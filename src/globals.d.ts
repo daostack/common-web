@@ -15,3 +15,11 @@ declare module 'yup' {
       ): StringSchema;
     }
   }
+
+declare global {
+  interface Window {
+    ReactNativeWebView: {
+      postMessage: (message: string) => void;
+    };
+  }
+}

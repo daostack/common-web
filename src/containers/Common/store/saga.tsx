@@ -72,6 +72,7 @@ import {
   CalculatedVotes,
   FundsAllocation,
   MemberAdmittance,
+  RemoveCircle,
 } from "@/shared/models/governance/proposals";
 
 export function* createGovernance(
@@ -192,10 +193,10 @@ export function* getCommonDetail({
       fetchCommonDiscussions(common.id),
       fetchCommonProposals(common.id),
     ])) as [
-      Awaited<ReturnType<typeof getGovernanceApi>>,
-      Awaited<ReturnType<typeof fetchCommonDiscussions>>,
-      Awaited<ReturnType<typeof fetchCommonProposals>>
-    ];
+        Awaited<ReturnType<typeof getGovernanceApi>>,
+        Awaited<ReturnType<typeof fetchCommonDiscussions>>,
+        Awaited<ReturnType<typeof fetchCommonProposals>>
+      ];
 
     if (!governance) {
       throw new Error(
@@ -581,6 +582,34 @@ export function* createAssignCircleProposal({
   }
 }
 
+export function* createRemoveCircleProposal({
+  payload,
+}: ReturnType<typeof actions.createRemoveCircleProposal.request>): Generator {
+  try {
+    yield put(startLoading());
+    const removeCircleProposal = (yield call(createProposalApi, {
+      ...payload.payload,
+      type: ProposalsTypes.REMOVE_CIRCLE
+    })) as RemoveCircle;
+
+    yield put(actions.createRemoveCircleProposal.success(removeCircleProposal));
+
+    if (payload.callback) {
+      payload.callback(null, removeCircleProposal);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createRemoveCircleProposal.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* createFundingProposal(
   {payload}
 ): Generator {
@@ -710,19 +739,25 @@ async function waitForVoteToBeApplied(
 export function* createVote({
   payload,
 }: ReturnType<typeof actions.createVote.request>): Generator {
-  const { votePayload, proposalVotes } = payload.payload;
+  const {
+    votePayload,
+    proposalVotes,
+    shouldWaitForVoteToBeApplied = true,
+  } = payload.payload;
 
   try {
     yield put(startLoading());
     const vote = (yield createVoteApi(votePayload)) as Vote;
 
-    yield call(async () => {
-      await waitForVoteToBeApplied(
-        vote.commonId,
-        vote.proposalId,
-        proposalVotes
-      );
-    });
+    if (shouldWaitForVoteToBeApplied) {
+      yield call(async () => {
+        await waitForVoteToBeApplied(
+          vote.commonId,
+          vote.proposalId,
+          proposalVotes
+        );
+      });
+    }
     yield put(actions.createVote.success());
     payload.callback(null, vote);
     yield put(stopLoading());
@@ -1210,6 +1245,10 @@ export function* commonsSaga() {
   yield takeLatest(
     actions.createAssignCircleProposal.request,
     createAssignCircleProposal
+  );
+  yield takeLatest(
+    actions.createRemoveCircleProposal.request,
+    createRemoveCircleProposal
   );
   yield takeLatest(actions.leaveCommon.request, leaveCommon);
   yield takeLatest(actions.deleteCommon.request, deleteCommon);

@@ -25,16 +25,18 @@ export default function ProposalItemComponent({
   let extraData;
   switch (proposal.type) {
     case ProposalsTypes.FUNDS_ALLOCATION:
-      extraData = `${formatPrice(proposal.data.args.amount)}₪`;
+      extraData = formatPrice(proposal.data.args.amount);
       break;
   }
 
   return (
-    <div className="proposal-item-wrapper">
+    <div
+      className="proposal-item-wrapper"
+      onClick={() => loadProposalDetail(proposal)}
+    >
       <div className="proposal-item-header">
         <div className="proposal-item-header-top">
           <div
-            onClick={() => loadProposalDetail(proposal)}
             className="proposal-title"
             title={proposal.data.args.title}
           >

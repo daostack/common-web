@@ -2,7 +2,7 @@ FROM node:14 AS builder
 WORKDIR /usr/src/app-build
 COPY . .
 ARG REACT_APP_ENV
-RUN yarn install && yarn run build
+RUN yarn install && CI=false yarn run build
 
 FROM nginx:latest
 WORKDIR /usr/share/nginx/html

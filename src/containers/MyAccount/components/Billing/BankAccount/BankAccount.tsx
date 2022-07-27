@@ -73,7 +73,7 @@ const BankAccount: FC<BankAccountProps> = (props) => {
   const contentEl = !bankAccount ? (
     <AddingCard
       text="You must provide bank account details in order to receive funds."
-      imageSrc="/assets/images/add-bank-account.svg"
+      imageSrc="/assets/images/membership-request-introduce.svg"
       imageAlt="Add bank account"
       buttonText="Add Bank Account"
       onClick={startEditing}

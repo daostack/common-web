@@ -38,6 +38,14 @@ $openTypeFontFormat: "opentype";
   font-weight: bold;
 }
 
+@font-face {
+  font-family: $nunitoSansFontName;
+  src: local($nunitoSansFontName),
+    url("/shared/assets/fonts/NunitoSans-ExtraBold.ttf")
+      format($trueTypeFontFormat);
+  font-weight: 800;
+}
+
 // NotoSerifSC
 @font-face {
   font-family: $notoSerifSCFontName;

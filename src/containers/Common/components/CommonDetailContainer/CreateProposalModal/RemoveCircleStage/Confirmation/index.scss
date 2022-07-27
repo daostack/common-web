@@ -1,0 +1,68 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.remove-circle-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.remove-circle-confirmation__image {
+  width: 18rem;
+  height: 17.875rem;
+  margin-bottom: 1.125rem;
+
+  @include big-phone {
+    max-width: 7.5rem;
+    width: 100%;
+    height: unset;
+    margin-bottom: 2.25rem;
+  }
+}
+
+.remove-circle-confirmation__title {
+  margin: 0;
+  font-family: NotoSerifSC, serif;
+  font-size: $moderate-med;
+  letter-spacing: 0.02em;
+
+  @include big-phone {
+    font-family: NunitoSans, sans-serif;
+    font-size: $moderate-small;
+    line-height: 120%;
+  }
+}
+
+.remove-circle-confirmation__circle-name {
+  margin: 1rem 0;
+  font-size: $small;
+  line-height: 125%;
+
+  @include big-phone {
+    margin: 0.5rem 0 2rem;
+  }
+}
+
+.remove-circle-confirmation__buttons-wrapper {
+  max-width: 23rem;
+  width: 100%;
+  margin-top: 2.25rem;
+  padding-bottom: 2.125rem;
+  display: grid;
+  grid-column-gap: 0.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @include big-phone {
+    margin-top: 2rem;
+    padding-bottom: 0;
+    grid-gap: 1rem 0;
+    grid-template-columns: 1fr;
+  }
+}
+
+.remove-circle-confirmation__cancel-button {
+  @include big-phone {
+    grid-row: 2;
+  }
+}

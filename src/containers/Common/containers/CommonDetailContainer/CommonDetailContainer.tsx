@@ -11,7 +11,12 @@ import {
   UserAvatar,
 } from "@/shared/components";
 import { Modal } from "@/shared/components/Modal";
-import { useAuthorizedModal, useModal, useViewPortHook } from "@/shared/hooks";
+import {
+  useAuthorizedModal,
+  useModal,
+  useQueryParams,
+  useViewPortHook,
+} from "@/shared/hooks";
 import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
 import ShareIcon from "@/shared/icons/share.icon";
 import {
@@ -72,6 +77,8 @@ import {
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
 import { useCommonMember } from "../../hooks";
+import { COMMON_DETAILS_PAGE_TAB_QUERY_PARAM, Tabs } from "./constants";
+import { getInitialTab } from "./helpers";
 import "./index.scss";
 import { MembersComponent } from "../../components/CommonDetailContainer/MembersComponent";
 
@@ -88,15 +95,6 @@ interface CommonDetailProps {
   | Discussion
   | DiscussionWithHighlightedMessage;
   linkType?: DynamicLinkType;
-}
-
-export enum Tabs {
-  About = "agenda",
-  Discussions = "discussion",
-  Proposals = "proposals",
-  Wallet = "wallet",
-  Notifications = "notifications",
-  Members = "members"
 }
 
 const tabs = [
@@ -135,6 +133,7 @@ const tabs = [
 
 export default function CommonDetail(props: CommonDetailProps = {}) {
   const { id: routeCommonId } = useParams<CommonDetailRouterParams>();
+  const queryParams = useQueryParams();
   const id = props.commonId || routeCommonId;
 
   const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
@@ -147,7 +146,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   );
   const [stickyClass, setStickyClass] = useState("");
   const [footerClass, setFooterClass] = useState("");
-  const [tab, setTab] = useState(Tabs.About);
+  const [tab, setTab] = useState(() => {
+    const defaultTab = queryParams[COMMON_DETAILS_PAGE_TAB_QUERY_PARAM];
+
+    return getInitialTab(typeof defaultTab === "string" ? defaultTab : "");
+  });
   const [imageError, setImageError] = useState(false);
   const [isCreationStageReached, setIsCreationStageReached] = useState(false);
   const [isCommonFetched, setIsCommonFetched] = useState(false);

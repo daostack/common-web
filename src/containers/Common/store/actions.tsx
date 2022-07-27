@@ -94,6 +94,10 @@ export const clearCurrentDiscussion = createStandardAction(
   CommonsActionTypes.CLEAR_CURRENT_DISCUSSION
 )();
 
+export const updateCurrentProposal = createStandardAction(
+  CommonsActionTypes.UPDATE_CURRENT_PROPOSAL
+)<Proposal>();
+
 export const clearCurrentProposal = createStandardAction(
   CommonsActionTypes.CLEAR_CURRENT_PROPOSAL
 )();
@@ -191,6 +195,20 @@ export const createAssignCircleProposal = createAsyncAction(
   Error
 >();
 
+export const createRemoveCircleProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_REMOVE_CIRCLE_PROPOSAL,
+  CommonsActionTypes.CREATE_REMOVE_CIRCLE_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_REMOVE_CIRCLE_PROPOSAL_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    Omit<CreateProposal[ProposalsTypes.REMOVE_CIRCLE]["data"], "type">,
+    CreateProposal[ProposalsTypes.REMOVE_CIRCLE]["response"],
+    Error
+  >,
+  CreateProposal[ProposalsTypes.REMOVE_CIRCLE]["response"],
+  Error
+>();
+
 export const createFundingProposal = createAsyncAction(
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL,
   CommonsActionTypes.CREATE_FUNDING_PROPOSAL_SUCCESS,
@@ -251,6 +269,7 @@ export const createVote = createAsyncAction(
     {
       votePayload: CreateVotePayload;
       proposalVotes: CalculatedVotes;
+      shouldWaitForVoteToBeApplied?: boolean;
     },
     Vote,
     Error

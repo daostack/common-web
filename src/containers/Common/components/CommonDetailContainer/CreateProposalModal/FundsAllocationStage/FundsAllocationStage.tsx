@@ -1,14 +1,12 @@
 import React, { FC, useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "@/containers/Auth/store/selectors";
 import { CreateProposal } from "@/containers/Common/interfaces";
 import { createFundingProposal } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Common, Governance, Proposal } from "@/shared/models";
+import { Common, Governance, CommonLink, Proposal } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { getUserName } from "@/shared/utils";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
 import { Confirmation } from "./Confirmation";
@@ -16,10 +14,6 @@ import { FundDetails } from "./FundDetails";
 import { Success } from "./Success";
 import { FundsAllocationStep } from "./constants";
 import { FundsAllocationData, FundType } from "./types";
-import {
-  UserDetails,
-  UserDetailsRef,
-} from "@/containers/Login/components/LoginContainer/UserDetails";
 import "./index.scss";
 
 interface FundsAllocationStageProps {
@@ -30,18 +24,18 @@ interface FundsAllocationStageProps {
 }
 
 const initialFundsData = {
-  title: 'title',
-  description: 'description',
-  goalOfPayment: 'goalOfPayment',
+  title: "title",
+  description: "description",
+  goalOfPayment: "goalOfPayment",
   amount: 10,
-  fund: 'ILS' as FundType,
-}
+  fund: "ILS" as FundType,
+  links: [] as CommonLink[],
+};
 
 const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
-  const user = useSelector(selectUser());
   const { common, governance, onFinish, onGoBack } = props;
   const dispatch = useDispatch();
-  const [fundsAllocationData, setfundsAllocationData] =
+  const [fundsAllocationData, setFundsAllocationData] =
     useState<FundsAllocationData>(initialFundsData);
   const [step, setStep] = useState(FundsAllocationStep.Configuration);
   const [isProposalCreating, setIsProposalCreating] = useState(false);
@@ -60,12 +54,12 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const isLoading = isProposalCreating;
 
   const handleConfigurationFinish = (data: FundsAllocationData) => {
-    setfundsAllocationData(data);
+    setFundsAllocationData(data);
     setStep(FundsAllocationStep.Funds);
   };
 
   const handleFundDetailsFinish = (data: FundsAllocationData) => {
-    setfundsAllocationData(data);
+    setFundsAllocationData(data);
     setStep(FundsAllocationStep.Confirmation);
   };
 
@@ -75,17 +69,18 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     }
 
     setIsProposalCreating(true);
+    const description = `${fundsAllocationData.description}\n\nGoal of Payment:\n${fundsAllocationData.goalOfPayment}`;
     const payload: Omit<
       CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"],
       "type"
     > = {
       args: {
+        description,
         amount: fundsAllocationData.amount * 100,
         commonId: common.id,
         title: fundsAllocationData.title,
-        description: fundsAllocationData.description,
         images: [],
-        links: [],
+        links: fundsAllocationData.links,
         files: [],
       },
     };
@@ -166,13 +161,14 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
             />
           )}
 
-          {(step === FundsAllocationStep.Funds || isMobileView) &&
-              <FundDetails
+          {(step === FundsAllocationStep.Funds || isMobileView) && (
+            <FundDetails
               governance={governance}
               initialData={fundsAllocationData}
               onFinish={handleFundDetailsFinish}
+              commonBalance={common.balance}
             />
-           }
+          )}
           {step === FundsAllocationStep.Confirmation &&
             (isMobileView ? (
               <Modal
