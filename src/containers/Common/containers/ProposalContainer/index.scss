@@ -377,6 +377,7 @@ $max-details-width: 74.875rem;
   .pitch-content__description-wrapper {
     margin-bottom: 2.25rem;
     font-size: $small;
+    word-break: break-word;
 
     @include big-phone {
       margin-bottom: 1rem;
