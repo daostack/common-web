@@ -24,13 +24,13 @@ interface FundsAllocationStageProps {
 }
 
 const initialFundsData = {
-  title: 'title',
-  description: 'description',
-  goalOfPayment: 'goalOfPayment',
+  title: "title",
+  description: "description",
+  goalOfPayment: "goalOfPayment",
   amount: 10,
-  fund: 'ILS' as FundType,
+  fund: "ILS" as FundType,
   links: [] as CommonLink[],
-}
+};
 
 const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const { common, governance, onFinish, onGoBack } = props;
@@ -156,14 +156,14 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
             />
           )}
 
-          {(step === FundsAllocationStep.Funds || isMobileView) &&
-              <FundDetails
+          {(step === FundsAllocationStep.Funds || isMobileView) && (
+            <FundDetails
               governance={governance}
               initialData={fundsAllocationData}
               onFinish={handleFundDetailsFinish}
               commonBalance={common.balance}
             />
-           }
+          )}
           {step === FundsAllocationStep.Confirmation &&
             (isMobileView ? (
               <Modal
