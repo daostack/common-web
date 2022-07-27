@@ -71,27 +71,15 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
     []
   );
 
-  const handleAssignProposalCreationFinish = useCallback(
-    (shouldViewProposal = false) => {
+  const handleProposalCreationFinish = useCallback(
+    (proposal?: Proposal) => {
       onClose();
 
-      if (shouldViewProposal) {
-        // TODO: Open created proposal
+      if (proposal) {
+        redirectToProposal(proposal);
       }
     },
-    [onClose]
-  );
-
-  const handleFundsAllocationCreationFinish = useCallback(
-    (shouldViewProposal = "") => {
-      onClose();
-
-      if (shouldViewProposal) {
-        redirectToProposal(shouldViewProposal)
-        // TODO: Open created proposal
-      }
-    },
-    [onClose]
+    [onClose, redirectToProposal]
   );
 
   useEffect(() => {
@@ -130,7 +118,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
           <AssignCircleStage
             common={common}
             governance={governance}
-            onFinish={handleAssignProposalCreationFinish}
+            onFinish={handleProposalCreationFinish}
             onGoBack={goToProposalTypeSelectionStage}
           />
         );
@@ -139,7 +127,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
           <RemoveCircleStage
             common={common}
             governance={governance}
-            onFinish={handleFundsAllocationDescriptionFinish}
+            onFinish={handleProposalCreationFinish}
             onGoBack={goToProposalTypeSelectionStage}
           />)
       case CreateProposalStage.FundsAllocation:
@@ -147,7 +135,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
           <FundsAllocationStage
             common={common}
             governance={governance}
-            onFinish={handleFundsAllocationCreationFinish}
+            onFinish={handleProposalCreationFinish}
             onGoBack={goToProposalTypeSelectionStage}
           />
         );
