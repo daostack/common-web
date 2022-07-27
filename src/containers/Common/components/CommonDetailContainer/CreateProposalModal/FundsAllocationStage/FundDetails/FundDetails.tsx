@@ -134,7 +134,9 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   };
 
   const handleFundSelect = (selectedFund: unknown) => {
-    setSelectedFund(selectedFund as FundType);
+    if (selectedFund === "ILS") {
+      setSelectedFund(selectedFund as FundType);
+    }
   };
 
   const getPrefix = () => {
