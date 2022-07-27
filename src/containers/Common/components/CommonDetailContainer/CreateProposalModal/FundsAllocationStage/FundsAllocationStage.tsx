@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useCallback } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CreateProposal } from "@/containers/Common/interfaces";
 import { createFundingProposal } from "@/containers/Common/store/actions";
@@ -6,6 +6,7 @@ import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
 import { Common, Governance, CommonLink, Proposal } from "@/shared/models";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
@@ -39,7 +40,8 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     useState<FundsAllocationData>(initialFundsData);
   const [step, setStep] = useState(FundsAllocationStep.Configuration);
   const [isProposalCreating, setIsProposalCreating] = useState(false);
-  const [createdProposal, setCreatedProposal] = useState(null);
+  const [createdProposal, setCreatedProposal] =
+    useState<FundsAllocation | null>(null);
   const {
     setTitle,
     setOnGoBack,
@@ -88,9 +90,9 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     dispatch(
       createFundingProposal.request({
         payload,
-        callback: (proposal: any) => {
-          if (proposal){
-            setCreatedProposal(proposal);
+        callback: (error, data) => {
+          if (!error && data){
+            setCreatedProposal(data);
             setStep(FundsAllocationStep.Success);
             setIsProposalCreating(false);
           }

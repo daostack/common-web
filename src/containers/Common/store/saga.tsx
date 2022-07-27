@@ -610,9 +610,9 @@ export function* createRemoveCircleProposal({
   }
 }
 
-export function* createFundingProposal(
-  {payload}
-): Generator {
+export function* createFundingProposal({
+  payload,
+}: ReturnType<typeof actions.createFundingProposal.request>): Generator {
   try {
     const { commonId } = payload.payload.args;
 
@@ -622,20 +622,15 @@ export function* createFundingProposal(
       type: ProposalsTypes.FUNDS_ALLOCATION,
     })) as FundsAllocation;
 
-    payload.callback(fundingProposal);
+    yield call(subscribeToCommonProposal, commonId, async () => {
+      const ds = await fetchCommonProposals(commonId);
 
-    yield call(
-      subscribeToCommonProposal,
-      commonId,
-      async () => {
-        const ds = await fetchCommonProposals(commonId);
-
-        store.dispatch(actions.setProposals(ds));
-        store.dispatch(actions.loadProposalList.request());
-        store.dispatch(stopLoading());     
-        store.dispatch(actions.getCommonsList.request());
-      }
-    );
+      store.dispatch(actions.setProposals(ds));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(stopLoading());
+      payload.callback(null, fundingProposal);
+      store.dispatch(actions.getCommonsList.request());
+    });
 
     yield put(actions.createFundingProposal.success(fundingProposal));
     yield put(stopLoading());

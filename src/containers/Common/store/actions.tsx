@@ -216,7 +216,7 @@ export const createFundingProposal = createAsyncAction(
 )<
   PayloadWithCallback<
     Omit<CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"], "type">,
-    void,
+    CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["response"],
     string
   >,
   CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["response"],
