@@ -23,6 +23,7 @@ import {
   getAssignCircleDetails,
   getFundsAllocationDetails,
   getMemberAdmittanceDetails,
+  getRemoveCircleDetails,
 } from "./helpers";
 import { ProposalDetailsItem } from "./types";
 import "./index.scss";
@@ -72,18 +73,11 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           governance
         );
       case ProposalsTypes.REMOVE_CIRCLE:
-        typedProposal = proposal as RemoveCircle;
-
-        return [
-          {
-            title: "Name of member",
-            value: "",
-          },
-          {
-            title: "Circle to be de-assigned from",
-            value: "",
-          }
-        ];
+        return getRemoveCircleDetails(
+          proposal as RemoveCircle,
+          proposer,
+          governance
+        );
       case ProposalsTypes.MEMBER_ADMITTANCE:
         return getMemberAdmittanceDetails(
           proposal as MemberAdmittance,
