@@ -76,7 +76,7 @@ const testFormWithoutErrors = async () => {
 
 const testFieldWithInvalidData = async (
   element: HTMLElement,
-  mockOnSubmit: () => {},
+  mockOnSubmit: () => Record<string, never>,
   value: string,
   errorText: string
 ) => {
@@ -92,7 +92,7 @@ const testFieldWithInvalidData = async (
 
 const testFieldRequiredValidation = async (
   element: HTMLElement,
-  mockOnSubmit: () => {}
+  mockOnSubmit: () => Record<string, never>
 ) => {
   await testFieldRequiredErrorOnBlur(element);
   await testFormWithoutErrors();
@@ -116,7 +116,7 @@ describe("ContactUsForm", () => {
   });
 
   it("should work correctly in loading state", () => {
-    render(<ContactUsForm onSubmit={() => {}} isLoading />);
+    render(<ContactUsForm onSubmit={() => { }} isLoading />);
 
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
     expect(screen.getByTestId("loader")).toBeInTheDocument();
@@ -124,7 +124,7 @@ describe("ContactUsForm", () => {
 
   it("should display error text", () => {
     const errorText = "Error during submission";
-    render(<ContactUsForm onSubmit={() => {}} errorText={errorText} />);
+    render(<ContactUsForm onSubmit={() => { }} errorText={errorText} />);
 
     expect(screen.getByRole("button")).toBeInTheDocument();
     expect(screen.getByText(errorText)).toBeInTheDocument();

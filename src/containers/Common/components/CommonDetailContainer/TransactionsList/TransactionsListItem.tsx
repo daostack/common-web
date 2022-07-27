@@ -33,7 +33,7 @@ const TransactionsListItem: FC<TransactionsListItemProps> = (
     (
       async () => {
         if (
-          !!payerData
+          Boolean(payerData)
           || type !== TransactionType.PayIn
           || !payerId
         ) return;
@@ -82,18 +82,18 @@ const TransactionsListItem: FC<TransactionsListItemProps> = (
             (type === TransactionType.PayIn)
               ? (
                 payerData
-                ? <div className="transaction__payin-payer-data">
-                  <UserAvatar
-                    photoURL={payerData.photoURL}
-                    nameForRandomAvatar={payerData.email}
-                    userName={getUserName(payerData)}
-                    className="payer-avatar"
-                  />
-                  <div className="payer-name">
-                    {getUserName(payerData)}
+                  ? <div className="transaction__payin-payer-data">
+                    <UserAvatar
+                      photoURL={payerData.photoURL}
+                      nameForRandomAvatar={payerData.email}
+                      userName={getUserName(payerData)}
+                      className="payer-avatar"
+                    />
+                    <div className="payer-name">
+                      {getUserName(payerData)}
+                    </div>
                   </div>
-                </div>
-                : <Loader/>
+                  : <Loader />
               )
               : (
                 <div className="transaction__payout-description">

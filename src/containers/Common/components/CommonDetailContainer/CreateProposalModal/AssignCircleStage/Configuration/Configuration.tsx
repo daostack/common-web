@@ -8,8 +8,7 @@ import {
   Dropdown,
   DropdownOption,
   ModalFooter,
-  Separator,
-  UserAvatar,
+  Separator
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import AvatarIcon from "@/shared/icons/avatar.icon";
@@ -61,18 +60,18 @@ const Configuration: FC<ConfigurationProps> = (props) => {
       commonMembers.reduce<AutocompleteOption[]>(
         (acc, member) =>
           member.userId !== user?.uid &&
-          circleBinary !== null &&
-          !(member.circles & circleBinary)
+            circleBinary !== null &&
+            !(member.circles & circleBinary)
             ? acc.concat({
-                text: (
-                  <MemberInfo
-                    className="assign-circle-configuration__member-info"
-                    user={member.user}
-                  />
-                ),
-                searchText: getUserName(member.user),
-                value: member.id,
-              })
+              text: (
+                <MemberInfo
+                  className="assign-circle-configuration__member-info"
+                  user={member.user}
+                />
+              ),
+              searchText: getUserName(member.user),
+              value: member.id,
+            })
             : acc,
         []
       ),

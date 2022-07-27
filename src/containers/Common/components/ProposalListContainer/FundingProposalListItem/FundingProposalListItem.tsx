@@ -1,9 +1,6 @@
 import React, { FC } from "react";
 
-import {
-  ProposalListItem,
-  ProposalState as ProposalStateTypes
-} from "@/shared/models";
+import { ProposalListItem } from "@/shared/models";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import {
   UserAvatar,
@@ -12,23 +9,23 @@ import {
 } from "@/shared/components";
 import { DynamicLinkType } from "@/shared/constants";
 import {
-    VotesComponent,
-    ProposalCountDown,
-    ProposalState,
+  VotesComponent,
+  ProposalCountDown,
+  ProposalState,
 } from "../../CommonDetailContainer";
 import {
-    checkIsCountdownState,
-    getUserName,
-    getDaysAgo,
-    getProposalExpirationDate,
-    formatPrice,
+  checkIsCountdownState,
+  getUserName,
+  getDaysAgo,
+  getProposalExpirationDate,
+  formatPrice,
 } from "@/shared/utils";
 import "./index.scss";
 
 const FundingProposalListItem: FC<ProposalListItem> = (
   {
-      proposal,
-      loadProposalDetails
+    proposal,
+    loadProposalDetails
   }: ProposalListItem
 ) => (
   <div className="proposal-item">

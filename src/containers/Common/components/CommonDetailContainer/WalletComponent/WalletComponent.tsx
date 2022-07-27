@@ -18,8 +18,8 @@ import {
   ProposalState,
   Time,
 } from "@/shared/models";
-import { Loader, ChartCanvas } from "@/shared/components";
-import { ChartType, ScreenSize } from "@/shared/constants";
+import { Loader } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import { sortByCreatedTime, formatPrice } from "@/shared/utils";
 import {
   isFundsAllocationProposal,
@@ -28,7 +28,7 @@ import {
 import { getScreenSize } from "@/shared/store/selectors";
 import { fetchCommonContributions, fetchCommonProposals } from "../../../store/api";
 import { TransactionsList } from "../";
-import { CommonWalletChartOptions, WalletMenuItems } from "./constants";
+import { WalletMenuItems } from "./constants";
 import { useCommonTransactionsChartDataSet } from "./hooks";
 import "./index.scss";
 
@@ -100,10 +100,10 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
 
         try {
           const commonPaymentsIn = (await fetchCommonContributions(common.id))
-                                    .filter(
-                                      payment =>
-                                        (payment.amount.currency === Currency.ILS)
-                                    );
+            .filter(
+              payment =>
+                (payment.amount.currency === Currency.ILS)
+            );
 
           setPaymentsInData(
             commonPaymentsIn.map(
@@ -139,7 +139,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
               (proposal) =>
                 proposal.state === ProposalState.PASSED &&
                 proposal.data.tracker.status ===
-                  FundingAllocationStatus.COMPLETED
+                FundingAllocationStatus.COMPLETED
             );
 
           setPaymentsOutData(
@@ -162,7 +162,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
   }, [paymentsOutData, setPaymentsOutData, common.id]);
 
   useEffect(() => {
-    if (!!formattedChartData || !orderedCommonTransactions)
+    if (Boolean(formattedChartData) || !orderedCommonTransactions)
       return;
 
     const {
@@ -204,11 +204,11 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
       }
     );
   }, [
-      formattedChartData,
-      orderedCommonTransactions,
-      common.createdAt,
-      getCommonTransactionsChartDataSet,
-    ]
+    formattedChartData,
+    orderedCommonTransactions,
+    common.createdAt,
+    getCommonTransactionsChartDataSet,
+  ]
   );
 
   useEffect(() => {

@@ -53,7 +53,7 @@ const filterExtraProps: FilterExtraPropsFunction = <
 >(
   props: T
 ) => {
-  const { isTextarea, ...restProps } = props;
+  const { isTextarea: _, ...restProps } = props;
 
   return restProps;
 };

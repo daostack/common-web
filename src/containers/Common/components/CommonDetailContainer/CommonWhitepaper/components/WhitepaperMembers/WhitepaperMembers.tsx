@@ -42,7 +42,7 @@ export default function WhitepaperMembers() {
         </span>)
     })
 
-    const allowedVotes = Object.keys(governance?.proposals || {}).filter((proposal, index) => {
+    const allowedVotes = Object.keys(governance?.proposals || {}).filter((proposal, _index) => {
       const circleBin = generateCirclesBinaryNumber([selectedMember.index])
 
       if (proposal === ProposalsTypes.ASSIGN_CIRCLE ||

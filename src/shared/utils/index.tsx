@@ -10,4 +10,3 @@ export { default as request } from "./request";
 export * from "./convertDatesToFirestoreTimestamps";
 export * from "./transformFirebaseDataToModel";
 export * from "./roles";
-export * from "./apollo";
