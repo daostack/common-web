@@ -5,7 +5,8 @@ import { createFundingProposal } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Common, Governance, CommonLink } from "@/shared/models";
+import { Common, Governance, CommonLink, Proposal } from "@/shared/models";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
@@ -19,7 +20,7 @@ import "./index.scss";
 interface FundsAllocationStageProps {
   common: Common;
   governance: Governance;
-  onFinish: (shouldViewProposal?: boolean) => void;
+  onFinish: (proposal?: Proposal) => void;
   onGoBack: () => void;
 }
 
@@ -39,6 +40,8 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     useState<FundsAllocationData>(initialFundsData);
   const [step, setStep] = useState(FundsAllocationStep.Configuration);
   const [isProposalCreating, setIsProposalCreating] = useState(false);
+  const [createdProposal, setCreatedProposal] =
+    useState<FundsAllocation | null>(null);
   const {
     setTitle,
     setOnGoBack,
@@ -88,7 +91,8 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       createFundingProposal.request({
         payload,
         callback: (error, data) => {
-          if (!error) {
+          if (!error && data){
+            setCreatedProposal(data);
             setStep(FundsAllocationStep.Success);
             setIsProposalCreating(false);
           }
@@ -102,11 +106,13 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   };
 
   const handleBackToCommon = () => {
-    onFinish(false);
+    onFinish();
   };
 
   const handleViewProposal = () => {
-    onFinish(true);
+    if (createdProposal) {
+      onFinish(createdProposal);
+    }
   };
 
   useEffect(() => {

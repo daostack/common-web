@@ -7,7 +7,8 @@ import { createAssignCircleProposal } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Common, Governance } from "@/shared/models";
+import { Common, Governance, Proposal } from "@/shared/models";
+import { AssignCircle } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
 import { useCreateProposalContext } from "../context";
@@ -21,7 +22,7 @@ import "./index.scss";
 interface AssignCircleStageProps {
   common: Common;
   governance: Governance;
-  onFinish: (shouldViewProposal?: boolean) => void;
+  onFinish: (proposal?: Proposal) => void;
   onGoBack: () => void;
 }
 
@@ -32,6 +33,9 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
     useState<AssignCircleData | null>(null);
   const [step, setStep] = useState(AssignCircleStep.Configuration);
   const [isProposalCreating, setIsProposalCreating] = useState(false);
+  const [createdProposal, setCreatedProposal] = useState<AssignCircle | null>(
+    null
+  );
   const {
     setTitle,
     setOnGoBack,
@@ -77,7 +81,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
         links: [],
         files: [],
         circleId: assignCircleData.circle.id,
-        userId: assignCircleData.commonMember.userId
+        userId: assignCircleData.commonMember.userId,
       },
     };
 
@@ -86,6 +90,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
         payload,
         callback: (error, data) => {
           if (!error && data) {
+            setCreatedProposal(data);
             setStep(AssignCircleStep.Success);
             setIsProposalCreating(false);
           }
@@ -99,11 +104,13 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
   };
 
   const handleBackToCommon = () => {
-    onFinish(false);
+    onFinish();
   };
 
   const handleViewProposal = () => {
-    onFinish(true);
+    if (createdProposal) {
+      onFinish(createdProposal);
+    }
   };
 
   useEffect(() => {

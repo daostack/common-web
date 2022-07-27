@@ -610,32 +610,27 @@ export function* createRemoveCircleProposal({
   }
 }
 
-export function* createFundingProposal(
-  action: ReturnType<typeof actions.createFundingProposal.request>
-): Generator {
+export function* createFundingProposal({
+  payload,
+}: ReturnType<typeof actions.createFundingProposal.request>): Generator {
   try {
-    const data = action.payload.payload;
-    const { commonId } = data.args;
+    const { commonId } = payload.payload.args;
 
     yield put(startLoading());
     const fundingProposal = (yield call(createProposalApi, {
-      ...data,
+      ...payload.payload,
       type: ProposalsTypes.FUNDS_ALLOCATION,
     })) as FundsAllocation;
 
-    yield call(
-      subscribeToCommonProposal,
-      commonId,
-      async () => {
-        const ds = await fetchCommonProposals(commonId);
+    yield call(subscribeToCommonProposal, commonId, async () => {
+      const ds = await fetchCommonProposals(commonId);
 
-        store.dispatch(actions.setProposals(ds));
-        store.dispatch(actions.loadProposalList.request());
-        store.dispatch(stopLoading());
-        action.payload.callback(null);
-        store.dispatch(actions.getCommonsList.request());
-      }
-    );
+      store.dispatch(actions.setProposals(ds));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(stopLoading());
+      payload.callback(null, fundingProposal);
+      store.dispatch(actions.getCommonsList.request());
+    });
 
     yield put(actions.createFundingProposal.success(fundingProposal));
     yield put(stopLoading());
@@ -651,7 +646,7 @@ export function* createFundingProposal(
           "Your bank account details couldn’t be verified. Please update them in your account settings.";
       }
 
-      action.payload.callback(errorMessage);
+      payload.callback(errorMessage);
       yield put(actions.createFundingProposal.failure(error));
       yield put(stopLoading());
     }
