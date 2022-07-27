@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import RightArrowIcon from "../../../../../shared/icons/rightArrow.icon";
 import "./index.scss";
 
@@ -18,11 +18,7 @@ const ITEMS: LinkItem[] = [
   },
 ];
 
-interface LoginHelpButtonsProps {
-  className?: string;
-}
-
-const LoginHelpButtons: FC<LoginHelpButtonsProps> = ({ className }) => {
+const LoginHelpButtons = () => {
   return (
     <ul className="login-help-buttons">
       {ITEMS.map((item, index) => (

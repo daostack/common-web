@@ -2,21 +2,21 @@ import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { Circle, CommonMemberWithUserInfo } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
+import { CurrencySymbol } from "@/shared/models";
 
 const getPrefix = (fund) => {
-    switch (fund) {
-      case "ILS":
-        return '₪';
-      case "Dollars":
-        return '$';
-      default:
-        // TODO icon for tokens
-        return '&';
-    }
+  switch (fund) {
+    case "ILS":
+      return CurrencySymbol.Shekel;
+    case "Dollars":
+      return CurrencySymbol.USD;
+    default:
+      // TODO icon for tokens
+      return '&';
   }
+}
 
 interface ConfirmationProps {
   amount: number;

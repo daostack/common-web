@@ -1,9 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { CommonShare, Linkify } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { CommonWhitepaper } from "../CommonWhitepaper";
-import classNames from "classnames";
 import "./index.scss";
 
 interface AboutTabComponentProps {
@@ -22,11 +21,11 @@ export default function AboutTabComponent({
   isJoiningPending,
 }: AboutTabComponentProps) {
   const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
-  const [expanded, setExpanded] = useState(false);
+  const [expanded] = useState(false);
   return (
     <div className="about-name-wrapper">
       <div className="description">
-        <Linkify>{expanded ? common.description :  common.description.substring(0, 200)}</Linkify>
+        <Linkify>{expanded ? common.description : common.description.substring(0, 200)}</Linkify>
       </div>
       <CommonWhitepaper />
       {common?.links?.length > 0 && expanded && (

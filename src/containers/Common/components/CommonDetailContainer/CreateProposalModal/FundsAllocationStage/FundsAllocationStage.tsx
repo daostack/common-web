@@ -91,7 +91,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       createFundingProposal.request({
         payload,
         callback: (error, data) => {
-          if (!error && data){
+          if (!error && data) {
             setCreatedProposal(data);
             setStep(FundsAllocationStep.Success);
             setIsProposalCreating(false);

@@ -1,4 +1,4 @@
-import { Circle, CommonMemberWithUserInfo, CommonLink } from "@/shared/models";
+import { CommonLink } from "@/shared/models";
 
 export type FundType = 'ILS' | 'Dollars' | 'Token';
 
