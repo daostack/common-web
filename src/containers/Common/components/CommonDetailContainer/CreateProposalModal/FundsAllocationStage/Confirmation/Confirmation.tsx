@@ -4,7 +4,7 @@ import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
-import { CurrencySymbol } from "../../../../../../../shared/models";
+import { CurrencySymbol } from "@/shared/models";
 
 const getPrefix = (fund) => {
   switch (fund) {
