@@ -15,11 +15,16 @@ export const PitchContentContainer: FC<PitchContentContainerProps> = ({
   return (
     <div className="pitch-content__wrapper">
       <div className="pitch-content__description-wrapper">
-        {descriptionParts.map((text, index) => (
-          <p className="pitch-content__description" key={index}>
-            {text}
-          </p>
-        ))}
+        <h3 className="pitch-content__description-title">Description</h3>
+        {descriptionParts.map((text, index) =>
+          text ? (
+            <p className="pitch-content__description" key={index}>
+              {text}
+            </p>
+          ) : (
+            <br key={index} />
+          )
+        )}
       </div>
       {proposal.data.args.links.length > 0 && (
         <ul className="pitch-content__links">

@@ -68,15 +68,16 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     }
 
     setIsProposalCreating(true);
+    const description = `${fundsAllocationData.description}\n\nGoal of Payment:\n${fundsAllocationData.goalOfPayment}`;
     const payload: Omit<
       CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"],
       "type"
     > = {
       args: {
+        description,
         amount: fundsAllocationData.amount * 100,
         commonId: common.id,
         title: fundsAllocationData.title,
-        description: fundsAllocationData.description,
         images: [],
         links: fundsAllocationData.links,
         files: [],
