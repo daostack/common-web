@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { formatPrice } from '../../../../../../../shared/utils';
+import { formatPrice } from '@/shared/utils';
 
 export const validationSchema = yup.object({
     commonBalance: yup.number(),
