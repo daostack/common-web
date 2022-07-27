@@ -35,7 +35,7 @@ const initialFundsData = {
 const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const { common, governance, onFinish, onGoBack } = props;
   const dispatch = useDispatch();
-  const [fundsAllocationData, setfundsAllocationData] =
+  const [fundsAllocationData, setFundsAllocationData] =
     useState<FundsAllocationData>(initialFundsData);
   const [step, setStep] = useState(FundsAllocationStep.Configuration);
   const [isProposalCreating, setIsProposalCreating] = useState(false);
@@ -53,12 +53,12 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const isLoading = isProposalCreating;
 
   const handleConfigurationFinish = (data: FundsAllocationData) => {
-    setfundsAllocationData(data);
+    setFundsAllocationData(data);
     setStep(FundsAllocationStep.Funds);
   };
 
   const handleFundDetailsFinish = (data: FundsAllocationData) => {
-    setfundsAllocationData(data);
+    setFundsAllocationData(data);
     setStep(FundsAllocationStep.Confirmation);
   };
 
@@ -78,7 +78,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
         title: fundsAllocationData.title,
         description: fundsAllocationData.description,
         images: [],
-        links: [],
+        links: fundsAllocationData.links,
         files: [],
       },
     };
