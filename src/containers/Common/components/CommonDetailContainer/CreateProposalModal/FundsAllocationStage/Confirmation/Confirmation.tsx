@@ -4,13 +4,14 @@ import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
+import { CurrencySymbol } from "../../../../../../../shared/models";
 
 const getPrefix = (fund) => {
   switch (fund) {
     case "ILS":
-      return '₪';
+      return CurrencySymbol.Shekel;
     case "Dollars":
-      return '$';
+      return CurrencySymbol.USD;
     default:
       // TODO icon for tokens
       return '&';

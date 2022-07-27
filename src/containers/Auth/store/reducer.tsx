@@ -43,12 +43,12 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
       nextState.loginModalState = action.payload;
     })
   )
-  .handleAction(actions.startAuthLoading, (state, _action) =>
+  .handleAction(actions.startAuthLoading, (state) =>
     produce(state, (nextState) => {
       nextState.isAuthLoading = true;
     })
   )
-  .handleAction(actions.stopAuthLoading, (state, _action) =>
+  .handleAction(actions.stopAuthLoading, (state) =>
     produce(state, (nextState) => {
       nextState.isAuthLoading = false;
     })

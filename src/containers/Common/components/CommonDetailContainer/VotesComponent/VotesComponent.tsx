@@ -64,7 +64,7 @@ export default function VotesComponent({
     (votingOption: VoteOutcome | null) =>
       !isVotingAllowed ||
       proposal.state !== ProposalState.VOTING ||
-      (Boolean(userVote) && userVote.outcome === votingOption) ||
+      (userVote && userVote.outcome === votingOption) ||
       preview,
     [proposal.state, isVotingAllowed, preview, userVote]
   );

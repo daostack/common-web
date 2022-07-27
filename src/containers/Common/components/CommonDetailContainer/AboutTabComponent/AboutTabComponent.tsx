@@ -21,7 +21,7 @@ export default function AboutTabComponent({
   isJoiningPending,
 }: AboutTabComponentProps) {
   const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
-  const [expanded, _setExpanded] = useState(false);
+  const [expanded] = useState(false);
   return (
     <div className="about-name-wrapper">
       <div className="description">

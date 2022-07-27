@@ -95,12 +95,12 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.currentProposal = proposal;
     })
   )
-  .handleAction(actions.clearCurrentDiscussion, (state, _action) =>
+  .handleAction(actions.clearCurrentDiscussion, (state) =>
     produce(state, (nextState) => {
       nextState.currentDiscussion = null;
     })
   )
-  .handleAction(actions.updateCurrentProposal, (state, _action) =>
+  .handleAction(actions.updateCurrentProposal, (state, action) =>
     produce(state, (nextState) => {
       if (nextState.currentProposal) {
         nextState.currentProposal = {
@@ -110,12 +110,12 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       }
     })
   )
-  .handleAction(actions.clearCurrentProposal, (state, _action) =>
+  .handleAction(actions.clearCurrentProposal, (state) =>
     produce(state, (nextState) => {
       nextState.currentProposal = null;
     })
   )
-  .handleAction(actions.closeCurrentCommon, (state, _action) =>
+  .handleAction(actions.closeCurrentCommon, (state) =>
     produce(state, (nextState) => {
       nextState.currentDiscussion = null;
       nextState.common = null;
@@ -151,7 +151,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.activeTab = action.payload;
     })
   )
-  .handleAction(actions.clearCommonActiveTab, (state, _action) =>
+  .handleAction(actions.clearCommonActiveTab, (state) =>
     produce(state, (nextState) => {
       nextState.activeTab = null;
     })

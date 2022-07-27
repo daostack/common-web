@@ -162,7 +162,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
   }, [paymentsOutData, setPaymentsOutData, common.id]);
 
   useEffect(() => {
-    if (Boolean(formattedChartData) || !orderedCommonTransactions)
+    if (formattedChartData || !orderedCommonTransactions)
       return;
 
     const {

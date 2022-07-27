@@ -33,7 +33,7 @@ const TransactionsListItem: FC<TransactionsListItemProps> = (
     (
       async () => {
         if (
-          Boolean(payerData)
+          payerData
           || type !== TransactionType.PayIn
           || !payerId
         ) return;
