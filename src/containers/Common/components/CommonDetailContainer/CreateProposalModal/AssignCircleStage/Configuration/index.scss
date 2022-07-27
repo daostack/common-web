@@ -33,6 +33,11 @@
   z-index: $dropdown-z-index + 1;
 }
 
+.funds-allocation-configuration__fund-type--disabled {
+  background-color: $light-gray-1;
+  cursor: not-allowed;
+}
+
 .assign-circle-configuration__member-autocomplete {
   z-index: $dropdown-z-index;
   margin-top: 1.5rem;

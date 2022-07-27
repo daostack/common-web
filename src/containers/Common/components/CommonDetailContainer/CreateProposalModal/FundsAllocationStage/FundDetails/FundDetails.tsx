@@ -122,6 +122,10 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
         text: fund,
         searchText: fund,
         value: fund,
+        className:
+          fund !== "ILS"
+            ? "funds-allocation-configuration__fund-type--disabled"
+            : "",
       })),
     []
   );
