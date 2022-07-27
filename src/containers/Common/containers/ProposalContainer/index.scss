@@ -374,12 +374,16 @@ $max-details-width: 74.875rem;
     margin-bottom: 2.375rem;
   }
 
-  .pitch-content__description {
-    margin: 0 0 2.25rem;
+  .pitch-content__description-wrapper {
+    margin-bottom: 2.25rem;
     font-size: $small;
+  }
 
-    @include big-phone {
-      margin-bottom: 1rem;
+  .pitch-content__description {
+    margin: 0 0 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 
