@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { startCase, lowerCase } from "lodash";
@@ -42,7 +42,7 @@ export default function WhitepaperMembers() {
         </span>)
     })
 
-    const allowedVotes = useMemo(() => Object.keys(governance?.proposals || {}).filter((proposal, index) => {
+    const allowedVotes = Object.keys(governance?.proposals || {}).filter((proposal, index) => {
       const circleBin = generateCirclesBinaryNumber([selectedMember.index])
 
       if (proposal === ProposalsTypes.ASSIGN_CIRCLE ||
@@ -62,7 +62,7 @@ export default function WhitepaperMembers() {
         <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
         {startCase(lowerCase(proposalKey))}
       </span>)
-    }), [governance, selectedMember])
+    });
 
     return (
       <div className="whitepaper-members__content">

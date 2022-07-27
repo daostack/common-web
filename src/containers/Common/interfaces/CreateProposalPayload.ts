@@ -1,6 +1,7 @@
 import { ProposalsTypes } from "@/shared/constants";
 import {
   AssignCircle,
+  RemoveCircle,
   FundsAllocation,
   MemberAdmittance,
 } from "@/shared/models/governance/proposals";
@@ -19,6 +20,10 @@ interface CreateAssignCircle {
   type: ProposalsTypes.ASSIGN_CIRCLE;
   args: Omit<AssignCircle["data"]["args"], "proposerId">;
 }
+interface CreateRemoveCircle {
+  type: ProposalsTypes.REMOVE_CIRCLE;
+  args: Omit<RemoveCircle["data"]["args"], "proposerId">;
+}
 
 interface Request<P, R> {
   data: P;
@@ -35,4 +40,5 @@ export interface CreateProposal {
     MemberAdmittance
   >;
   [ProposalsTypes.ASSIGN_CIRCLE]: Request<CreateAssignCircle, AssignCircle>;
+  [ProposalsTypes.REMOVE_CIRCLE]: Request<CreateRemoveCircle, RemoveCircle>;
 }
