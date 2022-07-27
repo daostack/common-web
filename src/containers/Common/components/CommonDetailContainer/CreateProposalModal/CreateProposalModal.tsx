@@ -75,7 +75,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
         redirectToProposal(proposal);
       }
     },
-    [onClose]
+    [onClose, redirectToProposal]
   );
 
   useEffect(() => {
