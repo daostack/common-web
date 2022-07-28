@@ -139,15 +139,21 @@ const Configuration: FC<ConfigurationProps> = (props) => {
       />
       <Separator className="assign-circle-configuration__separator" />
       <div className="assign-circle-configuration__form">
-        <Dropdown
-          className="assign-circle-configuration__circle-dropdown"
-          options={circleOptions}
-          value={circle?.id}
-          onSelect={handleCircleSelect}
-          label="Circle to Assign"
-          placeholder="Select Circle"
-          shouldBeFixed={false}
-        />
+        {allowedCircleIndexesToBeAssigned.length > 0 ? (
+          <Dropdown
+            className="assign-circle-configuration__circle-dropdown"
+            options={circleOptions}
+            value={circle?.id}
+            onSelect={handleCircleSelect}
+            label="Circle to Assign"
+            placeholder="Select Circle"
+            shouldBeFixed={false}
+          />
+        ) : (
+          <p className="assign-circle-configuration__info-text">
+            You don’t have permissions to assign circles
+          </p>
+        )}
         {circle && (
           <>
             {memberOptions.length > 0 ? (
@@ -161,7 +167,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
                 shouldBeFixed={false}
               />
             ) : (
-              <p className="assign-circle-configuration__no-members-text">
+              <p className="assign-circle-configuration__info-text">
                 There are no common members to assign selected circle.
               </p>
             )}
