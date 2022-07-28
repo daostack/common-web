@@ -86,7 +86,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
         (acc, member) =>
           member.userId !== user?.uid &&
           circleBinary !== null &&
-          !(member.circles & circleBinary)
+          (member.circles & circleBinary)
             ? acc.concat({
                 text: (
                   <MemberInfo
