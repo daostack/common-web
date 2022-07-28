@@ -50,14 +50,16 @@
     }
     .preview-pdf {
       margin: auto;
+      margin-top: 0;
       border-radius: 10px;
       max-height: 70%;
-      max-width: 43rem;
+      max-width: 38rem;
       @include big-phone {
         max-width: 70%;
       }
       .react-pdf__Page canvas {
         max-width: 100%;
+        width: fit-content;
         height: auto !important;
       }
     }
