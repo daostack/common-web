@@ -42,11 +42,13 @@ export default function ProposalItemComponent({
           >
             {proposal.data.args.title}
           </div>
-          <ElementDropdown
-            linkType={DynamicLinkType.Proposal}
-            elem={proposal}
-            transparent
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            <ElementDropdown
+              linkType={DynamicLinkType.Proposal}
+              elem={proposal}
+              transparent
+            />
+          </div>
         </div>
         <div className="proposal-item-type">{startCase(lowerCase(proposal.type))}</div>
       </div>
