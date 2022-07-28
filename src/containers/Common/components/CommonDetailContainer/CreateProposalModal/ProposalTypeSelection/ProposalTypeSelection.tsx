@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   Button,
@@ -8,12 +8,17 @@ import {
   Separator,
 } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
-import { Governance } from "@/shared/models";
+import { CommonMember, Governance } from "@/shared/models";
 import { BaseProposal } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
+import { checkIsProposalTypeAllowedForMember } from "@/shared/utils";
 import { ProposalTypeDetails } from "./ProposalTypeDetails";
 import { useCreateProposalContext } from "../context";
 import "./index.scss";
+
+interface ProposalTypeOption extends DropdownOption {
+  isDisabled: boolean;
+}
 
 const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
   {
@@ -35,6 +40,7 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
 
 interface ProposalTypeSelectionProps {
   governance: Governance;
+  commonMember: CommonMember;
   onFinish: (proposalType: ProposalsTypes) => void;
 }
 
@@ -54,7 +60,7 @@ const getProposalTypeDetails = (
 };
 
 const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
-  const { governance, onFinish } = props;
+  const { governance, commonMember, onFinish } = props;
   const {
     setTitle,
     setOnGoBack,
@@ -66,9 +72,33 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const proposalTypeDetails =
     selectedType && getProposalTypeDetails(governance, selectedType);
+  const proposalTypeOptions = useMemo<ProposalTypeOption[]>(
+    () =>
+      PROPOSAL_TYPE_OPTIONS.map((option) => {
+        const isDisabled = !checkIsProposalTypeAllowedForMember(
+          commonMember,
+          option.value as ProposalsTypes
+        );
+
+        return {
+          ...option,
+          isDisabled,
+          className: isDisabled
+            ? "proposal-type-selection-stage__type-dropdown-item--disabled"
+            : "",
+        };
+      }),
+    [commonMember]
+  );
 
   const handleSelect = (value: unknown) => {
-    setSelectedType(value as ProposalsTypes);
+    const foundOption = proposalTypeOptions.find(
+      (option) => option.value === value
+    );
+
+    if (foundOption && !foundOption.isDisabled) {
+      setSelectedType(value as ProposalsTypes);
+    }
   };
 
   const handleContinue = () => {
@@ -103,7 +133,7 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
       <Separator className="proposal-type-selection-stage__separator" />
       <div className="proposal-type-selection-stage__form">
         <Dropdown
-          options={PROPOSAL_TYPE_OPTIONS}
+          options={proposalTypeOptions}
           value={selectedType}
           onSelect={handleSelect}
           label="Type of proposal"
