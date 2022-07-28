@@ -123,6 +123,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
           <AssignCircleStage
             common={common}
             governance={governance}
+            commonMember={commonMember}
             onFinish={handleProposalCreationFinish}
             onGoBack={goToProposalTypeSelectionStage}
           />

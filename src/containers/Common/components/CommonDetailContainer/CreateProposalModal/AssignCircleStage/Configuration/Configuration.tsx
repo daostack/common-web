@@ -8,11 +8,16 @@ import {
   Dropdown,
   DropdownOption,
   ModalFooter,
-  Separator
+  Separator,
 } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import AvatarIcon from "@/shared/icons/avatar.icon";
-import { Circle, CommonMemberWithUserInfo, Governance } from "@/shared/models";
+import {
+  Circle,
+  CommonMember,
+  CommonMemberWithUserInfo,
+  Governance,
+} from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
 import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
@@ -23,13 +28,20 @@ import "./index.scss";
 
 interface ConfigurationProps {
   governance: Governance;
+  commonMember: CommonMember;
   commonMembers: CommonMemberWithUserInfo[];
   initialData: AssignCircleData | null;
   onFinish: (data: AssignCircleData) => void;
 }
 
 const Configuration: FC<ConfigurationProps> = (props) => {
-  const { governance, commonMembers, initialData, onFinish } = props;
+  const {
+    governance,
+    commonMember: currentCommonMember,
+    commonMembers,
+    initialData,
+    onFinish,
+  } = props;
   const isInitialCircleUpdate = useRef(true);
   const [circle, setCircle] = useState<Circle | null>(
     initialData?.circle || null
@@ -41,6 +53,15 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const allowedCircleIndexesToBeAssigned = useMemo(
+    () =>
+      Object.entries(
+        currentCommonMember.allowedProposals[ProposalsTypes.ASSIGN_CIRCLE] || {}
+      )
+        .filter(([, isAllowed]) => isAllowed)
+        .map(([circleIndex]) => Number(circleIndex)),
+    [currentCommonMember]
+  );
   const circleIndex = governance.circles.findIndex(
     ({ id }) => id === circle?.id
   );
@@ -48,30 +69,32 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     circleIndex >= 0 ? generateCirclesBinaryNumber([circleIndex]) : null;
   const circleOptions = useMemo<DropdownOption[]>(
     () =>
-      governance.circles.map((circle) => ({
-        text: circle.name,
-        searchText: circle.name,
-        value: circle.id,
-      })),
-    [governance.circles]
+      governance.circles
+        .filter((circle, index) =>
+          allowedCircleIndexesToBeAssigned.includes(index)
+        )
+        .map((circle) => ({
+          text: circle.name,
+          searchText: circle.name,
+          value: circle.id,
+        })),
+    [governance.circles, allowedCircleIndexesToBeAssigned]
   );
   const memberOptions = useMemo(
     () =>
       commonMembers.reduce<AutocompleteOption[]>(
         (acc, member) =>
-          member.userId !== user?.uid &&
-            circleBinary !== null &&
-            !(member.circles & circleBinary)
+          circleBinary !== null && !(member.circles & circleBinary)
             ? acc.concat({
-              text: (
-                <MemberInfo
-                  className="assign-circle-configuration__member-info"
-                  user={member.user}
-                />
-              ),
-              searchText: getUserName(member.user),
-              value: member.id,
-            })
+                text: (
+                  <MemberInfo
+                    className="assign-circle-configuration__member-info"
+                    user={member.user}
+                  />
+                ),
+                searchText: getUserName(member.user),
+                value: member.id,
+              })
             : acc,
         []
       ),
