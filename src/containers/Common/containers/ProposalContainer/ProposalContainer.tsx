@@ -262,6 +262,7 @@ const ProposalContainer = () => {
         <VotesModal
           isShowing={isVotesModalOpen}
           onClose={onVotesModalClose}
+          proposalId={proposalId}
         />
         <div className="proposal-page__wrapper">
           <div className="proposal-page__common-title-wrapper section-wrapper">
