@@ -24,6 +24,7 @@ export const TERMS_OF_USE_URL =
 export const CONTACT_EMAIL = "hi@common.io";
 export const SUPPORT_EMAIL = "support@common.io";
 
+export const MIN_CONTRIBUTION_ILS = 10;
 export const MIN_CONTRIBUTION_ILS_AMOUNT = 10_00; // ₪10 * 100
 export const MAX_CONTRIBUTION_ILS_AMOUNT = 5000_00; // ₪5000 * 100
 export const MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION = 500_00; // ₪500 * 100

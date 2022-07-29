@@ -1,41 +1,25 @@
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Formik, FormikConfig } from "formik";
-import { FormikProps } from "formik/dist/types";
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
 import { BankAccountState } from "@/containers/MyAccount/components/Billing/types";
 import {
-  Button,
-  Dropdown,
-  DropdownOption,
-  Loader,
-  ModalFooter,
+    Button, Dropdown, Loader, ModalFooter, DropdownOption
 } from "@/shared/components";
-import {
-  CurrencyInput,
-  Form,
-  LinksArray,
-} from "@/shared/components/Form/Formik";
-import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
+import { CurrencyInput, Form, LinksArray, TextField } from "@/shared/components/Form/Formik";
+import { MAX_LINK_TITLE_LENGTH, ScreenSize } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
-import { BankAccountDetails, Governance, CommonLink, CurrencySymbol } from "@/shared/models";
+import { BankAccountDetails, CommonLink, CurrencySymbol, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Formik, FormikConfig } from "formik";
+import { FormikProps } from "formik/dist/types";
+import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { StageName } from "../../StageName";
 import { FundsAllocationData, FundType } from "../types";
-import { validationSchema } from "./validationSchema";
+import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH, fundTypes } from "./constants";
 import "./index.scss";
+import { validationSchema } from "./validationSchema";
 
-const fundTypes = ['ILS', 'Dollars', 'Tokens'];
-
-interface ConfigurationProps {
+interface FundAllocationFormProps {
   governance: Governance;
   initialData: FundsAllocationData;
   onFinish: (data: FundsAllocationData) => void;
@@ -43,6 +27,9 @@ interface ConfigurationProps {
 }
 
 interface FormValues {
+  title: string;
+  description: string;
+  goalOfPayment: string;
   fund: FundType;
   amount: number;
   links: CommonLink[];
@@ -50,18 +37,28 @@ interface FormValues {
   bankAccountDetails: BankAccountDetails | null;
 }
 
-const FundDetails: FC<ConfigurationProps> = (props) => {
-  const dispatch = useDispatch();
-  const { commonBalance, initialData, onFinish } = props;
+const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
+    const dispatch = useDispatch();
+  const { initialData, onFinish, commonBalance } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const formRef = useRef<FormikProps<FormValues>>(null);
+  const [selectedFund, setSelectedFund] = useState<FundType>('ILS');
   const [bankAccountState, setBankAccountState] = useState<BankAccountState>({
     loading: false,
     fetched: false,
     bankAccount: null,
   });
-  const [selectedFund, setSelectedFund] = useState<FundType>('ILS');
+
+  const fundsOptions = useMemo<DropdownOption[]>(
+    () =>
+      fundTypes.map((fund) => ({
+        text: fund,
+        searchText: fund,
+        value: fund,
+      })),
+    []
+  );
 
   useEffect(() => {
     if (bankAccountState.loading || bankAccountState.fetched) {
@@ -85,46 +82,6 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     );
   }, [dispatch, bankAccountState]);
 
-  const getInitialValues = (): FormValues => ({
-    fund: 'ILS',
-    amount: 0,
-    links: [],
-    commonBalance: commonBalance / 100,
-    bankAccountDetails: bankAccountState.bankAccount
-  });
-
-  const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
-    (values) => {
-      onFinish({
-        ...initialData,
-        fund: selectedFund,
-        amount: values.amount || 10,
-        links: values.links,
-      });
-    },
-    [onFinish]
-  );
-
-  const handleContinueClick = useCallback(() => {
-    if (formRef.current) {
-      formRef.current.submitForm();
-      onFinish({
-        ...initialData,
-        ...formRef.current.values
-      })
-    }
-  }, []);
-
-  const fundsOptions = useMemo<DropdownOption[]>(
-    () =>
-      fundTypes.map((fund) => ({
-        text: fund,
-        searchText: fund,
-        value: fund,
-      })),
-    []
-  );
-
   const handleBankAccountChange = (data: BankAccountDetails | null) => {
     setBankAccountState((nextState) => ({
       ...nextState,
@@ -135,6 +92,17 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   const handleFundSelect = (selectedFund: unknown) => {
     setSelectedFund(selectedFund as FundType);
   };
+
+  const getInitialValues = (): FormValues => ({
+    title: formRef.current?.values.title || "",
+    description:formRef.current?.values.description || "",
+    goalOfPayment:formRef.current?.values.goalOfPayment || "",
+    fund: 'ILS',
+    amount: formRef.current?.values.amount || 0,
+    links: formRef.current?.values.links || [],
+    commonBalance: commonBalance / 100,
+    bankAccountDetails: bankAccountState.bankAccount
+  });
 
   const getPrefix = () => {
     switch (selectedFund) {
@@ -148,29 +116,74 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     }
   }
 
+  const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
+    (values) => {
+      onFinish({
+        ...initialData,
+        ...values,
+        fund: selectedFund,
+      });
+    },
+    [onFinish, initialData]
+  );
+
+  const handleContinueClick = () => {
+    formRef.current?.submitForm();
+  };
+
   return (
-    <div className="funds-allocation-configuration">
+    <div className="funds-allocation-form">
       <StageName
-        className="funds-allocation-configuration__stage-name"
+        className="funds-allocation-form__stage-name"
         name="Funds Allocation"
         backgroundColor="light-yellow"
         icon={
-          <DollarIcon className="funds-allocation-configuration__avatar-icon" />
+          <DollarIcon className="funds-allocation-form__avatar-icon" />
         }
       />
-      <div className="funds-allocation-configuration__form">
+      <div className="funds-allocation-form__container">
         <Formik
-          initialValues={getInitialValues()}
           enableReinitialize
+          initialValues={getInitialValues()}
           onSubmit={handleSubmit}
           innerRef={formRef}
           validationSchema={validationSchema}
           validateOnMount
         >
-          {({ values, errors, touched, isValid }) => (
+            {({ values, errors, touched, isValid }) => (
             <Form>
-              <Dropdown
-                className="assign-circle-configuration__circle-dropdown"
+                {console.log('isValid',isValid, errors)}
+              <TextField
+                className="funds-allocation-form__text-field"
+                id="title"
+                name="title"
+                label="Title"
+                placeholder="Briefly describe your proposal"
+                maxLength={FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH}
+                isRequired
+              />
+              <TextField
+                className="funds-allocation-form__text-field"
+                id="description"
+                name="description"
+                label="Description"
+                placeholder="What exactly do you plan to do and how? How does it align with the Common's agenda and goals"
+                rows={isMobileView ? 4 : 3}
+                isTextarea
+                isRequired
+              />
+              <TextField
+                className="funds-allocation-form__text-field"
+                id="goalOfPayment"
+                name="goalOfPayment"
+                label="Goal of Payment"
+                placeholder="What exactly do you plan to do with the funding?"
+                rows={isMobileView ? 4 : 3}
+                isTextarea
+                isRequired
+              />
+           <Dropdown
+                className="funds-allocation-form__dropdown"
                 options={fundsOptions}
                 value={selectedFund}
                 onSelect={handleFundSelect}
@@ -179,7 +192,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 shouldBeFixed={false}
               />
               <CurrencyInput
-                className="create-funds-allocation__text-field"
+                className="funds-allocation-form__text-field"
                 id="amount"
                 name="amount"
                 label="Amount"
@@ -202,11 +215,11 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 errors={errors.links}
                 touched={touched.links}
                 maxTitleLength={MAX_LINK_TITLE_LENGTH}
-                className="create-funds-allocation__text-field"
+                className="funds-allocation-form__text-field"
                 itemClassName="funds_allocation__links-array-item"
               />
               <ModalFooter sticky={!isMobileView}>
-                <div className="funds-allocation-configuration__modal-footer">
+                <div className="funds-allocation-form__modal-footer">
                   <Button
                     onClick={handleContinueClick}
                     shouldUseFullWidth={isMobileView}
@@ -224,4 +237,4 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   );
 };
 
-export default FundDetails;
+export default FundAllocationForm;

@@ -7,8 +7,7 @@ import {
   Button,
   Dropdown,
   DropdownOption,
-  ModalFooter,
-  Separator
+  ModalFooter
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import AvatarIcon from "@/shared/icons/avatar.icon";
@@ -114,7 +113,6 @@ const Configuration: FC<ConfigurationProps> = (props) => {
           <AvatarIcon className="assign-circle-configuration__avatar-icon" />
         }
       />
-      <Separator className="assign-circle-configuration__separator" />
       <div className="assign-circle-configuration__form">
         <Dropdown
           className="assign-circle-configuration__circle-dropdown"
