@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { UserAvatar } from "@/shared/components";
 import { VoteWithUserInfo } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
+import { getTimeAgo } from "./helpers";
 import "./index.scss";
 
 interface VoteItemProps {
@@ -22,7 +23,9 @@ const VoteItem: FC<VoteItemProps> = (props) => {
       />
       <div className="votes-modal-item__info">
         <span className="votes-modal-item__user-name">{userName}</span>
-        <span className="votes-modal-item__vote-date">1m ago</span>
+        <span className="votes-modal-item__vote-date">
+          {getTimeAgo(vote.createdAt.seconds * 1000)}
+        </span>
       </div>
       <img
         className="votes-modal-item__vote-icon"
