@@ -683,7 +683,9 @@ export const getCommonMembers = async (
 export const getVotesWithUserInfo = async (
   proposalId: string
 ): Promise<VoteWithUserInfo[]> => {
-  const result = await proposalVotesSubCollection(proposalId).get();
+  const result = await proposalVotesSubCollection(proposalId)
+    .orderBy("createdAt", "desc")
+    .get();
   const votes = transformFirebaseDataList<Vote>(result);
   const userIds = Array.from(new Set(votes.map(({ voterId }) => voterId)));
   const users = await getUserListByIds(userIds);
