@@ -39,13 +39,13 @@ export default function PendingUpload({ proposalId, selectedFiles, updateUploadS
 
         await uploadInvoices(invoicesData);
         updateUploadState(UploadState.Success);
-      } catch (error) {
+      } catch (e) {
         let errorText = "Something went wrong :/";
-        if (error instanceof Error) {
-          errorText = error.message;
+        if (e instanceof Error) {
+          errorText = e.message;
         }
         setError(errorText);
-        console.error(error);
+        console.error(e);
       }
     })();
   }, [selectedFiles, updateUploadState, proposalId, payoutDocsComment])

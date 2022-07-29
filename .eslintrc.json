@@ -32,7 +32,7 @@
     // Warn against template literal placeholder syntax in regular strings
     "no-template-curly-in-string": 1,
     // Warn if return statements do not either always or never specify values
-    "consistent-return": 1,
+    "consistent-return": 0,
     // Require the use of === and !==
     "eqeqeq": 2,
     // Disallow the use of alert, confirm, and prompt
@@ -122,7 +122,17 @@
 
         "@typescript-eslint/no-unnecessary-type-constraint": 0,
 
-        "@typescript-eslint/no-empty-function": 0
+        "@typescript-eslint/no-empty-function": 0,
+
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_"
+          }
+        ]
       }
     }
   ]

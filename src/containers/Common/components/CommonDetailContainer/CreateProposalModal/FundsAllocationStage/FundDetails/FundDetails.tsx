@@ -27,7 +27,7 @@ import {
 } from "@/shared/components/Form/Formik";
 import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
-import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
+import { BankAccountDetails, Governance, CommonLink, CurrencySymbol } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
 import { FundsAllocationData, FundType } from "../types";
@@ -146,9 +146,9 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   const getPrefix = () => {
     switch (selectedFund) {
       case "ILS":
-        return '₪';
+        return CurrencySymbol.Shekel;
       case "Dollars":
-        return '$';
+        return CurrencySymbol.USD;
       default:
         // TODO icon for tokens
         return '&';

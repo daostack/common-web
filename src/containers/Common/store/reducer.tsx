@@ -95,7 +95,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.currentProposal = proposal;
     })
   )
-  .handleAction(actions.clearCurrentDiscussion, (state, action) =>
+  .handleAction(actions.clearCurrentDiscussion, (state) =>
     produce(state, (nextState) => {
       nextState.currentDiscussion = null;
     })
@@ -110,12 +110,12 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       }
     })
   )
-  .handleAction(actions.clearCurrentProposal, (state, action) =>
+  .handleAction(actions.clearCurrentProposal, (state) =>
     produce(state, (nextState) => {
       nextState.currentProposal = null;
     })
   )
-  .handleAction(actions.closeCurrentCommon, (state, action) =>
+  .handleAction(actions.closeCurrentCommon, (state) =>
     produce(state, (nextState) => {
       nextState.currentDiscussion = null;
       nextState.common = null;
@@ -151,7 +151,7 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.activeTab = action.payload;
     })
   )
-  .handleAction(actions.clearCommonActiveTab, (state, action) =>
+  .handleAction(actions.clearCommonActiveTab, (state) =>
     produce(state, (nextState) => {
       nextState.activeTab = null;
     })

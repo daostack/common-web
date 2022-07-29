@@ -1,6 +1,6 @@
 import Api from "../../../services/Api";
 import { ApiEndpoint, ProposalsTypes } from "@/shared/constants";
-import { Collection, Proposal, ProposalState } from "@/shared/models";
+import { Collection, Proposal } from "@/shared/models";
 import {
   FundsAllocation,
   FundingAllocationStatus,

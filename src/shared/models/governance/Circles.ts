@@ -7,8 +7,8 @@ export type AllowedActions = {
 
 export type AllowedProposals = {
   [ProposalsTypes.FUNDS_ALLOCATION]?: true;
-  [ProposalsTypes.ASSIGN_CIRCLE]?: circleIndex[];
-  [ProposalsTypes.REMOVE_CIRCLE]?: circleIndex[];
+  [ProposalsTypes.ASSIGN_CIRCLE]?: Partial<Record<circleIndex, true>>;
+  [ProposalsTypes.REMOVE_CIRCLE]?: Partial<Record<circleIndex, true>>;
 };
 
 export type circleIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9

@@ -35,7 +35,7 @@ interface VotingContentContainerProps {
   proposer: User;
 }
 
-export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, common, governance, proposer }) => {
+export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, governance, proposer }) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -96,8 +96,8 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
         style={
           !isMobileView
             ? {
-                gridTemplateColumns: `repeat(${proposalDetailsByType.length}, minmax(0, 17.625rem))`,
-              }
+              gridTemplateColumns: `repeat(${proposalDetailsByType.length}, minmax(0, 17.625rem))`,
+            }
             : {}
         }
       >
@@ -116,14 +116,14 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           <CountDownCard
             className="voting-content__countdown-card"
             proposal={proposal}
-            memberCount={common.memberCount}
+            memberCount={proposal.votes.totalMembersWithVotingRight}
           />
         </div>
         <VotingCard
           className="voting-content__voting-card"
           type={VotingCardType.AllVotes}
           votedMembersAmount={proposal.votes.total}
-          membersAmount={common.memberCount}
+          membersAmount={proposal.votes.totalMembersWithVotingRight}
           percentageCondition={proposal.global.quorum}
         />
         <VotingCard

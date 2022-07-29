@@ -6,13 +6,11 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useSelector } from "react-redux";
 import { Modal } from "@/shared/components";
-import { ProposalsTypes, ScreenSize } from "@/shared/constants";
+import { ProposalsTypes } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps } from "@/shared/interfaces";
-import { Common, Governance, Proposal } from "@/shared/models";
-import { getScreenSize } from "@/shared/store/selectors";
+import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
 import { AssignCircleStage } from "./AssignCircleStage";
 import { RemoveCircleStage } from "./RemoveCircleStage";
 import { FundsAllocationStage } from "./FundsAllocationStage";
@@ -26,11 +24,19 @@ interface CreateProposalModalProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
   governance: Governance;
+  commonMember: CommonMember;
   redirectToProposal: (proposal: Proposal) => void;
 }
 
 const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
-  const { common, governance, isShowing, onClose, redirectToProposal } = props;
+  const {
+    common,
+    governance,
+    isShowing,
+    onClose,
+    commonMember,
+    redirectToProposal,
+  } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -39,9 +45,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
   const [onGoBack, setOnGoBack] = useState<GoBackHandler>();
   const [shouldShowClosePrompt, setShouldShowClosePrompt] = useState(false);
   const [shouldBeOnFullHeight, setShouldBeOnFullHeight] = useState(true);
-  const [errorText, setErrorText] = useState<string | null>(null);
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
+  const [_errorText, setErrorText] = useState<string | null>(null);
 
   const setGoBackHandler = useCallback((handler: GoBackHandler | null) => {
     setOnGoBack(() => handler ?? undefined);
@@ -110,6 +114,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
         return (
           <ProposalTypeSelection
             governance={governance}
+            commonMember={commonMember}
             onFinish={handleProposalTypeSelectionFinish}
           />
         );
@@ -118,6 +123,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
           <AssignCircleStage
             common={common}
             governance={governance}
+            commonMember={commonMember}
             onFinish={handleProposalCreationFinish}
             onGoBack={goToProposalTypeSelectionStage}
           />
@@ -127,9 +133,11 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
           <RemoveCircleStage
             common={common}
             governance={governance}
+            commonMember={commonMember}
             onFinish={handleProposalCreationFinish}
             onGoBack={goToProposalTypeSelectionStage}
-          />)
+          />
+        );
       case CreateProposalStage.FundsAllocation:
         return (
           <FundsAllocationStage
