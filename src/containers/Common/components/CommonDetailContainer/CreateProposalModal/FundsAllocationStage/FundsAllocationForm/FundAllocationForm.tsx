@@ -43,7 +43,7 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const formRef = useRef<FormikProps<FormValues>>(null);
-  const [selectedFund, setSelectedFund] = useState<FundType>('ILS');
+  const [selectedFund, setSelectedFund] = useState<FundType>(FundType.ILS);
   const [bankAccountState, setBankAccountState] = useState<BankAccountState>({
     loading: false,
     fetched: false,
@@ -97,7 +97,7 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
     title: formRef.current?.values.title || "",
     description:formRef.current?.values.description || "",
     goalOfPayment:formRef.current?.values.goalOfPayment || "",
-    fund: 'ILS',
+    fund: FundType.ILS,
     amount: formRef.current?.values.amount || 0,
     links: formRef.current?.values.links || [],
     commonBalance: commonBalance / 100,
@@ -108,7 +108,7 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
     switch (selectedFund) {
       case "ILS":
         return CurrencySymbol.Shekel;
-      case "Dollars":
+      case "USD":
         return CurrencySymbol.USD;
       default:
         // TODO icon for tokens
