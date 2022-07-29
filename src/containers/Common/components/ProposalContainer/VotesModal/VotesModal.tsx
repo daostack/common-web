@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useVotesWithUserInfo } from "@/containers/Common/hooks";
 import {
@@ -10,7 +10,7 @@ import {
   Tabs,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { ModalProps } from "@/shared/interfaces";
+import { ModalProps, ModalRef } from "@/shared/interfaces";
 import { VoteOutcome, VoteWithUserInfo } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { VoteItem } from "./VoteItem";
@@ -28,6 +28,7 @@ const filterVotes = (
 
 const VotesModal: FC<VotesModalProps> = (props) => {
   const { isShowing, onClose, proposalId } = props;
+  const modalRef = useRef<ModalRef>(null);
   const [tab, setTab] = useState<VotesModalTab>(VotesModalTab.All);
   const { loading, votes, fetchVotes } = useVotesWithUserInfo();
   const screenSize = useSelector(getScreenSize());
@@ -52,6 +53,10 @@ const VotesModal: FC<VotesModalProps> = (props) => {
   useEffect(() => {
     fetchVotes(proposalId, true);
   }, [proposalId]);
+
+  useEffect(() => {
+    modalRef.current?.scrollToTop();
+  }, [tab]);
 
   const renderVoteList = (data: VoteWithUserInfo[]) =>
     data.length > 0 ? (
@@ -115,6 +120,7 @@ const VotesModal: FC<VotesModalProps> = (props) => {
 
   return (
     <Modal
+      ref={modalRef}
       className="proposal-page-votes-modal"
       isShowing={isShowing}
       title={<h3 className="proposal-page-votes-modal__title">Votes</h3>}
