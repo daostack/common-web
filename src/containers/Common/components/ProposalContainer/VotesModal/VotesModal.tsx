@@ -1,7 +1,14 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useVotesWithUserInfo } from "@/containers/Common/hooks";
-import { Loader, Modal, Tab, TabPanel, Tabs } from "@/shared/components";
+import {
+  Loader,
+  Modal,
+  ModalHeaderContent,
+  Tab,
+  TabPanel,
+  Tabs,
+} from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
 import { VoteOutcome, VoteWithUserInfo } from "@/shared/models";
@@ -61,32 +68,34 @@ const VotesModal: FC<VotesModalProps> = (props) => {
 
   const renderContent = () => (
     <>
-      <Tabs
-        className="proposal-page-votes-modal__tabs-wrapper"
-        value={tab}
-        onChange={handleTabChange}
-      >
-        <Tab
-          className="proposal-page-votes-modal__tab"
-          label={`All (${votes.length})`}
-          value={VotesModalTab.All}
-        />
-        <Tab
-          className="proposal-page-votes-modal__tab"
-          label={`Approved (${approvedVotes.length})`}
-          value={VotesModalTab.Approved}
-        />
-        <Tab
-          className="proposal-page-votes-modal__tab"
-          label={`Abstained (${abstainedVotes.length})`}
-          value={VotesModalTab.Abstained}
-        />
-        <Tab
-          className="proposal-page-votes-modal__tab"
-          label={`Rejected (${rejectedVotes.length})`}
-          value={VotesModalTab.Rejected}
-        />
-      </Tabs>
+      <ModalHeaderContent>
+        <Tabs
+          className="proposal-page-votes-modal__tabs-wrapper"
+          value={tab}
+          onChange={handleTabChange}
+        >
+          <Tab
+            className="proposal-page-votes-modal__tab"
+            label={`All (${votes.length})`}
+            value={VotesModalTab.All}
+          />
+          <Tab
+            className="proposal-page-votes-modal__tab"
+            label={`Approved (${approvedVotes.length})`}
+            value={VotesModalTab.Approved}
+          />
+          <Tab
+            className="proposal-page-votes-modal__tab"
+            label={`Abstained (${abstainedVotes.length})`}
+            value={VotesModalTab.Abstained}
+          />
+          <Tab
+            className="proposal-page-votes-modal__tab"
+            label={`Rejected (${rejectedVotes.length})`}
+            value={VotesModalTab.Rejected}
+          />
+        </Tabs>
+      </ModalHeaderContent>
       <div className="proposal-page-votes-modal__tab-panels-wrapper">
         <TabPanel value={tab} panelValue={VotesModalTab.All}>
           {renderVoteList(votes)}

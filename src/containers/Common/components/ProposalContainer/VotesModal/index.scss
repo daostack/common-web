@@ -1,6 +1,8 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
+$max-content-width: 36.125rem;
+
 .proposal-page-votes-modal {
   color: $secondary-blue;
 
@@ -36,7 +38,7 @@
   }
 
   .proposal-page-votes-modal__content {
-    max-width: 36.125rem;
+    max-width: $max-content-width;
     width: 100%;
     margin: 0 auto;
     display: flex;
@@ -48,13 +50,18 @@
   }
 
   .proposal-page-votes-modal__tabs-wrapper {
+    max-width: $max-content-width;
+    margin: 0 auto;
     padding: 0 1.5rem;
     justify-content: space-between;
     white-space: nowrap;
     word-break: keep-all;
     border-bottom: 1px solid $light-gray-1;
+    box-sizing: border-box;
 
     @include big-phone {
+      max-width: unset;
+      margin: 0 -1rem;
       justify-content: flex-start;
     }
   }
