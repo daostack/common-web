@@ -41,6 +41,10 @@
     margin: 0 auto;
     display: flex;
     flex-direction: column;
+
+    @include big-phone {
+      max-width: unset;
+    }
   }
 
   .proposal-page-votes-modal__tabs-wrapper {
@@ -49,6 +53,10 @@
     white-space: nowrap;
     word-break: keep-all;
     border-bottom: 1px solid $light-gray-1;
+
+    @include big-phone {
+      justify-content: flex-start;
+    }
   }
 
   .proposal-page-votes-modal__tab {
@@ -59,5 +67,23 @@
     line-height: 143%;
     letter-spacing: 0.02em;
     border-bottom-width: 3px;
+  }
+
+  .proposal-page-votes-modal__tab-panels-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .proposal-page-votes-modal__vote-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  .proposal-page-votes-modal__no-votes-text {
+    padding: 0 $content-padding-mobile;
+    font-size: $small;
+    text-align: center;
+    color: $light-gray-2;
   }
 }
