@@ -11,26 +11,40 @@ interface VotingCardProps {
   membersAmount?: number;
   percentageCondition?: number;
   className?: string;
+  onClick?: () => void;
 }
 
-export const VotingCard: FC<VotingCardProps> = (
-  {
-    type,
-    votedMembersAmount,
-    targetVotersAmount,
-    percentageCondition,
-    membersAmount,
-    className
-  }
-) => {
+export const VotingCard: FC<VotingCardProps> = ({
+  type,
+  votedMembersAmount,
+  targetVotersAmount,
+  percentageCondition,
+  membersAmount,
+  className,
+  onClick,
+}) => {
   const cardTitle = useMemo((): string | ReactElement => {
     switch (type) {
       case VotingCardType.AllVotes:
-        return <div className="votes-title-container">
-          <div className="title">{VotingCardType.AllVotes}</div>
-          <div className="ratio">{votedMembersAmount}/{membersAmount}</div>
-          <img width={24} height={28} src="/icons/right-arrow.svg" alt="right-arrow" />
-        </div>;
+        return (
+          <div
+            className={classNames("votes-title-container", {
+              "votes-title-container--clickable": onClick,
+            })}
+            onClick={onClick}
+          >
+            <div className="title">{VotingCardType.AllVotes}</div>
+            <div className="ratio">
+              {votedMembersAmount}/{membersAmount}
+            </div>
+            <img
+              width={24}
+              height={28}
+              src="/icons/right-arrow.svg"
+              alt="right-arrow"
+            />
+          </div>
+        );
       default:
         return type;
     }
@@ -51,9 +65,9 @@ export const VotingCard: FC<VotingCardProps> = (
 
   const completedPercentage = useMemo((): number => {
     const calcPercentage = (actualAmount, totalAmount) =>
-      (!actualAmount || !totalAmount)
+      !actualAmount || !totalAmount
         ? 0
-        : (Math.round((actualAmount / totalAmount) * 100 * 100) / 100);
+        : Math.round((actualAmount / totalAmount) * 100 * 100) / 100;
 
     switch (type) {
       case VotingCardType.AllVotes:
@@ -84,9 +98,7 @@ export const VotingCard: FC<VotingCardProps> = (
 
   return (
     <div className={classNames("voting-card__wrapper", className)}>
-      <div className="voting-card__title">
-        {cardTitle}
-      </div>
+      <div className="voting-card__title">{cardTitle}</div>
       <ProgressBar
         completedPercentage={completedPercentage}
         minPercentCondition={minPercentCondition}

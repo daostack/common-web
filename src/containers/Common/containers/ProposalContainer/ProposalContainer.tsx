@@ -29,6 +29,7 @@ import {
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ChatComponent } from "../../components";
+import { VotesModal } from "../../components/ProposalContainer";
 import { useCommonMember, useProposalUserVote } from "../../hooks";
 import {
   addMessageToProposal,
@@ -81,6 +82,11 @@ const ProposalContainer = () => {
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember();
+  const {
+    isShowing: isVotesModalOpen,
+    onOpen: onVotesModalOpen,
+    onClose: onVotesModalClose,
+  } = useModal(false);
   const { data: userVote, fetchProposalVote, setVote } = useProposalUserVote();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -150,6 +156,7 @@ const ProposalContainer = () => {
               common={currentCommon}
               governance={governance}
               proposer={proposer}
+              onVotesOpen={onVotesModalOpen}
             />
           )
         );
@@ -167,7 +174,7 @@ const ProposalContainer = () => {
           commonMember={commonMember}
         />;
     }
-  }, [activeTab, currentCommon, proposer, governance]);
+  }, [activeTab, currentCommon, proposer, governance, onVotesModalOpen]);
 
   const voteButtonElem = useMemo(() =>
     <Button
@@ -251,6 +258,10 @@ const ProposalContainer = () => {
           isShowing={isShowing}
           onClose={onClose}
           setVote={setVote}
+        />
+        <VotesModal
+          isShowing={isVotesModalOpen}
+          onClose={onVotesModalClose}
         />
         <div className="proposal-page__wrapper">
           <div className="proposal-page__common-title-wrapper section-wrapper">
