@@ -566,12 +566,13 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           commonId={common.id}
         />
       )}
-      {isShowingNewP && (
+      {isShowingNewP && commonMember && (
         <CreateProposalModal
           isShowing={isShowingNewP}
           onClose={onCloseNewP}
           common={common}
           governance={governance}
+          commonMember={commonMember}
           redirectToProposal={getProposalDetail}
         />
       )}

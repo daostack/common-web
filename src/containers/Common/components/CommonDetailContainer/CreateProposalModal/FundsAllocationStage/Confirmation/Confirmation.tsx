@@ -3,24 +3,13 @@ import { useSelector } from "react-redux";
 import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
+import { getPrefix } from "../helpers";
+import { FundType } from "../types";
 import "./index.scss";
-import { CurrencySymbol } from "@/shared/models";
-
-const getPrefix = (fund) => {
-  switch (fund) {
-    case "ILS":
-      return CurrencySymbol.Shekel;
-    case "Dollars":
-      return CurrencySymbol.USD;
-    default:
-      // TODO icon for tokens
-      return '&';
-  }
-}
 
 interface ConfirmationProps {
   amount: number;
-  fund: string
+  fund: FundType;
   onSubmit: () => void;
   onCancel: () => void;
 }
