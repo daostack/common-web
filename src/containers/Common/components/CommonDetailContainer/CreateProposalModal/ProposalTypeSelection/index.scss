@@ -30,6 +30,11 @@
   width: 100%;
 }
 
+.proposal-type-selection-stage__type-dropdown-item--disabled {
+  background-color: $light-gray-1;
+  cursor: not-allowed;
+}
+
 .proposal-type-selection-stage__disclaimer-title {
   margin: 1.5rem 0 0;
   font-family: NunitoSans, sans-serif;

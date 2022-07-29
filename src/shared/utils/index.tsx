@@ -6,6 +6,7 @@ export * from "./countdown";
 export * from "./formatDate";
 export * from "./isError";
 export * from "./matchRoute";
+export * from "./proposals";
 export { default as request } from "./request";
 export * from "./convertDatesToFirestoreTimestamps";
 export * from "./transformFirebaseDataToModel";
