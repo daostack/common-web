@@ -152,7 +152,6 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
         >
             {({ values, errors, touched, isValid }) => (
             <Form>
-                {console.log('isValid',isValid, errors)}
               <TextField
                 className="funds-allocation-form__text-field"
                 id="title"
