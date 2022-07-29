@@ -8,6 +8,7 @@ export { default as useAuthorizedModal } from "./useAuthorizedModal";
 export { useComponentWillUnmount } from "./useComponentWillUnmount";
 export { default as useCountdown } from "./useCountdown";
 export { default as useFullText } from "./useFullText";
+export { useLoadingState } from "./useLoadingState";
 export { default as useMatchRoute } from "./useMatchRoute";
 export { default as useZoomDisabling } from "./useZoomDisabling";
 export { default as useQueryParams } from "./useQueryParams";
