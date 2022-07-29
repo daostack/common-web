@@ -1,11 +1,4 @@
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
@@ -27,14 +20,33 @@ import {
 } from "@/shared/components/Form/Formik";
 import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
-import { BankAccountDetails, Governance, CommonLink, CurrencySymbol } from "@/shared/models";
+import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
+import { getPrefix } from "../helpers";
 import { FundsAllocationData, FundType } from "../types";
 import { validationSchema } from "./validationSchema";
 import "./index.scss";
 
-const fundTypes = ['ILS', 'Dollars', 'Tokens'];
+const FUND_TYPES: DropdownOption[] = [
+  {
+    text: "ILS",
+    searchText: "ILS",
+    value: FundType.ILS,
+  },
+  {
+    text: "Dollars",
+    searchText: "Dollars",
+    value: FundType.USD,
+    className: "funds-allocation-configuration__fund-type--disabled",
+  },
+  {
+    text: "Tokens",
+    searchText: "Tokens",
+    value: FundType.Token,
+    className: "funds-allocation-configuration__fund-type--disabled",
+  },
+];
 
 interface ConfigurationProps {
   governance: Governance;
@@ -62,7 +74,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     fetched: false,
     bankAccount: null,
   });
-  const [selectedFund, setSelectedFund] = useState<FundType>('ILS');
+  const [selectedFund, setSelectedFund] = useState<FundType>(FundType.ILS);
 
   useEffect(() => {
     if (bankAccountState.loading || bankAccountState.fetched) {
@@ -87,7 +99,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   }, [dispatch, bankAccountState]);
 
   const getInitialValues = (): FormValues => ({
-    fund: 'ILS',
+    fund: FundType.ILS,
     amount: 0,
     links: [],
     commonBalance: commonBalance / 100,
@@ -116,16 +128,6 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     }
   }, []);
 
-  const fundsOptions = useMemo<DropdownOption[]>(
-    () =>
-      fundTypes.map((fund) => ({
-        text: fund,
-        searchText: fund,
-        value: fund,
-      })),
-    []
-  );
-
   const handleBankAccountChange = (data: BankAccountDetails | null) => {
     setBankAccountState((nextState) => ({
       ...nextState,
@@ -134,20 +136,10 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   };
 
   const handleFundSelect = (selectedFund: unknown) => {
-    setSelectedFund(selectedFund as FundType);
-  };
-
-  const getPrefix = () => {
-    switch (selectedFund) {
-      case "ILS":
-        return CurrencySymbol.Shekel;
-      case "Dollars":
-        return CurrencySymbol.USD;
-      default:
-        // TODO icon for tokens
-        return '&';
+    if (selectedFund === FundType.ILS) {
+      setSelectedFund(selectedFund);
     }
-  }
+  };
 
   return (
     <div className="funds-allocation-configuration">
@@ -173,7 +165,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
             <Form>
               <Dropdown
                 className="assign-circle-configuration__circle-dropdown"
-                options={fundsOptions}
+                options={FUND_TYPES}
                 value={selectedFund}
                 onSelect={handleFundSelect}
                 label="Type of Funds"
@@ -186,7 +178,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 name="amount"
                 label="Amount"
                 placeholder="10"
-                prefix={getPrefix()}
+                prefix={getPrefix(selectedFund)}
               />
               {bankAccountState.loading ? (
                 <div>

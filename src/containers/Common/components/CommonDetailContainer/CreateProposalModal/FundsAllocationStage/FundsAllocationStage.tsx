@@ -29,7 +29,7 @@ const initialFundsData = {
   description: "description",
   goalOfPayment: "goalOfPayment",
   amount: 10,
-  fund: "ILS" as FundType,
+  fund: FundType.ILS,
   links: [] as CommonLink[],
 };
 
