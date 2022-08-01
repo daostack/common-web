@@ -15,6 +15,7 @@ import { FundDetails } from "./FundDetails";
 import { Success } from "./Success";
 import { FundsAllocationStep } from "./constants";
 import { FundsAllocationData, FundType } from "./types";
+import {FundAllocationForm} from './FundsAllocationForm';
 import "./index.scss";
 
 interface FundsAllocationStageProps {
@@ -56,12 +57,18 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const isLoading = isProposalCreating;
 
   const handleConfigurationFinish = (data: FundsAllocationData) => {
-    setFundsAllocationData(data);
+    setFundsAllocationData((fundsAllocationData) => ({
+      ...fundsAllocationData,
+      ...data,
+    }));
     setStep(FundsAllocationStep.Funds);
   };
 
   const handleFundDetailsFinish = (data: FundsAllocationData) => {
-    setFundsAllocationData(data);
+    setFundsAllocationData((fundsAllocationData) => ({
+      ...fundsAllocationData,
+      ...data,
+    }));
     setStep(FundsAllocationStep.Confirmation);
   };
 
@@ -155,22 +162,33 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       {isLoading && <Loader />}
       {!isLoading && (
         <>
-          {(isConfigurationStep || isMobileView) && (
-            <Configuration
-              governance={governance}
-              initialData={fundsAllocationData}
-              onFinish={handleConfigurationFinish}
-            />
-          )}
+            {isMobileView ? (
+                <FundAllocationForm           
+                  governance={governance}
+                  initialData={fundsAllocationData}
+                  onFinish={handleFundDetailsFinish}
+                  commonBalance={common.balance} 
+                /> 
+              ) : (
+                <>
+                  {isConfigurationStep && (
+                    <Configuration
+                      governance={governance}
+                      initialData={fundsAllocationData}
+                      onFinish={handleConfigurationFinish}
+                    />
+                  )}
+                  {(step === FundsAllocationStep.Funds) && (
+                    <FundDetails
+                      governance={governance}
+                      initialData={fundsAllocationData}
+                      onFinish={handleFundDetailsFinish}
+                      commonBalance={common.balance}
+                    />
+                  )}
+                </>
+            )}
 
-          {(step === FundsAllocationStep.Funds || isMobileView) && (
-            <FundDetails
-              governance={governance}
-              initialData={fundsAllocationData}
-              onFinish={handleFundDetailsFinish}
-              commonBalance={common.balance}
-            />
-          )}
           {step === FundsAllocationStep.Confirmation &&
             (isMobileView ? (
               <Modal
