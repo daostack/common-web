@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import {
   Button,
   ModalFooter,
-  Separator,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
@@ -68,7 +67,6 @@ const Configuration: FC<ConfigurationProps> = (props) => {
           <DollarIcon className="funds-allocation-configuration__avatar-icon" />
         }
       />
-      <Separator className="funds-allocation-configuration__separator" />
       <div className="funds-allocation-configuration__form">
         <Formik
           initialValues={getInitialValues()}
