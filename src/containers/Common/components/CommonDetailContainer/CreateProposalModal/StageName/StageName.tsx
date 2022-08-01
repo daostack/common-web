@@ -1,8 +1,8 @@
 import React, { FC, ReactNode } from "react";
+import classNames from "classnames";
 import {
   Separator
 } from "@/shared/components";
-import classNames from "classnames";
 import "./index.scss";
 
 

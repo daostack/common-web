@@ -1,3 +1,7 @@
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import { Formik, FormikConfig } from "formik";
+import { FormikProps } from "formik/dist/types";
+import { useDispatch, useSelector } from "react-redux";
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
 import { BankAccountState } from "@/containers/MyAccount/components/Billing/types";
@@ -7,17 +11,13 @@ import { MAX_LINK_TITLE_LENGTH, ScreenSize } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
 import { BankAccountDetails, CommonLink, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { Formik, FormikConfig } from "formik";
-import { FormikProps } from "formik/dist/types";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { StageName } from "../../StageName";
 import { FundsAllocationData, FundType } from "../types";
 import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH } from "./constants";
 import {FUND_TYPES} from '../constants';
 import { getPrefix } from "../helpers";
-import "./index.scss";
 import { validationSchema } from "./validationSchema";
+import "./index.scss";
 
 interface FundAllocationFormProps {
   governance: Governance;

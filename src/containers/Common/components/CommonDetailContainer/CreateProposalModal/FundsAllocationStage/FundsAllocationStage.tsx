@@ -57,12 +57,18 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const isLoading = isProposalCreating;
 
   const handleConfigurationFinish = (data: FundsAllocationData) => {
-    setFundsAllocationData({...fundsAllocationData, ...data});
+    setFundsAllocationData((fundsAllocationData) => ({
+      ...fundsAllocationData,
+      ...data,
+    }));
     setStep(FundsAllocationStep.Funds);
   };
 
   const handleFundDetailsFinish = (data: FundsAllocationData) => {
-    setFundsAllocationData({...fundsAllocationData, ...data});
+    setFundsAllocationData((fundsAllocationData) => ({
+      ...fundsAllocationData,
+      ...data,
+    }));
     setStep(FundsAllocationStep.Confirmation);
   };
 

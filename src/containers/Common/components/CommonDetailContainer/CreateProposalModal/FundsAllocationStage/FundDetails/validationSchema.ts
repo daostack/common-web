@@ -1,13 +1,13 @@
 import * as yup from "yup";
 import { formatPrice } from "@/shared/utils";
-import { MIN_CONTRIBUTION_ILS, MIN_CONTRIBUTION_ILS_AMOUNT } from "@/shared/constants";
+import { MIN_CONTRIBUTION_ILS_AMOUNT } from "@/shared/constants";
 
 export const validationSchema = yup.object({
   commonBalance: yup.number(),
   amount: yup
     .number()
     .transform((value) => (isNaN(value) ? undefined : value))
-    .min(MIN_CONTRIBUTION_ILS,  `The amount requested cannot be less than ${formatPrice(
+    .min(MIN_CONTRIBUTION_ILS_AMOUNT / 100,  `The amount requested cannot be less than ${formatPrice(
       MIN_CONTRIBUTION_ILS_AMOUNT,
       { shouldRemovePrefixFromZero: false }
     )}.`)
