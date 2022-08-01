@@ -15,7 +15,7 @@ import { FundDetails } from "./FundDetails";
 import { Success } from "./Success";
 import { FundsAllocationStep } from "./constants";
 import { FundsAllocationData, FundType } from "./types";
-import {FundAllocationForm} from './FundsAllocationForm';
+import { FundAllocationForm } from "./FundsAllocationForm";
 import "./index.scss";
 
 interface FundsAllocationStageProps {
@@ -48,6 +48,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     setOnGoBack,
     setShouldShowClosePrompt,
     setShouldBeOnFullHeight,
+    onError,
   } = useCreateProposalContext();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -98,11 +99,14 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       createFundingProposal.request({
         payload,
         callback: (error, data) => {
-          if (!error && data) {
-            setCreatedProposal(data);
-            setStep(FundsAllocationStep.Success);
-            setIsProposalCreating(false);
+          if (error || !data) {
+            onError(error || "Something went wrong");
+            return;
           }
+
+          setCreatedProposal(data);
+          setStep(FundsAllocationStep.Success);
+          setIsProposalCreating(false);
         },
       })
     );
@@ -163,12 +167,12 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       {!isLoading && (
         <>
             {isMobileView ? (
-                <FundAllocationForm           
+                <FundAllocationForm
                   governance={governance}
                   initialData={fundsAllocationData}
                   onFinish={handleFundDetailsFinish}
-                  commonBalance={common.balance} 
-                /> 
+                  commonBalance={common.balance}
+                />
               ) : (
                 <>
                   {isConfigurationStep && (

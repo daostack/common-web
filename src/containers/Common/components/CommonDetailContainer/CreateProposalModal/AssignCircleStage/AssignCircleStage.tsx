@@ -42,6 +42,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
     setOnGoBack,
     setShouldShowClosePrompt,
     setShouldBeOnFullHeight,
+    onError,
   } = useCreateProposalContext();
   const {
     fetched: areCommonMembersFetched,
@@ -90,11 +91,14 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
       createAssignCircleProposal.request({
         payload,
         callback: (error, data) => {
-          if (!error && data) {
-            setCreatedProposal(data);
-            setStep(AssignCircleStep.Success);
-            setIsProposalCreating(false);
+          if (error || !data) {
+            onError(error?.message || "Something went wrong");
+            return;
           }
+
+          setCreatedProposal(data);
+          setStep(AssignCircleStep.Success);
+          setIsProposalCreating(false);
         },
       })
     );
