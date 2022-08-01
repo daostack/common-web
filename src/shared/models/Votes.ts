@@ -1,4 +1,5 @@
 import { BaseEntity } from "./BaseEntity";
+import { User } from "./User";
 
 export enum VoteOutcome {
   Approved = "approved",
@@ -31,6 +32,10 @@ export interface Vote extends BaseEntity {
    * The id of the proposal associated with the vote
    */
   proposalId: string;
+}
+
+export interface VoteWithUserInfo extends Vote {
+  user: User;
 }
 
 export enum VotingCardType {

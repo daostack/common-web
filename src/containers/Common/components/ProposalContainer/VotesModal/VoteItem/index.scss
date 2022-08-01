@@ -1,0 +1,47 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.votes-modal-item {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  font-family: NunitoSans, sans-serif;
+  border-bottom: 1px solid $light-gray-1;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.votes-modal-item__avatar {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 1rem;
+}
+
+.votes-modal-item__info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+.votes-modal-item__user-name {
+  margin-right: 0.5rem;
+  font-weight: bold;
+  font-size: $xsmall;
+}
+
+.votes-modal-item__vote-date {
+  font-size: $xxsmall;
+  line-height: 120%;
+  color: $light-gray-2;
+}
+
+.votes-modal-item__vote-icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  margin-left: auto;
+}

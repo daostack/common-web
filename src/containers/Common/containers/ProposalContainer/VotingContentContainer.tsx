@@ -33,9 +33,11 @@ interface VotingContentContainerProps {
   common: Common;
   governance: Governance;
   proposer: User;
+  onVotesOpen: () => void;
 }
 
-export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, governance, proposer }) => {
+export const VotingContentContainer: FC<VotingContentContainerProps> = (props) => {
+  const { proposal, governance, proposer, onVotesOpen } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -125,6 +127,7 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           votedMembersAmount={proposal.votes.total}
           membersAmount={proposal.votes.totalMembersWithVotingRight}
           percentageCondition={proposal.global.quorum}
+          onClick={onVotesOpen}
         />
         <VotingCard
           className="voting-content__voting-card"
