@@ -49,6 +49,16 @@ export const isMemberAdmittanceProposal = (
 ): proposal is MemberAdmittance =>
   Boolean(proposal?.type === ProposalsTypes.MEMBER_ADMITTANCE);
 
+export const isAssignCircleProposal = (
+  proposal?: Proposal | null
+): proposal is AssignCircle =>
+  Boolean(proposal?.type === ProposalsTypes.ASSIGN_CIRCLE);
+
+export const isRemoveCircleProposal = (
+  proposal?: Proposal | null
+): proposal is RemoveCircle =>
+  Boolean(proposal?.type === ProposalsTypes.REMOVE_CIRCLE);
+
 export * from "./AssignCircle";
 export * from "./BaseProposal";
 export * from "./BasicArgsProposal";
