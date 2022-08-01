@@ -60,6 +60,7 @@ const PROPOSAL_TYPE_CAPTION = {
   [ProposalsTypes.FUNDS_ALLOCATION]: "Funds Allocation",
   [ProposalsTypes.MEMBER_ADMITTANCE]: "Member Admittance",
   [ProposalsTypes.ASSIGN_CIRCLE]: "Assign Circle",
+  [ProposalsTypes.REMOVE_CIRCLE]: "Remove Circle",
 };
 
 enum PROPOSAL_MENU_TABS {
