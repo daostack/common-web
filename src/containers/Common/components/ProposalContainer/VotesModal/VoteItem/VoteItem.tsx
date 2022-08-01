@@ -1,8 +1,7 @@
 import React, { FC } from "react";
 import { UserAvatar } from "@/shared/components";
 import { VoteWithUserInfo } from "@/shared/models";
-import { getUserName } from "@/shared/utils";
-import { getTimeAgo } from "./helpers";
+import { getTimeAgo, getUserName } from "@/shared/utils";
 import "./index.scss";
 
 interface VoteItemProps {
