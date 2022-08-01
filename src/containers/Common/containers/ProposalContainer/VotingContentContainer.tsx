@@ -26,6 +26,7 @@ import {
   getRemoveCircleDetails,
 } from "./helpers";
 import { ProposalDetailsItem } from "./types";
+import { ProposalSpecificData } from "./useProposalSpecificData";
 import "./index.scss";
 
 interface VotingContentContainerProps {
@@ -33,11 +34,13 @@ interface VotingContentContainerProps {
   common: Common;
   governance: Governance;
   proposer: User;
+  proposalSpecificData: ProposalSpecificData;
   onVotesOpen: () => void;
 }
 
 export const VotingContentContainer: FC<VotingContentContainerProps> = (props) => {
-  const { proposal, governance, proposer, onVotesOpen } = props;
+  const { proposal, governance, proposer, proposalSpecificData, onVotesOpen } =
+    props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -71,13 +74,13 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
       case ProposalsTypes.ASSIGN_CIRCLE:
         return getAssignCircleDetails(
           proposal as AssignCircle,
-          proposer,
+          proposalSpecificData.user,
           governance
         );
       case ProposalsTypes.REMOVE_CIRCLE:
         return getRemoveCircleDetails(
           proposal as RemoveCircle,
-          proposer,
+          proposalSpecificData.user,
           governance
         );
       case ProposalsTypes.MEMBER_ADMITTANCE:
@@ -89,7 +92,7 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
       default:
         return [];
     }
-  }, [proposal, proposal.type]);
+  }, [proposal, proposal.type, proposalSpecificData]);
 
   return (
     <div className="voting-content__wrapper">

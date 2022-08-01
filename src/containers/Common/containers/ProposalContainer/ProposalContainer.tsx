@@ -48,6 +48,7 @@ import { Tabs as CommonDetailsTabs } from "../CommonDetailContainer";
 import { VotingContentContainer } from "./VotingContentContainer";
 import { PitchContentContainer } from "./PitchContentContainer";
 import { VotingPopup } from "./VotingPopup";
+import { useProposalSpecificData } from "./useProposalSpecificData";
 import "./index.scss";
 
 interface ProposalRouterParams {
@@ -88,6 +89,11 @@ const ProposalContainer = () => {
     onClose: onVotesModalClose,
   } = useModal(false);
   const { data: userVote, fetchProposalVote, setVote } = useProposalUserVote();
+  const {
+    data: proposalSpecificData,
+    fetched: isProposalSpecificDataFetched,
+    fetchData: fetchProposalSpecificData,
+  } = useProposalSpecificData();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const currentProposalId = currentProposal?.id;
@@ -144,37 +150,50 @@ const ProposalContainer = () => {
     [currentProposal]
   );
 
-  const renderContentByActiveTab = useCallback((currentProposal: Proposal) => {
-    switch (activeTab) {
-      case PROPOSAL_MENU_TABS.Voting:
-        return (
-          currentCommon &&
-          proposer &&
-          governance && (
-            <VotingContentContainer
-              proposal={currentProposal}
+  const renderContentByActiveTab = useCallback(
+    (currentProposal: Proposal) => {
+      switch (activeTab) {
+        case PROPOSAL_MENU_TABS.Voting:
+          return (
+            currentCommon &&
+            proposer &&
+            governance && (
+              <VotingContentContainer
+                proposal={currentProposal}
+                common={currentCommon}
+                governance={governance}
+                proposer={proposer}
+                proposalSpecificData={proposalSpecificData}
+                onVotesOpen={onVotesModalOpen}
+              />
+            )
+          );
+        case PROPOSAL_MENU_TABS.Pitch:
+          return <PitchContentContainer proposal={currentProposal} />;
+        case PROPOSAL_MENU_TABS.Discussions:
+          return (
+            <ChatComponent
               common={currentCommon}
-              governance={governance}
-              proposer={proposer}
-              onVotesOpen={onVotesModalOpen}
+              discussionMessage={currentProposal.discussionMessage || []}
+              type={ChatType.ProposalComments}
+              isAuthorized={Boolean(user)}
+              sendMessage={sendMessage}
+              isJoiningPending={isJoiningPending}
+              isCommonMemberFetched={isCommonMemberFetched}
+              commonMember={commonMember}
             />
-          )
-        );
-      case PROPOSAL_MENU_TABS.Pitch:
-        return <PitchContentContainer proposal={currentProposal} />;
-      case PROPOSAL_MENU_TABS.Discussions:
-        return <ChatComponent
-          common={currentCommon}
-          discussionMessage={currentProposal.discussionMessage || []}
-          type={ChatType.ProposalComments}
-          isAuthorized={Boolean(user)}
-          sendMessage={sendMessage}
-          isJoiningPending={isJoiningPending}
-          isCommonMemberFetched={isCommonMemberFetched}
-          commonMember={commonMember}
-        />;
-    }
-  }, [activeTab, currentCommon, proposer, governance, onVotesModalOpen]);
+          );
+      }
+    },
+    [
+      activeTab,
+      currentCommon,
+      proposer,
+      governance,
+      proposalSpecificData,
+      onVotesModalOpen,
+    ]
+  );
 
   const voteButtonElem = useMemo(() =>
     <Button
@@ -250,109 +269,100 @@ const ProposalContainer = () => {
       fetchProposalVote(currentProposal.id);
   }, [fetchProposalVote, currentProposal]);
 
-  return (currentCommon && currentProposal && isCommonMemberFetched && governance)
-    ? (
-      <>
-        <VotingPopup
-          proposal={currentProposal}
-          isShowing={isShowing}
-          onClose={onClose}
-          setVote={setVote}
+  useEffect(() => {
+    if (currentProposal) {
+      fetchProposalSpecificData(currentProposal);
+    }
+  }, [fetchProposalSpecificData, currentProposal]);
+
+  return currentCommon &&
+    currentProposal &&
+    isCommonMemberFetched &&
+    isProposalSpecificDataFetched &&
+    governance ? (
+    <>
+      <VotingPopup
+        proposal={currentProposal}
+        isShowing={isShowing}
+        onClose={onClose}
+        setVote={setVote}
+      />
+      {isVotesModalOpen && (
+        <VotesModal
+          isShowing={isVotesModalOpen}
+          onClose={onVotesModalClose}
+          proposalId={proposalId}
         />
-        {isVotesModalOpen && (
-          <VotesModal
-            isShowing={isVotesModalOpen}
-            onClose={onVotesModalClose}
-            proposalId={proposalId}
-          />
-        )}
-        <div className="proposal-page__wrapper">
-          <div className="proposal-page__common-title-wrapper section-wrapper">
-            <ButtonLink
-              className="proposal-page__back-button"
-              onClick={handleGoBack}
-            >
-              <LeftArrowIcon />
-            </ButtonLink>
-            <h1 className="proposal-page__common-title">
-              {currentCommon?.name}
-            </h1>
-          </div>
-          <div className="proposal-page__heading-info-wrapper section-wrapper">
-            <div className="proposal-page__heading-info-main">
-              <div className="proposal-page__proposer-info-wrapper">
-                <div className="proposal-page__proposer-info">
-                  <UserAvatar
-                    className="proposal-page__proposer-avatar"
-                    photoURL={currentProposal.proposer?.photoURL}
-                    nameForRandomAvatar={currentProposal.proposer?.email}
-                    userName={getUserName(currentProposal.proposer)}
-                  />
-                  <div className="proposal-page__proposer-info-username">
-                    {getUserName(currentProposal.proposer)}
-                  </div>
-                  {isMobileView && proposalTypeEl}
-                </div>
-              </div>
-              <div className="proposal-page__proposal-info-wrapper">
-                <div className="proposal-page__proposal-info-description">
-                  <div className="proposal-title">
-                    {currentProposal.data.args.title}
-                  </div>
-                  {!isMobileView && proposalTypeEl}
-                </div>
-                {
-                  !isMobileView && showVoteButton && voteButtonElem
-                }
-              </div>
-            </div>
-            <div className="proposal-page__proposal-menu-wrapper">
-              <ul className="proposal-page__proposal-menu">
-                {
-                  Object.entries(PROPOSAL_MENU_TABS).map(
-                    ([key, value]) =>
-                      <li
-                        key={key}
-                        onClick={() => setActiveTab(value)}
-                        className={
-                          classNames(
-                            "proposal-page__proposal-menu-item",
-                            {
-                              active: activeTab === value
-                            }
-                          )
-                        }
-                      >
-                        {value}
-                      </li>
-                  )
-                }
-              </ul>
-            </div>
-          </div>
-          <div
-            className={
-              classNames(
-                "proposal-page__content-wrapper",
-                {
-                  "chat-wrapper": activeTab === PROPOSAL_MENU_TABS.Discussions
-                }
-              )
-            }
+      )}
+      <div className="proposal-page__wrapper">
+        <div className="proposal-page__common-title-wrapper section-wrapper">
+          <ButtonLink
+            className="proposal-page__back-button"
+            onClick={handleGoBack}
           >
-            <div className="proposal-page__content-container section-wrapper">
-              {renderContentByActiveTab(currentProposal)}
+            <LeftArrowIcon />
+          </ButtonLink>
+          <h1 className="proposal-page__common-title">{currentCommon?.name}</h1>
+        </div>
+        <div className="proposal-page__heading-info-wrapper section-wrapper">
+          <div className="proposal-page__heading-info-main">
+            <div className="proposal-page__proposer-info-wrapper">
+              <div className="proposal-page__proposer-info">
+                <UserAvatar
+                  className="proposal-page__proposer-avatar"
+                  photoURL={currentProposal.proposer?.photoURL}
+                  nameForRandomAvatar={currentProposal.proposer?.email}
+                  userName={getUserName(currentProposal.proposer)}
+                />
+                <div className="proposal-page__proposer-info-username">
+                  {getUserName(currentProposal.proposer)}
+                </div>
+                {isMobileView && proposalTypeEl}
+              </div>
             </div>
-            <div className="proposal-page__proposal-vote-btn-wrapper">
-              {
-                isMobileView && showVoteButton && voteButtonElem
-              }
+            <div className="proposal-page__proposal-info-wrapper">
+              <div className="proposal-page__proposal-info-description">
+                <div className="proposal-title">
+                  {currentProposal.data.args.title}
+                </div>
+                {!isMobileView && proposalTypeEl}
+              </div>
+              {!isMobileView && showVoteButton && voteButtonElem}
             </div>
+          </div>
+          <div className="proposal-page__proposal-menu-wrapper">
+            <ul className="proposal-page__proposal-menu">
+              {Object.entries(PROPOSAL_MENU_TABS).map(([key, value]) => (
+                <li
+                  key={key}
+                  onClick={() => setActiveTab(value)}
+                  className={classNames("proposal-page__proposal-menu-item", {
+                    active: activeTab === value,
+                  })}
+                >
+                  {value}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-      </>
-    )
-    : <Loader />;
+        <div
+          className={classNames("proposal-page__content-wrapper", {
+            "chat-wrapper": activeTab === PROPOSAL_MENU_TABS.Discussions,
+          })}
+        >
+          <div className="proposal-page__content-container section-wrapper">
+            {renderContentByActiveTab(currentProposal)}
+          </div>
+          <div className="proposal-page__proposal-vote-btn-wrapper">
+            {isMobileView && showVoteButton && voteButtonElem}
+          </div>
+        </div>
+      </div>
+    </>
+  ) : (
+    <Loader />
+  );
 };
 
 export default ProposalContainer;
