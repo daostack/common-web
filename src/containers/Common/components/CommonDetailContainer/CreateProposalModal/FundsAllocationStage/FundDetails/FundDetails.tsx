@@ -8,7 +8,6 @@ import { BankAccountState } from "@/containers/MyAccount/components/Billing/type
 import {
   Button,
   Dropdown,
-  DropdownOption,
   Loader,
   ModalFooter,
 } from "@/shared/components";
@@ -25,27 +24,8 @@ import { StageName } from "../../StageName";
 import { getPrefix } from "../helpers";
 import { FundsAllocationData, FundType } from "../types";
 import { validationSchema } from "./validationSchema";
+import {FUND_TYPES} from '../constants';
 import "./index.scss";
-
-const FUND_TYPES: DropdownOption[] = [
-  {
-    text: "ILS",
-    searchText: "ILS",
-    value: FundType.ILS,
-  },
-  {
-    text: "Dollars",
-    searchText: "Dollars",
-    value: FundType.USD,
-    className: "funds-allocation-configuration__fund-type--disabled",
-  },
-  {
-    text: "Tokens",
-    searchText: "Tokens",
-    value: FundType.Token,
-    className: "funds-allocation-configuration__fund-type--disabled",
-  },
-];
 
 interface ConfigurationProps {
   governance: Governance;

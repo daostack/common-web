@@ -1,21 +1,21 @@
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
 import { BankAccountState } from "@/containers/MyAccount/components/Billing/types";
-import {
-    Button, Dropdown, Loader, ModalFooter, DropdownOption
-} from "@/shared/components";
+import { Button, Dropdown, Loader, ModalFooter} from "@/shared/components";
 import { CurrencyInput, Form, LinksArray, TextField } from "@/shared/components/Form/Formik";
 import { MAX_LINK_TITLE_LENGTH, ScreenSize } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
-import { BankAccountDetails, CommonLink, CurrencySymbol, Governance } from "@/shared/models";
+import { BankAccountDetails, CommonLink, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-import React, { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StageName } from "../../StageName";
 import { FundsAllocationData, FundType } from "../types";
-import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH, fundTypes } from "./constants";
+import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH } from "./constants";
+import {FUND_TYPES} from '../constants';
+import { getPrefix } from "../helpers";
 import "./index.scss";
 import { validationSchema } from "./validationSchema";
 
@@ -49,16 +49,6 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
     fetched: false,
     bankAccount: null,
   });
-
-  const fundsOptions = useMemo<DropdownOption[]>(
-    () =>
-      fundTypes.map((fund) => ({
-        text: fund,
-        searchText: fund,
-        value: fund,
-      })),
-    []
-  );
 
   useEffect(() => {
     if (bankAccountState.loading || bankAccountState.fetched) {
@@ -103,18 +93,6 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
     commonBalance: commonBalance / 100,
     bankAccountDetails: bankAccountState.bankAccount
   });
-
-  const getPrefix = () => {
-    switch (selectedFund) {
-      case "ILS":
-        return CurrencySymbol.Shekel;
-      case "USD":
-        return CurrencySymbol.USD;
-      default:
-        // TODO icon for tokens
-        return '&';
-    }
-  }
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
@@ -183,7 +161,7 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
               />
            <Dropdown
                 className="funds-allocation-form__dropdown"
-                options={fundsOptions}
+                options={FUND_TYPES}
                 value={selectedFund}
                 onSelect={handleFundSelect}
                 label="Type of Funds"
@@ -196,7 +174,7 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
                 name="amount"
                 label="Amount"
                 placeholder="10"
-                prefix={getPrefix()}
+                prefix={getPrefix(selectedFund)}
               />
               {bankAccountState.loading ? (
                 <div>
