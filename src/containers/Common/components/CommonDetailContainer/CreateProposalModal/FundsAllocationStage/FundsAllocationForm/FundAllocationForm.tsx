@@ -13,10 +13,10 @@ import { BankAccountDetails, CommonLink, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
 import { FundsAllocationData, FundType } from "../types";
-import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH } from "./constants";
+import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH } from "../constants";
 import {FUND_TYPES} from '../constants';
 import { getPrefix } from "../helpers";
-import { validationSchema } from "./validationSchema";
+import { fundAllocationValidationSchema } from "../validationSchema";
 import "./index.scss";
 
 interface FundAllocationFormProps {
@@ -125,7 +125,7 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
           initialValues={getInitialValues()}
           onSubmit={handleSubmit}
           innerRef={formRef}
-          validationSchema={validationSchema}
+          validationSchema={fundAllocationValidationSchema}
           validateOnMount
         >
             {({ values, errors, touched, isValid }) => (
