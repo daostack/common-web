@@ -26,6 +26,10 @@
       margin-bottom: 0;
     }
   }
+  .about-name-wrapper__description-part--rtl {
+    text-align: right;
+    direction: rtl;
+  }
 
   .title {
     font-size: 18px;

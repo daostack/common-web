@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import classNames from "classnames";
 import { CommonShare, Linkify } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import { Common } from "@/shared/models";
+import { containsHebrew } from "@/shared/utils";
 import { CommonWhitepaper } from "../CommonWhitepaper";
 import "./index.scss";
 
@@ -37,7 +39,13 @@ export default function AboutTabComponent({
       <div className="description">
         {filteredDescriptionParts.map((text, index) =>
           text ? (
-            <p className="about-name-wrapper__description-part" key={index}>
+            <p
+              className={classNames("about-name-wrapper__description-part", {
+                "about-name-wrapper__description-part--rtl":
+                  containsHebrew(text),
+              })}
+              key={index}
+            >
               <Linkify>{text}</Linkify>
             </p>
           ) : (
