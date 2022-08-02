@@ -1,16 +1,11 @@
 import * as yup from "yup";
 import { formatPrice } from "@/shared/utils";
-import { MIN_CONTRIBUTION_ILS_AMOUNT } from "@/shared/constants";
 
 export const validationSchema = yup.object({
   commonBalance: yup.number(),
   amount: yup
     .number()
     .transform((value) => (isNaN(value) ? undefined : value))
-    .min(MIN_CONTRIBUTION_ILS_AMOUNT / 100,  `The amount requested cannot be less than ${formatPrice(
-      MIN_CONTRIBUTION_ILS_AMOUNT,
-      { shouldRemovePrefixFromZero: false }
-    )}.`)
     .max(
       yup.ref("commonBalance"),
       ({ max }) =>
@@ -19,5 +14,8 @@ export const validationSchema = yup.object({
           { shouldRemovePrefixFromZero: false }
         )}).`
     ),
-  bankAccountDetails: yup.object().required(),
+  bankAccountDetails: yup.object().when("amount", {
+    is: (amount) => amount > 0,
+    then: yup.object().required()
+  }).nullable(),
 });

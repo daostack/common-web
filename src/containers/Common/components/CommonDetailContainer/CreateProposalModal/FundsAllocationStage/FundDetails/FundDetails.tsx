@@ -90,7 +90,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       onFinish({
         ...initialData,
         fund: selectedFund,
-        amount: values.amount || 10,
+        amount: values.amount,
         links: values.links,
       });
     },
@@ -182,7 +182,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                   <Button
                     onClick={handleContinueClick}
                     shouldUseFullWidth={isMobileView}
-                    disabled={!isValid || !bankAccountState.bankAccount}
+                    disabled={!isValid || (!bankAccountState.bankAccount && values.amount > 0)}
                   >
                     Create proposal
                   </Button>
