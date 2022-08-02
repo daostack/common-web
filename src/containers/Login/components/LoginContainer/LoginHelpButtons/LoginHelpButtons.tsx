@@ -24,7 +24,7 @@ interface LoginHelpButtonsProps {
 
 const LoginHelpButtons: FC<LoginHelpButtonsProps> = ({ className }) => {
   return (
-    <ul className="login-help-buttons">
+    <ul className="login-help-buttons s">
       {ITEMS.map((item, index) => (
         <li key={index} className="login-help-buttons__item">
           <a
