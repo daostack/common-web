@@ -29,6 +29,8 @@ export default function AboutTabComponent({
   const filteredDescriptionParts = isDescriptionExpanded
     ? descriptionParts
     : [(descriptionParts[0] || "").substring(0, 200)];
+  const shouldAllowSeeMoreDescription =
+    common.description !== filteredDescriptionParts[0];
 
   const toggleDescription = () => {
     setIsDescriptionExpanded((isExpanded) => !isExpanded);
@@ -52,9 +54,11 @@ export default function AboutTabComponent({
           )
         )}
       </div>
-      <a className="about-name-wrapper__see-more" onClick={toggleDescription}>
-        See {isDescriptionExpanded ? "less <" : "more >"}
-      </a>
+      {shouldAllowSeeMoreDescription && (
+        <a className="about-name-wrapper__see-more" onClick={toggleDescription}>
+          See {isDescriptionExpanded ? "less <" : "more >"}
+        </a>
+      )}
       <CommonWhitepaper />
       {common?.links?.length > 0 && (
         <div className="links">

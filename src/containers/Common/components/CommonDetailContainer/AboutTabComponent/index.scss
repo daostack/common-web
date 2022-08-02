@@ -8,7 +8,7 @@
 
   .about-name-wrapper__see-more {
     width: 100%;
-    margin: 1.75rem 0;
+    margin-bottom: 1.75rem;
     display: inline-block;
     text-align: right;
     text-decoration: underline;
@@ -63,6 +63,7 @@
     }
   }
   .description {
+    margin-bottom: 1.75rem;
     overflow-wrap: break-word;
   }
   .join-wrapper {
