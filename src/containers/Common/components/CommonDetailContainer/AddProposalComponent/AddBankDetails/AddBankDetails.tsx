@@ -331,6 +331,10 @@ export const AddBankDetails = (props: IProps) => {
     [dispatch, isEditing, bankLetterFile, photoIdFile, handleDataChange]
   );
 
+  const handleSubmitForm = () => {
+    formRef.current?.submitForm();
+  };
+
   return (
     <div className={classNames("add-bank-details-wrapper", className)}>
       {title !== null && (
@@ -582,6 +586,7 @@ export const AddBankDetails = (props: IProps) => {
                   </div>
                   <Button
                     type="submit"
+                    onClick={handleSubmitForm}
                     disabled={isSubmitButtonDisabled}
                     className="save-button"
                   >
