@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { CommonShare, Linkify } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import { Common } from "@/shared/models";
-import { containsHebrew } from "@/shared/utils";
+import { isRTL } from "@/shared/utils";
 import { CommonWhitepaper } from "../CommonWhitepaper";
 import "./index.scss";
 
@@ -41,8 +41,7 @@ export default function AboutTabComponent({
           text ? (
             <p
               className={classNames("about-name-wrapper__description-part", {
-                "about-name-wrapper__description-part--rtl":
-                  containsHebrew(text),
+                "about-name-wrapper__description-part--rtl": isRTL(text),
               })}
               key={index}
             >
