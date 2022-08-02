@@ -148,6 +148,16 @@ export const containsHebrew = (str: string) => {
   return /[\u0590-\u05FF]/.test(str);
 };
 
+export const isRTL = (text: string): boolean => {
+  const ltrChars =
+    "A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02B8\u0300-\u0590\u0800-\u1FFF" +
+    "\u2C00-\uFB1C\uFDFE-\uFE6F\uFEFD-\uFFFF";
+  const rtlChars = "\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC";
+  const rtlDirCheck = new RegExp("^[^" + ltrChars + "]*[" + rtlChars + "]");
+
+  return Boolean(text && rtlDirCheck.test(text));
+};
+
 /**
  * Validate credit card provider (Visa or MasterCard)
  * Currently only Visa is supported.
