@@ -20,19 +20,37 @@ export default function AboutTabComponent({
   isCommonMember,
   isJoiningPending,
 }: AboutTabComponentProps) {
-  const shouldShowJoinToCommonButton = screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
-  const [expanded] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const shouldShowJoinToCommonButton =
+    screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
+
+  const toggleDescription = () => {
+    setIsDescriptionExpanded((isExpanded) => !isExpanded);
+  };
+
   return (
     <div className="about-name-wrapper">
       <div className="description">
-        <Linkify>{expanded ? common.description : common.description.substring(0, 200)}</Linkify>
+        <Linkify>
+          {isDescriptionExpanded
+            ? common.description
+            : common.description.substring(0, 200)}
+        </Linkify>
       </div>
+      <a className="about-name-wrapper__see-more" onClick={toggleDescription}>
+        See {isDescriptionExpanded ? "less <" : "more >"}
+      </a>
       <CommonWhitepaper />
-      {common?.links?.length > 0 && expanded && (
+      {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
           {common.links.map((link) => (
-            <a href={link.value} key={link.title} target="_blank" rel="noopener noreferrer">
+            <a
+              href={link.value}
+              key={link.title}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {link.title}
             </a>
           ))}
