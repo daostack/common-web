@@ -6,12 +6,15 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { useSelector } from "react-redux";
 import { Modal } from "@/shared/components";
-import { ProposalsTypes } from "@/shared/constants";
+import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps } from "@/shared/interfaces";
 import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { AssignCircleStage } from "./AssignCircleStage";
+import { Error } from "./Error";
 import { RemoveCircleStage } from "./RemoveCircleStage";
 import { FundsAllocationStage } from "./FundsAllocationStage";
 import { ProposalTypeSelection } from "./ProposalTypeSelection";
@@ -45,7 +48,9 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
   const [onGoBack, setOnGoBack] = useState<GoBackHandler>();
   const [shouldShowClosePrompt, setShouldShowClosePrompt] = useState(false);
   const [shouldBeOnFullHeight, setShouldBeOnFullHeight] = useState(true);
-  const [_errorText, setErrorText] = useState<string | null>(null);
+  const [errorText, setErrorText] = useState<string | null>(null);
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const setGoBackHandler = useCallback((handler: GoBackHandler | null) => {
     setOnGoBack(() => handler ?? undefined);
@@ -86,6 +91,11 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
     [onClose, redirectToProposal]
   );
 
+  const handleErrorFinish = useCallback(() => {
+    setErrorText(null);
+    setStage(CreateProposalStage.ProposalTypeSelection);
+  }, []);
+
   useEffect(() => {
     if (isShowing) {
       disableZoom();
@@ -109,6 +119,10 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
   );
 
   const renderContent = () => {
+    if (!isMobileView && errorText !== null) {
+      return <Error errorText={errorText} onFinish={handleErrorFinish} />;
+    }
+
     switch (stage) {
       case CreateProposalStage.ProposalTypeSelection:
         return (
@@ -165,6 +179,9 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
     >
       <CreateProposalContext.Provider value={contextValue}>
         {renderContent()}
+        {isMobileView && errorText !== null && (
+          <Error errorText={errorText} onFinish={handleErrorFinish} />
+        )}
       </CreateProposalContext.Provider>
     </Modal>
   );
