@@ -19,6 +19,14 @@
     }
   }
 
+  .about-name-wrapper__description-part {
+    margin: 0 0 0.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   .title {
     font-size: 18px;
     font-weight: bold;

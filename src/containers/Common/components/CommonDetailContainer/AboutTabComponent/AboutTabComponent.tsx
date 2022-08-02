@@ -23,6 +23,10 @@ export default function AboutTabComponent({
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const shouldShowJoinToCommonButton =
     screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
+  const descriptionParts = common.description.split("\n");
+  const filteredDescriptionParts = isDescriptionExpanded
+    ? descriptionParts
+    : [(descriptionParts[0] || "").substring(0, 200)];
 
   const toggleDescription = () => {
     setIsDescriptionExpanded((isExpanded) => !isExpanded);
@@ -31,11 +35,15 @@ export default function AboutTabComponent({
   return (
     <div className="about-name-wrapper">
       <div className="description">
-        <Linkify>
-          {isDescriptionExpanded
-            ? common.description
-            : common.description.substring(0, 200)}
-        </Linkify>
+        {filteredDescriptionParts.map((text, index) =>
+          text ? (
+            <p className="about-name-wrapper__description-part" key={index}>
+              <Linkify>{text}</Linkify>
+            </p>
+          ) : (
+            <br key={index} />
+          )
+        )}
       </div>
       <a className="about-name-wrapper__see-more" onClick={toggleDescription}>
         See {isDescriptionExpanded ? "less <" : "more >"}
