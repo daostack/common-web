@@ -23,7 +23,7 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
 import { getPrefix } from "../helpers";
 import { FundsAllocationData, FundType } from "../types";
-import { validationSchema } from "./validationSchema";
+import { fundDetailsValidationSchema } from "../validationSchema";
 import {FUND_TYPES} from '../constants';
 import "./index.scss";
 
@@ -90,7 +90,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       onFinish({
         ...initialData,
         fund: selectedFund,
-        amount: values.amount || 10,
+        amount: values.amount,
         links: values.links,
       });
     },
@@ -136,7 +136,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
           enableReinitialize
           onSubmit={handleSubmit}
           innerRef={formRef}
-          validationSchema={validationSchema}
+          validationSchema={fundDetailsValidationSchema}
           validateOnMount
         >
           {({ values, errors, touched, isValid }) => (
@@ -182,7 +182,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                   <Button
                     onClick={handleContinueClick}
                     shouldUseFullWidth={isMobileView}
-                    disabled={!isValid || !bankAccountState.bankAccount}
+                    disabled={!isValid || (!bankAccountState.bankAccount && values.amount > 0)}
                   >
                     Create proposal
                   </Button>

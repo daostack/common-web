@@ -9,6 +9,8 @@ export enum FundsAllocationStep {
   Success,
 }
 
+export const FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH = 60;
+
 
 export const FUND_TYPES: DropdownOption[] = [
   {
