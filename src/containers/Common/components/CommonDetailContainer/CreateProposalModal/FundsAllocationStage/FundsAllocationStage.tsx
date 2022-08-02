@@ -6,7 +6,7 @@ import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
 import { Common, Governance, CommonLink, Proposal } from "@/shared/models";
-import { FundsAllocation } from "@/shared/models/governance/proposals";
+import { FundsAllocation, ProposalImage } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
@@ -31,6 +31,7 @@ const initialFundsData = {
   amount: 10,
   fund: "ILS" as FundType,
   links: [] as CommonLink[],
+  images: [] as ProposalImage[],
 };
 
 const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
@@ -81,7 +82,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
         amount: fundsAllocationData.amount * 100,
         commonId: common.id,
         title: fundsAllocationData.title,
-        images: [],
+        images: fundsAllocationData.images as ProposalImage[], //[] as ProposalImage[],
         links: fundsAllocationData.links,
         files: [],
       },

@@ -19,11 +19,13 @@ import {
   Loader,
   ModalFooter,
   Separator,
+  ButtonLink,
 } from "@/shared/components";
 import {
   CurrencyInput,
   Form,
   LinksArray,
+  ImageArray,
 } from "@/shared/components/Form/Formik";
 import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
@@ -32,7 +34,9 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
 import { FundsAllocationData, FundType } from "../types";
 import { validationSchema } from "./validationSchema";
+import { ProposalImage } from "@/shared/models/governance/proposals";
 import "./index.scss";
+import { FileUploadButton } from "../../../AddProposalComponent/FileUploadButton";
 
 const fundTypes = ['ILS', 'Dollars', 'Tokens'];
 
@@ -49,6 +53,7 @@ interface FormValues {
   links: CommonLink[];
   commonBalance: number;
   bankAccountDetails: BankAccountDetails | null;
+  images: ProposalImage[];
 }
 
 const FundDetails: FC<ConfigurationProps> = (props) => {
@@ -63,6 +68,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     bankAccount: null,
   });
   const [selectedFund, setSelectedFund] = useState<FundType>('ILS');
+  const [imageArr, setImageArr] = useState<ProposalImage[]>([]);
 
   useEffect(() => {
     if (bankAccountState.loading || bankAccountState.fetched) {
@@ -91,7 +97,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     amount: 0,
     links: [],
     commonBalance: commonBalance / 100,
-    bankAccountDetails: bankAccountState.bankAccount
+    bankAccountDetails: bankAccountState.bankAccount,
+    images: [] as ProposalImage[],
   });
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -101,6 +108,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
         fund: selectedFund,
         amount: values.amount || 10,
         links: values.links,
+        images: values.images as ProposalImage[],
       });
     },
     [onFinish]
@@ -136,6 +144,10 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   const handleFundSelect = (selectedFund: unknown) => {
     setSelectedFund(selectedFund as FundType);
   };
+
+  const addImage = (image: ProposalImage[]) => {
+    setImageArr([...imageArr, ...image]);
+  }
 
   const getPrefix = () => {
     switch (selectedFund) {
@@ -206,6 +218,14 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 maxTitleLength={MAX_LINK_TITLE_LENGTH}
                 className="create-funds-allocation__text-field"
                 itemClassName="funds_allocation__links-array-item"
+              />
+              <ImageArray
+                name="images"
+                values={values.images}
+                maxTitleLength={MAX_LINK_TITLE_LENGTH}
+                className="create-funds-allocation__text-field"
+                itemClassName="funds_allocation__links-array-item"
+                onUpload={(image: ProposalImage[]) => addImage(image)}
               />
               <ModalFooter sticky={!isMobileView}>
                 <div className="funds-allocation-configuration__modal-footer">

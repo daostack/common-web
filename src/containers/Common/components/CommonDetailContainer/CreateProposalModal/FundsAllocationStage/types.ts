@@ -1,4 +1,5 @@
 import { CommonLink } from "@/shared/models";
+import { ProposalImage } from "@/shared/models/governance/proposals";
 
 export type FundType = 'ILS' | 'Dollars' | 'Token';
 
@@ -11,4 +12,5 @@ export interface FundsAllocationData {
   fund: FundType;
   amount: number;
   links: CommonLink[];
+  images: ProposalImage[];
 }
