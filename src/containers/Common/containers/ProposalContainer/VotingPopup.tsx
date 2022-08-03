@@ -57,7 +57,7 @@ export const VotingPopup: FC<VotingPopupProps> = ({
         <div className="voting-popup__success-details-wrapper">
           <img
             className="voting-popup__approved-illustration"
-            src="/icons/preview-approved.svg"
+            src="/assets/images/membership-request-created.svg"
             alt="Success"
           />
           <p>Your vote was submitted! It will take some time to apply.</p>
