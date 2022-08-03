@@ -6,9 +6,9 @@ import { ReactElement } from "hoist-non-react-statics/node_modules/@types/react"
 
 interface VotingCardProps {
   type: VotingCardType;
-  votedMembersAmount?: number;
+  votedMembersAmount: number;
   targetVotersAmount?: number;
-  membersAmount: number;
+  membersAmount?: number;
   percentageCondition?: number;
   className?: string;
   onClick?: () => void;
@@ -73,7 +73,7 @@ export const VotingCard: FC<VotingCardProps> = ({
       case VotingCardType.AllVotes:
         return calcPercentage(votedMembersAmount, membersAmount);
       default:
-        return calcPercentage(targetVotersAmount, membersAmount);
+        return calcPercentage(targetVotersAmount, votedMembersAmount);
     }
   }, [type, votedMembersAmount, membersAmount, targetVotersAmount]);
 
