@@ -54,6 +54,7 @@ interface FormValues {
   commonBalance: number;
   bankAccountDetails: BankAccountDetails | null;
   images: ProposalImage[];
+  areImagesLoading: boolean;
 }
 
 const FundDetails: FC<ConfigurationProps> = (props) => {
@@ -68,7 +69,6 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     bankAccount: null,
   });
   const [selectedFund, setSelectedFund] = useState<FundType>('ILS');
-  const [imageArr, setImageArr] = useState<ProposalImage[]>([]);
 
   useEffect(() => {
     if (bankAccountState.loading || bankAccountState.fetched) {
@@ -98,7 +98,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     links: [],
     commonBalance: commonBalance / 100,
     bankAccountDetails: bankAccountState.bankAccount,
-    images: [] as ProposalImage[],
+    images: [],
+    areImagesLoading: false,
   });
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -144,10 +145,6 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   const handleFundSelect = (selectedFund: unknown) => {
     setSelectedFund(selectedFund as FundType);
   };
-
-  const addImage = (image: ProposalImage[]) => {
-    setImageArr([...imageArr, ...image]);
-  }
 
   const getPrefix = () => {
     switch (selectedFund) {
@@ -222,10 +219,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
               <ImageArray
                 name="images"
                 values={values.images}
-                maxTitleLength={MAX_LINK_TITLE_LENGTH}
-                className="create-funds-allocation__text-field"
-                itemClassName="funds_allocation__links-array-item"
-                onUpload={(image: ProposalImage[]) => addImage(image)}
+                areImagesLoading={values.areImagesLoading}
+                loadingFieldName="areImagesLoading"
               />
               <ModalFooter sticky={!isMobileView}>
                 <div className="funds-allocation-configuration__modal-footer">

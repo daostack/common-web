@@ -1,128 +1,127 @@
-import React, { useMemo, FC, useRef, ChangeEventHandler, useState, useEffect} from "react";
+import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
-import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
-import { uploadFile } from "@/shared/utils/firebaseUploadFile";
-import { FormikTouched } from "formik/dist/types";
-import { CommonLink } from "@/shared/models";
+import { useFormikContext } from "formik";
+import {
+  getFileNameForUploading,
+  uploadFile,
+} from "@/shared/utils/firebaseUploadFile";
 import { ProposalImage } from "@/shared/models/governance/proposals";
 import DeleteIcon from "@/shared/icons/delete.icon";
-import { ButtonLink } from "../../../ButtonLink";
-import { ErrorText } from "../../ErrorText";
-import { TextField } from "../TextField";
-import { Button, ButtonIcon, Loader, ModalFooter } from "@/shared/components";
-import { Formik } from "formik";
+import { ButtonIcon, ButtonLink, Loader } from "@/shared/components";
 import "./index.scss";
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
 
-
-interface ImageArrayProps extends FieldArrayConfig {
+interface ImageArrayProps {
+  name: string;
   values: ProposalImage[];
+  areImagesLoading: boolean;
+  loadingFieldName: string;
   title?: string;
-  hint?: string;
-  maxTitleLength?: number;
-  className?: string;
-  itemClassName?: string;
-  labelClassName?: string;
-  onUpload: (images: ProposalImage[]) => void;
 }
 
 const ImageArray: FC<ImageArrayProps> = (props) => {
   const {
     values,
+    name,
+    areImagesLoading = false,
+    loadingFieldName,
     title = "Add images",
-    hint = "Resources, related content, or social pages",
-    maxTitleLength,
-    className,
-    itemClassName,
-    labelClassName,
-    onUpload,
-    ...restProps
   } = props;
+  const { setFieldValue } = useFormikContext();
 
-  const [selectedImages, setSelectedImages] = useState<File[]>([])
-  const [showFileLoader, setShowFileLoader] = useState(false);
-  const [uploadedFiles, setUploadedFile] = useState<
-    { title: string; value: string }[]
-  >([]);
-
-  const selectFiles = (event) => {
-    const {files} = event.target;
-    setSelectedImages([...selectedImages, ...files])
+  const setLoadingState = (isLoading: boolean) => {
+    setFieldValue(loadingFieldName, isLoading);
   };
 
-  useEffect(() => {
-    (async () => {
-      if (selectedImages.length) {
-        setShowFileLoader(true);
-        const files = await Promise.all(
-          selectedImages.map(async (file: File) => {
-            const downloadURL = await uploadFile(file.name, "public_img", file);
-            return {title: file.name, value: downloadURL}
-          })
-        );
-        setUploadedFile((f) => [...f, ...files]);
-        setShowFileLoader(false);
-        setSelectedImages([])
-      }
-    })();
-  }, [selectedImages])
+  const updateUploadedFiles = (files: ProposalImage[]) => {
+    setFieldValue(name, files);
+  };
 
-  useEffect(()=> {
-    uploadedFiles && onUpload(uploadedFiles)
-  }, [uploadedFiles])
+  const selectFiles: ChangeEventHandler<HTMLInputElement> = async (event) => {
+    const { files } = event.target;
+
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    setLoadingState(true);
+
+    try {
+      const uploadedFiles = await Promise.all(
+        Array.from(files).map(async (file): Promise<ProposalImage> => {
+          const fileName = getFileNameForUploading(file.name);
+          const downloadURL = await uploadFile(fileName, "public_img", file);
+
+          return {
+            title: fileName,
+            value: downloadURL,
+          };
+        })
+      );
+
+      updateUploadedFiles(values.concat(uploadedFiles));
+      setLoadingState(false);
+    } catch (error) {
+      setLoadingState(false);
+    }
+  };
 
   const removeFile = (index: number) => {
-    const f = [...uploadedFiles];
-    f.splice(index, 1);
-    setUploadedFile(f);
+    const files = [...values];
+    files.splice(index, 1);
+    updateUploadedFiles(files);
   };
 
   return (
-        <div className={classNames("add-image-wrapper")}>
-          <div className="add-images-form-wrapper">
-            <div className="add-imaged-wrapper">
-            </div>
-            <div className="add-additional-information">
-              <div className="images-wrapper">
-                <input
-                  id="file"
-                  type="file"
-                  onChange={selectFiles}
-                  accept={ACCEPTED_EXTENSIONS}
-                  style={{ display: "none" }}
-                  multiple
-                />
-                
-                <ButtonLink
-                className="images-array__add-button"
-                onClick={() => document.getElementById("file")?.click()}
-              >Add images
-              </ButtonLink>
-              </div>
-              <div className="additional-content-wrapper">
-                  <div className="images-preview">
-                    {uploadedFiles.map((f, i) => (
-                      <div className="img-item" key={f.value}>
-                        <img className="img" src={f.value} alt={i.toString()} />
-                        <ButtonIcon
-                          className="file-item__remove-button"
-                          onClick={() => removeFile(i)}
-                        >
-                          <DeleteIcon className="file-item__delete-icon" />
-                        </ButtonIcon>
-                      </div>
-                    ))}
-                    {showFileLoader && (
-                      <div className="img-item">
-                        <Loader />
-                      </div>
-                    )}
-                  </div>
-              </div>
+    <div className={classNames("add-image-wrapper")}>
+      <div className="add-images-form-wrapper">
+        <div className="add-imaged-wrapper"></div>
+        <div className="add-additional-information">
+          <div className="images-wrapper">
+            <input
+              id="file"
+              type="file"
+              onChange={selectFiles}
+              accept={ACCEPTED_EXTENSIONS}
+              style={{ display: "none" }}
+              multiple
+            />
+
+            <ButtonLink
+              className="images-array__add-button"
+              onClick={() => document.getElementById("file")?.click()}
+            >
+              {title}
+            </ButtonLink>
+          </div>
+          <div className="additional-content-wrapper">
+            <div className="images-preview">
+              {values.map((file, index) => (
+                <div className="img-item" key={file.value}>
+                  <img
+                    className="img"
+                    src={file.value}
+                    alt={index.toString()}
+                  />
+                  <ButtonIcon
+                    className="file-item__remove-button"
+                    onClick={() => removeFile(index)}
+                  >
+                    <DeleteIcon className="file-item__delete-icon" />
+                  </ButtonIcon>
+                </div>
+              ))}
+              {areImagesLoading && (
+                <div className="img-item">
+                  <Loader />
+                </div>
+              )}
             </div>
           </div>
-        </div>  
+        </div>
+      </div>
+    </div>
   );
 };
 
