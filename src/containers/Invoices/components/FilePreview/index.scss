@@ -52,12 +52,13 @@
       margin: auto;
       border-radius: 10px;
       max-height: 70%;
-      max-width: 43rem;
+      max-width: 28rem;
       @include big-phone {
-        max-width: 70%;
+        max-width: 60%;
       }
       .react-pdf__Page canvas {
         max-width: 100%;
+        width: fit-content;
         height: auto !important;
       }
     }

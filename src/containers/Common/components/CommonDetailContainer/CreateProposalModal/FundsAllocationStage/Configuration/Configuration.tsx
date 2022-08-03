@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import {
   Button,
   ModalFooter,
-  Separator,
 } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
@@ -15,7 +14,7 @@ import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
 import { Form, TextField } from "@/shared/components/Form/Formik";
 import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH } from "./constants";
-import { validationSchema } from "./validationSchema";
+import { configurationValidationSchema } from "../validationSchema";
 import "./index.scss";
 
 interface ConfigurationProps {
@@ -68,13 +67,12 @@ const Configuration: FC<ConfigurationProps> = (props) => {
           <DollarIcon className="funds-allocation-configuration__avatar-icon" />
         }
       />
-      <Separator className="funds-allocation-configuration__separator" />
       <div className="funds-allocation-configuration__form">
         <Formik
           initialValues={getInitialValues()}
           onSubmit={handleSubmit}
           innerRef={formRef}
-          validationSchema={validationSchema}
+          validationSchema={configurationValidationSchema}
           validateOnMount
         >
           {({ isValid }) => (

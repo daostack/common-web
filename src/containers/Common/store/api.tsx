@@ -20,6 +20,7 @@ import {
   UnstructuredRules,
   User,
   Vote,
+  VoteWithUserInfo,
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
@@ -677,6 +678,24 @@ export const getCommonMembers = async (
   );
 
   return extendedMembers;
+};
+
+export const getVotesWithUserInfo = async (
+  proposalId: string
+): Promise<VoteWithUserInfo[]> => {
+  const result = await proposalVotesSubCollection(proposalId)
+    .orderBy("createdAt", "desc")
+    .get();
+  const votes = transformFirebaseDataList<Vote>(result);
+  const userIds = Array.from(new Set(votes.map(({ voterId }) => voterId)));
+  const users = await getUserListByIds(userIds);
+  const extendedVotes = votes.reduce<VoteWithUserInfo[]>((acc, member) => {
+    const user = users.find(({ uid }) => uid === member.voterId);
+
+    return user ? acc.concat({ ...member, user }) : acc;
+  }, []);
+
+  return extendedVotes;
 };
 
 export const governanceCollection = firebase

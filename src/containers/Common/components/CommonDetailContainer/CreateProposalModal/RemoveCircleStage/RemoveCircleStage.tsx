@@ -7,7 +7,7 @@ import { createRemoveCircleProposal } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Common, Governance, Proposal } from "@/shared/models";
+import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
 import { RemoveCircle } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
@@ -22,12 +22,13 @@ import "./index.scss";
 interface RemoveCircleStageProps {
   common: Common;
   governance: Governance;
+  commonMember: CommonMember;
   onFinish: (proposal?: Proposal) => void;
   onGoBack: () => void;
 }
 
 const RemoveCircleStage: FC<RemoveCircleStageProps> = (props) => {
-  const { common, governance, onFinish, onGoBack } = props;
+  const { common, governance, commonMember, onFinish, onGoBack } = props;
   const dispatch = useDispatch();
   const [removeCircleData, setRemoveCircleData] =
     useState<RemoveCircleData | null>(null);
@@ -41,6 +42,7 @@ const RemoveCircleStage: FC<RemoveCircleStageProps> = (props) => {
     setOnGoBack,
     setShouldShowClosePrompt,
     setShouldBeOnFullHeight,
+    onError,
   } = useCreateProposalContext();
   const {
     fetched: areCommonMembersFetched,
@@ -88,11 +90,14 @@ const RemoveCircleStage: FC<RemoveCircleStageProps> = (props) => {
       createRemoveCircleProposal.request({
         payload,
         callback: (error, data) => {
-          if (!error && data) {
-            setCreatedProposal(data);
-            setStep(RemoveCircleStep.Success);
-            setIsProposalCreating(false);
+          if (error || !data) {
+            onError(error?.message || "Something went wrong");
+            return;
           }
+
+          setCreatedProposal(data);
+          setStep(RemoveCircleStep.Success);
+          setIsProposalCreating(false);
         },
       })
     );
@@ -159,6 +164,7 @@ const RemoveCircleStage: FC<RemoveCircleStageProps> = (props) => {
           {(isConfigurationStep || isMobileView) && (
             <Configuration
               governance={governance}
+              commonMember={commonMember}
               commonMembers={commonMembers}
               initialData={removeCircleData}
               onFinish={handleConfigurationFinish}

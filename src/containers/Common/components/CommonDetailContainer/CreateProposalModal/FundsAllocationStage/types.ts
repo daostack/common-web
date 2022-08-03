@@ -1,7 +1,11 @@
 import { CommonLink } from "@/shared/models";
 import { ProposalImage } from "@/shared/models/governance/proposals";
 
-export type FundType = 'ILS' | 'Dollars' | 'Token';
+export enum FundType {
+  ILS = 'ILS',
+  USD = 'USD',
+  Token = 'Token',
+}
 
 export type RecipientType = 'Member' | 'Members' | 'Circles' | '3rd Party';
 

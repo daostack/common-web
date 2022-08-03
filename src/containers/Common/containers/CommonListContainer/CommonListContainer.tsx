@@ -1,22 +1,26 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-
-import { Loader } from "../../../../shared/components";
-import DownloadCommonApp from "../../../../shared/components/DownloadCommonApp/DownloadCommonApp";
-import { useAuthorizedModal } from "../../../../shared/hooks";
-import { isMobile } from "../../../../shared/utils";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { CommonRegistered } from "@/shared/models";
+import { Loader } from "@/shared/components";
+import DownloadCommonApp from "@/shared/components/DownloadCommonApp/DownloadCommonApp";
+import { useAuthorizedModal } from "@/shared/hooks";
+import { getLoading } from "@/shared/store/selectors";
+import { isMobile } from "@/shared/utils";
 import {
   CreateCommonButton,
   CommonListItem,
   CreateCommonModal,
 } from "../../components";
 import { COMMON_PAGE_SIZE } from "../../constants";
-
-import "./index.scss";
-
-import { useDispatch, useSelector } from "react-redux";
 import { selectCommonList, selectCurrentPage } from "../../store/selectors";
-import { getLoading } from "../../../../shared/store/selectors";
 import { getCommonsList, updatePage } from "../../store/actions";
+import "./index.scss";
 
 const options = {
   root: null,
@@ -25,13 +29,20 @@ const options = {
 };
 
 export default function CommonListContainer() {
-  const commons = useSelector(selectCommonList());
+  const allCommons = useSelector(selectCommonList());
   const page = useSelector(selectCurrentPage());
   const loading = useSelector(getLoading());
   const dispatch = useDispatch();
   const [loaderHack, setLoaderHack] = useState(false);
   const [isCommonsLoadingStarted, setIsCommonsLoadingStarted] = useState(false);
   const { isModalOpen, onOpen, onClose } = useAuthorizedModal();
+  const commons = useMemo(
+    () =>
+      allCommons.filter(
+        (common) => common.register === CommonRegistered.REGISTERED
+      ),
+    [allCommons]
+  );
 
   const loader = useRef(null);
 

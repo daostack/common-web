@@ -50,7 +50,7 @@ export const getFundsAllocationDetails = (
 
 export const getAssignCircleDetails = (
   proposal: AssignCircle,
-  proposer: User,
+  member: User | null,
   governance: Governance
 ): ProposalDetailsItem[] => {
   const circleToBeAssigned = governance.circles.find(
@@ -60,7 +60,7 @@ export const getAssignCircleDetails = (
   return [
     {
       title: "Name of member",
-      value: getUserName(proposer),
+      value: getUserName(member) || "--//--",
     },
     {
       title: "Circle to be assigned",
@@ -75,7 +75,7 @@ export const getAssignCircleDetails = (
 
 export const getRemoveCircleDetails = (
   proposal: RemoveCircle,
-  proposer: User,
+  member: User | null,
   governance: Governance
 ): ProposalDetailsItem[] => {
   const circleToBeRemoved = governance.circles.find(
@@ -85,7 +85,7 @@ export const getRemoveCircleDetails = (
   return [
     {
       title: "Name of member",
-      value: getUserName(proposer),
+      value: getUserName(member) || "--//--",
     },
     {
       title: "Circle to be removed",

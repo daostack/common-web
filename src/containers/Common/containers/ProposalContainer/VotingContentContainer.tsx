@@ -26,6 +26,7 @@ import {
   getRemoveCircleDetails,
 } from "./helpers";
 import { ProposalDetailsItem } from "./types";
+import { ProposalSpecificData } from "./useProposalSpecificData";
 import "./index.scss";
 
 interface VotingContentContainerProps {
@@ -33,9 +34,13 @@ interface VotingContentContainerProps {
   common: Common;
   governance: Governance;
   proposer: User;
+  proposalSpecificData: ProposalSpecificData;
+  onVotesOpen: () => void;
 }
 
-export const VotingContentContainer: FC<VotingContentContainerProps> = ({ proposal, common, governance, proposer }) => {
+export const VotingContentContainer: FC<VotingContentContainerProps> = (props) => {
+  const { proposal, governance, proposer, proposalSpecificData, onVotesOpen } =
+    props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -69,13 +74,13 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
       case ProposalsTypes.ASSIGN_CIRCLE:
         return getAssignCircleDetails(
           proposal as AssignCircle,
-          proposer,
+          proposalSpecificData.user,
           governance
         );
       case ProposalsTypes.REMOVE_CIRCLE:
         return getRemoveCircleDetails(
           proposal as RemoveCircle,
-          proposer,
+          proposalSpecificData.user,
           governance
         );
       case ProposalsTypes.MEMBER_ADMITTANCE:
@@ -87,7 +92,7 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
       default:
         return [];
     }
-  }, [proposal, proposal.type]);
+  }, [proposal, proposal.type, proposalSpecificData]);
 
   return (
     <div className="voting-content__wrapper">
@@ -96,8 +101,8 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
         style={
           !isMobileView
             ? {
-                gridTemplateColumns: `repeat(${proposalDetailsByType.length}, minmax(0, 17.625rem))`,
-              }
+              gridTemplateColumns: `repeat(${proposalDetailsByType.length}, minmax(0, 17.625rem))`,
+            }
             : {}
         }
       >
@@ -116,15 +121,16 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = ({ propos
           <CountDownCard
             className="voting-content__countdown-card"
             proposal={proposal}
-            memberCount={common.memberCount}
+            memberCount={proposal.votes.totalMembersWithVotingRight}
           />
         </div>
         <VotingCard
           className="voting-content__voting-card"
           type={VotingCardType.AllVotes}
           votedMembersAmount={proposal.votes.total}
-          membersAmount={common.memberCount}
+          membersAmount={proposal.votes.totalMembersWithVotingRight}
           percentageCondition={proposal.global.quorum}
+          onClick={onVotesOpen}
         />
         <VotingCard
           className="voting-content__voting-card"

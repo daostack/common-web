@@ -11,7 +11,7 @@ interface ProposalTypeDetailsProps {
 interface ItemProps {
   name: string;
   value: string | number;
-  hint: string;
+  hint?: string;
   hintColor?: "green" | "red";
 }
 
@@ -41,24 +41,9 @@ const ProposalTypeDetails: FC<ProposalTypeDetailsProps> = (props) => {
 
   return (
     <div className={classNames("proposal-type-details", className)}>
-      <Item
-        name="Quorum"
-        value={`${data.global.quorum}%`}
-        hint="Fulfilled"
-        hintColor="green"
-      />
-      <Item
-        name="Minimum Support"
-        value={`${data.global.minApprove}%`}
-        hint="Fulfilled"
-        hintColor="green"
-      />
-      <Item
-        name="Maximum Object"
-        value={`${data.global.maxReject}%`}
-        hint="Failing"
-        hintColor="red"
-      />
+      <Item name="Quorum" value={`${data.global.quorum}%`} />
+      <Item name="Minimum Support" value={`${data.global.minApprove}%`} />
+      <Item name="Maximum Object" value={`${data.global.maxReject}%`} />
       <Item name="Discussion Duration" value={discussionDuration} hint="Days" />
       <Item name="Voting Duration" value={votingDuration} hint="Days" />
     </div>

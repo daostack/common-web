@@ -15,6 +15,7 @@ import { FundDetails } from "./FundDetails";
 import { Success } from "./Success";
 import { FundsAllocationStep } from "./constants";
 import { FundsAllocationData, FundType } from "./types";
+import { FundAllocationForm } from "./FundsAllocationForm";
 import "./index.scss";
 
 interface FundsAllocationStageProps {
@@ -29,7 +30,7 @@ const initialFundsData = {
   description: "description",
   goalOfPayment: "goalOfPayment",
   amount: 10,
-  fund: "ILS" as FundType,
+  fund: FundType.ILS,
   links: [] as CommonLink[],
   images: [] as ProposalImage[],
 };
@@ -48,6 +49,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     setOnGoBack,
     setShouldShowClosePrompt,
     setShouldBeOnFullHeight,
+    onError,
   } = useCreateProposalContext();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -57,12 +59,18 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const isLoading = isProposalCreating;
 
   const handleConfigurationFinish = (data: FundsAllocationData) => {
-    setFundsAllocationData(data);
+    setFundsAllocationData((fundsAllocationData) => ({
+      ...fundsAllocationData,
+      ...data,
+    }));
     setStep(FundsAllocationStep.Funds);
   };
 
   const handleFundDetailsFinish = (data: FundsAllocationData) => {
-    setFundsAllocationData(data);
+    setFundsAllocationData((fundsAllocationData) => ({
+      ...fundsAllocationData,
+      ...data,
+    }));
     setStep(FundsAllocationStep.Confirmation);
   };
 
@@ -92,11 +100,14 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       createFundingProposal.request({
         payload,
         callback: (error, data) => {
-          if (!error && data) {
-            setCreatedProposal(data);
-            setStep(FundsAllocationStep.Success);
-            setIsProposalCreating(false);
+          if (error || !data) {
+            onError(error || "Something went wrong");
+            return;
           }
+
+          setCreatedProposal(data);
+          setStep(FundsAllocationStep.Success);
+          setIsProposalCreating(false);
         },
       })
     );
@@ -156,22 +167,33 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       {isLoading && <Loader />}
       {!isLoading && (
         <>
-          {(isConfigurationStep || isMobileView) && (
-            <Configuration
-              governance={governance}
-              initialData={fundsAllocationData}
-              onFinish={handleConfigurationFinish}
-            />
-          )}
+            {isMobileView ? (
+                <FundAllocationForm
+                  governance={governance}
+                  initialData={fundsAllocationData}
+                  onFinish={handleFundDetailsFinish}
+                  commonBalance={common.balance}
+                />
+              ) : (
+                <>
+                  {isConfigurationStep && (
+                    <Configuration
+                      governance={governance}
+                      initialData={fundsAllocationData}
+                      onFinish={handleConfigurationFinish}
+                    />
+                  )}
+                  {(step === FundsAllocationStep.Funds) && (
+                    <FundDetails
+                      governance={governance}
+                      initialData={fundsAllocationData}
+                      onFinish={handleFundDetailsFinish}
+                      commonBalance={common.balance}
+                    />
+                  )}
+                </>
+            )}
 
-          {(step === FundsAllocationStep.Funds || isMobileView) && (
-            <FundDetails
-              governance={governance}
-              initialData={fundsAllocationData}
-              onFinish={handleFundDetailsFinish}
-              commonBalance={common.balance}
-            />
-          )}
           {step === FundsAllocationStep.Confirmation &&
             (isMobileView ? (
               <Modal

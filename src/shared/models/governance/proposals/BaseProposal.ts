@@ -31,6 +31,8 @@ export interface CalculatedVotes {
   rejected: number;
 
   approved: number;
+
+  totalMembersWithVotingRight: number;
 }
 
 export interface BaseProposal extends BaseEntity {

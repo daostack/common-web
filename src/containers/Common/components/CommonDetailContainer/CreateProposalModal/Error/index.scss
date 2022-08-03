@@ -1,0 +1,77 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.error-create-proposal-modal {
+  width: 100%;
+  max-width: 23.75rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $secondary-blue;
+}
+
+.error-create-proposal-modal__image {
+  width: 10rem;
+  height: 10rem;
+
+  @include big-phone {
+    max-width: 7.25rem;
+    width: 100%;
+    max-height: 7.25rem;
+    height: 100%;
+  }
+}
+
+.error-create-proposal-modal__title {
+  margin: 2.5rem 0 1rem;
+  font-family: NotoSerifSC, serif;
+  font-size: $moderate-small;
+  font-weight: bold;
+  text-align: center;
+
+  @include big-phone {
+    margin: 1.5rem 0 0.5rem;
+    font-family: NunitoSans, serif;
+  }
+}
+
+.error-create-proposal-modal__submit-button {
+  max-width: 11.25rem;
+  margin-top: 2.5rem;
+
+  @include big-phone {
+    max-width: unset;
+    margin-top: 1.5rem;
+  }
+}
+
+.error-create-proposal-modal__view-details {
+  margin: 1rem 0;
+  font-size: $xsmall;
+  color: $light-gray-2;
+  text-align: center;
+  text-decoration: none;
+
+  @include big-phone {
+    width: 100%;
+    margin: 0.5rem 0 0;
+    padding: 1rem 0;
+  }
+}
+
+.error-create-proposal-modal__error {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 1rem 1.5rem;
+  background-color: $purple-alpha-10;
+  border-radius: 0.875rem;
+  color: $error;
+  text-align: center;
+  word-break: break-word;
+  box-sizing: border-box;
+
+  @include big-phone {
+    padding: 0.5rem 1rem;
+  }
+}
