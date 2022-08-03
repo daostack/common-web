@@ -5,26 +5,23 @@ import { FormikProps } from "formik/dist/types";
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
 import { BankAccountState } from "@/containers/MyAccount/components/Billing/types";
-import {
-  Button,
-  Dropdown,
-  Loader,
-  ModalFooter,
-} from "@/shared/components";
+import { Button, Dropdown, Loader, ModalFooter } from "@/shared/components";
 import {
   CurrencyInput,
   Form,
   LinksArray,
+  ImageArray,
 } from "@/shared/components/Form/Formik";
 import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
 import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
+import { ProposalImage } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
 import { getPrefix } from "../helpers";
 import { FundsAllocationData, FundType } from "../types";
 import { fundDetailsValidationSchema } from "../validationSchema";
-import {FUND_TYPES} from '../constants';
+import { FUND_TYPES } from "../constants";
 import "./index.scss";
 
 interface ConfigurationProps {
@@ -40,6 +37,8 @@ interface FormValues {
   links: CommonLink[];
   commonBalance: number;
   bankAccountDetails: BankAccountDetails | null;
+  images: ProposalImage[];
+  areImagesLoading: boolean;
 }
 
 const FundDetails: FC<ConfigurationProps> = (props) => {
@@ -82,7 +81,9 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     amount: 0,
     links: [],
     commonBalance: commonBalance / 100,
-    bankAccountDetails: bankAccountState.bankAccount
+    bankAccountDetails: bankAccountState.bankAccount,
+    images: [],
+    areImagesLoading: false,
   });
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -92,6 +93,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
         fund: selectedFund,
         amount: values.amount,
         links: values.links,
+        images: values.images,
       });
     },
     [onFinish]
@@ -102,8 +104,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       formRef.current.submitForm();
       onFinish({
         ...initialData,
-        ...formRef.current.values
-      })
+        ...formRef.current.values,
+      });
     }
   }, []);
 
@@ -177,12 +179,22 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 className="create-funds-allocation__text-field"
                 itemClassName="funds_allocation__links-array-item"
               />
+              <ImageArray
+                name="images"
+                values={values.images}
+                areImagesLoading={values.areImagesLoading}
+                loadingFieldName="areImagesLoading"
+              />
               <ModalFooter sticky={!isMobileView}>
                 <div className="funds-allocation-configuration__modal-footer">
                   <Button
                     onClick={handleContinueClick}
                     shouldUseFullWidth={isMobileView}
-                    disabled={!isValid || (!bankAccountState.bankAccount && values.amount > 0)}
+                    disabled={
+                      !isValid ||
+                      values.areImagesLoading ||
+                      (!bankAccountState.bankAccount && values.amount > 0)
+                    }
                   >
                     Create proposal
                   </Button>
