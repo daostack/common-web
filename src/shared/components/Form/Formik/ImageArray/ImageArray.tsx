@@ -111,8 +111,9 @@ const ImageArray: FC<ImageArrayProps> = (props) => {
                     alt={index.toString()}
                   />
                   <ButtonIcon
-                    className="file-item__remove-button"
+                    className="additional-content-wrapper__delete-button"
                     onClick={() => removeFile(index)}
+                    disabled={areImagesLoading}
                   >
                     <DeleteIcon className="file-item__delete-icon" />
                   </ButtonIcon>
