@@ -443,6 +443,7 @@ $max-details-width: 74.875rem;
       font-size: $xsmall;
       line-height: 120%;
       color: $light-gray-2;
+      word-break: break-word;
     }
 
     &:not(:last-child) {
