@@ -27,6 +27,7 @@ export const fundDetailsValidationSchema = yup.object({
     is: (amount) => amount > 0,
     then: yup.object().required()
   }).nullable(),
+  areImagesLoading: yup.boolean().oneOf([false]),
 });
 
 export const fundAllocationValidationSchema = configurationValidationSchema.concat(fundDetailsValidationSchema);
