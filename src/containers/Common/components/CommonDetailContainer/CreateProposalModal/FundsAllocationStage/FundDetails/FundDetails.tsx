@@ -93,7 +93,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
         fund: selectedFund,
         amount: values.amount,
         links: values.links,
-        images: values.images as ProposalImage[],
+        images: values.images,
       });
     },
     [onFinish]
@@ -192,6 +192,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                     shouldUseFullWidth={isMobileView}
                     disabled={
                       !isValid ||
+                      values.areImagesLoading ||
                       (!bankAccountState.bankAccount && values.amount > 0)
                     }
                   >
