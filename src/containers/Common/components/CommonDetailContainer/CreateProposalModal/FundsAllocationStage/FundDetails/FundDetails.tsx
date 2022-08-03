@@ -5,13 +5,7 @@ import { FormikProps } from "formik/dist/types";
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
 import { BankAccountState } from "@/containers/MyAccount/components/Billing/types";
-import {
-  Button,
-  Dropdown,
-  Loader,
-  ModalFooter,
-  ButtonLink,
-} from "@/shared/components";
+import { Button, Dropdown, Loader, ModalFooter } from "@/shared/components";
 import {
   CurrencyInput,
   Form,
@@ -21,15 +15,14 @@ import {
 import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
 import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
+import { ProposalImage } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
 import { getPrefix } from "../helpers";
 import { FundsAllocationData, FundType } from "../types";
-import { ProposalImage } from "@/shared/models/governance/proposals";
 import { fundDetailsValidationSchema } from "../validationSchema";
-import {FUND_TYPES} from '../constants';
+import { FUND_TYPES } from "../constants";
 import "./index.scss";
-import { FileUploadButton } from "../../../AddProposalComponent/FileUploadButton";
 
 interface ConfigurationProps {
   governance: Governance;
@@ -111,8 +104,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       formRef.current.submitForm();
       onFinish({
         ...initialData,
-        ...formRef.current.values
-      })
+        ...formRef.current.values,
+      });
     }
   }, []);
 
@@ -197,7 +190,10 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                   <Button
                     onClick={handleContinueClick}
                     shouldUseFullWidth={isMobileView}
-                    disabled={!isValid || (!bankAccountState.bankAccount && values.amount > 0)}
+                    disabled={
+                      !isValid ||
+                      (!bankAccountState.bankAccount && values.amount > 0)
+                    }
                   >
                     Create proposal
                   </Button>
