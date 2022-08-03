@@ -137,20 +137,20 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
           type={VotingCardType.Object}
           percentageCondition={proposal.global.maxReject}
           targetVotersAmount={proposal.votes.rejected}
-          membersAmount={proposal.votes.totalMembersWithVotingRight}
+          votedMembersAmount={proposal.votes.total}
         />
         <VotingCard
           className="voting-content__voting-card"
           type={VotingCardType.Support}
           percentageCondition={proposal.global.minApprove}
           targetVotersAmount={proposal.votes.approved}
-          membersAmount={proposal.votes.totalMembersWithVotingRight}
+          votedMembersAmount={proposal.votes.total}
         />
         <VotingCard
           className="voting-content__voting-card"
           type={VotingCardType.Abstain}
           targetVotersAmount={proposal.votes.abstained}
-          membersAmount={proposal.votes.totalMembersWithVotingRight}
+          votedMembersAmount={proposal.votes.total}
         />
       </div>
     </div>
