@@ -30,6 +30,12 @@ const ImageArray: FC<ImageArrayProps> = (props) => {
   } = props;
   const { setFieldValue } = useFormikContext();
 
+  const handleAddImageClick = () => {
+    if (!areImagesLoading) {
+      document.getElementById("file")?.click();
+    }
+  };
+
   const setLoadingState = (isLoading: boolean) => {
     setFieldValue(loadingFieldName, isLoading);
   };
@@ -90,7 +96,7 @@ const ImageArray: FC<ImageArrayProps> = (props) => {
 
             <ButtonLink
               className="images-array__add-button"
-              onClick={() => document.getElementById("file")?.click()}
+              onClick={handleAddImageClick}
             >
               {title}
             </ButtonLink>
