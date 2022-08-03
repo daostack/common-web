@@ -213,7 +213,11 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
                   <Button
                     onClick={handleContinueClick}
                     shouldUseFullWidth={isMobileView}
-                    disabled={!isValid || (!bankAccountState.bankAccount && values.amount > 0)}
+                    disabled={
+                      !isValid ||
+                      values.areImagesLoading ||
+                      (!bankAccountState.bankAccount && values.amount > 0)
+                    }
                   >
                     Create proposal
                   </Button>
