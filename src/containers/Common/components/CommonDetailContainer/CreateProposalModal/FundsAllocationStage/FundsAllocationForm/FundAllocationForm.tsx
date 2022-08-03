@@ -186,10 +186,12 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
                   <Loader />
                 </div>
               ) : (
-                <BankAccount
-                  bankAccount={bankAccountState.bankAccount}
-                  onBankAccountChange={handleBankAccountChange}
-                />
+                <div className="funds-allocation-form__bank-account-wrapper">
+                  <BankAccount
+                    bankAccount={bankAccountState.bankAccount}
+                    onBankAccountChange={handleBankAccountChange}
+                  />
+                </div>
               )}
               <LinksArray
                 name="links"
