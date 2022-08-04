@@ -137,7 +137,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
             .filter(isFundsAllocationProposal)
             .filter(
               (proposal) =>
-                proposal.state === ProposalState.PASSED &&
+                proposal.state === ProposalState.COMPLETED &&
                 proposal.data.tracker.status ===
                 FundingAllocationStatus.COMPLETED
             );
@@ -147,7 +147,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
               proposal => (
                 {
                   type: TransactionType.PayOut,
-                  amount: proposal.data.args.amount,
+                  amount: proposal.data.legal.totalInvoicesAmount,
                   createdAt: proposal.createdAt,
                   fundingRequestDescription: proposal.data.args.description,
                 }
