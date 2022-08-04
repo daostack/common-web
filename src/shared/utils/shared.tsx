@@ -57,7 +57,7 @@ export const getUserName = (
   user?: Pick<User, "firstName" | "lastName" | "displayName"> | null
 ) => {
   if (!user) return "";
-  return user.displayName || `${user.firstName} ${user.lastName}`.trim();
+  return user.displayName?.trim() || `${user.firstName} ${user.lastName}`.trim();
 };
 
 export const getUserInitials = (user: User | undefined) => {
