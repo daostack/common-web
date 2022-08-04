@@ -232,7 +232,9 @@ const ProposalContainer = () => {
   }, [currentProposal, dispatch, proposalId]);
 
   useEffect(() => {
-    dispatch(clearCurrentProposal())
+    return () => {
+      dispatch(clearCurrentProposal())
+    };
   }, [])
 
   useEffect(() => {
