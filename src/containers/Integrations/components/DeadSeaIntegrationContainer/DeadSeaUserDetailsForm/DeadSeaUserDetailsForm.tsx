@@ -9,11 +9,7 @@ import {
   Form,
   TextField,
 } from "@/shared/components/Form/Formik";
-import {
-  AVAILABLE_COUNTRIES,
-  CountryCode,
-  ScreenSize,
-} from "@/shared/constants";
+import { AVAILABLE_COUNTRIES, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import validationSchema from "./validationSchema";
 import "./index.scss";
@@ -47,14 +43,10 @@ const DeadSeaUserDetailsForm: FC = () => {
 
   const countriesOptions = useMemo<DropdownOption[]>(
     () =>
-      countryList
-        .filter((item) =>
-          AVAILABLE_COUNTRIES.includes(item.value as CountryCode)
-        )
-        .map((item) => ({
-          text: item.name,
-          value: item.value,
-        })),
+      countryList.map((item) => ({
+        text: item.name,
+        value: item.value,
+      })),
     []
   );
 
