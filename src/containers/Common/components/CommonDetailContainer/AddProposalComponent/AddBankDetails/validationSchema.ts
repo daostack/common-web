@@ -1,7 +1,10 @@
 import * as Yup from "yup";
-import { NUMBERS_ONLY_REGEXP } from "@/shared/constants";
+import {
+  AVAILABLE_COUNTRIES,
+  NAME_REGEXP,
+  NUMBERS_ONLY_REGEXP,
+} from "@/shared/constants";
 import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
-import { AVAILABLE_COUNTRIES, NAME_REGEXP } from "./constants";
 
 const schema = Yup.object().shape({
   idNumber: Yup.string()
@@ -18,7 +21,8 @@ const schema = Yup.object().shape({
   gender: Yup.number()
     .oneOf(GENDER_OPTIONS.map((option) => option.value as Gender))
     .required("Please choose gender"),
-  phoneNumber: Yup.string().phone('Phone number must be in valid international Israeli format')
+  phoneNumber: Yup.string()
+    .phone("Phone number must be in valid international Israeli format")
     .required("Please enter a phone number"),
   email: Yup.string()
     .required("Please enter your email")
