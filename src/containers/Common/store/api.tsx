@@ -451,7 +451,10 @@ export async function makeImmediateContribution(
 ): Promise<ImmediateContributionResponse> {
   const { data } = await Api.post<ImmediateContributionResponse>(
     ApiEndpoint.MakeImmediateContribution,
-    requestData
+    {
+      ...requestData,
+      saveCard: requestData.saveCard ?? true,
+    }
   );
 
   return convertObjectDatesToFirestoreTimestamps(data);
