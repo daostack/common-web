@@ -1,4 +1,5 @@
 import React, { FC, useCallback, useMemo } from "react";
+import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { countryList } from "@/shared/assets/countries";
 import { Button, DropdownOption } from "@/shared/components";
@@ -8,7 +9,12 @@ import {
   Form,
   TextField,
 } from "@/shared/components/Form/Formik";
-import { AVAILABLE_COUNTRIES, CountryCode } from "@/shared/constants";
+import {
+  AVAILABLE_COUNTRIES,
+  CountryCode,
+  ScreenSize,
+} from "@/shared/constants";
+import { getScreenSize } from "@/shared/store/selectors";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 
@@ -35,6 +41,10 @@ const getInitialValues = (): FormValues => ({
 });
 
 const DeadSeaUserDetailsForm: FC = () => {
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
+  const textAreaRowsAmount = isMobileView ? 3 : 2;
+
   const countriesOptions = useMemo<DropdownOption[]>(
     () =>
       countryList
@@ -111,7 +121,7 @@ const DeadSeaUserDetailsForm: FC = () => {
                 hint: "dead-sea-user-details-form__field-hint",
               }}
               isTextarea
-              rows={2}
+              rows={textAreaRowsAmount}
             />
             <TextField
               className="dead-sea-user-details-form__all-columns"
@@ -125,7 +135,7 @@ const DeadSeaUserDetailsForm: FC = () => {
                 hint: "dead-sea-user-details-form__field-hint",
               }}
               isTextarea
-              rows={2}
+              rows={textAreaRowsAmount}
             />
           </div>
           <Checkbox
@@ -143,6 +153,7 @@ const DeadSeaUserDetailsForm: FC = () => {
             className="dead-sea-user-details-form__submit-button"
             type="submit"
             disabled={!isValid}
+            shouldUseFullWidth
           >
             Next
           </Button>
