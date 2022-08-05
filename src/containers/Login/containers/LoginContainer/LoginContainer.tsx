@@ -46,7 +46,11 @@ const LoginContainer: FC = () => {
     user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
   );
   const [errorText, setErrorText] = useState("");
-  const { isShowing, type } = useSelector(selectLoginModalState());
+  const {
+    isShowing,
+    type,
+    title: loginModalTitle,
+  } = useSelector(selectLoginModalState());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
   const shouldRemoveHorizontalPadding =
     isMobileView && stage === AuthStage.AuthMethodSelect;
@@ -169,6 +173,7 @@ const LoginContainer: FC = () => {
       case AuthStage.AuthMethodSelect:
         return (
           <Connect
+            loginModalTitle={loginModalTitle}
             errorText={errorText}
             isJoinRequestType={type === LoginModalType.RequestToJoin}
             onAuthButtonClick={handleAuthButtonClick}
@@ -192,6 +197,7 @@ const LoginContainer: FC = () => {
   }, [
     stage,
     hasError,
+    loginModalTitle,
     errorText,
     handleClose,
     user,

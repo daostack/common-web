@@ -6,4 +6,5 @@ export enum LoginModalType {
 export interface LoginModalState {
   isShowing: boolean;
   type?: LoginModalType;
+  title?: string;
 }
