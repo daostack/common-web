@@ -7,6 +7,7 @@ import React, {
   ReactNode,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
 import { Modal } from "@/shared/components";
 import { AuthProvider, ErrorCode, ScreenSize } from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
@@ -31,11 +32,13 @@ import {
   DEFAULT_AUTH_ERROR_TEXT,
   ERROR_TEXT_FOR_NON_EXISTENT_USER,
 } from "../../constants";
+import { getAuthCode } from './helpers';
 import "./index.scss";
 
 const LoginContainer: FC = () => {
   const dispatch = useDispatch();
   const queryParams = useQueryParams();
+  const location = useLocation();
   const { removeQueryParams } = useRemoveQueryParams();
   const isAuthenticated = useSelector(authentificated());
   const isLoading = useSelector(selectIsAuthLoading());
@@ -62,10 +65,7 @@ const LoginContainer: FC = () => {
       ? ModalType.MobilePopUp
       : ModalType.Default;
   const hasError = Boolean(errorText);
-  const authCode =
-    typeof queryParams[AUTH_CODE_QUERY_PARAM_KEY] === "string"
-      ? queryParams[AUTH_CODE_QUERY_PARAM_KEY]
-      : "";
+  const authCode = getAuthCode(queryParams, location.pathname);
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
