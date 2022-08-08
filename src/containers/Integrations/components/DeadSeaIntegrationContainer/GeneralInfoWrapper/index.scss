@@ -1,0 +1,23 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.dead-sea-general-info-wrapper {
+  max-width: 36.125rem;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.dead-sea-general-info-wrapper__title {
+  margin: 0 0 3.875rem;
+  font-family: NotoSerifSC, serif;
+  font-weight: 600;
+  font-size: $large;
+  line-height: 133%;
+}
+
+.dead-sea-general-info-wrapper__action {
+  height: 1.25rem;
+  letter-spacing: 0.01em;
+}

@@ -1,15 +1,21 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import { useQueryParams } from "@/shared/hooks";
+import {
+  GeneralInfoWrapper,
+  DeadSeaUserDetailsForm,
+} from "../../components/DeadSeaIntegrationContainer";
+import { DeadSeaIntegrationStep } from "./constants";
 import { getAmount } from "./helpers";
 import "./index.scss";
 
 const DeadSeaIntegrationContainer: FC = () => {
   const dispatch = useDispatch();
   const queryParams = useQueryParams();
+  const [step, setStep] = useState(DeadSeaIntegrationStep.UserDetails);
   const user = useSelector(selectUser());
   const amount = getAmount(queryParams);
   const isInitialLoading = !user || !amount;
@@ -27,6 +33,23 @@ const DeadSeaIntegrationContainer: FC = () => {
     }
   }, [dispatch, user, amount]);
 
+  const renderContent = () => {
+    if (isInitialLoading) {
+      return <Loader />;
+    }
+
+    switch (step) {
+      case DeadSeaIntegrationStep.UserDetails:
+        return (
+          <GeneralInfoWrapper>
+            <DeadSeaUserDetailsForm />
+          </GeneralInfoWrapper>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="dead-sea-integration">
       <div className="dead-sea-integration__content">
@@ -37,7 +60,7 @@ const DeadSeaIntegrationContainer: FC = () => {
             alt="Dead Sea"
           />
         </div>
-        {isInitialLoading && <Loader />}
+        {renderContent()}
       </div>
     </div>
   );
