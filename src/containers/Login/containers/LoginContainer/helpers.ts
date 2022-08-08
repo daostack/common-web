@@ -1,13 +1,16 @@
 import { ParsedQuery } from "query-string";
-import { AUTH_CODE_QUERY_PARAM_KEY } from "@/containers/Login/constants";
-import { AUTH_CODE_FOR_SIGN_UP, ROUTE_PATHS } from "@/shared/constants";
+import {
+  AUTH_CODE_FOR_SIGN_UP,
+  QueryParamKey,
+  ROUTE_PATHS,
+} from "@/shared/constants";
 import { matchRoute } from "@/shared/utils";
 
 export const getAuthCode = (
   queryParams: ParsedQuery,
   pathname: string
 ): string => {
-  const authCode = queryParams[AUTH_CODE_QUERY_PARAM_KEY];
+  const authCode = queryParams[QueryParamKey.AuthCode];
 
   if (typeof authCode === "string") {
     return authCode;

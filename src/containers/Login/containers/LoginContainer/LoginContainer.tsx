@@ -9,7 +9,12 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { Modal } from "@/shared/components";
-import { AuthProvider, ErrorCode, ScreenSize } from "@/shared/constants";
+import {
+  AuthProvider,
+  ErrorCode,
+  ScreenSize,
+  QueryParamKey,
+} from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -28,7 +33,6 @@ import { Connect } from "../../components/LoginContainer/Connect";
 import { PhoneAuth } from "../../components/LoginContainer/PhoneAuth";
 import { AuthStage } from "../../components/LoginContainer/constants";
 import {
-  AUTH_CODE_QUERY_PARAM_KEY,
   DEFAULT_AUTH_ERROR_TEXT,
   ERROR_TEXT_FOR_NON_EXISTENT_USER,
 } from "../../constants";
@@ -79,7 +83,7 @@ const LoginContainer: FC = () => {
 
   const handleAuthFinish = useCallback(
     (isNewUser?: boolean) => {
-      removeQueryParams(AUTH_CODE_QUERY_PARAM_KEY);
+      removeQueryParams(QueryParamKey.AuthCode);
 
       if (isNewUser && shouldShowUserDetailsAfterSignUp) {
         setStage(AuthStage.CompleteAccountDetails);
