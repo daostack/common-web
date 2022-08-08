@@ -18,6 +18,7 @@ import {
   ErrorCode,
   RECAPTCHA_CONTAINER_ID,
   ROUTE_PATHS,
+  WebviewActions,
 } from "../../../shared/constants";
 import history from "../../../shared/history";
 import { createdUserApi, getUserData } from "./api";
@@ -456,6 +457,9 @@ function* logOut() {
 
   if (window.location.pathname === ROUTE_PATHS.MY_COMMONS) {
     history.push("/");
+  }
+  if(window.ReactNativeWebView) {
+    window.ReactNativeWebView.postMessage(WebviewActions.logout);
   }
   yield true;
 }
