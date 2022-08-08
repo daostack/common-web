@@ -29,11 +29,16 @@ const DeadSeaIntegrationContainer: FC = () => {
 
   return (
     <div className="dead-sea-integration">
-      {isInitialLoading && (
-        <div>
-          <Loader />
+      <div className="dead-sea-integration__content">
+        <div className="dead-sea-integration__main-image-wrapper">
+          <img
+            className="dead-sea-integration__main-image"
+            src="/assets/images/dead-sea-integration.png"
+            alt="Dead Sea"
+          />
         </div>
-      )}
+        {isInitialLoading && <Loader />}
+      </div>
     </div>
   );
 };
