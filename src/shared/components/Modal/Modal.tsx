@@ -44,6 +44,8 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     shouldShowHeaderShadow = true,
     closePrompt = false,
     withoutHorizontalPadding = false,
+    withoutHeader = false,
+    fullHeight = false,
   } = props;
   const contentRef = useRef<HTMLDivElement>(null);
   const [footer, setFooter] = useState<ReactNode>(null);
@@ -128,6 +130,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   const modalClassName = classNames("modal", props.className, {
     "modal--mobile-full-screen": mobileFullScreen && type !== ModalType.MobilePopUp,
     "modal--mobile-pop-up": type === ModalType.MobilePopUp,
+    "modal--full-height": fullHeight,
   });
   const headerWrapperClassName = classNames(
     "modal__header-wrapper",
@@ -222,14 +225,14 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
               className={modalClassName}
               onClick={handleModalContainerClick}
             >
-              {isHeaderSticky && headerEl}
+              {(isHeaderSticky && !withoutHeader) && headerEl}
               <ModalContext.Provider value={contextValue}>
                 <div
                   ref={contentRef}
                   className={modalContentClassName}
                   onScroll={handleScroll}
                 >
-                  {!isHeaderSticky && headerEl}
+                  {(!isHeaderSticky && !withoutHeader) && headerEl}
                   {children}
                   {!isFooterSticky && footerEl}
                 </div>

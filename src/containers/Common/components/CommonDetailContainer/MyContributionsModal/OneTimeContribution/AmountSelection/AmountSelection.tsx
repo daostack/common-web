@@ -1,10 +1,10 @@
 import React, { useEffect, FC } from "react";
 import { ContributionAmountSelection, Separator } from "@/shared/components";
-import { Common } from "@/shared/models";
+import { MIN_CONTRIBUTION_ILS_AMOUNT } from "@/shared/constants";
 import "./index.scss";
 
 interface AmountSelectionProps {
-  common: Common;
+  minSelectionAmount?: number;
   contributionAmount?: number;
   onSelect: (amount: number) => void;
   setShouldShowGoBackButton: (value: boolean) => void;
@@ -12,14 +12,11 @@ interface AmountSelectionProps {
 
 const AmountSelection: FC<AmountSelectionProps> = (props) => {
   const {
-    common,
+    minSelectionAmount = MIN_CONTRIBUTION_ILS_AMOUNT,
     contributionAmount,
     onSelect,
     setShouldShowGoBackButton,
   } = props;
-  const {
-    metadata: { minFeeToJoin },
-  } = common;
 
   const handleChange = (
     amount: number | null,
@@ -47,8 +44,7 @@ const AmountSelection: FC<AmountSelectionProps> = (props) => {
       <Separator className="one-time-amount-selection-my-contributions-stage__separator" />
       <ContributionAmountSelection
         contributionAmount={contributionAmount}
-        minFeeToJoin={minFeeToJoin}
-        zeroContribution={false}
+        minimalAmount={minSelectionAmount}
         onChange={handleChange}
         showFinishButton
       />

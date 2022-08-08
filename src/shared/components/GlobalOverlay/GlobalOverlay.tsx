@@ -6,8 +6,10 @@ interface GlobalOverlayProps {
   className?: string;
 }
 
-const GlobalOverlay: FC<GlobalOverlayProps> = ({ className }) => {
-  return <div className={classNames("global-overlay", className)} />;
+const GlobalOverlay: FC<GlobalOverlayProps> = ({ className, children }) => {
+  return (
+    <div className={classNames("global-overlay", className)}>{children}</div>
+  );
 };
 
 export default GlobalOverlay;

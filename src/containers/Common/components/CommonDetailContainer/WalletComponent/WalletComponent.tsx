@@ -15,19 +15,20 @@ import {
   Currency,
   TransactionType,
   TransactionData,
-  ProposalType,
   ProposalState,
-  ProposalFundingState,
-  FundingProcessStage,
   Time,
 } from "@/shared/models";
-import { Loader, ChartCanvas } from "@/shared/components";
-import { ChartType, ScreenSize } from "@/shared/constants";
+import { Loader } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import { sortByCreatedTime, formatPrice } from "@/shared/utils";
+import {
+  isFundsAllocationProposal,
+  FundingAllocationStatus,
+} from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { fetchCommonContributions, fetchCommonProposals } from "../../../store/api";
 import { TransactionsList } from "../";
-import { CommonWalletChartOptions, WalletMenuItems } from "./constants";
+import { WalletMenuItems } from "./constants";
 import { useCommonTransactionsChartDataSet } from "./hooks";
 import "./index.scss";
 
@@ -99,10 +100,10 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
 
         try {
           const commonPaymentsIn = (await fetchCommonContributions(common.id))
-                                    .filter(
-                                      payment =>
-                                        (payment.amount.currency === Currency.ILS)
-                                    );
+            .filter(
+              payment =>
+                (payment.amount.currency === Currency.ILS)
+            );
 
           setPaymentsInData(
             commonPaymentsIn.map(
@@ -132,23 +133,23 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
         try {
           const commonProposals = await fetchCommonProposals(common.id);
 
-          const chargedCommonProposals = commonProposals.filter(
-            proposal => (
-              proposal.type === ProposalType.FundingRequest
-              && proposal.state === ProposalState.PASSED
-              && proposal.fundingState === ProposalFundingState.Funded
-              && proposal.fundingProcessStage === FundingProcessStage.Completed
-            )
-          );
+          const chargedCommonProposals = commonProposals
+            .filter(isFundsAllocationProposal)
+            .filter(
+              (proposal) =>
+                proposal.state === ProposalState.COMPLETED &&
+                proposal.data.tracker.status ===
+                FundingAllocationStatus.COMPLETED
+            );
 
           setPaymentsOutData(
             chargedCommonProposals.map(
               proposal => (
                 {
                   type: TransactionType.PayOut,
-                  amount: proposal.fundingRequest?.amount,
-                  createdAt: proposal.createdAt || proposal.createTime,
-                  fundingRequestDescription: proposal.description.description,
+                  amount: proposal.data.legal.totalInvoicesAmount,
+                  createdAt: proposal.createdAt,
+                  fundingRequestDescription: proposal.data.args.description,
                 }
               )
             ).sort(sortByCreatedTime) as TransactionData[]
@@ -161,7 +162,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
   }, [paymentsOutData, setPaymentsOutData, common.id]);
 
   useEffect(() => {
-    if (!!formattedChartData || !orderedCommonTransactions)
+    if (formattedChartData || !orderedCommonTransactions)
       return;
 
     const {
@@ -203,11 +204,11 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
       }
     );
   }, [
-      formattedChartData,
-      orderedCommonTransactions,
-      common.createdAt,
-      getCommonTransactionsChartDataSet,
-    ]
+    formattedChartData,
+    orderedCommonTransactions,
+    common.createdAt,
+    getCommonTransactionsChartDataSet,
+  ]
   );
 
   useEffect(() => {
@@ -255,7 +256,8 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
                 </div>
               </div>
             </div>
-            {
+            {//FIXME: temporary hidden Common Wallet chart. Uncomment this after clearing the DB from USD-payments and legacy Commons to which they were made
+            /* {
               !isMobileView
               && <div className="common-transactions-chart-wrapper">
                 {
@@ -268,7 +270,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
                   : <Loader />
                 }
               </div>
-            }
+            } */}
           </div>
         </div>
       </div>
@@ -282,7 +284,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
               sticked: isWalletMenuSticked,
             }
           )
-        } 
+        }
       >
         <ul className="wallet__menu">
           <li

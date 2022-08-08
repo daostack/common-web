@@ -1,0 +1,19 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.proposal-type-details {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  grid-gap: 1rem 0.5rem;
+  font-size: $xsmall;
+  line-height: 143%;
+  letter-spacing: 0.02em;
+}
+
+.proposal-type-details__hint--green {
+  color: $green;
+}
+.proposal-type-details__hint--red {
+  color: $red;
+}

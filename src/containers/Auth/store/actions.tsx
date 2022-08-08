@@ -6,6 +6,7 @@ import { PayloadWithOptionalCallback } from "../../../shared/interfaces";
 import { User } from "../../../shared/models";
 import firebase from "../../../shared/utils/firebase";
 import { LoginModalState } from "../../Auth/interface/LoginModalState";
+import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 
 export const socialLogin = createAsyncAction(
   AuthActionTypes.SOCIAL_LOGIN,
@@ -13,9 +14,23 @@ export const socialLogin = createAsyncAction(
   AuthActionTypes.SOCIAL_LOGIN_FAILURE
 )<
   PayloadWithOptionalCallback<
-    AuthProvider,
+    { provider: AuthProvider; authCode: string },
     { user: User; isNewUser: boolean },
     Error
+  >,
+  User,
+  Error
+>();
+
+export const webviewLogin = createAsyncAction(
+  AuthActionTypes.WEBVIEW_LOGIN,
+  AuthActionTypes.WEBVIEW_LOGIN_SUCCESS,
+  AuthActionTypes.WEBVIEW_LOGIN_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    FirebaseCredentials,
+    { user: User; isNewUser: boolean },
+    boolean
   >,
   User,
   Error
@@ -47,7 +62,11 @@ export const confirmVerificationCode = createAsyncAction(
   AuthActionTypes.CONFIRM_VERIFICATION_CODE_FAILURE
 )<
   PayloadWithOptionalCallback<
-    { confirmation: firebase.auth.ConfirmationResult; code: string },
+    {
+      confirmation: firebase.auth.ConfirmationResult;
+      code: string;
+      authCode: string;
+    },
     { user: User; isNewUser: boolean },
     Error
   >,

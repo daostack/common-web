@@ -1,0 +1,20 @@
+@import "../../../constants";
+
+.global-loader-overlay {
+  background-color: $black-gray;
+}
+
+.global-loader-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 1rem;
+  background-color: $white;
+  border-radius: 1rem;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.global-loader {
+  left: unset;
+  transform: unset;
+}

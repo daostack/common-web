@@ -1,9 +1,7 @@
 import React, { FC } from "react";
 
-import {
-  ProposalListItem,
-  ProposalState as ProposalStateTypes
-} from "@/shared/models";
+import { ProposalListItem } from "@/shared/models";
+import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import {
   UserAvatar,
   Separator,
@@ -11,22 +9,23 @@ import {
 } from "@/shared/components";
 import { DynamicLinkType } from "@/shared/constants";
 import {
-    VotesComponent,
-    ProposalCountDown,
-    ProposalState,
+  VotesComponent,
+  ProposalCountDown,
+  ProposalState,
 } from "../../CommonDetailContainer";
 import {
-    getUserName,
-    getDaysAgo,
-    getProposalExpirationDate,
-    formatPrice,
+  checkIsCountdownState,
+  getUserName,
+  getDaysAgo,
+  getProposalExpirationDate,
+  formatPrice,
 } from "@/shared/utils";
 import "./index.scss";
 
 const FundingProposalListItem: FC<ProposalListItem> = (
   {
-      proposal,
-      loadProposalDetails
+    proposal,
+    loadProposalDetails
   }: ProposalListItem
 ) => (
   <div className="proposal-item">
@@ -39,9 +38,8 @@ const FundingProposalListItem: FC<ProposalListItem> = (
       <div className="proposal-item__description">
         <p>
           {
-            proposal.title
-            || proposal.description.title
-            || proposal.description.description
+            proposal.data.args.title
+            || proposal.data.args.description
           }
         </p>
         <ElementDropdown
@@ -60,20 +58,25 @@ const FundingProposalListItem: FC<ProposalListItem> = (
           />
           <div className="proposal-item__info-proposer">
             <div className="user-fullname">{getUserName(proposal.proposer)}</div>
-            <div className="days-ago">{getDaysAgo(new Date(), proposal.createdAt || proposal.createTime)}</div>
+            <div className="days-ago">{getDaysAgo(new Date(), proposal.createdAt)}</div>
           </div>
         </div>
         <div className="proposal-item__info-amount-countdown">
           <div className="amount">
-            {formatPrice(proposal.fundingRequest?.amount, { shouldRemovePrefixFromZero: false })}
+            {formatPrice(
+              isFundsAllocationProposal(proposal)
+                ? proposal.data.args.amount
+                : 0,
+              { shouldRemovePrefixFromZero: false }
+            )}
           </div>
-          {
-            (proposal.state === ProposalStateTypes.COUNTDOWN)
-            && <ProposalCountDown
+          {checkIsCountdownState(proposal) && (
+            <ProposalCountDown
               date={getProposalExpirationDate(proposal)}
+              state={proposal.state}
               preview
             />
-          }
+          )}
         </div>
       </div>
       <div className="proposal-item__voting">

@@ -1,24 +1,22 @@
-import {
-  CommonContributionType,
-  CommonLink,
-  CommonRule,
-} from "@/shared/models";
+import { BaseRule, CommonLink } from "@/shared/models";
 
 export interface CreateCommonPayload {
   name: string;
   image: string;
   byline?: string;
   description?: string;
-  contributionAmount: number;
-  contributionType: CommonContributionType;
-  rules?: CommonRule[];
+  unstructuredRules?: BaseRule[];
   links?: CommonLink[];
-  zeroContribution?: boolean;
   searchable?: boolean;
+  useTemplate: boolean;
 }
 
 export interface IntermediateCreateCommonPayload
-  extends Omit<CreateCommonPayload, "image" | "searchable"> {
+  extends Omit<
+    CreateCommonPayload,
+    "image" | "searchable" | "useTemplate" | "unstructuredRules"
+  > {
   image: string | File | null;
   agreementAccepted: boolean;
+  rules?: CreateCommonPayload["unstructuredRules"];
 }

@@ -2,6 +2,7 @@ import React, { ChangeEventHandler, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import classNames from "classnames";
 import {
   CurrencyInput,
   LinksArray,
@@ -13,9 +14,9 @@ import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
 import { Button, ButtonIcon, Loader, ModalFooter } from "@/shared/components";
 import DeleteIcon from "@/shared/icons/delete.icon";
-import { CreateFundingRequestProposalPayload } from "@/shared/interfaces/api/proposal";
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { MAX_PROPOSAL_TITLE_LENGTH } from "./constants";
+import { CreateFundsAllocationFormData } from "./types";
 
 const validationSchema = Yup.object({
   description: Yup.string().required("Field required"),
@@ -53,15 +54,17 @@ const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
 interface AddProposalFormInterface {
   common: Common;
   saveProposalState: (
-    payload: Partial<CreateFundingRequestProposalPayload>
+    payload: CreateFundsAllocationFormData
   ) => void;
   addBankDetails: () => void;
+  hidden?: boolean;
 }
 
 export const AddProposalForm = ({
   common,
   saveProposalState,
   addBankDetails,
+  hidden = false,
 }: AddProposalFormInterface) => {
   const dispatch = useDispatch();
   const [isAmountAdded, addAmountToValidation] = useState(false);
@@ -89,7 +92,7 @@ export const AddProposalForm = ({
         setHasBankDetails(true);
       }
     }))
-  }, [dispatch])
+  }, [dispatch, hidden])
 
   const [formValues] = useState({
     title: "",
@@ -163,7 +166,7 @@ export const AddProposalForm = ({
       isInitialValid={false}
     >
       {(formikProps) => (
-        <div className="add-proposal-wrapper">
+        <div className={classNames("add-proposal-wrapper", { hidden })}>
           <div className="common-title">{common.name}</div>
           <div className="add-proposal-title">New proposal</div>
           <div className="add-proposal-description">
@@ -293,15 +296,17 @@ export const AddProposalForm = ({
                 insufficient for the amount requested.
               </div>
             </div>
-            <ModalFooter sticky>
-              <div className="action-wrapper">
-                <Button
-                  disabled={!formikProps.isValid || !hasBankDetails}
-                  onClick={formikProps.submitForm}>
-                  Create proposal
-                </Button>
-              </div>
-            </ModalFooter>
+            {
+              !hidden && <ModalFooter sticky>
+                <div className="action-wrapper">
+                  <Button
+                    disabled={!formikProps.isValid || !hasBankDetails}
+                    onClick={formikProps.submitForm}>
+                    Create proposal
+                  </Button>
+                </div>
+              </ModalFooter>
+            }
           </div>
         </div>
       )}

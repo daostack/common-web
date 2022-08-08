@@ -1,10 +1,11 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Button } from "../../../../../shared/components";
-import { ScreenSize } from "../../../../../shared/constants";
-import { getScreenSize } from "../../../../../shared/store/selectors";
-import { ModalFooter } from "../../../../../shared/components/Modal";
+import { Button } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
+import { getScreenSize } from "@/shared/store/selectors";
+import { ModalFooter } from "@/shared/components/Modal";
 import { IStageProps } from "./MembershipRequestModal";
+import { MembershipRequestStage } from "./constants";
 import "./index.scss";
 
 export default function MembershipRequestWelcome(props: IStageProps) {
@@ -36,7 +37,10 @@ export default function MembershipRequestWelcome(props: IStageProps) {
         <div className="membership-request-welcome__modal-footer">
           <Button
             className="membership-request-welcome__submit-button"
-            onClick={() => setUserData({ ...userData, stage: 1 })}
+            onClick={() => setUserData({
+              ...userData,
+              stage: MembershipRequestStage.Introduce,
+            })}
             shouldUseFullWidth={isMobileView}>
             Got it
           </Button>

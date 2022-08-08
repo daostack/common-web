@@ -1,0 +1,73 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.assign-circle-configuration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.assign-circle-configuration__stage-name {
+  margin-top: 0.75rem;
+
+  @include big-phone {
+    margin-top: 1.5rem;
+  }
+}
+
+.assign-circle-configuration__avatar-icon {
+  flex-shrink: 0;
+}
+
+.assign-circle-configuration__form {
+  max-width: 36.5rem;
+  width: 100%;
+}
+
+.assign-circle-configuration__circle-dropdown {
+  z-index: $dropdown-z-index + 1;
+}
+
+.funds-allocation-configuration__fund-type--disabled {
+  background-color: $light-gray-1;
+  cursor: not-allowed;
+}
+
+.assign-circle-configuration__member-autocomplete {
+  z-index: $dropdown-z-index;
+  margin-top: 1.5rem;
+
+  .assign-circle-configuration__member-info {
+    font-weight: normal;
+    font-size: $xsmall;
+    line-height: 120%;
+
+    @include big-phone {
+      font-weight: 600;
+      font-size: $small;
+      line-height: 100%;
+    }
+  }
+}
+
+.assign-circle-configuration__info-text {
+  margin: 2rem 0 0;
+  font-size: $small;
+  color: $light-gray-2;
+  text-align: center;
+}
+
+.assign-circle-configuration__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+.assign-circle-configuration__submit-button {
+  max-width: 13.125rem;
+
+  @include big-phone {
+    max-width: unset;
+  }
+}

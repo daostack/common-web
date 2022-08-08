@@ -5,6 +5,32 @@
   border-radius: 14px;
   box-shadow: 0 3px 8px 0 #001a3614;
   background-color: $white;
+
+  .about-name-wrapper__see-more {
+    width: 100%;
+    margin-bottom: 1.75rem;
+    display: inline-block;
+    text-align: right;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .about-name-wrapper__description-part {
+    margin: 0 0 0.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .about-name-wrapper__description-part--rtl {
+    text-align: right;
+    direction: rtl;
+  }
+
   .title {
     font-size: 18px;
     font-weight: bold;
@@ -37,15 +63,10 @@
     }
   }
   .description {
-    margin-bottom: 25px;
+    margin-bottom: 1.75rem;
     overflow-wrap: break-word;
   }
   .join-wrapper {
-    .contribution {
-      font-size: 18px;
-      color: #051c3f;
-      margin-bottom: 32px;
-    }
     .button-blue {
       width: 175px;
       display: flex;
@@ -56,6 +77,11 @@
     .social-wrapper {
       width: 270px;
     }
+  }
+  .see-more-button {
+    font-family: NunitoSans-Regular;
+    color: gray;
+    text-align: right;
   }
 }
 

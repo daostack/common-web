@@ -2,8 +2,9 @@ import millify from "millify";
 import moment from "moment";
 
 import { MobileOperatingSystem, BASE_URL } from "../constants";
-import { Common, DateFormat, Proposal, Time, User } from "../models";
+import { Common, DateFormat, Time, User } from "../models";
 import { CurrencySymbol } from "@/shared/models";
+import { BaseProposal } from "@/shared/models/governance/proposals";
 import { transformFirebaseDataList } from "@/shared/utils/transformFirebaseDataToModel";
 
 interface FormatPriceOptions {
@@ -56,7 +57,7 @@ export const getUserName = (
   user?: Pick<User, "firstName" | "lastName" | "displayName"> | null
 ) => {
   if (!user) return "";
-  return user.displayName || `${user.firstName} ${user.lastName}`;
+  return user.displayName?.trim() || `${user.firstName} ${user.lastName}`.trim();
 };
 
 export const getUserInitials = (user: User | undefined) => {
@@ -147,6 +148,16 @@ export const containsHebrew = (str: string) => {
   return /[\u0590-\u05FF]/.test(str);
 };
 
+export const isRTL = (text: string): boolean => {
+  const ltrChars =
+    "A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02B8\u0300-\u0590\u0800-\u1FFF" +
+    "\u2C00-\uFB1C\uFDFE-\uFE6F\uFEFD-\uFFFF";
+  const rtlChars = "\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC";
+  const rtlDirCheck = new RegExp("^[^" + ltrChars + "]*[" + rtlChars + "]");
+
+  return Boolean(text && rtlDirCheck.test(text));
+};
+
 /**
  * Validate credit card provider (Visa or MasterCard)
  * Currently only Visa is supported.
@@ -223,8 +234,12 @@ export const roundNumberToNextTenths = (
 ): number =>
   Math.floor((value + valueForRounding) / valueForRounding) * valueForRounding;
 
-export const getProposalExpirationDate = (proposal: Proposal): Date =>
-  new Date((proposal.createdAt.seconds + proposal.countdownPeriod) * 1000);
+export const getProposalExpirationDate = (proposal: BaseProposal): Date => {
+  const timestamp =
+    proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
+
+  return timestamp ? new Date(timestamp.seconds * 1000) : new Date();
+};
 
 /**
  * Allowed {index}: 1 <= index <= 8
@@ -357,9 +372,6 @@ export function getLastActivity(data: Common) {
     }
     if (d.updatedAt) {
       activities.push(getDateValue(d.updatedAt));
-    }
-    if (d.createTime) {
-      activities.push(getDateValue(d.createTime));
     }
   });
   messages?.forEach((d) => {

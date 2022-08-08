@@ -1,19 +1,21 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { MembershipRequestModal } from "../MembershipRequestModal";
-import { useAuthorizedModal } from "../../../../../shared/hooks";
-import { Common } from "../../../../../shared/models";
-import { ROUTE_PATHS } from "../../../../../shared/constants";
-import { LoginModalType } from "../../../../Auth/interface";
+import { useAuthorizedModal } from "@/shared/hooks";
+import { Common, Governance } from "@/shared/models";
+import { ROUTE_PATHS } from "@/shared/constants";
+import { LoginModalType } from "@/containers/Auth/interface";
+import { Tabs } from "@/containers/Common/containers/CommonDetailContainer";
 import "./index.scss";
-import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
+import { MembershipRequestModal } from "../MembershipRequestModal";
 
 interface EmptyTabComponentProps {
   currentTab: string;
   message: string;
   title: string;
   common?: Common;
+  governance?: Governance;
   isCommonMember?: boolean;
+  isCommonMemberFetched?: boolean;
   isJoiningPending?: boolean;
 }
 
@@ -22,15 +24,18 @@ export default function EmptyTabComponent({
   message,
   title,
   common,
+  governance,
   isCommonMember,
+  isCommonMemberFetched = false,
   isJoiningPending,
 }: EmptyTabComponentProps) {
   const [isCreationStageReached, setIsCreationStageReached] = useState(false);
   const {
-    isModalOpen: showJoinModal,
+    isModalOpen: isJoinModalOpen,
     onOpen: onJoinModalOpen,
     onClose: onCloseJoinModal,
   } = useAuthorizedModal();
+  const showJoinModal = isJoinModalOpen && isCommonMemberFetched;
   const shouldShowJoinToCommonButton =
     Boolean(common) && !isCommonMember && !isJoiningPending;
   const shouldAllowJoiningToCommon =
@@ -50,11 +55,12 @@ export default function EmptyTabComponent({
 
   return (
     <>
-      {common && (
+      {common && governance && (
         <MembershipRequestModal
           isShowing={showJoinModal}
           onClose={onCloseJoinModal}
           common={common}
+          governance={governance}
           onCreationStageReach={setIsCreationStageReached}
         />
       )}

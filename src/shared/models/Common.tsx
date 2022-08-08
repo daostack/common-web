@@ -1,69 +1,142 @@
-import { Proposal } from "@/shared/models/Proposals";
-import { Discussion } from "@/shared/models/Discussion";
-import { DiscussionMessage } from "@/shared/models/DiscussionMessage";
-import { Time } from "@/shared/models/shared";
+import firebase from "firebase/app";
+import { AllowedActions, AllowedProposals } from "./governance/Circles";
+import { Reputation } from "./governance/Reputation";
+import { BaseEntity } from "./BaseEntity";
+import { Proposal } from "./Proposals";
+import { Discussion } from "./Discussion";
+import { DiscussionMessage } from "./DiscussionMessage";
+import { User } from "./User";
 
-export enum MemberPermission {
-  Founder = "founder",
-  Moderator = "moderator",
-}
-
-export interface Member {
-  joinedAt: { seconds: number; nanoseconds: number };
-  userId: string;
-  permission?: MemberPermission;
-}
-
-export interface CommonLink {
-  title: string;
-  value: string;
-}
-
-export interface CommonRule {
-  title: string;
-  value: string;
-}
-
-export enum CommonContributionType {
-  OneTime = "one-time",
-  Monthly = "monthly",
-}
-
-export interface Metadata {
-  byline?: string;
-  description?: string;
-  founderId: string;
-  minFeeToJoin: number;
-  contributionType: CommonContributionType;
-  zeroContribution?: boolean;
-  searchable?: boolean;
-}
-
-export interface Common {
-  id: string;
-  createdAt: Time | Date;
-  updatedAt: Time;
+export interface Common extends BaseEntity {
+  /**
+   * The name of the common showed in the app and
+   * other places (email, notification etc.)
+   */
   name: string;
-  balance: number;
-  reservedBalance?: number;
-  raised: number;
-  links: CommonLink[];
+
+  byline: string;
+
+  description: string;
+
+  /**
+   * The URL of the image, used as header for
+   * the common profile page
+   */
   image: string;
 
-  register: string;
-  members: Member[];
+  /**
+   * List of links, that the common provided
+   */
+  links: CommonLink[];
 
+  /**
+   * Will this common appear in the search results page
+   */
+  searchable: boolean;
+
+  /**
+   * The currently available funds of
+   * the common in cents
+   */
+  balance: number;
+
+  /**
+   * Reserved amount that is due to leave the common
+   * until the process of payout is completed
+   */
+  reservedBalance: number;
+
+  /**
+   * The total amount of funds that the
+   * common has raised to date in cents
+   */
+  raised: number;
+
+  /**
+   * Number of proposals in common
+   */
+  proposalCount: number;
+
+  /**
+   * Number of discussions in common
+   */
+  discussionCount: number;
+
+  /**
+   * Number of messages in all the discussions of the common
+   */
+  messageCount: number;
+
+  /**
+   * Number of memebers in the common
+   */
+  memberCount: number;
+
+  /**
+   * The whitelisting status of the common
+   */
+  register: CommonRegistered;
+
+  readonly governanceId: string | null;
+
+  readonly founderId: string;
+
+  state: CommonState;
+  /**
+   * Score of common for prioritization purposes
+   */
+  score: number;
+
+  /**
+   * This is not fetched from the database. It's calcualted while the commons are fetched.
+   */
   proposals?: Proposal[];
   discussions?: Discussion[];
   messages?: DiscussionMessage[];
+}
 
-  rules: CommonRule[];
+/**
+ * Used to showcase whether the common is whitelisted
+ *
+ * "na" - The common is not whitelisted and thus visible only to members
+ * "registered" - The common is whitelisted and part of the featured list
+ */
+export enum CommonRegistered {
+  NA = "na",
+  REGISTERED = "registered",
+}
 
-  fundingGoalDeadline: number;
+export enum CommonState {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  DRAFT = "DRAFT",
+}
 
-  metadata: Metadata;
-  score: number;
-  active: boolean;
+export interface CommonMember {
+  readonly id: string;
+  readonly userId: string;
+  joinedAt: firebase.firestore.Timestamp;
+  circles: number;
+  allowedActions: AllowedActions;
+  allowedProposals: AllowedProposals;
+  tokenBalance: number;
+  reputation: Partial<Reputation>;
+}
+
+export interface CommonMemberWithUserInfo extends CommonMember {
+  user: User;
+}
+
+export interface CommonLink {
+  /**
+   * The title of the link
+   */
+  title: string;
+
+  /**
+   * The address, to which the link is pointing
+   */
+  value: string;
 }
 
 export interface CommonPayment {

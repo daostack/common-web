@@ -1,1 +1,2 @@
-export { default as CommonDetailContainer, Tabs } from "./CommonDetailContainer";
+export { default as CommonDetailContainer } from "./CommonDetailContainer";
+export { Tabs } from "./constants";

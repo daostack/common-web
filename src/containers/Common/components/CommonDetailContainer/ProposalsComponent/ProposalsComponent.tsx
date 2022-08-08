@@ -1,16 +1,19 @@
-import { Tabs } from "@/containers/Common/containers/CommonDetailContainer/CommonDetailContainer";
 import React from "react";
-
-import { Common, Proposal } from "../../../../../shared/models";
+import { Tabs } from "@/containers/Common/containers/CommonDetailContainer";
+import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import "./index.scss";
 import ProposalItemComponent from "./ProposalItemComponent";
+import { ProposalsTypes } from "../../../../../shared/constants";
+
 interface DiscussionsComponentProps {
   proposals: Proposal[];
   loadProposalDetail: (payload: Proposal) => void;
   currentTab: Tabs;
   common: Common;
-  isCommonMember: boolean;
+  governance: Governance;
+  commonMember: CommonMember | null;
+  isCommonMemberFetched: boolean;
   isJoiningPending: boolean;
   onAddNewProposal: () => void;
 }
@@ -20,7 +23,9 @@ export default function ProposalsComponent({
   loadProposalDetail,
   currentTab,
   common,
-  isCommonMember,
+  governance,
+  commonMember,
+  isCommonMemberFetched,
   isJoiningPending,
   onAddNewProposal,
 }: DiscussionsComponentProps) {
@@ -28,7 +33,7 @@ export default function ProposalsComponent({
     <>
       <div className="proposal-title-wrapper">
         <div className="title">Proposals</div>
-        {isCommonMember && currentTab === Tabs.Proposals && (
+        {commonMember && currentTab === Tabs.Proposals && (
           <div className="add-button" onClick={onAddNewProposal}>
             <img src="/icons/add-proposal.svg" alt="add-proposal" />
             <span>Add New Proposal</span>
@@ -38,18 +43,22 @@ export default function ProposalsComponent({
       <div className="proposals-component-wrapper">
         {proposals.length > 0 ? (
           <>
-            {proposals.map((p) => (
-              <ProposalItemComponent
-                key={p.id}
-                proposal={p}
-                loadProposalDetail={loadProposalDetail}
-                isCommonMember={isCommonMember}
-              />
-            ))}
+            {proposals.map((proposal) => {
+              if (proposal.type !== ProposalsTypes.MEMBER_ADMITTANCE) {
+                return (
+                  <ProposalItemComponent
+                    key={proposal.id}
+                    proposal={proposal}
+                    loadProposalDetail={loadProposalDetail}
+                  />
+                )
+              }
+            })}
           </>
         ) : (
           <EmptyTabComponent
             common={common}
+            governance={governance}
             currentTab={currentTab}
             message={
               currentTab === Tabs.Proposals
@@ -61,7 +70,8 @@ export default function ProposalsComponent({
                 ? "No proposals yet"
                 : "No past activity"
             }
-            isCommonMember={isCommonMember}
+            isCommonMember={Boolean(commonMember)}
+            isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
           />
         )}

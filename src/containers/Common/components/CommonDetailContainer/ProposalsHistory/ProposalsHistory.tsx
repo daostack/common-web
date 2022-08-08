@@ -10,8 +10,8 @@ interface ProposalsHistoryProps {
 }
 
 export default function ProposalsHistory({ proposals, common }: ProposalsHistoryProps) {
-  const rejected = proposals.filter((p) => p.state === ProposalState.REJECTED).length;
-  const approved = proposals.filter((p) => p.state !== ProposalState.REJECTED).length;
+  const rejected = proposals.filter((p) => p.state === ProposalState.FAILED).length;
+  const approved = proposals.filter((p) => p.state !== ProposalState.FAILED).length;
 
   return (
     <div className="proposals-history-wrapper">

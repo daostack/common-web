@@ -1,10 +1,12 @@
 import React from "react";
-import { Button } from "../../../../../shared/components";
-import "./index.scss";
+import { Button } from "@/shared/components";
 import { IStageProps } from "./MembershipRequestModal";
+import { MembershipRequestStage } from "./constants";
+import "./index.scss";
 
 export default function MembershipRequestRules(props: IStageProps) {
-  const { userData, setUserData, common } = props;
+  const { userData, setUserData, governance } = props;
+  const rules = Object.values(governance?.unstructuredRules || {});
 
   return (
     <div className="membership-request-content membership-request-rules">
@@ -14,7 +16,7 @@ export default function MembershipRequestRules(props: IStageProps) {
         equal voting rights
       </div>
       <ol className="membership-request-rules__rules-wrapper">
-        {common?.rules.map((rule, index) => (
+        {rules.map((rule, index) => (
           <li
             key={index}
             className="membership-request-rules__rules-item-wrapper"
@@ -24,14 +26,19 @@ export default function MembershipRequestRules(props: IStageProps) {
                 {rule.title}
               </h4>
               <p className="membership-request-rules__rules-item-description">
-                {rule.value}
+                {rule.definition}
               </p>
             </div>
           </li>
         ))}
       </ol>
       <Button
-        onClick={() => setUserData({ ...userData, stage: 3 })}
+        onClick={() =>
+          setUserData({
+            ...userData,
+            stage: MembershipRequestStage.Creating,
+          })
+        }
         className="membership-request-rules__submit-button"
       >
         Accept Rules

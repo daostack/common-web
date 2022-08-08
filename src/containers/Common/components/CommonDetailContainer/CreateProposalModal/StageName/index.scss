@@ -1,0 +1,31 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.create-proposal-stage-name {
+  flex-shrink: 0;
+  max-width: 10rem;
+  width: 100%;
+  padding: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: $xsmall;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+}
+.create-proposal-stage-name--light-pink {
+  background-color: $light-red-2;
+}
+
+.create-proposal-stage-name--light-yellow {
+  background-color: #FFF8D2;
+}
+
+.create-proposal-stage-name__text {
+  margin-left: 0.625rem;
+}
+
+.create-proposal-stage-name__separator {
+  max-width: 33.5rem;
+  margin: 1.5rem 0;
+}

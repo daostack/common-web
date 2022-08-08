@@ -12,7 +12,6 @@ import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../interfaces";
-import { Funding } from "./Funding";
 import { GeneralInfo } from "./GeneralInfo";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { Review } from "./Review";
@@ -138,8 +137,6 @@ export default function CreationSteps(props: CreationStepsProps) {
         return <GeneralInfo {...stepProps} />;
       case CreationStep.UserAcknowledgment:
         return <UserAcknowledgment {...stepProps} />;
-      case CreationStep.Funding:
-        return <Funding {...stepProps} />;
       case CreationStep.Rules:
         return <Rules {...stepProps} />;
       case CreationStep.Review:

@@ -1,11 +1,9 @@
-import React, { useCallback, useState, ReactElement, ReactNode } from "react";
+import React, { useCallback, useState, ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
-import { CommonContributionType } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { formatPrice } from "@/shared/utils/shared";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { CommonImageSlider } from "./CommonImageSlider";
@@ -26,23 +24,17 @@ export default function Review({
   creationData,
 }: ReviewProps): ReactElement {
   const {
-    contributionType,
     name: commonName,
     description: about,
     byline: tagline,
     links = [],
     rules = [],
-    zeroContribution,
   } = creationData;
   const screenSize = useSelector(getScreenSize());
   const [selectedCommonImage, setSelectedCommonImage] = useState<
     string | File | null
   >(creationData.image);
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const minFeeToJoin = creationData.contributionAmount * 100;
-  const formattedMinFeeToJoin = formatPrice(minFeeToJoin, {
-    shouldRemovePrefixFromZero: false,
-  });
 
   const handleContinueClick = useCallback(() => {
     if (selectedCommonImage) {
@@ -51,27 +43,6 @@ export default function Review({
   }, [onFinish, selectedCommonImage]);
 
   const progressEl = <Progress creationStep={currentStep} />;
-
-  const getMinimumContributionText = (): ReactNode => {
-    let text: ReactNode =
-      "Members will be able to join the Common without a personal contribution";
-
-    if (!zeroContribution) {
-      text = (
-        <>
-          {formattedMinFeeToJoin}{" "}
-          <span className="create-common-review__section-description--bold">
-            {contributionType === CommonContributionType.OneTime
-              ? "one-time"
-              : "monthly"}
-          </span>{" "}
-          contribution
-        </>
-      );
-    }
-
-    return <p className="create-common-review__section-description">{text}</p>;
-  };
 
   return (
     <>
@@ -89,7 +60,6 @@ export default function Review({
           className="create-common-review__main-info"
           commonName={commonName}
           tagline={tagline}
-          formattedMinFeeToJoin={formattedMinFeeToJoin}
         />
         {!isMobileView && (
           <Separator className="create-common-review__separator" />
@@ -103,13 +73,7 @@ export default function Review({
           <LinkList links={links} />
         </div>
         <RuleList rules={rules} className="create-common-review__rules" />
-        <div className="create-common-review__contribution-container">
-          <h5 className="create-common-review__section-title">
-            Minimum Contribution
-          </h5>
-          {getMinimumContributionText()}
-        </div>
-        <div className="create-common-review__additional-info-container">
+        {/* <div className="create-common-review__additional-info-container">
           <div className="create-common-review__additional-info-text">
             To publish the Common, add a personal contribution.{" "}
             <span className="create-common-review__additional-info-text--bold">
@@ -117,14 +81,14 @@ export default function Review({
             </span>{" "}
             to the Common info after it is published.
           </div>
-        </div>
+        </div> */}
         <div className="create-common-review__submit-button-wrapper">
           <Button
             key="rules-continue"
             onClick={handleContinueClick}
             shouldUseFullWidth={isMobileView}
           >
-            Personal Contribution
+            Create a Common
           </Button>
         </div>
       </div>

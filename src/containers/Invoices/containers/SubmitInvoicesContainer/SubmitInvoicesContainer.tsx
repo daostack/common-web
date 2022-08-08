@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authentificated, selectUser } from "../../../Auth/store/selectors";
 import { useParams } from "react-router-dom";
+import { FundingAllocationStatus } from "@/shared/models/governance/proposals";
 import { fetchProposal } from "../../api";
 import { Loader } from "../../../../shared/components";
 import { Proposal } from "../../../../shared/models";
@@ -20,6 +21,7 @@ enum SubmissionStatus {
   NotAuthorized,
   Submitted,
   NotLoggedIn,
+  UploadUnavailable,
 }
 
 export default function SubmitInvoicesContainer() {
@@ -45,17 +47,27 @@ export default function SubmitInvoicesContainer() {
           return;
         }
         const proposal = await fetchProposal(proposalId);
-        if (!(proposal.proposerId === user?.uid)) {
+        if (!proposal) {
+          return;
+        }
+        if (!(proposal.data.args.proposerId === user?.uid)) {
           setSubmissionStatus(SubmissionStatus.NotAuthorized);
           return;
         }
-        if (proposal.payoutDocs && proposal.payoutDocs?.length > 0) {
+        if (proposal.data.legal.payoutDocs?.length > 0) {
           setSubmissionStatus(SubmissionStatus.Submitted);
           return;
         }
+        if (
+          proposal.data.tracker.status !==
+          FundingAllocationStatus.PENDING_INVOICE_UPLOAD
+        ) {
+          setSubmissionStatus(SubmissionStatus.UploadUnavailable);
+          return;
+        }
         setProposal(proposal);
-        const commonProposal = await fetchCommonDetail(proposal.commonId);
-        setCommonName(commonProposal.name);
+        const commonProposal = await fetchCommonDetail(proposal.data.args.commonId);
+        setCommonName(commonProposal?.name || "");
         setSubmissionStatus(SubmissionStatus.PendingUser);
       } catch (error) {
         console.error(error);
@@ -81,6 +93,8 @@ export default function SubmitInvoicesContainer() {
         );
       case SubmissionStatus.Submitted:
         return "Already Submitted";
+      default:
+        return "Invoices upload is not available yet";
     }
   }
 

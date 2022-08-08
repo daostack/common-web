@@ -1,6 +1,7 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { store } from "@/shared/appConfig";
 import {
+  GeneralError,
   getRandomUserAvatarURL,
   isError,
   tokenHandler,
@@ -11,7 +12,10 @@ import firebase from "../../../shared/utils/firebase";
 import { Collection, Proposal, User } from "../../../shared/models";
 import { UserCreationDto } from "../interface";
 import {
+  AUTH_CODE_FOR_SIGN_UP,
   AuthProvider,
+  AuthProviderID,
+  ErrorCode,
   RECAPTCHA_CONTAINER_ID,
   ROUTE_PATHS,
 } from "../../../shared/constants";
@@ -23,8 +27,11 @@ import {
   subscribeToNotification,
 } from "@/containers/Common/store/api";
 import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
+import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import { showNotification } from "@/shared/store/actions";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
+import { getProvider } from "@/shared/utils/authProvider";
+import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 
 const getAuthProviderFromProviderData = (
   providerData?: firebase.User["providerData"]
@@ -123,7 +130,8 @@ const getFirebaseAuthProvider = (
 
 const verifyLoggedInUser = async (
   user: firebase.User | null,
-  shouldCreateUserIfNotExist = false
+  shouldCreateUserIfNotExist: boolean,
+  authCode = ""
 ): Promise<{ user: User; isNewUser: boolean }> => {
   if (!user) {
     await firebase.auth().signOut();
@@ -137,16 +145,25 @@ const verifyLoggedInUser = async (
     throw new Error("User is not logged in");
   }
 
-  const result = shouldCreateUserIfNotExist
-    ? await createUser(user)
-    : {
-        user: await getUserData(user.uid),
-        isNewUser: false,
-      };
+  const isAllowedToCreateUser = authCode === AUTH_CODE_FOR_SIGN_UP;
+  const result =
+    shouldCreateUserIfNotExist && isAllowedToCreateUser
+      ? await createUser(user)
+      : {
+          user: await getUserData(user.uid),
+          isNewUser: false,
+        };
 
   if (!result.user) {
     await firebase.auth().signOut();
-    throw new Error("User is not logged in");
+
+    if (isAllowedToCreateUser) {
+      throw new Error("User is not logged in");
+    }
+
+    throw new GeneralError({
+      code: ErrorCode.CUserDoesNotExist,
+    });
   }
 
   tokenHandler.set(token);
@@ -158,15 +175,36 @@ const verifyLoggedInUser = async (
   };
 };
 
-const authorizeUser = async (
-  authProvider: AuthProvider
-): Promise<{ user: User; isNewUser: boolean }> => {
+const authorizeUser = async ({
+  provider: authProvider,
+  authCode,
+}: {
+  provider: AuthProvider;
+  authCode: string;
+}): Promise<{ user: User; isNewUser: boolean }> => {
   await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
   const provider = getFirebaseAuthProvider(authProvider);
   const { user } = await firebase.auth().signInWithPopup(provider);
 
-  return verifyLoggedInUser(user, true);
+  return verifyLoggedInUser(user, true, authCode);
+};
+
+const authorizeUserViaCredentials = async (
+  data: FirebaseCredentials
+): Promise<firebase.User | null> => {
+  let credential;
+  if(data.providerId === AuthProviderID.Apple) {
+    const provider = new firebase.auth.OAuthProvider(data.providerId);
+    credential = provider.credential(data);
+  } else {
+    const provider = getProvider(data?.providerId);
+    credential = provider.credential(data.idToken);
+  }
+
+  const { user } = await firebase.auth().signInWithCredential(credential);
+
+  return user;
 };
 
 const loginUsingEmailAndPassword = async (
@@ -178,7 +216,7 @@ const loginUsingEmailAndPassword = async (
   const { user } = await firebase
     .auth()
     .signInWithEmailAndPassword(email, password);
-  const data = await verifyLoggedInUser(user);
+  const data = await verifyLoggedInUser(user, false);
 
   return data.user;
 };
@@ -205,13 +243,14 @@ const sendVerificationCode = async (
 
 const confirmVerificationCode = async (
   confirmation: firebase.auth.ConfirmationResult,
-  code: string
+  code: string,
+  authCode: string
 ): Promise<{ user: User; isNewUser: boolean }> => {
   await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
   const { user } = await confirmation.confirm(code);
 
-  return verifyLoggedInUser(user, true);
+  return verifyLoggedInUser(user, true, authCode);
 };
 
 const updateUserData = async (user: User) => {
@@ -286,6 +325,44 @@ function* socialLoginSaga({
   }
 }
 
+function* webviewLoginSaga({
+  payload,
+}: ReturnType<typeof actions.webviewLogin.request>) {
+  try {
+    yield put(actions.startAuthLoading());
+
+    const loggedFirebaseUser = yield call(
+      authorizeUserViaCredentials,
+      payload.payload
+    );
+
+    const { user }: { user: User; } = yield call(
+      verifyLoggedInUser,
+      loggedFirebaseUser,
+      true
+    );
+    const firebaseUser: User = yield call(getUserData, user.uid ?? "");
+    if (firebaseUser) {
+      yield put(actions.webviewLogin.success(firebaseUser));
+    }
+
+    if (payload.callback) {
+      payload.callback(true);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.webviewLogin.failure(error));
+
+    }
+
+    if (payload.callback) {
+      payload.callback(false);
+    }
+  } finally {
+    yield put(actions.stopAuthLoading());
+  }
+}
+
 function* loginUsingEmailAndPasswordSaga({
   payload,
 }: ReturnType<typeof actions.loginUsingEmailAndPassword.request>) {
@@ -352,7 +429,8 @@ function* confirmVerificationCodeSaga({
     const { user, isNewUser }: { user: User; isNewUser: boolean } = yield call(
       confirmVerificationCode,
       payload.payload.confirmation,
-      payload.payload.code
+      payload.payload.code,
+      payload.payload.authCode
     );
     yield put(actions.confirmVerificationCode.success(user));
 
@@ -403,6 +481,7 @@ function* updateUserDetails({
 }
 
 function* authSagas() {
+  yield takeLatest(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(
     actions.loginUsingEmailAndPassword.request,
@@ -471,7 +550,7 @@ function* authSagas() {
           const proposal: Proposal | undefined = await getProposalById(
             data?.eventObjectId
           );
-          if (proposal) {
+          if (isFundsAllocationProposal(proposal)) {
             const notification = getFundingRequestNotification(data, proposal);
 
             store.dispatch(showNotification(notification));

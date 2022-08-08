@@ -1,48 +1,20 @@
-import { Moderation, Time } from "./shared";
-
-import { CommonContributionType, DiscussionMessage, User } from ".";
-import { VoteOutcome } from "./Votes";
-
-export enum ProposalFundingState {
-  NotRelevant = "notRelevant",
-  NotAvailable = "notAvailable",
-  Available = "available",
-  Funded = "funded",
-}
-
-export enum FundingProcessStage {
-  PendingInvoiceUpload = "pendingInvoiceUpload",
-  PendingInvoiceApproval = "pendingInvoiceApproval",
-  FundsTransferInProgress = "fundsTransferInProgress",
-  Completed = "completed",
-}
-
-export enum ProposalPaymentState {
-  NotAttempted = "notAttempted",
-  NotRelevant = "notRelevant",
-  Confirmed = "confirmed",
-  Pending = "pending",
-  Failed = "failed",
-}
+import {
+  AssignCircle,
+  FundsAllocation,
+  FundsRequest,
+  MemberAdmittance,
+  RemoveCircle,
+} from "@/shared/models/governance/proposals";
+import { DiscussionMessage } from "./DiscussionMessage";
+import { User } from "./User";
 
 export enum ProposalState {
-  COUNTDOWN = "countdown",
   PASSED = "passed",
-  REJECTED = "failed",
-  PASSED_INSUFFICIENT_BALANCE = "passedInsufficientBalance",
-  EXPIRED_INVOCIES_NOT_UPLOADED = "expiredInvociesNotUploaded",
-}
-
-export enum ProposalType {
-  FundingRequest = "fundingRequest",
-  Join = "join",
-}
-
-interface ProposalJoin {
-  __typename?: "ProposalJoin";
-  cardId: string;
-  funding: number;
-  fundingType?: CommonContributionType;
+  FAILED = "failed",
+  VOTING = "voting",
+  DISCUSSION = "discussion",
+  RETRACTED = "retracted",
+  COMPLETED = "completed",
 }
 
 export interface DocInfo<LegalType = number> {
@@ -58,69 +30,32 @@ export interface ProposalLink {
   value: string;
 }
 
-export interface Vote {
-  voteId: string;
-  voteOutcome: VoteOutcome;
-  voterId: string;
-}
-
-export interface Proposal {
-  commonId: string;
-  proposerId: string;
-  countdownPeriod: number;
-  createTime: Time;
-  createdAt: Time;
-  expiresAt: Date;
-  fundingRequest?: { funded: boolean; amount: number };
-
-  id: string;
-  moderation: Moderation;
-
-  quietEndingPeriod: number;
-
-  updatedAt: Time;
-  votes: Vote[];
-  votesAgainst?: number;
-  votesFor?: number;
-  votesAbstained?: number;
-  user?: User;
-  proposer?: User;
+interface ExtendedProposalOptions {
   discussionMessage?: DiscussionMessage[];
-  isLoaded?: boolean;
-
-  title: string;
-
-  state: ProposalState;
-  description: {
-    description: string;
-    links: ProposalLink[];
-    images: ProposalLink[];
-    files: File[];
-    title: string;
-  };
-  type: ProposalType;
-  paymentState?: ProposalPaymentState;
-  fundingState?: ProposalFundingState;
-  /** Details about the join request. Exists only on join request proposals */
-  join?: ProposalJoin;
-  fundingProcessStage?: FundingProcessStage;
-
-  approvalDate?: Time;
-  payoutDocs?: DocInfo[];
-  payoutDocsComment?: string;
-  payoutDocsRejectionReason?: string;
+  proposer?: User;
 }
 
-export interface ProposalWithHighlightedComment extends Proposal {
+export type Proposal = (
+  | MemberAdmittance
+  | FundsRequest
+  | FundsAllocation
+  | AssignCircle
+  | RemoveCircle
+) &
+  ExtendedProposalOptions;
+
+export type ProposalWithHighlightedComment = Proposal & {
   highlightedCommentId: string;
-}
+};
 
 export interface ProposalListItem {
   proposal: Proposal;
   loadProposalDetails: (payload: Proposal) => void;
 }
 
-export const isProposalWithHighlightedComment = (proposal: any): proposal is ProposalWithHighlightedComment =>
-  (proposal && proposal.highlightedCommentId);
+export const isProposalWithHighlightedComment = (
+  proposal: any
+): proposal is ProposalWithHighlightedComment =>
+  proposal && proposal.highlightedCommentId;
 
 export const isDocInfo = (data: any): data is DocInfo => data.downloadURL;

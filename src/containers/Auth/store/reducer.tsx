@@ -7,7 +7,7 @@ import * as actions from "./actions";
 type Action = ActionType<typeof actions>;
 
 const initialState: AuthStateType = {
-  authentificated: !!localStorage.getItem("token"),
+  authentificated: Boolean(localStorage.getItem("token")),
   user: localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") || "")
     : false,
@@ -24,6 +24,7 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
       actions.socialLogin.success,
       actions.loginUsingEmailAndPassword.success,
       actions.confirmVerificationCode.success,
+      actions.webviewLogin.success
     ],
     (state, action) =>
       produce(state, (nextState) => {
@@ -42,12 +43,12 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
       nextState.loginModalState = action.payload;
     })
   )
-  .handleAction(actions.startAuthLoading, (state, action) =>
+  .handleAction(actions.startAuthLoading, (state) =>
     produce(state, (nextState) => {
       nextState.isAuthLoading = true;
     })
   )
-  .handleAction(actions.stopAuthLoading, (state, action) =>
+  .handleAction(actions.stopAuthLoading, (state) =>
     produce(state, (nextState) => {
       nextState.isAuthLoading = false;
     })

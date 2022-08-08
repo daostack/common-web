@@ -264,9 +264,9 @@ export const AddBankDetails = (props: IProps) => {
         values.bankLetter = isPaymeDocument(bankLetterFile)
           ? bankLetterFile.downloadURL
           : await uploadFile(bankLetterFileName, "private", bankLetterFile!);
-      } catch (error: any) {
-        console.error(error);
-        setError(error?.message ?? "Something went wrong :/");
+      } catch (e: any) {
+        console.error(e);
+        setError(e?.message ?? "Something went wrong :/");
         setSending(false);
         return;
       }
@@ -281,19 +281,19 @@ export const AddBankDetails = (props: IProps) => {
           isPaymeDocument(photoIdFile)
             ? { ...photoIdFile }
             : {
-                name: photoIdFileName,
-                legalType: PaymeTypeCodes.SocialId,
-                mimeType: photoIdFile!.type,
-                downloadURL: values.photoId,
-              },
+              name: photoIdFileName,
+              legalType: PaymeTypeCodes.SocialId,
+              mimeType: photoIdFile!.type,
+              downloadURL: values.photoId,
+            },
           isPaymeDocument(bankLetterFile)
             ? { ...bankLetterFile }
             : {
-                name: bankLetterFileName,
-                legalType: PaymeTypeCodes.BankAccountOwnership,
-                mimeType: bankLetterFile!.type,
-                downloadURL: values.bankLetter,
-              },
+              name: bankLetterFileName,
+              legalType: PaymeTypeCodes.BankAccountOwnership,
+              mimeType: bankLetterFile!.type,
+              downloadURL: values.bankLetter,
+            },
         ],
         city: values.city,
         country: values.country,
@@ -330,6 +330,10 @@ export const AddBankDetails = (props: IProps) => {
     },
     [dispatch, isEditing, bankLetterFile, photoIdFile, handleDataChange]
   );
+
+  const handleSubmitForm = () => {
+    formRef.current?.submitForm();
+  };
 
   return (
     <div className={classNames("add-bank-details-wrapper", className)}>
@@ -582,6 +586,7 @@ export const AddBankDetails = (props: IProps) => {
                   </div>
                   <Button
                     type="submit"
+                    onClick={handleSubmitForm}
                     disabled={isSubmitButtonDisabled}
                     className="save-button"
                   >

@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { getScreenSize } from "@/shared/store/selectors";
 import { CommonShare, Loader } from "@/shared/components";
-import { Common, DiscussionMessage } from "@/shared/models";
+import { Common, CommonMember, DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
 import { formatDate } from "@/shared/utils";
 import {
@@ -23,13 +23,15 @@ import {
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 import { usePrevious } from "@/shared/hooks";
 import "./index.scss";
+import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 
 interface ChatComponentInterface {
   common: Common | null;
   discussionMessage: DiscussionMessage[];
   type: ChatType;
   onOpenJoinModal?: () => void;
-  isCommonMember?: boolean;
+  commonMember: CommonMember | null;
+  isCommonMemberFetched: boolean;
   isJoiningPending?: boolean;
   isAuthorized?: boolean;
   sendMessage?: (text: string) => void;
@@ -63,7 +65,8 @@ export default function ChatComponent({
   discussionMessage,
   type,
   onOpenJoinModal,
-  isCommonMember,
+  commonMember,
+  isCommonMemberFetched,
   isJoiningPending,
   isAuthorized,
   sendMessage,
@@ -72,11 +75,11 @@ export default function ChatComponent({
   const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(discussionMessage);
   const screenSize = useSelector(getScreenSize());
   const [message, setMessage] = useState("");
-  const shouldShowJoinToCommonButton = !isCommonMember && !isJoiningPending;
+  const shouldShowJoinToCommonButton = !commonMember && !isJoiningPending;
   const messages = discussionMessage.reduce(groupday, {});
   const [isNewMessageLoading, setIsNewMessageLoading] = useState<boolean>(false);
   const [lastMessageWithOpenedDropdownId, setLastMessageWithOpenedDropdownId] = useState<string | null>(null);
-  const isMobileView = (screenSize === ScreenSize.Mobile);
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const dateList = Object.keys(messages);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const chatId = useMemo(() => `chat-${uuidv4()}`, []);
@@ -95,6 +98,20 @@ export default function ChatComponent({
     ),
     [chatWrapperId]
   );
+
+  const sendChatMessage = (): void => {
+    if(message) {
+      setIsNewMessageLoading(true);
+      sendMessage && sendMessage(message);
+      setMessage("");
+    }
+  }
+
+  const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
+    if(event.key === KeyboardKeys.Enter) {
+      sendChatMessage();
+    }
+  }
 
   useEffect(() => {
     if (!highlightedMessageId)
@@ -164,11 +181,7 @@ export default function ChatComponent({
           const date = new Date(Number(day));
 
           return (
-            <ul
-              id={chatId}
-              className="message-list"
-              key={day}
-            >
+            <ul id={chatId} className="message-list" key={day}>
               <li className="date-title">
                 {isToday(date) ? "Today" : formatDate(date)}
               </li>
@@ -205,7 +218,8 @@ export default function ChatComponent({
               "Have any thoughts? Share them with other members by adding the first comment."
             }
             title="No comments yet"
-            isCommonMember={isCommonMember}
+            isCommonMember={Boolean(commonMember)}
+            isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
           />
         ) : isNewMessageLoading && (
@@ -235,45 +249,44 @@ export default function ChatComponent({
                 Join the effort
               </button>
             )}
-            {
-              common
-              ? <CommonShare
+            {common ? (
+              <CommonShare
                 common={common}
                 type={
                   isMobileView
-                  ? ShareViewType.ModalMobile
-                  : ShareViewType.ModalDesktop
+                    ? ShareViewType.ModalMobile
+                    : ShareViewType.ModalDesktop
                 }
                 color={Colors.lightPurple}
                 top="-130px"
               />
-              : <Loader />
-            }
+            ) : (
+              <Loader />
+            )}
           </div>
         </div>
       ) : (
         <div className="bottom-chat-wrapper">
-          {!isCommonMember ? <span className="text">Only members can send messages</span> :
+          {!commonMember ? (
+            <span className="text">Only members can send messages</span>
+          ) : (
             <>
               <input
                 className="message-input"
                 placeholder="What do you think?"
                 value={message}
+                onKeyDown={onEnterKeyDown}
                 onChange={(e) => setMessage(e.target.value)}
               />
               <button
                 className="send"
-                onClick={() => {
-                  setIsNewMessageLoading(true);
-                  sendMessage && sendMessage(message);
-                  setMessage("");
-                }}
+                onClick={sendChatMessage}
                 disabled={!message.length}
               >
                 <img src="/icons/send-message.svg" alt="send-message" />
               </button>
             </>
-          }
+          )}
         </div>
       )}
     </div>

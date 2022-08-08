@@ -1,7 +1,6 @@
 import React, { useMemo, useRef, useState, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { selectUser } from "@/containers/Auth/store/selectors";
 import {
   ButtonLink,
   Dropdown,
@@ -17,7 +16,7 @@ import ContributionIcon from "@/shared/icons/contribution.icon";
 import MosaicIcon from "@/shared/icons/mosaic.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
-import { Common, MemberPermission } from "@/shared/models";
+import { Common, CommonMember } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DeleteCommonPrompt } from "../DeleteCommonPrompt";
 import { LeaveCommonPrompt } from "../LeaveCommonPrompt";
@@ -96,17 +95,23 @@ interface CommonMenuProps {
   className?: string;
   menuButtonClassName?: string;
   common: Common;
+  currentCommonMember: CommonMember | null;
   withBorder?: boolean;
 }
 
 const CommonMenu: FC<CommonMenuProps> = (props) => {
-  const { className, menuButtonClassName, common, withBorder = false } = props;
+  const {
+    className,
+    menuButtonClassName,
+    common,
+    currentCommonMember,
+    withBorder = false,
+  } = props;
   const dropdownRef = useRef<DropdownRef>(null);
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(
     null
   );
   const screenSize = useSelector(getScreenSize());
-  const user = useSelector(selectUser());
   const { onDropdownToggle } = useAuthorizedDropdown(dropdownRef);
   const {
     isModalOpen: isModalMenuShowing,
@@ -114,12 +119,9 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     onClose: onMenuModalClose,
   } = useAuthorizedModal();
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const commonMember = common?.members.find(
-    (member) => member.userId === user?.uid
-  );
-  const isCommonMember = Boolean(commonMember);
+  const isCommonMember = Boolean(currentCommonMember);
   const isCommonOwner = Boolean(
-    commonMember?.permission === MemberPermission.Founder
+    common.founderId === currentCommonMember?.userId
   );
   const menuItems = useMemo<MenuItem[]>(() => {
     const items: MenuItem[] = [];
@@ -130,7 +132,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (isCommonMember) {
       items.push(MenuItem.MyContributions);
     }
-    if (isCommonOwner && common.members.length === 1) {
+    if (isCommonOwner && common.memberCount === 1) {
       items.push(MenuItem.DeleteCommon);
     }
     if (isCommonMember && !isCommonOwner) {
@@ -138,7 +140,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     }
 
     return items;
-  }, [isCommonMember, isCommonOwner, common.members]);
+  }, [isCommonMember, isCommonOwner, common.memberCount]);
   const options = useMemo(
     () =>
       OPTIONS.filter((option) => menuItems.includes(option.value as MenuItem)),
@@ -248,7 +250,8 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
       <LeaveCommonPrompt
         isShowing={selectedMenuItem === MenuItem.LeaveCommon}
         onClose={handleMenuClose}
-        commonId={common.id} />
+        commonId={common.id}
+      />
     </div>
   );
 };
