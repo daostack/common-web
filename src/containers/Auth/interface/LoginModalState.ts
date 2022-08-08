@@ -7,4 +7,5 @@ export interface LoginModalState {
   isShowing: boolean;
   type?: LoginModalType;
   title?: string;
+  canCloseModal?: boolean;
 }

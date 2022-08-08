@@ -13,7 +13,7 @@ import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
 import { getScreenSize } from "@/shared/store/selectors";
 import { isFirebaseError } from "@/shared/utils/firebase";
-import { isGeneralError } from "@/shared/utils";
+import { emptyFunction, isGeneralError } from "@/shared/utils";
 import { LoginModalType } from "../../../Auth/interface";
 import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
 import {
@@ -50,6 +50,7 @@ const LoginContainer: FC = () => {
     isShowing,
     type,
     title: loginModalTitle,
+    canCloseModal = true,
   } = useSelector(selectLoginModalState());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
   const shouldRemoveHorizontalPadding =
@@ -211,7 +212,7 @@ const LoginContainer: FC = () => {
   return (
     <Modal
       isShowing={isShowing}
-      onClose={handleClose}
+      onClose={canCloseModal ? handleClose : emptyFunction}
       type={modalType}
       className="login-container__modal"
       mobileFullScreen
@@ -219,6 +220,7 @@ const LoginContainer: FC = () => {
       title={title}
       withoutHorizontalPadding={shouldRemoveHorizontalPadding}
       styles={styles}
+      hideCloseButton={!canCloseModal}
     >
       {content}
     </Modal>
