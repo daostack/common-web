@@ -15,6 +15,7 @@ const DeadSeaIntegrationContainer: FC = () => {
           isShowing: true,
           title: "Dead Sea Guardians Common",
           canCloseModal: false,
+          shouldShowUserDetailsAfterSignUp: false,
         })
       );
     }

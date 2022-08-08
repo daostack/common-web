@@ -8,4 +8,5 @@ export interface LoginModalState {
   type?: LoginModalType;
   title?: string;
   canCloseModal?: boolean;
+  shouldShowUserDetailsAfterSignUp?: boolean;
 }

@@ -54,6 +54,7 @@ const LoginContainer: FC = () => {
     type,
     title: loginModalTitle,
     canCloseModal = true,
+    shouldShowUserDetailsAfterSignUp = true,
   } = useSelector(selectLoginModalState());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
   const shouldRemoveHorizontalPadding =
@@ -80,13 +81,13 @@ const LoginContainer: FC = () => {
     (isNewUser?: boolean) => {
       removeQueryParams(AUTH_CODE_QUERY_PARAM_KEY);
 
-      if (isNewUser) {
+      if (isNewUser && shouldShowUserDetailsAfterSignUp) {
         setStage(AuthStage.CompleteAccountDetails);
       } else {
         handleClose();
       }
     },
-    [removeQueryParams, handleClose]
+    [removeQueryParams, handleClose, shouldShowUserDetailsAfterSignUp]
   );
 
   const handleAuthButtonClick = useCallback(
