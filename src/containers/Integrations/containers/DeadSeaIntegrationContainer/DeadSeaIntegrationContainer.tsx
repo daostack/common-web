@@ -2,14 +2,20 @@ import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
+import { Loader } from "@/shared/components";
+import { useQueryParams } from "@/shared/hooks";
+import { getAmount } from "./helpers";
 import "./index.scss";
 
 const DeadSeaIntegrationContainer: FC = () => {
   const dispatch = useDispatch();
+  const queryParams = useQueryParams();
   const user = useSelector(selectUser());
+  const amount = getAmount(queryParams);
+  const isInitialLoading = !user || !amount;
 
   useEffect(() => {
-    if (!user) {
+    if (!user && amount) {
       dispatch(
         setLoginModalState({
           isShowing: true,
@@ -19,10 +25,16 @@ const DeadSeaIntegrationContainer: FC = () => {
         })
       );
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, amount]);
 
   return (
-    <div className="dead-sea-integration">DeadSeaIntegrationContainer</div>
+    <div className="dead-sea-integration">
+      {isInitialLoading && (
+        <div>
+          <Loader />
+        </div>
+      )}
+    </div>
   );
 };
 
