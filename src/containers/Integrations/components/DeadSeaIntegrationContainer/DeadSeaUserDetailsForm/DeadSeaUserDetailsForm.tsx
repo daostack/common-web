@@ -1,9 +1,10 @@
-import React, { FC, useCallback, useMemo } from "react";
-import { useSelector } from "react-redux";
+import React, { FC, useCallback, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
-import { selectUser } from "@/containers/Auth/store/selectors";
+import { updateUserDetails } from "@/containers/Auth/store/actions";
 import { countryList } from "@/shared/assets/countries";
-import { Button, DropdownOption } from "@/shared/components";
+import { Button, DropdownOption, Loader } from "@/shared/components";
+import { ErrorText } from "@/shared/components/Form";
 import {
   Checkbox,
   Dropdown,
@@ -40,8 +41,14 @@ const getInitialValues = (user?: User | null): FormValues => ({
   whatsappGroupAgreement: false,
 });
 
-const DeadSeaUserDetailsForm: FC = () => {
-  const user = useSelector(selectUser());
+interface DeadSeaUserDetailsFormProps {
+  user: User;
+}
+
+const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
+  const { user } = props;
+  const dispatch = useDispatch();
+  const [errorText, setErrorText] = useState("");
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const textAreaRowsAmount = isMobileView ? 3 : 2;
@@ -56,10 +63,33 @@ const DeadSeaUserDetailsForm: FC = () => {
   );
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
-    (values) => {
-      console.log(values);
+    (values, { setSubmitting }) => {
+      const { firstName, lastName, email, country, about } = values;
+
+      setSubmitting(true);
+      setErrorText("");
+
+      dispatch(
+        updateUserDetails.request({
+          user: {
+            ...user,
+            firstName,
+            lastName,
+            email,
+            country,
+            intro: about,
+          },
+          callback: (error) => {
+            setSubmitting(false);
+
+            if (error) {
+              setErrorText(error.message || "Something went wrong");
+            }
+          },
+        })
+      );
     },
-    []
+    [dispatch, user]
   );
 
   return (
@@ -69,7 +99,7 @@ const DeadSeaUserDetailsForm: FC = () => {
       validationSchema={validationSchema}
       validateOnMount
     >
-      {({ isValid }) => (
+      {({ isValid, isSubmitting }) => (
         <Form className="dead-sea-user-details-form">
           <div className="dead-sea-user-details-form__fields-wrapper">
             <TextField
@@ -146,14 +176,24 @@ const DeadSeaUserDetailsForm: FC = () => {
             name="whatsappGroupAgreement"
             label="Interested to join DSG whatsapp group"
           />
+          {isSubmitting && (
+            <div>
+              <Loader />
+            </div>
+          )}
           <Button
             className="dead-sea-user-details-form__submit-button"
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
             shouldUseFullWidth
           >
             Next
           </Button>
+          {errorText && (
+            <ErrorText className="dead-sea-user-details-form__error">
+              {errorText}
+            </ErrorText>
+          )}
         </Form>
       )}
     </Formik>

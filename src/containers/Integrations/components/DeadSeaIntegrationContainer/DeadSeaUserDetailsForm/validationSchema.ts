@@ -1,5 +1,8 @@
 import * as Yup from "yup";
-import { AVAILABLE_COUNTRIES, NAME_REGEXP } from "@/shared/constants";
+import { countryList } from "@/shared/assets/countries";
+import { NAME_REGEXP } from "@/shared/constants";
+
+const AVAILABLE_COUNTRIES = countryList.map((country) => country.value);
 
 const schema = Yup.object().shape({
   firstName: Yup.string()

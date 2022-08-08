@@ -42,7 +42,7 @@ const DeadSeaIntegrationContainer: FC = () => {
       case DeadSeaIntegrationStep.UserDetails:
         return (
           <GeneralInfoWrapper>
-            <DeadSeaUserDetailsForm />
+            <DeadSeaUserDetailsForm user={user} />
           </GeneralInfoWrapper>
         );
       default:

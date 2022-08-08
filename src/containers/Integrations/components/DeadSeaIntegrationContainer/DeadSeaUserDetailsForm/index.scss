@@ -38,19 +38,27 @@
 }
 
 .dead-sea-user-details-form__checkbox {
-  margin-top: 1.375rem;
+  margin: 1.375rem 0;
 
   @include big-phone {
-    margin-top: 1rem;
+    margin: 1rem 0;
   }
 }
 
 .dead-sea-user-details-form__submit-button {
   max-width: 12.625rem;
-  margin-top: 2.75rem;
+  margin-top: 1.375rem;
 
   @include big-phone {
     max-width: unset;
-    margin-top: 2rem;
+    margin-top: 1rem;
+  }
+}
+
+.dead-sea-user-details-form__error {
+  font-size: $small;
+
+  @include big-phone {
+    text-align: center;
   }
 }

@@ -256,10 +256,18 @@ const confirmVerificationCode = async (
 
 const updateUserData = async (user: User) => {
   const currentUser = await firebase.auth().currentUser;
-  await currentUser?.updateProfile({
+  const profileData: {
+    displayName?: string | null;
+    photoURL?: string | null;
+  } = {
     displayName: `${user.firstName} ${user.lastName}`,
-    photoURL: user.photo,
-  });
+  };
+
+  if (user.photo) {
+    profileData.photoURL = user.photo;
+  }
+
+  await currentUser?.updateProfile(profileData);
 
   const updatedCurrentUser = await firebase.auth().currentUser;
 
@@ -272,7 +280,7 @@ const updateUserData = async (user: User) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        photoURL: user.photo,
+        photoURL: user.photo || currentUser?.photoURL || "",
         intro: user.intro,
         displayName: `${user.firstName} ${user.lastName}`,
         country: user.country,
@@ -473,11 +481,11 @@ function* updateUserDetails({
 
     yield put(actions.updateUserDetails.success(user));
     tokenHandler.setUser(user);
-    yield payload.callback();
+    yield payload.callback(null);
   } catch (error) {
     if (isError(error)) {
       yield put(actions.updateUserDetails.failure(error));
-      yield payload.callback();
+      yield payload.callback(error);
     }
   } finally {
     yield put(actions.stopAuthLoading());
