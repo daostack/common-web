@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { countryList } from "@/shared/assets/countries";
 import { Button, DropdownOption } from "@/shared/components";
 import {
@@ -9,7 +10,8 @@ import {
   Form,
   TextField,
 } from "@/shared/components/Form/Formik";
-import { AVAILABLE_COUNTRIES, ScreenSize } from "@/shared/constants";
+import { CountryCode, ScreenSize } from "@/shared/constants";
+import { User } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import validationSchema from "./validationSchema";
 import "./index.scss";
@@ -25,18 +27,21 @@ interface FormValues {
   whatsappGroupAgreement: boolean;
 }
 
-const getInitialValues = (): FormValues => ({
-  firstName: "",
-  lastName: "",
-  email: "",
-  country: AVAILABLE_COUNTRIES.length === 1 ? AVAILABLE_COUNTRIES[0] : "",
-  about: "",
+const getInitialValues = (user?: User | null): FormValues => ({
+  firstName:
+    user?.firstName.trim() || user?.displayName?.trim().split(" ")[0] || "",
+  lastName:
+    user?.lastName.trim() || user?.displayName?.trim().split(" ")[1] || "",
+  email: user?.email || "",
+  country: user?.country || CountryCode.IL,
+  about: user?.intro || "",
   supportPlan: "",
   marketingContentAgreement: false,
   whatsappGroupAgreement: false,
 });
 
 const DeadSeaUserDetailsForm: FC = () => {
+  const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const textAreaRowsAmount = isMobileView ? 3 : 2;
@@ -59,7 +64,7 @@ const DeadSeaUserDetailsForm: FC = () => {
 
   return (
     <Formik
-      initialValues={getInitialValues()}
+      initialValues={getInitialValues(user)}
       onSubmit={handleSubmit}
       validationSchema={validationSchema}
       validateOnMount
