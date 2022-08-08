@@ -17,6 +17,7 @@ import {
   ROUTE_PATHS,
   SMALL_SCREEN_BREAKPOINT,
   ScreenSize,
+  WebviewActions,
 } from "../../shared/constants";
 import { changeScreenSize, showNotification } from "@/shared/store/actions";
 import { authentificated } from "../Auth/store/selectors";
@@ -62,12 +63,13 @@ const App = () => {
           payload: data,
             callback: (isLoggedIn) => {
               if(isLoggedIn) {
+                window.ReactNativeWebView.postMessage(WebviewActions.loginSuccess);
                 history.push(ROUTE_PATHS.MY_COMMONS)
               }
             }
         }));
       } catch (err) {
-        window.ReactNativeWebView.postMessage(JSON.stringify({ action: JSON.stringify(err) }));
+        window.ReactNativeWebView.postMessage(WebviewActions.loginError);
       }
     });
   }, []);
