@@ -104,7 +104,7 @@ export const useImmediateContribution = (): Return => {
           } else if (payment?.status === PaymentStatus.Failed) {
             setState((nextState) => ({
               ...nextState,
-              error: "Payment failed",
+              errorText: "Payment failed",
               isPaymentLoading: false,
             }));
           }

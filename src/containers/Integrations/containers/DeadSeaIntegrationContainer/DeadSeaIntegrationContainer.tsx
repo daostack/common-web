@@ -16,9 +16,9 @@ import "./index.scss";
 const DeadSeaIntegrationContainer: FC = () => {
   const dispatch = useDispatch();
   const queryParams = useQueryParams();
-  const [step, setStep] = useState(DeadSeaIntegrationStep.UserDetails);
+  const [step, setStep] = useState(DeadSeaIntegrationStep.Payment);
+  const [amount, setAmount] = useState(() => getAmount(queryParams));
   const user = useSelector(selectUser());
-  const amount = getAmount(queryParams);
   const isInitialLoading = !user || !amount;
 
   const handleMemberAdmittanceStepFinish = () => {
@@ -51,7 +51,7 @@ const DeadSeaIntegrationContainer: FC = () => {
           <MemberAdmittanceStep onFinish={handleMemberAdmittanceStepFinish} />
         );
       case DeadSeaIntegrationStep.Payment:
-        return <PaymentStep amount={amount} />;
+        return <PaymentStep amount={amount} onAmountChange={setAmount} />;
       default:
         return null;
     }

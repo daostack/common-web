@@ -18,6 +18,7 @@ interface PaymentDetailsProps {
   intermediatePayment: ImmediateContributionPayment | null;
   onPay: () => void;
   onIframeLoaded: () => void;
+  onAmountEdit: () => void;
 }
 
 const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
@@ -28,8 +29,9 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
     intermediatePayment,
     onPay,
     onIframeLoaded,
+    onAmountEdit,
   } = props;
-  const formattedAmount = formatPrice(amount);
+  const formattedAmount = formatPrice(amount, { shouldMillify: false });
 
   return (
     <div className="dead-sea-payment-details">
@@ -43,7 +45,10 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
         <span className="dead-sea-payment-details__info-hint">
           Payment details
         </span>
-        <ButtonLink className="dead-sea-payment-details__edit-amount-button">
+        <ButtonLink
+          className="dead-sea-payment-details__edit-amount-button"
+          onClick={onAmountEdit}
+        >
           Edit
         </ButtonLink>
       </div>

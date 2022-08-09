@@ -1,26 +1,24 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import config from "@/config";
-import { selectUser } from "@/containers/Auth/store/selectors";
-import { useCommonMember } from "@/containers/Common/hooks";
-import { createMemberAdmittanceProposal } from "@/containers/Common/store/actions";
 import { Loader } from "@/shared/components";
-import { MemberAdmittance } from "@/shared/models/governance/proposals";
-import { getUserName } from "@/shared/utils";
 import {
   useImmediateContribution,
   useUserCards,
 } from "@/shared/hooks/useCases";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
+import { AmountSelection } from "./AmountSelection";
 import { PaymentDetails } from "./PaymentDetails";
 import { ContributionType } from "@/shared/constants";
+import { ErrorText } from "@/shared/components/Form";
+import "./index.scss";
 
 interface PaymentStepProps {
   amount: number;
+  onAmountChange: (amount: number) => void;
 }
 
 const PaymentStep: FC<PaymentStepProps> = (props) => {
-  const { amount } = props;
+  const { amount, onAmountChange } = props;
   const {
     fetched: areUserCardsFetched,
     data: cards,
@@ -34,6 +32,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
     makeImmediateContribution,
     onReadyToSubscribe,
   } = useImmediateContribution();
+  const [isAmountEditing, setIsAmountEditing] = useState(true);
 
   const handleImmediateContribution = useCallback(() => {
     makeImmediateContribution({
@@ -42,6 +41,15 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
       contributionType: ContributionType.OneTime,
     });
   }, [makeImmediateContribution, amount]);
+
+  const toggleAmountEditing = () => {
+    setIsAmountEditing((isEditing) => !isEditing);
+  };
+
+  const handleAmountChange = (newAmount: number) => {
+    onAmountChange(newAmount);
+    toggleAmountEditing();
+  };
 
   useEffect(() => {
     fetchUserCards();
@@ -54,17 +62,29 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
   }, [areUserCardsFetched, cards.length, handleImmediateContribution]);
 
   return (
-    <GeneralInfoWrapper>
+    <GeneralInfoWrapper onGoBack={isAmountEditing ? toggleAmountEditing : null}>
       {!areUserCardsFetched && <Loader />}
-      {areUserCardsFetched && (
-        <PaymentDetails
-          amount={amount}
-          cards={cards}
-          isPaymentLoading={isPaymentLoading}
-          intermediatePayment={intermediatePayment}
-          onPay={handleImmediateContribution}
-          onIframeLoaded={onReadyToSubscribe}
-        />
+      {areUserCardsFetched &&
+        (isAmountEditing ? (
+          <AmountSelection
+            amount={amount}
+            onAmountChange={handleAmountChange}
+          />
+        ) : (
+          <PaymentDetails
+            amount={amount}
+            cards={cards}
+            isPaymentLoading={isPaymentLoading}
+            intermediatePayment={intermediatePayment}
+            onPay={handleImmediateContribution}
+            onIframeLoaded={onReadyToSubscribe}
+            onAmountEdit={toggleAmountEditing}
+          />
+        ))}
+      {errorText && (
+        <ErrorText className="dead-sea-payment-step__error">
+          {errorText}
+        </ErrorText>
       )}
     </GeneralInfoWrapper>
   );
