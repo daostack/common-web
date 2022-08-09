@@ -4,10 +4,7 @@ import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import { useQueryParams } from "@/shared/hooks";
-import {
-  GeneralInfoWrapper,
-  DeadSeaUserDetailsForm,
-} from "../../components/DeadSeaIntegrationContainer";
+import { UserDetailsStep } from "../../components/DeadSeaIntegrationContainer";
 import { DeadSeaIntegrationStep } from "./constants";
 import { getAmount } from "./helpers";
 import "./index.scss";
@@ -40,11 +37,7 @@ const DeadSeaIntegrationContainer: FC = () => {
 
     switch (step) {
       case DeadSeaIntegrationStep.UserDetails:
-        return (
-          <GeneralInfoWrapper>
-            <DeadSeaUserDetailsForm user={user} />
-          </GeneralInfoWrapper>
-        );
+        return <UserDetailsStep user={user} />;
       default:
         return null;
     }
