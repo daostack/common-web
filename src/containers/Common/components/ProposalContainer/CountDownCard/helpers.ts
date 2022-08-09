@@ -9,20 +9,34 @@ export enum VotingStatus {
   Withdrawn = "Withdrawn",
 }
 
-const calculateFinalState = (
-  proposal: Proposal,
-  memberCount: number
-): ProposalState => {
+const calculateFinalState = (proposal: Proposal): ProposalState => {
   const {
-    votes: { weightedApproved, weightedRejected, total },
+    votes: {
+      weightedApproved,
+      weightedRejected,
+      total,
+      totalMembersWithVotingRight,
+    },
     global: { maxReject, minApprove, quorum },
   } = proposal;
+
+  if (!totalMembersWithVotingRight) {
+    return ProposalState.FAILED;
+  }
+
+  if (minApprove === 0 && quorum === 0) {
+    if (maxReject > 0 && weightedRejected <= maxReject)
+      return ProposalState.PASSED;
+    if (maxReject > 0 && weightedRejected > maxReject)
+      return ProposalState.FAILED;
+    if (maxReject === 0) return ProposalState.PASSED;
+  }
 
   if (
     weightedRejected <= maxReject &&
     weightedRejected < weightedApproved &&
     weightedApproved >= minApprove &&
-    total / memberCount > quorum / 100
+    total / totalMembersWithVotingRight > quorum / 100
   ) {
     return ProposalState.PASSED;
   }
