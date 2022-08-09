@@ -4,7 +4,10 @@ import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import { useQueryParams } from "@/shared/hooks";
-import { UserDetailsStep } from "../../components/DeadSeaIntegrationContainer";
+import {
+  MemberAdmittanceStep,
+  UserDetailsStep,
+} from "../../components/DeadSeaIntegrationContainer";
 import { DeadSeaIntegrationStep } from "./constants";
 import { getAmount } from "./helpers";
 import "./index.scss";
@@ -16,6 +19,10 @@ const DeadSeaIntegrationContainer: FC = () => {
   const user = useSelector(selectUser());
   const amount = getAmount(queryParams);
   const isInitialLoading = !user || !amount;
+
+  const handleMemberAdmittanceStepFinish = () => {
+    console.log("handleMemberAdmittanceStepFinish");
+  };
 
   useEffect(() => {
     if (!user && amount) {
@@ -38,6 +45,10 @@ const DeadSeaIntegrationContainer: FC = () => {
     switch (step) {
       case DeadSeaIntegrationStep.UserDetails:
         return <UserDetailsStep user={user} />;
+      case DeadSeaIntegrationStep.MemberAdmittance:
+        return (
+          <MemberAdmittanceStep onFinish={handleMemberAdmittanceStepFinish} />
+        );
       default:
         return null;
     }
