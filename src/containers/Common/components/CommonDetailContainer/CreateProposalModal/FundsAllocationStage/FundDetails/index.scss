@@ -33,32 +33,8 @@
     }
   }
 
-.assign-circle-configuration__circle-dropdown {
+.funds-allocation-details_type-dropdown {
   z-index: $dropdown-z-index + 1;
-}
-
-.assign-circle-configuration__member-autocomplete {
-  z-index: $dropdown-z-index;
-  margin-top: 1.5rem;
-
-  .assign-circle-configuration__member-info {
-    font-weight: normal;
-    font-size: $xsmall;
-    line-height: 120%;
-
-    @include big-phone {
-      font-weight: 600;
-      font-size: $small;
-      line-height: 100%;
-    }
-  }
-}
-
-.assign-circle-configuration__no-members-text {
-  margin: 2rem 0 0;
-  font-size: $small;
-  color: $light-gray-2;
-  text-align: center;
 }
 
 .funds-allocation-configuration__modal-footer {
@@ -80,12 +56,4 @@
   flex-direction: column;
   margin: 2rem 0;
   margin-bottom: 1.5rem;
-}
-
-.assign-circle-configuration__submit-button {
-  max-width: 13.125rem;
-
-  @include big-phone {
-    max-width: unset;
-  }
 }

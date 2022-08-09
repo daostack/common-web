@@ -3,4 +3,5 @@ export enum CreateProposalStage {
   AssignCircle,
   RemoveCircle,
   FundsAllocation,
+  Survey,
 }

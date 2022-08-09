@@ -17,6 +17,7 @@ import { AssignCircleStage } from "./AssignCircleStage";
 import { Error } from "./Error";
 import { RemoveCircleStage } from "./RemoveCircleStage";
 import { FundsAllocationStage } from "./FundsAllocationStage";
+import { SurveyStage } from "./SurveyStage";
 import { ProposalTypeSelection } from "./ProposalTypeSelection";
 import { CreateProposalStage } from "./constants";
 import { CreateProposalContext, CreateProposalContextValue } from "./context";
@@ -67,6 +68,7 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
 
   const handleProposalTypeSelectionFinish = useCallback(
     (proposalType: ProposalsTypes) => {
+      console.log('proposalType', proposalType)
       if (proposalType === ProposalsTypes.ASSIGN_CIRCLE) {
         setStage(CreateProposalStage.AssignCircle);
       }
@@ -75,6 +77,9 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
       }
       if (proposalType === ProposalsTypes.REMOVE_CIRCLE) {
         setStage(CreateProposalStage.RemoveCircle);
+      }
+      if (proposalType === ProposalsTypes.SURVEY) {
+        setStage(CreateProposalStage.Survey);
       }
     },
     []
@@ -155,6 +160,15 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
       case CreateProposalStage.FundsAllocation:
         return (
           <FundsAllocationStage
+            common={common}
+            governance={governance}
+            onFinish={handleProposalCreationFinish}
+            onGoBack={goToProposalTypeSelectionStage}
+          />
+        );
+      case CreateProposalStage.Survey:
+        return (
+          <SurveyStage
             common={common}
             governance={governance}
             onFinish={handleProposalCreationFinish}

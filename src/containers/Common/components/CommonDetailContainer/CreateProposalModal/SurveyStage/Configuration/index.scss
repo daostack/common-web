@@ -1,13 +1,13 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-.funds-allocation-configuration {
+.survey-configuration {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.funds-allocation-configuration__stage-name {
+.survey-configuration__stage-name {
   margin-top: 0.75rem;
 
   @include big-phone {
@@ -15,16 +15,16 @@
   }
 }
 
-.funds-allocation-configuration__avatar-icon {
+.survey-configuration__avatar-icon {
   flex-shrink: 0;
 }
 
-.funds-allocation-configuration__form {
+.survey-configuration__form {
   max-width: 36.5rem;
   width: 100%;
 }
 
-.create-funds-allocation__text-field {
+.create-survey__text-field {
     margin-bottom: 24px;
 
     &:last-child {
@@ -32,9 +32,26 @@
     }
   }
 
-.funds-allocation-configuration__modal-footer {
+.survey-configuration__modal-footer {
   display: flex;
   justify-content: center;
   padding-top: 1.5rem;
   padding-bottom: 2rem;
+}
+
+.survey-form__text-field {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+}
+
+.survey__links-array-item {
+    margin-top: 1rem;
+
+    &:first-child {
+      margin-top: 0;
+    }
 }

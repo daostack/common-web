@@ -36,6 +36,11 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
     searchText: "Funds Allocation",
     value: ProposalsTypes.FUNDS_ALLOCATION,
   },
+  {
+    text: "Survey",
+    searchText: "Survey",
+    value: ProposalsTypes.SURVEY,
+  },
 ];
 
 interface ProposalTypeSelectionProps {

@@ -20,17 +20,17 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   return (
-    <div className="assign-circle-confirmation">
+    <div className="funds-allocation-confirmation">
       <img
-        className="assign-circle-confirmation__image"
+        className="funds-allocation-confirmation__image"
         src="/icons/social-login/account-avatar.svg"
         alt="Avatar"
       />
-      <h4 className="assign-circle-confirmation__title">Funds Allocation</h4>
-      <p className="assign-circle-confirmation__circle-name">{getPrefix(fund)}{amount}</p>
-      <div className="assign-circle-confirmation__buttons-wrapper">
+      <h4 className="funds-allocation-confirmation__title">Funds Allocation</h4>
+      <p className="funds-allocation-confirmation__circle-name">{getPrefix(fund)}{amount}</p>
+      <div className="funds-allocation-confirmation__buttons-wrapper">
         <Button
-          className="assign-circle-confirmation__cancel-button"
+          className="funds-allocation-confirmation__cancel-button"
           onClick={onCancel}
           variant={
             isMobileView
