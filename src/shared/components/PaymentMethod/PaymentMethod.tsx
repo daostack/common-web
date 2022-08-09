@@ -12,7 +12,7 @@ interface PaymentMethodProps {
   className?: string;
   card: Card;
   title?: string;
-  onReplacePaymentMethod: () => void;
+  onReplacePaymentMethod?: () => void;
   styles?: Styles;
 }
 
@@ -82,14 +82,16 @@ const PaymentMethod = (props: PaymentMethodProps): ReactElement => {
           </span>
         </div>
 
-        <div className="payment-method__replace-wrapper">
-          <ButtonLink
-            className="payment-method__replace"
-            onClick={onReplacePaymentMethod}
-          >
-            Replace payment method?
-          </ButtonLink>
-        </div>
+        {onReplacePaymentMethod && (
+          <div className="payment-method__replace-wrapper">
+            <ButtonLink
+              className="payment-method__replace"
+              onClick={onReplacePaymentMethod}
+            >
+              Replace payment method?
+            </ButtonLink>
+          </div>
+        )}
       </div>
     </div>
   );

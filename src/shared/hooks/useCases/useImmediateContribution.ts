@@ -14,7 +14,7 @@ interface State {
   isReadyToSubscribe: boolean;
   intermediatePayment: ImmediateContributionPayment | null;
   payment: Payment | null;
-  error: string | null;
+  errorText: string | null;
 }
 
 interface Return extends Omit<State, "isReadyToSubscribe"> {
@@ -27,7 +27,7 @@ const INITIAL_STATE: State = {
   isPaymentLoading: false,
   isReadyToSubscribe: false,
   payment: null,
-  error: null,
+  errorText: null,
 };
 
 export const useImmediateContribution = (): Return => {
@@ -60,7 +60,8 @@ export const useImmediateContribution = (): Return => {
             };
 
             if (error || !payment) {
-              stateForUpdate.error = error?.message || "Something went wrong";
+              stateForUpdate.errorText =
+                error?.message || "Something went wrong";
             } else if (!isImmediateContributionPayment(payment)) {
               stateForUpdate.payment = payment;
             } else {

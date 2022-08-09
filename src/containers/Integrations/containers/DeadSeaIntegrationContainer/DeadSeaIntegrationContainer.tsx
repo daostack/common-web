@@ -6,6 +6,7 @@ import { Loader } from "@/shared/components";
 import { useQueryParams } from "@/shared/hooks";
 import {
   MemberAdmittanceStep,
+  PaymentStep,
   UserDetailsStep,
 } from "../../components/DeadSeaIntegrationContainer";
 import { DeadSeaIntegrationStep } from "./constants";
@@ -49,6 +50,8 @@ const DeadSeaIntegrationContainer: FC = () => {
         return (
           <MemberAdmittanceStep onFinish={handleMemberAdmittanceStepFinish} />
         );
+      case DeadSeaIntegrationStep.Payment:
+        return <PaymentStep amount={amount} />;
       default:
         return null;
     }
