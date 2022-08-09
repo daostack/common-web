@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Button, ButtonLink, Separator } from "@/shared/components";
 import { Checkbox } from "@/shared/components/Form";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
-import { ScreenSize, TERMS_OF_USE_URL } from "@/shared/constants";
+import { ScreenSize } from "@/shared/constants";
 import ExplanationIcon from "@/shared/icons/explanation.icon";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
@@ -105,7 +105,7 @@ export default function UserAcknowledgment({
           For more details and information refer to the{" "}
           <ButtonLink
             className="create-common-user-acknowledgment__terms-link"
-            href={TERMS_OF_USE_URL}
+            href={require("../../../../../../../shared/assets/terms_and_conditions.pdf")}
             target="_blank"
             rel="noopener noreferrer"
           >
