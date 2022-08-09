@@ -44,10 +44,7 @@ const calculateFinalState = (proposal: Proposal): ProposalState => {
   return ProposalState.FAILED;
 };
 
-export const calculateVotingStatus = (
-  proposal: Proposal,
-  memberCount: number
-): VotingStatus => {
+export const calculateVotingStatus = (proposal: Proposal): VotingStatus => {
   switch (proposal.state) {
     case ProposalState.FAILED:
     case ProposalState.RETRACTED:
@@ -59,7 +56,7 @@ export const calculateVotingStatus = (
         ? VotingStatus.Withdrawn
         : VotingStatus.Approved;
     default:
-      return calculateFinalState(proposal, memberCount) === ProposalState.PASSED
+      return calculateFinalState(proposal) === ProposalState.PASSED
         ? VotingStatus.Passing
         : VotingStatus.Failing;
   }
