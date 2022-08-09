@@ -21,7 +21,7 @@ const calculateFinalState = (
   if (
     weightedRejected <= maxReject &&
     weightedRejected < weightedApproved &&
-    weightedApproved > minApprove &&
+    weightedApproved >= minApprove &&
     total / memberCount > quorum / 100
   ) {
     return ProposalState.PASSED;
