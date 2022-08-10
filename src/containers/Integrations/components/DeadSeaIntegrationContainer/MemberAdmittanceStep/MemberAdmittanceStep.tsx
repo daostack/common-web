@@ -10,6 +10,7 @@ import { getUserName } from "@/shared/utils";
 import { useLoadingState } from "@/shared/hooks";
 import { ErrorText } from "@/shared/components/Form";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
+import { useUserMemberAdmittanceProposal } from "./useUserMemberAdmittanceProposal";
 import "./index.scss";
 
 interface MemberAdmittanceStepProps {
@@ -24,9 +25,15 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
     fetched: isCommonMemberFetched,
     fetchCommonMember,
   } = useCommonMember();
+  const {
+    data: existingMemberAdmittance,
+    loading: isMemberAdmittanceLoading,
+    fetched: isMemberAdmittanceFetched,
+    fetchUserMemberAdmittanceProposal,
+  } = useUserMemberAdmittanceProposal();
   const [
     {
-      data: memberAdmittance,
+      data: createdMemberAdmittance,
       loading: isProposalCreationLoading,
       fetched: isProposalCreationFinished,
     },
@@ -47,10 +54,28 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
   }, [isCommonMemberFetched, commonMember, onFinish]);
 
   useEffect(() => {
+    if (
+      !isCommonMemberFetched ||
+      commonMember ||
+      isMemberAdmittanceLoading ||
+      isMemberAdmittanceFetched
+    ) {
+      return;
+    }
+
+    fetchUserMemberAdmittanceProposal(config.deadSeaCommonId);
+  }, [
+    isCommonMemberFetched,
+    commonMember,
+    isMemberAdmittanceLoading,
+    isMemberAdmittanceFetched,
+  ]);
+
+  useEffect(() => {
     (async () => {
       if (
-        !isCommonMemberFetched ||
-        commonMember ||
+        !isMemberAdmittanceFetched ||
+        existingMemberAdmittance ||
         isProposalCreationLoading ||
         isProposalCreationFinished
       ) {
@@ -90,8 +115,8 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
       );
     })();
   }, [
-    isCommonMemberFetched,
-    commonMember,
+    isMemberAdmittanceFetched,
+    existingMemberAdmittance,
     isProposalCreationLoading,
     isProposalCreationFinished,
   ]);

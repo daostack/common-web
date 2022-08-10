@@ -1,5 +1,5 @@
 import { getUserListByIds } from "@/containers/Auth/store/api";
-import { ApiEndpoint } from "@/shared/constants";
+import { ApiEndpoint, ProposalsTypes } from "@/shared/constants";
 import Api from "@/services/Api";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
@@ -49,6 +49,7 @@ import {
   CreateVotePayload,
   UpdateVotePayload,
 } from "@/shared/interfaces/api/vote";
+import { MemberAdmittance } from "@/shared/models/governance/proposals";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { NotificationItem } from "@/shared/models/Notification";
 
@@ -91,6 +92,27 @@ export async function fetchCommonProposals(commonId: string) {
     (proposal: Proposal, prevProposal: Proposal) =>
       prevProposal.createdAt?.seconds - proposal.createdAt?.seconds
   );
+}
+
+export async function fetchUserMemberAdmittanceProposal(
+  commonId: string,
+  userId: string
+): Promise<MemberAdmittance | null> {
+  const proposals = await firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .where("type", "==", ProposalsTypes.MEMBER_ADMITTANCE)
+    .where("data.args.commonId", "==", commonId)
+    .where("data.args.proposerId", "==", userId)
+    .get();
+  const data = transformFirebaseDataList<MemberAdmittance>(proposals);
+
+  data.sort(
+    (proposal: MemberAdmittance, prevProposal: MemberAdmittance) =>
+      prevProposal.createdAt?.seconds - proposal.createdAt?.seconds
+  );
+
+  return data[0] || null;
 }
 
 export async function fetchCommonContributions(commonId: string): Promise<Payment[]> {
