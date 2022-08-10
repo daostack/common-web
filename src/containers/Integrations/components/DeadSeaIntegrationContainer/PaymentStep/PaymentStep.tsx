@@ -32,7 +32,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
     makeImmediateContribution,
     onReadyToSubscribe,
   } = useImmediateContribution();
-  const [isAmountEditing, setIsAmountEditing] = useState(true);
+  const [isAmountEditing, setIsAmountEditing] = useState(false);
 
   const handleImmediateContribution = useCallback(() => {
     makeImmediateContribution({

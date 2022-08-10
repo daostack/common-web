@@ -26,7 +26,7 @@ const DeadSeaIntegrationContainer: FC = () => {
   };
 
   const handleMemberAdmittanceStepFinish = () => {
-    console.log("handleMemberAdmittanceStepFinish");
+    setStep(DeadSeaIntegrationStep.Payment);
   };
 
   useEffect(() => {
