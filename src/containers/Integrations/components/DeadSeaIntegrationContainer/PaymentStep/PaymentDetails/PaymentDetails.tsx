@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { ImmediateContributionPayment } from "@/containers/Common/interfaces";
 import {
   Button,
@@ -31,7 +31,14 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
     onIframeLoaded,
     onAmountEdit,
   } = props;
+  const [isFrameLoaded, setIsIframeLoaded] = useState(false);
   const formattedAmount = formatPrice(amount, { shouldMillify: false });
+  const isLoading = isPaymentLoading || (intermediatePayment && !isFrameLoaded);
+
+  const handleIframeLoad = () => {
+    onIframeLoaded();
+    setIsIframeLoaded(true);
+  };
 
   return (
     <div className="dead-sea-payment-details">
@@ -64,13 +71,13 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
           </Button>
         </>
       )}
-      {isPaymentLoading && <Loader />}
+      {isLoading && <Loader />}
       {intermediatePayment && (
         <IFrame
           src={intermediatePayment.link}
           frameBorder="0"
           title="Payment Details"
-          onLoad={onIframeLoaded}
+          onLoad={handleIframeLoad}
         />
       )}
     </div>
