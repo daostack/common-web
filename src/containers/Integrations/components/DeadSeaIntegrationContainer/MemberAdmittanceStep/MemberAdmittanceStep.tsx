@@ -11,7 +11,6 @@ import { getUserName } from "@/shared/utils";
 import { useLoadingState } from "@/shared/hooks";
 import { ErrorText } from "@/shared/components/Form";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
-import { useUserMemberAdmittanceProposal } from "./useUserMemberAdmittanceProposal";
 import "./index.scss";
 
 interface MemberAdmittanceStepProps {
@@ -26,12 +25,6 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
     fetched: isCommonMemberFetched,
     fetchCommonMember,
   } = useCommonMember();
-  const {
-    data: existingMemberAdmittance,
-    loading: isMemberAdmittanceLoading,
-    fetched: isMemberAdmittanceFetched,
-    fetchUserMemberAdmittanceProposal,
-  } = useUserMemberAdmittanceProposal();
   const [
     {
       data: createdMemberAdmittance,
@@ -56,28 +49,10 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
   }, [isCommonMemberFetched, commonMember, onFinish]);
 
   useEffect(() => {
-    if (
-      !isCommonMemberFetched ||
-      commonMember ||
-      isMemberAdmittanceLoading ||
-      isMemberAdmittanceFetched
-    ) {
-      return;
-    }
-
-    fetchUserMemberAdmittanceProposal(config.deadSeaCommonId);
-  }, [
-    isCommonMemberFetched,
-    commonMember,
-    isMemberAdmittanceLoading,
-    isMemberAdmittanceFetched,
-  ]);
-
-  useEffect(() => {
     (async () => {
       if (
-        !isMemberAdmittanceFetched ||
-        existingMemberAdmittance ||
+        !isCommonMemberFetched ||
+        commonMember ||
         isProposalCreationLoading ||
         isProposalCreationFinished
       ) {
@@ -117,14 +92,14 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
       );
     })();
   }, [
-    isMemberAdmittanceFetched,
-    existingMemberAdmittance,
+    isCommonMemberFetched,
+    commonMember,
     isProposalCreationLoading,
     isProposalCreationFinished,
   ]);
 
   useEffect(() => {
-    if (!existingMemberAdmittance && !createdMemberAdmittance) {
+    if (!createdMemberAdmittance) {
       return;
     }
 
@@ -135,7 +110,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
         onFinish();
       }
     });
-  }, [isMemberAdmittanceFetched, existingMemberAdmittance, userId, onFinish]);
+  }, [createdMemberAdmittance, userId, onFinish]);
 
   return (
     <GeneralInfoWrapper>
