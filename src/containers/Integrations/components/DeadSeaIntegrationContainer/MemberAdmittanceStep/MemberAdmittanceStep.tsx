@@ -4,6 +4,7 @@ import config from "@/config";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { useCommonMember } from "@/containers/Common/hooks";
 import { createMemberAdmittanceProposal } from "@/containers/Common/store/actions";
+import { subscribeToCommonMembers } from "@/containers/Common/store/api";
 import { Loader } from "@/shared/components";
 import { MemberAdmittance } from "@/shared/models/governance/proposals";
 import { getUserName } from "@/shared/utils";
@@ -41,6 +42,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
   ] = useLoadingState<MemberAdmittance | null>(null);
   const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
+  const userId = user?.uid;
   const userName = getUserName(user);
 
   useEffect(() => {
@@ -120,6 +122,20 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
     isProposalCreationLoading,
     isProposalCreationFinished,
   ]);
+
+  useEffect(() => {
+    if (!existingMemberAdmittance && !createdMemberAdmittance) {
+      return;
+    }
+
+    return subscribeToCommonMembers(config.deadSeaCommonId, (commonMembers) => {
+      if (
+        commonMembers.some((commonMember) => commonMember.userId === userId)
+      ) {
+        onFinish();
+      }
+    });
+  }, [isMemberAdmittanceFetched, existingMemberAdmittance, userId, onFinish]);
 
   return (
     <GeneralInfoWrapper>
