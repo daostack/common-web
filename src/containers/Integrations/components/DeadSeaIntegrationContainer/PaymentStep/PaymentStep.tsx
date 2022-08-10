@@ -30,6 +30,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
     payment,
     errorText,
     makeImmediateContribution,
+    resetImmediateContribution,
     onReadyToSubscribe,
   } = useImmediateContribution();
   const [isAmountEditing, setIsAmountEditing] = useState(false);
@@ -42,13 +43,21 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
     });
   }, [makeImmediateContribution, amount]);
 
-  const toggleAmountEditing = () => {
-    setIsAmountEditing((isEditing) => !isEditing);
+  const startAmountEditing = () => {
+    setIsAmountEditing(true);
+  };
+
+  const stopAmountEditing = () => {
+    setIsAmountEditing(false);
   };
 
   const handleAmountChange = (newAmount: number) => {
     onAmountChange(newAmount);
-    toggleAmountEditing();
+    stopAmountEditing();
+
+    if (amount !== newAmount && cards.length === 0) {
+      resetImmediateContribution();
+    }
   };
 
   useEffect(() => {
@@ -62,7 +71,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
   }, [areUserCardsFetched, cards.length, handleImmediateContribution]);
 
   return (
-    <GeneralInfoWrapper onGoBack={isAmountEditing ? toggleAmountEditing : null}>
+    <GeneralInfoWrapper onGoBack={isAmountEditing ? stopAmountEditing : null}>
       {!areUserCardsFetched && <Loader />}
       {areUserCardsFetched &&
         (isAmountEditing ? (
@@ -78,7 +87,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
             intermediatePayment={intermediatePayment}
             onPay={handleImmediateContribution}
             onIframeLoaded={onReadyToSubscribe}
-            onAmountEdit={toggleAmountEditing}
+            onAmountEdit={startAmountEditing}
           />
         ))}
       {errorText && (

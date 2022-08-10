@@ -47,7 +47,7 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
         </span>
         <ButtonLink
           className="dead-sea-payment-details__edit-amount-button"
-          onClick={onAmountEdit}
+          onClick={!isPaymentLoading ? onAmountEdit : undefined}
         >
           Edit
         </ButtonLink>

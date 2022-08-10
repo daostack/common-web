@@ -19,6 +19,7 @@ interface State {
 
 interface Return extends Omit<State, "isReadyToSubscribe"> {
   makeImmediateContribution: (data: ImmediateContributionData) => void;
+  resetImmediateContribution: () => void;
   onReadyToSubscribe: () => void;
 }
 
@@ -79,6 +80,10 @@ export const useImmediateContribution = (): Return => {
     [dispatch, state]
   );
 
+  const resetImmediateContribution = useCallback(() => {
+    setState(INITIAL_STATE);
+  }, []);
+
   const onReadyToSubscribe = useCallback(() => {
     setState((nextState) => ({
       ...nextState,
@@ -118,6 +123,7 @@ export const useImmediateContribution = (): Return => {
   return {
     ...state,
     makeImmediateContribution,
+    resetImmediateContribution,
     onReadyToSubscribe,
   };
 };
