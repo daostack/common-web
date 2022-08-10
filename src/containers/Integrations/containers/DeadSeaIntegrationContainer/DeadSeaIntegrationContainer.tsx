@@ -16,10 +16,14 @@ import "./index.scss";
 const DeadSeaIntegrationContainer: FC = () => {
   const dispatch = useDispatch();
   const queryParams = useQueryParams();
-  const [step, setStep] = useState(DeadSeaIntegrationStep.Payment);
+  const [step, setStep] = useState(DeadSeaIntegrationStep.UserDetails);
   const [amount, setAmount] = useState(() => getAmount(queryParams));
   const user = useSelector(selectUser());
   const isInitialLoading = !user || !amount;
+
+  const handleUserDetailsStepFinish = () => {
+    setStep(DeadSeaIntegrationStep.MemberAdmittance);
+  };
 
   const handleMemberAdmittanceStepFinish = () => {
     console.log("handleMemberAdmittanceStepFinish");
@@ -45,7 +49,9 @@ const DeadSeaIntegrationContainer: FC = () => {
 
     switch (step) {
       case DeadSeaIntegrationStep.UserDetails:
-        return <UserDetailsStep user={user} />;
+        return (
+          <UserDetailsStep user={user} onFinish={handleUserDetailsStepFinish} />
+        );
       case DeadSeaIntegrationStep.MemberAdmittance:
         return (
           <MemberAdmittanceStep onFinish={handleMemberAdmittanceStepFinish} />

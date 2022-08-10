@@ -5,14 +5,15 @@ import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 
 interface UserDetailsStepProps {
   user: User;
+  onFinish: () => void;
 }
 
 const UserDetailsStep: FC<UserDetailsStepProps> = (props) => {
-  const { user } = props;
+  const { user, onFinish } = props;
 
   return (
     <GeneralInfoWrapper>
-      <DeadSeaUserDetailsForm user={user} />
+      <DeadSeaUserDetailsForm user={user} onFinish={onFinish} />
     </GeneralInfoWrapper>
   );
 };

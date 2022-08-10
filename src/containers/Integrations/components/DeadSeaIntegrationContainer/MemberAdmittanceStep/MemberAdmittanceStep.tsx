@@ -9,6 +9,7 @@ import { MemberAdmittance } from "@/shared/models/governance/proposals";
 import { getUserName } from "@/shared/utils";
 import { useLoadingState } from "@/shared/hooks";
 import { ErrorText } from "@/shared/components/Form";
+import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 import "./index.scss";
 
 interface MemberAdmittanceStepProps {
@@ -31,7 +32,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
     },
     setProposalCreationState,
   ] = useLoadingState<MemberAdmittance | null>(null);
-  const [errorText, setErrorText] = useState("Something went wrong");
+  const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
   const userName = getUserName(user);
 
@@ -96,7 +97,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
   ]);
 
   return (
-    <div className="dead-sea-member-admittance-step">
+    <GeneralInfoWrapper>
       {errorText ? (
         <ErrorText className="dead-sea-member-admittance-step__error">
           {errorText}
@@ -104,7 +105,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
       ) : (
         <Loader />
       )}
-    </div>
+    </GeneralInfoWrapper>
   );
 };
 

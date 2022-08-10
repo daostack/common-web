@@ -43,10 +43,11 @@ const getInitialValues = (user?: User | null): FormValues => ({
 
 interface DeadSeaUserDetailsFormProps {
   user: User;
+  onFinish: () => void;
 }
 
 const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
-  const { user } = props;
+  const { user, onFinish } = props;
   const dispatch = useDispatch();
   const [errorText, setErrorText] = useState("");
   const screenSize = useSelector(getScreenSize());
@@ -84,6 +85,8 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
 
             if (error) {
               setErrorText(error.message || "Something went wrong");
+            } else {
+              onFinish();
             }
           },
         })
