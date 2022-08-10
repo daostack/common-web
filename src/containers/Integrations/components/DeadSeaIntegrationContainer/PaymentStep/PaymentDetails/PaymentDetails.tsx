@@ -33,7 +33,9 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
   } = props;
   const [isFrameLoaded, setIsIframeLoaded] = useState(false);
   const formattedAmount = formatPrice(amount, { shouldMillify: false });
-  const isLoading = isPaymentLoading || (intermediatePayment && !isFrameLoaded);
+  const isLoading = Boolean(
+    isPaymentLoading || (intermediatePayment && !isFrameLoaded)
+  );
 
   const handleIframeLoad = () => {
     onIframeLoaded();
@@ -59,19 +61,20 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
           Edit
         </ButtonLink>
       </div>
+      {isLoading && <Loader />}
       {cards.length > 0 && (
         <>
           <PaymentMethod card={cards[0]} />
           <Button
             className="dead-sea-payment-details__pay-button"
             onClick={onPay}
+            disabled={isLoading}
             shouldUseFullWidth
           >
             Pay {formattedAmount} (ILS)
           </Button>
         </>
       )}
-      {isLoading && <Loader />}
       {intermediatePayment && (
         <IFrame
           src={intermediatePayment.link}

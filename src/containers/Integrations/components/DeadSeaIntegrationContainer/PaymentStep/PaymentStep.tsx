@@ -15,10 +15,11 @@ import "./index.scss";
 interface PaymentStepProps {
   amount: number;
   onAmountChange: (amount: number) => void;
+  onFinish: () => void;
 }
 
 const PaymentStep: FC<PaymentStepProps> = (props) => {
-  const { amount, onAmountChange } = props;
+  const { amount, onAmountChange, onFinish } = props;
   const {
     fetched: areUserCardsFetched,
     data: cards,
@@ -69,6 +70,12 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
       handleImmediateContribution();
     }
   }, [areUserCardsFetched, cards.length, handleImmediateContribution]);
+
+  useEffect(() => {
+    if (payment) {
+      onFinish();
+    }
+  }, [payment]);
 
   return (
     <GeneralInfoWrapper onGoBack={isAmountEditing ? stopAmountEditing : null}>

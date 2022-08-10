@@ -7,6 +7,7 @@ import { useQueryParams } from "@/shared/hooks";
 import {
   MemberAdmittanceStep,
   PaymentStep,
+  Success,
   UserDetailsStep,
 } from "../../components/DeadSeaIntegrationContainer";
 import { DeadSeaIntegrationStep } from "./constants";
@@ -27,6 +28,10 @@ const DeadSeaIntegrationContainer: FC = () => {
 
   const handleMemberAdmittanceStepFinish = () => {
     setStep(DeadSeaIntegrationStep.Payment);
+  };
+
+  const handlePaymentStepFinish = () => {
+    setStep(DeadSeaIntegrationStep.Success);
   };
 
   useEffect(() => {
@@ -57,7 +62,15 @@ const DeadSeaIntegrationContainer: FC = () => {
           <MemberAdmittanceStep onFinish={handleMemberAdmittanceStepFinish} />
         );
       case DeadSeaIntegrationStep.Payment:
-        return <PaymentStep amount={amount} onAmountChange={setAmount} />;
+        return (
+          <PaymentStep
+            amount={amount}
+            onAmountChange={setAmount}
+            onFinish={handlePaymentStepFinish}
+          />
+        );
+      case DeadSeaIntegrationStep.Success:
+        return <Success />;
       default:
         return null;
     }

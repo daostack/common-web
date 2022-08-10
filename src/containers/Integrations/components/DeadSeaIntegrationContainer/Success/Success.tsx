@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import config from "@/config";
 import { Button } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import "./index.scss";
@@ -8,7 +9,9 @@ const Success: FC = () => {
   const history = useHistory();
 
   const handleJumpIn = () => {
-    history.push(ROUTE_PATHS.COMMON_LIST);
+    history.push(
+      ROUTE_PATHS.COMMON_DETAIL.replace(":id", config.deadSeaCommonId)
+    );
   };
 
   return (
