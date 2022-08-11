@@ -43,7 +43,7 @@ const getInitialValues = (user?: User | null): FormValues => ({
 
 interface DeadSeaUserDetailsFormProps {
   user: User;
-  onFinish: () => void;
+  onFinish: (supportPlan: string) => void;
 }
 
 const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
@@ -86,7 +86,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             if (error) {
               setErrorText(error.message || "Something went wrong");
             } else {
-              onFinish();
+              onFinish(values.supportPlan);
             }
           },
         })

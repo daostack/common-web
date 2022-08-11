@@ -14,11 +14,12 @@ import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 import "./index.scss";
 
 interface MemberAdmittanceStepProps {
+  description: string;
   onFinish: () => void;
 }
 
 const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
-  const { onFinish } = props;
+  const { description, onFinish } = props;
   const dispatch = useDispatch();
   const {
     data: commonMember,
@@ -64,13 +65,15 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
         loading: true,
       }));
 
+      const title = `Membership request from ${userName}`;
+
       dispatch(
         createMemberAdmittanceProposal.request({
           payload: {
             args: {
               commonId: config.deadSeaCommonId,
-              title: `Membership request from ${userName}`,
-              description: "",
+              title,
+              description: description || title,
               images: [],
               files: [],
               links: [],

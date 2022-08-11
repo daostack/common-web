@@ -20,11 +20,13 @@ const DeadSeaIntegrationContainer: FC = () => {
   const queryParams = useQueryParams();
   const [step, setStep] = useState(DeadSeaIntegrationStep.UserDetails);
   const [amount, setAmount] = useState(() => getAmount(queryParams));
+  const [supportPlan, setSupportPlan] = useState("");
   const user = useSelector(selectUser());
   const isInitialLoading = !user || !amount;
 
-  const handleUserDetailsStepFinish = () => {
+  const handleUserDetailsStepFinish = (supportPlan: string) => {
     setStep(DeadSeaIntegrationStep.MemberAdmittance);
+    setSupportPlan(supportPlan);
   };
 
   const handleMemberAdmittanceStepFinish = () => {
@@ -82,7 +84,10 @@ const DeadSeaIntegrationContainer: FC = () => {
         );
       case DeadSeaIntegrationStep.MemberAdmittance:
         return (
-          <MemberAdmittanceStep onFinish={handleMemberAdmittanceStepFinish} />
+          <MemberAdmittanceStep
+            description={supportPlan}
+            onFinish={handleMemberAdmittanceStepFinish}
+          />
         );
       case DeadSeaIntegrationStep.Payment:
         return (

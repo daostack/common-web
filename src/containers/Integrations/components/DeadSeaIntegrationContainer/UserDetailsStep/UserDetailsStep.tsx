@@ -5,7 +5,7 @@ import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 
 interface UserDetailsStepProps {
   user: User;
-  onFinish: () => void;
+  onFinish: (supportPlan: string) => void;
 }
 
 const UserDetailsStep: FC<UserDetailsStepProps> = (props) => {
