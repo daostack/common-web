@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
-import { useQueryParams } from "@/shared/hooks";
+import { useHeader, useQueryParams } from "@/shared/hooks";
 import {
   MemberAdmittanceStep,
   PaymentStep,
@@ -16,6 +16,7 @@ import "./index.scss";
 
 const DeadSeaIntegrationContainer: FC = () => {
   const dispatch = useDispatch();
+  const { updateHeaderState } = useHeader();
   const queryParams = useQueryParams();
   const [step, setStep] = useState(DeadSeaIntegrationStep.UserDetails);
   const [amount, setAmount] = useState(() => getAmount(queryParams));
@@ -46,6 +47,28 @@ const DeadSeaIntegrationContainer: FC = () => {
       );
     }
   }, [dispatch, user, amount]);
+
+  useEffect(() => {
+    if (!user) {
+      setStep(DeadSeaIntegrationStep.UserDetails);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    updateHeaderState({
+      shouldShowMenuItems: false,
+      shouldShowDownloadLinks: false,
+      shouldShowAuth: false,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (step === DeadSeaIntegrationStep.Success) {
+      updateHeaderState({
+        shouldShowMenuItems: null,
+      });
+    }
+  }, [step]);
 
   const renderContent = () => {
     if (isInitialLoading) {
