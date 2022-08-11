@@ -16,6 +16,11 @@ const initialState: SharedStateType = {
   shareLinks: {},
   loadingShareLinks: {},
   areReportsLoading: false,
+  header: {
+    shouldShowMenuItems: null,
+    shouldShowDownloadLinks: null,
+    shouldShowAuth: null,
+  }
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
@@ -70,6 +75,23 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
   .handleAction(actions.setAreReportsLoading, (state, action) =>
     produce(state, (nextState) => {
       nextState.areReportsLoading = action.payload;
+    })
+  )
+  .handleAction(actions.resetHeaderState, (state) =>
+    produce(state, (nextState) => {
+      nextState.header = {
+        shouldShowMenuItems: null,
+        shouldShowDownloadLinks: null,
+        shouldShowAuth: null,
+      };
+    })
+  )
+  .handleAction(actions.updateHeaderState, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.header = {
+        ...nextState.header,
+        ...action.payload,
+      };
     })
   );
 

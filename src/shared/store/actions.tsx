@@ -1,7 +1,11 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
 import { ScreenSize } from "../constants";
-import { NotificationData, PayloadWithOptionalCallback } from "../interfaces";
+import {
+  NotificationData,
+  PayloadWithOptionalCallback,
+  SharedHeaderState,
+} from "../interfaces";
 import { DynamicLinkInfo } from "../interfaces/api/dynamicLink";
 import { SharedActionTypes } from "./constants";
 
@@ -26,3 +30,10 @@ export const buildShareLink = createAsyncAction(
   { key: string; link: string },
   { key: string; error: Error }
 >();
+
+export const resetHeaderState = createStandardAction(
+  SharedActionTypes.RESET_HEADER_STATE
+)();
+export const updateHeaderState = createStandardAction(
+  SharedActionTypes.UPDATE_HEADER_STATE
+)<Partial<SharedHeaderState>>();
