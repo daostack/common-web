@@ -4,6 +4,7 @@ import {
   FundsRequest,
   MemberAdmittance,
   RemoveCircle,
+  Survey,
 } from "@/shared/models/governance/proposals";
 import { DiscussionMessage } from "./DiscussionMessage";
 import { User } from "./User";
@@ -41,6 +42,7 @@ export type Proposal = (
   | FundsAllocation
   | AssignCircle
   | RemoveCircle
+  | Survey
 ) &
   ExtendedProposalOptions;
 

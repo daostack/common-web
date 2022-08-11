@@ -1,0 +1,64 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.survey-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.survey-success__image {
+  width: 16rem;
+  height: 16rem;
+  margin-bottom: 1rem;
+
+  @include big-phone {
+    max-width: 7.5rem;
+    width: 100%;
+    height: unset;
+    margin-bottom: 2rem;
+  }
+}
+
+.survey-success__title {
+  margin: 0;
+  font-family: NotoSerifSC, serif;
+  font-size: $moderate-med;
+  letter-spacing: 0.02em;
+}
+
+.survey-success__description {
+  max-width: 24.875rem;
+  margin: 1rem 0 0;
+  font-size: $small;
+  line-height: 125%;
+
+  @include big-phone {
+    max-width: 17.5rem;
+    margin-top: 2rem;
+  }
+}
+
+.survey-success__buttons-wrapper {
+  max-width: 23rem;
+  width: 100%;
+  margin-top: 2.25rem;
+  padding-bottom: 2.125rem;
+  display: grid;
+  grid-column-gap: 0.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @include big-phone {
+    margin-top: 2rem;
+    padding-bottom: 0;
+    grid-gap: 1rem 0;
+    grid-template-columns: 1fr;
+  }
+}
+
+.survey-success__back-button {
+  @include big-phone {
+    grid-row: 2;
+  }
+}

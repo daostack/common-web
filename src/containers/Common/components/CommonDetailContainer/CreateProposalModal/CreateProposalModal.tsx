@@ -68,7 +68,6 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
 
   const handleProposalTypeSelectionFinish = useCallback(
     (proposalType: ProposalsTypes) => {
-      console.log('proposalType', proposalType)
       if (proposalType === ProposalsTypes.ASSIGN_CIRCLE) {
         setStage(CreateProposalStage.AssignCircle);
       }

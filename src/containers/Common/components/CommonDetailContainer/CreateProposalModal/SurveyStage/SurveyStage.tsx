@@ -1,17 +1,17 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CreateProposal } from "@/containers/Common/interfaces";
-import { createFundingProposal } from "@/containers/Common/store/actions";
+import { createSurvey } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
 import { Common, Governance, CommonLink, Proposal } from "@/shared/models";
-import { FundsAllocation, ProposalImage } from "@/shared/models/governance/proposals";
+import { Survey, ProposalImage } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
-//import { Confirmation } from "./Confirmation";
-//import { Success } from "./Success";
+import { Confirmation } from "./Confirmation";
+import { Success } from "./Success";
 import { SurveyStep } from "./constants";
 import { SurveyData } from "./types";
 import "./index.scss";
@@ -38,7 +38,7 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
   const [step, setStep] = useState(SurveyStep.Configuration);
   const [isProposalCreating, setIsProposalCreating] = useState(false);
   const [createdProposal, setCreatedProposal] =
-    useState<FundsAllocation | null>(null);
+    useState<Survey | null>(null);
   const {
     setTitle,
     setOnGoBack,
@@ -54,14 +54,6 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
   const isLoading = isProposalCreating;
 
   const handleConfigurationFinish = (data: SurveyData) => {
-    setSurveyData((surveyData) => ({
-      ...surveyData,
-      ...data,
-    }));
-    setStep(SurveyStep.Confirmation);
-  };
-
-  const handleFundDetailsFinish = (data: SurveyData) => {
     setSurveyData((surveyData) => ({
       ...surveyData,
       ...data,
@@ -89,8 +81,8 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
       },
     };
 
-    /*dispatch(
-      createFundingProposal.request({
+    dispatch(
+      createSurvey.request({
         payload,
         callback: (error, data) => {
           if (error || !data) {
@@ -99,11 +91,11 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
           }
 
           setCreatedProposal(data);
-          setStep(FundsAllocationStep.Success);
+          setStep(SurveyStep.Success);
           setIsProposalCreating(false);
         },
       })
-    );*/
+    );
   };
 
   const handleConfirmationCancel = () => {
@@ -138,32 +130,34 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
     setShouldBeOnFullHeight(isConfigurationStep || isLoading);
   }, [setShouldBeOnFullHeight, isConfigurationStep, isLoading]);
 
-  const renderConfirmationStep = () => <></>
-    /*fundsAllocationData && (
+  const renderConfirmationStep = () =>
+    surveyData && (
       <Confirmation
+        surveyData={surveyData}
         onSubmit={handleConfirm}
         onCancel={handleConfirmationCancel}
       />
-    );*/
+    );
 
-  const renderSuccessStep = () => <></>/*(
+  const renderSuccessStep = () => (
     <Success
       onBackToCommon={handleBackToCommon}
       onViewProposal={handleViewProposal}
     />
-  );*/
+  );
 
   return (
     <div className="survey-creation-stage">
       {isLoading && <Loader />}
       {!isLoading && (
         <>
-            {<Configuration
-                    governance={governance}
-                    initialData={surveyData}
-                    onFinish={handleConfigurationFinish}
-                  />}
-
+          {(isConfigurationStep || isMobileView) && (
+            <Configuration
+              governance={governance}
+              initialData={surveyData}
+              onFinish={handleConfigurationFinish}
+            />
+          )}
           {step === SurveyStep.Confirmation &&
             (isMobileView ? (
               <Modal
