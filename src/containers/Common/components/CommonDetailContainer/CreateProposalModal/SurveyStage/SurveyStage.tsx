@@ -51,7 +51,6 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
   const isConfigurationStep = step === SurveyStep.Configuration;
   const isSuccessStep = step === SurveyStep.Success;
   const shouldShowModalTitle = isMobileView || isConfigurationStep;
-  const isLoading = isProposalCreating;
 
   const handleConfigurationFinish = (data: SurveyData) => {
     setSurveyData((surveyData) => ({
@@ -75,7 +74,7 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
         description: surveyData.description,
         commonId: common.id,
         title: surveyData.title,
-        images: surveyData.images as ProposalImage[], //[] as ProposalImage[],
+        images: surveyData.images as ProposalImage[],
         links: surveyData.links,
         files: [],
       },
@@ -127,8 +126,8 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
   }, [setShouldShowClosePrompt, isSuccessStep]);
 
   useEffect(() => {
-    setShouldBeOnFullHeight(isConfigurationStep || isLoading);
-  }, [setShouldBeOnFullHeight, isConfigurationStep, isLoading]);
+    setShouldBeOnFullHeight(isConfigurationStep || isProposalCreating);
+  }, [setShouldBeOnFullHeight, isConfigurationStep, isProposalCreating]);
 
   const renderConfirmationStep = () =>
     surveyData && (
@@ -148,8 +147,8 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
 
   return (
     <div className="survey-creation-stage">
-      {isLoading && <Loader />}
-      {!isLoading && (
+      {isProposalCreating && <Loader />}
+      {!isProposalCreating && (
         <>
           {(isConfigurationStep || isMobileView) && (
             <Configuration

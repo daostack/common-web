@@ -90,7 +90,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
         amount: fundsAllocationData.amount * 100,
         commonId: common.id,
         title: fundsAllocationData.title,
-        images: fundsAllocationData.images as ProposalImage[], //[] as ProposalImage[],
+        images: fundsAllocationData.images as ProposalImage[],
         links: fundsAllocationData.links,
         files: [],
       },
