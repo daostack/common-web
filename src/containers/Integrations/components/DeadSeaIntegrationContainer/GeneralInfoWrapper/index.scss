@@ -25,11 +25,20 @@
 }
 
 .dead-sea-general-info-wrapper__title {
-  margin: 0 0 3.875rem;
+  margin: 0;
   font-family: NotoSerifSC, serif;
   font-weight: 600;
   font-size: $large;
   line-height: 133%;
+}
+
+.dead-sea-general-info-wrapper__description {
+  max-width: 32.75rem;
+  margin: 0.75rem 0 0;
+}
+
+.dead-sea-general-info-wrapper__bottom-margin {
+  margin-bottom: 3.875rem;
 
   @include big-phone {
     margin-bottom: 2rem;
