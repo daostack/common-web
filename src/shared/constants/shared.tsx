@@ -18,9 +18,6 @@ export const COMMON_APP_APP_STORE_LINK =
 export const COMMON_APP_GOOGLE_PLAY_LINK =
   "https://play.google.com/store/apps/details?id=com.daostack.common";
 
-export const TERMS_OF_USE_URL =
-  "https://uploads-ssl.webflow.com/5ed24eec6103a37f0ee6c20a/5f1967668c1f4f8589734424_Daostack_Common_O%C3%9C_Terms_and_Conditions_220120.pdf";
-
 export const CONTACT_EMAIL = "hi@common.io";
 export const SUPPORT_EMAIL = "support@common.io";
 

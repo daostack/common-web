@@ -121,7 +121,6 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
           <CountDownCard
             className="voting-content__countdown-card"
             proposal={proposal}
-            memberCount={proposal.votes.totalMembersWithVotingRight}
           />
         </div>
         <VotingCard
