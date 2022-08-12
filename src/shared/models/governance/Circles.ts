@@ -7,6 +7,7 @@ export type AllowedActions = {
 
 export type AllowedProposals = {
   [ProposalsTypes.FUNDS_ALLOCATION]?: true;
+  [ProposalsTypes.SURVEY]?: Partial<Record<circleIndex, true>>;
   [ProposalsTypes.ASSIGN_CIRCLE]?: Partial<Record<circleIndex, true>>;
   [ProposalsTypes.REMOVE_CIRCLE]?: Partial<Record<circleIndex, true>>;
 };

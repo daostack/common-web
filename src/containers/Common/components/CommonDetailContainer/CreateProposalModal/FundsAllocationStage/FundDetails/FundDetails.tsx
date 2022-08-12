@@ -144,7 +144,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
           {({ values, errors, touched, isValid }) => (
             <Form>
               <Dropdown
-                className="assign-circle-configuration__circle-dropdown"
+                className="funds-allocation-details__type-dropdown"
                 options={FUND_TYPES}
                 value={selectedFund}
                 onSelect={handleFundSelect}

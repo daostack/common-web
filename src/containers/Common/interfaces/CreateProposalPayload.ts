@@ -4,6 +4,7 @@ import {
   RemoveCircle,
   FundsAllocation,
   MemberAdmittance,
+  Survey
 } from "@/shared/models/governance/proposals";
 
 interface CreateFundsAllocation {
@@ -25,6 +26,11 @@ interface CreateRemoveCircle {
   args: Omit<RemoveCircle["data"]["args"], "proposerId">;
 }
 
+interface CreateSurvey {
+  type: ProposalsTypes.SURVEY;
+  args: Omit<Survey["data"]["args"], "proposerId">;
+}
+
 interface Request<P, R> {
   data: P;
   response: R;
@@ -41,4 +47,5 @@ export interface CreateProposal {
   >;
   [ProposalsTypes.ASSIGN_CIRCLE]: Request<CreateAssignCircle, AssignCircle>;
   [ProposalsTypes.REMOVE_CIRCLE]: Request<CreateRemoveCircle, RemoveCircle>;
+  [ProposalsTypes.SURVEY]: Request<CreateSurvey, Survey>;
 }

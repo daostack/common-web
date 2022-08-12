@@ -66,3 +66,5 @@ export * from "./FundsAllocation";
 export * from "./FundsRequest";
 export * from "./MemberAdmittance";
 export * from "./RemoveCircle";
+export * from "./Survey";
+

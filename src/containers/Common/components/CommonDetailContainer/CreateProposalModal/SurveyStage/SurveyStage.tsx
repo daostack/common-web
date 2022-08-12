@@ -1,24 +1,22 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CreateProposal } from "@/containers/Common/interfaces";
-import { createFundingProposal } from "@/containers/Common/store/actions";
+import { createSurvey } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
 import { Common, Governance, CommonLink, Proposal } from "@/shared/models";
-import { FundsAllocation, ProposalImage } from "@/shared/models/governance/proposals";
+import { Survey, ProposalImage } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
 import { Confirmation } from "./Confirmation";
-import { FundDetails } from "./FundDetails";
 import { Success } from "./Success";
-import { FundsAllocationStep } from "./constants";
-import { FundsAllocationData, FundType } from "./types";
-import { FundAllocationForm } from "./FundsAllocationForm";
+import { SurveyStep } from "./constants";
+import { SurveyData } from "./types";
 import "./index.scss";
 
-interface FundsAllocationStageProps {
+interface SurveyStageProps {
   common: Common;
   governance: Governance;
   onFinish: (proposal?: Proposal) => void;
@@ -28,22 +26,19 @@ interface FundsAllocationStageProps {
 const initialFundsData = {
   title: "title",
   description: "description",
-  goalOfPayment: "goalOfPayment",
-  amount: 10,
-  fund: FundType.ILS,
   links: [] as CommonLink[],
   images: [] as ProposalImage[],
 };
 
-const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
+const SurveyStage: FC<SurveyStageProps> = (props) => {
   const { common, governance, onFinish, onGoBack } = props;
   const dispatch = useDispatch();
-  const [fundsAllocationData, setFundsAllocationData] =
-    useState<FundsAllocationData>(initialFundsData);
-  const [step, setStep] = useState(FundsAllocationStep.Configuration);
+  const [surveyData, setSurveyData] =
+    useState<SurveyData>(initialFundsData);
+  const [step, setStep] = useState(SurveyStep.Configuration);
   const [isProposalCreating, setIsProposalCreating] = useState(false);
   const [createdProposal, setCreatedProposal] =
-    useState<FundsAllocation | null>(null);
+    useState<Survey | null>(null);
   const {
     setTitle,
     setOnGoBack,
@@ -53,51 +48,40 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   } = useCreateProposalContext();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const isConfigurationStep = step === FundsAllocationStep.Configuration;
-  const isSuccessStep = step === FundsAllocationStep.Success;
+  const isConfigurationStep = step === SurveyStep.Configuration;
+  const isSuccessStep = step === SurveyStep.Success;
   const shouldShowModalTitle = isMobileView || isConfigurationStep;
-  const isLoading = isProposalCreating;
 
-  const handleConfigurationFinish = (data: FundsAllocationData) => {
-    setFundsAllocationData((fundsAllocationData) => ({
-      ...fundsAllocationData,
+  const handleConfigurationFinish = (data: SurveyData) => {
+    setSurveyData((surveyData) => ({
+      ...surveyData,
       ...data,
     }));
-    setStep(FundsAllocationStep.Funds);
-  };
-
-  const handleFundDetailsFinish = (data: FundsAllocationData) => {
-    setFundsAllocationData((fundsAllocationData) => ({
-      ...fundsAllocationData,
-      ...data,
-    }));
-    setStep(FundsAllocationStep.Confirmation);
+    setStep(SurveyStep.Confirmation);
   };
 
   const handleConfirm = () => {
-    if (!fundsAllocationData) {
+    if (!surveyData) {
       return;
     }
 
     setIsProposalCreating(true);
-    const description = `${fundsAllocationData.description}\n\nGoal of Payment:\n${fundsAllocationData.goalOfPayment}`;
     const payload: Omit<
-      CreateProposal[ProposalsTypes.FUNDS_ALLOCATION]["data"],
+      CreateProposal[ProposalsTypes.SURVEY]["data"],
       "type"
     > = {
       args: {
-        description,
-        amount: fundsAllocationData.amount * 100,
+        description: surveyData.description,
         commonId: common.id,
-        title: fundsAllocationData.title,
-        images: fundsAllocationData.images as ProposalImage[],
-        links: fundsAllocationData.links,
+        title: surveyData.title,
+        images: surveyData.images as ProposalImage[],
+        links: surveyData.links,
         files: [],
       },
     };
 
     dispatch(
-      createFundingProposal.request({
+      createSurvey.request({
         payload,
         callback: (error, data) => {
           if (error || !data) {
@@ -106,7 +90,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
           }
 
           setCreatedProposal(data);
-          setStep(FundsAllocationStep.Success);
+          setStep(SurveyStep.Success);
           setIsProposalCreating(false);
         },
       })
@@ -114,7 +98,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   };
 
   const handleConfirmationCancel = () => {
-    setStep(FundsAllocationStep.Configuration);
+    setStep(SurveyStep.Configuration);
   };
 
   const handleBackToCommon = () => {
@@ -142,14 +126,13 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   }, [setShouldShowClosePrompt, isSuccessStep]);
 
   useEffect(() => {
-    setShouldBeOnFullHeight(isConfigurationStep || isLoading);
-  }, [setShouldBeOnFullHeight, isConfigurationStep, isLoading]);
+    setShouldBeOnFullHeight(isConfigurationStep || isProposalCreating);
+  }, [setShouldBeOnFullHeight, isConfigurationStep, isProposalCreating]);
 
   const renderConfirmationStep = () =>
-    fundsAllocationData && (
+    surveyData && (
       <Confirmation
-        fund={fundsAllocationData.fund}
-        amount={fundsAllocationData.amount}
+        surveyData={surveyData}
         onSubmit={handleConfirm}
         onCancel={handleConfirmationCancel}
       />
@@ -163,38 +146,18 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   );
 
   return (
-    <div className="funds-allocation-creation-stage">
-      {isLoading && <Loader />}
-      {!isLoading && (
+    <div className="survey-creation-stage">
+      {isProposalCreating && <Loader />}
+      {!isProposalCreating && (
         <>
-            {isMobileView ? (
-                <FundAllocationForm
-                  governance={governance}
-                  initialData={fundsAllocationData}
-                  onFinish={handleFundDetailsFinish}
-                  commonBalance={common.balance}
-                />
-              ) : (
-                <>
-                  {isConfigurationStep && (
-                    <Configuration
-                      governance={governance}
-                      initialData={fundsAllocationData}
-                      onFinish={handleConfigurationFinish}
-                    />
-                  )}
-                  {(step === FundsAllocationStep.Funds) && (
-                    <FundDetails
-                      governance={governance}
-                      initialData={fundsAllocationData}
-                      onFinish={handleFundDetailsFinish}
-                      commonBalance={common.balance}
-                    />
-                  )}
-                </>
-            )}
-
-          {step === FundsAllocationStep.Confirmation &&
+          {(isConfigurationStep || isMobileView) && (
+            <Configuration
+              governance={governance}
+              initialData={surveyData}
+              onFinish={handleConfigurationFinish}
+            />
+          )}
+          {step === SurveyStep.Confirmation &&
             (isMobileView ? (
               <Modal
                 isShowing
@@ -226,4 +189,4 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   );
 };
 
-export default FundsAllocationStage;
+export default SurveyStage;

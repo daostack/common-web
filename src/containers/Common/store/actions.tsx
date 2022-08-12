@@ -223,6 +223,20 @@ export const createFundingProposal = createAsyncAction(
   Error
 >();
 
+export const createSurvey = createAsyncAction(
+  CommonsActionTypes.CREATE_SURVEY,
+  CommonsActionTypes.CREATE_SURVEY_SUCCESS,
+  CommonsActionTypes.CREATE_SURVEY_FAILURE
+)<
+  PayloadWithCallback<
+    Omit<CreateProposal[ProposalsTypes.SURVEY]["data"], "type">,
+    CreateProposal[ProposalsTypes.SURVEY]["response"],
+    string
+  >,
+  CreateProposal[ProposalsTypes.SURVEY]["response"],
+  Error
+>();
+
 export const loadUserCards = createAsyncAction(
   CommonsActionTypes.LOAD_USER_CARDS,
   CommonsActionTypes.LOAD_USER_CARDS_SUCCESS,

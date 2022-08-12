@@ -1,50 +1,46 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-.funds-allocation-confirmation {
+.survey-success {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.funds-allocation-confirmation__image {
-  width: 18rem;
-  height: 17.875rem;
-  margin-bottom: 1.125rem;
+.survey-success__image {
+  width: 16rem;
+  height: 16rem;
+  margin-bottom: 1rem;
 
   @include big-phone {
     max-width: 7.5rem;
     width: 100%;
     height: unset;
-    margin-bottom: 2.25rem;
+    margin-bottom: 2rem;
   }
 }
 
-.funds-allocation-confirmation__title {
+.survey-success__title {
   margin: 0;
   font-family: NotoSerifSC, serif;
   font-size: $moderate-med;
   letter-spacing: 0.02em;
-
-  @include big-phone {
-    font-family: NunitoSans, sans-serif;
-    font-size: $moderate-small;
-    line-height: 120%;
-  }
 }
 
-.funds-allocation-confirmation__circle-name {
-  margin: 1rem 0;
+.survey-success__description {
+  max-width: 24.875rem;
+  margin: 1rem 0 0;
   font-size: $small;
   line-height: 125%;
 
   @include big-phone {
-    margin: 0.5rem 0 2rem;
+    max-width: 17.5rem;
+    margin-top: 2rem;
   }
 }
 
-.funds-allocation-confirmation__buttons-wrapper {
+.survey-success__buttons-wrapper {
   max-width: 23rem;
   width: 100%;
   margin-top: 2.25rem;
@@ -61,7 +57,7 @@
   }
 }
 
-.funds-allocation-confirmation__cancel-button {
+.survey-success__back-button {
   @include big-phone {
     grid-row: 2;
   }
