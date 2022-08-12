@@ -9,15 +9,21 @@ import { matchRoute } from "@/shared/utils";
 export const getAuthCode = (
   queryParams: ParsedQuery,
   pathname: string
-): string => {
+): { authCode: string; shouldOpenLoginModal: boolean } => {
   const authCode = queryParams[QueryParamKey.AuthCode];
 
   if (typeof authCode === "string") {
-    return authCode;
+    return {
+      authCode,
+      shouldOpenLoginModal: true,
+    };
   }
   if (matchRoute(pathname, ROUTE_PATHS.DEAD_SEA, { exact: true })) {
-    return AUTH_CODE_FOR_SIGN_UP;
+    return {
+      authCode: AUTH_CODE_FOR_SIGN_UP,
+      shouldOpenLoginModal: false,
+    };
   }
 
-  return "";
+  return { authCode: "", shouldOpenLoginModal: false };
 };

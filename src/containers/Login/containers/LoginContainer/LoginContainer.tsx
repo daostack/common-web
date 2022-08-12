@@ -36,7 +36,7 @@ import {
   DEFAULT_AUTH_ERROR_TEXT,
   ERROR_TEXT_FOR_NON_EXISTENT_USER,
 } from "../../constants";
-import { getAuthCode } from './helpers';
+import { getAuthCode } from "./helpers";
 import "./index.scss";
 
 const LoginContainer: FC = () => {
@@ -70,7 +70,10 @@ const LoginContainer: FC = () => {
       ? ModalType.MobilePopUp
       : ModalType.Default;
   const hasError = Boolean(errorText);
-  const authCode = getAuthCode(queryParams, location.pathname);
+  const { authCode, shouldOpenLoginModal } = getAuthCode(
+    queryParams,
+    location.pathname
+  );
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
@@ -147,10 +150,10 @@ const LoginContainer: FC = () => {
   }, [isShowing, user]);
 
   useEffect(() => {
-    if (!isAuthenticated && authCode) {
+    if (!isAuthenticated && authCode && shouldOpenLoginModal) {
       dispatch(setLoginModalState({ isShowing: true }));
     }
-  }, [authCode]);
+  }, [authCode, shouldOpenLoginModal]);
 
   const title = useMemo((): ReactNode => {
     if (!isMobileView || stage !== AuthStage.CompleteAccountDetails) {
