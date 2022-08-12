@@ -12,13 +12,18 @@ import "./index.scss";
 
 interface PaymentDetailsProps {
   amount?: number;
+  submitButtonText?: string;
   onAmountChange: (amount: number) => void;
 }
 
 const AMOUNTS = [18000, 36000, 75000, 120000];
 
 const AmountSelection: FC<PaymentDetailsProps> = (props) => {
-  const { amount: currentAmount, onAmountChange } = props;
+  const {
+    amount: currentAmount,
+    submitButtonText = "Update Contribution",
+    onAmountChange,
+  } = props;
   const [selectedAmount, setSelectedAmount] = useState<number | null>(() =>
     currentAmount && AMOUNTS.some((amount) => amount === currentAmount)
       ? currentAmount
@@ -85,7 +90,7 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
         onClick={handleSubmit}
         shouldUseFullWidth
       >
-        Update Contribution
+        {submitButtonText}
       </Button>
     </div>
   );

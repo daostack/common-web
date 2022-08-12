@@ -15,7 +15,11 @@ const InitialStep: FC<InitialStepProps> = (props) => {
 
   return (
     <GeneralInfoWrapper description={DESCRIPTION}>
-      <AmountSelection amount={amount} onAmountChange={onFinish} />
+      <AmountSelection
+        amount={amount}
+        submitButtonText="Support us via Common"
+        onAmountChange={onFinish}
+      />
     </GeneralInfoWrapper>
   );
 };
