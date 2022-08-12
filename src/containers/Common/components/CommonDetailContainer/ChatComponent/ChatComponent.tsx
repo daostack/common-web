@@ -6,6 +6,7 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
+import {useIntersection} from '@/shared/hooks';
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 
@@ -72,6 +73,13 @@ export default function ChatComponent({
   sendMessage,
   highlightedMessageId,
 }: ChatComponentInterface) {
+  const intersectionRef = React.useRef(null);
+  const intersection = useIntersection(intersectionRef, {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0
+  });
+
   const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(discussionMessage);
   const screenSize = useSelector(getScreenSize());
   const [message, setMessage] = useState("");
@@ -266,27 +274,32 @@ export default function ChatComponent({
           </div>
         </div>
       ) : (
-        <div className="bottom-chat-wrapper">
-          {!commonMember ? (
-            <span className="text">Only members can send messages</span>
-          ) : (
-            <>
-              <input
-                className="message-input"
-                placeholder="What do you think?"
-                value={message}
-                onKeyDown={onEnterKeyDown}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-              <button
-                className="send"
-                onClick={sendChatMessage}
-                disabled={!message.length}
-              >
-                <img src="/icons/send-message.svg" alt="send-message" />
-              </button>
-            </>
-          )}
+        <div className="bottom-chat-container" ref={intersectionRef}>
+          <div className={classNames("bottom-chat-wrapper", {
+            'bottom-chat-wrapper__fixed': !(Number(intersection?.intersectionRatio) > 0)
+            })}
+          >
+            {!commonMember ? (
+              <span className="text">Only members can send messages</span>
+            ) : (
+              <>
+                <input
+                  className="message-input"
+                  placeholder="What do you think?"
+                  value={message}
+                  onKeyDown={onEnterKeyDown}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+                <button
+                  className="send"
+                  onClick={sendChatMessage}
+                  disabled={!message.length}
+                >
+                  <img src="/icons/send-message.svg" alt="send-message" />
+                </button>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>

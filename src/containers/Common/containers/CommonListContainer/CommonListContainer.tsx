@@ -92,7 +92,7 @@ export default function CommonListContainer() {
         <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />
       )}
       <div className="title-wrapper">
-        <h1 className="page-title">Explore Commons</h1>
+        <h1 className="page-title">Featured Commons</h1>
         <CreateCommonButton onClick={onOpen} />
       </div>
       {loading && <Loader />}

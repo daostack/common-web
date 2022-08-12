@@ -181,18 +181,22 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
                 placeholder="10"
                 prefix={getPrefix(selectedFund)}
               />
-              {bankAccountState.loading ? (
-                <div>
-                  <Loader />
-                </div>
-              ) : (
-                <div className="funds-allocation-form__bank-account-wrapper">
-                  <BankAccount
-                    bankAccount={bankAccountState.bankAccount}
-                    onBankAccountChange={handleBankAccountChange}
-                  />
-                </div>
-              )}
+              {values.amount > 0 && 
+                <>
+                  {bankAccountState.loading ? (
+                      <div>
+                        <Loader />
+                      </div>
+                    ) : (
+                      <div className="funds-allocation-form__bank-account-wrapper">
+                        <BankAccount
+                          bankAccount={bankAccountState.bankAccount}
+                          onBankAccountChange={handleBankAccountChange}
+                        />
+                      </div>
+                  )}
+                </>
+              }
               <LinksArray
                 name="links"
                 values={values.links}
