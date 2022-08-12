@@ -451,7 +451,10 @@ export async function makeImmediateContribution(
 ): Promise<ImmediateContributionResponse> {
   const { data } = await Api.post<ImmediateContributionResponse>(
     ApiEndpoint.MakeImmediateContribution,
-    requestData
+    {
+      ...requestData,
+      saveCard: requestData.saveCard ?? true,
+    }
   );
 
   return convertObjectDatesToFirestoreTimestamps(data);
@@ -627,7 +630,6 @@ export async function seenNotification(id: string): Promise<void> {
   });
 }
 
-// TODO: verify it's the correct place to have these functions
 export const commonMembersSubCollection = (commonId: string) => {
   return firebase
     .firestore()
@@ -647,6 +649,15 @@ export const commonMembersSubCollection = (commonId: string) => {
         return object;
       },
     });
+};
+
+export const subscribeToCommonMembers = (
+  commonId: string,
+  callback: (commonMembers: CommonMember[]) => void
+): (() => void) => {
+  return commonMembersSubCollection(commonId).onSnapshot((snapshot) => {
+    callback(transformFirebaseDataList<CommonMember>(snapshot));
+  });
 };
 
 export const getCommonMember = async (

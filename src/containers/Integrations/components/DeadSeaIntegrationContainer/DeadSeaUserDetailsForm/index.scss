@@ -1,0 +1,64 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.dead-sea-user-details-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.dead-sea-user-details-form__fields-wrapper {
+  margin-bottom: 1.125rem;
+  display: grid;
+  grid-gap: 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @include big-phone {
+    grid-gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .dead-sea-user-details-form__field-hint {
+    margin-left: 0.25rem;
+    font-size: $xsmall;
+    font-style: normal;
+    color: $light-gray-2;
+  }
+}
+
+.dead-sea-user-details-form__field-label {
+  font-size: $xsmall;
+}
+
+.dead-sea-user-details-form__all-columns {
+  grid-column: 1 / 3;
+
+  @include big-phone {
+    grid-column: unset;
+  }
+}
+
+.dead-sea-user-details-form__checkbox {
+  margin: 1.375rem 0;
+
+  @include big-phone {
+    margin: 1rem 0;
+  }
+}
+
+.dead-sea-user-details-form__submit-button {
+  max-width: 12.625rem;
+  margin-top: 1.375rem;
+
+  @include big-phone {
+    max-width: unset;
+    margin-top: 1rem;
+  }
+}
+
+.dead-sea-user-details-form__error {
+  font-size: $small;
+
+  @include big-phone {
+    text-align: center;
+  }
+}

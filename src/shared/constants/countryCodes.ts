@@ -1,3 +1,5 @@
 export enum CountryCode {
-    IL = "IL",
-  }
+  IL = "IL",
+}
+
+export const AVAILABLE_COUNTRIES = [CountryCode.IL];

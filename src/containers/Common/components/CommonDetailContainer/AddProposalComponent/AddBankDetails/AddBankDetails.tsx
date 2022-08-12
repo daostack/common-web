@@ -14,7 +14,11 @@ import {
   Loader,
 } from "@/shared/components";
 import { Dropdown, TextField } from "@/shared/components/Form/Formik";
-import { ErrorCode } from "@/shared/constants";
+import {
+  AVAILABLE_COUNTRIES,
+  CountryCode,
+  ErrorCode,
+} from "@/shared/constants";
 import {
   addBankDetails,
   updateBankDetails,
@@ -36,7 +40,6 @@ import { useNotification } from "@/shared/hooks";
 import { FileUploadButton } from "../FileUploadButton";
 import validationSchema from "./validationSchema";
 import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
-import { AVAILABLE_COUNTRIES } from "./constants";
 import "./index.scss";
 
 interface IProps {
@@ -179,7 +182,9 @@ export const AddBankDetails = (props: IProps) => {
   const countriesOptions = useMemo<DropdownOption[]>(
     () =>
       countryList
-        .filter((item) => AVAILABLE_COUNTRIES.includes(item.value))
+        .filter((item) =>
+          AVAILABLE_COUNTRIES.includes(item.value as CountryCode)
+        )
         .map((item) => ({
           text: item.name,
           value: item.value,

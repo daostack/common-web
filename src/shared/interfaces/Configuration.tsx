@@ -11,6 +11,7 @@ export interface Configuration {
     appId: string;
   };
   cloudFunctionUrl: string;
+  deadSeaCommonId: string;
 }
 
 export interface ConfigurationObject {

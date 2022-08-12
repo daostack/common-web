@@ -25,3 +25,6 @@ export const selectLoadingShareLinks = () =>
 
 export const selectAreReportsLoading = () =>
   createSelector(selectShared, (state) => state.areReportsLoading);
+
+export const selectHeader = () =>
+  createSelector(selectShared, (state) => state.header);

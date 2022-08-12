@@ -5,7 +5,7 @@ export interface ImmediateContributionData {
   amount: number;
   commonId: string;
   contributionType: ContributionType;
-  saveCard: boolean;
+  saveCard?: boolean;
 }
 
 export interface ImmediateContributionPayment {

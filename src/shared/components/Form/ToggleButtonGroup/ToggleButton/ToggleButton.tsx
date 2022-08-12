@@ -1,6 +1,5 @@
 import React, { useCallback, FC } from "react";
 import classNames from "classnames";
-
 import { Orientation } from "@/shared/constants";
 import { useToggleButtonGroupContext } from "../context";
 import "./index.scss";
@@ -13,11 +12,12 @@ interface ToggleButtonStyles {
 
 interface ToggleButtonProps {
   value: unknown;
+  isDisabled?: boolean;
   styles?: ToggleButtonStyles;
 }
 
 const ToggleButton: FC<ToggleButtonProps> = (props) => {
-  const { value, styles, children } = props;
+  const { value, styles, isDisabled = false, children } = props;
   const { currentValue, onChange, variant } = useToggleButtonGroupContext();
 
   const handleClick = useCallback(() => {
@@ -25,8 +25,10 @@ const ToggleButton: FC<ToggleButtonProps> = (props) => {
   }, [onChange, value]);
 
   const buttonClassName = classNames("custom-toggle-button", styles?.default, {
-    [classNames("custom-toggle-button--active", styles?.active)]: value === currentValue,
-    [classNames("custom-toggle-button--vertical", styles?.vertical)]: variant === Orientation.Vertical,
+    [classNames("custom-toggle-button--active", styles?.active)]:
+      value === currentValue,
+    [classNames("custom-toggle-button--vertical", styles?.vertical)]:
+      variant === Orientation.Vertical,
   });
 
   return (
@@ -34,6 +36,7 @@ const ToggleButton: FC<ToggleButtonProps> = (props) => {
       className={buttonClassName}
       onClick={handleClick}
       type="button"
+      disabled={isDisabled}
     >
       {children}
     </button>

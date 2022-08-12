@@ -11,13 +11,19 @@ import { LoginHelpButtons } from "../LoginHelpButtons";
 import "./index.scss";
 
 interface ConnectProps {
+  loginModalTitle?: string;
   errorText?: string;
   isJoinRequestType: boolean;
   onAuthButtonClick: (provider: AuthProvider) => void;
 }
 
 const Connect: FC<ConnectProps> = (props) => {
-  const { errorText, isJoinRequestType, onAuthButtonClick } = props;
+  const {
+    loginModalTitle = "Be a part of Common",
+    errorText,
+    isJoinRequestType,
+    onAuthButtonClick,
+  } = props;
   const screenSize = useSelector(getScreenSize());
   const isLoading = useSelector(selectIsAuthLoading());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -57,7 +63,7 @@ const Connect: FC<ConnectProps> = (props) => {
                 isMobileView && isJoinRequestType,
             })}
           >
-            Be a part of Common
+            {loginModalTitle}
           </h2>
         )}
         <p

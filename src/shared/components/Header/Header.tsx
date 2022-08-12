@@ -12,7 +12,10 @@ import {
 } from "@/shared/hooks";
 import { UserRole } from "@/shared/models";
 import { setAreReportsLoading } from "@/shared/store/actions";
-import { selectAreReportsLoading } from "@/shared/store/selectors";
+import {
+  selectAreReportsLoading,
+  selectHeader,
+} from "@/shared/store/selectors";
 import { ApiEndpoint, Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
@@ -45,6 +48,7 @@ const EXACT_MATCH_ROUTE_PROPS: RouteProps = {
 const Header = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const sharedHeaderState = useSelector(selectHeader());
   const screenSize = useSelector(getScreenSize());
   const areReportsLoading = useSelector(selectAreReportsLoading());
   const [showMenu, setShowMenu] = useState(false);
@@ -69,6 +73,12 @@ const Header = () => {
   const [showAccountLinks, setShowAccountLinks] = useState<boolean>(
     isMyAccountRoute
   );
+  const shouldShowMenuItems =
+    sharedHeaderState.shouldShowMenuItems ?? !isTrusteeRoute;
+  const shouldShowDownloadLinks =
+    sharedHeaderState.shouldShowDownloadLinks ?? !isTrusteeRoute;
+  const shouldShowAuth =
+    sharedHeaderState.shouldShowAuth ?? !isTrusteeRoute;
 
   useEffect(() => {
     setShowAccountLinks(isMyAccountRoute);
@@ -124,7 +134,7 @@ const Header = () => {
         </button>
       )}
 
-      {!isTrusteeRoute && isAuthorized && (
+      {shouldShowMenuItems && isAuthorized && (
         <>
           <NavLink to="/" exact activeClassName="active">
             About
@@ -155,7 +165,7 @@ const Header = () => {
           <button onClick={logOutUser}>Log out</button>
         </>
       )}
-      {!isAuthorized && !isTrusteeRoute && (
+      {!isAuthorized && shouldShowAuth && (
         <button className="login-button" onClick={handleOpen}>
           Login / Sign up
         </button>
@@ -196,7 +206,7 @@ const Header = () => {
               hasAdminAccess={hasAdminAccess}
             />
           )}
-          {!isAuthorized && !isTrusteeRoute ? (
+          {!isAuthorized && shouldShowDownloadLinks ? (
             <div className="mobile-links-container">
               <MobileLinks color={Colors.black} />
             </div>
@@ -213,7 +223,7 @@ const Header = () => {
           </div>
           {showMenu && (
             <div className="menu-wrapper">
-              {!isTrusteeRoute && (
+              {shouldShowDownloadLinks && (
                 <DownloadCommonApp
                   setHasClosedPopup={() => {
                     return true;

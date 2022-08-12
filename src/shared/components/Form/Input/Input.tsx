@@ -13,6 +13,7 @@ import "./index.scss";
 
 interface InputStyles {
   label?: string;
+  hint?: string;
   description?: string;
   labelWrapper?: string;
   input?: {
@@ -149,7 +150,11 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
               {label}
             </label>
           )}
-          {hint && <span className="custom-input__hint">{hint}</span>}
+          {hint && (
+            <span className={classNames("custom-input__hint", styles?.hint)}>
+              {hint}
+            </span>
+          )}
         </div>
       )}
       {description && (
