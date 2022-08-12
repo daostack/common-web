@@ -15,10 +15,7 @@ export const getAuthCode = (
   if (typeof authCode === "string") {
     return authCode;
   }
-  if (
-    matchRoute(pathname, ROUTE_PATHS.DEAD_SEA, { exact: true }) &&
-    typeof queryParams[QueryParamKey.DeadSeaIntegrationAmount] === "string"
-  ) {
+  if (matchRoute(pathname, ROUTE_PATHS.DEAD_SEA, { exact: true })) {
     return AUTH_CODE_FOR_SIGN_UP;
   }
 
