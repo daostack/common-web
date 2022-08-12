@@ -5,8 +5,8 @@ import {
   useImmediateContribution,
   useUserCards,
 } from "@/shared/hooks/useCases";
+import { AmountSelection } from "../AmountSelection";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
-import { AmountSelection } from "./AmountSelection";
 import { PaymentDetails } from "./PaymentDetails";
 import { ContributionType } from "@/shared/constants";
 import { ErrorText } from "@/shared/components/Form";
