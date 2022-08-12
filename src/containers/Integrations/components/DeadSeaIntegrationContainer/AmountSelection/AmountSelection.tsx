@@ -1,6 +1,11 @@
 import React, { FC, useState } from "react";
 import { Button } from "@/shared/components";
-import { CurrencyInput } from "@/shared/components/Form";
+import {
+  CurrencyInput,
+  ToggleButtonGroup,
+  ToggleButton,
+} from "@/shared/components/Form";
+import { ContributionType } from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { SelectionButton } from "../SelectionButton";
 import "./index.scss";
@@ -42,6 +47,16 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   return (
     <div className="dead-sea-amount-selection">
       <h2 className="dead-sea-amount-selection__title">Donation details</h2>
+      <ToggleButtonGroup
+        className="dead-sea-amount-selection__toggle-button-group"
+        value={ContributionType.OneTime}
+        onChange={() => {}}
+      >
+        <ToggleButton value={ContributionType.OneTime}>One time</ToggleButton>
+        <ToggleButton value={ContributionType.Monthly} isDisabled>
+          Monthly
+        </ToggleButton>
+      </ToggleButtonGroup>
       <div className="dead-sea-amount-selection__amounts-wrapper" role="group">
         {AMOUNTS.map((amount) => (
           <SelectionButton

@@ -30,6 +30,10 @@ $custom-toggle-button-border-radius: 8px;
   &:active {
     background-color: $light-gray-6;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
 }
 .custom-toggle-button--active {
   border-color: $purple;
