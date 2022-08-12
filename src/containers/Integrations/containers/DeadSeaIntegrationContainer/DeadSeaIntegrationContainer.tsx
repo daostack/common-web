@@ -76,6 +76,8 @@ const DeadSeaIntegrationContainer: FC = () => {
         shouldShowMenuItems: null,
       });
     }
+
+    window.scrollTo(0, 0);
   }, [step]);
 
   const renderContent = () => {

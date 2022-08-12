@@ -45,21 +45,25 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
   return (
     <div className="dead-sea-payment-details">
       <div className="dead-sea-payment-details__info-block">
-        <h2 className="dead-sea-payment-details__info-title">
-          Dead Sea Guardians
-        </h2>
-        <span className="dead-sea-payment-details__info-amount">
-          {formattedAmount} (ILS)
-        </span>
-        <span className="dead-sea-payment-details__info-hint">
-          Payment details
-        </span>
-        <ButtonLink
-          className="dead-sea-payment-details__edit-amount-button"
-          onClick={!isPaymentLoading ? onAmountEdit : undefined}
-        >
-          Edit
-        </ButtonLink>
+        <div className="dead-sea-payment-details__info-block-half">
+          <h2 className="dead-sea-payment-details__info-title">
+            Dead Sea Guardians
+          </h2>
+          <span className="dead-sea-payment-details__info-hint">
+            Payment details
+          </span>
+        </div>
+        <div className="dead-sea-payment-details__info-block-half">
+          <span className="dead-sea-payment-details__info-amount">
+            {formattedAmount} (ILS)
+          </span>
+          <ButtonLink
+            className="dead-sea-payment-details__edit-amount-button"
+            onClick={!isPaymentLoading ? onAmountEdit : undefined}
+          >
+            Edit
+          </ButtonLink>
+        </div>
       </div>
       {isLoading && <Loader />}
       {cards.length > 0 && (

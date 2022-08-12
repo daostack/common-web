@@ -35,13 +35,18 @@
 .dead-sea-general-info-wrapper__description {
   max-width: 32.75rem;
   margin: 0.75rem 0 0;
+
+  @include big-phone {
+    max-width: unset;
+    margin-top: 1.125rem;
+  }
 }
 
 .dead-sea-general-info-wrapper__bottom-margin {
   margin-bottom: 3.875rem;
 
   @include big-phone {
-    margin-bottom: 2rem;
+    margin-bottom: 3.5rem;
   }
 }
 

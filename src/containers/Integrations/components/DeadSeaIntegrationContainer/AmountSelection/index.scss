@@ -13,10 +13,6 @@
   font-size: $moderate;
   line-height: 120%;
   letter-spacing: 0.01em;
-
-  @include big-phone {
-    margin-bottom: 1.5rem;
-  }
 }
 
 .dead-sea-amount-selection__toggle-button-group {
@@ -31,7 +27,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
   @include big-phone {
-    grid-gap: 1.5rem;
     grid-template-columns: 1fr;
   }
 }

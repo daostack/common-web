@@ -1,0 +1,13 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.dead-sea-user-details-step__register-title {
+  @include big-phone {
+    margin: 0 0 2.5rem;
+    font-family: NunitoSans, sans-serif;
+    font-weight: normal;
+    font-size: $moderate;
+    line-height: 120%;
+    letter-spacing: 0.01em;
+  }
+}
