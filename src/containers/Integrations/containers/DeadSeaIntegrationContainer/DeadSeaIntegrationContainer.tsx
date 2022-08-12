@@ -5,6 +5,7 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import { useHeader, useQueryParams } from "@/shared/hooks";
 import {
+  InitialStep,
   MemberAdmittanceStep,
   PaymentStep,
   Success,
@@ -18,11 +19,16 @@ const DeadSeaIntegrationContainer: FC = () => {
   const dispatch = useDispatch();
   const { updateHeaderState } = useHeader();
   const queryParams = useQueryParams();
-  const [step, setStep] = useState(DeadSeaIntegrationStep.UserDetails);
+  const [step, setStep] = useState(DeadSeaIntegrationStep.InitialStep);
   const [amount, setAmount] = useState(() => getAmount(queryParams));
   const [supportPlan, setSupportPlan] = useState("");
   const user = useSelector(selectUser());
-  const isInitialLoading = !user || !amount;
+  const isInitialLoading = !user && step === DeadSeaIntegrationStep.UserDetails;
+
+  const handleInitialStepFinish = (amount: number) => {
+    setAmount(amount);
+    setStep(DeadSeaIntegrationStep.UserDetails);
+  };
 
   const handleUserDetailsStepFinish = (supportPlan: string) => {
     setStep(DeadSeaIntegrationStep.MemberAdmittance);
@@ -38,7 +44,7 @@ const DeadSeaIntegrationContainer: FC = () => {
   };
 
   useEffect(() => {
-    if (!user && amount) {
+    if (!user && amount && step === DeadSeaIntegrationStep.UserDetails) {
       dispatch(
         setLoginModalState({
           isShowing: true,
@@ -48,11 +54,11 @@ const DeadSeaIntegrationContainer: FC = () => {
         })
       );
     }
-  }, [dispatch, user, amount]);
+  }, [dispatch, user, amount, step]);
 
   useEffect(() => {
     if (!user) {
-      setStep(DeadSeaIntegrationStep.UserDetails);
+      setStep(DeadSeaIntegrationStep.InitialStep);
     }
   }, [user]);
 
@@ -78,10 +84,14 @@ const DeadSeaIntegrationContainer: FC = () => {
     }
 
     switch (step) {
-      case DeadSeaIntegrationStep.UserDetails:
+      case DeadSeaIntegrationStep.InitialStep:
         return (
-          <UserDetailsStep user={user} onFinish={handleUserDetailsStepFinish} />
+          <InitialStep amount={amount} onFinish={handleInitialStepFinish} />
         );
+      case DeadSeaIntegrationStep.UserDetails:
+        return user ? (
+          <UserDetailsStep user={user} onFinish={handleUserDetailsStepFinish} />
+        ) : null;
       case DeadSeaIntegrationStep.MemberAdmittance:
         return (
           <MemberAdmittanceStep

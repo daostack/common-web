@@ -6,7 +6,7 @@ import { SelectionButton } from "../SelectionButton";
 import "./index.scss";
 
 interface PaymentDetailsProps {
-  amount: number;
+  amount?: number;
   onAmountChange: (amount: number) => void;
 }
 
@@ -15,10 +15,12 @@ const AMOUNTS = [18000, 36000, 75000, 120000];
 const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   const { amount: currentAmount, onAmountChange } = props;
   const [selectedAmount, setSelectedAmount] = useState<number | null>(() =>
-    AMOUNTS.some((amount) => amount === currentAmount) ? currentAmount : null
+    currentAmount && AMOUNTS.some((amount) => amount === currentAmount)
+      ? currentAmount
+      : null
   );
   const [inputValue, setInputValue] = useState(() =>
-    AMOUNTS.some((amount) => amount === currentAmount)
+    !currentAmount || AMOUNTS.some((amount) => amount === currentAmount)
       ? ""
       : String(currentAmount / 100)
   );
