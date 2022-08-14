@@ -85,7 +85,7 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
         payload,
         callback: (error, data) => {
           if (error || !data) {
-            onError(error || "Something went wrong");
+            onError(error?.message || "Something went wrong");
             return;
           }
 
