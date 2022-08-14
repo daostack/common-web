@@ -686,9 +686,8 @@ export function* createSurvey({
         payload.callback(error);
       }
     }
-  } finally {
-    yield put(stopLoading());
   }
+  yield put(stopLoading());
 }
 
 export function* leaveCommon(
@@ -1288,6 +1287,10 @@ export function* commonsSaga() {
   yield takeLatest(
     actions.createFundingProposal.request,
     createFundingProposal
+  );
+  yield takeLatest(
+    actions.createSurvey.request,
+    createSurvey
   );
   yield takeLatest(actions.loadUserCards.request, loadUserCardsSaga);
   yield takeLatest(
