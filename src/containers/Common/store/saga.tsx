@@ -73,6 +73,7 @@ import {
   FundsAllocation,
   MemberAdmittance,
   RemoveCircle,
+  Survey,
 } from "@/shared/models/governance/proposals";
 
 export function* createGovernance(
@@ -650,6 +651,43 @@ export function* createFundingProposal({
       yield put(actions.createFundingProposal.failure(error));
       yield put(stopLoading());
     }
+  }
+}
+
+export function* createSurvey({
+  payload,
+}: ReturnType<typeof actions.createSurvey.request>): Generator {
+  try {  
+    const { commonId } = payload.payload.args;
+
+    yield put(startLoading());
+    const survey = (yield call(createProposalApi, {
+      ...payload.payload,
+      type: ProposalsTypes.SURVEY,
+    })) as Survey;
+
+    yield call(subscribeToCommonProposal, commonId, async () => {
+      const ds = await fetchCommonProposals(commonId);
+
+      store.dispatch(actions.setProposals(ds));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(stopLoading());
+      payload.callback(null, survey);
+      store.dispatch(actions.getCommonsList.request());
+    });
+
+    yield put(actions.createSurvey.success(survey));
+    yield put(stopLoading());
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createSurvey.failure(error));
+      
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
   }
 }
 

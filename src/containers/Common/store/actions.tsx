@@ -231,7 +231,7 @@ export const createSurvey = createAsyncAction(
   PayloadWithCallback<
     Omit<CreateProposal[ProposalsTypes.SURVEY]["data"], "type">,
     CreateProposal[ProposalsTypes.SURVEY]["response"],
-    string
+    Error
   >,
   CreateProposal[ProposalsTypes.SURVEY]["response"],
   Error
