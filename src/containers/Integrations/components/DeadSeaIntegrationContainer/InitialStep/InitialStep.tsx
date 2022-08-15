@@ -17,7 +17,7 @@ const InitialStep: FC<InitialStepProps> = (props) => {
     <GeneralInfoWrapper description={DESCRIPTION}>
       <AmountSelection
         amount={amount}
-        submitButtonText="Support us via Common"
+        submitButtonText="Support the Community"
         onAmountChange={onFinish}
       />
     </GeneralInfoWrapper>
