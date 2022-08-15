@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import { Button } from "@/shared/components";
 import {
   CurrencyInput,
@@ -12,6 +12,7 @@ import "./index.scss";
 
 interface PaymentDetailsProps {
   amount?: number;
+  preSubmitText?: ReactNode;
   submitButtonText?: string;
   onAmountChange: (amount: number) => void;
 }
@@ -21,6 +22,7 @@ const AMOUNTS = [18000, 36000, 75000, 120000];
 const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   const {
     amount: currentAmount,
+    preSubmitText,
     submitButtonText = "Update Contribution",
     onAmountChange,
   } = props;
@@ -84,6 +86,7 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
           label: "dead-sea-amount-selection__currency-input-label",
         }}
       />
+      {preSubmitText}
       <Button
         className="dead-sea-amount-selection__submit-button"
         disabled={!selectedAmount && !Number(inputValue)}
