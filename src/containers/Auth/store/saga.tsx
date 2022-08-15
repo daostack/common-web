@@ -340,7 +340,8 @@ function* webviewLoginSaga({
     const { user }: { user: User; } = yield call(
       verifyLoggedInUser,
       loggedFirebaseUser,
-      true
+      true,
+      AUTH_CODE_FOR_SIGN_UP
     );
     const firebaseUser: User = yield call(getUserData, user.uid ?? "");
     if (firebaseUser) {
