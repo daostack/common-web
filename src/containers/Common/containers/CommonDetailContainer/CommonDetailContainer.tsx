@@ -99,7 +99,7 @@ interface CommonDetailProps {
 
 const tabs = [
   {
-    name: "Agenda",
+    name: "About",
     key: Tabs.About,
     icon: Tabs.About,
   },
