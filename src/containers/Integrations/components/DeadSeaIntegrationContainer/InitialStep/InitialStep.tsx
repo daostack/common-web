@@ -1,6 +1,9 @@
 import React, { FC } from "react";
+import { ButtonLink } from "@/shared/components";
+import { ROUTE_PATHS } from "@/shared/constants";
 import { AmountSelection } from "../AmountSelection";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
+import "./index.scss";
 
 interface InitialStepProps {
   amount: number;
@@ -17,7 +20,19 @@ const InitialStep: FC<InitialStepProps> = (props) => {
     <GeneralInfoWrapper description={DESCRIPTION}>
       <AmountSelection
         amount={amount}
-        submitButtonText="Support us via Common"
+        preSubmitText={
+          <p className="dead-sea-initial-step__pre-submit-text">
+            DSG is a community movement managed via{" "}
+            <ButtonLink
+              href={ROUTE_PATHS.HOME}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Common
+            </ButtonLink>
+          </p>
+        }
+        submitButtonText="Support the Community"
         onAmountChange={onFinish}
       />
     </GeneralInfoWrapper>
