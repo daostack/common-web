@@ -99,7 +99,7 @@ interface CommonDetailProps {
 
 const tabs = [
   {
-    name: "Agenda",
+    name: "About",
     key: Tabs.About,
     icon: Tabs.About,
   },
@@ -748,16 +748,13 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           >
             <div className="tab-content-wrapper">
               {tab === Tabs.About && (
-                <>
-                  <div className="about-title">About</div>
-                  <AboutTabComponent
-                    common={common}
-                    screenSize={screenSize}
-                    onOpenJoinModal={handleOpen}
-                    isCommonMember={isCommonMember}
-                    isJoiningPending={isJoiningPending}
-                  />
-                </>
+                <AboutTabComponent
+                  common={common}
+                  screenSize={screenSize}
+                  onOpenJoinModal={handleOpen}
+                  isCommonMember={isCommonMember}
+                  isJoiningPending={isJoiningPending}
+                />
               )}
               {tab === Tabs.Discussions && (
                 <DiscussionsComponent

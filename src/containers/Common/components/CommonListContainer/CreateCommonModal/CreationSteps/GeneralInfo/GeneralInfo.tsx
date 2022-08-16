@@ -88,7 +88,7 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
                 id="commonName"
                 name="commonName"
                 label="Common name"
-                placeholder="Ashley Johnson"
+                placeholder="Save the Amazon"
                 maxLength={MAX_COMMON_NAME_LENGTH}
                 isRequired
               />

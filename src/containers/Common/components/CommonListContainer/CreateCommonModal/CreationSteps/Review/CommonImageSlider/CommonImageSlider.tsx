@@ -72,7 +72,7 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
         <div />
       ) : (
         <span className="create-common-review-image-slider__hint-text">
-          Select or upload cover image
+          Select or upload a cover image
         </span>
       )}
       {isMobileView && (

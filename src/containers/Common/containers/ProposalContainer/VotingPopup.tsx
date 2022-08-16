@@ -60,7 +60,7 @@ export const VotingPopup: FC<VotingPopupProps> = ({
             src="/assets/images/membership-request-created.svg"
             alt="Success"
           />
-          <p>Your vote was submitted! It will take some time to apply.</p>
+          <p>Your vote was submitted! It might take some time to load</p>
           <Button
             className="voting-popup__success-button"
             onClick={onClose}
