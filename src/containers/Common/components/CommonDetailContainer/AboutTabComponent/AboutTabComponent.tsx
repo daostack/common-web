@@ -59,7 +59,7 @@ export default function AboutTabComponent({
           See {isDescriptionExpanded ? "less <" : "more >"}
         </a>
       )}
-      <CommonWhitepaper />
+      <CommonWhitepaper common={common} />
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>
