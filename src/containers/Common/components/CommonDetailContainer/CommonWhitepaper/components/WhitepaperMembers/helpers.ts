@@ -1,9 +1,9 @@
 import { lowerCase, startCase } from "lodash";
 import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
-import { AllowedActions, AllowedProposals } from "@/shared/models";
+import { AllowedActions } from "@/shared/models";
 
 export const getTextForProposalType = (
-  proposalType: keyof AllowedProposals
+  proposalType: ProposalsTypes
 ): string => {
   switch (proposalType) {
     case ProposalsTypes.ASSIGN_CIRCLE:
@@ -12,6 +12,8 @@ export const getTextForProposalType = (
       return "Fund allocation";
     case ProposalsTypes.REMOVE_CIRCLE:
       return "Remove circle";
+    case ProposalsTypes.MEMBER_ADMITTANCE:
+      return "Member admittance";
     default:
       return startCase(lowerCase(proposalType));
   }
