@@ -47,7 +47,7 @@ const getSubscriptionContent = (subscription: Subscription): Content => {
             DateFormat.GeneralHuman
           )}`
         : ""
-      : `${formatPrice(subscription.amount)}/mo`,
+      : `${formatPrice(subscription.amount.amount)}/mo`,
     description: isCanceled
       ? `Canceled by ${
           subscription.status === SubscriptionStatus.CanceledByUser
@@ -72,7 +72,7 @@ const getPaymentContent = (
     status: isFailedPayment ? "failure" : "success",
     statusText: isFailedPayment ? "Payment failed" : "Payment succeeded",
     statusDescription: `${formatPrice(
-      subscription?.amount ?? payment.amount.amount
+      subscription?.amount.amount ?? payment.amount.amount
     )}${isMonthlyPayment ? "/mo" : ""}`,
     description:
       isMonthlyPayment &&

@@ -6,6 +6,7 @@ export const ApiEndpoint = {
   VoteProposal: "/proposals/vote",
   UpdateVote: "/proposals/vote",
   MakeImmediateContribution: "/commons/immediate-contribution",
+  MakeMonthlyContribution: "/commons/immediate-contribution",
   AddBankAccount: "/payments/bank-account-details/add",
   UpdateBankAccount: "/payments/bank-account-details/update",
   DeleteBankAccount: "/payments/bank-account-details/delete",

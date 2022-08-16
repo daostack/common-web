@@ -42,6 +42,8 @@ import {
   CreateProposal,
   ImmediateContributionData,
   ImmediateContributionResponse,
+  SubscriptionData,
+  SubscriptionResponse,
   LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
@@ -460,6 +462,20 @@ export async function makeImmediateContribution(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
+export async function makeMonthlyContribution( /////
+  requestData: SubscriptionData
+): Promise<SubscriptionResponse> {
+  const { data } = await Api.post<SubscriptionResponse>(
+    ApiEndpoint.MakeMonthlyContribution,
+    {
+      ...requestData,
+      saveCard: requestData.saveCard ?? true,
+    }
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
 export function subscribeToPayment(
   paymentId: string,
   callback: (payment?: Payment) => void
@@ -470,6 +486,19 @@ export function subscribeToPayment(
     .doc(paymentId)
     .onSnapshot((snapshot) => {
       callback(transformFirebaseDataSingle<Payment>(snapshot));
+    });
+}
+
+export function subscribeToSubscription(
+  subscriptionId: string,
+  callback: (subscription?: Subscription) => void
+): () => void {
+  return firebase
+    .firestore()
+    .collection(Collection.Subscriptions)
+    .doc(subscriptionId)
+    .onSnapshot((snapshot) => {
+      callback(transformFirebaseDataSingle<Subscription>(snapshot));
     });
 }
 

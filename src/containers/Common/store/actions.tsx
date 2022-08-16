@@ -39,6 +39,8 @@ import { CalculatedVotes } from "@/shared/models/governance/proposals";
 import {
   ImmediateContributionData,
   ImmediateContributionResponse,
+  SubscriptionData,
+  SubscriptionResponse,
 } from "../interfaces";
 import { ProposalsTypes } from "@/shared/constants";
 
@@ -320,6 +322,20 @@ export const makeImmediateContribution = createAsyncAction(
     Error
   >,
   ImmediateContributionResponse,
+  Error
+>();
+
+export const makeMonthlyContribution = createAsyncAction(
+  CommonsActionTypes.MAKE_MONTHLY_CONTRIBUTION,
+  CommonsActionTypes.MAKE_MONTHLY_CONTRIBUTION_SUCCESS,
+  CommonsActionTypes.MAKE_MONTHLY_CONTRIBUTION_FAILURE
+)<
+  PayloadWithCallback<
+    SubscriptionData,
+    SubscriptionResponse,
+    Error
+  >,
+  SubscriptionResponse,
   Error
 >();
 

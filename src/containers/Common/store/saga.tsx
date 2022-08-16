@@ -39,6 +39,7 @@ import {
   createVote as createVoteApi,
   updateVote as updateVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
+  makeMonthlyContribution as makeMonthlyContributionApi,
   addBankDetails as addBankDetailsApi,
   updateBankDetails as updateBankDetailsApi,
   deleteBankDetails as deleteBankDetailsApi,
@@ -64,7 +65,7 @@ import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
 import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
-import { ImmediateContributionResponse } from "../interfaces";
+import { ImmediateContributionResponse, SubscriptionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
 import { Awaited } from "@/shared/interfaces";
 import {
@@ -989,6 +990,25 @@ export function* makeImmediateContribution(
   }
 }
 
+export function* makeMonthlyContribution(
+  action: ReturnType<typeof actions.makeMonthlyContribution.request>
+): Generator {
+  try {
+    const response = (yield call(
+      makeMonthlyContributionApi,
+      action.payload.payload
+    )) as SubscriptionResponse;
+
+    yield put(actions.makeMonthlyContribution.success(response));
+    action.payload.callback(null, response);
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.makeMonthlyContribution.failure(error));
+      action.payload.callback(error);
+    }
+  }
+}
+
 export function* createBuyerTokenPage(
   action: ReturnType<typeof actions.createBuyerTokenPage.request>
 ): Generator {
@@ -1303,6 +1323,10 @@ export function* commonsSaga() {
   yield takeLatest(
     actions.makeImmediateContribution.request,
     makeImmediateContribution
+  );
+  yield takeLatest(
+    actions.makeMonthlyContribution.request,
+    makeMonthlyContribution
   );
   yield takeLatest(actions.createBuyerTokenPage.request, createBuyerTokenPage);
   yield takeLatest(actions.getBankDetails.request, getBankDetails);

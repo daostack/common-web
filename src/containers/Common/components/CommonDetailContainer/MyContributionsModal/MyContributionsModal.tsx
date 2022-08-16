@@ -19,6 +19,7 @@ import {
   getUserSubscriptionToCommon,
 } from "../../../store/actions";
 import { ChangeMonthlyContribution } from "./ChangeMonthlyContribution";
+import { CreateMonthlyContribution } from "./CreateMonthlyContribution";
 import { Error } from "./Error";
 import { General } from "./General";
 import { MonthlyContributionCharges } from "./MonthlyContributionCharges";
@@ -152,6 +153,19 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
     [goBackForStages, goToGeneralStage]
   );
 
+  const handleCreateMonthlyContributionFinish = useCallback(
+    (subscription: Subscription) => {
+      setSubscription(subscription);
+
+      if (goBackForStages) {
+        goBackForStages();
+      } else {
+        goToGeneralStage();
+      }
+    },
+    [goBackForStages, goToGeneralStage]
+  );
+
   const handleError = useCallback((errorText: string) => {
     setErrorText(errorText);
   }, []);
@@ -272,7 +286,13 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             onFinish={handleChangeMonthlyContributionFinish}
             goBack={goBackForStages || goToGeneralStage}
           />
-        ) : null;
+        ) : (
+          <CreateMonthlyContribution
+            common={common}
+            onFinish={handleCreateMonthlyContributionFinish}
+            goBack={goBackForStages || goToGeneralStage}
+          />
+        );
       case MyContributionsStage.ReplacePaymentMethod:
         return subscription ? (
           <ReplacePaymentMethod
