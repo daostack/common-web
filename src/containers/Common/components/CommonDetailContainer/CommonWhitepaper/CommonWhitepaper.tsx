@@ -35,7 +35,7 @@ export default function CommonWhitepaper(props: CommonWhitepaperProps) {
                 "common-whitepaper__tab--active": tab === Tabs.Members,
               })}
             >
-              Members
+              Circles
             </div>
             <div
               onClick={() => setTab(Tabs.Proposals)}
