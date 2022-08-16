@@ -15,14 +15,15 @@ interface IProps {
 }
 
 // TODO: temporary until we have a better way to handle this
-const PROPOSALS_TYPE_1 = [ProposalsTypes.FUNDS_ALLOCATION, ProposalsTypes.MEMBER_ADMITTANCE];
-//const PROPOSALS_TYPE_2 = [ProposalsTypes.ASSIGN_CIRCLE, ProposalsTypes.REMOVE_CIRCLE];
+const CIRCLE_PROPOSAL_TYPES = [ProposalsTypes.ASSIGN_CIRCLE, ProposalsTypes.REMOVE_CIRCLE];
 
 export default function WhitepaperProposalCard({ circles, proposalType, proposalData }: IProps) {
   const [toggle, setToggle] = useState(false);
 
   // TODO: for now we take the first index for "CIRCLE" proposal. Need to check this.
-  const data = PROPOSALS_TYPE_1.includes(proposalType as ProposalsTypes) ? proposalData as Proposal : proposalData[1] as Proposal;
+  const data = !CIRCLE_PROPOSAL_TYPES.includes(proposalType as ProposalsTypes)
+    ? (proposalData as Proposal)
+    : (proposalData[1] as Proposal);
 
   const voters = calculateVoters(circles, data.global.weights)?.map((voter, index) => {
     return <span className="whitepaper-proposal-card__voter" key={index}>{voter}</span>
