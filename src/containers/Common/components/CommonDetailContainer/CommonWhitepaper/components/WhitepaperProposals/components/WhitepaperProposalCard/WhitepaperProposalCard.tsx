@@ -1,11 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import classNames from "classnames";
-import { startCase, lowerCase } from "lodash";
 import { Proposals } from "@/shared/models/governance/proposals";
 import { Proposal } from "@/shared/models";
 import { ProposalsTypes } from "@/shared/constants";
 import { calculateVoters } from "../../../../utils";
+import { getTextForProposalType } from "./helpers";
 import "./index.scss";
 
 interface IProps {
@@ -32,7 +32,7 @@ export default function WhitepaperProposalCard({ circles, proposalType, proposal
   return (
     <div className="whitepaper-proposal-card-wrapper">
       <div className="whitepaper-proposal-card__top-wrapper" onClick={() => setToggle(!toggle)}>
-        <div>{startCase(lowerCase(proposalType))}</div>
+        <div>{getTextForProposalType(proposalType as ProposalsTypes)}</div>
         <img src="/icons/up-arrow.svg" className={classNames("collapsed", { "expanded": toggle })} alt="arrow" />
       </div>
       {toggle && (
