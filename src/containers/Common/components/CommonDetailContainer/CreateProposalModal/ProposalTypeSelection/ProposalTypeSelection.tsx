@@ -22,24 +22,24 @@ interface ProposalTypeOption extends DropdownOption {
 
 const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
   {
-    text: "Assign Circle",
-    searchText: "Assign Circle",
-    value: ProposalsTypes.ASSIGN_CIRCLE,
-  },
-  {
-    text: "Remove Circle",
-    searchText: "Remove Circle",
-    value: ProposalsTypes.REMOVE_CIRCLE,
-  },
-  {
-    text: "Funds Allocation",
-    searchText: "Funds Allocation",
+    text: "Fund allocation",
+    searchText: "Fund allocation",
     value: ProposalsTypes.FUNDS_ALLOCATION,
   },
   {
     text: "Survey",
     searchText: "Survey",
     value: ProposalsTypes.SURVEY,
+  },
+  {
+    text: "Assign members to circle",
+    searchText: "Assign members to circle",
+    value: ProposalsTypes.ASSIGN_CIRCLE,
+  },
+  {
+    text: "Remove members from circle",
+    searchText: "Remove members from circle",
+    value: ProposalsTypes.REMOVE_CIRCLE,
   },
 ];
 
