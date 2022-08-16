@@ -131,9 +131,7 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
   return (
     <div className="proposal-type-selection-stage">
       <p className="proposal-type-selection-stage__description">
-        Proposals allow you to make decisions as a group. If you choose to
-        request funding and the proposal is accepted, you will be responsible to
-        follow it through.
+        Proposals let the group to make decisions together.
       </p>
       <Separator className="proposal-type-selection-stage__separator" />
       <div className="proposal-type-selection-stage__form">
