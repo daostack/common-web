@@ -18,9 +18,13 @@ export const getTextForProposalType = (
 export const checkShouldRemoveAction = (
   action: keyof AllowedActions
 ): boolean =>
-  [GovernanceActions.CREATE_PROPOSAL, GovernanceActions.CREATE_VOTE].includes(
-    action
-  );
+  [
+    GovernanceActions.CREATE_PROPOSAL,
+    GovernanceActions.CREATE_VOTE,
+    GovernanceActions.RECEIVE_REPORT_DISCUSSION_NOTIFICATION,
+    GovernanceActions.RECEIVE_REPORT_MESSAGE_NOTIFICATION,
+    GovernanceActions.RECEIVE_REPORT_PROPOSAL_NOTIFICATION,
+  ].includes(action);
 
 export const getTextForAction = (action: keyof AllowedActions): string => {
   switch (action) {
@@ -36,6 +40,18 @@ export const getTextForAction = (action: keyof AllowedActions): string => {
       return "Report a message";
     case GovernanceActions.REPORT_PROPOSAL:
       return "Report a proposal";
+    case GovernanceActions.HIDE_OR_UNHIDE_DISCUSSION:
+      return "Hide a discussion";
+    case GovernanceActions.HIDE_OR_UNHIDE_MESSAGE:
+      return "Hide a message";
+    case GovernanceActions.HIDE_OR_UNHIDE_PROPOSAL:
+      return "Hide a proposal";
+    case GovernanceActions.DELETE_DISCUSSION:
+      return "Delete a discussion";
+    case GovernanceActions.DELETE_MESSAGE:
+      return "Delete a message";
+    case GovernanceActions.RECEIVE_FUNDS:
+      return "Receive funds";
     default:
       return startCase(lowerCase(action));
   }
