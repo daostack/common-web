@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { startCase, lowerCase } from "lodash";
 import { generateCirclesBinaryNumber } from "../../utils";
 import { selectGovernance } from "@/containers/Common/store/selectors";
 import { ProposalsTypes } from "@/shared/constants";
