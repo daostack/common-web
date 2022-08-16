@@ -13,7 +13,7 @@ export const getTextForProposalType = (
     case ProposalsTypes.REMOVE_CIRCLE:
       return "Remove members from circle";
     case ProposalsTypes.MEMBER_ADMITTANCE:
-      return "Member admittance";
+      return "Members admittance";
     default:
       return startCase(lowerCase(proposalType));
   }
