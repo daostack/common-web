@@ -21,7 +21,7 @@ export default function CommonWhitepaper(props: CommonWhitepaperProps) {
 
   return (
     <div className="common-whitepaper-wrapper">
-      <div className="common-whitepaper__title">White Paper</div>
+      <div className="common-whitepaper__title">Governance</div>
       <span>
         The various permissions for each circle in {common.name}, in terms of
         proposing and voting on various actions.
