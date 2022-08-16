@@ -181,7 +181,7 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
                 placeholder="10"
                 prefix={getPrefix(selectedFund)}
               />
-              {values.amount > 0 && 
+              {values.amount > 0 &&
                 <>
                   {bankAccountState.loading ? (
                       <div>
