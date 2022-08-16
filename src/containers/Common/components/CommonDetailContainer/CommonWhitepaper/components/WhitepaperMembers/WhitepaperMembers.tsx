@@ -5,8 +5,12 @@ import { startCase, lowerCase } from "lodash";
 import { generateCirclesBinaryNumber } from "../../utils";
 import { selectGovernance } from "@/containers/Common/store/selectors";
 import { ProposalsTypes } from "@/shared/constants";
-import { AllowedProposals } from "@/shared/models";
-import { getTextForProposalType } from "./helpers";
+import { AllowedActions, AllowedProposals } from "@/shared/models";
+import {
+  getTextForAction,
+  getTextForProposalType,
+  checkShouldRemoveAction,
+} from "./helpers";
 import "./index.scss";
 
 export default function WhitepaperMembers() {
@@ -44,13 +48,22 @@ export default function WhitepaperMembers() {
         </span>
       ));
 
-    const allowedActions = Object.keys(circle?.allowedActions || {}).sort().map((action, index) => {
-      return (
+    const allowedActions = Object.keys(circle?.allowedActions || {})
+      .filter(
+        (action) => !checkShouldRemoveAction(action as keyof AllowedActions)
+      )
+      .map((action) => getTextForAction(action as keyof AllowedActions))
+      .sort()
+      .map((text, index) => (
         <span key={index} className="whitepaper-members__feature-title">
-          <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
-          {startCase(lowerCase(action))}
-        </span>)
-    })
+          <img
+            src="/icons/check.png"
+            className="whitepaper-members__checkmark-icon"
+            alt="checkmark"
+          />
+          {text}
+        </span>
+      ));
 
     const allowedVotes = Object.keys(governance?.proposals || {}).filter((proposal) => {
       const circleBin = generateCirclesBinaryNumber([selectedMember.index])
@@ -76,11 +89,11 @@ export default function WhitepaperMembers() {
 
     return (
       <div className="whitepaper-members__content">
-        <div className="whitepaper-members__sub-title">Allowed Proposals</div>
+        <div className="whitepaper-members__sub-title">Proposal Creation</div>
         {allowedProposals}
         {Boolean(allowedVotes.length) && <div className="whitepaper-members__sub-title">Proposal Voting</div>}
         {allowedVotes}
-        <div className="whitepaper-members__sub-title">Allowed Actions</div>
+        <div className="whitepaper-members__sub-title">Other Actions</div>
         {allowedActions}
       </div>
     )
