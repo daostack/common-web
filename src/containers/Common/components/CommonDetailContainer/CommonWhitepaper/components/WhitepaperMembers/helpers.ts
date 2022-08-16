@@ -11,7 +11,7 @@ export const getTextForProposalType = (
     case ProposalsTypes.FUNDS_ALLOCATION:
       return "Fund allocation";
     case ProposalsTypes.REMOVE_CIRCLE:
-      return "Remove circle";
+      return "Remove members from circle";
     case ProposalsTypes.MEMBER_ADMITTANCE:
       return "Member admittance";
     default:
