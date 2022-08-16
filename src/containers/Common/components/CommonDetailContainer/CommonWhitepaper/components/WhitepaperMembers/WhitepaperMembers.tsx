@@ -80,10 +80,12 @@ export default function WhitepaperMembers() {
       if (governance?.proposals[proposal]?.global?.weights?.find(({ circles }) => circles & circleBin)) {
         return true
       }
-    }).sort().map((proposalKey, index) => {
+    }).map((proposalType) =>
+      getTextForProposalType(proposalType as keyof AllowedProposals)
+    ).sort().map((proposalKey, index) => {
       return (<span key={index} className="whitepaper-members__feature-title">
         <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
-        {startCase(lowerCase(proposalKey))}
+        {proposalKey}
       </span>)
     });
 
