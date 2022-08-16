@@ -5,6 +5,8 @@ import { startCase, lowerCase } from "lodash";
 import { generateCirclesBinaryNumber } from "../../utils";
 import { selectGovernance } from "@/containers/Common/store/selectors";
 import { ProposalsTypes } from "@/shared/constants";
+import { AllowedProposals } from "@/shared/models";
+import { getTextForProposalType } from "./helpers";
 import "./index.scss";
 
 export default function WhitepaperMembers() {
@@ -26,13 +28,21 @@ export default function WhitepaperMembers() {
   const renderContent = () => {
     const circle = governance?.circles.filter(circle => circle.name === selectedMember?.name)[0];
 
-    const allowedProposals = Object.keys(circle?.allowedProposals || {}).sort().map((proposal, index) => {
-      return (
+    const allowedProposals = Object.keys(circle?.allowedProposals || {})
+      .map((proposalType) =>
+        getTextForProposalType(proposalType as keyof AllowedProposals)
+      )
+      .sort()
+      .map((text, index) => (
         <span key={index} className="whitepaper-members__feature-title">
-          <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
-          {startCase(lowerCase(proposal))}
-        </span>)
-    });
+          <img
+            src="/icons/check.png"
+            className="whitepaper-members__checkmark-icon"
+            alt="checkmark"
+          />
+          {text}
+        </span>
+      ));
 
     const allowedActions = Object.keys(circle?.allowedActions || {}).sort().map((action, index) => {
       return (
