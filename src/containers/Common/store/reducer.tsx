@@ -73,7 +73,6 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       const disscussion = { ...action.payload };
       const { discussions } = nextState;
-      disscussion.isLoaded = true;
       const index = discussions.findIndex((d) => d.id === disscussion.id);
       discussions[index] = disscussion;
       nextState.discussions = discussions;

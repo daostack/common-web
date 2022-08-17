@@ -72,7 +72,7 @@ const getLinkMetaData = ( //FIXME: need to add an appropriate social images
         {
           link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Discussion}/${elem.id}`,
           socialTitle: elem.title || "",
-          socialDescription: elem.description || "",
+          socialDescription: elem.message.slice(0, 200) || "",
           socialImageLink: "", //FIXME
         }
       );
