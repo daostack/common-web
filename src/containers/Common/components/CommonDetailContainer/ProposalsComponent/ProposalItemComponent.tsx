@@ -1,8 +1,11 @@
 import React from "react";
-import { startCase, lowerCase } from "lodash";
 import { UserAvatar, ElementDropdown } from "@/shared/components";
 import { Proposal } from "@/shared/models";
-import { formatPrice, getUserName } from "@/shared/utils";
+import {
+  formatPrice,
+  getTextForProposalType,
+  getUserName,
+} from "@/shared/utils";
 import { DynamicLinkType, ProposalsTypes } from "@/shared/constants";
 import ProposalState from "../ProposalState/ProposalState";
 import { VotesComponent } from "../VotesComponent";
@@ -25,7 +28,9 @@ export default function ProposalItemComponent({
   let extraData;
   switch (proposal.type) {
     case ProposalsTypes.FUNDS_ALLOCATION:
-      extraData = formatPrice(proposal.data.args.amount);
+      extraData = formatPrice(proposal.data.args.amount, {
+        shouldRemovePrefixFromZero: false,
+      });
       break;
   }
 
@@ -50,7 +55,7 @@ export default function ProposalItemComponent({
             />
           </div>
         </div>
-        <div className="proposal-item-type">{startCase(lowerCase(proposal.type))}</div>
+        <div className="proposal-item-type">{getTextForProposalType(proposal.type)}</div>
       </div>
       <div className="proposal-item-body">
         <div className="user-info-wrapper">

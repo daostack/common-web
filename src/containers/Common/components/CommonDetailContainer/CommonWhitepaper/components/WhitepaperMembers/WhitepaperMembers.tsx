@@ -5,11 +5,8 @@ import { generateCirclesBinaryNumber } from "../../utils";
 import { selectGovernance } from "@/containers/Common/store/selectors";
 import { ProposalsTypes } from "@/shared/constants";
 import { AllowedActions, AllowedProposals } from "@/shared/models";
-import {
-  getTextForAction,
-  getTextForProposalType,
-  checkShouldRemoveAction,
-} from "./helpers";
+import { getTextForProposalType } from "@/shared/utils";
+import { getTextForAction, checkShouldRemoveAction } from "./helpers";
 import "./index.scss";
 
 export default function WhitepaperMembers() {

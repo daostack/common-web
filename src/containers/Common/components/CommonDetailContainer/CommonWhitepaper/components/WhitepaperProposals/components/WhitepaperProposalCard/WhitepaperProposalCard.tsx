@@ -4,8 +4,8 @@ import classNames from "classnames";
 import { Proposals } from "@/shared/models/governance/proposals";
 import { Proposal } from "@/shared/models";
 import { ProposalsTypes } from "@/shared/constants";
+import { getTextForProposalType } from "@/shared/utils";
 import { calculateVoters } from "../../../../utils";
-import { getTextForProposalType } from "./helpers";
 import "./index.scss";
 
 interface IProps {
