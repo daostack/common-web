@@ -126,7 +126,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     <div className="funds-allocation-configuration">
       <StageName
         className="funds-allocation-configuration__stage-name"
-        name="Funds Allocation"
+        name="Fund allocation"
         backgroundColor="light-yellow"
         icon={
           <DollarIcon className="funds-allocation-configuration__avatar-icon" />
@@ -160,7 +160,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 placeholder="10"
                 prefix={getPrefix(selectedFund)}
               />
-              {values.amount > 0 && 
+              {values.amount > 0 &&
                 <>
                   {bankAccountState.loading ? (
                       <div>

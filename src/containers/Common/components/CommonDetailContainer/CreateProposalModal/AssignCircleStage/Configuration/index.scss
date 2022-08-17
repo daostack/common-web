@@ -8,7 +8,11 @@
 }
 
 .assign-circle-configuration__stage-name {
+  max-width: unset;
+  width: unset;
   margin-top: 0.75rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 
   @include big-phone {
     margin-top: 1.5rem;

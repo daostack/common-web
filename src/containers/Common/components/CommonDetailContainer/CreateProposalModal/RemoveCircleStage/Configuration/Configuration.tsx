@@ -164,7 +164,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     <div className="remove-circle-configuration">
       <StageName
         className="remove-circle-configuration__stage-name"
-        name="Remove Circle"
+        name="Remove members from circle"
         icon={
           <AvatarIcon className="remove-circle-configuration__avatar-icon" />
         }
@@ -184,7 +184,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
                 options={circleOptions}
                 value={circle?.id}
                 onSelect={handleCircleSelect}
-                label="Circle to Remove"
+                label="Circle to remove from"
                 placeholder="Select Circle"
                 shouldBeFixed={false}
               />
@@ -207,7 +207,8 @@ const Configuration: FC<ConfigurationProps> = (props) => {
                   />
                 ) : (
                   <p className="remove-circle-configuration__info-text">
-                    There are no common members to remove selected circle.
+                    There are no common members to be removed from the selected
+                    circle.
                   </p>
                 )}
               </>

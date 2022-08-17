@@ -162,7 +162,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     <div className="assign-circle-configuration">
       <StageName
         className="assign-circle-configuration__stage-name"
-        name="Assign Circle"
+        name="Assign members to circle"
         icon={
           <AvatarIcon className="assign-circle-configuration__avatar-icon" />
         }
@@ -182,7 +182,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
                 options={circleOptions}
                 value={circle?.id}
                 onSelect={handleCircleSelect}
-                label="Circle to Assign"
+                label="Circle to assign to"
                 placeholder="Select Circle"
                 shouldBeFixed={false}
               />
@@ -205,7 +205,8 @@ const Configuration: FC<ConfigurationProps> = (props) => {
                   />
                 ) : (
                   <p className="assign-circle-configuration__info-text">
-                    There are no common members to assign selected circle.
+                    There are no common members to be assigned to the selected
+                    circle.
                   </p>
                 )}
               </>

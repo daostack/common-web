@@ -118,7 +118,7 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
     <div className="funds-allocation-form">
       <StageName
         className="funds-allocation-form__stage-name"
-        name="Funds Allocation"
+        name="Fund allocation"
         backgroundColor="light-yellow"
         icon={
           <DollarIcon className="funds-allocation-form__avatar-icon" />
