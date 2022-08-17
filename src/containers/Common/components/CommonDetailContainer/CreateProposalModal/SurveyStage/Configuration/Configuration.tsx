@@ -5,7 +5,7 @@ import {
   ModalFooter,
 } from "@/shared/components";
 import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
-import DollarIcon from "@/shared/icons/dollar.icon";
+import QuestionOutlineIcon from "@/shared/icons/questionOutline.icon";
 import { Governance, CommonLink } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
@@ -65,10 +65,10 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     <div className="survey-configuration">
       <StageName
         className="survey-configuration__stage-name"
-        name="survey"
+        name="Survey"
         backgroundColor="light-yellow"
         icon={
-          <DollarIcon className="survey-configuration__avatar-icon" />
+          <QuestionOutlineIcon className="survey-configuration__avatar-icon" />
         }
       />
       <div className="survey-configuration__form">

@@ -29,7 +29,7 @@ export const getFundsAllocationDetails = (
   governance: Governance
 ): ProposalDetailsItem[] => [
   {
-    title: "Funds Allocation",
+    title: "Fund allocation",
     value: formatPrice(proposal.data.args.amount || 0, {
       shouldRemovePrefixFromZero: false,
     }),
