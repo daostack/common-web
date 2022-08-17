@@ -175,7 +175,9 @@ const ProposalContainer = () => {
           return (
             <ChatComponent
               common={currentCommon}
-              discussionMessages={currentProposal.discussionMessage || []}
+              discussionMessages={
+                currentProposal.discussion?.discussionMessages || []
+              }
               type={ChatType.ProposalComments}
               isAuthorized={Boolean(user)}
               sendMessage={sendMessage}

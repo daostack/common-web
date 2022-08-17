@@ -61,6 +61,7 @@ import {
   getCommonMember as getCommonMemberApi,
   getCommonMembers as getCommonMembersApi,
   getUserCommons as getUserCommonsApi,
+  getDiscussionsByIds,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -312,17 +313,21 @@ export function* loadProposalList(): Generator {
     const ownerIds = Array.from(
       new Set(proposals.map((d) => d.data.args.proposerId))
     );
-    const discussions_ids = proposals.map((d) => d.id);
+    const discussionIds = proposals.map(({ discussionId }) => discussionId);
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
-    const dMessages = (yield fetchDiscussionsMessages(
-      discussions_ids
-    )) as DiscussionMessage[];
+    const discussions = (yield getDiscussionsByIds(discussionIds)) as Awaited<
+      ReturnType<typeof getDiscussionsByIds>
+    >;
 
-    const loadedProposals = proposals.map((d) => {
-      const newProposal = { ...d };
-      newProposal.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
-      newProposal.proposer = owners.find((o) => o.uid === d.data.args.proposerId);
+    const loadedProposals = proposals.map((proposal) => {
+      const newProposal = { ...proposal };
+      newProposal.proposer = owners.find(
+        (o) => o.uid === proposal.data.args.proposerId
+      );
+      newProposal.discussion = discussions.find(
+        ({ proposalId }) => proposalId === proposal.id
+      );
       return newProposal;
     });
 
@@ -344,28 +349,26 @@ export function* loadProposalDetail(
 
     const proposal = { ...action.payload };
 
-    let discussionMessage: DiscussionMessage[];
-
-    if (action.payload.discussionMessage?.length) {
-      discussionMessage = action.payload.discussionMessage;
-    } else {
-      discussionMessage = (yield fetchDiscussionsMessages([
-        proposal.id,
-      ])) as DiscussionMessage[];
-    }
-
+    const discussionMessages = (yield fetchDiscussionsMessages([
+      proposal.discussionId,
+    ])) as DiscussionMessage[];
     const ownerIds = Array.from(
-      new Set(discussionMessage?.map((d) => d.ownerId))
+      new Set(discussionMessages?.map((d) => d.ownerId))
     );
     const owners = (yield fetchOwners(ownerIds)) as User[];
-    const loadedDisscussionMessage = discussionMessage?.map((d) => {
+    const loadedDisscussionMessage = discussionMessages?.map((d) => {
       const newDiscussionMessage = { ...d };
       newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
       return newDiscussionMessage;
     });
-    proposal.discussionMessage = loadedDisscussionMessage;
 
-    proposal.proposer = (yield getUserData(action.payload.data.args.proposerId)) as User;
+    if (proposal.discussion) {
+      proposal.discussion.discussionMessages = loadedDisscussionMessage;
+    }
+
+    proposal.proposer = (yield getUserData(
+      action.payload.data.args.proposerId
+    )) as User;
 
     yield put(actions.loadProposalDetail.success(proposal));
     yield put(stopLoading());

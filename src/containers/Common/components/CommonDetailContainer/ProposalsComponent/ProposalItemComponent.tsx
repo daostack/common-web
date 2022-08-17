@@ -75,7 +75,7 @@ export default function ProposalItemComponent({
         <div className="proposal-item-bottom">
           <div className="discussion-count-wrapper">
             <img src="/icons/discussions.svg" alt="discussions" />
-            <div className="discussion-count">{proposal.discussionMessage?.length || 0}</div>
+            <div className="discussion-count">{proposal.discussion?.messageCount || 0}</div>
           </div>
           <div className="extra-data">
             {extraData}

@@ -800,3 +800,22 @@ export const getVote = async (
   const [vote] = (await proposalVotesSubCollection(proposalId).where("voterId", "==", userId).get()).docs;
   return vote?.data() || null;
 };
+
+export async function getDiscussionsByIds(ids: string[]): Promise<Discussion[]> {
+  if (ids.length === 0) {
+    return [];
+  }
+
+  const queries: firebase.firestore.Query[] = [];
+  const config = firebase.firestore().collection(Collection.Discussion);
+
+  // Firebase allows to use at most 10 items per query for `in` option
+  for (let i = 0; i < ids.length; i += 10) {
+    queries.push(config.where("id", "in", ids.slice(i, i + 10)));
+  }
+  const results = await Promise.all(queries.map((query) => query.get()));
+
+  return results
+    .map((result) => transformFirebaseDataList<Discussion>(result))
+    .reduce((acc, items) => [...acc, ...items], []);
+}

@@ -6,7 +6,7 @@ import {
   RemoveCircle,
   Survey,
 } from "@/shared/models/governance/proposals";
-import { DiscussionMessage } from "./DiscussionMessage";
+import { Discussion } from "./Discussion";
 import { User } from "./User";
 
 export enum ProposalState {
@@ -32,8 +32,8 @@ export interface ProposalLink {
 }
 
 interface ExtendedProposalOptions {
-  discussionMessage?: DiscussionMessage[];
   proposer?: User;
+  discussion?: Discussion;
 }
 
 export type Proposal = (
