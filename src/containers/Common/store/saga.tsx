@@ -349,9 +349,11 @@ export function* loadProposalDetail(
 
     const proposal = { ...action.payload };
 
-    const discussionMessages = (yield fetchDiscussionsMessages([
-      proposal.discussionId,
-    ])) as DiscussionMessage[];
+    const discussionMessages = proposal.discussionId
+      ? ((yield fetchDiscussionsMessages([
+          proposal.discussionId,
+        ])) as DiscussionMessage[])
+      : [];
     const ownerIds = Array.from(
       new Set(discussionMessages?.map((d) => d.ownerId))
     );
