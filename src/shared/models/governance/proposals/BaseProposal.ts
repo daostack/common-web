@@ -63,7 +63,7 @@ export interface BaseProposal extends BaseEntity {
 
   approvalDate: firebase.firestore.Timestamp | null;
 
-  messageCount: number;
+  discussionId: string;
 
   type: ProposalsTypes;
 
