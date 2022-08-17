@@ -157,7 +157,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   const common = useSelector(selectCommonDetail());
   const governance = useSelector(selectGovernance());
-  const currentDisscussion = useSelector(selectCurrentDisscussion());
+  const currentDiscussion = useSelector(selectCurrentDisscussion());
   const proposals = useSelector(selectProposals());
   const discussions = useSelector(selectDiscussions());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
@@ -370,10 +370,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   const closeJoinModal = useCallback(() => {
     onCloseJoinModal();
-    if (currentDisscussion) {
+    if (currentDiscussion) {
       setTimeout(onOpen, 0);
     }
-  }, [onOpen, currentDisscussion, onCloseJoinModal]);
+  }, [onOpen, currentDiscussion, onCloseJoinModal]);
 
   const addPost = useCallback(() => {
     if (!user) return setTimeout(onOpenJoinModal, 0);
@@ -539,7 +539,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           }}
         >
           <DiscussionDetailModal
-            disscussion={currentDisscussion}
+            discussion={currentDiscussion}
             common={common}
             onOpenJoinModal={openJoinModal}
             commonMember={commonMember}

@@ -1,4 +1,5 @@
 import firebase from "@/shared/utils/firebase";
+import { DiscussionMessage } from "./DiscussionMessage";
 import { User } from "./User";
 import { Moderation } from "./shared";
 
@@ -21,6 +22,7 @@ export interface Discussion {
   title: string;
   message: string;
   ownerId: string;
+  owner?: User;
   commonId: string;
   createTime: firebase.firestore.Timestamp;
   lastMessage: firebase.firestore.Timestamp;
@@ -29,6 +31,7 @@ export interface Discussion {
   followers: string[];
   moderation?: Moderation;
   messageCount: number;
+  discussionMessages: DiscussionMessage[];
 
   /**
    * A discussion can be linked to a proposal, if it does - proposalId will exist.

@@ -245,7 +245,7 @@ export function* loadCommonDiscussionList(): Generator {
 
     const loadedDiscussions = discussions.map((d) => {
       const newDiscussion = { ...d };
-      newDiscussion.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
+      newDiscussion.discussionMessages = dMessages.filter((dM) => dM.discussionId === d.id);
       newDiscussion.owner = owners.find((o) => o.uid === d.ownerId);
       return newDiscussion;
     });
@@ -269,8 +269,8 @@ export function* loadDiscussionDetail(
 
     let discussionMessage: DiscussionMessage[];
 
-    if (action.payload.discussionMessage?.length) {
-      discussionMessage = action.payload.discussionMessage;
+    if (action.payload.discussionMessages?.length) {
+      discussionMessage = action.payload.discussionMessages;
     } else {
       discussionMessage = (yield fetchDiscussionsMessages([
         discussion.id,
@@ -283,13 +283,13 @@ export function* loadDiscussionDetail(
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
 
-    const loadedDisscussionMessage = discussionMessage?.map((d) => {
+    const loadedDiscussionMessages = discussionMessage?.map((d) => {
       const newDiscussionMessage = { ...d };
       newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
       return newDiscussionMessage;
     });
 
-    discussion.discussionMessage = loadedDisscussionMessage;
+    discussion.discussionMessages = loadedDiscussionMessages;
 
     yield put(actions.loadDisscussionDetail.success(discussion));
     yield put(stopLoading());
@@ -424,13 +424,10 @@ export function* createDiscussionSaga(
 
     yield put(startLoading());
 
-    const createdDiscussion = (yield createDiscussion(
+    const discussion = (yield createDiscussion(
       action.payload.payload
     )) as Awaited<ReturnType<typeof createDiscussion>>;
-    const discussion: DiscussionWithOwnerInfo = {
-      ...createdDiscussion,
-      owner: user,
-    };
+    discussion.owner = user;
 
     action.payload.callback(discussion);
 

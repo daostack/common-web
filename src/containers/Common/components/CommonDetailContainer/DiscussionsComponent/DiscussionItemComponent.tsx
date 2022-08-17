@@ -79,7 +79,7 @@ export default function DiscussionItemComponent({
         <div className="discussion-count">
           <img src="/icons/discussions.svg" alt="discussions" />
           <div className="count">
-            {discussion.discussionMessage?.length || 0}
+            {discussion.discussionMessages?.length || 0}
           </div>
         </div>
         <div

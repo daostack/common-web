@@ -13,7 +13,6 @@ import {
   Governance,
   Proposal,
   Discussion,
-  DiscussionWithOwnerInfo,
   DiscussionWithHighlightedMessage,
   Payment,
   Subscription,
@@ -152,7 +151,7 @@ export const createDiscussion = createAsyncAction(
 )<
   {
     payload: CreateDiscussionDto;
-    callback: (payload: DiscussionWithOwnerInfo) => void;
+    callback: (payload: Discussion) => void;
   },
   Discussion[],
   Error
