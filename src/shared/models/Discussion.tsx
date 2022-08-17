@@ -1,4 +1,5 @@
 import firebase from "@/shared/utils/firebase";
+import { BaseEntity } from "./BaseEntity";
 import { DiscussionMessage } from "./DiscussionMessage";
 import { User } from "./User";
 import { Moderation } from "./shared";
@@ -17,8 +18,7 @@ export interface DiscussionImage {
   value: string;
 }
 
-export interface Discussion {
-  id: string;
+export interface Discussion extends BaseEntity {
   title: string;
   message: string;
   ownerId: string;
