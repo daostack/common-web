@@ -113,12 +113,17 @@ const App = () => {
     closeNotification();
     dispatch(showNotification(null));
     if (notification?.type === EventTypeState.fundingRequestAccepted) {
-      history.push(
-        ROUTE_PATHS.SUBMIT_INVOICES.replace(
-          ":proposalId",
-          notification.eventObjectId
-        )
-      );
+      const path =
+        notification.additionalInformation === "0"
+          ? ROUTE_PATHS.PROPOSAL_DETAIL.replace(
+              ":id",
+              notification.eventObjectId
+            )
+          : ROUTE_PATHS.SUBMIT_INVOICES.replace(
+              ":proposalId",
+              notification.eventObjectId
+            );
+      history.push(path);
     }
   }, [closeNotification, history, notification, dispatch]);
 
