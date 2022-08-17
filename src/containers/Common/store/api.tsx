@@ -34,7 +34,6 @@ import {
 import firebase from "@/shared/utils/firebase";
 import {
   AddFounderToMembersPayload,
-  AddMessageToProposalDto,
   CreateCommonPayload,
   CreateDiscussionDto,
   DeleteCommon,
@@ -44,7 +43,7 @@ import {
   ImmediateContributionResponse,
   LeaveCommon,
 } from "@/containers/Common/interfaces";
-import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
+import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
   CreateVotePayload,
   UpdateVotePayload,
@@ -308,21 +307,15 @@ export async function createDiscussion(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
-export function addMessageToDiscussion(
-  payload: AddMessageToDiscussionDto | AddMessageToProposalDto
-) {
-  try {
-    return firebase
-      .firestore()
-      .collection(Collection.DiscussionMessage)
-      .doc()
-      .set(payload)
-      .then((value) => {
-        return value;
-      });
-  } catch (e) {
-    console.log("addMessageToDiscussion", e);
-  }
+export async function addMessageToDiscussion(
+  payload: CreateDiscussionMessageDto
+): Promise<DiscussionMessage> {
+  const { data } = await Api.post<DiscussionMessage>(
+    ApiEndpoint.CreateDiscussionMessage,
+    payload
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
 }
 
 export function subscribeToCommonDiscussion(

@@ -21,4 +21,5 @@ export const ApiEndpoint = {
   SendEmail: "/notifications/send-email",
   SeenNotification: "/notifications/seen",
   CreateDiscussion: "/discussions/create",
+  CreateDiscussionMessage: "/discussions/message",
 };

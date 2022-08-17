@@ -57,14 +57,12 @@ const getLinkMetaData = ( //FIXME: need to add an appropriate social images
     case DynamicLinkType.ProposalComment:
       elem = elem as DiscussionMessage;
 
-      return (
-        {
-          link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.ProposalComment}/${elem.id}`,
-          socialTitle: elem.flag ? `${elem.flag} proposal's comment` : 'proposal\'s comment',
-          socialDescription: elem.text || "",
-          socialImageLink: "", //FIXME
-        }
-      );
+      return {
+        link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.ProposalComment}/${elem.id}`,
+        socialTitle: "proposal’s comment",
+        socialDescription: elem.text || "",
+        socialImageLink: "", //FIXME
+      };
     case DynamicLinkType.Discussion:
       elem = elem as Discussion;
 
@@ -79,14 +77,12 @@ const getLinkMetaData = ( //FIXME: need to add an appropriate social images
     case DynamicLinkType.DiscussionMessage:
       elem = elem as DiscussionMessage;
 
-      return (
-        {
-          link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.DiscussionMessage}/${elem.id}`,
-          socialTitle: elem.flag ? `${elem.flag} discussion's comment` : 'discussion\'s comment',
-          socialDescription: elem.text || "",
-          socialImageLink: "", //FIXME
-        }
-      );
+      return {
+        link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.DiscussionMessage}/${elem.id}`,
+        socialTitle: "discussion’s comment",
+        socialDescription: elem.text || "",
+        socialImageLink: "", //FIXME
+      };
     default:
       return null;
   }

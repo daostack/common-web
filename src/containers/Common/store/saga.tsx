@@ -461,24 +461,27 @@ export function* addMessageToDiscussionSaga(
 
     yield addMessageToDiscussion(action.payload.payload);
 
-    yield call(
+    const unsubscribe = (yield call(
       subscribeToMessages,
       action.payload.payload.discussionId,
       async (data) => {
+        unsubscribe();
         const { discussion } = action.payload;
 
-        const updatedDiscussion = {
+        const updatedDiscussion: Discussion = {
           ...discussion,
-          discussionMessage: data.sort(
+          discussionMessages: data.sort(
             (m: DiscussionMessage, mP: DiscussionMessage) =>
               m.createTime?.seconds - mP.createTime?.seconds
           ),
         };
 
-        store.dispatch(actions.loadDisscussionDetail.request(updatedDiscussion));
+        store.dispatch(
+          actions.loadDisscussionDetail.request(updatedDiscussion)
+        );
         store.dispatch(actions.getCommonsList.request());
       }
-    );
+    )) as () => void;
 
     yield put(stopLoading());
   } catch (e) {
@@ -497,25 +500,28 @@ export function* addMessageToProposalSaga(
 
     yield addMessageToDiscussion(action.payload.payload);
 
-    yield call(
+    const unsubscribe = (yield call(
       subscribeToMessages,
       action.payload.payload.discussionId,
       async (data) => {
-        const proposal = { ...action.payload.proposal };
-
-        const updatedProposal = {
-          ...proposal,
-          discussionMessage: data.sort(
+        unsubscribe();
+        const discussion = action.payload.proposal.discussion && {
+          ...action.payload.proposal.discussion,
+          discussionMessages: data.sort(
             (m: DiscussionMessage, mP: DiscussionMessage) =>
               m.createTime?.seconds - mP.createTime?.seconds
           ),
         };
+        const proposal: Proposal = {
+          ...action.payload.proposal,
+          discussion,
+        };
 
-        store.dispatch(actions.loadProposalDetail.request(updatedProposal));
+        store.dispatch(actions.loadProposalDetail.request(proposal));
 
         store.dispatch(actions.getCommonsList.request());
       }
-    );
+    )) as () => void;
 
     yield put(stopLoading());
   } catch (e) {
