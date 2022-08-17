@@ -297,19 +297,15 @@ export function subscribeToCardChange(
     });
 }
 
-export function createDiscussion(payload: CreateDiscussionDto) {
-  try {
-    return firebase
-      .firestore()
-      .collection(Collection.Discussion)
-      .doc()
-      .set(payload)
-      .then((value) => {
-        return value;
-      });
-  } catch (e) {
-    console.log("createDiscussion", e);
-  }
+export async function createDiscussion(
+  payload: CreateDiscussionDto
+): Promise<Discussion> {
+  const { data } = await Api.post<Discussion>(
+    ApiEndpoint.CreateDiscussion,
+    payload
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
 }
 
 export function addMessageToDiscussion(

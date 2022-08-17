@@ -1,4 +1,5 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { isRequestError } from "@/services/Api";
 import PayMeService from "@/services/PayMeService";
 import { ErrorCode } from "@/shared/constants";
@@ -8,6 +9,7 @@ import {
   Common,
   CommonPayment,
   Discussion,
+  DiscussionWithOwnerInfo,
   User,
   DiscussionMessage,
   Proposal,
@@ -412,34 +414,33 @@ export function* createDiscussionSaga(
   action: ReturnType<typeof actions.createDiscussion.request>
 ): Generator {
   try {
+    const user = (yield select(selectUser())) as User | null;
+
+    if (!user) {
+      throw new Error(
+        "Discussion creation is not allowed for non-authorized user"
+      );
+    }
+
     yield put(startLoading());
 
-    yield createDiscussion(action.payload.payload);
+    const createdDiscussion = (yield createDiscussion(
+      action.payload.payload
+    )) as Awaited<ReturnType<typeof createDiscussion>>;
+    const discussion: DiscussionWithOwnerInfo = {
+      ...createdDiscussion,
+      owner: user,
+    };
 
-    const unsubscribe = (yield call(
-      subscribeToCommonDiscussion,
-      action.payload.payload.commonId,
-      async (data) => {
-        unsubscribe();
+    action.payload.callback(discussion);
 
-        const d = data.find(
-          (d: Discussion) => d.title === action.payload.payload.title
-        );
+    yield call(async () => {
+      const ds = await fetchCommonDiscussions(discussion.commonId);
 
-        if (d) {
-          d.owner = store.getState().auth.user;
-          action.payload.callback(d);
-        }
-
-        const ds = await fetchCommonDiscussions(
-          action.payload.payload.commonId
-        );
-
-        store.dispatch(actions.setDiscussion(ds));
-        store.dispatch(actions.loadCommonDiscussionList.request());
-        store.dispatch(actions.getCommonsList.request());
-      }
-    )) as () => void;
+      store.dispatch(actions.setDiscussion(ds));
+      store.dispatch(actions.loadCommonDiscussionList.request());
+      store.dispatch(actions.getCommonsList.request());
+    });
 
     yield put(stopLoading());
   } catch (e) {
@@ -657,7 +658,7 @@ export function* createFundingProposal({
 export function* createSurvey({
   payload,
 }: ReturnType<typeof actions.createSurvey.request>): Generator {
-  try {  
+  try {
     const { commonId } = payload.payload.args;
 
     yield put(startLoading());
@@ -681,7 +682,7 @@ export function* createSurvey({
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createSurvey.failure(error));
-      
+
       if (payload.callback) {
         payload.callback(error);
       }
