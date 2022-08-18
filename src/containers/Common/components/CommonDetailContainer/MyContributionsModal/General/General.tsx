@@ -54,7 +54,7 @@ const General: FC<GeneralProps> = (props) => {
     <div className="general-my-contributions-stage">
       <div className="general-my-contributions-stage__total-wrapper">
         <span className="general-my-contributions-stage__total-text">
-          To this day, I have contributed to this common
+          Your total contributions
         </span>
         <span className="general-my-contributions-stage__total">
           {formatPrice(total, { shouldRemovePrefixFromZero: false })}

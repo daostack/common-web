@@ -5,7 +5,6 @@ import {
 } from "@/shared/components";
 import "./index.scss";
 
-
 interface StageNameProps {
   className?: string;
   name: string;

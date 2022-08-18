@@ -26,7 +26,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
         src="/icons/social-login/account-avatar.svg"
         alt="Avatar"
       />
-      <h4 className="funds-allocation-confirmation__title">Funds Allocation</h4>
+      <h4 className="funds-allocation-confirmation__title">Fund allocation</h4>
       <p className="funds-allocation-confirmation__circle-name">{getPrefix(fund)}{amount}</p>
       <div className="funds-allocation-confirmation__buttons-wrapper">
         <Button

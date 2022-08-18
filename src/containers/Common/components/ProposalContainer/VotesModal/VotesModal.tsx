@@ -67,7 +67,7 @@ const VotesModal: FC<VotesModalProps> = (props) => {
       </ul>
     ) : (
       <p className="proposal-page-votes-modal__no-votes-text">
-        There are no votes for selected outcome
+        There are no votes here
       </p>
     );
 
@@ -86,17 +86,17 @@ const VotesModal: FC<VotesModalProps> = (props) => {
           />
           <Tab
             className="proposal-page-votes-modal__tab"
-            label={`Approved (${approvedVotes.length})`}
+            label={`Support (${approvedVotes.length})`}
             value={VotesModalTab.Approved}
           />
           <Tab
             className="proposal-page-votes-modal__tab"
-            label={`Abstained (${abstainedVotes.length})`}
+            label={`Abstain (${abstainedVotes.length})`}
             value={VotesModalTab.Abstained}
           />
           <Tab
             className="proposal-page-votes-modal__tab"
-            label={`Rejected (${rejectedVotes.length})`}
+            label={`Object (${rejectedVotes.length})`}
             value={VotesModalTab.Rejected}
           />
         </Tabs>

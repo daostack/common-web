@@ -22,24 +22,24 @@ interface ProposalTypeOption extends DropdownOption {
 
 const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
   {
-    text: "Assign Circle",
-    searchText: "Assign Circle",
-    value: ProposalsTypes.ASSIGN_CIRCLE,
-  },
-  {
-    text: "Remove Circle",
-    searchText: "Remove Circle",
-    value: ProposalsTypes.REMOVE_CIRCLE,
-  },
-  {
-    text: "Funds Allocation",
-    searchText: "Funds Allocation",
+    text: "Fund allocation",
+    searchText: "Fund allocation",
     value: ProposalsTypes.FUNDS_ALLOCATION,
   },
   {
     text: "Survey",
     searchText: "Survey",
     value: ProposalsTypes.SURVEY,
+  },
+  {
+    text: "Assign members to circle",
+    searchText: "Assign members to circle",
+    value: ProposalsTypes.ASSIGN_CIRCLE,
+  },
+  {
+    text: "Remove members from circle",
+    searchText: "Remove members from circle",
+    value: ProposalsTypes.REMOVE_CIRCLE,
   },
 ];
 
@@ -131,9 +131,7 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
   return (
     <div className="proposal-type-selection-stage">
       <p className="proposal-type-selection-stage__description">
-        Proposals allow you to make decisions as a group. If you choose to
-        request funding and the proposal is accepted, you will be responsible to
-        follow it through.
+        Proposals let the group to make decisions together.
       </p>
       <Separator className="proposal-type-selection-stage__separator" />
       <div className="proposal-type-selection-stage__form">

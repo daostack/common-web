@@ -78,7 +78,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
         title: `Assign circle proposal for ${getUserName(
           assignCircleData.commonMember.user
         )}`,
-        description: `Request from ${getUserName(user)}`,
+        description: assignCircleData.description,
         images: [],
         links: [],
         files: [],

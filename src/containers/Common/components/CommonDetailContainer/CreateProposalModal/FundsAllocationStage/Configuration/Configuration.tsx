@@ -61,7 +61,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     <div className="funds-allocation-configuration">
       <StageName
         className="funds-allocation-configuration__stage-name"
-        name="Funds Allocation"
+        name="Fund allocation"
         backgroundColor="light-yellow"
         icon={
           <DollarIcon className="funds-allocation-configuration__avatar-icon" />

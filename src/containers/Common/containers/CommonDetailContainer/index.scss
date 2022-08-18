@@ -186,14 +186,6 @@
       .tab-content-wrapper {
         margin-bottom: 1.25rem;
         width: 60%;
-
-        .about-title {
-          font-family: NunitoSans, sans-serif;
-          font-size: $moderate-med;
-          font-weight: bold;
-          color: $blue-text;
-          padding-bottom: 1.25rem;
-        }
       }
 
       &.wallet {
@@ -403,10 +395,6 @@
         .tab-content-wrapper {
           width: unset;
           margin-bottom: 70px;
-
-          .about-title {
-            padding-bottom: 0px;
-          }
         }
 
         .tabs-container {

@@ -170,9 +170,7 @@ export const AddProposalForm = ({
           <div className="common-title">{common.name}</div>
           <div className="add-proposal-title">New proposal</div>
           <div className="add-proposal-description">
-            Proposals allow you to make decisions as a group. If you choose to
-            request funding and the proposal is accepted, you will be
-            responsible to follow it through.
+            Proposals let the group to make decisions together.
           </div>
           <div className="add-proposal-form-wrapper">
             <TextField

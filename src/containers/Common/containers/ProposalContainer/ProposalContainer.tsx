@@ -56,11 +56,11 @@ interface ProposalRouterParams {
 }
 
 const PROPOSAL_TYPE_CAPTION = {
-  [ProposalsTypes.FUNDS_REQUEST]: "Funds Request",
-  [ProposalsTypes.FUNDS_ALLOCATION]: "Funds Allocation",
-  [ProposalsTypes.MEMBER_ADMITTANCE]: "Member Admittance",
-  [ProposalsTypes.ASSIGN_CIRCLE]: "Assign Circle",
-  [ProposalsTypes.REMOVE_CIRCLE]: "Remove Circle",
+  [ProposalsTypes.FUNDS_REQUEST]: "Funds request",
+  [ProposalsTypes.FUNDS_ALLOCATION]: "Fund allocation",
+  [ProposalsTypes.MEMBER_ADMITTANCE]: "Members admittance",
+  [ProposalsTypes.ASSIGN_CIRCLE]: "Assign members to circle",
+  [ProposalsTypes.REMOVE_CIRCLE]: "Remove members from circle",
 };
 
 enum PROPOSAL_MENU_TABS {

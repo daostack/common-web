@@ -77,7 +77,7 @@ const RemoveCircleStage: FC<RemoveCircleStageProps> = (props) => {
         title: `Remove circle proposal for ${getUserName(
           removeCircleData.commonMember.user
         )}`,
-        description: `Request from ${getUserName(user)}`,
+        description: removeCircleData.description,
         images: [],
         links: [],
         files: [],

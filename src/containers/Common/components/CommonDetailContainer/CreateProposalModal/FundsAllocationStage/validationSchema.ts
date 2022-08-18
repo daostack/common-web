@@ -3,10 +3,13 @@ import { formatPrice } from "@/shared/utils";
 import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH } from "./constants";
 
 export const configurationValidationSchema = yup.object().shape({
-  title: yup.string()
+  title: yup
+    .string()
     .max(FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH, "Entered title is too long")
-    .required("Please enter proposal title"),
-  description: yup.string().required("Please enter proposal description"),
+    .required("Please enter a title for the proposal"),
+  description: yup
+    .string()
+    .required("Please enter a description for the proposal"),
   goalOfPayment: yup.string().required("Please enter goal of payment"),
 });
 

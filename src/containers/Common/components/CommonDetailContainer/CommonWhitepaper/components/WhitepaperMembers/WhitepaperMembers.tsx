@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { startCase, lowerCase } from "lodash";
 import { generateCirclesBinaryNumber } from "../../utils";
 import { selectGovernance } from "@/containers/Common/store/selectors";
 import { ProposalsTypes } from "@/shared/constants";
+import { AllowedActions, AllowedProposals } from "@/shared/models";
+import { getTextForProposalType } from "@/shared/utils";
+import { getTextForAction, checkShouldRemoveAction } from "./helpers";
 import "./index.scss";
 
 export default function WhitepaperMembers() {
@@ -26,21 +28,38 @@ export default function WhitepaperMembers() {
   const renderContent = () => {
     const circle = governance?.circles.filter(circle => circle.name === selectedMember?.name)[0];
 
-    const allowedProposals = Object.keys(circle?.allowedProposals || {}).sort().map((proposal, index) => {
-      return (
+    const allowedProposals = Object.keys(circle?.allowedProposals || {})
+      .map((proposalType) =>
+        getTextForProposalType(proposalType as keyof AllowedProposals)
+      )
+      .sort()
+      .map((text, index) => (
         <span key={index} className="whitepaper-members__feature-title">
-          <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
-          {startCase(lowerCase(proposal))}
-        </span>)
-    });
+          <img
+            src="/icons/check.png"
+            className="whitepaper-members__checkmark-icon"
+            alt="checkmark"
+          />
+          {text}
+        </span>
+      ));
 
-    const allowedActions = Object.keys(circle?.allowedActions || {}).sort().map((action, index) => {
-      return (
+    const allowedActions = Object.keys(circle?.allowedActions || {})
+      .filter(
+        (action) => !checkShouldRemoveAction(action as keyof AllowedActions)
+      )
+      .map((action) => getTextForAction(action as keyof AllowedActions))
+      .sort()
+      .map((text, index) => (
         <span key={index} className="whitepaper-members__feature-title">
-          <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
-          {startCase(lowerCase(action))}
-        </span>)
-    })
+          <img
+            src="/icons/check.png"
+            className="whitepaper-members__checkmark-icon"
+            alt="checkmark"
+          />
+          {text}
+        </span>
+      ));
 
     const allowedVotes = Object.keys(governance?.proposals || {}).filter((proposal) => {
       const circleBin = generateCirclesBinaryNumber([selectedMember.index])
@@ -57,20 +76,22 @@ export default function WhitepaperMembers() {
       if (governance?.proposals[proposal]?.global?.weights?.find(({ circles }) => circles & circleBin)) {
         return true
       }
-    }).sort().map((proposalKey, index) => {
+    }).map((proposalType) =>
+      getTextForProposalType(proposalType as keyof AllowedProposals)
+    ).sort().map((proposalKey, index) => {
       return (<span key={index} className="whitepaper-members__feature-title">
         <img src="/icons/check.png" className="whitepaper-members__checkmark-icon" alt="checkmark" />
-        {startCase(lowerCase(proposalKey))}
+        {proposalKey}
       </span>)
     });
 
     return (
       <div className="whitepaper-members__content">
-        <div className="whitepaper-members__sub-title">Allowed Proposals</div>
+        <div className="whitepaper-members__sub-title">Proposal Creation</div>
         {allowedProposals}
         {Boolean(allowedVotes.length) && <div className="whitepaper-members__sub-title">Proposal Voting</div>}
         {allowedVotes}
-        <div className="whitepaper-members__sub-title">Allowed Actions</div>
+        <div className="whitepaper-members__sub-title">Other Actions</div>
         {allowedActions}
       </div>
     )
