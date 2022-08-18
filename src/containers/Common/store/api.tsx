@@ -797,7 +797,9 @@ export const getVote = async (
   return vote?.data() || null;
 };
 
-export async function getDiscussionsByIds(ids: string[]): Promise<Discussion[]> {
+export async function getDiscussionsByIds(initialIds: string[]): Promise<Discussion[]> {
+  const ids = initialIds.filter(Boolean);
+
   if (ids.length === 0) {
     return [];
   }

@@ -211,6 +211,7 @@ export function* getCommonDetail({
     yield put(actions.getCommonDetail.success(common));
     yield put(actions.setDiscussion(discussions));
     yield put(actions.setProposals(proposals));
+    yield put(actions.loadProposalList.request());
     yield put(actions.getGovernance.success(governance));
 
     if (payload.callback) {
