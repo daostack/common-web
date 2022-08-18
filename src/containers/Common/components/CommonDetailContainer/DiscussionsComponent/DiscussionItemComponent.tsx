@@ -44,7 +44,7 @@ export default function DiscussionItemComponent({
         <div className="creator-information">
           <div className="name">{getUserName(discussion.owner)}</div>
           <div className="days-ago">
-            {getDaysAgo(date, discussion.createTime)}
+            {getDaysAgo(date, discussion.createdAt)}
           </div>
         </div>
         <ElementDropdown

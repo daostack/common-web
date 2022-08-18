@@ -90,7 +90,7 @@ export default function DiscussionDetailModal({
                   {getUserName(discussion.owner)}
                 </div>
                 <div className="days-ago">
-                  {getDaysAgo(date, discussion.createTime)}
+                  {getDaysAgo(date, discussion.createdAt)}
                 </div>
               </div>
             </div>

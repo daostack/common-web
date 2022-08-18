@@ -74,7 +74,7 @@ export async function fetchCommonDiscussions(commonId: string) {
 
   return data.sort(
     (proposal: Discussion, prevProposal: Discussion) =>
-      prevProposal.createTime?.seconds - proposal.createTime?.seconds
+      prevProposal.createdAt.seconds - proposal.createdAt.seconds
   );
 }
 
@@ -278,7 +278,7 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
   );
   const data = flatChunk<DiscussionMessage>(discussions).sort(
     (m: DiscussionMessage, mP: DiscussionMessage) =>
-      m.createTime?.seconds - mP.createTime?.seconds
+      m.createdAt.seconds - mP.createdAt.seconds
   );
 
   return data;

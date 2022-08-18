@@ -472,7 +472,7 @@ export function* addMessageToDiscussionSaga(
           ...discussion,
           discussionMessages: data.sort(
             (m: DiscussionMessage, mP: DiscussionMessage) =>
-              m.createTime?.seconds - mP.createTime?.seconds
+              m.createdAt.seconds - mP.createdAt.seconds
           ),
         };
 
@@ -509,7 +509,7 @@ export function* addMessageToProposalSaga(
           ...action.payload.proposal.discussion,
           discussionMessages: data.sort(
             (m: DiscussionMessage, mP: DiscussionMessage) =>
-              m.createTime?.seconds - mP.createTime?.seconds
+              m.createdAt.seconds - mP.createdAt.seconds
           ),
         };
         const proposal: Proposal = {

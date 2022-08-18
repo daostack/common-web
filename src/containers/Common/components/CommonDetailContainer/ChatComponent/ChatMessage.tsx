@@ -32,7 +32,7 @@ export default function ChatMessage(
   }: ChatMessageProps
 ) {
   const [imageError, setImageError] = useState(false);
-  const mDate = new Date(disscussionMessage.createTime.seconds * 1000);
+  const mDate = new Date(disscussionMessage.createdAt.seconds * 1000);
 
   return (
     <li
