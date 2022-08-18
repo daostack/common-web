@@ -67,13 +67,12 @@ const getPaymentContent = (
 ): Content => {
   const isFailedPayment = payment.status === PaymentStatus.Failed;
   const isMonthlyPayment = Boolean(payment.subscriptionId);
+  const amount = subscription?.amount.amount || payment.amount.amount;
 
   return {
     status: isFailedPayment ? "failure" : "success",
     statusText: isFailedPayment ? "Payment failed" : "Payment succeeded",
-    statusDescription: `${formatPrice(
-      subscription?.amount.amount ?? payment.amount.amount
-    )}${isMonthlyPayment ? "/mo" : ""}`,
+    statusDescription:  formatPrice(amount, { bySubscription: isMonthlyPayment }),
     description:
       isMonthlyPayment &&
       subscription &&

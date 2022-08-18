@@ -76,7 +76,7 @@ const General: FC<GeneralProps> = (props) => {
                     new Date(dueDate * 1000),
                     DateFormat.LongHuman
                   )}`}
-                  amount={`${formatPrice(subscription.amount.amount)}/mo`}
+                  amount={formatPrice(subscription.amount.amount, {bySubscription: true})}
                   onClick={goToMonthlyContribution}
                   styles={itemStyles}
                 />
