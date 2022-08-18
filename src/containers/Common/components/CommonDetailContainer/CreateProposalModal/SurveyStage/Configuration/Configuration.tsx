@@ -50,6 +50,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     (values) => {
       onFinish({
         ...initialData,
+        ...values,
         title: values.title,
         description: values.description,
       });
