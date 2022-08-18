@@ -1,22 +1,9 @@
 import firebase from "@/shared/utils/firebase";
 import { BaseEntity } from "./BaseEntity";
 import { DiscussionMessage } from "./DiscussionMessage";
+import { Link } from "./Link";
 import { User } from "./User";
 import { Moderation } from "./shared";
-
-export interface DiscussionFile {
-  /**
-   * The URL of where the file is
-   */
-  value: string;
-}
-
-export interface DiscussionImage {
-  /**
-   * The URL of where the image is
-   */
-  value: string;
-}
 
 export interface Discussion extends BaseEntity {
   title: string;
@@ -25,8 +12,8 @@ export interface Discussion extends BaseEntity {
   owner?: User;
   commonId: string;
   lastMessage: firebase.firestore.Timestamp;
-  files: DiscussionFile[];
-  images: DiscussionImage[];
+  files: Link[];
+  images: Link[];
   followers: string[];
   moderation?: Moderation;
   messageCount: number;

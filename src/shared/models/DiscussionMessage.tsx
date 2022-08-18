@@ -1,5 +1,6 @@
 import { Moderation } from "@/shared/interfaces/Moderation";
 import { BaseEntity } from "./BaseEntity";
+import { Link } from "./Link";
 import { User } from "./User";
 
 export enum DiscussionMessageType {
@@ -10,10 +11,6 @@ export enum DiscussionMessageFlag {
   Clear = "Clear",
   Reported = "Reported",
   Hidden = "Hidden",
-}
-
-export interface DiscussionMessageImage {
-  value: string;
 }
 
 export interface DiscussionMessageTag {
@@ -30,6 +27,6 @@ export interface DiscussionMessage extends BaseEntity {
   ownerAvatar: string;
   moderation?: Moderation;
   parentId?: string;
-  images?: DiscussionMessageImage[];
+  images?: Link[];
   tags?: DiscussionMessageTag[];
 }
