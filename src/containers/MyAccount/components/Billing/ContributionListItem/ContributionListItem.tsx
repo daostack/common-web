@@ -47,7 +47,7 @@ const getSubscriptionContent = (subscription: Subscription): Content => {
             DateFormat.GeneralHuman
           )}`
         : ""
-      : `${formatPrice(subscription.amount.amount)}/mo`,
+      : formatPrice(subscription.amount.amount, { bySubscription: true }),
     description: isCanceled
       ? `Canceled by ${
           subscription.status === SubscriptionStatus.CanceledByUser
