@@ -68,6 +68,7 @@ export async function fetchCommonDiscussions(commonId: string) {
     .firestore()
     .collection(Collection.Discussion)
     .where("commonId", "==", commonId)
+    .where("proposalId", "==", null)
     .get();
   const data = transformFirebaseDataList<Discussion>(commons);
 
