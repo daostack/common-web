@@ -7,6 +7,7 @@ import React, {
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import classNames from "classnames";
+import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
   Loader,
   UserAvatar,
@@ -111,13 +112,11 @@ const ProposalContainer = () => {
   const sendMessage = useCallback(
     (message: string) => {
       if (currentProposal && user && user.uid) {
-        const dateNow = new Date();
-        const payload = {
+        const payload: CreateDiscussionMessageDto = {
           text: message,
-          createTime: dateNow,
           ownerId: user.uid,
           commonId: currentProposal.data.args.commonId,
-          discussionId: currentProposal.id,
+          discussionId: currentProposal.discussionId,
         };
 
         dispatch(addMessageToProposal.request({ payload, proposal: currentProposal }));

@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
-
+import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import { Loader } from "@/shared/components";
 import {
   Common,
@@ -51,10 +51,8 @@ export default function DiscussionDetailModal({
   const sendMessage = useCallback(
     (message: string) => {
       if (discussion && user && user.uid) {
-        const d = new Date();
-        const payload = {
+        const payload: CreateDiscussionMessageDto = {
           text: message,
-          createTime: d,
           ownerId: user.uid,
           commonId: discussion.commonId,
           discussionId: discussion.id,
