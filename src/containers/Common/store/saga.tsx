@@ -62,6 +62,7 @@ import {
   getCommonMembers as getCommonMembersApi,
   getUserCommons as getUserCommonsApi,
   getDiscussionsByIds,
+  fetchDiscussionById,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -364,6 +365,16 @@ export function* loadProposalDetail(
       return newDiscussionMessage;
     });
 
+    if (!proposal.discussion) {
+      const discussion = (yield fetchDiscussionById(
+        proposal.discussionId
+      )) as Awaited<ReturnType<typeof fetchDiscussionById>>;
+
+      if (discussion) {
+        proposal.discussion = discussion;
+      }
+    }
+
     if (proposal.discussion) {
       proposal.discussion.discussionMessages = loadedDisscussionMessage;
     }
@@ -498,31 +509,22 @@ export function* addMessageToProposalSaga(
   try {
     yield put(startLoading());
 
-    yield addMessageToDiscussion(action.payload.payload);
+    const discussionMessage = (yield addMessageToDiscussion(
+      action.payload.payload
+    )) as Awaited<ReturnType<typeof addMessageToDiscussion>>;
+    const discussion = action.payload.proposal.discussion && {
+      ...action.payload.proposal.discussion,
+      discussionMessages: [
+        discussionMessage,
+        ...action.payload.proposal.discussion.discussionMessages,
+      ],
+    };
+    const proposal: Proposal = {
+      ...action.payload.proposal,
+      discussion,
+    };
 
-    const unsubscribe = (yield call(
-      subscribeToMessages,
-      action.payload.payload.discussionId,
-      async (data) => {
-        unsubscribe();
-        const discussion = action.payload.proposal.discussion && {
-          ...action.payload.proposal.discussion,
-          discussionMessages: data.sort(
-            (m: DiscussionMessage, mP: DiscussionMessage) =>
-              m.createdAt.seconds - mP.createdAt.seconds
-          ),
-        };
-        const proposal: Proposal = {
-          ...action.payload.proposal,
-          discussion,
-        };
-
-        store.dispatch(actions.loadProposalDetail.request(proposal));
-
-        store.dispatch(actions.getCommonsList.request());
-      }
-    )) as () => void;
-
+    yield put(actions.loadProposalDetail.request(proposal));
     yield put(stopLoading());
   } catch (e) {
     if (isError(e)) {

@@ -119,7 +119,9 @@ export async function fetchProposalById(proposalId: string) {
   return data;
 }
 
-export async function fetchDiscussionById(discussionId: string) {
+export async function fetchDiscussionById(
+  discussionId: string
+): Promise<Discussion | null> {
   const discussion = await firebase
     .firestore()
     .collection(Collection.Discussion)
