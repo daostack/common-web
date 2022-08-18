@@ -325,10 +325,10 @@ export const makeImmediateContribution = createAsyncAction(
   Error
 >();
 
-export const makeMonthlyContribution = createAsyncAction(
-  CommonsActionTypes.MAKE_MONTHLY_CONTRIBUTION,
-  CommonsActionTypes.MAKE_MONTHLY_CONTRIBUTION_SUCCESS,
-  CommonsActionTypes.MAKE_MONTHLY_CONTRIBUTION_FAILURE
+export const createSubscription = createAsyncAction(
+  CommonsActionTypes.CREATE_SUBSCRIPTION,
+  CommonsActionTypes.CREATE_SUBSCRIPTION_SUCCESS,
+  CommonsActionTypes.CREATE_SUBSCRIPTION_FAILURE
 )<
   PayloadWithCallback<
     SubscriptionData,

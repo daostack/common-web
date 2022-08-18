@@ -3,44 +3,40 @@ import { useDispatch } from "react-redux";
 import {
   SubscriptionData,
   SubscriptionPayment,
-  isSubscriptionPayment,
 } from "@/containers/Common/interfaces";
-import { makeMonthlyContribution as makeMonthlyContributionAction } from "@/containers/Common/store/actions";
+import { createSubscription as createSubscriptionAction } from "@/containers/Common/store/actions";
 import { subscribeToSubscription } from "@/containers/Common/store/api";
 import { Subscription, SubscriptionStatus } from "@/shared/models";
 
 interface State {
   isPaymentLoading: boolean;
   isReadyToSubscribe: boolean;
-  monthlyPayment: SubscriptionPayment | null;
-  payment: Subscription | null;
+  subscription: Subscription | null;
   errorText: string | null;
 }
 
 interface Return extends Omit<State, "isReadyToSubscribe"> {
-  makeMonthlyContribution: (data: SubscriptionData) => void;
-  resetMonthlyContribution: () => void;
+  createSubscription: (data: SubscriptionData) => void;
+  resetSubscription: () => void;
   onReadyToSubscribe: () => void;
 }
 
 const INITIAL_STATE: State = {
-  monthlyPayment: null,
   isPaymentLoading: false,
   isReadyToSubscribe: false,
-  payment: null,
+  subscription: null,
   errorText: null,
 };
 
-export const useMonthlyContribution = (): Return => {
+export const useSubscription = (): Return => {
   const dispatch = useDispatch();
   const [{ isReadyToSubscribe, ...state }, setState] =
     useState<State>(INITIAL_STATE);
 
-  const makeMonthlyContribution = useCallback(
+  const createSubscription = useCallback(
     async (data: SubscriptionData) => {
       if (
-        state.monthlyPayment ||
-        state.payment ||
+        state.subscription ||
         state.isPaymentLoading ||
         !data.amount
       ) {
@@ -53,21 +49,28 @@ export const useMonthlyContribution = (): Return => {
       }));
 
       dispatch(
-        makeMonthlyContributionAction.request({
+        createSubscriptionAction.request({
           payload: data,
           callback: (error, payment) => {
             const stateForUpdate: Partial<State> = {
               isPaymentLoading: false,
             };
 
+            console.log('useSubscription', payment)
+
             if (error || !payment) {
               stateForUpdate.errorText =
                 error?.message || "Something went wrong";
-            } else if (!isSubscriptionPayment(payment)) {
+            } else {
+              stateForUpdate.subscription = payment;
+            }
+
+
+            /*else if (!isSubscriptionPayment(payment)) {
               stateForUpdate.payment = payment;
             } else {
               stateForUpdate.monthlyPayment = payment;
-            }
+            }*/
 
             setState((nextState) => ({
               ...nextState,
@@ -80,7 +83,7 @@ export const useMonthlyContribution = (): Return => {
     [dispatch, state]
   );
 
-  const resetMonthlyContribution = useCallback(() => {
+  const resetSubscription = useCallback(() => {
     setState(INITIAL_STATE);
   }, []);
 
@@ -92,13 +95,13 @@ export const useMonthlyContribution = (): Return => {
   }, []);
 
   useEffect(() => {
-    if (!isReadyToSubscribe || !state.monthlyPayment || state.payment) {
+    if (!isReadyToSubscribe || !state.subscription) {
       return;
     }
 
     try {
       return subscribeToSubscription(
-        state.monthlyPayment.paymentId,
+        state.subscription.id,
         (payment) => {
           if (payment?.status === SubscriptionStatus.Active) {
             setState((nextState) => ({
@@ -118,12 +121,12 @@ export const useMonthlyContribution = (): Return => {
     } catch (error) {
       console.error("Error during subscribing to payment status change");
     }
-  }, [isReadyToSubscribe, state.monthlyPayment, state.payment]);
+  }, [isReadyToSubscribe, state.subscription]);
 
   return {
     ...state,
-    makeMonthlyContribution,
-    resetMonthlyContribution,
+    createSubscription,
+    resetSubscription,
     onReadyToSubscribe,
   };
 };

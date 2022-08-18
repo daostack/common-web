@@ -19,7 +19,7 @@ import {
   getUserSubscriptionToCommon,
 } from "../../../store/actions";
 import { ChangeMonthlyContribution } from "./ChangeMonthlyContribution";
-import { CreateMonthlyContribution } from "./CreateMonthlyContribution";
+import { CreateSubscription } from "./CreateSubscription";
 import { Error } from "./Error";
 import { General } from "./General";
 import { MonthlyContributionCharges } from "./MonthlyContributionCharges";
@@ -287,7 +287,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             goBack={goBackForStages || goToGeneralStage}
           />
         ) : (
-          <CreateMonthlyContribution
+          <CreateSubscription
             common={common}
             onFinish={handleCreateMonthlyContributionFinish}
             goBack={goBackForStages || goToGeneralStage}

@@ -4,11 +4,12 @@ import { IFrame, Loader, Separator } from "@/shared/components";
 import { ContributionType } from "@/shared/constants";
 import { Common, Subscription, SubscriptionStatus } from "@/shared/models";
 import {
-  isSubscriptionPayment,
+  //isSubscriptionPayment,
   SubscriptionPayment,
 } from "../../../../../interfaces";
-import { makeMonthlyContribution } from "../../../../../store/actions";
+import { createSubscription } from "../../../../../store/actions";
 import { subscribeToSubscription } from "../../../../../store/api";
+import { useSubscription } from "@/shared/hooks/useCases";
 import "./index.scss";
 
 interface State {
@@ -42,9 +43,16 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
   const { id: commonId } = common;
   const dispatch = useDispatch();
   const [
-    { subscription, isPaymentLoading, isPaymentIframeLoaded },
+    {/* subscription, isPaymentLoading, */isPaymentIframeLoaded },
     setState,
   ] = useState<State>(INITIAL_STATE);
+
+  const {
+    isPaymentLoading,
+    onReadyToSubscribe,
+    subscription,
+    errorText
+  } = useSubscription();
 
   const handleIframeLoad = () => {
     setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
@@ -62,7 +70,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
       }));
 
       dispatch(
-        makeMonthlyContribution.request({
+        createSubscription.request({
           payload: {
             commonId,
             contributionType: ContributionType.Monthly,
@@ -74,10 +82,13 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
               onError(error?.message || "Something went wrong");
               return;
             }
-            if (!isSubscriptionPayment(payment)) {
-              onFinish(payment);
+            console.log('Payment payment', payment)
+            /*if (!isSubscriptionPayment(payment)) {
+              
               return;
-            }
+            }*/
+
+            onFinish(payment);
 
             setState((nextState) => ({
               ...nextState,
@@ -105,7 +116,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
 
 
     try {
-      return subscribeToSubscription(subscription.paymentId, (payment) => {
+      return subscribeToSubscription(subscription.id, (payment) => {
 
         if (payment?.status === SubscriptionStatus.Active) {
           onFinish(payment);
@@ -135,14 +146,14 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
         {!isPaymentIframeLoaded && (
           <Loader className="monthly-payment-my-contributions-stage__loader" />
         )}
-        {subscription && (
+        {/*subscription && (
           <IFrame
             src={subscription.link}
             frameBorder="0"
             title="Payment Details"
             onLoad={handleIframeLoad}
           />
-        )}
+        )*/}
       </div>
     </section>
   );

@@ -10,21 +10,21 @@ import { useMyContributionsContext } from "../context";
 import { AmountSelection } from "./AmountSelection";
 import { Payment as PaymentStep } from "./Payment";
 import { Success } from "./Success";
-import { CreateMonthlyContributionStep } from "./constants";
+import { CreateSubscriptionStep } from "./constants";
 import {
-  useMonthlyContribution,
+  useSubscription,
   useUserCards,
 } from "@/shared/hooks/useCases";
 import "./index.scss";
 
-interface CreateMonthlyContributionProps {
+interface CreateSubscriptionProps {
   common: Common;
   onFinish: (subscription: Subscription) => void;
   goBack: () => void;
   onLoadingToggle?: (isLoading: boolean) => void;
 }
 
-const CreateMonthlyContribution: FC<CreateMonthlyContributionProps> = (
+const CreateSubscription: FC<CreateSubscriptionProps> = (
   props
 ) => {
   const { common, onFinish, goBack, onLoadingToggle } =
@@ -32,8 +32,8 @@ const CreateMonthlyContribution: FC<CreateMonthlyContributionProps> = (
   const { setTitle, setOnGoBack, onError, setShouldShowClosePrompt } =
     useMyContributionsContext();
   const dispatch = useDispatch();
-  const [step, setStep] = useState<CreateMonthlyContributionStep>(
-    CreateMonthlyContributionStep.AmountSelection
+  const [step, setStep] = useState<CreateSubscriptionStep>(
+    CreateSubscriptionStep.AmountSelection
   );
   const [shouldShowGoBackButton, setShouldShowGoBackButton] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,11 +46,11 @@ const CreateMonthlyContribution: FC<CreateMonthlyContributionProps> = (
 
   const handleAmountSelect = (amount: number) => {
     setContributionAmount(amount);
-    setStep(CreateMonthlyContributionStep.Payment);
+    setStep(CreateSubscriptionStep.Payment);
   };
 
   const handleGoBack = useCallback(() => {
-    if (step === CreateMonthlyContributionStep.AmountSelection) {
+    if (step === CreateSubscriptionStep.AmountSelection) {
       goBack();
     } else {
       setStep((nextStep) => nextStep - 1);
@@ -96,7 +96,7 @@ const CreateMonthlyContribution: FC<CreateMonthlyContributionProps> = (
     }
 
     switch (step) {
-      case CreateMonthlyContributionStep.AmountSelection:
+      case CreateSubscriptionStep.AmountSelection:
         return (
           <AmountSelection
             contributionAmount={contributionAmount}
@@ -104,7 +104,7 @@ const CreateMonthlyContribution: FC<CreateMonthlyContributionProps> = (
             setShouldShowGoBackButton={setShouldShowGoBackButton}
           />
         );
-      case CreateMonthlyContributionStep.Payment:
+      case CreateSubscriptionStep.Payment:
         return typeof contributionAmount === "number" ? (
           <PaymentStep
             common={common}
@@ -138,4 +138,4 @@ const CreateMonthlyContribution: FC<CreateMonthlyContributionProps> = (
   );
 };
 
-export default CreateMonthlyContribution;
+export default CreateSubscription;

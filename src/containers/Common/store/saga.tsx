@@ -39,7 +39,7 @@ import {
   createVote as createVoteApi,
   updateVote as updateVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
-  makeMonthlyContribution as makeMonthlyContributionApi,
+  createSubscription as createSubscriptionApi,
   addBankDetails as addBankDetailsApi,
   updateBankDetails as updateBankDetailsApi,
   deleteBankDetails as deleteBankDetailsApi,
@@ -990,20 +990,20 @@ export function* makeImmediateContribution(
   }
 }
 
-export function* makeMonthlyContribution(
-  action: ReturnType<typeof actions.makeMonthlyContribution.request>
+export function* createSubscription(
+  action: ReturnType<typeof actions.createSubscription.request>
 ): Generator {
   try {
     const response = (yield call(
-      makeMonthlyContributionApi,
+      createSubscriptionApi,
       action.payload.payload
     )) as SubscriptionResponse;
 
-    yield put(actions.makeMonthlyContribution.success(response));
+    yield put(actions.createSubscription.success(response));
     action.payload.callback(null, response);
   } catch (error) {
     if (isError(error)) {
-      yield put(actions.makeMonthlyContribution.failure(error));
+      yield put(actions.createSubscription.failure(error));
       action.payload.callback(error);
     }
   }
@@ -1325,8 +1325,8 @@ export function* commonsSaga() {
     makeImmediateContribution
   );
   yield takeLatest(
-    actions.makeMonthlyContribution.request,
-    makeMonthlyContribution
+    actions.createSubscription.request,
+    createSubscription
   );
   yield takeLatest(actions.createBuyerTokenPage.request, createBuyerTokenPage);
   yield takeLatest(actions.getBankDetails.request, getBankDetails);

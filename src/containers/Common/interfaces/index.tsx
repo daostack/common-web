@@ -6,7 +6,7 @@ export * from "./CreateDiscussionDto";
 export * from "./CreateProposalPayload";
 export * from "./AddMessageToDiscussionDto";
 export * from "./ImmediateContribution";
-export * from "./MonthlyContribution";
+export * from "./Subscription";
 export * from "./PaymentPayload";
 export * from "./LeaveCommon";
 export * from "./DeleteCommon";

@@ -462,11 +462,11 @@ export async function makeImmediateContribution(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
-export async function makeMonthlyContribution( /////
+export async function createSubscription(
   requestData: SubscriptionData
 ): Promise<SubscriptionResponse> {
   const { data } = await Api.post<SubscriptionResponse>(
-    ApiEndpoint.MakeMonthlyContribution,
+    ApiEndpoint.CreateSubscription,
     {
       ...requestData,
       saveCard: requestData.saveCard ?? true,
