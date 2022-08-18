@@ -24,7 +24,6 @@ export interface Discussion extends BaseEntity {
   ownerId: string;
   owner?: User;
   commonId: string;
-  createTime: firebase.firestore.Timestamp;
   lastMessage: firebase.firestore.Timestamp;
   files: DiscussionFile[];
   images: DiscussionImage[];
