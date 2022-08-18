@@ -30,7 +30,6 @@ import {
   fetchDiscussionsMessages,
   fetchUserProposals,
   createDiscussion,
-  subscribeToCommonDiscussion,
   addMessageToDiscussion,
   subscribeToMessages,
   subscribeToCommonProposal,
