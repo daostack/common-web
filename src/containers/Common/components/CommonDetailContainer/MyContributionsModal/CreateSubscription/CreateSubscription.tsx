@@ -11,10 +11,6 @@ import { AmountSelection } from "./AmountSelection";
 import { Payment as PaymentStep } from "./Payment";
 import { Success } from "./Success";
 import { CreateSubscriptionStep } from "./constants";
-import {
-  useSubscription,
-  useUserCards,
-} from "@/shared/hooks/useCases";
 import "./index.scss";
 
 interface CreateSubscriptionProps {

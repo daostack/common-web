@@ -4,12 +4,11 @@ import { IFrame, Loader, Separator } from "@/shared/components";
 import { ContributionType } from "@/shared/constants";
 import { Common, Subscription, SubscriptionStatus } from "@/shared/models";
 import {
-  //isSubscriptionPayment,
+  isSubscriptionPayment,
   SubscriptionPayment,
 } from "../../../../../interfaces";
 import { createSubscription } from "../../../../../store/actions";
 import { subscribeToSubscription } from "../../../../../store/api";
-import { useSubscription } from "@/shared/hooks/useCases";
 import "./index.scss";
 
 interface State {
@@ -43,16 +42,16 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
   const { id: commonId } = common;
   const dispatch = useDispatch();
   const [
-    {/* subscription, isPaymentLoading, */isPaymentIframeLoaded },
+    { subscription, isPaymentLoading, isPaymentIframeLoaded },
     setState,
   ] = useState<State>(INITIAL_STATE);
 
-  const {
+  /*const {
     isPaymentLoading,
     onReadyToSubscribe,
     subscription,
     errorText
-  } = useSubscription();
+  } = useSubscription();*/
 
   const handleIframeLoad = () => {
     setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
@@ -83,13 +82,10 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
               return;
             }
             console.log('Payment payment', payment)
-            /*if (!isSubscriptionPayment(payment)) {
-              
+            if (!isSubscriptionPayment(payment)) {
+              onFinish(payment);
               return;
-            }*/
-
-            onFinish(payment);
-
+            }
             setState((nextState) => ({
               ...nextState,
               payment,
@@ -116,7 +112,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
 
 
     try {
-      return subscribeToSubscription(subscription.id, (payment) => {
+      return subscribeToSubscription(subscription.paymentId, (payment) => {
 
         if (payment?.status === SubscriptionStatus.Active) {
           onFinish(payment);
@@ -146,14 +142,14 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
         {!isPaymentIframeLoaded && (
           <Loader className="monthly-payment-my-contributions-stage__loader" />
         )}
-        {/*subscription && (
+        {subscription && (
           <IFrame
             src={subscription.link}
             frameBorder="0"
             title="Payment Details"
             onLoad={handleIframeLoad}
           />
-        )*/}
+        )}
       </div>
     </section>
   );

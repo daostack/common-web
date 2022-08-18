@@ -13,4 +13,11 @@ export interface SubscriptionPayment {
   paymentId: string;
 }
 
-export type SubscriptionResponse = Subscription;
+export type SubscriptionResponse = 
+	| SubscriptionPayment
+	| Subscription;
+
+export const isSubscriptionPayment = (
+  response: SubscriptionResponse
+): response is SubscriptionPayment =>
+  Boolean((response as SubscriptionPayment).link);
