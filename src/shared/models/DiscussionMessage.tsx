@@ -1,5 +1,5 @@
 import { Moderation } from "@/shared/interfaces/Moderation";
-import firebase from "@/shared/utils/firebase";
+import { BaseEntity } from "./BaseEntity";
 import { User } from "./User";
 
 export enum DiscussionMessageType {
@@ -20,15 +20,13 @@ export interface DiscussionMessageTag {
   value: string;
 }
 
-export interface DiscussionMessage {
-  id: string;
+export interface DiscussionMessage extends BaseEntity {
   discussionId: string;
   commonId: string;
   ownerId: string;
   ownerName: string;
   owner?: User;
   text: string;
-  createTime: firebase.firestore.Timestamp;
   ownerAvatar: string;
   moderation?: Moderation;
   parentId?: string;
