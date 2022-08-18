@@ -76,6 +76,7 @@ const AddDiscussionComponent = ({
             ...payload,
             ownerId: uid,
             commonId: commonId,
+            circleVisibility: [],
           },
           callback: (discussion: Discussion) => {
             onSucess(discussion);

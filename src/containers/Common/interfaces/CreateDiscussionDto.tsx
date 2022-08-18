@@ -5,5 +5,5 @@ export interface CreateDiscussionDto {
   commonId: string;
   files?: { value: string }[];
   images?: { value: string }[];
-  circleVisibility?: string[];
+  circleVisibility: string[];
 }
