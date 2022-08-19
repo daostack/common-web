@@ -25,7 +25,7 @@ import {
   CreateDiscussionDto,
   CreateCommonPayload,
   CreateGovernancePayload,
-  AddMessageToDiscussionDto,
+  CreateDiscussionMessageDto,
   DeleteCommon,
   LeaveCommon,
   CreateProposal,
@@ -149,7 +149,10 @@ export const createDiscussion = createAsyncAction(
   CommonsActionTypes.CREATE_DISCUSSION_SUCCESS,
   CommonsActionTypes.CREATE_DISCUSSION_FAILURE
 )<
-  { payload: CreateDiscussionDto; callback: (payload: Discussion) => void },
+  {
+    payload: CreateDiscussionDto;
+    callback: (payload: Discussion) => void;
+  },
   Discussion[],
   Error
 >();
@@ -160,7 +163,7 @@ export const addMessageToDiscussion = createAsyncAction(
   CommonsActionTypes.ADD_MESSAGE_TO_DISCUSSION_FAILURE
 )<
   {
-    payload: AddMessageToDiscussionDto;
+    payload: CreateDiscussionMessageDto;
     discussion: Discussion;
   },
   Discussion,
@@ -249,7 +252,7 @@ export const addMessageToProposal = createAsyncAction(
   CommonsActionTypes.ADD_MESSAGE_TO_PROPOSAL_FAILURE
 )<
   {
-    payload: AddMessageToDiscussionDto;
+    payload: CreateDiscussionMessageDto;
     proposal: Proposal;
   },
   Proposal,

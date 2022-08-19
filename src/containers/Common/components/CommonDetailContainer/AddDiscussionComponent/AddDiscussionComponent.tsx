@@ -33,6 +33,16 @@ const validationSchema = Yup.object({
     .max(MAX_TITLE_LENGTH, "Title too long"),
 });
 
+interface FormValues {
+  title: string;
+  message: string;
+}
+
+const INITIAL_VALUES: FormValues = {
+  title: "",
+  message: "",
+};
+
 const AddDiscussionComponent = ({
   isShowing,
   onClose,
@@ -42,10 +52,6 @@ const AddDiscussionComponent = ({
 }: AddDiscussionComponentProps) => {
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
-  });
-  const [formValues] = useState({
-    title: "",
-    message: "",
   });
 
   const dispatch = useDispatch();
@@ -62,16 +68,15 @@ const AddDiscussionComponent = ({
   }, [isShowing, disableZoom, resetZoom]);
 
   const addDiscussion = useCallback(
-    (payload) => {
+    (payload: FormValues) => {
       setPending(true);
       dispatch(
         createDiscussion.request({
           payload: {
             ...payload,
-            createTime: new Date(),
-            lastMessage: new Date(),
             ownerId: uid,
             commonId: commonId,
+            circleVisibility: [],
           },
           callback: (discussion: Discussion) => {
             onSucess(discussion);
@@ -98,7 +103,7 @@ const AddDiscussionComponent = ({
           setSubmitting(false);
           addDiscussion(values);
         }}
-        initialValues={formValues}
+        initialValues={INITIAL_VALUES}
         validateOnChange={true}
         validateOnBlur={false}
         validateOnMount={false}

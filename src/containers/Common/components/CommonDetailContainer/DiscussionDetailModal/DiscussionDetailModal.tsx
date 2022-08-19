@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
-
+import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import { Loader } from "@/shared/components";
 import {
   Common,
@@ -19,7 +19,7 @@ import { ScreenSize, ChatType } from "@/shared/constants";
 import "./index.scss";
 
 interface DiscussionDetailModalProps {
-  disscussion: Discussion | DiscussionWithHighlightedMessage | null;
+  discussion: Discussion | DiscussionWithHighlightedMessage | null;
   common: Common;
   onOpenJoinModal: () => void;
   commonMember: CommonMember | null;
@@ -28,7 +28,7 @@ interface DiscussionDetailModalProps {
 }
 
 export default function DiscussionDetailModal({
-  disscussion,
+  discussion,
   common,
   onOpenJoinModal,
   commonMember,
@@ -42,33 +42,31 @@ export default function DiscussionDetailModal({
   const [expanded, setExpanded] = useState(true);
   const highlightedMessageId = useMemo(
     () =>
-      isDiscussionWithHighlightedMessage(disscussion)
-        ? disscussion.highlightedMessageId
+      isDiscussionWithHighlightedMessage(discussion)
+        ? discussion.highlightedMessageId
         : null,
-    [disscussion]
+    [discussion]
   );
 
   const sendMessage = useCallback(
     (message: string) => {
-      if (disscussion && user && user.uid) {
-        const d = new Date();
-        const payload = {
+      if (discussion && user && user.uid) {
+        const payload: CreateDiscussionMessageDto = {
           text: message,
-          createTime: d,
           ownerId: user.uid,
-          commonId: disscussion.commonId,
-          discussionId: disscussion.id,
+          commonId: discussion.commonId,
+          discussionId: discussion.id,
         };
 
         dispatch(
-          addMessageToDiscussion.request({ payload, discussion: disscussion })
+          addMessageToDiscussion.request({ payload, discussion: discussion })
         );
       }
     },
-    [dispatch, user, disscussion]
+    [dispatch, user, discussion]
   );
 
-  return !disscussion ? (
+  return !discussion ? (
     <Loader />
   ) : (
     <div className="discussion-detail-modal-wrapper">
@@ -78,8 +76,8 @@ export default function DiscussionDetailModal({
             <div className="owner-wrapper">
               <div className="owner-icon-wrapper">
                 <img
-                  src={disscussion.owner?.photoURL}
-                  alt={getUserName(disscussion.owner)}
+                  src={discussion.owner?.photoURL}
+                  alt={getUserName(discussion.owner)}
                   onError={(event: any) =>
                     (event.target.src = "/icons/default_user.svg")
                   }
@@ -87,24 +85,24 @@ export default function DiscussionDetailModal({
               </div>
               <div className="owner-name-and-days-container">
                 <div className="owner-name">
-                  {getUserName(disscussion.owner)}
+                  {getUserName(discussion.owner)}
                 </div>
                 <div className="days-ago">
-                  {getDaysAgo(date, disscussion.createTime)}
+                  {getDaysAgo(date, discussion.createdAt)}
                 </div>
               </div>
             </div>
           )}
           <div className="discussion-information-wrapper">
-            <div className="discussion-name" title={disscussion.title}>
-              {disscussion.title}
+            <div className="discussion-name" title={discussion.title}>
+              {discussion.title}
             </div>
           </div>
         </div>
 
         {expanded && (
           <div className="description-container">
-            <p className="description">{disscussion.message}</p>
+            <p className="description">{discussion.message}</p>
           </div>
         )}
 
@@ -125,7 +123,7 @@ export default function DiscussionDetailModal({
       <div className="chat-container">
         <ChatComponent
           common={common}
-          discussionMessage={disscussion.discussionMessage || []}
+          discussionMessages={discussion.discussionMessages || []}
           type={ChatType.DiscussionMessages}
           highlightedMessageId={highlightedMessageId}
           onOpenJoinModal={onOpenJoinModal}

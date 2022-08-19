@@ -94,7 +94,7 @@ const FundingProposalListItem: FC<ProposalListItem> = (
             src="/icons/discussions.svg"
             alt="discussions"
           />
-          <div className="count">{proposal.discussionMessage?.length || 0}</div>
+          <div className="count">{proposal.discussion?.messageCount || 0}</div>
         </div>
         <div
           className="proposal-item__footer-viewall"

@@ -4,7 +4,7 @@ export * from "./CreateGovernancePayload";
 export * from "./CreateCommonPayload";
 export * from "./CreateDiscussionDto";
 export * from "./CreateProposalPayload";
-export * from "./AddMessageToDiscussionDto";
+export * from "./CreateDiscussionMessageDto";
 export * from "./ImmediateContribution";
 export * from "./PaymentPayload";
 export * from "./LeaveCommon";

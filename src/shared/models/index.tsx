@@ -9,6 +9,7 @@ export * from "./DiscussionMessage";
 export * from "./Discussion";
 export * from "./Gender";
 export * from "./Invoices";
+export * from "./Link";
 export * from "./Payment";
 export * from "./Subscription";
 export * from "./Votes";

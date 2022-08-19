@@ -362,9 +362,6 @@ export function getLastActivity(data: Common) {
     if (d.updatedAt) {
       activities.push(getDateValue(d.updatedAt));
     }
-    if (d.createTime) {
-      activities.push(getDateValue(d.createTime));
-    }
   });
   proposals?.forEach((d) => {
     if (d.createdAt) {
@@ -375,9 +372,7 @@ export function getLastActivity(data: Common) {
     }
   });
   messages?.forEach((d) => {
-    if (d.createTime) {
-      activities.push(getDateValue(d.createTime));
-    }
+    activities.push(getDateValue(d.createdAt));
   });
 
   const lastActivity = Math.max.apply(null, activities);

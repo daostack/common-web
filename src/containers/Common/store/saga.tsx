@@ -1,4 +1,5 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { isRequestError } from "@/services/Api";
 import PayMeService from "@/services/PayMeService";
 import { ErrorCode } from "@/shared/constants";
@@ -8,6 +9,7 @@ import {
   Common,
   CommonPayment,
   Discussion,
+  DiscussionWithOwnerInfo,
   User,
   DiscussionMessage,
   Proposal,
@@ -28,7 +30,6 @@ import {
   fetchDiscussionsMessages,
   fetchUserProposals,
   createDiscussion,
-  subscribeToCommonDiscussion,
   addMessageToDiscussion,
   subscribeToMessages,
   subscribeToCommonProposal,
@@ -59,6 +60,8 @@ import {
   getCommonMember as getCommonMemberApi,
   getCommonMembers as getCommonMembersApi,
   getUserCommons as getUserCommonsApi,
+  getDiscussionsByIds,
+  fetchDiscussionById,
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -208,6 +211,7 @@ export function* getCommonDetail({
     yield put(actions.getCommonDetail.success(common));
     yield put(actions.setDiscussion(discussions));
     yield put(actions.setProposals(proposals));
+    yield put(actions.loadProposalList.request());
     yield put(actions.getGovernance.success(governance));
 
     if (payload.callback) {
@@ -243,7 +247,7 @@ export function* loadCommonDiscussionList(): Generator {
 
     const loadedDiscussions = discussions.map((d) => {
       const newDiscussion = { ...d };
-      newDiscussion.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
+      newDiscussion.discussionMessages = dMessages.filter((dM) => dM.discussionId === d.id);
       newDiscussion.owner = owners.find((o) => o.uid === d.ownerId);
       return newDiscussion;
     });
@@ -267,8 +271,8 @@ export function* loadDiscussionDetail(
 
     let discussionMessage: DiscussionMessage[];
 
-    if (action.payload.discussionMessage?.length) {
-      discussionMessage = action.payload.discussionMessage;
+    if (action.payload.discussionMessages?.length) {
+      discussionMessage = action.payload.discussionMessages;
     } else {
       discussionMessage = (yield fetchDiscussionsMessages([
         discussion.id,
@@ -281,13 +285,13 @@ export function* loadDiscussionDetail(
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
 
-    const loadedDisscussionMessage = discussionMessage?.map((d) => {
+    const loadedDiscussionMessages = discussionMessage?.map((d) => {
       const newDiscussionMessage = { ...d };
       newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
       return newDiscussionMessage;
     });
 
-    discussion.discussionMessage = loadedDisscussionMessage;
+    discussion.discussionMessages = loadedDiscussionMessages;
 
     yield put(actions.loadDisscussionDetail.success(discussion));
     yield put(stopLoading());
@@ -310,17 +314,21 @@ export function* loadProposalList(): Generator {
     const ownerIds = Array.from(
       new Set(proposals.map((d) => d.data.args.proposerId))
     );
-    const discussions_ids = proposals.map((d) => d.id);
+    const discussionIds = proposals.map(({ discussionId }) => discussionId);
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
-    const dMessages = (yield fetchDiscussionsMessages(
-      discussions_ids
-    )) as DiscussionMessage[];
+    const discussions = (yield getDiscussionsByIds(discussionIds)) as Awaited<
+      ReturnType<typeof getDiscussionsByIds>
+    >;
 
-    const loadedProposals = proposals.map((d) => {
-      const newProposal = { ...d };
-      newProposal.discussionMessage = dMessages.filter((dM) => dM.discussionId === d.id);
-      newProposal.proposer = owners.find((o) => o.uid === d.data.args.proposerId);
+    const loadedProposals = proposals.map((proposal) => {
+      const newProposal = { ...proposal };
+      newProposal.proposer = owners.find(
+        (o) => o.uid === proposal.data.args.proposerId
+      );
+      newProposal.discussion = discussions.find(
+        ({ proposalId }) => proposalId === proposal.id
+      );
       return newProposal;
     });
 
@@ -342,28 +350,38 @@ export function* loadProposalDetail(
 
     const proposal = { ...action.payload };
 
-    let discussionMessage: DiscussionMessage[];
-
-    if (action.payload.discussionMessage?.length) {
-      discussionMessage = action.payload.discussionMessage;
-    } else {
-      discussionMessage = (yield fetchDiscussionsMessages([
-        proposal.id,
-      ])) as DiscussionMessage[];
-    }
-
+    const discussionMessages = proposal.discussionId
+      ? ((yield fetchDiscussionsMessages([
+          proposal.discussionId,
+        ])) as DiscussionMessage[])
+      : [];
     const ownerIds = Array.from(
-      new Set(discussionMessage?.map((d) => d.ownerId))
+      new Set(discussionMessages?.map((d) => d.ownerId))
     );
     const owners = (yield fetchOwners(ownerIds)) as User[];
-    const loadedDisscussionMessage = discussionMessage?.map((d) => {
+    const loadedDisscussionMessage = discussionMessages?.map((d) => {
       const newDiscussionMessage = { ...d };
       newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
       return newDiscussionMessage;
     });
-    proposal.discussionMessage = loadedDisscussionMessage;
 
-    proposal.proposer = (yield getUserData(action.payload.data.args.proposerId)) as User;
+    if (!proposal.discussion) {
+      const discussion = (yield fetchDiscussionById(
+        proposal.discussionId
+      )) as Awaited<ReturnType<typeof fetchDiscussionById>>;
+
+      if (discussion) {
+        proposal.discussion = discussion;
+      }
+    }
+
+    if (proposal.discussion) {
+      proposal.discussion.discussionMessages = loadedDisscussionMessage;
+    }
+
+    proposal.proposer = (yield getUserData(
+      action.payload.data.args.proposerId
+    )) as User;
 
     yield put(actions.loadProposalDetail.success(proposal));
     yield put(stopLoading());
@@ -412,34 +430,30 @@ export function* createDiscussionSaga(
   action: ReturnType<typeof actions.createDiscussion.request>
 ): Generator {
   try {
+    const user = (yield select(selectUser())) as User | null;
+
+    if (!user) {
+      throw new Error(
+        "Discussion creation is not allowed for non-authorized user"
+      );
+    }
+
     yield put(startLoading());
 
-    yield createDiscussion(action.payload.payload);
+    const discussion = (yield createDiscussion(
+      action.payload.payload
+    )) as Awaited<ReturnType<typeof createDiscussion>>;
+    discussion.owner = user;
 
-    const unsubscribe = (yield call(
-      subscribeToCommonDiscussion,
-      action.payload.payload.commonId,
-      async (data) => {
-        unsubscribe();
+    action.payload.callback(discussion);
 
-        const d = data.find(
-          (d: Discussion) => d.title === action.payload.payload.title
-        );
+    yield call(async () => {
+      const ds = await fetchCommonDiscussions(discussion.commonId);
 
-        if (d) {
-          d.owner = store.getState().auth.user;
-          action.payload.callback(d);
-        }
-
-        const ds = await fetchCommonDiscussions(
-          action.payload.payload.commonId
-        );
-
-        store.dispatch(actions.setDiscussion(ds));
-        store.dispatch(actions.loadCommonDiscussionList.request());
-        store.dispatch(actions.getCommonsList.request());
-      }
-    )) as () => void;
+      store.dispatch(actions.setDiscussion(ds));
+      store.dispatch(actions.loadCommonDiscussionList.request());
+      store.dispatch(actions.getCommonsList.request());
+    });
 
     yield put(stopLoading());
   } catch (e) {
@@ -458,24 +472,27 @@ export function* addMessageToDiscussionSaga(
 
     yield addMessageToDiscussion(action.payload.payload);
 
-    yield call(
+    const unsubscribe = (yield call(
       subscribeToMessages,
       action.payload.payload.discussionId,
       async (data) => {
+        unsubscribe();
         const { discussion } = action.payload;
 
-        const updatedDiscussion = {
+        const updatedDiscussion: Discussion = {
           ...discussion,
-          discussionMessage: data.sort(
+          discussionMessages: data.sort(
             (m: DiscussionMessage, mP: DiscussionMessage) =>
-              m.createTime?.seconds - mP.createTime?.seconds
+              m.createdAt.seconds - mP.createdAt.seconds
           ),
         };
 
-        store.dispatch(actions.loadDisscussionDetail.request(updatedDiscussion));
+        store.dispatch(
+          actions.loadDisscussionDetail.request(updatedDiscussion)
+        );
         store.dispatch(actions.getCommonsList.request());
       }
-    );
+    )) as () => void;
 
     yield put(stopLoading());
   } catch (e) {
@@ -492,28 +509,22 @@ export function* addMessageToProposalSaga(
   try {
     yield put(startLoading());
 
-    yield addMessageToDiscussion(action.payload.payload);
+    const discussionMessage = (yield addMessageToDiscussion(
+      action.payload.payload
+    )) as Awaited<ReturnType<typeof addMessageToDiscussion>>;
+    const discussion = action.payload.proposal.discussion && {
+      ...action.payload.proposal.discussion,
+      discussionMessages: [
+        discussionMessage,
+        ...action.payload.proposal.discussion.discussionMessages,
+      ],
+    };
+    const proposal: Proposal = {
+      ...action.payload.proposal,
+      discussion,
+    };
 
-    yield call(
-      subscribeToMessages,
-      action.payload.payload.discussionId,
-      async (data) => {
-        const proposal = { ...action.payload.proposal };
-
-        const updatedProposal = {
-          ...proposal,
-          discussionMessage: data.sort(
-            (m: DiscussionMessage, mP: DiscussionMessage) =>
-              m.createTime?.seconds - mP.createTime?.seconds
-          ),
-        };
-
-        store.dispatch(actions.loadProposalDetail.request(updatedProposal));
-
-        store.dispatch(actions.getCommonsList.request());
-      }
-    );
-
+    yield put(actions.loadProposalDetail.request(proposal));
     yield put(stopLoading());
   } catch (e) {
     if (isError(e)) {
@@ -657,7 +668,7 @@ export function* createFundingProposal({
 export function* createSurvey({
   payload,
 }: ReturnType<typeof actions.createSurvey.request>): Generator {
-  try {  
+  try {
     const { commonId } = payload.payload.args;
 
     yield put(startLoading());
@@ -681,7 +692,7 @@ export function* createSurvey({
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createSurvey.failure(error));
-      
+
       if (payload.callback) {
         payload.callback(error);
       }

@@ -34,7 +34,6 @@ import {
 import firebase from "@/shared/utils/firebase";
 import {
   AddFounderToMembersPayload,
-  AddMessageToProposalDto,
   CreateCommonPayload,
   CreateDiscussionDto,
   DeleteCommon,
@@ -44,7 +43,7 @@ import {
   ImmediateContributionResponse,
   LeaveCommon,
 } from "@/containers/Common/interfaces";
-import { AddMessageToDiscussionDto } from "@/containers/Common/interfaces/AddMessageToDiscussionDto";
+import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
   CreateVotePayload,
   UpdateVotePayload,
@@ -69,12 +68,13 @@ export async function fetchCommonDiscussions(commonId: string) {
     .firestore()
     .collection(Collection.Discussion)
     .where("commonId", "==", commonId)
+    .where("proposalId", "==", null)
     .get();
   const data = transformFirebaseDataList<Discussion>(commons);
 
   return data.sort(
     (proposal: Discussion, prevProposal: Discussion) =>
-      prevProposal.createTime?.seconds - proposal.createTime?.seconds
+      prevProposal.createdAt.seconds - proposal.createdAt.seconds
   );
 }
 
@@ -119,7 +119,9 @@ export async function fetchProposalById(proposalId: string) {
   return data;
 }
 
-export async function fetchDiscussionById(discussionId: string) {
+export async function fetchDiscussionById(
+  discussionId: string
+): Promise<Discussion | null> {
   const discussion = await firebase
     .firestore()
     .collection(Collection.Discussion)
@@ -278,7 +280,7 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
   );
   const data = flatChunk<DiscussionMessage>(discussions).sort(
     (m: DiscussionMessage, mP: DiscussionMessage) =>
-      m.createTime?.seconds - mP.createTime?.seconds
+      m.createdAt.seconds - mP.createdAt.seconds
   );
 
   return data;
@@ -297,36 +299,26 @@ export function subscribeToCardChange(
     });
 }
 
-export function createDiscussion(payload: CreateDiscussionDto) {
-  try {
-    return firebase
-      .firestore()
-      .collection(Collection.Discussion)
-      .doc()
-      .set(payload)
-      .then((value) => {
-        return value;
-      });
-  } catch (e) {
-    console.log("createDiscussion", e);
-  }
+export async function createDiscussion(
+  payload: CreateDiscussionDto
+): Promise<Discussion> {
+  const { data } = await Api.post<Discussion>(
+    ApiEndpoint.CreateDiscussion,
+    payload
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
 }
 
-export function addMessageToDiscussion(
-  payload: AddMessageToDiscussionDto | AddMessageToProposalDto
-) {
-  try {
-    return firebase
-      .firestore()
-      .collection(Collection.DiscussionMessage)
-      .doc()
-      .set(payload)
-      .then((value) => {
-        return value;
-      });
-  } catch (e) {
-    console.log("addMessageToDiscussion", e);
-  }
+export async function addMessageToDiscussion(
+  payload: CreateDiscussionMessageDto
+): Promise<DiscussionMessage> {
+  const { data } = await Api.post<DiscussionMessage>(
+    ApiEndpoint.CreateDiscussionMessage,
+    payload
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
 }
 
 export function subscribeToCommonDiscussion(
@@ -804,3 +796,24 @@ export const getVote = async (
   const [vote] = (await proposalVotesSubCollection(proposalId).where("voterId", "==", userId).get()).docs;
   return vote?.data() || null;
 };
+
+export async function getDiscussionsByIds(initialIds: string[]): Promise<Discussion[]> {
+  const ids = initialIds.filter(Boolean);
+
+  if (ids.length === 0) {
+    return [];
+  }
+
+  const queries: firebase.firestore.Query[] = [];
+  const config = firebase.firestore().collection(Collection.Discussion);
+
+  // Firebase allows to use at most 10 items per query for `in` option
+  for (let i = 0; i < ids.length; i += 10) {
+    queries.push(config.where("id", "in", ids.slice(i, i + 10)));
+  }
+  const results = await Promise.all(queries.map((query) => query.get()));
+
+  return results
+    .map((result) => transformFirebaseDataList<Discussion>(result))
+    .reduce((acc, items) => [...acc, ...items], []);
+}

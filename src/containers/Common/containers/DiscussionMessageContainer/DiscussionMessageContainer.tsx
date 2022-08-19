@@ -32,13 +32,14 @@ const DiscussionMessageContainer = () => {
           const relatedDiscussion = await fetchDiscussionById(requestingDiscussionMsg.discussionId);
 
           setCurrentDiscussionMsg(requestingDiscussionMsg);
-          setDiscussionWithHighlightedMsg(
-            {
+
+          if (relatedDiscussion) {
+            setDiscussionWithHighlightedMsg({
               ...relatedDiscussion,
               highlightedMessageId: discussionMessageId,
               id: requestingDiscussionMsg.discussionId,
-            }
-          );
+            });
+          }
         } catch (error) {
           console.log(error);
         }
@@ -55,7 +56,7 @@ const DiscussionMessageContainer = () => {
   useEffect(() => {
     if (!currentDiscussionMsg || !discussionWithHighlightedMsg)
       return;
-    
+
     setCurrentTab(Tabs.Discussions);
   },
     [currentDiscussionMsg, discussionWithHighlightedMsg, setCurrentTab]

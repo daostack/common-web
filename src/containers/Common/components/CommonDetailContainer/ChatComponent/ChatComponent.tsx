@@ -28,7 +28,7 @@ import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 
 interface ChatComponentInterface {
   common: Common | null;
-  discussionMessage: DiscussionMessage[];
+  discussionMessages: DiscussionMessage[];
   type: ChatType;
   onOpenJoinModal?: () => void;
   commonMember: CommonMember | null;
@@ -40,7 +40,7 @@ interface ChatComponentInterface {
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
-  const d = new Date(currentValue.createTime.seconds * 1000);
+  const d = new Date(currentValue.createdAt.seconds * 1000);
   const i = Math.floor(d.getTime() / (1000 * 60 * 60 * 24));
   const timestamp = i * (1000 * 60 * 60 * 24);
   acc[timestamp] = acc[timestamp] || [];
@@ -63,7 +63,7 @@ interface Messages {
 
 export default function ChatComponent({
   common,
-  discussionMessage,
+  discussionMessages,
   type,
   onOpenJoinModal,
   commonMember,
@@ -80,11 +80,11 @@ export default function ChatComponent({
     threshold: 0
   });
 
-  const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(discussionMessage);
+  const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(discussionMessages);
   const screenSize = useSelector(getScreenSize());
   const [message, setMessage] = useState("");
   const shouldShowJoinToCommonButton = !commonMember && !isJoiningPending;
-  const messages = discussionMessage.reduce(groupday, {});
+  const messages = discussionMessages.reduce(groupday, {});
   const [isNewMessageLoading, setIsNewMessageLoading] = useState<boolean>(false);
   const [lastMessageWithOpenedDropdownId, setLastMessageWithOpenedDropdownId] = useState<string | null>(null);
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -130,7 +130,7 @@ export default function ChatComponent({
     if (
       (
         Boolean(prevDiscussionMessages)
-        && (prevDiscussionMessages?.length !== discussionMessage.length)
+        && (prevDiscussionMessages?.length !== discussionMessages.length)
       )
       || isNewMessageLoading
     ) scrollToContainerBottom();
@@ -138,7 +138,7 @@ export default function ChatComponent({
     scrollToContainerBottom,
     prevDiscussionMessages,
     prevDiscussionMessages?.length,
-    discussionMessage.length,
+    discussionMessages.length,
     isNewMessageLoading
   ]);
 
@@ -168,12 +168,12 @@ export default function ChatComponent({
   useEffect(() => {
     if (
       !prevDiscussionMessages
-      || (prevDiscussionMessages?.length === discussionMessage.length)
+      || (prevDiscussionMessages?.length === discussionMessages.length)
     ) return;
 
     setIsNewMessageLoading(false);
   }, [
-    discussionMessage.length,
+    discussionMessages.length,
     prevDiscussionMessages,
     prevDiscussionMessages?.length,
     setIsNewMessageLoading,

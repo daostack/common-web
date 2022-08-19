@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import classNames from "classnames";
-import { Linkify, ElementDropdown } from "@/shared/components";
+import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import { DiscussionMessage } from "@/shared/models";
-import { getUserName, getUserInitials } from "@/shared/utils";
+import { getUserName } from "@/shared/utils";
 import { DynamicLinkType, Orientation, ChatType } from "@/shared/constants";
 
 interface ChatMessageProps {
@@ -31,8 +31,7 @@ export default function ChatMessage(
     onMessageDropdownOpen,
   }: ChatMessageProps
 ) {
-  const [imageError, setImageError] = useState(false);
-  const mDate = new Date(disscussionMessage.createTime.seconds * 1000);
+  const mDate = new Date(disscussionMessage.createdAt.seconds * 1000);
 
   return (
     <li
@@ -41,24 +40,11 @@ export default function ChatMessage(
     >
       <div className="message">
         <div className="icon-wrapper">
-          {disscussionMessage.owner?.photoURL && !imageError ? (
-            <img
-              src={disscussionMessage.owner?.photoURL}
-              alt={getUserName(disscussionMessage.owner)}
-              onError={() => setImageError(true)}
-            />
-          ) : (
-            <span
-              className="initials"
-              style={{
-                backgroundColor: Math.floor(Math.random() * 16777215).toString(
-                  16
-                ),
-              }}
-            >
-              {getUserInitials(disscussionMessage.owner)}
-            </span>
-          )}
+          <UserAvatar
+            photoURL={disscussionMessage.owner?.photoURL}
+            nameForRandomAvatar={disscussionMessage.owner?.email}
+            userName={getUserName(disscussionMessage.owner)}
+          />
         </div>
         <div className="message-text">
           <div className="message-name">

@@ -23,12 +23,14 @@ const DiscussionContainer: FC = () => {
         try {
           const requestingDiscussion = await fetchDiscussionById(discussionId);
 
-          setCurrentDiscussion(
-            {
-              ...requestingDiscussion,
-              id: discussionId,
-            }
-          );
+          if (requestingDiscussion) {
+            setCurrentDiscussion(
+              {
+                ...requestingDiscussion,
+                id: discussionId,
+              }
+            );
+          }
         } catch (error) {
           console.log(error);
         }
@@ -39,7 +41,7 @@ const DiscussionContainer: FC = () => {
   useEffect(() => {
     if (!currentDiscussion)
       return;
-    
+
     setCurrentTab(Tabs.Discussions);
   },
     [currentDiscussion, setCurrentTab]

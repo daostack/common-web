@@ -117,6 +117,7 @@ export interface CommonMember {
   readonly userId: string;
   joinedAt: firebase.firestore.Timestamp;
   circles: number;
+  circlesIds: string[];
   allowedActions: AllowedActions;
   allowedProposals: AllowedProposals;
   tokenBalance: number;
