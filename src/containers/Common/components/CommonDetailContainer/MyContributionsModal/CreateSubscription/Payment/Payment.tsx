@@ -46,13 +46,6 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
     setState,
   ] = useState<State>(INITIAL_STATE);
 
-  /*const {
-    isPaymentLoading,
-    onReadyToSubscribe,
-    subscription,
-    errorText
-  } = useSubscription();*/
-
   const handleIframeLoad = () => {
     setState((nextState) => ({ ...nextState, isPaymentIframeLoaded: true }));
   };
