@@ -30,6 +30,8 @@ const INITIAL_DATA: IntermediateCreateCommonPayload = {
 interface CreateCommonModalProps {
   isShowing: boolean;
   onClose: () => void;
+  parentCommonId?: string;
+  shouldBeWithoutIntroduction?: boolean;
 }
 
 const emptyFunction = () => {
@@ -40,8 +42,11 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
+  const initialStage = props.shouldBeWithoutIntroduction
+    ? CreateCommonStage.CreationSteps
+    : CreateCommonStage.Introduction;
   const [{ stage, shouldStartFromLastStep }, setStageState] = useState({
-    stage: CreateCommonStage.Introduction,
+    stage: initialStage,
     shouldStartFromLastStep: false,
   });
   const [creationData, setCreationData] =
@@ -58,6 +63,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isHeaderSticky = stage === CreateCommonStage.CreationSteps;
+  const isSubCommonCreation = Boolean(props.parentCommonId);
+
   const setBigTitle = useCallback((title: string) => {
     setTitle(title);
     setIsBigTitle(true);
@@ -136,6 +143,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         return (
           <CreationSteps
             isHeaderScrolledToTop={isHeaderScrolledToTop}
+            isSubCommonCreation={isSubCommonCreation}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
@@ -179,6 +187,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     }
   }, [
     stage,
+    isSubCommonCreation,
     isMobileView,
     isHeaderScrolledToTop,
     setSmallTitle,
@@ -200,12 +209,12 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     }
 
     setStageState({
-      stage: CreateCommonStage.Introduction,
+      stage: initialStage,
       shouldStartFromLastStep: false,
     });
     setCreationData(INITIAL_DATA);
     resetZoom();
-  }, [props.isShowing, disableZoom, resetZoom]);
+  }, [props.isShowing, initialStage, disableZoom, resetZoom]);
 
   return (
     <Modal

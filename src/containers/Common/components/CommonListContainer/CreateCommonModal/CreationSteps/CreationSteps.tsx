@@ -22,6 +22,7 @@ import "./index.scss";
 
 interface CreationStepsProps {
   isHeaderScrolledToTop: boolean;
+  isSubCommonCreation: boolean;
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
@@ -34,6 +35,7 @@ interface CreationStepsProps {
 export default function CreationSteps(props: CreationStepsProps) {
   const {
     isHeaderScrolledToTop,
+    isSubCommonCreation,
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
@@ -107,7 +109,7 @@ export default function CreationSteps(props: CreationStepsProps) {
           />
         )}
         <h3 className="create-common-creation-steps__modal-title">
-          Create a Common
+          Create {isSubCommonCreation ? "sub" : "a"} Common
         </h3>
       </div>
     );
@@ -118,8 +120,12 @@ export default function CreationSteps(props: CreationStepsProps) {
   }, [setTitle, title]);
 
   useEffect(() => {
-    setGoBackHandler(handleGoBack);
-  }, [setGoBackHandler, handleGoBack]);
+    setGoBackHandler(
+      !isSubCommonCreation || step !== CreationStep.GeneralInfo
+        ? handleGoBack
+        : undefined
+    );
+  }, [setGoBackHandler, isSubCommonCreation, handleGoBack, step]);
 
   useEffect(() => {
     setShouldShowCloseButton(true);
