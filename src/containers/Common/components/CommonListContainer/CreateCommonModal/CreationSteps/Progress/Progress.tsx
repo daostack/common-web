@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useMemo } from "react";
 import classNames from "classnames";
 import { StepProgress } from "@/shared/components";
 import { CreationStep } from "../constants";
@@ -20,12 +20,18 @@ export default function Progress({
   creationStep,
   isSubCommonCreation,
 }: ProgressProps): ReactElement {
-  const allStepsData = getStepData(isSubCommonCreation);
+  const allStepsData = useMemo(
+    () => getStepData(isSubCommonCreation),
+    [isSubCommonCreation]
+  );
   const stepData = allStepsData[creationStep];
   const stepIndex = PROGRESS_RELATED_STEPS.findIndex(
     (step) => step === creationStep
   );
-  const items = getStepProgressItems(allStepsData);
+  const items = useMemo(
+    () => getStepProgressItems(allStepsData),
+    [allStepsData]
+  );
 
   return (
     <div className="create-common-steps-progress">
