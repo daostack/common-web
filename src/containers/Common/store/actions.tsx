@@ -325,20 +325,6 @@ export const makeImmediateContribution = createAsyncAction(
   Error
 >();
 
-export const createSubscription = createAsyncAction(
-  CommonsActionTypes.CREATE_SUBSCRIPTION,
-  CommonsActionTypes.CREATE_SUBSCRIPTION_SUCCESS,
-  CommonsActionTypes.CREATE_SUBSCRIPTION_FAILURE
-)<
-  PayloadWithCallback<
-    SubscriptionData,
-    SubscriptionResponse,
-    Error
-  >,
-  SubscriptionResponse,
-  Error
->();
-
 export const createBuyerTokenPage = createAsyncAction(
   CommonsActionTypes.CREATE_BUYER_TOKEN_PAGE,
   CommonsActionTypes.CREATE_BUYER_TOKEN_PAGE_SUCCESS,

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useComponentWillUnmount } from "@/shared/hooks";
-import { Common, Subscription } from "@/shared/models";
+import { Common, Subscription, Payment } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { updateSubscription } from "../../../../store/actions";
 import { useMyContributionsContext } from "../context";
@@ -35,7 +35,7 @@ const CreateSubscription: FC<CreateSubscriptionProps> = (
   const [isLoading, setIsLoading] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const [createdPayment, setCreatedPayment] = useState<Subscription | null>(null);
+  const [createdPayment, setCreatedPayment] = useState<Subscription | Payment | null>(null);
   const [contributionAmount, setContributionAmount] = useState<
     number | undefined
   >();
@@ -57,13 +57,13 @@ const CreateSubscription: FC<CreateSubscriptionProps> = (
     setShouldShowClosePrompt(false);
   }, [setShouldShowClosePrompt]);
 
-  const handlePaymentFinish = useCallback((payment: Subscription) => {
+  const handlePaymentFinish = useCallback((payment: Subscription | Payment) => {
     setCreatedPayment(payment);
   }, []);
 
   const handleSuccessFinish = useCallback(() => {
     if (createdPayment) {
-      onFinish(createdPayment);
+      onFinish(createdPayment as Subscription);
     }
   }, [onFinish, createdPayment]);
 

@@ -462,20 +462,6 @@ export async function makeImmediateContribution(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
-export async function createSubscription(
-  requestData: SubscriptionData
-): Promise<SubscriptionResponse> {
-  const { data } = await Api.post<SubscriptionResponse>(
-    ApiEndpoint.CreateSubscription,
-    {
-      ...requestData,
-      saveCard: requestData.saveCard ?? true,
-    }
-  );
-
-  return convertObjectDatesToFirestoreTimestamps(data);
-}
-
 export function subscribeToPayment(
   paymentId: string,
   callback: (payment?: Payment) => void

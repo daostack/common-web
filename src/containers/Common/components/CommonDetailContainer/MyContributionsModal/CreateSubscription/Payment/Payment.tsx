@@ -2,17 +2,17 @@ import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
 import { IFrame, Loader, Separator } from "@/shared/components";
 import { ContributionType } from "@/shared/constants";
-import { Common, Subscription, SubscriptionStatus } from "@/shared/models";
+import { Common, Subscription, SubscriptionStatus, Payment } from "@/shared/models";
 import {
-  isSubscriptionPayment,
-  SubscriptionPayment,
+  isImmediateContributionPayment,
+  ImmediateContributionPayment,
 } from "../../../../../interfaces";
-import { createSubscription } from "../../../../../store/actions";
+import { makeImmediateContribution } from "../../../../../store/actions";
 import { subscribeToSubscription } from "../../../../../store/api";
 import "./index.scss";
 
 interface State {
-  subscription: SubscriptionPayment | null;
+  subscription: ImmediateContributionPayment | null;
   isPaymentLoading: boolean;
   isPaymentIframeLoaded: boolean;
 }
@@ -26,7 +26,7 @@ const INITIAL_STATE: State = {
 interface PaymentStepProps {
   common: Common;
   contributionAmount: number;
-  onFinish: (payment: Subscription) => void;
+  onFinish: (payment: Subscription | Payment) => void;
   onError: (errorText: string) => void;
   setShouldShowGoBackButton: (value: boolean) => void;
 }
@@ -62,7 +62,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
       }));
 
       dispatch(
-        createSubscription.request({
+        makeImmediateContribution.request({
           payload: {
             commonId,
             contributionType: ContributionType.Monthly,
@@ -74,8 +74,8 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
               onError(error?.message || "Something went wrong");
               return;
             }
-            console.log('Payment payment', payment)
-            if (!isSubscriptionPayment(payment)) {
+
+            if (!isImmediateContributionPayment(payment)) {
               onFinish(payment);
               return;
             }
