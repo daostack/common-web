@@ -1,52 +1,15 @@
 import React, { ReactElement } from "react";
-import { StepProgress, StepProgressItem } from "@/shared/components";
+import classNames from "classnames";
+import { StepProgress } from "@/shared/components";
 import { CreationStep } from "../constants";
+import { getStepData, getStepProgressItems } from "./helpers";
 import "./index.scss";
 
 interface ProgressProps {
   creationStep: CreationStep;
+  isSubCommonCreation: boolean;
 }
 
-const STEP_DATA: Record<
-  CreationStep,
-  { title: string; description?: string }
-> = {
-  [CreationStep.GeneralInfo]: {
-    title: "General Info",
-    description:
-      "Describe your cause and let the community learn more about your plans and goals.",
-  },
-  [CreationStep.UserAcknowledgment]: {
-    title: "User Acknowledgment",
-    description: "Before creating a Common, please make sure that:",
-  },
-  [CreationStep.Rules]: {
-    title: "Rules",
-    description:
-      "Add rules of conduct. New members must agree to the rules before joining the Common.",
-  },
-  [CreationStep.Review]: {
-    title: "Final touches and review",
-  },
-};
-
-const ITEMS: StepProgressItem[] = [
-  {
-    title: STEP_DATA[CreationStep.GeneralInfo].title,
-    activeImageSource: "/icons/common-creation/general-info-current.svg",
-    inactiveImageSource: "/icons/common-creation/general-info-current.svg",
-  },
-  {
-    title: STEP_DATA[CreationStep.Rules].title,
-    activeImageSource: "/icons/common-creation/rules-current.svg",
-    inactiveImageSource: "/icons/common-creation/rules-next.svg",
-  },
-  {
-    title: STEP_DATA[CreationStep.Review].title,
-    activeImageSource: "/icons/common-creation/review-current.svg",
-    inactiveImageSource: "/icons/common-creation/review-next.svg",
-  },
-];
 export const PROGRESS_RELATED_STEPS = [
   CreationStep.GeneralInfo,
   CreationStep.Rules,
@@ -55,11 +18,14 @@ export const PROGRESS_RELATED_STEPS = [
 
 export default function Progress({
   creationStep,
+  isSubCommonCreation,
 }: ProgressProps): ReactElement {
-  const stepData = STEP_DATA[creationStep];
+  const allStepsData = getStepData(isSubCommonCreation);
+  const stepData = allStepsData[creationStep];
   const stepIndex = PROGRESS_RELATED_STEPS.findIndex(
     (step) => step === creationStep
   );
+  const items = getStepProgressItems(allStepsData);
 
   return (
     <div className="create-common-steps-progress">
@@ -67,12 +33,17 @@ export default function Progress({
         <StepProgress
           className="create-common-steps-progress__stepper"
           currentStep={stepIndex + 1}
-          items={ITEMS}
+          items={items}
         />
       )}
       <h4 className="create-common-steps-progress__title">{stepData.title}</h4>
       {stepData.description && (
-        <p className="create-common-steps-progress__description">
+        <p
+          className={classNames(
+            "create-common-steps-progress__description",
+            stepData.descriptionClassName
+          )}
+        >
           {stepData.description}
         </p>
       )}

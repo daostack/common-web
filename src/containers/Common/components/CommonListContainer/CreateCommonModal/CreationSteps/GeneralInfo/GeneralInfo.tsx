@@ -20,6 +20,7 @@ import "./index.scss";
 
 interface GeneralInfoProps {
   currentStep: number;
+  isSubCommonCreation: boolean;
   onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
   creationData: IntermediateCreateCommonPayload;
 }
@@ -41,7 +42,7 @@ const getInitialValues = (
 });
 
 export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
-  const { currentStep, onFinish, creationData } = props;
+  const { currentStep, isSubCommonCreation, onFinish, creationData } = props;
   const formRef = useRef<FormikProps<FormValues>>(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -66,7 +67,12 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
     [onFinish]
   );
 
-  const progressEl = <Progress creationStep={currentStep} />;
+  const progressEl = (
+    <Progress
+      creationStep={currentStep}
+      isSubCommonCreation={isSubCommonCreation}
+    />
+  );
 
   return (
     <>

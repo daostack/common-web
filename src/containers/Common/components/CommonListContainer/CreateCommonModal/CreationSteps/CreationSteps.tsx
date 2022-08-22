@@ -134,6 +134,7 @@ export default function CreationSteps(props: CreationStepsProps) {
   const content = useMemo(() => {
     const stepProps = {
       creationData,
+      isSubCommonCreation,
       currentStep: step,
       onFinish: handleFinish,
     };
@@ -150,7 +151,7 @@ export default function CreationSteps(props: CreationStepsProps) {
       default:
         return null;
     }
-  }, [step, handleFinish, creationData]);
+  }, [step, isSubCommonCreation, handleFinish, creationData]);
 
   return content;
 }
