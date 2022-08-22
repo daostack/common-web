@@ -565,7 +565,6 @@ packages/core/src/domain/constants/secrets/*
 
 
 .env
-.env.staging
 .env.production
 
 **/secrets/*
