@@ -113,11 +113,6 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env
-.env.test
-.env*.local
-
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
@@ -562,11 +557,6 @@ build
 
 
 packages/core/src/domain/constants/secrets/*
-
-
-.env
-.env.staging
-.env.production
 
 **/secrets/*
 

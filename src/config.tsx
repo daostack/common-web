@@ -1,68 +1,61 @@
-import { Configuration, ConfigurationObject } from "./shared/interfaces";
-const { REACT_APP_ENV = "dev" } = process.env;
+import { Environment } from "@/shared/constants";
+import { Configuration } from "@/shared/interfaces";
+const {
+  REACT_APP_ENV = Environment.Dev,
+  REACT_APP_FIREBASE_API_KEY,
+  REACT_APP_FIREBASE_AUTH_DOMAIN,
+  REACT_APP_FIREBASE_DATABASE_URL,
+  REACT_APP_FIREBASE_PROJECT_ID,
+  REACT_APP_FIREBASE_STORAGE_BUCKET,
+  REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  REACT_APP_FIREBASE_APP_ID,
+  REACT_APP_CLOUD_FUNCTION_URL,
+  REACT_APP_DEAD_SEA_COMMON_ID,
+} = process.env;
 
 const FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL =
   "https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=api_key";
 
-const dev: Configuration = {
-  env: REACT_APP_ENV,
-  baseApiUrl: "http://localhost:4000/api/v1/",
+if (!Object.values(Environment).includes(REACT_APP_ENV as Environment)) {
+  throw new Error("App env is incorrect");
+}
+if (
+  !REACT_APP_FIREBASE_API_KEY ||
+  !REACT_APP_FIREBASE_AUTH_DOMAIN ||
+  !REACT_APP_FIREBASE_DATABASE_URL ||
+  !REACT_APP_FIREBASE_PROJECT_ID ||
+  !REACT_APP_FIREBASE_STORAGE_BUCKET ||
+  !REACT_APP_FIREBASE_MESSAGING_SENDER_ID ||
+  !REACT_APP_FIREBASE_APP_ID
+) {
+  throw new Error("Firebase config is not fully set up");
+}
+if (!REACT_APP_CLOUD_FUNCTION_URL) {
+  throw new Error("Cloud function URL is not set up");
+}
+if (!REACT_APP_DEAD_SEA_COMMON_ID) {
+  throw new Error("Dead sea common id is not set up");
+}
+
+const configElement: Configuration = {
+  env: REACT_APP_ENV as Environment,
   firebase: {
-    apiKey: "AIzaSyACs4Fof0wNmAvknR_ykBMD7SxwdxFzKKk",
-    authDomain: "common-dev-dea4e.firebaseapp.com",
-    databaseURL: "https://common-dev-dea4e.firebaseio.com",
-    projectId: "common-dev-dea4e",
-    storageBucket: "common-dev-dea4e.appspot.com",
-    messagingSenderId: "1027354410661",
-    appId: "1:1027354410661:web:486445886843ffcc5b974c",
+    apiKey: REACT_APP_FIREBASE_API_KEY,
+    authDomain: REACT_APP_FIREBASE_AUTH_DOMAIN,
+    databaseURL: REACT_APP_FIREBASE_DATABASE_URL,
+    projectId: REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: REACT_APP_FIREBASE_APP_ID,
   },
-  cloudFunctionUrl: "https://us-central1-common-dev-dea4e.cloudfunctions.net",
-  deadSeaCommonId: "e49c02a9-6962-4bbb-a4b7-166ef69ee27a",
+  cloudFunctionUrl: REACT_APP_CLOUD_FUNCTION_URL,
+  deadSeaCommonId: REACT_APP_DEAD_SEA_COMMON_ID,
 };
 
-const stage: Configuration = {
-  env: REACT_APP_ENV,
-  baseApiUrl: "http://localhost:4000/api/v1/",
-  firebase: {
-    apiKey: "AIzaSyClh8UZh-PDyVgwPrHZwURoA4HWuiXUbR8",
-    authDomain: "common-staging-50741.firebaseapp.com",
-    databaseURL: "https://common-staging-50741.firebaseio.com",
-    projectId: "common-staging-50741",
-    storageBucket: "common-staging-50741.appspot.com",
-    messagingSenderId: "78965953367",
-    appId: "1:78965953367:web:bc3e913a792fa28d2f6412",
-  },
-  cloudFunctionUrl:
-    "https://us-central1-common-staging-50741.cloudfunctions.net",
-  deadSeaCommonId: "f9e6df94-3286-423c-9fbf-0570277a5166",
-};
-
-const production: Configuration = {
-  ...dev,
-  firebase: {
-    apiKey: "AIzaSyAml-zMhoG_amLvM8mTxrydDOYXTGuubsA",
-    authDomain: "common-daostack.firebaseapp.com",
-    databaseURL: "https://common-daostack.firebaseio.com",
-    projectId: "common-daostack",
-    storageBucket: "common-daostack.appspot.com",
-    messagingSenderId: "78965953367",
-    appId: "1:854172758045:android:e4b053ade246c6fb1e96f4",
-  },
-  cloudFunctionUrl: "https://us-central1-common-daostack.cloudfunctions.net",
-  deadSeaCommonId: "e49c02a9-6962-4bbb-a4b7-166ef69ee27a",
-};
-
-const config: ConfigurationObject = {
-  dev,
-  stage,
-  production,
-};
-
-const configElement: Configuration = config[REACT_APP_ENV];
-
-export const FIREBASE_SHORT_DYNAMIC_LINKS_URL = FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL.replace(
-  "api_key",
-  configElement.firebase.apiKey
-);
+export const FIREBASE_SHORT_DYNAMIC_LINKS_URL =
+  FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL.replace(
+    "api_key",
+    configElement.firebase.apiKey
+  );
 
 export default configElement;

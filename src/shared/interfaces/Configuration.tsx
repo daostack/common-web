@@ -1,6 +1,7 @@
+import { Environment } from "@/shared/constants";
+
 export interface Configuration {
-  env: string;
-  baseApiUrl: string;
+  env: Environment;
   firebase: {
     apiKey: string;
     authDomain: string;
@@ -12,8 +13,4 @@ export interface Configuration {
   };
   cloudFunctionUrl: string;
   deadSeaCommonId: string;
-}
-
-export interface ConfigurationObject {
-  [key: string]: Configuration;
 }
