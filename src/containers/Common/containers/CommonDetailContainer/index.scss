@@ -481,3 +481,25 @@
   left: 0;
   background-color: transparent;
 }
+
+.common-detail-container__common-name-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.common-detail-container__common-subtitle {
+  font-family: NunitoSans, sans-serif;
+  font-size: $small;
+  font-weight: normal;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+
+  a {
+    color: $purple;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

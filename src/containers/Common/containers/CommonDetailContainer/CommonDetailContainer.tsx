@@ -78,7 +78,7 @@ import CheckIcon from "../../../../shared/icons/check.icon";
 import { selectUser } from "../../../Auth/store/selectors";
 import { useCommonMember } from "../../hooks";
 import { COMMON_DETAILS_PAGE_TAB_QUERY_PARAM, Tabs } from "./constants";
-import { getInitialTab } from "./helpers";
+import { getInitialTab, getCommonSubtitle } from "./helpers";
 import "./index.scss";
 import { MembersComponent } from "../../components/CommonDetailContainer/MembersComponent";
 
@@ -170,6 +170,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember();
+  const commonSubtitle = getCommonSubtitle();
 
   const activeProposals = useMemo(
     () => proposals.filter((d) => checkIsCountdownState(d)),
@@ -599,7 +600,14 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               <div className="text">
                 <div className="text-information-wrapper__info-wrapper">
                   <div className="name">
-                    {common?.name}
+                    <div className="common-detail-container__common-name-wrapper">
+                      <span>{common?.name}</span>
+                      {commonSubtitle && (
+                        <span className="common-detail-container__common-subtitle">
+                          {commonSubtitle}
+                        </span>
+                      )}
+                    </div>
                     {isMobileView && (
                       <div className="text-information-wrapper__menu-buttons">
                         {isCommonMember ? (
