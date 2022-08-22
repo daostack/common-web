@@ -89,7 +89,7 @@ const MainInfo: FC<GeneralInfoProps> = (props) => {
             className="create-common-general-info__text-field"
             itemClassName="create-common-general-info__links-array-item"
           />
-          <ModalFooter sticky={!isMobileView}>
+          <ModalFooter sticky>
             <div className="create-common-general-info__modal-footer">
               <Button
                 onClick={handleContinueClick}

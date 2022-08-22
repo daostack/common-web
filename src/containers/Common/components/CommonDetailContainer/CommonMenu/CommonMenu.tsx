@@ -18,7 +18,7 @@ import ContributionIcon from "@/shared/icons/contribution.icon";
 import MosaicIcon from "@/shared/icons/mosaic.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
-import { Common, CommonMember } from "@/shared/models";
+import { Common, CommonMember, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DeleteCommonPrompt } from "../DeleteCommonPrompt";
 import { LeaveCommonPrompt } from "../LeaveCommonPrompt";
@@ -107,6 +107,7 @@ interface CommonMenuProps {
   className?: string;
   menuButtonClassName?: string;
   common: Common;
+  governance: Governance;
   currentCommonMember: CommonMember | null;
   withBorder?: boolean;
 }
@@ -116,6 +117,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     className,
     menuButtonClassName,
     common,
+    governance,
     currentCommonMember,
     withBorder = false,
   } = props;
@@ -267,6 +269,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
       <CreateCommonModal
         isShowing={selectedMenuItem === MenuItem.CreateSubCommon}
         onClose={handleMenuClose}
+        governance={governance}
         parentCommonId={common.id}
         shouldBeWithoutIntroduction
       />

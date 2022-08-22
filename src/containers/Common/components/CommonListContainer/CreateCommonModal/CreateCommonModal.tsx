@@ -11,7 +11,7 @@ import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ScreenSize } from "@/shared/constants";
-import { Common } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import { IntermediateCreateCommonPayload } from "../../../interfaces";
 import { Confirmation } from "./Confirmation";
 import { CreationSteps } from "./CreationSteps";
@@ -30,6 +30,7 @@ const INITIAL_DATA: IntermediateCreateCommonPayload = {
 interface CreateCommonModalProps {
   isShowing: boolean;
   onClose: () => void;
+  governance?: Governance;
   parentCommonId?: string;
   shouldBeWithoutIntroduction?: boolean;
 }
@@ -39,6 +40,7 @@ const emptyFunction = () => {
 };
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
+  const { governance } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -144,6 +146,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
           <CreationSteps
             isHeaderScrolledToTop={isHeaderScrolledToTop}
             isSubCommonCreation={isSubCommonCreation}
+            governance={governance}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
@@ -188,6 +191,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   }, [
     stage,
     isSubCommonCreation,
+    governance,
     isMobileView,
     isHeaderScrolledToTop,
     setSmallTitle,
@@ -233,6 +237,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         shouldShowCloseButton &&
         ![CreateCommonStage.Success, CreateCommonStage.Error].includes(stage)
       }
+      fullHeight
     >
       <div id="content">{content}</div>
     </Modal>

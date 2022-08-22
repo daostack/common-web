@@ -19,4 +19,5 @@ export interface IntermediateCreateCommonPayload
   image: string | File | null;
   agreementAccepted: boolean;
   rules?: CreateCommonPayload["unstructuredRules"];
+  circleIdFromParent?: string;
 }
