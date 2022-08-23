@@ -7,6 +7,7 @@ type State = LoadingState<Common | null>;
 
 interface Return extends State {
   fetchCommon: (commonId: string) => void;
+  setCommon: (common: Common | null) => void;
 }
 
 export const useCommon = (): Return => {
@@ -41,8 +42,17 @@ export const useCommon = (): Return => {
     })();
   }, []);
 
+  const setCommon = useCallback((common: Common | null) => {
+    setState({
+      loading: false,
+      fetched: true,
+      data: common,
+    });
+  }, []);
+
   return {
     ...state,
     fetchCommon,
+    setCommon,
   };
 };

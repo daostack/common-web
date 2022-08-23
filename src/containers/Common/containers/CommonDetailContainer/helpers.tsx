@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ROUTE_PATHS } from "@/shared/constants";
+import { Common } from "@/shared/models";
 import { Tabs } from "./constants";
 
 export const getInitialTab = (defaultTab: string): Tabs => {
@@ -9,7 +10,19 @@ export const getInitialTab = (defaultTab: string): Tabs => {
   return isCorrectTab ? (defaultTab as Tabs) : Tabs.About;
 };
 
-export const getCommonSubtitle = (): ReactNode | null => {
+export const getCommonSubtitle = (
+  parentCommon: Common | null
+): ReactNode | null => {
+  if (parentCommon) {
+    return (
+      <>
+        Parent:{" "}
+        <Link to={ROUTE_PATHS.COMMON_DETAIL.replace(":id", parentCommon.id)}>
+          {parentCommon.name}
+        </Link>
+      </>
+    );
+  }
   if (true) {
     return (
       <>
