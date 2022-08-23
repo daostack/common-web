@@ -67,7 +67,7 @@ import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
 import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
-import { ImmediateContributionResponse } from "../interfaces";
+import { ImmediateContributionResponse, SubscriptionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
 import { Awaited } from "@/shared/interfaces";
 import {

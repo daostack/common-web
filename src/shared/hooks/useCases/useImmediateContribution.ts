@@ -7,13 +7,13 @@ import {
 } from "@/containers/Common/interfaces";
 import { makeImmediateContribution as makeImmediateContributionAction } from "@/containers/Common/store/actions";
 import { subscribeToPayment } from "@/containers/Common/store/api";
-import { Payment, PaymentStatus } from "@/shared/models";
+import { Payment, PaymentStatus, Subscription } from "@/shared/models";
 
 interface State {
   isPaymentLoading: boolean;
   isReadyToSubscribe: boolean;
   intermediatePayment: ImmediateContributionPayment | null;
-  payment: Payment | null;
+  payment: Payment | Subscription | null;
   errorText: string | null;
 }
 

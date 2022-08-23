@@ -74,7 +74,7 @@ const getSubscriptionData = (
   data.push(
     {
       title: "Amount",
-      value: formatPrice(subscription.amount),
+      value: formatPrice(subscription.amount.amount),
     },
     {
       title: "Subscribed at",

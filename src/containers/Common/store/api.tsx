@@ -41,6 +41,8 @@ import {
   CreateProposal,
   ImmediateContributionData,
   ImmediateContributionResponse,
+  SubscriptionData,
+  SubscriptionResponse,
   LeaveCommon,
 } from "@/containers/Common/interfaces";
 import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
@@ -462,6 +464,19 @@ export function subscribeToPayment(
     .doc(paymentId)
     .onSnapshot((snapshot) => {
       callback(transformFirebaseDataSingle<Payment>(snapshot));
+    });
+}
+
+export function subscribeToSubscription(
+  subscriptionId: string,
+  callback: (subscription?: Subscription) => void
+): () => void {
+  return firebase
+    .firestore()
+    .collection(Collection.Subscriptions)
+    .doc(subscriptionId)
+    .onSnapshot((snapshot) => {
+      callback(transformFirebaseDataSingle<Subscription>(snapshot));
     });
 }
 

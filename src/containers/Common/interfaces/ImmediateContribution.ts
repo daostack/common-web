@@ -1,5 +1,5 @@
 import { ContributionType } from "@/shared/constants";
-import { Payment } from "@/shared/models";
+import { Payment, Subscription } from "@/shared/models";
 
 export interface ImmediateContributionData {
   amount: number;
@@ -15,7 +15,8 @@ export interface ImmediateContributionPayment {
 
 export type ImmediateContributionResponse =
   | ImmediateContributionPayment
-  | Payment;
+  | Payment
+  | Subscription;
 
 export const isImmediateContributionPayment = (
   response: ImmediateContributionResponse
