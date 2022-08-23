@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router";
 import classNames from "classnames";
+import { setLoginModalState } from "@/containers/Auth/store/actions";
 import {
   GlobalLoader,
   Loader,
@@ -75,7 +76,7 @@ import {
   clearCommonActiveTab,
 } from "../../store/actions";
 import CheckIcon from "../../../../shared/icons/check.icon";
-import { selectUser } from "../../../Auth/store/selectors";
+import { authentificated, selectUser } from "../../../Auth/store/selectors";
 import { useCommonMember } from "../../hooks";
 import { COMMON_DETAILS_PAGE_TAB_QUERY_PARAM, Tabs } from "./constants";
 import { getInitialTab } from "./helpers";
@@ -163,6 +164,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
   const screenSize = useSelector(getScreenSize());
+  const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const activeTab = useSelector(selectCommonActiveTab());
   const {
@@ -496,6 +498,17 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     setStickyClass,
     joinEffortRef,
   ]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      dispatch(
+        setLoginModalState({
+          isShowing: true,
+          canCloseModal: false,
+        })
+      );
+    }
+  }, [isAuthenticated, dispatch]);
 
   useEffect(() => {
     if (inViewPortFooter) {

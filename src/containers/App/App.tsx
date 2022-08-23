@@ -156,11 +156,7 @@ const App = () => {
               exact
               component={DeadSeaIntegrationContainer}
             />
-            <PrivateRoute
-              path={ROUTE_PATHS.COMMON_LIST}
-              component={CommonContainer}
-              authenticated={isAuthenticated}
-            />
+            <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
             <PrivateRoute
               path={ROUTE_PATHS.PROPOSAL_DETAIL}
               component={ProposalContainer}
