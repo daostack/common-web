@@ -83,7 +83,9 @@ export default function ChatComponent({
   const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(discussionMessages);
   const screenSize = useSelector(getScreenSize());
   const [message, setMessage] = useState("");
-  const shouldShowJoinToCommonButton = !commonMember && !isJoiningPending;
+  const isSubCommon = Boolean(common?.directParent);
+  const shouldShowJoinToCommonButton =
+    !commonMember && !isJoiningPending && !isSubCommon;
   const messages = discussionMessages.reduce(groupday, {});
   const [isNewMessageLoading, setIsNewMessageLoading] = useState<boolean>(false);
   const [lastMessageWithOpenedDropdownId, setLastMessageWithOpenedDropdownId] = useState<string | null>(null);

@@ -189,6 +189,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     [proposals]
   );
 
+  const isSubCommon = Boolean(common?.directParent);
   const isCommonMember = Boolean(commonMember);
   const isJoiningPending = proposals.some(
     (proposal) =>
@@ -205,6 +206,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     !isCommonMember &&
     !isJoiningPending &&
     !inViewport &&
+    !isSubCommon &&
     (stickyClass || footerClass);
 
   const dispatch = useDispatch();
@@ -733,7 +735,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={setJoinEffortRef}>
-                  {!isCommonMember && (
+                  {!isCommonMember && !isSubCommon && (
                     <button
                       className={`button-blue join-the-effort-btn`}
                       onClick={handleOpen}
