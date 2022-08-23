@@ -15,7 +15,7 @@ export default function WhitepaperMembers() {
 
   const members = governance?.circles.map((circle, index) => {
     return (
-      <li
+      index < 5 && <li
         key={index}
         onClick={() => setSelectedMember({ ...circle, index })}
         className={classNames({ active: selectedMember?.name === circle.name })}
