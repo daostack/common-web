@@ -177,6 +177,17 @@ export async function fetchCommonListByIds(ids: string[]): Promise<Common[]> {
     .reduce((acc, items) => [...acc, ...items], []);
 }
 
+export async function fetchSubCommonsByCommonId(commonId: string): Promise<Common[]> {
+  const commons = await firebase
+    .firestore()
+    .collection(Collection.Daos)
+    .where("directParent.commonId", "==", commonId)
+    .where("state", "==", CommonState.ACTIVE)
+    .get();
+  const data = transformFirebaseDataList<Common>(commons);
+  return data;
+}
+
 export async function fetchCommonDetail(id: string): Promise<Common | null> {
   const common = await firebase
     .firestore()

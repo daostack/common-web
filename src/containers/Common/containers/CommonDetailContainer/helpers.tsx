@@ -11,7 +11,8 @@ export const getInitialTab = (defaultTab: string): Tabs => {
 };
 
 export const getCommonSubtitle = (
-  parentCommon: Common | null
+  parentCommon: Common | null,
+  subCommons: Common[]
 ): ReactNode | null => {
   if (parentCommon) {
     return (
@@ -23,11 +24,20 @@ export const getCommonSubtitle = (
       </>
     );
   }
-  if (true) {
+  if (subCommons.length > 0) {
     return (
       <>
-        Sub Commons: <Link to={ROUTE_PATHS.COMMON_DETAIL}>Subcommon 1</Link>,{" "}
-        <Link to={ROUTE_PATHS.COMMON_DETAIL}>Subcommon 2</Link>
+        Sub Commons:{" "}
+        {subCommons
+          .map((common) => (
+            <Link
+              key={common.id}
+              to={ROUTE_PATHS.COMMON_DETAIL.replace(":id", common.id)}
+            >
+              {common.name}
+            </Link>
+          ))
+          .join(", ")}
       </>
     );
   }

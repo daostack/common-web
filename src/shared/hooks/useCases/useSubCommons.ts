@@ -1,22 +1,22 @@
 import { useCallback, useState } from "react";
-import { fetchCommonListByIds } from "@/containers/Common/store/api";
+import { fetchSubCommonsByCommonId } from "@/containers/Common/store/api";
 import { LoadingState } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
 
 type State = LoadingState<Common[]>;
 
 interface Return extends State {
-  fetchCommons: (commonIds: string[]) => void;
+  fetchSubCommons: (commonId: string) => void;
 }
 
-export const useCommons = (): Return => {
+export const useSubCommons = (): Return => {
   const [state, setState] = useState<State>({
     loading: false,
     fetched: false,
     data: [],
   });
 
-  const fetchCommons = useCallback((commonIds: string[]) => {
+  const fetchSubCommons = useCallback((commonId: string) => {
     setState((nextState) => ({
       ...nextState,
       loading: true,
@@ -24,7 +24,7 @@ export const useCommons = (): Return => {
 
     (async () => {
       try {
-        const commons = await fetchCommonListByIds(commonIds);
+        const commons = await fetchSubCommonsByCommonId(commonId);
 
         setState({
           loading: false,
@@ -43,6 +43,6 @@ export const useCommons = (): Return => {
 
   return {
     ...state,
-    fetchCommons,
+    fetchSubCommons,
   };
 };

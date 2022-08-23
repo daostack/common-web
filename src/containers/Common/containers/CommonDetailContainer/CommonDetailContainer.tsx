@@ -17,7 +17,7 @@ import {
   useQueryParams,
   useViewPortHook,
 } from "@/shared/hooks";
-import { useCommon } from "@/shared/hooks/useCases";
+import { useCommon, useSubCommons } from "@/shared/hooks/useCases";
 import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
 import ShareIcon from "@/shared/icons/share.icon";
 import {
@@ -142,6 +142,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     fetchCommon: fetchParentCommon,
     setCommon: setParentCommon,
   } = useCommon();
+  const {
+    data: subCommons,
+    fetched: areSubCommonsFetched,
+    fetchSubCommons,
+  } = useSubCommons();
 
   const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
     null
@@ -177,7 +182,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember();
-  const commonSubtitle = getCommonSubtitle();
+  const commonSubtitle = getCommonSubtitle(parentCommon, subCommons);
 
   const activeProposals = useMemo(
     () => proposals.filter((d) => checkIsCountdownState(d)),
@@ -495,6 +500,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   }, [common, fetchParentCommon, setParentCommon]);
 
   useEffect(() => {
+    fetchSubCommons(id);
+  }, [fetchSubCommons, id]);
+
+  useEffect(() => {
     if (inViewport) {
       setStickyClass("");
     } else {
@@ -534,8 +543,17 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     }
   }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
 
-  if (!common || !governance || !isParentCommonFetched) {
-    return isCommonFetched && isParentCommonFetched ? <NotFound /> : <Loader />;
+  if (
+    !common ||
+    !governance ||
+    !isParentCommonFetched ||
+    !areSubCommonsFetched
+  ) {
+    return isCommonFetched && isParentCommonFetched && areSubCommonsFetched ? (
+      <NotFound />
+    ) : (
+      <Loader />
+    );
   }
 
   return (
