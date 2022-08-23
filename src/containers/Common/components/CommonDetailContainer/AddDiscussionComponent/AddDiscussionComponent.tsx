@@ -12,16 +12,21 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 import classNames from "classnames";
 import { createDiscussion } from "@/containers/Common/store/actions";
-import { Discussion } from "@/shared/models";
+import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
+import { Circle, Discussion } from "@/shared/models";
+import {CirclesSelect} from './Select/CirclesSelect';
+import { SelectType } from "@/shared/interfaces/Select";
+import {ToggleSwitch} from '@/shared/components/ToggleSwitch/ToggleSwitch';
 
 const MAX_TITLE_LENGTH = 49;
 const MAX_MESSAGE_LENGTH = 690;
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
-  onSucess: (discussion: Discussion) => void,
+  onSuccess: (discussion: Discussion) => void,
   uid: string,
   commonId: string,
+  governanceId: string,
 }
 
 const validationSchema = Yup.object({
@@ -36,19 +41,24 @@ const validationSchema = Yup.object({
 interface FormValues {
   title: string;
   message: string;
+  selectedCircles: SelectType<Circle>[] | null;
+  isLimitedDiscussion: boolean
 }
 
 const INITIAL_VALUES: FormValues = {
   title: "",
   message: "",
+  selectedCircles: null,
+  isLimitedDiscussion: false,
 };
 
 const AddDiscussionComponent = ({
   isShowing,
   onClose,
-  onSucess,
+  onSuccess,
   uid,
-  commonId
+  commonId,
+  governanceId
 }: AddDiscussionComponentProps) => {
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
@@ -58,6 +68,20 @@ const AddDiscussionComponent = ({
   const screenSize = useSelector(getScreenSize());
   const [pending, setPending] = useState(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const [circleOptions, setCircleOptions] = useState<SelectType<Circle>[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const governanceCircles = await getCommonGovernanceCircles(governanceId);
+      const circles = (governanceCircles || [])?.map((circle) => ({
+        ...circle,
+        value: circle.id,
+        label: circle.name
+      }));
+      setCircleOptions(circles);
+    })();
+  },[governanceId])
+
 
   useEffect(() => {
     if (isShowing) {
@@ -79,7 +103,7 @@ const AddDiscussionComponent = ({
             circleVisibility: [],
           },
           callback: (discussion: Discussion) => {
-            onSucess(discussion);
+            onSuccess(discussion);
           },
         })
       );
@@ -152,6 +176,22 @@ const AddDiscussionComponent = ({
                 </div>
               </div>
 
+              <ToggleSwitch label="Limited discussion" isChecked={formikProps.values.isLimitedDiscussion} onChange={(toggleState) => formikProps.setFieldValue('isLimitedDiscussion', toggleState)}/>
+              {
+                formikProps.values.isLimitedDiscussion && (
+                  <>
+                    <p className="add-discussion-limited-circles-title">Choose limited circles</p>
+                    <CirclesSelect
+                      placeholder="Choose circles"
+                      value={formikProps.values.selectedCircles}
+                      handleChange={data => {
+                        formikProps.setFieldValue('selectedCircles', data);
+                      }} 
+                      options={circleOptions}
+                    />
+                  </>
+                )
+              }
               <div className="action-wrapper">
                 <button
                   className="button-blue"

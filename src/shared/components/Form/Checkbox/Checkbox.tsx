@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 
 import RegularCheckboxIcon from "../../../icons/regularCheckbox.icon";
@@ -18,10 +18,11 @@ export type CheckboxProps = JSX.IntrinsicElements['input'] & {
   type?: "checkbox";
   error?: string;
   styles?: CheckboxStyles;
+  children?: ReactNode;
 };
 
 const Checkbox: FC<CheckboxProps> = (props) => {
-  const { className, label, error, styles, ...restProps } = props;
+  const { className, label, error, styles, children, ...restProps } = props;
   const id = restProps.id || restProps.name;
 
   return (
@@ -37,6 +38,7 @@ const Checkbox: FC<CheckboxProps> = (props) => {
           <RegularCheckboxIcon className="custom-checkbox__icon custom-checkbox__regular-icon" />
           <SelectedCheckboxIcon className="custom-checkbox__icon custom-checkbox__selected-icon" />
         </div>
+        {children}
         {label && (
           <label
             htmlFor={id}

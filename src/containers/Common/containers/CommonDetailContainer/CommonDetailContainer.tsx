@@ -561,9 +561,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         <AddDiscussionComponent
           isShowing={isShowingNewD}
           onClose={onCloseNewD}
-          onSucess={(discussion: Discussion) => { onCloseNewD(); getDisscussionDetail(discussion); }}
+          onSuccess={(discussion: Discussion) => { onCloseNewD(); getDisscussionDetail(discussion); }}
           uid={user?.uid!}
           commonId={common.id}
+          governanceId={governance.id}
         />
       )}
       {isShowingNewP && commonMember && (
