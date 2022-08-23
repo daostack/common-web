@@ -41,7 +41,7 @@ const emptyFunction = () => {
 };
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
-  const { governance, subCommons = [] } = props;
+  const { governance, subCommons = [], parentCommonId } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -161,6 +161,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       case CreateCommonStage.Confirmation:
         return (
           <Confirmation
+            isSubCommonCreation={isSubCommonCreation}
+            parentCommonId={parentCommonId}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
@@ -206,6 +208,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     props.onClose,
     errorText,
     handleCommonCreation,
+    parentCommonId,
   ]);
 
   useEffect(() => {

@@ -1,10 +1,12 @@
 import React, { useEffect, FC, ReactNode } from "react";
 import { Common } from "@/shared/models";
 import { IntermediateCreateCommonPayload } from "../../../../interfaces";
-import { useCommonCreation } from "../useCases";
+import { useCommonCreation, useSubCommonCreation } from "../useCases";
 import { Processing } from "./Processing";
 
 interface ConfirmationProps {
+  isSubCommonCreation: boolean;
+  parentCommonId?: string;
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
@@ -14,26 +16,50 @@ interface ConfirmationProps {
 
 const Confirmation: FC<ConfirmationProps> = (props) => {
   const {
+    isSubCommonCreation,
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
     onFinish,
     creationData,
+    parentCommonId,
   } = props;
   const {
     isCommonCreationLoading,
-    common,
-    error,
+    common: createdCommon,
+    error: commonCreationError,
     createCommon,
   } = useCommonCreation();
+  const {
+    isSubCommonCreationLoading,
+    subCommon: createdSubCommon,
+    error: subCommonCreationError,
+    createSubCommon,
+  } = useSubCommonCreation();
+  const isLoading = isCommonCreationLoading || isSubCommonCreationLoading;
+  const common = createdCommon || createdSubCommon;
+  const error = commonCreationError || subCommonCreationError;
 
   useEffect(() => {
-    if (isCommonCreationLoading || common || error) {
+    if (isLoading || common || error) {
       return;
     }
 
-    createCommon({ ...creationData });
-  }, [isCommonCreationLoading, common, error, creationData, createCommon]);
+    if (!isSubCommonCreation) {
+      createCommon({ ...creationData });
+    } else if (parentCommonId) {
+      createSubCommon({ ...creationData }, parentCommonId);
+    }
+  }, [
+    isLoading,
+    common,
+    error,
+    creationData,
+    createCommon,
+    createSubCommon,
+    isSubCommonCreation,
+    parentCommonId,
+  ]);
 
   useEffect(() => {
     if (!common && !error) {

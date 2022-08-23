@@ -42,6 +42,7 @@ import {
   ImmediateContributionData,
   ImmediateContributionResponse,
   LeaveCommon,
+  CreateSubCommonPayload,
 } from "@/containers/Common/interfaces";
 import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
@@ -443,6 +444,17 @@ export async function createCommon(
 ): Promise<Common> {
   const { data } = await Api.post<Common>(
     ApiEndpoint.CreateCommon,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function createSubCommon(
+  requestData: CreateSubCommonPayload
+): Promise<Common> {
+  const { data } = await Api.post<Common>(
+    ApiEndpoint.CreateSubCommon,
     requestData
   );
 
