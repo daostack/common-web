@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { CreateProposal } from "@/containers/Common/interfaces";
 import { createFundingProposal } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
-import { ProposalsTypes, ScreenSize } from "@/shared/constants";
+import {
+  AllocateFundsTo,
+  ProposalsTypes,
+  ScreenSize,
+} from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
 import { Common, Governance, CommonLink, Proposal } from "@/shared/models";
 import { FundsAllocation, ProposalImage } from "@/shared/models/governance/proposals";
@@ -93,6 +97,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
         images: fundsAllocationData.images as ProposalImage[],
         links: fundsAllocationData.links,
         files: [],
+        to: AllocateFundsTo.Proposer,
       },
     };
 
