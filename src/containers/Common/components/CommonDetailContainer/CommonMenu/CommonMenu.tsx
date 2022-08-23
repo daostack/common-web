@@ -140,10 +140,14 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     common.founderId === currentCommonMember?.userId
   );
   const menuItems = useMemo<MenuItem[]>(() => {
-    const items: MenuItem[] = [MenuItem.CreateSubCommon];
+    const items: MenuItem[] = [];
 
     if (isCommonOwner) {
-      items.push(MenuItem.EditInfo, MenuItem.EditRules);
+      items.push(
+        MenuItem.EditInfo,
+        MenuItem.EditRules,
+        MenuItem.CreateSubCommon
+      );
     }
     if (isCommonMember) {
       items.push(MenuItem.MyContributions);
