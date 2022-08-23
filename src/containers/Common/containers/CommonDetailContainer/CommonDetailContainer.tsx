@@ -642,14 +642,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               <div className="text">
                 <div className="text-information-wrapper__info-wrapper">
                   <div className="name">
-                    <div className="common-detail-container__common-name-wrapper">
-                      <span>{common?.name}</span>
-                      {commonSubtitle && (
-                        <span className="common-detail-container__common-subtitle">
-                          {commonSubtitle}
-                        </span>
-                      )}
-                    </div>
+                    {common?.name}
                     {isMobileView && (
                       <div className="text-information-wrapper__menu-buttons">
                         {isCommonMember ? (
@@ -682,7 +675,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       </div>
                     )}
                   </div>
-                  <div className="tagline">{common.byline}</div>
+                  <div className="tagline">
+                    {commonSubtitle || common.byline}
+                  </div>
                 </div>
               </div>
               <div className="numbers">
