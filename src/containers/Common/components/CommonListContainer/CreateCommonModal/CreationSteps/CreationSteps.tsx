@@ -10,7 +10,7 @@ import React, {
 import { useSelector } from "react-redux";
 import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { Governance } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { GeneralInfo } from "./GeneralInfo";
@@ -25,6 +25,7 @@ interface CreationStepsProps {
   isHeaderScrolledToTop: boolean;
   isSubCommonCreation: boolean;
   governance?: Governance;
+  subCommons: Common[];
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
@@ -39,6 +40,7 @@ export default function CreationSteps(props: CreationStepsProps) {
     isHeaderScrolledToTop,
     isSubCommonCreation,
     governance,
+    subCommons,
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
@@ -139,6 +141,7 @@ export default function CreationSteps(props: CreationStepsProps) {
       creationData,
       isSubCommonCreation,
       governance,
+      subCommons,
       currentStep: step,
       onFinish: handleFinish,
     };

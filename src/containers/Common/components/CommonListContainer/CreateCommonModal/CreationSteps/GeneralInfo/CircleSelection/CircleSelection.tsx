@@ -4,7 +4,7 @@ import { Button, DropdownOption } from "@/shared/components";
 import { ModalFooter } from "@/shared/components/Modal";
 import { Dropdown } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { Governance } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../../../interfaces";
 
@@ -12,10 +12,11 @@ interface GeneralInfoProps {
   onFinish: (circleId: string) => void;
   creationData: IntermediateCreateCommonPayload;
   governance: Governance;
+  subCommons: Common[];
 }
 
 const CircleSelection: FC<GeneralInfoProps> = (props) => {
-  const { onFinish, creationData, governance } = props;
+  const { onFinish, creationData, governance, subCommons } = props;
   const [selectedCircleId, setSelectedCircleId] = useState<string | undefined>(
     creationData.circleIdFromParent
   );
@@ -23,14 +24,21 @@ const CircleSelection: FC<GeneralInfoProps> = (props) => {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const options = useMemo<DropdownOption[]>(
     () =>
-      governance.circles.map(
-        (circle): DropdownOption => ({
-          text: circle.name,
-          searchText: circle.name,
-          value: circle.id,
-        })
-      ),
-    [governance]
+      governance.circles
+        .filter(
+          (circle) =>
+            !subCommons.some(
+              (subCommon) => subCommon.directParent?.circleId === circle.id
+            )
+        )
+        .map(
+          (circle): DropdownOption => ({
+            text: circle.name,
+            searchText: circle.name,
+            value: circle.id,
+          })
+        ),
+    [governance, subCommons]
   );
 
   const handleContinueClick = () => {

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
-import { Governance } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
@@ -16,6 +16,7 @@ interface GeneralInfoProps {
   currentStep: number;
   isSubCommonCreation: boolean;
   governance?: Governance;
+  subCommons: Common[];
   onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
   creationData: IntermediateCreateCommonPayload;
 }
@@ -25,6 +26,7 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
     currentStep,
     isSubCommonCreation,
     governance,
+    subCommons,
     onFinish,
     creationData,
   } = props;
@@ -78,6 +80,7 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
             onFinish={handleCircleSelection}
             creationData={creationData}
             governance={governance}
+            subCommons={subCommons}
           />
         )}
       </div>

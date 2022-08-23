@@ -108,6 +108,7 @@ interface CommonMenuProps {
   menuButtonClassName?: string;
   common: Common;
   governance: Governance;
+  subCommons: Common[];
   currentCommonMember: CommonMember | null;
   withBorder?: boolean;
 }
@@ -118,6 +119,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     menuButtonClassName,
     common,
     governance,
+    subCommons,
     currentCommonMember,
     withBorder = false,
   } = props;
@@ -271,6 +273,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         onClose={handleMenuClose}
         governance={governance}
         parentCommonId={common.id}
+        subCommons={subCommons}
         shouldBeWithoutIntroduction
       />
     </div>

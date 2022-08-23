@@ -32,6 +32,7 @@ interface CreateCommonModalProps {
   onClose: () => void;
   governance?: Governance;
   parentCommonId?: string;
+  subCommons?: Common[];
   shouldBeWithoutIntroduction?: boolean;
 }
 
@@ -40,7 +41,7 @@ const emptyFunction = () => {
 };
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
-  const { governance } = props;
+  const { governance, subCommons = [] } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -147,6 +148,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             isHeaderScrolledToTop={isHeaderScrolledToTop}
             isSubCommonCreation={isSubCommonCreation}
             governance={governance}
+            subCommons={subCommons}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
