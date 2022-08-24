@@ -28,16 +28,24 @@ export const getCommonSubtitle = (
     return (
       <>
         Sub Commons:{" "}
-        {subCommons
-          .map((common) => (
+        {subCommons.reduce<ReactNode[]>((acc, common, index) => {
+          const nextItems = [
             <Link
               key={common.id}
               to={ROUTE_PATHS.COMMON_DETAIL.replace(":id", common.id)}
             >
               {common.name}
-            </Link>
-          ))
-          .join(", ")}
+            </Link>,
+          ];
+
+          if (index !== subCommons.length - 1) {
+            nextItems.push(
+              <React.Fragment key={`separator-${index}`}>, </React.Fragment>
+            );
+          }
+
+          return acc.concat(...nextItems);
+        }, [])}
       </>
     );
   }
