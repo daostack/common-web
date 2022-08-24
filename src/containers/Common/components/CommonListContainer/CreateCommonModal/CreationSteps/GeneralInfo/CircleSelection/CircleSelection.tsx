@@ -1,12 +1,12 @@
 import React, { FC, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { IntermediateCreateCommonPayload } from "@/containers/Common/interfaces";
 import { Button, DropdownOption } from "@/shared/components";
 import { ModalFooter } from "@/shared/components/Modal";
 import { Dropdown } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { IntermediateCreateCommonPayload } from "../../../../../../interfaces";
 
 interface GeneralInfoProps {
   onFinish: (circleId: string) => void;

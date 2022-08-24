@@ -3,8 +3,8 @@ import { Common } from "@/shared/models";
 import {
   CreateSubCommonPayload,
   IntermediateCreateCommonPayload,
-} from "../../../../interfaces";
-import { createSubCommon as createSubCommonApi } from "../../../../store/api";
+} from "@/containers/Common/interfaces";
+import { createSubCommon as createSubCommonApi } from "@/containers/Common/store/api";
 import { getCommonImageURL } from "./useCommonCreation";
 
 interface Return {
