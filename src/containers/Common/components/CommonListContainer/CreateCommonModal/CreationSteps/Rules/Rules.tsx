@@ -19,6 +19,7 @@ import "./index.scss";
 
 interface RulesProps {
   currentStep: number;
+  isSubCommonCreation: boolean;
   onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
   creationData: IntermediateCreateCommonPayload;
 }
@@ -35,6 +36,7 @@ const getInitialValues = (
 
 export default function Rules({
   currentStep,
+  isSubCommonCreation,
   onFinish,
   creationData,
 }: RulesProps): ReactElement {
@@ -59,7 +61,12 @@ export default function Rules({
     [onFinish]
   );
 
-  const progressEl = <Progress creationStep={currentStep} />;
+  const progressEl = (
+    <Progress
+      creationStep={currentStep}
+      isSubCommonCreation={isSubCommonCreation}
+    />
+  );
 
   return (
     <>

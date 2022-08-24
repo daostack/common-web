@@ -23,8 +23,12 @@ export default function AboutTabComponent({
   isJoiningPending,
 }: AboutTabComponentProps) {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const isSubCommon = Boolean(common?.directParent);
   const shouldShowJoinToCommonButton =
-    screenSize === ScreenSize.Desktop && !isCommonMember && !isJoiningPending;
+    screenSize === ScreenSize.Desktop &&
+    !isCommonMember &&
+    !isJoiningPending &&
+    !isSubCommon;
   const descriptionParts = common.description.split("\n");
   const filteredDescriptionParts = isDescriptionExpanded
     ? descriptionParts

@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { CreateCommonModal } from "@/containers/Common/components";
 import {
   ButtonLink,
   Dropdown,
@@ -12,11 +13,12 @@ import {
 import { ScreenSize } from "@/shared/constants";
 import { useAuthorizedDropdown, useAuthorizedModal } from "@/shared/hooks";
 import AgendaIcon from "@/shared/icons/agenda.icon";
+import AddIcon from "@/shared/icons/add.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
 import MosaicIcon from "@/shared/icons/mosaic.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
-import { Common, CommonMember } from "@/shared/models";
+import { Common, CommonMember, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DeleteCommonPrompt } from "../DeleteCommonPrompt";
 import { LeaveCommonPrompt } from "../LeaveCommonPrompt";
@@ -26,6 +28,7 @@ import "./index.scss";
 export enum MenuItem {
   EditInfo,
   EditRules,
+  CreateSubCommon,
   MyContributions,
   DeleteCommon,
   LeaveCommon,
@@ -58,6 +61,15 @@ const OPTIONS: Option[] = [
     value: MenuItem.EditRules,
     className: "edit-common-menu__dropdown-menu-item--disabled",
     disabled: true,
+  },
+  {
+    text: (
+      <>
+        <AddIcon className="edit-common-menu__item-icon" /> Create SubCommon
+      </>
+    ),
+    searchText: "Create SubCommon",
+    value: MenuItem.CreateSubCommon,
   },
   {
     text: (
@@ -95,8 +107,12 @@ interface CommonMenuProps {
   className?: string;
   menuButtonClassName?: string;
   common: Common;
+  governance: Governance;
+  subCommons: Common[];
+  isSubCommon: boolean;
   currentCommonMember: CommonMember | null;
   withBorder?: boolean;
+  onSubCommonCreate?: (common: Common) => void;
 }
 
 const CommonMenu: FC<CommonMenuProps> = (props) => {
@@ -104,7 +120,11 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     className,
     menuButtonClassName,
     common,
+    governance,
+    subCommons,
+    isSubCommon,
     currentCommonMember,
+    onSubCommonCreate,
     withBorder = false,
   } = props;
   const dropdownRef = useRef<DropdownRef>(null);
@@ -129,18 +149,21 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (isCommonOwner) {
       items.push(MenuItem.EditInfo, MenuItem.EditRules);
     }
+    if (!isSubCommon) {
+      items.push(MenuItem.CreateSubCommon);
+    }
     if (isCommonMember) {
       items.push(MenuItem.MyContributions);
     }
-    if (isCommonOwner && common.memberCount === 1) {
+    if (isCommonOwner && common.memberCount === 1 && !isSubCommon) {
       items.push(MenuItem.DeleteCommon);
     }
-    if (isCommonMember && !isCommonOwner) {
+    if (isCommonMember && !isCommonOwner && !isSubCommon) {
       items.push(MenuItem.LeaveCommon);
     }
 
     return items;
-  }, [isCommonMember, isCommonOwner, common.memberCount]);
+  }, [isCommonMember, isCommonOwner, isSubCommon, common.memberCount]);
   const options = useMemo(
     () =>
       OPTIONS.filter((option) => menuItems.includes(option.value as MenuItem)),
@@ -251,6 +274,15 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         isShowing={selectedMenuItem === MenuItem.LeaveCommon}
         onClose={handleMenuClose}
         commonId={common.id}
+      />
+      <CreateCommonModal
+        isShowing={selectedMenuItem === MenuItem.CreateSubCommon}
+        onClose={handleMenuClose}
+        governance={governance}
+        parentCommonId={common.id}
+        subCommons={subCommons}
+        onCommonCreate={onSubCommonCreate}
+        shouldBeWithoutIntroduction
       />
     </div>
   );

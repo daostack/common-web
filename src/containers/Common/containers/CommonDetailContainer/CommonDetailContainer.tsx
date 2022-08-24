@@ -18,6 +18,7 @@ import {
   useQueryParams,
   useViewPortHook,
 } from "@/shared/hooks";
+import { useCommon, useSubCommons } from "@/shared/hooks/useCases";
 import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
 import ShareIcon from "@/shared/icons/share.icon";
 import {
@@ -79,7 +80,7 @@ import CheckIcon from "../../../../shared/icons/check.icon";
 import { authentificated, selectUser } from "../../../Auth/store/selectors";
 import { useCommonMember } from "../../hooks";
 import { COMMON_DETAILS_PAGE_TAB_QUERY_PARAM, Tabs } from "./constants";
-import { getInitialTab } from "./helpers";
+import { getInitialTab, getCommonSubtitle } from "./helpers";
 import "./index.scss";
 import { MembersComponent } from "../../components/CommonDetailContainer/MembersComponent";
 
@@ -91,10 +92,10 @@ interface CommonDetailProps {
   commonId?: string;
   tab?: Tabs;
   activeModalElement?:
-  | Proposal
-  | ProposalWithHighlightedComment
-  | Discussion
-  | DiscussionWithHighlightedMessage;
+    | Proposal
+    | ProposalWithHighlightedComment
+    | Discussion
+    | DiscussionWithHighlightedMessage;
   linkType?: DynamicLinkType;
 }
 
@@ -136,6 +137,18 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const { id: routeCommonId } = useParams<CommonDetailRouterParams>();
   const queryParams = useQueryParams();
   const id = props.commonId || routeCommonId;
+  const {
+    data: parentCommon,
+    fetched: isParentCommonFetched,
+    fetchCommon: fetchParentCommon,
+    setCommon: setParentCommon,
+  } = useCommon();
+  const {
+    data: subCommons,
+    fetched: areSubCommonsFetched,
+    fetchSubCommons,
+    addSubCommon,
+  } = useSubCommons();
 
   const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
     null
@@ -172,12 +185,14 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember();
+  const commonSubtitle = getCommonSubtitle(parentCommon, subCommons);
 
   const activeProposals = useMemo(
     () => proposals.filter((d) => checkIsCountdownState(d)),
     [proposals]
   );
 
+  const isSubCommon = Boolean(common?.directParent);
   const isCommonMember = Boolean(commonMember);
   const isJoiningPending = proposals.some(
     (proposal) =>
@@ -194,6 +209,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     !isCommonMember &&
     !isJoiningPending &&
     !inViewport &&
+    !isSubCommon &&
     (stickyClass || footerClass);
 
   const dispatch = useDispatch();
@@ -477,6 +493,22 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   };
 
   useEffect(() => {
+    if (!common) {
+      return;
+    }
+
+    if (common.directParent) {
+      fetchParentCommon(common.directParent.commonId);
+    } else {
+      setParentCommon(null);
+    }
+  }, [common, fetchParentCommon, setParentCommon]);
+
+  useEffect(() => {
+    fetchSubCommons(id);
+  }, [fetchSubCommons, id]);
+
+  useEffect(() => {
     if (inViewport) {
       setStickyClass("");
     } else {
@@ -527,8 +559,17 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     }
   }, [showJoinModal, shouldAllowJoiningToCommon, closeJoinModal]);
 
-  if (!common || !governance) {
-    return isCommonFetched ? <NotFound /> : <Loader />;
+  if (
+    !common ||
+    !governance ||
+    !isParentCommonFetched ||
+    !areSubCommonsFetched
+  ) {
+    return isCommonFetched && isParentCommonFetched && areSubCommonsFetched ? (
+      <NotFound />
+    ) : (
+      <Loader />
+    );
   }
 
   return (
@@ -574,7 +615,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         <AddDiscussionComponent
           isShowing={isShowingNewD}
           onClose={onCloseNewD}
-          onSucess={(discussion: Discussion) => { onCloseNewD(); getDisscussionDetail(discussion); }}
+          onSucess={(discussion: Discussion) => {
+            onCloseNewD();
+            getDisscussionDetail(discussion);
+          }}
           uid={user?.uid!}
           commonId={common.id}
         />
@@ -637,20 +681,27 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                             className="common-detail-wrapper__common-menu"
                             menuButtonClassName="common-detail-wrapper__menu-button--small"
                             common={common}
+                            governance={governance}
+                            subCommons={subCommons}
+                            isSubCommon={isSubCommon}
                             currentCommonMember={commonMember}
+                            onSubCommonCreate={addSubCommon}
                           />
                         )}
                       </div>
                     )}
                   </div>
-                  <div className="tagline">{common.byline}</div>
+                  <div className="tagline">
+                    {commonSubtitle || common.byline}
+                  </div>
                 </div>
               </div>
               <div className="numbers">
                 <div className="item">
                   <div className="value">{formatPrice(common?.balance)}</div>
-                  <div className="name">{`Available ${screenSize === ScreenSize.Desktop ? "Funds" : ""
-                    }`}</div>
+                  <div className="name">{`Available ${
+                    screenSize === ScreenSize.Desktop ? "Funds" : ""
+                  }`}</div>
                   {Boolean(common.reservedBalance) && (
                     <div className="text-information-wrapper__secondary-text">
                       In process: {formatPrice(common.reservedBalance)}
@@ -659,8 +710,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 </div>
                 <div className="item">
                   <div className="value">{formatPrice(common?.raised)}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Total" : ""
-                    } Raised`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Total" : ""
+                  } Raised`}</div>
                 </div>
                 <div className="item">
                   <div className="value">{common.memberCount}</div>
@@ -668,8 +720,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                 </div>
                 <div className="item">
                   <div className="value">{activeProposals.length}</div>
-                  <div className="name">{`${screenSize === ScreenSize.Desktop ? "Active" : ""
-                    } Proposals`}</div>
+                  <div className="name">{`${
+                    screenSize === ScreenSize.Desktop ? "Active" : ""
+                  } Proposals`}</div>
                 </div>
               </div>
             </div>
@@ -683,8 +736,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       onClick={() => changeTabHandler(t.key)}
                     >
                       <img
-                        src={`/icons/common-icons/${t.icon}${tab === t.key ? "-active" : ""
-                          }.svg`}
+                        src={`/icons/common-icons/${t.icon}${
+                          tab === t.key ? "-active" : ""
+                        }.svg`}
                         alt={t.name}
                       />
                       {t.name}
@@ -692,7 +746,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   ))}
                 </div>
                 <div className="social-wrapper" ref={setJoinEffortRef}>
-                  {!isCommonMember && (
+                  {!isCommonMember && !isSubCommon && (
                     <button
                       className={`button-blue join-the-effort-btn`}
                       onClick={handleOpen}
@@ -725,8 +779,12 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       className="common-detail-wrapper__common-menu"
                       menuButtonClassName="common-detail-wrapper__menu-button--big"
                       common={common}
+                      governance={governance}
+                      subCommons={subCommons}
+                      isSubCommon={isSubCommon}
                       currentCommonMember={commonMember}
                       withBorder
+                      onSubCommonCreate={addSubCommon}
                     />
                   )}
                 </div>
@@ -810,8 +868,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       onClick={() => changeTabHandler(t.key)}
                     >
                       <img
-                        src={`/icons/common-icons/${t.icon}${tab === t.key ? "-active" : ""
-                          }.svg`}
+                        src={`/icons/common-icons/${t.icon}${
+                          tab === t.key ? "-active" : ""
+                        }.svg`}
                         alt={t.name}
                       />
                       {t.name}

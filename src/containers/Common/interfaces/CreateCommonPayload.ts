@@ -11,6 +11,12 @@ export interface CreateCommonPayload {
   useTemplate: boolean;
 }
 
+export interface CreateSubCommonPayload
+  extends Omit<CreateCommonPayload, "searchable" | "useTemplate"> {
+  commonId: string;
+  circleId: string;
+}
+
 export interface IntermediateCreateCommonPayload
   extends Omit<
     CreateCommonPayload,
@@ -19,4 +25,5 @@ export interface IntermediateCreateCommonPayload
   image: string | File | null;
   agreementAccepted: boolean;
   rules?: CreateCommonPayload["unstructuredRules"];
+  circleIdFromParent?: string;
 }

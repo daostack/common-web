@@ -44,6 +44,7 @@ import {
   SubscriptionData,
   SubscriptionResponse,
   LeaveCommon,
+  CreateSubCommonPayload,
 } from "@/containers/Common/interfaces";
 import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
@@ -177,6 +178,17 @@ export async function fetchCommonListByIds(ids: string[]): Promise<Common[]> {
   return results
     .map((result) => transformFirebaseDataList<Common>(result))
     .reduce((acc, items) => [...acc, ...items], []);
+}
+
+export async function fetchSubCommonsByCommonId(commonId: string): Promise<Common[]> {
+  const commons = await firebase
+    .firestore()
+    .collection(Collection.Daos)
+    .where("directParent.commonId", "==", commonId)
+    .where("state", "==", CommonState.ACTIVE)
+    .get();
+  const data = transformFirebaseDataList<Common>(commons);
+  return data;
 }
 
 export async function fetchCommonDetail(id: string): Promise<Common | null> {
@@ -434,6 +446,17 @@ export async function createCommon(
 ): Promise<Common> {
   const { data } = await Api.post<Common>(
     ApiEndpoint.CreateCommon,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function createSubCommon(
+  requestData: CreateSubCommonPayload
+): Promise<Common> {
+  const { data } = await Api.post<Common>(
+    ApiEndpoint.CreateSubCommon,
     requestData
   );
 

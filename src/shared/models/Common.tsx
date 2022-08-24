@@ -87,6 +87,11 @@ export interface Common extends BaseEntity {
    */
   score: number;
 
+  directParent: {
+    commonId: string;
+    circleId: string;
+  } | null;
+
   /**
    * This is not fetched from the database. It's calcualted while the commons are fetched.
    */
