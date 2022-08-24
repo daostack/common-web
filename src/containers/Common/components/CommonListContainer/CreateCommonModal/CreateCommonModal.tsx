@@ -34,6 +34,7 @@ interface CreateCommonModalProps {
   parentCommonId?: string;
   subCommons?: Common[];
   shouldBeWithoutIntroduction?: boolean;
+  onCommonCreate?: (common: Common) => void;
 }
 
 const emptyFunction = () => {
@@ -41,7 +42,7 @@ const emptyFunction = () => {
 };
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
-  const { governance, subCommons = [], parentCommonId } = props;
+  const { governance, subCommons = [], parentCommonId, onCommonCreate } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -114,13 +115,17 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         return;
       }
 
+      if (onCommonCreate) {
+        onCommonCreate(common);
+      }
+
       setCreatedCommon(common);
       setStageState((state) => ({
         ...state,
         stage: CreateCommonStage.Success,
       }));
     },
-    [handleError]
+    [handleError, onCommonCreate]
   );
   const renderedTitle = useMemo((): ReactNode => {
     if (!title) {

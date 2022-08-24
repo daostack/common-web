@@ -112,6 +112,7 @@ interface CommonMenuProps {
   isSubCommon: boolean;
   currentCommonMember: CommonMember | null;
   withBorder?: boolean;
+  onSubCommonCreate?: (common: Common) => void;
 }
 
 const CommonMenu: FC<CommonMenuProps> = (props) => {
@@ -123,6 +124,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     subCommons,
     isSubCommon,
     currentCommonMember,
+    onSubCommonCreate,
     withBorder = false,
   } = props;
   const dropdownRef = useRef<DropdownRef>(null);
@@ -279,6 +281,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         governance={governance}
         parentCommonId={common.id}
         subCommons={subCommons}
+        onCommonCreate={onSubCommonCreate}
         shouldBeWithoutIntroduction
       />
     </div>

@@ -146,6 +146,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     data: subCommons,
     fetched: areSubCommonsFetched,
     fetchSubCommons,
+    addSubCommon,
   } = useSubCommons();
 
   const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
@@ -671,6 +672,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                             subCommons={subCommons}
                             isSubCommon={isSubCommon}
                             currentCommonMember={commonMember}
+                            onSubCommonCreate={addSubCommon}
                           />
                         )}
                       </div>
@@ -769,6 +771,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       isSubCommon={isSubCommon}
                       currentCommonMember={commonMember}
                       withBorder
+                      onSubCommonCreate={addSubCommon}
                     />
                   )}
                 </div>
