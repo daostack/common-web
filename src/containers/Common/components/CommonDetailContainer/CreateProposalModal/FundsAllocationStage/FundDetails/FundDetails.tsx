@@ -12,7 +12,8 @@ import {
   LinksArray,
   ImageArray,
 } from "@/shared/components/Form/Formik";
-import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
+import { ToggleButtonGroup, ToggleButton } from "@/shared/components/Form";
+import { ScreenSize, MAX_LINK_TITLE_LENGTH, RecipientType, Orientation } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
 import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
 import { ProposalImage } from "@/shared/models/governance/proposals";
@@ -122,6 +123,23 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     }
   };
 
+  /*const handleChange = useCallback(
+    (value: unknown) => {
+      const convertedValue = Number(value);
+
+      if (Number.isNaN(convertedValue)) {
+        setSelectedContribution("other");
+        onChange(null, true, false);
+        return;
+      }
+
+      setSelectedContribution(convertedValue);
+      onChange(convertedValue, false, true);
+    },
+    [onChange]
+  );*/
+
+
   return (
     <div className="funds-allocation-configuration">
       <StageName
@@ -143,6 +161,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
         >
           {({ values, errors, touched, isValid }) => (
             <Form>
+            <div className="funds-input-row">
               <Dropdown
                 className="funds-allocation-details__type-dropdown"
                 options={FUND_TYPES}
@@ -153,13 +172,14 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 shouldBeFixed={false}
               />
               <CurrencyInput
-                className="create-funds-allocation__text-field"
+                className="create-funds-allocation__currency"
                 id="amount"
                 name="amount"
                 label="Amount"
                 placeholder="10"
                 prefix={getPrefix(selectedFund)}
               />
+              </div>
               {values.amount > 0 &&
                 <>
                   {bankAccountState.loading ? (
@@ -176,6 +196,16 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                   )}
                 </>
               }
+              <ToggleButtonGroup
+                value={RecipientType.Member}
+                onChange={() => {}}
+                variant={Orientation.Horizontal}
+                >
+                <ToggleButton value={RecipientType.Member}>Member</ToggleButton>
+                <ToggleButton value={RecipientType.Common}>Common</ToggleButton>
+                
+              </ToggleButtonGroup>
+
               <LinksArray
                 name="links"
                 values={values.links}
