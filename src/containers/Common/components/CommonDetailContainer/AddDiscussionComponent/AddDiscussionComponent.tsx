@@ -14,9 +14,10 @@ import classNames from "classnames";
 import { createDiscussion } from "@/containers/Common/store/actions";
 import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
 import { Circle, Discussion } from "@/shared/models";
-import {CirclesSelect} from './Select/CirclesSelect';
+import { CirclesSelect } from './Select/CirclesSelect';
 import { SelectType } from "@/shared/interfaces/Select";
-import {ToggleSwitch} from '@/shared/components/ToggleSwitch/ToggleSwitch';
+import { ToggleSwitch } from '@/shared/components/ToggleSwitch/ToggleSwitch';
+import { omit } from "lodash";
 
 const MAX_TITLE_LENGTH = 49;
 const MAX_MESSAGE_LENGTH = 690;
@@ -36,19 +37,25 @@ const validationSchema = Yup.object({
   title: Yup.string()
     .required("Field required")
     .max(MAX_TITLE_LENGTH, "Title too long"),
+  isLimitedDiscussion: Yup.boolean(),
+  circleVisibility: Yup.array().when('isLimitedDiscussion', {
+    is: (isLimitedDiscussion) => isLimitedDiscussion === true,
+    then: (schema) => schema.min(1, 'Please add at least 1 circle'),
+    otherwise: (schema) => schema.min(0)
+  })
 });
 
 interface FormValues {
   title: string;
   message: string;
-  selectedCircles: SelectType<Circle>[] | null;
+  circleVisibility: SelectType<Circle>[];
   isLimitedDiscussion: boolean
 }
 
 const INITIAL_VALUES: FormValues = {
   title: "",
   message: "",
-  selectedCircles: null,
+  circleVisibility: [],
   isLimitedDiscussion: false,
 };
 
@@ -92,15 +99,18 @@ const AddDiscussionComponent = ({
   }, [isShowing, disableZoom, resetZoom]);
 
   const addDiscussion = useCallback(
-    (payload: FormValues) => {
+    (values: FormValues) => {
       setPending(true);
+      const circleVisibility = (values.circleVisibility || [])?.map(({value}) => value);
+      const payload = omit(values, 'isLimitedDiscussion')
+
       dispatch(
         createDiscussion.request({
           payload: {
             ...payload,
             ownerId: uid,
             commonId: commonId,
-            circleVisibility: [],
+            circleVisibility,
           },
           callback: (discussion: Discussion) => {
             onSuccess(discussion);
@@ -175,19 +185,20 @@ const AddDiscussionComponent = ({
                   />
                 </div>
               </div>
-
               <ToggleSwitch label="Limited discussion" isChecked={formikProps.values.isLimitedDiscussion} onChange={(toggleState) => formikProps.setFieldValue('isLimitedDiscussion', toggleState)}/>
               {
                 formikProps.values.isLimitedDiscussion && (
                   <>
                     <p className="add-discussion-limited-circles-title">Choose limited circles</p>
                     <CirclesSelect
+                      onBlur={formikProps.handleBlur('circleVisibility')}
                       placeholder="Choose circles"
-                      value={formikProps.values.selectedCircles}
+                      value={formikProps.values.circleVisibility}
                       handleChange={data => {
-                        formikProps.setFieldValue('selectedCircles', data);
+                        formikProps.setFieldValue('circleVisibility', data);
                       }} 
                       options={circleOptions}
+                      error={(formikProps.touched.circleVisibility && formikProps.errors.circleVisibility) as string}
                     />
                   </>
                 )
