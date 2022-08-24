@@ -13,9 +13,9 @@ export default function WhitepaperMembers() {
   const governance = useSelector(selectGovernance());
   const [selectedMember, setSelectedMember] = useState({ ...governance?.circles[0], index: 0 });
 
-  const members = governance?.circles.map((circle, index) => {
+  const members = governance?.circles.slice(0,5).map((circle, index) => {
     return (
-      index < 5 && <li
+      <li
         key={index}
         onClick={() => setSelectedMember({ ...circle, index })}
         className={classNames({ active: selectedMember?.name === circle.name })}
