@@ -669,6 +669,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                             common={common}
                             governance={governance}
                             subCommons={subCommons}
+                            isSubCommon={isSubCommon}
                             currentCommonMember={commonMember}
                           />
                         )}
@@ -765,6 +766,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       common={common}
                       governance={governance}
                       subCommons={subCommons}
+                      isSubCommon={isSubCommon}
                       currentCommonMember={commonMember}
                       withBorder
                     />

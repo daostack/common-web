@@ -109,6 +109,7 @@ interface CommonMenuProps {
   common: Common;
   governance: Governance;
   subCommons: Common[];
+  isSubCommon: boolean;
   currentCommonMember: CommonMember | null;
   withBorder?: boolean;
 }
@@ -120,6 +121,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     common,
     governance,
     subCommons,
+    isSubCommon,
     currentCommonMember,
     withBorder = false,
   } = props;
@@ -143,24 +145,23 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     const items: MenuItem[] = [];
 
     if (isCommonOwner) {
-      items.push(
-        MenuItem.EditInfo,
-        MenuItem.EditRules,
-        MenuItem.CreateSubCommon
-      );
+      items.push(MenuItem.EditInfo, MenuItem.EditRules);
+    }
+    if (isCommonOwner && !isSubCommon) {
+      items.push(MenuItem.CreateSubCommon);
     }
     if (isCommonMember) {
       items.push(MenuItem.MyContributions);
     }
-    if (isCommonOwner && common.memberCount === 1) {
+    if (isCommonOwner && common.memberCount === 1 && !isSubCommon) {
       items.push(MenuItem.DeleteCommon);
     }
-    if (isCommonMember && !isCommonOwner) {
+    if (isCommonMember && !isCommonOwner && !isSubCommon) {
       items.push(MenuItem.LeaveCommon);
     }
 
     return items;
-  }, [isCommonMember, isCommonOwner, common.memberCount]);
+  }, [isCommonMember, isCommonOwner, isSubCommon, common.memberCount]);
   const options = useMemo(
     () =>
       OPTIONS.filter((option) => menuItems.includes(option.value as MenuItem)),
