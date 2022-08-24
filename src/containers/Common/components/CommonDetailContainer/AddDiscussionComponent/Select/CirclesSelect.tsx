@@ -22,6 +22,7 @@ export const CirclesSelect = ({options, handleChange, value, placeholder, error,
   
   return (
     <div className="circle-select">
+      <p className="circle-select__limited-circles-title">Choose limited circles</p>
       <Select
         placeholder={placeholder}
         closeMenuOnSelect={false}

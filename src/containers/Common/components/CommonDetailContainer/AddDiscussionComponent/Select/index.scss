@@ -1,7 +1,7 @@
 @import "../../../../../../constants.scss";
 
 .circle-select {
-  height: 4rem;
+  height: 6rem;
 }
 
 .circle-select__no-option-text {
@@ -9,6 +9,13 @@
   font-size: $small;
   color: $light-gray-2;
   text-align: center;
+}
+
+.circle-select__limited-circles-title {
+  font-size: 14px;
+  color: $secondary-blue;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .circle-select-option {

@@ -188,19 +188,16 @@ const AddDiscussionComponent = ({
               <ToggleSwitch label="Limited discussion" isChecked={formikProps.values.isLimitedDiscussion} onChange={(toggleState) => formikProps.setFieldValue('isLimitedDiscussion', toggleState)}/>
               {
                 formikProps.values.isLimitedDiscussion && (
-                  <>
-                    <p className="add-discussion-limited-circles-title">Choose limited circles</p>
-                    <CirclesSelect
-                      onBlur={formikProps.handleBlur('circleVisibility')}
-                      placeholder="Choose circles"
-                      value={formikProps.values.circleVisibility}
-                      handleChange={data => {
-                        formikProps.setFieldValue('circleVisibility', data);
-                      }} 
-                      options={circleOptions}
-                      error={(formikProps.touched.circleVisibility && formikProps.errors.circleVisibility) as string}
-                    />
-                  </>
+                  <CirclesSelect
+                    onBlur={formikProps.handleBlur('circleVisibility')}
+                    placeholder="Choose circles"
+                    value={formikProps.values.circleVisibility}
+                    handleChange={data => {
+                      formikProps.setFieldValue('circleVisibility', data);
+                    }}
+                    options={circleOptions}
+                    error={(formikProps.touched.circleVisibility && formikProps.errors.circleVisibility) as string}
+                  />
                 )
               }
               <div className="action-wrapper">
