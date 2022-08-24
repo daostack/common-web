@@ -171,6 +171,17 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     fetchCommonMember,
   } = useCommonMember();
 
+  const userDiscussions = useMemo(() => {
+    const circleIds = new Set(commonMember?.circlesIds || []);
+    return discussions.filter(({circleVisibility}) => {
+      if(!circleVisibility?.length) {
+        return true;
+      }
+      return circleVisibility?.some((discussionCircleId) => circleIds.has(discussionCircleId))
+    });
+
+  },[discussions, commonMember])
+
   const activeProposals = useMemo(
     () => proposals.filter((d) => checkIsCountdownState(d)),
     [proposals]
@@ -187,7 +198,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
   const shouldShowStickyJoinEffortButton =
     screenSize === ScreenSize.Mobile &&
-    ((tab === Tabs.Discussions && discussions?.length > 0) ||
+    ((tab === Tabs.Discussions && userDiscussions?.length > 0) ||
       (tab === Tabs.Proposals && activeProposals.length > 0)) &&
     !isCommonMember &&
     !isJoiningPending &&
@@ -334,12 +345,12 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const clickPreviewDisscusionHandler = useCallback(
     (id: string) => {
       changeTabHandler(Tabs.Discussions);
-      const disscussion = discussions.find((f) => f.id === id);
+      const disscussion = userDiscussions.find((f) => f.id === id);
       if (disscussion) {
         getDisscussionDetail(disscussion);
       }
     },
-    [discussions, changeTabHandler, getDisscussionDetail]
+    [userDiscussions, changeTabHandler, getDisscussionDetail]
   );
 
   const clickPreviewProposalHandler = useCallback(
@@ -393,7 +404,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           <>
             <PreviewInformationList
               title="Latest Discussions"
-              discussions={discussions}
+              discussions={userDiscussions}
               vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
@@ -438,7 +449,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             />
             <PreviewInformationList
               title="Latest Discussions"
-              discussions={discussions}
+              discussions={userDiscussions}
               vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
@@ -459,7 +470,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             />
             <PreviewInformationList
               title="Latest Discussions"
-              discussions={discussions}
+              discussions={userDiscussions}
               vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
@@ -479,7 +490,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
       setStickyClass("");
     } else {
       if (joinEffortRef && joinEffortRef.offsetTop < window.scrollY) {
-        if (tab === Tabs.Discussions && discussions?.length) {
+        if (tab === Tabs.Discussions && userDiscussions?.length) {
           setStickyClass("sticky");
         } else if (tab === Tabs.Proposals && activeProposals.length) {
           setStickyClass("sticky");
@@ -492,7 +503,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     inViewport,
     activeProposals,
     tab,
-    discussions,
+    userDiscussions,
     setStickyClass,
     joinEffortRef,
   ]);
@@ -762,7 +773,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   onAddNewPost={addPost}
                   common={common}
                   governance={governance}
-                  discussions={discussions || []}
+                  discussions={userDiscussions || []}
                   loadDisscussionDetail={getDisscussionDetail}
                   isCommonMember={isCommonMember}
                   isCommonMemberFetched={isCommonMemberFetched}
