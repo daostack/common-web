@@ -18,7 +18,10 @@ export const getAuthCode = (
       shouldOpenLoginModal: true,
     };
   }
-  if (matchRoute(pathname, ROUTE_PATHS.DEAD_SEA, { exact: true })) {
+  if (
+    matchRoute(pathname, ROUTE_PATHS.DEAD_SEA, { exact: true }) ||
+    matchRoute(pathname, ROUTE_PATHS.COMMON_DETAIL, { exact: true })
+  ) {
     return {
       authCode: AUTH_CODE_FOR_SIGN_UP,
       shouldOpenLoginModal: false,
