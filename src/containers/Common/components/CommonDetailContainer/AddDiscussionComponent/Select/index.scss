@@ -4,6 +4,13 @@
   height: 4rem;
 }
 
+.circle-select__no-option-text {
+  margin: 0;
+  font-size: $small;
+  color: $light-gray-2;
+  text-align: center;
+}
+
 .circle-select-option {
   height: 2rem;
   cursor: pointer;

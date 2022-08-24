@@ -29,6 +29,11 @@ export const CirclesSelect = ({options, handleChange, value, placeholder, error,
         isMulti
         value={value}
         options={options}
+        noOptionsMessage={() => (
+          <p className="circle-select__no-option-text">
+            There are no circles to select
+          </p>
+        )}
         onChange={handleChange}
         onBlur={onBlur}
         hideSelectedOptions={false}
