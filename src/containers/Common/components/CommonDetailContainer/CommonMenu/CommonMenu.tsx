@@ -149,9 +149,9 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (isCommonOwner) {
       items.push(MenuItem.EditInfo, MenuItem.EditRules);
     }
-    if (!isSubCommon) {
-      items.push(MenuItem.CreateSubCommon);
-    }
+    // if (!isSubCommon) {
+    //   items.push(MenuItem.CreateSubCommon);
+    // }
     if (isCommonMember) {
       items.push(MenuItem.MyContributions);
     }
