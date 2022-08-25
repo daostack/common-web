@@ -1,6 +1,7 @@
-import { Report } from "./Report";
-
-import { Time, User } from ".";
+import { Moderation } from "@/shared/interfaces/Moderation";
+import { BaseEntity } from "./BaseEntity";
+import { Link } from "./Link";
+import { User } from "./User";
 
 export enum DiscussionMessageType {
   Message = "Message",
@@ -12,15 +13,20 @@ export enum DiscussionMessageFlag {
   Hidden = "Hidden",
 }
 
-export interface DiscussionMessage {
-  id: string;
+export interface DiscussionMessageTag {
+  value: string;
+}
+
+export interface DiscussionMessage extends BaseEntity {
   discussionId: string;
   commonId: string;
   ownerId: string;
-  text: string;
-  type: DiscussionMessageType;
-  flag: DiscussionMessageFlag;
-  reports: Array<Report>;
-  createTime: Time;
+  ownerName: string;
   owner?: User;
+  text: string;
+  ownerAvatar: string;
+  moderation?: Moderation;
+  parentId?: string;
+  images?: Link[];
+  tags?: DiscussionMessageTag[];
 }

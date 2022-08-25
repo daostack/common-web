@@ -21,7 +21,7 @@ export type CheckboxProps = JSX.IntrinsicElements['input'] & {
 };
 
 const Checkbox: FC<CheckboxProps> = (props) => {
-  const { className, label, error, styles, ...restProps } = props;
+  const { className, label, error, styles, children, ...restProps } = props;
   const id = restProps.id || restProps.name;
 
   return (
@@ -37,6 +37,7 @@ const Checkbox: FC<CheckboxProps> = (props) => {
           <RegularCheckboxIcon className="custom-checkbox__icon custom-checkbox__regular-icon" />
           <SelectedCheckboxIcon className="custom-checkbox__icon custom-checkbox__selected-icon" />
         </div>
+        {children}
         {label && (
           <label
             htmlFor={id}

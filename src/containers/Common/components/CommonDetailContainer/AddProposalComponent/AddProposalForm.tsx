@@ -8,7 +8,11 @@ import {
   LinksArray,
   TextField,
 } from "@/shared/components/Form/Formik";
-import { URL_REGEXP, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
+import {
+  URL_REGEXP,
+  MAX_LINK_TITLE_LENGTH,
+  AllocateFundsTo,
+} from "@/shared/constants";
 import { formatPrice } from "@/shared/utils";
 import { Common } from "@/shared/models";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
@@ -94,12 +98,13 @@ export const AddProposalForm = ({
     }))
   }, [dispatch, hidden])
 
-  const [formValues] = useState({
+  const [formValues] = useState<CreateFundsAllocationFormData>({
     title: "",
     description: "",
     links: [{ title: "", value: "" }],
     images: [],
     amount: 0,
+    to: AllocateFundsTo.Proposer,
   });
 
   useEffect(() => {

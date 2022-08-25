@@ -1,0 +1,57 @@
+@import "../../../constants.scss";
+
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+
+.toggle-switch__container {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 24px;
+}
+
+.toggle-switch__label {
+    font-size: 14px;
+    margin-left: 8px;
+    color: $secondary-blue
+}
+
+.toggle-switch__container__checkbox {
+    display: none;
+}
+
+.toggle-switch__container .toggle-switch__container__body {
+    position: absolute;
+    cursor: pointer;
+    background-color: $light-gray-2;
+    border-radius: 12px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: background-color 0.2s ease;
+}
+
+.toggle-switch__container .toggle-switch__container__body::before {
+    position: absolute;
+    content: "";
+    left: 3px;
+    top: 3px;
+    width: 18px;
+    height: 18px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.toggle-switch__container__checkbox:checked+.toggle-switch__container__body::before {
+    transform: translateX(12px);
+    background-color: #fff;
+}
+
+.toggle-switch__container__checkbox:checked+.toggle-switch__container__body {
+    background-color: $purple-2;
+}

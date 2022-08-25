@@ -75,7 +75,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
               return;
             }
             if (!isImmediateContributionPayment(payment)) {
-              onFinish(payment);
+              onFinish(payment as Payment);
               return;
             }
 

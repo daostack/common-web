@@ -11,7 +11,7 @@ import { Modal } from "@/shared/components";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps, ModalRef } from "@/shared/interfaces";
 import { getScreenSize } from "@/shared/store/selectors";
-import { ScreenSize } from "@/shared/constants";
+import { AllocateFundsTo, ScreenSize } from "@/shared/constants";
 import { BankAccountDetails, Common, Proposal } from "@/shared/models";
 import { AddProposalForm } from "./AddProposalForm";
 import { AddProposalConfirm } from "./AddProposalConfirm";
@@ -71,6 +71,7 @@ export const AddProposalComponent = ({
       amount: 0,
       commonId: common.id,
       files: [],
+      to: AllocateFundsTo.Proposer,
     },
   });
   const [errorMessage, setErrorMessage] = useState("");

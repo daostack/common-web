@@ -30,6 +30,7 @@ export const convertObjectDatesToFirestoreTimestamps = <T extends unknown>(
 
   convertDateInObject(newData, "createdAt");
   convertDateInObject(newData, "updatedAt");
+  convertDateInObject(newData, "lastMessage");
 
   return newData as T;
 };

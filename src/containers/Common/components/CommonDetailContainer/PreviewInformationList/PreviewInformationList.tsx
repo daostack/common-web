@@ -105,7 +105,7 @@ export default function PreviewInformationList(
                     <div className="discussion-count">
                       <img src="/icons/discussions.svg" alt="discussions" />
                       <div className="count">
-                        {proposal.discussionMessage?.length || 0}
+                        {proposal.discussion?.messageCount || 0}
                       </div>
                     </div>
                     <div className="countdown">

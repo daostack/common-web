@@ -4,7 +4,7 @@ import {
   MAX_COMMON_NAME_LENGTH,
   MAX_TAGLINE_LENGTH,
   MAX_ABOUT_LENGTH,
-} from "./constants";
+} from "../constants";
 
 const schema = Yup.object().shape({
   commonName: Yup.string()

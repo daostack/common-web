@@ -10,6 +10,7 @@ import React, {
 import { useSelector } from "react-redux";
 import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
+import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { GeneralInfo } from "./GeneralInfo";
@@ -22,6 +23,9 @@ import "./index.scss";
 
 interface CreationStepsProps {
   isHeaderScrolledToTop: boolean;
+  isSubCommonCreation: boolean;
+  governance?: Governance;
+  subCommons: Common[];
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
@@ -34,6 +38,9 @@ interface CreationStepsProps {
 export default function CreationSteps(props: CreationStepsProps) {
   const {
     isHeaderScrolledToTop,
+    isSubCommonCreation,
+    governance,
+    subCommons,
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
@@ -61,6 +68,15 @@ export default function CreationSteps(props: CreationStepsProps) {
     scrollTop();
     setStep((step) => step - 1);
   }, [step]);
+
+  const handleFormValues = (data?: Partial<IntermediateCreateCommonPayload>) => {
+    if (data) {
+      setCreationData((nextData) => ({
+        ...nextData,
+        ...data,
+      }));
+    }
+  };
 
   const handleFinish = useCallback(
     (data?: Partial<IntermediateCreateCommonPayload>) => {
@@ -107,7 +123,7 @@ export default function CreationSteps(props: CreationStepsProps) {
           />
         )}
         <h3 className="create-common-creation-steps__modal-title">
-          Create a Common
+          Create {isSubCommonCreation ? "sub" : "a"} Common
         </h3>
       </div>
     );
@@ -118,8 +134,12 @@ export default function CreationSteps(props: CreationStepsProps) {
   }, [setTitle, title]);
 
   useEffect(() => {
-    setGoBackHandler(handleGoBack);
-  }, [setGoBackHandler, handleGoBack]);
+    setGoBackHandler(
+      !isSubCommonCreation || step !== CreationStep.GeneralInfo
+        ? handleGoBack
+        : undefined
+    );
+  }, [setGoBackHandler, isSubCommonCreation, handleGoBack, step]);
 
   useEffect(() => {
     setShouldShowCloseButton(true);
@@ -128,6 +148,9 @@ export default function CreationSteps(props: CreationStepsProps) {
   const content = useMemo(() => {
     const stepProps = {
       creationData,
+      isSubCommonCreation,
+      governance,
+      subCommons,
       currentStep: step,
       onFinish: handleFinish,
     };
@@ -140,11 +163,11 @@ export default function CreationSteps(props: CreationStepsProps) {
       case CreationStep.Rules:
         return <Rules {...stepProps} />;
       case CreationStep.Review:
-        return <Review {...stepProps} />;
+        return <Review {...stepProps} handleFormValues={handleFormValues} />;
       default:
         return null;
     }
-  }, [step, handleFinish, creationData]);
+  }, [step, isSubCommonCreation, governance, handleFinish, creationData]);
 
   return content;
 }
