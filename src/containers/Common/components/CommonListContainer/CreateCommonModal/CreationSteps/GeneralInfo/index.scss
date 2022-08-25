@@ -32,6 +32,13 @@
   }
 }
 
+.create-common-general-info__empty-circles-text {
+  margin: 0;
+  font-size: $small;
+  color: $light-gray-2;
+  text-align: center;
+}
+
 .create-common-general-info__modal-footer {
   display: flex;
   justify-content: center;

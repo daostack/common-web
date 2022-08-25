@@ -39,6 +39,8 @@ import { CalculatedVotes } from "@/shared/models/governance/proposals";
 import {
   ImmediateContributionData,
   ImmediateContributionResponse,
+  SubscriptionData,
+  SubscriptionResponse,
 } from "../interfaces";
 import { ProposalsTypes } from "@/shared/constants";
 

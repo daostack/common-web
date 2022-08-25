@@ -42,7 +42,10 @@ import {
   CreateProposal,
   ImmediateContributionData,
   ImmediateContributionResponse,
+  SubscriptionData,
+  SubscriptionResponse,
   LeaveCommon,
+  CreateSubCommonPayload,
 } from "@/containers/Common/interfaces";
 import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
@@ -176,6 +179,17 @@ export async function fetchCommonListByIds(ids: string[]): Promise<Common[]> {
   return results
     .map((result) => transformFirebaseDataList<Common>(result))
     .reduce((acc, items) => [...acc, ...items], []);
+}
+
+export async function fetchSubCommonsByCommonId(commonId: string): Promise<Common[]> {
+  const commons = await firebase
+    .firestore()
+    .collection(Collection.Daos)
+    .where("directParent.commonId", "==", commonId)
+    .where("state", "==", CommonState.ACTIVE)
+    .get();
+  const data = transformFirebaseDataList<Common>(commons);
+  return data;
 }
 
 export async function fetchCommonDetail(id: string): Promise<Common | null> {
@@ -439,6 +453,17 @@ export async function createCommon(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
+export async function createSubCommon(
+  requestData: CreateSubCommonPayload
+): Promise<Common> {
+  const { data } = await Api.post<Common>(
+    ApiEndpoint.CreateSubCommon,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
 export async function makeImmediateContribution(
   requestData: ImmediateContributionData
 ): Promise<ImmediateContributionResponse> {
@@ -463,6 +488,19 @@ export function subscribeToPayment(
     .doc(paymentId)
     .onSnapshot((snapshot) => {
       callback(transformFirebaseDataSingle<Payment>(snapshot));
+    });
+}
+
+export function subscribeToSubscription(
+  subscriptionId: string,
+  callback: (subscription?: Subscription) => void
+): () => void {
+  return firebase
+    .firestore()
+    .collection(Collection.Subscriptions)
+    .doc(subscriptionId)
+    .onSnapshot((snapshot) => {
+      callback(transformFirebaseDataSingle<Subscription>(snapshot));
     });
 }
 

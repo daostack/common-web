@@ -13,6 +13,7 @@ import "./index.scss";
 
 interface UserAcknowledgmentProps {
   currentStep: number;
+  isSubCommonCreation: boolean;
   onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
   creationData: IntermediateCreateCommonPayload;
 }
@@ -22,6 +23,7 @@ const CAUSES_TEXT =
 
 export default function UserAcknowledgment({
   currentStep,
+  isSubCommonCreation,
   onFinish,
   creationData,
 }: UserAcknowledgmentProps): ReactElement {
@@ -80,7 +82,10 @@ export default function UserAcknowledgment({
           src="/assets/images/common-creation-user-acknowledgment.svg"
           alt="User Acknowledgment"
         />
-        <Progress creationStep={currentStep} />
+        <Progress
+          creationStep={currentStep}
+          isSubCommonCreation={isSubCommonCreation}
+        />
       </>
     ),
     [currentStep]

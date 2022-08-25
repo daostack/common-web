@@ -36,11 +36,13 @@ export default function EmptyTabComponent({
     onClose: onCloseJoinModal,
   } = useAuthorizedModal();
   const showJoinModal = isJoinModalOpen && isCommonMemberFetched;
+  const isSubCommon = Boolean(common?.directParent);
   const shouldShowJoinToCommonButton =
-    Boolean(common) && !isCommonMember && !isJoiningPending;
+    Boolean(common) && !isCommonMember && !isJoiningPending && !isSubCommon;
   const shouldAllowJoiningToCommon =
     Boolean(common) &&
     !isCommonMember &&
+    !isSubCommon &&
     (isCreationStageReached || !isJoiningPending);
 
   const handleModalOpen = useCallback(() => {

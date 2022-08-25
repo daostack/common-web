@@ -1,4 +1,4 @@
-import { ContributionSourceType, PaymentStatus } from "./Payment";
+import { ContributionSourceType, PaymentStatus, PaymentAmount } from "./Payment";
 import { Time } from "./shared";
 
 export enum SubscriptionStatus {
@@ -31,7 +31,7 @@ export interface Subscription {
   proposalId?: string;
   dueDate: Time;
   status: SubscriptionStatus;
-  amount: number;
+  amount: PaymentAmount;
   metadata: SubscriptionMetadata;
   paymentFailures?: SubscriptionPayment[];
   charges: number;

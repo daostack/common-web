@@ -14,12 +14,14 @@ import "./index.scss";
 
 interface ReviewProps {
   currentStep: number;
+  isSubCommonCreation: boolean;
   onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
   creationData: IntermediateCreateCommonPayload;
 }
 
 export default function Review({
   currentStep,
+  isSubCommonCreation,
   onFinish,
   creationData,
 }: ReviewProps): ReactElement {
@@ -42,7 +44,12 @@ export default function Review({
     }
   }, [onFinish, selectedCommonImage]);
 
-  const progressEl = <Progress creationStep={currentStep} />;
+  const progressEl = (
+    <Progress
+      creationStep={currentStep}
+      isSubCommonCreation={isSubCommonCreation}
+    />
+  );
 
   return (
     <>

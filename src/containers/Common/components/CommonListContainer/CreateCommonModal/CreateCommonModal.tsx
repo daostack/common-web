@@ -11,7 +11,7 @@ import { Modal } from "@/shared/components";
 import { getScreenSize } from "@/shared/store/selectors";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ScreenSize } from "@/shared/constants";
-import { Common } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import { IntermediateCreateCommonPayload } from "../../../interfaces";
 import { Confirmation } from "./Confirmation";
 import { CreationSteps } from "./CreationSteps";
@@ -30,6 +30,11 @@ const INITIAL_DATA: IntermediateCreateCommonPayload = {
 interface CreateCommonModalProps {
   isShowing: boolean;
   onClose: () => void;
+  governance?: Governance;
+  parentCommonId?: string;
+  subCommons?: Common[];
+  shouldBeWithoutIntroduction?: boolean;
+  onCommonCreate?: (common: Common) => void;
 }
 
 const emptyFunction = () => {
@@ -37,11 +42,15 @@ const emptyFunction = () => {
 };
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
+  const { governance, subCommons = [], parentCommonId, onCommonCreate } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
+  const initialStage = props.shouldBeWithoutIntroduction
+    ? CreateCommonStage.CreationSteps
+    : CreateCommonStage.Introduction;
   const [{ stage, shouldStartFromLastStep }, setStageState] = useState({
-    stage: CreateCommonStage.Introduction,
+    stage: initialStage,
     shouldStartFromLastStep: false,
   });
   const [creationData, setCreationData] =
@@ -58,6 +67,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isHeaderSticky = stage === CreateCommonStage.CreationSteps;
+  const isSubCommonCreation = Boolean(props.parentCommonId);
+
   const setBigTitle = useCallback((title: string) => {
     setTitle(title);
     setIsBigTitle(true);
@@ -104,13 +115,17 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         return;
       }
 
+      if (onCommonCreate) {
+        onCommonCreate(common);
+      }
+
       setCreatedCommon(common);
       setStageState((state) => ({
         ...state,
         stage: CreateCommonStage.Success,
       }));
     },
-    [handleError]
+    [handleError, onCommonCreate]
   );
   const renderedTitle = useMemo((): ReactNode => {
     if (!title) {
@@ -136,6 +151,9 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         return (
           <CreationSteps
             isHeaderScrolledToTop={isHeaderScrolledToTop}
+            isSubCommonCreation={isSubCommonCreation}
+            governance={governance}
+            subCommons={subCommons}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
@@ -148,6 +166,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       case CreateCommonStage.Confirmation:
         return (
           <Confirmation
+            isSubCommonCreation={isSubCommonCreation}
+            parentCommonId={parentCommonId}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
@@ -179,6 +199,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     }
   }, [
     stage,
+    isSubCommonCreation,
+    governance,
     isMobileView,
     isHeaderScrolledToTop,
     setSmallTitle,
@@ -191,6 +213,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     props.onClose,
     errorText,
     handleCommonCreation,
+    parentCommonId,
   ]);
 
   useEffect(() => {
@@ -200,12 +223,12 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     }
 
     setStageState({
-      stage: CreateCommonStage.Introduction,
+      stage: initialStage,
       shouldStartFromLastStep: false,
     });
     setCreationData(INITIAL_DATA);
     resetZoom();
-  }, [props.isShowing, disableZoom, resetZoom]);
+  }, [props.isShowing, initialStage, disableZoom, resetZoom]);
 
   return (
     <Modal
@@ -224,6 +247,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         shouldShowCloseButton &&
         ![CreateCommonStage.Success, CreateCommonStage.Error].includes(stage)
       }
+      fullHeight
     >
       <div id="content">{content}</div>
     </Modal>

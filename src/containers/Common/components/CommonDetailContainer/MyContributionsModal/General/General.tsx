@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, FC } from "react";
+import firebase from "firebase/app";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Button, ButtonVariant, ModalFooter } from "@/shared/components";
@@ -31,6 +32,7 @@ const General: FC<GeneralProps> = (props) => {
   const { setTitle } = useMyContributionsContext();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const dueDate = subscription?.dueDate?.seconds || firebase.firestore.Timestamp.now().seconds;
   const total = useMemo(
     () => payments.reduce((acc, payment) => acc + payment.amount.amount, 0),
     [payments]
@@ -71,10 +73,10 @@ const General: FC<GeneralProps> = (props) => {
                 <HistoryListItem
                   title="Monthly Contribution"
                   description={`Next payment: ${formatDate(
-                    new Date(subscription.dueDate.seconds * 1000),
+                    new Date(dueDate * 1000),
                     DateFormat.LongHuman
                   )}`}
-                  amount={`${formatPrice(subscription.amount)}/mo`}
+                  amount={formatPrice(subscription.amount.amount, {bySubscription: true})}
                   onClick={goToMonthlyContribution}
                   styles={itemStyles}
                 />
@@ -111,9 +113,6 @@ const General: FC<GeneralProps> = (props) => {
           <div
             className={classNames(
               "general-my-contributions-stage__buttons-wrapper",
-              {
-                "general-my-contributions-stage__buttons-wrapper--center": !subscription,
-              }
             )}
           >
             <Button
@@ -124,15 +123,13 @@ const General: FC<GeneralProps> = (props) => {
             >
               Add a one-time contribution
             </Button>
-            {subscription && (
               <Button
                 className="general-my-contributions-stage__button"
                 onClick={goToChangeMonthlyContribution}
                 shouldUseFullWidth
               >
-                Change my monthly contribution
+                {subscription  ? 'Change my' : 'Create'} monthly contribution
               </Button>
-            )}
           </div>
         </ModalFooter>
       </section>

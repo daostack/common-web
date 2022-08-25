@@ -20,7 +20,7 @@ interface Return {
   ) => Promise<void>;
 }
 
-const getCommonImageURL = async (
+export const getCommonImageURL = async (
   image: string | File
 ): Promise<string | null> => {
   if (typeof image === "string") {
