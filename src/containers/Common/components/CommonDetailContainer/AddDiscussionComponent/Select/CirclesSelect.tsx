@@ -4,6 +4,7 @@ import React, { ReactElement } from 'react';
 import Select, { MultiValue, StylesConfig, SingleValue } from 'react-select';
 import {CircleSelectOption} from './CircleSelectOption';
 import { ErrorText } from "@/shared/components/Form/ErrorText";
+import { Colors } from '@/shared/constants';
 import './index.scss';
 
 type CircleSelectType = SelectType<Circle>;
@@ -44,11 +45,11 @@ export const CirclesSelect = ({options, handleChange, value, placeholder, error,
           menuPortal: (provided) => ({...provided, zIndex: 10000}),
           control: (provided) => ({
             ...provided,
-            ...(error && {borderColor: '#ef5456'}),
+            ...(error && {borderColor: Colors.error}),
           }),
           multiValue: (provided) => ({
             ...provided,
-            backgroundColor: '#d2d8ff'
+            backgroundColor: Colors.lightGray9,
           })
         }}
         components={{ Option: CircleSelectOption }}

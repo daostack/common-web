@@ -42,7 +42,9 @@ export enum Colors {
   lightPurple = "#F1F2FF",
   lightGray3 = "#d5d5e4",
   lightGray4 = "#f4f6ff",
+  lightGray9 = "#d2d8ff",
   shadow2 = "rgba(0, 26, 54, 0.08)",
+  error = "#ef5456",
   transparent = "transparent",
 }
 

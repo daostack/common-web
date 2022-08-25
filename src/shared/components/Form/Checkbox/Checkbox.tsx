@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 
 import RegularCheckboxIcon from "../../../icons/regularCheckbox.icon";
@@ -18,7 +18,6 @@ export type CheckboxProps = JSX.IntrinsicElements['input'] & {
   type?: "checkbox";
   error?: string;
   styles?: CheckboxStyles;
-  children?: ReactNode;
 };
 
 const Checkbox: FC<CheckboxProps> = (props) => {
