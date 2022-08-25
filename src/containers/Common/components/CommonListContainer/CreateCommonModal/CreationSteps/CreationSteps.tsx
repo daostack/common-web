@@ -69,6 +69,15 @@ export default function CreationSteps(props: CreationStepsProps) {
     setStep((step) => step - 1);
   }, [step]);
 
+  const handleFormValues = (data?: Partial<IntermediateCreateCommonPayload>) => {
+    if (data) {
+      setCreationData((nextData) => ({
+        ...nextData,
+        ...data,
+      }));
+    }
+  };
+
   const handleFinish = useCallback(
     (data?: Partial<IntermediateCreateCommonPayload>) => {
       if (data) {
@@ -154,7 +163,7 @@ export default function CreationSteps(props: CreationStepsProps) {
       case CreationStep.Rules:
         return <Rules {...stepProps} />;
       case CreationStep.Review:
-        return <Review {...stepProps} />;
+        return <Review {...stepProps} handleFormValues={handleFormValues} />;
       default:
         return null;
     }

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, ReactElement } from "react";
+import React, { useCallback, ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
@@ -15,8 +15,9 @@ import "./index.scss";
 interface ReviewProps {
   currentStep: number;
   isSubCommonCreation: boolean;
-  onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
+  onFinish: (data?: Partial<IntermediateCreateCommonPayload>) => void;
   creationData: IntermediateCreateCommonPayload;
+  handleFormValues: (data: Partial<IntermediateCreateCommonPayload>) => void;
 }
 
 export default function Review({
@@ -24,6 +25,7 @@ export default function Review({
   isSubCommonCreation,
   onFinish,
   creationData,
+  handleFormValues,
 }: ReviewProps): ReactElement {
   const {
     name: commonName,
@@ -33,16 +35,11 @@ export default function Review({
     rules = [],
   } = creationData;
   const screenSize = useSelector(getScreenSize());
-  const [selectedCommonImage, setSelectedCommonImage] = useState<
-    string | File | null
-  >(creationData.image);
   const isMobileView = screenSize === ScreenSize.Mobile;
 
-  const handleContinueClick = useCallback(() => {
-    if (selectedCommonImage) {
-      onFinish({ image: selectedCommonImage });
-    }
-  }, [onFinish, selectedCommonImage]);
+  const handleContinueClick = () => {
+      onFinish();
+  };
 
   const progressEl = (
     <Progress
@@ -50,6 +47,10 @@ export default function Review({
       isSubCommonCreation={isSubCommonCreation}
     />
   );
+
+  const handleCommonImage = (image: string | File | null) => {
+    handleFormValues({image});
+  };
 
   return (
     <>
@@ -61,7 +62,7 @@ export default function Review({
           commonName={commonName}
           tagline={tagline}
           initialImage={creationData.image}
-          onImageChange={setSelectedCommonImage}
+          onImageChange={handleCommonImage}
         />
         <MainCommonInfo
           className="create-common-review__main-info"
