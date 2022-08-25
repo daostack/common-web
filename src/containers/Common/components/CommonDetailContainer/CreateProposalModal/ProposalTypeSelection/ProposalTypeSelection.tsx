@@ -77,24 +77,26 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const proposalTypeDetails =
     selectedType && getProposalTypeDetails(governance, selectedType);
-  const proposalTypeOptions = useMemo<ProposalTypeOption[]>(
-    () =>
-      PROPOSAL_TYPE_OPTIONS.map((option) => {
-        const isDisabled = !checkIsProposalTypeAllowedForMember(
-          commonMember,
-          option.value as ProposalsTypes
-        );
+  const proposalTypeOptions = useMemo<ProposalTypeOption[]>(() => {
+    const proposalKeys = Object.keys(governance.proposals);
 
-        return {
-          ...option,
-          isDisabled,
-          className: isDisabled
-            ? "proposal-type-selection-stage__type-dropdown-item--disabled"
-            : "",
-        };
-      }),
-    [commonMember]
-  );
+    return PROPOSAL_TYPE_OPTIONS.filter((option) =>
+      proposalKeys.includes(option.value as string)
+    ).map((option) => {
+      const isDisabled = !checkIsProposalTypeAllowedForMember(
+        commonMember,
+        option.value as ProposalsTypes
+      );
+
+      return {
+        ...option,
+        isDisabled,
+        className: isDisabled
+          ? "proposal-type-selection-stage__type-dropdown-item--disabled"
+          : "",
+      };
+    });
+  }, [governance.proposals, commonMember]);
 
   const handleSelect = (value: unknown) => {
     const foundOption = proposalTypeOptions.find(
