@@ -5,6 +5,7 @@ import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   BankAccountDetails,
   Card,
+  Circles,
   Collection,
   Common,
   CommonMember,
@@ -770,6 +771,14 @@ export const getCommonGovernanceRules = async (
   const governance = await getGovernance(governanceId);
 
   return governance?.unstructuredRules || null;
+};
+
+export const getCommonGovernanceCircles = async (
+  governanceId: string
+): Promise<Circles | null> => {
+  const governance = await getGovernance(governanceId);
+
+  return governance?.circles || null;
 };
 
 export const getUserCommons = async (userId: string): Promise<Common[]> => {

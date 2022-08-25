@@ -12,16 +12,22 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize } from "@/shared/constants";
 import classNames from "classnames";
 import { createDiscussion } from "@/containers/Common/store/actions";
-import { Discussion } from "@/shared/models";
+import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
+import { Circle, Discussion } from "@/shared/models";
+import { CirclesSelect } from './Select/CirclesSelect';
+import { SelectType } from "@/shared/interfaces/Select";
+import { ToggleSwitch } from '@/shared/components/ToggleSwitch/ToggleSwitch';
+import { omit } from "lodash";
 
 const MAX_TITLE_LENGTH = 49;
 const MAX_MESSAGE_LENGTH = 690;
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
-  onSucess: (discussion: Discussion) => void,
+  onSuccess: (discussion: Discussion) => void,
   uid: string,
   commonId: string,
+  governanceId: string,
 }
 
 const validationSchema = Yup.object({
@@ -31,24 +37,35 @@ const validationSchema = Yup.object({
   title: Yup.string()
     .required("Field required")
     .max(MAX_TITLE_LENGTH, "Title too long"),
+  isLimitedDiscussion: Yup.boolean(),
+  circleVisibility: Yup.array().when('isLimitedDiscussion', {
+    is: (isLimitedDiscussion) => isLimitedDiscussion === true,
+    then: (schema) => schema.min(1, 'Please add at least 1 circle'),
+    otherwise: (schema) => schema.min(0)
+  })
 });
 
 interface FormValues {
   title: string;
   message: string;
+  circleVisibility: SelectType<Circle>[];
+  isLimitedDiscussion: boolean
 }
 
 const INITIAL_VALUES: FormValues = {
   title: "",
   message: "",
+  circleVisibility: [],
+  isLimitedDiscussion: false,
 };
 
 const AddDiscussionComponent = ({
   isShowing,
   onClose,
-  onSucess,
+  onSuccess,
   uid,
-  commonId
+  commonId,
+  governanceId
 }: AddDiscussionComponentProps) => {
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
@@ -58,6 +75,20 @@ const AddDiscussionComponent = ({
   const screenSize = useSelector(getScreenSize());
   const [pending, setPending] = useState(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const [circleOptions, setCircleOptions] = useState<SelectType<Circle>[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const governanceCircles = await getCommonGovernanceCircles(governanceId);
+      const circles = (governanceCircles || [])?.map((circle) => ({
+        ...circle,
+        value: circle.id,
+        label: circle.name
+      }));
+      setCircleOptions(circles);
+    })();
+  },[governanceId])
+
 
   useEffect(() => {
     if (isShowing) {
@@ -68,18 +99,21 @@ const AddDiscussionComponent = ({
   }, [isShowing, disableZoom, resetZoom]);
 
   const addDiscussion = useCallback(
-    (payload: FormValues) => {
+    (values: FormValues) => {
       setPending(true);
+      const circleVisibility = (values.circleVisibility || [])?.map(({value}) => value);
+      const payload = omit(values, 'isLimitedDiscussion')
+
       dispatch(
         createDiscussion.request({
           payload: {
             ...payload,
             ownerId: uid,
             commonId: commonId,
-            circleVisibility: [],
+            circleVisibility,
           },
           callback: (discussion: Discussion) => {
-            onSucess(discussion);
+            onSuccess(discussion);
           },
         })
       );
@@ -151,7 +185,21 @@ const AddDiscussionComponent = ({
                   />
                 </div>
               </div>
-
+              <ToggleSwitch label="Limited discussion" isChecked={formikProps.values.isLimitedDiscussion} onChange={(toggleState) => formikProps.setFieldValue('isLimitedDiscussion', toggleState)}/>
+              {
+                formikProps.values.isLimitedDiscussion && (
+                  <CirclesSelect
+                    onBlur={formikProps.handleBlur('circleVisibility')}
+                    placeholder="Choose circles"
+                    value={formikProps.values.circleVisibility}
+                    handleChange={data => {
+                      formikProps.setFieldValue('circleVisibility', data);
+                    }}
+                    options={circleOptions}
+                    error={(formikProps.touched.circleVisibility && formikProps.errors.circleVisibility) as string}
+                  />
+                )
+              }
               <div className="action-wrapper">
                 <button
                   className="button-blue"
