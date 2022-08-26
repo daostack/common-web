@@ -1,0 +1,11 @@
+@import "../../../../constants";
+
+.language-dropdown__menu-button {
+  background-color: transparent;
+  border: 0;
+}
+
+.language-dropdown__item--rtl {
+  text-align: right;
+  direction: rtl;
+}

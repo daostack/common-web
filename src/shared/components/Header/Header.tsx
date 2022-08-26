@@ -33,6 +33,7 @@ import {
   logOut,
   setLoginModalState,
 } from "../../../containers/Auth/store/actions";
+import { LanguageDropdown } from "./LanguageDropdown";
 import "./index.scss";
 
 const ADMIN_ACCESS_ROLES: UserRole[] = [UserRole.Trustee];
@@ -198,6 +199,7 @@ const Header = () => {
       {screenSize === ScreenSize.Desktop ? (
         <>
           {links}
+          <LanguageDropdown />
           {user && (
             <Account
               user={user}
