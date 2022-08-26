@@ -1,7 +1,6 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
-
-import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
+import { Language, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
 import { SharedStateType } from "../interfaces";
 import * as actions from "./actions";
 
@@ -20,29 +19,30 @@ const initialState: SharedStateType = {
     shouldShowMenuItems: null,
     shouldShowDownloadLinks: null,
     shouldShowAuth: null,
-  }
+  },
+  language: Language.English,
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
   .handleAction(actions.startLoading, (state) =>
     produce(state, (nextState) => {
       nextState.loading = true;
-    }),
+    })
   )
   .handleAction(actions.stopLoading, (state) =>
     produce(state, (nextState) => {
       nextState.loading = false;
-    }),
+    })
   )
   .handleAction(actions.showNotification, (state, action) =>
     produce(state, (nexState) => {
       nexState.notification = action.payload;
-    }),
+    })
   )
   .handleAction(actions.changeScreenSize, (state, action) =>
     produce(state, (nextState) => {
       nextState.screenSize = action.payload;
-    }),
+    })
   )
   .handleAction(actions.buildShareLink.request, (state, { payload }) =>
     produce(state, (nextState) => {
@@ -50,7 +50,7 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.loadingShareLinks,
         [payload.payload.key]: true,
       };
-    }),
+    })
   )
   .handleAction(actions.buildShareLink.success, (state, { payload }) =>
     produce(state, (nextState) => {
@@ -62,7 +62,7 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.loadingShareLinks,
         [payload.key]: false,
       };
-    }),
+    })
   )
   .handleAction(actions.buildShareLink.failure, (state, { payload }) =>
     produce(state, (nextState) => {
@@ -70,7 +70,7 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.loadingShareLinks,
         [payload.key]: false,
       };
-    }),
+    })
   )
   .handleAction(actions.setAreReportsLoading, (state, action) =>
     produce(state, (nextState) => {
@@ -92,6 +92,11 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.header,
         ...action.payload,
       };
+    })
+  )
+  .handleAction(actions.changeLanguage, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.language = action.payload;
     })
   );
 

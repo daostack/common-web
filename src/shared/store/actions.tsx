@@ -1,6 +1,5 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
-
-import { ScreenSize } from "../constants";
+import { Language, ScreenSize } from "../constants";
 import {
   NotificationData,
   PayloadWithOptionalCallback,
@@ -37,3 +36,7 @@ export const resetHeaderState = createStandardAction(
 export const updateHeaderState = createStandardAction(
   SharedActionTypes.UPDATE_HEADER_STATE
 )<Partial<SharedHeaderState>>();
+
+export const changeLanguage = createStandardAction(
+  SharedActionTypes.CHANGE_LANGUAGE
+)<Language>();

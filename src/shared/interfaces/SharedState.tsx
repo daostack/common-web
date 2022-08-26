@@ -1,5 +1,4 @@
-import { ScreenSize } from "../constants";
-
+import { Language, ScreenSize } from "../constants";
 import { NotificationData } from "./";
 
 export interface SharedHeaderState {
@@ -16,4 +15,5 @@ export interface SharedStateType {
   loadingShareLinks: Record<string, boolean>;
   areReportsLoading: boolean;
   header: SharedHeaderState;
+  language: Language;
 }
