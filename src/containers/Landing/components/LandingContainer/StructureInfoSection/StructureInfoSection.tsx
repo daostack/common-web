@@ -1,9 +1,12 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
 import decentralizedOrganizationImageSrc from "@/shared/assets/images/decentralized-organization.svg";
 import decideTogetherImageSrc from "@/shared/assets/images/decide-together.svg";
 import poolFundsImageSrc from "@/shared/assets/images/pool-funds.svg";
+import { Language } from "@/shared/constants";
+import { selectIsRtlLanguage, selectLanguage } from "@/shared/store/selectors";
 import "./index.scss";
 
 interface CardProps {
@@ -38,14 +41,27 @@ const Card: FC<CardProps> = ({
 );
 
 const StructureInfoSection: FC = () => {
+  const language = useSelector(selectLanguage());
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const { t } = useTranslation("translation", {
     keyPrefix: "landing.structureInfoSection",
   });
 
   return (
     <section className="landing-structure-info-section">
-      <h2 className="landing-structure-info-section__title">{t("title")}</h2>
-      <div className="landing-structure-info-section__cards-wrapper">
+      <h2
+        className={classNames("landing-structure-info-section__title", {
+          "landing-structure-info-section__title--hebrew":
+            language === Language.Hebrew,
+        })}
+      >
+        {t("title")}
+      </h2>
+      <div
+        className={classNames("landing-structure-info-section__cards-wrapper", {
+          "landing-structure-info-section__cards-wrapper--rtl": isRtlLanguage,
+        })}
+      >
         <Card
           imageSrc={poolFundsImageSrc}
           title={t("card1.title")}

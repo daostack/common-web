@@ -32,6 +32,9 @@ $vertical-view-breakpoint: 1100px;
     grid-auto-flow: row;
   }
 }
+.landing-imagine-section__content--rtl {
+  direction: rtl;
+}
 
 .landing-imagine-section__image {
   width: 100%;

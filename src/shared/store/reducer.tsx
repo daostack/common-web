@@ -21,6 +21,7 @@ const initialState: SharedStateType = {
     shouldShowAuth: null,
   },
   language: Language.English,
+  isRtlLanguage: false,
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
@@ -97,6 +98,7 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
   .handleAction(actions.changeLanguage, (state, action) =>
     produce(state, (nextState) => {
       nextState.language = action.payload;
+      nextState.isRtlLanguage = nextState.language === Language.Hebrew;
     })
   );
 

@@ -16,4 +16,5 @@ export interface SharedStateType {
   areReportsLoading: boolean;
   header: SharedHeaderState;
   language: Language;
+  isRtlLanguage: boolean;
 }
