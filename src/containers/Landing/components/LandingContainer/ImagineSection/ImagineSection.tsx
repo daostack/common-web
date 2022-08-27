@@ -1,39 +1,42 @@
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import peopleOnCubesImageSrc from "@/shared/assets/images/peolpe-on-cubes.svg";
 import "./index.scss";
 
-const ImagineSection: FC = () => (
-  <section className="landing-imagine-section">
-    <div className="landing-imagine-section__content">
-      <img
-        className="landing-imagine-section__image"
-        src={peopleOnCubesImageSrc}
-        alt="People"
-      />
-      <div className="landing-imagine-section__info-wrapper">
-        <h2 className="landing-imagine-section__title">Imagine</h2>
-        <p className="landing-imagine-section__description">
-          Humanity’s greatest achievements were made by massive collaborations.
-          We enter a new era of trust and collaboration.
-        </p>
-        <p className="landing-imagine-section__description">
-          Imagine you could easily and quickly fuel a movement, by letting the
-          people in your community decide what is important.
-        </p>
-        <p className="landing-imagine-section__description">
-          With Common, you can.
-        </p>
-        <p className="landing-imagine-section__description">
-          Common empowers groups to collaborate with no single organizer. It’s
-          an online platform that makes it easy to pool funds together, and
-          decide collaboratively how to spend it.
-        </p>
-        <p className="landing-imagine-section__description">
-          We enter a new era of trust and collaboration.
-        </p>
+const ImagineSection: FC = () => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "landing.imagineSection",
+  });
+
+  return (
+    <section className="landing-imagine-section">
+      <div className="landing-imagine-section__content">
+        <img
+          className="landing-imagine-section__image"
+          src={peopleOnCubesImageSrc}
+          alt={t("imageAlt")}
+        />
+        <div className="landing-imagine-section__info-wrapper">
+          <h2 className="landing-imagine-section__title">{t("title")}</h2>
+          <p className="landing-imagine-section__description">
+            {t("description.part1")}
+          </p>
+          <p className="landing-imagine-section__description">
+            {t("description.part2")}
+          </p>
+          <p className="landing-imagine-section__description">
+            {t("description.part3")}
+          </p>
+          <p className="landing-imagine-section__description">
+            {t("description.part4")}
+          </p>
+          <p className="landing-imagine-section__description">
+            {t("description.part5")}
+          </p>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default ImagineSection;

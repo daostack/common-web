@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import decentralizedOrganizationImageSrc from "@/shared/assets/images/decentralized-organization.svg";
 import decideTogetherImageSrc from "@/shared/assets/images/decide-together.svg";
@@ -36,31 +37,35 @@ const Card: FC<CardProps> = ({
   </div>
 );
 
-const StructureInfoSection: FC = () => (
-  <section className="landing-structure-info-section">
-    <h2 className="landing-structure-info-section__title">
-      Shape a new structure for an organization
-    </h2>
-    <div className="landing-structure-info-section__cards-wrapper">
-      <Card
-        imageSrc={poolFundsImageSrc}
-        title="Pool Funds"
-        description="Pool collective resources to the Common’s wallet."
-        descriptionClassName="landing-structure-info-section__card-description--small"
-      />
-      <Card
-        imageSrc={decideTogetherImageSrc}
-        title="Decide Together"
-        description="Propose, discuss and vote on decisions and expenses."
-        descriptionClassName="landing-structure-info-section__card-description--medium"
-      />
-      <Card
-        imageSrc={decentralizedOrganizationImageSrc}
-        title="Decentralized Organization"
-        description="Shape a new structure, which is collaborative, autonomous and transparent."
-      />
-    </div>
-  </section>
-);
+const StructureInfoSection: FC = () => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "landing.structureInfoSection",
+  });
+
+  return (
+    <section className="landing-structure-info-section">
+      <h2 className="landing-structure-info-section__title">{t("title")}</h2>
+      <div className="landing-structure-info-section__cards-wrapper">
+        <Card
+          imageSrc={poolFundsImageSrc}
+          title={t("card1.title")}
+          description={t("card1.description")}
+          descriptionClassName="landing-structure-info-section__card-description--small"
+        />
+        <Card
+          imageSrc={decideTogetherImageSrc}
+          title={t("card2.title")}
+          description={t("card2.description")}
+          descriptionClassName="landing-structure-info-section__card-description--medium"
+        />
+        <Card
+          imageSrc={decentralizedOrganizationImageSrc}
+          title={t("card3.title")}
+          description={t("card3.description")}
+        />
+      </div>
+    </section>
+  );
+};
 
 export default StructureInfoSection;
