@@ -1,0 +1,30 @@
+@import "../../../../../constants";
+
+$custom-radio-button-border-radius: 8px;
+
+.custom-radio-button {
+  flex: 1 0;
+  padding: 10px;
+  font-size: inherit;
+  text-align: center;
+  margin-right: 1rem;
+  background-color: green;
+
+  &:first-child {
+    border-top-left-radius: $custom-radio-button-border-radius;
+    border-bottom-left-radius: $custom-radio-button-border-radius;
+  }
+  &:last-child {
+    border-top-right-radius: $custom-radio-button-border-radius;
+    border-bottom-right-radius: $custom-radio-button-border-radius;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+.custom-radio-button_label {
+  font-size: $small;
+  text-align: center;
+  font-family: inherit;
+}

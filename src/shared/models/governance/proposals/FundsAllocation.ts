@@ -19,7 +19,7 @@ export enum FundingAllocationStatus {
 export interface FundsAllocationArgs extends BasicArgsProposal {
   amount: number;
   to: AllocateFundsTo;
-  subcommonId?: string;
+  subcommonId?: string | null;
 }
 
 export interface FundsAllocation extends BaseProposal {

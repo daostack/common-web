@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
@@ -12,10 +12,10 @@ import {
   LinksArray,
   ImageArray,
 } from "@/shared/components/Form/Formik";
-import { ToggleButtonGroup, ToggleButton } from "@/shared/components/Form";
-import { ScreenSize, MAX_LINK_TITLE_LENGTH, RecipientType, Orientation } from "@/shared/constants";
+import { RadioButtonGroup, RadioButton } from "@/shared/components/Form";
+import { ScreenSize, MAX_LINK_TITLE_LENGTH, RecipientType, Orientation, AllocateFundsTo } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
-import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
+import { BankAccountDetails, Governance, CommonLink, Common, CommonMemberWithUserInfo } from "@/shared/models";
 import { ProposalImage } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
@@ -30,6 +30,8 @@ interface ConfigurationProps {
   initialData: FundsAllocationData;
   onFinish: (data: FundsAllocationData) => void;
   commonBalance: number;
+  commonMembers: CommonMemberWithUserInfo[];
+  commonList: Common[];
 }
 
 interface FormValues {
@@ -40,20 +42,44 @@ interface FormValues {
   bankAccountDetails: BankAccountDetails | null;
   images: ProposalImage[];
   areImagesLoading: boolean;
+  to: AllocateFundsTo,
+  subcommonId: string | null;
 }
 
 const FundDetails: FC<ConfigurationProps> = (props) => {
   const dispatch = useDispatch();
-  const { commonBalance, initialData, onFinish } = props;
+  const { commonBalance, initialData, onFinish, commonMembers, commonList } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const formRef = useRef<FormikProps<FormValues>>(null);
+  const [selectedRecipientType, setSelectedRecipientType] = useState(RecipientType.Member)
   const [bankAccountState, setBankAccountState] = useState<BankAccountState>({
     loading: false,
     fetched: false,
     bankAccount: null,
   });
   const [selectedFund, setSelectedFund] = useState<FundType>(FundType.ILS);
+  
+  const memberOptions = useMemo(
+    () => commonMembers.map(({user, id}) => ({
+      text: user.displayName || `${user.firstName} ${user.lastName}`,
+      searchText: user.displayName || `${user.firstName} ${user.lastName}`,
+      value: user.id,
+    })),
+    []
+  );
+
+  const commonsOptions = useMemo(
+    () => commonList.map(({id, name}) => ({
+        text: name,
+        searchText: name,
+        value: id,
+      })),
+    []
+  );
+
+  const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [recipientDropdownDetails, setRecipientDropdownDetails] = useState(memberOptions)
 
   useEffect(() => {
     if (bankAccountState.loading || bankAccountState.fetched) {
@@ -85,20 +111,36 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     bankAccountDetails: bankAccountState.bankAccount,
     images: [],
     areImagesLoading: false,
+    to: AllocateFundsTo.Proposer,
+    subcommonId: null,
   });
 
-  const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
-    (values) => {
+  const getTo = () => selectedRecipientType === RecipientType.Member
+    ? AllocateFundsTo.Proposer
+    : AllocateFundsTo.SubCommon;
+
+  const getSubcommon = () => commonsOptions.find((common) => common.value === selectedRecipient);
+
+  const getRecipientName = () => {
+    const to = getTo();
+    if (to === AllocateFundsTo.Proposer) {
+      return memberOptions.find((member) => member.value === selectedRecipient);
+    }
+    return commonsOptions.find((common) => common.value === selectedRecipient);
+  }
+
+  const handleSubmit = (values) => {
       onFinish({
         ...initialData,
         fund: selectedFund,
         amount: values.amount,
         links: values.links,
         images: values.images,
+        to: getTo(),
+        subcommonId: selectedRecipient,
+        recipientName: getRecipientName()?.text,
       });
-    },
-    [onFinish]
-  );
+    }
 
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
@@ -106,6 +148,9 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       onFinish({
         ...initialData,
         ...formRef.current.values,
+        to: getTo(),
+        subcommonId: selectedRecipient,
+        recipientName: getRecipientName()?.text ,
       });
     }
   }, []);
@@ -123,22 +168,24 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     }
   };
 
-  /*const handleChange = useCallback(
-    (value: unknown) => {
-      const convertedValue = Number(value);
+  const handleSelectRecipentType = (value: unknown) => {
+      setSelectedRecipientType(value as RecipientType);
+      value === RecipientType.Common
+        ? setRecipientDropdownDetails(commonsOptions)
+        : setRecipientDropdownDetails(memberOptions)
+  }
 
-      if (Number.isNaN(convertedValue)) {
-        setSelectedContribution("other");
-        onChange(null, true, false);
-        return;
-      }
+  const getDropdownDetails = () => selectedRecipientType === RecipientType.Common
+        ? commonsOptions
+        : memberOptions;
 
-      setSelectedContribution(convertedValue);
-      onChange(convertedValue, false, true);
-    },
-    [onChange]
-  );*/
+  const handleSetSelectedRecipient = (value) => {
+      setSelectedRecipient(value)
+  }
 
+  const toggleButtonStyles = {
+    default: "contribution-amount-selection__toggle-button",
+  };
 
   return (
     <div className="funds-allocation-configuration">
@@ -196,15 +243,34 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                   )}
                 </>
               }
-              <ToggleButtonGroup
-                value={RecipientType.Member}
-                onChange={() => {}}
+              <RadioButtonGroup
+                className="recipient-selection__toggle-button-group"
+                label="Recipient"
+                value={selectedRecipientType}
+                onChange={handleSelectRecipentType}
                 variant={Orientation.Horizontal}
                 >
-                <ToggleButton value={RecipientType.Member}>Member</ToggleButton>
-                <ToggleButton value={RecipientType.Common}>Common</ToggleButton>
+                <RadioButton
+                  value={RecipientType.Member}
+                  styles={toggleButtonStyles}
+                  checked={selectedRecipientType === RecipientType.Member}>
+                </RadioButton>
+                <RadioButton
+                  value={RecipientType.Common}
+                  styles={toggleButtonStyles}
+                  checked={selectedRecipientType === RecipientType.Common}>
+                </RadioButton>
                 
-              </ToggleButtonGroup>
+              </RadioButtonGroup>
+
+              <Dropdown
+                className="funds-allocation-details__type-dropdown"
+                options={recipientDropdownDetails}
+                value={selectedRecipient}
+                onSelect={handleSetSelectedRecipient}
+                placeholder={`Choose ${selectedRecipientType}`}
+                shouldBeFixed={false}
+              />
 
               <LinksArray
                 name="links"

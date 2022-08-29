@@ -1,5 +1,6 @@
 import { CommonLink } from "@/shared/models";
 import { ProposalImage } from "@/shared/models/governance/proposals";
+import { AllocateFundsTo } from "@/shared/constants";
 
 export enum FundType {
   ILS = 'ILS',
@@ -17,4 +18,7 @@ export interface FundsAllocationData {
   amount: number;
   links: CommonLink[];
   images: ProposalImage[];
+  to: AllocateFundsTo,
+  subcommonId?: string | null;
+  recipientName?: string;
 }

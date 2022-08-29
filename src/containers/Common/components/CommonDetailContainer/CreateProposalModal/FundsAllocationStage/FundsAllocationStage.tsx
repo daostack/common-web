@@ -1,7 +1,7 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CreateProposal } from "@/containers/Common/interfaces";
-import { createFundingProposal } from "@/containers/Common/store/actions";
+import { createFundingProposal, getCommonsList } from "@/containers/Common/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import {
   AllocateFundsTo,
@@ -20,6 +20,8 @@ import { Success } from "./Success";
 import { FundsAllocationStep } from "./constants";
 import { FundsAllocationData, FundType } from "./types";
 import { FundAllocationForm } from "./FundsAllocationForm";
+import { useCommonMembers } from "@/containers/Common/hooks";
+import { selectCommonList, selectCurrentPage } from "@/containers/Common/store/selectors";
 import "./index.scss";
 
 interface FundsAllocationStageProps {
@@ -37,15 +39,20 @@ const initialFundsData = {
   fund: FundType.ILS,
   links: [] as CommonLink[],
   images: [] as ProposalImage[],
+  to: AllocateFundsTo.Proposer,
+  subcommonId: null,
+  recipientName: "",
 };
 
 const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const { common, governance, onFinish, onGoBack } = props;
   const dispatch = useDispatch();
+  const allCommons = useSelector(selectCommonList());
   const [fundsAllocationData, setFundsAllocationData] =
     useState<FundsAllocationData>(initialFundsData);
   const [step, setStep] = useState(FundsAllocationStep.Configuration);
   const [isProposalCreating, setIsProposalCreating] = useState(false);
+  const [isCommonsLoadingStarted, setIsCommonsLoadingStarted] = useState(false);
   const [createdProposal, setCreatedProposal] =
     useState<FundsAllocation | null>(null);
   const {
@@ -55,12 +62,24 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     setShouldBeOnFullHeight,
     onError,
   } = useCreateProposalContext();
+  const {
+    fetched: areCommonMembersFetched,
+    data: commonMembers,
+    fetchCommonMembers,
+  } = useCommonMembers();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isConfigurationStep = step === FundsAllocationStep.Configuration;
   const isSuccessStep = step === FundsAllocationStep.Success;
   const shouldShowModalTitle = isMobileView || isConfigurationStep;
   const isLoading = isProposalCreating;
+  const commons = useMemo(
+    () =>
+      allCommons/*.filter(
+        (common) => common.register === 'registered'
+      )*/,
+    [allCommons]
+  );
 
   const handleConfigurationFinish = (data: FundsAllocationData) => {
     setFundsAllocationData((fundsAllocationData) => ({
@@ -71,12 +90,24 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   };
 
   const handleFundDetailsFinish = (data: FundsAllocationData) => {
+    console.log('handleFundDetailsFinish data', data)
     setFundsAllocationData((fundsAllocationData) => ({
       ...fundsAllocationData,
       ...data,
     }));
     setStep(FundsAllocationStep.Confirmation);
   };
+
+  useEffect(() => {
+    fetchCommonMembers(governance.commonId);
+  }, [fetchCommonMembers, governance.commonId]);
+
+  useEffect(() => {
+    if (!isCommonsLoadingStarted && commons.length === 0) {
+      setIsCommonsLoadingStarted(true);
+      dispatch(getCommonsList.request());
+    }
+  }, [dispatch, isCommonsLoadingStarted, commons]);
 
   const handleConfirm = () => {
     if (!fundsAllocationData) {
@@ -97,7 +128,8 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
         images: fundsAllocationData.images as ProposalImage[],
         links: fundsAllocationData.links,
         files: [],
-        to: AllocateFundsTo.Proposer,
+        to: fundsAllocationData.to,
+        subcommonId: fundsAllocationData?.subcommonId,
       },
     };
 
@@ -155,6 +187,8 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       <Confirmation
         fund={fundsAllocationData.fund}
         amount={fundsAllocationData.amount}
+        to={fundsAllocationData.to}
+        recipientName={fundsAllocationData?.recipientName}
         onSubmit={handleConfirm}
         onCancel={handleConfirmationCancel}
       />
@@ -194,6 +228,8 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
                       initialData={fundsAllocationData}
                       onFinish={handleFundDetailsFinish}
                       commonBalance={common.balance}
+                      commonMembers={commonMembers}
+                      commonList={commons}
                     />
                   )}
                 </>
