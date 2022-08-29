@@ -71,6 +71,11 @@ const Header = () => {
     ROUTE_PATHS.MY_ACCOUNT,
     NON_EXACT_MATCH_ROUTE_PROPS
   );
+  const isHomeRoute = useMatchRoute(ROUTE_PATHS.HOME, EXACT_MATCH_ROUTE_PROPS);
+  const isContactUsRoute = useMatchRoute(
+    ROUTE_PATHS.CONTACT_US,
+    EXACT_MATCH_ROUTE_PROPS
+  );
   const [showAccountLinks, setShowAccountLinks] =
     useState<boolean>(isMyAccountRoute);
   const shouldShowMenuItems =
@@ -78,6 +83,7 @@ const Header = () => {
   const shouldShowDownloadLinks =
     sharedHeaderState.shouldShowDownloadLinks ?? !isTrusteeRoute;
   const shouldShowAuth = sharedHeaderState.shouldShowAuth ?? !isTrusteeRoute;
+  const shouldShowLanguageDropdown = isHomeRoute || isContactUsRoute;
 
   useEffect(() => {
     setShowAccountLinks(isMyAccountRoute);
@@ -147,7 +153,7 @@ const Header = () => {
         </>
       )}
 
-      {isMobile() && (
+      {shouldShowLanguageDropdown && isMobile() && (
         <div
           className="header-wrapper__language-dropdown-wrapper"
           onClick={(event) => event.stopPropagation()}
@@ -205,7 +211,7 @@ const Header = () => {
       {screenSize === ScreenSize.Desktop ? (
         <>
           {links}
-          <LanguageDropdown />
+          {shouldShowLanguageDropdown && <LanguageDropdown />}
           {user && (
             <Account
               user={user}
