@@ -11,6 +11,8 @@ const ImagineSection: FC = () => {
   const { t } = useTranslation("translation", {
     keyPrefix: "landing.imagineSection",
   });
+  const descriptionPart4 = t("description.part4");
+  const descriptionPart5 = t("description.part5");
 
   return (
     <section className="landing-imagine-section">
@@ -35,12 +37,16 @@ const ImagineSection: FC = () => {
           <p className="landing-imagine-section__description">
             {t("description.part3")}
           </p>
-          <p className="landing-imagine-section__description">
-            {t("description.part4")}
-          </p>
-          <p className="landing-imagine-section__description">
-            {t("description.part5")}
-          </p>
+          {descriptionPart4 && (
+            <p className="landing-imagine-section__description">
+              {descriptionPart4}
+            </p>
+          )}
+          {descriptionPart5 && (
+            <p className="landing-imagine-section__description">
+              {t("description.part5")}
+            </p>
+          )}
         </div>
       </div>
     </section>
