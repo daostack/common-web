@@ -1,11 +1,16 @@
-import React, { FC } from "react";
+import React, { FC, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import classNames from "classnames";
 import { Formik } from "formik";
+import { FormikProps } from "formik/dist/types";
 import { Button, Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
 import { Form, TextField } from "@/shared/components/Form/Formik";
 import { SUPPORT_EMAIL } from "@/shared/constants";
-import validationSchema from "./validationSchema";
+import { useFormErrorsTranslate } from "@/shared/hooks";
+import { selectIsRtlLanguage, selectLanguage } from "@/shared/store/selectors";
+import { getValidationSchema } from "./validationSchema";
 import "./index.scss";
 
 interface ContactUsFormProps {
@@ -34,9 +39,14 @@ const INITIAL_VALUES: ContactUsFormValues = {
 
 const ContactUsForm: FC<ContactUsFormProps> = (props) => {
   const { onSubmit, isLoading = false, errorText } = props;
+  const formRef = useRef<FormikProps<ContactUsFormValues>>(null);
   const { t } = useTranslation("translation", {
     keyPrefix: "contactUs.contactUsSection.form",
   });
+  const language = useSelector(selectLanguage());
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
+  const validationSchema = useMemo(() => getValidationSchema(), [language]);
+  useFormErrorsTranslate(formRef.current);
 
   return (
     <Formik
@@ -56,6 +66,9 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
             input: {
               default: "contact-us-contact-us-form__input",
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
         />
         <TextField
@@ -68,6 +81,9 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
             input: {
               default: "contact-us-contact-us-form__input",
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
         />
         <TextField
@@ -81,6 +97,9 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
               default:
                 "contact-us-contact-us-form__input contact-us-contact-us-form__textarea",
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
           isTextarea
         />
@@ -94,6 +113,9 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
             input: {
               default: "contact-us-contact-us-form__input",
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
         />
         <TextField
@@ -105,8 +127,13 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
-              default: "contact-us-contact-us-form__input",
+              default: classNames("contact-us-contact-us-form__input", {
+                "contact-us-contact-us-form__input--rtl-ltr": isRtlLanguage,
+              }),
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
         />
         <TextField
@@ -118,8 +145,13 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
-              default: "contact-us-contact-us-form__input",
+              default: classNames("contact-us-contact-us-form__input", {
+                "contact-us-contact-us-form__input--rtl-ltr": isRtlLanguage,
+              }),
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
         />
         {isLoading && (
