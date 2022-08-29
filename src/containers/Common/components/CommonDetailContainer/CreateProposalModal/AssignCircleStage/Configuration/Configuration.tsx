@@ -162,7 +162,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     <div className="assign-circle-configuration">
       <StageName
         className="assign-circle-configuration__stage-name"
-        name="Assign members to circle"
+        name="Assign members to a circle"
         icon={
           <AvatarIcon className="assign-circle-configuration__avatar-icon" />
         }

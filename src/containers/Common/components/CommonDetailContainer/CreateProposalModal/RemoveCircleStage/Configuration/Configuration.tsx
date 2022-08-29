@@ -164,7 +164,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     <div className="remove-circle-configuration">
       <StageName
         className="remove-circle-configuration__stage-name"
-        name="Remove members from circle"
+        name="Remove members from a circle"
         icon={
           <AvatarIcon className="remove-circle-configuration__avatar-icon" />
         }

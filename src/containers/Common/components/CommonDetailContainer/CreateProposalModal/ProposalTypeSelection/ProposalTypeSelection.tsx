@@ -32,13 +32,13 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
     value: ProposalsTypes.SURVEY,
   },
   {
-    text: "Assign members to circle",
-    searchText: "Assign members to circle",
+    text: "Assign members to a circle",
+    searchText: "Assign members to a circle",
     value: ProposalsTypes.ASSIGN_CIRCLE,
   },
   {
-    text: "Remove members from circle",
-    searchText: "Remove members from circle",
+    text: "Remove members from a circle",
+    searchText: "Remove members from a circle",
     value: ProposalsTypes.REMOVE_CIRCLE,
   },
 ];
