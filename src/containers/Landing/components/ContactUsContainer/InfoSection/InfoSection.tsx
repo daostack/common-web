@@ -1,23 +1,36 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import classNames from "classnames";
 import teamImageSrc from "@/shared/assets/images/team.png";
 import { ButtonLink } from "@/shared/components";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
+import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import CheckInCircleIcon from "@/shared/icons/checkInCircle.icon";
+import { selectIsRtlLanguage } from "@/shared/store/selectors";
 import "./index.scss";
 
 interface InfoSectionProps {
   onGoBack: () => void;
 }
 
-const ListItem: FC = ({ children }) => (
+interface ListItemProps {
+  isRtl: boolean;
+}
+
+const ListItem: FC<ListItemProps> = ({ isRtl, children }) => (
   <div className="contact-us-info-section__list-item">
-    <CheckInCircleIcon className="contact-us-info-section__list-item-icon" />
+    <CheckInCircleIcon
+      className={classNames("contact-us-info-section__list-item-icon", {
+        "contact-us-info-section__list-item-icon--rtl": isRtl,
+      })}
+    />
     {children}
   </div>
 );
 
 const InfoSection: FC<InfoSectionProps> = ({ onGoBack }) => {
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const { t } = useTranslation("translation", {
     keyPrefix: "contactUs.infoSection",
   });
@@ -36,7 +49,11 @@ const InfoSection: FC<InfoSectionProps> = ({ onGoBack }) => {
             className="contact-us-info-section__back-link"
             onClick={onGoBack}
           >
-            <LeftArrowIcon />
+            {isRtlLanguage ? (
+              <RightArrowIcon className="contact-us-info-section__back-icon" />
+            ) : (
+              <LeftArrowIcon className="contact-us-info-section__back-icon" />
+            )}
             {t("backButton")}
           </ButtonLink>
           <h1 className="contact-us-info-section__title">{t("title")}</h1>
@@ -47,11 +64,11 @@ const InfoSection: FC<InfoSectionProps> = ({ onGoBack }) => {
             {t("description.part2")}
           </p>
           <ul className="contact-us-info-section__list">
-            <ListItem>{t("list.item1")}</ListItem>
-            <ListItem>{t("list.item2")}</ListItem>
-            <ListItem>{t("list.item3")}</ListItem>
-            <ListItem>{t("list.item4")}</ListItem>
-            <ListItem>{t("list.item5")}</ListItem>
+            <ListItem isRtl={isRtlLanguage}>{t("list.item1")}</ListItem>
+            <ListItem isRtl={isRtlLanguage}>{t("list.item2")}</ListItem>
+            <ListItem isRtl={isRtlLanguage}>{t("list.item3")}</ListItem>
+            <ListItem isRtl={isRtlLanguage}>{t("list.item4")}</ListItem>
+            <ListItem isRtl={isRtlLanguage}>{t("list.item5")}</ListItem>
           </ul>
         </div>
       </div>
