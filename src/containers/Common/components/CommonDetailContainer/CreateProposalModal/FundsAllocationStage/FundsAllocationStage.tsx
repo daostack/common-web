@@ -75,9 +75,9 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const isLoading = isProposalCreating;
   const commons = useMemo(
     () =>
-      allCommons/*.filter(
-        (common) => common.register === 'registered'
-      )*/,
+      allCommons.filter(
+        (currCommon) => currCommon.directParent?.commonId === common.id
+      ),
     [allCommons]
   );
 
@@ -90,7 +90,6 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   };
 
   const handleFundDetailsFinish = (data: FundsAllocationData) => {
-    console.log('handleFundDetailsFinish data', data)
     setFundsAllocationData((fundsAllocationData) => ({
       ...fundsAllocationData,
       ...data,
