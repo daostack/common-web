@@ -16,10 +16,9 @@ export default {
         title: "דמיינו",
         description: {
           part1:
-            "ההישגים הגדולים ביותר של האנושות נוצרו בשיתופי פעולה בקנה מידה עצום",
-          part2:
-            "דמיינו שאתן יכולות להניע בקלות ובמהירות תנועה, בה החברים מחליטים יחד מה באמת חשוב",
-          part3: "עם קומון, זה אפשרי.",
+            "ההישגים הגדולים ביותר של האנושות נוצרו בשיתופי פעולה בקנה מידה עצום דמיינו שאתן יכולות להניע בקלות ובמהירות תנועה, בה החברים מחליטים יחד מה באמת חשוב עם קומון, זה אפשרי.",
+          part2: "",
+          part3: "",
           part4: "",
           part5: "",
         },
@@ -39,24 +38,6 @@ export default {
           title: "גיבוש ארגון מבוזר",
           description:
             "יוצרים מבנה התארגנות חדש, עצמאי, שקוף וחופשי מבירוקרטיה",
-        },
-      },
-      commonInfoSection: {
-        title: "What is Common?",
-        card1: {
-          imageAlt: "Global empower",
-          description:
-            "Common empowers people around the world to catalyze social and economic change and fulfill common dreams together.",
-        },
-        card2: {
-          imageAlt: "Voting process",
-          description:
-            "Common members exchange ideas, prioritize initiatives, and fund projects through a democratic voting process.",
-        },
-        card3: {
-          imageAlt: "Collaboration",
-          description:
-            "Common enables large groups of people to collaborate on shared agendas by pooling funds and collectively making decisions.",
         },
       },
       collectiveActionSection: {
