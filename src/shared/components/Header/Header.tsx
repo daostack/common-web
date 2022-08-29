@@ -71,15 +71,13 @@ const Header = () => {
     ROUTE_PATHS.MY_ACCOUNT,
     NON_EXACT_MATCH_ROUTE_PROPS
   );
-  const [showAccountLinks, setShowAccountLinks] = useState<boolean>(
-    isMyAccountRoute
-  );
+  const [showAccountLinks, setShowAccountLinks] =
+    useState<boolean>(isMyAccountRoute);
   const shouldShowMenuItems =
     sharedHeaderState.shouldShowMenuItems ?? !isTrusteeRoute;
   const shouldShowDownloadLinks =
     sharedHeaderState.shouldShowDownloadLinks ?? !isTrusteeRoute;
-  const shouldShowAuth =
-    sharedHeaderState.shouldShowAuth ?? !isTrusteeRoute;
+  const shouldShowAuth = sharedHeaderState.shouldShowAuth ?? !isTrusteeRoute;
 
   useEffect(() => {
     setShowAccountLinks(isMyAccountRoute);
@@ -149,6 +147,14 @@ const Header = () => {
         </>
       )}
 
+      {isMobile() && (
+        <div
+          className="header-wrapper__language-dropdown-wrapper"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <LanguageDropdown />
+        </div>
+      )}
       {isAuthorized && isMobile() && (
         <>
           {hasAdminAccess && (
