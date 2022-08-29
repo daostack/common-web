@@ -21,7 +21,7 @@ import { FundsAllocationStep } from "./constants";
 import { FundsAllocationData, FundType } from "./types";
 import { FundAllocationForm } from "./FundsAllocationForm";
 import { useCommonMembers } from "@/containers/Common/hooks";
-import { selectCommonList, selectCurrentPage } from "@/containers/Common/store/selectors";
+import { selectCommonList } from "@/containers/Common/store/selectors";
 import "./index.scss";
 
 interface FundsAllocationStageProps {
@@ -41,6 +41,7 @@ const initialFundsData = {
   images: [] as ProposalImage[],
   to: AllocateFundsTo.Proposer,
   subcommonId: null,
+  otherMemberId: null,
   recipientName: "",
 };
 
@@ -113,6 +114,10 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
       return;
     }
 
+    const recipient = fundsAllocationData?.subcommonId
+      ? {subcommonId: fundsAllocationData.subcommonId}
+      : {otherMemberId: fundsAllocationData.otherMemberId}
+
     setIsProposalCreating(true);
     const description = `${fundsAllocationData.description}\n\nGoal of Payment:\n${fundsAllocationData.goalOfPayment}`;
     const payload: Omit<
@@ -128,7 +133,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
         links: fundsAllocationData.links,
         files: [],
         to: fundsAllocationData.to,
-        subcommonId: fundsAllocationData?.subcommonId,
+        ...recipient
       },
     };
 

@@ -20,6 +20,7 @@ export interface FundsAllocationArgs extends BasicArgsProposal {
   amount: number;
   to: AllocateFundsTo;
   subcommonId?: string | null;
+  otherMemberId?: string | null;
 }
 
 export interface FundsAllocation extends BaseProposal {

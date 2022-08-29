@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Formik, FormikConfig } from "formik";
+import { Formik } from "formik";
 import { FormikProps } from "formik/dist/types";
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
@@ -44,6 +44,7 @@ interface FormValues {
   areImagesLoading: boolean;
   to: AllocateFundsTo,
   subcommonId: string | null;
+  otherMemberId: string | null;
 }
 
 const FundDetails: FC<ConfigurationProps> = (props) => {
@@ -64,7 +65,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     () => commonMembers.map(({user, id}) => ({
       text: user.displayName || `${user.firstName} ${user.lastName}`,
       searchText: user.displayName || `${user.firstName} ${user.lastName}`,
-      value: user.id,
+      value: id,
     })),
     []
   );
@@ -113,20 +114,29 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     areImagesLoading: false,
     to: AllocateFundsTo.Proposer,
     subcommonId: null,
+    otherMemberId: null,
   });
 
   const getTo = () => selectedRecipientType === RecipientType.Member
     ? AllocateFundsTo.Proposer
     : AllocateFundsTo.SubCommon;
 
-  const getSubcommon = () => commonsOptions.find((common) => common.value === selectedRecipient);
-
-  const getRecipientName = () => {
+  const getRecipientDetails = () => {
     const to = getTo();
     if (to === AllocateFundsTo.Proposer) {
-      return memberOptions.find((member) => member.value === selectedRecipient);
+      const member = memberOptions.find((member) => member.value === selectedRecipient);
+      return {
+        to,
+        otherMemberId: selectedRecipient,
+        recipientName: member?.text,
+      }
     }
-    return commonsOptions.find((common) => common.value === selectedRecipient);
+    const subcommon = commonsOptions.find((common) => common.value === selectedRecipient);
+    return {
+      to,
+      subcommonId: selectedRecipient,
+      recipientName: subcommon?.text,
+    }
   }
 
   const handleSubmit = (values) => {
@@ -136,9 +146,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
         amount: values.amount,
         links: values.links,
         images: values.images,
-        to: getTo(),
-        subcommonId: selectedRecipient,
-        recipientName: getRecipientName()?.text,
+        ...getRecipientDetails(),
       });
     }
 
@@ -148,9 +156,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       onFinish({
         ...initialData,
         ...formRef.current.values,
-        to: getTo(),
-        subcommonId: selectedRecipient,
-        recipientName: getRecipientName()?.text ,
+        ...getRecipientDetails(),
       });
     }
   }, []);
@@ -174,10 +180,6 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
         ? setRecipientDropdownDetails(commonsOptions)
         : setRecipientDropdownDetails(memberOptions)
   }
-
-  const getDropdownDetails = () => selectedRecipientType === RecipientType.Common
-        ? commonsOptions
-        : memberOptions;
 
   const handleSetSelectedRecipient = (value) => {
       setSelectedRecipient(value)

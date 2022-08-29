@@ -20,5 +20,6 @@ export interface FundsAllocationData {
   images: ProposalImage[];
   to: AllocateFundsTo,
   subcommonId?: string | null;
+  otherMemberId?: string | null;
   recipientName?: string;
 }
