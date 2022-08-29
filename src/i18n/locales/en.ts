@@ -66,5 +66,42 @@ export default {
         description: "Common, where lead social entrepreneur change the world.",
       },
     },
+    contactUs: {
+      infoSection: {
+        imageAlt: "Team",
+        backButton: "Back",
+        title: "Launch a Common",
+        description: {
+          part1:
+            "We are looking for initiatives that are ready to launch and be our superusers as we design the product further.",
+          part2:
+            "If you tick all the boxes bellow, you are the one we are looking for:",
+        },
+        list: {
+          item1:
+            "You are a steward of a grassroots initiative/movement, with a clear purpose that will change the world for the better.",
+          item2:
+            "You have an active and devoted core team with you, and a large audience-community of followers.",
+          item3:
+            "You have the participatory “bug” - wanting more people to have more power in decision making and action.",
+          item4:
+            "You wish to pool funds from your community and make decisions about them together.",
+          item5: "You have the courage to try something new.",
+        },
+      },
+      contactUsSection: {
+        title: "We are here to walk you through it",
+        form: {
+          nameFieldLabel: "Your name",
+          commonTitleLabel: "What is the title of the Common you want to launch?",
+          descriptionLabel: "Please tell us a bit about the initiative and the people behind it",
+          residenceLabel: "Where are you from?",
+          emailLabel: "Email",
+          phoneNumberLabel: "Phone number",
+          sendButton: "Send",
+          contactUsHint: "Contact us at:",
+        },
+      },
+    },
   },
 };

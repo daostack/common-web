@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
 import { Button, Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
@@ -33,6 +34,9 @@ const INITIAL_VALUES: ContactUsFormValues = {
 
 const ContactUsForm: FC<ContactUsFormProps> = (props) => {
   const { onSubmit, isLoading = false, errorText } = props;
+  const { t } = useTranslation("translation", {
+    keyPrefix: "contactUs.contactUsSection.form",
+  });
 
   return (
     <Formik
@@ -46,7 +50,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           className="contact-us-contact-us-form__text-field"
           id="userName"
           name="name"
-          label="Your name"
+          label={t("nameFieldLabel")}
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
@@ -58,7 +62,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           className="contact-us-contact-us-form__text-field"
           id="commonTitle"
           name="commonTitle"
-          label="What is the title of the Common you want to launch?"
+          label={t("commonTitleLabel")}
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
@@ -70,7 +74,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           className="contact-us-contact-us-form__text-field"
           id="description"
           name="description"
-          label="Please tell us a bit about the initiative and the people behind it"
+          label={t("descriptionLabel")}
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
@@ -84,7 +88,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           className="contact-us-contact-us-form__text-field"
           id="residence"
           name="residence"
-          label="Where are you from?"
+          label={t("residenceLabel")}
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
@@ -96,7 +100,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           className="contact-us-contact-us-form__text-field"
           id="email"
           name="email"
-          label="Email"
+          label={t("emailLabel")}
           placeholder="example@email.com"
           styles={{
             label: "contact-us-contact-us-form__label",
@@ -109,7 +113,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           className="contact-us-contact-us-form__text-field"
           id="phoneNumber"
           name="phoneNumber"
-          label="Phone number"
+          label={t("phoneNumberLabel")}
           placeholder="+972-"
           styles={{
             label: "contact-us-contact-us-form__label",
@@ -129,7 +133,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
             type="submit"
             shouldUseFullWidth
           >
-            Send
+            {t("sendButton")}
           </Button>
         )}
         {errorText && (
@@ -138,7 +142,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           </ErrorText>
         )}
         <span className="contact-us-contact-us-form__support-email-wrapper">
-          Contact us at:{" "}
+          {t("contactUsHint")}{" "}
           <a
             className="contact-us-contact-us-form__support-email"
             href={`mailto:${SUPPORT_EMAIL}`}
