@@ -14,6 +14,7 @@ const CollectiveActionSection: FC<CollectiveActionSectionProps> = ({
   const { t } = useTranslation("translation", {
     keyPrefix: "landing",
   });
+  const description = t("collectiveActionSection.description");
 
   return (
     <section className="landing-collective-action-section">
@@ -27,10 +28,17 @@ const CollectiveActionSection: FC<CollectiveActionSectionProps> = ({
         <h2 className="landing-collective-action-section__title">
           {t("collectiveActionSection.title")}
         </h2>
-        <p className="landing-collective-action-section__description">
-          {t("collectiveActionSection.description")}
-        </p>
-        <Button onClick={onLaunchClick}>{t("buttons.launchCommon")}</Button>
+        {description && (
+          <p className="landing-collective-action-section__description">
+            {description}
+          </p>
+        )}
+        <Button
+          className="landing-collective-action-section__button"
+          onClick={onLaunchClick}
+        >
+          {t("buttons.launchCommon")}
+        </Button>
       </div>
     </section>
   );

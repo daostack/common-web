@@ -60,9 +60,8 @@ export default {
         },
       },
       collectiveActionSection: {
-        imageAlt: "People together",
-        title: "Launch Collective Action. Catalyze a movement, Together.",
-        description: "Common, where lead social entrepreneur change the world.",
+        title: "צרו התארגנות שיתופית, הניעו תנועה ביחד",
+        description: "",
       },
     },
   },
