@@ -7,13 +7,19 @@ import React, {
   ReactNode,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
 import { Modal } from "@/shared/components";
-import { AuthProvider, ErrorCode, ScreenSize } from "@/shared/constants";
+import {
+  AuthProvider,
+  ErrorCode,
+  ScreenSize,
+  QueryParamKey,
+} from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
 import { getScreenSize } from "@/shared/store/selectors";
 import { isFirebaseError } from "@/shared/utils/firebase";
-import { isGeneralError } from "@/shared/utils";
+import { emptyFunction, isGeneralError } from "@/shared/utils";
 import { LoginModalType } from "../../../Auth/interface";
 import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
 import {
@@ -31,11 +37,13 @@ import {
   DEFAULT_AUTH_ERROR_TEXT,
   ERROR_TEXT_FOR_NON_EXISTENT_USER,
 } from "../../constants";
+import { getAuthCode } from "./helpers";
 import "./index.scss";
 
 const LoginContainer: FC = () => {
   const dispatch = useDispatch();
   const queryParams = useQueryParams();
+  const location = useLocation();
   const { removeQueryParams } = useRemoveQueryParams();
   const isAuthenticated = useSelector(authentificated());
   const isLoading = useSelector(selectIsAuthLoading());
@@ -46,7 +54,13 @@ const LoginContainer: FC = () => {
     user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
   );
   const [errorText, setErrorText] = useState("");
-  const { isShowing, type } = useSelector(selectLoginModalState());
+  const {
+    isShowing,
+    type,
+    title: loginModalTitle,
+    canCloseModal = true,
+    shouldShowUserDetailsAfterSignUp = true,
+  } = useSelector(selectLoginModalState());
   const shouldShowBackButton = stage === AuthStage.PhoneAuth && !isLoading;
   const shouldRemoveHorizontalPadding =
     isMobileView && stage === AuthStage.AuthMethodSelect;
@@ -57,10 +71,10 @@ const LoginContainer: FC = () => {
       ? ModalType.MobilePopUp
       : ModalType.Default;
   const hasError = Boolean(errorText);
-  const authCode =
-    typeof queryParams[AUTH_CODE_QUERY_PARAM_KEY] === "string"
-      ? queryParams[AUTH_CODE_QUERY_PARAM_KEY]
-      : "";
+  const { authCode, shouldOpenLoginModal } = getAuthCode(
+    queryParams,
+    location.pathname
+  );
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
@@ -73,15 +87,15 @@ const LoginContainer: FC = () => {
 
   const handleAuthFinish = useCallback(
     (isNewUser?: boolean) => {
-      removeQueryParams(AUTH_CODE_QUERY_PARAM_KEY);
+      removeQueryParams(QueryParamKey.AuthCode);
 
-      if (isNewUser) {
+      if (isNewUser && shouldShowUserDetailsAfterSignUp) {
         setStage(AuthStage.CompleteAccountDetails);
       } else {
         handleClose();
       }
     },
-    [removeQueryParams, handleClose]
+    [removeQueryParams, handleClose, shouldShowUserDetailsAfterSignUp]
   );
 
   const handleAuthButtonClick = useCallback(
@@ -137,10 +151,10 @@ const LoginContainer: FC = () => {
   }, [isShowing, user]);
 
   useEffect(() => {
-    if (!isAuthenticated && authCode) {
+    if (!isAuthenticated && authCode && shouldOpenLoginModal) {
       dispatch(setLoginModalState({ isShowing: true }));
     }
-  }, [authCode]);
+  }, [authCode, shouldOpenLoginModal]);
 
   const title = useMemo((): ReactNode => {
     if (!isMobileView || stage !== AuthStage.CompleteAccountDetails) {
@@ -192,6 +206,7 @@ const LoginContainer: FC = () => {
   }, [
     stage,
     hasError,
+    loginModalTitle,
     errorText,
     handleClose,
     user,
@@ -205,7 +220,7 @@ const LoginContainer: FC = () => {
   return (
     <Modal
       isShowing={isShowing}
-      onClose={handleClose}
+      onClose={canCloseModal ? handleClose : emptyFunction}
       type={modalType}
       className="login-container__modal"
       mobileFullScreen
@@ -213,6 +228,7 @@ const LoginContainer: FC = () => {
       title={title}
       withoutHorizontalPadding={shouldRemoveHorizontalPadding}
       styles={styles}
+      hideCloseButton={!canCloseModal}
     >
       {content}
     </Modal>
