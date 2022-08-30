@@ -42,8 +42,6 @@ import {
   CreateProposal,
   ImmediateContributionData,
   ImmediateContributionResponse,
-  SubscriptionData,
-  SubscriptionResponse,
   LeaveCommon,
   CreateSubCommonPayload,
 } from "@/containers/Common/interfaces";

@@ -1,4 +1,4 @@
-import React, { useCallback, ReactElement } from "react";
+import React, { ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";

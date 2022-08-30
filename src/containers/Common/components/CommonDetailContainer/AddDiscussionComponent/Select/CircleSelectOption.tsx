@@ -16,7 +16,7 @@ export const CircleSelectOption:  React.FC<OptionProps<SelectType<Circle>>> = (p
         {...innerProps}
       >
         <Checkbox
-          disabled
+          onChange={(event) => event.stopPropagation()}
           className="circle-select-option"
           id={label}
           name={label}
