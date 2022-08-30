@@ -16,6 +16,7 @@ import {
   QueryParamKey,
 } from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
+import { useHistory } from "react-router-dom";
 import { ModalProps, ModalType } from "@/shared/interfaces";
 import { getScreenSize } from "@/shared/store/selectors";
 import { isFirebaseError } from "@/shared/utils/firebase";
@@ -37,6 +38,9 @@ import {
   ERROR_TEXT_FOR_NON_EXISTENT_USER,
 } from "../../constants";
 import { getAuthCode } from "./helpers";
+import { matchRoute } from "@/shared/utils";
+import { ROUTE_PATHS } from "@/shared/constants";
+
 import "./index.scss";
 
 const LoginContainer: FC = () => {
@@ -48,6 +52,7 @@ const LoginContainer: FC = () => {
   const isLoading = useSelector(selectIsAuthLoading());
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
+  const history = useHistory();
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [stage, setStage] = useState(
     user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
@@ -77,7 +82,10 @@ const LoginContainer: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
-  }, [dispatch]);
+    if (matchRoute(location.pathname, ROUTE_PATHS.HOME, { exact: true })) {
+      history.push(ROUTE_PATHS.COMMON_LIST);
+    }
+  }, [dispatch, location.pathname]);
 
   const handleError = useCallback((errorText?: string) => {
     setErrorText(errorText || DEFAULT_AUTH_ERROR_TEXT);
