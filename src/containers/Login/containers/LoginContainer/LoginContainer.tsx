@@ -81,7 +81,7 @@ const LoginContainer: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
-    if (window.location.pathname === ROUTE_PATHS.HOME) {
+    if (matchRoute(pathname, ROUTE_PATHS.HOME, { exact: true })) {
       history.push(ROUTE_PATHS.COMMON_LIST);
     }
   }, [dispatch]);
