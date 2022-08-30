@@ -6,13 +6,25 @@ import peopleOnCubesImageSrc from "@/shared/assets/images/peolpe-on-cubes.svg";
 import { selectIsRtlLanguage } from "@/shared/store/selectors";
 import "./index.scss";
 
+interface Description {
+  title: string;
+  parts: string[];
+}
+
 const ImagineSection: FC = () => {
   const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const { t } = useTranslation("translation", {
     keyPrefix: "landing.imagineSection",
   });
-  const descriptionPart4 = t("description.part4");
-  const descriptionPart5 = t("description.part5");
+  const description1: Description = t("description1", {
+    returnObjects: true,
+    defaultValue: null,
+  });
+  const description2: Description = t("description2", {
+    returnObjects: true,
+    defaultValue: null,
+  });
+  const descriptions = [description1, description2].filter(Boolean);
 
   return (
     <section className="landing-imagine-section">
@@ -26,27 +38,22 @@ const ImagineSection: FC = () => {
           src={peopleOnCubesImageSrc}
           alt={t("imageAlt")}
         />
-        <div className="landing-imagine-section__info-wrapper">
-          <h2 className="landing-imagine-section__title">{t("title")}</h2>
-          <p className="landing-imagine-section__description">
-            {t("description.part1")}
-          </p>
-          <p className="landing-imagine-section__description">
-            {t("description.part2")}
-          </p>
-          <p className="landing-imagine-section__description">
-            {t("description.part3")}
-          </p>
-          {descriptionPart4 && (
-            <p className="landing-imagine-section__description">
-              {descriptionPart4}
-            </p>
-          )}
-          {descriptionPart5 && (
-            <p className="landing-imagine-section__description">
-              {t("description.part5")}
-            </p>
-          )}
+        <div>
+          {descriptions.map((description, index) => (
+            <div key={index} className="landing-imagine-section__info-wrapper">
+              <h2 className="landing-imagine-section__title">
+                {description.title}
+              </h2>
+              {description.parts.map((part, partIndex) => (
+                <p
+                  key={partIndex}
+                  className="landing-imagine-section__description"
+                >
+                  {part}
+                </p>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </section>
