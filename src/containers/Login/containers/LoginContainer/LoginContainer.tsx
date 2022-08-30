@@ -82,10 +82,10 @@ const LoginContainer: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
-    if (matchRoute(window.location.pathname, ROUTE_PATHS.HOME, { exact: true })) {
+    if (matchRoute(location.pathname, ROUTE_PATHS.HOME, { exact: true })) {
       history.push(ROUTE_PATHS.COMMON_LIST);
     }
-  }, [dispatch]);
+  }, [dispatch, location.pathname]);
 
   const handleError = useCallback((errorText?: string) => {
     setErrorText(errorText || DEFAULT_AUTH_ERROR_TEXT);
