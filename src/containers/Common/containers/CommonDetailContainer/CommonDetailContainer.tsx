@@ -176,6 +176,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const discussions = useSelector(selectDiscussions());
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
+  const isAuthenticated = useSelector(authentificated());
   const screenSize = useSelector(getScreenSize());
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
