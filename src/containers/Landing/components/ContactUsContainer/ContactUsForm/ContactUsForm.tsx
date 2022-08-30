@@ -52,6 +52,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
     <Formik
       initialValues={INITIAL_VALUES}
       onSubmit={onSubmit}
+      innerRef={formRef}
       validationSchema={validationSchema}
       validateOnMount
     >

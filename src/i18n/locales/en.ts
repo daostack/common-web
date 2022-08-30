@@ -1,5 +1,12 @@
 export default {
   translation: {
+    form: {
+      errors: {
+        required: "This field is required",
+        invalidEmail: "Please enter a valid email",
+        invalidPhoneNumber: "Please enter a valid phone number",
+      },
+    },
     landing: {
       buttons: {
         launchCommon: "Launch a Common",
@@ -93,8 +100,10 @@ export default {
         title: "We are here to walk you through it",
         form: {
           nameFieldLabel: "Your name",
-          commonTitleLabel: "What is the title of the Common you want to launch?",
-          descriptionLabel: "Please tell us a bit about the initiative and the people behind it",
+          commonTitleLabel:
+            "What is the title of the Common you want to launch?",
+          descriptionLabel:
+            "Please tell us a bit about the initiative and the people behind it",
           residenceLabel: "Where are you from?",
           emailLabel: "Email",
           phoneNumberLabel: "Phone number",

@@ -1,5 +1,12 @@
 export default {
   translation: {
+    form: {
+      errors: {
+        required: "זהו שדה חובה",
+        invalidEmail: "אנא הזן אימייל תקין",
+        invalidPhoneNumber: "אנא הזן מספר טלפון תקין",
+      },
+    },
     landing: {
       buttons: {
         launchCommon: "צרו קומון",
