@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import classNames from "classnames";
 import { Language, ROUTE_PATHS } from "@/shared/constants";
 import { selectLanguage } from "@/shared/store/selectors";
 import {
@@ -21,7 +22,11 @@ const LandingContainer = () => {
   };
 
   return (
-    <div className="landing">
+    <div
+      className={classNames("landing", {
+        "hebrew-font": language === Language.Hebrew,
+      })}
+    >
       <VideoSection onLaunchClick={moveToContactUsPage} />
       <ImagineSection />
       <StructureInfoSection />
