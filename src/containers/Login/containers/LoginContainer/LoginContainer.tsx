@@ -38,6 +38,7 @@ import {
   ERROR_TEXT_FOR_NON_EXISTENT_USER,
 } from "../../constants";
 import { getAuthCode } from "./helpers";
+import { matchRoute } from "@/shared/utils";
 import { ROUTE_PATHS } from "@/shared/constants";
 
 import "./index.scss";
@@ -81,7 +82,7 @@ const LoginContainer: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
-    if (matchRoute(pathname, ROUTE_PATHS.HOME, { exact: true })) {
+    if (matchRoute(window.location.pathname, ROUTE_PATHS.HOME, { exact: true })) {
       history.push(ROUTE_PATHS.COMMON_LIST);
     }
   }, [dispatch]);
