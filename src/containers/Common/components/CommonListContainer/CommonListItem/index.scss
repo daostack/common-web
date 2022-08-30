@@ -43,43 +43,46 @@
       background-color: $purple;
     }
     .common-information {
+      padding: 0.5rem 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      font-family: NotoSerifSC-Bold;
+      font-family: NotoSerifSC, serif;
       width: 100%;
+      overflow: hidden;
       .name {
         z-index: 1;
-        display: -webkit-box;
         width: 100%;
+        max-height: 3.625rem;
         text-shadow: 0 0.125rem 0.25rem #00000033;
         font-size: 1.25rem;
         font-weight: bold;
         color: $white;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
         overflow: hidden;
         word-break: break-word;
       }
       .description {
+        max-height: 2.375rem;
         z-index: 1;
+        padding: 0 0.5rem;
         display: block;
         width: 100%;
         text-shadow: 0 0.125rem 0.25rem #00000033;
         font-size:$xxsmall;
         font-weight: 300;
         color: $white;
-        white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
+        word-break: break-word;
+        box-sizing: border-box;
         &:lang(he) {
           font-family: Assistant-Light;
         }
       }
       .last-activity{
         z-index: 1;
+        margin-top: auto;
         font-family: NunitoSans, sans-serif;
         font-style: normal;
         font-weight: bold;
@@ -88,7 +91,6 @@
         display: flex;
         align-items: center;
         text-align: center;
-        margin-top: 3rem;
         color: $light-gray-1;
       }
     }
