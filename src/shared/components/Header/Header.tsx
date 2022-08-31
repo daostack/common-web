@@ -86,6 +86,7 @@ const Header = () => {
 
   const handleOpen = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: true }));
+    setShowMenu(false);
   }, [dispatch]);
 
   const handleReportsDownload = async () => {
