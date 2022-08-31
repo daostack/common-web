@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactEventHandler } from "react";
 import classNames from "classnames";
 
 import RegularCheckboxIcon from "../../../icons/regularCheckbox.icon";
@@ -18,10 +18,11 @@ export type CheckboxProps = JSX.IntrinsicElements['input'] & {
   type?: "checkbox";
   error?: string;
   styles?: CheckboxStyles;
+  onLabelClick?: ReactEventHandler;
 };
 
 const Checkbox: FC<CheckboxProps> = (props) => {
-  const { className, label, error, styles, children, ...restProps } = props;
+  const { className, label, error, styles, children, onLabelClick, ...restProps } = props;
   const id = restProps.id || restProps.name;
 
   return (
@@ -40,6 +41,7 @@ const Checkbox: FC<CheckboxProps> = (props) => {
         {children}
         {label && (
           <label
+            onClick={onLabelClick}
             htmlFor={id}
             className={classNames("custom-checkbox__label", styles?.label)}
           >
