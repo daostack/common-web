@@ -17,6 +17,7 @@ export const CircleSelectOption:  React.FC<OptionProps<SelectType<Circle>>> = (p
       >
         <Checkbox
           onChange={(event) => event.stopPropagation()}
+          onLabelClick={(event) => event.preventDefault()}
           className="circle-select-option"
           id={label}
           name={label}
