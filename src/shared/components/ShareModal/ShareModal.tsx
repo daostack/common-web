@@ -1,7 +1,9 @@
 import React, { FC, PropsWithChildren, useMemo } from "react";
 import classNames from "classnames";
 import { Colors, ShareViewType } from "@/shared/constants";
-import { SocialLinks, Loader } from "@/shared/components";
+import { ButtonIcon, SocialLinks, Loader } from "@/shared/components";
+import CopyLinkIcon from "@/shared/icons/copyLink.icon";
+import { copyToClipboard } from "@/shared/utils";
 import { Modal } from "../Modal";
 import "./index.scss";
 
@@ -29,6 +31,10 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = ({
     () => type === ShareViewType.ModalMobile,
     [type]
   );
+
+  const handleCopyClick = () => {
+    copyToClipboard(sourceUrl);
+  };
 
   return (
     <Modal
@@ -72,8 +78,13 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = ({
               linkText={linkText}
             />
             <div className="share-modal_copy-link">
-              Copy
               <p className="copy-link-field">{sourceUrl}</p>
+              <ButtonIcon
+                className="share-modal__copy-button"
+                onClick={handleCopyClick}
+              >
+                <CopyLinkIcon />
+              </ButtonIcon>
             </div>
           </div>
         ))}
