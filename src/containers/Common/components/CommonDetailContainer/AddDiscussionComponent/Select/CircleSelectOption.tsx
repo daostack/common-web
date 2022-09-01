@@ -4,12 +4,14 @@ import { Checkbox } from "@/shared/components/Form";
 import { SelectType } from '@/shared/interfaces/Select';
 import { Circle } from '@/shared/models';
 import './index.scss';
+import classNames from 'classnames';
 
 export const CircleSelectOption:  React.FC<OptionProps<SelectType<Circle>>> = (props) => {
     const {
       isSelected,
       innerProps,
       label,
+      isDisabled,
     } = props;
     return (
       <div
@@ -18,10 +20,16 @@ export const CircleSelectOption:  React.FC<OptionProps<SelectType<Circle>>> = (p
         <Checkbox
           onChange={(event) => event.stopPropagation()}
           onLabelClick={(event) => event.preventDefault()}
-          className="circle-select-option"
+          className={classNames("circle-select__option", {
+            'circle-select__disabled-option': isDisabled,
+          })}
           id={label}
           name={label}
           label={label}
+          styles={{
+            label: isDisabled ? "circle-select__disabled" : '',
+            checkbox: isDisabled ? "circle-select__disabled" : ''
+          }}
           checked={isSelected}
         />
       </div>
