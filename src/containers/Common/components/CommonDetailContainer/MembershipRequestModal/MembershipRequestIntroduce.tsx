@@ -6,6 +6,7 @@ import { Form, TextField, LinksArray } from "@/shared/components/Form/Formik";
 import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { CommonLink } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { parseLinksForSubmission } from "@/shared/utils";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
 import { introduceStageSchema } from "./validationSchemas";
@@ -33,7 +34,7 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
       const nextStage = areRulesSpecified
         ? MembershipRequestStage.Rules
         : MembershipRequestStage.Creating;
-      const links = values.links.filter((link) => link.title && link.value);
+      const links = parseLinksForSubmission(values.links);
 
       setUserData((nextUserData) => ({
         ...nextUserData,
