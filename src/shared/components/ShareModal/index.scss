@@ -37,22 +37,24 @@
       .share-modal_title {
         font-size: $moderate-med;
       }
-
-      .share-modal_copy-link {
-        width: 50%;
-        .copy-link-field {
-          padding: 0.75rem;
-          max-height: 45px;
-          white-space: nowrap;
-          overflow-x: scroll;
-          overflow-y: hidden;
-        }
-      }
     }
 
     &.mobile {
       .share-modal_title {
         font-size: $small;
+      }
+    }
+
+    .share-modal_copy-link {
+      max-width: 25.75rem;
+      width: 100%;
+
+      .copy-link-field {
+        padding: 0.75rem;
+        max-height: 45px;
+        white-space: nowrap;
+        overflow-x: scroll;
+        overflow-y: hidden;
       }
     }
   }
