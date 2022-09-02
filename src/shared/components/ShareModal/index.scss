@@ -37,22 +37,37 @@
       .share-modal_title {
         font-size: $moderate-med;
       }
-
-      .share-modal_copy-link {
-        width: 50%;
-        .copy-link-field {
-          padding: 0.75rem;
-          max-height: 45px;
-          white-space: nowrap;
-          overflow-x: scroll;
-          overflow-y: hidden;
-        }
-      }
     }
 
     &.mobile {
       .share-modal_title {
         font-size: $small;
+      }
+    }
+
+    .share-modal_copy-link {
+      max-width: 25.75rem;
+      width: 100%;
+      display: flex;
+      align-items: center;
+
+      .copy-link-field {
+        width: 100%;
+        padding: 0.75rem;
+        max-height: 2.875rem;
+        white-space: nowrap;
+        overflow-x: scroll;
+        overflow-y: hidden;
+      }
+    }
+
+    .share-modal__copy-button {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      transition: background-color 0.2s;
+
+      &:active {
+        background-color: $light-gray-1;
       }
     }
   }
