@@ -1,10 +1,10 @@
 import React from 'react';
 import { OptionProps } from 'react-select';
+import classNames from 'classnames';
 import { Checkbox } from "@/shared/components/Form";
 import { SelectType } from '@/shared/interfaces/Select';
 import { Circle } from '@/shared/models';
 import './index.scss';
-import classNames from 'classnames';
 
 export const CircleSelectOption:  React.FC<OptionProps<SelectType<Circle>>> = (props) => {
     const {
