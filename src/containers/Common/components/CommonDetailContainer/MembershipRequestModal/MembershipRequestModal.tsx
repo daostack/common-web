@@ -14,6 +14,7 @@ import { GlobalLoader, Modal } from "@/shared/components";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps, ModalRef } from "@/shared/interfaces";
 import { Common, CommonLink, Governance } from "@/shared/models";
+import MembershipRequestContribution from "./MembershipRequestContribution";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
 import MembershipRequestIntroduce from "./MembershipRequestIntroduce";
@@ -143,6 +144,14 @@ export function MembershipRequestModal(props: IProps) {
             userData={userData}
             setUserData={setUserData}
             governance={governance}
+          />
+        );
+      case MembershipRequestStage.Contribution:
+        return (
+          <MembershipRequestContribution
+            userData={userData}
+            setUserData={setUserData}
+            common={common}
           />
         );
       case MembershipRequestStage.Payment:

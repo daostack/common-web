@@ -33,7 +33,7 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
         governance && Object.keys(governance.unstructuredRules).length > 0;
       const nextStage = areRulesSpecified
         ? MembershipRequestStage.Rules
-        : MembershipRequestStage.Payment;
+        : MembershipRequestStage.Contribution;
       const links = parseLinksForSubmission(values.links);
 
       setUserData((nextUserData) => ({
