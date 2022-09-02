@@ -21,14 +21,14 @@ export const CircleSelectOption:  React.FC<OptionProps<SelectType<Circle>>> = (p
           onChange={(event) => event.stopPropagation()}
           onLabelClick={(event) => event.preventDefault()}
           className={classNames("circle-select__option", {
-            'circle-select__disabled-option': isDisabled,
+            'circle-select__option--disabled': isDisabled,
           })}
           id={label}
           name={label}
           label={label}
           styles={{
-            label: isDisabled ? "circle-select__disabled" : '',
-            checkbox: isDisabled ? "circle-select__disabled" : ''
+            label: isDisabled ? "circle-select--disabled" : '',
+            checkbox: isDisabled ? "circle-select--disabled" : ''
           }}
           checked={isSelected}
         />

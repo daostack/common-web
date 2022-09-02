@@ -29,12 +29,12 @@
   }
 }
 
-.circle-select__disabled-option {
+.circle-select__option--disabled {
   background-color: $blue-button-disabled-second-option !important;
   cursor: not-allowed;
 }
 
-.circle-select__disabled {
+.circle-select--disabled {
   cursor: not-allowed !important;
 }
 
