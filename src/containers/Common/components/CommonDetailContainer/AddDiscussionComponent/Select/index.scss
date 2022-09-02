@@ -18,7 +18,7 @@
   margin-bottom: 0.5rem;
 }
 
-.circle-select-option {
+.circle-select__option {
   height: 2rem;
   cursor: pointer;
   justify-content: center;
@@ -27,5 +27,14 @@
   &:hover {
     background-color: $light-gray-9;
   }
+}
+
+.circle-select__option--disabled {
+  background-color: $blue-button-disabled-second-option !important;
+  cursor: not-allowed;
+}
+
+.circle-select--disabled {
+  cursor: not-allowed !important;
 }
 
