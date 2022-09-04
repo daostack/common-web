@@ -26,9 +26,9 @@ const RadioButton: FC<RadioButtonProps> = (props) => {
   }, [onChange, value]);
 
   return (
-    <label className={"custom-radio-button_label"}>
+    <label className="custom-radio-button_label">
       <input
-        className={"custom-radio-button"}
+        className="custom-radio-button"
         type="radio"
         value={value}
         onChange={handleClick}

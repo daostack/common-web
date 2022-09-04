@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
 import { BankAccountState } from "@/containers/MyAccount/components/Billing/types";
-import { Button, Dropdown, Loader, ModalFooter} from "@/shared/components";
+import { Button, Dropdown, Loader, ModalFooter } from "@/shared/components";
 import { CurrencyInput, Form, LinksArray, TextField, ImageArray } from "@/shared/components/Form/Formik";
-import { MAX_LINK_TITLE_LENGTH, ScreenSize } from "@/shared/constants";
+import { MAX_LINK_TITLE_LENGTH, ScreenSize, AllocateFundsTo } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
-import { BankAccountDetails, CommonLink, Governance } from "@/shared/models";
+import { BankAccountDetails, CommonLink, Governance, Common, CommonMemberWithUserInfo } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { StageName } from "../../StageName";
 import { FundsAllocationData, FundType } from "../types";
@@ -18,6 +18,7 @@ import {FUND_TYPES} from '../constants';
 import { getPrefix } from "../helpers";
 import { fundAllocationValidationSchema } from "../validationSchema";
 import { ProposalImage } from "@/shared/models/governance/proposals";
+import { FundDetails } from "@/containers/Common/components/CommonDetailContainer/CreateProposalModal/FundsAllocationStage/FundDetails";
 import "./index.scss";
 
 interface FundAllocationFormProps {
@@ -25,28 +26,30 @@ interface FundAllocationFormProps {
   initialData: FundsAllocationData;
   onFinish: (data: FundsAllocationData) => void;
   commonBalance: number;
+  commonMembers: CommonMemberWithUserInfo[];
+  commonList: Common[];
 }
 
 interface FormValues {
   title: string;
   description: string;
   goalOfPayment: string;
-  fund: FundType;
-  amount: number;
   links: CommonLink[];
   images: ProposalImage[];
   commonBalance: number;
   bankAccountDetails: BankAccountDetails | null;
   areImagesLoading: boolean;
+  to: AllocateFundsTo;
+  subcommonId: string | null;
+  otherMemberId: string | null;
 }
 
 const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
-    const dispatch = useDispatch();
-  const { initialData, onFinish, commonBalance } = props;
+  const dispatch = useDispatch();
+  const { initialData, onFinish, commonBalance, commonMembers, commonList, governance } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const formRef = useRef<FormikProps<FormValues>>(null);
-  const [selectedFund, setSelectedFund] = useState<FundType>(FundType.ILS);
   const [bankAccountState, setBankAccountState] = useState<BankAccountState>({
     loading: false,
     fetched: false,
@@ -82,21 +85,18 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
     }));
   };
 
-  const handleFundSelect = (selectedFund: unknown) => {
-    setSelectedFund(selectedFund as FundType);
-  };
-
   const getInitialValues = (): FormValues => ({
     title: formRef.current?.values.title || "",
     description:formRef.current?.values.description || "",
     goalOfPayment:formRef.current?.values.goalOfPayment || "",
-    fund: FundType.ILS,
-    amount: formRef.current?.values.amount || 0,
     links: formRef.current?.values.links || [],
     commonBalance: commonBalance / 100,
     bankAccountDetails: bankAccountState.bankAccount,
     images: formRef.current?.values.images || [],
     areImagesLoading: false,
+    to: AllocateFundsTo.Proposer,
+    subcommonId: null,
+    otherMemberId: null,
   });
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
@@ -104,7 +104,6 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
       onFinish({
         ...initialData,
         ...values,
-        fund: selectedFund,
       });
     },
     [onFinish, initialData]
@@ -164,69 +163,14 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
                 isTextarea
                 isRequired
               />
-           <Dropdown
-                className="funds-allocation-form__dropdown"
-                options={FUND_TYPES}
-                value={selectedFund}
-                onSelect={handleFundSelect}
-                label="Type of Funds"
-                placeholder="Select Type"
-                shouldBeFixed={false}
-              />
-              <CurrencyInput
-                className="funds-allocation-form__text-field"
-                id="amount"
-                name="amount"
-                label="Amount"
-                placeholder="10"
-                prefix={getPrefix(selectedFund)}
-              />
-              {values.amount > 0 &&
-                <>
-                  {bankAccountState.loading ? (
-                      <div>
-                        <Loader />
-                      </div>
-                    ) : (
-                      <div className="funds-allocation-form__bank-account-wrapper">
-                        <BankAccount
-                          bankAccount={bankAccountState.bankAccount}
-                          onBankAccountChange={handleBankAccountChange}
-                        />
-                      </div>
-                  )}
-                </>
-              }
-              <LinksArray
-                name="links"
-                values={values.links}
-                errors={errors.links}
-                touched={touched.links}
-                maxTitleLength={MAX_LINK_TITLE_LENGTH}
-                className="funds-allocation-form__text-field"
-                itemClassName="funds_allocation__links-array-item"
-              />
-              <ImageArray
-                name="images"
-                values={values.images}
-                areImagesLoading={values.areImagesLoading}
-                loadingFieldName="areImagesLoading"
-              />
-              <ModalFooter sticky={!isMobileView}>
-                <div className="funds-allocation-form__modal-footer">
-                  <Button
-                    onClick={handleContinueClick}
-                    shouldUseFullWidth={isMobileView}
-                    disabled={
-                      !isValid ||
-                      values.areImagesLoading ||
-                      (!bankAccountState.bankAccount && values.amount > 0)
-                    }
-                  >
-                    Create proposal
-                  </Button>
-                </div>
-              </ModalFooter>
+              <FundDetails
+                  governance={governance}
+                  initialData={initialData}
+                  onFinish={onFinish}
+                  commonBalance={commonBalance}
+                  commonMembers={commonMembers}
+                  commonList={commonList}
+                />
             </Form>
           )}
         </Formik>

@@ -216,6 +216,8 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
                   initialData={fundsAllocationData}
                   onFinish={handleFundDetailsFinish}
                   commonBalance={common.balance}
+                  commonMembers={commonMembers}
+                  commonList={commons}
                 />
               ) : (
                 <>

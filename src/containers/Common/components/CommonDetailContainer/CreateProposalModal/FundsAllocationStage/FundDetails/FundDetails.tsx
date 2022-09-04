@@ -42,7 +42,7 @@ interface FormValues {
   bankAccountDetails: BankAccountDetails | null;
   images: ProposalImage[];
   areImagesLoading: boolean;
-  to: AllocateFundsTo,
+  to: AllocateFundsTo;
   subcommonId: string | null;
   otherMemberId: string | null;
 }
@@ -67,7 +67,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       searchText: user.displayName || `${user.firstName} ${user.lastName}`,
       value: id,
     })),
-    []
+    [commonMembers]
   );
 
   const commonsOptions = useMemo(
@@ -76,7 +76,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
         searchText: name,
         value: id,
       })),
-    []
+    [commonList]
   );
 
   const [selectedRecipient, setSelectedRecipient] = useState(null);
@@ -86,7 +86,6 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     if (bankAccountState.loading || bankAccountState.fetched) {
       return;
     }
-
     setBankAccountState((state) => ({
       ...state,
       loading: true,
@@ -139,7 +138,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     }
   }
 
-  const handleSubmit = (values) => {
+  const handleSubmit = (values: FormValues) => {
       onFinish({
         ...initialData,
         fund: selectedFund,
@@ -191,14 +190,16 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
 
   return (
     <div className="funds-allocation-configuration">
-      <StageName
-        className="funds-allocation-configuration__stage-name"
-        name="Fund allocation"
-        backgroundColor="light-yellow"
-        icon={
-          <DollarIcon className="funds-allocation-configuration__avatar-icon" />
-        }
-      />
+      {!isMobileView && (
+        <StageName
+          className="funds-allocation-configuration__stage-name"
+          name="Fund allocation"
+          backgroundColor="light-yellow"
+          icon={
+            <DollarIcon className="funds-allocation-configuration__avatar-icon" />
+          }
+        />
+      )}
       <div className="funds-allocation-configuration__form">
         <Formik
           initialValues={getInitialValues()}

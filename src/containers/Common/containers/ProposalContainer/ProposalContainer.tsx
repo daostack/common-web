@@ -117,7 +117,6 @@ const ProposalContainer = () => {
       ({ circles }) => commonMember.circles & circles
     );
 
-  //console.log('allCommons', allCommons, 'commons', commons)
   useEffect(() => {
     currentCommon?.id && fetchCommonMembers(currentCommon.id);
   }, [fetchCommonMembers, currentCommon?.id]);
