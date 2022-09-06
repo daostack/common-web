@@ -184,9 +184,11 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       setSelectedRecipient(value)
   }
 
-  const toggleButtonStyles = {
-    default: "contribution-amount-selection__toggle-button",
-  };
+  const toggleButtonStyles = useMemo(() => (
+    {
+      default: "contribution-amount-selection__toggle-button"
+    }
+  ), [])
 
   return (
     <div className="funds-allocation-configuration">
