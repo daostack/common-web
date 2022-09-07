@@ -34,7 +34,7 @@ const stage: Configuration = {
   },
   cloudFunctionUrl:
     "https://us-central1-common-staging-50741.cloudfunctions.net",
-  deadSeaCommonId: "f9e6df94-3286-423c-9fbf-0570277a5166",
+  deadSeaCommonId: "7ae49aa5-940b-4367-9b4d-a40534102ef2",
 };
 
 const production: Configuration = {
