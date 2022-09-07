@@ -158,7 +158,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               id="supportPlan"
               name="supportPlan"
               label="How could you support DSG further?"
-              placeholder="Amet minim mollit non deserunt ullamco est sit aliqua dolor do good at, or love"
+              placeholder="Special skills, connections or other assets you have that could help accomplish the DSG mission"
               hint="(optional)"
               styles={{
                 label: "dead-sea-user-details-form__field-label",
