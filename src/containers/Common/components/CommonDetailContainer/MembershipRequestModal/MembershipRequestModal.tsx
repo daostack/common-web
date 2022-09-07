@@ -14,7 +14,6 @@ import { GlobalLoader, Modal } from "@/shared/components";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps, ModalRef } from "@/shared/interfaces";
 import { Common, CommonLink, Governance } from "@/shared/models";
-import MembershipRequestContribution from "./MembershipRequestContribution";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
 import MembershipRequestIntroduce from "./MembershipRequestIntroduce";
@@ -37,6 +36,8 @@ export interface IMembershipRequestData {
   stage: MembershipRequestStage;
   intro: string;
   links?: CommonLink[];
+  feeOneTime?: number;
+  feeMonthly?: number;
 }
 
 const INIT_DATA: IMembershipRequestData = {
@@ -146,20 +147,13 @@ export function MembershipRequestModal(props: IProps) {
             governance={governance}
           />
         );
-      case MembershipRequestStage.Contribution:
-        return (
-          <MembershipRequestContribution
-            userData={userData}
-            setUserData={setUserData}
-            common={common}
-          />
-        );
       case MembershipRequestStage.Payment:
         return (
           <MembershipRequestPayment
             userData={userData}
             setUserData={setUserData}
             common={common}
+            governance={governance}
           />
         );
       case MembershipRequestStage.Creating:

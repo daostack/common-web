@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useEffect } from "react";
+import React, { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
   Button,
@@ -18,7 +18,7 @@ import "./index.scss";
 export default function MembershipRequestPayment(
   props: IStageProps
 ): ReactElement {
-  const { userData, setUserData, common } = props;
+  const { setUserData, governance } = props;
   const {
     fetched: areUserCardsFetched,
     data: cards,
@@ -26,26 +26,41 @@ export default function MembershipRequestPayment(
   } = useUserCards();
   const { changePaymentMethodState, onPaymentMethodChange } =
     usePaymentMethodChange();
-  const contributionType =
-    Math.random() < 0.5 ? ContributionType.OneTime : ContributionType.Monthly;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const contributionTypeText =
-    contributionType === ContributionType.Monthly ? "monthly" : "one-time";
   const hasPaymentMethod = areUserCardsFetched && cards.length > 0;
   const shouldDisplayPaymentMethod =
     hasPaymentMethod &&
     !changePaymentMethodState.payment &&
     !changePaymentMethodState.isPaymentLoading;
-  const contributionAmount = 5000;
 
-  const finishPayment = useCallback(() => {
-    // const cardId = hasPaymentMethod && cards[0]?.id;
-    // setUserData((nextUserData) => ({
-    //   ...nextUserData,
-    //   cardId: cardId || nextUserData.cardId,
-    //   stage: MembershipRequestStage.Creating,
-    // }));
+  const contributionInfo = useMemo(() => {
+    const limitations = governance?.proposals?.MEMBER_ADMITTANCE?.limitations;
+
+    if(limitations?.minFeeMonthly) {
+      return {
+        amount: limitations?.minFeeMonthly,
+        contributionType: ContributionType.Monthly,
+        contributionTypeText: 'monthly'
+      }
+    } else {
+      return {
+        amount: limitations?.minFeeOneTime || 50, // TODO: REMOVE IT AFTER DEPLOYING THE BACKEND
+        contributionType: ContributionType.OneTime,
+        contributionTypeText: 'one-time'
+      }
+    }
+
+  },[governance]);
+
+  const finishPayment = useCallback((newCardId) => {
+    const cardId = hasPaymentMethod && cards[0]?.id;
+    setUserData((nextUserData) => ({
+      ...nextUserData,
+      cardId: newCardId || cardId,
+      stage: MembershipRequestStage.Creating,
+      ...(contributionInfo.contributionType === ContributionType.Monthly ? {feeMonthly: contributionInfo.amount} : {feeOneTime: contributionInfo.amount}),
+    }));
   }, [setUserData, hasPaymentMethod, cards]);
 
   useEffect(() => {
@@ -71,14 +86,23 @@ export default function MembershipRequestPayment(
     onPaymentMethodChange,
   ]);
 
+  useEffect(() => {
+    const cardId = changePaymentMethodState.createdCard?.id;
+    if(cardId) {
+      finishPayment(cardId);
+    }
+  },[changePaymentMethodState.createdCard])
+
+
+
   return (
     <div className="membership-request-content membership-request-payment">
       <div className="sub-title">Payment Details</div>
       <div className="sub-text">
         You are contributing{" "}
         <strong className="membership-request-payment__amount">
-          {formatPrice(contributionAmount, { shouldMillify: false })} (
-          {contributionTypeText})
+          {formatPrice(contributionInfo.amount, { shouldMillify: false })} (
+          {contributionInfo.contributionType})
         </strong>{" "}
         to this Common.
       </div>

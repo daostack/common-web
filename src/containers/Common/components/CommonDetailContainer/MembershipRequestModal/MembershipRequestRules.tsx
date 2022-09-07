@@ -36,7 +36,7 @@ export default function MembershipRequestRules(props: IStageProps) {
         onClick={() =>
           setUserData({
             ...userData,
-            stage: MembershipRequestStage.Contribution,
+            stage: MembershipRequestStage.Payment,
           })
         }
         className="membership-request-rules__submit-button"

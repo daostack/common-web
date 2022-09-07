@@ -19,4 +19,9 @@ export interface MemberAdmittance extends BaseProposal {
     defaultCircle: circleIndex;
     optimisticAdmittance: boolean;
   };
+  limitations: {
+    minFeeOneTime?: number;
+    minFeeMonthly?: number;
+    paymentMustGoThrough: boolean;
+  }
 }

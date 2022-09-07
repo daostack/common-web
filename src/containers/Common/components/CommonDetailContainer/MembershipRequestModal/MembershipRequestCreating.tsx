@@ -32,6 +32,8 @@ export default function MembershipRequestCreating(props: IStageProps) {
               images: [],
               files: [],
               links: userData.links || [],
+             ...(userData?.feeMonthly && { feeMonthly: userData?.feeMonthly }),
+             ...(userData?.feeOneTime && { feeOneTime: userData?.feeOneTime }),
             },
           },
           callback: (error) => {
