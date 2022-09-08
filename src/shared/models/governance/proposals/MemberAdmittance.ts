@@ -3,6 +3,7 @@ import { ProposalsTypes } from "@/shared/constants";
 import { circleIndex } from "../Circles";
 import { BaseProposal } from "./BaseProposal";
 import { BasicArgsProposal } from "./BasicArgsProposal";
+import { PaymentAmount } from '@/shared/models/Payment';
 
 export interface MemberAdmittanceArgs extends BasicArgsProposal {
   circle?: string;
@@ -20,8 +21,8 @@ export interface MemberAdmittance extends BaseProposal {
     optimisticAdmittance: boolean;
   };
   limitations: {
-    minFeeOneTime?: number;
-    minFeeMonthly?: number;
+    minFeeOneTime?: PaymentAmount;
+    minFeeMonthly?: PaymentAmount;
     paymentMustGoThrough: boolean;
   }
 }

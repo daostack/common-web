@@ -39,13 +39,13 @@ export default function MembershipRequestPayment(
 
     if(limitations?.minFeeMonthly) {
       return {
-        amount: limitations?.minFeeMonthly,
+        amount: limitations?.minFeeMonthly.amount,
         contributionType: ContributionType.Monthly,
         contributionTypeText: 'monthly'
       }
     } else {
       return {
-        amount: limitations?.minFeeOneTime || 50, // TODO: REMOVE IT AFTER DEPLOYING THE BACKEND
+        amount: limitations?.minFeeOneTime?.amount,
         contributionType: ContributionType.OneTime,
         contributionTypeText: 'one-time'
       }
