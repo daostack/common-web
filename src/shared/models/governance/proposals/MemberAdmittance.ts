@@ -8,6 +8,12 @@ export interface MemberAdmittanceArgs extends BasicArgsProposal {
   circle?: string;
 }
 
+export type MemberAdmittanceLimitations = {
+    minFeeOneTime?: PaymentAmount;
+    minFeeMonthly?: PaymentAmount;
+    paymentMustGoThrough: boolean;
+}
+
 export interface MemberAdmittance extends BaseProposal {
   data: {
     votingExpiresOn: firebase.firestore.Timestamp | null;

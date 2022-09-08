@@ -27,7 +27,11 @@ export const getStepData = (
   [CreationStep.Rules]: {
     title: "Rules",
     description:
-      "Add rules of conduct. New members must agree to the rules before joining the Common.",
+      "Control how this Common will collect and manage funds.",
+  },
+  [CreationStep.Funding]: {
+    title: "Funding",
+    description: "Before creating a Common, please make sure that:",
   },
   [CreationStep.Review]: {
     title: "Final touches and review",
@@ -46,6 +50,11 @@ export const getStepProgressItems = (
     title: allStepsData[CreationStep.Rules].title,
     activeImageSource: "/icons/common-creation/rules-current.svg",
     inactiveImageSource: "/icons/common-creation/rules-next.svg",
+  },
+  {
+    title: allStepsData[CreationStep.Funding].title,
+    activeImageSource: "/icons/common-creation/funding-current.svg",
+    inactiveImageSource: "/icons/common-creation/funding-next.svg",
   },
   {
     title: allStepsData[CreationStep.Review].title,

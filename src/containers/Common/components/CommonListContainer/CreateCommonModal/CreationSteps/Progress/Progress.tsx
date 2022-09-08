@@ -13,6 +13,7 @@ interface ProgressProps {
 export const PROGRESS_RELATED_STEPS = [
   CreationStep.GeneralInfo,
   CreationStep.Rules,
+  CreationStep.Funding,
   CreationStep.Review,
 ];
 
@@ -32,6 +33,8 @@ export default function Progress({
     () => getStepProgressItems(allStepsData),
     [allStepsData]
   );
+
+  console.log('---PROGRESS_RELATED_STEPS',PROGRESS_RELATED_STEPS);
 
   return (
     <div className="create-common-steps-progress">

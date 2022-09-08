@@ -20,6 +20,7 @@ import { Rules } from "./Rules";
 import { UserAcknowledgment } from "./UserAcknowledgment";
 import { CreationStep } from "./constants";
 import "./index.scss";
+import { Funding } from "./Funding";
 
 interface CreationStepsProps {
   isHeaderScrolledToTop: boolean;
@@ -86,6 +87,8 @@ export default function CreationSteps(props: CreationStepsProps) {
           ...data,
         }));
       }
+
+      console.log('---data', data);
 
       scrollTop();
 
@@ -155,6 +158,8 @@ export default function CreationSteps(props: CreationStepsProps) {
       onFinish: handleFinish,
     };
 
+    console.log('--creationData',creationData);
+
     switch (step) {
       case CreationStep.GeneralInfo:
         return <GeneralInfo {...stepProps} />;
@@ -162,6 +167,8 @@ export default function CreationSteps(props: CreationStepsProps) {
         return <UserAcknowledgment {...stepProps} />;
       case CreationStep.Rules:
         return <Rules {...stepProps} />;
+      case CreationStep.Funding:
+        return <Funding {...stepProps} />;
       case CreationStep.Review:
         return <Review {...stepProps} handleFormValues={handleFormValues} />;
       default:

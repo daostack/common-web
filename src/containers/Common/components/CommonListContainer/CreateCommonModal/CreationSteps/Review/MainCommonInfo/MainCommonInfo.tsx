@@ -11,10 +11,11 @@ interface MainCommonInfoProps {
   className?: string;
   commonName: string;
   tagline?: string;
+  formattedMinFeeToJoin?: string;
 }
 
 const MainCommonInfo: FC<MainCommonInfoProps> = (props) => {
-  const { commonName, tagline } = props;
+  const { commonName, tagline, formattedMinFeeToJoin } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const className = classNames(
@@ -25,16 +26,28 @@ const MainCommonInfo: FC<MainCommonInfoProps> = (props) => {
   if (isMobileView) {
     return (
       <div className={className}>
-        <div className="create-common-review-main-info__part-wrapper">
-          <span className="create-common-review-main-info__value-text">
-            Safety period
-          </span>
-          <span className="create-common-review-main-info__value">
-            <span>a few seconds</span>
-            <span className="create-common-review-main-info__date">
-              {formatDate(new Date(), DateFormat.FullHuman)}
+        <div className="create-common-review-main-info__half">
+          <div className="create-common-review-main-info__part-wrapper">
+            <span className="create-common-review-main-info__value-text">
+              Min. Contribution
             </span>
-          </span>
+            <span className="create-common-review-main-info__value">
+              {formattedMinFeeToJoin}
+            </span>
+          </div>
+        </div>
+        <div className="create-common-review-main-info__half">
+          <div className="create-common-review-main-info__part-wrapper">
+            <span className="create-common-review-main-info__value-text">
+              Safety period
+            </span>
+            <span className="create-common-review-main-info__value">
+              <span>a few seconds</span>
+              <span className="create-common-review-main-info__date">
+                {formatDate(new Date(), DateFormat.FullHuman)}
+              </span>
+            </span>
+          </div>
         </div>
       </div>
     );
@@ -49,6 +62,14 @@ const MainCommonInfo: FC<MainCommonInfoProps> = (props) => {
         {tagline && (
           <p className="create-common-review-main-info__tagline">{tagline}</p>
         )}
+      </div>
+      <div className="create-common-review-main-info__part-wrapper">
+        <span className="create-common-review-main-info__value-text">
+          Min. Contribution
+        </span>
+        <span className="create-common-review-main-info__value">
+          {formattedMinFeeToJoin}
+        </span>
       </div>
     </div>
   );

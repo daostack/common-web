@@ -4,6 +4,7 @@ import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
+import { formatPrice } from "@/shared/utils/shared";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { CommonImageSlider } from "./CommonImageSlider";
@@ -33,10 +34,18 @@ export default function Review({
     byline: tagline,
     links = [],
     rules = [],
+    memberAdmittanceOptions
   } = creationData;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const formattedMinFeeToJoin = formatPrice(
+    memberAdmittanceOptions?.minFeeMonthly?.amount || memberAdmittanceOptions?.minFeeOneTime?.amount, {
+      shouldRemovePrefixFromZero: false,
+    }
+  );
 
+
+  console.log('---creationData',formattedMinFeeToJoin);
   const handleContinueClick = () => {
       onFinish();
   };
@@ -68,6 +77,7 @@ export default function Review({
           className="create-common-review__main-info"
           commonName={commonName}
           tagline={tagline}
+          formattedMinFeeToJoin={formattedMinFeeToJoin}
         />
         {!isMobileView && (
           <Separator className="create-common-review__separator" />
