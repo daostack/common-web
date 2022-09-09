@@ -12,10 +12,11 @@ interface MainCommonInfoProps {
   commonName: string;
   tagline?: string;
   formattedMinFeeToJoin?: string;
+  isSubCommonCreation?: boolean;
 }
 
 const MainCommonInfo: FC<MainCommonInfoProps> = (props) => {
-  const { commonName, tagline, formattedMinFeeToJoin } = props;
+  const { commonName, tagline, formattedMinFeeToJoin, isSubCommonCreation } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const className = classNames(
@@ -26,16 +27,18 @@ const MainCommonInfo: FC<MainCommonInfoProps> = (props) => {
   if (isMobileView) {
     return (
       <div className={className}>
-        <div className="create-common-review-main-info__half">
-          <div className="create-common-review-main-info__part-wrapper">
-            <span className="create-common-review-main-info__value-text">
-              Min. Contribution
-            </span>
-            <span className="create-common-review-main-info__value">
-              {formattedMinFeeToJoin}
-            </span>
+        {!isSubCommonCreation && 
+          <div className="create-common-review-main-info__half">
+            <div className="create-common-review-main-info__part-wrapper">
+              <span className="create-common-review-main-info__value-text">
+                Min. Contribution
+              </span>
+              <span className="create-common-review-main-info__value">
+                {formattedMinFeeToJoin}
+              </span>
+            </div>
           </div>
-        </div>
+        }
         <div className="create-common-review-main-info__half">
           <div className="create-common-review-main-info__part-wrapper">
             <span className="create-common-review-main-info__value-text">
@@ -63,14 +66,16 @@ const MainCommonInfo: FC<MainCommonInfoProps> = (props) => {
           <p className="create-common-review-main-info__tagline">{tagline}</p>
         )}
       </div>
-      <div className="create-common-review-main-info__part-wrapper">
-        <span className="create-common-review-main-info__value-text">
-          Min. Contribution
-        </span>
-        <span className="create-common-review-main-info__value">
-          {formattedMinFeeToJoin}
-        </span>
-      </div>
+      {!isSubCommonCreation && 
+        <div className="create-common-review-main-info__part-wrapper">
+          <span className="create-common-review-main-info__value-text">
+            Min. Contribution
+          </span>
+          <span className="create-common-review-main-info__value">
+            {formattedMinFeeToJoin}
+          </span>
+        </div>
+      }
     </div>
   );
 };

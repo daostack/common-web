@@ -30,7 +30,7 @@ export default function Progress({
     (step) => step === creationStep
   );
   const items = useMemo(
-    () => getStepProgressItems(allStepsData),
+    () => getStepProgressItems(allStepsData, isSubCommonCreation),
     [allStepsData]
   );
 

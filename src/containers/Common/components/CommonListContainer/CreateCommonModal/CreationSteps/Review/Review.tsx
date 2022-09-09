@@ -78,6 +78,7 @@ export default function Review({
           commonName={commonName}
           tagline={tagline}
           formattedMinFeeToJoin={formattedMinFeeToJoin}
+          isSubCommonCreation={isSubCommonCreation}
         />
         {!isMobileView && (
           <Separator className="create-common-review__separator" />

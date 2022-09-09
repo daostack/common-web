@@ -94,6 +94,8 @@ export default function CreationSteps(props: CreationStepsProps) {
 
       if (step === CreationStep.Review) {
         onFinish();
+      } else if (step === CreationStep.Rules && isSubCommonCreation) {
+        setStep((step) => step + 2);
       } else {
         setStep((step) => step + 1);
       }
