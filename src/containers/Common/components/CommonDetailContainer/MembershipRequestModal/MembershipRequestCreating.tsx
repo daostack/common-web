@@ -7,6 +7,7 @@ import { getUserName } from "@/shared/utils";
 import { createMemberAdmittanceProposal } from "../../../store/actions";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
+import { Currency } from "@/shared/models";
 
 export default function MembershipRequestCreating(props: IStageProps) {
   const { userData, setUserData, common } = props;
@@ -32,8 +33,8 @@ export default function MembershipRequestCreating(props: IStageProps) {
               images: [],
               files: [],
               links: userData.links || [],
-             ...(userData?.feeMonthly && { feeMonthly: userData?.feeMonthly }),
-             ...(userData?.feeOneTime && { feeOneTime: userData?.feeOneTime }),
+             ...(userData?.feeMonthly && { feeMonthly: { amount: userData?.feeMonthly, currency: Currency.ILS } }),
+             ...(userData?.feeOneTime && { feeOneTime: { amount: userData?.feeOneTime, currency: Currency.ILS } }),
             },
           },
           callback: (error) => {
