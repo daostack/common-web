@@ -13,6 +13,7 @@ interface ProgressProps {
 export const PROGRESS_RELATED_STEPS = [
   CreationStep.GeneralInfo,
   CreationStep.Rules,
+  CreationStep.Funding,
   CreationStep.Review,
 ];
 
@@ -29,7 +30,7 @@ export default function Progress({
     (step) => step === creationStep
   );
   const items = useMemo(
-    () => getStepProgressItems(allStepsData),
+    () => getStepProgressItems(allStepsData, isSubCommonCreation),
     [allStepsData]
   );
 
