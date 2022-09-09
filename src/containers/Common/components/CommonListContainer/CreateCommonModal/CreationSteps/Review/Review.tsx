@@ -41,11 +41,11 @@ export default function Review({
   const formattedMinFeeToJoin = formatPrice(
     memberAdmittanceOptions?.minFeeMonthly?.amount || memberAdmittanceOptions?.minFeeOneTime?.amount, {
       shouldRemovePrefixFromZero: false,
+      bySubscription: Boolean(memberAdmittanceOptions?.minFeeMonthly)
     }
   );
 
 
-  console.log('---creationData',formattedMinFeeToJoin);
   const handleContinueClick = () => {
       onFinish();
   };

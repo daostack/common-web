@@ -25,6 +25,7 @@ import { Progress } from "../Progress";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 import { Currency } from "@/shared/models";
+import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 
 const DEFAULT_CONTRIBUTION_AMOUNT = MIN_CONTRIBUTION_ILS_AMOUNT / 100;
 
@@ -131,10 +132,21 @@ export default function Funding({
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
       const minContribution = ( Number(values.minimumContribution) || DEFAULT_CONTRIBUTION_AMOUNT ) * 100;
-      console.log('--,minContribution',minContribution);
+      let memberAdmittanceOptions = {} as Omit<MemberAdmittanceLimitations, 'paymentMustGoThrough'>;
+      if(values.isCommonJoinFree) {
+        memberAdmittanceOptions = {
+          minFeeMonthly: null,
+          minFeeOneTime: null,
+        }
+      } else {
+        memberAdmittanceOptions = values.contributionType === ContributionType.Monthly 
+        ? { minFeeMonthly:  { amount: minContribution, currency: Currency.ILS }, minFeeOneTime: null } 
+        : { minFeeOneTime: { amount: minContribution, currency: Currency.ILS }, minFeeMonthly: null };
+      }
+
       onFinish({
         memberAdmittanceOptions: {
-          ...(values.contributionType === ContributionType.Monthly ? { minFeeMonthly:  { amount: minContribution, currency: Currency.ILS } } : { minFeeOneTime: { amount: minContribution, currency: Currency.ILS } }),
+          ...memberAdmittanceOptions,
           paymentMustGoThrough: !values.isCommonJoinFree
         },
       });

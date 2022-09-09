@@ -34,8 +34,6 @@ export default function Progress({
     [allStepsData]
   );
 
-  console.log('---PROGRESS_RELATED_STEPS',PROGRESS_RELATED_STEPS);
-
   return (
     <div className="create-common-steps-progress">
       {stepIndex !== -1 && (
