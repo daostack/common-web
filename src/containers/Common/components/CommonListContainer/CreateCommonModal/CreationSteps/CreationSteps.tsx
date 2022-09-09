@@ -88,8 +88,6 @@ export default function CreationSteps(props: CreationStepsProps) {
         }));
       }
 
-      console.log('---data', data);
-
       scrollTop();
 
       if (step === CreationStep.Review) {
@@ -159,8 +157,6 @@ export default function CreationSteps(props: CreationStepsProps) {
       currentStep: step,
       onFinish: handleFinish,
     };
-
-    console.log('--creationData',creationData);
 
     switch (step) {
       case CreationStep.GeneralInfo:

@@ -10,7 +10,6 @@ const REQUIRED_MINIMUM_CONTRIBUTION_ERROR = `The amount must be at least ${forma
   MIN_CONTRIBUTION_ILS_AMOUNT
 )} and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION)}.`;
 
-console.log('-Object.values(ContributionType)',Object.values(ContributionType));
 const schema = Yup.object().shape({
   contributionType: Yup.string()
     .oneOf(

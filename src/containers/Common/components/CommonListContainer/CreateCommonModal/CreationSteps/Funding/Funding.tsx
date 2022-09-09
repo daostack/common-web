@@ -41,15 +41,10 @@ interface FormValues {
   isCommonJoinFree: boolean;
 }
 
-const getInitialValues = (
-  data: IntermediateCreateCommonPayload
-): FormValues => {
-  console.log('--data',data);
- return {
+const INITIAL_VALUES = {
    contributionType: ContributionType.OneTime,
    minimumContribution: undefined,
    isCommonJoinFree: false,
- }
 };
 
 const getCurrencyInputLabel = (
@@ -163,7 +158,7 @@ export default function Funding({
         {isMobileView && progressEl}
         <Separator className="create-common-funding__separator" />
         <Formik
-          initialValues={getInitialValues(creationData)}
+          initialValues={INITIAL_VALUES}
           onSubmit={handleSubmit}
           innerRef={formRef}
           validationSchema={validationSchema}
