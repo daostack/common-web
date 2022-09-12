@@ -1,0 +1,16 @@
+@import "../../../../../../constants";
+
+.delete-common-request {
+  display: flex;
+  flex-direction: column;
+}
+
+.delete-common-request__text {
+  margin: 0;
+  font-size: $xsmall;
+}
+
+.delete-common-request__button {
+  margin: 2.5rem 0 0 auto;
+  max-width: 9.75rem;
+}

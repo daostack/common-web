@@ -2,10 +2,11 @@ import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { leaveCommon } from "@/containers/Common/store/actions";
-import { Button, ButtonVariant, Modal } from "@/shared/components";
+import { Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
 import { useNotification } from "@/shared/hooks";
+import { DeleteCommonRequest } from "./DeleteCommonRequest";
 import "./index.scss";
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -49,6 +50,8 @@ export default function LeaveCommonModal({
       onClose={onClose}
       title="Leave common"
       className="leave-common-modal"
-    >asd</Modal>
+    >
+      <DeleteCommonRequest onOkClick={onClose} />
+    </Modal>
   );
 }
