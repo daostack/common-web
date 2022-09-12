@@ -22,9 +22,9 @@ const STEPS: StepProgressItem[] = [
     inactiveImageSource: "/icons/membership-request/rules-gray.svg",
   },
   {
-    title: "Contribution",
-    activeImageSource: "/icons/membership-request/contribution-current.svg",
-    inactiveImageSource: "/icons/membership-request/contribution-gray.svg",
+    title: "Payment",
+    activeImageSource: "/icons/membership-request/payment-current.svg",
+    inactiveImageSource: "/icons/membership-request/payment-gray.svg",
   },
 ];
 
