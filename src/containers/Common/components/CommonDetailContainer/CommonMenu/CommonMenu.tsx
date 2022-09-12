@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { CreateCommonModal } from "@/containers/Common/components";
+import { EditCommonModal } from "@/containers/Common/components";
 import {
   ButtonLink,
   Dropdown,
@@ -26,8 +27,7 @@ import { MyContributionsModal } from "../MyContributionsModal";
 import "./index.scss";
 
 export enum MenuItem {
-  EditInfo,
-  EditRules,
+  EditAgenda,
   CreateSubCommon,
   MyContributions,
   DeleteCommon,
@@ -39,7 +39,7 @@ interface Option extends DropdownOption {
 }
 
 const OPTIONS: Option[] = [
-  {
+  /*{
     text: (
       <>
         <MosaicIcon className="edit-common-menu__item-icon" /> Edit info and
@@ -49,18 +49,18 @@ const OPTIONS: Option[] = [
     searchText: "Edit info and cover photo",
     value: MenuItem.EditInfo,
     className: "edit-common-menu__dropdown-menu-item--disabled",
-    disabled: true,
-  },
+    disabled: false,//true,
+  },*/
   {
     text: (
       <>
-        <AgendaIcon className="edit-common-menu__item-icon" /> Edit rules
+        <AgendaIcon className="edit-common-menu__item-icon" /> Edit Agenda
       </>
     ),
-    searchText: "Edit rules",
-    value: MenuItem.EditRules,
-    className: "edit-common-menu__dropdown-menu-item--disabled",
-    disabled: true,
+    searchText: "Edit Agenda",
+    value: MenuItem.EditAgenda,
+    //className: "edit-common-menu__dropdown-menu-item--disabled",
+    //disabled: false//true,
   },
   {
     text: (
@@ -143,11 +143,12 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const isCommonOwner = Boolean(
     common.founderId === currentCommonMember?.userId
   );
+  console.log('currentCommonMember', currentCommonMember)
   const menuItems = useMemo<MenuItem[]>(() => {
     const items: MenuItem[] = [];
 
-    if (isCommonOwner) {
-      items.push(MenuItem.EditInfo, MenuItem.EditRules);
+    if (isCommonOwner) {//is leader
+      items.push(MenuItem.EditAgenda, MenuItem.EditAgenda);
     }
     if (!isSubCommon) {
       items.push(MenuItem.CreateSubCommon);
@@ -175,6 +176,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   };
 
   const handleSelect = (value: unknown) => {
+    console.log('handleSelect value', value);
     if (isMobileView) {
       onMenuModalClose();
     }
@@ -279,6 +281,16 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         isShowing={selectedMenuItem === MenuItem.CreateSubCommon}
         onClose={handleMenuClose}
         governance={governance}
+        parentCommonId={common.id}
+        subCommons={subCommons}
+        onCommonCreate={onSubCommonCreate}
+        shouldBeWithoutIntroduction
+      />
+      <EditCommonModal
+        isShowing={selectedMenuItem === MenuItem.EditAgenda}
+        onClose={handleMenuClose}
+        governance={governance}
+        common={common}
         parentCommonId={common.id}
         subCommons={subCommons}
         onCommonCreate={onSubCommonCreate}

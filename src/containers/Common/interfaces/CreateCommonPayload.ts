@@ -27,3 +27,12 @@ export interface IntermediateCreateCommonPayload
   rules?: CreateCommonPayload["unstructuredRules"];
   circleIdFromParent?: string;
 }
+
+export interface UpdateCommonPayload {
+  name: string;
+  image: string;
+  byline?: string;
+  description?: string;
+  links?: CommonLink[];
+  // potentially rules
+}
