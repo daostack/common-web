@@ -21,7 +21,7 @@ import { ModalType } from "@/shared/interfaces";
 import { Common, CommonMember, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DeleteCommonPrompt } from "../DeleteCommonPrompt";
-import { LeaveCommonPrompt } from "../LeaveCommonPrompt";
+import { LeaveCommonModal } from "../LeaveCommonModal";
 import { MyContributionsModal } from "../MyContributionsModal";
 import "./index.scss";
 
@@ -270,7 +270,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         onClose={handleMenuClose}
         common={common}
       />
-      <LeaveCommonPrompt
+      <LeaveCommonModal
         isShowing={selectedMenuItem === MenuItem.LeaveCommon}
         onClose={handleMenuClose}
         commonId={common.id}
