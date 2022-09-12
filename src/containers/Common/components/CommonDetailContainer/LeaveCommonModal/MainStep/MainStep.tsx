@@ -4,13 +4,15 @@ import { Checkbox } from "@/shared/components/Form";
 import "./index.scss";
 
 interface MainStepProps {
+  isLoading: boolean;
   onLeave: () => void;
   onCancel: () => void;
 }
 
 const MainStep: FC<MainStepProps> = (props) => {
-  const { onLeave, onCancel } = props;
+  const { isLoading, onLeave, onCancel } = props;
   const [isApproved, setIsApproved] = useState(false);
+  const isLeaveButtonDisabled = isLoading || !isApproved;
 
   const handleApprovalChange = () => {
     setIsApproved((value) => !value);
@@ -39,6 +41,7 @@ const MainStep: FC<MainStepProps> = (props) => {
         label="I understand and approve"
         checked={isApproved}
         onChange={handleApprovalChange}
+        disabled={isLoading}
         styles={{
           label: "leave-common-main-step__checkbox-label",
         }}
@@ -55,7 +58,7 @@ const MainStep: FC<MainStepProps> = (props) => {
         <Button
           className="leave-common-main-step__button"
           onClick={onLeave}
-          disabled={!isApproved}
+          disabled={isLeaveButtonDisabled}
           shouldUseFullWidth
         >
           Leave Common

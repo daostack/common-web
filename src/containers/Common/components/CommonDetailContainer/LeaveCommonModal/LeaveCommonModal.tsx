@@ -7,6 +7,7 @@ import { Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
 import { useLoadingState, useNotification } from "@/shared/hooks";
+import { emptyFunction } from "@/shared/utils";
 import { DeleteCommonRequest } from "./DeleteCommonRequest";
 import { MainStep } from "./MainStep";
 import "./index.scss";
@@ -67,13 +68,15 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
       return <DeleteCommonRequest onOkClick={onClose} />;
     }
 
-    return <MainStep onLeave={handleLeave} onCancel={onClose} />;
+    return (
+      <MainStep isLoading={loading} onLeave={handleLeave} onCancel={onClose} />
+    );
   };
 
   return (
     <Modal
       isShowing={isShowing}
-      onClose={onClose}
+      onClose={!loading ? onClose : emptyFunction}
       title="Leave common"
       className="leave-common-modal"
     >
