@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { leaveCommon } from "@/containers/Common/store/actions";
+import { isRequestError } from "@/services/Api";
 import { Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
@@ -44,9 +45,13 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
         },
         callback: (error) => {
           const isFinishedSuccessfully = !error;
+          const errorText = error
+            ? (isRequestError(error) && error.response?.data?.errorMessage) ||
+              "Something went wrong"
+            : "";
 
           setIsLeaving(false);
-          setErrorText(error ? error.message || "Something went wrong" : "");
+          setErrorText(errorText);
 
           if (isFinishedSuccessfully) {
             history.push(ROUTE_PATHS.MY_COMMONS);
