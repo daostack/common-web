@@ -11,7 +11,7 @@ import { MembershipRequestStage } from "./constants";
 import "./index.scss";
 
 export default function MembershipRequestContribution(props: IStageProps) {
-  const { userData, setUserData, common } = props;
+  const { setUserData } = props;
   const contributionAmount = 5000;
   const [
     [selectedContribution, hasSelectedContributionError],

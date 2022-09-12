@@ -41,13 +41,11 @@ export default function MembershipRequestPayment(
       return {
         amount: limitations?.minFeeMonthly.amount,
         contributionType: ContributionType.Monthly,
-        contributionTypeText: 'monthly'
       }
     } else {
       return {
         amount: limitations?.minFeeOneTime?.amount,
         contributionType: ContributionType.OneTime,
-        contributionTypeText: 'one-time'
       }
     }
 
@@ -59,7 +57,7 @@ export default function MembershipRequestPayment(
       ...nextUserData,
       cardId: newCardId || cardId,
       stage: MembershipRequestStage.Creating,
-      ...(contributionInfo.contributionType === ContributionType.Monthly ? {feeMonthly: contributionInfo.amount} : {feeOneTime: contributionInfo.amount}),
+      [contributionInfo.contributionType === ContributionType.Monthly ? 'feeMonthly' : 'feeOneTime']: contributionInfo.amount,
     }));
   }, [setUserData, hasPaymentMethod, cards]);
 
