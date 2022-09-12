@@ -4,10 +4,10 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import { getLoading } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
+import { ContributionSourceType, Currency } from "@/shared/models";
 import { createMemberAdmittanceProposal } from "../../../store/actions";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
-import { ContributionSourceType, Currency } from "@/shared/models";
 
 export default function MembershipRequestCreating(props: IStageProps) {
   const { userData, setUserData, common } = props;
