@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { selectUser } from "@/containers/Auth/store/selectors";
@@ -25,6 +25,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
   const history = useHistory();
   const [{ loading, data: leftCommonSuccessfully }, setLeavingState] =
     useLoadingState<boolean>(false);
+  const [errorText, setErrorText] = useState("Something went wrong");
   const user = useSelector(selectUser());
   const userId = user?.uid;
 
@@ -38,6 +39,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
       fetched: false,
       data: false,
     });
+    setErrorText("");
 
     dispatch(
       leaveCommon.request({
@@ -53,6 +55,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
             fetched: true,
             data: isFinishedSuccessfully,
           });
+          setErrorText(error ? error.message || "Something went wrong" : "");
 
           if (isFinishedSuccessfully) {
             history.push(ROUTE_PATHS.MY_COMMONS);
@@ -69,7 +72,12 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     }
 
     return (
-      <MainStep isLoading={loading} onLeave={handleLeave} onCancel={onClose} />
+      <MainStep
+        isLoading={loading}
+        errorText={errorText}
+        onLeave={handleLeave}
+        onCancel={onClose}
+      />
     );
   };
 

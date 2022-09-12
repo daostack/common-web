@@ -1,16 +1,17 @@
 import React, { FC, useState } from "react";
 import { Button, ButtonVariant } from "@/shared/components";
-import { Checkbox } from "@/shared/components/Form";
+import { Checkbox, ErrorText } from "@/shared/components/Form";
 import "./index.scss";
 
 interface MainStepProps {
   isLoading: boolean;
+  errorText: string;
   onLeave: () => void;
   onCancel: () => void;
 }
 
 const MainStep: FC<MainStepProps> = (props) => {
-  const { isLoading, onLeave, onCancel } = props;
+  const { isLoading, errorText, onLeave, onCancel } = props;
   const [isApproved, setIsApproved] = useState(false);
   const isLeaveButtonDisabled = isLoading || !isApproved;
 
@@ -46,6 +47,7 @@ const MainStep: FC<MainStepProps> = (props) => {
           label: "leave-common-main-step__checkbox-label",
         }}
       />
+      <ErrorText className="leave-common-main-step__error-text">{errorText}</ErrorText>
       <div className="leave-common-main-step__buttons-wrapper">
         <Button
           className="leave-common-main-step__button"
