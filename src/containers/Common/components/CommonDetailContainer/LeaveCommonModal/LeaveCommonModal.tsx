@@ -7,6 +7,7 @@ import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
 import { useNotification } from "@/shared/hooks";
 import { DeleteCommonRequest } from "./DeleteCommonRequest";
+import { MainStep } from "./MainStep";
 import "./index.scss";
 
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
@@ -51,7 +52,7 @@ export default function LeaveCommonModal({
       title="Leave common"
       className="leave-common-modal"
     >
-      <DeleteCommonRequest onOkClick={onClose} />
+      <MainStep onLeave={handleLeave} onCancel={onClose} />
     </Modal>
   );
 }
