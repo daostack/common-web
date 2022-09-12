@@ -6,7 +6,7 @@ import { leaveCommon } from "@/containers/Common/store/actions";
 import { Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
-import { useLoadingState, useNotification } from "@/shared/hooks";
+import { useNotification } from "@/shared/hooks";
 import { emptyFunction } from "@/shared/utils";
 import { DeleteCommonRequest } from "./DeleteCommonRequest";
 import { MainStep } from "./MainStep";
@@ -23,9 +23,8 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const history = useHistory();
-  const [{ loading, data: leftCommonSuccessfully }, setLeavingState] =
-    useLoadingState<boolean>(false);
-  const [errorText, setErrorText] = useState("Something went wrong");
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
   const userId = user?.uid;
 
@@ -34,11 +33,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
       return;
     }
 
-    setLeavingState({
-      loading: true,
-      fetched: false,
-      data: false,
-    });
+    setIsLeaving(true);
     setErrorText("");
 
     dispatch(
@@ -50,11 +45,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
         callback: (error) => {
           const isFinishedSuccessfully = !error;
 
-          setLeavingState({
-            loading: false,
-            fetched: true,
-            data: isFinishedSuccessfully,
-          });
+          setIsLeaving(false);
           setErrorText(error ? error.message || "Something went wrong" : "");
 
           if (isFinishedSuccessfully) {
@@ -73,7 +64,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
 
     return (
       <MainStep
-        isLoading={loading}
+        isLoading={isLeaving}
         errorText={errorText}
         onLeave={handleLeave}
         onCancel={onClose}
@@ -84,7 +75,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
   return (
     <Modal
       isShowing={isShowing}
-      onClose={!loading ? onClose : emptyFunction}
+      onClose={!isLeaving ? onClose : emptyFunction}
       title="Leave common"
       className="leave-common-modal"
     >
