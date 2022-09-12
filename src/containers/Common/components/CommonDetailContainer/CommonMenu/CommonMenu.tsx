@@ -274,6 +274,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         isShowing={selectedMenuItem === MenuItem.LeaveCommon}
         onClose={handleMenuClose}
         commonId={common.id}
+        memberCount={common.memberCount}
       />
       <CreateCommonModal
         isShowing={selectedMenuItem === MenuItem.CreateSubCommon}

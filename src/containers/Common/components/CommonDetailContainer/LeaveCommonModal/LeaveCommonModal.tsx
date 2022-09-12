@@ -1,49 +1,74 @@
-import React, { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { FC, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { leaveCommon } from "@/containers/Common/store/actions";
 import { Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
-import { useNotification } from "@/shared/hooks";
+import { useLoadingState, useNotification } from "@/shared/hooks";
 import { DeleteCommonRequest } from "./DeleteCommonRequest";
 import { MainStep } from "./MainStep";
 import "./index.scss";
 
-interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
+interface LeaveCommonModalProps
+  extends Pick<ModalProps, "isShowing" | "onClose"> {
   commonId: string;
+  memberCount: number;
 }
 
-export default function LeaveCommonModal({
-  isShowing,
-  onClose,
-  commonId,
-}: IProps) {
+const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
+  const { isShowing, onClose, commonId, memberCount } = props;
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const history = useHistory();
-  const [leaving, setLeaving] = useState(false);
-  const [error, setError] = useState("");
+  const [{ loading, data: leftCommonSuccessfully }, setLeavingState] =
+    useLoadingState<boolean>(false);
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
 
   const handleLeave = useCallback(() => {
-    setLeaving(true);
-    setError("");
+    if (!userId) {
+      return;
+    }
+
+    setLeavingState({
+      loading: true,
+      fetched: false,
+      data: false,
+    });
+
     dispatch(
       leaveCommon.request({
-        payload: { commonId },
+        payload: {
+          commonId,
+          userId,
+        },
         callback: (error) => {
-          if (error) {
-            console.error(error);
-            setLeaving(false);
-            setError(error?.message ?? "Something went wrong :/");
-            return;
+          const isFinishedSuccessfully = !error;
+
+          setLeavingState({
+            loading: false,
+            fetched: true,
+            data: isFinishedSuccessfully,
+          });
+
+          if (isFinishedSuccessfully) {
+            history.push(ROUTE_PATHS.MY_COMMONS);
+            notify("You’ve successfully left the common");
           }
-          history.push(ROUTE_PATHS.MY_COMMONS);
-          notify("You've successfully left the common");
         },
       })
     );
-  }, [dispatch, notify, history, commonId]);
+  }, [dispatch, notify, history, commonId, userId]);
+
+  const renderStep = () => {
+    if (memberCount === 1) {
+      return <DeleteCommonRequest onOkClick={onClose} />;
+    }
+
+    return <MainStep onLeave={handleLeave} onCancel={onClose} />;
+  };
 
   return (
     <Modal
@@ -52,7 +77,9 @@ export default function LeaveCommonModal({
       title="Leave common"
       className="leave-common-modal"
     >
-      <MainStep onLeave={handleLeave} onCancel={onClose} />
+      {renderStep()}
     </Modal>
   );
-}
+};
+
+export default LeaveCommonModal;
