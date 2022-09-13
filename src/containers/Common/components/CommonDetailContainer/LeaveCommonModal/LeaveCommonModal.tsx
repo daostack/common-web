@@ -1,16 +1,17 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { leaveCommon } from "@/containers/Common/store/actions";
 import { isRequestError } from "@/services/Api";
-import { Modal } from "@/shared/components";
+import { Loader, Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
 import { useNotification } from "@/shared/hooks";
 import { useCommonMembersWithCircleIdsAmount } from "@/shared/hooks/useCases";
 import { emptyFunction } from "@/shared/utils";
 import { DeleteCommonRequest } from "./DeleteCommonRequest";
+import { LastMemberInCircle } from "./LastMemberInCircle";
 import { MainStep } from "./MainStep";
 import "./index.scss";
 
@@ -37,6 +38,13 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const isDeleteCommonRequest = memberCount === 1;
+  const isLoading = !isDeleteCommonRequest && !areMemberAmountsFetched;
+  const isLastMemberInCircle = useMemo(
+    () =>
+      areMemberAmountsFetched &&
+      memberAmountsWithCircleId.some(({ amount }) => amount <= 1),
+    [areMemberAmountsFetched, memberAmountsWithCircleId]
+  );
 
   const handleLeave = useCallback(() => {
     if (!userId) {
@@ -94,6 +102,9 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     if (isDeleteCommonRequest) {
       return <DeleteCommonRequest onOkClick={onClose} />;
     }
+    if (isLastMemberInCircle) {
+      return <LastMemberInCircle onOkClick={onClose} />;
+    }
 
     return (
       <MainStep
@@ -112,7 +123,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
       title="Leave common"
       className="leave-common-modal"
     >
-      {renderStep()}
+      {isLoading ? <Loader /> : renderStep()}
     </Modal>
   );
 };
