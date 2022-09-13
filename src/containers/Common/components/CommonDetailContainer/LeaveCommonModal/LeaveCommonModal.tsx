@@ -120,6 +120,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     <Modal
       isShowing={isShowing}
       onClose={!isLeaving ? onClose : emptyFunction}
+      hideCloseButton={isLeaving}
       title="Leave common"
       className="leave-common-modal"
     >

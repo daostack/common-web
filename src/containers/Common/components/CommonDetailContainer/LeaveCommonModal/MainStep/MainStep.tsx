@@ -53,6 +53,7 @@ const MainStep: FC<MainStepProps> = (props) => {
           className="leave-common-main-step__button"
           onClick={onCancel}
           variant={ButtonVariant.Secondary}
+          disabled={isLeaveButtonDisabled}
           shouldUseFullWidth
         >
           Cancel
