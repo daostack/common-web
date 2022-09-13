@@ -6,17 +6,16 @@ import {
   uploadFile,
 } from "@/shared/utils/firebaseUploadFile";
 import {
-  CreateCommonPayload,
-  IntermediateCreateCommonPayload,
+  UpdateCommonPayload,
 } from "../../../../interfaces";
-import { createCommon as createCommonAction } from "../../../../store/actions";
+import { updateCommon as updateCommonAction } from "../../../../store/actions";
 
 interface Return {
-  isCommonCreationLoading: boolean;
+  isCommonUpdateLoading: boolean;
   common: Common | null;
   error: string;
-  createCommon: (
-    creationData: IntermediateCreateCommonPayload
+  updateCommon: (
+    updateData: UpdateCommonPayload
   ) => Promise<void>;
 }
 
@@ -39,39 +38,38 @@ export const getCommonImageURL = async (
   }
 };
 
-const useCommonCreation = (): Return => {
-  const [isCommonCreationLoading, setIsCommonCreationLoading] = useState(false);
+const useCommonUpdate = (): Return => {
+  const [isCommonUpdateLoading, setIsCommonUpdateLoading] = useState(false);
   const [common, setCommon] = useState<Common | null>(null);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
-  const createCommon = useCallback(
-    async (creationData: IntermediateCreateCommonPayload) => {
-      if (isCommonCreationLoading || !creationData.image) {
+  const updateCommon = useCallback(
+    async (updatedData: UpdateCommonPayload) => {
+      if (isCommonUpdateLoading || !updatedData.image) {
         return;
       }
 
-      setIsCommonCreationLoading(true);
-      const commonImageURL = await getCommonImageURL(creationData.image);
+      setIsCommonUpdateLoading(true);
+      const commonImageURL = await getCommonImageURL(updatedData.image);
 
       if (!commonImageURL) {
         setError("Something went wrong...");
-        setIsCommonCreationLoading(false);
+        setIsCommonUpdateLoading(false);
         return;
       }
 
-      const payload: CreateCommonPayload = {
-        name: creationData.name,
+      const payload: UpdateCommonPayload = {
+        name: updatedData.name,
         image: commonImageURL,
-        byline: creationData.byline,
-        description: creationData.description,
-        unstructuredRules: creationData.rules,
-        links: creationData.links,
-        useTemplate: true,
+        byline: updatedData.byline,
+        description: updatedData.description,
+        //unstructuredRules: creationData.rules,
+        links: updatedData.links,
       };
 
       dispatch(
-        createCommonAction.request({
+        updateCommonAction.request({
           payload,
           callback: (error, common) => {
             if (error || !common) {
@@ -80,20 +78,20 @@ const useCommonCreation = (): Return => {
               setCommon(common);
             }
 
-            setIsCommonCreationLoading(false);
+            setIsCommonUpdateLoading(false);
           },
         })
       );
     },
-    [dispatch, isCommonCreationLoading]
+    [dispatch, setIsCommonUpdateLoading]
   );
 
   return {
-    isCommonCreationLoading,
+    isCommonUpdateLoading,
     common,
     error,
-    createCommon,
+    updateCommon,
   };
 };
 
-export default useCommonCreation;
+export default useCommonUpdate;

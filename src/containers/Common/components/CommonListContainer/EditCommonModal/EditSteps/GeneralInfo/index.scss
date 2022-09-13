@@ -1,17 +1,17 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-.create-common-general-info {
+.update-common-general-info {
   width: 100%;
   max-width: 584px;
   margin: 0 auto;
   padding-bottom: 32px;
 
-  .create-common-general-info__separator {
+  .update-common-general-info__separator {
     margin-bottom: 1.5rem;
   }
 
-  .create-common-general-info__text-field {
+  .update-common-general-info__text-field {
     margin-bottom: 24px;
 
     &:last-child {
@@ -19,7 +19,7 @@
     }
   }
 
-  .create-common-general-info__links-array-item {
+  .update-common-general-info__links-array-item {
     margin-top: 16px;
 
     &:first-child {
@@ -32,14 +32,14 @@
   }
 }
 
-.create-common-general-info__empty-circles-text {
+.update-common-general-info__empty-circles-text {
   margin: 0;
   font-size: $small;
   color: $light-gray-2;
   text-align: center;
 }
 
-.create-common-general-info__modal-footer {
+.update-common-general-info__modal-footer {
   display: flex;
   justify-content: center;
   padding: 28px 0;

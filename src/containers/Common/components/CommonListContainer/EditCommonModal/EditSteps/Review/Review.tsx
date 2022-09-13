@@ -30,6 +30,7 @@ export default function Review({
     description: about,
     byline: tagline,
     links = [],
+    image,
     //rules = [],
   } = currentData;
   const screenSize = useSelector(getScreenSize());
@@ -45,36 +46,36 @@ export default function Review({
     />
   );
 
-  const handleCommonImage = (image: string | File | null) => {
+  const handleCommonImage = (image: string | File) => {
     handleFormValues({image});
   };
 
   return (
     <>
       {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
-      <div className="create-common-review">
+      <div className="update-common-review">
         {isMobileView && progressEl}
         <CommonImageSlider
-          className="create-common-review__image-slider"
+          className="update-common-review__image-slider"
           commonName={commonName}
           tagline={tagline}
           initialImage={currentData.image}
           onImageChange={handleCommonImage}
         />
         <MainCommonInfo
-          className="create-common-review__main-info"
+          className="update-common-review__main-info"
           commonName={commonName}
           tagline={tagline}
         />
         {!isMobileView && (
-          <Separator className="create-common-review__separator" />
+          <Separator className="update-common-review__separator" />
         )}
-        <div className="create-common-review__section">
-          <h5 className="create-common-review__section-title">About</h5>
-          <p className="create-common-review__section-description">{about}</p>
+        <div className="update-common-review__section">
+          <h5 className="update-common-review__section-title">About</h5>
+          <p className="update-common-review__section-description">{about}</p>
         </div>
-        <div className="create-common-review__section">
-          <h5 className="create-common-review__links-section-title">Links</h5>
+        <div className="update-common-review__section">
+          <h5 className="update-common-review__links-section-title">Links</h5>
           <LinkList links={links} />
         </div>
         {/*<RuleList rules={rules} className="create-common-review__rules" />*/}
@@ -87,7 +88,7 @@ export default function Review({
             to the Common info after it is published.
           </div>
         </div> */}
-        <div className="create-common-review__submit-button-wrapper">
+        <div className="update-common-review__submit-button-wrapper">
           <Button
             key="rules-continue"
             onClick={handleContinueClick}

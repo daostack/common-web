@@ -1,20 +1,20 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-.create-common-steps-progress {
+.update-common-steps-progress {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding-bottom: 1rem;
 
-  .create-common-steps-progress__stepper {
+  .update-common-steps-progress__stepper {
     max-width: 17.5rem;
     width: 100%;
     margin: 1rem 0 1.5rem;
   }
 
-  .create-common-steps-progress__title {
+  .update-common-steps-progress__title {
     margin: 0;
     font-family: NunitoSans-Bold, sans-serif;
     font-size: $small;
@@ -23,7 +23,7 @@
     text-align: center;
   }
 
-  .create-common-steps-progress__description {
+  .update-common-steps-progress__description {
     max-width: 23.5rem;
     margin: 0.25rem 0 0;
     font-size: $xsmall;
@@ -32,7 +32,7 @@
     text-align: center;
     color: $light-gray-2;
   }
-  .create-common-steps-progress__description--sub-common {
+  .update-common-steps-progress__description--sub-common {
     max-width: 27.25rem;
   }
 

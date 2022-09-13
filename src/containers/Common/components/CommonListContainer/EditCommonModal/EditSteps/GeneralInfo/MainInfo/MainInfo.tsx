@@ -53,7 +53,7 @@ const MainInfo: FC<GeneralInfoProps> = (props) => {
       {({ values, errors, touched, isValid }) => (
         <Form>
           <TextField
-            className="create-common-general-info__text-field"
+            className="update-common-general-info__text-field"
             id="commonName"
             name="commonName"
             label="Common name"
@@ -62,7 +62,7 @@ const MainInfo: FC<GeneralInfoProps> = (props) => {
             isRequired
           />
           <TextField
-            className="create-common-general-info__text-field"
+            className="update-common-general-info__text-field"
             id="tagline"
             name="tagline"
             label="Tagline"
@@ -70,7 +70,7 @@ const MainInfo: FC<GeneralInfoProps> = (props) => {
             maxLength={MAX_TAGLINE_LENGTH}
           />
           <TextField
-            className="create-common-general-info__text-field"
+            className="update-common-general-info__text-field"
             id="about"
             name="about"
             label="About"
@@ -86,17 +86,17 @@ const MainInfo: FC<GeneralInfoProps> = (props) => {
             errors={errors.links}
             touched={touched.links}
             maxTitleLength={MAX_LINK_TITLE_LENGTH}
-            className="create-common-general-info__text-field"
-            itemClassName="create-common-general-info__links-array-item"
+            className="update-common-general-info__text-field"
+            itemClassName="update-common-general-info__links-array-item"
           />
           <ModalFooter sticky>
-            <div className="create-common-general-info__modal-footer">
+            <div className="update-common-general-info__modal-footer">
               <Button
                 onClick={handleContinueClick}
                 shouldUseFullWidth={isMobileView}
                 disabled={!isValid}
               >
-                Continue 1
+                Continue
               </Button>
             </div>
           </ModalFooter>

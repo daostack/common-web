@@ -143,7 +143,6 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const isCommonOwner = Boolean(
     common.founderId === currentCommonMember?.userId
   );
-  console.log('currentCommonMember', currentCommonMember)
   const menuItems = useMemo<MenuItem[]>(() => {
     const items: MenuItem[] = [];
 
@@ -292,8 +291,6 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         governance={governance}
         common={common}
         parentCommonId={common.id}
-        subCommons={subCommons}
-        onCommonCreate={onSubCommonCreate}
         shouldBeWithoutIntroduction
       />
     </div>

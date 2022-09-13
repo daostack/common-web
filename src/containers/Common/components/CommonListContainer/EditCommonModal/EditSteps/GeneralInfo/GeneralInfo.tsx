@@ -8,7 +8,6 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { parseLinksForSubmission } from "@/shared/utils";
 import { UpdateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
-import { CircleSelection } from "./CircleSelection";
 import { MainInfo } from "./MainInfo";
 import { MainInfoValues } from "./types";
 import "./index.scss";
@@ -57,9 +56,9 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
   return (
     <>
       {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
-      <div className="create-common-general-info">
+      <div className="update-common-general-info">
         {isMobileView && progressEl}
-        <Separator className="create-common-general-info__separator" />
+        <Separator className="update-common-general-info__separator" />
         {shouldShowMainInfo && (
           <MainInfo
             onFinish={handleMainInfoSubmit}

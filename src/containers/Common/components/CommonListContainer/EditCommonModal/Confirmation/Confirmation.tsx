@@ -1,7 +1,7 @@
 import React, { useEffect, FC, ReactNode } from "react";
 import { Common } from "@/shared/models";
 import { UpdateCommonPayload } from "../../../../interfaces";
-import { useCommonCreation, useSubCommonCreation } from "../useCases";
+import { useCommonUpdate } from "../useCases";
 import { Processing } from "./Processing";
 
 interface ConfirmationProps {
@@ -23,13 +23,13 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     parentCommonId,
   } = props;
   const {
-    isCommonCreationLoading,
+    isCommonUpdateLoading,
     common: createdCommon,
     error: commonCreationError,
-    createCommon,
-  } = useCommonCreation();
+    updateCommon,
+  } = useCommonUpdate();
 
-  const isLoading = isCommonCreationLoading;
+  const isLoading = isCommonUpdateLoading;
   const common = createdCommon;
   const error = commonCreationError;
 
@@ -42,7 +42,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     common,
     error,
     currentData,
-    createCommon,
+    updateCommon,
     parentCommonId,
   ]);
 

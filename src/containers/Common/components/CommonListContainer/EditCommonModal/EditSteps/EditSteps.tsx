@@ -108,16 +108,16 @@ export default function EditSteps(props: EditStepsProps) {
     );
 
     return (
-      <div className="create-common-creation-steps__modal-title-wrapper">
+      <div className="update-common-edit-steps__modal-title-wrapper">
         {isMobileView && !isHeaderScrolledToTop && stepIndex !== -1 && (
           <Dots
-            className="create-common-creation-steps__modal-title-dots"
+            className="update-common-edit-steps__modal-title-dots"
             currentStep={stepIndex + 1}
             stepsAmount={PROGRESS_RELATED_STEPS.length}
             shouldHighlightUnfinishedSteps
           />
         )}
-        <h3 className="create-common-creation-steps__modal-title">
+        <h3 className="update-common-edit-steps__modal-title">
           Edit Common
         </h3>
       </div>

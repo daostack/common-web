@@ -30,7 +30,7 @@ export interface IntermediateCreateCommonPayload
 
 export interface UpdateCommonPayload {
   name: string;
-  image: string;
+  image: string | File;
   byline?: string;
   description?: string;
   links?: CommonLink[];

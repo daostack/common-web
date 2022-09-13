@@ -25,10 +25,8 @@ interface EditCommonModalProps {
   onClose: () => void;
   governance?: Governance;
   parentCommonId?: string;
-  subCommons?: Common[];
   common: Common;
   shouldBeWithoutIntroduction?: boolean;
-  onCommonCreate?: (common: Common) => void;
 }
 
 const emptyFunction = () => {
@@ -36,7 +34,7 @@ const emptyFunction = () => {
 };
 
 export default function EditCommonModal(props: EditCommonModalProps) {
-  const { governance = [], parentCommonId, onCommonCreate, common } = props;
+  const { governance, parentCommonId, common } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -61,7 +59,7 @@ export default function EditCommonModal(props: EditCommonModalProps) {
     (() => boolean | undefined) | undefined
   >();
   const [shouldShowCloseButton, setShouldShowCloseButton] = useState(true);
-  const [createdCommon, setCreatedCommon] = useState<Common | null>(null);
+  const [updatedCommon, setUpdatedCommon] = useState<Common | null>(null);
   const [errorText, setErrorText] = useState("");
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -106,24 +104,20 @@ export default function EditCommonModal(props: EditCommonModalProps) {
       stage: UpdateCommonStage.Error,
     }));
   }, []);
-  const handleCommonCreation = useCallback(
+  const handleCommonUpdate = useCallback(
     (common: Common | null, errorText: string) => {
       if (errorText || !common) {
         handleError(errorText);
         return;
       }
 
-      if (onCommonCreate) {
-        onCommonCreate(common);
-      }
-
-      setCreatedCommon(common);
+      setUpdatedCommon(common);
       setStageState((state) => ({
         ...state,
         stage: UpdateCommonStage.Success,
       }));
     },
-    [handleError, onCommonCreate]
+    [handleError]
   );
   const renderedTitle = useMemo((): ReactNode => {
     if (!title) {
@@ -133,7 +127,7 @@ export default function EditCommonModal(props: EditCommonModalProps) {
       return title;
     }
 
-    return <h3 className="create-common-modal__title">{title}</h3>;
+    return <h3 className="edit-common-modal__title">{title}</h3>;
   }, [title, isBigTitle]);
   const content = useMemo(() => {
     switch (stage) {
@@ -158,14 +152,14 @@ export default function EditCommonModal(props: EditCommonModalProps) {
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
-            onFinish={handleCommonCreation}
+            onFinish={handleCommonUpdate}
             currentData={currentData}
           />
         );
       case UpdateCommonStage.Success:
-        return createdCommon ? (
+        return updatedCommon ? (
           <Success
-            common={createdCommon}
+            common={updatedCommon}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
@@ -194,11 +188,11 @@ export default function EditCommonModal(props: EditCommonModalProps) {
     setGoBackHandler,
     moveStageForward,
     currentData,
-    createdCommon,
+    updatedCommon,
     shouldStartFromLastStep,
     props.onClose,
     errorText,
-    handleCommonCreation,
+    handleCommonUpdate,
     parentCommonId,
   ]);
 
@@ -221,7 +215,7 @@ export default function EditCommonModal(props: EditCommonModalProps) {
       isShowing={props.isShowing}
       onGoBack={onGoBack && handleGoBack}
       onClose={shouldShowCloseButton ? props.onClose : emptyFunction}
-      className={classNames("create-common-modal", {
+      className={classNames("edit-common-modal", {
         "mobile-full-screen": isMobileView,
       })}
       mobileFullScreen={isMobileView}

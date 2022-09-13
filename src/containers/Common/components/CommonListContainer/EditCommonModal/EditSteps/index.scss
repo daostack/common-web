@@ -1,18 +1,18 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
-.create-common-creation-steps__modal-title-wrapper {
+.update-common-edit-steps__modal-title-wrapper {
   height: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  .create-common-creation-steps__modal-title-dots {
+  .update-common-edit-steps__modal-title-dots {
     margin: 6px 0;
   }
 
-  .create-common-creation-steps__modal-title {
+  .update-common-edit-steps__modal-title {
     margin: 0;
     font-family: NunitoSans-Bold, sans-serif;
     font-size: $small;

@@ -1,2 +1,1 @@
-export { default as useCommonCreation } from "./useCommonCreation";
-export { default as useSubCommonCreation } from "./useSubCommonCreation";
+export { default as useCommonUpdate } from "./useCommonUpdate";
