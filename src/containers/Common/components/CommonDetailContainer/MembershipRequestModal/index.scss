@@ -370,6 +370,95 @@ $payment-iframe-height-mobile: 672px;
   }
 }
 
+.membership-request-payment {
+  min-height: 25rem;
+
+  input {
+    width: 100%;
+  }
+
+  .error {
+    align-self: flex-start;
+    color: $red;
+  }
+
+  .expiration-cvv-wrapper {
+    margin-top: 1.3rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .membership-rejected-text {
+    color: $light-gray-2;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .circle-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+
+    span {
+      font-size: $xxsmall;
+      color: $light-gray-2;
+      margin-bottom: 0.2rem;
+    }
+  }
+
+  .membership-request-payment__amount {
+    color: $purple;
+  }
+
+  @include big-phone {
+    min-height: unset;
+  }
+}
+
+.membership-request-payment__content {
+  flex: 1 0;
+  position: relative;
+  max-width: 25rem;
+  width: 100%;
+  min-height: $payment-iframe-height;
+  display: flex;
+
+  @include big-phone {
+    min-height: 3.125rem;
+  }
+}
+
+.membership-request-payment__loader {
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+
+  @include big-phone {
+    top: unset;
+    transform: translateX(-50%);
+  }
+}
+
+.membership-request-payment__continue-button-wrapper {
+  padding: 1.75rem 0;
+  display: flex;
+  justify-content: center;
+
+  .membership-request-payment__continue-button {
+    min-width: 11.25rem;
+
+    @include big-phone {
+      min-width: unset;
+    }
+  }
+
+  @include big-phone {
+    padding: 1.5rem 0;
+  }
+}
+
 .membership-request-creating {
   .loader-container {
     margin: 3rem 0;

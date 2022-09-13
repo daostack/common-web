@@ -24,10 +24,11 @@ const MAX_MESSAGE_LENGTH = 690;
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
-  onSuccess: (discussion: Discussion) => void,
-  uid: string,
-  commonId: string,
-  governanceId: string,
+  onSuccess: (discussion: Discussion) => void;
+  uid: string;
+  commonId: string;
+  governanceId: string;
+  userCircleIds?: string[];
 }
 
 const validationSchema = Yup.object({
@@ -65,7 +66,8 @@ const AddDiscussionComponent = ({
   onSuccess,
   uid,
   commonId,
-  governanceId
+  governanceId,
+  userCircleIds
 }: AddDiscussionComponentProps) => {
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
@@ -197,6 +199,7 @@ const AddDiscussionComponent = ({
                     }}
                     options={circleOptions}
                     error={(formikProps.touched.circleVisibility && formikProps.errors.circleVisibility) as string}
+                    isOptionDisabled={(option) => !userCircleIds?.includes(option.id)}
                   />
                 )
               }

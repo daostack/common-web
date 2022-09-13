@@ -5,6 +5,7 @@ import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { parseLinksForSubmission } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { CircleSelection } from "./CircleSelection";
@@ -45,7 +46,7 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
   };
 
   const handleMainInfoSubmit = (values: MainInfoValues) => {
-    const links = values.links.filter((link) => link.title && link.value);
+    const links = parseLinksForSubmission(values.links);
 
     onFinish({
       name: values.commonName,

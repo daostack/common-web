@@ -102,7 +102,7 @@ export default function Rules({
                     shouldUseFullWidth={isMobileView}
                     disabled={!isValid}
                   >
-                    Continue to Review
+                   {`Continue to ${isSubCommonCreation ? "Review" : 'Funding'}`}
                   </Button>
                 </div>
               </ModalFooter>

@@ -633,6 +633,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           uid={user?.uid!}
           commonId={common.id}
           governanceId={governance.id}
+          userCircleIds={commonMember?.circlesIds}
         />
       )}
       {isShowingNewP && commonMember && (

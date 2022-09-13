@@ -10,6 +10,7 @@ interface CheckboxStyles {
   inputWrapper?: string;
   label?: string;
   error?: string;
+  checkbox?: string;
 }
 
 export type CheckboxProps = JSX.IntrinsicElements['input'] & {
@@ -31,7 +32,7 @@ const Checkbox: FC<CheckboxProps> = (props) => {
         <div className={classNames("custom-checkbox__input-wrapper", styles?.inputWrapper)}>
           <input
             {...restProps}
-            className="custom-checkbox__input"
+            className={classNames("custom-checkbox__input", styles?.checkbox)}
             id={id}
             type="checkbox"
           />
