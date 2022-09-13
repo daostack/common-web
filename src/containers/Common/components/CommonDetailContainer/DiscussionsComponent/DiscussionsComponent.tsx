@@ -44,6 +44,7 @@ export default function DiscussionsComponent({
                 key={d.id}
                 discussion={d}
                 loadDisscussionDetail={loadDisscussionDetail}
+                governance={governance}
               />
             ))}
           </>
