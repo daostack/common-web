@@ -1,3 +1,9 @@
-import { Circle, Discussion } from "../models";
+import { Circle } from "../models";
 
-export const getCirclesNames = (circles: Circle[] | null, discussion: Discussion): string => (circles ?? [])?.filter(({id}) => discussion.circleVisibility?.includes(id)).map(({name}) => name).join(', ');
+export const getCirclesNames = (circles: Circle[] | null, circleVisibility?: string[]): string => {
+  if(!circles || !circleVisibility) {
+    return '';
+  }
+  
+  return (circles ?? [])?.filter(({id}) => circleVisibility?.includes(id)).map(({name}) => name).join(', ')
+};

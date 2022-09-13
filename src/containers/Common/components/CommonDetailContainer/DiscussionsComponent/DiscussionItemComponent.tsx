@@ -34,7 +34,7 @@ export default function DiscussionItemComponent({
     if(discussion.circleVisibility) {
       (async () => {
         const governanceCircles = await getCommonGovernanceCircles(governance.id);
-        const names = getCirclesNames(governanceCircles, discussion);
+        const names = getCirclesNames(governanceCircles, discussion.circleVisibility);
         setCircleNames(names);
       })();
     }
