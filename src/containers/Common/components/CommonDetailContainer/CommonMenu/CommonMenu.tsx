@@ -270,12 +270,15 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         onClose={handleMenuClose}
         common={common}
       />
-      <LeaveCommonModal
-        isShowing={selectedMenuItem === MenuItem.LeaveCommon}
-        onClose={handleMenuClose}
-        commonId={common.id}
-        memberCount={common.memberCount}
-      />
+      {currentCommonMember && (
+        <LeaveCommonModal
+          isShowing={selectedMenuItem === MenuItem.LeaveCommon}
+          onClose={handleMenuClose}
+          commonId={common.id}
+          memberCount={common.memberCount}
+          memberCircleIds={currentCommonMember.circlesIds}
+        />
+      )}
       <CreateCommonModal
         isShowing={selectedMenuItem === MenuItem.CreateSubCommon}
         onClose={handleMenuClose}

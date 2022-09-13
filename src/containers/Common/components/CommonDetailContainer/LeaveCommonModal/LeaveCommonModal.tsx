@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { selectUser } from "@/containers/Auth/store/selectors";
@@ -8,6 +8,7 @@ import { Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
 import { useNotification } from "@/shared/hooks";
+import { useCommonMembersWithCircleIdsAmount } from "@/shared/hooks/useCases";
 import { emptyFunction } from "@/shared/utils";
 import { DeleteCommonRequest } from "./DeleteCommonRequest";
 import { MainStep } from "./MainStep";
@@ -17,10 +18,17 @@ interface LeaveCommonModalProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
   commonId: string;
   memberCount: number;
+  memberCircleIds: string[];
 }
 
 const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
-  const { isShowing, onClose, commonId, memberCount } = props;
+  const { isShowing, onClose, commonId, memberCount, memberCircleIds } = props;
+  const {
+    loading: areMemberAmountsLoading,
+    fetched: areMemberAmountsFetched,
+    data: memberAmountsWithCircleId,
+    fetchCommonMembersWithCircleIdAmount,
+  } = useCommonMembersWithCircleIdsAmount();
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const history = useHistory();
@@ -28,6 +36,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
   const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const isDeleteCommonRequest = memberCount === 1;
 
   const handleLeave = useCallback(() => {
     if (!userId) {
@@ -62,8 +71,27 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     );
   }, [dispatch, notify, history, commonId, userId]);
 
+  useEffect(() => {
+    if (
+      isDeleteCommonRequest ||
+      areMemberAmountsLoading ||
+      areMemberAmountsFetched
+    ) {
+      return;
+    }
+
+    fetchCommonMembersWithCircleIdAmount(commonId, memberCircleIds);
+  }, [
+    isDeleteCommonRequest,
+    areMemberAmountsLoading,
+    areMemberAmountsFetched,
+    fetchCommonMembersWithCircleIdAmount,
+    commonId,
+    memberCircleIds,
+  ]);
+
   const renderStep = () => {
-    if (memberCount === 1) {
+    if (isDeleteCommonRequest) {
       return <DeleteCommonRequest onOkClick={onClose} />;
     }
 
