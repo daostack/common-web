@@ -17,9 +17,9 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { addMessageToDiscussion } from "@/containers/Common/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize, ChatType } from "@/shared/constants";
-import "./index.scss";
 import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
 import { getCirclesNames } from "@/shared/utils/circles";
+import "./index.scss";
 
 interface DiscussionDetailModalProps {
   discussion: Discussion | DiscussionWithHighlightedMessage | null;
