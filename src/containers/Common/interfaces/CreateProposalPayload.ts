@@ -2,10 +2,11 @@ import { ProposalsTypes } from "@/shared/constants";
 import { ContributionSourceType } from "@/shared/models";
 import {
   AssignCircle,
+  DeleteCommon,
   RemoveCircle,
   FundsAllocation,
   MemberAdmittance,
-  Survey
+  Survey,
 } from "@/shared/models/governance/proposals";
 
 interface CreateFundsAllocation {
@@ -15,7 +16,9 @@ interface CreateFundsAllocation {
 
 interface CreateMemberAdmittance {
   type: ProposalsTypes.MEMBER_ADMITTANCE;
-  args: Omit<MemberAdmittance["data"]["args"], "proposerId"> & { contributionSourceType?: ContributionSourceType };
+  args: Omit<MemberAdmittance["data"]["args"], "proposerId"> & {
+    contributionSourceType?: ContributionSourceType;
+  };
 }
 
 interface CreateAssignCircle {
@@ -30,6 +33,11 @@ interface CreateRemoveCircle {
 interface CreateSurvey {
   type: ProposalsTypes.SURVEY;
   args: Omit<Survey["data"]["args"], "proposerId">;
+}
+
+interface CreateDeleteCommon {
+  type: ProposalsTypes.DELETE_COMMON;
+  args: Omit<DeleteCommon["data"]["args"], "proposerId">;
 }
 
 interface Request<P, R> {
@@ -49,4 +57,5 @@ export interface CreateProposal {
   [ProposalsTypes.ASSIGN_CIRCLE]: Request<CreateAssignCircle, AssignCircle>;
   [ProposalsTypes.REMOVE_CIRCLE]: Request<CreateRemoveCircle, RemoveCircle>;
   [ProposalsTypes.SURVEY]: Request<CreateSurvey, Survey>;
+  [ProposalsTypes.DELETE_COMMON]: Request<CreateDeleteCommon, DeleteCommon>;
 }

@@ -71,6 +71,7 @@ import { Awaited } from "@/shared/interfaces";
 import {
   AssignCircle,
   CalculatedVotes,
+  DeleteCommon,
   FundsAllocation,
   MemberAdmittance,
   RemoveCircle,
@@ -699,6 +700,34 @@ export function* createSurvey({
   yield put(stopLoading());
 }
 
+export function* createDeleteCommonProposal({
+  payload,
+}: ReturnType<typeof actions.createDeleteCommonProposal.request>): Generator {
+  try {
+    yield put(startLoading());
+    const deleteCommonProposal = (yield call(createProposalApi, {
+      ...payload.payload,
+      type: ProposalsTypes.DELETE_COMMON,
+    })) as DeleteCommon;
+
+    yield put(actions.createDeleteCommonProposal.success(deleteCommonProposal));
+
+    if (payload.callback) {
+      payload.callback(null, deleteCommonProposal);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createDeleteCommonProposal.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* leaveCommon(
   action: ReturnType<typeof actions.leaveCommon.request>
 ): Generator {
@@ -1280,6 +1309,10 @@ export function* commonsSaga() {
   yield takeLatest(
     actions.createSurvey.request,
     createSurvey
+  );
+  yield takeLatest(
+    actions.createDeleteCommonProposal.request,
+    createDeleteCommonProposal
   );
   yield takeLatest(actions.loadUserCards.request, loadUserCardsSaga);
   yield takeLatest(
