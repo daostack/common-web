@@ -10,7 +10,7 @@ import {
   Modal,
   MenuButton,
 } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { useAuthorizedDropdown, useAuthorizedModal } from "@/shared/hooks";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import AddIcon from "@/shared/icons/add.icon";
@@ -156,7 +156,10 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (isCommonMember) {
       items.push(MenuItem.MyContributions);
     }
-    if (!isSubCommon) {
+    if (
+      currentCommonMember?.allowedProposals[ProposalsTypes.DELETE_COMMON] &&
+      !isSubCommon
+    ) {
       items.push(MenuItem.DeleteCommon);
     }
     if (isCommonMember && !isSubCommon) {
@@ -164,7 +167,13 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     }
 
     return items;
-  }, [isCommonMember, isCommonOwner, isSubCommon, common.memberCount]);
+  }, [
+    isCommonMember,
+    isCommonOwner,
+    isSubCommon,
+    common.memberCount,
+    currentCommonMember,
+  ]);
   const options = useMemo(
     () =>
       OPTIONS.filter((option) => menuItems.includes(option.value as MenuItem)),
