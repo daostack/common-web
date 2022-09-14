@@ -11,6 +11,7 @@ import { PaymentDetails } from "./PaymentDetails";
 import { ContributionType } from "@/shared/constants";
 import { ErrorText } from "@/shared/components/Form";
 import "./index.scss";
+import { Currency } from "@/shared/models";
 
 interface PaymentStepProps {
   amount: number;
@@ -38,7 +39,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
 
   const handleImmediateContribution = useCallback(() => {
     makeImmediateContribution({
-      amount,
+      price: { amount, currency: Currency.ILS },
       commonId: config.deadSeaCommonId,
       contributionType: ContributionType.OneTime,
     });
