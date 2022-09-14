@@ -14,6 +14,7 @@ import { ModalProps } from "@/shared/interfaces";
 import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { AssignCircleStage } from "./AssignCircleStage";
+import { DeleteCommonStage } from "./DeleteCommonStage";
 import { Error } from "./Error";
 import { RemoveCircleStage } from "./RemoveCircleStage";
 import { FundsAllocationStage } from "./FundsAllocationStage";
@@ -30,6 +31,7 @@ interface CreateProposalModalProps
   common: Common;
   governance: Governance;
   commonMember: CommonMember;
+  activeProposalsExist: boolean;
   redirectToProposal: (proposal: Proposal) => void;
   initialProposalType?: ProposalsTypes | null;
 }
@@ -41,13 +43,14 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
     isShowing,
     onClose,
     commonMember,
+    activeProposalsExist,
     redirectToProposal,
     initialProposalType,
   } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
-  const [stage, setStage] = useState(
+  const [stage, setStage] = useState<CreateProposalStage>(
     () =>
       (initialProposalType && getStageByProposalType(initialProposalType)) ||
       CreateProposalStage.ProposalTypeSelection
@@ -170,6 +173,15 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
           <SurveyStage
             common={common}
             governance={governance}
+            onFinish={handleProposalCreationFinish}
+            onGoBack={goToProposalTypeSelectionStage}
+          />
+        );
+      case CreateProposalStage.DeleteCommon:
+        return (
+          <DeleteCommonStage
+            common={common}
+            activeProposalsExist={activeProposalsExist}
             onFinish={handleProposalCreationFinish}
             onGoBack={goToProposalTypeSelectionStage}
           />

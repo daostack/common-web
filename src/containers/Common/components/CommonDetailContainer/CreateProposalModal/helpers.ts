@@ -13,6 +13,8 @@ export const getStageByProposalType = (
       return CreateProposalStage.RemoveCircle;
     case ProposalsTypes.SURVEY:
       return CreateProposalStage.Survey;
+    case ProposalsTypes.DELETE_COMMON:
+      return CreateProposalStage.DeleteCommon;
     default:
       return null;
   }

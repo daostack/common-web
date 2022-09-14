@@ -648,6 +648,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           common={common}
           governance={governance}
           commonMember={commonMember}
+          activeProposalsExist={activeProposals.length > 0}
           redirectToProposal={getProposalDetail}
         />
       )}
