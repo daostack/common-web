@@ -274,6 +274,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     [dispatch, isDiscussionsLoaded, isProposalsLoaded]
   );
 
+  const handleCommonDelete = () => {
+    console.log("handleCommonDelete");
+  };
+
   useEffect(() => {
     if (!activeTab || !isCommonFetched) return;
 
@@ -700,6 +704,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                             isSubCommon={isSubCommon}
                             currentCommonMember={commonMember}
                             onSubCommonCreate={addSubCommon}
+                            onCommonDelete={handleCommonDelete}
                           />
                         )}
                       </div>
@@ -799,6 +804,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       currentCommonMember={commonMember}
                       withBorder
                       onSubCommonCreate={addSubCommon}
+                      onCommonDelete={handleCommonDelete}
                     />
                   )}
                 </div>

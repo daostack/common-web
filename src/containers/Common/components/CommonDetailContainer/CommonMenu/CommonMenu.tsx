@@ -112,6 +112,7 @@ interface CommonMenuProps {
   currentCommonMember: CommonMember | null;
   withBorder?: boolean;
   onSubCommonCreate?: (common: Common) => void;
+  onCommonDelete: () => void;
 }
 
 const CommonMenu: FC<CommonMenuProps> = (props) => {
@@ -124,6 +125,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     isSubCommon,
     currentCommonMember,
     onSubCommonCreate,
+    onCommonDelete,
     withBorder = false,
   } = props;
   const dropdownRef = useRef<DropdownRef>(null);
@@ -179,6 +181,14 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     }
 
     setSelectedMenuItem(value as MenuItem);
+
+    switch (value) {
+      case MenuItem.DeleteCommon:
+        onCommonDelete();
+        break;
+      default:
+        break;
+    }
   };
 
   const handleMenuClose = () => {

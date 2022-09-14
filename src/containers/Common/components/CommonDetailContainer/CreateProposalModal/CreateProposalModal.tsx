@@ -21,6 +21,7 @@ import { SurveyStage } from "./SurveyStage";
 import { ProposalTypeSelection } from "./ProposalTypeSelection";
 import { CreateProposalStage } from "./constants";
 import { CreateProposalContext, CreateProposalContextValue } from "./context";
+import { getStageByProposalType } from "./helpers";
 import { GoBackHandler } from "./types";
 import "./index.scss";
 
@@ -30,6 +31,7 @@ interface CreateProposalModalProps
   governance: Governance;
   commonMember: CommonMember;
   redirectToProposal: (proposal: Proposal) => void;
+  initialProposalType?: ProposalsTypes | null;
 }
 
 const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
@@ -40,11 +42,16 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
     onClose,
     commonMember,
     redirectToProposal,
+    initialProposalType,
   } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
-  const [stage, setStage] = useState(CreateProposalStage.ProposalTypeSelection);
+  const [stage, setStage] = useState(
+    () =>
+      (initialProposalType && getStageByProposalType(initialProposalType)) ||
+      CreateProposalStage.ProposalTypeSelection
+  );
   const [title, setTitle] = useState<ReactNode>("Create New Proposal");
   const [onGoBack, setOnGoBack] = useState<GoBackHandler>();
   const [shouldShowClosePrompt, setShouldShowClosePrompt] = useState(false);
@@ -68,17 +75,10 @@ const CreateProposalModal: FC<CreateProposalModalProps> = (props) => {
 
   const handleProposalTypeSelectionFinish = useCallback(
     (proposalType: ProposalsTypes) => {
-      if (proposalType === ProposalsTypes.ASSIGN_CIRCLE) {
-        setStage(CreateProposalStage.AssignCircle);
-      }
-      if (proposalType === ProposalsTypes.FUNDS_ALLOCATION) {
-        setStage(CreateProposalStage.FundsAllocation);
-      }
-      if (proposalType === ProposalsTypes.REMOVE_CIRCLE) {
-        setStage(CreateProposalStage.RemoveCircle);
-      }
-      if (proposalType === ProposalsTypes.SURVEY) {
-        setStage(CreateProposalStage.Survey);
+      const nextStage = getStageByProposalType(proposalType);
+
+      if (nextStage) {
+        setStage(nextStage);
       }
     },
     []
