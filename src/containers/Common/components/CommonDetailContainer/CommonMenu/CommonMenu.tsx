@@ -21,7 +21,7 @@ import { ModalType } from "@/shared/interfaces";
 import { Common, CommonMember, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DeleteCommonPrompt } from "../DeleteCommonPrompt";
-import { LeaveCommonPrompt } from "../LeaveCommonPrompt";
+import { LeaveCommonModal } from "../LeaveCommonModal";
 import { MyContributionsModal } from "../MyContributionsModal";
 import "./index.scss";
 
@@ -158,7 +158,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (isCommonOwner && common.memberCount === 1 && !isSubCommon) {
       items.push(MenuItem.DeleteCommon);
     }
-    if (isCommonMember && !isCommonOwner && !isSubCommon) {
+    if (isCommonMember && !isSubCommon) {
       items.push(MenuItem.LeaveCommon);
     }
 
@@ -270,11 +270,15 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         onClose={handleMenuClose}
         common={common}
       />
-      <LeaveCommonPrompt
-        isShowing={selectedMenuItem === MenuItem.LeaveCommon}
-        onClose={handleMenuClose}
-        commonId={common.id}
-      />
+      {currentCommonMember && (
+        <LeaveCommonModal
+          isShowing={selectedMenuItem === MenuItem.LeaveCommon}
+          onClose={handleMenuClose}
+          commonId={common.id}
+          memberCount={common.memberCount}
+          memberCircleIds={currentCommonMember.circlesIds}
+        />
+      )}
       <CreateCommonModal
         isShowing={selectedMenuItem === MenuItem.CreateSubCommon}
         onClose={handleMenuClose}
