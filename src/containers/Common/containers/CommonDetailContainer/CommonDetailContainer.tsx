@@ -610,6 +610,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             commonMember={commonMember}
             isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
+            governance={governance}
           />
         </Modal>
       )}
