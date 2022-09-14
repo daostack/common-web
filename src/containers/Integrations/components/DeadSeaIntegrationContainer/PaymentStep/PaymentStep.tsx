@@ -10,8 +10,8 @@ import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 import { PaymentDetails } from "./PaymentDetails";
 import { ContributionType } from "@/shared/constants";
 import { ErrorText } from "@/shared/components/Form";
-import "./index.scss";
 import { Currency } from "@/shared/models";
+import "./index.scss";
 
 interface PaymentStepProps {
   amount: number;
