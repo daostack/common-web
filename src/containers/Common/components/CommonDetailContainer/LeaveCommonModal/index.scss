@@ -1,0 +1,10 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.leave-common-modal {
+  max-width: 31.875rem;
+
+  @include big-phone {
+    max-width: unset;
+  }
+}
