@@ -20,12 +20,12 @@ import {
 import { ScreenSize, MIN_CONTRIBUTION_ILS_AMOUNT, ContributionType } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
+import { Currency } from "@/shared/models";
+import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import validationSchema from "./validationSchema";
 import "./index.scss";
-import { Currency } from "@/shared/models";
-import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 
 const DEFAULT_CONTRIBUTION_AMOUNT = MIN_CONTRIBUTION_ILS_AMOUNT / 100;
 

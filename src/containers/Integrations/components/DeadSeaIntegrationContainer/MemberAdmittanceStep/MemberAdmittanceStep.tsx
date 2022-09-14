@@ -77,6 +77,8 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
               images: [],
               files: [],
               links: [],
+              feeMonthly: null,
+              feeOneTime: null,
             },
           },
           callback: (error, proposal) => {

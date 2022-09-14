@@ -2,7 +2,7 @@ import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
 import { IFrame, Loader, Separator } from "@/shared/components";
 import { ContributionType } from "@/shared/constants";
-import { Common, Subscription, Payment, PaymentStatus } from "@/shared/models";
+import { Common, Subscription, Payment, PaymentStatus, Currency } from "@/shared/models";
 import {
   isImmediateContributionPayment,
   ImmediateContributionPayment,
@@ -66,7 +66,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
           payload: {
             commonId,
             contributionType: ContributionType.Monthly,
-            amount: contributionAmount,
+            price: { amount: contributionAmount, currency: Currency.ILS },
             saveCard: true,
           },
           callback: (error, payment) => {

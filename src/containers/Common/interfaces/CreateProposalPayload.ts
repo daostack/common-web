@@ -1,5 +1,5 @@
 import { ProposalsTypes } from "@/shared/constants";
-import { ContributionSourceType } from "@/shared/models";
+import { ContributionSourceType, PaymentAmount } from "@/shared/models";
 import {
   AssignCircle,
   RemoveCircle,
@@ -15,7 +15,11 @@ interface CreateFundsAllocation {
 
 interface CreateMemberAdmittance {
   type: ProposalsTypes.MEMBER_ADMITTANCE;
-  args: Omit<MemberAdmittance["data"]["args"], "proposerId"> & { contributionSourceType?: ContributionSourceType };
+  args: Omit<MemberAdmittance["data"]["args"], "proposerId"> & { 
+    contributionSourceType?: ContributionSourceType;
+    feeMonthly: PaymentAmount | null;
+    feeOneTime: PaymentAmount | null;
+  };
 }
 
 interface CreateAssignCircle {
