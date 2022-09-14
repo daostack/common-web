@@ -38,11 +38,7 @@ const MobileBilling: FC<BillingProps> = (props) => {
     setActiveContributionTopOffset,
   ] = useState<number>(0);
   const [tab, setTab] = useState(BillingTab.PaymentDetails);
-  const commonId =
-    activeContribution &&
-    (isPayment(activeContribution)
-      ? activeContribution.commonId
-      : activeContribution.metadata.common.id);
+  const commonId = activeContribution && activeContribution.commonId;
   const common =
     contributionCommons.find((common) => common.id === commonId) || null;
   const subscription =

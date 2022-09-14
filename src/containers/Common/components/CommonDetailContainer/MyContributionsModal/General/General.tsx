@@ -34,7 +34,7 @@ const General: FC<GeneralProps> = (props) => {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const dueDate = subscription?.dueDate?.seconds || firebase.firestore.Timestamp.now().seconds;
   const total = useMemo(
-    () => payments.reduce((acc, payment) => acc + payment.amount.amount, 0),
+    () => payments.reduce((acc, payment) => acc + payment.price.amount, 0),
     [payments]
   );
   const oneTimePayments = useMemo(
@@ -76,7 +76,7 @@ const General: FC<GeneralProps> = (props) => {
                     new Date(dueDate * 1000),
                     DateFormat.LongHuman
                   )}`}
-                  amount={formatPrice(subscription.amount.amount, {bySubscription: true})}
+                  amount={formatPrice(subscription.price.amount, {bySubscription: true})}
                   onClick={goToMonthlyContribution}
                   styles={itemStyles}
                 />
@@ -89,7 +89,7 @@ const General: FC<GeneralProps> = (props) => {
                     new Date(payment.createdAt.seconds * 1000),
                     DateFormat.LongHuman
                   )}
-                  amount={formatPrice(payment.amount.amount, {
+                  amount={formatPrice(payment.price.amount, {
                     shouldRemovePrefixFromZero: false,
                   })}
                   styles={itemStyles}

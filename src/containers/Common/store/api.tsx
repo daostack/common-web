@@ -591,7 +591,7 @@ export async function getUserSubscriptionToCommon(
     .firestore()
     .collection(Collection.Subscriptions)
     .where("userId", "==", userId)
-    .where("metadata.common.id", "==", commonId)
+    .where("commonId", "==", commonId)
     .get();
   const subscriptions = transformFirebaseDataList<Subscription>(result);
 

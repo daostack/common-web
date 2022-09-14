@@ -43,7 +43,7 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleAmountSelect = (amount: number) => {
-    if (currentSubscription.amount.amount === amount) {
+    if (currentSubscription.price.amount === amount) {
       onFinish(currentSubscription);
       return;
     }
@@ -121,7 +121,7 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
       case ChangeMonthlyContributionStep.AmountSelection:
         return (
           <AmountSelection
-            currentAmount={currentSubscription.amount.amount}
+            currentAmount={currentSubscription.price.amount}
             onSelect={handleAmountSelect}
             setShouldShowGoBackButton={setShouldShowGoBackButton}
             styles={styles?.amountSelection}
