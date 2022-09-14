@@ -156,7 +156,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (isCommonMember) {
       items.push(MenuItem.MyContributions);
     }
-    if (isCommonOwner && !isSubCommon) {
+    if (!isSubCommon) {
       items.push(MenuItem.DeleteCommon);
     }
     if (isCommonMember && !isSubCommon) {

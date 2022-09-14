@@ -168,6 +168,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const [imageError, setImageError] = useState(false);
   const [isCreationStageReached, setIsCreationStageReached] = useState(false);
   const [isCommonFetched, setIsCommonFetched] = useState(false);
+  const [initialProposalTypeForCreation, setInitialProposalTypeForCreation] =
+    useState<ProposalsTypes | null>(null);
 
   const common = useSelector(selectCommonDetail());
   const governance = useSelector(selectGovernance());
@@ -189,14 +191,15 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   const userDiscussions = useMemo(() => {
     const circleIds = new Set(commonMember?.circlesIds || []);
-    return discussions.filter(({circleVisibility}) => {
-      if(!circleVisibility?.length) {
+    return discussions.filter(({ circleVisibility }) => {
+      if (!circleVisibility?.length) {
         return true;
       }
-      return circleVisibility?.some((discussionCircleId) => circleIds.has(discussionCircleId))
+      return circleVisibility?.some((discussionCircleId) =>
+        circleIds.has(discussionCircleId)
+      );
     });
-
-  },[discussions, commonMember])
+  }, [discussions, commonMember]);
 
   const activeProposals = useMemo(
     () => proposals.filter((d) => checkIsCountdownState(d)),
@@ -251,6 +254,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     onOpenJoinModal(LoginModalType.RequestToJoin);
   }, [onOpenJoinModal]);
 
+  const handleProposalCreationModalClose = () => {
+    onCloseNewP();
+    setInitialProposalTypeForCreation(null);
+  };
+
   const changeTabHandler = useCallback(
     (tab: Tabs) => {
       switch (tab) {
@@ -275,7 +283,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   );
 
   const handleCommonDelete = () => {
-    console.log("handleCommonDelete");
+    setInitialProposalTypeForCreation(ProposalsTypes.DELETE_COMMON);
+    onOpenNewP();
   };
 
   useEffect(() => {
@@ -644,12 +653,13 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
       {isShowingNewP && commonMember && (
         <CreateProposalModal
           isShowing={isShowingNewP}
-          onClose={onCloseNewP}
+          onClose={handleProposalCreationModalClose}
           common={common}
           governance={governance}
           commonMember={commonMember}
           activeProposalsExist={activeProposals.length > 0}
           redirectToProposal={getProposalDetail}
+          initialProposalType={initialProposalTypeForCreation}
         />
       )}
       <div className="common-detail-wrapper">
