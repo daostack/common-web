@@ -9,7 +9,6 @@ import {
   Common,
   CommonPayment,
   Discussion,
-  DiscussionWithOwnerInfo,
   User,
   DiscussionMessage,
   Proposal,
@@ -36,7 +35,6 @@ import {
   subscribeToProposal,
   leaveCommon as leaveCommonApi,
   loadUserCards,
-  deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
   updateVote as updateVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
@@ -720,25 +718,6 @@ export function* leaveCommon(
   }
 }
 
-export function* deleteCommon(
-  action: ReturnType<typeof actions.deleteCommon.request>
-): Generator {
-  try {
-    yield put(startLoading());
-    yield deleteCommonApi(action.payload.payload);
-
-    yield put(actions.deleteCommon.success(action.payload.payload.commonId));
-    action.payload.callback(null);
-    yield put(stopLoading());
-  } catch (error) {
-    if (isError(error)) {
-      yield put(actions.deleteCommon.failure(error));
-      action.payload.callback(error);
-      yield put(stopLoading());
-    }
-  }
-}
-
 async function waitForVoteToBeApplied(
   commonId: string,
   proposalId: string,
@@ -1294,7 +1273,6 @@ export function* commonsSaga() {
     createRemoveCircleProposal
   );
   yield takeLatest(actions.leaveCommon.request, leaveCommon);
-  yield takeLatest(actions.deleteCommon.request, deleteCommon);
   yield takeLatest(
     actions.createFundingProposal.request,
     createFundingProposal

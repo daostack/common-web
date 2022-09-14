@@ -20,7 +20,6 @@ import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
 import { Common, CommonMember, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { DeleteCommonPrompt } from "../DeleteCommonPrompt";
 import { LeaveCommonModal } from "../LeaveCommonModal";
 import { MyContributionsModal } from "../MyContributionsModal";
 import "./index.scss";
@@ -155,7 +154,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (isCommonMember) {
       items.push(MenuItem.MyContributions);
     }
-    if (isCommonOwner && common.memberCount === 1 && !isSubCommon) {
+    if (isCommonOwner && !isSubCommon) {
       items.push(MenuItem.DeleteCommon);
     }
     if (isCommonMember && !isSubCommon) {
@@ -260,11 +259,6 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   return (
     <div className={classNames("edit-common-menu", className)}>
       {isMobileView ? renderMenuModal() : renderMenuDropdown()}
-      <DeleteCommonPrompt
-        isShowing={selectedMenuItem === MenuItem.DeleteCommon}
-        onClose={handleMenuClose}
-        commonId={common.id}
-      />
       <MyContributionsModal
         isShowing={selectedMenuItem === MenuItem.MyContributions}
         onClose={handleMenuClose}
