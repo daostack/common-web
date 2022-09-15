@@ -569,17 +569,29 @@ export function* createAssignCircleProposal({
   payload,
 }: ReturnType<typeof actions.createAssignCircleProposal.request>): Generator {
   try {
+    const { commonId } = payload.payload.args;
+
     yield put(startLoading());
     const assignCircleProposal = (yield call(createProposalApi, {
       ...payload.payload,
       type: ProposalsTypes.ASSIGN_CIRCLE,
     })) as AssignCircle;
 
-    yield put(actions.createAssignCircleProposal.success(assignCircleProposal));
+    yield call(subscribeToCommonProposal, commonId, async () => {
+      const ds = await fetchCommonProposals(commonId);
 
-    if (payload.callback) {
-      payload.callback(null, assignCircleProposal);
-    }
+      store.dispatch(actions.setProposals(ds));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(stopLoading());
+
+      if (payload.callback) {
+        payload.callback(null, assignCircleProposal);
+      }
+
+      store.dispatch(actions.getCommonsList.request());
+    });
+
+    yield put(actions.createAssignCircleProposal.success(assignCircleProposal));
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createAssignCircleProposal.failure(error));
@@ -597,17 +609,29 @@ export function* createRemoveCircleProposal({
   payload,
 }: ReturnType<typeof actions.createRemoveCircleProposal.request>): Generator {
   try {
+    const { commonId } = payload.payload.args;
+
     yield put(startLoading());
     const removeCircleProposal = (yield call(createProposalApi, {
       ...payload.payload,
       type: ProposalsTypes.REMOVE_CIRCLE
     })) as RemoveCircle;
 
-    yield put(actions.createRemoveCircleProposal.success(removeCircleProposal));
+    yield call(subscribeToCommonProposal, commonId, async () => {
+      const ds = await fetchCommonProposals(commonId);
 
-    if (payload.callback) {
-      payload.callback(null, removeCircleProposal);
-    }
+      store.dispatch(actions.setProposals(ds));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(stopLoading());
+
+      if (payload.callback) {
+        payload.callback(null, removeCircleProposal);
+      }
+
+      store.dispatch(actions.getCommonsList.request());
+    });
+
+    yield put(actions.createRemoveCircleProposal.success(removeCircleProposal));
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createRemoveCircleProposal.failure(error));
@@ -704,17 +728,29 @@ export function* createDeleteCommonProposal({
   payload,
 }: ReturnType<typeof actions.createDeleteCommonProposal.request>): Generator {
   try {
+    const { commonId } = payload.payload.args;
+
     yield put(startLoading());
     const deleteCommonProposal = (yield call(createProposalApi, {
       ...payload.payload,
       type: ProposalsTypes.DELETE_COMMON,
     })) as DeleteCommon;
 
-    yield put(actions.createDeleteCommonProposal.success(deleteCommonProposal));
+    yield call(subscribeToCommonProposal, commonId, async () => {
+      const ds = await fetchCommonProposals(commonId);
 
-    if (payload.callback) {
-      payload.callback(null, deleteCommonProposal);
-    }
+      store.dispatch(actions.setProposals(ds));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(stopLoading());
+
+      if (payload.callback) {
+        payload.callback(null, deleteCommonProposal);
+      }
+
+      store.dispatch(actions.getCommonsList.request());
+    });
+
+    yield put(actions.createDeleteCommonProposal.success(deleteCommonProposal));
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createDeleteCommonProposal.failure(error));
