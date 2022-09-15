@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Button, ButtonVariant, ModalFooter } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { DateFormat, Payment, Subscription } from "@/shared/models";
+import { DateFormat, Payment, PaymentType, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate, formatPrice } from "@/shared/utils";
 import { HistoryListItem, HistoryListItemStyles } from "../HistoryListItem";
@@ -36,9 +36,11 @@ const General: FC<GeneralProps> = (props) => {
   const total = useMemo(
     () => payments.reduce((acc, payment) => acc + payment.price.amount, 0),
     [payments]
-  );
+    );
+  // TODO: Change when backend will fix it. 
+  // Previously was payments.filter((payment) => !payment.subscriptionId) but backend add subscriptionId for one-time payments
   const oneTimePayments = useMemo(
-    () => payments.filter((payment) => !payment.subscriptionId),
+    () => payments.filter((payment) => payment.type === PaymentType.OneTime),
     [payments]
   );
 
