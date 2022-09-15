@@ -42,7 +42,7 @@ export const useImmediateContribution = (): Return => {
         state.intermediatePayment ||
         state.payment ||
         state.isPaymentLoading ||
-        !data.amount
+        !data.price
       ) {
         return;
       }
