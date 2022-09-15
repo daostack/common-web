@@ -6,7 +6,7 @@ interface IFrameProps {
   src: string;
   frameBorder: string;
   title: string;
-  onLoad: () => void;
+  onLoad?: () => void;
   className?: string;
 }
 

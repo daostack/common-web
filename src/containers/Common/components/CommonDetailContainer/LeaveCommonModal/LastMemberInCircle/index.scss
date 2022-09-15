@@ -1,0 +1,16 @@
+@import "../../../../../../constants";
+
+.last-member-in-circle-step {
+  display: flex;
+  flex-direction: column;
+}
+
+.last-member-in-circle-step__text {
+  margin: 0;
+  font-size: $small;
+}
+
+.last-member-in-circle-step__button {
+  margin: 2.5rem 0 0 auto;
+  max-width: 9.75rem;
+}

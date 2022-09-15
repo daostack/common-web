@@ -17,6 +17,7 @@ import { Common, CommonLink, Governance } from "@/shared/models";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
 import MembershipRequestIntroduce from "./MembershipRequestIntroduce";
+import MembershipRequestPayment from "./MembershipRequestPayment";
 import MembershipRequestProgressBar from "./MembershipRequestProgressBar";
 import MembershipRequestRules from "./MembershipRequestRules";
 import MembershipRequestWelcome from "./MembershipRequestWelcome";
@@ -35,6 +36,8 @@ export interface IMembershipRequestData {
   stage: MembershipRequestStage;
   intro: string;
   links?: CommonLink[];
+  feeOneTime?: number;
+  feeMonthly?: number;
 }
 
 const INIT_DATA: IMembershipRequestData = {
@@ -141,6 +144,15 @@ export function MembershipRequestModal(props: IProps) {
           <MembershipRequestRules
             userData={userData}
             setUserData={setUserData}
+            governance={governance}
+          />
+        );
+      case MembershipRequestStage.Payment:
+        return (
+          <MembershipRequestPayment
+            userData={userData}
+            setUserData={setUserData}
+            common={common}
             governance={governance}
           />
         );

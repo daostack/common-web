@@ -1,22 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 
 import { useFullText } from "@/shared/hooks";
-import { Discussion } from "@/shared/models";
+import { Discussion, Governance } from "@/shared/models";
 import { getUserName, getDaysAgo } from "@/shared/utils";
 import { ElementDropdown } from "@/shared/components";
 import { DynamicLinkType } from "@/shared/constants";
+import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
+import { getCirclesNames } from "@/shared/utils/circles";
 
 interface DiscussionItemComponentProps {
   discussion: Discussion;
   loadDisscussionDetail: (payload: Discussion) => void;
+  governance: Governance;
 }
 
 export default function DiscussionItemComponent({
   discussion,
   loadDisscussionDetail,
+  governance,
 }: DiscussionItemComponentProps) {
   const [imageError, setImageError] = useState(false);
+  const [circleNames, setCircleNames] = useState('');
   const {
     ref: messageRef,
     isFullTextShowing,
@@ -24,6 +29,17 @@ export default function DiscussionItemComponent({
     showFullText,
   } = useFullText();
   const date = new Date();
+
+  useEffect(() => {
+    if(discussion.circleVisibility) {
+      (async () => {
+        const governanceCircles = await getCommonGovernanceCircles(governance.id);
+        const names = getCirclesNames(governanceCircles, discussion.circleVisibility);
+        setCircleNames(names);
+      })();
+    }
+  },[governance.id, discussion.circleVisibility])
+
   return (
     <div className="discussion-item-wrapper">
       <div className="discussion-top-bar">
@@ -66,7 +82,7 @@ export default function DiscussionItemComponent({
           className={classNames("description", { full: shouldShowFullText })}
           ref={messageRef}
         >
-          {discussion.message}
+          {circleNames ? `Limited to: ${circleNames}` : discussion.message}
         </div>
         {!isFullTextShowing ? (
           <div className="read-more" onClick={showFullText}>

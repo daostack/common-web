@@ -732,6 +732,18 @@ export const getCommonMembers = async (
   return extendedMembers;
 };
 
+export const getCommonMembersWithCircleIdAmount = async (
+  commonId: string,
+  circleId: string
+): Promise<number> => {
+  const result = await commonMembersSubCollection(commonId)
+    .where("circlesIds", "array-contains", circleId)
+    .get();
+  const members = transformFirebaseDataList<CommonMember>(result);
+
+  return members.length;
+};
+
 export const getVotesWithUserInfo = async (
   proposalId: string
 ): Promise<VoteWithUserInfo[]> => {

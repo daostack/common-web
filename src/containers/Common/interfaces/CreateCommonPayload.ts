@@ -1,4 +1,5 @@
 import { BaseRule, CommonLink } from "@/shared/models";
+import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 
 export interface CreateCommonPayload {
   name: string;
@@ -26,6 +27,7 @@ export interface IntermediateCreateCommonPayload
   agreementAccepted: boolean;
   rules?: CreateCommonPayload["unstructuredRules"];
   circleIdFromParent?: string;
+  memberAdmittanceOptions?: MemberAdmittanceLimitations;
 }
 
 export interface UpdateCommonPayload {

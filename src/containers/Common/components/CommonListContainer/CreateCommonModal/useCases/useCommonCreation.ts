@@ -68,6 +68,7 @@ const useCommonCreation = (): Return => {
         unstructuredRules: creationData.rules,
         links: creationData.links,
         useTemplate: true,
+        ...(creationData.memberAdmittanceOptions && { memberAdmittanceOptions: creationData.memberAdmittanceOptions})
       };
 
       dispatch(
