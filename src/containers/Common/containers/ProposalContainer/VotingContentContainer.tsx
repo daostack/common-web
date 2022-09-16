@@ -13,6 +13,7 @@ import {
   FundsRequest,
   RemoveCircle,
   MemberAdmittance,
+  DeleteCommon,
 } from "@/shared/models/governance/proposals";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -21,6 +22,7 @@ import { CountDownCard } from "../../components/ProposalContainer";
 import { VotingCard } from "./VotingCard";
 import {
   getAssignCircleDetails,
+  getDeleteCommonDetails,
   getFundsAllocationDetails,
   getMemberAdmittanceDetails,
   getRemoveCircleDetails,
@@ -86,6 +88,12 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
       case ProposalsTypes.MEMBER_ADMITTANCE:
         return getMemberAdmittanceDetails(
           proposal as MemberAdmittance,
+          proposer,
+          governance
+        );
+      case ProposalsTypes.DELETE_COMMON:
+        return getDeleteCommonDetails(
+          proposal as DeleteCommon,
           proposer,
           governance
         );

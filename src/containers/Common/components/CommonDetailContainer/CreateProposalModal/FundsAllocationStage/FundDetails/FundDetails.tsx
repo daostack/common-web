@@ -17,6 +17,7 @@ import DollarIcon from "@/shared/icons/dollar.icon";
 import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
 import { ProposalImage } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
+import { parseLinksForSubmission } from "@/shared/utils";
 import { StageName } from "../../StageName";
 import { getPrefix } from "../helpers";
 import { FundsAllocationData, FundType } from "../types";
@@ -88,11 +89,13 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
+      const links = parseLinksForSubmission(values.links);
+
       onFinish({
         ...initialData,
         fund: selectedFund,
         amount: values.amount,
-        links: values.links,
+        links,
         images: values.images,
       });
     },

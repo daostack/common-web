@@ -20,12 +20,12 @@ import {
 import { ScreenSize, MIN_CONTRIBUTION_ILS_AMOUNT, ContributionType } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
+import { Currency } from "@/shared/models";
+import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import validationSchema from "./validationSchema";
 import "./index.scss";
-import { Currency } from "@/shared/models";
-import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 
 const DEFAULT_CONTRIBUTION_AMOUNT = MIN_CONTRIBUTION_ILS_AMOUNT / 100;
 
@@ -43,7 +43,7 @@ interface FormValues {
 
 const INITIAL_VALUES = {
    contributionType: ContributionType.OneTime,
-   minimumContribution: undefined,
+   minimumContribution: 0,
    isCommonJoinFree: false,
 };
 
@@ -89,7 +89,6 @@ const getCurrencyInputDescription = (
 export default function Funding({
   currentStep,
   onFinish,
-  creationData,
 }: FundingProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const screenSize = useSelector(getScreenSize());
@@ -113,7 +112,7 @@ export default function Funding({
     if (event.target.checked && formRef.current) {
       formRef.current.setFieldValue(
         "minimumContribution",
-        DEFAULT_CONTRIBUTION_AMOUNT
+        0
       );
     }
   }, []);
@@ -222,7 +221,7 @@ export default function Funding({
                     shouldUseFullWidth={isMobileView}
                     disabled={!isValid}
                   >
-                    Continue to Rules
+                    Continue to Review
                   </Button>
                 </div>
               </ModalFooter>
