@@ -14,7 +14,7 @@ const MembersList: FC<MembersListComponentProps> = ({ members }) => {
 
     return <ul className="members__section__members-list">
         {members.map(member => {
-            const circlesIndexs = Array.from(numberToBinary(member.circles), Number)
+            const circlesIndexs = Array.from(numberToBinary(member.circles.bin), Number)
 
             let circlesString = ''
             const memberName = `${member.user.firstName} ${member.user.lastName}`
