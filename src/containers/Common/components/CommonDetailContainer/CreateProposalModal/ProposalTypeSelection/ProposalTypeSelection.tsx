@@ -155,6 +155,7 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
             <ProposalTypeDetails
               className="proposal-type-selection-stage__details"
               data={proposalTypeDetails}
+              circles={governance.circles}
             />
           </>
         )}

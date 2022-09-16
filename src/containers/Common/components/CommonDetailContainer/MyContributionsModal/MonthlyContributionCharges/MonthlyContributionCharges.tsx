@@ -63,7 +63,7 @@ const MonthlyContributionCharges: FC<MonthlyContributionChargesProps> = (
                 new Date(payment.createdAt.seconds * 1000),
                 DateFormat.LongHuman
               )}
-              amount={formatPrice(payment.amount.amount, {
+              amount={formatPrice(payment.price.amount, {
                 shouldRemovePrefixFromZero: false,
               })}
               styles={itemStyles}

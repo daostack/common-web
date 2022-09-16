@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useComponentWillUnmount } from "@/shared/hooks";
-import { Common, Subscription } from "@/shared/models";
+import { Common, Currency, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { updateSubscription } from "../../../../store/actions";
 import { useMyContributionsContext } from "../context";
@@ -43,7 +43,7 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleAmountSelect = (amount: number) => {
-    if (currentSubscription.amount.amount === amount) {
+    if (currentSubscription.price.amount === amount) {
       onFinish(currentSubscription);
       return;
     }
@@ -57,7 +57,7 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
       updateSubscription.request({
         payload: {
           subscriptionId: currentSubscription.id,
-          amount,
+          price: { amount, currency: Currency.ILS },
         },
         callback: (error, subscription) => {
           if (error || !subscription) {
@@ -121,7 +121,7 @@ const ChangeMonthlyContribution: FC<ChangeMonthlyContributionProps> = (
       case ChangeMonthlyContributionStep.AmountSelection:
         return (
           <AmountSelection
-            currentAmount={currentSubscription.amount.amount}
+            currentAmount={currentSubscription.price.amount}
             onSelect={handleAmountSelect}
             setShouldShowGoBackButton={setShouldShowGoBackButton}
             styles={styles?.amountSelection}
