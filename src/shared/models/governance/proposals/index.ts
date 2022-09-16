@@ -4,6 +4,7 @@ import { Proposal } from "../../Proposals";
 import { circleIndex } from "../Circles";
 import { AssignCircle } from "./AssignCircle";
 import { BasicArgsProposal } from "./BasicArgsProposal";
+import { DeleteCommon } from "./DeleteCommon";
 import { FundsAllocation } from "./FundsAllocation";
 import { MemberAdmittance } from "./MemberAdmittance";
 import { RemoveCircle } from "./RemoveCircle";
@@ -36,6 +37,7 @@ export interface Proposals {
   [ProposalsTypes.REMOVE_CIRCLE]: {
     [K in circleIndex]: Omit<RemoveCircle, ProposalInProgressKeys>;
   };
+  [ProposalsTypes.DELETE_COMMON]: Omit<DeleteCommon, ProposalInProgressKeys>;
   // Expended for each proposal
 }
 
@@ -59,12 +61,17 @@ export const isRemoveCircleProposal = (
 ): proposal is RemoveCircle =>
   Boolean(proposal?.type === ProposalsTypes.REMOVE_CIRCLE);
 
+export const isDeleteCommonProposal = (
+  proposal?: Proposal | null
+): proposal is RemoveCircle =>
+  Boolean(proposal?.type === ProposalsTypes.DELETE_COMMON);
+
 export * from "./AssignCircle";
 export * from "./BaseProposal";
 export * from "./BasicArgsProposal";
+export * from "./DeleteCommon";
 export * from "./FundsAllocation";
 export * from "./FundsRequest";
 export * from "./MemberAdmittance";
 export * from "./RemoveCircle";
 export * from "./Survey";
-
