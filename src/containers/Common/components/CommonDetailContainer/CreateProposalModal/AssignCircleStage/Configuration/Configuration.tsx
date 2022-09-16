@@ -81,14 +81,15 @@ const Configuration: FC<ConfigurationProps> = (props) => {
         .map(([circleIndex]) => Number(circleIndex)),
     [currentCommonMember]
   );
-  const circleIndex = governance.circles.findIndex(
-    ({ id }) => id === circle?.id
+  const foundCircleEntry = Object.entries(governance.circles).find(
+    ([, { id }]) => id === circle?.id
   );
+  const circleIndex = (foundCircleEntry && Number(foundCircleEntry[0])) ?? -1;
   const circleBinary =
     circleIndex >= 0 ? generateCirclesBinaryNumber([circleIndex]) : null;
   const circleOptions = useMemo<DropdownOption[]>(
     () =>
-      governance.circles
+      Object.values(governance.circles)
         .filter((circle, index) =>
           allowedCircleIndexesToBeAssigned.includes(index)
         )
@@ -103,7 +104,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     () =>
       commonMembers.reduce<AutocompleteOption[]>(
         (acc, member) =>
-          circleBinary !== null && !(member.circles & circleBinary)
+          circleBinary !== null && !(member.circles.bin & circleBinary)
             ? acc.concat({
                 text: (
                   <MemberInfo
@@ -121,7 +122,9 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   );
 
   const handleCircleSelect = (selectedCircleId: unknown) => {
-    const circle = governance.circles.find(({ id }) => id === selectedCircleId);
+    const circle = Object.values(governance.circles).find(
+      ({ id }) => id === selectedCircleId
+    );
     setCircle(circle || null);
   };
 
