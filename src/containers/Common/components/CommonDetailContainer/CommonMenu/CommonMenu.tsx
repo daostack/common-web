@@ -131,6 +131,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(
     null
   );
+  const circlesWithoutSubcommon = governance.circles.filter((circle) => !subCommons.some((subCommon) => subCommon.directParent?.circleId === circle.id))
   const screenSize = useSelector(getScreenSize());
   const { onDropdownToggle } = useAuthorizedDropdown(dropdownRef);
   const {
@@ -149,7 +150,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (isCommonOwner) {
       items.push(MenuItem.EditInfo, MenuItem.EditRules);
     }
-    if (!isSubCommon) {
+    if (!isSubCommon && circlesWithoutSubcommon.length > 0) {
       items.push(MenuItem.CreateSubCommon);
     }
     if (isCommonMember) {
