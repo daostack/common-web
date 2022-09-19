@@ -1,4 +1,5 @@
-import React, { ChangeEventHandler, FC, useState } from "react";
+import React, { ChangeEventHandler, FC, useMemo, useState } from "react";
+import { UserMembershipInfo } from "@/containers/Common/interfaces";
 import { Button, ButtonVariant } from "@/shared/components";
 import { Checkbox, ErrorText, Input } from "@/shared/components/Form";
 import "./index.scss";
@@ -6,14 +7,31 @@ import "./index.scss";
 interface MainStepProps {
   isLoading: boolean;
   errorText: string;
+  userMembershipInfo: UserMembershipInfo[];
   onDelete: () => void;
   onCancel: () => void;
 }
 
 const MainStep: FC<MainStepProps> = (props) => {
-  const { isLoading, errorText, onDelete, onCancel } = props;
+  const { isLoading, errorText, userMembershipInfo, onDelete, onCancel } =
+    props;
   const [userName, setUserName] = useState("");
   const [isApproved, setIsApproved] = useState(false);
+  const membershipInfo = useMemo(
+    () =>
+      userMembershipInfo.map(({ common, governance, commonMember }) => {
+        const circlesString = governance.circles
+          .filter(({ id }) => (commonMember.circlesIds || []).includes(id))
+          .map(({ name }) => name)
+          .join(", ");
+
+        return {
+          circlesString,
+          commonName: common.name,
+        };
+      }),
+    [userMembershipInfo]
+  );
   const isLeaveButtonDisabled = isLoading || !isApproved;
 
   const handleUserNameChange: ChangeEventHandler<HTMLInputElement> = (
@@ -53,8 +71,11 @@ const MainStep: FC<MainStepProps> = (props) => {
           Please review your memberships in the commons
         </h4>
         <ol className="delete-user-main-step__ordered-list">
-          <li>DSG - Senior Member</li>
-          <li>Gargamel Sea - Leader</li>
+          {membershipInfo.map(({ commonName, circlesString }) => (
+            <li key={commonName}>
+              {commonName} - {circlesString}
+            </li>
+          ))}
         </ol>
       </div>
       <ol className="delete-user-main-step__ordered-list">

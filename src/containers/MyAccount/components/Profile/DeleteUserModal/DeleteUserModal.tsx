@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { selectUser } from "@/containers/Auth/store/selectors";
@@ -6,6 +6,7 @@ import { leaveCommon } from "@/containers/Common/store/actions";
 import { isRequestError } from "@/services/Api";
 import { Loader, Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
+import { useUserInfoAboutMemberships } from "@/shared/hooks/useCases";
 import { ModalProps } from "@/shared/interfaces";
 import { useNotification } from "@/shared/hooks";
 import { emptyFunction } from "@/shared/utils";
@@ -25,8 +26,27 @@ const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
+  const {
+    loading: isUserInfoAboutMembershipsLoading,
+    fetched: isUserInfoAboutMembershipsFetched,
+    data: userInfoAboutMembershipsFetched,
+    fetchUserInfoAboutMemberships,
+  } = useUserInfoAboutMemberships();
   const userId = user?.uid;
-  const isLoading = false;
+  const isLoading = isUserInfoAboutMembershipsLoading;
+
+  useEffect(() => {
+    if (
+      !isUserInfoAboutMembershipsLoading &&
+      !isUserInfoAboutMembershipsFetched
+    ) {
+      fetchUserInfoAboutMemberships();
+    }
+  }, [
+    isUserInfoAboutMembershipsLoading,
+    isUserInfoAboutMembershipsFetched,
+    fetchUserInfoAboutMemberships,
+  ]);
 
   const handleUserDelete = useCallback(() => {
     if (!userId) {
@@ -75,6 +95,7 @@ const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
         <MainStep
           isLoading={isDeleting}
           errorText={errorText}
+          userMembershipInfo={userInfoAboutMembershipsFetched}
           onDelete={handleUserDelete}
           onCancel={onClose}
         />
