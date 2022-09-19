@@ -24,6 +24,7 @@ interface IProps {
   currentAmount?: number;
   pricePostfix?: string;
   showFinishButton?: boolean;
+  zeroContribution?: boolean;
   onChange: (
     amount: number | null,
     hasError: boolean,
@@ -40,9 +41,9 @@ export default function ContributionAmountSelection(props: IProps) {
     pricePostfix = "",
     showFinishButton = false,
     onChange,
+    zeroContribution = false,
   } = props;
   const [isCurrencyInputTouched, setIsCurrencyInputTouched] = useState(false);
-  const zeroContribution = false;
   const amountsForSelection = useMemo(
     () =>
       getAmountsForSelection(minimalAmount, zeroContribution, currentAmount),

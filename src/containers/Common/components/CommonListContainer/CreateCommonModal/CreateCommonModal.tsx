@@ -12,7 +12,9 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ScreenSize } from "@/shared/constants";
 import { Common, Governance } from "@/shared/models";
-import { IntermediateCreateCommonPayload } from "../../../interfaces";
+import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
+import { IntermediateCreateCommonPayload, PaymentPayload } from "../../../interfaces";
+import { Payment } from "./Payment";
 import { Confirmation } from "./Confirmation";
 import { CreationSteps } from "./CreationSteps";
 import { Error } from "./Error";
@@ -55,6 +57,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   });
   const [creationData, setCreationData] =
     useState<IntermediateCreateCommonPayload>(INITIAL_DATA);
+  const [paymentData, setPaymentData] = useState<PaymentPayload>({});
   const [title, setTitle] = useState<ReactNode>("");
   const [isBigTitle, setIsBigTitle] = useState(true);
   const [isHeaderScrolledToTop, setIsHeaderScrolledToTop] = useState(true);
@@ -122,11 +125,17 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       setCreatedCommon(common);
       setStageState((state) => ({
         ...state,
-        stage: CreateCommonStage.Success,
+        stage: isSubCommonCreation ? CreateCommonStage.Success : CreateCommonStage.Payment,
       }));
     },
     [handleError, onCommonCreate]
   );
+  const handlePaymentFinish = useCallback(() => {
+    setStageState((state) => ({
+      ...state,
+      stage: CreateCommonStage.Success,
+    }));
+  }, []);
   const renderedTitle = useMemo((): ReactNode => {
     if (!title) {
       return null;
@@ -175,6 +184,21 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             creationData={creationData}
           />
         );
+      case CreateCommonStage.Payment:
+        return createdCommon ? (
+          <Payment
+            isHeaderScrolledToTop={isHeaderScrolledToTop}
+            setTitle={setSmallTitle}
+            setGoBackHandler={setGoBackHandler}
+            setShouldShowCloseButton={setShouldShowCloseButton}
+            onFinish={handlePaymentFinish}
+            onError={handleError}
+            common={createdCommon}
+            paymentData={paymentData}
+            setPaymentData={setPaymentData}
+            memberAdmittanceOptions={creationData.memberAdmittanceOptions as MemberAdmittanceLimitations}
+          />
+        ) : null;
       case CreateCommonStage.Success:
         return createdCommon ? (
           <Success
@@ -215,6 +239,8 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     errorText,
     handleCommonCreation,
     parentCommonId,
+    paymentData,
+    handlePaymentFinish
   ]);
 
   useEffect(() => {
