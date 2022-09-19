@@ -13,13 +13,10 @@ import { emptyFunction } from "@/shared/utils";
 import { MainStep } from "./MainStep";
 import "./index.scss";
 
-interface DeleteUserModalProps
-  extends Pick<ModalProps, "isShowing" | "onClose"> {
-  commonId: string;
-}
+type DeleteUserModalProps = Pick<ModalProps, "isShowing" | "onClose">;
 
 const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
-  const { isShowing, onClose, commonId } = props;
+  const { isShowing, onClose } = props;
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const history = useHistory();
@@ -75,7 +72,7 @@ const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
         },
       })
     );
-  }, [dispatch, notify, history, commonId, userId]);
+  }, [dispatch, notify, history, userId]);
 
   return (
     <Modal
