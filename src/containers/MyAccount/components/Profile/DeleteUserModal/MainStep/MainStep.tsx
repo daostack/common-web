@@ -59,6 +59,7 @@ const MainStep: FC<MainStepProps> = (props) => {
         autoFocus
         value={userName}
         onChange={handleUserNameChange}
+        disabled={isLoading}
         styles={{
           label: "delete-user-main-step__input-label",
         }}
