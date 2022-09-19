@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { deleteUser } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
-import { leaveCommon } from "@/containers/Common/store/actions";
 import { isRequestError } from "@/services/Api";
 import { Loader, Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
@@ -57,11 +57,7 @@ const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
     setErrorText("");
 
     dispatch(
-      leaveCommon.request({
-        payload: {
-          commonId,
-          userId,
-        },
+      deleteUser.request({
         callback: (error) => {
           const isFinishedSuccessfully = !error;
           const errorText = error
@@ -73,8 +69,8 @@ const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
           setErrorText(errorText);
 
           if (isFinishedSuccessfully) {
-            history.push(ROUTE_PATHS.MY_COMMONS);
-            notify("You’ve successfully left the common");
+            history.push(ROUTE_PATHS.HOME);
+            notify("Your account was successfully deleted");
           }
         },
       })
