@@ -1,7 +1,10 @@
 import React, { ChangeEventHandler, FC, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { UserMembershipInfo } from "@/containers/Common/interfaces";
 import { Button, ButtonVariant } from "@/shared/components";
 import { Checkbox, ErrorText, Input } from "@/shared/components/Form";
+import { getUserName } from "@/shared/utils";
 import "./index.scss";
 
 interface MainStepProps {
@@ -17,6 +20,7 @@ const MainStep: FC<MainStepProps> = (props) => {
     props;
   const [userName, setUserName] = useState("");
   const [isApproved, setIsApproved] = useState(false);
+  const user = useSelector(selectUser());
   const membershipInfo = useMemo(
     () =>
       userMembershipInfo.map(({ common, governance, commonMember }) => {
@@ -32,7 +36,8 @@ const MainStep: FC<MainStepProps> = (props) => {
       }),
     [userMembershipInfo]
   );
-  const isLeaveButtonDisabled = isLoading || !isApproved;
+  const isDeleteButtonDisabled =
+    isLoading || !isApproved || userName !== getUserName(user);
 
   const handleUserNameChange: ChangeEventHandler<HTMLInputElement> = (
     event
@@ -118,7 +123,7 @@ const MainStep: FC<MainStepProps> = (props) => {
         <Button
           className="delete-user-main-step__button"
           onClick={onDelete}
-          disabled={isLeaveButtonDisabled}
+          disabled={isDeleteButtonDisabled}
           shouldUseFullWidth
         >
           Delete me
