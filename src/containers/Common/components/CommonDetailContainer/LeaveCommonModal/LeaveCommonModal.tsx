@@ -23,7 +23,7 @@ interface LeaveCommonModalProps
 }
 
 const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
-  const { isShowing, onClose, commonId, memberCount, memberCircleIds = []} = props;
+  const { isShowing, onClose, commonId, memberCount, memberCircleIds} = props;
   const {
     loading: areMemberAmountsLoading,
     fetched: areMemberAmountsFetched,
