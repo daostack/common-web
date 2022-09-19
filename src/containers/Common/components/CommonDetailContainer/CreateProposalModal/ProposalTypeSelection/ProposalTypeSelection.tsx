@@ -41,6 +41,11 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
     searchText: "Remove members from a circle",
     value: ProposalsTypes.REMOVE_CIRCLE,
   },
+  {
+    text: "Delete common",
+    searchText: "Delete common",
+    value: ProposalsTypes.DELETE_COMMON,
+  },
 ];
 
 interface ProposalTypeSelectionProps {
@@ -155,6 +160,7 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
             <ProposalTypeDetails
               className="proposal-type-selection-stage__details"
               data={proposalTypeDetails}
+              circles={governance.circles}
             />
           </>
         )}

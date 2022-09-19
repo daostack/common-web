@@ -434,12 +434,6 @@ export async function leaveCommon(requestData: LeaveCommon): Promise<void> {
   await Api.post<void>(ApiEndpoint.LeaveCommon, requestData);
 }
 
-export async function deleteCommon(requestData: DeleteCommon): Promise<void> {
-  const { data } = await Api.post<void>(ApiEndpoint.DeleteCommon, requestData);
-
-  return data;
-}
-
 export async function createCommon(
   requestData: CreateCommonPayload
 ): Promise<Common> {
@@ -591,7 +585,7 @@ export async function getUserSubscriptionToCommon(
     .firestore()
     .collection(Collection.Subscriptions)
     .where("userId", "==", userId)
-    .where("metadata.common.id", "==", commonId)
+    .where("commonId", "==", commonId)
     .get();
   const subscriptions = transformFirebaseDataList<Subscription>(result);
 

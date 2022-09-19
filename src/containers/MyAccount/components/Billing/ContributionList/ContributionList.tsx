@@ -68,9 +68,7 @@ const ContributionList: ForwardRefRenderFunction<
       ) : (
         <ul id={listId} className="billing-contribution-list__list">
           {contributions.map((contribution) => {
-            const commonId = isPayment(contribution)
-              ? contribution.commonId
-              : contribution.metadata.common.id;
+            const commonId = contribution.commonId;
             const common =
               commons.find((common) => common.id === commonId) || null;
             const subscription = isPayment(contribution)

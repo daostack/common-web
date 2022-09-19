@@ -156,7 +156,7 @@ const useUserContributions = (): Return => {
     const commonIdsSet = new Set(
       [
         ...paymentsState.data.map((item) => item.commonId),
-        ...subscriptionsState.data.map((item) => item.metadata.common.id),
+        ...subscriptionsState.data.map((item) => item.commonId),
       ].filter((item): item is string => Boolean(item))
     );
 

@@ -1,5 +1,6 @@
 import {
   AssignCircle,
+  DeleteCommon,
   FundsAllocation,
   FundsRequest,
   MemberAdmittance,
@@ -43,6 +44,7 @@ export type Proposal = (
   | AssignCircle
   | RemoveCircle
   | Survey
+  | DeleteCommon
 ) &
   ExtendedProposalOptions;
 

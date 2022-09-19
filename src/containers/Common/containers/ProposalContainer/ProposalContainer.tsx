@@ -62,6 +62,7 @@ const PROPOSAL_TYPE_CAPTION = {
   [ProposalsTypes.MEMBER_ADMITTANCE]: "Members admittance",
   [ProposalsTypes.ASSIGN_CIRCLE]: "Assign members to a circle",
   [ProposalsTypes.REMOVE_CIRCLE]: "Remove members from a circle",
+  [ProposalsTypes.DELETE_COMMON]: "Delete common",
 };
 
 enum PROPOSAL_MENU_TABS {

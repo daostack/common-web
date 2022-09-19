@@ -2,6 +2,7 @@ import { Circles, Governance, User } from "@/shared/models";
 import {
   AssignCircle,
   BaseProposal,
+  DeleteCommon,
   FundsAllocation,
   MemberAdmittance,
   RemoveCircle,
@@ -105,6 +106,21 @@ export const getMemberAdmittanceDetails = (
 ): ProposalDetailsItem[] => [
   {
     title: "Name of member",
+    value: getUserName(proposer),
+  },
+  {
+    title: "Voters",
+    value: getVotersString(proposal.global.weights, governance.circles),
+  },
+];
+
+export const getDeleteCommonDetails = (
+  proposal: DeleteCommon,
+  proposer: User,
+  governance: Governance
+): ProposalDetailsItem[] => [
+  {
+    title: "Creator",
     value: getUserName(proposer),
   },
   {

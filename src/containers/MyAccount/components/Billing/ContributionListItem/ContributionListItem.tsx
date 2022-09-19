@@ -47,7 +47,7 @@ const getSubscriptionContent = (subscription: Subscription): Content => {
             DateFormat.GeneralHuman
           )}`
         : ""
-      : formatPrice(subscription.amount.amount, { bySubscription: true }),
+      : formatPrice(subscription.price.amount, { bySubscription: true }),
     description: isCanceled
       ? `Canceled by ${
           subscription.status === SubscriptionStatus.CanceledByUser
@@ -67,7 +67,7 @@ const getPaymentContent = (
 ): Content => {
   const isFailedPayment = payment.status === PaymentStatus.Failed;
   const isMonthlyPayment = Boolean(payment.subscriptionId);
-  const amount = subscription?.amount.amount || payment.amount.amount;
+  const amount = subscription?.price.amount || payment.price.amount;
 
   return {
     status: isFailedPayment ? "failure" : "success",

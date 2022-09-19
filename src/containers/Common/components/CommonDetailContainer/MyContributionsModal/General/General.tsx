@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Button, ButtonVariant, ModalFooter } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { DateFormat, Payment, Subscription } from "@/shared/models";
+import { DateFormat, Payment, PaymentType, Subscription } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate, formatPrice } from "@/shared/utils";
 import { HistoryListItem, HistoryListItemStyles } from "../HistoryListItem";
@@ -34,11 +34,13 @@ const General: FC<GeneralProps> = (props) => {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const dueDate = subscription?.dueDate?.seconds || firebase.firestore.Timestamp.now().seconds;
   const total = useMemo(
-    () => payments.reduce((acc, payment) => acc + payment.amount.amount, 0),
+    () => payments.reduce((acc, payment) => acc + payment.price.amount, 0),
     [payments]
-  );
+    );
+  // TODO: Change when backend will fix it. 
+  // Previously was payments.filter((payment) => !payment.subscriptionId) but backend add subscriptionId for one-time payments
   const oneTimePayments = useMemo(
-    () => payments.filter((payment) => !payment.subscriptionId),
+    () => payments.filter((payment) => payment.type === PaymentType.OneTime),
     [payments]
   );
 
@@ -76,7 +78,7 @@ const General: FC<GeneralProps> = (props) => {
                     new Date(dueDate * 1000),
                     DateFormat.LongHuman
                   )}`}
-                  amount={formatPrice(subscription.amount.amount, {bySubscription: true})}
+                  amount={formatPrice(subscription.price.amount, {bySubscription: true})}
                   onClick={goToMonthlyContribution}
                   styles={itemStyles}
                 />
@@ -89,7 +91,7 @@ const General: FC<GeneralProps> = (props) => {
                     new Date(payment.createdAt.seconds * 1000),
                     DateFormat.LongHuman
                   )}
-                  amount={formatPrice(payment.amount.amount, {
+                  amount={formatPrice(payment.price.amount, {
                     shouldRemovePrefixFromZero: false,
                   })}
                   styles={itemStyles}
