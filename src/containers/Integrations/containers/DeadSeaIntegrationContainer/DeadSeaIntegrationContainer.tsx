@@ -63,7 +63,11 @@ const DeadSeaIntegrationContainer: FC = () => {
 
   useEffect(() => {
     if (!user) {
-      setStep(DeadSeaIntegrationStep.InitialStep);
+      setStep(
+        amount
+          ? DeadSeaIntegrationStep.UserDetails
+          : DeadSeaIntegrationStep.InitialStep
+      );
     }
   }, [user]);
 
