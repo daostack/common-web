@@ -500,7 +500,7 @@ function* deleteUser({
     yield put(actions.startAuthLoading());
 
     yield call(deleteUserApi);
-    yield call(logOut);
+    yield put(actions.logOut());
     yield put(actions.deleteUser.success());
 
     if (payload.callback) {
