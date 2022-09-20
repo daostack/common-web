@@ -17,6 +17,7 @@ const initialState: SharedStateType = {
   loadingShareLinks: {},
   areReportsLoading: false,
   header: {
+    shouldHideHeader: null,
     shouldShowMenuItems: null,
     shouldShowDownloadLinks: null,
     shouldShowAuth: null,
@@ -80,6 +81,7 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
   .handleAction(actions.resetHeaderState, (state) =>
     produce(state, (nextState) => {
       nextState.header = {
+        shouldHideHeader: null,
         shouldShowMenuItems: null,
         shouldShowDownloadLinks: null,
         shouldShowAuth: null,

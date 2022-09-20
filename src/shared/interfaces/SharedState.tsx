@@ -3,6 +3,7 @@ import { ScreenSize } from "../constants";
 import { NotificationData } from "./";
 
 export interface SharedHeaderState {
+  shouldHideHeader: boolean | null;
   shouldShowMenuItems: boolean | null;
   shouldShowDownloadLinks: boolean | null;
   shouldShowAuth: boolean | null;

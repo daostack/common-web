@@ -64,19 +64,11 @@ const DeadSeaIntegrationContainer: FC = () => {
 
   useEffect(() => {
     updateHeaderState({
-      shouldShowMenuItems: false,
-      shouldShowDownloadLinks: false,
-      shouldShowAuth: false,
+      shouldHideHeader: true,
     });
   }, []);
 
   useEffect(() => {
-    if (step === DeadSeaIntegrationStep.Success) {
-      updateHeaderState({
-        shouldShowMenuItems: null,
-      });
-    }
-
     window.scrollTo(0, 0);
   }, [step]);
 
