@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import { ProposalsTypes } from "@/shared/constants";
 import {
   BaseEntity,
+  CirclesMap,
   Moderation,
   ProposalState,
   VoteOutcome,
@@ -35,18 +36,22 @@ export interface CalculatedVotes {
   totalMembersWithVotingRight: number;
 }
 
+export interface Weight {
+  circles: CirclesMap;
+  value: number;
+}
+
+export interface GlobalDefinition {
+  votingDuration: number; // time in hours
+  discussionDuration: number; // time in hours
+  quorum: number; // required percentage of common member votes with voting rights (any vote)
+  weights: Weight[]; // sum of values is 100%, ordered array by value (descending)
+  minApprove: number; // weight based percentage
+  maxReject: number; // weight based percentage
+}
+
 export interface BaseProposal extends BaseEntity {
-  global: {
-    votingDuration: number; // time in hours
-    discussionDuration: number; // time in hours
-    quorum: number; // required percentage of common member votes (any vote)
-    weights: {
-      circles: number;
-      value: number;
-    }[]; // sum of values is 100%, ordered array by value (descending)
-    minApprove: number; // weight based percentage
-    maxReject: number; // weight based percentage
-  };
+  global: GlobalDefinition;
 
   local: Record<string, unknown>;
 

@@ -107,7 +107,7 @@ const ProposalContainer = () => {
     commonMember &&
     commonMember.allowedActions[GovernanceActions.CREATE_VOTE] &&
     currentProposal?.global.weights.some(
-      ({ circles }) => commonMember.circles & circles
+      ({ circles }) => commonMember.circles.bin & circles.bin
     );
 
   const sendMessage = useCallback(
