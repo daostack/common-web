@@ -178,7 +178,7 @@ const Header = () => {
   });
 
   if (shouldHideHeader) {
-    return null;
+    return <LoginContainer />;
   }
 
   return (
