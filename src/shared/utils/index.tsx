@@ -14,3 +14,4 @@ export * from "./convertDatesToFirestoreTimestamps";
 export * from "./timeAgo";
 export * from "./transformFirebaseDataToModel";
 export * from "./roles";
+export * from "./checkIsIFrame";
