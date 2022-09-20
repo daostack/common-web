@@ -23,10 +23,6 @@ const InitialStep: FC<InitialStepProps> = (props) => {
 
   return (
     <GeneralInfoWrapper description={DESCRIPTION}>
-      <iframe
-        src="https://deploy-preview-848--preview-common.netlify.app/dead-sea"
-        frameBorder="0"
-      />
       <AmountSelection
         amount={amount}
         preSubmitText={
