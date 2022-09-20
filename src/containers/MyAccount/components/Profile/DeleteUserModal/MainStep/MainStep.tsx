@@ -76,13 +76,19 @@ const MainStep: FC<MainStepProps> = (props) => {
         <h4 className="delete-user-main-step__list-title">
           Please review your memberships in the commons
         </h4>
-        <ol className="delete-user-main-step__ordered-list">
-          {membershipInfo.map(({ commonName, circlesString }) => (
-            <li key={commonName}>
-              {commonName} - {circlesString}
-            </li>
-          ))}
-        </ol>
+        {membershipInfo.length > 0 ? (
+          <ol className="delete-user-main-step__ordered-list">
+            {membershipInfo.map(({ commonName, circlesString }) => (
+              <li key={commonName}>
+                {commonName} - {circlesString}
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="delete-user-main-step__text">
+            You don’t have any memberships.
+          </p>
+        )}
       </div>
       <ol className="delete-user-main-step__ordered-list">
         <li>
