@@ -20,8 +20,12 @@ const DeadSeaIntegrationContainer: FC = () => {
   const { updateHeaderState } = useHeader();
   const { updateFooterState } = useFooter();
   const queryParams = useQueryParams();
-  const [step, setStep] = useState(DeadSeaIntegrationStep.InitialStep);
   const [amount, setAmount] = useState(() => getAmount(queryParams));
+  const [step, setStep] = useState(
+    amount
+      ? DeadSeaIntegrationStep.UserDetails
+      : DeadSeaIntegrationStep.InitialStep
+  );
   const [supportPlan, setSupportPlan] = useState("");
   const user = useSelector(selectUser());
   const isInitialLoading = !user && step === DeadSeaIntegrationStep.UserDetails;
