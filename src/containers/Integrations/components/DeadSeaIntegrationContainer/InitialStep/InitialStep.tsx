@@ -19,7 +19,7 @@ const InitialStep: FC<InitialStepProps> = (props) => {
   const isInsideIFrame = checkIsIFrame();
 
   const getSubmitLink = (amount: number): string =>
-    `${ROUTE_PATHS.DEAD_SEA}?${QueryParamKey.DeadSeaIntegrationAmount}=${amount}`;
+    `${ROUTE_PATHS.DEAD_SEA}?${QueryParamKey.IntegrationAmount}=${amount}`;
 
   return (
     <GeneralInfoWrapper description={DESCRIPTION}>
