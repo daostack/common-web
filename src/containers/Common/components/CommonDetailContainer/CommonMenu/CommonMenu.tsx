@@ -174,6 +174,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     isSubCommon,
     common.memberCount,
     currentCommonMember,
+    circlesWithoutSubcommon,
   ]);
   const options = useMemo(
     () =>
