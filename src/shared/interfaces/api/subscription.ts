@@ -1,4 +1,6 @@
+import { PaymentAmount } from "@/shared/models";
+
 export interface SubscriptionUpdateData {
   subscriptionId: string;
-  amount: number;
+  price: PaymentAmount;
 }

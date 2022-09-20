@@ -10,7 +10,7 @@ import {
   Modal,
   MenuButton,
 } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { useAuthorizedDropdown, useAuthorizedModal } from "@/shared/hooks";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import AddIcon from "@/shared/icons/add.icon";
@@ -20,8 +20,7 @@ import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
 import { Common, CommonMember, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { DeleteCommonPrompt } from "../DeleteCommonPrompt";
-import { LeaveCommonPrompt } from "../LeaveCommonPrompt";
+import { LeaveCommonModal } from "../LeaveCommonModal";
 import { MyContributionsModal } from "../MyContributionsModal";
 import "./index.scss";
 
@@ -113,6 +112,7 @@ interface CommonMenuProps {
   currentCommonMember: CommonMember | null;
   withBorder?: boolean;
   onSubCommonCreate?: (common: Common) => void;
+  onCommonDelete: () => void;
 }
 
 const CommonMenu: FC<CommonMenuProps> = (props) => {
@@ -125,6 +125,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     isSubCommon,
     currentCommonMember,
     onSubCommonCreate,
+    onCommonDelete,
     withBorder = false,
   } = props;
   const dropdownRef = useRef<DropdownRef>(null);
@@ -155,15 +156,24 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (isCommonMember) {
       items.push(MenuItem.MyContributions);
     }
-    if (isCommonOwner && common.memberCount === 1 && !isSubCommon) {
+    if (
+      currentCommonMember?.allowedProposals[ProposalsTypes.DELETE_COMMON] &&
+      !isSubCommon
+    ) {
       items.push(MenuItem.DeleteCommon);
     }
-    if (isCommonMember && !isCommonOwner && !isSubCommon) {
+    if (isCommonMember && !isSubCommon) {
       items.push(MenuItem.LeaveCommon);
     }
 
     return items;
-  }, [isCommonMember, isCommonOwner, isSubCommon, common.memberCount]);
+  }, [
+    isCommonMember,
+    isCommonOwner,
+    isSubCommon,
+    common.memberCount,
+    currentCommonMember,
+  ]);
   const options = useMemo(
     () =>
       OPTIONS.filter((option) => menuItems.includes(option.value as MenuItem)),
@@ -180,6 +190,14 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     }
 
     setSelectedMenuItem(value as MenuItem);
+
+    switch (value) {
+      case MenuItem.DeleteCommon:
+        onCommonDelete();
+        break;
+      default:
+        break;
+    }
   };
 
   const handleMenuClose = () => {
@@ -260,21 +278,20 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   return (
     <div className={classNames("edit-common-menu", className)}>
       {isMobileView ? renderMenuModal() : renderMenuDropdown()}
-      <DeleteCommonPrompt
-        isShowing={selectedMenuItem === MenuItem.DeleteCommon}
-        onClose={handleMenuClose}
-        commonId={common.id}
-      />
       <MyContributionsModal
         isShowing={selectedMenuItem === MenuItem.MyContributions}
         onClose={handleMenuClose}
         common={common}
       />
-      <LeaveCommonPrompt
-        isShowing={selectedMenuItem === MenuItem.LeaveCommon}
-        onClose={handleMenuClose}
-        commonId={common.id}
-      />
+      {currentCommonMember && (
+        <LeaveCommonModal
+          isShowing={selectedMenuItem === MenuItem.LeaveCommon}
+          onClose={handleMenuClose}
+          commonId={common.id}
+          memberCount={common.memberCount}
+          memberCircleIds={Object.values(currentCommonMember.circles.map)}
+        />
+      )}
       <CreateCommonModal
         isShowing={selectedMenuItem === MenuItem.CreateSubCommon}
         onClose={handleMenuClose}

@@ -19,6 +19,7 @@ import "./index.scss";
 
 interface SuccessProps {
   common: Common;
+  isSubCommonCreation: boolean;
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
@@ -27,6 +28,7 @@ interface SuccessProps {
 const Success: FC<SuccessProps> = (props) => {
   const {
     common,
+    isSubCommonCreation,
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
@@ -37,7 +39,11 @@ const Success: FC<SuccessProps> = (props) => {
   const commonPath = ROUTE_PATHS.COMMON_DETAIL.replace(":id", common.id);
 
   const handleGoToCommon = () => {
-    history.push(commonPath);
+    if (isSubCommonCreation) {
+      window.location.href = commonPath;
+    } else {
+      history.push(commonPath);
+    }
   };
 
   const title = useMemo(

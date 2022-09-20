@@ -168,6 +168,8 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const [imageError, setImageError] = useState(false);
   const [isCreationStageReached, setIsCreationStageReached] = useState(false);
   const [isCommonFetched, setIsCommonFetched] = useState(false);
+  const [initialProposalTypeForCreation, setInitialProposalTypeForCreation] =
+    useState<ProposalsTypes | null>(null);
 
   const common = useSelector(selectCommonDetail());
   const governance = useSelector(selectGovernance());
@@ -187,6 +189,20 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   } = useCommonMember();
   const commonSubtitle = getCommonSubtitle(parentCommon, subCommons);
 
+  const userDiscussions = useMemo(() => {
+    const circleIds = new Set(
+      commonMember ? Object.values(commonMember.circles.map) : []
+    );
+    return discussions.filter(({ circleVisibility }) => {
+      if (!circleVisibility?.length) {
+        return true;
+      }
+      return circleVisibility?.some((discussionCircleId) =>
+        circleIds.has(discussionCircleId)
+      );
+    });
+  }, [discussions, commonMember]);
+
   const activeProposals = useMemo(
     () => proposals.filter((d) => checkIsCountdownState(d)),
     [proposals]
@@ -204,7 +220,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
   const shouldShowStickyJoinEffortButton =
     screenSize === ScreenSize.Mobile &&
-    ((tab === Tabs.Discussions && discussions?.length > 0) ||
+    ((tab === Tabs.Discussions && userDiscussions?.length > 0) ||
       (tab === Tabs.Proposals && activeProposals.length > 0)) &&
     !isCommonMember &&
     !isJoiningPending &&
@@ -240,6 +256,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     onOpenJoinModal(LoginModalType.RequestToJoin);
   }, [onOpenJoinModal]);
 
+  const handleProposalCreationModalClose = () => {
+    onCloseNewP();
+    setInitialProposalTypeForCreation(null);
+  };
+
   const changeTabHandler = useCallback(
     (tab: Tabs) => {
       switch (tab) {
@@ -262,6 +283,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     },
     [dispatch, isDiscussionsLoaded, isProposalsLoaded]
   );
+
+  const handleCommonDelete = () => {
+    setInitialProposalTypeForCreation(ProposalsTypes.DELETE_COMMON);
+    onOpenNewP();
+  };
 
   useEffect(() => {
     if (!activeTab || !isCommonFetched) return;
@@ -352,12 +378,12 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const clickPreviewDisscusionHandler = useCallback(
     (id: string) => {
       changeTabHandler(Tabs.Discussions);
-      const disscussion = discussions.find((f) => f.id === id);
+      const disscussion = userDiscussions.find((f) => f.id === id);
       if (disscussion) {
         getDisscussionDetail(disscussion);
       }
     },
-    [discussions, changeTabHandler, getDisscussionDetail]
+    [userDiscussions, changeTabHandler, getDisscussionDetail]
   );
 
   const clickPreviewProposalHandler = useCallback(
@@ -411,7 +437,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           <>
             <PreviewInformationList
               title="Latest Discussions"
-              discussions={discussions}
+              discussions={userDiscussions}
               vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
@@ -456,7 +482,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             />
             <PreviewInformationList
               title="Latest Discussions"
-              discussions={discussions}
+              discussions={userDiscussions}
               vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
@@ -477,7 +503,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             />
             <PreviewInformationList
               title="Latest Discussions"
-              discussions={discussions}
+              discussions={userDiscussions}
               vievAllHandler={() => changeTabHandler(Tabs.Discussions)}
               onClickItem={clickPreviewDisscusionHandler}
               type="discussions"
@@ -513,7 +539,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
       setStickyClass("");
     } else {
       if (joinEffortRef && joinEffortRef.offsetTop < window.scrollY) {
-        if (tab === Tabs.Discussions && discussions?.length) {
+        if (tab === Tabs.Discussions && userDiscussions?.length) {
           setStickyClass("sticky");
         } else if (tab === Tabs.Proposals && activeProposals.length) {
           setStickyClass("sticky");
@@ -526,7 +552,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     inViewport,
     activeProposals,
     tab,
-    discussions,
+    userDiscussions,
     setStickyClass,
     joinEffortRef,
   ]);
@@ -599,6 +625,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
             commonMember={commonMember}
             isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
+            governance={governance}
           />
         </Modal>
       )}
@@ -615,22 +642,28 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         <AddDiscussionComponent
           isShowing={isShowingNewD}
           onClose={onCloseNewD}
-          onSucess={(discussion: Discussion) => {
+          onSuccess={(discussion: Discussion) => {
             onCloseNewD();
             getDisscussionDetail(discussion);
           }}
           uid={user?.uid!}
           commonId={common.id}
+          governanceId={governance.id}
+          userCircleIds={
+            commonMember ? Object.values(commonMember.circles.map) : []
+          }
         />
       )}
       {isShowingNewP && commonMember && (
         <CreateProposalModal
           isShowing={isShowingNewP}
-          onClose={onCloseNewP}
+          onClose={handleProposalCreationModalClose}
           common={common}
           governance={governance}
           commonMember={commonMember}
+          activeProposalsExist={activeProposals.length > 0}
           redirectToProposal={getProposalDetail}
+          initialProposalType={initialProposalTypeForCreation}
         />
       )}
       <div className="common-detail-wrapper">
@@ -686,6 +719,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                             isSubCommon={isSubCommon}
                             currentCommonMember={commonMember}
                             onSubCommonCreate={addSubCommon}
+                            onCommonDelete={handleCommonDelete}
                           />
                         )}
                       </div>
@@ -785,6 +819,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       currentCommonMember={commonMember}
                       withBorder
                       onSubCommonCreate={addSubCommon}
+                      onCommonDelete={handleCommonDelete}
                     />
                   )}
                 </div>
@@ -832,7 +867,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   onAddNewPost={addPost}
                   common={common}
                   governance={governance}
-                  discussions={discussions || []}
+                  discussions={userDiscussions || []}
                   loadDisscussionDetail={getDisscussionDetail}
                   isCommonMember={isCommonMember}
                   isCommonMemberFetched={isCommonMemberFetched}

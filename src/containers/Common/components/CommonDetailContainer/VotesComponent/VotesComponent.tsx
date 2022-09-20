@@ -55,7 +55,7 @@ export default function VotesComponent({
       commonMember &&
       commonMember.allowedActions[GovernanceActions.CREATE_VOTE] &&
       proposal.global.weights.some(
-        ({ circles }) => commonMember.circles & circles
+        ({ circles }) => commonMember.circles.bin & circles.bin
       ),
     [commonMember, proposal]
   );

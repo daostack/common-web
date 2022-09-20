@@ -16,11 +16,12 @@ const Checkbox: FC<CheckboxProps> = (props) => {
   const handleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
     (event) => {
       setTouched(true);
-      setValue(event.target.checked);
-
       if (onChange) {
         onChange(event);
       }
+
+      setValue(event.target.checked);
+
     },
     [setTouched, setValue, onChange]
   );

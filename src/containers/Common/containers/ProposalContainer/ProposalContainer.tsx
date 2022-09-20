@@ -61,8 +61,9 @@ const PROPOSAL_TYPE_CAPTION = {
   [ProposalsTypes.FUNDS_REQUEST]: "Funds request",
   [ProposalsTypes.FUNDS_ALLOCATION]: "Fund allocation",
   [ProposalsTypes.MEMBER_ADMITTANCE]: "Members admittance",
-  [ProposalsTypes.ASSIGN_CIRCLE]: "Assign members to circle",
-  [ProposalsTypes.REMOVE_CIRCLE]: "Remove members from circle",
+  [ProposalsTypes.ASSIGN_CIRCLE]: "Assign members to a circle",
+  [ProposalsTypes.REMOVE_CIRCLE]: "Remove members from a circle",
+  [ProposalsTypes.DELETE_COMMON]: "Delete common",
 };
 
 enum PROPOSAL_MENU_TABS {
@@ -114,7 +115,7 @@ const ProposalContainer = () => {
     commonMember &&
     commonMember.allowedActions[GovernanceActions.CREATE_VOTE] &&
     currentProposal?.global.weights.some(
-      ({ circles }) => commonMember.circles & circles
+      ({ circles }) => commonMember.circles.bin & circles.bin
     );
 
   useEffect(() => {

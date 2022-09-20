@@ -4,6 +4,7 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import { getLoading } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
+import { ContributionSourceType, Currency } from "@/shared/models";
 import { createMemberAdmittanceProposal } from "../../../store/actions";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
@@ -32,6 +33,9 @@ export default function MembershipRequestCreating(props: IStageProps) {
               images: [],
               files: [],
               links: userData.links || [],
+             ...((userData?.feeMonthly || userData?.feeOneTime) && {contributionSourceType: ContributionSourceType.CommonImmediate}),
+             ...(userData?.feeMonthly ? { feeMonthly: { amount: userData?.feeMonthly, currency: Currency.ILS }} : { feeMonthly: null }),
+             ...(userData?.feeOneTime ? { feeOneTime: { amount: userData?.feeOneTime, currency: Currency.ILS }} : { feeOneTime: null }),
             },
           },
           callback: (error) => {

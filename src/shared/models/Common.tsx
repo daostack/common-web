@@ -1,5 +1,9 @@
 import firebase from "firebase/app";
-import { AllowedActions, AllowedProposals } from "./governance/Circles";
+import {
+  AllowedActions,
+  AllowedProposals,
+  CirclesMap,
+} from "./governance/Circles";
 import { Reputation } from "./governance/Reputation";
 import { BaseEntity } from "./BaseEntity";
 import { Proposal } from "./Proposals";
@@ -121,8 +125,7 @@ export interface CommonMember {
   readonly id: string;
   readonly userId: string;
   joinedAt: firebase.firestore.Timestamp;
-  circles: number;
-  circlesIds: string[];
+  circles: CirclesMap;
   allowedActions: AllowedActions;
   allowedProposals: AllowedProposals;
   tokenBalance: number;

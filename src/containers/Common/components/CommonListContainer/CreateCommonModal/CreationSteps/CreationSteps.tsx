@@ -20,6 +20,7 @@ import { Rules } from "./Rules";
 import { UserAcknowledgment } from "./UserAcknowledgment";
 import { CreationStep } from "./constants";
 import "./index.scss";
+import { Funding } from "./Funding";
 
 interface CreationStepsProps {
   isHeaderScrolledToTop: boolean;
@@ -69,6 +70,15 @@ export default function CreationSteps(props: CreationStepsProps) {
     setStep((step) => step - 1);
   }, [step]);
 
+  const handleFormValues = (data?: Partial<IntermediateCreateCommonPayload>) => {
+    if (data) {
+      setCreationData((nextData) => ({
+        ...nextData,
+        ...data,
+      }));
+    }
+  };
+
   const handleFinish = useCallback(
     (data?: Partial<IntermediateCreateCommonPayload>) => {
       if (data) {
@@ -82,6 +92,8 @@ export default function CreationSteps(props: CreationStepsProps) {
 
       if (step === CreationStep.Review) {
         onFinish();
+      } else if (step === CreationStep.Rules && isSubCommonCreation) {
+        setStep((step) => step + 2);
       } else {
         setStep((step) => step + 1);
       }
@@ -153,8 +165,10 @@ export default function CreationSteps(props: CreationStepsProps) {
         return <UserAcknowledgment {...stepProps} />;
       case CreationStep.Rules:
         return <Rules {...stepProps} />;
+      case CreationStep.Funding:
+        return <Funding {...stepProps} />;
       case CreationStep.Review:
-        return <Review {...stepProps} />;
+        return <Review {...stepProps} handleFormValues={handleFormValues} />;
       default:
         return null;
     }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CommonDetailContainer, Tabs } from "..";
-import { fetchDiscussionMessageById, fetchProposalById } from "../../store/api";
+import { fetchDiscussionById, fetchDiscussionMessageById, fetchProposalById } from "../../store/api";
 import {
   DiscussionMessage,
   ProposalWithHighlightedComment,
@@ -37,15 +37,16 @@ const ProposalCommentContainer = () => {
         const requestingProposalComment = await fetchDiscussionMessageById(
           proposalCommentId
         );
+        const relatedDiscussion = await fetchDiscussionById(requestingProposalComment.discussionId);
         const relatedProposal = await fetchProposalById(
-          requestingProposalComment.discussionId
+          relatedDiscussion?.proposalId as string
         );
 
         setCurrentProposalComment(requestingProposalComment);
         setProposalWithHighlightedComment({
           ...relatedProposal,
           highlightedCommentId: proposalCommentId,
-          id: requestingProposalComment.discussionId,
+          id: relatedProposal.id,
         });
       } catch (error) {
         console.log(error);

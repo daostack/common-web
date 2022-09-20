@@ -242,6 +242,20 @@ export const createSurvey = createAsyncAction(
   Error
 >();
 
+export const createDeleteCommonProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_DELETE_COMMON_PROPOSAL,
+  CommonsActionTypes.CREATE_DELETE_COMMON_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_DELETE_COMMON_PROPOSAL_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    Omit<CreateProposal[ProposalsTypes.DELETE_COMMON]["data"], "type">,
+    CreateProposal[ProposalsTypes.DELETE_COMMON]["response"],
+    Error
+  >,
+  CreateProposal[ProposalsTypes.DELETE_COMMON]["response"],
+  Error
+>();
+
 export const loadUserCards = createAsyncAction(
   CommonsActionTypes.LOAD_USER_CARDS,
   CommonsActionTypes.LOAD_USER_CARDS_SUCCESS,

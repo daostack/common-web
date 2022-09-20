@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import { ProposalsTypes } from "@/shared/constants";
-import { circleIndex } from "../Circles";
+import { CircleIndex } from "../Circles";
 import { BaseProposal } from "./BaseProposal";
 import { BasicArgsProposal } from "./BasicArgsProposal";
 
@@ -15,7 +15,7 @@ export interface Survey extends BaseProposal {
   };
   type: ProposalsTypes.SURVEY;
   local: {
-    defaultCircle: circleIndex;
+    defaultCircle: CircleIndex;
     optimisticAdmittance: boolean;
   };
 }

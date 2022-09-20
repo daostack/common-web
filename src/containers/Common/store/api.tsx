@@ -5,6 +5,7 @@ import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   BankAccountDetails,
   Card,
+  Circles,
   Collection,
   Common,
   CommonMember,
@@ -36,15 +37,13 @@ import {
   AddFounderToMembersPayload,
   CreateCommonPayload,
   CreateDiscussionDto,
-  DeleteCommon,
   CreateGovernancePayload,
   CreateProposal,
   ImmediateContributionData,
   ImmediateContributionResponse,
-  SubscriptionData,
-  SubscriptionResponse,
   LeaveCommon,
   CreateSubCommonPayload,
+  UserMembershipInfo,
 } from "@/containers/Common/interfaces";
 import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
@@ -435,12 +434,6 @@ export async function leaveCommon(requestData: LeaveCommon): Promise<void> {
   await Api.post<void>(ApiEndpoint.LeaveCommon, requestData);
 }
 
-export async function deleteCommon(requestData: DeleteCommon): Promise<void> {
-  const { data } = await Api.post<void>(ApiEndpoint.DeleteCommon, requestData);
-
-  return data;
-}
-
 export async function createCommon(
   requestData: CreateCommonPayload
 ): Promise<Common> {
@@ -592,7 +585,7 @@ export async function getUserSubscriptionToCommon(
     .firestore()
     .collection(Collection.Subscriptions)
     .where("userId", "==", userId)
-    .where("metadata.common.id", "==", commonId)
+    .where("commonId", "==", commonId)
     .get();
   const subscriptions = transformFirebaseDataList<Subscription>(result);
 
@@ -721,6 +714,18 @@ export const getCommonMembers = async (
   return extendedMembers;
 };
 
+export const getCommonMembersWithCircleIdAmount = async (
+  commonId: string,
+  circleId: string
+): Promise<number> => {
+  const result = await commonMembersSubCollection(commonId)
+    .where("circlesIds", "array-contains", circleId)
+    .get();
+  const members = transformFirebaseDataList<CommonMember>(result);
+
+  return members.length;
+};
+
 export const getVotesWithUserInfo = async (
   proposalId: string
 ): Promise<VoteWithUserInfo[]> => {
@@ -772,6 +777,14 @@ export const getCommonGovernanceRules = async (
   return governance?.unstructuredRules || null;
 };
 
+export const getCommonGovernanceCircles = async (
+  governanceId: string
+): Promise<Circles | null> => {
+  const governance = await getGovernance(governanceId);
+
+  return governance?.circles || null;
+};
+
 export const getUserCommons = async (userId: string): Promise<Common[]> => {
   const querySnapshot = await firebase
     .firestore()
@@ -804,6 +817,69 @@ export const verifyIsUserMemberOfAnyCommon = async (userId: string): Promise<boo
     .get();
 
   return !querySnapshot.empty;
+};
+
+export const getUserInfoAboutMemberships = async (
+  userId: string
+): Promise<UserMembershipInfo[]> => {
+  const querySnapshot = await firebase
+    .firestore()
+    .collectionGroup(SubCollections.Members)
+    .where("userId", "==", userId)
+    .get();
+  const promises: (() => Promise<UserMembershipInfo>)[] = [];
+
+  querySnapshot.forEach((queryDocumentSnapshot) => {
+    promises.push(async (): Promise<UserMembershipInfo> => {
+      const documentReference = queryDocumentSnapshot.ref;
+      const documentGrandParent = documentReference.parent.parent;
+      const commonMember = (
+        await documentReference.get()
+      ).data() as CommonMember;
+
+      if (!documentGrandParent) {
+        throw new Error(
+          `There is no common for common member with id = ${commonMember.id}`
+        );
+      }
+
+      const common = (await documentGrandParent.get()).data() as Common;
+
+      if (!common) {
+        throw new Error(
+          `Couldn't find common for common member with id = ${commonMember.id}`
+        );
+      }
+      if (!common.governanceId) {
+        throw new Error(
+          `There is no governance id in common with id = ${common.id}`
+        );
+      }
+
+      const governance = await getGovernance(common.governanceId);
+
+      if (!governance) {
+        throw new Error(
+          `Couldn't find governance by id = ${common.governanceId}`
+        );
+      }
+
+      return {
+        common,
+        governance,
+        commonMember,
+      };
+    });
+  });
+
+  const results = await Promise.allSettled(promises.map((func) => func()));
+
+  return results
+    .filter(
+      (result): result is PromiseFulfilledResult<UserMembershipInfo> =>
+        result.status === "fulfilled"
+    )
+    .map((result) => result.value);
 };
 
 export const proposalVotesSubCollection = (proposalId: string) => {

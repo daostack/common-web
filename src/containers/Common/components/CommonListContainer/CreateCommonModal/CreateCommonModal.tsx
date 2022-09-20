@@ -179,6 +179,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
         return createdCommon ? (
           <Success
             common={createdCommon}
+            isSubCommonCreation={isSubCommonCreation}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}

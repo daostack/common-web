@@ -27,7 +27,10 @@ export const getStepData = (
   [CreationStep.Rules]: {
     title: "Rules",
     description:
-      "Add rules of conduct. New members must agree to the rules before joining the Common.",
+      "Control how this Common will collect and manage funds.",
+  },
+  [CreationStep.Funding]: {
+    title: "Funding",
   },
   [CreationStep.Review]: {
     title: "Final touches and review",
@@ -35,21 +38,36 @@ export const getStepData = (
 });
 
 export const getStepProgressItems = (
-  allStepsData: ReturnType<typeof getStepData>
-): StepProgressItem[] => [
-  {
-    title: allStepsData[CreationStep.GeneralInfo].title,
-    activeImageSource: "/icons/common-creation/general-info-current.svg",
-    inactiveImageSource: "/icons/common-creation/general-info-current.svg",
-  },
-  {
-    title: allStepsData[CreationStep.Rules].title,
-    activeImageSource: "/icons/common-creation/rules-current.svg",
-    inactiveImageSource: "/icons/common-creation/rules-next.svg",
-  },
-  {
-    title: allStepsData[CreationStep.Review].title,
-    activeImageSource: "/icons/common-creation/review-current.svg",
-    inactiveImageSource: "/icons/common-creation/review-next.svg",
-  },
-];
+  allStepsData: ReturnType<typeof getStepData>,
+  isSubCommonCreation: boolean
+): StepProgressItem[] => {
+  
+  const progressItems = [
+    {
+      title: allStepsData[CreationStep.GeneralInfo].title,
+      activeImageSource: "/icons/common-creation/general-info-current.svg",
+      inactiveImageSource: "/icons/common-creation/general-info-current.svg",
+    },
+    {
+      title: allStepsData[CreationStep.Rules].title,
+      activeImageSource: "/icons/common-creation/rules-current.svg",
+      inactiveImageSource: "/icons/common-creation/rules-next.svg",
+    },
+    {
+      title: allStepsData[CreationStep.Funding].title,
+      activeImageSource: "/icons/common-creation/funding-current.svg",
+      inactiveImageSource: "/icons/common-creation/funding-next.svg",
+    },
+    {
+      title: allStepsData[CreationStep.Review].title,
+      activeImageSource: "/icons/common-creation/review-current.svg",
+      inactiveImageSource: "/icons/common-creation/review-next.svg",
+    },
+  ];
+
+  if (isSubCommonCreation) {
+    progressItems.splice(2,1);
+  }
+
+  return progressItems;
+};

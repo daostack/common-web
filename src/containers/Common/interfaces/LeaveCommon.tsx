@@ -1,3 +1,4 @@
 export interface LeaveCommon {
-  commonId: string
+  commonId: string;
+  userId: string;
 }

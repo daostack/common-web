@@ -24,7 +24,7 @@ const CircleSelection: FC<GeneralInfoProps> = (props) => {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const options = useMemo<DropdownOption[]>(
     () =>
-      governance.circles
+      Object.values(governance.circles)
         .filter(
           (circle) =>
             !subCommons.some(

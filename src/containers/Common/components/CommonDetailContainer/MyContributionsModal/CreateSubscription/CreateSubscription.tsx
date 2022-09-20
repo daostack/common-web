@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useState, FC } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Loader } from "@/shared/components";
+import { useSelector } from "react-redux";
 import { ScreenSize } from "@/shared/constants";
 import { useComponentWillUnmount } from "@/shared/hooks";
 import { Common, Subscription, Payment } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { updateSubscription } from "../../../../store/actions";
 import { useMyContributionsContext } from "../context";
 import { AmountSelection } from "./AmountSelection";
 import { Payment as PaymentStep } from "./Payment";
@@ -23,16 +21,14 @@ interface CreateSubscriptionProps {
 const CreateSubscription: FC<CreateSubscriptionProps> = (
   props
 ) => {
-  const { common, onFinish, goBack, onLoadingToggle } =
+  const { common, onFinish, goBack } =
     props;
   const { setTitle, setOnGoBack, onError, setShouldShowClosePrompt } =
     useMyContributionsContext();
-  const dispatch = useDispatch();
   const [step, setStep] = useState<CreateSubscriptionStep>(
     CreateSubscriptionStep.AmountSelection
   );
   const [shouldShowGoBackButton, setShouldShowGoBackButton] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [createdPayment, setCreatedPayment] = useState<Subscription | Payment | null>(null);
@@ -76,8 +72,8 @@ const CreateSubscription: FC<CreateSubscriptionProps> = (
   }, [setOnGoBack, shouldShowGoBackButton, handleGoBack]);
 
   useEffect(() => {
-    setShouldShowClosePrompt(isLoading);
-  }, [isLoading, setShouldShowClosePrompt]);
+    setShouldShowClosePrompt(false);
+  }, [setShouldShowClosePrompt]);
 
   useComponentWillUnmount(handleUnmount);
 
@@ -117,13 +113,7 @@ const CreateSubscription: FC<CreateSubscriptionProps> = (
 
   return (
     <>
-      {isLoading ? (
-        <div className="create-monthly-contribution__loader-wrapper">
-          <Loader />
-        </div>
-      ) : (
-        renderContent()
-      )}
+      {renderContent()}
       {isMobileView && createdPayment && (
         <Success
           onFinish={handleSuccessFinish}
