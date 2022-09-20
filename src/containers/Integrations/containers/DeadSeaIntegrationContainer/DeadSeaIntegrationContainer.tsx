@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
-import { useHeader, useQueryParams } from "@/shared/hooks";
+import { useFooter, useHeader, useQueryParams } from "@/shared/hooks";
 import {
   InitialStep,
   MemberAdmittanceStep,
@@ -18,6 +18,7 @@ import "./index.scss";
 const DeadSeaIntegrationContainer: FC = () => {
   const dispatch = useDispatch();
   const { updateHeaderState } = useHeader();
+  const { updateFooterState } = useFooter();
   const queryParams = useQueryParams();
   const [step, setStep] = useState(DeadSeaIntegrationStep.InitialStep);
   const [amount, setAmount] = useState(() => getAmount(queryParams));
@@ -65,6 +66,9 @@ const DeadSeaIntegrationContainer: FC = () => {
   useEffect(() => {
     updateHeaderState({
       shouldHideHeader: true,
+    });
+    updateFooterState({
+      shouldHideFooter: true,
     });
   }, []);
 

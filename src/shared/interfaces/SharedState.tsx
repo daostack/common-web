@@ -9,6 +9,10 @@ export interface SharedHeaderState {
   shouldShowAuth: boolean | null;
 }
 
+export interface SharedFooterState {
+  shouldHideFooter: boolean | null;
+}
+
 export interface SharedStateType {
   loading: boolean;
   notification: NotificationData | null;
@@ -17,4 +21,5 @@ export interface SharedStateType {
   loadingShareLinks: Record<string, boolean>;
   areReportsLoading: boolean;
   header: SharedHeaderState;
+  footer: SharedFooterState;
 }

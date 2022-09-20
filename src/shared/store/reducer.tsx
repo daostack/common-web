@@ -21,29 +21,32 @@ const initialState: SharedStateType = {
     shouldShowMenuItems: null,
     shouldShowDownloadLinks: null,
     shouldShowAuth: null,
-  }
+  },
+  footer: {
+    shouldHideFooter: null,
+  },
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
   .handleAction(actions.startLoading, (state) =>
     produce(state, (nextState) => {
       nextState.loading = true;
-    }),
+    })
   )
   .handleAction(actions.stopLoading, (state) =>
     produce(state, (nextState) => {
       nextState.loading = false;
-    }),
+    })
   )
   .handleAction(actions.showNotification, (state, action) =>
     produce(state, (nexState) => {
       nexState.notification = action.payload;
-    }),
+    })
   )
   .handleAction(actions.changeScreenSize, (state, action) =>
     produce(state, (nextState) => {
       nextState.screenSize = action.payload;
-    }),
+    })
   )
   .handleAction(actions.buildShareLink.request, (state, { payload }) =>
     produce(state, (nextState) => {
@@ -51,7 +54,7 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.loadingShareLinks,
         [payload.payload.key]: true,
       };
-    }),
+    })
   )
   .handleAction(actions.buildShareLink.success, (state, { payload }) =>
     produce(state, (nextState) => {
@@ -63,7 +66,7 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.loadingShareLinks,
         [payload.key]: false,
       };
-    }),
+    })
   )
   .handleAction(actions.buildShareLink.failure, (state, { payload }) =>
     produce(state, (nextState) => {
@@ -71,7 +74,7 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.loadingShareLinks,
         [payload.key]: false,
       };
-    }),
+    })
   )
   .handleAction(actions.setAreReportsLoading, (state, action) =>
     produce(state, (nextState) => {
@@ -92,6 +95,21 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.header = {
         ...nextState.header,
+        ...action.payload,
+      };
+    })
+  )
+  .handleAction(actions.resetFooterState, (state) =>
+    produce(state, (nextState) => {
+      nextState.footer = {
+        shouldHideFooter: null,
+      };
+    })
+  )
+  .handleAction(actions.updateFooterState, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.footer = {
+        ...nextState.footer,
         ...action.payload,
       };
     })
