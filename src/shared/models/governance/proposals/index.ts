@@ -1,7 +1,6 @@
 import { ProposalsTypes } from "@/shared/constants";
 import { BaseEntity } from "../../BaseEntity";
 import { Proposal } from "../../Proposals";
-import { circleIndex } from "../Circles";
 import { AssignCircle } from "./AssignCircle";
 import { BasicArgsProposal } from "./BasicArgsProposal";
 import { DeleteCommon } from "./DeleteCommon";
@@ -31,12 +30,12 @@ export interface Proposals {
     FundsAllocation,
     ProposalInProgressKeys
   >;
-  [ProposalsTypes.ASSIGN_CIRCLE]: {
-    [K in circleIndex]: Omit<AssignCircle, ProposalInProgressKeys>;
-  };
-  [ProposalsTypes.REMOVE_CIRCLE]: {
-    [K in circleIndex]: Omit<RemoveCircle, ProposalInProgressKeys>;
-  };
+  [ProposalsTypes.ASSIGN_CIRCLE]: Partial<
+    Record<string, Omit<AssignCircle, ProposalInProgressKeys>>
+  >;
+  [ProposalsTypes.REMOVE_CIRCLE]: Partial<
+    Record<string, Omit<RemoveCircle, ProposalInProgressKeys>>
+  >;
   [ProposalsTypes.DELETE_COMMON]: Omit<DeleteCommon, ProposalInProgressKeys>;
   // Expended for each proposal
 }

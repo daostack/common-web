@@ -1,5 +1,5 @@
 import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
-import { BaseRule, Circle, circleIndex } from "@/shared/models";
+import { BaseRule, Circle, CircleIndex } from "@/shared/models";
 import { AllowedProposals } from "@/shared/models/governance";
 import { BaseProposal, Proposals } from "@/shared/models/governance/proposals";
 
@@ -8,7 +8,7 @@ type CreateGovernanceWeights = {
   value: number;
 }[];
 
-type CircleIndexToBooleanMap = Partial<Record<circleIndex, boolean>>;
+type CircleIndexToBooleanMap = Partial<Record<CircleIndex, boolean>>;
 
 type CreateGovernanceProposalsKeys =
   | ProposalsTypes.MEMBER_ADMITTANCE

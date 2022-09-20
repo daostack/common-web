@@ -17,7 +17,7 @@ const getVotersString = (
 ): string => {
   const voters =
     calculateVoters(
-      circles.map((circle) => circle.name),
+      Object.values(circles).map((circle) => circle.name),
       weights
     ) || [];
 
@@ -54,7 +54,7 @@ export const getAssignCircleDetails = (
   member: User | null,
   governance: Governance
 ): ProposalDetailsItem[] => {
-  const circleToBeAssigned = governance.circles.find(
+  const circleToBeAssigned = Object.values(governance.circles).find(
     (circle) => circle.id === proposal.data.args.circleId
   );
 
@@ -79,7 +79,7 @@ export const getRemoveCircleDetails = (
   member: User | null,
   governance: Governance
 ): ProposalDetailsItem[] => {
-  const circleToBeRemoved = governance.circles.find(
+  const circleToBeRemoved = Object.values(governance.circles).find(
     (circle) => circle.id === proposal.data.args.circleId
   );
 

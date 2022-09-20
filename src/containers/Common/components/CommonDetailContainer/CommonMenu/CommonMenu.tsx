@@ -289,7 +289,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
           onClose={handleMenuClose}
           commonId={common.id}
           memberCount={common.memberCount}
-          memberCircleIds={currentCommonMember.circlesIds}
+          memberCircleIds={Object.values(currentCommonMember.circles.map)}
         />
       )}
       <CreateCommonModal
