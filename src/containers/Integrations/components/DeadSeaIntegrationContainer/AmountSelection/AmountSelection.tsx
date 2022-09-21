@@ -6,8 +6,9 @@ import {
   ToggleButton,
 } from "@/shared/components/Form";
 import { ContributionType } from "@/shared/constants";
-import { formatPrice } from "@/shared/utils";
+import { emptyFunction, formatPrice } from "@/shared/utils";
 import { SelectionButton } from "../SelectionButton";
+import { getFinalAmount } from "./helpers";
 import "./index.scss";
 
 interface PaymentDetailsProps {
@@ -15,6 +16,7 @@ interface PaymentDetailsProps {
   preSubmitText?: ReactNode;
   submitButtonText?: string;
   onAmountChange: (amount: number) => void;
+  getSubmitLink?: (amount: number) => string;
 }
 
 const AMOUNTS = [18000, 36000, 75000, 120000];
@@ -25,6 +27,7 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
     preSubmitText,
     submitButtonText = "Update Contribution",
     onAmountChange,
+    getSubmitLink,
   } = props;
   const [selectedAmount, setSelectedAmount] = useState<number | null>(() =>
     currentAmount && AMOUNTS.some((amount) => amount === currentAmount)
@@ -36,6 +39,10 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
       ? ""
       : String(currentAmount / 100)
   );
+  const submitLink = getSubmitLink
+    ? getSubmitLink(getFinalAmount(selectedAmount, inputValue))
+    : "";
+  const isSubmitDisabled = !selectedAmount && !Number(inputValue);
 
   const handleAmountSelection = (amount: number) => {
     setSelectedAmount(amount);
@@ -48,8 +55,18 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   };
 
   const handleSubmit = () => {
-    onAmountChange(selectedAmount || Number(inputValue) * 100);
+    onAmountChange(getFinalAmount(selectedAmount, inputValue));
   };
+
+  const submitButtonEl = (
+    <Button
+      disabled={isSubmitDisabled}
+      onClick={submitLink ? emptyFunction : handleSubmit}
+      shouldUseFullWidth
+    >
+      {submitButtonText}
+    </Button>
+  );
 
   return (
     <div className="dead-sea-amount-selection">
@@ -87,14 +104,15 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
         }}
       />
       {preSubmitText}
-      <Button
-        className="dead-sea-amount-selection__submit-button"
-        disabled={!selectedAmount && !Number(inputValue)}
-        onClick={handleSubmit}
-        shouldUseFullWidth
-      >
-        {submitButtonText}
-      </Button>
+      <div className="dead-sea-amount-selection__submit-button-wrapper">
+        {submitLink ? (
+          <a href={submitLink} target="_blank" rel="noopener noreferrer">
+            {submitButtonEl}
+          </a>
+        ) : (
+          submitButtonEl
+        )}
+      </div>
     </div>
   );
 };
