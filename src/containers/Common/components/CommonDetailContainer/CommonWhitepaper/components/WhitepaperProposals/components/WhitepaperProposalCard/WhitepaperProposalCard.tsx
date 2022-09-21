@@ -23,7 +23,7 @@ export default function WhitepaperProposalCard({ circles, proposalType, proposal
   // TODO: for now we take the first index for "CIRCLE" proposal. Need to check this.
   const data = !CIRCLE_PROPOSAL_TYPES.includes(proposalType as ProposalsTypes)
     ? (proposalData as Proposal)
-    : (proposalData[1] as Proposal);
+    : (Object.values(proposalData)[0] as Proposal);
 
   const voters = calculateVoters(circles, data.global.weights)?.map((voter, index) => {
     return <span className="whitepaper-proposal-card__voter" key={index}>{voter}</span>
