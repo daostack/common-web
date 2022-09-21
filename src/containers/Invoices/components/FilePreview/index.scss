@@ -32,6 +32,7 @@
       max-height: 70%;
       max-width: 70%;
     }
+
     .preview-image--general-file {
       max-width: 520px;
       width: 100%;
@@ -48,18 +49,18 @@
         max-width: 70%;
       }
     }
+
     .preview-pdf {
       margin: auto;
       border-radius: 10px;
       max-height: 70%;
-      max-width: 28rem;
-      @include big-phone {
-        max-width: 60%;
-      }
+      max-width: 60%;
+
       .react-pdf__Page canvas {
         max-width: 100%;
-        width: fit-content;
-        height: auto !important;
+        width: fit-content !important;
+        max-height: 60vh !important;
+        height: fit-content !important;
       }
     }
   }
