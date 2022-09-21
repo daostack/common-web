@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import classNames from "classnames";
 import { Proposals } from "@/shared/models/governance/proposals";
-import { Proposal } from "@/shared/models";
+import { Circles, Proposal } from "@/shared/models";
 import { ProposalsTypes } from "@/shared/constants";
 import { getTextForProposalType } from "@/shared/utils";
 import { calculateVoters } from "../../../../utils";
@@ -11,7 +11,7 @@ import "./index.scss";
 interface IProps {
   proposalType: string;
   proposalData: Partial<Proposals>;
-  circles: string[] | undefined;
+  circles?: Circles;
 }
 
 // TODO: temporary until we have a better way to handle this
@@ -25,7 +25,7 @@ export default function WhitepaperProposalCard({ circles, proposalType, proposal
     ? (proposalData as Proposal)
     : (Object.values(proposalData)[0] as Proposal);
 
-  const voters = calculateVoters(circles, data.global.weights)?.map((voter, index) => {
+  const voters = calculateVoters(data.global.weights, circles)?.map((voter, index) => {
     return <span className="whitepaper-proposal-card__voter" key={index}>{voter}</span>
   });
 
