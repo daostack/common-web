@@ -3,9 +3,14 @@ import { ScreenSize } from "../constants";
 import { NotificationData } from "./";
 
 export interface SharedHeaderState {
+  shouldHideHeader: boolean | null;
   shouldShowMenuItems: boolean | null;
   shouldShowDownloadLinks: boolean | null;
   shouldShowAuth: boolean | null;
+}
+
+export interface SharedFooterState {
+  shouldHideFooter: boolean | null;
 }
 
 export interface SharedStateType {
@@ -16,4 +21,5 @@ export interface SharedStateType {
   loadingShareLinks: Record<string, boolean>;
   areReportsLoading: boolean;
   header: SharedHeaderState;
+  footer: SharedFooterState;
 }
