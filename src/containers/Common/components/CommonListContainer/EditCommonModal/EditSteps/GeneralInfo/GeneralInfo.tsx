@@ -6,7 +6,7 @@ import { ScreenSize } from "@/shared/constants";
 import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { parseLinksForSubmission } from "@/shared/utils";
-import { UpdateCommonPayload } from "../../../../../interfaces";
+import { UpdateCommonData } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { MainInfo } from "./MainInfo";
 import { MainInfoValues } from "./types";
@@ -15,8 +15,8 @@ import "./index.scss";
 interface GeneralInfoProps {
   currentStep: number;
   governance?: Governance;
-  onFinish: (data: Partial<UpdateCommonPayload>) => void;
-  currentData: UpdateCommonPayload;
+  onFinish: (data: Partial<UpdateCommonData>) => void;
+  currentData: UpdateCommonData;
 }
 
 export default function GeneralInfo(props: GeneralInfoProps): ReactElement {

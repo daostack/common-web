@@ -12,7 +12,7 @@ import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { UpdateCommonPayload } from "../../../../interfaces";
+import { UpdateCommonData } from "../../../../interfaces";
 import { GeneralInfo } from "./GeneralInfo";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { Review } from "./Review";
@@ -27,8 +27,8 @@ interface EditStepsProps {
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: () => void;
-  currentData: UpdateCommonPayload;
-  setCurrentData: Dispatch<SetStateAction<UpdateCommonPayload>>;
+  currentData: UpdateCommonData;
+  setCurrentData: Dispatch<SetStateAction<UpdateCommonData>>;
   shouldStartFromLastStep: boolean;
 }
 
@@ -64,7 +64,7 @@ export default function EditSteps(props: EditStepsProps) {
     setStep((step) => step - 1);
   }, [step]);
 
-  const handleFormValues = (data?: Partial<UpdateCommonPayload>) => {
+  const handleFormValues = (data?: Partial<UpdateCommonData>) => {
     if (data) {
       setCurrentData((nextData) => ({
         ...nextData,
@@ -74,7 +74,7 @@ export default function EditSteps(props: EditStepsProps) {
   };
 
   const handleFinish = useCallback(
-    (data?: Partial<UpdateCommonPayload>) => {
+    (data?: Partial<UpdateCommonData>) => {
       if (data) {
         setCurrentData((nextData) => ({
           ...nextData,

@@ -4,7 +4,7 @@ import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
-import { UpdateCommonPayload } from "../../../../../interfaces";
+import { UpdateCommonData } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { CommonImageSlider } from "./CommonImageSlider";
 import { LinkList } from "./LinkList";
@@ -14,9 +14,9 @@ import "./index.scss";
 
 interface ReviewProps {
   currentStep: number;
-  onFinish: (data?: Partial<UpdateCommonPayload>) => void;
-  currentData: UpdateCommonPayload;
-  handleFormValues: (data: Partial<UpdateCommonPayload>) => void;
+  onFinish: (data?: Partial<UpdateCommonData>) => void;
+  currentData: UpdateCommonData;
+  handleFormValues: (data: Partial<UpdateCommonData>) => void;
 }
 
 export default function Review({

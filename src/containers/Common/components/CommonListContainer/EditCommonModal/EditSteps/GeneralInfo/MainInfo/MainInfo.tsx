@@ -7,7 +7,7 @@ import { Button } from "@/shared/components";
 import { Form, LinksArray, TextField } from "@/shared/components/Form/Formik";
 import { ModalFooter } from "@/shared/components/Modal";
 import { getScreenSize } from "@/shared/store/selectors";
-import { UpdateCommonPayload } from "../../../../../../interfaces";
+import { UpdateCommonData } from "../../../../../../interfaces";
 import {
   MAX_ABOUT_LENGTH,
   MAX_COMMON_NAME_LENGTH,
@@ -18,11 +18,11 @@ import validationSchema from "./validationSchema";
 
 interface GeneralInfoProps {
   onFinish: (values: MainInfoValues) => void;
-  currentData: UpdateCommonPayload;
+  currentData: UpdateCommonData;
 }
 
 const getInitialValues = (
-  data: UpdateCommonPayload
+  data: UpdateCommonData
 ): MainInfoValues => ({
   commonName: data.name,
   tagline: data.byline || "",

@@ -12,7 +12,7 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ScreenSize } from "@/shared/constants";
 import { Common, Governance } from "@/shared/models";
-import { UpdateCommonPayload } from "../../../interfaces";
+import { UpdateCommonData } from "../../../interfaces";
 import { Confirmation } from "./Confirmation";
 import { EditSteps } from "./EditSteps";
 import { Error } from "./Error";
@@ -40,7 +40,7 @@ export default function EditCommonModal(props: EditCommonModalProps) {
     stage: initialStage,
     shouldStartFromLastStep: false,
   });
-  const INITIAL_DATA = {
+  const INITIAL_DATA: UpdateCommonData = {
     name: common.name,
     image: common.image,
     byline: common.byline,
@@ -48,7 +48,7 @@ export default function EditCommonModal(props: EditCommonModalProps) {
     links: common.links,
   }
   const [currentData, setCurrentData] =
-    useState<UpdateCommonPayload>(INITIAL_DATA);
+    useState<UpdateCommonData>(INITIAL_DATA);
   const [title, setTitle] = useState<ReactNode>("");
   const [isBigTitle, setIsBigTitle] = useState(true);
   const [isHeaderScrolledToTop, setIsHeaderScrolledToTop] = useState(true);
@@ -151,6 +151,7 @@ export default function EditCommonModal(props: EditCommonModalProps) {
             setShouldShowCloseButton={setShouldShowCloseButton}
             onFinish={handleCommonUpdate}
             currentData={currentData}
+            commonId={common.id}
           />
         );
       case UpdateCommonStage.Success:

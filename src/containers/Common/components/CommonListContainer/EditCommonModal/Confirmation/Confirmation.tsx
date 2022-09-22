@@ -1,16 +1,17 @@
 import React, { useEffect, FC, ReactNode } from "react";
 import { Common } from "@/shared/models";
-import { UpdateCommonPayload } from "../../../../interfaces";
+import { UpdateCommonData } from "../../../../interfaces";
 import { useCommonUpdate } from "../useCases";
 import { Processing } from "./Processing";
 
 interface ConfirmationProps {
   parentCommonId?: string;
+  commonId: string;
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: (common: Common | null, errorText: string) => void;
-  currentData: UpdateCommonPayload;
+  currentData: UpdateCommonData;
 }
 
 const Confirmation: FC<ConfirmationProps> = (props) => {
@@ -21,22 +22,26 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     onFinish,
     currentData,
     parentCommonId,
+    commonId,
   } = props;
   const {
     isCommonUpdateLoading,
-    common: createdCommon,
+    common: updatedCommon,
     error: commonCreationError,
     updateCommon,
-  } = useCommonUpdate();
+  } = useCommonUpdate(commonId);
 
   const isLoading = isCommonUpdateLoading;
-  const common = createdCommon;
+  const common = updatedCommon;
   const error = commonCreationError;
 
   useEffect(() => {
     if (isLoading || common || error) {
       return;
     }
+
+    updateCommon({...currentData});
+
   }, [
     isLoading,
     common,
@@ -44,6 +49,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     currentData,
     updateCommon,
     parentCommonId,
+    commonId
   ]);
 
   useEffect(() => {

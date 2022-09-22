@@ -6,6 +6,7 @@ import {
   uploadFile,
 } from "@/shared/utils/firebaseUploadFile";
 import {
+  UpdateCommonData,
   UpdateCommonPayload,
 } from "../../../../interfaces";
 import { updateCommon as updateCommonAction } from "../../../../store/actions";
@@ -15,7 +16,7 @@ interface Return {
   common: Common | null;
   error: string;
   updateCommon: (
-    updateData: UpdateCommonPayload
+    updateData: UpdateCommonData
   ) => Promise<void>;
 }
 
@@ -38,14 +39,14 @@ export const getCommonImageURL = async (
   }
 };
 
-const useCommonUpdate = (): Return => {
+const useCommonUpdate = (commonId): Return => {
   const [isCommonUpdateLoading, setIsCommonUpdateLoading] = useState(false);
   const [common, setCommon] = useState<Common | null>(null);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
   const updateCommon = useCallback(
-    async (updatedData: UpdateCommonPayload) => {
+    async (updatedData) => {
       if (isCommonUpdateLoading || !updatedData.image) {
         return;
       }
@@ -60,12 +61,15 @@ const useCommonUpdate = (): Return => {
       }
 
       const payload: UpdateCommonPayload = {
-        name: updatedData.name,
-        image: commonImageURL,
-        byline: updatedData.byline,
-        description: updatedData.description,
-        //unstructuredRules: creationData.rules,
-        links: updatedData.links,
+        commonId,
+        changes: {
+          name: updatedData.name,
+          image: commonImageURL,
+          byline: updatedData.byline,
+          description: updatedData.description,
+          //unstructuredRules: creationData.rules,
+          links: updatedData.links,
+        }    
       };
 
       dispatch(

@@ -30,11 +30,16 @@ export interface IntermediateCreateCommonPayload
   memberAdmittanceOptions?: MemberAdmittanceLimitations;
 }
 
-export interface UpdateCommonPayload {
+export interface UpdateCommonData {
   name: string;
   image: string | File;
   byline?: string;
   description?: string;
   links?: CommonLink[];
   // potentially rules
+}
+
+export interface UpdateCommonPayload {
+  commonId: string;
+  changes: UpdateCommonData;
 }
