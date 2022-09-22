@@ -1,4 +1,4 @@
-import { Circles, Governance, User } from "@/shared/models";
+import { Circles, Governance, User, CommonMemberWithUserInfo, Common } from "@/shared/models";
 import {
   AssignCircle,
   BaseProposal,
@@ -20,10 +20,22 @@ const getVotersString = (
   return voters.join("/");
 };
 
+const getRecipient = (proposal, commonMembers, subCommons) => {
+  const {subcommonId = null, otherMemberId = null, to} = proposal.data.args;
+  if (subcommonId) {
+    const subCommon = subCommons.find((subCommon) => subCommon.id === subcommonId);
+    return subCommon.name;
+  }
+  const proposer = commonMembers.find((member) => member.userId === otherMemberId);
+  const {user: {displayName, firstName, lastName}} = proposer;
+  return displayName || `${firstName} ${lastName}`;
+}
+
 export const getFundsAllocationDetails = (
   proposal: FundsAllocation,
-  proposer: User,
-  governance: Governance
+  governance: Governance,
+  commonMembers: CommonMemberWithUserInfo[],
+  subCommons: Common[]
 ): ProposalDetailsItem[] => [
   {
     title: "Fund allocation",
@@ -33,7 +45,7 @@ export const getFundsAllocationDetails = (
   },
   {
     title: "Recipient",
-    value: getUserName(proposer).split(" ")[0],
+    value: getRecipient(proposal, commonMembers, subCommons),
   },
   {
     title: "Recurring",
