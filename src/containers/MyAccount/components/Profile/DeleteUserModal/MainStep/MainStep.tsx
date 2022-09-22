@@ -99,7 +99,7 @@ const MainStep: FC<MainStepProps> = (props) => {
           according to the Common’s governance
         </li>
         <li>
-          Proposals that are assigns to you (funds transfer, circles) will be
+          Proposals that are assigned to you (funds transfer, circles) will be
           cancelled
         </li>
         <li>You will be removed from the Common’s members list</li>
