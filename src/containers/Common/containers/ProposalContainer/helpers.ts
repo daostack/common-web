@@ -15,11 +15,7 @@ const getVotersString = (
   weights: BaseProposal["global"]["weights"],
   circles: Circles
 ): string => {
-  const voters =
-    calculateVoters(
-      Object.values(circles).map((circle) => circle.name),
-      weights
-    ) || [];
+  const voters = calculateVoters(weights, circles) || [];
 
   return voters.join("/");
 };

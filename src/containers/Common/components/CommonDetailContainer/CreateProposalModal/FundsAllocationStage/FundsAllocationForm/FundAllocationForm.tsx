@@ -11,6 +11,7 @@ import { MAX_LINK_TITLE_LENGTH, ScreenSize, AllocateFundsTo } from "@/shared/con
 import DollarIcon from "@/shared/icons/dollar.icon";
 import { BankAccountDetails, CommonLink, Governance, Common, CommonMemberWithUserInfo } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { parseLinksForSubmission } from "@/shared/utils";
 import { StageName } from "../../StageName";
 import { FundsAllocationData, FundType } from "../types";
 import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH } from "../constants";
@@ -101,9 +102,13 @@ const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
+      const links = parseLinksForSubmission(values.links);
+
       onFinish({
         ...initialData,
         ...values,
+        fund: selectedFund,
+        links,
       });
     },
     [onFinish, initialData]
