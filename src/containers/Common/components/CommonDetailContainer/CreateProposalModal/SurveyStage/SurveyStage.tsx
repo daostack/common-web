@@ -8,6 +8,7 @@ import { ModalType } from "@/shared/interfaces";
 import { Common, Governance, CommonLink, Proposal } from "@/shared/models";
 import { Survey, ProposalImage } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
+import { parseLinksForSubmission } from "@/shared/utils";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
 import { Confirmation } from "./Confirmation";
@@ -53,9 +54,12 @@ const SurveyStage: FC<SurveyStageProps> = (props) => {
   const shouldShowModalTitle = isMobileView || isConfigurationStep;
 
   const handleConfigurationFinish = (data: SurveyData) => {
+    const links = parseLinksForSubmission(data.links);
+
     setSurveyData((surveyData) => ({
       ...surveyData,
       ...data,
+      links,
     }));
     setStep(SurveyStep.Confirmation);
   };
