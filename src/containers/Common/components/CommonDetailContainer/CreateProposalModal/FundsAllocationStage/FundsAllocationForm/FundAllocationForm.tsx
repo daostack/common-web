@@ -47,6 +47,7 @@ interface FormValues {
 
 const FundAllocationForm: FC<FundAllocationFormProps> = (props) => {
   const dispatch = useDispatch();
+  const [selectedFund, setSelectedFund] = useState<FundType>(FundType.ILS);
   const { initialData, onFinish, commonBalance, commonMembers, commonList, governance } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
