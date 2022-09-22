@@ -718,8 +718,13 @@ export const getCommonMembersWithCircleIdAmount = async (
   commonId: string,
   circleId: string
 ): Promise<number> => {
+  const governance = await getGovernanceByCommonId(commonId);
+  const [circleIndex = null] =
+    Object.entries(governance?.circles || {}).find(
+      ([, circle]) => circle.id === circleId
+    ) || [];
   const result = await commonMembersSubCollection(commonId)
-    .where("circlesIds", "array-contains", circleId)
+    .where(`circles.map.${circleIndex}`, "==", circleId)
     .get();
   const members = transformFirebaseDataList<CommonMember>(result);
 
@@ -767,6 +772,16 @@ export const getGovernance = async (
   ).data();
 
   return governance || null;
+};
+
+export const getGovernanceByCommonId = async (
+  commonId: string
+): Promise<Governance | null> => {
+  const governanceList = await governanceCollection
+    .where("commonId", "==", commonId)
+    .get();
+
+  return transformFirebaseDataList<Governance>(governanceList)[0] || null;
 };
 
 export const getCommonGovernanceRules = async (
