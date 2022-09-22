@@ -90,17 +90,11 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   )?.id;
   const circleOptions = useMemo<DropdownOption[]>(
     () =>
-      governanceCircles
-        .filter((circle) =>
-          allowedCirclesToBeAssigned.some(
-            (allowedCircle) => allowedCircle.id === circle.id
-          )
-        )
-        .map((circle) => ({
-          text: circle.name,
-          searchText: circle.name,
-          value: circle.id,
-        })),
+      allowedCirclesToBeAssigned.map((circle) => ({
+        text: circle.name,
+        searchText: circle.name,
+        value: circle.id,
+      })),
     [governanceCircles, allowedCirclesToBeAssigned]
   );
   const memberOptions = useMemo(
