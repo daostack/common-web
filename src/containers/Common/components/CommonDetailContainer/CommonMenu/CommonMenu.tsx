@@ -146,7 +146,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const menuItems = useMemo<MenuItem[]>(() => {
     const items: MenuItem[] = [];
 
-    if (isCommonOwner) {//is leader
+    if (currentCommonMember?.allowedActions.UPDATE_COMMON) {
       items.push(MenuItem.EditAgenda, MenuItem.EditAgenda);
     }
     if (!isSubCommon) {

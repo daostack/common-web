@@ -17,6 +17,7 @@ import { Confirmation } from "./Confirmation";
 import { EditSteps } from "./EditSteps";
 import { Error } from "./Error";
 import { Success } from "./Success";
+import { emptyFunction } from '@/shared/utils';
 import { UpdateCommonStage } from "./constants";
 import "./index.scss";
 
@@ -28,10 +29,6 @@ interface EditCommonModalProps {
   common: Common;
   shouldBeWithoutIntroduction?: boolean;
 }
-
-const emptyFunction = () => {
-  return;
-};
 
 export default function EditCommonModal(props: EditCommonModalProps) {
   const { governance, parentCommonId, common } = props;
