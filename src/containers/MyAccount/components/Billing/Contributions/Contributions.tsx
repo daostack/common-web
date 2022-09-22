@@ -33,11 +33,7 @@ const Contributions: FC<ContributionsProps> = (props) => {
   const contributionListRef = useRef<ContributionListRef>(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const commonId =
-    activeContribution &&
-    (isPayment(activeContribution)
-      ? activeContribution.commonId
-      : activeContribution.metadata.common.id);
+  const commonId = activeContribution && activeContribution.commonId;
   const common = commons.find((common) => common.id === commonId) || null;
 
   const subscription =

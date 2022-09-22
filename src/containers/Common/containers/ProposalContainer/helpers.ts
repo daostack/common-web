@@ -1,7 +1,8 @@
-import { Circles, Governance, User } from "@/shared/models";
+import { Circles, Governance, User, CommonMemberWithUserInfo, Common } from "@/shared/models";
 import {
   AssignCircle,
   BaseProposal,
+  DeleteCommon,
   FundsAllocation,
   MemberAdmittance,
   RemoveCircle,
@@ -14,19 +15,27 @@ const getVotersString = (
   weights: BaseProposal["global"]["weights"],
   circles: Circles
 ): string => {
-  const voters =
-    calculateVoters(
-      circles.map((circle) => circle.name),
-      weights
-    ) || [];
+  const voters = calculateVoters(weights, circles) || [];
 
   return voters.join("/");
 };
 
+const getRecipient = (proposal, commonMembers, subCommons) => {
+  const {subcommonId = null, otherMemberId = null, to} = proposal.data.args;
+  if (subcommonId) {
+    const subCommon = subCommons.find((subCommon) => subCommon.id === subcommonId);
+    return subCommon.name;
+  }
+  const proposer = commonMembers.find((member) => member.userId === otherMemberId);
+  const {user: {displayName, firstName, lastName}} = proposer;
+  return displayName || `${firstName} ${lastName}`;
+}
+
 export const getFundsAllocationDetails = (
   proposal: FundsAllocation,
-  proposer: User,
-  governance: Governance
+  governance: Governance,
+  commonMembers: CommonMemberWithUserInfo[],
+  subCommons: Common[]
 ): ProposalDetailsItem[] => [
   {
     title: "Fund allocation",
@@ -36,7 +45,7 @@ export const getFundsAllocationDetails = (
   },
   {
     title: "Recipient",
-    value: getUserName(proposer).split(" ")[0],
+    value: getRecipient(proposal, commonMembers, subCommons),
   },
   {
     title: "Recurring",
@@ -53,7 +62,7 @@ export const getAssignCircleDetails = (
   member: User | null,
   governance: Governance
 ): ProposalDetailsItem[] => {
-  const circleToBeAssigned = governance.circles.find(
+  const circleToBeAssigned = Object.values(governance.circles).find(
     (circle) => circle.id === proposal.data.args.circleId
   );
 
@@ -78,7 +87,7 @@ export const getRemoveCircleDetails = (
   member: User | null,
   governance: Governance
 ): ProposalDetailsItem[] => {
-  const circleToBeRemoved = governance.circles.find(
+  const circleToBeRemoved = Object.values(governance.circles).find(
     (circle) => circle.id === proposal.data.args.circleId
   );
 
@@ -105,6 +114,21 @@ export const getMemberAdmittanceDetails = (
 ): ProposalDetailsItem[] => [
   {
     title: "Name of member",
+    value: getUserName(proposer),
+  },
+  {
+    title: "Voters",
+    value: getVotersString(proposal.global.weights, governance.circles),
+  },
+];
+
+export const getDeleteCommonDetails = (
+  proposal: DeleteCommon,
+  proposer: User,
+  governance: Governance
+): ProposalDetailsItem[] => [
+  {
+    title: "Creator",
     value: getUserName(proposer),
   },
   {

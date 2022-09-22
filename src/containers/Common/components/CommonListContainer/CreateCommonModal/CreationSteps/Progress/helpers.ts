@@ -31,7 +31,6 @@ export const getStepData = (
   },
   [CreationStep.Funding]: {
     title: "Funding",
-    description: "Before creating a Common, please make sure that:",
   },
   [CreationStep.Review]: {
     title: "Final touches and review",

@@ -58,7 +58,10 @@ export default function DiscussionDetailModal({
     if(discussion?.circleVisibility) {
       (async () => {
         const governanceCircles = await getCommonGovernanceCircles(governance.id);
-        const names = getCirclesNames(governanceCircles, discussion?.circleVisibility);
+        const names = getCirclesNames(
+          governanceCircles ? Object.values(governanceCircles) : null,
+          discussion?.circleVisibility
+        );
         setCircleNames(names);
       })();
     }

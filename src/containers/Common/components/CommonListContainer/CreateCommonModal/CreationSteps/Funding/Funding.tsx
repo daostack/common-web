@@ -43,7 +43,7 @@ interface FormValues {
 
 const INITIAL_VALUES = {
    contributionType: ContributionType.OneTime,
-   minimumContribution: undefined,
+   minimumContribution: 0,
    isCommonJoinFree: false,
 };
 
@@ -89,7 +89,6 @@ const getCurrencyInputDescription = (
 export default function Funding({
   currentStep,
   onFinish,
-  creationData,
 }: FundingProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const screenSize = useSelector(getScreenSize());
@@ -113,7 +112,7 @@ export default function Funding({
     if (event.target.checked && formRef.current) {
       formRef.current.setFieldValue(
         "minimumContribution",
-        DEFAULT_CONTRIBUTION_AMOUNT
+        0
       );
     }
   }, []);
@@ -222,7 +221,7 @@ export default function Funding({
                     shouldUseFullWidth={isMobileView}
                     disabled={!isValid}
                   >
-                    Continue to Rules
+                    Continue to Review
                   </Button>
                 </div>
               </ModalFooter>

@@ -102,7 +102,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
           const commonPaymentsIn = (await fetchCommonContributions(common.id))
             .filter(
               payment =>
-                (payment.amount.currency === Currency.ILS)
+                (payment.price.currency === Currency.ILS)
             );
 
           setPaymentsInData(
@@ -111,7 +111,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
                 {
                   type: TransactionType.PayIn,
                   payerId: payment.userId,
-                  amount: payment.amount.amount,
+                  amount: payment.price.amount,
                   createdAt: payment.createdAt,
                 }
               )

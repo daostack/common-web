@@ -48,7 +48,7 @@ export interface Payment {
   status: PaymentStatus;
   contributionSourceType: ContributionSourceType;
   paymentMethod: "card";
-  amount: PaymentAmount;
+  price: PaymentAmount;
   fees: PaymentFees;
   source: PaymentSource;
   proposalId?: string;

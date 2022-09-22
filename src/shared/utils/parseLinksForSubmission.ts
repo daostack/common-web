@@ -4,7 +4,7 @@ export const parseLinksForSubmission = (links: CommonLink[]): CommonLink[] =>
   links
     .filter((link) => link.title && link.value)
     .map((link) =>
-      link.value.startsWith("www.")
+      link.value.startsWith("www.") || !link.value.match(/^https?:\/\//)
         ? {
             ...link,
             value: `https://${link.value}`,
