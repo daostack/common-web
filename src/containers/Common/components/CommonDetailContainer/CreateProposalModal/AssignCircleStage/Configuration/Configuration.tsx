@@ -81,7 +81,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
         .map(([circleIndex]) => Number(circleIndex)),
     [currentCommonMember]
   );
-  const circleIndex = governance.circles.findIndex(
+  const circleIndex = Object.values(governance.circles).findIndex(
     ({ id }) => id === circle?.id
   );
   const circleBinary =
@@ -121,7 +121,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   );
 
   const handleCircleSelect = (selectedCircleId: unknown) => {
-    const circle = governance.circles.find(({ id }) => id === selectedCircleId);
+    const circle = Object.values(governance.circles).find(({ id }) => id === selectedCircleId);
     setCircle(circle || null);
   };
 
