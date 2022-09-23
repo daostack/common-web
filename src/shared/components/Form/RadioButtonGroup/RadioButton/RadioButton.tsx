@@ -18,7 +18,7 @@ interface RadioButtonProps {
   checked: boolean;
 }
 
-const RadioButton: FC<RadioButtonProps> = (props) => {
+export const RadioButton: FC<RadioButtonProps> = (props) => {
   const { value, styles, isDisabled = false, children, checked } = props;
   const { currentValue, onChange, variant } = useRadioButtonGroupContext();
   const handleClick = useCallback(() => {
@@ -37,5 +37,3 @@ const RadioButton: FC<RadioButtonProps> = (props) => {
     </label>
     )
 };
-
-export default RadioButton;
