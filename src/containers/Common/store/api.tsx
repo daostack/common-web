@@ -199,7 +199,7 @@ export async function fetchCommonDetail(id: string): Promise<Common | null> {
     .where("state", "==", CommonState.ACTIVE)
     .get();
   const data = transformFirebaseDataList<Common>(common);
-  return data[0] || null;
+  return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
 }
 
 export async function fetchOwners(ownerids: string[]) {
@@ -457,15 +457,15 @@ export async function createSubCommon(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
-export async function updateCommon(
-  requestData: UpdateCommonPayload
-): Promise<Common> {
-  const { data } = await Api.post<Common>(
-    ApiEndpoint.UpdateCommon,
-    requestData
-  );
+export async function updateCommon(requestData: UpdateCommonPayload): Promise<Common> {
+  await Api.post<Common>(ApiEndpoint.UpdateCommon, requestData);
+  const common = await fetchCommonDetail(requestData.commonId);
 
-  return convertObjectDatesToFirestoreTimestamps(data);
+  if (!common) {
+    throw new Error(`Couldn't find common with id = "${requestData.commonId}"`);
+  }
+
+  return common;
 }
 
 export async function makeImmediateContribution(

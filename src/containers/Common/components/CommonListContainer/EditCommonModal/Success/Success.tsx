@@ -1,15 +1,9 @@
 import React, { useEffect, useMemo, FC, ReactNode } from "react";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
-import {
-  Button,
-  ButtonVariant,
-  CommonShare,
-} from "@/shared/components";
+import { Button, ButtonVariant, CommonShare } from "@/shared/components";
 import {
   Colors,
   ScreenSize,
-  ROUTE_PATHS,
   ShareViewType,
   SharePopupVariant,
 } from "@/shared/constants";
@@ -19,6 +13,7 @@ import "./index.scss";
 
 interface SuccessProps {
   common: Common;
+  onFinish: () => void;
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
@@ -27,18 +22,13 @@ interface SuccessProps {
 const Success: FC<SuccessProps> = (props) => {
   const {
     common,
+    onFinish,
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
   } = props;
-  const history = useHistory();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const commonPath = ROUTE_PATHS.COMMON_DETAIL.replace(":id", common.id);
-
-  const handleGoToCommon = () => {
-      history.push(commonPath);
-  };
 
   const title = useMemo(
     (): ReactNode =>
@@ -104,7 +94,7 @@ const Success: FC<SuccessProps> = (props) => {
           variant={
             isMobileView ? ButtonVariant.Secondary : ButtonVariant.Primary
           }
-          onClick={handleGoToCommon}
+          onClick={onFinish}
           shouldUseFullWidth
         >
           Go to Common
