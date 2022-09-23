@@ -1,0 +1,81 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.delete-user-main-step {
+  display: flex;
+  flex-direction: column;
+
+  .delete-user-main-step__checkbox {
+    margin-top: 1.75rem;
+  }
+
+  .delete-user-main-step__checkbox-label {
+    margin-left: 0.875rem;
+    font-family: NunitoSans, sans-serif;
+    font-weight: bold;
+    font-size: $small;
+  }
+}
+
+.delete-user-main-step__user-name-input {
+  margin-bottom: 1.5rem;
+}
+
+.delete-user-main-step__input-label {
+  font-size: $xsmall;
+}
+
+.delete-user-main-step__text {
+  margin: 1rem 0 0;
+  font-size: $small;
+}
+
+.delete-user-main-step__list-wrapper {
+  margin: 0.875rem 0 1.125rem;
+  padding: 1.25rem 1.375rem;
+  font-size: $small;
+  background-color: $light-gray-11;
+  border: 1px solid $light-gray-1;
+  border-radius: 0.5rem;
+}
+
+.delete-user-main-step__list-title {
+  margin: 0 0 0.875rem;
+}
+
+.delete-user-main-step__ordered-list {
+  margin: 0;
+  padding: 0;
+  list-style-position: inside;
+
+  li {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.delete-user-main-step__error-text {
+  font-size: $small;
+}
+
+.delete-user-main-step__buttons-wrapper {
+  margin-top: 3.25rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.delete-user-main-step__button {
+  max-width: 9.5rem;
+  margin-right: 1.375rem;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  @include big-phone {
+    max-width: unset;
+  }
+}

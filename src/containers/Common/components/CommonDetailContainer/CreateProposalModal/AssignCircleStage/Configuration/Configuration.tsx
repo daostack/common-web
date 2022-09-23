@@ -29,10 +29,10 @@ import {
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
-import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
 import { StageName } from "../../StageName";
 import { MemberInfo } from "../MemberInfo";
 import { AssignCircleData } from "../types";
+import { getAllowedCirclesToBeAssigned } from "./helpers";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 
@@ -69,59 +69,62 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     useState<CommonMemberWithUserInfo | null>(
       initialData?.commonMember || null
     );
-  const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const allowedCircleIndexesToBeAssigned = useMemo(
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+  const governanceCircles = Object.values(governance.circles);
+  const allowedCirclesToBeAssigned = useMemo(
     () =>
-      Object.entries(
-        currentCommonMember.allowedProposals[ProposalsTypes.ASSIGN_CIRCLE] || {}
-      )
-        .filter(([, isAllowed]) => isAllowed)
-        .map(([circleIndex]) => Number(circleIndex)),
-    [currentCommonMember]
+      getAllowedCirclesToBeAssigned(
+        governanceCircles,
+        currentCommonMember.allowedProposals[ProposalsTypes.ASSIGN_CIRCLE]
+      ),
+    [
+      governance.circles,
+      currentCommonMember.allowedProposals[ProposalsTypes.ASSIGN_CIRCLE],
+    ]
   );
-  const circleIndex = Object.values(governance.circles).findIndex(
+  const foundCircleId = governanceCircles.find(
     ({ id }) => id === circle?.id
-  );
-  const circleBinary =
-    circleIndex >= 0 ? generateCirclesBinaryNumber([circleIndex]) : null;
+  )?.id;
   const circleOptions = useMemo<DropdownOption[]>(
     () =>
-      governance.circles
-        .filter((circle, index) =>
-          allowedCircleIndexesToBeAssigned.includes(index)
-        )
-        .map((circle) => ({
-          text: circle.name,
-          searchText: circle.name,
-          value: circle.id,
-        })),
-    [governance.circles, allowedCircleIndexesToBeAssigned]
+      allowedCirclesToBeAssigned.map((circle) => ({
+        text: circle.name,
+        searchText: circle.name,
+        value: circle.id,
+      })),
+    [governanceCircles, allowedCirclesToBeAssigned]
   );
   const memberOptions = useMemo(
     () =>
-      commonMembers.reduce<AutocompleteOption[]>(
-        (acc, member) =>
-          circleBinary !== null && !(member.circles & circleBinary)
-            ? acc.concat({
-                text: (
-                  <MemberInfo
-                    className="assign-circle-configuration__member-info"
-                    user={member.user}
-                  />
-                ),
-                searchText: getUserName(member.user),
-                value: member.id,
-              })
-            : acc,
-        []
-      ),
-    [commonMembers, user?.uid, circleBinary]
+      foundCircleId
+        ? commonMembers.reduce<AutocompleteOption[]>(
+            (acc, member) =>
+              member.userId !== userId &&
+              !Object.values(member.circles.map).includes(foundCircleId)
+                ? acc.concat({
+                    text: (
+                      <MemberInfo
+                        className="assign-circle-configuration__member-info"
+                        user={member.user}
+                      />
+                    ),
+                    searchText: getUserName(member.user),
+                    value: member.id,
+                  })
+                : acc,
+            []
+          )
+        : [],
+    [commonMembers, userId, foundCircleId]
   );
 
   const handleCircleSelect = (selectedCircleId: unknown) => {
-    const circle = Object.values(governance.circles).find(({ id }) => id === selectedCircleId);
+    const circle = Object.values(governance.circles).find(
+      ({ id }) => id === selectedCircleId
+    );
     setCircle(circle || null);
   };
 
@@ -176,7 +179,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
       >
         {({ isValid }) => (
           <Form className="assign-circle-configuration__form">
-            {allowedCircleIndexesToBeAssigned.length > 0 ? (
+            {allowedCirclesToBeAssigned.length > 0 ? (
               <Dropdown
                 className="assign-circle-configuration__circle-dropdown"
                 options={circleOptions}

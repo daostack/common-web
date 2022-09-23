@@ -190,7 +190,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const commonSubtitle = getCommonSubtitle(parentCommon, subCommons);
 
   const userDiscussions = useMemo(() => {
-    const circleIds = new Set(commonMember?.circlesIds || []);
+    const circleIds = new Set(
+      commonMember ? Object.values(commonMember.circles.map) : []
+    );
     return discussions.filter(({ circleVisibility }) => {
       if (!circleVisibility?.length) {
         return true;
@@ -647,7 +649,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           uid={user?.uid!}
           commonId={common.id}
           governanceId={governance.id}
-          userCircleIds={commonMember?.circlesIds}
+          userCircleIds={
+            commonMember ? Object.values(commonMember.circles.map) : []
+          }
         />
       )}
       {isShowingNewP && commonMember && (

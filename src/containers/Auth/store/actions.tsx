@@ -105,3 +105,9 @@ export const setUserPhoneNumber = createStandardAction(
 export const setIsAuthenticationReady = createStandardAction(
   AuthActionTypes.SET_IS_AUTHENTICATION_READY
 )<boolean>();
+
+export const deleteUser = createAsyncAction(
+  AuthActionTypes.DELETE_USER,
+  AuthActionTypes.DELETE_USER_SUCCESS,
+  AuthActionTypes.DELETE_USER_FAILURE
+)<PayloadWithOptionalCallback<void, void, Error>, void, Error>();

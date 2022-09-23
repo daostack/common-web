@@ -29,7 +29,7 @@ import {
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
-import { generateCirclesBinaryNumber } from "../../../CommonWhitepaper/utils";
+import { getAllowedCirclesToBeAssigned } from "../../AssignCircleStage/Configuration/helpers";
 import { StageName } from "../../StageName";
 import { MemberInfo } from "../MemberInfo";
 import { RemoveCircleData } from "../types";
@@ -69,61 +69,62 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     useState<CommonMemberWithUserInfo | null>(
       initialData?.commonMember || null
     );
-  const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const allowedCircleIndexesToBeRemoved = useMemo(
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+  const governanceCircles = Object.values(governance.circles);
+  const allowedCirclesToBeRemoved = useMemo(
     () =>
-      Object.entries(
-        currentCommonMember.allowedProposals[ProposalsTypes.REMOVE_CIRCLE] || {}
-      )
-        .filter(([, isAllowed]) => isAllowed)
-        .map(([circleIndex]) => Number(circleIndex)),
-    [currentCommonMember]
+      getAllowedCirclesToBeAssigned(
+        governanceCircles,
+        currentCommonMember.allowedProposals[ProposalsTypes.REMOVE_CIRCLE]
+      ),
+    [
+      governance.circles,
+      currentCommonMember.allowedProposals[ProposalsTypes.REMOVE_CIRCLE],
+    ]
   );
-  const circleIndex = Object.values(governance.circles).findIndex(
+  const foundCircleId = governanceCircles.find(
     ({ id }) => id === circle?.id
-  );
-  const circleBinary =
-    circleIndex >= 0 ? generateCirclesBinaryNumber([circleIndex]) : null;
+  )?.id;
   const circleOptions = useMemo<DropdownOption[]>(
     () =>
-      governance.circles
-        .filter((circle, index) =>
-          allowedCircleIndexesToBeRemoved.includes(index)
-        )
-        .map((circle) => ({
-          text: circle.name,
-          searchText: circle.name,
-          value: circle.id,
-        })),
-    [governance.circles, allowedCircleIndexesToBeRemoved]
+      allowedCirclesToBeRemoved.map((circle) => ({
+        text: circle.name,
+        searchText: circle.name,
+        value: circle.id,
+      })),
+    [governanceCircles, allowedCirclesToBeRemoved]
   );
   const memberOptions = useMemo(
     () =>
-      commonMembers.reduce<AutocompleteOption[]>(
-        (acc, member) =>
-          member.userId !== user?.uid &&
-          circleBinary !== null &&
-          member.circles & circleBinary
-            ? acc.concat({
-                text: (
-                  <MemberInfo
-                    className="remove-circle-configuration__member-info"
-                    user={member.user}
-                  />
-                ),
-                searchText: getUserName(member.user),
-                value: member.id,
-              })
-            : acc,
-        []
-      ),
-    [commonMembers, user?.uid, circleBinary]
+      foundCircleId
+        ? commonMembers.reduce<AutocompleteOption[]>(
+            (acc, member) =>
+              member.userId !== userId &&
+              Object.values(member.circles.map).includes(foundCircleId)
+                ? acc.concat({
+                    text: (
+                      <MemberInfo
+                        className="remove-circle-configuration__member-info"
+                        user={member.user}
+                      />
+                    ),
+                    searchText: getUserName(member.user),
+                    value: member.id,
+                  })
+                : acc,
+            []
+          )
+        : [],
+    [commonMembers, userId, foundCircleId]
   );
 
   const handleCircleSelect = (selectedCircleId: unknown) => {
-    const circle = Object.values(governance.circles).find(({ id }) => id === selectedCircleId);
+    const circle = Object.values(governance.circles).find(
+      ({ id }) => id === selectedCircleId
+    );
     setCircle(circle || null);
   };
 
@@ -178,7 +179,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
       >
         {({ isValid }) => (
           <Form className="remove-circle-configuration__form">
-            {allowedCircleIndexesToBeRemoved.length > 0 ? (
+            {allowedCirclesToBeRemoved.length > 0 ? (
               <Dropdown
                 className="remove-circle-configuration__circle-dropdown"
                 options={circleOptions}

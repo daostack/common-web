@@ -21,5 +21,6 @@ export interface User {
   proposals?: Proposal[];
   uid?: string;
   roles?: UserRole[];
+  deleted?: true;
   //  subscriptions?: Subscription[];
 }

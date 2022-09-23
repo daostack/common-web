@@ -47,8 +47,7 @@ const ProposalTypeDetails: FC<ProposalTypeDetailsProps> = (props) => {
       return '';
     }
 
-    const circleNames = circles.map(({name}) => name);
-    return calculateVoters(circleNames, data.global.weights)?.map((voter) => voter).join(', ');
+    return calculateVoters(data.global.weights, circles)?.map((voter) => voter).join(', ');
   },[circles, data.global.weights]);
 
   return (

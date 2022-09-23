@@ -21,7 +21,7 @@ import {
   WebviewActions,
 } from "../../../shared/constants";
 import history from "../../../shared/history";
-import { createdUserApi, getUserData } from "./api";
+import { createdUserApi, deleteUserApi, getUserData } from "./api";
 import {
   getProposalById,
   seenNotification,
@@ -465,7 +465,7 @@ function* logOut() {
   firebase.auth().signOut();
 
   if (window.location.pathname === ROUTE_PATHS.MY_COMMONS) {
-    history.push("/");
+    history.push(ROUTE_PATHS.HOME);
   }
   if(window.ReactNativeWebView) {
     window.ReactNativeWebView.postMessage(WebviewActions.logout);
@@ -493,6 +493,32 @@ function* updateUserDetails({
   }
 }
 
+function* deleteUser({
+  payload,
+}: ReturnType<typeof actions.deleteUser.request>) {
+  try {
+    yield put(actions.startAuthLoading());
+
+    yield call(deleteUserApi);
+    yield put(actions.logOut());
+    yield put(actions.deleteUser.success());
+
+    if (payload.callback) {
+      payload.callback(null);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.deleteUser.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(actions.stopAuthLoading());
+  }
+}
+
 function* authSagas() {
   yield takeLatest(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
@@ -510,6 +536,7 @@ function* authSagas() {
   );
   yield takeLatest(actions.logOut, logOut);
   yield takeLatest(actions.updateUserDetails.request, updateUserDetails);
+  yield takeLatest(actions.deleteUser.request, deleteUser);
 }
 
 (async () => {

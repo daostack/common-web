@@ -109,3 +109,19 @@
     }
   }
 }
+
+.profile-wrapper__delete-account-button {
+  max-width: 11rem;
+  margin-top: 1.5rem;
+  background-color: $red;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: darken($red, 20%);
+  }
+
+  @include big-phone {
+    max-width: unset;
+  }
+}
