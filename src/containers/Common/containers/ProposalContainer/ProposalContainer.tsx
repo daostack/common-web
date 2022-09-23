@@ -31,7 +31,7 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ChatComponent } from "../../components";
 import { VotesModal } from "../../components/ProposalContainer";
-import { useCommonMember, useProposalUserVote } from "../../hooks";
+import { useCommonMember, useProposalUserVote, useCommonMembers } from "../../hooks";
 import {
   addMessageToProposal,
   clearCurrentProposal,
@@ -44,6 +44,7 @@ import {
   selectCommonDetail,
   selectCurrentProposal,
   selectGovernance,
+  selectCommonList,
 } from "../../store/selectors";
 import { Tabs as CommonDetailsTabs } from "../CommonDetailContainer";
 import { VotingContentContainer } from "./VotingContentContainer";
@@ -62,6 +63,7 @@ const PROPOSAL_TYPE_CAPTION = {
   [ProposalsTypes.MEMBER_ADMITTANCE]: "Members admittance",
   [ProposalsTypes.ASSIGN_CIRCLE]: "Assign members to a circle",
   [ProposalsTypes.REMOVE_CIRCLE]: "Remove members from a circle",
+  [ProposalsTypes.DELETE_COMMON]: "Delete common",
 };
 
 enum PROPOSAL_MENU_TABS {
@@ -78,6 +80,7 @@ const ProposalContainer = () => {
   const user = useSelector(selectUser());
   const currentProposal = useSelector(selectCurrentProposal());
   const currentCommon = useSelector(selectCommonDetail());
+  const allCommons = useSelector(selectCommonList());
   const governance = useSelector(selectGovernance());
   const [activeTab, setActiveTab] = useState<PROPOSAL_MENU_TABS>(PROPOSAL_MENU_TABS.Voting);
   const {
@@ -85,6 +88,12 @@ const ProposalContainer = () => {
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember();
+  const {
+    fetched: areCommonMembersFetched,
+    data: commonMembers,
+    fetchCommonMembers,
+  } = useCommonMembers();
+
   const {
     isShowing: isVotesModalOpen,
     onOpen: onVotesModalOpen,
@@ -106,8 +115,12 @@ const ProposalContainer = () => {
     commonMember &&
     commonMember.allowedActions[GovernanceActions.CREATE_VOTE] &&
     currentProposal?.global.weights.some(
-      ({ circles }) => commonMember.circles & circles
+      ({ circles }) => commonMember.circles.bin & circles.bin
     );
+
+  useEffect(() => {
+    currentCommon?.id && fetchCommonMembers(currentCommon.id);
+  }, [fetchCommonMembers, currentCommon?.id]);
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -150,6 +163,14 @@ const ProposalContainer = () => {
     [currentProposal]
   );
 
+  const subCommons = useMemo(
+    () =>
+      allCommons.filter(
+        (common) => common.directParent?.commonId === currentCommon?.id
+      ),
+    [allCommons]
+  );
+
   const renderContentByActiveTab = useCallback(
     (currentProposal: Proposal) => {
       switch (activeTab) {
@@ -165,6 +186,8 @@ const ProposalContainer = () => {
                 proposer={proposer}
                 proposalSpecificData={proposalSpecificData}
                 onVotesOpen={onVotesModalOpen}
+                commonMembers={commonMembers}
+                subCommons={subCommons}
               />
             )
           );
@@ -283,6 +306,7 @@ const ProposalContainer = () => {
     currentProposal &&
     isCommonMemberFetched &&
     isProposalSpecificDataFetched &&
+    areCommonMembersFetched && 
     governance ? (
     <>
       <VotingPopup

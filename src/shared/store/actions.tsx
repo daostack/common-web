@@ -4,6 +4,7 @@ import { ScreenSize } from "../constants";
 import {
   NotificationData,
   PayloadWithOptionalCallback,
+  SharedFooterState,
   SharedHeaderState,
 } from "../interfaces";
 import { DynamicLinkInfo } from "../interfaces/api/dynamicLink";
@@ -37,3 +38,10 @@ export const resetHeaderState = createStandardAction(
 export const updateHeaderState = createStandardAction(
   SharedActionTypes.UPDATE_HEADER_STATE
 )<Partial<SharedHeaderState>>();
+
+export const resetFooterState = createStandardAction(
+  SharedActionTypes.RESET_FOOTER_STATE
+)();
+export const updateFooterState = createStandardAction(
+  SharedActionTypes.UPDATE_FOOTER_STATE
+)<Partial<SharedFooterState>>();

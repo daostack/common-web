@@ -13,7 +13,8 @@ export default function WhitepaperProposals() {
         key={proposal}
         proposalType={proposal}
         proposalData={governance?.proposals[proposal]}
-        circles={governance?.circles.map(c => c.name)} />
+        circles={governance?.circles}
+      />
     );
   }
 
