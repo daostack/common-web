@@ -11,3 +11,4 @@ export * from "./routePaths";
 export * from "./shared";
 export * from "./countryCodes";
 export * from './webview';
+export * from './RecipientType';
