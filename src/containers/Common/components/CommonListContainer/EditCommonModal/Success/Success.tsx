@@ -44,7 +44,7 @@ const Success: FC<SuccessProps> = (props) => {
     (): ReactNode =>
       isMobileView ? (
         <img
-          className="create-common-confirmation-success__title-logo"
+          className="update-common-confirmation-success__title-logo"
           src="/icons/logo.svg"
           alt="Common Logo"
         />
@@ -65,22 +65,22 @@ const Success: FC<SuccessProps> = (props) => {
   }, [setShouldShowCloseButton]);
 
   return (
-    <div className="create-common-confirmation-success">
+    <div className="update-common-confirmation-success">
       <img
-        className="create-common-confirmation-success__image"
+        className="update-common-confirmation-success__image"
         src="/assets/images/illustrations-full-page-launch.svg"
         alt="Common Created"
       />
-      <h2 className="create-common-confirmation-success__title">
+      <h2 className="update-common-confirmation-success__title">
         Your journey starts now
       </h2>
-      <p className="create-common-confirmation-success__sub-title">
+      <p className="update-common-confirmation-success__sub-title">
         Your Common is ready. Spread the word and invite others to join you. You
         can always share it later.
       </p>
-      <div className="create-common-confirmation-success__buttons">
+      <div className="update-common-confirmation-success__buttons">
         <CommonShare
-          className="create-common-confirmation-success__button-wrapper"
+          className="update-common-confirmation-success__button-wrapper"
           common={common}
           type={isMobileView ? ShareViewType.ModalMobile : ShareViewType.Popup}
           color={Colors.lightPurple}
@@ -88,8 +88,8 @@ const Success: FC<SuccessProps> = (props) => {
           popupVariant={SharePopupVariant.TopCenter}
         >
           <Button
-            key="create-common-confirmation-success-share-btn"
-            className="create-common-confirmation-success__button"
+            key="update-common-confirmation-success-share-btn"
+            className="update-common-confirmation-success__button"
             variant={
               isMobileView ? ButtonVariant.Primary : ButtonVariant.Secondary
             }
@@ -99,8 +99,8 @@ const Success: FC<SuccessProps> = (props) => {
           </Button>
         </CommonShare>
         <Button
-          key="create-common-confirmation-success-go-to-common-btn"
-          className="create-common-confirmation-success__continue-button"
+          key="update-common-confirmation-success-go-to-common-btn"
+          className="update-common-confirmation-success__continue-button"
           variant={
             isMobileView ? ButtonVariant.Secondary : ButtonVariant.Primary
           }
