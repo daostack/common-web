@@ -1,6 +1,6 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Formik, FormikConfig } from "formik";
+import { Formik } from "formik";
 import { FormikProps } from "formik/dist/types";
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
@@ -12,9 +12,10 @@ import {
   LinksArray,
   ImageArray,
 } from "@/shared/components/Form/Formik";
-import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
+import { RadioButtonGroup, RadioButton } from "@/shared/components/Form";
+import { ScreenSize, MAX_LINK_TITLE_LENGTH, RecipientType, Orientation, AllocateFundsTo } from "@/shared/constants";
 import DollarIcon from "@/shared/icons/dollar.icon";
-import { BankAccountDetails, Governance, CommonLink } from "@/shared/models";
+import { BankAccountDetails, Governance, CommonLink, Common, CommonMemberWithUserInfo } from "@/shared/models";
 import { ProposalImage } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { parseLinksForSubmission } from "@/shared/utils";
@@ -30,6 +31,8 @@ interface ConfigurationProps {
   initialData: FundsAllocationData;
   onFinish: (data: FundsAllocationData) => void;
   commonBalance: number;
+  commonMembers: CommonMemberWithUserInfo[];
+  commonList: Common[];
 }
 
 interface FormValues {
@@ -40,26 +43,50 @@ interface FormValues {
   bankAccountDetails: BankAccountDetails | null;
   images: ProposalImage[];
   areImagesLoading: boolean;
+  to: AllocateFundsTo;
+  subcommonId: string | null;
+  otherMemberId: string | null;
 }
 
 const FundDetails: FC<ConfigurationProps> = (props) => {
   const dispatch = useDispatch();
-  const { commonBalance, initialData, onFinish } = props;
+  const { commonBalance, initialData, onFinish, commonMembers, commonList } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const formRef = useRef<FormikProps<FormValues>>(null);
+  const [selectedRecipientType, setSelectedRecipientType] = useState(RecipientType.Member)
   const [bankAccountState, setBankAccountState] = useState<BankAccountState>({
     loading: false,
     fetched: false,
     bankAccount: null,
   });
   const [selectedFund, setSelectedFund] = useState<FundType>(FundType.ILS);
+  
+  const memberOptions = useMemo(
+    () => commonMembers.map(({user, id}) => ({
+      text: user.displayName || `${user.firstName} ${user.lastName}`,
+      searchText: user.displayName || `${user.firstName} ${user.lastName}`,
+      value: id,
+    })),
+    [commonMembers]
+  );
+
+  const commonsOptions = useMemo(
+    () => commonList.map(({id, name}) => ({
+        text: name,
+        searchText: name,
+        value: id,
+      })),
+    [commonList]
+  );
+
+  const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [recipientDropdownDetails, setRecipientDropdownDetails] = useState(memberOptions)
 
   useEffect(() => {
     if (bankAccountState.loading || bankAccountState.fetched) {
       return;
     }
-
     setBankAccountState((state) => ({
       ...state,
       loading: true,
@@ -85,22 +112,45 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     bankAccountDetails: bankAccountState.bankAccount,
     images: [],
     areImagesLoading: false,
+    to: AllocateFundsTo.Proposer,
+    subcommonId: null,
+    otherMemberId: null,
   });
 
-  const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
-    (values) => {
-      const links = parseLinksForSubmission(values.links);
+  const getTo = () => selectedRecipientType === RecipientType.Member
+    ? AllocateFundsTo.Proposer
+    : AllocateFundsTo.SubCommon;
 
+  const getRecipientDetails = () => {
+    const to = getTo();
+    if (to === AllocateFundsTo.Proposer) {
+      const member = memberOptions.find((member) => member.value === selectedRecipient);
+      return {
+        to,
+        otherMemberId: selectedRecipient,
+        recipientName: member?.text,
+      }
+    }
+    const subcommon = commonsOptions.find((common) => common.value === selectedRecipient);
+    return {
+      to,
+      subcommonId: selectedRecipient,
+      recipientName: subcommon?.text,
+    }
+  }
+
+  const handleSubmit = (values: FormValues) => {
+      const links = parseLinksForSubmission(values.links);
+      
       onFinish({
         ...initialData,
         fund: selectedFund,
         amount: values.amount,
         links,
         images: values.images,
+        ...getRecipientDetails(),
       });
-    },
-    [onFinish]
-  );
+    }
 
   const handleContinueClick = useCallback(() => {
     if (formRef.current) {
@@ -108,6 +158,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
       onFinish({
         ...initialData,
         ...formRef.current.values,
+        ...getRecipientDetails(),
       });
     }
   }, []);
@@ -125,16 +176,35 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     }
   };
 
+  const handleSelectRecipentType = (value: unknown) => {
+      setSelectedRecipientType(value as RecipientType);
+      value === RecipientType.Common
+        ? setRecipientDropdownDetails(commonsOptions)
+        : setRecipientDropdownDetails(memberOptions)
+  }
+
+  const handleSetSelectedRecipient = (value) => {
+      setSelectedRecipient(value)
+  }
+
+  const toggleButtonStyles = useMemo(() => (
+    {
+      default: "contribution-amount-selection__toggle-button"
+    }
+  ), [])
+
   return (
     <div className="funds-allocation-configuration">
-      <StageName
-        className="funds-allocation-configuration__stage-name"
-        name="Fund allocation"
-        backgroundColor="light-yellow"
-        icon={
-          <DollarIcon className="funds-allocation-configuration__avatar-icon" />
-        }
-      />
+      {!isMobileView && (
+        <StageName
+          className="funds-allocation-configuration__stage-name"
+          name="Fund allocation"
+          backgroundColor="light-yellow"
+          icon={
+            <DollarIcon className="funds-allocation-configuration__avatar-icon" />
+          }
+        />
+      )}
       <div className="funds-allocation-configuration__form">
         <Formik
           initialValues={getInitialValues()}
@@ -146,6 +216,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
         >
           {({ values, errors, touched, isValid }) => (
             <Form>
+            <div className="funds-input-row">
               <Dropdown
                 className="funds-allocation-details__type-dropdown"
                 options={FUND_TYPES}
@@ -156,13 +227,14 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 shouldBeFixed={false}
               />
               <CurrencyInput
-                className="create-funds-allocation__text-field"
+                className="create-funds-allocation__currency"
                 id="amount"
                 name="amount"
                 label="Amount"
                 placeholder="10"
                 prefix={getPrefix(selectedFund)}
               />
+              </div>
               {values.amount > 0 &&
                 <>
                   {bankAccountState.loading ? (
@@ -179,6 +251,35 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                   )}
                 </>
               }
+              <RadioButtonGroup
+                className="recipient-selection__toggle-button-group"
+                label="Recipient"
+                value={selectedRecipientType}
+                onChange={handleSelectRecipentType}
+                variant={Orientation.Horizontal}
+                >
+                <RadioButton
+                  value={RecipientType.Member}
+                  styles={toggleButtonStyles}
+                  checked={selectedRecipientType === RecipientType.Member}>
+                </RadioButton>
+                <RadioButton
+                  value={RecipientType.Common}
+                  styles={toggleButtonStyles}
+                  checked={selectedRecipientType === RecipientType.Common}>
+                </RadioButton>
+                
+              </RadioButtonGroup>
+
+              <Dropdown
+                className="funds-allocation-details__type-dropdown"
+                options={recipientDropdownDetails}
+                value={selectedRecipient}
+                onSelect={handleSetSelectedRecipient}
+                placeholder={`Choose ${selectedRecipientType}`}
+                shouldBeFixed={false}
+              />
+
               <LinksArray
                 name="links"
                 values={values.links}

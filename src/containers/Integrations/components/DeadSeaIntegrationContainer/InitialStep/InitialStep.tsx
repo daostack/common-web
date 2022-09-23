@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { ButtonLink } from "@/shared/components";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
+import { checkIsIFrame } from "@/shared/utils";
 import { AmountSelection } from "../AmountSelection";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 import "./index.scss";
@@ -15,6 +16,10 @@ const DESCRIPTION =
 
 const InitialStep: FC<InitialStepProps> = (props) => {
   const { amount, onFinish } = props;
+  const isInsideIFrame = checkIsIFrame();
+
+  const getSubmitLink = (amount: number): string =>
+    `${ROUTE_PATHS.DEAD_SEA}?${QueryParamKey.IntegrationAmount}=${amount}`;
 
   return (
     <GeneralInfoWrapper description={DESCRIPTION}>
@@ -34,6 +39,7 @@ const InitialStep: FC<InitialStepProps> = (props) => {
         }
         submitButtonText="Support the Community"
         onAmountChange={onFinish}
+        getSubmitLink={isInsideIFrame ? getSubmitLink : undefined}
       />
     </GeneralInfoWrapper>
   );

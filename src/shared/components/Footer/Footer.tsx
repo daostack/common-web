@@ -2,12 +2,19 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { authentificated } from "@/containers/Auth/store/selectors";
+import { selectFooter } from "@/shared/store/selectors";
 import { COMMON_APP_APP_STORE_LINK, COMMON_APP_GOOGLE_PLAY_LINK, ROUTE_PATHS } from "../../constants";
 import "./index.scss";
 
 const Footer = () => {
   const isAuthenticated = useSelector(authentificated());
+  const sharedFooterState = useSelector(selectFooter());
+  const shouldHideFooter = sharedFooterState.shouldHideFooter ?? false;
   const date = new Date();
+
+  if (shouldHideFooter) {
+    return null;
+  }
 
   return (
     <section className="footer-wrapper">

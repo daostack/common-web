@@ -13,6 +13,10 @@ export async function createdUserApi(
   return data;
 }
 
+export async function deleteUserApi(): Promise<void> {
+  await Api.put(ApiEndpoint.DeleteUser);
+}
+
 export async function getUserData(userId: string) {
   const userSnapshot = await firebase
     .firestore()

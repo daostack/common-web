@@ -82,10 +82,12 @@ const AddDiscussionComponent = ({
   useEffect(() => {
     (async () => {
       const governanceCircles = await getCommonGovernanceCircles(governanceId);
-      const circles = (governanceCircles || [])?.map((circle) => ({
+      const circles = (
+        governanceCircles ? Object.values(governanceCircles) : []
+      )?.map((circle) => ({
         ...circle,
         value: circle.id,
-        label: circle.name
+        label: circle.name,
       }));
       setCircleOptions(circles);
     })();

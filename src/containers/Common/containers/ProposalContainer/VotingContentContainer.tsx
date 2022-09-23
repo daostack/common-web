@@ -6,6 +6,7 @@ import {
   Governance,
   VotingCardType,
   User,
+  CommonMemberWithUserInfo,
 } from "@/shared/models";
 import {
   AssignCircle,
@@ -27,6 +28,7 @@ import {
   getMemberAdmittanceDetails,
   getRemoveCircleDetails,
 } from "./helpers";
+import { useCommonMembers } from "@/containers/Common/hooks";
 import { ProposalDetailsItem } from "./types";
 import { ProposalSpecificData } from "./useProposalSpecificData";
 import "./index.scss";
@@ -38,10 +40,12 @@ interface VotingContentContainerProps {
   proposer: User;
   proposalSpecificData: ProposalSpecificData;
   onVotesOpen: () => void;
+  commonMembers: CommonMemberWithUserInfo[];
+  subCommons: Common[];
 }
 
 export const VotingContentContainer: FC<VotingContentContainerProps> = (props) => {
-  const { proposal, governance, proposer, proposalSpecificData, onVotesOpen } =
+  const { proposal, governance, proposer, proposalSpecificData, onVotesOpen, common, commonMembers, subCommons } =
     props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -49,12 +53,13 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
   const proposalDetailsByType = useMemo((): ProposalDetailsItem[] => {
     let typedProposal;
 
-    switch (proposal.type) { //TODO: fill up with a real proposal's data
+    switch (proposal.type) {
       case ProposalsTypes.FUNDS_ALLOCATION:
         return getFundsAllocationDetails(
           proposal as FundsAllocation,
-          proposer,
-          governance
+          governance,
+          commonMembers,
+          subCommons,
         );
       case ProposalsTypes.FUNDS_REQUEST:
         typedProposal = proposal as FundsRequest;

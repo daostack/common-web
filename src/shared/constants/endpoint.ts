@@ -19,6 +19,7 @@ export const ApiEndpoint = {
   UpdateSubscription: "/subscriptions/update",
   CancelSubscription: "/subscriptions/cancel",
   CreateUser: "/users/create",
+  DeleteUser: "/users/delete",
   SendEmail: "/notifications/send-email",
   SeenNotification: "/notifications/seen",
   CreateDiscussion: "/discussions/create",

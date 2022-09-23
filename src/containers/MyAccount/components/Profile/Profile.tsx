@@ -7,14 +7,21 @@ import {
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Button, ButtonIcon, ButtonVariant, Loader } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
+import { useModal } from "@/shared/hooks";
 import EditIcon from "@/shared/icons/edit.icon";
 import { getScreenSize } from "@/shared/store/selectors";
+import { DeleteUserModal } from "../../components/Profile";
 import "./index.scss";
 
 export default function Profile() {
   const userDetailsRef = useRef<UserDetailsRef>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    isShowing: isDeleteAccountModalShowing,
+    onOpen: onDeleteAccountModalOpen,
+    onClose: onDeleteAccountModalClose,
+  } = useModal(false);
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -96,8 +103,21 @@ export default function Profile() {
             }}
           />
           {isEditing && isMobileView && buttonsWrapperEl}
+          {!isEditing && (
+            <Button
+              className="profile-wrapper__delete-account-button"
+              onClick={onDeleteAccountModalOpen}
+              shouldUseFullWidth
+            >
+              Delete My Account
+            </Button>
+          )}
         </>
       )}
+      <DeleteUserModal
+        isShowing={isDeleteAccountModalShowing}
+        onClose={onDeleteAccountModalClose}
+      />
     </div>
   );
 }
