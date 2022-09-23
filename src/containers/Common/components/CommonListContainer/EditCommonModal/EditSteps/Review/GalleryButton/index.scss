@@ -1,0 +1,35 @@
+@import "../../../../../../../../constants";
+
+.create-common-review-gallery-button {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.875rem;
+  -webkit-backdrop-filter: blur(0.625rem);
+  backdrop-filter: blur(0.625rem);
+  background-color: $black-gray-3;
+  box-sizing: border-box;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .create-common-review-gallery-button__file-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    outline: 0;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .create-common-review-gallery-button__icon {
+    width: 1rem;
+    height: 1rem;
+    color: $white;
+  }
+}

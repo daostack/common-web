@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { CreateCommonModal } from "@/containers/Common/components";
+import { EditCommonModal } from "@/containers/Common/components";
 import {
   ButtonLink,
   Dropdown,
@@ -10,12 +11,15 @@ import {
   Modal,
   MenuButton,
 } from "@/shared/components";
-import { ProposalsTypes, ScreenSize } from "@/shared/constants";
+import {
+  GovernanceActions,
+  ProposalsTypes,
+  ScreenSize,
+} from "@/shared/constants";
 import { useAuthorizedDropdown, useAuthorizedModal } from "@/shared/hooks";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import AddIcon from "@/shared/icons/add.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
-import MosaicIcon from "@/shared/icons/mosaic.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
 import { Common, CommonMember, Governance } from "@/shared/models";
@@ -25,8 +29,7 @@ import { MyContributionsModal } from "../MyContributionsModal";
 import "./index.scss";
 
 export enum MenuItem {
-  EditInfo,
-  EditRules,
+  EditAgenda,
   CreateSubCommon,
   MyContributions,
   DeleteCommon,
@@ -38,7 +41,7 @@ interface Option extends DropdownOption {
 }
 
 const OPTIONS: Option[] = [
-  {
+  /*{
     text: (
       <>
         <MosaicIcon className="edit-common-menu__item-icon" /> Edit info and
@@ -48,18 +51,18 @@ const OPTIONS: Option[] = [
     searchText: "Edit info and cover photo",
     value: MenuItem.EditInfo,
     className: "edit-common-menu__dropdown-menu-item--disabled",
-    disabled: true,
-  },
+    disabled: false,//true,
+  },*/
   {
     text: (
       <>
-        <AgendaIcon className="edit-common-menu__item-icon" /> Edit rules
+        <AgendaIcon className="edit-common-menu__item-icon" /> Edit Agenda
       </>
     ),
-    searchText: "Edit rules",
-    value: MenuItem.EditRules,
-    className: "edit-common-menu__dropdown-menu-item--disabled",
-    disabled: true,
+    searchText: "Edit Agenda",
+    value: MenuItem.EditAgenda,
+    //className: "edit-common-menu__dropdown-menu-item--disabled",
+    //disabled: false//true,
   },
   {
     text: (
@@ -132,7 +135,12 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(
     null
   );
-  const circlesWithoutSubcommon = Object.values(governance.circles).filter((circle) => !subCommons.some((subCommon) => subCommon.directParent?.circleId === circle.id));
+  const circlesWithoutSubcommon = Object.values(governance.circles).filter(
+    (circle) =>
+      !subCommons.some(
+        (subCommon) => subCommon.directParent?.circleId === circle.id
+      )
+  );
   const screenSize = useSelector(getScreenSize());
   const { onDropdownToggle } = useAuthorizedDropdown(dropdownRef);
   const {
@@ -148,8 +156,8 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const menuItems = useMemo<MenuItem[]>(() => {
     const items: MenuItem[] = [];
 
-    if (isCommonOwner) {
-      items.push(MenuItem.EditInfo, MenuItem.EditRules);
+    if (currentCommonMember?.allowedActions[GovernanceActions.UPDATE_COMMON]) {
+      items.push(MenuItem.EditAgenda, MenuItem.EditAgenda);
     }
     if (!isSubCommon && circlesWithoutSubcommon.length > 0) {
       items.push(MenuItem.CreateSubCommon);
@@ -187,6 +195,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   };
 
   const handleSelect = (value: unknown) => {
+    console.log("handleSelect value", value);
     if (isMobileView) {
       onMenuModalClose();
     }
@@ -301,6 +310,14 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         parentCommonId={common.id}
         subCommons={subCommons}
         onCommonCreate={onSubCommonCreate}
+        shouldBeWithoutIntroduction
+      />
+      <EditCommonModal
+        isShowing={selectedMenuItem === MenuItem.EditAgenda}
+        onClose={handleMenuClose}
+        governance={governance}
+        common={common}
+        parentCommonId={common.id}
         shouldBeWithoutIntroduction
       />
     </div>
