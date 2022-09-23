@@ -85,7 +85,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
       currentCommonMember.allowedProposals[ProposalsTypes.ASSIGN_CIRCLE],
     ]
   );
-  const circleIndex = Object.values(governance.circles).findIndex(
+  const foundCircleId = governanceCircles.find(
     ({ id }) => id === circle?.id
   )?.id;
   const circleOptions = useMemo<DropdownOption[]>(
@@ -122,7 +122,9 @@ const Configuration: FC<ConfigurationProps> = (props) => {
   );
 
   const handleCircleSelect = (selectedCircleId: unknown) => {
-    const circle = Object.values(governance.circles).find(({ id }) => id === selectedCircleId);
+    const circle = Object.values(governance.circles).find(
+      ({ id }) => id === selectedCircleId
+    );
     setCircle(circle || null);
   };
 
