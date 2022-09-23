@@ -132,6 +132,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(
     null
   );
+  const circlesWithoutSubcommon = Object.values(governance.circles).filter((circle) => !subCommons.some((subCommon) => subCommon.directParent?.circleId === circle.id));
   const screenSize = useSelector(getScreenSize());
   const { onDropdownToggle } = useAuthorizedDropdown(dropdownRef);
   const {
@@ -150,7 +151,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (currentCommonMember?.allowedActions.UPDATE_COMMON) {
       items.push(MenuItem.EditAgenda, MenuItem.EditAgenda);
     }
-    if (!isSubCommon) {
+    if (!isSubCommon && circlesWithoutSubcommon.length > 0) {
       items.push(MenuItem.CreateSubCommon);
     }
     if (isCommonMember) {
@@ -173,6 +174,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     isSubCommon,
     common.memberCount,
     currentCommonMember,
+    circlesWithoutSubcommon,
   ]);
   const options = useMemo(
     () =>
