@@ -158,6 +158,7 @@ export default function EditCommonModal(props: EditCommonModalProps) {
         return updatedCommon ? (
           <Success
             common={updatedCommon}
+            onFinish={props.onClose}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
