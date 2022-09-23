@@ -11,12 +11,15 @@ import {
   Modal,
   MenuButton,
 } from "@/shared/components";
-import { ProposalsTypes, ScreenSize } from "@/shared/constants";
+import {
+  GovernanceActions,
+  ProposalsTypes,
+  ScreenSize,
+} from "@/shared/constants";
 import { useAuthorizedDropdown, useAuthorizedModal } from "@/shared/hooks";
 import AgendaIcon from "@/shared/icons/agenda.icon";
 import AddIcon from "@/shared/icons/add.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
-import MosaicIcon from "@/shared/icons/mosaic.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
 import { Common, CommonMember, Governance } from "@/shared/models";
@@ -132,7 +135,12 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(
     null
   );
-  const circlesWithoutSubcommon = Object.values(governance.circles).filter((circle) => !subCommons.some((subCommon) => subCommon.directParent?.circleId === circle.id));
+  const circlesWithoutSubcommon = Object.values(governance.circles).filter(
+    (circle) =>
+      !subCommons.some(
+        (subCommon) => subCommon.directParent?.circleId === circle.id
+      )
+  );
   const screenSize = useSelector(getScreenSize());
   const { onDropdownToggle } = useAuthorizedDropdown(dropdownRef);
   const {
@@ -148,7 +156,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const menuItems = useMemo<MenuItem[]>(() => {
     const items: MenuItem[] = [];
 
-    if (currentCommonMember?.allowedActions.UPDATE_COMMON) {
+    if (currentCommonMember?.allowedActions[GovernanceActions.UPDATE_COMMON]) {
       items.push(MenuItem.EditAgenda, MenuItem.EditAgenda);
     }
     if (!isSubCommon && circlesWithoutSubcommon.length > 0) {
@@ -187,7 +195,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   };
 
   const handleSelect = (value: unknown) => {
-    console.log('handleSelect value', value);
+    console.log("handleSelect value", value);
     if (isMobileView) {
       onMenuModalClose();
     }
