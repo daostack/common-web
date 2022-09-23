@@ -171,6 +171,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       produce(state, (nextState) => {
         nextState.proposals = [action.payload, ...nextState.proposals];
       })
+  )
+  .handleAction(actions.updateCommon.success, (state, { payload }) =>
+    produce(state, (nextState) => {
+      if (nextState.common?.id === payload.id) {
+        nextState.common = {
+          ...nextState.common,
+          ...payload,
+        };
+      }
+    })
   );
 
 export default reducer;
