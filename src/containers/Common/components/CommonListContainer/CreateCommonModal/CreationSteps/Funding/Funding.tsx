@@ -4,6 +4,7 @@ import React, {
   ChangeEventHandler,
   ReactElement,
   ReactNode,
+  useMemo,
 } from "react";
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
@@ -40,12 +41,6 @@ interface FormValues {
   minimumContribution?: number;
   isCommonJoinFree: boolean;
 }
-
-const INITIAL_VALUES = {
-   contributionType: ContributionType.OneTime,
-   minimumContribution: 0,
-   isCommonJoinFree: false,
-};
 
 const getCurrencyInputLabel = (
   contributionType: ContributionType,
@@ -89,10 +84,21 @@ const getCurrencyInputDescription = (
 export default function Funding({
   currentStep,
   onFinish,
+  creationData
 }: FundingProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+
+  const initialValues = useMemo(() => {
+    const minFeeMonthly = creationData.memberAdmittanceOptions?.minFeeMonthly?.amount;
+    const minFeeOneTime = creationData.memberAdmittanceOptions?.minFeeOneTime?.amount;
+    return {
+        minimumContribution: (minFeeMonthly || minFeeOneTime || 0) / 100,
+        contributionType: minFeeMonthly ? ContributionType.Monthly : ContributionType.OneTime,
+        isCommonJoinFree: creationData.memberAdmittanceOptions?.paymentMustGoThrough === undefined ? false : !creationData.memberAdmittanceOptions?.paymentMustGoThrough,
+    }
+  },[creationData])
 
   const handleContributionTypeChange = useCallback((value: unknown) => {
     if (
@@ -104,6 +110,11 @@ export default function Funding({
         DEFAULT_CONTRIBUTION_AMOUNT
       );
     }
+
+    formRef.current?.setFieldValue(
+      "isCommonJoinFree",
+      false
+    );
   }, []);
 
   const handleCheckboxChange = useCallback<
@@ -157,11 +168,13 @@ export default function Funding({
         {isMobileView && progressEl}
         <Separator className="create-common-funding__separator" />
         <Formik
-          initialValues={INITIAL_VALUES}
+          initialValues={initialValues}
+          enableReinitialize
           onSubmit={handleSubmit}
           innerRef={formRef}
           validationSchema={validationSchema}
           validateOnMount
+          validateOnChange
         >
           {({ values: { contributionType, isCommonJoinFree }, isValid }) => (
             <Form className="create-common-funding__form">
