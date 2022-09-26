@@ -73,7 +73,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
   const isConfigurationStep = step === FundsAllocationStep.Configuration;
   const isSuccessStep = step === FundsAllocationStep.Success;
   const shouldShowModalTitle = isMobileView || isConfigurationStep;
-  const isLoading = isProposalCreating;
+  const isLoading = isProposalCreating && !areCommonMembersFetched;
   const commons = useMemo(
     () =>
       allCommons.filter(
