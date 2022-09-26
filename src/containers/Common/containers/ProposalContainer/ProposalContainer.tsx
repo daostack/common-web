@@ -28,6 +28,7 @@ import {
   ROUTE_PATHS,
 } from "@/shared/constants";
 import { selectUser } from "@/containers/Auth/store/selectors";
+import { useSubCommons } from "@/shared/hooks/useCases";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ChatComponent } from "../../components";
 import { VotesModal } from "../../components/ProposalContainer";
@@ -44,7 +45,6 @@ import {
   selectCommonDetail,
   selectCurrentProposal,
   selectGovernance,
-  selectCommonList,
 } from "../../store/selectors";
 import { Tabs as CommonDetailsTabs } from "../CommonDetailContainer";
 import { VotingContentContainer } from "./VotingContentContainer";
@@ -80,7 +80,6 @@ const ProposalContainer = () => {
   const user = useSelector(selectUser());
   const currentProposal = useSelector(selectCurrentProposal());
   const currentCommon = useSelector(selectCommonDetail());
-  const allCommons = useSelector(selectCommonList());
   const governance = useSelector(selectGovernance());
   const [activeTab, setActiveTab] = useState<PROPOSAL_MENU_TABS>(PROPOSAL_MENU_TABS.Voting);
   const {
@@ -93,6 +92,12 @@ const ProposalContainer = () => {
     data: commonMembers,
     fetchCommonMembers,
   } = useCommonMembers();
+  const {
+    data: subCommons,
+    fetched: areSubCommonsFetched,
+    fetchSubCommons,
+  } = useSubCommons();
+  const commonId = currentCommon?.id;
 
   const {
     isShowing: isVotesModalOpen,
@@ -163,14 +168,6 @@ const ProposalContainer = () => {
     [currentProposal]
   );
 
-  const subCommons = useMemo(
-    () =>
-      allCommons.filter(
-        (common) => common.directParent?.commonId === currentCommon?.id
-      ),
-    [allCommons]
-  );
-
   const renderContentByActiveTab = useCallback(
     (currentProposal: Proposal) => {
       switch (activeTab) {
@@ -181,7 +178,6 @@ const ProposalContainer = () => {
             governance && (
               <VotingContentContainer
                 proposal={currentProposal}
-                common={currentCommon}
                 governance={governance}
                 proposer={proposer}
                 proposalSpecificData={proposalSpecificData}
@@ -287,9 +283,10 @@ const ProposalContainer = () => {
   }, [dispatch, currentProposalId]);
 
   useEffect(() => {
-    if (currentCommon)
-      fetchCommonMember(currentCommon.id);
-  }, [fetchCommonMember, currentCommon]);
+    if (commonId) {
+      fetchCommonMember(commonId);
+    }
+  }, [fetchCommonMember, commonId]);
 
   useEffect(() => {
     if (currentProposal)
@@ -302,11 +299,18 @@ const ProposalContainer = () => {
     }
   }, [fetchProposalSpecificData, currentProposal]);
 
+  useEffect(() => {
+    if (commonId) {
+      fetchSubCommons(commonId);
+    }
+  }, [fetchSubCommons, commonId]);
+
   return currentCommon &&
     currentProposal &&
     isCommonMemberFetched &&
     isProposalSpecificDataFetched &&
-    areCommonMembersFetched && 
+    areCommonMembersFetched &&
+    areSubCommonsFetched &&
     governance ? (
     <>
       <VotingPopup

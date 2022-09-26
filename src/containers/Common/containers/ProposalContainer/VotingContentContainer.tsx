@@ -35,7 +35,6 @@ import "./index.scss";
 
 interface VotingContentContainerProps {
   proposal: Proposal;
-  common: Common;
   governance: Governance;
   proposer: User;
   proposalSpecificData: ProposalSpecificData;
@@ -44,9 +43,18 @@ interface VotingContentContainerProps {
   subCommons: Common[];
 }
 
-export const VotingContentContainer: FC<VotingContentContainerProps> = (props) => {
-  const { proposal, governance, proposer, proposalSpecificData, onVotesOpen, common, commonMembers, subCommons } =
-    props;
+export const VotingContentContainer: FC<VotingContentContainerProps> = (
+  props
+) => {
+  const {
+    proposal,
+    governance,
+    proposer,
+    proposalSpecificData,
+    onVotesOpen,
+    commonMembers,
+    subCommons,
+  } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -59,7 +67,7 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
           proposal as FundsAllocation,
           governance,
           commonMembers,
-          subCommons,
+          subCommons
         );
       case ProposalsTypes.FUNDS_REQUEST:
         typedProposal = proposal as FundsRequest;
@@ -67,16 +75,21 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
         return [
           {
             title: "Recurring indication",
-            value: proposal.local.allowedPaymentTypes.SINGLE ? "Single" : "Monthly"
+            value: proposal.local.allowedPaymentTypes.SINGLE
+              ? "Single"
+              : "Monthly",
           },
           {
             title: "Sum of money",
-            value: formatPrice(typedProposal.data.legal.totalInvoicesAmount || 0, { shouldRemovePrefixFromZero: false }),
+            value: formatPrice(
+              typedProposal.data.legal.totalInvoicesAmount || 0,
+              { shouldRemovePrefixFromZero: false }
+            ),
           },
           {
             title: "Recipients circles",
             value: "",
-          }
+          },
         ];
       case ProposalsTypes.ASSIGN_CIRCLE:
         return getAssignCircleDetails(
@@ -105,7 +118,14 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
       default:
         return [];
     }
-  }, [proposal, proposal.type, proposalSpecificData]);
+  }, [
+    proposal,
+    governance,
+    proposer,
+    proposalSpecificData,
+    commonMembers,
+    subCommons,
+  ]);
 
   return (
     <div className="voting-content__wrapper">
@@ -114,8 +134,8 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
         style={
           !isMobileView
             ? {
-              gridTemplateColumns: `repeat(${proposalDetailsByType.length}, minmax(0, 17.625rem))`,
-            }
+                gridTemplateColumns: `repeat(${proposalDetailsByType.length}, minmax(0, 17.625rem))`,
+              }
             : {}
         }
       >
