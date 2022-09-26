@@ -96,7 +96,7 @@ export default function Funding({
     return {
         minimumContribution: (minFeeMonthly || minFeeOneTime || 0) / 100,
         contributionType: minFeeMonthly ? ContributionType.Monthly : ContributionType.OneTime,
-        isCommonJoinFree: creationData.memberAdmittanceOptions?.paymentMustGoThrough === null ? false : !creationData.memberAdmittanceOptions?.paymentMustGoThrough,
+        isCommonJoinFree: creationData.memberAdmittanceOptions?.paymentMustGoThrough === undefined ? false : !creationData.memberAdmittanceOptions?.paymentMustGoThrough,
     }
   },[creationData])
 
