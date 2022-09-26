@@ -212,6 +212,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
   };
 
   const handleSelectRecipientType = (value: unknown) => {
+    handleSetSelectedRecipient(null);
     setSelectedRecipientType(value as RecipientType);
     value === RecipientType.Common
       ? setRecipientDropdownDetails(commonsOptions)
