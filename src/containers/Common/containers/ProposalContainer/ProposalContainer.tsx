@@ -86,11 +86,6 @@ const ProposalContainer = () => {
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember();
-  const {
-    fetched: areCommonMembersFetched,
-    data: commonMembers,
-    fetchCommonMembers,
-  } = useCommonMembers();
   const commonId = currentCommon?.id;
 
   const {
@@ -116,10 +111,6 @@ const ProposalContainer = () => {
     currentProposal?.global.weights.some(
       ({ circles }) => commonMember.circles.bin & circles.bin
     );
-
-  useEffect(() => {
-    currentCommon?.id && fetchCommonMembers(currentCommon.id);
-  }, [fetchCommonMembers, currentCommon?.id]);
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -176,7 +167,6 @@ const ProposalContainer = () => {
                 proposer={proposer}
                 proposalSpecificData={proposalSpecificData}
                 onVotesOpen={onVotesModalOpen}
-                commonMembers={commonMembers}
               />
             )
           );
@@ -296,7 +286,6 @@ const ProposalContainer = () => {
     currentProposal &&
     isCommonMemberFetched &&
     isProposalSpecificDataFetched &&
-    areCommonMembersFetched &&
     governance ? (
     <>
       <VotingPopup

@@ -37,21 +37,14 @@ interface VotingContentContainerProps {
   proposer: User;
   proposalSpecificData: ProposalSpecificData;
   onVotesOpen: () => void;
-  commonMembers: CommonMemberWithUserInfo[];
 }
 
 export const VotingContentContainer: FC<VotingContentContainerProps> = (
   props
 ) => {
-  const {
-    proposal,
-    governance,
-    proposer,
-    proposalSpecificData,
-    onVotesOpen,
-    commonMembers,
-  } = props;
-  const { subCommons } = proposalSpecificData;
+  const { proposal, governance, proposer, proposalSpecificData, onVotesOpen } =
+    props;
+  const { commonMembers, subCommons } = proposalSpecificData;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 

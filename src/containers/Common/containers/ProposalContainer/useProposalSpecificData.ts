@@ -1,8 +1,14 @@
 import { useCallback } from "react";
 import { getUserData } from "@/containers/Auth/store/api";
+import { useCommonMembers } from "@/containers/Common/hooks";
 import { useLoadingState } from "@/shared/hooks";
 import { useSubCommons } from "@/shared/hooks/useCases";
-import { Common, Proposal, User } from "@/shared/models";
+import {
+  Common,
+  CommonMemberWithUserInfo,
+  Proposal,
+  User,
+} from "@/shared/models";
 import {
   isAssignCircleProposal,
   isFundsAllocationProposal,
@@ -12,6 +18,7 @@ import { LoadingState } from "@/shared/interfaces";
 
 export interface ProposalSpecificData {
   user: User | null;
+  commonMembers: CommonMemberWithUserInfo[];
   subCommons: Common[];
 }
 
@@ -21,11 +28,19 @@ interface Return extends LoadingState<ProposalSpecificData> {
 
 const INITIAL_DATA: ProposalSpecificData = {
   user: null,
+  commonMembers: [],
   subCommons: [],
 };
 
 export const useProposalSpecificData = (): Return => {
   const [state, setState] = useLoadingState<ProposalSpecificData>(INITIAL_DATA);
+  const {
+    data: commonMembers,
+    loading: areCommonMembersLoading,
+    fetched: areCommonMembersFetched,
+    fetchCommonMembers,
+    setCommonMembers,
+  } = useCommonMembers();
   const {
     data: subCommons,
     loading: areSubCommonsLoading,
@@ -33,8 +48,10 @@ export const useProposalSpecificData = (): Return => {
     fetchSubCommons,
     setSubCommons,
   } = useSubCommons();
-  const isLoading = state.loading || areSubCommonsLoading;
-  const isFetched = state.fetched || areSubCommonsFetched;
+  const isLoading =
+    state.loading || areSubCommonsLoading || areCommonMembersLoading;
+  const isFetched =
+    state.fetched && areSubCommonsFetched && areCommonMembersFetched;
 
   const fetchData = useCallback(
     async (proposal: Proposal, force = false) => {
@@ -48,9 +65,13 @@ export const useProposalSpecificData = (): Return => {
         data: INITIAL_DATA,
       });
 
+      const commonId = proposal.data.args.commonId;
+
       if (isFundsAllocationProposal(proposal)) {
-        fetchSubCommons(proposal.data.args.commonId);
+        fetchCommonMembers(commonId);
+        fetchSubCommons(commonId);
       } else {
+        setCommonMembers([]);
         setSubCommons([]);
       }
 
@@ -75,12 +96,19 @@ export const useProposalSpecificData = (): Return => {
         }));
       }
     },
-    [state, fetchSubCommons, setSubCommons]
+    [
+      state,
+      fetchCommonMembers,
+      setCommonMembers,
+      fetchSubCommons,
+      setSubCommons,
+    ]
   );
 
   return {
     data: {
       ...state.data,
+      commonMembers,
       subCommons,
     },
     loading: isLoading,

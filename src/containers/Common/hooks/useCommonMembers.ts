@@ -8,6 +8,7 @@ type State = LoadingState<CommonMemberWithUserInfo[]>;
 
 interface Return extends State {
   fetchCommonMembers: (commonId: string) => void;
+  setCommonMembers: (commonMembers: CommonMemberWithUserInfo[]) => void;
   resetCommonMembers: () => void;
 }
 
@@ -52,6 +53,17 @@ export const useCommonMembers = (): Return => {
     [state, dispatch]
   );
 
+  const setCommonMembers = useCallback(
+    (commonMembers: CommonMemberWithUserInfo[]) => {
+      setState({
+        loading: false,
+        fetched: true,
+        data: commonMembers,
+      });
+    },
+    []
+  );
+
   const resetCommonMembers = useCallback(() => {
     setState({
       loading: false,
@@ -63,6 +75,7 @@ export const useCommonMembers = (): Return => {
   return {
     ...state,
     fetchCommonMembers,
+    setCommonMembers,
     resetCommonMembers,
   };
 };
