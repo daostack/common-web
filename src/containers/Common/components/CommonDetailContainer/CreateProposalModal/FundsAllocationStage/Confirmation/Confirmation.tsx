@@ -12,12 +12,13 @@ interface ConfirmationProps {
   fund: FundType;
   to: string;
   recipientName?: string;
+  isLoading: boolean;
   onSubmit: () => void;
   onCancel: () => void;
 }
 
 const Confirmation: FC<ConfirmationProps> = (props) => {
-  const { amount, fund, onSubmit, to, recipientName, onCancel } = props;
+  const { amount, fund, onSubmit, to, recipientName, isLoading, onCancel } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -44,7 +45,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
         >
           Cancel
         </Button>
-        <Button onClick={onSubmit} shouldUseFullWidth>
+        <Button onClick={onSubmit} disabled={isLoading} shouldUseFullWidth>
           Create Proposal
         </Button>
       </div>
