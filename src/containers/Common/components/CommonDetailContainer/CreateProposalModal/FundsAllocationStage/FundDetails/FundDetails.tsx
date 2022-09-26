@@ -2,6 +2,7 @@ import React, { FC, useCallback, useEffect, useRef, useState, useMemo } from "re
 import { useDispatch, useSelector } from "react-redux";
 import { Formik } from "formik";
 import { FormikProps } from "formik/dist/types";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { getBankDetails } from "@/containers/Common/store/actions";
 import { BankAccount } from "@/containers/MyAccount/components/Billing/BankAccount";
 import { BankAccountState } from "@/containers/MyAccount/components/Billing/types";
@@ -61,14 +62,19 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     bankAccount: null,
   });
   const [selectedFund, setSelectedFund] = useState<FundType>(FundType.ILS);
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
 
   const memberOptions = useMemo(
-    () => commonMembers.map(({user, id}) => ({
-      text: user.displayName || `${user.firstName} ${user.lastName}`,
-      searchText: user.displayName || `${user.firstName} ${user.lastName}`,
-      value: id,
-    })),
-    [commonMembers]
+    () =>
+      commonMembers
+        .filter((member) => member.userId === userId)
+        .map(({ user, id }) => ({
+          text: user.displayName || `${user.firstName} ${user.lastName}`,
+          searchText: user.displayName || `${user.firstName} ${user.lastName}`,
+          value: id,
+        })),
+    [commonMembers, userId]
   );
 
   const commonsOptions = useMemo(
@@ -176,12 +182,12 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     }
   };
 
-  const handleSelectRecipentType = (value: unknown) => {
-      setSelectedRecipientType(value as RecipientType);
-      value === RecipientType.Common
-        ? setRecipientDropdownDetails(commonsOptions)
-        : setRecipientDropdownDetails(memberOptions)
-  }
+  const handleSelectRecipientType = (value: unknown) => {
+    setSelectedRecipientType(value as RecipientType);
+    value === RecipientType.Common
+      ? setRecipientDropdownDetails(commonsOptions)
+      : setRecipientDropdownDetails(memberOptions);
+  };
 
   const handleSetSelectedRecipient = (value) => {
       setSelectedRecipient(value)
@@ -255,7 +261,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
                 className="recipient-selection__toggle-button-group"
                 label="Recipient"
                 value={selectedRecipientType}
-                onChange={handleSelectRecipentType}
+                onChange={handleSelectRecipientType}
                 variant={Orientation.Horizontal}
               >
                 <RadioButton
