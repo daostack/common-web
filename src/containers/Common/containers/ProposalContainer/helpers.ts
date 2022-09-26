@@ -20,7 +20,11 @@ const getVotersString = (
   return voters.join("/");
 };
 
-const getRecipient = (proposal, commonMembers, subCommons) => {
+const getRecipient = (
+  proposal: FundsAllocation,
+  commonMembers: CommonMemberWithUserInfo[],
+  subCommons: Common[]
+) => {
   const { subcommonId = null, otherMemberId = null } = proposal.data.args;
 
   if (subcommonId) {
@@ -30,9 +34,7 @@ const getRecipient = (proposal, commonMembers, subCommons) => {
     return subCommon?.name || "-//-";
   }
 
-  const proposer = commonMembers.find(
-    (member) => member.userId === otherMemberId
-  );
+  const proposer = commonMembers.find((member) => member.id === otherMemberId);
 
   if (!proposer) {
     return "-//-";
