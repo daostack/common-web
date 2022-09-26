@@ -250,105 +250,110 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
           validationSchema={fundDetailsValidationSchema}
           validateOnMount
         >
-          {({ values, errors, touched, isValid }) => (
-            <Form>
-              <div className="funds-input-row">
+          {({ values, errors, touched, isValid }) => {
+            const areFundsToMember =
+              selectedRecipientType === RecipientType.Member;
+            const isSubmitDisabled =
+              !isValid ||
+              values.areImagesLoading ||
+              (!bankAccountState.bankAccount && values.amount > 0);
+
+            return (
+              <Form>
+                <div className="funds-input-row">
+                  <Dropdown
+                    className="funds-allocation-details__type-dropdown"
+                    options={FUND_TYPES}
+                    value={selectedFund}
+                    onSelect={handleFundSelect}
+                    label="Type of Funds"
+                    placeholder="Select Type"
+                    shouldBeFixed={false}
+                  />
+                  <CurrencyInput
+                    className="create-funds-allocation__currency"
+                    id="amount"
+                    name="amount"
+                    label="Amount"
+                    placeholder="10"
+                    prefix={getPrefix(selectedFund)}
+                  />
+                </div>
+                {values.amount > 0 && areFundsToMember && (
+                  <>
+                    {bankAccountState.loading ? (
+                      <div>
+                        <Loader />
+                      </div>
+                    ) : (
+                      <div className="funds-allocation-form__bank-account-wrapper">
+                        <BankAccount
+                          bankAccount={bankAccountState.bankAccount}
+                          onBankAccountChange={handleBankAccountChange}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+                <RadioButtonGroup
+                  className="recipient-selection__toggle-button-group"
+                  label="Recipient"
+                  value={selectedRecipientType}
+                  onChange={handleSelectRecipientType}
+                  variant={Orientation.Horizontal}
+                >
+                  <RadioButton
+                    value={RecipientType.Member}
+                    styles={toggleButtonStyles}
+                    checked={selectedRecipientType === RecipientType.Member}
+                  ></RadioButton>
+                  {commonsOptions.length > 0 && (
+                    <RadioButton
+                      value={RecipientType.Common}
+                      styles={toggleButtonStyles}
+                      checked={selectedRecipientType === RecipientType.Common}
+                    ></RadioButton>
+                  )}
+                </RadioButtonGroup>
+
                 <Dropdown
                   className="funds-allocation-details__type-dropdown"
-                  options={FUND_TYPES}
-                  value={selectedFund}
-                  onSelect={handleFundSelect}
-                  label="Type of Funds"
-                  placeholder="Select Type"
+                  options={recipientDropdownDetails}
+                  value={selectedRecipient}
+                  onSelect={handleSetSelectedRecipient}
+                  placeholder={`Choose ${selectedRecipientType}`}
                   shouldBeFixed={false}
                 />
-                <CurrencyInput
-                  className="create-funds-allocation__currency"
-                  id="amount"
-                  name="amount"
-                  label="Amount"
-                  placeholder="10"
-                  prefix={getPrefix(selectedFund)}
+
+                <LinksArray
+                  name="links"
+                  values={values.links}
+                  errors={errors.links}
+                  touched={touched.links}
+                  maxTitleLength={MAX_LINK_TITLE_LENGTH}
+                  className="create-funds-allocation__text-field"
+                  itemClassName="funds_allocation__links-array-item"
                 />
-              </div>
-              {values.amount > 0 && (
-                <>
-                  {bankAccountState.loading ? (
-                    <div>
-                      <Loader />
-                    </div>
-                  ) : (
-                    <div className="funds-allocation-form__bank-account-wrapper">
-                      <BankAccount
-                        bankAccount={bankAccountState.bankAccount}
-                        onBankAccountChange={handleBankAccountChange}
-                      />
-                    </div>
-                  )}
-                </>
-              )}
-              <RadioButtonGroup
-                className="recipient-selection__toggle-button-group"
-                label="Recipient"
-                value={selectedRecipientType}
-                onChange={handleSelectRecipientType}
-                variant={Orientation.Horizontal}
-              >
-                <RadioButton
-                  value={RecipientType.Member}
-                  styles={toggleButtonStyles}
-                  checked={selectedRecipientType === RecipientType.Member}
-                ></RadioButton>
-                {commonsOptions.length > 0 && (
-                  <RadioButton
-                    value={RecipientType.Common}
-                    styles={toggleButtonStyles}
-                    checked={selectedRecipientType === RecipientType.Common}
-                  ></RadioButton>
-                )}
-              </RadioButtonGroup>
-
-              <Dropdown
-                className="funds-allocation-details__type-dropdown"
-                options={recipientDropdownDetails}
-                value={selectedRecipient}
-                onSelect={handleSetSelectedRecipient}
-                placeholder={`Choose ${selectedRecipientType}`}
-                shouldBeFixed={false}
-              />
-
-              <LinksArray
-                name="links"
-                values={values.links}
-                errors={errors.links}
-                touched={touched.links}
-                maxTitleLength={MAX_LINK_TITLE_LENGTH}
-                className="create-funds-allocation__text-field"
-                itemClassName="funds_allocation__links-array-item"
-              />
-              <ImageArray
-                name="images"
-                values={values.images}
-                areImagesLoading={values.areImagesLoading}
-                loadingFieldName="areImagesLoading"
-              />
-              <ModalFooter sticky={!isMobileView}>
-                <div className="funds-allocation-configuration__modal-footer">
-                  <Button
-                    onClick={handleContinueClick}
-                    shouldUseFullWidth={isMobileView}
-                    disabled={
-                      !isValid ||
-                      values.areImagesLoading ||
-                      (!bankAccountState.bankAccount && values.amount > 0)
-                    }
-                  >
-                    Create proposal
-                  </Button>
-                </div>
-              </ModalFooter>
-            </Form>
-          )}
+                <ImageArray
+                  name="images"
+                  values={values.images}
+                  areImagesLoading={values.areImagesLoading}
+                  loadingFieldName="areImagesLoading"
+                />
+                <ModalFooter sticky={!isMobileView}>
+                  <div className="funds-allocation-configuration__modal-footer">
+                    <Button
+                      onClick={handleContinueClick}
+                      shouldUseFullWidth={isMobileView}
+                      disabled={isSubmitDisabled}
+                    >
+                      Create proposal
+                    </Button>
+                  </div>
+                </ModalFooter>
+              </Form>
+            );
+          }}
         </Formik>
       </div>
     </div>
