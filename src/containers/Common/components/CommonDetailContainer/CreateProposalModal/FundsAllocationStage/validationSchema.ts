@@ -26,10 +26,6 @@ export const fundDetailsValidationSchema = yup.object({
           { shouldRemovePrefixFromZero: false }
         )}).`
     ),
-  bankAccountDetails: yup.object().when("amount", {
-    is: (amount) => amount > 0,
-    then: yup.object().required()
-  }).nullable(),
 });
 
 export const fundAllocationValidationSchema = configurationValidationSchema.concat(fundDetailsValidationSchema);
