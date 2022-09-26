@@ -257,7 +257,8 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
             const isSubmitDisabled =
               !isValid ||
               values.areImagesLoading ||
-              (!bankAccountState.bankAccount && values.amount > 0);
+              (!bankAccountState.bankAccount && values.amount > 0) ||
+              !selectedRecipient;
 
             return (
               <Form>
