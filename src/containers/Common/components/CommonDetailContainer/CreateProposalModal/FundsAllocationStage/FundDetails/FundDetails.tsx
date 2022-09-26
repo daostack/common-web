@@ -61,7 +61,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
     bankAccount: null,
   });
   const [selectedFund, setSelectedFund] = useState<FundType>(FundType.ILS);
-  
+
   const memberOptions = useMemo(
     () => commonMembers.map(({user, id}) => ({
       text: user.displayName || `${user.firstName} ${user.lastName}`,
@@ -141,7 +141,7 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
 
   const handleSubmit = (values: FormValues) => {
       const links = parseLinksForSubmission(values.links);
-      
+
       onFinish({
         ...initialData,
         fund: selectedFund,
@@ -216,59 +216,60 @@ const FundDetails: FC<ConfigurationProps> = (props) => {
         >
           {({ values, errors, touched, isValid }) => (
             <Form>
-            <div className="funds-input-row">
-              <Dropdown
-                className="funds-allocation-details__type-dropdown"
-                options={FUND_TYPES}
-                value={selectedFund}
-                onSelect={handleFundSelect}
-                label="Type of Funds"
-                placeholder="Select Type"
-                shouldBeFixed={false}
-              />
-              <CurrencyInput
-                className="create-funds-allocation__currency"
-                id="amount"
-                name="amount"
-                label="Amount"
-                placeholder="10"
-                prefix={getPrefix(selectedFund)}
-              />
+              <div className="funds-input-row">
+                <Dropdown
+                  className="funds-allocation-details__type-dropdown"
+                  options={FUND_TYPES}
+                  value={selectedFund}
+                  onSelect={handleFundSelect}
+                  label="Type of Funds"
+                  placeholder="Select Type"
+                  shouldBeFixed={false}
+                />
+                <CurrencyInput
+                  className="create-funds-allocation__currency"
+                  id="amount"
+                  name="amount"
+                  label="Amount"
+                  placeholder="10"
+                  prefix={getPrefix(selectedFund)}
+                />
               </div>
-              {values.amount > 0 &&
+              {values.amount > 0 && (
                 <>
                   {bankAccountState.loading ? (
-                      <div>
-                        <Loader />
-                      </div>
-                    ) : (
-                      <div className="funds-allocation-form__bank-account-wrapper">
-                        <BankAccount
-                          bankAccount={bankAccountState.bankAccount}
-                          onBankAccountChange={handleBankAccountChange}
-                        />
-                      </div>
+                    <div>
+                      <Loader />
+                    </div>
+                  ) : (
+                    <div className="funds-allocation-form__bank-account-wrapper">
+                      <BankAccount
+                        bankAccount={bankAccountState.bankAccount}
+                        onBankAccountChange={handleBankAccountChange}
+                      />
+                    </div>
                   )}
                 </>
-              }
+              )}
               <RadioButtonGroup
                 className="recipient-selection__toggle-button-group"
                 label="Recipient"
                 value={selectedRecipientType}
                 onChange={handleSelectRecipentType}
                 variant={Orientation.Horizontal}
-                >
+              >
                 <RadioButton
                   value={RecipientType.Member}
                   styles={toggleButtonStyles}
-                  checked={selectedRecipientType === RecipientType.Member}>
-                </RadioButton>
-                <RadioButton
-                  value={RecipientType.Common}
-                  styles={toggleButtonStyles}
-                  checked={selectedRecipientType === RecipientType.Common}>
-                </RadioButton>
-                
+                  checked={selectedRecipientType === RecipientType.Member}
+                ></RadioButton>
+                {commonsOptions.length > 0 && (
+                  <RadioButton
+                    value={RecipientType.Common}
+                    styles={toggleButtonStyles}
+                    checked={selectedRecipientType === RecipientType.Common}
+                  ></RadioButton>
+                )}
               </RadioButtonGroup>
 
               <Dropdown
