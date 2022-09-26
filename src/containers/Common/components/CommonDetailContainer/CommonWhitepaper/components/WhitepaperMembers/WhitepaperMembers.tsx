@@ -81,7 +81,7 @@ export default function WhitepaperMembers() {
         })
       }
 
-      if (governance?.proposals[proposal]?.global?.weights?.find(({ circles }) => circles & circleBin)) {
+      if (governance?.proposals[proposal]?.global?.weights?.find(({ circles }) => circles.bin & circleBin)) {
         return true
       }
     }).map((proposalType) =>
