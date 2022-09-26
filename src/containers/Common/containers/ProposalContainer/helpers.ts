@@ -21,15 +21,28 @@ const getVotersString = (
 };
 
 const getRecipient = (proposal, commonMembers, subCommons) => {
-  const {subcommonId = null, otherMemberId = null, to} = proposal.data.args;
+  const { subcommonId = null, otherMemberId = null } = proposal.data.args;
+
   if (subcommonId) {
-    const subCommon = subCommons.find((subCommon) => subCommon.id === subcommonId);
-    return subCommon.name;
+    const subCommon = subCommons.find(
+      (subCommon) => subCommon.id === subcommonId
+    );
+    return subCommon?.name || "-//-";
   }
-  const proposer = commonMembers.find((member) => member.userId === otherMemberId);
-  const {user: {displayName, firstName, lastName}} = proposer;
+
+  const proposer = commonMembers.find(
+    (member) => member.userId === otherMemberId
+  );
+
+  if (!proposer) {
+    return "-//-";
+  }
+
+  const {
+    user: { displayName, firstName, lastName },
+  } = proposer;
   return displayName || `${firstName} ${lastName}`;
-}
+};
 
 export const getFundsAllocationDetails = (
   proposal: FundsAllocation,
