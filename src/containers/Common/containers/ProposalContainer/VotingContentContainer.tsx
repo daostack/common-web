@@ -2,7 +2,6 @@ import React, { FC, useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
   Proposal,
-  Common,
   Governance,
   VotingCardType,
   User,
@@ -28,7 +27,6 @@ import {
   getMemberAdmittanceDetails,
   getRemoveCircleDetails,
 } from "./helpers";
-import { useCommonMembers } from "@/containers/Common/hooks";
 import { ProposalDetailsItem } from "./types";
 import { ProposalSpecificData } from "./useProposalSpecificData";
 import "./index.scss";
@@ -40,7 +38,6 @@ interface VotingContentContainerProps {
   proposalSpecificData: ProposalSpecificData;
   onVotesOpen: () => void;
   commonMembers: CommonMemberWithUserInfo[];
-  subCommons: Common[];
 }
 
 export const VotingContentContainer: FC<VotingContentContainerProps> = (
@@ -53,8 +50,8 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (
     proposalSpecificData,
     onVotesOpen,
     commonMembers,
-    subCommons,
   } = props;
+  const { subCommons } = proposalSpecificData;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 

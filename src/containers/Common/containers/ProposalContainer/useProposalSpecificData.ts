@@ -1,15 +1,18 @@
 import { useCallback } from "react";
 import { getUserData } from "@/containers/Auth/store/api";
 import { useLoadingState } from "@/shared/hooks";
-import { Proposal, User } from "@/shared/models";
+import { useSubCommons } from "@/shared/hooks/useCases";
+import { Common, Proposal, User } from "@/shared/models";
 import {
   isAssignCircleProposal,
+  isFundsAllocationProposal,
   isRemoveCircleProposal,
 } from "@/shared/models/governance/proposals";
 import { LoadingState } from "@/shared/interfaces";
 
 export interface ProposalSpecificData {
   user: User | null;
+  subCommons: Common[];
 }
 
 interface Return extends LoadingState<ProposalSpecificData> {
@@ -18,10 +21,20 @@ interface Return extends LoadingState<ProposalSpecificData> {
 
 const INITIAL_DATA: ProposalSpecificData = {
   user: null,
+  subCommons: [],
 };
 
 export const useProposalSpecificData = (): Return => {
   const [state, setState] = useLoadingState<ProposalSpecificData>(INITIAL_DATA);
+  const {
+    data: subCommons,
+    loading: areSubCommonsLoading,
+    fetched: areSubCommonsFetched,
+    fetchSubCommons,
+    setSubCommons,
+  } = useSubCommons();
+  const isLoading = state.loading || areSubCommonsLoading;
+  const isFetched = state.fetched || areSubCommonsFetched;
 
   const fetchData = useCallback(
     async (proposal: Proposal, force = false) => {
@@ -35,6 +48,12 @@ export const useProposalSpecificData = (): Return => {
         data: INITIAL_DATA,
       });
 
+      if (isFundsAllocationProposal(proposal)) {
+        fetchSubCommons(proposal.data.args.commonId);
+      } else {
+        setSubCommons([]);
+      }
+
       let user: User | null = null;
 
       try {
@@ -46,20 +65,26 @@ export const useProposalSpecificData = (): Return => {
       } catch (error) {
         user = null;
       } finally {
-        setState({
+        setState((nextState) => ({
           loading: false,
           fetched: true,
           data: {
+            ...nextState.data,
             user,
           },
-        });
+        }));
       }
     },
-    [state]
+    [state, fetchSubCommons, setSubCommons]
   );
 
   return {
-    ...state,
+    data: {
+      ...state.data,
+      subCommons,
+    },
+    loading: isLoading,
+    fetched: isFetched,
     fetchData,
   };
 };

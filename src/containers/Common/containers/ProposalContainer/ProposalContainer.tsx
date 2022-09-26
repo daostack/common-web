@@ -28,7 +28,6 @@ import {
   ROUTE_PATHS,
 } from "@/shared/constants";
 import { selectUser } from "@/containers/Auth/store/selectors";
-import { useSubCommons } from "@/shared/hooks/useCases";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ChatComponent } from "../../components";
 import { VotesModal } from "../../components/ProposalContainer";
@@ -92,11 +91,6 @@ const ProposalContainer = () => {
     data: commonMembers,
     fetchCommonMembers,
   } = useCommonMembers();
-  const {
-    data: subCommons,
-    fetched: areSubCommonsFetched,
-    fetchSubCommons,
-  } = useSubCommons();
   const commonId = currentCommon?.id;
 
   const {
@@ -183,7 +177,6 @@ const ProposalContainer = () => {
                 proposalSpecificData={proposalSpecificData}
                 onVotesOpen={onVotesModalOpen}
                 commonMembers={commonMembers}
-                subCommons={subCommons}
               />
             )
           );
@@ -299,18 +292,11 @@ const ProposalContainer = () => {
     }
   }, [fetchProposalSpecificData, currentProposal]);
 
-  useEffect(() => {
-    if (commonId) {
-      fetchSubCommons(commonId);
-    }
-  }, [fetchSubCommons, commonId]);
-
   return currentCommon &&
     currentProposal &&
     isCommonMemberFetched &&
     isProposalSpecificDataFetched &&
     areCommonMembersFetched &&
-    areSubCommonsFetched &&
     governance ? (
     <>
       <VotingPopup
