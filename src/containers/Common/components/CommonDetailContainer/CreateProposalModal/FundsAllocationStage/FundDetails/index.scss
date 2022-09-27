@@ -35,6 +35,10 @@
 .funds-allocation-details__type-dropdown {
   z-index: $dropdown-z-index + 1;
   width: 48%;
+
+  @include big-phone {
+    width: 100%;
+  }
 }
 
 .funds-allocation-configuration__modal-footer {
