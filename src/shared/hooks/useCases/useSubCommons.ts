@@ -7,6 +7,7 @@ type State = LoadingState<Common[]>;
 
 interface Return extends State {
   fetchSubCommons: (commonId: string) => void;
+  setSubCommons: (commons: Common[]) => void;
   addSubCommon: (common: Common) => void;
 }
 
@@ -42,6 +43,14 @@ export const useSubCommons = (): Return => {
     })();
   }, []);
 
+  const setSubCommons = useCallback((commons: Common[]) => {
+    setState({
+      loading: false,
+      fetched: true,
+      data: commons,
+    });
+  }, []);
+
   const addSubCommon = useCallback((common: Common) => {
     setState((nextState) => ({
       ...nextState,
@@ -52,6 +61,7 @@ export const useSubCommons = (): Return => {
   return {
     ...state,
     fetchSubCommons,
+    setSubCommons,
     addSubCommon,
   };
 };
