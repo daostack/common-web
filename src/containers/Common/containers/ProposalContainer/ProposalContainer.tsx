@@ -5,7 +5,7 @@ import React, {
   useMemo,
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import classNames from "classnames";
 import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
@@ -75,12 +75,14 @@ const ProposalContainer = () => {
   const { id: proposalId } = useParams<ProposalRouterParams>();
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
+  const highlightedCommentId = (location.state as { highlightedCommentId?: string })?.highlightedCommentId;
   const { isShowing, onOpen, onClose } = useModal(false);
   const user = useSelector(selectUser());
   const currentProposal = useSelector(selectCurrentProposal());
   const currentCommon = useSelector(selectCommonDetail());
   const governance = useSelector(selectGovernance());
-  const [activeTab, setActiveTab] = useState<PROPOSAL_MENU_TABS>(PROPOSAL_MENU_TABS.Voting);
+  const [activeTab, setActiveTab] = useState<PROPOSAL_MENU_TABS>(highlightedCommentId ? PROPOSAL_MENU_TABS.Discussions : PROPOSAL_MENU_TABS.Voting);
   const {
     fetched: isCommonMemberFetched,
     data: commonMember,
@@ -185,6 +187,7 @@ const ProposalContainer = () => {
               isJoiningPending={isJoiningPending}
               isCommonMemberFetched={isCommonMemberFetched}
               commonMember={commonMember}
+              highlightedMessageId={highlightedCommentId}
             />
           );
       }

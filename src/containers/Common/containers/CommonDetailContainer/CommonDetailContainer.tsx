@@ -329,8 +329,14 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   );
 
   const getProposalDetail = useCallback(
-    (payload: Proposal) =>
-      history.push(ROUTE_PATHS.PROPOSAL_DETAIL.replace(":id", payload.id)),
+    (payload: Proposal | ProposalWithHighlightedComment) => {
+      history.push({
+        pathname: ROUTE_PATHS.PROPOSAL_DETAIL.replace(":id", payload.id),
+        state: {
+          highlightedCommentId: (payload as ProposalWithHighlightedComment)?.highlightedCommentId,
+        }
+      });
+    },
     []
   );
 
@@ -348,7 +354,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         getProposalDetail(activeModalElement as Proposal);
         break;
       case DynamicLinkType.ProposalComment:
-        getProposalDetail(activeModalElement as Proposal);
+        getProposalDetail(activeModalElement as ProposalWithHighlightedComment);
         break;
       case DynamicLinkType.Discussion:
         getDisscussionDetail(activeModalElement as Discussion);
