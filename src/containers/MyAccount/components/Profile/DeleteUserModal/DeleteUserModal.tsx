@@ -11,6 +11,8 @@ import { ModalProps } from "@/shared/interfaces";
 import { useNotification } from "@/shared/hooks";
 import { emptyFunction } from "@/shared/utils";
 import { MainStep } from "./MainStep";
+import { parseErrorsByCommonId } from "./helpers";
+import { DeleteError, ErrorsByCommonId } from "./types";
 import "./index.scss";
 
 type DeleteUserModalProps = Pick<ModalProps, "isShowing" | "onClose">;
@@ -21,6 +23,7 @@ const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
   const { notify } = useNotification();
   const history = useHistory();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [errors, setErrors] = useState<DeleteError[]>([]);
   const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
   const {
@@ -51,6 +54,7 @@ const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
     }
 
     setIsDeleting(true);
+    setErrors([]);
     setErrorText("");
 
     dispatch(
@@ -61,6 +65,18 @@ const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
             ? (isRequestError(error) && error.response?.data?.errorMessage) ||
               "Something went wrong"
             : "";
+          const errorsByCommonId =
+            isRequestError(error) &&
+            (error.response?.data?.data?.errorsByCommonId as ErrorsByCommonId);
+
+          if (errorsByCommonId) {
+            const commons = userInfoAboutMembershipsFetched.map(
+              ({ common }) => common
+            );
+            const errors = parseErrorsByCommonId(errorsByCommonId, commons);
+
+            setErrors(errors);
+          }
 
           setIsDeleting(false);
           setErrorText(errorText);
@@ -88,6 +104,7 @@ const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
         <MainStep
           isLoading={isDeleting}
           errorText={errorText}
+          errors={errors}
           userMembershipInfo={userInfoAboutMembershipsFetched}
           onDelete={handleUserDelete}
           onCancel={onClose}

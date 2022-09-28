@@ -61,6 +61,24 @@
   font-size: $small;
 }
 
+.delete-user-main-step__error-list {
+  margin: 0;
+  padding: 0 0 0 1rem;
+  list-style-type: none;
+}
+
+.delete-user-main-step__error-list-item {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.delete-user-main-step__error-item-title {
+  margin: 0 0 0.5rem;
+}
+
 .delete-user-main-step__buttons-wrapper {
   margin-top: 3.25rem;
   display: flex;
