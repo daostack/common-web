@@ -59,10 +59,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
         icon={<TrashIcon className="delete-common-configuration__trash-icon" />}
       />
       <ol className="delete-common-configuration__ordered-list">
-        <li>
-          Common wallet must be empty (We can try to refund the members
-          contributions they previously transferred)
-        </li>
+        <li>Common wallet must be empty</li>
         <li>All proposals must be completed</li>
       </ol>
       <Formik
