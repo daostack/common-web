@@ -58,6 +58,9 @@ const Configuration: FC<ConfigurationProps> = (props) => {
         name="Delete common"
         icon={<TrashIcon className="delete-common-configuration__trash-icon" />}
       />
+      <h4 className="delete-common-configuration__title">
+        To delete a common the following conditions must be met:
+      </h4>
       <ol className="delete-common-configuration__ordered-list">
         <li>Common wallet must be empty</li>
         <li>All proposals must be completed</li>
