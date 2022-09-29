@@ -1,11 +1,21 @@
+import { Environment } from "./shared/constants";
 import { Configuration, ConfigurationObject } from "./shared/interfaces";
-const { REACT_APP_ENV = "dev" } = process.env;
+const REACT_APP_ENV =
+  (process.env.REACT_APP_ENV as Environment) || Environment.Dev;
 
 const FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL =
   "https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=api_key";
 
+if (!Object.values(Environment).includes(REACT_APP_ENV)) {
+  throw new Error(
+    `REACT_APP_ENV has invalid value "${REACT_APP_ENV}". Allowed values: "${Object.values(
+      Environment
+    ).join(", ")}"`
+  );
+}
+
 const local: Configuration = {
-  env: REACT_APP_ENV,
+  env: Environment.Local,
   baseApiUrl: "http://localhost:4000/api/v1/",
   firebase: {
     apiKey: "AIzaSyACs4Fof0wNmAvknR_ykBMD7SxwdxFzKKk",
@@ -21,7 +31,7 @@ const local: Configuration = {
 };
 
 const dev: Configuration = {
-  env: REACT_APP_ENV,
+  env: Environment.Dev,
   baseApiUrl: "http://localhost:4000/api/v1/",
   firebase: {
     apiKey: "AIzaSyACs4Fof0wNmAvknR_ykBMD7SxwdxFzKKk",
@@ -37,7 +47,7 @@ const dev: Configuration = {
 };
 
 const stage: Configuration = {
-  env: REACT_APP_ENV,
+  env: Environment.Stage,
   baseApiUrl: "http://localhost:4000/api/v1/",
   firebase: {
     apiKey: "AIzaSyClh8UZh-PDyVgwPrHZwURoA4HWuiXUbR8",
@@ -55,6 +65,7 @@ const stage: Configuration = {
 
 const production: Configuration = {
   ...dev,
+  env: Environment.Production,
   firebase: {
     apiKey: "AIzaSyAml-zMhoG_amLvM8mTxrydDOYXTGuubsA",
     authDomain: "common-daostack.firebaseapp.com",
@@ -76,9 +87,10 @@ const config: ConfigurationObject = {
 
 const configElement: Configuration = config[REACT_APP_ENV];
 
-export const FIREBASE_SHORT_DYNAMIC_LINKS_URL = FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL.replace(
-  "api_key",
-  configElement.firebase.apiKey
-);
+export const FIREBASE_SHORT_DYNAMIC_LINKS_URL =
+  FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL.replace(
+    "api_key",
+    configElement.firebase.apiKey
+  );
 
 export default configElement;
