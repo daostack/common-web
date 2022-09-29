@@ -2,7 +2,6 @@ import { Environment } from "../constants";
 
 export interface Configuration {
   env: Environment;
-  baseApiUrl: string;
   firebase: {
     apiKey: string;
     authDomain: string;

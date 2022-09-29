@@ -5,7 +5,6 @@ jest.mock(
   "@/config",
   (): Configuration => ({
     env: Environment.Dev,
-    baseApiUrl: "https://api-url.com",
     firebase: {
       apiKey: "API_KEY",
       authDomain: "auth-domain.com",

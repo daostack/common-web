@@ -16,7 +16,6 @@ if (!Object.values(Environment).includes(REACT_APP_ENV)) {
 
 const local: Configuration = {
   env: Environment.Local,
-  baseApiUrl: "http://localhost:4000/api/v1/",
   firebase: {
     apiKey: "AIzaSyACs4Fof0wNmAvknR_ykBMD7SxwdxFzKKk",
     authDomain: "http://localhost:8086",
@@ -32,7 +31,6 @@ const local: Configuration = {
 
 const dev: Configuration = {
   env: Environment.Dev,
-  baseApiUrl: "http://localhost:4000/api/v1/",
   firebase: {
     apiKey: "AIzaSyACs4Fof0wNmAvknR_ykBMD7SxwdxFzKKk",
     authDomain: "common-dev-dea4e.firebaseapp.com",
@@ -48,7 +46,6 @@ const dev: Configuration = {
 
 const stage: Configuration = {
   env: Environment.Stage,
-  baseApiUrl: "http://localhost:4000/api/v1/",
   firebase: {
     apiKey: "AIzaSyClh8UZh-PDyVgwPrHZwURoA4HWuiXUbR8",
     authDomain: "common-staging-50741.firebaseapp.com",
@@ -64,7 +61,6 @@ const stage: Configuration = {
 };
 
 const production: Configuration = {
-  ...dev,
   env: Environment.Production,
   firebase: {
     apiKey: "AIzaSyAml-zMhoG_amLvM8mTxrydDOYXTGuubsA",
