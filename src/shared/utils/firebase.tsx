@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import { Environment, REACT_APP_ENV } from "@/shared/constants";
+import { local } from "@/config";
 import "firebase/firestore";
 import "firebase/auth";
 import "firebase/storage";
@@ -13,8 +14,13 @@ interface FirebaseError extends Error {
 firebase.initializeApp(config.firebase);
 
 if (REACT_APP_ENV === Environment.Local) {
-  firebase.auth().useEmulator("http://localhost:8086");
-  firebase.firestore().useEmulator("localhost", 8080);
+  firebase.auth().useEmulator(local.firebase.authDomain);
+  firebase
+    .firestore()
+    .useEmulator(
+      "localhost",
+      Number(local.firebase.databaseURL.split(/:/g)[2])
+    );
 }
 
 export const isFirebaseError = (error: any): error is FirebaseError => {

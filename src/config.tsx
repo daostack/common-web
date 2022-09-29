@@ -12,7 +12,7 @@ if (!Object.values(Environment).includes(REACT_APP_ENV)) {
   );
 }
 
-const local: Configuration = {
+export const local: Configuration = {
   env: Environment.Local,
   firebase: {
     apiKey: "AIzaSyACs4Fof0wNmAvknR_ykBMD7SxwdxFzKKk",
