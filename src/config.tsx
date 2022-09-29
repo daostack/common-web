@@ -1,7 +1,5 @@
-import { Environment } from "./shared/constants";
+import { Environment, REACT_APP_ENV } from "./shared/constants";
 import { Configuration, ConfigurationObject } from "./shared/interfaces";
-const REACT_APP_ENV =
-  (process.env.REACT_APP_ENV as Environment) || Environment.Dev;
 
 const FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL =
   "https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=api_key";
