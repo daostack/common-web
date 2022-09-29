@@ -15,6 +15,4 @@ export interface Configuration {
   deadSeaCommonId: string;
 }
 
-export interface ConfigurationObject {
-  [key: string]: Configuration;
-}
+export type ConfigurationObject = Record<Environment, Configuration>;

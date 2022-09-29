@@ -76,9 +76,10 @@ const production: Configuration = {
 };
 
 const config: ConfigurationObject = {
-  dev,
-  stage,
-  production,
+  [Environment.Local]: local,
+  [Environment.Dev]: dev,
+  [Environment.Stage]: stage,
+  [Environment.Production]: production,
 };
 
 const configElement: Configuration = config[REACT_APP_ENV];
