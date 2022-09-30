@@ -1,6 +1,7 @@
+import { Environment } from "../constants";
+
 export interface Configuration {
-  env: string;
-  baseApiUrl: string;
+  env: Environment;
   firebase: {
     apiKey: string;
     authDomain: string;
@@ -14,6 +15,4 @@ export interface Configuration {
   deadSeaCommonId: string;
 }
 
-export interface ConfigurationObject {
-  [key: string]: Configuration;
-}
+export type ConfigurationObject = Record<Environment, Configuration>;

@@ -1,10 +1,10 @@
+import { Environment } from "@/shared/constants";
 import { Configuration } from "@/shared/interfaces";
 
 jest.mock(
   "@/config",
   (): Configuration => ({
-    env: "dev",
-    baseApiUrl: "https://api-url.com",
+    env: Environment.Dev,
     firebase: {
       apiKey: "API_KEY",
       authDomain: "auth-domain.com",
