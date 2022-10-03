@@ -1,9 +1,9 @@
 import React, { FC } from "react";
+import { useHistory } from "react-router-dom";
 import config from "@/config";
 import { Button } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import "./index.scss";
-import { useHistory } from "react-router-dom";
 
 const Success: FC = () => {
   const history = useHistory();
@@ -15,19 +15,19 @@ const Success: FC = () => {
   };
 
   return (
-    <div className="dead-sea-success">
-      <h1 className="dead-sea-success__title">Welcome</h1>
-      <p className="dead-sea-success__paragraph-1">
+    <div className="supporters-page-success">
+      <h1 className="supporters-page-success__title">Welcome</h1>
+      <p className="supporters-page-success__paragraph-1">
         You’re now a supporter member of the Dead Sea Guardians Common.
       </p>
-      <p className="dead-sea-success__paragraph-2">
+      <p className="supporters-page-success__paragraph-2">
         The Common is a shared space for the Dead Sea Guardians Supporters
         Community. Common members discuss and vote on decisions and expenses.
         For more details on how to take active part in the Common check the
         Agenda.
       </p>
       <Button
-        className="dead-sea-success__submit-button"
+        className="supporters-page-success__submit-button"
         onClick={handleJumpIn}
         shouldUseFullWidth
       >

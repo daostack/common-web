@@ -9,7 +9,7 @@ import {
 } from "@/shared/components";
 import { Card } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
-import "src/containers/Common/components/SupportersContainer/PaymentStep/PaymentDetails/index.scss";
+import "./index.scss";
 
 interface PaymentDetailsProps {
   amount: number;

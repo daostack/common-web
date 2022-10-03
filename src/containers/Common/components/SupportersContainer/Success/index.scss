@@ -1,23 +1,23 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
-.dead-sea-success {
+.supporters-page-success {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.dead-sea-success__title {
+.supporters-page-success__title {
   margin: 0;
 }
 
-.dead-sea-success__paragraph-1 {
+.supporters-page-success__paragraph-1 {
   max-width: 18.375rem;
   margin: 1rem 0 0;
 }
 
-.dead-sea-success__paragraph-2 {
+.supporters-page-success__paragraph-2 {
   max-width: 43.125rem;
   margin: 2rem 0 0;
 
@@ -26,7 +26,7 @@
   }
 }
 
-.dead-sea-success__submit-button {
+.supporters-page-success__submit-button {
   max-width: 12.625rem;
   margin-top: 4rem;
 
