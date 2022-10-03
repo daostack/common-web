@@ -56,6 +56,11 @@
   color: $white;
 }
 
+.contact-us-info-section__back-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
 .contact-us-info-section__title {
   margin: 1.75rem 0 2rem;
   font-family: NotoSerifSC, serif;
@@ -87,4 +92,8 @@
 .contact-us-info-section__list-item-icon {
   flex-shrink: 0;
   margin-right: 0.875rem;
+}
+.contact-us-info-section__list-item-icon--rtl {
+  margin-left: 0.875rem;
+  margin-right: 0;
 }

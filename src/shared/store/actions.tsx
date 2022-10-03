@@ -1,6 +1,5 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
-
-import { ScreenSize } from "../constants";
+import { Language, ScreenSize } from "../constants";
 import {
   NotificationData,
   PayloadWithOptionalCallback,
@@ -45,3 +44,7 @@ export const resetFooterState = createStandardAction(
 export const updateFooterState = createStandardAction(
   SharedActionTypes.UPDATE_FOOTER_STATE
 )<Partial<SharedFooterState>>();
+
+export const changeLanguage = createStandardAction(
+  SharedActionTypes.CHANGE_LANGUAGE
+)<Language>();

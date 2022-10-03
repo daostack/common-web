@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import commonCollaborationIconSrc from "@/shared/assets/images/common-collaboration-icon.svg";
 import commonGlobalEmpowerIconSrc from "@/shared/assets/images/common-global-empower-icon.svg";
@@ -35,29 +36,35 @@ const Card: FC<CardProps> = ({
   </div>
 );
 
-const CommonInfoSection: FC = () => (
-  <section className="landing-common-info-section">
-    <div className="landing-common-info-section__content">
-      <h2 className="landing-common-info-section__title">What is Common?</h2>
-      <Card
-        imageSrc={commonGlobalEmpowerIconSrc}
-        imageAlt="Global empower"
-        description="Common empowers people around the world to catalyze social and economic change and fulfill common dreams together."
-      />
-      <Card
-        imageSrc={commonVotingProcessIconSrc}
-        imageAlt="Voting process"
-        description="Common members exchange ideas, prioritize initiatives, and fund projects through a democratic voting process."
-        descriptionClassName="landing-common-info-section__card-description--voting-process"
-      />
-      <Card
-        imageSrc={commonCollaborationIconSrc}
-        imageAlt="Collaboration"
-        description="Common enables large groups of people to collaborate on shared agendas by pooling funds and collectively making decisions."
-        descriptionClassName="landing-common-info-section__card-description--collaboration"
-      />
-    </div>
-  </section>
-);
+const CommonInfoSection: FC = () => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "landing.commonInfoSection",
+  });
+
+  return (
+    <section className="landing-common-info-section">
+      <div className="landing-common-info-section__content">
+        <h2 className="landing-common-info-section__title">{t("title")}</h2>
+        <Card
+          imageSrc={commonGlobalEmpowerIconSrc}
+          imageAlt={t("card1.imageAlt")}
+          description={t("card1.description")}
+        />
+        <Card
+          imageSrc={commonVotingProcessIconSrc}
+          imageAlt={t("card2.imageAlt")}
+          description={t("card2.description")}
+          descriptionClassName="landing-common-info-section__card-description--voting-process"
+        />
+        <Card
+          imageSrc={commonCollaborationIconSrc}
+          imageAlt={t("card3.imageAlt")}
+          description={t("card3.description")}
+          descriptionClassName="landing-common-info-section__card-description--collaboration"
+        />
+      </div>
+    </section>
+  );
+};
 
 export default CommonInfoSection;

@@ -24,3 +24,6 @@ $vertical-view-breakpoint: 1000px;
     grid-template-columns: 1fr;
   }
 }
+.contact-us__content--rtl {
+  direction: rtl;
+}

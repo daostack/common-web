@@ -1,4 +1,5 @@
 import React, { FC, useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { sendEmail } from "@/containers/Landing/store/actions";
 import { useNotification } from "@/shared/hooks";
@@ -8,6 +9,9 @@ import "./index.scss";
 
 const ContactUsSection: FC = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "contactUs.contactUsSection",
+  });
   const [errorText, setErrorText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { notify } = useNotification();
@@ -50,9 +54,7 @@ const ContactUsSection: FC = () => {
   return (
     <section className="contact-us-contact-us-section">
       <div className="contact-us-contact-us-section__content">
-        <h2 className="contact-us-contact-us-section__title">
-          We are here to walk you through it
-        </h2>
+        <h2 className="contact-us-contact-us-section__title">{t("title")}</h2>
         <ContactUsForm
           onSubmit={handleSubmit}
           isLoading={isLoading}

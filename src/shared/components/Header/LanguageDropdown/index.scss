@@ -1,0 +1,30 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.language-dropdown__menu-button {
+  background-color: transparent;
+  border: 0;
+
+  @include big-phone {
+    height: 4.125rem;
+    justify-content: center;
+  }
+}
+
+.language-dropdown__item--rtl {
+  text-align: right;
+  direction: rtl;
+}
+
+.language-dropdown__menu-item {
+  @include big-phone {
+    text-align: center;
+  }
+}
+
+.language-dropdown__value {
+  @include big-phone {
+    flex: unset;
+    font-size: $moderate;
+  }
+}

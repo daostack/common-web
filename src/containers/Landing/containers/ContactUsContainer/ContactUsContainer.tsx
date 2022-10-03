@@ -1,7 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import classNames from "classnames";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
+import { selectIsRtlLanguage } from "@/shared/store/selectors";
 import {
   ContactUsSection,
   InfoSection,
@@ -10,6 +13,7 @@ import "./index.scss";
 
 const ContactUsContainer = () => {
   const history = useHistory();
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
   useZoomDisabling();
 
   const moveToHomePage = () => {
@@ -18,7 +22,11 @@ const ContactUsContainer = () => {
 
   return (
     <div className="contact-us">
-      <div className="contact-us__content">
+      <div
+        className={classNames("contact-us__content", {
+          "contact-us__content--rtl": isRtlLanguage,
+        })}
+      >
         <InfoSection onGoBack={moveToHomePage} />
         <ContactUsSection />
       </div>

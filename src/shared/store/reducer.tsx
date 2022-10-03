@@ -1,7 +1,6 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
-
-import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
+import { Language, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
 import { SharedStateType } from "../interfaces";
 import * as actions from "./actions";
 
@@ -25,6 +24,8 @@ const initialState: SharedStateType = {
   footer: {
     shouldHideFooter: null,
   },
+  language: Language.English,
+  isRtlLanguage: false,
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
@@ -112,6 +113,12 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.footer,
         ...action.payload,
       };
+    })
+  )
+  .handleAction(actions.changeLanguage, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.language = action.payload;
+      nextState.isRtlLanguage = nextState.language === Language.Hebrew;
     })
   );
 
