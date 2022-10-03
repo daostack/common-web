@@ -9,6 +9,7 @@ export enum ROUTE_PATHS {
   MY_ACCOUNT_BILLING = "/my-account/billing",
   COMMON_LIST = "/commons",
   COMMON_DETAIL = "/commons/:id",
+  SUPPORTERS = "/commons/:id/supporters",
   MY_COMMONS = "/my-commons",
   SUBMIT_INVOICES = "/invoices/submission/:proposalId",
   TRUSTEE = "/trustee",
