@@ -10,7 +10,7 @@ import { MemberAdmittance } from "@/shared/models/governance/proposals";
 import { getUserName } from "@/shared/utils";
 import { useLoadingState } from "@/shared/hooks";
 import { ErrorText } from "@/shared/components/Form";
-import { GeneralInfoWrapper } from "../../../../Common/components/SupportersContainer/GeneralInfoWrapper";
+import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 import "./index.scss";
 
 interface MemberAdmittanceStepProps {
@@ -120,7 +120,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
   return (
     <GeneralInfoWrapper>
       {errorText ? (
-        <ErrorText className="dead-sea-member-admittance-step__error">
+        <ErrorText className="supporters-page-member-admittance-step__error">
           {errorText}
         </ErrorText>
       ) : (
