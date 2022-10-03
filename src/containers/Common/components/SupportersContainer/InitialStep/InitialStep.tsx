@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useLocation } from "react-router-dom";
 import { ButtonLink } from "@/shared/components";
 import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
 import { checkIsIFrame } from "@/shared/utils";
@@ -16,10 +17,11 @@ const DESCRIPTION =
 
 const InitialStep: FC<InitialStepProps> = (props) => {
   const { amount, onFinish } = props;
+  const location = useLocation();
   const isInsideIFrame = checkIsIFrame();
 
   const getSubmitLink = (amount: number): string =>
-    `${ROUTE_PATHS.DEAD_SEA}?${QueryParamKey.IntegrationAmount}=${amount}`;
+    `${location.pathname}?${QueryParamKey.IntegrationAmount}=${amount}`;
 
   return (
     <GeneralInfoWrapper description={DESCRIPTION}>
