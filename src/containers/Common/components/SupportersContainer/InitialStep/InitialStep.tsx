@@ -19,7 +19,7 @@ const DESCRIPTION =
 const InitialStep: FC<InitialStepProps> = (props) => {
   const { amount, onFinish } = props;
   const location = useLocation();
-  const { currentTranslation } = useSupportersDataContext();
+  const { supportersData, currentTranslation } = useSupportersDataContext();
   const isInsideIFrame = checkIsIFrame();
 
   const getSubmitLink = (amount: number): string =>
@@ -36,6 +36,7 @@ const InitialStep: FC<InitialStepProps> = (props) => {
     >
       <AmountSelection
         amount={amount}
+        amountsToSelect={supportersData?.amounts || []}
         preSubmitText={
           <p className="supporters-page-initial-step__pre-submit-text">
             DSG is a community movement managed via{" "}

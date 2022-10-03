@@ -13,29 +13,29 @@ import "./index.scss";
 
 interface PaymentDetailsProps {
   amount?: number;
+  amountsToSelect: number[];
   preSubmitText?: ReactNode;
   submitButtonText?: string;
   onAmountChange: (amount: number) => void;
   getSubmitLink?: (amount: number) => string;
 }
 
-const AMOUNTS = [18000, 36000, 75000, 120000];
-
 const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   const {
     amount: currentAmount,
+    amountsToSelect,
     preSubmitText,
     submitButtonText = "Update Contribution",
     onAmountChange,
     getSubmitLink,
   } = props;
   const [selectedAmount, setSelectedAmount] = useState<number | null>(() =>
-    currentAmount && AMOUNTS.some((amount) => amount === currentAmount)
+    currentAmount && amountsToSelect.some((amount) => amount === currentAmount)
       ? currentAmount
       : null
   );
   const [inputValue, setInputValue] = useState(() =>
-    !currentAmount || AMOUNTS.some((amount) => amount === currentAmount)
+    !currentAmount || amountsToSelect.some((amount) => amount === currentAmount)
       ? ""
       : String(currentAmount / 100)
   );
@@ -87,7 +87,7 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
         className="supporters-page-amount-selection__amounts-wrapper"
         role="group"
       >
-        {AMOUNTS.map((amount) => (
+        {amountsToSelect.map((amount) => (
           <SelectionButton
             key={amount}
             isActive={amount === selectedAmount}

@@ -36,7 +36,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
     resetImmediateContribution,
     onReadyToSubscribe,
   } = useImmediateContribution();
-  const { currentTranslation } = useSupportersDataContext();
+  const { supportersData, currentTranslation } = useSupportersDataContext();
   const [isAmountEditing, setIsAmountEditing] = useState(false);
 
   const handleImmediateContribution = useCallback(() => {
@@ -94,6 +94,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
         (isAmountEditing ? (
           <AmountSelection
             amount={amount}
+            amountsToSelect={supportersData?.amounts || []}
             onAmountChange={handleAmountChange}
           />
         ) : (
