@@ -103,15 +103,15 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
       validateOnMount
     >
       {({ isValid, isSubmitting }) => (
-        <Form className="dead-sea-user-details-form">
-          <div className="dead-sea-user-details-form__fields-wrapper">
+        <Form className="supporters-page-user-details-form">
+          <div className="supporters-page-user-details-form__fields-wrapper">
             <TextField
               id="firstName"
               name="firstName"
               label="First name"
               placeholder="Yossi"
               styles={{
-                label: "dead-sea-user-details-form__field-label",
+                label: "supporters-page-user-details-form__field-label",
               }}
             />
             <TextField
@@ -120,7 +120,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               label="Last name"
               placeholder="Mordachai"
               styles={{
-                label: "dead-sea-user-details-form__field-label",
+                label: "supporters-page-user-details-form__field-label",
               }}
             />
             <TextField
@@ -129,7 +129,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               label="Email"
               placeholder="yossi.mor@gmail.com"
               styles={{
-                label: "dead-sea-user-details-form__field-label",
+                label: "supporters-page-user-details-form__field-label",
               }}
             />
             <Dropdown
@@ -140,29 +140,29 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               shouldBeFixed={false}
             />
             <TextField
-              className="dead-sea-user-details-form__all-columns"
+              className="supporters-page-user-details-form__all-columns"
               id="about"
               name="about"
               label="About you"
               placeholder="What are you most passionate about, really good at, or love"
               hint="(optional)"
               styles={{
-                label: "dead-sea-user-details-form__field-label",
-                hint: "dead-sea-user-details-form__field-hint",
+                label: "supporters-page-user-details-form__field-label",
+                hint: "supporters-page-user-details-form__field-hint",
               }}
               isTextarea
               rows={textAreaRowsAmount}
             />
             <TextField
-              className="dead-sea-user-details-form__all-columns"
+              className="supporters-page-user-details-form__all-columns"
               id="supportPlan"
               name="supportPlan"
               label="How could you support DSG further?"
               placeholder="Special skills, connections or other assets you have that could help accomplish the DSG mission"
               hint="(optional)"
               styles={{
-                label: "dead-sea-user-details-form__field-label",
-                hint: "dead-sea-user-details-form__field-hint",
+                label: "supporters-page-user-details-form__field-label",
+                hint: "supporters-page-user-details-form__field-hint",
               }}
               isTextarea
               rows={textAreaRowsAmount}
@@ -174,7 +174,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             label="Agree to receive marketing content"
           />
           <Checkbox
-            className="dead-sea-user-details-form__checkbox"
+            className="supporters-page-user-details-form__checkbox"
             id="whatsappGroupAgreement"
             name="whatsappGroupAgreement"
             label="Interested to join DSG whatsapp group"
@@ -185,7 +185,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             </div>
           )}
           <Button
-            className="dead-sea-user-details-form__submit-button"
+            className="supporters-page-user-details-form__submit-button"
             type="submit"
             disabled={!isValid || isSubmitting}
             shouldUseFullWidth
@@ -193,7 +193,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             Next
           </Button>
           {errorText && (
-            <ErrorText className="dead-sea-user-details-form__error">
+            <ErrorText className="supporters-page-user-details-form__error">
               {errorText}
             </ErrorText>
           )}

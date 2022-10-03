@@ -1,12 +1,12 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
-.dead-sea-user-details-form {
+.supporters-page-user-details-form {
   display: flex;
   flex-direction: column;
 }
 
-.dead-sea-user-details-form__fields-wrapper {
+.supporters-page-user-details-form__fields-wrapper {
   margin-bottom: 1.125rem;
   display: grid;
   grid-gap: 1.5rem;
@@ -17,7 +17,7 @@
     grid-template-columns: 1fr;
   }
 
-  .dead-sea-user-details-form__field-hint {
+  .supporters-page-user-details-form__field-hint {
     margin-left: 0.25rem;
     font-size: $xsmall;
     font-style: normal;
@@ -25,11 +25,11 @@
   }
 }
 
-.dead-sea-user-details-form__field-label {
+.supporters-page-user-details-form__field-label {
   font-size: $xsmall;
 }
 
-.dead-sea-user-details-form__all-columns {
+.supporters-page-user-details-form__all-columns {
   grid-column: 1 / 3;
 
   @include big-phone {
@@ -37,7 +37,7 @@
   }
 }
 
-.dead-sea-user-details-form__checkbox {
+.supporters-page-user-details-form__checkbox {
   margin: 1.375rem 0;
 
   @include big-phone {
@@ -45,7 +45,7 @@
   }
 }
 
-.dead-sea-user-details-form__submit-button {
+.supporters-page-user-details-form__submit-button {
   max-width: 12.625rem;
   margin-top: 1.375rem;
 
@@ -55,7 +55,7 @@
   }
 }
 
-.dead-sea-user-details-form__error {
+.supporters-page-user-details-form__error {
   font-size: $small;
 
   @include big-phone {

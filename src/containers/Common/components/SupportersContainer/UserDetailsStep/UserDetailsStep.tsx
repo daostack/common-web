@@ -4,7 +4,7 @@ import { ScreenSize } from "@/shared/constants";
 import { User } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DeadSeaUserDetailsForm } from "../DeadSeaUserDetailsForm";
-import { GeneralInfoWrapper } from "../../../../Common/components/SupportersContainer/GeneralInfoWrapper";
+import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 import "./index.scss";
 
 interface UserDetailsStepProps {
@@ -20,7 +20,9 @@ const UserDetailsStep: FC<UserDetailsStepProps> = (props) => {
   return (
     <GeneralInfoWrapper>
       {isMobileView && (
-        <h2 className="dead-sea-user-details-step__register-title">Register</h2>
+        <h2 className="supporters-page-user-details-step__register-title">
+          Register
+        </h2>
       )}
       <DeadSeaUserDetailsForm user={user} onFinish={onFinish} />
     </GeneralInfoWrapper>
