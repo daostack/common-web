@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useLocation } from "react-router-dom";
+import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { ButtonLink } from "@/shared/components";
 import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
 import { checkIsIFrame } from "@/shared/utils";
@@ -18,13 +19,21 @@ const DESCRIPTION =
 const InitialStep: FC<InitialStepProps> = (props) => {
   const { amount, onFinish } = props;
   const location = useLocation();
+  const { currentTranslation } = useSupportersDataContext();
   const isInsideIFrame = checkIsIFrame();
 
   const getSubmitLink = (amount: number): string =>
     `${location.pathname}?${QueryParamKey.SupportersFlowAmount}=${amount}`;
 
+  if (!currentTranslation) {
+    return null;
+  }
+
   return (
-    <GeneralInfoWrapper description={DESCRIPTION}>
+    <GeneralInfoWrapper
+      title={currentTranslation.title}
+      description={DESCRIPTION}
+    >
       <AmountSelection
         amount={amount}
         preSubmitText={

@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import config from "@/config";
+import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
 import { ContributionType } from "@/shared/constants";
@@ -35,6 +36,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
     resetImmediateContribution,
     onReadyToSubscribe,
   } = useImmediateContribution();
+  const { currentTranslation } = useSupportersDataContext();
   const [isAmountEditing, setIsAmountEditing] = useState(false);
 
   const handleImmediateContribution = useCallback(() => {
@@ -78,8 +80,15 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
     }
   }, [payment]);
 
+  if (!currentTranslation) {
+    return null;
+  }
+
   return (
-    <GeneralInfoWrapper onGoBack={isAmountEditing ? stopAmountEditing : null}>
+    <GeneralInfoWrapper
+      title={currentTranslation.title}
+      onGoBack={isAmountEditing ? stopAmountEditing : null}
+    >
       {!areUserCardsFetched && <Loader />}
       {areUserCardsFetched &&
         (isAmountEditing ? (

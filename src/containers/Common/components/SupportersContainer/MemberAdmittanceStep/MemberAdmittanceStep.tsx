@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import config from "@/config";
 import { selectUser } from "@/containers/Auth/store/selectors";
+import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { useCommonMember } from "@/containers/Common/hooks";
 import { createMemberAdmittanceProposal } from "@/containers/Common/store/actions";
 import { subscribeToCommonMembers } from "@/containers/Common/store/api";
@@ -34,6 +35,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
     },
     setProposalCreationState,
   ] = useLoadingState<MemberAdmittance | null>(null);
+  const { currentTranslation } = useSupportersDataContext();
   const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -117,8 +119,12 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
     });
   }, [createdMemberAdmittance, userId, onFinish]);
 
+  if (!currentTranslation) {
+    return null;
+  }
+
   return (
-    <GeneralInfoWrapper>
+    <GeneralInfoWrapper title={currentTranslation.title}>
       {errorText ? (
         <ErrorText className="supporters-page-member-admittance-step__error">
           {errorText}

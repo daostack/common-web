@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useFooter, useHeader, useQueryParams } from "@/shared/hooks";
@@ -14,6 +14,7 @@ import {
   UserDetailsStep,
 } from "../../components/SupportersContainer";
 import { SupportersStep } from "./constants";
+import { SupportersDataContext, SupportersDataContextValue } from "./context";
 import { getAmount } from "./helpers";
 import "./index.scss";
 
@@ -39,9 +40,10 @@ const SupportersContainer = () => {
   );
   const [supportPlan, setSupportPlan] = useState("");
   const user = useSelector(selectUser());
-  const currentTranslation = supportersData
-    ? supportersData.translations[supportersData.defaultLocale]
-    : null;
+  const currentTranslation =
+    (supportersData &&
+      supportersData.translations[supportersData.defaultLocale]) ||
+    null;
   const isMainDataFetched = isCommonFetched && isSupportersDataFetched;
   const isInitialLoading = !user && step === SupportersStep.UserDetails;
 
@@ -141,6 +143,14 @@ const SupportersContainer = () => {
     }
   };
 
+  const contextValue = useMemo<SupportersDataContextValue>(
+    () => ({
+      supportersData,
+      currentTranslation,
+    }),
+    [supportersData, currentTranslation]
+  );
+
   if (!isMainDataFetched) {
     return <Loader />;
   }
@@ -160,7 +170,9 @@ const SupportersContainer = () => {
               alt={currentTranslation.title}
             />
           </div>
-          {renderContent()}
+          <SupportersDataContext.Provider value={contextValue}>
+            {renderContent()}
+          </SupportersDataContext.Provider>
         </div>
       )}
     </div>

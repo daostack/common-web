@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
+import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { ScreenSize } from "@/shared/constants";
 import { User } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -14,11 +15,16 @@ interface UserDetailsStepProps {
 
 const UserDetailsStep: FC<UserDetailsStepProps> = (props) => {
   const { user, onFinish } = props;
+  const { currentTranslation } = useSupportersDataContext();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
+  if (!currentTranslation) {
+    return null;
+  }
+
   return (
-    <GeneralInfoWrapper>
+    <GeneralInfoWrapper title={currentTranslation.title}>
       {isMobileView && (
         <h2 className="supporters-page-user-details-step__register-title">
           Register
