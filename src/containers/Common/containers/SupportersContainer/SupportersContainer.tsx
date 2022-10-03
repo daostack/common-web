@@ -6,6 +6,13 @@ import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import { useCommon, useSupportersData } from "@/shared/hooks/useCases";
+import {
+  InitialStep,
+  MemberAdmittanceStep,
+  PaymentStep,
+  Success,
+  UserDetailsStep,
+} from "../../components/SupportersContainer";
 import { SupportersStep } from "./constants";
 import { getAmount } from "./helpers";
 import "./index.scss";
@@ -103,7 +110,35 @@ const SupportersContainer = () => {
       return <Loader />;
     }
 
-    return <div>Content</div>;
+    switch (step) {
+      case SupportersStep.InitialStep:
+        return (
+          <InitialStep amount={amount} onFinish={handleInitialStepFinish} />
+        );
+      case SupportersStep.UserDetails:
+        return user ? (
+          <UserDetailsStep user={user} onFinish={handleUserDetailsStepFinish} />
+        ) : null;
+      case SupportersStep.MemberAdmittance:
+        return (
+          <MemberAdmittanceStep
+            description={supportPlan}
+            onFinish={handleMemberAdmittanceStepFinish}
+          />
+        );
+      case SupportersStep.Payment:
+        return (
+          <PaymentStep
+            amount={amount}
+            onAmountChange={setAmount}
+            onFinish={handlePaymentStepFinish}
+          />
+        );
+      case SupportersStep.Success:
+        return <Success />;
+      default:
+        return null;
+    }
   };
 
   if (!isMainDataFetched) {
