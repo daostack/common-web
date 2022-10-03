@@ -36,7 +36,8 @@ const InitialStep: FC<InitialStepProps> = (props) => {
         amountsToSelect={supportersData?.amounts || []}
         preSubmitText={
           <p className="supporters-page-initial-step__pre-submit-text">
-            DSG is a community movement managed via{" "}
+            <strong>{currentTranslation.title}</strong> is a community movement
+            managed via{" "}
             <ButtonLink
               href={ROUTE_PATHS.HOME}
               target="_blank"
