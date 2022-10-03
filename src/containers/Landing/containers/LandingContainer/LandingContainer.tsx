@@ -1,6 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { ROUTE_PATHS } from "@/shared/constants";
+import classNames from "classnames";
+import { Language, ROUTE_PATHS } from "@/shared/constants";
+import { selectLanguage } from "@/shared/store/selectors";
 import {
   CollectiveActionSection,
   CommonInfoSection,
@@ -11,6 +14,7 @@ import {
 import "./index.scss";
 
 const LandingContainer = () => {
+  const language = useSelector(selectLanguage());
   const history = useHistory();
 
   const moveToContactUsPage = () => {
@@ -18,11 +22,15 @@ const LandingContainer = () => {
   };
 
   return (
-    <div className="landing">
+    <div
+      className={classNames("landing", {
+        "hebrew-font": language === Language.Hebrew,
+      })}
+    >
       <VideoSection onLaunchClick={moveToContactUsPage} />
       <ImagineSection />
       <StructureInfoSection />
-      <CommonInfoSection />
+      {language !== Language.Hebrew && <CommonInfoSection />}
       <CollectiveActionSection onLaunchClick={moveToContactUsPage} />
     </div>
   );

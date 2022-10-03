@@ -18,9 +18,17 @@
     border: 1px solid $light-gray-3;
     border-radius: 0;
   }
+  .contact-us-contact-us-form__input--rtl-ltr {
+    text-align: right;
+    direction: ltr;
+  }
 
   .contact-us-contact-us-form__textarea {
     height: 5.375rem;
+  }
+
+  .contact-us-contact-us-form__input-error {
+    text-align: right;
   }
 
   .contact-us-contact-us-form__loader {

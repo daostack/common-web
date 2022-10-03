@@ -208,3 +208,15 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+.hebrew-font {
+  font-family: Heebo, sans-serif;
+
+  h1,
+  h2,
+  h3,
+  p,
+  button {
+    font-family: Heebo, sans-serif;
+  }
+}

@@ -31,3 +31,9 @@ export const selectHeader = () =>
 
 export const selectFooter = () =>
   createSelector(selectShared, (state) => state.footer);
+
+export const selectLanguage = () =>
+  createSelector(selectShared, (state) => state.language);
+
+export const selectIsRtlLanguage = () =>
+  createSelector(selectShared, (state) => state.isRtlLanguage);

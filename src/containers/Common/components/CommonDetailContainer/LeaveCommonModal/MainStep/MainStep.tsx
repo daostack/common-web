@@ -22,7 +22,7 @@ const MainStep: FC<MainStepProps> = (props) => {
   return (
     <div className="leave-common-main-step">
       <p className="leave-common-main-step__text">
-        Before you leave the Common, here are something you should know:
+        Before you leave the Common, here are some things:
       </p>
       <ol className="leave-common-main-step__ordered-list">
         <li>
@@ -47,7 +47,9 @@ const MainStep: FC<MainStepProps> = (props) => {
           label: "leave-common-main-step__checkbox-label",
         }}
       />
-      <ErrorText className="leave-common-main-step__error-text">{errorText}</ErrorText>
+      <ErrorText className="leave-common-main-step__error-text">
+        {errorText}
+      </ErrorText>
       <div className="leave-common-main-step__buttons-wrapper">
         <Button
           className="leave-common-main-step__button"

@@ -31,6 +31,9 @@ $mobile-breakpoint: 896px;
     margin-bottom: 6rem;
   }
 }
+.landing-structure-info-section__title--hebrew {
+  max-width: unset;
+}
 
 .landing-structure-info-section__cards-wrapper {
   max-width: 76rem;
@@ -47,6 +50,9 @@ $mobile-breakpoint: 896px;
     grid-template-columns: 1fr;
     grid-gap: 4.5rem 0;
   }
+}
+.landing-structure-info-section__cards-wrapper--rtl {
+  direction: rtl;
 }
 
 .landing-structure-info-section__card {

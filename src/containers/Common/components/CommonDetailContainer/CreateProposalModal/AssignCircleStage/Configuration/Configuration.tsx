@@ -9,7 +9,6 @@ import React, {
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-import { selectUser } from "@/containers/Auth/store/selectors";
 import {
   Autocomplete,
   AutocompleteOption,
@@ -71,8 +70,6 @@ const Configuration: FC<ConfigurationProps> = (props) => {
     );
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const user = useSelector(selectUser());
-  const userId = user?.uid;
   const governanceCircles = Object.values(governance.circles);
   const allowedCirclesToBeAssigned = useMemo(
     () =>
@@ -102,7 +99,6 @@ const Configuration: FC<ConfigurationProps> = (props) => {
       foundCircleId
         ? commonMembers.reduce<AutocompleteOption[]>(
             (acc, member) =>
-              member.userId !== userId &&
               !Object.values(member.circles.map).includes(foundCircleId)
                 ? acc.concat({
                     text: (
@@ -118,7 +114,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
             []
           )
         : [],
-    [commonMembers, userId, foundCircleId]
+    [commonMembers, foundCircleId]
   );
 
   const handleCircleSelect = (selectedCircleId: unknown) => {
