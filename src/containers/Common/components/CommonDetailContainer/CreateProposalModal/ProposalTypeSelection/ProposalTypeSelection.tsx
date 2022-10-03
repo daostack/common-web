@@ -32,14 +32,19 @@ const PROPOSAL_TYPE_OPTIONS: DropdownOption[] = [
     value: ProposalsTypes.SURVEY,
   },
   {
-    text: "Assign members to circle",
-    searchText: "Assign members to circle",
+    text: "Assign members to a circle",
+    searchText: "Assign members to a circle",
     value: ProposalsTypes.ASSIGN_CIRCLE,
   },
   {
-    text: "Remove members from circle",
-    searchText: "Remove members from circle",
+    text: "Remove members from a circle",
+    searchText: "Remove members from a circle",
     value: ProposalsTypes.REMOVE_CIRCLE,
+  },
+  {
+    text: "Delete common",
+    searchText: "Delete common",
+    value: ProposalsTypes.DELETE_COMMON,
   },
 ];
 
@@ -54,11 +59,10 @@ const getProposalTypeDetails = (
   proposalType: ProposalsTypes
 ): Pick<BaseProposal, "global"> | null => {
   if (
-    [ProposalsTypes.ASSIGN_CIRCLE, ProposalsTypes.REMOVE_CIRCLE].includes(
-      proposalType
-    )
+    proposalType === ProposalsTypes.ASSIGN_CIRCLE ||
+    proposalType === ProposalsTypes.REMOVE_CIRCLE
   ) {
-    return governance.proposals[proposalType][1] || null;
+    return Object.values(governance.proposals[proposalType] || {})[0] || null;
   }
 
   return governance.proposals[proposalType] || null;
@@ -155,6 +159,7 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
             <ProposalTypeDetails
               className="proposal-type-selection-stage__details"
               data={proposalTypeDetails}
+              circles={governance.circles}
             />
           </>
         )}

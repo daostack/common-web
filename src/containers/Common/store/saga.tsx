@@ -9,7 +9,6 @@ import {
   Common,
   CommonPayment,
   Discussion,
-  DiscussionWithOwnerInfo,
   User,
   DiscussionMessage,
   Proposal,
@@ -21,6 +20,7 @@ import {
 import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
   createCommon as createCommonApi,
+  updateCommon as updateCommonApi,
   createProposal as createProposalApi,
   fetchCommonList,
   fetchCommonDetail,
@@ -36,7 +36,6 @@ import {
   subscribeToProposal,
   leaveCommon as leaveCommonApi,
   loadUserCards,
-  deleteCommon as deleteCommonApi,
   createVote as createVoteApi,
   updateVote as updateVoteApi,
   makeImmediateContribution as makeImmediateContributionApi,
@@ -73,6 +72,7 @@ import { Awaited } from "@/shared/interfaces";
 import {
   AssignCircle,
   CalculatedVotes,
+  DeleteCommon,
   FundsAllocation,
   MemberAdmittance,
   RemoveCircle,
@@ -570,17 +570,29 @@ export function* createAssignCircleProposal({
   payload,
 }: ReturnType<typeof actions.createAssignCircleProposal.request>): Generator {
   try {
+    const { commonId } = payload.payload.args;
+
     yield put(startLoading());
     const assignCircleProposal = (yield call(createProposalApi, {
       ...payload.payload,
       type: ProposalsTypes.ASSIGN_CIRCLE,
     })) as AssignCircle;
 
-    yield put(actions.createAssignCircleProposal.success(assignCircleProposal));
+    yield call(subscribeToCommonProposal, commonId, async () => {
+      const ds = await fetchCommonProposals(commonId);
 
-    if (payload.callback) {
-      payload.callback(null, assignCircleProposal);
-    }
+      store.dispatch(actions.setProposals(ds));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(stopLoading());
+
+      if (payload.callback) {
+        payload.callback(null, assignCircleProposal);
+      }
+
+      store.dispatch(actions.getCommonsList.request());
+    });
+
+    yield put(actions.createAssignCircleProposal.success(assignCircleProposal));
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createAssignCircleProposal.failure(error));
@@ -598,17 +610,29 @@ export function* createRemoveCircleProposal({
   payload,
 }: ReturnType<typeof actions.createRemoveCircleProposal.request>): Generator {
   try {
+    const { commonId } = payload.payload.args;
+
     yield put(startLoading());
     const removeCircleProposal = (yield call(createProposalApi, {
       ...payload.payload,
       type: ProposalsTypes.REMOVE_CIRCLE
     })) as RemoveCircle;
 
-    yield put(actions.createRemoveCircleProposal.success(removeCircleProposal));
+    yield call(subscribeToCommonProposal, commonId, async () => {
+      const ds = await fetchCommonProposals(commonId);
 
-    if (payload.callback) {
-      payload.callback(null, removeCircleProposal);
-    }
+      store.dispatch(actions.setProposals(ds));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(stopLoading());
+
+      if (payload.callback) {
+        payload.callback(null, removeCircleProposal);
+      }
+
+      store.dispatch(actions.getCommonsList.request());
+    });
+
+    yield put(actions.createRemoveCircleProposal.success(removeCircleProposal));
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createRemoveCircleProposal.failure(error));
@@ -701,6 +725,46 @@ export function* createSurvey({
   yield put(stopLoading());
 }
 
+export function* createDeleteCommonProposal({
+  payload,
+}: ReturnType<typeof actions.createDeleteCommonProposal.request>): Generator {
+  try {
+    const { commonId } = payload.payload.args;
+
+    yield put(startLoading());
+    const deleteCommonProposal = (yield call(createProposalApi, {
+      ...payload.payload,
+      type: ProposalsTypes.DELETE_COMMON,
+    })) as DeleteCommon;
+
+    yield call(subscribeToCommonProposal, commonId, async () => {
+      const ds = await fetchCommonProposals(commonId);
+
+      store.dispatch(actions.setProposals(ds));
+      store.dispatch(actions.loadProposalList.request());
+      store.dispatch(stopLoading());
+
+      if (payload.callback) {
+        payload.callback(null, deleteCommonProposal);
+      }
+
+      store.dispatch(actions.getCommonsList.request());
+    });
+
+    yield put(actions.createDeleteCommonProposal.success(deleteCommonProposal));
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createDeleteCommonProposal.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(stopLoading());
+  }
+}
+
 export function* leaveCommon(
   action: ReturnType<typeof actions.leaveCommon.request>
 ): Generator {
@@ -714,25 +778,6 @@ export function* leaveCommon(
   } catch (error) {
     if (isError(error)) {
       yield put(actions.leaveCommon.failure(error));
-      action.payload.callback(error);
-      yield put(stopLoading());
-    }
-  }
-}
-
-export function* deleteCommon(
-  action: ReturnType<typeof actions.deleteCommon.request>
-): Generator {
-  try {
-    yield put(startLoading());
-    yield deleteCommonApi(action.payload.payload);
-
-    yield put(actions.deleteCommon.success(action.payload.payload.commonId));
-    action.payload.callback(null);
-    yield put(stopLoading());
-  } catch (error) {
-    if (isError(error)) {
-      yield put(actions.deleteCommon.failure(error));
       action.payload.callback(error);
       yield put(stopLoading());
     }
@@ -976,6 +1021,26 @@ export function* createCommon(
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createCommon.failure(error));
+      action.payload.callback(error);
+    }
+  }
+}
+
+// no backend for that yet
+export function* updateCommon(
+  action: ReturnType<typeof actions.updateCommon.request>
+): Generator {
+  try {
+    const common = (yield call(
+      updateCommonApi,
+      action.payload.payload
+    )) as Awaited<ReturnType<typeof updateCommonApi>>;
+
+    yield put(actions.updateCommon.success(common));
+    action.payload.callback(null, common);
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.updateCommon.failure(error));
       action.payload.callback(error);
     }
   }
@@ -1294,7 +1359,6 @@ export function* commonsSaga() {
     createRemoveCircleProposal
   );
   yield takeLatest(actions.leaveCommon.request, leaveCommon);
-  yield takeLatest(actions.deleteCommon.request, deleteCommon);
   yield takeLatest(
     actions.createFundingProposal.request,
     createFundingProposal
@@ -1303,12 +1367,17 @@ export function* commonsSaga() {
     actions.createSurvey.request,
     createSurvey
   );
+  yield takeLatest(
+    actions.createDeleteCommonProposal.request,
+    createDeleteCommonProposal
+  );
   yield takeLatest(actions.loadUserCards.request, loadUserCardsSaga);
   yield takeLatest(
     actions.addMessageToProposal.request,
     addMessageToProposalSaga
   );
   yield takeLatest(actions.createCommon.request, createCommon);
+  yield takeLatest(actions.updateCommon.request, updateCommon);
   yield takeLatest(actions.createVote.request, createVote);
   yield takeLatest(actions.updateVote.request, updateVote);
   yield takeLatest(

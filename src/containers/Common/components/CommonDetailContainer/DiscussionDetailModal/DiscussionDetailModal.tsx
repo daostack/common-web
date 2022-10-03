@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from "react";
+import React, { useCallback, useState, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
@@ -8,6 +8,7 @@ import {
   CommonMember,
   Discussion,
   DiscussionWithHighlightedMessage,
+  Governance,
   isDiscussionWithHighlightedMessage,
 } from "@/shared/models";
 import { getDaysAgo, getUserName } from "@/shared/utils";
@@ -16,6 +17,8 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { addMessageToDiscussion } from "@/containers/Common/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize, ChatType } from "@/shared/constants";
+import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
+import { getCirclesNames } from "@/shared/utils/circles";
 import "./index.scss";
 
 interface DiscussionDetailModalProps {
@@ -25,6 +28,7 @@ interface DiscussionDetailModalProps {
   commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;
   isJoiningPending: boolean;
+  governance: Governance;
 }
 
 export default function DiscussionDetailModal({
@@ -34,12 +38,14 @@ export default function DiscussionDetailModal({
   commonMember,
   isCommonMemberFetched,
   isJoiningPending,
+  governance,
 }: DiscussionDetailModalProps) {
   const dispatch = useDispatch();
   const date = new Date();
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
+  const [circleNames, setCircleNames] = useState('');
   const highlightedMessageId = useMemo(
     () =>
       isDiscussionWithHighlightedMessage(discussion)
@@ -47,6 +53,19 @@ export default function DiscussionDetailModal({
         : null,
     [discussion]
   );
+
+  useEffect(() => {
+    if(discussion?.circleVisibility) {
+      (async () => {
+        const governanceCircles = await getCommonGovernanceCircles(governance.id);
+        const names = getCirclesNames(
+          governanceCircles ? Object.values(governanceCircles) : null,
+          discussion?.circleVisibility
+        );
+        setCircleNames(names);
+      })();
+    }
+  },[governance.id, discussion])
 
   const sendMessage = useCallback(
     (message: string) => {
@@ -99,6 +118,12 @@ export default function DiscussionDetailModal({
             </div>
           </div>
         </div>
+
+        {circleNames && (
+          <div className="description-container">
+            <p className="description">{`Limited to: ${circleNames}`}</p>
+          </div>
+        )}
 
         {expanded && (
           <div className="description-container">

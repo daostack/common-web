@@ -13,20 +13,26 @@ export default function WhitepaperMembers() {
   const governance = useSelector(selectGovernance());
   const [selectedMember, setSelectedMember] = useState({ ...governance?.circles[0], index: 0 });
 
-  const members = governance?.circles.slice(0,5).map((circle, index) => {
-    return (
-      <li
-        key={index}
-        onClick={() => setSelectedMember({ ...circle, index })}
-        className={classNames({ active: selectedMember?.name === circle.name })}
-      >
-        {circle.name}
-      </li>
-    )
-  })
+  const members = Object.values(governance?.circles || {})
+    .slice(0, 5)
+    .map((circle, index) => {
+      return (
+        <li
+          key={index}
+          onClick={() => setSelectedMember({ ...circle, index })}
+          className={classNames({
+            active: selectedMember?.name === circle.name,
+          })}
+        >
+          {circle.name}
+        </li>
+      );
+    });
 
   const renderContent = () => {
-    const circle = governance?.circles.filter(circle => circle.name === selectedMember?.name)[0];
+    const circle = Object.values(governance?.circles || {}).filter(
+      (circle) => circle.name === selectedMember?.name
+    )[0];
 
     const allowedProposals = Object.keys(circle?.allowedProposals || {})
       .map((proposalType) =>
@@ -69,11 +75,13 @@ export default function WhitepaperMembers() {
         return Object.keys(governance?.proposals[proposal] || {}).find((key) => {
           const obj = governance?.proposals[proposal] || {}
 
-          return obj[key]?.global?.weights?.find(({ circles }) => circles & circleBin)
+          return obj[key]?.global?.weights?.find(
+            ({ circles }) => circles.bin & circleBin
+          );
         })
       }
 
-      if (governance?.proposals[proposal]?.global?.weights?.find(({ circles }) => circles & circleBin)) {
+      if (governance?.proposals[proposal]?.global?.weights?.find(({ circles }) => circles.bin & circleBin)) {
         return true
       }
     }).map((proposalType) =>

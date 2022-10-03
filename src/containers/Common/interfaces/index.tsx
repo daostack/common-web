@@ -10,3 +10,4 @@ export * from "./Subscription";
 export * from "./PaymentPayload";
 export * from "./LeaveCommon";
 export * from "./DeleteCommon";
+export * from "./UserMembershipInfo";

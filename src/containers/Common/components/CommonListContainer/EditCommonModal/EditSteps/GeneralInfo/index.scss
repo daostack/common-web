@@ -1,0 +1,50 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.update-common-general-info {
+  width: 100%;
+  max-width: 584px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+
+  .update-common-general-info__separator {
+    margin-bottom: 1.5rem;
+  }
+
+  .update-common-general-info__text-field {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .update-common-general-info__links-array-item {
+    margin-top: 16px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  @include big-phone {
+    padding-bottom: 14px;
+  }
+}
+
+.update-common-general-info__empty-circles-text {
+  margin: 0;
+  font-size: $small;
+  color: $light-gray-2;
+  text-align: center;
+}
+
+.update-common-general-info__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 28px 0;
+
+  @include big-phone {
+    padding: 24px 0;
+  }
+}

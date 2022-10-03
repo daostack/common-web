@@ -143,6 +143,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   const handleChangeMonthlyContributionFinish = useCallback(
     (subscription: Subscription) => {
       setSubscription(subscription);
+      setIsUserContributionsFetchStarted(false);
 
       if (goBackForStages) {
         goBackForStages();
@@ -156,6 +157,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
   const handleCreateMonthlyContributionFinish = useCallback(
     (subscription: Subscription) => {
       setSubscription(subscription);
+      setIsUserContributionsFetchStarted(false);
 
       if (goBackForStages) {
         goBackForStages();

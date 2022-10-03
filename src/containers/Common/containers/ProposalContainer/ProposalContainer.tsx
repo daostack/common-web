@@ -5,7 +5,7 @@ import React, {
   useMemo,
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import classNames from "classnames";
 import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
@@ -31,7 +31,7 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ChatComponent } from "../../components";
 import { VotesModal } from "../../components/ProposalContainer";
-import { useCommonMember, useProposalUserVote } from "../../hooks";
+import { useCommonMember, useProposalUserVote, useCommonMembers } from "../../hooks";
 import {
   addMessageToProposal,
   clearCurrentProposal,
@@ -60,8 +60,9 @@ const PROPOSAL_TYPE_CAPTION = {
   [ProposalsTypes.FUNDS_REQUEST]: "Funds request",
   [ProposalsTypes.FUNDS_ALLOCATION]: "Fund allocation",
   [ProposalsTypes.MEMBER_ADMITTANCE]: "Members admittance",
-  [ProposalsTypes.ASSIGN_CIRCLE]: "Assign members to circle",
-  [ProposalsTypes.REMOVE_CIRCLE]: "Remove members from circle",
+  [ProposalsTypes.ASSIGN_CIRCLE]: "Assign members to a circle",
+  [ProposalsTypes.REMOVE_CIRCLE]: "Remove members from a circle",
+  [ProposalsTypes.DELETE_COMMON]: "Delete common",
 };
 
 enum PROPOSAL_MENU_TABS {
@@ -74,17 +75,21 @@ const ProposalContainer = () => {
   const { id: proposalId } = useParams<ProposalRouterParams>();
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
+  const highlightedCommentId = (location.state as { highlightedCommentId?: string })?.highlightedCommentId;
   const { isShowing, onOpen, onClose } = useModal(false);
   const user = useSelector(selectUser());
   const currentProposal = useSelector(selectCurrentProposal());
   const currentCommon = useSelector(selectCommonDetail());
   const governance = useSelector(selectGovernance());
-  const [activeTab, setActiveTab] = useState<PROPOSAL_MENU_TABS>(PROPOSAL_MENU_TABS.Voting);
+  const [activeTab, setActiveTab] = useState<PROPOSAL_MENU_TABS>(highlightedCommentId ? PROPOSAL_MENU_TABS.Discussions : PROPOSAL_MENU_TABS.Voting);
   const {
     fetched: isCommonMemberFetched,
     data: commonMember,
     fetchCommonMember,
   } = useCommonMember();
+  const commonId = currentCommon?.id;
+
   const {
     isShowing: isVotesModalOpen,
     onOpen: onVotesModalOpen,
@@ -106,7 +111,7 @@ const ProposalContainer = () => {
     commonMember &&
     commonMember.allowedActions[GovernanceActions.CREATE_VOTE] &&
     currentProposal?.global.weights.some(
-      ({ circles }) => commonMember.circles & circles
+      ({ circles }) => commonMember.circles.bin & circles.bin
     );
 
   const sendMessage = useCallback(
@@ -160,7 +165,6 @@ const ProposalContainer = () => {
             governance && (
               <VotingContentContainer
                 proposal={currentProposal}
-                common={currentCommon}
                 governance={governance}
                 proposer={proposer}
                 proposalSpecificData={proposalSpecificData}
@@ -183,6 +187,7 @@ const ProposalContainer = () => {
               isJoiningPending={isJoiningPending}
               isCommonMemberFetched={isCommonMemberFetched}
               commonMember={commonMember}
+              highlightedMessageId={highlightedCommentId}
             />
           );
       }
@@ -264,9 +269,10 @@ const ProposalContainer = () => {
   }, [dispatch, currentProposalId]);
 
   useEffect(() => {
-    if (currentCommon)
-      fetchCommonMember(currentCommon.id);
-  }, [fetchCommonMember, currentCommon]);
+    if (commonId) {
+      fetchCommonMember(commonId);
+    }
+  }, [fetchCommonMember, commonId]);
 
   useEffect(() => {
     if (currentProposal)

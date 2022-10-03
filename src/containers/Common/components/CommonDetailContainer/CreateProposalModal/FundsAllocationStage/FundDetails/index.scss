@@ -24,9 +24,8 @@
   width: 100%;
 }
 
-.create-funds-allocation__text-field {
-    margin-bottom: 1rem;
-    margin-top: 1rem;
+.create-funds-allocation__currency {
+    width: 48%;
 
     &:last-child {
       margin-bottom: 0;
@@ -35,6 +34,11 @@
 
 .funds-allocation-details__type-dropdown {
   z-index: $dropdown-z-index + 1;
+  width: 48%;
+
+  @include big-phone {
+    width: 100%;
+  }
 }
 
 .funds-allocation-configuration__modal-footer {
@@ -56,4 +60,13 @@
   flex-direction: column;
   margin: 2rem 0;
   margin-bottom: 1.5rem;
+}
+.funds-input-row {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+}
+.recipient-selection__toggle-button-group {
+  margin-top: 1.5rem;
+  font-size: $small;
 }

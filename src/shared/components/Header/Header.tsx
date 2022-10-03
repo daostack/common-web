@@ -78,6 +78,7 @@ const Header = () => {
   );
   const [showAccountLinks, setShowAccountLinks] =
     useState<boolean>(isMyAccountRoute);
+  const shouldHideHeader = sharedHeaderState.shouldHideHeader ?? false;
   const shouldShowMenuItems =
     sharedHeaderState.shouldShowMenuItems ?? !isTrusteeRoute;
   const shouldShowDownloadLinks =
@@ -91,6 +92,7 @@ const Header = () => {
 
   const handleOpen = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: true }));
+    setShowMenu(false);
   }, [dispatch]);
 
   const handleReportsDownload = async () => {
@@ -189,6 +191,10 @@ const Header = () => {
   const headerWrapperClassName = classNames("header-wrapper", {
     "header-wrapper--without-shadow": isTrusteeRoute && !isTrusteeAuthRoute,
   });
+
+  if (shouldHideHeader) {
+    return <LoginContainer />;
+  }
 
   return (
     <section className={headerWrapperClassName}>

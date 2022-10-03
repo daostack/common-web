@@ -2,13 +2,13 @@ import React, { useEffect, useState, FC } from "react";
 import { useDispatch } from "react-redux";
 import { IFrame, Loader, Separator } from "@/shared/components";
 import { ContributionType } from "@/shared/constants";
-import { Common, Subscription, SubscriptionStatus, Payment } from "@/shared/models";
+import { Common, Subscription, Payment, PaymentStatus, Currency } from "@/shared/models";
 import {
   isImmediateContributionPayment,
   ImmediateContributionPayment,
 } from "../../../../../interfaces";
 import { makeImmediateContribution } from "../../../../../store/actions";
-import { subscribeToSubscription } from "../../../../../store/api";
+import { subscribeToPayment } from "../../../../../store/api";
 import "./index.scss";
 
 interface State {
@@ -66,7 +66,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
           payload: {
             commonId,
             contributionType: ContributionType.Monthly,
-            amount: contributionAmount,
+            price: { amount: contributionAmount, currency: Currency.ILS },
             saveCard: true,
           },
           callback: (error, payment) => {
@@ -81,7 +81,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
             }
             setState((nextState) => ({
               ...nextState,
-              payment,
+              subscription: {...payment},
               isPaymentLoading: false,
             }));
           },
@@ -105,11 +105,11 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
 
 
     try {
-      return subscribeToSubscription(subscription.paymentId, (payment) => {
-
-        if (payment?.status === SubscriptionStatus.Active) {
+      return subscribeToPayment(subscription.paymentId, (payment) => {
+  
+        if (payment?.status === PaymentStatus.Confirmed) {
           onFinish(payment);
-        } else if (payment?.status === SubscriptionStatus.PaymentFailed) {
+        } else if (payment?.status === PaymentStatus.Failed) {
           onError("Payment failed");
         }
       });

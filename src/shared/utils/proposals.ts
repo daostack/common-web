@@ -20,11 +20,11 @@ export const getTextForProposalType = (
 ): string => {
   switch (proposalType) {
     case ProposalsTypes.ASSIGN_CIRCLE:
-      return "Assign members to circle";
+      return "Assign members to a circle";
     case ProposalsTypes.FUNDS_ALLOCATION:
       return "Fund allocation";
     case ProposalsTypes.REMOVE_CIRCLE:
-      return "Remove members from circle";
+      return "Remove members from a circle";
     case ProposalsTypes.MEMBER_ADMITTANCE:
       return "Members admittance";
     default:

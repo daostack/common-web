@@ -16,9 +16,13 @@ const initialState: SharedStateType = {
   loadingShareLinks: {},
   areReportsLoading: false,
   header: {
+    shouldHideHeader: null,
     shouldShowMenuItems: null,
     shouldShowDownloadLinks: null,
     shouldShowAuth: null,
+  },
+  footer: {
+    shouldHideFooter: null,
   },
   language: Language.English,
   isRtlLanguage: false,
@@ -81,6 +85,7 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
   .handleAction(actions.resetHeaderState, (state) =>
     produce(state, (nextState) => {
       nextState.header = {
+        shouldHideHeader: null,
         shouldShowMenuItems: null,
         shouldShowDownloadLinks: null,
         shouldShowAuth: null,
@@ -91,6 +96,21 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.header = {
         ...nextState.header,
+        ...action.payload,
+      };
+    })
+  )
+  .handleAction(actions.resetFooterState, (state) =>
+    produce(state, (nextState) => {
+      nextState.footer = {
+        shouldHideFooter: null,
+      };
+    })
+  )
+  .handleAction(actions.updateFooterState, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.footer = {
+        ...nextState.footer,
         ...action.payload,
       };
     })

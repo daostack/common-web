@@ -1,5 +1,8 @@
+import { Environment } from "./environment";
+import { REACT_APP_ENV } from "./shared";
+
 export const DYNAMIC_LINK_URI_PREFIX =
-  (process.env.REACT_APP_ENV === "production")
+  REACT_APP_ENV === Environment.Production
     ? "https://app.common.io"
     : "https://staging.common.io";
 

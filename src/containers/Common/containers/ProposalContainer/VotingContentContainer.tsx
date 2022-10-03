@@ -2,10 +2,10 @@ import React, { FC, useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
   Proposal,
-  Common,
   Governance,
   VotingCardType,
   User,
+  CommonMemberWithUserInfo,
 } from "@/shared/models";
 import {
   AssignCircle,
@@ -13,6 +13,7 @@ import {
   FundsRequest,
   RemoveCircle,
   MemberAdmittance,
+  DeleteCommon,
 } from "@/shared/models/governance/proposals";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -21,6 +22,7 @@ import { CountDownCard } from "../../components/ProposalContainer";
 import { VotingCard } from "./VotingCard";
 import {
   getAssignCircleDetails,
+  getDeleteCommonDetails,
   getFundsAllocationDetails,
   getMemberAdmittanceDetails,
   getRemoveCircleDetails,
@@ -31,28 +33,31 @@ import "./index.scss";
 
 interface VotingContentContainerProps {
   proposal: Proposal;
-  common: Common;
   governance: Governance;
   proposer: User;
   proposalSpecificData: ProposalSpecificData;
   onVotesOpen: () => void;
 }
 
-export const VotingContentContainer: FC<VotingContentContainerProps> = (props) => {
+export const VotingContentContainer: FC<VotingContentContainerProps> = (
+  props
+) => {
   const { proposal, governance, proposer, proposalSpecificData, onVotesOpen } =
     props;
+  const { commonMembers, subCommons } = proposalSpecificData;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const proposalDetailsByType = useMemo((): ProposalDetailsItem[] => {
     let typedProposal;
 
-    switch (proposal.type) { //TODO: fill up with a real proposal's data
+    switch (proposal.type) {
       case ProposalsTypes.FUNDS_ALLOCATION:
         return getFundsAllocationDetails(
           proposal as FundsAllocation,
-          proposer,
-          governance
+          governance,
+          commonMembers,
+          subCommons
         );
       case ProposalsTypes.FUNDS_REQUEST:
         typedProposal = proposal as FundsRequest;
@@ -60,16 +65,21 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
         return [
           {
             title: "Recurring indication",
-            value: proposal.local.allowedPaymentTypes.SINGLE ? "Single" : "Monthly"
+            value: proposal.local.allowedPaymentTypes.SINGLE
+              ? "Single"
+              : "Monthly",
           },
           {
             title: "Sum of money",
-            value: formatPrice(typedProposal.data.legal.totalInvoicesAmount || 0, { shouldRemovePrefixFromZero: false }),
+            value: formatPrice(
+              typedProposal.data.legal.totalInvoicesAmount || 0,
+              { shouldRemovePrefixFromZero: false }
+            ),
           },
           {
             title: "Recipients circles",
             value: "",
-          }
+          },
         ];
       case ProposalsTypes.ASSIGN_CIRCLE:
         return getAssignCircleDetails(
@@ -89,10 +99,23 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
           proposer,
           governance
         );
+      case ProposalsTypes.DELETE_COMMON:
+        return getDeleteCommonDetails(
+          proposal as DeleteCommon,
+          proposer,
+          governance
+        );
       default:
         return [];
     }
-  }, [proposal, proposal.type, proposalSpecificData]);
+  }, [
+    proposal,
+    governance,
+    proposer,
+    proposalSpecificData,
+    commonMembers,
+    subCommons,
+  ]);
 
   return (
     <div className="voting-content__wrapper">
@@ -101,8 +124,8 @@ export const VotingContentContainer: FC<VotingContentContainerProps> = (props) =
         style={
           !isMobileView
             ? {
-              gridTemplateColumns: `repeat(${proposalDetailsByType.length}, minmax(0, 17.625rem))`,
-            }
+                gridTemplateColumns: `repeat(${proposalDetailsByType.length}, minmax(0, 17.625rem))`,
+              }
             : {}
         }
       >

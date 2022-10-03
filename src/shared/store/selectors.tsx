@@ -29,6 +29,9 @@ export const selectAreReportsLoading = () =>
 export const selectHeader = () =>
   createSelector(selectShared, (state) => state.header);
 
+export const selectFooter = () =>
+  createSelector(selectShared, (state) => state.footer);
+
 export const selectLanguage = () =>
   createSelector(selectShared, (state) => state.language);
 

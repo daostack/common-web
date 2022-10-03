@@ -17,10 +17,11 @@ interface CirclesSelectProps {
   selectStyles?: StylesConfig<CircleSelectType>;
   error?: string;
   onBlur: (e: React.FocusEvent<any, Element>) => void;
+  isOptionDisabled?: (option: CircleSelectType) => boolean;
 }
 
-export const CirclesSelect = ({options, handleChange, value, placeholder, error, onBlur}: CirclesSelectProps): ReactElement => {
-  
+export const CirclesSelect = ({options, handleChange, value, placeholder, error, onBlur, isOptionDisabled}: CirclesSelectProps): ReactElement => {
+
   return (
     <div className="circle-select">
       <p className="circle-select__limited-circles-title">Choose limited circles</p>
@@ -53,6 +54,7 @@ export const CirclesSelect = ({options, handleChange, value, placeholder, error,
           })
         }}
         components={{ Option: CircleSelectOption }}
+        isOptionDisabled={isOptionDisabled}
       />
       {Boolean(error) && (
         <ErrorText>{error}</ErrorText>

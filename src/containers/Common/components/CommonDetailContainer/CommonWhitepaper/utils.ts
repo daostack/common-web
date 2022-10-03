@@ -1,3 +1,6 @@
+import { Circles } from "@/shared/models";
+import { BaseProposal } from "@/shared/models/governance/proposals";
+
 export const generateCirclesBinaryNumber = (circles: number[]) => {
   const circlesSet = new Set(circles);
 
@@ -10,19 +13,25 @@ export const generateCirclesBinaryNumber = (circles: number[]) => {
   return parseInt(binary, 2);
 }
 
-export const calculateVoters = (circles: string[] | undefined, weights: any) => {
-  const binaryCircles = circles?.map((circle, index) => {
-    return { binary: generateCirclesBinaryNumber([index]), id: circle };
-  });
+export const calculateVoters = (
+  weights: BaseProposal["global"]["weights"],
+  circles?: Circles
+) => {
+  const binaryCircles = circles
+    ? Object.entries(circles).map(([circleIndex, circle]) => ({
+        name: circle.name,
+        binary: generateCirclesBinaryNumber([Number(circleIndex)]),
+      }))
+    : [];
 
-  const circlesWithVotingWeight = binaryCircles?.filter(({ binary }) => {
-    return weights?.find(({ circles }) => { return circles & binary });
-  })
-
-  const voters = circlesWithVotingWeight?.map(c => c.id);
+  const voters = binaryCircles
+    .filter(({ binary }) =>
+      weights?.some(({ circles }) => circles.bin & binary)
+    )
+    .map(({ name }) => name);
 
   return voters;
-}
+};
 
 
 export const numberToBinary = (n: number) => {

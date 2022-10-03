@@ -31,8 +31,8 @@ export interface Subscription {
   proposalId?: string;
   dueDate: Time;
   status: SubscriptionStatus;
-  amount: PaymentAmount;
-  metadata: SubscriptionMetadata;
+  price: PaymentAmount;
+  commonId: string;
   paymentFailures?: SubscriptionPayment[];
   charges: number;
   lastChargedAt: Time;

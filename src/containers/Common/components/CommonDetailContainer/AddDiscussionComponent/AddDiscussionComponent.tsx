@@ -24,10 +24,11 @@ const MAX_MESSAGE_LENGTH = 690;
 
 interface AddDiscussionComponentProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
-  onSuccess: (discussion: Discussion) => void,
-  uid: string,
-  commonId: string,
-  governanceId: string,
+  onSuccess: (discussion: Discussion) => void;
+  uid: string;
+  commonId: string;
+  governanceId: string;
+  userCircleIds?: string[];
 }
 
 const validationSchema = Yup.object({
@@ -65,7 +66,8 @@ const AddDiscussionComponent = ({
   onSuccess,
   uid,
   commonId,
-  governanceId
+  governanceId,
+  userCircleIds
 }: AddDiscussionComponentProps) => {
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
@@ -80,10 +82,12 @@ const AddDiscussionComponent = ({
   useEffect(() => {
     (async () => {
       const governanceCircles = await getCommonGovernanceCircles(governanceId);
-      const circles = (governanceCircles || [])?.map((circle) => ({
+      const circles = (
+        governanceCircles ? Object.values(governanceCircles) : []
+      )?.map((circle) => ({
         ...circle,
         value: circle.id,
-        label: circle.name
+        label: circle.name,
       }));
       setCircleOptions(circles);
     })();
@@ -197,6 +201,7 @@ const AddDiscussionComponent = ({
                     }}
                     options={circleOptions}
                     error={(formikProps.touched.circleVisibility && formikProps.errors.circleVisibility) as string}
+                    isOptionDisabled={(option) => !userCircleIds?.includes(option.id)}
                   />
                 )
               }

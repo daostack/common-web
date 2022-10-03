@@ -29,6 +29,7 @@ import {
   DeleteCommon,
   LeaveCommon,
   CreateProposal,
+  UpdateCommonPayload,
 } from "@/containers/Common/interfaces";
 import {
   CreateVotePayload,
@@ -242,6 +243,20 @@ export const createSurvey = createAsyncAction(
   Error
 >();
 
+export const createDeleteCommonProposal = createAsyncAction(
+  CommonsActionTypes.CREATE_DELETE_COMMON_PROPOSAL,
+  CommonsActionTypes.CREATE_DELETE_COMMON_PROPOSAL_SUCCESS,
+  CommonsActionTypes.CREATE_DELETE_COMMON_PROPOSAL_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    Omit<CreateProposal[ProposalsTypes.DELETE_COMMON]["data"], "type">,
+    CreateProposal[ProposalsTypes.DELETE_COMMON]["response"],
+    Error
+  >,
+  CreateProposal[ProposalsTypes.DELETE_COMMON]["response"],
+  Error
+>();
+
 export const loadUserCards = createAsyncAction(
   CommonsActionTypes.LOAD_USER_CARDS,
   CommonsActionTypes.LOAD_USER_CARDS_SUCCESS,
@@ -278,6 +293,12 @@ export const createCommon = createAsyncAction(
   CommonsActionTypes.CREATE_COMMON_SUCCESS,
   CommonsActionTypes.CREATE_COMMON_FAILURE
 )<PayloadWithCallback<CreateCommonPayload, Common, Error>, Common, Error>();
+
+export const updateCommon = createAsyncAction(
+  CommonsActionTypes.UPDATE_COMMON,
+  CommonsActionTypes.UPDATE_COMMON_SUCCESS,
+  CommonsActionTypes.UPDATE_COMMON_FAILURE
+)<PayloadWithCallback<UpdateCommonPayload, Common, Error>, Common, Error>();
 
 export const createVote = createAsyncAction(
   CommonsActionTypes.CREATE_VOTE,
