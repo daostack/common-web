@@ -13,6 +13,7 @@ import "./index.scss";
 
 interface PaymentDetailsProps {
   amount?: number;
+  minAmount?: number;
   amountsToSelect: number[];
   preSubmitText?: ReactNode;
   submitButtonText?: string;
@@ -23,6 +24,7 @@ interface PaymentDetailsProps {
 const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   const {
     amount: currentAmount,
+    minAmount,
     amountsToSelect,
     preSubmitText,
     submitButtonText = "Update Contribution",
@@ -39,10 +41,18 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
       ? ""
       : String(currentAmount / 100)
   );
+  const inputValueError =
+    (typeof minAmount === "number" &&
+      inputValue &&
+      Number(inputValue) < minAmount / 100 &&
+      `Minimum ${formatPrice(minAmount, { shouldMillify: false })} ILS`) ||
+    "";
   const submitLink = getSubmitLink
     ? getSubmitLink(getFinalAmount(selectedAmount, inputValue))
     : "";
-  const isSubmitDisabled = !selectedAmount && !Number(inputValue);
+  const isSubmitDisabled = Boolean(
+    (!selectedAmount && !Number(inputValue)) || inputValueError
+  );
 
   const handleAmountSelection = (amount: number) => {
     setSelectedAmount(amount);
@@ -103,9 +113,11 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
         label="Other"
         placeholder="Add amount"
         value={inputValue}
+        error={inputValueError}
         onValueChange={handleValueChange}
         styles={{
           label: "supporters-page-amount-selection__currency-input-label",
+          error: "supporters-page-amount-selection__currency-input-error",
         }}
       />
       {preSubmitText}

@@ -94,6 +94,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
         (isAmountEditing ? (
           <AmountSelection
             amount={amount}
+            minAmount={supportersData?.minAmount}
             amountsToSelect={supportersData?.amounts || []}
             onAmountChange={handleAmountChange}
           />

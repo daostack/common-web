@@ -9,6 +9,7 @@ export interface SupportersDataTranslation {
 export interface SupportersData {
   photoURL: string;
   amounts: number[];
+  minAmount?: number;
   defaultLocale: Language;
   translations: Partial<Record<Language, SupportersDataTranslation>>;
 }

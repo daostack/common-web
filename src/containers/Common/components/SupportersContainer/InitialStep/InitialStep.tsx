@@ -33,6 +33,7 @@ const InitialStep: FC<InitialStepProps> = (props) => {
     >
       <AmountSelection
         amount={amount}
+        minAmount={supportersData?.minAmount}
         amountsToSelect={supportersData?.amounts || []}
         preSubmitText={
           <p className="supporters-page-initial-step__pre-submit-text">
