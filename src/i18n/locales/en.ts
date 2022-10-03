@@ -112,5 +112,11 @@ export default {
         },
       },
     },
+    supporters: {
+      buttons: {
+        back: "Back",
+      },
+      joinText: "Join the",
+    },
   },
 };
