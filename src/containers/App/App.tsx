@@ -22,7 +22,6 @@ import {
 import { changeScreenSize, showNotification } from "@/shared/store/actions";
 import { authentificated } from "../Auth/store/selectors";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
-import { DeadSeaIntegrationContainer } from "../Integrations/containers";
 import { SubmitInvoicesContainer } from "../Invoices/containers";
 import { TrusteeContainer } from "../Trustee/containers";
 import { MyAccountContainer } from "../MyAccount/containers/MyAccountContainer";
@@ -150,11 +149,6 @@ const App = () => {
               path={ROUTE_PATHS.CONTACT_US}
               exact
               component={ContactUsContainer}
-            />
-            <Route
-              path={ROUTE_PATHS.DEAD_SEA}
-              exact
-              component={DeadSeaIntegrationContainer}
             />
             <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
             <PrivateRoute
