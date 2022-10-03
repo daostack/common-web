@@ -46,7 +46,7 @@ const InitialStep: FC<InitialStepProps> = (props) => {
             </ButtonLink>
           </p>
         }
-        submitButtonText="Support the Community"
+        submitButtonText="Support us via Common"
         onAmountChange={onFinish}
         getSubmitLink={isInsideIFrame ? getSubmitLink : undefined}
       />
