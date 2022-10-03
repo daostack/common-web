@@ -21,7 +21,7 @@ const InitialStep: FC<InitialStepProps> = (props) => {
   const isInsideIFrame = checkIsIFrame();
 
   const getSubmitLink = (amount: number): string =>
-    `${location.pathname}?${QueryParamKey.IntegrationAmount}=${amount}`;
+    `${location.pathname}?${QueryParamKey.SupportersFlowAmount}=${amount}`;
 
   return (
     <GeneralInfoWrapper description={DESCRIPTION}>
