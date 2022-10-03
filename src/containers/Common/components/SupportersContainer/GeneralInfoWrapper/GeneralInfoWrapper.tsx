@@ -5,12 +5,13 @@ import LongLeftArrowIcon from "@/shared/icons/longLeftArrow.icon";
 import "./index.scss";
 
 interface GeneralInfoWrapperProps {
+  title: string;
   description?: string;
   onGoBack?: (() => void) | null;
 }
 
 const GeneralInfoWrapper: FC<GeneralInfoWrapperProps> = (props) => {
-  const { description, onGoBack, children } = props;
+  const { title, description, onGoBack, children } = props;
 
   return (
     <div className="supporters-page-general-info-wrapper">
@@ -32,7 +33,7 @@ const GeneralInfoWrapper: FC<GeneralInfoWrapperProps> = (props) => {
           "supporters-page-general-info-wrapper__bottom-margin": !description,
         })}
       >
-        Dead Sea Guardians
+        {title}
       </h1>
       {description && (
         <p

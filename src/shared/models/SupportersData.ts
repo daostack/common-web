@@ -1,6 +1,6 @@
 import { Language } from "@/shared/constants";
 
-interface SupportersDataTranslation {
+export interface SupportersDataTranslation {
   title: string;
   description: string;
   thankYouPageDescription: string;
