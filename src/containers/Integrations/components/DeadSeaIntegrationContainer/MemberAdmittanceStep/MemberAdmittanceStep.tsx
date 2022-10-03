@@ -10,7 +10,7 @@ import { MemberAdmittance } from "@/shared/models/governance/proposals";
 import { getUserName } from "@/shared/utils";
 import { useLoadingState } from "@/shared/hooks";
 import { ErrorText } from "@/shared/components/Form";
-import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
+import { GeneralInfoWrapper } from "../../../../Common/components/SupportersContainer/GeneralInfoWrapper";
 import "./index.scss";
 
 interface MemberAdmittanceStepProps {

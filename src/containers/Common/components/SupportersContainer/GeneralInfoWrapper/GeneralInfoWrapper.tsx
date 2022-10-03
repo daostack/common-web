@@ -13,21 +13,23 @@ const GeneralInfoWrapper: FC<GeneralInfoWrapperProps> = (props) => {
   const { description, onGoBack, children } = props;
 
   return (
-    <div className="dead-sea-general-info-wrapper">
+    <div className="supporters-page-general-info-wrapper">
       {onGoBack ? (
         <ButtonLink
-          className="dead-sea-general-info-wrapper__back-button"
+          className="supporters-page-general-info-wrapper__back-button"
           onClick={onGoBack}
         >
-          <LongLeftArrowIcon className="dead-sea-general-info-wrapper__back-icon" />
+          <LongLeftArrowIcon className="supporters-page-general-info-wrapper__back-icon" />
           Back
         </ButtonLink>
       ) : (
-        <span className="dead-sea-general-info-wrapper__action">Join the</span>
+        <span className="supporters-page-general-info-wrapper__action">
+          Join the
+        </span>
       )}
       <h1
-        className={classNames("dead-sea-general-info-wrapper__title", {
-          "dead-sea-general-info-wrapper__bottom-margin": !description,
+        className={classNames("supporters-page-general-info-wrapper__title", {
+          "supporters-page-general-info-wrapper__bottom-margin": !description,
         })}
       >
         Dead Sea Guardians
@@ -35,7 +37,7 @@ const GeneralInfoWrapper: FC<GeneralInfoWrapperProps> = (props) => {
       {description && (
         <p
           className={
-            "dead-sea-general-info-wrapper__description dead-sea-general-info-wrapper__bottom-margin"
+            "supporters-page-general-info-wrapper__description supporters-page-general-info-wrapper__bottom-margin"
           }
         >
           {description}

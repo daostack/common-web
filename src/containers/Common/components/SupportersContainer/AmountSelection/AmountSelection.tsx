@@ -69,10 +69,12 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   );
 
   return (
-    <div className="dead-sea-amount-selection">
-      <h2 className="dead-sea-amount-selection__title">Donation details</h2>
+    <div className="supporters-page-amount-selection">
+      <h2 className="supporters-page-amount-selection__title">
+        Donation details
+      </h2>
       <ToggleButtonGroup
-        className="dead-sea-amount-selection__toggle-button-group"
+        className="supporters-page-amount-selection__toggle-button-group"
         value={ContributionType.OneTime}
         onChange={() => {}}
       >
@@ -81,7 +83,10 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
           Monthly
         </ToggleButton>
       </ToggleButtonGroup>
-      <div className="dead-sea-amount-selection__amounts-wrapper" role="group">
+      <div
+        className="supporters-page-amount-selection__amounts-wrapper"
+        role="group"
+      >
         {AMOUNTS.map((amount) => (
           <SelectionButton
             key={amount}
@@ -93,18 +98,18 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
         ))}
       </div>
       <CurrencyInput
-        className="dead-sea-amount-selection__currency-input"
+        className="supporters-page-amount-selection__currency-input"
         name="contributionAmount"
         label="Other"
         placeholder="Add amount"
         value={inputValue}
         onValueChange={handleValueChange}
         styles={{
-          label: "dead-sea-amount-selection__currency-input-label",
+          label: "supporters-page-amount-selection__currency-input-label",
         }}
       />
       {preSubmitText}
-      <div className="dead-sea-amount-selection__submit-button-wrapper">
+      <div className="supporters-page-amount-selection__submit-button-wrapper">
         {submitLink ? (
           <a href={submitLink} target="_blank" rel="noopener noreferrer">
             {submitButtonEl}

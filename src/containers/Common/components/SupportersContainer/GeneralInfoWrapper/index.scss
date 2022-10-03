@@ -1,7 +1,7 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
-.dead-sea-general-info-wrapper {
+.supporters-page-general-info-wrapper {
   max-width: 36.125rem;
   width: 100%;
   margin: 0 auto;
@@ -14,17 +14,17 @@
   }
 }
 
-.dead-sea-general-info-wrapper__back-button {
+.supporters-page-general-info-wrapper__back-button {
   height: 1.25rem;
   display: flex;
   align-items: center;
 }
 
-.dead-sea-general-info-wrapper__back-icon {
+.supporters-page-general-info-wrapper__back-icon {
   margin-right: 0.75rem;
 }
 
-.dead-sea-general-info-wrapper__title {
+.supporters-page-general-info-wrapper__title {
   margin: 0;
   font-family: NotoSerifSC, serif;
   font-weight: 600;
@@ -32,7 +32,7 @@
   line-height: 133%;
 }
 
-.dead-sea-general-info-wrapper__description {
+.supporters-page-general-info-wrapper__description {
   max-width: 32.75rem;
   margin: 0.75rem 0 0;
 
@@ -42,7 +42,7 @@
   }
 }
 
-.dead-sea-general-info-wrapper__bottom-margin {
+.supporters-page-general-info-wrapper__bottom-margin {
   margin-bottom: 3.875rem;
 
   @include big-phone {
@@ -50,7 +50,7 @@
   }
 }
 
-.dead-sea-general-info-wrapper__action {
+.supporters-page-general-info-wrapper__action {
   height: 1.25rem;
   letter-spacing: 0.01em;
 }

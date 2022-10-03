@@ -12,13 +12,13 @@ const SelectionButton: FC<SelectionButtonProps> = (props) => {
 
   return (
     <button
-      className="dead-sea-selection-button"
+      className="supporters-page-selection-button"
       type="button"
       onClick={onClick}
     >
       <span
-        className={classNames("dead-sea-selection-button__circle", {
-          "dead-sea-selection-button__circle--active": isActive,
+        className={classNames("supporters-page-selection-button__circle", {
+          "supporters-page-selection-button__circle--active": isActive,
         })}
       />
       {children}

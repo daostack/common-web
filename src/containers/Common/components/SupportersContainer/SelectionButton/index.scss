@@ -1,7 +1,7 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
-.dead-sea-selection-button {
+.supporters-page-selection-button {
   padding: 1.25rem;
   display: flex;
   align-self: center;
@@ -19,7 +19,7 @@
   }
 }
 
-.dead-sea-selection-button__circle {
+.supporters-page-selection-button__circle {
   position: relative;
   width: 1.25rem;
   height: 1.25rem;
@@ -27,7 +27,7 @@
   border: 0.125rem solid $light-gray-2;
   border-radius: 50%;
 }
-.dead-sea-selection-button__circle--active {
+.supporters-page-selection-button__circle--active {
   &:after {
     content: "";
     position: absolute;

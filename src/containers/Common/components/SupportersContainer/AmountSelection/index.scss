@@ -1,12 +1,12 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
-.dead-sea-amount-selection {
+.supporters-page-amount-selection {
   display: flex;
   flex-direction: column;
 }
 
-.dead-sea-amount-selection__title {
+.supporters-page-amount-selection__title {
   margin: 0 0 2.5rem;
   font-family: NunitoSans, sans-serif;
   font-weight: normal;
@@ -15,12 +15,12 @@
   letter-spacing: 0.01em;
 }
 
-.dead-sea-amount-selection__toggle-button-group {
+.supporters-page-amount-selection__toggle-button-group {
   max-width: 20.625rem;
   margin-bottom: 2.5rem;
 }
 
-.dead-sea-amount-selection__amounts-wrapper {
+.supporters-page-amount-selection__amounts-wrapper {
   margin-bottom: 2.5rem;
   display: grid;
   grid-gap: 2.5rem 1.5rem;
@@ -31,7 +31,7 @@
   }
 }
 
-.dead-sea-amount-selection__currency-input {
+.supporters-page-amount-selection__currency-input {
   max-width: 17.375rem;
 
   @include big-phone {
@@ -39,11 +39,11 @@
   }
 }
 
-.dead-sea-amount-selection__currency-input-label {
+.supporters-page-amount-selection__currency-input-label {
   font-size: $xsmall;
 }
 
-.dead-sea-amount-selection__submit-button-wrapper {
+.supporters-page-amount-selection__submit-button-wrapper {
   max-width: 15rem;
   margin-top: 3rem;
 

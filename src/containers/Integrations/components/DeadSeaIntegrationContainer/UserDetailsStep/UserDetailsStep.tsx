@@ -4,7 +4,7 @@ import { ScreenSize } from "@/shared/constants";
 import { User } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { DeadSeaUserDetailsForm } from "../DeadSeaUserDetailsForm";
-import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
+import { GeneralInfoWrapper } from "../../../../Common/components/SupportersContainer/GeneralInfoWrapper";
 import "./index.scss";
 
 interface UserDetailsStepProps {

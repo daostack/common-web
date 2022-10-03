@@ -26,7 +26,7 @@ const InitialStep: FC<InitialStepProps> = (props) => {
       <AmountSelection
         amount={amount}
         preSubmitText={
-          <p className="dead-sea-initial-step__pre-submit-text">
+          <p className="supporters-page-initial-step__pre-submit-text">
             DSG is a community movement managed via{" "}
             <ButtonLink
               href={ROUTE_PATHS.HOME}
