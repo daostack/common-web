@@ -1,16 +1,16 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import config from "@/config";
 import { Loader } from "@/shared/components";
+import { ErrorText } from "@/shared/components/Form";
+import { ContributionType } from "@/shared/constants";
 import {
   useImmediateContribution,
   useUserCards,
 } from "@/shared/hooks/useCases";
-import { AmountSelection } from "../../../../Common/components/SupportersContainer/AmountSelection";
-import { GeneralInfoWrapper } from "../../../../Common/components/SupportersContainer/GeneralInfoWrapper";
-import { PaymentDetails } from "./PaymentDetails";
-import { ContributionType } from "@/shared/constants";
-import { ErrorText } from "@/shared/components/Form";
 import { Currency } from "@/shared/models";
+import { AmountSelection } from "../AmountSelection";
+import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
+import { PaymentDetails } from "./PaymentDetails";
 import "./index.scss";
 
 interface PaymentStepProps {
@@ -99,7 +99,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
           />
         ))}
       {errorText && (
-        <ErrorText className="dead-sea-payment-step__error">
+        <ErrorText className="supporters-page-payment-step__error">
           {errorText}
         </ErrorText>
       )}

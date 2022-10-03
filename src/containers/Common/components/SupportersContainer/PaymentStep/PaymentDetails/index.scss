@@ -1,12 +1,12 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
-.dead-sea-payment-details {
+.supporters-page-payment-details {
   display: flex;
   flex-direction: column;
 }
 
-.dead-sea-payment-details__info-block {
+.supporters-page-payment-details__info-block {
   margin-bottom: 2.5rem;
   padding: 1.375rem;
   display: flex;
@@ -20,7 +20,7 @@
   }
 }
 
-.dead-sea-payment-details__info-block-half {
+.supporters-page-payment-details__info-block-half {
   display: flex;
   flex-direction: column;
 
@@ -34,7 +34,7 @@
   }
 }
 
-.dead-sea-payment-details__info-title {
+.supporters-page-payment-details__info-title {
   margin: 0;
   font-family: NunitoSans, sans-serif;
   font-weight: bold;
@@ -42,18 +42,18 @@
   line-height: 120%;
 }
 
-.dead-sea-payment-details__info-amount {
-  @extend .dead-sea-payment-details__info-title;
+.supporters-page-payment-details__info-amount {
+  @extend .supporters-page-payment-details__info-title;
 }
 
-.dead-sea-payment-details__info-hint {
+.supporters-page-payment-details__info-hint {
   font-size: $xsmall;
   line-height: 143%;
   letter-spacing: 0.02em;
   color: $light-gray-2;
 }
 
-.dead-sea-payment-details__edit-amount-button {
+.supporters-page-payment-details__edit-amount-button {
   justify-self: flex-end;
 
   @include big-phone {
@@ -61,7 +61,7 @@
   }
 }
 
-.dead-sea-payment-details__pay-button {
+.supporters-page-payment-details__pay-button {
   max-width: 12.625rem;
   margin-top: 1.5rem;
 }
