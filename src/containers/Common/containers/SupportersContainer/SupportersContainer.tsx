@@ -10,6 +10,7 @@ import {
   InitialStep,
   MemberAdmittanceStep,
   PaymentStep,
+  Success,
   UserDetailsStep,
   Welcome,
 } from "../../components/SupportersContainer";
@@ -62,7 +63,7 @@ const SupportersContainer = () => {
   };
 
   const handlePaymentStepFinish = () => {
-    setStep(SupportersStep.Welcome);
+    setStep(SupportersStep.Success);
   };
 
   useEffect(() => {
@@ -136,6 +137,8 @@ const SupportersContainer = () => {
             onFinish={handlePaymentStepFinish}
           />
         );
+      case SupportersStep.Success:
+        return <Success />;
       case SupportersStep.Welcome:
         return <Welcome />;
       default:

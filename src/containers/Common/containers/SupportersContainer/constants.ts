@@ -3,5 +3,6 @@ export enum SupportersStep {
   UserDetails,
   MemberAdmittance,
   Payment,
+  Success,
   Welcome,
 }
