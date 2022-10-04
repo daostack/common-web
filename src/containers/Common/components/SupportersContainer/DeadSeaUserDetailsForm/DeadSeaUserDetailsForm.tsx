@@ -153,8 +153,10 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               name="phoneNumber"
               label={t("userDetailsForm.phoneNumberLabel")}
               placeholder="+972"
+              hint="(optional)"
               styles={{
                 label: "supporters-page-user-details-form__field-label",
+                hint: "supporters-page-user-details-form__field-hint",
                 input: {
                   default: isRtlLanguage
                     ? "supporters-page-user-details-form__rtl"
