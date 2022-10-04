@@ -126,6 +126,7 @@ export default {
         otherInputTitle: "Other",
         otherInputPlaceholder: "Add amount",
         otherInputError: "Minimum {{amount}}",
+        defaultSubmitButtonText: "Update Contribution",
       },
       communityManagedText:
         "<0>{{commonName}}</0> is a community movement managed via <3>Common</3>",

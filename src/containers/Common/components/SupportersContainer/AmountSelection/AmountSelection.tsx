@@ -23,18 +23,18 @@ interface PaymentDetailsProps {
 }
 
 const AmountSelection: FC<PaymentDetailsProps> = (props) => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "supporters.amountSelection",
+  });
   const {
     amount: currentAmount,
     minAmount,
     amountsToSelect,
     preSubmitText,
-    submitButtonText = "Update Contribution",
+    submitButtonText = t("defaultSubmitButtonText"),
     onAmountChange,
     getSubmitLink,
   } = props;
-  const { t } = useTranslation("translation", {
-    keyPrefix: "supporters.amountSelection",
-  });
   const [selectedAmount, setSelectedAmount] = useState<number | null>(() =>
     currentAmount && amountsToSelect.some((amount) => amount === currentAmount)
       ? currentAmount
