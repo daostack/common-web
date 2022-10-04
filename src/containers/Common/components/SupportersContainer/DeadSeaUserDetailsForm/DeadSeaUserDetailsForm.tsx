@@ -14,7 +14,7 @@ import {
 } from "@/shared/components/Form/Formik";
 import { CountryCode, ScreenSize } from "@/shared/constants";
 import { User } from "@/shared/models";
-import { getScreenSize } from "@/shared/store/selectors";
+import { getScreenSize, selectIsRtlLanguage } from "@/shared/store/selectors";
 import validationSchema from "./validationSchema";
 import "./index.scss";
 
@@ -23,6 +23,7 @@ interface FormValues {
   lastName: string;
   email: string;
   country: string;
+  phoneNumber: string;
   about: string;
   supportPlan: string;
   marketingContentAgreement: boolean;
@@ -36,6 +37,7 @@ const getInitialValues = (user?: User | null): FormValues => ({
     user?.lastName.trim() || user?.displayName?.trim().split(" ")[1] || "",
   email: user?.email || "",
   country: user?.country || CountryCode.IL,
+  phoneNumber: user?.phoneNumber || "",
   about: user?.intro || "",
   supportPlan: "",
   marketingContentAgreement: false,
@@ -54,6 +56,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
     keyPrefix: "supporters",
   });
   const [errorText, setErrorText] = useState("");
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const textAreaRowsAmount = isMobileView ? 3 : 2;
@@ -69,7 +72,8 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values, { setSubmitting }) => {
-      const { firstName, lastName, email, country, about } = values;
+      const { firstName, lastName, email, country, phoneNumber, about } =
+        values;
 
       setSubmitting(true);
       setErrorText("");
@@ -82,6 +86,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             lastName,
             email,
             country,
+            phoneNumber,
             intro: about,
           },
           callback: (error) => {
@@ -142,6 +147,23 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               placeholder={t("userDetailsForm.countryPlaceholder")}
               options={countriesOptions}
               shouldBeFixed={false}
+            />
+            <TextField
+              id="phoneNumber"
+              name="phoneNumber"
+              label={t("userDetailsForm.phoneNumberTitle")}
+              placeholder="+972"
+              styles={{
+                label: "supporters-page-user-details-form__field-label",
+                input: {
+                  default: isRtlLanguage
+                    ? "supporters-page-user-details-form__rtl"
+                    : "",
+                },
+                error: isRtlLanguage
+                  ? "supporters-page-user-details-form__rtl"
+                  : "",
+              }}
             />
             <TextField
               className="supporters-page-user-details-form__all-columns"
