@@ -10,8 +10,8 @@ import {
   InitialStep,
   MemberAdmittanceStep,
   PaymentStep,
-  Success,
   UserDetailsStep,
+  Welcome,
 } from "../../components/SupportersContainer";
 import { SupportersStep } from "./constants";
 import { SupportersDataContext, SupportersDataContextValue } from "./context";
@@ -62,7 +62,7 @@ const SupportersContainer = () => {
   };
 
   const handlePaymentStepFinish = () => {
-    setStep(SupportersStep.Success);
+    setStep(SupportersStep.Welcome);
   };
 
   useEffect(() => {
@@ -136,8 +136,8 @@ const SupportersContainer = () => {
             onFinish={handlePaymentStepFinish}
           />
         );
-      case SupportersStep.Success:
-        return <Success />;
+      case SupportersStep.Welcome:
+        return <Welcome />;
       default:
         return null;
     }

@@ -5,5 +5,5 @@ export * from "./InitialStep";
 export * from "./MemberAdmittanceStep";
 export * from "./PaymentStep";
 export * from "./SelectionButton";
-export * from "./Success";
 export * from "./UserDetailsStep";
+export * from "./Welcome";
