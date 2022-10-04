@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { ImmediateContributionPayment } from "@/containers/Common/interfaces";
@@ -33,6 +34,9 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
     onIframeLoaded,
     onAmountEdit,
   } = props;
+  const { t } = useTranslation("translation", {
+    keyPrefix: "supporters",
+  });
   const [isFrameLoaded, setIsIframeLoaded] = useState(false);
   const user = useSelector(selectUser());
   const formattedAmount = formatPrice(amount, { shouldMillify: false });
@@ -48,10 +52,10 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
   return (
     <div className="supporters-page-payment-details">
       <h2 className="supporters-page-payment-details__title">
-        Payment details
+        {t("paymentDetails.title")}
       </h2>
       <p className="supporters-page-payment-details__description">
-        Update your payment details below
+        {t("paymentDetails.description")}
       </p>
       <div className="supporters-page-payment-details__info-block">
         <div className="supporters-page-payment-details__info-block-half">
@@ -70,21 +74,24 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
             className="supporters-page-payment-details__edit-amount-button"
             onClick={!isPaymentLoading ? onAmountEdit : undefined}
           >
-            Edit
+            {t("buttons.edit")}
           </ButtonLink>
         </div>
       </div>
       {isLoading && <Loader />}
       {cards.length > 0 && (
         <>
-          <PaymentMethod card={cards[0]} />
+          <PaymentMethod
+            card={cards[0]}
+            title={t("paymentDetails.paymentMethodTitle")}
+          />
           <Button
             className="supporters-page-payment-details__pay-button"
             onClick={onPay}
             disabled={isLoading}
             shouldUseFullWidth
           >
-            Pay {formattedAmount} (ILS)
+            {t("buttons.payAmount", { amount: `${formattedAmount} (ILS)` })}
           </Button>
         </>
       )}

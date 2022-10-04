@@ -117,6 +117,8 @@ export default {
         back: "Back",
         supportUsViaCommon: "Support us via Common",
         next: "Next",
+        edit: "Edit",
+        payAmount: "Pay {{amount}}",
       },
       joinText: "Join the",
       amountSelection: {
@@ -141,6 +143,11 @@ export default {
         countryLabel: "Country",
         countryPlaceholder: "---Select country---",
         phoneNumberLabel: "Phone number",
+      },
+      paymentDetails: {
+        title: "Payment details",
+        description: "Update your payment details below",
+        paymentMethodTitle: "Payment method",
       },
     },
   },
