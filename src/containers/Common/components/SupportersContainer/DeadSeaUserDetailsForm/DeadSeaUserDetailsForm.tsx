@@ -153,7 +153,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               name="phoneNumber"
               label={t("userDetailsForm.phoneNumberLabel")}
               placeholder="+972"
-              hint="(optional)"
+              hint={`(${t("userDetailsForm.optionalHint")})`}
               styles={{
                 label: "supporters-page-user-details-form__field-label",
                 hint: "supporters-page-user-details-form__field-hint",
@@ -173,7 +173,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               name="about"
               label="About you"
               placeholder="What are you most passionate about, really good at, or love"
-              hint="(optional)"
+              hint={`(${t("userDetailsForm.optionalHint")})`}
               styles={{
                 label: "supporters-page-user-details-form__field-label",
                 hint: "supporters-page-user-details-form__field-hint",
@@ -187,7 +187,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               name="supportPlan"
               label="How could you support DSG further?"
               placeholder="Special skills, connections or other assets you have that could help accomplish the DSG mission"
-              hint="(optional)"
+              hint={`(${t("userDetailsForm.optionalHint")})`}
               styles={{
                 label: "supporters-page-user-details-form__field-label",
                 hint: "supporters-page-user-details-form__field-hint",

@@ -130,6 +130,7 @@ export default {
       communityManagedText:
         "<0>{{commonName}}</0> is a community movement managed via <3>Common</3>",
       userDetailsForm: {
+        optionalHint: "optional",
         firstNameLabel: "First name",
         firstNamePlaceholder: "Yossi",
         lastNameLabel: "Last name",
