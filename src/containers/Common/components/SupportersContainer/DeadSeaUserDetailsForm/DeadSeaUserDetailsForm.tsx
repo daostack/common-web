@@ -117,7 +117,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             <TextField
               id="firstName"
               name="firstName"
-              label={t("userDetailsForm.firstNameTitle")}
+              label={t("userDetailsForm.firstNameLabel")}
               placeholder={t("userDetailsForm.firstNamePlaceholder")}
               styles={{
                 label: "supporters-page-user-details-form__field-label",
@@ -126,7 +126,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             <TextField
               id="lastName"
               name="lastName"
-              label={t("userDetailsForm.lastNameTitle")}
+              label={t("userDetailsForm.lastNameLabel")}
               placeholder={t("userDetailsForm.lastNamePlaceholder")}
               styles={{
                 label: "supporters-page-user-details-form__field-label",
@@ -135,7 +135,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             <TextField
               id="email"
               name="email"
-              label={t("userDetailsForm.emailTitle")}
+              label={t("userDetailsForm.emailLabel")}
               placeholder={t("userDetailsForm.emailPlaceholder")}
               styles={{
                 label: "supporters-page-user-details-form__field-label",
@@ -143,7 +143,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             />
             <Dropdown
               name="country"
-              label={t("userDetailsForm.countryTitle")}
+              label={t("userDetailsForm.countryLabel")}
               placeholder={t("userDetailsForm.countryPlaceholder")}
               options={countriesOptions}
               shouldBeFixed={false}
@@ -151,7 +151,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             <TextField
               id="phoneNumber"
               name="phoneNumber"
-              label={t("userDetailsForm.phoneNumberTitle")}
+              label={t("userDetailsForm.phoneNumberLabel")}
               placeholder="+972"
               styles={{
                 label: "supporters-page-user-details-form__field-label",
