@@ -1,4 +1,6 @@
 import React, { FC, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/containers/Auth/store/selectors";
 import { ImmediateContributionPayment } from "@/containers/Common/interfaces";
 import {
   Button,
@@ -8,7 +10,7 @@ import {
   PaymentMethod,
 } from "@/shared/components";
 import { Card } from "@/shared/models";
-import { formatPrice } from "@/shared/utils";
+import { formatPrice, getUserName } from "@/shared/utils";
 import "./index.scss";
 
 interface PaymentDetailsProps {
@@ -32,6 +34,7 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
     onAmountEdit,
   } = props;
   const [isFrameLoaded, setIsIframeLoaded] = useState(false);
+  const user = useSelector(selectUser());
   const formattedAmount = formatPrice(amount, { shouldMillify: false });
   const isLoading = Boolean(
     isPaymentLoading || (intermediatePayment && !isFrameLoaded)
@@ -44,13 +47,19 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
 
   return (
     <div className="supporters-page-payment-details">
+      <h2 className="supporters-page-payment-details__title">
+        Payment details
+      </h2>
+      <p className="supporters-page-payment-details__description">
+        Update your payment details below
+      </p>
       <div className="supporters-page-payment-details__info-block">
         <div className="supporters-page-payment-details__info-block-half">
-          <h2 className="supporters-page-payment-details__info-title">
-            Dead Sea Guardians
-          </h2>
+          <span className="supporters-page-payment-details__info-title">
+            {getUserName(user)}
+          </span>
           <span className="supporters-page-payment-details__info-hint">
-            Payment details
+            {user?.email}
           </span>
         </div>
         <div className="supporters-page-payment-details__info-block-half">
