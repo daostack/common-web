@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/components";
 import {
   CurrencyInput,
@@ -31,6 +32,9 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
     onAmountChange,
     getSubmitLink,
   } = props;
+  const { t } = useTranslation("translation", {
+    keyPrefix: "supporters.amountSelection",
+  });
   const [selectedAmount, setSelectedAmount] = useState<number | null>(() =>
     currentAmount && amountsToSelect.some((amount) => amount === currentAmount)
       ? currentAmount
@@ -45,7 +49,9 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
     (typeof minAmount === "number" &&
       inputValue &&
       Number(inputValue) < minAmount / 100 &&
-      `Minimum ${formatPrice(minAmount, { shouldMillify: false })} ILS`) ||
+      t("otherInputError", {
+        amount: `${formatPrice(minAmount, { shouldMillify: false })} ILS`,
+      })) ||
     "";
   const submitLink = getSubmitLink
     ? getSubmitLink(getFinalAmount(selectedAmount, inputValue))
@@ -81,16 +87,18 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   return (
     <div className="supporters-page-amount-selection">
       <h2 className="supporters-page-amount-selection__title">
-        Donation details
+        {t("donationDetailsTitle")}
       </h2>
       <ToggleButtonGroup
         className="supporters-page-amount-selection__toggle-button-group"
         value={ContributionType.OneTime}
         onChange={() => {}}
       >
-        <ToggleButton value={ContributionType.OneTime}>One time</ToggleButton>
+        <ToggleButton value={ContributionType.OneTime}>
+          {t("oneTimeTypeText")}
+        </ToggleButton>
         <ToggleButton value={ContributionType.Monthly} isDisabled>
-          Monthly
+          {t("monthlyTypeText")}
         </ToggleButton>
       </ToggleButtonGroup>
       <div
@@ -110,8 +118,8 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
       <CurrencyInput
         className="supporters-page-amount-selection__currency-input"
         name="contributionAmount"
-        label="Other"
-        placeholder="Add amount"
+        label={t("otherInputTitle")}
+        placeholder={t("otherInputPlaceholder")}
         value={inputValue}
         error={inputValueError}
         onValueChange={handleValueChange}

@@ -118,6 +118,14 @@ export default {
         supportUsViaCommon: "Support us via Common",
       },
       joinText: "Join the",
+      amountSelection: {
+        donationDetailsTitle: "Donation details",
+        oneTimeTypeText: "One time",
+        monthlyTypeText: "Monthly",
+        otherInputTitle: "Other",
+        otherInputPlaceholder: "Add amount",
+        otherInputError: 'Minimum {{amount}}',
+      },
       communityManagedText:
         "<0>{{commonName}}</0> is a community movement managed via <3>Common</3>",
     },
