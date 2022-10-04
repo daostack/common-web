@@ -1,7 +1,8 @@
-import React, { FC, useCallback, useMemo, useState } from "react";
+import React, { FC, useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
+import { FormikProps } from "formik/dist/types";
 import { updateUserDetails } from "@/containers/Auth/store/actions";
 import { countryList } from "@/shared/assets/countries";
 import { Button, DropdownOption, Loader } from "@/shared/components";
@@ -13,9 +14,14 @@ import {
   TextField,
 } from "@/shared/components/Form/Formik";
 import { CountryCode, ScreenSize } from "@/shared/constants";
+import { useFormErrorsTranslate } from "@/shared/hooks";
 import { User } from "@/shared/models";
-import { getScreenSize, selectIsRtlLanguage } from "@/shared/store/selectors";
-import validationSchema from "./validationSchema";
+import {
+  getScreenSize,
+  selectIsRtlLanguage,
+  selectLanguage,
+} from "@/shared/store/selectors";
+import { getValidationSchema } from "./validationSchema";
 import "./index.scss";
 
 interface FormValues {
@@ -55,11 +61,15 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
   const { t } = useTranslation("translation", {
     keyPrefix: "supporters",
   });
+  const formRef = useRef<FormikProps<FormValues>>(null);
   const [errorText, setErrorText] = useState("");
+  const language = useSelector(selectLanguage());
   const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const textAreaRowsAmount = isMobileView ? 3 : 2;
+  const validationSchema = useMemo(getValidationSchema, [language]);
+  useFormErrorsTranslate(formRef.current);
 
   const countriesOptions = useMemo<DropdownOption[]>(
     () =>
@@ -108,6 +118,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
     <Formik
       initialValues={getInitialValues(user)}
       onSubmit={handleSubmit}
+      innerRef={formRef}
       validationSchema={validationSchema}
       validateOnMount
     >
