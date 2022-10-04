@@ -10,7 +10,9 @@ import {
   Loader,
   PaymentMethod,
 } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import { Card } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice, getUserName } from "@/shared/utils";
 import "./index.scss";
 
@@ -39,6 +41,8 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
   });
   const [isFrameLoaded, setIsIframeLoaded] = useState(false);
   const user = useSelector(selectUser());
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const formattedAmount = formatPrice(amount, { shouldMillify: false });
   const isLoading = Boolean(
     isPaymentLoading || (intermediatePayment && !isFrameLoaded)
@@ -51,12 +55,16 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
 
   return (
     <div className="supporters-page-payment-details">
-      <h2 className="supporters-page-payment-details__title">
-        {t("paymentDetails.title")}
-      </h2>
-      <p className="supporters-page-payment-details__description">
-        {t("paymentDetails.description")}
-      </p>
+      {!isMobileView && (
+        <>
+          <h2 className="supporters-page-payment-details__title">
+            {t("paymentDetails.title")}
+          </h2>
+          <p className="supporters-page-payment-details__description">
+            {t("paymentDetails.description")}
+          </p>
+        </>
+      )}
       <div className="supporters-page-payment-details__info-block">
         <div className="supporters-page-payment-details__info-block-half">
           <span className="supporters-page-payment-details__info-title">

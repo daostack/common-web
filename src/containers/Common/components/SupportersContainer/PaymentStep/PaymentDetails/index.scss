@@ -16,7 +16,7 @@
 }
 
 .supporters-page-payment-details__description {
-  margin: 0;
+  margin: 0 0 2.5rem;
   font-size: $xsmall;
   line-height: 143%;
   letter-spacing: 0.02em;
@@ -24,7 +24,6 @@
 }
 
 .supporters-page-payment-details__info-block {
-  margin-top: 2.5rem;
   margin-bottom: 2.5rem;
   padding: 1.375rem;
   display: flex;
@@ -85,4 +84,9 @@
 .supporters-page-payment-details__pay-button {
   max-width: 12.625rem;
   margin-top: 1.5rem;
+
+  @include big-phone {
+    max-width: unset;
+    margin-top: 2.5rem;
+  }
 }
