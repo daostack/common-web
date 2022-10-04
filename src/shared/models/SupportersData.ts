@@ -6,9 +6,17 @@ export type SupportersDataFields =
   | "marketingContentAgreement"
   | "whatsappGroupAgreement";
 
+export interface SupportersDataFormFieldTranslation {
+  label: string;
+  placeholder?: string;
+}
+
 export interface SupportersDataTranslation {
   title: string;
   description: string;
+  fields?: Partial<
+    Record<SupportersDataFields, SupportersDataFormFieldTranslation>
+  >;
   thankYouPageDescription: string;
 }
 

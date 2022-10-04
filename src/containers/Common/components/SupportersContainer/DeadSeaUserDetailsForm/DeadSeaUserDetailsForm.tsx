@@ -79,6 +79,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const textAreaRowsAmount = isMobileView ? 3 : 2;
+  const fieldsTranslation = currentTranslation?.fields || {};
   const validationSchema = useMemo(getValidationSchema, [language]);
   useFormErrorsTranslate(formRef.current);
 
@@ -194,8 +195,11 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
                 className="supporters-page-user-details-form__all-columns"
                 id="about"
                 name="about"
-                label="About you"
-                placeholder="What are you most passionate about, really good at, or love"
+                label={fieldsTranslation.aboutYou?.label ?? "About you"}
+                placeholder={
+                  fieldsTranslation.aboutYou?.placeholder ??
+                  "What are you most passionate about, really good at, or love"
+                }
                 hint={`(${t("userDetailsForm.optionalHint")})`}
                 styles={{
                   label: "supporters-page-user-details-form__field-label",
@@ -210,8 +214,11 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
                 className="supporters-page-user-details-form__all-columns"
                 id="supportPlan"
                 name="supportPlan"
-                label="How could you support DSG further?"
-                placeholder="Special skills, connections or other assets you have that could help accomplish the DSG mission"
+                label={
+                  fieldsTranslation.furtherSupportPlan?.label ??
+                  "How could you support our activity further?"
+                }
+                placeholder={fieldsTranslation.furtherSupportPlan?.placeholder}
                 hint={`(${t("userDetailsForm.optionalHint")})`}
                 styles={{
                   label: "supporters-page-user-details-form__field-label",
@@ -228,7 +235,10 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             <Checkbox
               id="marketingContentAgreement"
               name="marketingContentAgreement"
-              label="Agree to receive marketing content"
+              label={
+                fieldsTranslation.marketingContentAgreement?.label ??
+                "Agree to receive marketing content"
+              }
             />
           )}
           {!supportersData?.hiddenFields?.includes(
@@ -238,7 +248,10 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               className="supporters-page-user-details-form__checkbox"
               id="whatsappGroupAgreement"
               name="whatsappGroupAgreement"
-              label="Interested to join DSG whatsapp group"
+              label={
+                fieldsTranslation.whatsappGroupAgreement?.label ??
+                "Interested to join DSG whatsapp group"
+              }
             />
           )}
           {isSubmitting && (
