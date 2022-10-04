@@ -24,8 +24,7 @@
   margin-bottom: 1.25rem;
 
   @include big-phone {
-    margin-right: -#{$content-padding-mobile};
-    margin-left: -#{$content-padding-mobile};
+    margin-bottom: 2rem;
   }
 }
 
@@ -34,8 +33,4 @@
   height: 12.5rem;
   border-radius: 0.625rem;
   object-fit: cover;
-
-  @include big-phone {
-    border-radius: 0;
-  }
 }
