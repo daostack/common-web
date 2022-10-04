@@ -21,6 +21,8 @@ export interface SupportersDataTranslation {
 }
 
 export interface SupportersData {
+  id: string;
+  commonId: string;
   photoURL: string;
   amounts: number[];
   minAmount?: number;

@@ -1,5 +1,4 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
-import config from "@/config";
 import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
@@ -38,14 +37,17 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
   } = useImmediateContribution();
   const { supportersData, currentTranslation } = useSupportersDataContext();
   const [isAmountEditing, setIsAmountEditing] = useState(false);
+  const commonId = supportersData?.commonId;
 
   const handleImmediateContribution = useCallback(() => {
-    makeImmediateContribution({
-      price: { amount, currency: Currency.ILS },
-      commonId: config.deadSeaCommonId,
-      contributionType: ContributionType.OneTime,
-    });
-  }, [makeImmediateContribution, amount]);
+    if (commonId) {
+      makeImmediateContribution({
+        commonId,
+        price: { amount, currency: Currency.ILS },
+        contributionType: ContributionType.OneTime,
+      });
+    }
+  }, [makeImmediateContribution, amount, commonId]);
 
   const startAmountEditing = () => {
     setIsAmountEditing(true);

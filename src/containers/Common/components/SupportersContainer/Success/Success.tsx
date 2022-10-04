@@ -1,17 +1,20 @@
 import React, { FC } from "react";
 import { useHistory } from "react-router-dom";
-import config from "@/config";
+import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { Button } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import "./index.scss";
 
 const Success: FC = () => {
   const history = useHistory();
+  const { supportersData } = useSupportersDataContext();
 
   const handleJumpIn = () => {
-    history.push(
-      ROUTE_PATHS.COMMON_DETAIL.replace(":id", config.deadSeaCommonId)
-    );
+    if (supportersData) {
+      history.push(
+        ROUTE_PATHS.COMMON_DETAIL.replace(":id", supportersData.commonId)
+      );
+    }
   };
 
   return (

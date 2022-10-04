@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import config from "@/config";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { useCommonMember } from "@/containers/Common/hooks";
@@ -35,15 +34,18 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
     },
     setProposalCreationState,
   ] = useLoadingState<MemberAdmittance | null>(null);
-  const { currentTranslation } = useSupportersDataContext();
+  const { supportersData, currentTranslation } = useSupportersDataContext();
   const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const userName = getUserName(user);
+  const commonId = supportersData?.commonId;
 
   useEffect(() => {
-    fetchCommonMember(config.deadSeaCommonId);
-  }, [fetchCommonMember]);
+    if (commonId) {
+      fetchCommonMember(commonId);
+    }
+  }, [fetchCommonMember, commonId]);
 
   useEffect(() => {
     if (isCommonMemberFetched && commonMember) {
@@ -57,7 +59,8 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
         !isCommonMemberFetched ||
         commonMember ||
         isProposalCreationLoading ||
-        isProposalCreationFinished
+        isProposalCreationFinished ||
+        !commonId
       ) {
         return;
       }
@@ -73,7 +76,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
         createMemberAdmittanceProposal.request({
           payload: {
             args: {
-              commonId: config.deadSeaCommonId,
+              commonId,
               title,
               description: description || title,
               images: [],
@@ -103,21 +106,22 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
     commonMember,
     isProposalCreationLoading,
     isProposalCreationFinished,
+    commonId,
   ]);
 
   useEffect(() => {
-    if (!createdMemberAdmittance) {
+    if (!createdMemberAdmittance || !commonId) {
       return;
     }
 
-    return subscribeToCommonMembers(config.deadSeaCommonId, (commonMembers) => {
+    return subscribeToCommonMembers(commonId, (commonMembers) => {
       if (
         commonMembers.some((commonMember) => commonMember.userId === userId)
       ) {
         onFinish();
       }
     });
-  }, [createdMemberAdmittance, userId, onFinish]);
+  }, [createdMemberAdmittance, userId, commonId, onFinish]);
 
   if (!currentTranslation) {
     return null;
