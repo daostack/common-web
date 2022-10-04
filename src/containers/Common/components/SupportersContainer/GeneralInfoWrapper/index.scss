@@ -35,6 +35,7 @@
 .supporters-page-general-info-wrapper__description {
   max-width: 32.75rem;
   margin: 0.75rem 0 0;
+  white-space: pre-line;
 
   @include big-phone {
     max-width: unset;
