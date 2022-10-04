@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
 import { updateUserDetails } from "@/containers/Auth/store/actions";
+import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { countryList } from "@/shared/assets/countries";
 import { Button, DropdownOption, Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
@@ -15,7 +16,7 @@ import {
 } from "@/shared/components/Form/Formik";
 import { CountryCode, ScreenSize } from "@/shared/constants";
 import { useFormErrorsTranslate } from "@/shared/hooks";
-import { User } from "@/shared/models";
+import { SupportersDataFields, User } from "@/shared/models";
 import {
   getScreenSize,
   selectIsRtlLanguage,
@@ -32,11 +33,14 @@ interface FormValues {
   phoneNumber: string;
   about: string;
   supportPlan: string;
-  marketingContentAgreement: boolean;
-  whatsappGroupAgreement: boolean;
+  marketingContentAgreement?: boolean;
+  whatsappGroupAgreement?: boolean;
 }
 
-const getInitialValues = (user?: User | null): FormValues => ({
+const getInitialValues = (
+  user?: User | null,
+  hiddenFields?: SupportersDataFields[]
+): FormValues => ({
   firstName:
     user?.firstName.trim() || user?.displayName?.trim().split(" ")[0] || "",
   lastName:
@@ -46,8 +50,14 @@ const getInitialValues = (user?: User | null): FormValues => ({
   phoneNumber: user?.phoneNumber || "",
   about: user?.intro || "",
   supportPlan: "",
-  marketingContentAgreement: false,
-  whatsappGroupAgreement: false,
+  marketingContentAgreement: !hiddenFields?.includes(
+    "marketingContentAgreement"
+  )
+    ? false
+    : undefined,
+  whatsappGroupAgreement: !hiddenFields?.includes("whatsappGroupAgreement")
+    ? false
+    : undefined,
 });
 
 interface DeadSeaUserDetailsFormProps {
@@ -62,6 +72,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
     keyPrefix: "supporters",
   });
   const formRef = useRef<FormikProps<FormValues>>(null);
+  const { supportersData, currentTranslation } = useSupportersDataContext();
   const [errorText, setErrorText] = useState("");
   const language = useSelector(selectLanguage());
   const isRtlLanguage = useSelector(selectIsRtlLanguage());
@@ -116,7 +127,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
 
   return (
     <Formik
-      initialValues={getInitialValues(user)}
+      initialValues={getInitialValues(user, supportersData?.hiddenFields)}
       onSubmit={handleSubmit}
       innerRef={formRef}
       validationSchema={validationSchema}
@@ -178,46 +189,58 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
                   : "",
               }}
             />
-            <TextField
-              className="supporters-page-user-details-form__all-columns"
-              id="about"
-              name="about"
-              label="About you"
-              placeholder="What are you most passionate about, really good at, or love"
-              hint={`(${t("userDetailsForm.optionalHint")})`}
-              styles={{
-                label: "supporters-page-user-details-form__field-label",
-                hint: "supporters-page-user-details-form__field-hint",
-              }}
-              isTextarea
-              rows={textAreaRowsAmount}
-            />
-            <TextField
-              className="supporters-page-user-details-form__all-columns"
-              id="supportPlan"
-              name="supportPlan"
-              label="How could you support DSG further?"
-              placeholder="Special skills, connections or other assets you have that could help accomplish the DSG mission"
-              hint={`(${t("userDetailsForm.optionalHint")})`}
-              styles={{
-                label: "supporters-page-user-details-form__field-label",
-                hint: "supporters-page-user-details-form__field-hint",
-              }}
-              isTextarea
-              rows={textAreaRowsAmount}
-            />
+            {!supportersData?.hiddenFields?.includes("aboutYou") && (
+              <TextField
+                className="supporters-page-user-details-form__all-columns"
+                id="about"
+                name="about"
+                label="About you"
+                placeholder="What are you most passionate about, really good at, or love"
+                hint={`(${t("userDetailsForm.optionalHint")})`}
+                styles={{
+                  label: "supporters-page-user-details-form__field-label",
+                  hint: "supporters-page-user-details-form__field-hint",
+                }}
+                isTextarea
+                rows={textAreaRowsAmount}
+              />
+            )}
+            {!supportersData?.hiddenFields?.includes("furtherSupportPlan") && (
+              <TextField
+                className="supporters-page-user-details-form__all-columns"
+                id="supportPlan"
+                name="supportPlan"
+                label="How could you support DSG further?"
+                placeholder="Special skills, connections or other assets you have that could help accomplish the DSG mission"
+                hint={`(${t("userDetailsForm.optionalHint")})`}
+                styles={{
+                  label: "supporters-page-user-details-form__field-label",
+                  hint: "supporters-page-user-details-form__field-hint",
+                }}
+                isTextarea
+                rows={textAreaRowsAmount}
+              />
+            )}
           </div>
-          <Checkbox
-            id="marketingContentAgreement"
-            name="marketingContentAgreement"
-            label="Agree to receive marketing content"
-          />
-          <Checkbox
-            className="supporters-page-user-details-form__checkbox"
-            id="whatsappGroupAgreement"
-            name="whatsappGroupAgreement"
-            label="Interested to join DSG whatsapp group"
-          />
+          {!supportersData?.hiddenFields?.includes(
+            "marketingContentAgreement"
+          ) && (
+            <Checkbox
+              id="marketingContentAgreement"
+              name="marketingContentAgreement"
+              label="Agree to receive marketing content"
+            />
+          )}
+          {!supportersData?.hiddenFields?.includes(
+            "whatsappGroupAgreement"
+          ) && (
+            <Checkbox
+              className="supporters-page-user-details-form__checkbox"
+              id="whatsappGroupAgreement"
+              name="whatsappGroupAgreement"
+              label="Interested to join DSG whatsapp group"
+            />
+          )}
           {isSubmitting && (
             <div>
               <Loader />
