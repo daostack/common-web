@@ -1,4 +1,5 @@
 import React, { FC, useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { updateUserDetails } from "@/containers/Auth/store/actions";
@@ -49,6 +50,9 @@ interface DeadSeaUserDetailsFormProps {
 const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
   const { user, onFinish } = props;
   const dispatch = useDispatch();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "supporters",
+  });
   const [errorText, setErrorText] = useState("");
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -108,8 +112,8 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             <TextField
               id="firstName"
               name="firstName"
-              label="First name"
-              placeholder="Yossi"
+              label={t("userDetailsForm.firstNameTitle")}
+              placeholder={t("userDetailsForm.firstNamePlaceholder")}
               styles={{
                 label: "supporters-page-user-details-form__field-label",
               }}
@@ -117,8 +121,8 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             <TextField
               id="lastName"
               name="lastName"
-              label="Last name"
-              placeholder="Mordachai"
+              label={t("userDetailsForm.lastNameTitle")}
+              placeholder={t("userDetailsForm.lastNamePlaceholder")}
               styles={{
                 label: "supporters-page-user-details-form__field-label",
               }}
@@ -126,16 +130,16 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             <TextField
               id="email"
               name="email"
-              label="Email"
-              placeholder="yossi.mor@gmail.com"
+              label={t("userDetailsForm.emailTitle")}
+              placeholder={t("userDetailsForm.emailPlaceholder")}
               styles={{
                 label: "supporters-page-user-details-form__field-label",
               }}
             />
             <Dropdown
               name="country"
-              label="Country"
-              placeholder="---Select country---"
+              label={t("userDetailsForm.countryTitle")}
+              placeholder={t("userDetailsForm.countryPlaceholder")}
               options={countriesOptions}
               shouldBeFixed={false}
             />
@@ -190,7 +194,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             disabled={!isValid || isSubmitting}
             shouldUseFullWidth
           >
-            Next
+            {t("buttons.next")}
           </Button>
           {errorText && (
             <ErrorText className="supporters-page-user-details-form__error">
