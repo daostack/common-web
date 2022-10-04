@@ -12,6 +12,9 @@ const schema = Yup.object().shape({
   country: Yup.string()
     .oneOf(AVAILABLE_COUNTRIES)
     .required("Please select a country"),
+  phoneNumber: Yup.string().phone(
+    "Phone number must be in valid international Israeli format"
+  ),
 });
 
 export default schema;
