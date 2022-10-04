@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { ButtonLink } from "@/shared/components";
@@ -15,6 +16,9 @@ interface InitialStepProps {
 
 const InitialStep: FC<InitialStepProps> = (props) => {
   const { amount, onFinish } = props;
+  const { t } = useTranslation("translation", {
+    keyPrefix: "supporters",
+  });
   const location = useLocation();
   const { supportersData, currentTranslation } = useSupportersDataContext();
   const isInsideIFrame = checkIsIFrame();
@@ -37,18 +41,24 @@ const InitialStep: FC<InitialStepProps> = (props) => {
         amountsToSelect={supportersData?.amounts || []}
         preSubmitText={
           <p className="supporters-page-initial-step__pre-submit-text">
-            <strong>{currentTranslation.title}</strong> is a community movement
-            managed via{" "}
-            <ButtonLink
-              href={ROUTE_PATHS.HOME}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Trans
+              t={t}
+              i18nKey="communityManagedText"
+              values={{ commonName: currentTranslation.title }}
             >
-              Common
-            </ButtonLink>
+              <strong>{currentTranslation.title}</strong> is a community
+              movement managed via{" "}
+              <ButtonLink
+                href={ROUTE_PATHS.HOME}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Common
+              </ButtonLink>
+            </Trans>
           </p>
         }
-        submitButtonText="Support us via Common"
+        submitButtonText={t("buttons.supportUsViaCommon")}
         onAmountChange={onFinish}
         getSubmitLink={isInsideIFrame ? getSubmitLink : undefined}
       />

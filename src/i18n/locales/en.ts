@@ -115,8 +115,11 @@ export default {
     supporters: {
       buttons: {
         back: "Back",
+        supportUsViaCommon: "Support us via Common",
       },
       joinText: "Join the",
+      communityManagedText:
+        "<0>{{commonName}}</0> is a community movement managed via <3>Common</3>",
     },
   },
 };
