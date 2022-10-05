@@ -1,25 +1,19 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { Button, ButtonVariant } from "@/shared/components";
-import { ROUTE_PATHS } from "@/shared/constants";
 import "./index.scss";
 
-const Success: FC = () => {
-  const history = useHistory();
+interface SuccessProps {
+  onFinish: () => void;
+}
+
+const Success: FC<SuccessProps> = (props) => {
+  const { onFinish } = props;
   const { t } = useTranslation("translation", {
     keyPrefix: "supporters",
   });
-  const { supportersData, currentTranslation } = useSupportersDataContext();
-
-  const handleJumpIn = () => {
-    if (supportersData) {
-      history.push(
-        ROUTE_PATHS.COMMON_DETAIL.replace(":id", supportersData.commonId)
-      );
-    }
-  };
+  const { currentTranslation } = useSupportersDataContext();
 
   return (
     <div className="supporters-page-success">
@@ -38,7 +32,7 @@ const Success: FC = () => {
       <div className="supporters-page-success__buttons-wrapper">
         <Button
           className="supporters-page-success__submit-button"
-          onClick={handleJumpIn}
+          onClick={onFinish}
           variant={ButtonVariant.SecondaryPurple}
           shouldUseFullWidth
         >
@@ -46,7 +40,7 @@ const Success: FC = () => {
         </Button>
         <Button
           className="supporters-page-success__submit-button"
-          onClick={handleJumpIn}
+          onClick={onFinish}
           shouldUseFullWidth
         >
           {t("buttons.shareWithFriends")}

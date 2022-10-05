@@ -66,6 +66,10 @@ const SupportersContainer = () => {
     setStep(SupportersStep.Success);
   };
 
+  const handleSuccessStepFinish = () => {
+    setStep(SupportersStep.Welcome);
+  };
+
   useEffect(() => {
     fetchCommon(commonId);
     fetchSupportersData(commonId);
@@ -138,7 +142,7 @@ const SupportersContainer = () => {
           />
         );
       case SupportersStep.Success:
-        return <Success />;
+        return <Success onFinish={handleSuccessStepFinish} />;
       case SupportersStep.Welcome:
         return <Welcome />;
       default:
