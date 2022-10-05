@@ -5,7 +5,9 @@ import { useFooter, useHeader, useQueryParams } from "@/shared/hooks";
 import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import { useCommon, useSupportersData } from "@/shared/hooks/useCases";
+import { getScreenSize } from "@/shared/store/selectors";
 import {
   InitialStep,
   MemberAdmittanceStep,
@@ -41,6 +43,8 @@ const SupportersContainer = () => {
   );
   const [supportPlan, setSupportPlan] = useState("");
   const user = useSelector(selectUser());
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
   const currentTranslation =
     (supportersData &&
       supportersData.translations[supportersData.defaultLocale]) ||
@@ -144,7 +148,9 @@ const SupportersContainer = () => {
       case SupportersStep.Success:
         return <Success onFinish={handleSuccessStepFinish} />;
       case SupportersStep.Welcome:
-        return <Welcome />;
+        return common?.governanceId ? (
+          <Welcome governanceId={common.governanceId} />
+        ) : null;
       default:
         return null;
     }
@@ -170,13 +176,15 @@ const SupportersContainer = () => {
       )}
       {common && supportersData && currentTranslation && (
         <div className="supporters-page__content">
-          <div className="supporters-page__main-image-wrapper">
-            <img
-              className="supporters-page__main-image"
-              src={supportersData.photoURL}
-              alt={currentTranslation.title}
-            />
-          </div>
+          {(!isMobileView || step !== SupportersStep.Welcome) && (
+            <div className="supporters-page__main-image-wrapper">
+              <img
+                className="supporters-page__main-image"
+                src={supportersData.photoURL}
+                alt={currentTranslation.title}
+              />
+            </div>
+          )}
           <SupportersDataContext.Provider value={contextValue}>
             {renderContent()}
           </SupportersDataContext.Provider>

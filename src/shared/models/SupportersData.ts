@@ -19,6 +19,8 @@ export interface SupportersDataTranslation {
   >;
   successPageDescription: string;
   successPageInfoBlockDescription: string;
+  welcomePageDescription: string;
+  welcomePageRulesDescription: string;
 }
 
 export interface SupportersData {

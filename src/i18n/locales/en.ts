@@ -121,6 +121,7 @@ export default {
         payAmount: "Pay {{amount}}",
         enterTheCommon: "Enter the common",
         shareWithFriends: "Share with friends",
+        jumpIn: "Jump In",
       },
       joinText: "Join the",
       amountSelection: {
@@ -154,6 +155,11 @@ export default {
       success: {
         title: "Thank you!",
         infoBlockTitle: "Get Involved",
+      },
+      welcome: {
+        title: "Welcome",
+        rulesTitle: "Common Rules",
+        rulesApproval: "I read and understood the rules",
       },
     },
   },
