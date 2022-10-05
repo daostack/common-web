@@ -11,7 +11,7 @@ const Success: FC = () => {
   const { t } = useTranslation("translation", {
     keyPrefix: "supporters",
   });
-  const { supportersData } = useSupportersDataContext();
+  const { supportersData, currentTranslation } = useSupportersDataContext();
 
   const handleJumpIn = () => {
     if (supportersData) {
@@ -25,18 +25,14 @@ const Success: FC = () => {
     <div className="supporters-page-success">
       <h1 className="supporters-page-success__title">{t("success.title")}</h1>
       <p className="supporters-page-success__description">
-        You’re now a Dead-Sea Guardian
+        {currentTranslation?.successPageDescription}
       </p>
       <div className="supporters-page-success__info-block">
         <h2 className="supporters-page-success__info-block-title">
           {t("success.infoBlockTitle")}
         </h2>
         <p className="supporters-page-success__info-block-content">
-          The Dead-Sea Guardians is a community movement managed via Common.
-          Common members discuss and vote on decisions and expenses. For more
-          details on how to be active in the community. Check out the
-          Dead-Sea-Guardians common for more details on how to be active in the
-          community.
+          {currentTranslation?.successPageInfoBlockDescription}
         </p>
       </div>
       <div className="supporters-page-success__buttons-wrapper">

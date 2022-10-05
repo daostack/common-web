@@ -17,7 +17,8 @@ export interface SupportersDataTranslation {
   fields?: Partial<
     Record<SupportersDataFields, SupportersDataFormFieldTranslation>
   >;
-  thankYouPageDescription: string;
+  successPageDescription: string;
+  successPageInfoBlockDescription: string;
 }
 
 export interface SupportersData {
