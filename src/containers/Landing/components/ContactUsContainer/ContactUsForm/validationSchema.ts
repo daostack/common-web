@@ -1,20 +1,24 @@
 import * as Yup from "yup";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
-import { FORM_ERROR_MESSAGES } from "@/shared/constants";
+import i18n from "@/i18n";
 
-const schema = Yup.object().shape({
-  name: Yup.string().required(FORM_ERROR_MESSAGES.REQUIRED),
-  commonTitle: Yup.string().required(FORM_ERROR_MESSAGES.REQUIRED),
-  description: Yup.string().required(FORM_ERROR_MESSAGES.REQUIRED),
-  residence: Yup.string().required(FORM_ERROR_MESSAGES.REQUIRED),
-  email: Yup.string()
-    .email(FORM_ERROR_MESSAGES.EMAIL)
-    .required(FORM_ERROR_MESSAGES.REQUIRED),
-  phoneNumber: Yup.string()
-    .required(FORM_ERROR_MESSAGES.REQUIRED)
-    .test("isValidPhoneNumber", FORM_ERROR_MESSAGES.PHONE_NUMBER, (data = "") =>
-      isPossiblePhoneNumber(data)
-    ),
-});
+export const getValidationSchema = (): Yup.ObjectSchema => {
+  const requiredText = i18n.t("form.errors.required");
 
-export default schema;
+  return Yup.object().shape({
+    name: Yup.string().required(requiredText),
+    commonTitle: Yup.string().required(requiredText),
+    description: Yup.string().required(requiredText),
+    residence: Yup.string().required(requiredText),
+    email: Yup.string()
+      .email(i18n.t("form.errors.invalidEmail"))
+      .required(requiredText),
+    phoneNumber: Yup.string()
+      .required(requiredText)
+      .test(
+        "isValidPhoneNumber",
+        i18n.t("form.errors.invalidPhoneNumber"),
+        (data = "") => isPossiblePhoneNumber(data)
+      ),
+  });
+};

@@ -1,39 +1,63 @@
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 import peopleOnCubesImageSrc from "@/shared/assets/images/peolpe-on-cubes.svg";
+import { selectIsRtlLanguage } from "@/shared/store/selectors";
 import "./index.scss";
 
-const ImagineSection: FC = () => (
-  <section className="landing-imagine-section">
-    <div className="landing-imagine-section__content">
-      <img
-        className="landing-imagine-section__image"
-        src={peopleOnCubesImageSrc}
-        alt="People"
-      />
-      <div className="landing-imagine-section__info-wrapper">
-        <h2 className="landing-imagine-section__title">Imagine</h2>
-        <p className="landing-imagine-section__description">
-          Humanity’s greatest achievements were made by massive collaborations.
-          We enter a new era of trust and collaboration.
-        </p>
-        <p className="landing-imagine-section__description">
-          Imagine you could easily and quickly fuel a movement, by letting the
-          people in your community decide what is important.
-        </p>
-        <p className="landing-imagine-section__description">
-          With Common, you can.
-        </p>
-        <p className="landing-imagine-section__description">
-          Common empowers groups to collaborate with no single organizer. It’s
-          an online platform that makes it easy to pool funds together, and
-          decide collaboratively how to spend it.
-        </p>
-        <p className="landing-imagine-section__description">
-          We enter a new era of trust and collaboration.
-        </p>
+interface Description {
+  title: string;
+  parts: string[];
+}
+
+const ImagineSection: FC = () => {
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
+  const { t } = useTranslation("translation", {
+    keyPrefix: "landing.imagineSection",
+  });
+  const description1: Description = t("description1", {
+    returnObjects: true,
+    defaultValue: null,
+  });
+  const description2: Description = t("description2", {
+    returnObjects: true,
+    defaultValue: null,
+  });
+  const descriptions = [description1, description2].filter(Boolean);
+
+  return (
+    <section className="landing-imagine-section">
+      <div
+        className={classNames("landing-imagine-section__content", {
+          "landing-imagine-section__content--rtl": isRtlLanguage,
+        })}
+      >
+        <img
+          className="landing-imagine-section__image"
+          src={peopleOnCubesImageSrc}
+          alt={t("imageAlt")}
+        />
+        <div>
+          {descriptions.map((description, index) => (
+            <div key={index} className="landing-imagine-section__info-wrapper">
+              <h2 className="landing-imagine-section__title">
+                {description.title}
+              </h2>
+              {description.parts.map((part, partIndex) => (
+                <p
+                  key={partIndex}
+                  className="landing-imagine-section__description"
+                >
+                  {part}
+                </p>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default ImagineSection;

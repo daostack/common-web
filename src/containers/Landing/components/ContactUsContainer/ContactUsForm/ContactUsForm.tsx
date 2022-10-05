@@ -1,10 +1,16 @@
-import React, { FC } from "react";
+import React, { FC, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import classNames from "classnames";
 import { Formik } from "formik";
+import { FormikProps } from "formik/dist/types";
 import { Button, Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
 import { Form, TextField } from "@/shared/components/Form/Formik";
 import { SUPPORT_EMAIL } from "@/shared/constants";
-import validationSchema from "./validationSchema";
+import { useFormErrorsTranslate } from "@/shared/hooks";
+import { selectIsRtlLanguage, selectLanguage } from "@/shared/store/selectors";
+import { getValidationSchema } from "./validationSchema";
 import "./index.scss";
 
 interface ContactUsFormProps {
@@ -33,11 +39,20 @@ const INITIAL_VALUES: ContactUsFormValues = {
 
 const ContactUsForm: FC<ContactUsFormProps> = (props) => {
   const { onSubmit, isLoading = false, errorText } = props;
+  const formRef = useRef<FormikProps<ContactUsFormValues>>(null);
+  const { t } = useTranslation("translation", {
+    keyPrefix: "contactUs.contactUsSection.form",
+  });
+  const language = useSelector(selectLanguage());
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
+  const validationSchema = useMemo(() => getValidationSchema(), [language]);
+  useFormErrorsTranslate(formRef.current);
 
   return (
     <Formik
       initialValues={INITIAL_VALUES}
       onSubmit={onSubmit}
+      innerRef={formRef}
       validationSchema={validationSchema}
       validateOnMount
     >
@@ -46,37 +61,46 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           className="contact-us-contact-us-form__text-field"
           id="userName"
           name="name"
-          label="Your name"
+          label={t("nameFieldLabel")}
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
               default: "contact-us-contact-us-form__input",
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
         />
         <TextField
           className="contact-us-contact-us-form__text-field"
           id="commonTitle"
           name="commonTitle"
-          label="What is the title of the Common you want to launch?"
+          label={t("commonTitleLabel")}
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
               default: "contact-us-contact-us-form__input",
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
         />
         <TextField
           className="contact-us-contact-us-form__text-field"
           id="description"
           name="description"
-          label="Please tell us a bit about the initiative and the people behind it"
+          label={t("descriptionLabel")}
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
               default:
                 "contact-us-contact-us-form__input contact-us-contact-us-form__textarea",
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
           isTextarea
         />
@@ -84,38 +108,51 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           className="contact-us-contact-us-form__text-field"
           id="residence"
           name="residence"
-          label="Where are you from?"
+          label={t("residenceLabel")}
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
               default: "contact-us-contact-us-form__input",
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
         />
         <TextField
           className="contact-us-contact-us-form__text-field"
           id="email"
           name="email"
-          label="Email"
+          label={t("emailLabel")}
           placeholder="example@email.com"
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
-              default: "contact-us-contact-us-form__input",
+              default: classNames("contact-us-contact-us-form__input", {
+                "contact-us-contact-us-form__input--rtl-ltr": isRtlLanguage,
+              }),
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
         />
         <TextField
           className="contact-us-contact-us-form__text-field"
           id="phoneNumber"
           name="phoneNumber"
-          label="Phone number"
+          label={t("phoneNumberLabel")}
           placeholder="+972-"
           styles={{
             label: "contact-us-contact-us-form__label",
             input: {
-              default: "contact-us-contact-us-form__input",
+              default: classNames("contact-us-contact-us-form__input", {
+                "contact-us-contact-us-form__input--rtl-ltr": isRtlLanguage,
+              }),
             },
+            error: isRtlLanguage
+              ? "contact-us-contact-us-form__input-error"
+              : "",
           }}
         />
         {isLoading && (
@@ -129,7 +166,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
             type="submit"
             shouldUseFullWidth
           >
-            Send
+            {t("sendButton")}
           </Button>
         )}
         {errorText && (
@@ -138,7 +175,7 @@ const ContactUsForm: FC<ContactUsFormProps> = (props) => {
           </ErrorText>
         )}
         <span className="contact-us-contact-us-form__support-email-wrapper">
-          Contact us at:{" "}
+          {t("contactUsHint")}{" "}
           <a
             className="contact-us-contact-us-form__support-email"
             href={`mailto:${SUPPORT_EMAIL}`}

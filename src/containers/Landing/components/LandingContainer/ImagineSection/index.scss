@@ -32,6 +32,9 @@ $vertical-view-breakpoint: 1100px;
     grid-auto-flow: row;
   }
 }
+.landing-imagine-section__content--rtl {
+  direction: rtl;
+}
 
 .landing-imagine-section__image {
   width: 100%;
@@ -44,14 +47,19 @@ $vertical-view-breakpoint: 1100px;
 }
 
 .landing-imagine-section__info-wrapper {
+  margin-bottom: 1.75rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .landing-imagine-section__title {
   width: 100%;
-  margin: 0 0 2rem;
+  margin: 0 0 1.375rem;
   font-family: NotoSerifSC, serif;
   font-weight: 600;
   font-size: $large;
@@ -64,7 +72,7 @@ $vertical-view-breakpoint: 1100px;
 
 .landing-imagine-section__description {
   width: 100%;
-  margin: 0 0 2rem;
+  margin: 0 0 1.75rem;
   font-size: $moderate;
   line-height: 120%;
   letter-spacing: 0.01em;

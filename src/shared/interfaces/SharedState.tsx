@@ -1,5 +1,4 @@
-import { ScreenSize } from "../constants";
-
+import { Language, ScreenSize } from "../constants";
 import { NotificationData } from "./";
 
 export interface SharedHeaderState {
@@ -26,5 +25,6 @@ export interface SharedStateType {
   areReportsLoading: boolean;
   header: SharedHeaderState;
   footer: SharedFooterState;
-  tutorialModalState: SharedModalState;
+  language: Language;
+  isRtlLanguage: boolean;
 }

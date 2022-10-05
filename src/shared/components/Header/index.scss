@@ -100,6 +100,11 @@
     margin-left: auto;
     white-space: nowrap;
   }
+
+  .header-wrapper__language-dropdown-wrapper {
+    width: 100%;
+    border-top: 1px solid $light-gray-1;
+  }
 }
 
 .header-wrapper--without-shadow {

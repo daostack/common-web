@@ -1,6 +1,5 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
-
-import { ScreenSize } from "../constants";
+import { Language, ScreenSize } from "../constants";
 import {
   NotificationData,
   PayloadWithOptionalCallback,
@@ -50,3 +49,7 @@ export const updateFooterState = createStandardAction(
 export const setTutorialModalState = createStandardAction(
   SharedActionTypes.SET_TUTORIAL_MODAL_STATE
 )<SharedModalState>();
+
+export const changeLanguage = createStandardAction(
+  SharedActionTypes.CHANGE_LANGUAGE
+)<Language>();

@@ -46,7 +46,7 @@ $mobile-view-breakpoint: 500px;
 }
 
 .landing-collective-action-section__title {
-  margin: 0;
+  margin: 0 0 0.5rem;
   font-family: NotoSerifSC, serif;
   font-weight: 600;
   font-size: $moderate-med;
@@ -54,7 +54,11 @@ $mobile-view-breakpoint: 500px;
 }
 
 .landing-collective-action-section__description {
-  margin: 0.5rem 0 3.625rem;
+  margin: 0 0 2rem;
   font-size: $moderate-small;
   line-height: 120%;
+}
+
+.landing-collective-action-section__button {
+  margin-top: 1.625rem;
 }

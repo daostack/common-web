@@ -2,6 +2,7 @@ export { default as useModal } from "./ModalHook";
 export { default as useOutsideClick } from "./OutsideClickHook";
 export { default as useViewPortHook } from "./ViewPortHook";
 export { default as useCalculateReadMoreLength } from "./CalculateReadMoreLenght";
+export { useFormErrorsTranslate } from "./useFormErrorsTranslate";
 export { default as useAnyMandatoryRoles } from "./useAnyMandatoryRoles";
 export { default as useAuthorizedDropdown } from "./useAuthorizedDropdown";
 export { default as useAuthorizedModal } from "./useAuthorizedModal";

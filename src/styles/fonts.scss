@@ -1,6 +1,7 @@
 $nunitoSansFontName: "NunitoSans";
 $notoSerifSCFontName: "NotoSerifSC";
 $assistantFontName: "Assistant";
+$heeboFontName: "Heebo";
 
 $trueTypeFontFormat: "truetype";
 $openTypeFontFormat: "opentype";
@@ -82,5 +83,27 @@ $openTypeFontFormat: "opentype";
   font-family: $assistantFontName;
   src: local($assistantFontName),
     url("/shared/assets/fonts/Assistant-Bold.ttf") format($trueTypeFontFormat);
+  font-weight: bold;
+}
+
+// Heebo
+@font-face {
+  font-family: $heeboFontName;
+  src: local($heeboFontName),
+    url("/shared/assets/fonts/Heebo-Regular.ttf") format($trueTypeFontFormat);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: $heeboFontName;
+  src: local($heeboFontName),
+    url("/shared/assets/fonts/Heebo-Medium.ttf") format($trueTypeFontFormat);
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: $heeboFontName;
+  src: local($heeboFontName),
+    url("/shared/assets/fonts/Heebo-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
 }
