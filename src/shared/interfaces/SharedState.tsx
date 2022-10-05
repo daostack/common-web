@@ -25,6 +25,7 @@ export interface SharedStateType {
   areReportsLoading: boolean;
   header: SharedHeaderState;
   footer: SharedFooterState;
+  tutorialModalState: SharedModalState;
   language: Language;
   isRtlLanguage: boolean;
 }
