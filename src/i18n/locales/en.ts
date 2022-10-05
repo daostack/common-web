@@ -119,6 +119,8 @@ export default {
         next: "Next",
         edit: "Edit",
         payAmount: "Pay {{amount}}",
+        enterTheCommon: "Enter the common",
+        shareWithFriends: "Share with friends",
       },
       joinText: "Join the",
       amountSelection: {
@@ -148,6 +150,10 @@ export default {
         title: "Payment details",
         description: "Update your payment details below",
         paymentMethodTitle: "Payment method",
+      },
+      success: {
+        title: "Thank you!",
+        infoBlockTitle: "Get Involved",
       },
     },
   },

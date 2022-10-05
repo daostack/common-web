@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { Button, ButtonVariant } from "@/shared/components";
@@ -7,6 +8,9 @@ import "./index.scss";
 
 const Success: FC = () => {
   const history = useHistory();
+  const { t } = useTranslation("translation", {
+    keyPrefix: "supporters",
+  });
   const { supportersData } = useSupportersDataContext();
 
   const handleJumpIn = () => {
@@ -19,13 +23,13 @@ const Success: FC = () => {
 
   return (
     <div className="supporters-page-success">
-      <h1 className="supporters-page-success__title">Thank you!</h1>
+      <h1 className="supporters-page-success__title">{t("success.title")}</h1>
       <p className="supporters-page-success__description">
         You’re now a Dead-Sea Guardian
       </p>
       <div className="supporters-page-success__info-block">
         <h2 className="supporters-page-success__info-block-title">
-          Get Involved
+          {t("success.infoBlockTitle")}
         </h2>
         <p className="supporters-page-success__info-block-content">
           The Dead-Sea Guardians is a community movement managed via Common.
@@ -42,14 +46,14 @@ const Success: FC = () => {
           variant={ButtonVariant.SecondaryPurple}
           shouldUseFullWidth
         >
-          Enter the common
+          {t("buttons.enterTheCommon")}
         </Button>
         <Button
           className="supporters-page-success__submit-button"
           onClick={handleJumpIn}
           shouldUseFullWidth
         >
-          Share with friends
+          {t("buttons.shareWithFriends")}
         </Button>
       </div>
     </div>
