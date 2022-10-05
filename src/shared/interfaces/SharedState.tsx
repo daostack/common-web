@@ -13,6 +13,10 @@ export interface SharedFooterState {
   shouldHideFooter: boolean | null;
 }
 
+export interface SharedModalState {
+  isShowing: boolean;
+}
+
 export interface SharedStateType {
   loading: boolean;
   notification: NotificationData | null;
@@ -22,4 +26,5 @@ export interface SharedStateType {
   areReportsLoading: boolean;
   header: SharedHeaderState;
   footer: SharedFooterState;
+  tutorialModalState: SharedModalState;
 }

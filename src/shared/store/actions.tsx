@@ -6,6 +6,7 @@ import {
   PayloadWithOptionalCallback,
   SharedFooterState,
   SharedHeaderState,
+  SharedModalState,
 } from "../interfaces";
 import { DynamicLinkInfo } from "../interfaces/api/dynamicLink";
 import { SharedActionTypes } from "./constants";
@@ -45,3 +46,7 @@ export const resetFooterState = createStandardAction(
 export const updateFooterState = createStandardAction(
   SharedActionTypes.UPDATE_FOOTER_STATE
 )<Partial<SharedFooterState>>();
+
+export const setTutorialModalState = createStandardAction(
+  SharedActionTypes.SET_TUTORIAL_MODAL_STATE
+)<SharedModalState>();

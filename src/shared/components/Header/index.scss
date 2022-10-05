@@ -22,10 +22,12 @@
     width: 100%;
     margin-left: 7.5rem;
     display: flex;
+
     .my-account-button {
       display: flex;
       justify-content: center;
       margin-bottom: 1rem;
+
       .my-account-button__arrow-icon {
         flex-shrink: 0;
         width: 1.5rem;
@@ -38,6 +40,17 @@
       .my-account-button__arrow-icon--opened {
         transform: rotate(-90deg);
       }
+    }
+
+    .tutorial-button {
+      text-decoration: none;
+      font-size: 18px;
+      color: #0b2046;
+      margin-right: 50px;
+      background-color: transparent;
+      border: none;
+      font-family: NunitoSans-Regular;
+      cursor: pointer;
     }
 
     .header-wrapper__mobile-link {
@@ -64,6 +77,7 @@
       margin-left: auto;
       margin-right: 1.5rem;
     }
+
     button,
     a {
       text-decoration: none;
@@ -74,11 +88,14 @@
       border: none;
       font-family: NunitoSans-Regular;
       cursor: pointer;
+      white-space: nowrap;
+
       &.active {
         font-weight: bold;
       }
     }
   }
+
   .mobile-links-container {
     margin-left: auto;
     white-space: nowrap;
@@ -91,25 +108,49 @@
 
 @media only screen and (max-width: $small-screen) {
   .header-wrapper {
+    .navigation-wrapper {
+      margin-left: 4.5rem;
+
+      .tutorial-button {
+        font-size: 16px;
+        margin-right: 30px
+      }
+
+      button,
+      a {
+        font-size: 16px;
+        margin-right: 30px
+      }
+    }
+
     .mobile-links-container {
       display: none;
     }
   }
+
+
 }
 
-@media only screen and (max-width: $mobile-breakpoint) {
+@media only screen and (max-width: $header-mobile-breakpoint) {
   .header-wrapper {
     height: $header-height-mobile;
     padding: 10px $content-padding-mobile;
     flex-direction: row-reverse;
+
+    .tutorial-button {
+      margin-right: 0px;
+    }
+
     .logo {
       height: 40px;
     }
+
     .common-logo {
       margin: 0 auto;
       align-items: center;
       display: flex;
     }
+
     .common-logo--without-avatar {
       padding-right: 2.5rem;
     }
@@ -119,6 +160,7 @@
       display: flex;
       align-items: center;
     }
+
     .humburger-menu:hover {
       cursor: pointer;
       opacity: 0.9;
@@ -143,29 +185,32 @@
       box-shadow: 0 10px 10px 0 $shadow;
       cursor: pointer;
     }
+
     .navigation-wrapper {
       flex-direction: column;
       align-items: center;
       margin-left: unset;
       width: 100%;
-      height: calc(
-        100vh - (#{$header-height} + #{$download-common-app-mobile-menu-height})
-      );
+      height: calc(100vh - (#{$header-height} + #{$download-common-app-mobile-menu-height}));
       overflow: scroll;
+
       button,
       a {
         margin-right: unset;
         width: 100%;
         text-align: center;
         padding: 20px 0;
+
         &.active {
           background-color: $purple;
           color: $white;
         }
       }
+
       a:not(.active):hover {
         background-color: $light-purple;
       }
+
       button:not(:first-child),
       a:not(:first-child) {
         border-top: 1px solid $light-gray-1;

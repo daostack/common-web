@@ -31,3 +31,6 @@ export const selectHeader = () =>
 
 export const selectFooter = () =>
   createSelector(selectShared, (state) => state.footer);
+
+  export const selectTutorialModalState = () =>
+  createSelector(selectShared, (state) => state.tutorialModalState);

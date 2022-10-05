@@ -25,6 +25,9 @@ const initialState: SharedStateType = {
   footer: {
     shouldHideFooter: null,
   },
+  tutorialModalState: {
+    isShowing: false,
+  }
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
@@ -112,6 +115,11 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.footer,
         ...action.payload,
       };
+    })
+  )
+  .handleAction(actions.setTutorialModalState, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.tutorialModalState = action.payload;
     })
   );
 
