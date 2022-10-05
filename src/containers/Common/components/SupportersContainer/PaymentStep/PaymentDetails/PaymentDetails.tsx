@@ -99,7 +99,7 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
             disabled={isLoading}
             shouldUseFullWidth
           >
-            {t("buttons.payAmount", { amount: `${formattedAmount} (ILS)` })}
+            {t("buttons.payAmount", { amount: formattedAmount })}
           </Button>
         </>
       )}

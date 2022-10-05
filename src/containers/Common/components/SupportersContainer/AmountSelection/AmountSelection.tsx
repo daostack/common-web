@@ -50,7 +50,7 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
       inputValue &&
       Number(inputValue) < minAmount / 100 &&
       t("otherInputError", {
-        amount: `${formatPrice(minAmount, { shouldMillify: false })} ILS`,
+        amount: formatPrice(minAmount, { shouldMillify: false }),
       })) ||
     "";
   const submitLink = getSubmitLink

@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useFooter, useHeader, useQueryParams } from "@/shared/hooks";
+import {
+  useFooter,
+  useHeader,
+  useLanguage,
+  useQueryParams,
+} from "@/shared/hooks";
 import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
@@ -36,6 +41,7 @@ const SupportersContainer = () => {
     fetched: isSupportersDataFetched,
     fetchSupportersData,
   } = useSupportersData();
+  const { changeLanguage } = useLanguage();
   const queryParams = useQueryParams();
   const [amount, setAmount] = useState(() => getAmount(queryParams));
   const [step, setStep] = useState(
@@ -77,7 +83,19 @@ const SupportersContainer = () => {
   useEffect(() => {
     fetchCommon(commonId);
     fetchSupportersData(commonId);
+    updateHeaderState({
+      shouldHideHeader: true,
+    });
+    updateFooterState({
+      shouldHideFooter: true,
+    });
   }, []);
+
+  useEffect(() => {
+    if (isSupportersDataFetched && supportersData?.defaultLocale) {
+      changeLanguage(supportersData.defaultLocale);
+    }
+  }, [isSupportersDataFetched]);
 
   useEffect(() => {
     if (
@@ -102,15 +120,6 @@ const SupportersContainer = () => {
       setStep(amount ? SupportersStep.UserDetails : SupportersStep.InitialStep);
     }
   }, [user]);
-
-  useEffect(() => {
-    updateHeaderState({
-      shouldHideHeader: true,
-    });
-    updateFooterState({
-      shouldHideFooter: true,
-    });
-  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
