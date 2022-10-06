@@ -1,4 +1,5 @@
 @import "../../../../../constants";
+@import "../../../../../styles/mixins";
 @import "../../../../../styles/sizes";
 
 .supporters-page-welcome {
@@ -92,5 +93,12 @@
 
   @include big-phone {
     max-width: unset;
+  }
+}
+
+@include rtl-direction {
+  .supporters-page-welcome__rules-description,
+  .supporters-page-welcome__rule-list {
+    text-align: right;
   }
 }
