@@ -115,7 +115,7 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
             isActive={amount === selectedAmount}
             onClick={() => handleAmountSelection(amount)}
           >
-            {formatPrice(amount, { shouldMillify: false })} (ILS)
+            {formatPrice(amount, { shouldMillify: false })}
           </SelectionButton>
         ))}
       </div>
