@@ -26,7 +26,7 @@ import { SubmitInvoicesContainer } from "../Invoices/containers";
 import { TrusteeContainer } from "../Trustee/containers";
 import { MyAccountContainer } from "../MyAccount/containers/MyAccountContainer";
 
-import { getNotification } from "@/shared/store/selectors";
+import { getNotification, selectIsRtlLanguage } from "@/shared/store/selectors";
 import { useModal } from "@/shared/hooks";
 import classNames from "classnames";
 import { BackgroundNotification } from "@/shared/components/BackgroundNotification";
@@ -41,6 +41,7 @@ import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 
 const App = () => {
   const dispatch = useDispatch();
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const isAuthenticated = useSelector(authentificated());
   const notification = useSelector(getNotification());
   const history = useHistory();
@@ -107,6 +108,16 @@ const App = () => {
       }
     };
   }, [dispatch]);
+
+  useEffect(() => {
+    const classNameToAdd = isRtlLanguage ? "direction--rtl" : "direction--ltr";
+    const classNameToRemove = isRtlLanguage
+      ? "direction--ltr"
+      : "direction--rtl";
+
+    document.body.classList.remove(classNameToRemove);
+    document.body.classList.add(classNameToAdd);
+  }, [isRtlLanguage]);
 
   const closeNotificationHandler = useCallback(() => {
     closeNotification();

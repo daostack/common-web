@@ -8,6 +8,9 @@
   align-items: center;
   color: $secondary-blue;
 }
+.supporters-page--rtl {
+  direction: rtl;
+}
 
 .supporters-page__content {
   max-width: 75rem;

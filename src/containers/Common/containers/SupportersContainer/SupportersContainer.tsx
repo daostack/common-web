@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import classNames from "classnames";
 import {
   useFooter,
   useHeader,
@@ -12,7 +13,7 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useCommon, useSupportersData } from "@/shared/hooks/useCases";
-import { getScreenSize } from "@/shared/store/selectors";
+import { getScreenSize, selectIsRtlLanguage } from "@/shared/store/selectors";
 import {
   InitialStep,
   MemberAdmittanceStep,
@@ -49,6 +50,7 @@ const SupportersContainer = () => {
   );
   const [supportPlan, setSupportPlan] = useState("");
   const user = useSelector(selectUser());
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const currentTranslation =
@@ -178,7 +180,11 @@ const SupportersContainer = () => {
   }
 
   return (
-    <div className="supporters-page">
+    <div
+      className={classNames("supporters-page", {
+        "supporters-page--rtl": isRtlLanguage,
+      })}
+    >
       {!common && <p>Couldn’t find common with id = "{commonId}"</p>}
       {common && !supportersData && (
         <p>Supporters flow is not supported by common "{common.name}".</p>
