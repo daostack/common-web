@@ -12,8 +12,8 @@ export default {
       mobileDescription: "התחבר/י ל",
       termsText:
         "בשימוש ב-Common הינך מסכימ/ה<br /><1>לתנאי השימוש</1> של האפליקציה",
-      termsOfUse: "לתנאי השימוש",
-      privacyPolicy: "תנאי שימוש",
+      termsOfUse: "תנאי שימוש",
+      privacyPolicy: "מדיניות פרטיות",
     },
     landing: {
       buttons: {
