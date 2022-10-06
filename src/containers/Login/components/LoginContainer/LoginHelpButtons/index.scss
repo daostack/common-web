@@ -1,4 +1,5 @@
 @import "../../../../../constants";
+@import "../../../../../styles/mixins";
 @import "../../../../../styles/sizes";
 
 .login-help-buttons {
@@ -28,5 +29,14 @@
     font-weight: 600;
     color: inherit;
     text-decoration: none;
+  }
+}
+@include rtl-direction {
+  .login-help-buttons {
+    direction: rtl;
+  }
+
+  .login-help-buttons__arrow-icon {
+    transform: rotate(180deg);
   }
 }
