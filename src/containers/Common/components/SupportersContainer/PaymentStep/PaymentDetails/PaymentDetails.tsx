@@ -76,7 +76,7 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
         </div>
         <div className="supporters-page-payment-details__info-block-half">
           <span className="supporters-page-payment-details__info-amount">
-            {formattedAmount} (ILS)
+            {formattedAmount}
           </span>
           <ButtonLink
             className="supporters-page-payment-details__edit-amount-button"

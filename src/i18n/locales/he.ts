@@ -9,7 +9,7 @@ export default {
     },
     login: {
       description: "התחבר/י לחשבון שלך כדי להצטרף לקומון",
-      mobileDescription: "להתחבר עם",
+      mobileDescription: "התחבר/י ל",
       termsText:
         "בשימוש ב-Common הינך מסכימ/ה<br /><1>לתנאי השימוש</1> של האפליקציה",
     },
