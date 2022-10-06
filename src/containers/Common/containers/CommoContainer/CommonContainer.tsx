@@ -27,7 +27,7 @@ export default function CommonContainer() {
         authenticated={isAuthenticated}
       />
       <Route
-        path={ROUTE_PATHS.SUPPORTERS}
+        path={ROUTE_PATHS.COMMON_SUPPORT}
         exact
         component={SupportersContainer}
       />
