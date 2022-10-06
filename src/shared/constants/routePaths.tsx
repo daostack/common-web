@@ -20,4 +20,6 @@ export enum ROUTE_PATHS {
   PROPOSAL_COMMENT = "/proposal-comments/:id",
   DISCUSSION_DETAIL = "/discussions/:id",
   DISCUSSION_MESSAGE = "/discussion-messages/:id",
+  DEAD_SEA = "/dead-sea",
+  PARENTS_FOR_CLIMATE = "/parents-for-climate",
 }

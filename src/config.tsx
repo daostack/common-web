@@ -24,6 +24,8 @@ export const local: Configuration = {
     appId: "1:1027354410661:web:486445886843ffcc5b974c",
   },
   cloudFunctionUrl: "http://localhost:5003/common-dev-dea4e/us-central1",
+  deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
 };
 
 const dev: Configuration = {
@@ -38,6 +40,8 @@ const dev: Configuration = {
     appId: "1:1027354410661:web:486445886843ffcc5b974c",
   },
   cloudFunctionUrl: "https://us-central1-common-dev-dea4e.cloudfunctions.net",
+  deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
 };
 
 const stage: Configuration = {
@@ -53,6 +57,8 @@ const stage: Configuration = {
   },
   cloudFunctionUrl:
     "https://us-central1-common-staging-50741.cloudfunctions.net",
+  deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
 };
 
 const production: Configuration = {
@@ -67,6 +73,8 @@ const production: Configuration = {
     appId: "1:854172758045:android:e4b053ade246c6fb1e96f4",
   },
   cloudFunctionUrl: "https://us-central1-common-daostack.cloudfunctions.net",
+  deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
 };
 
 const config: ConfigurationObject = {
