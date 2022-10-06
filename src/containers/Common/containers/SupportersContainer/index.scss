@@ -1,0 +1,39 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.supporters-page {
+  flex: 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $secondary-blue;
+}
+.supporters-page--rtl {
+  direction: rtl;
+}
+
+.supporters-page__content {
+  max-width: 75rem;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+
+  @include big-phone {
+    padding-top: 0;
+  }
+}
+
+.supporters-page__main-image-wrapper {
+  margin-bottom: 1.25rem;
+
+  @include big-phone {
+    margin-bottom: 2rem;
+  }
+}
+
+.supporters-page__main-image {
+  width: 100%;
+  height: 12.5rem;
+  border-radius: 0.625rem;
+  object-fit: cover;
+}

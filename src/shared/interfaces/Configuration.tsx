@@ -12,7 +12,6 @@ export interface Configuration {
     appId: string;
   };
   cloudFunctionUrl: string;
-  deadSeaCommonId: string;
 }
 
 export type ConfigurationObject = Record<Environment, Configuration>;

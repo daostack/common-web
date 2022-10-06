@@ -284,6 +284,7 @@ const updateUserData = async (user: User) => {
         intro: user.intro,
         displayName: `${user.firstName} ${user.lastName}`,
         country: user.country,
+        phoneNumber: user.phoneNumber,
       })
       .then(async () => {
         const updatedCurrentUser = await firebase.auth().currentUser;

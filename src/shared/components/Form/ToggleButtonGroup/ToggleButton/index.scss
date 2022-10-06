@@ -1,6 +1,7 @@
 @import "../../../../../constants";
+@import "../../../../../styles/mixins";
 
-$custom-toggle-button-border-radius: 8px;
+$custom-toggle-button-border-radius: 0.5rem;
 
 .custom-toggle-button {
   flex: 1 0;
@@ -46,10 +47,33 @@ $custom-toggle-button-border-radius: 8px;
   }
 }
 .custom-toggle-button--vertical {
-  margin-top: 24px;
-  border-radius: 8px;
+  margin-top: 1.5rem;
+  border-radius: $custom-toggle-button-border-radius;
 
   &:first-child {
     margin-top: 0;
+  }
+}
+
+@include rtl-direction {
+  .custom-toggle-button {
+    &:first-child {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-top-right-radius: $custom-toggle-button-border-radius;
+      border-bottom-right-radius: $custom-toggle-button-border-radius;
+    }
+    &:last-child {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-top-left-radius: $custom-toggle-button-border-radius;
+      border-bottom-left-radius: $custom-toggle-button-border-radius;
+    }
+  }
+  .custom-toggle-button--vertical {
+    &:first-child,
+    &:last-child {
+      border-radius: $custom-toggle-button-border-radius;
+    }
   }
 }

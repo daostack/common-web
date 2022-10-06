@@ -29,6 +29,7 @@ export enum Collection {
   DiscussionMessage = "discussionMessage",
   Payments = "payments",
   Subscriptions = "subscriptions",
+  Supporters = "supporters",
   Notifications = "notification",
 }
 

@@ -15,6 +15,5 @@ jest.mock(
       appId: "APP_ID",
     },
     cloudFunctionUrl: "https://cloud-function-url.com",
-    deadSeaCommonId: "e49c02a9-6962-4bbb-a4b7-166ef69ee27a",
   })
 );

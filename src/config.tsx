@@ -24,7 +24,6 @@ export const local: Configuration = {
     appId: "1:1027354410661:web:486445886843ffcc5b974c",
   },
   cloudFunctionUrl: "http://localhost:5003/common-dev-dea4e/us-central1",
-  deadSeaCommonId: "e49c02a9-6962-4bbb-a4b7-166ef69ee27a",
 };
 
 const dev: Configuration = {
@@ -39,7 +38,6 @@ const dev: Configuration = {
     appId: "1:1027354410661:web:486445886843ffcc5b974c",
   },
   cloudFunctionUrl: "https://us-central1-common-dev-dea4e.cloudfunctions.net",
-  deadSeaCommonId: "e49c02a9-6962-4bbb-a4b7-166ef69ee27a",
 };
 
 const stage: Configuration = {
@@ -55,7 +53,6 @@ const stage: Configuration = {
   },
   cloudFunctionUrl:
     "https://us-central1-common-staging-50741.cloudfunctions.net",
-  deadSeaCommonId: "7ae49aa5-940b-4367-9b4d-a40534102ef2",
 };
 
 const production: Configuration = {
@@ -70,7 +67,6 @@ const production: Configuration = {
     appId: "1:854172758045:android:e4b053ade246c6fb1e96f4",
   },
   cloudFunctionUrl: "https://us-central1-common-daostack.cloudfunctions.net",
-  deadSeaCommonId: "e49c02a9-6962-4bbb-a4b7-166ef69ee27a",
 };
 
 const config: ConfigurationObject = {
