@@ -40,7 +40,7 @@ const Welcome: FC<WelcomeProps> = (props) => {
 
   useEffect(() => {
     fetchGovernance(governanceId);
-  }, []);
+  }, [governanceId]);
 
   if (!isGovernanceFetched) {
     return <Loader />;

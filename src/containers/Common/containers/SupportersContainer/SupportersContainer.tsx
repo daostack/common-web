@@ -91,7 +91,7 @@ const SupportersContainer = () => {
     updateFooterState({
       shouldHideFooter: true,
     });
-  }, []);
+  }, [commonId]);
 
   useEffect(() => {
     if (isSupportersDataFetched && supportersData?.defaultLocale) {
