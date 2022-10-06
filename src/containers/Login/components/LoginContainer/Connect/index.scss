@@ -1,4 +1,5 @@
 @import "../../../../../constants";
+@import "../../../../../styles/mixins";
 @import "../../../../../styles/sizes";
 
 .connect-wrapper {
@@ -110,5 +111,12 @@
 
   @include big-phone {
     min-height: unset;
+  }
+}
+
+@include rtl-direction {
+  .connect-wrapper__sub-title,
+  .connect-wrapper__sub-text {
+    direction: rtl;
   }
 }

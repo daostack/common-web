@@ -7,6 +7,12 @@ export default {
         invalidPhoneNumber: "אנא הזן מספר טלפון תקין",
       },
     },
+    login: {
+      description: "התחבר/י לחשבון שלך כדי להצטרף לקומון",
+      mobileDescription: "להתחבר עם",
+      termsText:
+        "בשימוש ב-Common הינך מסכימ/ה<br /><1>לתנאי השימוש</1> של האפליקציה",
+    },
     landing: {
       buttons: {
         launchCommon: "צרו קומון",

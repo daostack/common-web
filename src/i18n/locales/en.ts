@@ -7,6 +7,12 @@ export default {
         invalidPhoneNumber: "Please enter a valid phone number",
       },
     },
+    login: {
+      description: "Connect your account to join this Common",
+      mobileDescription: "Connect with",
+      termsText:
+        "By using Common you agree to the app’s<br /><1>terms of use</1>",
+    },
     landing: {
       buttons: {
         launchCommon: "Launch a Common",
