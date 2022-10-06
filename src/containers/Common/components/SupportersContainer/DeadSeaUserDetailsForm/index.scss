@@ -1,4 +1,5 @@
 @import "../../../../../constants";
+@import "../../../../../styles/mixins";
 @import "../../../../../styles/sizes";
 
 .supporters-page-user-details-form {
@@ -65,5 +66,12 @@
 
   @include big-phone {
     text-align: center;
+  }
+}
+
+@include rtl-direction {
+  .supporters-page-user-details-form__field-hint {
+    margin-left: 0;
+    margin-right: 0.25rem;
   }
 }

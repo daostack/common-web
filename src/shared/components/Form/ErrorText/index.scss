@@ -1,11 +1,17 @@
 @import "../../../../constants";
+@import "../../../../styles/mixins";
 
 .error-text {
-  margin-top: 8px;
+  margin-top: 0.5rem;
   display: inline-block;
-  font-family: NunitoSans-Regular, sans-serif;
+  font-family: NunitoSans, sans-serif;
   font-size: $xxsmall;
   line-height: 1.42;
   text-align: left;
   color: $error;
+}
+@include rtl-direction {
+  .error-text {
+    text-align: right;
+  }
 }
