@@ -128,6 +128,7 @@ export default {
         donationDetailsTitle: "Donation details",
         oneTimeTypeText: "One time",
         monthlyTypeText: "Monthly",
+        monthlyTypeTooltip: "Not available yet",
         otherInputTitle: "Other",
         otherInputPlaceholder: "Add amount",
         otherInputError: "Minimum {{amount}}",

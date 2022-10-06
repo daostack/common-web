@@ -104,6 +104,7 @@ export default {
         donationDetailsTitle: "פרטי התרומה",
         oneTimeTypeText: "פעם אחת",
         monthlyTypeText: "חודשי",
+        monthlyTypeTooltip: "בקרוב",
         otherInputTitle: "סכום אחר",
         otherInputPlaceholder: "מלאו סכום",
         otherInputError: "מינימום {{amount}}",

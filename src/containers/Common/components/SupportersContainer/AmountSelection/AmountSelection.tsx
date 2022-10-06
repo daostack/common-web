@@ -97,7 +97,11 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
         <ToggleButton value={ContributionType.OneTime}>
           {t("oneTimeTypeText")}
         </ToggleButton>
-        <ToggleButton value={ContributionType.Monthly} isDisabled>
+        <ToggleButton
+          value={ContributionType.Monthly}
+          isDisabled
+          tooltip={t("monthlyTypeTooltip")}
+        >
           {t("monthlyTypeText")}
         </ToggleButton>
       </ToggleButtonGroup>

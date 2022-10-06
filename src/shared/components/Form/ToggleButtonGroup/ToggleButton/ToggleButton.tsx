@@ -13,11 +13,12 @@ interface ToggleButtonStyles {
 interface ToggleButtonProps {
   value: unknown;
   isDisabled?: boolean;
+  tooltip?: string;
   styles?: ToggleButtonStyles;
 }
 
 const ToggleButton: FC<ToggleButtonProps> = (props) => {
-  const { value, styles, isDisabled = false, children } = props;
+  const { value, styles, isDisabled = false, tooltip, children } = props;
   const { currentValue, onChange, variant } = useToggleButtonGroupContext();
 
   const handleClick = useCallback(() => {
@@ -37,6 +38,7 @@ const ToggleButton: FC<ToggleButtonProps> = (props) => {
       onClick={handleClick}
       type="button"
       disabled={isDisabled}
+      title={tooltip}
     >
       {children}
     </button>
