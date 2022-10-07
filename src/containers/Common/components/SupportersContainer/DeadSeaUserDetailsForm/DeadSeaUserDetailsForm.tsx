@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
 import { updateUserDetails } from "@/containers/Auth/store/actions";
+import { DeadSeaUserDetailsFormValuesWithoutUserDetails } from "@/containers/Common/components";
 import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { countryList } from "@/shared/assets/countries";
 import { Button, DropdownOption, Loader } from "@/shared/components";
@@ -22,22 +23,12 @@ import {
   selectIsRtlLanguage,
   selectLanguage,
 } from "@/shared/store/selectors";
+import { FormValues, FormValuesWithoutUserDetails } from "./types";
 import { getValidationSchema } from "./validationSchema";
 import "./index.scss";
 
-interface FormValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-  country: string;
-  phoneNumber: string;
-  about: string;
-  supportPlan: string;
-  marketingContentAgreement?: boolean;
-  whatsappGroupAgreement?: boolean;
-}
-
 const getInitialValues = (
+  initialData: FormValuesWithoutUserDetails,
   user?: User | null,
   displayedFields?: SupportersDataFields[]
 ): FormValues => ({
@@ -49,24 +40,25 @@ const getInitialValues = (
   country: user?.country || CountryCode.IL,
   phoneNumber: user?.phoneNumber || "",
   about: user?.intro || "",
-  supportPlan: "",
-  marketingContentAgreement: displayedFields?.includes(
-    "marketingContentAgreement"
-  )
-    ? false
-    : undefined,
-  whatsappGroupAgreement: displayedFields?.includes("whatsappGroupAgreement")
-    ? false
-    : undefined,
+  supportPlan: initialData.supportPlan ?? "",
+  marketingContentAgreement:
+    initialData.marketingContentAgreement ??
+    (displayedFields?.includes("marketingContentAgreement")
+      ? false
+      : undefined),
+  whatsappGroupAgreement:
+    initialData.whatsappGroupAgreement ??
+    (displayedFields?.includes("whatsappGroupAgreement") ? false : undefined),
 });
 
 interface DeadSeaUserDetailsFormProps {
   user: User;
-  onFinish: (supportPlan: string) => void;
+  initialData: FormValuesWithoutUserDetails;
+  onFinish: (data: DeadSeaUserDetailsFormValuesWithoutUserDetails) => void;
 }
 
 const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
-  const { user, onFinish } = props;
+  const { user, initialData, onFinish } = props;
   const dispatch = useDispatch();
   const { t } = useTranslation("translation", {
     keyPrefix: "supporters",
@@ -117,7 +109,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
             if (error) {
               setErrorText(error.message || "Something went wrong");
             } else {
-              onFinish(values.supportPlan);
+              onFinish(values);
             }
           },
         })
@@ -128,7 +120,11 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
 
   return (
     <Formik
-      initialValues={getInitialValues(user, supportersData?.displayedFields)}
+      initialValues={getInitialValues(
+        initialData,
+        user,
+        supportersData?.displayedFields
+      )}
       onSubmit={handleSubmit}
       innerRef={formRef}
       validationSchema={validationSchema}

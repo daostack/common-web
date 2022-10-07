@@ -19,6 +19,7 @@ import {
   selectLanguage,
 } from "@/shared/store/selectors";
 import {
+  DeadSeaUserDetailsFormValuesWithoutUserDetails,
   InitialStep,
   MemberAdmittanceStep,
   PaymentStep,
@@ -53,7 +54,10 @@ const SupportersContainer = () => {
   const [step, setStep] = useState(
     amount ? SupportersStep.UserDetails : SupportersStep.InitialStep
   );
-  const [supportPlan, setSupportPlan] = useState("");
+  const [formData, setFormData] =
+    useState<DeadSeaUserDetailsFormValuesWithoutUserDetails>({
+      supportPlan: "",
+    });
   const user = useSelector(selectUser());
   const language = useSelector(selectLanguage());
   const isRtlLanguage = useSelector(selectIsRtlLanguage());
@@ -71,9 +75,11 @@ const SupportersContainer = () => {
     setStep(SupportersStep.UserDetails);
   };
 
-  const handleUserDetailsStepFinish = (supportPlan: string) => {
+  const handleUserDetailsStepFinish = (
+    data: DeadSeaUserDetailsFormValuesWithoutUserDetails
+  ) => {
     setStep(SupportersStep.MemberAdmittance);
-    setSupportPlan(supportPlan);
+    setFormData(data);
   };
 
   const handleMemberAdmittanceStepFinish = () => {
@@ -153,12 +159,16 @@ const SupportersContainer = () => {
         );
       case SupportersStep.UserDetails:
         return user ? (
-          <UserDetailsStep user={user} onFinish={handleUserDetailsStepFinish} />
+          <UserDetailsStep
+            user={user}
+            formData={formData}
+            onFinish={handleUserDetailsStepFinish}
+          />
         ) : null;
       case SupportersStep.MemberAdmittance:
         return (
           <MemberAdmittanceStep
-            description={supportPlan}
+            data={formData}
             onFinish={handleMemberAdmittanceStepFinish}
           />
         );

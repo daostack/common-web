@@ -1,16 +1,20 @@
 import React, { FC } from "react";
 import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { User } from "@/shared/models";
-import { DeadSeaUserDetailsForm } from "../DeadSeaUserDetailsForm";
+import {
+  DeadSeaUserDetailsForm,
+  DeadSeaUserDetailsFormValuesWithoutUserDetails,
+} from "../DeadSeaUserDetailsForm";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 
 interface UserDetailsStepProps {
   user: User;
-  onFinish: (supportPlan: string) => void;
+  formData: DeadSeaUserDetailsFormValuesWithoutUserDetails;
+  onFinish: (data: DeadSeaUserDetailsFormValuesWithoutUserDetails) => void;
 }
 
 const UserDetailsStep: FC<UserDetailsStepProps> = (props) => {
-  const { user, onFinish } = props;
+  const { user, formData, onFinish } = props;
   const { currentTranslation } = useSupportersDataContext();
 
   if (!currentTranslation) {
@@ -19,7 +23,11 @@ const UserDetailsStep: FC<UserDetailsStepProps> = (props) => {
 
   return (
     <GeneralInfoWrapper title={currentTranslation.title}>
-      <DeadSeaUserDetailsForm user={user} onFinish={onFinish} />
+      <DeadSeaUserDetailsForm
+        user={user}
+        initialData={formData}
+        onFinish={onFinish}
+      />
     </GeneralInfoWrapper>
   );
 };
