@@ -17,11 +17,10 @@ interface PaymentStepProps {
   amount: number;
   onAmountChange: (amount: number) => void;
   onFinish: () => void;
-  onUserDetailsEdit: () => void;
 }
 
 const PaymentStep: FC<PaymentStepProps> = (props) => {
-  const { amount, onAmountChange, onFinish, onUserDetailsEdit } = props;
+  const { amount, onAmountChange, onFinish } = props;
   const {
     fetched: areUserCardsFetched,
     data: cards,
@@ -110,7 +109,6 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
             onPay={handleImmediateContribution}
             onIframeLoaded={onReadyToSubscribe}
             onAmountEdit={startAmountEditing}
-            onUserDetailsEdit={onUserDetailsEdit}
           />
         ))}
       {errorText && (

@@ -94,10 +94,6 @@ const SupportersContainer = () => {
     setStep(SupportersStep.Welcome);
   };
 
-  const goToUserDetailsStep = () => {
-    setStep(SupportersStep.UserDetails);
-  };
-
   useEffect(() => {
     fetchCommon(commonId);
     fetchSupportersData(commonId);
@@ -178,7 +174,6 @@ const SupportersContainer = () => {
             amount={amount}
             onAmountChange={setAmount}
             onFinish={handlePaymentStepFinish}
-            onUserDetailsEdit={goToUserDetailsStep}
           />
         );
       case SupportersStep.Success:
