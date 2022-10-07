@@ -82,3 +82,6 @@ If you need to mock something you can create a file in [utils/tests](./src/share
 2. Go to the [controller](https://github.com/daostack/common-backend/blob/dev/functions/src/users/controllers/create.ts#L20-L27) for user creation. Look for the `if` statement `process.env.NODE_ENV !== 'local'` and remove `else` part, as well as `if` check (leave the code which is in that `if` block);
 3. Open [package.json](./package.json) file and change `REACT_APP_ENV=dev` to `REACT_APP_ENV=local` in the `start` script.
 4. `yarn start`
+
+## Supporters Flow
+The documentation is [here](./docs/supporters-flow.md).

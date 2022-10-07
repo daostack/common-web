@@ -7,6 +7,9 @@ export default {
         invalidPhoneNumber: "Please enter a valid phone number",
       },
     },
+    share: {
+      title: "Share with friends",
+    },
     login: {
       description: "Connect your account to join this Common",
       mobileDescription: "Connect with",

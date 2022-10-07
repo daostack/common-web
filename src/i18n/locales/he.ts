@@ -7,6 +7,9 @@ export default {
         invalidPhoneNumber: "אנא הזן מספר טלפון תקין",
       },
     },
+    share: {
+      title: "שתף עם חברים",
+    },
     login: {
       description: "התחבר/י לחשבון שלך כדי להצטרף לקומון",
       mobileDescription: "התחבר/י ל",

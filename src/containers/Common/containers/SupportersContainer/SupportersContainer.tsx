@@ -10,11 +10,16 @@ import {
 } from "@/shared/hooks";
 import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
-import { Loader } from "@/shared/components";
+import { LanguageDropdown, Loader } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useCommon, useSupportersData } from "@/shared/hooks/useCases";
-import { getScreenSize, selectIsRtlLanguage } from "@/shared/store/selectors";
 import {
+  getScreenSize,
+  selectIsRtlLanguage,
+  selectLanguage,
+} from "@/shared/store/selectors";
+import {
+  DeadSeaUserDetailsFormValuesWithoutUserDetails,
   InitialStep,
   MemberAdmittanceStep,
   PaymentStep,
@@ -24,7 +29,7 @@ import {
 } from "../../components/SupportersContainer";
 import { SupportersStep } from "./constants";
 import { SupportersDataContext, SupportersDataContextValue } from "./context";
-import { getAmount } from "./helpers";
+import { getAmount, getInitialLanguage } from "./helpers";
 import "./index.scss";
 
 interface SupportersContainerRouterParams {
@@ -45,29 +50,36 @@ const SupportersContainer = () => {
   const { changeLanguage } = useLanguage();
   const queryParams = useQueryParams();
   const [amount, setAmount] = useState(() => getAmount(queryParams));
+  const initialLanguage = getInitialLanguage(queryParams);
   const [step, setStep] = useState(
     amount ? SupportersStep.UserDetails : SupportersStep.InitialStep
   );
-  const [supportPlan, setSupportPlan] = useState("");
+  const [formData, setFormData] =
+    useState<DeadSeaUserDetailsFormValuesWithoutUserDetails>({
+      supportPlan: "",
+    });
   const user = useSelector(selectUser());
+  const language = useSelector(selectLanguage());
   const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const currentTranslation =
-    (supportersData &&
-      supportersData.translations[supportersData.defaultLocale]) ||
-    null;
+    (supportersData && supportersData.translations[language]) || null;
   const isMainDataFetched = isCommonFetched && isSupportersDataFetched;
   const isInitialLoading = !user && step === SupportersStep.UserDetails;
+  const shouldShowLanguageDropdown =
+    Object.keys(supportersData?.translations || {}).length > 1;
 
   const handleInitialStepFinish = (amount: number) => {
     setAmount(amount);
     setStep(SupportersStep.UserDetails);
   };
 
-  const handleUserDetailsStepFinish = (supportPlan: string) => {
+  const handleUserDetailsStepFinish = (
+    data: DeadSeaUserDetailsFormValuesWithoutUserDetails
+  ) => {
     setStep(SupportersStep.MemberAdmittance);
-    setSupportPlan(supportPlan);
+    setFormData(data);
   };
 
   const handleMemberAdmittanceStepFinish = () => {
@@ -94,8 +106,12 @@ const SupportersContainer = () => {
   }, [commonId]);
 
   useEffect(() => {
-    if (isSupportersDataFetched && supportersData?.defaultLocale) {
-      changeLanguage(supportersData.defaultLocale);
+    if (isSupportersDataFetched && supportersData) {
+      const languageToUse =
+        initialLanguage && supportersData.translations[initialLanguage]
+          ? initialLanguage
+          : supportersData.defaultLocale;
+      changeLanguage(languageToUse);
     }
   }, [isSupportersDataFetched]);
 
@@ -139,12 +155,16 @@ const SupportersContainer = () => {
         );
       case SupportersStep.UserDetails:
         return user ? (
-          <UserDetailsStep user={user} onFinish={handleUserDetailsStepFinish} />
+          <UserDetailsStep
+            user={user}
+            formData={formData}
+            onFinish={handleUserDetailsStepFinish}
+          />
         ) : null;
       case SupportersStep.MemberAdmittance:
         return (
           <MemberAdmittanceStep
-            description={supportPlan}
+            data={formData}
             onFinish={handleMemberAdmittanceStepFinish}
           />
         );
@@ -157,7 +177,9 @@ const SupportersContainer = () => {
           />
         );
       case SupportersStep.Success:
-        return <Success onFinish={handleSuccessStepFinish} />;
+        return common ? (
+          <Success common={common} onFinish={handleSuccessStepFinish} />
+        ) : null;
       case SupportersStep.Welcome:
         return common?.governanceId ? (
           <Welcome governanceId={common.governanceId} />
@@ -203,6 +225,9 @@ const SupportersContainer = () => {
           <SupportersDataContext.Provider value={contextValue}>
             {renderContent()}
           </SupportersDataContext.Provider>
+          {shouldShowLanguageDropdown && (
+            <LanguageDropdown className="supporters-page__language-dropdown" />
+          )}
         </div>
       )}
     </div>

@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
+import { DeadSeaUserDetailsFormValuesWithoutUserDetails } from "@/containers/Common/components";
 import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
 import { useCommonMember } from "@/containers/Common/hooks";
 import { createMemberAdmittanceProposal } from "@/containers/Common/store/actions";
@@ -14,12 +15,12 @@ import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 import "./index.scss";
 
 interface MemberAdmittanceStepProps {
-  description: string;
+  data: DeadSeaUserDetailsFormValuesWithoutUserDetails;
   onFinish: () => void;
 }
 
 const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
-  const { description, onFinish } = props;
+  const { data, onFinish } = props;
   const dispatch = useDispatch();
   const {
     data: commonMember,
@@ -78,7 +79,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
             args: {
               commonId,
               title,
-              description: description || title,
+              description: data.supportPlan || title,
               images: [],
               files: [],
               links: [],
@@ -107,6 +108,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
     isProposalCreationLoading,
     isProposalCreationFinished,
     commonId,
+    data,
   ]);
 
   useEffect(() => {

@@ -79,7 +79,7 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
             {formattedAmount}
           </span>
           <ButtonLink
-            className="supporters-page-payment-details__edit-amount-button"
+            className="supporters-page-payment-details__edit-button"
             onClick={!isPaymentLoading ? onAmountEdit : undefined}
           >
             {t("buttons.edit")}

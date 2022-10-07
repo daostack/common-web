@@ -17,6 +17,7 @@ export * from "./Footer";
 export * from "./GlobalLoader";
 export * from "./GlobalOverlay";
 export * from "./Header";
+export * from "./Header/LanguageDropdown";
 export * from "./InvoiceTile";
 export * from "./Image";
 export * from "./Linkify";
