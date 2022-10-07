@@ -24,6 +24,7 @@ interface PaymentDetailsProps {
   onPay: () => void;
   onIframeLoaded: () => void;
   onAmountEdit: () => void;
+  onUserDetailsEdit: () => void;
 }
 
 const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
@@ -35,6 +36,7 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
     onPay,
     onIframeLoaded,
     onAmountEdit,
+    onUserDetailsEdit,
   } = props;
   const { t } = useTranslation("translation", {
     keyPrefix: "supporters",
@@ -73,13 +75,19 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
           <span className="supporters-page-payment-details__info-hint">
             {user?.email}
           </span>
+          <ButtonLink
+            className="supporters-page-payment-details__edit-button"
+            onClick={!isPaymentLoading ? onUserDetailsEdit : undefined}
+          >
+            {t("buttons.edit")}
+          </ButtonLink>
         </div>
         <div className="supporters-page-payment-details__info-block-half">
           <span className="supporters-page-payment-details__info-amount">
             {formattedAmount}
           </span>
           <ButtonLink
-            className="supporters-page-payment-details__edit-amount-button"
+            className="supporters-page-payment-details__edit-button"
             onClick={!isPaymentLoading ? onAmountEdit : undefined}
           >
             {t("buttons.edit")}
