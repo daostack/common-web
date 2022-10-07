@@ -1,19 +1,31 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
-import { Button, ButtonVariant } from "@/shared/components";
+import { Button, ButtonVariant, CommonShare } from "@/shared/components";
+import {
+  Colors,
+  ScreenSize,
+  SharePopupVariant,
+  ShareViewType,
+} from "@/shared/constants";
+import { Common } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
 
 interface SuccessProps {
+  common: Common;
   onFinish: () => void;
 }
 
 const Success: FC<SuccessProps> = (props) => {
-  const { onFinish } = props;
+  const { common, onFinish } = props;
   const { t } = useTranslation("translation", {
     keyPrefix: "supporters",
   });
   const { currentTranslation } = useSupportersDataContext();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   return (
     <div className="supporters-page-success">
@@ -38,13 +50,20 @@ const Success: FC<SuccessProps> = (props) => {
         >
           {t("buttons.enterTheCommon")}
         </Button>
-        <Button
+        <CommonShare
           className="supporters-page-success__submit-button"
-          onClick={onFinish}
-          shouldUseFullWidth
+          common={common}
+          type={
+            isMobileView
+              ? ShareViewType.ModalMobile
+              : ShareViewType.ModalDesktop
+          }
+          color={Colors.lightPurple}
+          top=""
+          popupVariant={SharePopupVariant.TopCenter}
         >
-          {t("buttons.shareWithFriends")}
-        </Button>
+          <Button shouldUseFullWidth>{t("buttons.shareWithFriends")}</Button>
+        </CommonShare>
       </div>
     </div>
   );

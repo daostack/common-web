@@ -1,4 +1,5 @@
-import React, { FC, PropsWithChildren, useMemo } from "react";
+import React, { FC, PropsWithChildren } from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Colors, ShareViewType } from "@/shared/constants";
 import { ButtonIcon, SocialLinks, Loader } from "@/shared/components";
@@ -17,20 +18,21 @@ interface ShareModalProps {
   linkText?: string;
 }
 
-const ShareModal: FC<PropsWithChildren<ShareModalProps>> = ({
-  children,
-  isShowing,
-  onClose,
-  type,
-  title = "Share with",
-  sourceUrl,
-  isLoading,
-  linkText,
-}) => {
-  const isMobileModal = useMemo(
-    () => type === ShareViewType.ModalMobile,
-    [type]
-  );
+const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (props) => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "share",
+  });
+  const {
+    children,
+    isShowing,
+    onClose,
+    type,
+    title = t("title"),
+    sourceUrl,
+    isLoading,
+    linkText,
+  } = props;
+  const isMobileModal = type === ShareViewType.ModalMobile;
 
   const handleCopyClick = () => {
     copyToClipboard(sourceUrl);

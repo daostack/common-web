@@ -84,6 +84,7 @@
 
 .supporters-page-success__submit-button {
   max-width: 12.625rem;
+  width: 100%;
 
   @include big-phone {
     max-width: unset;

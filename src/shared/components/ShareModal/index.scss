@@ -1,9 +1,11 @@
-@import "../../../constants.scss";
+@import "../../../constants";
+@import "../../../styles/mixins";
 
 .share-modal__wrapper {
   box-shadow: 0 0.25rem 1rem 0 $shadow;
 
   &.mobile {
+    min-width: 13.5rem;
     margin: 5vh 3vh;
   }
 
@@ -23,7 +25,7 @@
   }
 
   .share-modal_title {
-    font-weight: bold;
+    font-family: Lexend, sans-serif;
   }
 
   .share-modal__wrapper-content {
@@ -70,5 +72,11 @@
         background-color: $light-gray-1;
       }
     }
+  }
+}
+
+@include rtl-direction {
+  .share-modal_title {
+    direction: rtl;
   }
 }

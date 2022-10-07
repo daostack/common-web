@@ -162,7 +162,9 @@ const SupportersContainer = () => {
           />
         );
       case SupportersStep.Success:
-        return <Success onFinish={handleSuccessStepFinish} />;
+        return common ? (
+          <Success common={common} onFinish={handleSuccessStepFinish} />
+        ) : null;
       case SupportersStep.Welcome:
         return common?.governanceId ? (
           <Welcome governanceId={common.governanceId} />
