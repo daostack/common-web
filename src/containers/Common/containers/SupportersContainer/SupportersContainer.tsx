@@ -28,7 +28,7 @@ import {
 } from "../../components/SupportersContainer";
 import { SupportersStep } from "./constants";
 import { SupportersDataContext, SupportersDataContextValue } from "./context";
-import { getAmount } from "./helpers";
+import { getAmount, getInitialLanguage } from "./helpers";
 import "./index.scss";
 
 interface SupportersContainerRouterParams {
@@ -49,6 +49,7 @@ const SupportersContainer = () => {
   const { changeLanguage } = useLanguage();
   const queryParams = useQueryParams();
   const [amount, setAmount] = useState(() => getAmount(queryParams));
+  const initialLanguage = getInitialLanguage(queryParams);
   const [step, setStep] = useState(
     amount ? SupportersStep.UserDetails : SupportersStep.InitialStep
   );
@@ -103,8 +104,12 @@ const SupportersContainer = () => {
   }, [commonId]);
 
   useEffect(() => {
-    if (isSupportersDataFetched && supportersData?.defaultLocale) {
-      changeLanguage(supportersData.defaultLocale);
+    if (isSupportersDataFetched && supportersData) {
+      const languageToUse =
+        initialLanguage && supportersData.translations[initialLanguage]
+          ? initialLanguage
+          : supportersData.defaultLocale;
+      changeLanguage(languageToUse);
     }
   }, [isSupportersDataFetched]);
 
