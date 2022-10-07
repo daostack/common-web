@@ -39,7 +39,7 @@ interface FormValues {
 
 const getInitialValues = (
   user?: User | null,
-  hiddenFields?: SupportersDataFields[]
+  displayedFields?: SupportersDataFields[]
 ): FormValues => ({
   firstName:
     user?.firstName.trim() || user?.displayName?.trim().split(" ")[0] || "",
@@ -50,12 +50,12 @@ const getInitialValues = (
   phoneNumber: user?.phoneNumber || "",
   about: user?.intro || "",
   supportPlan: "",
-  marketingContentAgreement: !hiddenFields?.includes(
+  marketingContentAgreement: displayedFields?.includes(
     "marketingContentAgreement"
   )
     ? false
     : undefined,
-  whatsappGroupAgreement: !hiddenFields?.includes("whatsappGroupAgreement")
+  whatsappGroupAgreement: displayedFields?.includes("whatsappGroupAgreement")
     ? false
     : undefined,
 });
@@ -128,7 +128,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
 
   return (
     <Formik
-      initialValues={getInitialValues(user, supportersData?.hiddenFields)}
+      initialValues={getInitialValues(user, supportersData?.displayedFields)}
       onSubmit={handleSubmit}
       innerRef={formRef}
       validationSchema={validationSchema}
@@ -190,7 +190,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
                   : "",
               }}
             />
-            {!supportersData?.hiddenFields?.includes("aboutYou") && (
+            {supportersData?.displayedFields?.includes("aboutYou") && (
               <TextField
                 className="supporters-page-user-details-form__all-columns"
                 id="about"
@@ -209,7 +209,9 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
                 rows={textAreaRowsAmount}
               />
             )}
-            {!supportersData?.hiddenFields?.includes("furtherSupportPlan") && (
+            {supportersData?.displayedFields?.includes(
+              "furtherSupportPlan"
+            ) && (
               <TextField
                 className="supporters-page-user-details-form__all-columns"
                 id="supportPlan"
@@ -229,7 +231,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               />
             )}
           </div>
-          {!supportersData?.hiddenFields?.includes(
+          {supportersData?.displayedFields?.includes(
             "marketingContentAgreement"
           ) && (
             <Checkbox
@@ -241,7 +243,7 @@ const DeadSeaUserDetailsForm: FC<DeadSeaUserDetailsFormProps> = (props) => {
               }
             />
           )}
-          {!supportersData?.hiddenFields?.includes(
+          {supportersData?.displayedFields?.includes(
             "whatsappGroupAgreement"
           ) && (
             <Checkbox

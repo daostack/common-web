@@ -1,4 +1,5 @@
 @import "../../../../constants";
+@import "../../../../styles/mixins";
 
 .custom-checkbox {
   display: flex;
@@ -10,8 +11,8 @@
 
   .custom-checkbox__input-wrapper {
     position: relative;
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     flex-shrink: 0;
   }
 
@@ -32,7 +33,7 @@
     }
 
     &:focus-visible ~ .custom-checkbox__icon {
-      outline: $purple auto 5px;
+      outline: $purple auto 0.3125rem;
     }
   }
 
@@ -46,14 +47,21 @@
   }
 
   .custom-checkbox__label {
-    margin-left: 8px;
+    margin-left: 0.5rem;
     display: inline-flex;
     align-items: center;
-    font-family: NunitoSans-Regular, sans-serif;
+    font-family: NunitoSans, sans-serif;
     font-size: $xsmall;
     line-height: 1.42;
     color: $secondary-blue;
     cursor: pointer;
     user-select: none;
+  }
+}
+
+@include rtl-direction {
+  .custom-checkbox__label {
+    margin-left: 0;
+    margin-right: 0.5rem;
   }
 }

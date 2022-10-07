@@ -29,7 +29,7 @@ export interface SupportersData {
   photoURL: string;
   amounts: number[];
   minAmount?: number;
-  hiddenFields?: SupportersDataFields[];
+  displayedFields?: SupportersDataFields[];
   defaultLocale: Language;
   translations: Partial<Record<Language, SupportersDataTranslation>>;
 }

@@ -1,4 +1,5 @@
 @import "../../../../../constants";
+@import "../../../../../styles/mixins";
 @import "../../../../../styles/sizes";
 
 .supporters-page-selection-button {
@@ -38,5 +39,12 @@
     background-color: $purple-2;
     border-radius: 50%;
     transform: translateX(-50%) translateY(-50%);
+  }
+}
+
+@include rtl-direction {
+  .supporters-page-selection-button__circle {
+    margin-right: 0;
+    margin-left: 1.625rem;
   }
 }

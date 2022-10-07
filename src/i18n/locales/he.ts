@@ -7,6 +7,14 @@ export default {
         invalidPhoneNumber: "אנא הזן מספר טלפון תקין",
       },
     },
+    login: {
+      description: "התחבר/י לחשבון שלך כדי להצטרף לקומון",
+      mobileDescription: "התחבר/י ל",
+      termsText:
+        "בשימוש ב-Common הינך מסכימ/ה<br /><1>לתנאי השימוש</1> של האפליקציה",
+      termsOfUse: "תנאי שימוש",
+      privacyPolicy: "מדיניות פרטיות",
+    },
     landing: {
       buttons: {
         launchCommon: "צרו קומון",
@@ -104,6 +112,7 @@ export default {
         donationDetailsTitle: "פרטי התרומה",
         oneTimeTypeText: "פעם אחת",
         monthlyTypeText: "חודשי",
+        monthlyTypeTooltip: "בקרוב",
         otherInputTitle: "סכום אחר",
         otherInputPlaceholder: "מלאו סכום",
         otherInputError: "מינימום {{amount}}",

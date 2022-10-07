@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import PrivateRoute from "./PrivateRoute";
@@ -37,7 +37,7 @@ import { parseJson } from "@/shared/utils/json";
 
 import { webviewLogin } from "../Auth/store/actions";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
-
+import config from "@/config";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -45,6 +45,7 @@ const App = () => {
   const isAuthenticated = useSelector(authentificated());
   const notification = useSelector(getNotification());
   const history = useHistory();
+  const { search: queryString } = history.location;
 
   const {
     isShowing: isShowingNotification,
@@ -197,6 +198,20 @@ const App = () => {
               component={SubmitInvoicesContainer}
             />
             <Route path={ROUTE_PATHS.TRUSTEE} component={TrusteeContainer} />
+            <Redirect
+              from={ROUTE_PATHS.DEAD_SEA}
+              to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
+                ":id",
+                config.deadSeaCommonId
+              )}${queryString}`}
+            />
+            <Redirect
+              from={ROUTE_PATHS.PARENTS_FOR_CLIMATE}
+              to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
+                ":id",
+                config.parentsForClimateCommonId
+              )}${queryString}`}
+            />
             <Route component={NotFound} />
           </Switch>
         </Content>

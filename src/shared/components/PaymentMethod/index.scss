@@ -1,7 +1,9 @@
-@import "../../../constants.scss";
+@import "../../../constants";
+@import "../../../styles/mixins";
 @import "../../../styles/sizes";
 
 .payment-method {
+  direction: ltr;
   width: 100%;
   color: $secondary-blue;
 
@@ -38,7 +40,7 @@
   }
 
   .payment-method__card-info-wrapper {
-    margin-left: 16px;
+    margin-left: 1rem;
     display: flex;
     flex-direction: column;
   }
@@ -57,5 +59,11 @@
 
   .payment-method__replace-wrapper {
     margin-top: 10px;
+  }
+}
+
+@include rtl-direction {
+  .payment-method__title {
+    direction: rtl;
   }
 }

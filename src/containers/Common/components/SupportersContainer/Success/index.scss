@@ -1,4 +1,5 @@
 @import "../../../../../constants";
+@import "../../../../../styles/mixins";
 @import "../../../../../styles/sizes";
 
 .supporters-page-success {
@@ -90,5 +91,11 @@
     &:last-child {
       margin-top: 1rem;
     }
+  }
+}
+
+@include rtl-direction {
+  .supporters-page-success__buttons-wrapper {
+    direction: ltr;
   }
 }
