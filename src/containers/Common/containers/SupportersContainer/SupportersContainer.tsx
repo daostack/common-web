@@ -10,10 +10,14 @@ import {
 } from "@/shared/hooks";
 import { setLoginModalState } from "@/containers/Auth/store/actions";
 import { selectUser } from "@/containers/Auth/store/selectors";
-import { Loader } from "@/shared/components";
+import { LanguageDropdown, Loader } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useCommon, useSupportersData } from "@/shared/hooks/useCases";
-import { getScreenSize, selectIsRtlLanguage } from "@/shared/store/selectors";
+import {
+  getScreenSize,
+  selectIsRtlLanguage,
+  selectLanguage,
+} from "@/shared/store/selectors";
 import {
   InitialStep,
   MemberAdmittanceStep,
@@ -50,15 +54,16 @@ const SupportersContainer = () => {
   );
   const [supportPlan, setSupportPlan] = useState("");
   const user = useSelector(selectUser());
+  const language = useSelector(selectLanguage());
   const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const currentTranslation =
-    (supportersData &&
-      supportersData.translations[supportersData.defaultLocale]) ||
-    null;
+    (supportersData && supportersData.translations[language]) || null;
   const isMainDataFetched = isCommonFetched && isSupportersDataFetched;
   const isInitialLoading = !user && step === SupportersStep.UserDetails;
+  const shouldShowLanguageDropdown =
+    Object.keys(supportersData?.translations || {}).length > 1;
 
   const handleInitialStepFinish = (amount: number) => {
     setAmount(amount);
@@ -210,6 +215,9 @@ const SupportersContainer = () => {
           <SupportersDataContext.Provider value={contextValue}>
             {renderContent()}
           </SupportersDataContext.Provider>
+          {shouldShowLanguageDropdown && (
+            <LanguageDropdown className="supporters-page__language-dropdown" />
+          )}
         </div>
       )}
     </div>

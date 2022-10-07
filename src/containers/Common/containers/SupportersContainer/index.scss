@@ -13,6 +13,7 @@
 }
 
 .supporters-page__content {
+  position: relative;
   max-width: 75rem;
   padding-top: 1rem;
   display: flex;
@@ -36,4 +37,16 @@
   height: 12.5rem;
   border-radius: 0.625rem;
   object-fit: cover;
+}
+
+.supporters-page__language-dropdown {
+  position: absolute;
+  top: -3rem;
+  right: -2.75rem;
+
+  @include big-phone {
+    top: 0;
+    right: -1rem;
+    transform: translateY(-95%);
+  }
 }

@@ -4,6 +4,10 @@ import { Language } from "@/shared/constants";
 import { useLanguage } from "@/shared/hooks";
 import "./index.scss";
 
+interface LanguageDropdownProps {
+  className?: string;
+}
+
 const LANGUAGES: DropdownOption[] = [
   {
     text: "Eng",
@@ -18,7 +22,8 @@ const LANGUAGES: DropdownOption[] = [
   },
 ];
 
-const LanguageDropdown: FC = () => {
+const LanguageDropdown: FC<LanguageDropdownProps> = (props) => {
+  const { className } = props;
   const { language, changeLanguage } = useLanguage();
 
   const handleLanguageChange = async (value: unknown) => {
@@ -27,6 +32,7 @@ const LanguageDropdown: FC = () => {
 
   return (
     <Dropdown
+      className={className}
       value={language}
       onSelect={handleLanguageChange}
       options={LANGUAGES}
