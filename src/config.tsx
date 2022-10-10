@@ -73,8 +73,8 @@ const production: Configuration = {
     appId: "1:854172758045:android:e4b053ade246c6fb1e96f4",
   },
   cloudFunctionUrl: "https://us-central1-common-daostack.cloudfunctions.net",
-  deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
-  parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  deadSeaCommonId: "e5546b0d-52ef-44da-9a7d-f1104d869880",
+  parentsForClimateCommonId: "04ac2ec2-5cb2-4ab9-ae3f-5f223f482768",
 };
 
 const config: ConfigurationObject = {
