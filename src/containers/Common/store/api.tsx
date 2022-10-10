@@ -22,6 +22,7 @@ import {
   User,
   Vote,
   VoteWithUserInfo,
+  CommonMemberPreviewInfo,
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
@@ -53,6 +54,7 @@ import {
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { NotificationItem } from "@/shared/models/Notification";
+import { getCirclesNames } from "@/shared/utils/circles";
 
 export async function createGovernance(
   requestData: CreateGovernancePayload
@@ -148,6 +150,18 @@ export async function fetchUserProposals(userId: string) {
     (proposal: Proposal, prevProposal: Proposal) =>
       prevProposal.createdAt?.seconds - proposal.createdAt?.seconds
   );
+}
+
+export async function fetchUserMemberAdmittanceProposalWithCommonId(userId: string, commonId: string) {
+  const proposal = await firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .where("data.args.proposerId", "==", userId)
+    .where("data.args.commonId", "==", commonId)
+    .where("type", "==", "MEMBER_ADMITTANCE")
+    .get();
+
+  return transformFirebaseDataList<Proposal>(proposal)[0];
 }
 
 export async function fetchCommonList(): Promise<Common[]> {
@@ -724,6 +738,26 @@ export const getCommonMembers = async (
   );
 
   return extendedMembers;
+};
+
+export const getCommonMemberInfo = async (
+  userId: string,
+  commonId: string
+): Promise<CommonMemberPreviewInfo> => {
+
+  const userCommons = await getUserCommons(userId);
+  const commons = userCommons.filter(({id}) => id !== commonId)
+  const commonsWithCirclesInfo = await Promise.all(commons.map(async ({id, name}) => {
+    const [commonMemberInfo, governance] = await Promise.all([getCommonMember(commonId, userId), getGovernanceByCommonId(commonId)]);
+
+    const userCircleNames = getCirclesNames(Object.values(governance?.circles || {}), Object.values(commonMemberInfo?.circles.map || {}) as string[] );
+    return { id, name, userCircleNames };
+  }));
+  const proposal = await fetchUserMemberAdmittanceProposalWithCommonId(userId, commonId);
+
+  const introToCommon =  proposal?.data.args.description;
+
+  return { commons: commonsWithCirclesInfo, introToCommon} as CommonMemberPreviewInfo;
 };
 
 export const getCommonMembersWithCircleIdAmount = async (

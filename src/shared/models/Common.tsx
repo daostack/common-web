@@ -136,6 +136,15 @@ export interface CommonMemberWithUserInfo extends CommonMember {
   user: User;
 }
 
+export interface CommonMemberPreviewInfo {
+  commons: {
+    id: string;
+    name: string;
+    userCircleNames: string;
+  }[];
+  introToCommon?: string;
+}
+
 export interface CommonLink {
   /**
    * The title of the link
