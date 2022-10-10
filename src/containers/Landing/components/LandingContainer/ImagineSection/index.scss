@@ -76,6 +76,7 @@ $vertical-view-breakpoint: 1100px;
   font-size: $moderate;
   line-height: 120%;
   letter-spacing: 0.01em;
+  white-space: pre-line;
 
   &:last-child {
     margin-bottom: 0;
