@@ -1,4 +1,5 @@
 @import "../../../../../constants";
+@import "../../../../../styles/mixins";
 @import "../../../../../styles/sizes";
 
 $viewport-breakpoint: 1000px;
@@ -56,4 +57,10 @@ $viewport-breakpoint: 1000px;
 
 .landing-video-section__launch-common-button {
   max-width: 11.75rem;
+}
+
+@include rtl-direction {
+  .landing-video-section {
+    direction: rtl;
+  }
 }
