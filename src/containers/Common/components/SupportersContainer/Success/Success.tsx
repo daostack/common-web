@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useSupportersDataContext } from "@/containers/Common/containers/SupportersContainer/context";
-import { Button, ButtonVariant, CommonShare } from "@/shared/components";
+import { Button, ButtonVariant, SupportShare } from "@/shared/components";
 import {
   Colors,
   ScreenSize,
@@ -50,7 +50,7 @@ const Success: FC<SuccessProps> = (props) => {
         >
           {t("buttons.enterTheCommon")}
         </Button>
-        <CommonShare
+        <SupportShare
           className="supporters-page-success__submit-button"
           common={common}
           type={
@@ -63,7 +63,7 @@ const Success: FC<SuccessProps> = (props) => {
           popupVariant={SharePopupVariant.TopCenter}
         >
           <Button shouldUseFullWidth>{t("buttons.shareWithFriends")}</Button>
-        </CommonShare>
+        </SupportShare>
       </div>
     </div>
   );
