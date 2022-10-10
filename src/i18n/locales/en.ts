@@ -36,7 +36,7 @@ export default {
         description1: {
           title: "Imagine",
           parts: [
-            "Humanity’s greatest achievements were made by massive collaborations. We enter a new era of trust and collaboration.",
+            "Humanity’s greatest achievements were made by massive collaborations.",
             "Imagine you could easily and quickly fuel a movement, by letting the people in your community decide what is important.",
             "With Common, you can.",
             "Common empowers groups to collaborate with no single organizer. It’s an online platform that makes it easy to pool funds together, and decide collaboratively how to spend it.",
@@ -81,7 +81,8 @@ export default {
       collectiveActionSection: {
         imageAlt: "People together",
         title: "Launch Collective Action. Catalyze a movement, Together.",
-        description: "Common, where lead social entrepreneur change the world.",
+        description:
+          "Common, where leading social entrepreneur change the world.",
       },
     },
     contactUs: {

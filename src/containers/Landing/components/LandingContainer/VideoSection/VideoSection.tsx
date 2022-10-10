@@ -38,7 +38,13 @@ const VideoSection: FC<VideoSectionProps> = ({ onLaunchClick }) => {
         <p className="landing-video-section__main-info-description">
           {t("videoSection.description")}
         </p>
-        <Button onClick={onLaunchClick}> {t("buttons.launchCommon")}</Button>
+        <Button
+          className="landing-video-section__launch-common-button"
+          onClick={onLaunchClick}
+          shouldUseFullWidth
+        >
+          {t("buttons.launchCommon")}
+        </Button>
       </div>
     </section>
   );
