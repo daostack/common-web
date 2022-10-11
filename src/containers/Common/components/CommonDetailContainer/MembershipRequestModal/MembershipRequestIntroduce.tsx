@@ -30,7 +30,7 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
       const areRulesSpecified =
-        governance && Object.keys(governance.unstructuredRules).length > 0;
+        governance && governance.unstructuredRules.length > 0;
       const nextStage = areRulesSpecified
         ? MembershipRequestStage.Rules
         : MembershipRequestStage.Payment;
