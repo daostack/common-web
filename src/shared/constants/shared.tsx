@@ -13,7 +13,7 @@ export enum ScreenSize {
   Desktop = "DESKTOP",
 }
 
-export const HEADER_MOBILE_SCREEN_SIZE = 980;
+export const HEADER_MOBILE_SCREEN_SIZE = 1062;
 
 export enum Orientation {
   Horizontal,
