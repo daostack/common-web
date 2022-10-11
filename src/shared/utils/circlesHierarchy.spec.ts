@@ -1,7 +1,7 @@
-import { getHighestCircleInHierarchy } from "./getHighestCircleInHierarchy";
 import { Circle } from "@/shared/models";
+import { getCirclesWithHighestTier } from "./circlesHierarchy";
 
-describe("getHighestCircleInHierarchy", () => {
+describe("getCirclesWithHighestTier", () => {
   it("should return correct circles", () => {
     const circles: Pick<Circle, "name" | "hierarchy">[] = [
       { name: "Circle 1", hierarchy: null },
@@ -12,6 +12,6 @@ describe("getHighestCircleInHierarchy", () => {
     ];
     const expectedResult = [circles[0], circles[2], circles[3]];
 
-    expect(getHighestCircleInHierarchy(circles)).toEqual(expectedResult);
+    expect(getCirclesWithHighestTier(circles)).toEqual(expectedResult);
   });
 });

@@ -1,7 +1,7 @@
 import React, { FC, memo } from "react";
 import { useSelector } from "react-redux";
 import { CommonMemberWithUserInfo } from "@/shared/models";
-import { getHighestCircleInHierarchy } from "@/shared/utils";
+import { getCirclesWithHighestTier } from "@/shared/utils";
 import { selectGovernance } from "../../../store/selectors";
 import CommonMember from "./CommonMemberComponent";
 
@@ -20,7 +20,7 @@ const MembersList: FC<MembersListComponentProps> = ({ members }) => {
         const memberCircles = governanceCircles.filter((circle) =>
           memberCircleIds.includes(circle.id)
         );
-        const circlesString = getHighestCircleInHierarchy(memberCircles)
+        const circlesString = getCirclesWithHighestTier(memberCircles)
           .map((circle) => circle.name)
           .join(", ");
         const memberName = `${member.user.firstName} ${member.user.lastName}`;

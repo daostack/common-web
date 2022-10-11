@@ -1,8 +1,6 @@
 import { Circle } from "@/shared/models";
 
-export const getHighestCircleInHierarchy = <
-  T extends Pick<Circle, "hierarchy">
->(
+export const getCirclesWithHighestTier = <T extends Pick<Circle, "hierarchy">>(
   circles: T[]
 ): T[] => {
   const finalCircles = circles.filter((circle) => !circle.hierarchy);
