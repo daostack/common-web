@@ -5,6 +5,7 @@ export * from "./download";
 export * from "./emptyFunction";
 export * from "./countdown";
 export * from "./formatDate";
+export * from "./getHighestCircleInHierarchy";
 export * from "./isError";
 export * from "./matchRoute";
 export * from "./parseLinksForSubmission";
