@@ -58,7 +58,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
         )}
         {previewInfo.introToCommon && (
           <>
-            <p className="common-member-preview__section-title">How I relate to the cause</p>
+            <p className="common-member-preview__section-title">Membership intro</p>
             <div className="common-member-preview__info">{previewInfo.introToCommon}</div>
           </>
         )}
