@@ -799,10 +799,10 @@ export const getGovernanceByCommonId = async (
 
 export const getCommonGovernanceRules = async (
   governanceId: string
-): Promise<UnstructuredRules | null> => {
+): Promise<UnstructuredRules> => {
   const governance = await getGovernance(governanceId);
 
-  return governance?.unstructuredRules || null;
+  return governance?.unstructuredRules || [];
 };
 
 export const getCommonGovernanceCircles = async (

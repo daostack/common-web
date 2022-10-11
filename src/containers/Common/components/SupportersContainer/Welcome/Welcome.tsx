@@ -59,21 +59,16 @@ const Welcome: FC<WelcomeProps> = (props) => {
         {t("welcome.rulesTitle")}
       </h2>
       <ul className="supporters-page-welcome__rule-list">
-        {Object.entries(governance?.unstructuredRules || {}).map(
-          ([ruleId, rule]) => (
-            <li
-              key={ruleId}
-              className="supporters-page-welcome__rule-list-item"
-            >
-              <h3 className="supporters-page-welcome__rule-title">
-                {rule.title}
-              </h3>
-              <p className="supporters-page-welcome__rule-description">
-                {rule.definition}
-              </p>
-            </li>
-          )
-        )}
+        {(governance?.unstructuredRules || []).map((rule, index) => (
+          <li key={index} className="supporters-page-welcome__rule-list-item">
+            <h3 className="supporters-page-welcome__rule-title">
+              {rule.title}
+            </h3>
+            <p className="supporters-page-welcome__rule-description">
+              {rule.definition}
+            </p>
+          </li>
+        ))}
       </ul>
       <Checkbox
         className="supporters-page-welcome__rules-approval-checkbox"

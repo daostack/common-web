@@ -6,8 +6,9 @@ import "./index.scss";
 
 export default function MembershipRequestRules(props: IStageProps) {
   const { userData, setUserData, governance } = props;
-  const rules = Object.values(governance?.unstructuredRules || {});
-  const paymentMustGoThrough = governance?.proposals?.MEMBER_ADMITTANCE?.limitations.paymentMustGoThrough;
+  const rules = governance?.unstructuredRules || [];
+  const paymentMustGoThrough =
+    governance?.proposals?.MEMBER_ADMITTANCE?.limitations.paymentMustGoThrough;
 
   return (
     <div className="membership-request-content membership-request-rules">
@@ -37,7 +38,9 @@ export default function MembershipRequestRules(props: IStageProps) {
         onClick={() =>
           setUserData({
             ...userData,
-            stage: paymentMustGoThrough ? MembershipRequestStage.Payment : MembershipRequestStage.Creating,
+            stage: paymentMustGoThrough
+              ? MembershipRequestStage.Payment
+              : MembershipRequestStage.Creating,
           })
         }
         className="membership-request-rules__submit-button"
