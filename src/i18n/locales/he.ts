@@ -126,7 +126,7 @@ export default {
       communityManagedText:
         "<0>{{commonName}}</0> היא תנועה קהילתית המנוהלת על גבי <3>קומון</3>",
       userDetailsForm: {
-        optionalHint: "אופליונלי",
+        optionalHint: "אופציונלי",
         firstNameLabel: "שם פרטי",
         firstNamePlaceholder: "נועה",
         lastNameLabel: "שם משפחה",
