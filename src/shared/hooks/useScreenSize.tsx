@@ -1,15 +1,11 @@
 import * as React from 'react';
 
 export default function useScreenSize(query: string): boolean {
-  const [isMatches, setMatches] = React.useState(false);
-
-  const screenSize = React.useMemo(() =>  window.matchMedia(`(${query})`),[query]);
+  const [isMatches, setMatches] = React.useState(() => window.matchMedia(`(${query})`).matches);
 
   React.useEffect(() => {
-    setMatches(screenSize.matches);
-  },[])
+    const screenSize = window.matchMedia(`(${query})`);
 
-  React.useEffect(() => {
     const handleScreenSizeChange = (screenSize: MediaQueryListEvent) => {
       setMatches(screenSize.matches)
     };

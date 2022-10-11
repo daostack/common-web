@@ -2,20 +2,20 @@
 
 .tutorial-modal {
   height: 100%;
-  max-height: 650px;
+  max-height: 40.75rem;
   width: 100%;
-  max-width: 840px;
+  max-width: 52.5rem;
 }
 
 .tutorial-modal__header {
-  font-size: 20px;
-  margin-bottom: 0px;
+  font-size: $moderate-small;
+  margin-bottom: 0;
   margin-top: -1rem;
-  line-height: 29px;
+  line-height: 1.8125rem;
 }
 
 .tutorial-modal__text {
-  font-size: 14px;
+  font-size: $xsmall;
 }
 
 .tutorial-modal__container {
@@ -25,26 +25,26 @@
 .tutorial-modal__container__video {
   width: 100%;
   height: fit-content;
-  border-radius: 4px;
+  border-radius: 0.25rem;
 }
 
 .tutorial-modal__container__play-button-container {
   position: absolute;
-  height: 80px;
-  width: 80px;
-  border-radius: 40px;
+  height: 5rem;
+  width: 5rem;
+  border-radius: 2.5rem;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   background-color: $white;
   z-index: 10000;
-  box-shadow: 0px 3px 8px $shadow-2;
+  box-shadow: 0 0.25rem 0.5rem $shadow-2;
 }
 
 .tutorial-modal__container__play-button-container__icon {
   position: absolute;
-  height: 33px;
-  width: 36px;
+  height: 2.0625rem;
+  width: 2.25rem;
   left: calc(50% + 3px);
   top: 50%;
   transform: translate(-50%, -50%);

@@ -44,12 +44,12 @@
 
     .tutorial-button {
       text-decoration: none;
-      font-size: 18px;
-      color: #0b2046;
-      margin-right: 50px;
+      font-size: $moderate;
+      color: $blue;
+      margin-right: 3.125rem;
       background-color: transparent;
       border: none;
-      font-family: NunitoSans-Regular;
+      font-family: NunitoSans, sans-serif;
       cursor: pointer;
     }
 
@@ -81,12 +81,12 @@
     button,
     a {
       text-decoration: none;
-      font-size: 18px;
+      font-size: $moderate;
       color: $blue;
-      margin-right: 50px;
+      margin-right: 3.125rem;
       background-color: transparent;
       border: none;
-      font-family: NunitoSans-Regular;
+      font-family: NunitoSans, sans-serif;
       cursor: pointer;
       white-space: nowrap;
 
@@ -142,9 +142,13 @@
     padding: 10px $content-padding-mobile;
     flex-direction: row-reverse;
 
-    .tutorial-button {
-      margin-right: 0px;
+    .navigation-wrapper {
+
+      .tutorial-button {
+        margin-right: 0px;
+      }
     }
+
 
     .logo {
       height: 40px;

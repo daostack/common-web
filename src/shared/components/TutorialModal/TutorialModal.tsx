@@ -1,9 +1,9 @@
 import React, { useState, useRef, ReactElement, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Modal } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import landingVideoPosterSrc from "@/shared/assets/images/landing-video-poster.jpeg";
 import landingVideoSrc from "@/shared/assets/videos/landing-video.mp4";
-import { useDispatch } from 'react-redux';
 import { setTutorialModalState } from '@/shared/store/actions';
 import './index.scss';
 
