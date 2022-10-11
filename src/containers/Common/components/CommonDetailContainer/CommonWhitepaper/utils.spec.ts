@@ -10,6 +10,7 @@ describe("calculateVoters", () => {
         name: "Supporters",
         allowedActions: {},
         allowedProposals: {},
+        hierarchy: null,
       },
       1: {
         id: "1b42d7c9-fe5a-4d48-aa6a-133f81812204",
@@ -17,6 +18,7 @@ describe("calculateVoters", () => {
         reputation: {},
         allowedProposals: {},
         name: "Contributors",
+        hierarchy: null,
       },
       2: {
         id: "f8e3529b-c4fa-4f3e-9ad0-f788e80967f5",
@@ -24,6 +26,7 @@ describe("calculateVoters", () => {
         allowedProposals: {},
         allowedActions: {},
         reputation: {},
+        hierarchy: null,
       },
       3: {
         name: "Leader",
@@ -31,6 +34,7 @@ describe("calculateVoters", () => {
         allowedProposals: {},
         reputation: {},
         allowedActions: {},
+        hierarchy: null,
       },
       4: {
         allowedProposals: {},
@@ -38,6 +42,7 @@ describe("calculateVoters", () => {
         allowedActions: {},
         reputation: {},
         id: "6df2148b-0142-4976-a3d5-656d52f77984",
+        hierarchy: null,
       },
     };
     const weights: BaseProposal["global"]["weights"] = [

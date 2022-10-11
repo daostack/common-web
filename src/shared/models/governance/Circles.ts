@@ -19,11 +19,15 @@ export type CircleIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 export type Circle = {
   name: string;
-  reputation: Partial<Reputation>; // each property will be mapped to a validation function that recieves the value, i.e: minContribution(number) => number > minContributionNumber
+  reputation: Partial<Reputation>;
   id: string;
   allowedActions: AllowedActions;
   allowedProposals: AllowedProposals;
-}
+  hierarchy: {
+    tier: number;
+    exclusions: number[];
+  } | null;
+};
 
 export type CirclesMap = {
   bin: number;
