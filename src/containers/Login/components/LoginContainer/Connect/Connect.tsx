@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Loader } from "../../../../../shared/components";
@@ -24,6 +25,9 @@ const Connect: FC<ConnectProps> = (props) => {
     isJoinRequestType,
     onAuthButtonClick,
   } = props;
+  const { t } = useTranslation("translation", {
+    keyPrefix: "login",
+  });
   const screenSize = useSelector(getScreenSize());
   const isLoading = useSelector(selectIsAuthLoading());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -31,8 +35,8 @@ const Connect: FC<ConnectProps> = (props) => {
 
   const subTitleText =
     isMobileView && !isJoinRequestType
-      ? "Connect with"
-      : "Connect your account to join this Common";
+      ? t("mobileDescription")
+      : t("description");
 
   if (isLoading) {
     return (
@@ -86,16 +90,17 @@ const Connect: FC<ConnectProps> = (props) => {
               isMobileView && isJoinRequestType,
           })}
         >
-          By using Common you agree to the app’s
-          <br />
-          <a
-            className="connect-wrapper__terms-of-use"
-            href={require("../../../../../shared/assets/terms_and_conditions.pdf")}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            terms of use
-          </a>
+          <Trans t={t} i18nKey="termsText">
+            By using Common you agree to the app’s
+            <a
+              className="connect-wrapper__terms-of-use"
+              href={require("../../../../../shared/assets/terms_and_conditions.pdf")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              terms of use
+            </a>
+          </Trans>
         </p>
       </div>
       {isMobileView && !isJoinRequestType && <LoginHelpButtons />}

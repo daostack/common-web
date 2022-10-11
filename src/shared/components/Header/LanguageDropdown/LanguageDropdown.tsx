@@ -1,11 +1,12 @@
 import React, { FC } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Dropdown, DropdownOption } from "@/shared/components";
 import { Language } from "@/shared/constants";
-import { changeLanguage } from "@/shared/store/actions";
-import { selectLanguage } from "@/shared/store/selectors";
-import i18n from "@/i18n";
+import { useLanguage } from "@/shared/hooks";
 import "./index.scss";
+
+interface LanguageDropdownProps {
+  className?: string;
+}
 
 const LANGUAGES: DropdownOption[] = [
   {
@@ -21,18 +22,17 @@ const LANGUAGES: DropdownOption[] = [
   },
 ];
 
-const LanguageDropdown: FC = () => {
-  const dispatch = useDispatch();
-  const language = useSelector(selectLanguage());
+const LanguageDropdown: FC<LanguageDropdownProps> = (props) => {
+  const { className } = props;
+  const { language, changeLanguage } = useLanguage();
 
   const handleLanguageChange = async (value: unknown) => {
-    const language = value as Language;
-    await i18n.changeLanguage(language);
-    dispatch(changeLanguage(language));
+    await changeLanguage(value as Language);
   };
 
   return (
     <Dropdown
+      className={className}
       value={language}
       onSelect={handleLanguageChange}
       options={LANGUAGES}

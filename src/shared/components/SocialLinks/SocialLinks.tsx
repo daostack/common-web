@@ -1,4 +1,5 @@
 import React, { FC, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Loader } from "@/shared/components";
 import { isMobile } from "@/shared/utils";
@@ -41,6 +42,9 @@ export const SocialLinks: FC<SocialLinksProps> = (
     linkText,
   }
 ) => {
+  const { t } = useTranslation("translation", {
+    keyPrefix: "share",
+  });
 
   const shareNatively = useCallback(async () => {
     if (!navigator?.share)
@@ -95,7 +99,7 @@ export const SocialLinks: FC<SocialLinksProps> = (
       )}
       style={{ top: `${top ?? "64px"}` }}
     >
-      {shareViewType === ShareViewType.Popup && <div className="title">Share with</div>}
+      {shareViewType === ShareViewType.Popup && <div className="title">{t("title")}</div>}
       {
         isLoading
           ? <Loader />

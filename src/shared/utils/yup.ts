@@ -12,7 +12,11 @@ Yup.addMethod(Yup.string, 'phone', function yupPhone(
       ? errorMessage
       // eslint-disable-next-line no-template-curly-in-string
       : '${path} must be in a valid format.';
-  return this.test('phone', errMsg, (value: string) => {
+  return this.test('phone', errMsg, (value?: string) => {
+    if (typeof value === "undefined") {
+      return true;
+    }
+
     try {
       const phoneNumber = phoneUtil.parseAndKeepRawInput(value, CountryCode.IL);
 

@@ -9,6 +9,7 @@ export enum ROUTE_PATHS {
   MY_ACCOUNT_BILLING = "/my-account/billing",
   COMMON_LIST = "/commons",
   COMMON_DETAIL = "/commons/:id",
+  COMMON_SUPPORT = "/commons/:id/support",
   MY_COMMONS = "/my-commons",
   SUBMIT_INVOICES = "/invoices/submission/:proposalId",
   TRUSTEE = "/trustee",
@@ -20,4 +21,5 @@ export enum ROUTE_PATHS {
   DISCUSSION_DETAIL = "/discussions/:id",
   DISCUSSION_MESSAGE = "/discussion-messages/:id",
   DEAD_SEA = "/dead-sea",
+  PARENTS_FOR_CLIMATE = "/parents-for-climate",
 }

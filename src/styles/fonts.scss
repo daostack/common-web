@@ -2,6 +2,7 @@ $nunitoSansFontName: "NunitoSans";
 $notoSerifSCFontName: "NotoSerifSC";
 $assistantFontName: "Assistant";
 $heeboFontName: "Heebo";
+$lexendFontName: "Lexend";
 
 $trueTypeFontFormat: "truetype";
 $openTypeFontFormat: "opentype";
@@ -106,4 +107,12 @@ $openTypeFontFormat: "opentype";
   src: local($heeboFontName),
     url("/shared/assets/fonts/Heebo-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
+}
+
+// Lexend
+@font-face {
+  font-family: $lexendFontName;
+  src: local($lexendFontName),
+    url("/shared/assets/fonts/Lexend-Regular.ttf") format($trueTypeFontFormat);
+  font-weight: normal;
 }

@@ -18,6 +18,7 @@ import {
   Proposal,
   SubCollections,
   Subscription,
+  SupportersData,
   UnstructuredRules,
   User,
   Vote,
@@ -957,4 +958,17 @@ export async function getDiscussionsByIds(initialIds: string[]): Promise<Discuss
   return results
     .map((result) => transformFirebaseDataList<Discussion>(result))
     .reduce((acc, items) => [...acc, ...items], []);
+}
+
+export async function fetchSupportersDataByCommonId(
+  commonId: string
+): Promise<SupportersData | null> {
+  const supportersData = await firebase
+    .firestore()
+    .collection(Collection.Supporters)
+    .where("commonId", "==", commonId)
+    .get();
+  const data = transformFirebaseDataList<SupportersData>(supportersData);
+
+  return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
 }

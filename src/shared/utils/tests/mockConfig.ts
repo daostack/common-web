@@ -15,6 +15,7 @@ jest.mock(
       appId: "APP_ID",
     },
     cloudFunctionUrl: "https://cloud-function-url.com",
-    deadSeaCommonId: "e49c02a9-6962-4bbb-a4b7-166ef69ee27a",
+    deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+    parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
   })
 );

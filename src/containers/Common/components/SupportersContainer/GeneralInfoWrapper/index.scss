@@ -1,0 +1,70 @@
+@import "../../../../../constants";
+@import "../../../../../styles/mixins";
+@import "../../../../../styles/sizes";
+
+.supporters-page-general-info-wrapper {
+  max-width: 36.125rem;
+  width: 100%;
+  margin: 0 auto;
+  padding-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+
+  @include big-phone {
+    max-width: unset;
+  }
+}
+
+.supporters-page-general-info-wrapper__back-button {
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.supporters-page-general-info-wrapper__back-icon {
+  margin-right: 0.75rem;
+}
+
+.supporters-page-general-info-wrapper__title {
+  margin: 0;
+  font-family: Lexend, sans-serif;
+  font-weight: normal;
+  font-size: $large;
+  line-height: 133%;
+
+  @include big-phone {
+    font-size: $moderate-med;
+  }
+}
+
+.supporters-page-general-info-wrapper__description {
+  max-width: 32.75rem;
+  margin: 0.75rem 0 0;
+  white-space: pre-line;
+
+  @include big-phone {
+    max-width: unset;
+    margin-top: 1.125rem;
+  }
+}
+
+.supporters-page-general-info-wrapper__bottom-margin {
+  margin-bottom: 3.875rem;
+
+  @include big-phone {
+    margin-bottom: 3.5rem;
+  }
+}
+
+.supporters-page-general-info-wrapper__action {
+  height: 1.25rem;
+  letter-spacing: 0.01em;
+}
+
+@include rtl-direction {
+  .supporters-page-general-info-wrapper__back-icon {
+    margin-left: 0.75rem;
+    margin-right: 0;
+    transform: rotate(180deg);
+  }
+}

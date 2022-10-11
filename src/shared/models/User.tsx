@@ -11,6 +11,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email?: string;
+  phoneNumber?: string;
   photo?: string;
   photoURL?: string;
   intro?: string;

@@ -165,14 +165,14 @@ const Header = () => {
         </>
       )}
 
-      {/*{shouldShowLanguageDropdown && isMobile() && (*/}
-      {/*  <div*/}
-      {/*    className="header-wrapper__language-dropdown-wrapper"*/}
-      {/*    onClick={(event) => event.stopPropagation()}*/}
-      {/*  >*/}
-      {/*    <LanguageDropdown />*/}
-      {/*  </div>*/}
-      {/*)}*/}
+      {shouldShowLanguageDropdown && isMobile() && (
+        <div
+          className="header-wrapper__language-dropdown-wrapper"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <LanguageDropdown />
+        </div>
+      )}
       {isAuthorized && isMobile() && (
         <>
           {hasAdminAccess && (
@@ -227,7 +227,7 @@ const Header = () => {
       {isDesktop ? (
         <>
           {links}
-          {/*{shouldShowLanguageDropdown && <LanguageDropdown />}*/}
+          {shouldShowLanguageDropdown && <LanguageDropdown />}
           {user && (
             <Account
               user={user}

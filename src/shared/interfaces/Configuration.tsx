@@ -13,6 +13,7 @@ export interface Configuration {
   };
   cloudFunctionUrl: string;
   deadSeaCommonId: string;
+  parentsForClimateCommonId: string;
 }
 
 export type ConfigurationObject = Record<Environment, Configuration>;

@@ -7,7 +7,7 @@ type State = LoadingState<Governance | null>;
 
 interface Return extends State {
   fetchGovernance: (governanceId: string) => void;
-  setGovernance: (governanceId: Governance | null) => void;
+  setGovernance: (governance: Governance | null) => void;
 }
 
 export const useGovernance = (): Return => {

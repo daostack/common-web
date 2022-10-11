@@ -4,7 +4,11 @@ import { Route } from "react-router-dom";
 import PrivateRoute from "@/containers/App/PrivateRoute";
 import { authentificated } from "@/containers/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { CommonListContainer, CommonDetailContainer } from "..";
+import {
+  CommonListContainer,
+  CommonDetailContainer,
+  SupportersContainer,
+} from "..";
 
 export default function CommonContainer() {
   const isAuthenticated = useSelector(authentificated());
@@ -21,6 +25,11 @@ export default function CommonContainer() {
         exact={true}
         component={CommonListContainer}
         authenticated={isAuthenticated}
+      />
+      <Route
+        path={ROUTE_PATHS.COMMON_SUPPORT}
+        exact
+        component={SupportersContainer}
       />
     </div>
   );

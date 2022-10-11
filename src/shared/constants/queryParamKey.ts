@@ -1,4 +1,5 @@
 export enum QueryParamKey {
   AuthCode = "authCode",
-  IntegrationAmount = "amount",
+  SupportersFlowAmount = "amount",
+  Language = "language",
 }

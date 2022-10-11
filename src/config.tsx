@@ -24,7 +24,8 @@ export const local: Configuration = {
     appId: "1:1027354410661:web:486445886843ffcc5b974c",
   },
   cloudFunctionUrl: "http://localhost:5003/common-dev-dea4e/us-central1",
-  deadSeaCommonId: "e49c02a9-6962-4bbb-a4b7-166ef69ee27a",
+  deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
 };
 
 const dev: Configuration = {
@@ -39,7 +40,8 @@ const dev: Configuration = {
     appId: "1:1027354410661:web:486445886843ffcc5b974c",
   },
   cloudFunctionUrl: "https://us-central1-common-dev-dea4e.cloudfunctions.net",
-  deadSeaCommonId: "e49c02a9-6962-4bbb-a4b7-166ef69ee27a",
+  deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
 };
 
 const stage: Configuration = {
@@ -55,7 +57,8 @@ const stage: Configuration = {
   },
   cloudFunctionUrl:
     "https://us-central1-common-staging-50741.cloudfunctions.net",
-  deadSeaCommonId: "7ae49aa5-940b-4367-9b4d-a40534102ef2",
+  deadSeaCommonId: "a55a1e9b-104a-4866-9f4f-3e017bbae281",
+  parentsForClimateCommonId: "a55a1e9b-104a-4866-9f4f-3e017bbae281",
 };
 
 const production: Configuration = {
@@ -70,7 +73,8 @@ const production: Configuration = {
     appId: "1:854172758045:android:e4b053ade246c6fb1e96f4",
   },
   cloudFunctionUrl: "https://us-central1-common-daostack.cloudfunctions.net",
-  deadSeaCommonId: "e49c02a9-6962-4bbb-a4b7-166ef69ee27a",
+  deadSeaCommonId: "e5546b0d-52ef-44da-9a7d-f1104d869880",
+  parentsForClimateCommonId: "04ac2ec2-5cb2-4ab9-ae3f-5f223f482768",
 };
 
 const config: ConfigurationObject = {

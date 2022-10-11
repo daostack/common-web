@@ -19,7 +19,7 @@ export const getAuthCode = (
     };
   }
   if (
-    matchRoute(pathname, ROUTE_PATHS.DEAD_SEA, { exact: true }) ||
+    matchRoute(pathname, ROUTE_PATHS.COMMON_SUPPORT, { exact: true }) ||
     matchRoute(pathname, ROUTE_PATHS.COMMON_DETAIL, { exact: true })
   ) {
     return {

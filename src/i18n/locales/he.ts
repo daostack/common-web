@@ -7,29 +7,42 @@ export default {
         invalidPhoneNumber: "אנא הזן מספר טלפון תקין",
       },
     },
+    share: {
+      title: "שתף עם חברים",
+    },
+    login: {
+      description: "התחבר/י לחשבון שלך כדי להצטרף לקומון",
+      mobileDescription: "התחבר/י ל",
+      termsText:
+        "בשימוש ב-Common הינך מסכימ/ה<br /><1>לתנאי השימוש</1> של האפליקציה",
+      termsOfUse: "תנאי שימוש",
+      privacyPolicy: "מדיניות פרטיות",
+    },
     landing: {
       buttons: {
         launchCommon: "צרו קומון",
       },
       videoSection: {
         title: {
-          part1: "קומון, פלטפורמה דיגיטלית",
-          part2: "איתה אפשר להגיע רחוק, ביחד",
+          part1: "יוצרים שינוי בעולם, יחד.",
+          part2: "עם קומון זה אפשרי",
         },
-        description: "מקום ליזמים חברתיים שרוצים ליצור שינוי",
+        description: "פלטפורמה דיגיטלית ליזמות  שיתופית",
       },
       imagineSection: {
         description1: {
           title: "דמיינו",
           parts: [
-            "ההישגים הגדולים ביותר של האנושות נוצרו בשיתופי פעולה בקנה מידה עצום דמיינו שאתן יכולות להניע בקלות ובמהירות תנועה, בה החברים מחליטים יחד מה באמת חשוב עם קומון, זה אפשרי.",
+            "ההישגים הגדולים ביותר של האנושות נוצרו באמצעות שיתופי-פעולה בקנה מידה עצום.\n" +
+              "דמיינו שאתן יכולות ליזום בקלות ובמהירות תנועה שבה החברים מחליטים יחד מה חשוב באמת.\n" +
+              "עם קומון - זה אפשרי.\n",
           ],
         },
         description2: {
           title: "העתיד הוא משותף",
           parts: [
-            "קומון מאפשרת לקבוצות להתאגד לטובת מטרה משותפת, לאסוף כספים מהחברים ולהחליט יחד כיצד להוציא אותם. אפשר להקים כך פרוייקטים קהילתיים, קואופרטיבים ותנועות חברתיות גדולות. אין בירוקרטיה, אין קאצ’, פשוט פועלים יחד.",
-            "אנחנו נכנסים לעידן חדש של אמון ופעולה משותפת",
+            "קומון מאפשרת לקבוצות להתאגד לטובת מטרה משותפת, לאסוף כספים מהחברים ולהחליט יחד כיצד להוציא אותם. תוכלו להקים פרוייקטים קהילתיים, קואופרטיבים ותנועות חברתיות גדולות. אין בירוקרטיה, אין קאצ’, פשוט פועלים יחד.",
+            "אנחנו נכנסים לעידן חדש של אמון ופעולה משותפת.",
           ],
         },
       },
@@ -61,8 +74,8 @@ export default {
         title: "צרו קומון",
         description: {
           part1:
-            "אנו מעוניינים להעלות על קומון יוזמות שבשלות להיות משתמשי-העל שלנו בתהליך עיצוב המוצר קדימה.",
-          part2: "אם אתם עונים על כל הקריטריונים הבאים, אתם אלה שאנו מחפשים:",
+            "קומון מאתרת את משתמשי-העל שלה אשר יקחו חלק בעיצוב המוצר קדימה.",
+          part2: "אם אתם עונים על כל הקריטריונים הבאים, אנחנו מחפשים אתכם:",
         },
         list: {
           item1:
@@ -86,6 +99,57 @@ export default {
           sendButton: "שליחה",
           contactUsHint: "צרו איתנו קשר ב",
         },
+      },
+    },
+    supporters: {
+      buttons: {
+        back: "חזרה",
+        supportUsViaCommon: "תימכו בנו",
+        next: "הבא",
+        edit: "עריכה",
+        payAmount: "שלם {{amount}}",
+        enterTheCommon: "כנסו לקומון",
+        shareWithFriends: "שתפו עם חברים",
+        jumpIn: "הכנסו",
+      },
+      joinText: "הצטרפו אלינו",
+      amountSelection: {
+        donationDetailsTitle: "פרטי התרומה",
+        oneTimeTypeText: "פעם אחת",
+        monthlyTypeText: "חודשי",
+        monthlyTypeTooltip: "בקרוב",
+        otherInputTitle: "סכום אחר",
+        otherInputPlaceholder: "מלאו סכום",
+        otherInputError: "מינימום {{amount}}",
+        defaultSubmitButtonText: "עדכון התרומה",
+      },
+      communityManagedText:
+        "<0>{{commonName}}</0> היא תנועה קהילתית המנוהלת על גבי <3>קומון</3>",
+      userDetailsForm: {
+        optionalHint: "אופציונלי",
+        firstNameLabel: "שם פרטי",
+        firstNamePlaceholder: "נועה",
+        lastNameLabel: "שם משפחה",
+        lastNamePlaceholder: "אלון",
+        emailLabel: "כתובת אימייל",
+        emailPlaceholder: "noa.alon@gmail.com",
+        countryLabel: "מדינה",
+        countryPlaceholder: "---בחר מדינה---",
+        phoneNumberLabel: "טלפון",
+      },
+      paymentDetails: {
+        title: "פרטי תשלום",
+        description: "עדכן את פרטי התשלום שלך למטה",
+        paymentMethodTitle: "אמצעי תשלום",
+      },
+      success: {
+        title: "תודה!",
+        infoBlockTitle: "מעוניינים להיות מעורבים",
+      },
+      welcome: {
+        title: "ברוכים הבאים",
+        rulesTitle: "כללי הקומון",
+        rulesApproval: "קראתי והבנתי את הכללים",
       },
     },
   },

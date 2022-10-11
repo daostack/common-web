@@ -24,36 +24,35 @@ interface LinkMetaData {
   socialImageLink: string;
 }
 
-const getLinkMetaData = ( //FIXME: need to add an appropriate social images
+const getLinkMetaData = (
+  //FIXME: need to add an appropriate social images
   linkType: DynamicLinkType,
-  elem: Common | Proposal | Discussion | DiscussionMessage,
+  elem: Common | Proposal | Discussion | DiscussionMessage
 ): LinkMetaData | null => {
   switch (linkType) {
     case DynamicLinkType.Common:
       elem = elem as Common;
 
-      return (
-        {
-          link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Common}/${elem.id}`,
-          socialTitle: elem.name || "",
-          socialDescription: [
-              elem.byline || "",
-              "Download the Common app to join now."
-            ].filter(Boolean).join(". "),
-          socialImageLink: elem.image || "",
-        }
-      );
+      return {
+        link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Common}/${elem.id}`,
+        socialTitle: elem.name || "",
+        socialDescription: [
+          elem.byline || "",
+          "Download the Common app to join now.",
+        ]
+          .filter(Boolean)
+          .join(". "),
+        socialImageLink: elem.image || "",
+      };
     case DynamicLinkType.Proposal:
       elem = elem as Proposal;
 
-      return (
-        {
-          link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Proposal}/${elem.id}`,
-          socialTitle: elem.data.args.title || "",
-          socialDescription: elem.data.args.description || "",
-          socialImageLink: "", //FIXME
-        }
-      );
+      return {
+        link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Proposal}/${elem.id}`,
+        socialTitle: elem.data.args.title || "",
+        socialDescription: elem.data.args.description || "",
+        socialImageLink: "", //FIXME
+      };
     case DynamicLinkType.ProposalComment:
       elem = elem as DiscussionMessage;
 
@@ -66,14 +65,12 @@ const getLinkMetaData = ( //FIXME: need to add an appropriate social images
     case DynamicLinkType.Discussion:
       elem = elem as Discussion;
 
-      return (
-        {
-          link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Discussion}/${elem.id}`,
-          socialTitle: elem.title || "",
-          socialDescription: elem.message.slice(0, 200) || "",
-          socialImageLink: "", //FIXME
-        }
-      );
+      return {
+        link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Discussion}/${elem.id}`,
+        socialTitle: elem.title || "",
+        socialDescription: elem.message.slice(0, 200) || "",
+        socialImageLink: "", //FIXME
+      };
     case DynamicLinkType.DiscussionMessage:
       elem = elem as DiscussionMessage;
 
@@ -83,6 +80,20 @@ const getLinkMetaData = ( //FIXME: need to add an appropriate social images
         socialDescription: elem.text || "",
         socialImageLink: "", //FIXME
       };
+    case DynamicLinkType.Support:
+      elem = elem as Common;
+
+      return {
+        link: `${DYNAMIC_LINK_URI_PREFIX}/${DynamicLinkType.Support}/${elem.id}`,
+        socialTitle: elem.name || "",
+        socialDescription: [
+          elem.byline || "",
+          "Download the Common app to join now.",
+        ]
+          .filter(Boolean)
+          .join(". "),
+        socialImageLink: elem.image || "",
+      };
     default:
       return null;
   }
@@ -91,7 +102,7 @@ const getLinkMetaData = ( //FIXME: need to add an appropriate social images
 const useBuildShareLink = (
   linkType: DynamicLinkType,
   elem: Common | Proposal | Discussion | DiscussionMessage,
-  setLinkURL: (linkURL: string) => void,
+  setLinkURL: (linkURL: string) => void
 ): BuildShareLinkReturn => {
   const linkMetaData = getLinkMetaData(linkType, elem);
   const dispatch = useDispatch();
@@ -102,18 +113,10 @@ const useBuildShareLink = (
   const isLoading = Boolean(loadingShareLinks[linkKey]);
 
   const handleOpen = useCallback(() => {
-    if (
-      linkURL
-      || isLoading
-      || !linkMetaData
-    ) return;
+    if (linkURL || isLoading || !linkMetaData) return;
 
-    const {
-      link,
-      socialTitle,
-      socialDescription,
-      socialImageLink,
-    } = linkMetaData;
+    const { link, socialTitle, socialDescription, socialImageLink } =
+      linkMetaData;
 
     dispatch(
       buildShareLink.request({
@@ -131,17 +134,10 @@ const useBuildShareLink = (
         },
       })
     );
-  }, [
-    linkURL,
-    isLoading,
-    dispatch,
-    linkKey,
-    linkMetaData
-  ]);
+  }, [linkURL, isLoading, dispatch, linkKey, linkMetaData]);
 
   useEffect(() => {
-    if (isLoading || !linkURL)
-      return;
+    if (isLoading || !linkURL) return;
 
     setLinkURL(linkURL);
   }, [isLoading, linkURL, setLinkURL]);

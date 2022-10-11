@@ -1,0 +1,50 @@
+@import "../../../../../constants";
+@import "../../../../../styles/mixins";
+@import "../../../../../styles/sizes";
+
+.supporters-page-selection-button {
+  padding: 1.25rem;
+  display: flex;
+  align-self: center;
+  font-size: $moderate-small;
+  color: $secondary-blue;
+  background-color: $white;
+  border: 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.1875rem 0.5rem $shadow-2;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $light-gray-1;
+  }
+}
+
+.supporters-page-selection-button__circle {
+  position: relative;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 1.625rem;
+  border: 0.125rem solid $light-gray-2;
+  border-radius: 50%;
+}
+.supporters-page-selection-button__circle--active {
+  &:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: $purple-2;
+    border-radius: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+}
+
+@include rtl-direction {
+  .supporters-page-selection-button__circle {
+    margin-right: 0;
+    margin-left: 1.625rem;
+  }
+}

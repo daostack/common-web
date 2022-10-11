@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import PrivateRoute from "./PrivateRoute";
@@ -22,12 +22,11 @@ import {
 import { changeScreenSize, showNotification } from "@/shared/store/actions";
 import { authentificated } from "../Auth/store/selectors";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
-import { DeadSeaIntegrationContainer } from "../Integrations/containers";
 import { SubmitInvoicesContainer } from "../Invoices/containers";
 import { TrusteeContainer } from "../Trustee/containers";
 import { MyAccountContainer } from "../MyAccount/containers/MyAccountContainer";
 
-import { getNotification, selectTutorialModalState } from "@/shared/store/selectors";
+import { getNotification, selectIsRtlLanguage, selectTutorialModalState } from "@/shared/store/selectors";
 import { useModal } from "@/shared/hooks";
 import classNames from "classnames";
 import { BackgroundNotification } from "@/shared/components/BackgroundNotification";
@@ -38,14 +37,16 @@ import { parseJson } from "@/shared/utils/json";
 
 import { webviewLogin } from "../Auth/store/actions";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
-
+import config from "@/config";
 
 const App = () => {
   const dispatch = useDispatch();
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const isAuthenticated = useSelector(authentificated());
   const notification = useSelector(getNotification());
   const tutorialModalState = useSelector(selectTutorialModalState());
   const history = useHistory();
+  const { search: queryString } = history.location;
 
   const {
     isShowing: isShowingNotification,
@@ -110,6 +111,16 @@ const App = () => {
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    const classNameToAdd = isRtlLanguage ? "direction--rtl" : "direction--ltr";
+    const classNameToRemove = isRtlLanguage
+      ? "direction--ltr"
+      : "direction--rtl";
+
+    document.body.classList.remove(classNameToRemove);
+    document.body.classList.add(classNameToAdd);
+  }, [isRtlLanguage]);
+
   const closeNotificationHandler = useCallback(() => {
     closeNotification();
     dispatch(showNotification(null));
@@ -153,11 +164,6 @@ const App = () => {
               exact
               component={ContactUsContainer}
             />
-            <Route
-              path={ROUTE_PATHS.DEAD_SEA}
-              exact
-              component={DeadSeaIntegrationContainer}
-            />
             <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
             <PrivateRoute
               path={ROUTE_PATHS.PROPOSAL_DETAIL}
@@ -194,6 +200,20 @@ const App = () => {
               component={SubmitInvoicesContainer}
             />
             <Route path={ROUTE_PATHS.TRUSTEE} component={TrusteeContainer} />
+            <Redirect
+              from={ROUTE_PATHS.DEAD_SEA}
+              to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
+                ":id",
+                config.deadSeaCommonId
+              )}${queryString}`}
+            />
+            <Redirect
+              from={ROUTE_PATHS.PARENTS_FOR_CLIMATE}
+              to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
+                ":id",
+                config.parentsForClimateCommonId
+              )}${queryString}`}
+            />
             <Route component={NotFound} />
           </Switch>
         </Content>
