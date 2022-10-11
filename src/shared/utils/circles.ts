@@ -1,9 +1,15 @@
 import { Circle } from "../models";
 
-export const getCirclesNames = (circles: Circle[] | null, circleIds?: string[]): string => {
-  if(!circles || !circleIds) {
-    return '';
+export const getFilteredByIdCircles = (
+  circles: Circle[] | null,
+  circleIds?: string[]
+): Circle[] => {
+  if (!circles || circles.length === 0) {
+    return [];
   }
-  
-  return (circles ?? [])?.filter(({id}) => circleIds?.includes(id)).map(({name}) => name).join(', ')
+  if (!circleIds || circleIds.length === 0) {
+    return [...circles];
+  }
+
+  return circles.filter(({ id }) => circleIds.includes(id));
 };

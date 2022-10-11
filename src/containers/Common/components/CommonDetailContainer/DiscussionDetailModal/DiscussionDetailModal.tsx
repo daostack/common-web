@@ -11,14 +11,18 @@ import {
   Governance,
   isDiscussionWithHighlightedMessage,
 } from "@/shared/models";
-import { getDaysAgo, getUserName } from "@/shared/utils";
+import {
+  getCirclesWithLowestTier,
+  getDaysAgo,
+  getUserName,
+} from "@/shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { addMessageToDiscussion } from "@/containers/Common/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize, ChatType } from "@/shared/constants";
 import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
-import { getCirclesNames } from "@/shared/utils/circles";
+import { getFilteredByIdCircles } from "@/shared/utils/circles";
 import "./index.scss";
 
 interface DiscussionDetailModalProps {
@@ -57,11 +61,16 @@ export default function DiscussionDetailModal({
   useEffect(() => {
     if(discussion?.circleVisibility) {
       (async () => {
-        const governanceCircles = await getCommonGovernanceCircles(governance.id);
-        const names = getCirclesNames(
+        const governanceCircles = await getCommonGovernanceCircles(
+          governance.id
+        );
+        const filteredByIdCircles = getFilteredByIdCircles(
           governanceCircles ? Object.values(governanceCircles) : null,
           discussion?.circleVisibility
         );
+        const names = getCirclesWithLowestTier(filteredByIdCircles)
+          .map(({ name }) => name)
+          .join(", ");
         setCircleNames(names);
       })();
     }
