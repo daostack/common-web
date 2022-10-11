@@ -1,8 +1,5 @@
 import { Circle } from "@/shared/models";
-import {
-  getCirclesWithHighestTier,
-  getCirclesWithLowestTier,
-} from "./circlesHierarchy";
+import { getCirclesWithHighestTier, getCirclesWithLowestTier } from "./circles";
 
 describe("circlesHierarchy", () => {
   const CIRCLES: Pick<Circle, "name" | "hierarchy">[] = [

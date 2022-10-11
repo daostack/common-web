@@ -15,4 +15,4 @@ export * from "./timeAgo";
 export * from "./transformFirebaseDataToModel";
 export * from "./roles";
 export * from "./checkIsIFrame";
-export * from "./circlesHierarchy";
+export * from "./circles";
