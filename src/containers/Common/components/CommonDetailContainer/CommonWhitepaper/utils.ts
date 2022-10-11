@@ -1,5 +1,6 @@
 import { Circles } from "@/shared/models";
 import { BaseProposal } from "@/shared/models/governance/proposals";
+import { getCirclesWithLowestTier } from "@/shared/utils";
 
 export const generateCirclesBinaryNumber = (circles: number[]) => {
   const circlesSet = new Set(circles);
@@ -17,20 +18,18 @@ export const calculateVoters = (
   weights: BaseProposal["global"]["weights"],
   circles?: Circles
 ) => {
-  const binaryCircles = circles
-    ? Object.entries(circles).map(([circleIndex, circle]) => ({
-        name: circle.name,
-        binary: generateCirclesBinaryNumber([Number(circleIndex)]),
-      }))
+  const filteredCircles = circles
+    ? Object.entries(circles)
+        .filter(([circleIndex]) =>
+          weights?.some(
+            ({ circles }) =>
+              circles.bin & generateCirclesBinaryNumber([Number(circleIndex)])
+          )
+        )
+        .map(([, circle]) => circle)
     : [];
 
-  const voters = binaryCircles
-    .filter(({ binary }) =>
-      weights?.some(({ circles }) => circles.bin & binary)
-    )
-    .map(({ name }) => name);
-
-  return voters;
+  return getCirclesWithLowestTier(filteredCircles).map(({ name }) => name);
 };
 
 
