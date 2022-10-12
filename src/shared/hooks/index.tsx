@@ -19,5 +19,6 @@ export { default as useRemoveQueryParams } from "./useRemoveQueryParams";
 export { default as useNotification } from "./useNotification";
 export { default as useBuildShareLink } from "./useBuildShareLink";
 export { default as usePrevious } from "./usePrevious";
-export { default as useIntersection } from "./useIntersection";
+export { default as useIntersection } from './useIntersection';
+export { default as useScreenSize } from './useScreenSize';
 export { useLanguage } from "./useLanguage";
