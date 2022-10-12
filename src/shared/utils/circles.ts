@@ -67,3 +67,29 @@ export const getCirclesWithLowestTier = <T extends Pick<Circle, "hierarchy">>(
 
   return finalCircles;
 };
+
+export const addCirclesWithHigherTier = <
+  T extends Pick<Circle, "id" | "hierarchy">
+>(
+  currentCircles: T[],
+  allCircles: T[]
+): T[] =>
+  allCircles.filter((circleToCheck) => {
+    const isInCurrentCircles = currentCircles.some(
+      (circle) => circle.id === circleToCheck.id
+    );
+    if (isInCurrentCircles) {
+      return true;
+    }
+    if (!circleToCheck.hierarchy) {
+      return false;
+    }
+
+    return currentCircles.some(
+      (circle) =>
+        circle.hierarchy &&
+        circleToCheck.hierarchy &&
+        circle.id !== circleToCheck.id &&
+        circle.hierarchy.tier < circleToCheck.hierarchy.tier
+    );
+  });

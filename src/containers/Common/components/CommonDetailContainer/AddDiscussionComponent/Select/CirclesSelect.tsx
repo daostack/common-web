@@ -7,7 +7,7 @@ import { ErrorText } from "@/shared/components/Form/ErrorText";
 import { Colors } from '@/shared/constants';
 import './index.scss';
 
-type CircleSelectType = SelectType<Circle>;
+export type CircleSelectType = SelectType<Circle>;
 
 interface CirclesSelectProps {
   placeholder?: string;
