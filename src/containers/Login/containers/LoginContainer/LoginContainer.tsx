@@ -40,6 +40,7 @@ import {
 import { getAuthCode } from "./helpers";
 import { matchRoute } from "@/shared/utils";
 import { ROUTE_PATHS } from "@/shared/constants";
+import { setTutorialModalState } from "@/shared/store/actions";
 
 import "./index.scss";
 
@@ -82,6 +83,9 @@ const LoginContainer: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
+    if(stage === AuthStage.CompleteAccountDetails) {
+      dispatch(setTutorialModalState({ isShowing: true }));
+    }
     if (matchRoute(location.pathname, ROUTE_PATHS.HOME, { exact: true })) {
       history.push(ROUTE_PATHS.COMMON_LIST);
     }

@@ -24,6 +24,9 @@ const initialState: SharedStateType = {
   footer: {
     shouldHideFooter: null,
   },
+  tutorialModalState: {
+    isShowing: false,
+  },
   language: Language.English,
   isRtlLanguage: false,
 };
@@ -113,6 +116,11 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.footer,
         ...action.payload,
       };
+    })
+  )
+  .handleAction(actions.setTutorialModalState, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.tutorialModalState = action.payload;
     })
   )
   .handleAction(actions.changeLanguage, (state, action) =>
