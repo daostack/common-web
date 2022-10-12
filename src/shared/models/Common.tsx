@@ -142,7 +142,7 @@ export interface CommonMemberPreviewInfo {
     id: string;
     name: string;
     circles: Circles;
-    circlesMap: CirclesMap;
+    circlesMap: CirclesMap["map"];
   }[];
   introToCommon?: string;
 }

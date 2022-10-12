@@ -1,7 +1,11 @@
 import React, { FC, memo } from "react";
 import { useSelector } from "react-redux";
 import { CommonMemberWithUserInfo } from "@/shared/models";
-import { getCirclesWithHighestTier, getUserName } from "@/shared/utils";
+import {
+  getCirclesWithHighestTier,
+  getFilteredByIdCircles,
+  getUserName,
+} from "@/shared/utils";
 import { selectGovernance } from "../../../store/selectors";
 import CommonMember from "./CommonMemberComponent";
 
@@ -18,8 +22,9 @@ const MembersList: FC<MembersListComponentProps> = ({ members, commonId }) => {
     <ul className="members__section__members-list">
       {members.map((member) => {
         const memberCircleIds = Object.values(member.circles.map);
-        const memberCircles = governanceCircles.filter((circle) =>
-          memberCircleIds.includes(circle.id)
+        const memberCircles = getFilteredByIdCircles(
+          governanceCircles,
+          memberCircleIds
         );
         const circlesString = getCirclesWithHighestTier(memberCircles)
           .map((circle) => circle.name)

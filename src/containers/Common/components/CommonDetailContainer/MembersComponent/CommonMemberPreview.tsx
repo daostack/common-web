@@ -4,7 +4,10 @@ import { CommonMemberPreviewInfo, CommonMemberWithUserInfo } from "@/shared/mode
 import { getCommonMemberInfo } from "@/containers/Common/store/api";
 import { getCountryNameFromCode } from "@/shared/assets/countries";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { getCirclesNames } from "@/shared/utils/circles";
+import {
+  getCirclesWithHighestTier,
+  getFilteredByIdCircles,
+} from "@/shared/utils/circles";
 import "./common-member-preview.scss"
 
 interface CommonMemberPreview {
@@ -39,7 +42,15 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     }
 
     return previewInfo.commons.map((common) => {
-      const userCircleNames = getCirclesNames(Object.values(common.circles || {}), Object.values(common.circlesMap || {}) as string[]);
+      const governanceCircles = Object.values(common.circles || {});
+      const circleIds = Object.values(common.circlesMap || {});
+      const filteredByIdCircles = getFilteredByIdCircles(
+        governanceCircles,
+        circleIds
+      );
+      const userCircleNames = getCirclesWithHighestTier(filteredByIdCircles)
+        .map(({ name }) => name)
+        .join(", ");
 
       return { ...common, userCircleNames };
     });
@@ -59,7 +70,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     if(isLoading) {
       return <Loader />
     }
-    
+
 
     return (
       <>
