@@ -127,6 +127,7 @@
       margin: 0;
 
       .members__section__common-member {
+        cursor: pointer;
         box-shadow: 0rem 0.25rem 0.25rem 0rem $box-shadow-color;
         padding-bottom: 0.25rem;
         display: flex;

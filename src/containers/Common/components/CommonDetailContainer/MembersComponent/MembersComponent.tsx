@@ -71,7 +71,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
   const renderTab = useCallback((activeMenuItem: MemberListTab) => {
     switch (activeMenuItem) {
       case MemberListTab.Members:
-        return <MembersList members={sortedCommonMembers} />;
+        return <MembersList members={sortedCommonMembers} commonId={common.id} />;
 
       case MemberListTab.Pending:
         return <ProposalsList proposals={pendingProposals} emptyText={"No pending proposals"} />;
@@ -82,7 +82,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
       default:
         return null;
     }
-  }, [sortedCommonMembers, pendingProposals, historyProposals]);
+  }, [sortedCommonMembers, pendingProposals, historyProposals, common.id]);
 
   useEffect(() => {
     fetchCommonMembers(common.id);

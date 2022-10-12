@@ -7,9 +7,10 @@ import { useSelector } from "react-redux";
 
 interface MembersListComponentProps {
     members: CommonMemberWithUserInfo[];
+    commonId: string;
 }
 
-const MembersList: FC<MembersListComponentProps> = ({ members }) => {
+const MembersList: FC<MembersListComponentProps> = ({ members, commonId }) => {
     const governance = useSelector(selectGovernance());
 
     return <ul className="members__section__members-list">
@@ -33,11 +34,12 @@ const MembersList: FC<MembersListComponentProps> = ({ members }) => {
                 memberName={memberName}
                 avatar={member.user.photoURL}
                 joinedAt={member.joinedAt}
+                member={member}
+                commonId={commonId}
               />
             );
         })}
     </ul>
 }
-
 
 export default memo(MembersList);

@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import {
   AllowedActions,
   AllowedProposals,
+  Circles,
   CirclesMap,
 } from "./governance/Circles";
 import { Reputation } from "./governance/Reputation";
@@ -134,6 +135,16 @@ export interface CommonMember {
 
 export interface CommonMemberWithUserInfo extends CommonMember {
   user: User;
+}
+
+export interface CommonMemberPreviewInfo {
+  commons: {
+    id: string;
+    name: string;
+    circles: Circles;
+    circlesMap: CirclesMap;
+  }[];
+  introToCommon?: string;
 }
 
 export interface CommonLink {
