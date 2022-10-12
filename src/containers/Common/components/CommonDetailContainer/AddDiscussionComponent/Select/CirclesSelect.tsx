@@ -40,7 +40,6 @@ export const CirclesSelect = ({options, handleChange, value, placeholder, error,
         onChange={handleChange}
         onBlur={onBlur}
         hideSelectedOptions={false}
-        menuPortalTarget={document.body}
         styles={{
           menu: (provided) => ({ ...provided, zIndex: 10000}),
           menuPortal: (provided) => ({...provided, zIndex: 10000}),
