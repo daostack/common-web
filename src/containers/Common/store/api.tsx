@@ -54,7 +54,6 @@ import {
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { NotificationItem } from "@/shared/models/Notification";
-import { getCirclesNames } from "@/shared/utils/circles";
 
 export async function createGovernance(
   requestData: CreateGovernancePayload
@@ -750,8 +749,7 @@ export const getCommonMemberInfo = async (
   const commonsWithCirclesInfo = await Promise.all(commons.map(async ({id, name}) => {
     const [commonMemberInfo, governance] = await Promise.all([getCommonMember(commonId, userId), getGovernanceByCommonId(commonId)]);
 
-    const userCircleNames = getCirclesNames(Object.values(governance?.circles || {}), Object.values(commonMemberInfo?.circles.map || {}) as string[] );
-    return { id, name, userCircleNames };
+    return { id, name, circles: governance?.circles, circlesMap: commonMemberInfo?.circles.map };
   }));
   const proposal = await fetchUserMemberAdmittanceProposalWithCommonId(userId, commonId);
 

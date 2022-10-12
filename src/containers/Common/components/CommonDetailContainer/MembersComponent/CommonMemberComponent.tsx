@@ -1,9 +1,10 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import firebase from "firebase/app";
 import { v4 } from "uuid";
 import { CommonMemberWithUserInfo } from "@/shared/models";
 import { UserAvatar } from "../../../../../shared/components";
 import { CommonMemberPreview } from "./CommonMemberPreview";
+import { useModal } from "@/shared/hooks";
 
 interface CommonMemberProps {
     circles: string;
@@ -15,19 +16,11 @@ interface CommonMemberProps {
 }
 
 const CommonMember: FC<CommonMemberProps> = ({ member, commonId, circles, memberName, avatar, joinedAt }) => {
-    const [isShowingPreview, setShowingPreview] = useState(false);
-    
-    const handleOpenPreview = () => {
-        setShowingPreview(true); 
-    }
-
-    const handleClosePreview = () => {
-        setShowingPreview(false);
-    } 
+    const { isShowing, onClose, onOpen } = useModal(false);
 
     return (
         <>
-            <li key={v4()} onClick={handleOpenPreview} className="members__section__common-member" >
+            <li key={v4()} onClick={onOpen} className="members__section__common-member" >
                 <div className="members__section__common-member-details">
                     <UserAvatar photoURL={avatar} className="members__section__common-member-avatar" />
                     <div className="members__section__common-member-text-container">
@@ -43,11 +36,11 @@ const CommonMember: FC<CommonMemberProps> = ({ member, commonId, circles, member
                 circles={circles}
                 memberName={memberName}
                 avatar={avatar}
-                isShowing={isShowingPreview}
+                isShowing={isShowing}
                 commonId={commonId}
                 country={member.user.country}
                 about={member.user.intro}
-                onClose={handleClosePreview}
+                onClose={onClose}
             />
         </>
     )

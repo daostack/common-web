@@ -3,8 +3,8 @@
 .common-member-preview {
   height: fit-content;
   width: 100%;
-  max-height: 560px;
-  max-width: 510px;
+  max-height: 35rem;
+  max-width: 31.875rem;
 }
 
 .common-member-preview__container {
@@ -21,8 +21,8 @@
 
 .common-member-preview__container__header__avatar {
   margin-right: 1.5rem;
-  height: 80px;
-  width: 80px;
+  height: 5rem;
+  width: 5rem;
 }
 
 .common-member-preview__container__header__user-info {
@@ -30,7 +30,7 @@
 }
 
 .common-member-preview__container__header__user-info__name {
-  font-family: "NunitoSans";
+  font-family: NunitoSans, sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: $moderate-small;
@@ -38,7 +38,7 @@
 }
 
 .common-member-preview__container__header__user-info__subtitle {
-  font-family: "NunitoSans";
+  font-family: NunitoSans, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: $xsmall;
@@ -50,7 +50,7 @@
 }
 
 .common-member-preview__section-title {
-  font-family: "NunitoSans";
+  font-family: NunitoSans, sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: $small;
@@ -59,7 +59,7 @@
 }
 
 .common-member-preview__info {
-  font-family: "NunitoSans";
+  font-family: NunitoSans, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: $small;
@@ -68,10 +68,10 @@
 }
 
 .common-member-preview__common-name-link {
-  font-family: "NunitoSans";
+  font-family: NunitoSans, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: $small;
-  line-height: 20px;
+  line-height: 1.25rem;
   color: $purple-2;
 }

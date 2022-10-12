@@ -1394,10 +1394,10 @@ export const getCountryCodeFromName = (name: string) => {
   return countryObj?.value;
 };
 
-export const getCountryNameFromCode = (code: string) => {
+export const getCountryNameFromCode = (code: string): string => {
   const countryObj = countryList.find((x) => x.value === code);
 
-  return countryObj?.name;
+  return countryObj?.name || '';
 };
 
 export const UNKNOWN_COUNTRY = "Unknown";

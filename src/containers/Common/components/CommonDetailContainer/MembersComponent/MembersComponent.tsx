@@ -82,7 +82,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
       default:
         return null;
     }
-  }, [sortedCommonMembers, pendingProposals, historyProposals]);
+  }, [sortedCommonMembers, pendingProposals, historyProposals, common.id]);
 
   useEffect(() => {
     fetchCommonMembers(common.id);
