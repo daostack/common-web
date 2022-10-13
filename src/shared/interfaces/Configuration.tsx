@@ -14,6 +14,7 @@ export interface Configuration {
   cloudFunctionUrl: string;
   deadSeaCommonId: string;
   parentsForClimateCommonId: string;
+  saadiaCommonId: string;
 }
 
 export type ConfigurationObject = Record<Environment, Configuration>;

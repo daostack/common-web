@@ -214,6 +214,13 @@ const App = () => {
                 config.parentsForClimateCommonId
               )}${queryString}`}
             />
+            <Redirect
+              from={ROUTE_PATHS.SAADIA}
+              to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
+                ":id",
+                config.saadiaCommonId
+              )}${queryString}`}
+            />
             <Route component={NotFound} />
           </Switch>
         </Content>
