@@ -748,7 +748,7 @@ export const getCommonMemberInfo = async (
   const userCommons = await getUserCommons(userId);
   const commons = userCommons.filter(({id}) => id !== commonId)
   const commonsWithCirclesInfo = await Promise.all(commons.map(async ({id, name}) => {
-    const [commonMemberInfo, governance] = await Promise.all([getCommonMember(commonId, userId), getGovernanceByCommonId(commonId)]);
+    const [commonMemberInfo, governance] = await Promise.all([getCommonMember(id, userId), getGovernanceByCommonId(id)]);
 
     return { id, name, circles: governance?.circles, circlesMap: commonMemberInfo?.circles.map };
   }));
