@@ -215,7 +215,7 @@ const App = () => {
               )}${queryString}`}
             />
             <Redirect
-              from={ROUTE_PATHS.SAADIA}
+              from={ROUTE_PATHS.SAVE_SAADIA}
               to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
                 ":id",
                 config.saadiaCommonId
