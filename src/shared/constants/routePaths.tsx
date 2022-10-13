@@ -22,5 +22,5 @@ export enum ROUTE_PATHS {
   DISCUSSION_MESSAGE = "/discussion-messages/:id",
   DEAD_SEA = "/dead-sea",
   PARENTS_FOR_CLIMATE = "/parents-for-climate",
-  SAADIA = "/saadia",
+  SAVE_SAADIA = "/save-saadia",
 }
