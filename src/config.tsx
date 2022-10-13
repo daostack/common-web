@@ -26,6 +26,7 @@ export const local: Configuration = {
   cloudFunctionUrl: "http://localhost:5003/common-dev-dea4e/us-central1",
   deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
   parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  saadiaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
 };
 
 const dev: Configuration = {
@@ -42,6 +43,7 @@ const dev: Configuration = {
   cloudFunctionUrl: "https://us-central1-common-dev-dea4e.cloudfunctions.net",
   deadSeaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
   parentsForClimateCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
+  saadiaCommonId: "958dca85-7bc1-4714-95bd-1fc6343f0654",
 };
 
 const stage: Configuration = {
@@ -59,6 +61,7 @@ const stage: Configuration = {
     "https://us-central1-common-staging-50741.cloudfunctions.net",
   deadSeaCommonId: "a55a1e9b-104a-4866-9f4f-3e017bbae281",
   parentsForClimateCommonId: "a55a1e9b-104a-4866-9f4f-3e017bbae281",
+  saadiaCommonId: "a55a1e9b-104a-4866-9f4f-3e017bbae281",
 };
 
 const production: Configuration = {
@@ -75,6 +78,7 @@ const production: Configuration = {
   cloudFunctionUrl: "https://us-central1-common-daostack.cloudfunctions.net",
   deadSeaCommonId: "e5546b0d-52ef-44da-9a7d-f1104d869880",
   parentsForClimateCommonId: "04ac2ec2-5cb2-4ab9-ae3f-5f223f482768",
+  saadiaCommonId: "7c8c8996-b678-44df-9a57-e291431eb00f",
 };
 
 const config: ConfigurationObject = {
