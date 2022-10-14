@@ -285,7 +285,7 @@ export default function ChatComponent({
               <span className="text">Only members can send messages</span>
             ) : (
               <>
-                <input
+                <textarea
                   className="message-input"
                   placeholder="What do you think?"
                   value={message}

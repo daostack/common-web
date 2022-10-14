@@ -96,6 +96,7 @@
             font-size: $small;
             color: #001a36;
             word-wrap: break-word;
+            white-space: pre-line;
             .time-wrapper {
               font-size: $xxxsmall;
               font-weight: bold;
@@ -201,8 +202,8 @@
 
     .message-input {
       width: 100%;
-      height: 2.5rem;
-      padding: 0.25rem 1rem;
+      height: 3rem;
+      padding: 0.75rem 1rem 0.5rem;
       border-radius: 20px;
       background-color: #f0f2ff;
       border: none;
@@ -213,6 +214,7 @@
       color: $secondary-blue;
       display: flex;
       align-items: center;
+      box-sizing: border-box;
     }
     .send {
       display: flex;
@@ -235,12 +237,12 @@
   }
 
   .bottom-chat-wrapper__fixed {
-    position: fixed; 
-    width: calc(100% - 148px); 
-    left: 76px; 
+    position: fixed;
+    width: calc(100% - 148px);
+    left: 76px;
     margin-bottom: 0;
     @include big-phone {
-      width: calc(100% - 62px); 
+      width: calc(100% - 62px);
       left: 0px;
       margin-inline: 0px;
     }
