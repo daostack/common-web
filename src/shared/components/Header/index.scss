@@ -96,11 +96,6 @@
     }
   }
 
-  .mobile-links-container {
-    margin-left: auto;
-    white-space: nowrap;
-  }
-
   .header-wrapper__language-dropdown-wrapper {
     width: 100%;
     border-top: 1px solid $light-gray-1;
@@ -126,10 +121,6 @@
         font-size: $small;
         margin-right: 1.875rem;
       }
-    }
-
-    .mobile-links-container {
-      display: none;
     }
   }
 

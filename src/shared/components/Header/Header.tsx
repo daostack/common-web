@@ -17,12 +17,10 @@ import {
   selectAreReportsLoading,
   selectHeader,
 } from "@/shared/store/selectors";
-import { ApiEndpoint, Colors, HEADER_MOBILE_SCREEN_SIZE, ROUTE_PATHS } from "../../constants";
+import { ApiEndpoint, HEADER_MOBILE_SCREEN_SIZE, ROUTE_PATHS } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
 import { getUserName, isMobile, saveByURL } from "../../utils";
-import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
-import MobileLinks from "../MobileLinks/MobileLinks";
 import { Account } from "../Account";
 import {
   authentificated,
@@ -81,8 +79,6 @@ const Header = () => {
   const shouldHideHeader = sharedHeaderState.shouldHideHeader ?? false;
   const shouldShowMenuItems =
     sharedHeaderState.shouldShowMenuItems ?? !isTrusteeRoute;
-  const shouldShowDownloadLinks =
-    sharedHeaderState.shouldShowDownloadLinks ?? !isTrusteeRoute;
   const shouldShowAuth = sharedHeaderState.shouldShowAuth ?? !isTrusteeRoute;
   const shouldShowLanguageDropdown = isHomeRoute || isContactUsRoute;
 
@@ -236,11 +232,6 @@ const Header = () => {
               hasAdminAccess={hasAdminAccess}
             />
           )}
-          {!isAuthorized && shouldShowDownloadLinks ? (
-            <div className="mobile-links-container">
-              <MobileLinks color={Colors.black} />
-            </div>
-          ) : null}
         </>
       ) : (
         <>
@@ -253,14 +244,6 @@ const Header = () => {
           </div>
           {showMenu && (
             <div className="menu-wrapper">
-              {shouldShowDownloadLinks && (
-                <DownloadCommonApp
-                  setHasClosedPopup={() => {
-                    return true;
-                  }}
-                  inMenu={true}
-                />
-              )}
               {links}
             </div>
           )}

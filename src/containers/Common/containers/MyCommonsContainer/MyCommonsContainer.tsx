@@ -3,9 +3,8 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { Loader } from "@/shared/components";
-import DownloadCommonApp from "@/shared/components/DownloadCommonApp/DownloadCommonApp";
 import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
-import { checkIsCountdownState, isMobile } from "@/shared/utils";
+import { checkIsCountdownState } from "@/shared/utils";
 import "./index.scss";
 import { Common } from "@/shared/models";
 import { getLoading } from "@/shared/store/selectors";
@@ -70,9 +69,6 @@ export default function MyCommonsContainer() {
 
   return (
     <div className="content-element my-commons-wrapper">
-      {isMobile() && !hasClosedPopup && (
-        <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />
-      )}
       <div className="page-top-wrapper">
         <h1 className="page-title">My Commons</h1>
         {myCommons.length || pendingCommons.length ? (

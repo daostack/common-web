@@ -8,10 +8,8 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import { CommonRegistered } from "@/shared/models";
 import { Loader } from "@/shared/components";
-import DownloadCommonApp from "@/shared/components/DownloadCommonApp/DownloadCommonApp";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { getLoading } from "@/shared/store/selectors";
-import { isMobile } from "@/shared/utils";
 import {
   CreateCommonButton,
   CommonListItem,
@@ -88,9 +86,6 @@ export default function CommonListContainer() {
   // See https://github.com/daostack/common-monorepo/issues/691 - the field might change in the new DB
   return (
     <div className="content-element common-list-wrapper">
-      {isMobile() && !hasClosedPopup && (
-        <DownloadCommonApp setHasClosedPopup={setHasClosedPopup} />
-      )}
       <div className="title-wrapper">
         <h1 className="page-title">Featured Commons</h1>
         <CreateCommonButton onClick={onOpen} />
