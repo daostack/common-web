@@ -31,7 +31,8 @@
         }
       }
     }
-    &.rejected {
+    &.rejected,
+    &.canceled {
       .state-inner-wrapper {
         background: $light-red;
         .state-name {
