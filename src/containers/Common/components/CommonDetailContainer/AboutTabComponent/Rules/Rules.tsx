@@ -1,4 +1,5 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useMemo, useState } from "react";
+import { ButtonLink } from "@/shared/components";
 import { UnstructuredRules } from "@/shared/models";
 import "./index.scss";
 
@@ -6,13 +7,25 @@ interface CommonRulesProps {
   rules: UnstructuredRules;
 }
 
+const DEFAULT_RULES_TO_DISPLAY_AMOUNT = 2;
+
 const CommonRules: FC<CommonRulesProps> = (props) => {
   const { rules } = props;
-  const currentRules = useMemo(() => rules.slice(0, 2), [rules]);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const currentRules = useMemo(
+    () =>
+      isExpanded ? rules : rules.slice(0, DEFAULT_RULES_TO_DISPLAY_AMOUNT),
+    [rules, isExpanded]
+  );
+  const shouldShowToggleButton = rules.length > DEFAULT_RULES_TO_DISPLAY_AMOUNT;
 
   if (currentRules.length === 0) {
     return null;
   }
+
+  const toggleRules = () => {
+    setIsExpanded((value) => !value);
+  };
 
   return (
     <div className="about-tab-common-rules">
@@ -28,6 +41,14 @@ const CommonRules: FC<CommonRulesProps> = (props) => {
           </li>
         ))}
       </ul>
+      {shouldShowToggleButton && (
+        <ButtonLink
+          className="about-tab-common-rules__see-more-button"
+          onClick={toggleRules}
+        >
+          See {isExpanded ? "less <" : "more >"}
+        </ButtonLink>
+      )}
     </div>
   );
 };
