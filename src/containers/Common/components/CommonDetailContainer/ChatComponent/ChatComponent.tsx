@@ -112,7 +112,7 @@ export default function ChatComponent({
   const sendChatMessage = (): void => {
     if(message) {
       setIsNewMessageLoading(true);
-      sendMessage && sendMessage(message);
+      sendMessage && sendMessage(message.trim());
       setMessage("");
     }
   }
