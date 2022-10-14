@@ -118,10 +118,10 @@ export default function ChatComponent({
   }
 
   const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
-    if(event.key === KeyboardKeys.Enter) {
+    if (event.key === KeyboardKeys.Enter && (event.ctrlKey || event.metaKey)) {
       sendChatMessage();
     }
-  }
+  };
 
   useEffect(() => {
     if (!highlightedMessageId)
