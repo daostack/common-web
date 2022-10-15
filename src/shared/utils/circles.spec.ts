@@ -29,6 +29,16 @@ describe("circlesHierarchy", () => {
   ];
 
   describe("getCirclesWithHighestTier", () => {
+    it("should return correct circles when there are no circles with hierarchy", () => {
+      const circlesToCheck = [
+        CIRCLES_WITHOUT_EXCLUSION[1],
+        CIRCLES_WITHOUT_EXCLUSION[3],
+        CIRCLES_WITHOUT_EXCLUSION[6],
+      ];
+
+      expect(getCirclesWithHighestTier(circlesToCheck)).toEqual(circlesToCheck);
+    });
+
     it("should return correct circles when without exclusion", () => {
       const expectedResult = [
         CIRCLES_WITHOUT_EXCLUSION[1],
