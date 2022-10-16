@@ -22,8 +22,6 @@ import {
 } from "@/shared/hooks";
 import { copyToClipboard } from "@/shared/utils";
 import { getScreenSize } from "@/shared/store/selectors";
-import ShareIcon from "@/shared/icons/share.icon";
-import CopyLinkIcon from "@/shared/icons/copyLink.icon";
 import {
   Common,
   Proposal,
@@ -211,7 +209,9 @@ const ElementDropdown: FC<ElementDropdownProps> = (
             menuButton: classNames({
               "element-dropdown__menu-button--transparent": transparent,
             }),
-            menu: "element-dropdown__menu",
+            menu: classNames("element-dropdown__menu", {
+              'element-dropdown__extended-menu': isDiscussionMessage
+            }),
             menuItem: "element-dropdown__menu-item"
           }
         }

@@ -3,12 +3,16 @@
 .element-dropdown__menu-wrapper {
   .element-dropdown__menu {
     width: 10rem;
-    height: 16.875rem;
+    height: 5.625rem;
     right: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     border-radius: 0.5rem;
+  }
+
+  .element-dropdown__extended-menu {
+    height: 16.875rem;
   }
 
   .element-dropdown__menu-item {
