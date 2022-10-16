@@ -120,13 +120,53 @@ describe("circlesHierarchy", () => {
   });
 
   describe("addCirclesWithHigherTier", () => {
-    it("should return correct circles", () => {
-      const currentCircles = [CIRCLES_WITHOUT_EXCLUSION[2], CIRCLES_WITHOUT_EXCLUSION[4]];
-      const expectedResult = [CIRCLES_WITHOUT_EXCLUSION[2], CIRCLES_WITHOUT_EXCLUSION[3], CIRCLES_WITHOUT_EXCLUSION[4]];
+    const CIRCLES_WITH_EXCLUSION: Pick<Circle, "id" | "name" | "hierarchy">[] = [
+      { id: "circle-0", name: "Circle 0", hierarchy: { tier: 10, exclusions: [] } },
+      { id: "circle-1", name: "Circle 1", hierarchy: null },
+      { id: "circle-2", name: "Circle 2", hierarchy: { tier: 0, exclusions: [] } },
+      { id: "circle-3", name: "Circle 3", hierarchy: null },
+      { id: "circle-4", name: "Circle 4", hierarchy: { tier: 20, exclusions: [] } },
+      { id: "circle-5", name: "Circle 5", hierarchy: { tier: 10, exclusions: [20] } },
+      { id: "circle-6", name: "Circle 6", hierarchy: null },
+      { id: "circle-7", name: "Circle 7", hierarchy: { tier: 0, exclusions: [] } },
+      { id: "circle-8", name: "Circle 8", hierarchy: { tier: 20, exclusions: [] } },
+    ];
 
-      expect(addCirclesWithHigherTier(currentCircles, CIRCLES_WITHOUT_EXCLUSION)).toEqual(
-        expectedResult
-      );
+    it("should return correct circles when without exclusion", () => {
+      const currentCircles = [
+        CIRCLES_WITHOUT_EXCLUSION[2],
+        CIRCLES_WITHOUT_EXCLUSION[4],
+      ];
+      const expectedResult = [
+        CIRCLES_WITHOUT_EXCLUSION[0],
+        CIRCLES_WITHOUT_EXCLUSION[2],
+        CIRCLES_WITHOUT_EXCLUSION[4],
+        CIRCLES_WITHOUT_EXCLUSION[5],
+      ];
+
+      expect(
+        addCirclesWithHigherTier(currentCircles, CIRCLES_WITHOUT_EXCLUSION)
+      ).toEqual(expectedResult);
+    });
+
+    it("should return correct circles when with exclusion", () => {
+      const currentCircles = [
+        CIRCLES_WITH_EXCLUSION[1],
+        CIRCLES_WITH_EXCLUSION[2],
+        CIRCLES_WITH_EXCLUSION[5],
+      ];
+      const expectedResult = [
+        CIRCLES_WITH_EXCLUSION[0],
+        CIRCLES_WITH_EXCLUSION[1],
+        CIRCLES_WITH_EXCLUSION[2],
+        CIRCLES_WITH_EXCLUSION[4],
+        CIRCLES_WITH_EXCLUSION[5],
+        CIRCLES_WITH_EXCLUSION[8],
+      ];
+
+      expect(
+        addCirclesWithHigherTier(currentCircles, CIRCLES_WITH_EXCLUSION)
+      ).toEqual(expectedResult);
     });
   });
 });

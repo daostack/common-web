@@ -116,7 +116,9 @@ export const getCirclesWithHighestTier = <
   return sortCirclesByTierAscending(uniqueCircles);
 };
 
-export const getCirclesWithLowestTier = <T extends Pick<Circle, "id" | "hierarchy">>(
+export const getCirclesWithLowestTier = <
+  T extends Pick<Circle, "id" | "hierarchy">
+>(
   circles: T[]
 ): T[] => {
   const finalCircles = circles.filter((circle) => !circle.hierarchy);
@@ -145,10 +147,7 @@ export const getCirclesWithLowestTier = <T extends Pick<Circle, "id" | "hierarch
 
   while (circlesToCheck.length > 0) {
     finalCircles.push(...circlesToCheck);
-    circlesToCheck = getExcludedCircles(
-      circlesWithHierarchy,
-      circlesToCheck
-    );
+    circlesToCheck = getExcludedCircles(circlesWithHierarchy, circlesToCheck);
   }
 
   const uniqueCircles = uniqBy(finalCircles, (circle) => circle.id);
@@ -178,6 +177,7 @@ export const addCirclesWithHigherTier = <
         circle.hierarchy &&
         circleToCheck.hierarchy &&
         circle.id !== circleToCheck.id &&
-        circle.hierarchy.tier < circleToCheck.hierarchy.tier
+        circle.hierarchy.tier < circleToCheck.hierarchy.tier &&
+        !circle.hierarchy.exclusions.includes(circleToCheck.hierarchy.tier)
     );
   });
