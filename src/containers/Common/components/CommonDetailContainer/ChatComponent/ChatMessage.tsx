@@ -67,6 +67,7 @@ export default function ChatMessage(
             variant={Orientation.Horizontal}
             onMenuToggle={onMessageDropdownOpen}
             transparent
+            isDiscussionMessage
           />
         </div>
       </div>

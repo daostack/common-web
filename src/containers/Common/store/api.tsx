@@ -336,6 +336,21 @@ export async function addMessageToDiscussion(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
+export async function deleteDiscussionMessage(
+  discussionMessageId: string
+): Promise<DiscussionMessage> {
+  const { data } = await Api.delete<DiscussionMessage>(
+    ApiEndpoint.CreateDiscussionMessage,
+    {
+      data: {
+        id: discussionMessageId,
+      }
+    }
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
 export function subscribeToCommonDiscussion(
   commonId: string,
   callback: (payload: any) => void

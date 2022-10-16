@@ -36,6 +36,7 @@ import {
   DropdownOption,
   DropdownStyles,
 } from "../Dropdown";
+import { DeleteButton } from "./DeleteButton";
 import "./index.scss";
 
 interface ElementDropdownProps {
@@ -46,6 +47,7 @@ interface ElementDropdownProps {
   className?: string;
   styles?: DropdownStyles;
   onMenuToggle?: (isOpen: boolean) => void;
+  isDiscussionMessage?: boolean;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = (
@@ -57,6 +59,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
     styles = {},
     className,
     onMenuToggle,
+    isDiscussionMessage = false
   }
 ) => {
   const screenSize = useSelector(getScreenSize());
@@ -69,50 +72,69 @@ const ElementDropdown: FC<ElementDropdownProps> = (
   const isMobileView = (screenSize === ScreenSize.Mobile);
 
   const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(
-    () =>
-      [
+    () => {
+      const generalMenuItems = [
         {
           text: (
-            <>
-              <ShareIcon className="share-icon"/>
-              <span>Share</span>
-            </>
+            <span>Share</span>
           ),
           searchText: "Share",
           value: ElementDropdownMenuItems.Share,
         },
         {
           text: (
-            <div
-              className="dropdown-copy-link"
-              onClick={() => copyToClipboard(linkURL || "")}
-            >
-              <CopyLinkIcon />
-              <span>Copy link</span>
-            </div>
+            <span>Report</span>
           ),
-          searchText: "Copy link",
-          value: ElementDropdownMenuItems.CopyLink,
+          searchText: "Report",
+          value: ElementDropdownMenuItems.Report,
         },
-        //TODO: "Reports" dev scope
-        // {
-        //   text: (
-        //     <>
-        //       <ReportIcon />
-        //       <span>Report</span>
-        //     </>
-        //   ),
-        //   searchText: "Report",
-        //   value: ElementDropdownMenuItems.Report,
-        // },
-      ],
-      [linkURL]
+      ];
+      
+      const additionalMenuItems = isDiscussionMessage ? [
+        {
+          text: (
+            <span>Delete</span>
+          ),
+          searchText: "Delete",
+          value: ElementDropdownMenuItems.Delete,
+        },
+        {
+          text: (
+            <span>Copy</span>
+          ),
+          searchText: "Copy",
+          value: ElementDropdownMenuItems.Copy,
+        },
+        {
+          text: (
+            <span>Edit</span>
+          ),
+          searchText: "Edit",
+          value: ElementDropdownMenuItems.Edit,
+        },
+        {
+          text: (
+            <span>Reply</span>
+          ),
+          searchText: "Reply",
+          value: ElementDropdownMenuItems.Reply,
+        },
+      ] : [];
+
+      console.log('---additionalMenuItems',additionalMenuItems, isDiscussionMessage);
+
+
+      return [...additionalMenuItems, ...generalMenuItems];
+    },
+      [linkURL, isDiscussionMessage]
   );
 
+  console.log('---ElementDropdownMenuItemsList',ElementDropdownMenuItemsList);
+
   const handleMenuToggle = useCallback((isOpen: boolean) => {
-    if (!linkURL) {
-      handleOpen();
+    if (linkURL) {
       setIsShareLinkGenerating(true);
+      handleOpen();
     }
 
     if (onMenuToggle)
@@ -127,6 +149,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
   const handleMenuItemSelect = useCallback((value: unknown) => {
       if (value === ElementDropdownMenuItems.Report) return; //TODO: "Reports" dev scope
 
+      console.log('--value',value)
       setSelectedItem(value);
     },
     [setSelectedItem]
@@ -140,6 +163,8 @@ const ElementDropdown: FC<ElementDropdownProps> = (
   }, [isShareLinkGenerating, setIsShareLinkGenerating, linkURL]);
 
   useEffect(() => {
+    // console.log('---selectedItem',selectedItem)
+    // TODO: Comment linkUrl
     if (
       selectedItem === null
       || isShareLinkGenerating
@@ -150,7 +175,10 @@ const ElementDropdown: FC<ElementDropdownProps> = (
       case ElementDropdownMenuItems.Share:
         onOpen();
         break;
-      case ElementDropdownMenuItems.CopyLink:
+      case ElementDropdownMenuItems.Copy:
+        notify("The link has copied!");
+        break;
+      case ElementDropdownMenuItems.Delete:
         notify("The link has copied!");
         break;
       case ElementDropdownMenuItems.Report: //TODO: "Reports" dev scope

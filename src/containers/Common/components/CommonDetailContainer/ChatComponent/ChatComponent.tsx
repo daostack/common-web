@@ -203,7 +203,6 @@ export default function ChatComponent({
                       disscussionMessage={message}
                       chatType={type}
                       highlighted={message.id === highlightedMessageId}
-                      className={classNames({"last-message-with-dropdown": message.id === lastMessageWithOpenedDropdownId })}
                       onMessageDropdownOpen={
                         (messageIndex === messages[Number(day)].length - 1)
                           ? (isOpen: boolean) => {

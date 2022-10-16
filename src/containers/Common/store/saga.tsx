@@ -35,6 +35,7 @@ import {
   subscribeToCommonProposal,
   subscribeToProposal,
   leaveCommon as leaveCommonApi,
+  deleteDiscussionMessage as deleteDiscussionMessageApi, 
   loadUserCards,
   createVote as createVoteApi,
   updateVote as updateVoteApi,
@@ -66,7 +67,7 @@ import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
 import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
-import { ImmediateContributionResponse, SubscriptionResponse } from "../interfaces";
+import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
 import { Awaited } from "@/shared/interfaces";
 import {
@@ -498,6 +499,25 @@ export function* addMessageToDiscussionSaga(
   } catch (e) {
     if (isError(e)) {
       yield put(actions.addMessageToDiscussion.failure(e));
+      yield put(stopLoading());
+    }
+  }
+}
+
+export function* deleteDiscussionMessage(
+  action: ReturnType<typeof actions.deleteDiscussionMessage.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield deleteDiscussionMessageApi(action.payload.payload.discussionMessageId);
+
+    yield put(actions.deleteDiscussionMessage.success({} as DiscussionMessage));
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.deleteDiscussionMessage.failure(error));
+      action.payload.callback(error);
       yield put(stopLoading());
     }
   }
@@ -1342,6 +1362,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.loadProposalDetail.request, loadProposalDetail);
   yield takeLatest(actions.loadUserProposalList.request, loadUserProposalList);
   yield takeLatest(actions.createDiscussion.request, createDiscussionSaga);
+  yield takeLatest(actions.deleteDiscussionMessage.request, deleteDiscussionMessage);
   yield takeLatest(
     actions.addMessageToDiscussion.request,
     addMessageToDiscussionSaga

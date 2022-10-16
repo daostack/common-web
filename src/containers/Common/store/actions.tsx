@@ -17,6 +17,7 @@ import {
   Payment,
   Subscription,
   Vote,
+  DiscussionMessage,
 } from "@/shared/models";
 import { Tabs } from "@/containers/Common";
 import { PayloadWithOptionalCallback } from "@/shared/interfaces";
@@ -40,8 +41,6 @@ import { CalculatedVotes } from "@/shared/models/governance/proposals";
 import {
   ImmediateContributionData,
   ImmediateContributionResponse,
-  SubscriptionData,
-  SubscriptionResponse,
 } from "../interfaces";
 import { ProposalsTypes } from "@/shared/constants";
 
@@ -170,6 +169,20 @@ export const addMessageToDiscussion = createAsyncAction(
     discussion: Discussion;
   },
   Discussion,
+  Error
+>();
+
+export const deleteDiscussionMessage = createAsyncAction(
+  CommonsActionTypes.DELETE_DISCUSSION_MESSAGE,
+  CommonsActionTypes.DELETE_DISCUSSION_MESSAGE_SUCCESS,
+  CommonsActionTypes.DELETE_DISCUSSION_MESSAGE_FAILURE
+)<
+  PayloadWithCallback<
+    { discussionMessageId: string; },
+    DiscussionMessage,
+    Error
+  >,
+  DiscussionMessage,
   Error
 >();
 
