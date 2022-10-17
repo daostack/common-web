@@ -178,11 +178,11 @@ export const deleteDiscussionMessage = createAsyncAction(
   CommonsActionTypes.DELETE_DISCUSSION_MESSAGE_FAILURE
 )<
   PayloadWithCallback<
-    { discussionMessageId: string; },
+    { discussionId: string; discussionMessageId: string; },
     DiscussionMessage,
     Error
   >,
-  DiscussionMessage,
+  null,
   Error
 >();
 

@@ -7,7 +7,7 @@ import {
   Separator,
   ElementDropdown,
 } from "@/shared/components";
-import { DynamicLinkType } from "@/shared/constants";
+import { DynamicLinkType, ENTITY_TYPES } from "@/shared/constants";
 import {
   VotesComponent,
   ProposalCountDown,
@@ -43,6 +43,7 @@ const FundingProposalListItem: FC<ProposalListItem> = (
           }
         </p>
         <ElementDropdown
+          entityType={ENTITY_TYPES.Proposal}
           linkType={DynamicLinkType.Proposal}
           elem={proposal}
           className="dropdown-menu"

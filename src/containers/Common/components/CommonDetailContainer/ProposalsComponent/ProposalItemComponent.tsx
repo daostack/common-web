@@ -6,7 +6,7 @@ import {
   getTextForProposalType,
   getUserName,
 } from "@/shared/utils";
-import { DynamicLinkType, ProposalsTypes } from "@/shared/constants";
+import { DynamicLinkType, ENTITY_TYPES, ProposalsTypes } from "@/shared/constants";
 import ProposalState from "../ProposalState/ProposalState";
 import { VotesComponent } from "../VotesComponent";
 import { useCommonMember } from "@/containers/Common/hooks";
@@ -49,6 +49,7 @@ export default function ProposalItemComponent({
           </div>
           <div onClick={(e) => e.stopPropagation()}>
             <ElementDropdown
+              entityType={ENTITY_TYPES.Proposal}
               linkType={DynamicLinkType.Proposal}
               elem={proposal}
               transparent

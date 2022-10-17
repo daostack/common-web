@@ -5,7 +5,7 @@ import { useFullText } from "@/shared/hooks";
 import { Discussion, Governance } from "@/shared/models";
 import { getUserName, getDaysAgo } from "@/shared/utils";
 import { ElementDropdown } from "@/shared/components";
-import { DynamicLinkType } from "@/shared/constants";
+import { DynamicLinkType, ENTITY_TYPES } from "@/shared/constants";
 import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
 import { getCirclesNames } from "@/shared/utils/circles";
 
@@ -67,6 +67,7 @@ export default function DiscussionItemComponent({
           </div>
         </div>
         <ElementDropdown
+          entityType={ENTITY_TYPES.Discussion}
           linkType={DynamicLinkType.Discussion}
           elem={discussion}
           className="dropdown-menu"

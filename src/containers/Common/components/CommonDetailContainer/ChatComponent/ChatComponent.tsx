@@ -88,7 +88,6 @@ export default function ChatComponent({
     !commonMember && !isJoiningPending && !isSubCommon;
   const messages = discussionMessages.reduce(groupday, {});
   const [isNewMessageLoading, setIsNewMessageLoading] = useState<boolean>(false);
-  const [lastMessageWithOpenedDropdownId, setLastMessageWithOpenedDropdownId] = useState<string | null>(null);
   const isMobileView = screenSize === ScreenSize.Mobile;
   const dateList = Object.keys(messages);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
@@ -205,9 +204,7 @@ export default function ChatComponent({
                       highlighted={message.id === highlightedMessageId}
                       onMessageDropdownOpen={
                         (messageIndex === messages[Number(day)].length - 1)
-                          ? (isOpen: boolean) => {
-                            setLastMessageWithOpenedDropdownId(isOpen ? message.id : null);
-
+                          ? () => {
                             if(dayIndex === dateList.length - 1)
                               scrollToContainerBottom();
                           }

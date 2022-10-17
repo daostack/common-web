@@ -465,6 +465,37 @@ export function* createDiscussionSaga(
   }
 }
 
+function* subscribeToMessageRefresh(discussionId: string) {
+  const discussion = (yield fetchDiscussionById(
+    discussionId
+  )) as Awaited<ReturnType<typeof fetchDiscussionById>>;
+
+  const unsubscribe = yield call(
+    subscribeToMessages,
+    discussionId,
+    async (data) => {
+      unsubscribe();
+
+      if(discussion) {
+        const updatedDiscussion: Discussion = {
+          ...discussion,
+          discussionMessages: data.sort(
+            (m: DiscussionMessage, mP: DiscussionMessage) =>
+              m.createdAt.seconds - mP.createdAt.seconds
+          ),
+        };
+  
+        store.dispatch(
+          actions.loadDisscussionDetail.request(updatedDiscussion)
+        );
+        store.dispatch(actions.getCommonsList.request());
+      }
+    }
+  );
+
+  return unsubscribe;
+}
+
 export function* addMessageToDiscussionSaga(
   action: ReturnType<typeof actions.addMessageToDiscussion.request>
 ): Generator {
@@ -511,7 +542,8 @@ export function* deleteDiscussionMessage(
     yield put(startLoading());
     yield deleteDiscussionMessageApi(action.payload.payload.discussionMessageId);
 
-    yield put(actions.deleteDiscussionMessage.success({} as DiscussionMessage));
+    yield put(actions.deleteDiscussionMessage.success(null));
+    yield subscribeToMessageRefresh(action.payload.payload.discussionId);
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {

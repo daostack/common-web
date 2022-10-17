@@ -94,3 +94,10 @@ export enum ChartType {
   PolarArea = "polarArea",
   Radar = "radar",
 }
+
+export enum ENTITY_TYPES {
+  Proposal = "Proposal",
+  Discussion = "Discussion",
+  Common = "Common",
+  DiscussionMessage = "DiscussionMessage",
+}

@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import { DiscussionMessage } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
-import { DynamicLinkType, Orientation, ChatType } from "@/shared/constants";
+import { DynamicLinkType, Orientation, ChatType, ENTITY_TYPES } from "@/shared/constants";
 
 interface ChatMessageProps {
   disscussionMessage: DiscussionMessage;
@@ -62,6 +62,7 @@ export default function ChatMessage(
           </div>
           <ElementDropdown
             linkType={getDynamicLinkByChatType(chatType)}
+            entityType={ENTITY_TYPES.DiscussionMessage}
             elem={disscussionMessage}
             className="dropdown-menu"
             variant={Orientation.Horizontal}
