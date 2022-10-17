@@ -3,6 +3,7 @@ import { store } from "@/shared/appConfig";
 import {
   GeneralError,
   getRandomUserAvatarURL,
+  isAcceptedFundsAllocationToSubCommonEvent,
   isError,
   tokenHandler,
   transformFirebaseDataSingle,
@@ -591,7 +592,13 @@ function* authSagas() {
           const proposal: Proposal | undefined = await getProposalById(
             data?.eventObjectId
           );
-          if (isFundsAllocationProposal(proposal)) {
+          if (
+            isFundsAllocationProposal(proposal) &&
+            !isAcceptedFundsAllocationToSubCommonEvent(
+              proposal.data.args.to,
+              data.eventType
+            )
+          ) {
             const notification = getFundingRequestNotification(data, proposal);
 
             store.dispatch(showNotification(notification));
