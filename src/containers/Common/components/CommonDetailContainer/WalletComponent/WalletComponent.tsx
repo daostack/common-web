@@ -19,7 +19,7 @@ import {
   Time,
 } from "@/shared/models";
 import { Loader } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { AllocateFundsTo, ScreenSize } from "@/shared/constants";
 import { sortByCreatedTime, formatPrice } from "@/shared/utils";
 import {
   isFundsAllocationProposal,
@@ -137,22 +137,25 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
             .filter(isFundsAllocationProposal)
             .filter(
               (proposal) =>
-                proposal.state === ProposalState.COMPLETED &&
                 proposal.data.tracker.status ===
-                FundingAllocationStatus.COMPLETED
+                  FundingAllocationStatus.COMPLETED &&
+                (proposal.state === ProposalState.COMPLETED ||
+                  (proposal.state === ProposalState.PASSED &&
+                    proposal.data.args.to === AllocateFundsTo.SubCommon))
             );
 
           setPaymentsOutData(
-            chargedCommonProposals.map(
-              proposal => (
-                {
-                  type: TransactionType.PayOut,
-                  amount: proposal.data.legal.totalInvoicesAmount,
-                  createdAt: proposal.createdAt,
-                  fundingRequestDescription: proposal.data.args.description,
-                }
-              )
-            ).sort(sortByCreatedTime) as TransactionData[]
+            chargedCommonProposals
+              .map((proposal) => ({
+                type: TransactionType.PayOut,
+                amount:
+                  proposal.data.args.to === AllocateFundsTo.SubCommon
+                    ? proposal.data.args.amount
+                    : proposal.data.legal.totalInvoicesAmount,
+                createdAt: proposal.createdAt,
+                fundingRequestDescription: proposal.data.args.description,
+              }))
+              .sort(sortByCreatedTime) as TransactionData[]
           );
         } catch (error) {
           console.error(error);
