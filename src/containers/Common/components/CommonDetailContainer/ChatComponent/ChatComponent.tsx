@@ -112,16 +112,16 @@ export default function ChatComponent({
   const sendChatMessage = (): void => {
     if(message) {
       setIsNewMessageLoading(true);
-      sendMessage && sendMessage(message);
+      sendMessage && sendMessage(message.trim());
       setMessage("");
     }
   }
 
   const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
-    if(event.key === KeyboardKeys.Enter) {
+    if (event.key === KeyboardKeys.Enter && (event.ctrlKey || event.metaKey)) {
       sendChatMessage();
     }
-  }
+  };
 
   useEffect(() => {
     if (!highlightedMessageId)
@@ -285,7 +285,7 @@ export default function ChatComponent({
               <span className="text">Only members can send messages</span>
             ) : (
               <>
-                <input
+                <textarea
                   className="message-input"
                   placeholder="What do you think?"
                   value={message}
