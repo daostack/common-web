@@ -862,6 +862,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               {tab === Tabs.About && (
                 <AboutTabComponent
                   common={common}
+                  unstructuredRules={governance.unstructuredRules}
                   screenSize={screenSize}
                   onOpenJoinModal={handleOpen}
                   isCommonMember={isCommonMember}
