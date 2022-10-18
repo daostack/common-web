@@ -1,6 +1,6 @@
 import { Action } from "redux";
-import { call, fork, take, takeLeading } from "redux-saga/effects";
-import { ActionPattern } from "@redux-saga/types";
+import { fork, take } from "redux-saga/effects";
+import { ActionPattern, Task } from "@redux-saga/types";
 import { HelperWorkerParameters } from "@redux-saga/core/effects";
 
 type Saga = (...args: any[]) => any;
@@ -12,22 +12,15 @@ export const takeLeadingByIdentifier = <A extends Action>(
   ...args: HelperWorkerParameters<A, Saga>
 ) =>
   fork(function* () {
-    const tasks = {};
+    const tasks: Record<string, Task> = {};
 
     while (true) {
       const action = yield take(pattern);
-      console.log(action);
       const id = identifier(action);
+      const task = tasks[id];
 
-      if (!tasks[id]) {
-        yield call(saga, ...args.concat(action));
-        tasks[id] = yield takeLeading(
-          (patternAction) =>
-            patternAction.type === action.type &&
-            identifier(patternAction) === id,
-          saga,
-          ...args
-        );
+      if (!task || !task.isRunning()) {
+        tasks[id] = yield fork(saga, ...args.concat(action));
       }
     }
   });
