@@ -26,7 +26,11 @@ import {
   FundingAllocationStatus,
 } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
-import { fetchCommonContributions, fetchCommonProposals } from "../../../store/api";
+import {
+  fetchCommonContributions,
+  fetchCommonProposals,
+  fetchProposalsFromParentCommon,
+} from "../../../store/api";
 import { TransactionsList } from "../";
 import { WalletMenuItems } from "./constants";
 import { useCommonTransactionsChartDataSet } from "./hooks";
@@ -93,35 +97,60 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
   }, [paymentsInData, paymentsOutData, orderedCommonTransactions]);
 
   useEffect(() => {
-    (
-      async () => {
-        if (paymentsInData !== null)
-          return;
+    const getTransactionDataFromCommonContributions = async (): Promise<
+      TransactionData[]
+    > => {
+      const commonPaymentsIn = await fetchCommonContributions(common.id);
 
-        try {
-          const commonPaymentsIn = (await fetchCommonContributions(common.id))
-            .filter(
-              payment =>
-                (payment.price.currency === Currency.ILS)
-            );
+      return commonPaymentsIn
+        .filter((payment) => payment.price.currency === Currency.ILS)
+        .map((payment) => ({
+          type: TransactionType.PayIn,
+          payerId: payment.userId,
+          amount: payment.price.amount,
+          createdAt: payment.createdAt,
+        }));
+    };
 
-          setPaymentsInData(
-            commonPaymentsIn.map(
-              payment => (
-                {
-                  type: TransactionType.PayIn,
-                  payerId: payment.userId,
-                  amount: payment.price.amount,
-                  createdAt: payment.createdAt,
-                }
-              )
-            ).sort(sortByCreatedTime) as TransactionData[]
-          );
-        } catch (error) {
-          console.error(error);
-        }
+    const getTransactionDataFromParentCommon = async (): Promise<
+      TransactionData[]
+    > => {
+      if (!common.directParent?.commonId) {
+        return [];
       }
-    )();
+
+      const proposalsFromParentCommon = await fetchProposalsFromParentCommon(
+        common.id,
+        common.directParent.commonId
+      );
+
+      return proposalsFromParentCommon.map<TransactionData>((proposal) => ({
+        type: TransactionType.PayIn,
+        amount: proposal.data.args.amount,
+        createdAt: proposal.createdAt,
+        fundingRequestDescription: proposal.data.args.description,
+      }));
+    };
+
+    (async () => {
+      if (paymentsInData !== null) return;
+
+      try {
+        const [commonPaymentsIn, transactionDataFromParentCommon] =
+          await Promise.all([
+            getTransactionDataFromCommonContributions(),
+            getTransactionDataFromParentCommon(),
+          ]);
+
+        setPaymentsInData(
+          [...commonPaymentsIn, ...transactionDataFromParentCommon].sort(
+            sortByCreatedTime
+          )
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    })();
   }, [paymentsInData, setPaymentsInData, common.id]);
 
   useEffect(() => {
