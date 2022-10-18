@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, ReactElement } from "react";
 import classNames from "classnames";
 
 import { getUserData } from "../../../../Auth/store/api";
@@ -35,6 +35,42 @@ const TransactionsListItem: FC<TransactionsListItemProps> = ({
     })();
   }, [payerData, setPayerData, type, payerId]);
 
+  const renderPayInAdditionalInfo = (): ReactElement | null => {
+    if (!payerId) {
+      return fundingRequestDescription ? (
+        <div className="transaction__payout-description">
+          {fundingRequestDescription}
+        </div>
+      ) : null;
+    }
+    if (!payerData) {
+      return <Loader />;
+    }
+
+    return (
+      <div className="transaction__payin-payer-data">
+        <UserAvatar
+          photoURL={payerData.photoURL}
+          nameForRandomAvatar={payerData.email}
+          userName={getUserName(payerData)}
+          className="payer-avatar"
+        />
+        <div className="payer-name">{getUserName(payerData)}</div>
+      </div>
+    );
+  };
+
+  const renderPayOutAdditionalInfo = (): ReactElement | null => (
+    <div className="transaction__payout-description">
+      {fundingRequestDescription}
+    </div>
+  );
+
+  const renderAdditionalInfo = (): ReactElement | null =>
+    type === TransactionType.PayIn
+      ? renderPayInAdditionalInfo()
+      : renderPayOutAdditionalInfo();
+
   return (
     <div className="transaction__wrapper">
       <div className="transaction__content">
@@ -57,25 +93,7 @@ const TransactionsListItem: FC<TransactionsListItemProps> = ({
           </div>
         </div>
         <div className="transaction__additional-info">
-          {type === TransactionType.PayIn ? (
-            payerData ? (
-              <div className="transaction__payin-payer-data">
-                <UserAvatar
-                  photoURL={payerData.photoURL}
-                  nameForRandomAvatar={payerData.email}
-                  userName={getUserName(payerData)}
-                  className="payer-avatar"
-                />
-                <div className="payer-name">{getUserName(payerData)}</div>
-              </div>
-            ) : (
-              <Loader />
-            )
-          ) : (
-            <div className="transaction__payout-description">
-              {fundingRequestDescription}
-            </div>
-          )}
+          {renderAdditionalInfo()}
         </div>
       </div>
     </div>
