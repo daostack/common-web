@@ -166,11 +166,9 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
             .filter(isFundsAllocationProposal)
             .filter(
               (proposal) =>
+                proposal.state === ProposalState.COMPLETED &&
                 proposal.data.tracker.status ===
-                  FundingAllocationStatus.COMPLETED &&
-                (proposal.state === ProposalState.COMPLETED ||
-                  (proposal.state === ProposalState.PASSED &&
-                    proposal.data.args.to === AllocateFundsTo.SubCommon))
+                  FundingAllocationStatus.COMPLETED
             );
 
           setPaymentsOutData(
