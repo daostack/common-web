@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import { CommonShare, Linkify } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
-import { Common } from "@/shared/models";
+import { Common, UnstructuredRules } from "@/shared/models";
 import { isRTL } from "@/shared/utils";
 import { CommonWhitepaper } from "../CommonWhitepaper";
+import { Rules } from "./Rules";
 import "./index.scss";
 
 interface AboutTabComponentProps {
   common: Common;
+  unstructuredRules: UnstructuredRules;
   screenSize: string;
   onOpenJoinModal: () => void;
   isCommonMember?: boolean;
@@ -17,6 +19,7 @@ interface AboutTabComponentProps {
 
 export default function AboutTabComponent({
   common,
+  unstructuredRules,
   screenSize,
   onOpenJoinModal,
   isCommonMember,
@@ -64,6 +67,7 @@ export default function AboutTabComponent({
         </a>
       )}
       <CommonWhitepaper common={common} />
+      <Rules rules={unstructuredRules} />
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>

@@ -4,6 +4,7 @@ import { isFundsAllocationProposal } from "@/shared/models/governance/proposals"
 export enum VotingStatus {
   Failing = "Failing",
   Passing = "Passing",
+  Canceled = "Canceled",
   Rejected = "Rejected",
   Approved = "Approved",
   Withdrawn = "Withdrawn",
@@ -47,8 +48,9 @@ const calculateFinalState = (proposal: Proposal): ProposalState => {
 export const calculateVotingStatus = (proposal: Proposal): VotingStatus => {
   switch (proposal.state) {
     case ProposalState.FAILED:
-    case ProposalState.RETRACTED:
       return VotingStatus.Rejected;
+    case ProposalState.RETRACTED:
+      return VotingStatus.Canceled;
     case ProposalState.PASSED:
       return VotingStatus.Approved;
     case ProposalState.COMPLETED:

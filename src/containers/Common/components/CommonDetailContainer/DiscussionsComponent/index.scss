@@ -108,6 +108,7 @@
         -webkit-line-clamp: 6;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        white-space: pre-line;
 
         &.full {
           -webkit-line-clamp: unset;

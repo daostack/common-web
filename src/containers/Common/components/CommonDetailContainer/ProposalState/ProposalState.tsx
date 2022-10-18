@@ -1,18 +1,12 @@
 import React from "react";
 import classNames from "classnames";
-import {
-  Proposal,
-  ProposalState as ProposalStateTypes,
-} from "@/shared/models";
-import {
-  FundingAllocationStatus,
-  isFundsAllocationProposal,
-} from "@/shared/models/governance/proposals";
+import { Proposal } from "@/shared/models";
 import {
   checkIsCountdownState,
   getProposalExpirationDate,
 } from "@/shared/utils";
 import ProposalCountDown from "../ProposalCountDown/ProposalCountDown";
+import { getProposalState } from "./helpers";
 import "./index.scss";
 
 interface IProps {
@@ -21,21 +15,16 @@ interface IProps {
   className?: string;
 }
 
+const STATUS_TO_ICON_MAP = {
+  Canceled: "rejected",
+};
+
 export default function ProposalState({
   proposal,
   hideCounter,
   className,
 }: IProps) {
-  const isUnclaimedProposal =
-    isFundsAllocationProposal(proposal) &&
-    proposal.data.tracker.status ===
-      FundingAllocationStatus.EXPIRED_INVOICES_NOT_UPLOADED;
-  const state =
-    proposal.state === ProposalStateTypes.FAILED
-      ? "Rejected"
-      : isUnclaimedProposal
-      ? "Unclaimed"
-      : "Approved";
+  const state = getProposalState(proposal);
   const isCountdownState = checkIsCountdownState(proposal);
 
   return (
@@ -52,7 +41,9 @@ export default function ProposalState({
           <div className="state-inner-wrapper">
             {state !== "Unclaimed" && (
               <img
-                src={`/icons/${state.toLocaleLowerCase()}.svg`}
+                src={`/icons/${
+                  STATUS_TO_ICON_MAP[state] || state.toLocaleLowerCase()
+                }.svg`}
                 alt="proposal state"
               />
             )}

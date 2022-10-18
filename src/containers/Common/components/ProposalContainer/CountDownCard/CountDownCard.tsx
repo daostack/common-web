@@ -52,6 +52,7 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
               "proposal-container-countdown-card__status--red": [
                 VotingStatus.Failing,
                 VotingStatus.Rejected,
+                VotingStatus.Canceled,
               ].includes(votingStatus),
               "proposal-container-countdown-card__status--orange":
                 votingStatus === VotingStatus.Withdrawn,
