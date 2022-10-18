@@ -3,6 +3,8 @@ import classNames from "classnames";
 
 import { getUserData } from "../../../../Auth/store/api";
 import { Loader, UserAvatar } from "@/shared/components";
+import { ROUTE_PATHS } from "@/shared/constants";
+import { useCommon } from "@/shared/hooks/useCases";
 import {
   TransactionData,
   TransactionType,
@@ -16,10 +18,24 @@ interface TransactionsListItemProps {
   transaction: TransactionData;
 }
 
-const TransactionsListItem: FC<TransactionsListItemProps> = ({
-  transaction: { type, createdAt, amount, payerId, fundingRequestDescription },
-}) => {
+const TransactionsListItem: FC<TransactionsListItemProps> = (props) => {
+  const {
+    transaction: {
+      type,
+      createdAt,
+      amount,
+      payerId,
+      parentCommonId,
+      fundingRequestDescription,
+    },
+  } = props;
   const [payerData, setPayerData] = useState<User | null>(null);
+  const {
+    data: parentCommon,
+    fetched: isParentCommonFetched,
+    fetchCommon: fetchParentCommon,
+    setCommon: setParentCommon,
+  } = useCommon();
 
   useEffect(() => {
     (async () => {
@@ -35,29 +51,70 @@ const TransactionsListItem: FC<TransactionsListItemProps> = ({
     })();
   }, [payerData, setPayerData, type, payerId]);
 
+  useEffect(() => {
+    if (isParentCommonFetched) {
+      return;
+    }
+
+    if (parentCommonId) {
+      fetchParentCommon(parentCommonId);
+    } else {
+      setParentCommon(null);
+    }
+  }, [
+    isParentCommonFetched,
+    parentCommonId,
+    fetchParentCommon,
+    setParentCommon,
+  ]);
+
   const renderPayInAdditionalInfo = (): ReactElement | null => {
-    if (!payerId) {
+    const hasAdditionalInfo = Boolean(payerId || parentCommonId);
+
+    if (!hasAdditionalInfo) {
       return fundingRequestDescription ? (
         <div className="transaction__payout-description">
           {fundingRequestDescription}
         </div>
       ) : null;
     }
-    if (!payerData) {
+
+    const isLoading = !isParentCommonFetched || Boolean(payerId && !payerData);
+
+    if (isLoading) {
       return <Loader />;
     }
+    if (parentCommon) {
+      return (
+        <div className="transaction__payin-payer-data">
+          <div className="payer-name">
+            Parent Common:{" "}
+            <a
+              href={ROUTE_PATHS.COMMON_DETAIL.replace(":id", parentCommon.id)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {parentCommon.name}
+            </a>
+          </div>
+        </div>
+      );
+    }
+    if (payerData) {
+      return (
+        <div className="transaction__payin-payer-data">
+          <UserAvatar
+            photoURL={payerData.photoURL}
+            nameForRandomAvatar={payerData.email}
+            userName={getUserName(payerData)}
+            className="payer-avatar"
+          />
+          <div className="payer-name">{getUserName(payerData)}</div>
+        </div>
+      );
+    }
 
-    return (
-      <div className="transaction__payin-payer-data">
-        <UserAvatar
-          photoURL={payerData.photoURL}
-          nameForRandomAvatar={payerData.email}
-          userName={getUserName(payerData)}
-          className="payer-avatar"
-        />
-        <div className="payer-name">{getUserName(payerData)}</div>
-      </div>
-    );
+    return null;
   };
 
   const renderPayOutAdditionalInfo = (): ReactElement | null => (

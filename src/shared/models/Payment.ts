@@ -70,6 +70,7 @@ export interface TransactionData {
   amount: number;
   createdAt: Time;
   payerId?: string;
+  parentCommonId?: string;
   fundingRequestDescription?: string;
 }
 

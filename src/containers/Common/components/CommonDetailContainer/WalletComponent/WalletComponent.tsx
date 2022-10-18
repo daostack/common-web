@@ -97,6 +97,8 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
   }, [paymentsInData, paymentsOutData, orderedCommonTransactions]);
 
   useEffect(() => {
+    const parentCommonId = common.directParent?.commonId;
+
     const getTransactionDataFromCommonContributions = async (): Promise<
       TransactionData[]
     > => {
@@ -115,19 +117,19 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
     const getTransactionDataFromParentCommon = async (): Promise<
       TransactionData[]
     > => {
-      if (!common.directParent?.commonId) {
+      if (!parentCommonId) {
         return [];
       }
 
-      const proposalsFromParentCommon = await fetchProposalsFromParentCommon(
-        common.id,
-        common.directParent.commonId
-      );
+      const proposalsFromParentCommon = (
+        await fetchProposalsFromParentCommon(common.id, parentCommonId)
+      ).filter((proposal) => proposal.state === ProposalState.COMPLETED);
 
       return proposalsFromParentCommon.map<TransactionData>((proposal) => ({
         type: TransactionType.PayIn,
         amount: proposal.data.args.amount,
         createdAt: proposal.createdAt,
+        parentCommonId,
         fundingRequestDescription: proposal.data.args.description,
       }));
     };
