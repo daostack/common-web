@@ -109,9 +109,8 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
         </p>
         {commonsInfo.map((commonInfo) => (
           <div key={commonInfo.id} className="common-member-preview__info">
-            {commonInfo.name}
-            {commonInfo.id === commonId && <strong> (current)</strong>} -{" "}
-            {commonInfo.userCircleNames}
+            {commonInfo.name} - {commonInfo.userCircleNames}
+            {commonInfo.id === commonId && " (current)"}
           </div>
         ))}
       </>
