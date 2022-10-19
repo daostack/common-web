@@ -72,6 +72,7 @@ import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
 import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
+import { takeLeadingByIdentifier } from "@/shared/utils/saga";
 import { Awaited, LoadingState } from "@/shared/interfaces";
 import {
   AssignCircle,
@@ -1476,7 +1477,11 @@ export function* commonsSaga() {
   yield takeLatest(actions.getCommonMember.request, getCommonMember);
   yield takeLatest(actions.getCommonMembers.request, getCommonMembers);
   yield takeLatest(actions.getUserCommons.request, getUserCommons);
-  yield takeLeading(actions.getCommonState.request, getCommonState);
+  yield takeLeadingByIdentifier(
+    actions.getCommonState.request,
+    (action) => action.payload.payload.commonId,
+    getCommonState
+  );
 }
 
 export default commonsSaga;
