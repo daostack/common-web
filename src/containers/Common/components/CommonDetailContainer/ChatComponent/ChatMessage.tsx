@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import { DiscussionMessage, User } from "@/shared/models";
@@ -6,7 +6,7 @@ import { getUserName } from "@/shared/utils";
 import { DynamicLinkType, Orientation, ChatType, ENTITY_TYPES } from "@/shared/constants";
 
 interface ChatMessageProps {
-  disscussionMessage: DiscussionMessage;
+  discussionMessage: DiscussionMessage;
   chatType: ChatType;
   highlighted?: boolean;
   className?: string;
@@ -25,7 +25,7 @@ const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
 
 export default function ChatMessage(
   {
-    disscussionMessage,
+    discussionMessage,
     chatType,
     highlighted = false,
     className,
@@ -33,27 +33,44 @@ export default function ChatMessage(
     user,
   }: ChatMessageProps
 ) {
-  const mDate = new Date(disscussionMessage.createdAt.seconds * 1000);
+  const mDate = new Date(discussionMessage.createdAt.seconds * 1000);
+
+  const ReplyMessageContainer = useCallback(() => {
+    if (!discussionMessage.parentMessage) {
+      return null;
+    }
+
+    return (
+      <div className="reply-message-container">
+        <div className="message-name">
+          {discussionMessage.parentMessage?.ownerName}
+        </div>
+        <Linkify>{discussionMessage.parentMessage.text}</Linkify>
+      </div>
+    )
+  }, [discussionMessage.parentMessage])
+
 
   return (
     <li
-      id={disscussionMessage.id}
+      id={discussionMessage.id}
       className={classNames("message-wrapper", className, { highlighted })}
     >
       <div className="message">
         <div className="icon-wrapper">
           <UserAvatar
-            photoURL={disscussionMessage.owner?.photoURL}
-            nameForRandomAvatar={disscussionMessage.owner?.email}
-            userName={getUserName(disscussionMessage.owner)}
+            photoURL={discussionMessage.owner?.photoURL}
+            nameForRandomAvatar={discussionMessage.owner?.email}
+            userName={getUserName(discussionMessage.owner)}
           />
         </div>
         <div className="message-text">
+          <ReplyMessageContainer />
           <div className="message-name">
-            {getUserName(disscussionMessage.owner)}
+            {getUserName(discussionMessage.owner)}
           </div>
           <div className="message-content">
-            <Linkify>{disscussionMessage.text}</Linkify>
+            <Linkify>{discussionMessage.text}</Linkify>
             <div className="time-wrapper">
               {mDate.toLocaleTimeString([], {
                 hour12: false,
@@ -65,13 +82,13 @@ export default function ChatMessage(
           <ElementDropdown
             linkType={getDynamicLinkByChatType(chatType)}
             entityType={ENTITY_TYPES.DiscussionMessage}
-            elem={disscussionMessage}
+            elem={discussionMessage}
             className="dropdown-menu"
             variant={Orientation.Horizontal}
             onMenuToggle={onMessageDropdownOpen}
             transparent
             isDiscussionMessage
-            isOwner={user?.uid === disscussionMessage.owner?.id}
+            isOwner={user?.uid === discussionMessage.owner?.id}
           />
         </div>
       </div>

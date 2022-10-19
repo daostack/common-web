@@ -249,7 +249,7 @@ export default function ChatComponent({
                     <ChatMessage
                       key={message.id}
                       user={user}
-                      disscussionMessage={message}
+                      discussionMessage={message}
                       chatType={type}
                       highlighted={message.id === highlightedMessageId}
                       onMessageDropdownOpen={

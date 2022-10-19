@@ -14,12 +14,13 @@ import {
 import { getDaysAgo, getUserName } from "@/shared/utils";
 import { ChatComponent } from "../ChatComponent";
 import { selectUser } from "@/containers/Auth/store/selectors";
-import { addMessageToDiscussion } from "@/containers/Common/store/actions";
+import { addMessageToDiscussion, clearCurrentDiscussionMessageReply } from "@/containers/Common/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ScreenSize, ChatType } from "@/shared/constants";
 import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
 import { getCirclesNames } from "@/shared/utils/circles";
 import "./index.scss";
+import { selectCurrentDiscussionMessageReply } from "@/containers/Common/store/selectors";
 
 interface DiscussionDetailModalProps {
   discussion: Discussion | DiscussionWithHighlightedMessage | null;
@@ -43,6 +44,7 @@ export default function DiscussionDetailModal({
   const dispatch = useDispatch();
   const date = new Date();
   const user = useSelector(selectUser());
+  const currentDiscussionMessageReply = useSelector(selectCurrentDiscussionMessageReply());
   const screenSize = useSelector(getScreenSize());
   const [expanded, setExpanded] = useState(true);
   const [circleNames, setCircleNames] = useState('');
@@ -65,6 +67,10 @@ export default function DiscussionDetailModal({
         setCircleNames(names);
       })();
     }
+
+    return () => {
+      dispatch(clearCurrentDiscussionMessageReply());
+    }
   },[governance.id, discussion])
 
   const sendMessage = useCallback(
@@ -75,14 +81,20 @@ export default function DiscussionDetailModal({
           ownerId: user.uid,
           commonId: discussion.commonId,
           discussionId: discussion.id,
+          ...(currentDiscussionMessageReply && {parentId: currentDiscussionMessageReply?.id })
         };
 
+        
         dispatch(
           addMessageToDiscussion.request({ payload, discussion: discussion })
-        );
+          );
+
+        if(currentDiscussionMessageReply) {
+          dispatch(clearCurrentDiscussionMessageReply());
+        }
       }
     },
-    [dispatch, user, discussion]
+    [dispatch, user, discussion, currentDiscussionMessageReply]
   );
 
   return !discussion ? (
