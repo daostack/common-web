@@ -45,20 +45,28 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
       return [];
     }
 
-    return previewInfo.commons.map((common) => {
-      const governanceCircles = Object.values(common.circles || {});
-      const circleIds = Object.values(common.circlesMap || {});
-      const filteredByIdCircles = getFilteredByIdCircles(
-        governanceCircles,
-        circleIds
-      );
-      const userCircleNames = getCirclesWithHighestTier(filteredByIdCircles)
-        .map(({ name }) => name)
-        .join(", ");
+    return previewInfo.commons
+      .map((common) => {
+        const governanceCircles = Object.values(common.circles || {});
+        const circleIds = Object.values(common.circlesMap || {});
+        const filteredByIdCircles = getFilteredByIdCircles(
+          governanceCircles,
+          circleIds
+        );
+        const userCircleNames = getCirclesWithHighestTier(filteredByIdCircles)
+          .map(({ name }) => name)
+          .join(", ");
 
-      return { ...common, userCircleNames };
-    });
-  }, [previewInfo]);
+        return { ...common, userCircleNames };
+      })
+      .reduce<CommonMemberPreviewInfo["commons"]>(
+        (acc, commonInfo) =>
+          commonInfo.id === commonId
+            ? [commonInfo, ...acc]
+            : [...acc, commonInfo],
+        []
+      );
+  }, [previewInfo, commonId]);
 
   useEffect(() => {
     if (isShowing && member?.userId) {
@@ -99,14 +107,16 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
         <p className="common-member-preview__section-title">
           Member of the following Commons
         </p>
-        {commonsInfo.map((item) => (
-          <div key={item.id} className="common-member-preview__info">
-            {item.name} - {item.userCircleNames}
+        {commonsInfo.map((commonInfo) => (
+          <div key={commonInfo.id} className="common-member-preview__info">
+            {commonInfo.name}
+            {commonInfo.id === commonId && <strong> (current)</strong>} -{" "}
+            {commonInfo.userCircleNames}
           </div>
         ))}
       </>
     );
-  }, [isLoading, about, previewInfo]);
+  }, [isLoading, about, previewInfo, commonId]);
 
   return (
     <Modal
