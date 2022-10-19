@@ -31,7 +31,7 @@ import { selectUser } from "@/containers/Auth/store/selectors";
 import { getScreenSize } from "@/shared/store/selectors";
 import { ChatComponent } from "../../components";
 import { VotesModal } from "../../components/ProposalContainer";
-import { useCommonMember, useProposalUserVote, useCommonMembers } from "../../hooks";
+import { useCommonMember, useProposalUserVote } from "../../hooks";
 import {
   addMessageToProposal,
   clearCurrentProposal,

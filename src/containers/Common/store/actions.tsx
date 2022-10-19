@@ -186,6 +186,20 @@ export const deleteDiscussionMessage = createAsyncAction(
   Error
 >();
 
+export const updateDiscussionMessage = createAsyncAction(
+  CommonsActionTypes.UPDATE_DISCUSSION_MESSAGE,
+  CommonsActionTypes.UPDATE_DISCUSSION_MESSAGE_SUCCESS,
+  CommonsActionTypes.UPDATE_DISCUSSION_MESSAGE_FAILURE
+)<
+  PayloadWithCallback<
+    { discussionId: string; discussionMessageId: string; },
+    DiscussionMessage,
+    Error
+  >,
+  null,
+  Error
+>();
+
 export const createMemberAdmittanceProposal = createAsyncAction(
   CommonsActionTypes.CREATE_MEMBER_ADMITTANCE_PROPOSAL,
   CommonsActionTypes.CREATE_MEMBER_ADMITTANCE_PROPOSAL_SUCCESS,
@@ -507,3 +521,11 @@ export const getUserCommons = createAsyncAction(
   CommonsActionTypes.GET_USER_COMMONS_SUCCESS,
   CommonsActionTypes.GET_USER_COMMONS_FAILURE
 )<PayloadWithOptionalCallback<string, Common[], Error>, Common[], Error>();
+
+export const setCurrentDiscussionMessageReply = createStandardAction(
+  CommonsActionTypes.SET_DISCUSSION_MESSAGE_REPLY
+)<DiscussionMessage>();
+
+export const clearCurrentDiscussionMessageReply = createStandardAction(
+  CommonsActionTypes.CLEAR_DISCUSSION_MESSAGE_REPLY
+)();

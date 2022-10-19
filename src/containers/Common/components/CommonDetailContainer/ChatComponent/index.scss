@@ -6,7 +6,6 @@
   padding: 32px;
   padding-top: unset;
   background-color: #f3f4ff;
-  height: calc(100% - 90px);
   border-radius: 0 12px 12px 0;
   position: relative;
   box-sizing: border-box;
@@ -148,9 +147,6 @@
     }
   }
 
-  .bottom-chat-container {
-    height: 82px;
-  }
   .bottom-chat-wrapper {
     padding: 16px 30px 16px 32px;
     box-shadow: 0 -5px 5px -2px #4f5c6919;
@@ -235,6 +231,28 @@
 
   .bottom-chat-wrapper__fixed {
     position: fixed; 
+    width: calc(100% - 148px); 
+    left: 76px; 
+    margin-bottom: 0;
+    @include big-phone {
+      width: calc(100% - 62px); 
+      left: 0px;
+      margin-inline: 0px;
+    }
+  }
+
+  .bottom-reply-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    background-color: #fff;
+    margin: 0px -32px;
+    padding: 7px 32px 10px;
+  }
+
+  .bottom-reply-wrapper__fixed {
+    position: fixed;
+    bottom: 84px;
     width: calc(100% - 148px); 
     left: 76px; 
     margin-bottom: 0;

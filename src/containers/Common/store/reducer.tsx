@@ -18,6 +18,7 @@ const initialState: CommonsStateType = {
   isDiscussionsLoaded: false,
   currentDiscussion: null,
   currentProposal: null,
+  currentDiscussionMessageReply: null,
   cards: [],
   activeTab: null,
 };
@@ -181,6 +182,16 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
         };
       }
     })
-  );
+  )
+  .handleAction(actions.setCurrentDiscussionMessageReply, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.currentDiscussionMessageReply = payload;
+    })
+  )
+  .handleAction(actions.clearCurrentDiscussionMessageReply, (state) =>
+    produce(state, (nextState) => {
+      nextState.currentDiscussionMessageReply = null;
+    })
+);
 
 export default reducer;

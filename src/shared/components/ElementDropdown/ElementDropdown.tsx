@@ -36,7 +36,7 @@ import {
   DropdownStyles,
 } from "../Dropdown";
 import "./index.scss";
-import { deleteDiscussionMessage } from "@/containers/Common/store/actions";
+import { deleteDiscussionMessage, setCurrentDiscussionMessageReply } from "@/containers/Common/store/actions";
 
 interface ElementDropdownProps {
   linkType: DynamicLinkType;
@@ -47,6 +47,7 @@ interface ElementDropdownProps {
   styles?: DropdownStyles;
   onMenuToggle?: (isOpen: boolean) => void;
   isDiscussionMessage?: boolean;
+  isOwner?: boolean;
   entityType: ENTITY_TYPES;
 }
 
@@ -60,6 +61,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
     className,
     onMenuToggle,
     isDiscussionMessage = false,
+    isOwner = false,
     entityType
   }
 ) => {
@@ -83,7 +85,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
             discussionId: (elem as DiscussionMessage).discussionId,
             discussionMessageId: elem.id,
           },
-          callback(error, data) {
+          callback(error) {
               if(error) {
                 notify("Something went wrong");
                 return;
@@ -97,6 +99,10 @@ const ElementDropdown: FC<ElementDropdownProps> = (
     }
 
   },[elem, entityType]);
+
+  const onReply = useCallback(() => {
+    dispatch(setCurrentDiscussionMessageReply(elem as DiscussionMessage));
+  }, [elem]);
 
   const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(
     () => {
@@ -116,15 +122,8 @@ const ElementDropdown: FC<ElementDropdownProps> = (
           value: ElementDropdownMenuItems.Report,
         },
       ];
-      
-      const additionalMenuItems = isDiscussionMessage ? [
-        {
-          text: (
-            <span>Delete</span>
-          ),
-          searchText: "Delete",
-          value: ElementDropdownMenuItems.Delete,
-        },
+
+      const discussionMessageItems = isDiscussionMessage ? [
         {
           text: (
             <span>Copy</span>
@@ -134,23 +133,34 @@ const ElementDropdown: FC<ElementDropdownProps> = (
         },
         {
           text: (
-            <span>Edit</span>
-          ),
-          searchText: "Edit",
-          value: ElementDropdownMenuItems.Edit,
-        },
-        {
-          text: (
             <span>Reply</span>
           ),
           searchText: "Reply",
           value: ElementDropdownMenuItems.Reply,
+        }
+      ] :[];
+
+      
+      const additionalMenuItems = isOwner && isDiscussionMessage ? [
+        {
+          text: (
+            <span>Delete</span>
+          ),
+          searchText: "Delete",
+          value: ElementDropdownMenuItems.Delete,
         },
+        {
+          text: (
+            <span>Edit</span>
+          ),
+          searchText: "Edit",
+          value: ElementDropdownMenuItems.Edit,
+        }
       ] : [];
 
-      return [...additionalMenuItems, ...generalMenuItems];
+      return [...additionalMenuItems, ...discussionMessageItems, ...generalMenuItems];
     },
-      [linkURL, isDiscussionMessage, elem]
+      [linkURL, isDiscussionMessage, isOwner, elem]
   );
 
   const handleMenuToggle = useCallback((isOpen: boolean) => {
@@ -199,6 +209,9 @@ const ElementDropdown: FC<ElementDropdownProps> = (
         break;
       case ElementDropdownMenuItems.Delete:
         onDelete();
+        break;
+      case ElementDropdownMenuItems.Reply:
+        onReply();
         break;
       case ElementDropdownMenuItems.Report: //TODO: "Reports" dev scope
         break;

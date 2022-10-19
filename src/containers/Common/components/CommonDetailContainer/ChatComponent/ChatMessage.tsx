@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
-import { DiscussionMessage } from "@/shared/models";
+import { DiscussionMessage, User } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import { DynamicLinkType, Orientation, ChatType, ENTITY_TYPES } from "@/shared/constants";
 
@@ -11,6 +11,7 @@ interface ChatMessageProps {
   highlighted?: boolean;
   className?: string;
   onMessageDropdownOpen?: (isOpen: boolean) => void;
+  user: User | null;
 }
 
 const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
@@ -29,6 +30,7 @@ export default function ChatMessage(
     highlighted = false,
     className,
     onMessageDropdownOpen,
+    user,
   }: ChatMessageProps
 ) {
   const mDate = new Date(disscussionMessage.createdAt.seconds * 1000);
@@ -69,6 +71,7 @@ export default function ChatMessage(
             onMenuToggle={onMessageDropdownOpen}
             transparent
             isDiscussionMessage
+            isOwner={user?.uid === disscussionMessage.owner?.id}
           />
         </div>
       </div>

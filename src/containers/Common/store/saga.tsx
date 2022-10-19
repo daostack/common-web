@@ -555,6 +555,26 @@ export function* deleteDiscussionMessage(
   }
 }
 
+export function* updateDiscussionMessage(
+  action: ReturnType<typeof actions.deleteDiscussionMessage.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield deleteDiscussionMessageApi(action.payload.payload.discussionMessageId);
+
+    yield put(actions.deleteDiscussionMessage.success(null));
+    yield subscribeToMessageRefresh(action.payload.payload.discussionId);
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.deleteDiscussionMessage.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
+  }
+}
+
 export function* addMessageToProposalSaga(
   action: ReturnType<typeof actions.addMessageToProposal.request>
 ): Generator {
