@@ -3,13 +3,16 @@ import React, {
   useEffect,
   useMemo,
   useCallback,
+  useLayoutEffect,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
 import {useIntersection} from '@/shared/hooks';
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 
+import { ButtonIcon } from '@/shared/components/ButtonIcon';
+import CloseIcon from "@/shared/icons/close.icon";
 import { getScreenSize } from "@/shared/store/selectors";
 import { CommonShare, Loader } from "@/shared/components";
 import { Common, CommonMember, DiscussionMessage } from "@/shared/models";
@@ -25,6 +28,9 @@ import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailCo
 import { usePrevious } from "@/shared/hooks";
 import "./index.scss";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
+import { selectUser } from "@/containers/Auth/store/selectors";
+import { selectCurrentDiscussionMessageReply } from "@/containers/Common/store/selectors";
+import { clearCurrentDiscussionMessageReply } from "@/containers/Common/store/actions";
 
 interface ChatComponentInterface {
   common: Common | null;
@@ -74,14 +80,25 @@ export default function ChatComponent({
   highlightedMessageId,
 }: ChatComponentInterface) {
   const intersectionRef = React.useRef(null);
+  const replyDivRef = React.useRef(null);
   const intersection = useIntersection(intersectionRef, {
     root: null,
     rootMargin: '0px',
     threshold: 0
   });
 
+  const dispatch = useDispatch();
   const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(discussionMessages);
   const screenSize = useSelector(getScreenSize());
+  const user = useSelector(selectUser());
+  const discussionMessageReply = useSelector(selectCurrentDiscussionMessageReply());
+
+  const [height, setHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    setHeight((replyDivRef.current as any)?.clientHeight || 0);
+  }, [discussionMessageReply])
+
   const [message, setMessage] = useState("");
   const isSubCommon = Boolean(common?.directParent);
   const shouldShowJoinToCommonButton =
@@ -180,8 +197,40 @@ export default function ChatComponent({
     setIsNewMessageLoading,
   ]);
 
+  const chatWrapperStyle = useMemo(() => ({height: `calc(100% - ${90 + height}px)`}),[height])
+  const chatInputStyle = useMemo(() => ({minHeight: 82 + height}), [height]);
+
+  const MessageReply = useCallback(() => {
+    if(!discussionMessageReply) {
+      return null;
+    }
+
+    return (
+      <div ref={replyDivRef} className={classNames("bottom-reply-wrapper", {
+        'bottom-reply-wrapper__fixed': !(Number(intersection?.intersectionRatio) > 0)
+        })}>
+        <div className="bottom-reply-message-container">
+          <span className="bottom-reply-message-user-name">{discussionMessageReply.ownerName}</span>
+          <p className="bottom-reply-message-text">{discussionMessageReply.text}</p>
+        </div>
+        <ButtonIcon 
+          className="bottom-reply-message-close-button"
+          onClick={() => {
+            dispatch(clearCurrentDiscussionMessageReply());
+          }}
+        >
+          <CloseIcon
+            fill="#001A36"
+            height={16}
+            width={16}
+          />
+        </ButtonIcon>
+      </div>
+    )
+  }, [intersection, discussionMessageReply])
+
   return (
-    <div className="chat-wrapper">
+    <div className="chat-wrapper" style={chatWrapperStyle}>
       <div
         className={`messages ${!dateList.length ? "empty" : ""}`}
         id={chatWrapperId}
@@ -199,6 +248,7 @@ export default function ChatComponent({
                   (
                     <ChatMessage
                       key={message.id}
+                      user={user}
                       disscussionMessage={message}
                       chatType={type}
                       highlighted={message.id === highlightedMessageId}
@@ -272,7 +322,8 @@ export default function ChatComponent({
           </div>
         </div>
       ) : (
-        <div className="bottom-chat-container" ref={intersectionRef}>
+        <div ref={intersectionRef} style={chatInputStyle}>
+          <MessageReply />
           <div className={classNames("bottom-chat-wrapper", {
             'bottom-chat-wrapper__fixed': !(Number(intersection?.intersectionRatio) > 0)
             })}

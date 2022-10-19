@@ -245,9 +245,34 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    background-color: #fff;
+    background-color: $white;
     margin: 0px -32px;
     padding: 7px 32px 10px;
+
+    .bottom-reply-message-container {
+      width: 100%;
+      background-color: $light-gray-4;
+      border-radius: 14px;
+      padding: 7px 12px;
+
+      .bottom-reply-message-user-name {
+        font-size: $xsmall;
+        line-height: 20px;
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+
+      .bottom-reply-message-text {
+        font-size: $small;
+        line-height: 24px;
+        font-weight: 400;
+        margin: 0;
+      }
+
+    }
+    .bottom-reply-message-close-button {
+      margin-left: 22px;
+    }
   }
 
   .bottom-reply-wrapper__fixed {
