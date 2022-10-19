@@ -43,6 +43,7 @@ import {
   ImmediateContributionResponse,
 } from "../interfaces";
 import { ProposalsTypes } from "@/shared/constants";
+import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
 
 export const createGovernance = createAsyncAction(
   CommonsActionTypes.CREATE_GOVERNANCE,
@@ -191,11 +192,11 @@ export const updateDiscussionMessage = createAsyncAction(
   CommonsActionTypes.UPDATE_DISCUSSION_MESSAGE_SUCCESS,
   CommonsActionTypes.UPDATE_DISCUSSION_MESSAGE_FAILURE
 )<
-  PayloadWithCallback<
-    { discussionId: string; discussionMessageId: string; },
-    DiscussionMessage,
-    Error
-  >,
+{
+  payload: UpdateDiscussionMessageDto;
+  discussionId: string;
+  callback: (isSucceed: boolean) => void;
+},
   null,
   Error
 >();

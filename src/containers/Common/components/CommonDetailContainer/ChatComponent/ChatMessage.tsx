@@ -1,9 +1,10 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import { DiscussionMessage, User } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import { DynamicLinkType, Orientation, ChatType, ENTITY_TYPES } from "@/shared/constants";
+import EditMessageInput from './EditMessageInput';
 
 interface ChatMessageProps {
   discussionMessage: DiscussionMessage;
@@ -33,6 +34,8 @@ export default function ChatMessage(
     user,
   }: ChatMessageProps
 ) {
+  const [isEditMode, setEditMode] = useState(false);
+  const [message, setMessage] = useState(discussionMessage.text);
   const mDate = new Date(discussionMessage.createdAt.seconds * 1000);
 
   const ReplyMessageContainer = useCallback(() => {
@@ -64,33 +67,39 @@ export default function ChatMessage(
             userName={getUserName(discussionMessage.owner)}
           />
         </div>
-        <div className="message-text">
-          <ReplyMessageContainer />
-          <div className="message-name">
-            {getUserName(discussionMessage.owner)}
-          </div>
-          <div className="message-content">
-            <Linkify>{discussionMessage.text}</Linkify>
-            <div className="time-wrapper">
-              {mDate.toLocaleTimeString([], {
-                hour12: false,
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+        {isEditMode ? (
+         <EditMessageInput discussionMessage={discussionMessage} onClose={() => setEditMode(false)}/>
+        ) : 
+        (
+          <div className="message-text">
+            <ReplyMessageContainer />
+            <div className="message-name">
+              {getUserName(discussionMessage.owner)}
             </div>
+            <div className="message-content">
+              <Linkify>{discussionMessage.text}</Linkify>
+              <div className="time-wrapper">
+                {mDate.toLocaleTimeString([], {
+                  hour12: false,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </div>
+            </div>
+            <ElementDropdown
+              linkType={getDynamicLinkByChatType(chatType)}
+              entityType={ENTITY_TYPES.DiscussionMessage}
+              elem={discussionMessage}
+              className="dropdown-menu"
+              variant={Orientation.Horizontal}
+              onMenuToggle={onMessageDropdownOpen}
+              transparent
+              isDiscussionMessage
+              isOwner={user?.uid === discussionMessage.owner?.id}
+              onEdit={() => setEditMode(true)}
+            />
           </div>
-          <ElementDropdown
-            linkType={getDynamicLinkByChatType(chatType)}
-            entityType={ENTITY_TYPES.DiscussionMessage}
-            elem={discussionMessage}
-            className="dropdown-menu"
-            variant={Orientation.Horizontal}
-            onMenuToggle={onMessageDropdownOpen}
-            transparent
-            isDiscussionMessage
-            isOwner={user?.uid === discussionMessage.owner?.id}
-          />
-        </div>
+        )}
       </div>
     </li>
   );

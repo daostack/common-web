@@ -62,6 +62,7 @@ import {
   getUserCommons as getUserCommonsApi,
   getDiscussionsByIds,
   fetchDiscussionById,
+  updateDiscussionMessage as updateDiscussionMessageApi
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -562,20 +563,20 @@ export function* deleteDiscussionMessage(
 }
 
 export function* updateDiscussionMessage(
-  action: ReturnType<typeof actions.deleteDiscussionMessage.request>
+  action: ReturnType<typeof actions.updateDiscussionMessage.request>
 ): Generator {
   try {
     yield put(startLoading());
-    yield deleteDiscussionMessageApi(action.payload.payload.discussionMessageId);
+    yield updateDiscussionMessageApi(action.payload.payload);
 
-    yield put(actions.deleteDiscussionMessage.success(null));
-    yield subscribeToMessageRefresh(action.payload.payload.discussionId);
-    action.payload.callback(null);
+    yield put(actions.updateDiscussionMessage.success(null));
+    yield subscribeToMessageRefresh(action.payload.discussionId);
+    action.payload.callback(true);
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
-      yield put(actions.deleteDiscussionMessage.failure(error));
-      action.payload.callback(error);
+      yield put(actions.updateDiscussionMessage.failure(error));
+      action.payload.callback(false);
       yield put(stopLoading());
     }
   }
@@ -1421,6 +1422,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.loadUserProposalList.request, loadUserProposalList);
   yield takeLatest(actions.createDiscussion.request, createDiscussionSaga);
   yield takeLatest(actions.deleteDiscussionMessage.request, deleteDiscussionMessage);
+  yield takeLatest(actions.updateDiscussionMessage.request, updateDiscussionMessage);
   yield takeLatest(
     actions.addMessageToDiscussion.request,
     addMessageToDiscussionSaga

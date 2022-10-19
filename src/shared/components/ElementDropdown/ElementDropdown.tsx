@@ -49,6 +49,7 @@ interface ElementDropdownProps {
   isDiscussionMessage?: boolean;
   isOwner?: boolean;
   entityType: ENTITY_TYPES;
+  onEdit?: () => void;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = (
@@ -62,7 +63,8 @@ const ElementDropdown: FC<ElementDropdownProps> = (
     onMenuToggle,
     isDiscussionMessage = false,
     isOwner = false,
-    entityType
+    entityType,
+    onEdit
   }
 ) => {
   const dispatch = useDispatch();
@@ -197,7 +199,7 @@ const ElementDropdown: FC<ElementDropdownProps> = (
     if (
       selectedItem === null
       || isShareLinkGenerating
-      || !linkURL
+      // || !linkURL
     ) return;
 
     switch (selectedItem) {
@@ -212,6 +214,9 @@ const ElementDropdown: FC<ElementDropdownProps> = (
         break;
       case ElementDropdownMenuItems.Reply:
         onReply();
+        break;
+      case ElementDropdownMenuItems.Edit:
+        onEdit && onEdit()
         break;
       case ElementDropdownMenuItems.Report: //TODO: "Reports" dev scope
         break;

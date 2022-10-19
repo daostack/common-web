@@ -54,6 +54,7 @@ import {
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { NotificationItem } from "@/shared/models/Notification";
+import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
 
 export async function createGovernance(
   requestData: CreateGovernancePayload
@@ -352,15 +353,11 @@ export async function deleteDiscussionMessage(
 }
 
 export async function updateDiscussionMessage(
-  discussionMessageId: string
+  payload: UpdateDiscussionMessageDto
 ): Promise<DiscussionMessage> {
-  const { data } = await Api.delete<DiscussionMessage>(
+  const { data } = await Api.patch<DiscussionMessage>(
     ApiEndpoint.CreateDiscussionMessage,
-    {
-      data: {
-        id: discussionMessageId,
-      }
-    }
+    payload
   );
 
   return convertObjectDatesToFirestoreTimestamps(data);
