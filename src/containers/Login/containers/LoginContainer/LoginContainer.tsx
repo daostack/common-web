@@ -83,6 +83,7 @@ const LoginContainer: FC = () => {
     dispatch(setLoginModalState({ isShowing: false }));
     if (stage === AuthStage.CompleteAccountDetails) {
       dispatch(setTutorialModalState({ isShowing: true }));
+      return;
     }
     if (matchRoute(location.pathname, ROUTE_PATHS.HOME, { exact: true })) {
       history.push(ROUTE_PATHS.COMMON_LIST);
