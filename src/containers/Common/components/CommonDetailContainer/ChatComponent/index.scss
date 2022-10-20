@@ -24,7 +24,7 @@
       padding: 0;
       margin: 0;
 
-      > li {
+      >li {
         list-style: none;
       }
 
@@ -43,11 +43,13 @@
 
     .message-wrapper {
       width: 95%;
+
       .message {
         display: flex;
         position: relative;
         margin-bottom: 1rem;
         width: 25rem;
+
         .icon-wrapper {
           flex-shrink: 0;
           width: 2rem;
@@ -65,6 +67,7 @@
           position: relative;
           margin-bottom: 8px;
           overflow: hidden;
+
           img {
             position: absolute;
             right: 0;
@@ -75,6 +78,7 @@
             border-radius: 50%;
           }
         }
+
         .message-text {
           padding: 0.5rem 1rem;
           border-radius: 0.875rem;
@@ -90,16 +94,35 @@
             color: #001a36;
             margin-bottom: 0.5rem;
           }
+
           .message-content {
             font-size: $small;
             color: #001a36;
             word-wrap: break-word;
-            .time-wrapper {
-              font-size: $xxxsmall;
-              font-weight: bold;
-              color: $light-gray-2;
-              text-align: right;
+
+            .time-wrapper-container {
+              display: flex;
+              flex: 1;
+              justify-content: space-between;
+              margin-top: 0.6875rem;
+
+              .time-wrapper {
+                font-size: $xxxsmall;
+                font-weight: bold;
+                color: $light-gray-2;
+                text-align: right;
+              }
+
+              .edited-time-wrapper {
+                font-size: $xxsmall;
+              }
+
+              .creation-time-wrapper {
+                align-self: flex-end;
+                flex: 1;
+              }
             }
+
           }
         }
 
@@ -112,6 +135,7 @@
           .custom-dropdown-wrapper__menu {
             z-index: $dropdown-z-index;
           }
+
           svg {
             color: $light-gray-2;
           }
@@ -121,7 +145,7 @@
           padding: 6px 18px;
           background-color: #D2D8FF;
           margin-right: 40px;
-          margin-bottom: 5px; 
+          margin-bottom: 5px;
           border-radius: 14px;
         }
       }
@@ -135,6 +159,7 @@
         0% {
           background-color: $purple;
         }
+
         100% {
           background-color: transparent;
         }
@@ -167,6 +192,7 @@
     align-items: center;
     justify-content: space-between;
     border-radius: 0 0 12px 0;
+
     .text {
       font-size: 14px;
       color: $light-gray-2;
@@ -174,9 +200,11 @@
       width: 100%;
       text-align: center;
     }
+
     .button-wrapper {
       display: flex;
       margin-left: 5px;
+
       .button-blue {
         height: 40px;
         padding: 8px 32px;
@@ -192,9 +220,11 @@
         text-decoration: none;
         margin-right: 10px;
         font-family: NunitoSans-Bold;
+
         &:hover {
           opacity: 0.9;
         }
+
         &:disabled {
           pointer-events: none;
           opacity: 0.5;
@@ -217,6 +247,7 @@
       display: flex;
       align-items: center;
     }
+
     .send {
       display: flex;
       justify-content: center;
@@ -226,24 +257,29 @@
       border: none;
       outline: none;
       background: white;
+
       &:disabled {
         cursor: not-allowed;
         opacity: 0.5;
       }
     }
   }
+
   ::-webkit-scrollbar {
-    width: 0; /* Remove scrollbar space */
-    background: transparent; /* Optional: just make scrollbar invisible */
+    width: 0;
+    /* Remove scrollbar space */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
   }
 
   .bottom-chat-wrapper__fixed {
-    position: fixed; 
-    width: calc(100% - 148px); 
-    left: 76px; 
+    position: fixed;
+    width: calc(100% - 148px);
+    left: 76px;
     margin-bottom: 0;
+
     @include big-phone {
-      width: calc(100% - 62px); 
+      width: calc(100% - 62px);
       left: 0px;
       margin-inline: 0px;
     }
@@ -278,6 +314,7 @@
       }
 
     }
+
     .bottom-reply-message-close-button {
       margin-left: 22px;
     }
@@ -286,11 +323,12 @@
   .bottom-reply-wrapper__fixed {
     position: fixed;
     bottom: 84px;
-    width: calc(100% - 148px); 
-    left: 76px; 
+    width: calc(100% - 148px);
+    left: 76px;
     margin-bottom: 0;
+
     @include big-phone {
-      width: calc(100% - 62px); 
+      width: calc(100% - 62px);
       left: 0px;
       margin-inline: 0px;
     }
