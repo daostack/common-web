@@ -46,6 +46,7 @@ import {
   CreateSubCommonPayload,
   UpdateCommonPayload,
   UserMembershipInfo,
+  CreateReportDto,
 } from "@/containers/Common/interfaces";
 import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
@@ -998,4 +999,15 @@ export async function fetchSupportersDataByCommonId(
   const data = transformFirebaseDataList<SupportersData>(supportersData);
 
   return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
+}
+
+export async function createReport(
+  requestData: CreateReportDto
+): Promise<DiscussionMessage> {
+  const { data } = await Api.post<DiscussionMessage>(
+    ApiEndpoint.CreateReport,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
 }

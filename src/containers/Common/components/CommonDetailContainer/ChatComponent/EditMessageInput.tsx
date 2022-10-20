@@ -52,16 +52,16 @@ export default function EditMessageInput({ discussionMessage, onClose }: Props) 
         <Button
           disabled={isLoading}
           onClick={onClose}
-          className="edit-message-input__button-container__button edit-message-input__button-container__cancel_button"
+          className="edit-message-input__button-container__button edit-message-input__button-container__cancel"
         >
           Cancel
         </Button>
         <Button
           disabled={isLoading}
           onClick={updateMessage}
-          className="edit-message-input__button-container__button edit-message-input__button-container__save_button"
+          className="edit-message-input__button-container__button edit-message-input__button-container__save"
         >
-          {isLoading ? <Loader className="edit-message-input__button-container__save_button__loader" /> : "Save"}
+          {isLoading ? <Loader className="edit-message-input__button-container__save__loader" /> : "Save"}
         </Button>
       </div>
     </div>

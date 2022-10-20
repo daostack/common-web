@@ -62,7 +62,8 @@ import {
   getUserCommons as getUserCommonsApi,
   getDiscussionsByIds,
   fetchDiscussionById,
-  updateDiscussionMessage as updateDiscussionMessageApi
+  updateDiscussionMessage as updateDiscussionMessageApi,
+  createReport as createReportApi
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import { selectDiscussions, selectProposals } from "./selectors";
@@ -1407,6 +1408,26 @@ export function* getUserCommons({
   }
 }
 
+export function* createReport(
+  action: ReturnType<typeof actions.createReport.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield createReportApi(action.payload.payload);
+
+    yield put(actions.createReport.success(true));
+    yield subscribeToMessageRefresh(action.payload.discussionId);
+    action.payload.callback(true);
+    yield put(stopLoading());
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createReport.failure(error));
+      action.payload.callback(false);
+      yield put(stopLoading());
+    }
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
@@ -1486,6 +1507,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.getCommonMember.request, getCommonMember);
   yield takeLatest(actions.getCommonMembers.request, getCommonMembers);
   yield takeLatest(actions.getUserCommons.request, getUserCommons);
+  yield takeLatest(actions.createReport.request, createReport);
 }
 
 export default commonsSaga;

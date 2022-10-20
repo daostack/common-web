@@ -106,6 +106,7 @@ export default function ChatMessage({
               transparent
               isDiscussionMessage
               isOwner={user?.uid === discussionMessage.owner?.id}
+              userId={user?.uid}
               onEdit={() => setEditMode(true)}
             />
           </div>

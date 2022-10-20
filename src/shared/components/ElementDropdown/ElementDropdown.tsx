@@ -2,7 +2,7 @@ import React, { FC, useCallback, useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 
-import { deleteDiscussionMessage, setCurrentDiscussionMessageReply } from "@/containers/Common/store/actions";
+import { setCurrentDiscussionMessageReply } from "@/containers/Common/store/actions";
 import { MenuButton, ShareModal } from "@/shared/components";
 import { DynamicLinkType, Orientation, ShareViewType, ScreenSize, ENTITY_TYPES } from "@/shared/constants";
 import { useBuildShareLink, useNotification, useModal } from "@/shared/hooks";
@@ -11,6 +11,8 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { Common, Proposal, Discussion, DiscussionMessage } from "@/shared/models";
 import { Dropdown, ElementDropdownMenuItems, DropdownOption, DropdownStyles } from "../Dropdown";
 import "./index.scss";
+import { ReportModal } from "../ReportModal";
+import { DeleteModal } from "../DeleteModal";
 
 interface ElementDropdownProps {
   linkType: DynamicLinkType;
@@ -24,6 +26,7 @@ interface ElementDropdownProps {
   isOwner?: boolean;
   entityType: ENTITY_TYPES;
   onEdit?: () => void;
+  userId?: string;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
@@ -38,6 +41,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   isOwner = false,
   entityType,
   onEdit,
+  userId,
 }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
@@ -47,32 +51,9 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   const [isShareLinkGenerating, setIsShareLinkGenerating] = useState<boolean>(false);
   const { handleOpen } = useBuildShareLink(linkType, elem, setLinkURL);
   const { isShowing, onOpen, onClose } = useModal(false);
+  const { isShowing: isShowingReport, onOpen: onOpenReport, onClose: onCloseReport } = useModal(false);
+  const { isShowing: isShowingDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
-
-  const onDelete = useCallback(() => {
-    // TODO: Add other entities
-    switch (entityType) {
-      case ENTITY_TYPES.DiscussionMessage: {
-        dispatch(
-          deleteDiscussionMessage.request({
-            payload: {
-              discussionId: (elem as DiscussionMessage).discussionId,
-              discussionMessageId: elem.id,
-            },
-            callback(error) {
-              if (error) {
-                notify("Something went wrong");
-                return;
-              }
-
-              notify("The message has deleted!");
-            },
-          }),
-        );
-        break;
-      }
-    }
-  }, [elem, entityType]);
 
   const onReply = useCallback(() => {
     dispatch(setCurrentDiscussionMessageReply(elem as DiscussionMessage));
@@ -85,7 +66,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         searchText: "Share",
         value: ElementDropdownMenuItems.Share,
       },
-      isDiscussionMessage
+      isDiscussionMessage && !isOwner
         ? {
             text: <span>Report</span>,
             searchText: "Report",
@@ -146,8 +127,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const handleMenuItemSelect = useCallback(
     (value: unknown) => {
-      if (value === ElementDropdownMenuItems.Report) return; //TODO: "Reports" dev scope
-
       setSelectedItem(value);
     },
     [setSelectedItem],
@@ -164,8 +143,9 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       selectedItem === null ||
       isShareLinkGenerating
       // || !linkURL
-    )
+    ) {
       return;
+    }
 
     switch (selectedItem) {
       case ElementDropdownMenuItems.Share:
@@ -180,7 +160,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         notify("The link has copied!");
         break;
       case ElementDropdownMenuItems.Delete:
-        onDelete();
+        onOpenDelete();
         break;
       case ElementDropdownMenuItems.Reply:
         onReply();
@@ -189,11 +169,17 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         onEdit && onEdit();
         break;
       case ElementDropdownMenuItems.Report: //TODO: "Reports" dev scope
+        onOpenReport();
         break;
     }
 
     setSelectedItem(null);
   }, [selectedItem, notify, isShareLinkGenerating, linkURL, onOpen, setSelectedItem]);
+
+  const menuInlineStyle = useMemo(
+    () => ({ height: `${2.8125 * (ElementDropdownMenuItemsList.length || 1)}rem` }),
+    [ElementDropdownMenuItemsList],
+  );
 
   return (
     <>
@@ -205,14 +191,13 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         shouldBeFixed={false}
         onSelect={handleMenuItemSelect}
         isLoading={isShareLinkGenerating}
+        menuInlineStyle={menuInlineStyle}
         styles={{
           ...styles,
           menuButton: classNames({
             "element-dropdown__menu-button--transparent": transparent,
           }),
-          menu: classNames("element-dropdown__menu", {
-            "element-dropdown__extended-menu": isDiscussionMessage,
-          }),
+          menu: "element-dropdown__menu",
           menuItem: "element-dropdown__menu-item",
         }}
       />
@@ -223,6 +208,14 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         onClose={onClose}
         type={isMobileView ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop}
       />
+      <ReportModal
+        userId={userId as string}
+        isShowing={isShowingReport}
+        onClose={onCloseReport}
+        entity={elem}
+        type={entityType}
+      />
+      <DeleteModal isShowing={isShowingDelete} onClose={onCloseDelete} entity={elem} type={entityType} />
     </>
   );
 };

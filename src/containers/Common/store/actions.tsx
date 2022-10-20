@@ -31,6 +31,7 @@ import {
   LeaveCommon,
   CreateProposal,
   UpdateCommonPayload,
+  CreateReportDto,
 } from "@/containers/Common/interfaces";
 import {
   CreateVotePayload,
@@ -530,3 +531,17 @@ export const setCurrentDiscussionMessageReply = createStandardAction(
 export const clearCurrentDiscussionMessageReply = createStandardAction(
   CommonsActionTypes.CLEAR_DISCUSSION_MESSAGE_REPLY
 )();
+
+export const createReport = createAsyncAction(
+  CommonsActionTypes.CREATE_REPORT,
+  CommonsActionTypes.CREATE_REPORT_SUCCESS,
+  CommonsActionTypes.CREATE_REPORT_FAILURE
+)<
+  {
+    payload: CreateReportDto;
+    discussionId: string;
+    callback: (isSucceed: boolean) => void;
+  },
+  boolean,
+  Error
+>();
