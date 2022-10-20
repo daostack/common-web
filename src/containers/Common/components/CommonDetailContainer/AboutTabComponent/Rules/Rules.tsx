@@ -29,6 +29,7 @@ const CommonRules: FC<CommonRulesProps> = (props) => {
 
   return (
     <div className="about-tab-common-rules">
+      <h2 className="about-tab-common-rules__title">Common rules</h2>
       <ul className="about-tab-common-rules__list">
         {currentRules.map((rule, index) => (
           <li key={index} className="about-tab-common-rules__list-item">
