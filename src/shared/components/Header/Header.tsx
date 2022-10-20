@@ -127,7 +127,10 @@ const Header = () => {
   const links = (
     <div className="navigation-wrapper" onClick={handleNavLinkClick}>
       {isAuthorized && isMobile() && (
-        <button onClick={() => setShowAccountLinks(!showAccountLinks)}>
+        <button
+          className="my-account-button-wrapper"
+          onClick={() => setShowAccountLinks(!showAccountLinks)}
+        >
           <div ref={myAccountBtnRef} className="my-account-button">
             My Account
             <RightArrowIcon

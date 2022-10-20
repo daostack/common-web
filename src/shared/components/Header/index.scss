@@ -23,6 +23,10 @@
     margin-left: 7.5rem;
     display: flex;
 
+    .my-account-button-wrapper {
+      flex-shrink: 0;
+    }
+
     .my-account-button {
       display: flex;
       justify-content: center;
