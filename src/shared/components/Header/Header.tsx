@@ -152,12 +152,7 @@ const Header = () => {
           <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
             My Commons
           </NavLink>
-          <button
-            className="tutorial-button"
-            onClick={handleOpenTutorialModal}
-          >
-            Tutorial
-          </button>
+          <button onClick={handleOpenTutorialModal}>Tutorial</button>
         </>
       )}
 
