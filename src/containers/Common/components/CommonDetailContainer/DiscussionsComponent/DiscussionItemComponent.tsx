@@ -96,7 +96,7 @@ export default function DiscussionItemComponent({
         >
           {circleNames ? `Limited to: ${circleNames}` : discussion.message}
         </div>
-        {!isFullTextShowing ? (
+        {!shouldShowFullText && !isFullTextShowing ? (
           <div className="read-more" onClick={showFullText}>
             Read More
           </div>
