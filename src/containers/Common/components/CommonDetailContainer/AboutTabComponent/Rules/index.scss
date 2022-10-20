@@ -24,6 +24,10 @@
     margin-bottom: 0;
   }
 }
+.about-tab-common-rules__list-item--rtl {
+  text-align: right;
+  direction: rtl;
+}
 
 .about-tab-common-rules__list-item-title {
   margin: 0;
