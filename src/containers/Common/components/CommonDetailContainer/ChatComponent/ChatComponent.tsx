@@ -1,29 +1,18 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useLayoutEffect,
-} from "react";
+import React, { useState, useEffect, useMemo, useCallback, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
-import {useIntersection} from '@/shared/hooks';
+import { useIntersection } from "@/shared/hooks";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 
-import { ButtonIcon } from '@/shared/components/ButtonIcon';
+import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import CloseIcon from "@/shared/icons/close.icon";
 import { getScreenSize } from "@/shared/store/selectors";
 import { CommonShare, Loader } from "@/shared/components";
 import { Common, CommonMember, DiscussionMessage } from "@/shared/models";
 import ChatMessage from "./ChatMessage";
 import { formatDate } from "@/shared/utils";
-import {
-  Colors,
-  ShareViewType,
-  ScreenSize,
-  ChatType,
-} from "@/shared/constants";
+import { Colors, ShareViewType, ScreenSize, ChatType } from "@/shared/constants";
 import { EmptyTabComponent } from "@/containers/Common/components/CommonDetailContainer";
 import { usePrevious } from "@/shared/hooks";
 import "./index.scss";
@@ -83,8 +72,8 @@ export default function ChatComponent({
   const replyDivRef = React.useRef(null);
   const intersection = useIntersection(intersectionRef, {
     root: null,
-    rootMargin: '0px',
-    threshold: 0
+    rootMargin: "0px",
+    threshold: 0,
   });
 
   const dispatch = useDispatch();
@@ -96,13 +85,12 @@ export default function ChatComponent({
   const [height, setHeight] = useState(0);
 
   useLayoutEffect(() => {
-    setHeight((replyDivRef.current as any)?.clientHeight || 0);
-  }, [discussionMessageReply])
+    setHeight((replyDivRef.current as unknown as { clientHeight: number })?.clientHeight || 0);
+  }, [discussionMessageReply]);
 
   const [message, setMessage] = useState("");
   const isSubCommon = Boolean(common?.directParent);
-  const shouldShowJoinToCommonButton =
-    !commonMember && !isJoiningPending && !isSubCommon;
+  const shouldShowJoinToCommonButton = !commonMember && !isJoiningPending && !isSubCommon;
   const messages = discussionMessages.reduce(groupday, {});
   const [isNewMessageLoading, setIsNewMessageLoading] = useState<boolean>(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -110,209 +98,166 @@ export default function ChatComponent({
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const chatId = useMemo(() => `chat-${uuidv4()}`, []);
 
-  const scrollToContainerBottom = useCallback(() =>
-    setTimeout(
-      () =>
-        animateScroll.scrollToBottom(
-          {
+  const scrollToContainerBottom = useCallback(
+    () =>
+      setTimeout(
+        () =>
+          animateScroll.scrollToBottom({
             containerId: chatWrapperId,
             smooth: true,
             delay: 0,
-          }
-        ),
-      0
-    ),
-    [chatWrapperId]
+          }),
+        0,
+      ),
+    [chatWrapperId],
   );
 
   const sendChatMessage = (): void => {
-    if(message) {
+    if (message) {
       setIsNewMessageLoading(true);
       sendMessage && sendMessage(message);
       setMessage("");
     }
-  }
+  };
 
   const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
-    if(event.key === KeyboardKeys.Enter) {
+    if (event.key === KeyboardKeys.Enter) {
       sendChatMessage();
     }
-  }
+  };
 
   useEffect(() => {
-    if (!highlightedMessageId)
-      scrollToContainerBottom();
+    if (!highlightedMessageId) scrollToContainerBottom();
   }, [highlightedMessageId, scrollToContainerBottom]);
 
   useEffect(() => {
     if (
-      (
-        Boolean(prevDiscussionMessages)
-        && (prevDiscussionMessages?.length !== discussionMessages.length)
-      )
-      || isNewMessageLoading
-    ) scrollToContainerBottom();
+      (Boolean(prevDiscussionMessages) && prevDiscussionMessages?.length !== discussionMessages.length) ||
+      isNewMessageLoading
+    )
+      scrollToContainerBottom();
   }, [
     scrollToContainerBottom,
     prevDiscussionMessages,
     prevDiscussionMessages?.length,
     discussionMessages.length,
-    isNewMessageLoading
+    isNewMessageLoading,
   ]);
-
-  useEffect(
-    () => {
-      if (!highlightedMessageId)
-        return;
-
-      setTimeout(
-        () =>
-          scroller.scrollTo(
-            highlightedMessageId,
-            {
-              containerId: chatId,
-              delay: 0,
-              duration: 300,
-              offset: -15,
-              smooth: true,
-            }
-          ),
-        0
-      );
-    },
-    [chatId, highlightedMessageId]
-  );
 
   useEffect(() => {
-    if (
-      !prevDiscussionMessages
-      || (prevDiscussionMessages?.length === discussionMessages.length)
-    ) return;
+    if (!highlightedMessageId) return;
+
+    setTimeout(
+      () =>
+        scroller.scrollTo(highlightedMessageId, {
+          containerId: chatId,
+          delay: 0,
+          duration: 300,
+          offset: -15,
+          smooth: true,
+        }),
+      0,
+    );
+  }, [chatId, highlightedMessageId]);
+
+  useEffect(() => {
+    if (!prevDiscussionMessages || prevDiscussionMessages?.length === discussionMessages.length) return;
 
     setIsNewMessageLoading(false);
-  }, [
-    discussionMessages.length,
-    prevDiscussionMessages,
-    prevDiscussionMessages?.length,
-    setIsNewMessageLoading,
-  ]);
+  }, [discussionMessages.length, prevDiscussionMessages, prevDiscussionMessages?.length, setIsNewMessageLoading]);
 
-  const chatWrapperStyle = useMemo(() => ({height: `calc(100% - ${90 + height}px)`}),[height])
-  const chatInputStyle = useMemo(() => ({minHeight: 82 + height}), [height]);
+  const chatWrapperStyle = useMemo(() => ({ height: `calc(100% - ${90 + height}px)` }), [height]);
+  const chatInputStyle = useMemo(() => ({ minHeight: 82 + height }), [height]);
 
   const MessageReply = useCallback(() => {
-    if(!discussionMessageReply) {
+    if (!discussionMessageReply) {
       return null;
     }
 
     return (
-      <div ref={replyDivRef} className={classNames("bottom-reply-wrapper", {
-        'bottom-reply-wrapper__fixed': !(Number(intersection?.intersectionRatio) > 0)
-        })}>
+      <div
+        ref={replyDivRef}
+        className={classNames("bottom-reply-wrapper", {
+          "bottom-reply-wrapper__fixed": !(Number(intersection?.intersectionRatio) > 0),
+        })}
+      >
         <div className="bottom-reply-message-container">
           <span className="bottom-reply-message-user-name">{discussionMessageReply.ownerName}</span>
           <p className="bottom-reply-message-text">{discussionMessageReply.text}</p>
         </div>
-        <ButtonIcon 
+        <ButtonIcon
           className="bottom-reply-message-close-button"
           onClick={() => {
             dispatch(clearCurrentDiscussionMessageReply());
           }}
         >
-          <CloseIcon
-            fill="#001A36"
-            height={16}
-            width={16}
-          />
+          <CloseIcon fill="#001A36" height={16} width={16} />
         </ButtonIcon>
       </div>
-    )
-  }, [intersection, discussionMessageReply])
+    );
+  }, [intersection, discussionMessageReply]);
 
   return (
     <div className="chat-wrapper" style={chatWrapperStyle}>
-      <div
-        className={`messages ${!dateList.length ? "empty" : ""}`}
-        id={chatWrapperId}
-      >
+      <div className={`messages ${!dateList.length ? "empty" : ""}`} id={chatWrapperId}>
         {dateList.map((day, dayIndex) => {
           const date = new Date(Number(day));
 
           return (
             <ul id={chatId} className="message-list" key={day}>
-              <li className="date-title">
-                {isToday(date) ? "Today" : formatDate(date)}
-              </li>
-              {
-                messages[Number(day)].map((message, messageIndex) =>
-                  (
-                    <ChatMessage
-                      key={message.id}
-                      user={user}
-                      discussionMessage={message}
-                      chatType={type}
-                      highlighted={message.id === highlightedMessageId}
-                      onMessageDropdownOpen={
-                        (messageIndex === messages[Number(day)].length - 1)
-                          ? () => {
-                            if(dayIndex === dateList.length - 1)
-                              scrollToContainerBottom();
-                          }
-                          : undefined
-                      }
-                    />
-                  )
-                )
-              }
+              <li className="date-title">{isToday(date) ? "Today" : formatDate(date)}</li>
+              {messages[Number(day)].map((message, messageIndex) => (
+                <ChatMessage
+                  key={message.id}
+                  user={user}
+                  discussionMessage={message}
+                  chatType={type}
+                  highlighted={message.id === highlightedMessageId}
+                  onMessageDropdownOpen={
+                    messageIndex === messages[Number(day)].length - 1
+                      ? () => {
+                          if (dayIndex === dateList.length - 1) scrollToContainerBottom();
+                        }
+                      : undefined
+                  }
+                />
+              ))}
             </ul>
           );
         })}
-        {(!dateList.length && !isNewMessageLoading) ? (
+        {!dateList.length && !isNewMessageLoading ? (
           <EmptyTabComponent
             currentTab="messages"
-            message={
-              "Have any thoughts? Share them with other members by adding the first comment."
-            }
+            message={"Have any thoughts? Share them with other members by adding the first comment."}
             title="No comments yet"
             isCommonMember={Boolean(commonMember)}
             isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
           />
-        ) : isNewMessageLoading && (
+        ) : (
+          isNewMessageLoading && (
             <div
-              className={
-                classNames(
-                  "new-message-loader-wrapper",
-                  {
-                    "very-first-message": !dateList.length,
-                  }
-                )
-              }
+              className={classNames("new-message-loader-wrapper", {
+                "very-first-message": !dateList.length,
+              })}
             >
               <Loader />
             </div>
           )
-        }
+        )}
       </div>
       {!isAuthorized ? (
         <div className="bottom-chat-wrapper">
           <div className="button-wrapper">
             {shouldShowJoinToCommonButton && (
-              <button
-                className="button-blue join-the-effort-btn"
-                onClick={onOpenJoinModal}
-              >
+              <button className="button-blue join-the-effort-btn" onClick={onOpenJoinModal}>
                 Join the effort
               </button>
             )}
             {common ? (
               <CommonShare
                 common={common}
-                type={
-                  isMobileView
-                    ? ShareViewType.ModalMobile
-                    : ShareViewType.ModalDesktop
-                }
+                type={isMobileView ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop}
                 color={Colors.lightPurple}
                 top="-130px"
               />
@@ -324,8 +269,9 @@ export default function ChatComponent({
       ) : (
         <div ref={intersectionRef} style={chatInputStyle}>
           <MessageReply />
-          <div className={classNames("bottom-chat-wrapper", {
-            'bottom-chat-wrapper__fixed': !(Number(intersection?.intersectionRatio) > 0)
+          <div
+            className={classNames("bottom-chat-wrapper", {
+              "bottom-chat-wrapper__fixed": !(Number(intersection?.intersectionRatio) > 0),
             })}
           >
             {!commonMember ? (
@@ -339,11 +285,7 @@ export default function ChatComponent({
                   onKeyDown={onEnterKeyDown}
                   onChange={(e) => setMessage(e.target.value)}
                 />
-                <button
-                  className="send"
-                  onClick={sendChatMessage}
-                  disabled={!message.length}
-                >
+                <button className="send" onClick={sendChatMessage} disabled={!message.length}>
                   <img src="/icons/send-message.svg" alt="send-message" />
                 </button>
               </>
