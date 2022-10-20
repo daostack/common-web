@@ -49,6 +49,7 @@ export enum ElementDropdownMenuItems {
   Copy,
   Edit,
   Reply,
+  CopyLink,
 }
 
 export interface DropdownRef {
