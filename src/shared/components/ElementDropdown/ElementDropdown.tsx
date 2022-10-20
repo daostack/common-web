@@ -11,6 +11,7 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { Common, Proposal, Discussion, DiscussionMessage } from "@/shared/models";
 import { Dropdown, ElementDropdownMenuItems, DropdownOption, DropdownStyles } from "../Dropdown";
 import "./index.scss";
+import { ReportModal } from "../ReportModal";
 
 interface ElementDropdownProps {
   linkType: DynamicLinkType;
@@ -24,6 +25,7 @@ interface ElementDropdownProps {
   isOwner?: boolean;
   entityType: ENTITY_TYPES;
   onEdit?: () => void;
+  userId?: string;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
@@ -38,6 +40,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   isOwner = false,
   entityType,
   onEdit,
+  userId,
 }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
@@ -47,6 +50,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   const [isShareLinkGenerating, setIsShareLinkGenerating] = useState<boolean>(false);
   const { handleOpen } = useBuildShareLink(linkType, elem, setLinkURL);
   const { isShowing, onOpen, onClose } = useModal(false);
+  const { isShowing: isShowingReport, onOpen: onOpenReport, onClose: onCloseReport } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const onDelete = useCallback(() => {
@@ -85,7 +89,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         searchText: "Share",
         value: ElementDropdownMenuItems.Share,
       },
-      isDiscussionMessage
+      isDiscussionMessage && !isOwner
         ? {
             text: <span>Report</span>,
             searchText: "Report",
@@ -146,8 +150,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const handleMenuItemSelect = useCallback(
     (value: unknown) => {
-      if (value === ElementDropdownMenuItems.Report) return; //TODO: "Reports" dev scope
-
       setSelectedItem(value);
     },
     [setSelectedItem],
@@ -164,8 +166,9 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       selectedItem === null ||
       isShareLinkGenerating
       // || !linkURL
-    )
+    ) {
       return;
+    }
 
     switch (selectedItem) {
       case ElementDropdownMenuItems.Share:
@@ -189,6 +192,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         onEdit && onEdit();
         break;
       case ElementDropdownMenuItems.Report: //TODO: "Reports" dev scope
+        onOpenReport();
         break;
     }
 
@@ -222,6 +226,13 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         sourceUrl={linkURL || ""}
         onClose={onClose}
         type={isMobileView ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop}
+      />
+      <ReportModal
+        userId={userId as string}
+        isShowing={isShowingReport}
+        onClose={onCloseReport}
+        itemId={elem.id}
+        type={entityType}
       />
     </>
   );
