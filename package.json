@@ -134,6 +134,6 @@
     "node": "^14.18.x"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,html}": "prettier --write"
+    "*.{js,jsx,ts,tsx,html,css,scss}": "prettier --write"
   }
 }
