@@ -33,3 +33,9 @@ export const selectUserProposalList = () =>
   createSelector(selectCommons, (state) => state.userProposals);
 export const selectCommonActiveTab = () =>
   createSelector(selectCommons, (state) => state.activeTab);
+
+export const selectCommonStateById = (commonId: string) =>
+  createSelector(
+    selectCommons,
+    (state) => (commonId && state.commonStates[commonId]) || null
+  );

@@ -20,6 +20,7 @@ const initialState: CommonsStateType = {
   currentProposal: null,
   cards: [],
   activeTab: null,
+  commonStates: {},
 };
 
 type Action = ActionType<typeof actions>;
@@ -180,6 +181,13 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
           ...payload,
         };
       }
+    })
+  )
+  .handleAction(actions.updateCommonState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId, state } = payload;
+
+      nextState.commonStates[commonId] = { ...state };
     })
   );
 

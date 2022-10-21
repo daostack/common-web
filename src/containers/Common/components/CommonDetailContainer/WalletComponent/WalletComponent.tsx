@@ -19,14 +19,19 @@ import {
   Time,
 } from "@/shared/models";
 import { Loader } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { AllocateFundsTo, ScreenSize } from "@/shared/constants";
+import { useNotification } from "@/shared/hooks";
 import { sortByCreatedTime, formatPrice } from "@/shared/utils";
 import {
   isFundsAllocationProposal,
   FundingAllocationStatus,
 } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
-import { fetchCommonContributions, fetchCommonProposals } from "../../../store/api";
+import {
+  fetchCommonContributions,
+  fetchCommonProposals,
+  fetchProposalsFromParentCommon,
+} from "../../../store/api";
 import { TransactionsList } from "../";
 import { WalletMenuItems } from "./constants";
 import { useCommonTransactionsChartDataSet } from "./hooks";
@@ -57,6 +62,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
   const [paymentsOutData, setPaymentsOutData] = useState<TransactionData[] | null>(null);
   const [formattedChartData, setFormattedChartData] = useState<ChartData | null>(null);
   const { getCommonTransactionsChartDataSet } = useCommonTransactionsChartDataSet();
+  const { notify } = useNotification();
 
   const screenSize = useSelector(getScreenSize());
   const isMobileView = (screenSize === ScreenSize.Mobile);
@@ -93,36 +99,64 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
   }, [paymentsInData, paymentsOutData, orderedCommonTransactions]);
 
   useEffect(() => {
-    (
-      async () => {
-        if (paymentsInData !== null)
-          return;
+    const parentCommonId = common.directParent?.commonId;
 
-        try {
-          const commonPaymentsIn = (await fetchCommonContributions(common.id))
-            .filter(
-              payment =>
-                (payment.price.currency === Currency.ILS)
-            );
+    const getTransactionDataFromCommonContributions = async (): Promise<
+      TransactionData[]
+    > => {
+      const commonPaymentsIn = await fetchCommonContributions(common.id);
 
-          setPaymentsInData(
-            commonPaymentsIn.map(
-              payment => (
-                {
-                  type: TransactionType.PayIn,
-                  payerId: payment.userId,
-                  amount: payment.price.amount,
-                  createdAt: payment.createdAt,
-                }
-              )
-            ).sort(sortByCreatedTime) as TransactionData[]
-          );
-        } catch (error) {
-          console.error(error);
-        }
+      return commonPaymentsIn
+        .filter((payment) => payment.price.currency === Currency.ILS)
+        .map((payment) => ({
+          type: TransactionType.PayIn,
+          payerId: payment.userId,
+          amount: payment.price.amount,
+          createdAt: payment.createdAt,
+        }));
+    };
+
+    const getTransactionDataFromParentCommon = async (): Promise<
+      TransactionData[]
+    > => {
+      if (!parentCommonId) {
+        return [];
       }
-    )();
-  }, [paymentsInData, setPaymentsInData, common.id]);
+
+      const proposalsFromParentCommon = (
+        await fetchProposalsFromParentCommon(common.id, parentCommonId)
+      ).filter((proposal) => proposal.state === ProposalState.COMPLETED);
+
+      return proposalsFromParentCommon.map<TransactionData>((proposal) => ({
+        type: TransactionType.PayIn,
+        amount: proposal.data.args.amount,
+        createdAt: proposal.createdAt,
+        parentCommonId,
+        fundingRequestDescription: proposal.data.args.description,
+      }));
+    };
+
+    (async () => {
+      if (paymentsInData !== null) return;
+
+      try {
+        const [commonPaymentsIn, transactionDataFromParentCommon] =
+          await Promise.all([
+            getTransactionDataFromCommonContributions(),
+            getTransactionDataFromParentCommon(),
+          ]);
+
+        setPaymentsInData(
+          [...commonPaymentsIn, ...transactionDataFromParentCommon].sort(
+            sortByCreatedTime
+          )
+        );
+      } catch (error) {
+        console.error(error);
+        notify("Something went wrong during pay-in data fetching");
+      }
+    })();
+  }, [paymentsInData, setPaymentsInData, common.id, notify]);
 
   useEffect(() => {
     (
@@ -139,27 +173,29 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
               (proposal) =>
                 proposal.state === ProposalState.COMPLETED &&
                 proposal.data.tracker.status ===
-                FundingAllocationStatus.COMPLETED
+                  FundingAllocationStatus.COMPLETED
             );
 
           setPaymentsOutData(
-            chargedCommonProposals.map(
-              proposal => (
-                {
-                  type: TransactionType.PayOut,
-                  amount: proposal.data.legal.totalInvoicesAmount,
-                  createdAt: proposal.createdAt,
-                  fundingRequestDescription: proposal.data.args.description,
-                }
-              )
-            ).sort(sortByCreatedTime) as TransactionData[]
+            chargedCommonProposals
+              .map((proposal) => ({
+                type: TransactionType.PayOut,
+                amount:
+                  proposal.data.args.to === AllocateFundsTo.SubCommon
+                    ? proposal.data.args.amount
+                    : proposal.data.legal.totalInvoicesAmount,
+                createdAt: proposal.createdAt,
+                fundingRequestDescription: proposal.data.args.description,
+              }))
+              .sort(sortByCreatedTime) as TransactionData[]
           );
         } catch (error) {
           console.error(error);
+          notify("Something went wrong during pay-out data fetching");
         }
       }
     )();
-  }, [paymentsOutData, setPaymentsOutData, common.id]);
+  }, [paymentsOutData, setPaymentsOutData, common.id, notify]);
 
   useEffect(() => {
     if (formattedChartData || !orderedCommonTransactions)

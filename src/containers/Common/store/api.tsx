@@ -1,5 +1,5 @@
 import { getUserListByIds } from "@/containers/Auth/store/api";
-import { ApiEndpoint } from "@/shared/constants";
+import { AllocateFundsTo, ApiEndpoint } from "@/shared/constants";
 import Api from "@/services/Api";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
@@ -55,6 +55,7 @@ import {
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { NotificationItem } from "@/shared/models/Notification";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 
 export async function createGovernance(
   requestData: CreateGovernancePayload
@@ -91,6 +92,26 @@ export async function fetchCommonProposals(commonId: string) {
     .get();
 
   const data = transformFirebaseDataList<Proposal>(proposals);
+
+  return data.sort(
+    (proposal: Proposal, prevProposal: Proposal) =>
+      prevProposal.createdAt?.seconds - proposal.createdAt?.seconds
+  );
+}
+
+export async function fetchProposalsFromParentCommon(
+  subCommonId: string,
+  parentCommonId: string
+): Promise<FundsAllocation[]> {
+  const proposals = await firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .where("data.args.commonId", "==", parentCommonId)
+    .where("data.args.to", "==", AllocateFundsTo.SubCommon)
+    .where("data.args.subcommonId", "==", subCommonId)
+    .get();
+
+  const data = transformFirebaseDataList<FundsAllocation>(proposals);
 
   return data.sort(
     (proposal: Proposal, prevProposal: Proposal) =>
