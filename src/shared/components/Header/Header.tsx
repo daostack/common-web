@@ -9,20 +9,18 @@ import {
   useAnyMandatoryRoles,
   useMatchRoute,
   useOutsideClick,
+  useScreenSize,
 } from "@/shared/hooks";
 import { UserRole } from "@/shared/models";
-import { setAreReportsLoading } from "@/shared/store/actions";
+import { setAreReportsLoading, setTutorialModalState } from "@/shared/store/actions";
 import {
   selectAreReportsLoading,
   selectHeader,
 } from "@/shared/store/selectors";
-import { ApiEndpoint, Colors, ROUTE_PATHS, ScreenSize } from "../../constants";
+import { ApiEndpoint, HEADER_MOBILE_SCREEN_SIZE, ROUTE_PATHS } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
-import { getScreenSize } from "../../store/selectors";
 import { getUserName, isMobile, saveByURL } from "../../utils";
-import DownloadCommonApp from "../DownloadCommonApp/DownloadCommonApp";
-import MobileLinks from "../MobileLinks/MobileLinks";
 import { Account } from "../Account";
 import {
   authentificated,
@@ -47,17 +45,17 @@ const EXACT_MATCH_ROUTE_PROPS: RouteProps = {
 };
 
 const Header = () => {
+  const isDesktop = useScreenSize(`min-width: ${HEADER_MOBILE_SCREEN_SIZE}px`);
   const history = useHistory();
   const dispatch = useDispatch();
   const sharedHeaderState = useSelector(selectHeader());
-  const screenSize = useSelector(getScreenSize());
   const areReportsLoading = useSelector(selectAreReportsLoading());
   const [showMenu, setShowMenu] = useState(false);
   const isAuthorized = useSelector(authentificated());
   const user = useSelector(selectUser());
   const myAccountBtnRef = useRef(null);
   const { isOutside } = useOutsideClick(myAccountBtnRef);
-  const shouldDisplayAvatar = Boolean(screenSize === ScreenSize.Mobile && user);
+  const shouldDisplayAvatar = Boolean(!isDesktop && user);
   const hasAdminAccess = useAnyMandatoryRoles(ADMIN_ACCESS_ROLES, user?.roles);
   const isTrusteeRoute = useMatchRoute(
     ROUTE_PATHS.TRUSTEE,
@@ -81,8 +79,6 @@ const Header = () => {
   const shouldHideHeader = sharedHeaderState.shouldHideHeader ?? false;
   const shouldShowMenuItems =
     sharedHeaderState.shouldShowMenuItems ?? !isTrusteeRoute;
-  const shouldShowDownloadLinks =
-    sharedHeaderState.shouldShowDownloadLinks ?? !isTrusteeRoute;
   const shouldShowAuth = sharedHeaderState.shouldShowAuth ?? !isTrusteeRoute;
   const shouldShowLanguageDropdown = isHomeRoute || isContactUsRoute;
 
@@ -124,6 +120,10 @@ const Header = () => {
     dispatch(logOut());
   };
 
+  const handleOpenTutorialModal = () => {
+    dispatch(setTutorialModalState({ isShowing: true }));
+  }
+
   const links = (
     <div className="navigation-wrapper" onClick={handleNavLinkClick}>
       {isAuthorized && isMobile() && (
@@ -152,6 +152,12 @@ const Header = () => {
           <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
             My Commons
           </NavLink>
+          <button
+            className="tutorial-button"
+            onClick={handleOpenTutorialModal}
+          >
+            Tutorial
+          </button>
         </>
       )}
 
@@ -214,7 +220,7 @@ const Header = () => {
       >
         <img src="/icons/logo.svg" alt="logo" className="logo" />
       </Link>
-      {screenSize === ScreenSize.Desktop ? (
+      {isDesktop ? (
         <>
           {links}
           {shouldShowLanguageDropdown && <LanguageDropdown />}
@@ -226,11 +232,6 @@ const Header = () => {
               hasAdminAccess={hasAdminAccess}
             />
           )}
-          {!isAuthorized && shouldShowDownloadLinks ? (
-            <div className="mobile-links-container">
-              <MobileLinks color={Colors.black} />
-            </div>
-          ) : null}
         </>
       ) : (
         <>
@@ -243,14 +244,6 @@ const Header = () => {
           </div>
           {showMenu && (
             <div className="menu-wrapper">
-              {shouldShowDownloadLinks && (
-                <DownloadCommonApp
-                  setHasClosedPopup={() => {
-                    return true;
-                  }}
-                  inMenu={true}
-                />
-              )}
               {links}
             </div>
           )}

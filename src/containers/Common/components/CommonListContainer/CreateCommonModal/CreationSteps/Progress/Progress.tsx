@@ -17,6 +17,12 @@ export const PROGRESS_RELATED_STEPS = [
   CreationStep.Review,
 ];
 
+export const SUB_COMMON_PROGRESS_RELATED_STEPS = [
+  CreationStep.GeneralInfo,
+  CreationStep.Rules,
+  CreationStep.Review,
+];
+
 export default function Progress({
   creationStep,
   isSubCommonCreation,
@@ -26,9 +32,10 @@ export default function Progress({
     [isSubCommonCreation]
   );
   const stepData = allStepsData[creationStep];
-  const stepIndex = PROGRESS_RELATED_STEPS.findIndex(
-    (step) => step === creationStep
-  );
+  const steps = isSubCommonCreation
+    ? SUB_COMMON_PROGRESS_RELATED_STEPS
+    : PROGRESS_RELATED_STEPS;
+  const stepIndex = steps.findIndex((step) => step === creationStep);
   const items = useMemo(
     () => getStepProgressItems(allStepsData, isSubCommonCreation),
     [allStepsData]

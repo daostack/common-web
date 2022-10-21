@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import PrivateRoute from "./PrivateRoute";
-import { Content, NotFound, Footer, Header, Modal } from "@/shared/components";
+import { Content, NotFound, Footer, Header, Modal, TutorialModal } from "@/shared/components";
 import { NotificationProvider } from "@/shared/components/Notification";
 import {
   CommonContainer,
@@ -26,7 +26,7 @@ import { SubmitInvoicesContainer } from "../Invoices/containers";
 import { TrusteeContainer } from "../Trustee/containers";
 import { MyAccountContainer } from "../MyAccount/containers/MyAccountContainer";
 
-import { getNotification, selectIsRtlLanguage } from "@/shared/store/selectors";
+import { getNotification, selectIsRtlLanguage, selectTutorialModalState } from "@/shared/store/selectors";
 import { useModal } from "@/shared/hooks";
 import classNames from "classnames";
 import { BackgroundNotification } from "@/shared/components/BackgroundNotification";
@@ -44,6 +44,7 @@ const App = () => {
   const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const isAuthenticated = useSelector(authentificated());
   const notification = useSelector(getNotification());
+  const tutorialModalState = useSelector(selectTutorialModalState());
   const history = useHistory();
   const { search: queryString } = history.location;
 
@@ -152,6 +153,7 @@ const App = () => {
           />
         </Modal>
       )}
+      <TutorialModal isShowing={tutorialModalState.isShowing}/>
       <NotificationProvider>
         <Header />
         <Content>
@@ -210,6 +212,13 @@ const App = () => {
               to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
                 ":id",
                 config.parentsForClimateCommonId
+              )}${queryString}`}
+            />
+            <Redirect
+              from={ROUTE_PATHS.SAVE_SAADIA}
+              to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
+                ":id",
+                config.saadiaCommonId
               )}${queryString}`}
             />
             <Route component={NotFound} />

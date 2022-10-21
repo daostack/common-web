@@ -99,7 +99,8 @@
             font-size: $small;
             color: #001a36;
             word-wrap: break-word;
-
+            white-space: pre-line;
+            
             .time-wrapper-container {
               display: flex;
               flex: 1;
@@ -121,6 +122,12 @@
                 align-self: flex-end;
                 flex: 1;
               }
+            
+            .time-wrapper {
+              font-size: $xxxsmall;
+              font-weight: bold;
+              color: $light-gray-2;
+              text-align: right;
             }
 
           }
@@ -234,8 +241,8 @@
 
     .message-input {
       width: 100%;
-      height: 2.5rem;
-      padding: 0.25rem 1rem;
+      height: 3rem;
+      padding: 0.75rem 1rem 0.5rem;
       border-radius: 20px;
       background-color: #f0f2ff;
       border: none;
@@ -246,6 +253,7 @@
       color: $secondary-blue;
       display: flex;
       align-items: center;
+      box-sizing: border-box;
     }
 
     .send {

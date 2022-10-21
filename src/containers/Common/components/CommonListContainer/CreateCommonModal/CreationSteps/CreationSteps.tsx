@@ -67,8 +67,12 @@ export default function CreationSteps(props: CreationStepsProps) {
       return true;
     }
     scrollTop();
-    setStep((step) => step - 1);
-  }, [step]);
+    setStep((step) =>
+      step === CreationStep.Review && isSubCommonCreation
+        ? CreationStep.Rules
+        : step - 1
+    );
+  }, [step, isSubCommonCreation]);
 
   const handleFormValues = (data?: Partial<IntermediateCreateCommonPayload>) => {
     if (data) {

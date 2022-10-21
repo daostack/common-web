@@ -3,11 +3,15 @@ import classNames from "classnames";
 
 import { useFullText } from "@/shared/hooks";
 import { Discussion, Governance } from "@/shared/models";
-import { getUserName, getDaysAgo } from "@/shared/utils";
+import {
+  getUserName,
+  getDaysAgo,
+  getCirclesWithLowestTier,
+} from "@/shared/utils";
 import { ElementDropdown } from "@/shared/components";
 import { DynamicLinkType, ENTITY_TYPES } from "@/shared/constants";
 import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
-import { getCirclesNames } from "@/shared/utils/circles";
+import { getFilteredByIdCircles } from "@/shared/utils/circles";
 
 interface DiscussionItemComponentProps {
   discussion: Discussion;
@@ -33,11 +37,16 @@ export default function DiscussionItemComponent({
   useEffect(() => {
     if(discussion.circleVisibility) {
       (async () => {
-        const governanceCircles = await getCommonGovernanceCircles(governance.id);
-        const names = getCirclesNames(
+        const governanceCircles = await getCommonGovernanceCircles(
+          governance.id
+        );
+        const filteredByIdCircles = getFilteredByIdCircles(
           governanceCircles ? Object.values(governanceCircles) : null,
           discussion.circleVisibility
         );
+        const names = getCirclesWithLowestTier(filteredByIdCircles)
+          .map(({ name }) => name)
+          .join(", ");
         setCircleNames(names);
       })();
     }
