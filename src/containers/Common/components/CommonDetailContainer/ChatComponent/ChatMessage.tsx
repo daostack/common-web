@@ -34,15 +34,15 @@ export default function ChatMessage({
 }: ChatMessageProps) {
   const [isEditMode, setEditMode] = useState(false);
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
-  const updateAtdDate = new Date(discussionMessage.updatedAt.seconds * 1000);
+  const editedAtdDate = new Date(discussionMessage.editedAt?.seconds * 1000);
 
   const isEdited = useMemo(() => {
-    if (updateAtdDate > createdAtDate) {
+    if (editedAtdDate > createdAtDate) {
       return true;
     }
 
     return false;
-  }, [createdAtDate, updateAtdDate]);
+  }, [createdAtDate, editedAtdDate]);
 
   const ReplyMessageContainer = useCallback(() => {
     if (!discussionMessage.parentMessage) {
@@ -79,7 +79,7 @@ export default function ChatMessage({
                 {isEdited && (
                   <div className="time-wrapper edited-time-wrapper ">
                     (Edited{" "}
-                    {updateAtdDate.toLocaleTimeString([], {
+                    {editedAtdDate.toLocaleTimeString([], {
                       hour12: false,
                       hour: "2-digit",
                       minute: "2-digit",

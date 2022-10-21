@@ -1,3 +1,4 @@
+import firebase from "firebase/app";
 import { Moderation } from "@/shared/interfaces/Moderation";
 import { BaseEntity } from "./BaseEntity";
 import { Link } from "./Link";
@@ -36,4 +37,5 @@ export interface DiscussionMessage extends BaseEntity {
   images?: Link[];
   tags?: DiscussionMessageTag[];
   parentMessage: ParentDiscussionMessage | null;
+  editedAt: firebase.firestore.Timestamp;
 }
