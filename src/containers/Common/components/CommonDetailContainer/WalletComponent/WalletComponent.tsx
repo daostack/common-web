@@ -20,6 +20,7 @@ import {
 } from "@/shared/models";
 import { Loader } from "@/shared/components";
 import { AllocateFundsTo, ScreenSize } from "@/shared/constants";
+import { useNotification } from "@/shared/hooks";
 import { sortByCreatedTime, formatPrice } from "@/shared/utils";
 import {
   isFundsAllocationProposal,
@@ -61,6 +62,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
   const [paymentsOutData, setPaymentsOutData] = useState<TransactionData[] | null>(null);
   const [formattedChartData, setFormattedChartData] = useState<ChartData | null>(null);
   const { getCommonTransactionsChartDataSet } = useCommonTransactionsChartDataSet();
+  const { notify } = useNotification();
 
   const screenSize = useSelector(getScreenSize());
   const isMobileView = (screenSize === ScreenSize.Mobile);
@@ -151,9 +153,10 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
         );
       } catch (error) {
         console.error(error);
+        notify("Something went wrong during pay-in data fetching");
       }
     })();
-  }, [paymentsInData, setPaymentsInData, common.id]);
+  }, [paymentsInData, setPaymentsInData, common.id, notify]);
 
   useEffect(() => {
     (
@@ -188,10 +191,11 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
           );
         } catch (error) {
           console.error(error);
+          notify("Something went wrong during pay-out data fetching");
         }
       }
     )();
-  }, [paymentsOutData, setPaymentsOutData, common.id]);
+  }, [paymentsOutData, setPaymentsOutData, common.id, notify]);
 
   useEffect(() => {
     if (formattedChartData || !orderedCommonTransactions)
