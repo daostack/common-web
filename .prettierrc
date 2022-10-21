@@ -10,5 +10,13 @@
   "bracketSpacing": true,
   "jsxBracketSameLine": false,
   "arrowParens": "always",
-  "proseWrap": "preserve"
+  "proseWrap": "preserve",
+  "importOrder": [
+    "^react(.*)$",
+    "<THIRD_PARTY_MODULES>",
+    "^@(?!/)(.*)$",
+    "^@/(.*)$",
+    "^[./]",
+    "^[./]*(.s?css)$"
+  ]
 }
