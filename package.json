@@ -59,8 +59,7 @@
     "commit-hook": "git add .",
     "lint": "eslint -c .eslintrc.json --ext .js,.jsx,.ts,.tsx './src'",
     "lint:fix": "npm run lint -- --fix",
-    "prettier": "prettier --write \"**/*.+(ts|tsx)\"",
-    "hooks:precommit": "yarn prettier && yarn commit-hook"
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -114,9 +113,11 @@
     "eslint-plugin-react": "^7.30.0",
     "eslint-plugin-react-hooks": "^4.5.0",
     "eslint-plugin-unused-imports": "^1.0.0",
+    "husky": ">=6",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
+    "lint-staged": ">=10",
     "prettier": "^2.1.1",
     "react-test-renderer": "^16.10.0",
     "redux-devtools": "^3.5.0",
@@ -131,5 +132,8 @@
   },
   "engines": {
     "node": "^14.18.x"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,html}": "prettier --write"
   }
 }
