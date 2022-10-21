@@ -744,19 +744,33 @@ export const getCommonMemberInfo = async (
   userId: string,
   commonId: string
 ): Promise<CommonMemberPreviewInfo> => {
+  const commons = await getUserCommons(userId);
+  const commonsWithCirclesInfo = await Promise.all(
+    commons.map(async ({ id, name }) => {
+      const [commonMemberInfo, governance] = await Promise.all([
+        getCommonMember(id, userId),
+        getGovernanceByCommonId(id),
+      ]);
 
-  const userCommons = await getUserCommons(userId);
-  const commons = userCommons.filter(({id}) => id !== commonId)
-  const commonsWithCirclesInfo = await Promise.all(commons.map(async ({id, name}) => {
-    const [commonMemberInfo, governance] = await Promise.all([getCommonMember(id, userId), getGovernanceByCommonId(id)]);
+      return {
+        id,
+        name,
+        circles: governance?.circles,
+        circlesMap: commonMemberInfo?.circles.map,
+      };
+    })
+  );
+  const proposal = await fetchUserMemberAdmittanceProposalWithCommonId(
+    userId,
+    commonId
+  );
 
-    return { id, name, circles: governance?.circles, circlesMap: commonMemberInfo?.circles.map };
-  }));
-  const proposal = await fetchUserMemberAdmittanceProposalWithCommonId(userId, commonId);
+  const introToCommon = proposal?.data.args.description;
 
-  const introToCommon =  proposal?.data.args.description;
-
-  return { commons: commonsWithCirclesInfo, introToCommon} as CommonMemberPreviewInfo;
+  return {
+    commons: commonsWithCirclesInfo,
+    introToCommon,
+  } as CommonMemberPreviewInfo;
 };
 
 export const getCommonMembersWithCircleIdAmount = async (

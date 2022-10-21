@@ -1,14 +1,16 @@
 import React, { FC, useState, useEffect, useCallback, useMemo } from "react";
-import { UserAvatar, Modal, Loader} from "@/shared/components";
-import { CommonMemberPreviewInfo, CommonMemberWithUserInfo } from "@/shared/models";
+import { UserAvatar, Modal, Loader } from "@/shared/components";
+import {
+  CommonMemberPreviewInfo,
+  CommonMemberWithUserInfo,
+} from "@/shared/models";
 import { getCommonMemberInfo } from "@/containers/Common/store/api";
 import { getCountryNameFromCode } from "@/shared/assets/countries";
-import { ROUTE_PATHS } from "@/shared/constants";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
 } from "@/shared/utils/circles";
-import "./common-member-preview.scss"
+import "./common-member-preview.scss";
 
 interface CommonMemberPreview {
   member: CommonMemberWithUserInfo;
@@ -32,45 +34,57 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     isShowing = false,
     onClose,
     country,
-    about
+    about,
   } = props;
-  const [previewInfo, setPreviewInfo] = useState<CommonMemberPreviewInfo>({} as CommonMemberPreviewInfo);
+  const [previewInfo, setPreviewInfo] = useState<CommonMemberPreviewInfo>(
+    {} as CommonMemberPreviewInfo
+  );
   const [isLoading, setLoading] = useState(true);
   const commonsInfo = useMemo(() => {
     if (!previewInfo.commons) {
       return [];
     }
 
-    return previewInfo.commons.map((common) => {
-      const governanceCircles = Object.values(common.circles || {});
-      const circleIds = Object.values(common.circlesMap || {});
-      const filteredByIdCircles = getFilteredByIdCircles(
-        governanceCircles,
-        circleIds
-      );
-      const userCircleNames = getCirclesWithHighestTier(filteredByIdCircles)
-        .map(({ name }) => name)
-        .join(", ");
+    return previewInfo.commons
+      .map((common) => {
+        const governanceCircles = Object.values(common.circles || {});
+        const circleIds = Object.values(common.circlesMap || {});
+        const filteredByIdCircles = getFilteredByIdCircles(
+          governanceCircles,
+          circleIds
+        );
+        const userCircleNames = getCirclesWithHighestTier(filteredByIdCircles)
+          .map(({ name }) => name)
+          .join(", ");
 
-      return { ...common, userCircleNames };
-    });
-  },[previewInfo]);
+        return { ...common, userCircleNames };
+      })
+      .reduce<CommonMemberPreviewInfo["commons"]>(
+        (acc, commonInfo) =>
+          commonInfo.id === commonId
+            ? [commonInfo, ...acc]
+            : [...acc, commonInfo],
+        []
+      );
+  }, [previewInfo, commonId]);
 
   useEffect(() => {
-    if(isShowing && member?.userId) {
+    if (isShowing && member?.userId) {
       (async () => {
-        const commonMemberPreviewInfo = await getCommonMemberInfo(member.userId, commonId);
+        const commonMemberPreviewInfo = await getCommonMemberInfo(
+          member.userId,
+          commonId
+        );
         setPreviewInfo(commonMemberPreviewInfo);
         setLoading(false);
       })();
     }
-  },[isShowing, member])
+  }, [isShowing, member]);
 
   const GeneralUserInfo = useCallback(() => {
-    if(isLoading) {
-      return <Loader />
+    if (isLoading) {
+      return <Loader />;
     }
-
 
     return (
       <>
@@ -82,40 +96,46 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
         )}
         {previewInfo.introToCommon && (
           <>
-            <p className="common-member-preview__section-title">Membership intro</p>
-            <div className="common-member-preview__info">{previewInfo.introToCommon}</div>
+            <p className="common-member-preview__section-title">
+              Membership intro
+            </p>
+            <div className="common-member-preview__info">
+              {previewInfo.introToCommon}
+            </div>
           </>
         )}
-        <p className="common-member-preview__section-title">Member of the following Commons</p>
-        {commonsInfo.map((item) => (
-          <div key={item.id} className="common-member-preview__info">
-            <a
-              href={ROUTE_PATHS.COMMON_DETAIL.replace(':id', item.id)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="common-member-preview__common-name-link"
-            >
-              {item.name}
-            </a>
-            {" "}
-            -
-            {" "}
-            {item.userCircleNames}
+        <p className="common-member-preview__section-title">
+          Member of the following Commons
+        </p>
+        {commonsInfo.map((commonInfo) => (
+          <div key={commonInfo.id} className="common-member-preview__info">
+            {commonInfo.name} - {commonInfo.userCircleNames}
+            {commonInfo.id === commonId && " (current)"}
           </div>
         ))}
       </>
-    )
-  },[isLoading, about, previewInfo])
-
+    );
+  }, [isLoading, about, previewInfo, commonId]);
 
   return (
-    <Modal isShowing={isShowing} onClose={onClose} className="common-member-preview">
+    <Modal
+      isShowing={isShowing}
+      onClose={onClose}
+      className="common-member-preview"
+    >
       <div className="common-member-preview__container">
         <div className="common-member-preview__container__header">
-          <UserAvatar photoURL={avatar} className="common-member-preview__container__header__avatar" />
+          <UserAvatar
+            photoURL={avatar}
+            className="common-member-preview__container__header__avatar"
+          />
           <div className="common-member-preview__container__header__user-info">
-            <div className="common-member-preview__container__header__user-info__name">{memberName}</div>
-            <div className="common-member-preview__container__header__user-info__subtitle">{circles}</div>
+            <div className="common-member-preview__container__header__user-info__name">
+              {memberName}
+            </div>
+            <div className="common-member-preview__container__header__user-info__subtitle">
+              {circles}
+            </div>
             {country && (
               <div className="common-member-preview__container__header__user-info__subtitle common-member-preview__container__header__user-info__country">
                 {getCountryNameFromCode(country)}
@@ -126,5 +146,5 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
         <GeneralUserInfo />
       </div>
     </Modal>
-  )
-}
+  );
+};
