@@ -159,10 +159,15 @@ export const addCirclesWithHigherTier = <
   T extends Pick<Circle, "id" | "hierarchy">
 >(
   currentCircles: T[],
-  allCircles: T[]
-): T[] =>
-  allCircles.filter((circleToCheck) => {
-    const isInCurrentCircles = currentCircles.some(
+  allCircles: T[],
+  allowedCircleIds: string[] = []
+): T[] => {
+  const allowedCurrentCircles = currentCircles.filter((circle) =>
+    allowedCircleIds.includes(circle.id)
+  );
+
+  return allCircles.filter((circleToCheck) => {
+    const isInCurrentCircles = allowedCurrentCircles.some(
       (circle) => circle.id === circleToCheck.id
     );
     if (isInCurrentCircles) {
@@ -172,7 +177,7 @@ export const addCirclesWithHigherTier = <
       return false;
     }
 
-    return currentCircles.some(
+    return allowedCurrentCircles.some(
       (circle) =>
         circle.hierarchy &&
         circleToCheck.hierarchy &&
@@ -181,3 +186,4 @@ export const addCirclesWithHigherTier = <
         !circle.hierarchy.exclusions.includes(circleToCheck.hierarchy.tier)
     );
   });
+};
