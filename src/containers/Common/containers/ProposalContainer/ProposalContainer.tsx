@@ -34,6 +34,7 @@ import { VotesModal } from "../../components/ProposalContainer";
 import { useCommonMember, useProposalUserVote } from "../../hooks";
 import {
   addMessageToProposal,
+  clearCurrentDiscussionMessageReply,
   clearCurrentProposal,
   getCommonDetail,
   loadProposalDetail,
@@ -42,6 +43,7 @@ import {
 import { fetchProposalById, subscribeToProposal } from "../../store/api";
 import {
   selectCommonDetail,
+  selectCurrentDiscussionMessageReply,
   selectCurrentProposal,
   selectGovernance,
 } from "../../store/selectors";
@@ -82,6 +84,7 @@ const ProposalContainer = () => {
   const currentProposal = useSelector(selectCurrentProposal());
   const currentCommon = useSelector(selectCommonDetail());
   const governance = useSelector(selectGovernance());
+  const currentDiscussionMessageReply = useSelector(selectCurrentDiscussionMessageReply());
   const [activeTab, setActiveTab] = useState<PROPOSAL_MENU_TABS>(highlightedCommentId ? PROPOSAL_MENU_TABS.Discussions : PROPOSAL_MENU_TABS.Voting);
   const {
     fetched: isCommonMemberFetched,
@@ -122,12 +125,17 @@ const ProposalContainer = () => {
           ownerId: user.uid,
           commonId: currentProposal.data.args.commonId,
           discussionId: currentProposal.discussionId,
+          ...(currentDiscussionMessageReply && {parentId: currentDiscussionMessageReply?.id })
         };
 
         dispatch(addMessageToProposal.request({ payload, proposal: currentProposal }));
+
+        if(currentDiscussionMessageReply) {
+          dispatch(clearCurrentDiscussionMessageReply());
+        }
       }
     },
-    [dispatch, user, currentProposal]
+    [dispatch, user, currentProposal, currentDiscussionMessageReply]
   );
 
   const handleGoBack = () => {
@@ -239,6 +247,7 @@ const ProposalContainer = () => {
 
   useEffect(() => {
     return () => {
+      dispatch(clearCurrentDiscussionMessageReply());
       dispatch(clearCurrentProposal())
     };
   }, [])

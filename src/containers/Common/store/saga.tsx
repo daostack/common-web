@@ -374,9 +374,15 @@ export function* loadProposalDetail(
       new Set(discussionMessages?.map((d) => d.ownerId))
     );
     const owners = (yield fetchOwners(ownerIds)) as User[];
-    const loadeddiscussionMessage = discussionMessages?.map((d) => {
+    const loadedDiscussionMessages = discussionMessages?.map((d) => {
       const newDiscussionMessage = { ...d };
+      const parentMessage = discussionMessages.find(({id}) => id === d.parentId);
       newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      newDiscussionMessage.parentMessage = parentMessage ? {
+        id: parentMessage.id,
+        text: parentMessage.text,
+        ownerName: parentMessage?.ownerName
+      } : null;
       return newDiscussionMessage;
     });
 
@@ -391,7 +397,7 @@ export function* loadProposalDetail(
     }
 
     if (proposal.discussion) {
-      proposal.discussion.discussionMessages = loadeddiscussionMessage;
+      proposal.discussion.discussionMessages = loadedDiscussionMessages;
     }
 
     proposal.proposer = (yield getUserData(
