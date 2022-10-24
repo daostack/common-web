@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest, takeLeading } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { isRequestError } from "@/services/Api";
 import PayMeService from "@/services/PayMeService";
