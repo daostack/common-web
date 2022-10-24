@@ -23,6 +23,10 @@
     margin-left: 7.5rem;
     display: flex;
 
+    .my-account-button-wrapper {
+      flex-shrink: 0;
+    }
+
     .my-account-button {
       display: flex;
       justify-content: center;
@@ -40,17 +44,6 @@
       .my-account-button__arrow-icon--opened {
         transform: rotate(-90deg);
       }
-    }
-
-    .tutorial-button {
-      text-decoration: none;
-      font-size: $moderate;
-      color: $blue;
-      margin-right: 3.125rem;
-      background-color: transparent;
-      border: none;
-      font-family: NunitoSans, sans-serif;
-      cursor: pointer;
     }
 
     .header-wrapper__mobile-link {
@@ -83,7 +76,8 @@
       text-decoration: none;
       font-size: $moderate;
       color: $blue;
-      margin-right: 3.125rem;
+      margin: 0 3.125rem 0 0;
+      padding: 0;
       background-color: transparent;
       border: none;
       font-family: NunitoSans, sans-serif;
@@ -111,11 +105,6 @@
     .navigation-wrapper {
       margin-left: 4.5rem;
 
-      .tutorial-button {
-        font-size: $small;
-        margin-right: 1.875rem;
-      }
-
       button,
       a {
         font-size: $small;
@@ -132,14 +121,6 @@
     height: $header-height-mobile;
     padding: 10px $content-padding-mobile;
     flex-direction: row-reverse;
-
-    .navigation-wrapper {
-
-      .tutorial-button {
-        margin-right: 0px;
-      }
-    }
-
 
     .logo {
       height: 40px;

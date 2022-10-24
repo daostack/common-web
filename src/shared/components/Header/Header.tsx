@@ -127,7 +127,10 @@ const Header = () => {
   const links = (
     <div className="navigation-wrapper" onClick={handleNavLinkClick}>
       {isAuthorized && isMobile() && (
-        <button onClick={() => setShowAccountLinks(!showAccountLinks)}>
+        <button
+          className="my-account-button-wrapper"
+          onClick={() => setShowAccountLinks(!showAccountLinks)}
+        >
           <div ref={myAccountBtnRef} className="my-account-button">
             My Account
             <RightArrowIcon
@@ -152,12 +155,7 @@ const Header = () => {
           <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
             My Commons
           </NavLink>
-          <button
-            className="tutorial-button"
-            onClick={handleOpenTutorialModal}
-          >
-            Tutorial
-          </button>
+          <button onClick={handleOpenTutorialModal}>Tutorial</button>
         </>
       )}
 

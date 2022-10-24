@@ -55,9 +55,7 @@ const LoginContainer: FC = () => {
   const screenSize = useSelector(getScreenSize());
   const history = useHistory();
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const [stage, setStage] = useState(
-    user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
-  );
+  const [stage, setStage] = useState(AuthStage.AuthMethodSelect);
   const [errorText, setErrorText] = useState("");
   const {
     isShowing,
@@ -83,13 +81,14 @@ const LoginContainer: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
-    if(stage === AuthStage.CompleteAccountDetails) {
+    if (stage === AuthStage.CompleteAccountDetails) {
       dispatch(setTutorialModalState({ isShowing: true }));
+      return;
     }
     if (matchRoute(location.pathname, ROUTE_PATHS.HOME, { exact: true })) {
       history.push(ROUTE_PATHS.COMMON_LIST);
     }
-  }, [dispatch, location.pathname]);
+  }, [dispatch, stage, location.pathname]);
 
   const handleError = useCallback((errorText?: string) => {
     setErrorText(errorText || DEFAULT_AUTH_ERROR_TEXT);
@@ -154,12 +153,10 @@ const LoginContainer: FC = () => {
 
   useEffect(() => {
     if (!isShowing) {
-      setStage(
-        user ? AuthStage.CompleteAccountDetails : AuthStage.AuthMethodSelect
-      );
+      setStage(AuthStage.AuthMethodSelect);
       setErrorText("");
     }
-  }, [isShowing, user]);
+  }, [isShowing]);
 
   useEffect(() => {
     if (!isAuthenticated && authCode && shouldOpenLoginModal) {
