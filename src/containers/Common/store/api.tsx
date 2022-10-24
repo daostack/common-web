@@ -47,6 +47,7 @@ import {
   CreateSubCommonPayload,
   UpdateCommonPayload,
   UserMembershipInfo,
+  CreateReportDto,
 } from "@/containers/Common/interfaces";
 import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import {
@@ -56,6 +57,8 @@ import {
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { NotificationItem } from "@/shared/models/Notification";
 import { FundsAllocation } from "@/shared/models/governance/proposals";
+import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
+
 
 export async function createGovernance(
   requestData: CreateGovernancePayload
@@ -363,6 +366,32 @@ export async function addMessageToDiscussion(
   payload: CreateDiscussionMessageDto
 ): Promise<DiscussionMessage> {
   const { data } = await Api.post<DiscussionMessage>(
+    ApiEndpoint.CreateDiscussionMessage,
+    payload
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function deleteDiscussionMessage(
+  discussionMessageId: string
+): Promise<DiscussionMessage> {
+  const { data } = await Api.delete<DiscussionMessage>(
+    ApiEndpoint.CreateDiscussionMessage,
+    {
+      data: {
+        id: discussionMessageId,
+      }
+    }
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function updateDiscussionMessage(
+  payload: UpdateDiscussionMessageDto
+): Promise<DiscussionMessage> {
+  const { data } = await Api.patch<DiscussionMessage>(
     ApiEndpoint.CreateDiscussionMessage,
     payload
   );
@@ -1038,4 +1067,15 @@ export async function fetchSupportersDataByCommonId(
   const data = transformFirebaseDataList<SupportersData>(supportersData);
 
   return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
+}
+
+export async function createReport(
+  requestData: CreateReportDto
+): Promise<DiscussionMessage> {
+  const { data } = await Api.post<DiscussionMessage>(
+    ApiEndpoint.CreateReport,
+    requestData
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
 }

@@ -4,6 +4,7 @@ import {
   Governance,
   Proposal,
   Card,
+  DiscussionMessage,
 } from "@/shared/models";
 import { Tabs } from "@/containers/Common";
 import { LoadingState } from "@/shared/interfaces";
@@ -24,5 +25,6 @@ export interface CommonsStateType {
   userProposals: Proposal[];
   cards: Card[];
   activeTab: Tabs | null;
+  currentDiscussionMessageReply: DiscussionMessage | null,
   commonStates: Record<string, LoadingState<Common | null>>;
 }

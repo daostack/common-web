@@ -15,6 +15,7 @@ export const ApiEndpoint = {
   UploadInvoices: "/payments/payout-docs/add",
   ApproveOrDeclineProposal: "/payments/payout-docs/trustee-decision",
   GetReports: "/reports",
+  CreateReport: "/moderation/report",
   LeaveCommon: "/commons/leave",
   CreateSubscription: "/commons/immediate-contribution",
   UpdateSubscription: "/subscriptions/update",
@@ -25,4 +26,5 @@ export const ApiEndpoint = {
   SeenNotification: "/notifications/seen",
   CreateDiscussion: "/discussions/create",
   CreateDiscussionMessage: "/discussions/message",
+  DeleteDiscussionMessage: "/discussions/delete",
 };

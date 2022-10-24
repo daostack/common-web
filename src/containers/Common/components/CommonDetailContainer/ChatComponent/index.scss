@@ -6,7 +6,6 @@
   padding: 32px;
   padding-top: unset;
   background-color: #f3f4ff;
-  height: calc(100% - 90px);
   border-radius: 0 12px 12px 0;
   position: relative;
   box-sizing: border-box;
@@ -22,11 +21,10 @@
 
     .message-list {
       scrollbar-width: none;
-      overflow: auto;
       padding: 0;
       margin: 0;
 
-      > li {
+      >li {
         list-style: none;
       }
 
@@ -45,11 +43,13 @@
 
     .message-wrapper {
       width: 95%;
+
       .message {
         display: flex;
         position: relative;
         margin-bottom: 1rem;
         width: 25rem;
+
         .icon-wrapper {
           flex-shrink: 0;
           width: 2rem;
@@ -67,6 +67,7 @@
           position: relative;
           margin-bottom: 8px;
           overflow: hidden;
+
           img {
             position: absolute;
             right: 0;
@@ -77,6 +78,7 @@
             border-radius: 50%;
           }
         }
+
         .message-text {
           padding: 0.5rem 1rem;
           border-radius: 0.875rem;
@@ -92,17 +94,37 @@
             color: #001a36;
             margin-bottom: 0.5rem;
           }
+
           .message-content {
             font-size: $small;
             color: #001a36;
             word-wrap: break-word;
             white-space: pre-line;
-            .time-wrapper {
-              font-size: $xxxsmall;
-              font-weight: bold;
-              color: $light-gray-2;
-              text-align: right;
+
+            .time-wrapper-container {
+              display: flex;
+              flex: 1;
+              justify-content: space-between;
+              margin-top: 0.6875rem;
+
+              .time-wrapper {
+                font-size: $xxxsmall;
+                font-weight: bold;
+                color: $light-gray-2;
+                text-align: right;
+              }
+
+              .edited-time-wrapper {
+                font-size: $xxsmall;
+              }
+
+              .creation-time-wrapper {
+                align-self: flex-end;
+                flex: 1;
+              }
+
             }
+
           }
         }
 
@@ -115,8 +137,23 @@
           .custom-dropdown-wrapper__menu {
             z-index: $dropdown-z-index;
           }
+
           svg {
             color: $light-gray-2;
+          }
+        }
+
+        .reply-message-container {
+          padding: 0.375rem 1.125rem;
+          background-color: #D2D8FF;
+          margin-right: 2.5rem;
+          margin-bottom: 0.3125rem;
+          border-radius: 0.875rem;
+
+          .reply-message-content {
+            line-height: 1.5rem;
+            max-height: 3rem;
+            overflow: hidden;
           }
         }
       }
@@ -130,6 +167,7 @@
         0% {
           background-color: $purple;
         }
+
         100% {
           background-color: transparent;
         }
@@ -150,9 +188,6 @@
     }
   }
 
-  .bottom-chat-container {
-    height: 82px;
-  }
   .bottom-chat-wrapper {
     padding: 16px 30px 16px 32px;
     box-shadow: 0 -5px 5px -2px #4f5c6919;
@@ -165,6 +200,7 @@
     align-items: center;
     justify-content: space-between;
     border-radius: 0 0 12px 0;
+
     .text {
       font-size: 14px;
       color: $light-gray-2;
@@ -172,9 +208,11 @@
       width: 100%;
       text-align: center;
     }
+
     .button-wrapper {
       display: flex;
       margin-left: 5px;
+
       .button-blue {
         height: 40px;
         padding: 8px 32px;
@@ -190,9 +228,11 @@
         text-decoration: none;
         margin-right: 10px;
         font-family: NunitoSans-Bold;
+
         &:hover {
           opacity: 0.9;
         }
+
         &:disabled {
           pointer-events: none;
           opacity: 0.5;
@@ -216,6 +256,7 @@
       align-items: center;
       box-sizing: border-box;
     }
+
     .send {
       display: flex;
       justify-content: center;
@@ -225,24 +266,78 @@
       border: none;
       outline: none;
       background: white;
+
       &:disabled {
         cursor: not-allowed;
         opacity: 0.5;
       }
     }
   }
+
   ::-webkit-scrollbar {
-    width: 0; /* Remove scrollbar space */
-    background: transparent; /* Optional: just make scrollbar invisible */
+    width: 0;
+    /* Remove scrollbar space */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
   }
 
   .bottom-chat-wrapper__fixed {
     position: fixed;
-    width: calc(100% - 148px);
+    width: calc(100% - 9.25rem);
     left: 76px;
     margin-bottom: 0;
+
     @include big-phone {
-      width: calc(100% - 62px);
+      width: calc(100% - 3.875rem);
+      left: 0px;
+      margin-inline: 0px;
+    }
+  }
+
+  .bottom-reply-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    background-color: $white;
+    margin: 0px -2rem;
+    padding: 0.4375rem 2rem 0.625rem;
+
+    .bottom-reply-message-container {
+      width: 100%;
+      background-color: $light-gray-4;
+      border-radius: 0.875rem;
+      padding: 0.4375rem 0.75rem;
+
+      .bottom-reply-message-user-name {
+        font-size: $xsmall;
+        line-height: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.125rem;
+      }
+
+      .bottom-reply-message-text {
+        font-size: $small;
+        line-height: 1.5rem;
+        font-weight: 400;
+        margin: 0;
+      }
+
+    }
+
+    .bottom-reply-message-close-button {
+      margin-left: 1.375rem;
+    }
+  }
+
+  .bottom-reply-wrapper__fixed {
+    position: fixed;
+    bottom: 5.25rem;
+    width: calc(100% - 9.25rem);
+    left: 4.75rem;
+    margin-bottom: 0;
+
+    @include big-phone {
+      width: calc(100% - 3.875rem);
       left: 0px;
       margin-inline: 0px;
     }

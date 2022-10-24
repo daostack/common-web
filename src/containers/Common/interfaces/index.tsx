@@ -11,3 +11,4 @@ export * from "./PaymentPayload";
 export * from "./LeaveCommon";
 export * from "./DeleteCommon";
 export * from "./UserMembershipInfo";
+export * from "./CreateReportDto";

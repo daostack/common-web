@@ -17,6 +17,7 @@ import {
   Payment,
   Subscription,
   Vote,
+  DiscussionMessage,
 } from "@/shared/models";
 import { Tabs } from "@/containers/Common";
 import { PayloadWithOptionalCallback } from "@/shared/interfaces";
@@ -30,6 +31,7 @@ import {
   LeaveCommon,
   CreateProposal,
   UpdateCommonPayload,
+  CreateReportDto,
 } from "@/containers/Common/interfaces";
 import {
   CreateVotePayload,
@@ -42,6 +44,7 @@ import {
   ImmediateContributionResponse,
 } from "../interfaces";
 import { ProposalsTypes } from "@/shared/constants";
+import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
 
 export const createGovernance = createAsyncAction(
   CommonsActionTypes.CREATE_GOVERNANCE,
@@ -164,6 +167,34 @@ export const addMessageToDiscussion = createAsyncAction(
     discussion: Discussion;
   },
   Discussion,
+  Error
+>();
+
+export const deleteDiscussionMessage = createAsyncAction(
+  CommonsActionTypes.DELETE_DISCUSSION_MESSAGE,
+  CommonsActionTypes.DELETE_DISCUSSION_MESSAGE_SUCCESS,
+  CommonsActionTypes.DELETE_DISCUSSION_MESSAGE_FAILURE
+)<
+  PayloadWithCallback<
+    { discussionId: string; discussionMessageId: string; },
+    DiscussionMessage,
+    Error
+  >,
+  null,
+  Error
+>();
+
+export const updateDiscussionMessage = createAsyncAction(
+  CommonsActionTypes.UPDATE_DISCUSSION_MESSAGE,
+  CommonsActionTypes.UPDATE_DISCUSSION_MESSAGE_SUCCESS,
+  CommonsActionTypes.UPDATE_DISCUSSION_MESSAGE_FAILURE
+)<
+{
+  payload: UpdateDiscussionMessageDto;
+  discussionId: string;
+  callback: (isSucceed: boolean) => void;
+},
+  null,
   Error
 >();
 
@@ -480,6 +511,28 @@ export const getUserCommons = createAsyncAction(
   CommonsActionTypes.GET_USER_COMMONS_SUCCESS,
   CommonsActionTypes.GET_USER_COMMONS_FAILURE
 )<PayloadWithOptionalCallback<string, Common[], Error>, Common[], Error>();
+
+export const setCurrentDiscussionMessageReply = createStandardAction(
+  CommonsActionTypes.SET_DISCUSSION_MESSAGE_REPLY
+)<DiscussionMessage>();
+
+export const clearCurrentDiscussionMessageReply = createStandardAction(
+  CommonsActionTypes.CLEAR_DISCUSSION_MESSAGE_REPLY
+)();
+
+export const createReport = createAsyncAction(
+  CommonsActionTypes.CREATE_REPORT,
+  CommonsActionTypes.CREATE_REPORT_SUCCESS,
+  CommonsActionTypes.CREATE_REPORT_FAILURE
+)<
+  {
+    payload: CreateReportDto;
+    discussionId: string;
+    callback: (isSucceed: boolean) => void;
+  },
+  boolean,
+  Error
+>();
 
 export const getCommonState = createAsyncAction(
   CommonsActionTypes.GET_COMMON_STATE,

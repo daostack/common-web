@@ -123,6 +123,8 @@
   .chat-container {
     flex: 60;
     margin: -30px;
+    margin-top: 0;
+    overflow-x: hidden;
   }
 }
 
@@ -173,7 +175,7 @@
       }
     }
     .chat-container {
-      margin-top: 5rem;
+      margin-top: 10rem; // TODO: Add dependency with top card for mobile
     }
   }
 }

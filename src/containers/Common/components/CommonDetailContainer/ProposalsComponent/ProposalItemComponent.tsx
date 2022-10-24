@@ -1,12 +1,8 @@
 import React from "react";
 import { UserAvatar, ElementDropdown } from "@/shared/components";
 import { Proposal } from "@/shared/models";
-import {
-  formatPrice,
-  getTextForProposalType,
-  getUserName,
-} from "@/shared/utils";
-import { DynamicLinkType, ProposalsTypes } from "@/shared/constants";
+import { formatPrice, getTextForProposalType, getUserName } from "@/shared/utils";
+import { DynamicLinkType, EntityTypes, ProposalsTypes } from "@/shared/constants";
 import ProposalState from "../ProposalState/ProposalState";
 import { VotesComponent } from "../VotesComponent";
 import { useCommonMember } from "@/containers/Common/hooks";
@@ -16,14 +12,8 @@ interface ProposalItemComponentProps {
   proposal: Proposal;
 }
 
-export default function ProposalItemComponent({
-  proposal,
-  loadProposalDetail,
-}: ProposalItemComponentProps) {
-
-  const {
-    data: commonMember,
-  } = useCommonMember();
+export default function ProposalItemComponent({ proposal, loadProposalDetail }: ProposalItemComponentProps) {
+  const { data: commonMember } = useCommonMember();
 
   let extraData;
   switch (proposal.type) {
@@ -35,20 +25,15 @@ export default function ProposalItemComponent({
   }
 
   return (
-    <div
-      className="proposal-item-wrapper"
-      onClick={() => loadProposalDetail(proposal)}
-    >
+    <div className="proposal-item-wrapper" onClick={() => loadProposalDetail(proposal)}>
       <div className="proposal-item-header">
         <div className="proposal-item-header-top">
-          <div
-            className="proposal-title"
-            title={proposal.data.args.title}
-          >
+          <div className="proposal-title" title={proposal.data.args.title}>
             {proposal.data.args.title}
           </div>
           <div onClick={(e) => e.stopPropagation()}>
             <ElementDropdown
+              entityType={EntityTypes.Proposal}
               linkType={DynamicLinkType.Proposal}
               elem={proposal}
               transparent
@@ -70,21 +55,14 @@ export default function ProposalItemComponent({
           </div>
         </div>
         <div className="proposal-item-votes-wrapper">
-          <VotesComponent
-            proposal={proposal}
-            commonMember={commonMember}
-            preview
-            compact
-          />
+          <VotesComponent proposal={proposal} commonMember={commonMember} preview compact />
         </div>
         <div className="proposal-item-bottom">
           <div className="discussion-count-wrapper">
             <img src="/icons/discussions.svg" alt="discussions" />
             <div className="discussion-count">{proposal.discussion?.messageCount || 0}</div>
           </div>
-          <div className="extra-data">
-            {extraData}
-          </div>
+          <div className="extra-data">{extraData}</div>
         </div>
       </div>
     </div>

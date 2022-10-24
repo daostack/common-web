@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest, takeLeading } from "redux-saga/effects";
+import { call, put, select, takeLatest } from "redux-saga/effects";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { isRequestError } from "@/services/Api";
 import PayMeService from "@/services/PayMeService";
@@ -35,6 +35,7 @@ import {
   subscribeToCommonProposal,
   subscribeToProposal,
   leaveCommon as leaveCommonApi,
+  deleteDiscussionMessage as deleteDiscussionMessageApi, 
   loadUserCards,
   createVote as createVoteApi,
   updateVote as updateVoteApi,
@@ -61,6 +62,8 @@ import {
   getUserCommons as getUserCommonsApi,
   getDiscussionsByIds,
   fetchDiscussionById,
+  updateDiscussionMessage as updateDiscussionMessageApi,
+  createReport as createReportApi
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import {
@@ -293,7 +296,13 @@ export function* loadDiscussionDetail(
 
     const loadedDiscussionMessages = discussionMessage?.map((d) => {
       const newDiscussionMessage = { ...d };
+      const parentMessage = discussionMessage.find(({id}) => id === d.parentId);
       newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      newDiscussionMessage.parentMessage = parentMessage ? {
+        id: parentMessage.id,
+        text: parentMessage.text,
+        ownerName: parentMessage?.ownerName
+      } : null;
       return newDiscussionMessage;
     });
 
@@ -365,9 +374,15 @@ export function* loadProposalDetail(
       new Set(discussionMessages?.map((d) => d.ownerId))
     );
     const owners = (yield fetchOwners(ownerIds)) as User[];
-    const loadedDisscussionMessage = discussionMessages?.map((d) => {
+    const loadedDiscussionMessages = discussionMessages?.map((d) => {
       const newDiscussionMessage = { ...d };
+      const parentMessage = discussionMessages.find(({id}) => id === d.parentId);
       newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      newDiscussionMessage.parentMessage = parentMessage ? {
+        id: parentMessage.id,
+        text: parentMessage.text,
+        ownerName: parentMessage?.ownerName
+      } : null;
       return newDiscussionMessage;
     });
 
@@ -382,7 +397,7 @@ export function* loadProposalDetail(
     }
 
     if (proposal.discussion) {
-      proposal.discussion.discussionMessages = loadedDisscussionMessage;
+      proposal.discussion.discussionMessages = loadedDiscussionMessages;
     }
 
     proposal.proposer = (yield getUserData(
@@ -470,6 +485,37 @@ export function* createDiscussionSaga(
   }
 }
 
+function* subscribeToMessageRefresh(discussionId: string) {
+  const discussion = (yield fetchDiscussionById(
+    discussionId
+  )) as Awaited<ReturnType<typeof fetchDiscussionById>>;
+
+  const unsubscribe = yield call(
+    subscribeToMessages,
+    discussionId,
+    async (data) => {
+      unsubscribe();
+
+      if(discussion) {
+        const updatedDiscussion: Discussion = {
+          ...discussion,
+          discussionMessages: data.sort(
+            (m: DiscussionMessage, mP: DiscussionMessage) =>
+              m.createdAt.seconds - mP.createdAt.seconds
+          ),
+        };
+  
+        store.dispatch(
+          actions.loadDisscussionDetail.request(updatedDiscussion)
+        );
+        store.dispatch(actions.getCommonsList.request());
+      }
+    }
+  );
+
+  return unsubscribe;
+}
+
 export function* addMessageToDiscussionSaga(
   action: ReturnType<typeof actions.addMessageToDiscussion.request>
 ): Generator {
@@ -504,6 +550,46 @@ export function* addMessageToDiscussionSaga(
   } catch (e) {
     if (isError(e)) {
       yield put(actions.addMessageToDiscussion.failure(e));
+      yield put(stopLoading());
+    }
+  }
+}
+
+export function* deleteDiscussionMessage(
+  action: ReturnType<typeof actions.deleteDiscussionMessage.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield deleteDiscussionMessageApi(action.payload.payload.discussionMessageId);
+
+    yield put(actions.deleteDiscussionMessage.success(null));
+    yield subscribeToMessageRefresh(action.payload.payload.discussionId);
+    action.payload.callback(null);
+    yield put(stopLoading());
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.deleteDiscussionMessage.failure(error));
+      action.payload.callback(error);
+      yield put(stopLoading());
+    }
+  }
+}
+
+export function* updateDiscussionMessage(
+  action: ReturnType<typeof actions.updateDiscussionMessage.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield updateDiscussionMessageApi(action.payload.payload);
+
+    yield put(actions.updateDiscussionMessage.success(null));
+    yield subscribeToMessageRefresh(action.payload.discussionId);
+    action.payload.callback(true);
+    yield put(stopLoading());
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.updateDiscussionMessage.failure(error));
+      action.payload.callback(false);
       yield put(stopLoading());
     }
   }
@@ -1334,6 +1420,26 @@ export function* getUserCommons({
   }
 }
 
+export function* createReport(
+  action: ReturnType<typeof actions.createReport.request>
+): Generator {
+  try {
+    yield put(startLoading());
+    yield createReportApi(action.payload.payload);
+
+    yield put(actions.createReport.success(true));
+    yield subscribeToMessageRefresh(action.payload.discussionId);
+    action.payload.callback(true);
+    yield put(stopLoading());
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createReport.failure(error));
+      action.payload.callback(false);
+      yield put(stopLoading());
+    }
+  }
+}
+
 export function* getCommonState({
   payload,
 }: ReturnType<typeof actions.getCommonState.request>): Generator {
@@ -1414,6 +1520,8 @@ export function* commonsSaga() {
   yield takeLatest(actions.loadProposalDetail.request, loadProposalDetail);
   yield takeLatest(actions.loadUserProposalList.request, loadUserProposalList);
   yield takeLatest(actions.createDiscussion.request, createDiscussionSaga);
+  yield takeLatest(actions.deleteDiscussionMessage.request, deleteDiscussionMessage);
+  yield takeLatest(actions.updateDiscussionMessage.request, updateDiscussionMessage);
   yield takeLatest(
     actions.addMessageToDiscussion.request,
     addMessageToDiscussionSaga
@@ -1477,6 +1585,7 @@ export function* commonsSaga() {
   yield takeLatest(actions.getCommonMember.request, getCommonMember);
   yield takeLatest(actions.getCommonMembers.request, getCommonMembers);
   yield takeLatest(actions.getUserCommons.request, getUserCommons);
+  yield takeLatest(actions.createReport.request, createReport);
   yield takeLeadingByIdentifier(
     actions.getCommonState.request,
     (action) => action.payload.payload.commonId,

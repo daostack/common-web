@@ -195,7 +195,6 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   };
 
   const handleSelect = (value: unknown) => {
-    console.log("handleSelect value", value);
     if (isMobileView) {
       onMenuModalClose();
     }

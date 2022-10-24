@@ -44,8 +44,12 @@ export interface Option {
 
 export enum ElementDropdownMenuItems {
   Share,
-  CopyLink,
   Report,
+  Delete,
+  Copy,
+  Edit,
+  Reply,
+  CopyLink,
 }
 
 export interface DropdownRef {
@@ -67,11 +71,12 @@ export interface DropdownProps {
   fullMenuButtonChange?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   isLoading?: boolean;
+  menuInlineStyle?: CSSProperties;
 }
 
 const getFixedMenuStyles = (
   ref: RefObject<HTMLElement>,
-  menuRef: HTMLUListElement | null
+  menuRef: HTMLUListElement | null,
 ): CSSProperties | undefined => {
   if (!ref.current || !menuRef) {
     return;
@@ -100,7 +105,7 @@ const getFixedMenuStyles = (
 const getMenuStyles = (
   ref: RefObject<HTMLElement>,
   menuRef: HTMLUListElement | null,
-  shouldBeFixed?: boolean
+  shouldBeFixed?: boolean,
 ): CSSProperties | undefined => {
   if (!menuRef) {
     return;
@@ -116,10 +121,7 @@ const getMenuStyles = (
   }
 };
 
-const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
-  props,
-  dropdownRef
-) => {
+const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (props, dropdownRef) => {
   const {
     className,
     value,
@@ -134,6 +136,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     fullMenuButtonChange = false,
     shouldBeFixed = true,
     isLoading = false,
+    menuInlineStyle,
   } = props;
   const menuButtonRef = useRef<HTMLElement>(null);
   const [menuRef, setMenuRef] = useState<HTMLUListElement | null>(null);
@@ -141,17 +144,12 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
   const selectedOption = options.find((option) => option.value === value);
   const dropdownId = useMemo(() => `dropdown-${uuidv4()}`, []);
 
-  const handleSelection: MenuWrapperProps<HTMLElement>["onSelection"] = (
-    value,
-    event
-  ) => {
+  const handleSelection: MenuWrapperProps<HTMLElement>["onSelection"] = (value, event) => {
     event.stopPropagation();
     onSelect(value);
   };
 
-  const handleMenuToggle: MenuWrapperProps<HTMLElement>["onMenuToggle"] = ({
-    isOpen,
-  }) => {
+  const handleMenuToggle: MenuWrapperProps<HTMLElement>["onMenuToggle"] = ({ isOpen }) => {
     setIsOpen(isOpen);
 
     if (onMenuToggle) {
@@ -159,10 +157,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     }
   };
 
-  const menuStyles = useMemo(
-    () => getMenuStyles(menuButtonRef, menuRef, shouldBeFixed),
-    [menuRef, shouldBeFixed]
-  );
+  const menuStyles = useMemo(() => getMenuStyles(menuButtonRef, menuRef, shouldBeFixed), [menuRef, shouldBeFixed]);
 
   useImperativeHandle(
     dropdownRef,
@@ -174,7 +169,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
         closeMenu(dropdownId);
       },
     }),
-    [dropdownId]
+    [dropdownId],
   );
 
   return (
@@ -206,28 +201,17 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
             {menuButton || (
               <>
                 <span
-                  className={classNames(
-                    "custom-dropdown-wrapper__value",
-                    styles?.value,
-                    {
-                      [classNames(
-                        "custom-dropdown-wrapper__placeholder",
-                        styles?.placeholder
-                      )]: !menuButtonText && !selectedOption && placeholder,
-                    }
-                  )}
+                  className={classNames("custom-dropdown-wrapper__value", styles?.value, {
+                    [classNames("custom-dropdown-wrapper__placeholder", styles?.placeholder)]:
+                      !menuButtonText && !selectedOption && placeholder,
+                  })}
                 >
-                  {menuButtonText ??
-                    (selectedOption ? selectedOption.text : placeholder)}
+                  {menuButtonText ?? (selectedOption ? selectedOption.text : placeholder)}
                 </span>
                 <RightArrowIcon
-                  className={classNames(
-                    "custom-dropdown-wrapper__arrow-icon",
-                    styles?.arrowIcon,
-                    {
-                      "custom-dropdown-wrapper__arrow-icon--opened": isOpen,
-                    }
-                  )}
+                  className={classNames("custom-dropdown-wrapper__arrow-icon", styles?.arrowIcon, {
+                    "custom-dropdown-wrapper__arrow-icon--opened": isOpen,
+                  })}
                 />
               </>
             )}
@@ -237,50 +221,34 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
           className={classNames("custom-dropdown-wrapper__menu", styles?.menu, {
             "custom-dropdown-wrapper__menu--fixed": shouldBeFixed,
           })}
-          style={menuStyles}
+          style={{ ...menuStyles, ...menuInlineStyle }}
         >
-          {
-            isLoading
-              ? <Loader />
-              : <ul
-                  className={classNames(
-                    "custom-dropdown-wrapper__menu-list",
-                    styles?.menuList
-                  )}
-                  style={menuStyles?.bottom === 0 ? { maxHeight: "100%" } : undefined}
-                  ref={setMenuRef}
-              >
-                {
-                  options.map((option) => (
-                    <MenuItem
-                      key={String(option.value)}
-                      className={classNames(
-                        "custom-dropdown-wrapper__menu-item",
-                        styles?.menuItem,
-                        option.className,
-                        {
-                          "custom-dropdown-wrapper__menu-item--active":
-                          option.value === selectedOption?.value,
-                        }
-                      )}
-                      tag="li"
-                      value={option.value}
-                      text={
-                        option.searchText ||
-                        (typeof option.text === "string" ? option.text : undefined)
-                      }
-                    >
-                      {option.text}
-                    </MenuItem>
-                  ))
-                }
-              </ul>
-          }
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <ul
+              className={classNames("custom-dropdown-wrapper__menu-list", styles?.menuList)}
+              style={menuStyles?.bottom === 0 ? { maxHeight: "100%" } : undefined}
+              ref={setMenuRef}
+            >
+              {options.map((option) => (
+                <MenuItem
+                  key={String(option.value)}
+                  className={classNames("custom-dropdown-wrapper__menu-item", styles?.menuItem, option.className, {
+                    "custom-dropdown-wrapper__menu-item--active": option.value === selectedOption?.value,
+                  })}
+                  tag="li"
+                  value={option.value}
+                  text={option.searchText || (typeof option.text === "string" ? option.text : undefined)}
+                >
+                  {option.text}
+                </MenuItem>
+              ))}
+            </ul>
+          )}
         </Menu>
       </MenuWrapper>
-      {isOpen && shouldBeFixed && (
-        <GlobalOverlay className="custom-dropdown-wrapper__global-overlay" />
-      )}
+      {isOpen && shouldBeFixed && <GlobalOverlay className="custom-dropdown-wrapper__global-overlay" />}
     </>
   );
 };
