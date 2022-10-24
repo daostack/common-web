@@ -149,6 +149,12 @@
           margin-right: 2.5rem;
           margin-bottom: 0.3125rem;
           border-radius: 0.875rem;
+
+          .reply-message-content {
+            line-height: 24px;
+            max-height: 48px;
+            overflow: hidden;
+          }
         }
       }
 

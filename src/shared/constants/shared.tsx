@@ -94,7 +94,7 @@ export enum ChartType {
   Radar = "radar",
 }
 
-export enum ENTITY_TYPES {
+export enum EntityTypes {
   Proposal = "proposal",
   Discussion = "discussion",
   Common = "common",

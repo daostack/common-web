@@ -1,4 +1,4 @@
-import { ENTITY_TYPES } from "@/shared/constants";
+import { EntityTypes } from "@/shared/constants";
 
 interface ModerationData {
   reasons: string;
@@ -9,5 +9,5 @@ interface ModerationData {
 export interface CreateReportDto {
   moderationData: ModerationData;
   userId: string;
-  type: ENTITY_TYPES;
+  type: EntityTypes;
 }

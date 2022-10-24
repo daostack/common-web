@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { setCurrentDiscussionMessageReply } from "@/containers/Common/store/actions";
 import { MenuButton, ShareModal } from "@/shared/components";
-import { DynamicLinkType, Orientation, ShareViewType, ScreenSize, ENTITY_TYPES } from "@/shared/constants";
+import { DynamicLinkType, Orientation, ShareViewType, ScreenSize, EntityTypes } from "@/shared/constants";
 import { useBuildShareLink, useNotification, useModal } from "@/shared/hooks";
 import { copyToClipboard } from "@/shared/utils";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -24,7 +24,7 @@ interface ElementDropdownProps {
   onMenuToggle?: (isOpen: boolean) => void;
   isDiscussionMessage?: boolean;
   isOwner?: boolean;
-  entityType: ENTITY_TYPES;
+  entityType: EntityTypes;
   onEdit?: () => void;
   userId?: string;
 }

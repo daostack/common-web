@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren, useState, useCallback } from "react";
-import { Colors, ENTITY_TYPES } from "@/shared/constants";
+import { Colors, EntityTypes } from "@/shared/constants";
 import { Loader, Button } from "@/shared/components";
 import { Modal } from "../Modal";
 import "./index.scss";
@@ -11,7 +11,7 @@ import { deleteDiscussionMessage } from "@/containers/Common/store/actions";
 interface ReportModalProps {
   isShowing: boolean;
   onClose: () => void;
-  type: ENTITY_TYPES;
+  type: EntityTypes;
   linkText?: string;
   entity: DiscussionMessage | Discussion | Proposal | Common;
 }
@@ -25,7 +25,7 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
   const onDelete = useCallback(() => {
     // TODO: Add other entities
     switch (type) {
-      case ENTITY_TYPES.DiscussionMessage: {
+      case EntityTypes.DiscussionMessage: {
         setLoading(true);
         dispatch(
           deleteDiscussionMessage.request({

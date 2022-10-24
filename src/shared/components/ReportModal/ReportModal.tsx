@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren, useState, ChangeEvent, useCallback } from "react";
-import { Colors, ENTITY_TYPES } from "@/shared/constants";
+import { Colors, EntityTypes } from "@/shared/constants";
 import { Loader, Button } from "@/shared/components";
 import { createReport } from "@/containers/Common/store/actions";
 import { Modal } from "../Modal";
@@ -11,7 +11,7 @@ import { Discussion, DiscussionMessage, Proposal, Common } from "@/shared/models
 interface ReportModalProps {
   isShowing: boolean;
   onClose: () => void;
-  type: ENTITY_TYPES;
+  type: EntityTypes;
   linkText?: string;
   entity: Common | Proposal | Discussion | DiscussionMessage;
   userId: string;
@@ -27,7 +27,7 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
   const sendReport = useCallback((): void => {
     // TODO: Add other entities
     switch (type) {
-      case ENTITY_TYPES.DiscussionMessage: {
+      case EntityTypes.DiscussionMessage: {
         setLoading(true);
         dispatch(
           createReport.request({
