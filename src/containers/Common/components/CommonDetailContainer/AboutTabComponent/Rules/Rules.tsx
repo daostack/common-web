@@ -1,6 +1,8 @@
 import React, { FC, useMemo, useState } from "react";
+import classNames from "classnames";
 import { ButtonLink } from "@/shared/components";
 import { UnstructuredRules } from "@/shared/models";
+import { isRTL } from "@/shared/utils";
 import "./index.scss";
 
 interface CommonRulesProps {
@@ -29,9 +31,16 @@ const CommonRules: FC<CommonRulesProps> = (props) => {
 
   return (
     <div className="about-tab-common-rules">
+      <h2 className="about-tab-common-rules__title">Common rules</h2>
       <ul className="about-tab-common-rules__list">
         {currentRules.map((rule, index) => (
-          <li key={index} className="about-tab-common-rules__list-item">
+          <li
+            key={index}
+            className={classNames("about-tab-common-rules__list-item", {
+              "about-tab-common-rules__list-item--rtl":
+                isRTL(rule.title) || isRTL(rule.definition),
+            })}
+          >
             <h3 className="about-tab-common-rules__list-item-title">
               {rule.title}
             </h3>

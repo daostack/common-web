@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeLatest, takeLeading } from "redux-saga/effects";
 import { selectUser } from "@/containers/Auth/store/selectors";
 import { isRequestError } from "@/services/Api";
 import PayMeService from "@/services/PayMeService";
@@ -66,12 +66,17 @@ import {
   createReport as createReportApi
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
-import { selectDiscussions, selectProposals } from "./selectors";
+import {
+  selectCommonStateById,
+  selectDiscussions,
+  selectProposals,
+} from "./selectors";
 import { ProposalsTypes } from "@/shared/constants";
 import { store } from "@/shared/appConfig";
 import { ImmediateContributionResponse } from "../interfaces";
 import { groupBy, isError } from "@/shared/utils";
-import { Awaited } from "@/shared/interfaces";
+import { takeLeadingByIdentifier } from "@/shared/utils/saga";
+import { Awaited, LoadingState } from "@/shared/interfaces";
 import {
   AssignCircle,
   CalculatedVotes,
@@ -81,6 +86,7 @@ import {
   RemoveCircle,
   Survey,
 } from "@/shared/models/governance/proposals";
+import { updateCommonState } from "./actions";
 
 export function* createGovernance(
   action: ReturnType<typeof actions.createGovernance.request>
@@ -1428,6 +1434,72 @@ export function* createReport(
   }
 }
 
+export function* getCommonState({
+  payload,
+}: ReturnType<typeof actions.getCommonState.request>): Generator {
+  const { commonId } = payload.payload;
+
+  try {
+    const commonState =
+      ((yield select(
+        selectCommonStateById(commonId)
+      )) as LoadingState<Common | null>) || null;
+
+    if (commonState?.fetched || commonState?.loading) {
+      return;
+    }
+
+    yield put(
+      updateCommonState({
+        commonId,
+        state: {
+          loading: true,
+          fetched: false,
+          data: null,
+        },
+      })
+    );
+    const common = (yield call(fetchCommonDetail, commonId)) as Awaited<
+      ReturnType<typeof fetchCommonDetail>
+    >;
+
+    yield put(
+      updateCommonState({
+        commonId,
+        state: {
+          loading: false,
+          fetched: true,
+          data: common,
+        },
+      })
+    );
+    yield put(actions.getCommonState.success(common));
+
+    if (payload.callback) {
+      payload.callback(null, common);
+    }
+  } catch (error) {
+    yield put(
+      updateCommonState({
+        commonId,
+        state: {
+          loading: false,
+          fetched: true,
+          data: null,
+        },
+      })
+    );
+
+    if (isError(error)) {
+      yield put(actions.getCommonState.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
@@ -1508,6 +1580,11 @@ export function* commonsSaga() {
   yield takeLatest(actions.getCommonMembers.request, getCommonMembers);
   yield takeLatest(actions.getUserCommons.request, getUserCommons);
   yield takeLatest(actions.createReport.request, createReport);
+  yield takeLeadingByIdentifier(
+    actions.getCommonState.request,
+    (action) => action.payload.payload.commonId,
+    getCommonState
+  );
 }
 
 export default commonsSaga;

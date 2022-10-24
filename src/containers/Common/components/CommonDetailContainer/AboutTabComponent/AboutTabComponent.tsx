@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import classNames from "classnames";
 import { CommonShare, Linkify } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
+import { useFullText } from "@/shared/hooks";
 import { Common, UnstructuredRules } from "@/shared/models";
 import { isRTL } from "@/shared/utils";
 import { CommonWhitepaper } from "../CommonWhitepaper";
@@ -25,45 +26,33 @@ export default function AboutTabComponent({
   isCommonMember,
   isJoiningPending,
 }: AboutTabComponentProps) {
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const {
+    ref: descriptionRef,
+    shouldShowFullText,
+    isFullTextShowing,
+    toggleFullText,
+  } = useFullText();
   const isSubCommon = Boolean(common?.directParent);
   const shouldShowJoinToCommonButton =
     screenSize === ScreenSize.Desktop &&
     !isCommonMember &&
     !isJoiningPending &&
     !isSubCommon;
-  const descriptionParts = common.description.split("\n");
-  const filteredDescriptionParts = isDescriptionExpanded
-    ? descriptionParts
-    : [(descriptionParts[0] || "").substring(0, 200)];
-  const shouldAllowSeeMoreDescription =
-    common.description !== filteredDescriptionParts[0];
-
-  const toggleDescription = () => {
-    setIsDescriptionExpanded((isExpanded) => !isExpanded);
-  };
 
   return (
     <div className="about-name-wrapper">
-      <div className="description">
-        {filteredDescriptionParts.map((text, index) =>
-          text ? (
-            <p
-              className={classNames("about-name-wrapper__description-part", {
-                "about-name-wrapper__description-part--rtl": isRTL(text),
-              })}
-              key={index}
-            >
-              <Linkify>{text}</Linkify>
-            </p>
-          ) : (
-            <br key={index} />
-          )
-        )}
+      <div
+        ref={descriptionRef}
+        className={classNames("description", {
+          "description--rtl": isRTL(common.description),
+          "description--shortened": !shouldShowFullText,
+        })}
+      >
+        <Linkify>{common.description}</Linkify>
       </div>
-      {shouldAllowSeeMoreDescription && (
-        <a className="about-name-wrapper__see-more" onClick={toggleDescription}>
-          See {isDescriptionExpanded ? "less <" : "more >"}
+      {(shouldShowFullText || !isFullTextShowing) && (
+        <a className="about-name-wrapper__see-more" onClick={toggleFullText}>
+          See {shouldShowFullText ? "less <" : "more >"}
         </a>
       )}
       <CommonWhitepaper common={common} />

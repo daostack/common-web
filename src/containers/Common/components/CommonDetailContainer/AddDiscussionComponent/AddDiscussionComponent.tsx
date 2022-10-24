@@ -159,7 +159,8 @@ const AddDiscussionComponent = ({
               : [nonNullData];
             const finalCircles = addCirclesWithHigherTier(
               currentCircles,
-              circleOptions
+              circleOptions,
+              userCircleIds
             );
             formikProps.setFieldValue("circleVisibility", finalCircles);
           };

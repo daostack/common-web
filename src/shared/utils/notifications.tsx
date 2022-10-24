@@ -1,11 +1,12 @@
+import { AllocateFundsTo } from "@/shared/constants";
 import { NotificationData } from "@/shared/interfaces";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 import {
   EVENT_TITLE_STATES,
   EventTypeState,
   NotificationItem,
 } from "@/shared/models/Notification";
 import { formatPrice } from "@/shared/utils/shared";
-import { FundsAllocation } from "@/shared/models/governance/proposals";
 
 export function getFundingRequestNotification(
   data: NotificationItem,
@@ -25,3 +26,10 @@ export function getFundingRequestNotification(
     additionalInformation: formatPrice(proposal.data.args.amount || 0),
   };
 }
+
+export const isAcceptedFundsAllocationToSubCommonEvent = (
+  proposalTo: AllocateFundsTo,
+  eventType: EventTypeState
+): boolean =>
+  eventType === EventTypeState.fundingRequestAccepted &&
+  proposalTo === AllocateFundsTo.SubCommon;

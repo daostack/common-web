@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 
-import { PayloadWithCallback } from "@/shared/interfaces";
+import { LoadingState, PayloadWithCallback } from "@/shared/interfaces";
 import { BuyerTokenPageCreationData } from "@/shared/interfaces/api/payMe";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
@@ -50,11 +50,7 @@ export const createGovernance = createAsyncAction(
   CommonsActionTypes.CREATE_GOVERNANCE,
   CommonsActionTypes.CREATE_GOVERNANCE_SUCCESS,
   CommonsActionTypes.CREATE_GOVERNANCE_FAILURE
-)<
-  PayloadWithCallback<CreateGovernancePayload, void, Error>,
-  void,
-  Error
->();
+)<PayloadWithCallback<CreateGovernancePayload, void, Error>, void, Error>();
 
 export const getCommonsList = createAsyncAction(
   CommonsActionTypes.GET_COMMONS_LIST,
@@ -403,11 +399,7 @@ export const updateBankDetails = createAsyncAction(
   CommonsActionTypes.UPDATE_BANK_DETAILS_SUCCESS,
   CommonsActionTypes.UPDATE_BANK_DETAILS_FAILURE
 )<
-  PayloadWithCallback<
-    Partial<BankAccountDetails>,
-    BankAccountDetails,
-    Error
-  >,
+  PayloadWithCallback<Partial<BankAccountDetails>, BankAccountDetails, Error>,
   BankAccountDetails,
   Error
 >();
@@ -417,11 +409,7 @@ export const deleteBankDetails = createAsyncAction(
   CommonsActionTypes.DELETE_BANK_DETAILS_SUCCESS,
   CommonsActionTypes.DELETE_BANK_DETAILS_FAILURE
 )<
-  PayloadWithCallback<
-    void,
-    BankAccountDetails,
-    Error
-  >,
+  PayloadWithCallback<void, BankAccountDetails, Error>,
   BankAccountDetails,
   Error
 >();
@@ -545,3 +533,24 @@ export const createReport = createAsyncAction(
   boolean,
   Error
 >();
+
+export const getCommonState = createAsyncAction(
+  CommonsActionTypes.GET_COMMON_STATE,
+  CommonsActionTypes.GET_COMMON_STATE_SUCCESS,
+  CommonsActionTypes.GET_COMMON_STATE_FAILURE
+)<
+  PayloadWithOptionalCallback<
+    { commonId: string; force?: boolean },
+    Common | null,
+    Error
+  >,
+  Common | null,
+  Error
+>();
+
+export const updateCommonState = createStandardAction(
+  CommonsActionTypes.UPDATE_COMMON_STATE
+)<{
+  commonId: string;
+  state: LoadingState<Common | null>;
+}>();

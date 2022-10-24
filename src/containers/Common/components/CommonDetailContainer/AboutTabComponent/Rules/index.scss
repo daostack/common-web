@@ -5,6 +5,12 @@
   flex-direction: column;
 }
 
+.about-tab-common-rules__title {
+  margin: 0 0 1.5rem;
+  font-family: NunitoSans, sans-serif;
+  font-size: $moderate-med;
+}
+
 .about-tab-common-rules__list {
   margin: 0;
   padding: 0;
@@ -17,6 +23,10 @@
   &:last-child {
     margin-bottom: 0;
   }
+}
+.about-tab-common-rules__list-item--rtl {
+  text-align: right;
+  direction: rtl;
 }
 
 .about-tab-common-rules__list-item-title {

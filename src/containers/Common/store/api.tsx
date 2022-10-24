@@ -1,5 +1,5 @@
 import { getUserListByIds } from "@/containers/Auth/store/api";
-import { ApiEndpoint } from "@/shared/constants";
+import { AllocateFundsTo, ApiEndpoint } from "@/shared/constants";
 import Api from "@/services/Api";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
@@ -56,7 +56,9 @@ import {
 } from "@/shared/interfaces/api/vote";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { NotificationItem } from "@/shared/models/Notification";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
+
 
 export async function createGovernance(
   requestData: CreateGovernancePayload
@@ -93,6 +95,26 @@ export async function fetchCommonProposals(commonId: string) {
     .get();
 
   const data = transformFirebaseDataList<Proposal>(proposals);
+
+  return data.sort(
+    (proposal: Proposal, prevProposal: Proposal) =>
+      prevProposal.createdAt?.seconds - proposal.createdAt?.seconds
+  );
+}
+
+export async function fetchProposalsFromParentCommon(
+  subCommonId: string,
+  parentCommonId: string
+): Promise<FundsAllocation[]> {
+  const proposals = await firebase
+    .firestore()
+    .collection(Collection.Proposals)
+    .where("data.args.commonId", "==", parentCommonId)
+    .where("data.args.to", "==", AllocateFundsTo.SubCommon)
+    .where("data.args.subcommonId", "==", subCommonId)
+    .get();
+
+  const data = transformFirebaseDataList<FundsAllocation>(proposals);
 
   return data.sort(
     (proposal: Proposal, prevProposal: Proposal) =>
@@ -772,19 +794,33 @@ export const getCommonMemberInfo = async (
   userId: string,
   commonId: string
 ): Promise<CommonMemberPreviewInfo> => {
+  const commons = await getUserCommons(userId);
+  const commonsWithCirclesInfo = await Promise.all(
+    commons.map(async ({ id, name }) => {
+      const [commonMemberInfo, governance] = await Promise.all([
+        getCommonMember(id, userId),
+        getGovernanceByCommonId(id),
+      ]);
 
-  const userCommons = await getUserCommons(userId);
-  const commons = userCommons.filter(({id}) => id !== commonId)
-  const commonsWithCirclesInfo = await Promise.all(commons.map(async ({id, name}) => {
-    const [commonMemberInfo, governance] = await Promise.all([getCommonMember(id, userId), getGovernanceByCommonId(id)]);
+      return {
+        id,
+        name,
+        circles: governance?.circles,
+        circlesMap: commonMemberInfo?.circles.map,
+      };
+    })
+  );
+  const proposal = await fetchUserMemberAdmittanceProposalWithCommonId(
+    userId,
+    commonId
+  );
 
-    return { id, name, circles: governance?.circles, circlesMap: commonMemberInfo?.circles.map };
-  }));
-  const proposal = await fetchUserMemberAdmittanceProposalWithCommonId(userId, commonId);
+  const introToCommon = proposal?.data.args.description;
 
-  const introToCommon =  proposal?.data.args.description;
-
-  return { commons: commonsWithCirclesInfo, introToCommon} as CommonMemberPreviewInfo;
+  return {
+    commons: commonsWithCirclesInfo,
+    introToCommon,
+  } as CommonMemberPreviewInfo;
 };
 
 export const getCommonMembersWithCircleIdAmount = async (

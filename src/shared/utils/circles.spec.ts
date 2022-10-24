@@ -143,9 +143,16 @@ describe("circlesHierarchy", () => {
         CIRCLES_WITHOUT_EXCLUSION[4],
         CIRCLES_WITHOUT_EXCLUSION[5],
       ];
+      const allowedCircleIds = CIRCLES_WITH_EXCLUSION.map(
+        (circle) => circle.id
+      );
 
       expect(
-        addCirclesWithHigherTier(currentCircles, CIRCLES_WITHOUT_EXCLUSION)
+        addCirclesWithHigherTier(
+          currentCircles,
+          CIRCLES_WITHOUT_EXCLUSION,
+          allowedCircleIds
+        )
       ).toEqual(expectedResult);
     });
 
@@ -163,9 +170,40 @@ describe("circlesHierarchy", () => {
         CIRCLES_WITH_EXCLUSION[5],
         CIRCLES_WITH_EXCLUSION[8],
       ];
+      const allowedCircleIds = CIRCLES_WITH_EXCLUSION.map(
+        (circle) => circle.id
+      );
 
       expect(
-        addCirclesWithHigherTier(currentCircles, CIRCLES_WITH_EXCLUSION)
+        addCirclesWithHigherTier(
+          currentCircles,
+          CIRCLES_WITH_EXCLUSION,
+          allowedCircleIds
+        )
+      ).toEqual(expectedResult);
+    });
+
+    it("should return correct circles with restricted allowed circle ids", () => {
+      const currentCircles = [
+        CIRCLES_WITH_EXCLUSION[0],
+        CIRCLES_WITH_EXCLUSION[4],
+      ];
+      const expectedResult = [];
+      const allowedCircleIds = [
+        CIRCLES_WITH_EXCLUSION[1],
+        CIRCLES_WITH_EXCLUSION[2],
+        CIRCLES_WITH_EXCLUSION[3],
+        CIRCLES_WITH_EXCLUSION[5],
+        CIRCLES_WITH_EXCLUSION[6],
+        CIRCLES_WITH_EXCLUSION[7],
+      ].map((circle) => circle.id);
+
+      expect(
+        addCirclesWithHigherTier(
+          currentCircles,
+          CIRCLES_WITH_EXCLUSION,
+          allowedCircleIds
+        )
       ).toEqual(expectedResult);
     });
   });

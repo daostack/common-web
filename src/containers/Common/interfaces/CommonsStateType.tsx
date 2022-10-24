@@ -7,6 +7,7 @@ import {
   DiscussionMessage,
 } from "@/shared/models";
 import { Tabs } from "@/containers/Common";
+import { LoadingState } from "@/shared/interfaces";
 
 export interface CommonsStateType {
   commons: Common[];
@@ -25,4 +26,5 @@ export interface CommonsStateType {
   cards: Card[];
   activeTab: Tabs | null;
   currentDiscussionMessageReply: DiscussionMessage | null,
+  commonStates: Record<string, LoadingState<Common | null>>;
 }
