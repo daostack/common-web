@@ -3,7 +3,11 @@ import classNames from "classnames";
 
 import { useFullText } from "@/shared/hooks";
 import { Discussion, Governance } from "@/shared/models";
-import { getUserName, getDaysAgo, getCirclesWithLowestTier } from "@/shared/utils";
+import {
+  getUserName,
+  getDaysAgo,
+  getCirclesWithLowestTier,
+} from "@/shared/utils";
 import { ElementDropdown } from "@/shared/components";
 import { DynamicLinkType, EntityTypes } from "@/shared/constants";
 import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
@@ -11,24 +15,31 @@ import { getFilteredByIdCircles } from "@/shared/utils/circles";
 
 interface DiscussionItemComponentProps {
   discussion: Discussion;
-  loadDisscussionDetail: (payload: Discussion) => void;
+  loadDiscussionDetail: (payload: Discussion) => void;
   governance: Governance;
 }
 
 export default function DiscussionItemComponent({
   discussion,
-  loadDisscussionDetail,
+  loadDiscussionDetail,
   governance,
 }: DiscussionItemComponentProps) {
   const [imageError, setImageError] = useState(false);
   const [circleNames, setCircleNames] = useState("");
-  const { ref: messageRef, isFullTextShowing, shouldShowFullText, showFullText } = useFullText();
+  const {
+    ref: messageRef,
+    isFullTextShowing,
+    shouldShowFullText,
+    showFullText,
+  } = useFullText();
   const date = new Date();
 
   useEffect(() => {
     if (discussion.circleVisibility) {
       (async () => {
-        const governanceCircles = await getCommonGovernanceCircles(governance.id);
+        const governanceCircles = await getCommonGovernanceCircles(
+          governance.id,
+        );
         const filteredByIdCircles = getFilteredByIdCircles(
           governanceCircles ? Object.values(governanceCircles) : null,
           discussion.circleVisibility,
@@ -52,12 +63,17 @@ export default function DiscussionItemComponent({
               onError={() => setImageError(true)}
             />
           ) : (
-            <img src="/icons/default_user.svg" alt={getUserName(discussion.owner)} />
+            <img
+              src="/icons/default_user.svg"
+              alt={getUserName(discussion.owner)}
+            />
           )}
         </div>
         <div className="creator-information">
           <div className="name">{getUserName(discussion.owner)}</div>
-          <div className="days-ago">{getDaysAgo(date, discussion.createdAt)}</div>
+          <div className="days-ago">
+            {getDaysAgo(date, discussion.createdAt)}
+          </div>
         </div>
         <ElementDropdown
           entityType={EntityTypes.Discussion}
@@ -68,10 +84,17 @@ export default function DiscussionItemComponent({
         />
       </div>
       <div className="discussion-content">
-        <div className="title" onClick={() => loadDisscussionDetail(discussion)} title={discussion.title}>
+        <div
+          className="title"
+          onClick={() => loadDiscussionDetail(discussion)}
+          title={discussion.title}
+        >
           {discussion.title}
         </div>
-        <div className={classNames("description", { full: shouldShowFullText })} ref={messageRef}>
+        <div
+          className={classNames("description", { full: shouldShowFullText })}
+          ref={messageRef}
+        >
           {circleNames ? `Limited to: ${circleNames}` : discussion.message}
         </div>
         {!shouldShowFullText && !isFullTextShowing ? (
@@ -84,9 +107,14 @@ export default function DiscussionItemComponent({
       <div className="bottom-content">
         <div className="discussion-count">
           <img src="/icons/discussions.svg" alt="discussions" />
-          <div className="count">{discussion.discussionMessages?.length || 0}</div>
+          <div className="count">
+            {discussion.discussionMessages?.length || 0}
+          </div>
         </div>
-        <div className="view-all-discussions" onClick={() => loadDisscussionDetail(discussion)}>
+        <div
+          className="view-all-discussions"
+          onClick={() => loadDiscussionDetail(discussion)}
+        >
           View discussion
         </div>
       </div>

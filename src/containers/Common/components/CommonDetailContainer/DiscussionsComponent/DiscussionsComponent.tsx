@@ -7,7 +7,7 @@ import "./index.scss";
 
 interface DiscussionsComponentProps {
   discussions: Discussion[];
-  loadDisscussionDetail: (payload: Discussion) => void;
+  loadDiscussionDetail: (payload: Discussion) => void;
   common: Common;
   governance: Governance;
   isCommonMember: boolean;
@@ -18,7 +18,7 @@ interface DiscussionsComponentProps {
 
 export default function DiscussionsComponent({
   discussions,
-  loadDisscussionDetail,
+  loadDiscussionDetail,
   common,
   governance,
   isCommonMember,
@@ -34,7 +34,8 @@ export default function DiscussionsComponent({
           <div className="add-button" onClick={onAddNewPost}>
             <img src="/icons/add-discussion.svg" alt="add-post" />
             <span>Add New Discussion</span>
-          </div>)}
+          </div>
+        )}
       </div>
       <div className="discussions-component-wrapper">
         {discussions.length > 0 ? (
@@ -43,7 +44,7 @@ export default function DiscussionsComponent({
               <DiscussionItemComponent
                 key={d.id}
                 discussion={d}
-                loadDisscussionDetail={loadDisscussionDetail}
+                loadDiscussionDetail={loadDiscussionDetail}
                 governance={governance}
               />
             ))}

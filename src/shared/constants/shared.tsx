@@ -99,4 +99,5 @@ export enum EntityTypes {
   Discussion = "discussion",
   Common = "common",
   DiscussionMessage = "discussionMessage",
+  ProposalMessage = "proposalMessage",
 }

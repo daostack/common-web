@@ -3,7 +3,12 @@ import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import { DiscussionMessage, User } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
-import { DynamicLinkType, Orientation, ChatType, EntityTypes } from "@/shared/constants";
+import {
+  DynamicLinkType,
+  Orientation,
+  ChatType,
+  EntityTypes,
+} from "@/shared/constants";
 import EditMessageInput from "./EditMessageInput";
 
 interface ChatMessageProps {
@@ -45,7 +50,9 @@ export default function ChatMessage({
 
     return (
       <div className="reply-message-container">
-        <div className="message-name">{discussionMessage.parentMessage?.ownerName}</div>
+        <div className="message-name">
+          {discussionMessage.parentMessage?.ownerName}
+        </div>
         <div className="message-content reply-message-content">
           <Linkify>{discussionMessage.parentMessage.text}</Linkify>
         </div>
@@ -54,7 +61,10 @@ export default function ChatMessage({
   }, [discussionMessage.parentMessage]);
 
   return (
-    <li id={discussionMessage.id} className={classNames("message-wrapper", className, { highlighted })}>
+    <li
+      id={discussionMessage.id}
+      className={classNames("message-wrapper", className, { highlighted })}
+    >
       <div className="message">
         <div className="icon-wrapper">
           <UserAvatar
@@ -64,11 +74,17 @@ export default function ChatMessage({
           />
         </div>
         {isEditMode ? (
-          <EditMessageInput discussionMessage={discussionMessage} onClose={() => setEditMode(false)} />
+          <EditMessageInput
+            isProposalMessage={chatType === ChatType.ProposalComments}
+            discussionMessage={discussionMessage}
+            onClose={() => setEditMode(false)}
+          />
         ) : (
           <div className="message-text">
             <ReplyMessage />
-            <div className="message-name">{getUserName(discussionMessage.owner)}</div>
+            <div className="message-name">
+              {getUserName(discussionMessage.owner)}
+            </div>
             <div className="message-content">
               <Linkify>{discussionMessage.text}</Linkify>
               <div className="time-wrapper-container">
@@ -94,7 +110,11 @@ export default function ChatMessage({
             </div>
             <ElementDropdown
               linkType={getDynamicLinkByChatType(chatType)}
-              entityType={EntityTypes.DiscussionMessage}
+              entityType={
+                chatType === ChatType.DiscussionMessages
+                  ? EntityTypes.DiscussionMessage
+                  : EntityTypes.ProposalMessage
+              }
               elem={discussionMessage}
               className="dropdown-menu"
               variant={Orientation.Horizontal}

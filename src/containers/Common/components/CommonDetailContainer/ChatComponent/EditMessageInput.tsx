@@ -10,9 +10,14 @@ import "./edit-message-input.scss";
 interface Props {
   discussionMessage: DiscussionMessage;
   onClose: () => void;
+  isProposalMessage: boolean;
 }
 
-export default function EditMessageInput({ discussionMessage, onClose }: Props) {
+export default function EditMessageInput({
+  discussionMessage,
+  onClose,
+  isProposalMessage,
+}: Props) {
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const [message, setMessage] = useState(discussionMessage.text);
@@ -27,6 +32,7 @@ export default function EditMessageInput({ discussionMessage, onClose }: Props) 
           ownerId: discussionMessage.ownerId,
           text: message,
         },
+        isProposalMessage,
         discussionId: discussionMessage.discussionId,
         callback(isSucceed) {
           if (isSucceed) {
@@ -40,14 +46,22 @@ export default function EditMessageInput({ discussionMessage, onClose }: Props) 
     );
   };
 
-  const handleChangeMessage = (event: ChangeEvent<HTMLTextAreaElement>): void => {
+  const handleChangeMessage = (
+    event: ChangeEvent<HTMLTextAreaElement>,
+  ): void => {
     setMessage(event.target.value);
   };
 
   return (
     <div className="edit-message-input">
-      <div className="edit-message-input__owner-name">{getUserName(discussionMessage.owner)}</div>
-      <textarea className="edit-message-input__input" value={message} onChange={handleChangeMessage} />
+      <div className="edit-message-input__owner-name">
+        {getUserName(discussionMessage.owner)}
+      </div>
+      <textarea
+        className="edit-message-input__input"
+        value={message}
+        onChange={handleChangeMessage}
+      />
       <div className="edit-message-input__button-container">
         <Button
           disabled={isLoading}
@@ -61,7 +75,11 @@ export default function EditMessageInput({ discussionMessage, onClose }: Props) 
           onClick={updateMessage}
           className="edit-message-input__button-container__button edit-message-input__button-container__save"
         >
-          {isLoading ? <Loader className="edit-message-input__button-container__save__loader" /> : "Save"}
+          {isLoading ? (
+            <Loader className="edit-message-input__button-container__save__loader" />
+          ) : (
+            "Save"
+          )}
         </Button>
       </div>
     </div>

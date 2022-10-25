@@ -5,7 +5,12 @@ import { Modal } from "../Modal";
 import "./index.scss";
 import { useNotification } from "@/shared/hooks";
 import { useDispatch } from "react-redux";
-import { Common, Discussion, DiscussionMessage, Proposal } from "@/shared/models";
+import {
+  Common,
+  Discussion,
+  DiscussionMessage,
+  Proposal,
+} from "@/shared/models";
 import { deleteDiscussionMessage } from "@/containers/Common/store/actions";
 
 interface ReportModalProps {
@@ -22,30 +27,42 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
   const { notify } = useNotification();
   const [isLoading, setLoading] = useState(false);
 
+  const onDeleteMessage = useCallback(
+    (isProposalMessage: boolean): void => {
+      setLoading(true);
+      dispatch(
+        deleteDiscussionMessage.request({
+          payload: {
+            discussionId: (entity as DiscussionMessage).discussionId,
+            discussionMessageId: entity.id,
+            isProposalMessage,
+          },
+          callback(error) {
+            if (error) {
+              setLoading(false);
+              notify("Something went wrong");
+              return;
+            }
+
+            setLoading(false);
+            notify("The message has deleted!");
+            onClose();
+          },
+        }),
+      );
+    },
+    [entity],
+  );
+
   const onDelete = useCallback(() => {
     // TODO: Add other entities
     switch (type) {
       case EntityTypes.DiscussionMessage: {
-        setLoading(true);
-        dispatch(
-          deleteDiscussionMessage.request({
-            payload: {
-              discussionId: (entity as DiscussionMessage).discussionId,
-              discussionMessageId: entity.id,
-            },
-            callback(error) {
-              if (error) {
-                setLoading(false);
-                notify("Something went wrong");
-                return;
-              }
-
-              setLoading(false);
-              notify("The message has deleted!");
-              onClose();
-            },
-          }),
-        );
+        onDeleteMessage(false);
+        break;
+      }
+      case EntityTypes.ProposalMessage: {
+        onDeleteMessage(true);
         break;
       }
     }
@@ -78,7 +95,11 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
           className="delete-modal__button-container__button delete-modal__button-container__send"
           onClick={onDelete}
         >
-          {isLoading ? <Loader className="delete-modal__button-container__send__loader" /> : "Delete"}
+          {isLoading ? (
+            <Loader className="delete-modal__button-container__send__loader" />
+          ) : (
+            "Delete"
+          )}
         </Button>
       </div>
     </Modal>
