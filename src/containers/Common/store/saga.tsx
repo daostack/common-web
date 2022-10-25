@@ -63,7 +63,8 @@ import {
   getDiscussionsByIds,
   fetchDiscussionById,
   updateDiscussionMessage as updateDiscussionMessageApi,
-  createReport as createReportApi
+  createReport as createReportApi,
+  fetchProposalByDiscussionId
 } from "./api";
 import { getUserData } from "../../Auth/store/api";
 import {
@@ -272,7 +273,7 @@ export function* loadCommonDiscussionList(): Generator {
 }
 
 export function* loadDiscussionDetail(
-  action: ReturnType<typeof actions.loadDisscussionDetail.request>
+  action: ReturnType<typeof actions.loadDiscussionDetail.request>
 ): Generator {
   try {
     yield put(startLoading());
@@ -308,11 +309,11 @@ export function* loadDiscussionDetail(
 
     discussion.discussionMessages = loadedDiscussionMessages;
 
-    yield put(actions.loadDisscussionDetail.success(discussion));
+    yield put(actions.loadDiscussionDetail.success(discussion));
     yield put(stopLoading());
   } catch (e) {
     if (isError(e)) {
-      yield put(actions.loadDisscussionDetail.failure(e));
+      yield put(actions.loadDiscussionDetail.failure(e));
       yield put(stopLoading());
     }
   }
@@ -485,7 +486,7 @@ export function* createDiscussionSaga(
   }
 }
 
-function* subscribeToMessageRefresh(discussionId: string) {
+export function* subscribeToDiscussionMessageRefresh(discussionId: string) {
   const discussion = (yield fetchDiscussionById(
     discussionId
   )) as Awaited<ReturnType<typeof fetchDiscussionById>>;
@@ -506,7 +507,7 @@ function* subscribeToMessageRefresh(discussionId: string) {
         };
   
         store.dispatch(
-          actions.loadDisscussionDetail.request(updatedDiscussion)
+          actions.loadDiscussionDetail.request(updatedDiscussion)
         );
         store.dispatch(actions.getCommonsList.request());
       }
@@ -514,6 +515,49 @@ function* subscribeToMessageRefresh(discussionId: string) {
   );
 
   return unsubscribe;
+}
+
+export function* subscribeToProposalMessageRefresh(discussionId: string) {
+  const proposal = (yield fetchProposalByDiscussionId(
+    discussionId
+  )) as Awaited<ReturnType<typeof fetchProposalByDiscussionId>>;
+
+  const unsubscribe = yield call(
+    subscribeToMessages,
+    discussionId,
+    async (data) => {
+      unsubscribe();
+
+      if(proposal && proposal.discussion) {
+        const updatedDiscussion: Discussion = {
+          ...proposal.discussion,
+          discussionMessages: data.sort(
+            (m: DiscussionMessage, mP: DiscussionMessage) =>
+              m.createdAt.seconds - mP.createdAt.seconds
+          ),
+        };
+
+        const updatedProposal = {
+          ...proposal,
+          discussion: updatedDiscussion
+        }
+
+  
+        store.dispatch(
+          actions.loadProposalDetail.request(updatedProposal)
+        );
+        store.dispatch(actions.getCommonsList.request());
+      }
+    }
+  );
+
+  return unsubscribe;
+}
+
+export function* subscribeToMessageRefresh(discussionId: string, isProposalMessage: boolean): Generator {
+  return yield isProposalMessage 
+    ? subscribeToProposalMessageRefresh(discussionId)
+    : subscribeToDiscussionMessageRefresh(discussionId);
 }
 
 export function* addMessageToDiscussionSaga(
@@ -540,7 +584,7 @@ export function* addMessageToDiscussionSaga(
         };
 
         store.dispatch(
-          actions.loadDisscussionDetail.request(updatedDiscussion)
+          actions.loadDiscussionDetail.request(updatedDiscussion)
         );
         store.dispatch(actions.getCommonsList.request());
       }
@@ -563,7 +607,7 @@ export function* deleteDiscussionMessage(
     yield deleteDiscussionMessageApi(action.payload.payload.discussionMessageId);
 
     yield put(actions.deleteDiscussionMessage.success(null));
-    yield subscribeToMessageRefresh(action.payload.payload.discussionId);
+    yield subscribeToMessageRefresh(action.payload.payload.discussionId, action.payload.payload.isProposalMessage);
     action.payload.callback(null);
     yield put(stopLoading());
   } catch (error) {
@@ -583,7 +627,7 @@ export function* updateDiscussionMessage(
     yield updateDiscussionMessageApi(action.payload.payload);
 
     yield put(actions.updateDiscussionMessage.success(null));
-    yield subscribeToMessageRefresh(action.payload.discussionId);
+    yield subscribeToMessageRefresh(action.payload.discussionId, action.payload.isProposalMessage);
     action.payload.callback(true);
     yield put(stopLoading());
   } catch (error) {
@@ -1428,8 +1472,7 @@ export function* createReport(
     yield createReportApi(action.payload.payload);
 
     yield put(actions.createReport.success(true));
-    yield subscribeToMessageRefresh(action.payload.discussionId);
-    action.payload.callback(true);
+    yield action.payload.callback(true);
     yield put(stopLoading());
   } catch (error) {
     if (isError(error)) {
@@ -1515,7 +1558,7 @@ export function* commonsSaga() {
     actions.loadCommonDiscussionList.request,
     loadCommonDiscussionList
   );
-  yield takeLatest(actions.loadDisscussionDetail.request, loadDiscussionDetail);
+  yield takeLatest(actions.loadDiscussionDetail.request, loadDiscussionDetail);
   yield takeLatest(actions.loadProposalList.request, loadProposalList);
   yield takeLatest(actions.loadProposalDetail.request, loadProposalDetail);
   yield takeLatest(actions.loadUserProposalList.request, loadUserProposalList);

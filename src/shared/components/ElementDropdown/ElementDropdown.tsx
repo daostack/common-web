@@ -4,12 +4,28 @@ import classNames from "classnames";
 
 import { setCurrentDiscussionMessageReply } from "@/containers/Common/store/actions";
 import { MenuButton, ShareModal } from "@/shared/components";
-import { DynamicLinkType, Orientation, ShareViewType, ScreenSize, EntityTypes } from "@/shared/constants";
+import {
+  DynamicLinkType,
+  Orientation,
+  ShareViewType,
+  ScreenSize,
+  EntityTypes,
+} from "@/shared/constants";
 import { useBuildShareLink, useNotification, useModal } from "@/shared/hooks";
 import { copyToClipboard } from "@/shared/utils";
 import { getScreenSize } from "@/shared/store/selectors";
-import { Common, Proposal, Discussion, DiscussionMessage } from "@/shared/models";
-import { Dropdown, ElementDropdownMenuItems, DropdownOption, DropdownStyles } from "../Dropdown";
+import {
+  Common,
+  Proposal,
+  Discussion,
+  DiscussionMessage,
+} from "@/shared/models";
+import {
+  Dropdown,
+  ElementDropdownMenuItems,
+  DropdownOption,
+  DropdownStyles,
+} from "../Dropdown";
 import "./index.scss";
 import { ReportModal } from "../ReportModal";
 import { DeleteModal } from "../DeleteModal";
@@ -47,12 +63,23 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   const screenSize = useSelector(getScreenSize());
   const { notify } = useNotification();
   const [linkURL, setLinkURL] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<ElementDropdownMenuItems | unknown>(null);
-  const [isShareLinkGenerating, setIsShareLinkGenerating] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<
+    ElementDropdownMenuItems | unknown
+  >(null);
+  const [isShareLinkGenerating, setIsShareLinkGenerating] =
+    useState<boolean>(false);
   const { handleOpen } = useBuildShareLink(linkType, elem, setLinkURL);
   const { isShowing, onOpen, onClose } = useModal(false);
-  const { isShowing: isShowingReport, onOpen: onOpenReport, onClose: onCloseReport } = useModal(false);
-  const { isShowing: isShowingDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useModal(false);
+  const {
+    isShowing: isShowingReport,
+    onOpen: onOpenReport,
+    onClose: onCloseReport,
+  } = useModal(false);
+  const {
+    isShowing: isShowingDelete,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
+  } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const onReply = useCallback(() => {
@@ -110,14 +137,18 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
           ]
         : [];
 
-    return [...additionalMenuItems, ...discussionMessageItems, ...generalMenuItems];
+    return [
+      ...additionalMenuItems,
+      ...discussionMessageItems,
+      ...generalMenuItems,
+    ];
   }, [linkURL, isDiscussionMessage, isOwner, elem]);
 
   const handleMenuToggle = useCallback(
     (isOpen: boolean) => {
-      if (linkURL) {
-        setIsShareLinkGenerating(true);
+      if (!linkURL) {
         handleOpen();
+        setIsShareLinkGenerating(true);
       }
 
       if (onMenuToggle) onMenuToggle(isOpen);
@@ -139,11 +170,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   }, [isShareLinkGenerating, setIsShareLinkGenerating, linkURL]);
 
   useEffect(() => {
-    if (
-      selectedItem === null ||
-      isShareLinkGenerating
-      // || !linkURL
-    ) {
+    if (selectedItem === null || isShareLinkGenerating || !linkURL) {
       return;
     }
 
@@ -174,10 +201,19 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     }
 
     setSelectedItem(null);
-  }, [selectedItem, notify, isShareLinkGenerating, linkURL, onOpen, setSelectedItem]);
+  }, [
+    selectedItem,
+    notify,
+    isShareLinkGenerating,
+    linkURL,
+    onOpen,
+    setSelectedItem,
+  ]);
 
   const menuInlineStyle = useMemo(
-    () => ({ height: `${2.8125 * (ElementDropdownMenuItemsList.length || 1)}rem` }),
+    () => ({
+      height: `${2.8125 * (ElementDropdownMenuItemsList.length || 1)}rem`,
+    }),
     [ElementDropdownMenuItemsList],
   );
 
@@ -206,7 +242,9 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         isLoading={isShareLinkGenerating}
         sourceUrl={linkURL || ""}
         onClose={onClose}
-        type={isMobileView ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop}
+        type={
+          isMobileView ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop
+        }
       />
       <ReportModal
         userId={userId as string}
@@ -215,7 +253,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         entity={elem}
         type={entityType}
       />
-      <DeleteModal isShowing={isShowingDelete} onClose={onCloseDelete} entity={elem} type={entityType} />
+      <DeleteModal
+        isShowing={isShowingDelete}
+        onClose={onCloseDelete}
+        entity={elem}
+        type={entityType}
+      />
     </>
   );
 };

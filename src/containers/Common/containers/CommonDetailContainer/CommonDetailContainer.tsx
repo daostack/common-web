@@ -70,7 +70,7 @@ import {
   closeCurrentCommon,
   getCommonDetail,
   loadCommonDiscussionList,
-  loadDisscussionDetail,
+  loadDiscussionDetail,
   loadProposalList,
   loadUserCards,
   setCommonActiveTab,
@@ -151,12 +151,12 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   } = useSubCommons();
 
   const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
-    null
+    null,
   );
   const inViewport = useViewPortHook(joinEffortRef, "-50px");
   const inViewPortFooter = useViewPortHook(
     document.querySelector(".footer-wrapper"),
-    "0px"
+    "0px",
   );
   const [stickyClass, setStickyClass] = useState("");
   const [footerClass, setFooterClass] = useState("");
@@ -191,21 +191,21 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   const userDiscussions = useMemo(() => {
     const circleIds = new Set(
-      commonMember ? Object.values(commonMember.circles.map) : []
+      commonMember ? Object.values(commonMember.circles.map) : [],
     );
     return discussions.filter(({ circleVisibility }) => {
       if (!circleVisibility?.length) {
         return true;
       }
       return circleVisibility?.some((discussionCircleId) =>
-        circleIds.has(discussionCircleId)
+        circleIds.has(discussionCircleId),
       );
     });
   }, [discussions, commonMember]);
 
   const activeProposals = useMemo(
     () => proposals.filter((d) => checkIsCountdownState(d)),
-    [proposals]
+    [proposals],
   );
 
   const isSubCommon = Boolean(common?.directParent);
@@ -214,7 +214,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     (proposal) =>
       proposal.type === ProposalsTypes.MEMBER_ADMITTANCE &&
       checkIsCountdownState(proposal) &&
-      proposal.data.args.proposerId === user?.uid
+      proposal.data.args.proposerId === user?.uid,
   );
   const shouldAllowJoiningToCommon =
     !isCommonMember && (isCreationStageReached || !isJoiningPending);
@@ -281,7 +281,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
       setTab(tab);
     },
-    [dispatch, isDiscussionsLoaded, isProposalsLoaded]
+    [dispatch, isDiscussionsLoaded, isProposalsLoaded],
   );
 
   const handleCommonDelete = () => {
@@ -309,7 +309,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         callback: () => {
           setIsCommonFetched(true);
         },
-      })
+      }),
     );
     return () => {
       dispatch(closeCurrentCommon());
@@ -322,10 +322,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   const getDisscussionDetail = useCallback(
     (payload: Discussion | DiscussionWithHighlightedMessage) => {
-      dispatch(loadDisscussionDetail.request(payload));
+      dispatch(loadDiscussionDetail.request(payload));
       onOpen();
     },
-    [dispatch, onOpen]
+    [dispatch, onOpen],
   );
 
   const getProposalDetail = useCallback(
@@ -333,11 +333,12 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
       history.push({
         pathname: ROUTE_PATHS.PROPOSAL_DETAIL.replace(":id", payload.id),
         state: {
-          highlightedCommentId: (payload as ProposalWithHighlightedComment)?.highlightedCommentId,
-        }
+          highlightedCommentId: (payload as ProposalWithHighlightedComment)
+            ?.highlightedCommentId,
+        },
       });
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -361,7 +362,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         break;
       case DynamicLinkType.DiscussionMessage:
         getDisscussionDetail(
-          activeModalElement as DiscussionWithHighlightedMessage
+          activeModalElement as DiscussionWithHighlightedMessage,
         );
         break;
     }
@@ -389,7 +390,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         getDisscussionDetail(disscussion);
       }
     },
-    [userDiscussions, changeTabHandler, getDisscussionDetail]
+    [userDiscussions, changeTabHandler, getDisscussionDetail],
   );
 
   const clickPreviewProposalHandler = useCallback(
@@ -400,7 +401,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         getProposalDetail(proposal);
       }
     },
-    [proposals, changeTabHandler, getProposalDetail]
+    [proposals, changeTabHandler, getProposalDetail],
   );
 
   // const addProposal = useCallback(
@@ -569,7 +570,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         setLoginModalState({
           isShowing: true,
           canCloseModal: false,
-        })
+        }),
       );
     }
   }, [isAuthenticated, dispatch]);
@@ -855,7 +856,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               "content-element inner-main-content-wrapper",
               {
                 wallet: tab === Tabs.Wallet,
-              }
+              },
             )}
           >
             <div className="tab-content-wrapper">
@@ -875,7 +876,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   common={common}
                   governance={governance}
                   discussions={userDiscussions || []}
-                  loadDisscussionDetail={getDisscussionDetail}
+                  loadDiscussionDetail={getDisscussionDetail}
                   isCommonMember={isCommonMember}
                   isCommonMemberFetched={isCommonMemberFetched}
                   isJoiningPending={isJoiningPending}

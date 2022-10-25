@@ -112,7 +112,7 @@ export const loadCommonDiscussionList = createAsyncAction(
   CommonsActionTypes.LOAD_COMMON_DISCUSSIONS_FAILURE
 )<void, Discussion[], Error>();
 
-export const loadDisscussionDetail = createAsyncAction(
+export const loadDiscussionDetail = createAsyncAction(
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL,
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL_SUCCESS,
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL_FAILURE
@@ -176,7 +176,11 @@ export const deleteDiscussionMessage = createAsyncAction(
   CommonsActionTypes.DELETE_DISCUSSION_MESSAGE_FAILURE
 )<
   PayloadWithCallback<
-    { discussionId: string; discussionMessageId: string; },
+    { 
+      discussionId: string;
+      discussionMessageId: string;
+      isProposalMessage: boolean;
+    },
     DiscussionMessage,
     Error
   >,
@@ -192,6 +196,7 @@ export const updateDiscussionMessage = createAsyncAction(
 {
   payload: UpdateDiscussionMessageDto;
   discussionId: string;
+  isProposalMessage: boolean;
   callback: (isSucceed: boolean) => void;
 },
   null,
