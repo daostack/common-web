@@ -146,9 +146,9 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const handleMenuToggle = useCallback(
     (isOpen: boolean) => {
-      if (linkURL) {
-        setIsShareLinkGenerating(true);
+      if (!linkURL) {
         handleOpen();
+        setIsShareLinkGenerating(true);
       }
 
       if (onMenuToggle) onMenuToggle(isOpen);
@@ -170,11 +170,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   }, [isShareLinkGenerating, setIsShareLinkGenerating, linkURL]);
 
   useEffect(() => {
-    if (
-      selectedItem === null ||
-      isShareLinkGenerating
-      // || !linkURL
-    ) {
+    if (selectedItem === null || isShareLinkGenerating || !linkURL) {
       return;
     }
 
