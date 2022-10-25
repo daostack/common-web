@@ -27,15 +27,24 @@ interface CommonImageSliderProps {
 const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
   const { commonName, tagline, initialImage, onImageChange } = props;
   const [swiperRef, setSwiperRef] = useState<SwiperClass | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(() =>
-    !initialImage || typeof initialImage === "string" ? null : initialImage
-  );
+  const [selectedFile, setSelectedFile] = useState<string | File | null>(() => {
+    if (!initialImage) {
+      return null;
+    }
+    if (typeof initialImage !== "string") {
+      return initialImage;
+    }
+
+    const isExampleImage = EXAMPLE_IMAGES.indexOf(initialImage) >= 0;
+
+    return isExampleImage ? null : initialImage;
+  });
   const [isInitialSlideSet, setIsInitialSlideSet] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const className = classNames(
     "create-common-review-image-slider",
-    props.className
+    props.className,
   );
 
   const handleSlideChange = useCallback(
@@ -46,7 +55,7 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
         onImageChange(imageURL);
       }
     },
-    [onImageChange]
+    [onImageChange],
   );
 
   const handleLeftClick = useCallback(() => {
@@ -61,10 +70,13 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
     }
   }, [swiperRef]);
 
-  const handleImageSelect = useCallback((file: File | null) => {
-    setSelectedFile(file);
-    onImageChange(file || EXAMPLE_IMAGES[0]);
-  }, [onImageChange]);
+  const handleImageSelect = useCallback(
+    (file: File | null) => {
+      setSelectedFile(file);
+      onImageChange(file || EXAMPLE_IMAGES[0]);
+    },
+    [onImageChange],
+  );
 
   const renderTextWrapper = (shouldHideHint = false) => (
     <div className="create-common-review-image-slider__text-wrapper">
@@ -106,8 +118,9 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
     }
 
     const index = EXAMPLE_IMAGES.indexOf(initialImage);
+    const isExampleImage = index >= 0;
 
-    if (index >= 0) {
+    if (isExampleImage) {
       swiperRef.slideTo(index);
     } else {
       onImageChange(EXAMPLE_IMAGES[0]);
@@ -153,8 +166,16 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
         <>
           <Image
             className="create-common-review-image-slider__image"
-            src={URL.createObjectURL(selectedFile)}
-            alt={selectedFile.name}
+            src={
+              typeof selectedFile === "string"
+                ? selectedFile
+                : URL.createObjectURL(selectedFile)
+            }
+            alt={
+              typeof selectedFile === "string"
+                ? "Selected image"
+                : selectedFile.name
+            }
           />
           {renderTextWrapper(true)}
         </>
