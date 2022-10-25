@@ -3,23 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { MultiValue, SingleValue } from "react-select";
 import classNames from "classnames";
 import { Formik } from "formik";
-import * as Yup from "yup";
 import { omit } from "lodash";
-import { TextField } from "@/shared/components/Form/Formik";
-import { Modal } from "@/shared/components";
-import { useZoomDisabling } from "@/shared/hooks";
-import { ModalProps } from "@/shared/interfaces";
-
-import "./index.scss";
-import { getScreenSize } from "@/shared/store/selectors";
-import { ScreenSize } from "@/shared/constants";
+import * as Yup from "yup";
 import { createDiscussion } from "@/containers/Common/store/actions";
 import { getCommonGovernanceCircles } from "@/containers/Common/store/api";
-import { Circle, Discussion } from "@/shared/models";
-import { CircleSelectType, CirclesSelect } from "./Select/CirclesSelect";
-import { SelectType } from "@/shared/interfaces/Select";
+import { Modal } from "@/shared/components";
+import { TextField } from "@/shared/components/Form/Formik";
 import { ToggleSwitch } from "@/shared/components/ToggleSwitch/ToggleSwitch";
-import { addCirclesWithHigherTier } from "@/shared/utils";
+import { ScreenSize } from "@/shared/constants";
+import { useZoomDisabling } from "@/shared/hooks";
+import { ModalProps } from "@/shared/interfaces";
+import { SelectType } from "@/shared/interfaces/Select";
+import { Circle, Discussion } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
+import { CircleSelectType, CirclesSelect } from "./Select/CirclesSelect";
+import "./index.scss";
 
 const MAX_TITLE_LENGTH = 49;
 const MAX_MESSAGE_LENGTH = 690;
@@ -41,18 +39,18 @@ const validationSchema = Yup.object({
     .required("Field required")
     .max(MAX_TITLE_LENGTH, "Title too long"),
   isLimitedDiscussion: Yup.boolean(),
-  circleVisibility: Yup.array().when('isLimitedDiscussion', {
+  circleVisibility: Yup.array().when("isLimitedDiscussion", {
     is: (isLimitedDiscussion) => isLimitedDiscussion === true,
-    then: (schema) => schema.min(1, 'Please add at least 1 circle'),
-    otherwise: (schema) => schema.min(0)
-  })
+    then: (schema) => schema.min(1, "Please add at least 1 circle"),
+    otherwise: (schema) => schema.min(0),
+  }),
 });
 
 interface FormValues {
   title: string;
   message: string;
   circleVisibility: SelectType<Circle>[];
-  isLimitedDiscussion: boolean
+  isLimitedDiscussion: boolean;
 }
 
 const INITIAL_VALUES: FormValues = {
@@ -69,7 +67,7 @@ const AddDiscussionComponent = ({
   uid,
   commonId,
   governanceId,
-  userCircleIds
+  userCircleIds,
 }: AddDiscussionComponentProps) => {
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
@@ -93,8 +91,7 @@ const AddDiscussionComponent = ({
       }));
       setCircleOptions(circles);
     })();
-  },[governanceId])
-
+  }, [governanceId]);
 
   useEffect(() => {
     if (isShowing) {
@@ -107,8 +104,10 @@ const AddDiscussionComponent = ({
   const addDiscussion = useCallback(
     (values: FormValues) => {
       setPending(true);
-      const circleVisibility = (values.circleVisibility || [])?.map(({value}) => value);
-      const payload = omit(values, 'isLimitedDiscussion')
+      const circleVisibility = (values.circleVisibility || [])?.map(
+        ({ value }) => value,
+      );
+      const payload = omit(values, "isLimitedDiscussion");
 
       dispatch(
         createDiscussion.request({
@@ -121,10 +120,10 @@ const AddDiscussionComponent = ({
           callback: (discussion: Discussion) => {
             onSuccess(discussion);
           },
-        })
+        }),
       );
     },
-    [dispatch]
+    [dispatch],
   );
 
   return (
@@ -151,18 +150,9 @@ const AddDiscussionComponent = ({
       >
         {(formikProps) => {
           const handleCirclesSelect = (
-            data: MultiValue<CircleSelectType> | SingleValue<CircleSelectType>
+            data: MultiValue<CircleSelectType> | SingleValue<CircleSelectType>,
           ) => {
-            const nonNullData = data ?? [];
-            const currentCircles = Array.isArray(nonNullData)
-              ? nonNullData
-              : [nonNullData];
-            const finalCircles = addCirclesWithHigherTier(
-              currentCircles,
-              circleOptions,
-              userCircleIds
-            );
-            formikProps.setFieldValue("circleVisibility", finalCircles);
+            formikProps.setFieldValue("circleVisibility", data);
           };
 
           return (
@@ -213,7 +203,7 @@ const AddDiscussionComponent = ({
                   onChange={(toggleState) =>
                     formikProps.setFieldValue(
                       "isLimitedDiscussion",
-                      toggleState
+                      toggleState,
                     )
                   }
                 />
