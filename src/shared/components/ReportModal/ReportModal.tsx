@@ -48,7 +48,7 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
               reasons: message,
               itemId: entity.id,
             },
-            type,
+            type: EntityTypes.DiscussionMessage,
             userId,
           },
           discussionId,
