@@ -67,11 +67,8 @@
   color: $secondary-blue;
 }
 
-.common-member-preview__common-name-link {
-  font-family: NunitoSans, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: $small;
-  line-height: 1.25rem;
-  color: $purple-2;
+.common-member-preview__common-name {
+  @extend .common-member-preview__info;
+
+  margin-bottom: 1.125rem;
 }

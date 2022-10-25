@@ -1,11 +1,11 @@
 import React, { FC, useState, useEffect, useCallback, useMemo } from "react";
+import { getCommonMemberInfo } from "@/containers/Common/store/api";
+import { getCountryNameFromCode } from "@/shared/assets/countries";
 import { UserAvatar, Modal, Loader } from "@/shared/components";
 import {
   CommonMemberPreviewInfo,
   CommonMemberWithUserInfo,
 } from "@/shared/models";
-import { getCommonMemberInfo } from "@/containers/Common/store/api";
-import { getCountryNameFromCode } from "@/shared/assets/countries";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
@@ -37,7 +37,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     about,
   } = props;
   const [previewInfo, setPreviewInfo] = useState<CommonMemberPreviewInfo>(
-    {} as CommonMemberPreviewInfo
+    {} as CommonMemberPreviewInfo,
   );
   const [isLoading, setLoading] = useState(true);
   const commonsInfo = useMemo(() => {
@@ -51,7 +51,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
         const circleIds = Object.values(common.circlesMap || {});
         const filteredByIdCircles = getFilteredByIdCircles(
           governanceCircles,
-          circleIds
+          circleIds,
         );
         const userCircleNames = getCirclesWithHighestTier(filteredByIdCircles)
           .map(({ name }) => name)
@@ -64,7 +64,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
           commonInfo.id === commonId
             ? [commonInfo, ...acc]
             : [...acc, commonInfo],
-        []
+        [],
       );
   }, [previewInfo, commonId]);
 
@@ -73,7 +73,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
       (async () => {
         const commonMemberPreviewInfo = await getCommonMemberInfo(
           member.userId,
-          commonId
+          commonId,
         );
         setPreviewInfo(commonMemberPreviewInfo);
         setLoading(false);
@@ -108,7 +108,10 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
           Member of the following Commons
         </p>
         {commonsInfo.map((commonInfo) => (
-          <div key={commonInfo.id} className="common-member-preview__info">
+          <div
+            key={commonInfo.id}
+            className="common-member-preview__common-name"
+          >
             {commonInfo.name} - {commonInfo.userCircleNames}
             {commonInfo.id === commonId && " (current)"}
           </div>
