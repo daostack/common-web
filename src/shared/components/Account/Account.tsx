@@ -6,16 +6,13 @@ import { setAreReportsLoading } from "@/shared/store/actions";
 import { selectAreReportsLoading } from "@/shared/store/selectors";
 import {
   ApiEndpoint,
-  COMMON_APP_APP_STORE_LINK,
-  COMMON_APP_GOOGLE_PLAY_LINK,
-  MobileOperatingSystem,
   ROUTE_PATHS,
 } from "../../constants";
 import { useOutsideClick } from "../../hooks";
 
 import { Loader, UserAvatar } from "../../../shared/components";
 import { User } from "../../../shared/models";
-import { getMobileOperatingSystem, getUserName, saveByURL } from "../../utils";
+import { getUserName, saveByURL } from "../../utils";
 
 import "./index.scss";
 
@@ -85,18 +82,6 @@ const Account = ({
                 onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}
               >
                 My Commons
-              </div>
-              <div
-                className="account-wrapper__menu-item"
-                onClick={() =>
-                  window.open(
-                    getMobileOperatingSystem() === MobileOperatingSystem.iOS
-                      ? COMMON_APP_APP_STORE_LINK
-                      : COMMON_APP_GOOGLE_PLAY_LINK
-                  )
-                }
-              >
-                Download Common app
               </div>
             </>
           )}
