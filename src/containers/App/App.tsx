@@ -1,10 +1,31 @@
 import React, { useCallback, useEffect } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
-import PrivateRoute from "./PrivateRoute";
-import { Content, NotFound, Footer, Header, Modal, TutorialModal } from "@/shared/components";
+import { useHistory } from "react-router";
+import { Redirect, Route, Switch } from "react-router-dom";
+import classNames from "classnames";
+import config from "@/config";
+import { NotFound, Modal, TutorialModal } from "@/shared/components";
+import { BackgroundNotification } from "@/shared/components/BackgroundNotification";
 import { NotificationProvider } from "@/shared/components/Notification";
+import { useModal } from "@/shared/hooks";
+import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
+import { OldLayout } from "@/shared/layouts";
+import { EventTypeState } from "@/shared/models/Notification";
+import { changeScreenSize, showNotification } from "@/shared/store/actions";
+import {
+  getNotification,
+  selectIsRtlLanguage,
+  selectTutorialModalState,
+} from "@/shared/store/selectors";
+import { parseJson } from "@/shared/utils/json";
+import {
+  ROUTE_PATHS,
+  SMALL_SCREEN_BREAKPOINT,
+  ScreenSize,
+  WebviewActions,
+} from "../../shared/constants";
+import { webviewLogin } from "../Auth/store/actions";
+import { authentificated } from "../Auth/store/selectors";
 import {
   CommonContainer,
   ProposalContainer,
@@ -12,32 +33,12 @@ import {
   DiscussionContainer,
   DiscussionMessageContainer,
 } from "../Common";
-import { ContactUsContainer, LandingContainer } from "../Landing";
-import {
-  ROUTE_PATHS,
-  SMALL_SCREEN_BREAKPOINT,
-  ScreenSize,
-  WebviewActions,
-} from "../../shared/constants";
-import { changeScreenSize, showNotification } from "@/shared/store/actions";
-import { authentificated } from "../Auth/store/selectors";
 import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
 import { SubmitInvoicesContainer } from "../Invoices/containers";
-import { TrusteeContainer } from "../Trustee/containers";
+import { ContactUsContainer, LandingContainer } from "../Landing";
 import { MyAccountContainer } from "../MyAccount/containers/MyAccountContainer";
-
-import { getNotification, selectIsRtlLanguage, selectTutorialModalState } from "@/shared/store/selectors";
-import { useModal } from "@/shared/hooks";
-import classNames from "classnames";
-import { BackgroundNotification } from "@/shared/components/BackgroundNotification";
-import { EventTypeState } from "@/shared/models/Notification";
-
-import { useHistory } from "react-router";
-import { parseJson } from "@/shared/utils/json";
-
-import { webviewLogin } from "../Auth/store/actions";
-import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
-import config from "@/config";
+import { TrusteeContainer } from "../Trustee/containers";
+import PrivateRoute from "./PrivateRoute";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -55,22 +56,26 @@ const App = () => {
   } = useModal(false);
 
   useEffect(() => {
-    window.addEventListener('message', event => {
+    window.addEventListener("message", (event) => {
       const data = parseJson(event.data) as FirebaseCredentials;
       if (!data?.providerId) {
         return;
       }
 
       try {
-        dispatch(webviewLogin.request({
-          payload: data,
+        dispatch(
+          webviewLogin.request({
+            payload: data,
             callback: (isLoggedIn) => {
-              if(isLoggedIn) {
-                window.ReactNativeWebView.postMessage(WebviewActions.loginSuccess);
-                history.push(ROUTE_PATHS.MY_COMMONS)
+              if (isLoggedIn) {
+                window.ReactNativeWebView.postMessage(
+                  WebviewActions.loginSuccess,
+                );
+                history.push(ROUTE_PATHS.MY_COMMONS);
               }
-            }
-        }));
+            },
+          }),
+        );
       } catch (err) {
         window.ReactNativeWebView.postMessage(WebviewActions.loginError);
       }
@@ -85,13 +90,13 @@ const App = () => {
 
   useEffect(() => {
     const screenSize = window.matchMedia(
-      `(min-width: ${SMALL_SCREEN_BREAKPOINT})`
+      `(min-width: ${SMALL_SCREEN_BREAKPOINT})`,
     );
     const handleScreenSizeChange = (screenSize: MediaQueryListEvent) => {
       dispatch(
         changeScreenSize(
-          screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile
-        )
+          screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile,
+        ),
       );
     };
 
@@ -129,18 +134,18 @@ const App = () => {
         notification.additionalInformation === "0"
           ? ROUTE_PATHS.PROPOSAL_DETAIL.replace(
               ":id",
-              notification.eventObjectId
+              notification.eventObjectId,
             )
           : ROUTE_PATHS.SUBMIT_INVOICES.replace(
               ":proposalId",
-              notification.eventObjectId
+              notification.eventObjectId,
             );
       history.push(path);
     }
   }, [closeNotification, history, notification, dispatch]);
 
   return (
-    <div className="App">
+    <>
       {isShowingNotification && notification && (
         <Modal
           isShowing={isShowingNotification}
@@ -153,10 +158,9 @@ const App = () => {
           />
         </Modal>
       )}
-      <TutorialModal isShowing={tutorialModalState.isShowing}/>
+      <TutorialModal isShowing={tutorialModalState.isShowing} />
       <NotificationProvider>
-        <Header />
-        <Content>
+        <OldLayout>
           <Switch>
             <Route path={ROUTE_PATHS.HOME} exact component={LandingContainer} />
             <Route
@@ -204,29 +208,28 @@ const App = () => {
               from={ROUTE_PATHS.DEAD_SEA}
               to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
                 ":id",
-                config.deadSeaCommonId
+                config.deadSeaCommonId,
               )}${queryString}`}
             />
             <Redirect
               from={ROUTE_PATHS.PARENTS_FOR_CLIMATE}
               to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
                 ":id",
-                config.parentsForClimateCommonId
+                config.parentsForClimateCommonId,
               )}${queryString}`}
             />
             <Redirect
               from={ROUTE_PATHS.SAVE_SAADIA}
               to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
                 ":id",
-                config.saadiaCommonId
+                config.saadiaCommonId,
               )}${queryString}`}
             />
             <Route component={NotFound} />
           </Switch>
-        </Content>
-        <Footer />
+        </OldLayout>
       </NotificationProvider>
-    </div>
+    </>
   );
 };
 
