@@ -155,7 +155,6 @@ export default function EditRulesModal(props: EditRulesModalProps) {
       case UpdateGovernanceStage.Success:
         return updatedGovernance ? (
           <Success
-            governance={updatedGovernance}
             onFinish={props.onClose}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}

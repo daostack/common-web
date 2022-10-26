@@ -13,14 +13,12 @@ interface ReviewProps {
   currentStep: number;
   onFinish: (data?: Partial<UpdateGovernanceData>) => void;
   currentData: UpdateGovernanceData;
-  handleFormValues: (data: Partial<UpdateGovernanceData>) => void;
 }
 
 export default function Review({
   currentStep,
   onFinish,
   currentData,
-  handleFormValues,
 }: ReviewProps): ReactElement {
   const {
     unstructuredRules = [],
@@ -41,9 +39,9 @@ export default function Review({
   return (
     <>
       {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
-      <div className="update-common-review">
+      <div className="update-rules-review">
         {!isMobileView && (
-          <Separator className="update-common-review__separator" />
+          <Separator className="update-rules-review__separator" />
         )}
         <RuleList rules={unstructuredRules} className="create-common-review__rules" />
         {/* <div className="create-common-review__additional-info-container">
@@ -55,7 +53,7 @@ export default function Review({
             to the Common info after it is published.
           </div>
         </div> */}
-        <div className="update-common-review__submit-button-wrapper">
+        <div className="update-rules-review__submit-button-wrapper">
           <Button
             key="rules-continue"
             onClick={handleContinueClick}

@@ -1,18 +1,13 @@
 import React, { useEffect, useMemo, FC, ReactNode } from "react";
 import { useSelector } from "react-redux";
-import { Button, ButtonVariant, CommonShare } from "@/shared/components";
+import { Button, ButtonVariant } from "@/shared/components";
 import {
-  Colors,
   ScreenSize,
-  ShareViewType,
-  SharePopupVariant,
 } from "@/shared/constants";
-import { Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
 
 interface SuccessProps {
-  governance: Governance;
   onFinish: () => void;
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
@@ -21,7 +16,6 @@ interface SuccessProps {
 
 const Success: FC<SuccessProps> = (props) => {
   const {
-    governance,
     onFinish,
     setTitle,
     setGoBackHandler,
@@ -59,14 +53,10 @@ const Success: FC<SuccessProps> = (props) => {
       <img
         className="update-governance-confirmation-success__image"
         src="/assets/images/illustrations-full-page-launch.svg"
-        alt="Common Created"
+        alt="Rules updated"
       />
-      <h2 className="update-governance-confirmation-success__title">
-        Your journey starts now
-      </h2>
       <p className="update-governance-confirmation-success__sub-title">
-        Your Common is ready. Spread the word and invite others to join you. You
-        can always share it later.
+        You successfully updated your Common's rules!
       </p>
       <div className="update-governance-confirmation-success__buttons">
         <Button

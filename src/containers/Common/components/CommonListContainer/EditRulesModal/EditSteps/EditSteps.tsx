@@ -151,7 +151,7 @@ export default function EditSteps(props: EditStepsProps) {
       case EditStep.Rules:
         return <Rules {...stepProps} />;
       case EditStep.Review:
-        return <Review {...stepProps} handleFormValues={handleFormValues} />;
+        return <Review {...stepProps} />;
       default:
         return null;
     }
