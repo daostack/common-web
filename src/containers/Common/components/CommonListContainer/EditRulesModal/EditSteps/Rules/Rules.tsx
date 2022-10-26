@@ -69,9 +69,9 @@ export default function Rules({
   return (
     <>
       {!isMobileView && <ModalHeaderContent>{progressEl}</ModalHeaderContent>}
-      <div className="create-common-rules">
+      <div className="update-rules">
         {isMobileView && progressEl}
-        <Separator className="create-common-rules__separator" />
+        <Separator className="update-rules__separator" />
         <Formik
           initialValues={getInitialValues(currentData)}
           onSubmit={handleSubmit}
@@ -80,7 +80,7 @@ export default function Rules({
           validateOnMount
         >
           {({ values, errors, touched, isValid }) => (
-            <Form className="create-common-rules__form">
+            <Form className="update-rules__form">
               <RulesArray
                 title="Rules of conduct"
                 description="Use rules to set the tone for your Common‘s discussions. (No advertising and spam, accepted language, etc.)"
@@ -90,10 +90,10 @@ export default function Rules({
                 touched={touched.rules}
                 maxTitleLength={MAX_RULE_TITLE_LENGTH}
                 maxDescriptionLength={MAX_RULE_DESCRIPTION_LENGTH}
-                itemClassName="create-common-rules__rules-array-item"
+                itemClassName="update-rules__rules-array-item"
               />
               <ModalFooter sticky>
-                <div className="create-common-rules__modal-footer">
+                <div className="update-rules__modal-footer">
                   <Button
                     key="rules-continue"
                     onClick={handleContinueClick}

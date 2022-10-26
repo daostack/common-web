@@ -3,16 +3,16 @@ import { Loader } from "@/shared/components";
 import "./index.scss";
 
 const Processing: FC = () => (
-  <div className="update-common-confirmation-processing">
+  <div className="update-governance-confirmation-processing">
     <img
-      className="update-common-confirmation-processing__image"
+      className="update-governance-confirmation-processing__image"
       src="/icons/discussions-empty.svg"
       alt="Processing creation request"
     />
-    <h2 className="update-common-confirmation-processing__title">
+    <h2 className="update-governance-confirmation-processing__title">
       Editing your Common
     </h2>
-    <div className="update-common-confirmation-processing__loader">
+    <div className="update-governance-confirmation-processing__loader">
       <Loader />
     </div>
   </div>

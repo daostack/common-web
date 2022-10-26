@@ -1,7 +1,7 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
-.update-common-confirmation-success {
+.update-governance-confirmation-success {
   width: 100%;
   max-width: 23.75rem;
   margin: 0 auto;
@@ -9,7 +9,7 @@
   flex-direction: column;
   align-items: center;
 
-  .update-common-confirmation-success__image {
+  .update-governance-confirmation-success__image {
     width: 14.75rem;
     height: 14.75rem;
 
@@ -22,7 +22,7 @@
     }
   }
 
-  .update-common-confirmation-success__title {
+  .update-governance-confirmation-success__title {
     margin: 2.625rem 0 1rem;
     font-family: NotoSerifSC, serif;
     font-size: $moderate-med;
@@ -34,13 +34,13 @@
     }
   }
 
-  .update-common-confirmation-success__sub-title {
+  .update-governance-confirmation-success__sub-title {
     margin: 0;
     font-size: $xsmall;
     text-align: center;
   }
 
-  .update-common-confirmation-success__buttons {
+  .update-governance-confirmation-success__buttons {
     display: flex;
     justify-content: center;
     padding-top: 1.75rem;
@@ -50,7 +50,7 @@
     }
   }
 
-  .update-common-confirmation-success__button-wrapper {
+  .update-governance-confirmation-success__button-wrapper {
     max-width: 10.75rem;
     width: 100%;
 
@@ -59,15 +59,15 @@
     }
   }
 
-  .update-common-confirmation-success__continue-button {
-    @extend .update-common-confirmation-success__button-wrapper;
+  .update-governance-confirmation-success__continue-button {
+    @extend .update-governance-confirmation-success__button-wrapper;
 
     @include big-phone {
       margin-top: 1rem;
     }
   }
 }
-.update-common-confirmation-success__title-logo {
+.update-governance-confirmation-success__title-logo {
   width: 5.5rem;
   height: 2.5rem;
   margin: 0.75rem 0;

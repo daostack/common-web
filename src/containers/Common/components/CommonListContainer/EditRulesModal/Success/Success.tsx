@@ -34,7 +34,7 @@ const Success: FC<SuccessProps> = (props) => {
     (): ReactNode =>
       isMobileView ? (
         <img
-          className="update-common-confirmation-success__title-logo"
+          className="update-governance-confirmation-success__title-logo"
           src="/icons/logo.svg"
           alt="Common Logo"
         />
@@ -55,23 +55,23 @@ const Success: FC<SuccessProps> = (props) => {
   }, [setShouldShowCloseButton]);
 
   return (
-    <div className="update-common-confirmation-success">
+    <div className="update-governance-confirmation-success">
       <img
-        className="update-common-confirmation-success__image"
+        className="update-governance-confirmation-success__image"
         src="/assets/images/illustrations-full-page-launch.svg"
         alt="Common Created"
       />
-      <h2 className="update-common-confirmation-success__title">
+      <h2 className="update-governance-confirmation-success__title">
         Your journey starts now
       </h2>
-      <p className="update-common-confirmation-success__sub-title">
+      <p className="update-governance-confirmation-success__sub-title">
         Your Common is ready. Spread the word and invite others to join you. You
         can always share it later.
       </p>
-      <div className="update-common-confirmation-success__buttons">
+      <div className="update-governance-confirmation-success__buttons">
         <Button
-          key="update-common-confirmation-success-go-to-common-btn"
-          className="update-common-confirmation-success__continue-button"
+          key="update-governance-confirmation-success-go-to-common-btn"
+          className="update-governance-confirmation-success__continue-button"
           variant={
             isMobileView ? ButtonVariant.Secondary : ButtonVariant.Primary
           }

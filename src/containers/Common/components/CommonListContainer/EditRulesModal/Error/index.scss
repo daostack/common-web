@@ -1,7 +1,7 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
-.update-common-confirmation-error {
+.update-governance-confirmation-error {
   width: 100%;
   max-width: 23.75rem;
   margin: 0 auto;
@@ -9,7 +9,7 @@
   flex-direction: column;
   align-items: center;
 
-  .update-common-confirmation-error__image {
+  .update-governance-confirmation-error__image {
     width: 10.825rem;
     height: 10.825rem;
     margin-top: 2rem;
@@ -23,7 +23,7 @@
     }
   }
 
-  .update-common-confirmation-error__title {
+  .update-governance-confirmation-error__title {
     margin: 4.625rem 0 1rem;
     font-family: NotoSerifSC, serif;
     font-size: $moderate-med;
@@ -35,13 +35,13 @@
     }
   }
 
-  .update-common-confirmation-error__sub-title {
+  .update-governance-confirmation-error__sub-title {
     margin: 0;
     font-size: $xsmall;
     text-align: center;
   }
 
-  .update-common-confirmation-error__submit-button {
+  .update-governance-confirmation-error__submit-button {
     max-width: 11.25rem;
     margin-top: 3.5rem;
 
@@ -51,7 +51,7 @@
     }
   }
 
-  .update-common-confirmation-error__view-details {
+  .update-governance-confirmation-error__view-details {
     display: none;
     margin: 1.5rem 0 1rem;
     font-size: $xsmall;
@@ -66,7 +66,7 @@
     }
   }
 
-  .update-common-confirmation-error__error {
+  .update-governance-confirmation-error__error {
     width: 100%;
     margin-bottom: 1rem;
     padding: 1rem 1.5rem;

@@ -31,19 +31,19 @@ export default function Progress({
   );
 
   return (
-    <div className="update-common-steps-progress">
+    <div className="update-rules-steps-progress">
       {stepIndex !== -1 && (
         <StepProgress
-          className="update-common-steps-progress__stepper"
+          className="update-rules-steps-progress__stepper"
           currentStep={stepIndex + 1}
           items={items}
         />
       )}
-      <h4 className="update-common-steps-progress__title">{stepData.title}</h4>
+      <h4 className="update-rules-steps-progress__title">{stepData.title}</h4>
       {stepData.description && (
         <p
           className={classNames(
-            "update-common-steps-progress__description",
+            "update-rules-steps-progress__description",
             stepData.descriptionClassName
           )}
         >

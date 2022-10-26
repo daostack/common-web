@@ -37,21 +37,21 @@ const Error: FC<ErrorProps> = (props) => {
   }, [setShouldShowCloseButton]);
 
   return (
-    <div className="update-common-confirmation-error">
+    <div className="update-governance-confirmation-error">
       <img
-        className="update-common-confirmation-error__image"
+        className="update-governance-confirmation-error__image"
         src="/icons/add-proposal/illustrations-medium-alert.svg"
         alt="Something went wrong"
       />
-      <h2 className="update-common-confirmation-error__title">
+      <h2 className="update-governance-confirmation-error__title">
         Something went wrong
       </h2>
-      <p className="update-common-confirmation-error__sub-title">
+      <p className="update-governance-confirmation-error__sub-title">
         This took longer than expected, please try again later
       </p>
       <Button
         key="personal-contribution-continue"
-        className="update-common-confirmation-error__submit-button"
+        className="update-governance-confirmation-error__submit-button"
         variant={ButtonVariant.Secondary}
         onClick={onFinish}
         shouldUseFullWidth
@@ -59,13 +59,13 @@ const Error: FC<ErrorProps> = (props) => {
         OK
       </Button>
       <ButtonLink
-        className="update-common-confirmation-error__view-details"
+        className="update-governance-confirmation-error__view-details"
         onClick={handleErrorDetailsButtonClick}
       >
         View error details
       </ButtonLink>
       {shouldShowError && (
-        <span className="update-common-confirmation-error__error">
+        <span className="update-governance-confirmation-error__error">
           {errorText}
         </span>
       )}

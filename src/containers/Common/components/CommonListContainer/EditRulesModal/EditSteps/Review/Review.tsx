@@ -6,9 +6,6 @@ import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { UpdateGovernanceData } from "../../../../../interfaces";
 import { Progress } from "../Progress";
-import { CommonImageSlider } from "./CommonImageSlider";
-import { LinkList } from "./LinkList";
-import { MainCommonInfo } from "./MainCommonInfo";
 import { RuleList } from "./RuleList";
 import "./index.scss";
 

@@ -1,7 +1,7 @@
 @import "../../../../../../../constants";
 @import "../../../../../../../styles/sizes";
 
-.update-common-confirmation-processing {
+.update-governance-confirmation-processing {
   width: 100%;
   max-width: 36.5rem;
   margin: 0 auto;
@@ -9,7 +9,7 @@
   flex-direction: column;
   align-items: center;
 
-  .update-common-confirmation-processing__image {
+  .update-governance-confirmation-processing__image {
     width: 14.75rem;
     height: 14.75rem;
 
@@ -21,7 +21,7 @@
     }
   }
 
-  .update-common-confirmation-processing__title {
+  .update-governance-confirmation-processing__title {
     margin: 2.625rem 0 5rem;
     font-family: NotoSerifSC, serif;
     font-size: $moderate-med;
@@ -33,7 +33,7 @@
     }
   }
 
-  .update-common-confirmation-processing__loader {
+  .update-governance-confirmation-processing__loader {
     margin-bottom: 5.375rem;
 
     @include big-phone {

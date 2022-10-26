@@ -121,7 +121,7 @@ export default function EditRulesModal(props: EditRulesModalProps) {
       return title;
     }
 
-    return <h3 className="edit-common-modal__title">{title}</h3>;
+    return <h3 className="edit-rules-modal__title">{title}</h3>;
   }, [title, isBigTitle]);
   const content = useMemo(() => {
     switch (stage) {
@@ -212,7 +212,7 @@ export default function EditRulesModal(props: EditRulesModalProps) {
       isShowing={props.isShowing}
       onGoBack={onGoBack && handleGoBack}
       onClose={shouldShowCloseButton ? props.onClose : emptyFunction}
-      className={classNames("edit-common-modal", {
+      className={classNames("edit-rules-modal", {
         "mobile-full-screen": isMobileView,
       })}
       mobileFullScreen={isMobileView}

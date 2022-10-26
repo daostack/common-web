@@ -14,16 +14,16 @@ export default function RuleList({ rules, className }: RuleListProps) {
   }
 
   return (
-    <ul className={classNames("update-common-review-rule-list", className)}>
+    <ul className={classNames("update-rules-review-rule-list", className)}>
       {rules.map((rule, index) => (
-        <li className="update-common-review-rule-list__item" key={index}>
-          <span className="update-common-review-rule-list__number">
+        <li className="update-rules-review-rule-list__item" key={index}>
+          <span className="update-rules-review-rule-list__number">
             Rule #{index + 1}
           </span>
-          <h5 className="update-common-review-rule-list__title">
+          <h5 className="update-rules-review-rule-list__title">
             {rule.title}
           </h5>
-          <p className="update-common-review-rule-list__description">
+          <p className="update-rules-review-rule-list__description">
             {rule.definition}
           </p>
         </li>
