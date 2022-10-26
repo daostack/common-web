@@ -1,7 +1,7 @@
 import millify from "millify";
 import moment from "moment";
 
-import { MobileOperatingSystem, BASE_URL } from "../constants";
+import { BASE_URL } from "../constants";
 import { Common, DateFormat, Time, User } from "../models";
 import { CurrencySymbol } from "@/shared/models";
 import { BaseProposal } from "@/shared/models/governance/proposals";
@@ -113,31 +113,6 @@ export const isMobile = (): boolean => {
       )
     )
   );
-};
-
-/**
- * Determines the mobile operating system.
- * This function returns one of 'iOS', 'Android', 'Windows Phone', or 'unknown'.
- *
- * @returns {MobileOperatingSystem}
- */
-export const getMobileOperatingSystem = (): MobileOperatingSystem => {
-  const userAgent =
-    navigator.userAgent || navigator.vendor || (window as any).opera;
-  // Windows Phone must come first because its UA also contains "Android"
-  if (/windows phone/i.test(userAgent)) {
-    return MobileOperatingSystem.WindowsPhone;
-  }
-
-  if (/android/i.test(userAgent)) {
-    return MobileOperatingSystem.Android;
-  }
-
-  if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
-    return MobileOperatingSystem.iOS;
-  }
-
-  return MobileOperatingSystem.unknown;
 };
 
 /**
