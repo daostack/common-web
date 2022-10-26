@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { CreateCommonModal } from "@/containers/Common/components";
-import { EditCommonModal } from "@/containers/Common/components";
+import { EditCommonModal, EditRulesModal } from "@/containers/Common/components";
 import {
   ButtonLink,
   Dropdown,
@@ -30,6 +30,7 @@ import "./index.scss";
 
 export enum MenuItem {
   EditAgenda,
+  EditRules,
   CreateSubCommon,
   MyContributions,
   DeleteCommon,
@@ -61,6 +62,17 @@ const OPTIONS: Option[] = [
     ),
     searchText: "Edit Agenda",
     value: MenuItem.EditAgenda,
+    //className: "edit-common-menu__dropdown-menu-item--disabled",
+    //disabled: false//true,
+  },
+  {
+    text: (
+      <>
+        <AgendaIcon className="edit-common-menu__item-icon" /> Edit Rules
+      </>
+    ),
+    searchText: "Edit Rules",
+    value: MenuItem.EditRules,
     //className: "edit-common-menu__dropdown-menu-item--disabled",
     //disabled: false//true,
   },
@@ -157,7 +169,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     const items: MenuItem[] = [];
 
     if (currentCommonMember?.allowedActions[GovernanceActions.UPDATE_COMMON]) {
-      items.push(MenuItem.EditAgenda, MenuItem.EditAgenda);
+      items.push(MenuItem.EditAgenda, MenuItem.EditRules);
     }
     if (!isSubCommon && circlesWithoutSubcommon.length > 0) {
       items.push(MenuItem.CreateSubCommon);
@@ -313,6 +325,14 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
       />
       <EditCommonModal
         isShowing={selectedMenuItem === MenuItem.EditAgenda}
+        onClose={handleMenuClose}
+        governance={governance}
+        common={common}
+        parentCommonId={common.id}
+        shouldBeWithoutIntroduction
+      />
+      <EditRulesModal
+        isShowing={selectedMenuItem === MenuItem.EditRules}
         onClose={handleMenuClose}
         governance={governance}
         common={common}

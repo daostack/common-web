@@ -1,0 +1,48 @@
+@import "../../../../../../../../constants";
+@import "../../../../../../../../styles/sizes";
+
+.update-common-review-rule-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  .update-common-review-rule-list__item {
+    margin: 0 0 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .update-common-review-rule-list__number {
+    margin-bottom: 0.25rem;
+    display: block;
+    font-size: $xsmall;
+    line-height: 1.43;
+    color: $light-gray-2;
+
+    @include big-phone {
+      margin-bottom: 0.313rem;
+    }
+  }
+
+  .update-common-review-rule-list__title {
+    margin: 0 0 0.25rem 0;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.5;
+
+    @include big-phone {
+      margin-bottom: 0.5rem;
+      font-size: $xsmall;
+    }
+  }
+
+  .update-common-review-rule-list__description {
+    margin: 0;
+    font-size: $xsmall;
+    line-height: 1.43;
+  }
+}

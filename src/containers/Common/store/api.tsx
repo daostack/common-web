@@ -46,6 +46,7 @@ import {
   LeaveCommon,
   CreateSubCommonPayload,
   UpdateCommonPayload,
+  UpdateGovernancePayload,
   UserMembershipInfo,
   CreateReportDto,
 } from "@/containers/Common/interfaces";
@@ -556,6 +557,19 @@ export async function updateCommon(
   }
 
   return common;
+}
+
+export async function updateGovernance(
+  requestData: UpdateGovernancePayload,
+): Promise<Governance> {
+  await Api.post<Governance>(ApiEndpoint.UpdateCommon, requestData);
+  const governance = await getGovernanceByCommonId(requestData.commonId);
+
+  if (!governance) {
+    throw new Error(`Couldn't find governance of common with id ${requestData.commonId}`);
+  }
+
+  return governance;
 }
 
 export async function makeImmediateContribution(

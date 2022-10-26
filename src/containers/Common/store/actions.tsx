@@ -31,6 +31,7 @@ import {
   LeaveCommon,
   CreateProposal,
   UpdateCommonPayload,
+  UpdateGovernancePayload,
   CreateReportDto,
 } from "@/containers/Common/interfaces";
 import {
@@ -329,6 +330,12 @@ export const updateCommon = createAsyncAction(
   CommonsActionTypes.UPDATE_COMMON_SUCCESS,
   CommonsActionTypes.UPDATE_COMMON_FAILURE
 )<PayloadWithCallback<UpdateCommonPayload, Common, Error>, Common, Error>();
+
+export const updateGovernance = createAsyncAction(
+  CommonsActionTypes.UPDATE_GOVERNANCE,
+  CommonsActionTypes.UPDATE_GOVERNANCE_SUCCESS,
+  CommonsActionTypes.UPDATE_GOVERNANCE_FAILURE
+)<PayloadWithCallback<UpdateGovernancePayload, Governance, Error>, Governance, Error>();
 
 export const createVote = createAsyncAction(
   CommonsActionTypes.CREATE_VOTE,

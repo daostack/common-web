@@ -21,6 +21,7 @@ import { startLoading, stopLoading } from "@/shared/store/actions";
 import {
   createCommon as createCommonApi,
   updateCommon as updateCommonApi,
+  updateGovernance as updateGovernanceApi,
   createProposal as createProposalApi,
   fetchCommonList,
   fetchCommonDetail,
@@ -1182,6 +1183,25 @@ export function* updateCommon(
   }
 }
 
+export function* updateGovernance(
+  action: ReturnType<typeof actions.updateGovernance.request>
+): Generator {
+  try {
+    const governance = (yield call(
+      updateGovernanceApi,
+      action.payload.payload
+    )) as Awaited<ReturnType<typeof updateGovernanceApi>>;
+
+    yield put(actions.updateGovernance.success(governance));
+    action.payload.callback(null, governance);
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.updateGovernance.failure(error));
+      action.payload.callback(error);
+    }
+  }
+}
+
 export function* makeImmediateContribution(
   action: ReturnType<typeof actions.makeImmediateContribution.request>
 ): Generator {
@@ -1601,6 +1621,7 @@ export function* commonsSaga() {
   );
   yield takeLatest(actions.createCommon.request, createCommon);
   yield takeLatest(actions.updateCommon.request, updateCommon);
+  yield takeLatest(actions.updateGovernance.request, updateGovernance);
   yield takeLatest(actions.createVote.request, createVote);
   yield takeLatest(actions.updateVote.request, updateVote);
   yield takeLatest(
