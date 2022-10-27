@@ -18,7 +18,7 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
     proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
   const daysText = days > 0 ? `${days} Day${days > 1 ? "s " : " "}` : "";
   const timerString = `${daysText}${formatCountdownValue(
-    hours
+    hours,
   )}:${formatCountdownValue(minutes)}:${formatCountdownValue(seconds)}`;
   const votingStatus = calculateVotingStatus(proposal);
 
@@ -54,8 +54,6 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
                 VotingStatus.Rejected,
                 VotingStatus.Canceled,
               ].includes(votingStatus),
-              "proposal-container-countdown-card__status--orange":
-                votingStatus === VotingStatus.Withdrawn,
             })}
           >
             {votingStatus}
