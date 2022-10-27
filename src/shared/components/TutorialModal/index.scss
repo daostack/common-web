@@ -16,6 +16,10 @@
 
 .tutorial-modal__text {
   font-size: $xsmall;
+  white-space: pre-line;
+}
+.tutorial-modal__text--rtl {
+  direction: rtl;
 }
 
 .tutorial-modal__container {
