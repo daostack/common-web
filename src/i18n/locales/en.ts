@@ -175,5 +175,9 @@ export default {
         rulesApproval: "I read and understood the rules",
       },
     },
+    tutorial: {
+      welcome:
+        "Welcome to the Common app!\nBelow is a short video tutorial on how to use the app (currently only in Hebrew, English version is coming soon).",
+    },
   },
 };
