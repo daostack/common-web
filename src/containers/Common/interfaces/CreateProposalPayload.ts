@@ -20,6 +20,7 @@ interface CreateMemberAdmittance {
     contributionSourceType?: ContributionSourceType;
     feeMonthly: PaymentAmount | null;
     feeOneTime: PaymentAmount | null;
+    fromSupportersFlow?: boolean;
   };
 }
 

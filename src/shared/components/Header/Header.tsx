@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Routes } from "@/containers/MyAccount/components/Routes";
-import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import { Loader, UserAvatar } from "@/shared/components";
 import {
   useAnyMandatoryRoles,
@@ -11,26 +10,34 @@ import {
   useOutsideClick,
   useScreenSize,
 } from "@/shared/hooks";
+import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import { UserRole } from "@/shared/models";
-import { setAreReportsLoading, setTutorialModalState } from "@/shared/store/actions";
+import {
+  setAreReportsLoading,
+  setTutorialModalState,
+} from "@/shared/store/actions";
 import {
   selectAreReportsLoading,
   selectHeader,
 } from "@/shared/store/selectors";
-import { ApiEndpoint, HEADER_MOBILE_SCREEN_SIZE, ROUTE_PATHS } from "../../constants";
-import CloseIcon from "../../icons/close.icon";
-import HamburgerIcon from "../../icons/hamburger.icon";
-import { getUserName, isMobile, saveByURL } from "../../utils";
-import { Account } from "../Account";
+import {
+  logOut,
+  setLoginModalState,
+} from "../../../containers/Auth/store/actions";
 import {
   authentificated,
   selectUser,
 } from "../../../containers/Auth/store/selectors";
 import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
 import {
-  logOut,
-  setLoginModalState,
-} from "../../../containers/Auth/store/actions";
+  ApiEndpoint,
+  HEADER_MOBILE_SCREEN_SIZE,
+  ROUTE_PATHS,
+} from "../../constants";
+import CloseIcon from "../../icons/close.icon";
+import HamburgerIcon from "../../icons/hamburger.icon";
+import { getUserName, isMobile, saveByURL } from "../../utils";
+import { Account } from "../Account";
 import { LanguageDropdown } from "./LanguageDropdown";
 import "./index.scss";
 
@@ -59,20 +66,20 @@ const Header = () => {
   const hasAdminAccess = useAnyMandatoryRoles(ADMIN_ACCESS_ROLES, user?.roles);
   const isTrusteeRoute = useMatchRoute(
     ROUTE_PATHS.TRUSTEE,
-    NON_EXACT_MATCH_ROUTE_PROPS
+    NON_EXACT_MATCH_ROUTE_PROPS,
   );
   const isTrusteeAuthRoute = useMatchRoute(
     ROUTE_PATHS.TRUSTEE_AUTH,
-    EXACT_MATCH_ROUTE_PROPS
+    EXACT_MATCH_ROUTE_PROPS,
   );
   const isMyAccountRoute = useMatchRoute(
     ROUTE_PATHS.MY_ACCOUNT,
-    NON_EXACT_MATCH_ROUTE_PROPS
+    NON_EXACT_MATCH_ROUTE_PROPS,
   );
   const isHomeRoute = useMatchRoute(ROUTE_PATHS.HOME, EXACT_MATCH_ROUTE_PROPS);
   const isContactUsRoute = useMatchRoute(
     ROUTE_PATHS.CONTACT_US,
-    EXACT_MATCH_ROUTE_PROPS
+    EXACT_MATCH_ROUTE_PROPS,
   );
   const [showAccountLinks, setShowAccountLinks] =
     useState<boolean>(isMyAccountRoute);
@@ -122,7 +129,7 @@ const Header = () => {
 
   const handleOpenTutorialModal = () => {
     dispatch(setTutorialModalState({ isShowing: true }));
-  }
+  };
 
   const links = (
     <div className="navigation-wrapper" onClick={handleNavLinkClick}>
@@ -155,7 +162,7 @@ const Header = () => {
           <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
             My Commons
           </NavLink>
-          <button onClick={handleOpenTutorialModal}>Tutorial</button>
+          <button onClick={handleOpenTutorialModal}>App tour</button>
         </>
       )}
 
@@ -240,11 +247,7 @@ const Header = () => {
               <HamburgerIcon />
             )}
           </div>
-          {showMenu && (
-            <div className="menu-wrapper">
-              {links}
-            </div>
-          )}
+          {showMenu && <div className="menu-wrapper">{links}</div>}
         </>
       )}
       <LoginContainer />
