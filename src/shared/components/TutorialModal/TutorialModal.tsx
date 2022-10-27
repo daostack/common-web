@@ -1,11 +1,12 @@
 import React, { useState, useRef, ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import tutorialVideoSrc from "@/shared/assets/videos/tutorial-video.mp4";
 import { Modal } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { setTutorialModalState } from "@/shared/store/actions";
+import { selectIsRtlLanguage } from "@/shared/store/selectors";
 import { isRTL } from "@/shared/utils";
 import "./index.scss";
 
@@ -18,6 +19,7 @@ export default function TutorialModal({ isShowing }: Props): ReactElement {
   const { t } = useTranslation("translation", {
     keyPrefix: "tutorial",
   });
+  const isRtlLanguage = useSelector(selectIsRtlLanguage());
 
   const [isPlaying, setPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>();
@@ -50,7 +52,7 @@ export default function TutorialModal({ isShowing }: Props): ReactElement {
         <h4 className="tutorial-modal__header">App tour</h4>
         <p
           className={classNames("tutorial-modal__text", {
-            "tutorial-modal__text--rtl": isRTL(t("welcome")),
+            "tutorial-modal__text--rtl": isRtlLanguage,
           })}
         >
           {t("welcome")}
