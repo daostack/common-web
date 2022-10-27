@@ -1,8 +1,8 @@
 import firebase from "firebase/app";
 import { ProposalsTypes } from "@/shared/constants";
+import { PaymentAmount } from "@/shared/models/Payment";
 import { BaseProposal } from "./BaseProposal";
 import { BasicArgsProposal } from "./BasicArgsProposal";
-import { PaymentAmount } from "@/shared/models/Payment";
 
 export interface MemberAdmittanceArgs extends BasicArgsProposal {
   circle?: string;
