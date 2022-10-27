@@ -23,7 +23,8 @@
         letter-spacing: normal;
       }
     }
-    &.approved {
+    &.approved,
+    &.withdrawn {
       .state-inner-wrapper {
         background: $light-green;
         .state-name {
