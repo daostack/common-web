@@ -7,10 +7,10 @@ import { useCommonMember } from "@/containers/Common/hooks";
 import { createMemberAdmittanceProposal } from "@/containers/Common/store/actions";
 import { subscribeToCommonMembers } from "@/containers/Common/store/api";
 import { Loader } from "@/shared/components";
+import { ErrorText } from "@/shared/components/Form";
+import { useLoadingState } from "@/shared/hooks";
 import { MemberAdmittance } from "@/shared/models/governance/proposals";
 import { getUserName } from "@/shared/utils";
-import { useLoadingState } from "@/shared/hooks";
-import { ErrorText } from "@/shared/components/Form";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 import "./index.scss";
 
@@ -85,6 +85,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
               links: [],
               feeMonthly: null,
               feeOneTime: null,
+              fromSupportersFlow: true,
             },
           },
           callback: (error, proposal) => {
@@ -99,7 +100,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
               data: proposal,
             });
           },
-        })
+        }),
       );
     })();
   }, [
