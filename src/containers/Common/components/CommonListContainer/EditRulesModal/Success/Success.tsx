@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, FC, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { Button, ButtonVariant } from "@/shared/components";
-import {
-  ScreenSize,
-} from "@/shared/constants";
+import { ScreenSize } from "@/shared/constants";
+import { Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import "./index.scss";
 
 interface SuccessProps {
+  governance: Governance;
   onFinish: () => void;
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
@@ -16,6 +16,7 @@ interface SuccessProps {
 
 const Success: FC<SuccessProps> = (props) => {
   const {
+    governance,
     onFinish,
     setTitle,
     setGoBackHandler,
@@ -33,7 +34,7 @@ const Success: FC<SuccessProps> = (props) => {
           alt="Common Logo"
         />
       ) : null,
-    [isMobileView]
+    [isMobileView],
   );
 
   useEffect(() => {

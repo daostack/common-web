@@ -18,25 +18,6 @@ interface Return {
   updateRules: (updateData: UpdateGovernanceData) => Promise<void>;
 }
 
-export const getCommonImageURL = async (
-  image: string | File,
-): Promise<string | null> => {
-  if (typeof image === "string") {
-    return image;
-  }
-
-  try {
-    return await uploadFile(
-      getFileNameForUploading(image.name),
-      "public_img",
-      image,
-    );
-  } catch (error) {
-    console.error("Error during common image uploading");
-    return null;
-  }
-};
-
 const useRulesUpdate = (governanceId, commonId): Return => {
   const [isGovernanceUpdateLoading, setIsGovernanceUpdateLoading] =
     useState(false);

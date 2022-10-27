@@ -8,16 +8,16 @@ import React, {
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Modal } from "@/shared/components";
-import { getScreenSize } from "@/shared/store/selectors";
-import { useZoomDisabling } from "@/shared/hooks";
 import { ScreenSize } from "@/shared/constants";
+import { useZoomDisabling } from "@/shared/hooks";
 import { Common, Governance } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
+import { emptyFunction } from "@/shared/utils";
 import { UpdateGovernanceData } from "../../../interfaces";
 import { Confirmation } from "./Confirmation";
 import { EditSteps } from "./EditSteps";
 import { Error } from "./Error";
 import { Success } from "./Success";
-import { emptyFunction } from '@/shared/utils';
 import { UpdateGovernanceStage } from "./constants";
 import "./index.scss";
 
@@ -41,9 +41,8 @@ export default function EditRulesModal(props: EditRulesModalProps) {
     shouldStartFromLastStep: false,
   });
   const INITIAL_DATA: UpdateGovernanceData = {
-    unstructuredRules: governance.unstructuredRules || []
-    
-  }
+    unstructuredRules: governance.unstructuredRules || [],
+  };
   const [currentData, setCurrentData] =
     useState<UpdateGovernanceData>(INITIAL_DATA);
   const [title, setTitle] = useState<ReactNode>("");
@@ -53,7 +52,9 @@ export default function EditRulesModal(props: EditRulesModalProps) {
     (() => boolean | undefined) | undefined
   >();
   const [shouldShowCloseButton, setShouldShowCloseButton] = useState(true);
-  const [updatedGovernance, setUpdatedGovernance] = useState<Governance | null>(null);
+  const [updatedGovernance, setUpdatedGovernance] = useState<Governance | null>(
+    null,
+  );
   const [errorText, setErrorText] = useState("");
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -72,7 +73,7 @@ export default function EditRulesModal(props: EditRulesModalProps) {
     (handler?: (() => boolean | undefined) | null) => {
       setOnGoBack(() => handler ?? undefined);
     },
-    []
+    [],
   );
   const moveStageBack = useCallback(() => {
     setStageState(({ stage }) => ({
@@ -111,7 +112,7 @@ export default function EditRulesModal(props: EditRulesModalProps) {
         stage: UpdateGovernanceStage.Success,
       }));
     },
-    [handleError]
+    [handleError],
   );
   const renderedTitle = useMemo((): ReactNode => {
     if (!title) {
@@ -155,6 +156,7 @@ export default function EditRulesModal(props: EditRulesModalProps) {
       case UpdateGovernanceStage.Success:
         return updatedGovernance ? (
           <Success
+            governance={updatedGovernance}
             onFinish={props.onClose}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
@@ -221,7 +223,9 @@ export default function EditRulesModal(props: EditRulesModalProps) {
       onHeaderScrolledToTop={setIsHeaderScrolledToTop}
       closePrompt={
         shouldShowCloseButton &&
-        ![UpdateGovernanceStage.Success, UpdateGovernanceStage.Error].includes(stage)
+        ![UpdateGovernanceStage.Success, UpdateGovernanceStage.Error].includes(
+          stage,
+        )
       }
       fullHeight
     >
