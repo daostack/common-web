@@ -1,23 +1,32 @@
-import { Proposal, ProposalState as ProposalStateTypes } from "@/shared/models";
+import { Proposal, ProposalState } from "@/shared/models";
 import {
   FundingAllocationStatus,
   isFundsAllocationProposal,
 } from "@/shared/models/governance/proposals";
 
 export const getProposalState = (proposal: Proposal): string => {
+  if (
+    isFundsAllocationProposal(proposal) &&
+    proposal.data.tracker.status ===
+      FundingAllocationStatus.EXPIRED_INVOICES_NOT_UPLOADED
+  ) {
+    return "Unclaimed";
+  }
+
   switch (proposal.state) {
-    case ProposalStateTypes.FAILED:
+    case ProposalState.FAILED:
       return "Rejected";
-    case ProposalStateTypes.RETRACTED:
+    case ProposalState.RETRACTED:
       return "Canceled";
+    case ProposalState.COMPLETED:
+      if (isFundsAllocationProposal(proposal)) {
+        return "Withdrawn";
+      }
+
+      break;
     default:
       break;
   }
 
-  const isUnclaimedProposal =
-    isFundsAllocationProposal(proposal) &&
-    proposal.data.tracker.status ===
-      FundingAllocationStatus.EXPIRED_INVOICES_NOT_UPLOADED;
-
-  return isUnclaimedProposal ? "Unclaimed" : "Approved";
+  return "Approved";
 };
