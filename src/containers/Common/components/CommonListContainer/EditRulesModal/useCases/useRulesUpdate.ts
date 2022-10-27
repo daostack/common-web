@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Governance } from "@/shared/models";
+import { Governance, BaseRule } from "@/shared/models";
 import {
   getFileNameForUploading,
   uploadFile,
@@ -15,13 +15,11 @@ interface Return {
   isGovernanceUpdateLoading: boolean;
   governance: Governance | null;
   error: string;
-  updateRules: (
-    updateData: UpdateGovernanceData
-  ) => Promise<void>;
+  updateRules: (updateData: UpdateGovernanceData) => Promise<void>;
 }
 
 export const getCommonImageURL = async (
-  image: string | File
+  image: string | File,
 ): Promise<string | null> => {
   if (typeof image === "string") {
     return image;
@@ -31,7 +29,7 @@ export const getCommonImageURL = async (
     return await uploadFile(
       getFileNameForUploading(image.name),
       "public_img",
-      image
+      image,
     );
   } catch (error) {
     console.error("Error during common image uploading");
@@ -40,7 +38,8 @@ export const getCommonImageURL = async (
 };
 
 const useRulesUpdate = (governanceId, commonId): Return => {
-  const [isGovernanceUpdateLoading, setIsGovernanceUpdateLoading] = useState(false);
+  const [isGovernanceUpdateLoading, setIsGovernanceUpdateLoading] =
+    useState(false);
   const [governance, setGovernance] = useState<Governance | null>(null);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
@@ -55,9 +54,7 @@ const useRulesUpdate = (governanceId, commonId): Return => {
 
       const payload: UpdateGovernancePayload = {
         commonId,
-        changes: {
-          unstructuredRules: updatedData.unstructuredRules,
-        }   
+        changes: updatedData.unstructuredRules as BaseRule[],
       };
 
       dispatch(
@@ -72,10 +69,10 @@ const useRulesUpdate = (governanceId, commonId): Return => {
 
             setIsGovernanceUpdateLoading(false);
           },
-        })
+        }),
       );
     },
-    [dispatch, setIsGovernanceUpdateLoading]
+    [dispatch, setIsGovernanceUpdateLoading],
   );
 
   return {

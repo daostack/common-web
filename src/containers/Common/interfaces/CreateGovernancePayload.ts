@@ -58,7 +58,5 @@ export interface UpdateGovernanceData {
 
 export interface UpdateGovernancePayload {
   commonId: string;
-    changes: {
-      unstructuredRules: BaseRule[];
-    }
+  changes: BaseRule[];
 }

@@ -1,7 +1,27 @@
 import { getUserListByIds } from "@/containers/Auth/store/api";
-import { AllocateFundsTo, ApiEndpoint } from "@/shared/constants";
+import {
+  AddFounderToMembersPayload,
+  CreateCommonPayload,
+  CreateDiscussionDto,
+  CreateGovernancePayload,
+  CreateProposal,
+  ImmediateContributionData,
+  ImmediateContributionResponse,
+  LeaveCommon,
+  CreateSubCommonPayload,
+  UpdateCommonPayload,
+  UpdateGovernancePayload,
+  UserMembershipInfo,
+  CreateReportDto,
+} from "@/containers/Common/interfaces";
+import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
 import Api from "@/services/Api";
+import { AllocateFundsTo, ApiEndpoint } from "@/shared/constants";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
+import {
+  CreateVotePayload,
+  UpdateVotePayload,
+} from "@/shared/interfaces/api/vote";
 import {
   BankAccountDetails,
   Card,
@@ -25,6 +45,9 @@ import {
   VoteWithUserInfo,
   CommonMemberPreviewInfo,
 } from "@/shared/models";
+import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
+import { NotificationItem } from "@/shared/models/Notification";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 import {
   convertObjectDatesToFirestoreTimestamps,
   createIdsChunk,
@@ -35,29 +58,6 @@ import {
   sortByCreatedTime,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
-import {
-  AddFounderToMembersPayload,
-  CreateCommonPayload,
-  CreateDiscussionDto,
-  CreateGovernancePayload,
-  CreateProposal,
-  ImmediateContributionData,
-  ImmediateContributionResponse,
-  LeaveCommon,
-  CreateSubCommonPayload,
-  UpdateCommonPayload,
-  UpdateGovernancePayload,
-  UserMembershipInfo,
-  CreateReportDto,
-} from "@/containers/Common/interfaces";
-import { CreateDiscussionMessageDto } from "@/containers/Common/interfaces";
-import {
-  CreateVotePayload,
-  UpdateVotePayload,
-} from "@/shared/interfaces/api/vote";
-import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
-import { NotificationItem } from "@/shared/models/Notification";
-import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
 
 export async function createGovernance(
@@ -164,7 +164,7 @@ export async function fetchProposalByDiscussionId(discussionId: string) {
 
   return {
     ...data,
-    discussion
+    discussion,
   };
 }
 
@@ -562,11 +562,13 @@ export async function updateCommon(
 export async function updateGovernance(
   requestData: UpdateGovernancePayload,
 ): Promise<Governance> {
-  await Api.post<Governance>(ApiEndpoint.UpdateCommon, requestData);
+  await Api.post<Governance>(ApiEndpoint.UpdateGovernance, requestData);
   const governance = await getGovernanceByCommonId(requestData.commonId);
 
   if (!governance) {
-    throw new Error(`Couldn't find governance of common with id ${requestData.commonId}`);
+    throw new Error(
+      `Couldn't find governance of common with id ${requestData.commonId}`,
+    );
   }
 
   return governance;
