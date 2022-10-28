@@ -1,24 +1,25 @@
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import { ROUTE_PATHS } from "../../shared/constants";
+import { authentificated } from "@/containers/Auth/store/selectors";
+import { ROUTE_PATHS } from "@/shared/constants";
 
 interface OnlyPublicRouteProps extends RouteProps {
-  component: React.JSXElementConstructor<any>;
-  authenticated: boolean;
   redirectPath?: ROUTE_PATHS;
 }
 
 const DEFAULT_REDIRECT_PATH = ROUTE_PATHS.HOME;
 
 const OnlyPublicRoute: FC<OnlyPublicRouteProps> = (props) => {
-  const { component: Component, authenticated, redirectPath, ...rest } = props;
+  const { component: Component, redirectPath, children, ...rest } = props;
+  const authenticated = useSelector(authentificated());
 
   return (
     <Route
       {...rest}
       render={(props) => {
         if (!authenticated) {
-          return <Component {...props} />;
+          return Component ? <Component {...props} /> : children;
         }
 
         return (
