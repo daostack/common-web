@@ -1,12 +1,12 @@
 import React, { FC } from "react";
-import { Redirect, RouteProps } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ROUTE_PATHS } from "../../../../shared/constants";
-import { useMatchRoute } from "../../../../shared/hooks";
-import { UserRole } from "../../../../shared/models";
-import OnlyPublicRoute from "../../../App/OnlyPublicRoute";
-import PrivateRoute from "../../../App/PrivateRoute";
-import { authentificated, selectUser } from "../../../Auth/store/selectors";
+import { Redirect, RouteProps } from "react-router-dom";
+import OnlyPublicRoute from "@/containers/App/OnlyPublicRoute";
+import PrivateRoute from "@/containers/App/PrivateRoute";
+import { authentificated, selectUser } from "@/containers/Auth/store/selectors";
+import { ROUTE_PATHS } from "@/shared/constants";
+import { useMatchRoute } from "@/shared/hooks";
+import { UserRole } from "@/shared/models";
 import { AuthenticationContainer } from "../AuthenticationContainer";
 import { InvoiceAcceptanceContainer } from "../InvoiceAcceptanceContainer";
 import { InvoicesAcceptanceContainer } from "../InvoicesAcceptanceContainer";
@@ -18,12 +18,11 @@ const TRUSTEE_MATCH_ROUTE_PROPS: RouteProps = {
 const TrusteeContainer: FC = () => {
   const isParentTrusteeRoute = useMatchRoute(
     ROUTE_PATHS.TRUSTEE,
-    TRUSTEE_MATCH_ROUTE_PROPS
+    TRUSTEE_MATCH_ROUTE_PROPS,
   );
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const generalPrivateProps = {
-    authenticated: isAuthenticated,
     userRoles: user?.roles,
     anyMandatoryRoles: [UserRole.Trustee],
     unauthenticatedRedirectPath: ROUTE_PATHS.TRUSTEE_AUTH,

@@ -1,5 +1,7 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Route, Redirect, RouteProps } from "react-router-dom";
+import { authentificated } from "@/containers/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { UserRole } from "@/shared/models";
 import { checkMandatoryRoles, checkAnyMandatoryRoles } from "@/shared/utils";
@@ -14,7 +16,6 @@ interface PrivateRouteProps
       | "unauthenticatedRedirectPath"
       | "unauthorizedRedirectPath"
     > {
-  authenticated: boolean;
   userRoles?: UserRole[];
 }
 
@@ -23,7 +24,6 @@ const DEFAULT_REDIRECT_PATH = ROUTE_PATHS.HOME;
 const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
   const {
     component: Component,
-    authenticated,
     userRoles,
     mandatoryRoles,
     anyMandatoryRoles,
@@ -32,6 +32,7 @@ const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
     children,
     ...rest
   } = props;
+  const authenticated = useSelector(authentificated());
   const hasNecessaryRoles =
     (!mandatoryRoles || checkMandatoryRoles(mandatoryRoles, userRoles)) &&
     (!anyMandatoryRoles ||

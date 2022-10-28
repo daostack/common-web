@@ -1,8 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Route } from "react-router-dom";
 import PrivateRoute from "@/containers/App/PrivateRoute";
-import { authentificated } from "@/containers/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
 import {
   CommonListContainer,
@@ -11,20 +9,17 @@ import {
 } from "..";
 
 export default function CommonContainer() {
-  const isAuthenticated = useSelector(authentificated());
-
   return (
     <div>
       <Route
         path={ROUTE_PATHS.COMMON_DETAIL}
-        exact={true}
+        exact
         component={CommonDetailContainer}
       />
       <PrivateRoute
         path={ROUTE_PATHS.COMMON_LIST}
-        exact={true}
+        exact
         component={CommonListContainer}
-        authenticated={isAuthenticated}
       />
       <Route
         path={ROUTE_PATHS.COMMON_SUPPORT}
