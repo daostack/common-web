@@ -1,30 +1,28 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import { authentificated } from "@/containers/Auth/store/selectors";
+import {
+  authentificated,
+  selectUserRoles,
+} from "@/containers/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { UserRole } from "@/shared/models";
 import { checkMandatoryRoles, checkAnyMandatoryRoles } from "@/shared/utils";
 import { PrivateRouteConfiguration } from "./router/types";
 
-interface PrivateRouteProps
-  extends RouteProps,
-    Pick<
-      PrivateRouteConfiguration,
-      | "mandatoryRoles"
-      | "anyMandatoryRoles"
-      | "unauthenticatedRedirectPath"
-      | "unauthorizedRedirectPath"
-    > {
-  userRoles?: UserRole[];
-}
+type PrivateRouteProps = RouteProps &
+  Pick<
+    PrivateRouteConfiguration,
+    | "mandatoryRoles"
+    | "anyMandatoryRoles"
+    | "unauthenticatedRedirectPath"
+    | "unauthorizedRedirectPath"
+  >;
 
 const DEFAULT_REDIRECT_PATH = ROUTE_PATHS.HOME;
 
 const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
   const {
     component: Component,
-    userRoles,
     mandatoryRoles,
     anyMandatoryRoles,
     unauthenticatedRedirectPath,
@@ -32,6 +30,7 @@ const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
     children,
     ...rest
   } = props;
+  const userRoles = useSelector(selectUserRoles());
   const authenticated = useSelector(authentificated());
   const hasNecessaryRoles =
     (!mandatoryRoles || checkMandatoryRoles(mandatoryRoles, userRoles)) &&

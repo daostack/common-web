@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Redirect, RouteProps } from "react-router-dom";
 import OnlyPublicRoute from "@/containers/App/OnlyPublicRoute";
 import PrivateRoute from "@/containers/App/PrivateRoute";
-import { authentificated, selectUser } from "@/containers/Auth/store/selectors";
+import { authentificated } from "@/containers/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { useMatchRoute } from "@/shared/hooks";
 import { UserRole } from "@/shared/models";
@@ -21,9 +21,7 @@ const TrusteeContainer: FC = () => {
     TRUSTEE_MATCH_ROUTE_PROPS,
   );
   const isAuthenticated = useSelector(authentificated());
-  const user = useSelector(selectUser());
   const generalPrivateProps = {
-    userRoles: user?.roles,
     anyMandatoryRoles: [UserRole.Trustee],
     unauthenticatedRedirectPath: ROUTE_PATHS.TRUSTEE_AUTH,
   };
