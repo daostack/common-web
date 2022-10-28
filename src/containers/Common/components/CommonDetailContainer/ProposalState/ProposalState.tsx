@@ -17,6 +17,7 @@ interface IProps {
 
 const STATUS_TO_ICON_MAP = {
   Canceled: "rejected",
+  Withdrawn: "approved",
 };
 
 export default function ProposalState({
