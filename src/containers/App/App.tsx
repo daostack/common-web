@@ -22,7 +22,7 @@ import {
   WebviewActions,
 } from "../../shared/constants";
 import { webviewLogin } from "../Auth/store/actions";
-import { Routes } from "./router";
+import { Router } from "./router";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -142,7 +142,7 @@ const App = () => {
       )}
       <TutorialModal isShowing={tutorialModalState.isShowing} />
       <NotificationProvider>
-        <Routes />
+        <Router />
       </NotificationProvider>
     </>
   );
