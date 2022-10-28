@@ -3,7 +3,7 @@ import { RouteProps } from "react-router";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { UserRole } from "@/shared/models";
 
-enum RouteType {
+export enum RouteType {
   Public,
   Private,
   OnlyPublic,
