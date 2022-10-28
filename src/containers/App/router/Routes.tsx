@@ -13,9 +13,6 @@ const Routes: FC = () => {
 
   return (
     <Switch>
-      {ROUTES.map((layoutConfiguration, index) => (
-        <Layout key={index} {...layoutConfiguration} />
-      ))}
       <Redirect
         from={ROUTE_PATHS.DEAD_SEA}
         to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
@@ -37,6 +34,9 @@ const Routes: FC = () => {
           config.saadiaCommonId,
         )}${queryString}`}
       />
+      {ROUTES.map((layoutConfiguration, index) => (
+        <Layout key={index} {...layoutConfiguration} />
+      ))}
       <Route component={NotFound} />
     </Switch>
   );
