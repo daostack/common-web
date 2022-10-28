@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import config from "@/config";
 import { NotFound } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { Layout } from "./components";
+import { Layout } from "./Layout";
 import { ROUTES } from "./configuration";
 
 const Routes: FC = () => {
