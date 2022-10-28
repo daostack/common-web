@@ -1,10 +1,11 @@
 import React, { FC } from "react";
 import { Route, Switch } from "react-router-dom";
 import { LayoutConfiguration } from "../types";
+import { mapRoutesToPaths } from "./helpers";
 
 const Layout: FC<LayoutConfiguration> = (props) => {
   const { component: LayoutComponent, routes } = props;
-  const paths = routes.map((route) => route.path);
+  const paths = mapRoutesToPaths(routes);
 
   return (
     <Route exact path={paths}>

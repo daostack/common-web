@@ -33,7 +33,7 @@ export interface OnlyPublicRouteConfiguration
   type: RouteType.OnlyPublic;
 }
 
-type Route =
+export type Route =
   | PublicRouteConfiguration
   | PrivateRouteConfiguration
   | OnlyPublicRouteConfiguration;
