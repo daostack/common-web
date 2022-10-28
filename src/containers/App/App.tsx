@@ -22,7 +22,7 @@ import {
   WebviewActions,
 } from "../../shared/constants";
 import { webviewLogin } from "../Auth/store/actions";
-import Routes from "./Routes";
+import { Routes } from "./router";
 
 const App = () => {
   const dispatch = useDispatch();

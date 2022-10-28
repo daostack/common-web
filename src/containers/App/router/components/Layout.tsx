@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Route, Switch } from "react-router-dom";
-import { LayoutConfiguration } from "./types";
+import { LayoutConfiguration } from "../types";
 
 const Layout: FC<LayoutConfiguration> = (props) => {
   const { component: LayoutComponent, routes } = props;
