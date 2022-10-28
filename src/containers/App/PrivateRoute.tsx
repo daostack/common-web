@@ -1,26 +1,25 @@
 import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import { ROUTE_PATHS } from "../../shared/constants";
-import { UserRole } from "../../shared/models";
-import {
-  checkMandatoryRoles,
-  checkAnyMandatoryRoles,
-} from "../../shared/utils";
+import { ROUTE_PATHS } from "@/shared/constants";
+import { UserRole } from "@/shared/models";
+import { checkMandatoryRoles, checkAnyMandatoryRoles } from "@/shared/utils";
+import { PrivateRouteConfiguration } from "./router/types";
 
-interface PrivateRouteProps extends RouteProps {
+interface PrivateRouteProps
+  extends RouteProps,
+    Pick<
+      PrivateRouteConfiguration,
+      | "mandatoryRoles"
+      | "anyMandatoryRoles"
+      | "unauthenticatedRedirectPath"
+      | "unauthorizedRedirectPath"
+    > {
   authenticated: boolean;
   userRoles?: UserRole[];
-  /** User should have all of these roles */
-  mandatoryRoles?: UserRole[];
-  /** User should have one of these roles */
-  anyMandatoryRoles?: UserRole[];
-  unauthenticatedRedirectPath?: ROUTE_PATHS;
-  unauthorizedRedirectPath?: ROUTE_PATHS;
 }
 
 const DEFAULT_REDIRECT_PATH = ROUTE_PATHS.HOME;
 
-/* eslint-disable */
 const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
   const {
     component: Component,
