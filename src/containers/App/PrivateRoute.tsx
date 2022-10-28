@@ -8,7 +8,6 @@ import {
 } from "../../shared/utils";
 
 interface PrivateRouteProps extends RouteProps {
-  component: React.JSXElementConstructor<any>;
   authenticated: boolean;
   userRoles?: UserRole[];
   /** User should have all of these roles */
@@ -31,6 +30,7 @@ const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
     anyMandatoryRoles,
     unauthenticatedRedirectPath,
     unauthorizedRedirectPath,
+    children,
     ...rest
   } = props;
   const hasNecessaryRoles =
@@ -54,7 +54,7 @@ const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
           return <Redirect to={to} />;
         }
 
-        return <Component {...props} />;
+        return Component ? <Component {...props} /> : children;
       }}
     />
   );
