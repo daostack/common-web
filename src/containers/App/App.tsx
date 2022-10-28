@@ -1,15 +1,12 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { Redirect, Route, Switch } from "react-router-dom";
 import classNames from "classnames";
-import config from "@/config";
-import { NotFound, Modal, TutorialModal } from "@/shared/components";
+import { Modal, TutorialModal } from "@/shared/components";
 import { BackgroundNotification } from "@/shared/components/BackgroundNotification";
 import { NotificationProvider } from "@/shared/components/Notification";
 import { useModal } from "@/shared/hooks";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
-import { OldLayout } from "@/shared/layouts";
 import { EventTypeState } from "@/shared/models/Notification";
 import { changeScreenSize, showNotification } from "@/shared/store/actions";
 import {
@@ -25,29 +22,14 @@ import {
   WebviewActions,
 } from "../../shared/constants";
 import { webviewLogin } from "../Auth/store/actions";
-import { authentificated } from "../Auth/store/selectors";
-import {
-  CommonContainer,
-  ProposalContainer,
-  ProposalCommentContainer,
-  DiscussionContainer,
-  DiscussionMessageContainer,
-} from "../Common";
-import { MyCommonsContainer } from "../Common/containers/MyCommonsContainer";
-import { SubmitInvoicesContainer } from "../Invoices/containers";
-import { ContactUsContainer, LandingContainer } from "../Landing";
-import { MyAccountContainer } from "../MyAccount/containers/MyAccountContainer";
-import { TrusteeContainer } from "../Trustee/containers";
-import PrivateRoute from "./PrivateRoute";
+import Routes from "./Routes";
 
 const App = () => {
   const dispatch = useDispatch();
   const isRtlLanguage = useSelector(selectIsRtlLanguage());
-  const isAuthenticated = useSelector(authentificated());
   const notification = useSelector(getNotification());
   const tutorialModalState = useSelector(selectTutorialModalState());
   const history = useHistory();
-  const { search: queryString } = history.location;
 
   const {
     isShowing: isShowingNotification,
@@ -160,74 +142,7 @@ const App = () => {
       )}
       <TutorialModal isShowing={tutorialModalState.isShowing} />
       <NotificationProvider>
-        <OldLayout>
-          <Switch>
-            <Route path={ROUTE_PATHS.HOME} exact component={LandingContainer} />
-            <Route
-              path={ROUTE_PATHS.CONTACT_US}
-              exact
-              component={ContactUsContainer}
-            />
-            <Route path={ROUTE_PATHS.COMMON_LIST} component={CommonContainer} />
-            <PrivateRoute
-              path={ROUTE_PATHS.PROPOSAL_DETAIL}
-              component={ProposalContainer}
-              authenticated={isAuthenticated}
-            />
-            <PrivateRoute
-              path={ROUTE_PATHS.PROPOSAL_COMMENT}
-              component={ProposalCommentContainer}
-              authenticated={isAuthenticated}
-            />
-            <PrivateRoute
-              path={ROUTE_PATHS.DISCUSSION_DETAIL}
-              component={DiscussionContainer}
-              authenticated={isAuthenticated}
-            />
-            <PrivateRoute
-              path={ROUTE_PATHS.DISCUSSION_MESSAGE}
-              component={DiscussionMessageContainer}
-              authenticated={isAuthenticated}
-            />
-            <PrivateRoute
-              path={ROUTE_PATHS.MY_ACCOUNT}
-              component={MyAccountContainer}
-              authenticated={isAuthenticated}
-            />
-            <PrivateRoute
-              path={ROUTE_PATHS.MY_COMMONS}
-              component={MyCommonsContainer}
-              authenticated={isAuthenticated}
-            />
-            <Route
-              path={ROUTE_PATHS.SUBMIT_INVOICES}
-              component={SubmitInvoicesContainer}
-            />
-            <Route path={ROUTE_PATHS.TRUSTEE} component={TrusteeContainer} />
-            <Redirect
-              from={ROUTE_PATHS.DEAD_SEA}
-              to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
-                ":id",
-                config.deadSeaCommonId,
-              )}${queryString}`}
-            />
-            <Redirect
-              from={ROUTE_PATHS.PARENTS_FOR_CLIMATE}
-              to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
-                ":id",
-                config.parentsForClimateCommonId,
-              )}${queryString}`}
-            />
-            <Redirect
-              from={ROUTE_PATHS.SAVE_SAADIA}
-              to={`${ROUTE_PATHS.COMMON_SUPPORT.replace(
-                ":id",
-                config.saadiaCommonId,
-              )}${queryString}`}
-            />
-            <Route component={NotFound} />
-          </Switch>
-        </OldLayout>
+        <Routes />
       </NotificationProvider>
     </>
   );
