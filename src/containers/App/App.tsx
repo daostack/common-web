@@ -11,7 +11,6 @@ import { EventTypeState } from "@/shared/models/Notification";
 import { changeScreenSize, showNotification } from "@/shared/store/actions";
 import {
   getNotification,
-  selectIsRtlLanguage,
   selectTutorialModalState,
 } from "@/shared/store/selectors";
 import { parseJson } from "@/shared/utils/json";
@@ -22,11 +21,11 @@ import {
   WebviewActions,
 } from "../../shared/constants";
 import { webviewLogin } from "../Auth/store/actions";
+import { TextDirectionHandler } from "./handlers";
 import { Router } from "./router";
 
 const App = () => {
   const dispatch = useDispatch();
-  const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const notification = useSelector(getNotification());
   const tutorialModalState = useSelector(selectTutorialModalState());
   const history = useHistory();
@@ -98,16 +97,6 @@ const App = () => {
     };
   }, [dispatch]);
 
-  useEffect(() => {
-    const classNameToAdd = isRtlLanguage ? "direction--rtl" : "direction--ltr";
-    const classNameToRemove = isRtlLanguage
-      ? "direction--ltr"
-      : "direction--rtl";
-
-    document.body.classList.remove(classNameToRemove);
-    document.body.classList.add(classNameToAdd);
-  }, [isRtlLanguage]);
-
   const closeNotificationHandler = useCallback(() => {
     closeNotification();
     dispatch(showNotification(null));
@@ -142,6 +131,7 @@ const App = () => {
       )}
       <TutorialModal isShowing={tutorialModalState.isShowing} />
       <NotificationProvider>
+        <TextDirectionHandler />
         <Router />
       </NotificationProvider>
     </>
