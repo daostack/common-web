@@ -42,3 +42,9 @@ export interface LayoutConfiguration {
   component: ComponentType;
   routes: Route[];
 }
+
+export interface LayoutConfigurationWithRouteProps
+  extends LayoutConfiguration,
+    Pick<RouteProps<ROUTE_PATHS>, "path"> {
+  exact: true;
+}

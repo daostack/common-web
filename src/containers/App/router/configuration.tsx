@@ -12,9 +12,14 @@ import { MyAccountContainer } from "@/containers/MyAccount";
 import { TrusteeContainer } from "@/containers/Trustee";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { OldLayout } from "@/shared/layouts";
-import { LayoutConfiguration, RouteType } from "./types";
+import { mapRoutesToPaths } from "./helpers";
+import {
+  LayoutConfiguration,
+  LayoutConfigurationWithRouteProps,
+  RouteType,
+} from "./types";
 
-export const ROUTES: LayoutConfiguration[] = [
+const ROUTE_CONFIGURATIONS: LayoutConfiguration[] = [
   {
     component: OldLayout,
     routes: [
@@ -73,3 +78,10 @@ export const ROUTES: LayoutConfiguration[] = [
     ],
   },
 ];
+
+export const ROUTES: LayoutConfigurationWithRouteProps[] =
+  ROUTE_CONFIGURATIONS.map((configuration) => ({
+    ...configuration,
+    path: mapRoutesToPaths(configuration.routes),
+    exact: true,
+  }));

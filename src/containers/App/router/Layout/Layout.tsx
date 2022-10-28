@@ -1,14 +1,12 @@
 import React, { FC } from "react";
 import { Route, Switch } from "react-router-dom";
-import { LayoutConfiguration } from "../types";
-import { mapRoutesToPaths } from "./helpers";
+import { LayoutConfigurationWithRouteProps } from "../types";
 
-const Layout: FC<LayoutConfiguration> = (props) => {
-  const { component: LayoutComponent, routes } = props;
-  const paths = mapRoutesToPaths(routes);
+const Layout: FC<LayoutConfigurationWithRouteProps> = (props) => {
+  const { component: LayoutComponent, routes, ...restProps } = props;
 
   return (
-    <Route exact path={paths}>
+    <Route {...restProps}>
       <LayoutComponent>
         <Switch>
           {routes.map((route) => (
