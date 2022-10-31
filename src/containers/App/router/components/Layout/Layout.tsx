@@ -1,12 +1,13 @@
 import React, { FC } from "react";
 import { Route, Switch } from "react-router-dom";
-import { LayoutConfigurationWithRouteProps } from "../types";
+import { LayoutConfigurationWithRouteProps } from "../../types";
+import { LayoutRoute } from "../LayoutRoute";
 
 const Layout: FC<LayoutConfigurationWithRouteProps> = (props) => {
   const { component: LayoutComponent, routes, ...restProps } = props;
 
   return (
-    <Route {...restProps}>
+    <LayoutRoute routeConfigurations={routes} {...restProps}>
       <LayoutComponent>
         <Switch>
           {routes.map((route) => (
@@ -14,7 +15,7 @@ const Layout: FC<LayoutConfigurationWithRouteProps> = (props) => {
           ))}
         </Switch>
       </LayoutComponent>
-    </Route>
+    </LayoutRoute>
   );
 };
 

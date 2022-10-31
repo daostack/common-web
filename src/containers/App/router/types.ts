@@ -31,6 +31,7 @@ export interface PrivateRouteConfiguration extends GeneralRouteConfiguration {
 export interface OnlyPublicRouteConfiguration
   extends GeneralRouteConfiguration {
   type: RouteType.OnlyPublic;
+  redirectPath?: ROUTE_PATHS;
 }
 
 export type Route =

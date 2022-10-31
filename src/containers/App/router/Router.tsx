@@ -5,7 +5,7 @@ import config from "@/config";
 import { history } from "@/shared/appConfig";
 import { NotFound } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { Layout } from "./Layout";
+import { Layout } from "./components";
 import { ROUTES } from "./configuration";
 
 const Router: FC = () => {
