@@ -1,13 +1,15 @@
-import * as React from 'react';
+import React, { useEffect, useState } from "react";
 
 export default function useScreenSize(query: string): boolean {
-  const [isMatches, setMatches] = React.useState(() => window.matchMedia(`(${query})`).matches);
+  const [isMatches, setMatches] = useState(
+    () => window.matchMedia(`(${query})`).matches,
+  );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const screenSize = window.matchMedia(`(${query})`);
 
     const handleScreenSizeChange = (screenSize: MediaQueryListEvent) => {
-      setMatches(screenSize.matches)
+      setMatches(screenSize.matches);
     };
 
     // Condition is added to solve issue https://www.designcise.com/web/tutorial/how-to-fix-the-javascript-typeerror-matchmedia-addeventlistener-is-not-a-function
