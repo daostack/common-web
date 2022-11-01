@@ -1,13 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import AppWrapper from "@/containers/App/AppWrapper";
+import { App, AppWrapper } from "@/containers/App";
+import "./i18n";
 import "./index.scss";
-import App from "./containers/App/App";
-import './i18n';
 
 ReactDOM.render(
   <AppWrapper>
     <App />
   </AppWrapper>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );
