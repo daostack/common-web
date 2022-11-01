@@ -2,11 +2,14 @@ import React, { FC } from "react";
 import { Provider } from "react-redux";
 import { store } from "@/shared/appConfig";
 import "@/shared/utils/yup";
+import App from "./App";
 import { NotificationProvider } from "./providers";
 
-const AppWrapper: FC = ({ children }) => (
+const AppWrapper: FC = () => (
   <Provider store={store}>
-    <NotificationProvider>{children}</NotificationProvider>
+    <NotificationProvider>
+      <App />
+    </NotificationProvider>
   </Provider>
 );
 
