@@ -27,6 +27,10 @@ const WebViewLoginHandler: FC = () => {
                   WebviewActions.loginSuccess,
                 );
                 history.push(ROUTE_PATHS.MY_COMMONS);
+              } else {
+                window.ReactNativeWebView.postMessage(
+                  WebviewActions.loginError,
+                );
               }
             },
           }),
