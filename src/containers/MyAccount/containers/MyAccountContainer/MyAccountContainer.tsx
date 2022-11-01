@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import PrivateRoute from "@/containers/App/PrivateRoute";
+import { PrivateRoute } from "@/containers/App/router";
 import { ROUTE_PATHS, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { Activities } from "../../components/Activities";
