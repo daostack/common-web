@@ -1,38 +1,37 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import { ROUTE_PATHS } from "../../shared/constants";
-import { UserRole } from "../../shared/models";
 import {
-  checkMandatoryRoles,
-  checkAnyMandatoryRoles,
-} from "../../shared/utils";
+  authentificated,
+  selectUserRoles,
+} from "@/containers/Auth/store/selectors";
+import { ROUTE_PATHS } from "@/shared/constants";
+import { checkMandatoryRoles, checkAnyMandatoryRoles } from "@/shared/utils";
+import { PrivateRouteConfiguration } from "./router/types";
 
-interface PrivateRouteProps extends RouteProps {
-  component: React.JSXElementConstructor<any>;
-  authenticated: boolean;
-  userRoles?: UserRole[];
-  /** User should have all of these roles */
-  mandatoryRoles?: UserRole[];
-  /** User should have one of these roles */
-  anyMandatoryRoles?: UserRole[];
-  unauthenticatedRedirectPath?: ROUTE_PATHS;
-  unauthorizedRedirectPath?: ROUTE_PATHS;
-}
+type PrivateRouteProps = RouteProps &
+  Pick<
+    PrivateRouteConfiguration,
+    | "mandatoryRoles"
+    | "anyMandatoryRoles"
+    | "unauthenticatedRedirectPath"
+    | "unauthorizedRedirectPath"
+  >;
 
 const DEFAULT_REDIRECT_PATH = ROUTE_PATHS.HOME;
 
-/* eslint-disable */
 const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
   const {
     component: Component,
-    authenticated,
-    userRoles,
     mandatoryRoles,
     anyMandatoryRoles,
     unauthenticatedRedirectPath,
     unauthorizedRedirectPath,
+    children,
     ...rest
   } = props;
+  const userRoles = useSelector(selectUserRoles());
+  const authenticated = useSelector(authentificated());
   const hasNecessaryRoles =
     (!mandatoryRoles || checkMandatoryRoles(mandatoryRoles, userRoles)) &&
     (!anyMandatoryRoles ||
@@ -54,7 +53,7 @@ const PrivateRoute: React.FunctionComponent<PrivateRouteProps> = (props) => {
           return <Redirect to={to} />;
         }
 
-        return <Component {...props} />;
+        return Component ? <Component {...props} /> : children;
       }}
     />
   );

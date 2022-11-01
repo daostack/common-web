@@ -5,6 +5,7 @@
   position: fixed;
   z-index: $notifications-container-z-index;
   width: 20rem;
+  top: 0;
   right: 50%;
   transform: translateX(50%);
 }

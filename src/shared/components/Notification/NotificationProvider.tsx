@@ -1,6 +1,7 @@
-import React, { useCallback, useMemo, useState, FC } from "react";
-import { NotificationContext, NotificationContextValue } from "./context";
+import React, { useCallback, useMemo, useState, FC, useEffect } from "react";
+import { Portal } from "../Portal";
 import Notification from "./Notification/Notification";
+import { NotificationContext, NotificationContextValue } from "./context";
 import "./index.scss";
 
 export interface INotification {
@@ -13,37 +14,49 @@ const MAX_NOTIFICATIONS_DISPLAY = 3;
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
-  const addNotification = useCallback<NotificationContextValue["addNotification"]>((value) => {
-    setNotifications((notifications) => notifications.concat({ id: notifications.length, content: value }));
+  const addNotification = useCallback<
+    NotificationContextValue["addNotification"]
+  >((value) => {
+    setNotifications((notifications) =>
+      notifications.concat({ id: notifications.length, content: value }),
+    );
   }, []);
 
   const removeNotification = useCallback((id: number) => {
-    setNotifications((notifications) => notifications.filter((notification) => notification.id !== id));
+    setNotifications((notifications) =>
+      notifications.filter((notification) => notification.id !== id),
+    );
   }, []);
+
+  useEffect(() => {
+    if (notifications.length > MAX_NOTIFICATIONS_DISPLAY) {
+      setNotifications((notifications) => notifications.slice(1));
+    }
+  }, [notifications.length]);
 
   const contextValue = useMemo<NotificationContextValue>(
     () => ({
       addNotification,
     }),
-    [addNotification]
+    [addNotification],
   );
-
-  if (notifications.length > MAX_NOTIFICATIONS_DISPLAY) {
-    setNotifications((notifications) => notifications.filter((notification, index) => index !== 0));
-  }
 
   return (
     <NotificationContext.Provider value={contextValue}>
       {children}
-      <div className="notifications-container">
-        {notifications.map((notification, index) => {
-          return (
-            <Notification
-              key={index}
-              notification={notification}
-              removeNotification={() => removeNotification(notification.id)} />);
-        })}
-      </div>
+      <Portal>
+        <div className="notifications-container">
+          {notifications.map((notification, index) => {
+            return (
+              <Notification
+                key={index}
+                notification={notification}
+                removeNotification={() => removeNotification(notification.id)}
+              />
+            );
+          })}
+        </div>
+      </Portal>
     </NotificationContext.Provider>
   );
 };
