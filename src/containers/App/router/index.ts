@@ -1,2 +1,2 @@
 export { default as Router } from "./Router";
-export * from "./components";
+export { PrivateRoute, OnlyPublicRoute } from "./components";
