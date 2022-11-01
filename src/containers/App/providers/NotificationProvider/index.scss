@@ -1,5 +1,5 @@
-@import "../../../constants";
-@import "../../../styles/sizes";
+@import "../../../../constants";
+@import "../../../../styles/sizes";
 
 .notifications-container {
   position: fixed;
@@ -13,7 +13,6 @@
 @include big-phone {
   .notifications-container {
     width: 95%;
-    bottom: 0;
     top: unset;
     bottom: 0;
   }
