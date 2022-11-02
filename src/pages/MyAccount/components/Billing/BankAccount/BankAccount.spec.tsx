@@ -12,10 +12,10 @@ import withTestId from "@/shared/utils/tests/withTestId";
 import BankAccount from "./BankAccount";
 
 jest.mock(
-  "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddBankDetails/AddBankDetails",
+  "@/pages/OldCommon/components/CommonDetailContainer/AddProposalComponent/AddBankDetails/AddBankDetails",
   () => {
     const module = jest.requireActual(
-      "@/containers/Common/components/CommonDetailContainer/AddProposalComponent/AddBankDetails/AddBankDetails",
+      "@/pages/OldCommon/components/CommonDetailContainer/AddProposalComponent/AddBankDetails/AddBankDetails",
     );
 
     return {
