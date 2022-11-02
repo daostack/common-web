@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import SwiperCore, { Pagination } from "swiper/core";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { CommonListItem } from "@/pages/Common/components";
+import { CommonListItem } from "@/pages/OldCommon/components";
 import { Loader } from "../../../../../shared/components";
 import { ROUTE_PATHS, ScreenSize } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
@@ -11,8 +11,8 @@ import {
   getLoading,
   getScreenSize,
 } from "../../../../../shared/store/selectors";
-import { getCommonsList } from "../../../../Common/store/actions";
-import { selectCommonList } from "../../../../Common/store/selectors";
+import { getCommonsList } from "../../../../OldCommon/store/actions";
+import { selectCommonList } from "../../../../OldCommon/store/selectors";
 import "./index.scss";
 import "swiper/components/pagination/pagination.min.css";
 import "swiper/swiper.min.css";

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import { createBuyerTokenPage } from "@/pages/Common/store/actions";
-import { subscribeToCardChange } from "@/pages/Common/store/api";
+import { createBuyerTokenPage } from "@/pages/OldCommon/store/actions";
+import { subscribeToCardChange } from "@/pages/OldCommon/store/api";
 import { Card, CommonPayment } from "@/shared/models";
 
 export interface ChangePaymentMethodState {

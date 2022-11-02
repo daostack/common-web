@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { fetchSubCommonsByCommonId } from "@/pages/Common/store/api";
+import { fetchSubCommonsByCommonId } from "@/pages/OldCommon/store/api";
 import { LoadingState } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
 

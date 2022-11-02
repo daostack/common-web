@@ -1,6 +1,6 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { getUserListByIds } from "@/pages/Auth/store/api";
-import { fetchCommonListByIds } from "@/pages/Common/store/api";
+import { fetchCommonListByIds } from "@/pages/OldCommon/store/api";
 import { Awaited } from "@/shared/interfaces";
 import { Common, User } from "@/shared/models";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";

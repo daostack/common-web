@@ -1,14 +1,14 @@
+import { SubmitInvoicesContainer } from "@/pages/Invoices";
+import { ContactUsContainer, LandingContainer } from "@/pages/Landing";
+import { MyAccountContainer } from "@/pages/MyAccount";
 import {
   CommonContainer,
   DiscussionContainer,
   DiscussionMessageContainer,
   ProposalCommentContainer,
   ProposalContainer,
-} from "@/pages/Common";
-import { MyCommonsContainer } from "@/pages/Common/containers/MyCommonsContainer";
-import { SubmitInvoicesContainer } from "@/pages/Invoices";
-import { ContactUsContainer, LandingContainer } from "@/pages/Landing";
-import { MyAccountContainer } from "@/pages/MyAccount";
+} from "@/pages/OldCommon";
+import { MyCommonsContainer } from "@/pages/OldCommon/containers/MyCommonsContainer";
 import { TrusteeContainer } from "@/pages/Trustee";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { OldLayout } from "@/shared/layouts";

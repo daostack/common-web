@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { CommonListItem } from "@/pages/Common/components";
-import { useUserCommons } from "@/pages/Common/hooks";
+import { CommonListItem } from "@/pages/OldCommon/components";
+import { useUserCommons } from "@/pages/OldCommon/hooks";
 import { Loader } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { Common } from "@/shared/models";

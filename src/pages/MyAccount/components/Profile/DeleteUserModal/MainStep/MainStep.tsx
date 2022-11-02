@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler, FC, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { UserMembershipInfo } from "@/pages/Common/interfaces";
+import { UserMembershipInfo } from "@/pages/OldCommon/interfaces";
 import { Button, ButtonVariant } from "@/shared/components";
 import { Checkbox, ErrorText, Input } from "@/shared/components/Form";
 import { ErrorCode } from "@/shared/constants";

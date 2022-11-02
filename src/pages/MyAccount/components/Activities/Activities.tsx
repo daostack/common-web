@@ -9,8 +9,8 @@ import {
   CommonListItem,
   FundingProposalListItem,
   MembershipRequestListItem,
-} from "@/pages/Common/components";
-import { useUserCommons } from "@/pages/Common/hooks";
+} from "@/pages/OldCommon/components";
+import { useUserCommons } from "@/pages/OldCommon/hooks";
 import { Loader } from "@/shared/components";
 import { ProposalsTypes, ROUTE_PATHS, ScreenSize } from "@/shared/constants";
 import { Common, Proposal } from "@/shared/models";
@@ -21,14 +21,14 @@ import {
   loadUserProposalList,
   getCommonDetail,
   closeCurrentCommon,
-} from "../../../Common/store/actions";
+} from "../../../OldCommon/store/actions";
 import {
   selectCommonList,
   selectUserProposalList,
   selectCurrentProposal,
   selectIsCommonsLoaded,
   selectIsUserProposalsLoaded,
-} from "../../../Common/store/selectors";
+} from "../../../OldCommon/store/selectors";
 import { CollectionSummaryCard } from "./CollectionSummaryCard";
 import "./index.scss";
 import "swiper/components/pagination/pagination.min.css";

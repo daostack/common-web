@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getCommonState,
   updateCommonState,
-} from "@/pages/Common/store/actions";
-import { selectCommonStateById } from "@/pages/Common/store/selectors";
+} from "@/pages/OldCommon/store/actions";
+import { selectCommonStateById } from "@/pages/OldCommon/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
 

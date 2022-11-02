@@ -1,7 +1,7 @@
 import React, { FC, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AddBankDetails } from "@/pages/Common/components/CommonDetailContainer/AddProposalComponent/AddBankDetails/AddBankDetails";
-import { deleteBankDetails } from "@/pages/Common/store/actions";
+import { AddBankDetails } from "@/pages/OldCommon/components/CommonDetailContainer/AddProposalComponent/AddBankDetails/AddBankDetails";
+import { deleteBankDetails } from "@/pages/OldCommon/store/actions";
 import { Modal } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";

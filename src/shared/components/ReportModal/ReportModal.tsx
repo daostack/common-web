@@ -6,8 +6,8 @@ import React, {
   useCallback,
 } from "react";
 import { useDispatch } from "react-redux";
-import { createReport } from "@/pages/Common/store/actions";
-import { subscribeToMessageRefresh } from "@/pages/Common/store/saga";
+import { createReport } from "@/pages/OldCommon/store/actions";
+import { subscribeToMessageRefresh } from "@/pages/OldCommon/store/saga";
 import { Loader, Button } from "@/shared/components";
 import { Colors, EntityTypes } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";

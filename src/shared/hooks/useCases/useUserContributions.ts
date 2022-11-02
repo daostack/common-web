@@ -5,7 +5,7 @@ import {
   getCommonsListByIds,
   getUserContributions,
   getUserSubscriptions,
-} from "@/pages/Common/store/actions";
+} from "@/pages/OldCommon/store/actions";
 import {
   Common,
   Payment,
