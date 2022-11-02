@@ -55,7 +55,6 @@
     "start": "REACT_APP_ENV=dev craco start",
     "test": "TZ=UTC jest",
     "test:watch": "TZ=UTC jest --watch",
-    "eject": "react-scripts eject",
     "commit-hook": "git add .",
     "lint": "eslint -c .eslintrc.json --ext .js,.jsx,.ts,.tsx './src'",
     "lint:fix": "npm run lint -- --fix",
