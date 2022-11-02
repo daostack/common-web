@@ -5,9 +5,9 @@ import axios, {
   CancelTokenSource,
 } from "axios";
 import config from "@/config";
-import getFirebaseToken from "@/helpers/getFirebaseToken";
 import { store } from "@/shared/appConfig";
 import { AXIOS_TIMEOUT } from "@/shared/constants";
+import { getFirebaseToken } from "@/shared/utils";
 
 interface RequestConfig extends AxiosRequestConfig {
   isAuthorizedRequest?: boolean;
@@ -54,7 +54,7 @@ class Api {
 
   public get = async <T>(
     url: string,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<AxiosResponse<T>> => {
     return this.apiEngine.get<T>(url, await this.expandConfig(config));
   };
@@ -62,7 +62,7 @@ class Api {
   public post = async <T>(
     url: string,
     data?: unknown,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<AxiosResponse<T>> => {
     return this.apiEngine.post<T>(url, data, await this.expandConfig(config));
   };
@@ -70,7 +70,7 @@ class Api {
   public put = async <T>(
     url: string,
     data?: unknown,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<AxiosResponse<T>> => {
     return this.apiEngine.put<T>(url, data, await this.expandConfig(config));
   };
@@ -78,14 +78,14 @@ class Api {
   public patch = async <T>(
     url: string,
     data?: unknown,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<AxiosResponse<T>> => {
     return this.apiEngine.patch<T>(url, data, await this.expandConfig(config));
   };
 
   public delete = async <T>(
     url: string,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<AxiosResponse<T>> => {
     return this.apiEngine.delete<T>(url, await this.expandConfig(config));
   };
@@ -105,7 +105,7 @@ class Api {
   };
 
   private expandConfig = async (
-    config: RequestConfig = {}
+    config: RequestConfig = {},
   ): Promise<RequestConfig> => ({
     ...config,
     ...(await this.getHeaders(config)),

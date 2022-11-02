@@ -4,7 +4,6 @@ import {
   BackgroundNotificationModal,
   TutorialModal,
 } from "@/shared/components";
-import { NotificationProvider } from "@/shared/components/Notification";
 import { SMALL_SCREEN_BREAKPOINT, ScreenSize } from "@/shared/constants";
 import { useScreenSize } from "@/shared/hooks";
 import { changeScreenSize } from "@/shared/store/actions";
@@ -27,11 +26,9 @@ const App = () => {
     <>
       <BackgroundNotificationModal />
       <TutorialModal isShowing={tutorialModalState.isShowing} />
-      <NotificationProvider>
-        <TextDirectionHandler />
-        <WebViewLoginHandler />
-        <Router />
-      </NotificationProvider>
+      <TextDirectionHandler />
+      <WebViewLoginHandler />
+      <Router />
     </>
   );
 };

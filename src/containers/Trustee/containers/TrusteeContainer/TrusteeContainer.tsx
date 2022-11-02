@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { Redirect, RouteProps } from "react-router-dom";
-import OnlyPublicRoute from "@/containers/App/OnlyPublicRoute";
-import PrivateRoute from "@/containers/App/PrivateRoute";
+import { OnlyPublicRoute, PrivateRoute } from "@/containers/App/router";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { useMatchRoute } from "@/shared/hooks";
 import { UserRole } from "@/shared/models";

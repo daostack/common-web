@@ -7,7 +7,7 @@ import {
 } from "@/containers/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { checkMandatoryRoles, checkAnyMandatoryRoles } from "@/shared/utils";
-import { PrivateRouteConfiguration } from "./router/types";
+import { PrivateRouteConfiguration } from "../../types";
 
 type PrivateRouteProps = RouteProps &
   Pick<

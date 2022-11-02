@@ -1,13 +1,9 @@
 import React, { useCallback, useMemo, useState, FC, useEffect } from "react";
-import { Portal } from "../Portal";
-import Notification from "./Notification/Notification";
+import { Portal } from "@/shared/components";
+import { Notification } from "./Notification";
 import { NotificationContext, NotificationContextValue } from "./context";
+import { INotification } from "./types";
 import "./index.scss";
-
-export interface INotification {
-  id: number;
-  content: React.ReactNode;
-}
 
 const MAX_NOTIFICATIONS_DISPLAY = 3;
 

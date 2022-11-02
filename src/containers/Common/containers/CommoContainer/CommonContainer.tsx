@@ -1,6 +1,6 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import PrivateRoute from "@/containers/App/PrivateRoute";
+import { PrivateRoute } from "@/containers/App/router";
 import { ROUTE_PATHS } from "@/shared/constants";
 import {
   CommonListContainer,
