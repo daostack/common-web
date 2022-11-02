@@ -1,0 +1,38 @@
+@import "../../../../../constants";
+
+.billing-adding-card {
+  width: 100%;
+  padding: 1rem 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  border-radius: 0.875rem;
+  background-color: $light-gray-4;
+  box-sizing: border-box;
+  justify-content: space-around;
+}
+
+.billing-adding-card__image {
+  width: fit-content;
+  height: 7.65rem;
+}
+
+.billing-adding-card__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.billing-adding-card__content__text {
+  margin: 1rem 0;
+  font-size: $xsmall;
+  text-align: center;
+  white-space: pre-line;
+}
+
+.billing-adding-card__content__button {
+  color: $purple;
+  border-radius: 0.5rem;
+}

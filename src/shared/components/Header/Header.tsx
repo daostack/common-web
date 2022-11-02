@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
-import { Routes } from "@/containers/MyAccount/components/Routes";
+import { Routes } from "@/pages/MyAccount/components/Routes";
 import { Loader, UserAvatar } from "@/shared/components";
 import {
   useAnyMandatoryRoles,
@@ -20,15 +20,12 @@ import {
   selectAreReportsLoading,
   selectHeader,
 } from "@/shared/store/selectors";
-import {
-  logOut,
-  setLoginModalState,
-} from "../../../containers/Auth/store/actions";
+import { logOut, setLoginModalState } from "../../../pages/Auth/store/actions";
 import {
   authentificated,
   selectUser,
-} from "../../../containers/Auth/store/selectors";
-import { LoginContainer } from "../../../containers/Login/containers/LoginContainer";
+} from "../../../pages/Auth/store/selectors";
+import { LoginContainer } from "../../../pages/Login/containers/LoginContainer";
 import {
   ApiEndpoint,
   HEADER_MOBILE_SCREEN_SIZE,

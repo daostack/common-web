@@ -54,7 +54,7 @@ For testing purposes we are using **React Testing Library**. The main idea of th
 
 [Here](https://kentcdodds.com/blog/testing-implementation-details) is a good article about why testing of implementation details is not good.
 
-Of course, sometimes it is necessary to know something about the inner logic and here we can just mock it to use our [logic from the tests](./src/containers/MyAccount/components/Billing/BankAccount/BankAccount.spec.tsx#L14-L56).
+Of course, sometimes it is necessary to know something about the inner logic and here we can just mock it to use our [logic from the tests](./src/pages/MyAccount/components/Billing/BankAccount/BankAccount.spec.tsx#L14-L56).
 
 Cases where we need to test calls to BE, test store changing after BE call, test redirecting, etc... is more related to integration tests, which our project doesn't use.
 

@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
-import { selectUser } from "@/containers/Auth/store/selectors";
-import { UserMembershipInfo } from "@/containers/Common/interfaces";
-import { getUserInfoAboutMemberships } from "@/containers/Common/store/api";
+import { selectUser } from "@/pages/Auth/store/selectors";
+import { UserMembershipInfo } from "@/pages/Common/interfaces";
+import { getUserInfoAboutMemberships } from "@/pages/Common/store/api";
 import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
 

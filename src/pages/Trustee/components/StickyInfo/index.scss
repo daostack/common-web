@@ -1,0 +1,11 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.trustee-sticky-info {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: $white;
+  box-shadow: 0 0.25rem 0.25rem 0 $sticky-info-shadow;
+}

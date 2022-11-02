@@ -1,17 +1,17 @@
 import React, { FC, PropsWithChildren, useState, useCallback } from "react";
-import { Colors, EntityTypes } from "@/shared/constants";
-import { Loader, Button } from "@/shared/components";
-import { Modal } from "../Modal";
-import "./index.scss";
-import { useNotification } from "@/shared/hooks";
 import { useDispatch } from "react-redux";
+import { deleteDiscussionMessage } from "@/pages/Common/store/actions";
+import { Loader, Button } from "@/shared/components";
+import { Colors, EntityTypes } from "@/shared/constants";
+import { useNotification } from "@/shared/hooks";
 import {
   Common,
   Discussion,
   DiscussionMessage,
   Proposal,
 } from "@/shared/models";
-import { deleteDiscussionMessage } from "@/containers/Common/store/actions";
+import { Modal } from "../Modal";
+import "./index.scss";
 
 interface ReportModalProps {
   isShowing: boolean;
