@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import { subscribeToCardChange } from "@/containers/Common/store/api";
-import { createBuyerTokenPage } from "@/containers/Common/store/actions";
+import { createBuyerTokenPage } from "@/pages/Common/store/actions";
+import { subscribeToCardChange } from "@/pages/Common/store/api";
 import { Card, CommonPayment } from "@/shared/models";
 
 export interface ChangePaymentMethodState {
@@ -20,15 +20,13 @@ interface Return {
 
 const usePaymentMethodChange = (): Return => {
   const dispatch = useDispatch();
-  const [
-    changePaymentMethodState,
-    setChangePaymentMethodState,
-  ] = useState<ChangePaymentMethodState>(() => ({
-    payment: null,
-    isPaymentLoading: false,
-    cardId: uuidv4(),
-    createdCard: null,
-  }));
+  const [changePaymentMethodState, setChangePaymentMethodState] =
+    useState<ChangePaymentMethodState>(() => ({
+      payment: null,
+      isPaymentLoading: false,
+      cardId: uuidv4(),
+      createdCard: null,
+    }));
 
   const onPaymentMethodChange = useCallback(() => {
     setChangePaymentMethodState((nextState) => ({
@@ -53,7 +51,7 @@ const usePaymentMethodChange = (): Return => {
             isPaymentLoading: false,
           }));
         },
-      })
+      }),
     );
   }, [dispatch, changePaymentMethodState.cardId]);
 

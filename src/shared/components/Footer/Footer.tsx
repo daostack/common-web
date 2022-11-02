@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { authentificated } from "@/containers/Auth/store/selectors";
+import { authentificated } from "@/pages/Auth/store/selectors";
 import { selectFooter } from "@/shared/store/selectors";
 import { ROUTE_PATHS } from "../../constants";
 import "./index.scss";
@@ -25,10 +25,18 @@ const Footer = () => {
           {isAuthenticated && (
             <Link to={ROUTE_PATHS.COMMON_LIST}>Explore Commons</Link>
           )}
-          <a href={require("../../assets/terms_and_conditions.pdf")} target="_blank" rel="noopener noreferrer">
+          <a
+            href={require("../../assets/terms_and_conditions.pdf")}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Terms of Use
           </a>
-          <a href={require("../../assets/privacy_policy.pdf")} target="_blank" rel="noopener noreferrer">
+          <a
+            href={require("../../assets/privacy_policy.pdf")}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Privacy Policy
           </a>
           <a href="mailto://support@common.io">Contact</a>
@@ -38,7 +46,9 @@ const Footer = () => {
         <div className="powered-by">
           Powered by <img src="/icons/dao.svg" alt="dao" /> DaoStack
         </div>
-        <div className="copyrights">Copyrights © {date.getFullYear()}. All rights reserved</div>
+        <div className="copyrights">
+          Copyrights © {date.getFullYear()}. All rights reserved
+        </div>
       </div>
     </section>
   );

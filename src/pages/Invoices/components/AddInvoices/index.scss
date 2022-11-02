@@ -1,0 +1,97 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.add-invoices-wrapper {
+  input[type="file"] {
+    display: none;
+  }
+  .invoices-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    > label,
+    > div {
+      margin: 0.75rem;
+    }
+    :first-child {
+      margin-left: 0;
+    }
+    :last-child {
+      margin-right: 0;
+    }
+    .add-invoice-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: $light-gray-4;
+      border-radius: 14px;
+      width: 160px;
+      height: 160px;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .add-invoices__total-amount-label {
+      margin: 1.5rem 0;
+    }
+  }
+
+  .add-invoices-wrapper__file-preview-top-wrapper {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+    box-sizing: border-box;
+  }
+
+  .add-invoices-wrapper__file-preview-delete-icon {
+    padding: 10px;
+    border-radius: 100%;
+    background-color: $black-gray;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  .add-invoices-wrapper__file-preview-bottom-wrapper {
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .add-invoices-wrapper__file-preview-image--shrink {
+    animation: shrink 0.5s forwards;
+
+    @keyframes shrink {
+      from {
+        max-height: 70%;
+      }
+      to {
+        max-height: 40%;
+      }
+    }
+  }
+
+  @include big-phone {
+    width: 100%;
+    .invoices-container {
+      flex-direction: column-reverse;
+      > label,
+      > div {
+        margin: 0.75rem 0;
+      }
+      .add-invoice-button {
+        width: 100%;
+      }
+    }
+  }
+}

@@ -1,27 +1,25 @@
 import { useCallback, useEffect, useState, RefObject } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DropdownRef } from "@/shared/components";
-import { setLoginModalState } from "../../containers/Auth/store/actions";
+import { setLoginModalState } from "../../pages/Auth/store/actions";
 import {
   authentificated,
   selectLoginModalState,
-} from "../../containers/Auth/store/selectors";
+} from "../../pages/Auth/store/selectors";
 
 interface AuthorizedModalReturn {
   onDropdownToggle: (isOpen: boolean) => void;
 }
 
 const useAuthorizedDropdown = (
-  dropdownRef: RefObject<DropdownRef>
+  dropdownRef: RefObject<DropdownRef>,
 ): AuthorizedModalReturn => {
-  const [
-    shouldShowDropdownOnLoginClose,
-    setShouldShowDropdownOnLoginClose,
-  ] = useState(false);
+  const [shouldShowDropdownOnLoginClose, setShouldShowDropdownOnLoginClose] =
+    useState(false);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(authentificated());
   const { isShowing: isLoginModalShowing } = useSelector(
-    selectLoginModalState()
+    selectLoginModalState(),
   );
 
   const onDropdownToggle = useCallback(
@@ -34,7 +32,7 @@ const useAuthorizedDropdown = (
       dispatch(setLoginModalState({ isShowing: true }));
       setShouldShowDropdownOnLoginClose(true);
     },
-    [isAuthenticated, dropdownRef, dispatch]
+    [isAuthenticated, dropdownRef, dispatch],
   );
 
   useEffect(() => {

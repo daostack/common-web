@@ -5,20 +5,20 @@ import React, {
   ChangeEvent,
   useCallback,
 } from "react";
-import { Colors, EntityTypes } from "@/shared/constants";
-import { Loader, Button } from "@/shared/components";
-import { createReport } from "@/containers/Common/store/actions";
-import { Modal } from "../Modal";
-import "./index.scss";
-import { useNotification } from "@/shared/hooks";
 import { useDispatch } from "react-redux";
+import { createReport } from "@/pages/Common/store/actions";
+import { subscribeToMessageRefresh } from "@/pages/Common/store/saga";
+import { Loader, Button } from "@/shared/components";
+import { Colors, EntityTypes } from "@/shared/constants";
+import { useNotification } from "@/shared/hooks";
 import {
   Discussion,
   DiscussionMessage,
   Proposal,
   Common,
 } from "@/shared/models";
-import { subscribeToMessageRefresh } from "@/containers/Common/store/saga";
+import { Modal } from "../Modal";
+import "./index.scss";
 
 interface ReportModalProps {
   isShowing: boolean;
