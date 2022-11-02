@@ -4,9 +4,9 @@ import {
   ImmediateContributionData,
   ImmediateContributionPayment,
   isImmediateContributionPayment,
-} from "@/pages/Common/interfaces";
-import { makeImmediateContribution as makeImmediateContributionAction } from "@/pages/Common/store/actions";
-import { subscribeToPayment } from "@/pages/Common/store/api";
+} from "@/pages/OldCommon/interfaces";
+import { makeImmediateContribution as makeImmediateContributionAction } from "@/pages/OldCommon/store/actions";
+import { subscribeToPayment } from "@/pages/OldCommon/store/api";
 import { Payment, PaymentStatus, Subscription } from "@/shared/models";
 
 interface State {

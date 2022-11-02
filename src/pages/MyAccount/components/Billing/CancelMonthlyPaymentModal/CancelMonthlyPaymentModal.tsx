@@ -1,7 +1,7 @@
 import React, { useState, FC } from "react";
 import { useDispatch } from "react-redux";
 import moment from "moment";
-import { cancelSubscription } from "@/pages/Common/store/actions";
+import { cancelSubscription } from "@/pages/OldCommon/store/actions";
 import { Button, ButtonVariant, Loader, Modal } from "@/shared/components";
 import { DAYS_TILL_REMOVAL_FROM_COMMON_AFTER_CANCELING } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";

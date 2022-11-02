@@ -1,9 +1,9 @@
 import React, { useMemo, useState, FC } from "react";
-import { ChangeMonthlyContribution } from "@/pages/Common/components/CommonDetailContainer/MyContributionsModal/ChangeMonthlyContribution";
+import { ChangeMonthlyContribution } from "@/pages/OldCommon/components/CommonDetailContainer/MyContributionsModal/ChangeMonthlyContribution";
 import {
   MyContributionsContext,
   MyContributionsContextValue,
-} from "@/pages/Common/components/CommonDetailContainer/MyContributionsModal/context";
+} from "@/pages/OldCommon/components/CommonDetailContainer/MyContributionsModal/context";
 import { Modal } from "@/shared/components";
 import { Common, Subscription } from "@/shared/models";
 import "./index.scss";

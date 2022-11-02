@@ -3,7 +3,7 @@ import {
   getProposalById,
   seenNotification,
   subscribeToNotification,
-} from "@/pages/Common/store/api";
+} from "@/pages/OldCommon/store/api";
 import { store } from "@/shared/appConfig";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 import { EventTypeState, NotificationItem } from "@/shared/models/Notification";

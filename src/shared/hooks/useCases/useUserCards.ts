@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { loadUserCards } from "@/pages/Common/store/actions";
+import { loadUserCards } from "@/pages/OldCommon/store/actions";
 import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
 import { Card } from "@/shared/models";

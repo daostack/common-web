@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getBankDetails, loadUserCards } from "@/pages/Common/store/actions";
+import { getBankDetails, loadUserCards } from "@/pages/OldCommon/store/actions";
 import { ScreenSize } from "@/shared/constants";
 import {
   usePaymentMethodChange,

@@ -6,7 +6,7 @@ import { Loader } from "../../../../shared/components";
 import { Proposal } from "../../../../shared/models";
 import { setLoginModalState } from "../../../Auth/store/actions";
 import { authentificated, selectUser } from "../../../Auth/store/selectors";
-import { fetchCommonDetail } from "../../../Common/store/api";
+import { fetchCommonDetail } from "../../../OldCommon/store/api";
 import { fetchProposal } from "../../api";
 import { ProposalDetails } from "../../components/ProposalDetails";
 import "./index.scss";

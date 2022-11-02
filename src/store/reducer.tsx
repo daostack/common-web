@@ -2,7 +2,7 @@ import { connectRouter } from "connected-react-router";
 import { History } from "history";
 import { AnyAction, combineReducers } from "redux";
 import { AuthReducer } from "../pages/Auth/store/reducer";
-import { commonsReducer } from "../pages/Common/store";
+import { commonsReducer } from "../pages/OldCommon/store";
 import { trusteeReducer } from "../pages/Trustee/store";
 import { AppState } from "../shared/interfaces";
 import { SharedReducer } from "../shared/store/reducer";

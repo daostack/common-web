@@ -5,7 +5,7 @@ import { NavLink, useParams } from "react-router-dom";
 import {
   FundingProposalListItem,
   MembershipRequestListItem,
-} from "@/pages/Common/components";
+} from "@/pages/OldCommon/components";
 import { Loader } from "@/shared/components";
 import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
 import { Proposal } from "@/shared/models";
@@ -15,11 +15,11 @@ import {
   getCommonDetail,
   loadUserProposalList,
   closeCurrentCommon,
-} from "../../../../Common/store/actions";
+} from "../../../../OldCommon/store/actions";
 import {
   selectUserProposalList,
   selectCurrentProposal,
-} from "../../../../Common/store/selectors";
+} from "../../../../OldCommon/store/selectors";
 import "./index.scss";
 
 interface MyProposalsContainerRouterParams {

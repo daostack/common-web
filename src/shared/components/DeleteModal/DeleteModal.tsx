@@ -1,6 +1,6 @@
 import React, { FC, PropsWithChildren, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { deleteDiscussionMessage } from "@/pages/Common/store/actions";
+import { deleteDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { Loader, Button } from "@/shared/components";
 import { Colors, EntityTypes } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";

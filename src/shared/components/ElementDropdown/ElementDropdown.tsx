@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
-import { setCurrentDiscussionMessageReply } from "@/pages/Common/store/actions";
+import { setCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
 import { MenuButton, ShareModal } from "@/shared/components";
 import {
   DynamicLinkType,
