@@ -20,21 +20,15 @@ export default function Review({
   onFinish,
   currentData,
 }: ReviewProps): ReactElement {
-  const {
-    unstructuredRules = [],
-  } = currentData;
+  const { unstructuredRules = [] } = currentData;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleContinueClick = () => {
-      onFinish();
+    onFinish();
   };
 
-  const progressEl = (
-    <Progress
-      creationStep={currentStep}
-    />
-  );
+  const progressEl = <Progress creationStep={currentStep} />;
 
   return (
     <>
@@ -43,16 +37,10 @@ export default function Review({
         {!isMobileView && (
           <Separator className="update-rules-review__separator" />
         )}
-        <RuleList rules={unstructuredRules} className="create-common-review__rules" />
-        {/* <div className="create-common-review__additional-info-container">
-          <div className="create-common-review__additional-info-text">
-            To publish the Common, add a personal contribution.{" "}
-            <span className="create-common-review__additional-info-text--bold">
-              Don’t worry, you will be able to make changes
-            </span>{" "}
-            to the Common info after it is published.
-          </div>
-        </div> */}
+        <RuleList
+          rules={unstructuredRules}
+          className="create-common-review__rules"
+        />
         <div className="update-rules-review__submit-button-wrapper">
           <Button
             key="rules-continue"

@@ -6,18 +6,18 @@
   max-width: 584px;
   margin: 0 auto;
   padding-bottom: 32px;
+}
 
-  .update-rules__separator {
-    margin-bottom: 1.5rem;
+.update-rules__rules-array-item {
+  margin-top: 16px;
+
+  &:first-child {
+    margin-top: 0;
   }
+}
 
-  .update-rules__rules-array-item {
-    margin-top: 16px;
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
+.update-rules__separator {
+  margin-bottom: 1.5rem;
 }
 
 .update-rules__modal-footer {

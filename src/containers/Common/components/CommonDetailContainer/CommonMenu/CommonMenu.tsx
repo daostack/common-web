@@ -2,7 +2,10 @@ import React, { useMemo, useRef, useState, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { CreateCommonModal } from "@/containers/Common/components";
-import { EditCommonModal, EditRulesModal } from "@/containers/Common/components";
+import {
+  EditCommonModal,
+  EditRulesModal,
+} from "@/containers/Common/components";
 import {
   ButtonLink,
   Dropdown,
@@ -17,8 +20,8 @@ import {
   ScreenSize,
 } from "@/shared/constants";
 import { useAuthorizedDropdown, useAuthorizedModal } from "@/shared/hooks";
-import AgendaIcon from "@/shared/icons/agenda.icon";
 import AddIcon from "@/shared/icons/add.icon";
+import AgendaIcon from "@/shared/icons/agenda.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
@@ -62,8 +65,6 @@ const OPTIONS: Option[] = [
     ),
     searchText: "Edit Agenda",
     value: MenuItem.EditAgenda,
-    //className: "edit-common-menu__dropdown-menu-item--disabled",
-    //disabled: false//true,
   },
   {
     text: (
@@ -73,8 +74,6 @@ const OPTIONS: Option[] = [
     ),
     searchText: "Edit Rules",
     value: MenuItem.EditRules,
-    //className: "edit-common-menu__dropdown-menu-item--disabled",
-    //disabled: false//true,
   },
   {
     text: (
@@ -145,13 +144,13 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   } = props;
   const dropdownRef = useRef<DropdownRef>(null);
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(
-    null
+    null,
   );
   const circlesWithoutSubcommon = Object.values(governance.circles).filter(
     (circle) =>
       !subCommons.some(
-        (subCommon) => subCommon.directParent?.circleId === circle.id
-      )
+        (subCommon) => subCommon.directParent?.circleId === circle.id,
+      ),
   );
   const screenSize = useSelector(getScreenSize());
   const { onDropdownToggle } = useAuthorizedDropdown(dropdownRef);
@@ -163,7 +162,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isCommonMember = Boolean(currentCommonMember);
   const isCommonOwner = Boolean(
-    common.founderId === currentCommonMember?.userId
+    common.founderId === currentCommonMember?.userId,
   );
   const menuItems = useMemo<MenuItem[]>(() => {
     const items: MenuItem[] = [];
@@ -199,7 +198,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
   const options = useMemo(
     () =>
       OPTIONS.filter((option) => menuItems.includes(option.value as MenuItem)),
-    [menuItems]
+    [menuItems],
   );
 
   const handleModalOpen = () => {
@@ -280,7 +279,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
                   {
                     "edit-common-menu__menu-modal-button--disabled":
                       option.disabled,
-                  }
+                  },
                 )}
                 onClick={
                   !option.disabled

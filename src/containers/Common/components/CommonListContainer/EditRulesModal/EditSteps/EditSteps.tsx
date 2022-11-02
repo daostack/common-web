@@ -44,7 +44,7 @@ export default function EditSteps(props: EditStepsProps) {
     shouldStartFromLastStep,
   } = props;
   const [step, setStep] = useState(() =>
-    shouldStartFromLastStep ? EditStep.Review : EditStep.Rules
+    shouldStartFromLastStep ? EditStep.Review : EditStep.Rules,
   );
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -89,21 +89,16 @@ export default function EditSteps(props: EditStepsProps) {
         setStep((step) => step + 1);
       }
     },
-    [onFinish, step, setCurrentData]
-  );
-
-  const shouldShowTitle = useCallback(
-    (): boolean => isMobileView,
-    [isMobileView]
+    [onFinish, step, setCurrentData],
   );
 
   const title = useMemo(() => {
-    if (!shouldShowTitle()) {
+    if (!isMobileView) {
       return "";
     }
 
     const stepIndex = PROGRESS_RELATED_STEPS.findIndex(
-      (progressStep) => progressStep === step
+      (progressStep) => progressStep === step,
     );
 
     return (
@@ -121,18 +116,14 @@ export default function EditSteps(props: EditStepsProps) {
         </h3>
       </div>
     );
-  }, [shouldShowTitle, isMobileView, isHeaderScrolledToTop, step]);
+  }, [isMobileView, isHeaderScrolledToTop, step]);
 
   useEffect(() => {
     setTitle(title);
   }, [setTitle, title]);
 
   useEffect(() => {
-    setGoBackHandler(
-      step !== EditStep.Rules
-        ? handleGoBack
-        : undefined
-    );
+    setGoBackHandler(step !== EditStep.Rules ? handleGoBack : undefined);
   }, [setGoBackHandler, handleGoBack, step]);
 
   useEffect(() => {

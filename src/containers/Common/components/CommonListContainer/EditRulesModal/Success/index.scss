@@ -9,19 +9,6 @@
   flex-direction: column;
   align-items: center;
 
-  .update-governance-confirmation-success__image {
-    width: 14.75rem;
-    height: 14.75rem;
-
-    @include big-phone {
-      max-width: 13.25rem;
-      width: 100%;
-      max-height: 13.25rem;
-      height: 100%;
-      margin-top: 0.625rem;
-    }
-  }
-
   .update-governance-confirmation-success__title {
     margin: 2.625rem 0 1rem;
     font-family: NotoSerifSC, serif;
@@ -73,3 +60,15 @@
   margin: 0.75rem 0;
 }
 
+.update-governance-confirmation-success__image {
+  width: 14.75rem;
+  height: 14.75rem;
+
+  @include big-phone {
+    max-width: 13.25rem;
+    width: 100%;
+    max-height: 13.25rem;
+    height: 100%;
+    margin-top: 0.625rem;
+  }
+}
