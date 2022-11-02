@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "@/containers/Auth/store/selectors";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import {
   getCommonsListByIds,
   getUserContributions,
   getUserSubscriptions,
-} from "@/containers/Common/store/actions";
+} from "@/pages/Common/store/actions";
 import {
   Common,
   Payment,
@@ -47,14 +47,12 @@ const useUserContributions = (): Return => {
     fetched: false,
     data: [],
   });
-  const [
-    subscriptionsState,
-    setSubscriptionsState,
-  ] = useState<SubscriptionsState>({
-    loading: false,
-    fetched: false,
-    data: [],
-  });
+  const [subscriptionsState, setSubscriptionsState] =
+    useState<SubscriptionsState>({
+      loading: false,
+      fetched: false,
+      data: [],
+    });
   const [commonNamesState, setCommonNamesState] = useState<CommonNamesState>({
     loading: false,
     fetched: false,
@@ -85,7 +83,7 @@ const useUserContributions = (): Return => {
   const updateSubscription = useCallback((subscription: Subscription) => {
     setSubscriptionsState((nextState) => {
       const nextData = nextState.data.map((item) =>
-        item.id === subscription.id ? { ...subscription } : item
+        item.id === subscription.id ? { ...subscription } : item,
       );
 
       return {
@@ -112,7 +110,7 @@ const useUserContributions = (): Return => {
             (item) =>
               (!item.subscriptionId &&
                 item.status === PaymentStatus.Confirmed) ||
-              item.status === PaymentStatus.Failed
+              item.status === PaymentStatus.Failed,
           );
 
           setPaymentsState({
@@ -121,7 +119,7 @@ const useUserContributions = (): Return => {
             data: data || [],
           });
         },
-      })
+      }),
     );
   }, [dispatch, paymentsState, user]);
 
@@ -157,7 +155,7 @@ const useUserContributions = (): Return => {
       [
         ...paymentsState.data.map((item) => item.commonId),
         ...subscriptionsState.data.map((item) => item.commonId),
-      ].filter((item): item is string => Boolean(item))
+      ].filter((item): item is string => Boolean(item)),
     );
 
     dispatch(
@@ -170,7 +168,7 @@ const useUserContributions = (): Return => {
             data: commons || [],
           });
         },
-      })
+      }),
     );
   }, [
     dispatch,
@@ -205,7 +203,7 @@ const useUserContributions = (): Return => {
             data: subscriptions || [],
           });
         },
-      })
+      }),
     );
   }, [dispatch, subscriptionsState, user]);
 
