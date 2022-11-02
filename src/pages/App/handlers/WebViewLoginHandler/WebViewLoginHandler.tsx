@@ -1,14 +1,13 @@
 import React, { FC, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router";
 import { webviewLogin } from "@/pages/Auth/store/actions";
+import { history } from "@/shared/appConfig";
 import { ROUTE_PATHS, WebviewActions } from "@/shared/constants";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 import { parseJson } from "@/shared/utils/json";
 
 const WebViewLoginHandler: FC = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
 
   useEffect(() => {
     window.addEventListener("message", (event) => {
