@@ -12,6 +12,7 @@
   "arrowParens": "always",
   "proseWrap": "preserve",
   "importOrder": [
+    "/projectSetupImports$",
     "^react(.*)$",
     "<THIRD_PARTY_MODULES>",
     "^@(?!/)(.*)$",
