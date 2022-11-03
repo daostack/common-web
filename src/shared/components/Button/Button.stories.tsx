@@ -1,10 +1,8 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { getUIKitTitle } from "../../utils/storybook";
 import Button, { ButtonVariant } from "./Button";
 
 export default {
-  title: getUIKitTitle("Button"),
   component: Button,
   argTypes: {
     onClick: {

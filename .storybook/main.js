@@ -1,5 +1,12 @@
 module.exports = {
-  stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+  stories: [
+    {
+      directory: "../src/shared/components",
+      files: "**/*.stories.*",
+      titlePrefix: "UI Kit",
+    },
+    "../src/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+  ],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
