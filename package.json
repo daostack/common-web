@@ -52,6 +52,7 @@
   },
   "scripts": {
     "build": "craco build",
+    "build:storybook": "build-storybook -s public",
     "start": "REACT_APP_ENV=dev craco start",
     "test": "TZ=UTC jest",
     "test:watch": "TZ=UTC jest --watch",
@@ -60,8 +61,7 @@
     "lint": "eslint -c .eslintrc.json --ext .js,.jsx,.ts,.tsx './src'",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky install",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "storybook": "start-storybook -p 6006 -s public"
   },
   "eslintConfig": {
     "extends": "react-app",
