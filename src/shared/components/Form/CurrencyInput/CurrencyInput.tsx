@@ -1,8 +1,8 @@
 import React, { FC, ReactNode } from "react";
-import classNames from "classnames";
 import BaseCurrencyInput, {
   CurrencyInputProps as BaseCurrencyInputProps,
 } from "react-currency-input-field";
+import classNames from "classnames";
 import { ErrorText } from "../ErrorText";
 import { MiddleVariant } from "./MiddleVariant";
 import { DEFAULT_INTL_CONFIG } from "./constants";
@@ -15,6 +15,7 @@ export enum CurrencyInputVariant {
 
 interface CurrencyInputStyles {
   label?: string;
+  hint?: string;
   description?: string;
   input?: {
     default?: string;
@@ -55,14 +56,14 @@ const CurrencyInput: FC<CurrencyInputProps> = (props) => {
     "custom-currency-input__label-wrapper",
     {
       "custom-currency-input__label-wrapper--with-description": description,
-    }
+    },
   );
   const inputClassName = classNames(
     "custom-currency-input__input",
     styles?.input?.default,
     {
       "custom-currency-input__input--error": error,
-    }
+    },
   );
 
   return (
@@ -74,20 +75,29 @@ const CurrencyInput: FC<CurrencyInputProps> = (props) => {
               htmlFor={id}
               className={classNames(
                 "custom-currency-input__label",
-                styles?.label
+                styles?.label,
               )}
             >
               {label}
             </label>
           )}
-          {hint && <span className="custom-currency-input__hint">{hint}</span>}
+          {hint && (
+            <span
+              className={classNames(
+                "custom-currency-input__hint",
+                styles?.hint,
+              )}
+            >
+              {hint}
+            </span>
+          )}
         </div>
       )}
       {description && (
         <p
           className={classNames(
             "custom-currency-input__description",
-            styles?.description
+            styles?.description,
           )}
         >
           {description}

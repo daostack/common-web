@@ -2,7 +2,10 @@ import React, { FC, useCallback, useEffect, useState } from "react";
 import { useSupportersDataContext } from "@/pages/OldCommon/containers/SupportersContainer/context";
 import { Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
-import { ContributionType } from "@/shared/constants";
+import {
+  ContributionType,
+  MIN_CONTRIBUTION_ILS_AMOUNT,
+} from "@/shared/constants";
 import {
   useImmediateContribution,
   useUserCards,
@@ -15,12 +18,13 @@ import "./index.scss";
 
 interface PaymentStepProps {
   amount: number;
-  onAmountChange: (amount: number) => void;
+  contributionType: ContributionType;
+  onAmountChange: (amount: number, contributionType: ContributionType) => void;
   onFinish: () => void;
 }
 
 const PaymentStep: FC<PaymentStepProps> = (props) => {
-  const { amount, onAmountChange, onFinish } = props;
+  const { amount, contributionType, onAmountChange, onFinish } = props;
   const {
     fetched: areUserCardsFetched,
     data: cards,
@@ -44,7 +48,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
       makeImmediateContribution({
         commonId,
         price: { amount, currency: Currency.ILS },
-        contributionType: ContributionType.OneTime,
+        contributionType,
       });
     }
   }, [makeImmediateContribution, amount, commonId]);
@@ -57,8 +61,11 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
     setIsAmountEditing(false);
   };
 
-  const handleAmountChange = (newAmount: number) => {
-    onAmountChange(newAmount);
+  const handleAmountChange = (
+    newAmount: number,
+    contributionType: ContributionType,
+  ) => {
+    onAmountChange(newAmount, contributionType);
     stopAmountEditing();
 
     if (amount !== newAmount && cards.length === 0) {
@@ -96,13 +103,21 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
         (isAmountEditing ? (
           <AmountSelection
             amount={amount}
-            minAmount={supportersData?.minAmount}
-            amountsToSelect={supportersData?.amounts || []}
+            contributionType={contributionType}
+            minOneTimeAmount={
+              supportersData?.minAmount || MIN_CONTRIBUTION_ILS_AMOUNT
+            }
+            minMonthlyAmount={
+              supportersData?.minMonthlyAmount || MIN_CONTRIBUTION_ILS_AMOUNT
+            }
+            oneTimeAmountsToSelect={supportersData?.amounts || []}
+            monthlyAmountToSelect={supportersData?.monthlyAmounts || []}
             onAmountChange={handleAmountChange}
           />
         ) : (
           <PaymentDetails
             amount={amount}
+            contributionType={contributionType}
             cards={cards}
             isPaymentLoading={isPaymentLoading}
             intermediatePayment={intermediatePayment}
