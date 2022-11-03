@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { updateGovernance as updateGovernanceAction } from "@/containers/Common/store/actions";
 import { Governance, BaseRule } from "@/shared/models";
 import {
   getFileNameForUploading,
@@ -10,6 +9,7 @@ import {
   UpdateGovernanceData,
   UpdateGovernancePayload,
 } from "../../../../interfaces";
+import { updateGovernance as updateGovernanceAction } from "../../../../store/actions";
 
 interface Return {
   isGovernanceUpdateLoading: boolean;

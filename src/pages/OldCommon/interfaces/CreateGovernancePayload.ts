@@ -51,3 +51,12 @@ export interface CreateGovernancePayload {
   unstructuredRules: BaseRule[];
   commonId: string;
 }
+
+export interface UpdateGovernanceData {
+  unstructuredRules: BaseRule[];
+}
+
+export interface UpdateGovernancePayload {
+  commonId: string;
+  changes: BaseRule[];
+}
