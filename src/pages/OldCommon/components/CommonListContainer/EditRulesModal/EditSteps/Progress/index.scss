@@ -1,0 +1,42 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.update-rules-steps-progress {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 1rem;
+
+  .update-rules-steps-progress__stepper {
+    max-width: 17.5rem;
+    width: 100%;
+    margin: 1rem 0 1.5rem;
+  }
+
+  .update-rules-steps-progress__title {
+    margin: 0;
+    font-family: NunitoSans-Bold, sans-serif;
+    font-size: $small;
+    font-weight: bold;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .update-rules-steps-progress__description {
+    max-width: 23.5rem;
+    margin: 0.25rem 0 0;
+    font-size: $xsmall;
+    font-weight: normal;
+    line-height: 1.42;
+    text-align: center;
+    color: $light-gray-2;
+  }
+  .update-rules-steps-progress__description--sub-common {
+    max-width: 27.25rem;
+  }
+
+  @include big-phone {
+    padding-bottom: 1.25rem;
+  }
+}
