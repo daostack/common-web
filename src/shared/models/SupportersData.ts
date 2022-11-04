@@ -29,6 +29,8 @@ export interface SupportersData {
   photoURL: string;
   amounts: number[];
   minAmount?: number;
+  monthlyAmounts: number[];
+  minMonthlyAmount?: number;
   displayedFields?: SupportersDataFields[];
   defaultLocale: Language;
   translations: Partial<Record<Language, SupportersDataTranslation>>;

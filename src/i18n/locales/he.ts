@@ -119,6 +119,7 @@ export default {
         monthlyTypeText: "חודשי",
         monthlyTypeTooltip: "בקרוב",
         otherInputTitle: "סכום אחר",
+        otherInputMonthlyHint: '(חודשי)',
         otherInputPlaceholder: "מלאו סכום",
         otherInputError: "מינימום {{amount}}",
         defaultSubmitButtonText: "עדכון התרומה",

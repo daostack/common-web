@@ -14,11 +14,14 @@ import "./index.scss";
 
 interface PaymentDetailsProps {
   amount?: number;
-  minAmount?: number;
-  amountsToSelect: number[];
+  contributionType?: ContributionType;
+  minOneTimeAmount: number;
+  minMonthlyAmount: number;
+  oneTimeAmountsToSelect: number[];
+  monthlyAmountsToSelect: number[];
   preSubmitText?: ReactNode;
   submitButtonText?: string;
-  onAmountChange: (amount: number) => void;
+  onAmountChange: (amount: number, contributionType: ContributionType) => void;
   getSubmitLink?: (amount: number) => string;
 }
 
@@ -28,29 +31,57 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   });
   const {
     amount: currentAmount,
-    minAmount,
-    amountsToSelect,
+    contributionType,
+    minOneTimeAmount,
+    minMonthlyAmount,
+    monthlyAmountsToSelect,
+    oneTimeAmountsToSelect,
     preSubmitText,
     submitButtonText = t("defaultSubmitButtonText"),
     onAmountChange,
     getSubmitLink,
   } = props;
+  const [tabValue, setTabValue] = useState(
+    contributionType || ContributionType.OneTime,
+  );
+  const oneTimeSelectionData = {
+    minAmount: minOneTimeAmount,
+    amountsToSelect: oneTimeAmountsToSelect,
+    isMonthlyContribution: false,
+  };
+
+  const monthlySelectionData = {
+    minAmount: minMonthlyAmount,
+    amountsToSelect: monthlyAmountsToSelect,
+    isMonthlyContribution: true,
+  };
+
+  const [selectionData, setSelectionData] = useState(() =>
+    contributionType === ContributionType.Monthly
+      ? monthlySelectionData
+      : oneTimeSelectionData,
+  );
   const [selectedAmount, setSelectedAmount] = useState<number | null>(() =>
-    currentAmount && amountsToSelect.some((amount) => amount === currentAmount)
+    currentAmount &&
+    selectionData.amountsToSelect.some((amount) => amount === currentAmount)
       ? currentAmount
       : null,
   );
   const [inputValue, setInputValue] = useState(() =>
-    !currentAmount || amountsToSelect.some((amount) => amount === currentAmount)
+    !currentAmount ||
+    selectionData.amountsToSelect.some((amount) => amount === currentAmount)
       ? ""
       : String(currentAmount / 100),
   );
   const inputValueError =
-    (typeof minAmount === "number" &&
+    (typeof selectionData.minAmount === "number" &&
       inputValue &&
-      Number(inputValue) < minAmount / 100 &&
+      Number(inputValue) < selectionData.minAmount / 100 &&
       t("otherInputError", {
-        amount: formatPrice(minAmount, { shouldMillify: false }),
+        amount: formatPrice(selectionData.minAmount, {
+          shouldMillify: false,
+          bySubscription: selectionData.isMonthlyContribution,
+        }),
       })) ||
     "";
   const submitLink = getSubmitLink
@@ -71,7 +102,12 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   };
 
   const handleSubmit = () => {
-    onAmountChange(getFinalAmount(selectedAmount, inputValue));
+    onAmountChange(
+      getFinalAmount(selectedAmount, inputValue),
+      selectionData.isMonthlyContribution
+        ? ContributionType.Monthly
+        : ContributionType.OneTime,
+    );
   };
 
   const submitButtonEl = (
@@ -91,15 +127,21 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
       </h2>
       <ToggleButtonGroup
         className="supporters-page-amount-selection__toggle-button-group"
-        value={ContributionType.OneTime}
-        onChange={() => {}}
+        value={tabValue}
+        onChange={(value) => {
+          setTabValue(value as ContributionType);
+          setSelectionData(
+            value === ContributionType.Monthly
+              ? monthlySelectionData
+              : oneTimeSelectionData,
+          );
+        }}
       >
         <ToggleButton value={ContributionType.OneTime}>
           {t("oneTimeTypeText")}
         </ToggleButton>
         <ToggleButton
           value={ContributionType.Monthly}
-          isDisabled
           tooltip={t("monthlyTypeTooltip")}
         >
           {t("monthlyTypeText")}
@@ -109,13 +151,16 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
         className="supporters-page-amount-selection__amounts-wrapper"
         role="group"
       >
-        {amountsToSelect.map((amount) => (
+        {selectionData.amountsToSelect.map((amount) => (
           <SelectionButton
             key={amount}
             isActive={amount === selectedAmount}
             onClick={() => handleAmountSelection(amount)}
           >
-            {formatPrice(amount, { shouldMillify: false })}
+            {formatPrice(amount, {
+              shouldMillify: false,
+              bySubscription: selectionData.isMonthlyContribution,
+            })}
           </SelectionButton>
         ))}
       </div>
@@ -123,6 +168,11 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
         className="supporters-page-amount-selection__currency-input"
         name="contributionAmount"
         label={t("otherInputTitle")}
+        hint={
+          selectionData.isMonthlyContribution
+            ? t("otherInputMonthlyHint")
+            : undefined
+        }
         placeholder={t("otherInputPlaceholder")}
         value={inputValue}
         error={inputValueError}
@@ -130,6 +180,7 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
         styles={{
           label: "supporters-page-amount-selection__currency-input-label",
           error: "supporters-page-amount-selection__currency-input-error",
+          hint: "supporters-page-amount-selection__currency-input-hint",
         }}
       />
       {preSubmitText}

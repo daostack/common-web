@@ -3,7 +3,12 @@ import { Trans, useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { useSupportersDataContext } from "@/pages/OldCommon/containers/SupportersContainer/context";
 import { ButtonLink } from "@/shared/components";
-import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
+import {
+  ContributionType,
+  MIN_CONTRIBUTION_ILS_AMOUNT,
+  QueryParamKey,
+  ROUTE_PATHS,
+} from "@/shared/constants";
 import { checkIsIFrame } from "@/shared/utils";
 import { AmountSelection } from "../AmountSelection";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
@@ -11,7 +16,7 @@ import "./index.scss";
 
 interface InitialStepProps {
   amount: number;
-  onFinish: (amount: number) => void;
+  onFinish: (amount: number, contributionType: ContributionType) => void;
 }
 
 const InitialStep: FC<InitialStepProps> = (props) => {
@@ -37,8 +42,14 @@ const InitialStep: FC<InitialStepProps> = (props) => {
     >
       <AmountSelection
         amount={amount}
-        minAmount={supportersData?.minAmount}
-        amountsToSelect={supportersData?.amounts || []}
+        minMonthlyAmount={
+          supportersData?.minMonthlyAmount || MIN_CONTRIBUTION_ILS_AMOUNT
+        }
+        monthlyAmountsToSelect={supportersData?.monthlyAmounts || []}
+        minOneTimeAmount={
+          supportersData?.minAmount || MIN_CONTRIBUTION_ILS_AMOUNT
+        }
+        oneTimeAmountsToSelect={supportersData?.amounts || []}
         preSubmitText={
           <p className="supporters-page-initial-step__pre-submit-text">
             <Trans

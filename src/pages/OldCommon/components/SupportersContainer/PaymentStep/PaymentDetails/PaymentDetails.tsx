@@ -10,7 +10,7 @@ import {
   Loader,
   PaymentMethod,
 } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { ContributionType, ScreenSize } from "@/shared/constants";
 import { Card } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice, getUserName } from "@/shared/utils";
@@ -18,6 +18,7 @@ import "./index.scss";
 
 interface PaymentDetailsProps {
   amount: number;
+  contributionType: ContributionType;
   cards: Card[];
   isPaymentLoading: boolean;
   intermediatePayment: ImmediateContributionPayment | null;
@@ -29,6 +30,7 @@ interface PaymentDetailsProps {
 const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
   const {
     amount,
+    contributionType,
     cards,
     isPaymentLoading,
     intermediatePayment,
@@ -43,7 +45,10 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const formattedAmount = formatPrice(amount, { shouldMillify: false });
+  const formattedAmount = formatPrice(amount, {
+    shouldMillify: false,
+    bySubscription: contributionType === ContributionType.Monthly,
+  });
   const isLoading = Boolean(
     isPaymentLoading || (intermediatePayment && !isFrameLoaded),
   );

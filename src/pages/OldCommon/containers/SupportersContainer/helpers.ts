@@ -1,5 +1,5 @@
 import { ParsedQuery } from "query-string";
-import { Language, QueryParamKey } from "@/shared/constants";
+import { ContributionType, Language, QueryParamKey } from "@/shared/constants";
 
 export const getAmount = (queryParams: ParsedQuery): number => {
   const rawAmount = queryParams[QueryParamKey.SupportersFlowAmount];
@@ -11,6 +11,18 @@ export const getAmount = (queryParams: ParsedQuery): number => {
   const amount = Number(rawAmount);
 
   return !Number.isNaN(amount) ? amount : 0;
+};
+
+export const getContributionType = (queryParams: ParsedQuery): ContributionType => {
+  const rawMonthly = queryParams[QueryParamKey.SupportersFlowMonthly];
+
+  if (typeof rawMonthly !== "string") {
+    return ContributionType.OneTime;
+  }
+
+  const isMonthly = rawMonthly === 'true';
+
+  return isMonthly ? ContributionType.Monthly : ContributionType.OneTime;
 };
 
 export const getInitialLanguage = (
