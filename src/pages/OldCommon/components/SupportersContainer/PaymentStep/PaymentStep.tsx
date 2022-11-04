@@ -51,7 +51,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
         contributionType,
       });
     }
-  }, [makeImmediateContribution, amount, commonId]);
+  }, [makeImmediateContribution, amount, commonId, contributionType]);
 
   const startAmountEditing = () => {
     setIsAmountEditing(true);

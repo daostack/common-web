@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useMemo, useState } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/components";
 import {
@@ -44,31 +44,22 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
   const [tabValue, setTabValue] = useState(
     contributionType || ContributionType.OneTime,
   );
-  const oneTimeSelectionData = useMemo(
-    () => ({
-      minAmount:
-        contributionType === ContributionType.Monthly
-          ? minMonthlyAmount
-          : minOneTimeAmount,
-      amountsToSelect:
-        contributionType === ContributionType.Monthly
-          ? monthlyAmountToSelect
-          : oneTimeAmountsToSelect,
-      isMonthlyContribution: contributionType === ContributionType.Monthly,
-    }),
-    [minOneTimeAmount, oneTimeAmountsToSelect],
-  );
+  const oneTimeSelectionData = {
+    minAmount: minOneTimeAmount,
+    amountsToSelect: oneTimeAmountsToSelect,
+    isMonthlyContribution: false,
+  };
 
-  const monthlySelectionData = useMemo(
-    () => ({
-      minAmount: minMonthlyAmount,
-      amountsToSelect: monthlyAmountToSelect,
-      isMonthlyContribution: true,
-    }),
-    [minOneTimeAmount, oneTimeAmountsToSelect],
-  );
-  const [selectionData, setSelectionData] = useState(
-    () => oneTimeSelectionData,
+  const monthlySelectionData = {
+    minAmount: minMonthlyAmount,
+    amountsToSelect: monthlyAmountToSelect,
+    isMonthlyContribution: true,
+  };
+
+  const [selectionData, setSelectionData] = useState(() =>
+    contributionType === ContributionType.Monthly
+      ? monthlySelectionData
+      : oneTimeSelectionData,
   );
   const [selectedAmount, setSelectedAmount] = useState<number | null>(() =>
     currentAmount &&

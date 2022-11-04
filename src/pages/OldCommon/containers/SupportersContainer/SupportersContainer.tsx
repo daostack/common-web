@@ -29,7 +29,7 @@ import {
 } from "../../components/SupportersContainer";
 import { SupportersStep } from "./constants";
 import { SupportersDataContext, SupportersDataContextValue } from "./context";
-import { getAmount, getInitialLanguage } from "./helpers";
+import { getAmount, getContributionType, getInitialLanguage } from "./helpers";
 import "./index.scss";
 
 interface SupportersContainerRouterParams {
@@ -50,8 +50,8 @@ const SupportersContainer = () => {
   const { changeLanguage } = useLanguage();
   const queryParams = useQueryParams();
   const [amount, setAmount] = useState(() => getAmount(queryParams));
-  const [contributionType, setContributionType] = useState(
-    ContributionType.OneTime,
+  const [contributionType, setContributionType] = useState(() =>
+    getContributionType(queryParams),
   );
   const initialLanguage = getInitialLanguage(queryParams);
   const [step, setStep] = useState(
