@@ -111,7 +111,7 @@ const PaymentStep: FC<PaymentStepProps> = (props) => {
               supportersData?.minMonthlyAmount || MIN_CONTRIBUTION_ILS_AMOUNT
             }
             oneTimeAmountsToSelect={supportersData?.amounts || []}
-            monthlyAmountToSelect={supportersData?.monthlyAmounts || []}
+            monthlyAmountsToSelect={supportersData?.monthlyAmounts || []}
             onAmountChange={handleAmountChange}
           />
         ) : (

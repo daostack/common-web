@@ -18,7 +18,7 @@ interface PaymentDetailsProps {
   minOneTimeAmount: number;
   minMonthlyAmount: number;
   oneTimeAmountsToSelect: number[];
-  monthlyAmountToSelect: number[];
+  monthlyAmountsToSelect: number[];
   preSubmitText?: ReactNode;
   submitButtonText?: string;
   onAmountChange: (amount: number, contributionType: ContributionType) => void;
@@ -34,7 +34,7 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
     contributionType,
     minOneTimeAmount,
     minMonthlyAmount,
-    monthlyAmountToSelect,
+    monthlyAmountsToSelect,
     oneTimeAmountsToSelect,
     preSubmitText,
     submitButtonText = t("defaultSubmitButtonText"),
@@ -52,7 +52,7 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
 
   const monthlySelectionData = {
     minAmount: minMonthlyAmount,
-    amountsToSelect: monthlyAmountToSelect,
+    amountsToSelect: monthlyAmountsToSelect,
     isMonthlyContribution: true,
   };
 
