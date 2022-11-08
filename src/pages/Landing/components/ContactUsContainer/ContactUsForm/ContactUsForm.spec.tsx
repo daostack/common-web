@@ -6,6 +6,9 @@ import ContactUsForm from "./ContactUsForm";
 
 jest.mock("@/shared/components", () => {
   const module = jest.requireActual("@/shared/components");
+  const { default: withTestId } = jest.requireActual(
+    "@/shared/utils/tests/withTestId",
+  );
 
   return {
     ...module,
