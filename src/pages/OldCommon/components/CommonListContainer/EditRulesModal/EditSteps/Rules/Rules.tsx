@@ -2,13 +2,14 @@ import React, { useCallback, useRef, ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
+import { differenceBy, differenceWith, intersectionBy, isEqual } from "lodash";
 import { Button, Separator } from "@/shared/components";
 import { Form, RulesArray } from "@/shared/components/Form/Formik";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
-import { BaseRule, Governance } from "@/shared/models";
+import { BaseRule, Governance, UnstructuredRules } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { UpdateGovernanceData } from "../../../../../interfaces";
+import { UpdateGovernanceRulesData } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import {
   MAX_RULE_TITLE_LENGTH,
@@ -19,18 +20,19 @@ import "./index.scss";
 
 interface RulesProps {
   currentStep: number;
-  onFinish: (data: Partial<UpdateGovernanceData>) => void;
+  onFinish: (data: Partial<UpdateGovernanceRulesData>) => void;
   governance: Governance | undefined;
-  currentData: UpdateGovernanceData;
+  currentData: UpdateGovernanceRulesData;
+  initialRules: UnstructuredRules;
 }
 
 interface FormValues {
   rules: BaseRule[];
 }
 
-const getInitialValues = (data: UpdateGovernanceData): FormValues => ({
-  rules: data.unstructuredRules?.length
-    ? data.unstructuredRules
+const getInitialValues = (data: UpdateGovernanceRulesData): FormValues => ({
+  rules: data.allRules?.length
+    ? data.allRules
     : [{ title: "", definition: "" }],
 });
 
@@ -38,6 +40,7 @@ export default function Rules({
   currentStep,
   onFinish,
   currentData,
+  initialRules,
 }: RulesProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const screenSize = useSelector(getScreenSize());
@@ -51,11 +54,32 @@ export default function Rules({
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
-      const unstructuredRules = values.rules.filter(
-        (rule) => rule.title && rule.definition,
+      const governanceRules = (values.rules as UnstructuredRules).filter(
+        (rule) => rule.title && rule.definition && rule?.id,
+      ) as UnstructuredRules;
+
+      const deletedRules = differenceBy(initialRules, governanceRules, "id");
+      const filteredInitialRules = intersectionBy(
+        initialRules,
+        governanceRules,
+        "id",
+      );
+      const changes = differenceWith(
+        governanceRules,
+        filteredInitialRules,
+        isEqual,
       );
 
-      onFinish({ unstructuredRules });
+      const newRules = (values.rules as UnstructuredRules).filter(
+        (rule) => rule.title && rule.definition && !rule?.id,
+      ) as UnstructuredRules;
+
+      onFinish({
+        changes,
+        new: newRules,
+        remove: deletedRules.map(({ id }) => id),
+        allRules: values.rules,
+      });
     },
     [onFinish],
   );

@@ -1,21 +1,17 @@
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Governance, BaseRule } from "@/shared/models";
+import { Governance } from "@/shared/models";
 import {
-  getFileNameForUploading,
-  uploadFile,
-} from "@/shared/utils/firebaseUploadFile";
-import {
-  UpdateGovernanceData,
-  UpdateGovernancePayload,
+  UpdateGovernanceRulesData,
+  UpdateGovernanceRulesPayload,
 } from "../../../../interfaces";
-import { updateGovernance as updateGovernanceAction } from "../../../../store/actions";
+import { updateGovernanceRules } from "../../../../store/api";
 
 interface Return {
   isGovernanceUpdateLoading: boolean;
   governance: Governance | null;
   error: string;
-  updateRules: (updateData: UpdateGovernanceData) => Promise<void>;
+  updateRules: (updateData: UpdateGovernanceRulesData) => Promise<void>;
 }
 
 const useRulesUpdate = (governanceId, commonId): Return => {
@@ -33,25 +29,21 @@ const useRulesUpdate = (governanceId, commonId): Return => {
 
       setIsGovernanceUpdateLoading(true);
 
-      const payload: UpdateGovernancePayload = {
+      const payload: UpdateGovernanceRulesPayload = {
         commonId,
-        changes: updatedData.unstructuredRules as BaseRule[],
+        changes: updatedData.changes,
+        new: updatedData.new,
+        remove: updatedData.remove
       };
+      try {
 
-      dispatch(
-        updateGovernanceAction.request({
-          payload,
-          callback: (error, governance) => {
-            if (error || !governance) {
-              setError("Something went wrong...");
-            } else {
-              setGovernance(governance);
-            }
-
-            setIsGovernanceUpdateLoading(false);
-          },
-        }),
-      );
+        const updatedGovernance = await updateGovernanceRules(payload);
+        setGovernance(updatedGovernance);
+      } catch(err) {
+        setError("Something went wrong...");
+      } finally {
+        setIsGovernanceUpdateLoading(false);
+      }
     },
     [dispatch, setIsGovernanceUpdateLoading],
   );

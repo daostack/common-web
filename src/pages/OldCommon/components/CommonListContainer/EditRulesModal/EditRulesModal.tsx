@@ -13,7 +13,7 @@ import { useZoomDisabling } from "@/shared/hooks";
 import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { emptyFunction } from "@/shared/utils";
-import { UpdateGovernanceData } from "../../../interfaces";
+import { UpdateGovernanceRulesData } from "../../../interfaces";
 import { Confirmation } from "./Confirmation";
 import { EditSteps } from "./EditSteps";
 import { Error } from "./Error";
@@ -40,11 +40,11 @@ export default function EditRulesModal(props: EditRulesModalProps) {
     stage: initialStage,
     shouldStartFromLastStep: false,
   });
-  const INITIAL_DATA: UpdateGovernanceData = {
-    unstructuredRules: governance.unstructuredRules || [],
+  const INITIAL_DATA: UpdateGovernanceRulesData = {
+    allRules: governance.unstructuredRules || [],
   };
   const [currentData, setCurrentData] =
-    useState<UpdateGovernanceData>(INITIAL_DATA);
+    useState<UpdateGovernanceRulesData>(INITIAL_DATA);
   const [title, setTitle] = useState<ReactNode>("");
   const [isBigTitle, setIsBigTitle] = useState(true);
   const [isHeaderScrolledToTop, setIsHeaderScrolledToTop] = useState(true);
@@ -129,6 +129,7 @@ export default function EditRulesModal(props: EditRulesModalProps) {
       case UpdateGovernanceStage.EditSteps:
         return (
           <EditSteps
+            initialRules={governance.unstructuredRules || []}
             isHeaderScrolledToTop={isHeaderScrolledToTop}
             governance={governance}
             setTitle={setSmallTitle}

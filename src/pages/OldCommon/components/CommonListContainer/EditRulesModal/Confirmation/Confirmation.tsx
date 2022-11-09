@@ -1,6 +1,6 @@
 import React, { useEffect, FC, ReactNode } from "react";
-import { Common, Governance } from "@/shared/models";
-import { UpdateGovernanceData } from "../../../../interfaces";
+import { Governance } from "@/shared/models";
+import { UpdateGovernanceRulesData } from "../../../../interfaces";
 import { useRulesUpdate } from "../useCases";
 import { Processing } from "./Processing";
 
@@ -11,7 +11,7 @@ interface ConfirmationProps {
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: (governance: Governance | null, errorText: string) => void;
-  currentData: UpdateGovernanceData;
+  currentData: UpdateGovernanceRulesData;
   governanceId: string;
 }
 

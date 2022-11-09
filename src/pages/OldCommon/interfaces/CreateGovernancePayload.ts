@@ -1,6 +1,6 @@
 import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
 import { BaseRule, Circle, CircleIndex } from "@/shared/models";
-import { AllowedProposals } from "@/shared/models/governance";
+import { AllowedProposals, UnstructuredRules } from "@/shared/models/governance";
 import { BaseProposal, Proposals } from "@/shared/models/governance/proposals";
 
 type CreateGovernanceWeights = {
@@ -52,11 +52,16 @@ export interface CreateGovernancePayload {
   commonId: string;
 }
 
-export interface UpdateGovernanceData {
-  unstructuredRules: BaseRule[];
+export interface UpdateGovernanceRulesPayload {
+  commonId: string;
+  changes: UnstructuredRules;
+  new?: BaseRule[];
+  remove?: string[];
 }
 
-export interface UpdateGovernancePayload {
-  commonId: string;
-  changes: BaseRule[];
+export interface UpdateGovernanceRulesData {
+  changes?: UnstructuredRules;
+  new?: BaseRule[];
+  remove?: string[];
+  allRules: BaseRule[];
 }

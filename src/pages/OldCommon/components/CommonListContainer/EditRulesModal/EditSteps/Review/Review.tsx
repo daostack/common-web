@@ -4,15 +4,15 @@ import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
-import { UpdateGovernanceData } from "../../../../../interfaces";
+import { UpdateGovernanceRulesData } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { RuleList } from "./RuleList";
 import "./index.scss";
 
 interface ReviewProps {
   currentStep: number;
-  onFinish: (data?: Partial<UpdateGovernanceData>) => void;
-  currentData: UpdateGovernanceData;
+  onFinish: (data?: Partial<UpdateGovernanceRulesData>) => void;
+  currentData: UpdateGovernanceRulesData;
 }
 
 export default function Review({
@@ -20,7 +20,7 @@ export default function Review({
   onFinish,
   currentData,
 }: ReviewProps): ReactElement {
-  const { unstructuredRules = [] } = currentData;
+  const { allRules } = currentData;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
 
@@ -37,10 +37,7 @@ export default function Review({
         {!isMobileView && (
           <Separator className="update-rules-review__separator" />
         )}
-        <RuleList
-          rules={unstructuredRules}
-          className="create-common-review__rules"
-        />
+        <RuleList rules={allRules} className="create-common-review__rules" />
         <div className="update-rules-review__submit-button-wrapper">
           <Button
             key="rules-continue"

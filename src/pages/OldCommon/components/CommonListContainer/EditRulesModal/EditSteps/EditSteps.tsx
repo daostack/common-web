@@ -10,9 +10,9 @@ import React, {
 import { useSelector } from "react-redux";
 import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { Common, Governance } from "@/shared/models";
+import { Common, Governance, UnstructuredRules } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { UpdateGovernanceData } from "../../../../interfaces";
+import { UpdateGovernanceRulesData } from "../../../../interfaces";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
 import { Review } from "./Review";
 import { Rules } from "./Rules";
@@ -20,14 +20,15 @@ import { EditStep } from "./constants";
 import "./index.scss";
 
 interface EditStepsProps {
+  initialRules: UnstructuredRules;
   isHeaderScrolledToTop: boolean;
   governance?: Governance;
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: () => void;
-  currentData: UpdateGovernanceData;
-  setCurrentData: Dispatch<SetStateAction<UpdateGovernanceData>>;
+  currentData: UpdateGovernanceRulesData;
+  setCurrentData: Dispatch<SetStateAction<UpdateGovernanceRulesData>>;
   shouldStartFromLastStep: boolean;
 }
 
@@ -42,6 +43,7 @@ export default function EditSteps(props: EditStepsProps) {
     currentData,
     setCurrentData,
     shouldStartFromLastStep,
+    initialRules,
   } = props;
   const [step, setStep] = useState(() =>
     shouldStartFromLastStep ? EditStep.Review : EditStep.Rules,
@@ -63,17 +65,8 @@ export default function EditSteps(props: EditStepsProps) {
     setStep((step) => step - 1);
   }, [step]);
 
-  const handleFormValues = (data?: Partial<UpdateGovernanceData>) => {
-    if (data) {
-      setCurrentData((nextData) => ({
-        ...nextData,
-        ...data,
-      }));
-    }
-  };
-
   const handleFinish = useCallback(
-    (data?: Partial<UpdateGovernanceData>) => {
+    (data?: Partial<UpdateGovernanceRulesData>) => {
       if (data) {
         setCurrentData((nextData) => ({
           ...nextData,
@@ -140,7 +133,7 @@ export default function EditSteps(props: EditStepsProps) {
 
     switch (step) {
       case EditStep.Rules:
-        return <Rules {...stepProps} />;
+        return <Rules {...stepProps} initialRules={initialRules} />;
       case EditStep.Review:
         return <Review {...stepProps} />;
       default:
