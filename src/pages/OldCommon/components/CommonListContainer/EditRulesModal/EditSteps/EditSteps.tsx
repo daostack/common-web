@@ -10,7 +10,7 @@ import React, {
 import { useSelector } from "react-redux";
 import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
-import { Common, Governance, UnstructuredRules } from "@/shared/models";
+import { Governance, UnstructuredRules } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { UpdateGovernanceRulesData } from "../../../../interfaces";
 import { PROGRESS_RELATED_STEPS } from "./Progress";

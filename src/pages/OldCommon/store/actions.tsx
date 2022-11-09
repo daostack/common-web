@@ -10,6 +10,7 @@ import {
   CreateProposal,
   UpdateCommonPayload,
   CreateReportDto,
+  UpdateGovernanceRulesPayload,
 } from "@/pages/OldCommon/interfaces";
 import { ProposalsTypes } from "@/shared/constants";
 import { LoadingState, PayloadWithCallback } from "@/shared/interfaces";
@@ -328,6 +329,20 @@ export const updateCommon = createAsyncAction(
   CommonsActionTypes.UPDATE_COMMON_SUCCESS,
   CommonsActionTypes.UPDATE_COMMON_FAILURE,
 )<PayloadWithCallback<UpdateCommonPayload, Common, Error>, Common, Error>();
+
+export const updateGovernanceRules = createAsyncAction(
+  CommonsActionTypes.UPDATE_GOVERNANCE_RULES,
+  CommonsActionTypes.UPDATE_GOVERNANCE_RULES_SUCCESS,
+  CommonsActionTypes.UPDATE_GOVERNANCE_RULES_FAILURE,
+)<
+  {
+    payload: UpdateGovernanceRulesPayload;
+    governance: Governance;
+    callback: (error: Error | null, governance?: Governance) => void;
+  },
+  Common,
+  Error
+>();
 
 export const createVote = createAsyncAction(
   CommonsActionTypes.CREATE_VOTE,

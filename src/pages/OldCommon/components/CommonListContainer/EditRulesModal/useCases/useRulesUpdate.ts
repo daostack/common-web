@@ -5,7 +5,7 @@ import {
   UpdateGovernanceRulesData,
   UpdateGovernanceRulesPayload,
 } from "../../../../interfaces";
-import { updateGovernanceRules } from "../../../../store/api";
+import { updateGovernanceRules } from "../../../../store/actions";
 
 interface Return {
   isGovernanceUpdateLoading: boolean;
@@ -14,7 +14,7 @@ interface Return {
   updateRules: (updateData: UpdateGovernanceRulesData) => Promise<void>;
 }
 
-const useRulesUpdate = (governanceId, commonId): Return => {
+const useRulesUpdate = (commonId, initialGovernance): Return => {
   const [isGovernanceUpdateLoading, setIsGovernanceUpdateLoading] =
     useState(false);
   const [governance, setGovernance] = useState<Governance | null>(null);
@@ -35,15 +35,18 @@ const useRulesUpdate = (governanceId, commonId): Return => {
         new: updatedData.new,
         remove: updatedData.remove
       };
-      try {
-
-        const updatedGovernance = await updateGovernanceRules(payload);
-        setGovernance(updatedGovernance);
-      } catch(err) {
-        setError("Something went wrong...");
-      } finally {
-        setIsGovernanceUpdateLoading(false);
-      }
+        dispatch(updateGovernanceRules.request({
+          payload,
+          governance: initialGovernance,
+          callback: (error, updatedGovernance) => {
+            if(error) {
+              setError("Something went wrong...");
+            } else if(updatedGovernance){
+              setGovernance(updatedGovernance);
+            }
+            setIsGovernanceUpdateLoading(false);
+          }
+        }))
     },
     [dispatch, setIsGovernanceUpdateLoading],
   );

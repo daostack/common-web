@@ -151,7 +151,7 @@ export default function EditRulesModal(props: EditRulesModalProps) {
             onFinish={handleGovernanceUpdate}
             currentData={currentData}
             commonId={common.id}
-            governanceId={governance.id}
+            initialGovernance={governance}
           />
         );
       case UpdateGovernanceStage.Success:

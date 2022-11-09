@@ -12,7 +12,7 @@ interface ConfirmationProps {
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: (governance: Governance | null, errorText: string) => void;
   currentData: UpdateGovernanceRulesData;
-  governanceId: string;
+  initialGovernance: Governance;
 }
 
 const Confirmation: FC<ConfirmationProps> = (props) => {
@@ -24,14 +24,14 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     currentData,
     parentCommonId,
     commonId,
-    governanceId,
+    initialGovernance,
   } = props;
   const {
     isGovernanceUpdateLoading,
     governance: updatedGovernance,
     error: commonCreationError,
     updateRules,
-  } = useRulesUpdate(governanceId, commonId);
+  } = useRulesUpdate(commonId, initialGovernance);
 
   const isLoading = isGovernanceUpdateLoading;
   const governance = updatedGovernance;

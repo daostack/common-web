@@ -2,7 +2,13 @@ import React, { useCallback, useRef, ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-import { differenceBy, differenceWith, intersectionBy, isEqual } from "lodash";
+import {
+  differenceBy,
+  differenceWith,
+  intersectionBy,
+  isEmpty,
+  isEqual,
+} from "lodash";
 import { Button, Separator } from "@/shared/components";
 import { Form, RulesArray } from "@/shared/components/Form/Formik";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
@@ -75,7 +81,9 @@ export default function Rules({
       ) as UnstructuredRules;
 
       onFinish({
-        changes,
+        changes: isEmpty(changes)
+          ? governanceRules.map(({ id }) => ({ id }))
+          : changes,
         new: newRules,
         remove: deletedRules.map(({ id }) => id),
         allRules: values.rules,
