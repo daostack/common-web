@@ -3,6 +3,11 @@ module.exports = {
     {
       directory: "../src/shared/components",
       files: "**/*.stories.*",
+      titlePrefix: "Shared Components",
+    },
+    {
+      directory: "../src/shared/ui-kit",
+      files: "**/*.stories.*",
       titlePrefix: "UI Kit",
     },
     "../src/**/*.stories.@(js|jsx|ts|tsx|mdx)",
