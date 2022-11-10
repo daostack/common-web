@@ -2,17 +2,18 @@ import React, { FC, useMemo, useState } from "react";
 import classNames from "classnames";
 import { ButtonLink } from "@/shared/components";
 import { UnstructuredRules } from "@/shared/models";
-import { isRTL } from "@/shared/utils";
+import { commonTypeText, isRTL } from "@/shared/utils";
 import "./index.scss";
 
 interface CommonRulesProps {
   rules: UnstructuredRules;
+  isSubCommon: boolean;
 }
 
 const DEFAULT_RULES_TO_DISPLAY_AMOUNT = 2;
 
 const CommonRules: FC<CommonRulesProps> = (props) => {
-  const { rules } = props;
+  const { rules, isSubCommon } = props;
   const [isExpanded, setIsExpanded] = useState(false);
   const currentRules = useMemo(
     () =>
@@ -31,7 +32,9 @@ const CommonRules: FC<CommonRulesProps> = (props) => {
 
   return (
     <div className="about-tab-common-rules">
-      <h2 className="about-tab-common-rules__title">Common rules</h2>
+      <h2 className="about-tab-common-rules__title">
+        {commonTypeText(isSubCommon)} rules
+      </h2>
       <ul className="about-tab-common-rules__list">
         {currentRules.map((rule, index) => (
           <li

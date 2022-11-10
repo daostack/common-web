@@ -12,6 +12,7 @@ import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { Funding } from "./Funding";
 import { GeneralInfo } from "./GeneralInfo";
@@ -132,7 +133,7 @@ export default function CreationSteps(props: CreationStepsProps) {
           />
         )}
         <h3 className="create-common-creation-steps__modal-title">
-          Create {isSubCommonCreation ? "sub" : "a"} Common
+          Create a {commonTypeText(isSubCommonCreation)}
         </h3>
       </div>
     );

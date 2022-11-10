@@ -1,6 +1,7 @@
 import { lowerCase, startCase } from "lodash";
 import { ProposalsTypes } from "@/shared/constants";
 import { CommonMember } from "@/shared/models";
+import { commonTypeText } from "./text";
 
 export const checkIsProposalTypeAllowedForMember = (
   commonMember: CommonMember,
@@ -16,7 +17,8 @@ export const checkIsProposalTypeAllowedForMember = (
 };
 
 export const getTextForProposalType = (
-  proposalType: ProposalsTypes
+  proposalType: ProposalsTypes,
+  isSubCommon = false
 ): string => {
   switch (proposalType) {
     case ProposalsTypes.ASSIGN_CIRCLE:
@@ -27,6 +29,8 @@ export const getTextForProposalType = (
       return "Remove members from a circle";
     case ProposalsTypes.MEMBER_ADMITTANCE:
       return "Members admittance";
+    case ProposalsTypes.DELETE_COMMON:
+      return `Delete ${commonTypeText(isSubCommon)}`;
     default:
       return startCase(lowerCase(proposalType));
   }

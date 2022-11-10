@@ -30,7 +30,7 @@ import "./index.scss";
 
 export enum MenuItem {
   EditAgenda,
-  CreateSubCommon,
+  CreateProject,
   MyContributions,
   DeleteCommon,
   LeaveCommon,
@@ -67,11 +67,11 @@ const OPTIONS: Option[] = [
   {
     text: (
       <>
-        <AddIcon className="edit-common-menu__item-icon" /> Create SubCommon
+        <AddIcon className="edit-common-menu__item-icon" /> Create Project
       </>
     ),
-    searchText: "Create SubCommon",
-    value: MenuItem.CreateSubCommon,
+    searchText: "Create Project",
+    value: MenuItem.CreateProject,
   },
   {
     text: (
@@ -160,7 +160,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
       items.push(MenuItem.EditAgenda, MenuItem.EditAgenda);
     }
     if (!isSubCommon && circlesWithoutSubcommon.length > 0) {
-      items.push(MenuItem.CreateSubCommon);
+      items.push(MenuItem.CreateProject);
     }
     if (isCommonMember) {
       items.push(MenuItem.MyContributions);
@@ -292,6 +292,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         isShowing={selectedMenuItem === MenuItem.MyContributions}
         onClose={handleMenuClose}
         common={common}
+        isSubCommon={Boolean(common.directParent)}
       />
       {currentCommonMember && (
         <LeaveCommonModal
@@ -303,10 +304,11 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         />
       )}
       <CreateCommonModal
-        isShowing={selectedMenuItem === MenuItem.CreateSubCommon}
+        isShowing={selectedMenuItem === MenuItem.CreateProject}
         onClose={handleMenuClose}
         governance={governance}
         parentCommonId={common.id}
+        isSubCommonCreation={Boolean(common.directParent)}
         subCommons={subCommons}
         onCommonCreate={onSubCommonCreate}
         shouldBeWithoutIntroduction
@@ -317,6 +319,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         governance={governance}
         common={common}
         parentCommonId={common.id}
+        isSubCommonCreation={Boolean(common.directParent)}
         shouldBeWithoutIntroduction
       />
     </div>

@@ -8,6 +8,7 @@ import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { BaseRule } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import {
@@ -85,7 +86,9 @@ export default function Rules({
             <Form className="create-common-rules__form">
               <RulesArray
                 title="Rules of conduct"
-                description="Use rules to set the tone for your Common‘s discussions. (No advertising and spam, accepted language, etc.)"
+                description={`Use rules to set the tone for your ${commonTypeText(
+                  isSubCommonCreation,
+                )}‘s discussions. (No advertising and spam, accepted language, etc.)`}
                 name="rules"
                 values={values.rules}
                 errors={errors.rules}
@@ -102,9 +105,7 @@ export default function Rules({
                     shouldUseFullWidth={isMobileView}
                     disabled={!isValid}
                   >
-                    {`Continue to ${
-                      isSubCommonCreation ? "Review" : "Funding"
-                    }`}
+                    {`Continue to ${commonTypeText(isSubCommonCreation)}`}
                   </Button>
                 </div>
               </ModalFooter>

@@ -4,6 +4,7 @@ import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import { formatPrice } from "@/shared/utils/shared";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
@@ -108,7 +109,7 @@ export default function Review({
             onClick={handleContinueClick}
             shouldUseFullWidth={isMobileView}
           >
-            Create a Common
+            Create a {commonTypeText(isSubCommonCreation)}
           </Button>
         </div>
       </div>

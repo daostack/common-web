@@ -81,7 +81,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     setShouldShowCloseButton(false);
   }, [setShouldShowCloseButton]);
 
-  return <Processing />;
+  return <Processing isSubCommonCreation={isSubCommonCreation} />;
 };
 
 export default Confirmation;

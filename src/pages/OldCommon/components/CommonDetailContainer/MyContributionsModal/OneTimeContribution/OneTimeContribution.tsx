@@ -14,10 +14,11 @@ interface OneTimeContributionProps {
   common: Common;
   onFinish: (payment: Payment) => void;
   goBack: () => void;
+  isSubCommon: boolean;
 }
 
 const OneTimeContribution: FC<OneTimeContributionProps> = (props) => {
-  const { common, onFinish, goBack } = props;
+  const { common, onFinish, goBack, isSubCommon } = props;
   const { setTitle, setOnGoBack, onError, setShouldShowClosePrompt } =
     useMyContributionsContext();
   const [step, setStep] = useState<OneTimeContributionStep>(
@@ -89,6 +90,7 @@ const OneTimeContribution: FC<OneTimeContributionProps> = (props) => {
             contributionAmount={contributionAmount}
             onSelect={handleAmountSelect}
             setShouldShowGoBackButton={setShouldShowGoBackButton}
+            isSubCommon={isSubCommon}
           />
         );
       case OneTimeContributionStep.Payment:

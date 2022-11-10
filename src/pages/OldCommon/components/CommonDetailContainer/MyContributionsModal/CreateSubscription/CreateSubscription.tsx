@@ -16,10 +16,11 @@ interface CreateSubscriptionProps {
   onFinish: (subscription: Subscription) => void;
   goBack: () => void;
   onLoadingToggle?: (isLoading: boolean) => void;
+  isSubCommon: boolean;
 }
 
 const CreateSubscription: FC<CreateSubscriptionProps> = (props) => {
-  const { common, onFinish, goBack } = props;
+  const { common, onFinish, goBack, isSubCommon } = props;
   const { setTitle, setOnGoBack, onError, setShouldShowClosePrompt } =
     useMyContributionsContext();
   const [step, setStep] = useState<CreateSubscriptionStep>(
@@ -93,6 +94,7 @@ const CreateSubscription: FC<CreateSubscriptionProps> = (props) => {
             contributionAmount={contributionAmount}
             onSelect={handleAmountSelect}
             setShouldShowGoBackButton={setShouldShowGoBackButton}
+            isSubCommon={isSubCommon}
           />
         );
       case CreateSubscriptionStep.Payment:

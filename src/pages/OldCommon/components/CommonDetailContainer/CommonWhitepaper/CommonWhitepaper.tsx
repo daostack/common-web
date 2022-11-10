@@ -12,10 +12,11 @@ enum Tabs {
 
 interface CommonWhitepaperProps {
   common: Common;
+  isSubCommon: boolean;
 }
 
 export default function CommonWhitepaper(props: CommonWhitepaperProps) {
-  const { common } = props;
+  const { common, isSubCommon } = props;
   const [toggle, setToggle] = useState(false);
   const [tab, setTab] = useState(Tabs.Members);
 
@@ -47,9 +48,9 @@ export default function CommonWhitepaper(props: CommonWhitepaperProps) {
             </div>
           </div>
           {tab === Tabs.Members ? (
-            <WhitepaperMembers />
+            <WhitepaperMembers isSubCommon={isSubCommon} />
           ) : (
-            <WhitepaperProposals />
+            <WhitepaperProposals isSubCommon={isSubCommon} />
           )}
         </div>
       )}

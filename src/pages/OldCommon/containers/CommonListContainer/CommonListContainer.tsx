@@ -109,7 +109,11 @@ export default function CommonListContainer() {
         </div>
       )}
 
-      <CreateCommonModal isShowing={isModalOpen} onClose={onClose} />
+      <CreateCommonModal
+        isShowing={isModalOpen}
+        onClose={onClose}
+        isSubCommonCreation={false}
+      />
     </div>
   );
 }

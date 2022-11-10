@@ -26,12 +26,13 @@ interface EditCommonModalProps {
   onClose: () => void;
   governance?: Governance;
   parentCommonId?: string;
+  isSubCommonCreation: boolean;
   common: Common;
   shouldBeWithoutIntroduction?: boolean;
 }
 
 export default function EditCommonModal(props: EditCommonModalProps) {
-  const { governance, parentCommonId, common } = props;
+  const { governance, parentCommonId, common, isSubCommonCreation } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -131,6 +132,7 @@ export default function EditCommonModal(props: EditCommonModalProps) {
       case UpdateCommonStage.EditSteps:
         return (
           <EditSteps
+            isSubCommonCreation={isSubCommonCreation}
             isHeaderScrolledToTop={isHeaderScrolledToTop}
             governance={governance}
             setTitle={setSmallTitle}
@@ -145,6 +147,7 @@ export default function EditCommonModal(props: EditCommonModalProps) {
       case UpdateCommonStage.Confirmation:
         return (
           <Confirmation
+            isSubCommonCreation={isSubCommonCreation}
             parentCommonId={parentCommonId}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
@@ -157,6 +160,7 @@ export default function EditCommonModal(props: EditCommonModalProps) {
       case UpdateCommonStage.Success:
         return updatedCommon ? (
           <Success
+            isSubCommonCreation={isSubCommonCreation}
             common={updatedCommon}
             onFinish={props.onClose}
             setTitle={setSmallTitle}

@@ -37,6 +37,7 @@ interface CreateCommonModalProps {
   onClose: () => void;
   governance?: Governance;
   parentCommonId?: string;
+  isSubCommonCreation: boolean;
   subCommons?: Common[];
   shouldBeWithoutIntroduction?: boolean;
   onCommonCreate?: (common: Common) => void;
@@ -47,7 +48,13 @@ const emptyFunction = () => {
 };
 
 export default function CreateCommonModal(props: CreateCommonModalProps) {
-  const { governance, subCommons = [], parentCommonId, onCommonCreate } = props;
+  const {
+    governance,
+    subCommons = [],
+    parentCommonId,
+    onCommonCreate,
+    isSubCommonCreation,
+  } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -73,7 +80,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isHeaderSticky = stage === CreateCommonStage.CreationSteps;
-  const isSubCommonCreation = Boolean(props.parentCommonId);
 
   const setBigTitle = useCallback((title: string) => {
     setTitle(title);

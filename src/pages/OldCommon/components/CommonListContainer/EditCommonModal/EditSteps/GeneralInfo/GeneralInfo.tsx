@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
-import { Common, Governance } from "@/shared/models";
+import { Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { parseLinksForSubmission } from "@/shared/utils";
 import { UpdateCommonData } from "../../../../../interfaces";
@@ -17,10 +17,11 @@ interface GeneralInfoProps {
   governance?: Governance;
   onFinish: (data: Partial<UpdateCommonData>) => void;
   currentData: UpdateCommonData;
+  isSubCommonCreation: boolean;
 }
 
 export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
-  const { currentStep, governance, onFinish, currentData } = props;
+  const { currentStep, onFinish, currentData, isSubCommonCreation } = props;
   const [shouldShowMainInfo, setShouldShowMainInfo] = useState(true);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -49,7 +50,11 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
         {isMobileView && progressEl}
         <Separator className="update-common-general-info__separator" />
         {shouldShowMainInfo && (
-          <MainInfo onFinish={handleMainInfoSubmit} currentData={currentData} />
+          <MainInfo
+            onFinish={handleMainInfoSubmit}
+            currentData={currentData}
+            isSubCommonCreation={isSubCommonCreation}
+          />
         )}
       </div>
     </>

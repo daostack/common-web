@@ -12,6 +12,7 @@ import { Dots } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import { UpdateCommonData } from "../../../../interfaces";
 import { GeneralInfo } from "./GeneralInfo";
 import { PROGRESS_RELATED_STEPS } from "./Progress";
@@ -30,6 +31,7 @@ interface EditStepsProps {
   currentData: UpdateCommonData;
   setCurrentData: Dispatch<SetStateAction<UpdateCommonData>>;
   shouldStartFromLastStep: boolean;
+  isSubCommonCreation: boolean;
 }
 
 export default function EditSteps(props: EditStepsProps) {
@@ -43,6 +45,7 @@ export default function EditSteps(props: EditStepsProps) {
     currentData,
     setCurrentData,
     shouldStartFromLastStep,
+    isSubCommonCreation,
   } = props;
   const [step, setStep] = useState(() =>
     shouldStartFromLastStep ? EditStep.Review : EditStep.GeneralInfo,
@@ -117,7 +120,9 @@ export default function EditSteps(props: EditStepsProps) {
             shouldHighlightUnfinishedSteps
           />
         )}
-        <h3 className="update-common-edit-steps__modal-title">Edit Common</h3>
+        <h3 className="update-common-edit-steps__modal-title">
+          Edit {commonTypeText(isSubCommonCreation)}
+        </h3>
       </div>
     );
   }, [shouldShowTitle, isMobileView, isHeaderScrolledToTop, step]);
@@ -140,6 +145,7 @@ export default function EditSteps(props: EditStepsProps) {
       governance,
       currentStep: step,
       onFinish: handleFinish,
+      isSubCommonCreation,
     };
 
     switch (step) {

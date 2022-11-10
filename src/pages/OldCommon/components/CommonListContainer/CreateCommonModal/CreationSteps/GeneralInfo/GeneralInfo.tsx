@@ -74,6 +74,7 @@ export default function GeneralInfo(props: GeneralInfoProps): ReactElement {
           <MainInfo
             onFinish={handleMainInfoSubmit}
             creationData={creationData}
+            isSubCommonCreation={isSubCommonCreation}
           />
         )}
         {!shouldShowMainInfo && governance && (
