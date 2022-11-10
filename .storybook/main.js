@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
   stories: [
     {
@@ -25,5 +27,14 @@ module.exports = {
   framework: "@storybook/react",
   core: {
     builder: "@storybook/builder-webpack5",
+  },
+  webpackFinal: async (config) => {
+    // Is based on tsconfig.paths.json file paths
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": path.resolve(__dirname, "..", "src"),
+    };
+
+    return config;
   },
 };
