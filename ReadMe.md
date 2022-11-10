@@ -4,25 +4,18 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `yarn start`
-
+`yarn start` - 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `yarn test`
+`yarn test` - Launches the tests.
 
-Launches the tests.
+`yarn run test:watch` - Launches the test runner in the interactive watch mode.
 
-### `yarn run test:watch`
-
-Launches the test runner in the interactive watch mode.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br>
+`yarn build` - Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.<br>
@@ -32,6 +25,20 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## Project architecture
 Check out structure of the `components` folder [here](./docs/page-structure.md).
+
+## Storybook
+
+Check out [Write stories](https://storybook.js.org/docs/react/writing-stories/introduction) series of articles on Storybook docs site to understand what is "story" and how to write them. [Testing](https://storybook.js.org/docs/react/writing-tests/introduction) articles will show which kind of tests we can write for our stories.
+
+In our project we put stories next to the component file itself and name it as `ComponentName.stories.tsx`.
+
+`yarn run storybook` - Runs storybook
+
+`yarn run test:storybook` - Runs tests for Storybook stories
+
+`yarn run test:snapshots` - Runs snapshot tests for Storybook stories
+
+`yarn run update:snapshots` - Updates snapshot tests for Storybook stories
 
 ## Testing
 

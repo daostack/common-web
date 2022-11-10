@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { setLoginModalState } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LanguageDropdown, Loader } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { ContributionType, ScreenSize } from "@/shared/constants";
 import {
   useFooter,
   useHeader,
@@ -29,7 +29,7 @@ import {
 } from "../../components/SupportersContainer";
 import { SupportersStep } from "./constants";
 import { SupportersDataContext, SupportersDataContextValue } from "./context";
-import { getAmount, getInitialLanguage } from "./helpers";
+import { getAmount, getContributionType, getInitialLanguage } from "./helpers";
 import "./index.scss";
 
 interface SupportersContainerRouterParams {
@@ -50,6 +50,9 @@ const SupportersContainer = () => {
   const { changeLanguage } = useLanguage();
   const queryParams = useQueryParams();
   const [amount, setAmount] = useState(() => getAmount(queryParams));
+  const [contributionType, setContributionType] = useState(() =>
+    getContributionType(queryParams),
+  );
   const initialLanguage = getInitialLanguage(queryParams);
   const [step, setStep] = useState(
     amount ? SupportersStep.UserDetails : SupportersStep.InitialStep,
@@ -70,9 +73,21 @@ const SupportersContainer = () => {
   const shouldShowLanguageDropdown =
     Object.keys(supportersData?.translations || {}).length > 1;
 
-  const handleInitialStepFinish = (amount: number) => {
+  const handleInitialStepFinish = (
+    amount: number,
+    contributionType: ContributionType,
+  ) => {
     setAmount(amount);
+    setContributionType(contributionType);
     setStep(SupportersStep.UserDetails);
+  };
+
+  const handleChangeAmount = (
+    amount: number,
+    contributionType: ContributionType,
+  ) => {
+    setAmount(amount);
+    setContributionType(contributionType);
   };
 
   const handleUserDetailsStepFinish = (
@@ -171,8 +186,9 @@ const SupportersContainer = () => {
       case SupportersStep.Payment:
         return (
           <PaymentStep
+            contributionType={contributionType}
             amount={amount}
-            onAmountChange={setAmount}
+            onAmountChange={handleChangeAmount}
             onFinish={handlePaymentStepFinish}
           />
         );

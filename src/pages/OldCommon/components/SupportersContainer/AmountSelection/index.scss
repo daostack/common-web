@@ -37,10 +37,16 @@
   @include big-phone {
     max-width: unset;
   }
+
+  .custom-currency-input__hint {
+    margin-inline: 0.5rem;
+    font-style: normal;
+  }
 }
 
 .supporters-page-amount-selection__currency-input-label,
-.supporters-page-amount-selection__currency-input-error {
+.supporters-page-amount-selection__currency-input-error,
+.supporters-page-amount-selection__currency-input-hint {
   font-size: $xsmall;
 }
 
