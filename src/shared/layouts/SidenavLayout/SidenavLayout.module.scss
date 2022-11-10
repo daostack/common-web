@@ -11,6 +11,8 @@ $sidenav-width: 20rem;
   --sb-content-pb: var(--footer-height);
   --sb-bg-color: #ffffff;
   --sb-shadow: 0.125rem 0 0.375rem rgba(0, 26, 54, 0.08);
+  --sb-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --sb-transition-duration: 0.6s;
   --bg-color: #fbfcfc;
 
   min-height: 100vh;
@@ -45,6 +47,23 @@ $sidenav-width: 20rem;
   @media (max-width: 540px) {
     right: 0;
     display: flex;
+    will-change: transform;
+    transform: translateX(-110vw);
+    transition: transform var(--sb-transition-duration) var(--sb-easing),
+      visibility 0s linear var(--sb-transition-duration);
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+    visibility: hidden;
+
+    &:target {
+      transform: translateX(0);
+      transition: transform var(--sb-transition-duration) var(--sb-easing);
+      visibility: visible;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    --sb-transition-duration: 1ms;
   }
 }
 
