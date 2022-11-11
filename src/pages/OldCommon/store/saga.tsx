@@ -31,6 +31,7 @@ import {
   Subscription,
   BankAccountDetails,
   Vote,
+  Governance,
 } from "../../../shared/models";
 import { getUserData } from "../../Auth/store/api";
 import { ImmediateContributionResponse } from "../interfaces";
@@ -38,6 +39,7 @@ import { updateCommonState } from "./actions";
 import {
   createCommon as createCommonApi,
   updateCommon as updateCommonApi,
+  updateGovernanceRules as updateGovernanceRulesApi,
   createProposal as createProposalApi,
   fetchCommonList,
   fetchCommonDetail,
@@ -1566,9 +1568,36 @@ export function* getCommonState({
   }
 }
 
+export function* updateGovernanceRules(
+  action: ReturnType<typeof actions.updateGovernanceRules.request>,
+): Generator {
+  try {
+    const updatedRules = (yield call(
+      updateGovernanceRulesApi,
+      action.payload.payload,
+    )) as Awaited<ReturnType<typeof updateGovernanceRulesApi>>;
+
+    const updatedGovernance = {
+      ...action.payload.governance,
+      unstructuredRules: updatedRules.unstructuredRules,
+    } as Governance;
+
+    yield put(actions.getGovernance.success(updatedGovernance));
+    action.payload.callback(null, updatedGovernance);
+  } catch (error) {
+    if (isError(error)) {
+      action.payload.callback(error);
+    }
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
+  yield takeLatest(
+    actions.updateGovernanceRules.request,
+    updateGovernanceRules,
+  );
   yield takeLatest(actions.getCommonsListByIds.request, getCommonsListByIds);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);
   yield takeLatest(

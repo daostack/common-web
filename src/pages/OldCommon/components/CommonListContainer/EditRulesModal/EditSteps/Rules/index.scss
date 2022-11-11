@@ -1,0 +1,31 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.update-rules {
+  width: 100%;
+  max-width: 36.5rem;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+.update-rules__rules-array-item {
+  margin-top: 1rem;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.update-rules__separator {
+  margin-bottom: 1.5rem;
+}
+
+.update-rules__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding: 1.75rem 0;
+
+  @include big-phone {
+    padding: 1.5rem 0;
+  }
+}

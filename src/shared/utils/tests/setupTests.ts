@@ -1,3 +1,4 @@
+import "@/projectSetupImports";
 import "./mockConfig";
-import "./mockStorages";
 import "./mockMatchMedia";
+import "./mockStorages";
