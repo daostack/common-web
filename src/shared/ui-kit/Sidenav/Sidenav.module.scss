@@ -16,7 +16,7 @@
     transform: translateX(-110vw);
     transition: transform var(--sb-transition-duration) var(--sb-easing),
       visibility 0s linear var(--sb-transition-duration);
-    overflow: hidden auto;
+    overflow: hidden;
     overscroll-behavior: contain;
     visibility: hidden;
 
