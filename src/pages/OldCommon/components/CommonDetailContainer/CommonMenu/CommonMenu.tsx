@@ -322,7 +322,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         onClose={handleMenuClose}
         governance={governance}
         parentCommonId={common.id}
-        isSubCommonCreation={Boolean(common.directParent)}
+        isSubCommonCreation={!isSubCommon}
         subCommons={subCommons}
         onCommonCreate={onSubCommonCreate}
         shouldBeWithoutIntroduction
@@ -333,7 +333,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         governance={governance}
         common={common}
         parentCommonId={common.id}
-        isSubCommonCreation={Boolean(common.directParent)}
+        isSubCommonCreation={!isSubCommon}
         shouldBeWithoutIntroduction
       />
       <EditRulesModal
@@ -343,6 +343,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         governance={governance}
         parentCommonId={common.id}
         shouldBeWithoutIntroduction={false}
+        isSubCommon={isSubCommon}
       />
     </div>
   );

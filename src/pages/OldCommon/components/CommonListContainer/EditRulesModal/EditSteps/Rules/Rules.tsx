@@ -15,6 +15,7 @@ import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { BaseRule, Governance, UnstructuredRules } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import { UpdateGovernanceRulesData } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import {
@@ -30,6 +31,7 @@ interface RulesProps {
   governance: Governance | undefined;
   currentData: UpdateGovernanceRulesData;
   initialRules: UnstructuredRules;
+  isSubCommon: boolean;
 }
 
 interface FormValues {
@@ -47,6 +49,7 @@ export default function Rules({
   onFinish,
   currentData,
   initialRules,
+  isSubCommon,
 }: RulesProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const screenSize = useSelector(getScreenSize());
@@ -92,7 +95,9 @@ export default function Rules({
     [onFinish],
   );
 
-  const progressEl = <Progress creationStep={currentStep} />;
+  const progressEl = (
+    <Progress creationStep={currentStep} isSubCommon={isSubCommon} />
+  );
 
   return (
     <>
@@ -111,7 +116,9 @@ export default function Rules({
             <Form className="update-rules__form">
               <RulesArray
                 title="Rules of conduct"
-                description="Use rules to set the tone for your Common‘s discussions. (No advertising and spam, accepted language, etc.)"
+                description={`Use rules to set the tone for your ${commonTypeText(
+                  isSubCommon,
+                )}‘s discussions. (No advertising and spam, accepted language, etc.)`}
                 name="rules"
                 values={values.rules}
                 errors={errors.rules}

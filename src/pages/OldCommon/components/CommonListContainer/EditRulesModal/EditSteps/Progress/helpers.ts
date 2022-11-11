@@ -1,7 +1,8 @@
 import { StepProgressItem } from "@/shared/components";
+import { commonTypeText } from "@/shared/utils";
 import { EditStep } from "../constants";
 
-export const getStepData = (): Record<
+export const getStepData = (isSubCommon = false): Record<
   EditStep,
   {
     title: string;
@@ -12,7 +13,7 @@ export const getStepData = (): Record<
   [EditStep.Rules]: {
     title: "Rules",
     description:
-      "Add rules of conduct. New members must agree to the rules before joining the Common.",
+      `Add rules of conduct. New members must agree to the rules before joining the ${commonTypeText(isSubCommon)}.`,
   },
   [EditStep.Review]: {
     title: "Final touches and review",

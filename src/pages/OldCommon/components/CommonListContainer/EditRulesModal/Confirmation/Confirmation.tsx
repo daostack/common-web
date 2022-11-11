@@ -13,6 +13,7 @@ interface ConfirmationProps {
   onFinish: (governance: Governance | null, errorText: string) => void;
   currentData: UpdateGovernanceRulesData;
   initialGovernance: Governance;
+  isSubCommon: boolean;
 }
 
 const Confirmation: FC<ConfirmationProps> = (props) => {
@@ -25,6 +26,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     parentCommonId,
     commonId,
     initialGovernance,
+    isSubCommon,
   } = props;
   const {
     isGovernanceUpdateLoading,
@@ -73,7 +75,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     setShouldShowCloseButton(false);
   }, [setShouldShowCloseButton]);
 
-  return <Processing />;
+  return <Processing isSubCommon={isSubCommon} />;
 };
 
 export default Confirmation;

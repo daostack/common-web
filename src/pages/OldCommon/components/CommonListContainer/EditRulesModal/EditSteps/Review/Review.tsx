@@ -13,12 +13,14 @@ interface ReviewProps {
   currentStep: number;
   onFinish: (data?: Partial<UpdateGovernanceRulesData>) => void;
   currentData: UpdateGovernanceRulesData;
+  isSubCommon: boolean;
 }
 
 export default function Review({
   currentStep,
   onFinish,
   currentData,
+  isSubCommon,
 }: ReviewProps): ReactElement {
   const { allRules } = currentData;
   const screenSize = useSelector(getScreenSize());
@@ -28,7 +30,9 @@ export default function Review({
     onFinish();
   };
 
-  const progressEl = <Progress creationStep={currentStep} />;
+  const progressEl = (
+    <Progress creationStep={currentStep} isSubCommon={isSubCommon} />
+  );
 
   return (
     <>
