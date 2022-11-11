@@ -29,6 +29,7 @@ const SidenavLayout: FC = (props) => {
             >
               Add block
             </button>
+            <a href="#">Close Sidenav</a>
           </div>
         </div>
         <a
