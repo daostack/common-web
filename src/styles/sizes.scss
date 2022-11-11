@@ -28,26 +28,64 @@
   }
 }
 
-@mixin laptop {
-  @media only screen and (max-width: $small-screen) {
-    @content;
-  }
-}
-
 @mixin small-laptop {
   @media only screen and (max-width: $small-laptop) {
     @content;
   }
 }
 
-@mixin desktop {
-  @media only screen and (min-width: #{$small-screen + 1}) {
+@mixin viewport-breakpoint($breakpoint) {
+  @media only screen and (max-width: $breakpoint) {
     @content;
   }
 }
 
-@mixin viewport-breakpoint($breakpoint) {
-  @media only screen and (max-width: $breakpoint) {
+/* size related mixins v2 */
+
+@mixin phone {
+  @media only screen and (max-width: $phone-breakpoint) {
+    @content;
+  }
+}
+
+@mixin only-phone-orientated {
+  @media only screen and (min-width: #{$phone-breakpoint + 1}) and (max-width: $tablet-breakpoint) {
+    @content;
+  }
+}
+
+@mixin phone-orientated {
+  @media only screen and (max-width: $tablet-breakpoint) {
+    @content;
+  }
+}
+
+@mixin only-tablet {
+  @media only screen and (min-width: #{$tablet-breakpoint + 1}) and (max-width: $laptop-breakpoint) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media only screen and (max-width: $laptop-breakpoint) {
+    @content;
+  }
+}
+
+@mixin only-laptop {
+  @media only screen and (min-width: #{$laptop-breakpoint + 1}) and (max-width: $desktop-breakpoint) {
+    @content;
+  }
+}
+
+@mixin laptop {
+  @media only screen and (max-width: $desktop-breakpoint) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media only screen and (min-width: #{$desktop-breakpoint + 1}) {
     @content;
   }
 }
