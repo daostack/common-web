@@ -12,6 +12,8 @@ import {
   UpdateCommonPayload,
   UserMembershipInfo,
   CreateReportDto,
+  UpdateGovernanceRulesPayload,
+  UpdateGovernanceRulesResponse,
 } from "@/pages/OldCommon/interfaces";
 import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
 import Api from "@/services/Api";
@@ -1107,6 +1109,17 @@ export async function createReport(
   const { data } = await Api.post<DiscussionMessage>(
     ApiEndpoint.CreateReport,
     requestData,
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function updateGovernanceRules(
+  payload: UpdateGovernanceRulesPayload,
+): Promise<UpdateGovernanceRulesResponse> {
+  const { data } = await Api.post<Governance>(
+    ApiEndpoint.GovernanceUpdateRules,
+    payload,
   );
 
   return convertObjectDatesToFirestoreTimestamps(data);

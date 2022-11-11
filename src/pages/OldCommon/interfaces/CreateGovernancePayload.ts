@@ -1,6 +1,7 @@
+import firebase from "firebase/app";
 import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
 import { BaseRule, Circle, CircleIndex } from "@/shared/models";
-import { AllowedProposals } from "@/shared/models/governance";
+import { AllowedProposals, UnstructuredRules } from "@/shared/models/governance";
 import { BaseProposal, Proposals } from "@/shared/models/governance/proposals";
 
 type CreateGovernanceWeights = {
@@ -50,4 +51,24 @@ export interface CreateGovernancePayload {
   proposals: Partial<CreateGovernanceProposals>;
   unstructuredRules: BaseRule[];
   commonId: string;
+}
+
+export interface UpdateGovernanceRulesPayload {
+  commonId: string;
+  changes?: UnstructuredRules | {id: string}[];
+  new?: BaseRule[];
+  remove?: string[];
+}
+
+export interface UpdateGovernanceRulesData {
+  changes?: UnstructuredRules | {id: string}[];
+  new?: BaseRule[];
+  remove?: string[];
+  allRules: BaseRule[];
+}
+
+export interface UpdateGovernanceRulesResponse {
+  message: string;
+  unstructuredRules: UnstructuredRules;
+  updatedAt: firebase.firestore.Timestamp;
 }

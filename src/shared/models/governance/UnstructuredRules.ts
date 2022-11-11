@@ -3,7 +3,7 @@ export interface BaseRule {
   definition: string;
 }
 
-interface Rule extends BaseRule {
+export interface Rule extends BaseRule {
   readonly id: string;
 }
 

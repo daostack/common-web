@@ -36,7 +36,6 @@ export interface UpdateCommonData {
   byline?: string;
   description?: string;
   links?: CommonLink[];
-  // potentially rules
 }
 
 export interface UpdateCommonPayload {
