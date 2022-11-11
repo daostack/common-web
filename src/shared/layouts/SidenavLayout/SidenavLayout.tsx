@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
-import { Footer } from "@/shared/ui-kit";
+import { SIDENAV_ID } from "@/shared/constants";
+import { Footer, Sidenav } from "@/shared/ui-kit";
 import styles from "./SidenavLayout.module.scss";
 
 const SidenavLayout: FC = (props) => {
@@ -8,42 +9,33 @@ const SidenavLayout: FC = (props) => {
 
   return (
     <div className={styles.container}>
-      <aside id="sidenav-open" className={styles.aside}>
-        <div className={styles.sidenavContent}>
-          <div className={styles.customContent}>
-            {Array(amountOfBlocks)
-              .fill(null)
-              .map((item, index) => (
-                <React.Fragment key={index}>
-                  <h4>My</h4>
-                  <a href="#">Dashboard</a>
-                  <a href="#">Profile</a>
-                  <a href="#">Preferences</a>
-                  <a href="#">Archive</a>
-                </React.Fragment>
-              ))}
-            <button
-              onClick={() =>
-                setAmountOfBlocks((currentAmount) => currentAmount + 1)
-              }
-            >
-              Add block
-            </button>
-            <a href="#">Close Sidenav</a>
-          </div>
+      <Sidenav>
+        <div className={styles.customSidenavContent}>
+          {Array(amountOfBlocks)
+            .fill(null)
+            .map((item, index) => (
+              <React.Fragment key={index}>
+                <h4>My</h4>
+                <a href="#">Dashboard</a>
+                <a href="#">Profile</a>
+                <a href="#">Preferences</a>
+                <a href="#">Archive</a>
+              </React.Fragment>
+            ))}
+          <button
+            onClick={() =>
+              setAmountOfBlocks((currentAmount) => currentAmount + 1)
+            }
+          >
+            Add block
+          </button>
+          <a href="#">Close Sidenav</a>
         </div>
-        <a
-          href="#"
-          id="sidenav-close"
-          className={styles.sidenavClose}
-          title="Close Menu"
-          aria-label="Close Menu"
-        />
-      </aside>
+      </Sidenav>
       <main className={styles.main}>
         <header>
           <a
-            href="#sidenav-open"
+            href={`#${SIDENAV_ID}`}
             id="sidenav-button"
             className="hamburger"
             title="Open Menu"
