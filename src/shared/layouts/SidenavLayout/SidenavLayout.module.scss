@@ -1,4 +1,5 @@
 @import "../../../constants";
+@import "../../../styles/sizes";
 
 .container {
   --main-pl: 18.75rem;
@@ -26,7 +27,7 @@
     box-sizing: border-box;
   }
 
-  @media (max-width: 540px) {
+  @include tablet {
     --main-pl: unset;
     --footer-z-index: unset;
     --sb-max-width: 100%;
@@ -44,7 +45,7 @@
   max-width: var(--sb-max-width);
   width: var(--sb-width);
 
-  @media (max-width: 540px) {
+  @include tablet {
     right: 0;
     display: flex;
     will-change: transform;
@@ -94,7 +95,7 @@
   touch-action: manipulation;
   display: none;
 
-  @media (max-width: 540px) {
+  @include tablet {
     width: 100%;
     height: 100%;
     display: initial;
