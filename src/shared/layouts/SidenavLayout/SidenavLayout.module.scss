@@ -106,12 +106,3 @@ $sidenav-width: 20rem;
   padding-left: var(--main-pl);
   background-color: var(--bg-color);
 }
-
-.footer {
-  flex-shrink: 0;
-  z-index: var(--footer-z-index);
-  height: var(--footer-height);
-  padding: 1.625rem 8.125rem;
-  background-color: #f9faff;
-  border: 1px solid #d5d5e4;
-}

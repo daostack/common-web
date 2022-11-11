@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import { Footer } from "@/shared/ui-kit";
 import styles from "./SidenavLayout.module.scss";
 
 const SidenavLayout: FC = (props) => {
@@ -110,9 +111,7 @@ const SidenavLayout: FC = (props) => {
           </p>
         </article>
       </main>
-      <footer className={styles.footer}>
-        Footer1Footer1Footer1Footer1Footer1
-      </footer>
+      <Footer />
     </div>
   );
 };

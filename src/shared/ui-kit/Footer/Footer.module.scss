@@ -1,0 +1,47 @@
+@import "../../../constants";
+
+.footer {
+  flex-shrink: 0;
+  z-index: var(--footer-z-index);
+  height: var(--footer-height, 4.625rem);
+  padding-left: 8.125rem;
+  padding-right: 7.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  font-family: NunitoSans, sans-serif;
+  font-size: $xxsmall;
+  color: $c-neutrals-300;
+  background-color: $c-notification-100;
+  border-top: 0.0625rem solid $c-neutrals-200;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.commonLogo {
+  flex-shrink: 0;
+  height: 1.5rem;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.poweredByInfo {
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.daoStackLogo {
+  margin: 0 0.375rem;
+}
+
+.copyrightInfo {
+  display: flex;
+  align-items: center;
+  font-weight: 300;
+}
