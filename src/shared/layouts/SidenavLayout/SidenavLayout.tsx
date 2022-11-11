@@ -32,78 +32,7 @@ const SidenavLayout: FC = (props) => {
           <a href="#">Close Sidenav</a>
         </div>
       </Sidenav>
-      <main className={styles.main}>
-        <header>
-          <a
-            href={`#${SIDENAV_ID}`}
-            id="sidenav-button"
-            className="hamburger"
-            title="Open Menu"
-            aria-label="Open Menu"
-          >
-            Open Sidenav
-          </a>
-          <h1>Site Title</h1>
-        </header>
-
-        <article>
-          <h2>Totam Header</h2>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum
-            consectetur, necessitatibus velit officia ut impedit veritatis
-            temporibus soluta? Totam odit cupiditate facilis nisi sunt hic
-            necessitatibus voluptatem nihil doloribus! Enim.
-          </p>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum
-            consectetur, necessitatibus velit officia ut impedit veritatis
-            temporibus soluta? Totam odit cupiditate facilis nisi sunt hic
-            necessitatibus voluptatem nihil doloribus! Enim.
-          </p>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum
-            consectetur, necessitatibus velit officia ut impedit veritatis
-            temporibus soluta? Totam odit cupiditate facilis nisi sunt hic
-            necessitatibus voluptatem nihil doloribus! Enim.
-          </p>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum
-            consectetur, necessitatibus velit officia ut impedit veritatis
-            temporibus soluta? Totam odit cupiditate facilis nisi sunt hic
-            necessitatibus voluptatem nihil doloribus! Enim.
-          </p>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum
-            consectetur, necessitatibus velit officia ut impedit veritatis
-            temporibus soluta? Totam odit cupiditate facilis nisi sunt hic
-            necessitatibus voluptatem nihil doloribus! Enim.
-          </p>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum
-            consectetur, necessitatibus velit officia ut impedit veritatis
-            temporibus soluta? Totam odit cupiditate facilis nisi sunt hic
-            necessitatibus voluptatem nihil doloribus! Enim.
-          </p>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum
-            consectetur, necessitatibus velit officia ut impedit veritatis
-            temporibus soluta? Totam odit cupiditate facilis nisi sunt hic
-            necessitatibus voluptatem nihil doloribus! Enim.
-          </p>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum
-            consectetur, necessitatibus velit officia ut impedit veritatis
-            temporibus soluta? Totam odit cupiditate facilis nisi sunt hic
-            necessitatibus voluptatem nihil doloribus! Enim.
-          </p>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum
-            consectetur, necessitatibus velit officia ut impedit veritatis
-            temporibus soluta? Totam odit cupiditate facilis nisi sunt hic
-            necessitatibus voluptatem nihil doloribus! Enim.
-          </p>
-        </article>
-      </main>
+      <main className={styles.main}>{children}</main>
       <Footer />
     </div>
   );
