@@ -85,7 +85,7 @@ export default function Rules({
           ? governanceRules.map(({ id }) => ({ id }))
           : changes,
         new: newRules,
-        remove: deletedRules.map(({ id }) => id),
+        remove: deletedRules.map(({ id }) => id).filter(Boolean),
         allRules: values.rules,
       });
     },
