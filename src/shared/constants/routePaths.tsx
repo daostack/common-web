@@ -23,4 +23,5 @@ export enum ROUTE_PATHS {
   DEAD_SEA = "/dead-sea",
   PARENTS_FOR_CLIMATE = "/parents-for-climate",
   SAVE_SAADIA = "/save-saadia",
+  TEST = "/test",
 }
