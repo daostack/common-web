@@ -12,5 +12,6 @@ export * from "./queryParamKey";
 export * from "./routePaths";
 export * from "./shared";
 export * from "./countryCodes";
-export * from './webview';
-export * from './RecipientType';
+export * from "./webview";
+export * from "./RecipientType";
+export * from "./viewportBreakpoint";
