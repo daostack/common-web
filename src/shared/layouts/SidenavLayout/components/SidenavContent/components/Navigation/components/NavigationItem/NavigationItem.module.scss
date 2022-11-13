@@ -1,0 +1,27 @@
+@import "../../../../../../../../../constants";
+
+.item {
+  --item-pl: 1rem;
+  --item-pr: 0.625rem;
+  --item-color: #{$c-neutrals-600};
+
+  padding: 0.625rem calc(var(--content-ph) + var(--item-pr)) 0.625rem
+    calc(var(--content-ph) + var(--item-pl));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: NunitoSans, sans-serif;
+  font-weight: 600;
+  font-size: $small;
+  color: var(--item-color);
+  text-decoration: none;
+}
+.itemDisabled {
+  --item-color: #{$c-neutrals-300};
+
+  cursor: not-allowed;
+}
+
+.icon {
+  flex-shrink: 0;
+}

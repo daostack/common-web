@@ -1,9 +1,17 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import SidenavContent from "./SidenavContent";
 
 export default {
   component: SidenavContent,
+  decorators: [
+    (Story) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 } as ComponentMeta<typeof SidenavContent>;
 
 const Template: ComponentStory<typeof SidenavContent> = (args) => (
@@ -16,7 +24,7 @@ Regular.parameters = {
 };
 Regular.decorators = [
   (Story) => (
-    <div style={{ width: "18.75rem" }}>
+    <div style={{ width: "18.75rem", border: "1px solid red" }}>
       <Story />
     </div>
   ),

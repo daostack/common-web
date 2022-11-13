@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 
-interface TrashIconProps {
+interface CopyrightIconProps {
   className?: string;
 }
 
-const CopyrightIcon: FC<TrashIconProps> = ({ className }) => (
+const CopyrightIcon: FC<CopyrightIconProps> = ({ className }) => (
   <svg
     className={className}
     width="12"
