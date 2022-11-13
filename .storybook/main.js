@@ -12,6 +12,11 @@ module.exports = {
       files: "**/*.stories.*",
       titlePrefix: "UI Kit",
     },
+    {
+      directory: "../src/shared/layouts",
+      files: "**/*.stories.*",
+      titlePrefix: "Layouts",
+    },
     "../src/**/*.stories.@(js|jsx|ts|tsx|mdx)",
   ],
   addons: [
