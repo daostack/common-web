@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import logoSrc from "@/shared/assets/images/logo-sidenav.svg";
+import { UserInfo } from "./components";
 import styles from "./SidenavContent.module.scss";
 
 const SidenavContent: FC = () => {
@@ -7,8 +8,9 @@ const SidenavContent: FC = () => {
 
   return (
     <div className={styles.container}>
-      <img className={styles.logo} src={logoSrc} alt="Common Logo " />
+      <img className={styles.logo} src={logoSrc} alt="Common Logo" />
       {separatorEl}
+      <UserInfo />
       {separatorEl}
     </div>
   );
