@@ -1,0 +1,51 @@
+@import "../../../constants";
+@import "../../../styles/sizes";
+
+.container {
+  --main-pl: 18.75rem;
+  --footer-z-index: 1;
+  --footer-height: 4.625rem;
+  --sb-max-width: unset;
+  --sb-width: 18.75rem;
+  --sb-content-max-width: 100%;
+  --sb-content-width: 100%;
+  --sb-content-pb: var(--footer-height);
+  --sb-bg-color: #{$c-shades-white};
+  --sb-shadow: 0.125rem 0 0.375rem #{$c-sidebar-shadow};
+  --sb-easing: cubic-bezier(0.16, 1, 0.3, 1);
+  --sb-transition-duration: 0.6s;
+  --bg-color: #{$c-shades-100};
+
+  min-height: 100vh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+  box-sizing: border-box;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  @include tablet {
+    --main-pl: unset;
+    --footer-z-index: unset;
+    --sb-max-width: 100%;
+    --sb-width: 100%;
+    --sb-content-width: 100%;
+    --sb-content-pb: unset;
+  }
+}
+
+.customSidenavContent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.main {
+  flex: 1;
+  padding-left: var(--main-pl);
+  background-color: var(--bg-color);
+}

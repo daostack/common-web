@@ -95,12 +95,27 @@ $carousel-overlay-shadow: rgba(0, 26, 54, 0.4);
 $shadow-1: rgba(79, 92, 105, 0.1);
 $date-picker-arrow-color: #aeaeae;
 
+/* colors v2 */
+$c-neutrals-200: #d5d5e4;
+$c-neutrals-300: #979bba;
+$c-notification-100: #f9faff;
+$c-shades-white: #ffffff;
+$c-shades-100: #fbfcfc;
+
+$c-sidebar-shadow: rgba(0, 26, 54, 0.08);
+
 /* breakpoints */
 $small-laptop: 1366px;
 $small-screen: 1240px;
 $header-mobile-breakpoint: 1062px;
 $mobile-breakpoint: 770px;
 $mobile-portrait: 375px;
+
+/* breakpoints v2 */
+$desktop-breakpoint: 1560px;
+$laptop-breakpoint: 1152px;
+$tablet-breakpoint: 768px;
+$phone-breakpoint: 390px;
 
 /* */
 $landing-page-animation-duration: 10s;

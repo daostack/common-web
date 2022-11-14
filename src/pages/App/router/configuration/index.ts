@@ -4,8 +4,12 @@ import {
   LayoutConfigurationWithRouteProps,
 } from "../types";
 import { OLD_LAYOUT_CONFIGURATION } from "./oldLayout";
+import { SIDENAV_LAYOUT_CONFIGURATION } from "./sidenavLayout";
 
-const CONFIGURATIONS: LayoutConfiguration[] = [OLD_LAYOUT_CONFIGURATION];
+const CONFIGURATIONS: LayoutConfiguration[] = [
+  OLD_LAYOUT_CONFIGURATION,
+  SIDENAV_LAYOUT_CONFIGURATION,
+];
 
 export const ROUTES: LayoutConfigurationWithRouteProps[] = CONFIGURATIONS.map(
   (configuration) => {
