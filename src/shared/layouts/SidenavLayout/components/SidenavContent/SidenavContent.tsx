@@ -1,5 +1,7 @@
 import React, { FC } from "react";
+import { NavLink } from "react-router-dom";
 import logoSrc from "@/shared/assets/images/logo-sidenav.svg";
+import { ROUTE_PATHS } from "@/shared/constants";
 import { Navigation, UserInfo } from "./components";
 import styles from "./SidenavContent.module.scss";
 
@@ -8,7 +10,9 @@ const SidenavContent: FC = () => {
 
   return (
     <div className={styles.container}>
-      <img className={styles.logo} src={logoSrc} alt="Common Logo" />
+      <NavLink className={styles.logoWrapper} to={ROUTE_PATHS.HOME}>
+        <img className={styles.logo} src={logoSrc} alt="Common Logo" />
+      </NavLink>
       {separatorEl}
       <UserInfo />
       {separatorEl}
