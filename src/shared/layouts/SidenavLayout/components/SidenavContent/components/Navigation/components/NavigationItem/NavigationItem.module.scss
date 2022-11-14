@@ -4,9 +4,9 @@
   --item-pl: 1rem;
   --item-pr: 0.625rem;
   --item-color: #{$c-neutrals-600};
+  --item-bg-color: transparent;
 
-  padding: 0.625rem calc(var(--content-ph) + var(--item-pr)) 0.625rem
-    calc(var(--content-ph) + var(--item-pl));
+  padding: 0.625rem var(--item-pr) 0.625rem var(--item-pl);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -15,6 +15,13 @@
   font-size: $small;
   color: var(--item-color);
   text-decoration: none;
+  background-color: var(--item-bg-color);
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+
+  &:hover {
+    --item-bg-color: #{$c-primary-200}99;
+  }
 }
 .itemDisabled {
   --item-color: #{$c-neutrals-300};
