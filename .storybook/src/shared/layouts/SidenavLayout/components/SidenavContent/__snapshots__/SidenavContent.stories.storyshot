@@ -1,0 +1,209 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent Regular 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "18.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <div
+    className="container"
+  >
+    <a
+      aria-current="page"
+      className="logoWrapper active"
+      href="/"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <img
+        alt="Common Logo"
+        className="logo"
+        src="test-file-stub"
+      />
+    </a>
+    <div
+      className="separator"
+    />
+    <div
+      className="container"
+    >
+      <button
+        aria-expanded={false}
+        aria-haspopup={true}
+        className="menuButton"
+        data-headlessui-state=""
+        id="headlessui-menu-button-1"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        type="button"
+      >
+        <img
+          alt="Yossi Mordachai's avatar"
+          className="avatar"
+          onError={[Function]}
+          src="test-file-stub"
+        />
+        <span
+          className="name"
+        >
+          Yossi Mordachai
+        </span>
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      className="separator"
+    />
+    <nav
+      className="container"
+    >
+      <ul
+        className="list"
+      >
+        <li
+          className="listItem"
+        >
+          <a
+            aria-current="page"
+            className="item active"
+            href="/"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            <span>
+              About
+            </span>
+          </a>
+        </li>
+        <li
+          className="listItem"
+        >
+          <a
+            aria-current={null}
+            className="item"
+            href="/commons"
+            onClick={[Function]}
+          >
+            <span>
+              Commons
+            </span>
+          </a>
+        </li>
+        <li
+          className="listItem"
+        >
+          <div
+            aria-disabled={true}
+            className="item itemDisabled"
+          >
+            <span>
+              Notifications
+            </span>
+            <svg
+              className="icon"
+              fill="none"
+              height="24"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g
+                clipPath="url(#clip0_3640_43059)"
+              >
+                <path
+                  d="M4 19C5.10457 19 6 18.1046 6 17C6 15.8954 5.10457 15 4 15C2.89543 15 2 15.8954 2 17C2 18.1046 2.89543 19 4 19Z"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M13 19C14.1046 19 15 18.1046 15 17C15 15.8954 14.1046 15 13 15C11.8954 15 11 15.8954 11 17C11 18.1046 11.8954 19 13 19Z"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M13 19H4"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M4 15H13"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M8 12V7H10C10.7956 7 11.5587 7.31607 12.1213 7.87868C12.6839 8.44129 13 9.20435 13 10V15"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M5 15V13C5 12.7348 5.10536 12.4804 5.29289 12.2929C5.48043 12.1054 5.73478 12 6 12H13"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M21.12 9.88L18 5L13 10"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M21.12 9.88C21.539 10.2996 21.8243 10.8339 21.9399 11.4155C22.0554 11.9971 21.996 12.5998 21.7692 13.1477C21.5423 13.6956 21.1582 14.1639 20.6653 14.4936C20.1725 14.8233 19.593 14.9995 19 15C18.2046 14.9993 17.4421 14.6828 16.88 14.12L21.12 9.88V9.88Z"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+              </g>
+              <defs>
+                <clipPath
+                  id="clip0_3640_43059"
+                >
+                  <rect
+                    fill="white"
+                    height="24"
+                    width="24"
+                  />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <div
+      className="separator"
+    />
+  </div>
+</div>
+`;
