@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.png";
+import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { Image } from "@/shared/components/Image";
 import styles from "./UserInfo.module.scss";
 
