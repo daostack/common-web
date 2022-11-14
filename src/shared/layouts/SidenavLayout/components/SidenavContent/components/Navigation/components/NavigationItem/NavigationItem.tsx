@@ -15,7 +15,11 @@ const NavigationItem: FC<NavigationItemProps> = (props) => {
 
   const Wrapper: FC = ({ children }) => {
     if (type === NavigationItemType.Block || disabled) {
-      return <div className={itemClassName}>{children}</div>;
+      return (
+        <div className={itemClassName} aria-disabled={disabled}>
+          {children}
+        </div>
+      );
     }
 
     return (

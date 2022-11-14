@@ -2,9 +2,10 @@ import React, { FC } from "react";
 
 interface ExcavatorIconProps {
   className?: string;
+  ariaHidden?: boolean;
 }
 
-const ExcavatorIcon: FC<ExcavatorIconProps> = ({ className }) => (
+const ExcavatorIcon: FC<ExcavatorIconProps> = ({ className, ariaHidden }) => (
   <svg
     className={className}
     width="24"
@@ -12,6 +13,7 @@ const ExcavatorIcon: FC<ExcavatorIconProps> = ({ className }) => (
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    aria-hidden={ariaHidden}
   >
     <g clipPath="url(#clip0_3640_43059)">
       <path
