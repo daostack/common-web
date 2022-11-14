@@ -1,12 +1,12 @@
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadingState } from "@/shared/interfaces";
-import { Common } from "@/shared/models";
 import {
   getCommonState,
   updateCommonState,
-} from "@/containers/Common/store/actions";
-import { selectCommonStateById } from "@/containers/Common/store/selectors";
+} from "@/pages/OldCommon/store/actions";
+import { selectCommonStateById } from "@/pages/OldCommon/store/selectors";
+import { LoadingState } from "@/shared/interfaces";
+import { Common } from "@/shared/models";
 
 type State = LoadingState<Common | null>;
 
@@ -35,10 +35,10 @@ export const useCommon = (): Return => {
       dispatch(
         getCommonState.request({
           payload: { commonId },
-        })
+        }),
       );
     },
-    [dispatch]
+    [dispatch],
   );
 
   const setCommon = useCallback(
@@ -54,14 +54,14 @@ export const useCommon = (): Return => {
           updateCommonState({
             commonId: common.id,
             state: nextState,
-          })
+          }),
         );
       }
 
       setDefaultState(nextState);
       setCurrentCommonId(common?.id || "");
     },
-    [dispatch]
+    [dispatch],
   );
 
   return {

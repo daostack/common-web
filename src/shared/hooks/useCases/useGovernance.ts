@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { getGovernance } from "@/containers/Common/store/api";
+import { getGovernance } from "@/pages/OldCommon/store/api";
 import { LoadingState } from "@/shared/interfaces";
 import { Governance } from "@/shared/models";
 

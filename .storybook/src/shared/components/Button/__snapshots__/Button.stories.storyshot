@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots UI Kit/Button Disabled 1`] = `
+<button
+  className="custom-button custom-button--disabled"
+  disabled={true}
+  tabIndex={0}
+  type="button"
+>
+  Disabled
+</button>
+`;
+
+exports[`Storyshots UI Kit/Button Full Width 1`] = `
+<button
+  className="custom-button custom-button--full-width custom-button--primary"
+  tabIndex={0}
+  type="button"
+>
+  Full Width
+</button>
+`;
+
+exports[`Storyshots UI Kit/Button Primary 1`] = `
+<button
+  className="custom-button custom-button--primary"
+  tabIndex={0}
+  type="button"
+>
+  Primary
+</button>
+`;
+
+exports[`Storyshots UI Kit/Button Secondary 1`] = `
+<button
+  className="custom-button custom-button--secondary"
+  tabIndex={0}
+  type="button"
+>
+  Secondary
+</button>
+`;
+
+exports[`Storyshots UI Kit/Button Secondary Purple 1`] = `
+<button
+  className="custom-button custom-button--secondary-purple"
+  tabIndex={0}
+  type="button"
+>
+  Secondary Purple
+</button>
+`;
+
+exports[`Storyshots UI Kit/Button Shadowed 1`] = `
+<button
+  className="custom-button custom-button--shadowed custom-button--primary"
+  tabIndex={0}
+  type="button"
+>
+  Shadowed
+</button>
+`;

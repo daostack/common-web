@@ -1,13 +1,11 @@
+import "./projectSetupImports";
 import React from "react";
 import ReactDOM from "react-dom";
-import AppWrapper from "@/containers/App/AppWrapper";
-import "./index.scss";
-import App from "./containers/App/App";
-import './i18n';
+import { App, AppWrapper } from "@/pages/App";
 
 ReactDOM.render(
   <AppWrapper>
     <App />
   </AppWrapper>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );

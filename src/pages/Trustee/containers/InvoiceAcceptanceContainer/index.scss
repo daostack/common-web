@@ -1,0 +1,99 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+$sticky-info-height: 4.75rem;
+$sticky-info-mobile-height: 3.75rem;
+
+.invoice-acceptance-container__sticky-info {
+  height: 4.688rem;
+  padding: 0 5rem;
+
+  @include big-phone {
+    height: 3.6875rem;
+    padding: 0 1.25rem;
+  }
+}
+
+.invoice-acceptance-container__back-link-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.invoice-acceptance-container__back-link {
+  display: flex;
+  align-items: center;
+  font-family: NunitoSans-Bold, sans-serif;
+  font-size: $moderate;
+  font-weight: bold;
+  color: $black;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.invoice-acceptance-container__left-arrow-icon {
+  margin-right: 0.5rem;
+}
+
+.invoice-acceptance-container {
+  padding: ($sticky-info-height + 3rem) 0 5.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .invoice-acceptance-container__loader-wrapper {
+    display: flex;
+  }
+
+  .invoice-acceptance-container__title {
+    margin-bottom: 2rem;
+    font-family: NotoSerifSC-Bold, serif;
+    font-size: $moderate;
+    font-weight: bold;
+    text-align: center;
+    color: $secondary-blue;
+  }
+
+  .invoice-acceptance-container__invoice-tile-list {
+    margin-top: 2rem;
+  }
+
+  .invoice-acceptance-container__actions-wrapper {
+    max-width: 19.25rem;
+    width: 100%;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .invoice-acceptance-container__approve-button {
+    width: 100%;
+    height: 3rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+  }
+
+  .invoice-acceptance-container__decline-button {
+    width: 100%;
+    height: 3rem;
+    margin-top: 1rem;
+    font-family: NunitoSans-Regular, sans-serif;
+    font-weight: normal;
+    border: 1px solid $light-gray-1;
+    background-color: $white;
+    color: $red;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background-color: $red;
+      color: $white;
+    }
+  }
+
+  @include big-phone {
+    padding-top: $sticky-info-mobile-height + 1.75rem;
+  }
+}

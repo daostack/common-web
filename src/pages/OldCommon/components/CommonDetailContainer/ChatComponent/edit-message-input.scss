@@ -1,0 +1,61 @@
+@import "../../../../../constants.scss";
+@import "../../../../../styles/sizes";
+
+.edit-message-input {
+  box-sizing: border-box;
+  border-radius: 0.875rem;
+  border: 0.0625rem $light-gray-2 solid;
+  width: 85%;
+  background-color: $white;
+  padding: 0.5rem 1rem;
+}
+
+.edit-message-input__owner-name {
+  font-size: $xsmall;
+  font-weight: bold;
+  color: $secondary-blue;
+  margin-bottom: 0.5rem;
+}
+
+.edit-message-input__input {
+  resize: none;
+  width: 100%;
+  border-width: 0;
+  outline: 0;
+}
+
+.edit-message-input__button-container {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+  height: 2.125rem;
+  margin-bottom: 0.25rem;
+}
+
+.edit-message-input__button-container__button {
+  font-size: $xsmall;
+  border-radius: 0.5rem;
+  padding: 0.46875rem 0.8125rem;
+  height: fit-content;
+}
+
+.edit-message-input__button-container__cancel {
+  border: 0.0625rem $light-gray-2 solid;
+  color: $light-gray-2;
+  background-color: $light-gray-1;
+  margin-right: 0.5rem;
+}
+
+.edit-message-input__button-container__save {
+  border: 0.0625rem $purple-2 solid;
+  color: $white;
+  background-color: $purple-2;
+  margin-left: 0.5rem;
+  width: 3.6875rem;
+}
+
+.edit-message-input__button-container__save__loader {
+  height: 1.25rem;
+  width: 1.25rem;
+}

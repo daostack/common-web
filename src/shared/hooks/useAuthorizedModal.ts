@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { LoginModalType } from "../../containers/Auth/interface";
-import { setLoginModalState } from "../../containers/Auth/store/actions";
+import { LoginModalType } from "../../pages/Auth/interface";
+import { setLoginModalState } from "../../pages/Auth/store/actions";
 import {
   authentificated,
   selectLoginModalState,
-} from "../../containers/Auth/store/selectors";
+} from "../../pages/Auth/store/selectors";
 
 interface AuthorizedModalReturn {
   isModalOpen: boolean;
@@ -15,14 +15,12 @@ interface AuthorizedModalReturn {
 
 const useAuthorizedModal = (): AuthorizedModalReturn => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [
-    shouldShowModalOnLoginClose,
-    setShouldShowModalOnLoginClose,
-  ] = useState(false);
+  const [shouldShowModalOnLoginClose, setShouldShowModalOnLoginClose] =
+    useState(false);
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(authentificated());
   const { isShowing: isLoginModalShowing } = useSelector(
-    selectLoginModalState()
+    selectLoginModalState(),
   );
 
   const onOpen = useCallback(
@@ -35,7 +33,7 @@ const useAuthorizedModal = (): AuthorizedModalReturn => {
       dispatch(setLoginModalState({ isShowing: true, type: loginModalType }));
       setShouldShowModalOnLoginClose(true);
     },
-    [isAuthenticated, dispatch]
+    [isAuthenticated, dispatch],
   );
 
   const onClose = useCallback(() => {

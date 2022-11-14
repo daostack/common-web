@@ -17,3 +17,5 @@ export * from "./roles";
 export * from "./checkIsIFrame";
 export * from "./circles";
 export * from "./notifications";
+export * from "./getFirebaseToken";
+export * from "./text";

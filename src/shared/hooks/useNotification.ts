@@ -1,7 +1,7 @@
 import {
   useNotificationContext,
   NotificationContextValue,
-} from "../components/Notification/context";
+} from "@/pages/App/providers/NotificationProvider/context";
 
 interface Return {
   notify: NotificationContextValue["addNotification"];

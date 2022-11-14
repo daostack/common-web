@@ -1,8 +1,7 @@
 import React, { FC, useCallback, useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
-
-import { setCurrentDiscussionMessageReply } from "@/containers/Common/store/actions";
+import { setCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
 import { MenuButton, ShareModal } from "@/shared/components";
 import {
   DynamicLinkType,
@@ -12,23 +11,23 @@ import {
   EntityTypes,
 } from "@/shared/constants";
 import { useBuildShareLink, useNotification, useModal } from "@/shared/hooks";
-import { copyToClipboard } from "@/shared/utils";
-import { getScreenSize } from "@/shared/store/selectors";
 import {
   Common,
   Proposal,
   Discussion,
   DiscussionMessage,
 } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
+import { copyToClipboard } from "@/shared/utils";
+import { DeleteModal } from "../DeleteModal";
 import {
   Dropdown,
   ElementDropdownMenuItems,
   DropdownOption,
   DropdownStyles,
 } from "../Dropdown";
-import "./index.scss";
 import { ReportModal } from "../ReportModal";
-import { DeleteModal } from "../DeleteModal";
+import "./index.scss";
 
 interface ElementDropdownProps {
   linkType: DynamicLinkType;

@@ -1,0 +1,60 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.supporters-page-amount-selection {
+  display: flex;
+  flex-direction: column;
+}
+
+.supporters-page-amount-selection__title {
+  margin: 0 0 2.5rem;
+  font-family: NunitoSans, sans-serif;
+  font-weight: normal;
+  font-size: $moderate;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+}
+
+.supporters-page-amount-selection__toggle-button-group {
+  max-width: 20.625rem;
+  margin-bottom: 2.5rem;
+}
+
+.supporters-page-amount-selection__amounts-wrapper {
+  margin-bottom: 2.5rem;
+  display: grid;
+  grid-gap: 2.5rem 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @include big-phone {
+    grid-template-columns: 1fr;
+  }
+}
+
+.supporters-page-amount-selection__currency-input {
+  max-width: 17.375rem;
+
+  @include big-phone {
+    max-width: unset;
+  }
+
+  .custom-currency-input__hint {
+    margin-inline: 0.5rem;
+    font-style: normal;
+  }
+}
+
+.supporters-page-amount-selection__currency-input-label,
+.supporters-page-amount-selection__currency-input-error,
+.supporters-page-amount-selection__currency-input-hint {
+  font-size: $xsmall;
+}
+
+.supporters-page-amount-selection__submit-button-wrapper {
+  max-width: 15rem;
+  margin-top: 2.5rem;
+
+  @include big-phone {
+    max-width: unset;
+  }
+}

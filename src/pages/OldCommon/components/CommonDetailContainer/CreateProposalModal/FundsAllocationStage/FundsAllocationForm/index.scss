@@ -1,0 +1,62 @@
+@import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
+
+.funds-allocation-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.funds-allocation-form__stage-name {
+  margin-top: 0.75rem;
+
+  @include big-phone {
+    margin-top: 1.5rem;
+  }
+}
+
+.funds-allocation-form__avatar-icon {
+  flex-shrink: 0;
+}
+
+.funds-allocation-form__bank-account-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.funds-allocation-form__dropdown {
+  z-index: $dropdown-z-index + 1;
+}
+
+.funds-allocation-form__modal-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+.funds-allocation-form__avatar-icon {
+  flex-shrink: 0;
+}
+
+.funds-allocation-form__container {
+  max-width: 36.5rem;
+  width: 100%;
+}
+
+.funds-allocation-form__text-field {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.funds_allocation__links-array-item {
+  margin-top: 1rem;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}

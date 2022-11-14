@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { getCommonMembersWithCircleIdAmount } from "@/containers/Common/store/api";
+import { getCommonMembersWithCircleIdAmount } from "@/pages/OldCommon/store/api";
 import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
 
@@ -13,12 +13,12 @@ type State = LoadingState<Data[]>;
 interface Return extends State {
   fetchCommonMembersWithCircleIdAmount: (
     commonId: string,
-    circleIds: string[]
+    circleIds: string[],
   ) => void;
 }
 
 export const useCommonMembersWithCircleIdsAmount = (
-  isLoading?: boolean
+  isLoading?: boolean,
 ): Return => {
   const [state, setState] = useLoadingState<Data[]>([], {
     loading: isLoading,
@@ -37,14 +37,14 @@ export const useCommonMembersWithCircleIdsAmount = (
             circleIds.map(async (circleId): Promise<Data> => {
               const amount = await getCommonMembersWithCircleIdAmount(
                 commonId,
-                circleId
+                circleId,
               );
 
               return {
                 circleId,
                 amount,
               };
-            })
+            }),
           );
 
           setState({
@@ -64,7 +64,7 @@ export const useCommonMembersWithCircleIdsAmount = (
         }
       })();
     },
-    []
+    [],
   );
 
   return {

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { fetchSupportersDataByCommonId } from "@/containers/Common/store/api";
+import { fetchSupportersDataByCommonId } from "@/pages/OldCommon/store/api";
 import { LoadingState } from "@/shared/interfaces";
 import { SupportersData } from "@/shared/models";
 import { useLoadingState } from "../useLoadingState";

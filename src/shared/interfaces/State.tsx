@@ -1,9 +1,8 @@
 import { RouterState } from "connected-react-router";
-
-import { AuthStateType } from "../../containers/Auth/interface";
+import { AuthStateType } from "../../pages/Auth/interface";
+import { CommonsStateType } from "../../pages/OldCommon/interfaces";
+import { TrusteeStateType } from "../../pages/Trustee/interfaces";
 import { SharedStateType } from "./SharedState";
-import { CommonsStateType } from "../../containers/Common/interfaces";
-import { TrusteeStateType } from "../../containers/Trustee/interfaces";
 
 export interface AppState {
   auth: AuthStateType;

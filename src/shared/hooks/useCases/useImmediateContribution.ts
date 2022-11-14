@@ -4,9 +4,9 @@ import {
   ImmediateContributionData,
   ImmediateContributionPayment,
   isImmediateContributionPayment,
-} from "@/containers/Common/interfaces";
-import { makeImmediateContribution as makeImmediateContributionAction } from "@/containers/Common/store/actions";
-import { subscribeToPayment } from "@/containers/Common/store/api";
+} from "@/pages/OldCommon/interfaces";
+import { makeImmediateContribution as makeImmediateContributionAction } from "@/pages/OldCommon/store/actions";
+import { subscribeToPayment } from "@/pages/OldCommon/store/api";
 import { Payment, PaymentStatus, Subscription } from "@/shared/models";
 
 interface State {
@@ -74,10 +74,10 @@ export const useImmediateContribution = (): Return => {
               ...stateForUpdate,
             }));
           },
-        })
+        }),
       );
     },
-    [dispatch, state]
+    [dispatch, state],
   );
 
   const resetImmediateContribution = useCallback(() => {
@@ -113,7 +113,7 @@ export const useImmediateContribution = (): Return => {
               isPaymentLoading: false,
             }));
           }
-        }
+        },
       );
     } catch (error) {
       console.error("Error during subscribing to payment status change");
