@@ -1,6 +1,7 @@
 import { lowerCase, startCase } from "lodash";
 import { GovernanceActions } from "@/shared/constants";
 import { AllowedActions } from "@/shared/models";
+import { commonTypeText } from "@/shared/utils";
 
 export const checkShouldRemoveAction = (
   action: keyof AllowedActions,
@@ -19,7 +20,7 @@ export const checkShouldRemoveAction = (
     GovernanceActions.DELETE_MESSAGE,
   ].includes(action);
 
-export const getTextForAction = (action: keyof AllowedActions): string => {
+export const getTextForAction = (action: keyof AllowedActions, isSubCommon = false): string => {
   switch (action) {
     case GovernanceActions.CONTRIBUTE:
       return "Contribute funds";
@@ -33,6 +34,8 @@ export const getTextForAction = (action: keyof AllowedActions): string => {
       return "Hide a message";
     case GovernanceActions.RECEIVE_FUNDS:
       return "Receive funds";
+    case GovernanceActions.UPDATE_COMMON:
+      return `Update ${commonTypeText(isSubCommon)}`
     default:
       return startCase(lowerCase(action));
   }

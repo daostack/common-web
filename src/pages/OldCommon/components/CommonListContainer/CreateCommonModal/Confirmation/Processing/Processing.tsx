@@ -1,8 +1,13 @@
 import React, { FC } from "react";
 import { Loader } from "@/shared/components";
+import { commonTypeText } from "@/shared/utils";
 import "./index.scss";
 
-const Processing: FC = () => (
+interface Props {
+  isSubCommonCreation: boolean;
+}
+
+const Processing: FC<Props> = ({ isSubCommonCreation }) => (
   <div className="create-common-confirmation-processing">
     <img
       className="create-common-confirmation-processing__image"
@@ -10,7 +15,7 @@ const Processing: FC = () => (
       alt="Processing creation request"
     />
     <h2 className="create-common-confirmation-processing__title">
-      Creating your Common
+      Creating your {commonTypeText(isSubCommonCreation)}
     </h2>
     <div className="create-common-confirmation-processing__loader">
       <Loader />

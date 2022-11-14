@@ -26,7 +26,7 @@ import {
 import { Currency } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
-import { formatPrice } from "@/shared/utils";
+import { commonTypeText, formatPrice } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import validationSchema from "./validationSchema";
@@ -38,6 +38,7 @@ interface FundingProps {
   currentStep: number;
   onFinish: (data: Partial<IntermediateCreateCommonPayload>) => void;
   creationData: IntermediateCreateCommonPayload;
+  isSubCommonCreation: boolean;
 }
 
 interface FormValues {
@@ -67,9 +68,12 @@ const getCurrencyInputLabel = (
 const getCurrencyInputDescription = (
   contributionType: ContributionType,
   isMobileView: boolean,
+  isSubCommonCreation,
 ): string => {
   const descriptionPieces = [
-    "Set the minimum amount that new members will have to contribute in order to join this Common.",
+    `Set the minimum amount that new members will have to contribute in order to join this ${commonTypeText(
+      isSubCommonCreation,
+    )}.`,
   ];
 
   if (!isMobileView || contributionType !== ContributionType.Monthly) {
@@ -87,6 +91,7 @@ export default function Funding({
   currentStep,
   onFinish,
   creationData,
+  isSubCommonCreation,
 }: FundingProps): ReactElement {
   const formRef = useRef<FormikProps<FormValues>>(null);
   const screenSize = useSelector(getScreenSize());
@@ -223,6 +228,7 @@ export default function Funding({
                 description={getCurrencyInputDescription(
                   contributionType,
                   isMobileView,
+                  isSubCommonCreation,
                 )}
                 placeholder={formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)}
                 disabled={
@@ -242,7 +248,9 @@ export default function Funding({
                   className="create-common-funding__field"
                   id="isCommonJoinFree"
                   name="isCommonJoinFree"
-                  label="Let users join the Common without a personal contribution"
+                  label={`Let users join the ${commonTypeText(
+                    isSubCommonCreation,
+                  )} without a personal contribution`}
                   onChange={handleCheckboxChange}
                   styles={{
                     label: "create-common-funding__checkbox-label",

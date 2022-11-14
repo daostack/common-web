@@ -9,6 +9,7 @@ import {
 } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import "./index.scss";
 
 interface SuccessProps {
@@ -17,6 +18,7 @@ interface SuccessProps {
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
+  isSubCommonCreation: boolean;
 }
 
 const Success: FC<SuccessProps> = (props) => {
@@ -26,6 +28,7 @@ const Success: FC<SuccessProps> = (props) => {
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
+    isSubCommonCreation,
   } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -65,8 +68,8 @@ const Success: FC<SuccessProps> = (props) => {
         Your journey starts now
       </h2>
       <p className="update-common-confirmation-success__sub-title">
-        Your Common is ready. Spread the word and invite others to join you. You
-        can always share it later.
+        Your {commonTypeText(isSubCommonCreation)} is ready. Spread the word and
+        invite others to join you. You can always share it later.
       </p>
       <div className="update-common-confirmation-success__buttons">
         <CommonShare
@@ -97,7 +100,7 @@ const Success: FC<SuccessProps> = (props) => {
           onClick={onFinish}
           shouldUseFullWidth
         >
-          Go to Common
+          Go to {commonTypeText(isSubCommonCreation)}
         </Button>
       </div>
     </div>

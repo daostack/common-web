@@ -6,6 +6,7 @@ import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import ExplanationIcon from "@/shared/icons/explanation.icon";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { CheckedList } from "./CheckedList";
@@ -52,15 +53,20 @@ export default function UserAcknowledgment({
 
   const listItems = useMemo(
     () => [
-      "The purpose of the Common is not in violation of any law, regulation, or 3rd party rights.",
+      `The purpose of the ${commonTypeText(
+        isSubCommonCreation,
+      )} is not in violation of any law, regulation, or 3rd party rights.`,
       <>
-        The Common will be raising funds for{" "}
+        The {commonTypeText(isSubCommonCreation)} will be raising funds for{" "}
         <strong>non-profit or charitable causes only.</strong> The common is not
         intended for commercial or for-profit purposes.
       </>,
-      "All Commons and their members must comply with applicable financial and tax obligations.",
+      `All ${commonTypeText(
+        isSubCommonCreation,
+      )}s and their members must comply with applicable financial and tax obligations.`,
       <>
-        The Common will solely promote one or more of the following{" "}
+        The {commonTypeText(isSubCommonCreation)} will solely promote one or
+        more of the following{" "}
         <ButtonLink
           className="create-common-user-acknowledgment__causes-link"
           onClick={toggleCausesBoxShowing}

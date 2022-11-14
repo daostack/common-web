@@ -12,6 +12,7 @@ interface ConfirmationProps {
   setShouldShowCloseButton: (shouldShow: boolean) => void;
   onFinish: (common: Common | null, errorText: string) => void;
   currentData: UpdateCommonData;
+  isSubCommonCreation: boolean;
 }
 
 const Confirmation: FC<ConfirmationProps> = (props) => {
@@ -23,6 +24,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     currentData,
     parentCommonId,
     commonId,
+    isSubCommonCreation,
   } = props;
   const {
     isCommonUpdateLoading,
@@ -71,7 +73,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     setShouldShowCloseButton(false);
   }, [setShouldShowCloseButton]);
 
-  return <Processing />;
+  return <Processing isSubCommonCreation={isSubCommonCreation} />;
 };
 
 export default Confirmation;

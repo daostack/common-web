@@ -3,7 +3,11 @@ import { useSelector } from "react-redux";
 import { selectGovernance } from "@/pages/OldCommon/store/selectors";
 import WhitepaperProposalCard from "./components/WhitepaperProposalCard/WhitepaperProposalCard";
 
-export default function WhitepaperProposals() {
+interface Props {
+  isSubCommon: boolean;
+}
+
+export default function WhitepaperProposals({ isSubCommon }: Props) {
   const governance = useSelector(selectGovernance());
 
   const proposals: JSX.Element[] | undefined = [];
@@ -14,6 +18,7 @@ export default function WhitepaperProposals() {
         proposalType={proposal}
         proposalData={governance?.proposals[proposal]}
         circles={governance?.circles}
+        isSubCommon={isSubCommon}
       />,
     );
   }

@@ -7,14 +7,16 @@ import "./index.scss";
 
 interface ProgressProps {
   creationStep: EditStep;
+  isSubCommon: boolean;
 }
 
 export const PROGRESS_RELATED_STEPS = [EditStep.Rules, EditStep.Review];
 
 export default function Progress({
   creationStep,
+  isSubCommon,
 }: ProgressProps): ReactElement {
-  const allStepsData = useMemo(() => getStepData(), []);
+  const allStepsData = useMemo(() => getStepData(isSubCommon), [isSubCommon]);
   const stepData = allStepsData[creationStep];
   const stepIndex = PROGRESS_RELATED_STEPS.findIndex(
     (step) => step === creationStep,

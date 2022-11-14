@@ -4,6 +4,7 @@ import { Button, ButtonVariant } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import "./index.scss";
 
 interface SuccessProps {
@@ -12,6 +13,7 @@ interface SuccessProps {
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
+  isSubCommon: boolean;
 }
 
 const Success: FC<SuccessProps> = (props) => {
@@ -21,6 +23,7 @@ const Success: FC<SuccessProps> = (props) => {
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
+    isSubCommon,
   } = props;
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -57,7 +60,7 @@ const Success: FC<SuccessProps> = (props) => {
         alt="Rules updated"
       />
       <p className="update-governance-confirmation-success__sub-title">
-        You successfully updated your Common's rules!
+        You successfully updated your {commonTypeText(isSubCommon)}'s rules!
       </p>
       <div className="update-governance-confirmation-success__buttons">
         <Button
@@ -69,7 +72,7 @@ const Success: FC<SuccessProps> = (props) => {
           onClick={onFinish}
           shouldUseFullWidth
         >
-          Go to Common
+          Go to {commonTypeText(isSubCommon)}
         </Button>
       </div>
     </div>

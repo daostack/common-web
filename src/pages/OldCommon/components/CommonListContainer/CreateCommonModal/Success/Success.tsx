@@ -11,6 +11,7 @@ import {
 } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import "./index.scss";
 
 interface SuccessProps {
@@ -77,8 +78,8 @@ const Success: FC<SuccessProps> = (props) => {
         Your journey starts now
       </h2>
       <p className="create-common-confirmation-success__sub-title">
-        Your Common is ready. Spread the word and invite others to join you. You
-        can always share it later.
+        Your {commonTypeText(isSubCommonCreation)} is ready. Spread the word and
+        invite others to join you. You can always share it later.
       </p>
       <div className="create-common-confirmation-success__buttons">
         <CommonShare
@@ -109,7 +110,7 @@ const Success: FC<SuccessProps> = (props) => {
           onClick={handleGoToCommon}
           shouldUseFullWidth
         >
-          Go to Common
+          Go to {commonTypeText(isSubCommonCreation)}
         </Button>
       </div>
     </div>

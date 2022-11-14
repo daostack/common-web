@@ -7,6 +7,7 @@ import { Form, LinksArray, TextField } from "@/shared/components/Form/Formik";
 import { ModalFooter } from "@/shared/components/Modal";
 import { MAX_LINK_TITLE_LENGTH, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import { UpdateCommonData } from "../../../../../../interfaces";
 import {
   MAX_ABOUT_LENGTH,
@@ -19,6 +20,7 @@ import validationSchema from "./validationSchema";
 interface GeneralInfoProps {
   onFinish: (values: MainInfoValues) => void;
   currentData: UpdateCommonData;
+  isSubCommonCreation: boolean;
 }
 
 const getInitialValues = (data: UpdateCommonData): MainInfoValues => ({
@@ -29,7 +31,7 @@ const getInitialValues = (data: UpdateCommonData): MainInfoValues => ({
 });
 
 const MainInfo: FC<GeneralInfoProps> = (props) => {
-  const { onFinish, currentData } = props;
+  const { onFinish, currentData, isSubCommonCreation } = props;
   const formRef = useRef<FormikProps<MainInfoValues>>(null);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -54,7 +56,7 @@ const MainInfo: FC<GeneralInfoProps> = (props) => {
             className="update-common-general-info__text-field"
             id="commonName"
             name="commonName"
-            label="Common name"
+            label={`${commonTypeText(isSubCommonCreation)} name`}
             placeholder="Save the Amazon"
             maxLength={MAX_COMMON_NAME_LENGTH}
             isRequired
@@ -64,7 +66,9 @@ const MainInfo: FC<GeneralInfoProps> = (props) => {
             id="tagline"
             name="tagline"
             label="Tagline"
-            placeholder="What is the ultimate goal of the Common?"
+            placeholder={`What is the ultimate goal of the ${commonTypeText(
+              isSubCommonCreation,
+            )}?`}
             maxLength={MAX_TAGLINE_LENGTH}
           />
           <TextField

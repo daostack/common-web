@@ -30,6 +30,7 @@ interface EditStepsProps {
   currentData: UpdateGovernanceRulesData;
   setCurrentData: Dispatch<SetStateAction<UpdateGovernanceRulesData>>;
   shouldStartFromLastStep: boolean;
+  isSubCommon: boolean;
 }
 
 export default function EditSteps(props: EditStepsProps) {
@@ -44,6 +45,7 @@ export default function EditSteps(props: EditStepsProps) {
     setCurrentData,
     shouldStartFromLastStep,
     initialRules,
+    isSubCommon,
   } = props;
   const [step, setStep] = useState(() =>
     shouldStartFromLastStep ? EditStep.Review : EditStep.Rules,
@@ -129,6 +131,7 @@ export default function EditSteps(props: EditStepsProps) {
       governance,
       currentStep: step,
       onFinish: handleFinish,
+      isSubCommon,
     };
 
     switch (step) {

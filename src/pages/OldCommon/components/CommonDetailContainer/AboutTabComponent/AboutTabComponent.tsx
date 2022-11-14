@@ -55,8 +55,8 @@ export default function AboutTabComponent({
           See {shouldShowFullText ? "less <" : "more >"}
         </a>
       )}
-      <CommonWhitepaper common={common} />
-      <Rules rules={unstructuredRules} />
+      <CommonWhitepaper common={common} isSubCommon={isSubCommon} />
+      <Rules rules={unstructuredRules} isSubCommon={isSubCommon} />
       {common?.links?.length > 0 && (
         <div className="links">
           <div className="title">Links</div>

@@ -40,6 +40,7 @@ enum MyContributionsStage {
 interface MyContributionsModalProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
+  isSubCommon: boolean;
 }
 
 const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
@@ -274,6 +275,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             common={common}
             onFinish={handleOneTimeContributionFinish}
             goBack={goBackForStages || goToGeneralStage}
+            isSubCommon={Boolean(common.directParent)}
           />
         );
       case MyContributionsStage.ChangeMonthlyContribution:
@@ -289,6 +291,7 @@ const MyContributionsModal: FC<MyContributionsModalProps> = (props) => {
             common={common}
             onFinish={handleCreateMonthlyContributionFinish}
             goBack={goBackForStages || goToGeneralStage}
+            isSubCommon={Boolean(common.directParent)}
           />
         );
       case MyContributionsStage.ReplacePaymentMethod:

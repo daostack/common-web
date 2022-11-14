@@ -4,6 +4,7 @@ import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
+import { commonTypeText } from "@/shared/utils";
 import { UpdateCommonData } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { CommonImageSlider } from "./CommonImageSlider";
@@ -17,6 +18,7 @@ interface ReviewProps {
   onFinish: (data?: Partial<UpdateCommonData>) => void;
   currentData: UpdateCommonData;
   handleFormValues: (data: Partial<UpdateCommonData>) => void;
+  isSubCommonCreation: boolean;
 }
 
 export default function Review({
@@ -24,6 +26,7 @@ export default function Review({
   onFinish,
   currentData,
   handleFormValues,
+  isSubCommonCreation,
 }: ReviewProps): ReactElement {
   const {
     name: commonName,
@@ -90,7 +93,7 @@ export default function Review({
             onClick={handleContinueClick}
             shouldUseFullWidth={isMobileView}
           >
-            Update Common
+            Update {commonTypeText(isSubCommonCreation)}
           </Button>
         </div>
       </div>

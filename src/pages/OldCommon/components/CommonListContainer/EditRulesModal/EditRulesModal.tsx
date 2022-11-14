@@ -28,10 +28,11 @@ interface EditRulesModalProps {
   parentCommonId?: string;
   common: Common;
   shouldBeWithoutIntroduction?: boolean;
+  isSubCommon: boolean;
 }
 
 export default function EditRulesModal(props: EditRulesModalProps) {
-  const { governance, parentCommonId, common } = props;
+  const { governance, parentCommonId, common, isSubCommon } = props;
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -139,6 +140,7 @@ export default function EditRulesModal(props: EditRulesModalProps) {
             currentData={currentData}
             setCurrentData={setCurrentData}
             shouldStartFromLastStep={shouldStartFromLastStep}
+            isSubCommon={isSubCommon}
           />
         );
       case UpdateGovernanceStage.Confirmation:
@@ -152,6 +154,7 @@ export default function EditRulesModal(props: EditRulesModalProps) {
             currentData={currentData}
             commonId={common.id}
             initialGovernance={governance}
+            isSubCommon={isSubCommon}
           />
         );
       case UpdateGovernanceStage.Success:
@@ -162,6 +165,7 @@ export default function EditRulesModal(props: EditRulesModalProps) {
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
+            isSubCommon={isSubCommon}
           />
         ) : null;
       case UpdateGovernanceStage.Error:

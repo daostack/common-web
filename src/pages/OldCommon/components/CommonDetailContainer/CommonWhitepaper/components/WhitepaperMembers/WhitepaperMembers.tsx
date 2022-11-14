@@ -9,7 +9,11 @@ import { generateCirclesBinaryNumber } from "../../utils";
 import { getTextForAction, checkShouldRemoveAction } from "./helpers";
 import "./index.scss";
 
-export default function WhitepaperMembers() {
+interface Props {
+  isSubCommon: boolean;
+}
+
+export default function WhitepaperMembers({ isSubCommon }: Props) {
   const governance = useSelector(selectGovernance());
   const [selectedMember, setSelectedMember] = useState({
     ...governance?.circles[0],
@@ -39,7 +43,10 @@ export default function WhitepaperMembers() {
 
     const allowedProposals = Object.keys(circle?.allowedProposals || {})
       .map((proposalType) =>
-        getTextForProposalType(proposalType as keyof AllowedProposals),
+        getTextForProposalType(
+          proposalType as keyof AllowedProposals,
+          isSubCommon,
+        ),
       )
       .sort()
       .map((text, index) => (
@@ -57,7 +64,9 @@ export default function WhitepaperMembers() {
       .filter(
         (action) => !checkShouldRemoveAction(action as keyof AllowedActions),
       )
-      .map((action) => getTextForAction(action as keyof AllowedActions))
+      .map((action) =>
+        getTextForAction(action as keyof AllowedActions, isSubCommon),
+      )
       .sort()
       .map((text, index) => (
         <span key={index} className="whitepaper-members__feature-title">
@@ -98,7 +107,10 @@ export default function WhitepaperMembers() {
         }
       })
       .map((proposalType) =>
-        getTextForProposalType(proposalType as keyof AllowedProposals),
+        getTextForProposalType(
+          proposalType as keyof AllowedProposals,
+          isSubCommon,
+        ),
       )
       .sort()
       .map((proposalKey, index) => {

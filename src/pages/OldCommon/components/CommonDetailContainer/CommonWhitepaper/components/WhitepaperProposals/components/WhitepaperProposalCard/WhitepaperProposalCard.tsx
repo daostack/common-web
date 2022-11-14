@@ -12,6 +12,7 @@ interface IProps {
   proposalType: string;
   proposalData: Partial<Proposals>;
   circles?: Circles;
+  isSubCommon: boolean;
 }
 
 // TODO: temporary until we have a better way to handle this
@@ -24,6 +25,7 @@ export default function WhitepaperProposalCard({
   circles,
   proposalType,
   proposalData,
+  isSubCommon,
 }: IProps) {
   const [toggle, setToggle] = useState(false);
 
@@ -48,7 +50,9 @@ export default function WhitepaperProposalCard({
         className="whitepaper-proposal-card__top-wrapper"
         onClick={() => setToggle(!toggle)}
       >
-        <div>{getTextForProposalType(proposalType as ProposalsTypes)}</div>
+        <div>
+          {getTextForProposalType(proposalType as ProposalsTypes, isSubCommon)}
+        </div>
         <img
           src="/icons/up-arrow.svg"
           className={classNames("collapsed", { expanded: toggle })}
