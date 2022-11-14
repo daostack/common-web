@@ -14,7 +14,7 @@ const SidenavContent: FC = () => {
         <img className={styles.logo} src={logoSrc} alt="Common Logo" />
       </NavLink>
       {separatorEl}
-      <UserInfo />
+      <UserInfo userName="Yossi Mordachai" />
       {separatorEl}
       <Navigation />
       {separatorEl}

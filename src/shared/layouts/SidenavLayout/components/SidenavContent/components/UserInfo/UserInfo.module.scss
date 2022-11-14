@@ -1,27 +1,23 @@
 @import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
 
 .container {
-  --user-info-block-ph: 0.625rem;
-
-  padding: 0.875rem var(--content-ph) 0.875rem
-    calc(var(--content-ph) + var(--user-info-block-ph));
-  display: flex;
-  align-items: center;
-}
-
-.avatar {
-  width: 2.5rem;
-  height: 2.5rem;
-  margin-right: 1rem;
-  border-radius: 50%;
-}
-
-.name {
-  font-family: NunitoSans, sans-serif;
-  font-weight: 600;
-  font-size: $small;
+  position: relative;
+  padding: 0 var(--content-ph);
   color: $c-neutrals-600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.menuTransitionEnter {
+  opacity: 0;
+}
+.menuTransitionEnterActive {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+.menuTransitionExit {
+  opacity: 1;
+}
+.menuTransitionExitActive {
+  opacity: 0;
+  transition: opacity 200ms;
 }

@@ -24,7 +24,9 @@ Regular.parameters = {
 };
 Regular.decorators = [
   (Story) => (
-    <div style={{ width: "18.75rem", border: "1px solid red" }}>
+    <div
+      style={{ maxWidth: "18.75rem", width: "100%", border: "1px solid red" }}
+    >
       <Story />
     </div>
   ),

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
-import { Image } from "@/shared/components/Image";
+import { Menu, Transition } from "@headlessui/react";
+import { MenuButton, MenuItems } from "./components";
 import styles from "./UserInfo.module.scss";
 
 interface UserInfoProps {
@@ -9,17 +9,21 @@ interface UserInfoProps {
 }
 
 const UserInfo: FC<UserInfoProps> = (props) => {
-  const { avatarURL = avatarPlaceholderSrc, userName = "User" } = props;
+  const { avatarURL, userName } = props;
 
   return (
     <div className={styles.container}>
-      <Image
-        className={styles.avatar}
-        src={avatarURL}
-        alt={`${userName}'s avatar`}
-        preloaderSrc={avatarPlaceholderSrc}
-      />
-      <span className={styles.name}>Yossi Mordachai</span>
+      <Menu>
+        <MenuButton avatarURL={avatarURL} userName={userName} />
+        <Transition
+          enter={styles.menuTransitionEnter}
+          enterTo={styles.menuTransitionEnterActive}
+          leave={styles.menuTransitionExit}
+          leaveTo={styles.menuTransitionExitActive}
+        >
+          <MenuItems />
+        </Transition>
+      </Menu>
     </div>
   );
 };
