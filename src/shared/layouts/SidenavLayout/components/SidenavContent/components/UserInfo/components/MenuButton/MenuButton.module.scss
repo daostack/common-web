@@ -4,13 +4,17 @@
 .menuButton {
   width: 100%;
   margin: 0;
-  padding: 0.875rem 0 0.875rem 0.625rem;
+  padding: 0.875rem 0.625rem;
   display: flex;
   align-items: center;
   background-color: transparent;
   border: 0;
   box-sizing: border-box;
   cursor: pointer;
+
+  @include tablet {
+    padding: 0.875rem;
+  }
 }
 
 .avatar {

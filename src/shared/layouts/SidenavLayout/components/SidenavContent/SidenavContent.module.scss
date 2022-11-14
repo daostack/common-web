@@ -1,27 +1,42 @@
 @import "../../../../../constants";
+@import "../../../../../styles/sizes";
 
 .container {
-  --content-ph: 1.125rem;
+  --sidenav-content-ph: 1.125rem;
 
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  @include tablet {
+    --sidenav-content-ph: 1.25rem;
+  }
 }
 
 .logoWrapper {
   padding: 1.5rem 0 1.75rem 2.375rem;
   text-decoration: none;
+
+  @include tablet {
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .logo {
   max-width: 9.25rem;
   width: 100%;
+
+  @include tablet {
+    max-width: 6.125rem;
+  }
 }
 
 .separator {
   height: 0.0625rem;
-  margin: 0 var(--content-ph);
+  margin: 0 var(--sidenav-content-ph);
   background-color: $c-neutrals-200;
 }

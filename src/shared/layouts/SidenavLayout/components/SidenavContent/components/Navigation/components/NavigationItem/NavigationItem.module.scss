@@ -1,4 +1,5 @@
 @import "../../../../../../../../../constants";
+@import "../../../../../../../../../styles/sizes";
 
 .item {
   --item-pl: 1rem;
@@ -21,6 +22,11 @@
 
   &:hover {
     --item-bg-color: #{$c-primary-200}99;
+  }
+
+  @include tablet {
+    --item-pl: 1.5rem;
+    --item-pr: 0.5rem;
   }
 }
 .itemDisabled {
