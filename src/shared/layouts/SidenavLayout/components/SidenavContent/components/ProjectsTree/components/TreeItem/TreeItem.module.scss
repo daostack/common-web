@@ -1,0 +1,58 @@
+@import "../../../../../../../../../constants";
+
+.itemWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  --bg-color: #{$c-shades-white};
+
+  height: 2.75rem;
+  padding-left: calc(1.125rem * var(--tree-level, 1));
+  padding-right: 2rem;
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-color);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  overflow: hidden;
+
+  &:hover {
+    --bg-color: #{$c-primary-100};
+  }
+}
+.itemActive {
+  --bg-color: #{$c-primary-200}99;
+
+  &:hover {
+    --bg-color: #{$c-primary-200}99;
+  }
+}
+
+.arrowIconButton {
+  padding: 0.75rem 0.625rem 0.75rem 0;
+}
+
+.image {
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.1875rem;
+  object-fit: cover;
+}
+.imageRounded {
+  border-radius: 50%;
+}
+
+.name {
+  font-family: NunitoSans, sans-serif;
+  font-weight: 600;
+  font-size: $small;
+  color: $c-neutrals-600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
