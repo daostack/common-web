@@ -18,6 +18,7 @@ interface ChatMessageProps {
   className?: string;
   onMessageDropdownOpen?: (isOpen: boolean) => void;
   user: User | null;
+  scrollToRepliedMessage: (messageId: string) => void;
 }
 
 const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
@@ -36,6 +37,7 @@ export default function ChatMessage({
   className,
   onMessageDropdownOpen,
   user,
+  scrollToRepliedMessage,
 }: ChatMessageProps) {
   const [isEditMode, setEditMode] = useState(false);
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
@@ -44,12 +46,17 @@ export default function ChatMessage({
   const isEdited = editedAtDate > createdAtDate;
 
   const ReplyMessage = useCallback(() => {
-    if (!discussionMessage.parentMessage) {
+    if (!discussionMessage.parentMessage?.id) {
       return null;
     }
 
     return (
-      <div className="reply-message-container">
+      <div
+        onClick={() => {
+          scrollToRepliedMessage(discussionMessage.parentMessage?.id as string);
+        }}
+        className="reply-message-container"
+      >
         <div className="message-name">
           {discussionMessage.parentMessage?.ownerName}
         </div>
