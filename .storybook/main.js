@@ -12,6 +12,11 @@ module.exports = {
       files: "**/*.stories.*",
       titlePrefix: "UI Kit",
     },
+    {
+      directory: "../src/shared/layouts",
+      files: "**/*.stories.*",
+      titlePrefix: "Layouts",
+    },
     "../src/**/*.stories.@(js|jsx|ts|tsx|mdx)",
   ],
   addons: [
@@ -20,6 +25,7 @@ module.exports = {
     "@storybook/addon-interactions",
     "@storybook/preset-create-react-app",
     "@storybook/addon-a11y",
+    "@storybook/addon-viewport",
   ],
   features: {
     interactionsDebugger: true,
