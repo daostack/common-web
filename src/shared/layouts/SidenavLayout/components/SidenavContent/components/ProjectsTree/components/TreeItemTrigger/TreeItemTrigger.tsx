@@ -68,6 +68,7 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
       {!!item.notificationsAmount && (
         <span
           className={styles.notificationsAmount}
+          title={`Notifications amount: ${item.notificationsAmount}`}
           aria-label={`Notifications amount: ${item.notificationsAmount}`}
         >
           {item.notificationsAmount > 9 ? "9+" : item.notificationsAmount}
