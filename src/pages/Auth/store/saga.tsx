@@ -12,6 +12,8 @@ import { showNotification } from "@/shared/store/actions";
 import { getProvider } from "@/shared/utils/authProvider";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
 import {
+  ANONYMOUS_USER_FIRST_NAME,
+  ANONYMOUS_USER_LAST_NAME,
   AUTH_CODE_FOR_SIGN_UP,
   AuthProvider,
   AuthProviderID,
@@ -75,7 +77,10 @@ const createUser = async (
   }
 
   const splittedDisplayName = user.displayName?.split(" ") ||
-    (user.email && [user.email.split("@")[0]]) || ["Anonymous", "User"];
+    (user.email && [user.email.split("@")[0]]) || [
+      ANONYMOUS_USER_FIRST_NAME,
+      ANONYMOUS_USER_LAST_NAME,
+    ];
 
   const userPhotoUrl =
     user.photoURL || getRandomUserAvatarURL(user.displayName || user.email);
