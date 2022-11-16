@@ -51,3 +51,11 @@ ParentWithNotificationsAmount.args = {
     notificationsAmount: 2,
   },
 };
+
+export const ParentWithoutMembership = Template.bind({});
+ParentWithoutMembership.args = {
+  item: {
+    ...ITEM,
+    hasMembership: false,
+  },
+};

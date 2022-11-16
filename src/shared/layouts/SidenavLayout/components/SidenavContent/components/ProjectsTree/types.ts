@@ -3,6 +3,7 @@ export interface Item {
   image: string;
   name: string;
   path: string;
+  hasMembership?: boolean;
   notificationsAmount?: number;
   items?: Item[];
 }

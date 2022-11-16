@@ -16,6 +16,7 @@ interface TreeItemProps {
 const TreeItem: FC<TreeItemProps> = (props) => {
   const { item, level = 1, isActive = false, children } = props;
   const [isOpen, setIsOpen] = useState(false);
+  const { hasMembership = true } = item;
   const itemStyles = {
     "--tree-level": level,
   } as CSSProperties;
@@ -58,7 +59,13 @@ const TreeItem: FC<TreeItemProps> = (props) => {
           src={item.image}
           alt={`${item.name}'s image`}
         />
-        <span className={styles.name}>{item.name}</span>
+        <span
+          className={classNames(styles.name, {
+            [styles.nameWithoutMembership]: !hasMembership,
+          })}
+        >
+          {item.name}
+        </span>
         {!!item.notificationsAmount && (
           <span className={styles.notificationsAmount}>
             {item.notificationsAmount > 9 ? "9+" : item.notificationsAmount}
