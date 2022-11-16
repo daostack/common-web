@@ -59,6 +59,11 @@ const TreeItem: FC<TreeItemProps> = (props) => {
           alt={`${item.name}'s image`}
         />
         <span className={styles.name}>{item.name}</span>
+        {!!item.notificationsAmount && (
+          <span className={styles.notificationsAmount}>
+            {item.notificationsAmount > 9 ? "9+" : item.notificationsAmount}
+          </span>
+        )}
       </NavLink>
       {isOpen ? children : null}
     </div>

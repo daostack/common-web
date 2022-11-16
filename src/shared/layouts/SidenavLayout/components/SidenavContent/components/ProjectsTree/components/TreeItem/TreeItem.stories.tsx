@@ -2,7 +2,16 @@ import React from "react";
 import { MemoryRouter } from "react-router";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { ROUTE_PATHS } from "@/shared/constants";
+import { Item } from "../../types";
 import TreeItem from "./TreeItem";
+
+const ITEM: Item = {
+  id: "parent-item",
+  image:
+    "https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media",
+  name: "Clean Air",
+  path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "parent-item"),
+};
 
 export default {
   component: TreeItem,
@@ -26,17 +35,19 @@ const Template: ComponentStory<typeof TreeItem> = (args) => (
 
 export const ParentWithoutItems = Template.bind({});
 ParentWithoutItems.args = {
-  item: {
-    id: "parent-item",
-    image:
-      "https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media",
-    name: "Clean Air",
-    path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "parent-item"),
-  },
+  item: { ...ITEM },
 };
 
 export const ParentActiveWithoutItems = Template.bind({});
 ParentActiveWithoutItems.args = {
-  ...ParentWithoutItems.args,
+  item: { ...ITEM },
   isActive: true,
+};
+
+export const ParentWithNotificationsAmount = Template.bind({});
+ParentWithNotificationsAmount.args = {
+  item: {
+    ...ITEM,
+    notificationsAmount: 2,
+  },
 };

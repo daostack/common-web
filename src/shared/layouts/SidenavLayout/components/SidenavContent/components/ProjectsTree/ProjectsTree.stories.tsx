@@ -43,28 +43,64 @@ ProjectsTree.args = {
       path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "project-2"),
       items: [
         {
-          id: "project-2-nested-1",
-          name: "Project 2 Nested 1",
+          id: "project-2.1",
+          name: "Project 2.1",
           image: IMAGE_URL,
-          path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "project-2-nested-1"),
+          path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "project-2.1"),
+          notificationsAmount: 7,
           items: [
             {
-              id: "project-2-nested-1.1",
-              name: "Project 2 Nested 1.1",
+              id: "project-2.1.1",
+              name: "Project 2.1.1",
               image: IMAGE_URL,
-              path: ROUTE_PATHS.COMMON_DETAIL.replace(
-                ":id",
-                "project-2-nested-1.1",
-              ),
+              path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "project-2.1.1"),
+              items: [
+                {
+                  id: "project-2.1.1.1",
+                  name: "Project 2.1.1.1",
+                  image: IMAGE_URL,
+                  path: ROUTE_PATHS.COMMON_DETAIL.replace(
+                    ":id",
+                    "project-2.1.1.1",
+                  ),
+                },
+                {
+                  id: "project-2.1.1.2",
+                  name: "Project 2.1.1.2",
+                  image: IMAGE_URL,
+                  path: ROUTE_PATHS.COMMON_DETAIL.replace(
+                    ":id",
+                    "project-2.1.1.2",
+                  ),
+                  items: [
+                    {
+                      id: "project-2.1.1.2.1",
+                      name: "Project nested long long long",
+                      image: IMAGE_URL,
+                      path: ROUTE_PATHS.COMMON_DETAIL.replace(
+                        ":id",
+                        "project-2.1.1.2.1",
+                      ),
+                      notificationsAmount: 2,
+                    },
+                    {
+                      id: "project-2.1.1.2.2",
+                      name: "Project 2.1.1.2.2",
+                      image: IMAGE_URL,
+                      path: ROUTE_PATHS.COMMON_DETAIL.replace(
+                        ":id",
+                        "project-2.1.1.2.2",
+                      ),
+                    },
+                  ],
+                },
+              ],
             },
             {
-              id: "project-2-nested-1.2",
-              name: "Project 2 Nested 1.2",
+              id: "project-2.1.2",
+              name: "Project 2.1.2",
               image: IMAGE_URL,
-              path: ROUTE_PATHS.COMMON_DETAIL.replace(
-                ":id",
-                "project-2-nested-1.2",
-              ),
+              path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "project-2.1.2"),
             },
           ],
         },
