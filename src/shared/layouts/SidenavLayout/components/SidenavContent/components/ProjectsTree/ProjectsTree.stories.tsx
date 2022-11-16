@@ -72,6 +72,7 @@ ProjectsTree.args = {
                     ":id",
                     "project-2.1.1.2",
                   ),
+                  hasMembership: false,
                   items: [
                     {
                       id: "project-2.1.1.2.1",
@@ -82,6 +83,7 @@ ProjectsTree.args = {
                         "project-2.1.1.2.1",
                       ),
                       notificationsAmount: 2,
+                      hasMembership: false,
                     },
                     {
                       id: "project-2.1.1.2.2",
@@ -91,6 +93,7 @@ ProjectsTree.args = {
                         ":id",
                         "project-2.1.1.2.2",
                       ),
+                      hasMembership: false,
                     },
                   ],
                 },
