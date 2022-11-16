@@ -1,10 +1,6 @@
-import React, { CSSProperties, FC, MouseEventHandler, useState } from "react";
-import { NavLink } from "react-router-dom";
-import classNames from "classnames";
-import { ButtonIcon } from "@/shared/components/ButtonIcon";
-import { Image } from "@/shared/components/Image";
-import { SmallArrowIcon } from "@/shared/icons";
+import React, { CSSProperties, FC, useState } from "react";
 import { Item } from "../../types";
+import { TreeItemTrigger } from "../TreeItemTrigger";
 import styles from "./TreeItem.module.scss";
 
 interface TreeItemProps {
@@ -16,18 +12,13 @@ interface TreeItemProps {
 const TreeItem: FC<TreeItemProps> = (props) => {
   const { item, level = 1, isActive = false, children } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const { hasMembership = true } = item;
   const itemStyles = {
     "--tree-level": level,
   } as CSSProperties;
   const hasNestedContent = Boolean(children);
 
-  const onIconClick: MouseEventHandler<HTMLButtonElement> = (event) => {
-    if (hasNestedContent) {
-      event.stopPropagation();
-      event.preventDefault();
-      setIsOpen((value) => !value);
-    }
+  const handleTriggerToggle = () => {
+    setIsOpen((value) => !value);
   };
 
   return (
@@ -38,52 +29,13 @@ const TreeItem: FC<TreeItemProps> = (props) => {
       aria-selected={isActive}
       aria-label={`Item of ${item.name}`}
     >
-      <NavLink
-        className={classNames(styles.item, {
-          [styles.itemActive]: isActive,
-        })}
-        to={item.path}
-        title={item.name}
-        aria-label={`Go to ${item.name}`}
-      >
-        <ButtonIcon
-          className={classNames(styles.arrowIconButton, {
-            [styles.arrowIconButtonHidden]: !hasNestedContent,
-          })}
-          onClick={onIconClick}
-          aria-label={`${isOpen ? "Hide" : "Show"} ${item.name}'s projects`}
-          aria-hidden={!hasNestedContent}
-        >
-          <SmallArrowIcon
-            className={classNames(styles.arrowIcon, {
-              [styles.arrowIconOpen]: isOpen,
-            })}
-          />
-        </ButtonIcon>
-        <Image
-          className={classNames(styles.image, {
-            [styles.imageRounded]: level !== 1,
-          })}
-          src={item.image}
-          alt={`${item.name}'s image`}
-          aria-hidden
-        />
-        <span
-          className={classNames(styles.name, {
-            [styles.nameWithoutMembership]: !hasMembership,
-          })}
-        >
-          {item.name}
-        </span>
-        {!!item.notificationsAmount && (
-          <span
-            className={styles.notificationsAmount}
-            aria-label={`Notifications amount: ${item.notificationsAmount}`}
-          >
-            {item.notificationsAmount > 9 ? "9+" : item.notificationsAmount}
-          </span>
-        )}
-      </NavLink>
+      <TreeItemTrigger
+        item={item}
+        level={level}
+        isActive={isActive}
+        isOpen={isOpen}
+        onToggle={hasNestedContent ? handleTriggerToggle : undefined}
+      />
       {isOpen ? children : null}
     </li>
   );
