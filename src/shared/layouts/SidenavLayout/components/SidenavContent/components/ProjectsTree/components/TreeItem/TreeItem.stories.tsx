@@ -33,35 +33,35 @@ const Template: ComponentStory<typeof TreeItem> = (args) => (
   <TreeItem {...args} />
 );
 
-export const ParentWithoutItems = Template.bind({});
-ParentWithoutItems.args = {
+export const WithoutItems = Template.bind({});
+WithoutItems.args = {
   item: { ...ITEM },
 };
 
-export const ParentActiveWithoutItems = Template.bind({});
-ParentActiveWithoutItems.args = {
+export const ActiveWithoutItems = Template.bind({});
+ActiveWithoutItems.args = {
   item: { ...ITEM },
   isActive: true,
 };
 
-export const ParentWithNotificationsAmount = Template.bind({});
-ParentWithNotificationsAmount.args = {
+export const WithNotificationsAmount = Template.bind({});
+WithNotificationsAmount.args = {
   item: { ...ITEM, notificationsAmount: 2 },
 };
 
-export const ParentActiveWithNotificationsAmount = Template.bind({});
-ParentActiveWithNotificationsAmount.args = {
+export const ActiveWithNotificationsAmount = Template.bind({});
+ActiveWithNotificationsAmount.args = {
   item: { ...ITEM, notificationsAmount: 2 },
   isActive: true,
 };
 
-export const ParentWithoutMembership = Template.bind({});
-ParentWithoutMembership.args = {
+export const WithoutMembership = Template.bind({});
+WithoutMembership.args = {
   item: { ...ITEM, hasMembership: false },
 };
 
-export const ParentActiveWithoutMembership = Template.bind({});
-ParentActiveWithoutMembership.args = {
+export const ActiveWithoutMembership = Template.bind({});
+ActiveWithoutMembership.args = {
   item: { ...ITEM, hasMembership: false },
   isActive: true,
 };
