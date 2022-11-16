@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC } from "react";
+import React, { CSSProperties, FC, MouseEventHandler, useState } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { Image } from "@/shared/components/Image";
@@ -10,14 +10,22 @@ interface TreeItemProps {
   item: Item;
   level?: number;
   isActive?: boolean;
-  isOpen?: boolean;
 }
 
 const TreeItem: FC<TreeItemProps> = (props) => {
-  const { item, level = 1, isActive = false, isOpen = false, children } = props;
+  const { item, level = 1, isActive = false, children } = props;
+  const [isOpen, setIsOpen] = useState(false);
   const itemStyles = {
     "--tree-level": level,
   } as CSSProperties;
+  const hasNestedContent = Boolean(children);
+
+  const onIconClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+    if (hasNestedContent) {
+      event.stopPropagation();
+      setIsOpen((value) => !value);
+    }
+  };
 
   return (
     <div className={styles.itemWrapper} style={itemStyles}>
@@ -27,10 +35,17 @@ const TreeItem: FC<TreeItemProps> = (props) => {
         })}
       >
         <ButtonIcon
-          className={styles.arrowIconButton}
+          className={classNames(styles.arrowIconButton, {
+            [styles.arrowIconButtonHidden]: !hasNestedContent,
+          })}
+          onClick={onIconClick}
           aria-label={`${isOpen ? "Close" : "Open"} ${item.name}'s projects`}
         >
-          <SmallArrowIcon />
+          <SmallArrowIcon
+            className={classNames(styles.arrowIcon, {
+              [styles.arrowIconOpen]: isOpen,
+            })}
+          />
         </ButtonIcon>
         <Image
           className={classNames(styles.image, {
@@ -41,7 +56,7 @@ const TreeItem: FC<TreeItemProps> = (props) => {
         />
         <span className={styles.name}>{item.name}</span>
       </div>
-      {children}
+      {isOpen ? children : null}
     </div>
   );
 };

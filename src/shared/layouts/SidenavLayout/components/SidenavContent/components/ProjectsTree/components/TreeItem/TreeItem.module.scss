@@ -34,6 +34,17 @@
 .arrowIconButton {
   padding: 0.75rem 0.625rem 0.75rem 0;
 }
+.arrowIconButtonHidden {
+  visibility: hidden;
+}
+
+.arrowIcon {
+  transition: transform 0.2s;
+}
+
+.arrowIconOpen {
+  transform: rotate(90deg);
+}
 
 .image {
   flex-shrink: 0;

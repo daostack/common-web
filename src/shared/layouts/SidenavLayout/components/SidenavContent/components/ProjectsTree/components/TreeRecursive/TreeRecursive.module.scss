@@ -4,4 +4,14 @@
   display: flex;
   flex-direction: column;
   list-style-type: none;
+  animation: listCollapse 0.3s;
+
+  @keyframes listCollapse {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }

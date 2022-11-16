@@ -40,8 +40,25 @@ ProjectsTree.args = {
           id: "project-2-nested-1",
           name: "Project 2 Nested 1",
           image: IMAGE_URL,
+          items: [
+            {
+              id: "project-2-nested-1.1",
+              name: "Project 2 Nested 1.1",
+              image: IMAGE_URL,
+            },
+            {
+              id: "project-2-nested-1.2",
+              name: "Project 2 Nested 1.2",
+              image: IMAGE_URL,
+            },
+          ],
         },
       ],
+    },
+    {
+      id: "project-3",
+      name: "Project 3",
+      image: IMAGE_URL,
     },
   ],
 };
