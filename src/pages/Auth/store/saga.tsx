@@ -83,7 +83,7 @@ const createUser = async (
     ];
 
   const userPhotoUrl =
-    user.photoURL || getRandomUserAvatarURL(user.displayName || user.email);
+    user.photoURL || getRandomUserAvatarURL(splittedDisplayName.join("+"));
 
   const userPublicData: UserCreationDto = {
     firstName: splittedDisplayName[0] || "",
