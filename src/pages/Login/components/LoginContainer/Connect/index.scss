@@ -98,7 +98,7 @@
   .connect-wrapper__terms-of-use {
     font-weight: 600;
     color: $secondary-blue;
-    text-decoration: none;
+    text-decoration: underline;
   }
 
   @include big-phone {
