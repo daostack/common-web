@@ -52,6 +52,12 @@ ParentWithNotificationsAmount.args = {
   },
 };
 
+export const ParentActiveWithNotificationsAmount = Template.bind({});
+ParentActiveWithNotificationsAmount.args = {
+  item: { ...ITEM, notificationsAmount: 2 },
+  isActive: true,
+};
+
 export const ParentWithoutMembership = Template.bind({});
 ParentWithoutMembership.args = {
   item: {
