@@ -1,4 +1,5 @@
 import React, { CSSProperties, FC, MouseEventHandler, useState } from "react";
+import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { Image } from "@/shared/components/Image";
@@ -23,16 +24,18 @@ const TreeItem: FC<TreeItemProps> = (props) => {
   const onIconClick: MouseEventHandler<HTMLButtonElement> = (event) => {
     if (hasNestedContent) {
       event.stopPropagation();
+      event.preventDefault();
       setIsOpen((value) => !value);
     }
   };
 
   return (
     <div className={styles.itemWrapper} style={itemStyles}>
-      <div
+      <NavLink
         className={classNames(styles.item, {
           [styles.itemActive]: isActive,
         })}
+        to={item.path}
       >
         <ButtonIcon
           className={classNames(styles.arrowIconButton, {
@@ -55,7 +58,7 @@ const TreeItem: FC<TreeItemProps> = (props) => {
           alt={`${item.name}'s image`}
         />
         <span className={styles.name}>{item.name}</span>
-      </div>
+      </NavLink>
       {isOpen ? children : null}
     </div>
   );

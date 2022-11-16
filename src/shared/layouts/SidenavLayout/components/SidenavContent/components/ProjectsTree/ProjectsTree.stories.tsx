@@ -1,5 +1,7 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { MemoryRouter } from "react-router";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { ROUTE_PATHS } from "@/shared/constants";
 import ProjectsTreeComponent from "./ProjectsTree";
 
 const IMAGE_URL =
@@ -12,9 +14,11 @@ export default {
   },
   decorators: [
     (Story) => (
-      <div style={{ maxWidth: "18.75rem", width: "100%" }}>
-        <Story />
-      </div>
+      <MemoryRouter>
+        <div style={{ maxWidth: "18.75rem", width: "100%" }}>
+          <Story />
+        </div>
+      </MemoryRouter>
     ),
   ],
 } as ComponentMeta<typeof ProjectsTreeComponent>;
@@ -30,26 +34,37 @@ ProjectsTree.args = {
       id: "project-1",
       name: "Project 1",
       image: IMAGE_URL,
+      path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "project-1"),
     },
     {
       id: "project-2",
       name: "Project 2",
       image: IMAGE_URL,
+      path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "project-2"),
       items: [
         {
           id: "project-2-nested-1",
           name: "Project 2 Nested 1",
           image: IMAGE_URL,
+          path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "project-2-nested-1"),
           items: [
             {
               id: "project-2-nested-1.1",
               name: "Project 2 Nested 1.1",
               image: IMAGE_URL,
+              path: ROUTE_PATHS.COMMON_DETAIL.replace(
+                ":id",
+                "project-2-nested-1.1",
+              ),
             },
             {
               id: "project-2-nested-1.2",
               name: "Project 2 Nested 1.2",
               image: IMAGE_URL,
+              path: ROUTE_PATHS.COMMON_DETAIL.replace(
+                ":id",
+                "project-2-nested-1.2",
+              ),
             },
           ],
         },
@@ -59,6 +74,7 @@ ProjectsTree.args = {
       id: "project-3",
       name: "Project 3",
       image: IMAGE_URL,
+      path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "project-3"),
     },
   ],
 };
