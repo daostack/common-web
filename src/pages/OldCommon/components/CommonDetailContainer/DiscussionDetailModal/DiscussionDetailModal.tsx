@@ -37,6 +37,7 @@ interface DiscussionDetailModalProps {
   isCommonMemberFetched: boolean;
   isJoiningPending: boolean;
   governance: Governance;
+  userDiscussions: Discussion[];
 }
 
 export default function DiscussionDetailModal({
@@ -47,6 +48,7 @@ export default function DiscussionDetailModal({
   isCommonMemberFetched,
   isJoiningPending,
   governance,
+  userDiscussions,
 }: DiscussionDetailModalProps) {
   const dispatch = useDispatch();
   const date = new Date();
@@ -64,6 +66,13 @@ export default function DiscussionDetailModal({
         : null,
     [discussion],
   );
+
+  const hasAccessToDiscussion = useMemo(() => {
+    if (!discussion) {
+      return false;
+    }
+    return userDiscussions.some(({ id }) => id === discussion.id);
+  }, [userDiscussions, discussion]);
 
   useEffect(() => {
     if (discussion?.circleVisibility) {
@@ -184,6 +193,7 @@ export default function DiscussionDetailModal({
           isJoiningPending={isJoiningPending}
           isAuthorized={Boolean(user)}
           sendMessage={sendMessage}
+          hasAccess={hasAccessToDiscussion}
         />
       </div>
     </div>
