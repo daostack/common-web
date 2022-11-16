@@ -29,6 +29,7 @@ import {
   getRandomUserAvatarURL,
   isAcceptedFundsAllocationToSubCommonEvent,
   isError,
+  isRandomUserAvatarURL,
   tokenHandler,
   transformFirebaseDataSingle,
 } from "../../../shared/utils";
@@ -267,9 +268,14 @@ const updateUserData = async (user: User) => {
   } = {
     displayName: `${user.firstName} ${user.lastName}`,
   };
+  const photoURL =
+    user.photo &&
+    (isRandomUserAvatarURL(user.photo)
+      ? getRandomUserAvatarURL(profileData.displayName?.replaceAll(" ", "+"))
+      : user.photo);
 
-  if (user.photo) {
-    profileData.photoURL = user.photo;
+  if (photoURL) {
+    profileData.photoURL = photoURL;
   }
 
   await currentUser?.updateProfile(profileData);
@@ -285,7 +291,7 @@ const updateUserData = async (user: User) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        photoURL: user.photo || currentUser?.photoURL || "",
+        photoURL: updatedCurrentUser.photoURL || user.photo || "",
         intro: user.intro,
         displayName: `${user.firstName} ${user.lastName}`,
         country: user.country,
