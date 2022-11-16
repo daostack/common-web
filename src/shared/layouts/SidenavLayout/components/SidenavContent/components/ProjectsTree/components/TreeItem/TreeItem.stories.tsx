@@ -44,6 +44,18 @@ ActiveWithoutItems.args = {
   isActive: true,
 };
 
+export const Level2 = Template.bind({});
+Level2.args = {
+  item: { ...ITEM },
+  level: 2,
+};
+
+export const Level3 = Template.bind({});
+Level3.args = {
+  item: { ...ITEM },
+  level: 3,
+};
+
 export const WithNotificationsAmount = Template.bind({});
 WithNotificationsAmount.args = {
   item: { ...ITEM, notificationsAmount: 2 },
@@ -64,4 +76,17 @@ export const ActiveWithoutMembership = Template.bind({});
 ActiveWithoutMembership.args = {
   item: { ...ITEM, hasMembership: false },
   isActive: true,
+};
+
+export const WithChildren = Template.bind({});
+WithChildren.args = {
+  item: { ...ITEM },
+  children: "Children",
+};
+
+export const ActiveWithChildren = Template.bind({});
+ActiveWithChildren.args = {
+  item: { ...ITEM },
+  isActive: true,
+  children: "Children",
 };
