@@ -31,20 +31,28 @@ const TreeItem: FC<TreeItemProps> = (props) => {
   };
 
   return (
-    <div className={styles.itemWrapper} style={itemStyles}>
+    <li
+      className={styles.itemWrapper}
+      style={itemStyles}
+      role="treeitem"
+      aria-selected={isActive}
+      aria-label={`Item of ${item.name}`}
+    >
       <NavLink
         className={classNames(styles.item, {
           [styles.itemActive]: isActive,
         })}
         to={item.path}
         title={item.name}
+        aria-label={`Go to ${item.name}`}
       >
         <ButtonIcon
           className={classNames(styles.arrowIconButton, {
             [styles.arrowIconButtonHidden]: !hasNestedContent,
           })}
           onClick={onIconClick}
-          aria-label={`${isOpen ? "Close" : "Open"} ${item.name}'s projects`}
+          aria-label={`${isOpen ? "Hide" : "Show"} ${item.name}'s projects`}
+          aria-hidden={!hasNestedContent}
         >
           <SmallArrowIcon
             className={classNames(styles.arrowIcon, {
@@ -58,6 +66,7 @@ const TreeItem: FC<TreeItemProps> = (props) => {
           })}
           src={item.image}
           alt={`${item.name}'s image`}
+          aria-hidden
         />
         <span
           className={classNames(styles.name, {
@@ -67,13 +76,16 @@ const TreeItem: FC<TreeItemProps> = (props) => {
           {item.name}
         </span>
         {!!item.notificationsAmount && (
-          <span className={styles.notificationsAmount}>
+          <span
+            className={styles.notificationsAmount}
+            aria-label={`Notifications amount: ${item.notificationsAmount}`}
+          >
             {item.notificationsAmount > 9 ? "9+" : item.notificationsAmount}
           </span>
         )}
       </NavLink>
       {isOpen ? children : null}
-    </div>
+    </li>
   );
 };
 
