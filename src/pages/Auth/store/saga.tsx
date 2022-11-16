@@ -12,6 +12,8 @@ import { showNotification } from "@/shared/store/actions";
 import { getProvider } from "@/shared/utils/authProvider";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
 import {
+  ANONYMOUS_USER_FIRST_NAME,
+  ANONYMOUS_USER_LAST_NAME,
   AUTH_CODE_FOR_SIGN_UP,
   AuthProvider,
   AuthProviderID,
@@ -27,6 +29,7 @@ import {
   getRandomUserAvatarURL,
   isAcceptedFundsAllocationToSubCommonEvent,
   isError,
+  isRandomUserAvatarURL,
   tokenHandler,
   transformFirebaseDataSingle,
 } from "../../../shared/utils";
@@ -74,12 +77,14 @@ const createUser = async (
     };
   }
 
-  const splittedDisplayName = user.displayName?.split(" ") || [
-    user.email?.split("@")[0] || user.phoneNumber,
-  ];
+  const splittedDisplayName = user.displayName?.split(" ") ||
+    (user.email && [user.email.split("@")[0]]) || [
+      ANONYMOUS_USER_FIRST_NAME,
+      ANONYMOUS_USER_LAST_NAME,
+    ];
 
   const userPhotoUrl =
-    user.photoURL || getRandomUserAvatarURL(user.displayName || user.email);
+    user.photoURL || getRandomUserAvatarURL(splittedDisplayName.join("+"));
 
   const userPublicData: UserCreationDto = {
     firstName: splittedDisplayName[0] || "",
@@ -263,9 +268,14 @@ const updateUserData = async (user: User) => {
   } = {
     displayName: `${user.firstName} ${user.lastName}`,
   };
+  const photoURL =
+    user.photo &&
+    (isRandomUserAvatarURL(user.photo)
+      ? getRandomUserAvatarURL(profileData.displayName?.replaceAll(" ", "+"))
+      : user.photo);
 
-  if (user.photo) {
-    profileData.photoURL = user.photo;
+  if (photoURL) {
+    profileData.photoURL = photoURL;
   }
 
   await currentUser?.updateProfile(profileData);
@@ -281,7 +291,7 @@ const updateUserData = async (user: User) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        photoURL: user.photo || currentUser?.photoURL || "",
+        photoURL: updatedCurrentUser.photoURL || user.photo || "",
         intro: user.intro,
         displayName: `${user.firstName} ${user.lastName}`,
         country: user.country,
