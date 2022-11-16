@@ -36,6 +36,7 @@ const TreeItem: FC<TreeItemProps> = (props) => {
           [styles.itemActive]: isActive,
         })}
         to={item.path}
+        title={item.name}
       >
         <ButtonIcon
           className={classNames(styles.arrowIconButton, {
