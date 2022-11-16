@@ -42,6 +42,7 @@ interface ChatComponentInterface {
   isAuthorized?: boolean;
   sendMessage?: (text: string) => void;
   highlightedMessageId?: string | null;
+  hasAccess?: boolean;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
@@ -77,6 +78,7 @@ export default function ChatComponent({
   isAuthorized,
   sendMessage,
   highlightedMessageId: linkHighlightedMessageId,
+  hasAccess = true,
 }: ChatComponentInterface) {
   const intersectionRef = React.useRef(null);
   const replyDivRef = React.useRef(null);
@@ -254,56 +256,71 @@ export default function ChatComponent({
         className={`messages ${!dateList.length ? "empty" : ""}`}
         id={chatWrapperId}
       >
-        {dateList.map((day, dayIndex) => {
-          const date = new Date(Number(day));
+        {hasAccess ? (
+          <>
+            {dateList.map((day, dayIndex) => {
+              const date = new Date(Number(day));
 
-          return (
-            <ul id={chatId} className="message-list" key={day}>
-              <li className="date-title">
-                {isToday(date) ? "Today" : formatDate(date)}
-              </li>
-              {messages[Number(day)].map((message, messageIndex) => (
-                <ChatMessage
-                  key={message.id}
-                  user={user}
-                  discussionMessage={message}
-                  chatType={type}
-                  scrollToRepliedMessage={scrollToRepliedMessage}
-                  highlighted={message.id === highlightedMessageId}
-                  onMessageDropdownOpen={
-                    messageIndex === messages[Number(day)].length - 1
-                      ? () => {
-                          if (dayIndex === dateList.length - 1)
-                            scrollToContainerBottom();
-                        }
-                      : undefined
-                  }
-                />
-              ))}
-            </ul>
-          );
-        })}
-        {!dateList.length && !isNewMessageLoading ? (
+              return (
+                <ul id={chatId} className="message-list" key={day}>
+                  <li className="date-title">
+                    {isToday(date) ? "Today" : formatDate(date)}
+                  </li>
+                  {messages[Number(day)].map((message, messageIndex) => (
+                    <ChatMessage
+                      key={message.id}
+                      user={user}
+                      discussionMessage={message}
+                      chatType={type}
+                      scrollToRepliedMessage={scrollToRepliedMessage}
+                      highlighted={message.id === highlightedMessageId}
+                      onMessageDropdownOpen={
+                        messageIndex === messages[Number(day)].length - 1
+                          ? () => {
+                              if (dayIndex === dateList.length - 1)
+                                scrollToContainerBottom();
+                            }
+                          : undefined
+                      }
+                    />
+                  ))}
+                </ul>
+              );
+            })}
+            {!dateList.length && !isNewMessageLoading ? (
+              <EmptyTabComponent
+                currentTab="messages"
+                message={
+                  "Have any thoughts? Share them with other members by adding the first comment."
+                }
+                title="No comments yet"
+                isCommonMember={Boolean(commonMember)}
+                isCommonMemberFetched={isCommonMemberFetched}
+                isJoiningPending={isJoiningPending}
+              />
+            ) : (
+              isNewMessageLoading && (
+                <div
+                  className={classNames("new-message-loader-wrapper", {
+                    "very-first-message": !dateList.length,
+                  })}
+                >
+                  <Loader />
+                </div>
+              )
+            )}
+          </>
+        ) : (
           <EmptyTabComponent
             currentTab="messages"
             message={
-              "Have any thoughts? Share them with other members by adding the first comment."
+              "This content is private and visible only to members of the common in specific circles."
             }
-            title="No comments yet"
+            title=""
             isCommonMember={Boolean(commonMember)}
             isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
           />
-        ) : (
-          isNewMessageLoading && (
-            <div
-              className={classNames("new-message-loader-wrapper", {
-                "very-first-message": !dateList.length,
-              })}
-            >
-              <Loader />
-            </div>
-          )
         )}
       </div>
       {!isAuthorized ? (
@@ -343,7 +360,7 @@ export default function ChatComponent({
               ),
             })}
           >
-            {!commonMember ? (
+            {!commonMember || !hasAccess ? (
               <span className="text">Only members can send messages</span>
             ) : (
               <>

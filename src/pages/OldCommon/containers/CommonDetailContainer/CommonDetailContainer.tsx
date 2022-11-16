@@ -627,6 +627,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         >
           <DiscussionDetailModal
             discussion={currentDiscussion}
+            userDiscussions={userDiscussions}
             common={common}
             onOpenJoinModal={openJoinModal}
             commonMember={commonMember}
