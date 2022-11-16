@@ -46,10 +46,7 @@ ParentActiveWithoutItems.args = {
 
 export const ParentWithNotificationsAmount = Template.bind({});
 ParentWithNotificationsAmount.args = {
-  item: {
-    ...ITEM,
-    notificationsAmount: 2,
-  },
+  item: { ...ITEM, notificationsAmount: 2 },
 };
 
 export const ParentActiveWithNotificationsAmount = Template.bind({});
@@ -60,8 +57,11 @@ ParentActiveWithNotificationsAmount.args = {
 
 export const ParentWithoutMembership = Template.bind({});
 ParentWithoutMembership.args = {
-  item: {
-    ...ITEM,
-    hasMembership: false,
-  },
+  item: { ...ITEM, hasMembership: false },
+};
+
+export const ParentActiveWithoutMembership = Template.bind({});
+ParentActiveWithoutMembership.args = {
+  item: { ...ITEM, hasMembership: false },
+  isActive: true,
 };
