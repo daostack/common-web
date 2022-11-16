@@ -96,7 +96,7 @@ const LoginContainer: FC = () => {
   }, []);
 
   const handleAuthFinish = useCallback(
-    (isNewUser: boolean = false) => {
+    (isNewUser = false) => {
       removeQueryParams(QueryParamKey.AuthCode);
       setIsNewUserCreated(isNewUser);
 
