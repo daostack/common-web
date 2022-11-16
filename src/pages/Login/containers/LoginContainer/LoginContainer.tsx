@@ -56,6 +56,7 @@ const LoginContainer: FC = () => {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [stage, setStage] = useState(AuthStage.AuthMethodSelect);
   const [errorText, setErrorText] = useState("");
+  const [isNewUserCreated, setIsNewUserCreated] = useState(false);
   const {
     isShowing,
     type,
@@ -95,8 +96,9 @@ const LoginContainer: FC = () => {
   }, []);
 
   const handleAuthFinish = useCallback(
-    (isNewUser?: boolean) => {
+    (isNewUser = false) => {
       removeQueryParams(QueryParamKey.AuthCode);
+      setIsNewUserCreated(isNewUser);
 
       if (isNewUser && shouldShowUserDetailsAfterSignUp) {
         setStage(AuthStage.CompleteAccountDetails);
@@ -154,6 +156,7 @@ const LoginContainer: FC = () => {
     if (!isShowing) {
       setStage(AuthStage.AuthMethodSelect);
       setErrorText("");
+      setIsNewUserCreated(false);
     }
   }, [isShowing]);
 
@@ -206,7 +209,11 @@ const LoginContainer: FC = () => {
         );
       case AuthStage.CompleteAccountDetails:
         return user ? (
-          <UserDetailsWrapper user={user} closeModal={handleClose} />
+          <UserDetailsWrapper
+            user={user}
+            isNewUser={isNewUserCreated}
+            closeModal={handleClose}
+          />
         ) : null;
       default:
         return null;
@@ -223,6 +230,7 @@ const LoginContainer: FC = () => {
     handleAuthButtonClick,
     handleAuthFinish,
     handleError,
+    isNewUserCreated,
   ]);
 
   return (

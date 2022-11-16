@@ -12,6 +12,10 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
+import {
+  ANONYMOUS_USER_FIRST_NAME,
+  ANONYMOUS_USER_LAST_NAME,
+} from "@/shared/constants";
 import { countryList } from "../../../../../shared/assets/countries";
 import {
   Button,
@@ -53,6 +57,7 @@ export interface UserDetailsRef {
 interface UserDetailsProps {
   className?: string;
   user: User;
+  isNewUser?: boolean;
   closeModal?: () => void;
   showAuthProvider?: boolean;
   customSaveButton?: boolean;
@@ -72,12 +77,16 @@ interface FormValues {
   intro: string;
 }
 
-const getInitialValues = (user: User): FormValues => {
+const getInitialValues = (user: User, isNewUser: boolean): FormValues => {
   const names = (user.displayName || "").split(" ");
+  const isAnonymousUser =
+    isNewUser &&
+    user.firstName === ANONYMOUS_USER_FIRST_NAME &&
+    user.lastName === ANONYMOUS_USER_LAST_NAME;
 
   return {
-    firstName: user.firstName || names[0] || "",
-    lastName: user.lastName || names[1] || "",
+    firstName: (!isAnonymousUser && (user.firstName || names[0])) || "",
+    lastName: (!isAnonymousUser && (user.lastName || names[1])) || "",
     email: user.email || "",
     country: user.country || "",
     photo: user.photoURL || "",
@@ -92,6 +101,7 @@ const UserDetails: ForwardRefRenderFunction<
   const {
     className,
     user,
+    isNewUser = false,
     closeModal,
     showAuthProvider = true,
     customSaveButton = false,
@@ -208,7 +218,7 @@ const UserDetails: ForwardRefRenderFunction<
     <div className={classNames("user-details", className)}>
       <Formik
         innerRef={formRef}
-        initialValues={getInitialValues(user)}
+        initialValues={getInitialValues(user, isNewUser)}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
         validateOnMount

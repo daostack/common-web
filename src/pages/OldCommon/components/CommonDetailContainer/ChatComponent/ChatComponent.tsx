@@ -76,7 +76,7 @@ export default function ChatComponent({
   isJoiningPending,
   isAuthorized,
   sendMessage,
-  highlightedMessageId,
+  highlightedMessageId: linkHighlightedMessageId,
 }: ChatComponentInterface) {
   const intersectionRef = React.useRef(null);
   const replyDivRef = React.useRef(null);
@@ -96,6 +96,9 @@ export default function ChatComponent({
   );
 
   const [height, setHeight] = useState(0);
+  const [highlightedMessageId, setHighlightedMessageId] = useState(
+    linkHighlightedMessageId,
+  );
 
   useLayoutEffect(() => {
     setHeight(
@@ -200,6 +203,17 @@ export default function ChatComponent({
   );
   const chatInputStyle = useMemo(() => ({ minHeight: 82 + height }), [height]);
 
+  function scrollToRepliedMessage(messageId: string) {
+    scroller.scrollTo(messageId, {
+      containerId: chatWrapperId,
+      delay: 0,
+      duration: 300,
+      offset: -100,
+      smooth: true,
+    });
+    setHighlightedMessageId(messageId);
+  }
+
   const MessageReply = useCallback(() => {
     if (!discussionMessageReply) {
       return null;
@@ -254,6 +268,7 @@ export default function ChatComponent({
                   user={user}
                   discussionMessage={message}
                   chatType={type}
+                  scrollToRepliedMessage={scrollToRepliedMessage}
                   highlighted={message.id === highlightedMessageId}
                   onMessageDropdownOpen={
                     messageIndex === messages[Number(day)].length - 1

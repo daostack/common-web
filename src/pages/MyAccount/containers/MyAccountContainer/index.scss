@@ -3,9 +3,16 @@
 
 .my-account-container-wrapper {
   display: flex;
+  flex: 1;
+  margin-bottom: -#{$content-padding-bottom};
 
   .route-content {
     margin: 2.5rem 0 2.5rem 3.5rem;
+
+    @include big-phone {
+      margin: unset;
+      margin-top: 1.5rem;
+    }
   }
   .route-title {
     margin: 0;
@@ -16,16 +23,5 @@
   .route-sub-title {
     font-size: $moderate;
     font-weight: bold;
-  }
-}
-
-@include big-phone {
-  .my-account-container-wrapper {
-    flex: 1;
-
-    .route-content {
-      margin: unset;
-      margin-top: 1.5rem;
-    }
   }
 }

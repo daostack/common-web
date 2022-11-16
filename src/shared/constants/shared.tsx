@@ -95,3 +95,6 @@ export enum EntityTypes {
 }
 
 export const SIDENAV_ID = "sidenav-open";
+
+export const ANONYMOUS_USER_FIRST_NAME = "Anonymous";
+export const ANONYMOUS_USER_LAST_NAME = "User";
