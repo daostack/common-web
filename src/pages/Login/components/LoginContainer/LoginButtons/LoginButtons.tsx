@@ -6,7 +6,7 @@ import "./index.scss";
 const PROVIDERS = [
   AuthProvider.Apple,
   AuthProvider.Google,
-  AuthProvider.Facebook,
+  //TODO: Fix Facebook configuration. AuthProvider.Facebook,
   AuthProvider.Phone,
 ];
 
