@@ -74,9 +74,8 @@ const createUser = async (
     };
   }
 
-  const splittedDisplayName = user.displayName?.split(" ") || [
-    user.email?.split("@")[0] || user.phoneNumber,
-  ];
+  const splittedDisplayName = user.displayName?.split(" ") ||
+    (user.email && [user.email.split("@")[0]]) || ["Anonymous", "User"];
 
   const userPhotoUrl =
     user.photoURL || getRandomUserAvatarURL(user.displayName || user.email);
