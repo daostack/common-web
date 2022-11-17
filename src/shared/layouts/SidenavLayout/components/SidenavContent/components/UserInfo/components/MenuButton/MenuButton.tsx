@@ -1,10 +1,6 @@
 import React, { FC } from "react";
 import { Menu } from "@headlessui/react";
-import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
-import { Image } from "@/shared/components/Image";
-import { useIsTabletView } from "@/shared/hooks/viewport";
-import { RightArrowThinIcon, SmallArrowIcon } from "@/shared/icons";
-import styles from "./MenuButton.module.scss";
+import { Content } from "../Content";
 
 interface MenuButtonProps {
   avatarURL?: string;
@@ -12,22 +8,11 @@ interface MenuButtonProps {
 }
 
 const MenuButton: FC<MenuButtonProps> = (props) => {
-  const { avatarURL = avatarPlaceholderSrc, userName } = props;
-  const isTabletView = useIsTabletView();
-  const ArrowIcon = isTabletView ? RightArrowThinIcon : SmallArrowIcon;
+  const { avatarURL, userName } = props;
 
   return (
     <Menu.Button as={React.Fragment}>
-      <button className={styles.menuButton}>
-        <Image
-          className={styles.avatar}
-          src={avatarURL}
-          alt={userName ? `${userName}'s avatar` : "User's avatar"}
-          preloaderSrc={avatarPlaceholderSrc}
-        />
-        <span className={styles.name}>{userName}</span>
-        <ArrowIcon className={styles.arrowIcon} />
-      </button>
+      <Content avatarURL={avatarURL} userName={userName} />
     </Menu.Button>
   );
 };

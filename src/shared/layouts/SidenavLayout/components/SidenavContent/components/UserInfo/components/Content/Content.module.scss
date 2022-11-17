@@ -1,0 +1,49 @@
+@import "../../../../../../../../../constants";
+@import "../../../../../../../../../styles/sizes";
+
+.menuButton {
+  width: 100%;
+  margin: 0;
+  padding: 0.875rem 0.625rem;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+
+  @include tablet {
+    padding-left: 0.875rem;
+    padding-right: 0;
+  }
+}
+
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 1rem;
+  border-radius: 50%;
+}
+
+.name {
+  font-family: NunitoSans, sans-serif;
+  font-weight: 600;
+  font-size: $small;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arrowIcon {
+  margin-left: 1.5rem;
+  transform: rotate(90deg);
+  transition: rotate 0.3s;
+
+  @include tablet {
+    margin-left: auto;
+    transform: unset;
+    transition: unset;
+    color: $c-shades-black;
+  }
+}
