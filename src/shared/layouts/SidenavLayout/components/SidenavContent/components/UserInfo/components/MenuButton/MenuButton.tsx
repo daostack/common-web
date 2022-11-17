@@ -17,15 +17,17 @@ const MenuButton: FC<MenuButtonProps> = (props) => {
   const ArrowIcon = isTabletView ? RightArrowThinIcon : SmallArrowIcon;
 
   return (
-    <Menu.Button className={styles.menuButton}>
-      <Image
-        className={styles.avatar}
-        src={avatarURL}
-        alt={userName ? `${userName}'s avatar` : "User's avatar"}
-        preloaderSrc={avatarPlaceholderSrc}
-      />
-      <span className={styles.name}>{userName}</span>
-      <ArrowIcon className={styles.arrowIcon} />
+    <Menu.Button as={React.Fragment}>
+      <button className={styles.menuButton}>
+        <Image
+          className={styles.avatar}
+          src={avatarURL}
+          alt={userName ? `${userName}'s avatar` : "User's avatar"}
+          preloaderSrc={avatarPlaceholderSrc}
+        />
+        <span className={styles.name}>{userName}</span>
+        <ArrowIcon className={styles.arrowIcon} />
+      </button>
     </Menu.Button>
   );
 };
