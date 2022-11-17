@@ -1,10 +1,15 @@
 @import "../../../constants";
 
 .button {
+  --btn-h: auto;
+  --btn-pr: 0;
+  --btn-pl: 0;
   --btn-color: inherit;
   --btn-bg-color: transparent;
   --btn-border: none;
 
+  height: var(--btn-h);
+  padding: 0 var(--btn-pr) 0 var(--btn-pl);
   font-family: NunitoSans, sans-serif;
   font-size: $small;
   font-weight: normal;
@@ -48,4 +53,25 @@
     --btn-bg-color: transparent;
     --btn-border-color: #{$c-shades-neutrals-30};
   }
+}
+
+.buttonLargeSize {
+  --btn-h: 3.25rem;
+  --btn-pr: 1.5rem;
+  --btn-pl: 1.5rem;
+}
+.buttonMediumSize {
+  --btn-h: 2.75rem;
+  --btn-pr: 1.5rem;
+  --btn-pl: 1.5rem;
+}
+.buttonSmallSize {
+  --btn-h: 2.25rem;
+  --btn-pr: 1.5rem;
+  --btn-pl: 1.5rem;
+}
+.buttonXsmallSize {
+  --btn-h: 2rem;
+  --btn-pr: 1rem;
+  --btn-pl: 1rem;
 }

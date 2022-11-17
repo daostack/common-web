@@ -7,14 +7,30 @@ export enum ButtonVariant {
   OutlineBlue = "outline-blue",
 }
 
+export enum ButtonSize {
+  Large = "large",
+  Medium = "medium",
+  Small = "small",
+  Xsmall = "xsmall",
+}
+
 type ButtonProps = JSX.IntrinsicElements["button"] & {
   variant?: ButtonVariant;
+  size?: ButtonSize;
 };
 
 const Button: FC<ButtonProps> = (props) => {
-  const { variant = ButtonVariant.PrimaryPurple, ...restProps } = props;
+  const {
+    variant = ButtonVariant.PrimaryPurple,
+    size = ButtonSize.Medium,
+    ...restProps
+  } = props;
   const className = classNames(styles.button, props.className, {
     [styles.buttonOutlineBlueVariant]: variant === ButtonVariant.OutlineBlue,
+    [styles.buttonLargeSize]: size === ButtonSize.Large,
+    [styles.buttonMediumSize]: size === ButtonSize.Medium,
+    [styles.buttonSmallSize]: size === ButtonSize.Small,
+    [styles.buttonXsmallSize]: size === ButtonSize.Xsmall,
   });
 
   return (
