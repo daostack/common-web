@@ -118,6 +118,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent Regular 1`] 
               Notifications
             </span>
             <svg
+              aria-hidden={true}
               className="icon"
               fill="none"
               height="24"
