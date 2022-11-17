@@ -71,7 +71,7 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
           title={`Notifications amount: ${item.notificationsAmount}`}
           aria-label={`Notifications amount: ${item.notificationsAmount}`}
         >
-          {item.notificationsAmount > 9 ? "9+" : item.notificationsAmount}
+          {item.notificationsAmount}
         </span>
       )}
     </NavLink>
