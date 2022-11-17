@@ -40,7 +40,6 @@ exports[`Storyshots Layouts/SidenavLayout/SidenavContent Regular 1`] = `
         onClick={[Function]}
         onKeyDown={[Function]}
         onKeyUp={[Function]}
-        type="button"
       >
         <img
           alt="Yossi Mordachai's avatar"
