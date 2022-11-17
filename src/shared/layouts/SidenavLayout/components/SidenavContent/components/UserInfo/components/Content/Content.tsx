@@ -5,7 +5,7 @@ import React, {
   ReactNode,
 } from "react";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
-import { Image } from "@/shared/components";
+import { Image } from "@/shared/components/Image";
 import styles from "./Content.module.scss";
 
 interface Element {

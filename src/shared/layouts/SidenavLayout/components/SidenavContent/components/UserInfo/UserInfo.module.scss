@@ -6,18 +6,3 @@
   padding: 0 var(--sidenav-content-ph);
   color: $c-neutrals-600;
 }
-
-.menuTransitionEnter {
-  opacity: 0;
-}
-.menuTransitionEnterActive {
-  opacity: 1;
-  transition: opacity 200ms;
-}
-.menuTransitionExit {
-  opacity: 1;
-}
-.menuTransitionExitActive {
-  opacity: 0;
-  transition: opacity 200ms;
-}

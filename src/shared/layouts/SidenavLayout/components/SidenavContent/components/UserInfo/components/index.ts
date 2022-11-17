@@ -1,2 +1,1 @@
-export * from "./MenuButton";
-export * from "./MenuItems";
+export * from "./AuthenticatedContent";
