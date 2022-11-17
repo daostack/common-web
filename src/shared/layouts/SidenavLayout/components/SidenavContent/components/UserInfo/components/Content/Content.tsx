@@ -1,23 +1,29 @@
-import React, { ForwardRefRenderFunction, forwardRef, RefObject } from "react";
+import React, {
+  ForwardRefRenderFunction,
+  forwardRef,
+  RefObject,
+  ReactNode,
+} from "react";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { Image } from "@/shared/components";
-import { useIsTabletView } from "@/shared/hooks/viewport";
-import { RightArrowThinIcon, SmallArrowIcon } from "@/shared/icons";
 import styles from "./Content.module.scss";
 
 interface ContentProps {
   avatarURL?: string;
   userName?: string;
+  leftSideEl?: ReactNode;
 }
 
 const Content: ForwardRefRenderFunction<unknown, ContentProps> = (
   props,
   ref,
 ) => {
-  const { avatarURL = avatarPlaceholderSrc, userName, ...restProps } = props;
-  const isTabletView = useIsTabletView();
-  const ArrowIcon = isTabletView ? RightArrowThinIcon : SmallArrowIcon;
-
+  const {
+    avatarURL = avatarPlaceholderSrc,
+    userName,
+    leftSideEl,
+    ...restProps
+  } = props;
   return (
     <button
       ref={ref as RefObject<HTMLButtonElement>}
@@ -31,7 +37,7 @@ const Content: ForwardRefRenderFunction<unknown, ContentProps> = (
         preloaderSrc={avatarPlaceholderSrc}
       />
       <span className={styles.name}>{userName}</span>
-      <ArrowIcon className={styles.arrowIcon} />
+      {leftSideEl}
     </button>
   );
 };
