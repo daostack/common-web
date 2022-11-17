@@ -134,6 +134,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
       <span
         aria-label="Notifications amount: 2"
         className="notificationsAmount"
+        title="Notifications amount: 2"
       >
         2
       </span>
@@ -548,6 +549,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
       <span
         aria-label="Notifications amount: 2"
         className="notificationsAmount"
+        title="Notifications amount: 2"
       >
         2
       </span>
