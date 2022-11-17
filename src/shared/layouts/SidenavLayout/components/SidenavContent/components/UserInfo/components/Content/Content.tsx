@@ -1,35 +1,39 @@
 import React, {
-  ForwardRefRenderFunction,
+  ForwardedRef,
   forwardRef,
-  RefObject,
+  ReactElement,
   ReactNode,
 } from "react";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { Image } from "@/shared/components";
 import styles from "./Content.module.scss";
 
-interface ContentProps {
+interface Element {
+  button: HTMLButtonElement;
+}
+
+interface ContentProps<T> {
+  as?: T;
   avatarURL?: string;
   userName?: string;
   leftSideEl?: ReactNode;
 }
 
-const Content: ForwardRefRenderFunction<unknown, ContentProps> = (
-  props,
-  ref,
-) => {
+function Content<T extends keyof Element>(
+  props: ContentProps<T>,
+  ref: ForwardedRef<Element[T]>,
+): ReactElement {
   const {
+    as = "button",
     avatarURL = avatarPlaceholderSrc,
     userName,
     leftSideEl,
     ...restProps
   } = props;
+  const Tag = as;
+
   return (
-    <button
-      ref={ref as RefObject<HTMLButtonElement>}
-      className={styles.menuButton}
-      {...restProps}
-    >
+    <Tag ref={ref} className={styles.menuButton} {...restProps}>
       <Image
         className={styles.avatar}
         src={avatarURL}
@@ -38,8 +42,8 @@ const Content: ForwardRefRenderFunction<unknown, ContentProps> = (
       />
       <span className={styles.name}>{userName}</span>
       {leftSideEl}
-    </button>
+    </Tag>
   );
-};
+}
 
 export default forwardRef(Content);
