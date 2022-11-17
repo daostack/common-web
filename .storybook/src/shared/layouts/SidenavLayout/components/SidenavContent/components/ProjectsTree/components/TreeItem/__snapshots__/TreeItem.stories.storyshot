@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/ProjectsTree/components/TreeItem Active With Children 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Active With Children 1`] = `
 <div
   style={
     Object {
@@ -68,7 +68,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
 </div>
 `;
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/ProjectsTree/components/TreeItem Active With Notifications Amount 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Active With Notifications Amount 1`] = `
 <div
   style={
     Object {
@@ -143,7 +143,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
 </div>
 `;
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/ProjectsTree/components/TreeItem Active Without Items 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Active Without Items 1`] = `
 <div
   style={
     Object {
@@ -211,7 +211,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
 </div>
 `;
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/ProjectsTree/components/TreeItem Active Without Membership 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Active Without Membership 1`] = `
 <div
   style={
     Object {
@@ -279,7 +279,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
 </div>
 `;
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/ProjectsTree/components/TreeItem Level 2 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Level 2 1`] = `
 <div
   style={
     Object {
@@ -347,7 +347,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
 </div>
 `;
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/ProjectsTree/components/TreeItem Level 3 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Level 3 1`] = `
 <div
   style={
     Object {
@@ -415,7 +415,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
 </div>
 `;
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/ProjectsTree/components/TreeItem With Children 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/TreeItem With Children 1`] = `
 <div
   style={
     Object {
@@ -483,7 +483,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
 </div>
 `;
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/ProjectsTree/components/TreeItem With Notifications Amount 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/TreeItem With Notifications Amount 1`] = `
 <div
   style={
     Object {
@@ -558,7 +558,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
 </div>
 `;
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/ProjectsTree/components/TreeItem Without Items 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Without Items 1`] = `
 <div
   style={
     Object {
@@ -626,7 +626,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/P
 </div>
 `;
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent/components/ProjectsTree/components/TreeItem Without Membership 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Without Membership 1`] = `
 <div
   style={
     Object {
