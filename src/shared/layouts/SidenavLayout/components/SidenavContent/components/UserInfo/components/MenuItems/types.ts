@@ -8,6 +8,7 @@ export enum ItemType {
 
 interface GeneralItem {
   key: string;
+  className?: string;
   text: ReactNode;
 }
 

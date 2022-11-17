@@ -1,16 +1,22 @@
 @import "../../../../../../../../../constants";
 
 .itemsWrapper {
+  --items-br: 0.5rem;
+
   position: absolute;
   top: 100%;
   left: var(--sidenav-content-ph);
   right: var(--sidenav-content-ph);
   margin: 0;
-  padding: 0.25rem;
+  padding: 0;
   display: flex;
   flex-direction: column;
   list-style-type: none;
   background-color: $c-shades-white;
-  border-radius: 0.375rem;
-  box-shadow: 0.125rem 0.125rem 0.375rem #{$c-sidebar-shadow};
+  border-radius: var(--items-br);
+  filter: drop-shadow(0 0.25rem 0.9375rem #{$c-sidebar-user-menu-shadow});
+}
+
+.logoutItem {
+  color: $c-error-300;
 }

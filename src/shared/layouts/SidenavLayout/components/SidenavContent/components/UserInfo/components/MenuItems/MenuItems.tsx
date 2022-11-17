@@ -8,12 +8,18 @@ import styles from "./MenuItems.module.scss";
 const MenuItems: FC = () => {
   const items: Item[] = [
     {
-      key: "my-account",
-      text: "My Account",
+      key: "my-profile",
+      text: "My profile",
       to: ROUTE_PATHS.MY_ACCOUNT_PROFILE,
     },
     {
+      key: "billing",
+      text: "Billing",
+      to: ROUTE_PATHS.MY_ACCOUNT_BILLING,
+    },
+    {
       key: "log-out",
+      className: styles.logoutItem,
       type: ItemType.Button,
       text: "Log out",
       onClick: () => {
