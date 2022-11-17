@@ -1,0 +1,51 @@
+@import "../../../constants";
+
+.button {
+  --btn-color: inherit;
+  --btn-bg-color: transparent;
+  --btn-border: none;
+
+  font-family: NunitoSans, sans-serif;
+  font-size: $small;
+  font-weight: normal;
+  color: var(--btn-color);
+  text-align: center;
+  line-height: 125%;
+  background-color: var(--btn-bg-color);
+  border: var(--btn-border);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.buttonOutlineBlueVariant {
+  --btn-color: #{$c-primary-400};
+  --btn-bg-color: #{$c-primary-100};
+  --btn-border-color: #{$c-primary-400};
+  --btn-border: 0.0625rem solid var(--btn-border-color);
+
+  &:hover {
+    --btn-color: #{$c-primary-300};
+    --btn-bg-color: #{$c-hover-secondary};
+    --btn-border-color: #{$c-primary-300};
+  }
+
+  &:active {
+    --btn-color: #{$c-primary-400};
+    --btn-bg-color: #{$c-primary-200};
+    --btn-border-color: #{$c-primary-400};
+  }
+
+  &:disabled {
+    --btn-color: #{$c-shades-neutrals-30};
+    --btn-bg-color: transparent;
+    --btn-border-color: #{$c-shades-neutrals-30};
+  }
+}
