@@ -1,6 +1,8 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
+import { expect } from "@storybook/jest";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { within, userEvent } from "@storybook/testing-library";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { Item } from "../../types";
 import TreeItem from "./TreeItem";
@@ -81,7 +83,21 @@ ActiveWithoutMembership.args = {
 export const WithChildren = Template.bind({});
 WithChildren.args = {
   item: { ...ITEM },
-  children: "Children",
+  children: <div data-testid="children">Children</div>,
+};
+WithChildren.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+
+  await expect(canvas.queryByTestId("children")).not.toBeInTheDocument();
+
+  const toggleItemsButtonEl = canvas.getByLabelText(
+    "Show Clean Air's projects",
+  );
+  await userEvent.click(toggleItemsButtonEl);
+  await expect(canvas.getByTestId("children")).toBeInTheDocument();
+
+  await userEvent.click(toggleItemsButtonEl);
+  await expect(canvas.queryByTestId("children")).not.toBeInTheDocument();
 };
 
 export const ActiveWithChildren = Template.bind({});
