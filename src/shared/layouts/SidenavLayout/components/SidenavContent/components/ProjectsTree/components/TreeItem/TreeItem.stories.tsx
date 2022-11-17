@@ -16,6 +16,7 @@ const ITEM: Item = {
 };
 
 export default {
+  title: "SidenavLayout/TreeItem",
   component: TreeItem,
   parameters: {
     layout: "fullscreen",

@@ -8,6 +8,7 @@ const IMAGE_URL =
   "https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media";
 
 export default {
+  title: "SidenavLayout/ProjectsTree",
   component: ProjectsTreeComponent,
   parameters: {
     layout: "fullscreen",
