@@ -2,9 +2,10 @@
 
 .item {
   --bg-color: #{$c-shades-white};
+  --item-pl-per-level: 1.125rem;
 
   height: 2.75rem;
-  padding-left: calc(1.125rem * var(--tree-level, 1));
+  padding-left: calc(var(--item-pl-per-level) * (var(--tree-level, 1) - 1));
   padding-right: 0.875rem;
   display: flex;
   align-items: center;
@@ -28,7 +29,7 @@
 }
 
 .arrowIconButton {
-  padding: 0.75rem 0.625rem 0.75rem 0;
+  padding: 0.75rem 0.625rem 0.75rem var(--item-pl-per-level);
 }
 .arrowIconButtonHidden {
   visibility: hidden;
