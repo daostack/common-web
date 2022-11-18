@@ -2,6 +2,7 @@
 @import "../../../../../../../styles/sizes";
 
 .container {
+  flex-shrink: 0;
   position: relative;
   padding: 0 var(--sidenav-content-ph);
   color: $c-neutrals-600;

@@ -2,7 +2,8 @@ import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
 import logoSrc from "@/shared/assets/images/logo-sidenav.svg";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { Navigation, UserInfo } from "./components";
+import { Navigation, ProjectsTree, UserInfo } from "./components";
+import { ITEMS } from "./itemsMock";
 import styles from "./SidenavContent.module.scss";
 
 const SidenavContent: FC = () => {
@@ -18,6 +19,9 @@ const SidenavContent: FC = () => {
       {separatorEl}
       <Navigation />
       {separatorEl}
+      <nav className={styles.projectsTreeWrapper}>
+        <ProjectsTree items={ITEMS} />
+      </nav>
     </div>
   );
 };

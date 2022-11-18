@@ -43,6 +43,7 @@
   background-color: var(--sb-bg-color);
   box-shadow: var(--sb-shadow);
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .closeLink {

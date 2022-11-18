@@ -16,6 +16,7 @@
 }
 
 .logoWrapper {
+  flex-shrink: 0;
   padding: 1.5rem 0 1.75rem 2.375rem;
   text-decoration: none;
 
@@ -36,7 +37,16 @@
 }
 
 .separator {
+  flex-shrink: 0;
   height: 0.0625rem;
   margin: 0 var(--sidenav-content-ph);
   background-color: $c-neutrals-200;
+}
+
+.projectsTreeWrapper {
+  flex: 1;
+  padding: 1rem var(--sidenav-content-ph);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
