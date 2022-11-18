@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent Regular 1`] = `
+exports[`Storyshots Layouts/SidenavLayout/SidenavContent Regular 1`] = `
 <div
   style={
     Object {
@@ -118,6 +118,7 @@ exports[`Storyshots Layouts/SidenavLayout/components/SidenavContent Regular 1`] 
               Notifications
             </span>
             <svg
+              aria-hidden={true}
               className="icon"
               fill="none"
               height="24"

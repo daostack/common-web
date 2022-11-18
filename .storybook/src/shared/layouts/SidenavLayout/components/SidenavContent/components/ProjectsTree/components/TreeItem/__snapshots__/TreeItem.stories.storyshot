@@ -1,0 +1,695 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Active With Children 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "16.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <li
+    aria-label="Item of Clean Air"
+    aria-selected={true}
+    className="itemWrapper"
+    role="treeitem"
+    style={
+      Object {
+        "--tree-level": 1,
+      }
+    }
+  >
+    <a
+      aria-current={null}
+      aria-label="Go to Clean Air"
+      className="item itemActive"
+      href="/commons/parent-item"
+      onClick={[Function]}
+      title="Clean Air"
+    >
+      <button
+        aria-hidden={false}
+        aria-label="Show Clean Air's projects"
+        className="button-icon arrowIconButton"
+        onClick={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <img
+        alt="Clean Air's image"
+        aria-hidden={true}
+        className="image"
+        onError={[Function]}
+        src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+      />
+      <span
+        className="name"
+      >
+        Clean Air
+      </span>
+    </a>
+  </li>
+</div>
+`;
+
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Active With Notifications Amount 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "16.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <li
+    aria-label="Item of Clean Air"
+    aria-selected={true}
+    className="itemWrapper"
+    role="treeitem"
+    style={
+      Object {
+        "--tree-level": 1,
+      }
+    }
+  >
+    <a
+      aria-current={null}
+      aria-label="Go to Clean Air"
+      className="item itemActive"
+      href="/commons/parent-item"
+      onClick={[Function]}
+      title="Clean Air"
+    >
+      <button
+        aria-hidden={true}
+        aria-label="Show Clean Air's projects"
+        className="button-icon arrowIconButton arrowIconButtonHidden"
+        onClick={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <img
+        alt="Clean Air's image"
+        aria-hidden={true}
+        className="image"
+        onError={[Function]}
+        src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+      />
+      <span
+        className="name"
+      >
+        Clean Air
+      </span>
+      <span
+        aria-label="Notifications amount: 2"
+        className="notificationsAmount"
+        title="Notifications amount: 2"
+      >
+        2
+      </span>
+    </a>
+  </li>
+</div>
+`;
+
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Active Without Items 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "16.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <li
+    aria-label="Item of Clean Air"
+    aria-selected={true}
+    className="itemWrapper"
+    role="treeitem"
+    style={
+      Object {
+        "--tree-level": 1,
+      }
+    }
+  >
+    <a
+      aria-current={null}
+      aria-label="Go to Clean Air"
+      className="item itemActive"
+      href="/commons/parent-item"
+      onClick={[Function]}
+      title="Clean Air"
+    >
+      <button
+        aria-hidden={true}
+        aria-label="Show Clean Air's projects"
+        className="button-icon arrowIconButton arrowIconButtonHidden"
+        onClick={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <img
+        alt="Clean Air's image"
+        aria-hidden={true}
+        className="image"
+        onError={[Function]}
+        src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+      />
+      <span
+        className="name"
+      >
+        Clean Air
+      </span>
+    </a>
+  </li>
+</div>
+`;
+
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Active Without Membership 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "16.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <li
+    aria-label="Item of Clean Air"
+    aria-selected={true}
+    className="itemWrapper"
+    role="treeitem"
+    style={
+      Object {
+        "--tree-level": 1,
+      }
+    }
+  >
+    <a
+      aria-current={null}
+      aria-label="Go to Clean Air"
+      className="item itemActive"
+      href="/commons/parent-item"
+      onClick={[Function]}
+      title="Clean Air"
+    >
+      <button
+        aria-hidden={true}
+        aria-label="Show Clean Air's projects"
+        className="button-icon arrowIconButton arrowIconButtonHidden"
+        onClick={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <img
+        alt="Clean Air's image"
+        aria-hidden={true}
+        className="image"
+        onError={[Function]}
+        src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+      />
+      <span
+        className="name nameWithoutMembership"
+      >
+        Clean Air
+      </span>
+    </a>
+  </li>
+</div>
+`;
+
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Level 2 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "16.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <li
+    aria-label="Item of Clean Air"
+    aria-selected={false}
+    className="itemWrapper"
+    role="treeitem"
+    style={
+      Object {
+        "--tree-level": 2,
+      }
+    }
+  >
+    <a
+      aria-current={null}
+      aria-label="Go to Clean Air"
+      className="item"
+      href="/commons/parent-item"
+      onClick={[Function]}
+      title="Clean Air"
+    >
+      <button
+        aria-hidden={true}
+        aria-label="Show Clean Air's projects"
+        className="button-icon arrowIconButton arrowIconButtonHidden"
+        onClick={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <img
+        alt="Clean Air's image"
+        aria-hidden={true}
+        className="image imageRounded"
+        onError={[Function]}
+        src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+      />
+      <span
+        className="name"
+      >
+        Clean Air
+      </span>
+    </a>
+  </li>
+</div>
+`;
+
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Level 3 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "16.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <li
+    aria-label="Item of Clean Air"
+    aria-selected={false}
+    className="itemWrapper"
+    role="treeitem"
+    style={
+      Object {
+        "--tree-level": 3,
+      }
+    }
+  >
+    <a
+      aria-current={null}
+      aria-label="Go to Clean Air"
+      className="item"
+      href="/commons/parent-item"
+      onClick={[Function]}
+      title="Clean Air"
+    >
+      <button
+        aria-hidden={true}
+        aria-label="Show Clean Air's projects"
+        className="button-icon arrowIconButton arrowIconButtonHidden"
+        onClick={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <img
+        alt="Clean Air's image"
+        aria-hidden={true}
+        className="image imageRounded"
+        onError={[Function]}
+        src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+      />
+      <span
+        className="name"
+      >
+        Clean Air
+      </span>
+    </a>
+  </li>
+</div>
+`;
+
+exports[`Storyshots Layouts/SidenavLayout/TreeItem With Children 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "16.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <li
+    aria-label="Item of Clean Air"
+    aria-selected={false}
+    className="itemWrapper"
+    role="treeitem"
+    style={
+      Object {
+        "--tree-level": 1,
+      }
+    }
+  >
+    <a
+      aria-current={null}
+      aria-label="Go to Clean Air"
+      className="item"
+      href="/commons/parent-item"
+      onClick={[Function]}
+      title="Clean Air"
+    >
+      <button
+        aria-hidden={false}
+        aria-label="Show Clean Air's projects"
+        className="button-icon arrowIconButton"
+        onClick={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <img
+        alt="Clean Air's image"
+        aria-hidden={true}
+        className="image"
+        onError={[Function]}
+        src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+      />
+      <span
+        className="name"
+      >
+        Clean Air
+      </span>
+    </a>
+  </li>
+</div>
+`;
+
+exports[`Storyshots Layouts/SidenavLayout/TreeItem With Notifications Amount 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "16.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <li
+    aria-label="Item of Clean Air"
+    aria-selected={false}
+    className="itemWrapper"
+    role="treeitem"
+    style={
+      Object {
+        "--tree-level": 1,
+      }
+    }
+  >
+    <a
+      aria-current={null}
+      aria-label="Go to Clean Air"
+      className="item"
+      href="/commons/parent-item"
+      onClick={[Function]}
+      title="Clean Air"
+    >
+      <button
+        aria-hidden={true}
+        aria-label="Show Clean Air's projects"
+        className="button-icon arrowIconButton arrowIconButtonHidden"
+        onClick={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <img
+        alt="Clean Air's image"
+        aria-hidden={true}
+        className="image"
+        onError={[Function]}
+        src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+      />
+      <span
+        className="name"
+      >
+        Clean Air
+      </span>
+      <span
+        aria-label="Notifications amount: 2"
+        className="notificationsAmount"
+        title="Notifications amount: 2"
+      >
+        2
+      </span>
+    </a>
+  </li>
+</div>
+`;
+
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Without Items 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "16.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <li
+    aria-label="Item of Clean Air"
+    aria-selected={false}
+    className="itemWrapper"
+    role="treeitem"
+    style={
+      Object {
+        "--tree-level": 1,
+      }
+    }
+  >
+    <a
+      aria-current={null}
+      aria-label="Go to Clean Air"
+      className="item"
+      href="/commons/parent-item"
+      onClick={[Function]}
+      title="Clean Air"
+    >
+      <button
+        aria-hidden={true}
+        aria-label="Show Clean Air's projects"
+        className="button-icon arrowIconButton arrowIconButtonHidden"
+        onClick={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <img
+        alt="Clean Air's image"
+        aria-hidden={true}
+        className="image"
+        onError={[Function]}
+        src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+      />
+      <span
+        className="name"
+      >
+        Clean Air
+      </span>
+    </a>
+  </li>
+</div>
+`;
+
+exports[`Storyshots Layouts/SidenavLayout/TreeItem Without Membership 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "16.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <li
+    aria-label="Item of Clean Air"
+    aria-selected={false}
+    className="itemWrapper"
+    role="treeitem"
+    style={
+      Object {
+        "--tree-level": 1,
+      }
+    }
+  >
+    <a
+      aria-current={null}
+      aria-label="Go to Clean Air"
+      className="item"
+      href="/commons/parent-item"
+      onClick={[Function]}
+      title="Clean Air"
+    >
+      <button
+        aria-hidden={true}
+        aria-label="Show Clean Air's projects"
+        className="button-icon arrowIconButton arrowIconButtonHidden"
+        onClick={[Function]}
+        tabIndex={0}
+        type="button"
+      >
+        <svg
+          aria-hidden={true}
+          className="arrowIcon"
+          fill="none"
+          height="8"
+          viewBox="0 0 6 8"
+          width="6"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+      <img
+        alt="Clean Air's image"
+        aria-hidden={true}
+        className="image"
+        onError={[Function]}
+        src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+      />
+      <span
+        className="name nameWithoutMembership"
+      >
+        Clean Air
+      </span>
+    </a>
+  </li>
+</div>
+`;
