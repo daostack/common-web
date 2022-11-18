@@ -42,11 +42,3 @@
   margin: 0 var(--sidenav-content-ph);
   background-color: $c-neutrals-200;
 }
-
-.projectsTreeWrapper {
-  flex: 1;
-  padding: 1rem var(--sidenav-content-ph);
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}

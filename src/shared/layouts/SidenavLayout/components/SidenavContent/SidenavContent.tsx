@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import logoSrc from "@/shared/assets/images/logo-sidenav.svg";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { Navigation, ProjectsTree, UserInfo } from "./components";
+import { Navigation, ProjectsTree, Scrollbar, UserInfo } from "./components";
 import { ITEMS } from "./itemsMock";
 import styles from "./SidenavContent.module.scss";
 
@@ -25,9 +25,9 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
       {separatorEl}
       <Navigation />
       {separatorEl}
-      <nav className={styles.projectsTreeWrapper}>
+      <Scrollbar>
         <ProjectsTree items={ITEMS} />
-      </nav>
+      </Scrollbar>
     </div>
   );
 };
