@@ -25,6 +25,7 @@ const Scrollbar: FC<ReactScrollbarProps> = (props) => {
       trackYProps={{ className: styles.trackY }}
       thumbYProps={{ className: styles.thumbY }}
       native={false}
+      mobileNative
     />
   );
 };
