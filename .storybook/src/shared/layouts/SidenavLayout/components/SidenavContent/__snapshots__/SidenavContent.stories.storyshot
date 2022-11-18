@@ -31,7 +31,7 @@ exports[`Storyshots Layouts/SidenavLayout/SidenavContent Regular 1`] = `
     <div
       className="container"
     >
-      <button
+      <div
         className="menuButton"
       >
         <img
@@ -52,7 +52,7 @@ exports[`Storyshots Layouts/SidenavLayout/SidenavContent Regular 1`] = `
         >
           Login
         </button>
-      </button>
+      </div>
     </div>
     <div
       className="separator"
