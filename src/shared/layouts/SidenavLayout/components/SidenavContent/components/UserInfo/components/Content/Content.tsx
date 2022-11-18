@@ -10,6 +10,7 @@ import styles from "./Content.module.scss";
 
 interface Element {
   button: HTMLButtonElement;
+  div: HTMLDivElement;
 }
 
 interface ContentProps<T> {
@@ -33,6 +34,7 @@ function Content<T extends keyof Element>(
   const Tag = as;
 
   return (
+    // @ts-ignore
     <Tag ref={ref} className={styles.menuButton} {...restProps}>
       <Image
         className={styles.avatar}

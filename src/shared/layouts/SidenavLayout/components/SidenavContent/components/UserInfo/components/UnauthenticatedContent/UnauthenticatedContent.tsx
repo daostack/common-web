@@ -8,6 +8,7 @@ const UnauthenticatedContent: FC = () => (
   <Content
     avatarURL={avatarPlaceholderSrc}
     userName="Guest"
+    as="div"
     leftSideEl={
       <Button
         className={styles.loginButton}
