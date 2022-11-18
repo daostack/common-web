@@ -31,6 +31,7 @@ export enum Collection {
   Subscriptions = "subscriptions",
   Supporters = "supporters",
   Notifications = "notification",
+  BankAccountDetails = "bankAccountDetails",
 }
 
 export enum SubCollections {

@@ -1,7 +1,10 @@
-import React, { useMemo, FC } from "react";
+import React, { useMemo, FC, useEffect, useCallback } from "react";
 import classNames from "classnames";
+import { Loader } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
+import { useBankAccountDetails } from "@/shared/hooks/useCases";
 import ApprovedIcon from "@/shared/icons/approved.icon";
+import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
 import { Common, DateFormat, User } from "@/shared/models";
 import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { formatEpochTime, formatPrice, getUserName } from "@/shared/utils";
@@ -9,6 +12,7 @@ import {
   checkDeclinedProposal,
   checkPendingApprovalProposal,
 } from "../../helpers";
+import { DownloadFile } from "../DownloadFile";
 import "./index.scss";
 
 interface ProposalCardProps {
@@ -24,11 +28,52 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
   const isPendingApproval = checkPendingApprovalProposal(proposal);
   const isDeclined = checkDeclinedProposal(proposal);
   const isApproved = !isPendingApproval && !isDeclined;
-  const { payoutDocs, payoutDocsUserComment } = proposal.data.legal;
+  const { payoutDocs } = proposal.data.legal;
   const invoicesTotal = useMemo(
     () => (payoutDocs || []).reduce((acc, doc) => acc + (doc.amount || 0), 0),
     [payoutDocs],
   );
+
+  const {
+    loading: isBankAccountLoading,
+    data: bankAccountDetails,
+    fetchBankAccountDetailsByUserId,
+  } = useBankAccountDetails();
+
+  const identificationDocs = useMemo(() => {
+    if (!bankAccountDetails) {
+      return null;
+    }
+
+    const userIdPhoto =
+      bankAccountDetails?.identificationDocs.find(
+        (doc) => doc.legalType === PaymeTypeCodes.SocialId,
+      ) || null;
+    const bankDocument =
+      bankAccountDetails?.identificationDocs.find(
+        (doc) => doc.legalType === PaymeTypeCodes.BankAccountOwnership,
+      ) || null;
+
+    //TODO: Fix after BE is ready
+    const incorporationDocument =
+      bankAccountDetails?.identificationDocs.find(
+        (doc) => doc.legalType === PaymeTypeCodes.SocialId,
+      ) || null;
+
+    return {
+      userIdPhoto,
+      bankDocument,
+      incorporationDocument,
+    };
+  }, [bankAccountDetails]);
+
+  useEffect(() => {
+    if (!user?.uid) {
+      return;
+    }
+
+    fetchBankAccountDetailsByUserId(user.uid);
+  }, [user]);
 
   const containerClassName = classNames("trustee-proposal-card", {
     "trustee-proposal-card--without-action": !onClick,
@@ -48,6 +93,41 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
     },
   );
 
+  const UserDocuments = useCallback(() => {
+    if (isBankAccountLoading) {
+      return (
+        <div className="trustee-proposal-card__file-link-wrapper">
+          <Loader className="trustee-proposal-card__file-link-wrapper__loader" />
+        </div>
+      );
+    }
+
+    return (
+      <div className="trustee-proposal-card__file-link-wrapper">
+        <div className="trustee-proposal-card__file-link-wrapper__top-container">
+          {identificationDocs?.userIdPhoto?.downloadURL && (
+            <DownloadFile
+              downloadURL={identificationDocs?.userIdPhoto?.downloadURL}
+              fileName="User ID"
+            />
+          )}
+          {identificationDocs?.bankDocument?.downloadURL && (
+            <DownloadFile
+              downloadURL={identificationDocs?.bankDocument?.downloadURL}
+              fileName="Bank document"
+            />
+          )}
+        </div>
+        {identificationDocs?.incorporationDocument?.downloadURL && (
+          <DownloadFile
+            downloadURL={identificationDocs?.incorporationDocument?.downloadURL}
+            fileName="Incorporation Document"
+          />
+        )}
+      </div>
+    );
+  }, [identificationDocs, isBankAccountLoading]);
+
   return (
     <div className={containerClassName}>
       <span className={approvalDateClassName}>
@@ -64,30 +144,43 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
           {withAdditionalData && (
             <div className="trustee-proposal-card__extended-data-wrapper">
               <p className="trustee-proposal-card__extended-data">
-                Common name:{" "}
-                {common ? (
-                  <a
-                    href={ROUTE_PATHS.COMMON_DETAIL.replace(":id", common.id)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {common.name}
-                  </a>
-                ) : (
-                  "-"
-                )}
+                <span
+                  className="trustee-proposal-card__extended-data-label"
+                  style={{ fontSize: "0.8125rem" }}
+                >
+                  Common name
+                </span>
+                {common?.name || "-"}
               </p>
               <p className="trustee-proposal-card__extended-data">
-                Proposer name: {user ? getUserName(user) : "-"}
+                <span className="trustee-proposal-card__extended-data-label">
+                  Beneficiary name
+                </span>
+                {user ? getUserName(user) : "-"}
+              </p>
+              <p className="trustee-proposal-card__extended-data">
+                <span className="trustee-proposal-card__extended-data-label">
+                  ID Number
+                </span>
+                {bankAccountDetails?.socialId || "-"}
+              </p>
+              <p className="trustee-proposal-card__extended-data">
+                <span className="trustee-proposal-card__extended-data-label">
+                  Bank Account
+                </span>
+                {bankAccountDetails?.accountNumber || "-"}
+              </p>
+              <p className="trustee-proposal-card__extended-data">
+                <span
+                  className="trustee-proposal-card__extended-data-label"
+                  style={{ fontSize: "0.8125rem" }}
+                >
+                  Payment for
+                </span>
+                {proposal.data.args.title}
               </p>
             </div>
           )}
-          <h3
-            className="trustee-proposal-card__title"
-            title={proposal.data.args.title}
-          >
-            {proposal.data.args.title}
-          </h3>
           <div className="trustee-proposal-card__prices-wrapper">
             <div className={priceWrapperClassName}>
               <span>Proposal Requested</span>
@@ -102,17 +195,7 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
               </span>
             </div>
           </div>
-          <p
-            className="trustee-proposal-card__note"
-            title={payoutDocsUserComment || ""}
-          >
-            {payoutDocsUserComment && (
-              <>
-                <strong>Note: </strong>
-                {payoutDocsUserComment}
-              </>
-            )}
-          </p>
+          <UserDocuments />
         </div>
         {onClick && (
           <button

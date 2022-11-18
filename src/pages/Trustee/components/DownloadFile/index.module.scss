@@ -1,0 +1,26 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.downloadFile {
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  margin: 0.5rem 0rem;
+}
+
+.downloadFileLink {
+  text-decoration: none;
+  font-size: $xsmall;
+  color: $purple-2;
+  margin-right: 0.625rem;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  font-family: NunitoSans, sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &.active {
+    font-weight: bold;
+  }
+}
