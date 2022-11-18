@@ -26,7 +26,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
       <Navigation />
       {separatorEl}
       <Scrollbar>
-        <ProjectsTree items={ITEMS} />
+        <ProjectsTree className={styles.projectsTree} items={ITEMS} />
       </Scrollbar>
     </div>
   );
