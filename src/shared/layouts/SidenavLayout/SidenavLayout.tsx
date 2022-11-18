@@ -9,7 +9,7 @@ const SidenavLayout: FC = (props) => {
   return (
     <div className={styles.container}>
       <Sidenav>
-        <SidenavContent />
+        <SidenavContent className={styles.sidenavContent} />
       </Sidenav>
       <main className={styles.main}>{children}</main>
       <Footer />

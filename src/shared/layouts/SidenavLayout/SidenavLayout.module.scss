@@ -33,11 +33,9 @@
   }
 }
 
-.customSidenavContent {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
+.sidenavContent {
+  margin: 0 auto;
+  max-width: 25rem;
 }
 
 .main {
