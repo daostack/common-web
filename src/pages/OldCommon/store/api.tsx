@@ -608,6 +608,18 @@ export async function getBankDetails(): Promise<BankAccountDetails> {
   return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
 }
 
+export async function getBankDetailsByUserId(
+  userId: string,
+): Promise<BankAccountDetails | null> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.BankAccountDetails)
+    .where("userId", "==", userId)
+    .get();
+
+  return transformFirebaseDataList<BankAccountDetails>(result)[0];
+}
+
 export async function addBankDetails(
   requestData: AddBankDetailsPayload,
 ): Promise<BankAccountDetails> {
