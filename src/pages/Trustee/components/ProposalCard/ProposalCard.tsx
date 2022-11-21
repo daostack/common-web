@@ -53,11 +53,9 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
       bankAccountDetails?.identificationDocs.find(
         (doc) => doc.legalType === PaymeTypeCodes.BankAccountOwnership,
       ) || null;
-
-    //TODO: Fix after BE is ready
     const incorporationDocument =
       bankAccountDetails?.identificationDocs.find(
-        (doc) => doc.legalType === PaymeTypeCodes.SocialId,
+        (doc) => doc.legalType === PaymeTypeCodes.CorporateCertificate,
       ) || null;
 
     return {
