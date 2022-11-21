@@ -21,6 +21,8 @@ Page URL: `/commons/:commonId/support`
   "photoURL": "https://picsum.photos/1000/300",
   "minAmount": 3000,
   "amounts": [3000, 5000, 10000, 15000],
+  "minMonthlyAmount": 1000,
+  "monthlyAmounts": [1000, 1500, 2000, 2500],
   "displayedFields": [
     "aboutYou",
     "furtherSupportPlan",
