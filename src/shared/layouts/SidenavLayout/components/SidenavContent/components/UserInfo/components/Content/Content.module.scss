@@ -7,6 +7,7 @@
   padding: 0.875rem 0.625rem;
   display: flex;
   align-items: center;
+  color: inherit;
   background-color: transparent;
   border: 0;
   box-sizing: border-box;
@@ -33,17 +34,4 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.arrowIcon {
-  margin-left: 1.5rem;
-  transform: rotate(90deg);
-  transition: rotate 0.3s;
-
-  @include tablet {
-    margin-left: auto;
-    transform: unset;
-    transition: unset;
-    color: $c-shades-black;
-  }
 }

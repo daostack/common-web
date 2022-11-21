@@ -1,18 +1,31 @@
 @import "../../../../../../../../../../../constants";
 
 .item {
-  --item-bg-color: transparent;
+  --item-bg-color: #{$c-shades-white};
+  --item-border: 0.0625rem solid #{$c-neutrals-100};
 
-  padding: 0.5rem 1.5rem;
+  padding: 1.125rem 1.5rem;
   text-decoration: none;
   color: inherit;
   background-color: var(--item-bg-color);
-  border: 0;
-  border-radius: 0.25rem;
+  border: var(--item-border);
+  border-bottom: 0;
   font-family: NunitoSans, sans-serif;
   font-size: $small;
   text-align: left;
   cursor: pointer;
+  box-sizing: border-box;
+
+  &:first-child {
+    border-top-left-radius: var(--items-br);
+    border-top-right-radius: var(--items-br);
+  }
+
+  &:last-child {
+    border-bottom: var(--item-border);
+    border-bottom-left-radius: var(--items-br);
+    border-bottom-right-radius: var(--items-br);
+  }
 }
 .itemActive {
   --item-bg-color: #{$c-primary-200}99;

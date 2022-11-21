@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
+<div
+  className="sb-flex-column sb-align-start sb-w-max-content sb-items-mb-2"
+>
+  <button
+    className="button buttonOutlineBlueVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonOutlineBlueVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonOutlineBlueVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonOutlineBlueVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonOutlineBlueVariant buttonLargeSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonOutlineBlueVariant buttonMediumSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonOutlineBlueVariant buttonSmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonOutlineBlueVariant buttonXsmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+</div>
+`;

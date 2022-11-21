@@ -124,6 +124,8 @@
 
         "@typescript-eslint/no-empty-function": 0,
 
+        "@typescript-eslint/ban-ts-comment": 0,
+
         "no-unused-vars": "off",
         "no-misleading-character-class": "off",
         "@typescript-eslint/no-unused-vars": [

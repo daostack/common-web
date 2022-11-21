@@ -1,60 +1,43 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
 interface Return {
+  setTargetEl: (HTMLElement) => void;
   lockBodyScroll: () => void;
   unlockBodyScroll: () => void;
 }
 
-const useLockedBody = (initialLocked = false, rootId = "root"): Return => {
-  const [locked, setLocked] = useState(initialLocked);
+const useLockedBody = (isLocked?: boolean): Return => {
+  const [targetEl, setTargetEl] = useState<HTMLElement | null>(null);
 
   const lockBodyScroll = useCallback(() => {
-    setLocked(true);
-  }, []);
+    if (targetEl) {
+      disableBodyScroll(targetEl, {
+        reserveScrollBarGap: true,
+      });
+    }
+  }, [targetEl]);
 
   const unlockBodyScroll = useCallback(() => {
-    setLocked(false);
-  }, []);
+    if (targetEl) {
+      enableBodyScroll(targetEl);
+    }
+  }, [targetEl]);
 
-  // Do the side effect before render
   useLayoutEffect(() => {
-    if (!locked) {
+    if (!targetEl || !isLocked) {
       return;
     }
 
-    // Save initial body style
-    const originalOverflow = document.body.style.overflow;
-    const originalPaddingRight = document.body.style.paddingRight;
-
-    // Lock body scroll
-    document.body.style.overflow = "hidden";
-
-    // Get the scrollBar width
-    const root = document.getElementById(rootId); // or root
-    const scrollBarWidth = root ? root.offsetWidth - root.scrollWidth : 0;
-
-    // Avoid width reflow
-    if (scrollBarWidth) {
-      document.body.style.paddingRight = `${scrollBarWidth}px`;
-    }
+    lockBodyScroll();
 
     return () => {
-      document.body.style.overflow = originalOverflow;
-
-      if (scrollBarWidth) {
-        document.body.style.paddingRight = originalPaddingRight;
-      }
+      unlockBodyScroll();
     };
-  }, [locked]);
-
-  // Update state if initialValue changes
-  useEffect(() => {
-    if (locked !== initialLocked) {
-      setLocked(initialLocked);
-    }
-  }, [initialLocked]);
+  }, [targetEl, isLocked]);
 
   return {
+    setTargetEl,
     lockBodyScroll,
     unlockBodyScroll,
   };

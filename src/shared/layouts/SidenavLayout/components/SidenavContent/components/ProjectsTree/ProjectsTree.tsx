@@ -6,11 +6,12 @@ import { Item } from "./types";
 import { getItemByPath } from "./utils";
 
 interface ProjectsTreeProps {
+  className?: string;
   items: Item[];
 }
 
 const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
-  const { items } = props;
+  const { className, items } = props;
   const location = useLocation();
   const activeItem = getItemByPath(location.pathname, items);
   const contextValue = useMemo<TreeContextValue>(
@@ -22,7 +23,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
 
   return (
     <TreeContext.Provider value={contextValue}>
-      <TreeRecursive items={items} />
+      <TreeRecursive className={className} items={items} />
     </TreeContext.Provider>
   );
 };
