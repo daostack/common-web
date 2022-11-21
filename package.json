@@ -9,7 +9,6 @@
     "@storybook/addon-viewport": "^6.5.13",
     "@types/react-pdf": "^5.7.2",
     "axios": "^0.21.0",
-    "body-scroll-lock": "^4.0.0-beta.0",
     "chart.js": "^3.8.0",
     "classnames": "^2.3.1",
     "connected-react-router": "^6.8.0",

@@ -13,10 +13,10 @@ const SidenavLayout: FC = (props) => {
   const isTabletView = useIsTabletView();
   const isSidenavOpen = !isTabletView || location.hash === `#${SIDENAV_ID}`;
   const shouldLockBodyScroll = isTabletView && isSidenavOpen;
-  const { setTargetEl } = useLockedBody(shouldLockBodyScroll);
+  useLockedBody(shouldLockBodyScroll);
 
   return (
-    <div ref={setTargetEl} className={styles.container}>
+    <div className={styles.container}>
       <Sidenav>
         <SidenavContent className={styles.sidenavContent} />
       </Sidenav>
