@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import DownloadIcon from "@/shared/icons/download_2.icon";
 import { saveByURL } from "@/shared/utils";
-import styles from "./index.module.scss";
+import styles from "./DownloadFile.module.scss";
 
 interface DownloadFileProps {
   downloadURL: string;
