@@ -11,6 +11,7 @@ interface CommonHeaderProps {
   commonName: string;
   description: string;
   joinButtonText?: string;
+  onJoin?: () => void;
 }
 
 const CommonHeader: FC<CommonHeaderProps> = (props) => {
@@ -19,6 +20,7 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
     commonName,
     description,
     joinButtonText = "Join the effort",
+    onJoin,
   } = props;
   const isTabletView = useIsTabletView();
   const isJoinButtonVisible = !isTabletView;
@@ -60,6 +62,7 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
             })}
             variant={ButtonVariant.OutlineBlue}
             size={ButtonSize.Medium}
+            onClick={onJoin}
           >
             {joinButtonText}
           </Button>
