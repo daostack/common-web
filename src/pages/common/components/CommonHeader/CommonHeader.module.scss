@@ -1,0 +1,33 @@
+@import "../../../../constants";
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  color: $c-neutrals-600;
+}
+
+.header {
+  display: flex;
+}
+
+.commonImage {
+  width: 4.5rem;
+  height: 4.5rem;
+  margin-right: 1rem;
+  border-radius: 1.125rem;
+}
+
+.commonName {
+  margin: 0;
+  font-family: Lexend, sans-serif;
+  font-weight: normal;
+  font-size: $large-1;
+  line-height: 133%;
+}
+
+.description {
+  margin: 0;
+  font-size: $small;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+}

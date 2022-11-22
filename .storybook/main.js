@@ -17,6 +17,11 @@ module.exports = {
       files: "**/*.stories.*",
       titlePrefix: "Layouts",
     },
+    {
+      directory: "../src/pages",
+      files: "**/*.stories.*",
+      titlePrefix: "Pages",
+    },
     "../src/**/*.stories.@(js|jsx|ts|tsx|mdx)",
   ],
   addons: [
