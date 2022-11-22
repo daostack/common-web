@@ -3,11 +3,13 @@
 .container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   color: $c-neutrals-600;
 }
 
 .header {
   display: flex;
+  overflow: hidden;
 }
 
 .commonImage {
@@ -15,6 +17,10 @@
   height: 4.5rem;
   margin-right: 1rem;
   border-radius: 1.125rem;
+}
+
+.commonDetailsWrapper {
+  overflow: hidden;
 }
 
 .commonName {
@@ -30,4 +36,19 @@
   font-size: $small;
   line-height: 120%;
   letter-spacing: 0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.rightHalf {
+  display: flex;
+  align-items: center;
+}
+
+.joinButton {
+  margin-right: 0;
+}
+.joinButtonWithMargin {
+  margin-right: 3rem;
 }

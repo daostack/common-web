@@ -1,15 +1,36 @@
 import React, { FC } from "react";
-import { KeyValuePairs } from "./components";
+import classNames from "classnames";
+import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
+import { formatPrice } from "@/shared/utils";
+import { KeyValueItem, KeyValuePairs } from "./components";
 import styles from "./CommonHeader.module.scss";
 
 interface CommonHeaderProps {
   commonSrc: string;
   commonName: string;
   description: string;
+  joinButtonText?: string;
 }
 
 const CommonHeader: FC<CommonHeaderProps> = (props) => {
-  const { commonSrc, commonName, description } = props;
+  const {
+    commonSrc,
+    commonName,
+    description,
+    joinButtonText = "Join the effort",
+  } = props;
+  const items: KeyValueItem[] = [
+    {
+      id: "available-funds",
+      name: "Available Funds",
+      value: formatPrice(142100, { shouldMillify: false }),
+    },
+    {
+      id: "members",
+      name: "Members",
+      value: "182",
+    },
+  ];
 
   return (
     <section className={styles.container}>
@@ -19,12 +40,25 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
           src={commonSrc}
           alt={`${commonName}'s image`}
         />
-        <div>
+        <div className={styles.commonDetailsWrapper}>
           <h1 className={styles.commonName}>{commonName}</h1>
-          <p className={styles.description}>{description}</p>
+          <p className={styles.description} title={description}>
+            {description}
+          </p>
         </div>
       </header>
-      <KeyValuePairs />
+      <div className={styles.rightHalf}>
+        <Button
+          className={classNames(styles.joinButton, {
+            [styles.joinButtonWithMargin]: true,
+          })}
+          variant={ButtonVariant.OutlineBlue}
+          size={ButtonSize.Medium}
+        >
+          {joinButtonText}
+        </Button>
+        <KeyValuePairs items={items} />
+      </div>
     </section>
   );
 };
