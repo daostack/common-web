@@ -6,10 +6,11 @@
 }
 
 .key {
-  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
   font-size: $small;
   line-height: 120%;
   letter-spacing: 0.01em;
+  white-space: nowrap;
   color: $c-neutrals-300;
 }
 
