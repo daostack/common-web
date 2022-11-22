@@ -1,15 +1,26 @@
 @import "../../../../constants";
+@import "../../../../styles/sizes";
 
 .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: $c-neutrals-600;
+
+  @include tablet {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .header {
   display: flex;
   overflow: hidden;
+
+  @include tablet {
+    overflow: unset;
+  }
 }
 
 .commonImage {
@@ -17,10 +28,12 @@
   height: 4.5rem;
   margin-right: 1rem;
   border-radius: 1.125rem;
-}
 
-.commonDetailsWrapper {
-  overflow: hidden;
+  @include tablet {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.75rem;
+  }
 }
 
 .commonName {
@@ -29,6 +42,19 @@
   font-weight: normal;
   font-size: $large-1;
   line-height: 133%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  @include tablet {
+    max-width: 80%;
+    margin-bottom: 0.125rem;
+    font-size: $moderate-med;
+    line-height: 100%;
+    text-overflow: unset;
+    white-space: unset;
+    overflow: unset;
+  }
 }
 
 .description {
@@ -39,11 +65,22 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+
+  @include tablet {
+    max-width: 80%;
+    text-overflow: unset;
+    white-space: unset;
+    overflow: unset;
+  }
 }
 
 .rightHalf {
   display: flex;
   align-items: center;
+
+  @include tablet {
+    margin-top: 2rem;
+  }
 }
 
 .joinButton {
