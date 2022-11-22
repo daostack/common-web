@@ -876,9 +876,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                   onAddNewPost={addPost}
                   common={common}
                   governance={governance}
+                  commonMember={commonMember}
                   discussions={userDiscussions || []}
                   loadDiscussionDetail={getDisscussionDetail}
-                  isCommonMember={isCommonMember}
                   isCommonMemberFetched={isCommonMemberFetched}
                   isJoiningPending={isJoiningPending}
                 />
