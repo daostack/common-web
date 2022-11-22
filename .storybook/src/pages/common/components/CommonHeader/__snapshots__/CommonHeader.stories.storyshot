@@ -1,0 +1,254 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Pages/Common/Common Header With Changed Join Button Text 1`] = `
+<section
+  className="container"
+>
+  <header
+    className="header"
+  >
+    <img
+      alt="CleanAir's image"
+      className="commonImage"
+      src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+    />
+    <div>
+      <h1
+        className="commonName"
+        title="CleanAir"
+      >
+        CleanAir
+      </h1>
+      <p
+        className="description"
+        title="If you wanna save the Amazon, own it."
+      >
+        If you wanna save the Amazon, own it.
+      </p>
+    </div>
+  </header>
+  <div
+    className="rightHalf"
+  >
+    <button
+      className="button joinButton joinButtonWithMargin buttonOutlineBlueVariant buttonMediumSize"
+      tabIndex={0}
+      type="button"
+    >
+      Join the project
+    </button>
+    <dl
+      className="list"
+    >
+      <div
+        className="container item"
+      >
+        <dt
+          className="key"
+        >
+          Available Funds
+        </dt>
+        <dd
+          className="value"
+        >
+          ₪1,421
+        </dd>
+      </div>
+      <div
+        className="container item"
+      >
+        <dt
+          className="key"
+        >
+          Members
+        </dt>
+        <dd
+          className="value"
+        >
+          182
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+`;
+
+exports[`Storyshots Pages/Common/Common Header With Full Info 1`] = `
+<section
+  className="container"
+>
+  <header
+    className="header"
+  >
+    <img
+      alt="CleanAir's image"
+      className="commonImage"
+      src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+    />
+    <div>
+      <h1
+        className="commonName"
+        title="CleanAir"
+      >
+        CleanAir
+      </h1>
+      <p
+        className="description"
+        title="If you wanna save the Amazon, own it."
+      >
+        If you wanna save the Amazon, own it.
+      </p>
+    </div>
+  </header>
+  <div
+    className="rightHalf"
+  >
+    <button
+      className="button joinButton joinButtonWithMargin buttonOutlineBlueVariant buttonMediumSize"
+      tabIndex={0}
+      type="button"
+    >
+      Join the effort
+    </button>
+    <dl
+      className="list"
+    >
+      <div
+        className="container item"
+      >
+        <dt
+          className="key"
+        >
+          Available Funds
+        </dt>
+        <dd
+          className="value"
+        >
+          ₪1,421
+        </dd>
+      </div>
+      <div
+        className="container item"
+      >
+        <dt
+          className="key"
+        >
+          Members
+        </dt>
+        <dd
+          className="value"
+        >
+          182
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+`;
+
+exports[`Storyshots Pages/Common/Common Header Without Details 1`] = `
+<section
+  className="container"
+>
+  <header
+    className="header"
+  >
+    <img
+      alt="CleanAir's image"
+      className="commonImage"
+      src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+    />
+    <div>
+      <h1
+        className="commonName"
+        title="CleanAir"
+      >
+        CleanAir
+      </h1>
+      <p
+        className="description"
+        title="If you wanna save the Amazon, own it."
+      >
+        If you wanna save the Amazon, own it.
+      </p>
+    </div>
+  </header>
+  <div
+    className="rightHalf"
+  >
+    <button
+      className="button joinButton buttonOutlineBlueVariant buttonMediumSize"
+      tabIndex={0}
+      type="button"
+    >
+      Join the effort
+    </button>
+  </div>
+</section>
+`;
+
+exports[`Storyshots Pages/Common/Common Header Without Join Button 1`] = `
+<section
+  className="container"
+>
+  <header
+    className="header"
+  >
+    <img
+      alt="CleanAir's image"
+      className="commonImage"
+      src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+    />
+    <div>
+      <h1
+        className="commonName"
+        title="CleanAir"
+      >
+        CleanAir
+      </h1>
+      <p
+        className="description"
+        title="If you wanna save the Amazon, own it."
+      >
+        If you wanna save the Amazon, own it.
+      </p>
+    </div>
+  </header>
+  <div
+    className="rightHalf"
+  >
+    <dl
+      className="list"
+    >
+      <div
+        className="container item"
+      >
+        <dt
+          className="key"
+        >
+          Available Funds
+        </dt>
+        <dd
+          className="value"
+        >
+          ₪1,421
+        </dd>
+      </div>
+      <div
+        className="container item"
+      >
+        <dt
+          className="key"
+        >
+          Members
+        </dt>
+        <dd
+          className="value"
+        >
+          182
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+`;
