@@ -19,3 +19,4 @@ export * from "./circles";
 export * from "./notifications";
 export * from "./getFirebaseToken";
 export * from "./text";
+export * from "./hasPermission";
