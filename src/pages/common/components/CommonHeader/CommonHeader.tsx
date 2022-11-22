@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { KeyValuePairs } from "./components";
 import styles from "./CommonHeader.module.scss";
 
 interface CommonHeaderProps {
@@ -23,6 +24,7 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
           <p className={styles.description}>{description}</p>
         </div>
       </header>
+      <KeyValuePairs />
     </section>
   );
 };
