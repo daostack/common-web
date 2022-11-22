@@ -10,6 +10,8 @@ interface CommonHeaderProps {
   commonSrc: string;
   commonName: string;
   description: string;
+  details?: KeyValueItem[];
+  withJoin?: boolean;
   joinButtonText?: string;
   onJoin?: () => void;
 }
@@ -19,23 +21,14 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
     commonSrc,
     commonName,
     description,
+    details = [],
+    withJoin = true,
     joinButtonText = "Join the effort",
     onJoin,
   } = props;
   const isTabletView = useIsTabletView();
-  const isJoinButtonVisible = !isTabletView;
-  const items: KeyValueItem[] = [
-    {
-      id: "available-funds",
-      name: "Available Funds",
-      value: formatPrice(142100, { shouldMillify: false }),
-    },
-    {
-      id: "members",
-      name: "Members",
-      value: "182",
-    },
-  ];
+  const isJoinButtonVisible = !isTabletView && withJoin;
+  const areItemsVisible = Boolean(details && details.length > 0);
 
   return (
     <section className={styles.container}>
@@ -54,21 +47,23 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
           </p>
         </div>
       </header>
-      <div className={styles.rightHalf}>
-        {isJoinButtonVisible && (
-          <Button
-            className={classNames(styles.joinButton, {
-              [styles.joinButtonWithMargin]: true,
-            })}
-            variant={ButtonVariant.OutlineBlue}
-            size={ButtonSize.Medium}
-            onClick={onJoin}
-          >
-            {joinButtonText}
-          </Button>
-        )}
-        <KeyValuePairs items={items} />
-      </div>
+      {(isJoinButtonVisible || areItemsVisible) && (
+        <div className={styles.rightHalf}>
+          {isJoinButtonVisible && (
+            <Button
+              className={classNames(styles.joinButton, {
+                [styles.joinButtonWithMargin]: areItemsVisible,
+              })}
+              variant={ButtonVariant.OutlineBlue}
+              size={ButtonSize.Medium}
+              onClick={onJoin}
+            >
+              {joinButtonText}
+            </Button>
+          )}
+          {areItemsVisible && <KeyValuePairs items={details} />}
+        </div>
+      )}
     </section>
   );
 };
