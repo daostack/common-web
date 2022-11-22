@@ -1,6 +1,8 @@
 import React from "react";
 import { Tabs } from "@/pages/OldCommon";
-import { Common, Discussion, Governance } from "@/shared/models";
+import { GovernanceActions } from "@/shared/constants";
+import { Common, CommonMember, Discussion, Governance } from "@/shared/models";
+import { hasPermission } from "@/shared/utils";
 import { EmptyTabComponent } from "../EmptyTabContent";
 import DiscussionItemComponent from "./DiscussionItemComponent";
 import "./index.scss";
@@ -10,7 +12,7 @@ interface DiscussionsComponentProps {
   loadDiscussionDetail: (payload: Discussion) => void;
   common: Common;
   governance: Governance;
-  isCommonMember: boolean;
+  commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;
   isJoiningPending: boolean;
   onAddNewPost: () => void;
@@ -21,16 +23,22 @@ export default function DiscussionsComponent({
   loadDiscussionDetail,
   common,
   governance,
-  isCommonMember,
+  commonMember,
   isCommonMemberFetched,
   isJoiningPending,
   onAddNewPost,
 }: DiscussionsComponentProps) {
+  const isCommonMember = Boolean(commonMember);
+  const isDiscussionCreationAvailable = hasPermission({
+    commonMember,
+    key: GovernanceActions.CREATE_DISCUSSION,
+  });
+
   return (
     <>
       <div className="discussion-title-wrapper">
         <div className="title">Discussions</div>
-        {isCommonMember && (
+        {isDiscussionCreationAvailable && (
           <div className="add-button" onClick={onAddNewPost}>
             <img src="/icons/add-discussion.svg" alt="add-post" />
             <span>Add New Discussion</span>
