@@ -6,7 +6,7 @@ import { ProposalCard } from "../ProposalCard";
 import "./index.scss";
 
 const CARD_WIDTH = 384;
-const CARD_HEIGHT = 382;
+const CARD_HEIGHT = 444;
 const CARDS_V_GAP = 32;
 const CARDS_H_GAP = 24;
 
