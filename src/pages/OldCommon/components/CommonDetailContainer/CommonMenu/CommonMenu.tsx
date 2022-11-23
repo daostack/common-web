@@ -1,18 +1,18 @@
-import React, { useMemo, useRef, useState, FC } from "react";
+import React, { FC, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import {
   CreateCommonModal,
+  EditCommonModal,
   EditRulesModal,
 } from "@/pages/OldCommon/components";
-import { EditCommonModal } from "@/pages/OldCommon/components";
 import {
   ButtonLink,
   Dropdown,
   DropdownOption,
   DropdownRef,
-  Modal,
   MenuButton,
+  Modal,
 } from "@/shared/components";
 import {
   GovernanceActions,
@@ -27,6 +27,7 @@ import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
 import { Common, CommonMember, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { hasPermission } from "@/shared/utils";
 import { LeaveCommonModal } from "../LeaveCommonModal";
 import { MyContributionsModal } from "../MyContributionsModal";
 import "./index.scss";
@@ -173,7 +174,14 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
       items.push(MenuItem.EditAgenda, MenuItem.EditAgenda);
       items.push(MenuItem.EditRules, MenuItem.EditRules);
     }
-    if (!isSubCommon && circlesWithoutSubcommon.length > 0) {
+    if (
+      !isSubCommon &&
+      circlesWithoutSubcommon.length > 0 &&
+      hasPermission({
+        commonMember: currentCommonMember,
+        key: GovernanceActions.CREATE_SUBCOMMON,
+      })
+    ) {
       items.push(MenuItem.CreateProject);
     }
     if (isCommonMember) {
