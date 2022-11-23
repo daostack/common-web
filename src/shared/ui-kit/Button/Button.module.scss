@@ -20,6 +20,7 @@
   border: var(--btn-border);
   border-radius: 0.375rem;
   overflow: hidden;
+  white-space: nowrap;
   cursor: pointer;
   user-select: none;
   transition: all 0.2s;

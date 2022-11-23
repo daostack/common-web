@@ -1,0 +1,22 @@
+@import "../../../../../../styles/sizes";
+
+.list {
+  margin: 0;
+  display: flex;
+
+  @include tablet {
+    flex-wrap: wrap;
+  }
+}
+
+.item {
+  margin-right: 2.5rem;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  @include tablet {
+    margin-right: 2rem;
+  }
+}
