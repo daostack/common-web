@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import { Content, Footer, Header } from "../../components";
+import { Footer } from "@/shared/ui-kit";
+import { Content, Header } from "../../components";
 import styles from "./OldLayout.module.scss";
 
 const OldLayout: FC = (props) => {
