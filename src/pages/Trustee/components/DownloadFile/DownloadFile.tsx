@@ -5,17 +5,22 @@ import styles from "./DownloadFile.module.scss";
 
 interface DownloadFileProps {
   downloadURL: string;
+  name: string;
   fileName: string;
 }
 
-const DownloadFile: FC<DownloadFileProps> = ({ downloadURL, fileName }) => {
+const DownloadFile: FC<DownloadFileProps> = ({
+  downloadURL,
+  name,
+  fileName,
+}) => {
   const downloadFile = () => {
     saveByURL(downloadURL, fileName);
   };
 
   return (
     <div className={styles.downloadFile} onClick={downloadFile}>
-      <button className={styles.downloadFileLink}>{fileName}</button>
+      <button className={styles.downloadFileLink}>{name}</button>
       <DownloadIcon />
     </div>
   );
