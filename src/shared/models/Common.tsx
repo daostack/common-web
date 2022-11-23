@@ -1,4 +1,9 @@
 import firebase from "firebase/app";
+import { BaseEntity } from "./BaseEntity";
+import { Discussion } from "./Discussion";
+import { DiscussionMessage } from "./DiscussionMessage";
+import { Proposal } from "./Proposals";
+import { User } from "./User";
 import {
   AllowedActions,
   AllowedProposals,
@@ -6,11 +11,6 @@ import {
   CirclesMap,
 } from "./governance/Circles";
 import { Reputation } from "./governance/Reputation";
-import { BaseEntity } from "./BaseEntity";
-import { Proposal } from "./Proposals";
-import { Discussion } from "./Discussion";
-import { DiscussionMessage } from "./DiscussionMessage";
-import { User } from "./User";
 
 export interface Common extends BaseEntity {
   /**
@@ -34,6 +34,12 @@ export interface Common extends BaseEntity {
    */
   links: CommonLink[];
 
+  gallery: CommonLink[];
+
+  tags: string[];
+
+  video: CommonLink | null;
+
   /**
    * Will this common appear in the search results page
    */
@@ -41,7 +47,7 @@ export interface Common extends BaseEntity {
 
   /**
    * The currently available funds of
-   * the common in cents
+   * the common in ILS
    */
   balance: number;
 
