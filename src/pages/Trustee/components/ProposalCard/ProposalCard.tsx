@@ -100,26 +100,43 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
       );
     }
 
+    const getFileName = (
+      originalFileName: string,
+      newFileName: string,
+    ): string => `${newFileName}.${originalFileName.split(".").pop()}`;
+
     return (
       <div className="trustee-proposal-card__file-link-wrapper">
         <div className="trustee-proposal-card__file-link-wrapper__top-container">
           {identificationDocs?.userIdPhoto?.downloadURL && (
             <DownloadFile
               downloadURL={identificationDocs?.userIdPhoto?.downloadURL}
-              fileName="User ID"
+              name="User ID"
+              fileName={getFileName(
+                identificationDocs.userIdPhoto.name,
+                "User ID",
+              )}
             />
           )}
           {identificationDocs?.bankDocument?.downloadURL && (
             <DownloadFile
               downloadURL={identificationDocs?.bankDocument?.downloadURL}
-              fileName="Bank document"
+              name="Bank document"
+              fileName={getFileName(
+                identificationDocs.bankDocument.name,
+                "Bank document",
+              )}
             />
           )}
         </div>
         {identificationDocs?.incorporationDocument?.downloadURL && (
           <DownloadFile
             downloadURL={identificationDocs?.incorporationDocument?.downloadURL}
-            fileName="Incorporation Document"
+            name="Incorporation Document"
+            fileName={getFileName(
+              identificationDocs.incorporationDocument.name,
+              "Incorporation Document",
+            )}
           />
         )}
       </div>
