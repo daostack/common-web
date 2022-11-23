@@ -7,8 +7,8 @@ const FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL =
 if (!Object.values(Environment).includes(REACT_APP_ENV)) {
   throw new Error(
     `REACT_APP_ENV has invalid value "${REACT_APP_ENV}". Allowed values: "${Object.values(
-      Environment
-    ).join(", ")}"`
+      Environment,
+    ).join(", ")}"`,
   );
 }
 
@@ -76,7 +76,7 @@ const production: Configuration = {
     appId: "1:854172758045:android:e4b053ade246c6fb1e96f4",
   },
   cloudFunctionUrl: "https://us-central1-common-daostack.cloudfunctions.net",
-  deadSeaCommonId: "e5546b0d-52ef-44da-9a7d-f1104d869880",
+  deadSeaCommonId: "6cfbfae6-2e5c-4b3b-ba70-e8fd871f48e2",
   parentsForClimateCommonId: "04ac2ec2-5cb2-4ab9-ae3f-5f223f482768",
   saadiaCommonId: "7c8c8996-b678-44df-9a57-e291431eb00f",
 };
@@ -93,7 +93,7 @@ const configElement: Configuration = config[REACT_APP_ENV];
 export const FIREBASE_SHORT_DYNAMIC_LINKS_URL =
   FIREBASE_SHORT_DYNAMIC_LINKS_TEMPLATE_URL.replace(
     "api_key",
-    configElement.firebase.apiKey
+    configElement.firebase.apiKey,
   );
 
 export default configElement;
