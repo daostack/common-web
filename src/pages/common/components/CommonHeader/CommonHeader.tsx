@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { Image } from "@/shared/components/Image";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
-import { formatPrice } from "@/shared/utils";
 import { KeyValueItem, KeyValuePairs } from "./components";
 import styles from "./CommonHeader.module.scss";
 
@@ -31,16 +31,25 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
   const isTabletView = useIsTabletView();
   const isJoinButtonVisible = !isTabletView && withJoin;
   const areItemsVisible = Boolean(details && details.length > 0);
+  const commonImageClassName = classNames(styles.commonImage, {
+    [styles.commonImageRounded]: isProject,
+  });
 
   return (
     <section className={styles.container}>
       <header className={styles.header}>
-        <img
-          className={classNames(styles.commonImage, {
-            [styles.commonImageRounded]: isProject,
-          })}
+        <Image
+          className={commonImageClassName}
           src={commonSrc}
           alt={`${commonName}'s image`}
+          placeholderElement={
+            <div
+              className={classNames(
+                commonImageClassName,
+                styles.commonImagePlaceholder,
+              )}
+            />
+          }
         />
         <div>
           <h1 className={styles.commonName} title={commonName}>
