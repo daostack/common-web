@@ -35,6 +35,12 @@ WithFullInfo.args = {
   ],
 };
 
+export const ForProject = Template.bind({});
+ForProject.args = {
+  ...WithFullInfo.args,
+  isProject: true,
+};
+
 export const WithChangedJoinButtonText = Template.bind({});
 WithChangedJoinButtonText.args = {
   ...WithFullInfo.args,

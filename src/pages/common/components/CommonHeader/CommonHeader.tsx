@@ -11,6 +11,7 @@ interface CommonHeaderProps {
   commonName: string;
   description: string;
   details?: KeyValueItem[];
+  isProject?: boolean;
   withJoin?: boolean;
   joinButtonText?: string;
   onJoin?: () => void;
@@ -22,8 +23,9 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
     commonName,
     description,
     details = [],
+    isProject = false,
     withJoin = true,
-    joinButtonText = "Join the effort",
+    joinButtonText = isProject ? "Join the project" : "Join the effort",
     onJoin,
   } = props;
   const isTabletView = useIsTabletView();
@@ -34,7 +36,9 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
     <section className={styles.container}>
       <header className={styles.header}>
         <img
-          className={styles.commonImage}
+          className={classNames(styles.commonImage, {
+            [styles.commonImageRounded]: isProject,
+          })}
           src={commonSrc}
           alt={`${commonName}'s image`}
         />
