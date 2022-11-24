@@ -12,6 +12,7 @@ export enum RouteType {
 interface GeneralRouteConfiguration
   extends Pick<RouteProps, "component" | "exact"> {
   path: ROUTE_PATHS;
+  routeOptions?: Record<string, unknown>;
 }
 
 export interface PublicRouteConfiguration extends GeneralRouteConfiguration {
