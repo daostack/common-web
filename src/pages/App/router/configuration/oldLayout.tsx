@@ -2,7 +2,6 @@ import { SubmitInvoicesContainer } from "@/pages/Invoices";
 import { ContactUsContainer, LandingContainer } from "@/pages/Landing";
 import { MyAccountContainer } from "@/pages/MyAccount";
 import {
-  CommonDetailContainer,
   CommonListContainer,
   DiscussionContainer,
   DiscussionMessageContainer,
@@ -38,11 +37,6 @@ export const OLD_LAYOUT_CONFIGURATION: LayoutConfiguration<OldLayoutRouteOptions
         path: ROUTE_PATHS.COMMON_LIST,
         exact: true,
         component: CommonListContainer,
-      },
-      {
-        path: ROUTE_PATHS.COMMON_DETAIL,
-        exact: true,
-        component: CommonDetailContainer,
       },
       {
         path: ROUTE_PATHS.COMMON_SUPPORT,
