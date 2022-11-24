@@ -4,3 +4,7 @@ export {
   OnlyPublicRoute,
   useLayoutRouteContext,
 } from "./components";
+export type {
+  OldLayoutRouteOptions,
+  SidenavLayoutRouteOptions,
+} from "./configuration";
