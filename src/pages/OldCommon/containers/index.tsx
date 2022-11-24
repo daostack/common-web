@@ -1,4 +1,3 @@
-export * from "./CommoContainer";
 export * from "./CommonListContainer";
 export * from "./CommonDetailContainer";
 export * from "./ProposalContainer";

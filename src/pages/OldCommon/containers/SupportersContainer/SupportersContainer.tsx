@@ -209,34 +209,36 @@ const SupportersContainer = () => {
   }
 
   return (
-    <div
-      className={classNames("supporters-page", {
-        "supporters-page--rtl": isRtlLanguage,
-      })}
-    >
-      {!common && <p>Couldn’t find common with id = "{commonId}"</p>}
-      {common && !supportersData && (
-        <p>Supporters flow is not supported by common "{common.name}".</p>
-      )}
-      {common && supportersData && currentTranslation && (
-        <div className="supporters-page__content">
-          {(!isMobileView || step !== SupportersStep.Welcome) && (
-            <div className="supporters-page__main-image-wrapper">
-              <img
-                className="supporters-page__main-image"
-                src={supportersData.photoURL}
-                alt={currentTranslation.title}
-              />
-            </div>
-          )}
-          <SupportersDataContext.Provider value={contextValue}>
-            {renderContent()}
-          </SupportersDataContext.Provider>
-          {shouldShowLanguageDropdown && (
-            <LanguageDropdown className="supporters-page__language-dropdown" />
-          )}
-        </div>
-      )}
+    <div>
+      <div
+        className={classNames("supporters-page", {
+          "supporters-page--rtl": isRtlLanguage,
+        })}
+      >
+        {!common && <p>Couldn’t find common with id = "{commonId}"</p>}
+        {common && !supportersData && (
+          <p>Supporters flow is not supported by common "{common.name}".</p>
+        )}
+        {common && supportersData && currentTranslation && (
+          <div className="supporters-page__content">
+            {(!isMobileView || step !== SupportersStep.Welcome) && (
+              <div className="supporters-page__main-image-wrapper">
+                <img
+                  className="supporters-page__main-image"
+                  src={supportersData.photoURL}
+                  alt={currentTranslation.title}
+                />
+              </div>
+            )}
+            <SupportersDataContext.Provider value={contextValue}>
+              {renderContent()}
+            </SupportersDataContext.Provider>
+            {shouldShowLanguageDropdown && (
+              <LanguageDropdown className="supporters-page__language-dropdown" />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

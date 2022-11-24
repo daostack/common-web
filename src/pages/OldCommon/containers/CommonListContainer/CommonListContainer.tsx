@@ -85,35 +85,40 @@ export default function CommonListContainer() {
 
   // See https://github.com/daostack/common-monorepo/issues/691 - the field might change in the new DB
   return (
-    <div className="content-element common-list-wrapper">
-      <div className="title-wrapper">
-        <h1 className="page-title">Featured Commons</h1>
-        <CreateCommonButton onClick={onOpen} />
-      </div>
-      {loading && <Loader />}
-      <div className="common-list">
-        {currentCommons.map((c) => (
-          <CommonListItem common={c} key={c.id} />
-        ))}
-      </div>
-
-      {commons.length !== currentCommons.length && (
-        <div className="loader-container">
-          {page < 3 && !loaderHack ? <div ref={loader} /> : null}
-          {loaderHack ? <Loader /> : null}
-          {page >= 3 && !loaderHack ? (
-            <div className="loading-btn button-blue" onClick={() => loadHack()}>
-              Load more Commons
-            </div>
-          ) : null}
+    <div>
+      <div className="content-element common-list-wrapper">
+        <div className="title-wrapper">
+          <h1 className="page-title">Featured Commons</h1>
+          <CreateCommonButton onClick={onOpen} />
         </div>
-      )}
+        {loading && <Loader />}
+        <div className="common-list">
+          {currentCommons.map((c) => (
+            <CommonListItem common={c} key={c.id} />
+          ))}
+        </div>
 
-      <CreateCommonModal
-        isShowing={isModalOpen}
-        onClose={onClose}
-        isSubCommonCreation={false}
-      />
+        {commons.length !== currentCommons.length && (
+          <div className="loader-container">
+            {page < 3 && !loaderHack ? <div ref={loader} /> : null}
+            {loaderHack ? <Loader /> : null}
+            {page >= 3 && !loaderHack ? (
+              <div
+                className="loading-btn button-blue"
+                onClick={() => loadHack()}
+              >
+                Load more Commons
+              </div>
+            ) : null}
+          </div>
+        )}
+
+        <CreateCommonModal
+          isShowing={isModalOpen}
+          onClose={onClose}
+          isSubCommonCreation={false}
+        />
+      </div>
     </div>
   );
 }

@@ -606,7 +606,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   }
 
   return (
-    <>
+    <div>
       {isShowing && (
         <Modal
           isShowing={isShowing}
@@ -940,6 +940,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
