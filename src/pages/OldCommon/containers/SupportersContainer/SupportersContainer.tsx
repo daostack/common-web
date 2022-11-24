@@ -6,12 +6,7 @@ import { setLoginModalState } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LanguageDropdown, Loader } from "@/shared/components";
 import { ContributionType, ScreenSize } from "@/shared/constants";
-import {
-  useFooter,
-  useHeader,
-  useLanguage,
-  useQueryParams,
-} from "@/shared/hooks";
+import { useHeader, useLanguage, useQueryParams } from "@/shared/hooks";
 import { useCommon, useSupportersData } from "@/shared/hooks/useCases";
 import {
   getScreenSize,
@@ -40,7 +35,6 @@ const SupportersContainer = () => {
   const { id: commonId } = useParams<SupportersContainerRouterParams>();
   const dispatch = useDispatch();
   const { updateHeaderState } = useHeader();
-  const { updateFooterState } = useFooter();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
   const {
     data: supportersData,
@@ -114,9 +108,6 @@ const SupportersContainer = () => {
     fetchSupportersData(commonId);
     updateHeaderState({
       shouldHideHeader: true,
-    });
-    updateFooterState({
-      shouldHideFooter: true,
     });
   }, [commonId]);
 
