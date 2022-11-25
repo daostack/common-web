@@ -25,7 +25,6 @@ import {
   authentificated,
   selectUser,
 } from "../../../pages/Auth/store/selectors";
-import { LoginContainer } from "../../../pages/Login/containers/LoginContainer";
 import {
   ApiEndpoint,
   HEADER_MOBILE_SCREEN_SIZE,
@@ -201,7 +200,7 @@ const Header = () => {
   });
 
   if (shouldHideHeader) {
-    return <LoginContainer />;
+    return null;
   }
 
   return (
@@ -247,7 +246,6 @@ const Header = () => {
           {showMenu && <div className="menu-wrapper">{links}</div>}
         </>
       )}
-      <LoginContainer />
     </section>
   );
 };

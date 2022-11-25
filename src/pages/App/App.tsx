@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Router as ReactRouter } from "react-router";
+import { LoginContainer } from "@/pages/Login/containers/LoginContainer";
+import { history } from "@/shared/appConfig";
 import {
   BackgroundNotificationModal,
   TutorialModal,
@@ -23,13 +26,14 @@ const App = () => {
   }, [dispatch, isDesktop]);
 
   return (
-    <>
+    <ReactRouter history={history}>
       <BackgroundNotificationModal />
       <TutorialModal isShowing={tutorialModalState.isShowing} />
       <TextDirectionHandler />
       <WebViewLoginHandler />
+      <LoginContainer />
       <Router />
-    </>
+    </ReactRouter>
   );
 };
 
