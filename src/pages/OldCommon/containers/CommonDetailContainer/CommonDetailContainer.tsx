@@ -42,7 +42,7 @@ import {
 } from "@/shared/utils";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { LoginModalType } from "../../../Auth/interface";
-import { authentificated, selectUser } from "../../../Auth/store/selectors";
+import { selectUser } from "../../../Auth/store/selectors";
 import {
   AboutTabComponent,
   PreviewInformationList,
@@ -178,7 +178,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
   const screenSize = useSelector(getScreenSize());
-  const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const activeTab = useSelector(selectCommonActiveTab());
   const {
@@ -765,12 +764,14 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       className={`tab-item ${tab === t.key ? "active" : ""}`}
                       onClick={() => changeTabHandler(t.key)}
                     >
-                      <img
-                        src={`/icons/common-icons/${t.icon}${
-                          tab === t.key ? "-active" : ""
-                        }.svg`}
-                        alt={t.name}
-                      />
+                      {isMobileView && (
+                        <img
+                          src={`/icons/common-icons/${t.icon}${
+                            tab === t.key ? "-active" : ""
+                          }.svg`}
+                          alt={t.name}
+                        />
+                      )}
                       {t.name}
                     </div>
                   ))}
