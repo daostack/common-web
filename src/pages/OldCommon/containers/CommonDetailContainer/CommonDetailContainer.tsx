@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
-import { setLoginModalState } from "@/pages/Auth/store/actions";
 import {
   GlobalLoader,
   Loader,
@@ -563,17 +562,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     setStickyClass,
     joinEffortRef,
   ]);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      dispatch(
-        setLoginModalState({
-          isShowing: true,
-          canCloseModal: false,
-        }),
-      );
-    }
-  }, [isAuthenticated, dispatch]);
 
   useEffect(() => {
     if (inViewPortFooter) {
