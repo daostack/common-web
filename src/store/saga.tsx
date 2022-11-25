@@ -4,8 +4,16 @@ import { landingSaga } from "../pages/Landing/store";
 import { commonsSaga } from "../pages/OldCommon/store";
 import { trusteeSaga } from "../pages/Trustee/store";
 import { saga } from "../shared/store";
+import { projectsSaga } from "./states";
 
-const allSagas = [authSaga, commonsSaga, trusteeSaga, landingSaga, saga];
+const allSagas = [
+  authSaga,
+  commonsSaga,
+  trusteeSaga,
+  landingSaga,
+  projectsSaga,
+  saga,
+];
 
 export default function* appSagas() {
   yield all(allSagas.map(fork));
