@@ -5,7 +5,7 @@ import React, {
   ReactNode,
 } from "react";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
-import { Image } from "@/shared/components/Image";
+import { UserAvatar } from "@/shared/components/UserAvatar";
 import styles from "./Content.module.scss";
 
 interface Element {
@@ -36,10 +36,10 @@ function Content<T extends keyof Element>(
   return (
     // @ts-ignore
     <Tag ref={ref} className={styles.menuButton} {...restProps}>
-      <Image
+      <UserAvatar
         className={styles.avatar}
-        src={avatarURL}
-        alt={userName ? `${userName}'s avatar` : "User's avatar"}
+        photoURL={avatarURL}
+        userName={userName}
         preloaderSrc={avatarPlaceholderSrc}
       />
       <span className={styles.name}>{userName}</span>
