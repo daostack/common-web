@@ -1,3 +1,4 @@
+export * from "./useAllViews";
 export * from "./useIsDesktopView";
 export * from "./useIsLaptopView";
 export * from "./useIsPhoneOrientedView";

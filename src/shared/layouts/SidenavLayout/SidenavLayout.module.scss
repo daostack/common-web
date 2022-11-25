@@ -34,6 +34,9 @@
     --sb-content-pb: unset;
   }
 }
+.containerWithoutFooter {
+  --sb-content-pb: 0;
+}
 
 .sidenavContent {
   margin: 0 auto;
