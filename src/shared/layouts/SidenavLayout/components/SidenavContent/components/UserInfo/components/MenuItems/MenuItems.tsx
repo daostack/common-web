@@ -1,11 +1,14 @@
 import React, { FC } from "react";
+import { useDispatch } from "react-redux";
 import { Menu } from "@headlessui/react";
+import { logOut } from "@/pages/Auth/store/actions";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { MenuItem } from "./components";
 import { Item, ItemType } from "./types";
 import styles from "./MenuItems.module.scss";
 
 const MenuItems: FC = () => {
+  const dispatch = useDispatch();
   const items: Item[] = [
     {
       key: "my-profile",
@@ -23,7 +26,7 @@ const MenuItems: FC = () => {
       type: ItemType.Button,
       text: "Log out",
       onClick: () => {
-        console.log("Log out");
+        dispatch(logOut());
       },
     },
   ];
