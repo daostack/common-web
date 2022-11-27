@@ -2,7 +2,6 @@ import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
 import { ProjectsState } from "@/store/states";
 import * as actions from "./actions";
-import { generateProjectsStateItems } from "./utils";
 
 type Action = ActionType<typeof actions>;
 
@@ -20,7 +19,7 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
   )
   .handleAction(actions.getProjects.success, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.data = generateProjectsStateItems(payload);
+      nextState.data = [...payload];
       nextState.isDataLoading = false;
       nextState.isDataFetched = true;
     }),

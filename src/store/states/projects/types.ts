@@ -1,11 +1,12 @@
+import { Common } from "@/shared/models";
+
 export interface ProjectsStateItem {
-  id: string;
+  commonId: string;
   image: string;
   name: string;
-  path: string;
+  directParent: Common["directParent"];
   hasMembership?: boolean;
   notificationsAmount?: number;
-  items?: ProjectsStateItem[];
 }
 
 export interface ProjectsState {
