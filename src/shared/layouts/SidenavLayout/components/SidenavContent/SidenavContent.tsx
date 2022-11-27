@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
@@ -13,6 +13,7 @@ import {
   selectAreProjectsLoading,
 } from "@/store/states";
 import { Navigation, ProjectsTree, Scrollbar, UserInfo } from "./components";
+import { generateProjectsTreeItems } from "./utils";
 import styles from "./SidenavContent.module.scss";
 
 interface SidenavContentProps {
@@ -27,6 +28,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
   const projects = useSelector(selectProjectsData);
   const areProjectsLoading = useSelector(selectAreProjectsLoading);
   const areProjectsFetched = useSelector(selectAreProjectsFetched);
+  const items = useMemo(() => generateProjectsTreeItems(projects), [projects]);
   const separatorEl = <div className={styles.separator} />;
 
   useEffect(() => {
@@ -55,7 +57,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
       {separatorEl}
       {areProjectsFetched && (
         <Scrollbar>
-          <ProjectsTree className={styles.projectsTree} items={projects} />
+          <ProjectsTree className={styles.projectsTree} items={items} />
         </Scrollbar>
       )}
     </div>
