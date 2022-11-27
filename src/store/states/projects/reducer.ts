@@ -31,6 +31,11 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
       nextState.isDataFetched = true;
     }),
   )
+  .handleAction(actions.addProject, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.data.push(payload);
+    }),
+  )
   .handleAction(actions.updateProject, (state, { payload }) =>
     produce(state, (nextState) => {
       const itemIndex = nextState.data.findIndex(
