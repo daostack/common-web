@@ -2,7 +2,7 @@ import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { selectUser } from "@/pages/Auth/store/selectors";
+import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
 import logoSrc from "@/shared/assets/images/logo-sidenav.svg";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { getUserName } from "@/shared/utils";
@@ -22,6 +22,7 @@ interface SidenavContentProps {
 const SidenavContent: FC<SidenavContentProps> = (props) => {
   const { className } = props;
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const projects = useSelector(selectProjectsData);
   const areProjectsLoading = useSelector(selectAreProjectsLoading);
@@ -29,10 +30,14 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
   const separatorEl = <div className={styles.separator} />;
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      dispatch(projectsActions.clearProjects());
+      return;
+    }
     if (!areProjectsLoading && !areProjectsFetched) {
       dispatch(projectsActions.getProjects.request());
     }
-  }, [areProjectsLoading, areProjectsFetched]);
+  }, [isAuthenticated, areProjectsLoading, areProjectsFetched]);
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -43,7 +48,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
       <UserInfo
         avatarURL={user?.photoURL}
         userName={getUserName(user)}
-        isAuthenticated={Boolean(user)}
+        isAuthenticated={isAuthenticated}
       />
       {separatorEl}
       <Navigation />

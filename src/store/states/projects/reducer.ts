@@ -30,4 +30,11 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
       nextState.isDataLoading = false;
       nextState.isDataFetched = true;
     }),
+  )
+  .handleAction(actions.clearProjects, (state) =>
+    produce(state, (nextState) => {
+      nextState.data = [];
+      nextState.isDataLoading = false;
+      nextState.isDataFetched = false;
+    }),
   );
