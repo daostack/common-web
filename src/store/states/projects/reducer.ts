@@ -20,9 +20,7 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
   )
   .handleAction(actions.getProjects.success, (state, { payload }) =>
     produce(state, (nextState) => {
-      const { commons } = payload;
-
-      nextState.data = generateProjectsStateItems(commons);
+      nextState.data = generateProjectsStateItems(payload);
       nextState.isDataLoading = false;
       nextState.isDataFetched = true;
     }),

@@ -1,16 +1,17 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import { CommonService } from "@/services";
+import { Awaited } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
 import * as actions from "./actions";
 
 function* getProjects() {
   try {
-    const commons = yield call(
-      CommonService.getUserCommons,
+    const data = (yield call(
+      CommonService.getUserProjectsInfo,
       "jTvCqKFjlVaNfANUPJq4v8d5bI43",
-    );
+    )) as Awaited<ReturnType<typeof CommonService.getUserProjectsInfo>>;
 
-    yield put(actions.getProjects.success({ commons }));
+    yield put(actions.getProjects.success(data));
   } catch (error) {
     if (isError(error)) {
       yield put(actions.getProjects.failure(error));

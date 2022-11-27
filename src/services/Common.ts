@@ -1,3 +1,4 @@
+import { UserProjectsInfoItem } from "@/shared/interfaces";
 import {
   Collection,
   Common,
@@ -81,7 +82,7 @@ class CommonService {
 
   public getUserProjectsInfo = async (
     userId: string,
-  ): Promise<{ common: Common; hasMembership: boolean }[]> => {
+  ): Promise<UserProjectsInfoItem[]> => {
     const userCommonIds = await this.getUserCommonIds(userId);
     const commons = await this.getCommonsWithSubCommons(userCommonIds);
 

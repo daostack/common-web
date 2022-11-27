@@ -1,13 +1,15 @@
 import { ROUTE_PATHS } from "@/shared/constants";
-import { Common } from "@/shared/models";
+import { UserProjectsInfoItem } from "@/shared/interfaces";
 import { ProjectsStateItem } from "@/store/states";
 
-const getItemFromCommon = (
-  common: Common,
-  commonsGroupedByParentId: Map<string | null, Common[]>,
+const getItemFromUserProjectsInfoItem = (
+  userProjectsInfoItem: UserProjectsInfoItem,
+  itemsGroupedByCommonParentId: Map<string | null, UserProjectsInfoItem[]>,
 ): ProjectsStateItem => {
-  const items = (commonsGroupedByParentId.get(common.id) || []).map(
-    (subCommon) => getItemFromCommon(subCommon, commonsGroupedByParentId),
+  const { common, hasMembership } = userProjectsInfoItem;
+  const items = (itemsGroupedByCommonParentId.get(common.id) || []).map(
+    (subCommon) =>
+      getItemFromUserProjectsInfoItem(subCommon, itemsGroupedByCommonParentId),
   );
 
   return {
@@ -15,26 +17,30 @@ const getItemFromCommon = (
     image: common.image,
     name: common.name,
     path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", common.id),
-    hasMembership: false,
+    hasMembership,
     notificationsAmount: 0,
     items,
   };
 };
 
 export const generateProjectsStateItems = (
-  commons: Common[],
+  data: UserProjectsInfoItem[],
 ): ProjectsStateItem[] => {
-  const commonsGroupedByParentId = commons.reduce((map, common) => {
-    const currentGroup = map.get(common.directParent?.commonId || null) || [];
-    currentGroup.push(common);
+  const itemsGroupedByCommonParentId = data.reduce((map, item) => {
+    const commonId = item.common.directParent?.commonId || null;
+    const currentGroup = map.get(commonId) || [];
+    currentGroup.push(item);
+    map.set(commonId, currentGroup);
 
     return map;
-  }, new Map<string | null, Common[]>());
-  const mainCommons = commonsGroupedByParentId.get(null) || [];
+  }, new Map<string | null, UserProjectsInfoItem[]>());
+  const mainItems = itemsGroupedByCommonParentId.get(null) || [];
 
-  return mainCommons.reduce<ProjectsStateItem[]>(
-    (acc, common) =>
-      acc.concat(getItemFromCommon(common, commonsGroupedByParentId)),
+  return mainItems.reduce<ProjectsStateItem[]>(
+    (acc, item) =>
+      acc.concat(
+        getItemFromUserProjectsInfoItem(item, itemsGroupedByCommonParentId),
+      ),
     [],
   );
 };
