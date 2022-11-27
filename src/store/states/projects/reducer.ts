@@ -31,6 +31,20 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
       nextState.isDataFetched = true;
     }),
   )
+  .handleAction(actions.updateProject, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const itemIndex = nextState.data.findIndex(
+        (item) => item.commonId === payload.commonId,
+      );
+
+      if (itemIndex > -1) {
+        nextState.data[itemIndex] = {
+          ...nextState.data[itemIndex],
+          ...payload,
+        };
+      }
+    }),
+  )
   .handleAction(actions.clearProjects, (state) =>
     produce(state, (nextState) => {
       nextState.data = [];

@@ -8,6 +8,10 @@ export const getProjects = createAsyncAction(
   ProjectsActionType.GET_PROJECTS_FAILURE,
 )<void, ProjectsStateItem[], Error>();
 
+export const updateProject = createStandardAction(
+  ProjectsActionType.UPDATE_PROJECT,
+)<{ commonId: string } & Partial<Omit<ProjectsStateItem, "commonId">>>();
+
 export const clearProjects = createStandardAction(
   ProjectsActionType.CLEAR_PROJECTS,
 )();
