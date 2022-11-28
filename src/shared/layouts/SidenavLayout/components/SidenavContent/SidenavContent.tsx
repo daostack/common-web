@@ -33,7 +33,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
       {separatorEl}
       <Navigation />
       {separatorEl}
-      <Projects className={styles.projectsTree} />
+      <Projects />
     </div>
   );
 };
