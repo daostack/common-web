@@ -68,10 +68,10 @@ export const useCommonMember = (): Return => {
   const resetCommonMember = useCallback(() => {
     setState({
       loading: false,
-      fetched: false,
+      fetched: !userId,
       data: null,
     });
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     resetCommonMember();
