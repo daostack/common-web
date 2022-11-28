@@ -11,13 +11,13 @@ function* getProjects() {
   try {
     const user = (yield select(selectUser())) as User | null;
 
-    if (!user) {
+    if (!user?.uid) {
       throw new Error("There is no user to fetch projects");
     }
 
     const data = (yield call(
       CommonService.getUserProjectsInfo,
-      user.id,
+      user.uid,
     )) as Awaited<ReturnType<typeof CommonService.getUserProjectsInfo>>;
     const projectsData: ProjectsStateItem[] = data.map(
       ({ common, hasMembership }) => ({
