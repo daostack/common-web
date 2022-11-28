@@ -75,7 +75,7 @@ export const useCommonMember = (): Return => {
 
   useEffect(() => {
     resetCommonMember();
-  }, [resetCommonMember, userId]);
+  }, [userId]);
 
   return {
     ...state,

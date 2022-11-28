@@ -1,6 +1,8 @@
 import React, { FC, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFullCommonData } from "@/shared/hooks/useCases";
+import { Loader } from "@/shared/ui-kit";
 import styles from "./Common.module.scss";
 
 interface CommonRouterParams {
@@ -9,19 +11,48 @@ interface CommonRouterParams {
 
 const Common: FC = () => {
   const { id: commonId } = useParams<CommonRouterParams>();
-  const { data, loading, fetched, fetchCommonData, resetCommonData } =
-    useFullCommonData();
-  const isDataEmpty = data === null;
+  const {
+    data: commonData,
+    fetched: isCommonDataFetched,
+    fetchCommonData,
+    resetCommonData,
+  } = useFullCommonData();
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+    resetCommonMember,
+  } = useCommonMember();
+  const isDataEmpty = commonData === null;
+  const isDataFetched = isCommonDataFetched;
+
+  const resetData = () => {
+    resetCommonData();
+    resetCommonMember();
+  };
+
+  const fetchData = () => {
+    fetchCommonData(commonId);
+    fetchCommonMember(commonId);
+  };
 
   useEffect(() => {
     if (!isDataEmpty) {
-      resetCommonData();
+      resetData();
     }
 
-    fetchCommonData(commonId);
+    fetchData();
   }, [commonId]);
 
-  return <div>Common</div>;
+  if (!isDataFetched) {
+    return (
+      <div className={styles.loaderWrapper}>
+        <Loader />
+      </div>
+    );
+  }
+
+  return <span>Content</span>;
 };
 
 export default Common;
