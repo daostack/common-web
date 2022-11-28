@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFullCommonData } from "@/shared/hooks/useCases";
 import { Loader } from "@/shared/ui-kit";
+import { CommonContent } from "./components";
 import styles from "./Common.module.scss";
 
 interface CommonRouterParams {
@@ -39,11 +40,18 @@ const Common: FC = () => {
       </div>
     );
   }
-  if (isDataFetched && !commonData) {
+  if (!commonData) {
     return null;
   }
 
-  return <span>Content</span>;
+  return (
+    <CommonContent
+      common={commonData.common}
+      governance={commonData.governance}
+      isCommonMemberFetched={isCommonMemberFetched}
+      commonMember={commonMember}
+    />
+  );
 };
 
 export default Common;
