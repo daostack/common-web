@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
+import { setLoginModalState } from "@/pages/Auth/store/actions";
 import {
   GlobalLoader,
   Loader,
@@ -42,7 +43,7 @@ import {
 } from "@/shared/utils";
 import CheckIcon from "../../../../shared/icons/check.icon";
 import { LoginModalType } from "../../../Auth/interface";
-import { selectUser } from "../../../Auth/store/selectors";
+import { authentificated, selectUser } from "../../../Auth/store/selectors";
 import {
   AboutTabComponent,
   PreviewInformationList,
@@ -178,6 +179,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const isDiscussionsLoaded = useSelector(selectIsDiscussionsLoaded());
   const isProposalsLoaded = useSelector(selectIsProposalLoaded());
   const screenSize = useSelector(getScreenSize());
+  const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const activeTab = useSelector(selectCommonActiveTab());
   const {
@@ -561,6 +563,17 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     setStickyClass,
     joinEffortRef,
   ]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      dispatch(
+        setLoginModalState({
+          isShowing: true,
+          canCloseModal: false,
+        }),
+      );
+    }
+  }, [isAuthenticated, dispatch]);
 
   useEffect(() => {
     if (inViewPortFooter) {

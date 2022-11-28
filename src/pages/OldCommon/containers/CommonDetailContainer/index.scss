@@ -3,9 +3,10 @@
 
 .common-detail-wrapper {
   margin-bottom: -100px;
-  padding: 0 2.5rem 3.125rem;
+  padding-bottom: 50px;
 
   .main-information-block {
+    background-color: $white;
     margin-bottom: 7px;
 
     .main-information-wrapper {
@@ -17,7 +18,8 @@
           position: absolute;
           right: 0;
           bottom: 0;
-          width: 100%;
+          width: calc(100% + 4rem);
+          transform: translateX(2rem);
           height: 100%;
           object-fit: cover;
           background-color: $blue;
@@ -220,17 +222,10 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .common-detail-wrapper {
-    padding: 0 1.25rem 1.25rem;
-
     .main-information-block {
       .main-information-wrapper {
         .img-wrapper {
           margin: 0px -#{$content-padding-mobile};
-
-          img {
-            width: calc(100% + 4rem);
-            transform: translateX(2rem);
-          }
 
           .default-image {
             width: 100%;
