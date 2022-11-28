@@ -1,3 +1,4 @@
 export * from "./Button";
 export * from "./Footer";
+export * from "./Loader";
 export * from "./Sidenav";
