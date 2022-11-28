@@ -20,6 +20,14 @@ export const SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<SidenavLayoutRout
         path: ROUTE_PATHS.COMMON,
         exact: true,
         component: CommonPage,
+        routeOptions: {
+          footer: {
+            displayedOnViewports: [
+              ViewportBreakpointVariant.Desktop,
+              ViewportBreakpointVariant.Laptop,
+            ],
+          },
+        },
       },
     ],
   };
