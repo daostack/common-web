@@ -23,10 +23,11 @@ export const useFullCommonData = (): Return => {
   });
 
   const fetchCommonData = useCallback((commonId: string) => {
-    setState((nextState) => ({
-      ...nextState,
+    setState({
       loading: true,
-    }));
+      fetched: false,
+      data: null,
+    });
 
     (async () => {
       try {
