@@ -4,10 +4,25 @@ import {
   CommonState,
   SubCollections,
 } from "@/shared/models";
-import { transformFirebaseDataList } from "@/shared/utils";
+import {
+  convertObjectDatesToFirestoreTimestamps,
+  transformFirebaseDataList,
+} from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 
 class CommonService {
+  public getCommonById = async (commonId: string): Promise<Common | null> => {
+    const common = await firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("id", "==", commonId)
+      .where("state", "==", CommonState.ACTIVE)
+      .get();
+    const data = transformFirebaseDataList<Common>(common);
+
+    return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
+  };
+
   public getCommonsByIds = async (ids: string[]): Promise<Common[]> => {
     if (ids.length === 0) {
       return [];
