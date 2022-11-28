@@ -5,3 +5,11 @@ export enum ViewportBreakpoint {
   Tablet = 768,
   Phone = 390,
 }
+
+export enum ViewportBreakpointVariant {
+  Desktop = "desktop",
+  Laptop = "laptop",
+  Tablet = "tablet",
+  PhoneOriented = "phone-oriented",
+  Phone = "phone",
+}

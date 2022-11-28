@@ -15,6 +15,7 @@ const Scrollbar: FC<ReactScrollbarProps> = (props) => {
       style={{
         width: "100%",
         height: "100%",
+        overscrollBehavior: "contain",
         ...(props.style || {}),
       }}
       rtl={false}

@@ -6,3 +6,4 @@ export * from "./Notification";
 export * from "./redux";
 export * from "./SharedState";
 export * from "./ModalProps";
+export * from "./ViewportStates";

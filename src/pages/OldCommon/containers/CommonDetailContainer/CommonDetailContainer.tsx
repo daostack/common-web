@@ -777,12 +777,14 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
                       className={`tab-item ${tab === t.key ? "active" : ""}`}
                       onClick={() => changeTabHandler(t.key)}
                     >
-                      <img
-                        src={`/icons/common-icons/${t.icon}${
-                          tab === t.key ? "-active" : ""
-                        }.svg`}
-                        alt={t.name}
-                      />
+                      {isMobileView && (
+                        <img
+                          src={`/icons/common-icons/${t.icon}${
+                            tab === t.key ? "-active" : ""
+                          }.svg`}
+                          alt={t.name}
+                        />
+                      )}
                       {t.name}
                     </div>
                   ))}

@@ -236,7 +236,7 @@ const LoginContainer: FC = () => {
   return (
     <Modal
       isShowing={isShowing}
-      onClose={canCloseModal ? handleClose : emptyFunction}
+      onClose={canCloseModal && !isLoading ? handleClose : emptyFunction}
       type={modalType}
       className="login-container__modal"
       mobileFullScreen
@@ -244,7 +244,7 @@ const LoginContainer: FC = () => {
       title={title}
       withoutHorizontalPadding={shouldRemoveHorizontalPadding}
       styles={styles}
-      hideCloseButton={!canCloseModal}
+      hideCloseButton={!canCloseModal || isLoading}
     >
       {content}
     </Modal>

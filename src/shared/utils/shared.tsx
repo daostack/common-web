@@ -54,10 +54,14 @@ export const formatEpochTime = (
 
 export const getUserName = (
   user?: Pick<User, "firstName" | "lastName" | "displayName"> | null,
-) => {
-  if (!user) return "";
+): string => {
+  if (!user) {
+    return "";
+  }
+
   return (
-    user.displayName?.trim() || `${user.firstName} ${user.lastName}`.trim()
+    user.displayName?.trim() ||
+    [user.firstName, user.lastName].filter(Boolean).join(" ").trim()
   );
 };
 
@@ -67,7 +71,10 @@ export const getUserInitials = (user: User | undefined) => {
 };
 
 export const getRandomUserAvatarURL = (name?: string | null): string =>
-  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`;
+  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name?.replaceAll(
+    " ",
+    "+",
+  )}&rounded=true`;
 
 export const isRandomUserAvatarURL = (url: string): boolean =>
   url.startsWith("https://eu.ui-avatars.com/api");

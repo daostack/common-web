@@ -34,6 +34,9 @@
     --sb-content-pb: unset;
   }
 }
+.containerWithoutFooter {
+  --sb-content-pb: 0;
+}
 
 .sidenavContent {
   margin: 0 auto;
@@ -44,4 +47,5 @@
   flex: 1;
   padding-left: var(--main-pl);
   background-color: var(--bg-color);
+  overflow: hidden;
 }

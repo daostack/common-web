@@ -1,4 +1,4 @@
-import { Item } from "../types";
+import { Item } from "../../ProjectsTree/types";
 
 export const getItemByPath = (path: string, items: Item[]): Item | null => {
   let finalItem: Item | null = null;
