@@ -6,6 +6,7 @@ import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { commonTypeText } from "@/shared/utils";
 import { formatPrice } from "@/shared/utils/shared";
+import { Currency } from "../../../../../../../shared/models";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import { CommonImageSlider } from "./CommonImageSlider";
@@ -40,8 +41,11 @@ export default function Review({
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const formattedMinFeeToJoin = formatPrice(
-    memberAdmittanceOptions?.minFeeMonthly?.amount ||
-      memberAdmittanceOptions?.minFeeOneTime?.amount,
+    memberAdmittanceOptions?.minFeeMonthly ||
+      memberAdmittanceOptions?.minFeeOneTime || {
+        amount: 0,
+        currency: Currency.ILS,
+      },
     {
       shouldRemovePrefixFromZero: false,
       bySubscription: Boolean(memberAdmittanceOptions?.minFeeMonthly),

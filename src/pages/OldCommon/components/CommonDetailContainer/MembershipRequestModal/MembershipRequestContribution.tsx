@@ -6,6 +6,7 @@ import { ModalFooter } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
+import { Currency } from "../../../../../shared/models";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
 import "./index.scss";
@@ -27,7 +28,7 @@ export default function MembershipRequestContribution(props: IStageProps) {
   const zeroContribution = false;
 
   const formattedMinFeeToJoin = formatPrice(
-    zeroContribution ? 0 : minFeeToJoin,
+    { amount: zeroContribution ? 0 : minFeeToJoin, currency: Currency.ILS },
     {
       shouldMillify: false,
       shouldRemovePrefixFromZero: false,

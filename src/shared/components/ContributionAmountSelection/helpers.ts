@@ -3,11 +3,12 @@ import {
   MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION,
   MIN_CONTRIBUTION_ILS_AMOUNT,
 } from "../../constants";
+import { Currency } from "../../models";
 import { formatPrice, roundNumberToNextTenths } from "../../utils";
 
 const getLastSelectionAmount = (
   minFeeToJoin: number,
-  lastAmount: number
+  lastAmount: number,
 ): number =>
   minFeeToJoin >= MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION / 100 &&
   lastAmount < 2500
@@ -17,7 +18,7 @@ const getLastSelectionAmount = (
 export const getAmountsForSelection = (
   minFeeToJoin: number,
   zeroContribution: boolean,
-  currentAmount?: number
+  currentAmount?: number,
 ): number[] => {
   if ((minFeeToJoin === 0 || zeroContribution) && !currentAmount) {
     return [0, MIN_CONTRIBUTION_ILS_AMOUNT, MIN_CONTRIBUTION_ILS_AMOUNT * 2];
@@ -42,7 +43,7 @@ export const getAmountsForSelection = (
 export const validateContributionAmount = (
   minFeeToJoin: number,
   zeroContribution: boolean,
-  value?: string
+  value?: string,
 ): string => {
   const minFeeToJoinForUsage = zeroContribution ? 0 : minFeeToJoin;
   const convertedValue = Number(value) * 100;
@@ -61,20 +62,29 @@ export const validateContributionAmount = (
   if (minFeeToJoinForUsage === 0) {
     errorTexts.push("0, or");
     errorTexts.push(
-      `at least ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT, {
-        shouldMillify: false,
-      })}`
+      `at least ${formatPrice(
+        { amount: MIN_CONTRIBUTION_ILS_AMOUNT, currency: Currency.ILS },
+        {
+          shouldMillify: false,
+        },
+      )}`,
     );
   } else {
     errorTexts.push(
-      `at least ${formatPrice(minFeeToJoinForUsage, { shouldMillify: false })}`
+      `at least ${formatPrice(
+        { amount: minFeeToJoinForUsage, currency: Currency.ILS },
+        { shouldMillify: false },
+      )}`,
     );
   }
 
   errorTexts.push(
-    `and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT, {
-      shouldMillify: false,
-    })}`
+    `and at most ${formatPrice(
+      { amount: MAX_CONTRIBUTION_ILS_AMOUNT, currency: Currency.ILS },
+      {
+        shouldMillify: false,
+      },
+    )}`,
   );
 
   return errorTexts.join(" ");
@@ -82,7 +92,7 @@ export const validateContributionAmount = (
 
 export const getInitialSelectedContributionValue = (
   amountsForSelection: number[],
-  contributionAmount?: number
+  contributionAmount?: number,
 ): number | "other" | null => {
   if (contributionAmount === undefined) {
     return null;
@@ -95,7 +105,7 @@ export const getInitialSelectedContributionValue = (
 
 export const getInitialEnteredContributionValue = (
   selectedContribution: number | "other" | null,
-  contributionAmount?: number
+  contributionAmount?: number,
 ): string | undefined =>
   selectedContribution === "other" && contributionAmount
     ? String(contributionAmount / 100)

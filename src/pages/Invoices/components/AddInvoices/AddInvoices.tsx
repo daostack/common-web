@@ -13,6 +13,7 @@ import {
   DeletePrompt,
 } from "@/shared/components";
 import { ScreenSize } from "../../../../shared/constants";
+import { Currency } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import { AmountPrompt } from "../AmountPrompt";
@@ -199,7 +200,8 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
             />
           )}
           <span className="add-invoices__total-amount-label">
-            Total invoices amount: {formatPrice(totalAmount * 100)}
+            Total invoices amount:{" "}
+            {formatPrice({ amount: totalAmount * 100, currency: Currency.ILS })}
           </span>
           <button
             className="button-blue"
@@ -223,8 +225,14 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
           proposalId={proposalId}
           selectedFiles={selectedFiles}
           onCancel={() => setShowUploadPrompt(false)}
-          invoicesTotal={formatPrice(totalAmount * 100)}
-          proposalRequest={formatPrice(proposalRequest)}
+          invoicesTotal={formatPrice({
+            amount: totalAmount * 100,
+            currency: Currency.ILS,
+          })}
+          proposalRequest={formatPrice({
+            amount: proposalRequest ? proposalRequest / 100 : 0,
+            currency: Currency.ILS,
+          })}
           updateSubmissionStatus={updateSubmissionStatus}
         />
       )}

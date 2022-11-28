@@ -11,6 +11,7 @@ import { ContributionType, ScreenSize } from "@/shared/constants";
 import { usePaymentMethodChange, useUserCards } from "@/shared/hooks/useCases";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
+import { Currency } from "../../../../../shared/models";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
 import "./index.scss";
@@ -101,8 +102,14 @@ export default function MembershipRequestPayment(
       <div className="sub-text">
         You are contributing{" "}
         <strong className="membership-request-payment__amount">
-          {formatPrice(contributionInfo.amount, { shouldMillify: false })} (
-          {contributionInfo.contributionType})
+          {formatPrice(
+            {
+              amount: contributionInfo.amount as number,
+              currency: Currency.ILS,
+            },
+            { shouldMillify: false },
+          )}{" "}
+          ({contributionInfo.contributionType})
         </strong>{" "}
         to this Common.
       </div>

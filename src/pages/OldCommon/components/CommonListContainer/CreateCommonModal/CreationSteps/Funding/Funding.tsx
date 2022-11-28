@@ -55,7 +55,10 @@ const getCurrencyInputLabel = (
     contributionType === ContributionType.OneTime ? "one-time" : "monthly";
   const additionalText =
     isMobileView && contributionType === ContributionType.Monthly
-      ? ` (min. ${formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)})`
+      ? ` (min. ${formatPrice({
+          amount: MIN_CONTRIBUTION_ILS_AMOUNT,
+          currency: Currency.ILS,
+        })})`
       : "";
 
   return (
@@ -78,9 +81,10 @@ const getCurrencyInputDescription = (
 
   if (!isMobileView || contributionType !== ContributionType.Monthly) {
     descriptionPieces.push(
-      `The minimum contribution allowed by credit card is ${formatPrice(
-        MIN_CONTRIBUTION_ILS_AMOUNT,
-      )}.`,
+      `The minimum contribution allowed by credit card is ${formatPrice({
+        amount: MIN_CONTRIBUTION_ILS_AMOUNT,
+        currency: Currency.ILS,
+      })}.`,
     );
   }
 
@@ -230,7 +234,10 @@ export default function Funding({
                   isMobileView,
                   isSubCommonCreation,
                 )}
-                placeholder={formatPrice(MIN_CONTRIBUTION_ILS_AMOUNT)}
+                placeholder={formatPrice({
+                  amount: MIN_CONTRIBUTION_ILS_AMOUNT,
+                  currency: Currency.ILS,
+                })}
                 disabled={
                   contributionType === ContributionType.OneTime &&
                   isCommonJoinFree

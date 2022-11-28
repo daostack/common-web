@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { UserAvatar, Separator, ElementDropdown } from "@/shared/components";
 import { DynamicLinkType, EntityTypes } from "@/shared/constants";
-import { ProposalListItem } from "@/shared/models";
+import { Currency, ProposalListItem } from "@/shared/models";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import {
   checkIsCountdownState,
@@ -59,7 +59,7 @@ const FundingProposalListItem: FC<ProposalListItem> = ({
             {formatPrice(
               isFundsAllocationProposal(proposal)
                 ? proposal.data.args.amount
-                : 0,
+                : { amount: 0, currency: Currency.ILS },
               {
                 shouldRemovePrefixFromZero: false,
               },

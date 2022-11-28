@@ -16,7 +16,7 @@ import {
   AllocateFundsTo,
 } from "@/shared/constants";
 import DeleteIcon from "@/shared/icons/delete.icon";
-import { Common } from "@/shared/models";
+import { Common, Currency } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
 import { uploadFile } from "@/shared/utils/firebaseUploadFile";
 import { MAX_PROPOSAL_TITLE_LENGTH } from "./constants";
@@ -111,7 +111,7 @@ export const AddProposalForm = ({
     if (common && common.balance && !isAmountAdded) {
       const amount = Yup.object({
         amount: Yup.number().max(
-          common.balance / 100,
+          common.balance.amount / 100,
           `This amount exceeds the current balance of the Common (${formatPrice(
             common?.balance,
           )}). Please select a lower amount or wait for the Common to raise more funds.`,
@@ -196,9 +196,12 @@ export const AddProposalForm = ({
                   id="funding"
                   name="amount"
                   label="Funding amount requested"
-                  placeholder={formatPrice(0, {
-                    shouldRemovePrefixFromZero: false,
-                  })}
+                  placeholder={formatPrice(
+                    { amount: 0, currency: Currency.ILS },
+                    {
+                      shouldRemovePrefixFromZero: false,
+                    },
+                  )}
                 />
               </div>
               <div className="funding-description">

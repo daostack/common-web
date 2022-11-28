@@ -8,6 +8,7 @@ import {
 } from "@/shared/components/Form";
 import { ContributionType } from "@/shared/constants";
 import { emptyFunction, formatPrice } from "@/shared/utils";
+import { Currency } from "../../../../../shared/models";
 import { SelectionButton } from "../SelectionButton";
 import { getFinalAmount } from "./helpers";
 import "./index.scss";
@@ -78,10 +79,13 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
       inputValue &&
       Number(inputValue) < selectionData.minAmount / 100 &&
       t("otherInputError", {
-        amount: formatPrice(selectionData.minAmount, {
-          shouldMillify: false,
-          bySubscription: selectionData.isMonthlyContribution,
-        }),
+        amount: formatPrice(
+          { amount: selectionData.minAmount, currency: Currency.ILS },
+          {
+            shouldMillify: false,
+            bySubscription: selectionData.isMonthlyContribution,
+          },
+        ),
       })) ||
     "";
   const submitLink = getSubmitLink
@@ -157,10 +161,13 @@ const AmountSelection: FC<PaymentDetailsProps> = (props) => {
             isActive={amount === selectedAmount}
             onClick={() => handleAmountSelection(amount)}
           >
-            {formatPrice(amount, {
-              shouldMillify: false,
-              bySubscription: selectionData.isMonthlyContribution,
-            })}
+            {formatPrice(
+              { amount, currency: Currency.ILS },
+              {
+                shouldMillify: false,
+                bySubscription: selectionData.isMonthlyContribution,
+              },
+            )}
           </SelectionButton>
         ))}
       </div>

@@ -11,7 +11,12 @@ import { Modal } from "@/shared/components";
 import { AllocateFundsTo, ScreenSize } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps, ModalRef } from "@/shared/interfaces";
-import { BankAccountDetails, Common, Proposal } from "@/shared/models";
+import {
+  BankAccountDetails,
+  Common,
+  Currency,
+  Proposal,
+} from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { AddBankDetails } from "./AddBankDetails/AddBankDetails";
 import { AddProposalConfirm } from "./AddProposalConfirm";
@@ -102,7 +107,10 @@ export const AddProposalComponent = ({
       fundingRequest.args.links = fundingRequest.args.links?.filter(
         (link) => link.title && link.value,
       );
-      fundingRequest.args.amount = fundingRequest.args.amount * 100;
+      fundingRequest.args.amount = {
+        amount: fundingRequest.args.amount.amount * 100,
+        currency: Currency.ILS,
+      };
       onProposalAdd(fundingRequest, (error) => {
         if (error !== null) {
           setErrorMessage(error);
