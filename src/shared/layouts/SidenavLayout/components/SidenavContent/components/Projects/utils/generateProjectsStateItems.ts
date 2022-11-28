@@ -1,6 +1,6 @@
 import { ROUTE_PATHS } from "@/shared/constants";
 import { ProjectsStateItem } from "@/store/states";
-import { Item } from "../components/ProjectsTree/types";
+import { Item } from "../../ProjectsTree/types";
 
 const getItemFromProjectsStateItem = (
   projectsStateItem: ProjectsStateItem,

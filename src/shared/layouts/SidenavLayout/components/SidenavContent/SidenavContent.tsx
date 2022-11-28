@@ -1,19 +1,12 @@
-import React, { FC, useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
 import logoSrc from "@/shared/assets/images/logo-sidenav.svg";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { getUserName } from "@/shared/utils";
-import {
-  projectsActions,
-  selectProjectsData,
-  selectAreProjectsFetched,
-  selectAreProjectsLoading,
-} from "@/store/states";
-import { Navigation, ProjectsTree, Scrollbar, UserInfo } from "./components";
-import { generateProjectsTreeItems } from "./utils";
+import { Navigation, Projects, UserInfo } from "./components";
 import styles from "./SidenavContent.module.scss";
 
 interface SidenavContentProps {
@@ -22,28 +15,9 @@ interface SidenavContentProps {
 
 const SidenavContent: FC<SidenavContentProps> = (props) => {
   const { className } = props;
-  const dispatch = useDispatch();
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
-  const projects = useSelector(selectProjectsData);
-  const areProjectsLoading = useSelector(selectAreProjectsLoading);
-  const areProjectsFetched = useSelector(selectAreProjectsFetched);
-  const items = useMemo(() => generateProjectsTreeItems(projects), [projects]);
   const separatorEl = <div className={styles.separator} />;
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      dispatch(
-        projectsActions.clearProjectsExceptOfCurrent(
-          "7649b0de-5eba-4244-b6da-c7e59ef86a17",
-        ),
-      );
-      return;
-    }
-    if (!areProjectsLoading && !areProjectsFetched) {
-      dispatch(projectsActions.getProjects.request());
-    }
-  }, [isAuthenticated, areProjectsLoading, areProjectsFetched]);
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -59,11 +33,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
       {separatorEl}
       <Navigation />
       {separatorEl}
-      {areProjectsFetched && (
-        <Scrollbar>
-          <ProjectsTree className={styles.projectsTree} items={items} />
-        </Scrollbar>
-      )}
+      <Projects className={styles.projectsTree} />
     </div>
   );
 };
