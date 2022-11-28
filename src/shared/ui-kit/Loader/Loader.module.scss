@@ -1,7 +1,31 @@
+@import "../../../constants";
+
 .loader {
   height: 3.125rem;
   width: 3.125rem;
   background-image: url("/icons/loader.svg");
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.globalLoaderOverlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $c-shades-neutrals-30;
+}
+
+.globalLoaderWrapper {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $c-shades-white;
+  border-radius: 1rem;
 }
