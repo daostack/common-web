@@ -21,19 +21,17 @@ const Common: FC = () => {
     fetched: isCommonMemberFetched,
     data: commonMember,
     fetchCommonMember,
-    resetCommonMember,
   } = useCommonMember();
   const isDataEmpty = commonData === null;
   const isDataFetched = isCommonDataFetched;
 
   const resetData = () => {
     resetCommonData();
-    resetCommonMember();
   };
 
   const fetchData = () => {
     fetchCommonData(commonId);
-    fetchCommonMember(commonId);
+    fetchCommonMember(commonId, true);
   };
 
   useEffect(() => {

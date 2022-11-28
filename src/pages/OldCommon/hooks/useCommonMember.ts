@@ -8,7 +8,7 @@ import { getCommonMember } from "../store/actions";
 type State = LoadingState<CommonMember | null>;
 
 interface Return extends State {
-  fetchCommonMember: (commonId: string) => void;
+  fetchCommonMember: (commonId: string, force?: boolean) => void;
   resetCommonMember: () => void;
 }
 
@@ -23,22 +23,24 @@ export const useCommonMember = (): Return => {
   const userId = user?.uid;
 
   const fetchCommonMember = useCallback(
-    (commonId: string) => {
-      if (state.loading || state.fetched) {
+    (commonId: string, force = false) => {
+      if (!force && (state.loading || state.fetched)) {
         return;
       }
       if (!userId) {
-        setState((nextState) => ({
-          ...nextState,
+        setState({
+          loading: false,
           fetched: true,
-        }));
+          data: null,
+        });
         return;
       }
 
-      setState((nextState) => ({
-        ...nextState,
+      setState({
         loading: true,
-      }));
+        fetched: false,
+        data: null,
+      });
 
       dispatch(
         getCommonMember.request({
