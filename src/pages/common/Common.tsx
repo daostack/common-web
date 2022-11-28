@@ -39,6 +39,9 @@ const Common: FC = () => {
       </div>
     );
   }
+  if (isDataFetched && !commonData) {
+    return null;
+  }
 
   return <span>Content</span>;
 };
