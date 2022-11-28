@@ -33,7 +33,11 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      dispatch(projectsActions.clearProjects());
+      dispatch(
+        projectsActions.clearProjectsExceptOfCurrent(
+          "7649b0de-5eba-4244-b6da-c7e59ef86a17",
+        ),
+      );
       return;
     }
     if (!areProjectsLoading && !areProjectsFetched) {

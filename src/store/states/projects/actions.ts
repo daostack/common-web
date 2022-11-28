@@ -19,3 +19,7 @@ export const updateProject = createStandardAction(
 export const clearProjects = createStandardAction(
   ProjectsActionType.CLEAR_PROJECTS,
 )();
+
+export const clearProjectsExceptOfCurrent = createStandardAction(
+  ProjectsActionType.CLEAR_PROJECTS_EXCEPT_OF_CURRENT,
+)<string>();

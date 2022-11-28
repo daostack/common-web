@@ -1,7 +1,9 @@
 import produce from "immer";
+import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import { ProjectsState } from "@/store/states";
 import * as actions from "./actions";
+import { getRelatedToIdItems } from "./utils";
 
 type Action = ActionType<typeof actions>;
 
@@ -9,6 +11,12 @@ const initialState: ProjectsState = {
   data: [],
   isDataLoading: false,
   isDataFetched: false,
+};
+
+const clearProjects = (state: WritableDraft<ProjectsState>): void => {
+  state.data = [];
+  state.isDataLoading = false;
+  state.isDataFetched = false;
 };
 
 export const reducer = createReducer<ProjectsState, Action>(initialState)
@@ -52,8 +60,21 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
   )
   .handleAction(actions.clearProjects, (state) =>
     produce(state, (nextState) => {
-      nextState.data = [];
-      nextState.isDataLoading = false;
-      nextState.isDataFetched = false;
+      clearProjects(nextState);
     }),
+  )
+  .handleAction(
+    actions.clearProjectsExceptOfCurrent,
+    (state, { payload: commonId }) =>
+      produce(state, (nextState) => {
+        const hasItemToCheck = nextState.data.some(
+          (item) => item.commonId === commonId,
+        );
+        if (!hasItemToCheck) {
+          clearProjects(nextState);
+          return;
+        }
+
+        nextState.data = getRelatedToIdItems(commonId, nextState.data);
+      }),
   );
