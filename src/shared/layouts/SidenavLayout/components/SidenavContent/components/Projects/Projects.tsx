@@ -2,6 +2,7 @@ import React, { FC, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { authentificated } from "@/pages/Auth/store/selectors";
+import { Loader } from "@/shared/ui-kit";
 import {
   projectsActions,
   selectAreProjectsFetched,
@@ -50,8 +51,8 @@ const Projects: FC = () => {
     }
   }, [areProjectsLoading, isDataReady]);
 
-  if (!isDataReady) {
-    return null;
+  if (items.length === 0) {
+    return areProjectsLoading ? <Loader className={styles.loader} /> : null;
   }
 
   return (
@@ -61,6 +62,7 @@ const Projects: FC = () => {
         items={items}
         activeItem={activeItem}
       />
+      {areProjectsLoading && <Loader className={styles.loader} />}
     </Scrollbar>
   );
 };
