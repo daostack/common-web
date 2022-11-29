@@ -4,8 +4,8 @@ import { CommonService } from "@/services";
 import { Awaited } from "@/shared/interfaces";
 import { User } from "@/shared/models";
 import { isError } from "@/shared/utils";
-import { ProjectsStateItem } from "@/store/states";
 import * as actions from "./actions";
+import { ProjectsStateItem } from "./types";
 
 function* getProjects() {
   try {
