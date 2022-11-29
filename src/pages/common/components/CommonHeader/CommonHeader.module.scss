@@ -19,6 +19,7 @@
   overflow: hidden;
 
   @include tablet {
+    width: 100%;
     overflow: unset;
   }
 }
@@ -44,6 +45,10 @@
 
 .commonInfoWrapper {
   overflow: hidden;
+
+  @include tablet {
+    width: 100%;
+  }
 }
 
 .commonName {
