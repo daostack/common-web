@@ -30,16 +30,8 @@ const Projects: FC = () => {
   const isDataReady = areProjectsFetched && Boolean(activeItem);
 
   useEffect(() => {
-    if (areProjectsLoading) {
-      return;
-    }
-    if (!isDataReady) {
-      dispatch(projectsActions.getProjects.request(activeItemId));
-    }
-  }, [areProjectsLoading, isDataReady]);
-
-  useEffect(() => {
     if (isAuthenticated) {
+      dispatch(projectsActions.markProjectsAsNotFetched());
       return;
     }
     if (activeItemId) {
@@ -48,6 +40,15 @@ const Projects: FC = () => {
       dispatch(projectsActions.clearProjects());
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (areProjectsLoading) {
+      return;
+    }
+    if (!isDataReady) {
+      dispatch(projectsActions.getProjects.request(activeItemId));
+    }
+  }, [areProjectsLoading, isDataReady]);
 
   if (!isDataReady) {
     return null;

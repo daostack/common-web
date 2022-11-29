@@ -23,3 +23,7 @@ export const clearProjects = createStandardAction(
 export const clearProjectsExceptOfCurrent = createStandardAction(
   ProjectsActionType.CLEAR_PROJECTS_EXCEPT_OF_CURRENT,
 )<string>();
+
+export const markProjectsAsNotFetched = createStandardAction(
+  ProjectsActionType.MARK_PROJECTS_AS_NOT_FETCHED,
+)();
