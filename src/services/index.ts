@@ -4,3 +4,4 @@ export { default as GeneralApi } from "./GeneralApi";
 export { default as GovernanceService } from "./Governance";
 export { default as Logger } from "./Logger";
 export { default as PayMeService } from "./PayMeService";
+export { default as ProjectService } from "./Project";

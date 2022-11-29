@@ -1,24 +1,24 @@
 import { call, put, select, takeLatest } from "redux-saga/effects";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { CommonService } from "@/services";
+import { ProjectService } from "@/services";
 import { Awaited } from "@/shared/interfaces";
 import { User } from "@/shared/models";
 import { isError } from "@/shared/utils";
 import * as actions from "./actions";
 import { ProjectsStateItem } from "./types";
 
-function* getProjects() {
+function* getProjects(action: ReturnType<typeof actions.getProjects.request>) {
+  const { payload: additionalIdToFetch = "" } = action;
+
   try {
     const user = (yield select(selectUser())) as User | null;
-
-    if (!user?.uid) {
-      throw new Error("There is no user to fetch projects");
-    }
+    const userId = user?.uid;
 
     const data = (yield call(
-      CommonService.getUserProjectsInfo,
-      user.uid,
-    )) as Awaited<ReturnType<typeof CommonService.getUserProjectsInfo>>;
+      ProjectService.getProjectsInfo,
+      userId,
+      additionalIdToFetch,
+    )) as Awaited<ReturnType<typeof ProjectService.getProjectsInfo>>;
     const projectsData: ProjectsStateItem[] = data.map(
       ({ common, hasMembership }) => ({
         commonId: common.id,

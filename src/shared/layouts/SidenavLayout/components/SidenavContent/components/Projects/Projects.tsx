@@ -27,12 +27,16 @@ const Projects: FC = () => {
   const items = useMemo(() => generateProjectsTreeItems(projects), [projects]);
   const activeItemId = getActiveItemIdByPath(location.pathname);
   const activeItem = getItemById(activeItemId, items);
+  const isDataReady = areProjectsFetched && Boolean(activeItem);
 
   useEffect(() => {
-    if (isAuthenticated && !areProjectsLoading && !areProjectsFetched) {
-      dispatch(projectsActions.getProjects.request());
+    if (areProjectsLoading) {
+      return;
     }
-  }, [isAuthenticated, areProjectsLoading, areProjectsFetched]);
+    if (!isDataReady) {
+      dispatch(projectsActions.getProjects.request(activeItemId));
+    }
+  }, [areProjectsLoading, isDataReady]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -45,7 +49,7 @@ const Projects: FC = () => {
     }
   }, [isAuthenticated]);
 
-  if (!areProjectsFetched) {
+  if (!isDataReady) {
     return null;
   }
 

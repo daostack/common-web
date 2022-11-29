@@ -6,7 +6,7 @@ export const getProjects = createAsyncAction(
   ProjectsActionType.GET_PROJECTS,
   ProjectsActionType.GET_PROJECTS_SUCCESS,
   ProjectsActionType.GET_PROJECTS_FAILURE,
-)<void, ProjectsStateItem[], Error>();
+)<string | void, ProjectsStateItem[], Error>();
 
 export const addProject = createStandardAction(
   ProjectsActionType.ADD_PROJECT,
