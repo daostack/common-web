@@ -1,4 +1,4 @@
-import { ProjectsStateItem } from "@/store/states";
+import { ProjectsStateItem } from "../types";
 
 const getParentItem = (
   commonId: string,

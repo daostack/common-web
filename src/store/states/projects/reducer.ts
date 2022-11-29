@@ -1,8 +1,8 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
-import { ProjectsState } from "@/store/states";
 import * as actions from "./actions";
+import { ProjectsState } from "./types";
 import { getRelatedToIdItems } from "./utils";
 
 type Action = ActionType<typeof actions>;
