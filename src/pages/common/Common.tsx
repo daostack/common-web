@@ -2,7 +2,7 @@ import React, { FC, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFullCommonData } from "@/shared/hooks/useCases";
-import { Loader } from "@/shared/ui-kit";
+import { Loader, NotFound } from "@/shared/ui-kit";
 import { CommonContent } from "./components";
 import styles from "./Common.module.scss";
 
@@ -35,13 +35,17 @@ const Common: FC = () => {
 
   if (!isDataFetched) {
     return (
-      <div className={styles.loaderWrapper}>
+      <div className={styles.centerWrapper}>
         <Loader />
       </div>
     );
   }
   if (!commonData) {
-    return null;
+    return (
+      <div className={styles.centerWrapper}>
+        <NotFound />
+      </div>
+    );
   }
 
   return (
