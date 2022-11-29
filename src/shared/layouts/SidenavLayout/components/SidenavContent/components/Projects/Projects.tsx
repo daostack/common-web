@@ -10,7 +10,11 @@ import {
 } from "@/store/states";
 import { ProjectsTree } from "../ProjectsTree";
 import { Scrollbar } from "../Scrollbar";
-import { generateProjectsTreeItems, getItemByPath } from "./utils";
+import {
+  generateProjectsTreeItems,
+  getActiveItemIdByPath,
+  getItemById,
+} from "./utils";
 import styles from "./Projects.module.scss";
 
 const Projects: FC = () => {
@@ -21,8 +25,8 @@ const Projects: FC = () => {
   const areProjectsLoading = useSelector(selectAreProjectsLoading);
   const areProjectsFetched = useSelector(selectAreProjectsFetched);
   const items = useMemo(() => generateProjectsTreeItems(projects), [projects]);
-  const activeItem = getItemByPath(location.pathname, items);
-  const activeItemId = activeItem?.id;
+  const activeItemId = getActiveItemIdByPath(location.pathname);
+  const activeItem = getItemById(activeItemId, items);
 
   useEffect(() => {
     if (isAuthenticated && !areProjectsLoading && !areProjectsFetched) {
@@ -31,8 +35,13 @@ const Projects: FC = () => {
   }, [isAuthenticated, areProjectsLoading, areProjectsFetched]);
 
   useEffect(() => {
-    if (!isAuthenticated && activeItemId) {
+    if (isAuthenticated) {
+      return;
+    }
+    if (activeItemId) {
       dispatch(projectsActions.clearProjectsExceptOfCurrent(activeItemId));
+    } else {
+      dispatch(projectsActions.clearProjects());
     }
   }, [isAuthenticated]);
 
