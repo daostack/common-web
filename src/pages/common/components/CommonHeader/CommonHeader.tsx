@@ -55,9 +55,11 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
           <h1 className={styles.commonName} title={commonName}>
             {commonName}
           </h1>
-          <p className={styles.description} title={description}>
-            {description}
-          </p>
+          {description && (
+            <p className={styles.description} title={description}>
+              {description}
+            </p>
+          )}
         </div>
       </header>
       {(isJoinButtonVisible || areItemsVisible) && (
