@@ -12,7 +12,7 @@ interface Return extends State {
   resetCommonMember: () => void;
 }
 
-export const useCommonMember = (): Return => {
+export const useCommonMember = (shouldAutoReset = true): Return => {
   const dispatch = useDispatch();
   const [state, setState] = useState<State>({
     loading: false,
@@ -70,13 +70,15 @@ export const useCommonMember = (): Return => {
   const resetCommonMember = useCallback(() => {
     setState({
       loading: false,
-      fetched: !userId,
+      fetched: false,
       data: null,
     });
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
-    resetCommonMember();
+    if (shouldAutoReset) {
+      resetCommonMember();
+    }
   }, [userId]);
 
   return {

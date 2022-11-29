@@ -1,5 +1,7 @@
 import React, { FC, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFullCommonData } from "@/shared/hooks/useCases";
 import { Loader, NotFound } from "@/shared/ui-kit";
@@ -21,7 +23,9 @@ const Common: FC = () => {
     fetched: isCommonMemberFetched,
     data: commonMember,
     fetchCommonMember,
-  } = useCommonMember();
+  } = useCommonMember(false);
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const isDataFetched = isCommonDataFetched;
 
   const fetchData = () => {
@@ -32,6 +36,10 @@ const Common: FC = () => {
   useEffect(() => {
     fetchData();
   }, [commonId]);
+
+  useEffect(() => {
+    fetchCommonMember(commonId, true);
+  }, [userId]);
 
   if (!isDataFetched) {
     return (
