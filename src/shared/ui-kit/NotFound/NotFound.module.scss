@@ -13,7 +13,7 @@
   width: 100%;
 
   @include tablet {
-    max-width: 17rem;
+    max-width: 14rem;
   }
 }
 
@@ -24,7 +24,8 @@
   font-size: 8rem;
 
   @include tablet {
-    font-size: 6.5rem;
+    margin-top: 1.875rem;
+    font-size: 4.5rem;
   }
 }
 
