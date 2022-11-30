@@ -5,6 +5,7 @@
   padding: 3rem 0;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 
   @include tablet {
     padding: 1.25rem 0;
