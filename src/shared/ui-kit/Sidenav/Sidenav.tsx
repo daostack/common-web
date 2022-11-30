@@ -1,5 +1,6 @@
 import React, { FC, KeyboardEvent } from "react";
 import { useLocation } from "react-router";
+import classNames from "classnames";
 import { SIDENAV_ID } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useLockedBody } from "@/shared/hooks";
@@ -10,10 +11,12 @@ const Sidenav: FC = (props) => {
   const { children } = props;
   const location = useLocation();
   const viewportStates = useAllViews();
-  const isSidenavOpen =
+  // Sidenav is always visible on desktop and on tablet and lower viewports when hash is as sidenav id
+  const isSidenavVisible =
     !viewportStates.isTabletView || location.hash === `#${SIDENAV_ID}`;
-  const shouldLockBodyScroll = viewportStates.isTabletView && isSidenavOpen;
-  useLockedBody(shouldLockBodyScroll);
+  // Sidenav can be open only on tablet and lower viewports
+  const isSidenavOpen = viewportStates.isTabletView && isSidenavVisible;
+  useLockedBody(isSidenavOpen);
 
   const closeSidenav = () => {
     window.location.hash = "";
@@ -28,7 +31,9 @@ const Sidenav: FC = (props) => {
   return (
     <aside
       id={SIDENAV_ID}
-      className={styles.sidenav}
+      className={classNames(styles.sidenav, {
+        [styles.sidenavOpen]: isSidenavOpen,
+      })}
       onKeyUp={onSidebarKeyUp}
       tabIndex={0}
     >

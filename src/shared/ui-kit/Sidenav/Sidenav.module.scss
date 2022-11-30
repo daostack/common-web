@@ -20,16 +20,17 @@
     overflow: hidden;
     overscroll-behavior: contain;
     visibility: hidden;
-
-    &:target {
-      transform: translateX(0);
-      transition: transform var(--sb-transition-duration) var(--sb-easing);
-      visibility: visible;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     --sb-transition-duration: 1ms;
+  }
+}
+.sidenavOpen {
+  @include tablet {
+    transform: translateX(0);
+    transition: transform var(--sb-transition-duration) var(--sb-easing);
+    visibility: visible;
   }
 }
 
