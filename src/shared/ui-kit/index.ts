@@ -5,4 +5,5 @@ export * from "./Loader";
 export * from "./NotFound";
 export * from "./Portal";
 export * from "./Sidenav";
+export * from "./Tags";
 export * from "./TopNavigation";
