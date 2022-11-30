@@ -1,6 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Common, CommonMember, Governance } from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
+import { CommonTab } from "../../constants";
 import { CommonHeader } from "../CommonHeader";
 import { CommonTopNavigation } from "../CommonTopNavigation";
 import { getMainCommonDetails } from "./utils";
@@ -15,6 +16,7 @@ interface CommonContentProps {
 
 const CommonContent: FC<CommonContentProps> = (props) => {
   const { common, governance, isCommonMemberFetched, commonMember } = props;
+  const [tab, setTab] = useState(CommonTab.About);
 
   return (
     <>

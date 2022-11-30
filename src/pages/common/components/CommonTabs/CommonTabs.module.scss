@@ -1,0 +1,15 @@
+@import "../../../../constants";
+
+.tabs {
+  white-space: nowrap;
+}
+
+.tab {
+  --tab-ml: 3rem;
+  --tab-pb: 1.375rem;
+  --tab-fw: 600;
+  --tab-fs: #{$small};
+  --tab-inactive-color: #{$c-neutrals-300};
+  --tab-inactive-hover-color: #{$c-neutrals-300};
+  --tab-active-color: #{$c-neutrals-600};
+}
