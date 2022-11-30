@@ -1,9 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 import classNames from "classnames";
 import {
   SidenavLayoutRouteOptions,
   useLayoutRouteContext,
 } from "@/pages/App/router";
+import { useLockedBody } from "@/shared/hooks";
 import { useAllViews } from "@/shared/hooks/viewport";
 import { Footer, Sidenav } from "@/shared/ui-kit";
 import { SidenavContent } from "./components";
@@ -19,6 +20,18 @@ const SidenavLayout: FC = (props) => {
     routeOptions.footer,
     viewportStates,
   );
+  const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
+
+  const handleSidenavOpenToggle = useCallback(
+    (isOpen: boolean) => {
+      if (isOpen) {
+        lockBodyScroll();
+      } else {
+        unlockBodyScroll();
+      }
+    },
+    [lockBodyScroll, unlockBodyScroll],
+  );
 
   return (
     <div
@@ -26,7 +39,7 @@ const SidenavLayout: FC = (props) => {
         [styles.containerWithoutFooter]: !isFooterVisible,
       })}
     >
-      <Sidenav>
+      <Sidenav onOpenToggle={handleSidenavOpenToggle}>
         <SidenavContent className={styles.sidenavContent} />
       </Sidenav>
       <main className={styles.main}>{children}</main>
