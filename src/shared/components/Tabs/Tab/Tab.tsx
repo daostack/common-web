@@ -8,10 +8,11 @@ interface TabProps {
   className?: string;
   label: string;
   value: unknown;
+  includeDefaultMobileStyles?: boolean;
 }
 
 const Tab: FC<TabProps> = (props) => {
-  const { className, label, value } = props;
+  const { className, label, value, includeDefaultMobileStyles = true } = props;
   const { value: currentValue, onChange, panelIdTemplate } = useTabContext();
   const isActive = value === currentValue;
   const panelId = getPanelId(value, panelIdTemplate);
@@ -23,8 +24,11 @@ const Tab: FC<TabProps> = (props) => {
 
   const buttonClassName = classNames(
     "custom-tab",
-    { "custom-tab--active": isActive },
-    className
+    {
+      "custom-tab--active": isActive,
+      "custom-tab--default-mobile": includeDefaultMobileStyles,
+    },
+    className,
   );
 
   return (

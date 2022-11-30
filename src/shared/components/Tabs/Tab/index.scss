@@ -1,49 +1,56 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
 
-$inactive-color: $light-gray-2;
-$inactive-hover-color: $purple;
-$active-color: $purple-2;
-
 .custom-tab {
-  margin: 0 0 0 2rem;
-  padding: 0 0 1.25rem 0;
-  font-family: NunitoSans-Bold, sans-serif;
-  font-size: $moderate;
-  font-weight: bold;
+  --tab-ml: 2rem;
+  --tab-pb: 1.25rem;
+  --tab-inactive-color: #{$light-gray-2};
+  --tab-inactive-hover-color: #{$purple};
+  --tab-active-color: #{$purple-2};
+  --tab-color: var(--tab-inactive-color);
+  --tab-bb-color: transparent;
+  --tab-fw: bold;
+  --tab-fs: #{$moderate};
+
+  margin: 0 0 0 var(--tab-ml);
+  padding: 0 0 var(--tab-pb) 0;
+  font-family: NunitoSans, sans-serif;
+  font-size: var(--tab-fs);
+  font-weight: var(--tab-fw);
   text-align: center;
-  color: $inactive-color;
+  color: var(--tab-color);
   background-color: transparent;
   border: 0;
-  border-bottom: .25rem solid transparent;
+  border-bottom: 0.25rem solid var(--tab-bb-color);
   cursor: pointer;
-  transition: color .2s, border-bottom-color .2s;
+  transition: color 0.2s, border-bottom-color 0.2s;
 
   &:active {
-    border-bottom-color: $inactive-hover-color;
-    color: $inactive-hover-color;
+    --tab-bb-color: var(--tab-inactive-hover-color);
+    --tab-color: var(--tab-inactive-hover-color);
   }
 
   &:hover {
-    color: $inactive-hover-color;
+    --tab-color: var(--tab-inactive-hover-color);
   }
 
   &:first-child {
-    margin-left: 0;
+    --tab-ml: 0;
   }
-
+}
+.custom-tab--default-mobile {
   @include big-phone {
-    margin-left: 1.5rem;
-    padding-bottom: .75rem;
+    --tab-ml: 1.5rem;
+    --tab-pb: 0.75rem;
   }
 }
 .custom-tab--active {
-  border-bottom-color: $active-color;
-  color: $active-color;
+  --tab-bb-color: var(--tab-active-color);
+  --tab-color: var(--tab-active-color);
 
   &:active,
   &:hover {
-    border-bottom-color: $active-color;
-    color: $active-color;
+    --tab-bb-color: var(--tab-active-color);
+    --tab-color: var(--tab-active-color);
   }
 }
