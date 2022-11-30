@@ -1,6 +1,7 @@
 @import "../../../../constants";
 
 .tabs {
+  flex-shrink: unset;
   white-space: nowrap;
 }
 

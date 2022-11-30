@@ -1,9 +1,11 @@
 import React, { FC } from "react";
+import classNames from "classnames";
 import { Tab, Tabs } from "@/shared/components";
 import { CommonTab } from "../../constants";
 import styles from "./CommonTabs.module.scss";
 
 interface CommonTabsProps {
+  className?: string;
   activeTab: CommonTab;
   onTabChange: (tab: CommonTab) => void;
 }
@@ -17,14 +19,18 @@ const TABS: { label: string; value: CommonTab }[] = [
 ];
 
 const CommonTabs: FC<CommonTabsProps> = (props) => {
-  const { activeTab, onTabChange } = props;
+  const { className, activeTab, onTabChange } = props;
 
   const handleTabChange = (value: unknown) => {
     onTabChange(value as CommonTab);
   };
 
   return (
-    <Tabs className={styles.tabs} value={activeTab} onChange={handleTabChange}>
+    <Tabs
+      className={classNames(styles.tabs, className)}
+      value={activeTab}
+      onChange={handleTabChange}
+    >
       {TABS.map((tab) => (
         <Tab
           key={tab.value}
