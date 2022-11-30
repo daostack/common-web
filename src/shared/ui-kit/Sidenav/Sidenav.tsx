@@ -1,10 +1,19 @@
 import React, { FC, KeyboardEvent } from "react";
+import { useLocation } from "react-router";
 import { SIDENAV_ID } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
+import { useLockedBody } from "@/shared/hooks";
+import { useAllViews } from "@/shared/hooks/viewport";
 import styles from "./Sidenav.module.scss";
 
 const Sidenav: FC = (props) => {
   const { children } = props;
+  const location = useLocation();
+  const viewportStates = useAllViews();
+  const isSidenavOpen =
+    !viewportStates.isTabletView || location.hash === `#${SIDENAV_ID}`;
+  const shouldLockBodyScroll = viewportStates.isTabletView && isSidenavOpen;
+  useLockedBody(shouldLockBodyScroll);
 
   const closeSidenav = () => {
     window.location.hash = "";
