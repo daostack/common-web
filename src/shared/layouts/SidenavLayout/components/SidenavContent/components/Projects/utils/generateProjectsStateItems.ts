@@ -16,7 +16,7 @@ const getItemFromProjectsStateItem = (
     id: projectsStateItem.commonId,
     image: projectsStateItem.image,
     name: projectsStateItem.name,
-    path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", projectsStateItem.commonId),
+    path: ROUTE_PATHS.COMMON.replace(":id", projectsStateItem.commonId),
     hasMembership: projectsStateItem.hasMembership,
     notificationsAmount: projectsStateItem.notificationsAmount,
     items,

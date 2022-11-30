@@ -1,0 +1,65 @@
+@import "../../../styles/sizes";
+
+.container {
+  --container-mw: unset;
+  --container-ml: unset;
+  --container-mr: unset;
+  --container-pl: unset;
+  --container-pr: unset;
+
+  max-width: var(--container-mw);
+  width: 100%;
+  margin-left: var(--container-ml);
+  margin-right: var(--container-mr);
+  padding-left: var(--container-pl);
+  padding-right: var(--container-pr);
+  box-sizing: border-box;
+}
+
+.desktopContainer {
+  @include desktop {
+    --container-mw: 63.875rem;
+    --container-ml: auto;
+    --container-mr: auto;
+  }
+}
+
+.laptopContainer {
+  @include only-laptop {
+    --container-pl: 2.5rem;
+    --container-pr: 2.5rem;
+    --container-mw: calc(63.875rem + var(--container-pl) + var(--container-pr));
+    --container-ml: auto;
+    --container-mr: auto;
+  }
+}
+
+.tabletContainer {
+  @include only-tablet {
+    --container-mw: initial;
+    --container-ml: auto;
+    --container-mr: auto;
+    --container-pl: 2.5rem;
+    --container-pr: 2.5rem;
+  }
+}
+
+.phoneOrientatedContainer {
+  @include only-phone-orientated {
+    --container-mw: initial;
+    --container-ml: auto;
+    --container-mr: auto;
+    --container-pl: 1rem;
+    --container-pr: 1rem;
+  }
+}
+
+.phoneContainer {
+  @include phone {
+    --container-mw: initial;
+    --container-ml: auto;
+    --container-mr: auto;
+    --container-pl: 1rem;
+    --container-pr: 1rem;
+  }
+}

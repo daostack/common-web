@@ -21,6 +21,7 @@ const KeyValuePairs: FC<KeyValuePairsProps> = (props) => {
           key={item.id}
           name={item.name}
           value={item.value}
+          valueHint={item.valueHint}
         />
       ))}
     </dl>

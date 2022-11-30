@@ -8,11 +8,11 @@ import { getCommonMember } from "../store/actions";
 type State = LoadingState<CommonMember | null>;
 
 interface Return extends State {
-  fetchCommonMember: (commonId: string) => void;
+  fetchCommonMember: (commonId: string, force?: boolean) => void;
   resetCommonMember: () => void;
 }
 
-export const useCommonMember = (): Return => {
+export const useCommonMember = (shouldAutoReset = true): Return => {
   const dispatch = useDispatch();
   const [state, setState] = useState<State>({
     loading: false,
@@ -23,22 +23,24 @@ export const useCommonMember = (): Return => {
   const userId = user?.uid;
 
   const fetchCommonMember = useCallback(
-    (commonId: string) => {
-      if (state.loading || state.fetched) {
+    (commonId: string, force = false) => {
+      if (!force && (state.loading || state.fetched)) {
         return;
       }
       if (!userId) {
-        setState((nextState) => ({
-          ...nextState,
+        setState({
+          loading: false,
           fetched: true,
-        }));
+          data: null,
+        });
         return;
       }
 
-      setState((nextState) => ({
-        ...nextState,
+      setState({
         loading: true,
-      }));
+        fetched: false,
+        data: null,
+      });
 
       dispatch(
         getCommonMember.request({
@@ -74,8 +76,10 @@ export const useCommonMember = (): Return => {
   }, []);
 
   useEffect(() => {
-    resetCommonMember();
-  }, [resetCommonMember, userId]);
+    if (shouldAutoReset) {
+      resetCommonMember();
+    }
+  }, [userId]);
 
   return {
     ...state,

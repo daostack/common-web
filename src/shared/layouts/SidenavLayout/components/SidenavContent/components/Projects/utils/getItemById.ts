@@ -1,18 +1,21 @@
 import { Item } from "../../ProjectsTree/types";
 
-export const getItemByPath = (path: string, items: Item[]): Item | null => {
+export const getItemById = (itemId: string, items: Item[]): Item | null => {
   let finalItem: Item | null = null;
   const isItemFound = items.some((item) => {
+    if (item.id === itemId) {
+      finalItem = item;
+
+      return true;
+    }
+
     if (item.items && item.items.length > 0) {
-      finalItem = getItemByPath(path, item.items);
+      finalItem = getItemById(itemId, item.items);
 
       if (finalItem) {
         return true;
       }
     }
-
-    finalItem = item;
-    return path === item.path;
   });
 
   return isItemFound ? finalItem : null;

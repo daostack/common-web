@@ -4,10 +4,25 @@ import {
   CommonState,
   SubCollections,
 } from "@/shared/models";
-import { transformFirebaseDataList } from "@/shared/utils";
+import {
+  convertObjectDatesToFirestoreTimestamps,
+  transformFirebaseDataList,
+} from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 
 class CommonService {
+  public getCommonById = async (commonId: string): Promise<Common | null> => {
+    const common = await firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("id", "==", commonId)
+      .where("state", "==", CommonState.ACTIVE)
+      .get();
+    const data = transformFirebaseDataList<Common>(common);
+
+    return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
+  };
+
   public getCommonsByIds = async (ids: string[]): Promise<Common[]> => {
     if (ids.length === 0) {
       return [];
@@ -79,18 +94,22 @@ class CommonService {
     return finalCommons;
   };
 
-  public getUserProjectsInfo = async (
-    userId: string,
-  ): Promise<{ common: Common; hasMembership: boolean }[]> => {
-    const userCommonIds = await this.getUserCommonIds(userId);
-    const commons = await this.getCommonsWithSubCommons(userCommonIds);
+  public getParentCommonForCommonId = async (
+    commonId: string,
+  ): Promise<Common | null> => {
+    let nextCommonId = commonId;
 
-    return commons
-      .filter((common) => common.state === CommonState.ACTIVE)
-      .map((common) => ({
-        common,
-        hasMembership: userCommonIds.some((commonId) => commonId === common.id),
-      }));
+    while (nextCommonId) {
+      const common = await this.getCommonById(nextCommonId);
+
+      if (common && !common.directParent) {
+        return common;
+      }
+
+      nextCommonId = common?.directParent?.commonId || "";
+    }
+
+    return null;
   };
 }
 

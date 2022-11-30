@@ -7,7 +7,7 @@ import { KeyValueItem, KeyValuePairs } from "./components";
 import styles from "./CommonHeader.module.scss";
 
 interface CommonHeaderProps {
-  commonSrc: string;
+  commonImageSrc: string;
   commonName: string;
   description: string;
   details?: KeyValueItem[];
@@ -19,7 +19,7 @@ interface CommonHeaderProps {
 
 const CommonHeader: FC<CommonHeaderProps> = (props) => {
   const {
-    commonSrc,
+    commonImageSrc,
     commonName,
     description,
     details = [],
@@ -40,7 +40,7 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
       <header className={styles.header}>
         <Image
           className={commonImageClassName}
-          src={commonSrc}
+          src={commonImageSrc}
           alt={`${commonName}'s image`}
           placeholderElement={
             <div
@@ -51,13 +51,15 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
             />
           }
         />
-        <div>
+        <div className={styles.commonInfoWrapper}>
           <h1 className={styles.commonName} title={commonName}>
             {commonName}
           </h1>
-          <p className={styles.description} title={description}>
-            {description}
-          </p>
+          {description && (
+            <p className={styles.description} title={description}>
+              {description}
+            </p>
+          )}
         </div>
       </header>
       {(isJoinButtonVisible || areItemsVisible) && (

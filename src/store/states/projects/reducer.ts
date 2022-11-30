@@ -77,4 +77,9 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
 
         nextState.data = getRelatedToIdItems(commonId, nextState.data);
       }),
+  )
+  .handleAction(actions.markProjectsAsNotFetched, (state) =>
+    produce(state, (nextState) => {
+      nextState.isDataFetched = false;
+    }),
   );

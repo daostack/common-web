@@ -1,2 +1,3 @@
 export * from "./generateProjectsStateItems";
-export * from "./getItemByPath";
+export * from "./getActiveItemIdByPath";
+export * from "./getItemById";

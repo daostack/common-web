@@ -6,7 +6,7 @@ export const getProjects = createAsyncAction(
   ProjectsActionType.GET_PROJECTS,
   ProjectsActionType.GET_PROJECTS_SUCCESS,
   ProjectsActionType.GET_PROJECTS_FAILURE,
-)<void, ProjectsStateItem[], Error>();
+)<string | void, ProjectsStateItem[], Error>();
 
 export const addProject = createStandardAction(
   ProjectsActionType.ADD_PROJECT,
@@ -23,3 +23,7 @@ export const clearProjects = createStandardAction(
 export const clearProjectsExceptOfCurrent = createStandardAction(
   ProjectsActionType.CLEAR_PROJECTS_EXCEPT_OF_CURRENT,
 )<string>();
+
+export const markProjectsAsNotFetched = createStandardAction(
+  ProjectsActionType.MARK_PROJECTS_AS_NOT_FETCHED,
+)();
