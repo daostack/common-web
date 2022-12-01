@@ -1,0 +1,17 @@
+@import "../../../../../constants";
+
+.item {
+  font-weight: 600;
+  font-size: $xsmall;
+  color: var(--breadcrumbs-inactive-color);
+}
+.itemLast {
+  color: var(--breadcrumbs-active-color);
+}
+.itemLink {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

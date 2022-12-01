@@ -94,6 +94,35 @@ class CommonService {
     return finalCommons;
   };
 
+  // Fetch all parent commons. Order: from main parent common to lowest ones
+  public getAllParentCommonsForCommon = async (
+    commonToCheck: Pick<Common, "directParent"> | string,
+  ): Promise<Common[]> => {
+    const common =
+      typeof commonToCheck === "string"
+        ? await this.getCommonById(commonToCheck)
+        : commonToCheck;
+
+    if (!common || common.directParent === null) {
+      return [];
+    }
+
+    let finalCommons: Common[] = [];
+    let nextCommonId = common.directParent.commonId;
+
+    while (nextCommonId) {
+      const common = await this.getCommonById(nextCommonId);
+
+      if (common) {
+        finalCommons = [common, ...finalCommons];
+      }
+
+      nextCommonId = common?.directParent?.commonId || "";
+    }
+
+    return finalCommons;
+  };
+
   public getParentCommonForCommonId = async (
     commonId: string,
   ): Promise<Common | null> => {

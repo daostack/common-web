@@ -1,0 +1,15 @@
+@import "../../../constants";
+
+.list {
+  --breadcrumbs-inactive-color: #{$c-neutrals-300};
+  --breadcrumbs-active-color: #{$c-neutrals-600};
+
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.listItem {
+  display: inline-block;
+  color: var(--breadcrumbs-inactive-color);
+}

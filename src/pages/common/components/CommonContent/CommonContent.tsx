@@ -5,6 +5,7 @@ import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
 import { CommonHeader } from "../CommonHeader";
 import { CommonManagement } from "../CommonManagement";
+import { CommonTabPanels } from "../CommonTabPanels";
 import { CommonTopNavigation } from "../CommonTopNavigation";
 import { getMainCommonDetails } from "./utils";
 import styles from "./CommonContent.module.scss";
@@ -12,12 +13,19 @@ import styles from "./CommonContent.module.scss";
 interface CommonContentProps {
   common: Common;
   governance: Governance;
+  parentCommons: Common[];
   isCommonMemberFetched: boolean;
   commonMember: CommonMember | null;
 }
 
 const CommonContent: FC<CommonContentProps> = (props) => {
-  const { common, governance, isCommonMemberFetched, commonMember } = props;
+  const {
+    common,
+    governance,
+    parentCommons,
+    isCommonMemberFetched,
+    commonMember,
+  } = props;
   const [tab, setTab] = useState(CommonTab.About);
   const isTabletView = useIsTabletView();
 
@@ -36,6 +44,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
             withJoin={false}
           />
         </Container>
+        <div className={styles.commonHeaderSeparator} />
         {!isTabletView && (
           <Container>
             <CommonManagement
@@ -46,6 +55,12 @@ const CommonContent: FC<CommonContentProps> = (props) => {
             />
           </Container>
         )}
+        <CommonTabPanels
+          activeTab={tab}
+          common={common}
+          governance={governance}
+          parentCommons={parentCommons}
+        />
       </div>
     </>
   );

@@ -1,19 +1,21 @@
 import React, { FC } from "react";
+import classNames from "classnames";
 import styles from "./Tags.module.scss";
 
 interface TagsProps {
-  tags: string[];
+  className?: string;
+  tags?: string[];
 }
 
 const Tags: FC<TagsProps> = (props) => {
-  const { tags } = props;
+  const { className, tags = [] } = props;
 
   if (tags.length === 0) {
     return null;
   }
 
   return (
-    <ul className={styles.list}>
+    <ul className={classNames(styles.list, className)}>
       {tags.map((tag, index) => (
         <li key={index} className={styles.item}>
           {tag}

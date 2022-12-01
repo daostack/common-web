@@ -1,0 +1,23 @@
+@import "../../../../../../../../constants";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.description {
+  margin: 0;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+  color: $c-neutrals-600;
+  word-wrap: break-word;
+  white-space: pre-line;
+}
+.descriptionRTL {
+  direction: rtl;
+}
+
+.tagsWrapper {
+  margin-top: 2.125rem;
+}

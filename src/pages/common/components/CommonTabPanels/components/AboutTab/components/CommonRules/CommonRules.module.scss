@@ -1,0 +1,40 @@
+@import "../../../../../../../../constants";
+
+.title {
+  margin: 0 0 2rem;
+  font-size: $small;
+  color: $c-neutrals-600;
+}
+
+.list {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  margin-bottom: 2rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+.itemRTL {
+  text-align: right;
+  direction: rtl;
+}
+
+.itemTitle {
+  font-family: NunitoSans, sans-serif;
+  font-weight: bold;
+  font-size: $small;
+}
+
+.itemDescription {
+  margin: 0;
+  font-size: $small;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+  white-space: pre-line;
+}
