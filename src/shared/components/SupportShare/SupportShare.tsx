@@ -11,19 +11,19 @@ interface SupportShareProps
 
 const SupportShare: FC<SupportShareProps> = (props) => {
   const { common, ...restProps } = props;
-  const [linkURL, setLinkURL] = useState<string | null>(null);
-  const { handleOpen } = useBuildShareLink(
-    DynamicLinkType.Support,
-    common,
-    setLinkURL
-  );
+  // const [linkURL, setLinkURL] = useState<string | null>(null);
+  // const { handleOpen } = useBuildShareLink(
+  //   DynamicLinkType.Support,
+  //   common,
+  //   setLinkURL,
+  // );
 
   return (
     <Share
       {...restProps}
-      url={linkURL || ""}
-      isLoading={!linkURL}
-      onOpen={handleOpen}
+      url={`https://common.io/commons/${common.id}/support`}
+      isLoading={false}
+      // onOpen={handleOpen}
     />
   );
 };
