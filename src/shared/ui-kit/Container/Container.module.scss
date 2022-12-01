@@ -2,10 +2,10 @@
 
 .container {
   --container-mw: unset;
-  --container-ml: unset;
-  --container-mr: unset;
-  --container-pl: unset;
-  --container-pr: unset;
+  --container-ml: 0;
+  --container-mr: 0;
+  --container-pl: 0;
+  --container-pr: 0;
 
   max-width: var(--container-mw);
   width: 100%;
