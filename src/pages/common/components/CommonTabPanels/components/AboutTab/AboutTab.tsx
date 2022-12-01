@@ -4,6 +4,7 @@ import { Common, UnstructuredRules } from "@/shared/models";
 import {
   CommonDescription,
   CommonEntranceInfo,
+  CommonGovernance,
   CommonRules,
 } from "./components";
 import styles from "./AboutTab.module.scss";
@@ -20,6 +21,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
       <CommonDescription common={common} />
+      <CommonGovernance commonName={common.name} />
       {rules.length > 0 && <CommonRules rules={rules} />}
     </div>
   );
