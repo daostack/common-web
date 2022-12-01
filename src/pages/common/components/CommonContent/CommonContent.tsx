@@ -38,7 +38,12 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         </Container>
         {!isTabletView && (
           <Container>
-            <CommonManagement activeTab={tab} onTabChange={setTab} />
+            <CommonManagement
+              activeTab={tab}
+              circles={governance.circles}
+              circlesMap={commonMember?.circles.map}
+              onTabChange={setTab}
+            />
           </Container>
         )}
       </div>

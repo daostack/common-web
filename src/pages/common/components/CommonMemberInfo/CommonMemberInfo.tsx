@@ -1,15 +1,30 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { Avatar2Icon } from "@/shared/icons";
+import { CommonMember, Governance } from "@/shared/models";
+import {
+  getCirclesWithHighestTier,
+  getFilteredByIdCircles,
+} from "@/shared/utils";
 import styles from "./CommonMemberInfo.module.scss";
 
 interface CommonMemberInfoProps {
   className?: string;
+  circles: Governance["circles"];
+  circlesMap?: CommonMember["circles"]["map"];
 }
 
 const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
-  const { className } = props;
-  const circleNames = "Circle 1";
+  const { className, circles, circlesMap } = props;
+  const governanceCircles = Object.values(circles || {});
+  const circleIds = Object.values(circlesMap || {});
+  const filteredByIdCircles = getFilteredByIdCircles(
+    governanceCircles,
+    circleIds,
+  );
+  const circleNames = getCirclesWithHighestTier(filteredByIdCircles)
+    .map(({ name }) => name)
+    .join(", ");
 
   return (
     <div className={classNames(styles.container, className)}>
