@@ -1,7 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common, CommonMember, Governance } from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
+import { CommonTab } from "../../constants";
 import { CommonHeader } from "../CommonHeader";
+import { CommonManagement } from "../CommonManagement";
 import { CommonTopNavigation } from "../CommonTopNavigation";
 import { getMainCommonDetails } from "./utils";
 import styles from "./CommonContent.module.scss";
@@ -15,6 +18,8 @@ interface CommonContentProps {
 
 const CommonContent: FC<CommonContentProps> = (props) => {
   const { common, governance, isCommonMemberFetched, commonMember } = props;
+  const [tab, setTab] = useState(CommonTab.About);
+  const isTabletView = useIsTabletView();
 
   return (
     <>
@@ -31,6 +36,11 @@ const CommonContent: FC<CommonContentProps> = (props) => {
             withJoin={false}
           />
         </Container>
+        {!isTabletView && (
+          <Container>
+            <CommonManagement activeTab={tab} onTabChange={setTab} />
+          </Container>
+        )}
       </div>
     </>
   );
