@@ -44,6 +44,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
             withJoin={false}
           />
         </Container>
+        <div className={styles.commonHeaderSeparator} />
         {!isTabletView && (
           <Container>
             <CommonManagement

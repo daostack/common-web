@@ -1,3 +1,4 @@
+@import "../../../../constants";
 @import "../../../../styles/sizes";
 
 .container {
@@ -13,5 +14,17 @@
     --main-content-mw: 100%;
 
     padding: 1.25rem 0;
+  }
+}
+
+.commonHeaderSeparator {
+  display: none;
+
+  @include tablet {
+    width: 100%;
+    height: 0.0625rem;
+    margin-top: 1rem;
+    display: block;
+    background-color: $c-neutrals-100;
   }
 }
