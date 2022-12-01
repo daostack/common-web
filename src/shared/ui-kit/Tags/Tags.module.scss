@@ -1,14 +1,18 @@
 @import "../../../constants";
 
 .list {
-  margin: 0;
+  --tags-gap: 1rem;
+
+  width: calc(100% + var(--tags-gap));
+  margin: calc(var(--tags-gap) * -1) 0 0 calc(var(--tags-gap) * -1);
   padding: 0;
   display: flex;
+  flex-wrap: wrap;
   list-style-type: none;
 }
 
 .item {
-  margin-left: 0.5rem;
+  margin: var(--tags-gap) 0 0 var(--tags-gap);
   padding: 0.5rem;
   font-size: $xsmall;
   line-height: 143%;
@@ -16,8 +20,4 @@
   color: $c-neutrals-600;
   background-color: $c-primary-100;
   border-radius: 0.5rem;
-
-  &:first-child {
-    margin-left: 0;
-  }
 }
