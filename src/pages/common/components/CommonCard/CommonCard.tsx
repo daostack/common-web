@@ -1,10 +1,17 @@
 import React, { FC } from "react";
+import classNames from "classnames";
 import styles from "./CommonCard.module.scss";
 
-const CommonCard: FC = (props) => {
-  const { children } = props;
+interface CommonCardProps {
+  className?: string;
+}
 
-  return <div className={styles.container}>{children}</div>;
+const CommonCard: FC<CommonCardProps> = (props) => {
+  const { className, children } = props;
+
+  return (
+    <div className={classNames(styles.container, className)}>{children}</div>
+  );
 };
 
 export default CommonCard;
