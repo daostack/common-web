@@ -10,10 +10,11 @@ interface CommonTabPanelsProps {
   activeTab: CommonTab;
   common: Common;
   governance: Governance;
+  parentCommons: Common[];
 }
 
 const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
-  const { activeTab, common, governance } = props;
+  const { activeTab, common, governance, parentCommons } = props;
 
   return (
     <Container
@@ -23,7 +24,12 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
       ]}
     >
       <TabPanel value={activeTab} panelValue={CommonTab.About}>
-        <AboutTab common={common} rules={governance.unstructuredRules} />
+        <AboutTab
+          activeTab={activeTab}
+          common={common}
+          rules={governance.unstructuredRules}
+          parentCommons={parentCommons}
+        />
       </TabPanel>
     </Container>
   );

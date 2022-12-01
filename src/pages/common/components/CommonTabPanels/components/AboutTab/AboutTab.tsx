@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { CommonTab } from "@/pages/common/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common, UnstructuredRules } from "@/shared/models";
 import {
@@ -10,12 +11,14 @@ import {
 import styles from "./AboutTab.module.scss";
 
 interface AboutTabProps {
+  activeTab: CommonTab;
   common: Common;
+  parentCommons: Common[];
   rules: UnstructuredRules;
 }
 
 const AboutTab: FC<AboutTabProps> = (props) => {
-  const { common, rules } = props;
+  const { activeTab, common, parentCommons, rules } = props;
   const isTabletView = useIsTabletView();
 
   const renderMainColumn = () => (

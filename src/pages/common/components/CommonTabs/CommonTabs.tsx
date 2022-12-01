@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import { Tab, Tabs } from "@/shared/components";
 import { CommonTab } from "../../constants";
+import { getCommonTabName } from "../../utils";
 import styles from "./CommonTabs.module.scss";
 
 interface CommonTabsProps {
@@ -11,11 +12,14 @@ interface CommonTabsProps {
 }
 
 const TABS: { label: string; value: CommonTab }[] = [
-  { label: "About", value: CommonTab.About },
-  { label: "Feed", value: CommonTab.Feed },
-  { label: "Wallet", value: CommonTab.Wallet },
-  { label: "Members", value: CommonTab.Members },
-  { label: "Governance", value: CommonTab.Governance },
+  { label: getCommonTabName(CommonTab.About), value: CommonTab.About },
+  { label: getCommonTabName(CommonTab.Feed), value: CommonTab.Feed },
+  { label: getCommonTabName(CommonTab.Wallet), value: CommonTab.Wallet },
+  { label: getCommonTabName(CommonTab.Members), value: CommonTab.Members },
+  {
+    label: getCommonTabName(CommonTab.Governance),
+    value: CommonTab.Governance,
+  },
 ];
 
 const CommonTabs: FC<CommonTabsProps> = (props) => {

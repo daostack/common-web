@@ -13,12 +13,19 @@ import styles from "./CommonContent.module.scss";
 interface CommonContentProps {
   common: Common;
   governance: Governance;
+  parentCommons: Common[];
   isCommonMemberFetched: boolean;
   commonMember: CommonMember | null;
 }
 
 const CommonContent: FC<CommonContentProps> = (props) => {
-  const { common, governance, isCommonMemberFetched, commonMember } = props;
+  const {
+    common,
+    governance,
+    parentCommons,
+    isCommonMemberFetched,
+    commonMember,
+  } = props;
   const [tab, setTab] = useState(CommonTab.About);
   const isTabletView = useIsTabletView();
 
@@ -51,6 +58,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           activeTab={tab}
           common={common}
           governance={governance}
+          parentCommons={parentCommons}
         />
       </div>
     </>
