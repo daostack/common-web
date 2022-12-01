@@ -1,11 +1,20 @@
+@import "../../../../../../styles/sizes";
+
 .container {
   display: flex;
   flex-direction: column;
 }
 
-.tabNavigation {
-  max-width: var(--main-content-mw);
+.tabNavigationContainer {
   margin-top: 0.875rem;
+
+  @include desktop {
+    max-width: var(--main-content-mw);
+  }
+
+  @include only-laptop {
+    max-width: var(--main-content-mw);
+  }
 }
 
 .columnsWrapper {
@@ -13,6 +22,10 @@
   display: grid;
   grid-column-gap: 1rem;
   grid-template-columns: minmax(var(--main-content-mw), 1fr) 1fr;
+
+  @include tablet {
+    margin-top: 1.125rem;
+  }
 }
 
 .mainColumnWrapper {
