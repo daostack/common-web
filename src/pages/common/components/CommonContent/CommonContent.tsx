@@ -5,6 +5,7 @@ import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
 import { CommonHeader } from "../CommonHeader";
 import { CommonManagement } from "../CommonManagement";
+import { CommonTabPanels } from "../CommonTabPanels";
 import { CommonTopNavigation } from "../CommonTopNavigation";
 import { getMainCommonDetails } from "./utils";
 import styles from "./CommonContent.module.scss";
@@ -46,6 +47,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
             />
           </Container>
         )}
+        <CommonTabPanels activeTab={tab} common={common} />
       </div>
     </>
   );

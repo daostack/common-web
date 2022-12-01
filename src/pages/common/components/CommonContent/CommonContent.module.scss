@@ -1,6 +1,8 @@
 @import "../../../../styles/sizes";
 
 .container {
+  --main-content-mw: 62%;
+
   flex: 1;
   padding: 3rem 0;
   display: flex;

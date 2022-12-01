@@ -36,7 +36,7 @@ export interface Common extends BaseEntity {
 
   gallery: CommonLink[];
 
-  tags: string[];
+  tags?: string[];
 
   video: CommonLink | null;
 
