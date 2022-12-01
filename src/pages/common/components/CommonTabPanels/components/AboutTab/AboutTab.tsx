@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { CommonTab } from "@/pages/common/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common, UnstructuredRules } from "@/shared/models";
+import { TabNavigation } from "../TabNavigation";
 import {
   CommonDescription,
   CommonEntranceInfo,
@@ -42,7 +43,13 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
+      <TabNavigation
+        className={styles.tabNavigation}
+        activeTab={activeTab}
+        common={common}
+        parentCommons={parentCommons}
+      />
       <div className={styles.columnsWrapper}>
         {renderMainColumn()}
         {renderAdditionalColumn()}
