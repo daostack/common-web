@@ -28,16 +28,26 @@
   }
 }
 
-.mainColumnWrapper {
-  display: flex;
-  flex-direction: column;
-
+@mixin mainColumnWrapperItemsGap($margin: 0.625rem) {
   & > * {
-    margin-bottom: 0.625rem;
+    margin-bottom: $margin;
 
     &:last-child {
       margin-bottom: 0;
     }
+  }
+}
+
+.mainColumnWrapper {
+  display: flex;
+  flex-direction: column;
+
+  @include desktop {
+    @include mainColumnWrapperItemsGap;
+  }
+
+  @include only-laptop {
+    @include mainColumnWrapperItemsGap;
   }
 }
 
