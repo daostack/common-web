@@ -1,20 +1,26 @@
 import React, { FC } from "react";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Common } from "@/shared/models";
-import { CommonDescription, CommonEntranceInfo } from "./components";
+import { Common, UnstructuredRules } from "@/shared/models";
+import {
+  CommonDescription,
+  CommonEntranceInfo,
+  CommonRules,
+} from "./components";
 import styles from "./AboutTab.module.scss";
 
 interface AboutTabProps {
   common: Common;
+  rules: UnstructuredRules;
 }
 
 const AboutTab: FC<AboutTabProps> = (props) => {
-  const { common } = props;
+  const { common, rules } = props;
   const isTabletView = useIsTabletView();
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
       <CommonDescription common={common} />
+      {rules.length > 0 && <CommonRules rules={rules} />}
     </div>
   );
 

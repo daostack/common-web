@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { TabPanel } from "@/shared/components";
 import { ViewportBreakpointVariant } from "@/shared/constants";
-import { Common } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
 import { AboutTab } from "./components";
@@ -9,10 +9,11 @@ import { AboutTab } from "./components";
 interface CommonTabPanelsProps {
   activeTab: CommonTab;
   common: Common;
+  governance: Governance;
 }
 
 const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
-  const { activeTab, common } = props;
+  const { activeTab, common, governance } = props;
 
   return (
     <Container
@@ -22,7 +23,7 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
       ]}
     >
       <TabPanel value={activeTab} panelValue={CommonTab.About}>
-        <AboutTab common={common} />
+        <AboutTab common={common} rules={governance.unstructuredRules} />
       </TabPanel>
     </Container>
   );

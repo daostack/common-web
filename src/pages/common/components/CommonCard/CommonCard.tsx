@@ -10,7 +10,9 @@ const CommonCard: FC<CommonCardProps> = (props) => {
   const { className, children } = props;
 
   return (
-    <div className={classNames(styles.container, className)}>{children}</div>
+    <section className={classNames(styles.container, className)}>
+      {children}
+    </section>
   );
 };
 

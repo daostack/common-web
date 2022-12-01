@@ -47,7 +47,11 @@ const CommonContent: FC<CommonContentProps> = (props) => {
             />
           </Container>
         )}
-        <CommonTabPanels activeTab={tab} common={common} />
+        <CommonTabPanels
+          activeTab={tab}
+          common={common}
+          governance={governance}
+        />
       </div>
     </>
   );
