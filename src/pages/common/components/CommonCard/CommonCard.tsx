@@ -4,13 +4,18 @@ import styles from "./CommonCard.module.scss";
 
 interface CommonCardProps {
   className?: string;
+  hideCardStyles?: boolean;
 }
 
 const CommonCard: FC<CommonCardProps> = (props) => {
-  const { className, children } = props;
+  const { className, hideCardStyles = false, children } = props;
 
   return (
-    <section className={classNames(styles.container, className)}>
+    <section
+      className={classNames(styles.container, className, {
+        [styles.containerWithCardStyles]: !hideCardStyles,
+      })}
+    >
       {children}
     </section>
   );
