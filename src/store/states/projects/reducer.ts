@@ -75,7 +75,12 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
           return;
         }
 
-        nextState.data = getRelatedToIdItems(commonId, nextState.data);
+        nextState.data = getRelatedToIdItems(commonId, nextState.data).map(
+          (item) => ({
+            ...item,
+            hasMembership: false,
+          }),
+        );
       }),
   )
   .handleAction(actions.markProjectsAsNotFetched, (state) =>
