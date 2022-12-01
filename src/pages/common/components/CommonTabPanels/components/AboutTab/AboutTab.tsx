@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common } from "@/shared/models";
-import { CommonDescription } from "./components";
+import { CommonDescription, CommonEntranceInfo } from "./components";
 import styles from "./AboutTab.module.scss";
 
 interface AboutTabProps {
@@ -23,7 +23,11 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       return null;
     }
 
-    return <div className={styles.additionalColumnWrapper}></div>;
+    return (
+      <div className={styles.additionalColumnWrapper}>
+        <CommonEntranceInfo />
+      </div>
+    );
   };
 
   return (
