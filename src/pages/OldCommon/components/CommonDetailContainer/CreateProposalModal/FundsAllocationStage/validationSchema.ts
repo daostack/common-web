@@ -1,6 +1,6 @@
 import * as yup from "yup";
+import { Currency } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
-import { Currency } from "../../../../../../shared/models";
 import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH } from "./constants";
 
 export const configurationValidationSchema = yup.object().shape({

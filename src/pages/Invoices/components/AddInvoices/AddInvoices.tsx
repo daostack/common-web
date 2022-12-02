@@ -12,8 +12,8 @@ import {
   InvoiceTileVariant,
   DeletePrompt,
 } from "@/shared/components";
+import { Currency } from "@/shared/models";
 import { ScreenSize } from "../../../../shared/constants";
-import { Currency } from "../../../../shared/models";
 import { getScreenSize } from "../../../../shared/store/selectors";
 import { formatPrice } from "../../../../shared/utils";
 import { AmountPrompt } from "../AmountPrompt";
@@ -158,7 +158,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
         ) : (
           <AmountPrompt
             onContinue={onFileUploadFinish}
-            proposalRequest={proposalRequest ? proposalRequest / 100 : 0}
+            proposalRequest={proposalRequest || 0}
             totalAmount={totalAmount}
           />
         )}
@@ -230,7 +230,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
             currency: Currency.ILS,
           })}
           proposalRequest={formatPrice({
-            amount: proposalRequest ? proposalRequest / 100 : 0,
+            amount: proposalRequest || 0,
             currency: Currency.ILS,
           })}
           updateSubmissionStatus={updateSubmissionStatus}

@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import classNames from "classnames";
 import { Orientation } from "@/shared/constants";
-import { Currency } from "../../models";
+import { Currency } from "@/shared/models";
 import { formatPrice } from "../../utils";
 import { Button } from "../Button";
 import {

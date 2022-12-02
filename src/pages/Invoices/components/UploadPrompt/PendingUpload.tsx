@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
 import { Button, Loader } from "../../../../shared/components";
-import { InvoicesSubmission } from "../../../../shared/models";
+import { Currency, InvoicesSubmission } from "../../../../shared/models";
 import { uploadFile } from "../../../../shared/utils/firebaseUploadFile";
 import { uploadInvoices } from "../../api";
 import { IFile } from "../AddInvoices/AddInvoices";
@@ -41,7 +41,7 @@ export default function PendingUpload({
             invoicesData.payoutDocs.push({
               name: file.data.name,
               legalType: PaymeTypeCodes.Invoice,
-              amount: file.amount * 100,
+              amount: { amount: file.amount * 100, currency: Currency.ILS },
               mimeType: file.data.type,
               downloadURL: downloadURL,
             });

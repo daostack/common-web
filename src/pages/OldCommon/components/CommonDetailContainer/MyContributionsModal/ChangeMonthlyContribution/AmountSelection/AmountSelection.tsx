@@ -2,8 +2,8 @@ import React, { useEffect, FC } from "react";
 import classNames from "classnames";
 import { ContributionAmountSelection, Separator } from "@/shared/components";
 import { MIN_CONTRIBUTION_ILS_AMOUNT } from "@/shared/constants";
+import { Currency } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
-import { Currency } from "../../../../../../../shared/models";
 import "./index.scss";
 
 export interface Styles {

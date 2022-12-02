@@ -59,7 +59,7 @@ const FundingProposalListItem: FC<ProposalListItem> = ({
             {formatPrice(
               isFundsAllocationProposal(proposal)
                 ? proposal.data.args.amount
-                : { amount: 0, currency: Currency.ILS },
+                : { amount: 0 },
               {
                 shouldRemovePrefixFromZero: false,
               },

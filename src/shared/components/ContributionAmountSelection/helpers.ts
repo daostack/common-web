@@ -1,9 +1,9 @@
+import { Currency } from "@/shared/models";
 import {
   MAX_CONTRIBUTION_ILS_AMOUNT,
   MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION,
   MIN_CONTRIBUTION_ILS_AMOUNT,
 } from "../../constants";
-import { Currency } from "../../models";
 import { formatPrice, roundNumberToNextTenths } from "../../utils";
 
 const getLastSelectionAmount = (

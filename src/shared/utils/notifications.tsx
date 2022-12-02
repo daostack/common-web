@@ -7,7 +7,6 @@ import {
 } from "@/shared/models/Notification";
 import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { formatPrice } from "@/shared/utils/shared";
-import { Currency } from "../models";
 
 export function getFundingRequestNotification(
   data: NotificationItem,
@@ -25,7 +24,7 @@ export function getFundingRequestNotification(
         ? "Done"
         : "Let's get to work",
     additionalInformation: formatPrice(
-      proposal.data.args.amount || { amount: 0, currency: Currency.ILS },
+      proposal.data.args.amount || { amount: 0 },
     ),
   };
 }

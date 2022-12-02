@@ -11,10 +11,10 @@ import {
   MIN_CONTRIBUTION_ILS_AMOUNT,
   ScreenSize,
 } from "@/shared/constants";
+import { Currency } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
-import { Currency } from "../../../../../../../shared/models";
 import { PaymentPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
 import "./index.scss";

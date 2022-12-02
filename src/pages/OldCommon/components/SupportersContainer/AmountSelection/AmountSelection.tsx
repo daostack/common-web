@@ -7,8 +7,8 @@ import {
   ToggleButton,
 } from "@/shared/components/Form";
 import { ContributionType } from "@/shared/constants";
+import { Currency } from "@/shared/models";
 import { emptyFunction, formatPrice } from "@/shared/utils";
-import { Currency } from "../../../../../shared/models";
 import { SelectionButton } from "../SelectionButton";
 import { getFinalAmount } from "./helpers";
 import "./index.scss";

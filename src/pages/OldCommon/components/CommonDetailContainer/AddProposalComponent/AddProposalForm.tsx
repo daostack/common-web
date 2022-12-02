@@ -103,7 +103,7 @@ export const AddProposalForm = ({
     description: "",
     links: [{ title: "", value: "" }],
     images: [],
-    amount: 0,
+    amount: { amount: 0, currency: Currency.ILS },
     to: AllocateFundsTo.Proposer,
   });
 
@@ -197,7 +197,7 @@ export const AddProposalForm = ({
                   name="amount"
                   label="Funding amount requested"
                   placeholder={formatPrice(
-                    { amount: 0, currency: Currency.ILS },
+                    { amount: 0 },
                     {
                       shouldRemovePrefixFromZero: false,
                     },

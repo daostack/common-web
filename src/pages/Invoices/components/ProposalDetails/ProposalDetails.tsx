@@ -1,6 +1,6 @@
 import React from "react";
 import ApprovedIcon from "@/shared/icons/approved.icon";
-import { Proposal, User } from "@/shared/models";
+import { Currency, Proposal, User } from "@/shared/models";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import { formatEpochTime, formatPrice } from "@/shared/utils";
 import { AddInvoices } from "../AddInvoices";
@@ -26,7 +26,7 @@ export default function ProposalDetails({
   const expense: Expense = Expense.proposal;
   const amount = isFundsAllocationProposal(proposal)
     ? proposal.data.args.amount
-    : 0;
+    : { amount: 0 };
 
   return (
     <div className="proposal-detailes-wrapper">
@@ -56,7 +56,7 @@ export default function ProposalDetails({
       <AddInvoices
         proposalId={proposal?.id ?? ""}
         className="submit-invoices-wrapper__add-invoice"
-        proposalRequest={amount}
+        proposalRequest={amount.amount}
         updateSubmissionStatus={updateSubmissionStatus}
       />
     </div>

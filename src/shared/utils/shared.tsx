@@ -29,17 +29,17 @@ interface FormatPriceOptions {
  * Backend stores the price in cents, that's why we divide by 100
  **/
 export const formatPrice = (
-  price: PaymentAmount,
+  price: Partial<PaymentAmount>,
   options: FormatPriceOptions = {},
 ): string => {
   const {
     shouldMillify = true,
     shouldRemovePrefixFromZero = true,
     bySubscription = false,
-    prefix = getPrefix(price.currency),
+    prefix = getPrefix(price?.currency || Currency.ILS),
   } = options;
 
-  if (!price || !price.amount) {
+  if (!price.amount) {
     return shouldRemovePrefixFromZero ? "0" : `${prefix}0`;
   }
 

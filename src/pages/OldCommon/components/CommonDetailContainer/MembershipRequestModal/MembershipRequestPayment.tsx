@@ -9,9 +9,9 @@ import {
 } from "@/shared/components";
 import { ContributionType, ScreenSize } from "@/shared/constants";
 import { usePaymentMethodChange, useUserCards } from "@/shared/hooks/useCases";
+import { Currency } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
-import { Currency } from "../../../../../shared/models";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
 import "./index.scss";
@@ -104,7 +104,7 @@ export default function MembershipRequestPayment(
         <strong className="membership-request-payment__amount">
           {formatPrice(
             {
-              amount: contributionInfo.amount as number,
+              amount: contributionInfo?.amount || 0,
               currency: Currency.ILS,
             },
             { shouldMillify: false },

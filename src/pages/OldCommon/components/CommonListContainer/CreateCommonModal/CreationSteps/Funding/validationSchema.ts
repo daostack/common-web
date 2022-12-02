@@ -4,8 +4,8 @@ import {
   MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION,
   ContributionType,
 } from "@/shared/constants";
+import { Currency } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
-import { Currency } from "../../../../../../../shared/models";
 
 const REQUIRED_MINIMUM_CONTRIBUTION_ERROR = `The amount must be at least ${formatPrice(
   { amount: MIN_CONTRIBUTION_ILS_AMOUNT, currency: Currency.ILS },

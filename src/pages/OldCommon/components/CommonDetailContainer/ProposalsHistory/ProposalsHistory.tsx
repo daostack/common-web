@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Common,
-  Currency,
-  Proposal,
-  ProposalState,
-} from "../../../../../shared/models";
+import { Common, Currency, Proposal, ProposalState } from "@/shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 

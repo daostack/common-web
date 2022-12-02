@@ -71,7 +71,7 @@ export const AddProposalComponent = ({
         description: "",
         links: [],
         images: [],
-        amount: 0,
+        amount: { amount: 0, currency: Currency.ILS },
         commonId: common.id,
         files: [],
         to: AllocateFundsTo.Proposer,

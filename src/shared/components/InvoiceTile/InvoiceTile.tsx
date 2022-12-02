@@ -1,9 +1,9 @@
 import React, { useCallback, FC, MouseEventHandler } from "react";
 import classNames from "classnames";
+import { Currency } from "@/shared/models";
 import { ButtonIcon, Image } from "../../../shared/components";
 import TrashIcon from "../../../shared/icons/trash.icon";
 import { formatPrice } from "../../../shared/utils";
-import { Currency } from "../../models";
 import "./index.scss";
 
 export enum InvoiceTileVariant {
