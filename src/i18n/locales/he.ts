@@ -11,7 +11,7 @@ export default {
       title: "שתף עם חברים",
     },
     login: {
-      description: "התחבר/י לחשבון שלך כדי להצטרף לקומון",
+      description: "התחבר/י לחשבון שלך כדי להמשיך",
       mobileDescription: "התחבר/י ל",
       termsText:
         "בשימוש ב-Common הינך מסכימ/ה<br /><1>לתנאי השימוש</1> של האפליקציה",
@@ -149,7 +149,7 @@ export default {
       },
       welcome: {
         title: "ברוכים הבאים",
-        rulesTitle: "כללי הקומון",
+        rulesTitle: "כללי הקומון של",
         rulesApproval: "קראתי והבנתי את הכללים",
       },
     },

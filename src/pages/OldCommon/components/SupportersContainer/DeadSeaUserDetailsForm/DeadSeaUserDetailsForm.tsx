@@ -43,12 +43,10 @@ const getInitialValues = (
   supportPlan: initialData.supportPlan ?? "",
   marketingContentAgreement:
     initialData.marketingContentAgreement ??
-    (displayedFields?.includes("marketingContentAgreement")
-      ? false
-      : undefined),
+    (displayedFields?.includes("marketingContentAgreement") ? true : undefined),
   whatsappGroupAgreement:
     initialData.whatsappGroupAgreement ??
-    (displayedFields?.includes("whatsappGroupAgreement") ? false : undefined),
+    (displayedFields?.includes("whatsappGroupAgreement") ? true : undefined),
 });
 
 interface DeadSeaUserDetailsFormProps {
