@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
+import { Currency, InvoicesSubmission } from "@/shared/models";
 import { Button, Loader } from "../../../../shared/components";
-import { Currency, InvoicesSubmission } from "../../../../shared/models";
 import { uploadFile } from "../../../../shared/utils/firebaseUploadFile";
 import { uploadInvoices } from "../../api";
 import { IFile } from "../AddInvoices/AddInvoices";
