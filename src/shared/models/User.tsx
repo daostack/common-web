@@ -17,7 +17,6 @@ export interface User {
   intro?: string;
   createdAt?: Date;
   lastLoginAt?: Date;
-  tokens?: string[];
   permissions?: string[];
   proposals?: Proposal[];
   uid?: string;
