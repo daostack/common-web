@@ -1,5 +1,4 @@
 import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
-import { Reputation } from "./Reputation";
 
 export type AllowedActions = {
   [key in GovernanceActions]?: true;
@@ -52,7 +51,6 @@ export enum CIRCLE_TYPES {
 
 export type Circle = {
   name: string;
-  reputation: Partial<Reputation>;
   id: string;
   allowedActions: AllowedActions;
   allowedProposals: AllowedProposals;
