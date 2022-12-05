@@ -6,7 +6,6 @@ describe("calculateVoters", () => {
   it("should calculate voters correctly", () => {
     const circles: Circles = {
       0: {
-        reputation: {},
         id: "f0e718e5-c613-4f06-a7a7-4782647de3f8",
         name: "Supporters",
         allowedActions: {},
@@ -16,7 +15,6 @@ describe("calculateVoters", () => {
       1: {
         id: "1b42d7c9-fe5a-4d48-aa6a-133f81812204",
         allowedActions: {},
-        reputation: {},
         allowedProposals: {},
         name: "Contributors",
         hierarchy: {
@@ -29,7 +27,6 @@ describe("calculateVoters", () => {
         name: "Seniors",
         allowedProposals: {},
         allowedActions: {},
-        reputation: {},
         hierarchy: {
           tier: 10,
           exclusions: [],
@@ -39,7 +36,6 @@ describe("calculateVoters", () => {
         name: "Leader",
         id: "1c1d2b5e-f9ac-4e9c-8872-4ceaa6b1a543",
         allowedProposals: {},
-        reputation: {},
         allowedActions: {},
         hierarchy: {
           tier: 20,
@@ -50,7 +46,6 @@ describe("calculateVoters", () => {
         allowedProposals: {},
         name: "Project",
         allowedActions: {},
-        reputation: {},
         id: "6df2148b-0142-4976-a3d5-656d52f77984",
         hierarchy: null,
       },

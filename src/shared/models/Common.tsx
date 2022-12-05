@@ -10,7 +10,6 @@ import {
   Circles,
   CirclesMap,
 } from "./governance/Circles";
-import { Reputation } from "./governance/Reputation";
 
 export interface Common extends BaseEntity {
   /**
@@ -135,8 +134,6 @@ export interface CommonMember {
   circles: CirclesMap;
   allowedActions: AllowedActions;
   allowedProposals: AllowedProposals;
-  tokenBalance: number;
-  reputation: Partial<Reputation>;
 }
 
 export interface CommonMemberWithUserInfo extends CommonMember {

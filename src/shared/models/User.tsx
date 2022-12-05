@@ -5,7 +5,6 @@ export enum UserRole {
 }
 
 export interface User {
-  id: string;
   displayName?: string;
   country: string;
   firstName: string;
@@ -16,9 +15,7 @@ export interface User {
   photoURL?: string;
   intro?: string;
   createdAt?: Date;
-  lastLoginAt?: Date;
-  tokens?: string[];
-  permissions?: string[];
+  updatedAt?: Date;
   proposals?: Proposal[];
   uid?: string;
   roles?: UserRole[];
