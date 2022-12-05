@@ -1,5 +1,7 @@
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonTab } from "@/pages/common/constants";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -28,6 +30,7 @@ interface AboutTabProps {
 const AboutTab: FC<AboutTabProps> = (props) => {
   const { activeTab, common, parentCommons, subCommons, rules, limitations } =
     props;
+  const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
 
   const renderMainColumn = () => (
@@ -40,7 +43,9 @@ const AboutTab: FC<AboutTabProps> = (props) => {
 
   const renderAdditionalColumn = () => (
     <div className={styles.additionalColumnWrapper}>
-      {limitations && <CommonEntranceInfo limitations={limitations} />}
+      {limitations && (
+        <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
+      )}
       <CommonProjects subCommons={subCommons} />
     </div>
   );
@@ -62,7 +67,9 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       <div className={styles.separator} />
       {rules.length > 0 && <CommonRules rules={rules} />}
       <div className={styles.separator} />
-      {limitations && <CommonEntranceInfo limitations={limitations} />}
+      {limitations && (
+        <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
+      )}
     </div>
   );
 

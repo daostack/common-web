@@ -2,17 +2,18 @@ import React, { FC } from "react";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
-import { Container } from "@/shared/ui-kit";
+import { Button, ButtonSize, ButtonVariant, Container } from "@/shared/ui-kit";
 import { CommonCard } from "../../../../../CommonCard";
 import { CommonEntranceItem } from "./components";
 import styles from "./CommonEntranceInfo.module.scss";
 
 interface CommonEntranceInfoProps {
   limitations: MemberAdmittanceLimitations;
+  withJoinRequest?: boolean;
 }
 
 const CommonEntranceInfo: FC<CommonEntranceInfoProps> = (props) => {
-  const { limitations } = props;
+  const { limitations, withJoinRequest = false } = props;
   const isTabletView = useIsTabletView();
 
   if (!limitations.minFeeOneTime && !limitations.minFeeMonthly) {
@@ -44,6 +45,15 @@ const CommonEntranceInfo: FC<CommonEntranceInfoProps> = (props) => {
             />
           )}
         </dl>
+        {withJoinRequest && (
+          <Button
+            className={styles.joinButton}
+            variant={ButtonVariant.OutlineBlue}
+            size={ButtonSize.Medium}
+          >
+            Join the project
+          </Button>
+        )}
       </CommonCard>
     </Container>
   );
