@@ -3,6 +3,7 @@ import { CommonTab } from "@/pages/common/constants";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common, UnstructuredRules } from "@/shared/models";
+import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { Container } from "@/shared/ui-kit";
 import { TabNavigation } from "../TabNavigation";
 import {
@@ -18,10 +19,11 @@ interface AboutTabProps {
   common: Common;
   parentCommons: Common[];
   rules: UnstructuredRules;
+  limitations?: MemberAdmittanceLimitations;
 }
 
 const AboutTab: FC<AboutTabProps> = (props) => {
-  const { activeTab, common, parentCommons, rules } = props;
+  const { activeTab, common, parentCommons, rules, limitations } = props;
   const isTabletView = useIsTabletView();
 
   const renderMainColumn = () => (
@@ -39,7 +41,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
 
     return (
       <div className={styles.additionalColumnWrapper}>
-        <CommonEntranceInfo />
+        {limitations && <CommonEntranceInfo limitations={limitations} />}
       </div>
     );
   };
