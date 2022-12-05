@@ -16,6 +16,13 @@
     max-width: var(--main-content-mw);
   }
 }
+.tabNavigationContainerWithoutActions {
+  margin-bottom: 1.25rem;
+
+  @include tablet {
+    margin-bottom: 0.5rem;
+  }
+}
 
 .columnsWrapper {
   margin-top: 1rem;

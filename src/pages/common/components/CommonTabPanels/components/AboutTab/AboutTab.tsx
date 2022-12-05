@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import classNames from "classnames";
 import { CommonTab } from "@/pages/common/constants";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -55,7 +56,10 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   return (
     <div className={styles.container}>
       <Container
-        className={styles.tabNavigationContainer}
+        className={classNames(
+          styles.tabNavigationContainer,
+          styles.tabNavigationContainerWithoutActions,
+        )}
         viewports={[
           ViewportBreakpointVariant.Tablet,
           ViewportBreakpointVariant.PhoneOriented,
