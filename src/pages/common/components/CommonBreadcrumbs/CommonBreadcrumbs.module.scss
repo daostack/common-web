@@ -1,0 +1,10 @@
+.breadcrumbListItemWrapper {
+  display: inline-flex;
+}
+
+.breadcrumbItem {
+  max-width: 9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
