@@ -14,6 +14,7 @@ interface CommonContentProps {
   common: Common;
   governance: Governance;
   parentCommons: Common[];
+  subCommons: Common[];
   isCommonMemberFetched: boolean;
   commonMember: CommonMember | null;
 }
@@ -23,6 +24,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     common,
     governance,
     parentCommons,
+    subCommons,
     isCommonMemberFetched,
     commonMember,
   } = props;
@@ -60,6 +62,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           common={common}
           governance={governance}
           parentCommons={parentCommons}
+          subCommons={subCommons}
         />
       </div>
     </>

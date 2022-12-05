@@ -11,6 +11,7 @@ import {
   CommonDescription,
   CommonEntranceInfo,
   CommonGovernance,
+  CommonProjects,
   CommonRules,
 } from "./components";
 import styles from "./AboutTab.module.scss";
@@ -19,12 +20,14 @@ interface AboutTabProps {
   activeTab: CommonTab;
   common: Common;
   parentCommons: Common[];
+  subCommons: Common[];
   rules: UnstructuredRules;
   limitations?: MemberAdmittanceLimitations;
 }
 
 const AboutTab: FC<AboutTabProps> = (props) => {
-  const { activeTab, common, parentCommons, rules, limitations } = props;
+  const { activeTab, common, parentCommons, subCommons, rules, limitations } =
+    props;
   const isTabletView = useIsTabletView();
 
   const renderMainColumn = () => (
@@ -38,6 +41,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   const renderAdditionalColumn = () => (
     <div className={styles.additionalColumnWrapper}>
       {limitations && <CommonEntranceInfo limitations={limitations} />}
+      <CommonProjects subCommons={subCommons} />
     </div>
   );
 

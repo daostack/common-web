@@ -11,10 +11,11 @@ interface CommonTabPanelsProps {
   common: Common;
   governance: Governance;
   parentCommons: Common[];
+  subCommons: Common[];
 }
 
 const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
-  const { activeTab, common, governance, parentCommons } = props;
+  const { activeTab, common, governance, parentCommons, subCommons } = props;
 
   return (
     <Container
@@ -29,6 +30,7 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
           common={common}
           rules={governance.unstructuredRules}
           parentCommons={parentCommons}
+          subCommons={subCommons}
           limitations={
             governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE]?.limitations
           }
