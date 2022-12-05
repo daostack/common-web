@@ -8,6 +8,7 @@ import styles from "./CommonTabs.module.scss";
 interface CommonTabsProps {
   className?: string;
   activeTab: CommonTab;
+  isAuthenticated?: boolean;
   onTabChange: (tab: CommonTab) => void;
 }
 
@@ -22,8 +23,11 @@ const TABS: { label: string; value: CommonTab }[] = [
   },
 ];
 
+const UNAUTHENTICATED_TABS = [TABS[0]];
+
 const CommonTabs: FC<CommonTabsProps> = (props) => {
-  const { className, activeTab, onTabChange } = props;
+  const { className, activeTab, isAuthenticated = false, onTabChange } = props;
+  const tabs = isAuthenticated ? TABS : UNAUTHENTICATED_TABS;
 
   const handleTabChange = (value: unknown) => {
     onTabChange(value as CommonTab);
@@ -35,7 +39,7 @@ const CommonTabs: FC<CommonTabsProps> = (props) => {
       value={activeTab}
       onChange={handleTabChange}
     >
-      {TABS.map((tab) => (
+      {tabs.map((tab) => (
         <Tab
           key={tab.value}
           className={styles.tab}

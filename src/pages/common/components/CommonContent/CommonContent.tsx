@@ -62,6 +62,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
               activeTab={tab}
               circles={governance.circles}
               circlesMap={commonMember?.circles.map}
+              isAuthenticated={isAuthenticated}
               onTabChange={setTab}
             />
           </Container>
