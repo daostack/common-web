@@ -77,3 +77,15 @@
   margin: 0.875rem 0 1.75rem;
   background-color: $c-neutrals-200;
 }
+
+.commonProjectsWrapper {
+  @include tablet {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+
+  @include phone-orientated {
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+  }
+}

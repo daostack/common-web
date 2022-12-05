@@ -32,7 +32,11 @@ const Project: FC<ProjectProps> = (props) => {
   );
 
   return (
-    <div className={styles.item}>
+    <div
+      className={classNames(styles.item, {
+        [styles.itemDisabled]: !props.imageURL,
+      })}
+    >
       {imageEl}
       {titleEl}
       {description && <p className={styles.description}>{description}</p>}

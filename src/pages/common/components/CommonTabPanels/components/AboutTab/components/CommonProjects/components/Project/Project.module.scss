@@ -1,11 +1,22 @@
 @import "../../../../../../../../../../constants";
+@import "../../../../../../../../../../styles/sizes";
 
 .item {
+  --main-color: #{$c-neutrals-600};
+
   width: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   box-sizing: border-box;
+
+  @include tablet {
+    align-items: center;
+    text-align: center;
+  }
+}
+.itemDisabled {
+  --main-color: #{$c-neutrals-300};
 }
 
 .imageSize {
@@ -27,23 +38,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: $c-neutrals-300;
+  color: var(--main-color);
   background-color: $c-neutrals-100;
-  border: 0.0625rem solid $c-neutrals-300;
+  border: 0.0625rem solid var(--main-color);
 }
 
 .title {
+  width: 100%;
   margin-top: 1rem;
   font-weight: bold;
   font-size: $small;
-  color: $c-neutrals-600;
+  color: var(--main-color);
   text-decoration: underline;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  box-sizing: border-box;
 }
 .titleForIcon {
-  color: $c-neutrals-300;
   text-decoration: none;
   white-space: unset;
 }

@@ -9,7 +9,8 @@
 }
 
 .title {
-  margin: 0 0 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
   font-size: $small;
 
   @include tablet {
@@ -22,10 +23,19 @@
 
   padding: 0;
   list-style-type: none;
+
+  @include tablet {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
 }
 
 .projectsItem {
   max-width: 5.75rem;
+
+  @include tablet {
+    max-width: 6rem;
+  }
 }
 
 .plusIcon {

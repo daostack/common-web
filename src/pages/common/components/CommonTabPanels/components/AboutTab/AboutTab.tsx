@@ -49,6 +49,15 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     <div className={styles.mainColumnWrapper}>
       <CommonDescription common={common} />
       <div className={styles.separator} />
+      {subCommons.length > 0 && (
+        <>
+          <CommonProjects
+            subCommons={subCommons}
+            styles={{ projectsWrapper: styles.commonProjectsWrapper }}
+          />
+          <div className={styles.separator} />
+        </>
+      )}
       <CommonGovernance commonName={common.name} />
       <div className={styles.separator} />
       {rules.length > 0 && <CommonRules rules={rules} />}
