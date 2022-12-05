@@ -10,7 +10,8 @@ interface TabsProps extends TabContextValue {
 }
 
 const Tabs: FC<TabsProps> = (props) => {
-  const { className, value, onChange, panelIdTemplate, children } = props;
+  const { className, value, onChange, panelIdTemplate, withIcons, children } =
+    props;
   const tabListId = useMemo(() => `tab-list-${uuidv4()}`, []);
 
   const handleChange = useCallback(
@@ -26,23 +27,26 @@ const Tabs: FC<TabsProps> = (props) => {
         smooth: true,
       });
     },
-    [onChange, tabListId]
+    [onChange, tabListId],
   );
 
   const contextValue = useMemo<TabContextValue>(
     () => ({
       value,
       panelIdTemplate,
+      withIcons,
       onChange: handleChange,
     }),
-    [value, handleChange, panelIdTemplate]
+    [value, handleChange, panelIdTemplate, withIcons],
   );
 
   return (
     <TabContext.Provider value={contextValue}>
       <div
         id={tabListId}
-        className={classNames("custom-tabs", className)}
+        className={classNames("custom-tabs", className, {
+          "custom-tabs--with-icons": withIcons,
+        })}
         role="tablist"
       >
         {children}

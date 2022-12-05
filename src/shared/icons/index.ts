@@ -1,6 +1,7 @@
 export { default as Avatar2Icon } from "./avatar2.icon";
 export { default as CopyrightIcon } from "./copyright.icon";
 export { default as ExcavatorIcon } from "./excavator.icon";
+export { default as InfoIcon } from "./info.icon";
 export { default as LongLeftArrowIcon } from "./longLeftArrow.icon";
 export { default as MoreIcon } from "./more.icon";
 export { default as PlusIcon } from "./plus.icon";

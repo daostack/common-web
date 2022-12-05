@@ -8,6 +8,7 @@ import { CommonTab } from "../../constants";
 import { CommonHeader } from "../CommonHeader";
 import { CommonManagement } from "../CommonManagement";
 import { CommonTabPanels } from "../CommonTabPanels";
+import { CommonTabs } from "../CommonTabs";
 import { CommonTopNavigation } from "../CommonTopNavigation";
 import { getMainCommonDetails } from "./utils";
 import styles from "./CommonContent.module.scss";
@@ -74,6 +75,14 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           parentCommons={parentCommons}
           subCommons={subCommons}
         />
+        {isTabletView && (
+          <CommonTabs
+            className={styles.tabs}
+            activeTab={tab}
+            isAuthenticated={isAuthenticated}
+            onTabChange={setTab}
+          />
+        )}
       </div>
     </>
   );

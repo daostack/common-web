@@ -1,8 +1,19 @@
 @import "../../../../constants";
+@import "../../../../styles/sizes";
 
 .tabs {
   flex-shrink: unset;
   white-space: nowrap;
+}
+.tabsFixed {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: var(--bottom-tabs-height);
+  padding: 0 0.5rem;
+  background-color: $c-shades-white;
+  border-top: 0.0625rem solid $c-neutrals-100;
 }
 
 .tab {
@@ -13,4 +24,14 @@
   --tab-inactive-color: #{$c-neutrals-300};
   --tab-inactive-hover-color: #{$c-neutrals-600};
   --tab-active-color: #{$c-neutrals-600};
+
+  @include tablet {
+    --tab-ml: 0;
+    --tab-pb: 0;
+    --tab-fs: #{$xxxsmall-2};
+  }
+}
+
+.icon {
+  margin-bottom: 0.5rem;
 }
