@@ -12,10 +12,43 @@ export type AllowedProposals = {
   [ProposalsTypes.REMOVE_CIRCLE]?: Partial<Record<string, true>>;
 };
 
-export type CircleIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-  | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19
-  | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29
-  | 30 | 31;
+export type CircleIndex =
+  | 0
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14
+  | 15
+  | 16
+  | 17
+  | 18
+  | 19
+  | 20
+  | 21
+  | 22
+  | 23
+  | 24
+  | 25
+  | 26
+  | 27
+  | 28
+  | 29
+  | 30
+  | 31;
+
+export enum CIRCLE_TYPES {
+  project = "project",
+}
 
 export type Circle = {
   name: string;
@@ -27,6 +60,7 @@ export type Circle = {
     tier: number;
     exclusions: number[];
   } | null;
+  type?: CIRCLE_TYPES | null;
 };
 
 export type CirclesMap = {
