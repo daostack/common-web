@@ -1,5 +1,6 @@
 import React, { useCallback, FC, MouseEventHandler } from "react";
 import classNames from "classnames";
+import { Currency } from "@/shared/models";
 import { ButtonIcon, Image } from "../../../shared/components";
 import TrashIcon from "../../../shared/icons/trash.icon";
 import { formatPrice } from "../../../shared/utils";
@@ -49,16 +50,17 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
         onClick();
       }
     },
-    [shouldDownloadOnClick, onClick]
+    [shouldDownloadOnClick, onClick],
   );
 
   const amountEl = amount !== null && (
     <span
       className={classNames("invoice-tile__amount", {
-        "invoice-tile__amount--static invoice-tile__amount--purple": isFullWidthVariant,
+        "invoice-tile__amount--static invoice-tile__amount--purple":
+          isFullWidthVariant,
       })}
     >
-      Amount: {formatPrice(amount)}
+      Amount: {formatPrice({ amount, currency: Currency.ILS })}
     </span>
   );
   const deleteButtonEl = onDelete && (
@@ -80,7 +82,7 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
   });
   const generalFileClassName = classNames(
     imageClassName,
-    "invoice-tile__image--general-file"
+    "invoice-tile__image--general-file",
   );
 
   const additionalProps = shouldDownloadOnClick
@@ -95,7 +97,7 @@ const InvoiceTile: FC<InvoiceTileProps> = (props) => {
       className={classNames(
         "invoice-tile",
         { "invoice-tile--full-width": isFullWidthVariant },
-        className
+        className,
       )}
     >
       {shouldDisplayTopContent && (

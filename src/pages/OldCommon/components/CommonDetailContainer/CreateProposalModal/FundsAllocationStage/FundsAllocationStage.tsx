@@ -14,7 +14,13 @@ import {
   ScreenSize,
 } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Common, Governance, CommonLink, Proposal } from "@/shared/models";
+import {
+  Common,
+  Governance,
+  CommonLink,
+  Proposal,
+  Currency,
+} from "@/shared/models";
 import {
   FundsAllocation,
   ProposalImage,
@@ -132,7 +138,10 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
     > = {
       args: {
         description,
-        amount: fundsAllocationData.amount * 100,
+        amount: {
+          amount: fundsAllocationData.amount * 100,
+          currency: Currency.ILS,
+        },
         commonId: common.id,
         title: fundsAllocationData.title,
         images: fundsAllocationData.images as ProposalImage[],
@@ -222,7 +231,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
               governance={governance}
               initialData={fundsAllocationData}
               onFinish={handleFundDetailsFinish}
-              commonBalance={common.balance}
+              commonBalance={common.balance.amount}
               commonMembers={commonMembers}
               commonList={commons}
             />
@@ -240,7 +249,7 @@ const FundsAllocationStage: FC<FundsAllocationStageProps> = (props) => {
                   governance={governance}
                   initialData={fundsAllocationData}
                   onFinish={handleFundDetailsFinish}
-                  commonBalance={common.balance}
+                  commonBalance={common.balance.amount}
                   commonMembers={commonMembers}
                   commonList={commons}
                 />

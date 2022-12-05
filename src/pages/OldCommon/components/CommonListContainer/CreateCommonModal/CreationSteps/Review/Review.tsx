@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Button, Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
+import { Currency } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { commonTypeText } from "@/shared/utils";
 import { formatPrice } from "@/shared/utils/shared";
@@ -40,8 +41,11 @@ export default function Review({
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const formattedMinFeeToJoin = formatPrice(
-    memberAdmittanceOptions?.minFeeMonthly?.amount ||
-      memberAdmittanceOptions?.minFeeOneTime?.amount,
+    memberAdmittanceOptions?.minFeeMonthly ||
+      memberAdmittanceOptions?.minFeeOneTime || {
+        amount: 0,
+        currency: Currency.ILS,
+      },
     {
       shouldRemovePrefixFromZero: false,
       bySubscription: Boolean(memberAdmittanceOptions?.minFeeMonthly),

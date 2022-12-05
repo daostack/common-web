@@ -1,10 +1,22 @@
 import millify from "millify";
 import moment from "moment";
-import { CurrencySymbol } from "@/shared/models";
+import { CurrencySymbol, PaymentAmount } from "@/shared/models";
+import { Currency } from "@/shared/models";
 import { BaseProposal } from "@/shared/models/governance/proposals";
 import { transformFirebaseDataList } from "@/shared/utils/transformFirebaseDataToModel";
 import { BASE_URL } from "../constants";
 import { Common, DateFormat, Time, User } from "../models";
+
+export const getPrefix = (currency: Currency): string => {
+  switch (currency) {
+    case Currency.ILS:
+      return CurrencySymbol.Shekel;
+    case Currency.USD:
+      return CurrencySymbol.USD;
+    default:
+      return "";
+  }
+};
 
 interface FormatPriceOptions {
   shouldMillify?: boolean;
@@ -17,21 +29,21 @@ interface FormatPriceOptions {
  * Backend stores the price in cents, that's why we divide by 100
  **/
 export const formatPrice = (
-  price?: number,
+  price: Partial<PaymentAmount>,
   options: FormatPriceOptions = {},
 ): string => {
   const {
     shouldMillify = true,
     shouldRemovePrefixFromZero = true,
     bySubscription = false,
-    prefix = CurrencySymbol.Shekel,
+    prefix = getPrefix(price?.currency || Currency.ILS),
   } = options;
 
-  if (!price) {
+  if (!price.amount) {
     return shouldRemovePrefixFromZero ? "0" : `${prefix}0`;
   }
 
-  const convertedPrice = price / 100;
+  const convertedPrice = price.amount / 100;
 
   return `${prefix}${
     shouldMillify

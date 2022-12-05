@@ -5,6 +5,7 @@ import firebase from "firebase/app";
 import { Button, ButtonVariant, ModalFooter } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import {
+  Currency,
   DateFormat,
   Payment,
   PaymentType,
@@ -68,7 +69,10 @@ const General: FC<GeneralProps> = (props) => {
           Your total contributions
         </span>
         <span className="general-my-contributions-stage__total">
-          {formatPrice(total, { shouldRemovePrefixFromZero: false })}
+          {formatPrice(
+            { amount: total, currency: Currency.ILS },
+            { shouldRemovePrefixFromZero: false },
+          )}
         </span>
       </div>
       <section className="general-my-contributions-stage__history">
@@ -85,7 +89,7 @@ const General: FC<GeneralProps> = (props) => {
                     new Date(dueDate * 1000),
                     DateFormat.LongHuman,
                   )}`}
-                  amount={formatPrice(subscription.price.amount, {
+                  amount={formatPrice(subscription.price, {
                     bySubscription: true,
                   })}
                   onClick={goToMonthlyContribution}
@@ -100,7 +104,7 @@ const General: FC<GeneralProps> = (props) => {
                     new Date(payment.createdAt.seconds * 1000),
                     DateFormat.LongHuman,
                   )}
-                  amount={formatPrice(payment.price.amount, {
+                  amount={formatPrice(payment.price, {
                     shouldRemovePrefixFromZero: false,
                   })}
                   styles={itemStyles}

@@ -5,7 +5,7 @@ import { ROUTE_PATHS } from "@/shared/constants";
 import { useBankAccountDetails } from "@/shared/hooks/useCases";
 import ApprovedIcon from "@/shared/icons/approved.icon";
 import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
-import { Common, DateFormat, User } from "@/shared/models";
+import { Common, Currency, DateFormat, User } from "@/shared/models";
 import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { formatEpochTime, formatPrice, getUserName } from "@/shared/utils";
 import {
@@ -30,7 +30,11 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
   const isApproved = !isPendingApproval && !isDeclined;
   const { payoutDocs } = proposal.data.legal;
   const invoicesTotal = useMemo(
-    () => (payoutDocs || []).reduce((acc, doc) => acc + (doc.amount || 0), 0),
+    () =>
+      (payoutDocs || []).reduce(
+        (acc, doc) => acc + (doc.amount?.amount || 0),
+        0,
+      ),
     [payoutDocs],
   );
 
@@ -206,7 +210,7 @@ const ProposalCard: FC<ProposalCardProps> = (props) => {
             <div className={priceWrapperClassName}>
               <span>Invoices Total</span>
               <span className="trustee-proposal-card__price">
-                {formatPrice(invoicesTotal)}
+                {formatPrice({ amount: invoicesTotal, currency: Currency.ILS })}
               </span>
             </div>
           </div>

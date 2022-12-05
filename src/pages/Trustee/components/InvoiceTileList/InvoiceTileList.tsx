@@ -72,7 +72,7 @@ const InvoiceTileList: FC<InvoiceTileListProps> = (props) => {
                 fileURL={doc.downloadURL}
                 fileName={doc.name}
                 isImage={doc.mimeType.startsWith("image/")}
-                amount={doc.amount || 0}
+                amount={doc.amount?.amount || 0}
                 variant={
                   isMobileView
                     ? InvoiceTileVariant.FullWidth

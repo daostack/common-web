@@ -1,5 +1,5 @@
+import { Currency } from "@/shared/models";
 import { Time } from "./shared";
-import { Currency } from "./Currency";
 
 export enum PaymentStatus {
   Pending = "pending",
