@@ -152,9 +152,7 @@ class CommonService {
       .get();
     const members = transformFirebaseDataList<CommonMember>(result);
 
-    return members[0]
-      ? convertObjectDatesToFirestoreTimestamps(members[0])
-      : null;
+    return members[0] || null;
   };
 }
 

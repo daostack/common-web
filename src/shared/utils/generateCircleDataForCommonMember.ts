@@ -98,7 +98,7 @@ export const generateCirclesDataForCommonMember = (
         throw new Error(
           `could not find cirlce in governance ${JSON.stringify(circle)}`,
         );
-      circleIdsByHierarchy.add(circle?.[1].id);
+      circleIdsByHierarchy.add(circle?.[1]?.id);
       return { ...prev, [next]: circle.id };
     },
     {},
