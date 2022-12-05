@@ -34,17 +34,23 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     </div>
   );
 
-  const renderAdditionalColumn = () => {
-    if (isTabletView) {
-      return null;
-    }
+  const renderAdditionalColumn = () => (
+    <div className={styles.additionalColumnWrapper}>
+      {limitations && <CommonEntranceInfo limitations={limitations} />}
+    </div>
+  );
 
-    return (
-      <div className={styles.additionalColumnWrapper}>
-        {limitations && <CommonEntranceInfo limitations={limitations} />}
-      </div>
-    );
-  };
+  const renderMobileColumn = () => (
+    <div className={styles.mainColumnWrapper}>
+      <CommonDescription common={common} />
+      <div className={styles.separator} />
+      <CommonGovernance commonName={common.name} />
+      <div className={styles.separator} />
+      {rules.length > 0 && <CommonRules rules={rules} />}
+      <div className={styles.separator} />
+      {limitations && <CommonEntranceInfo limitations={limitations} />}
+    </div>
+  );
 
   return (
     <div className={styles.container}>
@@ -63,8 +69,14 @@ const AboutTab: FC<AboutTabProps> = (props) => {
         />
       </Container>
       <div className={styles.columnsWrapper}>
-        {renderMainColumn()}
-        {renderAdditionalColumn()}
+        {!isTabletView ? (
+          <>
+            {renderMainColumn()}
+            {renderAdditionalColumn()}
+          </>
+        ) : (
+          renderMobileColumn()
+        )}
       </div>
     </div>
   );
