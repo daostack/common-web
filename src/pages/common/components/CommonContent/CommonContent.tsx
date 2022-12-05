@@ -1,4 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { authentificated } from "@/pages/Auth/store/selectors";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common, CommonMember, Governance } from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
@@ -29,7 +31,14 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     commonMember,
   } = props;
   const [tab, setTab] = useState(CommonTab.About);
+  const isAuthenticated = useSelector(authentificated());
   const isTabletView = useIsTabletView();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setTab(CommonTab.About);
+    }
+  }, [isAuthenticated]);
 
   return (
     <>
