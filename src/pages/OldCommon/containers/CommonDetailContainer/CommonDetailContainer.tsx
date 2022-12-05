@@ -317,7 +317,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   }, [dispatch, id]);
 
   useEffect(() => {
-    fetchCommonMember(id);
+    fetchCommonMember(id, {});
   }, [fetchCommonMember, id]);
 
   const getDisscussionDetail = useCallback(

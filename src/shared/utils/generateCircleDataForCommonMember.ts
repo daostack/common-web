@@ -1,12 +1,6 @@
 import { generateCirclesBinaryNumber } from "../../pages/OldCommon/components/CommonDetailContainer/CommonWhitepaper/utils";
 import { GovernanceActions, ProposalsTypes } from "../constants";
-import {
-  AllowedActions,
-  AllowedProposals,
-  CircleIndex,
-  CirclesMap,
-  Governance,
-} from "../models";
+import { CircleIndex, CirclesPermissions, Governance } from "../models";
 
 export const circleIndexGuard = (n: number | string) => {
   const castedN = Number(n);
@@ -20,11 +14,7 @@ export const circleIndexGuard = (n: number | string) => {
 export const generateCirclesDataForCommonMember = (
   governanceCircles: Governance["circles"],
   circleIds: string[],
-): {
-  circles: CirclesMap;
-  allowedActions: AllowedActions;
-  allowedProposals: AllowedProposals;
-} => {
+): CirclesPermissions => {
   const circleIdsSet = new Set(circleIds);
 
   const circlesIndexesByHierarchy = new Set<CircleIndex>();

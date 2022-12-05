@@ -7,6 +7,7 @@ import { UserAvatar } from "@/shared/components";
 import { GovernanceActions } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import {
+  CirclesPermissions,
   CommonMember,
   Proposal,
   ProposalState,
@@ -19,7 +20,7 @@ import "./index.scss";
 
 interface VotesComponentProps {
   proposal: Proposal;
-  commonMember?: CommonMember | null;
+  commonMember?: (CommonMember & CirclesPermissions) | null;
   preview?: boolean;
   compact?: boolean;
   compactCard?: boolean;

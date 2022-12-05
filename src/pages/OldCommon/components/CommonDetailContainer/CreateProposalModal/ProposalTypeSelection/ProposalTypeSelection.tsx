@@ -89,6 +89,7 @@ const ProposalTypeSelection: FC<ProposalTypeSelectionProps> = (props) => {
     ).map((option) => {
       const isDisabled = !checkIsProposalTypeAllowedForMember(
         commonMember,
+        governance,
         option.value as ProposalsTypes,
       );
 

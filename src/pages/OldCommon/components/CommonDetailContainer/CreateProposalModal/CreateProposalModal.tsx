@@ -11,7 +11,13 @@ import { Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps } from "@/shared/interfaces";
-import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+  Proposal,
+} from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { AssignCircleStage } from "./AssignCircleStage";
 import { DeleteCommonStage } from "./DeleteCommonStage";
@@ -30,7 +36,7 @@ interface CreateProposalModalProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
   governance: Governance;
-  commonMember: CommonMember;
+  commonMember: CommonMember & CirclesPermissions;
   activeProposalsExist: boolean;
   redirectToProposal: (proposal: Proposal) => void;
   initialProposalType?: ProposalsTypes | null;

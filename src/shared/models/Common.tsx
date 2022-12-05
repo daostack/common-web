@@ -134,6 +134,12 @@ export interface CommonMember {
   circleIds: string[];
 }
 
+export interface CirclesPermissions {
+  allowedActions: AllowedActions;
+  allowedProposals: AllowedProposals;
+  circles: CirclesMap;
+}
+
 export interface CommonMemberWithUserInfo extends CommonMember {
   user: User;
 }

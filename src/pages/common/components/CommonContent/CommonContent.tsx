@@ -1,6 +1,11 @@
 import React, { FC, useState } from "react";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Common, CommonMember, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
 import { CommonHeader } from "../CommonHeader";
@@ -15,7 +20,7 @@ interface CommonContentProps {
   governance: Governance;
   parentCommons: Common[];
   isCommonMemberFetched: boolean;
-  commonMember: CommonMember | null;
+  commonMember: (CommonMember & CirclesPermissions) | null;
 }
 
 const CommonContent: FC<CommonContentProps> = (props) => {

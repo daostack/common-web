@@ -21,10 +21,9 @@ const MembersList: FC<MembersListComponentProps> = ({ members, commonId }) => {
   return (
     <ul className="members__section__members-list">
       {members.map((member) => {
-        const memberCircleIds = Object.values(member.circles.map);
         const memberCircles = getFilteredByIdCircles(
           governanceCircles,
-          memberCircleIds,
+          member.circleIds,
         );
         const circlesString = getCirclesWithHighestTier(memberCircles)
           .map((circle) => circle.name)

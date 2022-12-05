@@ -1,6 +1,7 @@
 import {
   Collection,
   Common,
+  CommonMember,
   CommonState,
   SubCollections,
 } from "@/shared/models";
@@ -9,6 +10,7 @@ import {
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import { commonMembersSubCollection } from "../pages/OldCommon/store/api";
 
 class CommonService {
   public getCommonById = async (commonId: string): Promise<Common | null> => {
@@ -139,6 +141,20 @@ class CommonService {
     }
 
     return null;
+  };
+
+  public getCommonMemberByUserId = async (
+    commonId: string,
+    userId: string,
+  ): Promise<CommonMember | null> => {
+    const result = await commonMembersSubCollection(commonId)
+      .where("userId", "==", userId)
+      .get();
+    const members = transformFirebaseDataList<CommonMember>(result);
+
+    return members[0]
+      ? convertObjectDatesToFirestoreTimestamps(members[0])
+      : null;
   };
 }
 

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { CommonMember, Governance } from "@/shared/models";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { CommonTab } from "../../constants";
 import { CommonMemberInfo } from "../CommonMemberInfo";
 import { CommonMenuButton } from "../CommonMenuButton";
@@ -9,7 +9,7 @@ import styles from "./CommonManagement.module.scss";
 interface CommonManagementProps {
   activeTab: CommonTab;
   circles: Governance["circles"];
-  circlesMap?: CommonMember["circles"]["map"];
+  circlesMap?: (CommonMember & CirclesPermissions)["circles"]["map"];
   onTabChange: (tab: CommonTab) => void;
 }
 

@@ -2,13 +2,18 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
-import { CommonMember } from "@/shared/models";
-import { getCommonMember } from "../store/actions";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import { CommonService, GovernanceService } from "../../../services";
+import { generateCirclesDataForCommonMember } from "../../../shared/utils/generateCircleDataForCommonMember";
 
-type State = LoadingState<CommonMember | null>;
+type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
 
 interface Return extends State {
-  fetchCommonMember: (commonId: string, force?: boolean) => void;
+  fetchCommonMember: (
+    commonId: string,
+    options: { governance?: Governance; commonMember?: CommonMember },
+    force?: boolean,
+  ) => void;
   resetCommonMember: () => void;
 }
 
@@ -23,11 +28,15 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
   const userId = user?.uid;
 
   const fetchCommonMember = useCallback(
-    (commonId: string, force = false) => {
+    async (
+      commonId: string,
+      options: { governance?: Governance; commonMember?: CommonMember } = {},
+      force = false,
+    ) => {
       if (!force && (state.loading || state.fetched)) {
         return;
       }
-      if (!userId) {
+      if (!userId || !commonId) {
         setState({
           loading: false,
           fetched: true,
@@ -42,27 +51,45 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
         data: null,
       });
 
-      dispatch(
-        getCommonMember.request({
-          payload: {
-            commonId,
-            userId,
-          },
-          callback: (error, commonMember) => {
-            const nextState: State = {
-              loading: false,
-              fetched: true,
-              data: null,
-            };
+      try {
+        const [governance, commonMember] = await Promise.all([
+          options.governance ||
+            GovernanceService.getGovernanceByCommonId(commonId),
+          options.commonMember ||
+            CommonService.getCommonMemberByUserId(commonId, userId),
+        ]);
 
-            if (!error && commonMember) {
-              nextState.data = commonMember;
-            }
+        if (!governance || !commonMember) {
+          setState({
+            loading: false,
+            fetched: false,
+            data: null,
+          });
+          return;
+        }
 
-            setState(nextState);
-          },
-        }),
-      );
+        const nextState: State = {
+          loading: false,
+          fetched: true,
+          data: null,
+        };
+
+        nextState.data = {
+          ...commonMember,
+          ...generateCirclesDataForCommonMember(
+            governance.circles,
+            commonMember.circleIds,
+          ),
+        };
+
+        setState(nextState);
+      } catch (e) {
+        setState({
+          loading: false,
+          fetched: false,
+          data: null,
+        });
+      }
     },
     [state, dispatch, userId],
   );
