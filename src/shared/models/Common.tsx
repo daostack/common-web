@@ -131,9 +131,7 @@ export interface CommonMember {
   readonly id: string;
   readonly userId: string;
   joinedAt: firebase.firestore.Timestamp;
-  circles: CirclesMap;
-  allowedActions: AllowedActions;
-  allowedProposals: AllowedProposals;
+  circleIds: string[];
 }
 
 export interface CommonMemberWithUserInfo extends CommonMember {
