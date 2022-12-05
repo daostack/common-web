@@ -158,7 +158,7 @@ export default function AddInvoices(props: AddInvoicesProps): ReactElement {
         ) : (
           <AmountPrompt
             onContinue={onFileUploadFinish}
-            proposalRequest={proposalRequest || 0}
+            proposalRequest={proposalRequest / 100 || 0}
             totalAmount={totalAmount}
           />
         )}
