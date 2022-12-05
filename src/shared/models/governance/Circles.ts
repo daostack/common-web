@@ -45,8 +45,8 @@ export type CircleIndex =
   | 30
   | 31;
 
-export enum CIRCLE_TYPES {
-  project = "project",
+export enum CircleType {
+  Project = "project",
 }
 
 export type Circle = {
@@ -58,7 +58,7 @@ export type Circle = {
     tier: number;
     exclusions: number[];
   } | null;
-  type?: CIRCLE_TYPES | null;
+  type?: CircleType | null;
 };
 
 export type CirclesMap = {
