@@ -51,6 +51,8 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
         data: null,
       });
 
+      let data: (CommonMember & CirclesPermissions) | null = null;
+
       try {
         const [governance, commonMember] = await Promise.all([
           options.governance ||
@@ -59,35 +61,26 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
             CommonService.getCommonMemberByUserId(commonId, userId),
         ]);
 
-        if (!governance || !commonMember) {
-          setState({
-            loading: false,
-            fetched: false,
-            data: null,
-          });
-          return;
+        if (governance && commonMember) {
+          data = {
+            ...commonMember,
+            ...generateCirclesDataForCommonMember(
+              governance.circles,
+              commonMember.circleIds,
+            ),
+          };
         }
-
-        const nextState: State = {
-          loading: false,
-          fetched: true,
-          data: null,
-        };
-
-        nextState.data = {
-          ...commonMember,
-          ...generateCirclesDataForCommonMember(
-            governance.circles,
-            commonMember.circleIds,
-          ),
-        };
-
-        setState(nextState);
       } catch (e) {
         setState({
           loading: false,
-          fetched: false,
+          fetched: true,
           data: null,
+        });
+      } finally {
+        setState({
+          loading: false,
+          fetched: true,
+          data,
         });
       }
     },
