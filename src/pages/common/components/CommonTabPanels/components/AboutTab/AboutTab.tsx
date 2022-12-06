@@ -32,6 +32,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     props;
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
+  const isParentCommon = common.directParent === null;
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
@@ -46,7 +47,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       {limitations && (
         <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
       )}
-      <CommonProjects subCommons={subCommons} />
+      {isParentCommon && <CommonProjects subCommons={subCommons} />}
     </div>
   );
 
@@ -54,7 +55,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     <div className={styles.mainColumnWrapper}>
       <CommonDescription common={common} />
       <div className={styles.separator} />
-      {subCommons.length > 0 && (
+      {isParentCommon && subCommons.length > 0 && (
         <>
           <CommonProjects
             subCommons={subCommons}
