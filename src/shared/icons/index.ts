@@ -8,3 +8,4 @@ export { default as MoreIcon } from "./more.icon";
 export { default as PlusIcon } from "./plus.icon";
 export { default as RightArrowThinIcon } from "./rightArrowThin.icon";
 export { default as SmallArrowIcon } from "./smallArrow.icon";
+export { default as WalletIcon } from "./wallet.icon";
