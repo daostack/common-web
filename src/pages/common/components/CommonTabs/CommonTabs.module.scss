@@ -34,6 +34,10 @@
   }
 }
 
-.icon {
-  margin-bottom: 0.5rem;
+.iconWrapper {
+  height: 1.5rem;
+  margin-bottom: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

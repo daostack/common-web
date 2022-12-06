@@ -24,27 +24,27 @@ const TABS: { label: string; value: CommonTab; icon?: ReactNode }[] = [
   {
     label: getCommonTabName(CommonTab.About),
     value: CommonTab.About,
-    icon: <InfoIcon className={styles.icon} />,
+    icon: <InfoIcon />,
   },
   {
     label: getCommonTabName(CommonTab.Feed),
     value: CommonTab.Feed,
-    icon: <BlocksIcon className={styles.icon} />,
+    icon: <BlocksIcon />,
   },
   {
     label: getCommonTabName(CommonTab.Wallet),
     value: CommonTab.Wallet,
-    icon: <WalletIcon className={styles.icon} />,
+    icon: <WalletIcon />,
   },
   {
     label: getCommonTabName(CommonTab.Members),
     value: CommonTab.Members,
-    icon: <PeopleGroupIcon className={styles.icon} />,
+    icon: <PeopleGroupIcon />,
   },
   {
     label: getCommonTabName(CommonTab.Governance),
     value: CommonTab.Governance,
-    icon: <GovernanceIcon className={styles.icon} />,
+    icon: <GovernanceIcon />,
   },
 ];
 
@@ -79,7 +79,11 @@ const CommonTabs: FC<CommonTabsProps> = (props) => {
           className={styles.tab}
           label={tab.label}
           value={tab.value}
-          icon={tab.icon}
+          icon={
+            tab.icon ? (
+              <div className={styles.iconWrapper}>{tab.icon}</div>
+            ) : undefined
+          }
           includeDefaultMobileStyles={false}
         />
       ))}
