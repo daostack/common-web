@@ -4,6 +4,7 @@
 .container {
   --main-content-mw: 62%;
   --bottom-tabs-height: 4rem;
+  --bottom-tabs-pb: var(--safe-area-inset-bottom);
 
   flex: 1;
   padding: 3rem 0;
@@ -14,7 +15,8 @@
   @include tablet {
     --main-content-mw: 100%;
 
-    padding: 1.25rem 0 calc(3.125rem + var(--bottom-tabs-height));
+    padding: 1.25rem 0
+      calc(3.125rem + var(--bottom-tabs-height) + var(--bottom-tabs-pb));
   }
 }
 

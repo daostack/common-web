@@ -11,7 +11,7 @@
   bottom: 0;
   left: 0;
   height: var(--bottom-tabs-height);
-  padding: 0;
+  padding: 0 0 var(--bottom-tabs-pb);
   display: grid;
   grid-template-columns: repeat(var(--items-amount, 5), minmax(0, 1fr));
   background-color: $c-shades-white;
