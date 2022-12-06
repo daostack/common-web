@@ -1,0 +1,24 @@
+@import "../../../../../../../../../../constants";
+
+.item {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.itemLabel {
+  font-weight: bold;
+  color: $c-neutrals-300;
+}
+
+.itemValue {
+  margin: 0 0 0 0.5rem;
+  white-space: nowrap;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+}

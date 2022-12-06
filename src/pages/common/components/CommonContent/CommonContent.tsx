@@ -1,4 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { authentificated } from "@/pages/Auth/store/selectors";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common, CommonMember, Governance } from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
@@ -6,6 +8,7 @@ import { CommonTab } from "../../constants";
 import { CommonHeader } from "../CommonHeader";
 import { CommonManagement } from "../CommonManagement";
 import { CommonTabPanels } from "../CommonTabPanels";
+import { CommonTabs } from "../CommonTabs";
 import { CommonTopNavigation } from "../CommonTopNavigation";
 import { getMainCommonDetails } from "./utils";
 import styles from "./CommonContent.module.scss";
@@ -14,6 +17,7 @@ interface CommonContentProps {
   common: Common;
   governance: Governance;
   parentCommons: Common[];
+  subCommons: Common[];
   isCommonMemberFetched: boolean;
   commonMember: CommonMember | null;
 }
@@ -23,11 +27,19 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     common,
     governance,
     parentCommons,
+    subCommons,
     isCommonMemberFetched,
     commonMember,
   } = props;
   const [tab, setTab] = useState(CommonTab.About);
+  const isAuthenticated = useSelector(authentificated());
   const isTabletView = useIsTabletView();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setTab(CommonTab.About);
+    }
+  }, [isAuthenticated]);
 
   return (
     <>
@@ -51,6 +63,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
               activeTab={tab}
               circles={governance.circles}
               circlesMap={commonMember?.circles.map}
+              isAuthenticated={isAuthenticated}
               onTabChange={setTab}
             />
           </Container>
@@ -60,7 +73,16 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           common={common}
           governance={governance}
           parentCommons={parentCommons}
+          subCommons={subCommons}
         />
+        {isTabletView && (
+          <CommonTabs
+            className={styles.tabs}
+            activeTab={tab}
+            isAuthenticated={isAuthenticated}
+            onTabChange={setTab}
+          />
+        )}
       </div>
     </>
   );
