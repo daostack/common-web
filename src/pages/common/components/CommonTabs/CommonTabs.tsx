@@ -4,6 +4,7 @@ import { Tab, Tabs } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   BlocksIcon,
+  GovernanceIcon,
   InfoIcon,
   PeopleGroupIcon,
   WalletIcon,
@@ -43,7 +44,7 @@ const TABS: { label: string; value: CommonTab; icon?: ReactNode }[] = [
   {
     label: getCommonTabName(CommonTab.Governance),
     value: CommonTab.Governance,
-    icon: <InfoIcon className={styles.icon} />,
+    icon: <GovernanceIcon className={styles.icon} />,
   },
 ];
 
