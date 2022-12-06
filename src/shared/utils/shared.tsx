@@ -35,20 +35,15 @@ export const formatPrice = (
   }
 
   const convertedPrice = price / 100;
+  const milifiedPrice = shouldMillify
+    ? millify(convertedPrice)
+    : convertedPrice.toLocaleString("en-US");
 
   if (isShekel && bySubscription) {
-    return `${
-      shouldMillify
-        ? millify(convertedPrice)
-        : convertedPrice.toLocaleString("en-US")
-    }${monthlyLabel}`;
+    return `${milifiedPrice}${monthlyLabel}`;
   }
 
-  return `${prefix}${
-    shouldMillify
-      ? millify(convertedPrice)
-      : convertedPrice.toLocaleString("en-US")
-  }${bySubscription ? monthlyLabel : ""}`;
+  return `${prefix}${milifiedPrice}${bySubscription ? monthlyLabel : ""}`;
 };
 
 /**
