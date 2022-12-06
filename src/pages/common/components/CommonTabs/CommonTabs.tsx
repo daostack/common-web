@@ -2,7 +2,12 @@ import React, { CSSProperties, FC, ReactNode } from "react";
 import classNames from "classnames";
 import { Tab, Tabs } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { BlocksIcon, InfoIcon, WalletIcon } from "@/shared/icons";
+import {
+  BlocksIcon,
+  InfoIcon,
+  PeopleGroupIcon,
+  WalletIcon,
+} from "@/shared/icons";
 import { CommonTab } from "../../constants";
 import { getCommonTabName } from "../../utils";
 import styles from "./CommonTabs.module.scss";
@@ -33,7 +38,7 @@ const TABS: { label: string; value: CommonTab; icon?: ReactNode }[] = [
   {
     label: getCommonTabName(CommonTab.Members),
     value: CommonTab.Members,
-    icon: <InfoIcon className={styles.icon} />,
+    icon: <PeopleGroupIcon className={styles.icon} />,
   },
   {
     label: getCommonTabName(CommonTab.Governance),

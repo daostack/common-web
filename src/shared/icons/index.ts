@@ -5,6 +5,7 @@ export { default as ExcavatorIcon } from "./excavator.icon";
 export { default as InfoIcon } from "./info.icon";
 export { default as LongLeftArrowIcon } from "./longLeftArrow.icon";
 export { default as MoreIcon } from "./more.icon";
+export { default as PeopleGroupIcon } from "./people-group.icon";
 export { default as PlusIcon } from "./plus.icon";
 export { default as RightArrowThinIcon } from "./rightArrowThin.icon";
 export { default as SmallArrowIcon } from "./smallArrow.icon";
