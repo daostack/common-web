@@ -128,8 +128,9 @@ export default function ChatMessage({
               onMenuToggle={onMessageDropdownOpen}
               transparent
               isDiscussionMessage
-              isOwner={user?.uid === discussionMessage.owner?.id}
+              ownerId={discussionMessage.owner?.id}
               userId={user?.uid}
+              commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}
             />
           </div>

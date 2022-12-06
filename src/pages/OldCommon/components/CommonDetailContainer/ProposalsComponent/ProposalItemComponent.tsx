@@ -50,6 +50,8 @@ export default function ProposalItemComponent({
               entityType={EntityTypes.Proposal}
               linkType={DynamicLinkType.Proposal}
               elem={proposal}
+              ownerId={proposal.proposer?.uid}
+              commonId={proposal.data?.args?.commonId}
               transparent
             />
           </div>

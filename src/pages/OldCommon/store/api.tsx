@@ -18,6 +18,7 @@ import {
 import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
 import Api from "@/services/Api";
 import { AllocateFundsTo, ApiEndpoint } from "@/shared/constants";
+import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   CreateVotePayload,
@@ -59,6 +60,7 @@ import {
   sortByCreatedTime,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import { ChangeVisibilityDto } from "../interfaces/ChangeVisibilityDto";
 import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
 
 export async function createGovernance(
@@ -356,10 +358,15 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
         .get(),
     ),
   );
-  const data = flatChunk<DiscussionMessage>(discussions).sort(
-    (m: DiscussionMessage, mP: DiscussionMessage) =>
-      m.createdAt.seconds - mP.createdAt.seconds,
-  );
+  const data = flatChunk<DiscussionMessage>(discussions)
+    .filter(
+      (discussionMessage: DiscussionMessage) =>
+        discussionMessage.moderation?.flag !== ModerationFlags.Hidden,
+    )
+    .sort(
+      (m: DiscussionMessage, mP: DiscussionMessage) =>
+        m.createdAt.seconds - mP.createdAt.seconds,
+    );
 
   return data;
 }
@@ -1120,6 +1127,28 @@ export async function createReport(
 ): Promise<DiscussionMessage> {
   const { data } = await Api.post<DiscussionMessage>(
     ApiEndpoint.CreateReport,
+    requestData,
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function hideContent(
+  requestData: ChangeVisibilityDto,
+): Promise<DiscussionMessage> {
+  const { data } = await Api.post<DiscussionMessage | Discussion | Proposal>(
+    ApiEndpoint.HideContent,
+    requestData,
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function showContent(
+  requestData: ChangeVisibilityDto,
+): Promise<DiscussionMessage> {
+  const { data } = await Api.post<DiscussionMessage | Discussion | Proposal>(
+    ApiEndpoint.ShowContent,
     requestData,
   );
 

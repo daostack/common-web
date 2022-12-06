@@ -29,6 +29,7 @@ import {
 import { useCommon, useSubCommons } from "@/shared/hooks/useCases";
 import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
 import ShareIcon from "@/shared/icons/share.icon";
+import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
   Discussion,
   DiscussionWithHighlightedMessage,
@@ -193,7 +194,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     const circleIds = new Set(
       commonMember ? Object.values(commonMember.circles.map) : [],
     );
-    return discussions.filter(({ circleVisibility }) => {
+    return discussions.filter(({ circleVisibility, moderation }) => {
+      if (moderation?.flag === ModerationFlags.Hidden) {
+        return false;
+      }
+
       if (!circleVisibility?.length) {
         return true;
       }

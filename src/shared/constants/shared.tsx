@@ -87,7 +87,7 @@ export enum ChartType {
 }
 
 export enum EntityTypes {
-  Proposal = "proposal",
+  Proposal = "proposals",
   Discussion = "discussion",
   Common = "common",
   DiscussionMessage = "discussionMessage",
