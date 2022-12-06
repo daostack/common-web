@@ -28,6 +28,7 @@ import {
 import { getFilteredByIdCircles } from "@/shared/utils/circles";
 import { ChatComponent } from "../ChatComponent";
 import "./index.scss";
+import { ModerationFlags } from "@/shared/interfaces/Moderation";
 
 interface DiscussionDetailModalProps {
   discussion: Discussion | DiscussionWithHighlightedMessage | null;
@@ -194,6 +195,7 @@ export default function DiscussionDetailModal({
           isAuthorized={Boolean(user)}
           sendMessage={sendMessage}
           hasAccess={hasAccessToDiscussion}
+          isHidden={discussion.moderation?.flag === ModerationFlags.Hidden}
         />
       </div>
     </div>
