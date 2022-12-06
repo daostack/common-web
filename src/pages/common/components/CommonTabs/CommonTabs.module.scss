@@ -11,7 +11,9 @@
   bottom: 0;
   left: 0;
   height: var(--bottom-tabs-height);
-  padding: 0 0.5rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--items-amount, 5), minmax(0, 1fr));
   background-color: $c-shades-white;
   border-top: 0.0625rem solid $c-neutrals-100;
 }

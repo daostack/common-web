@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, FC } from "react";
+import React, { useCallback, useMemo, FC, CSSProperties } from "react";
 import { scroller } from "react-scroll";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
@@ -7,11 +7,19 @@ import "./index.scss";
 
 interface TabsProps extends TabContextValue {
   className?: string;
+  style?: CSSProperties;
 }
 
 const Tabs: FC<TabsProps> = (props) => {
-  const { className, value, onChange, panelIdTemplate, withIcons, children } =
-    props;
+  const {
+    className,
+    style,
+    value,
+    onChange,
+    panelIdTemplate,
+    withIcons,
+    children,
+  } = props;
   const tabListId = useMemo(() => `tab-list-${uuidv4()}`, []);
 
   const handleChange = useCallback(
@@ -47,6 +55,7 @@ const Tabs: FC<TabsProps> = (props) => {
         className={classNames("custom-tabs", className, {
           "custom-tabs--with-icons": withIcons,
         })}
+        style={style}
         role="tablist"
       >
         {children}

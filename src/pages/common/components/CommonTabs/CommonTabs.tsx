@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { CSSProperties, FC, ReactNode } from "react";
 import classNames from "classnames";
 import { Tab, Tabs } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -49,6 +49,9 @@ const CommonTabs: FC<CommonTabsProps> = (props) => {
   const { className, activeTab, isAuthenticated = false, onTabChange } = props;
   const isTabletView = useIsTabletView();
   const tabs = isAuthenticated ? TABS : UNAUTHENTICATED_TABS;
+  const itemStyles = {
+    "--items-amount": tabs.length,
+  } as CSSProperties;
 
   const handleTabChange = (value: unknown) => {
     onTabChange(value as CommonTab);
@@ -59,6 +62,7 @@ const CommonTabs: FC<CommonTabsProps> = (props) => {
       className={classNames(styles.tabs, className, {
         [styles.tabsFixed]: isTabletView,
       })}
+      style={itemStyles}
       value={activeTab}
       withIcons={isTabletView}
       onChange={handleTabChange}
