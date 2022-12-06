@@ -26,18 +26,24 @@ export const formatPrice = (
     bySubscription = false,
     prefix = CurrencySymbol.Shekel,
   } = options;
+  const isShekel = prefix === CurrencySymbol.Shekel;
+
+  const monthlyLabel = isShekel ? "שׁ״ח לחודש" : "/mo";
 
   if (!price) {
     return shouldRemovePrefixFromZero ? "0" : `${prefix}0`;
   }
 
   const convertedPrice = price / 100;
+  const milifiedPrice = shouldMillify
+    ? millify(convertedPrice)
+    : convertedPrice.toLocaleString("en-US");
 
-  return `${prefix}${
-    shouldMillify
-      ? millify(convertedPrice)
-      : convertedPrice.toLocaleString("en-US")
-  }${bySubscription ? "/mo" : ""}`;
+  if (isShekel && bySubscription) {
+    return `${milifiedPrice}${monthlyLabel}`;
+  }
+
+  return `${prefix}${milifiedPrice}${bySubscription ? monthlyLabel : ""}`;
 };
 
 /**

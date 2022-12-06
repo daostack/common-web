@@ -11,7 +11,7 @@ export default {
       title: "Share with friends",
     },
     login: {
-      description: "Connect your account to join this Common",
+      description: "Connect your account to continue",
       mobileDescription: "Connect with",
       termsText:
         "By using Common you agree to the app’s<br /><1>terms of use</1>",
