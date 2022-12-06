@@ -14,7 +14,7 @@
   @include tablet {
     --main-content-mw: 100%;
 
-    padding: 1.25rem 0;
+    padding: 1.25rem 0 calc(3.125rem + var(--bottom-tabs-height));
   }
 }
 
