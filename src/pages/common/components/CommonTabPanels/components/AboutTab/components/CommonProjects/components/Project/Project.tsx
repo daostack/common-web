@@ -1,44 +1,25 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
-import classNames from "classnames";
 import { Image } from "@/shared/components";
 import styles from "./Project.module.scss";
 
 interface ProjectProps {
   title: string;
   description?: string;
-  url?: string;
-  imageURL?: string;
-  imageAlt?: string;
-  icon?: ReactNode;
+  url: string;
+  imageURL: string;
+  imageAlt: string;
 }
 
 const Project: FC<ProjectProps> = (props) => {
-  const { title, description, url, imageURL, imageAlt, icon } = props;
-  const imageEl = props.imageURL ? (
-    <Image className={styles.image} src={imageURL} alt={imageAlt || ""} />
-  ) : (
-    <div className={styles.iconWrapper}>{icon}</div>
-  );
-  const titleClassName = classNames(styles.title, {
-    [styles.titleForIcon]: !props.imageURL,
-  });
-  const titleEl = url ? (
-    <NavLink className={titleClassName} to={url}>
-      {title}
-    </NavLink>
-  ) : (
-    <span className={titleClassName}>{title}</span>
-  );
+  const { title, description, url, imageURL, imageAlt } = props;
 
   return (
-    <div
-      className={classNames(styles.item, {
-        [styles.itemDisabled]: !props.imageURL,
-      })}
-    >
-      {imageEl}
-      {titleEl}
+    <div className={styles.item}>
+      <Image className={styles.image} src={imageURL} alt={imageAlt} />
+      <NavLink className={styles.title} to={url}>
+        {title}
+      </NavLink>
       {description && <p className={styles.description}>{description}</p>}
     </div>
   );
