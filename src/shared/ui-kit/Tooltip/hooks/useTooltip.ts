@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   useFloating,
   autoUpdate,
   offset,
   flip,
   shift,
+  arrow,
   useHover,
   useFocus,
   useDismiss,
@@ -21,6 +22,7 @@ export const useTooltip = (options: TooltipOptions = {}) => {
     onOpenChange: setControlledOpen,
   } = options;
   const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
+  const arrowRef = useRef<HTMLDivElement>(null);
 
   const open = controlledOpen ?? uncontrolledOpen;
   const setOpen = setControlledOpen ?? setUncontrolledOpen;
@@ -30,7 +32,14 @@ export const useTooltip = (options: TooltipOptions = {}) => {
     open,
     onOpenChange: setOpen,
     whileElementsMounted: autoUpdate,
-    middleware: [offset(8), flip(), shift()],
+    middleware: [
+      offset(8),
+      flip(),
+      shift(),
+      arrow({
+        element: arrowRef,
+      }),
+    ],
   });
 
   const { context } = data;
@@ -51,9 +60,10 @@ export const useTooltip = (options: TooltipOptions = {}) => {
     () => ({
       open,
       setOpen,
+      arrowRef,
       ...interactions,
       ...data,
     }),
-    [open, setOpen, interactions, data],
+    [open, setOpen, interactions, data, arrowRef],
   );
 };

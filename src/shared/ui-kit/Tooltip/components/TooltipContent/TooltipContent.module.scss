@@ -1,13 +1,24 @@
 @import "../../../../../constants";
 
 .container {
+  --tooltip-content-color: #{$c-neutrals-600};
+  --tooltip-content-bg-color: #{$c-shades-white};
+
   width: max-content;
   padding: 0.25rem 0.625rem;
   font-size: $xsmall;
   line-height: 143%;
   letter-spacing: 0.02em;
-  color: $c-neutrals-600;
-  background-color: $c-shades-white;
+  color: var(--tooltip-content-color);
+  background-color: var(--tooltip-content-bg-color);
   border-radius: 0.3125rem;
   filter: drop-shadow(0 0.25rem 0.9375rem rgba(0, 0, 0, 0.15259));
+}
+
+.arrowWrapper {
+  position: absolute;
+  width: 0.625rem;
+  height: 0.625rem;
+  display: flex;
+  color: var(--tooltip-content-bg-color);
 }
