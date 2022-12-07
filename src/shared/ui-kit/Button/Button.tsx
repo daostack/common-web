@@ -17,6 +17,7 @@ export enum ButtonSize {
 type ButtonProps = JSX.IntrinsicElements["button"] & {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  visuallyDisabled?: boolean;
 };
 
 const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
@@ -26,9 +27,11 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
   const {
     variant = ButtonVariant.PrimaryPurple,
     size = ButtonSize.Medium,
+    visuallyDisabled,
     ...restProps
   } = props;
   const className = classNames(styles.button, props.className, {
+    [styles.buttonDisabled]: visuallyDisabled || props.disabled,
     [styles.buttonOutlineBlueVariant]: variant === ButtonVariant.OutlineBlue,
     [styles.buttonLargeSize]: size === ButtonSize.Large,
     [styles.buttonMediumSize]: size === ButtonSize.Medium,
@@ -43,6 +46,9 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
       type="button"
       {...restProps}
       className={className}
+      disabled={visuallyDisabled ? undefined : props.disabled}
+      aria-disabled={visuallyDisabled ? "true" : props["aria-disabled"]}
+      onClick={visuallyDisabled ? undefined : props.onClick}
     />
   );
 };

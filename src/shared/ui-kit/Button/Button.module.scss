@@ -26,7 +26,7 @@
   transition: all 0.2s;
   box-sizing: border-box;
 
-  &:disabled {
+  &.buttonDisabled {
     cursor: not-allowed;
   }
 }
@@ -49,7 +49,7 @@
     --btn-border-color: #{$c-primary-400};
   }
 
-  &:disabled {
+  &.buttonDisabled {
     --btn-color: #{$c-shades-neutrals-30};
     --btn-bg-color: transparent;
     --btn-border-color: #{$c-shades-neutrals-30};

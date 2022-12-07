@@ -62,3 +62,14 @@ export const WithCustomTrigger = () => (
     <TooltipContent>Content</TooltipContent>
   </Tooltip>
 );
+
+export const WithDisabledCustomTrigger = () => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button variant={ButtonVariant.OutlineBlue} visuallyDisabled>
+        Custom Trigger
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>Content</TooltipContent>
+  </Tooltip>
+);
