@@ -59,6 +59,7 @@ import {
   sortByCreatedTime,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import { generateCirclesDataForCommonMember } from "../../../shared/utils/generateCircleDataForCommonMember";
 import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
 
 export async function createGovernance(
@@ -842,11 +843,19 @@ export const getCommonMemberInfo = async (
         getGovernanceByCommonId(id),
       ]);
 
+      const circlesData =
+        governance &&
+        commonMemberInfo &&
+        generateCirclesDataForCommonMember(
+          governance?.circles,
+          commonMemberInfo?.circleIds,
+        );
+
       return {
         id,
         name,
         circles: governance?.circles,
-        circlesMap: commonMemberInfo?.circles.map,
+        circlesMap: circlesData?.circles.map,
       };
     }),
   );

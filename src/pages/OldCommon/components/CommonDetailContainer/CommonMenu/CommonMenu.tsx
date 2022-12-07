@@ -25,7 +25,12 @@ import AgendaIcon from "@/shared/icons/agenda.icon";
 import ContributionIcon from "@/shared/icons/contribution.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { ModalType } from "@/shared/interfaces";
-import { Common, CommonMember, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { hasPermission } from "@/shared/utils";
 import { LeaveCommonModal } from "../LeaveCommonModal";
@@ -126,7 +131,7 @@ interface CommonMenuProps {
   governance: Governance;
   subCommons: Common[];
   isSubCommon: boolean;
-  currentCommonMember: CommonMember | null;
+  currentCommonMember: (CommonMember & CirclesPermissions) | null;
   withBorder?: boolean;
   onSubCommonCreate?: (common: Common) => void;
   onCommonDelete: () => void;
@@ -177,8 +182,10 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     if (
       !isSubCommon &&
       circlesWithoutSubcommon.length > 0 &&
+      currentCommonMember &&
       hasPermission({
         commonMember: currentCommonMember,
+        governance,
         key: GovernanceActions.CREATE_SUBCOMMON,
       })
     ) {

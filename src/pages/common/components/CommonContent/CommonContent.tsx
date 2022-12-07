@@ -2,7 +2,12 @@ import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { authentificated } from "@/pages/Auth/store/selectors";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Common, CommonMember, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
 import { CommonHeader } from "../CommonHeader";
@@ -19,7 +24,7 @@ interface CommonContentProps {
   parentCommons: Common[];
   subCommons: Common[];
   isCommonMemberFetched: boolean;
-  commonMember: CommonMember | null;
+  commonMember: (CommonMember & CirclesPermissions) | null;
 }
 
 const CommonContent: FC<CommonContentProps> = (props) => {

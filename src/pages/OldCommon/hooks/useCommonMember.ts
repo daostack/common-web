@@ -2,13 +2,18 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
-import { CommonMember } from "@/shared/models";
-import { getCommonMember } from "../store/actions";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import { CommonService, GovernanceService, Logger } from "../../../services";
+import { generateCirclesDataForCommonMember } from "../../../shared/utils/generateCircleDataForCommonMember";
 
-type State = LoadingState<CommonMember | null>;
+type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
 
 interface Return extends State {
-  fetchCommonMember: (commonId: string, force?: boolean) => void;
+  fetchCommonMember: (
+    commonId: string,
+    options: { governance?: Governance; commonMember?: CommonMember },
+    force?: boolean,
+  ) => void;
   resetCommonMember: () => void;
 }
 
@@ -23,7 +28,11 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
   const userId = user?.uid;
 
   const fetchCommonMember = useCallback(
-    (commonId: string, force = false) => {
+    async (
+      commonId: string,
+      options: { governance?: Governance; commonMember?: CommonMember } = {},
+      force = false,
+    ) => {
       if (!force && (state.loading || state.fetched)) {
         return;
       }
@@ -42,27 +51,42 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
         data: null,
       });
 
-      dispatch(
-        getCommonMember.request({
-          payload: {
-            commonId,
-            userId,
-          },
-          callback: (error, commonMember) => {
-            const nextState: State = {
-              loading: false,
-              fetched: true,
-              data: null,
-            };
+      try {
+        const [governance, commonMember] = await Promise.all([
+          options.governance ||
+            (await GovernanceService.getGovernanceByCommonId(commonId)),
+          options.commonMember ||
+            (await CommonService.getCommonMemberByUserId(commonId, userId)),
+        ]);
 
-            if (!error && commonMember) {
-              nextState.data = commonMember;
-            }
+        if (governance && commonMember) {
+          setState({
+            loading: false,
+            fetched: true,
+            data: {
+              ...commonMember,
+              ...generateCirclesDataForCommonMember(
+                governance.circles,
+                commonMember.circleIds,
+              ),
+            },
+          });
+        } else {
+          setState({
+            loading: false,
+            fetched: true,
+            data: null,
+          });
+        }
+      } catch (e) {
+        Logger.error({ state, e });
 
-            setState(nextState);
-          },
-        }),
-      );
+        setState({
+          loading: false,
+          fetched: true,
+          data: null,
+        });
+      }
     },
     [state, dispatch, userId],
   );
