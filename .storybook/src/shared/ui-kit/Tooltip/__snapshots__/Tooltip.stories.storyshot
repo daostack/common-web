@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Storyshots UI Kit/Tooltip Controlled 1`] = `
+<div>
+  <button
+    data-state="closed"
+    onClick={[Function]}
+    onPointerDown={[Function]}
+  >
+    Trigger
+  </button>
+</div>
+`;
+
 exports[`Storyshots UI Kit/Tooltip Default 1`] = `
 <button
   data-state="closed"
