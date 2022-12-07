@@ -21,6 +21,8 @@ interface CreateMemberAdmittance {
     feeMonthly: PaymentAmount | null;
     feeOneTime: PaymentAmount | null;
     fromSupportersFlow?: boolean;
+    receiveEmails?: boolean;
+    userWhatsapp?: boolean;
   };
 }
 
