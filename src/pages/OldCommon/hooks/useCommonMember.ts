@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
-import { CommonService, GovernanceService } from "../../../services";
+import { CommonService, GovernanceService, Logger } from "../../../services";
 import { generateCirclesDataForCommonMember } from "../../../shared/utils/generateCircleDataForCommonMember";
 
 type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
@@ -36,7 +36,7 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
       if (!force && (state.loading || state.fetched)) {
         return;
       }
-      if (!userId || !commonId) {
+      if (!userId) {
         setState({
           loading: false,
           fetched: true,
@@ -52,12 +52,12 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
       });
 
       try {
-        const governance =
+        const [governance, commonMember] = await Promise.all([
           options.governance ||
-          (await GovernanceService.getGovernanceByCommonId(commonId));
-        const commonMember =
+            (await GovernanceService.getGovernanceByCommonId(commonId)),
           options.commonMember ||
-          (await CommonService.getCommonMemberByUserId(commonId, userId));
+            (await CommonService.getCommonMemberByUserId(commonId, userId)),
+        ]);
 
         if (governance && commonMember) {
           setState({
@@ -71,9 +71,15 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
               ),
             },
           });
+        } else {
+          setState({
+            loading: false,
+            fetched: true,
+            data: null,
+          });
         }
       } catch (e) {
-        console.log(state, e);
+        Logger.error({ state, e });
 
         setState({
           loading: false,
