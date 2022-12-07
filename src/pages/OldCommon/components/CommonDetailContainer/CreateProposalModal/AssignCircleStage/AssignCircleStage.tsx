@@ -7,7 +7,13 @@ import { createAssignCircleProposal } from "@/pages/OldCommon/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+  Proposal,
+} from "@/shared/models";
 import { AssignCircle } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
@@ -22,7 +28,7 @@ import "./index.scss";
 interface AssignCircleStageProps {
   common: Common;
   governance: Governance;
-  commonMember: CommonMember;
+  commonMember: CommonMember & CirclesPermissions;
   onFinish: (proposal?: Proposal) => void;
   onGoBack: () => void;
 }

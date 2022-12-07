@@ -30,7 +30,7 @@ const Common: FC = () => {
 
   const fetchData = () => {
     fetchCommonData(commonId);
-    fetchCommonMember(commonId, true);
+    fetchCommonMember(commonId, {}, true);
   };
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const Common: FC = () => {
   }, [commonId]);
 
   useEffect(() => {
-    fetchCommonMember(commonId, true);
+    fetchCommonMember(commonId, {}, true);
   }, [userId]);
 
   if (!isDataFetched) {
