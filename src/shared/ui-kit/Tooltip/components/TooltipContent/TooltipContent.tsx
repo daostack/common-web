@@ -5,14 +5,23 @@ import React, {
   useMemo,
 } from "react";
 import { mergeRefs } from "react-merge-refs";
+import classNames from "classnames";
 import { FloatingPortal } from "@floating-ui/react-dom-interactions";
 import { useTooltipContext } from "../../context";
+import styles from "./TooltipContent.module.scss";
 
 const TooltipContent: ForwardRefRenderFunction<
   HTMLDivElement,
   HTMLProps<HTMLDivElement>
 > = (props, propRef) => {
   const state = useTooltipContext();
+  const containerProps = state.getFloatingProps(props);
+  const containerClassName = classNames(
+    styles.container,
+    typeof containerProps.className === "string"
+      ? containerProps.className
+      : undefined,
+  );
 
   const ref = useMemo(
     () => mergeRefs([state.floating, propRef]),
@@ -31,7 +40,8 @@ const TooltipContent: ForwardRefRenderFunction<
             visibility: state.x === null ? "hidden" : "visible",
             ...props.style,
           }}
-          {...state.getFloatingProps(props)}
+          {...containerProps}
+          className={containerClassName}
         />
       )}
     </FloatingPortal>
