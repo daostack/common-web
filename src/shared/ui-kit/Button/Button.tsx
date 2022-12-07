@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ForwardRefRenderFunction, forwardRef } from "react";
 import classNames from "classnames";
 import styles from "./Button.module.scss";
 
@@ -19,7 +19,10 @@ type ButtonProps = JSX.IntrinsicElements["button"] & {
   size?: ButtonSize;
 };
 
-const Button: FC<ButtonProps> = (props) => {
+const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
+  props,
+  ref,
+) => {
   const {
     variant = ButtonVariant.PrimaryPurple,
     size = ButtonSize.Medium,
@@ -34,8 +37,14 @@ const Button: FC<ButtonProps> = (props) => {
   });
 
   return (
-    <button tabIndex={0} type="button" {...restProps} className={className} />
+    <button
+      ref={ref}
+      tabIndex={0}
+      type="button"
+      {...restProps}
+      className={className}
+    />
   );
 };
 
-export default Button;
+export default forwardRef(Button);

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { Button, ButtonVariant } from "../Button";
 import Tooltip from "./Tooltip";
 import { TooltipContent, TooltipTrigger } from "./components";
 
@@ -52,3 +53,12 @@ export const Controlled = () => {
     </div>
   );
 };
+
+export const WithCustomTrigger = () => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button variant={ButtonVariant.OutlineBlue}>Custom Trigger</Button>
+    </TooltipTrigger>
+    <TooltipContent>Content</TooltipContent>
+  </Tooltip>
+);
