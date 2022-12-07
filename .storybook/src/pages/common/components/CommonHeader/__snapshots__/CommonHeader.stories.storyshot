@@ -13,7 +13,9 @@ exports[`Storyshots Pages/Common/Common Header For Project 1`] = `
       onError={[Function]}
       src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
     />
-    <div>
+    <div
+      className="commonInfoWrapper"
+    >
       <h1
         className="commonName"
         title="CleanAir"
@@ -87,7 +89,9 @@ exports[`Storyshots Pages/Common/Common Header With Changed Join Button Text 1`]
       onError={[Function]}
       src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
     />
-    <div>
+    <div
+      className="commonInfoWrapper"
+    >
       <h1
         className="commonName"
         title="CleanAir"
@@ -161,7 +165,9 @@ exports[`Storyshots Pages/Common/Common Header With Full Info 1`] = `
       onError={[Function]}
       src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
     />
-    <div>
+    <div
+      className="commonInfoWrapper"
+    >
       <h1
         className="commonName"
         title="CleanAir"
@@ -235,7 +241,9 @@ exports[`Storyshots Pages/Common/Common Header Without Details 1`] = `
       onError={[Function]}
       src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
     />
-    <div>
+    <div
+      className="commonInfoWrapper"
+    >
       <h1
         className="commonName"
         title="CleanAir"
@@ -277,7 +285,9 @@ exports[`Storyshots Pages/Common/Common Header Without Join Button 1`] = `
       onError={[Function]}
       src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
     />
-    <div>
+    <div
+      className="commonInfoWrapper"
+    >
       <h1
         className="commonName"
         title="CleanAir"

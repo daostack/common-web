@@ -54,3 +54,11 @@
     --tab-color: var(--tab-active-color);
   }
 }
+.custom-tab--with-icon {
+  --tab-pb: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 0;
+}

@@ -1,14 +1,19 @@
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
+import classNames from "classnames";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonTab } from "@/pages/common/constants";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common, UnstructuredRules } from "@/shared/models";
+import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { Container } from "@/shared/ui-kit";
 import { TabNavigation } from "../TabNavigation";
 import {
   CommonDescription,
   CommonEntranceInfo,
   CommonGovernance,
+  CommonProjects,
   CommonRules,
 } from "./components";
 import styles from "./AboutTab.module.scss";
@@ -17,11 +22,15 @@ interface AboutTabProps {
   activeTab: CommonTab;
   common: Common;
   parentCommons: Common[];
+  subCommons: Common[];
   rules: UnstructuredRules;
+  limitations?: MemberAdmittanceLimitations;
 }
 
 const AboutTab: FC<AboutTabProps> = (props) => {
-  const { activeTab, common, parentCommons, rules } = props;
+  const { activeTab, common, parentCommons, subCommons, rules, limitations } =
+    props;
+  const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
 
   const renderMainColumn = () => (
@@ -32,22 +41,45 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     </div>
   );
 
-  const renderAdditionalColumn = () => {
-    if (isTabletView) {
-      return null;
-    }
+  const renderAdditionalColumn = () => (
+    <div className={styles.additionalColumnWrapper}>
+      {limitations && (
+        <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
+      )}
+      <CommonProjects subCommons={subCommons} />
+    </div>
+  );
 
-    return (
-      <div className={styles.additionalColumnWrapper}>
-        <CommonEntranceInfo />
-      </div>
-    );
-  };
+  const renderMobileColumn = () => (
+    <div className={styles.mainColumnWrapper}>
+      <CommonDescription common={common} />
+      <div className={styles.separator} />
+      {subCommons.length > 0 && (
+        <>
+          <CommonProjects
+            subCommons={subCommons}
+            styles={{ projectsWrapper: styles.commonProjectsWrapper }}
+          />
+          <div className={styles.separator} />
+        </>
+      )}
+      <CommonGovernance commonName={common.name} />
+      <div className={styles.separator} />
+      {rules.length > 0 && <CommonRules rules={rules} />}
+      <div className={styles.separator} />
+      {limitations && (
+        <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
+      )}
+    </div>
+  );
 
   return (
     <div className={styles.container}>
       <Container
-        className={styles.tabNavigationContainer}
+        className={classNames(
+          styles.tabNavigationContainer,
+          styles.tabNavigationContainerWithoutActions,
+        )}
         viewports={[
           ViewportBreakpointVariant.Tablet,
           ViewportBreakpointVariant.PhoneOriented,
@@ -61,8 +93,14 @@ const AboutTab: FC<AboutTabProps> = (props) => {
         />
       </Container>
       <div className={styles.columnsWrapper}>
-        {renderMainColumn()}
-        {renderAdditionalColumn()}
+        {!isTabletView ? (
+          <>
+            {renderMainColumn()}
+            {renderAdditionalColumn()}
+          </>
+        ) : (
+          renderMobileColumn()
+        )}
       </div>
     </div>
   );

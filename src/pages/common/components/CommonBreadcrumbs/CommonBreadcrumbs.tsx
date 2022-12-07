@@ -4,6 +4,7 @@ import { Common } from "@/shared/models";
 import { BreadcrumbItem, Breadcrumbs } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
 import { getCommonTabName } from "../../utils";
+import styles from "./CommonBreadcrumbs.module.scss";
 
 interface CommonBreadcrumbsProps {
   activeTab: CommonTab;
@@ -21,7 +22,15 @@ const CommonBreadcrumbs: FC<CommonBreadcrumbsProps> = (props) => {
     }))
     .concat({ text: common.name }, { text: getCommonTabName(activeTab) });
 
-  return <Breadcrumbs items={items} />;
+  return (
+    <Breadcrumbs
+      items={items}
+      styles={{
+        listItemWrapper: styles.breadcrumbListItemWrapper,
+        item: styles.breadcrumbItem,
+      }}
+    />
+  );
 };
 
 export default CommonBreadcrumbs;

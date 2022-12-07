@@ -5,13 +5,14 @@ import { BreadcrumbItem } from "../../types";
 import styles from "./Breadcrumb.module.scss";
 
 interface BreadcrumbProps {
+  className?: string;
   item: BreadcrumbItem;
   isLastItem: boolean;
 }
 
 const Breadcrumb: FC<BreadcrumbProps> = (props) => {
-  const { item, isLastItem } = props;
-  const className = classNames(styles.item, {
+  const { className: outerClassName, item, isLastItem } = props;
+  const className = classNames(styles.item, outerClassName, {
     [styles.itemLast]: isLastItem,
     [styles.itemLink]: item.url,
   });
