@@ -2,11 +2,10 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import { ROUTE_PATHS, ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { PlusIcon } from "@/shared/icons";
 import { Common } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
 import { CommonCard } from "../../../../../CommonCard";
-import { Project } from "./components";
+import { AddProjectButton, Project } from "./components";
 import styles from "./CommonProjects.module.scss";
 
 interface CommonProjectsStyles {
@@ -58,10 +57,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
         ))}
         {!isTabletView && (
           <li className={styles.projectsItem}>
-            <Project
-              title="Add new project"
-              icon={<PlusIcon className={styles.plusIcon} />}
-            />
+            <AddProjectButton />
           </li>
         )}
       </ul>
