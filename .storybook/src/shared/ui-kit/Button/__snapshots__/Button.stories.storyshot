@@ -33,7 +33,7 @@ exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
     Button Label
   </button>
   <button
-    className="button buttonOutlineBlueVariant buttonLargeSize"
+    className="button buttonDisabled buttonOutlineBlueVariant buttonLargeSize"
     disabled={true}
     tabIndex={0}
     type="button"
@@ -41,7 +41,7 @@ exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
     Button Label
   </button>
   <button
-    className="button buttonOutlineBlueVariant buttonMediumSize"
+    className="button buttonDisabled buttonOutlineBlueVariant buttonMediumSize"
     disabled={true}
     tabIndex={0}
     type="button"
@@ -49,7 +49,7 @@ exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
     Button Label
   </button>
   <button
-    className="button buttonOutlineBlueVariant buttonSmallSize"
+    className="button buttonDisabled buttonOutlineBlueVariant buttonSmallSize"
     disabled={true}
     tabIndex={0}
     type="button"
@@ -57,12 +57,44 @@ exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
     Button Label
   </button>
   <button
-    className="button buttonOutlineBlueVariant buttonXsmallSize"
+    className="button buttonDisabled buttonOutlineBlueVariant buttonXsmallSize"
     disabled={true}
     tabIndex={0}
     type="button"
   >
     Button Label
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonOutlineBlueVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonOutlineBlueVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonOutlineBlueVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonOutlineBlueVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
   </button>
 </div>
 `;
