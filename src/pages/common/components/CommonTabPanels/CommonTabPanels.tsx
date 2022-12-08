@@ -28,6 +28,7 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
         <AboutTab
           activeTab={activeTab}
           common={common}
+          governance={governance}
           rules={governance.unstructuredRules}
           parentCommons={parentCommons}
           subCommons={subCommons}

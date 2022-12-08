@@ -1,9 +1,14 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { ROUTE_PATHS, ViewportBreakpointVariant } from "@/shared/constants";
+import {
+  GovernanceActions,
+  ROUTE_PATHS,
+  ViewportBreakpointVariant,
+} from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Common } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
+import { getCirclesWithLowestTier } from "@/shared/utils";
 import { CommonCard } from "../../../../../CommonCard";
 import { AddProjectButton, Project } from "./components";
 import styles from "./CommonProjects.module.scss";
@@ -15,12 +20,22 @@ interface CommonProjectsStyles {
 interface CommonProjectsProps {
   className?: string;
   subCommons: Common[];
+  circles: Governance["circles"];
   styles?: CommonProjectsStyles;
 }
 
 const CommonProjects: FC<CommonProjectsProps> = (props) => {
-  const { className, subCommons, styles: outerStyles } = props;
+  const { className, subCommons, circles, styles: outerStyles } = props;
   const isTabletView = useIsTabletView();
+  const circlesWithPermissionToAddNewProject = getCirclesWithLowestTier(
+    Object.values(circles).filter(
+      (circle) => circle.allowedActions[GovernanceActions.CREATE_SUBCOMMON],
+    ),
+  );
+  const circleNames = circlesWithPermissionToAddNewProject
+    .map((circle) => circle.name)
+    .join(", ");
+  const isAddingNewProjectAllowed = false;
 
   return (
     <CommonCard
@@ -57,7 +72,22 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
         ))}
         {!isTabletView && (
           <li className={styles.projectsItem}>
-            <AddProjectButton />
+            <AddProjectButton
+              visuallyDisabled={!isAddingNewProjectAllowed}
+              tooltipContent={
+                !isAddingNewProjectAllowed && circleNames ? (
+                  <>
+                    Adding a new project is reserved for members of the{" "}
+                    {circleNames} circle
+                    {circlesWithPermissionToAddNewProject.length > 1 ? "s" : ""}
+                    .
+                    <br />
+                    You can check the Governance page to learn more about the
+                    structure and permissions in this common.
+                  </>
+                ) : null
+              }
+            />
           </li>
         )}
       </ul>
