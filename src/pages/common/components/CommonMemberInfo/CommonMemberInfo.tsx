@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { Avatar2Icon } from "@/shared/icons";
-import { CommonMember, Governance } from "@/shared/models";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
@@ -11,13 +11,13 @@ import styles from "./CommonMemberInfo.module.scss";
 interface CommonMemberInfoProps {
   className?: string;
   circles: Governance["circles"];
-  circlesMap?: CommonMember["circles"]["map"];
+  circlesMap?: (CommonMember & CirclesPermissions)["circles"]["map"];
 }
 
 const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
   const { className, circles, circlesMap } = props;
   const governanceCircles = Object.values(circles || {});
-  const circleIds = Object.values(circlesMap || {});
+  const circleIds: string[] = Object.values(circlesMap || {});
   const filteredByIdCircles = getFilteredByIdCircles(
     governanceCircles,
     circleIds,

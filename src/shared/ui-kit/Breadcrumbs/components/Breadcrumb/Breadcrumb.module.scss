@@ -1,9 +1,11 @@
 @import "../../../../../constants";
 
 .item {
+  display: inline-block;
   font-weight: 600;
   font-size: $xsmall;
   color: var(--breadcrumbs-inactive-color);
+  word-break: break-word;
 }
 .itemLast {
   color: var(--breadcrumbs-active-color);

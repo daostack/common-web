@@ -23,25 +23,13 @@
   flex-direction: column;
 }
 
-.item {
-  width: 100%;
-  margin-bottom: 0.5rem;
-  display: flex;
-  justify-content: space-between;
+.joinButton {
+  max-width: 8.5rem;
+  margin-top: 1.75rem;
+  padding-left: 0;
+  padding-right: 0;
 
-  &:last-child {
-    margin-bottom: 0;
+  @include tablet {
+    margin-top: 2rem;
   }
-}
-
-.itemLabel {
-  font-weight: bold;
-  color: $c-neutrals-300;
-}
-
-.itemValue {
-  margin: 0 0 0 0.5rem;
-  white-space: nowrap;
-  line-height: 120%;
-  letter-spacing: 0.01em;
 }

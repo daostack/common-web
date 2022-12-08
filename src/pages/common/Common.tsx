@@ -30,7 +30,7 @@ const Common: FC = () => {
 
   const fetchData = () => {
     fetchCommonData(commonId);
-    fetchCommonMember(commonId, true);
+    fetchCommonMember(commonId, {}, true);
   };
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const Common: FC = () => {
   }, [commonId]);
 
   useEffect(() => {
-    fetchCommonMember(commonId, true);
+    fetchCommonMember(commonId, {}, true);
   }, [userId]);
 
   if (!isDataFetched) {
@@ -64,6 +64,7 @@ const Common: FC = () => {
       common={commonData.common}
       governance={commonData.governance}
       parentCommons={commonData.parentCommons}
+      subCommons={commonData.subCommons}
       isCommonMemberFetched={isCommonMemberFetched}
       commonMember={commonMember}
     />

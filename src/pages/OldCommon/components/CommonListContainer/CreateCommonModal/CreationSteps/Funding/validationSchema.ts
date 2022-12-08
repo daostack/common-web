@@ -4,11 +4,15 @@ import {
   MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION,
   ContributionType,
 } from "@/shared/constants";
+import { Currency } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
 
 const REQUIRED_MINIMUM_CONTRIBUTION_ERROR = `The amount must be at least ${formatPrice(
-  MIN_CONTRIBUTION_ILS_AMOUNT,
-)} and at most ${formatPrice(MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION)}.`;
+  { amount: MIN_CONTRIBUTION_ILS_AMOUNT, currency: Currency.ILS },
+)} and at most ${formatPrice({
+  amount: MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION,
+  currency: Currency.ILS,
+})}.`;
 
 const schema = Yup.object().shape({
   contributionType: Yup.string()

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { TabPanel } from "@/shared/components";
-import { ViewportBreakpointVariant } from "@/shared/constants";
+import { ProposalsTypes, ViewportBreakpointVariant } from "@/shared/constants";
 import { Common, Governance } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
@@ -11,10 +11,11 @@ interface CommonTabPanelsProps {
   common: Common;
   governance: Governance;
   parentCommons: Common[];
+  subCommons: Common[];
 }
 
 const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
-  const { activeTab, common, governance, parentCommons } = props;
+  const { activeTab, common, governance, parentCommons, subCommons } = props;
 
   return (
     <Container
@@ -29,6 +30,10 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
           common={common}
           rules={governance.unstructuredRules}
           parentCommons={parentCommons}
+          subCommons={subCommons}
+          limitations={
+            governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE]?.limitations
+          }
         />
       </TabPanel>
     </Container>

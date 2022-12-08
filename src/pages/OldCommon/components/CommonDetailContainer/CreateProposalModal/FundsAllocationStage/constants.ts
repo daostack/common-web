@@ -23,10 +23,4 @@ export const FUND_TYPES: DropdownOption[] = [
     value: FundType.USD,
     className: "funds-allocation-configuration__fund-type--disabled",
   },
-  {
-    text: "Tokens",
-    searchText: "Tokens",
-    value: FundType.Token,
-    className: "funds-allocation-configuration__fund-type--disabled",
-  },
 ];

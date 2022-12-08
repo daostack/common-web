@@ -1,13 +1,18 @@
 import { lowerCase, startCase } from "lodash";
 import { ProposalsTypes } from "@/shared/constants";
-import { CommonMember } from "@/shared/models";
+import { CommonMember, Governance } from "@/shared/models";
+import { generateCirclesDataForCommonMember } from "./generateCircleDataForCommonMember";
 import { commonTypeText } from "./text";
 
 export const checkIsProposalTypeAllowedForMember = (
   commonMember: CommonMember,
-  proposalType: ProposalsTypes
+  governance: Governance,
+  proposalType: ProposalsTypes,
 ): boolean => {
-  const allowedProposalValue = commonMember.allowedProposals[proposalType];
+  const allowedProposalValue = generateCirclesDataForCommonMember(
+    governance.circles,
+    commonMember.circleIds,
+  ).allowedProposals[proposalType];
 
   if (typeof allowedProposalValue === "object") {
     return Object.values(allowedProposalValue).some((isAllowed) => isAllowed);
@@ -18,7 +23,7 @@ export const checkIsProposalTypeAllowedForMember = (
 
 export const getTextForProposalType = (
   proposalType: ProposalsTypes,
-  isSubCommon = false
+  isSubCommon = false,
 ): string => {
   switch (proposalType) {
     case ProposalsTypes.ASSIGN_CIRCLE:

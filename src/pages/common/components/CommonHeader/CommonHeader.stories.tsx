@@ -1,6 +1,7 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { formatPrice } from "@/shared/utils";
+import { Currency } from "../../../../shared/models";
 import CommonHeader from "./CommonHeader";
 
 export default {
@@ -25,7 +26,10 @@ WithFullInfo.args = {
     {
       id: "available-funds",
       name: "Available Funds",
-      value: formatPrice(142100, { shouldMillify: false }),
+      value: formatPrice(
+        { amount: 142100, currency: Currency.ILS },
+        { shouldMillify: false },
+      ),
     },
     {
       id: "members",

@@ -293,7 +293,7 @@ const ProposalContainer = () => {
 
   useEffect(() => {
     if (commonId) {
-      fetchCommonMember(commonId);
+      fetchCommonMember(commonId, {});
     }
   }, [fetchCommonMember, commonId]);
 
