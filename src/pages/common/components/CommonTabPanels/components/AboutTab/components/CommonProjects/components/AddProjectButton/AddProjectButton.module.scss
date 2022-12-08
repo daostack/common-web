@@ -58,3 +58,8 @@
   color: var(--main-color);
   text-decoration: var(--text-decoration);
 }
+
+.tooltipContent {
+  max-width: 20rem;
+  z-index: 1;
+}
