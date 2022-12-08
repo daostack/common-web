@@ -88,7 +88,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
         {!isTabletView && (
           <li className={styles.projectsItem}>
             <AddProjectButton
-              visuallyDisabled={!isAddingNewProjectAllowed}
+              disabled={!isAddingNewProjectAllowed}
               tooltipContent={
                 <AddProjectTooltipContent
                   isAddingNewProjectAllowed={isAddingNewProjectAllowed}

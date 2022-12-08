@@ -8,23 +8,18 @@ interface AddProjectButtonProps {
   text?: string;
   tooltipContent?: ReactNode;
   onClick?: () => void;
-  visuallyDisabled?: boolean;
+  disabled?: boolean;
 }
 
 const AddProjectButton: FC<AddProjectButtonProps> = (props) => {
-  const {
-    text = "Add new project",
-    tooltipContent,
-    onClick,
-    visuallyDisabled,
-  } = props;
+  const { text = "Add new project", tooltipContent, onClick, disabled } = props;
   const buttonEl = (
     <button
       className={classNames(styles.item, {
-        [styles.itemDisabled]: visuallyDisabled,
+        [styles.itemDisabled]: disabled,
       })}
-      aria-disabled={visuallyDisabled}
-      onClick={visuallyDisabled ? undefined : onClick}
+      aria-disabled={disabled}
+      onClick={disabled ? undefined : onClick}
     >
       <div className={styles.iconWrapper}>
         <PlusIcon className={styles.icon} />
