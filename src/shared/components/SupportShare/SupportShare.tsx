@@ -15,7 +15,7 @@ const SupportShare: FC<SupportShareProps> = (props) => {
   const { handleOpen } = useBuildShareLink(
     DynamicLinkType.Support,
     common,
-    setLinkURL
+    setLinkURL,
   );
 
   return (
@@ -24,6 +24,7 @@ const SupportShare: FC<SupportShareProps> = (props) => {
       url={linkURL || ""}
       isLoading={!linkURL}
       onOpen={handleOpen}
+      text="I’m part of this common, check it out:"
     />
   );
 };
