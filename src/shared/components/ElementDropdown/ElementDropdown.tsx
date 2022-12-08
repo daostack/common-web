@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { setCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
-import { selectCommonMember } from "@/pages/OldCommon/store/selectors";
+import {
+  selectCommonMember,
+  selectGovernance,
+} from "@/pages/OldCommon/store/selectors";
 import { MenuButton, ShareModal } from "@/shared/components";
 import {
   DynamicLinkType,
@@ -18,6 +21,8 @@ import {
   Proposal,
   Discussion,
   DiscussionMessage,
+  CommonMember,
+  Governance,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { copyToClipboard, hasPermission } from "@/shared/utils";
@@ -66,7 +71,8 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
-  const commonMember = useSelector(selectCommonMember());
+  const commonMember = useSelector(selectCommonMember()) as CommonMember;
+  const governance = useSelector(selectGovernance()) as Governance;
   const { notify } = useNotification();
   const [linkURL, setLinkURL] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<
@@ -126,6 +132,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     if (
       hasPermission({
         commonMember,
+        governance,
         key: HideContentTypes[entityType],
       })
     ) {
