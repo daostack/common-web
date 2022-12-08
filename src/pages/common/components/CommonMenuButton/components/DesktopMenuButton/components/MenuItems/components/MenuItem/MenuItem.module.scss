@@ -1,12 +1,13 @@
 @import "../../../../../../../../../../constants";
 
 .item {
+  --item-color: #{$c-neutrals-600};
   --item-bg-color: #{$c-shades-white};
   --item-border: 0.0625rem solid #{$c-neutrals-100};
 
   padding: 1.125rem 1.5rem;
   text-decoration: none;
-  color: inherit;
+  color: var(--item-color);
   background-color: var(--item-bg-color);
   border: var(--item-border);
   border-bottom: 0;
@@ -30,4 +31,8 @@
 }
 .itemActive {
   --item-bg-color: #{$c-primary-200}99;
+}
+
+.itemWithWarning {
+  --item-color: #{$c-error-300};
 }

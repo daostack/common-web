@@ -6,7 +6,7 @@ import React, {
 } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { Item, ItemType } from "../../types";
+import { Item, ItemType } from "../../../../../../types";
 import styles from "./MenuItem.module.scss";
 
 interface MenuItemProps {
@@ -23,10 +23,22 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
   const content = item.text;
   const className = classNames(styles.item, item.className, {
     [styles.itemActive]: active,
+    [styles.itemWithWarning]: item.withWarning,
   });
 
   switch (item.type) {
-    case ItemType.Button:
+    case ItemType.Link:
+      return (
+        <NavLink
+          ref={ref as RefObject<HTMLAnchorElement>}
+          {...restProps}
+          className={className}
+          to={item.to}
+        >
+          {content}
+        </NavLink>
+      );
+    default:
       return (
         <button
           ref={ref as RefObject<HTMLButtonElement>}
@@ -42,17 +54,6 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
         >
           {content}
         </button>
-      );
-    default:
-      return (
-        <NavLink
-          ref={ref as RefObject<HTMLAnchorElement>}
-          {...restProps}
-          className={className}
-          to={item.to}
-        >
-          {content}
-        </NavLink>
       );
   }
 };

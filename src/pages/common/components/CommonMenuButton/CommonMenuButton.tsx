@@ -27,6 +27,7 @@ const CommonMenuButton: FC<CommonMenuButtonProps> = (props) => {
       <DesktopMenuButton
         className={outerStyles?.container}
         triggerEl={buttonEl}
+        items={[]}
       />
     );
   }

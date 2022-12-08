@@ -1,5 +1,5 @@
 export enum CommonMenuItem {
-  InviteToCircle,
-  LeaveCommon,
-  DeleteCommon,
+  InviteToCircle = "invite-to-circle",
+  LeaveCommon = "leave-common",
+  DeleteCommon = "delete-common",
 }

@@ -1,16 +1,18 @@
 import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import { Menu, Transition } from "@headlessui/react";
+import { Item } from "../../types";
 import { MenuItems } from "./components";
 import styles from "./DesktopMenuButton.module.scss";
 
 interface DesktopMenuButtonProps {
   className?: string;
   triggerEl: ReactNode;
+  items: Item[];
 }
 
 const DesktopMenuButton: FC<DesktopMenuButtonProps> = (props) => {
-  const { className, triggerEl } = props;
+  const { className, triggerEl, items } = props;
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -22,7 +24,7 @@ const DesktopMenuButton: FC<DesktopMenuButtonProps> = (props) => {
           leave={styles.menuTransitionExit}
           leaveTo={styles.menuTransitionExitActive}
         >
-          <MenuItems />
+          <MenuItems items={items} />
         </Transition>
       </Menu>
     </div>
