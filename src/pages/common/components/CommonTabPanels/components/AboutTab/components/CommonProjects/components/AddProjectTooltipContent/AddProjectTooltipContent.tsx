@@ -4,12 +4,11 @@ import { Governance } from "@/shared/models";
 import { getCirclesWithLowestTier } from "@/shared/utils";
 
 interface AddProjectTooltipContentProps {
-  isAddingNewProjectAllowed: boolean;
   circles: Governance["circles"];
 }
 
 const AddProjectTooltipContent: FC<AddProjectTooltipContentProps> = (props) => {
-  const { isAddingNewProjectAllowed, circles } = props;
+  const { circles } = props;
   const circlesWithPermissionToAddNewProject = getCirclesWithLowestTier(
     Object.values(circles).filter(
       (circle) => circle.allowedActions[GovernanceActions.CREATE_SUBCOMMON],
@@ -19,7 +18,7 @@ const AddProjectTooltipContent: FC<AddProjectTooltipContentProps> = (props) => {
     .map((circle) => circle.name)
     .join(", ");
 
-  if (isAddingNewProjectAllowed || !circleNames) {
+  if (!circleNames) {
     return null;
   }
 

@@ -90,10 +90,9 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
             <AddProjectButton
               disabled={!isAddingNewProjectAllowed}
               tooltipContent={
-                <AddProjectTooltipContent
-                  isAddingNewProjectAllowed={isAddingNewProjectAllowed}
-                  circles={circles}
-                />
+                !isAddingNewProjectAllowed ? (
+                  <AddProjectTooltipContent circles={circles} />
+                ) : null
               }
             />
           </li>
