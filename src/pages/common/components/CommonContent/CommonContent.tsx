@@ -49,7 +49,11 @@ const CommonContent: FC<CommonContentProps> = (props) => {
 
   return (
     <>
-      <CommonTopNavigation />
+      <CommonTopNavigation
+        commonMember={commonMember}
+        circles={governance.circles}
+        isSubCommon={isSubCommon}
+      />
       {!isCommonMemberFetched && <Loader variant={LoaderVariant.Global} />}
       <div className={styles.container}>
         <Container>
