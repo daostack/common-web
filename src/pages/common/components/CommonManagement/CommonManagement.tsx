@@ -38,7 +38,7 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
             circles={circles}
             circlesMap={circlesMap}
           />
-          <CommonMenuButton className={styles.commonMenuButton} />
+          <CommonMenuButton styles={{ button: styles.commonMenuButton }} />
         </>
       )}
     </div>
