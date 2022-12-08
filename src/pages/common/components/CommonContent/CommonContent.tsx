@@ -77,6 +77,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           activeTab={tab}
           common={common}
           governance={governance}
+          commonMember={commonMember}
           parentCommons={parentCommons}
           subCommons={subCommons}
         />

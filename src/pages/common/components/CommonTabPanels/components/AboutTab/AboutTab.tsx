@@ -5,7 +5,13 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonTab } from "@/pages/common/constants";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Common, Governance, UnstructuredRules } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+  UnstructuredRules,
+} from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { Container } from "@/shared/ui-kit";
 import { TabNavigation } from "../TabNavigation";
@@ -22,6 +28,7 @@ interface AboutTabProps {
   activeTab: CommonTab;
   common: Common;
   governance: Governance;
+  commonMember: (CommonMember & CirclesPermissions) | null;
   parentCommons: Common[];
   subCommons: Common[];
   rules: UnstructuredRules;
@@ -33,6 +40,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     activeTab,
     common,
     governance,
+    commonMember,
     parentCommons,
     subCommons,
     rules,
@@ -56,7 +64,11 @@ const AboutTab: FC<AboutTabProps> = (props) => {
         <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
       )}
       {isParentCommon && (
-        <CommonProjects subCommons={subCommons} circles={governance.circles} />
+        <CommonProjects
+          commonMember={commonMember}
+          subCommons={subCommons}
+          circles={governance.circles}
+        />
       )}
     </div>
   );
@@ -68,6 +80,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       {isParentCommon && subCommons.length > 0 && (
         <>
           <CommonProjects
+            commonMember={commonMember}
             subCommons={subCommons}
             circles={governance.circles}
             styles={{ projectsWrapper: styles.commonProjectsWrapper }}

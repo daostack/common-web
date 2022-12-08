@@ -6,11 +6,20 @@ import {
   ViewportBreakpointVariant,
 } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Common, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
-import { getCirclesWithLowestTier } from "@/shared/utils";
+import { hasPermission } from "@/shared/utils";
 import { CommonCard } from "../../../../../CommonCard";
-import { AddProjectButton, Project } from "./components";
+import {
+  AddProjectButton,
+  AddProjectTooltipContent,
+  Project,
+} from "./components";
 import styles from "./CommonProjects.module.scss";
 
 interface CommonProjectsStyles {
@@ -19,23 +28,29 @@ interface CommonProjectsStyles {
 
 interface CommonProjectsProps {
   className?: string;
+  commonMember: (CommonMember & CirclesPermissions) | null;
   subCommons: Common[];
   circles: Governance["circles"];
   styles?: CommonProjectsStyles;
 }
 
 const CommonProjects: FC<CommonProjectsProps> = (props) => {
-  const { className, subCommons, circles, styles: outerStyles } = props;
+  const {
+    className,
+    commonMember,
+    subCommons,
+    circles,
+    styles: outerStyles,
+  } = props;
   const isTabletView = useIsTabletView();
-  const circlesWithPermissionToAddNewProject = getCirclesWithLowestTier(
-    Object.values(circles).filter(
-      (circle) => circle.allowedActions[GovernanceActions.CREATE_SUBCOMMON],
-    ),
+  const isAddingNewProjectAllowed = Boolean(
+    commonMember &&
+      hasPermission({
+        commonMember,
+        governance: { circles },
+        key: GovernanceActions.CREATE_SUBCOMMON,
+      }),
   );
-  const circleNames = circlesWithPermissionToAddNewProject
-    .map((circle) => circle.name)
-    .join(", ");
-  const isAddingNewProjectAllowed = false;
 
   return (
     <CommonCard
@@ -75,17 +90,10 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
             <AddProjectButton
               visuallyDisabled={!isAddingNewProjectAllowed}
               tooltipContent={
-                !isAddingNewProjectAllowed && circleNames ? (
-                  <>
-                    Adding a new project is reserved for members of the{" "}
-                    {circleNames} circle
-                    {circlesWithPermissionToAddNewProject.length > 1 ? "s" : ""}
-                    .
-                    <br />
-                    You can check the Governance page to learn more about the
-                    structure and permissions in this common.
-                  </>
-                ) : null
+                <AddProjectTooltipContent
+                  isAddingNewProjectAllowed={isAddingNewProjectAllowed}
+                  circles={circles}
+                />
               }
             />
           </li>

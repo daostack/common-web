@@ -4,7 +4,7 @@ import { generateCirclesDataForCommonMember } from "./generateCircleDataForCommo
 
 interface Query {
   commonMember: CommonMember;
-  governance: Governance;
+  governance: Pick<Governance, "circles">;
   key: ProposalsTypes | GovernanceActions;
 }
 
