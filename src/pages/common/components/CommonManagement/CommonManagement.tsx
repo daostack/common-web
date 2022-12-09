@@ -45,7 +45,11 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
             commonMember={commonMember}
             circles={circles}
             isSubCommon={isSubCommon}
-            styles={{ button: styles.commonMenuButton }}
+            styles={{
+              container: styles.commonMenuButtonContainer,
+              button: styles.commonMenuButton,
+              menuItems: styles.commonMenuItems,
+            }}
           />
         </>
       )}

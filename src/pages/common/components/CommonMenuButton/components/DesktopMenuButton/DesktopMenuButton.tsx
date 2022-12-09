@@ -7,12 +7,13 @@ import styles from "./DesktopMenuButton.module.scss";
 
 interface DesktopMenuButtonProps {
   className?: string;
+  menuItemsClassName?: string;
   triggerEl: ReactNode;
   items: Item[];
 }
 
 const DesktopMenuButton: FC<DesktopMenuButtonProps> = (props) => {
-  const { className, triggerEl, items } = props;
+  const { className, menuItemsClassName, triggerEl, items } = props;
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -24,7 +25,7 @@ const DesktopMenuButton: FC<DesktopMenuButtonProps> = (props) => {
           leave={styles.menuTransitionExit}
           leaveTo={styles.menuTransitionExitActive}
         >
-          <MenuItems items={items} />
+          <MenuItems className={menuItemsClassName} items={items} />
         </Transition>
       </Menu>
     </div>
