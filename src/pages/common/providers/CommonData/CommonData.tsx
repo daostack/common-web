@@ -1,5 +1,6 @@
 import React, { FC, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
+import { CommonMemberEventEmitter } from "@/events";
 import { LeaveCommonModal } from "@/pages/OldCommon/components/CommonDetailContainer/LeaveCommonModal";
 import { useNotification } from "@/shared/hooks";
 import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
@@ -24,6 +25,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
   };
 
   const handleSuccessfulLeave = () => {
+    if (commonMember) {
+      CommonMemberEventEmitter.emit(`clear-common-member-${commonMember.id}`);
+    }
+
     dispatch(projectsActions.removeMembershipFromProjectAndChildren(common.id));
     notify("You’ve successfully left the common");
     handleMenuClose();

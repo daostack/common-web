@@ -34,7 +34,7 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
         isAuthenticated={isAuthenticated}
         onTabChange={onTabChange}
       />
-      {isAuthenticated && (
+      {commonMember && (
         <>
           <CommonMemberInfo
             className={styles.memberInfo}
