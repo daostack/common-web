@@ -68,7 +68,6 @@ const HideModal: FC<PropsWithChildren<HideModalProps>> = (props) => {
         }
         break;
       }
-      case EntityTypes.DiscussionMessage:
     }
   }, [currentDiscussion, currentProposal, entity, type]);
 
