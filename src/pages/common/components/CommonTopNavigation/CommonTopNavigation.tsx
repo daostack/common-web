@@ -18,6 +18,7 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
       circles={circles}
       isSubCommon={isSubCommon}
       isMobileVersion
+      styles={{ container: styles.rightItem }}
     />
   ) : null;
 

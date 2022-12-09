@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { MoreIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
-import { DesktopMenuButton } from "./components";
+import { DesktopMenuButton, MobileMenuButton } from "./components";
 import { useMenuItems } from "./hooks";
 import styles from "./CommonMenuButton.module.scss";
 
@@ -48,7 +48,13 @@ const CommonMenuButton: FC<CommonMenuButtonProps> = (props) => {
     );
   }
 
-  return buttonEl;
+  return (
+    <MobileMenuButton
+      className={outerStyles?.container}
+      triggerEl={buttonEl}
+      items={items}
+    />
+  );
 };
 
 export default CommonMenuButton;
