@@ -1,12 +1,16 @@
-import React, { FC } from "react";
+import React, { ForwardRefRenderFunction, forwardRef } from "react";
 import classNames from "classnames";
 import "./index.scss";
 
-type ButtonIconProps = JSX.IntrinsicElements['button'];
+type ButtonIconProps = JSX.IntrinsicElements["button"];
 
-const ButtonIcon: FC<ButtonIconProps> = (props) => {
+const ButtonIcon: ForwardRefRenderFunction<
+  HTMLButtonElement,
+  ButtonIconProps
+> = (props, ref) => {
   return (
     <button
+      ref={ref}
       tabIndex={0}
       type="button"
       {...props}
@@ -15,4 +19,4 @@ const ButtonIcon: FC<ButtonIconProps> = (props) => {
   );
 };
 
-export default ButtonIcon;
+export default forwardRef(ButtonIcon);

@@ -39,6 +39,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   const [tab, setTab] = useState(CommonTab.About);
   const isAuthenticated = useSelector(authentificated());
   const isTabletView = useIsTabletView();
+  const isSubCommon = common.directParent !== null;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -66,8 +67,9 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           <Container>
             <CommonManagement
               activeTab={tab}
+              isSubCommon={isSubCommon}
               circles={governance.circles}
-              circlesMap={commonMember?.circles.map}
+              commonMember={commonMember}
               isAuthenticated={isAuthenticated}
               onTabChange={setTab}
             />
