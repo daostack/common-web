@@ -1,1 +1,1 @@
-export * from "./CommonTab";
+export * from "./commonTab";
