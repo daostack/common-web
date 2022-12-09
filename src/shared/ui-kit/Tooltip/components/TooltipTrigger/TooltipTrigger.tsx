@@ -7,6 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import { mergeRefs } from "react-merge-refs";
+import { TooltipState } from "../../constants";
 import { useTooltipContext } from "../../context";
 
 interface TooltipTriggerProps extends HTMLProps<HTMLElement> {
@@ -34,7 +35,7 @@ const TooltipTrigger: ForwardRefRenderFunction<
         ref,
         ...restProps,
         ...children.props,
-        "data-state": state.open ? "open" : "closed",
+        "data-state": state.open ? TooltipState.Open : TooltipState.Closed,
       }),
     );
   }
@@ -43,7 +44,7 @@ const TooltipTrigger: ForwardRefRenderFunction<
     <button
       ref={ref}
       // The user can style the trigger based on the state
-      data-state={state.open ? "open" : "closed"}
+      data-state={state.open ? TooltipState.Open : TooltipState.Closed}
       {...state.getReferenceProps(restProps)}
     >
       {children}
