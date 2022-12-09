@@ -21,6 +21,18 @@ const Template: ComponentStory<typeof Button> = (args) => (
     <Button {...args} disabled size={ButtonSize.Medium} />
     <Button {...args} disabled size={ButtonSize.Small} />
     <Button {...args} disabled size={ButtonSize.Xsmall} />
+    <Button {...args} visuallyDisabled size={ButtonSize.Large}>
+      Visually Disabled
+    </Button>
+    <Button {...args} visuallyDisabled size={ButtonSize.Medium}>
+      Visually Disabled
+    </Button>
+    <Button {...args} visuallyDisabled size={ButtonSize.Small}>
+      Visually Disabled
+    </Button>
+    <Button {...args} visuallyDisabled size={ButtonSize.Xsmall}>
+      Visually Disabled
+    </Button>
   </div>
 );
 

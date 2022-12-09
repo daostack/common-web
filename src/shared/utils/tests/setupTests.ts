@@ -3,4 +3,5 @@ import "./mockMatchMedia";
 import "@/projectSetupImports";
 import "./mockConfig";
 import "./mockReactScrollbarsCustom";
+import "./mockReactMergeRefs";
 import "./mockStorages";

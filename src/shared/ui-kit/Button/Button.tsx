@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { ForwardRefRenderFunction, forwardRef } from "react";
 import classNames from "classnames";
 import styles from "./Button.module.scss";
 
@@ -17,15 +17,21 @@ export enum ButtonSize {
 type ButtonProps = JSX.IntrinsicElements["button"] & {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  visuallyDisabled?: boolean;
 };
 
-const Button: FC<ButtonProps> = (props) => {
+const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
+  props,
+  ref,
+) => {
   const {
     variant = ButtonVariant.PrimaryPurple,
     size = ButtonSize.Medium,
+    visuallyDisabled,
     ...restProps
   } = props;
   const className = classNames(styles.button, props.className, {
+    [styles.buttonDisabled]: visuallyDisabled || props.disabled,
     [styles.buttonOutlineBlueVariant]: variant === ButtonVariant.OutlineBlue,
     [styles.buttonLargeSize]: size === ButtonSize.Large,
     [styles.buttonMediumSize]: size === ButtonSize.Medium,
@@ -34,8 +40,17 @@ const Button: FC<ButtonProps> = (props) => {
   });
 
   return (
-    <button tabIndex={0} type="button" {...restProps} className={className} />
+    <button
+      ref={ref}
+      tabIndex={0}
+      type="button"
+      {...restProps}
+      className={className}
+      disabled={visuallyDisabled ? undefined : props.disabled}
+      aria-disabled={visuallyDisabled ? "true" : props["aria-disabled"]}
+      onClick={visuallyDisabled ? undefined : props.onClick}
+    />
   );
 };
 
-export default Button;
+export default forwardRef(Button);
