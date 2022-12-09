@@ -14,7 +14,7 @@ import { getFilteredByIdCircles } from "@/shared/utils/circles";
 
 interface DiscussionItemComponentProps {
   discussion: Discussion;
-  loadDiscussionDetail: (payload: Discussion) => void;
+  loadDiscussionDetail: (payload: { discussion: Discussion }) => void;
   governance: Governance;
 }
 
@@ -78,6 +78,8 @@ export default function DiscussionItemComponent({
           entityType={EntityTypes.Discussion}
           linkType={DynamicLinkType.Discussion}
           elem={discussion}
+          ownerId={discussion.ownerId}
+          commonId={governance.commonId}
           className="dropdown-menu"
           transparent
         />
@@ -85,7 +87,7 @@ export default function DiscussionItemComponent({
       <div className="discussion-content">
         <div
           className="title"
-          onClick={() => loadDiscussionDetail(discussion)}
+          onClick={() => loadDiscussionDetail({ discussion })}
           title={discussion.title}
         >
           {discussion.title}
@@ -112,7 +114,7 @@ export default function DiscussionItemComponent({
         </div>
         <div
           className="view-all-discussions"
-          onClick={() => loadDiscussionDetail(discussion)}
+          onClick={() => loadDiscussionDetail({ discussion })}
         >
           View discussion
         </div>

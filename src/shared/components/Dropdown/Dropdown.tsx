@@ -50,6 +50,7 @@ export enum ElementDropdownMenuItems {
   Edit,
   Reply,
   CopyLink,
+  Hide
 }
 
 export interface DropdownRef {

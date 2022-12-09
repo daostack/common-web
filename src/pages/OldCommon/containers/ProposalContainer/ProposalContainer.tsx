@@ -20,6 +20,7 @@ import {
 } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
+import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import { Proposal, ProposalState } from "@/shared/models";
 import { isMemberAdmittanceProposal } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -205,6 +206,10 @@ const ProposalContainer = () => {
               isCommonMemberFetched={isCommonMemberFetched}
               commonMember={commonMember}
               highlightedMessageId={highlightedCommentId}
+              isHidden={
+                currentProposal.discussion?.moderation?.flag ===
+                ModerationFlags.Hidden
+              }
             />
           );
       }

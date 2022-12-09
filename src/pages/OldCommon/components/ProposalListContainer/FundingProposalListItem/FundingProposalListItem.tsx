@@ -34,6 +34,8 @@ const FundingProposalListItem: FC<ProposalListItem> = ({
           entityType={EntityTypes.Proposal}
           linkType={DynamicLinkType.Proposal}
           elem={proposal}
+          ownerId={proposal.proposer?.uid}
+          commonId={proposal.data?.args?.commonId}
           className="dropdown-menu"
           transparent
         />
