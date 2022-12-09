@@ -94,6 +94,7 @@ export enum EntityTypes {
   ProposalMessage = "proposalMessage",
 }
 
+export const FOOTER_ID = "footer";
 export const SIDENAV_ID = "sidenav-open";
 
 export const ANONYMOUS_USER_FIRST_NAME = "Anonymous";

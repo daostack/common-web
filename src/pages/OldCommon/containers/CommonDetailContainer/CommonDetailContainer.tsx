@@ -19,6 +19,7 @@ import {
   DynamicLinkType,
   ProposalsTypes,
   ROUTE_PATHS,
+  FOOTER_ID,
 } from "@/shared/constants";
 import {
   useAuthorizedModal,
@@ -156,7 +157,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   );
   const inViewport = useViewPortHook(joinEffortRef, "-50px");
   const inViewPortFooter = useViewPortHook(
-    document.querySelector(".footer-wrapper"),
+    document.querySelector(`#${FOOTER_ID}`),
     "0px",
   );
   const [stickyClass, setStickyClass] = useState("");

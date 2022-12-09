@@ -59,6 +59,7 @@ body {
     margin-top: $header-height;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     .page-title {
       color: $deep-blue;
