@@ -1,4 +1,5 @@
-import { CommonMenuItem } from "../constants";
+import { CommonMenuItem } from "../../../constants";
+import { useCommonDataContext } from "../../../providers";
 import { Item } from "../types";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
@@ -6,6 +7,7 @@ type Options = GetAllowedItemsOptions;
 
 export const useMenuItems = (options: Options): Item[] => {
   const allowedMenuItems = getAllowedItems(options);
+  const { onMenuItemSelect } = useCommonDataContext();
   const items: Item[] = [
     {
       id: CommonMenuItem.InviteToCircle,
@@ -19,7 +21,7 @@ export const useMenuItems = (options: Options): Item[] => {
       text: "Leave common",
       withWarning: true,
       onClick: () => {
-        console.log(CommonMenuItem.LeaveCommon);
+        onMenuItemSelect(CommonMenuItem.LeaveCommon);
       },
     },
     {

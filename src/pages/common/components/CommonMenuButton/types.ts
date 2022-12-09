@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { ROUTE_PATHS } from "@/shared/constants";
-import { CommonMenuItem } from "./constants";
+import { CommonMenuItem } from "../../constants";
 
 export enum ItemType {
   Link,
