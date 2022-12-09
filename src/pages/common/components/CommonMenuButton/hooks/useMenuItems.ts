@@ -29,7 +29,7 @@ export const useMenuItems = (options: Options): Item[] => {
       text: "Delete common",
       withWarning: true,
       onClick: () => {
-        console.log(CommonMenuItem.DeleteCommon);
+        onMenuItemSelect(CommonMenuItem.DeleteCommon);
       },
     },
   ];
