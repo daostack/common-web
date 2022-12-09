@@ -327,7 +327,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
 
   const getDisscussionDetail = useCallback(
     (payload: Discussion | DiscussionWithHighlightedMessage) => {
-      dispatch(loadDiscussionDetail.request(payload));
+      dispatch(loadDiscussionDetail.request({discussion: payload}));
       onOpen();
     },
     [dispatch, onOpen],
