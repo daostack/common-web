@@ -365,12 +365,12 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         getProposalDetail(activeModalElement as ProposalWithHighlightedComment);
         break;
       case DynamicLinkType.Discussion:
-        getDisscussionDetail(activeModalElement as Discussion);
+        getDisscussionDetail({ discussion: activeModalElement as Discussion });
         break;
       case DynamicLinkType.DiscussionMessage:
-        getDisscussionDetail(
-          activeModalElement as DiscussionWithHighlightedMessage,
-        );
+        getDisscussionDetail({
+          discussion: activeModalElement as DiscussionWithHighlightedMessage,
+        });
         break;
     }
     // eslint-disable-next-line
@@ -392,9 +392,9 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const clickPreviewDisscusionHandler = useCallback(
     (id: string) => {
       changeTabHandler(Tabs.Discussions);
-      const disscussion = userDiscussions.find((f) => f.id === id);
-      if (disscussion) {
-        getDisscussionDetail(disscussion);
+      const discussion = userDiscussions.find((f) => f.id === id);
+      if (discussion) {
+        getDisscussionDetail({ discussion });
       }
     },
     [userDiscussions, changeTabHandler, getDisscussionDetail],
@@ -659,7 +659,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
           onClose={onCloseNewD}
           onSuccess={(discussion: Discussion) => {
             onCloseNewD();
-            getDisscussionDetail(discussion);
+            getDisscussionDetail({ discussion });
           }}
           uid={user?.uid!}
           commonId={common.id}
