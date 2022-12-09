@@ -17,18 +17,23 @@ const MobileMenuButton: FC<MobileMenuButtonProps> = (props) => {
   return (
     <div className={className}>
       <Menu>
-        <Menu.Button as={React.Fragment}>{triggerEl}</Menu.Button>
-        <Portal>
-          <Transition
-            className={styles.itemsWrapper}
-            enter={styles.menuTransitionEnter}
-            enterTo={styles.menuTransitionEnterActive}
-            leave={styles.menuTransitionExit}
-            leaveTo={styles.menuTransitionExitActive}
-          >
-            <MenuItems items={items} />
-          </Transition>
-        </Portal>
+        {({ open }) => (
+          <>
+            <Menu.Button as={React.Fragment}>{triggerEl}</Menu.Button>
+            <Portal>
+              <Transition
+                show={open}
+                className={styles.itemsWrapper}
+                enter={styles.menuTransitionEnter}
+                enterTo={styles.menuTransitionEnterActive}
+                leave={styles.menuTransitionExit}
+                leaveTo={styles.menuTransitionExitActive}
+              >
+                {open && <MenuItems items={items} />}
+              </Transition>
+            </Portal>
+          </>
+        )}
       </Menu>
     </div>
   );

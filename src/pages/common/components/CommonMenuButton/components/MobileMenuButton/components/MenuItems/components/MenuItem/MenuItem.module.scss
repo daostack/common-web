@@ -17,6 +17,7 @@
   cursor: pointer;
   box-sizing: border-box;
   transition: background-color 0.2s;
+  user-select: none;
 
   &:first-child {
     border-top-left-radius: var(--items-br);
