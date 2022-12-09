@@ -12,7 +12,8 @@
   color: var(--tooltip-content-color);
   background-color: var(--tooltip-content-bg-color);
   border-radius: 0.3125rem;
-  filter: drop-shadow(0 0.25rem 0.9375rem rgba(0, 0, 0, 0.15259));
+  box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.15259);
+  box-sizing: border-box;
 }
 
 .arrowWrapper {

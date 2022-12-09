@@ -1,7 +1,12 @@
 import React, { FC } from "react";
 import { TabPanel } from "@/shared/components";
 import { ProposalsTypes, ViewportBreakpointVariant } from "@/shared/constants";
-import { Common, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
 import { AboutTab } from "./components";
@@ -10,12 +15,20 @@ interface CommonTabPanelsProps {
   activeTab: CommonTab;
   common: Common;
   governance: Governance;
+  commonMember: (CommonMember & CirclesPermissions) | null;
   parentCommons: Common[];
   subCommons: Common[];
 }
 
 const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
-  const { activeTab, common, governance, parentCommons, subCommons } = props;
+  const {
+    activeTab,
+    common,
+    governance,
+    commonMember,
+    parentCommons,
+    subCommons,
+  } = props;
 
   return (
     <Container
@@ -28,6 +41,8 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
         <AboutTab
           activeTab={activeTab}
           common={common}
+          governance={governance}
+          commonMember={commonMember}
           rules={governance.unstructuredRules}
           parentCommons={parentCommons}
           subCommons={subCommons}

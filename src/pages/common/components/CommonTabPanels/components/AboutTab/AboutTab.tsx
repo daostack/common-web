@@ -5,7 +5,13 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonTab } from "@/pages/common/constants";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Common, UnstructuredRules } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+  UnstructuredRules,
+} from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { Container } from "@/shared/ui-kit";
 import { TabNavigation } from "../TabNavigation";
@@ -21,6 +27,8 @@ import styles from "./AboutTab.module.scss";
 interface AboutTabProps {
   activeTab: CommonTab;
   common: Common;
+  governance: Governance;
+  commonMember: (CommonMember & CirclesPermissions) | null;
   parentCommons: Common[];
   subCommons: Common[];
   rules: UnstructuredRules;
@@ -28,8 +36,16 @@ interface AboutTabProps {
 }
 
 const AboutTab: FC<AboutTabProps> = (props) => {
-  const { activeTab, common, parentCommons, subCommons, rules, limitations } =
-    props;
+  const {
+    activeTab,
+    common,
+    governance,
+    commonMember,
+    parentCommons,
+    subCommons,
+    rules,
+    limitations,
+  } = props;
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
   const isParentCommon = common.directParent === null;
@@ -47,7 +63,13 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       {limitations && (
         <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
       )}
-      {isParentCommon && <CommonProjects subCommons={subCommons} />}
+      {isParentCommon && (
+        <CommonProjects
+          commonMember={commonMember}
+          subCommons={subCommons}
+          circles={governance.circles}
+        />
+      )}
     </div>
   );
 
@@ -58,7 +80,9 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       {isParentCommon && subCommons.length > 0 && (
         <>
           <CommonProjects
+            commonMember={commonMember}
             subCommons={subCommons}
+            circles={governance.circles}
             styles={{ projectsWrapper: styles.commonProjectsWrapper }}
           />
           <div className={styles.separator} />

@@ -1,12 +1,25 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { ROUTE_PATHS, ViewportBreakpointVariant } from "@/shared/constants";
+import {
+  GovernanceActions,
+  ROUTE_PATHS,
+  ViewportBreakpointVariant,
+} from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { PlusIcon } from "@/shared/icons";
-import { Common } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
+import { hasPermission } from "@/shared/utils";
 import { CommonCard } from "../../../../../CommonCard";
-import { Project } from "./components";
+import {
+  AddProjectButton,
+  AddProjectTooltipContent,
+  Project,
+} from "./components";
 import styles from "./CommonProjects.module.scss";
 
 interface CommonProjectsStyles {
@@ -15,13 +28,29 @@ interface CommonProjectsStyles {
 
 interface CommonProjectsProps {
   className?: string;
+  commonMember: (CommonMember & CirclesPermissions) | null;
   subCommons: Common[];
+  circles: Governance["circles"];
   styles?: CommonProjectsStyles;
 }
 
 const CommonProjects: FC<CommonProjectsProps> = (props) => {
-  const { className, subCommons, styles: outerStyles } = props;
+  const {
+    className,
+    commonMember,
+    subCommons,
+    circles,
+    styles: outerStyles,
+  } = props;
   const isTabletView = useIsTabletView();
+  const isAddingNewProjectAllowed = Boolean(
+    commonMember &&
+      hasPermission({
+        commonMember,
+        governance: { circles },
+        key: GovernanceActions.CREATE_SUBCOMMON,
+      }),
+  );
 
   return (
     <CommonCard
@@ -58,9 +87,13 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
         ))}
         {!isTabletView && (
           <li className={styles.projectsItem}>
-            <Project
-              title="Add new project"
-              icon={<PlusIcon className={styles.plusIcon} />}
+            <AddProjectButton
+              disabled={!isAddingNewProjectAllowed}
+              tooltipContent={
+                !isAddingNewProjectAllowed ? (
+                  <AddProjectTooltipContent circles={circles} />
+                ) : null
+              }
             />
           </li>
         )}

@@ -19,28 +19,12 @@
   --main-color: #{$c-neutrals-300};
 }
 
-.imageSize {
+.image {
   width: 4.5rem;
   height: 4.5rem;
   border-radius: 50%;
-  box-sizing: border-box;
-}
-
-.image {
-  @extend .imageSize;
-
   object-fit: cover;
-}
-
-.iconWrapper {
-  @extend .imageSize;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--main-color);
-  background-color: $c-neutrals-100;
-  border: 0.0625rem solid var(--main-color);
+  box-sizing: border-box;
 }
 
 .title {
@@ -54,10 +38,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   box-sizing: border-box;
-}
-.titleForIcon {
-  text-decoration: none;
-  white-space: unset;
 }
 
 .description {
