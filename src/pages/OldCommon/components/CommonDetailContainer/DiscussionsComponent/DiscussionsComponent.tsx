@@ -9,7 +9,7 @@ import "./index.scss";
 
 interface DiscussionsComponentProps {
   discussions: Discussion[];
-  loadDiscussionDetail: (payload: Discussion) => void;
+  loadDiscussionDetail: (payload: { discussion: Discussion }) => void;
   common: Common;
   governance: Governance;
   commonMember: CommonMember | null;

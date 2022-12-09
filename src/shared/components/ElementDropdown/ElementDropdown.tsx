@@ -1,7 +1,12 @@
 import React, { FC, useCallback, useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { setCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
+import {
+  selectCommonMember,
+  selectGovernance,
+} from "@/pages/OldCommon/store/selectors";
 import { MenuButton, ShareModal } from "@/shared/components";
 import {
   DynamicLinkType,
@@ -16,9 +21,11 @@ import {
   Proposal,
   Discussion,
   DiscussionMessage,
+  CommonMember,
+  Governance,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { copyToClipboard } from "@/shared/utils";
+import { copyToClipboard, hasPermission } from "@/shared/utils";
 import { DeleteModal } from "../DeleteModal";
 import {
   Dropdown,
@@ -26,6 +33,7 @@ import {
   DropdownOption,
   DropdownStyles,
 } from "../Dropdown";
+import { HideContentTypes, HideModal } from "../HideModal";
 import { ReportModal } from "../ReportModal";
 import "./index.scss";
 
@@ -38,10 +46,11 @@ interface ElementDropdownProps {
   styles?: DropdownStyles;
   onMenuToggle?: (isOpen: boolean) => void;
   isDiscussionMessage?: boolean;
-  isOwner?: boolean;
   entityType: EntityTypes;
   onEdit?: () => void;
   userId?: string;
+  ownerId?: string;
+  commonId?: string;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
@@ -53,13 +62,17 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   className,
   onMenuToggle,
   isDiscussionMessage = false,
-  isOwner = false,
   entityType,
   onEdit,
   userId,
+  ownerId,
+  commonId,
 }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
+  const user = useSelector(selectUser());
+  const commonMember = useSelector(selectCommonMember()) as CommonMember;
+  const governance = useSelector(selectGovernance()) as Governance;
   const { notify } = useNotification();
   const [linkURL, setLinkURL] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<
@@ -79,6 +92,11 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     onOpen: onOpenDelete,
     onClose: onCloseDelete,
   } = useModal(false);
+  const {
+    isShowing: isShowingHide,
+    onOpen: onOpenHide,
+    onClose: onCloseHide,
+  } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
 
   const onReply = useCallback(() => {
@@ -86,24 +104,44 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   }, [elem]);
 
   const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(() => {
+    const isOwner = ownerId === user?.uid;
     const generalMenuItems = [
       {
         text: <span>Share</span>,
         searchText: "Share",
         value: ElementDropdownMenuItems.Share,
       },
-      isDiscussionMessage && !isOwner
-        ? {
-            text: <span>Report</span>,
-            searchText: "Report",
-            value: ElementDropdownMenuItems.Report,
-          }
-        : {
-            text: <span>Copy Link</span>,
-            searchText: "Copy Link",
-            value: ElementDropdownMenuItems.CopyLink,
-          },
     ];
+
+    if (!isOwner) {
+      generalMenuItems.push({
+        text: <span>Report</span>,
+        searchText: "Report",
+        value: ElementDropdownMenuItems.Report,
+      });
+    }
+
+    if (isDiscussionMessage) {
+      generalMenuItems.push({
+        text: <span>Copy Link</span>,
+        searchText: "Copy Link",
+        value: ElementDropdownMenuItems.CopyLink,
+      });
+    }
+
+    if (
+      hasPermission({
+        commonMember,
+        governance,
+        key: HideContentTypes[entityType],
+      })
+    ) {
+      generalMenuItems.push({
+        text: <span>Hide</span>,
+        searchText: "Hide",
+        value: ElementDropdownMenuItems.Hide,
+      });
+    }
 
     const discussionMessageItems = isDiscussionMessage
       ? [
@@ -141,7 +179,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       ...discussionMessageItems,
       ...generalMenuItems,
     ];
-  }, [linkURL, isDiscussionMessage, isOwner, elem]);
+  }, [linkURL, isDiscussionMessage, elem, user, ownerId, commonMember]);
 
   const handleMenuToggle = useCallback(
     (isOpen: boolean) => {
@@ -152,7 +190,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
       if (onMenuToggle) onMenuToggle(isOpen);
     },
-    [linkURL, onMenuToggle, handleOpen, setIsShareLinkGenerating],
+    [linkURL, onMenuToggle, setIsShareLinkGenerating],
   );
 
   const handleMenuItemSelect = useCallback(
@@ -196,6 +234,9 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         break;
       case ElementDropdownMenuItems.Report: //TODO: "Reports" dev scope
         onOpenReport();
+        break;
+      case ElementDropdownMenuItems.Hide:
+        onOpenHide();
         break;
     }
 
@@ -244,6 +285,14 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         type={
           isMobileView ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop
         }
+      />
+      <HideModal
+        userId={userId as string}
+        isShowing={isShowingHide}
+        onClose={onCloseHide}
+        entity={elem}
+        type={entityType}
+        commonId={commonId as string}
       />
       <ReportModal
         userId={userId as string}

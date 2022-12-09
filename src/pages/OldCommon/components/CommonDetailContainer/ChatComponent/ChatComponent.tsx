@@ -43,6 +43,7 @@ interface ChatComponentInterface {
   sendMessage?: (text: string) => void;
   highlightedMessageId?: string | null;
   hasAccess?: boolean;
+  isHidden: boolean;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
@@ -79,6 +80,7 @@ export default function ChatComponent({
   sendMessage,
   highlightedMessageId: linkHighlightedMessageId,
   hasAccess = true,
+  isHidden = false,
 }: ChatComponentInterface) {
   const intersectionRef = React.useRef(null);
   const replyDivRef = React.useRef(null);
@@ -256,7 +258,7 @@ export default function ChatComponent({
         className={`messages ${!dateList.length ? "empty" : ""}`}
         id={chatWrapperId}
       >
-        {hasAccess ? (
+        {hasAccess && !isHidden ? (
           <>
             {dateList.map((day, dayIndex) => {
               const date = new Date(Number(day));
@@ -314,7 +316,9 @@ export default function ChatComponent({
           <EmptyTabComponent
             currentTab="messages"
             message={
-              "This content is private and visible only to members of the common in specific circles."
+              isHidden
+                ? "This discussion was hidden due to inappropriate content"
+                : "This content is private and visible only to members of the common in specific circles."
             }
             title=""
             isCommonMember={Boolean(commonMember)}
@@ -360,7 +364,7 @@ export default function ChatComponent({
               ),
             })}
           >
-            {!commonMember || !hasAccess ? (
+            {!commonMember || !hasAccess || isHidden ? (
               <span className="text">Only members can send messages</span>
             ) : (
               <>

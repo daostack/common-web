@@ -1,5 +1,6 @@
 import React from "react";
 import { Tabs } from "@/pages/OldCommon/containers/CommonDetailContainer";
+import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
 import { ProposalsTypes } from "../../../../../shared/constants";
 import { EmptyTabComponent } from "../EmptyTabContent";
@@ -44,7 +45,10 @@ export default function ProposalsComponent({
         {proposals.length > 0 ? (
           <>
             {proposals.map((proposal) => {
-              if (proposal.type !== ProposalsTypes.MEMBER_ADMITTANCE) {
+              if (
+                proposal.type !== ProposalsTypes.MEMBER_ADMITTANCE &&
+                proposal.moderation.flag !== ModerationFlags.Hidden
+              ) {
                 return (
                   <ProposalItemComponent
                     key={proposal.id}

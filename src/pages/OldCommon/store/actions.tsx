@@ -112,12 +112,21 @@ export const loadCommonDiscussionList = createAsyncAction(
   CommonsActionTypes.LOAD_COMMON_DISCUSSIONS_FAILURE,
 )<void, Discussion[], Error>();
 
+export const hideDiscussion = createAsyncAction(
+  CommonsActionTypes.HIDE_COMMON_DISCUSSION,
+  CommonsActionTypes.HIDE_COMMON_DISCUSSION_SUCCESS,
+  CommonsActionTypes.HIDE_COMMON_DISCUSSION_FAILURE,
+)<string, Discussion[], Error>();
+
 export const loadDiscussionDetail = createAsyncAction(
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL,
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL_SUCCESS,
   CommonsActionTypes.LOAD_DISCUSSION_DETAIL_FAILURE,
 )<
-  Discussion | DiscussionWithHighlightedMessage,
+  {
+    discussion: Discussion | DiscussionWithHighlightedMessage;
+    force?: boolean;
+  },
   Discussion | DiscussionWithHighlightedMessage,
   Error
 >();
@@ -131,6 +140,12 @@ export const loadProposalList = createAsyncAction(
   CommonsActionTypes.LOAD_PROPOSAL_LIST_SUCCESS,
   CommonsActionTypes.LOAD_PROPOSAL_LIST_FAILURE,
 )<void, Proposal[], Error>();
+
+export const hideProposal = createAsyncAction(
+  CommonsActionTypes.HIDE_COMMON_PROPOSAL,
+  CommonsActionTypes.HIDE_COMMON_PROPOSAL_SUCCESS,
+  CommonsActionTypes.HIDE_COMMON_PROPOSAL_FAILURE,
+)<string, Proposal[], Error>();
 
 export const loadProposalDetail = createAsyncAction(
   CommonsActionTypes.LOAD_PROPOSAL_DETAIL,
@@ -546,7 +561,7 @@ export const createReport = createAsyncAction(
 )<
   {
     payload: CreateReportDto;
-    discussionId: string;
+    discussionId?: string;
     callback: (isSucceed: boolean) => void;
   },
   boolean,
