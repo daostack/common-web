@@ -88,7 +88,6 @@ import {
 } from "./api";
 import {
   selectCommonStateById,
-  selectCurrentDisscussion,
   selectDiscussions,
   selectProposals,
 } from "./selectors";
@@ -572,7 +571,11 @@ export function* subscribeToDiscussionMessageRefresh(discussionId: string) {
           ),
         };
 
-        store.dispatch(actions.loadDiscussionDetail.request({discussion: updatedDiscussion}));
+        store.dispatch(
+          actions.loadDiscussionDetail.request({
+            discussion: updatedDiscussion,
+          }),
+        );
         store.dispatch(actions.getCommonsList.request());
       }
     },
@@ -647,7 +650,11 @@ export function* addMessageToDiscussionSaga(
           ),
         };
 
-        store.dispatch(actions.loadDiscussionDetail.request({discussion: updatedDiscussion}));
+        store.dispatch(
+          actions.loadDiscussionDetail.request({
+            discussion: updatedDiscussion,
+          }),
+        );
         store.dispatch(actions.getCommonsList.request());
       },
     )) as () => void;

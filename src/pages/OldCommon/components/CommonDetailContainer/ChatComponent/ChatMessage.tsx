@@ -128,7 +128,7 @@ export default function ChatMessage({
               onMenuToggle={onMessageDropdownOpen}
               transparent
               isDiscussionMessage
-              ownerId={discussionMessage.owner?.id}
+              ownerId={discussionMessage.owner?.uid}
               userId={user?.uid}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}
