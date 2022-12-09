@@ -133,6 +133,7 @@ export default {
         payAmount: "Pay {{amount}}",
         enterTheCommon: "Enter the common",
         shareWithFriends: "Share with friends",
+        shareLeadingText: "I’m part of this common, check it out:",
         jumpIn: "Jump In",
       },
       joinText: "Join the",

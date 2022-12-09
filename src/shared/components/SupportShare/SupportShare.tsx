@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { DynamicLinkType } from "@/shared/constants";
 import { useBuildShareLink } from "@/shared/hooks";
 import { Common } from "@/shared/models";
@@ -11,11 +12,15 @@ interface SupportShareProps
 
 const SupportShare: FC<SupportShareProps> = (props) => {
   const { common, ...restProps } = props;
+  const { t } = useTranslation("translation", {
+    keyPrefix: "supporters",
+  });
+
   const [linkURL, setLinkURL] = useState<string | null>(null);
   const { handleOpen } = useBuildShareLink(
     DynamicLinkType.Support,
     common,
-    setLinkURL
+    setLinkURL,
   );
 
   return (
@@ -24,6 +29,7 @@ const SupportShare: FC<SupportShareProps> = (props) => {
       url={linkURL || ""}
       isLoading={!linkURL}
       onOpen={handleOpen}
+      text={t("buttons.shareLeadingText")}
     />
   );
 };

@@ -110,6 +110,7 @@ export default {
         payAmount: "שלם {{amount}}",
         enterTheCommon: "כנסו לקומון",
         shareWithFriends: "שתפו עם חברים",
+        shareLeadingText: "I’m part of this common, check it out:", 
         jumpIn: "הכנסו",
       },
       joinText: "הצטרפו אלינו",
