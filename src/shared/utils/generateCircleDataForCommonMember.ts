@@ -26,8 +26,8 @@ export const generateCirclesDataForCommonMember = (
       ([_, circle]) => circle.id === id,
     );
     if (!circle || !circle[1])
-      throw new Error(`could not find cirlce in governance ${id}`);
-    circleIdsByHierarchy.add(circle?.[1].id);
+      throw new Error(`could not find circle in governance ${id}`);
+    circleIdsByHierarchy.add(circle[1].id);
     circlesIndexesByHierarchy.add(circleIndexGuard(circle[0]));
 
     if (circle[1].hierarchy) {
@@ -98,7 +98,7 @@ export const generateCirclesDataForCommonMember = (
         throw new Error(
           `could not find cirlce in governance ${JSON.stringify(circle)}`,
         );
-      circleIdsByHierarchy.add(circle?.[1]?.id);
+      circleIdsByHierarchy.add(circle[1]?.id);
       return { ...prev, [next]: circle.id };
     },
     {},
