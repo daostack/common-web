@@ -48,7 +48,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     return previewInfo.commons
       .map((common) => {
         const governanceCircles = Object.values(common.circles || {});
-        const circleIds = member.circleIds;
+        const circleIds = Object.values(common.circlesMap || {});
         const filteredByIdCircles = getFilteredByIdCircles(
           governanceCircles,
           circleIds,

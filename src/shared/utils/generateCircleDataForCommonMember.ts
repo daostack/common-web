@@ -39,9 +39,10 @@ export const generateCirclesDataForCommonMember = (
           !circle[1].hierarchy.exclusions.find(
             (tier) => govCircle.hierarchy && govCircle.hierarchy.tier === tier,
           )
-        )
+        ) {
           circleIdsByHierarchy.add(govCircle.id);
-        circlesIndexesByHierarchy.add(circleIndexGuard(index));
+          circlesIndexesByHierarchy.add(circleIndexGuard(index));
+        }
       });
     }
   });
