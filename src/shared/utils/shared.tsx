@@ -26,9 +26,7 @@ export const formatPrice = (
     bySubscription = false,
     prefix = CurrencySymbol.Shekel,
   } = options;
-  const isShekel = prefix === CurrencySymbol.Shekel;
-
-  const monthlyLabel = isShekel ? "שׁ״ח לחודש" : "/mo";
+  const monthlyLabel = prefix === CurrencySymbol.Shekel ? " לחודש" : "/mo";
 
   if (!price) {
     return shouldRemovePrefixFromZero ? "0" : `${prefix}0`;
@@ -38,10 +36,6 @@ export const formatPrice = (
   const milifiedPrice = shouldMillify
     ? millify(convertedPrice)
     : convertedPrice.toLocaleString("en-US");
-
-  if (isShekel && bySubscription) {
-    return `${milifiedPrice}${monthlyLabel}`;
-  }
 
   return `${prefix}${milifiedPrice}${bySubscription ? monthlyLabel : ""}`;
 };
