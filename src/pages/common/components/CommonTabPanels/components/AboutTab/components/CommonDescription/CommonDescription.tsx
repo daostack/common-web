@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import { Linkify } from "@/shared/components";
 import { ViewportBreakpointVariant } from "@/shared/constants";
+import { useFullText } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common } from "@/shared/models";
 import { Container, Tags } from "@/shared/ui-kit";
@@ -17,6 +18,12 @@ const CommonDescription: FC<CommonDescriptionProps> = (props) => {
   const { common } = props;
   const tags = common.tags || [];
   const isTabletView = useIsTabletView();
+  const {
+    ref: descriptionRef,
+    shouldShowFullText,
+    isFullTextShowing,
+    toggleFullText,
+  } = useFullText();
 
   return (
     <Container
@@ -28,12 +35,19 @@ const CommonDescription: FC<CommonDescriptionProps> = (props) => {
     >
       <CommonCard className={styles.container} hideCardStyles={isTabletView}>
         <p
+          ref={descriptionRef}
           className={classNames(styles.description, {
             [styles.descriptionRTL]: isRTL(common.description),
+            [styles.descriptionShortened]: !shouldShowFullText,
           })}
         >
           <Linkify>{common.description}</Linkify>
         </p>
+        {(shouldShowFullText || !isFullTextShowing) && (
+          <a className={styles.seeMore} onClick={toggleFullText}>
+            See {shouldShowFullText ? "less" : "more"}
+          </a>
+        )}
         {tags.length > 0 && (
           <div className={styles.tagsWrapper}>
             <Tags tags={tags} />
