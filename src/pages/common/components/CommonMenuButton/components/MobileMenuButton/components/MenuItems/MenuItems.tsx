@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Menu } from "@headlessui/react";
 import { emptyFunction } from "@/shared/utils";
-import { CommonMenuItem } from "../../../../constants";
+import { CommonMenuItem } from "../../../../../../constants";
 import { Item } from "../../../../types";
 import { MenuItem } from "./components";
 import styles from "./MenuItems.module.scss";

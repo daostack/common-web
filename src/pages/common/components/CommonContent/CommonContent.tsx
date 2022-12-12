@@ -10,6 +10,7 @@ import {
 } from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
+import { CommonDataProvider } from "../../providers";
 import { CommonHeader } from "../CommonHeader";
 import { CommonManagement } from "../CommonManagement";
 import { CommonTabPanels } from "../CommonTabPanels";
@@ -48,7 +49,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   }, [isAuthenticated]);
 
   return (
-    <>
+    <CommonDataProvider common={common} commonMember={commonMember}>
       <CommonTopNavigation
         commonMember={commonMember}
         circles={governance.circles}
@@ -96,7 +97,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           />
         )}
       </div>
-    </>
+    </CommonDataProvider>
   );
 };
 

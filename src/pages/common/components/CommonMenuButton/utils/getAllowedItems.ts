@@ -1,7 +1,7 @@
 import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
-import { CommonMenuItem } from "../constants";
+import { CommonMenuItem } from "../../../constants";
 
 export interface GetAllowedItemsOptions {
   commonMember: (CommonMember & CirclesPermissions) | null;

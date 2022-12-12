@@ -3,7 +3,7 @@ import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import * as actions from "./actions";
 import { ProjectsState } from "./types";
-import { getRelatedToIdItems } from "./utils";
+import { getAllNestedItems, getRelatedToIdItems } from "./utils";
 
 type Action = ActionType<typeof actions>;
 
@@ -87,4 +87,26 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
     produce(state, (nextState) => {
       nextState.isDataFetched = false;
     }),
+  )
+  .handleAction(
+    actions.removeMembershipFromProjectAndChildren,
+    (state, { payload: commonId }) =>
+      produce(state, (nextState) => {
+        const currentItem = nextState.data.find(
+          (item) => item.commonId === commonId,
+        );
+
+        if (!currentItem) {
+          return;
+        }
+
+        const itemsToChange = [
+          currentItem,
+          ...getAllNestedItems(currentItem, nextState.data),
+        ];
+
+        itemsToChange.forEach((item) => {
+          item.hasMembership = false;
+        });
+      }),
   );
