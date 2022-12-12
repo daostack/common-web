@@ -45,7 +45,7 @@ const CommonDescription: FC<CommonDescriptionProps> = (props) => {
         </p>
         {(shouldShowFullText || !isFullTextShowing) && (
           <a className={styles.seeMore} onClick={toggleFullText}>
-            See {shouldShowFullText ? "less <" : "more >"}
+            See {shouldShowFullText ? "less" : "more"}
           </a>
         )}
         {tags.length > 0 && (
