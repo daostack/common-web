@@ -34,7 +34,7 @@ const CommonDescription: FC<CommonDescriptionProps> = (props) => {
       ]}
     >
       <CommonCard className={styles.container} hideCardStyles={isTabletView}>
-        <div
+        <p
           ref={descriptionRef}
           className={classNames(styles.description, {
             [styles.descriptionRTL]: isRTL(common.description),
@@ -42,7 +42,7 @@ const CommonDescription: FC<CommonDescriptionProps> = (props) => {
           })}
         >
           <Linkify>{common.description}</Linkify>
-        </div>
+        </p>
         {(shouldShowFullText || !isFullTextShowing) && (
           <a className={styles.seeMore} onClick={toggleFullText}>
             See {shouldShowFullText ? "less <" : "more >"}
