@@ -6,7 +6,7 @@ import { createDeleteCommonProposal } from "@/pages/OldCommon/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
+import { Common, Proposal } from "@/shared/models";
 import { DeleteCommon } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
@@ -133,7 +133,7 @@ const DeleteCommonStage: FC<DeleteCommonStageProps> = (props) => {
 
   useEffect(() => {
     if (typeof props.activeProposalsExist === "undefined") {
-      checkActiveProposals();
+      checkActiveProposals(common.id);
     }
   }, [props.activeProposalsExist]);
 

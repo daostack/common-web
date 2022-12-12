@@ -1,12 +1,12 @@
 import { useCallback } from "react";
-import { Logger } from "@/services";
+import { Logger, ProposalService } from "@/services";
 import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
 
 type State = LoadingState<boolean | null>;
 
 interface Return extends State {
-  checkActiveProposals: () => void;
+  checkActiveProposals: (commonId: string) => void;
 }
 
 export const useActiveProposalsCheck = (initialValue?: boolean): Return => {
@@ -20,7 +20,7 @@ export const useActiveProposalsCheck = (initialValue?: boolean): Return => {
       : {},
   );
 
-  const checkActiveProposals = useCallback(async () => {
+  const checkActiveProposals = useCallback(async (commonId: string) => {
     setState({
       loading: true,
       fetched: false,
@@ -28,13 +28,13 @@ export const useActiveProposalsCheck = (initialValue?: boolean): Return => {
     });
 
     try {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 1000);
-      });
+      const activeProposalsExist =
+        await ProposalService.checkActiveProposalsExistenceInCommon(commonId);
+
       setState({
         loading: false,
         fetched: true,
-        data: true,
+        data: activeProposalsExist,
       });
     } catch (error) {
       Logger.error(error);
