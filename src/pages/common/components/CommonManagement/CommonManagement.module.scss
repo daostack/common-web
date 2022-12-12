@@ -15,9 +15,15 @@
 }
 
 .memberInfo {
-  margin-right: 1.875rem;
   border-left: 0.0625rem solid #{$c-neutrals-100};
-  border-right: 0.0625rem solid #{$c-neutrals-100};
+}
+
+.commonMenuButtonContainer {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 1.875rem;
+  border-left: 0.0625rem solid #{$c-neutrals-100};
 }
 
 .commonMenuButton {
@@ -29,4 +35,9 @@
   &:hover {
     background-color: $c-primary-200;
   }
+}
+
+.commonMenuItems {
+  // 0.875rem - space between menu button and bottom of its container
+  top: calc(100% - 0.875rem);
 }

@@ -34,7 +34,7 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
         isAuthenticated={isAuthenticated}
         onTabChange={onTabChange}
       />
-      {isAuthenticated && (
+      {commonMember && (
         <>
           <CommonMemberInfo
             className={styles.memberInfo}
@@ -45,7 +45,11 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
             commonMember={commonMember}
             circles={circles}
             isSubCommon={isSubCommon}
-            styles={{ button: styles.commonMenuButton }}
+            styles={{
+              container: styles.commonMenuButtonContainer,
+              button: styles.commonMenuButton,
+              menuItems: styles.commonMenuItems,
+            }}
           />
         </>
       )}

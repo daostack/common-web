@@ -20,6 +20,7 @@ interface LeaveCommonModalProps
   commonId: string;
   memberCount: number;
   memberCircleIds: string[];
+  onSuccessfulLeave?: () => void;
 }
 
 const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
@@ -29,6 +30,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     commonId,
     memberCount,
     memberCircleIds = [],
+    onSuccessfulLeave,
   } = props;
   const {
     loading: areMemberAmountsLoading,
@@ -76,7 +78,13 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
           setIsLeaving(false);
           setErrorText(errorText);
 
-          if (isFinishedSuccessfully) {
+          if (!isFinishedSuccessfully) {
+            return;
+          }
+
+          if (onSuccessfulLeave) {
+            onSuccessfulLeave();
+          } else {
             history.push(ROUTE_PATHS.MY_COMMONS);
             notify("You’ve successfully left the common");
           }

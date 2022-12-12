@@ -1,0 +1,26 @@
+@import "../../../../../../../../constants";
+
+.itemsWrapper {
+  --items-br: 0.875rem;
+
+  max-width: 25rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: $small;
+  list-style-type: none;
+  background-color: rgba(242, 242, 242, 0.9);
+  border-radius: var(--items-br);
+  box-shadow: 0 0.25rem 0.9375rem #{$c-sidebar-user-menu-shadow};
+}
+
+@supports (backdrop-filter: blur(1.7rem)) {
+  .itemsWrapper {
+    background-color: transparent;
+    backdrop-filter: blur(1.7rem);
+    box-shadow: none;
+  }
+}

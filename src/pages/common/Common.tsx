@@ -5,7 +5,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFullCommonData } from "@/shared/hooks/useCases";
 import { Loader, NotFound } from "@/shared/ui-kit";
-import { CommonContent, CommonTopNavigation } from "./components";
+import { CommonContent, PureCommonTopNavigation } from "./components";
 import styles from "./Common.module.scss";
 
 interface CommonRouterParams {
@@ -51,7 +51,7 @@ const Common: FC = () => {
   if (!commonData) {
     return (
       <>
-        <CommonTopNavigation />
+        <PureCommonTopNavigation />
         <div className={styles.centerWrapper}>
           <NotFound />
         </div>

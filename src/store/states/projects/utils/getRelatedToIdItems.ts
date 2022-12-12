@@ -15,7 +15,7 @@ const getParentItem = (
   return parentItem;
 };
 
-const getAllNestedItems = (
+export const getAllNestedItems = (
   parentItem: ProjectsStateItem,
   data: ProjectsStateItem[],
 ): ProjectsStateItem[] => {

@@ -27,3 +27,7 @@ export const clearProjectsExceptOfCurrent = createStandardAction(
 export const markProjectsAsNotFetched = createStandardAction(
   ProjectsActionType.MARK_PROJECTS_AS_NOT_FETCHED,
 )();
+
+export const removeMembershipFromProjectAndChildren = createStandardAction(
+  ProjectsActionType.REMOVE_MEMBERSHIP_FROM_PROJECT_AND_CHILDREN,
+)<string>();

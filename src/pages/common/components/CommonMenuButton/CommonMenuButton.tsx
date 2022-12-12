@@ -2,13 +2,14 @@ import React, { FC } from "react";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { MoreIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
-import { DesktopMenuButton } from "./components";
+import { DesktopMenuButton, MobileMenuButton } from "./components";
 import { useMenuItems } from "./hooks";
 import styles from "./CommonMenuButton.module.scss";
 
 interface Styles {
   container?: string;
   button?: string;
+  menuItems?: string;
 }
 
 interface CommonMenuButtonProps {
@@ -32,6 +33,11 @@ const CommonMenuButton: FC<CommonMenuButtonProps> = (props) => {
     isSubCommon,
     governance: { circles },
   });
+
+  if (items.length === 0) {
+    return null;
+  }
+
   const buttonEl = (
     <ButtonIcon className={outerStyles?.button}>
       <MoreIcon className={styles.icon} />
@@ -42,13 +48,20 @@ const CommonMenuButton: FC<CommonMenuButtonProps> = (props) => {
     return (
       <DesktopMenuButton
         className={outerStyles?.container}
+        menuItemsClassName={outerStyles?.menuItems}
         triggerEl={buttonEl}
         items={items}
       />
     );
   }
 
-  return buttonEl;
+  return (
+    <MobileMenuButton
+      className={outerStyles?.container}
+      triggerEl={buttonEl}
+      items={items}
+    />
+  );
 };
 
 export default CommonMenuButton;
