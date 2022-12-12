@@ -18,6 +18,25 @@
   direction: rtl;
 }
 
+.descriptionShortened {
+  display: -webkit-box;
+  -webkit-line-clamp: 9;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.seeMore {
+  color: $purple-2;
+  width: 100%;
+  margin-bottom: 1.75rem;
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
 .tagsWrapper {
   margin-top: 2.125rem;
 }

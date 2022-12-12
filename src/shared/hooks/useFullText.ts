@@ -15,8 +15,10 @@ interface Return<T extends Element> {
   toggleFullText: () => void;
 }
 
+const SCROLL_HEIGHT_DIFF = 2;
+
 const checkFullTextShowing = <T extends Element>(ref: RefObject<T>): boolean =>
-  Boolean(ref.current && ref.current.clientHeight >= ref.current.scrollHeight);
+  Boolean(ref.current && ref.current.clientHeight >= ref.current.scrollHeight - SCROLL_HEIGHT_DIFF);
 
 const useFullText = <T extends Element = HTMLDivElement>(): Return<T> => {
   const ref = useRef<T>(null);
