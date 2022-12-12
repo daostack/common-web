@@ -9,7 +9,7 @@ import "./index.scss";
 
 interface DiscussionsComponentProps {
   discussions: Discussion[];
-  loadDiscussionDetail: (payload: Discussion) => void;
+  loadDiscussionDetail: (payload: { discussion: Discussion }) => void;
   common: Common;
   governance: Governance;
   commonMember: CommonMember | null;
@@ -29,10 +29,13 @@ export default function DiscussionsComponent({
   onAddNewPost,
 }: DiscussionsComponentProps) {
   const isCommonMember = Boolean(commonMember);
-  const isDiscussionCreationAvailable = hasPermission({
-    commonMember,
-    key: GovernanceActions.CREATE_DISCUSSION,
-  });
+  const isDiscussionCreationAvailable =
+    commonMember &&
+    hasPermission({
+      commonMember,
+      governance,
+      key: GovernanceActions.CREATE_DISCUSSION,
+    });
 
   return (
     <>

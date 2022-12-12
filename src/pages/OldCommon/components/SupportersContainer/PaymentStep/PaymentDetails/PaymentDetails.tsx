@@ -11,7 +11,7 @@ import {
   PaymentMethod,
 } from "@/shared/components";
 import { ContributionType, ScreenSize } from "@/shared/constants";
-import { Card } from "@/shared/models";
+import { Card, Currency } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice, getUserName } from "@/shared/utils";
 import "./index.scss";
@@ -45,10 +45,13 @@ const PaymentDetails: FC<PaymentDetailsProps> = (props) => {
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const formattedAmount = formatPrice(amount, {
-    shouldMillify: false,
-    bySubscription: contributionType === ContributionType.Monthly,
-  });
+  const formattedAmount = formatPrice(
+    { amount, currency: Currency.ILS },
+    {
+      shouldMillify: false,
+      bySubscription: contributionType === ContributionType.Monthly,
+    },
+  );
   const isLoading = Boolean(
     isPaymentLoading || (intermediatePayment && !isFrameLoaded),
   );

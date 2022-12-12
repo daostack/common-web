@@ -43,9 +43,7 @@ const MainStep: FC<MainStepProps> = (props) => {
     () =>
       userMembershipInfo.map(({ common, governance, commonMember }) => {
         const circlesString = Object.values(governance.circles)
-          .filter(({ id }) =>
-            Object.values(commonMember.circles.map).includes(id),
-          )
+          .filter(({ id }) => commonMember.circleIds.includes(id))
           .map(({ name }) => name)
           .join(", ");
 

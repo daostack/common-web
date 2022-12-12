@@ -1,10 +1,22 @@
 import millify from "millify";
 import moment from "moment";
-import { CurrencySymbol } from "@/shared/models";
+import { CurrencySymbol, PaymentAmount } from "@/shared/models";
+import { Currency } from "@/shared/models";
 import { BaseProposal } from "@/shared/models/governance/proposals";
 import { transformFirebaseDataList } from "@/shared/utils/transformFirebaseDataToModel";
 import { BASE_URL } from "../constants";
 import { Common, DateFormat, Time, User } from "../models";
+
+export const getPrefix = (currency: Currency): string => {
+  switch (currency) {
+    case Currency.ILS:
+      return CurrencySymbol.Shekel;
+    case Currency.USD:
+      return CurrencySymbol.USD;
+    default:
+      return "";
+  }
+};
 
 interface FormatPriceOptions {
   shouldMillify?: boolean;
@@ -17,22 +29,22 @@ interface FormatPriceOptions {
  * Backend stores the price in cents, that's why we divide by 100
  **/
 export const formatPrice = (
-  price?: number,
+  price: Partial<PaymentAmount>,
   options: FormatPriceOptions = {},
 ): string => {
   const {
     shouldMillify = true,
     shouldRemovePrefixFromZero = true,
     bySubscription = false,
-    prefix = CurrencySymbol.Shekel,
+    prefix = getPrefix(price?.currency || Currency.ILS),
   } = options;
   const monthlyLabel = prefix === CurrencySymbol.Shekel ? " לחודש" : "/mo";
 
-  if (!price) {
+  if (!price.amount) {
     return shouldRemovePrefixFromZero ? "0" : `${prefix}0`;
   }
 
-  const convertedPrice = price / 100;
+  const convertedPrice = price.amount / 100;
   const milifiedPrice = shouldMillify
     ? millify(convertedPrice)
     : convertedPrice.toLocaleString("en-US");
@@ -54,10 +66,14 @@ export const formatEpochTime = (
 
 export const getUserName = (
   user?: Pick<User, "firstName" | "lastName" | "displayName"> | null,
-) => {
-  if (!user) return "";
+): string => {
+  if (!user) {
+    return "";
+  }
+
   return (
-    user.displayName?.trim() || `${user.firstName} ${user.lastName}`.trim()
+    user.displayName?.trim() ||
+    [user.firstName, user.lastName].filter(Boolean).join(" ").trim()
   );
 };
 
@@ -67,7 +83,10 @@ export const getUserInitials = (user: User | undefined) => {
 };
 
 export const getRandomUserAvatarURL = (name?: string | null): string =>
-  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name}&rounded=true`;
+  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name?.replaceAll(
+    " ",
+    "+",
+  )}&rounded=true`;
 
 export const isRandomUserAvatarURL = (url: string): boolean =>
   url.startsWith("https://eu.ui-avatars.com/api");

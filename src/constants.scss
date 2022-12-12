@@ -23,6 +23,7 @@ $download-common-app-mobile-menu-height: 3.125rem;
 /* font sizes */
 $xlarge: 46px; // 2.875rem
 $mlarge: 42px; // 2.625rem
+$large-1: 36px; // 2.25rem
 $large: 35px; // 2.1875rem
 $medium: 26px; // 1.625rem
 $moderate-med: 24px; // 1.5rem
@@ -31,7 +32,9 @@ $moderate-small: 20px; // 1.25rem
 $moderate: 18px; // 1.125rem
 $small: 16px; // 1rem
 $xsmall: 14px; // 0.875rem
+$xxsmall-2: 13px; // 0.8125rem
 $xxsmall: 12px; // 0.75rem
+$xxxsmall-2: 11px; // 0.6875rem
 $xxxsmall: 10px; // 0.625rem
 $xxxxsmall: 6px; // 0.375rem
 
@@ -96,15 +99,26 @@ $shadow-1: rgba(79, 92, 105, 0.1);
 $date-picker-arrow-color: #aeaeae;
 
 /* colors v2 */
+$c-primary-100: #f4f6ff;
 $c-primary-200: #d2d8ff;
+$c-primary-300: #7786ff;
+$c-primary-400: #5666f5;
+$c-neutrals-100: #eeeeee;
 $c-neutrals-200: #d5d5e4;
 $c-neutrals-300: #979bba;
 $c-neutrals-600: #001a36;
 $c-notification-100: #f9faff;
 $c-shades-white: #ffffff;
+$c-shades-black: #000000;
+$c-shades-neutrals-30: rgba(0, 26, 54, 0.3);
 $c-shades-100: #fbfcfc;
+$c-error-300: #ff603e;
+$c-hover-secondary: #f9fcff;
+$c-separator-light-non-opaque: rgba(60, 60, 67, 0.36);
 
 $c-sidebar-shadow: rgba(0, 26, 54, 0.08);
+$c-sidebar-user-menu-shadow: rgba(0, 0, 0, 0.15259);
+$c-common-card-shadow: rgba(0, 26, 54, 0.08);
 
 /* breakpoints */
 $small-laptop: 1366px;

@@ -8,6 +8,7 @@ import {
   Survey,
 } from "@/shared/models/governance/proposals";
 import { Discussion } from "./Discussion";
+import { PaymentAmount } from "./Payment";
 import { User } from "./User";
 
 export enum ProposalState {
@@ -22,7 +23,7 @@ export enum ProposalState {
 export interface DocInfo<LegalType = number> {
   name: string;
   legalType: LegalType;
-  amount?: number;
+  amount?: PaymentAmount;
   mimeType: string;
   downloadURL: string;
 }
@@ -58,7 +59,7 @@ export interface ProposalListItem {
 }
 
 export const isProposalWithHighlightedComment = (
-  proposal: any
+  proposal: any,
 ): proposal is ProposalWithHighlightedComment =>
   proposal && proposal.highlightedCommentId;
 

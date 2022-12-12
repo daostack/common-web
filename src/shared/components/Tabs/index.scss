@@ -1,7 +1,9 @@
-@import "../../../constants";
-
 .custom-tabs {
   flex-shrink: 0;
   display: flex;
   overflow-x: auto;
+}
+.custom-tabs--with-icons {
+  align-items: center;
+  overflow: hidden;
 }

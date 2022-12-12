@@ -1,5 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
 import classNames from "classnames";
+import { Orientation } from "@/shared/constants";
+import { Currency } from "@/shared/models";
+import { formatPrice } from "../../utils";
 import { Button } from "../Button";
 import {
   CurrencyInput,
@@ -7,8 +10,6 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "../Form";
-import { formatPrice } from "../../utils";
-import { Orientation } from "@/shared/constants";
 import {
   getAmountsForSelection,
   getInitialEnteredContributionValue,
@@ -28,7 +29,7 @@ interface IProps {
   onChange: (
     amount: number | null,
     hasError: boolean,
-    isSelection: boolean
+    isSelection: boolean,
   ) => void;
 }
 
@@ -47,26 +48,32 @@ export default function ContributionAmountSelection(props: IProps) {
   const amountsForSelection = useMemo(
     () =>
       getAmountsForSelection(minimalAmount, zeroContribution, currentAmount),
-    [minimalAmount, zeroContribution, currentAmount]
+    [minimalAmount, zeroContribution, currentAmount],
   );
   const [selectedContribution, setSelectedContribution] = useState<
     number | "other" | null
   >(() =>
-    getInitialSelectedContributionValue(amountsForSelection, contributionAmount)
+    getInitialSelectedContributionValue(
+      amountsForSelection,
+      contributionAmount,
+    ),
   );
   const [enteredContribution, setEnteredContribution] = useState<
     string | undefined
   >(() =>
-    getInitialEnteredContributionValue(selectedContribution, contributionAmount)
+    getInitialEnteredContributionValue(
+      selectedContribution,
+      contributionAmount,
+    ),
   );
   const formattedMinimalAmount = formatPrice(
-    zeroContribution ? 0 : minimalAmount,
-    { shouldMillify: false, shouldRemovePrefixFromZero: false }
+    { amount: zeroContribution ? 0 : minimalAmount, currency: Currency.ILS },
+    { shouldMillify: false, shouldRemovePrefixFromZero: false },
   );
   const currencyInputError = validateContributionAmount(
     minimalAmount,
     zeroContribution,
-    enteredContribution
+    enteredContribution,
   );
 
   const handleBackToSelectionClick = useCallback(() => {
@@ -92,13 +99,13 @@ export default function ContributionAmountSelection(props: IProps) {
       setSelectedContribution(convertedValue);
       onChange(convertedValue, false, true);
     },
-    [onChange]
+    [onChange],
   );
 
   const handleCurrencyInputChange = useCallback(
     (value: string | undefined) => {
       const hasError = Boolean(
-        validateContributionAmount(minimalAmount, zeroContribution, value)
+        validateContributionAmount(minimalAmount, zeroContribution, value),
       );
       const convertedValue = Number(value);
 
@@ -106,10 +113,10 @@ export default function ContributionAmountSelection(props: IProps) {
       onChange(
         !Number.isNaN(convertedValue) ? convertedValue * 100 : null,
         hasError,
-        false
+        false,
       );
     },
-    [minimalAmount, zeroContribution, onChange]
+    [minimalAmount, zeroContribution, onChange],
   );
 
   const handleContinueClick = useCallback(() => {
@@ -118,7 +125,7 @@ export default function ContributionAmountSelection(props: IProps) {
     onChange(
       !Number.isNaN(convertedValue) ? convertedValue * 100 : null,
       false,
-      true
+      true,
     );
   }, [enteredContribution, onChange]);
 
@@ -141,10 +148,13 @@ export default function ContributionAmountSelection(props: IProps) {
               styles={toggleButtonStyles}
               value={amount}
             >
-              {formatPrice(amount, {
-                shouldMillify: false,
-                shouldRemovePrefixFromZero: false,
-              })}
+              {formatPrice(
+                { amount, currency: Currency.ILS },
+                {
+                  shouldMillify: false,
+                  shouldRemovePrefixFromZero: false,
+                },
+              )}
               {pricePostfix}
               {amount === currentAmount ? " - Current" : ""}
             </ToggleButton>

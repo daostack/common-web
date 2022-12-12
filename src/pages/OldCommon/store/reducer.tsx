@@ -22,6 +22,7 @@ const initialState: CommonsStateType = {
   cards: [],
   activeTab: null,
   commonStates: {},
+  commonMember: null,
 };
 
 type Action = ActionType<typeof actions>;
@@ -43,6 +44,11 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.common = action.payload;
     }),
   )
+  .handleAction(actions.getCommonMember.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.commonMember = action.payload;
+    }),
+  )
   .handleAction(actions.setDiscussion, (state, action) =>
     produce(state, (nextState) => {
       nextState.discussions = action.payload;
@@ -59,7 +65,19 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
       nextState.isDiscussionsLoaded = true;
     }),
   )
+  .handleAction(actions.hideDiscussion.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.discussions = action.payload;
+      nextState.isDiscussionsLoaded = true;
+    }),
+  )
   .handleAction(actions.loadProposalList.success, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.proposals = action.payload;
+      nextState.isProposalsLoaded = true;
+    }),
+  )
+  .handleAction(actions.hideProposal.success, (state, action) =>
     produce(state, (nextState) => {
       nextState.proposals = action.payload;
       nextState.isProposalsLoaded = true;

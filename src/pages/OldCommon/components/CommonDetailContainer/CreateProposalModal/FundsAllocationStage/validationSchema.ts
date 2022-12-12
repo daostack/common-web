@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { Currency } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
 import { FUNDS_ALLOCATION_PROPOSAL_TITLE_LENGTH } from "./constants";
 
@@ -22,7 +23,7 @@ export const fundDetailsValidationSchema = yup.object({
       yup.ref("commonBalance"),
       ({ max }) =>
         `The amount requested cannot be greater than the Common balance (${formatPrice(
-          max * 100,
+          { amount: max * 100, currency: Currency.ILS },
           { shouldRemovePrefixFromZero: false },
         )}).`,
     ),

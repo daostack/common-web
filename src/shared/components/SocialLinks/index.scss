@@ -59,7 +59,7 @@
     cursor: pointer;
     margin: 0 0.75rem;
 
-    &>.social-icon {
+    & > .social-icon {
       width: 2rem;
       height: 2rem;
       background-repeat: no-repeat;
@@ -67,23 +67,23 @@
       background-position: center;
     }
 
-    &>.facebook-icon {
+    & > .facebook-icon {
       background-image: url("/icons/social-share/facebook.svg");
     }
 
-    &>.linkedin-icon {
+    & > .linkedin-icon {
       background-image: url("/icons/social-share/linkedin.svg");
     }
 
-    &>.telegram-icon {
+    & > .telegram-icon {
       background-image: url("/icons/social-share/telegram.svg");
     }
 
-    &>.twitter-icon {
+    & > .twitter-icon {
       background-image: url("/icons/social-share/twitter.svg");
     }
 
-    &>.whatsapp-icon {
+    & > .whatsapp-icon {
       background-image: url("/icons/social-share/whatsapp.svg");
     }
   }
@@ -99,23 +99,23 @@
   button:hover {
     opacity: 0.9;
 
-    &>.facebook-icon {
+    & > .facebook-icon {
       background-image: url("/icons/social-share/facebook-h.svg");
     }
 
-    &>.linkedin-icon {
+    & > .linkedin-icon {
       background-image: url("/icons/social-share/linkedin-h.svg");
     }
 
-    &>.telegram-icon {
+    & > .telegram-icon {
       background-image: url("/icons/social-share/telegram-h.svg");
     }
 
-    &>.twitter-icon {
+    & > .twitter-icon {
       background-image: url("/icons/social-share/twitter-h.svg");
     }
 
-    &>.whatsapp-icon {
+    & > .whatsapp-icon {
       background-image: url("/icons/social-share/whatsapp-h.svg");
     }
   }

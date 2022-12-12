@@ -5,7 +5,10 @@ interface SmallArrowIconProps {
   ariaHidden?: boolean;
 }
 
-const SmallArrowIcon: FC<SmallArrowIconProps> = ({ className, ariaHidden }) => (
+const SmallArrowIcon: FC<SmallArrowIconProps> = ({
+  className,
+  ariaHidden = true,
+}) => (
   <svg
     className={className}
     width="6"

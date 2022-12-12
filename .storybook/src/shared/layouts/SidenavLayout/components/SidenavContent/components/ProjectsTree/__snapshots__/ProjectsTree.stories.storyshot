@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Layouts/SidenavLayout/ProjectsTree Projects Tree 1`] = `
+<div
+  style={
+    Object {
+      "maxWidth": "18.75rem",
+      "width": "100%",
+    }
+  }
+>
+  <ul
+    aria-label="List of related to you projects"
+    aria-multiselectable={false}
+    className="list"
+    role="tree"
+  >
+    <li
+      aria-label="Item of Project 1"
+      aria-selected={false}
+      className="itemWrapper"
+      role="treeitem"
+      style={
+        Object {
+          "--tree-level": 1,
+        }
+      }
+    >
+      <a
+        aria-current={null}
+        aria-label="Go to Project 1"
+        className="item"
+        href="/commons/project-1"
+        onClick={[Function]}
+        title="Project 1"
+      >
+        <button
+          aria-hidden={true}
+          aria-label="Show Project 1's projects"
+          className="button-icon arrowIconButton arrowIconButtonHidden"
+          onClick={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <svg
+            aria-hidden={true}
+            className="arrowIcon"
+            fill="none"
+            height="8"
+            viewBox="0 0 6 8"
+            width="6"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
+        <img
+          alt="Project 1's image"
+          aria-hidden={true}
+          className="image"
+          onError={[Function]}
+          src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+        />
+        <span
+          className="name"
+        >
+          Project 1
+        </span>
+      </a>
+    </li>
+    <li
+      aria-label="Item of Project 2"
+      aria-selected={false}
+      className="itemWrapper"
+      role="treeitem"
+      style={
+        Object {
+          "--tree-level": 1,
+        }
+      }
+    >
+      <a
+        aria-current={null}
+        aria-label="Go to Project 2"
+        className="item"
+        href="/commons/project-2"
+        onClick={[Function]}
+        title="Project 2"
+      >
+        <button
+          aria-hidden={false}
+          aria-label="Show Project 2's projects"
+          className="button-icon arrowIconButton"
+          onClick={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <svg
+            aria-hidden={true}
+            className="arrowIcon"
+            fill="none"
+            height="8"
+            viewBox="0 0 6 8"
+            width="6"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
+        <img
+          alt="Project 2's image"
+          aria-hidden={true}
+          className="image"
+          onError={[Function]}
+          src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+        />
+        <span
+          className="name"
+        >
+          Project 2
+        </span>
+      </a>
+    </li>
+    <li
+      aria-label="Item of Project 3"
+      aria-selected={false}
+      className="itemWrapper"
+      role="treeitem"
+      style={
+        Object {
+          "--tree-level": 1,
+        }
+      }
+    >
+      <a
+        aria-current={null}
+        aria-label="Go to Project 3"
+        className="item"
+        href="/commons/project-3"
+        onClick={[Function]}
+        title="Project 3"
+      >
+        <button
+          aria-hidden={true}
+          aria-label="Show Project 3's projects"
+          className="button-icon arrowIconButton arrowIconButtonHidden"
+          onClick={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <svg
+            aria-hidden={true}
+            className="arrowIcon"
+            fill="none"
+            height="8"
+            viewBox="0 0 6 8"
+            width="6"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4.8764 3.18912C5.42946 3.58825 5.42946 4.41175 4.87641 4.81088L1.58521 7.1861C0.923842 7.6634 9.76746e-08 7.19083 8.79486e-08 6.37522L3.13002e-08 1.62478C2.15742e-08 0.809174 0.923841 0.336598 1.58521 0.813896L4.8764 3.18912Z"
+              fill="currentColor"
+            />
+          </svg>
+        </button>
+        <img
+          alt="Project 3's image"
+          aria-hidden={true}
+          className="image"
+          onError={[Function]}
+          src="https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media"
+        />
+        <span
+          className="name"
+        >
+          Project 3
+        </span>
+      </a>
+    </li>
+  </ul>
+</div>
+`;

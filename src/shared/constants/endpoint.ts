@@ -17,6 +17,8 @@ export const ApiEndpoint = {
   ApproveOrDeclineProposal: "/payments/payout-docs/trustee-decision",
   GetReports: "/reports",
   CreateReport: "/moderation/report",
+  HideContent: "/moderation/hide",
+  ShowContent: "/moderation/show",
   LeaveCommon: "/commons/leave",
   CreateSubscription: "/commons/immediate-contribution",
   UpdateSubscription: "/subscriptions/update",

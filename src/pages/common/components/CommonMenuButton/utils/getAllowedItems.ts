@@ -1,0 +1,51 @@
+import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import { hasPermission } from "@/shared/utils";
+import { CommonMenuItem } from "../../../constants";
+
+export interface GetAllowedItemsOptions {
+  commonMember: (CommonMember & CirclesPermissions) | null;
+  governance: Pick<Governance, "circles">;
+  isSubCommon: boolean;
+}
+
+const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
+  CommonMenuItem,
+  (options: GetAllowedItemsOptions) => boolean
+> = {
+  [CommonMenuItem.InviteToCircle]: ({ commonMember, governance }) =>
+    Boolean(
+      commonMember &&
+        hasPermission({
+          commonMember,
+          governance,
+          key: GovernanceActions.INVITE_TO_CIRCLE,
+        }),
+    ),
+  [CommonMenuItem.LeaveCommon]: ({ commonMember, isSubCommon }) =>
+    Boolean(commonMember && !isSubCommon),
+  [CommonMenuItem.DeleteCommon]: ({ commonMember, governance }) =>
+    Boolean(
+      commonMember &&
+        hasPermission({
+          commonMember,
+          governance,
+          key: ProposalsTypes.DELETE_COMMON,
+        }),
+    ),
+  [CommonMenuItem.Cancel]: () => false,
+};
+
+export const getAllowedItems = (
+  options: GetAllowedItemsOptions,
+): CommonMenuItem[] => {
+  const orderedItems = [
+    CommonMenuItem.InviteToCircle,
+    CommonMenuItem.LeaveCommon,
+    CommonMenuItem.DeleteCommon,
+  ];
+
+  return orderedItems.filter((item) =>
+    MENU_ITEM_TO_CHECK_FUNCTION_MAP[item](options),
+  );
+};

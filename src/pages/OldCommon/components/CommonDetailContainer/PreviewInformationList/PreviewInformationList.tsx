@@ -5,6 +5,7 @@ import {
   Proposal,
   Discussion,
   CommonMember,
+  CirclesPermissions,
 } from "../../../../../shared/models";
 import { getProposalExpirationDate } from "../../../../../shared/utils";
 import { VotesComponent } from "../VotesComponent";
@@ -21,7 +22,7 @@ interface PreviewInformationListProps {
   vievAllHandler: () => void;
   onClickItem: (id: string) => void;
   type: string;
-  commonMember: CommonMember | null;
+  commonMember: (CommonMember & CirclesPermissions) | null;
 }
 
 export default function PreviewInformationList(

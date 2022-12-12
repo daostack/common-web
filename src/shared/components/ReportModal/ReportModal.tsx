@@ -71,6 +71,34 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
     [message, userId, type, entity],
   );
 
+  const sendReportOnEntity = useCallback(() => {
+    setLoading(true);
+    dispatch(
+      createReport.request({
+        payload: {
+          moderationData: {
+            moderatorNote: message,
+            reasons: message,
+            itemId: entity.id,
+          },
+          type,
+          userId,
+        },
+        callback(isSucceed) {
+          if (!isSucceed) {
+            setLoading(false);
+            notify("Something went wrong");
+            return;
+          }
+          setLoading(false);
+          setMessage("");
+          notify("Report was sent");
+          onClose();
+        },
+      }),
+    );
+  }, [message, userId, type, entity]);
+
   const sendReport = useCallback((): void => {
     // TODO: Add other entities
     switch (type) {
@@ -80,6 +108,11 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
       }
       case EntityTypes.ProposalMessage: {
         sendReportOnMessage(true);
+        break;
+      }
+      case EntityTypes.Discussion:
+      case EntityTypes.Proposal: {
+        sendReportOnEntity();
         break;
       }
     }

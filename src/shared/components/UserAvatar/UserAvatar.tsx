@@ -17,14 +17,14 @@ const UserAvatar: FC<UserAvatarProps> = (props) => {
   const {
     className,
     photoURL,
-    nameForRandomAvatar,
     userName,
+    nameForRandomAvatar = userName,
     preloaderSrc,
     onClick,
   } = props;
   const randomUserAvatarURL = getRandomUserAvatarURL(nameForRandomAvatar);
   const userAvatarURL = photoURL || randomUserAvatarURL;
-  const userAvatarAlt = `${userName || "user"} avatar`;
+  const userAvatarAlt = `${userName || "User"}'s avatar`;
   const imageClassName = classNames("general-user-avatar", className);
 
   return (

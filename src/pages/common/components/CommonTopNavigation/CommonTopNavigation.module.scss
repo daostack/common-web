@@ -1,0 +1,16 @@
+@import "../../../../styles/sizes";
+
+.container {
+  display: none;
+
+  @include tablet {
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+}
+
+.rightItem {
+  margin-left: auto;
+}

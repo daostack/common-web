@@ -143,7 +143,7 @@ export default {
         monthlyTypeText: "Monthly",
         monthlyTypeTooltip: "Not available yet",
         otherInputTitle: "Other",
-        otherInputMonthlyHint: '(monthly)',
+        otherInputMonthlyHint: "(monthly)",
         otherInputPlaceholder: "Add amount",
         otherInputError: "Minimum {{amount}}",
         defaultSubmitButtonText: "Update Contribution",

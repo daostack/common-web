@@ -23,6 +23,7 @@ import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import AvatarIcon from "@/shared/icons/avatar.icon";
 import {
   Circle,
+  CirclesPermissions,
   CommonMember,
   CommonMemberWithUserInfo,
   Governance,
@@ -38,7 +39,7 @@ import "./index.scss";
 
 interface ConfigurationProps {
   governance: Governance;
-  commonMember: CommonMember;
+  commonMember: CommonMember & CirclesPermissions;
   commonMembers: CommonMemberWithUserInfo[];
   initialData: RemoveCircleData | null;
   onFinish: (data: RemoveCircleData) => void;
@@ -103,7 +104,7 @@ const Configuration: FC<ConfigurationProps> = (props) => {
         ? commonMembers.reduce<AutocompleteOption[]>(
             (acc, member) =>
               member.userId !== userId &&
-              Object.values(member.circles.map).includes(foundCircleId)
+              member.circleIds.includes(foundCircleId)
                 ? acc.concat({
                     text: (
                       <MemberInfo

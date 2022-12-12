@@ -1,0 +1,37 @@
+@import "../../../../../../../constants";
+
+.wrapper {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.scroller {
+  overscroll-behavior: contain;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+}
+
+.trackY {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 0.5rem;
+  height: 100%;
+  background: var(--scroll-bg-color);
+  cursor: pointer;
+}
+
+.thumbY {
+  background: var(--scroll-thumb-color);
+  border-radius: 0.5rem;
+
+  &:active {
+    --scroll-thumb-color: #{$c-neutrals-300};
+  }
+}

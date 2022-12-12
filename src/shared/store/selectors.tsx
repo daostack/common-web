@@ -1,15 +1,17 @@
 import { createSelector } from "reselect";
-
 import { AppState } from "../interfaces";
 
 const selectShared = (state: AppState) => state.shared;
 const selectScreenSize = (state: AppState) => state.shared;
 
-export const getLoading = () => createSelector(selectShared, (state) => state.loading);
+export const getLoading = () =>
+  createSelector(selectShared, (state) => state.loading);
 
-export const getNotification = () => createSelector(selectShared, (state) => state.notification);
+export const getNotification = () =>
+  createSelector(selectShared, (state) => state.notification);
 
-export const getScreenSize = () => createSelector(selectScreenSize, (state) => state.screenSize);
+export const getScreenSize = () =>
+  createSelector(selectScreenSize, (state) => state.screenSize);
 
 export const selectRouter = () =>
   createSelector(
@@ -29,12 +31,9 @@ export const selectAreReportsLoading = () =>
 export const selectHeader = () =>
   createSelector(selectShared, (state) => state.header);
 
-export const selectFooter = () =>
-  createSelector(selectShared, (state) => state.footer);
-
 export const selectTutorialModalState = () =>
   createSelector(selectShared, (state) => state.tutorialModalState);
-  
+
 export const selectLanguage = () =>
   createSelector(selectShared, (state) => state.language);
 

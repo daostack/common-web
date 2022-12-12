@@ -5,7 +5,10 @@ interface ExcavatorIconProps {
   ariaHidden?: boolean;
 }
 
-const ExcavatorIcon: FC<ExcavatorIconProps> = ({ className, ariaHidden }) => (
+const ExcavatorIcon: FC<ExcavatorIconProps> = ({
+  className,
+  ariaHidden = true,
+}) => (
   <svg
     className={className}
     width="24"

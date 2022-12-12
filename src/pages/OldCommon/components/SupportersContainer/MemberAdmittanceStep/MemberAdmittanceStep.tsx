@@ -44,7 +44,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
 
   useEffect(() => {
     if (commonId) {
-      fetchCommonMember(commonId);
+      fetchCommonMember(commonId, {});
     }
   }, [fetchCommonMember, commonId]);
 

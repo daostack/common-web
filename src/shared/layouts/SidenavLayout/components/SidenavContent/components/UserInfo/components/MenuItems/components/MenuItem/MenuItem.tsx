@@ -21,7 +21,7 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
 ) => {
   const { item, active, ...restProps } = props;
   const content = item.text;
-  const className = classNames(styles.item, {
+  const className = classNames(styles.item, item.className, {
     [styles.itemActive]: active,
   });
 
