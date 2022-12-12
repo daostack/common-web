@@ -38,18 +38,18 @@ export const formatPrice = (
     bySubscription = false,
     prefix = getPrefix(price?.currency || Currency.ILS),
   } = options;
+  const monthlyLabel = prefix === CurrencySymbol.Shekel ? " לחודש" : "/mo";
 
   if (!price.amount) {
     return shouldRemovePrefixFromZero ? "0" : `${prefix}0`;
   }
 
   const convertedPrice = price.amount / 100;
+  const milifiedPrice = shouldMillify
+    ? millify(convertedPrice)
+    : convertedPrice.toLocaleString("en-US");
 
-  return `${prefix}${
-    shouldMillify
-      ? millify(convertedPrice)
-      : convertedPrice.toLocaleString("en-US")
-  }${bySubscription ? "/mo" : ""}`;
+  return `${prefix}${milifiedPrice}${bySubscription ? monthlyLabel : ""}`;
 };
 
 /**
