@@ -89,7 +89,6 @@ const CommonData: FC<CommonDataProps> = (props) => {
           common={common}
           governance={governance}
           commonMember={commonMember}
-          activeProposalsExist={true}
           redirectToProposal={redirectToProposalPage}
           initialProposalType={initialProposalTypeForCreation}
         />
