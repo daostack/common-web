@@ -42,6 +42,7 @@ interface CreateCommonModalProps {
   subCommons?: Common[];
   shouldBeWithoutIntroduction?: boolean;
   onCommonCreate?: (common: Common) => void;
+  onGoToCommon?: (common: Common) => void;
 }
 
 const emptyFunction = () => {
@@ -55,6 +56,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     parentCommonId,
     onCommonCreate,
     isSubCommonCreation,
+    onGoToCommon,
   } = props;
   const dispatch = useDispatch();
   const { disableZoom, resetZoom } = useZoomDisabling({
@@ -222,6 +224,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
+            onGoToCommon={onGoToCommon}
           />
         ) : null;
       case CreateCommonStage.Error:
@@ -256,6 +259,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     parentCommonId,
     paymentData,
     handlePaymentFinish,
+    onGoToCommon,
   ]);
 
   useEffect(() => {
