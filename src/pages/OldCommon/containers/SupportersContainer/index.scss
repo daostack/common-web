@@ -1,6 +1,8 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
 
+$max-content-width: 75rem;
+
 .supporters-page {
   flex: 1 0;
   display: flex;
@@ -14,7 +16,7 @@
 
 .supporters-page__content {
   position: relative;
-  max-width: 75rem;
+  max-width: $max-content-width;
   padding-top: 1rem;
   display: flex;
   flex-direction: column;
@@ -37,6 +39,26 @@
   height: 12.5rem;
   border-radius: 0.625rem;
   object-fit: cover;
+}
+
+.supporters-page__language-dropdown-portal-content {
+  position: absolute;
+  top: $header-height;
+  right: $content-padding;
+  left: $content-padding;
+
+  @include big-phone {
+    top: $header-height-mobile;
+    right: $content-padding-mobile;
+    left: $content-padding-mobile;
+  }
+}
+
+.supporters-page__language-dropdown-wrapper {
+  position: relative;
+  max-width: $max-content-width;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .supporters-page__language-dropdown {

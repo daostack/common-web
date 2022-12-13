@@ -13,6 +13,7 @@ import {
   selectIsRtlLanguage,
   selectLanguage,
 } from "@/shared/store/selectors";
+import { Portal } from "@/shared/ui-kit";
 import {
   DeadSeaUserDetailsFormValuesWithoutUserDetails,
   InitialStep,
@@ -234,7 +235,13 @@ const SupportersContainer = () => {
               {renderContent()}
             </SupportersDataContext.Provider>
             {shouldShowLanguageDropdown && (
-              <LanguageDropdown className="supporters-page__language-dropdown" />
+              <Portal>
+                <div className="supporters-page__language-dropdown-portal-content">
+                  <div className="supporters-page__language-dropdown-wrapper">
+                    <LanguageDropdown className="supporters-page__language-dropdown" />
+                  </div>
+                </div>
+              </Portal>
             )}
           </div>
         )}
