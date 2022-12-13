@@ -49,7 +49,11 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   }, [isAuthenticated]);
 
   return (
-    <CommonDataProvider common={common} commonMember={commonMember}>
+    <CommonDataProvider
+      common={common}
+      governance={governance}
+      commonMember={commonMember}
+    >
       <CommonTopNavigation
         commonMember={commonMember}
         circles={governance.circles}
