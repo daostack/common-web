@@ -37,7 +37,7 @@ interface CreateProposalModalProps
   common: Common;
   governance: Governance;
   commonMember: CommonMember & CirclesPermissions;
-  activeProposalsExist: boolean;
+  activeProposalsExist?: boolean;
   redirectToProposal: (proposal: Proposal) => void;
   initialProposalType?: ProposalsTypes | null;
 }

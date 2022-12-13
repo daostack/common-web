@@ -16,3 +16,4 @@ export * from "./ProposalState";
 export * from "./WalletComponent";
 export * from "./TransactionsList";
 export * from "./CommonWhitepaper";
+export * from "./LeaveCommonModal";
