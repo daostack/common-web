@@ -1,5 +1,6 @@
 import millify from "millify";
 import moment from "moment";
+import { store } from "@/shared/appConfig";
 import { CurrencySymbol, PaymentAmount } from "@/shared/models";
 import { Currency } from "@/shared/models";
 import { BaseProposal } from "@/shared/models/governance/proposals";
@@ -32,13 +33,14 @@ export const formatPrice = (
   price: Partial<PaymentAmount>,
   options: FormatPriceOptions = {},
 ): string => {
+  const isRtlLanguage = store.getState().shared.isRtlLanguage;
   const {
     shouldMillify = true,
     shouldRemovePrefixFromZero = true,
     bySubscription = false,
     prefix = getPrefix(price?.currency || Currency.ILS),
   } = options;
-  const monthlyLabel = prefix === CurrencySymbol.Shekel ? " לחודש" : "/mo";
+  const monthlyLabel = isRtlLanguage ? " לחודש" : "/mo";
 
   if (!price.amount) {
     return shouldRemovePrefixFromZero ? "0" : `${prefix}0`;
