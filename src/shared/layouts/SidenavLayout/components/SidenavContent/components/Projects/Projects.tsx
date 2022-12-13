@@ -6,7 +6,7 @@ import { CreateCommonModal } from "@/pages/OldCommon/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
-import { Button, ButtonSize, ButtonVariant, Loader } from "@/shared/ui-kit";
+import { Loader } from "@/shared/ui-kit";
 import {
   projectsActions,
   selectAreProjectsFetched,
@@ -15,6 +15,7 @@ import {
 } from "@/store/states";
 import { ProjectsTree } from "../ProjectsTree";
 import { Scrollbar } from "../Scrollbar";
+import { CreateCommonButton } from "./components";
 import {
   generateProjectsTreeItems,
   getActiveItemIdByPath,
@@ -79,14 +80,10 @@ const Projects: FC = () => {
           activeItem={activeItem}
         />
         <div className={styles.createCommonButtonWrapper}>
-          <Button
+          <CreateCommonButton
             className={styles.createCommonButton}
-            variant={ButtonVariant.OutlineBlue}
-            size={ButtonSize.Medium}
             onClick={onCreateCommonModalOpen}
-          >
-            Create a Common
-          </Button>
+          />
         </div>
         {areProjectsLoading && <Loader className={styles.loader} />}
       </Scrollbar>

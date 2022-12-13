@@ -1,0 +1,55 @@
+@import "../../../../../../../../../constants";
+
+.button {
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  font-family: NunitoSans, sans-serif;
+  font-size: $small;
+  font-weight: 600;
+  color: $c-primary-400;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+  box-sizing: border-box;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.iconWrapper {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $c-primary-100;
+  border: 0.0625rem solid $c-primary-400;
+  border-radius: 0.1875rem;
+  box-sizing: border-box;
+}
+
+.plusIcon {
+  flex-shrink: 0;
+  width: 0.625rem;
+  height: 0.625rem;
+}
+
+.name {
+  font-family: NunitoSans, sans-serif;
+  font-weight: 600;
+  font-size: $small;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
