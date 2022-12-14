@@ -1,4 +1,8 @@
-import React, { ForwardRefRenderFunction, forwardRef } from "react";
+import React, {
+  ComponentType,
+  ForwardRefRenderFunction,
+  forwardRef,
+} from "react";
 import classNames from "classnames";
 import styles from "./Button.module.scss";
 
@@ -14,9 +18,14 @@ export enum ButtonSize {
   Xsmall = "xsmall",
 }
 
+type IconComponentType = ComponentType<{
+  className?: string;
+}>;
+
 type ButtonProps = JSX.IntrinsicElements["button"] & {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  leftIcon?: IconComponentType;
   visuallyDisabled?: boolean;
 };
 
@@ -27,7 +36,9 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
   const {
     variant = ButtonVariant.PrimaryPurple,
     size = ButtonSize.Medium,
+    leftIcon: LeftIcon,
     visuallyDisabled,
+    children,
     ...restProps
   } = props;
   const className = classNames(styles.button, props.className, {
@@ -49,7 +60,10 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
       disabled={visuallyDisabled ? undefined : props.disabled}
       aria-disabled={visuallyDisabled ? "true" : props["aria-disabled"]}
       onClick={visuallyDisabled ? undefined : props.onClick}
-    />
+    >
+      {LeftIcon && <LeftIcon className={styles.leftIcon} />}
+      {children}
+    </button>
   );
 };
 

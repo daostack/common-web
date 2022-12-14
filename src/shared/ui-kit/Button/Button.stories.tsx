@@ -1,5 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { PlusIcon } from "@/shared/icons";
 import Button, { ButtonVariant, ButtonSize } from "./Button";
 
 export default {
@@ -39,5 +40,12 @@ const Template: ComponentStory<typeof Button> = (args) => (
 export const OutlineBlue = Template.bind({});
 OutlineBlue.args = {
   variant: ButtonVariant.OutlineBlue,
+  children: "Button Label",
+};
+
+export const OutlineBlueWithIcon = Template.bind({});
+OutlineBlueWithIcon.args = {
+  variant: ButtonVariant.OutlineBlue,
+  leftIcon: PlusIcon,
   children: "Button Label",
 };
