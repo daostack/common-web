@@ -53,6 +53,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       common={common}
       governance={governance}
       commonMember={commonMember}
+      subCommons={subCommons}
     >
       <CommonTopNavigation
         commonMember={commonMember}

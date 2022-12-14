@@ -3,6 +3,7 @@ import { CommonMenuItem } from "../../constants";
 
 interface Data {
   onMenuItemSelect: (menuItem: CommonMenuItem | null) => void;
+  onProjectCreate: () => void;
 }
 
 export type CommonDataContextValue = Data | null;

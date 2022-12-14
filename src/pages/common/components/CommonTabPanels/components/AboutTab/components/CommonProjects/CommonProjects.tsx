@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { useCommonDataContext } from "@/pages/common/providers";
 import {
   GovernanceActions,
   ROUTE_PATHS,
@@ -42,6 +43,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
     circles,
     styles: outerStyles,
   } = props;
+  const { onProjectCreate } = useCommonDataContext();
   const isTabletView = useIsTabletView();
   const isAddingNewProjectAllowed = Boolean(
     commonMember &&
@@ -94,6 +96,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
                   <AddProjectTooltipContent circles={circles} />
                 ) : null
               }
+              onClick={onProjectCreate}
             />
           </li>
         )}
