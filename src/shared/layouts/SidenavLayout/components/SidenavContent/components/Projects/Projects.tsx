@@ -1,7 +1,11 @@
 import React, { FC, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import { useHistory } from "react-router";
 import { authentificated } from "@/pages/Auth/store/selectors";
+import { CreateCommonModal } from "@/pages/OldCommon/components";
+import { ROUTE_PATHS } from "@/shared/constants";
+import { useModal } from "@/shared/hooks";
+import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import {
   projectsActions,
@@ -11,6 +15,7 @@ import {
 } from "@/store/states";
 import { ProjectsTree } from "../ProjectsTree";
 import { Scrollbar } from "../Scrollbar";
+import { CreateCommonButton } from "./components";
 import {
   generateProjectsTreeItems,
   getActiveItemIdByPath,
@@ -20,7 +25,13 @@ import styles from "./Projects.module.scss";
 
 const Projects: FC = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const history = useHistory();
+  const location = history.location;
+  const {
+    isShowing: isCreateCommonModalOpen,
+    onOpen: onCreateCommonModalOpen,
+    onClose: onCreateCommonModalClose,
+  } = useModal(false);
   const isAuthenticated = useSelector(authentificated());
   const projects = useSelector(selectProjectsData);
   const areProjectsLoading = useSelector(selectAreProjectsLoading);
@@ -29,6 +40,11 @@ const Projects: FC = () => {
   const activeItemId = getActiveItemIdByPath(location.pathname);
   const activeItem = getItemById(activeItemId, items);
   const isDataReady = areProjectsFetched && Boolean(activeItem);
+
+  const handleGoToCommon = (createdCommon: Common) => {
+    onCreateCommonModalClose();
+    history.push(ROUTE_PATHS.COMMON.replace(":id", createdCommon.id));
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -56,14 +72,28 @@ const Projects: FC = () => {
   }
 
   return (
-    <Scrollbar>
-      <ProjectsTree
-        className={styles.projectsTree}
-        items={items}
-        activeItem={activeItem}
+    <>
+      <Scrollbar>
+        <ProjectsTree
+          className={styles.projectsTree}
+          items={items}
+          activeItem={activeItem}
+        />
+        <div className={styles.createCommonButtonWrapper}>
+          <CreateCommonButton
+            className={styles.createCommonButton}
+            onClick={onCreateCommonModalOpen}
+          />
+        </div>
+        {areProjectsLoading && <Loader className={styles.loader} />}
+      </Scrollbar>
+      <CreateCommonModal
+        isShowing={isCreateCommonModalOpen}
+        onClose={onCreateCommonModalClose}
+        isSubCommonCreation={false}
+        onGoToCommon={handleGoToCommon}
       />
-      {areProjectsLoading && <Loader className={styles.loader} />}
-    </Scrollbar>
+    </>
   );
 };
 
