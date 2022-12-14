@@ -40,10 +40,11 @@ const CommonData: FC<CommonDataProps> = (props) => {
   } = useProposalCreationModal();
   const {
     isSubCommonCreationModalOpen,
+    areNonCreatedProjectsLeft,
     onSubCommonCreationModalOpen,
     onSubCommonCreationModalClose,
     onSubCommonCreate,
-  } = useSubCommonCreationModal();
+  } = useSubCommonCreationModal(governance.circles, subCommons);
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -73,9 +74,14 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
       onMenuItemSelect: handleMenuItemSelect,
+      areNonCreatedProjectsLeft,
       onProjectCreate: onSubCommonCreationModalOpen,
     }),
-    [handleMenuItemSelect, onSubCommonCreationModalOpen],
+    [
+      handleMenuItemSelect,
+      areNonCreatedProjectsLeft,
+      onSubCommonCreationModalOpen,
+    ],
   );
 
   return (
