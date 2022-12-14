@@ -5,10 +5,10 @@ export enum CommonEvent {
   Created = "created",
 }
 
-interface CommonEvents {
+export interface CommonEventToListener {
   [CommonEvent.Created]: (common: Common) => void;
 }
 
-class CommonEventEmitter extends EventEmitter<CommonEvents> {}
+class CommonEventEmitter extends EventEmitter<CommonEventToListener> {}
 
 export default new CommonEventEmitter();

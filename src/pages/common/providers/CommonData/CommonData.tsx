@@ -108,7 +108,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
         governance={governance}
         parentCommonId={common.id}
         subCommons={subCommons}
-        onCommonCreate={onSubCommonCreate}
+        onGoToCommon={onSubCommonCreate}
         isSubCommonCreation
         shouldBeWithoutIntroduction
       />
