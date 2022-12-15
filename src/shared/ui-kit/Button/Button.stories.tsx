@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { PlusIcon } from "@/shared/icons";
+import { BoldPlusIcon } from "@/shared/icons";
 import Button, { ButtonVariant, ButtonSize } from "./Button";
 
 export default {
@@ -46,6 +46,6 @@ OutlineBlue.args = {
 export const OutlineBlueWithIcon = Template.bind({});
 OutlineBlueWithIcon.args = {
   variant: ButtonVariant.OutlineBlue,
-  leftIcon: PlusIcon,
+  leftIcon: BoldPlusIcon,
   children: "Button Label",
 };
