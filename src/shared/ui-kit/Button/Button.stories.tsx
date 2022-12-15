@@ -46,6 +46,6 @@ OutlineBlue.args = {
 export const OutlineBlueWithIcon = Template.bind({});
 OutlineBlueWithIcon.args = {
   variant: ButtonVariant.OutlineBlue,
-  leftIcon: BoldPlusIcon,
+  leftIcon: <BoldPlusIcon />,
   children: "Button Label",
 };

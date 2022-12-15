@@ -1,7 +1,9 @@
 import React, {
-  ComponentType,
   ForwardRefRenderFunction,
   forwardRef,
+  isValidElement,
+  cloneElement,
+  ReactNode,
 } from "react";
 import classNames from "classnames";
 import styles from "./Button.module.scss";
@@ -18,14 +20,10 @@ export enum ButtonSize {
   Xsmall = "xsmall",
 }
 
-type IconComponentType = ComponentType<{
-  className?: string;
-}>;
-
 type ButtonProps = JSX.IntrinsicElements["button"] & {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  leftIcon?: IconComponentType;
+  leftIcon?: ReactNode;
   visuallyDisabled?: boolean;
 };
 
@@ -36,7 +34,7 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
   const {
     variant = ButtonVariant.PrimaryPurple,
     size = ButtonSize.Medium,
-    leftIcon: LeftIcon,
+    leftIcon,
     visuallyDisabled,
     children,
     ...restProps
@@ -49,6 +47,14 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
     [styles.buttonSmallSize]: size === ButtonSize.Small,
     [styles.buttonXsmallSize]: size === ButtonSize.Xsmall,
   });
+  let leftIconEl: ReactNode | null = null;
+
+  if (isValidElement(leftIcon)) {
+    leftIconEl = cloneElement(leftIcon, {
+      ...leftIcon.props,
+      className: classNames(styles.leftIcon, leftIcon.props.className),
+    });
+  }
 
   return (
     <button
@@ -61,7 +67,7 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
       aria-disabled={visuallyDisabled ? "true" : props["aria-disabled"]}
       onClick={visuallyDisabled ? undefined : props.onClick}
     >
-      {LeftIcon && <LeftIcon className={styles.leftIcon} />}
+      {leftIconEl}
       {children}
     </button>
   );
