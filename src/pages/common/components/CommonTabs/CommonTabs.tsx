@@ -48,13 +48,20 @@ const TABS: { label: string; value: CommonTab; icon?: ReactNode }[] = [
   },
 ];
 
+// Mobile version should display only following tabs: About, Feed and Governance
+const MOBILE_TABS = [TABS[0], TABS[1], TABS[4]];
+
 // Tabs available for unauthenticated user: about, governance
 const UNAUTHENTICATED_TABS = [TABS[0], TABS[4]];
 
 const CommonTabs: FC<CommonTabsProps> = (props) => {
   const { className, activeTab, isAuthenticated = false, onTabChange } = props;
   const isTabletView = useIsTabletView();
-  const tabs = isAuthenticated ? TABS : UNAUTHENTICATED_TABS;
+  const tabs = isAuthenticated
+    ? isTabletView
+      ? MOBILE_TABS
+      : TABS
+    : UNAUTHENTICATED_TABS;
   const itemStyles = {
     "--items-amount": tabs.length,
   } as CSSProperties;
