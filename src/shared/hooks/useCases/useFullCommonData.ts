@@ -1,4 +1,9 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import {
+  CommonEvent,
+  CommonEventEmitter,
+  CommonEventToListener,
+} from "@/events";
 import { CommonService, GovernanceService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
 import { Common, Governance } from "@/shared/models";
@@ -23,6 +28,7 @@ export const useFullCommonData = (): Return => {
     fetched: false,
     data: null,
   });
+  const currentCommonId = state.data?.common.id;
 
   const fetchCommonData = useCallback((commonId: string) => {
     setState({
@@ -77,6 +83,42 @@ export const useFullCommonData = (): Return => {
       data: null,
     });
   }, []);
+
+  useEffect(() => {
+    if (!currentCommonId) {
+      return;
+    }
+
+    const handleSubCommonCreate = (subCommon: Common) => {
+      setState((currentState) => {
+        if (!currentState || !currentState.data) {
+          return currentState;
+        }
+
+        return {
+          ...currentState,
+          data: {
+            ...currentState.data,
+            subCommons: currentState.data?.subCommons.concat(subCommon) || [],
+          },
+        };
+      });
+    };
+
+    const handleCommonCreate: CommonEventToListener[CommonEvent.Created] = (
+      createdCommon,
+    ) => {
+      if (createdCommon.directParent?.commonId === currentCommonId) {
+        handleSubCommonCreate(createdCommon);
+      }
+    };
+
+    CommonEventEmitter.on(CommonEvent.Created, handleCommonCreate);
+
+    return () => {
+      CommonEventEmitter.off(CommonEvent.Created, handleCommonCreate);
+    };
+  }, [currentCommonId]);
 
   return {
     ...state,

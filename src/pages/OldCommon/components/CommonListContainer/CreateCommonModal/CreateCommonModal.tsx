@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
+import { CommonEvent, CommonEventEmitter } from "@/events";
 import { Modal } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
@@ -277,18 +278,21 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   }, [props.isShowing, initialStage, disableZoom, resetZoom]);
 
   useEffect(() => {
-    if (stage === CreateCommonStage.Success && createdCommon) {
-      dispatch(
-        projectsActions.addProject({
-          commonId: createdCommon.id,
-          image: createdCommon.image,
-          name: createdCommon.name,
-          directParent: createdCommon.directParent,
-          hasMembership: true,
-          notificationsAmount: 0,
-        }),
-      );
+    if (stage !== CreateCommonStage.Success || !createdCommon) {
+      return;
     }
+
+    dispatch(
+      projectsActions.addProject({
+        commonId: createdCommon.id,
+        image: createdCommon.image,
+        name: createdCommon.name,
+        directParent: createdCommon.directParent,
+        hasMembership: true,
+        notificationsAmount: 0,
+      }),
+    );
+    CommonEventEmitter.emit(CommonEvent.Created, createdCommon);
   }, [stage]);
 
   return (

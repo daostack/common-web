@@ -2,6 +2,7 @@ import React, { FC, useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { CommonMemberEventEmitter } from "@/events";
 import {
+  CreateCommonModal,
   CreateProposalModal,
   LeaveCommonModal,
 } from "@/pages/OldCommon/components";
@@ -15,16 +16,17 @@ import {
 import { projectsActions } from "@/store/states";
 import { CommonMenuItem } from "../../constants";
 import { CommonDataContext, CommonDataContextValue } from "./context";
-import { useProposalCreationModal } from "./hooks";
+import { useProposalCreationModal, useSubCommonCreationModal } from "./hooks";
 
 interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  subCommons: Common[];
 }
 
 const CommonData: FC<CommonDataProps> = (props) => {
-  const { common, governance, commonMember, children } = props;
+  const { common, governance, commonMember, subCommons, children } = props;
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const [selectedMenuItem, setSelectedMenuItem] =
@@ -36,6 +38,13 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onCommonDelete,
     redirectToProposalPage,
   } = useProposalCreationModal();
+  const {
+    isSubCommonCreationModalOpen,
+    areNonCreatedProjectsLeft,
+    onSubCommonCreationModalOpen,
+    onSubCommonCreationModalClose,
+    onSubCommonCreate,
+  } = useSubCommonCreationModal(governance.circles, subCommons);
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -65,8 +74,14 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
       onMenuItemSelect: handleMenuItemSelect,
+      areNonCreatedProjectsLeft,
+      onProjectCreate: onSubCommonCreationModalOpen,
     }),
-    [handleMenuItemSelect],
+    [
+      handleMenuItemSelect,
+      areNonCreatedProjectsLeft,
+      onSubCommonCreationModalOpen,
+    ],
   );
 
   return (
@@ -93,6 +108,16 @@ const CommonData: FC<CommonDataProps> = (props) => {
           initialProposalType={initialProposalTypeForCreation}
         />
       )}
+      <CreateCommonModal
+        isShowing={isSubCommonCreationModalOpen}
+        onClose={onSubCommonCreationModalClose}
+        governance={governance}
+        parentCommonId={common.id}
+        subCommons={subCommons}
+        onGoToCommon={onSubCommonCreate}
+        isSubCommonCreation
+        shouldBeWithoutIntroduction
+      />
     </CommonDataContext.Provider>
   );
 };
