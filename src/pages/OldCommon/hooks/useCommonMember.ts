@@ -127,12 +127,23 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
         }
       };
 
+    const resetCommonMember: CommonMemberEventToListener[CommonMemberEvent.Reset] =
+      (commonId: string, commonMemberIdToReset: string) => {
+        if (commonMemberIdToReset !== commonMemberId) {
+          return;
+        }
+
+        fetchCommonMember(commonId, {}, true);
+      };
+
     CommonMemberEventEmitter.on(CommonMemberEvent.Clear, clearCommonMember);
+    CommonMemberEventEmitter.on(CommonMemberEvent.Reset, resetCommonMember);
 
     return () => {
       CommonMemberEventEmitter.off(CommonMemberEvent.Clear, clearCommonMember);
+      CommonMemberEventEmitter.off(CommonMemberEvent.Reset, resetCommonMember);
     };
-  }, [commonMemberId]);
+  }, [commonMemberId, fetchCommonMember]);
 
   return {
     ...state,
