@@ -1,11 +1,15 @@
 import { EventEmitter } from "eventemitter3";
 
-// clear-common-member-{common-member-id}
-// reset-common-member-{common-member-id}
-export type CommonMemberEvent =
-  | `clear-common-member-${string}`
-  | `reset-common-member-${string}`;
+export enum CommonMemberEvent {
+  Clear = "clear",
+  Reset = "reset",
+}
 
-class CommonMemberEventEmitter extends EventEmitter<CommonMemberEvent> {}
+export interface CommonMemberEventToListener {
+  [CommonMemberEvent.Clear]: (commonMemberId: string) => void;
+  [CommonMemberEvent.Reset]: (commonId: string, commonMemberId: string) => void;
+}
+
+class CommonMemberEventEmitter extends EventEmitter<CommonMemberEventToListener> {}
 
 export default new CommonMemberEventEmitter();

@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { CommonMemberEventEmitter } from "@/events";
+import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
 import {
   CreateCommonModal,
   CreateProposalModal,
@@ -74,7 +74,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
 
   const handleSuccessfulLeave = () => {
     if (commonMember) {
-      CommonMemberEventEmitter.emit(`clear-common-member-${commonMember.id}`);
+      CommonMemberEventEmitter.emit(CommonMemberEvent.Clear, commonMember.id);
     }
 
     dispatch(projectsActions.removeMembershipFromProjectAndChildren(common.id));

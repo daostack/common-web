@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CommonMemberEventEmitter, CommonMemberEvent } from "@/events";
+import {
+  CommonMemberEventEmitter,
+  CommonMemberEvent,
+  CommonMemberEventToListener,
+} from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
@@ -112,20 +116,21 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
       return;
     }
 
-    const event: CommonMemberEvent = `clear-common-member-${commonMemberId}`;
+    const clearCommonMember: CommonMemberEventToListener[CommonMemberEvent.Clear] =
+      (commonMemberIdToClear: string) => {
+        if (commonMemberIdToClear === commonMemberId) {
+          setState({
+            loading: false,
+            fetched: true,
+            data: null,
+          });
+        }
+      };
 
-    const clearCommonMember = () => {
-      setState({
-        loading: false,
-        fetched: true,
-        data: null,
-      });
-    };
-
-    CommonMemberEventEmitter.on(event, clearCommonMember);
+    CommonMemberEventEmitter.on(CommonMemberEvent.Clear, clearCommonMember);
 
     return () => {
-      CommonMemberEventEmitter.off(event, clearCommonMember);
+      CommonMemberEventEmitter.off(CommonMemberEvent.Clear, clearCommonMember);
     };
   }, [commonMemberId]);
 
