@@ -1,8 +1,9 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import volunteeringImageSrc from "@/shared/assets/images/volunteering.svg";
 import { Image, Modal } from "@/shared/components";
 import { Circle } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
+import { emptyFunction } from "@/shared/utils";
 import styles from "./LeaveCircleModal.module.scss";
 
 interface LeaveCircleModalProps {
@@ -13,9 +14,28 @@ interface LeaveCircleModalProps {
 
 const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
   const { circle, isShowing, onClose } = props;
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  const handleLeave = async () => {
+    setIsLeaving(true);
+
+    try {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
+      setIsLeaving(false);
+    } catch (error) {
+      setIsLeaving(false);
+    }
+  };
 
   return (
-    <Modal className={styles.modal} isShowing={isShowing} onClose={onClose}>
+    <Modal
+      className={styles.modal}
+      isShowing={isShowing}
+      onClose={isLeaving ? emptyFunction : onClose}
+      hideCloseButton={isLeaving}
+    >
       <div className={styles.content}>
         <Image
           className={styles.image}
@@ -39,6 +59,7 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
               variant={ButtonVariant.PrimaryGray}
               size={ButtonSize.Medium}
               onClick={onClose}
+              disabled={isLeaving}
             >
               Cancel
             </Button>
@@ -46,6 +67,8 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
               className={`${styles.button} ${styles.confirmButton}`}
               variant={ButtonVariant.PrimaryPurple}
               size={ButtonSize.Medium}
+              onClick={handleLeave}
+              disabled={isLeaving}
             >
               Yes, leave circle
             </Button>
