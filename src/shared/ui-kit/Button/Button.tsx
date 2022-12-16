@@ -41,6 +41,8 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
   } = props;
   const className = classNames(styles.button, props.className, {
     [styles.buttonDisabled]: visuallyDisabled || props.disabled,
+    [styles.buttonPrimaryPurpleVariant]:
+      variant === ButtonVariant.PrimaryPurple,
     [styles.buttonOutlineBlueVariant]: variant === ButtonVariant.OutlineBlue,
     [styles.buttonLargeSize]: size === ButtonSize.Large,
     [styles.buttonMediumSize]: size === ButtonSize.Medium,

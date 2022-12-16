@@ -35,6 +35,25 @@
   }
 }
 
+.buttonPrimaryPurpleVariant {
+  --btn-color: #{$c-shades-white};
+  --btn-bg-color: #{$c-primary-400};
+  --btn-border-color: none;
+  --btn-border: 0;
+
+  &:hover {
+    --btn-bg-color: #{$c-primary-300};
+  }
+
+  &:active {
+    --btn-bg-color: #{$c-primary-500};
+  }
+
+  &.buttonDisabled {
+    --btn-bg-color: #{$c-shades-neutrals-30};
+  }
+}
+
 .buttonOutlineBlueVariant {
   --btn-color: #{$c-primary-400};
   --btn-bg-color: #{$c-primary-100};

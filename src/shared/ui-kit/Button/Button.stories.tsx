@@ -37,6 +37,12 @@ const Template: ComponentStory<typeof Button> = (args) => (
   </div>
 );
 
+export const PrimaryPurple = Template.bind({});
+PrimaryPurple.args = {
+  variant: ButtonVariant.PrimaryPurple,
+  children: "Button Label",
+};
+
 export const OutlineBlue = Template.bind({});
 OutlineBlue.args = {
   variant: ButtonVariant.OutlineBlue,
