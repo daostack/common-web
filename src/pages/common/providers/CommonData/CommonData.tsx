@@ -86,11 +86,13 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onMenuItemSelect: handleMenuItemSelect,
       areNonCreatedProjectsLeft,
       onProjectCreate: onSubCommonCreationModalOpen,
+      onLeaveCircle: onLeaveCommonModalOpen,
     }),
     [
       handleMenuItemSelect,
       areNonCreatedProjectsLeft,
       onSubCommonCreationModalOpen,
+      onLeaveCommonModalOpen,
     ],
   );
 
