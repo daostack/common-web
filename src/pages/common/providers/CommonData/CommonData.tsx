@@ -18,7 +18,7 @@ import { CommonMenuItem } from "../../constants";
 import { LeaveCircleModal } from "./components";
 import { CommonDataContext, CommonDataContextValue } from "./context";
 import {
-  useLeaveCommonModal,
+  useLeaveCircleModal,
   useProposalCreationModal,
   useSubCommonCreationModal,
 } from "./hooks";
@@ -51,10 +51,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onSubCommonCreate,
   } = useSubCommonCreationModal(governance.circles, subCommons);
   const {
-    isLeaveCommonModalOpen,
-    onLeaveCommonModalOpen,
-    onLeaveCommonModalClose,
-  } = useLeaveCommonModal();
+    isLeaveCircleModalOpen,
+    onLeaveCircleModalOpen,
+    onLeaveCircleModalClose,
+  } = useLeaveCircleModal();
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -86,13 +86,13 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onMenuItemSelect: handleMenuItemSelect,
       areNonCreatedProjectsLeft,
       onProjectCreate: onSubCommonCreationModalOpen,
-      onLeaveCircle: onLeaveCommonModalOpen,
+      onLeaveCircle: onLeaveCircleModalOpen,
     }),
     [
       handleMenuItemSelect,
       areNonCreatedProjectsLeft,
       onSubCommonCreationModalOpen,
-      onLeaveCommonModalOpen,
+      onLeaveCircleModalOpen,
     ],
   );
 
@@ -131,8 +131,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
         shouldBeWithoutIntroduction
       />
       <LeaveCircleModal
-        isShowing={isLeaveCommonModalOpen}
-        onClose={onLeaveCommonModalClose}
+        isShowing={isLeaveCircleModalOpen}
+        onClose={onLeaveCircleModalClose}
       />
     </CommonDataContext.Provider>
   );
