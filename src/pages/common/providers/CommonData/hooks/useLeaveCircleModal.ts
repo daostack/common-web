@@ -20,13 +20,7 @@ interface Return {
 
 export const useLeaveCircleModal = (): Return => {
   const [leaveCircleState, setLeaveCircleState] = useState<State>({
-    circle: {
-      name: "circle to leave",
-      id: "circle-to-leave",
-      allowedActions: {},
-      allowedProposals: {},
-      hierarchy: null,
-    },
+    circle: null,
     commonMemberId: null,
   });
   const {
