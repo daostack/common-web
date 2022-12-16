@@ -131,9 +131,11 @@ const CommonData: FC<CommonDataProps> = (props) => {
         isSubCommonCreation
         shouldBeWithoutIntroduction
       />
-      {circleToLeave && (
+      {circleToLeave && commonMember && (
         <LeaveCircleModal
           circle={circleToLeave}
+          commonId={common.id}
+          commonMemberId={commonMember.id}
           isShowing={isLeaveCircleModalOpen}
           onClose={onLeaveCircleModalClose}
         />

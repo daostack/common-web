@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
 import volunteeringImageSrc from "@/shared/assets/images/volunteering.svg";
 import { Image, Modal } from "@/shared/components";
 import { Circle } from "@/shared/models";
@@ -8,12 +9,14 @@ import styles from "./LeaveCircleModal.module.scss";
 
 interface LeaveCircleModalProps {
   circle: Circle;
+  commonId: string;
+  commonMemberId: string;
   isShowing: boolean;
   onClose: () => void;
 }
 
 const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
-  const { circle, isShowing, onClose } = props;
+  const { circle, commonId, commonMemberId, isShowing, onClose } = props;
   const [isLeaving, setIsLeaving] = useState(false);
 
   const handleLeave = async () => {
@@ -23,6 +26,11 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
       await new Promise((resolve) => {
         setTimeout(resolve, 1000);
       });
+      CommonMemberEventEmitter.emit(
+        CommonMemberEvent.Reset,
+        commonId,
+        commonMemberId,
+      );
       setIsLeaving(false);
     } catch (error) {
       setIsLeaving(false);
