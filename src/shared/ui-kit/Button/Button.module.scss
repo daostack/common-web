@@ -35,6 +35,28 @@
   }
 }
 
+.buttonPrimaryGrayVariant {
+  --btn-color: #{$c-neutrals-300};
+  --btn-bg-color: #{$c-neutrals-100};
+  --btn-border-color: none;
+  --btn-border: 0;
+
+  &:hover {
+    --btn-color: #{$c-neutrals-300};
+    --btn-bg-color: #{$c-shades-100};
+  }
+
+  &:active {
+    --btn-color: #{$c-neutrals-300};
+    --btn-bg-color: #{$c-neutrals-200};
+  }
+
+  &.buttonDisabled {
+    --btn-color: #{$c-neutrals-200};
+    --btn-bg-color: #{$c-neutrals-100};
+  }
+}
+
 .buttonPrimaryPurpleVariant {
   --btn-color: #{$c-shades-white};
   --btn-bg-color: #{$c-primary-400};
