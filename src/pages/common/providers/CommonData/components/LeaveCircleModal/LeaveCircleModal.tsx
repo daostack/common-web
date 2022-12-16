@@ -40,7 +40,7 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
               Cancel
             </Button>
             <Button
-              variant={ButtonVariant.OutlineBlue}
+              variant={ButtonVariant.PrimaryPurple}
               size={ButtonSize.Medium}
             >
               Yes, leave circle
