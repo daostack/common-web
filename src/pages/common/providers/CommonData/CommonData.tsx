@@ -51,6 +51,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onSubCommonCreate,
   } = useSubCommonCreationModal(governance.circles, subCommons);
   const {
+    circleToLeave,
     isLeaveCircleModalOpen,
     onLeaveCircleModalOpen,
     onLeaveCircleModalClose,
@@ -130,10 +131,13 @@ const CommonData: FC<CommonDataProps> = (props) => {
         isSubCommonCreation
         shouldBeWithoutIntroduction
       />
-      <LeaveCircleModal
-        isShowing={isLeaveCircleModalOpen}
-        onClose={onLeaveCircleModalClose}
-      />
+      {circleToLeave && (
+        <LeaveCircleModal
+          circle={circleToLeave}
+          isShowing={isLeaveCircleModalOpen}
+          onClose={onLeaveCircleModalClose}
+        />
+      )}
     </CommonDataContext.Provider>
   );
 };

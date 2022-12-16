@@ -1,16 +1,18 @@
 import React, { FC } from "react";
 import volunteeringImageSrc from "@/shared/assets/images/volunteering.svg";
 import { Image, Modal } from "@/shared/components";
+import { Circle } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./LeaveCircleModal.module.scss";
 
 interface LeaveCircleModalProps {
+  circle: Circle;
   isShowing: boolean;
   onClose: () => void;
 }
 
 const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
-  const { isShowing, onClose } = props;
+  const { circle, isShowing, onClose } = props;
 
   return (
     <Modal className={styles.modal} isShowing={isShowing} onClose={onClose}>
@@ -23,7 +25,7 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
           aria-hidden
         />
         <h2 className={styles.title}>
-          Are you sure you want to leave circle1?
+          Are you sure you want to leave {circle.name}?
         </h2>
         <p className={styles.description}>
           If you leave this circle, you might lose permissions associated with
