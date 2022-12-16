@@ -2,15 +2,33 @@ import { useCallback, useState } from "react";
 import { useModal } from "@/shared/hooks";
 import { Circle } from "@/shared/models";
 
+interface State {
+  circle: Circle | null;
+  commonMemberId: string | null;
+}
+
 interface Return {
   circleToLeave: Circle | null;
   isLeaveCircleModalOpen: boolean;
-  onLeaveCircleModalOpen: (circle: Circle) => void;
+  onLeaveCircleModalOpen: (
+    commonId: string,
+    commonMemberId: string,
+    circle: Circle,
+  ) => void;
   onLeaveCircleModalClose: () => void;
 }
 
 export const useLeaveCircleModal = (): Return => {
-  const [circleToLeave, setCircleToLeave] = useState<Circle | null>(null);
+  const [leaveCircleState, setLeaveCircleState] = useState<State>({
+    circle: {
+      name: "circle to leave",
+      id: "circle-to-leave",
+      allowedActions: {},
+      allowedProposals: {},
+      hierarchy: null,
+    },
+    commonMemberId: null,
+  });
   const {
     isShowing: isLeaveCircleModalOpen,
     onOpen: onLeaveCircleModalOpen,
@@ -18,17 +36,22 @@ export const useLeaveCircleModal = (): Return => {
   } = useModal(false);
 
   const handleLeaveCircleModalOpen = useCallback(
-    (circle: Circle) => {
-      setCircleToLeave(circle);
+    (commonId: string, commonMemberId: string, circle: Circle) => {
+      setLeaveCircleState({ circle, commonMemberId });
       onLeaveCircleModalOpen();
     },
     [onLeaveCircleModalOpen],
   );
 
+  const handleLeaveCircleModalClose = useCallback(() => {
+    onLeaveCircleModalClose();
+    setLeaveCircleState({ circle: null, commonMemberId: null });
+  }, [onLeaveCircleModalClose]);
+
   return {
-    circleToLeave,
+    circleToLeave: leaveCircleState.circle,
     isLeaveCircleModalOpen,
     onLeaveCircleModalOpen: handleLeaveCircleModalOpen,
-    onLeaveCircleModalClose,
+    onLeaveCircleModalClose: handleLeaveCircleModalClose,
   };
 };

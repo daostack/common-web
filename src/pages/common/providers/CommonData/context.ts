@@ -6,7 +6,7 @@ interface Data {
   onMenuItemSelect: (menuItem: CommonMenuItem | null) => void;
   areNonCreatedProjectsLeft: boolean;
   onProjectCreate: () => void;
-  onLeaveCircle: (circle: Circle) => void;
+  onLeaveCircle: (commonMemberId: string, circle: Circle) => void;
 }
 
 export type CommonDataContextValue = Data | null;
