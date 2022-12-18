@@ -884,12 +884,11 @@ export const getCommonMembersWithCircleIdAmount = async (
   circleId: string,
 ): Promise<number> => {
   const governance = await getGovernanceByCommonId(commonId);
-  const [circleIndex = null] =
-    Object.entries(governance?.circles || {}).find(
-      ([, circle]) => circle.id === circleId,
-    ) || [];
+  const circle = Object.values(governance?.circles || {}).find(
+    (circle) => circle.id === circleId,
+  );
   const result = await commonMembersSubCollection(commonId)
-    .where(`circleIds`, "array-contains", circleId)
+    .where(`circleIds`, "array-contains", circle?.id)
     .get();
   const members = transformFirebaseDataList<CommonMember>(result);
 
