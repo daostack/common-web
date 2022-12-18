@@ -889,7 +889,7 @@ export const getCommonMembersWithCircleIdAmount = async (
       ([, circle]) => circle.id === circleId,
     ) || [];
   const result = await commonMembersSubCollection(commonId)
-    .where(`circles.map.${circleIndex}`, "==", circleId)
+    .where(`circleIds`, "array-contains", circleId)
     .get();
   const members = transformFirebaseDataList<CommonMember>(result);
 
