@@ -190,7 +190,7 @@ const SupportersContainer = () => {
         ) : null;
       case SupportersStep.Welcome:
         return common?.governanceId ? (
-          <Welcome governanceId={common.governanceId} />
+          <Welcome commonName={common.name} governanceId={common.governanceId} />
         ) : null;
       default:
         return null;
