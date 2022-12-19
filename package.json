@@ -60,7 +60,7 @@
   "scripts": {
     "build": "craco build",
     "build:storybook": "build-storybook -s public",
-    "start": "REACT_APP_ENV=local craco start",
+    "start": "REACT_APP_ENV=dev craco start",
     "test": "TZ=UTC jest",
     "test:watch": "yarn test --watch",
     "test:storybook": "test-storybook",
