@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Common } from "@/shared/models";
+import { Common, PaymentAmount } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { Container } from "@/shared/ui-kit";
 import { CommonCard } from "../../../../../CommonCard";
@@ -30,16 +30,16 @@ const CommonEntranceInfo: FC<CommonEntranceInfoProps> = (props) => {
       <CommonCard className={styles.container} hideCardStyles={isTabletView}>
         <h3 className={styles.title}>Entrance</h3>
         <dl className={styles.list}>
-          {limitations?.minFeeOneTime && (
+          {Boolean(limitations?.minFeeOneTime) && (
             <CommonEntranceItem
               text="Minimal single contribution"
-              amount={limitations?.minFeeOneTime}
+              amount={limitations?.minFeeOneTime as PaymentAmount}
             />
           )}
-          {limitations?.minFeeMonthly && (
+          {Boolean(limitations?.minFeeMonthly) && (
             <CommonEntranceItem
               text="Minimal monthly contribution"
-              amount={limitations?.minFeeMonthly}
+              amount={limitations?.minFeeMonthly as PaymentAmount}
               bySubscription
             />
           )}
