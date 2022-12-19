@@ -1,4 +1,3 @@
-import React from "react";
 import CommonPage from "@/pages/common/Common";
 import { ROUTE_PATHS, ViewportBreakpointVariant } from "@/shared/constants";
 import { SidenavLayout } from "@/shared/layouts";
