@@ -19,6 +19,7 @@ import {
   CommonDescription,
   CommonEntranceInfo,
   CommonGovernance,
+  CommonParent,
   CommonProjects,
   CommonRules,
 } from "./components";
@@ -70,6 +71,9 @@ const AboutTab: FC<AboutTabProps> = (props) => {
           circles={governance.circles}
         />
       )}
+      {!isParentCommon && (
+        <CommonParent parentCommon={common} projectsAmountInParentCommon={3} />
+      )}
     </div>
   );
 
@@ -94,6 +98,9 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       <div className={styles.separator} />
       {limitations && (
         <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
+      )}
+      {!isParentCommon && (
+        <CommonParent parentCommon={common} projectsAmountInParentCommon={1} />
       )}
     </div>
   );
