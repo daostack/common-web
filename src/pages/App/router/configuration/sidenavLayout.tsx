@@ -1,5 +1,5 @@
 import React from "react";
-import { Common as CommonPage } from "@/pages/common";
+import CommonPage from "@/pages/common/Common";
 import { ROUTE_PATHS, ViewportBreakpointVariant } from "@/shared/constants";
 import { SidenavLayout } from "@/shared/layouts";
 import { LayoutConfiguration } from "../types";
