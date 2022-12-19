@@ -12,12 +12,19 @@ import {
 } from "@/pages/OldCommon";
 import { MyCommonsContainer } from "@/pages/OldCommon/containers/MyCommonsContainer";
 import { TrusteeContainer } from "@/pages/Trustee";
-import { ROUTE_PATHS } from "@/shared/constants";
+import {
+  ROUTE_PATHS,
+  SMALL_SCREEN_BREAKPOINT_NUMBER,
+} from "@/shared/constants";
 import { OldLayout } from "@/shared/layouts";
 import { LayoutConfiguration, RouteType } from "../types";
 
 export interface OldLayoutRouteOptions {
-  footer?: boolean;
+  footer?:
+    | boolean
+    | {
+        mediaQueryWhenDisplay?: string;
+      };
 }
 
 export const OLD_LAYOUT_CONFIGURATION: LayoutConfiguration<OldLayoutRouteOptions> =
@@ -43,6 +50,13 @@ export const OLD_LAYOUT_CONFIGURATION: LayoutConfiguration<OldLayoutRouteOptions
         path: ROUTE_PATHS.COMMON_DETAIL,
         exact: true,
         component: CommonDetailContainer,
+        routeOptions: {
+          footer: {
+            mediaQueryWhenDisplay: `(min-width: ${
+              SMALL_SCREEN_BREAKPOINT_NUMBER + 1
+            }px)`,
+          },
+        },
       },
       {
         path: ROUTE_PATHS.COMMON_SUPPORT,

@@ -3,7 +3,8 @@ import { Environment } from "./environment";
 export const REACT_APP_ENV =
   (process.env.REACT_APP_ENV as Environment) || Environment.Dev;
 
-export const SMALL_SCREEN_BREAKPOINT = "770px";
+export const SMALL_SCREEN_BREAKPOINT_NUMBER = 770;
+export const SMALL_SCREEN_BREAKPOINT = `${SMALL_SCREEN_BREAKPOINT_NUMBER}px`;
 
 export const BASE_URL = window.location.origin;
 export const AUTH_CODE_FOR_SIGN_UP = "5a81Ec29e6";
