@@ -1,9 +1,10 @@
 import React, { FC, PropsWithChildren } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Colors, ShareViewType } from "@/shared/constants";
 import { ButtonIcon, SocialLinks, Loader } from "@/shared/components";
-import CopyLinkIcon from "@/shared/icons/copyLink.icon";
+import { Colors, ShareViewType } from "@/shared/constants";
+import { useNotification } from "@/shared/hooks";
+import { CopyLinkChainIcon } from "@/shared/icons";
 import { copyToClipboard } from "@/shared/utils";
 import { Modal } from "../Modal";
 import "./index.scss";
@@ -33,9 +34,11 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (props) => {
     linkText,
   } = props;
   const isMobileModal = type === ShareViewType.ModalMobile;
+  const { notify } = useNotification();
 
   const handleCopyClick = () => {
     copyToClipboard(sourceUrl);
+    notify("The link has copied!");
   };
 
   return (
@@ -79,15 +82,12 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (props) => {
               isLoading={isLoading}
               linkText={linkText}
             />
-            <div className="share-modal_copy-link">
-              <p className="copy-link-field">{sourceUrl}</p>
-              <ButtonIcon
-                className="share-modal__copy-button"
-                onClick={handleCopyClick}
-              >
-                <CopyLinkIcon />
+            <button className="share-modal_copy-link" onClick={handleCopyClick}>
+              <ButtonIcon className="share-modal__copy-button">
+                <CopyLinkChainIcon />
               </ButtonIcon>
-            </div>
+              <p className="share-modal_copy-link-text">Copy Link</p>
+            </button>
           </div>
         ))}
     </Modal>

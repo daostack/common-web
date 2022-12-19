@@ -1,18 +1,24 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CommonMemberEventEmitter, CommonMemberEvent } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
-import { CommonMember } from "@/shared/models";
-import { getCommonMember } from "../store/actions";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import { CommonService, GovernanceService, Logger } from "../../../services";
+import { generateCirclesDataForCommonMember } from "../../../shared/utils/generateCircleDataForCommonMember";
 
-type State = LoadingState<CommonMember | null>;
+type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
 
 interface Return extends State {
-  fetchCommonMember: (commonId: string) => void;
+  fetchCommonMember: (
+    commonId: string,
+    options: { governance?: Governance; commonMember?: CommonMember },
+    force?: boolean,
+  ) => void;
   resetCommonMember: () => void;
 }
 
-export const useCommonMember = (): Return => {
+export const useCommonMember = (shouldAutoReset = true): Return => {
   const dispatch = useDispatch();
   const [state, setState] = useState<State>({
     loading: false,
@@ -21,46 +27,68 @@ export const useCommonMember = (): Return => {
   });
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const commonMemberId = state.data?.id;
 
   const fetchCommonMember = useCallback(
-    (commonId: string) => {
-      if (state.loading || state.fetched) {
+    async (
+      commonId: string,
+      options: { governance?: Governance; commonMember?: CommonMember } = {},
+      force = false,
+    ) => {
+      if (!force && (state.loading || state.fetched)) {
         return;
       }
       if (!userId) {
-        setState((nextState) => ({
-          ...nextState,
+        setState({
+          loading: false,
           fetched: true,
-        }));
+          data: null,
+        });
         return;
       }
 
-      setState((nextState) => ({
-        ...nextState,
+      setState({
         loading: true,
-      }));
+        fetched: false,
+        data: null,
+      });
 
-      dispatch(
-        getCommonMember.request({
-          payload: {
-            commonId,
-            userId,
-          },
-          callback: (error, commonMember) => {
-            const nextState: State = {
-              loading: false,
-              fetched: true,
-              data: null,
-            };
+      try {
+        const [governance, commonMember] = await Promise.all([
+          options.governance ||
+            (await GovernanceService.getGovernanceByCommonId(commonId)),
+          options.commonMember ||
+            (await CommonService.getCommonMemberByUserId(commonId, userId)),
+        ]);
 
-            if (!error && commonMember) {
-              nextState.data = commonMember;
-            }
+        if (governance && commonMember) {
+          setState({
+            loading: false,
+            fetched: true,
+            data: {
+              ...commonMember,
+              ...generateCirclesDataForCommonMember(
+                governance.circles,
+                commonMember.circleIds,
+              ),
+            },
+          });
+        } else {
+          setState({
+            loading: false,
+            fetched: true,
+            data: null,
+          });
+        }
+      } catch (e) {
+        Logger.error({ state, e });
 
-            setState(nextState);
-          },
-        }),
-      );
+        setState({
+          loading: false,
+          fetched: true,
+          data: null,
+        });
+      }
     },
     [state, dispatch, userId],
   );
@@ -74,8 +102,32 @@ export const useCommonMember = (): Return => {
   }, []);
 
   useEffect(() => {
-    resetCommonMember();
-  }, [resetCommonMember, userId]);
+    if (shouldAutoReset) {
+      resetCommonMember();
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (!commonMemberId) {
+      return;
+    }
+
+    const event: CommonMemberEvent = `clear-common-member-${commonMemberId}`;
+
+    const clearCommonMember = () => {
+      setState({
+        loading: false,
+        fetched: true,
+        data: null,
+      });
+    };
+
+    CommonMemberEventEmitter.on(event, clearCommonMember);
+
+    return () => {
+      CommonMemberEventEmitter.off(event, clearCommonMember);
+    };
+  }, [commonMemberId]);
 
   return {
     ...state,

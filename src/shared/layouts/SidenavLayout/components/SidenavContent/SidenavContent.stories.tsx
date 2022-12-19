@@ -4,6 +4,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import SidenavContent from "./SidenavContent";
 
 export default {
+  title: "SidenavLayout/SidenavContent",
   component: SidenavContent,
   decorators: [
     (Story) => (

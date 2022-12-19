@@ -2,6 +2,7 @@ import React, { useEffect, FC } from "react";
 import classNames from "classnames";
 import { ContributionAmountSelection, Separator } from "@/shared/components";
 import { MIN_CONTRIBUTION_ILS_AMOUNT } from "@/shared/constants";
+import { Currency } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
 import "./index.scss";
 
@@ -52,7 +53,8 @@ const AmountSelection: FC<AmountSelectionProps> = (props) => {
       </h3>
       <p className="change-monthly-amount-selection-my-contributions-stage__description">
         Select the amount for your monthly contribution to this Common. The
-        minimum contribution to this Common is {formatPrice(minSelectionAmount)}{" "}
+        minimum contribution to this Common is{" "}
+        {formatPrice({ amount: minSelectionAmount, currency: Currency.ILS })}{" "}
         monthly.
       </p>
       <Separator className="change-monthly-amount-selection-my-contributions-stage__separator" />

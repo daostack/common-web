@@ -1,0 +1,37 @@
+@import "../../../constants";
+@import "../../../styles/sizes";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: $c-neutrals-600;
+}
+
+.image {
+  max-width: 22rem;
+  width: 100%;
+
+  @include tablet {
+    max-width: 14rem;
+  }
+}
+
+.title {
+  margin: 0;
+  font-family: NunitoSans, sans-serif;
+  font-weight: 600;
+  font-size: 8rem;
+
+  @include tablet {
+    margin-top: 1.875rem;
+    font-size: 4.5rem;
+  }
+}
+
+.description {
+  margin: 0;
+  font-weight: bold;
+  font-size: $moderate-small;
+  line-height: 120%;
+}

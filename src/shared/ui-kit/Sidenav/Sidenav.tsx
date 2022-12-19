@@ -1,18 +1,24 @@
-import React, { FC, KeyboardEvent } from "react";
+import React, { FC, KeyboardEvent, useEffect } from "react";
 import { useLocation } from "react-router";
+import classNames from "classnames";
 import { SIDENAV_ID } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
-import { useLockedBody } from "@/shared/hooks";
-import { useIsTabletView } from "@/shared/hooks/viewport";
+import { useAllViews } from "@/shared/hooks/viewport";
 import styles from "./Sidenav.module.scss";
 
-const Sidenav: FC = (props) => {
-  const { children } = props;
+interface SidenavProps {
+  onOpenToggle?: (isOpen: boolean) => void;
+}
+
+const Sidenav: FC<SidenavProps> = (props) => {
+  const { onOpenToggle, children } = props;
   const location = useLocation();
-  const isTabletView = useIsTabletView();
-  const isSidenavOpen = !isTabletView || location.hash === `#${SIDENAV_ID}`;
-  const shouldLockBodyScroll = isTabletView && isSidenavOpen;
-  useLockedBody(shouldLockBodyScroll);
+  const viewportStates = useAllViews();
+  // Sidenav is always visible on desktop and on tablet and lower viewports when hash is as sidenav id
+  const isSidenavVisible =
+    !viewportStates.isTabletView || location.hash === `#${SIDENAV_ID}`;
+  // Sidenav can be open only on tablet and lower viewports
+  const isSidenavOpen = viewportStates.isTabletView && isSidenavVisible;
 
   const closeSidenav = () => {
     window.location.hash = "";
@@ -24,10 +30,18 @@ const Sidenav: FC = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (onOpenToggle) {
+      onOpenToggle(isSidenavOpen);
+    }
+  }, [isSidenavOpen]);
+
   return (
     <aside
       id={SIDENAV_ID}
-      className={styles.sidenav}
+      className={classNames(styles.sidenav, {
+        [styles.sidenavOpen]: isSidenavOpen,
+      })}
       onKeyUp={onSidebarKeyUp}
       tabIndex={0}
     >

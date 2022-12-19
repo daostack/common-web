@@ -1,0 +1,42 @@
+@import "../../../../../../../../constants";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.description {
+  margin: 0;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+  color: $c-neutrals-600;
+  word-wrap: break-word;
+  white-space: pre-line;
+}
+.descriptionRTL {
+  direction: rtl;
+}
+
+.descriptionShortened {
+  display: -webkit-box;
+  -webkit-line-clamp: 9;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.seeMore {
+  color: $purple-2;
+  width: 100%;
+  margin-bottom: 1.75rem;
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.tagsWrapper {
+  margin-top: 2.125rem;
+}

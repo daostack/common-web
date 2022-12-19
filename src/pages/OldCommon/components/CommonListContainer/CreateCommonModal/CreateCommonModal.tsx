@@ -5,7 +5,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { Modal } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
@@ -13,6 +13,7 @@ import { useZoomDisabling } from "@/shared/hooks";
 import { Common, Governance } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
+import { projectsActions } from "@/store/states";
 import {
   IntermediateCreateCommonPayload,
   PaymentPayload,
@@ -55,6 +56,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     onCommonCreate,
     isSubCommonCreation,
   } = props;
+  const dispatch = useDispatch();
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -269,6 +271,21 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setCreationData(INITIAL_DATA);
     resetZoom();
   }, [props.isShowing, initialStage, disableZoom, resetZoom]);
+
+  useEffect(() => {
+    if (stage === CreateCommonStage.Success && createdCommon) {
+      dispatch(
+        projectsActions.addProject({
+          commonId: createdCommon.id,
+          image: createdCommon.image,
+          name: createdCommon.name,
+          directParent: createdCommon.directParent,
+          hasMembership: true,
+          notificationsAmount: 0,
+        }),
+      );
+    }
+  }, [stage]);
 
   return (
     <Modal

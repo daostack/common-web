@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState, FC, useEffect } from "react";
-import { Portal } from "@/shared/components";
+import { Portal } from "@/shared/ui-kit";
 import { Notification } from "./Notification";
 import { NotificationContext, NotificationContextValue } from "./context";
 import { INotification } from "./types";

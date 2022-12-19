@@ -6,6 +6,7 @@ import { store } from "@/shared/appConfig";
 import { ErrorCode } from "@/shared/constants";
 import { ProposalsTypes } from "@/shared/constants";
 import { Awaited, LoadingState } from "@/shared/interfaces";
+import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
   AssignCircle,
   CalculatedVotes,
@@ -276,17 +277,40 @@ export function* loadCommonDiscussionList(): Generator {
   }
 }
 
+export function* hideDiscussion(
+  action: ReturnType<typeof actions.hideDiscussion.request>,
+): Generator {
+  try {
+    yield put(startLoading());
+    const discussions: Discussion[] = (yield select(
+      selectDiscussions(),
+    )) as Discussion[];
+
+    const filteredDiscussion = discussions.filter(
+      (discussion) => discussion.id !== action.payload,
+    );
+
+    yield put(actions.hideDiscussion.success(filteredDiscussion));
+    yield put(stopLoading());
+  } catch (e) {
+    if (isError(e)) {
+      yield put(actions.hideDiscussion.failure(e));
+      yield put(stopLoading());
+    }
+  }
+}
+
 export function* loadDiscussionDetail(
   action: ReturnType<typeof actions.loadDiscussionDetail.request>,
 ): Generator {
   try {
     yield put(startLoading());
-    const discussion = { ...action.payload };
+    const discussion = { ...action.payload.discussion };
 
     let discussionMessage: DiscussionMessage[];
 
-    if (action.payload.discussionMessages?.length) {
-      discussionMessage = action.payload.discussionMessages;
+    if (discussion.discussionMessages?.length && !action.payload.force) {
+      discussionMessage = discussion.discussionMessages;
     } else {
       discussionMessage = (yield fetchDiscussionsMessages([
         discussion.id,
@@ -299,21 +323,25 @@ export function* loadDiscussionDetail(
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
 
-    const loadedDiscussionMessages = discussionMessage?.map((d) => {
-      const newDiscussionMessage = { ...d };
-      const parentMessage = discussionMessage.find(
-        ({ id }) => id === d.parentId,
-      );
-      newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
-      newDiscussionMessage.parentMessage = parentMessage
-        ? {
-            id: parentMessage.id,
-            text: parentMessage.text,
-            ownerName: parentMessage?.ownerName,
-          }
-        : null;
-      return newDiscussionMessage;
-    });
+    const loadedDiscussionMessages = discussionMessage
+      ?.filter(
+        (discussion) => discussion.moderation?.flag !== ModerationFlags.Hidden,
+      )
+      .map((d) => {
+        const newDiscussionMessage = { ...d };
+        const parentMessage = discussionMessage.find(
+          ({ id }) => id === d.parentId,
+        );
+        newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+        newDiscussionMessage.parentMessage = parentMessage
+          ? {
+              id: parentMessage.id,
+              text: parentMessage.text,
+              ownerName: parentMessage?.ownerName,
+            }
+          : null;
+        return newDiscussionMessage;
+      });
 
     discussion.discussionMessages = loadedDiscussionMessages;
 
@@ -366,6 +394,29 @@ export function* loadProposalList(): Generator {
   }
 }
 
+export function* hideProposal(
+  action: ReturnType<typeof actions.hideProposal.request>,
+): Generator {
+  try {
+    yield put(startLoading());
+    const proposals: Proposal[] = (yield select(
+      selectProposals(),
+    )) as Proposal[];
+
+    const filteredProposals = proposals.filter(
+      (proposal) => proposal.id !== action.payload,
+    );
+
+    yield put(actions.hideProposal.success(filteredProposals));
+    yield put(stopLoading());
+  } catch (e) {
+    if (isError(e)) {
+      yield put(actions.hideProposal.failure(e));
+      yield put(stopLoading());
+    }
+  }
+}
+
 export function* loadProposalDetail(
   action: ReturnType<typeof actions.loadProposalDetail.request>,
 ): Generator {
@@ -410,7 +461,9 @@ export function* loadProposalDetail(
     }
 
     if (proposal.discussion) {
-      proposal.discussion.discussionMessages = loadedDiscussionMessages;
+      const updatedDiscussion = { ...proposal.discussion };
+      updatedDiscussion.discussionMessages = loadedDiscussionMessages;
+      proposal.discussion = { ...updatedDiscussion } as Discussion;
     }
 
     proposal.proposer = (yield getUserData(
@@ -518,7 +571,11 @@ export function* subscribeToDiscussionMessageRefresh(discussionId: string) {
           ),
         };
 
-        store.dispatch(actions.loadDiscussionDetail.request(updatedDiscussion));
+        store.dispatch(
+          actions.loadDiscussionDetail.request({
+            discussion: updatedDiscussion,
+          }),
+        );
         store.dispatch(actions.getCommonsList.request());
       }
     },
@@ -593,7 +650,11 @@ export function* addMessageToDiscussionSaga(
           ),
         };
 
-        store.dispatch(actions.loadDiscussionDetail.request(updatedDiscussion));
+        store.dispatch(
+          actions.loadDiscussionDetail.request({
+            discussion: updatedDiscussion,
+          }),
+        );
         store.dispatch(actions.getCommonsList.request());
       },
     )) as () => void;
@@ -1683,6 +1744,8 @@ export function* commonsSaga() {
     (action) => action.payload.payload.commonId,
     getCommonState,
   );
+  yield takeLatest(actions.hideDiscussion.request, hideDiscussion);
+  yield takeLatest(actions.hideProposal.request, hideProposal);
 }
 
 export default commonsSaga;

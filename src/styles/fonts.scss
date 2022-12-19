@@ -113,6 +113,20 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $lexendFontName;
   src: local($lexendFontName),
+    url("/shared/assets/fonts/Lexend-Light.ttf") format($trueTypeFontFormat);
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: $lexendFontName;
+  src: local($lexendFontName),
     url("/shared/assets/fonts/Lexend-Regular.ttf") format($trueTypeFontFormat);
   font-weight: normal;
+}
+
+@font-face {
+  font-family: $lexendFontName;
+  src: local($lexendFontName),
+    url("/shared/assets/fonts/Lexend-Bold.ttf") format($trueTypeFontFormat);
+  font-weight: bold;
 }

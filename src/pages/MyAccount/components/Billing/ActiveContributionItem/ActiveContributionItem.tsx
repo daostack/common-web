@@ -41,7 +41,7 @@ const getPaymentData = (payment: Payment): ActiveContributionDataItem[] => {
     },
     {
       title: "Amount",
-      value: formatPrice(payment.price.amount),
+      value: formatPrice(payment.price),
     },
   ];
 };
@@ -74,7 +74,7 @@ const getSubscriptionData = (
   data.push(
     {
       title: "Amount",
-      value: formatPrice(subscription.price.amount),
+      value: formatPrice(subscription.price),
     },
     {
       title: "Subscribed at",

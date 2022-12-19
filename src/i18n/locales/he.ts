@@ -11,7 +11,7 @@ export default {
       title: "שתף עם חברים",
     },
     login: {
-      description: "התחבר/י לחשבון שלך כדי להצטרף לקומון",
+      description: "התחבר/י לחשבון שלך כדי להמשיך",
       mobileDescription: "התחבר/י ל",
       termsText:
         "בשימוש ב-Common הינך מסכימ/ה<br /><1>לתנאי השימוש</1> של האפליקציה",
@@ -110,6 +110,7 @@ export default {
         payAmount: "שלם {{amount}}",
         enterTheCommon: "כנסו לקומון",
         shareWithFriends: "שתפו עם חברים",
+        shareLeadingText: "I’m part of this common, check it out:",
         jumpIn: "הכנסו",
       },
       joinText: "הצטרפו אלינו",
@@ -119,7 +120,7 @@ export default {
         monthlyTypeText: "חודשי",
         monthlyTypeTooltip: "בקרוב",
         otherInputTitle: "סכום אחר",
-        otherInputMonthlyHint: '(חודשי)',
+        otherInputMonthlyHint: "(חודשי)",
         otherInputPlaceholder: "מלאו סכום",
         otherInputError: "מינימום {{amount}}",
         defaultSubmitButtonText: "עדכון התרומה",
@@ -149,7 +150,7 @@ export default {
       },
       welcome: {
         title: "ברוכים הבאים",
-        rulesTitle: "כללי הקומון",
+        rulesTitle: "כללי הקומון של",
         rulesApproval: "קראתי והבנתי את הכללים",
       },
     },

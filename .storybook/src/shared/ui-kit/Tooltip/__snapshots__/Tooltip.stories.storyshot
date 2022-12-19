@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots UI Kit/Tooltip Controlled 1`] = `
+<div>
+  <button
+    data-state="closed"
+    onClick={[Function]}
+    onPointerDown={[Function]}
+  >
+    Trigger
+  </button>
+</div>
+`;
+
+exports[`Storyshots UI Kit/Tooltip Default 1`] = `
+<button
+  data-state="closed"
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseMove={[Function]}
+  onPointerDown={[Function]}
+  onPointerEnter={[Function]}
+  onPointerLeave={[Function]}
+>
+  Trigger
+</button>
+`;
+
+exports[`Storyshots UI Kit/Tooltip With Custom Trigger 1`] = `
+<button
+  className="button buttonOutlineBlueVariant buttonMediumSize"
+  data-state="closed"
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseMove={[Function]}
+  onPointerDown={[Function]}
+  onPointerEnter={[Function]}
+  onPointerLeave={[Function]}
+  tabIndex={0}
+  type="button"
+>
+  Custom Trigger
+</button>
+`;
+
+exports[`Storyshots UI Kit/Tooltip With Disabled Custom Trigger 1`] = `
+<button
+  aria-disabled="true"
+  className="button buttonDisabled buttonOutlineBlueVariant buttonMediumSize"
+  data-state="closed"
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseMove={[Function]}
+  onPointerDown={[Function]}
+  onPointerEnter={[Function]}
+  onPointerLeave={[Function]}
+  tabIndex={0}
+  type="button"
+>
+  Custom Trigger
+</button>
+`;
+
+exports[`Storyshots UI Kit/Tooltip With Long Content 1`] = `
+<button
+  data-state="closed"
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseMove={[Function]}
+  onPointerDown={[Function]}
+  onPointerEnter={[Function]}
+  onPointerLeave={[Function]}
+>
+  Trigger
+</button>
+`;

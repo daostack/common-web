@@ -1,5 +1,5 @@
 import React from "react";
-import { Common, Proposal, ProposalState } from "../../../../../shared/models";
+import { Common, Currency, Proposal, ProposalState } from "@/shared/models";
 import { formatPrice } from "../../../../../shared/utils";
 import "./index.scss";
 
@@ -35,7 +35,10 @@ export default function ProposalsHistory({
         </div>
         <div className="block-item">
           <div className="value">
-            {formatPrice(common.raised - common.balance)}
+            {formatPrice({
+              amount: common.raised.amount - common.balance.amount,
+              currency: Currency.ILS,
+            })}
           </div>
           <div className="title">Spent</div>
         </div>

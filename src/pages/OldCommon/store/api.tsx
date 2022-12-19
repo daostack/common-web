@@ -18,6 +18,7 @@ import {
 import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
 import Api from "@/services/Api";
 import { AllocateFundsTo, ApiEndpoint } from "@/shared/constants";
+import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
   CreateVotePayload,
@@ -59,6 +60,8 @@ import {
   sortByCreatedTime,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import { generateCirclesDataForCommonMember } from "../../../shared/utils/generateCircleDataForCommonMember";
+import { ChangeVisibilityDto } from "../interfaces/ChangeVisibilityDto";
 import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
 
 export async function createGovernance(
@@ -356,10 +359,15 @@ export async function fetchDiscussionsMessages(dIds: string[]) {
         .get(),
     ),
   );
-  const data = flatChunk<DiscussionMessage>(discussions).sort(
-    (m: DiscussionMessage, mP: DiscussionMessage) =>
-      m.createdAt.seconds - mP.createdAt.seconds,
-  );
+  const data = flatChunk<DiscussionMessage>(discussions)
+    .filter(
+      (discussionMessage: DiscussionMessage) =>
+        discussionMessage.moderation?.flag !== ModerationFlags.Hidden,
+    )
+    .sort(
+      (m: DiscussionMessage, mP: DiscussionMessage) =>
+        m.createdAt.seconds - mP.createdAt.seconds,
+    );
 
   return data;
 }
@@ -608,6 +616,18 @@ export async function getBankDetails(): Promise<BankAccountDetails> {
   return convertObjectDatesToFirestoreTimestamps<BankAccountDetails>(data);
 }
 
+export async function getBankDetailsByUserId(
+  userId: string,
+): Promise<BankAccountDetails | null> {
+  const result = await firebase
+    .firestore()
+    .collection(Collection.BankAccountDetails)
+    .where("userId", "==", userId)
+    .get();
+
+  return transformFirebaseDataList<BankAccountDetails>(result)[0];
+}
+
 export async function addBankDetails(
   requestData: AddBankDetailsPayload,
 ): Promise<BankAccountDetails> {
@@ -830,11 +850,19 @@ export const getCommonMemberInfo = async (
         getGovernanceByCommonId(id),
       ]);
 
+      const circlesData =
+        governance &&
+        commonMemberInfo &&
+        generateCirclesDataForCommonMember(
+          governance?.circles,
+          commonMemberInfo?.circleIds,
+        );
+
       return {
         id,
         name,
         circles: governance?.circles,
-        circlesMap: commonMemberInfo?.circles.map,
+        circlesMap: circlesData?.circles.map,
       };
     }),
   );
@@ -856,12 +884,11 @@ export const getCommonMembersWithCircleIdAmount = async (
   circleId: string,
 ): Promise<number> => {
   const governance = await getGovernanceByCommonId(commonId);
-  const [circleIndex = null] =
-    Object.entries(governance?.circles || {}).find(
-      ([, circle]) => circle.id === circleId,
-    ) || [];
+  const circle = Object.values(governance?.circles || {}).find(
+    (circle) => circle.id === circleId,
+  );
   const result = await commonMembersSubCollection(commonId)
-    .where(`circles.map.${circleIndex}`, "==", circleId)
+    .where(`circleIds`, "array-contains", circle?.id)
     .get();
   const members = transformFirebaseDataList<CommonMember>(result);
 
@@ -1108,6 +1135,28 @@ export async function createReport(
 ): Promise<DiscussionMessage> {
   const { data } = await Api.post<DiscussionMessage>(
     ApiEndpoint.CreateReport,
+    requestData,
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function hideContent(
+  requestData: ChangeVisibilityDto,
+): Promise<DiscussionMessage> {
+  const { data } = await Api.post<DiscussionMessage | Discussion | Proposal>(
+    ApiEndpoint.HideContent,
+    requestData,
+  );
+
+  return convertObjectDatesToFirestoreTimestamps(data);
+}
+
+export async function showContent(
+  requestData: ChangeVisibilityDto,
+): Promise<DiscussionMessage> {
+  const { data } = await Api.post<DiscussionMessage | Discussion | Proposal>(
+    ApiEndpoint.ShowContent,
     requestData,
   );
 

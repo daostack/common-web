@@ -6,18 +6,14 @@ import { setLoginModalState } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LanguageDropdown, Loader } from "@/shared/components";
 import { ContributionType, ScreenSize } from "@/shared/constants";
-import {
-  useFooter,
-  useHeader,
-  useLanguage,
-  useQueryParams,
-} from "@/shared/hooks";
+import { useHeader, useLanguage, useQueryParams } from "@/shared/hooks";
 import { useCommon, useSupportersData } from "@/shared/hooks/useCases";
 import {
   getScreenSize,
   selectIsRtlLanguage,
   selectLanguage,
 } from "@/shared/store/selectors";
+import { Portal } from "@/shared/ui-kit";
 import {
   DeadSeaUserDetailsFormValuesWithoutUserDetails,
   InitialStep,
@@ -40,7 +36,6 @@ const SupportersContainer = () => {
   const { id: commonId } = useParams<SupportersContainerRouterParams>();
   const dispatch = useDispatch();
   const { updateHeaderState } = useHeader();
-  const { updateFooterState } = useFooter();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
   const {
     data: supportersData,
@@ -114,9 +109,6 @@ const SupportersContainer = () => {
     fetchSupportersData(commonId);
     updateHeaderState({
       shouldHideHeader: true,
-    });
-    updateFooterState({
-      shouldHideFooter: true,
     });
   }, [commonId]);
 
@@ -198,7 +190,7 @@ const SupportersContainer = () => {
         ) : null;
       case SupportersStep.Welcome:
         return common?.governanceId ? (
-          <Welcome governanceId={common.governanceId} />
+          <Welcome commonName={common.name} governanceId={common.governanceId} />
         ) : null;
       default:
         return null;
@@ -218,34 +210,42 @@ const SupportersContainer = () => {
   }
 
   return (
-    <div
-      className={classNames("supporters-page", {
-        "supporters-page--rtl": isRtlLanguage,
-      })}
-    >
-      {!common && <p>Couldn’t find common with id = "{commonId}"</p>}
-      {common && !supportersData && (
-        <p>Supporters flow is not supported by common "{common.name}".</p>
-      )}
-      {common && supportersData && currentTranslation && (
-        <div className="supporters-page__content">
-          {(!isMobileView || step !== SupportersStep.Welcome) && (
-            <div className="supporters-page__main-image-wrapper">
-              <img
-                className="supporters-page__main-image"
-                src={supportersData.photoURL}
-                alt={currentTranslation.title}
-              />
-            </div>
-          )}
-          <SupportersDataContext.Provider value={contextValue}>
-            {renderContent()}
-          </SupportersDataContext.Provider>
-          {shouldShowLanguageDropdown && (
-            <LanguageDropdown className="supporters-page__language-dropdown" />
-          )}
-        </div>
-      )}
+    <div>
+      <div
+        className={classNames("supporters-page", {
+          "supporters-page--rtl": isRtlLanguage,
+        })}
+      >
+        {!common && <p>Couldn’t find common with id = "{commonId}"</p>}
+        {common && !supportersData && (
+          <p>Supporters flow is not supported by common "{common.name}".</p>
+        )}
+        {common && supportersData && currentTranslation && (
+          <div className="supporters-page__content">
+            {(!isMobileView || step !== SupportersStep.Welcome) && (
+              <div className="supporters-page__main-image-wrapper">
+                <img
+                  className="supporters-page__main-image"
+                  src={supportersData.photoURL}
+                  alt={currentTranslation.title}
+                />
+              </div>
+            )}
+            <SupportersDataContext.Provider value={contextValue}>
+              {renderContent()}
+            </SupportersDataContext.Provider>
+            {shouldShowLanguageDropdown && (
+              <Portal>
+                <div className="supporters-page__language-dropdown-portal-content">
+                  <div className="supporters-page__language-dropdown-wrapper">
+                    <LanguageDropdown className="supporters-page__language-dropdown" />
+                  </div>
+                </div>
+              </Portal>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

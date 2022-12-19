@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState, PropsWithChildren } from "react";
 import classNames from "classnames";
 import { SocialLinks, ShareModal } from "@/shared/components";
-import {
-  Colors,
-  ShareViewType,
-  SharePopupVariant,
-} from "@/shared/constants";
+import { Colors, ShareViewType, SharePopupVariant } from "@/shared/constants";
 import { useModal, useOutsideClick } from "../../hooks";
 import "./index.scss";
 
@@ -76,28 +72,27 @@ export default function Share(props: PropsWithChildren<IProps>) {
           onClick={handleClick}
         />
       )}
-      {
-        (type === ShareViewType.Popup)
-        ? (
-            isShown && <SocialLinks
-              shareViewType={type}
-              sourceUrl={url}
-              isLoading={isLoading}
-              popupVariant={popupVariant}
-              top={top}
-              linkText={text}
-            />
+      {type === ShareViewType.Popup ? (
+        isShown && (
+          <SocialLinks
+            shareViewType={type}
+            sourceUrl={url}
+            isLoading={isLoading}
+            popupVariant={popupVariant}
+            top={top}
+            linkText={text}
+          />
         )
-        : (
-            <ShareModal
-              isShowing={isShowing}
-              isLoading={isLoading}
-              sourceUrl={url}
-              onClose={onClose}
-              type={type}
-            />
-        )
-      }
+      ) : (
+        <ShareModal
+          isShowing={isShowing}
+          isLoading={isLoading}
+          sourceUrl={url}
+          onClose={onClose}
+          type={type}
+          linkText={text}
+        />
+      )}
     </div>
   );
 }

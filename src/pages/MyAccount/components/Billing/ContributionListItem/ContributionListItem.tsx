@@ -9,6 +9,7 @@ import {
   PaymentStatus,
   Subscription,
   SubscriptionStatus,
+  Currency,
 } from "@/shared/models";
 import { formatDate, formatPrice } from "@/shared/utils";
 import "./index.scss";
@@ -47,7 +48,7 @@ const getSubscriptionContent = (subscription: Subscription): Content => {
             DateFormat.GeneralHuman,
           )}`
         : ""
-      : formatPrice(subscription.price.amount, { bySubscription: true }),
+      : formatPrice(subscription.price, { bySubscription: true }),
     description: isCanceled
       ? `Canceled by ${
           subscription.status === SubscriptionStatus.CanceledByUser
@@ -72,9 +73,12 @@ const getPaymentContent = (
   return {
     status: isFailedPayment ? "failure" : "success",
     statusText: isFailedPayment ? "Payment failed" : "Payment succeeded",
-    statusDescription: formatPrice(amount, {
-      bySubscription: isMonthlyPayment,
-    }),
+    statusDescription: formatPrice(
+      { amount, currency: Currency.ILS },
+      {
+        bySubscription: isMonthlyPayment,
+      },
+    ),
     description:
       isMonthlyPayment &&
       subscription &&

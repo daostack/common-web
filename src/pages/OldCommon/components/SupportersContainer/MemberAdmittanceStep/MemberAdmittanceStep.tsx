@@ -44,7 +44,7 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
 
   useEffect(() => {
     if (commonId) {
-      fetchCommonMember(commonId);
+      fetchCommonMember(commonId, {});
     }
   }, [fetchCommonMember, commonId]);
 
@@ -86,6 +86,8 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
               feeMonthly: null,
               feeOneTime: null,
               fromSupportersFlow: true,
+              receiveEmails: data.marketingContentAgreement ?? false,
+              userWhatsapp: data.whatsappGroupAgreement ?? false,
             },
           },
           callback: (error, proposal) => {

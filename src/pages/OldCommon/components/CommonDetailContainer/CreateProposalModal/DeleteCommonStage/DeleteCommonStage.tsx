@@ -146,7 +146,7 @@ const DeleteCommonStage: FC<DeleteCommonStageProps> = (props) => {
         <>
           {(isConfigurationStep || isMobileView) && (
             <Configuration
-              commonBalance={common.balance}
+              commonBalance={common.balance.amount}
               activeProposalsExist={activeProposalsExist}
               initialData={deleteCommonData}
               onFinish={handleConfigurationFinish}

@@ -1,4 +1,7 @@
+// The order is important here!
+import "./mockMatchMedia";
 import "@/projectSetupImports";
 import "./mockConfig";
-import "./mockMatchMedia";
+import "./mockReactScrollbarsCustom";
+import "./mockReactMergeRefs";
 import "./mockStorages";

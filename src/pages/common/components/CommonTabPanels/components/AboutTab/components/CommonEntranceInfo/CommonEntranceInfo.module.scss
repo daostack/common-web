@@ -1,0 +1,35 @@
+@import "../../../../../../../../constants";
+@import "../../../../../../../../styles/sizes";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  color: $c-neutrals-600;
+}
+
+.title {
+  margin: 0 0 0.625rem;
+  font-size: $small;
+
+  @include tablet {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.list {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.joinButton {
+  max-width: 8.5rem;
+  margin-top: 1.75rem;
+  padding-left: 0;
+  padding-right: 0;
+
+  @include tablet {
+    margin-top: 2rem;
+  }
+}

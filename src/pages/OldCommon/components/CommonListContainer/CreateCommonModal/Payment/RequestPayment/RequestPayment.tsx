@@ -230,8 +230,11 @@ export default function RequestPayment(
       <p className="create-common-payment__sub-text">
         You are contributing{" "}
         <strong className="create-common-payment__amount">
-          {formatPrice(selectedAmount, { shouldMillify: false })} (
-          {contributionType})
+          {formatPrice(
+            { amount: selectedAmount || 0, currency: Currency.ILS },
+            { shouldMillify: false },
+          )}{" "}
+          ({contributionType})
         </strong>{" "}
         to this Common.
       </p>

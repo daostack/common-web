@@ -138,7 +138,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
 
       return proposalsFromParentCommon.map<TransactionData>((proposal) => ({
         type: TransactionType.PayIn,
-        amount: proposal.data.args.amount,
+        amount: proposal.data.args.amount.amount,
         createdAt: proposal.createdAt,
         parentCommonId,
         fundingRequestDescription: proposal.data.args.description,

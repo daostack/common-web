@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import { AllocateFundsTo, ProposalsTypes } from "@/shared/constants";
-import { DocInfo } from "@/shared/models";
+import { DocInfo, PaymentAmount } from "@/shared/models";
 import { BaseProposal } from "./BaseProposal";
 import { BasicArgsProposal } from "./BasicArgsProposal";
 
@@ -17,7 +17,7 @@ export enum FundingAllocationStatus {
 }
 
 export interface FundsAllocationArgs extends BasicArgsProposal {
-  amount: number;
+  amount: PaymentAmount;
   to: AllocateFundsTo;
   subcommonId?: string | null;
   otherMemberId?: string | null;

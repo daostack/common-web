@@ -1,16 +1,16 @@
 import firebase from "firebase/app";
+import { BaseEntity } from "./BaseEntity";
+import { Discussion } from "./Discussion";
+import { DiscussionMessage } from "./DiscussionMessage";
+import { PaymentAmount } from "./Payment";
+import { Proposal } from "./Proposals";
+import { User } from "./User";
 import {
   AllowedActions,
   AllowedProposals,
   Circles,
   CirclesMap,
 } from "./governance/Circles";
-import { Reputation } from "./governance/Reputation";
-import { BaseEntity } from "./BaseEntity";
-import { Proposal } from "./Proposals";
-import { Discussion } from "./Discussion";
-import { DiscussionMessage } from "./DiscussionMessage";
-import { User } from "./User";
 
 export interface Common extends BaseEntity {
   /**
@@ -34,6 +34,12 @@ export interface Common extends BaseEntity {
    */
   links: CommonLink[];
 
+  gallery: CommonLink[];
+
+  tags?: string[];
+
+  video: CommonLink | null;
+
   /**
    * Will this common appear in the search results page
    */
@@ -41,21 +47,20 @@ export interface Common extends BaseEntity {
 
   /**
    * The currently available funds of
-   * the common in cents
    */
-  balance: number;
+  balance: PaymentAmount;
 
   /**
    * Reserved amount that is due to leave the common
    * until the process of payout is completed
    */
-  reservedBalance: number;
+  reservedBalance: PaymentAmount;
 
   /**
    * The total amount of funds that the
-   * common has raised to date in cents
+   * common has raised to date
    */
-  raised: number;
+  raised: PaymentAmount;
 
   /**
    * Number of proposals in common
@@ -126,11 +131,13 @@ export interface CommonMember {
   readonly id: string;
   readonly userId: string;
   joinedAt: firebase.firestore.Timestamp;
-  circles: CirclesMap;
+  circleIds: string[];
+}
+
+export interface CirclesPermissions {
   allowedActions: AllowedActions;
   allowedProposals: AllowedProposals;
-  tokenBalance: number;
-  reputation: Partial<Reputation>;
+  circles: CirclesMap;
 }
 
 export interface CommonMemberWithUserInfo extends CommonMember {

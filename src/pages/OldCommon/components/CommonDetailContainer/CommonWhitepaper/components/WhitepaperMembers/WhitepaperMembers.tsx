@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectGovernance } from "@/pages/OldCommon/store/selectors";
 import { ProposalsTypes } from "@/shared/constants";
-import { AllowedActions, AllowedProposals } from "@/shared/models";
+import { AllowedActions, AllowedProposals, CircleType } from "@/shared/models";
 import { getTextForProposalType } from "@/shared/utils";
 import { generateCirclesBinaryNumber } from "../../utils";
 import { getTextForAction, checkShouldRemoveAction } from "./helpers";
@@ -23,17 +23,18 @@ export default function WhitepaperMembers({ isSubCommon }: Props) {
   const members = Object.values(governance?.circles || {})
     .slice(0, 5)
     .map((circle, index) => {
-      return (
-        <li
-          key={index}
-          onClick={() => setSelectedMember({ ...circle, index })}
-          className={classNames({
-            active: selectedMember?.name === circle.name,
-          })}
-        >
-          {circle.name}
-        </li>
-      );
+      if (circle?.type !== CircleType.Project)
+        return (
+          <li
+            key={index}
+            onClick={() => setSelectedMember({ ...circle, index })}
+            className={classNames({
+              active: selectedMember?.name === circle.name,
+            })}
+          >
+            {circle.name}
+          </li>
+        );
     });
 
   const renderContent = () => {

@@ -8,6 +8,7 @@ import {
   TransactionType,
   User,
   DateFormat,
+  Currency,
 } from "@/shared/models";
 import { formatDate, formatPrice, getUserName } from "@/shared/utils";
 import { getUserData } from "../../../../Auth/store/api";
@@ -137,9 +138,10 @@ const TransactionsListItem: FC<TransactionsListItemProps> = (props) => {
               "pay-out": type === TransactionType.PayOut,
             })}
           >
-            {`${type === TransactionType.PayIn ? "+ " : "- "}${formatPrice(
+            {`${type === TransactionType.PayIn ? "+ " : "- "}${formatPrice({
               amount,
-            )}`}
+              currency: Currency.ILS,
+            })}`}
           </div>
           <div className="transaction__time">
             {formatDate(

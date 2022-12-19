@@ -40,3 +40,5 @@ export const selectCommonStateById = (commonId: string) =>
     selectCommons,
     (state) => (commonId && state.commonStates[commonId]) || null,
   );
+export const selectCommonMember = () =>
+  createSelector(selectCommons, (state) => state.commonMember);

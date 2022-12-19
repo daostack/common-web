@@ -11,6 +11,7 @@ import {
   MIN_CONTRIBUTION_ILS_AMOUNT,
   ScreenSize,
 } from "@/shared/constants";
+import { Currency } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatPrice } from "@/shared/utils";
@@ -46,7 +47,7 @@ export default function PersonalContribution(props: PersonalContributionProps) {
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isMonthlyContribution = contributionType === ContributionType.Monthly;
   const formattedMinFeeToJoin = formatPrice(
-    zeroContribution ? 0 : minFeeToJoin,
+    { amount: zeroContribution ? 0 : minFeeToJoin, currency: Currency.ILS },
     { shouldMillify: false, shouldRemovePrefixFromZero: false },
   );
 

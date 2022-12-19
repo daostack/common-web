@@ -5,7 +5,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { Modal } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
@@ -13,6 +13,7 @@ import { useZoomDisabling } from "@/shared/hooks";
 import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { emptyFunction } from "@/shared/utils";
+import { projectsActions } from "@/store/states";
 import { UpdateCommonData } from "../../../interfaces";
 import { Confirmation } from "./Confirmation";
 import { EditSteps } from "./EditSteps";
@@ -33,6 +34,7 @@ interface EditCommonModalProps {
 
 export default function EditCommonModal(props: EditCommonModalProps) {
   const { governance, parentCommonId, common, isSubCommonCreation } = props;
+  const dispatch = useDispatch();
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
@@ -114,6 +116,13 @@ export default function EditCommonModal(props: EditCommonModalProps) {
         ...state,
         stage: UpdateCommonStage.Success,
       }));
+      dispatch(
+        projectsActions.updateProject({
+          commonId: common.id,
+          image: common.image,
+          name: common.name,
+        }),
+      );
     },
     [handleError],
   );

@@ -10,6 +10,7 @@ export enum ROUTE_PATHS {
   COMMON_LIST = "/commons",
   COMMON_DETAIL = "/commons/:id",
   COMMON_SUPPORT = "/commons/:id/support",
+  COMMON = "/new-commons/:id",
   MY_COMMONS = "/my-commons",
   SUBMIT_INVOICES = "/invoices/submission/:proposalId",
   TRUSTEE = "/trustee",
@@ -23,5 +24,4 @@ export enum ROUTE_PATHS {
   DEAD_SEA = "/dead-sea",
   PARENTS_FOR_CLIMATE = "/parents-for-climate",
   SAVE_SAADIA = "/save-saadia",
-  TEST = "/test",
 }

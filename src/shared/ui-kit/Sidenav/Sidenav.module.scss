@@ -6,6 +6,7 @@
   top: 0;
   bottom: 0;
   left: 0;
+  z-index: 1;
   max-width: var(--sb-max-width);
   width: var(--sb-width);
 
@@ -19,16 +20,17 @@
     overflow: hidden;
     overscroll-behavior: contain;
     visibility: hidden;
-
-    &:target {
-      transform: translateX(0);
-      transition: transform var(--sb-transition-duration) var(--sb-easing);
-      visibility: visible;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     --sb-transition-duration: 1ms;
+  }
+}
+.sidenavOpen {
+  @include tablet {
+    transform: translateX(0);
+    transition: transform var(--sb-transition-duration) var(--sb-easing);
+    visibility: visible;
   }
 }
 
@@ -43,6 +45,7 @@
   background-color: var(--sb-bg-color);
   box-shadow: var(--sb-shadow);
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .closeLink {

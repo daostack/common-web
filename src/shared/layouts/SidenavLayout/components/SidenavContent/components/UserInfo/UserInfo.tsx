@@ -1,29 +1,23 @@
 import React, { FC } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { MenuButton, MenuItems } from "./components";
+import { AuthenticatedContent, UnauthenticatedContent } from "./components";
 import styles from "./UserInfo.module.scss";
 
 interface UserInfoProps {
   avatarURL?: string;
   userName?: string;
+  isAuthenticated?: boolean;
 }
 
 const UserInfo: FC<UserInfoProps> = (props) => {
-  const { avatarURL, userName } = props;
+  const { avatarURL, userName, isAuthenticated = false } = props;
 
   return (
     <div className={styles.container}>
-      <Menu>
-        <MenuButton avatarURL={avatarURL} userName={userName} />
-        <Transition
-          enter={styles.menuTransitionEnter}
-          enterTo={styles.menuTransitionEnterActive}
-          leave={styles.menuTransitionExit}
-          leaveTo={styles.menuTransitionExitActive}
-        >
-          <MenuItems />
-        </Transition>
-      </Menu>
+      {isAuthenticated ? (
+        <AuthenticatedContent avatarURL={avatarURL} userName={userName} />
+      ) : (
+        <UnauthenticatedContent />
+      )}
     </div>
   );
 };

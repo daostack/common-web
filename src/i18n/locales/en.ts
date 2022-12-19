@@ -11,7 +11,7 @@ export default {
       title: "Share with friends",
     },
     login: {
-      description: "Connect your account to join this Common",
+      description: "Connect your account to continue",
       mobileDescription: "Connect with",
       termsText:
         "By using Common you agree to the app’s<br /><1>terms of use</1>",
@@ -133,6 +133,7 @@ export default {
         payAmount: "Pay {{amount}}",
         enterTheCommon: "Enter the common",
         shareWithFriends: "Share with friends",
+        shareLeadingText: "I’m part of this common, check it out:",
         jumpIn: "Jump In",
       },
       joinText: "Join the",
@@ -142,7 +143,7 @@ export default {
         monthlyTypeText: "Monthly",
         monthlyTypeTooltip: "Not available yet",
         otherInputTitle: "Other",
-        otherInputMonthlyHint: '(monthly)',
+        otherInputMonthlyHint: "(monthly)",
         otherInputPlaceholder: "Add amount",
         otherInputError: "Minimum {{amount}}",
         defaultSubmitButtonText: "Update Contribution",
