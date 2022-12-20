@@ -7,6 +7,7 @@ import { CommonTabs } from "../CommonTabs";
 import styles from "./CommonManagement.module.scss";
 
 interface CommonManagementProps {
+  commonId: string;
   activeTab: CommonTab;
   isSubCommon: boolean;
   circles: Governance["circles"];
@@ -23,6 +24,7 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
     commonMember,
     isAuthenticated = false,
     onTabChange,
+    commonId,
   } = props;
   const circlesMap = commonMember?.circles.map;
 
@@ -40,6 +42,8 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
             className={styles.memberInfo}
             circles={circles}
             circlesMap={circlesMap}
+            commonId={commonId}
+            commonMember={commonMember}
           />
           <CommonMenuButton
             commonMember={commonMember}
