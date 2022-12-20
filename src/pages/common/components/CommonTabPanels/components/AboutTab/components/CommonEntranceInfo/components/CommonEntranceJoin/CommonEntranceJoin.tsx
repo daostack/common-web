@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonService } from "@/services";
-import { useCommon } from "@/shared/hooks/useCases";
+import { useFullCommonData } from "@/shared/hooks/useCases";
 import { Common } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./CommonEntranceJoin.module.scss";
@@ -20,23 +20,20 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const isProject = Boolean(common.directParent);
   const parentId = common.directParent?.commonId;
   const {
-    data: parentCommon,
-    fetched: isParentCommonFetched,
-    fetchCommon: fetchParentCommon,
-    setCommon: setParentCommon,
-  } = useCommon();
+    data: commonData,
+    fetched: isCommonDataFetched,
+    fetchCommonData,
+  } = useFullCommonData();
 
   useEffect(() => {
-    if (!parentId) {
+    if (!common.id) {
       return;
     }
 
     if (parentId) {
-      fetchParentCommon(parentId);
-    } else {
-      setParentCommon(null);
+      fetchCommonData(common.id);
     }
-  }, [parentId, fetchParentCommon, setParentCommon]);
+  }, [common, fetchCommonData]);
 
   useEffect(() => {
     if (!parentId || !user?.uid) {
@@ -52,17 +49,17 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
     })();
   }, [user, parentId]);
 
-  if (!isParentCommonFetched && isProject && user) {
+  if (!isCommonDataFetched && isProject && user) {
     return null;
   }
 
   return (
     <>
-      {isProject && parentCommon?.name && (
+      {isProject && commonData?.parent?.name && (
         <p className={styles.joinHint}>
           <strong>{common.name}</strong> is a project in the{" "}
-          <strong>{parentCommon.name}</strong> common. Only common members can
-          join the project.
+          <strong>{commonData?.parent.name}</strong> common. Only common members
+          can join the project.
         </p>
       )}
       {((withJoinRequest && !isProject) ||
