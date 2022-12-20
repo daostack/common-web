@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { useCommonDataContext } from "@/pages/common/providers";
 import { CommonService } from "@/services";
-import { useFullCommonData } from "@/shared/hooks/useCases";
 import { Common } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./CommonEntranceJoin.module.scss";
@@ -19,21 +19,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const [isParentCommonMember, setIsParentCommonMember] = useState(false);
   const isProject = Boolean(common.directParent);
   const parentId = common.directParent?.commonId;
-  const {
-    data: commonData,
-    fetched: isCommonDataFetched,
-    fetchCommonData,
-  } = useFullCommonData();
-
-  useEffect(() => {
-    if (!common.id) {
-      return;
-    }
-
-    if (parentId) {
-      fetchCommonData(common.id);
-    }
-  }, [common, fetchCommonData]);
+  const { parentCommon } = useCommonDataContext();
 
   useEffect(() => {
     if (!parentId || !user?.uid) {
@@ -49,17 +35,13 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
     })();
   }, [user, parentId]);
 
-  if (!isCommonDataFetched && isProject && user) {
-    return null;
-  }
-
   return (
     <>
-      {isProject && commonData?.parent?.name && (
+      {isProject && parentCommon?.name && (
         <p className={styles.joinHint}>
           <strong>{common.name}</strong> is a project in the{" "}
-          <strong>{commonData?.parent.name}</strong> common. Only common members
-          can join the project.
+          <strong>{parentCommon.name}</strong> common. Only common members can
+          join the project.
         </p>
       )}
       {((withJoinRequest && !isProject) ||
