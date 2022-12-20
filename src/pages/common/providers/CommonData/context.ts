@@ -8,6 +8,7 @@ interface Data {
   onProjectCreate: () => void;
   subCommons: Common[];
   parentCommon?: Common;
+  parentCommonSubCommons: Common[];
 }
 
 export type CommonDataContextValue = Data | null;

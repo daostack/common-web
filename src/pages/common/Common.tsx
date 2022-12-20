@@ -66,6 +66,7 @@ const Common: FC = () => {
       governance={commonData.governance}
       parentCommons={commonData.parentCommons}
       subCommons={commonData.subCommons}
+      parentCommonSubCommons={commonData.parentCommonSubCommons}
       isCommonMemberFetched={isCommonMemberFetched}
       commonMember={commonMember}
     />

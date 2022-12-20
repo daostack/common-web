@@ -47,7 +47,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     limitations,
   } = props;
   const isTabletView = useIsTabletView();
-  const { parentCommon } = useCommonDataContext();
+  const { parentCommon, parentCommonSubCommons } = useCommonDataContext();
   const isParentCommon = common.directParent === null;
 
   const renderMainColumn = () => (
@@ -75,7 +75,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       {parentCommon && (
         <CommonParent
           parentCommon={parentCommon}
-          projectsAmountInParentCommon={3}
+          projectsAmountInParentCommon={parentCommonSubCommons.length}
         />
       )}
     </div>
@@ -108,7 +108,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       {parentCommon && (
         <CommonParent
           parentCommon={parentCommon}
-          projectsAmountInParentCommon={1}
+          projectsAmountInParentCommon={parentCommonSubCommons.length}
         />
       )}
     </div>

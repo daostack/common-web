@@ -15,6 +15,7 @@ interface Data {
   parentCommons: Common[];
   subCommons: Common[];
   parentCommon?: Common;
+  parentCommonSubCommons: Common[];
 }
 
 type State = LoadingState<Data | null>;
@@ -53,10 +54,16 @@ export const useFullCommonData = (): Return => {
           throw new Error(`Couldn't find governance by common id= ${commonId}`);
         }
 
-        const [parentCommons, subCommons] = await Promise.all([
-          CommonService.getAllParentCommonsForCommon(common),
-          CommonService.getCommonsByDirectParentIds([common.id]),
-        ]);
+        const [parentCommons, subCommons, parentCommonSubCommons] =
+          await Promise.all([
+            CommonService.getAllParentCommonsForCommon(common),
+            CommonService.getCommonsByDirectParentIds([common.id]),
+            common.directParent
+              ? CommonService.getCommonsByDirectParentIds([
+                  common.directParent.commonId,
+                ])
+              : [],
+          ]);
 
         setState({
           loading: false,
@@ -67,6 +74,7 @@ export const useFullCommonData = (): Return => {
             parentCommons,
             subCommons,
             parentCommon: last(parentCommons),
+            parentCommonSubCommons,
           },
         });
       } catch (error) {
