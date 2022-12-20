@@ -62,7 +62,7 @@ const Common: FC = () => {
   return (
     <CommonContent
       common={commonData.common}
-      parentCommon={commonData.parent}
+      parentCommon={commonData.parentCommon}
       governance={commonData.governance}
       parentCommons={commonData.parentCommons}
       subCommons={commonData.subCommons}

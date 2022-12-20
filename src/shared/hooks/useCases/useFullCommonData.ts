@@ -14,7 +14,7 @@ interface Data {
   governance: Governance;
   parentCommons: Common[];
   subCommons: Common[];
-  parent?: Common;
+  parentCommon?: Common;
 }
 
 type State = LoadingState<Data | null>;
@@ -66,7 +66,7 @@ export const useFullCommonData = (): Return => {
             governance,
             parentCommons,
             subCommons,
-            parent: last(parentCommons),
+            parentCommon: last(parentCommons),
           },
         });
       } catch (error) {

@@ -15,11 +15,11 @@ interface CommonEntranceJoinProps {
 
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const { withJoinRequest = false, common, isProject } = props;
-  const user = useSelector(selectUser());
   const [isParentCommonMember, setIsParentCommonMember] = useState(false);
+  const { parentCommon } = useCommonDataContext();
+  const user = useSelector(selectUser());
   const parentId = common.directParent?.commonId;
   const userId = user?.uid;
-  const { parentCommon } = useCommonDataContext();
 
   useEffect(() => {
     if (!parentId || !userId) {
@@ -44,8 +44,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
           join the project.
         </p>
       )}
-      {((withJoinRequest && !isProject) ||
-        (withJoinRequest && isParentCommonMember)) && (
+      {withJoinRequest && (!isProject || isParentCommonMember) && (
         <Button
           className={styles.joinButton}
           variant={ButtonVariant.OutlineBlue}
