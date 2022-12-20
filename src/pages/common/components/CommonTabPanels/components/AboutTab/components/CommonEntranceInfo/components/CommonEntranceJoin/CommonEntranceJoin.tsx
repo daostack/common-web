@@ -19,21 +19,22 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const [isParentCommonMember, setIsParentCommonMember] = useState(false);
   const isProject = Boolean(common.directParent);
   const parentId = common.directParent?.commonId;
+  const userId = user?.uid;
   const { parentCommon } = useCommonDataContext();
 
   useEffect(() => {
-    if (!parentId || !user?.uid) {
+    if (!parentId || !userId) {
       return;
     }
 
     (async () => {
       const commonMember = await CommonService.getCommonMemberByUserId(
         parentId,
-        user.uid as string,
+        userId,
       );
       setIsParentCommonMember(Boolean(commonMember));
     })();
-  }, [user, parentId]);
+  }, [userId, parentId]);
 
   return (
     <>
