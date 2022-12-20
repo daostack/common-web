@@ -1,10 +1,13 @@
 import { createContext, useContext } from "react";
+import { Common } from "@/shared/models";
 import { CommonMenuItem } from "../../constants";
 
 interface Data {
   onMenuItemSelect: (menuItem: CommonMenuItem | null) => void;
   areNonCreatedProjectsLeft: boolean;
   onProjectCreate: () => void;
+  subCommons: Common[];
+  parentCommon?: Common;
 }
 
 export type CommonDataContextValue = Data | null;

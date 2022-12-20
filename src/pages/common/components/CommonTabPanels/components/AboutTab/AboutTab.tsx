@@ -1,7 +1,5 @@
 import React, { FC } from "react";
-import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonTab } from "@/pages/common/constants";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -47,7 +45,6 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     rules,
     limitations,
   } = props;
-  const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
   const isParentCommon = common.directParent === null;
 
@@ -61,9 +58,11 @@ const AboutTab: FC<AboutTabProps> = (props) => {
 
   const renderAdditionalColumn = () => (
     <div className={styles.additionalColumnWrapper}>
-      {limitations && (
-        <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
-      )}
+      <CommonEntranceInfo
+        limitations={limitations}
+        withJoinRequest={!commonMember}
+        common={common}
+      />
       {isParentCommon && (
         <CommonProjects
           commonMember={commonMember}
@@ -96,9 +95,11 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       <div className={styles.separator} />
       {rules.length > 0 && <CommonRules rules={rules} />}
       <div className={styles.separator} />
-      {limitations && (
-        <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
-      )}
+      <CommonEntranceInfo
+        limitations={limitations}
+        withJoinRequest={!commonMember}
+        common={common}
+      />
       {!isParentCommon && (
         <CommonParent parentCommon={common} projectsAmountInParentCommon={1} />
       )}

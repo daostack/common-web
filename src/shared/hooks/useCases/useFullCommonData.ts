@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { last } from "lodash";
 import {
   CommonEvent,
   CommonEventEmitter,
@@ -13,6 +14,7 @@ interface Data {
   governance: Governance;
   parentCommons: Common[];
   subCommons: Common[];
+  parent?: Common;
 }
 
 type State = LoadingState<Data | null>;
@@ -64,6 +66,7 @@ export const useFullCommonData = (): Return => {
             governance,
             parentCommons,
             subCommons,
+            parent: last(parentCommons),
           },
         });
       } catch (error) {
