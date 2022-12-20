@@ -21,6 +21,7 @@ import styles from "./CommonContent.module.scss";
 
 interface CommonContentProps {
   common: Common;
+  parentCommon?: Common;
   governance: Governance;
   parentCommons: Common[];
   subCommons: Common[];
@@ -36,6 +37,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     subCommons,
     isCommonMemberFetched,
     commonMember,
+    parentCommon,
   } = props;
   const [tab, setTab] = useState(CommonTab.About);
   const isAuthenticated = useSelector(authentificated());
@@ -51,6 +53,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   return (
     <CommonDataProvider
       common={common}
+      parentCommon={parentCommon}
       governance={governance}
       commonMember={commonMember}
       subCommons={subCommons}

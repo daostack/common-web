@@ -23,10 +23,18 @@ interface CommonDataProps {
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
   subCommons: Common[];
+  parentCommon?: Common;
 }
 
 const CommonData: FC<CommonDataProps> = (props) => {
-  const { common, governance, commonMember, subCommons, children } = props;
+  const {
+    common,
+    governance,
+    commonMember,
+    subCommons,
+    parentCommon,
+    children,
+  } = props;
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const [selectedMenuItem, setSelectedMenuItem] =
@@ -76,11 +84,15 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onMenuItemSelect: handleMenuItemSelect,
       areNonCreatedProjectsLeft,
       onProjectCreate: onSubCommonCreationModalOpen,
+      subCommons,
+      parentCommon,
     }),
     [
       handleMenuItemSelect,
       areNonCreatedProjectsLeft,
       onSubCommonCreationModalOpen,
+      subCommons,
+      parentCommon,
     ],
   );
 

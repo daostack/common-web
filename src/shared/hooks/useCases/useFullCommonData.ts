@@ -4,6 +4,7 @@ import {
   CommonEventEmitter,
   CommonEventToListener,
 } from "@/events";
+import { last } from "lodash";
 import { CommonService, GovernanceService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
 import { Common, Governance } from "@/shared/models";
@@ -13,6 +14,7 @@ interface Data {
   governance: Governance;
   parentCommons: Common[];
   subCommons: Common[];
+  parent?: Common;
 }
 
 type State = LoadingState<Data | null>;
@@ -64,6 +66,7 @@ export const useFullCommonData = (): Return => {
             governance,
             parentCommons,
             subCommons,
+            parent: last(parentCommons),
           },
         });
       } catch (error) {
