@@ -10,14 +10,13 @@ import styles from "./CommonEntranceJoin.module.scss";
 interface CommonEntranceJoinProps {
   withJoinRequest?: boolean;
   common: Common;
-  isProject?: boolean;
+  isProject: boolean;
 }
 
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
-  const { withJoinRequest = false, common } = props;
+  const { withJoinRequest = false, common, isProject } = props;
   const user = useSelector(selectUser());
   const [isParentCommonMember, setIsParentCommonMember] = useState(false);
-  const isProject = Boolean(common.directParent);
   const parentId = common.directParent?.commonId;
   const userId = user?.uid;
   const { parentCommon } = useCommonDataContext();
