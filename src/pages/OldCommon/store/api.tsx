@@ -17,11 +17,7 @@ import {
 } from "@/pages/OldCommon/interfaces";
 import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
 import Api from "@/services/Api";
-import {
-  AllocateFundsTo,
-  ApiEndpoint,
-  ProposalsTypes,
-} from "@/shared/constants";
+import { AllocateFundsTo, ApiEndpoint } from "@/shared/constants";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
@@ -50,15 +46,10 @@ import {
   Vote,
   VoteWithUserInfo,
   CommonMemberPreviewInfo,
-  ProposalState,
 } from "@/shared/models";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { NotificationItem } from "@/shared/models/Notification";
-import {
-  AssignCircle,
-  FundsAllocation,
-  RemoveCircle,
-} from "@/shared/models/governance/proposals";
+import { FundsAllocation } from "@/shared/models/governance/proposals";
 import {
   convertObjectDatesToFirestoreTimestamps,
   createIdsChunk,
@@ -468,52 +459,6 @@ export function subscribeToCommonProposal(
     setTimeout(subscribe, 0);
   });
   return subscribe;
-}
-
-// TODO: Move to new API folder
-export function subscribeToCommonUserPendingCircleProposals(
-  commonId: string,
-  userId: string,
-  callback: (payload: (AssignCircle | RemoveCircle)[]) => void,
-): () => void {
-  const query = firebase
-    .firestore()
-    .collection(Collection.Proposals)
-    .where("data.args.commonId", "==", commonId)
-    .where("data.args.proposerId", "==", userId)
-    .where("type", "in", [
-      ProposalsTypes.ASSIGN_CIRCLE,
-      ProposalsTypes.REMOVE_CIRCLE,
-    ]);
-  const subscribe = query.onSnapshot((snapshot) => {
-    const list = transformFirebaseDataList<AssignCircle | RemoveCircle>(
-      snapshot,
-    ).filter(({ state }) =>
-      [ProposalState.DISCUSSION, ProposalState.VOTING].includes(state),
-    );
-    callback(list);
-    setTimeout(subscribe, 0);
-  });
-  return subscribe;
-}
-
-export async function fetchCircleMemberCountByCircleId({
-  commonId,
-  circleId,
-}: {
-  commonId: string;
-  circleId: string;
-}): Promise<number> {
-  const commonMembersData = await firebase
-    .firestore()
-    .collection(Collection.Daos)
-    .doc(commonId)
-    .collection(SubCollections.Members)
-    .where("circleIds", "array-contains", circleId)
-    .get();
-  const data = transformFirebaseDataList<CommonMember>(commonMembersData);
-
-  return data?.length ?? 0;
 }
 
 export function subscribeToProposal(

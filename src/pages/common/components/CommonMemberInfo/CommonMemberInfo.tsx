@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import classNames from "classnames";
 import { Popover } from "@headlessui/react";
-import { subscribeToCommonUserPendingCircleProposals } from "@/pages/OldCommon/store/api";
+import { ProposalService } from "@/services";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { Portal } from "@/shared/ui-kit";
 import {
@@ -44,7 +44,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
       return;
     }
 
-    const unsubscribe = subscribeToCommonUserPendingCircleProposals(
+    const unsubscribe = ProposalService.subscribeToUserPendingCircleProposals(
       commonId,
       commonMember.userId,
       (data) => {

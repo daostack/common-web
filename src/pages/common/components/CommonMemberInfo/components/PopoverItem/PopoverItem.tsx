@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import classNames from "classnames";
-import { fetchCircleMemberCountByCircleId } from "@/pages/OldCommon/store/api";
+import { CommonService } from "@/services";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./PopoverItem.module.scss";
 
@@ -50,10 +50,11 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     }
 
     (async () => {
-      const circleMemberCount = await fetchCircleMemberCountByCircleId({
-        commonId,
-        circleId,
-      });
+      const circleMemberCount =
+        await CommonService.fetchCircleMemberCountByCircleId({
+          commonId,
+          circleId,
+        });
       setMembersCount(circleMemberCount);
     })();
   }, [commonId]);
