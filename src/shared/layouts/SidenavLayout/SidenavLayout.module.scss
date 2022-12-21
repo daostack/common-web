@@ -2,7 +2,7 @@
 @import "../../../styles/sizes";
 
 .container {
-  --main-pl: 18.75rem;
+  --main-pl: unset;
   --footer-z-index: 1;
   --footer-height: 4.625rem;
   --sb-max-width: unset;
@@ -26,12 +26,18 @@
   box-sizing: border-box;
 
   @include tablet {
-    --main-pl: unset;
     --footer-z-index: unset;
     --sb-max-width: 100%;
     --sb-width: 100%;
     --sb-content-width: 100%;
     --sb-content-pb: unset;
+  }
+}
+.containerWithSidenav {
+  --main-pl: var(--sb-width);
+
+  @include tablet {
+    --main-pl: unset;
   }
 }
 .containerWithoutFooter {
