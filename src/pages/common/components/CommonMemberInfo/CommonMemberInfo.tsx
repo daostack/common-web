@@ -81,7 +81,10 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
 
   return (
     <Popover className={classNames(styles.container, className)}>
-      <PopoverButton circleNames={circleNames} />
+      <PopoverButton
+        isMobileVersion={isMobileVersion}
+        circleNames={circleNames}
+      />
       {isMobileVersion ? (
         <Portal>
           <CommonMemberPopoverPanel />
