@@ -189,7 +189,7 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
               type: TransactionType.PayOut,
               amount:
                 proposal.data.args.to === AllocateFundsTo.SubCommon
-                  ? proposal.data.args.amount
+                  ? proposal.data.args.amount.amount
                   : proposal.data.legal.totalInvoicesAmount,
               createdAt: proposal.createdAt,
               fundingRequestDescription: proposal.data.args.description,

@@ -19,7 +19,6 @@ import {
   DynamicLinkType,
   ProposalsTypes,
   ROUTE_PATHS,
-  FOOTER_ID,
 } from "@/shared/constants";
 import {
   useAuthorizedModal,
@@ -156,12 +155,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     null,
   );
   const inViewport = useViewPortHook(joinEffortRef, "-50px");
-  const inViewPortFooter = useViewPortHook(
-    document.querySelector(`#${FOOTER_ID}`),
-    "0px",
-  );
   const [stickyClass, setStickyClass] = useState("");
-  const [footerClass, setFooterClass] = useState("");
   const [tab, setTab] = useState(() => {
     const defaultTab = queryParams[COMMON_DETAILS_PAGE_TAB_QUERY_PARAM];
 
@@ -232,7 +226,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     !isJoiningPending &&
     !inViewport &&
     !isSubCommon &&
-    (stickyClass || footerClass);
+    stickyClass;
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -584,17 +578,6 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   }, [isAuthenticated, dispatch]);
 
   useEffect(() => {
-    if (inViewPortFooter) {
-      if (inViewport) {
-        setStickyClass("sticky");
-      }
-      setFooterClass("footer-sticky");
-    } else {
-      setFooterClass("");
-    }
-  }, [inViewPortFooter, setFooterClass, inViewport]);
-
-  useEffect(() => {
     if (showJoinModal && !shouldAllowJoiningToCommon) {
       closeJoinModal();
     }
@@ -777,7 +760,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               </div>
             </div>
             <div className="common-content-selector">
-              <div className={`content-element tabs-container ${footerClass}`}>
+              <div className="content-element tabs-container">
                 <div className="tabs-wrapper">
                   {tabs.map((t) => (
                     <div
@@ -910,33 +893,10 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
               {tab === Tabs.Wallet && <WalletComponent common={common} />}
               {tab === Tabs.Members && <MembersComponent common={common} />}
             </div>
-            {isMobileView && (
-              <div
-                className={`tabs-container bottom ${stickyClass} ${footerClass}`}
-              >
-                <div className="tabs-wrapper">
-                  {tabs.map((t) => (
-                    <div
-                      key={t.key}
-                      className={`tab-item ${tab === t.key ? "active" : ""}`}
-                      onClick={() => changeTabHandler(t.key)}
-                    >
-                      <img
-                        src={`/icons/common-icons/${t.icon}${
-                          tab === t.key ? "-active" : ""
-                        }.svg`}
-                        alt={t.name}
-                      />
-                      {t.name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
             {shouldShowStickyJoinEffortButton && (
               <>
                 <button
-                  className={`button-blue join-the-effort-btn ${stickyClass} ${footerClass}`}
+                  className={`button-blue join-the-effort-btn ${stickyClass}`}
                   onClick={handleOpen}
                 >
                   Join the effort

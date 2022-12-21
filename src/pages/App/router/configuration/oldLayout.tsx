@@ -12,12 +12,16 @@ import {
 } from "@/pages/OldCommon";
 import { MyCommonsContainer } from "@/pages/OldCommon/containers/MyCommonsContainer";
 import { TrusteeContainer } from "@/pages/Trustee";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { ROUTE_PATHS, ScreenSize } from "@/shared/constants";
 import { OldLayout } from "@/shared/layouts";
 import { LayoutConfiguration, RouteType } from "../types";
 
 export interface OldLayoutRouteOptions {
-  footer?: boolean;
+  footer?:
+    | boolean
+    | {
+        screenSizeWhenDisplay?: ScreenSize;
+      };
 }
 
 export const OLD_LAYOUT_CONFIGURATION: LayoutConfiguration<OldLayoutRouteOptions> =
@@ -43,6 +47,11 @@ export const OLD_LAYOUT_CONFIGURATION: LayoutConfiguration<OldLayoutRouteOptions
         path: ROUTE_PATHS.COMMON_DETAIL,
         exact: true,
         component: CommonDetailContainer,
+        routeOptions: {
+          footer: {
+            screenSizeWhenDisplay: ScreenSize.Desktop,
+          },
+        },
       },
       {
         path: ROUTE_PATHS.COMMON_SUPPORT,
@@ -61,16 +70,31 @@ export const OLD_LAYOUT_CONFIGURATION: LayoutConfiguration<OldLayoutRouteOptions
         path: ROUTE_PATHS.PROPOSAL_COMMENT,
         component: ProposalCommentContainer,
         type: RouteType.Private,
+        routeOptions: {
+          footer: {
+            screenSizeWhenDisplay: ScreenSize.Desktop,
+          },
+        },
       },
       {
         path: ROUTE_PATHS.DISCUSSION_DETAIL,
         component: DiscussionContainer,
         type: RouteType.Private,
+        routeOptions: {
+          footer: {
+            screenSizeWhenDisplay: ScreenSize.Desktop,
+          },
+        },
       },
       {
         path: ROUTE_PATHS.DISCUSSION_MESSAGE,
         component: DiscussionMessageContainer,
         type: RouteType.Private,
+        routeOptions: {
+          footer: {
+            screenSizeWhenDisplay: ScreenSize.Desktop,
+          },
+        },
       },
       {
         path: ROUTE_PATHS.MY_ACCOUNT,

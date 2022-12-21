@@ -10,10 +10,11 @@ import "./index.scss";
 
 interface WelcomeProps {
   governanceId: string;
+  commonName: string;
 }
 
 const Welcome: FC<WelcomeProps> = (props) => {
-  const { governanceId } = props;
+  const { governanceId, commonName } = props;
   const history = useHistory();
   const { t } = useTranslation("translation", {
     keyPrefix: "supporters",
@@ -56,7 +57,7 @@ const Welcome: FC<WelcomeProps> = (props) => {
         {currentTranslation?.welcomePageRulesDescription}
       </p>
       <h2 className="supporters-page-welcome__rules-title">
-        {t("welcome.rulesTitle")}
+        {commonName} {t("welcome.rulesTitle")}
       </h2>
       <ul className="supporters-page-welcome__rule-list">
         {(governance?.unstructuredRules || []).map((rule, index) => (
