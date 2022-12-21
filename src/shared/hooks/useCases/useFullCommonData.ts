@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
+import { last } from "lodash";
 import {
   CommonEvent,
   CommonEventEmitter,
   CommonEventToListener,
 } from "@/events";
-import { last } from "lodash";
 import { CommonService, GovernanceService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
 import { Common, Governance } from "@/shared/models";
@@ -14,7 +14,8 @@ interface Data {
   governance: Governance;
   parentCommons: Common[];
   subCommons: Common[];
-  parent?: Common;
+  parentCommon?: Common;
+  parentCommonSubCommons: Common[];
 }
 
 type State = LoadingState<Data | null>;
@@ -53,10 +54,16 @@ export const useFullCommonData = (): Return => {
           throw new Error(`Couldn't find governance by common id= ${commonId}`);
         }
 
-        const [parentCommons, subCommons] = await Promise.all([
-          CommonService.getAllParentCommonsForCommon(common),
-          CommonService.getCommonsByDirectParentIds([common.id]),
-        ]);
+        const [parentCommons, subCommons, parentCommonSubCommons] =
+          await Promise.all([
+            CommonService.getAllParentCommonsForCommon(common),
+            CommonService.getCommonsByDirectParentIds([common.id]),
+            common.directParent
+              ? CommonService.getCommonsByDirectParentIds([
+                  common.directParent.commonId,
+                ])
+              : [],
+          ]);
 
         setState({
           loading: false,
@@ -66,7 +73,8 @@ export const useFullCommonData = (): Return => {
             governance,
             parentCommons,
             subCommons,
-            parent: last(parentCommons),
+            parentCommon: last(parentCommons),
+            parentCommonSubCommons,
           },
         });
       } catch (error) {

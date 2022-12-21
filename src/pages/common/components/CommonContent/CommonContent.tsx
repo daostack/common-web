@@ -25,6 +25,7 @@ interface CommonContentProps {
   governance: Governance;
   parentCommons: Common[];
   subCommons: Common[];
+  parentCommonSubCommons: Common[];
   isCommonMemberFetched: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
 }
@@ -38,6 +39,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     isCommonMemberFetched,
     commonMember,
     parentCommon,
+    parentCommonSubCommons,
   } = props;
   const [tab, setTab] = useState(CommonTab.About);
   const isAuthenticated = useSelector(authentificated());
@@ -57,6 +59,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       governance={governance}
       commonMember={commonMember}
       subCommons={subCommons}
+      parentCommonSubCommons={parentCommonSubCommons}
     >
       <CommonTopNavigation
         commonMember={commonMember}
