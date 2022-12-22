@@ -46,32 +46,31 @@ export const useParentCommonSubscription = (
             return currentState;
           }
 
-          const parentSubCommons = data.reduce<Data["parentCommonSubCommons"]>(
-            (finalSubCommons, { common, isRemoved }) => {
-              if (isRemoved) {
-                return finalSubCommons.filter(
-                  (subCommon) => subCommon.id !== common.id,
-                );
-              }
-
-              const isExistingSubCommon = finalSubCommons.some(
-                (subCommon) => subCommon.id === common.id,
+          const parentCommonSubCommons = data.reduce<
+            Data["parentCommonSubCommons"]
+          >((finalSubCommons, { common, isRemoved }) => {
+            if (isRemoved) {
+              return finalSubCommons.filter(
+                (subCommon) => subCommon.id !== common.id,
               );
+            }
 
-              return isExistingSubCommon
-                ? finalSubCommons.map((subCommon) =>
-                    subCommon.id === common.id ? common : subCommon,
-                  )
-                : finalSubCommons.concat(common);
-            },
-            currentState.data?.parentCommonSubCommons || [],
-          );
+            const isExistingSubCommon = finalSubCommons.some(
+              (subCommon) => subCommon.id === common.id,
+            );
+
+            return isExistingSubCommon
+              ? finalSubCommons.map((subCommon) =>
+                  subCommon.id === common.id ? common : subCommon,
+                )
+              : finalSubCommons.concat(common);
+          }, currentState.data?.parentCommonSubCommons || []);
 
           return {
             ...currentState,
             data: {
               ...currentState.data,
-              parentSubCommons,
+              parentCommonSubCommons,
             },
           };
         });
