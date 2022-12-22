@@ -1,10 +1,10 @@
+export * from "./firestoreDataConverter";
 export * from "./error";
 export * from "./shared";
 export { default as tokenHandler } from "./tokenHandler";
 export * from "./download";
 export * from "./emptyFunction";
 export * from "./countdown";
-export * from "./firestoreDataConverter";
 export * from "./formatDate";
 export * from "./isError";
 export * from "./matchRoute";
