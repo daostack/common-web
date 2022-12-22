@@ -1,24 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { last } from "lodash";
-import {
-  CommonEvent,
-  CommonEventEmitter,
-  CommonEventToListener,
-} from "@/events";
 import { CommonService, GovernanceService } from "@/services";
-import { LoadingState } from "@/shared/interfaces";
-import { Common, Governance } from "@/shared/models";
-
-interface Data {
-  common: Common;
-  governance: Governance;
-  parentCommons: Common[];
-  subCommons: Common[];
-  parentCommon?: Common;
-  parentCommonSubCommons: Common[];
-}
-
-type State = LoadingState<Data | null>;
+import { State } from "./types";
+import { useSubCommonCreateSubscription } from "./useSubCommonCreateSubscription";
 
 interface Return extends State {
   fetchCommonData: (commonId: string) => void;
@@ -32,6 +16,7 @@ export const useFullCommonData = (): Return => {
     data: null,
   });
   const currentCommonId = state.data?.common.id;
+  useSubCommonCreateSubscription(setState, currentCommonId);
 
   const fetchCommonData = useCallback((commonId: string) => {
     setState({
@@ -94,42 +79,6 @@ export const useFullCommonData = (): Return => {
       data: null,
     });
   }, []);
-
-  useEffect(() => {
-    if (!currentCommonId) {
-      return;
-    }
-
-    const handleSubCommonCreate = (subCommon: Common) => {
-      setState((currentState) => {
-        if (!currentState || !currentState.data) {
-          return currentState;
-        }
-
-        return {
-          ...currentState,
-          data: {
-            ...currentState.data,
-            subCommons: currentState.data?.subCommons.concat(subCommon) || [],
-          },
-        };
-      });
-    };
-
-    const handleCommonCreate: CommonEventToListener[CommonEvent.Created] = (
-      createdCommon,
-    ) => {
-      if (createdCommon.directParent?.commonId === currentCommonId) {
-        handleSubCommonCreate(createdCommon);
-      }
-    };
-
-    CommonEventEmitter.on(CommonEvent.Created, handleCommonCreate);
-
-    return () => {
-      CommonEventEmitter.off(CommonEvent.Created, handleCommonCreate);
-    };
-  }, [currentCommonId]);
 
   useEffect(() => {
     if (!currentCommonId) {
