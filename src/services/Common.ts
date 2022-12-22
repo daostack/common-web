@@ -193,6 +193,26 @@ class CommonService {
       }
     });
   };
+
+  public subscribeToSubCommons = (
+    parentCommonId: string,
+    callback: (data: { common: Common; isRemoved: boolean }[]) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE)
+      .where("directParent.commonId", "==", parentCommonId)
+      .withConverter(converter);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        common: docChange.doc.data(),
+        isRemoved: docChange.type === "removed",
+      }));
+      callback(data);
+    });
+  };
 }
 
 export default new CommonService();
