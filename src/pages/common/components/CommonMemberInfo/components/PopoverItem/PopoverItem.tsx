@@ -76,14 +76,14 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
         >
           {circleName}
         </p>
-        <p className={styles.membersCount}>
+        <span className={styles.membersCount}>
           {isLoading ? (
             <Loader className={styles.membersCountLoader} />
           ) : (
             membersCount
           )}{" "}
           members
-        </p>
+        </span>
       </div>
       <ActionButton />
     </div>
