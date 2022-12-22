@@ -20,7 +20,7 @@ export const useFullCommonData = (): Return => {
   });
   const currentCommonId = state.data?.common.id;
   useSubCommonCreateSubscription(setState, currentCommonId);
-  useCommonSubscription(setState, currentCommonId);
+  useCommonSubscription(setState, currentCommonId, state.data?.parentCommons);
   useGovernanceSubscription(setState, state.data?.governance.id);
   useParentCommonSubscription(setState, state.data?.parentCommon?.id);
 
