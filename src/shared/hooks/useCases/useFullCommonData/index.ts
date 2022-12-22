@@ -3,6 +3,7 @@ import { last } from "lodash";
 import { CommonService, GovernanceService } from "@/services";
 import { State } from "./types";
 import { useCommonSubscription } from "./useCommonSubscription";
+import { useGovernanceSubscription } from "./useGovernanceSubscription";
 import { useSubCommonCreateSubscription } from "./useSubCommonCreateSubscription";
 
 interface Return extends State {
@@ -19,6 +20,7 @@ export const useFullCommonData = (): Return => {
   const currentCommonId = state.data?.common.id;
   useSubCommonCreateSubscription(setState, currentCommonId);
   useCommonSubscription(setState, currentCommonId);
+  useGovernanceSubscription(setState, state.data?.governance.id);
 
   const fetchCommonData = useCallback((commonId: string) => {
     setState({
