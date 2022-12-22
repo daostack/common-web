@@ -4,6 +4,7 @@ import { CommonService, GovernanceService } from "@/services";
 import { State } from "./types";
 import { useCommonSubscription } from "./useCommonSubscription";
 import { useGovernanceSubscription } from "./useGovernanceSubscription";
+import { useParentCommonSubscription } from "./useParentCommonSubscription";
 import { useSubCommonCreateSubscription } from "./useSubCommonCreateSubscription";
 
 interface Return extends State {
@@ -21,6 +22,7 @@ export const useFullCommonData = (): Return => {
   useSubCommonCreateSubscription(setState, currentCommonId);
   useCommonSubscription(setState, currentCommonId);
   useGovernanceSubscription(setState, state.data?.governance.id);
+  useParentCommonSubscription(setState, state.data?.parentCommon?.id);
 
   const fetchCommonData = useCallback((commonId: string) => {
     setState({
