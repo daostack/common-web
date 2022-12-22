@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { CommonService } from "@/services";
-import { Data, State } from "./types";
+import { State } from "./types";
+import { updateCommonsBySubscription } from "./utils";
 
 export const useParentCommonSubscription = (
   setState: Dispatch<SetStateAction<State>>,
@@ -46,25 +47,10 @@ export const useParentCommonSubscription = (
             return currentState;
           }
 
-          const parentCommonSubCommons = data.reduce<
-            Data["parentCommonSubCommons"]
-          >((finalSubCommons, { common, isRemoved }) => {
-            if (isRemoved) {
-              return finalSubCommons.filter(
-                (subCommon) => subCommon.id !== common.id,
-              );
-            }
-
-            const isExistingSubCommon = finalSubCommons.some(
-              (subCommon) => subCommon.id === common.id,
-            );
-
-            return isExistingSubCommon
-              ? finalSubCommons.map((subCommon) =>
-                  subCommon.id === common.id ? common : subCommon,
-                )
-              : finalSubCommons.concat(common);
-          }, currentState.data?.parentCommonSubCommons || []);
+          const parentCommonSubCommons = updateCommonsBySubscription(
+            data,
+            currentState.data?.parentCommonSubCommons,
+          );
 
           return {
             ...currentState,
