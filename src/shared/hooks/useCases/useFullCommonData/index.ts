@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { last } from "lodash";
 import { CommonService, GovernanceService } from "@/services";
 import { State } from "./types";
+import { useCommonSubscription } from "./useCommonSubscription";
 import { useSubCommonCreateSubscription } from "./useSubCommonCreateSubscription";
 
 interface Return extends State {
@@ -17,6 +18,7 @@ export const useFullCommonData = (): Return => {
   });
   const currentCommonId = state.data?.common.id;
   useSubCommonCreateSubscription(setState, currentCommonId);
+  useCommonSubscription(setState, currentCommonId);
 
   const fetchCommonData = useCallback((commonId: string) => {
     setState({
@@ -79,35 +81,6 @@ export const useFullCommonData = (): Return => {
       data: null,
     });
   }, []);
-
-  useEffect(() => {
-    if (!currentCommonId) {
-      return;
-    }
-
-    const unsubscribe = CommonService.subscribeToCommon(
-      currentCommonId,
-      (updatedCommon, isRemoved) => {
-        setState((currentState) => {
-          if (!currentState.data) {
-            return currentState;
-          }
-
-          return {
-            ...currentState,
-            data: !isRemoved
-              ? {
-                  ...currentState.data,
-                  common: updatedCommon,
-                }
-              : null,
-          };
-        });
-      },
-    );
-
-    return unsubscribe;
-  }, [currentCommonId]);
 
   return {
     ...state,
