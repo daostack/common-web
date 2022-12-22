@@ -131,6 +131,35 @@ export const useFullCommonData = (): Return => {
     };
   }, [currentCommonId]);
 
+  useEffect(() => {
+    if (!currentCommonId) {
+      return;
+    }
+
+    const unsubscribe = CommonService.subscribeToCommon(
+      currentCommonId,
+      (updatedCommon, isRemoved) => {
+        setState((currentState) => {
+          if (!currentState.data) {
+            return currentState;
+          }
+
+          return {
+            ...currentState,
+            data: !isRemoved
+              ? {
+                  ...currentState.data,
+                  common: updatedCommon,
+                }
+              : null,
+          };
+        });
+      },
+    );
+
+    return unsubscribe;
+  }, [currentCommonId]);
+
   return {
     ...state,
     fetchCommonData,
