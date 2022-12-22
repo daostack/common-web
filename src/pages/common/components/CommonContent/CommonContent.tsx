@@ -65,6 +65,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         commonMember={commonMember}
         circles={governance.circles}
         isSubCommon={isSubCommon}
+        commonId={common.id}
       />
       {!isCommonMemberFetched && <Loader variant={LoaderVariant.Global} />}
       <div className={styles.container}>
@@ -82,6 +83,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         {!isTabletView && (
           <Container>
             <CommonManagement
+              commonId={common.id}
               activeTab={tab}
               isSubCommon={isSubCommon}
               circles={governance.circles}

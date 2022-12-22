@@ -1,0 +1,33 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.popoverPanel {
+  --items-br: 0.5rem;
+  position: absolute;
+  z-index: 1000;
+  top: calc(100% + 0.25rem);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+  font-size: $small;
+  list-style-type: none;
+  background-color: $c-shades-white;
+  border-radius: var(--items-br);
+  box-shadow: 0 0.25rem 0.9375rem #{$c-sidebar-user-menu-shadow};
+
+  @include tablet {
+    top: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 13.5rem;
+    width: calc(100% - 0.75rem);
+    max-width: 27.5rem;
+  }
+}
