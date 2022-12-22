@@ -6,6 +6,7 @@ import {
 } from "@/events";
 import { Common } from "@/shared/models";
 import { State } from "./types";
+import { updateCommonsBySubscription } from "./utils";
 
 export const useSubCommonCreateSubscription = (
   setState: Dispatch<SetStateAction<State>>,
@@ -16,17 +17,22 @@ export const useSubCommonCreateSubscription = (
       return;
     }
 
-    const handleSubCommonCreate = (subCommon: Common) => {
+    const handleSubCommonCreate = (createdSubCommon: Common) => {
       setState((currentState) => {
         if (!currentState || !currentState.data) {
           return currentState;
         }
 
+        const subCommons = updateCommonsBySubscription(
+          [{ common: createdSubCommon, isRemoved: false }],
+          currentState.data?.subCommons,
+        );
+
         return {
           ...currentState,
           data: {
             ...currentState.data,
-            subCommons: currentState.data?.subCommons.concat(subCommon) || [],
+            subCommons,
           },
         };
       });
