@@ -1,0 +1,77 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.popoverButton {
+  display: flex;
+  width: 100%;
+  padding: 0 1.375rem 0 1.75rem;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    background-color: $light-gray-11;
+  }
+
+  @include tablet {
+    justify-content: center;
+  }
+}
+
+.contentWrapper {
+  flex-direction: row;
+  display: flex;
+}
+
+.avatarIcon {
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+}
+
+.memberInfo {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  @include tablet {
+    margin-right: 1rem;
+    align-items: center;
+  }
+}
+
+.title {
+  font-weight: bold;
+  font-size: $xxsmall-2;
+  line-height: 120%;
+  color: $c-neutrals-300;
+}
+
+.circleNames {
+  font-weight: bold;
+  color: $c-neutrals-600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  @include tablet {
+    font-weight: 400;
+  }
+}
+
+.popoverArrowIcon {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  transform: rotate(90deg);
+  transition: all 0.2s;
+  color: $light-gray-2;
+  margin-left: 1rem;
+
+  @include tablet {
+    margin-left: 0;
+  }
+}
+
+.popoverArrowIconOpened {
+  transform: rotate(-90deg);
+}

@@ -154,6 +154,21 @@ class CommonService {
 
     return members[0] || null;
   };
+
+  public getCircleMemberCountByCircleId = async ({
+    commonId,
+    circleId,
+  }: {
+    commonId: string;
+    circleId: string;
+  }): Promise<number> => {
+    const commonMembersData = await commonMembersSubCollection(commonId)
+      .where("circleIds", "array-contains", circleId)
+      .get();
+    const data = transformFirebaseDataList<CommonMember>(commonMembersData);
+  
+    return data?.length ?? 0;
+  }
 }
 
 export default new CommonService();
