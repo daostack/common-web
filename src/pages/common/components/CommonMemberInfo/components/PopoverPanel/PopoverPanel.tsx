@@ -21,6 +21,7 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
     <Popover.Panel className={classNames(styles.popoverPanel, className)}>
       {governanceCircles.map(({ name, id: circleId }) => (
         <PopoverItem
+          key={circleId}
           circleName={name}
           circleId={circleId}
           commonId={commonId}

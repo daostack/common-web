@@ -8,7 +8,7 @@ import { useLockedBody } from "@/shared/hooks";
 import { useAllViews } from "@/shared/hooks/viewport";
 import { Footer, Sidenav } from "@/shared/ui-kit";
 import { SidenavContent } from "./components";
-import { checkFooterVisibility } from "./utils";
+import { checkFooterVisibility, checkSidenavVisibility } from "./utils";
 import styles from "./SidenavLayout.module.scss";
 
 const SidenavLayout: FC = (props) => {
@@ -16,6 +16,7 @@ const SidenavLayout: FC = (props) => {
   const { routeOptions = {} } =
     useLayoutRouteContext<SidenavLayoutRouteOptions>();
   const viewportStates = useAllViews();
+  const isSidenavVisible = checkSidenavVisibility(routeOptions.sidenav);
   const isFooterVisible = checkFooterVisibility(
     routeOptions.footer,
     viewportStates,
@@ -36,12 +37,15 @@ const SidenavLayout: FC = (props) => {
   return (
     <div
       className={classNames(styles.container, {
+        [styles.containerWithSidenav]: isSidenavVisible,
         [styles.containerWithoutFooter]: !isFooterVisible,
       })}
     >
-      <Sidenav onOpenToggle={handleSidenavOpenToggle}>
-        <SidenavContent className={styles.sidenavContent} />
-      </Sidenav>
+      {isSidenavVisible && (
+        <Sidenav onOpenToggle={handleSidenavOpenToggle}>
+          <SidenavContent className={styles.sidenavContent} />
+        </Sidenav>
+      )}
       <main className={styles.main}>{children}</main>
       {isFooterVisible && <Footer />}
     </div>
