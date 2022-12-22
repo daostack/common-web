@@ -38,6 +38,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     governanceCircles,
     circleIds,
   );
+  const userId = commonMember.userId;
 
   useEffect(() => {
     if (!commonId || !commonMember) {
@@ -46,7 +47,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
 
     const unsubscribe = ProposalService.subscribeToUserPendingCircleProposals(
       commonId,
-      commonMember.userId,
+      userId,
       (data) => {
         const pendingCircleMap = new Map<string, boolean>();
         governanceCircles.forEach(({ id: circleId }) => {
@@ -61,7 +62,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     );
 
     return unsubscribe;
-  }, [commonId, commonMember]);
+  }, [commonId, userId, governanceCircles]);
 
   const circleNames = getCirclesWithHighestTier(filteredByIdCircles)
     .map(({ name }) => name)
@@ -76,7 +77,12 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
         circleIds={circleIds}
       />
     ),
-    [commonId, governanceCircles, pendingCircles, circleIds],
+    [
+      commonId,
+      JSON.stringify(governanceCircles),
+      JSON.stringify(pendingCircles),
+      JSON.stringify(circleIds),
+    ],
   );
 
   return (

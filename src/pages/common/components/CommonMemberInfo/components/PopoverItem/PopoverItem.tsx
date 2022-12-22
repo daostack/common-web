@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import classNames from "classnames";
-import { CommonService } from "@/services";
-import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { CommonService, Logger } from "@/services";
+import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import styles from "./PopoverItem.module.scss";
 
 interface CommonMemberInfoProps {
@@ -17,6 +17,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
   const { className, commonId, circleId, isMember, isPending, circleName } =
     props;
   const [membersCount, setMembersCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const ActionButton = useCallback(() => {
     if (isMember) {
@@ -50,14 +51,20 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     }
 
     (async () => {
-      const circleMemberCount =
-        await CommonService.fetchCircleMemberCountByCircleId({
-          commonId,
-          circleId,
-        });
-      setMembersCount(circleMemberCount);
+      try {
+        const circleMemberCount =
+          await CommonService.getCircleMemberCountByCircleId({
+            commonId,
+            circleId,
+          });
+        setMembersCount(circleMemberCount);
+      } catch (e) {
+        Logger.error({ commonId, circleId, e });
+      } finally {
+        setIsLoading(false);
+      }
     })();
-  }, [commonId]);
+  }, [commonId, circleId]);
 
   return (
     <div className={classNames(styles.item, className)}>
@@ -69,7 +76,14 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
         >
           {circleName}
         </p>
-        <p className={styles.membersCount}>{membersCount} members</p>
+        <p className={styles.membersCount}>
+          {isLoading ? (
+            <Loader className={styles.membersCountLoader} />
+          ) : (
+            membersCount
+          )}{" "}
+          members
+        </p>
       </div>
       <ActionButton />
     </div>

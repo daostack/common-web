@@ -1,4 +1,5 @@
 @import "../../../../constants";
+@import "../../../../styles/sizes";
 
 .container {
   flex-shrink: 0;
@@ -11,7 +12,10 @@
   position: relative;
   cursor: pointer;
 
-  @media only screen and (max-width: $laptop-breakpoint) {
+  @include tablet {
     margin: auto;
+    min-width: 13.5rem;
+    width: calc(100% - 2.625rem);
+    max-width: 27.5rem;
   }
 }

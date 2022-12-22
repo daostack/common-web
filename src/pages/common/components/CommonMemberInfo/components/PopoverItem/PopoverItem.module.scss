@@ -51,9 +51,18 @@
 }
 
 .membersCount {
+  display: inline-flex;
+  align-items: center;
   font-size: $xxsmall-2;
   color: $light-gray-2;
   margin: 0;
+}
+
+.membersCountLoader {
+  height: 1rem;
+  width: 1rem;
+  background-size: 1rem;
+  margin-right: 0.25rem;
 }
 
 .actionButton {

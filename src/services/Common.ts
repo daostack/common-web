@@ -155,18 +155,14 @@ class CommonService {
     return members[0] || null;
   };
 
-  public fetchCircleMemberCountByCircleId = async ({
+  public getCircleMemberCountByCircleId = async ({
     commonId,
     circleId,
   }: {
     commonId: string;
     circleId: string;
   }): Promise<number> => {
-    const commonMembersData = await firebase
-      .firestore()
-      .collection(Collection.Daos)
-      .doc(commonId)
-      .collection(SubCollections.Members)
+    const commonMembersData = await commonMembersSubCollection(commonId)
       .where("circleIds", "array-contains", circleId)
       .get();
     const data = transformFirebaseDataList<CommonMember>(commonMembersData);

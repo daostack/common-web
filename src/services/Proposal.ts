@@ -1,7 +1,7 @@
 import { ProposalsTypes } from "@/shared/constants";
 import { Collection, ProposalState } from "@/shared/models";
 import { AssignCircle, RemoveCircle } from "@/shared/models/governance/proposals";
-import { transformFirebaseDataList } from "@/shared/utils";
+import { checkIsCountdownState, transformFirebaseDataList } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 
 class ProposalService {
@@ -32,16 +32,13 @@ class ProposalService {
         ProposalsTypes.ASSIGN_CIRCLE,
         ProposalsTypes.REMOVE_CIRCLE,
       ]);
-    const subscribe = query.onSnapshot((snapshot) => {
+    const unsubscribe = query.onSnapshot((snapshot) => {
       const list = transformFirebaseDataList<AssignCircle | RemoveCircle>(
         snapshot,
-      ).filter(({ state }) =>
-        [ProposalState.DISCUSSION, ProposalState.VOTING].includes(state),
-      );
+      ).filter((proposal) => checkIsCountdownState(proposal));
       callback(list);
-      setTimeout(subscribe, 0);
     });
-    return subscribe;
+    return unsubscribe;
   }
 }
 

@@ -1,4 +1,5 @@
 @import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
 
 .popoverButton {
   display: flex;
@@ -12,7 +13,7 @@
     background-color: $light-gray-11;
   }
 
-  @media only screen and (max-width: $laptop-breakpoint) {
+  @include tablet {
     justify-content: center;
   }
 }
@@ -31,7 +32,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  @media only screen and (max-width: $laptop-breakpoint) {
+
+  @include tablet {
     margin-right: 1rem;
     align-items: center;
   }
@@ -50,6 +52,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+
+  @include tablet {
+    font-weight: 400;
+  }
 }
 
 .popoverArrowIcon {
