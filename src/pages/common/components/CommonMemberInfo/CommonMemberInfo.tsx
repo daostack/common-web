@@ -68,23 +68,6 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     .map(({ name }) => name)
     .join(", ");
 
-  const CommonMemberPopoverPanel = useCallback(
-    () => (
-      <PopoverPanel
-        commonId={commonId}
-        governanceCircles={governanceCircles}
-        pendingCircles={pendingCircles}
-        circleIds={circleIds}
-      />
-    ),
-    [
-      commonId,
-      JSON.stringify(governanceCircles),
-      JSON.stringify(pendingCircles),
-      JSON.stringify(circleIds),
-    ],
-  );
-
   return (
     <Popover className={classNames(styles.container, className)}>
       <PopoverButton
@@ -93,10 +76,20 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
       />
       {isMobileVersion ? (
         <Portal>
-          <CommonMemberPopoverPanel />
+          <PopoverPanel
+            commonId={commonId}
+            governanceCircles={governanceCircles}
+            pendingCircles={pendingCircles}
+            circleIds={circleIds}
+          />
         </Portal>
       ) : (
-        <CommonMemberPopoverPanel />
+        <PopoverPanel
+          commonId={commonId}
+          governanceCircles={governanceCircles}
+          pendingCircles={pendingCircles}
+          circleIds={circleIds}
+        />
       )}
       <Portal>
         <PopoverPanel
