@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import classNames from "classnames";
 import { Popover } from "@headlessui/react";
 import { ProposalService } from "@/services";

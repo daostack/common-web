@@ -1,3 +1,5 @@
+import { commonMembersSubCollection } from "@/pages/OldCommon/store/api";
+import { UnsubscribeFunction } from "@/shared/interfaces";
 import {
   Collection,
   Common,
@@ -7,10 +9,12 @@ import {
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
+  firestoreDataConverter,
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
-import { commonMembersSubCollection } from "../pages/OldCommon/store/api";
+
+const converter = firestoreDataConverter<Common>();
 
 class CommonService {
   public getCommonById = async (commonId: string): Promise<Common | null> => {
@@ -166,9 +170,69 @@ class CommonService {
       .where("circleIds", "array-contains", circleId)
       .get();
     const data = transformFirebaseDataList<CommonMember>(commonMembersData);
-  
+
     return data?.length ?? 0;
-  }
+  };
+
+  public subscribeToCommon = (
+    commonId: string,
+    callback: (common: Common, isRemoved: boolean) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("id", "==", commonId)
+      .where("state", "==", CommonState.ACTIVE)
+      .withConverter(converter);
+
+    return query.onSnapshot((snapshot) => {
+      const docChange = snapshot.docChanges()[0];
+
+      if (docChange && docChange.type !== "added") {
+        callback(docChange.doc.data(), docChange.type === "removed");
+      }
+    });
+  };
+
+  public subscribeToCommons = (
+    commonIds: string[],
+    callback: (data: { common: Common; isRemoved: boolean }[]) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("id", "in", commonIds)
+      .where("state", "==", CommonState.ACTIVE)
+      .withConverter(converter);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        common: docChange.doc.data(),
+        isRemoved: docChange.type === "removed",
+      }));
+      callback(data);
+    });
+  };
+
+  public subscribeToSubCommons = (
+    parentCommonId: string,
+    callback: (data: { common: Common; isRemoved: boolean }[]) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE)
+      .where("directParent.commonId", "==", parentCommonId)
+      .withConverter(converter);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        common: docChange.doc.data(),
+        isRemoved: docChange.type === "removed",
+      }));
+      callback(data);
+    });
+  };
 }
 
 export default new CommonService();
