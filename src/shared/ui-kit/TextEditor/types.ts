@@ -36,8 +36,13 @@ export interface BulletedListElement extends BaseElement {
   type: ElementType.BulletedList;
 }
 
+export interface ListItemElement extends BaseElement {
+  type: ElementType.ListItem;
+}
+
 export type CustomElement =
   | ParagraphElement
   | BlockQuoteElement
   | NumberedListElement
-  | BulletedListElement;
+  | BulletedListElement
+  | ListItemElement;

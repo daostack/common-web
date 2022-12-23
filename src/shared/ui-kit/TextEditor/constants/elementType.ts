@@ -3,4 +3,5 @@ export enum ElementType {
   BlockQuote = "block-quote",
   NumberedList = "numbered-list",
   BulletedList = "bulleted-list",
+  ListItem = "list-item",
 }
