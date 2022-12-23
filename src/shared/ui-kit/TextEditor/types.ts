@@ -1,7 +1,7 @@
 import { BaseEditor } from "slate";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
-import { Alignment, ElementType } from "./constants";
+import { ElementType } from "./constants";
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
 
@@ -21,11 +21,6 @@ interface BaseElement {
 
 export interface ParagraphElement extends BaseElement {
   type: ElementType.Paragraph;
-  alignment?: Alignment;
-}
-
-export interface BlockQuoteElement extends BaseElement {
-  type: ElementType.BlockQuote;
 }
 
 export interface NumberedListElement extends BaseElement {
@@ -42,7 +37,6 @@ export interface ListItemElement extends BaseElement {
 
 export type CustomElement =
   | ParagraphElement
-  | BlockQuoteElement
   | NumberedListElement
   | BulletedListElement
   | ListItemElement;
