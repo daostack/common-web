@@ -19,6 +19,12 @@
 
 .link {
   display: flex;
+  font-size: $small;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .linkIconWrapper {
