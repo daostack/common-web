@@ -1,0 +1,37 @@
+@import "../../../../../../../../constants";
+
+.list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+}
+
+.listItem {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.link {
+  display: flex;
+}
+
+.linkIconWrapper {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.linkIcon {
+  width: 1rem;
+  height: 1rem;
+  color: inherit;
+}

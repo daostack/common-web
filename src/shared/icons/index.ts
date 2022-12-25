@@ -7,6 +7,7 @@ export { default as CopyLinkChainIcon } from "./copyLinkChain.icon";
 export { default as ExcavatorIcon } from "./excavator.icon";
 export { default as GovernanceIcon } from "./governance.icon";
 export { default as InfoIcon } from "./info.icon";
+export { default as Link2Icon } from "./link2.icon";
 export { default as LongLeftArrowIcon } from "./longLeftArrow.icon";
 export { default as MoreIcon } from "./more.icon";
 export { default as PeopleGroupIcon } from "./people-group.icon";
