@@ -1,19 +1,16 @@
 import React, { FC, useCallback, useMemo } from "react";
 import isHotkey from "is-hotkey";
-import {
-  createEditor,
-  Descendant,
-  Editor,
-  Element as SlateElement,
-  Transforms,
-} from "slate";
+import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
 import { Editable, Slate, useSlate, withReact } from "slate-react";
 import { Leaf } from "./components";
-import { ElementType, HOTKEYS } from "./constants";
-import { isElementActive, isMarkActive, toggleMark } from "./utils";
-
-const LIST_TYPES = [ElementType.NumberedList, ElementType.BulletedList];
+import { ElementType, HOTKEYS, LIST_TYPES } from "./constants";
+import {
+  isElementActive,
+  isMarkActive,
+  toggleElement,
+  toggleMark,
+} from "./utils";
 
 const TextEditor = () => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
@@ -22,14 +19,6 @@ const TextEditor = () => {
 
   return (
     <Slate editor={editor} value={initialValue}>
-      <Toolbar>
-        <MarkButton format="bold" icon="format_bold" />
-        <MarkButton format="italic" icon="format_italic" />
-        <MarkButton format="underline" icon="format_underlined" />
-        <MarkButton format="code" icon="code" />
-        <BlockButton format="numbered-list" icon="format_list_numbered" />
-        <BlockButton format="bulleted-list" icon="format_list_bulleted" />
-      </Toolbar>
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
@@ -46,34 +35,16 @@ const TextEditor = () => {
           }
         }}
       />
+      <Toolbar>
+        <MarkButton format="bold" icon="format_bold" />
+        <MarkButton format="italic" icon="format_italic" />
+        <MarkButton format="underline" icon="format_underlined" />
+        <MarkButton format="code" icon="code" />
+        <BlockButton format="numbered-list" icon="format_list_numbered" />
+        <BlockButton format="bulleted-list" icon="format_list_bulleted" />
+      </Toolbar>
     </Slate>
   );
-};
-
-const toggleBlock = (editor, elementType: ElementType) => {
-  const isActive = isElementActive(editor, elementType);
-  const isList = LIST_TYPES.includes(elementType);
-
-  Transforms.unwrapNodes(editor, {
-    match: (node) =>
-      !Editor.isEditor(node) &&
-      SlateElement.isElement(node) &&
-      LIST_TYPES.includes(node.type),
-    split: true,
-  });
-  const newProperties: Partial<SlateElement> = {
-    type: isActive
-      ? ElementType.Paragraph
-      : isList
-      ? ElementType.ListItem
-      : elementType,
-  };
-  Transforms.setNodes<SlateElement>(editor, newProperties);
-
-  if (!isActive && isList) {
-    const block = { type: elementType, children: [] };
-    Transforms.wrapNodes(editor, block);
-  }
 };
 
 const Element = ({ attributes, children, element }) => {
@@ -113,7 +84,7 @@ const BlockButton: FC<{ elementType: ElementType }> = ({ elementType }) => {
       active={isElementActive(editor, elementType)}
       onMouseDown={(event) => {
         event.preventDefault();
-        toggleBlock(editor, elementType);
+        toggleElement(editor, elementType);
       }}
     >
       {icon}
