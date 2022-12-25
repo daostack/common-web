@@ -10,6 +10,7 @@ export interface FormattedText {
   bold?: boolean;
   italic?: boolean;
   code?: boolean;
+  underline?: boolean;
 }
 
 export type CustomText = FormattedText;
