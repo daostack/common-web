@@ -3,8 +3,8 @@ import isHotkey from "is-hotkey";
 import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
 import { Editable, Slate, useSlate, withReact } from "slate-react";
-import { Leaf } from "./components";
-import { ElementType, HOTKEYS, LIST_TYPES } from "./constants";
+import { Element, Leaf } from "./components";
+import { ElementType, HOTKEYS } from "./constants";
 import {
   isElementActive,
   isMarkActive,
@@ -45,36 +45,6 @@ const TextEditor = () => {
       </Toolbar>
     </Slate>
   );
-};
-
-const Element = ({ attributes, children, element }) => {
-  const style = { textAlign: element.align };
-  switch (element.type) {
-    case "bulleted-list":
-      return (
-        <ul style={style} {...attributes}>
-          {children}
-        </ul>
-      );
-    case "list-item":
-      return (
-        <li style={style} {...attributes}>
-          {children}
-        </li>
-      );
-    case "numbered-list":
-      return (
-        <ol style={style} {...attributes}>
-          {children}
-        </ol>
-      );
-    default:
-      return (
-        <p style={style} {...attributes}>
-          {children}
-        </p>
-      );
-  }
 };
 
 const BlockButton: FC<{ elementType: ElementType }> = ({ elementType }) => {
