@@ -2,7 +2,7 @@ import React, { FC, useMemo } from "react";
 import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, withReact } from "slate-react";
-import { Editor, MarkButton, Toolbar } from "./components";
+import { Editor, ElementButton, MarkButton, Toolbar } from "./components";
 import { ElementType, FormatType, TextEditorSize } from "./constants";
 import styles from "./TextEditor.module.scss";
 
@@ -21,28 +21,12 @@ const TextEditor: FC<TextEditorProps> = (props) => {
         <Editor size={size} placeholder={placeholder} />
         <Toolbar>
           <MarkButton format={FormatType.Bold} />
-          {/*<BlockButton format="numbered-list" icon="format_list_numbered" />*/}
-          {/*<BlockButton format="bulleted-list" icon="format_list_bulleted" />*/}
+          <ElementButton elementType={ElementType.BulletedList} />
         </Toolbar>
       </div>
     </Slate>
   );
 };
-
-// const BlockButton: FC<{ elementType: ElementType }> = ({ elementType }) => {
-//   const editor = useSlate();
-//   return (
-//     <Button
-//       active={isElementActive(editor, elementType)}
-//       onMouseDown={(event) => {
-//         event.preventDefault();
-//         toggleElement(editor, elementType);
-//       }}
-//     >
-//       {icon}
-//     </Button>
-//   );
-// };
 
 const initialValue: Descendant[] = [
   {
