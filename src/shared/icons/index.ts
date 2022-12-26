@@ -14,3 +14,7 @@ export { default as PlusIcon } from "./plus.icon";
 export { default as RightArrowThinIcon } from "./rightArrowThin.icon";
 export { default as SmallArrowIcon } from "./smallArrow.icon";
 export { default as WalletIcon } from "./wallet.icon";
+export { default as MessageIcon } from "./message.icon";
+export { default as VoteAgainst } from './voteAgainst.icon';
+export { default as VoteFor } from './voteFor.icon';
+export { default as VoteAbstain } from './voteAbstain.icon';
