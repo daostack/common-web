@@ -17,9 +17,9 @@ export interface FormattedText {
 
 export type CustomText = FormattedText;
 
-interface BaseElement {
+interface BaseElement<Child = CustomText> {
   type: ElementType;
-  children: CustomText[];
+  children: Child[];
   indentLevel?: number;
 }
 
@@ -27,11 +27,11 @@ export interface ParagraphElement extends BaseElement {
   type: ElementType.Paragraph;
 }
 
-export interface NumberedListElement extends BaseElement {
+export interface NumberedListElement extends BaseElement<ListItemElement> {
   type: ElementType.NumberedList;
 }
 
-export interface BulletedListElement extends BaseElement {
+export interface BulletedListElement extends BaseElement<ListItemElement> {
   type: ElementType.BulletedList;
 }
 
