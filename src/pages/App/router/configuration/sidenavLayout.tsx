@@ -4,6 +4,7 @@ import { SidenavLayout } from "@/shared/layouts";
 import { LayoutConfiguration } from "../types";
 
 export interface SidenavLayoutRouteOptions {
+  sidenav?: boolean;
   footer?:
     | boolean
     | {

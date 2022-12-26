@@ -1,0 +1,39 @@
+@import "../../../styles/sizes";
+
+.logoWrapper {
+  --logo-top-indent: 1.5rem;
+  --logo-right-indent: 0;
+  --logo-bottom-indent: 1.75rem;
+  --logo-left-indent: 2.375rem;
+
+  flex-shrink: 0;
+  padding: var(--logo-top-indent) var(--logo-right-indent)
+    var(--logo-bottom-indent) var(--logo-left-indent);
+  display: flex;
+  text-decoration: none;
+
+  @include tablet {
+    --logo-top-indent: 1rem;
+    --logo-right-indent: 0;
+    --logo-bottom-indent: 1rem;
+    --logo-left-indent: 0;
+
+    justify-content: center;
+  }
+}
+.logoWrapperFixed {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.logo {
+  width: 9.25rem;
+  height: 2.875rem;
+
+  @include tablet {
+    max-width: 6.125rem;
+    width: 100%;
+    height: 1.875rem;
+  }
+}

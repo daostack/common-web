@@ -1,38 +1,21 @@
 @import "../../../../constants";
+@import "../../../../styles/sizes";
 
 .container {
   flex-shrink: 0;
-  width: 16.5rem;
+  min-width: 16.5rem;
   height: 100%;
-  padding: 0 1.375rem 0 1.75rem;
   display: flex;
   align-items: center;
-  overflow: hidden;
+  justify-content: center;
   box-sizing: border-box;
-}
+  position: relative;
+  cursor: pointer;
 
-.avatarIcon {
-  flex-shrink: 0;
-  margin-right: 0.75rem;
-}
-
-.memberInfo {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.title {
-  font-weight: bold;
-  font-size: $xxsmall-2;
-  line-height: 120%;
-  color: $c-neutrals-300;
-}
-
-.circleNames {
-  font-weight: bold;
-  color: $c-neutrals-600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+  @include tablet {
+    margin: auto;
+    min-width: 13.5rem;
+    width: calc(100% - 2.625rem);
+    max-width: 27.5rem;
+  }
 }

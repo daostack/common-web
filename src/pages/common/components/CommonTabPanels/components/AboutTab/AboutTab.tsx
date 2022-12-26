@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { CommonTab } from "@/pages/common/constants";
+import { useCommonDataContext } from "@/pages/common/providers";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -17,6 +18,7 @@ import {
   CommonDescription,
   CommonEntranceInfo,
   CommonGovernance,
+  CommonParent,
   CommonProjects,
   CommonRules,
 } from "./components";
@@ -45,6 +47,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     limitations,
   } = props;
   const isTabletView = useIsTabletView();
+  const { parentCommon, parentCommonSubCommons } = useCommonDataContext();
   const isParentCommon = common.directParent === null;
 
   const renderMainColumn = () => (
@@ -67,6 +70,12 @@ const AboutTab: FC<AboutTabProps> = (props) => {
           commonMember={commonMember}
           subCommons={subCommons}
           circles={governance.circles}
+        />
+      )}
+      {parentCommon && (
+        <CommonParent
+          parentCommon={parentCommon}
+          projectsAmountInParentCommon={parentCommonSubCommons.length}
         />
       )}
     </div>
@@ -96,6 +105,12 @@ const AboutTab: FC<AboutTabProps> = (props) => {
         withJoinRequest={!commonMember}
         common={common}
       />
+      {parentCommon && (
+        <CommonParent
+          parentCommon={parentCommon}
+          projectsAmountInParentCommon={parentCommonSubCommons.length}
+        />
+      )}
     </div>
   );
 

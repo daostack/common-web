@@ -10,17 +10,16 @@ import styles from "./CommonEntranceJoin.module.scss";
 interface CommonEntranceJoinProps {
   withJoinRequest?: boolean;
   common: Common;
-  isProject?: boolean;
+  isProject: boolean;
 }
 
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
-  const { withJoinRequest = false, common } = props;
-  const user = useSelector(selectUser());
+  const { withJoinRequest = false, common, isProject } = props;
   const [isParentCommonMember, setIsParentCommonMember] = useState(false);
-  const isProject = Boolean(common.directParent);
+  const { parentCommon } = useCommonDataContext();
+  const user = useSelector(selectUser());
   const parentId = common.directParent?.commonId;
   const userId = user?.uid;
-  const { parentCommon } = useCommonDataContext();
 
   useEffect(() => {
     if (!parentId || !userId) {
@@ -45,8 +44,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
           join the project.
         </p>
       )}
-      {((withJoinRequest && !isProject) ||
-        (withJoinRequest && isParentCommonMember)) && (
+      {withJoinRequest && (!isProject || isParentCommonMember) && (
         <Button
           className={styles.joinButton}
           variant={ButtonVariant.OutlineBlue}
