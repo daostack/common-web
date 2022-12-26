@@ -1,0 +1,12 @@
+@import "../../../../../constants";
+
+.editor {
+  --text-editor-fs: #{$xsmall};
+
+  font-family: NunitoSans, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: var(--text-editor-fs);
+  line-height: 120%;
+  color: $secondary-blue;
+}

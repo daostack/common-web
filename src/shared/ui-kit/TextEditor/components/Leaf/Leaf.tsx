@@ -5,7 +5,7 @@ import styles from "./Leaf.module.scss";
 
 const Leaf: FC<RenderLeafProps> = (props) => {
   const { attributes, leaf, children } = props;
-  const className = classNames({
+  const className = classNames(styles.leaf, {
     [styles.bold]: leaf.bold,
     [styles.italic]: leaf.italic,
     [styles.underline]: leaf.underline,
