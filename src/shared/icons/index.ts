@@ -1,5 +1,6 @@
 export { default as Avatar2Icon } from "./avatar2.icon";
 export { default as BlocksIcon } from "./blocks.icon";
+export { default as BoldMarkIcon } from "./boldMark.icon";
 export { default as BoldPlusIcon } from "./boldPlus.icon";
 export { default as CaretIcon } from "./caret.icon";
 export { default as CopyrightIcon } from "./copyright.icon";
@@ -7,6 +8,7 @@ export { default as CopyLinkChainIcon } from "./copyLinkChain.icon";
 export { default as ExcavatorIcon } from "./excavator.icon";
 export { default as GovernanceIcon } from "./governance.icon";
 export { default as InfoIcon } from "./info.icon";
+export { default as ListMarkIcon } from "./listMark.icon";
 export { default as LongLeftArrowIcon } from "./longLeftArrow.icon";
 export { default as MoreIcon } from "./more.icon";
 export { default as PeopleGroupIcon } from "./people-group.icon";
