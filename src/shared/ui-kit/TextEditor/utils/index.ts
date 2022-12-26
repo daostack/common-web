@@ -4,6 +4,7 @@ export * from "./checkIsListType";
 export * from "./checkIsParentElementType";
 export * from "./isElementActive";
 export * from "./isMarkActive";
+export * from "./parseStringToTextEditorValue";
 export * from "./toggleElement";
 export * from "./toggleList";
 export * from "./toggleMark";
