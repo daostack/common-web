@@ -49,3 +49,20 @@ export const Big = Template.bind({});
 Big.args = {
   size: TextEditorSize.Big,
 };
+
+export const WithLabel = Template.bind({});
+WithLabel.args = {
+  label: "Content",
+};
+
+export const WithHint = Template.bind({});
+WithHint.args = {
+  label: "Content",
+  hint: "Hint goes here",
+};
+
+export const Optional = Template.bind({});
+Optional.args = {
+  label: "Content",
+  optional: true,
+};

@@ -3,4 +3,4 @@ export {
   ElementType as TextEditorElementType,
   TextEditorSize,
 } from "./constants";
-export type { TextEditorValue } from "./types";
+export type { TextEditorValue, TextEditorStyles } from "./types";

@@ -39,6 +39,13 @@ export interface ListItemElement extends BaseElement {
   type: ElementType.ListItem;
 }
 
+export interface TextEditorStyles {
+  label?: string;
+  hint?: string;
+  labelWrapper?: string;
+  error?: string;
+}
+
 export type CustomElement =
   | ParagraphElement
   | NumberedListElement
