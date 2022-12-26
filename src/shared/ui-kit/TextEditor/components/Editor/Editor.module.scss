@@ -1,12 +1,25 @@
 @import "../../../../../constants";
 
 .editor {
+  --text-editor-h: auto;
   --text-editor-fs: #{$xsmall};
 
+  height: var(--text-editor-h);
+  padding: 0.75rem;
   font-family: NunitoSans, sans-serif;
   font-style: normal;
   font-weight: normal;
   font-size: var(--text-editor-fs);
   line-height: 120%;
   color: $secondary-blue;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.editorSmallSize {
+  --text-editor-h: 4.5rem;
+}
+
+.editorBigSize {
+  --text-editor-h: 8.625rem;
 }

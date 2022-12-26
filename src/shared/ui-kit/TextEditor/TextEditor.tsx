@@ -3,16 +3,22 @@ import { createEditor, Descendant } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, withReact } from "slate-react";
 import { Editor, MarkButton, Toolbar } from "./components";
-import { ElementType, FormatType } from "./constants";
+import { ElementType, FormatType, TextEditorSize } from "./constants";
 import styles from "./TextEditor.module.scss";
 
-const TextEditor: FC = () => {
+interface TextEditorProps {
+  size?: TextEditorSize;
+  placeholder?: string;
+}
+
+const TextEditor: FC<TextEditorProps> = (props) => {
+  const { size, placeholder } = props;
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   return (
     <Slate editor={editor} value={initialValue}>
       <div className={styles.container}>
-        <Editor />
+        <Editor size={size} placeholder={placeholder} />
         <Toolbar>
           <MarkButton format={FormatType.Bold} />
           {/*<BlockButton format="numbered-list" icon="format_list_numbered" />*/}
