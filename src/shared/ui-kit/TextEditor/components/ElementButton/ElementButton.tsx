@@ -2,7 +2,12 @@ import React, { FC, MouseEventHandler, ReactNode } from "react";
 import { useSlate } from "slate-react";
 import { ListMarkIcon } from "@/shared/icons";
 import { ElementType } from "../../constants";
-import { isElementActive, toggleElement } from "../../utils";
+import {
+  checkIsListType,
+  isElementActive,
+  toggleElement,
+  toggleList,
+} from "../../utils";
 import { ToolbarButton } from "../ToolbarButton";
 import styles from "./ElementButton.module.scss";
 
@@ -11,7 +16,7 @@ interface ElementButtonProps {
 }
 
 const getIconByFormat = (elementType: ElementType): ReactNode => {
-  if (elementType === ElementType.BulletedList) {
+  if (checkIsListType(elementType)) {
     return <ListMarkIcon className={styles.listMarkIcon} />;
   }
 
@@ -24,7 +29,11 @@ const ElementButton: FC<ElementButtonProps> = (props) => {
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();
-    toggleElement(editor, elementType);
+    if (checkIsListType(elementType)) {
+      toggleList(editor, elementType);
+    } else {
+      toggleElement(editor, elementType);
+    }
   };
 
   return (

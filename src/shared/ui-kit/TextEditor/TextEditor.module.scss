@@ -1,6 +1,7 @@
 @import "../../../constants";
 
 .container {
+  --text-editor-elements-margin: 0.5rem;
   --text-editor-border: 0.0625rem solid #{$c-neutrals-100};
 
   display: flex;

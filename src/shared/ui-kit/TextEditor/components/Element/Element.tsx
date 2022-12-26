@@ -8,11 +8,19 @@ const Element: FC<RenderElementProps> = (props) => {
 
   switch (element.type) {
     case ElementType.BulletedList:
-      return <ul {...attributes}>{children}</ul>;
+      return (
+        <ul {...attributes} className={styles.list}>
+          {children}
+        </ul>
+      );
+    case ElementType.NumberedList:
+      return (
+        <ol {...attributes} className={styles.list}>
+          {children}
+        </ol>
+      );
     case ElementType.ListItem:
       return <li {...attributes}>{children}</li>;
-    case ElementType.NumberedList:
-      return <ol {...attributes}>{children}</ol>;
     default:
       return (
         <p {...attributes} className={styles.paragraph}>
