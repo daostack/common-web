@@ -1,0 +1,10 @@
+@import "../../../../../constants";
+
+.container {
+  display: flex;
+  border-top: var(--text-editor-border);
+
+  & > * {
+    border-right: var(--text-editor-border);
+  }
+}
