@@ -7,6 +7,8 @@ export { default as CopyrightIcon } from "./copyright.icon";
 export { default as CopyLinkChainIcon } from "./copyLinkChain.icon";
 export { default as ExcavatorIcon } from "./excavator.icon";
 export { default as GovernanceIcon } from "./governance.icon";
+export { default as IndentLeftMarkIcon } from "./indentLeftMark.icon";
+export { default as IndentRightMarkIcon } from "./indentRightMark.icon";
 export { default as InfoIcon } from "./info.icon";
 export { default as ListMarkIcon } from "./listMark.icon";
 export { default as LongLeftArrowIcon } from "./longLeftArrow.icon";
