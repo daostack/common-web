@@ -1,2 +1,6 @@
 export { default as TextEditor } from "./TextEditor";
-export { TextEditorSize } from "./constants";
+export {
+  ElementType as TextEditorElementType,
+  TextEditorSize,
+} from "./constants";
+export type { TextEditorValue } from "./types";

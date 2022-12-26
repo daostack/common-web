@@ -1,7 +1,9 @@
-import { BaseEditor } from "slate";
+import { BaseEditor, Descendant } from "slate";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
 import { ElementType } from "./constants";
+
+export type TextEditorValue = Descendant[];
 
 export type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
 
@@ -18,6 +20,7 @@ export type CustomText = FormattedText;
 interface BaseElement {
   type: ElementType;
   children: CustomText[];
+  indentLevel?: number;
 }
 
 export interface ParagraphElement extends BaseElement {

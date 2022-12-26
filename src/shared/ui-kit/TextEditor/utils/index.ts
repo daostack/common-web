@@ -1,4 +1,7 @@
+export * from "./changeElementIndent";
+export * from "./checkIsIndentType";
 export * from "./checkIsListType";
+export * from "./checkIsParentElementType";
 export * from "./isElementActive";
 export * from "./isMarkActive";
 export * from "./toggleElement";

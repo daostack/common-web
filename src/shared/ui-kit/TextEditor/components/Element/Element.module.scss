@@ -1,9 +1,22 @@
-.paragraph {
+.element {
+  --element-pl: 0rem;
+
   margin: 0 0 var(--text-editor-elements-margin);
+  padding: 0 0 0
+    calc(
+      var(--text-editor-elements-indent, 0rem) * var(--element-indent-level, 0) +
+        var(--element-pl)
+    );
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.paragraph {
   font-size: var(--text-editor-fs);
 }
 
 .list {
-  margin: 0 0 var(--text-editor-elements-margin);
-  padding: 0 0 0 1.5rem;
+  --element-pl: 1.5rem;
 }

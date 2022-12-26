@@ -1,6 +1,10 @@
 import React, { FC, MouseEventHandler, ReactNode } from "react";
 import { useSlate } from "slate-react";
-import { BoldMarkIcon } from "@/shared/icons";
+import {
+  BoldMarkIcon,
+  IndentLeftMarkIcon,
+  IndentRightMarkIcon,
+} from "@/shared/icons";
 import { FormatType } from "../../constants";
 import { isMarkActive, toggleMark } from "../../utils";
 import { ToolbarButton } from "../ToolbarButton";
@@ -13,6 +17,12 @@ interface MarkButtonProps {
 const getIconByFormat = (format: FormatType): ReactNode => {
   if (format === FormatType.Bold) {
     return <BoldMarkIcon className={styles.boldIcon} />;
+  }
+  if (format === FormatType.LeftIndent) {
+    return <IndentLeftMarkIcon className={styles.indentMarkIcon} />;
+  }
+  if (format === FormatType.RightIndent) {
+    return <IndentRightMarkIcon className={styles.indentMarkIcon} />;
   }
 
   return null;

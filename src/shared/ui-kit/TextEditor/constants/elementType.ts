@@ -6,3 +6,4 @@ export enum ElementType {
 }
 
 export const LIST_TYPES = [ElementType.NumberedList, ElementType.BulletedList];
+export const PARENT_TYPES = [...LIST_TYPES, ElementType.Paragraph];
