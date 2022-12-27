@@ -5,6 +5,8 @@ export enum FormatType {
   Code = "code",
   LeftIndent = "left-indent",
   RightIndent = "right-indent",
+  LTR = "ltr",
+  RTL = "rtl",
 }
 
 export const INDENT_TYPES = [FormatType.LeftIndent, FormatType.RightIndent];

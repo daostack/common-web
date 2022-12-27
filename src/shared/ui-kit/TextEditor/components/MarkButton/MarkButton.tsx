@@ -4,6 +4,8 @@ import {
   BoldMarkIcon,
   IndentLeftMarkIcon,
   IndentRightMarkIcon,
+  LTRDirectionMarkIcon,
+  RTLDirectionMarkIcon,
 } from "@/shared/icons";
 import { FormatType } from "../../constants";
 import { isMarkActive, toggleMark } from "../../utils";
@@ -23,6 +25,12 @@ const getIconByFormat = (format: FormatType): ReactNode => {
   }
   if (format === FormatType.RightIndent) {
     return <IndentRightMarkIcon className={styles.indentMarkIcon} />;
+  }
+  if (format === FormatType.LTR) {
+    return <LTRDirectionMarkIcon className={styles.textDirectionMarkIcon} />;
+  }
+  if (format === FormatType.RTL) {
+    return <RTLDirectionMarkIcon className={styles.textDirectionMarkIcon} />;
   }
 
   return null;

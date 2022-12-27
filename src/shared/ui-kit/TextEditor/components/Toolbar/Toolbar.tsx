@@ -8,6 +8,8 @@ const Toolbar: FC = () => (
   <div className={styles.container}>
     <MarkButton format={FormatType.Bold} />
     <ElementButton elementType={ElementType.BulletedList} />
+    <MarkButton format={FormatType.LTR} />
+    <MarkButton format={FormatType.RTL} />
     <MarkButton format={FormatType.LeftIndent} />
     <MarkButton format={FormatType.RightIndent} />
   </div>
