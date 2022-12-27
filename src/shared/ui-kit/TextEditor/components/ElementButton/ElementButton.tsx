@@ -1,5 +1,6 @@
 import React, { FC, MouseEventHandler, ReactNode } from "react";
 import { useSlate } from "slate-react";
+import { useModal } from "@/shared/hooks";
 import { Link2Icon, ListMarkIcon } from "@/shared/icons";
 import { ElementType } from "../../constants";
 import {
@@ -9,6 +10,7 @@ import {
   toggleList,
 } from "../../utils";
 import { ToolbarButton } from "../ToolbarButton";
+import { LinkModal } from "./components";
 import styles from "./ElementButton.module.scss";
 
 interface ElementButtonProps {
@@ -29,23 +31,39 @@ const getIconByFormat = (elementType: ElementType): ReactNode => {
 const ElementButton: FC<ElementButtonProps> = (props) => {
   const { elementType } = props;
   const editor = useSlate();
+  const {
+    isShowing: isLinkModalOpen,
+    onOpen: onLinkModalOpen,
+    onClose: onLinkModalClose,
+  } = useModal(false);
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault();
     if (checkIsListType(elementType)) {
       toggleList(editor, elementType);
+    } else if (elementType === ElementType.Link) {
+      onLinkModalOpen();
     } else {
       toggleElement(editor, elementType);
     }
   };
 
   return (
-    <ToolbarButton
-      active={isElementActive(editor, elementType)}
-      onClick={handleClick}
-    >
-      {getIconByFormat(elementType)}
-    </ToolbarButton>
+    <>
+      <ToolbarButton
+        active={isElementActive(editor, elementType)}
+        onClick={handleClick}
+      >
+        {getIconByFormat(elementType)}
+      </ToolbarButton>
+      {elementType === ElementType.Link && (
+        <LinkModal
+          editor={editor}
+          isShowing={isLinkModalOpen}
+          onClose={onLinkModalClose}
+        />
+      )}
+    </>
   );
 };
 

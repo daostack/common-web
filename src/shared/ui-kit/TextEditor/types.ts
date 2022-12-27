@@ -17,7 +17,9 @@ export interface FormattedText {
 
 export type CustomText = FormattedText;
 
-interface BaseElement<Child = CustomText> {
+type BaseElementChild = CustomText | LinkElement;
+
+interface BaseElement<Child = BaseElementChild> {
   type: ElementType;
   children: Child[];
   indentLevel?: number;

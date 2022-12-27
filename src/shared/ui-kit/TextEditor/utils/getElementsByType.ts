@@ -1,17 +1,19 @@
 import { Editor, Element, NodeEntry, Node } from "slate";
 import { EditorNodesOptions } from "slate/dist/interfaces/editor";
-import { checkIsParentElementType } from "./checkIsParentElementType";
+import { ElementType } from "../constants";
+import { CustomElement } from "../types";
 
-export const getParentElements = (
+export const getElementsByType = <T extends CustomElement>(
   editor: Editor,
+  elementType: ElementType,
   options?: EditorNodesOptions<Node>,
-): NodeEntry<Element>[] =>
+): NodeEntry<T>[] =>
   Array.from(
     Editor.nodes(editor, {
       ...options,
       match: (node) =>
         !Editor.isEditor(node) &&
         Element.isElement(node) &&
-        checkIsParentElementType(node.type),
+        node.type === elementType,
     }),
   ) || [];

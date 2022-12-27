@@ -36,8 +36,7 @@ export const changeElementIndent = (
     at: Editor.unhangRange(editor, selection),
   });
   nodeEntries.forEach(([node, path]) => {
-    const nextIndentLevel =
-      (Element.isElement(node) && getNextIndentLevel(node, formatType)) || 0;
+    const nextIndentLevel = getNextIndentLevel(node, formatType) || 0;
     const newProperties: Partial<SlateElement> = {
       indentLevel: nextIndentLevel,
     };

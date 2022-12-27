@@ -38,7 +38,11 @@ const Element: FC<RenderElementProps> = (props) => {
         </ol>
       );
     case ElementType.ListItem:
-      return <li {...elementProps}>{children}</li>;
+      return (
+        <li {...elementProps} dir={undefined}>
+          {children}
+        </li>
+      );
     case ElementType.Link:
       return (
         <Link attributes={elementProps} element={element}>

@@ -34,7 +34,40 @@ const Template: ComponentStory<typeof TextEditor> = (args) => {
         },
         { text: "bold", bold: true },
         {
-          text: ", or add a semantically rendered block quote in the middle of the page, like this:",
+          text: ", or add a bulleted list:",
+        },
+      ],
+    },
+    {
+      type: TextEditorElementType.BulletedList,
+      children: [
+        {
+          type: TextEditorElementType.ListItem,
+          children: [{ text: "With" }],
+        },
+        {
+          type: TextEditorElementType.ListItem,
+          children: [{ text: "Some" }],
+        },
+        {
+          type: TextEditorElementType.ListItem,
+          children: [{ text: "Items" }],
+        },
+      ],
+    },
+    {
+      type: TextEditorElementType.Paragraph,
+      children: [
+        {
+          text: "Here we can have a ",
+        },
+        {
+          type: TextEditorElementType.Link,
+          url: "https://common.io",
+          children: [{ text: "hyperlink" }],
+        },
+        {
+          text: " definition.",
         },
       ],
     },
