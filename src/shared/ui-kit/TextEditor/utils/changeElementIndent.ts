@@ -1,6 +1,6 @@
 import { Editor, Element, Element as SlateElement, Transforms } from "slate";
 import { FormatType, MAX_INDENT_LEVEL } from "../constants";
-import { checkIsParentElementType } from "../utils";
+import { getParentElements } from "./getParentElements";
 
 const getNextIndentLevel = (
   element: Element,
@@ -32,16 +32,9 @@ export const changeElementIndent = (
     return;
   }
 
-  const nodeEntries =
-    Array.from(
-      Editor.nodes(editor, {
-        at: Editor.unhangRange(editor, selection),
-        match: (node) =>
-          !Editor.isEditor(node) &&
-          Element.isElement(node) &&
-          checkIsParentElementType(node.type),
-      }),
-    ) || [];
+  const nodeEntries = getParentElements(editor, {
+    at: Editor.unhangRange(editor, selection),
+  });
   nodeEntries.forEach(([node, path]) => {
     const nextIndentLevel =
       (Element.isElement(node) && getNextIndentLevel(node, formatType)) || 0;

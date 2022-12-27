@@ -10,3 +10,4 @@ export enum FormatType {
 }
 
 export const INDENT_TYPES = [FormatType.LeftIndent, FormatType.RightIndent];
+export const TEXT_DIRECTION_TYPES = [FormatType.LTR, FormatType.RTL];

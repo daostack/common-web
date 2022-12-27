@@ -2,6 +2,7 @@ import React, { CSSProperties, FC } from "react";
 import classNames from "classnames";
 import { RenderElementProps } from "slate-react";
 import { ElementType } from "../../constants";
+import { getElementTextDirection } from "./utils";
 import styles from "./Element.module.scss";
 
 const Element: FC<RenderElementProps> = (props) => {
@@ -12,6 +13,7 @@ const Element: FC<RenderElementProps> = (props) => {
     style: {
       "--element-indent-level": element.indentLevel || 0,
     } as CSSProperties,
+    dir: getElementTextDirection(element, attributes.dir),
   };
 
   switch (element.type) {

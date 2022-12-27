@@ -38,6 +38,10 @@ const Template: ComponentStory<typeof TextEditor> = (args) => {
         },
       ],
     },
+    {
+      type: TextEditorElementType.Paragraph,
+      children: [{ text: "היי ", bold: true }, { text: "מה שלומך?" }],
+    },
   ]);
 
   return <TextEditor {...args} value={value} onChange={setValue} />;
