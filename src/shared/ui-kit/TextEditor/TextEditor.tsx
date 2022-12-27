@@ -4,6 +4,7 @@ import { withHistory } from "slate-history";
 import { Slate, withReact } from "slate-react";
 import { Editor, Header, Toolbar } from "./components";
 import { TextEditorSize } from "./constants";
+import { withInlines } from "./hofs";
 import { TextEditorValue, TextEditorStyles } from "./types";
 import styles from "./TextEditor.module.scss";
 
@@ -29,7 +30,10 @@ const TextEditor: FC<TextEditorProps> = (props) => {
     placeholder,
     styles: outerStyles,
   } = props;
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = useMemo(
+    () => withInlines(withHistory(withReact(createEditor()))),
+    [],
+  );
 
   return (
     <Slate editor={editor} value={value} onChange={onChange}>

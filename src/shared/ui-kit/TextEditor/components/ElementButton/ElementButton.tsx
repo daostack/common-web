@@ -1,6 +1,6 @@
 import React, { FC, MouseEventHandler, ReactNode } from "react";
 import { useSlate } from "slate-react";
-import { ListMarkIcon } from "@/shared/icons";
+import { Link2Icon, ListMarkIcon } from "@/shared/icons";
 import { ElementType } from "../../constants";
 import {
   checkIsListType,
@@ -18,6 +18,9 @@ interface ElementButtonProps {
 const getIconByFormat = (elementType: ElementType): ReactNode => {
   if (checkIsListType(elementType)) {
     return <ListMarkIcon className={styles.listMarkIcon} />;
+  }
+  if (elementType === ElementType.Link) {
+    return <Link2Icon className={styles.linkMarkIcon} />;
   }
 
   return null;
