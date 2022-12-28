@@ -17,6 +17,10 @@ export default {
 const Template: ComponentStory<typeof TextEditor> = (args) => {
   const [value, setValue] = useState<TextEditorValue>([
     {
+      type: TextEditorElementType.Heading,
+      children: [{ text: "Here we have heading" }],
+    },
+    {
       type: TextEditorElementType.Paragraph,
       children: [
         { text: "This is editable " },

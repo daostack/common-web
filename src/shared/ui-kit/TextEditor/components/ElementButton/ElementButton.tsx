@@ -18,6 +18,9 @@ interface ElementButtonProps {
 }
 
 const getIconByFormat = (elementType: ElementType): ReactNode => {
+  if (elementType === ElementType.Heading) {
+    return <span className={styles.headingMarkIcon}>T</span>;
+  }
   if (checkIsListType(elementType)) {
     return <ListMarkIcon className={styles.listMarkIcon} />;
   }

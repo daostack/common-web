@@ -1,5 +1,6 @@
 export enum ElementType {
   Paragraph = "paragraph",
+  Heading = "heading",
   Link = "link",
   NumberedList = "numbered-list",
   BulletedList = "bulleted-list",
@@ -7,5 +8,9 @@ export enum ElementType {
 }
 
 export const LIST_TYPES = [ElementType.NumberedList, ElementType.BulletedList];
-export const PARENT_TYPES = [...LIST_TYPES, ElementType.Paragraph];
+export const PARENT_TYPES = [
+  ...LIST_TYPES,
+  ElementType.Paragraph,
+  ElementType.Heading,
+];
 export const INLINE_TYPES = [ElementType.Link];

@@ -30,6 +30,10 @@ export interface ParagraphElement extends BaseElement {
   type: ElementType.Paragraph;
 }
 
+export interface HeadingElement extends BaseElement {
+  type: ElementType.Heading;
+}
+
 export interface LinkElement extends BaseElement {
   type: ElementType.Link;
   url?: string;
@@ -56,6 +60,7 @@ export interface TextEditorStyles {
 
 export type CustomElement =
   | ParagraphElement
+  | HeadingElement
   | LinkElement
   | NumberedListElement
   | BulletedListElement

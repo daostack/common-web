@@ -2,6 +2,7 @@ import { ElementType, PARENT_TYPES } from "../constants";
 
 type FinalElementType =
   | ElementType.Paragraph
+  | ElementType.Heading
   | ElementType.NumberedList
   | ElementType.BulletedList;
 

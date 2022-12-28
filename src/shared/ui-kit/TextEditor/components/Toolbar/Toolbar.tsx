@@ -7,6 +7,7 @@ import styles from "./Toolbar.module.scss";
 const Toolbar: FC = () => (
   <div className={styles.container}>
     <MarkButton format={FormatType.Bold} />
+    <ElementButton elementType={ElementType.Heading} />
     <ElementButton elementType={ElementType.BulletedList} />
     <ElementButton elementType={ElementType.Link} />
     <MarkButton format={FormatType.LTR} />

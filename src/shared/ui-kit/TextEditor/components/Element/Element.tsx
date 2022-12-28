@@ -19,6 +19,15 @@ const Element: FC<RenderElementProps> = (props) => {
   };
 
   switch (element.type) {
+    case ElementType.Heading:
+      return (
+        <h3
+          {...elementProps}
+          className={classNames(elementProps.className, styles.heading)}
+        >
+          {children}
+        </h3>
+      );
     case ElementType.BulletedList:
       return (
         <ul
