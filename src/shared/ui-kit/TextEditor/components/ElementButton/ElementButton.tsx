@@ -1,7 +1,7 @@
 import React, { FC, MouseEventHandler, ReactNode } from "react";
 import { useSlate } from "slate-react";
 import { useModal } from "@/shared/hooks";
-import { Link2Icon, ListMarkIcon } from "@/shared/icons";
+import { Link3Icon, ListMarkIcon } from "@/shared/icons";
 import { ElementType } from "../../constants";
 import {
   checkIsListType,
@@ -25,7 +25,7 @@ const getIconByFormat = (elementType: ElementType): ReactNode => {
     return <ListMarkIcon className={styles.listMarkIcon} />;
   }
   if (elementType === ElementType.Link) {
-    return <Link2Icon className={styles.linkMarkIcon} />;
+    return <Link3Icon className={styles.linkMarkIcon} />;
   }
 
   return null;
