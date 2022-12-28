@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { createEditor } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, withReact } from "slate-react";
+import { ErrorText } from "@/shared/components/Form/ErrorText";
 import { Editor, Header, Toolbar } from "./components";
 import { TextEditorSize } from "./constants";
 import { withInlines } from "./hofs";
@@ -17,6 +18,7 @@ interface TextEditorProps {
   onChange?: (value: TextEditorValue) => void;
   size?: TextEditorSize;
   placeholder?: string;
+  error?: string;
   readOnly?: boolean;
   styles?: TextEditorStyles;
 }
@@ -30,6 +32,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
     onChange,
     size,
     placeholder,
+    error,
     readOnly = false,
     styles: outerStyles,
   } = props;
@@ -55,6 +58,9 @@ const TextEditor: FC<TextEditorProps> = (props) => {
           <Editor size={size} placeholder={placeholder} readOnly={readOnly} />
           {!readOnly && <Toolbar />}
         </div>
+        {Boolean(error) && (
+          <ErrorText className={outerStyles?.error}>{error}</ErrorText>
+        )}
       </div>
     </Slate>
   );

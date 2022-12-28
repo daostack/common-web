@@ -108,6 +108,11 @@ Optional.args = {
   optional: true,
 };
 
+export const Error = Template.bind({});
+Error.args = {
+  error: "This field is required",
+};
+
 export const ReadOnly = Template.bind({});
 ReadOnly.args = {
   readOnly: true,
