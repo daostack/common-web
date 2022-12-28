@@ -64,7 +64,7 @@ const LinkModal: FC<LinkModalProps> = (props) => {
   }, [isShowing]);
 
   return (
-    <Modal isShowing={isShowing} onClose={onClose} className={styles.modal}>
+    <Modal className={styles.modal} isShowing={isShowing} onClose={onClose}>
       <form className={styles.form} onSubmit={handleLinkUpdate}>
         <Input
           id="textEditorURL"
