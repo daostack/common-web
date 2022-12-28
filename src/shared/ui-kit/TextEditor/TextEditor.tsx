@@ -1,4 +1,5 @@
 import React, { FC, useMemo } from "react";
+import classNames from "classnames";
 import { createEditor } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, withReact } from "slate-react";
@@ -13,9 +14,10 @@ interface TextEditorProps {
   hint?: string;
   optional?: boolean;
   value: TextEditorValue;
-  onChange: (value: TextEditorValue) => void;
+  onChange?: (value: TextEditorValue) => void;
   size?: TextEditorSize;
   placeholder?: string;
+  readOnly?: boolean;
   styles?: TextEditorStyles;
 }
 
@@ -28,6 +30,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
     onChange,
     size,
     placeholder,
+    readOnly = false,
     styles: outerStyles,
   } = props;
   const editor = useMemo(
@@ -44,9 +47,13 @@ const TextEditor: FC<TextEditorProps> = (props) => {
           optional={optional}
           styles={outerStyles}
         />
-        <div className={styles.editorWrapper}>
-          <Editor size={size} placeholder={placeholder} />
-          <Toolbar />
+        <div
+          className={classNames(styles.editorWrapper, {
+            [styles.editorWrapperReadOnly]: readOnly,
+          })}
+        >
+          <Editor size={size} placeholder={placeholder} readOnly={readOnly} />
+          {!readOnly && <Toolbar />}
         </div>
       </div>
     </Slate>

@@ -10,16 +10,18 @@ import styles from "./Editor.module.scss";
 interface EditorProps {
   size?: TextEditorSize;
   placeholder?: string;
+  readOnly?: boolean;
 }
 
 const Editor: FC<EditorProps> = (props) => {
-  const { size = TextEditorSize.Small, placeholder } = props;
+  const { size = TextEditorSize.Small, placeholder, readOnly = false } = props;
   const editor = useSlate();
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const className = classNames(styles.editor, {
     [styles.editorSmallSize]: size === TextEditorSize.Small,
     [styles.editorBigSize]: size === TextEditorSize.Big,
+    [styles.editorReadOnly]: readOnly,
   });
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
@@ -40,6 +42,7 @@ const Editor: FC<EditorProps> = (props) => {
       renderLeaf={renderLeaf}
       placeholder={placeholder}
       spellCheck
+      readOnly={readOnly}
       onKeyDown={handleKeyDown}
     />
   );

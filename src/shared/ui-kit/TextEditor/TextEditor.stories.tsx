@@ -107,3 +107,8 @@ Optional.args = {
   label: "Content",
   optional: true,
 };
+
+export const ReadOnly = Template.bind({});
+ReadOnly.args = {
+  readOnly: true,
+};
