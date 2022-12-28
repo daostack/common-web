@@ -1,4 +1,5 @@
 @import "../../../../../../../styles/mixins";
+@import "../../../../../../../styles/sizes";
 
 .modal {
   max-width: 30rem;
@@ -12,6 +13,10 @@
 
 .buttonsContainer {
   margin-left: auto;
+
+  @include big-phone {
+    width: 100%;
+  }
 }
 
 .buttonsWrapper {
@@ -19,4 +24,8 @@
 
   margin-top: 0.75rem;
   flex-wrap: nowrap;
+
+  @include big-phone {
+    flex-direction: column-reverse;
+  }
 }
