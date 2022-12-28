@@ -1,4 +1,10 @@
-import React, { ChangeEventHandler, FC, useEffect, useState } from "react";
+import React, {
+  ChangeEventHandler,
+  FC,
+  FormEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import { Editor } from "slate";
 import { Input } from "@/shared/components/Form/Input";
 import { Modal } from "@/shared/components/Modal";
@@ -37,7 +43,9 @@ const LinkModal: FC<LinkModalProps> = (props) => {
     setUrl(event.target.value);
   };
 
-  const handleLinkUpdate = () => {
+  const handleLinkUpdate: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+
     if (url) {
       insertLink(editor, url);
     }
