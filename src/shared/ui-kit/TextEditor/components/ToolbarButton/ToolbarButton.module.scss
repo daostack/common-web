@@ -1,0 +1,35 @@
+@import "../../../../../constants";
+
+.button {
+  --btn-color: #{$c-neutrals-300};
+  --btn-bg-color: transparent;
+
+  width: 2.375rem;
+  height: 2.125rem;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--btn-color);
+  background-color: var(--btn-bg-color);
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+
+  &:hover {
+    --btn-color: #{$c-neutrals-600};
+  }
+}
+.buttonActive {
+  --btn-color: #{$c-neutrals-600};
+}
+
+.icon {
+  flex-shrink: 0;
+  color: inherit;
+}

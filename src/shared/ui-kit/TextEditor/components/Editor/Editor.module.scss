@@ -1,0 +1,35 @@
+@import "../../../../../constants";
+
+.editor {
+  --text-editor-h: auto;
+
+  height: var(--text-editor-h);
+  padding: 0.75rem;
+  font-family: NunitoSans, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: var(--text-editor-elements-fs);
+  line-height: 120%;
+  color: $secondary-blue;
+  overflow-y: auto;
+  border: var(--text-editor-border);
+  box-sizing: border-box;
+
+  & [dir="rtl"] {
+    font-family: Heebo, sans-serif;
+  }
+}
+
+.editorSmallSize {
+  --text-editor-h: 4.5rem;
+}
+
+.editorBigSize {
+  --text-editor-h: 8.625rem;
+}
+
+.editorReadOnly {
+  --text-editor-h: auto;
+
+  padding: 0;
+}

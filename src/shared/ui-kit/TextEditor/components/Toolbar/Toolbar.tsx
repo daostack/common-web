@@ -1,0 +1,21 @@
+import React, { FC } from "react";
+import { ElementType, FormatType } from "../../constants";
+import { ElementButton } from "../ElementButton";
+import { MarkButton } from "../MarkButton";
+import styles from "./Toolbar.module.scss";
+
+const Toolbar: FC = () => (
+  <div className={styles.container}>
+    <MarkButton format={FormatType.Bold} />
+    <ElementButton elementType={ElementType.Heading} />
+    <ElementButton elementType={ElementType.BulletedList} />
+    <ElementButton elementType={ElementType.Link} />
+    <MarkButton format={FormatType.LTR} />
+    <MarkButton format={FormatType.RTL} />
+    <MarkButton format={FormatType.LeftIndent} />
+    <MarkButton format={FormatType.RightIndent} />
+    <div className={styles.bottomBorder} />
+  </div>
+);
+
+export default Toolbar;

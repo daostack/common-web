@@ -1,0 +1,19 @@
+@import "../../../constants";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.editorWrapper {
+  --text-editor-border: 0.0625rem solid #{$c-neutrals-100};
+  --text-editor-elements-margin: 0.5rem;
+  --text-editor-elements-indent: 1.5rem;
+  --text-editor-elements-fs: #{$xsmall};
+
+  display: flex;
+  flex-direction: column;
+}
+.editorWrapperReadOnly {
+  --text-editor-border: 0;
+}
