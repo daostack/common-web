@@ -1,7 +1,7 @@
 import React, { FC, MouseEventHandler, ReactNode } from "react";
 import { useSlate } from "slate-react";
 import { useModal } from "@/shared/hooks";
-import { Link3Icon, ListMarkIcon } from "@/shared/icons";
+import { HeadingMarkIcon, Link3Icon, ListMarkIcon } from "@/shared/icons";
 import { ElementType } from "../../constants";
 import {
   checkIsListType,
@@ -19,7 +19,7 @@ interface ElementButtonProps {
 
 const getIconByFormat = (elementType: ElementType): ReactNode => {
   if (elementType === ElementType.Heading) {
-    return <span className={styles.headingMarkIcon}>T</span>;
+    return <HeadingMarkIcon className={styles.headingMarkIcon} />;
   }
   if (checkIsListType(elementType)) {
     return <ListMarkIcon className={styles.listMarkIcon} />;

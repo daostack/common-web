@@ -8,6 +8,7 @@ export { default as CopyLinkChainIcon } from "./copyLinkChain.icon";
 export { default as ExcavatorIcon } from "./excavator.icon";
 export { default as GovernanceIcon } from "./governance.icon";
 export { default as Hamburger2Icon } from "./hamburger2.icon";
+export { default as HeadingMarkIcon } from "./headingMark.icon";
 export { default as IndentLeftMarkIcon } from "./indentLeftMark.icon";
 export { default as IndentRightMarkIcon } from "./indentRightMark.icon";
 export { default as InfoIcon } from "./info.icon";
