@@ -13,7 +13,6 @@
 
   display: flex;
   flex-direction: column;
-  border: var(--text-editor-border);
 }
 .editorWrapperReadOnly {
   --text-editor-border: 0;

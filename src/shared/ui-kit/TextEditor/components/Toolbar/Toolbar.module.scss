@@ -2,9 +2,17 @@
 
 .container {
   display: flex;
-  border-top: var(--text-editor-border);
+  flex-wrap: wrap;
+  border-left: var(--text-editor-border);
+  border-right: var(--text-editor-border);
 
   & > * {
     border-right: var(--text-editor-border);
+    border-bottom: var(--text-editor-border);
   }
+}
+
+.bottomBorder {
+  flex: 1;
+  border-right: 0;
 }

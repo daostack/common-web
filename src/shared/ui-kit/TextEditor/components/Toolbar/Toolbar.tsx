@@ -14,6 +14,7 @@ const Toolbar: FC = () => (
     <MarkButton format={FormatType.RTL} />
     <MarkButton format={FormatType.LeftIndent} />
     <MarkButton format={FormatType.RightIndent} />
+    <div className={styles.bottomBorder} />
   </div>
 );
 

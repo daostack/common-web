@@ -12,6 +12,7 @@
   line-height: 120%;
   color: $secondary-blue;
   overflow-y: auto;
+  border: var(--text-editor-border);
   box-sizing: border-box;
 
   & [dir="rtl"] {
