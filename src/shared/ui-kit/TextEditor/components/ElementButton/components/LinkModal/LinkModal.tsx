@@ -3,6 +3,7 @@ import { Editor } from "slate";
 import { Input } from "@/shared/components/Form/Input";
 import { Modal } from "@/shared/components/Modal";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { checkIsURL } from "@/shared/utils";
 import { ElementType } from "../../../../constants";
 import { LinkElement } from "../../../../types";
 import {
@@ -22,8 +23,15 @@ interface LinkModalProps {
 const LinkModal: FC<LinkModalProps> = (props) => {
   const { editor, isShowing, onClose } = props;
   const [url, setUrl] = useState("");
+  const [isTouched, setIsTouched] = useState(false);
   const isLinkActive = isElementActive(editor, ElementType.Link);
-  const isSaveDisabled = !url;
+  const isURLValid = checkIsURL(url);
+  const errorText = isTouched && !isURLValid ? "Please enter correct URL" : "";
+  const isSaveDisabled = !url || !isURLValid;
+
+  const handleBlur = () => {
+    setIsTouched(true);
+  };
 
   const handleURLChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     setUrl(event.target.value);
@@ -46,6 +54,7 @@ const LinkModal: FC<LinkModalProps> = (props) => {
   useEffect(() => {
     if (!isShowing || !editor.selection) {
       setUrl("");
+      setIsTouched(false);
       return;
     }
 
@@ -73,6 +82,8 @@ const LinkModal: FC<LinkModalProps> = (props) => {
           autoFocus
           value={url}
           onChange={handleURLChange}
+          onBlur={handleBlur}
+          error={errorText}
         />
         <div className={styles.buttonsContainer}>
           <div className={styles.buttonsWrapper}>
