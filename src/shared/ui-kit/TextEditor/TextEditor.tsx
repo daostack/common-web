@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, FocusEventHandler, useMemo } from "react";
 import classNames from "classnames";
 import { createEditor } from "slate";
 import { withHistory } from "slate-history";
@@ -10,12 +10,13 @@ import { withInlines } from "./hofs";
 import { TextEditorValue, TextEditorStyles } from "./types";
 import styles from "./TextEditor.module.scss";
 
-interface TextEditorProps {
+export interface TextEditorProps {
   label?: string;
   hint?: string;
   optional?: boolean;
   value: TextEditorValue;
   onChange?: (value: TextEditorValue) => void;
+  onBlur?: FocusEventHandler;
   size?: TextEditorSize;
   placeholder?: string;
   error?: string;
@@ -30,6 +31,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
     optional,
     value,
     onChange,
+    onBlur,
     size,
     placeholder,
     error,
@@ -55,7 +57,12 @@ const TextEditor: FC<TextEditorProps> = (props) => {
             [styles.editorWrapperReadOnly]: readOnly,
           })}
         >
-          <Editor size={size} placeholder={placeholder} readOnly={readOnly} />
+          <Editor
+            size={size}
+            placeholder={placeholder}
+            readOnly={readOnly}
+            onBlur={onBlur}
+          />
           {!readOnly && <Toolbar />}
         </div>
         {Boolean(error) && (

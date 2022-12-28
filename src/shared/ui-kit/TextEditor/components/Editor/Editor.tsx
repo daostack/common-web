@@ -1,4 +1,9 @@
-import React, { FC, KeyboardEventHandler, useCallback } from "react";
+import React, {
+  FC,
+  FocusEventHandler,
+  KeyboardEventHandler,
+  useCallback,
+} from "react";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
 import { Editable, useSlate } from "slate-react";
@@ -11,10 +16,16 @@ interface EditorProps {
   size?: TextEditorSize;
   placeholder?: string;
   readOnly?: boolean;
+  onBlur?: FocusEventHandler;
 }
 
 const Editor: FC<EditorProps> = (props) => {
-  const { size = TextEditorSize.Small, placeholder, readOnly = false } = props;
+  const {
+    size = TextEditorSize.Small,
+    placeholder,
+    readOnly = false,
+    onBlur,
+  } = props;
   const editor = useSlate();
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
@@ -43,6 +54,7 @@ const Editor: FC<EditorProps> = (props) => {
       placeholder={placeholder}
       spellCheck
       readOnly={readOnly}
+      onBlur={onBlur}
       onKeyDown={handleKeyDown}
     />
   );
