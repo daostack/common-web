@@ -65,7 +65,7 @@ const LinkModal: FC<LinkModalProps> = (props) => {
 
   return (
     <Modal isShowing={isShowing} onClose={onClose} className={styles.modal}>
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={handleLinkUpdate}>
         <Input
           id="textEditorURL"
           name="textEditorURL"
@@ -88,8 +88,8 @@ const LinkModal: FC<LinkModalProps> = (props) => {
               </Button>
             )}
             <Button
+              type="submit"
               variant={ButtonVariant.PrimaryPurple}
-              onClick={handleLinkUpdate}
               disabled={isSaveDisabled}
             >
               Save
