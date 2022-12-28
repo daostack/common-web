@@ -4,7 +4,7 @@ import { LinkElement } from "../types";
 import { getElementsByType } from "./getElementsByType";
 import { unwrapLink } from "./unwrapLink";
 
-export const wrapLink = (editor: Editor, url: string = ""): void => {
+export const wrapLink = (editor: Editor, url = ""): void => {
   const { selection } = editor;
   const isCollapsed = Boolean(selection && Range.isCollapsed(selection));
   const linkElement: LinkElement = {

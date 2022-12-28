@@ -2,7 +2,7 @@ import { ElementType } from "../constants";
 import { TextEditorValue } from "../types";
 
 export const parseStringToTextEditorValue = (
-  initialValue: string = "",
+  initialValue = "",
 ): TextEditorValue => {
   if (!initialValue) {
     return [
