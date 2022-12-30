@@ -5,6 +5,7 @@
 .footer {
   flex-shrink: 0;
   z-index: var(--footer-z-index, unset);
+  height: var(--footer-height, 4.625rem);
   display: flex;
   font-family: NunitoSans, sans-serif;
   font-size: $xxsmall;
@@ -15,7 +16,6 @@
   overflow: hidden;
 }
 .footerDefault {
-  height: var(--footer-height, 4.625rem);
   padding-left: 8.125rem;
   padding-right: 7.5rem;
   flex-wrap: wrap;
@@ -23,9 +23,10 @@
   align-items: center;
 }
 .footerSmall {
-  height: var(--footer-height, 4.25rem);
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding: 0.5rem 1.5rem 0.875rem;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .commonLogo {
