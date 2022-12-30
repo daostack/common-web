@@ -1,4 +1,5 @@
 @import "../../../constants";
+@import "../../../styles/mixins";
 @import "../../../styles/sizes";
 
 .footer {
@@ -31,19 +32,14 @@
 }
 
 .content {
-  display: flex;
-  flex-wrap: wrap;
+  @include flex-list-with-gap(1rem);
+
   align-items: center;
 }
 
 .poweredByInfo {
-  margin-right: 1rem;
   display: flex;
   align-items: center;
-
-  @include tablet {
-    margin-right: 0;
-  }
 }
 
 .daoStackLogo {
@@ -54,8 +50,4 @@
   display: flex;
   align-items: center;
   font-weight: 300;
-
-  @include tablet {
-    display: none;
-  }
 }
