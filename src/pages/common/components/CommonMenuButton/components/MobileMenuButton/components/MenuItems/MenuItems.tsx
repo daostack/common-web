@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { Menu } from "@headlessui/react";
+import { MenuItem as Item } from "@/shared/interfaces";
 import { emptyFunction } from "@/shared/utils";
 import { CommonMenuItem } from "../../../../../../constants";
-import { Item } from "../../../../types";
 import { MenuItem } from "./components";
 import styles from "./MenuItems.module.scss";
 

@@ -6,7 +6,10 @@ import React, {
 } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { Item, ItemType } from "../../../../../../types";
+import {
+  MenuItem as Item,
+  MenuItemType as ItemType,
+} from "@/shared/interfaces";
 import styles from "./MenuItem.module.scss";
 
 interface MenuItemProps {

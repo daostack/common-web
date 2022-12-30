@@ -1,7 +1,7 @@
 import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import { Menu, Transition } from "@headlessui/react";
-import { Item } from "../../types";
+import { MenuItem as Item } from "@/shared/interfaces";
 import { MenuItems } from "./components";
 import styles from "./DesktopMenuButton.module.scss";
 

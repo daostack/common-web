@@ -1,7 +1,7 @@
 import React, { FC, ReactNode } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import { MenuItem as Item } from "@/shared/interfaces";
 import { Portal } from "@/shared/ui-kit";
-import { Item } from "../../types";
 import { MenuItems } from "./components";
 import styles from "./MobileMenuButton.module.scss";
 
