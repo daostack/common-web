@@ -1,15 +1,10 @@
 import CommonPage from "@/pages/common/Common";
-import { ROUTE_PATHS, ViewportBreakpointVariant } from "@/shared/constants";
+import { ROUTE_PATHS } from "@/shared/constants";
 import { SidenavLayout } from "@/shared/layouts";
 import { LayoutConfiguration } from "../types";
 
 export interface SidenavLayoutRouteOptions {
   sidenav?: boolean;
-  footer?:
-    | boolean
-    | {
-        displayedOnViewports?: ViewportBreakpointVariant[];
-      };
 }
 
 export const SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<SidenavLayoutRouteOptions> =
@@ -20,14 +15,6 @@ export const SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<SidenavLayoutRout
         path: ROUTE_PATHS.COMMON,
         exact: true,
         component: CommonPage,
-        routeOptions: {
-          footer: {
-            displayedOnViewports: [
-              ViewportBreakpointVariant.Desktop,
-              ViewportBreakpointVariant.Laptop,
-            ],
-          },
-        },
       },
     ],
   };
