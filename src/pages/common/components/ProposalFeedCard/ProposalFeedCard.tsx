@@ -14,8 +14,6 @@ import {
   ProposalFeedVotingInfoProps,
 } from "./components";
 
-// import styles from "./ProposalFeedCard.module.scss";
-
 interface ProposalFeedCardProps {
   headerProps: FeedCardHeaderProps;
   contentProps: FeedCardContentProps;

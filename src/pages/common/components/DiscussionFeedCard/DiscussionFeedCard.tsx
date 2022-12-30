@@ -9,8 +9,6 @@ import {
   FeedCardFooterProps,
 } from "../FeedCard";
 
-// import styles from "./DiscussionFeedCard.module.scss";
-
 interface DiscussionFeedCardProps {
   headerProps: FeedCardHeaderProps;
   contentProps: FeedCardContentProps;
