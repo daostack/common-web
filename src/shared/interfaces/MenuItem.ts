@@ -24,3 +24,5 @@ interface ButtonItem extends GeneralItem {
 }
 
 export type MenuItem = LinkItem | ButtonItem;
+
+export const CANCEL_MENU_ITEM_ID = "cancel";

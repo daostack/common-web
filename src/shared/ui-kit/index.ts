@@ -6,6 +6,7 @@ export * from "./Container";
 export * from "./DesktopMenu";
 export * from "./Footer";
 export * from "./Loader";
+export * from "./MobileMenu";
 export * from "./NotFound";
 export * from "./Portal";
 export * from "./Sidenav";

@@ -3,15 +3,15 @@ import { Menu, Transition } from "@headlessui/react";
 import { MenuItem as Item } from "@/shared/interfaces";
 import { Portal } from "@/shared/ui-kit";
 import { MenuItems } from "./components";
-import styles from "./MobileMenuButton.module.scss";
+import styles from "./MobileMenu.module.scss";
 
-interface MobileMenuButtonProps {
+interface MobileMenuProps {
   className?: string;
   triggerEl: ReactNode;
   items: Item[];
 }
 
-const MobileMenuButton: FC<MobileMenuButtonProps> = (props) => {
+const MobileMenu: FC<MobileMenuProps> = (props) => {
   const { className, triggerEl, items } = props;
 
   return (
@@ -39,4 +39,4 @@ const MobileMenuButton: FC<MobileMenuButtonProps> = (props) => {
   );
 };
 
-export default MobileMenuButton;
+export default MobileMenu;

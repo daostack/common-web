@@ -1,8 +1,7 @@
 import React, { FC } from "react";
 import { Menu } from "@headlessui/react";
-import { MenuItem as Item } from "@/shared/interfaces";
+import { MenuItem as Item, CANCEL_MENU_ITEM_ID } from "@/shared/interfaces";
 import { emptyFunction } from "@/shared/utils";
-import { CommonMenuItem } from "../../../../../../constants";
 import { MenuItem } from "./components";
 import styles from "./MenuItems.module.scss";
 
@@ -12,7 +11,7 @@ interface MenuItemsProps {
 
 const MenuItems: FC<MenuItemsProps> = (props) => {
   const items = props.items.concat({
-    id: CommonMenuItem.Cancel,
+    id: CANCEL_MENU_ITEM_ID,
     text: "Cancel",
     onClick: emptyFunction,
   });

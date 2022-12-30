@@ -5,14 +5,14 @@ import { MenuItem as Item } from "@/shared/interfaces";
 import { MenuItems } from "./components";
 import styles from "./DesktopMenu.module.scss";
 
-interface DesktopMenuButtonProps {
+interface DesktopMenuProps {
   className?: string;
   menuItemsClassName?: string;
   triggerEl: ReactNode;
   items: Item[];
 }
 
-const DesktopMenu: FC<DesktopMenuButtonProps> = (props) => {
+const DesktopMenu: FC<DesktopMenuProps> = (props) => {
   const { className, menuItemsClassName, triggerEl, items } = props;
 
   return (
