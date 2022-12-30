@@ -4,14 +4,8 @@
 
 .footer {
   flex-shrink: 0;
-  z-index: var(--footer-z-index);
-  height: var(--footer-height, 4.625rem);
-  padding-left: 8.125rem;
-  padding-right: 7.5rem;
+  z-index: var(--footer-z-index, unset);
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
   font-family: NunitoSans, sans-serif;
   font-size: $xxsmall;
   color: $c-neutrals-300;
@@ -19,11 +13,19 @@
   border-top: 0.0625rem solid $c-neutrals-200;
   box-sizing: border-box;
   overflow: hidden;
-
-  @include tablet {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
+}
+.footerDefault {
+  height: var(--footer-height, 4.625rem);
+  padding-left: 8.125rem;
+  padding-right: 7.5rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.footerSmall {
+  height: var(--footer-height, 4.25rem);
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .commonLogo {

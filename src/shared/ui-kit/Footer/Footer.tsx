@@ -1,4 +1,5 @@
-import React, { FC } from "react";
+import React, { DetailedHTMLProps, FC, HTMLAttributes } from "react";
+import classNames from "classnames";
 import logoDAOStackSrc from "@/shared/assets/images/logo-daostack.svg";
 import logoFooterSrc from "@/shared/assets/images/logo-footer.svg";
 import { FOOTER_ID } from "@/shared/constants";
@@ -40,9 +41,31 @@ const Footer: FC<FooterProps> = (props) => {
       &nbsp;{currentYear}. All rights reserved
     </div>
   );
+  const footerProps: DetailedHTMLProps<
+    HTMLAttributes<HTMLElement>,
+    HTMLElement
+  > = {
+    id: FOOTER_ID,
+    className: styles.footer,
+  };
+
+  if (isTabletView || variant === FooterVariant.Small) {
+    return (
+      <footer
+        {...footerProps}
+        className={classNames(footerProps.className, styles.footerSmall)}
+      >
+        {poweredByEl}
+        {copyrightEl}
+      </footer>
+    );
+  }
 
   return (
-    <footer id={FOOTER_ID} className={styles.footer}>
+    <footer
+      {...footerProps}
+      className={classNames(footerProps.className, styles.footerDefault)}
+    >
       {commonLogoEl}
       <div>
         <div className={styles.content}>

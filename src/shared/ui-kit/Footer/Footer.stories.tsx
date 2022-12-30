@@ -5,6 +5,9 @@ import FooterComponent from "./Footer";
 export default {
   title: "Footer",
   component: FooterComponent,
+  parameters: {
+    layout: "fullscreen",
+  },
 } as ComponentMeta<typeof FooterComponent>;
 
 const Template: ComponentStory<typeof FooterComponent> = (args) => (
