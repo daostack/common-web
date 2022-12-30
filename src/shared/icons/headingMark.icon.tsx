@@ -9,45 +9,44 @@ const HeadingMarkIcon: FC<HeadingMarkIconProps> = ({ className }) => {
 
   return (
     <svg
-      className={className}
-      width="21"
-      height="18"
-      viewBox="0 0 21 18"
+      width="20"
+      height="17"
+      viewBox="0 0 20 17"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M1 4V1H17V4"
+        d="M1 3.8125V1H16V3.8125"
         stroke={color}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M6 17H12"
+        d="M5.6875 16H11.3125"
         stroke={color}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M9 1V17"
+        d="M8.5 1V16"
         stroke={color}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M13 10V9H21V10"
+        d="M12 9.875V9H19V9.875"
         stroke={color}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M16 17H19"
+        d="M14.24 16H16.865"
         stroke={color}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M17 9V17"
+        d="M15.5 9V16"
         stroke={color}
         strokeLinecap="round"
         strokeLinejoin="round"
