@@ -2,7 +2,8 @@ import React, { FC } from "react";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { MoreIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
-import { DesktopMenuButton, MobileMenuButton } from "./components";
+import { DesktopMenu } from "@/shared/ui-kit";
+import { MobileMenuButton } from "./components";
 import { useMenuItems } from "./hooks";
 import styles from "./CommonMenuButton.module.scss";
 
@@ -46,7 +47,7 @@ const CommonMenuButton: FC<CommonMenuButtonProps> = (props) => {
 
   if (!isMobileVersion) {
     return (
-      <DesktopMenuButton
+      <DesktopMenu
         className={outerStyles?.container}
         menuItemsClassName={outerStyles?.menuItems}
         triggerEl={buttonEl}

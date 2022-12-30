@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Menu, Transition } from "@headlessui/react";
 import { MenuItem as Item } from "@/shared/interfaces";
 import { MenuItems } from "./components";
-import styles from "./DesktopMenuButton.module.scss";
+import styles from "./DesktopMenu.module.scss";
 
 interface DesktopMenuButtonProps {
   className?: string;
@@ -12,7 +12,7 @@ interface DesktopMenuButtonProps {
   items: Item[];
 }
 
-const DesktopMenuButton: FC<DesktopMenuButtonProps> = (props) => {
+const DesktopMenu: FC<DesktopMenuButtonProps> = (props) => {
   const { className, menuItemsClassName, triggerEl, items } = props;
 
   return (
@@ -32,4 +32,4 @@ const DesktopMenuButton: FC<DesktopMenuButtonProps> = (props) => {
   );
 };
 
-export default DesktopMenuButton;
+export default DesktopMenu;

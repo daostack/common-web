@@ -3,6 +3,7 @@ export * from "./Button";
 export * from "./ButtonIcon";
 export * from "./CommonLogo";
 export * from "./Container";
+export * from "./DesktopMenu";
 export * from "./Footer";
 export * from "./Loader";
 export * from "./NotFound";
