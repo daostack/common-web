@@ -1,25 +1,52 @@
 import React, { FC } from "react";
 import { BoldPlusIcon } from "@/shared/icons";
-import { Button, ButtonIcon, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
+import {
+  Button,
+  ButtonIcon,
+  ButtonSize,
+  ButtonVariant,
+  DesktopMenu,
+  MobileMenu,
+} from "@/shared/ui-kit";
+import { useMenuItems } from "./hooks";
 import styles from "./NewCollaborationButton.module.scss";
 
 interface NewCollaborationButtonProps {
-  isIconVersion?: boolean;
+  isMobileVersion?: boolean;
 }
 
 const NewCollaborationButton: FC<NewCollaborationButtonProps> = (props) => {
-  const { isIconVersion = false } = props;
-  const icon = <BoldPlusIcon className={styles.icon} />;
+  const { isMobileVersion = false } = props;
+  const items = useMenuItems();
   const buttonVariant = ButtonVariant.OutlineBlue;
+  const iconEl = <BoldPlusIcon className={styles.icon} />;
 
-  if (isIconVersion) {
-    return <ButtonIcon variant={buttonVariant}>{icon}</ButtonIcon>;
+  if (items.length === 0) {
+    return null;
+  }
+
+  if (!isMobileVersion) {
+    return (
+      <DesktopMenu
+        triggerEl={
+          <Button
+            variant={buttonVariant}
+            size={ButtonSize.Xsmall}
+            leftIcon={iconEl}
+          >
+            New Collaboration
+          </Button>
+        }
+        items={items}
+      />
+    );
   }
 
   return (
-    <Button variant={buttonVariant} size={ButtonSize.Xsmall} leftIcon={icon}>
-      New Collaboration
-    </Button>
+    <MobileMenu
+      triggerEl={<ButtonIcon variant={buttonVariant}>{iconEl}</ButtonIcon>}
+      items={items}
+    />
   );
 };
 

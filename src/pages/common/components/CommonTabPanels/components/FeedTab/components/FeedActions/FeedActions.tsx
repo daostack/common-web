@@ -13,8 +13,7 @@ interface FeedActionsProps {
 
 const FeedActions: FC<FeedActionsProps> = (props) => {
   const { allowedActions = [] } = props;
-  const isTabletView = useIsTabletView();
-  const isIconVersion = isTabletView;
+  const isMobileVersion = useIsTabletView();
 
   if (allowedActions.length === 0) {
     return null;
@@ -24,7 +23,7 @@ const FeedActions: FC<FeedActionsProps> = (props) => {
     <div>
       <div className={styles.container}>
         {allowedActions.includes(FeedAction.NewCollaboration) && (
-          <NewCollaborationButton isIconVersion={isIconVersion} />
+          <NewCollaborationButton isMobileVersion={isMobileVersion} />
         )}
       </div>
     </div>
