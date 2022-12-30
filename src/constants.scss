@@ -105,6 +105,7 @@ $c-primary-300: #7786ff;
 $c-primary-400: #5666f5;
 $c-primary-500: #2c3fef;
 $c-neutrals-100: #eeeeee;
+$c-neutrals-100-shadow: 4px 4px 0px #E2E2E2;
 $c-neutrals-200: #d5d5e4;
 $c-neutrals-300: #979bba;
 $c-neutrals-600: #001a36;
@@ -112,10 +113,17 @@ $c-notification-100: #f9faff;
 $c-shades-white: #ffffff;
 $c-shades-black: #000000;
 $c-shades-neutrals-30: rgba(0, 26, 54, 0.3);
+$c-error-100: #FFEFEC;
+$c-error-100-shadow: 4px 4px 0px #FEDED8;
 $c-shades-100: #fbfcfc;
 $c-error-300: #ff603e;
 $c-hover-secondary: #f9fcff;
 $c-separator-light-non-opaque: rgba(60, 60, 67, 0.36);
+$logo-1: #99CA80;
+$success-100: #F1FDF0;
+$success-100-shadow: 4px 4px 0px #E2F9E0;
+$success-300: #6EE569;
+
 
 $c-sidebar-shadow: rgba(0, 26, 54, 0.08);
 $c-sidebar-user-menu-shadow: rgba(0, 0, 0, 0.15259);

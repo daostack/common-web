@@ -7,6 +7,12 @@ export enum VoteOutcome {
   Abstained = "abstained",
 }
 
+export enum VoteType {
+  Approve = "approve",
+  Reject = "reject",
+  Abstain = "abstain",
+}
+
 export enum VoteAction {
   Create = "create",
   Update = "update",
