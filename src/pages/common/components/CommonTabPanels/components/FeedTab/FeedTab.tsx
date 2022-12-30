@@ -6,6 +6,7 @@ import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Container } from "@/shared/ui-kit";
 import { TabNavigation } from "../TabNavigation";
+import { FeedActions, FeedAction } from "./components";
 import styles from "./FeedTab.module.scss";
 
 interface FeedTabProps {
@@ -16,6 +17,7 @@ const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab } = props;
   const isTabletView = useIsTabletView();
   const { common, parentCommons } = useCommonDataContext();
+  const allowedFeedActions = [FeedAction.NewCollaboration];
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}></div>
@@ -32,10 +34,10 @@ const FeedTab: FC<FeedTabProps> = (props) => {
   return (
     <div className={styles.container}>
       <Container
-        className={classNames(
-          styles.tabNavigationContainer,
-          styles.tabNavigationContainerWithoutActions,
-        )}
+        className={classNames(styles.tabNavigationContainer, {
+          [styles.tabNavigationContainerWithoutActions]:
+            allowedFeedActions.length === 0,
+        })}
         viewports={[
           ViewportBreakpointVariant.Tablet,
           ViewportBreakpointVariant.PhoneOriented,
@@ -46,6 +48,7 @@ const FeedTab: FC<FeedTabProps> = (props) => {
           activeTab={activeTab}
           common={common}
           parentCommons={parentCommons}
+          rightContent={<FeedActions allowedActions={allowedFeedActions} />}
         />
       </Container>
       <div className={styles.columnsWrapper}>
