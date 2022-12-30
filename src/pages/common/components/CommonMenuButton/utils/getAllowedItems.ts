@@ -33,7 +33,6 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
           key: ProposalsTypes.DELETE_COMMON,
         }),
     ),
-  [CommonMenuItem.Cancel]: () => false,
 };
 
 export const getAllowedItems = (
