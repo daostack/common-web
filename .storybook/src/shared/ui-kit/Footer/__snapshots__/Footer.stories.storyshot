@@ -2,7 +2,7 @@
 
 exports[`Storyshots UI Kit/Footer Footer 1`] = `
 <footer
-  className="footer"
+  className="footer footerDefault"
   id="footer"
 >
   <img
