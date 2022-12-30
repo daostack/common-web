@@ -13,11 +13,12 @@ export enum FooterVariant {
 }
 
 interface FooterProps {
+  className?: string;
   variant?: FooterVariant;
 }
 
 const Footer: FC<FooterProps> = (props) => {
-  const { variant = FooterVariant.Default } = props;
+  const { className: outerClassName, variant = FooterVariant.Default } = props;
   const isTabletView = useIsTabletView();
   const currentYear = new Date().getFullYear();
   const commonLogoEl = (
@@ -46,7 +47,7 @@ const Footer: FC<FooterProps> = (props) => {
     HTMLElement
   > = {
     id: FOOTER_ID,
-    className: styles.footer,
+    className: classNames(outerClassName, styles.footer),
   };
 
   if (isTabletView || variant === FooterVariant.Small) {
