@@ -9,6 +9,7 @@ const HeadingMarkIcon: FC<HeadingMarkIconProps> = ({ className }) => {
 
   return (
     <svg
+      className={className}
       width="20"
       height="17"
       viewBox="0 0 20 17"
