@@ -1,0 +1,45 @@
+@import "../../../../../constants";
+
+.container {
+  position: relative;
+  width: 6.25rem;
+  height: 6.25rem;
+  border: 0.0625rem solid #{$c-neutrals-300};
+  box-sizing: border-box;
+
+  &:hover {
+    .removeButton {
+      display: flex;
+    }
+  }
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removeButton {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: $c-neutrals-100;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: $c-neutrals-200;
+  }
+
+  &:active {
+    background-color: $c-neutrals-300;
+  }
+}
+
+.removeButtonIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
