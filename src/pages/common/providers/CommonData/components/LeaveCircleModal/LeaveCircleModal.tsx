@@ -3,6 +3,7 @@ import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
 import { CommonService } from "@/services";
 import volunteeringImageSrc from "@/shared/assets/images/volunteering.svg";
 import { Image, Modal } from "@/shared/components";
+import { ErrorText } from "@/shared/components/Form";
 import { Circle } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
@@ -19,9 +20,11 @@ interface LeaveCircleModalProps {
 const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
   const { circle, commonId, commonMemberId, isShowing, onClose } = props;
   const [isLeaving, setIsLeaving] = useState(false);
+  const [errorText, setErrorText] = useState("");
 
   const handleLeave = async () => {
     setIsLeaving(true);
+    setErrorText("");
 
     try {
       await CommonService.leaveCircle(commonId, circle.id);
@@ -33,6 +36,7 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
       setIsLeaving(false);
       onClose();
     } catch (error) {
+      setErrorText("Something went wrong");
       setIsLeaving(false);
     }
   };
@@ -82,6 +86,9 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
             </Button>
           </div>
         </div>
+        {errorText && (
+          <ErrorText className={styles.error}>{errorText}</ErrorText>
+        )}
       </div>
     </Modal>
   );
