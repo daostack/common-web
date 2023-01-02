@@ -9,7 +9,7 @@ export interface UploadFile {
   file: File | string;
 }
 
-interface UploadFilesProps {
+export interface UploadFilesProps {
   className?: string;
   files?: UploadFile[];
   onChange: (files: UploadFile[]) => void;
