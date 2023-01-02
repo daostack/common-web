@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
 import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
+import { CommonService } from "@/services";
 import volunteeringImageSrc from "@/shared/assets/images/volunteering.svg";
 import { Image, Modal } from "@/shared/components";
 import { Circle } from "@/shared/models";
@@ -23,9 +24,7 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
     setIsLeaving(true);
 
     try {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 1000);
-      });
+      await CommonService.leaveCircle(commonId, circle.id);
       CommonMemberEventEmitter.emit(
         CommonMemberEvent.Reset,
         commonId,
