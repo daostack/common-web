@@ -31,6 +31,7 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
         commonMemberId,
       );
       setIsLeaving(false);
+      onClose();
     } catch (error) {
       setIsLeaving(false);
     }
