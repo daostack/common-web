@@ -13,6 +13,7 @@ export { default as HeadingMarkIcon } from "./headingMark.icon";
 export { default as IndentLeftMarkIcon } from "./indentLeftMark.icon";
 export { default as IndentRightMarkIcon } from "./indentRightMark.icon";
 export { default as InfoIcon } from "./info.icon";
+export { default as LeftArrowIcon } from "./leftArrow.icon";
 export { default as Link2Icon } from "./link2.icon";
 export { default as Link3Icon } from "./link3.icon";
 export { default as ListMarkIcon } from "./listMark.icon";
