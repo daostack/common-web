@@ -1,0 +1,33 @@
+.element {
+  --element-indent: 0rem;
+  --element-calculated-indent: calc(
+    var(--text-editor-elements-indent, 0rem) * var(--element-indent-level, 0) +
+      var(--element-indent)
+  );
+
+  margin: 0 0 var(--text-editor-elements-margin);
+  padding: 0 0 0 var(--element-calculated-indent);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &[dir="rtl"] {
+    padding-left: 0;
+    padding-right: var(--element-calculated-indent);
+  }
+}
+
+.heading {
+  margin-bottom: calc(var(--text-editor-elements-margin) * 1.5);
+  font-size: calc(var(--text-editor-elements-fs) * 1.2);
+  font-weight: bold;
+}
+
+.paragraph {
+  font-size: var(--text-editor-elements-fs);
+}
+
+.list {
+  --element-indent: 1.5rem;
+}

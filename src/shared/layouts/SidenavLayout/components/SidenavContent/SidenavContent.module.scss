@@ -15,31 +15,13 @@
   }
 }
 
-.logoWrapper {
-  flex-shrink: 0;
-  padding: 1.5rem 0 1.75rem 2.375rem;
-  text-decoration: none;
-
-  @include tablet {
-    padding: 1rem 0;
-    display: flex;
-    justify-content: center;
-  }
-}
-
-.logo {
-  max-width: 9.25rem;
-  width: 100%;
-
-  @include tablet {
-    max-width: 6.125rem;
-    height: 1.875rem;
-  }
-}
-
 .separator {
   flex-shrink: 0;
   height: 0.0625rem;
   margin: 0 var(--sidenav-content-ph);
   background-color: $c-neutrals-200;
+}
+
+.footer {
+  margin-top: auto;
 }

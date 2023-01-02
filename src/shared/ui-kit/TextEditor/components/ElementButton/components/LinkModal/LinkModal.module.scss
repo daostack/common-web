@@ -1,0 +1,31 @@
+@import "../../../../../../../styles/mixins";
+@import "../../../../../../../styles/sizes";
+
+.modal {
+  max-width: 30rem;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttonsContainer {
+  margin-left: auto;
+
+  @include big-phone {
+    width: 100%;
+  }
+}
+
+.buttonsWrapper {
+  @include flex-list-with-gap(1rem);
+
+  margin-top: 0.75rem;
+  flex-wrap: nowrap;
+
+  @include big-phone {
+    flex-direction: column-reverse;
+  }
+}

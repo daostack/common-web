@@ -1,10 +1,8 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
-import logoSrc from "@/shared/assets/images/logo-sidenav.svg";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { CommonLogo, Footer, FooterVariant } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { Navigation, Projects, UserInfo } from "./components";
 import styles from "./SidenavContent.module.scss";
@@ -21,9 +19,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
 
   return (
     <div className={classNames(styles.container, className)}>
-      <NavLink className={styles.logoWrapper} to={ROUTE_PATHS.HOME}>
-        <img className={styles.logo} src={logoSrc} alt="Common Logo" />
-      </NavLink>
+      <CommonLogo />
       {separatorEl}
       <UserInfo
         avatarURL={user?.photoURL}
@@ -34,6 +30,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
       <Navigation />
       {separatorEl}
       <Projects />
+      <Footer className={styles.footer} variant={FooterVariant.Small} />
     </div>
   );
 };

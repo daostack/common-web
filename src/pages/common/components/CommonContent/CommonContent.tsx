@@ -21,9 +21,11 @@ import styles from "./CommonContent.module.scss";
 
 interface CommonContentProps {
   common: Common;
+  parentCommon?: Common;
   governance: Governance;
   parentCommons: Common[];
   subCommons: Common[];
+  parentCommonSubCommons: Common[];
   isCommonMemberFetched: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
 }
@@ -36,6 +38,8 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     subCommons,
     isCommonMemberFetched,
     commonMember,
+    parentCommon,
+    parentCommonSubCommons,
   } = props;
   const [tab, setTab] = useState(CommonTab.About);
   const isAuthenticated = useSelector(authentificated());
@@ -51,40 +55,46 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   return (
     <CommonDataProvider
       common={common}
+      parentCommon={parentCommon}
       governance={governance}
       commonMember={commonMember}
       subCommons={subCommons}
+      parentCommonSubCommons={parentCommonSubCommons}
     >
       <CommonTopNavigation
         commonMember={commonMember}
         circles={governance.circles}
         isSubCommon={isSubCommon}
+        commonId={common.id}
       />
       {!isCommonMemberFetched && <Loader variant={LoaderVariant.Global} />}
       <div className={styles.container}>
-        <Container>
-          <CommonHeader
-            commonImageSrc={common.image}
-            commonName={common.name}
-            description={common.byline}
-            details={getMainCommonDetails(common)}
-            isProject={Boolean(common.directParent)}
-            withJoin={false}
-          />
-        </Container>
-        <div className={styles.commonHeaderSeparator} />
-        {!isTabletView && (
+        <div className={styles.contentHeaderWrapper}>
           <Container>
-            <CommonManagement
-              activeTab={tab}
-              isSubCommon={isSubCommon}
-              circles={governance.circles}
-              commonMember={commonMember}
-              isAuthenticated={isAuthenticated}
-              onTabChange={setTab}
+            <CommonHeader
+              commonImageSrc={common.image}
+              commonName={common.name}
+              description={common.byline}
+              details={getMainCommonDetails(common)}
+              isProject={Boolean(common.directParent)}
+              withJoin={false}
             />
           </Container>
-        )}
+          <div className={styles.commonHeaderSeparator} />
+          {!isTabletView && (
+            <Container>
+              <CommonManagement
+                commonId={common.id}
+                activeTab={tab}
+                isSubCommon={isSubCommon}
+                circles={governance.circles}
+                commonMember={commonMember}
+                isAuthenticated={isAuthenticated}
+                onTabChange={setTab}
+              />
+            </Container>
+          )}
+        </div>
         <CommonTabPanels
           activeTab={tab}
           common={common}

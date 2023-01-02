@@ -1,11 +1,14 @@
 import { createContext, useContext } from "react";
-import { Circle } from "@/shared/models";
+import { Circle, Common } from "@/shared/models";
 import { CommonMenuItem } from "../../constants";
 
 interface Data {
   onMenuItemSelect: (menuItem: CommonMenuItem | null) => void;
   areNonCreatedProjectsLeft: boolean;
   onProjectCreate: () => void;
+  subCommons: Common[];
+  parentCommon?: Common;
+  parentCommonSubCommons: Common[];
   onLeaveCircle: (
     commonId: string,
     commonMemberId: string,

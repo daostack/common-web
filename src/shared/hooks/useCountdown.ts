@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { formatCountdownValue } from "../utils";
 
 interface Difference {
   isFinished: boolean;
@@ -6,6 +7,7 @@ interface Difference {
   hours: number;
   minutes: number;
   seconds: number;
+  timer: string;
 }
 
 interface Return extends Difference {
@@ -17,6 +19,7 @@ const INITIAL_DIFFERENCE: Difference = {
   hours: 0,
   minutes: 0,
   seconds: 0,
+  timer: "",
   isFinished: false,
 };
 
@@ -38,11 +41,17 @@ const calculateDifference = (finalDate: Date): Difference => {
 
   const seconds = Math.floor(milliseconds / 1000);
 
+  const daysText = days > 0 ? `${days} Day${days > 1 ? "s " : " "}` : "";
+  const timer = `${daysText}${formatCountdownValue(
+    hours,
+  )}:${formatCountdownValue(minutes)}:${formatCountdownValue(seconds)}`;
+
   return {
     days,
     hours,
     minutes,
     seconds,
+    timer,
     isFinished: false,
   };
 };
@@ -50,7 +59,7 @@ const calculateDifference = (finalDate: Date): Difference => {
 const useCountdown = (): Return => {
   const [countdownDate, setCountdownDate] = useState<Date | null>(null);
   const [difference, setDifference] = useState<Difference>(
-    countdownDate ? calculateDifference(countdownDate) : INITIAL_DIFFERENCE
+    countdownDate ? calculateDifference(countdownDate) : INITIAL_DIFFERENCE,
   );
 
   const startCountdown = useCallback((date: Date) => {

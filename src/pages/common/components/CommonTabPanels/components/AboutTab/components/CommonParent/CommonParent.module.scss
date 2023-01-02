@@ -1,0 +1,56 @@
+@import "../../../../../../../../constants";
+@import "../../../../../../../../styles/sizes";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  color: $c-neutrals-600;
+}
+
+.title {
+  margin: 0 0 1.5rem;
+  font-size: $small;
+}
+
+.contentWrapper {
+  display: flex;
+  word-break: break-word;
+}
+
+.commonImage {
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin-right: 1rem;
+  border-radius: 1.125rem;
+}
+
+.commonInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.commonName {
+  margin: 0;
+  font-family: Lexend, sans-serif;
+  font-size: $moderate-med;
+}
+
+.commonDescription {
+  margin: 0.5rem 0 0;
+  font-size: $xsmall;
+  line-height: 120%;
+  letter-spacing: 0.01em;
+}
+
+.commonLink {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  font-size: $xsmall;
+  color: $c-primary-400;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import ApprovedIcon from "@/shared/icons/approved.icon";
+import ApprovedIcon from "@/shared/icons/voteFor.icon";
 import { PaymentAmount, Currency, Proposal, User } from "@/shared/models";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import { formatEpochTime, formatPrice } from "@/shared/utils";

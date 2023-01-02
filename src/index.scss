@@ -214,6 +214,10 @@ code {
   }
 }
 
+:-webkit-any-link {
+  color: inherit;
+}
+
 @supports (padding-bottom: constant(safe-area-inset-bottom)) {
   body {
     --safe-area-inset-bottom: constant(safe-area-inset-bottom);

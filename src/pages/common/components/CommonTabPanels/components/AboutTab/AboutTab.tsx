@@ -1,8 +1,7 @@
 import React, { FC } from "react";
-import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonTab } from "@/pages/common/constants";
+import { useCommonDataContext } from "@/pages/common/providers";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -19,6 +18,7 @@ import {
   CommonDescription,
   CommonEntranceInfo,
   CommonGovernance,
+  CommonParent,
   CommonProjects,
   CommonRules,
 } from "./components";
@@ -46,8 +46,8 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     rules,
     limitations,
   } = props;
-  const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
+  const { parentCommon, parentCommonSubCommons } = useCommonDataContext();
   const isParentCommon = common.directParent === null;
 
   const renderMainColumn = () => (
@@ -60,14 +60,22 @@ const AboutTab: FC<AboutTabProps> = (props) => {
 
   const renderAdditionalColumn = () => (
     <div className={styles.additionalColumnWrapper}>
-      {limitations && (
-        <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
-      )}
+      <CommonEntranceInfo
+        limitations={limitations}
+        withJoinRequest={!commonMember}
+        common={common}
+      />
       {isParentCommon && (
         <CommonProjects
           commonMember={commonMember}
           subCommons={subCommons}
           circles={governance.circles}
+        />
+      )}
+      {parentCommon && (
+        <CommonParent
+          parentCommon={parentCommon}
+          projectsAmountInParentCommon={parentCommonSubCommons.length}
         />
       )}
     </div>
@@ -92,8 +100,16 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       <div className={styles.separator} />
       {rules.length > 0 && <CommonRules rules={rules} />}
       <div className={styles.separator} />
-      {limitations && (
-        <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
+      <CommonEntranceInfo
+        limitations={limitations}
+        withJoinRequest={!commonMember}
+        common={common}
+      />
+      {parentCommon && (
+        <CommonParent
+          parentCommon={parentCommon}
+          projectsAmountInParentCommon={parentCommonSubCommons.length}
+        />
       )}
     </div>
   );

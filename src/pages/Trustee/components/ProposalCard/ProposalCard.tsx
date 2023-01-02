@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Loader } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { useBankAccountDetails } from "@/shared/hooks/useCases";
-import ApprovedIcon from "@/shared/icons/approved.icon";
+import ApprovedIcon from "@/shared/icons/voteFor.icon";
 import { PaymeTypeCodes } from "@/shared/interfaces/api/payMe";
 import { Common, Currency, DateFormat, User } from "@/shared/models";
 import { FundsAllocation } from "@/shared/models/governance/proposals";

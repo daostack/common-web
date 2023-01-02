@@ -1,3 +1,4 @@
+export * from "./firestoreDataConverter";
 export * from "./error";
 export * from "./shared";
 export { default as tokenHandler } from "./tokenHandler";
@@ -15,6 +16,7 @@ export * from "./timeAgo";
 export * from "./transformFirebaseDataToModel";
 export * from "./roles";
 export * from "./checkIsIFrame";
+export * from "./checkIsURL";
 export * from "./circles";
 export * from "./notifications";
 export * from "./getFirebaseToken";
