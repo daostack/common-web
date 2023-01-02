@@ -5,7 +5,7 @@ import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Container } from "@/shared/ui-kit";
 import { TabNavigation } from "../TabNavigation";
-import { FeedActions, FeedAction } from "./components";
+import { FeedActions, FeedAction, NewDiscussionCreation } from "./components";
 import styles from "./FeedTab.module.scss";
 
 interface FeedTabProps {
@@ -19,7 +19,9 @@ const FeedTab: FC<FeedTabProps> = (props) => {
   const allowedFeedActions = [FeedAction.NewCollaboration];
 
   const renderMainColumn = () => (
-    <div className={styles.mainColumnWrapper}></div>
+    <div className={styles.mainColumnWrapper}>
+      <NewDiscussionCreation />
+    </div>
   );
 
   const renderAdditionalColumn = () => (
