@@ -3,6 +3,7 @@ export { default as BlocksIcon } from "./blocks.icon";
 export { default as BoldMarkIcon } from "./boldMark.icon";
 export { default as BoldPlusIcon } from "./boldPlus.icon";
 export { default as CaretIcon } from "./caret.icon";
+export { default as Close2Icon } from "./close2.icon";
 export { default as CopyrightIcon } from "./copyright.icon";
 export { default as CopyLinkChainIcon } from "./copyLinkChain.icon";
 export { default as ExcavatorIcon } from "./excavator.icon";
