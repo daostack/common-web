@@ -23,6 +23,8 @@ const Trigger: FC<TriggerProps> = (props) => {
     if (file) {
       onChange(file);
     }
+
+    event.target.value = "";
   };
 
   return (
