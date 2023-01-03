@@ -11,6 +11,7 @@ import { TextEditorValue, TextEditorStyles } from "./types";
 import styles from "./TextEditor.module.scss";
 
 export interface TextEditorProps {
+  className?: string;
   id?: string;
   name?: string;
   label?: string;
@@ -28,6 +29,7 @@ export interface TextEditorProps {
 
 const TextEditor: FC<TextEditorProps> = (props) => {
   const {
+    className,
     id,
     name,
     label,
@@ -49,7 +51,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
 
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
-      <div className={styles.container}>
+      <div className={classNames(styles.container, className)}>
         <Header
           label={label}
           hint={hint}

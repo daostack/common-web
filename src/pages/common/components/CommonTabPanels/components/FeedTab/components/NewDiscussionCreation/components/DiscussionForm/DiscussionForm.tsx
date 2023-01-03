@@ -1,6 +1,10 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { TextEditor, TextField } from "@/shared/components/Form/Formik";
+import {
+  TextEditor,
+  TextField,
+  UploadFiles,
+} from "@/shared/components/Form/Formik";
 import { MAX_DISCUSSION_TITLE_LENGTH } from "../../constants";
 import styles from "./DiscussionForm.module.scss";
 
@@ -25,7 +29,13 @@ const DiscussionForm: FC<DiscussionFormProps> = (props) => {
           hint: styles.textFieldHint,
         }}
       />
-      <TextEditor name="content" label="Content" optional />
+      <TextEditor
+        className={styles.field}
+        name="content"
+        label="Content"
+        optional
+      />
+      <UploadFiles name="images" />
     </div>
   );
 };

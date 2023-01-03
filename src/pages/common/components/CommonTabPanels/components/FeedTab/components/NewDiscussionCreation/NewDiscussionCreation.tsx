@@ -8,6 +8,7 @@ import {
   CommonMember,
   Governance,
 } from "@/shared/models";
+import { UploadFile } from "@/shared/ui-kit";
 import {
   parseStringToTextEditorValue,
   TextEditorValue,
@@ -26,12 +27,14 @@ interface FormValues {
   circle: Circle | null;
   title: string;
   content: TextEditorValue;
+  images: UploadFile[];
 }
 
 const INITIAL_VALUES: FormValues = {
   circle: null,
   title: "",
   content: parseStringToTextEditorValue(),
+  images: [],
 };
 
 const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
