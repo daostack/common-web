@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { Form } from "@/shared/components/Form/Formik";
@@ -36,8 +36,11 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const dispatch = useDispatch();
   const isTabletView = useIsTabletView();
   const { onNewCollaborationMenuItemSelect } = useCommonDataContext();
-  const initialValues =
-    useSelector(selectDiscussionCreationData) || INITIAL_VALUES;
+  const discussionCreationData = useSelector(selectDiscussionCreationData);
+  const initialValues = useMemo(
+    () => discussionCreationData || INITIAL_VALUES,
+    [],
+  );
   const userCircleIds = commonMember
     ? Object.values(commonMember.circles.map)
     : [];
