@@ -1,6 +1,14 @@
+@import "../../../../../../styles/sizes";
+
 .container {
   width: 100%;
+  min-height: 2rem;
   display: flex;
   justify-content: space-between;
   align-self: flex-start;
+
+  @include tablet {
+    min-height: 2.25rem;
+    align-items: center;
+  }
 }

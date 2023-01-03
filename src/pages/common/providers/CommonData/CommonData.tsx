@@ -27,6 +27,7 @@ interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  parentCommons: Common[];
   subCommons: Common[];
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
@@ -37,6 +38,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     common,
     governance,
     commonMember,
+    parentCommons,
     subCommons,
     parentCommon,
     parentCommonSubCommons,
@@ -97,6 +99,9 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onMenuItemSelect: handleMenuItemSelect,
       areNonCreatedProjectsLeft,
       onProjectCreate: onSubCommonCreationModalOpen,
+      common,
+      governance,
+      parentCommons,
       subCommons,
       parentCommon,
       parentCommonSubCommons,
@@ -106,6 +111,9 @@ const CommonData: FC<CommonDataProps> = (props) => {
       handleMenuItemSelect,
       areNonCreatedProjectsLeft,
       onSubCommonCreationModalOpen,
+      common,
+      governance,
+      parentCommons,
       subCommons,
       parentCommon,
       parentCommonSubCommons,

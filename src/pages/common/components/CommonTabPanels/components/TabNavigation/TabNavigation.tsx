@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import { CommonTab } from "@/pages/common/constants";
 import { Common } from "@/shared/models";
@@ -10,10 +10,11 @@ interface TabNavigationProps {
   activeTab: CommonTab;
   common: Common;
   parentCommons: Common[];
+  rightContent?: ReactNode;
 }
 
 const TabNavigation: FC<TabNavigationProps> = (props) => {
-  const { className, activeTab, common, parentCommons } = props;
+  const { className, activeTab, common, parentCommons, rightContent } = props;
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -22,6 +23,7 @@ const TabNavigation: FC<TabNavigationProps> = (props) => {
         common={common}
         parentCommons={parentCommons}
       />
+      {rightContent}
     </div>
   );
 };
