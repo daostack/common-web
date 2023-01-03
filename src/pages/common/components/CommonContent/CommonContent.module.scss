@@ -1,6 +1,10 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
 
+.globalLoader {
+  z-index: 10;
+}
+
 .container {
   --main-content-mw: 62%;
   --bottom-tabs-height: 4rem;

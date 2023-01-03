@@ -68,7 +68,12 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         isSubCommon={isSubCommon}
         commonId={common.id}
       />
-      {!isCommonMemberFetched && <Loader variant={LoaderVariant.Global} />}
+      {!isCommonMemberFetched && (
+        <Loader
+          overlayClassName={styles.globalLoader}
+          variant={LoaderVariant.Global}
+        />
+      )}
       <div className={styles.container}>
         <div className={styles.contentHeaderWrapper}>
           <Container>

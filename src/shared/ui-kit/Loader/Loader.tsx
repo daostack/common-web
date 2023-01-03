@@ -10,17 +10,24 @@ export enum LoaderVariant {
 
 interface LoaderProps {
   className?: string;
+  overlayClassName?: string;
   variant?: LoaderVariant;
 }
 
 const Loader: FC<LoaderProps> = (props) => {
-  const { className, variant = LoaderVariant.Default } = props;
+  const {
+    className,
+    overlayClassName,
+    variant = LoaderVariant.Default,
+  } = props;
   const loaderEl = <div className={classNames(styles.loader, className)} />;
 
   if (variant === LoaderVariant.Global) {
     return (
       <Portal>
-        <div className={styles.globalLoaderOverlay}>
+        <div
+          className={classNames(styles.globalLoaderOverlay, overlayClassName)}
+        >
           <div className={styles.globalLoaderWrapper}>{loaderEl}</div>
         </div>
       </Portal>
