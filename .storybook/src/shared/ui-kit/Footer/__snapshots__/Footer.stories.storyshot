@@ -48,7 +48,7 @@ exports[`Storyshots UI Kit/Footer Default 1`] = `
           />
         </svg>
          
-        2022
+        2023
         . All rights reserved
       </div>
     </div>
@@ -95,7 +95,7 @@ exports[`Storyshots UI Kit/Footer Small 1`] = `
       />
     </svg>
      
-    2022
+    2023
     . All rights reserved
   </div>
 </footer>

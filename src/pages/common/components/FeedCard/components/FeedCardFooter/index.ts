@@ -1,1 +1,1 @@
-export * from './FeedCardFooter';
+export * from "./FeedCardFooter";

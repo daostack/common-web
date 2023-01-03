@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { CommonMemberEventEmitter } from "@/events";
+import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
 import {
   CreateCommonModal,
   CreateProposalModal,
@@ -15,8 +15,13 @@ import {
 } from "@/shared/models";
 import { projectsActions } from "@/store/states";
 import { CommonMenuItem } from "../../constants";
+import { LeaveCircleModal } from "./components";
 import { CommonDataContext, CommonDataContextValue } from "./context";
-import { useProposalCreationModal, useSubCommonCreationModal } from "./hooks";
+import {
+  useLeaveCircleModal,
+  useProposalCreationModal,
+  useSubCommonCreationModal,
+} from "./hooks";
 
 interface CommonDataProps {
   common: Common;
@@ -57,6 +62,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onSubCommonCreationModalClose,
     onSubCommonCreate,
   } = useSubCommonCreationModal(governance.circles, subCommons);
+  const {
+    circleToLeave,
+    isLeaveCircleModalOpen,
+    onLeaveCircleModalOpen,
+    onLeaveCircleModalClose,
+  } = useLeaveCircleModal();
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -75,7 +86,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
 
   const handleSuccessfulLeave = () => {
     if (commonMember) {
-      CommonMemberEventEmitter.emit(`clear-common-member-${commonMember.id}`);
+      CommonMemberEventEmitter.emit(CommonMemberEvent.Clear, commonMember.id);
     }
 
     dispatch(projectsActions.removeMembershipFromProjectAndChildren(common.id));
@@ -94,6 +105,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
+      onLeaveCircle: onLeaveCircleModalOpen,
     }),
     [
       handleMenuItemSelect,
@@ -105,6 +117,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
+      onLeaveCircleModalOpen,
     ],
   );
 
@@ -142,6 +155,15 @@ const CommonData: FC<CommonDataProps> = (props) => {
         isSubCommonCreation
         shouldBeWithoutIntroduction
       />
+      {circleToLeave && commonMember && (
+        <LeaveCircleModal
+          circle={circleToLeave}
+          commonId={common.id}
+          commonMemberId={commonMember.id}
+          isShowing={isLeaveCircleModalOpen}
+          onClose={onLeaveCircleModalClose}
+        />
+      )}
     </CommonDataContext.Provider>
   );
 };

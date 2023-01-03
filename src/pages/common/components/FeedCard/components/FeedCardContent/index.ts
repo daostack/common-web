@@ -1,1 +1,1 @@
-export * from './FeedCardContent';
+export * from "./FeedCardContent";
