@@ -1,1 +1,1 @@
-export * from './FeedInfoHeader';
+export * from "./FeedInfoHeader";

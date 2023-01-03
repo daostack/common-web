@@ -1,2 +1,2 @@
-export * from './ProposalFeedButtonContainer';
-export * from './ProposalFeedVotingInfo';
+export * from "./ProposalFeedButtonContainer";
+export * from "./ProposalFeedVotingInfo";

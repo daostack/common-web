@@ -19,7 +19,7 @@ const INITIAL_DIFFERENCE: Difference = {
   hours: 0,
   minutes: 0,
   seconds: 0,
-  timer: '',
+  timer: "",
   isFinished: false,
 };
 
@@ -59,7 +59,7 @@ const calculateDifference = (finalDate: Date): Difference => {
 const useCountdown = (): Return => {
   const [countdownDate, setCountdownDate] = useState<Date | null>(null);
   const [difference, setDifference] = useState<Difference>(
-    countdownDate ? calculateDifference(countdownDate) : INITIAL_DIFFERENCE
+    countdownDate ? calculateDifference(countdownDate) : INITIAL_DIFFERENCE,
   );
 
   const startCountdown = useCallback((date: Date) => {

@@ -1,1 +1,1 @@
-export * from './ProposalFeedButtonContainer';
+export * from "./ProposalFeedButtonContainer";

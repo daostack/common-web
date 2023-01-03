@@ -1,1 +1,1 @@
-export * from './DiscussionFeedCard';
+export * from "./DiscussionFeedCard";

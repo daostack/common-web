@@ -1,1 +1,1 @@
-export * from './ProposalFeedVotingInfo';
+export * from "./ProposalFeedVotingInfo";

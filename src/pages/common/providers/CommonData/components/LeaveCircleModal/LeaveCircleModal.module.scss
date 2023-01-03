@@ -1,0 +1,84 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/mixins";
+@import "../../../../../../styles/sizes";
+
+.modal {
+  max-width: 39.125rem;
+
+  @include tablet {
+    max-width: 20rem;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.image {
+  max-width: 11rem;
+  width: 100%;
+  margin-bottom: 2.375rem;
+}
+
+.title {
+  margin: 0;
+  padding: 0;
+  font-family: Lexend, sans-serif;
+  font-weight: normal;
+  font-size: $moderate-med;
+  color: $c-neutrals-600;
+  letter-spacing: 0.02em;
+}
+
+.description {
+  max-width: 28rem;
+  margin: 0.5rem 0 1.5rem;
+  font-family: NunitoSans, sans-serif;
+  font-size: $small;
+  line-height: 150%;
+  color: $c-neutrals-300;
+}
+
+.buttonsContainer {
+  margin: 0 auto;
+
+  @include tablet {
+    width: 100%;
+  }
+}
+
+.buttonsWrapper {
+  @include desktop {
+    @include flex-list-with-gap(1rem);
+  }
+
+  @include only-laptop {
+    @include flex-list-with-gap(1rem);
+  }
+
+  @include tablet {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.button {
+  @include tablet {
+    max-width: 14.375rem;
+    width: 100%;
+  }
+}
+
+.confirmButton {
+  @include tablet {
+    margin-top: 2rem;
+  }
+}
+
+.error {
+  font-size: $xsmall;
+}

@@ -3,5 +3,8 @@ export {
   CommonEvent,
 } from "./CommonEventEmitter";
 export type { CommonEventToListener } from "./CommonEventEmitter";
-export { default as CommonMemberEventEmitter } from "./CommonMemberEventEmitter";
-export type { CommonMemberEvent } from "./CommonMemberEventEmitter";
+export {
+  default as CommonMemberEventEmitter,
+  CommonMemberEvent,
+} from "./CommonMemberEventEmitter";
+export type { CommonMemberEventToListener } from "./CommonMemberEventEmitter";

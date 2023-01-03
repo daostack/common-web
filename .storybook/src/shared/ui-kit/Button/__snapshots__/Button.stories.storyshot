@@ -449,3 +449,201 @@ exports[`Storyshots UI Kit/Button Outline Blue With Icon 1`] = `
   </button>
 </div>
 `;
+
+exports[`Storyshots UI Kit/Button Primary Gray 1`] = `
+<div
+  className="sb-flex-column sb-align-start sb-w-max-content sb-items-mb-2"
+>
+  <button
+    className="button buttonPrimaryGrayVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonPrimaryGrayVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonPrimaryGrayVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonPrimaryGrayVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryGrayVariant buttonLargeSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryGrayVariant buttonMediumSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryGrayVariant buttonSmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryGrayVariant buttonXsmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryGrayVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryGrayVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryGrayVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryGrayVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+</div>
+`;
+
+exports[`Storyshots UI Kit/Button Primary Purple 1`] = `
+<div
+  className="sb-flex-column sb-align-start sb-w-max-content sb-items-mb-2"
+>
+  <button
+    className="button buttonPrimaryPurpleVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonPrimaryPurpleVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonPrimaryPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonPrimaryPurpleVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonLargeSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonMediumSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonSmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonXsmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+</div>
+`;

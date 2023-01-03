@@ -1,4 +1,5 @@
 import { commonMembersSubCollection } from "@/pages/OldCommon/store/api";
+import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import {
   Collection,
@@ -13,6 +14,7 @@ import {
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import Api from "./Api";
 
 const converter = firestoreDataConverter<Common>();
 
@@ -231,6 +233,16 @@ class CommonService {
         isRemoved: docChange.type === "removed",
       }));
       callback(data);
+    });
+  };
+
+  public leaveCircle = async (
+    commonId: string,
+    circleId: string,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.CreateAction, {
+      type: GovernanceActions.LEAVE_CIRCLE,
+      args: { commonId, circleId },
     });
   };
 }

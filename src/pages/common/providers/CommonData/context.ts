@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Common, Governance } from "@/shared/models";
+import { Circle, Common, Governance } from "@/shared/models";
 import { CommonMenuItem } from "../../constants";
 
 interface Data {
@@ -12,6 +12,11 @@ interface Data {
   subCommons: Common[];
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
+  onLeaveCircle: (
+    commonId: string,
+    commonMemberId: string,
+    circle: Circle,
+  ) => void;
 }
 
 export type CommonDataContextValue = Data | null;
