@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { LeftArrowIcon } from "@/shared/icons";
@@ -10,25 +10,27 @@ import { Permission } from "./constants";
 import styles from "./PermissionSelection.module.scss";
 
 interface PermissionSelectionProps {
+  currentCircle: Circle | null;
   governanceCircles: Governance["circles"];
   userCircleIds?: string[];
+  onCircleSave: (circle: Circle | null) => void;
 }
 
 const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
-  const { governanceCircles, userCircleIds } = props;
+  const { currentCircle, governanceCircles, userCircleIds, onCircleSave } =
+    props;
   const {
     isShowing: isCircleSelectionModalOpen,
     onOpen: onCircleSelectionModalOpen,
     onClose: onCircleSelectionModalClose,
   } = useModal(false);
-  const [selectedCircle, setSelectedCircle] = useState<Circle | null>(null);
   const isTabletView = useIsTabletView();
   const items: MenuItem[] = [
     {
       id: Permission.Public,
       text: "Public discussion",
       onClick: () => {
-        setSelectedCircle(null);
+        onCircleSave(null);
       },
     },
     {
@@ -38,8 +40,8 @@ const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
     },
   ];
   const buttonEl = (
-    <button className={styles.button}>
-      {!selectedCircle ? "Public" : `Private: ${selectedCircle.name}`}
+    <button className={styles.button} type="button">
+      {!currentCircle ? "Public" : `Private: ${currentCircle.name}`}
       <LeftArrowIcon className={styles.arrowIcon} />
     </button>
   );
@@ -59,8 +61,8 @@ const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
       <CircleSelectionModal
         isOpen={isCircleSelectionModalOpen}
         onClose={onCircleSelectionModalClose}
-        onSave={setSelectedCircle}
-        initialCircleId={selectedCircle?.id}
+        onSave={onCircleSave}
+        initialCircleId={currentCircle?.id}
         governanceCircles={governanceCircles}
         userCircleIds={userCircleIds}
       />

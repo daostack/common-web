@@ -1,0 +1,1 @@
+export const MAX_DISCUSSION_TITLE_LENGTH = 70;

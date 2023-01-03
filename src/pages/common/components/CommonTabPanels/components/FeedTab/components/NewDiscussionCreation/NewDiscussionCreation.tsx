@@ -1,14 +1,30 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
+import { Formik, FormikConfig } from "formik";
+import { Form } from "@/shared/components/Form/Formik";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import {
+  Circle,
+  CirclesPermissions,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { CommonCard } from "../../../../../CommonCard";
 import { NewDiscussionHeader } from "./components";
+import validationSchema from "./validationSchema";
 import styles from "./NewDiscussionCreation.module.scss";
 
 interface NewDiscussionCreationProps {
   governanceCircles: Governance["circles"];
   commonMember: (CommonMember & CirclesPermissions) | null;
 }
+
+interface FormValues {
+  circle: Circle | null;
+}
+
+const INITIAL_VALUES: FormValues = {
+  circle: null,
+};
 
 const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const { governanceCircles, commonMember } = props;
@@ -17,12 +33,32 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     ? Object.values(commonMember.circles.map)
     : [];
 
+  const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
+    (values) => {
+      console.log(values);
+    },
+    [],
+  );
+
   return (
-    <CommonCard className={styles.container} hideCardStyles={isTabletView}>
-      <NewDiscussionHeader
-        governanceCircles={governanceCircles}
-        userCircleIds={userCircleIds}
-      />
+    <CommonCard hideCardStyles={isTabletView}>
+      <Formik
+        initialValues={INITIAL_VALUES}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+        validateOnMount
+      >
+        {({ values, setFieldValue }) => (
+          <Form className={styles.form}>
+            <NewDiscussionHeader
+              currentCircle={values.circle}
+              governanceCircles={governanceCircles}
+              userCircleIds={userCircleIds}
+              onCircleSave={(circle) => setFieldValue("circle", circle)}
+            />
+          </Form>
+        )}
+      </Formik>
     </CommonCard>
   );
 };
