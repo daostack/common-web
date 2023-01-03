@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { CommonTab } from "@/pages/common/constants";
+import { CommonTab, NewCollaborationMenuItem } from "@/pages/common/constants";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -18,15 +18,18 @@ interface FeedTabProps {
 const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember } = props;
   const isTabletView = useIsTabletView();
-  const { common, parentCommons } = useCommonDataContext();
+  const { common, parentCommons, newCollaborationMenuItem } =
+    useCommonDataContext();
   const allowedFeedActions = [FeedAction.NewCollaboration];
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
-      <NewDiscussionCreation
-        governanceCircles={governance.circles}
-        commonMember={commonMember}
-      />
+      {newCollaborationMenuItem === NewCollaborationMenuItem.NewDiscussion && (
+        <NewDiscussionCreation
+          governanceCircles={governance.circles}
+          commonMember={commonMember}
+        />
+      )}
     </div>
   );
 
