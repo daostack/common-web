@@ -101,7 +101,6 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           common={common}
           governance={governance}
           commonMember={commonMember}
-          parentCommons={parentCommons}
           subCommons={subCommons}
         />
         {isTabletView && (

@@ -18,9 +18,10 @@ interface FeedTabProps {
 const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember } = props;
   const isTabletView = useIsTabletView();
-  const { common, parentCommons, newCollaborationMenuItem } =
-    useCommonDataContext();
-  const allowedFeedActions = [FeedAction.NewCollaboration];
+  const { newCollaborationMenuItem } = useCommonDataContext();
+  const allowedFeedActions = !newCollaborationMenuItem
+    ? [FeedAction.NewCollaboration]
+    : [];
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
@@ -53,8 +54,6 @@ const FeedTab: FC<FeedTabProps> = (props) => {
       >
         <TabNavigation
           activeTab={activeTab}
-          common={common}
-          parentCommons={parentCommons}
           rightContent={<FeedActions allowedActions={allowedFeedActions} />}
         />
       </Container>
