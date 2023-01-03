@@ -11,6 +11,8 @@ import { TextEditorValue, TextEditorStyles } from "./types";
 import styles from "./TextEditor.module.scss";
 
 export interface TextEditorProps {
+  id?: string;
+  name?: string;
   label?: string;
   hint?: string;
   optional?: boolean;
@@ -26,6 +28,8 @@ export interface TextEditorProps {
 
 const TextEditor: FC<TextEditorProps> = (props) => {
   const {
+    id,
+    name,
     label,
     hint,
     optional,
@@ -58,6 +62,8 @@ const TextEditor: FC<TextEditorProps> = (props) => {
           })}
         >
           <Editor
+            id={id}
+            name={name}
             size={size}
             placeholder={placeholder}
             readOnly={readOnly}
