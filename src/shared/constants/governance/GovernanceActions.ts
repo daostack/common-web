@@ -38,4 +38,6 @@ export enum GovernanceActions {
 
   INVITE_TO_CIRCLE = "INVITE_TO_CIRCLE",
   INVITE_TO_COMMON = "INVITE_TO_COMMON",
+
+  LEAVE_CIRCLE = "LEAVE_CIRCLE",
 }

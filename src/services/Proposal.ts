@@ -1,7 +1,13 @@
 import { ProposalsTypes } from "@/shared/constants";
 import { Collection, ProposalState } from "@/shared/models";
-import { AssignCircle, RemoveCircle } from "@/shared/models/governance/proposals";
-import { checkIsCountdownState, transformFirebaseDataList } from "@/shared/utils";
+import {
+  AssignCircle,
+  RemoveCircle,
+} from "@/shared/models/governance/proposals";
+import {
+  checkIsCountdownState,
+  transformFirebaseDataList,
+} from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 
 class ProposalService {
@@ -22,7 +28,7 @@ class ProposalService {
     commonId: string,
     userId: string,
     callback: (payload: (AssignCircle | RemoveCircle)[]) => void,
-  ): () => void =>{
+  ): (() => void) => {
     const query = firebase
       .firestore()
       .collection(Collection.Proposals)
@@ -39,7 +45,7 @@ class ProposalService {
       callback(list);
     });
     return unsubscribe;
-  }
+  };
 }
 
 export default new ProposalService();

@@ -1,1 +1,1 @@
-export * from './FeedCardHeader';
+export * from "./FeedCardHeader";

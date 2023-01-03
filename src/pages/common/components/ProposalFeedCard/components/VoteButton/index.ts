@@ -1,1 +1,1 @@
-export * from './VoteButton';
+export * from "./VoteButton";

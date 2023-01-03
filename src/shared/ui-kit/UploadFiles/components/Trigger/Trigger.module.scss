@@ -1,0 +1,57 @@
+@import "../../../../../constants";
+
+.container {
+  --upload-trigger-color: #{$c-neutrals-200};
+  --upload-trigger-border-color: #{$c-neutrals-100};
+  --upload-trigger-border: 0.0625rem solid var(--upload-trigger-border-color);
+
+  position: relative;
+  width: 6.25rem;
+  height: 6.25rem;
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--upload-trigger-color);
+  background-color: $c-shades-white;
+  border: var(--upload-trigger-border);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  box-sizing: border-box;
+
+  &:hover {
+    --upload-trigger-color: #{$c-primary-200};
+    --upload-trigger-border-color: #{$c-primary-200};
+  }
+
+  &:active {
+    --upload-trigger-color: #{$c-neutrals-300};
+    --upload-trigger-border-color: #{$c-neutrals-300};
+  }
+}
+
+.uploadIcon {
+  width: 2.875rem;
+  height: 1.75rem;
+  color: inherit;
+}
+
+.text {
+  max-width: 80%;
+  margin-top: 0.75rem;
+  font-size: $xsmall;
+  line-height: 120%;
+  text-align: center;
+  color: inherit;
+}
+
+.input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  outline: 0;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
