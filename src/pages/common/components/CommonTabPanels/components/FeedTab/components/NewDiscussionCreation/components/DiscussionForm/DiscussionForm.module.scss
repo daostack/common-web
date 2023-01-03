@@ -1,0 +1,23 @@
+@import "../../../../../../../../../../constants";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.field {
+  margin-bottom: 1.875rem;
+
+  &:hover {
+    margin-bottom: 0;
+  }
+
+  .textFieldLabelWrapper {
+    font-size: $xsmall;
+  }
+
+  .textFieldHint {
+    font-style: normal;
+    color: $c-neutrals-300;
+  }
+}

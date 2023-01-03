@@ -5,7 +5,8 @@ import {
   TextEditorProps as BaseTextEditorProps,
 } from "@/shared/ui-kit/TextEditor";
 
-interface TextEditorProps extends BaseTextEditorProps {
+interface TextEditorProps
+  extends Omit<BaseTextEditorProps, "value" | "onChange"> {
   name: string;
   isRequired?: boolean;
 }

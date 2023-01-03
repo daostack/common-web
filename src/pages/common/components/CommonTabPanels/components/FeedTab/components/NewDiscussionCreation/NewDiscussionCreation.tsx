@@ -8,8 +8,12 @@ import {
   CommonMember,
   Governance,
 } from "@/shared/models";
+import {
+  parseStringToTextEditorValue,
+  TextEditorValue,
+} from "@/shared/ui-kit/TextEditor";
 import { CommonCard } from "../../../../../CommonCard";
-import { NewDiscussionHeader } from "./components";
+import { DiscussionForm, NewDiscussionHeader } from "./components";
 import validationSchema from "./validationSchema";
 import styles from "./NewDiscussionCreation.module.scss";
 
@@ -20,10 +24,14 @@ interface NewDiscussionCreationProps {
 
 interface FormValues {
   circle: Circle | null;
+  title: string;
+  content: TextEditorValue;
 }
 
 const INITIAL_VALUES: FormValues = {
   circle: null,
+  title: "",
+  content: parseStringToTextEditorValue(),
 };
 
 const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
@@ -56,6 +64,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
               userCircleIds={userCircleIds}
               onCircleSave={(circle) => setFieldValue("circle", circle)}
             />
+            <DiscussionForm className={styles.discussionForm} />
           </Form>
         )}
       </Formik>
