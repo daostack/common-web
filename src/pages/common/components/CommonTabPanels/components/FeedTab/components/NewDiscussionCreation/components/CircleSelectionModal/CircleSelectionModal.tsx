@@ -27,11 +27,13 @@ const CircleSelectionModal: FC<CircleSelectionModalProps> = (props) => {
     initialCircleId,
   );
   const governanceCircles = Object.values(props.governanceCircles);
-  const circleOptions: DropdownOption[] = governanceCircles.map((circle) => ({
-    text: circle.name,
-    searchText: circle.name,
-    value: circle.id,
-  }));
+  const circleOptions: DropdownOption[] = governanceCircles
+    .filter((circle) => userCircleIds.includes(circle.id))
+    .map((circle) => ({
+      text: circle.name,
+      searchText: circle.name,
+      value: circle.id,
+    }));
   const selectedCircle = governanceCircles.find(
     (circle) => circle.id === selectedCircleId,
   );
