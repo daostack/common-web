@@ -49,7 +49,7 @@ const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
     <MobileMenu triggerEl={buttonEl} items={items} />
   ) : (
     <DesktopMenu
-      menuItemsClassName={styles.desktopMenuItem}
+      menuItemsClassName={styles.desktopMenuItems}
       triggerEl={buttonEl}
       items={items}
     />
