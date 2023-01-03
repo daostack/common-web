@@ -3,6 +3,7 @@ import { CommonTab } from "@/pages/common/constants";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
 import { TabNavigation } from "../TabNavigation";
 import { FeedActions, FeedAction, NewDiscussionCreation } from "./components";
@@ -10,17 +11,22 @@ import styles from "./FeedTab.module.scss";
 
 interface FeedTabProps {
   activeTab: CommonTab;
+  governance: Governance;
+  commonMember: (CommonMember & CirclesPermissions) | null;
 }
 
 const FeedTab: FC<FeedTabProps> = (props) => {
-  const { activeTab } = props;
+  const { activeTab, governance, commonMember } = props;
   const isTabletView = useIsTabletView();
   const { common, parentCommons } = useCommonDataContext();
   const allowedFeedActions = [FeedAction.NewCollaboration];
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
-      <NewDiscussionCreation />
+      <NewDiscussionCreation
+        governanceCircles={governance.circles}
+        commonMember={commonMember}
+      />
     </div>
   );
 
