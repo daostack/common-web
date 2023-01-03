@@ -58,6 +58,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       parentCommon={parentCommon}
       governance={governance}
       commonMember={commonMember}
+      parentCommons={parentCommons}
       subCommons={subCommons}
       parentCommonSubCommons={parentCommonSubCommons}
     >
