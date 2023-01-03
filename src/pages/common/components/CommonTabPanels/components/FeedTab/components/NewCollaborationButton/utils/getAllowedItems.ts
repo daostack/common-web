@@ -1,23 +1,23 @@
-import { MenuItem } from "../constants";
+import { NewCollaborationMenuItem } from "../../../../../../../constants";
 
 export type GetAllowedItemsOptions = void;
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
-  MenuItem,
+  NewCollaborationMenuItem,
   (options: GetAllowedItemsOptions) => boolean
 > = {
-  [MenuItem.NewProposal]: () => true,
-  [MenuItem.NewDiscussion]: () => true,
-  [MenuItem.NewContribution]: () => true,
+  [NewCollaborationMenuItem.NewProposal]: () => true,
+  [NewCollaborationMenuItem.NewDiscussion]: () => true,
+  [NewCollaborationMenuItem.NewContribution]: () => true,
 };
 
 export const getAllowedItems = (
   options: GetAllowedItemsOptions,
-): MenuItem[] => {
+): NewCollaborationMenuItem[] => {
   const orderedItems = [
-    MenuItem.NewProposal,
-    MenuItem.NewDiscussion,
-    MenuItem.NewContribution,
+    NewCollaborationMenuItem.NewProposal,
+    NewCollaborationMenuItem.NewDiscussion,
+    NewCollaborationMenuItem.NewContribution,
   ];
 
   return orderedItems.filter((item) =>
