@@ -13,6 +13,7 @@ import {
   parseStringToTextEditorValue,
   TextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
+import { useCommonDataContext } from "../../../../../../providers";
 import { CommonCard } from "../../../../../CommonCard";
 import { DiscussionForm, NewDiscussionHeader } from "./components";
 import validationSchema from "./validationSchema";
@@ -40,9 +41,14 @@ const INITIAL_VALUES: FormValues = {
 const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const { governanceCircles, commonMember } = props;
   const isTabletView = useIsTabletView();
+  const { onNewCollaborationMenuItemSelect } = useCommonDataContext();
   const userCircleIds = commonMember
     ? Object.values(commonMember.circles.map)
     : [];
+
+  const handleCancel = () => {
+    onNewCollaborationMenuItemSelect(null);
+  };
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
@@ -73,6 +79,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
                 <Button
                   className={styles.button}
                   variant={ButtonVariant.PrimaryGray}
+                  onClick={handleCancel}
                 >
                   Cancel
                 </Button>

@@ -19,7 +19,7 @@ interface Data {
   ) => void;
   newCollaborationMenuItem: NewCollaborationMenuItem | null;
   onNewCollaborationMenuItemSelect: (
-    menuItem: NewCollaborationMenuItem,
+    menuItem: NewCollaborationMenuItem | null,
   ) => void;
 }
 
