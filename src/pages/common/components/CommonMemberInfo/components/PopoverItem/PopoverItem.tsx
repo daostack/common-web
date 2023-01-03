@@ -1,6 +1,8 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import classNames from "classnames";
+import { useCommonDataContext } from "@/pages/common/providers";
 import { CommonService, Logger } from "@/services";
+import { Circle } from "@/shared/models";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import styles from "./PopoverItem.module.scss";
 
@@ -15,6 +17,8 @@ interface CommonMemberInfoProps {
   canRequestToJoin: boolean;
   canLeaveCircle: boolean;
   shouldShowLeaveButton: boolean;
+  circle: Circle;
+  userId: string;
 }
 
 export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
@@ -29,9 +33,12 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     canRequestToJoin,
     canLeaveCircle,
     shouldShowLeaveButton,
+    userId,
+    circle,
   } = props;
   const [membersCount, setMembersCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const { onLeaveCircle, onJoinCircle } = useCommonDataContext();
 
   const ActionButton = useCallback(() => {
     if (isMember && !shouldShowLeaveButton) {
@@ -43,6 +50,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
         <Button
           className={styles.actionButton}
           variant={ButtonVariant.OutlineBlue}
+          onClick={() => onLeaveCircle(commonId, userId, circle)}
         >
           Leave Circle
         </Button>
@@ -58,6 +66,23 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
         className={styles.actionButton}
         variant={ButtonVariant.OutlineBlue}
         disabled={!canRequestToJoin}
+        onClick={() =>
+          onJoinCircle(
+            {
+              args: {
+                commonId,
+                title: "Test",
+                description: "Test 21312",
+                images: [],
+                links: [],
+                files: [],
+                circleId,
+                userId,
+              },
+            },
+            circleName,
+          )
+        }
       >
         Request to join
       </Button>

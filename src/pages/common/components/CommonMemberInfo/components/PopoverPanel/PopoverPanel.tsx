@@ -11,11 +11,18 @@ interface PopoverPanelProps {
   pendingCircles: Map<string, boolean>;
   governanceCircles: Circle[];
   circleIds: string[];
+  userId: string;
 }
 
 export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
-  const { className, governanceCircles, pendingCircles, commonId, circleIds } =
-    props;
+  const {
+    className,
+    governanceCircles,
+    pendingCircles,
+    commonId,
+    circleIds,
+    userId,
+  } = props;
 
   return (
     <Popover.Panel className={classNames(styles.popoverPanel, className)}>
@@ -36,6 +43,8 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
             shouldShowLeaveButton={
               circleIds.length > 1 && index === circleIds.length - 1
             }
+            circle={governanceCircles[index]}
+            userId={userId}
           />
         ),
       )}

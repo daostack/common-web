@@ -86,6 +86,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
             governanceCircles={governanceCircles}
             pendingCircles={pendingCircles}
             circleIds={circleIds}
+            userId={userId}
           />
         </Portal>
       ) : (
@@ -94,6 +95,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
           governanceCircles={governanceCircles}
           pendingCircles={pendingCircles}
           circleIds={circleIds}
+          userId={userId}
         />
       )}
     </Popover>

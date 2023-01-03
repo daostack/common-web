@@ -1,3 +1,5 @@
+import { CreateProposal } from "@/pages/OldCommon/interfaces";
+import { createProposal } from "@/pages/OldCommon/store/api";
 import { ProposalsTypes } from "@/shared/constants";
 import { Collection, ProposalState } from "@/shared/models";
 import {
@@ -46,6 +48,12 @@ class ProposalService {
     });
     return unsubscribe;
   };
+
+  public createAssignProposal = async (payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">): Promise<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["response"]> => {
+    const createdProposal = await createProposal({...payload, type: ProposalsTypes.ASSIGN_CIRCLE}) as AssignCircle;
+    
+    return createdProposal;
+  }
 }
 
 export default new ProposalService();
