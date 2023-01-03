@@ -1,21 +1,21 @@
 import React, { FC, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { Form } from "@/shared/components/Form/Formik";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import {
-  Circle,
-  CirclesPermissions,
-  CommonMember,
-  Governance,
-} from "@/shared/models";
-import { Button, ButtonVariant, UploadFile } from "@/shared/ui-kit";
-import {
-  parseStringToTextEditorValue,
-  TextEditorValue,
-} from "@/shared/ui-kit/TextEditor";
+import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
+import { selectDiscussionCreationData } from "@/store/states";
+import { commonActions } from "@/store/states";
 import { useCommonDataContext } from "../../../../../../providers";
 import { CommonCard } from "../../../../../CommonCard";
-import { DiscussionForm, NewDiscussionHeader } from "./components";
+import {
+  DiscussionForm,
+  DiscussionFormPersist,
+  NewDiscussionHeader,
+} from "./components";
 import validationSchema from "./validationSchema";
 import styles from "./NewDiscussionCreation.module.scss";
 
@@ -24,14 +24,7 @@ interface NewDiscussionCreationProps {
   commonMember: (CommonMember & CirclesPermissions) | null;
 }
 
-interface FormValues {
-  circle: Circle | null;
-  title: string;
-  content: TextEditorValue;
-  images: UploadFile[];
-}
-
-const INITIAL_VALUES: FormValues = {
+const INITIAL_VALUES: NewDiscussionCreationFormValues = {
   circle: null,
   title: "",
   content: parseStringToTextEditorValue(),
@@ -40,27 +33,30 @@ const INITIAL_VALUES: FormValues = {
 
 const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const { governanceCircles, commonMember } = props;
+  const dispatch = useDispatch();
   const isTabletView = useIsTabletView();
   const { onNewCollaborationMenuItemSelect } = useCommonDataContext();
+  const initialValues =
+    useSelector(selectDiscussionCreationData) || INITIAL_VALUES;
   const userCircleIds = commonMember
     ? Object.values(commonMember.circles.map)
     : [];
 
   const handleCancel = () => {
     onNewCollaborationMenuItemSelect(null);
+    dispatch(commonActions.setDiscussionCreationData(null));
   };
 
-  const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
-    (values) => {
-      console.log(values);
-    },
-    [],
-  );
+  const handleSubmit = useCallback<
+    FormikConfig<NewDiscussionCreationFormValues>["onSubmit"]
+  >((values) => {
+    console.log(values);
+  }, []);
 
   return (
     <CommonCard hideCardStyles={isTabletView}>
       <Formik
-        initialValues={INITIAL_VALUES}
+        initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
         validateOnMount
@@ -86,6 +82,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
                 <Button className={styles.button}>Publish discussion</Button>
               </div>
             </div>
+            <DiscussionFormPersist />
           </Form>
         )}
       </Formik>
