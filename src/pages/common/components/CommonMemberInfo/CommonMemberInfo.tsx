@@ -34,6 +34,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
   const [pendingCircles, setPendingCircles] = useState(
     new Map<string, boolean>(),
   );
+  const [pendingCircleName, setPendingCircleName] = useState("");
   const filteredByIdCircles = getFilteredByIdCircles(
     governanceCircles,
     circleIds,
@@ -50,11 +51,14 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
       userId,
       (data) => {
         const pendingCircleMap = new Map<string, boolean>();
-        governanceCircles.forEach(({ id: circleId }) => {
-          pendingCircleMap.set(
-            circleId,
-            data.some((proposal) => proposal.data.args.circleId === circleId),
+        governanceCircles.forEach(({ id: circleId, name }) => {
+          const isPendingCircle = data.some(
+            (proposal) => proposal.data.args.circleId === circleId,
           );
+          if (isPendingCircle) {
+            setPendingCircleName(name);
+          }
+          pendingCircleMap.set(circleId, isPendingCircle);
         });
 
         setPendingCircles(pendingCircleMap);
@@ -62,7 +66,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     );
 
     return unsubscribe;
-  }, [commonId, userId, governanceCircles]);
+  }, [commonId, userId, JSON.stringify(governanceCircles)]);
 
   const circleNames = getCirclesWithHighestTier(filteredByIdCircles)
     .map(({ name }) => name)
@@ -73,6 +77,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
       <PopoverButton
         isMobileVersion={isMobileVersion}
         circleNames={circleNames}
+        pendingCircleName={pendingCircleName}
       />
       {isMobileVersion ? (
         <Portal>
@@ -91,14 +96,6 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
           circleIds={circleIds}
         />
       )}
-      <Portal>
-        <PopoverPanel
-          commonId={commonId}
-          governanceCircles={governanceCircles}
-          pendingCircles={pendingCircles}
-          circleIds={circleIds}
-        />
-      </Portal>
     </Popover>
   );
 };

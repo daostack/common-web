@@ -19,16 +19,26 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
 
   return (
     <Popover.Panel className={classNames(styles.popoverPanel, className)}>
-      {governanceCircles.map(({ name, id: circleId }) => (
-        <PopoverItem
-          key={circleId}
-          circleName={name}
-          circleId={circleId}
-          commonId={commonId}
-          isPending={Boolean(pendingCircles.get(circleId))}
-          isMember={circleIds.includes(circleId)}
-        />
-      ))}
+      {governanceCircles.map(
+        ({ name, id: circleId, allowedActions }, index) => (
+          <PopoverItem
+            key={circleId}
+            circleName={name}
+            governanceCircleIds={governanceCircles
+              .slice(0, index + 1)
+              .map(({ id }) => id)}
+            circleId={circleId}
+            commonId={commonId}
+            isPending={Boolean(pendingCircles.get(circleId))}
+            isMember={circleIds.includes(circleId)}
+            canRequestToJoin={circleIds.length === index}
+            canLeaveCircle={Boolean(allowedActions.LEAVE_CIRCLE)}
+            shouldShowLeaveButton={
+              circleIds.length > 1 && index === circleIds.length - 1
+            }
+          />
+        ),
+      )}
     </Popover.Panel>
   );
 };

@@ -11,16 +11,34 @@ interface CommonMemberInfoProps {
   isMember: boolean;
   isPending: boolean;
   circleName: string;
+  governanceCircleIds: string[];
+  canRequestToJoin: boolean;
+  canLeaveCircle: boolean;
+  shouldShowLeaveButton: boolean;
 }
 
 export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
-  const { className, commonId, circleId, isMember, isPending, circleName } =
-    props;
+  const {
+    className,
+    commonId,
+    circleId,
+    isMember,
+    isPending,
+    circleName,
+    governanceCircleIds,
+    canRequestToJoin,
+    canLeaveCircle,
+    shouldShowLeaveButton,
+  } = props;
   const [membersCount, setMembersCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const ActionButton = useCallback(() => {
-    if (isMember) {
+    if (isMember && !shouldShowLeaveButton) {
+      return <></>;
+    }
+
+    if (isMember && canLeaveCircle && shouldShowLeaveButton) {
       return (
         <Button
           className={styles.actionButton}
@@ -39,8 +57,9 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
       <Button
         className={styles.actionButton}
         variant={ButtonVariant.OutlineBlue}
+        disabled={!canRequestToJoin}
       >
-        Join circle
+        Request to join
       </Button>
     );
   }, [isMember, isPending]);
@@ -53,9 +72,9 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     (async () => {
       try {
         const circleMemberCount =
-          await CommonService.getCircleMemberCountByCircleId({
+          await CommonService.getCircleMemberCountByCircleIds({
             commonId,
-            circleId,
+            circleIds: governanceCircleIds,
           });
         setMembersCount(circleMemberCount);
       } catch (e) {
