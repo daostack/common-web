@@ -58,6 +58,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       parentCommon={parentCommon}
       governance={governance}
       commonMember={commonMember}
+      parentCommons={parentCommons}
       subCommons={subCommons}
       parentCommonSubCommons={parentCommonSubCommons}
     >
@@ -69,30 +70,32 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       />
       {!isCommonMemberFetched && <Loader variant={LoaderVariant.Global} />}
       <div className={styles.container}>
-        <Container>
-          <CommonHeader
-            commonImageSrc={common.image}
-            commonName={common.name}
-            description={common.byline}
-            details={getMainCommonDetails(common)}
-            isProject={Boolean(common.directParent)}
-            withJoin={false}
-          />
-        </Container>
-        <div className={styles.commonHeaderSeparator} />
-        {!isTabletView && (
+        <div className={styles.contentHeaderWrapper}>
           <Container>
-            <CommonManagement
-              commonId={common.id}
-              activeTab={tab}
-              isSubCommon={isSubCommon}
-              circles={governance.circles}
-              commonMember={commonMember}
-              isAuthenticated={isAuthenticated}
-              onTabChange={setTab}
+            <CommonHeader
+              commonImageSrc={common.image}
+              commonName={common.name}
+              description={common.byline}
+              details={getMainCommonDetails(common)}
+              isProject={Boolean(common.directParent)}
+              withJoin={false}
             />
           </Container>
-        )}
+          <div className={styles.commonHeaderSeparator} />
+          {!isTabletView && (
+            <Container>
+              <CommonManagement
+                commonId={common.id}
+                activeTab={tab}
+                isSubCommon={isSubCommon}
+                circles={governance.circles}
+                commonMember={commonMember}
+                isAuthenticated={isAuthenticated}
+                onTabChange={setTab}
+              />
+            </Container>
+          )}
+        </div>
         <CommonTabPanels
           activeTab={tab}
           common={common}
