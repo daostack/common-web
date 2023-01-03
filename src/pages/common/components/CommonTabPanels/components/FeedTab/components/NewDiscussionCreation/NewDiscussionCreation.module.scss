@@ -1,3 +1,5 @@
+@import "../../../../../../../../styles/mixins";
+
 .form {
   display: flex;
   flex-direction: column;
@@ -5,4 +7,17 @@
 
 .discussionForm {
   margin-top: 1.5rem;
+}
+
+.buttonsContainer {
+  margin-top: 2.5rem;
+}
+
+.buttonsWrapper {
+  @include flex-list-with-gap(2rem);
+}
+
+.button {
+  max-width: 10.625rem;
+  width: 100%;
 }

@@ -8,7 +8,7 @@ import {
   CommonMember,
   Governance,
 } from "@/shared/models";
-import { UploadFile } from "@/shared/ui-kit";
+import { Button, ButtonVariant, UploadFile } from "@/shared/ui-kit";
 import {
   parseStringToTextEditorValue,
   TextEditorValue,
@@ -68,6 +68,17 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
               onCircleSave={(circle) => setFieldValue("circle", circle)}
             />
             <DiscussionForm className={styles.discussionForm} />
+            <div className={styles.buttonsContainer}>
+              <div className={styles.buttonsWrapper}>
+                <Button
+                  className={styles.button}
+                  variant={ButtonVariant.PrimaryGray}
+                >
+                  Cancel
+                </Button>
+                <Button className={styles.button}>Publish discussion</Button>
+              </div>
+            </div>
           </Form>
         )}
       </Formik>
