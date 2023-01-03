@@ -54,7 +54,13 @@ const FeedTab: FC<FeedTabProps> = (props) => {
       >
         <TabNavigation
           activeTab={activeTab}
-          rightContent={<FeedActions allowedActions={allowedFeedActions} />}
+          rightContent={
+            <FeedActions
+              allowedActions={allowedFeedActions}
+              commonMember={commonMember}
+              governance={governance}
+            />
+          }
         />
       </Container>
       <div className={styles.columnsWrapper}>

@@ -1,14 +1,44 @@
+import { GovernanceActions } from "@/shared/constants";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import { hasPermission } from "@/shared/utils";
 import { NewCollaborationMenuItem } from "../../../../../../../constants";
 
-export type GetAllowedItemsOptions = void;
+export interface GetAllowedItemsOptions {
+  commonMember: (CommonMember & CirclesPermissions) | null;
+  governance: Pick<Governance, "circles">;
+}
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   NewCollaborationMenuItem,
   (options: GetAllowedItemsOptions) => boolean
 > = {
-  [NewCollaborationMenuItem.NewProposal]: () => true,
-  [NewCollaborationMenuItem.NewDiscussion]: () => true,
-  [NewCollaborationMenuItem.NewContribution]: () => true,
+  [NewCollaborationMenuItem.NewProposal]: ({ commonMember, governance }) =>
+    Boolean(
+      commonMember &&
+        hasPermission({
+          commonMember,
+          governance,
+          key: GovernanceActions.CREATE_PROPOSAL,
+        }),
+    ),
+  [NewCollaborationMenuItem.NewDiscussion]: ({ commonMember, governance }) =>
+    Boolean(
+      commonMember &&
+        hasPermission({
+          commonMember,
+          governance,
+          key: GovernanceActions.CREATE_DISCUSSION,
+        }),
+    ),
+  [NewCollaborationMenuItem.NewContribution]: ({ commonMember, governance }) =>
+    Boolean(
+      commonMember &&
+        hasPermission({
+          commonMember,
+          governance,
+          key: GovernanceActions.CONTRIBUTE,
+        }),
+    ),
 };
 
 export const getAllowedItems = (
