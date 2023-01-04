@@ -15,7 +15,8 @@ function* getFeedItems(
 
   try {
     const currentFeedItems = (yield select(selectFeedItems)) as FeedItems;
-    const { data, lastDocSnapshot, hasMore } = (yield call(
+    const isFirstRequest = !currentFeedItems.lastDocSnapshot;
+    const { data, firstDocSnapshot, lastDocSnapshot, hasMore } = (yield call(
       CommonFeedService.getCommonFeedItems,
       commonId,
       {
@@ -29,6 +30,9 @@ function* getFeedItems(
         data,
         lastDocSnapshot,
         hasMore,
+        firstDocSnapshot: isFirstRequest
+          ? firstDocSnapshot
+          : currentFeedItems.firstDocSnapshot,
       }),
     );
   } catch (error) {

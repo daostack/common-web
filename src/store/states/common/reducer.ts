@@ -9,6 +9,7 @@ const initialFeedItems: FeedItems = {
   data: null,
   loading: false,
   hasMore: false,
+  firstDocSnapshot: null,
   lastDocSnapshot: null,
 };
 
@@ -54,6 +55,16 @@ export const reducer = createReducer<CommonState, Action>(initialState)
         loading: false,
         hasMore: false,
         lastDocSnapshot: null,
+      };
+    }),
+  )
+  .handleAction(actions.addNewFeedItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const newData = payload.map((item) => item.commonFeedItem);
+      nextState.feedItems = {
+        ...nextState.feedItems,
+        data: newData.concat(nextState.feedItems.data || []),
+        firstDocSnapshot: payload[0]?.docSnapshot || null,
       };
     }),
   );

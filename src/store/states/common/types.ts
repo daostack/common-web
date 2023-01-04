@@ -6,6 +6,7 @@ export interface FeedItems {
   data: CommonFeed[] | null;
   loading: boolean;
   hasMore: boolean;
+  firstDocSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed> | null;
   lastDocSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed> | null;
 }
 

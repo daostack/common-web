@@ -1,5 +1,7 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
+import { CommonFeed } from "@/shared/models";
+import firebase from "@/shared/utils/firebase";
 import { CommonActionType } from "./constants";
 import { FeedItems } from "./types";
 
@@ -22,4 +24,13 @@ export const getFeedItems = createAsyncAction(
   },
   Omit<FeedItems, "loading">,
   Error
+>();
+
+export const addNewFeedItems = createStandardAction(
+  CommonActionType.ADD_NEW_FEED_ITEMS,
+)<
+  {
+    commonFeedItem: CommonFeed;
+    docSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed>;
+  }[]
 >();
