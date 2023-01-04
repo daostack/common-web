@@ -37,6 +37,7 @@ export enum Collection {
 export enum SubCollections {
   Members = "members",
   Votes = "votes",
+  CommonFeed = "commonFeed",
 }
 
 export enum DateFormat {
