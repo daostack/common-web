@@ -4,6 +4,9 @@ import { Popover } from "@headlessui/react";
 import { Circle } from "@/shared/models";
 import { PopoverItem } from "../PopoverItem";
 import styles from "./PopoverPanel.module.scss";
+import { selectUser } from "@/pages/Auth/store/selectors";
+import { useSelector } from "react-redux";
+import { getUserName } from "@/shared/utils";
 
 interface PopoverPanelProps {
   className?: string;
@@ -23,6 +26,7 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
     circleIds,
     userId,
   } = props;
+  const user = useSelector(selectUser());
 
   return (
     <Popover.Panel className={classNames(styles.popoverPanel, className)}>
@@ -45,6 +49,7 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
             }
             circle={governanceCircles[index]}
             userId={userId}
+            userName={getUserName(user)}
           />
         ),
       )}

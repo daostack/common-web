@@ -19,6 +19,7 @@ interface CommonMemberInfoProps {
   shouldShowLeaveButton: boolean;
   circle: Circle;
   userId: string;
+  userName: string;
 }
 
 export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
@@ -35,6 +36,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     shouldShowLeaveButton,
     userId,
     circle,
+    userName,
   } = props;
   const [membersCount, setMembersCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -71,8 +73,8 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
             {
               args: {
                 commonId,
-                title: "Test",
-                description: "Test 21312",
+                title: `Assign circle proposal for ${userName}`,
+                description: `Join circle request: ${circleName}`,
                 images: [],
                 links: [],
                 files: [],
@@ -87,7 +89,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
         Request to join
       </Button>
     );
-  }, [isMember, isPending]);
+  }, [isMember, isPending, commonId, circleId, userId, circleName, userName]);
 
   useEffect(() => {
     if (!commonId || !circleId) {
