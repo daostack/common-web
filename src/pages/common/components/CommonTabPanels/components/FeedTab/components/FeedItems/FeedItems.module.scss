@@ -1,4 +1,6 @@
 @import "../../../../../../../../styles/mixins";
 
 .container {
+  display: flex;
+  flex-direction: column;
 }

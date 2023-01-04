@@ -1,6 +1,8 @@
 import React, { FC, useEffect } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { useCommonFeedItems } from "../../hooks";
+import { FeedItem } from "./component";
+import styles from "./FeedItems.module.scss";
 
 const FeedItems: FC = () => {
   const { common } = useCommonDataContext();
@@ -23,7 +25,13 @@ const FeedItems: FC = () => {
     }
   }, []);
 
-  return null;
+  return (
+    <div className={styles.container}>
+      {commonFeedItems?.map((item) => (
+        <FeedItem key={item.id} item={item} />
+      ))}
+    </div>
+  );
 };
 
 export default FeedItems;
