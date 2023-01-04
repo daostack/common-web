@@ -8,4 +8,4 @@ export * from "./RulesArray";
 export * from "./ToggleButtonGroup";
 export { TextEditor } from "./TextEditor";
 export { TextField } from "./TextField";
-export { UploadFiles } from "./UploadFiles";
+export * from "./UploadFiles";

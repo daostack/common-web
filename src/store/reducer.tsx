@@ -6,7 +6,7 @@ import { commonsReducer } from "../pages/OldCommon/store";
 import { trusteeReducer } from "../pages/Trustee/store";
 import { AppState } from "../shared/interfaces";
 import { SharedReducer } from "../shared/store/reducer";
-import { projectsReducer } from "./states";
+import { commonReducer, projectsReducer } from "./states";
 
 export default (history: History) => {
   const appReducer = combineReducers<AppState>({
@@ -16,6 +16,7 @@ export default (history: History) => {
     router: connectRouter(history),
     trustee: trusteeReducer,
     projects: projectsReducer,
+    common: commonReducer,
   });
 
   return (state: AppState | undefined, action: AnyAction) => {

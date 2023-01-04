@@ -28,7 +28,6 @@ interface AboutTabProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  parentCommons: Common[];
   subCommons: Common[];
   rules: UnstructuredRules;
   limitations?: MemberAdmittanceLimitations;
@@ -40,7 +39,6 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     common,
     governance,
     commonMember,
-    parentCommons,
     subCommons,
     rules,
     limitations,
@@ -123,11 +121,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
           ViewportBreakpointVariant.Phone,
         ]}
       >
-        <TabNavigation
-          activeTab={activeTab}
-          common={common}
-          parentCommons={parentCommons}
-        />
+        <TabNavigation activeTab={activeTab} />
       </Container>
       <div className={styles.columnsWrapper}>
         {!isTabletView ? (

@@ -54,6 +54,7 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
               restProps.onClick(...args);
             }
           }}
+          type="button"
         >
           {content}
         </button>

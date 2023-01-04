@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authentificated } from "@/pages/Auth/store/selectors";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -9,6 +9,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
+import { commonActions } from "@/store/states";
 import { CommonTab } from "../../constants";
 import { CommonDataProvider } from "../../providers";
 import { CommonHeader } from "../CommonHeader";
@@ -41,6 +42,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     parentCommon,
     parentCommonSubCommons,
   } = props;
+  const dispatch = useDispatch();
   const [tab, setTab] = useState(CommonTab.About);
   const isAuthenticated = useSelector(authentificated());
   const isTabletView = useIsTabletView();
@@ -51,6 +53,12 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       setTab(CommonTab.About);
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(commonActions.resetCommon());
+    };
+  }, []);
 
   return (
     <CommonDataProvider
@@ -68,7 +76,12 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         isSubCommon={isSubCommon}
         commonId={common.id}
       />
-      {!isCommonMemberFetched && <Loader variant={LoaderVariant.Global} />}
+      {!isCommonMemberFetched && (
+        <Loader
+          overlayClassName={styles.globalLoader}
+          variant={LoaderVariant.Global}
+        />
+      )}
       <div className={styles.container}>
         <div className={styles.contentHeaderWrapper}>
           <Container>
@@ -101,7 +114,6 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           common={common}
           governance={governance}
           commonMember={commonMember}
-          parentCommons={parentCommons}
           subCommons={subCommons}
         />
         {isTabletView && (

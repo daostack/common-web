@@ -5,20 +5,22 @@ import {
   TextEditorProps as BaseTextEditorProps,
 } from "@/shared/ui-kit/TextEditor";
 
-interface TextEditorProps extends BaseTextEditorProps {
+interface TextEditorProps
+  extends Omit<BaseTextEditorProps, "value" | "onChange"> {
   name: string;
   isRequired?: boolean;
 }
 
 const TextEditor: FC<TextEditorProps> = (props) => {
   const { name, isRequired, ...restProps } = props;
-  const [field, { touched, error }] = useField(name);
+  const [{ value }, { touched, error }, { setValue }] = useField(name);
   const hintToShow = restProps.hint || (isRequired ? "Required" : "");
 
   return (
     <BaseTextEditor
       {...restProps}
-      {...field}
+      value={value}
+      onChange={setValue}
       hint={hintToShow}
       error={touched ? error : ""}
     />
