@@ -1,7 +1,7 @@
+import { NewCollaborationMenuItem } from "@/pages/common/constants";
 import { GovernanceActions } from "@/shared/constants";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
-import { NewCollaborationMenuItem } from "../../../../../../../constants";
 
 export interface GetAllowedItemsOptions {
   commonMember: (CommonMember & CirclesPermissions) | null;

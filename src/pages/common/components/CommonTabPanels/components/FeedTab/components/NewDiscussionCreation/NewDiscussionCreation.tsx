@@ -53,6 +53,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const handleSubmit = useCallback<
     FormikConfig<NewDiscussionCreationFormValues>["onSubmit"]
   >((values) => {
+    // TODO: Call discussion creation api
     console.log(values);
   }, []);
 

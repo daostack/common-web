@@ -1,6 +1,6 @@
+import { NewCollaborationMenuItem } from "@/pages/common/constants";
+import { useCommonDataContext } from "@/pages/common/providers";
 import { MenuItem as Item } from "@/shared/interfaces";
-import { NewCollaborationMenuItem } from "../../../../../../../constants";
-import { useCommonDataContext } from "../../../../../../../providers";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
 type Options = GetAllowedItemsOptions;
