@@ -1,3 +1,4 @@
+import { UnsubscribeFunction } from "@/shared/interfaces";
 import { Collection, Discussion } from "@/shared/models";
 import {
   firestoreDataConverter,
@@ -25,6 +26,25 @@ class DiscussionService {
       (discussion && transformFirebaseDataSingle<Discussion>(discussion)) ||
       null
     );
+  };
+
+  public subscribeToDiscussion = (
+    discussionId: string,
+    callback: (discussion: Discussion) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getDiscussionCollection().where(
+      "id",
+      "==",
+      discussionId,
+    );
+
+    return query.onSnapshot((snapshot) => {
+      const docChange = snapshot.docChanges()[0];
+
+      if (docChange && docChange.type !== "added") {
+        callback(docChange.doc.data());
+      }
+    });
   };
 }
 

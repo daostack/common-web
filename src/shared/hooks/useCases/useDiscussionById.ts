@@ -1,5 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { DiscussionService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
 import { Discussion } from "@/shared/models";
 import { cacheActions, selectDiscussionStateById } from "@/store/states";
@@ -59,6 +60,30 @@ export const useDiscussionById = (): Return => {
     },
     [dispatch],
   );
+
+  useEffect(() => {
+    if (!currentDiscussionId) {
+      return;
+    }
+
+    const unsubscribe = DiscussionService.subscribeToDiscussion(
+      currentDiscussionId,
+      (updatedDiscussion) => {
+        dispatch(
+          cacheActions.updateDiscussionStateById({
+            discussionId: updatedDiscussion.id,
+            state: {
+              loading: false,
+              fetched: true,
+              data: updatedDiscussion,
+            },
+          }),
+        );
+      },
+    );
+
+    return unsubscribe;
+  }, [currentDiscussionId]);
 
   return {
     ...state,
