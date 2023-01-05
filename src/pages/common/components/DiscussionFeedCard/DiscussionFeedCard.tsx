@@ -1,30 +1,58 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useUserById } from "@/shared/hooks/useCases";
+import { CommonFeed, DateFormat, Governance } from "@/shared/models";
+import {
+  formatDate,
+  getCirclesWithLowestTier,
+  getFilteredByIdCircles,
+  getUserName,
+} from "@/shared/utils";
 import {
   FeedCard,
   FeedCardHeader,
   FeedCardContent,
   FeedCardFooter,
-  FeedCardContentProps,
-  FeedCardHeaderProps,
-  FeedCardFooterProps,
 } from "../FeedCard";
 
 interface DiscussionFeedCardProps {
-  headerProps: FeedCardHeaderProps;
-  contentProps: FeedCardContentProps;
-  footerProps: FeedCardFooterProps;
+  item: CommonFeed;
+  governanceCircles: Governance["circles"];
 }
 
-export const DiscussionFeedCard: React.FC<DiscussionFeedCardProps> = ({
-  headerProps,
-  contentProps,
-  footerProps,
-}) => {
+export const DiscussionFeedCard: React.FC<DiscussionFeedCardProps> = (
+  props,
+) => {
+  const { item, governanceCircles } = props;
+  const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
+  const filteredByIdCircles = getFilteredByIdCircles(
+    governanceCircles ? Object.values(governanceCircles) : null,
+    item.circleVisibility,
+  );
+  const circleNames = getCirclesWithLowestTier(filteredByIdCircles)
+    .map(({ name }) => name)
+    .join(", ");
+  const circleVisibility = circleNames ? `Private, ${circleNames}` : "Public";
+
+  useEffect(() => {
+    fetchUser(item.userId);
+  }, [item.userId]);
+
   return (
     <FeedCard>
-      <FeedCardHeader {...headerProps} />
-      <FeedCardContent {...contentProps} />
-      <FeedCardFooter {...footerProps} />
+      {isUserFetched && (
+        <FeedCardHeader
+          avatar={user?.photoURL}
+          title={getUserName(user)}
+          createdAt={`Created: ${formatDate(
+            new Date(item.createdAt.seconds * 1000),
+            DateFormat.SuperShortSecondary,
+          )}`}
+          type="Discussion"
+          circleVisibility={circleVisibility}
+        />
+      )}
+      {/*<FeedCardContent {...contentProps} />*/}
+      {/*<FeedCardFooter {...footerProps} />*/}
     </FeedCard>
   );
 };

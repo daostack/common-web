@@ -5,7 +5,7 @@ import { FeedItem } from "./component";
 import styles from "./FeedItems.module.scss";
 
 const FeedItems: FC = () => {
-  const { common } = useCommonDataContext();
+  const { common, governance } = useCommonDataContext();
   const {
     data: commonFeedItems,
     loading,
@@ -28,7 +28,11 @@ const FeedItems: FC = () => {
   return (
     <div className={styles.container}>
       {commonFeedItems?.map((item) => (
-        <FeedItem key={item.id} item={item} />
+        <FeedItem
+          key={item.id}
+          item={item}
+          governanceCircles={governance.circles}
+        />
       ))}
     </div>
   );

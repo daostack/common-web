@@ -2,15 +2,19 @@
 
 .container {
   display: flex;
-  flex: 1;
+  flex: 1 0;
   min-height: 4.5rem;
   justify-content: space-between;
   width: 100%;
   background-color: $white;
   box-shadow: 0px 3px 8px $shadow-2;
-  padding: 1rem 1.5625rem 1rem 1.4375rem;
+  padding: 1rem var(--feed-card-ph, 1.5rem);
   box-sizing: border-box;
   border-bottom: 0.0625rem solid $c-neutrals-200;
+
+  &:last-child {
+    border-bottom: 0;
+  }
 }
 
 .content {
@@ -58,7 +62,9 @@
 }
 
 .threeDotMenu {
-  margin-left: 2.0625rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 1.5rem;
   background-color: transparent;
   color: $c-neutrals-300;
 }
