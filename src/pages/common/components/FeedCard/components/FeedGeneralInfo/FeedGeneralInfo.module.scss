@@ -15,6 +15,10 @@
   line-height: 1.375rem;
   margin-bottom: 0.5rem;
   font-family: Lexend, sans-serif;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .subtitle {
@@ -22,7 +26,6 @@
   font-family: Lexend, sans-serif;
   line-height: 120%;
   color: $c-neutrals-300;
-  margin-bottom: 0.5rem;
 }
 
 .description {
@@ -30,6 +33,11 @@
   color: $c-neutrals-600;
   line-height: 1.25rem;
   margin-bottom: 0.625rem;
+  white-space: pre-line;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .descriptionShortened {
