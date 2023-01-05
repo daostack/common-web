@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useMemo } from "react";
 import classNames from "classnames";
 import { Popover } from "@headlessui/react";
 import { ProposalService } from "@/services";
@@ -29,8 +29,14 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     commonId,
     isMobileVersion,
   } = props;
-  const governanceCircles = Object.values(circles || {});
-  const circleIds: string[] = Object.values(circlesMap || {});
+  const governanceCircles = useMemo(
+    () => Object.values(circles || {}),
+    [circles],
+  );
+  const circleIds: string[] = useMemo(
+    () => Object.values(circlesMap || {}),
+    [circlesMap],
+  );
   const [pendingCircles, setPendingCircles] = useState(
     new Map<string, boolean>(),
   );
@@ -66,7 +72,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     );
 
     return unsubscribe;
-  }, [commonId, userId, JSON.stringify(governanceCircles)]);
+  }, [commonId, userId, governanceCircles]);
 
   const circleNames = getCirclesWithHighestTier(filteredByIdCircles)
     .map(({ name }) => name)
