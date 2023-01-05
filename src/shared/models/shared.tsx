@@ -50,4 +50,5 @@ export enum DateFormat {
   ShortSecondary = "DD/MM/YYYY",
   SuperShortSecondary = "D/M/YYYY",
   ShortWithDots = "DD.MM.YY",
+  FullTime = "HH:mm:ss",
 }

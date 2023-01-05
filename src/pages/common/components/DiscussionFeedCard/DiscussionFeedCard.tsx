@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useUserById } from "@/shared/hooks/useCases";
+import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
 import { CommonFeed, DateFormat, Governance } from "@/shared/models";
 import {
   formatDate,
@@ -24,6 +24,11 @@ export const DiscussionFeedCard: React.FC<DiscussionFeedCardProps> = (
 ) => {
   const { item, governanceCircles } = props;
   const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
+  const {
+    fetchDiscussion,
+    data: discussion,
+    fetched: isDiscussionFetched,
+  } = useDiscussionById();
   const filteredByIdCircles = getFilteredByIdCircles(
     governanceCircles ? Object.values(governanceCircles) : null,
     item.circleVisibility,
@@ -36,6 +41,12 @@ export const DiscussionFeedCard: React.FC<DiscussionFeedCardProps> = (
   useEffect(() => {
     fetchUser(item.userId);
   }, [item.userId]);
+
+  useEffect(() => {
+    if (item.data.discussionId) {
+      fetchDiscussion(item.data.discussionId);
+    }
+  }, [item.data.discussionId]);
 
   return (
     <FeedCard>
@@ -51,8 +62,19 @@ export const DiscussionFeedCard: React.FC<DiscussionFeedCardProps> = (
           circleVisibility={circleVisibility}
         />
       )}
-      {/*<FeedCardContent {...contentProps} />*/}
-      {/*<FeedCardFooter {...footerProps} />*/}
+      <FeedCardContent
+        title={discussion?.title || ""}
+        description={discussion?.message || ""}
+      />
+      {isDiscussionFetched && (
+        <FeedCardFooter
+          messageCount={discussion?.messageCount || 0}
+          lastActivity={formatDate(
+            new Date(item.updatedAt.seconds * 1000),
+            DateFormat.FullTime,
+          )}
+        />
+      )}
     </FeedCard>
   );
 };
