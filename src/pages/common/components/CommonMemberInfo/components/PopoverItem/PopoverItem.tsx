@@ -1,9 +1,8 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback } from "react";
 import classNames from "classnames";
 import { useCommonDataContext } from "@/pages/common/providers";
-import { CommonService, Logger } from "@/services";
 import { Circle } from "@/shared/models";
-import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./PopoverItem.module.scss";
 
 interface CommonMemberInfoProps {
@@ -13,13 +12,13 @@ interface CommonMemberInfoProps {
   isMember: boolean;
   isPending: boolean;
   circleName: string;
-  governanceCircleIds: string[];
   canRequestToJoin: boolean;
   canLeaveCircle: boolean;
   shouldShowLeaveButton: boolean;
   circle: Circle;
   userId: string;
   userName: string;
+  membersCount: number;
 }
 
 export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
@@ -30,16 +29,14 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     isMember,
     isPending,
     circleName,
-    governanceCircleIds,
     canRequestToJoin,
     canLeaveCircle,
     shouldShowLeaveButton,
     userId,
     circle,
     userName,
+    membersCount,
   } = props;
-  const [membersCount, setMembersCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const { onLeaveCircle, onJoinCircle } = useCommonDataContext();
 
   const ActionButton = useCallback(() => {
@@ -91,27 +88,6 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     );
   }, [isMember, isPending, commonId, circleId, userId, circleName, userName]);
 
-  useEffect(() => {
-    if (!commonId || !circleId) {
-      return;
-    }
-
-    (async () => {
-      try {
-        const circleMemberCount =
-          await CommonService.getCircleMemberCountByCircleIds({
-            commonId,
-            circleIds: governanceCircleIds,
-          });
-        setMembersCount(circleMemberCount);
-      } catch (e) {
-        Logger.error({ commonId, circleId, e });
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [commonId, circleId]);
-
   return (
     <div className={classNames(styles.item, className)}>
       <div className={styles.leftContent}>
@@ -122,14 +98,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
         >
           {circleName}
         </p>
-        <span className={styles.membersCount}>
-          {isLoading ? (
-            <Loader className={styles.membersCountLoader} />
-          ) : (
-            membersCount
-          )}{" "}
-          members
-        </span>
+        <span className={styles.membersCount}>{membersCount} members</span>
       </div>
       <ActionButton />
     </div>

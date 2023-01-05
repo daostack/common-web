@@ -168,12 +168,18 @@ class CommonService {
   }: {
     commonId: string;
     circleIds: string[];
-  }): Promise<number> => {
+  }): Promise<Map<string, number>> => {
+    const circleMembersCount = new Map();
+    await Promise.all(circleIds.map(async (id,index) => {
       const commonMembersData = await commonMembersSubCollection(commonId).get();
       const data = transformFirebaseDataList<CommonMember>(commonMembersData);
-      const filteredMembers = data.filter(({circleIds: ids}) => isEqual(ids.sort(), circleIds.sort()))
+      const filteredMembers = data.filter(({circleIds: ids}) => isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()))
   
-      return filteredMembers?.length ?? 0;
+      circleMembersCount.set(id,filteredMembers?.length ?? 0)
+      return filteredMembers;
+    }));
+
+    return circleMembersCount;
   };
 
   public subscribeToCommon = (

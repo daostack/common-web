@@ -1,12 +1,12 @@
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Popover } from "@headlessui/react";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { Circle } from "@/shared/models";
+import { getUserName } from "@/shared/utils";
 import { PopoverItem } from "../PopoverItem";
 import styles from "./PopoverPanel.module.scss";
-import { selectUser } from "@/pages/Auth/store/selectors";
-import { useSelector } from "react-redux";
-import { getUserName } from "@/shared/utils";
 
 interface PopoverPanelProps {
   className?: string;
@@ -14,6 +14,7 @@ interface PopoverPanelProps {
   pendingCircles: Map<string, boolean>;
   governanceCircles: Circle[];
   circleIds: string[];
+  circleMembersCount: Map<string, number>;
   userId: string;
 }
 
@@ -25,6 +26,7 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
     commonId,
     circleIds,
     userId,
+    circleMembersCount,
   } = props;
   const user = useSelector(selectUser());
 
@@ -35,9 +37,6 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
           <PopoverItem
             key={circleId}
             circleName={name}
-            governanceCircleIds={governanceCircles
-              .slice(0, index + 1)
-              .map(({ id }) => id)}
             circleId={circleId}
             commonId={commonId}
             isPending={Boolean(pendingCircles.get(circleId))}
@@ -50,6 +49,7 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
             circle={governanceCircles[index]}
             userId={userId}
             userName={getUserName(user)}
+            membersCount={circleMembersCount.get(circleId) ?? 0}
           />
         ),
       )}
