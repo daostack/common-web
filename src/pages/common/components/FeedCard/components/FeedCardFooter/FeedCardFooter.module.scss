@@ -12,6 +12,19 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: $c-neutrals-300;
+  cursor: pointer;
+  transition: 0.2s all;
+
+  &:hover {
+    color: $c-primary-400;
+    text-decoration: underline;
+  }
+}
+
+.messageIcon {
+  margin-top: 0.125rem;
+  color: inherit;
 }
 
 .rightContent {
@@ -28,8 +41,6 @@
   font-size: $small;
   line-height: 1.375rem;
   font-weight: 600;
-  color: $c-primary-400;
-  text-decoration-line: underline;
   margin-left: 0.75rem;
 }
 
