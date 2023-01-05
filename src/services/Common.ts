@@ -15,6 +15,7 @@ import {
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import Api from "./Api";
+import { isEqual } from "lodash";
 
 const converter = firestoreDataConverter<Common>();
 
@@ -168,12 +169,11 @@ class CommonService {
     commonId: string;
     circleIds: string[];
   }): Promise<number> => {
-    const commonMembersData = await commonMembersSubCollection(commonId)
-      .where("circleIds", "==", circleIds )
-      .get();
-    const data = transformFirebaseDataList<CommonMember>(commonMembersData);
-
-    return data?.length ?? 0;
+      const commonMembersData = await commonMembersSubCollection(commonId).get();
+      const data = transformFirebaseDataList<CommonMember>(commonMembersData);
+      const filteredMembers = data.filter(({circleIds: ids}) => isEqual(ids.sort(), circleIds.sort()))
+  
+      return filteredMembers?.length ?? 0;
   };
 
   public subscribeToCommon = (
