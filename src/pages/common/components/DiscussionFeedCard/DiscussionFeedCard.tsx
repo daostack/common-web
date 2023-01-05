@@ -13,6 +13,7 @@ import {
   FeedCardContent,
   FeedCardFooter,
 } from "../FeedCard";
+import { LoadingFeedCard } from "../LoadingFeedCard";
 
 interface DiscussionFeedCardProps {
   item: CommonFeed;
@@ -29,6 +30,7 @@ export const DiscussionFeedCard: React.FC<DiscussionFeedCardProps> = (
     data: discussion,
     fetched: isDiscussionFetched,
   } = useDiscussionById();
+  const isLoading = !isUserFetched || !isDiscussionFetched;
   const filteredByIdCircles = getFilteredByIdCircles(
     governanceCircles ? Object.values(governanceCircles) : null,
     item.circleVisibility,
@@ -48,33 +50,33 @@ export const DiscussionFeedCard: React.FC<DiscussionFeedCardProps> = (
     }
   }, [item.data.discussionId]);
 
+  if (isLoading) {
+    return <LoadingFeedCard />;
+  }
+
   return (
     <FeedCard>
-      {isUserFetched && (
-        <FeedCardHeader
-          avatar={user?.photoURL}
-          title={getUserName(user)}
-          createdAt={`Created: ${formatDate(
-            new Date(item.createdAt.seconds * 1000),
-            DateFormat.SuperShortSecondary,
-          )}`}
-          type="Discussion"
-          circleVisibility={circleVisibility}
-        />
-      )}
-      <FeedCardContent
-        title={discussion?.title || ""}
-        description={discussion?.message || ""}
+      <FeedCardHeader
+        avatar={user?.photoURL}
+        title={getUserName(user)}
+        createdAt={`Created: ${formatDate(
+          new Date(item.createdAt.seconds * 1000),
+          DateFormat.SuperShortSecondary,
+        )}`}
+        type="Discussion"
+        circleVisibility={circleVisibility}
       />
-      {isDiscussionFetched && (
-        <FeedCardFooter
-          messageCount={discussion?.messageCount || 0}
-          lastActivity={formatDate(
-            new Date(item.updatedAt.seconds * 1000),
-            DateFormat.FullTime,
-          )}
-        />
-      )}
+      <FeedCardContent
+        title={discussion?.title}
+        description={discussion?.message}
+      />
+      <FeedCardFooter
+        messageCount={discussion?.messageCount || 0}
+        lastActivity={formatDate(
+          new Date(item.updatedAt.seconds * 1000),
+          DateFormat.FullTime,
+        )}
+      />
     </FeedCard>
   );
 };

@@ -1,0 +1,1 @@
+export { LoadingFeedCard } from "./LoadingFeedCard";
