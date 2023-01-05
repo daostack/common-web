@@ -31,7 +31,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   const isLoading = !isUserFetched || !isDiscussionFetched;
   const filteredByIdCircles = getFilteredByIdCircles(
     governanceCircles ? Object.values(governanceCircles) : null,
-    item.circleVisibility,
+    discussion?.circleVisibility,
   );
   const circleNames = getCirclesWithLowestTier(filteredByIdCircles)
     .map(({ name }) => name)
