@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { FC, memo, useEffect } from "react";
 import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
 import { CommonFeed, DateFormat, Governance } from "@/shared/models";
 import {
@@ -20,9 +20,7 @@ interface DiscussionFeedCardProps {
   governanceCircles: Governance["circles"];
 }
 
-export const DiscussionFeedCard: React.FC<DiscussionFeedCardProps> = (
-  props,
-) => {
+const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   const { item, governanceCircles } = props;
   const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
   const {
@@ -80,3 +78,5 @@ export const DiscussionFeedCard: React.FC<DiscussionFeedCardProps> = (
     </FeedCard>
   );
 };
+
+export default memo(DiscussionFeedCard);
