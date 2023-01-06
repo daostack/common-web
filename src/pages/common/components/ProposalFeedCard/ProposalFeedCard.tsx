@@ -117,7 +117,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           proposal={proposal}
           commonMember={commonMember}
         />
-        <UserVoteInfo userVote={userVote} />
+        <UserVoteInfo userVote={userVote} state={proposal.state} />
       </FeedCardContent>
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
