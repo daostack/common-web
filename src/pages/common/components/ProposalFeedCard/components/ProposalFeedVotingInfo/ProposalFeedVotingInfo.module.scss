@@ -35,8 +35,19 @@
   color: $c-neutrals-600;
 }
 
-.status {
-  font-size: $small;
-  letter-spacing: 0.01em;
-  line-height: 120%;
+.votingStatus {
+  color: $c-green-300;
+  background-color: $c-green-100;
+
+  &:hover {
+    background-color: $c-green-100;
+  }
+}
+.votingStatusFailing {
+  color: $c-error-300;
+  background-color: $c-error-100;
+
+  &:hover {
+    background-color: $c-error-100;
+  }
 }

@@ -1,5 +1,9 @@
 import React, { CSSProperties, useLayoutEffect } from "react";
 import classNames from "classnames";
+import {
+  calculateVotingStatus,
+  checkIsFailingVoting,
+} from "@/pages/OldCommon/components/ProposalContainer/CountDownCard/helpers";
 import { getVotersString } from "@/pages/OldCommon/containers/ProposalContainer/helpers";
 import { useCountdown } from "@/shared/hooks";
 import { Governance, Proposal, ProposalState } from "@/shared/models";
@@ -18,10 +22,10 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
 ) => {
   const { proposal, governanceCircles } = props;
   const { startCountdown, timer } = useCountdown();
-  const { votes } = proposal;
   const expirationTimestamp =
     proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
   const isCountdownState = checkIsCountdownState(proposal);
+  const votingStatus = calculateVotingStatus(proposal);
   const containerStyles = {
     "--voting-info-items-amount": isCountdownState ? 4 : 3,
   } as CSSProperties;
@@ -47,7 +51,7 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
       )}
       <VotingInfo label="Votes">
         <ModalTriggerButton>
-          {votes.total}/{votes.totalMembersWithVotingRight}
+          {proposal.votes.total}/{proposal.votes.totalMembersWithVotingRight}
         </ModalTriggerButton>
       </VotingInfo>
       <VotingInfo label="Voters">
@@ -56,7 +60,13 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
         </p>
       </VotingInfo>
       <VotingInfo label="Status">
-        <p className={classNames(styles.text, styles.status)}>Status</p>
+        <ModalTriggerButton
+          className={classNames(styles.votingStatus, {
+            [styles.votingStatusFailing]: checkIsFailingVoting(votingStatus),
+          })}
+        >
+          {votingStatus}
+        </ModalTriggerButton>
       </VotingInfo>
     </div>
   );
