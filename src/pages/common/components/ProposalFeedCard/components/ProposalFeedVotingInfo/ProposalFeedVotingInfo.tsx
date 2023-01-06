@@ -8,8 +8,6 @@ import styles from "./ProposalFeedVotingInfo.module.scss";
 
 export interface ProposalFeedVotingInfoProps {
   proposal: Proposal;
-  votersCount: number;
-  votedCount: number;
   voters: string;
   voteStatus: string;
 }
@@ -17,8 +15,9 @@ export interface ProposalFeedVotingInfoProps {
 export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   props,
 ) => {
-  const { proposal, votersCount, votedCount, voters, voteStatus } = props;
+  const { proposal, voters, voteStatus } = props;
   const { startCountdown, timer } = useCountdown();
+  const { votes } = proposal;
   const expirationTimestamp =
     proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
 
@@ -43,7 +42,7 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
       )}
       <VotingInfo label="Votes">
         <p className={classNames(styles.text, styles.votes)}>
-          {votedCount}/{votersCount}
+          {votes.total}/{votes.totalMembersWithVotingRight}
         </p>
       </VotingInfo>
       <VotingInfo label="Voters">
