@@ -1,15 +1,10 @@
 @import "../../../../../../constants";
 
 .container {
-  --voting-info-items-amount: 4;
-
   margin-top: 0.25rem;
   padding: 1.5rem 2.25rem 1.25rem 2rem;
   display: grid;
-  grid-template-columns: repeat(
-    var(--voting-info-items-amount),
-    minmax(0, 17.625rem)
-  );
+  grid-template-columns: repeat(4, minmax(0, 17.625rem));
   grid-column-gap: 1rem;
   background-color: $c-shades-white;
   border: 0.0625rem solid $c-neutrals-100;

@@ -14,20 +14,16 @@ import styles from "./ProposalFeedVotingInfo.module.scss";
 export interface ProposalFeedVotingInfoProps {
   proposal: Proposal;
   governanceCircles: Governance["circles"];
-  isCountdownState: boolean;
 }
 
 export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   props,
 ) => {
-  const { proposal, governanceCircles, isCountdownState } = props;
+  const { proposal, governanceCircles } = props;
   const { startCountdown, timer } = useCountdown();
   const expirationTimestamp =
     proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
   const votingStatus = calculateVotingStatus(proposal);
-  const containerStyles = {
-    "--voting-info-items-amount": isCountdownState ? 4 : 3,
-  } as CSSProperties;
 
   useLayoutEffect(() => {
     if (expirationTimestamp) {
@@ -36,18 +32,16 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   }, [startCountdown, expirationTimestamp]);
 
   return (
-    <div className={styles.container} style={containerStyles}>
-      {isCountdownState && (
-        <VotingInfo
-          label={
-            proposal.state === ProposalState.DISCUSSION
-              ? "Voting starts in"
-              : "Time to Vote"
-          }
-        >
-          <p className={classNames(styles.text, styles.timeToVote)}>{timer}</p>
-        </VotingInfo>
-      )}
+    <div className={styles.container}>
+      <VotingInfo
+        label={
+          proposal.state === ProposalState.DISCUSSION
+            ? "Voting starts in"
+            : "Time to Vote"
+        }
+      >
+        <p className={classNames(styles.text, styles.timeToVote)}>{timer}</p>
+      </VotingInfo>
       <VotingInfo label="Votes">
         <ModalTriggerButton>
           {proposal.votes.total}/{proposal.votes.totalMembersWithVotingRight}
