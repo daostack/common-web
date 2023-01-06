@@ -20,6 +20,7 @@ import {
   ProposalFeedButtonContainer,
   UserVoteInfo,
 } from "./components";
+import { checkIsVotingAllowed, checkUserPermissionsToVote } from "./utils";
 
 interface ProposalFeedCardProps {
   commonId: string;
@@ -92,6 +93,17 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     return <LoadingFeedCard />;
   }
 
+  const userHasPermissionsToVote = checkUserPermissionsToVote({
+    proposal,
+    commonMember,
+  });
+  const isVotingAllowed =
+    userHasPermissionsToVote &&
+    checkIsVotingAllowed({
+      userVote,
+      proposal,
+    });
+
   return (
     <FeedCard>
       <FeedCardHeader
@@ -112,12 +124,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           proposal={proposal}
           governanceCircles={governanceCircles}
         />
-        <ProposalFeedButtonContainer
+        {isVotingAllowed && <ProposalFeedButtonContainer />}
+        <UserVoteInfo
           userVote={userVote}
-          proposal={proposal}
-          commonMember={commonMember}
+          state={proposal.state}
+          userHasPermissionsToVote={userHasPermissionsToVote}
         />
-        <UserVoteInfo userVote={userVote} state={proposal.state} />
       </FeedCardContent>
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}

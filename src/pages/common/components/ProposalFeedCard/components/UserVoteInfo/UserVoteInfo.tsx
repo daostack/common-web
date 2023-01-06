@@ -12,6 +12,7 @@ import styles from "./UserVoteInfo.module.scss";
 interface UserVoteInfoProps {
   userVote?: Vote | null;
   state: Proposal["state"];
+  userHasPermissionsToVote: boolean;
 }
 
 const VOTE_OUTCOME_TO_TEXT_MAP: Record<VoteOutcome, string> = {
@@ -27,7 +28,7 @@ const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
 };
 
 export const UserVoteInfo: FC<UserVoteInfoProps> = (props) => {
-  const { userVote, state } = props;
+  const { userVote, state, userHasPermissionsToVote } = props;
   const user = useSelector(selectUser());
   const className = classNames(styles.container, {
     [styles.containerApprove]: userVote?.outcome === VoteOutcome.Approved,
@@ -36,7 +37,7 @@ export const UserVoteInfo: FC<UserVoteInfoProps> = (props) => {
   });
 
   if (!userVote) {
-    return !checkIsCountdownState({ state }) ? (
+    return userHasPermissionsToVote && !checkIsCountdownState({ state }) ? (
       <div className={styles.container}>You didn’t vote to this proposal</div>
     ) : null;
   }
