@@ -1,6 +1,7 @@
 import { takeLeadingByIdentifier } from "@/shared/utils/saga";
 import * as actions from "../actions";
 import { getDiscussionStateById } from "./getDiscussionStateById";
+import { getProposalStateById } from "./getProposalStateById";
 import { getUserStateById } from "./getUserStateById";
 
 export function* mainSaga() {
@@ -13,5 +14,10 @@ export function* mainSaga() {
     actions.getDiscussionStateById.request,
     (action) => action.payload.payload.discussionId,
     getDiscussionStateById,
+  );
+  yield takeLeadingByIdentifier(
+    actions.getProposalStateById.request,
+    (action) => action.payload.payload.proposalId,
+    getProposalStateById,
   );
 }

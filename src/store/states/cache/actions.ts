@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { LoadingState, PayloadWithOptionalCallback } from "@/shared/interfaces";
-import { Discussion, User } from "@/shared/models";
+import { Discussion, Proposal, User } from "@/shared/models";
 import { CacheActionType } from "./constants";
 
 export const getUserStateById = createAsyncAction(
@@ -43,4 +43,25 @@ export const updateDiscussionStateById = createStandardAction(
 )<{
   discussionId: string;
   state: LoadingState<Discussion | null>;
+}>();
+
+export const getProposalStateById = createAsyncAction(
+  CacheActionType.GET_PROPOSAL_STATE_BY_ID,
+  CacheActionType.GET_PROPOSAL_STATE_BY_ID_SUCCESS,
+  CacheActionType.GET_PROPOSAL_STATE_BY_ID_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    { proposalId: string; force?: boolean },
+    Proposal | null,
+    Error
+  >,
+  Proposal | null,
+  Error
+>();
+
+export const updateProposalStateById = createStandardAction(
+  CacheActionType.UPDATE_PROPOSAL_STATE_BY_ID,
+)<{
+  proposalId: string;
+  state: LoadingState<Proposal | null>;
 }>();

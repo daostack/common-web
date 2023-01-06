@@ -1,16 +1,36 @@
 import { ProposalsTypes } from "@/shared/constants";
-import { Collection, ProposalState } from "@/shared/models";
+import { Collection, Proposal, ProposalState } from "@/shared/models";
 import {
   AssignCircle,
   RemoveCircle,
 } from "@/shared/models/governance/proposals";
 import {
   checkIsCountdownState,
+  firestoreDataConverter,
   transformFirebaseDataList,
+  transformFirebaseDataSingle,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 
+const converter = firestoreDataConverter<Proposal>();
+
 class ProposalService {
+  private getProposalCollection = () =>
+    firebase
+      .firestore()
+      .collection(Collection.Proposals)
+      .withConverter(converter);
+
+  public getProposalById = async (
+    proposalId: string,
+  ): Promise<Proposal | null> => {
+    const proposal = await this.getProposalCollection().doc(proposalId).get();
+
+    return (
+      (proposal && transformFirebaseDataSingle<Proposal>(proposal)) || null
+    );
+  };
+
   public checkActiveProposalsExistenceInCommon = async (
     commonId: string,
   ): Promise<boolean> => {

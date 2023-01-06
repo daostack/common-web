@@ -8,6 +8,7 @@ type Action = ActionType<typeof actions>;
 const initialState: CacheState = {
   userStates: {},
   discussionStates: {},
+  proposalStates: {},
 };
 
 export const reducer = createReducer<CacheState, Action>(initialState)
@@ -23,5 +24,12 @@ export const reducer = createReducer<CacheState, Action>(initialState)
       const { discussionId, state } = payload;
 
       nextState.discussionStates[discussionId] = { ...state };
+    }),
+  )
+  .handleAction(actions.updateProposalStateById, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { proposalId, state } = payload;
+
+      nextState.proposalStates[proposalId] = { ...state };
     }),
   );
