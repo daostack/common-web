@@ -35,10 +35,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }, [item.userId]);
 
   useEffect(() => {
-    if (item.data.discussionId) {
-      fetchDiscussion(item.data.discussionId);
-    }
-  }, [item.data.discussionId]);
+    fetchDiscussion(item.data.id);
+  }, [item.data.id]);
 
   if (isLoading) {
     return <LoadingFeedCard />;
