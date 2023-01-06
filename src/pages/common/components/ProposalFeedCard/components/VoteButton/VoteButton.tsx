@@ -9,6 +9,12 @@ interface VoteButtonProps {
   voteType: VoteType;
 }
 
+const VOTE_TYPE_TO_TEXT_MAP: Record<VoteType, string> = {
+  [VoteType.Approve]: "Vote for",
+  [VoteType.Abstain]: "Abstain",
+  [VoteType.Reject]: "Vote against",
+};
+
 export const VoteButton: React.FC<VoteButtonProps> = ({ voteType }) => {
   const VoteIcon = useCallback(() => {
     switch (voteType) {
@@ -41,7 +47,7 @@ export const VoteButton: React.FC<VoteButtonProps> = ({ voteType }) => {
           [styles.rejectText]: VoteType.Reject === voteType,
         })}
       >
-        Vote for
+        {VOTE_TYPE_TO_TEXT_MAP[voteType]}
       </p>
       <VoteIcon />
     </Button>

@@ -1,4 +1,5 @@
 import React, { memo, useEffect } from "react";
+import { useProposalUserVote } from "@/pages/OldCommon/hooks";
 import {
   useDiscussionById,
   useProposalById,
@@ -37,12 +38,14 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     data: proposal,
     fetched: isProposalFetched,
   } = useProposalById();
+  const { data: userVote, fetchProposalVote, setVote } = useProposalUserVote();
   const isLoading =
     !isUserFetched || !isDiscussionFetched || !isProposalFetched || !proposal;
   const circleVisibility = getVisibilityString(
     governanceCircles,
     item.circleVisibility,
   );
+  const proposalId = proposal?.id;
 
   useEffect(() => {
     fetchUser(item.userId);
@@ -57,6 +60,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   useEffect(() => {
     fetchProposal(item.data.id);
   }, [item.data.id]);
+
+  useEffect(() => {
+    if (proposalId) {
+      fetchProposalVote(proposalId);
+    }
+  }, [proposalId]);
 
   if (isLoading) {
     return <LoadingFeedCard />;
@@ -82,7 +91,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           proposal={proposal}
           governanceCircles={governanceCircles}
         />
-        {/*<ProposalFeedButtonContainer />*/}
+        {!userVote && <ProposalFeedButtonContainer />}
       </FeedCardContent>
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}

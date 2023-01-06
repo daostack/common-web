@@ -1,7 +1,8 @@
 @import "../../../../../../constants";
 
 .container {
-  display: flex;
-  justify-content: space-between;
   margin-top: 1.375rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-column-gap: 1.5rem;
 }
