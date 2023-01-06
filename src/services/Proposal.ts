@@ -1,4 +1,5 @@
 import { ProposalsTypes } from "@/shared/constants";
+import { UnsubscribeFunction } from "@/shared/interfaces";
 import { Collection, Proposal, ProposalState } from "@/shared/models";
 import {
   AssignCircle,
@@ -65,6 +66,17 @@ class ProposalService {
       callback(list);
     });
     return unsubscribe;
+  };
+
+  public subscribeToProposal = (
+    proposalId: string,
+    callback: (proposal: Proposal) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getProposalCollection().doc(proposalId);
+
+    return query.onSnapshot((snapshot) => {
+      callback(transformFirebaseDataSingle<Proposal>(snapshot));
+    });
   };
 }
 
