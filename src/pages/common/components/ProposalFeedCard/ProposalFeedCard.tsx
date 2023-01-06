@@ -66,10 +66,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       </FeedCardContent>
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
-        lastActivity={formatDate(
-          new Date(item.updatedAt.seconds * 1000),
-          DateFormat.FullTime,
-        )}
+        lastActivity={item.updatedAt.seconds * 1000}
       />
     </FeedCard>
   );
