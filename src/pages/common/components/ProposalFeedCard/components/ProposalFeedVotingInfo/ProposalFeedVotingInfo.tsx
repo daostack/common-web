@@ -1,26 +1,26 @@
 import React, { useLayoutEffect } from "react";
 import classNames from "classnames";
-import firebase from "firebase/app";
 import { useCountdown } from "@/shared/hooks";
+import { Proposal, ProposalState } from "@/shared/models";
+import { checkIsCountdownState } from "@/shared/utils";
 import { VotingInfo } from "../VotingInfo";
 import styles from "./ProposalFeedVotingInfo.module.scss";
 
 export interface ProposalFeedVotingInfoProps {
-  expirationTimestamp: firebase.firestore.Timestamp;
+  proposal: Proposal;
   votersCount: number;
   votedCount: number;
   voters: string;
   voteStatus: string;
 }
 
-export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = ({
-  expirationTimestamp,
-  votersCount,
-  votedCount,
-  voters,
-  voteStatus,
-}) => {
+export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
+  props,
+) => {
+  const { proposal, votersCount, votedCount, voters, voteStatus } = props;
   const { startCountdown, timer } = useCountdown();
+  const expirationTimestamp =
+    proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
 
   useLayoutEffect(() => {
     if (expirationTimestamp) {
@@ -30,9 +30,17 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = ({
 
   return (
     <div className={styles.container}>
-      <VotingInfo label="Time to Vote">
-        <p className={classNames(styles.text, styles.timeToVote)}>{timer}</p>
-      </VotingInfo>
+      {checkIsCountdownState(proposal) && (
+        <VotingInfo
+          label={
+            proposal.state === ProposalState.DISCUSSION
+              ? "Voting starts in"
+              : "Time to Vote"
+          }
+        >
+          <p className={classNames(styles.text, styles.timeToVote)}>{timer}</p>
+        </VotingInfo>
+      )}
       <VotingInfo label="Votes">
         <p className={classNames(styles.text, styles.votes)}>
           {votedCount}/{votersCount}
