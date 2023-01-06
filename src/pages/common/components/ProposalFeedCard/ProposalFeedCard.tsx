@@ -1,40 +1,78 @@
-import React from "react";
+import React, { memo, useEffect } from "react";
+import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
+import { CommonFeed, DateFormat, Governance } from "@/shared/models";
+import { formatDate, getUserName } from "@/shared/utils";
 import {
   FeedCard,
   FeedCardHeader,
   FeedCardContent,
   FeedCardFooter,
-  FeedCardHeaderProps,
-  FeedCardContentProps,
-  FeedCardFooterProps,
+  getVisibilityString,
 } from "../FeedCard";
+import { LoadingFeedCard } from "../LoadingFeedCard";
 import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
-  ProposalFeedVotingInfoProps,
 } from "./components";
 
 interface ProposalFeedCardProps {
-  headerProps: FeedCardHeaderProps;
-  contentProps: FeedCardContentProps;
-  votingInfoProps: ProposalFeedVotingInfoProps;
-  footerProps: FeedCardFooterProps;
+  item: CommonFeed;
+  governanceCircles: Governance["circles"];
 }
 
-export const ProposalFeedCard: React.FC<ProposalFeedCardProps> = ({
-  headerProps,
-  contentProps,
-  votingInfoProps,
-  footerProps,
-}) => {
+const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
+  const { item, governanceCircles } = props;
+  const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
+  const {
+    fetchDiscussion,
+    data: discussion,
+    fetched: isDiscussionFetched,
+  } = useDiscussionById();
+  const isLoading = !isUserFetched || !isDiscussionFetched;
+  const circleVisibility = getVisibilityString(
+    governanceCircles,
+    item.circleVisibility,
+  );
+
+  useEffect(() => {
+    fetchUser(item.userId);
+  }, [item.userId]);
+
+  useEffect(() => {
+    if (item.data.discussionId) {
+      fetchDiscussion(item.data.discussionId);
+    }
+  }, [item.data.discussionId]);
+
+  if (isLoading) {
+    return <LoadingFeedCard />;
+  }
+
   return (
     <FeedCard>
-      <FeedCardHeader {...headerProps} />
-      <FeedCardContent {...contentProps}>
-        <ProposalFeedVotingInfo {...votingInfoProps} />
-        <ProposalFeedButtonContainer />
+      <FeedCardHeader
+        avatar={user?.photoURL}
+        title={getUserName(user)}
+        createdAt={`Created: ${formatDate(
+          new Date(item.createdAt.seconds * 1000),
+          DateFormat.SuperShortSecondary,
+        )}`}
+        type="Proposal"
+        circleVisibility={circleVisibility}
+      />
+      <FeedCardContent>
+        {/*<ProposalFeedVotingInfo />*/}
+        {/*<ProposalFeedButtonContainer />*/}
       </FeedCardContent>
-      <FeedCardFooter {...footerProps} />
+      <FeedCardFooter
+        messageCount={discussion?.messageCount || 0}
+        lastActivity={formatDate(
+          new Date(item.updatedAt.seconds * 1000),
+          DateFormat.FullTime,
+        )}
+      />
     </FeedCard>
   );
 };
+
+export default memo(ProposalFeedCard);
