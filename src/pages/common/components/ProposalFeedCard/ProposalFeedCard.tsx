@@ -6,7 +6,7 @@ import {
   useUserById,
 } from "@/shared/hooks/useCases";
 import { CommonFeed, DateFormat, Governance } from "@/shared/models";
-import { formatDate, getUserName } from "@/shared/utils";
+import { checkIsCountdownState, formatDate, getUserName } from "@/shared/utils";
 import {
   FeedCard,
   FeedCardHeader,
@@ -93,6 +93,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     return <LoadingFeedCard />;
   }
 
+  const isCountdownState = checkIsCountdownState(proposal);
   const userHasPermissionsToVote = checkUserPermissionsToVote({
     proposal,
     commonMember,
@@ -123,12 +124,13 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         <ProposalFeedVotingInfo
           proposal={proposal}
           governanceCircles={governanceCircles}
+          isCountdownState={isCountdownState}
         />
         {isVotingAllowed && <ProposalFeedButtonContainer />}
         <UserVoteInfo
           userVote={userVote}
-          state={proposal.state}
           userHasPermissionsToVote={userHasPermissionsToVote}
+          isCountdownState={isCountdownState}
         />
       </FeedCardContent>
       <FeedCardFooter

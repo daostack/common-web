@@ -5,14 +5,14 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { UserAvatar } from "@/shared/components";
 import { VoteAbstain, VoteAgainst, VoteFor } from "@/shared/icons";
-import { Proposal, Vote, VoteOutcome } from "@/shared/models";
-import { checkIsCountdownState, getUserName } from "@/shared/utils";
+import { Vote, VoteOutcome } from "@/shared/models";
+import { getUserName } from "@/shared/utils";
 import styles from "./UserVoteInfo.module.scss";
 
 interface UserVoteInfoProps {
   userVote?: Vote | null;
-  state: Proposal["state"];
   userHasPermissionsToVote: boolean;
+  isCountdownState: boolean;
 }
 
 const VOTE_OUTCOME_TO_TEXT_MAP: Record<VoteOutcome, string> = {
@@ -28,7 +28,7 @@ const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
 };
 
 export const UserVoteInfo: FC<UserVoteInfoProps> = (props) => {
-  const { userVote, state, userHasPermissionsToVote } = props;
+  const { userVote, userHasPermissionsToVote, isCountdownState } = props;
   const user = useSelector(selectUser());
   const className = classNames(styles.container, {
     [styles.containerApprove]: userVote?.outcome === VoteOutcome.Approved,
@@ -37,7 +37,7 @@ export const UserVoteInfo: FC<UserVoteInfoProps> = (props) => {
   });
 
   if (!userVote) {
-    return userHasPermissionsToVote && !checkIsCountdownState({ state }) ? (
+    return userHasPermissionsToVote && !isCountdownState ? (
       <div className={styles.container}>You didn’t vote to this proposal</div>
     ) : null;
   }

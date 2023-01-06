@@ -7,7 +7,6 @@ import {
 import { getVotersString } from "@/pages/OldCommon/containers/ProposalContainer/helpers";
 import { useCountdown } from "@/shared/hooks";
 import { Governance, Proposal, ProposalState } from "@/shared/models";
-import { checkIsCountdownState } from "@/shared/utils";
 import { ModalTriggerButton } from "../ModalTriggerButton";
 import { VotingInfo } from "../VotingInfo";
 import styles from "./ProposalFeedVotingInfo.module.scss";
@@ -15,16 +14,16 @@ import styles from "./ProposalFeedVotingInfo.module.scss";
 export interface ProposalFeedVotingInfoProps {
   proposal: Proposal;
   governanceCircles: Governance["circles"];
+  isCountdownState: boolean;
 }
 
 export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   props,
 ) => {
-  const { proposal, governanceCircles } = props;
+  const { proposal, governanceCircles, isCountdownState } = props;
   const { startCountdown, timer } = useCountdown();
   const expirationTimestamp =
     proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
-  const isCountdownState = checkIsCountdownState(proposal);
   const votingStatus = calculateVotingStatus(proposal);
   const containerStyles = {
     "--voting-info-items-amount": isCountdownState ? 4 : 3,
