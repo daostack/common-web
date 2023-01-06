@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from "react";
-import { useProposalUserVote } from "@/pages/OldCommon/hooks";
+import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import {
   useDiscussionById,
   useProposalById,
@@ -21,12 +21,13 @@ import {
 } from "./components";
 
 interface ProposalFeedCardProps {
+  commonId: string;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
-  const { item, governanceCircles } = props;
+  const { commonId, item, governanceCircles } = props;
   const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
   const {
     fetchDiscussion,
@@ -38,14 +39,29 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     data: proposal,
     fetched: isProposalFetched,
   } = useProposalById();
-  const { data: userVote, fetchProposalVote, setVote } = useProposalUserVote();
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+  } = useCommonMember();
+  const {
+    data: userVote,
+    loading: isUserVoteLoading,
+    fetchProposalVote,
+    setVote,
+  } = useProposalUserVote();
   const isLoading =
-    !isUserFetched || !isDiscussionFetched || !isProposalFetched || !proposal;
+    !isUserFetched ||
+    !isDiscussionFetched ||
+    !isProposalFetched ||
+    !proposal ||
+    isUserVoteLoading ||
+    !isCommonMemberFetched;
   const circleVisibility = getVisibilityString(
     governanceCircles,
     item.circleVisibility,
   );
-  const proposalId = proposal?.id;
+  const proposalId = item.data.id;
 
   useEffect(() => {
     fetchUser(item.userId);
@@ -62,10 +78,14 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   }, [item.data.id]);
 
   useEffect(() => {
-    if (proposalId) {
-      fetchProposalVote(proposalId);
+    fetchProposalVote(proposalId);
+  }, [fetchProposalVote, proposalId]);
+
+  useEffect(() => {
+    if (commonId) {
+      fetchCommonMember(commonId, {});
     }
-  }, [proposalId]);
+  }, [fetchCommonMember, commonId]);
 
   if (isLoading) {
     return <LoadingFeedCard />;
@@ -91,7 +111,11 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           proposal={proposal}
           governanceCircles={governanceCircles}
         />
-        {!userVote && <ProposalFeedButtonContainer />}
+        <ProposalFeedButtonContainer
+          userVote={userVote}
+          proposal={proposal}
+          commonMember={commonMember}
+        />
       </FeedCardContent>
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}

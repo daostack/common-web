@@ -6,12 +6,13 @@ import {
 import { CommonFeed, CommonFeedType, Governance } from "@/shared/models";
 
 interface FeedItemProps {
+  commonId: string;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
 }
 
 const FeedItem: FC<FeedItemProps> = (props) => {
-  const { item, governanceCircles } = props;
+  const { commonId, item, governanceCircles } = props;
 
   if (item.data.type === CommonFeedType.Discussion) {
     return (
@@ -20,7 +21,11 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   }
   if (item.data.type === CommonFeedType.Proposal) {
     return (
-      <ProposalFeedCard item={item} governanceCircles={governanceCircles} />
+      <ProposalFeedCard
+        commonId={commonId}
+        item={item}
+        governanceCircles={governanceCircles}
+      />
     );
   }
 
