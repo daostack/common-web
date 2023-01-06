@@ -1,25 +1,29 @@
-import React, { useLayoutEffect } from "react";
+import React, { CSSProperties, useLayoutEffect } from "react";
 import classNames from "classnames";
+import { getVotersString } from "@/pages/OldCommon/containers/ProposalContainer/helpers";
 import { useCountdown } from "@/shared/hooks";
-import { Proposal, ProposalState } from "@/shared/models";
+import { Governance, Proposal, ProposalState } from "@/shared/models";
 import { checkIsCountdownState } from "@/shared/utils";
 import { VotingInfo } from "../VotingInfo";
 import styles from "./ProposalFeedVotingInfo.module.scss";
 
 export interface ProposalFeedVotingInfoProps {
   proposal: Proposal;
-  voters: string;
-  voteStatus: string;
+  governanceCircles: Governance["circles"];
 }
 
 export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   props,
 ) => {
-  const { proposal, voters, voteStatus } = props;
+  const { proposal, governanceCircles } = props;
   const { startCountdown, timer } = useCountdown();
   const { votes } = proposal;
   const expirationTimestamp =
     proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
+  const isCountdownState = checkIsCountdownState(proposal);
+  const containerStyles = {
+    "--voting-info-items-amount": isCountdownState ? 4 : 3,
+  } as CSSProperties;
 
   useLayoutEffect(() => {
     if (expirationTimestamp) {
@@ -28,8 +32,8 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   }, [startCountdown, expirationTimestamp]);
 
   return (
-    <div className={styles.container}>
-      {checkIsCountdownState(proposal) && (
+    <div className={styles.container} style={containerStyles}>
+      {isCountdownState && (
         <VotingInfo
           label={
             proposal.state === ProposalState.DISCUSSION
@@ -46,10 +50,12 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
         </p>
       </VotingInfo>
       <VotingInfo label="Voters">
-        <p className={classNames(styles.text, styles.voters)}>{voters}</p>
+        <p className={classNames(styles.text, styles.voters)}>
+          {getVotersString(proposal.global.weights, governanceCircles)}
+        </p>
       </VotingInfo>
       <VotingInfo label="Status">
-        <p className={classNames(styles.text, styles.status)}>{voteStatus}</p>
+        <p className={classNames(styles.text, styles.status)}>Status</p>
       </VotingInfo>
     </div>
   );

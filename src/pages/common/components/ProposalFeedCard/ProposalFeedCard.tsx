@@ -78,7 +78,10 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         title={proposal.data.args.title}
         description={proposal.data.args.description}
       >
-        {/*<ProposalFeedVotingInfo />*/}
+        <ProposalFeedVotingInfo
+          proposal={proposal}
+          governanceCircles={governanceCircles}
+        />
         {/*<ProposalFeedButtonContainer />*/}
       </FeedCardContent>
       <FeedCardFooter
