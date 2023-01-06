@@ -1,5 +1,9 @@
 import React, { memo, useEffect } from "react";
-import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
+import {
+  useDiscussionById,
+  useProposalById,
+  useUserById,
+} from "@/shared/hooks/useCases";
 import { CommonFeed, DateFormat, Governance } from "@/shared/models";
 import { formatDate, getUserName } from "@/shared/utils";
 import {
@@ -28,7 +32,13 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     data: discussion,
     fetched: isDiscussionFetched,
   } = useDiscussionById();
-  const isLoading = !isUserFetched || !isDiscussionFetched;
+  const {
+    fetchProposal,
+    data: proposal,
+    fetched: isProposalFetched,
+  } = useProposalById();
+  const isLoading =
+    !isUserFetched || !isDiscussionFetched || !isProposalFetched || !proposal;
   const circleVisibility = getVisibilityString(
     governanceCircles,
     item.circleVisibility,
@@ -43,6 +53,10 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       fetchDiscussion(item.data.discussionId);
     }
   }, [item.data.discussionId]);
+
+  useEffect(() => {
+    fetchProposal(item.data.id);
+  }, [item.data.id]);
 
   if (isLoading) {
     return <LoadingFeedCard />;
@@ -60,7 +74,10 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         type="Proposal"
         circleVisibility={circleVisibility}
       />
-      <FeedCardContent>
+      <FeedCardContent
+        title={proposal.data.args.title}
+        description={proposal.data.args.description}
+      >
         {/*<ProposalFeedVotingInfo />*/}
         {/*<ProposalFeedButtonContainer />*/}
       </FeedCardContent>
