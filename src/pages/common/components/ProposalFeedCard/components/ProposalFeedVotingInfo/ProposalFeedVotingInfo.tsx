@@ -4,6 +4,7 @@ import { getVotersString } from "@/pages/OldCommon/containers/ProposalContainer/
 import { useCountdown } from "@/shared/hooks";
 import { Governance, Proposal, ProposalState } from "@/shared/models";
 import { checkIsCountdownState } from "@/shared/utils";
+import { ModalTriggerButton } from "../ModalTriggerButton";
 import { VotingInfo } from "../VotingInfo";
 import styles from "./ProposalFeedVotingInfo.module.scss";
 
@@ -45,9 +46,9 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
         </VotingInfo>
       )}
       <VotingInfo label="Votes">
-        <p className={classNames(styles.text, styles.votes)}>
+        <ModalTriggerButton>
           {votes.total}/{votes.totalMembersWithVotingRight}
-        </p>
+        </ModalTriggerButton>
       </VotingInfo>
       <VotingInfo label="Voters">
         <p className={classNames(styles.text, styles.voters)}>
