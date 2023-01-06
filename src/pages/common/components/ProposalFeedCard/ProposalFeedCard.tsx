@@ -18,6 +18,7 @@ import { LoadingFeedCard } from "../LoadingFeedCard";
 import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
+  UserVoteInfo,
 } from "./components";
 
 interface ProposalFeedCardProps {
@@ -116,6 +117,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           proposal={proposal}
           commonMember={commonMember}
         />
+        <UserVoteInfo userVote={userVote} />
       </FeedCardContent>
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}

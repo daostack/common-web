@@ -1,0 +1,32 @@
+@import "../../../../../../constants";
+
+.container {
+  margin: 1.5rem auto 0;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: $small;
+  color: $c-neutrals-600;
+  background-color: $c-neutrals-100;
+  border-radius: 0.25rem;
+}
+.containerApprove {
+  background-color: $success-100;
+}
+.containerAbstain {
+  background-color: $c-neutrals-100;
+}
+.containerReject {
+  background-color: $c-error-100;
+}
+
+.avatar {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 1rem;
+}
+
+.resultText {
+  margin-right: 1rem;
+}
