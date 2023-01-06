@@ -18,9 +18,9 @@ export const FeedCardFooter: React.FC<FeedCardFooterProps> = ({
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
-        <MessageIcon color={Colors.primary400} />
+        <MessageIcon className={styles.messageIcon} />
         <p className={classNames(styles.text, styles.messageCount)}>
-          {messageCount} Messages
+          {messageCount} Message{messageCount === 1 ? "" : "s"}
         </p>
       </div>
       <div className={styles.rightContent}>

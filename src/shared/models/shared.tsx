@@ -37,6 +37,7 @@ export enum Collection {
 export enum SubCollections {
   Members = "members",
   Votes = "votes",
+  CommonFeed = "commonFeed",
 }
 
 export enum DateFormat {
@@ -47,5 +48,7 @@ export enum DateFormat {
   FullHuman = "MMMM DD, YYYY",
   GeneralHuman = "D MMMM YYYY",
   ShortSecondary = "DD/MM/YYYY",
+  SuperShortSecondary = "D/M/YYYY",
   ShortWithDots = "DD.MM.YY",
+  FullTime = "HH:mm:ss",
 }
