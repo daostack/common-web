@@ -32,18 +32,10 @@ class DiscussionService {
     discussionId: string,
     callback: (discussion: Discussion) => void,
   ): UnsubscribeFunction => {
-    const query = this.getDiscussionCollection().where(
-      "id",
-      "==",
-      discussionId,
-    );
+    const query = this.getDiscussionCollection().doc(discussionId);
 
     return query.onSnapshot((snapshot) => {
-      const docChange = snapshot.docChanges()[0];
-
-      if (docChange && docChange.type !== "added") {
-        callback(docChange.doc.data());
-      }
+      callback(transformFirebaseDataSingle<Discussion>(snapshot));
     });
   };
 }
