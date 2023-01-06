@@ -7,7 +7,6 @@ import React, {
   useRef,
 } from "react";
 import classNames from "classnames";
-
 import { ErrorText } from "../ErrorText";
 import "./index.scss";
 
@@ -41,6 +40,7 @@ export type FullInputProps = (InputProps | TextareaProps) & {
   hint?: string;
   maxLength?: number;
   shouldDisplayCount?: boolean;
+  countAsHint?: boolean;
   error?: string;
   styles?: InputStyles;
 };
@@ -50,9 +50,9 @@ export interface InputRef {
 }
 
 const filterExtraProps: FilterExtraPropsFunction = <
-  T extends InputProps | TextareaProps
+  T extends InputProps | TextareaProps,
 >(
-  props: T
+  props: T,
 ) => {
   const { isTextarea: _, ...restProps } = props;
 
@@ -64,24 +64,28 @@ const isChangeAllowed = (value: string, maxLength?: number): boolean =>
 
 const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
   props,
-  inputRef
+  inputRef,
 ) => {
   const {
     className,
     label,
     description,
-    hint,
     maxLength,
     shouldDisplayCount,
+    countAsHint = false,
     error,
     styles,
     ...restProps
   } = props;
   const innerInputRef = useRef<HTMLInputElement>(null);
   const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(
-    null
+    null,
   );
   const id = restProps.id || restProps.name;
+  const currentLength =
+    typeof restProps.value === "string" ? restProps.value.length : 0;
+  const hint =
+    props.hint || (countAsHint ? `${currentLength}/${maxLength}` : "");
   const shouldDisplayCountToUse =
     shouldDisplayCount ?? Boolean(maxLength && maxLength > 0);
   const inputStyles =
@@ -94,7 +98,7 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
     {
       "custom-input__input--textarea": restProps.isTextarea,
       "custom-input__input--error": error,
-    }
+    },
   );
   const generalInputProps = {
     id,
@@ -112,7 +116,7 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
     }
   };
   const handleTextareaChange: ChangeEventHandler<HTMLTextAreaElement> = (
-    event
+    event,
   ) => {
     if (
       props.onChange &&
@@ -130,7 +134,7 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
         innerInputRef.current?.focus();
       },
     }),
-    []
+    [],
   );
 
   return (
@@ -139,7 +143,7 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
         <div
           className={classNames(
             "custom-input__label-wrapper",
-            styles?.labelWrapper
+            styles?.labelWrapper,
           )}
         >
           {label && (
@@ -161,7 +165,7 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
         <p
           className={classNames(
             "custom-input__description",
-            styles?.description
+            styles?.description,
           )}
         >
           {description}
@@ -170,7 +174,7 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
       <div
         className={classNames(
           "custom-input__input-wrapper",
-          styles?.inputWrapper
+          styles?.inputWrapper,
         )}
       >
         {!restProps.isTextarea && (
@@ -188,10 +192,9 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
             onChange={handleTextareaChange}
           />
         )}
-        {shouldDisplayCountToUse && (
+        {shouldDisplayCountToUse && !countAsHint && (
           <span className="custom-input__input-length" ref={setInputLengthRef}>
-            {typeof restProps.value === "string" ? restProps.value.length : 0}/
-            {maxLength}
+            {currentLength}/{maxLength}
           </span>
         )}
       </div>

@@ -1,6 +1,10 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
 
+.globalLoader {
+  z-index: 10;
+}
+
 .container {
   --main-content-mw: 62%;
   --bottom-tabs-height: 4rem;
@@ -24,7 +28,7 @@
 .contentHeaderWrapper {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 2;
   padding-top: 3rem;
   background-color: var(--page-bg-color);
 

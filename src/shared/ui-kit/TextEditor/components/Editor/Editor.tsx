@@ -13,6 +13,8 @@ import { toggleMark } from "../../utils";
 import styles from "./Editor.module.scss";
 
 interface EditorProps {
+  id?: string;
+  name?: string;
   size?: TextEditorSize;
   placeholder?: string;
   readOnly?: boolean;
@@ -34,6 +36,7 @@ const Editor: FC<EditorProps> = (props) => {
     [styles.editorBigSize]: size === TextEditorSize.Big,
     [styles.editorReadOnly]: readOnly,
   });
+  const id = props.id || props.name;
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
     Object.entries(HOTKEYS).forEach(([hotkey, format]) => {
@@ -48,6 +51,7 @@ const Editor: FC<EditorProps> = (props) => {
 
   return (
     <Editable
+      id={id}
       className={className}
       renderElement={renderElement}
       renderLeaf={renderLeaf}

@@ -16,19 +16,11 @@ interface CommonTabPanelsProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  parentCommons: Common[];
   subCommons: Common[];
 }
 
 const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
-  const {
-    activeTab,
-    common,
-    governance,
-    commonMember,
-    parentCommons,
-    subCommons,
-  } = props;
+  const { activeTab, common, governance, commonMember, subCommons } = props;
 
   return (
     <Container
@@ -44,7 +36,6 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
           governance={governance}
           commonMember={commonMember}
           rules={governance.unstructuredRules}
-          parentCommons={parentCommons}
           subCommons={subCommons}
           limitations={
             governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE]?.limitations
@@ -52,7 +43,11 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
         />
       </TabPanel>
       <TabPanel value={activeTab} panelValue={CommonTab.Feed}>
-        <FeedTab activeTab={activeTab} />
+        <FeedTab
+          activeTab={activeTab}
+          governance={governance}
+          commonMember={commonMember}
+        />
       </TabPanel>
     </Container>
   );

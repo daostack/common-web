@@ -14,7 +14,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { projectsActions } from "@/store/states";
-import { CommonMenuItem } from "../../constants";
+import { CommonMenuItem, NewCollaborationMenuItem } from "../../constants";
 import { LeaveCircleModal } from "./components";
 import { JoinCircleModal } from "./components/JoinCircleModal";
 import { CommonDataContext, CommonDataContextValue } from "./context";
@@ -50,6 +50,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const { notify } = useNotification();
   const [selectedMenuItem, setSelectedMenuItem] =
     useState<CommonMenuItem | null>(null);
+  const [newCollaborationMenuItem, setNewCollaborationMenuItem] =
+    useState<NewCollaborationMenuItem | null>(null);
   const {
     isProposalCreationModalOpen,
     initialProposalTypeForCreation,
@@ -117,6 +119,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
       parentCommonSubCommons,
       onLeaveCircle: onLeaveCircleModalOpen,
       onJoinCircle: onJoinCircleModalOpen,
+      newCollaborationMenuItem,
+      onNewCollaborationMenuItemSelect: setNewCollaborationMenuItem,
     }),
     [
       handleMenuItemSelect,
@@ -130,6 +134,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       parentCommonSubCommons,
       onLeaveCircleModalOpen,
       onJoinCircleModalOpen,
+      newCollaborationMenuItem,
     ],
   );
 

@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react";
 import { Circle, Common, Governance } from "@/shared/models";
-import { CommonMenuItem } from "../../constants";
 import { ProposalsTypes } from "@/shared/constants";
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
+import { CommonMenuItem, NewCollaborationMenuItem } from "../../constants";
 
 interface Data {
   onMenuItemSelect: (menuItem: CommonMenuItem | null) => void;
@@ -20,6 +20,10 @@ interface Data {
     circle: Circle,
   ) => void;
   onJoinCircle: (payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">, circleName: string) => void;
+  newCollaborationMenuItem: NewCollaborationMenuItem | null;
+  onNewCollaborationMenuItemSelect: (
+    menuItem: NewCollaborationMenuItem | null,
+  ) => void;
 }
 
 export type CommonDataContextValue = Data | null;
