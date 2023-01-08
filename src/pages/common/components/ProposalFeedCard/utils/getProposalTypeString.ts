@@ -10,5 +10,5 @@ const PROPOSAL_TYPE_TO_TEXT_MAP = {
   [ProposalsTypes.SURVEY]: "Survey",
 };
 
-export const getProposalTypeString = (proposalsType: ProposalsTypes): string =>
-  PROPOSAL_TYPE_TO_TEXT_MAP[proposalsType] || "";
+export const getProposalTypeString = (proposalType: ProposalsTypes): string =>
+  PROPOSAL_TYPE_TO_TEXT_MAP[proposalType] || "";

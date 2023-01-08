@@ -13,13 +13,11 @@ export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      {title && description && (
-        <FeedGeneralInfo
-          title={title}
-          description={description}
-          subtitle={subtitle}
-        />
-      )}
+      <FeedGeneralInfo
+        title={title}
+        description={description}
+        subtitle={subtitle}
+      />
       {children}
     </div>
   );
