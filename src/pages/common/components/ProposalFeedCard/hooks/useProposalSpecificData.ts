@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { AllocateFundsTo } from "@/shared/constants";
 import { useLoadingState } from "@/shared/hooks";
-import { useUserById } from "@/shared/hooks/useCases";
+import { useCommon, useUserById } from "@/shared/hooks/useCases";
 import { LoadingState } from "@/shared/interfaces";
 import { Proposal } from "@/shared/models";
 import {
@@ -16,6 +16,7 @@ interface Return extends LoadingState<ProposalSpecificData> {
 
 const INITIAL_DATA: ProposalSpecificData = {
   targetUser: null,
+  targetCommon: null,
 };
 
 export const useProposalSpecificData = (): Return => {
@@ -27,8 +28,17 @@ export const useProposalSpecificData = (): Return => {
     loading: isTargetUserLoading,
     fetched: isTargetUserFetched,
   } = useUserById();
-  const isLoading = state.loading || isTargetUserLoading;
-  const isFetched = state.fetched && isTargetUserFetched;
+  const {
+    fetchCommon: fetchTargetCommon,
+    setCommon: setTargetCommon,
+    data: targetCommon,
+    loading: isTargetCommonLoading,
+    fetched: isTargetCommonFetched,
+  } = useCommon();
+  const isLoading =
+    state.loading || isTargetUserLoading || isTargetCommonLoading;
+  const isFetched =
+    state.fetched && isTargetUserFetched && isTargetCommonFetched;
 
   const fetchFundsAllocationProposalData = useCallback(
     (fundsAllocation: FundsAllocation) => {
@@ -37,17 +47,20 @@ export const useProposalSpecificData = (): Return => {
 
       if (to === AllocateFundsTo.SubCommon) {
         if (subcommonId) {
-          // TODO: fetch target common
+          fetchTargetCommon(subcommonId);
         } else {
-          // TODO: setTargetCommon to null
+          setTargetCommon(null);
         }
+
+        setTargetUser(null);
         return;
       }
 
       const targetUserId = otherMemberId || proposerId;
       fetchTargetUser(targetUserId);
+      setTargetCommon(null);
     },
-    [fetchTargetUser],
+    [fetchTargetUser, setTargetUser, fetchTargetCommon, setTargetCommon],
   );
 
   const fetchData = useCallback(
@@ -66,6 +79,7 @@ export const useProposalSpecificData = (): Return => {
         fetchFundsAllocationProposalData(proposal);
       } else {
         setTargetUser(null);
+        setTargetCommon(null);
       }
 
       setState((nextState) => ({
@@ -74,13 +88,14 @@ export const useProposalSpecificData = (): Return => {
         data: nextState.data,
       }));
     },
-    [state, fetchFundsAllocationProposalData, setTargetUser],
+    [state, fetchFundsAllocationProposalData, setTargetUser, setTargetCommon],
   );
 
   return {
     data: {
       ...state.data,
       targetUser,
+      targetCommon,
     },
     loading: isLoading,
     fetched: isFetched,
