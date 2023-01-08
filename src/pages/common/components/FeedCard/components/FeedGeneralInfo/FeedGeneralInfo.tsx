@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import classNames from "classnames";
 import { useFullText } from "@/shared/hooks";
 import styles from "./FeedGeneralInfo.module.scss";
 
 interface FeedGeneralInfoProps {
   title?: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
   description?: string;
 }
 

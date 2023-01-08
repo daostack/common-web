@@ -1,10 +1,10 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { FeedGeneralInfo } from "../FeedGeneralInfo";
 import styles from "./FeedCardContent.module.scss";
 
 export interface FeedCardContentProps {
   title?: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
   description?: string;
 }
 

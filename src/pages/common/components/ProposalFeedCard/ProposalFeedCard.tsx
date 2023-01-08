@@ -23,6 +23,7 @@ import {
 import {
   checkIsVotingAllowed,
   checkUserPermissionsToVote,
+  getProposalSubtitle,
   getProposalTitleString,
   getProposalTypeString,
 } from "./utils";
@@ -124,6 +125,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       />
       <FeedCardContent
         title={getProposalTitleString(proposal.data.args.title, proposal.type)}
+        subtitle={getProposalSubtitle(proposal)}
         description={proposal.data.args.description}
       >
         {isCountdownState && (
