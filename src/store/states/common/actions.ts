@@ -1,6 +1,10 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
-import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
-import { CommonFeed } from "@/shared/models";
+import { CreateDiscussionDto } from "@/pages/OldCommon/interfaces";
+import {
+  NewDiscussionCreationFormValues,
+  PayloadWithOptionalCallback,
+} from "@/shared/interfaces";
+import { CommonFeed, Discussion } from "@/shared/models";
 import firebase from "@/shared/utils/firebase";
 import { CommonActionType } from "./constants";
 import { FeedItems } from "./types";
@@ -12,6 +16,16 @@ export const resetCommon = createStandardAction(
 export const setDiscussionCreationData = createStandardAction(
   CommonActionType.SET_DISCUSSION_CREATION_DATA,
 )<NewDiscussionCreationFormValues | null>();
+
+export const createDiscussion = createAsyncAction(
+  CommonActionType.CREATE_DISCUSSION,
+  CommonActionType.CREATE_DISCUSSION_SUCCESS,
+  CommonActionType.CREATE_DISCUSSION_FAILURE,
+)<
+  PayloadWithOptionalCallback<CreateDiscussionDto, Discussion, Error>,
+  Discussion,
+  Error
+>();
 
 export const getFeedItems = createAsyncAction(
   CommonActionType.GET_FEED_ITEMS,

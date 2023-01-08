@@ -15,19 +15,28 @@ const initialFeedItems: FeedItems = {
 
 const initialState: CommonState = {
   feedItems: { ...initialFeedItems },
-  discussionCreationData: null,
+  discussionCreation: {
+    data: null,
+    loading: false,
+  },
 };
 
 export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.resetCommon, (state) =>
     produce(state, (nextState) => {
       nextState.feedItems = { ...initialFeedItems };
-      nextState.discussionCreationData = null;
+      nextState.discussionCreation = {
+        data: null,
+        loading: false,
+      };
     }),
   )
   .handleAction(actions.setDiscussionCreationData, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.discussionCreationData = payload;
+      nextState.discussionCreation = {
+        data: payload,
+        loading: false,
+      };
     }),
   )
   .handleAction(actions.getFeedItems.request, (state) =>

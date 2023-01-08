@@ -12,5 +12,8 @@ export interface FeedItems {
 
 export interface CommonState {
   feedItems: FeedItems;
-  discussionCreationData: NewDiscussionCreationFormValues | null;
+  discussionCreation: {
+    data: NewDiscussionCreationFormValues | null;
+    loading: boolean;
+  };
 }
