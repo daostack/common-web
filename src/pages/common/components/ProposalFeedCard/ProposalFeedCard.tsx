@@ -23,6 +23,7 @@ import {
 import {
   checkIsVotingAllowed,
   checkUserPermissionsToVote,
+  getProposalTitleString,
   getProposalTypeString,
 } from "./utils";
 
@@ -122,7 +123,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         circleVisibility={circleVisibility}
       />
       <FeedCardContent
-        title={proposal.data.args.title}
+        title={getProposalTitleString(proposal.data.args.title, proposal.type)}
         description={proposal.data.args.description}
       >
         {isCountdownState && (
