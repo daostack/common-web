@@ -63,15 +63,17 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     FormikConfig<NewDiscussionCreationFormValues>["onSubmit"]
   >(
     (values) => {
-      if (!userId || !values.circle) {
+      if (!userId) {
         return;
       }
 
-      const circleVisibility = addCirclesWithHigherTier(
-        [values.circle],
-        Object.values(governanceCircles),
-        userCircleIds,
-      ).map((circle) => circle.id);
+      const circleVisibility = values.circle
+        ? addCirclesWithHigherTier(
+            [values.circle],
+            Object.values(governanceCircles),
+            userCircleIds,
+          ).map((circle) => circle.id)
+        : [];
 
       dispatch(
         commonActions.createDiscussion.request({
