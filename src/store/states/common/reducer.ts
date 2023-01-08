@@ -39,6 +39,30 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
+  .handleAction(actions.createDiscussion.request, (state) =>
+    produce(state, (nextState) => {
+      nextState.discussionCreation = {
+        ...nextState.discussionCreation,
+        loading: true,
+      };
+    }),
+  )
+  .handleAction(actions.createDiscussion.success, (state) =>
+    produce(state, (nextState) => {
+      nextState.discussionCreation = {
+        loading: false,
+        data: null,
+      };
+    }),
+  )
+  .handleAction(actions.createDiscussion.failure, (state) =>
+    produce(state, (nextState) => {
+      nextState.discussionCreation = {
+        ...nextState.discussionCreation,
+        loading: false,
+      };
+    }),
+  )
   .handleAction(actions.getFeedItems.request, (state) =>
     produce(state, (nextState) => {
       nextState.feedItems = {

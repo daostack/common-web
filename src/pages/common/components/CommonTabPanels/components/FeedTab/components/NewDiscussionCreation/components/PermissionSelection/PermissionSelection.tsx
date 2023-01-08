@@ -14,11 +14,17 @@ interface PermissionSelectionProps {
   governanceCircles: Governance["circles"];
   userCircleIds?: string[];
   onCircleSave: (circle: Circle | null) => void;
+  disabled?: boolean;
 }
 
 const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
-  const { currentCircle, governanceCircles, userCircleIds, onCircleSave } =
-    props;
+  const {
+    currentCircle,
+    governanceCircles,
+    userCircleIds,
+    onCircleSave,
+    disabled,
+  } = props;
   const {
     isShowing: isCircleSelectionModalOpen,
     onOpen: onCircleSelectionModalOpen,
@@ -40,7 +46,7 @@ const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
     },
   ];
   const buttonEl = (
-    <button className={styles.button} type="button">
+    <button className={styles.button} type="button" disabled={disabled}>
       {!currentCircle ? "Public" : `Private: ${currentCircle.name}`}
       <LeftArrowIcon className={styles.arrowIcon} />
     </button>

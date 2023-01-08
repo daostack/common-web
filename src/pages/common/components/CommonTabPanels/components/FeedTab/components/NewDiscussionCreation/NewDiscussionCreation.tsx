@@ -9,7 +9,10 @@ import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
 import { addCirclesWithHigherTier } from "@/shared/utils";
-import { selectDiscussionCreationData } from "@/store/states";
+import {
+  selectDiscussionCreationData,
+  selectIsDiscussionCreationLoading,
+} from "@/store/states";
 import { commonActions } from "@/store/states";
 import { useCommonDataContext } from "../../../../../../providers";
 import { CommonCard } from "../../../../../CommonCard";
@@ -39,6 +42,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const isTabletView = useIsTabletView();
   const { common, onNewCollaborationMenuItemSelect } = useCommonDataContext();
   const discussionCreationData = useSelector(selectDiscussionCreationData);
+  const isLoading = useSelector(selectIsDiscussionCreationLoading);
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const initialValues = useMemo(
@@ -100,6 +104,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
               governanceCircles={governanceCircles}
               userCircleIds={userCircleIds}
               onCircleSave={(circle) => setFieldValue("circle", circle)}
+              disabled={isLoading}
             />
             <DiscussionForm className={styles.discussionForm} />
             <div className={styles.buttonsContainer}>
@@ -108,13 +113,16 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
                   className={styles.button}
                   variant={ButtonVariant.PrimaryGray}
                   onClick={handleCancel}
+                  disabled={isLoading}
                 >
                   Cancel
                 </Button>
-                <Button className={styles.button}>Publish discussion</Button>
+                <Button className={styles.button} disabled={isLoading}>
+                  Publish discussion
+                </Button>
               </div>
             </div>
-            <DiscussionFormPersist />
+            {!isLoading && <DiscussionFormPersist />}
           </Form>
         )}
       </Formik>
