@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { ProposalsTypes } from "@/shared/constants";
+import React, { ReactNode } from "react";
+import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
 import { Proposal } from "@/shared/models";
 import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { formatPriceEntrance, getUserName } from "@/shared/utils";
@@ -9,12 +9,25 @@ const getSubtitleForFundsAllocation = (
   fundsAllocation: FundsAllocation,
   proposalSpecificData: ProposalSpecificData,
 ): ReactNode => {
+  const { targetUser, targetCommon } = proposalSpecificData;
   const formattedPrice = formatPriceEntrance(fundsAllocation.data.args.amount);
 
-  if (proposalSpecificData.targetUser) {
-    return `${formattedPrice} for ${getUserName(
-      proposalSpecificData.targetUser,
-    )}`;
+  if (targetCommon) {
+    return (
+      <>
+        {formattedPrice} to project{" "}
+        <a
+          href={ROUTE_PATHS.COMMON.replace(":id", targetCommon.id)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {targetCommon.name}
+        </a>
+      </>
+    );
+  }
+  if (targetUser) {
+    return `${formattedPrice} for ${getUserName(targetUser)}`;
   }
 
   return formattedPrice;
