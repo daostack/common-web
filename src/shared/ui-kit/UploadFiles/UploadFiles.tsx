@@ -1,13 +1,8 @@
 import React, { FC } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { UploadFile } from "@/shared/interfaces";
 import { Trigger, UploadedFile } from "./components";
 import styles from "./UploadFiles.module.scss";
-
-export interface UploadFile {
-  // id can be any string. it is just for correct displaying purposes
-  id: string;
-  file: File | string;
-}
 
 export interface UploadFilesProps {
   className?: string;
@@ -22,6 +17,7 @@ const UploadFiles: FC<UploadFilesProps> = (props) => {
     onChange(
       files.concat({
         id: uuidv4(),
+        title: file.name,
         file,
       }),
     );

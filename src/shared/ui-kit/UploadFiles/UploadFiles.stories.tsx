@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import UploadFilesComponent, { UploadFile } from "./UploadFiles";
+import { UploadFile } from "@/shared/interfaces";
+import UploadFilesComponent from "./UploadFiles";
 
 export default {
   title: "Upload Files",

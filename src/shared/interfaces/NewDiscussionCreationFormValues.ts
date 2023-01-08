@@ -1,6 +1,6 @@
 import { Circle } from "@/shared/models";
-import { UploadFile } from "@/shared/ui-kit";
 import { TextEditorValue } from "@/shared/ui-kit/TextEditor";
+import { UploadFile } from "./UploadFile";
 
 export interface NewDiscussionCreationFormValues {
   circle: Circle | null;

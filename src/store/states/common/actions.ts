@@ -3,6 +3,7 @@ import { CreateDiscussionDto } from "@/pages/OldCommon/interfaces";
 import {
   NewDiscussionCreationFormValues,
   PayloadWithOptionalCallback,
+  UploadFile,
 } from "@/shared/interfaces";
 import { CommonFeed, Discussion } from "@/shared/models";
 import firebase from "@/shared/utils/firebase";
@@ -22,7 +23,14 @@ export const createDiscussion = createAsyncAction(
   CommonActionType.CREATE_DISCUSSION_SUCCESS,
   CommonActionType.CREATE_DISCUSSION_FAILURE,
 )<
-  PayloadWithOptionalCallback<CreateDiscussionDto, Discussion, Error>,
+  PayloadWithOptionalCallback<
+    Omit<CreateDiscussionDto, "files" | "images"> & {
+      files?: UploadFile[];
+      images?: UploadFile[];
+    },
+    Discussion,
+    Error
+  >,
   Discussion,
   Error
 >();

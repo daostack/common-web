@@ -1,12 +1,14 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { Form } from "@/shared/components/Form/Formik";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
+import { addCirclesWithHigherTier } from "@/shared/utils";
 import { selectDiscussionCreationData } from "@/store/states";
 import { commonActions } from "@/store/states";
 import { useCommonDataContext } from "../../../../../../providers";
@@ -35,15 +37,18 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const { governanceCircles, commonMember } = props;
   const dispatch = useDispatch();
   const isTabletView = useIsTabletView();
-  const { onNewCollaborationMenuItemSelect } = useCommonDataContext();
+  const { common, onNewCollaborationMenuItemSelect } = useCommonDataContext();
   const discussionCreationData = useSelector(selectDiscussionCreationData);
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const initialValues = useMemo(
     () => discussionCreationData || INITIAL_VALUES,
     [],
   );
-  const userCircleIds = commonMember
-    ? Object.values(commonMember.circles.map)
-    : [];
+  const userCircleIds = useMemo(
+    () => (commonMember ? Object.values(commonMember.circles.map) : []),
+    [commonMember],
+  );
 
   const handleCancel = () => {
     onNewCollaborationMenuItemSelect(null);
@@ -52,10 +57,33 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
 
   const handleSubmit = useCallback<
     FormikConfig<NewDiscussionCreationFormValues>["onSubmit"]
-  >((values) => {
-    // TODO: Call discussion creation api
-    console.log(values);
-  }, []);
+  >(
+    (values) => {
+      if (!userId || !values.circle) {
+        return;
+      }
+
+      const circleVisibility = addCirclesWithHigherTier(
+        [values.circle],
+        Object.values(governanceCircles),
+        userCircleIds,
+      ).map((circle) => circle.id);
+
+      dispatch(
+        commonActions.createDiscussion.request({
+          payload: {
+            title: values.title,
+            message: JSON.stringify(values.content),
+            ownerId: userId,
+            commonId: common.id,
+            images: values.images,
+            circleVisibility,
+          },
+        }),
+      );
+    },
+    [governanceCircles, userCircleIds, userId, common.id],
+  );
 
   return (
     <CommonCard hideCardStyles={isTabletView}>
