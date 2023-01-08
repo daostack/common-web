@@ -18,6 +18,7 @@ interface EditorProps {
   size?: TextEditorSize;
   placeholder?: string;
   readOnly?: boolean;
+  disabled?: boolean;
   onBlur?: FocusEventHandler;
 }
 
@@ -26,6 +27,7 @@ const Editor: FC<EditorProps> = (props) => {
     size = TextEditorSize.Small,
     placeholder,
     readOnly = false,
+    disabled = false,
     onBlur,
   } = props;
   const editor = useSlate();
@@ -57,7 +59,7 @@ const Editor: FC<EditorProps> = (props) => {
       renderLeaf={renderLeaf}
       placeholder={placeholder}
       spellCheck
-      readOnly={readOnly}
+      readOnly={readOnly || disabled}
       onBlur={onBlur}
       onKeyDown={handleKeyDown}
     />

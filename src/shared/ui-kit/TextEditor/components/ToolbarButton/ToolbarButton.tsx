@@ -3,12 +3,12 @@ import classNames from "classnames";
 import styles from "./ToolbarButton.module.scss";
 
 interface ToolbarButtonProps
-  extends Pick<JSX.IntrinsicElements["button"], "onClick"> {
+  extends Pick<JSX.IntrinsicElements["button"], "onClick" | "disabled"> {
   active?: boolean;
 }
 
 const ToolbarButton: FC<ToolbarButtonProps> = (props) => {
-  const { active = false, onClick, children } = props;
+  const { active = false, onClick, disabled, children } = props;
   const className = classNames(styles.button, {
     [styles.buttonActive]: active,
   });
@@ -22,7 +22,7 @@ const ToolbarButton: FC<ToolbarButtonProps> = (props) => {
   }
 
   return (
-    <button className={className} onClick={onClick}>
+    <button className={className} onClick={onClick} disabled={disabled}>
       {iconEl}
     </button>
   );

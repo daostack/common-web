@@ -24,6 +24,7 @@ export interface TextEditorProps {
   placeholder?: string;
   error?: string;
   readOnly?: boolean;
+  disabled?: boolean;
   styles?: TextEditorStyles;
 }
 
@@ -42,6 +43,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
     placeholder,
     error,
     readOnly = false,
+    disabled = false,
     styles: outerStyles,
   } = props;
   const editor = useMemo(
@@ -69,9 +71,10 @@ const TextEditor: FC<TextEditorProps> = (props) => {
             size={size}
             placeholder={placeholder}
             readOnly={readOnly}
+            disabled={disabled}
             onBlur={onBlur}
           />
-          {!readOnly && <Toolbar />}
+          {!readOnly && <Toolbar disabled={disabled} />}
         </div>
         {Boolean(error) && (
           <ErrorText className={outerStyles?.error}>{error}</ErrorText>

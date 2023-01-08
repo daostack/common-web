@@ -8,10 +8,11 @@ export interface UploadFilesProps {
   className?: string;
   files?: UploadFile[];
   onChange: (files: UploadFile[]) => void;
+  disabled?: boolean;
 }
 
 const UploadFiles: FC<UploadFilesProps> = (props) => {
-  const { className, files = [], onChange } = props;
+  const { className, files = [], onChange, disabled = false } = props;
 
   const handleTriggerChange = (file: File) => {
     onChange(
@@ -24,7 +25,9 @@ const UploadFiles: FC<UploadFilesProps> = (props) => {
   };
 
   const handleFileRemove = (fileId: string) => {
-    onChange(files.filter((file) => file.id !== fileId));
+    if (!disabled) {
+      onChange(files.filter((file) => file.id !== fileId));
+    }
   };
 
   return (
@@ -38,7 +41,7 @@ const UploadFiles: FC<UploadFilesProps> = (props) => {
               onRemove={() => handleFileRemove(file.id)}
             />
           ))}
-        <Trigger onChange={handleTriggerChange} />
+        <Trigger onChange={handleTriggerChange} disabled={disabled} />
       </div>
     </div>
   );

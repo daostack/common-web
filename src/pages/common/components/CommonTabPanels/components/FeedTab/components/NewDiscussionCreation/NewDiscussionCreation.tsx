@@ -108,7 +108,10 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
               onCircleSave={(circle) => setFieldValue("circle", circle)}
               disabled={isLoading}
             />
-            <DiscussionForm className={styles.discussionForm} />
+            <DiscussionForm
+              className={styles.discussionForm}
+              disabled={isLoading}
+            />
             <div className={styles.buttonsContainer}>
               <div className={styles.buttonsWrapper}>
                 <Button
@@ -128,7 +131,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
                 </Button>
               </div>
             </div>
-            {!isLoading && <DiscussionFormPersist />}
+            <DiscussionFormPersist />
           </Form>
         )}
       </Formik>
