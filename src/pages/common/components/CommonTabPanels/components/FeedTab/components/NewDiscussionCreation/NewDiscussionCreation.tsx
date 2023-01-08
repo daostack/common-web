@@ -119,7 +119,11 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
                 >
                   Cancel
                 </Button>
-                <Button className={styles.button} disabled={isLoading}>
+                <Button
+                  className={styles.button}
+                  type="submit"
+                  disabled={isLoading}
+                >
                   Publish discussion
                 </Button>
               </div>
