@@ -20,6 +20,7 @@ import {
   ProposalFeedButtonContainer,
   UserVoteInfo,
 } from "./components";
+import { useProposalSpecificData } from "./hooks";
 import {
   checkIsVotingAllowed,
   checkUserPermissionsToVote,
@@ -58,13 +59,19 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     fetchProposalVote,
     setVote,
   } = useProposalUserVote();
+  const {
+    data: proposalSpecificData,
+    fetched: isProposalSpecificDataFetched,
+    fetchData: fetchProposalSpecificData,
+  } = useProposalSpecificData();
   const isLoading =
     !isUserFetched ||
     !isDiscussionFetched ||
     !isProposalFetched ||
     !proposal ||
     isUserVoteLoading ||
-    !isCommonMemberFetched;
+    !isCommonMemberFetched ||
+    !isProposalSpecificDataFetched;
   const circleVisibility = getVisibilityString(
     governanceCircles,
     item.circleVisibility,
@@ -94,6 +101,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       fetchCommonMember(commonId, {});
     }
   }, [fetchCommonMember, commonId]);
+
+  useEffect(() => {
+    if (proposal) {
+      fetchProposalSpecificData(proposal, true);
+    }
+  }, [proposal?.id]);
 
   if (isLoading) {
     return <LoadingFeedCard />;
@@ -125,7 +138,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       />
       <FeedCardContent
         title={getProposalTitleString(proposal.data.args.title, proposal.type)}
-        subtitle={getProposalSubtitle(proposal)}
+        subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
         description={proposal.data.args.description}
       >
         {isCountdownState && (
