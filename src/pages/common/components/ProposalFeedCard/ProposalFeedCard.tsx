@@ -20,7 +20,11 @@ import {
   ProposalFeedButtonContainer,
   UserVoteInfo,
 } from "./components";
-import { checkIsVotingAllowed, checkUserPermissionsToVote } from "./utils";
+import {
+  checkIsVotingAllowed,
+  checkUserPermissionsToVote,
+  getProposalTypeString,
+} from "./utils";
 
 interface ProposalFeedCardProps {
   commonId: string;
@@ -114,7 +118,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           new Date(item.createdAt.seconds * 1000),
           DateFormat.SuperShortSecondary,
         )}`}
-        type="Proposal"
+        type={getProposalTypeString(proposal.type)}
         circleVisibility={circleVisibility}
       />
       <FeedCardContent
