@@ -17,6 +17,7 @@ import {
   Proposal,
   Common,
 } from "@/shared/models";
+import { emptyFunction } from "@/shared/utils";
 import { Modal } from "../Modal";
 import "./index.scss";
 
@@ -128,7 +129,8 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
     <Modal
       className="report-modal"
       isShowing={isShowing}
-      onClose={onClose}
+      onClose={isLoading ? emptyFunction : onClose}
+      hideCloseButton={isLoading}
       title="Report"
       closeColor={Colors.black}
       closeIconSize={20}
@@ -142,6 +144,7 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
         className="report-modal__input"
         value={message}
         onChange={handleChangeMessage}
+        disabled={isLoading}
       />
       <div className="report-modal__button-container">
         <Button
@@ -152,7 +155,7 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
           Cancel
         </Button>
         <Button
-          disabled={isLoading}
+          disabled={isLoading || !message}
           className="report-modal__button-container__button report-modal__button-container__send"
           onClick={sendReport}
         >

@@ -4,7 +4,12 @@ import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
 type Options = GetAllowedItemsOptions;
 
-export const useMenuItems = (options: Options): Item[] => {
+interface Actions {
+  report: () => void;
+}
+
+export const useMenuItems = (options: Options, actions: Actions): Item[] => {
+  const { report } = actions;
   const allowedMenuItems = getAllowedItems(options);
   const items: Item[] = [
     {
@@ -17,9 +22,7 @@ export const useMenuItems = (options: Options): Item[] => {
     {
       id: DiscussionCardMenuItem.Report,
       text: "Report",
-      onClick: () => {
-        console.log(DiscussionCardMenuItem.Report);
-      },
+      onClick: report,
     },
     {
       id: DiscussionCardMenuItem.Edit,

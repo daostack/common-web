@@ -1,6 +1,6 @@
 import { DiscussionCardMenuItem } from "../constants";
 
-export type GetAllowedItemsOptions = void;
+export type GetAllowedItemsOptions = number;
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   DiscussionCardMenuItem,
