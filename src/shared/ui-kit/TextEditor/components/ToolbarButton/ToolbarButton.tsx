@@ -22,7 +22,12 @@ const ToolbarButton: FC<ToolbarButtonProps> = (props) => {
   }
 
   return (
-    <button className={className} onClick={onClick} disabled={disabled}>
+    <button
+      className={className}
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+    >
       {iconEl}
     </button>
   );
