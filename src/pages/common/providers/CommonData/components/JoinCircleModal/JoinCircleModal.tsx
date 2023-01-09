@@ -78,6 +78,10 @@ const JoinCircleModal: FC<JoinCircleModalProps> = (props) => {
       isShowing={isShowing}
       onClose={proposalState.isLoading ? emptyFunction : onClose}
       hideCloseButton={proposalState.isLoading}
+      styles={{
+        modalOverlay: styles.modalOverlay,
+        modalWrapper: styles.modalWrapper,
+      }}
     >
       <div className={styles.content}>
         <Image

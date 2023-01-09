@@ -10,6 +10,14 @@
   }
 }
 
+.modalOverlay {
+  z-index: 10000;
+}
+
+.modalWrapper {
+  z-index: 10000;
+}
+
 .content {
   display: flex;
   flex-direction: column;
