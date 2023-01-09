@@ -5,6 +5,7 @@ export * from "./checkIsInlineType";
 export * from "./checkIsListType";
 export * from "./checkIsParentElementType";
 export * from "./checkIsTextDirectionType";
+export * from "./checkIsTextEditorValueEmpty";
 export * from "./getElementsByType";
 export * from "./insertLink";
 export * from "./isElementActive";
