@@ -1,5 +1,8 @@
 import { AppState } from "@/shared/interfaces";
 
+export const selectNewCollaborationMenuItem = (state: AppState) =>
+  state.common.newCollaborationMenuItem;
+
 export const selectDiscussionCreationData = (state: AppState) =>
   state.common.discussionCreation.data;
 

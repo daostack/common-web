@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { Circle, Common, Governance } from "@/shared/models";
-import { CommonMenuItem, NewCollaborationMenuItem } from "../../constants";
+import { CommonMenuItem } from "../../constants";
 
 interface Data {
   onMenuItemSelect: (menuItem: CommonMenuItem | null) => void;
@@ -16,10 +16,6 @@ interface Data {
     commonId: string,
     commonMemberId: string,
     circle: Circle,
-  ) => void;
-  newCollaborationMenuItem: NewCollaborationMenuItem | null;
-  onNewCollaborationMenuItemSelect: (
-    menuItem: NewCollaborationMenuItem | null,
   ) => void;
 }
 

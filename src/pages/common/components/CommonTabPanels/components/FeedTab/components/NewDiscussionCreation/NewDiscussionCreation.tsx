@@ -40,7 +40,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const { governanceCircles, commonMember } = props;
   const dispatch = useDispatch();
   const isTabletView = useIsTabletView();
-  const { common, onNewCollaborationMenuItemSelect } = useCommonDataContext();
+  const { common } = useCommonDataContext();
   const discussionCreationData = useSelector(selectDiscussionCreationData);
   const isLoading = useSelector(selectIsDiscussionCreationLoading);
   const user = useSelector(selectUser());
@@ -55,7 +55,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   );
 
   const handleCancel = () => {
-    onNewCollaborationMenuItemSelect(null);
+    dispatch(commonActions.setNewCollaborationMenuItem(null));
     dispatch(commonActions.setDiscussionCreationData(null));
   };
 
