@@ -47,6 +47,10 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
       isShowing={isShowing}
       onClose={isLeaving ? emptyFunction : onClose}
       hideCloseButton={isLeaving}
+      styles={{
+        modalOverlay: styles.modalOverlay,
+        modalWrapper: styles.modalWrapper,
+      }}
     >
       <div className={styles.content}>
         <Image

@@ -1,3 +1,4 @@
+import { isEqual } from "lodash";
 import { commonMembersSubCollection } from "@/pages/OldCommon/store/api";
 import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
@@ -161,19 +162,30 @@ class CommonService {
     return members[0] || null;
   };
 
-  public getCircleMemberCountByCircleId = async ({
+  public getCircleMemberCountByCircleIds = async ({
     commonId,
-    circleId,
+    circleIds,
   }: {
     commonId: string;
-    circleId: string;
-  }): Promise<number> => {
-    const commonMembersData = await commonMembersSubCollection(commonId)
-      .where("circleIds", "array-contains", circleId)
-      .get();
-    const data = transformFirebaseDataList<CommonMember>(commonMembersData);
+    circleIds: string[];
+  }): Promise<Map<string, number>> => {
+    const circleMembersCount = new Map();
+    await Promise.all(
+      circleIds.map(async (id, index) => {
+        const commonMembersData = await commonMembersSubCollection(
+          commonId,
+        ).get();
+        const data = transformFirebaseDataList<CommonMember>(commonMembersData);
+        const filteredMembers = data.filter(({ circleIds: ids }) =>
+          isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()),
+        );
 
-    return data?.length ?? 0;
+        circleMembersCount.set(id, filteredMembers?.length ?? 0);
+        return filteredMembers;
+      }),
+    );
+
+    return circleMembersCount;
   };
 
   public subscribeToCommon = (

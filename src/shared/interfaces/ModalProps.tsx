@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-
 import { Colors } from "../constants";
 
 export enum ModalType {
@@ -28,6 +27,7 @@ export interface ModalProps {
   fullHeight?: boolean;
   styles?: {
     modalWrapper?: string;
+    modalOverlay?: string;
     headerWrapper?: string;
     header?: string;
     closeWrapper?: string;

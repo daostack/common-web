@@ -8,10 +8,11 @@ interface PopoverButtonProps {
   className?: string;
   circleNames: string;
   isMobileVersion?: boolean;
+  pendingCircleName?: string;
 }
 
 export const PopoverButton: FC<PopoverButtonProps> = (props) => {
-  const { className, circleNames, isMobileVersion } = props;
+  const { className, circleNames, isMobileVersion, pendingCircleName } = props;
 
   return (
     <Popover.Button
@@ -21,9 +22,11 @@ export const PopoverButton: FC<PopoverButtonProps> = (props) => {
       <div className={styles.contentWrapper}>
         {!isMobileVersion && <Avatar2Icon className={styles.avatarIcon} />}
         <div className={styles.memberInfo}>
-          <span className={styles.title}>You are a member</span>
+          <span className={styles.title}>
+            {pendingCircleName ? "Join circle request..." : "You are a member"}
+          </span>
           <span className={styles.circleNames} title={circleNames}>
-            {circleNames}
+            {circleNames} {pendingCircleName ? `-> ${pendingCircleName}` : ""}
           </span>
         </div>
       </div>
