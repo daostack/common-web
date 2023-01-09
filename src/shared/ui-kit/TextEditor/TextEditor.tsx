@@ -1,8 +1,15 @@
-import React, { FC, FocusEventHandler, useMemo } from "react";
+import React, {
+  FC,
+  FocusEventHandler,
+  MutableRefObject,
+  RefCallback,
+  useEffect,
+  useMemo,
+} from "react";
 import classNames from "classnames";
 import { createEditor } from "slate";
 import { withHistory } from "slate-history";
-import { Slate, withReact } from "slate-react";
+import { ReactEditor, Slate, withReact } from "slate-react";
 import { ErrorText } from "@/shared/components/Form/ErrorText";
 import { Editor, Header, Toolbar } from "./components";
 import { TextEditorSize } from "./constants";
@@ -12,6 +19,8 @@ import styles from "./TextEditor.module.scss";
 
 export interface TextEditorProps {
   className?: string;
+  editorClassName?: string;
+  editorRef?: MutableRefObject<HTMLElement | null> | RefCallback<HTMLElement>;
   id?: string;
   name?: string;
   label?: string;
@@ -31,6 +40,8 @@ export interface TextEditorProps {
 const TextEditor: FC<TextEditorProps> = (props) => {
   const {
     className,
+    editorClassName,
+    editorRef,
     id,
     name,
     label,
@@ -51,6 +62,20 @@ const TextEditor: FC<TextEditorProps> = (props) => {
     [],
   );
 
+  useEffect(() => {
+    if (!editorRef) {
+      return;
+    }
+
+    const editorEl = ReactEditor.toDOMNode(editor, editor);
+
+    if (typeof editorRef === "function") {
+      editorRef(editorEl);
+    } else {
+      editorRef.current = editorEl;
+    }
+  }, [editorRef, editor]);
+
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
       <div className={classNames(styles.container, className)}>
@@ -66,6 +91,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
           })}
         >
           <Editor
+            className={editorClassName}
             id={id}
             name={name}
             size={size}

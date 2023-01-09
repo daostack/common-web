@@ -13,6 +13,7 @@ import { toggleMark } from "../../utils";
 import styles from "./Editor.module.scss";
 
 interface EditorProps {
+  className?: string;
   id?: string;
   name?: string;
   size?: TextEditorSize;
@@ -33,11 +34,15 @@ const Editor: FC<EditorProps> = (props) => {
   const editor = useSlate();
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-  const className = classNames(styles.editor, {
-    [styles.editorSmallSize]: size === TextEditorSize.Small,
-    [styles.editorBigSize]: size === TextEditorSize.Big,
-    [styles.editorReadOnly]: readOnly,
-  });
+  const className = classNames(
+    styles.editor,
+    {
+      [styles.editorSmallSize]: size === TextEditorSize.Small,
+      [styles.editorBigSize]: size === TextEditorSize.Big,
+      [styles.editorReadOnly]: readOnly,
+    },
+    props.className,
+  );
   const id = props.id || props.name;
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
