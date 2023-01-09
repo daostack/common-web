@@ -10,6 +10,7 @@ import {
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
 import { LoadingFeedCard } from "../LoadingFeedCard";
+import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
   item: CommonFeed;
@@ -24,6 +25,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     data: discussion,
     fetched: isDiscussionFetched,
   } = useDiscussionById();
+  const menuItems = useMenuItems();
   const isLoading = !isUserFetched || !isDiscussionFetched;
   const circleVisibility = getVisibilityString(
     governanceCircles,
@@ -53,6 +55,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         )}`}
         type="Discussion"
         circleVisibility={circleVisibility}
+        menuItems={menuItems}
       />
       <FeedCardContent
         title={discussion?.title}
