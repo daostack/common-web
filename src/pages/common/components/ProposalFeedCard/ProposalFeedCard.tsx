@@ -20,7 +20,14 @@ import {
   ProposalFeedButtonContainer,
   UserVoteInfo,
 } from "./components";
-import { checkIsVotingAllowed, checkUserPermissionsToVote } from "./utils";
+import { useProposalSpecificData } from "./hooks";
+import {
+  checkIsVotingAllowed,
+  checkUserPermissionsToVote,
+  getProposalSubtitle,
+  getProposalTitleString,
+  getProposalTypeString,
+} from "./utils";
 
 interface ProposalFeedCardProps {
   commonId: string;
@@ -52,13 +59,19 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     fetchProposalVote,
     setVote,
   } = useProposalUserVote();
+  const {
+    data: proposalSpecificData,
+    fetched: isProposalSpecificDataFetched,
+    fetchData: fetchProposalSpecificData,
+  } = useProposalSpecificData();
   const isLoading =
     !isUserFetched ||
     !isDiscussionFetched ||
     !isProposalFetched ||
     !proposal ||
     isUserVoteLoading ||
-    !isCommonMemberFetched;
+    !isCommonMemberFetched ||
+    !isProposalSpecificDataFetched;
   const circleVisibility = getVisibilityString(
     governanceCircles,
     item.circleVisibility,
@@ -89,6 +102,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     }
   }, [fetchCommonMember, commonId]);
 
+  useEffect(() => {
+    if (proposal) {
+      fetchProposalSpecificData(proposal, true);
+    }
+  }, [proposal?.id]);
+
   if (isLoading) {
     return <LoadingFeedCard />;
   }
@@ -114,11 +133,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           new Date(item.createdAt.seconds * 1000),
           DateFormat.SuperShortSecondary,
         )}`}
-        type="Proposal"
+        type={getProposalTypeString(proposal.type)}
         circleVisibility={circleVisibility}
       />
       <FeedCardContent
-        title={proposal.data.args.title}
+        title={getProposalTitleString(proposal.data.args.title, proposal.type)}
+        subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
         description={proposal.data.args.description}
       >
         {isCountdownState && (
