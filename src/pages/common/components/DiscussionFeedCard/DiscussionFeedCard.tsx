@@ -39,7 +39,15 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     data: discussion,
     fetched: isDiscussionFetched,
   } = useDiscussionById();
-  const menuItems = useMenuItems(1, { report: onReportModalOpen });
+  const menuItems = useMenuItems(
+    {
+      discussion,
+      governance: {
+        circles: governanceCircles,
+      },
+    },
+    { report: onReportModalOpen },
+  );
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const isLoading = !isDiscussionCreatorFetched || !isDiscussionFetched;

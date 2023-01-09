@@ -1,4 +1,8 @@
+import { useDispatch } from "react-redux";
+import { CommonAction } from "@/shared/constants";
 import { MenuItem as Item } from "@/shared/interfaces";
+import { parseStringToTextEditorValue } from "@/shared/ui-kit";
+import { commonActions } from "@/store/states";
 import { DiscussionCardMenuItem } from "../constants";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
@@ -9,6 +13,8 @@ interface Actions {
 }
 
 export const useMenuItems = (options: Options, actions: Actions): Item[] => {
+  const dispatch = useDispatch();
+  const { discussion, governance } = options;
   const { report } = actions;
   const allowedMenuItems = getAllowedItems(options);
   const items: Item[] = [
@@ -28,7 +34,24 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       id: DiscussionCardMenuItem.Edit,
       text: "Edit",
       onClick: () => {
-        console.log(DiscussionCardMenuItem.Edit);
+        if (!discussion) {
+          return;
+        }
+
+        const circles = Object.values(governance.circles).filter((circle) =>
+          discussion.circleVisibility?.includes(circle.id),
+        );
+        const circle = null;
+
+        dispatch(
+          commonActions.setDiscussionCreationData({
+            circle: null,
+            title: discussion.title,
+            content: parseStringToTextEditorValue(discussion.message),
+            images: [],
+          }),
+        );
+        dispatch(commonActions.setCommonAction(CommonAction.EditDiscussion));
       },
     },
     {
