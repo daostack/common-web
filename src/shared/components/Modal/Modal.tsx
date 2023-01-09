@@ -127,6 +127,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   }, [isHeaderSticky, isFooterSticky]);
 
   const modalWrapperClassName = classNames("modal-wrapper", styles?.modalWrapper);
+  const modalOverlayClassName = classNames("modal-overlay", styles?.modalOverlay);
   const modalClassName = classNames("modal", props.className, {
     "modal--mobile-full-screen": mobileFullScreen && type !== ModalType.MobilePopUp,
     "modal--mobile-pop-up": type === ModalType.MobilePopUp,
@@ -219,7 +220,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   return isShowing
     ? ReactDOM.createPortal(
         <div id={modalId}>
-          <div className="modal-overlay" />
+          <div className={modalOverlayClassName} />
           <div className={modalWrapperClassName} onClick={handleClose}>
             <div
               className={modalClassName}

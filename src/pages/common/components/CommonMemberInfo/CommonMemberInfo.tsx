@@ -1,7 +1,7 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState, useMemo } from "react";
 import classNames from "classnames";
 import { Popover } from "@headlessui/react";
-import { ProposalService } from "@/services";
+import { CommonService, ProposalService } from "@/services";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { Portal } from "@/shared/ui-kit";
 import {
@@ -29,16 +29,40 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     commonId,
     isMobileVersion,
   } = props;
-  const governanceCircles = Object.values(circles || {});
-  const circleIds: string[] = Object.values(circlesMap || {});
+  const governanceCircles = useMemo(
+    () => Object.values(circles || {}),
+    [circles],
+  );
+  const circleIds: string[] = useMemo(
+    () => Object.values(circlesMap || {}),
+    [circlesMap],
+  );
   const [pendingCircles, setPendingCircles] = useState(
     new Map<string, boolean>(),
   );
+  const [circleMembersCount, setCircleMembersCount] = useState(
+    new Map<string, number>(),
+  );
+  const [pendingCircleName, setPendingCircleName] = useState("");
   const filteredByIdCircles = getFilteredByIdCircles(
     governanceCircles,
     circleIds,
   );
   const userId = commonMember.userId;
+
+  useEffect(() => {
+    if (!governanceCircles.length) {
+      return;
+    }
+
+    (async () => {
+      const membersCount = await CommonService.getCircleMemberCountByCircleIds({
+        commonId,
+        circleIds: governanceCircles.map(({ id }) => id),
+      });
+      setCircleMembersCount(membersCount);
+    })();
+  }, [governanceCircles]);
 
   useEffect(() => {
     if (!commonId || !commonMember) {
@@ -50,11 +74,14 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
       userId,
       (data) => {
         const pendingCircleMap = new Map<string, boolean>();
-        governanceCircles.forEach(({ id: circleId }) => {
-          pendingCircleMap.set(
-            circleId,
-            data.some((proposal) => proposal.data.args.circleId === circleId),
+        governanceCircles.forEach(({ id: circleId, name }) => {
+          const isPendingCircle = data.some(
+            (proposal) => proposal.data.args.circleId === circleId,
           );
+          if (isPendingCircle) {
+            setPendingCircleName(name);
+          }
+          pendingCircleMap.set(circleId, isPendingCircle);
         });
 
         setPendingCircles(pendingCircleMap);
@@ -73,6 +100,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
       <PopoverButton
         isMobileVersion={isMobileVersion}
         circleNames={circleNames}
+        pendingCircleName={pendingCircleName}
       />
       {isMobileVersion ? (
         <Portal>
@@ -81,6 +109,8 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
             governanceCircles={governanceCircles}
             pendingCircles={pendingCircles}
             circleIds={circleIds}
+            userId={userId}
+            circleMembersCount={circleMembersCount}
           />
         </Portal>
       ) : (
@@ -89,16 +119,10 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
           governanceCircles={governanceCircles}
           pendingCircles={pendingCircles}
           circleIds={circleIds}
+          userId={userId}
+          circleMembersCount={circleMembersCount}
         />
       )}
-      <Portal>
-        <PopoverPanel
-          commonId={commonId}
-          governanceCircles={governanceCircles}
-          pendingCircles={pendingCircles}
-          circleIds={circleIds}
-        />
-      </Portal>
     </Popover>
   );
 };

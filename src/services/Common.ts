@@ -15,6 +15,7 @@ import {
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import Api from "./Api";
+import { isEqual } from "lodash";
 
 const converter = firestoreDataConverter<Common>();
 
@@ -161,19 +162,24 @@ class CommonService {
     return members[0] || null;
   };
 
-  public getCircleMemberCountByCircleId = async ({
+  public getCircleMemberCountByCircleIds = async ({
     commonId,
-    circleId,
+    circleIds,
   }: {
     commonId: string;
-    circleId: string;
-  }): Promise<number> => {
-    const commonMembersData = await commonMembersSubCollection(commonId)
-      .where("circleIds", "array-contains", circleId)
-      .get();
-    const data = transformFirebaseDataList<CommonMember>(commonMembersData);
+    circleIds: string[];
+  }): Promise<Map<string, number>> => {
+    const circleMembersCount = new Map();
+    await Promise.all(circleIds.map(async (id,index) => {
+      const commonMembersData = await commonMembersSubCollection(commonId).get();
+      const data = transformFirebaseDataList<CommonMember>(commonMembersData);
+      const filteredMembers = data.filter(({circleIds: ids}) => isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()))
+  
+      circleMembersCount.set(id,filteredMembers?.length ?? 0)
+      return filteredMembers;
+    }));
 
-    return data?.length ?? 0;
+    return circleMembersCount;
   };
 
   public subscribeToCommon = (

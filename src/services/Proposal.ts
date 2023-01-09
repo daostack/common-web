@@ -1,3 +1,5 @@
+import { CreateProposal } from "@/pages/OldCommon/interfaces";
+import { createProposal } from "@/pages/OldCommon/store/api";
 import { ProposalsTypes } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { Collection, Proposal, ProposalState } from "@/shared/models";
@@ -78,6 +80,12 @@ class ProposalService {
       callback(transformFirebaseDataSingle<Proposal>(snapshot));
     });
   };
+
+  public createAssignProposal = async (payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">): Promise<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["response"]> => {
+    const createdProposal = await createProposal({...payload, type: ProposalsTypes.ASSIGN_CIRCLE}) as AssignCircle;
+    
+    return createdProposal;
+  }
 }
 
 export default new ProposalService();
