@@ -1,20 +1,23 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { FeedGeneralInfo } from "../FeedGeneralInfo";
 import styles from "./FeedCardContent.module.scss";
 
 export interface FeedCardContentProps {
-  title: string;
-  subtitle?: string;
-  description: string;
+  title?: string;
+  subtitle?: ReactNode;
+  description?: string;
 }
 
-export const FeedCardContent: React.FC<FeedCardContentProps> = ({
-  children,
-  ...props
-}) => {
+export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {
+  const { children, title, description, subtitle } = props;
+
   return (
     <div className={styles.container}>
-      <FeedGeneralInfo {...props} />
+      <FeedGeneralInfo
+        title={title}
+        description={description}
+        subtitle={subtitle}
+      />
       {children}
     </div>
   );

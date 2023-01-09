@@ -6,7 +6,12 @@ import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
 import { TabNavigation } from "../TabNavigation";
-import { FeedActions, FeedAction, NewDiscussionCreation } from "./components";
+import {
+  FeedActions,
+  FeedAction,
+  FeedItems,
+  NewDiscussionCreation,
+} from "./components";
 import styles from "./FeedTab.module.scss";
 
 interface FeedTabProps {
@@ -31,6 +36,7 @@ const FeedTab: FC<FeedTabProps> = (props) => {
           commonMember={commonMember}
         />
       )}
+      <FeedItems />
     </div>
   );
 
@@ -39,7 +45,9 @@ const FeedTab: FC<FeedTabProps> = (props) => {
   );
 
   const renderMobileColumn = () => (
-    <div className={styles.mainColumnWrapper}></div>
+    <div className={styles.mainColumnWrapper}>
+      <FeedItems />
+    </div>
   );
 
   return (

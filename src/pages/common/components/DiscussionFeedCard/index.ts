@@ -1,1 +1,1 @@
-export * from "./DiscussionFeedCard";
+export { default as DiscussionFeedCard } from "./DiscussionFeedCard";

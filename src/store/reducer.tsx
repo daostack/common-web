@@ -6,7 +6,7 @@ import { commonsReducer } from "../pages/OldCommon/store";
 import { trusteeReducer } from "../pages/Trustee/store";
 import { AppState } from "../shared/interfaces";
 import { SharedReducer } from "../shared/store/reducer";
-import { commonReducer, projectsReducer } from "./states";
+import { cacheReducer, commonReducer, projectsReducer } from "./states";
 
 export default (history: History) => {
   const appReducer = combineReducers<AppState>({
@@ -17,6 +17,7 @@ export default (history: History) => {
     trustee: trusteeReducer,
     projects: projectsReducer,
     common: commonReducer,
+    cache: cacheReducer,
   });
 
   return (state: AppState | undefined, action: AnyAction) => {

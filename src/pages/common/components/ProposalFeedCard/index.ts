@@ -1,1 +1,1 @@
-export * from "./ProposalFeedCard";
+export { default as ProposalFeedCard } from "./ProposalFeedCard";

@@ -1,12 +1,12 @@
 import React from "react";
 import classNames from "classnames";
-import { Colors } from "@/shared/constants";
 import { MessageIcon } from "@/shared/icons";
+import { LastActivity } from "../LastActivity";
 import styles from "./FeedCardFooter.module.scss";
 
 export interface FeedCardFooterProps {
   messageCount: number;
-  lastActivity: string;
+  lastActivity: number;
   unreadMessages?: number;
 }
 
@@ -18,14 +18,14 @@ export const FeedCardFooter: React.FC<FeedCardFooterProps> = ({
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
-        <MessageIcon color={Colors.primary400} />
+        <MessageIcon className={styles.messageIcon} />
         <p className={classNames(styles.text, styles.messageCount)}>
-          {messageCount} Messages
+          {messageCount} Message{messageCount === 1 ? "" : "s"}
         </p>
       </div>
       <div className={styles.rightContent}>
         <p className={classNames(styles.text, styles.lastActivity)}>
-          Last Activity: {lastActivity}
+          Last Activity: <LastActivity milliseconds={lastActivity} />
         </p>
         {unreadMessages && (
           <div className={styles.unreadMessages}>{unreadMessages}</div>
