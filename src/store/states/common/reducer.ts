@@ -22,15 +22,7 @@ const initialState: CommonState = {
 };
 
 export const reducer = createReducer<CommonState, Action>(initialState)
-  .handleAction(actions.resetCommon, (state) =>
-    produce(state, (nextState) => {
-      nextState.feedItems = { ...initialFeedItems };
-      nextState.discussionCreation = {
-        data: null,
-        loading: false,
-      };
-    }),
-  )
+  .handleAction(actions.resetCommon, () => ({ ...initialState }))
   .handleAction(actions.setDiscussionCreationData, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.discussionCreation = {
