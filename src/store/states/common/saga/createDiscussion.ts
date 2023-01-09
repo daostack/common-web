@@ -1,7 +1,7 @@
 import { call, put } from "redux-saga/effects";
-import { DiscussionService } from "@/services";
+import { CommonFeedService, DiscussionService } from "@/services";
 import { Awaited, UploadFile } from "@/shared/interfaces";
-import { CommonLink } from "@/shared/models";
+import { CommonFeedType, CommonLink } from "@/shared/models";
 import { isError } from "@/shared/utils";
 import {
   getFileNameForUploading,
@@ -54,6 +54,20 @@ export function* createDiscussion(
         },
       }),
     );
+
+    const feedItemData = (yield call(
+      CommonFeedService.getCommonFeedItemWithSnapshot,
+      discussion.commonId,
+      discussion.id,
+      CommonFeedType.Discussion,
+    )) as Awaited<
+      ReturnType<typeof CommonFeedService.getCommonFeedItemWithSnapshot>
+    >;
+
+    if (feedItemData) {
+      yield put(actions.addNewFeedItems([feedItemData]));
+    }
+
     yield put(actions.createDiscussion.success(discussion));
 
     if (payload.callback) {

@@ -85,11 +85,31 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.addNewFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
-      const newData = payload.map((item) => item.commonFeedItem);
+      let firstDocSnapshot = nextState.feedItems.firstDocSnapshot;
+
+      const data = payload.reduceRight(
+        (acc, { commonFeedItem, docSnapshot }) => {
+          const nextData = [...acc];
+          const itemIndex = nextData.findIndex(
+            (item) => item.id === commonFeedItem.id,
+          );
+
+          if (itemIndex < 0) {
+            firstDocSnapshot = docSnapshot;
+            return [commonFeedItem, ...nextData];
+          }
+
+          nextData[itemIndex] = commonFeedItem;
+
+          return nextData;
+        },
+        nextState.feedItems.data || [],
+      );
+
       nextState.feedItems = {
         ...nextState.feedItems,
-        data: newData.concat(nextState.feedItems.data || []),
-        firstDocSnapshot: payload[0]?.docSnapshot || null,
+        data,
+        firstDocSnapshot,
       };
     }),
   );
