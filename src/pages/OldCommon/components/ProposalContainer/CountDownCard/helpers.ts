@@ -63,3 +63,8 @@ export const calculateVotingStatus = (proposal: Proposal): VotingStatus => {
         : VotingStatus.Failing;
   }
 };
+
+export const checkIsFailingVoting = (votingStatus: VotingStatus): boolean =>
+  [VotingStatus.Failing, VotingStatus.Rejected, VotingStatus.Canceled].includes(
+    votingStatus,
+  );

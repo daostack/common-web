@@ -4,14 +4,14 @@
   display: flex;
   justify-content: space-between;
   border-radius: 0.25rem;
-  padding: 0.9375rem 1.25rem;
+  padding: 0.875rem 1.25rem;
 }
 
 .buttonText {
+  margin: 0;
   font-size: $small;
   letter-spacing: 0.01em;
   line-height: 120%;
-  margin-right: 3.625rem;
 }
 
 .approveText {
