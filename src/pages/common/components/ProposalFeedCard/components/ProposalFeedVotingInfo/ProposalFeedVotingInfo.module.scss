@@ -1,13 +1,14 @@
 @import "../../../../../../constants";
 
 .container {
-  display: flex;
+  margin-top: 0.25rem;
+  padding: 1.5rem 2.25rem 1.25rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 17.625rem));
+  grid-column-gap: 1rem;
+  background-color: $c-shades-white;
   border: 0.0625rem solid $c-neutrals-100;
   box-sizing: border-box;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 1.4375rem 2.25rem 1.25rem 2rem;
-  justify-content: space-between;
-  margin-top: 0.25rem;
 }
 
 .text {
@@ -17,26 +18,30 @@
 .timeToVote {
   font-size: $moderate-med;
   font-family: Lexend, sans-serif;
-  line-height: 2.9375rem;
   font-weight: 300;
-  color: $c-neutrals-600;
-}
-
-.votes {
-  font-size: $small;
-  line-height: 120%;
   color: $c-neutrals-600;
 }
 
 .voters {
   font-family: Lexend, sans-serif;
-  font-size: $small;
+  font-size: $xsmall;
   line-height: 120%;
   color: $c-neutrals-600;
 }
 
-.status {
-  font-size: $small;
-  letter-spacing: 0.01em;
-  line-height: 120%;
+.votingStatus {
+  color: $c-green-300;
+  background-color: $c-green-100;
+
+  &:hover {
+    background-color: $c-green-100;
+  }
+}
+.votingStatusFailing {
+  color: $c-error-300;
+  background-color: $c-error-100;
+
+  &:hover {
+    background-color: $c-error-100;
+  }
 }

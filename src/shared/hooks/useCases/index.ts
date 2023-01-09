@@ -5,6 +5,7 @@ export { useFullCommonData } from "./useFullCommonData";
 export { useImmediateContribution } from "./useImmediateContribution";
 export { default as usePaymentMethodChange } from "./usePaymentMethodChange";
 export type { ChangePaymentMethodState } from "./usePaymentMethodChange";
+export { useProposalById } from "./useProposalById";
 export { useSubCommons } from "./useSubCommons";
 export { useSupportersData } from "./useSupportersData";
 export { useUserById } from "./useUserById";

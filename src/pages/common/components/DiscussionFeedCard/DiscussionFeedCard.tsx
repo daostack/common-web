@@ -1,18 +1,14 @@
 import React, { FC, memo, useEffect } from "react";
 import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
 import { CommonFeed, DateFormat, Governance } from "@/shared/models";
-import {
-  formatDate,
-  getCirclesWithLowestTier,
-  getFilteredByIdCircles,
-  getUserName,
-} from "@/shared/utils";
+import { formatDate, getUserName } from "@/shared/utils";
 import {
   FeedCard,
   FeedCardHeader,
   FeedCardContent,
   FeedCardFooter,
 } from "../FeedCard";
+import { getVisibilityString } from "../FeedCard";
 import { LoadingFeedCard } from "../LoadingFeedCard";
 
 interface DiscussionFeedCardProps {
@@ -29,24 +25,18 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     fetched: isDiscussionFetched,
   } = useDiscussionById();
   const isLoading = !isUserFetched || !isDiscussionFetched;
-  const filteredByIdCircles = getFilteredByIdCircles(
-    governanceCircles ? Object.values(governanceCircles) : null,
+  const circleVisibility = getVisibilityString(
+    governanceCircles,
     discussion?.circleVisibility,
   );
-  const circleNames = getCirclesWithLowestTier(filteredByIdCircles)
-    .map(({ name }) => name)
-    .join(", ");
-  const circleVisibility = circleNames ? `Private, ${circleNames}` : "Public";
 
   useEffect(() => {
     fetchUser(item.userId);
   }, [item.userId]);
 
   useEffect(() => {
-    if (item.data.discussionId) {
-      fetchDiscussion(item.data.discussionId);
-    }
-  }, [item.data.discussionId]);
+    fetchDiscussion(item.data.id);
+  }, [item.data.id]);
 
   if (isLoading) {
     return <LoadingFeedCard />;
@@ -70,10 +60,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       />
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
-        lastActivity={formatDate(
-          new Date(item.updatedAt.seconds * 1000),
-          DateFormat.FullTime,
-        )}
+        lastActivity={item.updatedAt.seconds * 1000}
       />
     </FeedCard>
   );

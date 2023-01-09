@@ -1,49 +1,47 @@
-import React, { useCallback } from "react";
+import React, { ReactNode } from "react";
 import classNames from "classnames";
 import { VoteAbstain, VoteAgainst, VoteFor } from "@/shared/icons";
-import { VoteType } from "@/shared/models";
+import { VoteOutcome } from "@/shared/models";
 import { Button } from "@/shared/ui-kit";
 import styles from "./VoteButton.module.scss";
 
 interface VoteButtonProps {
-  voteType: VoteType;
+  voteOutcome: VoteOutcome;
 }
 
-export const VoteButton: React.FC<VoteButtonProps> = ({ voteType }) => {
-  const VoteIcon = useCallback(() => {
-    switch (voteType) {
-      case VoteType.Approve: {
-        return <VoteFor />;
-      }
-      case VoteType.Abstain: {
-        return <VoteAbstain />;
-      }
-      case VoteType.Reject: {
-        return <VoteAgainst />;
-      }
-      default:
-        return <></>;
-    }
-  }, [voteType]);
+const VOTE_OUTCOME_TO_TEXT_MAP: Record<VoteOutcome, string> = {
+  [VoteOutcome.Approved]: "Vote for",
+  [VoteOutcome.Abstained]: "Abstain",
+  [VoteOutcome.Rejected]: "Vote against",
+};
+
+const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
+  [VoteOutcome.Approved]: <VoteFor />,
+  [VoteOutcome.Abstained]: <VoteAbstain />,
+  [VoteOutcome.Rejected]: <VoteAgainst />,
+};
+
+export const VoteButton: React.FC<VoteButtonProps> = (props) => {
+  const { voteOutcome } = props;
 
   return (
     <Button
       className={classNames(styles.button, {
-        [styles.approveButton]: VoteType.Approve === voteType,
-        [styles.abstainButton]: VoteType.Abstain === voteType,
-        [styles.rejectButton]: VoteType.Reject === voteType,
+        [styles.approveButton]: VoteOutcome.Approved === voteOutcome,
+        [styles.abstainButton]: VoteOutcome.Abstained === voteOutcome,
+        [styles.rejectButton]: VoteOutcome.Rejected === voteOutcome,
       })}
     >
       <p
         className={classNames(styles.buttonText, {
-          [styles.approveText]: VoteType.Approve === voteType,
-          [styles.abstainText]: VoteType.Abstain === voteType,
-          [styles.rejectText]: VoteType.Reject === voteType,
+          [styles.approveText]: VoteOutcome.Approved === voteOutcome,
+          [styles.abstainText]: VoteOutcome.Abstained === voteOutcome,
+          [styles.rejectText]: VoteOutcome.Rejected === voteOutcome,
         })}
       >
-        Vote for
+        {VOTE_OUTCOME_TO_TEXT_MAP[voteOutcome]}
       </p>
-      <VoteIcon />
+      {VOTE_OUTCOME_TO_ICON_MAP[voteOutcome]}
     </Button>
   );
 };
