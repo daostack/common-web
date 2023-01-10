@@ -18,6 +18,7 @@ import { getVisibilityString } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
 import { LoadingFeedCard } from "../LoadingFeedCard";
 import { useMenuItems } from "./hooks";
+import styles from "./DiscussionFeedCard.module.scss";
 
 interface DiscussionFeedCardProps {
   item: CommonFeed;
@@ -129,6 +130,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         />
       )}
       <DesktopStyleMenu
+        className={styles.desktopStyleMenu}
         isOpen={isMenuOpen}
         onClose={onMenuClose}
         items={menuItems}
