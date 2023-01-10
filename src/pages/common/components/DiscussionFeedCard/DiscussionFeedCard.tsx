@@ -67,6 +67,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     discussion?.circleVisibility,
   );
 
+  const handleLongPress = () => {
+    console.log("Long pressed!");
+  };
+
   useEffect(() => {
     fetchDiscussionCreator(item.userId);
   }, [item.userId]);
@@ -80,7 +84,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }
 
   return (
-    <FeedCard>
+    <FeedCard onLongPress={handleLongPress}>
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}
         title={getUserName(discussionCreator)}

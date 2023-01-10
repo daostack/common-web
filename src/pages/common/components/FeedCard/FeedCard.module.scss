@@ -8,6 +8,10 @@
   flex-direction: column;
   color: $c-neutrals-600;
 }
+.containerLongPressing {
+  box-shadow: 0 0.1875rem 0.5rem #{$c-shades-neutrals-30};
+  transition: box-shadow 0.4s;
+}
 .containerActive {
   border: 0.0625rem solid $c-neutrals-300;
 }
