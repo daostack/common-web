@@ -1,6 +1,8 @@
 import React, { FC, useEffect } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
+import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { Container } from "@/shared/ui-kit";
 import { useCommonFeedItems } from "../../hooks";
 import { FeedItem } from "./component";
 import styles from "./FeedItems.module.scss";
@@ -28,7 +30,14 @@ const FeedItems: FC = () => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <Container
+      className={styles.container}
+      viewports={[
+        ViewportBreakpointVariant.Tablet,
+        ViewportBreakpointVariant.PhoneOriented,
+        ViewportBreakpointVariant.Phone,
+      ]}
+    >
       {commonFeedItems?.map((item) => (
         <FeedItem
           key={item.id}
@@ -38,7 +47,7 @@ const FeedItems: FC = () => {
           isMobileVersion={isTabletView}
         />
       ))}
-    </div>
+    </Container>
   );
 };
 
