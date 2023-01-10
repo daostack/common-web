@@ -91,6 +91,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         type="Discussion"
         circleVisibility={circleVisibility}
         menuItems={menuItems}
+        isMobileVersion={isMobileVersion}
       />
       <FeedCardContent
         title={discussion?.title}
