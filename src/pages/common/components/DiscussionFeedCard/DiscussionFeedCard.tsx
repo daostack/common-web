@@ -2,7 +2,7 @@ import React, { FC, memo, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ReportModal } from "@/shared/components";
-import { EntityTypes } from "@/shared/constants";
+import { DynamicLinkType, EntityTypes } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
 import { CommonFeed, DateFormat, Governance } from "@/shared/models";
@@ -14,20 +14,27 @@ import {
   FeedCardFooter,
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
+import { FeedCardShare } from "../FeedCard";
 import { LoadingFeedCard } from "../LoadingFeedCard";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
   item: CommonFeed;
   governanceCircles: Governance["circles"];
+  isMobileVersion?: boolean;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const { item, governanceCircles } = props;
+  const { item, governanceCircles, isMobileVersion = false } = props;
   const {
     isShowing: isReportModalOpen,
     onOpen: onReportModalOpen,
     onClose: onReportModalClose,
+  } = useModal(false);
+  const {
+    isShowing: isShareModalOpen,
+    onOpen: onShareModalOpen,
+    onClose: onShareModalClose,
   } = useModal(false);
   const {
     fetchUser: fetchDiscussionCreator,
@@ -46,7 +53,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         circles: governanceCircles,
       },
     },
-    { report: onReportModalOpen },
+    {
+      report: onReportModalOpen,
+      share: onShareModalOpen,
+    },
   );
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -97,6 +107,15 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           onClose={onReportModalClose}
           entity={discussion}
           type={EntityTypes.Discussion}
+        />
+      )}
+      {discussion && (
+        <FeedCardShare
+          isOpen={isShareModalOpen}
+          onClose={onShareModalClose}
+          linkType={DynamicLinkType.Discussion}
+          element={discussion}
+          isMobileVersion={isMobileVersion}
         />
       )}
     </FeedCard>

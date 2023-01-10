@@ -10,20 +10,19 @@ type Options = GetAllowedItemsOptions;
 
 interface Actions {
   report: () => void;
+  share: () => void;
 }
 
 export const useMenuItems = (options: Options, actions: Actions): Item[] => {
   const dispatch = useDispatch();
   const { discussion, governance } = options;
-  const { report } = actions;
+  const { report, share } = actions;
   const allowedMenuItems = getAllowedItems(options);
   const items: Item[] = [
     {
       id: DiscussionCardMenuItem.Share,
       text: "Share",
-      onClick: () => {
-        console.log(DiscussionCardMenuItem.Share);
-      },
+      onClick: share,
     },
     {
       id: DiscussionCardMenuItem.Report,

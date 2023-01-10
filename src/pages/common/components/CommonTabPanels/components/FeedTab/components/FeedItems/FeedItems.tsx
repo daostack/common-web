@@ -1,5 +1,6 @@
 import React, { FC, useEffect } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { useCommonFeedItems } from "../../hooks";
 import { FeedItem } from "./component";
 import styles from "./FeedItems.module.scss";
@@ -12,6 +13,7 @@ const FeedItems: FC = () => {
     hasMore,
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(common.id);
+  const isTabletView = useIsTabletView();
 
   const fetchMore = () => {
     if (hasMore) {
@@ -33,6 +35,7 @@ const FeedItems: FC = () => {
           commonId={common.id}
           item={item}
           governanceCircles={governance.circles}
+          isMobileVersion={isTabletView}
         />
       ))}
     </div>
