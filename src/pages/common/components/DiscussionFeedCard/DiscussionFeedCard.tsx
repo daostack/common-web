@@ -6,6 +6,7 @@ import { DynamicLinkType, EntityTypes } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
 import { CommonFeed, DateFormat, Governance } from "@/shared/models";
+import { DesktopStyleMenu } from "@/shared/ui-kit";
 import { formatDate, getUserName } from "@/shared/utils";
 import {
   FeedCard,
@@ -35,6 +36,11 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     isShowing: isShareModalOpen,
     onOpen: onShareModalOpen,
     onClose: onShareModalClose,
+  } = useModal(false);
+  const {
+    isShowing: isMenuOpen,
+    onOpen: onMenuOpen,
+    onClose: onMenuClose,
   } = useModal(false);
   const {
     fetchUser: fetchDiscussionCreator,
@@ -67,10 +73,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     discussion?.circleVisibility,
   );
 
-  const handleLongPress = () => {
-    console.log("Long pressed!");
-  };
-
   useEffect(() => {
     fetchDiscussionCreator(item.userId);
   }, [item.userId]);
@@ -84,7 +86,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }
 
   return (
-    <FeedCard onLongPress={handleLongPress}>
+    <FeedCard
+      onLongPress={isMobileVersion ? onMenuOpen : undefined}
+      isLongPressed={isMenuOpen}
+    >
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}
         title={getUserName(discussionCreator)}
@@ -123,6 +128,11 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           isMobileVersion={isMobileVersion}
         />
       )}
+      <DesktopStyleMenu
+        isOpen={isMenuOpen}
+        onClose={onMenuClose}
+        items={menuItems}
+      />
     </FeedCard>
   );
 };

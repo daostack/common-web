@@ -3,14 +3,16 @@ import { Transition as HeadlessUITransition } from "@headlessui/react";
 import styles from "./Transition.module.scss";
 
 interface TransitionProps {
+  className?: string;
   show?: boolean;
 }
 
 const Transition: FC<TransitionProps> = (props) => {
-  const { show, children } = props;
+  const { className, show, children } = props;
 
   return (
     <HeadlessUITransition
+      className={className}
       show={show}
       enter={styles.menuTransitionEnter}
       enterTo={styles.menuTransitionEnterActive}
