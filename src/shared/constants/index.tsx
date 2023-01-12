@@ -6,6 +6,7 @@ export * from "./endpoint";
 export * from "./environment";
 export * from "./errorCode";
 export * from "./formErrorMessages";
+export * from "./newCollaborationMenuItem";
 export * from "./language";
 export * from "./Math";
 export * from "./queryParamKey";

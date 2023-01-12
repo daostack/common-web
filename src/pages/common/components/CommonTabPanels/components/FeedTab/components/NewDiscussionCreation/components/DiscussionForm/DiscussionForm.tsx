@@ -10,10 +10,11 @@ import styles from "./DiscussionForm.module.scss";
 
 interface DiscussionFormProps {
   className?: string;
+  disabled?: boolean;
 }
 
 const DiscussionForm: FC<DiscussionFormProps> = (props) => {
-  const { className } = props;
+  const { className, disabled = false } = props;
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -24,6 +25,7 @@ const DiscussionForm: FC<DiscussionFormProps> = (props) => {
         label="Discussion Title"
         maxLength={MAX_DISCUSSION_TITLE_LENGTH}
         countAsHint
+        disabled={disabled}
         styles={{
           labelWrapper: styles.textFieldLabelWrapper,
           hint: styles.textFieldHint,
@@ -34,8 +36,9 @@ const DiscussionForm: FC<DiscussionFormProps> = (props) => {
         name="content"
         label="Content"
         optional
+        disabled={disabled}
       />
-      <UploadFiles name="images" />
+      <UploadFiles name="images" disabled={disabled} />
     </div>
   );
 };

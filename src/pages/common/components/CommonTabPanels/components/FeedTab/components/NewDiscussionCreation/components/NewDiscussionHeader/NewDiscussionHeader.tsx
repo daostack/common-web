@@ -13,11 +13,17 @@ interface NewDiscussionHeaderProps {
   governanceCircles: Governance["circles"];
   userCircleIds?: string[];
   onCircleSave: (circle: Circle | null) => void;
+  disabled?: boolean;
 }
 
 const NewDiscussionHeader: FC<NewDiscussionHeaderProps> = (props) => {
-  const { currentCircle, governanceCircles, userCircleIds, onCircleSave } =
-    props;
+  const {
+    currentCircle,
+    governanceCircles,
+    userCircleIds,
+    onCircleSave,
+    disabled = false,
+  } = props;
   const user = useSelector(selectUser());
   const userName = getUserName(user);
 
@@ -36,6 +42,7 @@ const NewDiscussionHeader: FC<NewDiscussionHeaderProps> = (props) => {
           governanceCircles={governanceCircles}
           userCircleIds={userCircleIds}
           onCircleSave={onCircleSave}
+          disabled={disabled}
         />
       </div>
     </div>

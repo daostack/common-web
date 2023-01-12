@@ -1,6 +1,11 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import classNames from "classnames";
 import { useFullText } from "@/shared/hooks";
+import {
+  checkIsTextEditorValueEmpty,
+  parseStringToTextEditorValue,
+  TextEditor,
+} from "@/shared/ui-kit";
 import styles from "./FeedGeneralInfo.module.scss";
 
 interface FeedGeneralInfoProps {
@@ -12,11 +17,15 @@ interface FeedGeneralInfoProps {
 export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
   const { title, subtitle, description } = props;
   const {
-    ref: descriptionRef,
+    setRef: setDescriptionRef,
     shouldShowFullText,
     isFullTextShowing,
     toggleFullText,
-  } = useFullText();
+  } = useFullText<HTMLElement>();
+  const parsedDescription = useMemo(
+    () => parseStringToTextEditorValue(description),
+    [description],
+  );
 
   return (
     <div className={styles.container}>
@@ -26,16 +35,16 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
       {subtitle && (
         <p className={classNames(styles.text, styles.subtitle)}>{subtitle}</p>
       )}
-      {description && (
+      {!checkIsTextEditorValueEmpty(parsedDescription) && (
         <>
-          <p
-            ref={descriptionRef}
-            className={classNames(styles.text, styles.description, {
+          <TextEditor
+            editorRef={setDescriptionRef}
+            editorClassName={classNames(styles.description, {
               [styles.descriptionShortened]: !shouldShowFullText,
             })}
-          >
-            {description}
-          </p>
+            value={parsedDescription}
+            readOnly
+          />
           {(shouldShowFullText || !isFullTextShowing) && (
             <a
               className={classNames(styles.seeMore, styles.text)}

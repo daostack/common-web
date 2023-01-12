@@ -1,3 +1,4 @@
+import { isEqual } from "lodash";
 import { commonMembersSubCollection } from "@/pages/OldCommon/store/api";
 import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
@@ -15,7 +16,6 @@ import {
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import Api from "./Api";
-import { isEqual } from "lodash";
 
 const converter = firestoreDataConverter<Common>();
 
@@ -170,14 +170,20 @@ class CommonService {
     circleIds: string[];
   }): Promise<Map<string, number>> => {
     const circleMembersCount = new Map();
-    await Promise.all(circleIds.map(async (id,index) => {
-      const commonMembersData = await commonMembersSubCollection(commonId).get();
-      const data = transformFirebaseDataList<CommonMember>(commonMembersData);
-      const filteredMembers = data.filter(({circleIds: ids}) => isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()))
-  
-      circleMembersCount.set(id,filteredMembers?.length ?? 0)
-      return filteredMembers;
-    }));
+    await Promise.all(
+      circleIds.map(async (id, index) => {
+        const commonMembersData = await commonMembersSubCollection(
+          commonId,
+        ).get();
+        const data = transformFirebaseDataList<CommonMember>(commonMembersData);
+        const filteredMembers = data.filter(({ circleIds: ids }) =>
+          isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()),
+        );
+
+        circleMembersCount.set(id, filteredMembers?.length ?? 0);
+        return filteredMembers;
+      }),
+    );
 
     return circleMembersCount;
   };

@@ -1,5 +1,10 @@
 import { UnsubscribeFunction } from "@/shared/interfaces";
-import { Collection, CommonFeed, SubCollections } from "@/shared/models";
+import {
+  Collection,
+  CommonFeed,
+  CommonFeedType,
+  SubCollections,
+} from "@/shared/models";
 import {
   firestoreDataConverter,
   transformFirebaseDataList,
@@ -16,6 +21,30 @@ class CommonFeedService {
       .doc(commonId)
       .collection(SubCollections.CommonFeed)
       .withConverter(converter);
+
+  public getCommonFeedItemWithSnapshot = async (
+    commonId: string,
+    dataId: string,
+    dataType: CommonFeedType,
+  ): Promise<{
+    commonFeedItem: CommonFeed;
+    docSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed>;
+  } | null> => {
+    const snapshot = await this.getCommonFeedSubCollection(commonId)
+      .where("data.id", "==", dataId)
+      .where("data.type", "==", dataType)
+      .get();
+    const docSnapshot = snapshot.docs[0];
+
+    if (!docSnapshot) {
+      return null;
+    }
+
+    return {
+      commonFeedItem: docSnapshot.data(),
+      docSnapshot,
+    };
+  };
 
   public getCommonFeedItems = async (
     commonId: string,

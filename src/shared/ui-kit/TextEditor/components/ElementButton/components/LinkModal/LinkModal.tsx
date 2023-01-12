@@ -45,6 +45,7 @@ const LinkModal: FC<LinkModalProps> = (props) => {
 
   const handleLinkUpdate: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
+    event.stopPropagation();
 
     if (url) {
       insertLink(editor, url);

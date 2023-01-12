@@ -9,4 +9,5 @@ export * from "./redux";
 export * from "./SharedState";
 export * from "./ModalProps";
 export * from "./UnsubscribeFunction";
+export * from "./UploadFile";
 export * from "./ViewportStates";

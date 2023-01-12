@@ -81,11 +81,16 @@ class ProposalService {
     });
   };
 
-  public createAssignProposal = async (payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">): Promise<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["response"]> => {
-    const createdProposal = await createProposal({...payload, type: ProposalsTypes.ASSIGN_CIRCLE}) as AssignCircle;
-    
+  public createAssignProposal = async (
+    payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">,
+  ): Promise<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["response"]> => {
+    const createdProposal = (await createProposal({
+      ...payload,
+      type: ProposalsTypes.ASSIGN_CIRCLE,
+    })) as AssignCircle;
+
     return createdProposal;
-  }
+  };
 }
 
 export default new ProposalService();

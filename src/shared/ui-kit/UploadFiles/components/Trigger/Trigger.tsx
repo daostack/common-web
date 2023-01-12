@@ -8,6 +8,7 @@ interface TriggerProps {
   onChange: (file: File) => void;
   text?: string;
   accept?: string;
+  disabled?: boolean;
 }
 
 const Trigger: FC<TriggerProps> = (props) => {
@@ -15,6 +16,7 @@ const Trigger: FC<TriggerProps> = (props) => {
     onChange,
     text = "Upload pictures",
     accept = ACCEPTED_EXTENSIONS,
+    disabled = false,
   } = props;
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -36,6 +38,7 @@ const Trigger: FC<TriggerProps> = (props) => {
         type="file"
         onChange={handleChange}
         accept={accept}
+        disabled={disabled}
       />
     </label>
   );

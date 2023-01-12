@@ -11,6 +11,7 @@ export * from "./NotFound";
 export * from "./Portal";
 export * from "./Sidenav";
 export * from "./Tags";
+export * from "./TextEditor";
 export * from "./Tooltip";
 export * from "./TopNavigation";
 export * from "./UploadFiles";

@@ -1,2 +1,2 @@
 export { default as UploadFiles } from "./UploadFiles";
-export type { UploadFile, UploadFilesProps } from "./UploadFiles";
+export type { UploadFilesProps } from "./UploadFiles";

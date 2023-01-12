@@ -1,7 +1,7 @@
-import { ROUTE_PATHS } from "@/shared/constants";
+import { NewCollaborationMenuItem, ROUTE_PATHS } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { BreadcrumbItem } from "@/shared/ui-kit";
-import { CommonTab, NewCollaborationMenuItem } from "../../../constants";
+import { CommonTab } from "../../../constants";
 import { getCommonTabName } from "../../../utils";
 
 const NEW_COLLABORATION_ITEM_TO_TEXT_MAP: Record<

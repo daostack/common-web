@@ -1,10 +1,14 @@
 import React, { FC } from "react";
-import { CommonTab, NewCollaborationMenuItem } from "@/pages/common/constants";
-import { useCommonDataContext } from "@/pages/common/providers";
-import { ViewportBreakpointVariant } from "@/shared/constants";
+import { useSelector } from "react-redux";
+import { CommonTab } from "@/pages/common/constants";
+import {
+  NewCollaborationMenuItem,
+  ViewportBreakpointVariant,
+} from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
+import { selectNewCollaborationMenuItem } from "@/store/states";
 import { TabNavigation } from "../TabNavigation";
 import {
   FeedActions,
@@ -23,7 +27,7 @@ interface FeedTabProps {
 const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember } = props;
   const isTabletView = useIsTabletView();
-  const { newCollaborationMenuItem } = useCommonDataContext();
+  const newCollaborationMenuItem = useSelector(selectNewCollaborationMenuItem);
   const allowedFeedActions = !newCollaborationMenuItem
     ? [FeedAction.NewCollaboration]
     : [];

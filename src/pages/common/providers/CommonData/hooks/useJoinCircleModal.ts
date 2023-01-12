@@ -1,16 +1,22 @@
 import { useCallback, useState } from "react";
-import { useModal } from "@/shared/hooks";
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { ProposalsTypes } from "@/shared/constants";
+import { useModal } from "@/shared/hooks";
 
 interface State {
   circleName: string | null;
-  payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type"> | null;
+  payload: Omit<
+    CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"],
+    "type"
+  > | null;
 }
 
 interface Return {
   circleNameToJoin: string | null;
-  createAssignProposalJoinPayload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type"> | null;
+  createAssignProposalJoinPayload: Omit<
+    CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"],
+    "type"
+  > | null;
   isJoinCircleModalOpen: boolean;
   onJoinCircleModalOpen: (
     payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">,
@@ -31,7 +37,13 @@ export const useJoinCircleModal = (): Return => {
   } = useModal(false);
 
   const handleJoinCircleModalOpen = useCallback(
-    (payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">, circleName: string) => {
+    (
+      payload: Omit<
+        CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"],
+        "type"
+      >,
+      circleName: string,
+    ) => {
       setJoinCircleState({ circleName, payload });
       onJoinCircleModalOpen();
     },

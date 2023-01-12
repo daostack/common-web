@@ -1,12 +1,12 @@
-import { call, put, select, takeLatest } from "redux-saga/effects";
+import { call, put, select } from "redux-saga/effects";
 import { CommonFeedService } from "@/services";
 import { Awaited } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
-import * as actions from "./actions";
-import { selectFeedItems } from "./selectors";
-import { FeedItems } from "./types";
+import * as actions from "../actions";
+import { selectFeedItems } from "../selectors";
+import { FeedItems } from "../types";
 
-function* getFeedItems(
+export function* getFeedItems(
   action: ReturnType<typeof actions.getFeedItems.request>,
 ) {
   const {
@@ -40,8 +40,4 @@ function* getFeedItems(
       yield put(actions.getFeedItems.failure(error));
     }
   }
-}
-
-export function* mainSaga() {
-  yield takeLatest(actions.getFeedItems.request, getFeedItems);
 }
