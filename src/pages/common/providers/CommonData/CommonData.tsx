@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { CommonMemberEventEmitter } from "@/events";
+import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
 import {
   CreateCommonModal,
   CreateProposalModal,
@@ -15,13 +15,21 @@ import {
 } from "@/shared/models";
 import { projectsActions } from "@/store/states";
 import { CommonMenuItem } from "../../constants";
+import { LeaveCircleModal } from "./components";
+import { JoinCircleModal } from "./components/JoinCircleModal";
 import { CommonDataContext, CommonDataContextValue } from "./context";
-import { useProposalCreationModal, useSubCommonCreationModal } from "./hooks";
+import {
+  useLeaveCircleModal,
+  useProposalCreationModal,
+  useSubCommonCreationModal,
+  useJoinCircleModal,
+} from "./hooks";
 
 interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  parentCommons: Common[];
   subCommons: Common[];
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
@@ -32,6 +40,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     common,
     governance,
     commonMember,
+    parentCommons,
     subCommons,
     parentCommon,
     parentCommonSubCommons,
@@ -55,6 +64,20 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onSubCommonCreationModalClose,
     onSubCommonCreate,
   } = useSubCommonCreationModal(governance.circles, subCommons);
+  const {
+    circleToLeave,
+    isLeaveCircleModalOpen,
+    onLeaveCircleModalOpen,
+    onLeaveCircleModalClose,
+  } = useLeaveCircleModal();
+
+  const {
+    circleNameToJoin,
+    createAssignProposalJoinPayload,
+    isJoinCircleModalOpen,
+    onJoinCircleModalClose,
+    onJoinCircleModalOpen,
+  } = useJoinCircleModal();
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -73,7 +96,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
 
   const handleSuccessfulLeave = () => {
     if (commonMember) {
-      CommonMemberEventEmitter.emit(`clear-common-member-${commonMember.id}`);
+      CommonMemberEventEmitter.emit(CommonMemberEvent.Clear, commonMember.id);
     }
 
     dispatch(projectsActions.removeMembershipFromProjectAndChildren(common.id));
@@ -86,17 +109,27 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onMenuItemSelect: handleMenuItemSelect,
       areNonCreatedProjectsLeft,
       onProjectCreate: onSubCommonCreationModalOpen,
+      common,
+      governance,
+      parentCommons,
       subCommons,
       parentCommon,
       parentCommonSubCommons,
+      onLeaveCircle: onLeaveCircleModalOpen,
+      onJoinCircle: onJoinCircleModalOpen,
     }),
     [
       handleMenuItemSelect,
       areNonCreatedProjectsLeft,
       onSubCommonCreationModalOpen,
+      common,
+      governance,
+      parentCommons,
       subCommons,
       parentCommon,
       parentCommonSubCommons,
+      onLeaveCircleModalOpen,
+      onJoinCircleModalOpen,
     ],
   );
 
@@ -134,6 +167,23 @@ const CommonData: FC<CommonDataProps> = (props) => {
         isSubCommonCreation
         shouldBeWithoutIntroduction
       />
+      {circleToLeave && commonMember && (
+        <LeaveCircleModal
+          circle={circleToLeave}
+          commonId={common.id}
+          commonMemberId={commonMember.id}
+          isShowing={isLeaveCircleModalOpen}
+          onClose={onLeaveCircleModalClose}
+        />
+      )}
+      {circleNameToJoin && createAssignProposalJoinPayload && (
+        <JoinCircleModal
+          isShowing={isJoinCircleModalOpen}
+          onClose={onJoinCircleModalClose}
+          circleName={circleNameToJoin}
+          payload={createAssignProposalJoinPayload}
+        />
+      )}
     </CommonDataContext.Provider>
   );
 };

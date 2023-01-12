@@ -1,26 +1,26 @@
 import React, { FC } from "react";
-import { ROUTE_PATHS } from "@/shared/constants";
-import { Common } from "@/shared/models";
+import { useSelector } from "react-redux";
 import { BreadcrumbItem, Breadcrumbs } from "@/shared/ui-kit";
+import { selectNewCollaborationMenuItem } from "@/store/states";
 import { CommonTab } from "../../constants";
-import { getCommonTabName } from "../../utils";
+import { useCommonDataContext } from "../../providers";
+import { getBreadcrumbItems } from "./utils";
 import styles from "./CommonBreadcrumbs.module.scss";
 
 interface CommonBreadcrumbsProps {
   activeTab: CommonTab;
-  common: Common;
-  parentCommons: Common[];
 }
 
 const CommonBreadcrumbs: FC<CommonBreadcrumbsProps> = (props) => {
-  const { activeTab, common, parentCommons } = props;
-  const items: BreadcrumbItem[] = parentCommons
-    .map<BreadcrumbItem>((parentCommon) => ({
-      id: parentCommon.id,
-      text: parentCommon.name,
-      url: ROUTE_PATHS.COMMON.replace(":id", parentCommon.id),
-    }))
-    .concat({ text: common.name }, { text: getCommonTabName(activeTab) });
+  const { activeTab } = props;
+  const { common, parentCommons } = useCommonDataContext();
+  const newCollaborationMenuItem = useSelector(selectNewCollaborationMenuItem);
+  const items: BreadcrumbItem[] = getBreadcrumbItems({
+    activeTab,
+    common,
+    parentCommons,
+    newCollaborationMenuItem,
+  });
 
   return (
     <Breadcrumbs

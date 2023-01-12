@@ -4,7 +4,7 @@ import { landingSaga } from "../pages/Landing/store";
 import { commonsSaga } from "../pages/OldCommon/store";
 import { trusteeSaga } from "../pages/Trustee/store";
 import { saga } from "../shared/store";
-import { projectsSaga } from "./states";
+import { cacheSaga, commonSaga, projectsSaga } from "./states";
 
 const allSagas = [
   authSaga,
@@ -12,6 +12,8 @@ const allSagas = [
   trusteeSaga,
   landingSaga,
   projectsSaga,
+  commonSaga,
+  cacheSaga,
   saga,
 ];
 

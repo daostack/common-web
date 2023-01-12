@@ -1,6 +1,6 @@
+import { MenuItem as Item } from "@/shared/interfaces";
 import { CommonMenuItem } from "../../../constants";
 import { useCommonDataContext } from "../../../providers";
-import { Item } from "../types";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
 type Options = GetAllowedItemsOptions;
@@ -34,5 +34,7 @@ export const useMenuItems = (options: Options): Item[] => {
     },
   ];
 
-  return items.filter((item) => allowedMenuItems.includes(item.id));
+  return items.filter((item) =>
+    allowedMenuItems.includes(item.id as CommonMenuItem),
+  );
 };

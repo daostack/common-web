@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authentificated } from "@/pages/Auth/store/selectors";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -9,6 +9,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
+import { commonActions } from "@/store/states";
 import { CommonTab } from "../../constants";
 import { CommonDataProvider } from "../../providers";
 import { CommonHeader } from "../CommonHeader";
@@ -41,6 +42,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     parentCommon,
     parentCommonSubCommons,
   } = props;
+  const dispatch = useDispatch();
   const [tab, setTab] = useState(CommonTab.About);
   const isAuthenticated = useSelector(authentificated());
   const isTabletView = useIsTabletView();
@@ -52,12 +54,19 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     }
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(commonActions.resetCommon());
+    };
+  }, []);
+
   return (
     <CommonDataProvider
       common={common}
       parentCommon={parentCommon}
       governance={governance}
       commonMember={commonMember}
+      parentCommons={parentCommons}
       subCommons={subCommons}
       parentCommonSubCommons={parentCommonSubCommons}
     >
@@ -67,38 +76,44 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         isSubCommon={isSubCommon}
         commonId={common.id}
       />
-      {!isCommonMemberFetched && <Loader variant={LoaderVariant.Global} />}
+      {!isCommonMemberFetched && (
+        <Loader
+          overlayClassName={styles.globalLoader}
+          variant={LoaderVariant.Global}
+        />
+      )}
       <div className={styles.container}>
-        <Container>
-          <CommonHeader
-            commonImageSrc={common.image}
-            commonName={common.name}
-            description={common.byline}
-            details={getMainCommonDetails(common)}
-            isProject={Boolean(common.directParent)}
-            withJoin={false}
-          />
-        </Container>
-        <div className={styles.commonHeaderSeparator} />
-        {!isTabletView && (
+        <div className={styles.contentHeaderWrapper}>
           <Container>
-            <CommonManagement
-              commonId={common.id}
-              activeTab={tab}
-              isSubCommon={isSubCommon}
-              circles={governance.circles}
-              commonMember={commonMember}
-              isAuthenticated={isAuthenticated}
-              onTabChange={setTab}
+            <CommonHeader
+              commonImageSrc={common.image}
+              commonName={common.name}
+              description={common.byline}
+              details={getMainCommonDetails(common)}
+              isProject={Boolean(common.directParent)}
+              withJoin={false}
             />
           </Container>
-        )}
+          <div className={styles.commonHeaderSeparator} />
+          {!isTabletView && (
+            <Container>
+              <CommonManagement
+                commonId={common.id}
+                activeTab={tab}
+                isSubCommon={isSubCommon}
+                circles={governance.circles}
+                commonMember={commonMember}
+                isAuthenticated={isAuthenticated}
+                onTabChange={setTab}
+              />
+            </Container>
+          )}
+        </div>
         <CommonTabPanels
           activeTab={tab}
           common={common}
           governance={governance}
           commonMember={commonMember}
-          parentCommons={parentCommons}
           subCommons={subCommons}
         />
         {isTabletView && (

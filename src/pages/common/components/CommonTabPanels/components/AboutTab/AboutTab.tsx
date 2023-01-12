@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import classNames from "classnames";
 import { CommonTab } from "@/pages/common/constants";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { ViewportBreakpointVariant } from "@/shared/constants";
@@ -29,7 +28,6 @@ interface AboutTabProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  parentCommons: Common[];
   subCommons: Common[];
   rules: UnstructuredRules;
   limitations?: MemberAdmittanceLimitations;
@@ -41,7 +39,6 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     common,
     governance,
     commonMember,
-    parentCommons,
     subCommons,
     rules,
     limitations,
@@ -117,21 +114,14 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   return (
     <div className={styles.container}>
       <Container
-        className={classNames(
-          styles.tabNavigationContainer,
-          styles.tabNavigationContainerWithoutActions,
-        )}
+        className={styles.tabNavigationContainer}
         viewports={[
           ViewportBreakpointVariant.Tablet,
           ViewportBreakpointVariant.PhoneOriented,
           ViewportBreakpointVariant.Phone,
         ]}
       >
-        <TabNavigation
-          activeTab={activeTab}
-          common={common}
-          parentCommons={parentCommons}
-        />
+        <TabNavigation activeTab={activeTab} />
       </Container>
       <div className={styles.columnsWrapper}>
         {!isTabletView ? (

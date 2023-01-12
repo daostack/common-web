@@ -1,0 +1,19 @@
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+.menuTransitionEnter {
+  opacity: 0;
+}
+.menuTransitionEnterActive {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+.menuTransitionExit {
+  opacity: 1;
+}
+.menuTransitionExitActive {
+  opacity: 0;
+  transition: opacity 200ms;
+}

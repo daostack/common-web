@@ -1,0 +1,47 @@
+@import "../../../../../../constants";
+
+.container {
+  margin-top: 0.25rem;
+  padding: 1.5rem 2.25rem 1.25rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 17.625rem));
+  grid-column-gap: 1rem;
+  background-color: $c-shades-white;
+  border: 0.0625rem solid $c-neutrals-100;
+  box-sizing: border-box;
+}
+
+.text {
+  margin: 0;
+}
+
+.timeToVote {
+  font-size: $moderate-med;
+  font-family: Lexend, sans-serif;
+  font-weight: 300;
+  color: $c-neutrals-600;
+}
+
+.voters {
+  font-family: Lexend, sans-serif;
+  font-size: $xsmall;
+  line-height: 120%;
+  color: $c-neutrals-600;
+}
+
+.votingStatus {
+  color: $c-green-300;
+  background-color: $c-green-100;
+
+  &:hover {
+    background-color: $c-green-100;
+  }
+}
+.votingStatusFailing {
+  color: $c-error-300;
+  background-color: $c-error-100;
+
+  &:hover {
+    background-color: $c-error-100;
+  }
+}

@@ -17,7 +17,7 @@ import {
 import { formatPrice, getUserName } from "@/shared/utils";
 import { ProposalDetailsItem } from "./types";
 
-const getVotersString = (
+export const getVotersString = (
   weights: BaseProposal["global"]["weights"],
   circles: Circles,
 ): string => {

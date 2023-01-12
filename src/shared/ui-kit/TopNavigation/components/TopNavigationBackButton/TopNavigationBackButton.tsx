@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
-import { LongLeftArrowIcon } from "@/shared/icons";
+import { Hamburger2Icon } from "@/shared/icons";
 import styles from "./TopNavigationBackButton.module.scss";
 
 interface TopNavigationBackButtonProps {
@@ -12,7 +12,7 @@ const TopNavigationBackButton: FC<TopNavigationBackButtonProps> = (props) => {
 
   return (
     <ButtonIcon className={styles.button} onClick={onClick}>
-      <LongLeftArrowIcon className={styles.icon} />
+      <Hamburger2Icon className={styles.icon} />
     </ButtonIcon>
   );
 };

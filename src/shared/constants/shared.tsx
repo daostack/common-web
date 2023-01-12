@@ -41,6 +41,7 @@ export enum Colors {
   shadow2 = "rgba(0, 26, 54, 0.08)",
   error = "#ef5456",
   transparent = "transparent",
+  primary400 = "#5666F5",
 }
 
 export const AXIOS_TIMEOUT = 1000000;

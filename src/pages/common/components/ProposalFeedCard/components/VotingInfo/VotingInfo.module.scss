@@ -1,0 +1,19 @@
+@import "../../../../../../constants";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: $xsmall;
+  letter-spacing: 0.02em;
+  color: $c-neutrals-600;
+  margin: 0;
+}
+
+.valueContainer {
+  display: flex;
+  align-items: center;
+  height: 2.6875rem;
+}

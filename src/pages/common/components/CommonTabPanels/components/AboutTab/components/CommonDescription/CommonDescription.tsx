@@ -8,6 +8,7 @@ import { Common } from "@/shared/models";
 import { Container, Tags } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import { CommonCard } from "../../../../../CommonCard";
+import { CommonLinks } from "../CommonLinks";
 import styles from "./CommonDescription.module.scss";
 
 interface CommonDescriptionProps {
@@ -59,6 +60,7 @@ const CommonDescription: FC<CommonDescriptionProps> = (props) => {
           alt={`${common.name}'s image`}
           placeholderElement={null}
         />
+        <CommonLinks className={styles.commonLinks} links={common.links} />
       </CommonCard>
     </Container>
   );
