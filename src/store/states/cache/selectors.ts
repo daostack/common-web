@@ -10,3 +10,7 @@ export const selectDiscussionStateById =
 export const selectProposalStateById =
   (proposalId: string) => (state: AppState) =>
     state.cache.proposalStates[proposalId] || null;
+
+export const selectDiscussionMessagesStateByDiscussionId =
+  (discussionId: string) => (state: AppState) =>
+    state.cache.discussionMessagesStates[discussionId] || null;

@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useCallback, useEffect } from "react";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import {
   useDiscussionById,
@@ -7,6 +7,7 @@ import {
 } from "@/shared/hooks/useCases";
 import { CommonFeed, DateFormat, Governance } from "@/shared/models";
 import { checkIsCountdownState, formatDate, getUserName } from "@/shared/utils";
+import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
   FeedCardHeader,
@@ -37,6 +38,7 @@ interface ProposalFeedCardProps {
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const { commonId, item, governanceCircles } = props;
+  const { setChatItem } = useChatContext();
   const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
   const {
     fetchDiscussion,
@@ -108,6 +110,16 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     }
   }, [proposal?.id]);
 
+  const handleOpenChat = useCallback(() => {
+    if (discussion && proposal) {
+      setChatItem({
+        discussion,
+        proposal,
+        circleVisibility: item.circleVisibility,
+      });
+    }
+  }, [proposal, discussion, item]);
+
   if (isLoading) {
     return <LoadingFeedCard />;
   }
@@ -157,6 +169,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
         lastActivity={item.updatedAt.seconds * 1000}
+        onClick={handleOpenChat}
       />
     </FeedCard>
   );

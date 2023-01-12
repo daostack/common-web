@@ -1,8 +1,9 @@
-@import "../../../../../constants.scss";
-@import "../../../../../styles/sizes";
+@import "../../../../constants.scss";
+@import "../../../../styles/sizes";
 
 .chat-wrapper {
   padding: 32px;
+  width: 100%;
   padding-top: unset;
   background-color: #f3f4ff;
   position: relative;
@@ -27,15 +28,15 @@
       }
 
       .date-title {
-        padding: 8px;
-        border-radius: 15px;
-        background-color: $white;
+        padding: 0.0625rem 0.1875rem;
+        border-radius: 4px;
+        background-color: $c-neutrals-100;
         font-size: 12px;
         text-align: center;
-        color: $gray;
+        color: $c-primary-300;
         margin: 0 auto;
-        width: 120px;
-        margin: 24px auto;
+        width: fit-content;
+        margin: 1.3125rem auto 1rem;
       }
     }
 
@@ -46,7 +47,8 @@
         display: flex;
         position: relative;
         margin-bottom: 1rem;
-        width: 25rem;
+        width: 100%;
+        max-width: 25rem;
 
         .icon-wrapper {
           flex-shrink: 0;
@@ -85,6 +87,7 @@
           width: 85%;
           box-sizing: border-box;
           position: relative;
+          text-align: start;
 
           .message-name {
             font-size: $xsmall;
@@ -187,16 +190,20 @@
 
   .bottom-chat-wrapper {
     padding: 16px 30px 16px 34px;
-    box-shadow: 0 -5px 5px -2px #4f5c6919;
-    background-color: #ffffff;
+    background-color: $c-input-100;
+    border: 0.0625rem solid $c-neutrals-100;
+    border-left-width: 0;
+    border-right-width: 0;
+    box-shadow: none;
     width: 100%;
-    margin: 0 -32px 24px;
+    margin: 0 -32px 0px;
     bottom: 0px;
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-radius: 0 0 12px 0;
+    border-radius: 0;
+    width: 100%;
 
     .text {
       font-size: 14px;
@@ -242,13 +249,13 @@
       height: 3rem;
       padding: 0.75rem 1rem 0.5rem;
       border-radius: 20px;
-      background-color: #f0f2ff;
-      border: none;
+      background-color: $light-gray-1;
+      border: 0.0625rem solid $c-neutrals-200;
       outline: none;
       resize: none;
       font-size: 0.875rem;
       line-height: 1.43;
-      color: $secondary-blue;
+      color: $c-neutrals-600;
       display: flex;
       align-items: center;
       box-sizing: border-box;
@@ -262,7 +269,7 @@
       margin-left: 16px;
       border: none;
       outline: none;
-      background: white;
+      background: $c-input-100;
 
       &:disabled {
         cursor: not-allowed;
@@ -284,9 +291,9 @@
     left: 76px;
     margin-bottom: 0;
 
-    @include big-phone {
-      width: calc(100% - 3.875rem);
-      left: 0px;
+    @include tablet {
+      width: calc(100% - 4rem);
+      left: 0;
       margin-inline: 0px;
     }
   }

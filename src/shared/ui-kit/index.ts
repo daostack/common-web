@@ -14,3 +14,4 @@ export * from "./Tags";
 export * from "./Tooltip";
 export * from "./TopNavigation";
 export * from "./UploadFiles";
+export * from "./MobileModal";

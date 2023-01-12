@@ -11,6 +11,7 @@ import { getCommonGovernanceCircles } from "@/pages/OldCommon/store/api";
 import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
 import { Loader } from "@/shared/components";
 import { ScreenSize, ChatType } from "@/shared/constants";
+import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
   Common,
   CommonMember,
@@ -28,7 +29,6 @@ import {
 import { getFilteredByIdCircles } from "@/shared/utils/circles";
 import { ChatComponent } from "../ChatComponent";
 import "./index.scss";
-import { ModerationFlags } from "@/shared/interfaces/Moderation";
 
 interface DiscussionDetailModalProps {
   discussion: Discussion | DiscussionWithHighlightedMessage | null;
