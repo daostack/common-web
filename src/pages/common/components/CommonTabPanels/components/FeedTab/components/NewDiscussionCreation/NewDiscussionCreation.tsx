@@ -55,7 +55,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   );
 
   const handleCancel = () => {
-    dispatch(commonActions.setNewCollaborationMenuItem(null));
+    dispatch(commonActions.setCommonAction(null));
     dispatch(commonActions.setDiscussionCreationData(null));
   };
 
