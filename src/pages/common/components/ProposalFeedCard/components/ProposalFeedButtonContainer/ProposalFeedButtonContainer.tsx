@@ -6,9 +6,18 @@ import styles from "./ProposalFeedButtonContainer.module.scss";
 export const ProposalFeedButtonContainer: FC = () => {
   return (
     <div className={styles.container}>
-      <VoteButton voteOutcome={VoteOutcome.Approved} />
-      <VoteButton voteOutcome={VoteOutcome.Abstained} />
-      <VoteButton voteOutcome={VoteOutcome.Rejected} />
+      <VoteButton
+        className={styles.buttonApprove}
+        voteOutcome={VoteOutcome.Approved}
+      />
+      <VoteButton
+        className={styles.buttonAbstain}
+        voteOutcome={VoteOutcome.Abstained}
+      />
+      <VoteButton
+        className={styles.buttonReject}
+        voteOutcome={VoteOutcome.Rejected}
+      />
     </div>
   );
 };
