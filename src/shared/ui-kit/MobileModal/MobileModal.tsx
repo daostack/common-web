@@ -32,15 +32,14 @@ const MobileModal: FC<MobileModalProps> = (props) => {
     children,
     title,
   } = props;
-  const [titleHeight, setTitleHeight] = useState(MIN_TITLE_HEIGHT);
+  const [titleHeight, setTitleHeight] = useState(title ? MIN_TITLE_HEIGHT : 0);
   const [titleRef, { height }] = useMeasure();
 
-  console.log("--titleRef", height);
   useEffect(() => {
     if (height) {
-      setTitleHeight(height + TITLE_PADDING_SIZE);
+      setTitleHeight(height + (title ? TITLE_PADDING_SIZE : 0));
     }
-  }, [height]);
+  }, [height, title]);
 
   return (
     <Modal
