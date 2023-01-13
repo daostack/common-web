@@ -19,6 +19,7 @@ import {
 } from "@/pages/OldCommon/store/actions";
 import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
 import { Loader } from "@/shared/components";
+import { ChatMessage } from "@/shared/components";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { ChatType } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
@@ -36,12 +37,10 @@ import {
   Proposal,
 } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
-import ChatMessage from "./ChatMessage";
 import "./index.scss";
 
 interface ChatComponentInterface {
   common: Common | null;
-  discussionMessages: DiscussionMessage[];
   type: ChatType;
   commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;

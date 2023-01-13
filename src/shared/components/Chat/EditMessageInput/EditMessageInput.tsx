@@ -1,11 +1,12 @@
 import React, { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
+import classNames from "classnames";
 import { updateDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { Loader, Button } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
 import { DiscussionMessage } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
-import "./edit-message-input.scss";
+import styles from "./EditMessageInput.module.scss";
 
 interface Props {
   discussionMessage: DiscussionMessage;
@@ -53,33 +54,29 @@ export default function EditMessageInput({
   };
 
   return (
-    <div className="edit-message-input">
-      <div className="edit-message-input__owner-name">
+    <div className={styles.container}>
+      <div className={styles.ownerName}>
         {getUserName(discussionMessage.owner)}
       </div>
       <textarea
-        className="edit-message-input__input"
+        className={styles.input}
         value={message}
         onChange={handleChangeMessage}
       />
-      <div className="edit-message-input__button-container">
+      <div className={styles.buttonContainer}>
         <Button
           disabled={isLoading}
           onClick={onClose}
-          className="edit-message-input__button-container__button edit-message-input__button-container__cancel"
+          className={classNames(styles.button, styles.cancelButton)}
         >
           Cancel
         </Button>
         <Button
           disabled={isLoading}
           onClick={updateMessage}
-          className="edit-message-input__button-container__button edit-message-input__button-container__save"
+          className={classNames(styles.button, styles.saveButton)}
         >
-          {isLoading ? (
-            <Loader className="edit-message-input__button-container__save__loader" />
-          ) : (
-            "Save"
-          )}
+          {isLoading ? <Loader className={styles.loader} /> : "Save"}
         </Button>
       </div>
     </div>

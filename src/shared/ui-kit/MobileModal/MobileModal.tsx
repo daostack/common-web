@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, LegacyRef, useEffect, useState, useMemo } from "react";
 import { useMeasure } from "react-use";
 import { Image, Modal, ButtonIcon } from "@/shared/components";
 import { Colors } from "@/shared/constants";
@@ -21,6 +21,8 @@ const closeIconSize = 12;
 
 const MIN_TITLE_HEIGHT = 59;
 const TITLE_PADDING_SIZE = 40;
+const HEADER_HEIGHT = 38;
+const MODAL_TOP_PADDING = 24;
 
 const MobileModal: FC<MobileModalProps> = (props) => {
   const {
@@ -40,6 +42,14 @@ const MobileModal: FC<MobileModalProps> = (props) => {
       setTitleHeight(height + (title ? TITLE_PADDING_SIZE : 0));
     }
   }, [height, title]);
+
+  const childrenWrapper = useMemo(
+    () => ({
+      maxHeight: `calc(100vh - ${MODAL_TOP_PADDING}px - ${HEADER_HEIGHT}px - ${titleHeight}px)`,
+      width: "100%",
+    }),
+    [titleHeight],
+  );
 
   return (
     <Modal
@@ -78,18 +88,14 @@ const MobileModal: FC<MobileModalProps> = (props) => {
           )}
         </div>
         {title && (
-          <p ref={titleRef as any} className={styles.title}>
+          <p
+            ref={titleRef as LegacyRef<HTMLDivElement>}
+            className={styles.title}
+          >
             {title}
           </p>
         )}
-        <div
-          style={{
-            maxHeight: `calc(100vh - 24px - 38px - ${titleHeight}px)`,
-            width: "100%",
-          }}
-        >
-          {children}
-        </div>
+        <div style={childrenWrapper}>{children}</div>
       </div>
     </Modal>
   );

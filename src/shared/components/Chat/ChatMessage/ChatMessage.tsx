@@ -9,7 +9,8 @@ import {
 } from "@/shared/constants";
 import { DiscussionMessage, User } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
-import EditMessageInput from "./EditMessageInput";
+import { EditMessageInput } from "../EditMessageInput";
+import styles from "./ChatMessage.module.scss";
 
 interface ChatMessageProps {
   discussionMessage: DiscussionMessage;
@@ -55,12 +56,17 @@ export default function ChatMessage({
         onClick={() => {
           scrollToRepliedMessage(discussionMessage.parentMessage?.id as string);
         }}
-        className="reply-message-container"
+        className={styles.replyMessageContainer}
       >
-        <div className="message-name">
+        <div className={styles.messageName}>
           {discussionMessage.parentMessage?.ownerName}
         </div>
-        <div className="message-content reply-message-content">
+        <div
+          className={classNames(
+            styles.messageContent,
+            styles.replyMessageContent,
+          )}
+        >
           <Linkify>{discussionMessage.parentMessage.text}</Linkify>
         </div>
       </div>
@@ -70,10 +76,10 @@ export default function ChatMessage({
   return (
     <li
       id={discussionMessage.id}
-      className={classNames("message-wrapper", className, { highlighted })}
+      className={classNames(styles.container, className, { highlighted })}
     >
-      <div className="message">
-        <div className="icon-wrapper">
+      <div className={styles.message}>
+        <div className={styles.iconWrapper}>
           <UserAvatar
             photoURL={discussionMessage.owner?.photoURL}
             nameForRandomAvatar={discussionMessage.owner?.email}
@@ -87,16 +93,21 @@ export default function ChatMessage({
             onClose={() => setEditMode(false)}
           />
         ) : (
-          <div className="message-text">
+          <div className={styles.messageText}>
             <ReplyMessage />
-            <div className="message-name">
+            <div className={styles.messageName}>
               {getUserName(discussionMessage.owner)}
             </div>
-            <div className="message-content">
+            <div className={styles.messageContent}>
               <Linkify>{discussionMessage.text}</Linkify>
-              <div className="time-wrapper-container">
+              <div className={styles.timeWrapperContainer}>
                 {isEdited && (
-                  <div className="time-wrapper edited-time-wrapper ">
+                  <div
+                    className={classNames(
+                      styles.timeWrapper,
+                      styles.editedTimeWrapper,
+                    )}
+                  >
                     (Edited{" "}
                     {editedAtDate.toLocaleTimeString([], {
                       hour12: false,
@@ -106,7 +117,12 @@ export default function ChatMessage({
                     )
                   </div>
                 )}
-                <div className="time-wrapper creation-time-wrapper">
+                <div
+                  className={classNames(
+                    styles.timeWrapper,
+                    styles.creationTimeWrapper,
+                  )}
+                >
                   {createdAtDate.toLocaleTimeString([], {
                     hour12: false,
                     hour: "2-digit",
@@ -123,7 +139,7 @@ export default function ChatMessage({
                   : EntityTypes.ProposalMessage
               }
               elem={discussionMessage}
-              className="dropdown-menu"
+              className={styles.dropdownMenu}
               variant={Orientation.Horizontal}
               onMenuToggle={onMessageDropdownOpen}
               transparent

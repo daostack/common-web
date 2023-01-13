@@ -80,7 +80,6 @@ export default function EmptyTabComponent({
           )}
           {currentTab === "messages" && (
             <img
-              style={{ maxWidth: "100%" }}
               alt={currentTab}
               src="/assets/images/illustrations-full-page-common.svg"
             />

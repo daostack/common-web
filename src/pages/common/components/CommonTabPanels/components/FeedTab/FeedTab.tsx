@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, LegacyRef, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useMeasure } from "react-use";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -14,7 +14,6 @@ import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   CirclesPermissions,
   Common,
-  CommonFeed,
   CommonMember,
   Governance,
 } from "@/shared/models";
@@ -50,6 +49,19 @@ const FeedTab: FC<FeedTabProps> = (props) => {
     ? [FeedAction.NewCollaboration]
     : [];
 
+  const hasAccess = useMemo(() => {
+    if (!chatItem) {
+      return;
+    }
+
+    return (
+      !chatItem.circleVisibility.length ||
+      chatItem.circleVisibility.some((circleId) =>
+        userCircleIds.includes(circleId),
+      )
+    );
+  }, [chatItem, userCircleIds]);
+
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
       {newCollaborationMenuItem === NewCollaborationMenuItem.NewDiscussion && (
@@ -62,31 +74,30 @@ const FeedTab: FC<FeedTabProps> = (props) => {
     </div>
   );
 
+  const chatWrapperStyle = useMemo(
+    () => ({
+      height: `calc(100vh - ${HEADER_HEIGHT + BREADCRUMBS_HEIGHT}px)`,
+      maxWidth: width,
+      top: HEADER_HEIGHT + BREADCRUMBS_HEIGHT,
+    }),
+    [width],
+  );
+
   const renderAdditionalColumn = () => (
-    <div ref={chatColumnRef as any} className={styles.additionalColumnWrapper}>
-      <div
-        style={{
-          height: `calc(100vh - ${HEADER_HEIGHT + BREADCRUMBS_HEIGHT}px)`,
-          maxWidth: width,
-          position: "fixed",
-          top: HEADER_HEIGHT + BREADCRUMBS_HEIGHT,
-        }}
-      >
+    <div
+      ref={chatColumnRef as LegacyRef<HTMLDivElement>}
+      className={styles.additionalColumnWrapper}
+    >
+      <div className={styles.chatWrapper} style={chatWrapperStyle}>
         {chatItem && (
           <ChatComponent
             commonMember={commonMember}
             isCommonMemberFetched
             isAuthorized={Boolean(user)}
             type={ChatType.DiscussionMessages}
-            hasAccess={
-              !chatItem.circleVisibility.length ||
-              chatItem.circleVisibility.some((circleId) =>
-                userCircleIds.includes(circleId),
-              )
-            }
+            hasAccess={hasAccess}
             isHidden={false}
             common={common}
-            discussionMessages={[]}
             discussion={chatItem.discussion}
             proposal={chatItem.proposal}
           />
@@ -98,6 +109,29 @@ const FeedTab: FC<FeedTabProps> = (props) => {
   const renderMobileColumn = () => (
     <div className={styles.mainColumnWrapper}>
       <FeedItems />
+      <MobileModal
+        isShowing={Boolean(chatItem)}
+        hasBackButton
+        onClose={() => {
+          setChatItem(undefined);
+        }}
+        common={common}
+        title={common.description}
+      >
+        {chatItem && (
+          <ChatComponent
+            commonMember={commonMember}
+            isCommonMemberFetched
+            isAuthorized={Boolean(user)}
+            type={ChatType.DiscussionMessages}
+            hasAccess={hasAccess}
+            isHidden={false}
+            common={common}
+            discussion={chatItem.discussion}
+            proposal={chatItem.proposal}
+          />
+        )}
+      </MobileModal>
     </div>
   );
 
@@ -141,37 +175,6 @@ const FeedTab: FC<FeedTabProps> = (props) => {
           )}
         </div>
       </div>
-      {isTabletView && (
-        <MobileModal
-          isShowing={Boolean(chatItem)}
-          hasBackButton
-          onClose={() => {
-            setChatItem(undefined);
-          }}
-          common={common}
-          title={common.description}
-        >
-          {chatItem && (
-            <ChatComponent
-              commonMember={commonMember}
-              isCommonMemberFetched
-              isAuthorized={Boolean(user)}
-              type={ChatType.DiscussionMessages}
-              hasAccess={
-                !chatItem.circleVisibility.length ||
-                chatItem.circleVisibility.some((circleId) =>
-                  userCircleIds.includes(circleId),
-                )
-              }
-              isHidden={false}
-              common={common}
-              discussionMessages={[]}
-              discussion={chatItem.discussion}
-              proposal={chatItem.proposal}
-            />
-          )}
-        </MobileModal>
-      )}
     </ChatContext.Provider>
   );
 };
