@@ -46,6 +46,7 @@ const MobileModal: FC<MobileModalProps> = (props) => {
   const childrenWrapper = useMemo(
     () => ({
       maxHeight: `calc(100vh - ${MODAL_TOP_PADDING}px - ${HEADER_HEIGHT}px - ${titleHeight}px)`,
+      height: "100%",
       width: "100%",
     }),
     [titleHeight],

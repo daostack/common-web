@@ -169,7 +169,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
         lastActivity={item.updatedAt.seconds * 1000}
-        onClick={handleOpenChat}
+        onMessagesClick={handleOpenChat}
       />
     </FeedCard>
   );

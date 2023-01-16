@@ -8,18 +8,18 @@ export interface FeedCardFooterProps {
   messageCount: number;
   lastActivity: number;
   unreadMessages?: number;
-  onClick?: () => void;
+  onMessagesClick?: () => void;
 }
 
 export const FeedCardFooter: React.FC<FeedCardFooterProps> = ({
   messageCount,
   lastActivity,
   unreadMessages,
-  onClick,
+  onMessagesClick,
 }) => {
   return (
     <div className={styles.container}>
-      <div className={styles.leftContent} onClick={onClick}>
+      <div className={styles.leftContent} onClick={onMessagesClick}>
         <MessageIcon className={styles.messageIcon} />
         <p className={classNames(styles.text, styles.messageCount)}>
           {messageCount} Message{messageCount === 1 ? "" : "s"}

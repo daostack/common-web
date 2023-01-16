@@ -43,9 +43,12 @@ const BREADCRUMBS_HEIGHT = 64;
 
 const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember, common } = props;
-  const [chatItem, setChatItem] = useState<ChatItem>();
-  const userCircleIds = Object.values(commonMember?.circles.map ?? {});
-  const [chatColumnRef, { width }] = useMeasure();
+  const [chatItem, setChatItem] = useState<ChatItem | null>();
+  const userCircleIds = useMemo(
+    () => Object.values(commonMember?.circles.map ?? {}),
+    [commonMember],
+  );
+  const [chatColumnRef, { width: chatWidth }] = useMeasure();
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
   const newCollaborationMenuItem = useSelector(selectNewCollaborationMenuItem);
@@ -53,9 +56,9 @@ const FeedTab: FC<FeedTabProps> = (props) => {
     ? [FeedAction.NewCollaboration]
     : [];
 
-  const hasAccess = useMemo(() => {
+  const hasAccessToChat = useMemo(() => {
     if (!chatItem) {
-      return;
+      return false;
     }
 
     return (
@@ -80,11 +83,12 @@ const FeedTab: FC<FeedTabProps> = (props) => {
 
   const chatWrapperStyle = useMemo(
     () => ({
-      height: `calc(100vh - ${HEADER_HEIGHT + BREADCRUMBS_HEIGHT}px)`,
-      maxWidth: width,
+      height: `calc(100vh - ${HEADER_HEIGHT + BREADCRUMBS_HEIGHT}px + 30px)`,
+      maxWidth: chatWidth,
+      width: "100%",
       top: HEADER_HEIGHT + BREADCRUMBS_HEIGHT,
     }),
-    [width],
+    [chatWidth],
   );
 
   const renderAdditionalColumn = () => (
@@ -98,8 +102,12 @@ const FeedTab: FC<FeedTabProps> = (props) => {
             commonMember={commonMember}
             isCommonMemberFetched
             isAuthorized={Boolean(user)}
-            type={ChatType.DiscussionMessages}
-            hasAccess={hasAccess}
+            type={
+              chatItem.proposal
+                ? ChatType.ProposalComments
+                : ChatType.DiscussionMessages
+            }
+            hasAccess={hasAccessToChat}
             isHidden={false}
             common={common}
             discussion={chatItem.discussion}
@@ -117,7 +125,7 @@ const FeedTab: FC<FeedTabProps> = (props) => {
         isShowing={Boolean(chatItem)}
         hasBackButton
         onClose={() => {
-          setChatItem(undefined);
+          setChatItem(null);
         }}
         common={common}
         title={common.description}
@@ -128,7 +136,7 @@ const FeedTab: FC<FeedTabProps> = (props) => {
             isCommonMemberFetched
             isAuthorized={Boolean(user)}
             type={ChatType.DiscussionMessages}
-            hasAccess={hasAccess}
+            hasAccess={hasAccessToChat}
             isHidden={false}
             common={common}
             discussion={chatItem.discussion}
