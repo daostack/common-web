@@ -1,34 +1,33 @@
 import React, { FC } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { UploadFile } from "@/shared/interfaces";
 import { Trigger, UploadedFile } from "./components";
 import styles from "./UploadFiles.module.scss";
-
-export interface UploadFile {
-  // id can be any string. it is just for correct displaying purposes
-  id: string;
-  file: File | string;
-}
 
 export interface UploadFilesProps {
   className?: string;
   files?: UploadFile[];
   onChange: (files: UploadFile[]) => void;
+  disabled?: boolean;
 }
 
 const UploadFiles: FC<UploadFilesProps> = (props) => {
-  const { className, files = [], onChange } = props;
+  const { className, files = [], onChange, disabled = false } = props;
 
   const handleTriggerChange = (file: File) => {
     onChange(
       files.concat({
         id: uuidv4(),
+        title: file.name,
         file,
       }),
     );
   };
 
   const handleFileRemove = (fileId: string) => {
-    onChange(files.filter((file) => file.id !== fileId));
+    if (!disabled) {
+      onChange(files.filter((file) => file.id !== fileId));
+    }
   };
 
   return (
@@ -42,7 +41,7 @@ const UploadFiles: FC<UploadFilesProps> = (props) => {
               onRemove={() => handleFileRemove(file.id)}
             />
           ))}
-        <Trigger onChange={handleTriggerChange} />
+        <Trigger onChange={handleTriggerChange} disabled={disabled} />
       </div>
     </div>
   );

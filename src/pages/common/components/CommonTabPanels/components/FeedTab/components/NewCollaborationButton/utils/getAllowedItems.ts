@@ -1,5 +1,7 @@
-import { NewCollaborationMenuItem } from "@/pages/common/constants";
-import { GovernanceActions } from "@/shared/constants";
+import {
+  GovernanceActions,
+  NewCollaborationMenuItem,
+} from "@/shared/constants";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
 

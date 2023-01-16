@@ -13,11 +13,13 @@ import { toggleMark } from "../../utils";
 import styles from "./Editor.module.scss";
 
 interface EditorProps {
+  className?: string;
   id?: string;
   name?: string;
   size?: TextEditorSize;
   placeholder?: string;
   readOnly?: boolean;
+  disabled?: boolean;
   onBlur?: FocusEventHandler;
 }
 
@@ -26,16 +28,21 @@ const Editor: FC<EditorProps> = (props) => {
     size = TextEditorSize.Small,
     placeholder,
     readOnly = false,
+    disabled = false,
     onBlur,
   } = props;
   const editor = useSlate();
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-  const className = classNames(styles.editor, {
-    [styles.editorSmallSize]: size === TextEditorSize.Small,
-    [styles.editorBigSize]: size === TextEditorSize.Big,
-    [styles.editorReadOnly]: readOnly,
-  });
+  const className = classNames(
+    styles.editor,
+    {
+      [styles.editorSmallSize]: size === TextEditorSize.Small,
+      [styles.editorBigSize]: size === TextEditorSize.Big,
+      [styles.editorReadOnly]: readOnly,
+    },
+    props.className,
+  );
   const id = props.id || props.name;
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
@@ -57,7 +64,7 @@ const Editor: FC<EditorProps> = (props) => {
       renderLeaf={renderLeaf}
       placeholder={placeholder}
       spellCheck
-      readOnly={readOnly}
+      readOnly={readOnly || disabled}
       onBlur={onBlur}
       onKeyDown={handleKeyDown}
     />

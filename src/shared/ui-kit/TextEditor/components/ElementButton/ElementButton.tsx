@@ -15,6 +15,7 @@ import styles from "./ElementButton.module.scss";
 
 interface ElementButtonProps {
   elementType: ElementType;
+  disabled?: boolean;
 }
 
 const getIconByFormat = (elementType: ElementType): ReactNode => {
@@ -32,7 +33,7 @@ const getIconByFormat = (elementType: ElementType): ReactNode => {
 };
 
 const ElementButton: FC<ElementButtonProps> = (props) => {
-  const { elementType } = props;
+  const { elementType, disabled } = props;
   const editor = useSlate();
   const {
     isShowing: isLinkModalOpen,
@@ -56,6 +57,7 @@ const ElementButton: FC<ElementButtonProps> = (props) => {
       <ToolbarButton
         active={isElementActive(editor, elementType)}
         onClick={handleClick}
+        disabled={disabled}
       >
         {getIconByFormat(elementType)}
       </ToolbarButton>

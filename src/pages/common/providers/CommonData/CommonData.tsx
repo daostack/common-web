@@ -14,13 +14,15 @@ import {
   Governance,
 } from "@/shared/models";
 import { projectsActions } from "@/store/states";
-import { CommonMenuItem, NewCollaborationMenuItem } from "../../constants";
+import { CommonMenuItem } from "../../constants";
 import { LeaveCircleModal } from "./components";
+import { JoinCircleModal } from "./components/JoinCircleModal";
 import { CommonDataContext, CommonDataContextValue } from "./context";
 import {
   useLeaveCircleModal,
   useProposalCreationModal,
   useSubCommonCreationModal,
+  useJoinCircleModal,
 } from "./hooks";
 
 interface CommonDataProps {
@@ -48,8 +50,6 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const { notify } = useNotification();
   const [selectedMenuItem, setSelectedMenuItem] =
     useState<CommonMenuItem | null>(null);
-  const [newCollaborationMenuItem, setNewCollaborationMenuItem] =
-    useState<NewCollaborationMenuItem | null>(null);
   const {
     isProposalCreationModalOpen,
     initialProposalTypeForCreation,
@@ -70,6 +70,14 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onLeaveCircleModalOpen,
     onLeaveCircleModalClose,
   } = useLeaveCircleModal();
+
+  const {
+    circleNameToJoin,
+    createAssignProposalJoinPayload,
+    isJoinCircleModalOpen,
+    onJoinCircleModalClose,
+    onJoinCircleModalOpen,
+  } = useJoinCircleModal();
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -108,8 +116,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       parentCommon,
       parentCommonSubCommons,
       onLeaveCircle: onLeaveCircleModalOpen,
-      newCollaborationMenuItem,
-      onNewCollaborationMenuItemSelect: setNewCollaborationMenuItem,
+      onJoinCircle: onJoinCircleModalOpen,
     }),
     [
       handleMenuItemSelect,
@@ -122,7 +129,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       parentCommon,
       parentCommonSubCommons,
       onLeaveCircleModalOpen,
-      newCollaborationMenuItem,
+      onJoinCircleModalOpen,
     ],
   );
 
@@ -167,6 +174,14 @@ const CommonData: FC<CommonDataProps> = (props) => {
           commonMemberId={commonMember.id}
           isShowing={isLeaveCircleModalOpen}
           onClose={onLeaveCircleModalClose}
+        />
+      )}
+      {circleNameToJoin && createAssignProposalJoinPayload && (
+        <JoinCircleModal
+          isShowing={isJoinCircleModalOpen}
+          onClose={onJoinCircleModalClose}
+          circleName={circleNameToJoin}
+          payload={createAssignProposalJoinPayload}
         />
       )}
     </CommonDataContext.Provider>

@@ -7,9 +7,12 @@ import {
   ChatContext,
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
-import { CommonTab, NewCollaborationMenuItem } from "@/pages/common/constants";
-import { useCommonDataContext } from "@/pages/common/providers";
-import { ChatType, ViewportBreakpointVariant } from "@/shared/constants";
+import { CommonTab } from "@/pages/common/constants";
+import {
+  ChatType,
+  ViewportBreakpointVariant,
+  NewCollaborationMenuItem,
+} from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   CirclesPermissions,
@@ -18,6 +21,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { Container, MobileModal } from "@/shared/ui-kit";
+import { selectNewCollaborationMenuItem } from "@/store/states";
 import { TabNavigation } from "../TabNavigation";
 import {
   FeedActions,
@@ -44,7 +48,7 @@ const FeedTab: FC<FeedTabProps> = (props) => {
   const [chatColumnRef, { width }] = useMeasure();
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
-  const { newCollaborationMenuItem } = useCommonDataContext();
+  const newCollaborationMenuItem = useSelector(selectNewCollaborationMenuItem);
   const allowedFeedActions = !newCollaborationMenuItem
     ? [FeedAction.NewCollaboration]
     : [];

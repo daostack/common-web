@@ -14,6 +14,7 @@ import styles from "./MarkButton.module.scss";
 
 interface MarkButtonProps {
   format: FormatType;
+  disabled?: boolean;
 }
 
 const getIconByFormat = (format: FormatType): ReactNode => {
@@ -37,7 +38,7 @@ const getIconByFormat = (format: FormatType): ReactNode => {
 };
 
 const MarkButton: FC<MarkButtonProps> = (props) => {
-  const { format } = props;
+  const { format, disabled } = props;
   const editor = useSlate();
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -46,7 +47,11 @@ const MarkButton: FC<MarkButtonProps> = (props) => {
   };
 
   return (
-    <ToolbarButton active={isMarkActive(editor, format)} onClick={handleClick}>
+    <ToolbarButton
+      active={isMarkActive(editor, format)}
+      onClick={handleClick}
+      disabled={disabled}
+    >
       {getIconByFormat(format)}
     </ToolbarButton>
   );

@@ -29,6 +29,7 @@ exports[`Storyshots UI Kit/Upload Files Upload Files 1`] = `
       <input
         accept="image/*"
         className="input"
+        disabled={false}
         onChange={[Function]}
         type="file"
       />

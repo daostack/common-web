@@ -30,15 +30,7 @@
 }
 
 .description {
-  font-size: $small;
-  color: $c-neutrals-600;
-  line-height: 1.25rem;
-  margin-bottom: 0.625rem;
   white-space: pre-line;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 }
 
 .descriptionShortened {

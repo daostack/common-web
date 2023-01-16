@@ -15,19 +15,50 @@ const initialFeedItems: FeedItems = {
 
 const initialState: CommonState = {
   feedItems: { ...initialFeedItems },
-  discussionCreationData: null,
+  newCollaborationMenuItem: null,
+  discussionCreation: {
+    data: null,
+    loading: false,
+  },
 };
 
 export const reducer = createReducer<CommonState, Action>(initialState)
-  .handleAction(actions.resetCommon, (state) =>
+  .handleAction(actions.resetCommon, () => ({ ...initialState }))
+  .handleAction(actions.setNewCollaborationMenuItem, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.feedItems = { ...initialFeedItems };
-      nextState.discussionCreationData = null;
+      nextState.newCollaborationMenuItem = payload;
     }),
   )
   .handleAction(actions.setDiscussionCreationData, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.discussionCreationData = payload;
+      nextState.discussionCreation = {
+        data: payload,
+        loading: false,
+      };
+    }),
+  )
+  .handleAction(actions.createDiscussion.request, (state) =>
+    produce(state, (nextState) => {
+      nextState.discussionCreation = {
+        ...nextState.discussionCreation,
+        loading: true,
+      };
+    }),
+  )
+  .handleAction(actions.createDiscussion.success, (state) =>
+    produce(state, (nextState) => {
+      nextState.discussionCreation = {
+        loading: false,
+        data: null,
+      };
+    }),
+  )
+  .handleAction(actions.createDiscussion.failure, (state) =>
+    produce(state, (nextState) => {
+      nextState.discussionCreation = {
+        ...nextState.discussionCreation,
+        loading: false,
+      };
     }),
   )
   .handleAction(actions.getFeedItems.request, (state) =>
@@ -60,11 +91,31 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.addNewFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
-      const newData = payload.map((item) => item.commonFeedItem);
+      let firstDocSnapshot = nextState.feedItems.firstDocSnapshot;
+
+      const data = payload.reduceRight(
+        (acc, { commonFeedItem, docSnapshot }) => {
+          const nextData = [...acc];
+          const itemIndex = nextData.findIndex(
+            (item) => item.id === commonFeedItem.id,
+          );
+
+          if (itemIndex < 0) {
+            firstDocSnapshot = docSnapshot;
+            return [commonFeedItem, ...nextData];
+          }
+
+          nextData[itemIndex] = commonFeedItem;
+
+          return nextData;
+        },
+        nextState.feedItems.data || [],
+      );
+
       nextState.feedItems = {
         ...nextState.feedItems,
-        data: newData.concat(nextState.feedItems.data || []),
-        firstDocSnapshot: payload[0]?.docSnapshot || null,
+        data,
+        firstDocSnapshot,
       };
     }),
   );

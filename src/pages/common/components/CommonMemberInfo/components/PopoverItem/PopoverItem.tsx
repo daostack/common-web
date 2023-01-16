@@ -1,7 +1,8 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback } from "react";
 import classNames from "classnames";
-import { CommonService, Logger } from "@/services";
-import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
+import { useCommonDataContext } from "@/pages/common/providers";
+import { Circle } from "@/shared/models";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./PopoverItem.module.scss";
 
 interface CommonMemberInfoProps {
@@ -11,20 +12,44 @@ interface CommonMemberInfoProps {
   isMember: boolean;
   isPending: boolean;
   circleName: string;
+  canRequestToJoin: boolean;
+  canLeaveCircle: boolean;
+  shouldShowLeaveButton: boolean;
+  circle: Circle;
+  userId: string;
+  userName: string;
+  membersCount: number;
 }
 
 export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
-  const { className, commonId, circleId, isMember, isPending, circleName } =
-    props;
-  const [membersCount, setMembersCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    className,
+    commonId,
+    circleId,
+    isMember,
+    isPending,
+    circleName,
+    canRequestToJoin,
+    canLeaveCircle,
+    shouldShowLeaveButton,
+    userId,
+    circle,
+    userName,
+    membersCount,
+  } = props;
+  const { onLeaveCircle, onJoinCircle } = useCommonDataContext();
 
   const ActionButton = useCallback(() => {
-    if (isMember) {
+    if (isMember && !shouldShowLeaveButton) {
+      return <></>;
+    }
+
+    if (isMember && canLeaveCircle && shouldShowLeaveButton) {
       return (
         <Button
           className={styles.actionButton}
           variant={ButtonVariant.OutlineBlue}
+          onClick={() => onLeaveCircle(commonId, userId, circle)}
         >
           Leave Circle
         </Button>
@@ -39,32 +64,29 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
       <Button
         className={styles.actionButton}
         variant={ButtonVariant.OutlineBlue}
+        disabled={!canRequestToJoin}
+        onClick={() =>
+          onJoinCircle(
+            {
+              args: {
+                commonId,
+                title: `Assign circle proposal for ${userName}`,
+                description: `Join circle request: ${circleName}`,
+                images: [],
+                links: [],
+                files: [],
+                circleId,
+                userId,
+              },
+            },
+            circleName,
+          )
+        }
       >
-        Join circle
+        Request to join
       </Button>
     );
-  }, [isMember, isPending]);
-
-  useEffect(() => {
-    if (!commonId || !circleId) {
-      return;
-    }
-
-    (async () => {
-      try {
-        const circleMemberCount =
-          await CommonService.getCircleMemberCountByCircleId({
-            commonId,
-            circleId,
-          });
-        setMembersCount(circleMemberCount);
-      } catch (e) {
-        Logger.error({ commonId, circleId, e });
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [commonId, circleId]);
+  }, [isMember, isPending, commonId, circleId, userId, circleName, userName]);
 
   return (
     <div className={classNames(styles.item, className)}>
@@ -76,14 +98,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
         >
           {circleName}
         </p>
-        <span className={styles.membersCount}>
-          {isLoading ? (
-            <Loader className={styles.membersCountLoader} />
-          ) : (
-            membersCount
-          )}{" "}
-          members
-        </span>
+        <span className={styles.membersCount}>{membersCount} members</span>
       </div>
       <ActionButton />
     </div>
