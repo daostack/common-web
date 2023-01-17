@@ -45,7 +45,7 @@
 .messageText {
   padding: 0.5rem 1rem;
   border-radius: 0.875rem;
-  background-color: #e0e3ff;
+  background-color: $c-chat-message;
   flex-direction: row;
   width: 85%;
   box-sizing: border-box;
@@ -56,13 +56,13 @@
 .messageName {
   font-size: $xsmall;
   font-weight: bold;
-  color: #001a36;
+  color: $secondary-blue;
   margin-bottom: 0.5rem;
 }
 
 .messageContent {
   font-size: $small;
-  color: #001a36;
+  color: $secondary-blue;
   word-wrap: break-word;
   white-space: pre-line;
 }
@@ -78,7 +78,7 @@
   font-size: $xxxsmall;
   font-weight: bold;
   color: $light-gray-2;
-  text-align: right;
+  text-align: left;
 }
 
 .editedTimeWrapper {

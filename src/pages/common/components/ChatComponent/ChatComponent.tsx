@@ -51,6 +51,7 @@ interface ChatComponentInterface {
   isHidden: boolean;
   proposal?: Proposal;
   discussion: Discussion;
+  titleHeight?: number;
 }
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
@@ -87,6 +88,7 @@ export default function ChatComponent({
   isHidden = false,
   proposal,
   discussion,
+  titleHeight = 0,
 }: ChatComponentInterface) {
   const intersectionRef = React.useRef(null);
   const replyDivRef = React.useRef(null);
@@ -263,8 +265,8 @@ export default function ChatComponent({
       return { height: `calc(100% - 48px)` };
     }
 
-    return { height: `calc(100% - ${90 + height}px)` };
-  }, [height, isTabletView]);
+    return { height: `calc(100% - ${52 + height}px - ${titleHeight}px)` };
+  }, [height, isTabletView, titleHeight]);
   const chatInputStyle = useMemo(() => ({ minHeight: 82 + height }), [height]);
 
   function scrollToRepliedMessage(messageId: string) {

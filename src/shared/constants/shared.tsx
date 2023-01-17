@@ -30,6 +30,7 @@ export const MAX_CONTRIBUTION_ILS_AMOUNT_IN_COMMON_CREATION = 500_00; // ₪500 
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {
   gray = "#92a2b5",
+  neutrals300 = "#979BBA",
   white = "#FFFFFF",
   black = "#000000",
   purple = "#7786ff",

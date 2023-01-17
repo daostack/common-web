@@ -12,6 +12,7 @@ import {
   ChatType,
   ViewportBreakpointVariant,
   NewCollaborationMenuItem,
+  Colors,
 } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -40,6 +41,7 @@ interface FeedTabProps {
 
 const HEADER_HEIGHT = 221;
 const BREADCRUMBS_HEIGHT = 64;
+const DISCUSSION_TITLE_PADDING_HEIGHT = 41;
 
 const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember, common } = props;
@@ -49,6 +51,7 @@ const FeedTab: FC<FeedTabProps> = (props) => {
     [commonMember],
   );
   const [chatColumnRef, { width: chatWidth }] = useMeasure();
+  const [chatTitleRef, { height: chatTitleHeight }] = useMeasure();
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
   const newCollaborationMenuItem = useSelector(selectNewCollaborationMenuItem);
@@ -83,12 +86,12 @@ const FeedTab: FC<FeedTabProps> = (props) => {
 
   const chatWrapperStyle = useMemo(
     () => ({
-      height: `calc(100vh - ${HEADER_HEIGHT + BREADCRUMBS_HEIGHT}px + 30px)`,
+      ...(chatItem && { border: `0.0625rem solid ${Colors.neutrals300}` }),
       maxWidth: chatWidth,
-      width: "100%",
+      marginBottom: "0.5rem",
       top: HEADER_HEIGHT + BREADCRUMBS_HEIGHT,
     }),
-    [chatWidth],
+    [chatWidth, chatItem],
   );
 
   const renderAdditionalColumn = () => (
@@ -98,21 +101,34 @@ const FeedTab: FC<FeedTabProps> = (props) => {
     >
       <div className={styles.chatWrapper} style={chatWrapperStyle}>
         {chatItem && (
-          <ChatComponent
-            commonMember={commonMember}
-            isCommonMemberFetched
-            isAuthorized={Boolean(user)}
-            type={
-              chatItem.proposal
-                ? ChatType.ProposalComments
-                : ChatType.DiscussionMessages
-            }
-            hasAccess={hasAccessToChat}
-            isHidden={false}
-            common={common}
-            discussion={chatItem.discussion}
-            proposal={chatItem.proposal}
-          />
+          <>
+            <p
+              className={styles.chatDiscussionTitle}
+              ref={chatTitleRef as LegacyRef<HTMLParagraphElement>}
+            >
+              {chatItem.discussion.title}
+            </p>
+            <ChatComponent
+              commonMember={commonMember}
+              isCommonMemberFetched
+              isAuthorized={Boolean(user)}
+              type={
+                chatItem.proposal
+                  ? ChatType.ProposalComments
+                  : ChatType.DiscussionMessages
+              }
+              hasAccess={hasAccessToChat}
+              isHidden={false}
+              common={common}
+              discussion={chatItem.discussion}
+              proposal={chatItem.proposal}
+              titleHeight={
+                chatTitleHeight
+                  ? chatTitleHeight + DISCUSSION_TITLE_PADDING_HEIGHT
+                  : 0
+              }
+            />
+          </>
         )}
       </div>
     </div>
