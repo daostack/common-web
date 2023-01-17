@@ -9,14 +9,19 @@ interface FeedItemProps {
   commonId: string;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
+  isMobileVersion?: boolean;
 }
 
 const FeedItem: FC<FeedItemProps> = (props) => {
-  const { commonId, item, governanceCircles } = props;
+  const { commonId, item, governanceCircles, isMobileVersion = false } = props;
 
   if (item.data.type === CommonFeedType.Discussion) {
     return (
-      <DiscussionFeedCard item={item} governanceCircles={governanceCircles} />
+      <DiscussionFeedCard
+        item={item}
+        governanceCircles={governanceCircles}
+        isMobileVersion={isMobileVersion}
+      />
     );
   }
   if (item.data.type === CommonFeedType.Proposal) {

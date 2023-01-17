@@ -1,14 +1,11 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { CommonTab } from "@/pages/common/constants";
-import {
-  NewCollaborationMenuItem,
-  ViewportBreakpointVariant,
-} from "@/shared/constants";
+import { CommonAction, ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
-import { selectNewCollaborationMenuItem } from "@/store/states";
+import { selectCommonAction } from "@/store/states";
 import { TabNavigation } from "../TabNavigation";
 import {
   FeedActions,
@@ -27,14 +24,12 @@ interface FeedTabProps {
 const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember } = props;
   const isTabletView = useIsTabletView();
-  const newCollaborationMenuItem = useSelector(selectNewCollaborationMenuItem);
-  const allowedFeedActions = !newCollaborationMenuItem
-    ? [FeedAction.NewCollaboration]
-    : [];
+  const commonAction = useSelector(selectCommonAction);
+  const allowedFeedActions = !commonAction ? [FeedAction.NewCollaboration] : [];
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
-      {newCollaborationMenuItem === NewCollaborationMenuItem.NewDiscussion && (
+      {commonAction === CommonAction.NewDiscussion && (
         <NewDiscussionCreation
           governanceCircles={governance.circles}
           commonMember={commonMember}

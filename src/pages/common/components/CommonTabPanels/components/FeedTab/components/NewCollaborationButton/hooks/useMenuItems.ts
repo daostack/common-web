@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { NewCollaborationMenuItem } from "@/shared/constants";
+import { CommonAction } from "@/shared/constants";
 import { MenuItem as Item } from "@/shared/interfaces";
 import { commonActions } from "@/store/states";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
@@ -10,35 +10,35 @@ export const useMenuItems = (options: Options): Item[] => {
   const dispatch = useDispatch();
   const allowedMenuItems = getAllowedItems(options);
 
-  const setMenuItem = (menuItem: NewCollaborationMenuItem) => {
-    dispatch(commonActions.setNewCollaborationMenuItem(menuItem));
+  const setMenuItem = (menuItem: CommonAction) => {
+    dispatch(commonActions.setCommonAction(menuItem));
   };
 
   const items: Item[] = [
     {
-      id: NewCollaborationMenuItem.NewProposal,
+      id: CommonAction.NewProposal,
       text: "New Proposal",
       onClick: () => {
-        setMenuItem(NewCollaborationMenuItem.NewProposal);
+        setMenuItem(CommonAction.NewProposal);
       },
     },
     {
-      id: NewCollaborationMenuItem.NewDiscussion,
+      id: CommonAction.NewDiscussion,
       text: "New Discussion",
       onClick: () => {
-        setMenuItem(NewCollaborationMenuItem.NewDiscussion);
+        setMenuItem(CommonAction.NewDiscussion);
       },
     },
     {
-      id: NewCollaborationMenuItem.NewContribution,
+      id: CommonAction.NewContribution,
       text: "New Contribution",
       onClick: () => {
-        setMenuItem(NewCollaborationMenuItem.NewContribution);
+        setMenuItem(CommonAction.NewContribution);
       },
     },
   ];
 
   return items.filter((item) =>
-    allowedMenuItems.includes(item.id as NewCollaborationMenuItem),
+    allowedMenuItems.includes(item.id as CommonAction),
   );
 };
