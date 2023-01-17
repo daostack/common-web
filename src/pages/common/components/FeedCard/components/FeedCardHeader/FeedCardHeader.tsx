@@ -2,6 +2,8 @@ import React from "react";
 import classNames from "classnames";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { MenuButton, UserAvatar } from "@/shared/components";
+import { MenuItem } from "@/shared/interfaces";
+import { DesktopMenu } from "@/shared/ui-kit";
 import styles from "./FeedCardHeader.module.scss";
 
 export interface FeedCardHeaderProps {
@@ -10,6 +12,8 @@ export interface FeedCardHeaderProps {
   createdAt: string;
   type: string;
   circleVisibility?: string;
+  menuItems?: MenuItem[];
+  isMobileVersion?: boolean;
 }
 
 export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
@@ -19,6 +23,8 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
     createdAt,
     type,
     circleVisibility,
+    menuItems = [],
+    isMobileVersion = false,
   } = props;
 
   return (
@@ -47,7 +53,12 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
             </p>
           )}
         </div>
-        <MenuButton className={styles.threeDotMenu} />
+        {!isMobileVersion && menuItems.length > 0 && (
+          <DesktopMenu
+            triggerEl={<MenuButton className={styles.threeDotMenu} />}
+            items={menuItems}
+          />
+        )}
       </div>
     </div>
   );

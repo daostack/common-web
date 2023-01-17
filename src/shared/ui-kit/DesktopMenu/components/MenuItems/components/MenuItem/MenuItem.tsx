@@ -14,7 +14,7 @@ import styles from "./MenuItem.module.scss";
 
 interface MenuItemProps {
   item: Item;
-  active: boolean;
+  active?: boolean;
   // This is passed by Menu.Item and we should call it if we override onClick
   onClick?: MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
 }
@@ -22,7 +22,7 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
   props,
   ref,
 ) => {
-  const { item, active, ...restProps } = props;
+  const { item, active = false, ...restProps } = props;
   const content = item.text;
   const className = classNames(styles.item, item.className, {
     [styles.itemActive]: active,

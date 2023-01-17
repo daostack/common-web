@@ -367,7 +367,7 @@ export const createVote = createAsyncAction(
   PayloadWithCallback<
     {
       votePayload: CreateVotePayload;
-      proposalVotes: CalculatedVotes;
+      proposalVotes?: CalculatedVotes;
       shouldWaitForVoteToBeApplied?: boolean;
     },
     Vote,
