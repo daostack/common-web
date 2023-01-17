@@ -29,6 +29,10 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   } = useCountdown();
   const expirationTimestamp =
     proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
+  const votersString = getVotersString(
+    proposal.global.weights,
+    governanceCircles,
+  );
   const votingStatus = calculateVotingStatus(proposal);
 
   useLayoutEffect(() => {
@@ -56,8 +60,11 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
         </ModalTriggerButton>
       </VotingInfo>
       <VotingInfo label="Voters">
-        <p className={classNames(styles.text, styles.voters)}>
-          {getVotersString(proposal.global.weights, governanceCircles)}
+        <p
+          className={classNames(styles.text, styles.voters)}
+          title={votersString}
+        >
+          {votersString}
         </p>
       </VotingInfo>
       <VotingInfo label="Status">

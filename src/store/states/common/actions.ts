@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { CreateDiscussionDto } from "@/pages/OldCommon/interfaces";
-import { NewCollaborationMenuItem } from "@/shared/constants";
+import { CommonAction } from "@/shared/constants";
 import {
   NewDiscussionCreationFormValues,
   PayloadWithOptionalCallback,
@@ -15,9 +15,9 @@ export const resetCommon = createStandardAction(
   CommonActionType.RESET_COMMON,
 )();
 
-export const setNewCollaborationMenuItem = createStandardAction(
-  CommonActionType.SET_NEW_COLLABORATION_MENU_ITEM,
-)<NewCollaborationMenuItem | null>();
+export const setCommonAction = createStandardAction(
+  CommonActionType.SET_COMMON_ACTION,
+)<CommonAction | null>();
 
 export const setDiscussionCreationData = createStandardAction(
   CommonActionType.SET_DISCUSSION_CREATION_DATA,

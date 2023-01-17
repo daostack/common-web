@@ -35,14 +35,17 @@ export const ProposalFeedButtonContainer: FC<
     <>
       <div className={styles.container}>
         <VoteButton
+          className={styles.buttonApprove}
           voteOutcome={VoteOutcome.Approved}
           onClick={handleVoteButtonClick}
         />
         <VoteButton
+          className={styles.buttonAbstain}
           voteOutcome={VoteOutcome.Abstained}
           onClick={handleVoteButtonClick}
         />
         <VoteButton
+          className={styles.buttonReject}
           voteOutcome={VoteOutcome.Rejected}
           onClick={handleVoteButtonClick}
         />

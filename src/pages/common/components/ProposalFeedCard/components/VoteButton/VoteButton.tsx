@@ -6,6 +6,7 @@ import { Button } from "@/shared/ui-kit";
 import styles from "./VoteButton.module.scss";
 
 interface VoteButtonProps {
+  className?: string;
   voteOutcome: VoteOutcome;
   onClick?: (voteOutcome: VoteOutcome) => void;
 }
@@ -17,13 +18,13 @@ const VOTE_OUTCOME_TO_TEXT_MAP: Record<VoteOutcome, string> = {
 };
 
 const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
-  [VoteOutcome.Approved]: <VoteFor />,
-  [VoteOutcome.Abstained]: <VoteAbstain />,
-  [VoteOutcome.Rejected]: <VoteAgainst />,
+  [VoteOutcome.Approved]: <VoteFor className={styles.icon} />,
+  [VoteOutcome.Abstained]: <VoteAbstain className={styles.icon} />,
+  [VoteOutcome.Rejected]: <VoteAgainst className={styles.icon} />,
 };
 
 export const VoteButton: React.FC<VoteButtonProps> = (props) => {
-  const { voteOutcome, onClick } = props;
+  const { className, voteOutcome, onClick } = props;
 
   const handleClick = () => {
     if (onClick) {
@@ -33,11 +34,15 @@ export const VoteButton: React.FC<VoteButtonProps> = (props) => {
 
   return (
     <Button
-      className={classNames(styles.button, {
-        [styles.approveButton]: VoteOutcome.Approved === voteOutcome,
-        [styles.abstainButton]: VoteOutcome.Abstained === voteOutcome,
-        [styles.rejectButton]: VoteOutcome.Rejected === voteOutcome,
-      })}
+      className={classNames(
+        styles.button,
+        {
+          [styles.approveButton]: VoteOutcome.Approved === voteOutcome,
+          [styles.abstainButton]: VoteOutcome.Abstained === voteOutcome,
+          [styles.rejectButton]: VoteOutcome.Rejected === voteOutcome,
+        },
+        className,
+      )}
       onClick={handleClick}
     >
       <p
