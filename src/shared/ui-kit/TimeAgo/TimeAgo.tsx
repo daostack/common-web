@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { getTimeAgo } from "@/shared/utils";
 
-export interface LastActivityProps {
+export interface TimeAgoProps {
   milliseconds: number;
 }
 
@@ -12,7 +12,7 @@ const getInterval = (milliseconds: number): number => {
   return isLastHour ? 20000 : 0;
 };
 
-const LastActivity: FC<LastActivityProps> = (props) => {
+const TimeAgo: FC<TimeAgoProps> = (props) => {
   const { milliseconds } = props;
   const [formattedTime, setFormattedTime] = useState(() =>
     getTimeAgo(milliseconds, { withFormattedTime: false }),
@@ -47,4 +47,4 @@ const LastActivity: FC<LastActivityProps> = (props) => {
   );
 };
 
-export default LastActivity;
+export default TimeAgo;

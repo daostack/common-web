@@ -141,12 +141,10 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
         description={proposal.data.args.description}
       >
-        {isCountdownState && (
-          <ProposalFeedVotingInfo
-            proposal={proposal}
-            governanceCircles={governanceCircles}
-          />
-        )}
+        <ProposalFeedVotingInfo
+          proposal={proposal}
+          governanceCircles={governanceCircles}
+        />
         {isVotingAllowed && (
           <ProposalFeedButtonContainer
             proposalId={proposal.id}

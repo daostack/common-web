@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { MessageIcon } from "@/shared/icons";
-import { LastActivity } from "../LastActivity";
+import { TimeAgo } from "@/shared/ui-kit";
 import styles from "./FeedCardFooter.module.scss";
 
 export interface FeedCardFooterProps {
@@ -25,7 +25,7 @@ export const FeedCardFooter: React.FC<FeedCardFooterProps> = ({
       </div>
       <div className={styles.rightContent}>
         <p className={classNames(styles.text, styles.lastActivity)}>
-          Last Activity: <LastActivity milliseconds={lastActivity} />
+          Last Activity: <TimeAgo milliseconds={lastActivity} />
         </p>
         {unreadMessages && (
           <div className={styles.unreadMessages}>{unreadMessages}</div>
