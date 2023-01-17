@@ -85,10 +85,12 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
               imageURL={subCommon.image}
               imageAlt={`${subCommon.name}'s image`}
               tooltipContent={
-                <ProjectTooltipContent
-                  title={subCommon.name}
-                  description={subCommon.byline}
-                />
+                !isTabletView ? (
+                  <ProjectTooltipContent
+                    title={subCommon.name}
+                    description={subCommon.byline}
+                  />
+                ) : null
               }
             />
           </li>
