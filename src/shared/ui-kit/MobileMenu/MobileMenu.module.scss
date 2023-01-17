@@ -3,6 +3,7 @@
   right: 0;
   bottom: var(--safe-area-inset-bottom);
   left: 0;
+  z-index: 2;
   padding: 0 0.5rem;
   display: flex;
   justify-content: center;
