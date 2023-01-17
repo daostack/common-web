@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import firebase from "firebase/app";
 import { TimeAgo } from "@/shared/ui-kit";
+import styles from "./Countdown.module.scss";
 
 interface CountdownProps {
   timer: string;
@@ -18,7 +19,12 @@ const Countdown: FC<CountdownProps> = (props) => {
     return null;
   }
 
-  return <TimeAgo milliseconds={expirationTimestamp.seconds * 1000} />;
+  return (
+    <TimeAgo
+      className={styles.timeAgo}
+      milliseconds={expirationTimestamp.seconds * 1000}
+    />
+  );
 };
 
 export default Countdown;

@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { getTimeAgo } from "@/shared/utils";
 
 export interface TimeAgoProps {
+  className?: string;
   milliseconds: number;
 }
 
@@ -13,7 +14,7 @@ const getInterval = (milliseconds: number): number => {
 };
 
 const TimeAgo: FC<TimeAgoProps> = (props) => {
-  const { milliseconds } = props;
+  const { className, milliseconds } = props;
   const [formattedTime, setFormattedTime] = useState(() =>
     getTimeAgo(milliseconds, { withFormattedTime: false }),
   );
@@ -41,7 +42,10 @@ const TimeAgo: FC<TimeAgoProps> = (props) => {
   }, [milliseconds]);
 
   return (
-    <span title={`${date.toDateString()} ${date.toTimeString()}`}>
+    <span
+      className={className}
+      title={`${date.toDateString()} ${date.toTimeString()}`}
+    >
       {formattedTime}
     </span>
   );
