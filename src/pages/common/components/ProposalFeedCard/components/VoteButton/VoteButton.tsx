@@ -8,6 +8,7 @@ import styles from "./VoteButton.module.scss";
 interface VoteButtonProps {
   className?: string;
   voteOutcome: VoteOutcome;
+  onClick?: (voteOutcome: VoteOutcome) => void;
 }
 
 const VOTE_OUTCOME_TO_TEXT_MAP: Record<VoteOutcome, string> = {
@@ -23,7 +24,13 @@ const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
 };
 
 export const VoteButton: React.FC<VoteButtonProps> = (props) => {
-  const { className, voteOutcome } = props;
+  const { className, voteOutcome, onClick } = props;
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick(voteOutcome);
+    }
+  };
 
   return (
     <Button
@@ -36,6 +43,7 @@ export const VoteButton: React.FC<VoteButtonProps> = (props) => {
         },
         className,
       )}
+      onClick={handleClick}
     >
       <p
         className={classNames(styles.buttonText, {

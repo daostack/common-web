@@ -147,7 +147,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
             governanceCircles={governanceCircles}
           />
         )}
-        {isVotingAllowed && <ProposalFeedButtonContainer />}
+        {isVotingAllowed && (
+          <ProposalFeedButtonContainer
+            proposalId={proposal.id}
+            onVoteCreate={setVote}
+          />
+        )}
         <UserVoteInfo
           userVote={userVote}
           userHasPermissionsToVote={userHasPermissionsToVote}
