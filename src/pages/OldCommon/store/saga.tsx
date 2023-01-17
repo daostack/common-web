@@ -1050,7 +1050,7 @@ export function* createVote({
     yield put(startLoading());
     const vote = (yield createVoteApi(votePayload)) as Vote;
 
-    if (shouldWaitForVoteToBeApplied) {
+    if (shouldWaitForVoteToBeApplied && proposalVotes) {
       yield call(async () => {
         await waitForVoteToBeApplied(
           vote.commonId,
