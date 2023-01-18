@@ -15,4 +15,3 @@ export * from "./TextEditor";
 export * from "./Tooltip";
 export * from "./TopNavigation";
 export * from "./UploadFiles";
-export * from "./MobileModal";

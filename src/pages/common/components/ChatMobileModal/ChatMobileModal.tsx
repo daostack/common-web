@@ -6,9 +6,9 @@ import { ArrowBackIcon } from "@/shared/icons";
 import CloseIcon from "@/shared/icons/close.icon";
 import { Common } from "@/shared/models";
 import { emptyFunction } from "@/shared/utils";
-import styles from "./MobileModal.module.scss";
+import styles from "./ChatMobileModal.module.scss";
 
-interface MobileModalProps {
+interface ChatMobileModalProps {
   title?: string;
   isShowing: boolean;
   hasCloseIcon?: boolean;
@@ -24,7 +24,7 @@ const TITLE_PADDING_SIZE = 40;
 const HEADER_HEIGHT = 38;
 const MODAL_TOP_PADDING = 24;
 
-const MobileModal: FC<MobileModalProps> = (props) => {
+const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
   const {
     isShowing,
     hasCloseIcon,
@@ -102,4 +102,4 @@ const MobileModal: FC<MobileModalProps> = (props) => {
   );
 };
 
-export default MobileModal;
+export default ChatMobileModal;

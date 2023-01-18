@@ -118,7 +118,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         circleVisibility: item.circleVisibility,
       });
     }
-  }, [proposal, discussion, item]);
+  }, [proposal, discussion, setChatItem, item.circleVisibility]);
 
   if (isLoading) {
     return <LoadingFeedCard />;

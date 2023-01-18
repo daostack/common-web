@@ -2,6 +2,7 @@ import React, { FC, LegacyRef, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useMeasure } from "react-use";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { ChatMobileModal } from "@/pages/common/components";
 import {
   ChatComponent,
   ChatContext,
@@ -21,7 +22,7 @@ import {
   CommonMember,
   Governance,
 } from "@/shared/models";
-import { Container, MobileModal } from "@/shared/ui-kit";
+import { Container } from "@/shared/ui-kit";
 import { selectNewCollaborationMenuItem } from "@/store/states";
 import { TabNavigation } from "../TabNavigation";
 import {
@@ -137,7 +138,7 @@ const FeedTab: FC<FeedTabProps> = (props) => {
   const renderMobileColumn = () => (
     <div className={styles.mainColumnWrapper}>
       <FeedItems />
-      <MobileModal
+      <ChatMobileModal
         isShowing={Boolean(chatItem)}
         hasBackButton
         onClose={() => {
@@ -159,7 +160,7 @@ const FeedTab: FC<FeedTabProps> = (props) => {
             proposal={chatItem.proposal}
           />
         )}
-      </MobileModal>
+      </ChatMobileModal>
     </div>
   );
 
