@@ -1,28 +1,26 @@
-import { NewCollaborationMenuItem, ROUTE_PATHS } from "@/shared/constants";
+import { CommonAction, ROUTE_PATHS } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { BreadcrumbItem } from "@/shared/ui-kit";
 import { CommonTab } from "../../../constants";
 import { getCommonTabName } from "../../../utils";
 
-const NEW_COLLABORATION_ITEM_TO_TEXT_MAP: Record<
-  NewCollaborationMenuItem,
-  string
-> = {
-  [NewCollaborationMenuItem.NewProposal]: "New proposal",
-  [NewCollaborationMenuItem.NewDiscussion]: "New discussion",
-  [NewCollaborationMenuItem.NewContribution]: "New contribution",
+const COMMON_ACTION_TO_TEXT_MAP: Record<CommonAction, string> = {
+  [CommonAction.NewProposal]: "New proposal",
+  [CommonAction.NewDiscussion]: "New discussion",
+  [CommonAction.EditDiscussion]: "Edit discussion",
+  [CommonAction.NewContribution]: "New contribution",
 };
 
 export const getBreadcrumbItems = ({
   activeTab,
   common,
   parentCommons,
-  newCollaborationMenuItem,
+  commonAction,
 }: {
   activeTab: CommonTab;
   common: Common;
   parentCommons: Common[];
-  newCollaborationMenuItem: NewCollaborationMenuItem | null;
+  commonAction: CommonAction | null;
 }): BreadcrumbItem[] => {
   const items: BreadcrumbItem[] = parentCommons
     .map<BreadcrumbItem>((parentCommon) => ({
@@ -32,9 +30,9 @@ export const getBreadcrumbItems = ({
     }))
     .concat({ text: common.name }, { text: getCommonTabName(activeTab) });
 
-  if (newCollaborationMenuItem && activeTab === CommonTab.Feed) {
+  if (commonAction && activeTab === CommonTab.Feed) {
     items.push({
-      text: NEW_COLLABORATION_ITEM_TO_TEXT_MAP[newCollaborationMenuItem],
+      text: COMMON_ACTION_TO_TEXT_MAP[commonAction],
     });
   }
 

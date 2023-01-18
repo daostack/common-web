@@ -1,4 +1,4 @@
-import { NewCollaborationMenuItem } from "@/shared/constants";
+import { CommonAction } from "@/shared/constants";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
 import firebase from "@/shared/utils/firebase";
@@ -13,7 +13,7 @@ export interface FeedItems {
 
 export interface CommonState {
   feedItems: FeedItems;
-  newCollaborationMenuItem: NewCollaborationMenuItem | null;
+  commonAction: CommonAction | null;
   discussionCreation: {
     data: NewDiscussionCreationFormValues | null;
     loading: boolean;

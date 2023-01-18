@@ -22,9 +22,9 @@ const VOTE_OUTCOME_TO_TEXT_MAP: Record<VoteOutcome, string> = {
 };
 
 const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
-  [VoteOutcome.Approved]: <VoteFor />,
-  [VoteOutcome.Abstained]: <VoteAbstain />,
-  [VoteOutcome.Rejected]: <VoteAgainst />,
+  [VoteOutcome.Approved]: <VoteFor className={styles.icon} />,
+  [VoteOutcome.Abstained]: <VoteAbstain className={styles.icon} />,
+  [VoteOutcome.Rejected]: <VoteAgainst className={styles.icon} />,
 };
 
 export const UserVoteInfo: FC<UserVoteInfoProps> = (props) => {

@@ -1,7 +1,4 @@
-import {
-  GovernanceActions,
-  NewCollaborationMenuItem,
-} from "@/shared/constants";
+import { GovernanceActions, CommonAction } from "@/shared/constants";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
 
@@ -10,11 +7,16 @@ export interface GetAllowedItemsOptions {
   governance: Pick<Governance, "circles">;
 }
 
+type NewCollaborationMenuItems =
+  | CommonAction.NewProposal
+  | CommonAction.NewDiscussion
+  | CommonAction.NewContribution;
+
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
-  NewCollaborationMenuItem,
+  NewCollaborationMenuItems,
   (options: GetAllowedItemsOptions) => boolean
 > = {
-  [NewCollaborationMenuItem.NewProposal]: ({ commonMember, governance }) =>
+  [CommonAction.NewProposal]: ({ commonMember, governance }) =>
     Boolean(
       commonMember &&
         hasPermission({
@@ -23,7 +25,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
           key: GovernanceActions.CREATE_PROPOSAL,
         }),
     ),
-  [NewCollaborationMenuItem.NewDiscussion]: ({ commonMember, governance }) =>
+  [CommonAction.NewDiscussion]: ({ commonMember, governance }) =>
     Boolean(
       commonMember &&
         hasPermission({
@@ -32,7 +34,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
           key: GovernanceActions.CREATE_DISCUSSION,
         }),
     ),
-  [NewCollaborationMenuItem.NewContribution]: ({ commonMember, governance }) =>
+  [CommonAction.NewContribution]: ({ commonMember, governance }) =>
     Boolean(
       commonMember &&
         hasPermission({
@@ -45,11 +47,11 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
 
 export const getAllowedItems = (
   options: GetAllowedItemsOptions,
-): NewCollaborationMenuItem[] => {
-  const orderedItems = [
-    NewCollaborationMenuItem.NewProposal,
-    NewCollaborationMenuItem.NewDiscussion,
-    NewCollaborationMenuItem.NewContribution,
+): CommonAction[] => {
+  const orderedItems: NewCollaborationMenuItems[] = [
+    CommonAction.NewProposal,
+    CommonAction.NewDiscussion,
+    CommonAction.NewContribution,
   ];
 
   return orderedItems.filter((item) =>
