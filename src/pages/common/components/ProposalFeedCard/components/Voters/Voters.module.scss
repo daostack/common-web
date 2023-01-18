@@ -1,0 +1,9 @@
+@import "../../../../../../constants";
+
+.popoverContent {
+  max-width: 20rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: $c-shades-white;
+}

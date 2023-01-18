@@ -1,6 +1,7 @@
 @import "../../../../../../../../constants";
 
 .voters {
+  width: 100%;
   margin: 0;
   padding: 0;
   display: flex;
@@ -18,5 +19,5 @@
 
 .noVotesText {
   margin: 0;
-  padding: 0.5rem 1rem;
+  padding: 0.8125rem 1rem;
 }

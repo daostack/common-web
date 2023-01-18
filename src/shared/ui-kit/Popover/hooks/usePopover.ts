@@ -16,6 +16,7 @@ export const usePopover = (options: PopoverOptions = {}) => {
   const {
     initialOpen = false,
     placement,
+    fallbackStrategy,
     modal = true,
     open: controlledOpen,
     onOpenChange: setControlledOpen,
@@ -35,7 +36,7 @@ export const usePopover = (options: PopoverOptions = {}) => {
     middleware: [
       offset(5),
       flip({
-        fallbackStrategy: "bestFit",
+        fallbackStrategy: fallbackStrategy ?? "bestFit",
       }),
       shift({ padding: 5 }),
     ],
