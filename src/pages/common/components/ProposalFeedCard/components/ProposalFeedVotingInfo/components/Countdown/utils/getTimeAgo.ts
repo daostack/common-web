@@ -7,7 +7,14 @@ export const getTimeAgo = (milliseconds: number): string => {
   const today = moment();
   const isToday = today.isSame(date, "day");
 
-  return isToday
-    ? `${formatDate(date, DateFormat.GeneralTime)} today`
+  if (isToday) {
+    return formatDate(date, DateFormat.GeneralTime);
+  }
+
+  const yesterday = moment().subtract(1, "day");
+  const isYesterday = yesterday.isSame(date, "day");
+
+  return isYesterday
+    ? "yesterday"
     : formatDate(date, DateFormat.ShortSecondary);
 };
