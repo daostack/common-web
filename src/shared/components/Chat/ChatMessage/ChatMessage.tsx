@@ -44,6 +44,7 @@ export default function ChatMessage({
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
   const editedAtDate = new Date(discussionMessage.editedAt?.seconds * 1000);
 
+  const isNotCurrentUserMessage = user?.uid !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
 
   const ReplyMessage = useCallback(() => {
@@ -78,14 +79,20 @@ export default function ChatMessage({
       id={discussionMessage.id}
       className={classNames(styles.container, className, { highlighted })}
     >
-      <div className={styles.message}>
-        <div className={styles.iconWrapper}>
-          <UserAvatar
-            photoURL={discussionMessage.owner?.photoURL}
-            nameForRandomAvatar={discussionMessage.owner?.email}
-            userName={getUserName(discussionMessage.owner)}
-          />
-        </div>
+      <div
+        className={classNames(styles.message, {
+          [styles.messageCurrentUser]: !isNotCurrentUserMessage,
+        })}
+      >
+        {isNotCurrentUserMessage && (
+          <div className={styles.iconWrapper}>
+            <UserAvatar
+              photoURL={discussionMessage.owner?.photoURL}
+              nameForRandomAvatar={discussionMessage.owner?.email}
+              userName={getUserName(discussionMessage.owner)}
+            />
+          </div>
+        )}
         {isEditMode ? (
           <EditMessageInput
             isProposalMessage={chatType === ChatType.ProposalComments}
@@ -93,11 +100,17 @@ export default function ChatMessage({
             onClose={() => setEditMode(false)}
           />
         ) : (
-          <div className={styles.messageText}>
+          <div
+            className={classNames(styles.messageText, {
+              [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
+            })}
+          >
             <ReplyMessage />
-            <div className={styles.messageName}>
-              {getUserName(discussionMessage.owner)}
-            </div>
+            {isNotCurrentUserMessage && (
+              <div className={styles.messageName}>
+                {getUserName(discussionMessage.owner)}
+              </div>
+            )}
             <div className={styles.messageContent}>
               <Linkify>{discussionMessage.text}</Linkify>
               <div className={styles.timeWrapperContainer}>
@@ -121,6 +134,9 @@ export default function ChatMessage({
                   className={classNames(
                     styles.timeWrapper,
                     styles.creationTimeWrapper,
+                    {
+                      [styles.timeWrapperEdited]: isEdited,
+                    },
                   )}
                 >
                   {createdAtDate.toLocaleTimeString([], {

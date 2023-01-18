@@ -115,8 +115,6 @@ export default function ChatComponent({
     linkHighlightedMessageId,
   );
 
-  console.log("---discussionMessages", discussionMessages);
-
   useEffect(() => {
     if (discussionId) {
       fetchDiscussionMessages(discussionId);

@@ -13,6 +13,10 @@
   max-width: 25rem;
 }
 
+.messageCurrentUser {
+  justify-content: flex-end;
+}
+
 .iconWrapper {
   flex-shrink: 0;
   width: 2rem;
@@ -53,6 +57,10 @@
   text-align: start;
 }
 
+.messageTextCurrentUser {
+  background-color: $c-neutrals-200;
+}
+
 .messageName {
   font-size: $xsmall;
   font-weight: bold;
@@ -79,6 +87,10 @@
   font-weight: bold;
   color: $light-gray-2;
   text-align: left;
+}
+
+.timeWrapperEdited {
+  text-align: right;
 }
 
 .editedTimeWrapper {

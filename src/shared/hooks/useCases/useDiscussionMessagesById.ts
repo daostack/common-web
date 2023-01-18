@@ -2,8 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DiscussionMessageService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
-import { DiscussionMessage } from "@/shared/models";
+import { DiscussionMessage, User } from "@/shared/models";
 import { cacheActions, selectDiscussionMessagesStateByDiscussionId } from "@/store/states";
+import { fetchOwners } from "@/pages/OldCommon/store/api";
+import { isEqual, xor } from "lodash";
 
 type State = LoadingState<DiscussionMessage[] | null>;
 
@@ -22,8 +24,11 @@ export const useDiscussionMessagesById = (): Return => {
   const dispatch = useDispatch();
   const [currentDiscussionId, setCurrentDiscussionId] = useState("");
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
+  const [messageOwners, setMessageOwners] = useState<User[]>([]);
+  const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
   const state =
     useSelector(selectDiscussionMessagesStateByDiscussionId(currentDiscussionId)) || defaultState;
+  const [discussionMessagesWithOwners, setDiscussionMessagesWithOwners] = useState<any>();
 
   const fetchDiscussionMessages = useCallback(
     (discussionId: string) => {
@@ -37,6 +42,49 @@ export const useDiscussionMessagesById = (): Return => {
     },
     [dispatch],
   );
+
+  const fetchMessageOwners = async (ids: string[]): Promise<User[]> => {
+    if(isEqual(messageOwnersIds, ids)) {
+      return [...messageOwners];
+    }
+    const newOwnerIds = xor(messageOwnersIds, ids);
+    const owners = await fetchOwners(newOwnerIds) as User[];
+    setMessageOwnersIds(ids);
+    setMessageOwners([...messageOwners, ...owners]);
+    return owners;
+  }
+
+  useEffect(() => {
+    if(!state.data?.length) {
+      return;
+    }
+
+    (async () => {
+      const discussionMessages = [...(state.data || [])];
+      const ownerIds = Array.from(
+        new Set(discussionMessages?.map((d) => d.ownerId)),
+      ) as string[];
+      const owners = await fetchMessageOwners(ownerIds);
+    
+      const loadedDiscussionMessages = discussionMessages.map((d) => {
+          const newDiscussionMessage = { ...d };
+          const parentMessage = discussionMessages.find(
+            ({ id }) => id === d.parentId,
+          );
+          newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+          newDiscussionMessage.parentMessage = parentMessage
+            ? {
+                id: parentMessage.id,
+                text: parentMessage.text,
+                ownerName: parentMessage?.ownerName,
+              }
+            : null;
+          return newDiscussionMessage;
+        });
+
+        setDiscussionMessagesWithOwners(loadedDiscussionMessages);
+    })();
+  },[state.data, messageOwnersIds, messageOwners]);
 
   const setDiscussionMessages = useCallback(
     (discussionMessages: DiscussionMessage[] | null) => {
@@ -86,6 +134,7 @@ export const useDiscussionMessagesById = (): Return => {
 
   return {
     ...state,
+    data: discussionMessagesWithOwners,
     fetchDiscussionMessages,
     setDiscussionMessages,
   };
