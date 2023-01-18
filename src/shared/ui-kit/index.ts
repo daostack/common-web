@@ -8,6 +8,7 @@ export * from "./Footer";
 export * from "./Loader";
 export * from "./MobileMenu";
 export * from "./NotFound";
+export * from "./Popover";
 export * from "./Portal";
 export * from "./Sidenav";
 export * from "./Tags";
