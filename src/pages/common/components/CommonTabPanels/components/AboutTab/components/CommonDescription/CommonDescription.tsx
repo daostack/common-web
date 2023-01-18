@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { Image, Linkify } from "@/shared/components";
+import { ImageGallery, Linkify } from "@/shared/components";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useFullText } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -54,12 +54,7 @@ const CommonDescription: FC<CommonDescriptionProps> = (props) => {
             <Tags tags={tags} />
           </div>
         )}
-        <Image
-          className={styles.commonImage}
-          src={common.image}
-          alt={`${common.name}'s image`}
-          placeholderElement={null}
-        />
+        <ImageGallery gallery={common.gallery} videoSrc={common.video?.value} />
         <CommonLinks className={styles.commonLinks} links={common.links} />
       </CommonCard>
     </Container>

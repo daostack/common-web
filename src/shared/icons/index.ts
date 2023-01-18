@@ -31,3 +31,4 @@ export { default as MessageIcon } from "./message.icon";
 export { default as VoteAgainst } from "./voteAgainst.icon";
 export { default as VoteFor } from "./voteFor.icon";
 export { default as VoteAbstain } from "./voteAbstain.icon";
+export { default as ArrowBackIcon } from "./arrowBack.icon";
