@@ -40,3 +40,4 @@ export * from "./TutorialModal";
 export * from "./SupportShare";
 export * from "./BackgroundNotificationModal";
 export * from "./Chat";
+export * from "./ReportModal";

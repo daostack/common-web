@@ -15,7 +15,7 @@ const initialFeedItems: FeedItems = {
 
 const initialState: CommonState = {
   feedItems: { ...initialFeedItems },
-  newCollaborationMenuItem: null,
+  commonAction: null,
   discussionCreation: {
     data: null,
     loading: false,
@@ -24,9 +24,9 @@ const initialState: CommonState = {
 
 export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.resetCommon, () => ({ ...initialState }))
-  .handleAction(actions.setNewCollaborationMenuItem, (state, { payload }) =>
+  .handleAction(actions.setCommonAction, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.newCollaborationMenuItem = payload;
+      nextState.commonAction = payload;
     }),
   )
   .handleAction(actions.setDiscussionCreationData, (state, { payload }) =>

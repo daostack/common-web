@@ -38,7 +38,10 @@ class CommonService {
     }
 
     const queries: firebase.firestore.Query[] = [];
-    const config = firebase.firestore().collection(Collection.Daos);
+    const config = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE);
 
     // Firebase allows to use at most 10 items per query for `in` option
     for (let i = 0; i < ids.length; i += 10) {
@@ -59,7 +62,10 @@ class CommonService {
     }
 
     const queries: firebase.firestore.Query[] = [];
-    const config = firebase.firestore().collection(Collection.Daos);
+    const config = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE);
 
     // Firebase allows to use at most 10 items per query for `in` option
     for (let i = 0; i < ids.length; i += 10) {

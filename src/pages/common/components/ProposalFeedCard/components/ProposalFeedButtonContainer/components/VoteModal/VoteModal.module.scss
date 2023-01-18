@@ -1,0 +1,51 @@
+@import "../../../../../../../../constants";
+@import "../../../../../../../../styles/mixins";
+
+.modal {
+  max-width: 31.875rem;
+
+  .modalHeader {
+    margin-top: 2rem;
+    justify-content: flex-start;
+  }
+}
+
+.modalTitleWrapper {
+  padding-right: 2.375rem;
+  display: flex;
+  flex-direction: column;
+  color: $c-neutrals-600;
+}
+
+.modalTitle {
+  margin: 0;
+  font-family: NunitoSans, sans-serif;
+  font-weight: bold;
+  font-size: $moderate-small;
+  line-height: 120%;
+}
+
+.modalContent {
+  margin-top: 1rem;
+}
+
+.description {
+  margin: 0;
+  font-size: $xsmall;
+  line-height: 120%;
+}
+
+.buttonsContainer {
+  margin-top: 2.875rem;
+}
+
+.buttonsWrapper {
+  @include flex-list-with-gap(1.375rem);
+
+  justify-content: flex-end;
+}
+
+.button {
+  max-width: 9.5rem;
+  width: 100%;
+}

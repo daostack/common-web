@@ -1,6 +1,12 @@
 import React, { FC, memo, useCallback, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/pages/Auth/store/selectors";
+import { ReportModal } from "@/shared/components";
+import { DynamicLinkType, EntityTypes } from "@/shared/constants";
+import { useModal } from "@/shared/hooks";
 import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
 import { CommonFeed, DateFormat, Governance } from "@/shared/models";
+import { DesktopStyleMenu } from "@/shared/ui-kit";
 import { formatDate, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
@@ -10,23 +16,57 @@ import {
   FeedCardFooter,
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
+import { FeedCardShare } from "../FeedCard";
 import { LoadingFeedCard } from "../LoadingFeedCard";
+import { useMenuItems } from "./hooks";
+import styles from "./DiscussionFeedCard.module.scss";
 
 interface DiscussionFeedCardProps {
   item: CommonFeed;
   governanceCircles: Governance["circles"];
+  isMobileVersion?: boolean;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const { item, governanceCircles } = props;
   const { setChatItem } = useChatContext();
-  const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
+  const { item, governanceCircles, isMobileVersion = false } = props;
+  const {
+    isShowing: isReportModalOpen,
+    onOpen: onReportModalOpen,
+    onClose: onReportModalClose,
+  } = useModal(false);
+  const {
+    isShowing: isShareModalOpen,
+    onOpen: onShareModalOpen,
+    onClose: onShareModalClose,
+  } = useModal(false);
+  const { isShowing: isMenuOpen, onClose: onMenuClose } = useModal(false);
+  const {
+    fetchUser: fetchDiscussionCreator,
+    data: discussionCreator,
+    fetched: isDiscussionCreatorFetched,
+  } = useUserById();
   const {
     fetchDiscussion,
     data: discussion,
     fetched: isDiscussionFetched,
   } = useDiscussionById();
-  const isLoading = !isUserFetched || !isDiscussionFetched;
+  const menuItems = useMenuItems(
+    {
+      discussion,
+      governance: {
+        circles: governanceCircles,
+      },
+    },
+    {
+      report: onReportModalOpen,
+      share: onShareModalOpen,
+    },
+  );
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+  const isLoading = !isDiscussionCreatorFetched || !isDiscussionFetched;
+
   const circleVisibility = getVisibilityString(
     governanceCircles,
     discussion?.circleVisibility,
@@ -42,7 +82,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }, [discussion, item]);
 
   useEffect(() => {
-    fetchUser(item.userId);
+    fetchDiscussionCreator(item.userId);
   }, [item.userId]);
 
   useEffect(() => {
@@ -54,16 +94,18 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }
 
   return (
-    <FeedCard>
+    <FeedCard isLongPressed={isMenuOpen}>
       <FeedCardHeader
-        avatar={user?.photoURL}
-        title={getUserName(user)}
+        avatar={discussionCreator?.photoURL}
+        title={getUserName(discussionCreator)}
         createdAt={`Created: ${formatDate(
           new Date(item.createdAt.seconds * 1000),
           DateFormat.SuperShortSecondary,
         )}`}
         type="Discussion"
         circleVisibility={circleVisibility}
+        menuItems={menuItems}
+        isMobileVersion={isMobileVersion}
       />
       <FeedCardContent
         title={discussion?.title}
@@ -73,6 +115,30 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         messageCount={discussion?.messageCount || 0}
         lastActivity={item.updatedAt.seconds * 1000}
         onMessagesClick={handleOpenChat}
+      />
+      {userId && discussion && (
+        <ReportModal
+          userId={userId}
+          isShowing={isReportModalOpen}
+          onClose={onReportModalClose}
+          entity={discussion}
+          type={EntityTypes.Discussion}
+        />
+      )}
+      {discussion && (
+        <FeedCardShare
+          isOpen={isShareModalOpen}
+          onClose={onShareModalClose}
+          linkType={DynamicLinkType.Discussion}
+          element={discussion}
+          isMobileVersion={isMobileVersion}
+        />
+      )}
+      <DesktopStyleMenu
+        className={styles.desktopStyleMenu}
+        isOpen={isMenuOpen}
+        onClose={onMenuClose}
+        items={menuItems}
       />
     </FeedCard>
   );

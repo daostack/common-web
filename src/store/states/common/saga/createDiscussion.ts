@@ -55,7 +55,7 @@ export function* createDiscussion(
       }),
     );
 
-    yield put(actions.setNewCollaborationMenuItem(null));
+    yield put(actions.setCommonAction(null));
     yield put(actions.createDiscussion.success(discussion));
 
     if (payload.callback) {

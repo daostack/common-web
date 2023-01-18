@@ -9,12 +9,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { CommonTab } from "@/pages/common/constants";
-import {
-  ChatType,
-  ViewportBreakpointVariant,
-  NewCollaborationMenuItem,
-  Colors,
-} from "@/shared/constants";
+import { CommonAction, ViewportBreakpointVariant, NewCollaborationMenuItem, Colors, ChatType } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   CirclesPermissions,
@@ -23,7 +18,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
-import { selectNewCollaborationMenuItem } from "@/store/states";
+import { selectCommonAction } from "@/store/states";
 import { TabNavigation } from "../TabNavigation";
 import {
   FeedActions,
@@ -55,10 +50,8 @@ const FeedTab: FC<FeedTabProps> = (props) => {
   const [chatTitleRef, { height: chatTitleHeight }] = useMeasure();
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
-  const newCollaborationMenuItem = useSelector(selectNewCollaborationMenuItem);
-  const allowedFeedActions = !newCollaborationMenuItem
-    ? [FeedAction.NewCollaboration]
-    : [];
+  const commonAction = useSelector(selectCommonAction);
+  const allowedFeedActions = !commonAction ? [FeedAction.NewCollaboration] : [];
 
   const hasAccessToChat = useMemo(() => {
     if (!chatItem) {
@@ -75,7 +68,7 @@ const FeedTab: FC<FeedTabProps> = (props) => {
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
-      {newCollaborationMenuItem === NewCollaborationMenuItem.NewDiscussion && (
+      {commonAction === CommonAction.NewDiscussion && (
         <NewDiscussionCreation
           governanceCircles={governance.circles}
           commonMember={commonMember}
