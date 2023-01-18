@@ -38,11 +38,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     onOpen: onShareModalOpen,
     onClose: onShareModalClose,
   } = useModal(false);
-  const {
-    isShowing: isMenuOpen,
-    onOpen: onMenuOpen,
-    onClose: onMenuClose,
-  } = useModal(false);
+  const { isShowing: isMenuOpen, onClose: onMenuClose } = useModal(false);
   const {
     fetchUser: fetchDiscussionCreator,
     data: discussionCreator,
@@ -87,10 +83,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }
 
   return (
-    <FeedCard
-      onLongPress={isMobileVersion ? onMenuOpen : undefined}
-      isLongPressed={isMenuOpen}
-    >
+    <FeedCard isLongPressed={isMenuOpen}>
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}
         title={getUserName(discussionCreator)}

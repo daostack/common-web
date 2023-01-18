@@ -10,8 +10,8 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   DiscussionCardMenuItem,
   (options: GetAllowedItemsOptions) => boolean
 > = {
-  [DiscussionCardMenuItem.Share]: () => true,
-  [DiscussionCardMenuItem.Report]: () => true,
+  [DiscussionCardMenuItem.Share]: () => false,
+  [DiscussionCardMenuItem.Report]: () => false,
   [DiscussionCardMenuItem.Edit]: () => false,
   [DiscussionCardMenuItem.Remove]: () => false,
 };
