@@ -20,6 +20,7 @@ import {
   AddProjectButton,
   AddProjectTooltipContent,
   Project,
+  ProjectTooltipContent,
 } from "./components";
 import styles from "./CommonProjects.module.scss";
 
@@ -80,10 +81,17 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
           <li key={subCommon.id} className={styles.projectsItem}>
             <Project
               title={subCommon.name}
-              description={subCommon.byline}
               url={ROUTE_PATHS.COMMON.replace(":id", subCommon.id)}
               imageURL={subCommon.image}
               imageAlt={`${subCommon.name}'s image`}
+              tooltipContent={
+                !isTabletView ? (
+                  <ProjectTooltipContent
+                    title={subCommon.name}
+                    description={subCommon.byline}
+                  />
+                ) : null
+              }
             />
           </li>
         ))}
