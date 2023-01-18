@@ -19,6 +19,10 @@
   & .swiper-wrapper {
     max-height: 35rem;
   }
+
+  & .swiper-pagination-bullet-active {
+    background-color: $c-neutrals-300;
+  }
 }
 
 .slider-wrapper {
@@ -36,10 +40,9 @@
 
 .arrow-wrapper {
   position: absolute;
-  top: 50%;
+  bottom: 2.125rem;
   z-index: 2;
   color: $black;
-  transform: translateY(-50%);
 
   &:disabled {
     color: $gray;
@@ -48,20 +51,20 @@
 
 .arrow-wrapper-left {
   @extend .arrow-wrapper;
-  left: 1.5rem;
+  left: 19rem;
 
   @include tablet {
-    left: 1rem;
+    left: 18rem;
   }
 }
 
 .arrow-wrapper-right {
   @extend .arrow-wrapper;
 
-  right: 1.5rem;
+  right: 19rem;
 
   @include tablet {
-    right: 1rem;
+    right: 18rem;
   }
 }
 

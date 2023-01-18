@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { ImageGallery, Linkify } from "@/shared/components";
+import { Linkify } from "@/shared/components";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useFullText } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common } from "@/shared/models";
-import { Container, Tags } from "@/shared/ui-kit";
+import { Container, Tags, ImageGallery } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import { CommonCard } from "../../../../../CommonCard";
 import { CommonLinks } from "../CommonLinks";

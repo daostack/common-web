@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Image, Modal, ButtonIcon } from "@/shared/components";
 import { Colors } from "@/shared/constants";
-import { ArrowBackIcon } from "@/shared/icons";
+import { LongLeftArrowIcon } from "@/shared/icons";
 import { emptyFunction } from "@/shared/utils";
 import styles from "./ImageGalleryMobileModal.module.scss";
 
@@ -28,7 +28,7 @@ const ImageGalleryMobileModal: FC<ImageGalleryMobileModalProps> = (props) => {
       <div className={styles.content}>
         <div className={styles.header}>
           <ButtonIcon onClick={onClose}>
-            <ArrowBackIcon
+            <LongLeftArrowIcon
               className={styles.backButtonIcon}
               color={Colors.white}
             />

@@ -5,9 +5,14 @@
   margin-top: 2.125rem;
 }
 
+.content {
+  display: inline-flex;
+  align-items: center;
+}
+
 .videoContainer {
   position: relative;
-  width: fit-content
+  width: fit-content;
 }
 
 .video {
@@ -16,6 +21,8 @@
   height: 18.875rem;
   object-fit: cover;
   border-radius: 0.25rem;
+  grid-column-start: 1;
+  grid-column-end: 2;
 }
 
 .playButtonContainer {
@@ -44,6 +51,10 @@
   margin-top: 1rem;
 }
 
+.imageContainerSingleImage {
+  margin-top: 0;
+}
+
 .image {
   flex-shrink: 0;
   max-width: 14rem;
@@ -52,17 +63,23 @@
   object-fit: cover;
 }
 
-.imageLeft {
-  @extend .image;
+.singleImage {
+  width: 100%;
+  height: 100%;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
 
+.leftItem {
   margin-right: 0.15625rem;
+  margin-left: 0;
 }
 
-.imageRight {
-  @extend .image;
-
+.rightItem {
   margin-left: 0.15625rem;
+  margin-right: 0;
 }
+
 
 .seeAllGallery {
   font-size: $xsmall;
