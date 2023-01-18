@@ -24,6 +24,7 @@
 }
 
 .avatar {
+  flex-shrink: 0;
   width: 2rem;
   height: 2rem;
   margin-right: 1rem;
@@ -31,4 +32,9 @@
 
 .resultText {
   margin-right: 1rem;
+  word-break: break-word;
+}
+
+.icon {
+  flex-shrink: 0;
 }
