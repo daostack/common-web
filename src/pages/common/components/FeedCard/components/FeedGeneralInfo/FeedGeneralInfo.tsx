@@ -1,5 +1,6 @@
 import React, { ReactNode, useMemo } from "react";
 import classNames from "classnames";
+import { Image } from "@/shared/components";
 import { useFullText } from "@/shared/hooks";
 import {
   checkIsTextEditorValueEmpty,
@@ -12,10 +13,11 @@ interface FeedGeneralInfoProps {
   title?: string;
   subtitle?: ReactNode;
   description?: string;
+  image?: string;
 }
 
 export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
-  const { title, subtitle, description } = props;
+  const { title, subtitle, description, image } = props;
   const {
     setRef: setDescriptionRef,
     shouldShowFullText,
@@ -35,6 +37,7 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
       {subtitle && (
         <p className={classNames(styles.text, styles.subtitle)}>{subtitle}</p>
       )}
+      {image && <Image src={image} alt="" />}
       {!checkIsTextEditorValueEmpty(parsedDescription) && (
         <>
           <TextEditor

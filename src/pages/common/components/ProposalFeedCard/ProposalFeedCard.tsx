@@ -144,6 +144,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           proposal.data.args.description,
           proposal.type,
         )}
+        image={discussion?.images[0]?.value}
       >
         <ProposalFeedVotingInfo
           proposal={proposal}

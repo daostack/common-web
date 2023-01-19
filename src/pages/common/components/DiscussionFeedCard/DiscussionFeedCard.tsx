@@ -99,6 +99,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       <FeedCardContent
         title={discussion?.title}
         description={discussion?.message}
+        image={discussion?.images[0]?.value}
       />
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
