@@ -9,7 +9,12 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { CommonTab } from "@/pages/common/constants";
-import { CommonAction, ViewportBreakpointVariant, NewCollaborationMenuItem, Colors, ChatType } from "@/shared/constants";
+import {
+  CommonAction,
+  ViewportBreakpointVariant,
+  Colors,
+  ChatType,
+} from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   CirclesPermissions,
