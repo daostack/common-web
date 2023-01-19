@@ -56,16 +56,12 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
 
       const buttonEl = (
         <Button
-          className={classNames(styles.actionButton, {
-            [styles.actionButtonDisabled]: disabledLeaveButton,
-          })}
+          className={styles.actionButton}
           variant={ButtonVariant.OutlineBlue}
-          onClick={
-            isHighestTierCircle && membersCount === 1
-              ? undefined
-              : handleLeaveCircle
-          }
+          onClick={handleLeaveCircle}
+          disabled={disabledLeaveButton}
           aria-disabled={disabledLeaveButton}
+          visuallyDisabled
         >
           Leave Circle
         </Button>

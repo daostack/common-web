@@ -30,7 +30,7 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
   } = props;
   const user = useSelector(selectUser());
 
-  const commonHighestTierCircle = getCirclesWithHighestTier(governanceCircles)[0];
+  const circlesWithHighestTier = getCirclesWithHighestTier(governanceCircles);
 
   return (
     <Popover.Panel className={classNames(styles.popoverPanel, className)}>
@@ -40,7 +40,9 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
             key={circleId}
             circleName={name}
             circleId={circleId}
-            isHighestTierCircle={commonHighestTierCircle.id === circleId}
+            isHighestTierCircle={circlesWithHighestTier.some(
+              (highestTierCircle) => highestTierCircle.id === circleId,
+            )}
             commonId={commonId}
             isPending={Boolean(pendingCircles.get(circleId))}
             isMember={circleIds.includes(circleId)}
