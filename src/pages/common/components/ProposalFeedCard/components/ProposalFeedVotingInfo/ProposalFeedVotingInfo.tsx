@@ -66,6 +66,10 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
             </ModalTriggerButton>
           }
           proposalId={proposal.id}
+          totalVotes={proposal.votes.total}
+          totalMembersWithVotingRight={
+            proposal.votes.totalMembersWithVotingRight
+          }
           isMobileVersion={isTabletView}
         />
       </VotingInfo>
