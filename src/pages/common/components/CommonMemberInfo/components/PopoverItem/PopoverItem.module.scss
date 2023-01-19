@@ -70,9 +70,22 @@
   height: 2rem;
 }
 
+.actionButtonDisabled {
+  color: $c-shades-neutrals-30;
+  background-color: transparent;
+  border-color: $c-shades-neutrals-30;
+  cursor: not-allowed;
+}
+
 .pendingStatus {
   font-size: $small;
   line-height: 1.25rem;
   color: $light-gray-2;
   margin: 0;
+}
+
+.tooltipContent {
+  margin-top: 1.125rem;
+  max-width: 20.9375rem;
+  z-index: 3;
 }

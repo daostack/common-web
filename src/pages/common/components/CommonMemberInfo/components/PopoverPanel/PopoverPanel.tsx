@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { Popover } from "@headlessui/react";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { Circle } from "@/shared/models";
-import { getUserName } from "@/shared/utils";
+import { getCirclesWithHighestTier, getUserName } from "@/shared/utils";
 import { PopoverItem } from "../PopoverItem";
 import styles from "./PopoverPanel.module.scss";
 
@@ -30,6 +30,8 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
   } = props;
   const user = useSelector(selectUser());
 
+  const commonHighestTierCircle = getCirclesWithHighestTier(governanceCircles)[0];
+
   return (
     <Popover.Panel className={classNames(styles.popoverPanel, className)}>
       {governanceCircles.map(
@@ -38,6 +40,7 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
             key={circleId}
             circleName={name}
             circleId={circleId}
+            isHighestTierCircle={commonHighestTierCircle.id === circleId}
             commonId={commonId}
             isPending={Boolean(pendingCircles.get(circleId))}
             isMember={circleIds.includes(circleId)}

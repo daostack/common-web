@@ -2,6 +2,7 @@ import React, { FC, useCallback } from "react";
 import classNames from "classnames";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { Circle } from "@/shared/models";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui-kit";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./PopoverItem.module.scss";
 
@@ -14,6 +15,7 @@ interface CommonMemberInfoProps {
   circleName: string;
   canRequestToJoin: boolean;
   canLeaveCircle: boolean;
+  isHighestTierCircle: boolean;
   shouldShowLeaveButton: boolean;
   circle: Circle;
   userId: string;
@@ -36,8 +38,13 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     circle,
     userName,
     membersCount,
+    isHighestTierCircle,
   } = props;
   const { onLeaveCircle, onJoinCircle } = useCommonDataContext();
+
+  const handleLeaveCircle = useCallback(() => {
+    onLeaveCircle(commonId, userId, circle);
+  }, [commonId, userId, circle]);
 
   const ActionButton = useCallback(() => {
     if (isMember && !shouldShowLeaveButton) {
@@ -45,14 +52,33 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     }
 
     if (isMember && canLeaveCircle && shouldShowLeaveButton) {
-      return (
+      const disabledLeaveButton = isHighestTierCircle && membersCount === 1;
+
+      const buttonEl = (
         <Button
-          className={styles.actionButton}
+          className={classNames(styles.actionButton, {
+            [styles.actionButtonDisabled]: disabledLeaveButton,
+          })}
           variant={ButtonVariant.OutlineBlue}
-          onClick={() => onLeaveCircle(commonId, userId, circle)}
+          onClick={
+            isHighestTierCircle && membersCount === 1
+              ? undefined
+              : handleLeaveCircle
+          }
+          aria-disabled={disabledLeaveButton}
         >
           Leave Circle
         </Button>
+      );
+
+      return (
+        <Tooltip placement="bottom-end">
+          <TooltipTrigger asChild>{buttonEl}</TooltipTrigger>
+          <TooltipContent className={styles.tooltipContent}>
+            Looks like you are the only member in the leadership circle, and
+            thus you can't leave it until someone else joins the circle.
+          </TooltipContent>
+        </Tooltip>
       );
     }
 
@@ -86,7 +112,17 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
         Request to join
       </Button>
     );
-  }, [isMember, isPending, commonId, circleId, userId, circleName, userName]);
+  }, [
+    isMember,
+    isPending,
+    commonId,
+    circleId,
+    userId,
+    circleName,
+    userName,
+    isHighestTierCircle,
+    membersCount,
+  ]);
 
   return (
     <div className={classNames(styles.item, className)}>
