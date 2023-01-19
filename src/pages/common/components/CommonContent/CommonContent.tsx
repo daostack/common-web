@@ -121,6 +121,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
             className={styles.tabs}
             activeTab={tab}
             isAuthenticated={isAuthenticated}
+            commonMember={commonMember}
             onTabChange={setTab}
           />
         )}

@@ -34,6 +34,7 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
         className={styles.tabs}
         activeTab={activeTab}
         isAuthenticated={isAuthenticated}
+        commonMember={commonMember}
         onTabChange={onTabChange}
       />
       {commonMember && (
