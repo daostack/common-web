@@ -21,7 +21,7 @@ const VOTE_OUTCOME_TO_TEXT_MAP: Record<VoteOutcome, string> = {
   [VoteOutcome.Rejected]: "Vote against",
 };
 
-const VoteModal: FC<VoteModalProps> = (props) => {
+export const VoteModal: FC<VoteModalProps> = (props) => {
   const { isOpen, onClose, proposalId, voteOutcome, onFinish } = props;
   const dispatch = useDispatch();
   const [isVoting, setIsVoting] = useState(false);
@@ -97,5 +97,3 @@ const VoteModal: FC<VoteModalProps> = (props) => {
     </Modal>
   );
 };
-
-export default VoteModal;

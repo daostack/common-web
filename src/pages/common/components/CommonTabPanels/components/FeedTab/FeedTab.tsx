@@ -21,7 +21,7 @@ interface FeedTabProps {
   commonMember: (CommonMember & CirclesPermissions) | null;
 }
 
-const FeedTab: FC<FeedTabProps> = (props) => {
+export const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember } = props;
   const isTabletView = useIsTabletView();
   const commonAction = useSelector(selectCommonAction);
@@ -83,5 +83,3 @@ const FeedTab: FC<FeedTabProps> = (props) => {
     </div>
   );
 };
-
-export default FeedTab;

@@ -6,8 +6,10 @@ import {
 } from "@/pages/OldCommon/components/ProposalContainer/CountDownCard/helpers";
 import { getVotersString } from "@/pages/OldCommon/containers/ProposalContainer/helpers";
 import { useCountdown } from "@/shared/hooks";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Governance, Proposal } from "@/shared/models";
 import { ModalTriggerButton } from "../ModalTriggerButton";
+import { Voters } from "../Voters";
 import { VotingInfo } from "../VotingInfo";
 import { Countdown } from "./components";
 import { getCountdownLabel } from "./utils";
@@ -22,6 +24,7 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   props,
 ) => {
   const { proposal, governanceCircles } = props;
+  const isTabletView = useIsTabletView();
   const {
     startCountdown,
     timer,
@@ -55,9 +58,20 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
         </p>
       </VotingInfo>
       <VotingInfo label="Votes">
-        <ModalTriggerButton>
-          {proposal.votes.total}/{proposal.votes.totalMembersWithVotingRight}
-        </ModalTriggerButton>
+        <Voters
+          triggerEl={
+            <ModalTriggerButton>
+              {proposal.votes.total}/
+              {proposal.votes.totalMembersWithVotingRight}
+            </ModalTriggerButton>
+          }
+          proposalId={proposal.id}
+          totalVotes={proposal.votes.total}
+          totalMembersWithVotingRight={
+            proposal.votes.totalMembersWithVotingRight
+          }
+          isMobileVersion={isTabletView}
+        />
       </VotingInfo>
       <VotingInfo label="Voters">
         <p
