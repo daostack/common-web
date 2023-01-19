@@ -13,15 +13,20 @@ interface ImageGalleryProps {
   placeholderElement?: ReactNode;
   isShowing: boolean;
   onClose: () => void;
+  videoSrc?: string;
 }
 
 const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
-  const { images, isShowing, onClose } = props;
+  const { images, isShowing, onClose, videoSrc } = props;
   const [swiperRef, setSwiperRef] = useState<SwiperClass | null>(null);
 
   const handleLeftClick = useCallback(() => {
     if (swiperRef) {
       swiperRef.slidePrev();
+    }
+
+    if (videoSrc) {
+      (document.getElementById("videoPlayer") as HTMLVideoElement)?.pause();
     }
   }, [swiperRef]);
 
@@ -29,14 +34,32 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
     if (swiperRef) {
       swiperRef.slideNext();
     }
+
+    if (videoSrc) {
+      (document.getElementById("videoPlayer") as HTMLVideoElement)?.pause();
+    }
   }, [swiperRef]);
 
   return (
     <Modal isShowing={isShowing} onClose={onClose}>
       <div className="container">
         <Swiper onSwiper={setSwiperRef} loop={true} pagination>
+          {videoSrc && (
+            <SwiperSlide key={0} className="slider-wrapper">
+              <div className="video-container">
+                <video
+                  id="videoPlayer"
+                  className="video"
+                  preload="auto"
+                  controls
+                >
+                  <source src={videoSrc} type="video/mp4" />
+                </video>
+              </div>
+            </SwiperSlide>
+          )}
           {images.map((imageURL, index) => (
-            <SwiperSlide key={index} className="slider-wrapper">
+            <SwiperSlide key={index + 1} className="slider-wrapper">
               <Image
                 className="slide-img"
                 src={imageURL}

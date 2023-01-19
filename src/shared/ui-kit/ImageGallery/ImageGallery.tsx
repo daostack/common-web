@@ -1,7 +1,6 @@
 import React, { FC, LegacyRef, useMemo, useRef, useState } from "react";
 import { useMeasure } from "react-use";
 import classNames from "classnames";
-import tutorialVideoSrc from "@/shared/assets/videos/tutorial-video.mp4";
 import { ButtonLink, Image } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -125,12 +124,14 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
           images={images}
           isShowing={isShowing}
           onClose={onClose}
+          videoSrc={videoSrc}
         />
       ) : (
         <ImageGalleryModal
           isShowing={isShowing}
           onClose={onClose}
           images={images}
+          videoSrc={videoSrc}
         />
       )}
     </div>

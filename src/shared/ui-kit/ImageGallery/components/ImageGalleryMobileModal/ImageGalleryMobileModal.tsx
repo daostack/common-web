@@ -9,10 +9,11 @@ interface ImageGalleryMobileModalProps {
   images: string[];
   isShowing: boolean;
   onClose: () => void;
+  videoSrc?: string;
 }
 
 const ImageGalleryMobileModal: FC<ImageGalleryMobileModalProps> = (props) => {
-  const { isShowing, onClose, images } = props;
+  const { isShowing, onClose, images, videoSrc } = props;
 
   return (
     <Modal
@@ -35,6 +36,18 @@ const ImageGalleryMobileModal: FC<ImageGalleryMobileModalProps> = (props) => {
           </ButtonIcon>
         </div>
         <div className={styles.imageWrapper}>
+          {videoSrc && (
+            <div className={styles.videoContainer}>
+              <video
+                id="videoPlayer"
+                className={styles.video}
+                preload="auto"
+                controls
+              >
+                <source src={videoSrc} type="video/mp4" />
+              </video>
+            </div>
+          )}
           {images.map((imageURL, index) => (
             <Image
               className={styles.image}
