@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.0.0-alpha.3",
+    "@floating-ui/react": "^0.18.0",
     "@floating-ui/react-dom-interactions": "^0.13.1",
     "@headlessui/react": "^1.7.4",
     "@react-firebase/auth": "^0.2.10",

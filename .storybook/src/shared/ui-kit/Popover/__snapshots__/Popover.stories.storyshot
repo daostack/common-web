@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots UI Kit/Popover Controlled 1`] = `
+<div>
+  <button
+    aria-expanded="false"
+    aria-haspopup="dialog"
+    data-state="closed"
+    onClick={[Function]}
+    onPointerDown={[Function]}
+  >
+    My trigger
+  </button>
+</div>
+`;
+
+exports[`Storyshots UI Kit/Popover Default 1`] = `
+<button
+  aria-expanded="false"
+  aria-haspopup="dialog"
+  data-state="closed"
+  onClick={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onPointerDown={[Function]}
+>
+  My trigger
+</button>
+`;
+
+exports[`Storyshots UI Kit/Popover With Custom Trigger 1`] = `
+<button
+  aria-expanded="false"
+  aria-haspopup="dialog"
+  className="button buttonOutlineBlueVariant buttonMediumSize"
+  data-state="closed"
+  onClick={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onPointerDown={[Function]}
+  tabIndex={0}
+  type="button"
+>
+  Custom Trigger
+</button>
+`;

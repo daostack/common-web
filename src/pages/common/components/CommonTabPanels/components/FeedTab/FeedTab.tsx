@@ -205,5 +205,3 @@ const FeedTab: FC<FeedTabProps> = (props) => {
     </ChatContext.Provider>
   );
 };
-
-export default FeedTab;
