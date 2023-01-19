@@ -61,21 +61,25 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
           onClick={handleLeaveCircle}
           disabled={disabledLeaveButton}
           aria-disabled={disabledLeaveButton}
-          visuallyDisabled
+          visuallyDisabled={disabledLeaveButton}
         >
           Leave Circle
         </Button>
       );
 
-      return (
-        <Tooltip placement="bottom-end">
-          <TooltipTrigger asChild>{buttonEl}</TooltipTrigger>
-          <TooltipContent className={styles.tooltipContent}>
-            Looks like you are the only member in the leadership circle, and
-            thus you can't leave it until someone else joins the circle.
-          </TooltipContent>
-        </Tooltip>
-      );
+      if (disabledLeaveButton) {
+        return (
+          <Tooltip placement="bottom-end">
+            <TooltipTrigger asChild>{buttonEl}</TooltipTrigger>
+            <TooltipContent className={styles.tooltipContent}>
+              Looks like you are the only member in the leadership circle, and
+              thus you can't leave it until someone else joins the circle.
+            </TooltipContent>
+          </Tooltip>
+        );
+      }
+
+      return buttonEl;
     }
 
     if (isPending) {
