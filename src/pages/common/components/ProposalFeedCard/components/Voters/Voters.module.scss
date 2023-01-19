@@ -3,7 +3,9 @@
 .popoverContent {
   max-width: 20rem;
   width: 100%;
+  max-height: 22.75rem;
   display: flex;
   justify-content: center;
   background-color: $c-shades-white;
+  overflow-y: auto;
 }
