@@ -27,8 +27,9 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         isAuthenticated={isAuthenticated}
       />
       {separatorEl}
-      <Navigation />
-      {separatorEl}
+      {/* Temporary: see https://github.com/daostack/common-web/issues/1110 */}
+      {/* <Navigation />
+      {separatorEl} */}
       <Projects />
       <Footer className={styles.footer} variant={FooterVariant.Small} />
     </div>
