@@ -24,6 +24,7 @@ import { useProposalSpecificData } from "./hooks";
 import {
   checkIsVotingAllowed,
   checkUserPermissionsToVote,
+  getProposalDescriptionString,
   getProposalSubtitle,
   getProposalTitleString,
   getProposalTypeString,
@@ -137,9 +138,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         circleVisibility={circleVisibility}
       />
       <FeedCardContent
-        title={getProposalTitleString(proposal.data.args.title, proposal.type)}
+        title={getProposalTitleString(proposal, { governanceCircles })}
         subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
-        description={proposal.data.args.description}
+        description={getProposalDescriptionString(
+          proposal.data.args.description,
+          proposal.type,
+        )}
       >
         <ProposalFeedVotingInfo
           proposal={proposal}
