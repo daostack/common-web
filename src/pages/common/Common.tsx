@@ -23,7 +23,12 @@ const Common: FC = () => {
     fetched: isCommonMemberFetched,
     data: commonMember,
     fetchCommonMember,
-  } = useCommonMember(false);
+  } = useCommonMember({
+    shouldAutoReset: false,
+    withSubscription: true,
+    commonId,
+    governanceCircles: commonData?.governance.circles,
+  });
   const {
     fetched: isPendingJoinCheckFinished,
     data: isJoinPending,

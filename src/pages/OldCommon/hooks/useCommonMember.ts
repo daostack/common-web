@@ -8,8 +8,15 @@ import {
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import { generateCirclesDataForCommonMember } from "@/shared/utils";
 import { CommonService, GovernanceService, Logger } from "../../../services";
-import { generateCirclesDataForCommonMember } from "../../../shared/utils/generateCircleDataForCommonMember";
+
+interface Options {
+  shouldAutoReset?: boolean;
+  withSubscription?: boolean;
+  commonId?: string;
+  governanceCircles?: Governance["circles"];
+}
 
 type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
 
@@ -22,7 +29,13 @@ interface Return extends State {
   resetCommonMember: () => void;
 }
 
-export const useCommonMember = (shouldAutoReset = true): Return => {
+export const useCommonMember = (options: Options = {}): Return => {
+  const {
+    shouldAutoReset = true,
+    withSubscription = false,
+    commonId,
+    governanceCircles,
+  } = options;
   const dispatch = useDispatch();
   const [state, setState] = useState<State>({
     loading: false,
@@ -144,6 +157,39 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
       CommonMemberEventEmitter.off(CommonMemberEvent.Reset, resetCommonMember);
     };
   }, [commonMemberId, fetchCommonMember]);
+
+  useEffect(() => {
+    if (!withSubscription || !commonId || !userId || !governanceCircles) {
+      return;
+    }
+
+    const unsubscribe =
+      CommonService.subscribeToCommonMemberByCommonIdAndUserId(
+        commonId,
+        userId,
+        (commonMember, isRemoved) => {
+          let data: State["data"] = null;
+
+          if (!isRemoved) {
+            data = {
+              ...commonMember,
+              ...generateCirclesDataForCommonMember(
+                governanceCircles,
+                commonMember.circleIds,
+              ),
+            };
+          }
+
+          setState({
+            loading: false,
+            fetched: true,
+            data,
+          });
+        },
+      );
+
+    return unsubscribe;
+  }, [withSubscription, commonId, userId, governanceCircles]);
 
   return {
     ...state,

@@ -18,6 +18,7 @@ import firebase from "@/shared/utils/firebase";
 import Api from "./Api";
 
 const converter = firestoreDataConverter<Common>();
+const commonMemberConverter = firestoreDataConverter<CommonMember>();
 
 class CommonService {
   public getCommonById = async (commonId: string): Promise<Common | null> => {
@@ -251,6 +252,24 @@ class CommonService {
         isRemoved: docChange.type === "removed",
       }));
       callback(data);
+    });
+  };
+
+  public subscribeToCommonMemberByCommonIdAndUserId = (
+    commonId: string,
+    userId: string,
+    callback: (commonMember: CommonMember, isRemoved: boolean) => void,
+  ): UnsubscribeFunction => {
+    const query = commonMembersSubCollection(commonId)
+      .where("userId", "==", userId)
+      .withConverter(commonMemberConverter);
+
+    return query.onSnapshot((snapshot) => {
+      const docChange = snapshot.docChanges()[0];
+
+      if (docChange) {
+        callback(docChange.doc.data(), docChange.type === "removed");
+      }
     });
   };
 
