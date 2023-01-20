@@ -47,7 +47,6 @@ const InviteFriendsButton: FC<InviteFriendsButtonProps> = (props) => {
           Invite friends
         </Button>
       )}
-
       <ShareModal
         isShowing={isShowing}
         isLoading={!linkURL}
