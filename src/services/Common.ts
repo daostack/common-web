@@ -258,7 +258,13 @@ class CommonService {
   public subscribeToCommonMemberByCommonIdAndUserId = (
     commonId: string,
     userId: string,
-    callback: (commonMember: CommonMember, isRemoved: boolean) => void,
+    callback: (
+      commonMember: CommonMember,
+      statuses: {
+        isAdded: boolean;
+        isRemoved: boolean;
+      },
+    ) => void,
   ): UnsubscribeFunction => {
     const query = commonMembersSubCollection(commonId)
       .where("userId", "==", userId)
@@ -268,7 +274,10 @@ class CommonService {
       const docChange = snapshot.docChanges()[0];
 
       if (docChange) {
-        callback(docChange.doc.data(), docChange.type === "removed");
+        callback(docChange.doc.data(), {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        });
       }
     });
   };

@@ -9,6 +9,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "@/shared/utils";
+import { projectsActions } from "@/store/states";
 import { CommonService, GovernanceService, Logger } from "../../../services";
 
 interface Options {
@@ -167,9 +168,17 @@ export const useCommonMember = (options: Options = {}): Return => {
       CommonService.subscribeToCommonMemberByCommonIdAndUserId(
         commonId,
         userId,
-        (commonMember, isRemoved) => {
+        (commonMember, { isAdded, isRemoved }) => {
           let data: State["data"] = null;
 
+          if (isAdded) {
+            dispatch(
+              projectsActions.updateProject({
+                commonId,
+                hasMembership: true,
+              }),
+            );
+          }
           if (!isRemoved) {
             data = {
               ...commonMember,
