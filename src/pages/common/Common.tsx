@@ -28,6 +28,7 @@ const Common: FC = () => {
     fetched: isPendingJoinCheckFinished,
     data: isJoinPending,
     checkUserPendingJoin,
+    setIsJoinPending,
   } = useUserPendingJoin();
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -79,6 +80,7 @@ const Common: FC = () => {
       isGlobalDataFetched={isGlobalDataFetched}
       commonMember={commonMember}
       isJoinPending={isJoinPending}
+      setIsJoinPending={setIsJoinPending}
     />
   );
 };

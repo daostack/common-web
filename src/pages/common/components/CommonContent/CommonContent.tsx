@@ -30,6 +30,7 @@ interface CommonContentProps {
   isGlobalDataFetched: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
   isJoinPending: boolean;
+  setIsJoinPending: (isJoinPending: boolean) => void;
 }
 
 const CommonContent: FC<CommonContentProps> = (props) => {
@@ -43,6 +44,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     parentCommon,
     parentCommonSubCommons,
     isJoinPending,
+    setIsJoinPending,
   } = props;
   const dispatch = useDispatch();
   const [tab, setTab] = useState(CommonTab.About);
@@ -72,6 +74,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       subCommons={subCommons}
       parentCommonSubCommons={parentCommonSubCommons}
       isJoinPending={isJoinPending}
+      setIsJoinPending={setIsJoinPending}
     >
       <CommonTopNavigation
         commonMember={commonMember}

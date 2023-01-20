@@ -49,6 +49,7 @@ interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
   governance: Governance;
   onCreationStageReach?: (reached: boolean) => void;
+  onRequestCreated?: () => void;
 }
 
 export function MembershipRequestModal(props: IProps) {
@@ -59,8 +60,14 @@ export function MembershipRequestModal(props: IProps) {
   const modalRef = useRef<ModalRef>(null);
   const [userData, setUserData] = useState(INIT_DATA);
   const { stage } = userData;
-  const { isShowing, onClose, common, governance, onCreationStageReach } =
-    props;
+  const {
+    isShowing,
+    onClose,
+    common,
+    governance,
+    onCreationStageReach,
+    onRequestCreated,
+  } = props;
   const {
     loading: isMembershipCheckLoading,
     fetched: isMembershipCheckDone,
@@ -199,6 +206,12 @@ export function MembershipRequestModal(props: IProps) {
       onCreationStageReach(true);
     }
   }, [stage, onCreationStageReach]);
+
+  useEffect(() => {
+    if (stage === MembershipRequestStage.Created && onRequestCreated) {
+      onRequestCreated();
+    }
+  }, [stage]);
 
   useEffect(() => {
     modalRef.current?.scrollToTop();

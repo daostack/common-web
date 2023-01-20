@@ -35,6 +35,7 @@ interface CommonDataProps {
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
   isJoinPending: boolean;
+  setIsJoinPending: (isJoinPending: boolean) => void;
 }
 
 const CommonData: FC<CommonDataProps> = (props) => {
@@ -47,6 +48,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     parentCommon,
     parentCommonSubCommons,
     isJoinPending,
+    setIsJoinPending,
     children,
   } = props;
   const dispatch = useDispatch();
@@ -204,6 +206,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
         onClose={onCommonJoinModalClose}
         common={common}
         governance={governance}
+        onRequestCreated={() => setIsJoinPending(true)}
       />
     </CommonDataContext.Provider>
   );

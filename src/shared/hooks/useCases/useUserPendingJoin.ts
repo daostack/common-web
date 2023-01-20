@@ -8,6 +8,7 @@ type State = LoadingState<boolean>;
 
 interface Return extends State {
   checkUserPendingJoin: (commonId: string) => void;
+  setIsJoinPending: (isJoinPending: boolean) => void;
   resetUserPendingJoin: () => void;
 }
 
@@ -61,6 +62,24 @@ export const useUserPendingJoin = (): Return => {
     [userId],
   );
 
+  const setIsJoinPending = useCallback((isJoinPending: boolean) => {
+    setState((prevState) => {
+      if (
+        !prevState.loading &&
+        prevState.fetched &&
+        prevState.data === isJoinPending
+      ) {
+        return prevState;
+      }
+
+      return {
+        loading: false,
+        fetched: true,
+        data: isJoinPending,
+      };
+    });
+  }, []);
+
   const resetUserPendingJoin = useCallback(() => {
     setState({
       loading: false,
@@ -72,6 +91,7 @@ export const useUserPendingJoin = (): Return => {
   return {
     ...state,
     checkUserPendingJoin,
+    setIsJoinPending,
     resetUserPendingJoin,
   };
 };

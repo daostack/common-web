@@ -1,0 +1,40 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.container {
+  height: 100%;
+  padding: 0 1.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.avatarIcon {
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  overflow: hidden;
+
+  @include tablet {
+    margin-right: 1rem;
+    align-items: center;
+  }
+}
+
+.title {
+  font-size: $xxsmall-2;
+  line-height: 120%;
+  color: $c-neutrals-300;
+}
+
+.status {
+  color: $c-neutrals-600;
+
+  @include tablet {
+    font-weight: normal;
+  }
+}
