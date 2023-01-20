@@ -6,6 +6,10 @@
   padding: 0 1.75rem;
   display: flex;
   align-items: center;
+
+  @include tablet {
+    padding: 0 1rem;
+  }
 }
 
 .avatarIcon {
@@ -20,7 +24,6 @@
   overflow: hidden;
 
   @include tablet {
-    margin-right: 1rem;
     align-items: center;
   }
 }
