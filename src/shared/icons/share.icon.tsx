@@ -14,7 +14,7 @@ export default function ShareIcon({ className }: ShareIconProps): ReactElement {
       viewBox="0 0 24 24"
     >
       <g fill="none" fillRule="evenodd">
-        <g fill="#001A36" fillRule="nonzero">
+        <g fill="currentColor" fillRule="nonzero">
           <g>
             <g>
               <g>

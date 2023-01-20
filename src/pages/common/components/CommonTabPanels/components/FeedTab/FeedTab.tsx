@@ -3,7 +3,12 @@ import { useSelector } from "react-redux";
 import { CommonTab } from "@/pages/common/constants";
 import { CommonAction, ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
 import { selectCommonAction } from "@/store/states";
 import { TabNavigation } from "../TabNavigation";
@@ -19,6 +24,7 @@ interface FeedTabProps {
   activeTab: CommonTab;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  common: Common;
 }
 
 export const FeedTab: FC<FeedTabProps> = (props) => {
