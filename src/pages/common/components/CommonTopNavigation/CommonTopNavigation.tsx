@@ -1,6 +1,12 @@
 import React, { FC } from "react";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
-import { TopNavigation, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  TopNavigation,
+  TopNavigationOpenSidenavButton,
+} from "@/shared/ui-kit";
 import { useCommonDataContext } from "../../providers";
 import { CommonMemberInfo } from "../CommonMemberInfo";
 import { CommonMenuButton } from "../CommonMenuButton";
@@ -16,8 +22,9 @@ interface CommonTopNavigationProps {
 
 const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
   const { commonMember, circles, isSubCommon, commonId } = props;
-  const { isJoinPending } = useCommonDataContext();
+  const { isJoinAllowed, isJoinPending, onJoinCommon } = useCommonDataContext();
   const circlesMap = commonMember?.circles.map;
+  const isJoinButtonVisible = !isSubCommon && isJoinAllowed;
   const centralEl = commonMember ? (
     <CommonMemberInfo
       circles={circles}
@@ -36,6 +43,14 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
       isSubCommon={isSubCommon}
       isMobileVersion
     />
+  ) : isJoinButtonVisible ? (
+    <Button
+      variant={ButtonVariant.OutlineBlue}
+      size={ButtonSize.Xsmall}
+      onClick={onJoinCommon}
+    >
+      Join
+    </Button>
   ) : (
     <div className={styles.emptyBlock} />
   );
