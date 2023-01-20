@@ -204,7 +204,6 @@ const CommonData: FC<CommonDataProps> = (props) => {
         onClose={onCommonJoinModalClose}
         common={common}
         governance={governance}
-        onCreationStageReach={() => {}}
       />
     </CommonDataContext.Provider>
   );

@@ -48,7 +48,7 @@ const INIT_DATA: IMembershipRequestData = {
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
   governance: Governance;
-  onCreationStageReach: (reached: boolean) => void;
+  onCreationStageReach?: (reached: boolean) => void;
 }
 
 export function MembershipRequestModal(props: IProps) {
@@ -118,7 +118,10 @@ export function MembershipRequestModal(props: IProps) {
     };
 
     setUserData(payload);
-    onCreationStageReach(false);
+
+    if (onCreationStageReach) {
+      onCreationStageReach(false);
+    }
   }, [isMembershipCheckDone, isMember, isShowing, onCreationStageReach]);
 
   const renderCurrentStage = (stage: number) => {
@@ -192,7 +195,7 @@ export function MembershipRequestModal(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (stage === MembershipRequestStage.Creating) {
+    if (stage === MembershipRequestStage.Creating && onCreationStageReach) {
       onCreationStageReach(true);
     }
   }, [stage, onCreationStageReach]);
