@@ -10,15 +10,17 @@
   align-items: center;
 }
 
-.videoContainer {
+.mainContentContainer {
   position: relative;
-  width: fit-content;
+  width: 100%;
+  max-width: 28.25rem;
 }
 
-.video {
+.mainContent {
   max-width: 28.25rem;
   width: 100%;
-  height: 18.875rem;
+  max-height: 18.875rem;
+  height: 100%;
   object-fit: cover;
   border-radius: 0.25rem;
 }

@@ -1,4 +1,11 @@
-import React, { FC, LegacyRef, useMemo, useRef, useState } from "react";
+import React, {
+  FC,
+  LegacyRef,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useMeasure } from "react-use";
 import classNames from "classnames";
 import { ButtonLink, Image } from "@/shared/components";
@@ -22,7 +29,7 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
   const images = (gallery || []).map(({ value }) => value);
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [leftImage, rightImage] = images;
+  const [leftImage, rightImage, mainImage] = images;
 
   const hasOneImage = leftImage && !rightImage;
   const singleImageWithoutVideo = hasOneImage && !videoSrc;
@@ -40,6 +47,59 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
     [videoContainerWidth],
   );
 
+  const MainContent = useCallback(() => {
+    if (!videoSrc && !mainImage) {
+      return null;
+    }
+
+    if (videoSrc) {
+      return (
+        <>
+          <video
+            ref={videoRef as LegacyRef<HTMLVideoElement>}
+            className={classNames(styles.mainContent, {
+              [styles.leftItem]: hasOneImage,
+            })}
+            style={hasOneImage ? imagePreviewStyle : {}}
+            playsInline
+            preload="auto"
+            controls={isPlaying}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+          {!isPlaying && (
+            <div
+              onClick={handleClickPlayButton}
+              className={styles.playButtonContainer}
+            >
+              <img
+                className={styles.playButton}
+                src="/icons/play-button.svg"
+                alt="play-button"
+              />
+            </div>
+          )}
+        </>
+      );
+    }
+
+    return (
+      <Image
+        className={styles.mainContent}
+        src={mainImage}
+        alt="Gallery image"
+      />
+    );
+  }, [
+    videoSrc,
+    mainImage,
+    isPlaying,
+    hasOneImage,
+    imagePreviewStyle,
+    handleClickPlayButton,
+    videoRef,
+  ]);
+
   if (images.length === 0 && !videoSrc) {
     return null;
   }
@@ -54,35 +114,8 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
           [styles.content]: hasOneImage,
         })}
       >
-        <div className={styles.videoContainer}>
-          {videoSrc && (
-            <>
-              <video
-                ref={videoRef as LegacyRef<HTMLVideoElement>}
-                className={classNames(styles.video, {
-                  [styles.leftItem]: hasOneImage,
-                })}
-                style={hasOneImage ? imagePreviewStyle : {}}
-                playsInline
-                preload="auto"
-                controls={isPlaying}
-              >
-                <source src={videoSrc} type="video/mp4" />
-              </video>
-              {!isPlaying && (
-                <div
-                  onClick={handleClickPlayButton}
-                  className={styles.playButtonContainer}
-                >
-                  <img
-                    className={styles.playButton}
-                    src="/icons/play-button.svg"
-                    alt="play-button"
-                  />
-                </div>
-              )}
-            </>
-          )}
+        <div className={styles.mainContentContainer}>
+          <MainContent />
         </div>
         <div
           className={classNames(styles.imageContainer, {
