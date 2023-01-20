@@ -16,7 +16,7 @@ interface CommonEntranceJoinProps {
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const { withJoinRequest = false, common, isProject } = props;
   const [isParentCommonMember, setIsParentCommonMember] = useState(false);
-  const { parentCommon } = useCommonDataContext();
+  const { parentCommon, onJoinCommon } = useCommonDataContext();
   const user = useSelector(selectUser());
   const parentId = common.directParent?.commonId;
   const userId = user?.uid;
@@ -49,6 +49,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
           className={styles.joinButton}
           variant={ButtonVariant.OutlineBlue}
           size={ButtonSize.Medium}
+          onClick={onJoinCommon}
         >
           Join the {isProject ? "project" : "effort"}
         </Button>
