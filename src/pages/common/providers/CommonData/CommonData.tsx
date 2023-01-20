@@ -34,6 +34,7 @@ interface CommonDataProps {
   subCommons: Common[];
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
+  isJoinPending: boolean;
 }
 
 const CommonData: FC<CommonDataProps> = (props) => {
@@ -45,6 +46,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     subCommons,
     parentCommon,
     parentCommonSubCommons,
+    isJoinPending,
     children,
   } = props;
   const dispatch = useDispatch();
@@ -84,7 +86,6 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onClose: onCommonJoinModalClose,
   } = useModal(false);
   const isProject = Boolean(common.directParent);
-  const isJoinPending = false;
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
