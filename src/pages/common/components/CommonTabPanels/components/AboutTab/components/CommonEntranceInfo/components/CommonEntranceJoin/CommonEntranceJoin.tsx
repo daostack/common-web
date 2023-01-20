@@ -12,7 +12,7 @@ interface CommonEntranceJoinProps {
 
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const { withJoinRequest = false, common, isProject } = props;
-  const { parentCommon, onJoinCommon } = useCommonDataContext();
+  const { parentCommon, isJoinAllowed, onJoinCommon } = useCommonDataContext();
 
   return (
     <>
@@ -23,7 +23,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
           join the project.
         </p>
       )}
-      {withJoinRequest && !isProject && (
+      {withJoinRequest && !isProject && isJoinAllowed && (
         <Button
           className={styles.joinButton}
           variant={ButtonVariant.OutlineBlue}

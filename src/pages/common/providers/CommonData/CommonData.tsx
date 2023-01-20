@@ -84,6 +84,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onClose: onCommonJoinModalClose,
   } = useModal(false);
   const isProject = Boolean(common.directParent);
+  const isJoinPending = false;
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -121,6 +122,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
+      isJoinAllowed: !commonMember && !isJoinPending,
+      isJoinPending: !commonMember && isJoinPending,
       onJoinCommon: isProject ? undefined : onCommonJoinModalOpen,
       onLeaveCircle: onLeaveCircleModalOpen,
       onJoinCircle: onJoinCircleModalOpen,
@@ -135,6 +138,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
+      commonMember,
+      isJoinPending,
       isProject,
       onCommonJoinModalOpen,
       onLeaveCircleModalOpen,

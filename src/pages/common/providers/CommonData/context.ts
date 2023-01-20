@@ -14,6 +14,8 @@ interface Data {
   subCommons: Common[];
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
+  isJoinAllowed: boolean;
+  isJoinPending: boolean;
   onJoinCommon?: () => void;
   onLeaveCircle: (
     commonId: string,
