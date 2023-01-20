@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { LoadingState, PayloadWithOptionalCallback } from "@/shared/interfaces";
-import { Discussion, Proposal, User } from "@/shared/models";
+import { Discussion, DiscussionMessage, Proposal, User } from "@/shared/models";
 import { CacheActionType } from "./constants";
 
 export const getUserStateById = createAsyncAction(
@@ -38,11 +38,32 @@ export const getDiscussionStateById = createAsyncAction(
   Error
 >();
 
+export const getDiscussionMessageStateByDiscussionId = createAsyncAction(
+  CacheActionType.GET_DISCUSSION_MESSAGE_STATE_BY_DISCUSSION_ID,
+  CacheActionType.GET_DISCUSSION_MESSAGE_STATE_BY_ID_DISCUSSION_SUCCESS,
+  CacheActionType.GET_DISCUSSION_MESSAGE_STATE_BY_ID_DISCUSSION_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    { discussionId: string; force?: boolean },
+    DiscussionMessage[] | null,
+    Error
+  >,
+  DiscussionMessage[] | null,
+  Error
+>();
+
 export const updateDiscussionStateById = createStandardAction(
   CacheActionType.UPDATE_DISCUSSION_STATE_BY_ID,
 )<{
   discussionId: string;
   state: LoadingState<Discussion | null>;
+}>();
+
+export const updateDiscussionMessagesStateByDiscussionId = createStandardAction(
+  CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_ID,
+)<{
+  discussionId: string;
+  state: LoadingState<DiscussionMessage[] | null>;
 }>();
 
 export const getProposalStateById = createAsyncAction(
