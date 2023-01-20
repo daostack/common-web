@@ -29,7 +29,7 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
   } = props;
   const { onJoinCommon } = useCommonDataContext();
   const isTabletView = useIsTabletView();
-  const isJoinButtonVisible = !isTabletView && withJoin;
+  const isJoinButtonVisible = !isTabletView && withJoin && !isProject;
   const areItemsVisible = Boolean(details && details.length > 0);
   const commonImageClassName = classNames(styles.commonImage, {
     [styles.commonImageRounded]: isProject,
