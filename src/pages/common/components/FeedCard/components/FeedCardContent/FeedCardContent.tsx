@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { CommonLink } from "@/shared/models";
 import { FeedGeneralInfo } from "../FeedGeneralInfo";
 import styles from "./FeedCardContent.module.scss";
 
@@ -6,7 +7,7 @@ export interface FeedCardContentProps {
   title?: string;
   subtitle?: ReactNode;
   description?: string;
-  image?: string;
+  image?: CommonLink;
 }
 
 export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {

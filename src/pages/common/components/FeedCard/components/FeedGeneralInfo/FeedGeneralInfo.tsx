@@ -2,6 +2,7 @@ import React, { ReactNode, useMemo } from "react";
 import classNames from "classnames";
 import { Image } from "@/shared/components";
 import { useFullText } from "@/shared/hooks";
+import { CommonLink } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
   parseStringToTextEditorValue,
@@ -13,7 +14,7 @@ interface FeedGeneralInfoProps {
   title?: string;
   subtitle?: ReactNode;
   description?: string;
-  image?: string;
+  image?: CommonLink;
 }
 
 export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
@@ -37,7 +38,6 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
       {subtitle && (
         <p className={classNames(styles.text, styles.subtitle)}>{subtitle}</p>
       )}
-      {image && <Image src={image} alt="" />}
       {!checkIsTextEditorValueEmpty(parsedDescription) && (
         <>
           <TextEditor
@@ -58,6 +58,7 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           )}
         </>
       )}
+      {image && <Image src={image.value} alt={image.title} />}
     </div>
   );
 };
