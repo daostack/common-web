@@ -44,7 +44,7 @@ const HEADER_HEIGHT = 221;
 const BREADCRUMBS_HEIGHT = 64;
 const DISCUSSION_TITLE_PADDING_HEIGHT = 41;
 
-const FeedTab: FC<FeedTabProps> = (props) => {
+export const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember, common } = props;
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const userCircleIds = useMemo(
