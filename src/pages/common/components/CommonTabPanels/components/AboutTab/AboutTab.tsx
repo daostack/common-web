@@ -21,6 +21,8 @@ import {
   CommonProjects,
   CommonRules,
 } from "./components";
+import { AboutActions } from "./components/AboutActions";
+import { AboutAction } from "./components/AboutActions/AboutActions";
 import styles from "./AboutTab.module.scss";
 
 interface AboutTabProps {
@@ -121,7 +123,15 @@ const AboutTab: FC<AboutTabProps> = (props) => {
           ViewportBreakpointVariant.Phone,
         ]}
       >
-        <TabNavigation activeTab={activeTab} />
+        <TabNavigation
+          activeTab={activeTab}
+          rightContent={
+            <AboutActions
+              allowedActions={[AboutAction.InviteFriends]}
+              common={common}
+            />
+          }
+        />
       </Container>
       <div className={styles.columnsWrapper}>
         {!isTabletView ? (

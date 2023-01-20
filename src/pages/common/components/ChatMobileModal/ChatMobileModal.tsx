@@ -2,7 +2,7 @@ import React, { FC, LegacyRef, useEffect, useState, useMemo } from "react";
 import { useMeasure } from "react-use";
 import { Image, Modal, ButtonIcon } from "@/shared/components";
 import { Colors } from "@/shared/constants";
-import { ArrowBackIcon } from "@/shared/icons";
+import { LongLeftArrowIcon } from "@/shared/icons";
 import CloseIcon from "@/shared/icons/close.icon";
 import { Common } from "@/shared/models";
 import { emptyFunction } from "@/shared/utils";
@@ -68,7 +68,7 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
           <div className={styles.headerContent}>
             {hasBackButton && (
               <ButtonIcon onClick={onClose}>
-                <ArrowBackIcon className={styles.backButtonIcon} />
+                <LongLeftArrowIcon className={styles.backButtonIcon} />
               </ButtonIcon>
             )}
             <Image
