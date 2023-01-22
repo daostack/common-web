@@ -58,7 +58,13 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           )}
         </>
       )}
-      {image && <Image src={image.value} alt={image.title} />}
+      {image && (
+        <Image
+          src={image.value}
+          className={classNames(styles.image)}
+          alt={image.title}
+        />
+      )}
     </div>
   );
 };
