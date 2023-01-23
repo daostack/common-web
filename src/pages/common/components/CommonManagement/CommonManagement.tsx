@@ -1,9 +1,11 @@
 import React, { FC } from "react";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { CommonTab } from "../../constants";
+import { useCommonDataContext } from "../../providers";
 import { CommonMemberInfo } from "../CommonMemberInfo";
 import { CommonMenuButton } from "../CommonMenuButton";
 import { CommonTabs } from "../CommonTabs";
+import { PendingJoinInfo } from "../PendingJoinInfo";
 import styles from "./CommonManagement.module.scss";
 
 interface CommonManagementProps {
@@ -26,6 +28,7 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
     onTabChange,
     commonId,
   } = props;
+  const { isJoinPending } = useCommonDataContext();
   const circlesMap = commonMember?.circles.map;
 
   return (
@@ -34,8 +37,12 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
         className={styles.tabs}
         activeTab={activeTab}
         isAuthenticated={isAuthenticated}
+        commonMember={commonMember}
         onTabChange={onTabChange}
       />
+      {!commonMember && isJoinPending && (
+        <PendingJoinInfo className={styles.memberInfo} />
+      )}
       {commonMember && (
         <>
           <CommonMemberInfo

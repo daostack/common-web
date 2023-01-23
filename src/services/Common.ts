@@ -18,6 +18,7 @@ import firebase from "@/shared/utils/firebase";
 import Api from "./Api";
 
 const converter = firestoreDataConverter<Common>();
+const commonMemberConverter = firestoreDataConverter<CommonMember>();
 
 class CommonService {
   public getCommonById = async (commonId: string): Promise<Common | null> => {
@@ -38,7 +39,10 @@ class CommonService {
     }
 
     const queries: firebase.firestore.Query[] = [];
-    const config = firebase.firestore().collection(Collection.Daos);
+    const config = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE);
 
     // Firebase allows to use at most 10 items per query for `in` option
     for (let i = 0; i < ids.length; i += 10) {
@@ -59,7 +63,10 @@ class CommonService {
     }
 
     const queries: firebase.firestore.Query[] = [];
-    const config = firebase.firestore().collection(Collection.Daos);
+    const config = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE);
 
     // Firebase allows to use at most 10 items per query for `in` option
     for (let i = 0; i < ids.length; i += 10) {
@@ -245,6 +252,33 @@ class CommonService {
         isRemoved: docChange.type === "removed",
       }));
       callback(data);
+    });
+  };
+
+  public subscribeToCommonMemberByCommonIdAndUserId = (
+    commonId: string,
+    userId: string,
+    callback: (
+      commonMember: CommonMember,
+      statuses: {
+        isAdded: boolean;
+        isRemoved: boolean;
+      },
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = commonMembersSubCollection(commonId)
+      .where("userId", "==", userId)
+      .withConverter(commonMemberConverter);
+
+    return query.onSnapshot((snapshot) => {
+      const docChange = snapshot.docChanges()[0];
+
+      if (docChange) {
+        callback(docChange.doc.data(), {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        });
+      }
     });
   };
 

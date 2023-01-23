@@ -40,15 +40,7 @@
   box-sizing: border-box;
 }
 
-.description {
-  margin: 0.25rem 0 0;
-  display: -webkit-box;
-  font-size: $small;
-  line-height: 125%;
-  color: $c-neutrals-300;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  text-overflow: ellipsis;
-  word-break: break-word;
+.tooltipContent {
+  max-width: 20rem;
+  z-index: 3;
 }

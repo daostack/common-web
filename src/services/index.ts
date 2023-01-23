@@ -9,3 +9,4 @@ export { default as PayMeService } from "./PayMeService";
 export { default as ProjectService } from "./Project";
 export { default as ProposalService } from "./Proposal";
 export { default as UserService } from "./User";
+export { default as DiscussionMessageService } from "./DiscussionMessage";

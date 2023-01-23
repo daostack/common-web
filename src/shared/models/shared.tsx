@@ -42,6 +42,7 @@ export enum SubCollections {
 
 export enum DateFormat {
   Long = "DD-MM-YYYY HH:mm",
+  LongSlashed = "DD/MM/YYYY HH:mm",
   Short = "YYYY-MM-DD",
   Human = "MMM, D YYYY",
   LongHuman = "D MMMM YYYY",
@@ -51,4 +52,5 @@ export enum DateFormat {
   SuperShortSecondary = "D/M/YYYY",
   ShortWithDots = "DD.MM.YY",
   FullTime = "HH:mm:ss",
+  GeneralTime = "HH:mm",
 }

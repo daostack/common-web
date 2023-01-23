@@ -1,0 +1,41 @@
+@import "../../../../../../../../constants";
+
+.container {
+  padding: 0.375rem 1.25rem 0.375rem 1.125rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $c-shades-white;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
+.voteInfo {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.userName {
+  font-size: $xsmall;
+  color: $c-neutrals-600;
+}
+
+.createdAt {
+  font-size: $xxsmall;
+  line-height: 120%;
+  color: $c-neutrals-300;
+}
+
+.icon {
+  flex-shrink: 0;
+}

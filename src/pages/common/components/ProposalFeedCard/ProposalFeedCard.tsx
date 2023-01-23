@@ -1,12 +1,18 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useCallback, useEffect } from "react";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import {
   useDiscussionById,
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, DateFormat, Governance } from "@/shared/models";
+import {
+  CommonFeed,
+  CommonLink,
+  DateFormat,
+  Governance,
+} from "@/shared/models";
 import { checkIsCountdownState, formatDate, getUserName } from "@/shared/utils";
+import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
   FeedCardHeader,
@@ -24,6 +30,7 @@ import { useProposalSpecificData } from "./hooks";
 import {
   checkIsVotingAllowed,
   checkUserPermissionsToVote,
+  getProposalDescriptionString,
   getProposalSubtitle,
   getProposalTitleString,
   getProposalTypeString,
@@ -37,6 +44,7 @@ interface ProposalFeedCardProps {
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const { commonId, item, governanceCircles } = props;
+  const { setChatItem } = useChatContext();
   const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
   const {
     fetchDiscussion,
@@ -108,6 +116,16 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     }
   }, [proposal?.id]);
 
+  const handleOpenChat = useCallback(() => {
+    if (discussion && proposal) {
+      setChatItem({
+        discussion,
+        proposal,
+        circleVisibility: item.circleVisibility,
+      });
+    }
+  }, [proposal, discussion, setChatItem, item.circleVisibility]);
+
   if (isLoading) {
     return <LoadingFeedCard />;
   }
@@ -137,16 +155,18 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         circleVisibility={circleVisibility}
       />
       <FeedCardContent
-        title={getProposalTitleString(proposal.data.args.title, proposal.type)}
+        title={getProposalTitleString(proposal, { governanceCircles })}
         subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
-        description={proposal.data.args.description}
-      >
-        {isCountdownState && (
-          <ProposalFeedVotingInfo
-            proposal={proposal}
-            governanceCircles={governanceCircles}
-          />
+        description={getProposalDescriptionString(
+          proposal.data.args.description,
+          proposal.type,
         )}
+        image={discussion?.images[0] as CommonLink}
+      >
+        <ProposalFeedVotingInfo
+          proposal={proposal}
+          governanceCircles={governanceCircles}
+        />
         {isVotingAllowed && (
           <ProposalFeedButtonContainer
             proposalId={proposal.id}
@@ -162,6 +182,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
         lastActivity={item.updatedAt.seconds * 1000}
+        onMessagesClick={handleOpenChat}
       />
     </FeedCard>
   );

@@ -5,8 +5,9 @@ import {
   CreateCommonModal,
   CreateProposalModal,
   LeaveCommonModal,
+  MembershipRequestModal,
 } from "@/pages/OldCommon/components";
-import { useNotification } from "@/shared/hooks";
+import { useModal, useNotification } from "@/shared/hooks";
 import {
   CirclesPermissions,
   Common,
@@ -33,6 +34,8 @@ interface CommonDataProps {
   subCommons: Common[];
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
+  isJoinPending: boolean;
+  setIsJoinPending: (isJoinPending: boolean) => void;
 }
 
 const CommonData: FC<CommonDataProps> = (props) => {
@@ -44,6 +47,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
     subCommons,
     parentCommon,
     parentCommonSubCommons,
+    isJoinPending,
+    setIsJoinPending,
     children,
   } = props;
   const dispatch = useDispatch();
@@ -70,7 +75,6 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onLeaveCircleModalOpen,
     onLeaveCircleModalClose,
   } = useLeaveCircleModal();
-
   const {
     circleNameToJoin,
     createAssignProposalJoinPayload,
@@ -78,6 +82,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onJoinCircleModalClose,
     onJoinCircleModalOpen,
   } = useJoinCircleModal();
+  const {
+    isShowing: isCommonJoinModalOpen,
+    onOpen: onCommonJoinModalOpen,
+    onClose: onCommonJoinModalClose,
+  } = useModal(false);
+  const isProject = Boolean(common.directParent);
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -115,6 +125,9 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
+      isJoinAllowed: !commonMember && !isJoinPending,
+      isJoinPending: !commonMember && isJoinPending,
+      onJoinCommon: isProject ? undefined : onCommonJoinModalOpen,
       onLeaveCircle: onLeaveCircleModalOpen,
       onJoinCircle: onJoinCircleModalOpen,
     }),
@@ -128,6 +141,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
+      commonMember,
+      isJoinPending,
+      isProject,
+      onCommonJoinModalOpen,
       onLeaveCircleModalOpen,
       onJoinCircleModalOpen,
     ],
@@ -184,6 +201,13 @@ const CommonData: FC<CommonDataProps> = (props) => {
           payload={createAssignProposalJoinPayload}
         />
       )}
+      <MembershipRequestModal
+        isShowing={isCommonJoinModalOpen}
+        onClose={onCommonJoinModalClose}
+        common={common}
+        governance={governance}
+        onRequestCreated={() => setIsJoinPending(true)}
+      />
     </CommonDataContext.Provider>
   );
 };

@@ -2,7 +2,7 @@ import moment, { Moment } from "moment";
 
 const TIME_FORMAT = "HH:mm";
 
-const getTodayTimeAgo = (date: Moment, today: Moment): string => {
+const getTimeAgoWithinLast24Hours = (date: Moment, today: Moment): string => {
   const hoursDiff = today.diff(date, "hours");
 
   if (hoursDiff > 0) {
@@ -28,7 +28,7 @@ export const getTimeAgo = (
   const daysDiff = today.diff(date, "days");
 
   if (daysDiff === 0) {
-    return getTodayTimeAgo(date, today);
+    return getTimeAgoWithinLast24Hours(date, today);
   }
 
   const formattedTime = date.format(TIME_FORMAT);

@@ -115,7 +115,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     const { current } = contentRef;
 
     setIsFullyScrolledToTop(
-      !isHeaderSticky || Boolean(current && current.scrollTop <= 0),
+      !isHeaderSticky || !current || current.scrollTop <= 0,
     );
     setIsFullyScrolledToBottom(
       !isFooterSticky ||

@@ -1,1 +1,1 @@
-export * from "./ModalTriggerButton";
+export { default as ModalTriggerButton } from "./ModalTriggerButton";

@@ -1,1 +1,1 @@
-export { default as FeedTab } from "./FeedTab";
+export * from "./FeedTab";

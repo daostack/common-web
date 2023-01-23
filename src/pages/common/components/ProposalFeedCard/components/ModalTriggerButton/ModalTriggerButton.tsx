@@ -1,20 +1,26 @@
-import React, { FC } from "react";
+import React, { ForwardRefRenderFunction, forwardRef } from "react";
 import classNames from "classnames";
 import { SmallArrowIcon } from "@/shared/icons";
 import styles from "./ModalTriggerButton.module.scss";
 
-interface ModalTriggerButtonProps {
-  className?: string;
-  onClick?: () => void;
-}
+type ModalTriggerButtonProps = JSX.IntrinsicElements["button"];
 
-export const ModalTriggerButton: FC<ModalTriggerButtonProps> = (props) => {
-  const { className, children } = props;
+const ModalTriggerButton: ForwardRefRenderFunction<
+  HTMLButtonElement,
+  ModalTriggerButtonProps
+> = (props, ref) => {
+  const { className, children, ...restProps } = props;
 
   return (
-    <button className={classNames(styles.button, className)}>
+    <button
+      {...restProps}
+      ref={ref}
+      className={classNames(styles.button, className)}
+    >
       {children}
       <SmallArrowIcon className={styles.icon} />
     </button>
   );
 };
+
+export default forwardRef(ModalTriggerButton);

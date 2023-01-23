@@ -1,13 +1,19 @@
-import React, { FC, memo, useEffect } from "react";
+import React, { FC, memo, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ReportModal } from "@/shared/components";
 import { DynamicLinkType, EntityTypes } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
-import { CommonFeed, DateFormat, Governance } from "@/shared/models";
+import {
+  CommonFeed,
+  CommonLink,
+  DateFormat,
+  Governance,
+} from "@/shared/models";
 import { DesktopStyleMenu } from "@/shared/ui-kit";
 import { formatDate, getUserName } from "@/shared/utils";
+import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
   FeedCardHeader,
@@ -27,6 +33,7 @@ interface DiscussionFeedCardProps {
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
+  const { setChatItem } = useChatContext();
   const { item, governanceCircles, isMobileVersion = false } = props;
   const {
     isShowing: isReportModalOpen,
@@ -38,11 +45,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     onOpen: onShareModalOpen,
     onClose: onShareModalClose,
   } = useModal(false);
-  const {
-    isShowing: isMenuOpen,
-    onOpen: onMenuOpen,
-    onClose: onMenuClose,
-  } = useModal(false);
+  const { isShowing: isMenuOpen, onClose: onMenuClose } = useModal(false);
   const {
     fetchUser: fetchDiscussionCreator,
     data: discussionCreator,
@@ -74,6 +77,15 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     discussion?.circleVisibility,
   );
 
+  const handleOpenChat = useCallback(() => {
+    if (discussion) {
+      setChatItem({
+        discussion,
+        circleVisibility: item.circleVisibility,
+      });
+    }
+  }, [discussion, item]);
+
   useEffect(() => {
     fetchDiscussionCreator(item.userId);
   }, [item.userId]);
@@ -87,10 +99,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }
 
   return (
-    <FeedCard
-      onLongPress={isMobileVersion ? onMenuOpen : undefined}
-      isLongPressed={isMenuOpen}
-    >
+    <FeedCard isLongPressed={isMenuOpen}>
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}
         title={getUserName(discussionCreator)}
@@ -106,10 +115,12 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       <FeedCardContent
         title={discussion?.title}
         description={discussion?.message}
+        image={discussion?.images[0] as CommonLink}
       />
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
         lastActivity={item.updatedAt.seconds * 1000}
+        onMessagesClick={handleOpenChat}
       />
       {userId && discussion && (
         <ReportModal
