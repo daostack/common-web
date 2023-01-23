@@ -5,7 +5,12 @@ import { ReportModal } from "@/shared/components";
 import { DynamicLinkType, EntityTypes } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
-import { CommonFeed, DateFormat, Governance } from "@/shared/models";
+import {
+  CommonFeed,
+  CommonLink,
+  DateFormat,
+  Governance,
+} from "@/shared/models";
 import { DesktopStyleMenu } from "@/shared/ui-kit";
 import { formatDate, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
@@ -110,6 +115,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       <FeedCardContent
         title={discussion?.title}
         description={discussion?.message}
+        image={discussion?.images[0] as CommonLink}
       />
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}

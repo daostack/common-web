@@ -1,6 +1,8 @@
 import React, { ReactNode, useMemo } from "react";
 import classNames from "classnames";
+import { Image } from "@/shared/components";
 import { useFullText } from "@/shared/hooks";
+import { CommonLink } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
   parseStringToTextEditorValue,
@@ -12,10 +14,11 @@ interface FeedGeneralInfoProps {
   title?: string;
   subtitle?: ReactNode;
   description?: string;
+  image?: CommonLink;
 }
 
 export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
-  const { title, subtitle, description } = props;
+  const { title, subtitle, description, image } = props;
   const {
     setRef: setDescriptionRef,
     shouldShowFullText,
@@ -54,6 +57,13 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
             </a>
           )}
         </>
+      )}
+      {image && (
+        <Image
+          src={image.value}
+          className={classNames(styles.image)}
+          alt={image.title}
+        />
       )}
     </div>
   );
