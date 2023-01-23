@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
+import { authentificated } from "@/pages/Auth/store/selectors";
 import {
   CreateCommonModal,
   CreateProposalModal,
@@ -87,6 +88,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onOpen: onCommonJoinModalOpen,
     onClose: onCommonJoinModalClose,
   } = useModal(false);
+  const isAuthenticated = useSelector(authentificated());
   const isProject = Boolean(common.directParent);
 
   const handleMenuItemSelect = useCallback(
@@ -125,7 +127,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
-      isJoinAllowed: !commonMember && !isJoinPending,
+      isJoinAllowed: !commonMember && !isJoinPending && isAuthenticated,
       isJoinPending: !commonMember && isJoinPending,
       onJoinCommon: isProject ? undefined : onCommonJoinModalOpen,
       onLeaveCircle: onLeaveCircleModalOpen,
@@ -144,6 +146,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       commonMember,
       isJoinPending,
       isProject,
+      isAuthenticated,
       onCommonJoinModalOpen,
       onLeaveCircleModalOpen,
       onJoinCircleModalOpen,
