@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
-import { useFullCommonData } from "@/shared/hooks/useCases";
+import { useFullCommonData, useUserPendingJoin } from "@/shared/hooks/useCases";
 import { Loader, NotFound } from "@/shared/ui-kit";
 import { CommonContent, PureCommonTopNavigation } from "./components";
 import styles from "./Common.module.scss";
@@ -23,14 +23,28 @@ const Common: FC = () => {
     fetched: isCommonMemberFetched,
     data: commonMember,
     fetchCommonMember,
-  } = useCommonMember(false);
+  } = useCommonMember({
+    shouldAutoReset: false,
+    withSubscription: true,
+    commonId,
+    governanceCircles: commonData?.governance.circles,
+  });
+  const {
+    fetched: isPendingJoinCheckFinished,
+    data: isJoinPending,
+    checkUserPendingJoin,
+    setIsJoinPending,
+  } = useUserPendingJoin();
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const isDataFetched = isCommonDataFetched;
+  const isGlobalDataFetched =
+    isCommonMemberFetched && isPendingJoinCheckFinished;
 
   const fetchData = () => {
     fetchCommonData(commonId);
     fetchCommonMember(commonId, {}, true);
+    checkUserPendingJoin(commonId);
   };
 
   useEffect(() => {
@@ -39,6 +53,7 @@ const Common: FC = () => {
 
   useEffect(() => {
     fetchCommonMember(commonId, {}, true);
+    checkUserPendingJoin(commonId);
   }, [userId]);
 
   if (!isDataFetched) {
@@ -67,8 +82,10 @@ const Common: FC = () => {
       parentCommons={commonData.parentCommons}
       subCommons={commonData.subCommons}
       parentCommonSubCommons={commonData.parentCommonSubCommons}
-      isCommonMemberFetched={isCommonMemberFetched}
+      isGlobalDataFetched={isGlobalDataFetched}
       commonMember={commonMember}
+      isJoinPending={isJoinPending}
+      setIsJoinPending={setIsJoinPending}
     />
   );
 };

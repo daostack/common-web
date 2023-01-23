@@ -91,6 +91,20 @@ class ProposalService {
 
     return createdProposal;
   };
+
+  public checkHasUserPendingMemberAdmittanceProposal = async (
+    commonId: string,
+    userId: string,
+  ): Promise<boolean> => {
+    const snapshot = await this.getProposalCollection()
+      .where("type", "==", ProposalsTypes.MEMBER_ADMITTANCE)
+      .where("data.args.proposerId", "==", userId)
+      .where("data.args.commonId", "==", commonId)
+      .where("state", "in", [ProposalState.VOTING, ProposalState.DISCUSSION])
+      .get();
+
+    return !snapshot.empty;
+  };
 }
 
 export default new ProposalService();

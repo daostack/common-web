@@ -27,8 +27,10 @@ interface CommonContentProps {
   parentCommons: Common[];
   subCommons: Common[];
   parentCommonSubCommons: Common[];
-  isCommonMemberFetched: boolean;
+  isGlobalDataFetched: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  isJoinPending: boolean;
+  setIsJoinPending: (isJoinPending: boolean) => void;
 }
 
 const CommonContent: FC<CommonContentProps> = (props) => {
@@ -37,10 +39,12 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     governance,
     parentCommons,
     subCommons,
-    isCommonMemberFetched,
+    isGlobalDataFetched,
     commonMember,
     parentCommon,
     parentCommonSubCommons,
+    isJoinPending,
+    setIsJoinPending,
   } = props;
   const dispatch = useDispatch();
   const [tab, setTab] = useState(CommonTab.About);
@@ -69,6 +73,8 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       parentCommons={parentCommons}
       subCommons={subCommons}
       parentCommonSubCommons={parentCommonSubCommons}
+      isJoinPending={isJoinPending}
+      setIsJoinPending={setIsJoinPending}
     >
       <CommonTopNavigation
         commonMember={commonMember}
@@ -76,7 +82,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         isSubCommon={isSubCommon}
         commonId={common.id}
       />
-      {!isCommonMemberFetched && (
+      {!isGlobalDataFetched && (
         <Loader
           overlayClassName={styles.globalLoader}
           variant={LoaderVariant.Global}

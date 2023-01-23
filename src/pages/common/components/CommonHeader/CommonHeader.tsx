@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { useCommonDataContext } from "@/pages/common/providers";
 import { Image } from "@/shared/components/Image";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
@@ -14,7 +15,6 @@ interface CommonHeaderProps {
   isProject?: boolean;
   withJoin?: boolean;
   joinButtonText?: string;
-  onJoin?: () => void;
 }
 
 const CommonHeader: FC<CommonHeaderProps> = (props) => {
@@ -26,10 +26,11 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
     isProject = false,
     withJoin = true,
     joinButtonText = isProject ? "Join the project" : "Join the effort",
-    onJoin,
   } = props;
+  const { isJoinAllowed, onJoinCommon } = useCommonDataContext();
   const isTabletView = useIsTabletView();
-  const isJoinButtonVisible = !isTabletView && withJoin;
+  const isJoinButtonVisible =
+    !isTabletView && withJoin && !isProject && isJoinAllowed;
   const areItemsVisible = Boolean(details && details.length > 0);
   const commonImageClassName = classNames(styles.commonImage, {
     [styles.commonImageRounded]: isProject,
@@ -71,7 +72,7 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
               })}
               variant={ButtonVariant.OutlineBlue}
               size={ButtonSize.Medium}
-              onClick={onJoin}
+              onClick={onJoinCommon}
             >
               {joinButtonText}
             </Button>

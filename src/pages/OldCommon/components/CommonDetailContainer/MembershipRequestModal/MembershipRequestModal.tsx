@@ -48,7 +48,8 @@ const INIT_DATA: IMembershipRequestData = {
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
   governance: Governance;
-  onCreationStageReach: (reached: boolean) => void;
+  onCreationStageReach?: (reached: boolean) => void;
+  onRequestCreated?: () => void;
 }
 
 export function MembershipRequestModal(props: IProps) {
@@ -59,8 +60,14 @@ export function MembershipRequestModal(props: IProps) {
   const modalRef = useRef<ModalRef>(null);
   const [userData, setUserData] = useState(INIT_DATA);
   const { stage } = userData;
-  const { isShowing, onClose, common, governance, onCreationStageReach } =
-    props;
+  const {
+    isShowing,
+    onClose,
+    common,
+    governance,
+    onCreationStageReach,
+    onRequestCreated,
+  } = props;
   const {
     loading: isMembershipCheckLoading,
     fetched: isMembershipCheckDone,
@@ -118,7 +125,10 @@ export function MembershipRequestModal(props: IProps) {
     };
 
     setUserData(payload);
-    onCreationStageReach(false);
+
+    if (onCreationStageReach) {
+      onCreationStageReach(false);
+    }
   }, [isMembershipCheckDone, isMember, isShowing, onCreationStageReach]);
 
   const renderCurrentStage = (stage: number) => {
@@ -192,10 +202,16 @@ export function MembershipRequestModal(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (stage === MembershipRequestStage.Creating) {
+    if (stage === MembershipRequestStage.Creating && onCreationStageReach) {
       onCreationStageReach(true);
     }
   }, [stage, onCreationStageReach]);
+
+  useEffect(() => {
+    if (stage === MembershipRequestStage.Created && onRequestCreated) {
+      onRequestCreated();
+    }
+  }, [stage]);
 
   useEffect(() => {
     modalRef.current?.scrollToTop();
