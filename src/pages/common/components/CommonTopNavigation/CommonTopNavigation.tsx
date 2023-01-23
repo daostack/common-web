@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import {
   Button,
@@ -25,41 +25,54 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
   const { isJoinAllowed, isJoinPending, onJoinCommon } = useCommonDataContext();
   const circlesMap = commonMember?.circles.map;
   const isJoinButtonVisible = !isSubCommon && isJoinAllowed;
-  const centralEl = commonMember ? (
-    <CommonMemberInfo
-      circles={circles}
-      circlesMap={circlesMap}
-      commonId={commonId}
-      commonMember={commonMember}
-      isMobileVersion
-    />
-  ) : isJoinPending ? (
-    <PendingJoinInfo isMobileVersion />
-  ) : null;
-  const rightEl = commonMember ? (
-    <CommonMenuButton
-      commonMember={commonMember}
-      circles={circles}
-      isSubCommon={isSubCommon}
-      isMobileVersion
-    />
-  ) : isJoinButtonVisible ? (
-    <Button
-      variant={ButtonVariant.OutlineBlue}
-      size={ButtonSize.Xsmall}
-      onClick={onJoinCommon}
-    >
-      Join
-    </Button>
-  ) : (
-    <div className={styles.emptyBlock} />
-  );
+
+  const renderCentralElement = (): ReactNode => {
+    if (commonMember) {
+      return (
+        <CommonMemberInfo
+          circles={circles}
+          circlesMap={circlesMap}
+          commonId={commonId}
+          commonMember={commonMember}
+          isMobileVersion
+        />
+      );
+    }
+
+    return isJoinPending ? <PendingJoinInfo isMobileVersion /> : null;
+  };
+
+  const renderRightElement = (): ReactNode => {
+    if (commonMember) {
+      return (
+        <CommonMenuButton
+          commonMember={commonMember}
+          circles={circles}
+          isSubCommon={isSubCommon}
+          isMobileVersion
+        />
+      );
+    }
+    if (isJoinButtonVisible) {
+      return (
+        <Button
+          variant={ButtonVariant.OutlineBlue}
+          size={ButtonSize.Xsmall}
+          onClick={onJoinCommon}
+        >
+          Join
+        </Button>
+      );
+    }
+
+    return <div className={styles.emptyBlock} />;
+  };
 
   return (
     <TopNavigation className={styles.container}>
       <TopNavigationOpenSidenavButton />
-      {centralEl}
-      {rightEl}
+      {renderCentralElement()}
+      {renderRightElement()}
     </TopNavigation>
   );
 };
