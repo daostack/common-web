@@ -7,7 +7,12 @@ import {
 } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
-import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import {
+  Circles,
+  CirclesPermissions,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { CommonService, GovernanceService, Logger } from "../../../services";
@@ -16,7 +21,7 @@ interface Options {
   shouldAutoReset?: boolean;
   withSubscription?: boolean;
   commonId?: string;
-  governanceCircles?: Governance["circles"];
+  governanceCircles?: Circles;
 }
 
 type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
