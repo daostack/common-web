@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
+import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { UserAvatar } from "@/shared/components";
@@ -9,6 +10,7 @@ import { PermissionSelection } from "../PermissionSelection";
 import styles from "./NewDiscussionHeader.module.scss";
 
 interface NewDiscussionHeaderProps {
+  className?: string;
   currentCircle: Circle | null;
   governanceCircles: Governance["circles"];
   userCircleIds?: string[];
@@ -18,6 +20,7 @@ interface NewDiscussionHeaderProps {
 
 const NewDiscussionHeader: FC<NewDiscussionHeaderProps> = (props) => {
   const {
+    className,
     currentCircle,
     governanceCircles,
     userCircleIds,
@@ -28,7 +31,7 @@ const NewDiscussionHeader: FC<NewDiscussionHeaderProps> = (props) => {
   const userName = getUserName(user);
 
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, className)}>
       <UserAvatar
         className={styles.avatar}
         photoURL={user?.photoURL}

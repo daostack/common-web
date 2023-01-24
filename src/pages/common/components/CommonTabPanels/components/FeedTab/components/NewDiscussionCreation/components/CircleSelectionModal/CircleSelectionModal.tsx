@@ -1,7 +1,8 @@
 import React, { FC, useEffect, useState } from "react";
 import { Dropdown, DropdownOption, Modal } from "@/shared/components";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Circle, Governance } from "@/shared/models";
-import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
 import { addCirclesWithHigherTier } from "@/shared/utils";
 import { getCircleNamesAsString } from "./utils";
 import styles from "./CircleSelectionModal.module.scss";
@@ -23,6 +24,7 @@ const CircleSelectionModal: FC<CircleSelectionModalProps> = (props) => {
     initialCircleId = null,
     userCircleIds = [],
   } = props;
+  const isTabletView = useIsTabletView();
   const [selectedCircleId, setSelectedCircleId] = useState<string | null>(
     initialCircleId,
   );
@@ -44,6 +46,7 @@ const CircleSelectionModal: FC<CircleSelectionModalProps> = (props) => {
         userCircleIds,
       ).filter((circle) => circle.id !== selectedCircleId)
     : [];
+  const buttonSize = isTabletView ? ButtonSize.Large : ButtonSize.Medium;
 
   const handleCircleSelect = (value: unknown) => {
     setSelectedCircleId(value as string);
@@ -79,6 +82,7 @@ const CircleSelectionModal: FC<CircleSelectionModalProps> = (props) => {
       }
       styles={{
         header: styles.modalHeader,
+        closeWrapper: styles.closeWrapper,
       }}
     >
       <div className={styles.modalContent}>
@@ -103,11 +107,16 @@ const CircleSelectionModal: FC<CircleSelectionModalProps> = (props) => {
             <Button
               className={styles.button}
               variant={ButtonVariant.PrimaryGray}
+              size={buttonSize}
               onClick={onClose}
             >
               Cancel
             </Button>
-            <Button className={styles.button} onClick={handleSave}>
+            <Button
+              className={styles.button}
+              size={buttonSize}
+              onClick={handleSave}
+            >
               Save
             </Button>
           </div>
