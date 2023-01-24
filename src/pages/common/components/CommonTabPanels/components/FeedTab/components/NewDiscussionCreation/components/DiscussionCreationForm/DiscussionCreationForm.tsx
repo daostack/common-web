@@ -14,6 +14,7 @@ import styles from "./DiscussionCreationForm.module.scss";
 type FormValues = NewDiscussionCreationFormValues;
 
 interface Styles {
+  header?: string;
   buttonsWrapper?: string;
 }
 
@@ -51,6 +52,7 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
       {({ values, setFieldValue }) => (
         <Form className={classNames(styles.form, className)}>
           <NewDiscussionHeader
+            className={outerStyles?.header}
             currentCircle={values.circle}
             governanceCircles={governanceCircles}
             userCircleIds={userCircleIds}

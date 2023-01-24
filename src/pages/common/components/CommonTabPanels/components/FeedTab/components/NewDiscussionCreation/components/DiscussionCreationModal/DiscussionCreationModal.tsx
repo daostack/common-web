@@ -47,6 +47,7 @@ const DiscussionCreationModal: FC<DiscussionCreationModalProps> = (props) => {
         onSubmit={onSubmit}
         isLoading={isLoading}
         styles={{
+          header: styles.discussionCreationFormHeader,
           buttonsWrapper: styles.buttonsWrapper,
         }}
       />
