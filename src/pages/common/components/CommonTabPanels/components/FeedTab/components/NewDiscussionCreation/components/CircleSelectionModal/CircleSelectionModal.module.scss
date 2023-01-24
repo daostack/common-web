@@ -1,5 +1,6 @@
 @import "../../../../../../../../../../constants";
 @import "../../../../../../../../../../styles/mixins";
+@import "../../../../../../../../../../styles/sizes";
 
 .modal {
   max-width: 31.875rem;
@@ -7,6 +8,10 @@
   .modalHeader {
     margin-top: 2rem;
     justify-content: flex-start;
+  }
+
+  .closeWrapper {
+    top: 0;
   }
 }
 
@@ -45,15 +50,27 @@
 
 .buttonsContainer {
   margin-top: 3.75rem;
+
+  @include tablet {
+    margin-top: 2.25rem;
+  }
 }
 
 .buttonsWrapper {
   @include flex-list-with-gap(1.5rem);
 
   justify-content: flex-end;
+
+  @include tablet {
+    flex-wrap: wrap-reverse;
+  }
 }
 
 .button {
   max-width: 9.5rem;
   width: 100%;
+
+  @include tablet {
+    max-width: 100%;
+  }
 }

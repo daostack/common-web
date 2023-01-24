@@ -11,11 +11,13 @@ import {
 } from "@/store/states";
 import { commonActions } from "@/store/states";
 import { useCommonDataContext } from "../../../../../../providers";
-import { DiscussionCreationCard } from "./components";
+import { DiscussionCreationCard, DiscussionCreationModal } from "./components";
 
 interface NewDiscussionCreationProps {
   governanceCircles: Governance["circles"];
   commonMember: (CommonMember & CirclesPermissions) | null;
+  commonImage?: string;
+  commonName?: string;
   isModalVariant?: boolean;
 }
 
@@ -27,7 +29,13 @@ const INITIAL_VALUES: NewDiscussionCreationFormValues = {
 };
 
 const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
-  const { governanceCircles, commonMember, isModalVariant = false } = props;
+  const {
+    governanceCircles,
+    commonMember,
+    commonImage,
+    commonName,
+    isModalVariant = false,
+  } = props;
   const dispatch = useDispatch();
   const { common } = useCommonDataContext();
   const discussionCreationData = useSelector(selectDiscussionCreationData);
@@ -78,8 +86,23 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     [governanceCircles, userCircleIds, userId, common.id],
   );
 
-  if (isModalVariant) {
-    return null;
+  if (
+    isModalVariant &&
+    typeof commonImage === "string" &&
+    typeof commonName === "string"
+  ) {
+    return (
+      <DiscussionCreationModal
+        initialValues={initialValues}
+        governanceCircles={governanceCircles}
+        userCircleIds={userCircleIds}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        isLoading={isLoading}
+        commonImage={commonImage}
+        commonName={commonName}
+      />
+    );
   }
 
   return (

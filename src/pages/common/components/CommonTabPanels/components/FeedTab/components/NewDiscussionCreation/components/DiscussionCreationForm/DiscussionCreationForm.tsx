@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import classNames from "classnames";
 import { Formik } from "formik";
 import { Form } from "@/shared/components/Form/Formik";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
@@ -12,23 +13,31 @@ import styles from "./DiscussionCreationForm.module.scss";
 
 type FormValues = NewDiscussionCreationFormValues;
 
+interface Styles {
+  buttonsWrapper?: string;
+}
+
 interface DiscussionCreationFormProps {
+  className?: string;
   initialValues: FormValues;
   governanceCircles: Circles;
   userCircleIds: string[];
   onSubmit: (values: FormValues) => void;
   onCancel?: () => void;
   isLoading?: boolean;
+  styles?: Styles;
 }
 
 const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
   const {
+    className,
     initialValues,
     governanceCircles,
     userCircleIds,
     onSubmit,
     onCancel,
     isLoading = false,
+    styles: outerStyles,
   } = props;
   const disabled = isLoading;
 
@@ -40,7 +49,7 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
       validateOnMount
     >
       {({ values, setFieldValue }) => (
-        <Form className={styles.form}>
+        <Form className={classNames(styles.form, className)}>
           <NewDiscussionHeader
             currentCircle={values.circle}
             governanceCircles={governanceCircles}
@@ -52,7 +61,12 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
             className={styles.discussionForm}
             disabled={disabled}
           />
-          <div className={styles.buttonsContainer}>
+          <div
+            className={classNames(
+              styles.buttonsContainer,
+              outerStyles?.buttonsWrapper,
+            )}
+          >
             <div className={styles.buttonsWrapper}>
               {onCancel && (
                 <Button

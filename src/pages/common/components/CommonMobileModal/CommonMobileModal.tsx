@@ -1,22 +1,31 @@
 import React, { FC } from "react";
 import { Image, Modal } from "@/shared/components";
+import { emptyFunction } from "@/shared/utils";
 import styles from "./CommonMobileModal.module.scss";
 
 interface CommonMobileModalProps {
   isOpen: boolean;
+  isClosingEnabled?: boolean;
   onClose: () => void;
   commonImage: string;
   commonName: string;
 }
 
 const CommonMobileModal: FC<CommonMobileModalProps> = (props) => {
-  const { isOpen, onClose, commonImage, commonName, children } = props;
+  const {
+    isOpen,
+    isClosingEnabled = true,
+    onClose,
+    commonImage,
+    commonName,
+    children,
+  } = props;
 
   return (
     <Modal
       className={styles.modal}
       isShowing={isOpen}
-      onClose={onClose}
+      onClose={isClosingEnabled ? onClose : emptyFunction}
       title={
         <div className={styles.titleWrapper}>
           <Image
@@ -31,9 +40,11 @@ const CommonMobileModal: FC<CommonMobileModalProps> = (props) => {
       }
       mobileFullScreen
       isHeaderSticky
+      hideCloseButton={!isClosingEnabled}
       styles={{
         headerWrapper: styles.modalHeaderWrapper,
         header: styles.modalHeader,
+        content: styles.modalContent,
       }}
     >
       {children}

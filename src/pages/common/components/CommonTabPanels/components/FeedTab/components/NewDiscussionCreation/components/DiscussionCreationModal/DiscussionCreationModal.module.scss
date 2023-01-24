@@ -1,0 +1,19 @@
+@import "../../../../../../../../../../constants";
+
+.title {
+  margin: 1rem 0 2.25rem;
+  font-family: Lexend, sans-serif;
+  font-weight: normal;
+  font-size: $moderate-med;
+  line-height: 100%;
+  color: $c-neutrals-600;
+}
+
+.form {
+  flex: 1;
+}
+
+.buttonsWrapper {
+  margin-top: auto;
+  padding-top: 2.5rem;
+}

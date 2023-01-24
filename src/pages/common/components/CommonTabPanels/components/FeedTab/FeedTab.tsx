@@ -136,6 +136,15 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
 
   const renderMobileColumn = () => (
     <div className={styles.mainColumnWrapper}>
+      {commonAction === CommonAction.NewDiscussion && (
+        <NewDiscussionCreation
+          governanceCircles={governance.circles}
+          commonMember={commonMember}
+          commonImage={common.image}
+          commonName={common.name}
+          isModalVariant
+        />
+      )}
       <FeedItems />
       <ChatMobileModal
         isShowing={Boolean(chatItem)}
