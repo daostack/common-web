@@ -22,7 +22,7 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
   const { title, subtitle, description, images = [] } = props;
   const {
     setRef: setDescriptionRef,
-    shouldShowFullText,
+    shouldShowFullText: shouldShowFullContent,
     isFullTextShowing,
     toggleFullText,
   } = useFullText<HTMLElement>();
@@ -33,7 +33,7 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
   const isDescriptionEmpty = checkIsTextEditorValueEmpty(parsedDescription);
   const image = images[0];
   const shouldDisplaySeeMoreButton =
-    ((shouldShowFullText || !isFullTextShowing) && !isDescriptionEmpty) ||
+    ((shouldShowFullContent || !isFullTextShowing) && !isDescriptionEmpty) ||
     images.length > 0;
 
   const handleSeeMoreClick = () => {
@@ -52,13 +52,13 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
         <TextEditor
           editorRef={setDescriptionRef}
           editorClassName={classNames(styles.description, {
-            [styles.descriptionShortened]: !shouldShowFullText,
+            [styles.descriptionShortened]: !shouldShowFullContent,
           })}
           value={parsedDescription}
           readOnly
         />
       )}
-      {image && shouldShowFullText && (
+      {image && shouldShowFullContent && (
         <Image
           src={image.value}
           className={classNames(styles.image)}
@@ -73,7 +73,7 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           onClick={handleSeeMoreClick}
         >
           See{" "}
-          {shouldShowFullText ? (
+          {shouldShowFullContent ? (
             "less"
           ) : (
             <>
