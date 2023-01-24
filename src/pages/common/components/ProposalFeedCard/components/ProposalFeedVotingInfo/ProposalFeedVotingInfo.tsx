@@ -3,6 +3,7 @@ import classNames from "classnames";
 import {
   calculateVotingStatus,
   checkIsFailingVoting,
+  checkIsVotingFinished,
 } from "@/pages/OldCommon/components/ProposalContainer/CountDownCard/helpers";
 import { getVotersString } from "@/pages/OldCommon/containers/ProposalContainer/helpers";
 import { useCountdown } from "@/shared/hooks";
@@ -81,7 +82,9 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
           {votersString}
         </p>
       </VotingInfo>
-      <VotingInfo label="Status">
+      <VotingInfo
+        label={checkIsVotingFinished(votingStatus) ? "Result" : "Status"}
+      >
         <ModalTriggerButton
           className={classNames(styles.votingStatus, {
             [styles.votingStatusFailing]: checkIsFailingVoting(votingStatus),
