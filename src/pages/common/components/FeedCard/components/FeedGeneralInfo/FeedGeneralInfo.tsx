@@ -63,6 +63,8 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           src={image.value}
           className={classNames(styles.image)}
           alt={image.title}
+          placeholderElement={null}
+          aria-hidden
         />
       )}
       {shouldDisplaySeeMoreButton && (
