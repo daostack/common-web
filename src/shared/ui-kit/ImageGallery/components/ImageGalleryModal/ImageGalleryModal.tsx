@@ -45,7 +45,7 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
       <div className="container">
         <Swiper onSwiper={setSwiperRef} loop={true} pagination>
           {videoSrc && (
-            <SwiperSlide key={0} className="slider-wrapper">
+            <SwiperSlide key={videoSrc} className="slider-wrapper">
               <div className="video-container">
                 <video
                   id="videoPlayer"
@@ -59,7 +59,7 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
             </SwiperSlide>
           )}
           {images.map((imageURL, index) => (
-            <SwiperSlide key={index + 1} className="slider-wrapper">
+            <SwiperSlide key={imageURL} className="slider-wrapper">
               <Image
                 className="slide-img"
                 src={imageURL}

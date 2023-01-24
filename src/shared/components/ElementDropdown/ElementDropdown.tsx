@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
+import copyToClipboard from "copy-to-clipboard";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { setCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
 import {
@@ -25,7 +26,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { copyToClipboard, hasPermission } from "@/shared/utils";
+import { hasPermission } from "@/shared/utils";
 import { DeleteModal } from "../DeleteModal";
 import {
   Dropdown,
