@@ -2,6 +2,7 @@ import React, { ReactNode, useMemo } from "react";
 import classNames from "classnames";
 import { Image } from "@/shared/components";
 import { useFullText } from "@/shared/hooks";
+import { AttachIcon } from "@/shared/icons";
 import { CommonLink } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
@@ -69,7 +70,17 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           className={classNames(styles.seeMore, styles.text)}
           onClick={handleSeeMoreClick}
         >
-          See {shouldShowFullText ? "less" : "more"}
+          See{" "}
+          {shouldShowFullText ? (
+            "less"
+          ) : (
+            <>
+              more
+              {images.length > 0 && (
+                <AttachIcon className={styles.attachIcon} />
+              )}
+            </>
+          )}
         </a>
       )}
     </div>
