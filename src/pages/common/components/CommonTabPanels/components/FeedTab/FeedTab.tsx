@@ -143,7 +143,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
           setChatItem(null);
         }}
         common={common}
-        title={common.description}
+        title={chatItem?.discussion.title}
       >
         {chatItem && (
           <ChatComponent

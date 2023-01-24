@@ -55,10 +55,6 @@ export const useDiscussionMessagesById = (): Return => {
   }
 
   useEffect(() => {
-    if(!state.data?.length) {
-      return;
-    }
-
     (async () => {
       const discussionMessages = [...(state.data || [])];
       const ownerIds = Array.from(
