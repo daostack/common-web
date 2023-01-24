@@ -126,10 +126,18 @@
     width: 3rem;
     height: 3rem;
     margin: 0 0.75rem;
+
+    @include phone {
+      width: 2.5rem;
+      height: 2.5rem;
+      margin: 0 0.4rem;
+    }
   }
+
+
 }
 
-@include big-phone {
+@include tablet {
   .social-links-wrapper {
     position: unset;
     box-shadow: unset;

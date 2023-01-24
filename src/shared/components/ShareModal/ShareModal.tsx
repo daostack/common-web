@@ -1,11 +1,11 @@
 import React, { FC, PropsWithChildren } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
+import copyToClipboard from "copy-to-clipboard";
 import { ButtonIcon, SocialLinks, Loader } from "@/shared/components";
 import { Colors, ShareViewType } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
 import { CopyLinkChainIcon } from "@/shared/icons";
-import { copyToClipboard } from "@/shared/utils";
 import { Modal } from "../Modal";
 import "./index.scss";
 
