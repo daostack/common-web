@@ -14,11 +14,11 @@ interface FeedGeneralInfoProps {
   title?: string;
   subtitle?: ReactNode;
   description?: string;
-  image?: CommonLink;
+  images?: CommonLink[];
 }
 
 export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
-  const { title, subtitle, description, image } = props;
+  const { title, subtitle, description, images = [] } = props;
   const {
     setRef: setDescriptionRef,
     shouldShowFullText,
@@ -29,6 +29,7 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
     () => parseStringToTextEditorValue(description),
     [description],
   );
+  const image = images[0];
 
   return (
     <div className={styles.container}>
