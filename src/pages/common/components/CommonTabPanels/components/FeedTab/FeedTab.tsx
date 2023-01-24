@@ -77,6 +77,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
         <NewDiscussionCreation
           governanceCircles={governance.circles}
           commonMember={commonMember}
+          isModalVariant={false}
         />
       )}
       <FeedItems />

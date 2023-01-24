@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
@@ -12,12 +11,12 @@ import {
 } from "@/store/states";
 import { commonActions } from "@/store/states";
 import { useCommonDataContext } from "../../../../../../providers";
-import { CommonCard } from "../../../../../CommonCard";
-import { DiscussionCreationForm } from "./components";
+import { DiscussionCreationCard } from "./components";
 
 interface NewDiscussionCreationProps {
   governanceCircles: Governance["circles"];
   commonMember: (CommonMember & CirclesPermissions) | null;
+  isModalVariant?: boolean;
 }
 
 const INITIAL_VALUES: NewDiscussionCreationFormValues = {
@@ -28,9 +27,8 @@ const INITIAL_VALUES: NewDiscussionCreationFormValues = {
 };
 
 const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
-  const { governanceCircles, commonMember } = props;
+  const { governanceCircles, commonMember, isModalVariant = false } = props;
   const dispatch = useDispatch();
-  const isTabletView = useIsTabletView();
   const { common } = useCommonDataContext();
   const discussionCreationData = useSelector(selectDiscussionCreationData);
   const isLoading = useSelector(selectIsDiscussionCreationLoading);
@@ -80,17 +78,19 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     [governanceCircles, userCircleIds, userId, common.id],
   );
 
+  if (isModalVariant) {
+    return null;
+  }
+
   return (
-    <CommonCard hideCardStyles={isTabletView}>
-      <DiscussionCreationForm
-        initialValues={initialValues}
-        governanceCircles={governanceCircles}
-        userCircleIds={userCircleIds}
-        onSubmit={handleSubmit}
-        onCancel={handleCancel}
-        isLoading={isLoading}
-      />
-    </CommonCard>
+    <DiscussionCreationCard
+      initialValues={initialValues}
+      governanceCircles={governanceCircles}
+      userCircleIds={userCircleIds}
+      onSubmit={handleSubmit}
+      onCancel={handleCancel}
+      isLoading={isLoading}
+    />
   );
 };
 
