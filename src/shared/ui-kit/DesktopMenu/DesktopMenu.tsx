@@ -18,10 +18,16 @@ const DesktopMenu: FC<DesktopMenuProps> = (props) => {
   return (
     <div className={classNames(styles.container, className)}>
       <Menu>
-        <Menu.Button as={React.Fragment}>{triggerEl}</Menu.Button>
-        <Transition>
-          <MenuItems className={menuItemsClassName} items={items} />
-        </Transition>
+        {({ open }) => (
+          <>
+            <Menu.Button as={React.Fragment}>{triggerEl}</Menu.Button>
+            <Transition show={open}>
+              {open && (
+                <MenuItems className={menuItemsClassName} items={items} />
+              )}
+            </Transition>
+          </>
+        )}
       </Menu>
     </div>
   );

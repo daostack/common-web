@@ -1,12 +1,8 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Formik, FormikConfig } from "formik";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { Form } from "@/shared/components/Form/Formik";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
-import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
 import { addCirclesWithHigherTier } from "@/shared/utils";
 import {
@@ -15,18 +11,14 @@ import {
 } from "@/store/states";
 import { commonActions } from "@/store/states";
 import { useCommonDataContext } from "../../../../../../providers";
-import { CommonCard } from "../../../../../CommonCard";
-import {
-  DiscussionForm,
-  DiscussionFormPersist,
-  NewDiscussionHeader,
-} from "./components";
-import validationSchema from "./validationSchema";
-import styles from "./NewDiscussionCreation.module.scss";
+import { DiscussionCreationCard, DiscussionCreationModal } from "./components";
 
 interface NewDiscussionCreationProps {
   governanceCircles: Governance["circles"];
   commonMember: (CommonMember & CirclesPermissions) | null;
+  commonImage?: string;
+  commonName?: string;
+  isModalVariant?: boolean;
 }
 
 const INITIAL_VALUES: NewDiscussionCreationFormValues = {
@@ -37,9 +29,14 @@ const INITIAL_VALUES: NewDiscussionCreationFormValues = {
 };
 
 const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
-  const { governanceCircles, commonMember } = props;
+  const {
+    governanceCircles,
+    commonMember,
+    commonImage,
+    commonName,
+    isModalVariant = false,
+  } = props;
   const dispatch = useDispatch();
-  const isTabletView = useIsTabletView();
   const { common } = useCommonDataContext();
   const discussionCreationData = useSelector(selectDiscussionCreationData);
   const isLoading = useSelector(selectIsDiscussionCreationLoading);
@@ -59,10 +56,8 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     dispatch(commonActions.setDiscussionCreationData(null));
   };
 
-  const handleSubmit = useCallback<
-    FormikConfig<NewDiscussionCreationFormValues>["onSubmit"]
-  >(
-    (values) => {
+  const handleSubmit = useCallback(
+    (values: NewDiscussionCreationFormValues) => {
       if (!userId) {
         return;
       }
@@ -91,51 +86,34 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     [governanceCircles, userCircleIds, userId, common.id],
   );
 
-  return (
-    <CommonCard hideCardStyles={isTabletView}>
-      <Formik
+  if (
+    isModalVariant &&
+    typeof commonImage === "string" &&
+    typeof commonName === "string"
+  ) {
+    return (
+      <DiscussionCreationModal
         initialValues={initialValues}
+        governanceCircles={governanceCircles}
+        userCircleIds={userCircleIds}
         onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-        validateOnMount
-      >
-        {({ values, setFieldValue }) => (
-          <Form className={styles.form}>
-            <NewDiscussionHeader
-              currentCircle={values.circle}
-              governanceCircles={governanceCircles}
-              userCircleIds={userCircleIds}
-              onCircleSave={(circle) => setFieldValue("circle", circle)}
-              disabled={isLoading}
-            />
-            <DiscussionForm
-              className={styles.discussionForm}
-              disabled={isLoading}
-            />
-            <div className={styles.buttonsContainer}>
-              <div className={styles.buttonsWrapper}>
-                <Button
-                  className={styles.button}
-                  variant={ButtonVariant.PrimaryGray}
-                  onClick={handleCancel}
-                  disabled={isLoading}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className={styles.button}
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  Publish discussion
-                </Button>
-              </div>
-            </div>
-            <DiscussionFormPersist />
-          </Form>
-        )}
-      </Formik>
-    </CommonCard>
+        onCancel={handleCancel}
+        isLoading={isLoading}
+        commonImage={commonImage}
+        commonName={commonName}
+      />
+    );
+  }
+
+  return (
+    <DiscussionCreationCard
+      initialValues={initialValues}
+      governanceCircles={governanceCircles}
+      userCircleIds={userCircleIds}
+      onSubmit={handleSubmit}
+      onCancel={handleCancel}
+      isLoading={isLoading}
+    />
   );
 };
 
