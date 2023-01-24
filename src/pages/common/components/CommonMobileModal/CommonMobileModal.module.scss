@@ -14,6 +14,10 @@
     display: flex;
     flex-direction: column;
   }
+
+  .closeWrapper {
+    top: 0.625rem;
+  }
 }
 
 .titleWrapper {
@@ -23,6 +27,7 @@
 
 .commonImage {
   flex-shrink: 0;
+  align-self: flex-start;
   width: 2rem;
   height: 2rem;
   margin-right: 1rem;

@@ -45,6 +45,7 @@ const CommonMobileModal: FC<CommonMobileModalProps> = (props) => {
         headerWrapper: styles.modalHeaderWrapper,
         header: styles.modalHeader,
         content: styles.modalContent,
+        closeWrapper: styles.closeWrapper,
       }}
     >
       {children}
