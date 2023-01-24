@@ -74,16 +74,19 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
       userId,
       (data) => {
         const pendingCircleMap = new Map<string, boolean>();
+        let circleName = "";
         governanceCircles.forEach(({ id: circleId, name }) => {
           const isPendingCircle = data.some(
             (proposal) => proposal.data.args.circleId === circleId,
           );
+
           if (isPendingCircle) {
-            setPendingCircleName(name);
+            circleName = name;
           }
           pendingCircleMap.set(circleId, isPendingCircle);
         });
 
+        setPendingCircleName(circleName);
         setPendingCircles(pendingCircleMap);
       },
     );
