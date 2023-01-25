@@ -94,7 +94,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
             {
               args: {
                 commonId,
-                title: `Assign circle proposal for ${userName}`,
+                title: `Request to join ${circleName} circle by ${userName}`,
                 description: `Join circle request: ${circleName}`,
                 images: [],
                 links: [],
