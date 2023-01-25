@@ -5,12 +5,7 @@ import {
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
-import {
-  CommonFeed,
-  CommonLink,
-  DateFormat,
-  Governance,
-} from "@/shared/models";
+import { CommonFeed, DateFormat, Governance } from "@/shared/models";
 import { checkIsCountdownState, formatDate, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
@@ -161,7 +156,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           proposal.data.args.description,
           proposal.type,
         )}
-        image={discussion?.images[0] as CommonLink}
+        images={discussion?.images}
       >
         <ProposalFeedVotingInfo
           proposal={proposal}

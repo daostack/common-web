@@ -7,11 +7,11 @@ export interface FeedCardContentProps {
   title?: string;
   subtitle?: ReactNode;
   description?: string;
-  image?: CommonLink;
+  images?: CommonLink[];
 }
 
 export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {
-  const { children, title, description, subtitle, image } = props;
+  const { children, title, description, subtitle, images } = props;
 
   return (
     <div className={styles.container}>
@@ -19,7 +19,7 @@ export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {
         title={title}
         description={description}
         subtitle={subtitle}
-        image={image}
+        images={images}
       />
       {children}
     </div>
