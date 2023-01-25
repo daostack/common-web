@@ -1,8 +1,9 @@
 import React, { FC, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Loader } from "@/shared/components";
+import { ButtonIcon, Loader } from "@/shared/components";
 import { ShareViewType, SharePopupVariant } from "@/shared/constants";
+import { FacebookIcon } from "@/shared/icons";
 import { isMobile } from "@/shared/utils";
 import "./index.scss";
 
@@ -116,12 +117,12 @@ export const SocialLinks: FC<SocialLinksProps> = ({
               shareViewType === ShareViewType.ModalMobile,
           })}
         >
-          <button
-            className="facebook"
-            onClick={() => handleURLOpen(Social.Facebook)}
-          >
-            <div className="social-icon facebook-icon" />
-          </button>
+          <ButtonIcon onClick={() => handleURLOpen(Social.Facebook)}>
+            <FacebookIcon
+              className="social-icon facebook-icon"
+              color="currentColor"
+            />
+          </ButtonIcon>
           <button
             className="linkedin"
             onClick={() => handleURLOpen(Social.LinkedIn)}

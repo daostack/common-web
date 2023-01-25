@@ -68,7 +68,7 @@
     }
 
     & > .facebook-icon {
-      background-image: url("/icons/social-share/facebook.svg");
+      color: #0077fb;
     }
 
     & > .linkedin-icon {
@@ -100,7 +100,7 @@
     opacity: 0.9;
 
     & > .facebook-icon {
-      background-image: url("/icons/social-share/facebook-h.svg");
+      color: #5d6ef9;
     }
 
     & > .linkedin-icon {
@@ -133,8 +133,6 @@
       margin: 0 0.4rem;
     }
   }
-
-
 }
 
 @include tablet {
