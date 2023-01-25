@@ -5,15 +5,16 @@ import { ReportModal } from "@/shared/components";
 import { DynamicLinkType, EntityTypes } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
-import { CommonFeed, DateFormat, Governance } from "@/shared/models";
+import { CommonFeed, Governance } from "@/shared/models";
 import { DesktopStyleMenu } from "@/shared/ui-kit";
-import { formatDate, getUserName } from "@/shared/utils";
+import { getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
   FeedCardHeader,
   FeedCardContent,
   FeedCardFooter,
+  FeedCountdown,
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
@@ -98,10 +99,15 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}
         title={getUserName(discussionCreator)}
-        createdAt={`Created: ${formatDate(
-          new Date(item.createdAt.seconds * 1000),
-          DateFormat.SuperShortSecondary,
-        )}`}
+        createdAt={
+          <>
+            Created:{" "}
+            <FeedCountdown
+              isCountdownFinished
+              expirationTimestamp={item.createdAt}
+            />
+          </>
+        }
         type="Discussion"
         circleVisibility={circleVisibility}
         menuItems={menuItems}
