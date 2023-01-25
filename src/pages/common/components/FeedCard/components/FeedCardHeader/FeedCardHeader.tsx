@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import classNames from "classnames";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { MenuButton, UserAvatar } from "@/shared/components";
@@ -9,7 +9,7 @@ import styles from "./FeedCardHeader.module.scss";
 export interface FeedCardHeaderProps {
   avatar?: string;
   title: string;
-  createdAt: string;
+  createdAt: ReactNode;
   type: string;
   circleVisibility?: string;
   menuItems?: MenuItem[];

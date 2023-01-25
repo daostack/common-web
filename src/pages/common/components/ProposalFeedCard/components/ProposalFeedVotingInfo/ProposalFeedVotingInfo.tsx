@@ -52,6 +52,7 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
       >
         <p className={classNames(styles.text, styles.timeToVote)}>
           <FeedCountdown
+            timeAgoClassName={styles.timeAgoClassName}
             timer={timer}
             isCountdownFinished={isCountdownFinished}
             expirationTimestamp={expirationTimestamp}
