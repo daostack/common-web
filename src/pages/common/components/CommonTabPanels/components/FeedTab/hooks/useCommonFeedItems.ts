@@ -15,7 +15,7 @@ export const useCommonFeedItems = (commonId: string): Return => {
     dispatch(
       commonActions.getFeedItems.request({
         commonId,
-        limit: 15,
+        limit: 50,
       }),
     );
   };

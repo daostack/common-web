@@ -43,7 +43,8 @@
 .seeMore {
   color: $purple-2;
   width: fit-content;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   cursor: pointer;
 
   &:hover {
@@ -53,4 +54,11 @@
 
 .image {
   max-width: 33.0625rem;
+}
+
+.attachIcon {
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.9375rem;
+  margin-left: 0.75rem;
 }

@@ -1,3 +1,4 @@
+export { default as AttachIcon } from "./attach.icon";
 export { default as Avatar2Icon } from "./avatar2.icon";
 export { default as BlocksIcon } from "./blocks.icon";
 export { default as BoldMarkIcon } from "./boldMark.icon";
@@ -31,6 +32,6 @@ export { default as MessageIcon } from "./message.icon";
 export { default as VoteAgainst } from "./voteAgainst.icon";
 export { default as VoteFor } from "./voteFor.icon";
 export { default as VoteAbstain } from "./voteAbstain.icon";
-export { default as InviteFriendsIcon} from "./inviteFriends.icon";
+export { default as InviteFriendsIcon } from "./inviteFriends.icon";
 export { default as ShareIcon } from "./share.icon";
 export { default as SendIcon } from "./send.icon";

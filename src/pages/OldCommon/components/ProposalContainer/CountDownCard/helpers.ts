@@ -68,3 +68,6 @@ export const checkIsFailingVoting = (votingStatus: VotingStatus): boolean =>
   [VotingStatus.Failing, VotingStatus.Rejected, VotingStatus.Canceled].includes(
     votingStatus,
   );
+
+export const checkIsVotingFinished = (votingStatus: VotingStatus): boolean =>
+  ![VotingStatus.Failing, VotingStatus.Passing].includes(votingStatus);
