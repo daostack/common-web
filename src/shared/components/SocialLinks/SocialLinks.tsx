@@ -8,6 +8,7 @@ import {
   LinkedInIcon,
   TelegramIcon,
   TwitterIcon,
+  WhatsAppIcon,
 } from "@/shared/icons";
 import { isMobile } from "@/shared/utils";
 import "./index.scss";
@@ -143,12 +144,9 @@ export const SocialLinks: FC<SocialLinksProps> = ({
               color="currentColor"
             />
           </ButtonIcon>
-          <button
-            className="whatsapp"
-            onClick={() => handleURLOpen(Social.Whatsapp)}
-          >
-            <div className="social-icon whatsapp-icon" />
-          </button>
+          <ButtonIcon onClick={() => handleURLOpen(Social.Whatsapp)}>
+            <WhatsAppIcon className="social-icon whatsapp-icon" />
+          </ButtonIcon>
         </div>
       )}
     </div>
