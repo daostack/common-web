@@ -169,30 +169,27 @@ class CommonService {
     return members[0] || null;
   };
 
-  public getCircleMemberCountByCircleIds = async ({
+  public subscribeToCircleMemberCountByCircleIds = ({
     commonId,
     circleIds,
   }: {
     commonId: string;
     circleIds: string[];
-  }): Promise<Map<string, number>> => {
-    const circleMembersCount = new Map();
-    await Promise.all(
-      circleIds.map(async (id, index) => {
-        const commonMembersData = await commonMembersSubCollection(
-          commonId,
-        ).get();
-        const data = transformFirebaseDataList<CommonMember>(commonMembersData);
+  }, callback: (circleMembersCount: Map<string, number>) => void,): UnsubscribeFunction => {
+    const query = commonMembersSubCollection(commonId).withConverter(commonMemberConverter);
+    
+    return query.onSnapshot((snapshot) => {
+      const data = transformFirebaseDataList<CommonMember>(snapshot);
+      const circleMembersCount = new Map<string, number>();
+      circleIds.map((id, index) => {
         const filteredMembers = data.filter(({ circleIds: ids }) =>
-          isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()),
-        );
+        isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()),
+      );
 
-        circleMembersCount.set(id, filteredMembers?.length ?? 0);
-        return filteredMembers;
-      }),
-    );
-
-    return circleMembersCount;
+      circleMembersCount.set(id, filteredMembers?.length ?? 0);
+      });
+      callback(circleMembersCount);
+    });
   };
 
   public subscribeToCommon = (
