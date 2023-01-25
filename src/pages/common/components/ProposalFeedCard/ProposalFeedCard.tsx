@@ -5,8 +5,8 @@ import {
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, DateFormat, Governance } from "@/shared/models";
-import { checkIsCountdownState, formatDate, getUserName } from "@/shared/utils";
+import { CommonFeed, Governance } from "@/shared/models";
+import { checkIsCountdownState, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
@@ -14,6 +14,7 @@ import {
   FeedCardContent,
   FeedCardFooter,
   getVisibilityString,
+  FeedCountdown,
 } from "../FeedCard";
 import { LoadingFeedCard } from "../LoadingFeedCard";
 import {
@@ -142,10 +143,15 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       <FeedCardHeader
         avatar={user?.photoURL}
         title={getUserName(user)}
-        createdAt={`Created: ${formatDate(
-          new Date(item.createdAt.seconds * 1000),
-          DateFormat.SuperShortSecondary,
-        )}`}
+        createdAt={
+          <>
+            Created:{" "}
+            <FeedCountdown
+              isCountdownFinished
+              expirationTimestamp={item.createdAt}
+            />
+          </>
+        }
         type={getProposalTypeString(proposal.type)}
         circleVisibility={circleVisibility}
       />

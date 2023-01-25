@@ -9,10 +9,10 @@ import { getVotersString } from "@/pages/OldCommon/containers/ProposalContainer/
 import { useCountdown } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Governance, Proposal } from "@/shared/models";
+import { FeedCountdown } from "../../../FeedCard";
 import { ModalTriggerButton } from "../ModalTriggerButton";
 import { Voters } from "../Voters";
 import { VotingInfo } from "../VotingInfo";
-import { Countdown } from "./components";
 import { getCountdownLabel } from "./utils";
 import styles from "./ProposalFeedVotingInfo.module.scss";
 
@@ -51,7 +51,8 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
         label={getCountdownLabel(proposal.state, isCountdownFinished)}
       >
         <p className={classNames(styles.text, styles.timeToVote)}>
-          <Countdown
+          <FeedCountdown
+            timeAgoClassName={styles.timeAgoClassName}
             timer={timer}
             isCountdownFinished={isCountdownFinished}
             expirationTimestamp={expirationTimestamp}
