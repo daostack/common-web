@@ -55,13 +55,15 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
       return;
     }
 
-    (async () => {
-      const membersCount = await CommonService.getCircleMemberCountByCircleIds({
-        commonId,
-        circleIds: governanceCircles.map(({ id }) => id),
-      });
-      setCircleMembersCount(membersCount);
-    })();
+    const unsubscribe = CommonService.subscribeToCircleMemberCountByCircleIds(
+      commonId,
+      governanceCircles.map(({ id }) => id),
+      (circlesCountMap) => {
+        setCircleMembersCount(circlesCountMap);
+      },
+    );
+
+    return unsubscribe;
   }, [governanceCircles]);
 
   useEffect(() => {

@@ -169,30 +169,25 @@ class CommonService {
     return members[0] || null;
   };
 
-  public getCircleMemberCountByCircleIds = async ({
-    commonId,
-    circleIds,
-  }: {
-    commonId: string;
-    circleIds: string[];
-  }): Promise<Map<string, number>> => {
-    const circleMembersCount = new Map();
-    await Promise.all(
-      circleIds.map(async (id, index) => {
-        const commonMembersData = await commonMembersSubCollection(
-          commonId,
-        ).get();
-        const data = transformFirebaseDataList<CommonMember>(commonMembersData);
-        const filteredMembers = data.filter(({ circleIds: ids }) =>
+  public subscribeToCircleMemberCountByCircleIds = (
+    commonId: string,
+    circleIds: string[],
+    callback: (circleMembersCount: Map<string, number>) => void
+  ): UnsubscribeFunction => {
+    const query = commonMembersSubCollection(commonId).withConverter(commonMemberConverter);
+    
+    return query.onSnapshot((snapshot) => {
+      const data = transformFirebaseDataList<CommonMember>(snapshot);
+      const circleMembersCount = new Map<string, number>();
+        circleIds.map((id, index) => {
+          const filteredMembers = data.filter(({ circleIds: ids }) =>
           isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()),
         );
 
         circleMembersCount.set(id, filteredMembers?.length ?? 0);
-        return filteredMembers;
-      }),
-    );
-
-    return circleMembersCount;
+      });
+      callback(circleMembersCount);
+    });
   };
 
   public subscribeToCommon = (
