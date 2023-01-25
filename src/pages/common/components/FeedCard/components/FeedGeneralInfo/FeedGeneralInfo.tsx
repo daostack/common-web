@@ -2,6 +2,7 @@ import React, { ReactNode, useMemo } from "react";
 import classNames from "classnames";
 import { Image } from "@/shared/components";
 import { useFullText } from "@/shared/hooks";
+import { AttachIcon } from "@/shared/icons";
 import { CommonLink } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
@@ -14,14 +15,14 @@ interface FeedGeneralInfoProps {
   title?: string;
   subtitle?: ReactNode;
   description?: string;
-  image?: CommonLink;
+  images?: CommonLink[];
 }
 
 export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
-  const { title, subtitle, description, image } = props;
+  const { title, subtitle, description, images = [] } = props;
   const {
     setRef: setDescriptionRef,
-    shouldShowFullText,
+    shouldShowFullText: shouldShowFullContent,
     isFullTextShowing,
     toggleFullText,
   } = useFullText<HTMLElement>();
@@ -29,6 +30,15 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
     () => parseStringToTextEditorValue(description),
     [description],
   );
+  const isDescriptionEmpty = checkIsTextEditorValueEmpty(parsedDescription);
+  const image = images[0];
+  const shouldDisplaySeeMoreButton =
+    ((shouldShowFullContent || !isFullTextShowing) && !isDescriptionEmpty) ||
+    images.length > 0;
+
+  const handleSeeMoreClick = () => {
+    toggleFullText();
+  };
 
   return (
     <div className={styles.container}>
@@ -38,32 +48,42 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
       {subtitle && (
         <p className={classNames(styles.text, styles.subtitle)}>{subtitle}</p>
       )}
-      {!checkIsTextEditorValueEmpty(parsedDescription) && (
-        <>
-          <TextEditor
-            editorRef={setDescriptionRef}
-            editorClassName={classNames(styles.description, {
-              [styles.descriptionShortened]: !shouldShowFullText,
-            })}
-            value={parsedDescription}
-            readOnly
-          />
-          {(shouldShowFullText || !isFullTextShowing) && (
-            <a
-              className={classNames(styles.seeMore, styles.text)}
-              onClick={toggleFullText}
-            >
-              See {shouldShowFullText ? "less" : "more"}
-            </a>
-          )}
-        </>
+      {!isDescriptionEmpty && (
+        <TextEditor
+          editorRef={setDescriptionRef}
+          editorClassName={classNames(styles.description, {
+            [styles.descriptionShortened]: !shouldShowFullContent,
+          })}
+          value={parsedDescription}
+          readOnly
+        />
       )}
-      {image && (
+      {image && shouldShowFullContent && (
         <Image
           src={image.value}
           className={classNames(styles.image)}
           alt={image.title}
+          placeholderElement={null}
+          aria-hidden
         />
+      )}
+      {shouldDisplaySeeMoreButton && (
+        <a
+          className={classNames(styles.seeMore, styles.text)}
+          onClick={handleSeeMoreClick}
+        >
+          See{" "}
+          {shouldShowFullContent ? (
+            "less"
+          ) : (
+            <>
+              more
+              {images.length > 0 && (
+                <AttachIcon className={styles.attachIcon} />
+              )}
+            </>
+          )}
+        </a>
       )}
     </div>
   );
