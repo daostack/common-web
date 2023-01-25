@@ -56,10 +56,8 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     }
 
     const unsubscribe = CommonService.subscribeToCircleMemberCountByCircleIds(
-      {
-        commonId,
-        circleIds: governanceCircles.map(({ id }) => id),
-      },
+      commonId,
+      governanceCircles.map(({ id }) => id),
       (circlesCountMap) => {
         setCircleMembersCount(circlesCountMap);
       },

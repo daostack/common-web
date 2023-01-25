@@ -169,24 +169,22 @@ class CommonService {
     return members[0] || null;
   };
 
-  public subscribeToCircleMemberCountByCircleIds = ({
-    commonId,
-    circleIds,
-  }: {
-    commonId: string;
-    circleIds: string[];
-  }, callback: (circleMembersCount: Map<string, number>) => void,): UnsubscribeFunction => {
+  public subscribeToCircleMemberCountByCircleIds = (
+    commonId: string,
+    circleIds: string[],
+    callback: (circleMembersCount: Map<string, number>) => void
+  ): UnsubscribeFunction => {
     const query = commonMembersSubCollection(commonId).withConverter(commonMemberConverter);
     
     return query.onSnapshot((snapshot) => {
       const data = transformFirebaseDataList<CommonMember>(snapshot);
       const circleMembersCount = new Map<string, number>();
-      circleIds.map((id, index) => {
-        const filteredMembers = data.filter(({ circleIds: ids }) =>
-        isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()),
-      );
+        circleIds.map((id, index) => {
+          const filteredMembers = data.filter(({ circleIds: ids }) =>
+          isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()),
+        );
 
-      circleMembersCount.set(id, filteredMembers?.length ?? 0);
+        circleMembersCount.set(id, filteredMembers?.length ?? 0);
       });
       callback(circleMembersCount);
     });
