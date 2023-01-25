@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { ButtonIcon, Loader } from "@/shared/components";
 import { ShareViewType, SharePopupVariant } from "@/shared/constants";
-import { FacebookIcon, LinkedInIcon } from "@/shared/icons";
+import { FacebookIcon, LinkedInIcon, TwitterIcon } from "@/shared/icons";
 import { isMobile } from "@/shared/utils";
 import "./index.scss";
 
@@ -126,12 +126,12 @@ export const SocialLinks: FC<SocialLinksProps> = ({
           <ButtonIcon onClick={() => handleURLOpen(Social.LinkedIn)}>
             <LinkedInIcon className="social-icon linkedin-icon" />
           </ButtonIcon>
-          <button
-            className="twitter"
-            onClick={() => handleURLOpen(Social.Twitter)}
-          >
-            <div className="social-icon twitter-icon" />
-          </button>
+          <ButtonIcon onClick={() => handleURLOpen(Social.Twitter)}>
+            <TwitterIcon
+              className="social-icon twitter-icon"
+              color="currentColor"
+            />
+          </ButtonIcon>
           <button
             className="telegram"
             onClick={() => handleURLOpen(Social.Telegram)}
