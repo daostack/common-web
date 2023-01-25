@@ -1,15 +1,15 @@
 import React, { FC } from "react";
 import firebase from "firebase/app";
 import { getTimeAgo } from "./utils";
-import styles from "./Countdown.module.scss";
+import styles from "./FeedCountdown.module.scss";
 
-interface CountdownProps {
+interface FeedCountdownProps {
   timer: string;
   isCountdownFinished: boolean;
   expirationTimestamp: firebase.firestore.Timestamp | null;
 }
 
-const Countdown: FC<CountdownProps> = (props) => {
+const FeedCountdown: FC<FeedCountdownProps> = (props) => {
   const { timer, isCountdownFinished, expirationTimestamp } = props;
 
   if (!isCountdownFinished) {
@@ -32,4 +32,4 @@ const Countdown: FC<CountdownProps> = (props) => {
   );
 };
 
-export default Countdown;
+export default FeedCountdown;
