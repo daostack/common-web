@@ -29,7 +29,7 @@ interface DiscussionFeedCardProps {
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const { setChatItem } = useChatContext();
+  const { activeItemDiscussionId, setChatItem } = useChatContext();
   const { item, governanceCircles, isMobileVersion = false } = props;
   const {
     isShowing: isReportModalOpen,
@@ -67,6 +67,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const isLoading = !isDiscussionCreatorFetched || !isDiscussionFetched;
+  const isActive = discussion?.id === activeItemDiscussionId;
 
   const circleVisibility = getVisibilityString(
     governanceCircles,
@@ -95,7 +96,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }
 
   return (
-    <FeedCard isLongPressed={isMenuOpen}>
+    <FeedCard isActive={isActive} isLongPressed={isMenuOpen}>
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}
         title={getUserName(discussionCreator)}

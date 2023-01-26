@@ -9,6 +9,7 @@ export interface ChatItem {
 
 export interface ChatContextValue {
   setChatItem: (data: ChatItem) => void;
+  activeItemDiscussionId?: string;
 }
 
 export const ChatContext = React.createContext<ChatContextValue>({

@@ -40,7 +40,7 @@ interface ProposalFeedCardProps {
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const { commonId, item, governanceCircles } = props;
-  const { setChatItem } = useChatContext();
+  const { activeItemDiscussionId, setChatItem } = useChatContext();
   const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
   const {
     fetchDiscussion,
@@ -81,6 +81,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     item.circleVisibility,
   );
   const proposalId = item.data.id;
+  const isActive = discussion?.id === activeItemDiscussionId;
 
   useEffect(() => {
     fetchUser(item.userId);
@@ -139,7 +140,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     });
 
   return (
-    <FeedCard>
+    <FeedCard isActive={isActive}>
       <FeedCardHeader
         avatar={user?.photoURL}
         title={getUserName(user)}
