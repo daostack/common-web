@@ -14,18 +14,18 @@ import React, {
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
+import { Colors } from "../../constants";
 import { useComponentWillUnmount } from "../../hooks";
-import { ModalProps, ModalRef, ModalType } from "../../interfaces";
 import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
-import { Colors } from "../../constants";
-import { ModalContext, FooterOptions, ModalContextValue } from "./context";
+import { ModalProps, ModalRef, ModalType } from "../../interfaces";
 import { ClosePrompt } from "./components/ClosePrompt";
+import { ModalContext, FooterOptions, ModalContextValue } from "./context";
 import "./index.scss";
 
 const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   props,
-  modalRef
+  modalRef,
 ) => {
   const {
     isShowing,
@@ -115,20 +115,29 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     const { current } = contentRef;
 
     setIsFullyScrolledToTop(
-      !isHeaderSticky || Boolean(current && current.scrollTop <= 0)
+      !isHeaderSticky || !current || current.scrollTop <= 0,
     );
     setIsFullyScrolledToBottom(
       !isFooterSticky ||
         Boolean(
           current &&
-            current.clientHeight + 1 >= current.scrollHeight - current.scrollTop
-        )
+            current.clientHeight + 1 >=
+              current.scrollHeight - current.scrollTop,
+        ),
     );
   }, [isHeaderSticky, isFooterSticky]);
 
-  const modalWrapperClassName = classNames("modal-wrapper", styles?.modalWrapper);
+  const modalWrapperClassName = classNames(
+    "modal-wrapper",
+    styles?.modalWrapper,
+  );
+  const modalOverlayClassName = classNames(
+    "modal-overlay",
+    styles?.modalOverlay,
+  );
   const modalClassName = classNames("modal", props.className, {
-    "modal--mobile-full-screen": mobileFullScreen && type !== ModalType.MobilePopUp,
+    "modal--mobile-full-screen":
+      mobileFullScreen && type !== ModalType.MobilePopUp,
     "modal--mobile-pop-up": type === ModalType.MobilePopUp,
     "modal--full-height": fullHeight,
   });
@@ -136,10 +145,11 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     "modal__header-wrapper",
     styles?.headerWrapper,
     {
-      "modal__header-wrapper--with-modal-padding": isHeaderSticky || withoutHorizontalPadding,
+      "modal__header-wrapper--with-modal-padding":
+        isHeaderSticky || withoutHorizontalPadding,
       "modal__header-wrapper--shadowed":
         isHeaderSticky && !isFullyScrolledToTop && shouldShowHeaderShadow,
-    }
+    },
   );
   const headerClassName = classNames("modal__header", styles?.header, {
     "modal__header--default-padding": !title,
@@ -174,7 +184,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
           <div
             className={classNames(
               "modal__action-wrapper modal__close-wrapper",
-              styles?.closeWrapper
+              styles?.closeWrapper,
             )}
             onClick={handleClose}
           >
@@ -193,15 +203,19 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     <footer className={footerClassName}>{footer}</footer>
   );
 
-  useImperativeHandle(modalRef, () => ({
-    scrollToTop: () => {
-      if (contentRef.current) {
-        contentRef.current.scrollTo({
-          top: 0,
-        });
-      }
-    },
-  }), []);
+  useImperativeHandle(
+    modalRef,
+    () => ({
+      scrollToTop: () => {
+        if (contentRef.current) {
+          contentRef.current.scrollTo({
+            top: 0,
+          });
+        }
+      },
+    }),
+    [],
+  );
 
   useLayoutEffect(() => {
     handleScroll();
@@ -213,26 +227,23 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
       setFooterOptions,
       setHeaderContent,
     }),
-    []
+    [],
   );
 
   return isShowing
     ? ReactDOM.createPortal(
         <div id={modalId}>
-          <div className="modal-overlay" />
+          <div className={modalOverlayClassName} />
           <div className={modalWrapperClassName} onClick={handleClose}>
-            <div
-              className={modalClassName}
-              onClick={handleModalContainerClick}
-            >
-              {(isHeaderSticky && !withoutHeader) && headerEl}
+            <div className={modalClassName} onClick={handleModalContainerClick}>
+              {isHeaderSticky && !withoutHeader && headerEl}
               <ModalContext.Provider value={contextValue}>
                 <div
                   ref={contentRef}
                   className={modalContentClassName}
                   onScroll={handleScroll}
                 >
-                  {(!isHeaderSticky && !withoutHeader) && headerEl}
+                  {!isHeaderSticky && !withoutHeader && headerEl}
                   {children}
                   {!isFooterSticky && footerEl}
                 </div>
@@ -247,7 +258,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
             </div>
           </div>
         </div>,
-        document.body
+        document.body,
       )
     : null;
 };

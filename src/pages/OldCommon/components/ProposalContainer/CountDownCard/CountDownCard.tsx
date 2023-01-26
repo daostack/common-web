@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { useCountdown } from "@/shared/hooks";
 import { Proposal, ProposalState } from "@/shared/models";
 import { checkIsCountdownState, formatCountdownValue } from "@/shared/utils";
-import { calculateVotingStatus, VotingStatus } from "./helpers";
+import { calculateVotingStatus, checkIsFailingVoting } from "./helpers";
 import "./index.scss";
 
 interface CountDownCardProps {
@@ -49,11 +49,8 @@ const CountDownCard: FC<CountDownCardProps> = (props) => {
           </span>
           <p
             className={classNames("proposal-container-countdown-card__status", {
-              "proposal-container-countdown-card__status--red": [
-                VotingStatus.Failing,
-                VotingStatus.Rejected,
-                VotingStatus.Canceled,
-              ].includes(votingStatus),
+              "proposal-container-countdown-card__status--red":
+                checkIsFailingVoting(votingStatus),
             })}
           >
             {votingStatus}

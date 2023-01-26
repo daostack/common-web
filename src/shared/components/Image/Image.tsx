@@ -15,14 +15,8 @@ interface CustomImageProps extends ImgHTMLAttributes<HTMLImageElement> {
 }
 
 const CustomImage: FC<CustomImageProps> = (props) => {
-  const {
-    src,
-    alt,
-    preloaderSrc,
-    onError,
-    placeholderElement = null,
-    ...restProps
-  } = props;
+  const { src, alt, preloaderSrc, onError, placeholderElement, ...restProps } =
+    props;
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const imageSrc = isLoaded || !preloaderSrc ? src : preloaderSrc;
@@ -35,7 +29,7 @@ const CustomImage: FC<CustomImageProps> = (props) => {
         onError(...args);
       }
     },
-    [onError]
+    [onError],
   );
 
   useEffect(() => {
@@ -59,7 +53,7 @@ const CustomImage: FC<CustomImageProps> = (props) => {
     };
   }, [src]);
 
-  return hasError && placeholderElement ? (
+  return hasError && (placeholderElement || placeholderElement === null) ? (
     <>{placeholderElement}</>
   ) : (
     <img {...restProps} src={imageSrc} alt={alt} onError={handleError} />

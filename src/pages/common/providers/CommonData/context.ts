@@ -1,8 +1,31 @@
 import { createContext, useContext } from "react";
+import { CreateProposal } from "@/pages/OldCommon/interfaces";
+import { ProposalsTypes } from "@/shared/constants";
+import { Circle, Common, Governance } from "@/shared/models";
 import { CommonMenuItem } from "../../constants";
 
 interface Data {
   onMenuItemSelect: (menuItem: CommonMenuItem | null) => void;
+  areNonCreatedProjectsLeft: boolean;
+  onProjectCreate: () => void;
+  common: Common;
+  governance: Governance;
+  parentCommons: Common[];
+  subCommons: Common[];
+  parentCommon?: Common;
+  parentCommonSubCommons: Common[];
+  isJoinAllowed: boolean;
+  isJoinPending: boolean;
+  onJoinCommon?: () => void;
+  onLeaveCircle: (
+    commonId: string,
+    commonMemberId: string,
+    circle: Circle,
+  ) => void;
+  onJoinCircle: (
+    payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">,
+    circleName: string,
+  ) => void;
 }
 
 export type CommonDataContextValue = Data | null;

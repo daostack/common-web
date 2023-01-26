@@ -2,9 +2,13 @@ import React, { FC } from "react";
 
 interface LongLeftArrowIconProps {
   className?: string;
+  color?: string;
 }
 
-const LongLeftArrowIcon: FC<LongLeftArrowIconProps> = ({ className }) => (
+const LongLeftArrowIcon: FC<LongLeftArrowIconProps> = ({
+  className,
+  color,
+}) => (
   <svg
     className={className}
     width="16"
@@ -15,7 +19,7 @@ const LongLeftArrowIcon: FC<LongLeftArrowIconProps> = ({ className }) => (
   >
     <path
       d="M8 1L1 8L8 15M15 8H2H15Z"
-      stroke="currentColor"
+      stroke={color || "currentColor"}
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"

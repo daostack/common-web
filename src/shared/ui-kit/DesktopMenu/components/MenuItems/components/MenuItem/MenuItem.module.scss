@@ -1,0 +1,41 @@
+@import "../../../../../../../constants";
+
+.item {
+  --item-color: #{$c-neutrals-600};
+  --item-bg-color: #{$c-shades-white};
+  --item-border: 0.0625rem solid #{$c-neutrals-100};
+
+  margin: 0;
+  padding: 1.125rem 1.5rem;
+  text-decoration: none;
+  color: var(--item-color);
+  background-color: var(--item-bg-color);
+  border: var(--item-border);
+  border-bottom: 0;
+  font-family: NunitoSans, sans-serif;
+  font-weight: 600;
+  font-size: $small;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+  user-select: none;
+
+  &:first-child {
+    border-top-left-radius: var(--items-br);
+    border-top-right-radius: var(--items-br);
+  }
+
+  &:last-child {
+    border-bottom: var(--item-border);
+    border-bottom-left-radius: var(--items-br);
+    border-bottom-right-radius: var(--items-br);
+  }
+}
+.itemActive {
+  --item-bg-color: #{$c-primary-200}99;
+}
+
+.itemWithWarning {
+  --item-color: #{$c-error-300};
+}

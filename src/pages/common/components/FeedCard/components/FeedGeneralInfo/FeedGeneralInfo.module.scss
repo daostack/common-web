@@ -1,0 +1,64 @@
+@import "../../../../../../constants";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.text {
+  margin: 0;
+}
+
+.title {
+  font-size: $moderate;
+  color: $c-neutrals-600;
+  line-height: 1.375rem;
+  margin-bottom: 0.5rem;
+  font-family: Lexend, sans-serif;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.subtitle {
+  margin-bottom: 0.5rem;
+  font-size: $moderate;
+  font-family: Lexend, sans-serif;
+  line-height: 120%;
+  color: $c-neutrals-300;
+}
+
+.description {
+  white-space: pre-line;
+}
+
+.descriptionShortened {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.seeMore {
+  color: $purple-2;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.image {
+  max-width: 33.0625rem;
+}
+
+.attachIcon {
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.9375rem;
+  margin-left: 0.75rem;
+}

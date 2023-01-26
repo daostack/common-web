@@ -1,5 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { BoldPlusIcon } from "@/shared/icons";
 import Button, { ButtonVariant, ButtonSize } from "./Button";
 
 export default {
@@ -36,8 +37,27 @@ const Template: ComponentStory<typeof Button> = (args) => (
   </div>
 );
 
+export const PrimaryGray = Template.bind({});
+PrimaryGray.args = {
+  variant: ButtonVariant.PrimaryGray,
+  children: "Button Label",
+};
+
+export const PrimaryPurple = Template.bind({});
+PrimaryPurple.args = {
+  variant: ButtonVariant.PrimaryPurple,
+  children: "Button Label",
+};
+
 export const OutlineBlue = Template.bind({});
 OutlineBlue.args = {
   variant: ButtonVariant.OutlineBlue,
+  children: "Button Label",
+};
+
+export const OutlineBlueWithIcon = Template.bind({});
+OutlineBlueWithIcon.args = {
+  variant: ButtonVariant.OutlineBlue,
+  leftIcon: <BoldPlusIcon />,
   children: "Button Label",
 };

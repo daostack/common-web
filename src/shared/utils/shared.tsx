@@ -19,11 +19,23 @@ export const getPrefix = (currency: Currency): string => {
   }
 };
 
+export const getPostfixForEntrance = (currency: Currency): string => {
+  switch (currency) {
+    case Currency.ILS:
+      return "ILS";
+    case Currency.USD:
+      return CurrencySymbol.USD;
+    default:
+      return "";
+  }
+};
+
 interface FormatPriceOptions {
   shouldMillify?: boolean;
   shouldRemovePrefixFromZero?: boolean;
   bySubscription?: boolean;
   prefix?: string;
+  postfix?: string;
 }
 
 /**
@@ -52,6 +64,29 @@ export const formatPrice = (
     : convertedPrice.toLocaleString("en-US");
 
   return `${prefix}${milifiedPrice}${bySubscription ? monthlyLabel : ""}`;
+};
+
+export const formatPriceEntrance = (
+  price: Partial<PaymentAmount>,
+  options: FormatPriceOptions = {},
+): string => {
+  const {
+    shouldMillify = true,
+    shouldRemovePrefixFromZero = true,
+    bySubscription = false,
+    postfix = getPostfixForEntrance(price?.currency || Currency.ILS),
+  } = options;
+
+  if (!price.amount) {
+    return shouldRemovePrefixFromZero ? "0" : `0${postfix}`;
+  }
+
+  const convertedPrice = price.amount / 100;
+  const milifiedPrice = shouldMillify
+    ? millify(convertedPrice)
+    : convertedPrice.toLocaleString("en-US");
+
+  return `${milifiedPrice} ${postfix}${bySubscription ? "/mo" : ""}`;
 };
 
 /**
@@ -265,9 +300,6 @@ export const formatCountdownValue = (value: number): string => {
 
   return convertedValue.length === 1 ? `0${convertedValue}` : convertedValue;
 };
-
-export const copyToClipboard = (text: string) =>
-  navigator.clipboard.writeText(text);
 
 export const createIdsChunk = (pool: string[]) =>
   pool.reduce((resultArray: any, item, index) => {

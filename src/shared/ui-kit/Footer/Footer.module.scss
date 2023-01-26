@@ -1,16 +1,12 @@
 @import "../../../constants";
+@import "../../../styles/mixins";
 @import "../../../styles/sizes";
 
 .footer {
   flex-shrink: 0;
-  z-index: var(--footer-z-index);
+  z-index: var(--footer-z-index, unset);
   height: var(--footer-height, 4.625rem);
-  padding-left: 8.125rem;
-  padding-right: 7.5rem;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
   font-family: NunitoSans, sans-serif;
   font-size: $xxsmall;
   color: $c-neutrals-300;
@@ -18,11 +14,19 @@
   border-top: 0.0625rem solid $c-neutrals-200;
   box-sizing: border-box;
   overflow: hidden;
-
-  @include tablet {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
+}
+.footerDefault {
+  padding-left: 8.125rem;
+  padding-right: 7.5rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.footerSmall {
+  padding: 0.5rem 1rem 0.875rem;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .commonLogo {
@@ -31,19 +35,14 @@
 }
 
 .content {
-  display: flex;
-  flex-wrap: wrap;
+  @include flex-list-with-gap(1rem);
+
   align-items: center;
 }
 
 .poweredByInfo {
-  margin-right: 1rem;
   display: flex;
   align-items: center;
-
-  @include tablet {
-    margin-right: 0;
-  }
 }
 
 .daoStackLogo {
@@ -54,8 +53,4 @@
   display: flex;
   align-items: center;
   font-weight: 300;
-
-  @include tablet {
-    display: none;
-  }
 }

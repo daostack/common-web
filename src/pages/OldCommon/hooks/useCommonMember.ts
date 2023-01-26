@@ -1,11 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CommonMemberEventEmitter, CommonMemberEvent } from "@/events";
+import {
+  CommonMemberEventEmitter,
+  CommonMemberEvent,
+  CommonMemberEventToListener,
+} from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
-import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import {
+  Circles,
+  CirclesPermissions,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
+import { generateCirclesDataForCommonMember } from "@/shared/utils";
+import { projectsActions } from "@/store/states";
 import { CommonService, GovernanceService, Logger } from "../../../services";
-import { generateCirclesDataForCommonMember } from "../../../shared/utils/generateCircleDataForCommonMember";
+
+interface Options {
+  shouldAutoReset?: boolean;
+  withSubscription?: boolean;
+  commonId?: string;
+  governanceCircles?: Circles;
+}
 
 type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
 
@@ -18,7 +35,13 @@ interface Return extends State {
   resetCommonMember: () => void;
 }
 
-export const useCommonMember = (shouldAutoReset = true): Return => {
+export const useCommonMember = (options: Options = {}): Return => {
+  const {
+    shouldAutoReset = true,
+    withSubscription = false,
+    commonId,
+    governanceCircles,
+  } = options;
   const dispatch = useDispatch();
   const [state, setState] = useState<State>({
     loading: false,
@@ -112,22 +135,75 @@ export const useCommonMember = (shouldAutoReset = true): Return => {
       return;
     }
 
-    const event: CommonMemberEvent = `clear-common-member-${commonMemberId}`;
+    const clearCommonMember: CommonMemberEventToListener[CommonMemberEvent.Clear] =
+      (commonMemberIdToClear: string) => {
+        if (commonMemberIdToClear === commonMemberId) {
+          setState({
+            loading: false,
+            fetched: true,
+            data: null,
+          });
+        }
+      };
 
-    const clearCommonMember = () => {
-      setState({
-        loading: false,
-        fetched: true,
-        data: null,
-      });
-    };
+    const resetCommonMember: CommonMemberEventToListener[CommonMemberEvent.Reset] =
+      (commonId: string, commonMemberIdToReset: string) => {
+        if (commonMemberIdToReset !== commonMemberId) {
+          return;
+        }
 
-    CommonMemberEventEmitter.on(event, clearCommonMember);
+        fetchCommonMember(commonId, {}, true);
+      };
+
+    CommonMemberEventEmitter.on(CommonMemberEvent.Clear, clearCommonMember);
+    CommonMemberEventEmitter.on(CommonMemberEvent.Reset, resetCommonMember);
 
     return () => {
-      CommonMemberEventEmitter.off(event, clearCommonMember);
+      CommonMemberEventEmitter.off(CommonMemberEvent.Clear, clearCommonMember);
+      CommonMemberEventEmitter.off(CommonMemberEvent.Reset, resetCommonMember);
     };
-  }, [commonMemberId]);
+  }, [commonMemberId, fetchCommonMember]);
+
+  useEffect(() => {
+    if (!withSubscription || !commonId || !userId || !governanceCircles) {
+      return;
+    }
+
+    const unsubscribe =
+      CommonService.subscribeToCommonMemberByCommonIdAndUserId(
+        commonId,
+        userId,
+        (commonMember, { isAdded, isRemoved }) => {
+          let data: State["data"] = null;
+
+          if (isAdded) {
+            dispatch(
+              projectsActions.updateProject({
+                commonId,
+                hasMembership: true,
+              }),
+            );
+          }
+          if (!isRemoved) {
+            data = {
+              ...commonMember,
+              ...generateCirclesDataForCommonMember(
+                governanceCircles,
+                commonMember.circleIds,
+              ),
+            };
+          }
+
+          setState({
+            loading: false,
+            fetched: true,
+            data,
+          });
+        },
+      );
+
+    return unsubscribe;
+  }, [withSubscription, commonId, userId, governanceCircles]);
 
   return {
     ...state,

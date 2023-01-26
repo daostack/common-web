@@ -1,4 +1,4 @@
 export interface Link {
-  title?: string;
+  title: string;
   value: string;
 }

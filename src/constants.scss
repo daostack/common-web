@@ -31,6 +31,7 @@ $moderate-xmed: 22px; // 1.375rem
 $moderate-small: 20px; // 1.25rem
 $moderate: 18px; // 1.125rem
 $small: 16px; // 1rem
+$mobile-title: 15px; // 0.9375rem
 $xsmall: 14px; // 0.875rem
 $xxsmall-2: 13px; // 0.8125rem
 $xxsmall: 12px; // 0.75rem
@@ -103,7 +104,9 @@ $c-primary-100: #f4f6ff;
 $c-primary-200: #d2d8ff;
 $c-primary-300: #7786ff;
 $c-primary-400: #5666f5;
+$c-primary-500: #2c3fef;
 $c-neutrals-100: #eeeeee;
+$c-neutrals-100-shadow: 4px 4px 0px #e2e2e2;
 $c-neutrals-200: #d5d5e4;
 $c-neutrals-300: #979bba;
 $c-neutrals-600: #001a36;
@@ -111,11 +114,21 @@ $c-notification-100: #f9faff;
 $c-shades-white: #ffffff;
 $c-shades-black: #000000;
 $c-shades-neutrals-30: rgba(0, 26, 54, 0.3);
+$c-error-100: #ffefec;
+$c-error-100-shadow: 4px 4px 0px #feded8;
 $c-shades-100: #fbfcfc;
 $c-error-300: #ff603e;
 $c-hover-secondary: #f9fcff;
+$c-green-100: #ddffdc;
+$c-green-300: #62a541;
 $c-separator-light-non-opaque: rgba(60, 60, 67, 0.36);
+$logo-1: #99ca80;
+$success-100: #f1fdf0;
+$success-100-shadow: 4px 4px 0px #e2f9e0;
+$success-300: #6ee569;
 
+$c-input-100: #F9FAFA;
+$c-chat-message: #F4F5F5;
 $c-sidebar-shadow: rgba(0, 26, 54, 0.08);
 $c-sidebar-user-menu-shadow: rgba(0, 0, 0, 0.15259);
 $c-common-card-shadow: rgba(0, 26, 54, 0.08);

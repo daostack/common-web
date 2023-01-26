@@ -1,0 +1,85 @@
+@import "../../../../../../styles/sizes";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabNavigationContainer {
+  margin-top: 0.875rem;
+
+  @include desktop {
+    max-width: var(--main-content-mw);
+  }
+
+  @include only-laptop {
+    max-width: var(--main-content-mw);
+  }
+
+  @include tablet {
+    margin-top: 0.375rem;
+  }
+}
+
+.columnsWrapper {
+  margin-top: 1.125rem;
+  display: grid;
+  grid-column-gap: 1rem;
+  grid-template-columns: minmax(var(--main-content-mw), 1fr) 1fr;
+
+  @include tablet {
+    margin-top: 0.5rem;
+  }
+}
+
+@mixin mainColumnWrapperItemsGap($margin: 0.625rem) {
+  & > * {
+    margin-bottom: $margin;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.mainColumnWrapper {
+  display: flex;
+  flex-direction: column;
+
+  @include desktop {
+    @include mainColumnWrapperItemsGap;
+  }
+
+  @include only-laptop {
+    @include mainColumnWrapperItemsGap;
+  }
+}
+
+.additionalColumnWrapper {
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.chatWrapper {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+.chatDiscussionTitle {
+  background-color: $white;
+  margin: 0;
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid $c-neutrals-200;
+  font-size: $mobile-title;
+  font-family: Lexend, sans-serif;
+  color: $c-neutrals-600
+}

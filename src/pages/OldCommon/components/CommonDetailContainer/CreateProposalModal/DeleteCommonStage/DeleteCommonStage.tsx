@@ -6,7 +6,7 @@ import { createDeleteCommonProposal } from "@/pages/OldCommon/store/actions";
 import { Loader, Modal } from "@/shared/components";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { ModalType } from "@/shared/interfaces";
-import { Common, CommonMember, Governance, Proposal } from "@/shared/models";
+import { Common, Proposal } from "@/shared/models";
 import { DeleteCommon } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName } from "@/shared/utils";
@@ -15,18 +15,19 @@ import { Configuration } from "./Configuration";
 import { Confirmation } from "./Confirmation";
 import { Success } from "./Success";
 import { DeleteCommonStep } from "./constants";
+import { useActiveProposalsCheck } from "./hooks";
 import { DeleteCommonData } from "./types";
 import "./index.scss";
 
 interface DeleteCommonStageProps {
   common: Common;
-  activeProposalsExist: boolean;
+  activeProposalsExist?: boolean;
   onFinish: (proposal?: Proposal) => void;
   onGoBack: () => void;
 }
 
 const DeleteCommonStage: FC<DeleteCommonStageProps> = (props) => {
-  const { common, activeProposalsExist, onFinish, onGoBack } = props;
+  const { common, onFinish, onGoBack } = props;
   const dispatch = useDispatch();
   const [deleteCommonData, setDeleteCommonData] =
     useState<DeleteCommonData | null>(null);
@@ -42,13 +43,19 @@ const DeleteCommonStage: FC<DeleteCommonStageProps> = (props) => {
     setShouldBeOnFullHeight,
     onError,
   } = useCreateProposalContext();
+  const {
+    data: activeProposalsExistRaw,
+    fetched: areActiveProposalsChecked,
+    checkActiveProposals,
+  } = useActiveProposalsCheck(props.activeProposalsExist);
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isConfigurationStep = step === DeleteCommonStep.Configuration;
   const isSuccessStep = step === DeleteCommonStep.Success;
   const shouldShowModalTitle = isMobileView || isConfigurationStep;
-  const isLoading = isProposalCreating;
+  const activeProposalsExist = activeProposalsExistRaw ?? true;
+  const isLoading = isProposalCreating || !areActiveProposalsChecked;
 
   const handleConfigurationFinish = (data: DeleteCommonData) => {
     setDeleteCommonData(data);
@@ -123,6 +130,12 @@ const DeleteCommonStage: FC<DeleteCommonStageProps> = (props) => {
   useEffect(() => {
     setShouldBeOnFullHeight(isConfigurationStep || isLoading);
   }, [setShouldBeOnFullHeight, isConfigurationStep, isLoading]);
+
+  useEffect(() => {
+    if (typeof props.activeProposalsExist === "undefined") {
+      checkActiveProposals(common.id);
+    }
+  }, [props.activeProposalsExist]);
 
   const renderConfirmationStep = () =>
     deleteCommonData && (

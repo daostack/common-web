@@ -3,12 +3,15 @@ import {
   useEffect,
   useRef,
   useState,
+  RefCallback,
   RefObject,
   useLayoutEffect,
 } from "react";
+import { useForceUpdate } from "@/shared/hooks";
 
 interface Return<T extends Element> {
   ref: RefObject<T>;
+  setRef: RefCallback<T>;
   isFullTextShowing: boolean;
   shouldShowFullText: boolean;
   showFullText: () => void;
@@ -18,13 +21,25 @@ interface Return<T extends Element> {
 const SCROLL_HEIGHT_DIFF = 2;
 
 const checkFullTextShowing = <T extends Element>(ref: RefObject<T>): boolean =>
-  Boolean(ref.current && ref.current.clientHeight >= ref.current.scrollHeight - SCROLL_HEIGHT_DIFF);
+  Boolean(
+    ref.current &&
+      ref.current.clientHeight >= ref.current.scrollHeight - SCROLL_HEIGHT_DIFF,
+  );
 
 const useFullText = <T extends Element = HTMLDivElement>(): Return<T> => {
-  const ref = useRef<T>(null);
+  const ref = useRef<T | null>(null);
+  const forceUpdate = useForceUpdate();
   const [shouldShowFullText, setShouldShowFullText] = useState(false);
   const isFullTextShowing = checkFullTextShowing(ref);
   const [, setIsFullTextShowingAfterResize] = useState(isFullTextShowing);
+
+  const setRef = useCallback<RefCallback<T>>(
+    (element) => {
+      ref.current = element;
+      forceUpdate();
+    },
+    [ref],
+  );
 
   const showFullText = useCallback(() => {
     setShouldShowFullText(true);
@@ -50,6 +65,7 @@ const useFullText = <T extends Element = HTMLDivElement>(): Return<T> => {
 
   return {
     ref,
+    setRef,
     isFullTextShowing,
     shouldShowFullText,
     showFullText,

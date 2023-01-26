@@ -1,8 +1,6 @@
 import React, { FC } from "react";
-import { useSelector } from "react-redux";
-import classNames from "classnames";
-import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonTab } from "@/pages/common/constants";
+import { useCommonDataContext } from "@/pages/common/providers";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -19,9 +17,12 @@ import {
   CommonDescription,
   CommonEntranceInfo,
   CommonGovernance,
+  CommonParent,
   CommonProjects,
   CommonRules,
 } from "./components";
+import { AboutActions } from "./components/AboutActions";
+import { AboutAction } from "./components/AboutActions/AboutActions";
 import styles from "./AboutTab.module.scss";
 
 interface AboutTabProps {
@@ -29,7 +30,6 @@ interface AboutTabProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  parentCommons: Common[];
   subCommons: Common[];
   rules: UnstructuredRules;
   limitations?: MemberAdmittanceLimitations;
@@ -41,13 +41,12 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     common,
     governance,
     commonMember,
-    parentCommons,
     subCommons,
     rules,
     limitations,
   } = props;
-  const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
+  const { parentCommon, parentCommonSubCommons } = useCommonDataContext();
   const isParentCommon = common.directParent === null;
 
   const renderMainColumn = () => (
@@ -60,14 +59,22 @@ const AboutTab: FC<AboutTabProps> = (props) => {
 
   const renderAdditionalColumn = () => (
     <div className={styles.additionalColumnWrapper}>
-      {limitations && (
-        <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
-      )}
+      <CommonEntranceInfo
+        limitations={limitations}
+        withJoinRequest={!commonMember}
+        common={common}
+      />
       {isParentCommon && (
         <CommonProjects
           commonMember={commonMember}
           subCommons={subCommons}
           circles={governance.circles}
+        />
+      )}
+      {parentCommon && (
+        <CommonParent
+          parentCommon={parentCommon}
+          projectsAmountInParentCommon={parentCommonSubCommons.length}
         />
       )}
     </div>
@@ -92,8 +99,16 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       <div className={styles.separator} />
       {rules.length > 0 && <CommonRules rules={rules} />}
       <div className={styles.separator} />
-      {limitations && (
-        <CommonEntranceInfo limitations={limitations} withJoinRequest={!user} />
+      <CommonEntranceInfo
+        limitations={limitations}
+        withJoinRequest={!commonMember}
+        common={common}
+      />
+      {parentCommon && (
+        <CommonParent
+          parentCommon={parentCommon}
+          projectsAmountInParentCommon={parentCommonSubCommons.length}
+        />
       )}
     </div>
   );
@@ -101,10 +116,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   return (
     <div className={styles.container}>
       <Container
-        className={classNames(
-          styles.tabNavigationContainer,
-          styles.tabNavigationContainerWithoutActions,
-        )}
+        className={styles.tabNavigationContainer}
         viewports={[
           ViewportBreakpointVariant.Tablet,
           ViewportBreakpointVariant.PhoneOriented,
@@ -113,8 +125,12 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       >
         <TabNavigation
           activeTab={activeTab}
-          common={common}
-          parentCommons={parentCommons}
+          rightContent={
+            <AboutActions
+              allowedActions={[AboutAction.InviteFriends]}
+              common={common}
+            />
+          }
         />
       </Container>
       <div className={styles.columnsWrapper}>

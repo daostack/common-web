@@ -7,7 +7,6 @@ import { Modal } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { setTutorialModalState } from "@/shared/store/actions";
 import { selectIsRtlLanguage } from "@/shared/store/selectors";
-import { isRTL } from "@/shared/utils";
 import "./index.scss";
 
 interface Props {

@@ -20,6 +20,7 @@ interface SuccessProps {
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
+  onGoToCommon?: (common: Common) => void;
 }
 
 const Success: FC<SuccessProps> = (props) => {
@@ -29,6 +30,7 @@ const Success: FC<SuccessProps> = (props) => {
     setTitle,
     setGoBackHandler,
     setShouldShowCloseButton,
+    onGoToCommon,
   } = props;
   const history = useHistory();
   const screenSize = useSelector(getScreenSize());
@@ -36,6 +38,11 @@ const Success: FC<SuccessProps> = (props) => {
   const commonPath = ROUTE_PATHS.COMMON_DETAIL.replace(":id", common.id);
 
   const handleGoToCommon = () => {
+    if (onGoToCommon) {
+      onGoToCommon(common);
+      return;
+    }
+
     if (isSubCommonCreation) {
       window.location.href = commonPath;
     } else {

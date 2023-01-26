@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { useCommonDataContext } from "@/pages/common/providers";
 import {
   GovernanceActions,
   ROUTE_PATHS,
@@ -19,6 +20,7 @@ import {
   AddProjectButton,
   AddProjectTooltipContent,
   Project,
+  ProjectTooltipContent,
 } from "./components";
 import styles from "./CommonProjects.module.scss";
 
@@ -42,6 +44,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
     circles,
     styles: outerStyles,
   } = props;
+  const { areNonCreatedProjectsLeft, onProjectCreate } = useCommonDataContext();
   const isTabletView = useIsTabletView();
   const isAddingNewProjectAllowed = Boolean(
     commonMember &&
@@ -78,14 +81,21 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
           <li key={subCommon.id} className={styles.projectsItem}>
             <Project
               title={subCommon.name}
-              description={subCommon.byline}
               url={ROUTE_PATHS.COMMON.replace(":id", subCommon.id)}
               imageURL={subCommon.image}
               imageAlt={`${subCommon.name}'s image`}
+              tooltipContent={
+                !isTabletView ? (
+                  <ProjectTooltipContent
+                    title={subCommon.name}
+                    description={subCommon.byline}
+                  />
+                ) : null
+              }
             />
           </li>
         ))}
-        {!isTabletView && (
+        {areNonCreatedProjectsLeft && !isTabletView && (
           <li className={styles.projectsItem}>
             <AddProjectButton
               disabled={!isAddingNewProjectAllowed}
@@ -94,6 +104,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
                   <AddProjectTooltipContent circles={circles} />
                 ) : null
               }
+              onClick={onProjectCreate}
             />
           </li>
         )}

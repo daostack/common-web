@@ -1,0 +1,81 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+$smallest-breakpoint: 344px;
+
+.container {
+  margin-top: 0.25rem;
+  padding: 1.5rem 2.25rem 1.25rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  background-color: $c-shades-white;
+  border: 0.0625rem solid $c-neutrals-100;
+  box-sizing: border-box;
+
+  @include viewport-breakpoint(640px) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-gap: 1.125rem 1rem;
+  }
+
+  @include phone {
+    grid-gap: 1rem 0.5rem;
+  }
+
+  @include viewport-breakpoint($smallest-breakpoint) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.text {
+  margin: 0;
+}
+
+.timeToVote {
+  font-size: $moderate-med;
+  font-family: Lexend, sans-serif;
+  font-weight: 300;
+  color: $c-neutrals-600;
+}
+
+.timeAgoClassName {
+  font-size: $moderate;
+}
+
+.voters {
+  max-width: 8.5rem;
+  font-family: Lexend, sans-serif;
+  font-size: $xsmall;
+  line-height: 120%;
+  color: $c-neutrals-600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
+  @include viewport-breakpoint($smallest-breakpoint) {
+    max-width: unset;
+    text-overflow: unset;
+    white-space: unset;
+    overflow: unset;
+    word-break: break-word;
+  }
+}
+
+.votingStatus {
+  color: $c-green-300;
+  background-color: $c-green-100;
+
+  &:hover {
+    background-color: $c-green-100;
+  }
+}
+.votingStatusFailing {
+  color: $c-error-300;
+  background-color: $c-error-100;
+
+  &:hover {
+    background-color: $c-error-100;
+  }
+}

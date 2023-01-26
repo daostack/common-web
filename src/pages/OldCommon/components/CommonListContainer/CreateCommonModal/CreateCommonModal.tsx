@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
+import { CommonEvent, CommonEventEmitter } from "@/events";
 import { Modal } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
@@ -42,6 +43,7 @@ interface CreateCommonModalProps {
   subCommons?: Common[];
   shouldBeWithoutIntroduction?: boolean;
   onCommonCreate?: (common: Common) => void;
+  onGoToCommon?: (common: Common) => void;
 }
 
 const emptyFunction = () => {
@@ -55,6 +57,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     parentCommonId,
     onCommonCreate,
     isSubCommonCreation,
+    onGoToCommon,
   } = props;
   const dispatch = useDispatch();
   const { disableZoom, resetZoom } = useZoomDisabling({
@@ -222,6 +225,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
             setShouldShowCloseButton={setShouldShowCloseButton}
+            onGoToCommon={onGoToCommon}
           />
         ) : null;
       case CreateCommonStage.Error:
@@ -256,6 +260,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     parentCommonId,
     paymentData,
     handlePaymentFinish,
+    onGoToCommon,
   ]);
 
   useEffect(() => {
@@ -273,18 +278,21 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   }, [props.isShowing, initialStage, disableZoom, resetZoom]);
 
   useEffect(() => {
-    if (stage === CreateCommonStage.Success && createdCommon) {
-      dispatch(
-        projectsActions.addProject({
-          commonId: createdCommon.id,
-          image: createdCommon.image,
-          name: createdCommon.name,
-          directParent: createdCommon.directParent,
-          hasMembership: true,
-          notificationsAmount: 0,
-        }),
-      );
+    if (stage !== CreateCommonStage.Success || !createdCommon) {
+      return;
     }
+
+    dispatch(
+      projectsActions.addProject({
+        commonId: createdCommon.id,
+        image: createdCommon.image,
+        name: createdCommon.name,
+        directParent: createdCommon.directParent,
+        hasMembership: true,
+        notificationsAmount: 0,
+      }),
+    );
+    CommonEventEmitter.emit(CommonEvent.Created, createdCommon);
   }, [stage]);
 
   return (

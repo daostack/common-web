@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useLoadingState } from "@/shared/hooks";
+import { useIsMounted, useLoadingState } from "@/shared/hooks";
 import { VoteWithUserInfo } from "@/shared/models";
 import { getVotesWithUserInfo } from "../store/api";
 
@@ -10,6 +10,7 @@ interface Return {
 }
 
 export const useVotesWithUserInfo = (): Return => {
+  const isMounted = useIsMounted();
   const [state, setState] = useLoadingState<VoteWithUserInfo[]>([]);
 
   const fetchVotes = useCallback(
@@ -31,11 +32,13 @@ export const useVotesWithUserInfo = (): Return => {
       } catch (error) {
         votes = [];
       } finally {
-        setState({
-          loading: false,
-          fetched: true,
-          data: votes,
-        });
+        if (isMounted()) {
+          setState({
+            loading: false,
+            fetched: true,
+            data: votes,
+          });
+        }
       }
     },
     [state],

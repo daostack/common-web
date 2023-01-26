@@ -1,0 +1,45 @@
+@import "../../../../constants";
+
+.modal {
+  .modalHeaderWrapper {
+    .modalHeader {
+      padding-top: 0.625rem;
+      padding-left: 0;
+      padding-bottom: 0.375rem;
+      justify-content: flex-start;
+    }
+  }
+
+  .modalContent {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .closeWrapper {
+    top: 0.625rem;
+  }
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.commonImage {
+  flex-shrink: 0;
+  align-self: flex-start;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 1rem;
+  border-radius: 0.5rem;
+}
+
+.commonName {
+  margin: 0;
+  font-family: Lexend, sans-serif;
+  font-weight: normal;
+  font-size: $moderate;
+  line-height: 100%;
+  color: $c-neutrals-600;
+  word-break: break-word;
+}

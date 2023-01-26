@@ -4,13 +4,15 @@
   display: none;
 
   @include tablet {
+    z-index: 2;
     padding: 0 1rem;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     overflow: hidden;
   }
 }
 
-.rightItem {
-  margin-left: auto;
+.emptyBlock {
+  width: 1.75rem;
 }

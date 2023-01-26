@@ -1,3 +1,7 @@
+import { isEqual } from "lodash";
+import { commonMembersSubCollection } from "@/pages/OldCommon/store/api";
+import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
+import { UnsubscribeFunction } from "@/shared/interfaces";
 import {
   Collection,
   Common,
@@ -7,10 +11,14 @@ import {
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
+  firestoreDataConverter,
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
-import { commonMembersSubCollection } from "../pages/OldCommon/store/api";
+import Api from "./Api";
+
+const converter = firestoreDataConverter<Common>();
+const commonMemberConverter = firestoreDataConverter<CommonMember>();
 
 class CommonService {
   public getCommonById = async (commonId: string): Promise<Common | null> => {
@@ -31,7 +39,10 @@ class CommonService {
     }
 
     const queries: firebase.firestore.Query[] = [];
-    const config = firebase.firestore().collection(Collection.Daos);
+    const config = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE);
 
     // Firebase allows to use at most 10 items per query for `in` option
     for (let i = 0; i < ids.length; i += 10) {
@@ -52,7 +63,10 @@ class CommonService {
     }
 
     const queries: firebase.firestore.Query[] = [];
-    const config = firebase.firestore().collection(Collection.Daos);
+    const config = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE);
 
     // Firebase allows to use at most 10 items per query for `in` option
     for (let i = 0; i < ids.length; i += 10) {
@@ -153,6 +167,124 @@ class CommonService {
     const members = transformFirebaseDataList<CommonMember>(result);
 
     return members[0] || null;
+  };
+
+  public subscribeToCircleMemberCountByCircleIds = (
+    commonId: string,
+    circleIds: string[],
+    callback: (circleMembersCount: Map<string, number>) => void
+  ): UnsubscribeFunction => {
+    const query = commonMembersSubCollection(commonId).withConverter(commonMemberConverter);
+    
+    return query.onSnapshot((snapshot) => {
+      const data = transformFirebaseDataList<CommonMember>(snapshot);
+      const circleMembersCount = new Map<string, number>();
+        circleIds.map((id, index) => {
+          const filteredMembers = data.filter(({ circleIds: ids }) =>
+          isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()),
+        );
+
+        circleMembersCount.set(id, filteredMembers?.length ?? 0);
+      });
+      callback(circleMembersCount);
+    });
+  };
+
+  public subscribeToCommon = (
+    commonId: string,
+    callback: (common: Common, isRemoved: boolean) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("id", "==", commonId)
+      .where("state", "==", CommonState.ACTIVE)
+      .withConverter(converter);
+
+    return query.onSnapshot((snapshot) => {
+      const docChange = snapshot.docChanges()[0];
+
+      if (docChange && docChange.type !== "added") {
+        callback(docChange.doc.data(), docChange.type === "removed");
+      }
+    });
+  };
+
+  public subscribeToCommons = (
+    commonIds: string[],
+    callback: (data: { common: Common; isRemoved: boolean }[]) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("id", "in", commonIds)
+      .where("state", "==", CommonState.ACTIVE)
+      .withConverter(converter);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        common: docChange.doc.data(),
+        isRemoved: docChange.type === "removed",
+      }));
+      callback(data);
+    });
+  };
+
+  public subscribeToSubCommons = (
+    parentCommonId: string,
+    callback: (data: { common: Common; isRemoved: boolean }[]) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE)
+      .where("directParent.commonId", "==", parentCommonId)
+      .withConverter(converter);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        common: docChange.doc.data(),
+        isRemoved: docChange.type === "removed",
+      }));
+      callback(data);
+    });
+  };
+
+  public subscribeToCommonMemberByCommonIdAndUserId = (
+    commonId: string,
+    userId: string,
+    callback: (
+      commonMember: CommonMember,
+      statuses: {
+        isAdded: boolean;
+        isRemoved: boolean;
+      },
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = commonMembersSubCollection(commonId)
+      .where("userId", "==", userId)
+      .withConverter(commonMemberConverter);
+
+    return query.onSnapshot((snapshot) => {
+      const docChange = snapshot.docChanges()[0];
+
+      if (docChange) {
+        callback(docChange.doc.data(), {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        });
+      }
+    });
+  };
+
+  public leaveCircle = async (
+    commonId: string,
+    circleId: string,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.CreateAction, {
+      type: GovernanceActions.LEAVE_CIRCLE,
+      args: { commonId, circleId },
+    });
   };
 }
 

@@ -1,0 +1,62 @@
+@import "../../../constants";
+@import "../../../styles/sizes";
+
+.container {
+  margin-top: 2.125rem;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mainContentContainer {
+  position: relative;
+  width: 100%;
+  flex: 0;
+  max-width: 28.25rem;
+}
+
+.imageContainer {
+  display: flex;
+  margin-top: 1rem;
+}
+
+.imageContainerSingleImage {
+  margin-top: 0;
+}
+
+.image {
+  flex-shrink: 0;
+  max-width: 14rem;
+  max-height: 13.125rem;
+  border-radius: 0.25rem;
+  object-fit: cover;
+}
+
+.singleImage {
+  width: 100%;
+  height: 100%;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.leftItem {
+  margin-right: 0.15625rem;
+  margin-left: 0;
+}
+
+.rightItem {
+  margin-left: 0.15625rem;
+  margin-right: 0;
+}
+
+
+.seeAllGallery {
+  font-size: $xsmall;
+  line-height: 1.25rem;
+  letter-spacing: 2%;
+  color: $c-primary-400;
+  text-decoration: underline;
+  margin-top: 2rem;
+}
