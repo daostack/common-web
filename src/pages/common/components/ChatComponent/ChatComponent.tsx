@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
+import isHotkey from "is-hotkey";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
@@ -19,7 +20,7 @@ import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/sel
 import { Loader } from "@/shared/components";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { ChatType } from "@/shared/constants";
-import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
+import { HotKeys } from "@/shared/constants/isHotKeyKeys";
 import { useIntersection } from "@/shared/hooks";
 import { usePrevious } from "@/shared/hooks";
 import { useDiscussionMessagesById } from "@/shared/hooks/useCases";
@@ -176,8 +177,12 @@ export default function ChatComponent({
   };
 
   const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
-    if (event.key === KeyboardKeys.Enter && (event.ctrlKey || event.metaKey)) {
+    if (isHotkey(HotKeys.Enter, event)) {
       sendChatMessage();
+    }
+
+    if (isHotkey(HotKeys.NewLine, event)) {
+      setMessage(message + "\r\n");
     }
   };
 
