@@ -175,8 +175,9 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
   const contextValue = useMemo(
     () => ({
       setChatItem,
+      activeItemDiscussionId: chatItem?.discussion.id,
     }),
-    [setChatItem],
+    [setChatItem, chatItem],
   );
 
   return (
