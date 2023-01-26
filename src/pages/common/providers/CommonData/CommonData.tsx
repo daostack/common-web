@@ -8,7 +8,7 @@ import {
   LeaveCommonModal,
   MembershipRequestModal,
 } from "@/pages/OldCommon/components";
-import { useModal, useNotification } from "@/shared/hooks";
+import { useAuthorizedModal, useNotification } from "@/shared/hooks";
 import {
   CirclesPermissions,
   Common,
@@ -84,10 +84,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onJoinCircleModalOpen,
   } = useJoinCircleModal();
   const {
-    isShowing: isCommonJoinModalOpen,
+    isModalOpen: isCommonJoinModalOpen,
     onOpen: onCommonJoinModalOpen,
     onClose: onCommonJoinModalClose,
-  } = useModal(false);
+  } = useAuthorizedModal();
   const isAuthenticated = useSelector(authentificated());
   const isProject = Boolean(common.directParent);
 
@@ -127,7 +127,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
-      isJoinAllowed: !commonMember && !isJoinPending && isAuthenticated,
+      isJoinAllowed: !commonMember && !isJoinPending,
       isJoinPending: !commonMember && isJoinPending,
       onJoinCommon: isProject ? undefined : onCommonJoinModalOpen,
       onLeaveCircle: onLeaveCircleModalOpen,
