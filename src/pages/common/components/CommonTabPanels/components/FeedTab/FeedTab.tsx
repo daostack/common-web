@@ -177,7 +177,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
       setChatItem,
       activeItemDiscussionId: chatItem?.discussion.id,
     }),
-    [setChatItem, chatItem],
+    [setChatItem, chatItem?.discussion.id],
   );
 
   return (
