@@ -35,7 +35,7 @@ export const useDiscussionMessagesById = (): Return => {
       setDefaultState({ ...DEFAULT_STATE });
       setCurrentDiscussionId(discussionId);
       dispatch(
-        cacheActions.getDiscussionStateById.request({
+        cacheActions.getDiscussionMessageStateByDiscussionId.request({
           payload: { discussionId },
         }),
       );

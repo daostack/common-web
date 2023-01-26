@@ -6,11 +6,9 @@ import React, {
   useLayoutEffect,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { scroller, animateScroll } from "react-scroll";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
 import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
 import {
   clearCurrentDiscussionMessageReply,
@@ -19,7 +17,6 @@ import {
 } from "@/pages/OldCommon/store/actions";
 import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
 import { Loader } from "@/shared/components";
-import { ChatMessage } from "@/shared/components";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { ChatType } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
@@ -36,7 +33,7 @@ import {
   DiscussionMessage,
   Proposal,
 } from "@/shared/models";
-import { formatDate } from "@/shared/utils";
+import { ChatContent } from "./components/ChatContent";
 import "./index.scss";
 
 interface ChatComponentInterface {
@@ -54,6 +51,10 @@ interface ChatComponentInterface {
   titleHeight?: number;
 }
 
+interface Messages {
+  [key: number]: DiscussionMessage[];
+}
+
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
   const d = new Date(currentValue.createdAt.seconds * 1000);
   const i = Math.floor(d.getTime() / (1000 * 60 * 60 * 24));
@@ -61,19 +62,6 @@ function groupday(acc: any, currentValue: DiscussionMessage): Messages {
   acc[timestamp] = acc[timestamp] || [];
   acc[timestamp].push(currentValue);
   return acc;
-}
-
-const isToday = (someDate: Date) => {
-  const today = new Date();
-  return (
-    someDate.getDate() === today.getDate() &&
-    someDate.getMonth() === today.getMonth() &&
-    someDate.getFullYear() === today.getFullYear()
-  );
-};
-
-interface Messages {
-  [key: number]: DiscussionMessage[];
 }
 
 export default function ChatComponent({
@@ -99,8 +87,11 @@ export default function ChatComponent({
   });
 
   const dispatch = useDispatch();
-  const { fetchDiscussionMessages, data: discussionMessages = [] } =
-    useDiscussionMessagesById();
+  const {
+    fetchDiscussionMessages,
+    data: discussionMessages = [],
+    fetched: isFetchedDiscussionMessages,
+  } = useDiscussionMessagesById();
   const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(
     discussionMessages ?? [],
   );
@@ -111,9 +102,6 @@ export default function ChatComponent({
   const discussionId = discussion.id;
 
   const [height, setHeight] = useState(0);
-  const [highlightedMessageId, setHighlightedMessageId] = useState(
-    linkHighlightedMessageId,
-  );
 
   useEffect(() => {
     if (discussionId) {
@@ -135,21 +123,6 @@ export default function ChatComponent({
   const isTabletView = useIsTabletView();
   const dateList = Object.keys(messages);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
-  const chatId = useMemo(() => `chat-${uuidv4()}`, []);
-
-  const scrollToContainerBottom = useCallback(
-    () =>
-      setTimeout(
-        () =>
-          animateScroll.scrollToBottom({
-            containerId: chatWrapperId,
-            smooth: true,
-            delay: 0,
-          }),
-        0,
-      ),
-    [chatWrapperId],
-  );
 
   const addMessageByType = useCallback(
     (payload: CreateDiscussionMessageDto) => {
@@ -209,41 +182,6 @@ export default function ChatComponent({
   };
 
   useEffect(() => {
-    if (!highlightedMessageId) scrollToContainerBottom();
-  }, [highlightedMessageId, scrollToContainerBottom]);
-
-  useEffect(() => {
-    if (
-      (Boolean(prevDiscussionMessages) &&
-        prevDiscussionMessages?.length !== discussionMessages?.length) ||
-      isNewMessageLoading
-    )
-      scrollToContainerBottom();
-  }, [
-    scrollToContainerBottom,
-    prevDiscussionMessages,
-    prevDiscussionMessages?.length,
-    discussionMessages?.length,
-    isNewMessageLoading,
-  ]);
-
-  useEffect(() => {
-    if (!highlightedMessageId) return;
-
-    setTimeout(
-      () =>
-        scroller.scrollTo(highlightedMessageId, {
-          containerId: chatId,
-          delay: 0,
-          duration: 300,
-          offset: -15,
-          smooth: true,
-        }),
-      0,
-    );
-  }, [chatId, highlightedMessageId]);
-
-  useEffect(() => {
     if (
       !prevDiscussionMessages ||
       prevDiscussionMessages?.length === discussionMessages?.length
@@ -266,17 +204,6 @@ export default function ChatComponent({
     return { height: `calc(100% - ${52 + height}px - ${titleHeight}px)` };
   }, [height, isTabletView, titleHeight]);
   const chatInputStyle = useMemo(() => ({ minHeight: 82 + height }), [height]);
-
-  function scrollToRepliedMessage(messageId: string) {
-    scroller.scrollTo(messageId, {
-      containerId: chatWrapperId,
-      delay: 0,
-      duration: 300,
-      offset: -100,
-      smooth: true,
-    });
-    setHighlightedMessageId(messageId);
-  }
 
   const MessageReply = useCallback(() => {
     if (!discussionMessageReply) {
@@ -318,73 +245,26 @@ export default function ChatComponent({
         className={`messages ${!dateList.length ? "empty" : ""}`}
         id={chatWrapperId}
       >
-        {hasAccess && !isHidden ? (
-          <>
-            {dateList.map((day, dayIndex) => {
-              const date = new Date(Number(day));
-
-              return (
-                <ul id={chatId} className="message-list" key={day}>
-                  <li className="date-title">
-                    {isToday(date) ? "Today" : formatDate(date)}
-                  </li>
-                  {messages[Number(day)].map((message, messageIndex) => (
-                    <ChatMessage
-                      key={message.id}
-                      user={user}
-                      discussionMessage={message}
-                      chatType={type}
-                      scrollToRepliedMessage={scrollToRepliedMessage}
-                      highlighted={message.id === highlightedMessageId}
-                      onMessageDropdownOpen={
-                        messageIndex === messages[Number(day)].length - 1
-                          ? () => {
-                              if (dayIndex === dateList.length - 1)
-                                scrollToContainerBottom();
-                            }
-                          : undefined
-                      }
-                    />
-                  ))}
-                </ul>
-              );
-            })}
-            {!dateList.length && !isNewMessageLoading ? (
-              <EmptyTabComponent
-                currentTab="messages"
-                message={
-                  "Have any thoughts? Share them with other members by adding the first comment."
-                }
-                title="No comments yet"
-                isCommonMember={Boolean(commonMember)}
-                isCommonMemberFetched={isCommonMemberFetched}
-                isJoiningPending={isJoiningPending}
-              />
-            ) : (
-              isNewMessageLoading && (
-                <div
-                  className={classNames("new-message-loader-wrapper", {
-                    "very-first-message": !dateList.length,
-                  })}
-                >
-                  <Loader />
-                </div>
-              )
-            )}
-          </>
-        ) : (
-          <EmptyTabComponent
-            currentTab="messages"
-            message={
-              isHidden
-                ? "This discussion was hidden due to inappropriate content"
-                : "This content is private and visible only to members of the common in specific circles."
-            }
-            title=""
-            isCommonMember={Boolean(commonMember)}
+        {isFetchedDiscussionMessages ? (
+          <ChatContent
+            discussionMessages={discussionMessages}
+            prevDiscussionMessages={prevDiscussionMessages}
+            linkHighlightedMessageId={linkHighlightedMessageId}
+            type={type}
+            commonMember={commonMember}
             isCommonMemberFetched={isCommonMemberFetched}
             isJoiningPending={isJoiningPending}
+            hasAccess={hasAccess}
+            isHidden={isHidden}
+            chatWrapperId={chatWrapperId}
+            isNewMessageLoading={isNewMessageLoading}
+            messages={messages}
+            dateList={dateList}
           />
+        ) : (
+          <div className="loader-container">
+            <Loader />
+          </div>
         )}
       </div>
       {isAuthorized && (
