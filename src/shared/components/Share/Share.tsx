@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState, PropsWithChildren } from "react";
 import classNames from "classnames";
-import { SocialLinks, ShareModal } from "@/shared/components";
+import { SocialLinks, ShareModal, ButtonIcon } from "@/shared/components";
 import { Colors, ShareViewType, SharePopupVariant } from "@/shared/constants";
+import { ShareIcon } from "@/shared/icons";
 import { useModal, useOutsideClick } from "../../hooks";
 import "./index.scss";
 
@@ -65,12 +66,14 @@ export default function Share(props: PropsWithChildren<IProps>) {
           {children}
         </div>
       ) : (
-        <div
+        <ButtonIcon
           className={classNames("share-button", shareButtonClassName, {
             "share-button__with-border": withBorder,
           })}
           onClick={handleClick}
-        />
+        >
+          <ShareIcon />
+        </ButtonIcon>
       )}
       {type === ShareViewType.Popup ? (
         isShown && (

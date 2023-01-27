@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { useCommonDataContext } from "@/pages/common/providers";
+import { useCommonDataContext } from "@/pages/common/providers/CommonData/context";
 import { Image } from "@/shared/components/Image";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
+import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit/Button";
 import { KeyValueItem, KeyValuePairs } from "./components";
 import styles from "./CommonHeader.module.scss";
 

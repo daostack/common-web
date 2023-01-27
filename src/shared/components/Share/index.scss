@@ -7,11 +7,9 @@
   .share-button {
     width: 40px;
     height: 40px;
+    color: $secondary-blue;
     border-radius: 40px;
     background-color: var(--share-button-bg);
-    background-image: url("/icons/icons-share.svg");
-    background-repeat: no-repeat;
-    background-position: center;
     cursor: pointer;
   }
   .share-button:hover {
