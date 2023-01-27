@@ -8,7 +8,7 @@ import React, {
 import { Editor } from "slate";
 import { Input } from "@/shared/components/Form/Input";
 import { Modal } from "@/shared/components/Modal";
-import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { Button, ButtonVariant } from "@/shared/ui-kit/Button";
 import { checkIsURL } from "@/shared/utils";
 import { ElementType } from "../../../../constants";
 import { LinkElement } from "../../../../types";
