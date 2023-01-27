@@ -1,9 +1,8 @@
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, useEffect } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { ViewportBreakpointVariant } from "@/shared/constants";
-import { useViewPortHook } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Container } from "@/shared/ui-kit";
+import { Container, InfiniteScroll } from "@/shared/ui-kit";
 import { useCommonFeedItems } from "../../hooks";
 import { FeedItem } from "./component";
 import styles from "./FeedItems.module.scss";
@@ -17,8 +16,6 @@ const FeedItems: FC = () => {
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(common.id);
   const isTabletView = useIsTabletView();
-  const anchorRef = useRef<HTMLDivElement>(null);
-  const isAnchorVisible = useViewPortHook(anchorRef.current);
 
   const fetchMore = () => {
     if (hasMore) {
@@ -32,12 +29,6 @@ const FeedItems: FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (isAnchorVisible && !loading) {
-      fetchMore();
-    }
-  }, [isAnchorVisible]);
-
   return (
     <Container
       className={styles.container}
@@ -47,16 +38,17 @@ const FeedItems: FC = () => {
         ViewportBreakpointVariant.Phone,
       ]}
     >
-      {commonFeedItems?.map((item) => (
-        <FeedItem
-          key={item.id}
-          commonId={common.id}
-          item={item}
-          governanceCircles={governance.circles}
-          isMobileVersion={isTabletView}
-        />
-      ))}
-      <div ref={anchorRef} />
+      <InfiniteScroll onFetchNext={fetchMore} isLoading={loading}>
+        {commonFeedItems?.map((item) => (
+          <FeedItem
+            key={item.id}
+            commonId={common.id}
+            item={item}
+            governanceCircles={governance.circles}
+            isMobileVersion={isTabletView}
+          />
+        ))}
+      </InfiniteScroll>
     </Container>
   );
 };
