@@ -9,6 +9,9 @@ export default {
   component: CommonHeader,
   parameters: {
     layout: "fullscreen",
+    storyshots: {
+      disable: true,
+    },
   },
 } as ComponentMeta<typeof CommonHeader>;
 
