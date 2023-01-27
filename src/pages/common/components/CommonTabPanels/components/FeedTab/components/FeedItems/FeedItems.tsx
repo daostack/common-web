@@ -1,6 +1,7 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { ViewportBreakpointVariant } from "@/shared/constants";
+import { useViewPortHook } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Container } from "@/shared/ui-kit";
 import { useCommonFeedItems } from "../../hooks";
@@ -16,6 +17,8 @@ const FeedItems: FC = () => {
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(common.id);
   const isTabletView = useIsTabletView();
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const isAnchorVisible = useViewPortHook(anchorRef.current);
 
   const fetchMore = () => {
     if (hasMore) {
@@ -28,6 +31,12 @@ const FeedItems: FC = () => {
       fetchCommonFeedItems();
     }
   }, []);
+
+  useEffect(() => {
+    if (isAnchorVisible && !loading) {
+      fetchMore();
+    }
+  }, [isAnchorVisible]);
 
   return (
     <Container
@@ -47,6 +56,7 @@ const FeedItems: FC = () => {
           isMobileVersion={isTabletView}
         />
       ))}
+      <div ref={anchorRef} />
     </Container>
   );
 };
