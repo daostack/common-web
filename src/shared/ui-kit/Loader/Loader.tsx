@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import loaderSrc from "@/shared/assets/icons/loader.svg";
 import { Portal } from "../Portal";
 import styles from "./Loader.module.scss";
 
@@ -20,7 +21,13 @@ const Loader: FC<LoaderProps> = (props) => {
     overlayClassName,
     variant = LoaderVariant.Default,
   } = props;
-  const loaderEl = <div className={classNames(styles.loader, className)} />;
+  const loaderEl = (
+    <img
+      className={classNames(styles.loader, className)}
+      src={loaderSrc}
+      alt="Loader"
+    />
+  );
 
   if (variant === LoaderVariant.Global) {
     return (

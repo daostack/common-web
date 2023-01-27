@@ -1,11 +1,9 @@
 @import "../../../constants";
 
 .loader {
-  height: 3.125rem;
+  flex-shrink: 0;
   width: 3.125rem;
-  background-image: url("/shared/assets/icons/loader.svg");
-  background-repeat: no-repeat;
-  background-position: center;
+  height: 3.125rem;
 }
 
 .globalLoaderOverlay {
