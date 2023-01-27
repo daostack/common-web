@@ -20,7 +20,7 @@ import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/sel
 import { Loader } from "@/shared/components";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { ChatType } from "@/shared/constants";
-import { HotKeys } from "@/shared/constants/isHotKeyKeys";
+import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { useIntersection } from "@/shared/hooks";
 import { usePrevious } from "@/shared/hooks";
 import { useDiscussionMessagesById } from "@/shared/hooks/useCases";
@@ -178,10 +178,9 @@ export default function ChatComponent({
 
   const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
     if (isHotkey(HotKeys.Enter, event)) {
+      event.preventDefault();
       sendChatMessage();
-    }
-
-    if (isHotkey(HotKeys.NewLine, event)) {
+    } else if (isHotkey(HotKeys.ModEnter || HotKeys.ShiftEnter, event)) {
       setMessage(message + "\r\n");
     }
   };
