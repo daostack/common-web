@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 
-function useViewPortHook(element: any, rootMargin: string) {
+function useViewPortHook(element?: HTMLElement | null, rootMargin?: string) {
   const [isVisible, setState] = useState(false);
 
   useEffect(() => {
+    if (!element) {
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         setState(entry.isIntersecting);
@@ -11,9 +15,9 @@ function useViewPortHook(element: any, rootMargin: string) {
       { rootMargin },
     );
 
-    element && observer.observe(element);
+    observer.observe(element);
 
-    return () => element && observer.unobserve(element);
+    return () => observer.unobserve(element);
   }, [element, rootMargin]);
 
   return isVisible;
