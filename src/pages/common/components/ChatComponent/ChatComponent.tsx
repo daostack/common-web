@@ -177,12 +177,20 @@ export default function ChatComponent({
   };
 
   const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
-    if (isHotkey(HotKeys.Enter, event)) {
+    Object.values(HotKeys).forEach((hotkey) => {
+      if (!isHotkey(hotkey, event)) {
+        return;
+      }
       event.preventDefault();
-      sendChatMessage();
-    } else if (isHotkey(HotKeys.ModEnter || HotKeys.ShiftEnter, event)) {
-      setMessage(message + "\r\n");
-    }
+      if (isHotkey(HotKeys.Enter, event)) {
+        sendChatMessage();
+      } else if (
+        isHotkey(HotKeys.ModEnter, event) ||
+        isHotkey(HotKeys.ShiftEnter, event)
+      ) {
+        setMessage(message + "\r\n");
+      }
+    });
   };
 
   useEffect(() => {
