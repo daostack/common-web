@@ -4,6 +4,7 @@ import { ROUTE_PATHS } from "@/shared/constants";
 import { useCommon } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Container, Loader } from "@/shared/ui-kit";
+import { ProjectCreationForm } from "./components";
 import styles from "./ProjectCreation.module.scss";
 
 interface ProjectCreationProps {
@@ -57,6 +58,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           Project serves a certain group in the common to organize together and
           achieve more focused goals.
         </p>
+        <ProjectCreationForm />
       </div>
     </Container>
   );

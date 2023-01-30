@@ -7,5 +7,5 @@ export * from "./ImageArray";
 export * from "./RulesArray";
 export * from "./ToggleButtonGroup";
 export { TextEditor } from "./TextEditor";
-export { TextField } from "./TextField";
+export * from "./TextField";
 export * from "./UploadFiles";
