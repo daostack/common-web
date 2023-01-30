@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots UI Kit/TextEditor/Toolbar Button Active 1`] = `
+<button
+  className="button buttonActive"
+  type="button"
+>
+  <svg
+    className="icon"
+    fill="none"
+    height="12"
+    viewBox="0 0 16 12"
+    width="16"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M4.66675 1H15.5001"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M4.66675 6H15.5001"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M4.66675 11H15.5001"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M0.5 1H0.51"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M0.5 6H0.51"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M0.5 11H0.51"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+</button>
+`;
+
+exports[`Storyshots UI Kit/TextEditor/Toolbar Button Default 1`] = `
+<button
+  className="button"
+  type="button"
+>
+  <svg
+    className="icon"
+    fill="none"
+    height="16"
+    viewBox="0 0 13 16"
+    width="13"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M1 1.33398H7.66667C8.55072 1.33398 9.39857 1.68517 10.0237 2.31029C10.6488 2.93542 11 3.78326 11 4.66732C11 5.55137 10.6488 6.39922 10.0237 7.02434C9.39857 7.64946 8.55072 8.00065 7.66667 8.00065H1V1.33398Z"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M1 8H8.5C9.38405 8 10.2319 8.35119 10.857 8.97631C11.4821 9.60143 11.8333 10.4493 11.8333 11.3333C11.8333 12.2174 11.4821 13.0652 10.857 13.6904C10.2319 14.3155 9.38405 14.6667 8.5 14.6667H1V8Z"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+</button>
+`;

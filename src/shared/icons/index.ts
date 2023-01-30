@@ -1,3 +1,4 @@
+export * from "./socials";
 export { default as AttachIcon } from "./attach.icon";
 export { default as Avatar2Icon } from "./avatar2.icon";
 export { default as BlocksIcon } from "./blocks.icon";

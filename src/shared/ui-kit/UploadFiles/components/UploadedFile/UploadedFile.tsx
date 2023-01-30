@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Close2Icon } from "@/shared/icons";
-import { ButtonIcon } from "@/shared/ui-kit";
+import { ButtonIcon } from "@/shared/ui-kit/ButtonIcon";
 import styles from "./UploadedFile.module.scss";
 
 interface UploadedFileProps {

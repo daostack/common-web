@@ -1,8 +1,15 @@
 import React, { FC, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { Loader } from "@/shared/components";
+import { ButtonIcon, Loader } from "@/shared/components";
 import { ShareViewType, SharePopupVariant } from "@/shared/constants";
+import {
+  FacebookIcon,
+  LinkedInIcon,
+  TelegramIcon,
+  TwitterIcon,
+  WhatsAppIcon,
+} from "@/shared/icons";
 import { isMobile } from "@/shared/utils";
 import "./index.scss";
 
@@ -116,36 +123,30 @@ export const SocialLinks: FC<SocialLinksProps> = ({
               shareViewType === ShareViewType.ModalMobile,
           })}
         >
-          <button
-            className="facebook"
-            onClick={() => handleURLOpen(Social.Facebook)}
-          >
-            <div className="social-icon facebook-icon" />
-          </button>
-          <button
-            className="linkedin"
-            onClick={() => handleURLOpen(Social.LinkedIn)}
-          >
-            <div className="social-icon linkedin-icon" />
-          </button>
-          <button
-            className="twitter"
-            onClick={() => handleURLOpen(Social.Twitter)}
-          >
-            <div className="social-icon twitter-icon" />
-          </button>
-          <button
-            className="telegram"
-            onClick={() => handleURLOpen(Social.Telegram)}
-          >
-            <div className="social-icon telegram-icon" />
-          </button>
-          <button
-            className="whatsapp"
-            onClick={() => handleURLOpen(Social.Whatsapp)}
-          >
-            <div className="social-icon whatsapp-icon" />
-          </button>
+          <ButtonIcon onClick={() => handleURLOpen(Social.Facebook)}>
+            <FacebookIcon
+              className="social-icon facebook-icon"
+              color="currentColor"
+            />
+          </ButtonIcon>
+          <ButtonIcon onClick={() => handleURLOpen(Social.LinkedIn)}>
+            <LinkedInIcon className="social-icon linkedin-icon" />
+          </ButtonIcon>
+          <ButtonIcon onClick={() => handleURLOpen(Social.Twitter)}>
+            <TwitterIcon
+              className="social-icon twitter-icon"
+              color="currentColor"
+            />
+          </ButtonIcon>
+          <ButtonIcon onClick={() => handleURLOpen(Social.Telegram)}>
+            <TelegramIcon
+              className="social-icon telegram-icon"
+              color="currentColor"
+            />
+          </ButtonIcon>
+          <ButtonIcon onClick={() => handleURLOpen(Social.Whatsapp)}>
+            <WhatsAppIcon className="social-icon whatsapp-icon" />
+          </ButtonIcon>
         </div>
       )}
     </div>
