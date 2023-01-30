@@ -84,6 +84,7 @@ const Common: FC = () => {
       parentCommonSubCommons={commonData.parentCommonSubCommons}
       isGlobalDataFetched={isGlobalDataFetched}
       commonMember={commonMember}
+      isCommonMemberFetched={isCommonMemberFetched}
       isJoinPending={isJoinPending}
       setIsJoinPending={setIsJoinPending}
     />

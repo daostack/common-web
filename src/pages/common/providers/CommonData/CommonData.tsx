@@ -30,6 +30,7 @@ interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  isCommonMemberFetched: boolean;
   parentCommons: Common[];
   subCommons: Common[];
   parentCommon?: Common;
@@ -43,11 +44,11 @@ const CommonData: FC<CommonDataProps> = (props) => {
     common,
     governance,
     commonMember,
+    isCommonMemberFetched,
     parentCommons,
     subCommons,
     parentCommon,
     parentCommonSubCommons,
-    isJoinPending,
     setIsJoinPending,
     children,
   } = props;
@@ -89,7 +90,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
   } = useAuthorizedModal();
   const isProject = Boolean(common.directParent);
 
-  const isJoinAllowed = !commonMember && !isJoinPending;
+  const isJoinPending =
+    isCommonMemberFetched && !commonMember && props.isJoinPending;
+  const isJoinAllowed =
+    isCommonMemberFetched && !commonMember && !isJoinPending;
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -127,8 +131,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
-      isJoinAllowed: !commonMember && !isJoinPending,
-      isJoinPending: !commonMember && isJoinPending,
+      isJoinAllowed,
+      isJoinPending,
       onJoinCommon: isProject ? undefined : onCommonJoinModalOpen,
       onLeaveCircle: onLeaveCircleModalOpen,
       onJoinCircle: onJoinCircleModalOpen,
@@ -143,7 +147,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
-      commonMember,
+      isJoinAllowed,
       isJoinPending,
       isProject,
       onCommonJoinModalOpen,
