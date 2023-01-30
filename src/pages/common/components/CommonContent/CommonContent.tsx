@@ -70,6 +70,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       parentCommon={parentCommon}
       governance={governance}
       commonMember={commonMember}
+      isGlobalDataFetched={isGlobalDataFetched}
       parentCommons={parentCommons}
       subCommons={subCommons}
       parentCommonSubCommons={parentCommonSubCommons}

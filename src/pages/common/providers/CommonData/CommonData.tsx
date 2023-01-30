@@ -1,14 +1,13 @@
-import React, { FC, useCallback, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
-import { authentificated } from "@/pages/Auth/store/selectors";
 import {
   CreateCommonModal,
   CreateProposalModal,
   LeaveCommonModal,
   MembershipRequestModal,
 } from "@/pages/OldCommon/components";
-import { useModal, useNotification } from "@/shared/hooks";
+import { useAuthorizedModal, useNotification } from "@/shared/hooks";
 import {
   CirclesPermissions,
   Common,
@@ -31,6 +30,7 @@ interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  isGlobalDataFetched: boolean;
   parentCommons: Common[];
   subCommons: Common[];
   parentCommon?: Common;
@@ -44,11 +44,11 @@ const CommonData: FC<CommonDataProps> = (props) => {
     common,
     governance,
     commonMember,
+    isGlobalDataFetched,
     parentCommons,
     subCommons,
     parentCommon,
     parentCommonSubCommons,
-    isJoinPending,
     setIsJoinPending,
     children,
   } = props;
@@ -84,12 +84,15 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onJoinCircleModalOpen,
   } = useJoinCircleModal();
   const {
-    isShowing: isCommonJoinModalOpen,
+    isModalOpen: isCommonJoinModalOpen,
     onOpen: onCommonJoinModalOpen,
     onClose: onCommonJoinModalClose,
-  } = useModal(false);
-  const isAuthenticated = useSelector(authentificated());
+  } = useAuthorizedModal();
   const isProject = Boolean(common.directParent);
+
+  const isJoinPending =
+    isGlobalDataFetched && !commonMember && props.isJoinPending;
+  const isJoinAllowed = isGlobalDataFetched && !commonMember && !isJoinPending;
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -116,6 +119,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
     handleMenuClose();
   };
 
+  useEffect(() => {
+    if (isGlobalDataFetched && !isJoinAllowed && isCommonJoinModalOpen) {
+      onCommonJoinModalClose();
+    }
+  }, [isGlobalDataFetched, isJoinAllowed, isCommonJoinModalOpen]);
+
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
       onMenuItemSelect: handleMenuItemSelect,
@@ -127,8 +136,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
-      isJoinAllowed: !commonMember && !isJoinPending && isAuthenticated,
-      isJoinPending: !commonMember && isJoinPending,
+      isJoinAllowed,
+      isJoinPending,
       onJoinCommon: isProject ? undefined : onCommonJoinModalOpen,
       onLeaveCircle: onLeaveCircleModalOpen,
       onJoinCircle: onJoinCircleModalOpen,
@@ -143,10 +152,9 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
-      commonMember,
+      isJoinAllowed,
       isJoinPending,
       isProject,
-      isAuthenticated,
       onCommonJoinModalOpen,
       onLeaveCircleModalOpen,
       onJoinCircleModalOpen,
@@ -205,7 +213,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
         />
       )}
       <MembershipRequestModal
-        isShowing={isCommonJoinModalOpen}
+        isShowing={isJoinAllowed && isCommonJoinModalOpen}
         onClose={onCommonJoinModalClose}
         common={common}
         governance={governance}
