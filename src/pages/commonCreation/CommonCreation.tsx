@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
-import { Loader } from "@/shared/ui-kit";
-import styles from "./CommonCreation.module.scss";
+import { ProjectCreation } from "./components";
 
 interface CommonCreationRouterParams {
   id?: string;
@@ -9,15 +8,9 @@ interface CommonCreationRouterParams {
 
 const CommonCreation: FC = () => {
   const { id: commonId } = useParams<CommonCreationRouterParams>();
-  const isProjectCreation = Boolean(commonId);
-  const isLoading = false;
 
-  if (isLoading) {
-    return (
-      <div className={styles.centerWrapper}>
-        <Loader />
-      </div>
-    );
+  if (commonId) {
+    return <ProjectCreation parentCommonId={commonId} />;
   }
 
   return null;

@@ -1,0 +1,51 @@
+@import "../../../../constants";
+
+.centerWrapper {
+  flex: 1;
+  padding: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nonExistentParentCommon {
+  margin: 0;
+}
+
+.container {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.content {
+  max-width: 36.5rem;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.backArrowIcon {
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+}
+
+.title {
+  margin: 0 0 0.875rem;
+  font-family: Lexend, sans-serif;
+  font-weight: normal;
+  font-size: $large-1;
+  line-height: 133%;
+}
+
+.subtitle {
+  margin: 0 0 2.25rem;
+  font-size: $small;
+  line-height: 125%;
+}
