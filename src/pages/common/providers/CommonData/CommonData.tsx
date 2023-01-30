@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
 import {
@@ -119,6 +119,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
     notify("You’ve successfully left the common");
     handleMenuClose();
   };
+
+  useEffect(() => {
+    if (!isJoinAllowed && isCommonJoinModalOpen) {
+      onCommonJoinModalClose();
+    }
+  }, [isJoinAllowed, isCommonJoinModalOpen]);
 
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
