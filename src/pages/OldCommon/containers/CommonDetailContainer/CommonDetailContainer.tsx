@@ -24,7 +24,7 @@ import {
   useAuthorizedModal,
   useModal,
   useQueryParams,
-  useViewPortHook,
+  useIntersectionObserver,
 } from "@/shared/hooks";
 import { useCommon, useSubCommons } from "@/shared/hooks/useCases";
 import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
@@ -154,7 +154,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
   const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
     null,
   );
-  const inViewport = useViewPortHook(joinEffortRef, "-50px");
+  const inViewport = useIntersectionObserver(joinEffortRef, "-50px");
   const [stickyClass, setStickyClass] = useState("");
   const [tab, setTab] = useState(() => {
     const defaultTab = queryParams[COMMON_DETAILS_PAGE_TAB_QUERY_PARAM];

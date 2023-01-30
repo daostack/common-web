@@ -1,6 +1,6 @@
 export { default as useModal } from "./ModalHook";
 export { default as useOutsideClick } from "./OutsideClickHook";
-export { default as useViewPortHook } from "./ViewPortHook";
+export { default as useIntersectionObserver } from "./useIntersectionObserver";
 export { default as useCalculateReadMoreLength } from "./CalculateReadMoreLenght";
 export { useFormErrorsTranslate } from "./useFormErrorsTranslate";
 export { default as useAnyMandatoryRoles } from "./useAnyMandatoryRoles";
