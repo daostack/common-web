@@ -59,13 +59,13 @@ class CommonFeedService {
     hasMore: boolean;
   }> => {
     const { startAfter, limit = 10 } = options;
-    const query = this.getCommonFeedSubCollection(commonId).orderBy(
+    let query = this.getCommonFeedSubCollection(commonId).orderBy(
       "createdAt",
       "desc",
     );
 
     if (startAfter) {
-      query.startAfter(startAfter);
+      query = query.startAfter(startAfter);
     }
 
     const snapshot = await query.limit(limit).get();
