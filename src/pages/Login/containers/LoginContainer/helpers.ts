@@ -6,6 +6,12 @@ import {
 } from "@/shared/constants";
 import { matchRoute } from "@/shared/utils";
 
+const PAGES_WITH_ALLOWED_SIGN_UP = [
+  ROUTE_PATHS.COMMON_SUPPORT,
+  ROUTE_PATHS.COMMON_DETAIL,
+  ROUTE_PATHS.COMMON,
+];
+
 export const getAuthCode = (
   queryParams: ParsedQuery,
   pathname: string,
@@ -19,8 +25,9 @@ export const getAuthCode = (
     };
   }
   if (
-    matchRoute(pathname, ROUTE_PATHS.COMMON_SUPPORT, { exact: true }) ||
-    matchRoute(pathname, ROUTE_PATHS.COMMON_DETAIL, { exact: true })
+    PAGES_WITH_ALLOWED_SIGN_UP.some((page) =>
+      matchRoute(pathname, page, { exact: true }),
+    )
   ) {
     return {
       authCode: AUTH_CODE_FOR_SIGN_UP,
