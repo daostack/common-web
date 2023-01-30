@@ -21,6 +21,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         item={item}
         governanceCircles={governanceCircles}
         isMobileVersion={isMobileVersion}
+        commonId={commonId}
       />
     );
   }

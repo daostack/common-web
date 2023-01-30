@@ -155,6 +155,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         }
         type={getProposalTypeString(proposal.type)}
         circleVisibility={circleVisibility}
+        commonId={commonId}
+        userId={item.userId}
       />
       <FeedCardContent
         title={getProposalTitleString(proposal, { governanceCircles })}
