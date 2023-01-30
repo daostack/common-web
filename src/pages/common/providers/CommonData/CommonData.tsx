@@ -30,7 +30,7 @@ interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  isCommonMemberFetched: boolean;
+  isGlobalDataFetched: boolean;
   parentCommons: Common[];
   subCommons: Common[];
   parentCommon?: Common;
@@ -44,7 +44,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     common,
     governance,
     commonMember,
-    isCommonMemberFetched,
+    isGlobalDataFetched,
     parentCommons,
     subCommons,
     parentCommon,
@@ -91,9 +91,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const isProject = Boolean(common.directParent);
 
   const isJoinPending =
-    isCommonMemberFetched && !commonMember && props.isJoinPending;
-  const isJoinAllowed =
-    isCommonMemberFetched && !commonMember && !isJoinPending;
+    isGlobalDataFetched && !commonMember && props.isJoinPending;
+  const isJoinAllowed = isGlobalDataFetched && !commonMember && !isJoinPending;
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -121,10 +120,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
   };
 
   useEffect(() => {
-    if (!isJoinAllowed && isCommonJoinModalOpen) {
+    if (isGlobalDataFetched && !isJoinAllowed && isCommonJoinModalOpen) {
       onCommonJoinModalClose();
     }
-  }, [isJoinAllowed, isCommonJoinModalOpen]);
+  }, [isGlobalDataFetched, isJoinAllowed, isCommonJoinModalOpen]);
 
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
