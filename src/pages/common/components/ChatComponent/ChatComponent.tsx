@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
+import isHotkey from "is-hotkey";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
@@ -19,7 +20,7 @@ import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/sel
 import { Loader } from "@/shared/components";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { ChatType } from "@/shared/constants";
-import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
+import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { useIntersection } from "@/shared/hooks";
 import { usePrevious } from "@/shared/hooks";
 import { useDiscussionMessagesById } from "@/shared/hooks/useCases";
@@ -63,6 +64,8 @@ function groupday(acc: any, currentValue: DiscussionMessage): Messages {
   acc[timestamp].push(currentValue);
   return acc;
 }
+
+const CHAT_HOT_KEYS = [HotKeys.Enter, HotKeys.ModEnter, HotKeys.ShiftEnter];
 
 export default function ChatComponent({
   common,
@@ -176,9 +179,22 @@ export default function ChatComponent({
   };
 
   const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
-    if (event.key === KeyboardKeys.Enter && (event.ctrlKey || event.metaKey)) {
-      sendChatMessage();
+    const enteredHotkey = CHAT_HOT_KEYS.find((hotkey) =>
+      isHotkey(hotkey, event),
+    );
+
+    if (!enteredHotkey) {
+      return;
     }
+
+    event.preventDefault();
+
+    if (enteredHotkey === HotKeys.Enter) {
+      sendChatMessage();
+      return;
+    }
+
+    setMessage((currentMessage) => `${currentMessage}\r\n`);
   };
 
   useEffect(() => {
