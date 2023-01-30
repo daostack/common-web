@@ -65,6 +65,8 @@ function groupday(acc: any, currentValue: DiscussionMessage): Messages {
   return acc;
 }
 
+const CHAT_HOT_KEYS = [HotKeys.Enter, HotKeys.ModEnter, HotKeys.ShiftEnter];
+
 export default function ChatComponent({
   common,
   type,
@@ -177,20 +179,22 @@ export default function ChatComponent({
   };
 
   const onEnterKeyDown = (event: React.KeyboardEvent<HTMLElement>): void => {
-    Object.values(HotKeys).forEach((hotkey) => {
-      if (!isHotkey(hotkey, event)) {
-        return;
-      }
-      event.preventDefault();
-      if (isHotkey(HotKeys.Enter, event)) {
-        sendChatMessage();
-      } else if (
-        isHotkey(HotKeys.ModEnter, event) ||
-        isHotkey(HotKeys.ShiftEnter, event)
-      ) {
-        setMessage(message + "\r\n");
-      }
-    });
+    const enteredHotkey = CHAT_HOT_KEYS.find((hotkey) =>
+      isHotkey(hotkey, event),
+    );
+
+    if (!enteredHotkey) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (enteredHotkey === HotKeys.Enter) {
+      sendChatMessage();
+      return;
+    }
+
+    setMessage((currentMessage) => `${currentMessage}\r\n`);
   };
 
   useEffect(() => {
