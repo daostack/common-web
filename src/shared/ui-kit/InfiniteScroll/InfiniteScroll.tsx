@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { useViewPortHook } from "@/shared/hooks";
+import { useIntersectionObserver } from "@/shared/hooks";
 import { Loader } from "@/shared/ui-kit/Loader";
 import styles from "./InfiniteScroll.module.scss";
 
@@ -12,7 +12,7 @@ const InfiniteScroll: FC<InfiniteScrollProps> = (props) => {
   const { isLoading, onFetchNext, children } = props;
   const [isInnerLoading, setIsInnerLoading] = useState(isLoading);
   const markerRef = useRef<HTMLDivElement>(null);
-  const isMarkerOnScreen = useViewPortHook(markerRef.current);
+  const isMarkerOnScreen = useIntersectionObserver(markerRef.current);
 
   useEffect(() => {
     if (isLoading) {

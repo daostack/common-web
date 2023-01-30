@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 
-function useViewPortHook(element?: HTMLElement | null, rootMargin?: string) {
+function useIntersectionObserver(
+  element?: HTMLElement | null,
+  rootMargin?: string,
+) {
   const [isVisible, setState] = useState(false);
 
   useEffect(() => {
@@ -22,4 +25,4 @@ function useViewPortHook(element?: HTMLElement | null, rootMargin?: string) {
 
   return isVisible;
 }
-export default useViewPortHook;
+export default useIntersectionObserver;
