@@ -88,13 +88,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
     isModalOpen: isCommonJoinModalOpen,
     onOpen: onCommonJoinModalOpen,
     onClose: onCommonJoinModalClose,
-  } = useAuthorizedModal(false);
+  } = useAuthorizedModal();
   const {
-    isShowing: isProjectJoinModalOpen,
+    isModalOpen: isProjectJoinModalOpen,
     onOpen: onProjectJoinModalOpen,
     onClose: onProjectJoinModalClose,
-  } = useAuthorizedModal(false);
-  const isAuthenticated = useSelector(authentificated());
+  } = useAuthorizedModal();
   const isProject = Boolean(common.directParent);
 
   const isJoinPending =
