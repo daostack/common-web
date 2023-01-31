@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { TextField } from "@/shared/components/Form/Formik";
 import { CreationFormItemType } from "../../constants";
 import { CreationFormItem } from "../../types";
+import styles from "./Item.module.scss";
 
 interface ItemProps {
   className?: string;
@@ -15,7 +16,20 @@ const Item: FC<ItemProps> = (props) => {
 
   switch (item.type) {
     case CreationFormItemType.TextField:
-      return <TextField {...item.props} className={className} />;
+      return (
+        <TextField
+          {...item.props}
+          className={classNames(styles.textField, className)}
+          styles={{
+            ...item.props.styles,
+            labelWrapper: classNames(
+              styles.textFieldLabelWrapper,
+              item.props.styles?.labelWrapper,
+            ),
+            hint: classNames(styles.textFieldHint, item.props.styles?.hint),
+          }}
+        />
+      );
     default:
       return null;
   }
