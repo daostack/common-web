@@ -108,9 +108,12 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
 
       const circleId = governance.circles[0].id;
       const circleName = governance.circles[0].name;
+      const commonId = isJoinMemberAdmittanceRequest
+        ? common.id
+        : common.directParent?.commonId;
 
       const payload = {
-        commonId: common.id,
+        commonId,
         description: message,
         images: [],
         files: [],
@@ -130,7 +133,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         await createAssignProposal({
           args: {
             ...payload,
-            commonId: common.id,
+            commonId,
             circleId,
             userId,
             title: `Request to join ${circleName} circle by ${userName}`,
@@ -138,7 +141,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         });
       }
     },
-    [governance, common, userId],
+    [governance, common.id, common.directParent?.commonId, userId],
   );
 
   return (
