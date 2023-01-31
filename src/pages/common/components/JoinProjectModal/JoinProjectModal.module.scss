@@ -1,0 +1,24 @@
+@import "../../../../constants";
+@import "../../../../styles/mixins";
+
+.modal {
+  max-width: 31.5rem;
+  width: 100%;
+  border-radius: 0.5rem;
+}
+
+.modalHeader {
+  justify-content: flex-start !important;
+  padding: 0 !important;
+
+  .modal__title {
+    font-size: $moderate-small;
+  }
+}
+
+.modalContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 2.25rem !important;
+}

@@ -16,6 +16,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { projectsActions } from "@/store/states";
+import { JoinProjectModal } from "../../components/JoinProjectModal";
 import { CommonMenuItem } from "../../constants";
 import { LeaveCircleModal } from "./components";
 import { JoinCircleModal } from "./components/JoinCircleModal";
@@ -88,6 +89,11 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onOpen: onCommonJoinModalOpen,
     onClose: onCommonJoinModalClose,
   } = useModal(false);
+  const {
+    isShowing: isProjectJoinModalOpen,
+    onOpen: onProjectJoinModalOpen,
+    onClose: onProjectJoinModalClose,
+  } = useModal(false);
   const isAuthenticated = useSelector(authentificated());
   const isProject = Boolean(common.directParent);
 
@@ -129,7 +135,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       parentCommonSubCommons,
       isJoinAllowed: !commonMember && !isJoinPending && isAuthenticated,
       isJoinPending: !commonMember && isJoinPending,
-      onJoinCommon: isProject ? undefined : onCommonJoinModalOpen,
+      onJoinCommon: isProject ? onProjectJoinModalOpen : onCommonJoinModalOpen,
       onLeaveCircle: onLeaveCircleModalOpen,
       onJoinCircle: onJoinCircleModalOpen,
     }),
@@ -210,6 +216,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
         common={common}
         governance={governance}
         onRequestCreated={() => setIsJoinPending(true)}
+      />
+      <JoinProjectModal
+        isShowing={isProjectJoinModalOpen}
+        onClose={onProjectJoinModalClose}
+        common={common}
+        governance={governance}
       />
     </CommonDataContext.Provider>
   );
