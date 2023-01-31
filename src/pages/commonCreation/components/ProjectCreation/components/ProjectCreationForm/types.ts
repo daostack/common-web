@@ -6,4 +6,6 @@ export interface ProjectCreationFormValues {
   projectName: string;
   byline: string;
   description: TextEditorValue;
+  videoUrl: string;
+  gallery: UploadFile[];
 }

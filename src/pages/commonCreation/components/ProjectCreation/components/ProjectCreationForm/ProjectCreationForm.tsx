@@ -17,6 +17,8 @@ const INITIAL_VALUES: ProjectCreationFormValues = {
   projectName: "",
   byline: "",
   description: parseStringToTextEditorValue(),
+  videoUrl: "",
+  gallery: [],
 };
 
 const ProjectCreationForm: FC = () => {
@@ -67,6 +69,14 @@ const ProjectCreationForm: FC = () => {
         name: "videoUrl",
         label: "YouTube video (optional)",
         placeholder: "https://",
+      },
+    },
+    {
+      type: CreationFormItemType.UploadFiles,
+      className: styles.projectImages,
+      props: {
+        name: "gallery",
+        label: "Gallery",
       },
     },
   ];
