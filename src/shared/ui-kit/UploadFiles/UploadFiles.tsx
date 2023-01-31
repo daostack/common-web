@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { ErrorText } from "@/shared/components/Form/ErrorText";
 import { UploadFile } from "@/shared/interfaces";
 import { Header, Trigger, UploadedFile } from "./components";
 import { UploadFilesStyles } from "./types";
@@ -14,6 +15,7 @@ export interface UploadFilesProps {
   optional?: boolean;
   maxImagesAmount?: number;
   disabled?: boolean;
+  error?: string;
   styles?: UploadFilesStyles;
 }
 
@@ -27,6 +29,7 @@ const UploadFiles: FC<UploadFilesProps> = (props) => {
     optional,
     maxImagesAmount,
     disabled = false,
+    error,
     styles: outerStyles,
   } = props;
 
@@ -67,6 +70,9 @@ const UploadFiles: FC<UploadFilesProps> = (props) => {
           <Trigger onChange={handleTriggerChange} disabled={disabled} />
         )}
       </div>
+      {Boolean(error) && (
+        <ErrorText className={outerStyles?.error}>{error}</ErrorText>
+      )}
     </div>
   );
 };
