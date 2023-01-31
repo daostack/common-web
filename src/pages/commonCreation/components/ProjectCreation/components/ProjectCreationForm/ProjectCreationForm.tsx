@@ -10,6 +10,7 @@ import {
   MAX_PROJECT_TAGLINE_LENGTH,
 } from "../../constants";
 import { ProjectCreationFormValues } from "./types";
+import styles from "./ProjectCreationForm.module.scss";
 
 const INITIAL_VALUES: ProjectCreationFormValues = {
   projectName: "",
@@ -48,6 +49,16 @@ const ProjectCreationForm: FC = () => {
         label: "Mission",
         placeholder:
           "What exactly do you plan to do and how? How does it align with the Common's agenda and goals",
+      },
+    },
+    {
+      type: CreationFormItemType.TextField,
+      className: styles.videoUrlTextField,
+      props: {
+        id: "videoUrl",
+        name: "videoUrl",
+        label: "YouTube video (optional)",
+        placeholder: "https://",
       },
     },
   ];
