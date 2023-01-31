@@ -56,14 +56,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         isLoading: true,
         step: JoinProjectSteps.CREATION,
       });
-      await ProposalService.createMemberAdmittanceProposal({
-        args: {
-          ...payload,
-          title: `Membership request from ${userName}`,
-          feeMonthly: null,
-          feeOneTime: null,
-        },
-      });
+      await ProposalService.createMemberAdmittanceProposal(payload);
       setState({
         ...INITIAL_STATE,
         isLoading: false,
@@ -90,18 +83,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
           step: JoinProjectSteps.CREATION,
         });
 
-        const circleId = governance.circles[0].id;
-        const circleName = governance.circles[0].name;
-
-        await ProposalService.createAssignProposal({
-          args: {
-            ...payload,
-            commonId: common.id,
-            circleId,
-            userId,
-            title: `Request to join ${circleName} circle by ${userName}`,
-          },
-        });
+        await ProposalService.createAssignProposal(payload);
         setState({
           ...INITIAL_STATE,
           isLoading: false,
