@@ -4,6 +4,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { ProposalService } from "@/services";
 import { Modal } from "@/shared/components";
 import { Colors, ProposalsTypes } from "@/shared/constants";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common, Governance } from "@/shared/models";
 import { emptyFunction, getUserName } from "@/shared/utils";
 import { JoinProjectCreation, JoinProjectForm } from "./components";
@@ -23,7 +24,6 @@ enum JoinProjectSteps {
 
 const INITIAL_STATE = {
   isLoading: false,
-  isAssignCircle: false,
   step: JoinProjectSteps.FORM,
   errorText: "",
 };
@@ -32,17 +32,28 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
   props,
 ) => {
   const { isShowing, onClose, governance, common } = props;
+  const isTabletView = useIsTabletView();
   const [state, setState] = useState(INITIAL_STATE);
   const user = useSelector(selectUser());
   const userName = getUserName(user);
   const userId = user?.uid;
+  const isJoinMemberAdmittanceRequest = Boolean(
+    governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE],
+  );
+  const modalTitle = isJoinMemberAdmittanceRequest
+    ? "Request to Join Project"
+    : "Join Project";
+
+  const handleClose = () => {
+    setState(INITIAL_STATE);
+    onClose();
+  };
 
   const createMemberAdmittanceProposal = async (payload) => {
     try {
       setState({
         ...INITIAL_STATE,
         isLoading: true,
-        isAssignCircle: false,
         step: JoinProjectSteps.CREATION,
       });
       await ProposalService.createMemberAdmittanceProposal({
@@ -56,13 +67,11 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
       setState({
         ...INITIAL_STATE,
         isLoading: false,
-        isAssignCircle: false,
         step: JoinProjectSteps.CREATION,
       });
     } catch (err) {
       setState({
         isLoading: false,
-        isAssignCircle: false,
         errorText: "Something went wrong",
         step: JoinProjectSteps.CREATION,
       });
@@ -78,7 +87,6 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         setState({
           ...INITIAL_STATE,
           isLoading: true,
-          isAssignCircle: true,
           step: JoinProjectSteps.CREATION,
         });
 
@@ -97,13 +105,11 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         setState({
           ...INITIAL_STATE,
           isLoading: false,
-          isAssignCircle: true,
           step: JoinProjectSteps.CREATION,
         });
       } catch (err) {
         setState({
           isLoading: false,
-          isAssignCircle: true,
           errorText: "Something went wrong",
           step: JoinProjectSteps.CREATION,
         });
@@ -129,7 +135,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         links: [],
       };
 
-      if (governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE]) {
+      if (isJoinMemberAdmittanceRequest) {
         await createMemberAdmittanceProposal({
           args: {
             ...payload,
@@ -157,25 +163,29 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
     <Modal
       className={styles.modal}
       isShowing={isShowing}
-      onClose={state.isLoading ? emptyFunction : onClose}
-      hideCloseButton={state.isLoading}
-      title={
-        state.step === JoinProjectSteps.FORM ? "Request to Join Project" : ""
-      }
+      onClose={state.isLoading ? emptyFunction : handleClose}
+      hideCloseButton={state.isLoading || (isTabletView && !state.errorText)}
+      title={state.step === JoinProjectSteps.FORM ? modalTitle : ""}
       closeColor={Colors.black}
       closeIconSize={24}
+      mobileFullScreen
       styles={{
         header: styles.modalHeader,
         content: styles.modalContent,
       }}
     >
       {state.step === JoinProjectSteps.FORM ? (
-        <JoinProjectForm onClose={onClose} requestToJoin={requestToJoin} />
+        <JoinProjectForm
+          onClose={handleClose}
+          requestToJoin={requestToJoin}
+          isJoinMemberAdmittanceRequest={isJoinMemberAdmittanceRequest}
+        />
       ) : (
         <JoinProjectCreation
           isLoading={state.isLoading}
-          isAssignCircle={state.isAssignCircle}
+          isJoinMemberAdmittanceRequest={isJoinMemberAdmittanceRequest}
           errorText={state.errorText}
+          onClose={handleClose}
         />
       )}
     </Modal>

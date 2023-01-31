@@ -5,12 +5,13 @@ import styles from "./JoinProjectForm.module.scss";
 interface JoinProjectFormProps {
   onClose: () => void;
   requestToJoin: (message: string) => void;
+  isJoinMemberAdmittanceRequest: boolean;
 }
 
 const JoinProjectForm: FC<PropsWithChildren<JoinProjectFormProps>> = (
   props,
 ) => {
-  const { onClose, requestToJoin } = props;
+  const { onClose, requestToJoin, isJoinMemberAdmittanceRequest } = props;
   const [message, setMessage] = useState("");
 
   const handleChangeMessage = (
@@ -41,7 +42,7 @@ const JoinProjectForm: FC<PropsWithChildren<JoinProjectFormProps>> = (
           className={styles.confirmButton}
           onClick={handleRequestToJoin}
         >
-          Request to join
+          {isJoinMemberAdmittanceRequest ? "Request to join" : "Join project"}
         </Button>
       </div>
     </>

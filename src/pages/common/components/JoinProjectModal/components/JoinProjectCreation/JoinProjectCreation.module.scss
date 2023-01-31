@@ -23,6 +23,7 @@
   font-size: $moderate-med;
   color: $c-neutrals-600;
   letter-spacing: 0.02em;
+  max-width: 20.5rem;
 }
 
 .description {
@@ -37,4 +38,14 @@
 
 .error {
   font-size: $xsmall;
+}
+
+.button {
+  max-width: 13.1875rem;
+  width: 100%;
+  height: 3rem;
+  border-radius: 0.5rem;
+  background-color: $purple;
+  color: $white;
+  margin-top: 4.875rem;
 }
