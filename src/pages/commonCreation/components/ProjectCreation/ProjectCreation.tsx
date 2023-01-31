@@ -1,6 +1,9 @@
 import React, { FC, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { useSelector } from "react-redux";
+import { NavLink, Redirect } from "react-router-dom";
+import { selectUser } from "@/pages/Auth/store/selectors";
+import { useCommonMember } from "@/pages/OldCommon/hooks";
+import { GovernanceActions, ROUTE_PATHS } from "@/shared/constants";
 import { useCommon } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Container, Loader } from "@/shared/ui-kit";
@@ -18,18 +21,31 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     fetched: isParentCommonFetched,
     fetchCommon: fetchParentCommon,
   } = useCommon();
-  const isLoading = !isParentCommonFetched;
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+  } = useCommonMember({
+    shouldAutoReset: false,
+  });
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+  const loaderEl = (
+    <div className={styles.centerWrapper}>
+      <Loader />
+    </div>
+  );
 
   useEffect(() => {
     fetchParentCommon(parentCommonId);
   }, [parentCommonId]);
 
-  if (isLoading) {
-    return (
-      <div className={styles.centerWrapper}>
-        <Loader />
-      </div>
-    );
+  useEffect(() => {
+    fetchCommonMember(parentCommonId, {}, true);
+  }, [parentCommonId, userId]);
+
+  if (!isParentCommonFetched) {
+    return loaderEl;
   }
   if (!parentCommon) {
     return (
@@ -40,14 +56,23 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
       </div>
     );
   }
+  if (!isCommonMemberFetched) {
+    return loaderEl;
+  }
+
+  const parentCommonRoute = ROUTE_PATHS.COMMON.replace(":id", parentCommon.id);
+
+  if (
+    !commonMember ||
+    !commonMember.allowedActions[GovernanceActions.CREATE_PROJECT]
+  ) {
+    return <Redirect to={parentCommonRoute} />;
+  }
 
   return (
     <Container className={styles.container}>
       <div className={styles.content}>
-        <NavLink
-          className={styles.backLink}
-          to={ROUTE_PATHS.COMMON.replace(":id", parentCommon.id)}
-        >
+        <NavLink className={styles.backLink} to={parentCommonRoute}>
           <LongLeftArrowIcon className={styles.backArrowIcon} />
           Back
         </NavLink>
