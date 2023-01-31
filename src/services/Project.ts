@@ -1,6 +1,7 @@
 import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
 import { CreateProjectPayload } from "@/shared/interfaces";
 import { Common, CommonState } from "@/shared/models";
+import { getProjectCircleDefinition } from "@/shared/utils";
 import Api from "./Api";
 import CommonService from "./Common";
 
@@ -73,7 +74,7 @@ class ProjectService {
           commonId: parentCommonId,
           subcommonDefinition: data,
           newCircleArgs: {
-            circleDefinition: {},
+            circleDefinition: getProjectCircleDefinition(data.name),
           },
         },
       },
