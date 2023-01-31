@@ -1,11 +1,3 @@
-import { UploadFile } from "@/shared/interfaces";
-import { TextEditorValue } from "@/shared/ui-kit";
+import { IntermediateCreateProjectPayload } from "@/shared/interfaces";
 
-export interface ProjectCreationFormValues {
-  projectImages: UploadFile[];
-  projectName: string;
-  byline: string;
-  description: TextEditorValue;
-  videoUrl: string;
-  gallery: UploadFile[];
-}
+export type ProjectCreationFormValues = IntermediateCreateProjectPayload;

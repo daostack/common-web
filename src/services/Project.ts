@@ -1,4 +1,7 @@
+import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
+import { CreateProjectPayload } from "@/shared/interfaces";
 import { Common, CommonState } from "@/shared/models";
+import Api from "./Api";
 import CommonService from "./Common";
 
 class ProjectService {
@@ -54,6 +57,29 @@ class ProjectService {
     return finalProjectsInfo.concat(
       this.parseDataToProjectsInfo(additionalCommons),
     );
+  };
+
+  public createNewProject = async (
+    parentCommonId: string,
+    data: CreateProjectPayload,
+  ): Promise<Common> => {
+    const {
+      data: { circleProjectSubcommon },
+    } = await Api.post<{ circleProjectSubcommon: Common }>(
+      ApiEndpoint.CreateAction,
+      {
+        type: GovernanceActions.CREATE_PROJECT,
+        args: {
+          commonId: parentCommonId,
+          subcommonDefinition: data,
+          newCircleArgs: {
+            circleDefinition: {},
+          },
+        },
+      },
+    );
+
+    return circleProjectSubcommon;
   };
 }
 
