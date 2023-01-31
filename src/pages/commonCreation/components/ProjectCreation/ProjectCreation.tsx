@@ -58,7 +58,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           Project serves a certain group in the common to organize together and
           achieve more focused goals.
         </p>
-        <ProjectCreationForm />
+        <ProjectCreationForm parentCommonId={parentCommon.id} />
       </div>
     </Container>
   );

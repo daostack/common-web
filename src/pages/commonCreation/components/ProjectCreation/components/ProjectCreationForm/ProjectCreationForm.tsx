@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useProjectCreation } from "@/shared/hooks/useCases";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import {
   CreationForm,
@@ -21,7 +22,15 @@ const INITIAL_VALUES: ProjectCreationFormValues = {
   gallery: [],
 };
 
-const ProjectCreationForm: FC = () => {
+interface ProjectCreationFormProps {
+  parentCommonId: string;
+}
+
+const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
+  const { parentCommonId } = props;
+  const { isProjectCreationLoading, project, error, createProject } =
+    useProjectCreation();
+
   const formItems: CreationFormItem[] = [
     {
       type: CreationFormItemType.UploadFiles,
@@ -104,7 +113,7 @@ const ProjectCreationForm: FC = () => {
   ];
 
   const handleSubmit = (values: ProjectCreationFormValues) => {
-    console.log(values);
+    createProject(parentCommonId, values);
   };
 
   return (
@@ -113,6 +122,8 @@ const ProjectCreationForm: FC = () => {
       onSubmit={handleSubmit}
       items={formItems}
       submitButtonText="Create Project"
+      disabled={isProjectCreationLoading}
+      error={error}
     />
   );
 };

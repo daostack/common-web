@@ -5,12 +5,7 @@ import {
   IntermediateCreateProjectPayload,
 } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
-import {
-  getFileDownloadInfo,
-  getFileNameForUploading,
-  getFilesDownloadInfo,
-  uploadFile,
-} from "@/shared/utils";
+import { getFileDownloadInfo, getFilesDownloadInfo } from "@/shared/utils";
 
 interface Return {
   isProjectCreationLoading: boolean;
@@ -21,25 +16,6 @@ interface Return {
     creationData: IntermediateCreateProjectPayload,
   ) => Promise<void>;
 }
-
-export const getCommonImageURL = async (
-  image: string | File,
-): Promise<string | null> => {
-  if (typeof image === "string") {
-    return image;
-  }
-
-  try {
-    return await uploadFile(
-      getFileNameForUploading(image.name),
-      "public_img",
-      image,
-    );
-  } catch (error) {
-    console.error("Error during common image uploading");
-    return null;
-  }
-};
 
 export const useProjectCreation = (): Return => {
   const [isProjectCreationLoading, setIsProjectCreationLoading] =

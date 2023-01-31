@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, ReactElement } from "react";
 import { Formik, FormikValues } from "formik";
+import { ErrorText } from "@/shared/components/Form";
 import { Form } from "@/shared/components/Form/Formik";
 import { Button } from "@/shared/ui-kit";
 import { Item } from "./components";
@@ -13,6 +14,7 @@ interface CreationFormProps<T> {
   items: CreationFormItem[];
   submitButtonText?: string;
   disabled?: boolean;
+  error?: string;
 }
 
 const CreationForm = <T extends FormikValues>(
@@ -24,6 +26,7 @@ const CreationForm = <T extends FormikValues>(
     items,
     submitButtonText = "Create",
     disabled,
+    error,
   } = props;
   const validationSchema = generateValidationSchema(items);
 
@@ -52,6 +55,9 @@ const CreationForm = <T extends FormikValues>(
         >
           {submitButtonText}
         </Button>
+        {Boolean(error) && (
+          <ErrorText className={styles.error}>{error}</ErrorText>
+        )}
       </Form>
     </Formik>
   );
