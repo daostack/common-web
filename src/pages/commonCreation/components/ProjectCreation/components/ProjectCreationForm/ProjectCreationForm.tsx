@@ -1,9 +1,14 @@
 import React, { FC } from "react";
 import { useProjectCreation } from "@/shared/hooks/useCases";
-import { parseStringToTextEditorValue } from "@/shared/ui-kit";
+import {
+  Loader,
+  LoaderVariant,
+  parseStringToTextEditorValue,
+} from "@/shared/ui-kit";
 import { CreationForm } from "../../../CreationForm";
 import { CONFIGURATION } from "./configuration";
 import { ProjectCreationFormValues } from "./types";
+import styles from "./ProjectCreationForm.module.scss";
 
 const INITIAL_VALUES: ProjectCreationFormValues = {
   projectImages: [],
@@ -28,14 +33,22 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   };
 
   return (
-    <CreationForm
-      initialValues={INITIAL_VALUES}
-      onSubmit={handleSubmit}
-      items={CONFIGURATION}
-      submitButtonText="Create Project"
-      disabled={isProjectCreationLoading}
-      error={error}
-    />
+    <>
+      {isProjectCreationLoading && (
+        <Loader
+          overlayClassName={styles.globalLoader}
+          variant={LoaderVariant.Global}
+        />
+      )}
+      <CreationForm
+        initialValues={INITIAL_VALUES}
+        onSubmit={handleSubmit}
+        items={CONFIGURATION}
+        submitButtonText="Create Project"
+        disabled={isProjectCreationLoading}
+        error={error}
+      />
+    </>
   );
 };
 
