@@ -13,6 +13,7 @@ import { ProjectCreationFormValues } from "./types";
 import styles from "./ProjectCreationForm.module.scss";
 
 const INITIAL_VALUES: ProjectCreationFormValues = {
+  projectImages: [],
   projectName: "",
   byline: "",
   description: parseStringToTextEditorValue(),
@@ -20,6 +21,15 @@ const INITIAL_VALUES: ProjectCreationFormValues = {
 
 const ProjectCreationForm: FC = () => {
   const formItems: CreationFormItem[] = [
+    {
+      type: CreationFormItemType.UploadFiles,
+      className: styles.projectImages,
+      props: {
+        name: "projectImages",
+        label: "Project picture",
+        maxImagesAmount: 1,
+      },
+    },
     {
       type: CreationFormItemType.TextField,
       props: {
@@ -43,6 +53,7 @@ const ProjectCreationForm: FC = () => {
     },
     {
       type: CreationFormItemType.TextEditor,
+      className: styles.description,
       props: {
         id: "description",
         name: "description",
@@ -51,7 +62,6 @@ const ProjectCreationForm: FC = () => {
     },
     {
       type: CreationFormItemType.TextField,
-      className: styles.videoUrlTextField,
       props: {
         id: "videoUrl",
         name: "videoUrl",

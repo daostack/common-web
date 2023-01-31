@@ -5,7 +5,7 @@ import {
   UploadFilesProps as BaseUploadFilesProps,
 } from "@/shared/ui-kit/UploadFiles";
 
-interface UploadFilesProps
+export interface UploadFilesProps
   extends Omit<BaseUploadFilesProps, "files" | "onChange"> {
   name: string;
 }

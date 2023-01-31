@@ -1,6 +1,7 @@
 import {
   TextFieldProps,
   TextEditorProps,
+  UploadFilesProps,
 } from "@/shared/components/Form/Formik";
 import { CreationFormItemType } from "./constants";
 
@@ -18,4 +19,11 @@ interface TextEditorFormItem extends BaseFormItem<TextEditorProps> {
   type: CreationFormItemType.TextEditor;
 }
 
-export type CreationFormItem = TextFieldFormItem | TextEditorFormItem;
+interface UploadFilesFormItem extends BaseFormItem<UploadFilesProps> {
+  type: CreationFormItemType.UploadFiles;
+}
+
+export type CreationFormItem =
+  | TextFieldFormItem
+  | TextEditorFormItem
+  | UploadFilesFormItem;

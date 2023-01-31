@@ -1,6 +1,10 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { TextEditor, TextField } from "@/shared/components/Form/Formik";
+import {
+  TextEditor,
+  TextField,
+  UploadFiles,
+} from "@/shared/components/Form/Formik";
 import { CreationFormItemType } from "../../constants";
 import { CreationFormItem } from "../../types";
 import styles from "./Item.module.scss";
@@ -32,6 +36,8 @@ const Item: FC<ItemProps> = (props) => {
       );
     case CreationFormItemType.TextEditor:
       return <TextEditor {...item.props} className={className} />;
+    case CreationFormItemType.UploadFiles:
+      return <UploadFiles {...item.props} className={className} />;
     default:
       return null;
   }
