@@ -47,8 +47,6 @@ const ProjectCreationForm: FC = () => {
         id: "description",
         name: "description",
         label: "Mission",
-        placeholder:
-          "What exactly do you plan to do and how? How does it align with the Common's agenda and goals",
       },
     },
     {
