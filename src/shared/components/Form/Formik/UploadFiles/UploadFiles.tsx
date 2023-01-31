@@ -12,9 +12,16 @@ export interface UploadFilesProps
 
 const UploadFiles: FC<UploadFilesProps> = (props) => {
   const { name, ...restProps } = props;
-  const [{ value }, , { setValue }] = useField(name);
+  const [{ value }, { touched, error }, { setValue }] = useField(name);
 
-  return <BaseUploadFiles {...restProps} files={value} onChange={setValue} />;
+  return (
+    <BaseUploadFiles
+      {...restProps}
+      files={value}
+      onChange={setValue}
+      error={touched ? error : ""}
+    />
+  );
 };
 
 export default UploadFiles;

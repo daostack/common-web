@@ -14,6 +14,10 @@ interface ItemValidation {
     value: number;
     message?: string;
   };
+  min?: {
+    value: number;
+    message?: string;
+  };
 }
 
 interface BaseFormItem<Props extends { name: string } = { name: string }> {
@@ -32,8 +36,9 @@ interface TextEditorFormItem extends BaseFormItem<TextEditorProps> {
   type: CreationFormItemType.TextEditor;
 }
 
-interface UploadFilesFormItem extends BaseFormItem<UploadFilesProps> {
+export interface UploadFilesFormItem extends BaseFormItem<UploadFilesProps> {
   type: CreationFormItemType.UploadFiles;
+  validation?: Pick<ItemValidation, "min">;
 }
 
 export type CreationFormItem =

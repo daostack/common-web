@@ -1,6 +1,10 @@
 import * as Yup from "yup";
 import { CreationFormItemType } from "../constants";
-import { CreationFormItem, TextFieldFormItem } from "../types";
+import {
+  CreationFormItem,
+  TextFieldFormItem,
+  UploadFilesFormItem,
+} from "../types";
 
 type Schema = Yup.Schema<unknown>;
 
@@ -22,6 +26,21 @@ const getValidationSchemaForTextFieldItem = ({
   return schema;
 };
 
+const getValidationSchemaForUploadFilesItem = ({
+  validation,
+}: Pick<UploadFilesFormItem, "validation">): Schema => {
+  let schema = Yup.array();
+
+  if (!validation) {
+    return schema;
+  }
+  if (validation.min) {
+    schema = schema.min(validation.min.value, validation.min.message);
+  }
+
+  return schema;
+};
+
 export const generateValidationSchema = (
   items: CreationFormItem[],
 ): Yup.ObjectSchema => {
@@ -30,6 +49,9 @@ export const generateValidationSchema = (
 
     if (item.type === CreationFormItemType.TextField) {
       schema = getValidationSchemaForTextFieldItem(item);
+    }
+    if (item.type === CreationFormItemType.UploadFiles) {
+      schema = getValidationSchemaForUploadFilesItem(item);
     }
 
     return schema

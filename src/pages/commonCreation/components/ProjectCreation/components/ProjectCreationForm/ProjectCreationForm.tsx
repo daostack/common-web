@@ -31,6 +31,12 @@ const ProjectCreationForm: FC = () => {
         label: "Project picture",
         maxImagesAmount: 1,
       },
+      validation: {
+        min: {
+          value: 1,
+          message: "Project image is required",
+        },
+      },
     },
     {
       type: CreationFormItemType.TextField,
