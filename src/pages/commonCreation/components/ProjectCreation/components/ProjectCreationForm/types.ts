@@ -1,4 +1,7 @@
+import { TextEditorValue } from "@/shared/ui-kit";
+
 export interface ProjectCreationFormValues {
   projectName: string;
-  tagline: string;
+  byline: string;
+  description: TextEditorValue;
 }

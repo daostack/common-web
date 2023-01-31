@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import {
   CreationForm,
   CreationFormItem,
@@ -12,7 +13,8 @@ import { ProjectCreationFormValues } from "./types";
 
 const INITIAL_VALUES: ProjectCreationFormValues = {
   projectName: "",
-  tagline: "",
+  byline: "",
+  description: parseStringToTextEditorValue(),
 };
 
 const ProjectCreationForm: FC = () => {
@@ -30,12 +32,22 @@ const ProjectCreationForm: FC = () => {
     {
       type: CreationFormItemType.TextField,
       props: {
-        id: "tagline",
-        name: "tagline",
+        id: "byline",
+        name: "byline",
         label: "Subtitle",
         placeholder: "Add caption here",
         maxLength: MAX_PROJECT_TAGLINE_LENGTH,
         countAsHint: true,
+      },
+    },
+    {
+      type: CreationFormItemType.TextEditor,
+      props: {
+        id: "description",
+        name: "description",
+        label: "Mission",
+        placeholder:
+          "What exactly do you plan to do and how? How does it align with the Common's agenda and goals",
       },
     },
   ];

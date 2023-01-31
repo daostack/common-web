@@ -1,4 +1,7 @@
-import { TextFieldProps } from "@/shared/components/Form/Formik";
+import {
+  TextFieldProps,
+  TextEditorProps,
+} from "@/shared/components/Form/Formik";
 import { CreationFormItemType } from "./constants";
 
 interface BaseFormItem<Props extends { name: string } = { name: string }> {
@@ -11,4 +14,8 @@ interface TextFieldFormItem extends BaseFormItem<TextFieldProps> {
   type: CreationFormItemType.TextField;
 }
 
-export type CreationFormItem = TextFieldFormItem;
+interface TextEditorFormItem extends BaseFormItem<TextEditorProps> {
+  type: CreationFormItemType.TextEditor;
+}
+
+export type CreationFormItem = TextFieldFormItem | TextEditorFormItem;

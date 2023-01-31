@@ -6,6 +6,6 @@ export * from "./LinksArray";
 export * from "./ImageArray";
 export * from "./RulesArray";
 export * from "./ToggleButtonGroup";
-export { TextEditor } from "./TextEditor";
+export * from "./TextEditor";
 export * from "./TextField";
 export * from "./UploadFiles";
