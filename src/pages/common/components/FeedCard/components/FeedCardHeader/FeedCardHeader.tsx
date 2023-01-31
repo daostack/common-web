@@ -1,13 +1,11 @@
 import React, { ReactNode } from "react";
 import classNames from "classnames";
-import { CommonMemberPreview } from "@/pages/OldCommon/components/CommonDetailContainer/MembersComponent/CommonMemberPreview";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { MenuButton, UserAvatar } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
-import { useCommonMemberWithUserInfo } from "@/shared/hooks/useCases/useCommonMemberWithUserInfo";
 import { MenuItem } from "@/shared/interfaces";
 import { DesktopMenu } from "@/shared/ui-kit";
-import { getUserName } from "@/shared/utils";
+import { FeedUserPopup } from "../FeedUserPopup";
 import styles from "./FeedCardHeader.module.scss";
 
 export interface FeedCardHeaderProps {
@@ -34,12 +32,15 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
     commonId,
     userId,
   } = props;
-  const { isShowing, onClose, onOpen } = useModal(false);
-  const { data: commonMember } = useCommonMemberWithUserInfo(commonId, userId);
+  const {
+    isShowing: isShowingUserProfile,
+    onClose: onCloseUserProfile,
+    onOpen: onOpenUserProfile,
+  } = useModal(false);
 
   return (
     <div className={styles.container}>
-      <div className={styles.content} onClick={onOpen}>
+      <div className={styles.content} onClick={onOpenUserProfile}>
         <UserAvatar
           className={styles.avatar}
           photoURL={avatar}
@@ -71,18 +72,13 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
         )}
       </div>
 
-      {commonMember && (
-        <CommonMemberPreview
-          key={commonMember.id}
-          member={commonMember}
-          circles={commonMember.circleIds[0]}
-          memberName={getUserName(commonMember.user)}
-          avatar={avatar}
-          isShowing={isShowing}
+      {isShowingUserProfile && (
+        <FeedUserPopup
           commonId={commonId}
-          country={commonMember.user.country}
-          about={commonMember.user.intro}
-          onClose={onClose}
+          userId={userId}
+          avatar={avatar}
+          isShowing={isShowingUserProfile}
+          onClose={onCloseUserProfile}
         />
       )}
     </div>
