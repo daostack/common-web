@@ -7,15 +7,17 @@ interface ProjectsTreeProps {
   className?: string;
   items: Item[];
   activeItem: Item | null;
+  itemIdWithNewProjectCreation: string;
 }
 
 const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
-  const { className, items, activeItem } = props;
+  const { className, items, activeItem, itemIdWithNewProjectCreation } = props;
   const contextValue = useMemo<TreeContextValue>(
     () => ({
       activeItemId: activeItem?.id,
+      itemIdWithNewProjectCreation,
     }),
-    [activeItem],
+    [activeItem?.id, itemIdWithNewProjectCreation],
   );
 
   return (
