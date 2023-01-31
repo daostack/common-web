@@ -41,6 +41,16 @@ const ProjectCreationForm: FC = () => {
         maxLength: MAX_PROJECT_NAME_LENGTH,
         countAsHint: true,
       },
+      validation: {
+        required: {
+          value: true,
+          message: "Project name is required",
+        },
+        max: {
+          value: MAX_PROJECT_NAME_LENGTH,
+          message: "Project name is too long",
+        },
+      },
     },
     {
       type: CreationFormItemType.TextField,
@@ -51,6 +61,12 @@ const ProjectCreationForm: FC = () => {
         placeholder: "Add caption here",
         maxLength: MAX_PROJECT_TAGLINE_LENGTH,
         countAsHint: true,
+      },
+      validation: {
+        max: {
+          value: MAX_PROJECT_TAGLINE_LENGTH,
+          message: "Subtitle is too long",
+        },
       },
     },
     {

@@ -4,6 +4,7 @@ import { Form } from "@/shared/components/Form/Formik";
 import { Button } from "@/shared/ui-kit";
 import { Item } from "./components";
 import { CreationFormItem } from "./types";
+import { generateValidationSchema } from "./utils";
 import styles from "./CreationForm.module.scss";
 
 interface CreationFormProps<T> {
@@ -24,9 +25,15 @@ const CreationForm = <T extends FormikValues>(
     submitButtonText = "Create",
     disabled,
   } = props;
+  const validationSchema = generateValidationSchema(items);
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit} validateOnMount>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+      validateOnMount
+    >
       <Form className={styles.form}>
         <div className={styles.itemsWrapper}>
           {items.map((item) => (
