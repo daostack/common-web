@@ -11,22 +11,38 @@ interface CreationFormProps<T> {
   onSubmit: (values: T) => void;
   items: CreationFormItem[];
   submitButtonText?: string;
+  disabled?: boolean;
 }
 
 const CreationForm = <T extends FormikValues>(
   props: PropsWithChildren<CreationFormProps<T>>,
 ): ReactElement => {
-  const { initialValues, onSubmit, items, submitButtonText = "Create" } = props;
+  const {
+    initialValues,
+    onSubmit,
+    items,
+    submitButtonText = "Create",
+    disabled,
+  } = props;
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validateOnMount>
       <Form className={styles.form}>
         <div className={styles.itemsWrapper}>
           {items.map((item) => (
-            <Item key={item.props.name} className={styles.item} item={item} />
+            <Item
+              key={item.props.name}
+              className={styles.item}
+              item={item}
+              disabled={disabled}
+            />
           ))}
         </div>
-        <Button className={styles.submitButton} type="submit">
+        <Button
+          className={styles.submitButton}
+          type="submit"
+          disabled={disabled}
+        >
           {submitButtonText}
         </Button>
       </Form>
