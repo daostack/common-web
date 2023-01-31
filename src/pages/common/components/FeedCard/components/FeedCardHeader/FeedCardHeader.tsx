@@ -53,6 +53,15 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
             {createdAt}
           </p>
         </div>
+        {isShowingUserProfile && (
+          <FeedUserPopup
+            commonId={commonId}
+            userId={userId}
+            avatar={avatar}
+            isShowing={isShowingUserProfile}
+            onClose={onCloseUserProfile}
+          />
+        )}
       </div>
 
       <div className={styles.content}>
@@ -71,16 +80,6 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
           />
         )}
       </div>
-
-      {isShowingUserProfile && (
-        <FeedUserPopup
-          commonId={commonId}
-          userId={userId}
-          avatar={avatar}
-          isShowing={isShowingUserProfile}
-          onClose={onCloseUserProfile}
-        />
-      )}
     </div>
   );
 };

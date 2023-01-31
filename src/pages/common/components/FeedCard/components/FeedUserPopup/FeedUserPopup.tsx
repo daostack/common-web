@@ -1,7 +1,9 @@
 import React from "react";
 import { CommonMemberPreview } from "@/pages/OldCommon/components/CommonDetailContainer/MembersComponent/CommonMemberPreview";
 import { useCommonMemberWithUserInfo } from "@/shared/hooks/useCases/useCommonMemberWithUserInfo";
+import { Loader } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
+import styles from "./FeedUserPopup.module.scss";
 
 interface FeedUserPopupProps {
   commonId: string;
@@ -18,24 +20,22 @@ export const FeedUserPopup = ({
   isShowing,
   onClose,
 }: FeedUserPopupProps) => {
-  const { data: commonMember } = useCommonMemberWithUserInfo(commonId, userId);
+  const { data } = useCommonMemberWithUserInfo(commonId, userId);
+
+  if (!data) return <Loader className={styles.loader} />;
 
   return (
-    <>
-      {commonMember && (
-        <CommonMemberPreview
-          key={commonMember.id}
-          member={commonMember}
-          circles={commonMember.circleIds[0]}
-          memberName={getUserName(commonMember.user)}
-          avatar={avatar}
-          isShowing={isShowing}
-          commonId={commonId}
-          country={commonMember.user.country}
-          about={commonMember.user.intro}
-          onClose={onClose}
-        />
-      )}
-    </>
+    <CommonMemberPreview
+      key={data.id}
+      member={data}
+      circles={data.circleIds[0]}
+      memberName={getUserName(data.user)}
+      avatar={avatar}
+      isShowing={isShowing}
+      commonId={commonId}
+      country={data.user.country}
+      about={data.user.intro}
+      onClose={onClose}
+    />
   );
 };
