@@ -10,3 +10,6 @@ export const selectIsDiscussionCreationLoading = (state: AppState) =>
   state.common.discussionCreation.loading;
 
 export const selectFeedItems = (state: AppState) => state.common.feedItems;
+
+export const selectIsNewProjectCreated = (state: AppState) =>
+  state.common.isNewProjectCreated;

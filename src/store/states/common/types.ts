@@ -18,4 +18,5 @@ export interface CommonState {
     data: NewDiscussionCreationFormValues | null;
     loading: boolean;
   };
+  isNewProjectCreated: boolean;
 }

@@ -20,6 +20,7 @@ import {
   generateProjectsTreeItems,
   getActiveItemIdByPath,
   getItemById,
+  getItemIdWithNewProjectCreationByPath,
 } from "./utils";
 import styles from "./Projects.module.scss";
 
@@ -38,6 +39,9 @@ const Projects: FC = () => {
   const areProjectsFetched = useSelector(selectAreProjectsFetched);
   const items = useMemo(() => generateProjectsTreeItems(projects), [projects]);
   const activeItemId = getActiveItemIdByPath(location.pathname);
+  const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
+    location.pathname,
+  );
   const activeItem = getItemById(activeItemId, items);
   const isDataReady = areProjectsFetched && Boolean(activeItem);
 
@@ -78,6 +82,7 @@ const Projects: FC = () => {
           className={styles.projectsTree}
           items={items}
           activeItem={activeItem}
+          itemIdWithNewProjectCreation={itemIdWithNewProjectCreation}
         />
         <div className={styles.createCommonButtonWrapper}>
           <CreateCommonButton

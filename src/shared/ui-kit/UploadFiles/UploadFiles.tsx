@@ -1,18 +1,37 @@
 import React, { FC } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { ErrorText } from "@/shared/components/Form/ErrorText";
 import { UploadFile } from "@/shared/interfaces";
-import { Trigger, UploadedFile } from "./components";
+import { Header, Trigger, UploadedFile } from "./components";
+import { UploadFilesStyles } from "./types";
 import styles from "./UploadFiles.module.scss";
 
 export interface UploadFilesProps {
   className?: string;
   files?: UploadFile[];
   onChange: (files: UploadFile[]) => void;
+  label?: string;
+  hint?: string;
+  optional?: boolean;
+  maxImagesAmount?: number;
   disabled?: boolean;
+  error?: string;
+  styles?: UploadFilesStyles;
 }
 
 const UploadFiles: FC<UploadFilesProps> = (props) => {
-  const { className, files = [], onChange, disabled = false } = props;
+  const {
+    className,
+    files = [],
+    onChange,
+    label,
+    hint,
+    optional,
+    maxImagesAmount,
+    disabled = false,
+    error,
+    styles: outerStyles,
+  } = props;
 
   const handleTriggerChange = (file: File) => {
     onChange(
@@ -32,6 +51,12 @@ const UploadFiles: FC<UploadFilesProps> = (props) => {
 
   return (
     <div className={className}>
+      <Header
+        label={label}
+        hint={hint}
+        optional={optional}
+        styles={outerStyles}
+      />
       <div className={styles.itemsWrapper}>
         {files.length > 0 &&
           files.map((file) => (
@@ -41,8 +66,13 @@ const UploadFiles: FC<UploadFilesProps> = (props) => {
               onRemove={() => handleFileRemove(file.id)}
             />
           ))}
-        <Trigger onChange={handleTriggerChange} disabled={disabled} />
+        {(!maxImagesAmount || maxImagesAmount > files.length) && (
+          <Trigger onChange={handleTriggerChange} disabled={disabled} />
+        )}
       </div>
+      {Boolean(error) && (
+        <ErrorText className={outerStyles?.error}>{error}</ErrorText>
+      )}
     </div>
   );
 };

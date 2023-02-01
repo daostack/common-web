@@ -9,7 +9,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
-import { commonActions } from "@/store/states";
+import { commonActions, selectIsNewProjectCreated } from "@/store/states";
 import { CommonTab } from "../../constants";
 import { CommonDataProvider } from "../../providers";
 import { CommonHeader } from "../CommonHeader";
@@ -17,6 +17,7 @@ import { CommonManagement } from "../CommonManagement";
 import { CommonTabPanels } from "../CommonTabPanels";
 import { CommonTabs } from "../CommonTabs";
 import { CommonTopNavigation } from "../CommonTopNavigation";
+import { SuccessfulProjectCreationModal } from "./components";
 import { getMainCommonDetails } from "./utils";
 import styles from "./CommonContent.module.scss";
 
@@ -49,6 +50,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   const dispatch = useDispatch();
   const [tab, setTab] = useState(CommonTab.About);
   const isAuthenticated = useSelector(authentificated());
+  const isNewProjectCreated = useSelector(selectIsNewProjectCreated);
   const isTabletView = useIsTabletView();
   const isSubCommon = common.directParent !== null;
 
@@ -133,6 +135,9 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           />
         )}
       </div>
+      {isGlobalDataFetched && isNewProjectCreated && (
+        <SuccessfulProjectCreationModal />
+      )}
     </CommonDataProvider>
   );
 };
