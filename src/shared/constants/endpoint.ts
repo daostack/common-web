@@ -31,4 +31,5 @@ export const ApiEndpoint = {
   CreateDiscussion: "/discussions/create",
   CreateDiscussionMessage: "/discussions/message",
   DeleteDiscussionMessage: "/discussions/delete",
+  EligibleVoters: "/proposals/get-all-eligible-proposal-voters",
 };

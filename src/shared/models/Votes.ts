@@ -38,6 +38,11 @@ export interface VoteWithUserInfo extends Vote {
   user: User;
 }
 
+export interface EligibleVoters {
+  userId: string;
+  vote: Vote | null;
+}
+
 export enum VotingCardType {
   AllVotes = "Votes",
   Object = "Object",

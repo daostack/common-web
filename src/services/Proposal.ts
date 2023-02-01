@@ -1,8 +1,13 @@
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { createProposal } from "@/pages/OldCommon/store/api";
-import { ProposalsTypes } from "@/shared/constants";
+import { ApiEndpoint, ProposalsTypes } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
-import { Collection, Proposal, ProposalState } from "@/shared/models";
+import {
+  Collection,
+  EligibleVoters,
+  Proposal,
+  ProposalState,
+} from "@/shared/models";
 import {
   AssignCircle,
   RemoveCircle,
@@ -14,6 +19,7 @@ import {
   transformFirebaseDataSingle,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import Api from "./Api";
 
 const converter = firestoreDataConverter<Proposal>();
 
@@ -104,6 +110,17 @@ class ProposalService {
       .get();
 
     return !snapshot.empty;
+  };
+
+  public proposalEligibleVoters = async (
+    proposalId: string,
+  ): Promise<EligibleVoters[]> => {
+    const voters = (
+      await Api.get<EligibleVoters[]>(
+        `${ApiEndpoint.EligibleVoters}/${proposalId}`,
+      )
+    ).data;
+    return voters;
   };
 }
 
