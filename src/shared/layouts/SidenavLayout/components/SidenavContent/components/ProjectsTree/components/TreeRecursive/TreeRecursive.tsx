@@ -31,9 +31,10 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
           : "List of related to you projects"
       }
     >
-      {parentId === itemIdWithNewProjectCreation && (
-        <PlaceholderTreeItem name="New project" level={level} isActive />
-      )}
+      {Boolean(itemIdWithNewProjectCreation) &&
+        parentId === itemIdWithNewProjectCreation && (
+          <PlaceholderTreeItem name="New project" level={level} isActive />
+        )}
       {items.map((item) => (
         <TreeItem
           key={item.id}
