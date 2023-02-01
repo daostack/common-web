@@ -1,4 +1,5 @@
 @import "../../../../constants";
+@import "../../../../styles/sizes";
 
 .centerWrapper {
   flex: 1;
@@ -15,6 +16,11 @@
 .container {
   padding-top: 6rem;
   padding-bottom: 6rem;
+
+  @include tablet {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
 }
 
 .content {
