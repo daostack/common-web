@@ -1,5 +1,13 @@
-import React, { PropsWithChildren, ReactElement } from "react";
+import React, {
+  PropsWithChildren,
+  ReactElement,
+  forwardRef,
+  useRef,
+  ForwardedRef,
+  useImperativeHandle,
+} from "react";
 import { Formik, FormikValues } from "formik";
+import { FormikProps } from "formik/dist/types";
 import { ErrorText } from "@/shared/components/Form";
 import { Form } from "@/shared/components/Form/Formik";
 import { Button } from "@/shared/ui-kit";
@@ -17,8 +25,13 @@ interface CreationFormProps<T> {
   error?: string;
 }
 
+export interface CreationFormRef {
+  isDirty: () => boolean;
+}
+
 const CreationForm = <T extends FormikValues>(
   props: PropsWithChildren<CreationFormProps<T>>,
+  ref: ForwardedRef<CreationFormRef>,
 ): ReactElement => {
   const {
     initialValues,
@@ -29,9 +42,19 @@ const CreationForm = <T extends FormikValues>(
     error,
   } = props;
   const validationSchema = generateValidationSchema(items);
+  const formRef = useRef<FormikProps<T>>(null);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      isDirty: () => formRef.current?.dirty ?? true,
+    }),
+    [formRef],
+  );
 
   return (
     <Formik
+      innerRef={formRef}
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
@@ -63,4 +86,7 @@ const CreationForm = <T extends FormikValues>(
   );
 };
 
-export default CreationForm;
+const generateCreationForm = <T extends FormikValues>() =>
+  forwardRef<CreationFormRef, CreationFormProps<T>>(CreationForm);
+
+export default generateCreationForm;

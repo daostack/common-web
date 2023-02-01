@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 
-export const usePreventReload = (shouldPrevent = true): void => {
+export const usePreventReload = (
+  shouldPrevent: boolean | (() => boolean) = true,
+): void => {
   useEffect(() => {
-    if (!shouldPrevent) {
-      return;
-    }
-
     const handlePrevent = (event) => {
-      event.preventDefault();
-      event.returnValue = "";
+      if (
+        typeof shouldPrevent === "function" ? shouldPrevent() : shouldPrevent
+      ) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
     };
 
     window.addEventListener("beforeunload", handlePrevent);
