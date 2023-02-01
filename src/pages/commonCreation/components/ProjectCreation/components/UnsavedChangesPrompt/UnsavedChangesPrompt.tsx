@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import {
   Button,
+  ButtonVariant,
   PreventNavigationPrompt,
   PreventNavigationPromptProps,
 } from "@/shared/ui-kit";
@@ -41,6 +42,7 @@ const UnsavedChangesPrompt: FC<UnsavedChangesPromptProps> = (props) => {
               <Button
                 className={styles.confirmNavigationButton}
                 onClick={confirmNavigation}
+                variant={ButtonVariant.Warning}
               >
                 Leave without saving
               </Button>
