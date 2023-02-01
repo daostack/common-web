@@ -29,10 +29,10 @@ const JoinProjectCreation: FC<JoinProjectCreationProps> = (props) => {
       <>
         <h2 className={styles.title}>
           {isJoinMemberAdmittanceRequest
-            ? "Your request has been successfully received"
-            : "Congratulations! You are in"}
+            ? "Congratulations! You are in"
+            : "Your request has been successfully received"}
         </h2>
-        {isJoinMemberAdmittanceRequest && (
+        {!isJoinMemberAdmittanceRequest && (
           <p className={styles.description}>Please wait for confirmation</p>
         )}
         <Button className={styles.button} onClick={onClose}>

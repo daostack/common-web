@@ -49,7 +49,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
     onClose();
   };
 
-  const createMemberAdmittanceProposal = async (payload) => {
+  const createMemberAdmittanceProposal = useCallback(async (payload) => {
     try {
       setState({
         ...INITIAL_STATE,
@@ -69,36 +69,30 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         step: JoinProjectSteps.CREATION,
       });
     }
-  };
+  }, []);
 
-  const createAssignProposal = useCallback(
-    async (payload) => {
-      try {
-        if (!governance.circles?.[0] || !userId) {
-          return;
-        }
-        setState({
-          ...INITIAL_STATE,
-          isLoading: true,
-          step: JoinProjectSteps.CREATION,
-        });
+  const createAssignProposal = useCallback(async (payload) => {
+    try {
+      setState({
+        ...INITIAL_STATE,
+        isLoading: true,
+        step: JoinProjectSteps.CREATION,
+      });
 
-        await ProposalService.createAssignProposal(payload);
-        setState({
-          ...INITIAL_STATE,
-          isLoading: false,
-          step: JoinProjectSteps.CREATION,
-        });
-      } catch (err) {
-        setState({
-          isLoading: false,
-          errorText: "Something went wrong",
-          step: JoinProjectSteps.CREATION,
-        });
-      }
-    },
-    [governance, userId, userName],
-  );
+      await ProposalService.createAssignProposal(payload);
+      setState({
+        ...INITIAL_STATE,
+        isLoading: false,
+        step: JoinProjectSteps.CREATION,
+      });
+    } catch (err) {
+      setState({
+        isLoading: false,
+        errorText: "Something went wrong",
+        step: JoinProjectSteps.CREATION,
+      });
+    }
+  }, []);
 
   const requestToJoin = useCallback(
     async (message) => {
@@ -106,11 +100,11 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         return;
       }
 
-      const circleId = governance.circles[0].id;
       const circleName = governance.circles[0].name;
       const commonId = isJoinMemberAdmittanceRequest
         ? common.id
         : common.directParent?.commonId;
+      const circleId = common.directParent?.circleId;
 
       const payload = {
         commonId,
@@ -134,8 +128,8 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
           args: {
             ...payload,
             commonId,
-            circleId,
             userId,
+            circleId,
             title: `Request to join ${circleName} circle by ${userName}`,
           },
         });
