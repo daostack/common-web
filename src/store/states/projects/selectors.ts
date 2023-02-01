@@ -7,3 +7,6 @@ export const selectAreProjectsLoading = (state: AppState) =>
 
 export const selectAreProjectsFetched = (state: AppState) =>
   state.projects.isDataFetched;
+
+export const selectIsCommonCreationDisabled = (state: AppState) =>
+  state.projects.isCommonCreationDisabled;

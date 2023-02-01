@@ -1,4 +1,5 @@
-import React, { FC, useCallback, useRef } from "react";
+import React, { FC, useCallback, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { usePreventReload } from "@/shared/hooks";
 import { useProjectCreation } from "@/shared/hooks/useCases";
 import {
@@ -6,6 +7,7 @@ import {
   LoaderVariant,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
+import { projectsActions } from "@/store/states";
 import { generateCreationForm, CreationFormRef } from "../../../CreationForm";
 import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
 import { CONFIGURATION } from "./configuration";
@@ -29,6 +31,7 @@ interface ProjectCreationFormProps {
 
 const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const { parentCommonId } = props;
+  const dispatch = useDispatch();
   const formRef = useRef<CreationFormRef>(null);
   const { isProjectCreationLoading, project, error, createProject } =
     useProjectCreation();
@@ -43,6 +46,14 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   };
 
   usePreventReload(shouldPreventReload);
+
+  useEffect(() => {
+    dispatch(projectsActions.setIsCommonCreationDisabled(true));
+
+    return () => {
+      dispatch(projectsActions.setIsCommonCreationDisabled(false));
+    };
+  }, []);
 
   return (
     <>
