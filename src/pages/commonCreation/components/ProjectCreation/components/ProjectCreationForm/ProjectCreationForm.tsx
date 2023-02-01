@@ -7,6 +7,7 @@ import {
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
 import { generateCreationForm, CreationFormRef } from "../../../CreationForm";
+import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
 import { CONFIGURATION } from "./configuration";
 import { ProjectCreationFormValues } from "./types";
 import styles from "./ProjectCreationForm.module.scss";
@@ -33,8 +34,8 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     useProjectCreation();
 
   const shouldPreventReload = useCallback(
-    () => formRef.current?.isDirty() ?? true,
-    [formRef],
+    () => (!project && formRef.current?.isDirty()) ?? true,
+    [formRef, project],
   );
 
   const handleSubmit = (values: ProjectCreationFormValues) => {
@@ -60,6 +61,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         disabled={isProjectCreationLoading}
         error={error}
       />
+      <UnsavedChangesPrompt shouldShowPrompt={shouldPreventReload} />
     </>
   );
 };
