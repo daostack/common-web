@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { usePreventReload } from "@/shared/hooks";
 import { useProjectCreation } from "@/shared/hooks/useCases";
 import {
   Loader,
@@ -27,6 +28,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const { parentCommonId } = props;
   const { isProjectCreationLoading, project, error, createProject } =
     useProjectCreation();
+  usePreventReload();
 
   const handleSubmit = (values: ProjectCreationFormValues) => {
     createProject(parentCommonId, values);
