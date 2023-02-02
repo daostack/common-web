@@ -47,21 +47,20 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     setIsJoinPending,
   } = props;
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(authentificated());
   const [tab, setTab] = useState(
-    isAuthenticated ? CommonTab.Feed : CommonTab.About,
+    commonMember ? CommonTab.Feed : CommonTab.About,
   );
+  const isAuthenticated = useSelector(authentificated());
   const isTabletView = useIsTabletView();
   const isSubCommon = common.directParent !== null;
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      setTab(CommonTab.About);
-    } else {
-      // --> authenticated
+    if (commonMember) {
       setTab(CommonTab.Feed);
+    } else {
+      setTab(CommonTab.About);
     }
-  }, [isAuthenticated]);
+  }, [commonMember]);
 
   useEffect(() => {
     return () => {
