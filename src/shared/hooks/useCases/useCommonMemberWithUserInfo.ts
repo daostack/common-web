@@ -1,25 +1,24 @@
 import { useEffect } from "react";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
-import { useCommonDataContext } from "@/pages/common/providers";
 import { LoadingState } from "@/shared/interfaces";
 import { CommonMemberWithUserInfo } from "@/shared/models";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
 } from "@/shared/utils";
+import { useGovernance } from "./useGovernance";
 import { useUserById } from "./useUserById";
 
 export const useCommonMemberWithUserInfo = (
   commonId: string,
   userId?: string,
+  governanceId?: string,
 ): LoadingState<CommonMemberWithUserInfo | null> => {
-  const { governance } = useCommonDataContext();
-  const governanceCircles = Object.values(governance?.circles || {});
-
-  const memberCircles = getFilteredByIdCircles(governanceCircles);
-  const circlesString = getCirclesWithHighestTier(memberCircles)
-    .map((circle) => circle.name)
-    .join(", ");
+  const {
+    data: governance,
+    fetched: isGovernanceFetched,
+    fetchGovernance,
+  } = useGovernance();
 
   const {
     fetchUser,
@@ -39,9 +38,18 @@ export const useCommonMemberWithUserInfo = (
       fetchUser(userId);
     }
     fetchCommonMember(commonId, {}, true);
-  }, [userId, commonId]);
+    if (governanceId) {
+      fetchGovernance(governanceId);
+    }
+  }, [userId, commonId, governanceId]);
 
-  return commonMember && user
+  const governanceCircles = Object.values(governance?.circles || {});
+  const memberCircles = getFilteredByIdCircles(governanceCircles);
+  const circlesString = getCirclesWithHighestTier(memberCircles)
+    .map((circle) => circle.name)
+    .join(", ");
+
+  return commonMember && user && governance
     ? {
         data: {
           id: commonMember.id,
@@ -55,7 +63,7 @@ export const useCommonMemberWithUserInfo = (
       }
     : {
         data: null,
-        loading: isUserLoading || isCommonMemberLoading,
-        fetched: isUserFetched && isCommonMemberFetched,
+        loading: isUserLoading || isCommonMemberLoading || isGovernanceFetched,
+        fetched: isUserFetched && isCommonMemberFetched && isGovernanceFetched,
       };
 };

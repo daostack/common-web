@@ -6,6 +6,7 @@ import { getUserName } from "@/shared/utils";
 import styles from "./FeedUserPopup.module.scss";
 
 interface FeedUserPopupProps {
+  governanceId?: string;
   commonId: string;
   userId?: string;
   avatar: string;
@@ -14,13 +15,18 @@ interface FeedUserPopupProps {
 }
 
 export const FeedUserPopup = ({
+  governanceId,
   commonId,
   userId,
   avatar,
   isShowing,
   onClose,
 }: FeedUserPopupProps) => {
-  const { data, fetched } = useCommonMemberWithUserInfo(commonId, userId);
+  const { data, fetched } = useCommonMemberWithUserInfo(
+    commonId,
+    userId,
+    governanceId,
+  );
 
   if (!data || !fetched) {
     return <Loader className={styles.loader} />;
