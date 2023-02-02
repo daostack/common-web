@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
-import { selectGovernance } from "@/pages/OldCommon/store/selectors";
+import { useCommonDataContext } from "@/pages/common/providers";
+import { LoadingState } from "@/shared/interfaces";
 import { CommonMemberWithUserInfo } from "@/shared/models";
 import {
   getCirclesWithHighestTier,
@@ -11,10 +11,9 @@ import { useUserById } from "./useUserById";
 
 export const useCommonMemberWithUserInfo = (
   commonId: string,
-  userId: string | undefined,
-) => {
-  const [data, setData] = useState<CommonMemberWithUserInfo | undefined>();
-  const governance = useSelector(selectGovernance());
+  userId?: string,
+): LoadingState<CommonMemberWithUserInfo | null> => {
+  const { governance } = useCommonDataContext();
   const governanceCircles = Object.values(governance?.circles || {});
 
   const memberCircles = getFilteredByIdCircles(governanceCircles);
@@ -22,25 +21,41 @@ export const useCommonMemberWithUserInfo = (
     .map((circle) => circle.name)
     .join(", ");
 
-  const { fetchUser, data: user } = useUserById();
-  const { data: commonMember, fetchCommonMember } = useCommonMember();
+  const {
+    fetchUser,
+    data: user,
+    loading: isUserLoading,
+    fetched: isUserFetched,
+  } = useUserById();
+  const {
+    data: commonMember,
+    fetchCommonMember,
+    loading: isCommonMemberLoading,
+    fetched: isCommonMemberFetched,
+  } = useCommonMember();
 
   useEffect(() => {
-    if (userId) fetchUser(userId);
-    fetchCommonMember(commonId, {});
-  }, [fetchUser, fetchCommonMember, userId, commonId]);
-
-  useEffect(() => {
-    if (commonMember && user) {
-      setData({
-        id: commonMember.id,
-        userId: commonMember.userId,
-        joinedAt: commonMember.joinedAt,
-        circleIds: [circlesString],
-        user: user,
-      });
+    if (userId) {
+      fetchUser(userId);
     }
-  }, [commonMember, user]);
+    fetchCommonMember(commonId, {}, true);
+  }, [userId, commonId]);
 
-  return { data };
+  return commonMember && user
+    ? {
+        data: {
+          id: commonMember.id,
+          userId: commonMember.userId,
+          joinedAt: commonMember.joinedAt,
+          circleIds: [circlesString],
+          user: user,
+        },
+        loading: false,
+        fetched: true,
+      }
+    : {
+        data: null,
+        loading: isUserLoading || isCommonMemberLoading,
+        fetched: isUserFetched && isCommonMemberFetched,
+      };
 };

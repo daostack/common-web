@@ -1,13 +1,13 @@
 import React from "react";
 import { CommonMemberPreview } from "@/pages/OldCommon/components/CommonDetailContainer/MembersComponent/CommonMemberPreview";
-import { useCommonMemberWithUserInfo } from "@/shared/hooks/useCases/useCommonMemberWithUserInfo";
+import { useCommonMemberWithUserInfo } from "@/shared/hooks/useCases";
 import { Loader } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import styles from "./FeedUserPopup.module.scss";
 
 interface FeedUserPopupProps {
   commonId: string;
-  userId: string | undefined;
+  userId?: string;
   avatar: string;
   isShowing: boolean;
   onClose: () => void;
@@ -20,9 +20,11 @@ export const FeedUserPopup = ({
   isShowing,
   onClose,
 }: FeedUserPopupProps) => {
-  const { data } = useCommonMemberWithUserInfo(commonId, userId);
+  const { data, fetched } = useCommonMemberWithUserInfo(commonId, userId);
 
-  if (!data) return <Loader className={styles.loader} />;
+  if (!data || !fetched) {
+    return <Loader className={styles.loader} />;
+  }
 
   return (
     <CommonMemberPreview

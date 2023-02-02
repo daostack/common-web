@@ -17,7 +17,7 @@ export interface FeedCardHeaderProps {
   menuItems?: MenuItem[];
   isMobileVersion?: boolean;
   commonId: string;
-  userId: string | undefined;
+  userId?: string;
 }
 
 export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
