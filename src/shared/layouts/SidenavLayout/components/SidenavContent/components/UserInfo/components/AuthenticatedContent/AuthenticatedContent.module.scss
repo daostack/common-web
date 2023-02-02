@@ -1,16 +1,9 @@
 @import "../../../../../../../../../constants";
-@import "../../../../../../../../../styles/sizes";
 
 .arrowIcon {
   margin-left: 1.5rem;
-  transition: rotate 0.3s;
   transform: rotate(90deg);
-
-  @include tablet {
-    margin-left: auto;
-    transition: unset;
-    color: $c-shades-black;
-  }
+  color: $c-shades-black;
 }
 
 .menuTransitionEnter {
