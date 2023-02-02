@@ -48,14 +48,14 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   } = props;
   const dispatch = useDispatch();
   const [tab, setTab] = useState(
-    commonMember ? CommonTab.Feed : CommonTab.About,
+    commonMember?.id ? CommonTab.Feed : CommonTab.About,
   );
   const isAuthenticated = useSelector(authentificated());
   const isTabletView = useIsTabletView();
   const isSubCommon = common.directParent !== null;
 
   useEffect(() => {
-    if (commonMember) {
+    if (commonMember?.id) {
       setTab(CommonTab.Feed);
     } else {
       setTab(CommonTab.About);
