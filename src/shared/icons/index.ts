@@ -36,4 +36,3 @@ export { default as VoteAbstain } from "./voteAbstain.icon";
 export { default as InviteFriendsIcon } from "./inviteFriends.icon";
 export { default as ShareIcon } from "./share.icon";
 export { default as SendIcon } from "./send.icon";
-export { default as DownArrowIcon } from "./downArrow.icon";

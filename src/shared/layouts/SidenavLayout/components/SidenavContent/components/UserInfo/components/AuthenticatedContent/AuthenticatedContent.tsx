@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { RightArrowThinIcon, DownArrowIcon } from "@/shared/icons";
+import { RightArrowThinIcon } from "@/shared/icons";
 import { Content } from "../Content";
 import { MenuItems } from "../MenuItems";
 import styles from "./AuthenticatedContent.module.scss";
@@ -14,7 +14,6 @@ interface AuthenticatedContentProps {
 const AuthenticatedContent: FC<AuthenticatedContentProps> = (props) => {
   const { avatarURL, userName } = props;
   const isTabletView = useIsTabletView();
-  const ArrowIcon = isTabletView ? RightArrowThinIcon : DownArrowIcon;
 
   return (
     <Menu>
@@ -22,7 +21,11 @@ const AuthenticatedContent: FC<AuthenticatedContentProps> = (props) => {
         <Content
           avatarURL={avatarURL}
           userName={userName}
-          leftSideEl={<ArrowIcon className={styles.arrowIcon} />}
+          leftSideEl={
+            <RightArrowThinIcon
+              className={isTabletView ? styles.arrowIcon : styles.arrowIcon}
+            />
+          }
         />
       </Menu.Button>
       <Transition
