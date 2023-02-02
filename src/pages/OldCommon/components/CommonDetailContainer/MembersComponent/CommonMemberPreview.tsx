@@ -13,15 +13,16 @@ import {
 import "./common-member-preview.scss";
 
 interface CommonMemberPreview {
-  member: CommonMemberWithUserInfo;
-  circles: string;
+  member: CommonMemberWithUserInfo | null;
+  circles?: string;
   memberName: string;
   avatar: string | undefined;
   isShowing: boolean;
   commonId: string;
   onClose: () => void;
-  country: string;
+  country?: string;
   about?: string;
+  dataFetched?: boolean;
 }
 
 export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
@@ -35,6 +36,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     onClose,
     country,
     about,
+    dataFetched,
   } = props;
   const [previewInfo, setPreviewInfo] = useState<CommonMemberPreviewInfo>(
     {} as CommonMemberPreviewInfo,
@@ -82,7 +84,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
   }, [isShowing, member]);
 
   const GeneralUserInfo = useCallback(() => {
-    if (isLoading) {
+    if (isLoading || !dataFetched) {
       return <Loader />;
     }
 
