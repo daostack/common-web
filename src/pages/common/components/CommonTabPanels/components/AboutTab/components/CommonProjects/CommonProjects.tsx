@@ -51,7 +51,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
       hasPermission({
         commonMember,
         governance: { circles },
-        key: GovernanceActions.CREATE_SUBCOMMON,
+        key: GovernanceActions.CREATE_PROJECT,
       }),
   );
 
