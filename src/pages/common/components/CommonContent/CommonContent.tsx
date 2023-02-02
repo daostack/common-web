@@ -55,12 +55,8 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   const isSubCommon = common.directParent !== null;
 
   useEffect(() => {
-    if (commonMember?.id) {
-      setTab(CommonTab.Feed);
-    } else {
-      setTab(CommonTab.About);
-    }
-  }, [commonMember]);
+    setTab(commonMember?.id ? CommonTab.Feed : CommonTab.About);
+  }, [commonMember?.id]);
 
   useEffect(() => {
     return () => {
