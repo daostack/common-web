@@ -1,5 +1,6 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
+import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import * as actions from "./actions";
 import { CacheState } from "./types";
 
@@ -10,6 +11,7 @@ const initialState: CacheState = {
   discussionStates: {},
   discussionMessagesStates: {},
   proposalStates: {},
+  feedItemUserMetadataStates: {},
 };
 
 export const reducer = createReducer<CacheState, Action>(initialState)
@@ -27,17 +29,32 @@ export const reducer = createReducer<CacheState, Action>(initialState)
       nextState.discussionStates[discussionId] = { ...state };
     }),
   )
-  .handleAction(actions.updateDiscussionMessagesStateByDiscussionId, (state, { payload }) =>
-  produce(state, (nextState) => {
-    const { discussionId, state } = payload;
+  .handleAction(
+    actions.updateDiscussionMessagesStateByDiscussionId,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { discussionId, state } = payload;
 
-    nextState.discussionMessagesStates[discussionId] = { ...state };
-  }),
-)
+        nextState.discussionMessagesStates[discussionId] = { ...state };
+      }),
+  )
   .handleAction(actions.updateProposalStateById, (state, { payload }) =>
     produce(state, (nextState) => {
       const { proposalId, state } = payload;
 
       nextState.proposalStates[proposalId] = { ...state };
+    }),
+  )
+  .handleAction(actions.updateFeedItemUserMetadata, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId, userId, feedObjectId, state } = payload;
+
+      nextState.feedItemUserMetadataStates[
+        getFeedItemUserMetadataKey({
+          commonId,
+          userId,
+          feedObjectId,
+        })
+      ] = { ...state };
     }),
   );
