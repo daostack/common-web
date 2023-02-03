@@ -4,6 +4,7 @@ export * from "./User";
 export * from "./Card";
 export * from "./Common";
 export * from "./CommonFeed";
+export * from "./CommonFeedObjectUserUnique";
 export * from "./shared";
 export * from "./Proposals";
 export * from "./DiscussionMessage";

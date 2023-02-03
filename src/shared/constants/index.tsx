@@ -8,6 +8,7 @@ export * from "./environment";
 export * from "./errorCode";
 export * from "./formErrorMessages";
 export * from "./language";
+export * from "./lastSeenEntity";
 export * from "./Math";
 export * from "./queryParamKey";
 export * from "./routePaths";
