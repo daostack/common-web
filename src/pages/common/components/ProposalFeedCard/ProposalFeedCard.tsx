@@ -36,10 +36,11 @@ interface ProposalFeedCardProps {
   commonId: string;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
+  governanceId?: string;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
-  const { commonId, item, governanceCircles } = props;
+  const { commonId, item, governanceCircles, governanceId } = props;
   const { activeItemDiscussionId, setChatItem } = useChatContext();
   const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
   const {
@@ -155,6 +156,9 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         }
         type={getProposalTypeString(proposal.type)}
         circleVisibility={circleVisibility}
+        commonId={commonId}
+        userId={item.userId}
+        governanceId={governanceId}
       />
       <FeedCardContent
         title={getProposalTitleString(proposal, { governanceCircles })}

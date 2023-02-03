@@ -10,10 +10,17 @@ interface FeedItemProps {
   item: CommonFeed;
   governanceCircles: Governance["circles"];
   isMobileVersion?: boolean;
+  governanceId?: string;
 }
 
 const FeedItem: FC<FeedItemProps> = (props) => {
-  const { commonId, item, governanceCircles, isMobileVersion = false } = props;
+  const {
+    commonId,
+    item,
+    governanceCircles,
+    isMobileVersion = false,
+    governanceId,
+  } = props;
 
   if (item.data.type === CommonFeedType.Discussion) {
     return (
@@ -21,6 +28,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         item={item}
         governanceCircles={governanceCircles}
         isMobileVersion={isMobileVersion}
+        commonId={commonId}
+        governanceId={governanceId}
       />
     );
   }
@@ -30,6 +39,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         commonId={commonId}
         item={item}
         governanceCircles={governanceCircles}
+        governanceId={governanceId}
       />
     );
   }

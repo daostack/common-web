@@ -17,3 +17,4 @@ export { useUserInfoAboutMemberships } from "./useUserInfoAboutMemberships";
 export { useBankAccountDetails } from "./useBankAccountDetails";
 export { useDiscussionMessagesById } from "./useDiscussionMessagesById";
 export { useUserPendingJoin } from "./useUserPendingJoin";
+export { useCommonMemberWithUserInfo } from "./useCommonMemberWithUserInfo";
