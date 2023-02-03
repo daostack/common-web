@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useCallback, useMemo } from "react";
+import React, { FC, useState, useEffect, useMemo } from "react";
 import { getCommonMemberInfo } from "@/pages/OldCommon/store/api";
 import { getCountryNameFromCode } from "@/shared/assets/countries";
 import { UserAvatar, Modal, Loader } from "@/shared/components";
@@ -36,7 +36,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     onClose,
     country,
     about,
-    dataFetched,
+    dataFetched = true,
   } = props;
   const [previewInfo, setPreviewInfo] = useState<CommonMemberPreviewInfo>(
     {} as CommonMemberPreviewInfo,
@@ -83,7 +83,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     }
   }, [isShowing, member]);
 
-  const GeneralUserInfo = useCallback(() => {
+  const GeneralUserInfo = () => {
     if (isLoading || !dataFetched) {
       return <Loader />;
     }
@@ -120,7 +120,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
         ))}
       </>
     );
-  }, [isLoading, about, previewInfo, commonId]);
+  };
 
   return (
     <Modal
