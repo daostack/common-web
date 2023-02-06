@@ -144,9 +144,17 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         discussion,
         proposal,
         circleVisibility: item.circleVisibility,
+        lastSeenItem: feedItemUserMetadata?.lastSeen,
       });
     }
-  }, [item.id, proposal, discussion, setChatItem, item.circleVisibility]);
+  }, [
+    item.id,
+    proposal,
+    discussion,
+    setChatItem,
+    item.circleVisibility,
+    feedItemUserMetadata?.lastSeen,
+  ]);
 
   if (isLoading) {
     return <LoadingFeedCard />;

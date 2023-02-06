@@ -100,9 +100,15 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         feedItemId: item.id,
         discussion,
         circleVisibility: item.circleVisibility,
+        lastSeenItem: feedItemUserMetadata?.lastSeen,
       });
     }
-  }, [discussion, item.id, item.circleVisibility]);
+  }, [
+    discussion,
+    item.id,
+    item.circleVisibility,
+    feedItemUserMetadata?.lastSeen,
+  ]);
 
   useEffect(() => {
     fetchDiscussionCreator(item.userId);

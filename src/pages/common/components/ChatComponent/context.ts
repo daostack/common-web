@@ -1,11 +1,16 @@
 import React, { useContext } from "react";
-import { Discussion, Proposal } from "@/shared/models";
+import {
+  CommonFeedObjectUserUnique,
+  Discussion,
+  Proposal,
+} from "@/shared/models";
 
 export interface ChatItem {
   feedItemId: string;
   proposal?: Proposal;
   discussion: Discussion;
   circleVisibility: string[];
+  lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
 }
 
 export interface ChatContextValue {
