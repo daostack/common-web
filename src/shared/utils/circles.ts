@@ -17,10 +17,6 @@ export const getFilteredByIdCircles = (
   return circles.filter(({ id }) => circleIds.includes(id));
 };
 
-export const getCircleNamesWithSeparator = (circles: Circle[] | null, separator = ", "): string | undefined => {
-  return circles?.map(({name}) => name).join(separator);
-};
-
 const getCirclesPerTier = <T extends Pick<Circle, "id" | "hierarchy">>(
   circles: T[],
 ): Record<number, T[]> =>

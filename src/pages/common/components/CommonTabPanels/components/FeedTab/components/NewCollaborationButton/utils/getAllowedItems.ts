@@ -16,14 +16,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   NewCollaborationMenuItems,
   (options: GetAllowedItemsOptions) => boolean
 > = {
-  [CommonAction.NewProposal]:  ({ commonMember, governance }) => Boolean(
-    commonMember &&
-      hasPermission({
-        commonMember,
-        governance,
-        key: GovernanceActions.CREATE_PROPOSAL,
-      }),
-  ),
+  [CommonAction.NewProposal]: () => false,
   [CommonAction.NewDiscussion]: ({ commonMember, governance }) =>
     Boolean(
       commonMember &&

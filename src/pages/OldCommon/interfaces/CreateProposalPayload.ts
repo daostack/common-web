@@ -1,5 +1,4 @@
 import { ProposalsTypes } from "@/shared/constants";
-import { UploadFile } from "@/shared/interfaces";
 import { ContributionSourceType, PaymentAmount } from "@/shared/models";
 import {
   AssignCircle,
@@ -64,9 +63,4 @@ export interface CreateProposal {
   [ProposalsTypes.REMOVE_CIRCLE]: Request<CreateRemoveCircle, RemoveCircle>;
   [ProposalsTypes.SURVEY]: Request<CreateSurvey, Survey>;
   [ProposalsTypes.DELETE_COMMON]: Request<CreateDeleteCommon, DeleteCommon>;
-}
-
-export type CreateProposalWithFiles<T extends keyof CreateProposal> = Omit<CreateProposal[T]["data"]["args"], "files" | "images"> & {
-  files?: UploadFile[];
-  images?: UploadFile[];
 }

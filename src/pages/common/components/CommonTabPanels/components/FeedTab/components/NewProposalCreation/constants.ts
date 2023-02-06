@@ -1,1 +1,0 @@
-export const MAX_PROPOSAL_TITLE_LENGTH = 70;

@@ -10,4 +10,3 @@ export { default as ProjectService } from "./Project";
 export { default as ProposalService } from "./Proposal";
 export { default as UserService } from "./User";
 export { default as DiscussionMessageService } from "./DiscussionMessage";
-export { default as FileService } from "./File";
