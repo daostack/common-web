@@ -306,6 +306,7 @@ export default function ChatComponent({
             isNewMessageLoading={isNewMessageLoading}
             messages={messages}
             dateList={dateList}
+            lastSeenItem={lastSeenItem}
           />
         ) : (
           <div className="loader-container">
