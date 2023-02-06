@@ -4,6 +4,7 @@ export { useDiscussionById } from "./useDiscussionById";
 export { useFeedItemUserMetadata } from "./useFeedItemUserMetadata";
 export { useFullCommonData } from "./useFullCommonData";
 export { useImmediateContribution } from "./useImmediateContribution";
+export { useMarkFeedItemAsSeen } from "./useMarkFeedItemAsSeen";
 export { default as usePaymentMethodChange } from "./usePaymentMethodChange";
 export type { ChangePaymentMethodState } from "./usePaymentMethodChange";
 export { useProjectCreation } from "./useProjectCreation";

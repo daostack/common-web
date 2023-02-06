@@ -85,11 +85,12 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   const handleOpenChat = useCallback(() => {
     if (discussion) {
       setChatItem({
+        feedItemId: item.id,
         discussion,
         circleVisibility: item.circleVisibility,
       });
     }
-  }, [discussion, item]);
+  }, [discussion, item.id, item.circleVisibility]);
 
   useEffect(() => {
     fetchDiscussionCreator(item.userId);

@@ -140,12 +140,13 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const handleOpenChat = useCallback(() => {
     if (discussion && proposal) {
       setChatItem({
+        feedItemId: item.id,
         discussion,
         proposal,
         circleVisibility: item.circleVisibility,
       });
     }
-  }, [proposal, discussion, setChatItem, item.circleVisibility]);
+  }, [item.id, proposal, discussion, setChatItem, item.circleVisibility]);
 
   if (isLoading) {
     return <LoadingFeedCard />;
