@@ -105,25 +105,6 @@
   }
 }
 
-.buttonWarningVariant {
-  --btn-color: #{$c-error-300};
-  --btn-bg-color: #{$c-primary-100};
-  --btn-border-color: #{$c-error-300};
-  --btn-border: 0.0625rem solid var(--btn-border-color);
-
-  &:hover {
-    --btn-bg-color: #{$c-hover-secondary};
-  }
-
-  &:active {
-    --btn-bg-color: #{$c-error-100};
-  }
-
-  &.buttonDisabled {
-    --btn-bg-color: #{$c-neutrals-100};
-  }
-}
-
 .buttonLargeSize {
   --btn-h: 3.25rem;
   --btn-pr: 1.5rem;

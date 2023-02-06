@@ -42,7 +42,6 @@ const FeedItems: FC = () => {
         {commonFeedItems?.map((item) => (
           <FeedItem
             key={item.id}
-            governanceId={governance.id}
             commonId={common.id}
             item={item}
             governanceCircles={governance.circles}

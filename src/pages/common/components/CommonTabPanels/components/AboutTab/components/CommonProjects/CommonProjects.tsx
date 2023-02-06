@@ -44,14 +44,14 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
     circles,
     styles: outerStyles,
   } = props;
-  const { onProjectCreate } = useCommonDataContext();
+  const { areNonCreatedProjectsLeft, onProjectCreate } = useCommonDataContext();
   const isTabletView = useIsTabletView();
   const isAddingNewProjectAllowed = Boolean(
     commonMember &&
       hasPermission({
         commonMember,
         governance: { circles },
-        key: GovernanceActions.CREATE_PROJECT,
+        key: GovernanceActions.CREATE_SUBCOMMON,
       }),
   );
 
@@ -95,7 +95,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
             />
           </li>
         ))}
-        {!isTabletView && (
+        {areNonCreatedProjectsLeft && !isTabletView && (
           <li className={styles.projectsItem}>
             <AddProjectButton
               disabled={!isAddingNewProjectAllowed}

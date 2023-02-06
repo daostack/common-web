@@ -12,7 +12,6 @@ export enum ButtonVariant {
   PrimaryGray = "primary-gray",
   PrimaryPurple = "primary-purple",
   OutlineBlue = "outline-blue",
-  Warning = "warning",
 }
 
 export enum ButtonSize {
@@ -47,7 +46,6 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
     [styles.buttonPrimaryPurpleVariant]:
       variant === ButtonVariant.PrimaryPurple,
     [styles.buttonOutlineBlueVariant]: variant === ButtonVariant.OutlineBlue,
-    [styles.buttonWarningVariant]: variant === ButtonVariant.Warning,
     [styles.buttonLargeSize]: size === ButtonSize.Large,
     [styles.buttonMediumSize]: size === ButtonSize.Medium,
     [styles.buttonSmallSize]: size === ButtonSize.Small,

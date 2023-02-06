@@ -13,5 +13,4 @@ export interface ProjectsState {
   data: ProjectsStateItem[];
   isDataLoading: boolean;
   isDataFetched: boolean;
-  isCommonCreationDisabled: boolean;
 }

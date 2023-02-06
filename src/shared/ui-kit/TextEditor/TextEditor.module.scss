@@ -3,6 +3,7 @@
 .container {
   display: flex;
   flex-direction: column;
+  background-color: $c-shades-white;
 }
 
 .editorWrapper {
@@ -13,7 +14,6 @@
 
   display: flex;
   flex-direction: column;
-  background-color: $c-shades-white;
 }
 .editorWrapperReadOnly {
   --text-editor-border: 0;

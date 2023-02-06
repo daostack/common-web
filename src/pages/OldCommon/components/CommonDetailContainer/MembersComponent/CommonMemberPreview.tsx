@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useMemo } from "react";
+import React, { FC, useState, useEffect, useCallback, useMemo } from "react";
 import { getCommonMemberInfo } from "@/pages/OldCommon/store/api";
 import { getCountryNameFromCode } from "@/shared/assets/countries";
 import { UserAvatar, Modal, Loader } from "@/shared/components";
@@ -13,16 +13,15 @@ import {
 import "./common-member-preview.scss";
 
 interface CommonMemberPreview {
-  member: CommonMemberWithUserInfo | null;
-  circles?: string;
+  member: CommonMemberWithUserInfo;
+  circles: string;
   memberName: string;
   avatar: string | undefined;
   isShowing: boolean;
   commonId: string;
   onClose: () => void;
-  country?: string;
+  country: string;
   about?: string;
-  dataFetched?: boolean;
 }
 
 export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
@@ -36,7 +35,6 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     onClose,
     country,
     about,
-    dataFetched = true,
   } = props;
   const [previewInfo, setPreviewInfo] = useState<CommonMemberPreviewInfo>(
     {} as CommonMemberPreviewInfo,
@@ -83,8 +81,8 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     }
   }, [isShowing, member]);
 
-  const GeneralUserInfo = () => {
-    if (isLoading || !dataFetched) {
+  const GeneralUserInfo = useCallback(() => {
+    if (isLoading) {
       return <Loader />;
     }
 
@@ -120,7 +118,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
         ))}
       </>
     );
-  };
+  }, [isLoading, about, previewInfo, commonId]);
 
   return (
     <Modal

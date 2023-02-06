@@ -21,5 +21,4 @@ export interface CommonState {
   commonAction: CommonAction | null;
   discussionCreation: EntityCreation<NewDiscussionCreationFormValues>;
   proposalCreation: EntityCreation<NewProposalCreationFormValues>
-  isNewProjectCreated: boolean;
 }

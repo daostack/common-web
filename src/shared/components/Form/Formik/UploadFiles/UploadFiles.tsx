@@ -5,23 +5,16 @@ import {
   UploadFilesProps as BaseUploadFilesProps,
 } from "@/shared/ui-kit/UploadFiles";
 
-export interface UploadFilesProps
+interface UploadFilesProps
   extends Omit<BaseUploadFilesProps, "files" | "onChange"> {
   name: string;
 }
 
 const UploadFiles: FC<UploadFilesProps> = (props) => {
   const { name, ...restProps } = props;
-  const [{ value }, { touched, error }, { setValue }] = useField(name);
+  const [{ value }, , { setValue }] = useField(name);
 
-  return (
-    <BaseUploadFiles
-      {...restProps}
-      files={value}
-      onChange={setValue}
-      error={touched ? error : ""}
-    />
-  );
+  return <BaseUploadFiles {...restProps} files={value} onChange={setValue} />;
 };
 
 export default UploadFiles;

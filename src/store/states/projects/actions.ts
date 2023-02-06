@@ -31,7 +31,3 @@ export const markProjectsAsNotFetched = createStandardAction(
 export const removeMembershipFromProjectAndChildren = createStandardAction(
   ProjectsActionType.REMOVE_MEMBERSHIP_FROM_PROJECT_AND_CHILDREN,
 )<string>();
-
-export const setIsCommonCreationDisabled = createStandardAction(
-  ProjectsActionType.SET_IS_COMMON_CREATION_DISABLED,
-)<boolean>();

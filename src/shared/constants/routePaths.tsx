@@ -11,7 +11,6 @@ export enum ROUTE_PATHS {
   COMMON_DETAIL = "/commons/:id",
   COMMON_SUPPORT = "/commons/:id/support",
   COMMON = "/new-commons/:id",
-  PROJECT_CREATION = "/new-commons/:id/new-project",
   MY_COMMONS = "/my-commons",
   SUBMIT_INVOICES = "/invoices/submission/:proposalId",
   TRUSTEE = "/trustee",

@@ -6,6 +6,7 @@ import { CommonMenuItem } from "../../constants";
 
 interface Data {
   onMenuItemSelect: (menuItem: CommonMenuItem | null) => void;
+  areNonCreatedProjectsLeft: boolean;
   onProjectCreate: () => void;
   common: Common;
   governance: Governance;

@@ -1,2 +1,0 @@
-export const MAX_PROJECT_NAME_LENGTH = 20;
-export const MAX_PROJECT_TAGLINE_LENGTH = 40;

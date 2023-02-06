@@ -80,7 +80,3 @@ export const addNewFeedItems = createStandardAction(
     docSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed>;
   }[]
 >();
-
-export const setIsNewProjectCreated = createStandardAction(
-  CommonActionType.SET_IS_NEW_PROJECT_CREATED,
-)<boolean>();

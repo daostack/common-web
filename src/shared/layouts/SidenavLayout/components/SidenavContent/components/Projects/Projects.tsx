@@ -11,7 +11,6 @@ import {
   projectsActions,
   selectAreProjectsFetched,
   selectAreProjectsLoading,
-  selectIsCommonCreationDisabled,
   selectProjectsData,
 } from "@/store/states";
 import { ProjectsTree } from "../ProjectsTree";
@@ -21,7 +20,6 @@ import {
   generateProjectsTreeItems,
   getActiveItemIdByPath,
   getItemById,
-  getItemIdWithNewProjectCreationByPath,
 } from "./utils";
 import styles from "./Projects.module.scss";
 
@@ -38,12 +36,8 @@ const Projects: FC = () => {
   const projects = useSelector(selectProjectsData);
   const areProjectsLoading = useSelector(selectAreProjectsLoading);
   const areProjectsFetched = useSelector(selectAreProjectsFetched);
-  const isCommonCreationDisabled = useSelector(selectIsCommonCreationDisabled);
   const items = useMemo(() => generateProjectsTreeItems(projects), [projects]);
   const activeItemId = getActiveItemIdByPath(location.pathname);
-  const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
-    location.pathname,
-  );
   const activeItem = getItemById(activeItemId, items);
   const isDataReady = areProjectsFetched && Boolean(activeItem);
 
@@ -84,13 +78,11 @@ const Projects: FC = () => {
           className={styles.projectsTree}
           items={items}
           activeItem={activeItem}
-          itemIdWithNewProjectCreation={itemIdWithNewProjectCreation}
         />
         <div className={styles.createCommonButtonWrapper}>
           <CreateCommonButton
             className={styles.createCommonButton}
             onClick={onCreateCommonModalOpen}
-            disabled={isCommonCreationDisabled}
           />
         </div>
         {areProjectsLoading && <Loader className={styles.loader} />}

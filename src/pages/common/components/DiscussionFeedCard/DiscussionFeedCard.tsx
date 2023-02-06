@@ -26,19 +26,11 @@ interface DiscussionFeedCardProps {
   item: CommonFeed;
   governanceCircles: Governance["circles"];
   isMobileVersion?: boolean;
-  commonId: string;
-  governanceId?: string;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   const { activeItemDiscussionId, setChatItem } = useChatContext();
-  const {
-    item,
-    governanceCircles,
-    isMobileVersion = false,
-    commonId,
-    governanceId,
-  } = props;
+  const { item, governanceCircles, isMobileVersion = false } = props;
   const {
     isShowing: isReportModalOpen,
     onOpen: onReportModalOpen,
@@ -121,9 +113,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         circleVisibility={circleVisibility}
         menuItems={menuItems}
         isMobileVersion={isMobileVersion}
-        commonId={commonId}
-        userId={item.userId}
-        governanceId={governanceId}
       />
       <FeedCardContent
         title={discussion?.title}

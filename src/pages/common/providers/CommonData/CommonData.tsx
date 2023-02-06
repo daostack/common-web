@@ -1,13 +1,12 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router";
 import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
 import {
+  CreateCommonModal,
   CreateProposalModal,
   LeaveCommonModal,
   MembershipRequestModal,
 } from "@/pages/OldCommon/components";
-import { ROUTE_PATHS } from "@/shared/constants";
 import { useAuthorizedModal, useNotification } from "@/shared/hooks";
 import {
   CirclesPermissions,
@@ -23,6 +22,7 @@ import { CommonDataContext, CommonDataContextValue } from "./context";
 import {
   useLeaveCircleModal,
   useProposalCreationModal,
+  useSubCommonCreationModal,
   useJoinCircleModal,
 } from "./hooks";
 
@@ -53,7 +53,6 @@ const CommonData: FC<CommonDataProps> = (props) => {
     children,
   } = props;
   const dispatch = useDispatch();
-  const history = useHistory();
   const { notify } = useNotification();
   const [selectedMenuItem, setSelectedMenuItem] =
     useState<CommonMenuItem | null>(null);
@@ -64,6 +63,13 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onCommonDelete,
     redirectToProposalPage,
   } = useProposalCreationModal();
+  const {
+    isSubCommonCreationModalOpen,
+    areNonCreatedProjectsLeft,
+    onSubCommonCreationModalOpen,
+    onSubCommonCreationModalClose,
+    onSubCommonCreate,
+  } = useSubCommonCreationModal(governance.circles, subCommons);
   const {
     circleToLeave,
     isLeaveCircleModalOpen,
@@ -103,10 +109,6 @@ const CommonData: FC<CommonDataProps> = (props) => {
     setSelectedMenuItem(null);
   };
 
-  const handleProjectCreate = useCallback(() => {
-    history.push(ROUTE_PATHS.PROJECT_CREATION.replace(":id", common.id));
-  }, [history, common.id]);
-
   const handleSuccessfulLeave = () => {
     if (commonMember) {
       CommonMemberEventEmitter.emit(CommonMemberEvent.Clear, commonMember.id);
@@ -126,7 +128,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
       onMenuItemSelect: handleMenuItemSelect,
-      onProjectCreate: handleProjectCreate,
+      areNonCreatedProjectsLeft,
+      onProjectCreate: onSubCommonCreationModalOpen,
       common,
       governance,
       parentCommons,
@@ -141,7 +144,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
     }),
     [
       handleMenuItemSelect,
-      handleProjectCreate,
+      areNonCreatedProjectsLeft,
+      onSubCommonCreationModalOpen,
       common,
       governance,
       parentCommons,
@@ -181,6 +185,16 @@ const CommonData: FC<CommonDataProps> = (props) => {
           initialProposalType={initialProposalTypeForCreation}
         />
       )}
+      <CreateCommonModal
+        isShowing={isSubCommonCreationModalOpen}
+        onClose={onSubCommonCreationModalClose}
+        governance={governance}
+        parentCommonId={common.id}
+        subCommons={subCommons}
+        onGoToCommon={onSubCommonCreate}
+        isSubCommonCreation
+        shouldBeWithoutIntroduction
+      />
       {circleToLeave && commonMember && (
         <LeaveCircleModal
           circle={circleToLeave}
