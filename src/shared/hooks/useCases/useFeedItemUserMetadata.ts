@@ -1,5 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CommonFeedObjectUserUniqueService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
 import { CommonFeedObjectUserUnique } from "@/shared/models";
 import { cacheActions, selectFeedItemUserMetadata } from "@/store/states";
@@ -46,6 +47,33 @@ export const useFeedItemUserMetadata = (): Return => {
     },
     [dispatch],
   );
+
+  useEffect(() => {
+    if (!identificationInfo) {
+      return;
+    }
+
+    const unsubscribe =
+      CommonFeedObjectUserUniqueService.subscribeToFeedItemUserMetadata(
+        identificationInfo.commonId,
+        identificationInfo.userId,
+        identificationInfo.feedObjectId,
+        (data) => {
+          dispatch(
+            cacheActions.updateFeedItemUserMetadata({
+              ...identificationInfo,
+              state: {
+                loading: false,
+                fetched: true,
+                data,
+              },
+            }),
+          );
+        },
+      );
+
+    return unsubscribe;
+  }, [identificationInfo]);
 
   return {
     ...state,

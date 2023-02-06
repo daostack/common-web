@@ -32,6 +32,7 @@ import { SendIcon } from "@/shared/icons";
 import CloseIcon from "@/shared/icons/close.icon";
 import {
   Common,
+  CommonFeedObjectUserUnique,
   CommonMember,
   Discussion,
   DiscussionMessage,
@@ -55,6 +56,7 @@ interface ChatComponentInterface {
   discussion: Discussion;
   feedItemId?: string;
   titleHeight?: number;
+  lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
 }
 
 interface Messages {
@@ -86,6 +88,7 @@ export default function ChatComponent({
   discussion,
   feedItemId,
   titleHeight = 0,
+  lastSeenItem,
 }: ChatComponentInterface) {
   const intersectionRef = React.useRef(null);
   const replyDivRef = React.useRef(null);
@@ -225,7 +228,11 @@ export default function ChatComponent({
   ]);
 
   useEffect(() => {
-    if (lastNonUserMessage && feedItemId) {
+    if (
+      lastNonUserMessage &&
+      lastSeenItem?.id !== lastNonUserMessage.id &&
+      feedItemId
+    ) {
       markFeedItemAsSeen({
         feedObjectId: feedItemId,
         commonId: lastNonUserMessage.commonId,
