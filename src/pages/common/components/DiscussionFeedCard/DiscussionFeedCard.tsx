@@ -4,7 +4,11 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { ReportModal } from "@/shared/components";
 import { DynamicLinkType, EntityTypes } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
-import { useDiscussionById, useUserById } from "@/shared/hooks/useCases";
+import {
+  useDiscussionById,
+  useFeedItemUserMetadata,
+  useUserById,
+} from "@/shared/hooks/useCases";
 import { CommonFeed, Governance } from "@/shared/models";
 import { DesktopStyleMenu } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
@@ -60,6 +64,11 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     data: discussion,
     fetched: isDiscussionFetched,
   } = useDiscussionById();
+  const {
+    data: feedItemUserMetadata,
+    fetched: isFeedItemUserMetadataFetched,
+    fetchFeedItemUserMetadata,
+  } = useFeedItemUserMetadata();
   const menuItems = useMenuItems(
     {
       discussion,
@@ -74,7 +83,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   );
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const isLoading = !isDiscussionCreatorFetched || !isDiscussionFetched;
+  const isLoading =
+    !isDiscussionCreatorFetched ||
+    !isDiscussionFetched ||
+    !isFeedItemUserMetadataFetched;
   const isActive = discussion?.id === activeItemDiscussionId;
 
   const circleVisibility = getVisibilityString(
@@ -99,6 +111,14 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   useEffect(() => {
     fetchDiscussion(item.data.id);
   }, [item.data.id]);
+
+  useEffect(() => {
+    fetchFeedItemUserMetadata({
+      userId: userId || "",
+      commonId,
+      feedObjectId: item.id,
+    });
+  }, [userId, commonId, item.id]);
 
   if (isLoading) {
     return <LoadingFeedCard />;
@@ -134,6 +154,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
         lastActivity={item.updatedAt.seconds * 1000}
+        unreadMessages={feedItemUserMetadata?.count || 0}
         onMessagesClick={handleOpenChat}
       />
       {userId && discussion && (

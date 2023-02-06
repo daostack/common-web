@@ -212,6 +212,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
         lastActivity={item.updatedAt.seconds * 1000}
+        unreadMessages={feedItemUserMetadata?.count || 0}
         onMessagesClick={handleOpenChat}
       />
     </FeedCard>
