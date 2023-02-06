@@ -1,7 +1,10 @@
 import React, { memo, useCallback, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import {
   useDiscussionById,
+  useFeedItemUserMetadata,
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
@@ -41,8 +44,14 @@ interface ProposalFeedCardProps {
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const { commonId, item, governanceCircles, governanceId } = props;
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const { activeItemDiscussionId, setChatItem } = useChatContext();
-  const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
+  const {
+    fetchUser: fetchFeedItemUser,
+    data: feedItemUser,
+    fetched: isFeedItemUserFetched,
+  } = useUserById();
   const {
     fetchDiscussion,
     data: discussion,
@@ -69,14 +78,20 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     fetched: isProposalSpecificDataFetched,
     fetchData: fetchProposalSpecificData,
   } = useProposalSpecificData();
+  const {
+    data: feedItemUserMetadata,
+    fetched: isFeedItemUserMetadataFetched,
+    fetchFeedItemUserMetadata,
+  } = useFeedItemUserMetadata();
   const isLoading =
-    !isUserFetched ||
+    !isFeedItemUserFetched ||
     !isDiscussionFetched ||
     !isProposalFetched ||
     !proposal ||
     isUserVoteLoading ||
     !isCommonMemberFetched ||
-    !isProposalSpecificDataFetched;
+    !isProposalSpecificDataFetched ||
+    !isFeedItemUserMetadataFetched;
   const circleVisibility = getVisibilityString(
     governanceCircles,
     item.circleVisibility,
@@ -85,7 +100,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const isActive = discussion?.id === activeItemDiscussionId;
 
   useEffect(() => {
-    fetchUser(item.userId);
+    fetchFeedItemUser(item.userId);
   }, [item.userId]);
 
   useEffect(() => {
@@ -107,6 +122,14 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       fetchCommonMember(commonId, {});
     }
   }, [fetchCommonMember, commonId]);
+
+  useEffect(() => {
+    fetchFeedItemUserMetadata({
+      userId: userId || "",
+      commonId,
+      feedObjectId: item.id,
+    });
+  }, [userId, commonId, item.id]);
 
   useEffect(() => {
     if (proposal) {
@@ -143,8 +166,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   return (
     <FeedCard isActive={isActive}>
       <FeedCardHeader
-        avatar={user?.photoURL}
-        title={getUserName(user)}
+        avatar={feedItemUser?.photoURL}
+        title={getUserName(feedItemUser)}
         createdAt={
           <>
             Created:{" "}

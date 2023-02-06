@@ -18,6 +18,10 @@ export function* getFeedItemUserMetadataState({
 }: ReturnType<typeof getStateAction.request>) {
   const { commonId, userId, feedObjectId } = payload.payload;
 
+  if (!commonId || !userId || !feedObjectId) {
+    return;
+  }
+
   try {
     const state =
       ((yield select(
