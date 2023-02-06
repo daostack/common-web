@@ -16,3 +16,6 @@ export const selectIsProposalCreationLoading = (state: AppState) =>
   state.common.proposalCreation.loading;
 
 export const selectFeedItems = (state: AppState) => state.common.feedItems;
+
+export const selectIsNewProjectCreated = (state: AppState) =>
+  state.common.isNewProjectCreated;

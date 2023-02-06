@@ -20,6 +20,7 @@ const initialState: CommonState = {
     data: null,
     loading: false,
   },
+  isNewProjectCreated: false,
   proposalCreation: {
     data: null,
     loading: false,
@@ -153,5 +154,10 @@ export const reducer = createReducer<CommonState, Action>(initialState)
         data,
         firstDocSnapshot,
       };
+    }),
+  )
+  .handleAction(actions.setIsNewProjectCreated, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.isNewProjectCreated = payload;
     }),
   );

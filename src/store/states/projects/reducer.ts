@@ -11,6 +11,7 @@ const initialState: ProjectsState = {
   data: [],
   isDataLoading: false,
   isDataFetched: false,
+  isCommonCreationDisabled: false,
 };
 
 const clearProjects = (state: WritableDraft<ProjectsState>): void => {
@@ -109,4 +110,9 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
           item.hasMembership = false;
         });
       }),
+  )
+  .handleAction(actions.setIsCommonCreationDisabled, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.isCommonCreationDisabled = payload;
+    }),
   );

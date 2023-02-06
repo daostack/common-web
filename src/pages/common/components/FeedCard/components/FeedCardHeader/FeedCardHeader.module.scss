@@ -20,6 +20,8 @@
 .content {
   display: flex;
   align-items: center;
+  cursor: pointer;
+  position: relative;
 }
 
 .avatar {

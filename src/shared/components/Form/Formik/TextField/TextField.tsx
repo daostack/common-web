@@ -1,9 +1,8 @@
 import React, { FC } from "react";
 import { useField } from "formik";
-
 import { Input, InputProps } from "../../Input";
 
-type TextFieldProps = InputProps & {
+export type TextFieldProps = InputProps & {
   isRequired?: boolean;
 };
 
@@ -17,7 +16,7 @@ const TextField: FC<TextFieldProps> = (props) => {
       {...restProps}
       {...field}
       hint={hintToShow}
-      error={touched ? error : ''}
+      error={touched ? error : ""}
     />
   );
 };
