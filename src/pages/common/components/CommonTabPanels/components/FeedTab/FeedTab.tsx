@@ -30,6 +30,7 @@ import {
   FeedAction,
   FeedItems,
   NewDiscussionCreation,
+  NewProposalCreation,
 } from "./components";
 import styles from "./FeedTab.module.scss";
 
@@ -75,6 +76,13 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
     <div className={styles.mainColumnWrapper}>
       {commonAction === CommonAction.NewDiscussion && (
         <NewDiscussionCreation
+          governanceCircles={governance.circles}
+          commonMember={commonMember}
+          isModalVariant={false}
+        />
+      )}
+      {commonAction === CommonAction.NewProposal && (
+        <NewProposalCreation
           governanceCircles={governance.circles}
           commonMember={commonMember}
           isModalVariant={false}
@@ -138,6 +146,15 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
     <div className={styles.mainColumnWrapper}>
       {commonAction === CommonAction.NewDiscussion && (
         <NewDiscussionCreation
+          governanceCircles={governance.circles}
+          commonMember={commonMember}
+          commonImage={common.image}
+          commonName={common.name}
+          isModalVariant
+        />
+      )}
+      {commonAction === CommonAction.NewProposal && (
+        <NewProposalCreation
           governanceCircles={governance.circles}
           commonMember={commonMember}
           commonImage={common.image}
