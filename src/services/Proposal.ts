@@ -11,6 +11,7 @@ import {
 import {
   AssignCircle,
   RemoveCircle,
+  MemberAdmittance,
 } from "@/shared/models/governance/proposals";
 import {
   checkIsCountdownState,
@@ -94,6 +95,20 @@ class ProposalService {
       ...payload,
       type: ProposalsTypes.ASSIGN_CIRCLE,
     })) as AssignCircle;
+
+    return createdProposal;
+  };
+
+  public createMemberAdmittanceProposal = async (
+    payload: Omit<
+      CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["data"],
+      "type"
+    >,
+  ): Promise<CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["response"]> => {
+    const createdProposal = (await createProposal({
+      ...payload,
+      type: ProposalsTypes.MEMBER_ADMITTANCE,
+    })) as MemberAdmittance;
 
     return createdProposal;
   };

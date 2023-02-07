@@ -1,0 +1,19 @@
+@import "../../../../../constants";
+
+.labelWrapper {
+  margin-bottom: 0.625rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: $xsmall;
+  line-height: 120%;
+  color: $c-neutrals-600;
+}
+
+.optionalHint {
+  color: $c-neutrals-300;
+}
+
+.hint {
+  font-style: italic;
+  color: $c-neutrals-300;
+}

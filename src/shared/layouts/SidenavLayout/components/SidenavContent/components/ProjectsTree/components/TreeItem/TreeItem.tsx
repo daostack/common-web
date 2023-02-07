@@ -1,6 +1,7 @@
-import React, { CSSProperties, FC, useState } from "react";
+import React, { FC, useState } from "react";
 import { Item } from "../../types";
 import { TreeItemTrigger } from "../TreeItemTrigger";
+import { getItemStyles } from "./utils";
 import styles from "./TreeItem.module.scss";
 
 interface TreeItemProps {
@@ -12,9 +13,7 @@ interface TreeItemProps {
 const TreeItem: FC<TreeItemProps> = (props) => {
   const { item, level = 1, isActive = false, children } = props;
   const [isOpen, setIsOpen] = useState(false);
-  const itemStyles = {
-    "--tree-level": level,
-  } as CSSProperties;
+  const itemStyles = getItemStyles(level);
   const hasNestedContent = Boolean(children);
 
   const handleTriggerToggle = () => {

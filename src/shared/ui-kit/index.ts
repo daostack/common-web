@@ -12,6 +12,7 @@ export * from "./MobileMenu";
 export * from "./NotFound";
 export * from "./Popover";
 export * from "./Portal";
+export * from "./PreventNavigationPrompt";
 export * from "./Sidenav";
 export * from "./Tags";
 export * from "./TextEditor";

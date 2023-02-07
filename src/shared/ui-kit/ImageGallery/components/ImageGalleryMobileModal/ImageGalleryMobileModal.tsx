@@ -50,6 +50,7 @@ const ImageGalleryMobileModal: FC<ImageGalleryMobileModalProps> = (props) => {
           )}
           {images.map((imageURL, index) => (
             <Image
+              key={imageURL}
               className={styles.image}
               src={imageURL}
               alt={`Common gallery image #${index + 1}`}

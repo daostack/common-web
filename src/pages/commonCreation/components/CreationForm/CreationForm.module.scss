@@ -1,0 +1,28 @@
+@import "../../../../constants";
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.itemsWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.submitButton {
+  align-self: flex-start;
+  margin-top: 2.625rem;
+}
+
+.error {
+  font-size: $xsmall;
+}

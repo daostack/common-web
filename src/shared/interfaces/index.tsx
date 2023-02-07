@@ -1,6 +1,7 @@
 export * from "./Awaited";
 export * from "./State";
 export * from "./Configuration";
+export * from "./CreateProjectPayload";
 export * from "./LoadingState";
 export * from "./MenuItem";
 export * from "./NewDiscussionCreationFormValues";
