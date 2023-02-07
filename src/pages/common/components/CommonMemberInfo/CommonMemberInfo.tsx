@@ -2,11 +2,12 @@ import React, { FC, useEffect, useState, useMemo } from "react";
 import classNames from "classnames";
 import { Popover } from "@headlessui/react";
 import { CommonService, ProposalService } from "@/services";
-import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import { CommonMember, Governance } from "@/shared/models";
 import { Portal } from "@/shared/ui-kit";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
+  removeProjectCircles,
 } from "@/shared/utils";
 import { PopoverPanel, PopoverButton } from "./components";
 import styles from "./CommonMemberInfo.module.scss";
@@ -14,28 +15,20 @@ import styles from "./CommonMemberInfo.module.scss";
 interface CommonMemberInfoProps {
   className?: string;
   circles: Governance["circles"];
-  circlesMap?: (CommonMember & CirclesPermissions)["circles"]["map"];
   commonId: string;
   commonMember: CommonMember;
   isMobileVersion?: boolean;
 }
 
 const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
-  const {
-    className,
-    circles,
-    circlesMap,
-    commonMember,
-    commonId,
-    isMobileVersion,
-  } = props;
+  const { className, circles, commonMember, commonId, isMobileVersion } = props;
   const governanceCircles = useMemo(
-    () => Object.values(circles || {}),
+    () => removeProjectCircles(Object.values(circles || {})),
     [circles],
   );
   const circleIds: string[] = useMemo(
-    () => Object.values(circlesMap || {}),
-    [circlesMap],
+    () => governanceCircles.map(({ id }) => id),
+    [governanceCircles],
   );
   const [pendingCircles, setPendingCircles] = useState(
     new Map<string, boolean>(),

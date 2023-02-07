@@ -23,7 +23,6 @@ interface CommonTopNavigationProps {
 const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
   const { commonMember, circles, isSubCommon, commonId } = props;
   const { isJoinAllowed, isJoinPending, onJoinCommon } = useCommonDataContext();
-  const circlesMap = commonMember?.circles.map;
   const isJoinButtonVisible = !isSubCommon && isJoinAllowed;
 
   const renderCentralElement = (): ReactNode => {
@@ -31,7 +30,6 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
       return (
         <CommonMemberInfo
           circles={circles}
-          circlesMap={circlesMap}
           commonId={commonId}
           commonMember={commonMember}
           isMobileVersion
