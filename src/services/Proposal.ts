@@ -1,20 +1,22 @@
-import { CreateProposal } from "@/pages/OldCommon/interfaces";
-import { createProposal } from "@/pages/OldCommon/store/api";
-import { ProposalsTypes } from "@/shared/constants";
-import { UnsubscribeFunction } from "@/shared/interfaces";
+import { CreateProposal, CreateProposalWithFiles } from "@/pages/OldCommon/interfaces";
+import { ApiEndpoint, ProposalsTypes } from "@/shared/constants";
+import { UnsubscribeFunction, UploadFile } from "@/shared/interfaces";
 import { Collection, Proposal, ProposalState } from "@/shared/models";
 import {
   AssignCircle,
   RemoveCircle,
+  Survey,
   MemberAdmittance
 } from "@/shared/models/governance/proposals";
 import {
   checkIsCountdownState,
+  convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import { Api, FileService } from ".";
 
 const converter = firestoreDataConverter<Proposal>();
 
@@ -82,15 +84,40 @@ class ProposalService {
     });
   };
 
+  createProposal = async <T extends keyof CreateProposal>(
+    requestData: CreateProposal[T]["data"],
+  ): Promise<CreateProposal[T]["response"]> => {
+    const { data } = await Api.post<CreateProposal[T]["response"]>(
+      ApiEndpoint.CreateProposal,
+      requestData,
+    );
+  
+    return convertObjectDatesToFirestoreTimestamps(data);
+  }
+
   public createAssignProposal = async (
     payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">,
   ): Promise<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["response"]> => {
-    const createdProposal = (await createProposal({
+    const createdProposal = (await this.createProposal({
       ...payload,
       type: ProposalsTypes.ASSIGN_CIRCLE,
     })) as AssignCircle;
 
     return createdProposal;
+  };
+
+  public createSurveyProposal = async (
+    payload: CreateProposalWithFiles<ProposalsTypes.SURVEY>,
+  ): Promise<Proposal> => {
+    const [files, images] = await Promise.all([FileService.uploadFiles(payload.files as unknown as UploadFile[]), FileService.uploadFiles(payload.images as unknown as UploadFile[])]) as any;
+    return (await this.createProposal({
+      args: {
+        ...payload,
+        files,
+        images
+      },
+      type: ProposalsTypes.SURVEY,
+    })) as Survey;
   };
 
   public createMemberAdmittanceProposal = async (

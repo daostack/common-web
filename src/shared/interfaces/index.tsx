@@ -5,6 +5,7 @@ export * from "./CreateProjectPayload";
 export * from "./LoadingState";
 export * from "./MenuItem";
 export * from "./NewDiscussionCreationFormValues";
+export * from "./NewProposalCreationFormValues";
 export * from "./Notification";
 export * from "./redux";
 export * from "./SharedState";
