@@ -2,8 +2,10 @@ import React, { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { useCommonMember } from "@/pages/OldCommon/hooks";
-import { useFullCommonData, useUserPendingJoin } from "@/shared/hooks/useCases";
+import {
+  useFullCommonData,
+  useGlobalCommonData,
+} from "@/shared/hooks/useCases";
 import { Loader, NotFound } from "@/shared/ui-kit";
 import { CommonContent, PureCommonTopNavigation } from "./components";
 import styles from "./Common.module.scss";
@@ -20,31 +22,21 @@ const Common: FC = () => {
     fetchCommonData,
   } = useFullCommonData();
   const {
-    fetched: isCommonMemberFetched,
-    data: commonMember,
-    fetchCommonMember,
-  } = useCommonMember({
-    shouldAutoReset: false,
-    withSubscription: true,
+    fetched: isGlobalDataFetched,
+    fetchUserRelatedData,
+    data: { commonMember, parentCommonMember, isJoinPending },
+    setIsJoinPending,
+  } = useGlobalCommonData({
     commonId,
     governanceCircles: commonData?.governance.circles,
   });
-  const {
-    fetched: isPendingJoinCheckFinished,
-    data: isJoinPending,
-    checkUserPendingJoin,
-    setIsJoinPending,
-  } = useUserPendingJoin();
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const isDataFetched = isCommonDataFetched;
-  const isGlobalDataFetched =
-    isCommonMemberFetched && isPendingJoinCheckFinished;
 
   const fetchData = () => {
     fetchCommonData(commonId);
-    fetchCommonMember(commonId, {}, true);
-    checkUserPendingJoin(commonId);
+    fetchUserRelatedData();
   };
 
   useEffect(() => {
@@ -52,8 +44,7 @@ const Common: FC = () => {
   }, [commonId]);
 
   useEffect(() => {
-    fetchCommonMember(commonId, {}, true);
-    checkUserPendingJoin(commonId);
+    fetchUserRelatedData();
   }, [userId]);
 
   if (!isDataFetched) {
@@ -84,6 +75,7 @@ const Common: FC = () => {
       parentCommonSubCommons={commonData.parentCommonSubCommons}
       isGlobalDataFetched={isGlobalDataFetched}
       commonMember={commonMember}
+      parentCommonMember={parentCommonMember}
       isJoinPending={isJoinPending}
       setIsJoinPending={setIsJoinPending}
     />

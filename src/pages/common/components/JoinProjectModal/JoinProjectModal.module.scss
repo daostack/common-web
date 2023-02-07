@@ -1,0 +1,49 @@
+@import "../../../../constants";
+@import "../../../../styles/mixins";
+@import "../../../../styles/sizes";
+
+.modal {
+  max-width: 31.5rem;
+  width: 100%;
+  border-radius: 0.5rem;
+
+  @include tablet {
+    max-width: unset;
+    border-radius: 0;
+  
+    .closeWrapper {
+      top: 0.625rem;
+    }
+  }
+
+  .modalHeaderWrapper {
+    .modalHeader {
+      justify-content: flex-start;
+      padding: 0;
+    
+      @include tablet {
+        padding-top: 0.625rem;
+        padding-left: 0;
+        padding-bottom: 0.375rem;
+        justify-content: center;
+      }
+    
+      .modal__title {
+        font-size: $moderate-small;
+      }
+    }
+  }
+
+  .modalContent {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 2.25rem;
+  
+    @include tablet {
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+    }
+  }
+}

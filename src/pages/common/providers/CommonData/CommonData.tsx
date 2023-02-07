@@ -16,6 +16,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { projectsActions } from "@/store/states";
+import { JoinProjectModal } from "../../components/JoinProjectModal";
 import { CommonMenuItem } from "../../constants";
 import { LeaveCircleModal } from "./components";
 import { JoinCircleModal } from "./components/JoinCircleModal";
@@ -30,6 +31,7 @@ interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  parentCommonMember: CommonMember | null;
   isGlobalDataFetched: boolean;
   parentCommons: Common[];
   subCommons: Common[];
@@ -44,6 +46,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     common,
     governance,
     commonMember,
+    parentCommonMember,
     isGlobalDataFetched,
     parentCommons,
     subCommons,
@@ -82,11 +85,21 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onOpen: onCommonJoinModalOpen,
     onClose: onCommonJoinModalClose,
   } = useAuthorizedModal();
+  const {
+    isModalOpen: isProjectJoinModalOpen,
+    onOpen: onProjectJoinModalOpen,
+    onClose: onProjectJoinModalClose,
+  } = useAuthorizedModal();
   const isProject = Boolean(common.directParent);
 
   const isJoinPending =
     isGlobalDataFetched && !commonMember && props.isJoinPending;
-  const isJoinAllowed = isGlobalDataFetched && !commonMember && !isJoinPending;
+  const isJoinAllowed = Boolean(
+    isGlobalDataFetched &&
+      ((!isProject && !commonMember) ||
+        (isProject && parentCommonMember && !commonMember)) &&
+      !isJoinPending,
+  );
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -123,6 +136,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
     }
   }, [isGlobalDataFetched, isJoinAllowed, isCommonJoinModalOpen]);
 
+  useEffect(() => {
+    if (isGlobalDataFetched && !isJoinAllowed && isProjectJoinModalOpen) {
+      onProjectJoinModalClose();
+    }
+  }, [isGlobalDataFetched, isJoinAllowed, isProjectJoinModalOpen]);
+
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
       onMenuItemSelect: handleMenuItemSelect,
@@ -135,7 +154,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       parentCommonSubCommons,
       isJoinAllowed,
       isJoinPending,
-      onJoinCommon: isProject ? undefined : onCommonJoinModalOpen,
+      onJoinCommon: isProject ? onProjectJoinModalOpen : onCommonJoinModalOpen,
       onLeaveCircle: onLeaveCircleModalOpen,
       onJoinCircle: onJoinCircleModalOpen,
     }),
@@ -154,6 +173,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onCommonJoinModalOpen,
       onLeaveCircleModalOpen,
       onJoinCircleModalOpen,
+      onProjectJoinModalOpen,
     ],
   );
 
@@ -204,6 +224,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
         common={common}
         governance={governance}
         onRequestCreated={() => setIsJoinPending(true)}
+      />
+      <JoinProjectModal
+        isShowing={isJoinAllowed && isProjectJoinModalOpen}
+        onClose={onProjectJoinModalClose}
+        common={common}
+        governance={governance}
       />
     </CommonDataContext.Provider>
   );

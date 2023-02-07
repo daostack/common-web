@@ -32,6 +32,9 @@ interface Return extends State {
     options: { governance?: Governance; commonMember?: CommonMember },
     force?: boolean,
   ) => void;
+  setCommonMember: (
+    commonMember: (CommonMember & CirclesPermissions) | null,
+  ) => void;
   resetCommonMember: () => void;
 }
 
@@ -114,6 +117,17 @@ export const useCommonMember = (options: Options = {}): Return => {
       }
     },
     [state, dispatch, userId],
+  );
+
+  const setCommonMember = useCallback(
+    (newCommonMember: (CommonMember & CirclesPermissions) | null) => {
+      setState({
+        loading: false,
+        fetched: true,
+        data: newCommonMember,
+      });
+    },
+    [],
   );
 
   const resetCommonMember = useCallback(() => {
@@ -208,6 +222,7 @@ export const useCommonMember = (options: Options = {}): Return => {
   return {
     ...state,
     fetchCommonMember,
+    setCommonMember,
     resetCommonMember,
   };
 };
