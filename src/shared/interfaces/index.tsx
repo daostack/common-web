@@ -3,6 +3,7 @@ export * from "./State";
 export * from "./Configuration";
 export * from "./CreateProjectPayload";
 export * from "./LoadingState";
+export * from "./MarkCommonFeedItemAsSeenPayload";
 export * from "./MenuItem";
 export * from "./NewDiscussionCreationFormValues";
 export * from "./Notification";

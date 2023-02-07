@@ -29,7 +29,7 @@ export const FeedCardFooter: React.FC<FeedCardFooterProps> = ({
         <p className={classNames(styles.text, styles.lastActivity)}>
           Last Activity: <TimeAgo milliseconds={lastActivity} />
         </p>
-        {unreadMessages && (
+        {Boolean(unreadMessages) && (
           <div className={styles.unreadMessages}>{unreadMessages}</div>
         )}
       </div>

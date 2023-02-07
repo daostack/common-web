@@ -5,6 +5,7 @@ export const ApiEndpoint = {
   CreateCommon: "/commons/create",
   UpdateCommon: "/commons/update",
   CreateSubCommon: "/commons/subcommon/create",
+  MarkFeedObjectSeenForUser: "/commons/mark-feed-object-seen-for-user",
   CreateAction: "/proposals/action",
   CreateProposal: "/proposals/create",
   VoteProposal: "/proposals/vote",

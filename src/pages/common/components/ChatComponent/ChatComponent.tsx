@@ -19,22 +19,27 @@ import {
 import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
 import { Loader } from "@/shared/components";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
-import { ChatType } from "@/shared/constants";
+import { ChatType, LastSeenEntity } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { useIntersection } from "@/shared/hooks";
 import { usePrevious } from "@/shared/hooks";
-import { useDiscussionMessagesById } from "@/shared/hooks/useCases";
+import {
+  useDiscussionMessagesById,
+  useMarkFeedItemAsSeen,
+} from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { SendIcon } from "@/shared/icons";
 import CloseIcon from "@/shared/icons/close.icon";
 import {
   Common,
+  CommonFeedObjectUserUnique,
   CommonMember,
   Discussion,
   DiscussionMessage,
   Proposal,
 } from "@/shared/models";
 import { ChatContent } from "./components/ChatContent";
+import { getLastNonUserMessage } from "./utils";
 import "./index.scss";
 
 interface ChatComponentInterface {
@@ -49,7 +54,9 @@ interface ChatComponentInterface {
   isHidden: boolean;
   proposal?: Proposal;
   discussion: Discussion;
+  feedItemId?: string;
   titleHeight?: number;
+  lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
 }
 
 interface Messages {
@@ -79,7 +86,9 @@ export default function ChatComponent({
   isHidden = false,
   proposal,
   discussion,
+  feedItemId,
   titleHeight = 0,
+  lastSeenItem,
 }: ChatComponentInterface) {
   const intersectionRef = React.useRef(null);
   const replyDivRef = React.useRef(null);
@@ -88,6 +97,7 @@ export default function ChatComponent({
     rootMargin: "0px",
     threshold: 0,
   });
+  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
   const dispatch = useDispatch();
   const {
@@ -99,10 +109,15 @@ export default function ChatComponent({
     discussionMessages ?? [],
   );
   const user = useSelector(selectUser());
+  const userId = user?.uid;
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
   const discussionId = discussion.id;
+  const lastNonUserMessage = getLastNonUserMessage(
+    discussionMessages || [],
+    userId,
+  );
 
   const [height, setHeight] = useState(0);
 
@@ -212,6 +227,21 @@ export default function ChatComponent({
     setIsNewMessageLoading,
   ]);
 
+  useEffect(() => {
+    if (
+      lastNonUserMessage &&
+      lastSeenItem?.id !== lastNonUserMessage.id &&
+      feedItemId
+    ) {
+      markFeedItemAsSeen({
+        feedObjectId: feedItemId,
+        commonId: lastNonUserMessage.commonId,
+        lastSeenId: lastNonUserMessage.id,
+        type: LastSeenEntity.DiscussionMessage,
+      });
+    }
+  }, [lastNonUserMessage?.id]);
+
   const chatWrapperStyle = useMemo(() => {
     if (isTabletView) {
       return { height: `calc(100% - 48px)` };
@@ -276,6 +306,7 @@ export default function ChatComponent({
             isNewMessageLoading={isNewMessageLoading}
             messages={messages}
             dateList={dateList}
+            lastSeenItem={lastSeenItem}
           />
         ) : (
           <div className="loader-container">
