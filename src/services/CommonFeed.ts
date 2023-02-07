@@ -16,7 +16,7 @@ import {
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
-import Api from "./Api";
+import Api, { CancelToken } from "./Api";
 
 const converter = firestoreDataConverter<CommonFeed>();
 
@@ -116,10 +116,13 @@ class CommonFeedService {
 
   public markCommonFeedItemAsSeen = async (
     payload: MarkCommonFeedItemAsSeenPayload,
+    options: { cancelToken?: CancelToken } = {},
   ): Promise<CommonFeedObjectUserUnique> => {
+    const { cancelToken } = options;
     const { data } = await Api.post<CommonFeedObjectUserUnique>(
       ApiEndpoint.MarkFeedObjectSeenForUser,
       payload,
+      { cancelToken },
     );
 
     return convertObjectDatesToFirestoreTimestamps(data);

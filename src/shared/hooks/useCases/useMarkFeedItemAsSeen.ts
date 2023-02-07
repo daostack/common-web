@@ -1,5 +1,11 @@
-import { useCallback, useState } from "react";
-import { CommonFeedService, Logger } from "@/services";
+import { useCallback, useRef, useState } from "react";
+import {
+  CancelTokenSource,
+  CommonFeedService,
+  isRequestCancelled,
+  getCancelTokenSource,
+  Logger,
+} from "@/services";
 import { MarkCommonFeedItemAsSeenPayload } from "@/shared/interfaces";
 
 interface Return {
@@ -8,17 +14,31 @@ interface Return {
 }
 
 export const useMarkFeedItemAsSeen = (): Return => {
+  const cancelTokenRef = useRef<CancelTokenSource | null>(null);
   const [isFeedItemMarkingAsSeen, setIsFeedItemMarkingAsSeen] = useState(false);
 
   const markFeedItemAsSeen = useCallback(
     async (payload: MarkCommonFeedItemAsSeenPayload) => {
+      if (cancelTokenRef.current) {
+        cancelTokenRef.current.cancel();
+      }
+
       try {
         setIsFeedItemMarkingAsSeen(true);
-        await CommonFeedService.markCommonFeedItemAsSeen(payload);
-      } catch (error) {
-        Logger.error(error);
-      } finally {
+        cancelTokenRef.current = getCancelTokenSource();
+
+        await CommonFeedService.markCommonFeedItemAsSeen(payload, {
+          cancelToken: cancelTokenRef.current.token,
+        });
+
+        cancelTokenRef.current = null;
         setIsFeedItemMarkingAsSeen(false);
+      } catch (error) {
+        if (!isRequestCancelled(error)) {
+          Logger.error(error);
+          cancelTokenRef.current = null;
+          setIsFeedItemMarkingAsSeen(false);
+        }
       }
     },
     [],
