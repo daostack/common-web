@@ -3,7 +3,7 @@ import { flattenDeep, uniq } from "lodash";
 import { ProposalsTypes } from "@/shared/constants";
 import { Circles, Governance } from "@/shared/models";
 import {
-  getCircleNamesWithSeparator,
+  getCirclesWithLowestTier,
   getFilteredByIdCircles,
 } from "@/shared/utils";
 import styles from "./VotingSettings.module.scss";
@@ -34,16 +34,16 @@ const VotingSettings: FC<VotingSettingsProps> = ({
       ),
     ) as string[];
 
-    return getCircleNamesWithSeparator(
+    return getCirclesWithLowestTier(
       getFilteredByIdCircles(Object.values(governanceCircles), proposalCircles),
-    );
+    )[0]?.name;
   }, [proposalSettings, governanceCircles]);
 
   return (
     <div className={styles.container}>
       <label className={styles.text}>Voting settings:</label>
       <span className={styles.text}>
-        {voters ? `Voters: ${voters},` : ""}Voting:{" "}
+        {voters ? `Voters: ${voters}, ` : ""}Voting:{" "}
         {proposalSettings.votingDuration}h, Quorum: {proposalSettings.quorum}%,
         Min. support: {proposalSettings.minApprove}%, Max. object:{" "}
         {proposalSettings.maxReject}%
