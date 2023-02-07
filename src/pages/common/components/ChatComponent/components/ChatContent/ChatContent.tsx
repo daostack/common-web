@@ -168,16 +168,12 @@ export default function ChatContent({
         );
       })}
       {!dateList.length && !isNewMessageLoading ? (
-        <EmptyTabComponent
-          currentTab="messages"
-          message={
-            "Have any thoughts? Share them with other members by adding the first comment."
-          }
-          title="No comments yet"
-          isCommonMember={Boolean(commonMember)}
-          isCommonMemberFetched={isCommonMemberFetched}
-          isJoiningPending={isJoiningPending}
-        />
+        <p className={styles.noMessagesText}>
+          There are no messages here yet.
+          <br />
+          Type in the text box to share your thoughts and begin the
+          conversation.
+        </p>
       ) : (
         isNewMessageLoading && (
           <div

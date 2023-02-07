@@ -1,4 +1,4 @@
-@import "../../../../../../constants.scss";
+@import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
 .messageList {
@@ -21,6 +21,19 @@
   margin: 0 auto;
   width: fit-content;
   margin: 1.3125rem auto 1rem;
+}
+
+.noMessagesText {
+  align-self: flex-start;
+  max-width: 17.5rem;
+  margin: 3.375rem 0 0;
+  padding: 0.5rem 1rem;
+  font-size: $xsmall;
+  line-height: 143%;
+  text-align: left;
+  background-color: $c-chat-message;
+  border-radius: 0.9375rem;
+  box-sizing: border-box;
 }
 
 .newMessageLoaderWrapper {
