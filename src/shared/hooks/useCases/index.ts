@@ -2,6 +2,7 @@ export { useCommon } from "./useCommon";
 export { useCommonMembersWithCircleIdsAmount } from "./useCommonMembersWithCircleIdsAmount";
 export { useDiscussionById } from "./useDiscussionById";
 export { useFullCommonData } from "./useFullCommonData";
+export { useGlobalCommonData } from "./useGlobalCommonData";
 export { useImmediateContribution } from "./useImmediateContribution";
 export { default as usePaymentMethodChange } from "./usePaymentMethodChange";
 export type { ChangePaymentMethodState } from "./usePaymentMethodChange";

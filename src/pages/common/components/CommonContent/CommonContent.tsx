@@ -29,6 +29,7 @@ interface CommonContentProps {
   parentCommonSubCommons: Common[];
   isGlobalDataFetched: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  parentCommonMember: CommonMember | null;
   isJoinPending: boolean;
   setIsJoinPending: (isJoinPending: boolean) => void;
 }
@@ -41,6 +42,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     subCommons,
     isGlobalDataFetched,
     commonMember,
+    parentCommonMember,
     parentCommon,
     parentCommonSubCommons,
     isJoinPending,
@@ -70,6 +72,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       parentCommon={parentCommon}
       governance={governance}
       commonMember={commonMember}
+      parentCommonMember={parentCommonMember}
       isGlobalDataFetched={isGlobalDataFetched}
       parentCommons={parentCommons}
       subCommons={subCommons}

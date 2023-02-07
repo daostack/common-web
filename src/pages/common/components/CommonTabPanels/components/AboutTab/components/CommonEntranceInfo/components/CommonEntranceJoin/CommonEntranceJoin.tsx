@@ -23,7 +23,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
           join the project.
         </p>
       )}
-      {withJoinRequest && !isProject && isJoinAllowed && (
+      {withJoinRequest && isJoinAllowed && (
         <Button
           className={styles.joinButton}
           variant={ButtonVariant.OutlineBlue}
