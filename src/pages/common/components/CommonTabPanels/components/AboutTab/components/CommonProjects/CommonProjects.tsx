@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import classNames from "classnames";
 import { useCommonDataContext } from "@/pages/common/providers";
 import {
@@ -14,7 +14,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
-import { hasPermission } from "@/shared/utils";
+import { hasPermission, removeProjectCircles } from "@/shared/utils";
 import { CommonCard } from "../../../../../CommonCard";
 import {
   AddProjectButton,
@@ -55,6 +55,20 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
       }),
   );
 
+  const filteredSubCommons = useMemo(() => {
+    if (!circles || !subCommons) {
+      return [];
+    }
+
+    const nonProjectCircles = removeProjectCircles(Object.values(circles)).map(
+      ({ id }) => id,
+    );
+
+    return subCommons.filter(({ directParent }) =>
+      nonProjectCircles.includes(directParent?.circleId ?? ""),
+    );
+  }, [subCommons, circles]);
+
   return (
     <CommonCard
       className={classNames(styles.container, className)}
@@ -77,7 +91,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
           outerStyles?.projectsWrapper,
         )}
       >
-        {subCommons.map((subCommon) => (
+        {filteredSubCommons.map((subCommon) => (
           <li key={subCommon.id} className={styles.projectsItem}>
             <Project
               title={subCommon.name}

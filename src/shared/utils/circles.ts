@@ -1,5 +1,5 @@
 import uniqBy from "lodash/uniqBy";
-import { Circle } from "../models";
+import { Circle, CircleType } from "../models";
 
 export const getFilteredByIdCircles = (
   circles: Circle[] | null,
@@ -16,6 +16,18 @@ export const getFilteredByIdCircles = (
 
   return circles.filter(({ id }) => circleIds.includes(id));
 };
+
+export const removeProjectCircles = (
+  circles: Circle[] | null
+): Circle[] => {
+  return (circles || [])?.filter(({type}) => type !== CircleType.Project);
+}
+
+export const filterProjectCircles = (
+  circles: Circle[] | null
+): Circle[] => {
+  return (circles || [])?.filter(({type}) => type === CircleType.Project);
+}
 
 const getCirclesPerTier = <T extends Pick<Circle, "id" | "hierarchy">>(
   circles: T[],

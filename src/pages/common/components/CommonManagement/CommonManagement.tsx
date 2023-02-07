@@ -29,7 +29,6 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
     commonId,
   } = props;
   const { isJoinPending } = useCommonDataContext();
-  const circlesMap = commonMember?.circles.map;
 
   return (
     <div className={styles.container}>
@@ -48,7 +47,6 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
           <CommonMemberInfo
             className={styles.memberInfo}
             circles={circles}
-            circlesMap={circlesMap}
             commonId={commonId}
             commonMember={commonMember}
           />
