@@ -1,7 +1,11 @@
 import React, { FC, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useFullCommonData } from "@/shared/hooks/useCases";
-import { useGlobalCommonData } from "@/shared/hooks/useCases/useGlobalCommonData";
+import { selectUser } from "@/pages/Auth/store/selectors";
+import {
+  useFullCommonData,
+  useGlobalCommonData,
+} from "@/shared/hooks/useCases";
 import { Loader, NotFound } from "@/shared/ui-kit";
 import { CommonContent, PureCommonTopNavigation } from "./components";
 import styles from "./Common.module.scss";
@@ -19,15 +23,20 @@ const Common: FC = () => {
   } = useFullCommonData();
   const {
     fetched: isGlobalDataFetched,
-    fetchGlobalCommonData,
-    data: { parentCommonMember, commonMember, isJoinPending },
+    fetchUserRelatedData,
+    data: { commonMember, parentCommonMember, isJoinPending },
     setIsJoinPending,
-  } = useGlobalCommonData();
+  } = useGlobalCommonData({
+    commonId,
+    governanceCircles: commonData?.governance.circles,
+  });
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const isDataFetched = isCommonDataFetched;
-  const governanceCircles = commonData?.governance.circles;
 
   const fetchData = () => {
     fetchCommonData(commonId);
+    fetchUserRelatedData();
   };
 
   useEffect(() => {
@@ -35,16 +44,8 @@ const Common: FC = () => {
   }, [commonId]);
 
   useEffect(() => {
-    if (!commonId) {
-      return;
-    }
-
-    fetchGlobalCommonData({
-      commonId,
-      parentCommonId: commonData?.parentCommon?.id,
-      governanceCircles: commonData?.governance.circles,
-    });
-  }, [commonId, commonData?.parentCommon?.id, governanceCircles]);
+    fetchUserRelatedData();
+  }, [userId]);
 
   if (!isDataFetched) {
     return (

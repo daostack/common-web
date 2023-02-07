@@ -1,118 +1,93 @@
-import { useCallback, useState } from "react";
-import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
+import { useCallback } from "react";
+import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { LoadingState } from "@/shared/interfaces";
-import { generateCirclesDataForCommonMember } from "@/shared/utils";
-import { CommonService, ProposalService } from "@/services";
-import { useSelector } from "react-redux";
-import { selectUser } from "@/pages/Auth/store/selectors";
+import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
+import { useUserPendingJoin } from "./useUserPendingJoin";
 
-type State = LoadingState<{
-  parentCommonMember: CommonMember | null;
-  commonMember: CommonMember & CirclesPermissions | null;
-  isJoinPending: boolean;
-}>;
-
-const DEFAULT_STATE = {
-  parentCommonMember: null,
-  commonMember: null,
-  isJoinPending: false,
-}
-
-
-interface FetchGlobalCommonData {
+interface UseGlobalCommonDataArguments {
   commonId: string;
   parentCommonId?: string;
   governanceCircles?: Circles;
 }
 
+type State = LoadingState<{
+  commonMember: (CommonMember & CirclesPermissions) | null;
+  parentCommonMember: (CommonMember & CirclesPermissions) | null;
+  isJoinPending: boolean;
+}>;
+
 interface Return extends State {
+  fetchUserRelatedData: () => void;
   setIsJoinPending: (isJoinPending: boolean) => void;
-  fetchGlobalCommonData: (data: FetchGlobalCommonData) => void;
-  resetGlobalCommonData: () => void;
 }
 
-export const useGlobalCommonData = (): Return => {
-  const [state, setState] = useState<State>({
-    loading: false,
-    fetched: false,
-    data: DEFAULT_STATE,
+export const useGlobalCommonData = (
+  data: UseGlobalCommonDataArguments,
+): Return => {
+  const { commonId, parentCommonId, governanceCircles } = data;
+  const {
+    loading: isCommonMemberLoading,
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+  } = useCommonMember({
+    shouldAutoReset: false,
+    withSubscription: true,
+    commonId,
+    governanceCircles,
   });
-  const user = useSelector(selectUser());
-  const userId = user?.uid;
+  const {
+    loading: isParentCommonMemberLoading,
+    fetched: isParentCommonMemberFetched,
+    data: parentCommonMember,
+    fetchCommonMember: fetchParentCommonMember,
+    setCommonMember: setParentCommonMember,
+  } = useCommonMember({
+    shouldAutoReset: false,
+  });
+  const {
+    loading: isPendingJoinCheckLoading,
+    fetched: isPendingJoinCheckFinished,
+    data: isJoinPending,
+    checkUserPendingJoin,
+    setIsJoinPending,
+  } = useUserPendingJoin();
+  const isGlobalDataLoading =
+    isCommonMemberLoading ||
+    isPendingJoinCheckLoading ||
+    isParentCommonMemberLoading;
+  const isGlobalDataFetched =
+    isCommonMemberFetched &&
+    isPendingJoinCheckFinished &&
+    isParentCommonMemberFetched;
 
-  const fetchGlobalCommonData = useCallback(async ({commonId: id, parentCommonId: parentId, governanceCircles: circles}:FetchGlobalCommonData) => {
-    if (state.loading || state.fetched) {
-      return;
+  const fetchUserRelatedData = useCallback(() => {
+    fetchCommonMember(commonId, {}, true);
+    checkUserPendingJoin(commonId);
+
+    if (parentCommonId) {
+      fetchParentCommonMember(parentCommonId, {}, true);
+    } else {
+      setParentCommonMember(null);
     }
-    if (!userId) {
-      setState({
-        loading: false,
-        fetched: true,
-        data: DEFAULT_STATE,
-      });
-      return;
-    }
-    setState({
-      loading: true,
-      fetched: false,
-      data: DEFAULT_STATE,
-    });
-
-    try {
-      const [commonMember, isJoinPending] = await Promise.all([
-        CommonService.getCommonMemberByUserId(id, userId),
-        ProposalService.checkHasUserPendingMemberAdmittanceProposal(id, userId)
-      ]);
-      const parentCommonMember = await (parentId ? CommonService.getCommonMemberByUserId(parentId, userId) : null);
-      const commonMemberWithCircles = commonMember && circles ? {
-        ...commonMember,
-        ...generateCirclesDataForCommonMember(
-          circles,
-          commonMember.circleIds,
-        ),
-      } : null;
-        setState({
-          loading: false,
-          fetched: true,
-          data: {
-            commonMember: commonMemberWithCircles,
-            parentCommonMember,
-            isJoinPending
-          },
-        });
-    } catch(err) {
-      setState({
-        loading: false,
-        fetched: true,
-        data: DEFAULT_STATE,
-      });
-    }
-  },[])
-
-  const setIsJoinPending = (isJoinPending: boolean): void => {
-    setState({
-      loading: false,
-      fetched: true,
-      data: {
-        commonMember: state.data?.commonMember ?? null,
-        parentCommonMember: state.data?.parentCommonMember ?? null,
-        isJoinPending
-      },
-    });
-  }
-
-  const resetGlobalCommonData = useCallback(() => {
-    setState({
-      loading: false,
-      fetched: false,
-      data: DEFAULT_STATE,
-    });
-  }, []);
+  }, [
+    commonId,
+    parentCommonId,
+    fetchCommonMember,
+    checkUserPendingJoin,
+    fetchParentCommonMember,
+    setParentCommonMember,
+  ]);
 
   return {
-    ...state,
-    resetGlobalCommonData,
-    fetchGlobalCommonData,
+    loading: isGlobalDataLoading,
+    fetched: isGlobalDataFetched,
+    data: {
+      commonMember,
+      parentCommonMember,
+      isJoinPending,
+    },
+    fetchUserRelatedData,
     setIsJoinPending,
   };
 };
