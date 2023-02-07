@@ -31,6 +31,7 @@ interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  parentCommonMember: CommonMember | null;
   isGlobalDataFetched: boolean;
   parentCommons: Common[];
   subCommons: Common[];
@@ -45,6 +46,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     common,
     governance,
     commonMember,
+    parentCommonMember,
     isGlobalDataFetched,
     parentCommons,
     subCommons,
@@ -98,7 +100,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
 
   const isJoinPending =
     isGlobalDataFetched && !commonMember && props.isJoinPending;
-  const isJoinAllowed = isGlobalDataFetched && !commonMember && !isJoinPending;
+  const isJoinAllowed = Boolean(
+    isGlobalDataFetched &&
+      ((!isProject && !commonMember) ||
+        (isProject && parentCommonMember && !commonMember)) &&
+      !isJoinPending,
+  );
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
@@ -164,6 +171,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onCommonJoinModalOpen,
       onLeaveCircleModalOpen,
       onJoinCircleModalOpen,
+      onProjectJoinModalOpen,
     ],
   );
 
@@ -226,7 +234,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
         onRequestCreated={() => setIsJoinPending(true)}
       />
       <JoinProjectModal
-        isShowing={isProjectJoinModalOpen}
+        isShowing={isJoinAllowed && isProjectJoinModalOpen}
         onClose={onProjectJoinModalClose}
         common={common}
         governance={governance}

@@ -149,6 +149,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
       closeIconSize={24}
       mobileFullScreen
       styles={{
+        headerWrapper: styles.modalHeaderWrapper,
         header: styles.modalHeader,
         content: styles.modalContent,
       }}

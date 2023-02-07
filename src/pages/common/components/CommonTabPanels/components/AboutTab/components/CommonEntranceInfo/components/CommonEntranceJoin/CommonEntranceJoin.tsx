@@ -1,5 +1,4 @@
-import React, { FC, useEffect } from "react";
-import { useCommonMember } from "@/pages/OldCommon/hooks";
+import React, { FC } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { Common } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
@@ -14,24 +13,6 @@ interface CommonEntranceJoinProps {
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const { withJoinRequest = false, common, isProject } = props;
   const { parentCommon, isJoinAllowed, onJoinCommon } = useCommonDataContext();
-  const {
-    fetched: isParentCommonMemberFetched,
-    data: parentCommonMember,
-    fetchCommonMember,
-  } = useCommonMember();
-
-  const shouldShowJoinButton =
-    (withJoinRequest && isJoinAllowed && !isProject) ||
-    (isProject &&
-      parentCommonMember &&
-      isJoinAllowed &&
-      isParentCommonMemberFetched);
-
-  useEffect(() => {
-    if (parentCommon?.id) {
-      fetchCommonMember(parentCommon.id, {});
-    }
-  }, [fetchCommonMember, parentCommon]);
 
   return (
     <>
@@ -42,7 +23,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
           join the project.
         </p>
       )}
-      {shouldShowJoinButton && (
+      {withJoinRequest && isJoinAllowed && (
         <Button
           className={styles.joinButton}
           variant={ButtonVariant.OutlineBlue}

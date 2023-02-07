@@ -9,6 +9,14 @@
   margin-bottom: 0.5rem;
 }
 
+.field {
+  border: 0.0625rem $light-gray-3 solid;
+
+  &::placeholder {
+    font-size: $xsmall;
+  }
+}
+
 .input {
   box-sizing: border-box;
   resize: none;

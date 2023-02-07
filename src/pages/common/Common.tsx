@@ -1,9 +1,7 @@
 import React, { FC, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { selectUser } from "@/pages/Auth/store/selectors";
-import { useCommonMember } from "@/pages/OldCommon/hooks";
-import { useFullCommonData, useUserPendingJoin } from "@/shared/hooks/useCases";
+import { useFullCommonData } from "@/shared/hooks/useCases";
+import { useGlobalCommonData } from "@/shared/hooks/useCases/useGlobalCommonData";
 import { Loader, NotFound } from "@/shared/ui-kit";
 import { CommonContent, PureCommonTopNavigation } from "./components";
 import styles from "./Common.module.scss";
@@ -20,31 +18,16 @@ const Common: FC = () => {
     fetchCommonData,
   } = useFullCommonData();
   const {
-    fetched: isCommonMemberFetched,
-    data: commonMember,
-    fetchCommonMember,
-  } = useCommonMember({
-    shouldAutoReset: false,
-    withSubscription: true,
-    commonId,
-    governanceCircles: commonData?.governance.circles,
-  });
-  const {
-    fetched: isPendingJoinCheckFinished,
-    data: isJoinPending,
-    checkUserPendingJoin,
+    fetched: isGlobalDataFetched,
+    fetchGlobalCommonData,
+    data: { parentCommonMember, commonMember, isJoinPending },
     setIsJoinPending,
-  } = useUserPendingJoin();
-  const user = useSelector(selectUser());
-  const userId = user?.uid;
+  } = useGlobalCommonData();
   const isDataFetched = isCommonDataFetched;
-  const isGlobalDataFetched =
-    isCommonMemberFetched && isPendingJoinCheckFinished;
+  const governanceCircles = commonData?.governance.circles;
 
   const fetchData = () => {
     fetchCommonData(commonId);
-    fetchCommonMember(commonId, {}, true);
-    checkUserPendingJoin(commonId);
   };
 
   useEffect(() => {
@@ -52,9 +35,16 @@ const Common: FC = () => {
   }, [commonId]);
 
   useEffect(() => {
-    fetchCommonMember(commonId, {}, true);
-    checkUserPendingJoin(commonId);
-  }, [userId]);
+    if (!commonId) {
+      return;
+    }
+
+    fetchGlobalCommonData({
+      commonId,
+      parentCommonId: commonData?.parentCommon?.id,
+      governanceCircles: commonData?.governance.circles,
+    });
+  }, [commonId, commonData?.parentCommon?.id, governanceCircles]);
 
   if (!isDataFetched) {
     return (
@@ -84,6 +74,7 @@ const Common: FC = () => {
       parentCommonSubCommons={commonData.parentCommonSubCommons}
       isGlobalDataFetched={isGlobalDataFetched}
       commonMember={commonMember}
+      parentCommonMember={parentCommonMember}
       isJoinPending={isJoinPending}
       setIsJoinPending={setIsJoinPending}
     />

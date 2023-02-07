@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC } from "react";
 import { Image } from "@/shared/components";
 import { Button } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
@@ -16,7 +16,7 @@ const JoinProjectCreation: FC<JoinProjectCreationProps> = (props) => {
   const { isLoading, isJoinMemberAdmittanceRequest, errorText, onClose } =
     props;
 
-  const ContentEl = useCallback(() => {
+  const Content = () => {
     if (errorText) {
       return <ErrorText className={styles.error}>{errorText}</ErrorText>;
     }
@@ -40,7 +40,7 @@ const JoinProjectCreation: FC<JoinProjectCreationProps> = (props) => {
         </Button>
       </>
     );
-  }, [errorText, isLoading, isJoinMemberAdmittanceRequest]);
+  };
 
   return (
     <div className={styles.content}>
@@ -51,7 +51,7 @@ const JoinProjectCreation: FC<JoinProjectCreationProps> = (props) => {
         placeholderElement={null}
         aria-hidden
       />
-      <ContentEl />
+      <Content />
     </div>
   );
 };
