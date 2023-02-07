@@ -106,27 +106,43 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(() => {
     const isOwner = ownerId === user?.uid;
-    const generalMenuItems = [
-      {
-        text: <span>Share</span>,
-        searchText: "Share",
-        value: ElementDropdownMenuItems.Share,
-      },
-    ];
 
-    if (!isOwner) {
-      generalMenuItems.push({
-        text: <span>Report</span>,
-        searchText: "Report",
-        value: ElementDropdownMenuItems.Report,
-      });
+    const items: DropdownOption[] = [];
+
+    if (isOwner && isDiscussionMessage) {
+      items.push(
+        {
+          text: <span>Reply</span>,
+          searchText: "Reply",
+          value: ElementDropdownMenuItems.Reply,
+        },
+        {
+          text: <span>Edit</span>,
+          searchText: "Edit",
+          value: ElementDropdownMenuItems.Edit,
+        },
+      );
     }
 
     if (isDiscussionMessage) {
-      generalMenuItems.push({
-        text: <span>Copy Link</span>,
-        searchText: "Copy Link",
-        value: ElementDropdownMenuItems.CopyLink,
+      items.push({
+        text: <span>Copy</span>,
+        searchText: "Copy",
+        value: ElementDropdownMenuItems.Copy,
+      });
+    }
+
+    items.push({
+      text: <span>Share</span>,
+      searchText: "Share",
+      value: ElementDropdownMenuItems.Share,
+    });
+
+    if (!isOwner) {
+      items.push({
+        text: <span>Report</span>,
+        searchText: "Report",
+        value: ElementDropdownMenuItems.Report,
       });
     }
 
@@ -137,49 +153,26 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         key: HideContentTypes[entityType],
       })
     ) {
-      generalMenuItems.push({
-        text: <span>Hide</span>,
+      items.push({
+        text: (
+          <span className="element-dropdown__menu-item--red-text">Hide</span>
+        ),
         searchText: "Hide",
         value: ElementDropdownMenuItems.Hide,
       });
     }
 
-    const discussionMessageItems = isDiscussionMessage
-      ? [
-          {
-            text: <span>Copy</span>,
-            searchText: "Copy",
-            value: ElementDropdownMenuItems.Copy,
-          },
-          {
-            text: <span>Reply</span>,
-            searchText: "Reply",
-            value: ElementDropdownMenuItems.Reply,
-          },
-        ]
-      : [];
+    if (isOwner && isDiscussionMessage) {
+      items.push({
+        text: (
+          <span className="element-dropdown__menu-item--red-text">Delete</span>
+        ),
+        searchText: "Delete",
+        value: ElementDropdownMenuItems.Delete,
+      });
+    }
 
-    const additionalMenuItems =
-      isOwner && isDiscussionMessage
-        ? [
-            {
-              text: <span>Delete</span>,
-              searchText: "Delete",
-              value: ElementDropdownMenuItems.Delete,
-            },
-            {
-              text: <span>Edit</span>,
-              searchText: "Edit",
-              value: ElementDropdownMenuItems.Edit,
-            },
-          ]
-        : [];
-
-    return [
-      ...additionalMenuItems,
-      ...discussionMessageItems,
-      ...generalMenuItems,
-    ];
+    return items;
   }, [linkURL, isDiscussionMessage, elem, user, ownerId, commonMember]);
 
   const handleMenuToggle = useCallback(
