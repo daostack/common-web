@@ -138,6 +138,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
     }
   }, [isGlobalDataFetched, isJoinAllowed, isCommonJoinModalOpen]);
 
+  useEffect(() => {
+    if (isGlobalDataFetched && !isJoinAllowed && isProjectJoinModalOpen) {
+      onProjectJoinModalClose();
+    }
+  }, [isGlobalDataFetched, isJoinAllowed, isProjectJoinModalOpen]);
+
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
       onMenuItemSelect: handleMenuItemSelect,
