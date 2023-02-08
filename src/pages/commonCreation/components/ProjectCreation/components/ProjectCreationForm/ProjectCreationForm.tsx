@@ -1,12 +1,14 @@
-import React, { FC, useCallback, useEffect, useRef } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { usePreventReload } from "@/shared/hooks";
 import { useProjectCreation } from "@/shared/hooks/useCases";
+import { Circles, Common } from "@/shared/models";
 import {
   Loader,
   LoaderVariant,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
+import { getCirclesWithHighestTier } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { generateCreationForm, CreationFormRef } from "../../../CreationForm";
 import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
@@ -16,25 +18,40 @@ import styles from "./ProjectCreationForm.module.scss";
 
 const CreationForm = generateCreationForm<ProjectCreationFormValues>();
 
-const INITIAL_VALUES: ProjectCreationFormValues = {
-  projectImages: [],
-  projectName: "",
-  byline: "",
-  description: parseStringToTextEditorValue(),
-  videoUrl: "",
-  gallery: [],
-};
-
 interface ProjectCreationFormProps {
   parentCommonId: string;
+  governanceCircles: Circles;
+  onFinish: (createdProject: Common) => void;
 }
 
+const getInitialValues = (
+  governanceCircles: Circles,
+): ProjectCreationFormValues => {
+  const circlesWithHighestTier = getCirclesWithHighestTier(
+    Object.values(governanceCircles),
+  );
+
+  return {
+    projectImages: [],
+    projectName: "",
+    byline: "",
+    description: parseStringToTextEditorValue(),
+    videoUrl: "",
+    gallery: [],
+    highestCircleId: circlesWithHighestTier[0]?.id || "",
+  };
+};
+
 const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
-  const { parentCommonId } = props;
+  const { parentCommonId, governanceCircles, onFinish } = props;
   const dispatch = useDispatch();
   const formRef = useRef<CreationFormRef>(null);
   const { isProjectCreationLoading, project, error, createProject } =
     useProjectCreation();
+  const initialValues = useMemo(
+    () => getInitialValues(governanceCircles),
+    [governanceCircles],
+  );
 
   const shouldPreventReload = useCallback(
     () => (!project && formRef.current?.isDirty()) ?? true,
@@ -55,6 +72,12 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (project) {
+      onFinish(project);
+    }
+  }, [project]);
+
   return (
     <>
       {isProjectCreationLoading && (
@@ -65,7 +88,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
       )}
       <CreationForm
         ref={formRef}
-        initialValues={INITIAL_VALUES}
+        initialValues={initialValues}
         onSubmit={handleSubmit}
         items={CONFIGURATION}
         submitButtonText="Create Project"

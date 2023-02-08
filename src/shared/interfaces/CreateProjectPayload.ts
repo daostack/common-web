@@ -12,6 +12,7 @@ export interface CreateProjectPayload {
   gallery?: CommonLink[];
   video?: CommonLink;
   tags?: string[];
+  highestCircleId: string;
 }
 
 export interface IntermediateCreateProjectPayload {
@@ -21,4 +22,5 @@ export interface IntermediateCreateProjectPayload {
   description: TextEditorValue;
   videoUrl: string;
   gallery: UploadFile[];
+  highestCircleId: string;
 }
