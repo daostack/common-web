@@ -156,12 +156,14 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         title={discussion?.title}
         description={discussion?.message}
         images={discussion?.images}
+        onClick={handleOpenChat}
       />
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
         lastActivity={item.updatedAt.seconds * 1000}
         unreadMessages={feedItemUserMetadata?.count || 0}
         onMessagesClick={handleOpenChat}
+        onClick={handleOpenChat}
       />
       {userId && discussion && (
         <ReportModal
