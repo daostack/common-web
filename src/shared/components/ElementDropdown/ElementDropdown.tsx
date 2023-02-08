@@ -109,19 +109,20 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     const items: DropdownOption[] = [];
 
+    if (isDiscussionMessage) {
+      items.push({
+        text: <span>Reply</span>,
+        searchText: "Reply",
+        value: ElementDropdownMenuItems.Reply,
+      });
+    }
+
     if (isOwner && isDiscussionMessage) {
-      items.push(
-        {
-          text: <span>Reply</span>,
-          searchText: "Reply",
-          value: ElementDropdownMenuItems.Reply,
-        },
-        {
-          text: <span>Edit</span>,
-          searchText: "Edit",
-          value: ElementDropdownMenuItems.Edit,
-        },
-      );
+      items.push({
+        text: <span>Edit</span>,
+        searchText: "Edit",
+        value: ElementDropdownMenuItems.Edit,
+      });
     }
 
     if (isDiscussionMessage) {
