@@ -1,18 +1,18 @@
 import { useCallback } from "react";
 import { ProposalService } from "@/services";
-import { EligibleVoters } from "@/shared/models";
+import { EligibleVoterWithUserInfo } from "@/shared/models";
 import { useIsMounted } from "../useIsMounted";
 import { useLoadingState } from "../useLoadingState";
 
 interface Return {
   loading: boolean;
-  voters: EligibleVoters[];
+  voters: EligibleVoterWithUserInfo[];
   fetchEligibleVoters: (proposalId: string, force?: boolean) => void;
 }
 
 export const useEligibleVoters = (): Return => {
   const isMounted = useIsMounted();
-  const [state, setState] = useLoadingState([]);
+  const [state, setState] = useLoadingState<EligibleVoterWithUserInfo[]>([]);
 
   const fetchEligibleVoters = useCallback(
     async (proposalId: string, force = false) => {
@@ -26,7 +26,7 @@ export const useEligibleVoters = (): Return => {
         data: [],
       });
 
-      let voters: EligibleVoters[] = [];
+      let voters: EligibleVoterWithUserInfo[] = [];
 
       try {
         voters = await ProposalService.proposalEligibleVoters(proposalId);
@@ -37,7 +37,7 @@ export const useEligibleVoters = (): Return => {
           setState({
             loading: false,
             fetched: true,
-            data: voters as any, // TODO: need to check the type error
+            data: voters,
           });
         }
       }

@@ -1,10 +1,12 @@
+import { getUserListByIds } from "@/pages/Auth/store/api";
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { createProposal } from "@/pages/OldCommon/store/api";
 import { ApiEndpoint, ProposalsTypes } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import {
   Collection,
-  EligibleVoters,
+  EligibleVoter,
+  EligibleVoterWithUserInfo,
   Proposal,
   ProposalState,
 } from "@/shared/models";
@@ -129,13 +131,33 @@ class ProposalService {
 
   public proposalEligibleVoters = async (
     proposalId: string,
-  ): Promise<EligibleVoters[]> => {
-    const voters = (
-      await Api.get<EligibleVoters[]>(
+  ): Promise<EligibleVoterWithUserInfo[]> => {
+    const votersObject = (
+      await Api.get<EligibleVoter[]>(
         `${ApiEndpoint.EligibleVoters}/${proposalId}`,
       )
     ).data;
-    return voters;
+
+    /**
+     * TODO: temporary because the backend returns object of object instead of array of objects
+     */
+    const votersArray = Object.values(votersObject);
+    votersArray.pop();
+
+    const userIds = Array.from(
+      new Set(votersArray.map(({ userId }) => userId)),
+    );
+    const users = await getUserListByIds(userIds);
+
+    const extendedVoters = votersArray.reduce<EligibleVoterWithUserInfo[]>(
+      (acc, member) => {
+        const user = users.find(({ uid }) => uid === member.userId);
+        return user ? acc.concat({ ...member, user }) : acc;
+      },
+      [],
+    );
+
+    return extendedVoters;
   };
 }
 
