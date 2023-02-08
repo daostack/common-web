@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import classNames from "classnames";
-import { useLongPress } from "use-long-press";
 import { MessageIcon } from "@/shared/icons";
 import { TimeAgo } from "@/shared/ui-kit";
 import styles from "./FeedCardFooter.module.scss";
@@ -10,7 +9,7 @@ export type FeedCardFooterProps = JSX.IntrinsicElements["div"] & {
   lastActivity: number;
   unreadMessages?: number;
   onMessagesClick?: () => void;
-  onLongPress: () => void;
+  onClick: () => void;
 };
 
 export const FeedCardFooter: React.FC<FeedCardFooterProps> = ({
@@ -18,30 +17,10 @@ export const FeedCardFooter: React.FC<FeedCardFooterProps> = ({
   lastActivity,
   unreadMessages,
   onMessagesClick,
-  onLongPress,
+  onClick,
 }) => {
-  const [isLongPressing, setIsLongPressing] = useState(false);
-  const handleLongPress = () => {
-    onLongPress();
-
-    setIsLongPressing(false);
-  };
-
-  const getLongPressProps = useLongPress(handleLongPress, {
-    threshold: 400,
-    cancelOnMovement: true,
-    onStart: () => setIsLongPressing(true),
-    onFinish: () => setIsLongPressing(false),
-    onCancel: () => setIsLongPressing(false),
-  });
-
   return (
-    <div
-      className={classNames(styles.container, {
-        [styles.longPressingWrapper]: isLongPressing,
-      })}
-      {...getLongPressProps()}
-    >
+    <div className={styles.container} onClick={onClick}>
       <div className={styles.leftContent} onClick={onMessagesClick}>
         <MessageIcon className={styles.messageIcon} />
         <p className={classNames(styles.text, styles.messageCount)}>

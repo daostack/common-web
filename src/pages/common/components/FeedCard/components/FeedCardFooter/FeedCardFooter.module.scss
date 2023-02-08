@@ -8,11 +8,6 @@
   justify-content: space-between;
 }
 
-.longPressingWrapper {
-  box-shadow: 0 0.1875rem 0.5rem #{$c-shades-neutrals-30};
-  transition: box-shadow 0.4s;
-}
-
 .leftContent {
   display: flex;
   flex-direction: row;

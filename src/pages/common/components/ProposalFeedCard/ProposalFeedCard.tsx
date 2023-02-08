@@ -168,7 +168,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           proposal.type,
         )}
         images={discussion?.images}
-        onLongPress={handleOpenChat}
+        onClick={handleOpenChat}
       >
         <ProposalFeedVotingInfo
           proposal={proposal}
@@ -190,7 +190,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         messageCount={discussion?.messageCount || 0}
         lastActivity={item.updatedAt.seconds * 1000}
         onMessagesClick={handleOpenChat}
-        onLongPress={handleOpenChat}
+        onClick={handleOpenChat}
       />
     </FeedCard>
   );

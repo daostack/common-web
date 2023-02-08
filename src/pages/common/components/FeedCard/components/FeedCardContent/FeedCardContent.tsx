@@ -1,6 +1,4 @@
-import React, { ReactNode, useState } from "react";
-import classNames from "classnames";
-import { useLongPress } from "use-long-press";
+import React, { ReactNode } from "react";
 import { CommonLink } from "@/shared/models";
 import { FeedGeneralInfo } from "../FeedGeneralInfo";
 import styles from "./FeedCardContent.module.scss";
@@ -10,33 +8,14 @@ export type FeedCardContentProps = JSX.IntrinsicElements["div"] & {
   subtitle?: ReactNode;
   description?: string;
   images?: CommonLink[];
-  onLongPress: () => void;
+  onClick: () => void;
 };
 
 export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {
-  const { children, title, description, subtitle, images, onLongPress } = props;
-  const [isLongPressing, setIsLongPressing] = useState(false);
-  const handleLongPress = () => {
-    onLongPress();
-
-    setIsLongPressing(false);
-  };
-
-  const getLongPressProps = useLongPress(handleLongPress, {
-    threshold: 400,
-    cancelOnMovement: true,
-    onStart: () => setIsLongPressing(true),
-    onFinish: () => setIsLongPressing(false),
-    onCancel: () => setIsLongPressing(false),
-  });
+  const { children, title, description, subtitle, images, onClick } = props;
 
   return (
-    <div
-      className={classNames(styles.container, {
-        [styles.longPressingWrapper]: isLongPressing,
-      })}
-      {...getLongPressProps()}
-    >
+    <div className={styles.container} onClick={onClick}>
       <FeedGeneralInfo
         title={title}
         description={description}
