@@ -17,6 +17,7 @@ import {
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import { Api, FileService } from ".";
+import { createProposal as createProposalApi } from "@/pages/OldCommon/store/api";
 
 const converter = firestoreDataConverter<Proposal>();
 
@@ -123,7 +124,7 @@ class ProposalService {
   public createMemberAdmittanceProposal = async (
     payload: Omit<CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["data"], "type">,
   ): Promise<CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["response"]> => {
-    const createdProposal = (await createProposal({
+    const createdProposal = (await createProposalApi({
       ...payload,
       type: ProposalsTypes.MEMBER_ADMITTANCE,
     })) as MemberAdmittance;
