@@ -1,15 +1,22 @@
-import { UnsubscribeFunction } from "@/shared/interfaces";
+import { ApiEndpoint } from "@/shared/constants";
+import {
+  MarkCommonFeedItemAsSeenPayload,
+  UnsubscribeFunction,
+} from "@/shared/interfaces";
 import {
   Collection,
   CommonFeed,
+  CommonFeedObjectUserUnique,
   CommonFeedType,
   SubCollections,
 } from "@/shared/models";
 import {
+  convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import Api, { CancelToken } from "./Api";
 
 const converter = firestoreDataConverter<CommonFeed>();
 
@@ -105,6 +112,20 @@ class CommonFeedService {
         }));
       callback(data);
     });
+  };
+
+  public markCommonFeedItemAsSeen = async (
+    payload: MarkCommonFeedItemAsSeenPayload,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<CommonFeedObjectUserUnique> => {
+    const { cancelToken } = options;
+    const { data } = await Api.post<CommonFeedObjectUserUnique>(
+      ApiEndpoint.MarkFeedObjectSeenForUser,
+      payload,
+      { cancelToken },
+    );
+
+    return convertObjectDatesToFirestoreTimestamps(data);
   };
 }
 

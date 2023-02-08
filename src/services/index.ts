@@ -1,6 +1,12 @@
-export { default as Api } from "./Api";
+export {
+  default as Api,
+  getCancelTokenSource,
+  isRequestCancelled,
+} from "./Api";
+export type { CancelToken, CancelTokenSource } from "./Api";
 export { default as CommonService } from "./Common";
 export { default as CommonFeedService } from "./CommonFeed";
+export { default as CommonFeedObjectUserUniqueService } from "./CommonFeedObjectUserUnique";
 export { default as DiscussionService } from "./Discussion";
 export { default as GeneralApi } from "./GeneralApi";
 export { default as GovernanceService } from "./Governance";

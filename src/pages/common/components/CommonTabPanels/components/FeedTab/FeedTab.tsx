@@ -130,11 +130,13 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
               common={common}
               discussion={chatItem.discussion}
               proposal={chatItem.proposal}
+              feedItemId={chatItem.feedItemId}
               titleHeight={
                 chatTitleHeight
                   ? chatTitleHeight + DISCUSSION_TITLE_PADDING_HEIGHT
                   : 0
               }
+              lastSeenItem={chatItem.lastSeenItem}
             />
           </>
         )}
@@ -183,6 +185,8 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
             common={common}
             discussion={chatItem.discussion}
             proposal={chatItem.proposal}
+            feedItemId={chatItem.feedItemId}
+            lastSeenItem={chatItem.lastSeenItem}
           />
         )}
       </ChatMobileModal>

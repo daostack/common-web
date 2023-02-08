@@ -1,6 +1,12 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { LoadingState, PayloadWithOptionalCallback } from "@/shared/interfaces";
-import { Discussion, DiscussionMessage, Proposal, User } from "@/shared/models";
+import {
+  CommonFeedObjectUserUnique,
+  Discussion,
+  DiscussionMessage,
+  Proposal,
+  User,
+} from "@/shared/models";
 import { CacheActionType } from "./constants";
 
 export const getUserStateById = createAsyncAction(
@@ -85,4 +91,31 @@ export const updateProposalStateById = createStandardAction(
 )<{
   proposalId: string;
   state: LoadingState<Proposal | null>;
+}>();
+
+export const getFeedItemUserMetadata = createAsyncAction(
+  CacheActionType.GET_FEED_ITEM_USER_METADATA,
+  CacheActionType.GET_FEED_ITEM_USER_METADATA_SUCCESS,
+  CacheActionType.GET_FEED_ITEM_USER_METADATA_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    {
+      commonId: string;
+      userId: string;
+      feedObjectId: string;
+    },
+    CommonFeedObjectUserUnique | null,
+    Error
+  >,
+  CommonFeedObjectUserUnique | null,
+  Error
+>();
+
+export const updateFeedItemUserMetadata = createStandardAction(
+  CacheActionType.UPDATE_FEED_ITEM_USER_METADATA,
+)<{
+  commonId: string;
+  userId: string;
+  feedObjectId: string;
+  state: LoadingState<CommonFeedObjectUserUnique | null>;
 }>();

@@ -8,8 +8,13 @@ import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailCont
 import { Loader } from "@/shared/components";
 import { ChatMessage } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
-import { CommonMember, DiscussionMessage } from "@/shared/models";
+import {
+  CommonFeedObjectUserUnique,
+  CommonMember,
+  DiscussionMessage,
+} from "@/shared/models";
 import { formatDate } from "@/shared/utils";
+import { Separator } from "./components";
 import styles from "./ChatContent.module.scss";
 
 interface ChatContentInterface {
@@ -26,6 +31,7 @@ interface ChatContentInterface {
   isNewMessageLoading: boolean;
   messages: Record<number, DiscussionMessage[]>;
   dateList: string[];
+  lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
 }
 
 const isToday = (someDate: Date) => {
@@ -51,6 +57,7 @@ export default function ChatContent({
   isNewMessageLoading,
   messages,
   dateList,
+  lastSeenItem,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -146,38 +153,54 @@ export default function ChatContent({
             <li className={styles.dateTitle}>
               {isToday(date) ? "Today" : formatDate(date)}
             </li>
-            {messages[Number(day)].map((message, messageIndex) => (
-              <ChatMessage
-                key={message.id}
-                user={user}
-                discussionMessage={message}
-                chatType={type}
-                scrollToRepliedMessage={scrollToRepliedMessage}
-                highlighted={message.id === highlightedMessageId}
-                onMessageDropdownOpen={
-                  messageIndex === messages[Number(day)].length - 1
-                    ? () => {
-                        if (dayIndex === dateList.length - 1)
-                          scrollToContainerBottom();
-                      }
-                    : undefined
+            {messages[Number(day)].map(
+              (message, messageIndex, currentMessages) => {
+                const messageEl = (
+                  <ChatMessage
+                    key={message.id}
+                    user={user}
+                    discussionMessage={message}
+                    chatType={type}
+                    scrollToRepliedMessage={scrollToRepliedMessage}
+                    highlighted={message.id === highlightedMessageId}
+                    onMessageDropdownOpen={
+                      messageIndex === messages[Number(day)].length - 1
+                        ? () => {
+                            if (dayIndex === dateList.length - 1)
+                              scrollToContainerBottom();
+                          }
+                        : undefined
+                    }
+                  />
+                );
+
+                if (
+                  message.id !== lastSeenItem?.id ||
+                  messageIndex === currentMessages.length - 1
+                ) {
+                  return messageEl;
                 }
-              />
-            ))}
+
+                return (
+                  <React.Fragment key={message.id}>
+                    {messageEl}
+                    <li>
+                      <Separator>New</Separator>
+                    </li>
+                  </React.Fragment>
+                );
+              },
+            )}
           </ul>
         );
       })}
       {!dateList.length && !isNewMessageLoading ? (
-        <EmptyTabComponent
-          currentTab="messages"
-          message={
-            "Have any thoughts? Share them with other members by adding the first comment."
-          }
-          title="No comments yet"
-          isCommonMember={Boolean(commonMember)}
-          isCommonMemberFetched={isCommonMemberFetched}
-          isJoiningPending={isJoiningPending}
-        />
+        <p className={styles.noMessagesText}>
+          There are no messages here yet.
+          <br />
+          Type in the text box to share your thoughts and begin the
+          conversation.
+        </p>
       ) : (
         isNewMessageLoading && (
           <div

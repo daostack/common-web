@@ -124,5 +124,5 @@ export const isRequestCancelled = (error: unknown): boolean => {
   return axios.isCancel(error);
 };
 
-export type { CancelToken } from "axios";
+export type { CancelToken, CancelTokenSource } from "axios";
 export default new Api();
