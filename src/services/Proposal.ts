@@ -157,6 +157,11 @@ class ProposalService {
       [],
     );
 
+    /**
+     * Sort the array: mamaber with no votes yet are at the end.
+     */
+    extendedVoters.sort((a, b) => (a.vote && !b.vote ? -1 : 0));
+
     return extendedVoters;
   };
 }
