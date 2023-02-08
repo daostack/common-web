@@ -26,8 +26,5 @@ export const getProjectCircleDefinition = (name: string) => ({
     local: {},
     limitations: {},
   },
-  hierarchy: {
-    tier: null,
-    exclusions: [],
-  },
+  hierarchy: null,
 });
