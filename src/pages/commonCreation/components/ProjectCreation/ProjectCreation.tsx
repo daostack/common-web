@@ -1,12 +1,14 @@
 import React, { FC, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { NavLink, Redirect } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { GovernanceActions, ROUTE_PATHS } from "@/shared/constants";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
+import { Common } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
+import { commonActions, projectsActions } from "@/store/states";
 import { ProjectCreationForm } from "./components";
 import styles from "./ProjectCreation.module.scss";
 
@@ -16,6 +18,8 @@ interface ProjectCreationProps {
 
 const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   const { parentCommonId } = props;
+  const history = useHistory();
+  const dispatch = useDispatch();
   const {
     data: parentCommon,
     fetched: isParentCommonFetched,
@@ -40,6 +44,21 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
       <Loader />
     </div>
   );
+
+  const handleCreatedProject = (createdProject: Common) => {
+    dispatch(commonActions.setIsNewProjectCreated(true));
+    dispatch(
+      projectsActions.addProject({
+        commonId: createdProject.id,
+        image: createdProject.image,
+        name: createdProject.name,
+        directParent: createdProject.directParent,
+        hasMembership: true,
+        notificationsAmount: 0,
+      }),
+    );
+    history.push(ROUTE_PATHS.COMMON.replace(":id", createdProject.id));
+  };
 
   useEffect(() => {
     fetchParentCommon(parentCommonId);
@@ -104,6 +123,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         <ProjectCreationForm
           parentCommonId={parentCommon.id}
           governanceCircles={parentGovernance.circles}
+          onFinish={handleCreatedProject}
         />
       </div>
     </Container>

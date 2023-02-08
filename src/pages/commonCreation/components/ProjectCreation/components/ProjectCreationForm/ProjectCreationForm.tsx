@@ -2,7 +2,7 @@ import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { usePreventReload } from "@/shared/hooks";
 import { useProjectCreation } from "@/shared/hooks/useCases";
-import { Circles } from "@/shared/models";
+import { Circles, Common } from "@/shared/models";
 import {
   Loader,
   LoaderVariant,
@@ -21,6 +21,7 @@ const CreationForm = generateCreationForm<ProjectCreationFormValues>();
 interface ProjectCreationFormProps {
   parentCommonId: string;
   governanceCircles: Circles;
+  onFinish: (createdProject: Common) => void;
 }
 
 const getInitialValues = (
@@ -42,7 +43,7 @@ const getInitialValues = (
 };
 
 const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
-  const { parentCommonId, governanceCircles } = props;
+  const { parentCommonId, governanceCircles, onFinish } = props;
   const dispatch = useDispatch();
   const formRef = useRef<CreationFormRef>(null);
   const { isProjectCreationLoading, project, error, createProject } =
@@ -70,6 +71,12 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
       dispatch(projectsActions.setIsCommonCreationDisabled(false));
     };
   }, []);
+
+  useEffect(() => {
+    if (project) {
+      onFinish(project);
+    }
+  }, [project]);
 
   return (
     <>
