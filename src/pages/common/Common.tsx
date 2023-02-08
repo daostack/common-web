@@ -21,14 +21,16 @@ const Common: FC = () => {
     fetched: isCommonDataFetched,
     fetchCommonData,
   } = useFullCommonData();
+  const parentCommonId = commonData?.common.directParent?.commonId;
   const {
     fetched: isGlobalDataFetched,
     fetchUserRelatedData,
+    fetchParentCommonMemberData,
     data: { commonMember, parentCommonMember, isJoinPending },
     setIsJoinPending,
   } = useGlobalCommonData({
     commonId,
-    parentCommonId: commonData?.common.directParent?.commonId,
+    parentCommonId,
     governanceCircles: commonData?.governance.circles,
   });
   const user = useSelector(selectUser());
@@ -45,11 +47,14 @@ const Common: FC = () => {
   }, [commonId]);
 
   useEffect(() => {
-    if (!isCommonDataFetched) {
-      return;
-    }
     fetchUserRelatedData();
-  }, [userId, isCommonDataFetched]);
+  }, [userId]);
+
+  useEffect(() => {
+    if (isCommonDataFetched) {
+      fetchParentCommonMemberData();
+    }
+  }, [userId, parentCommonId, isCommonDataFetched]);
 
   if (!isDataFetched) {
     return (
