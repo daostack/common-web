@@ -18,10 +18,11 @@ export const useGovernance = (): Return => {
   });
 
   const fetchGovernance = useCallback((governanceId: string) => {
-    setState((nextState) => ({
-      ...nextState,
+    setState({
       loading: true,
-    }));
+      fetched: false,
+      data: null,
+    });
 
     (async () => {
       try {

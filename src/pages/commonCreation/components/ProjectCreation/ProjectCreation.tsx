@@ -4,7 +4,7 @@ import { NavLink, Redirect } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { GovernanceActions, ROUTE_PATHS } from "@/shared/constants";
-import { useCommon } from "@/shared/hooks/useCases";
+import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Container, Loader } from "@/shared/ui-kit";
 import { ProjectCreationForm } from "./components";
@@ -21,6 +21,11 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     fetched: isParentCommonFetched,
     fetchCommon: fetchParentCommon,
   } = useCommon();
+  const {
+    data: parentGovernance,
+    fetched: isParentGovernanceFetched,
+    fetchGovernance: fetchParentGovernance,
+  } = useGovernance();
   const {
     fetched: isCommonMemberFetched,
     data: commonMember,
@@ -41,6 +46,12 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   }, [parentCommonId]);
 
   useEffect(() => {
+    if (parentCommon?.governanceId) {
+      fetchParentGovernance(parentCommon.governanceId);
+    }
+  }, [parentCommon?.governanceId]);
+
+  useEffect(() => {
     fetchCommonMember(parentCommonId, {}, true);
   }, [parentCommonId, userId]);
 
@@ -50,14 +61,21 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   if (!parentCommon) {
     return (
       <div className={styles.centerWrapper}>
-        <p className={styles.nonExistentParentCommon}>
-          Parent common does not exist
-        </p>
+        <p className={styles.dataErrorText}>Parent common does not exist</p>
       </div>
     );
   }
-  if (!isCommonMemberFetched) {
+  if (!isParentGovernanceFetched || !isCommonMemberFetched) {
     return loaderEl;
+  }
+  if (!parentGovernance) {
+    return (
+      <div className={styles.centerWrapper}>
+        <p className={styles.dataErrorText}>
+          Governance for parent common was not found
+        </p>
+      </div>
+    );
   }
 
   const parentCommonRoute = ROUTE_PATHS.COMMON.replace(":id", parentCommon.id);
@@ -83,7 +101,10 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           Project serves a certain group in the common to organize together and
           achieve more focused goals.
         </p>
-        <ProjectCreationForm parentCommonId={parentCommon.id} />
+        <ProjectCreationForm
+          parentCommonId={parentCommon.id}
+          governanceCircles={parentGovernance.circles}
+        />
       </div>
     </Container>
   );
