@@ -18,6 +18,7 @@ type State = LoadingState<{
 
 interface Return extends State {
   fetchUserRelatedData: () => void;
+  fetchParentCommonMemberData: () => void;
   setIsJoinPending: (isJoinPending: boolean) => void;
 }
 
@@ -42,6 +43,7 @@ export const useGlobalCommonData = (
     data: parentCommonMember,
     fetchCommonMember: fetchParentCommonMember,
     setCommonMember: setParentCommonMember,
+    resetCommonMember: resetParentCommonMember,
   } = useCommonMember({
     shouldAutoReset: false,
   });
@@ -62,22 +64,23 @@ export const useGlobalCommonData = (
     isParentCommonMemberFetched;
 
   const fetchUserRelatedData = useCallback(() => {
+    resetParentCommonMember();
     fetchCommonMember(commonId, {}, true);
     checkUserPendingJoin(commonId);
+  }, [
+    commonId,
+    fetchCommonMember,
+    checkUserPendingJoin,
+    resetParentCommonMember,
+  ]);
 
+  const fetchParentCommonMemberData = useCallback(() => {
     if (parentCommonId) {
       fetchParentCommonMember(parentCommonId, {}, true);
     } else {
       setParentCommonMember(null);
     }
-  }, [
-    commonId,
-    parentCommonId,
-    fetchCommonMember,
-    checkUserPendingJoin,
-    fetchParentCommonMember,
-    setParentCommonMember,
-  ]);
+  }, [parentCommonId, fetchParentCommonMember, setParentCommonMember]);
 
   return {
     loading: isGlobalDataLoading,
@@ -88,6 +91,7 @@ export const useGlobalCommonData = (
       isJoinPending,
     },
     fetchUserRelatedData,
+    fetchParentCommonMemberData,
     setIsJoinPending,
   };
 };
