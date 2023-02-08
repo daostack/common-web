@@ -12,6 +12,11 @@
   box-sizing: border-box;
 }
 
+.longPressingWrapper {
+  box-shadow: 0 0.1875rem 0.5rem #{$c-shades-neutrals-30};
+  transition: box-shadow 0.4s;
+}
+
 .text {
   margin: 0;
 }
