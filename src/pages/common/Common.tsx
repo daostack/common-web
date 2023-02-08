@@ -28,6 +28,7 @@ const Common: FC = () => {
     setIsJoinPending,
   } = useGlobalCommonData({
     commonId,
+    parentCommonId: commonData?.common.directParent?.commonId,
     governanceCircles: commonData?.governance.circles,
   });
   const user = useSelector(selectUser());
@@ -44,8 +45,11 @@ const Common: FC = () => {
   }, [commonId]);
 
   useEffect(() => {
+    if (!isCommonDataFetched) {
+      return;
+    }
     fetchUserRelatedData();
-  }, [userId]);
+  }, [userId, isCommonDataFetched]);
 
   if (!isDataFetched) {
     return (
