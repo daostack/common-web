@@ -23,6 +23,7 @@ interface CommonMemberPreview {
   country?: string;
   about?: string;
   dataFetched?: boolean;
+  showCommonsOfMember?: boolean;
 }
 
 export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
@@ -37,6 +38,7 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
     country,
     about,
     dataFetched = true,
+    showCommonsOfMember = false,
   } = props;
   const [previewInfo, setPreviewInfo] = useState<CommonMemberPreviewInfo>(
     {} as CommonMemberPreviewInfo,
@@ -106,18 +108,22 @@ export const CommonMemberPreview: FC<CommonMemberPreview> = (props) => {
             </div>
           </>
         )}
-        <p className="common-member-preview__section-title">
-          Member of the following Commons
-        </p>
-        {commonsInfo.map((commonInfo) => (
-          <div
-            key={commonInfo.id}
-            className="common-member-preview__common-name"
-          >
-            {commonInfo.name} - {commonInfo.userCircleNames}
-            {commonInfo.id === commonId && " (current)"}
-          </div>
-        ))}
+        {showCommonsOfMember && (
+          <>
+            <p className="common-member-preview__section-title">
+              Member of the following Commons
+            </p>
+            {commonsInfo.map((commonInfo) => (
+              <div
+                key={commonInfo.id}
+                className="common-member-preview__common-name"
+              >
+                {commonInfo.name} - {commonInfo.userCircleNames}
+                {commonInfo.id === commonId && " (current)"}
+              </div>
+            ))}
+          </>
+        )}
       </>
     );
   };
