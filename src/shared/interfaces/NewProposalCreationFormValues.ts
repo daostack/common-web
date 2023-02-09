@@ -7,4 +7,5 @@ export interface NewProposalCreationFormValues {
   title: string;
   content: TextEditorValue;
   images: UploadFile[];
+  files: UploadFile[];
 }

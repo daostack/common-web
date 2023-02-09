@@ -110,12 +110,12 @@ class ProposalService {
   public createSurveyProposal = async (
     payload: CreateProposalWithFiles<ProposalsTypes.SURVEY>,
   ): Promise<Proposal> => {
-    const [files, images] = await Promise.all([FileService.uploadFiles(payload.files as unknown as UploadFile[]), FileService.uploadFiles(payload.images as unknown as UploadFile[])]) as any;
+    const [files, images] = await Promise.all([FileService.uploadFiles(payload.files), FileService.uploadFiles(payload.images)]);
     return (await this.createProposal({
       args: {
         ...payload,
-        files,
-        images
+        files: files ?? [],
+        images: images ?? []
       },
       type: ProposalsTypes.SURVEY,
     })) as Survey;

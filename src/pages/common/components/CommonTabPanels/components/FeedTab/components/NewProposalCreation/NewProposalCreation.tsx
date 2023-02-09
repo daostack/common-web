@@ -26,6 +26,7 @@ const INITIAL_VALUES: NewProposalCreationFormValues = {
   title: "",
   content: parseStringToTextEditorValue(),
   images: [],
+  files: [],
 };
 
 const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
@@ -50,12 +51,12 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
 
   const userCircleIds = useMemo(
     () => (commonMember ? Object.values(commonMember.circles.map) : []),
-    [commonMember],
+    [commonMember?.circles.map],
   );
 
   const handleCancel = () => {
     dispatch(commonActions.setCommonAction(null));
-    dispatch(commonActions.setDiscussionCreationData(null));
+    dispatch(commonActions.setProposalCreationData(null));
   };
 
   const handleSubmit = useCallback(
@@ -70,8 +71,10 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
             title: values.title,
             description: JSON.stringify(values.content),
             images: values.images,
+            files: values.files,
+            links: [],
             commonId,
-          } as any,
+          },
         }),
       );
     },

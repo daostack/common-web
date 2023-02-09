@@ -48,7 +48,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   );
   const userCircleIds = useMemo(
     () => (commonMember ? Object.values(commonMember.circles.map) : []),
-    [commonMember],
+    [commonMember?.circles.map],
   );
 
   const handleCancel = () => {
