@@ -137,28 +137,22 @@ class ProposalService {
       `${ApiEndpoint.EligibleVoters}/${proposalId}`,
     );
 
-    /**
-     * TODO: temporary because the backend returns object of object instead of array of objects
-     */
-    const votersArray = Object.values(data);
-    votersArray.pop();
-
-    const parsedVotersArray: EligibleVoter[] = votersArray.map((voter) => ({
+    // TODO: need to check the response from the backend
+    const parsedData: EligibleVoter[] = (data as any).data.map((voter) => ({
       ...voter,
       vote: convertObjectDatesToFirestoreTimestamps(voter.vote),
     }));
 
-    const userIds = Array.from(
-      new Set(parsedVotersArray.map(({ userId }) => userId)),
-    );
+    const userIds = Array.from(new Set(parsedData.map(({ userId }) => userId)));
     const users = await getUserListByIds(userIds);
 
-    const extendedVoters = parsedVotersArray.reduce<
-      EligibleVoterWithUserInfo[]
-    >((acc, member) => {
-      const user = users.find(({ uid }) => uid === member.userId);
-      return user ? acc.concat({ ...member, user }) : acc;
-    }, []);
+    const extendedVoters = parsedData.reduce<EligibleVoterWithUserInfo[]>(
+      (acc, member) => {
+        const user = users.find(({ uid }) => uid === member.userId);
+        return user ? acc.concat({ ...member, user }) : acc;
+      },
+      [],
+    );
 
     /**
      * Sort the array: members with no votes yet are at the end.
