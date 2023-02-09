@@ -2,6 +2,8 @@ import React, { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { QueryParamKey } from "@/shared/constants";
+import { useQueryParams } from "@/shared/hooks";
 import {
   useFullCommonData,
   useGlobalCommonData,
@@ -16,6 +18,7 @@ interface CommonRouterParams {
 
 const Common: FC = () => {
   const { id: commonId } = useParams<CommonRouterParams>();
+  const queryParams = useQueryParams();
   const {
     data: commonData,
     fetched: isCommonDataFetched,
@@ -35,6 +38,7 @@ const Common: FC = () => {
   });
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const tabQueryParam = queryParams[QueryParamKey.Tab];
   const isDataFetched = isCommonDataFetched;
 
   const fetchData = () => {
@@ -76,6 +80,7 @@ const Common: FC = () => {
 
   return (
     <CommonContent
+      defaultTab={typeof tabQueryParam === "string" ? tabQueryParam : ""}
       common={commonData.common}
       parentCommon={commonData.parentCommon}
       governance={commonData.governance}

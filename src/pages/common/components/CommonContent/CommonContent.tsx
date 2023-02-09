@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authentificated } from "@/pages/Auth/store/selectors";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -10,7 +10,6 @@ import {
 } from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
 import { commonActions, selectIsNewProjectCreated } from "@/store/states";
-import { CommonTab } from "../../constants";
 import { CommonDataProvider } from "../../providers";
 import { CommonHeader } from "../CommonHeader";
 import { CommonManagement } from "../CommonManagement";
@@ -18,10 +17,12 @@ import { CommonTabPanels } from "../CommonTabPanels";
 import { CommonTabs } from "../CommonTabs";
 import { CommonTopNavigation } from "../CommonTopNavigation";
 import { SuccessfulProjectCreationModal } from "./components";
-import { getMainCommonDetails } from "./utils";
+import { getAllowedTabs, getMainCommonDetails } from "./utils";
+import { getInitialTab } from "./utils";
 import styles from "./CommonContent.module.scss";
 
 interface CommonContentProps {
+  defaultTab: string;
   common: Common;
   parentCommon?: Common;
   governance: Governance;
@@ -37,6 +38,7 @@ interface CommonContentProps {
 
 const CommonContent: FC<CommonContentProps> = (props) => {
   const {
+    defaultTab,
     common,
     governance,
     parentCommons,
@@ -49,18 +51,38 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     isJoinPending,
     setIsJoinPending,
   } = props;
+  const isTabletView = useIsTabletView();
   const dispatch = useDispatch();
-  const [tab, setTab] = useState(
-    commonMember?.id ? CommonTab.Feed : CommonTab.About,
+  const isCommonMember = Boolean(commonMember);
+  const allowedTabs = useMemo(
+    () =>
+      getAllowedTabs({
+        isCommonMember,
+        isMobileView: isTabletView,
+      }),
+    [isCommonMember, isTabletView],
+  );
+  const [tab, setTab] = useState(() =>
+    getInitialTab({
+      defaultTab,
+      isCommonMember,
+      allowedTabs,
+    }),
   );
   const isAuthenticated = useSelector(authentificated());
   const isNewProjectCreated = useSelector(selectIsNewProjectCreated);
-  const isTabletView = useIsTabletView();
   const isSubCommon = common.directParent !== null;
 
   useEffect(() => {
-    setTab(commonMember?.id ? CommonTab.Feed : CommonTab.About);
-  }, [commonMember?.id]);
+    setTab(
+      getInitialTab({
+        defaultTab,
+        activeTab: tab,
+        isCommonMember,
+        allowedTabs,
+      }),
+    );
+  }, [allowedTabs]);
 
   useEffect(() => {
     return () => {
