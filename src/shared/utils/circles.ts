@@ -49,7 +49,7 @@ const getWhereCirclesAreExcluded = <T extends Pick<Circle, "hierarchy" | "type" 
   allCircles: T[],
   circlesToCheck: T[],
 ): T[] =>
-  removeProjectCircles(allCircles).filter((circle) =>
+  allCircles.filter((circle) =>
     circlesToCheck.some(
       (circleToCheck) =>
         typeof circleToCheck.hierarchy?.tier === "number" &&
@@ -61,7 +61,7 @@ const getExcludedCircles = <T extends Pick<Circle, "id" | "hierarchy" | "type">>
   allCircles: T[],
   circlesToCheck: T[],
 ): T[] =>
-  removeProjectCircles(allCircles).filter((circle) => {
+  allCircles.filter((circle) => {
     const tier = circle.hierarchy?.tier;
 
     return (
@@ -77,7 +77,7 @@ const getExcludedCircles = <T extends Pick<Circle, "id" | "hierarchy" | "type">>
 const sortCirclesByTierAscending = <T extends Pick<Circle, "hierarchy" | "type" | "id">>(
   circles: T[],
 ): T[] =>
-  removeProjectCircles([...circles]).sort((prevCircle, nextCircle) => {
+  [...circles].sort((prevCircle, nextCircle) => {
     if (!nextCircle.hierarchy) {
       return 1;
     }
