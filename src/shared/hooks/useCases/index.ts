@@ -21,3 +21,4 @@ export { useBankAccountDetails } from "./useBankAccountDetails";
 export { useDiscussionMessagesById } from "./useDiscussionMessagesById";
 export { useUserPendingJoin } from "./useUserPendingJoin";
 export { useCommonMemberWithUserInfo } from "./useCommonMemberWithUserInfo";
+export { useEligibleVoters } from "./useEligibleVoters";

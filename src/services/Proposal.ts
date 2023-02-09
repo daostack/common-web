@@ -1,20 +1,29 @@
+import { getUserListByIds } from "@/pages/Auth/store/api";
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { createProposal } from "@/pages/OldCommon/store/api";
-import { ProposalsTypes } from "@/shared/constants";
+import { ApiEndpoint, ProposalsTypes } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
-import { Collection, Proposal, ProposalState } from "@/shared/models";
+import {
+  Collection,
+  EligibleVoter,
+  EligibleVoterWithUserInfo,
+  Proposal,
+  ProposalState,
+} from "@/shared/models";
 import {
   AssignCircle,
   RemoveCircle,
-  MemberAdmittance
+  MemberAdmittance,
 } from "@/shared/models/governance/proposals";
 import {
   checkIsCountdownState,
+  convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import Api from "./Api";
 
 const converter = firestoreDataConverter<Proposal>();
 
@@ -94,7 +103,10 @@ class ProposalService {
   };
 
   public createMemberAdmittanceProposal = async (
-    payload: Omit<CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["data"], "type">,
+    payload: Omit<
+      CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["data"],
+      "type"
+    >,
   ): Promise<CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["response"]> => {
     const createdProposal = (await createProposal({
       ...payload,
@@ -116,6 +128,44 @@ class ProposalService {
       .get();
 
     return !snapshot.empty;
+  };
+
+  public proposalEligibleVoters = async (
+    proposalId: string,
+  ): Promise<EligibleVoterWithUserInfo[]> => {
+    const { data } = await Api.get<EligibleVoter[]>(
+      `${ApiEndpoint.EligibleVoters}/${proposalId}`,
+    );
+
+    /**
+     * TODO: temporary because the backend returns object of object instead of array of objects
+     */
+    const votersArray = Object.values(data);
+    votersArray.pop();
+
+    const parsedVotersArray: EligibleVoter[] = votersArray.map((voter) => ({
+      ...voter,
+      vote: convertObjectDatesToFirestoreTimestamps(voter.vote),
+    }));
+
+    const userIds = Array.from(
+      new Set(parsedVotersArray.map(({ userId }) => userId)),
+    );
+    const users = await getUserListByIds(userIds);
+
+    const extendedVoters = parsedVotersArray.reduce<
+      EligibleVoterWithUserInfo[]
+    >((acc, member) => {
+      const user = users.find(({ uid }) => uid === member.userId);
+      return user ? acc.concat({ ...member, user }) : acc;
+    }, []);
+
+    /**
+     * Sort the array: mamaber with no votes yet are at the end.
+     */
+    extendedVoters.sort((a, b) => (a.vote && !b.vote ? -1 : 0));
+
+    return extendedVoters;
   };
 }
 
