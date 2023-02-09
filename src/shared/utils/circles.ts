@@ -1,17 +1,17 @@
 import uniqBy from "lodash/uniqBy";
 import { Circle, CircleType } from "../models";
 
-export const removeProjectCircles = <T extends Pick<Circle, "id" | "hierarchy" | "type">>(
-  circles: T[] | null
+export const removeProjectCircles = <T extends Pick<Circle, "type">>(
+  circles: T[] | null,
 ): T[] => {
-  return (circles || [])?.filter(({type}) => type !== CircleType.Project);
-}
+  return (circles || []).filter(({ type }) => type !== CircleType.Project);
+};
 
-export const filterProjectCircles = (
-  circles: Circle[] | null
-): Circle[] => {
-  return (circles || [])?.filter(({type}) => type === CircleType.Project);
-}
+export const filterProjectCircles = <T extends Pick<Circle, "type">>(
+  circles: T[] | null,
+): T[] => {
+  return (circles || []).filter(({ type }) => type === CircleType.Project);
+};
 
 export const getFilteredByIdCircles = (
   circles: Circle[] | null,
@@ -29,10 +29,10 @@ export const getFilteredByIdCircles = (
   return circles.filter(({ id }) => circleIds.includes(id));
 };
 
-const getCirclesPerTier = <T extends Pick<Circle, "id" | "hierarchy" | "type">>(
+const getCirclesPerTier = <T extends Pick<Circle, "id" | "hierarchy">>(
   circles: T[],
 ): Record<number, T[]> =>
-  removeProjectCircles(circles).reduce<Record<number, T[]>>((acc, circle) => {
+  circles.reduce<Record<number, T[]>>((acc, circle) => {
     if (!circle.hierarchy) {
       return acc;
     }
@@ -45,7 +45,7 @@ const getCirclesPerTier = <T extends Pick<Circle, "id" | "hierarchy" | "type">>(
     };
   }, {});
 
-const getWhereCirclesAreExcluded = <T extends Pick<Circle, "hierarchy" | "type" | "id">>(
+const getWhereCirclesAreExcluded = <T extends Pick<Circle, "hierarchy">>(
   allCircles: T[],
   circlesToCheck: T[],
 ): T[] =>
@@ -57,7 +57,7 @@ const getWhereCirclesAreExcluded = <T extends Pick<Circle, "hierarchy" | "type" 
     ),
   );
 
-const getExcludedCircles = <T extends Pick<Circle, "id" | "hierarchy" | "type">>(
+const getExcludedCircles = <T extends Pick<Circle, "id" | "hierarchy">>(
   allCircles: T[],
   circlesToCheck: T[],
 ): T[] =>
@@ -74,7 +74,7 @@ const getExcludedCircles = <T extends Pick<Circle, "id" | "hierarchy" | "type">>
     );
   });
 
-const sortCirclesByTierAscending = <T extends Pick<Circle, "hierarchy" | "type" | "id">>(
+const sortCirclesByTierAscending = <T extends Pick<Circle, "hierarchy">>(
   circles: T[],
 ): T[] =>
   [...circles].sort((prevCircle, nextCircle) => {
@@ -91,10 +91,11 @@ const sortCirclesByTierAscending = <T extends Pick<Circle, "hierarchy" | "type" 
 export const getCirclesWithHighestTier = <
   T extends Pick<Circle, "id" | "hierarchy" | "type">,
 >(
-  circles: T[],
+  outerCircles: T[],
 ): T[] => {
-  const finalCircles = removeProjectCircles(circles).filter((circle) => !circle.hierarchy);
-  const circlesWithHierarchy = removeProjectCircles(circles).filter((circle) =>
+  const circles = removeProjectCircles(outerCircles);
+  const finalCircles = circles.filter((circle) => !circle.hierarchy);
+  const circlesWithHierarchy = circles.filter((circle) =>
     Boolean(circle.hierarchy),
   );
 
@@ -133,9 +134,10 @@ export const getCirclesWithHighestTier = <
 export const getCirclesWithLowestTier = <
   T extends Pick<Circle, "id" | "hierarchy" | "type">,
 >(
-  circles: T[],
+  outerCircles: T[],
 ): T[] => {
-  const finalCircles = removeProjectCircles(circles).filter((circle) => !circle.hierarchy);
+  const circles = removeProjectCircles(outerCircles);
+  const finalCircles = circles.filter((circle) => !circle.hierarchy);
   const circlesWithHierarchy = circles.filter((circle) =>
     Boolean(circle.hierarchy),
   );
@@ -176,8 +178,8 @@ export const addCirclesWithHigherTier = <
   allCircles: T[],
   allowedCircleIds: string[] = [],
 ): T[] => {
-  const allowedCurrentCircles = removeProjectCircles(currentCircles).filter((circle) =>
-    allowedCircleIds.includes(circle.id),
+  const allowedCurrentCircles = removeProjectCircles(currentCircles).filter(
+    (circle) => allowedCircleIds.includes(circle.id),
   );
 
   return removeProjectCircles(allCircles).filter((circleToCheck) => {
