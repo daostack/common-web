@@ -38,6 +38,7 @@ export enum SubCollections {
   Members = "members",
   Votes = "votes",
   CommonFeed = "commonFeed",
+  CommonFeedObjectUserUnique = "commonFeedObjectUserUnique",
 }
 
 export enum DateFormat {

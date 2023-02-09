@@ -1,12 +1,14 @@
 import React, { FC, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { NavLink, Redirect } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { GovernanceActions, ROUTE_PATHS } from "@/shared/constants";
-import { useCommon } from "@/shared/hooks/useCases";
+import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
+import { Common } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
+import { commonActions, projectsActions } from "@/store/states";
 import { ProjectCreationForm } from "./components";
 import styles from "./ProjectCreation.module.scss";
 
@@ -16,11 +18,18 @@ interface ProjectCreationProps {
 
 const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   const { parentCommonId } = props;
+  const history = useHistory();
+  const dispatch = useDispatch();
   const {
     data: parentCommon,
     fetched: isParentCommonFetched,
     fetchCommon: fetchParentCommon,
   } = useCommon();
+  const {
+    data: parentGovernance,
+    fetched: isParentGovernanceFetched,
+    fetchGovernance: fetchParentGovernance,
+  } = useGovernance();
   const {
     fetched: isCommonMemberFetched,
     data: commonMember,
@@ -36,9 +45,30 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     </div>
   );
 
+  const handleCreatedProject = (createdProject: Common) => {
+    dispatch(commonActions.setIsNewProjectCreated(true));
+    dispatch(
+      projectsActions.addProject({
+        commonId: createdProject.id,
+        image: createdProject.image,
+        name: createdProject.name,
+        directParent: createdProject.directParent,
+        hasMembership: true,
+        notificationsAmount: 0,
+      }),
+    );
+    history.push(ROUTE_PATHS.COMMON.replace(":id", createdProject.id));
+  };
+
   useEffect(() => {
     fetchParentCommon(parentCommonId);
   }, [parentCommonId]);
+
+  useEffect(() => {
+    if (parentCommon?.governanceId) {
+      fetchParentGovernance(parentCommon.governanceId);
+    }
+  }, [parentCommon?.governanceId]);
 
   useEffect(() => {
     fetchCommonMember(parentCommonId, {}, true);
@@ -50,14 +80,21 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   if (!parentCommon) {
     return (
       <div className={styles.centerWrapper}>
-        <p className={styles.nonExistentParentCommon}>
-          Parent common does not exist
-        </p>
+        <p className={styles.dataErrorText}>Parent common does not exist</p>
       </div>
     );
   }
-  if (!isCommonMemberFetched) {
+  if (!isParentGovernanceFetched || !isCommonMemberFetched) {
     return loaderEl;
+  }
+  if (!parentGovernance) {
+    return (
+      <div className={styles.centerWrapper}>
+        <p className={styles.dataErrorText}>
+          Governance for parent common was not found
+        </p>
+      </div>
+    );
   }
 
   const parentCommonRoute = ROUTE_PATHS.COMMON.replace(":id", parentCommon.id);
@@ -83,7 +120,11 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           Project serves a certain group in the common to organize together and
           achieve more focused goals.
         </p>
-        <ProjectCreationForm parentCommonId={parentCommon.id} />
+        <ProjectCreationForm
+          parentCommonId={parentCommon.id}
+          governanceCircles={parentGovernance.circles}
+          onFinish={handleCreatedProject}
+        />
       </div>
     </Container>
   );

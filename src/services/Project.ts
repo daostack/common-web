@@ -64,6 +64,7 @@ class ProjectService {
     parentCommonId: string,
     data: CreateProjectPayload,
   ): Promise<Common> => {
+    const { highestCircleId, ...subCommonData } = data;
     const {
       data: { circleProjectSubcommon },
     } = await Api.post<{ circleProjectSubcommon: Common }>(
@@ -72,9 +73,12 @@ class ProjectService {
         type: GovernanceActions.CREATE_PROJECT,
         args: {
           commonId: parentCommonId,
-          subcommonDefinition: data,
+          subcommonDefinition: subCommonData,
           newCircleArgs: {
-            circleDefinition: getProjectCircleDefinition(data.name),
+            circleDefinition: getProjectCircleDefinition(
+              subCommonData.name,
+              highestCircleId,
+            ),
           },
         },
       },
