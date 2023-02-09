@@ -7,7 +7,11 @@ import {
   IntermediateCreateProjectPayload,
 } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
-import { getFileDownloadInfo, getFilesDownloadInfo } from "@/shared/utils";
+import {
+  getFileDownloadInfo,
+  getFilesDownloadInfo,
+  parseLinksForSubmission,
+} from "@/shared/utils";
 
 interface Return {
   isProjectCreationLoading: boolean;
@@ -43,6 +47,7 @@ export const useProjectCreation = (): Return => {
           getFileDownloadInfo(projectImageFile),
           getFilesDownloadInfo(creationData.gallery),
         ]);
+        const links = parseLinksForSubmission(creationData.links || []);
         const payload: CreateProjectPayload = {
           name: creationData.projectName,
           byline: creationData.byline,
@@ -57,6 +62,7 @@ export const useProjectCreation = (): Return => {
                 value: creationData.videoUrl,
               }
             : undefined,
+          links,
           highestCircleId: creationData.highestCircleId,
         };
         const createdProject = await ProjectService.createNewProject(
