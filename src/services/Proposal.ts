@@ -114,8 +114,8 @@ class ProposalService {
     return (await this.createProposal({
       args: {
         ...payload,
-        files: files ?? [],
-        images: images ?? []
+        files,
+        images
       },
       type: ProposalsTypes.SURVEY,
     })) as Survey;
