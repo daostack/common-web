@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authentificated } from "@/pages/Auth/store/selectors";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   CirclesPermissions,
@@ -69,7 +68,6 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       allowedTabs,
     }),
   );
-  const isAuthenticated = useSelector(authentificated());
   const isNewProjectCreated = useSelector(selectIsNewProjectCreated);
   const isSubCommon = common.directParent !== null;
 
@@ -134,10 +132,10 @@ const CommonContent: FC<CommonContentProps> = (props) => {
               <CommonManagement
                 commonId={common.id}
                 activeTab={tab}
+                allowedTabs={allowedTabs}
                 isSubCommon={isSubCommon}
                 circles={governance.circles}
                 commonMember={commonMember}
-                isAuthenticated={isAuthenticated}
                 onTabChange={setTab}
               />
             </Container>
@@ -154,8 +152,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           <CommonTabs
             className={styles.tabs}
             activeTab={tab}
-            isAuthenticated={isAuthenticated}
-            commonMember={commonMember}
+            allowedTabs={allowedTabs}
             onTabChange={setTab}
           />
         )}
