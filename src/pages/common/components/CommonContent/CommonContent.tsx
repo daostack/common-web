@@ -69,6 +69,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     }),
   );
   const isNewProjectCreated = useSelector(selectIsNewProjectCreated);
+  const parentCommonId = common.directParent?.commonId;
   const isSubCommon = common.directParent !== null;
 
   useEffect(() => {
@@ -156,8 +157,8 @@ const CommonContent: FC<CommonContentProps> = (props) => {
           />
         )}
       </div>
-      {isGlobalDataFetched && isNewProjectCreated && (
-        <SuccessfulProjectCreationModal />
+      {isGlobalDataFetched && isNewProjectCreated && parentCommonId && (
+        <SuccessfulProjectCreationModal parentCommonId={parentCommonId} />
       )}
     </CommonDataProvider>
   );

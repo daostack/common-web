@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
+import { CommonTab } from "@/pages/common";
 import { GovernanceActions, ROUTE_PATHS } from "@/shared/constants";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
+import { getCommonPagePath } from "@/shared/utils";
 import { commonActions, projectsActions } from "@/store/states";
 import { ProjectCreationForm } from "./components";
 import styles from "./ProjectCreation.module.scss";
@@ -57,7 +59,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         notificationsAmount: 0,
       }),
     );
-    history.push(ROUTE_PATHS.COMMON.replace(":id", createdProject.id));
+    history.push(getCommonPagePath(createdProject.id, CommonTab.About));
   };
 
   useEffect(() => {

@@ -17,6 +17,7 @@ export * from "./convertDatesToFirestoreTimestamps";
 export * from "./timeAgo";
 export * from "./transformFirebaseDataToModel";
 export * from "./roles";
+export * from "./routes";
 export * from "./checkIsIFrame";
 export * from "./checkIsURL";
 export * from "./circles";
