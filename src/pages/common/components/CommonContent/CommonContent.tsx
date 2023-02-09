@@ -75,7 +75,6 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     setTab(
       getInitialTab({
         defaultTab,
-        activeTab: tab,
         isCommonMember,
         allowedTabs,
       }),
