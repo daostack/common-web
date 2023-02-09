@@ -13,14 +13,6 @@ export const filterProjectCircles = (
   return (circles || [])?.filter(({type}) => type === CircleType.Project);
 }
 
-export const filterCircleMapNonProjectCircles = <T extends Pick<Circle, "id" | "hierarchy" | "type">>(
-  circles: T[],
-  circleIds: string[]
-): string[] => {
-  const nonProjectCirclesIds =  removeProjectCircles(circles).map(({id}) => id);
-  return circleIds.filter((id) => nonProjectCirclesIds.includes(id));
-}
-
 export const getFilteredByIdCircles = (
   circles: Circle[] | null,
   circleIds: string[] = [],

@@ -5,7 +5,6 @@ import { CommonService, ProposalService } from "@/services";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { Portal } from "@/shared/ui-kit";
 import {
-  filterCircleMapNonProjectCircles,
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
   removeProjectCircles,
@@ -36,12 +35,8 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     [circles],
   );
   const circleIds: string[] = useMemo(
-    () =>
-      filterCircleMapNonProjectCircles(
-        governanceCircles,
-        Object.values(circlesMap || {}),
-      ),
-    [circlesMap, governanceCircles],
+    () => Object.values(circlesMap || {}),
+    [circlesMap],
   );
   const [pendingCircles, setPendingCircles] = useState(
     new Map<string, boolean>(),

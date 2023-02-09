@@ -29,6 +29,7 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
     if (commonMember) {
       return (
         <CommonMemberInfo
+          circlesMap={circlesMap}
           circles={circles}
           commonId={commonId}
           commonMember={commonMember}
