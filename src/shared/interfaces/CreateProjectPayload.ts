@@ -22,5 +22,6 @@ export interface IntermediateCreateProjectPayload {
   description: TextEditorValue;
   videoUrl: string;
   gallery: UploadFile[];
+  links?: CommonLink[];
   highestCircleId: string;
 }

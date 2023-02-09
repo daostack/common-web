@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import {
+  LinksArray,
   TextEditor,
   TextField,
   UploadFiles,
@@ -47,6 +48,14 @@ const Item: FC<ItemProps> = (props) => {
     case CreationFormItemType.UploadFiles:
       return (
         <UploadFiles
+          {...item.props}
+          className={className}
+          disabled={disabled ?? item.props.disabled}
+        />
+      );
+    case CreationFormItemType.Links:
+      return (
+        <LinksArray
           {...item.props}
           className={className}
           disabled={disabled ?? item.props.disabled}

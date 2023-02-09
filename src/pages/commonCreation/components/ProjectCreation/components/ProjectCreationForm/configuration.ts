@@ -84,4 +84,14 @@ export const CONFIGURATION: CreationFormItem[] = [
       label: "Gallery",
     },
   },
+  {
+    type: CreationFormItemType.Links,
+    props: {
+      name: "links",
+      title: "Links",
+      errors: [],
+      values: [],
+      touched: [],
+    },
+  },
 ];

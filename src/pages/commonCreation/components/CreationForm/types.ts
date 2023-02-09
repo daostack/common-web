@@ -1,4 +1,5 @@
 import {
+  LinksArrayProps,
   TextFieldProps,
   TextEditorProps,
   UploadFilesProps,
@@ -41,7 +42,12 @@ export interface UploadFilesFormItem extends BaseFormItem<UploadFilesProps> {
   validation?: Pick<ItemValidation, "min">;
 }
 
+export interface LinksFormItem extends BaseFormItem<LinksArrayProps> {
+  type: CreationFormItemType.Links;
+}
+
 export type CreationFormItem =
   | TextFieldFormItem
   | TextEditorFormItem
-  | UploadFilesFormItem;
+  | UploadFilesFormItem
+  | LinksFormItem;
