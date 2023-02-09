@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import {
-  LinksArray,
+  LinksArrayWrapper,
   TextEditor,
   TextField,
   UploadFiles,
@@ -55,9 +55,14 @@ const Item: FC<ItemProps> = (props) => {
       );
     case CreationFormItemType.Links:
       return (
-        <LinksArray
+        <LinksArrayWrapper
           {...item.props}
           className={className}
+          labelClassName={classNames(
+            styles.linksArrayWrapperLabel,
+            item.props.labelClassName,
+          )}
+          hint={item.props.hint ?? ""}
           disabled={disabled ?? item.props.disabled}
         />
       );

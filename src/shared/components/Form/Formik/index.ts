@@ -3,6 +3,7 @@ export * from "./Checkbox";
 export * from "./CurrencyInput";
 export * from "./Dropdown";
 export * from "./LinksArray";
+export * from "./LinksArrayWrapper";
 export * from "./ImageArray";
 export * from "./RulesArray";
 export * from "./ToggleButtonGroup";

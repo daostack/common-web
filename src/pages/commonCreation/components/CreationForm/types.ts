@@ -1,5 +1,5 @@
 import {
-  LinksArrayProps,
+  LinksArrayWrapperProps,
   TextFieldProps,
   TextEditorProps,
   UploadFilesProps,
@@ -18,6 +18,10 @@ interface ItemValidation {
   min?: {
     value: number;
     message?: string;
+  };
+  links?: {
+    enabled: boolean;
+    max?: number;
   };
 }
 
@@ -42,8 +46,9 @@ export interface UploadFilesFormItem extends BaseFormItem<UploadFilesProps> {
   validation?: Pick<ItemValidation, "min">;
 }
 
-export interface LinksFormItem extends BaseFormItem<LinksArrayProps> {
+export interface LinksFormItem extends BaseFormItem<LinksArrayWrapperProps> {
   type: CreationFormItemType.Links;
+  validation?: Pick<ItemValidation, "links">;
 }
 
 export type CreationFormItem =
