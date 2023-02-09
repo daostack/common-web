@@ -1,6 +1,26 @@
 import uniqBy from "lodash/uniqBy";
 import { Circle, CircleType } from "../models";
 
+export const removeProjectCircles = <T extends Pick<Circle, "id" | "hierarchy" | "type">>(
+  circles: T[] | null
+): T[] => {
+  return (circles || [])?.filter(({type}) => type !== CircleType.Project);
+}
+
+export const filterProjectCircles = (
+  circles: Circle[] | null
+): Circle[] => {
+  return (circles || [])?.filter(({type}) => type === CircleType.Project);
+}
+
+export const filterCircleMapNonProjectCircles = <T extends Pick<Circle, "id" | "hierarchy" | "type">>(
+  circles: T[],
+  circleIds: string[]
+): string[] => {
+  const nonProjectCirclesIds =  removeProjectCircles(circles).map(({id}) => id);
+  return circleIds.filter((id) => nonProjectCirclesIds.includes(id));
+}
+
 export const getFilteredByIdCircles = (
   circles: Circle[] | null,
   circleIds: string[] = [],
@@ -16,18 +36,6 @@ export const getFilteredByIdCircles = (
 
   return circles.filter(({ id }) => circleIds.includes(id));
 };
-
-export const removeProjectCircles = <T extends Pick<Circle, "id" | "hierarchy" | "type">>(
-  circles: T[] | null
-): T[] => {
-  return (circles || [])?.filter(({type}) => type !== CircleType.Project);
-}
-
-export const filterProjectCircles = (
-  circles: Circle[] | null
-): Circle[] => {
-  return (circles || [])?.filter(({type}) => type === CircleType.Project);
-}
 
 const getCirclesPerTier = <T extends Pick<Circle, "id" | "hierarchy" | "type">>(
   circles: T[],
