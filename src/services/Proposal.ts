@@ -17,6 +17,7 @@ import {
 } from "@/shared/models/governance/proposals";
 import {
   checkIsCountdownState,
+  convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
@@ -132,30 +133,32 @@ class ProposalService {
   public proposalEligibleVoters = async (
     proposalId: string,
   ): Promise<EligibleVoterWithUserInfo[]> => {
-    const votersObject = (
-      await Api.get<EligibleVoter[]>(
-        `${ApiEndpoint.EligibleVoters}/${proposalId}`,
-      )
-    ).data;
+    const { data } = await Api.get<EligibleVoter[]>(
+      `${ApiEndpoint.EligibleVoters}/${proposalId}`,
+    );
 
     /**
      * TODO: temporary because the backend returns object of object instead of array of objects
      */
-    const votersArray = Object.values(votersObject);
+    const votersArray = Object.values(data);
     votersArray.pop();
 
+    const parsedVotersArray: EligibleVoter[] = votersArray.map((voter) => ({
+      ...voter,
+      vote: convertObjectDatesToFirestoreTimestamps(voter.vote),
+    }));
+
     const userIds = Array.from(
-      new Set(votersArray.map(({ userId }) => userId)),
+      new Set(parsedVotersArray.map(({ userId }) => userId)),
     );
     const users = await getUserListByIds(userIds);
 
-    const extendedVoters = votersArray.reduce<EligibleVoterWithUserInfo[]>(
-      (acc, member) => {
-        const user = users.find(({ uid }) => uid === member.userId);
-        return user ? acc.concat({ ...member, user }) : acc;
-      },
-      [],
-    );
+    const extendedVoters = parsedVotersArray.reduce<
+      EligibleVoterWithUserInfo[]
+    >((acc, member) => {
+      const user = users.find(({ uid }) => uid === member.userId);
+      return user ? acc.concat({ ...member, user }) : acc;
+    }, []);
 
     /**
      * Sort the array: mamaber with no votes yet are at the end.

@@ -38,7 +38,6 @@ const VoterItem: FC<VoterItemProps> = (props) => {
         <div className={styles.voteInfo}>
           <span className={styles.userName}>{userName}</span>
           <span className={styles.createdAt}>
-            {/* backend returns seconds and nanoseconds with underscore hence we get invalid date.  */}
             {voter.vote
               ? formatDate(
                   new Date(voter.vote.createdAt.seconds * 1000),
