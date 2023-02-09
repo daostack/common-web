@@ -21,6 +21,10 @@ const initialState: CommonState = {
     loading: false,
   },
   isNewProjectCreated: false,
+  proposalCreation: {
+    data: null,
+    loading: false,
+  },
 };
 
 export const reducer = createReducer<CommonState, Action>(initialState)
@@ -33,6 +37,14 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.setDiscussionCreationData, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.discussionCreation = {
+        data: payload,
+        loading: false,
+      };
+    }),
+  )
+  .handleAction(actions.setProposalCreationData, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.proposalCreation = {
         data: payload,
         loading: false,
       };
@@ -58,6 +70,30 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       nextState.discussionCreation = {
         ...nextState.discussionCreation,
+        loading: false,
+      };
+    }),
+  )
+  .handleAction(actions.createSurveyProposal.request, (state) =>
+    produce(state, (nextState) => {
+      nextState.proposalCreation = {
+        ...nextState.proposalCreation,
+        loading: true,
+      };
+    }),
+  )
+  .handleAction(actions.createSurveyProposal.success, (state) =>
+    produce(state, (nextState) => {
+      nextState.proposalCreation = {
+        loading: false,
+        data: null,
+      };
+    }),
+  )
+  .handleAction(actions.createSurveyProposal.failure, (state) =>
+    produce(state, (nextState) => {
+      nextState.proposalCreation = {
+        ...nextState.proposalCreation,
         loading: false,
       };
     }),

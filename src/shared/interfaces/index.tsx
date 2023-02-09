@@ -6,6 +6,7 @@ export * from "./LoadingState";
 export * from "./MarkCommonFeedItemAsSeenPayload";
 export * from "./MenuItem";
 export * from "./NewDiscussionCreationFormValues";
+export * from "./NewProposalCreationFormValues";
 export * from "./Notification";
 export * from "./redux";
 export * from "./SharedState";
