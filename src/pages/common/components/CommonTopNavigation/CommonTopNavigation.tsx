@@ -24,7 +24,6 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
   const { commonMember, circles, isSubCommon, commonId } = props;
   const { isJoinAllowed, isJoinPending, onJoinCommon } = useCommonDataContext();
   const circlesMap = commonMember?.circles.map;
-  const isJoinButtonVisible = !isSubCommon && isJoinAllowed;
 
   const renderCentralElement = (): ReactNode => {
     if (commonMember) {
@@ -53,7 +52,7 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
         />
       );
     }
-    if (isJoinButtonVisible) {
+    if (isJoinAllowed) {
       return (
         <Button
           variant={ButtonVariant.OutlineBlue}

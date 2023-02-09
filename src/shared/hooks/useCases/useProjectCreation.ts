@@ -55,6 +55,7 @@ export const useProjectCreation = (): Return => {
                 value: creationData.videoUrl,
               }
             : undefined,
+          highestCircleId: creationData.highestCircleId,
         };
         const createdProject = await ProjectService.createNewProject(
           parentCommonId,

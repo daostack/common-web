@@ -1,12 +1,17 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import classNames from "classnames";
-import { Linkify } from "@/shared/components";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useFullText } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common } from "@/shared/models";
-import { Container, Tags, ImageGallery } from "@/shared/ui-kit";
-import { isRTL } from "@/shared/utils";
+import {
+  Container,
+  Tags,
+  ImageGallery,
+  parseStringToTextEditorValue,
+  checkIsTextEditorValueEmpty,
+  TextEditor,
+} from "@/shared/ui-kit";
 import { CommonCard } from "../../../../../CommonCard";
 import { CommonLinks } from "../CommonLinks";
 import styles from "./CommonDescription.module.scss";
@@ -20,11 +25,18 @@ const CommonDescription: FC<CommonDescriptionProps> = (props) => {
   const tags = common.tags || [];
   const isTabletView = useIsTabletView();
   const {
-    ref: descriptionRef,
+    setRef: setDescriptionRef,
     shouldShowFullText,
     isFullTextShowing,
     toggleFullText,
-  } = useFullText();
+  } = useFullText<HTMLElement>();
+  const parsedDescription = useMemo(
+    () => parseStringToTextEditorValue(common.description),
+    [common.description],
+  );
+  const isDescriptionEmpty = checkIsTextEditorValueEmpty(parsedDescription);
+  const shouldDisplaySeeMoreButton =
+    (shouldShowFullText || !isFullTextShowing) && !isDescriptionEmpty;
 
   return (
     <Container
@@ -35,16 +47,17 @@ const CommonDescription: FC<CommonDescriptionProps> = (props) => {
       ]}
     >
       <CommonCard className={styles.container} hideCardStyles={isTabletView}>
-        <p
-          ref={descriptionRef}
-          className={classNames(styles.description, {
-            [styles.descriptionRTL]: isRTL(common.description),
-            [styles.descriptionShortened]: !shouldShowFullText,
-          })}
-        >
-          <Linkify>{common.description}</Linkify>
-        </p>
-        {(shouldShowFullText || !isFullTextShowing) && (
+        {!isDescriptionEmpty && (
+          <TextEditor
+            editorRef={setDescriptionRef}
+            editorClassName={classNames(styles.description, {
+              [styles.descriptionShortened]: !shouldShowFullText,
+            })}
+            value={parsedDescription}
+            readOnly
+          />
+        )}
+        {shouldDisplaySeeMoreButton && (
           <a className={styles.seeMore} onClick={toggleFullText}>
             See {shouldShowFullText ? "less" : "more"}
           </a>
