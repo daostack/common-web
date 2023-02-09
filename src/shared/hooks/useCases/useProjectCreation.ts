@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react";
 import { Logger, ProjectService } from "@/services";
+import { isRequestError } from "@/services/Api";
+import { ErrorCode } from "@/shared/constants";
 import {
   CreateProjectPayload,
   IntermediateCreateProjectPayload,
@@ -63,8 +65,14 @@ export const useProjectCreation = (): Return => {
         );
         setProject(createdProject);
       } catch (error) {
+        const errorMessage =
+          isRequestError(error) &&
+          error.response?.data?.errorCode === ErrorCode.ArgumentDuplicatedError
+            ? `Project with name "${creationData.projectName}" already exists`
+            : "Something went wrong...";
+
         Logger.error(error);
-        setError("Something went wrong...");
+        setError(errorMessage);
       } finally {
         setIsProjectCreationLoading(false);
       }
