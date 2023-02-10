@@ -6,6 +6,7 @@ import { UnsubscribeFunction } from "@/shared/interfaces";
 import {
   Collection,
   EligibleVoter,
+  EligibleVotersApiResponse,
   EligibleVoterWithUserInfo,
   Proposal,
   ProposalState,
@@ -133,12 +134,11 @@ class ProposalService {
   public proposalEligibleVoters = async (
     proposalId: string,
   ): Promise<EligibleVoterWithUserInfo[]> => {
-    const { data } = await Api.get<EligibleVoter[]>(
+    const { data } = await Api.get<EligibleVotersApiResponse>(
       `${ApiEndpoint.EligibleVoters}/${proposalId}`,
     );
 
-    // TODO: need to check the response from the backend
-    const parsedData: EligibleVoter[] = (data as any).data.map((voter) => ({
+    const parsedData: EligibleVoter[] = data.data.map((voter) => ({
       ...voter,
       vote: convertObjectDatesToFirestoreTimestamps(voter.vote),
     }));
