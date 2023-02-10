@@ -1,5 +1,6 @@
 import { CreationFormItem, CreationFormItemType } from "../../../CreationForm";
 import {
+  MAX_LINK_TITLE_LENGTH,
   MAX_PROJECT_NAME_LENGTH,
   MAX_PROJECT_TAGLINE_LENGTH,
 } from "../../constants";
@@ -78,10 +79,23 @@ export const CONFIGURATION: CreationFormItem[] = [
   },
   {
     type: CreationFormItemType.UploadFiles,
-    className: styles.projectImages,
     props: {
       name: "gallery",
       label: "Gallery",
+    },
+  },
+  {
+    type: CreationFormItemType.Links,
+    props: {
+      name: "links",
+      title: "Links",
+      maxTitleLength: MAX_LINK_TITLE_LENGTH,
+    },
+    validation: {
+      links: {
+        enabled: true,
+        max: MAX_LINK_TITLE_LENGTH,
+      },
     },
   },
 ];

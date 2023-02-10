@@ -1,14 +1,30 @@
 import React, { FC } from "react";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { Modal } from "@/shared/components";
 import { Button } from "@/shared/ui-kit";
+import { getCommonPagePath } from "@/shared/utils";
 import { commonActions } from "@/store/states";
+import { CommonTab } from "../../../../constants";
 import styles from "./SuccessfulProjectCreationModal.module.scss";
 
-const SuccessfulProjectCreationModal: FC = () => {
+interface SuccessfulProjectCreationModalProps {
+  parentCommonId: string;
+}
+
+const SuccessfulProjectCreationModal: FC<
+  SuccessfulProjectCreationModalProps
+> = (props) => {
+  const { parentCommonId } = props;
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleClose = () => {
+    dispatch(commonActions.setIsNewProjectCreated(false));
+    history.push(getCommonPagePath(parentCommonId, CommonTab.About));
+  };
+
+  const handleJumpToProject = () => {
     dispatch(commonActions.setIsNewProjectCreated(false));
   };
 
@@ -30,7 +46,7 @@ const SuccessfulProjectCreationModal: FC = () => {
         <p className={styles.description}>
           At any time you can add rules, tags, members to the project, etc
         </p>
-        <Button className={styles.button} onClick={handleClose}>
+        <Button className={styles.button} onClick={handleJumpToProject}>
           Jump to the project
         </Button>
       </div>

@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import {
+  LinksArrayWrapper,
   TextEditor,
   TextField,
   UploadFiles,
@@ -49,6 +50,19 @@ const Item: FC<ItemProps> = (props) => {
         <UploadFiles
           {...item.props}
           className={className}
+          disabled={disabled ?? item.props.disabled}
+        />
+      );
+    case CreationFormItemType.Links:
+      return (
+        <LinksArrayWrapper
+          {...item.props}
+          className={className}
+          labelClassName={classNames(
+            styles.linksArrayWrapperLabel,
+            item.props.labelClassName,
+          )}
+          hint={item.props.hint ?? ""}
           disabled={disabled ?? item.props.disabled}
         />
       );

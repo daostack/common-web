@@ -2,8 +2,8 @@ import React, { useMemo, FC } from "react";
 import classNames from "classnames";
 import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
 import { FormikTouched } from "formik/dist/types";
-import { CommonLink } from "@/shared/models";
 import DeleteIcon from "@/shared/icons/delete.icon";
+import { CommonLink } from "@/shared/models";
 import { ButtonIcon } from "../../../ButtonIcon";
 import { ButtonLink } from "../../../ButtonLink";
 import { ErrorText } from "../../ErrorText";
@@ -13,7 +13,7 @@ import "./index.scss";
 type Errors = string | string[] | FormikErrors<CommonLink[]> | undefined;
 type Touched = FormikTouched<CommonLink>[] | undefined;
 
-interface LinksArrayProps extends FieldArrayConfig {
+export interface LinksArrayProps extends FieldArrayConfig {
   values: CommonLink[];
   errors: Errors;
   touched: Touched;
@@ -23,12 +23,13 @@ interface LinksArrayProps extends FieldArrayConfig {
   className?: string;
   itemClassName?: string;
   labelClassName?: string;
+  disabled?: boolean;
 }
 
 const getInputError = (
   errors: Errors,
   index: number,
-  key: keyof CommonLink
+  key: keyof CommonLink,
 ): string => {
   if (!errors || typeof errors !== "object") {
     return "";
@@ -46,7 +47,7 @@ const getInputError = (
 const isTouched = (
   touched: Touched,
   index: number,
-  key: keyof CommonLink
+  key: keyof CommonLink,
 ): boolean => Boolean(touched && touched[index] && touched[index][key]);
 
 const LinksArray: FC<LinksArrayProps> = (props) => {
@@ -60,15 +61,16 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
     className,
     itemClassName,
     labelClassName,
+    disabled,
     ...restProps
   } = props;
   const isAddLinkButtonHidden = useMemo<boolean>(
     () =>
       Boolean(
         (errors && errors.length > 0) ||
-          values?.some((value) => !value.title && !value.value)
+          values?.some((value) => !value.title && !value.value),
       ),
-    [errors, values]
+    [errors, values],
   );
 
   return (
@@ -102,6 +104,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                     placeholder="Link title"
                     maxLength={maxTitleLength}
                     hint={index === 0 ? hint : ""}
+                    disabled={disabled}
                     styles={{
                       label: labelClassName,
                       input: {
@@ -118,12 +121,14 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                       id={`${restProps.name}.${index}.value`}
                       name={`${restProps.name}.${index}.value`}
                       placeholder={`Link #${index + 1}`}
+                      disabled={disabled}
                       styles={{
                         input: {
                           default: classNames("links-array__link-input", {
                             "links-array__link-input--without-top-border":
                               titleError || !valueError,
-                            "links-array__link-input--with-delete-button": shouldDisplayDeleteButton,
+                            "links-array__link-input--with-delete-button":
+                              shouldDisplayDeleteButton,
                           }),
                         },
                         error: "links-array__link-error",
@@ -133,6 +138,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                       <ButtonIcon
                         className="links-array__remove-button"
                         onClick={() => remove(index)}
+                        disabled={disabled}
                       >
                         <DeleteIcon className="links-array__delete-icon" />
                       </ButtonIcon>
@@ -146,6 +152,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
               <ButtonLink
                 className="links-array__add-button"
                 onClick={handleNewLinkAdd}
+                disabled={disabled}
               >
                 Add link
               </ButtonLink>

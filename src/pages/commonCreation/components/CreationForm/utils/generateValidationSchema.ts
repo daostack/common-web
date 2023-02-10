@@ -1,7 +1,9 @@
 import * as Yup from "yup";
+import { MAX_LINK_TITLE_LENGTH, URL_REGEXP } from "@/shared/constants";
 import { CreationFormItemType } from "../constants";
 import {
   CreationFormItem,
+  LinksFormItem,
   TextFieldFormItem,
   UploadFilesFormItem,
 } from "../types";
@@ -41,6 +43,39 @@ const getValidationSchemaForUploadFilesItem = ({
   return schema;
 };
 
+const getValidationSchemaForLinksItem = ({
+  validation,
+}: Pick<LinksFormItem, "validation">): Schema => {
+  if (!validation || !validation.links || !validation.links.enabled) {
+    return Yup.array();
+  }
+
+  return Yup.array().of(
+    Yup.object().shape(
+      {
+        title: Yup.string().when("value", (value: string) => {
+          if (value) {
+            return Yup.string()
+              .max(
+                validation.links?.max || MAX_LINK_TITLE_LENGTH,
+                "Entered title is too long",
+              )
+              .required("Please enter link title");
+          }
+        }),
+        value: Yup.string().when("title", (title: string) => {
+          if (title) {
+            return Yup.string()
+              .matches(URL_REGEXP, "Please enter correct URL")
+              .required("Please enter a link");
+          }
+        }),
+      },
+      [["title", "value"]],
+    ),
+  );
+};
+
 export const generateValidationSchema = (
   items: CreationFormItem[],
 ): Yup.ObjectSchema => {
@@ -52,6 +87,9 @@ export const generateValidationSchema = (
     }
     if (item.type === CreationFormItemType.UploadFiles) {
       schema = getValidationSchemaForUploadFilesItem(item);
+    }
+    if (item.type === CreationFormItemType.Links) {
+      schema = getValidationSchemaForLinksItem(item);
     }
 
     return schema
