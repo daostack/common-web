@@ -31,7 +31,7 @@ const VoterItem: FC<VoterItemProps> = (props) => {
       <div className={styles.content}>
         <UserAvatar
           className={styles.avatar}
-          photoURL={voter.user?.photoURL}
+          photoURL={voter.user.photoURL}
           userName={userName}
           preloaderSrc={avatarPlaceholderSrc}
         />

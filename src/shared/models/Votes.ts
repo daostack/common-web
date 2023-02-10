@@ -43,11 +43,6 @@ export interface EligibleVoter {
   vote: Vote | null;
 }
 
-export interface EligibleVotersApiResponse {
-  data: EligibleVoter[];
-  message: string;
-}
-
 export interface EligibleVoterWithUserInfo extends EligibleVoter {
   user: User;
 }

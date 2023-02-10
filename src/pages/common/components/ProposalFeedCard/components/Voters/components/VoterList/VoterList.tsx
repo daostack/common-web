@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useEligibleVoters } from "@/shared/hooks/useCases/useEligibleVoters";
+import { useEligibleVoters } from "@/shared/hooks/useCases";
 import { Loader } from "@/shared/ui-kit";
 import { VoterItem } from "../VoterItem";
 import styles from "./VoterList.module.scss";

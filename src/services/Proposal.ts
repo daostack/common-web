@@ -3,10 +3,10 @@ import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { createProposal } from "@/pages/OldCommon/store/api";
 import { ApiEndpoint, ProposalsTypes } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
+import { EligibleVotersApiResponse } from "@/shared/interfaces/api/eligibleVoters";
 import {
   Collection,
   EligibleVoter,
-  EligibleVotersApiResponse,
   EligibleVoterWithUserInfo,
   Proposal,
   ProposalState,
@@ -131,11 +131,11 @@ class ProposalService {
     return !snapshot.empty;
   };
 
-  public proposalEligibleVoters = async (
+  public getProposalEligibleVoters = async (
     proposalId: string,
   ): Promise<EligibleVoterWithUserInfo[]> => {
     const { data } = await Api.get<EligibleVotersApiResponse>(
-      `${ApiEndpoint.EligibleVoters}/${proposalId}`,
+      ApiEndpoint.GetProposalEligibleVoters.replace(":proposalId", proposalId),
     );
 
     const parsedData: EligibleVoter[] = data.data.map((voter) => ({

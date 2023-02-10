@@ -29,7 +29,7 @@ export const useEligibleVoters = (): Return => {
       let voters: EligibleVoterWithUserInfo[] = [];
 
       try {
-        voters = await ProposalService.proposalEligibleVoters(proposalId);
+        voters = await ProposalService.getProposalEligibleVoters(proposalId);
       } catch (error) {
         voters = [];
       } finally {
