@@ -89,7 +89,7 @@ const sortCirclesByTierAscending = <T extends Pick<Circle, "hierarchy">>(
       return -1;
     }
 
-    return prevCircle.hierarchy?.tier - nextCircle.hierarchy?.tier;
+    return prevCircle.hierarchy.tier - nextCircle.hierarchy.tier;
   });
 
 export const getCirclesWithHighestTier = <
