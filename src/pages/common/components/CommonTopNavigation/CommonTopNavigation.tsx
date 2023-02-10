@@ -29,8 +29,8 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
     if (commonMember) {
       return (
         <CommonMemberInfo
-          circles={circles}
           circlesMap={circlesMap}
+          circles={circles}
           commonId={commonId}
           commonMember={commonMember}
           isMobileVersion

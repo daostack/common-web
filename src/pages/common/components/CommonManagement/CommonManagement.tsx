@@ -47,9 +47,9 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
           <CommonMemberInfo
             className={styles.memberInfo}
             circles={circles}
-            circlesMap={circlesMap}
             commonId={commonId}
             commonMember={commonMember}
+            circlesMap={circlesMap}
           />
           <CommonMenuButton
             commonMember={commonMember}

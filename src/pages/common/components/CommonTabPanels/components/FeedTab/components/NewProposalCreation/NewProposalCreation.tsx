@@ -1,19 +1,19 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
+import { PROPOSAL_TYPE_SELECT_OPTIONS } from "@/shared/constants";
+import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
-import { addCirclesWithHigherTier } from "@/shared/utils";
 import {
-  selectDiscussionCreationData,
-  selectIsDiscussionCreationLoading,
+  selectIsProposalCreationLoading,
+  selectProposalCreationData,
 } from "@/store/states";
 import { commonActions } from "@/store/states";
 import { useCommonDataContext } from "../../../../../../providers";
-import { DiscussionCreationCard, DiscussionCreationModal } from "./components";
+import { ProposalCreationCard, ProposalCreationModal } from "./components";
 
-interface NewDiscussionCreationProps {
+interface NewProposalCreationProps {
   governanceCircles: Governance["circles"];
   commonMember: (CommonMember & CirclesPermissions) | null;
   commonImage?: string;
@@ -21,14 +21,15 @@ interface NewDiscussionCreationProps {
   isModalVariant?: boolean;
 }
 
-const INITIAL_VALUES: NewDiscussionCreationFormValues = {
-  circle: null,
+const INITIAL_VALUES: NewProposalCreationFormValues = {
+  proposalType: PROPOSAL_TYPE_SELECT_OPTIONS[0],
   title: "",
   content: parseStringToTextEditorValue(),
   images: [],
+  files: [],
 };
 
-const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
+const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
   const {
     governanceCircles,
     commonMember,
@@ -37,15 +38,17 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     isModalVariant = false,
   } = props;
   const dispatch = useDispatch();
-  const { common } = useCommonDataContext();
-  const discussionCreationData = useSelector(selectDiscussionCreationData);
-  const isLoading = useSelector(selectIsDiscussionCreationLoading);
+  const { common, governance } = useCommonDataContext();
+  const proposalCreationData = useSelector(selectProposalCreationData);
+  const isLoading = useSelector(selectIsProposalCreationLoading);
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const commonId = common.id;
   const initialValues = useMemo(
-    () => discussionCreationData || INITIAL_VALUES,
+    () => proposalCreationData || INITIAL_VALUES,
     [],
   );
+
   const userCircleIds = useMemo(
     () => (commonMember ? Object.values(commonMember.circles.map) : []),
     [commonMember?.circles.map],
@@ -53,37 +56,29 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
 
   const handleCancel = () => {
     dispatch(commonActions.setCommonAction(null));
-    dispatch(commonActions.setDiscussionCreationData(null));
+    dispatch(commonActions.setProposalCreationData(null));
   };
 
   const handleSubmit = useCallback(
-    (values: NewDiscussionCreationFormValues) => {
+    (values: NewProposalCreationFormValues) => {
       if (!userId) {
         return;
       }
 
-      const circleVisibility = values.circle
-        ? addCirclesWithHigherTier(
-            [values.circle],
-            Object.values(governanceCircles),
-            userCircleIds,
-          ).map((circle) => circle.id)
-        : [];
-
       dispatch(
-        commonActions.createDiscussion.request({
+        commonActions.createSurveyProposal.request({
           payload: {
             title: values.title,
-            message: JSON.stringify(values.content),
-            ownerId: userId,
-            commonId: common.id,
+            description: JSON.stringify(values.content),
             images: values.images,
-            circleVisibility,
+            files: values.files,
+            links: [],
+            commonId,
           },
         }),
       );
     },
-    [governanceCircles, userCircleIds, userId, common.id],
+    [governanceCircles, userCircleIds, userId, commonId],
   );
 
   if (
@@ -92,9 +87,10 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     typeof commonName === "string"
   ) {
     return (
-      <DiscussionCreationModal
+      <ProposalCreationModal
         initialValues={initialValues}
         governanceCircles={governanceCircles}
+        governance={governance}
         userCircleIds={userCircleIds}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
@@ -106,9 +102,10 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   }
 
   return (
-    <DiscussionCreationCard
+    <ProposalCreationCard
       initialValues={initialValues}
       governanceCircles={governanceCircles}
+      governance={governance}
       userCircleIds={userCircleIds}
       onSubmit={handleSubmit}
       onCancel={handleCancel}
@@ -117,4 +114,4 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   );
 };
 
-export default NewDiscussionCreation;
+export default NewProposalCreation;
