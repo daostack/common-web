@@ -38,6 +38,7 @@ const getInitialValues = (
     description: parseStringToTextEditorValue(),
     videoUrl: "",
     gallery: [],
+    links: [{ title: "", value: "" }],
     highestCircleId: circlesWithHighestTier[0]?.id || "",
   };
 };

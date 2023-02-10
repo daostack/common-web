@@ -9,7 +9,6 @@ import {
   PeopleGroupIcon,
   WalletIcon,
 } from "@/shared/icons";
-import { CommonMember } from "@/shared/models";
 import { CommonTab } from "../../constants";
 import { getCommonTabName } from "../../utils";
 import styles from "./CommonTabs.module.scss";
@@ -17,12 +16,17 @@ import styles from "./CommonTabs.module.scss";
 interface CommonTabsProps {
   className?: string;
   activeTab: CommonTab;
-  isAuthenticated?: boolean;
-  commonMember: CommonMember | null;
+  allowedTabs: CommonTab[];
   onTabChange: (tab: CommonTab) => void;
 }
 
-const TABS: { label: string; value: CommonTab; icon?: ReactNode }[] = [
+interface TabConfiguration {
+  label: string;
+  value: CommonTab;
+  icon?: ReactNode;
+}
+
+const TABS: TabConfiguration[] = [
   {
     label: getCommonTabName(CommonTab.About),
     value: CommonTab.About,
@@ -50,27 +54,16 @@ const TABS: { label: string; value: CommonTab; icon?: ReactNode }[] = [
   },
 ];
 
-// Mobile version should display only following tabs: About, Feed and Governance
-const MOBILE_TABS = [TABS[0], TABS[1], TABS[4]];
-
-// Tabs available for unauthenticated or non-member users: about, governance
-const UNAUTHENTICATED_OR_NON_MEMBERS_TABS = [TABS[0], TABS[4]];
-
 const CommonTabs: FC<CommonTabsProps> = (props) => {
-  const {
-    className,
-    activeTab,
-    isAuthenticated = false,
-    commonMember,
-    onTabChange,
-  } = props;
+  const { className, activeTab, allowedTabs, onTabChange } = props;
   const isTabletView = useIsTabletView();
-  const tabs =
-    isAuthenticated && commonMember
-      ? isTabletView
-        ? MOBILE_TABS
-        : TABS
-      : UNAUTHENTICATED_OR_NON_MEMBERS_TABS;
+  const tabs = allowedTabs
+    .map((tab) =>
+      TABS.find((tabConfiguration) => tabConfiguration.value === tab),
+    )
+    .filter((tabConfiguration): tabConfiguration is TabConfiguration =>
+      Boolean(tabConfiguration),
+    );
 
   const itemStyles = {
     "--items-amount": tabs.length,

@@ -38,6 +38,17 @@ const CommonDescription: FC<CommonDescriptionProps> = (props) => {
   const shouldDisplaySeeMoreButton =
     (shouldShowFullText || !isFullTextShowing) && !isDescriptionEmpty;
 
+  const isFullyEmpty =
+    isDescriptionEmpty &&
+    tags.length === 0 &&
+    !common.video &&
+    (!common.gallery || common.gallery.length === 0) &&
+    common.links.length === 0;
+
+  if (isFullyEmpty) {
+    return null;
+  }
+
   return (
     <Container
       viewports={[

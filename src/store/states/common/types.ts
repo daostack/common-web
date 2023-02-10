@@ -1,7 +1,15 @@
 import { CommonAction } from "@/shared/constants";
-import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
+import {
+  NewDiscussionCreationFormValues,
+  NewProposalCreationFormValues,
+} from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
 import firebase from "@/shared/utils/firebase";
+
+export type EntityCreation<T> = {
+  data: T | null;
+  loading: boolean;
+};
 
 export interface FeedItems {
   data: CommonFeed[] | null;
@@ -14,9 +22,7 @@ export interface FeedItems {
 export interface CommonState {
   feedItems: FeedItems;
   commonAction: CommonAction | null;
-  discussionCreation: {
-    data: NewDiscussionCreationFormValues | null;
-    loading: boolean;
-  };
+  discussionCreation: EntityCreation<NewDiscussionCreationFormValues>;
+  proposalCreation: EntityCreation<NewProposalCreationFormValues>;
   isNewProjectCreated: boolean;
 }

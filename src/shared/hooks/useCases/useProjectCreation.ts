@@ -1,11 +1,17 @@
 import { useCallback, useState } from "react";
 import { Logger, ProjectService } from "@/services";
+import { isRequestError } from "@/services/Api";
+import { ErrorCode } from "@/shared/constants";
 import {
   CreateProjectPayload,
   IntermediateCreateProjectPayload,
 } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
-import { getFileDownloadInfo, getFilesDownloadInfo } from "@/shared/utils";
+import {
+  getFileDownloadInfo,
+  getFilesDownloadInfo,
+  parseLinksForSubmission,
+} from "@/shared/utils";
 
 interface Return {
   isProjectCreationLoading: boolean;
@@ -41,6 +47,7 @@ export const useProjectCreation = (): Return => {
           getFileDownloadInfo(projectImageFile),
           getFilesDownloadInfo(creationData.gallery),
         ]);
+        const links = parseLinksForSubmission(creationData.links || []);
         const payload: CreateProjectPayload = {
           name: creationData.projectName,
           byline: creationData.byline,
@@ -55,6 +62,7 @@ export const useProjectCreation = (): Return => {
                 value: creationData.videoUrl,
               }
             : undefined,
+          links,
           highestCircleId: creationData.highestCircleId,
         };
         const createdProject = await ProjectService.createNewProject(
@@ -63,8 +71,14 @@ export const useProjectCreation = (): Return => {
         );
         setProject(createdProject);
       } catch (error) {
+        const errorMessage =
+          isRequestError(error) &&
+          error.response?.data?.errorCode === ErrorCode.ArgumentDuplicatedError
+            ? `Project with name "${creationData.projectName}" already exists`
+            : "Something went wrong...";
+
         Logger.error(error);
-        setError("Something went wrong...");
+        setError(errorMessage);
       } finally {
         setIsProjectCreationLoading(false);
       }

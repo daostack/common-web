@@ -1,0 +1,45 @@
+import { call, put } from "redux-saga/effects";
+import { ProposalService } from "@/services";
+import { Awaited } from "@/shared/interfaces";
+import { isError } from "@/shared/utils";
+import * as cacheActions from "../../cache/actions";
+import * as actions from "../actions";
+
+export function* createSurveyProposal(
+  action: ReturnType<typeof actions.createSurveyProposal.request>,
+): Generator {
+  const { payload } = action;
+
+  try {
+    const proposal = (yield call(
+      ProposalService.createSurveyProposal,
+      payload.payload,
+    )) as Awaited<ReturnType<typeof ProposalService.createSurveyProposal>>;
+
+    yield put(
+      cacheActions.updateProposalStateById({
+        proposalId: proposal.id,
+        state: {
+          loading: false,
+          fetched: true,
+          data: proposal,
+        },
+      }),
+    );
+
+    yield put(actions.setCommonAction(null));
+    yield put(actions.createSurveyProposal.success(proposal));
+
+    if (payload.callback) {
+      payload.callback(null, proposal);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createSurveyProposal.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  }
+}

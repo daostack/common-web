@@ -11,20 +11,20 @@ import styles from "./CommonManagement.module.scss";
 interface CommonManagementProps {
   commonId: string;
   activeTab: CommonTab;
+  allowedTabs: CommonTab[];
   isSubCommon: boolean;
   circles: Governance["circles"];
   commonMember: (CommonMember & CirclesPermissions) | null;
-  isAuthenticated?: boolean;
   onTabChange: (tab: CommonTab) => void;
 }
 
 const CommonManagement: FC<CommonManagementProps> = (props) => {
   const {
     activeTab,
+    allowedTabs,
     isSubCommon,
     circles,
     commonMember,
-    isAuthenticated = false,
     onTabChange,
     commonId,
   } = props;
@@ -36,8 +36,7 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
       <CommonTabs
         className={styles.tabs}
         activeTab={activeTab}
-        isAuthenticated={isAuthenticated}
-        commonMember={commonMember}
+        allowedTabs={allowedTabs}
         onTabChange={onTabChange}
       />
       {!commonMember && isJoinPending && (
@@ -48,9 +47,9 @@ const CommonManagement: FC<CommonManagementProps> = (props) => {
           <CommonMemberInfo
             className={styles.memberInfo}
             circles={circles}
-            circlesMap={circlesMap}
             commonId={commonId}
             commonMember={commonMember}
+            circlesMap={circlesMap}
           />
           <CommonMenuButton
             commonMember={commonMember}

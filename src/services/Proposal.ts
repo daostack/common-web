@@ -1,6 +1,9 @@
 import { getUserListByIds } from "@/pages/Auth/store/api";
-import { CreateProposal } from "@/pages/OldCommon/interfaces";
-import { createProposal } from "@/pages/OldCommon/store/api";
+import {
+  CreateProposal,
+  CreateProposalWithFiles,
+} from "@/pages/OldCommon/interfaces";
+import { createProposal as createProposalApi } from "@/pages/OldCommon/store/api";
 import { ApiEndpoint, ProposalsTypes } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { EligibleVotersApiResponse } from "@/shared/interfaces/api/eligibleVoters";
@@ -14,6 +17,7 @@ import {
 import {
   AssignCircle,
   RemoveCircle,
+  Survey,
   MemberAdmittance,
 } from "@/shared/models/governance/proposals";
 import {
@@ -24,7 +28,7 @@ import {
   transformFirebaseDataSingle,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
-import Api from "./Api";
+import { Api, FileService } from ".";
 
 const converter = firestoreDataConverter<Proposal>();
 
@@ -92,15 +96,43 @@ class ProposalService {
     });
   };
 
+  createProposal = async <T extends keyof CreateProposal>(
+    requestData: CreateProposal[T]["data"],
+  ): Promise<CreateProposal[T]["response"]> => {
+    const { data } = await Api.post<CreateProposal[T]["response"]>(
+      ApiEndpoint.CreateProposal,
+      requestData,
+    );
+
+    return convertObjectDatesToFirestoreTimestamps(data);
+  };
+
   public createAssignProposal = async (
     payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">,
   ): Promise<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["response"]> => {
-    const createdProposal = (await createProposal({
+    const createdProposal = (await this.createProposal({
       ...payload,
       type: ProposalsTypes.ASSIGN_CIRCLE,
     })) as AssignCircle;
 
     return createdProposal;
+  };
+
+  public createSurveyProposal = async (
+    payload: CreateProposalWithFiles<ProposalsTypes.SURVEY>,
+  ): Promise<Proposal> => {
+    const [files, images] = await Promise.all([
+      FileService.uploadFiles(payload.files || []),
+      FileService.uploadFiles(payload.images || []),
+    ]);
+    return (await this.createProposal({
+      args: {
+        ...payload,
+        files,
+        images,
+      },
+      type: ProposalsTypes.SURVEY,
+    })) as Survey;
   };
 
   public createMemberAdmittanceProposal = async (
@@ -109,7 +141,7 @@ class ProposalService {
       "type"
     >,
   ): Promise<CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["response"]> => {
-    const createdProposal = (await createProposal({
+    const createdProposal = (await createProposalApi({
       ...payload,
       type: ProposalsTypes.MEMBER_ADMITTANCE,
     })) as MemberAdmittance;

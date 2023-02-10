@@ -3,6 +3,8 @@ export enum ErrorCode {
   CUserDoesNotExist = "CUserDoesNotExist",
 
   // Back-end error codes
+  ArgumentDuplicatedError = "ArgumentDuplicatedError",
+
   // PayMeError
   SellerRejected = "External.PayMeError.SellerRejected",
   InvalidBankDetails = "External.PayMeError.InvalidBankDetails",

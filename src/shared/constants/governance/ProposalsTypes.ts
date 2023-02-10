@@ -23,7 +23,36 @@ export enum ProposalsTypes {
   REMOVE_CIRCLE = "REMOVE_CIRCLE",
   SURVEY = "SURVEY",
 
-  DELETE_COMMON = 'DELETE_COMMON'
+  DELETE_COMMON = "DELETE_COMMON",
 
   // DELETE_DISCUSSION = "DELETE_DISCUSSION",
 }
+
+export interface ProposalTypeSelectOption {
+  label: string;
+  value: ProposalsTypes;
+}
+
+export const PROPOSAL_TYPE_SELECT_OPTIONS = [
+  {
+    label: "Survey",
+    value: ProposalsTypes.SURVEY,
+  },
+  // TODO: Add in future tickets
+  // {
+  //   label: "Fund allocation",
+  //   value: ProposalsTypes.FUNDS_ALLOCATION,
+  // },
+  // {
+  //   label: "Assign members to a circle",
+  //   value: ProposalsTypes.ASSIGN_CIRCLE,
+  // },
+  // {
+  //   label: "Remove members from a circle",
+  //   value: ProposalsTypes.REMOVE_CIRCLE,
+  // },
+  // {
+  //   label: "Delete common",
+  //   value: ProposalsTypes.DELETE_COMMON,
+  // },
+];

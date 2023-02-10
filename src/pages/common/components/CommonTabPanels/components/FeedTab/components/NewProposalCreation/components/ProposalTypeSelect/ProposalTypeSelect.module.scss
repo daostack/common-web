@@ -1,0 +1,19 @@
+@import "../../../../../../../../../../constants";
+
+.container {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  display: inline-flex;
+  font-size: $xsmall;
+  color: $c-neutrals-600;
+  margin-bottom: 0.5rem;
+}
+
+.selectDropdownIcon {
+  transform: rotate(90deg);
+  width: 1rem;
+  height: 1rem;
+  color: $c-neutrals-600;
+}

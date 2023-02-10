@@ -1,7 +1,7 @@
 import React, { FC, PropsWithChildren, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { ProposalService } from "@/services";
+import { GovernanceService, ProposalService } from "@/services";
 import { Modal } from "@/shared/components";
 import { Colors, ProposalsTypes } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -100,11 +100,20 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         return;
       }
 
-      const circleName = governance.circles[0].name;
       const commonId = isJoinMemberAdmittanceRequest
         ? common.id
         : common.directParent?.commonId;
+
+      const commonGovernanceInfo = (
+        common.directParent
+          ? await GovernanceService.getGovernanceByCommonId(commonId as string)
+          : governance
+      ) as Governance;
+      const governanceCircles = Object.values(commonGovernanceInfo.circles);
       const circleId = common.directParent?.circleId;
+      const circleName = governanceCircles.find(
+        ({ id }) => id === circleId,
+      )?.name;
 
       const payload = {
         commonId,

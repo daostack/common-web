@@ -1,0 +1,30 @@
+@import "../../../../../../../../../../constants";
+
+.container {
+  padding-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 0.0625rem solid $c-neutrals-200;
+}
+
+.content {
+  height: 100%;
+  width: 100%;
+  margin-left: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.contentTextRow {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.text {
+  font-weight: 600;
+  font-size: $xsmall;
+  color: $c-neutrals-600;
+}

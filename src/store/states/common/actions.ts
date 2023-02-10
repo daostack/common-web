@@ -1,12 +1,16 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
-import { CreateDiscussionDto } from "@/pages/OldCommon/interfaces";
-import { CommonAction } from "@/shared/constants";
+import {
+  CreateDiscussionDto,
+  CreateProposalWithFiles,
+} from "@/pages/OldCommon/interfaces";
+import { CommonAction, ProposalsTypes } from "@/shared/constants";
 import {
   NewDiscussionCreationFormValues,
+  NewProposalCreationFormValues,
   PayloadWithOptionalCallback,
   UploadFile,
 } from "@/shared/interfaces";
-import { CommonFeed, Discussion } from "@/shared/models";
+import { CommonFeed, Discussion, Proposal } from "@/shared/models";
 import firebase from "@/shared/utils/firebase";
 import { CommonActionType } from "./constants";
 import { FeedItems } from "./types";
@@ -23,6 +27,10 @@ export const setDiscussionCreationData = createStandardAction(
   CommonActionType.SET_DISCUSSION_CREATION_DATA,
 )<NewDiscussionCreationFormValues | null>();
 
+export const setProposalCreationData = createStandardAction(
+  CommonActionType.SET_PROPOSAL_CREATION_DATA,
+)<NewProposalCreationFormValues | null>();
+
 export const createDiscussion = createAsyncAction(
   CommonActionType.CREATE_DISCUSSION,
   CommonActionType.CREATE_DISCUSSION_SUCCESS,
@@ -37,6 +45,20 @@ export const createDiscussion = createAsyncAction(
     Error
   >,
   Discussion,
+  Error
+>();
+
+export const createSurveyProposal = createAsyncAction(
+  CommonActionType.CREATE_PROPOSAL,
+  CommonActionType.CREATE_PROPOSAL_SUCCESS,
+  CommonActionType.CREATE_PROPOSAL_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    CreateProposalWithFiles<ProposalsTypes.SURVEY>,
+    Proposal,
+    Error
+  >,
+  Proposal,
   Error
 >();
 

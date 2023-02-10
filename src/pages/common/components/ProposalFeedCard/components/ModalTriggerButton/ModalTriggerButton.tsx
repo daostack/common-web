@@ -9,11 +9,17 @@ const ModalTriggerButton: ForwardRefRenderFunction<
   HTMLButtonElement,
   ModalTriggerButtonProps
 > = (props, ref) => {
-  const { className, children, ...restProps } = props;
+  const { className, children, onClick, ...restProps } = props;
+
+  const handleClick = (event) => {
+    event.stopPropagation();
+    onClick && onClick(event);
+  };
 
   return (
     <button
       {...restProps}
+      onClick={handleClick}
       ref={ref}
       className={classNames(styles.button, className)}
     >
