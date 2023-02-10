@@ -181,7 +181,7 @@ class CommonService {
       const circleMembersCount = new Map<string, number>();
         circleIds.map((id, index) => {
           const filteredMembers = data.filter(({ circleIds: ids }) =>
-          isEqual(ids.sort(), circleIds.slice(0, index + 1).sort()),
+          isEqual(ids.filter((id => circleIds.includes(id))).sort(), circleIds.slice(0, index + 1).sort()),
         );
 
         circleMembersCount.set(id, filteredMembers?.length ?? 0);
