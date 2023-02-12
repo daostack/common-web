@@ -12,12 +12,23 @@ interface DesktopStyleMenuProps {
   isOpen: boolean;
   onClose: () => void;
   items: Item[];
+  withTransition?: boolean;
 }
 
 const DesktopStyleMenu: FC<DesktopStyleMenuProps> = (props) => {
-  const { className, isOpen, onClose, items } = props;
+  const { className, isOpen, onClose, items, withTransition = true } = props;
   const listRef = useRef(null);
   const { isOutside } = useOutsideClick(listRef);
+  const contentEl = (
+    <ul
+      ref={listRef}
+      className={classNames(menuItemsStyles.itemsWrapper, className)}
+    >
+      {items.map((item) => (
+        <MenuItem key={item.id} item={item} />
+      ))}
+    </ul>
+  );
 
   useEffect(() => {
     if (isOutside) {
@@ -25,17 +36,12 @@ const DesktopStyleMenu: FC<DesktopStyleMenuProps> = (props) => {
     }
   }, [isOutside]);
 
-  return (
+  return withTransition ? (
     <Transition className={styles.transition} show={isOpen}>
-      <ul
-        ref={listRef}
-        className={classNames(menuItemsStyles.itemsWrapper, className)}
-      >
-        {items.map((item) => (
-          <MenuItem key={item.id} item={item} />
-        ))}
-      </ul>
+      {contentEl}
     </Transition>
+  ) : (
+    <>{isOpen && contentEl}</>
   );
 };
 

@@ -309,6 +309,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
           isOpen={isOpen}
           onClose={() => onMenuToggle && onMenuToggle(false)}
           items={desktopStyleMenuItems}
+          withTransition={false}
         />
       )}
       <ShareModal
