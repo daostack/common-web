@@ -201,7 +201,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const handleMenuToggle = useCallback(
     (isOpen: boolean) => {
-      if (!linkURL) {
+      if (!linkURL && isOpen) {
         handleOpen();
         setIsShareLinkGenerating(true);
       }
