@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { MouseEventHandler, useCallback, useState } from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import {
@@ -7,6 +7,7 @@ import {
   ChatType,
   EntityTypes,
 } from "@/shared/constants";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { DiscussionMessage, User } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import { EditMessageInput } from "../EditMessageInput";
@@ -41,11 +42,30 @@ export default function ChatMessage({
   scrollToRepliedMessage,
 }: ChatMessageProps) {
   const [isEditMode, setEditMode] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isTabletView = useIsTabletView();
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
   const editedAtDate = new Date(discussionMessage.editedAt?.seconds * 1000);
 
   const isNotCurrentUserMessage = user?.uid !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
+
+  const handleMenuToggle = (isOpen: boolean) => {
+    setIsMenuOpen(isOpen);
+
+    if (onMessageDropdownOpen) {
+      onMessageDropdownOpen(isOpen);
+    }
+  };
+
+  const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
+    if (isTabletView) {
+      return;
+    }
+
+    event.preventDefault();
+    setIsMenuOpen(true);
+  };
 
   const ReplyMessage = useCallback(() => {
     if (!discussionMessage.parentMessage?.id) {
@@ -78,6 +98,7 @@ export default function ChatMessage({
     <li
       id={discussionMessage.id}
       className={classNames(styles.container, className, { highlighted })}
+      onContextMenu={handleContextMenu}
     >
       <div
         className={classNames(styles.message, {
@@ -157,7 +178,8 @@ export default function ChatMessage({
               elem={discussionMessage}
               className={styles.dropdownMenu}
               variant={Orientation.Horizontal}
-              onMenuToggle={onMessageDropdownOpen}
+              isOpen={isMenuOpen}
+              onMenuToggle={handleMenuToggle}
               transparent
               isDiscussionMessage
               ownerId={discussionMessage.owner?.uid}
