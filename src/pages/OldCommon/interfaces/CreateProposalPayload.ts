@@ -66,7 +66,10 @@ export interface CreateProposal {
   [ProposalsTypes.DELETE_COMMON]: Request<CreateDeleteCommon, DeleteCommon>;
 }
 
-export type CreateProposalWithFiles<T extends keyof CreateProposal> = Omit<CreateProposal[T]["data"]["args"], "files" | "images"> & {
+export type CreateProposalWithFiles<T extends keyof CreateProposal> = Omit<
+  CreateProposal[T]["data"]["args"],
+  "files" | "images"
+> & {
   files?: UploadFile[];
   images?: UploadFile[];
-}
+};

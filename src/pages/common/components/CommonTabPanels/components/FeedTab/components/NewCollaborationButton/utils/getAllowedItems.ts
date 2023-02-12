@@ -1,4 +1,8 @@
-import { GovernanceActions, CommonAction, ProposalsTypes } from "@/shared/constants";
+import {
+  GovernanceActions,
+  CommonAction,
+  ProposalsTypes,
+} from "@/shared/constants";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
 
@@ -16,15 +20,15 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   NewCollaborationMenuItems,
   (options: GetAllowedItemsOptions) => boolean
 > = {
-  [CommonAction.NewProposal]:  ({ commonMember, governance }) =>
+  [CommonAction.NewProposal]: ({ commonMember, governance }) =>
     Boolean(
-    commonMember &&
-      hasPermission({
-        commonMember,
-        governance,
-        key: ProposalsTypes.SURVEY,
-      }),
-  ),
+      commonMember &&
+        hasPermission({
+          commonMember,
+          governance,
+          key: ProposalsTypes.SURVEY,
+        }),
+    ),
   [CommonAction.NewDiscussion]: ({ commonMember, governance }) =>
     Boolean(
       commonMember &&

@@ -14,7 +14,7 @@ const ModalTriggerButton: ForwardRefRenderFunction<
   const handleClick = (event) => {
     event.stopPropagation();
     onClick && onClick(event);
-  }
+  };
 
   return (
     <button

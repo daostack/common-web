@@ -1,12 +1,24 @@
-import { CreateProposal, CreateProposalWithFiles } from "@/pages/OldCommon/interfaces";
+import { getUserListByIds } from "@/pages/Auth/store/api";
+import {
+  CreateProposal,
+  CreateProposalWithFiles,
+} from "@/pages/OldCommon/interfaces";
+import { createProposal as createProposalApi } from "@/pages/OldCommon/store/api";
 import { ApiEndpoint, ProposalsTypes } from "@/shared/constants";
-import { UnsubscribeFunction, UploadFile } from "@/shared/interfaces";
-import { Collection, Proposal, ProposalState } from "@/shared/models";
+import { UnsubscribeFunction } from "@/shared/interfaces";
+import { EligibleVotersApiResponse } from "@/shared/interfaces/api/eligibleVoters";
+import {
+  Collection,
+  EligibleVoter,
+  EligibleVoterWithUserInfo,
+  Proposal,
+  ProposalState,
+} from "@/shared/models";
 import {
   AssignCircle,
   RemoveCircle,
   Survey,
-  MemberAdmittance
+  MemberAdmittance,
 } from "@/shared/models/governance/proposals";
 import {
   checkIsCountdownState,
@@ -17,7 +29,6 @@ import {
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import { Api, FileService } from ".";
-import { createProposal as createProposalApi } from "@/pages/OldCommon/store/api";
 
 const converter = firestoreDataConverter<Proposal>();
 
@@ -92,9 +103,9 @@ class ProposalService {
       ApiEndpoint.CreateProposal,
       requestData,
     );
-  
+
     return convertObjectDatesToFirestoreTimestamps(data);
-  }
+  };
 
   public createAssignProposal = async (
     payload: Omit<CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"], "type">,
@@ -110,19 +121,25 @@ class ProposalService {
   public createSurveyProposal = async (
     payload: CreateProposalWithFiles<ProposalsTypes.SURVEY>,
   ): Promise<Proposal> => {
-    const [files, images] = await Promise.all([FileService.uploadFiles(payload.files || []), FileService.uploadFiles(payload.images || [])]);
+    const [files, images] = await Promise.all([
+      FileService.uploadFiles(payload.files || []),
+      FileService.uploadFiles(payload.images || []),
+    ]);
     return (await this.createProposal({
       args: {
         ...payload,
         files,
-        images
+        images,
       },
       type: ProposalsTypes.SURVEY,
     })) as Survey;
   };
 
   public createMemberAdmittanceProposal = async (
-    payload: Omit<CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["data"], "type">,
+    payload: Omit<
+      CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["data"],
+      "type"
+    >,
   ): Promise<CreateProposal[ProposalsTypes.MEMBER_ADMITTANCE]["response"]> => {
     const createdProposal = (await createProposalApi({
       ...payload,
@@ -144,6 +161,37 @@ class ProposalService {
       .get();
 
     return !snapshot.empty;
+  };
+
+  public getProposalEligibleVoters = async (
+    proposalId: string,
+  ): Promise<EligibleVoterWithUserInfo[]> => {
+    const { data } = await Api.get<EligibleVotersApiResponse>(
+      ApiEndpoint.GetProposalEligibleVoters.replace(":proposalId", proposalId),
+    );
+
+    const parsedData: EligibleVoter[] = data.data.map((voter) => ({
+      ...voter,
+      vote: convertObjectDatesToFirestoreTimestamps(voter.vote),
+    }));
+
+    const userIds = Array.from(new Set(parsedData.map(({ userId }) => userId)));
+    const users = await getUserListByIds(userIds);
+
+    const extendedVoters = parsedData.reduce<EligibleVoterWithUserInfo[]>(
+      (acc, member) => {
+        const user = users.find(({ uid }) => uid === member.userId);
+        return user ? acc.concat({ ...member, user }) : acc;
+      },
+      [],
+    );
+
+    /**
+     * Sort the array: members with no votes yet are at the end.
+     */
+    extendedVoters.sort((a, b) => (a.vote && !b.vote ? -1 : 0));
+
+    return extendedVoters;
   };
 }
 

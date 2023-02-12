@@ -11,8 +11,11 @@ export function* createSurveyProposal(
   const { payload } = action;
 
   try {
-    const proposal= (yield call(ProposalService.createSurveyProposal, payload.payload)) as Awaited<ReturnType<typeof ProposalService.createSurveyProposal>>;
- 
+    const proposal = (yield call(
+      ProposalService.createSurveyProposal,
+      payload.payload,
+    )) as Awaited<ReturnType<typeof ProposalService.createSurveyProposal>>;
+
     yield put(
       cacheActions.updateProposalStateById({
         proposalId: proposal.id,

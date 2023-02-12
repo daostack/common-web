@@ -1,6 +1,6 @@
 import { TextEditorValue } from "@/shared/ui-kit/TextEditor";
-import { UploadFile } from "./UploadFile";
 import { ProposalTypeSelectOption } from "../constants";
+import { UploadFile } from "./UploadFile";
 
 export interface NewProposalCreationFormValues {
   proposalType: ProposalTypeSelectOption;

@@ -1,5 +1,8 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
-import { CreateDiscussionDto, CreateProposalWithFiles } from "@/pages/OldCommon/interfaces";
+import {
+  CreateDiscussionDto,
+  CreateProposalWithFiles,
+} from "@/pages/OldCommon/interfaces";
 import { CommonAction, ProposalsTypes } from "@/shared/constants";
 import {
   NewDiscussionCreationFormValues,
