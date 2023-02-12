@@ -185,20 +185,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     return items;
   }, [linkURL, isDiscussionMessage, elem, user, ownerId, commonMember]);
 
-  const desktopStyleMenuItems = useMemo<DesktopStyleMenuItem[]>(
-    () =>
-      ElementDropdownMenuItemsList.map<DesktopStyleMenuItem>((item) => ({
-        type: MenuItemType.Button,
-        id: item.value as string,
-        className: item.className,
-        text: item.text,
-        onClick: () => {
-          setSelectedItem(item.value);
-        },
-      })),
-    [ElementDropdownMenuItemsList],
-  );
-
   const handleMenuToggle = useCallback(
     (isOpen: boolean) => {
       if (!linkURL && isOpen) {
@@ -268,6 +254,21 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     setSelectedItem,
   ]);
 
+  const desktopStyleMenuItems = useMemo<DesktopStyleMenuItem[]>(
+    () =>
+      ElementDropdownMenuItemsList.map<DesktopStyleMenuItem>((item) => ({
+        type: MenuItemType.Button,
+        id: item.value as string,
+        className: item.className,
+        text: item.text,
+        onClick: () => {
+          setSelectedItem(item.value);
+          handleMenuToggle(false);
+        },
+      })),
+    [ElementDropdownMenuItemsList, handleMenuToggle],
+  );
+
   const menuInlineStyle = useMemo(
     () => ({
       height: `${2.8125 * (ElementDropdownMenuItemsList.length || 1)}rem`,
@@ -307,7 +308,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         <DesktopStyleMenu
           className={elementDropdownStyles.desktopStyleMenu}
           isOpen={isOpen}
-          onClose={() => onMenuToggle && onMenuToggle(false)}
+          onClose={() => handleMenuToggle(false)}
           items={desktopStyleMenuItems}
           withTransition={false}
         />
