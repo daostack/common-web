@@ -58,13 +58,17 @@ export default function ChatMessage({
     }
   };
 
-  const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
+  const handleMessageClick: MouseEventHandler<HTMLDivElement> = (event) => {
     if (isTabletView) {
-      return;
+      setIsMenuOpen(true);
     }
+  };
 
-    event.preventDefault();
-    setIsMenuOpen(true);
+  const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
+    if (!isTabletView) {
+      event.preventDefault();
+      setIsMenuOpen(true);
+    }
   };
 
   const ReplyMessage = useCallback(() => {
@@ -125,6 +129,7 @@ export default function ChatMessage({
             className={classNames(styles.messageText, {
               [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
             })}
+            onClick={handleMessageClick}
           >
             <ReplyMessage />
             {isNotCurrentUserMessage && (
