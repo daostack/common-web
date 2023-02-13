@@ -6,6 +6,8 @@ import { useCommonSubscription } from "./useCommonSubscription";
 import { useGovernanceSubscription } from "./useGovernanceSubscription";
 import { useParentCommonSubscription } from "./useParentCommonSubscription";
 import { useSubCommonCreateSubscription } from "./useSubCommonCreateSubscription";
+import { useDispatch } from "react-redux";
+import { setCommonGovernance } from "@/store/states/common/actions";
 
 interface Return extends State {
   fetchCommonData: (commonId: string) => void;
@@ -13,6 +15,7 @@ interface Return extends State {
 }
 
 export const useFullCommonData = (): Return => {
+  const dispatch = useDispatch();
   const [state, setState] = useState<State>({
     loading: false,
     fetched: false,
@@ -44,6 +47,7 @@ export const useFullCommonData = (): Return => {
         if (!governance) {
           throw new Error(`Couldn't find governance by common id= ${commonId}`);
         }
+        dispatch(setCommonGovernance(governance));
 
         const [parentCommons, subCommons, parentCommonSubCommons] =
           await Promise.all([
@@ -69,6 +73,7 @@ export const useFullCommonData = (): Return => {
           },
         });
       } catch (error) {
+        dispatch(setCommonGovernance(null));
         setState({
           loading: false,
           fetched: true,
@@ -76,15 +81,16 @@ export const useFullCommonData = (): Return => {
         });
       }
     })();
-  }, []);
+  }, [dispatch]);
 
   const resetCommonData = useCallback(() => {
+    dispatch(setCommonGovernance(null));
     setState({
       loading: false,
       fetched: false,
       data: null,
     });
-  }, []);
+  }, [dispatch]);
 
   return {
     ...state,

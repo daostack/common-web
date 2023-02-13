@@ -4,10 +4,6 @@ import classNames from "classnames";
 import copyToClipboard from "copy-to-clipboard";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { setCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
-import {
-  selectCommonMember,
-  selectGovernance,
-} from "@/pages/OldCommon/store/selectors";
 import { MenuButton, ShareModal } from "@/shared/components";
 import {
   DynamicLinkType,
@@ -27,6 +23,7 @@ import {
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { hasPermission } from "@/shared/utils";
+import { selectCommonMember, selectGovernance } from "@/store/states";
 import { DeleteModal } from "../DeleteModal";
 import {
   Dropdown,
@@ -72,8 +69,8 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
-  const commonMember = useSelector(selectCommonMember()) as CommonMember;
-  const governance = useSelector(selectGovernance()) as Governance;
+  const commonMember = useSelector(selectCommonMember) as CommonMember;
+  const governance = useSelector(selectGovernance) as Governance;
   const { notify } = useNotification();
   const [linkURL, setLinkURL] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<
@@ -174,7 +171,15 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     }
 
     return items;
-  }, [linkURL, isDiscussionMessage, elem, user, ownerId, commonMember]);
+  }, [
+    linkURL,
+    isDiscussionMessage,
+    elem,
+    user,
+    ownerId,
+    commonMember,
+    governance,
+  ]);
 
   const handleMenuToggle = useCallback(
     (isOpen: boolean) => {

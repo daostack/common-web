@@ -16,7 +16,7 @@ export const hasPermission = ({
   governance,
   key,
 }: Query): boolean => {
-  if (!commonMember) {
+  if (!commonMember || !governance) {
     return false;
   }
 
