@@ -25,6 +25,7 @@ const Common: FC = () => {
     fetchCommonData,
   } = useFullCommonData();
   const parentCommonId = commonData?.common.directParent?.commonId;
+  const parentCircleId = commonData?.common.directParent?.circleId;
   const {
     fetched: isGlobalDataFetched,
     fetchUserRelatedData,
@@ -34,6 +35,7 @@ const Common: FC = () => {
   } = useGlobalCommonData({
     commonId,
     parentCommonId,
+    parentCircleId,
     governanceCircles: commonData?.governance.circles,
   });
   const user = useSelector(selectUser());
@@ -58,7 +60,7 @@ const Common: FC = () => {
     if (isCommonDataFetched) {
       fetchParentCommonMemberData();
     }
-  }, [userId, parentCommonId, isCommonDataFetched]);
+  }, [userId, parentCommonId, parentCircleId, isCommonDataFetched]);
 
   if (!isDataFetched) {
     return (

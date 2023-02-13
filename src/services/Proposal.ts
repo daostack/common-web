@@ -163,6 +163,23 @@ class ProposalService {
     return !snapshot.empty;
   };
 
+
+  public checkHasUserAssignProjectCircleProposal = async (
+    commonId: string,
+    circleId: string,
+    userId: string,
+  ): Promise<boolean> => {
+    const snapshot = await this.getProposalCollection()
+      .where("type", "==", ProposalsTypes.ASSIGN_CIRCLE)
+      .where("data.args.proposerId", "==", userId)
+      .where("data.args.commonId", "==", commonId)
+      .where("data.args.circleId", "==", circleId)
+      .where("state", "in", [ProposalState.VOTING, ProposalState.DISCUSSION])
+      .get();
+
+    return !snapshot.empty;
+  };
+
   public getProposalEligibleVoters = async (
     proposalId: string,
   ): Promise<EligibleVoterWithUserInfo[]> => {
