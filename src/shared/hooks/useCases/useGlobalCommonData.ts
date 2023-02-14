@@ -7,6 +7,7 @@ import { useUserPendingJoin } from "./useUserPendingJoin";
 interface UseGlobalCommonDataArguments {
   commonId: string;
   parentCommonId?: string;
+  parentCircleId?: string;
   governanceCircles?: Circles;
 }
 
@@ -25,7 +26,7 @@ interface Return extends State {
 export const useGlobalCommonData = (
   data: UseGlobalCommonDataArguments,
 ): Return => {
-  const { commonId, parentCommonId, governanceCircles } = data;
+  const { commonId, parentCommonId, parentCircleId, governanceCircles } = data;
   const {
     loading: isCommonMemberLoading,
     fetched: isCommonMemberFetched,
@@ -66,9 +67,14 @@ export const useGlobalCommonData = (
   const fetchUserRelatedData = useCallback(() => {
     resetParentCommonMember();
     fetchCommonMember(commonId, {}, true);
-    checkUserPendingJoin(commonId);
+    checkUserPendingJoin(commonId, {
+      parentCommonId,
+      parentCircleId,
+    });
   }, [
     commonId,
+    parentCommonId,
+    parentCircleId,
     fetchCommonMember,
     checkUserPendingJoin,
     resetParentCommonMember,

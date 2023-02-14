@@ -6,8 +6,16 @@ import { Logger, ProposalService } from "../../../services";
 
 type State = LoadingState<boolean>;
 
+interface ParentCommonInfo {
+  parentCommonId?: string;
+  parentCircleId?: string;
+}
+
 interface Return extends State {
-  checkUserPendingJoin: (commonId: string) => void;
+  checkUserPendingJoin: (
+    commonId: string,
+    { parentCommonId, parentCircleId }: ParentCommonInfo,
+  ) => void;
   setIsJoinPending: (isJoinPending: boolean) => void;
   resetUserPendingJoin: () => void;
 }
@@ -22,7 +30,10 @@ export const useUserPendingJoin = (): Return => {
   const userId = user?.uid;
 
   const checkUserPendingJoin = useCallback(
-    async (commonId: string) => {
+    async (
+      commonId: string,
+      { parentCircleId, parentCommonId }: ParentCommonInfo,
+    ) => {
       if (!userId) {
         setState({
           loading: false,
@@ -39,16 +50,25 @@ export const useUserPendingJoin = (): Return => {
       });
 
       try {
-        const isJoinPending =
+        const isMemberAdmittancePending =
           await ProposalService.checkHasUserPendingMemberAdmittanceProposal(
             commonId,
             userId,
           );
 
+        const isAssignProjectCirclePending =
+          parentCommonId && parentCircleId
+            ? await ProposalService.checkHasUserAssignProjectCircleProposal(
+                parentCommonId,
+                parentCircleId,
+                userId,
+              )
+            : false;
+
         setState({
           loading: false,
           fetched: true,
-          data: isJoinPending,
+          data: isMemberAdmittancePending || isAssignProjectCirclePending,
         });
       } catch (error) {
         Logger.error(error);

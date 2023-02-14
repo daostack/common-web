@@ -15,6 +15,7 @@ interface JoinProjectModalProps {
   onClose: () => void;
   common: Common;
   governance: Governance;
+  onRequestCreated: () => void;
 }
 
 enum JoinProjectSteps {
@@ -31,7 +32,7 @@ const INITIAL_STATE = {
 const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
   props,
 ) => {
-  const { isShowing, onClose, governance, common } = props;
+  const { isShowing, onClose, governance, common, onRequestCreated } = props;
   const isTabletView = useIsTabletView();
   const [state, setState] = useState(INITIAL_STATE);
   const user = useSelector(selectUser());
@@ -57,6 +58,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         step: JoinProjectSteps.CREATION,
       });
       await ProposalService.createMemberAdmittanceProposal(payload);
+      onRequestCreated();
       setState({
         ...INITIAL_STATE,
         isLoading: false,
@@ -80,6 +82,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
       });
 
       await ProposalService.createAssignProposal(payload);
+      onRequestCreated();
       setState({
         ...INITIAL_STATE,
         isLoading: false,

@@ -230,6 +230,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
         onClose={onProjectJoinModalClose}
         common={common}
         governance={governance}
+        onRequestCreated={() => setIsJoinPending(true)}
       />
     </CommonDataContext.Provider>
   );
