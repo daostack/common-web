@@ -88,7 +88,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
           isModalVariant={false}
         />
       )}
-      <FeedItems />
+      <FeedItems userCircleIds={userCircleIds} />
     </div>
   );
 
@@ -164,7 +164,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
           isModalVariant
         />
       )}
-      <FeedItems />
+      <FeedItems userCircleIds={userCircleIds} />
       <ChatMobileModal
         isShowing={Boolean(chatItem)}
         hasBackButton

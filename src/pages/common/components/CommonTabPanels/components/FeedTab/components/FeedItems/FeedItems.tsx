@@ -7,7 +7,12 @@ import { useCommonFeedItems } from "../../hooks";
 import { FeedItem } from "./component";
 import styles from "./FeedItems.module.scss";
 
-const FeedItems: FC = () => {
+interface FeedItemsProps {
+  userCircleIds: string[];
+}
+
+const FeedItems: FC<FeedItemsProps> = (props) => {
+  const { userCircleIds } = props;
   const { common, governance } = useCommonDataContext();
   const {
     data: commonFeedItems,
@@ -47,6 +52,7 @@ const FeedItems: FC = () => {
             item={item}
             governanceCircles={governance.circles}
             isMobileVersion={isTabletView}
+            userCircleIds={userCircleIds}
           />
         ))}
       </InfiniteScroll>
