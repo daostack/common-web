@@ -4,16 +4,11 @@ import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { setAreReportsLoading } from "@/shared/store/actions";
 import { selectAreReportsLoading } from "@/shared/store/selectors";
-import {
-  ApiEndpoint,
-  ROUTE_PATHS,
-} from "../../constants";
-import { useOutsideClick } from "../../hooks";
-
 import { Loader, UserAvatar } from "../../../shared/components";
 import { User } from "../../../shared/models";
+import { ApiEndpoint, ROUTE_PATHS } from "../../constants";
+import { useOutsideClick } from "../../hooks";
 import { getUserName, saveByURL } from "../../utils";
-
 import "./index.scss";
 
 interface AccountProps {
@@ -54,7 +49,7 @@ const Account = ({
   }, [isOutside, setShowMenu, setOusideValue]);
 
   const showMyAccount = () => {
-    history.push(ROUTE_PATHS.MY_ACCOUNT_PROFILE);
+    history.push(ROUTE_PATHS.PROFILE);
   };
 
   return (

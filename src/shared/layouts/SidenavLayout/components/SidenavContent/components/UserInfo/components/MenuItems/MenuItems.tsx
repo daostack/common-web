@@ -13,7 +13,7 @@ const MenuItems: FC = () => {
     {
       key: "my-profile",
       text: "My profile",
-      to: ROUTE_PATHS.MY_ACCOUNT_PROFILE,
+      to: ROUTE_PATHS.PROFILE,
     },
     {
       key: "billing",
