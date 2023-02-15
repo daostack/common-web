@@ -4,6 +4,7 @@ import {
   ProposalFeedCard,
 } from "@/pages/common/components";
 import { CommonFeed, CommonFeedType, Governance } from "@/shared/models";
+import { checkIsItemVisibleForUser } from "@/shared/utils";
 
 interface FeedItemProps {
   commonId: string;
@@ -24,17 +25,11 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     governanceId,
   } = props;
 
-  if (item.data.type === CommonFeedType.Discussion) {
-    if (item.circleVisibility.length > 0) {
-      if (
-        !item.circleVisibility.some((circleId) =>
-          userCircleIds.includes(circleId),
-        )
-      ) {
-        return null;
-      }
-    }
+  if (!checkIsItemVisibleForUser(item.circleVisibility, userCircleIds)) {
+    return null;
+  }
 
+  if (item.data.type === CommonFeedType.Discussion) {
     return (
       <DiscussionFeedCard
         item={item}
