@@ -210,3 +210,16 @@ export const addCirclesWithHigherTier = <
     );
   });
 };
+
+export const checkIsItemVisibleForUser = (
+  itemCircleVisibility: string[],
+  userCircleIds: string[],
+): boolean => {
+  if (itemCircleVisibility.length <= 0) {
+    return true;
+  }
+
+  return itemCircleVisibility.some((circleId) =>
+    userCircleIds.includes(circleId),
+  );
+};

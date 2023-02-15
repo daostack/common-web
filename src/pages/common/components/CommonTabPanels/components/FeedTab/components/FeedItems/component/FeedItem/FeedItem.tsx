@@ -4,11 +4,13 @@ import {
   ProposalFeedCard,
 } from "@/pages/common/components";
 import { CommonFeed, CommonFeedType, Governance } from "@/shared/models";
+import { checkIsItemVisibleForUser } from "@/shared/utils";
 
 interface FeedItemProps {
   commonId: string;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
+  userCircleIds: string[];
   isMobileVersion?: boolean;
   governanceId?: string;
 }
@@ -18,9 +20,14 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonId,
     item,
     governanceCircles,
+    userCircleIds,
     isMobileVersion = false,
     governanceId,
   } = props;
+
+  if (!checkIsItemVisibleForUser(item.circleVisibility, userCircleIds)) {
+    return null;
+  }
 
   if (item.data.type === CommonFeedType.Discussion) {
     return (
