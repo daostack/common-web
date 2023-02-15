@@ -211,7 +211,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   }, [isShareLinkGenerating, setIsShareLinkGenerating, linkURL]);
 
   useEffect(() => {
-    if (selectedItem === null || isShareLinkGenerating || !linkURL) {
+    if (selectedItem === null) {
       return;
     }
 
@@ -224,8 +224,10 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         notify("The message has copied!");
         break;
       case ElementDropdownMenuItems.CopyLink:
-        copyToClipboard(linkURL || "");
-        notify("The link has copied!");
+        if (linkURL) {
+          copyToClipboard(linkURL || "");
+          notify("The link has copied!");
+        }
         break;
       case ElementDropdownMenuItems.Delete:
         onOpenDelete();
