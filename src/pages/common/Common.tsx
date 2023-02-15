@@ -8,12 +8,12 @@ import {
   useFullCommonData,
   useGlobalCommonData,
 } from "@/shared/hooks/useCases";
-import { Loader, NotFound } from "@/shared/ui-kit";
+import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
   setCommonGovernance,
   setCommonMember,
 } from "@/store/states/common/actions";
-import { CommonContent, PureCommonTopNavigation } from "./components";
+import { CommonContent } from "./components";
 import styles from "./Common.module.scss";
 
 interface CommonRouterParams {

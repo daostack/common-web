@@ -6,5 +6,4 @@ export * from "./DiscussionFeedCard";
 export * from "./FeedCard";
 export * from "./PendingJoinInfo";
 export * from "./ProposalFeedCard";
-export * from "./PureCommonTopNavigation";
 export * from "./ChatMobileModal";
