@@ -15,7 +15,6 @@ import {
 } from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
-import { commonActions } from "@/store/states/common";
 import { CommonService, GovernanceService, Logger } from "../../../services";
 
 interface Options {
@@ -89,7 +88,6 @@ export const useCommonMember = (options: Options = {}): Return => {
         ]);
 
         if (governance && commonMember) {
-          dispatch(commonActions.setCommonMember(commonMember));
           setState({
             loading: false,
             fetched: true,
@@ -111,7 +109,6 @@ export const useCommonMember = (options: Options = {}): Return => {
       } catch (e) {
         Logger.error({ state, e });
 
-        dispatch(commonActions.setCommonMember(null));
         setState({
           loading: false,
           fetched: true,
@@ -119,23 +116,21 @@ export const useCommonMember = (options: Options = {}): Return => {
         });
       }
     },
-    [state, dispatch, userId],
+    [state, userId],
   );
 
   const setCommonMember = useCallback(
     (newCommonMember: (CommonMember & CirclesPermissions) | null) => {
-      dispatch(commonActions.setCommonMember(newCommonMember));
       setState({
         loading: false,
         fetched: true,
         data: newCommonMember,
       });
     },
-    [dispatch],
+    [],
   );
 
   const resetCommonMember = useCallback(() => {
-    dispatch(commonActions.setCommonMember(null));
     setState({
       loading: false,
       fetched: false,
@@ -157,7 +152,6 @@ export const useCommonMember = (options: Options = {}): Return => {
     const clearCommonMember: CommonMemberEventToListener[CommonMemberEvent.Clear] =
       (commonMemberIdToClear: string) => {
         if (commonMemberIdToClear === commonMemberId) {
-          dispatch(commonActions.setCommonMember(null));
           setState({
             loading: false,
             fetched: true,
