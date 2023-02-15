@@ -1,13 +1,16 @@
 import React, { FC } from "react";
 import { Profile } from "@/pages/MyAccount/components/Profile";
-import { Container } from "@/shared/ui-kit";
+import { Container, PureCommonTopNavigation } from "@/shared/ui-kit";
 import styles from "./Profile.module.scss";
 
 const ProfilePage: FC = () => {
   return (
-    <Container className={styles.container}>
-      <Profile />
-    </Container>
+    <>
+      <PureCommonTopNavigation className={styles.topNavigation} />
+      <Container className={styles.container}>
+        <Profile />
+      </Container>
+    </>
   );
 };
 
