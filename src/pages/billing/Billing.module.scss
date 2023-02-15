@@ -1,0 +1,15 @@
+@import "../../styles/sizes";
+
+.topNavigation {
+  z-index: 2;
+}
+
+.container {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+
+  @include tablet {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}

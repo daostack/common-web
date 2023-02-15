@@ -18,7 +18,7 @@ const MenuItems: FC = () => {
     {
       key: "billing",
       text: "Billing",
-      to: ROUTE_PATHS.MY_ACCOUNT_BILLING,
+      to: ROUTE_PATHS.BILLING,
     },
     {
       key: "log-out",
