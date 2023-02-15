@@ -418,7 +418,7 @@ export const AddBankDetails = (props: IProps) => {
                       }}
                     />
                     <Dropdown
-                      className="field"
+                      className="field add-bank-details-form__dropdown"
                       name="gender"
                       label="Gender"
                       placeholder="---Select gender---"
@@ -491,7 +491,7 @@ export const AddBankDetails = (props: IProps) => {
                       }}
                     />
                     <Dropdown
-                      className="field"
+                      className="field add-bank-details-form__dropdown"
                       name="bankCode"
                       label="Bank Name"
                       placeholder="---Select bank---"
@@ -547,7 +547,7 @@ export const AddBankDetails = (props: IProps) => {
                       }}
                     />
                     <Dropdown
-                      className="field"
+                      className="field add-bank-details-form__dropdown"
                       name="country"
                       label="Country/Region"
                       placeholder="---Select country---"
