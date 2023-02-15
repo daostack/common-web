@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
@@ -96,6 +96,10 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     governanceCircles,
     item.circleVisibility,
   );
+  const [isHovering, setHovering] = useState(false);
+  const onHover = (isMouseEnter: boolean): void => {
+    setHovering(isMouseEnter);
+  };
   const proposalId = item.data.id;
   const isActive = discussion?.id === activeItemDiscussionId;
 
@@ -173,7 +177,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     });
 
   return (
-    <FeedCard isActive={isActive}>
+    <FeedCard isActive={isActive} isHovering={isHovering}>
       <FeedCardHeader
         avatar={feedItemUser?.photoURL}
         title={getUserName(feedItemUser)}
@@ -201,6 +205,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         )}
         images={discussion?.images}
         onClick={handleOpenChat}
+        onMouseEnter={() => {
+          onHover(true);
+        }}
+        onMouseLeave={() => {
+          onHover(false);
+        }}
       >
         <ProposalFeedVotingInfo
           proposal={proposal}
@@ -224,6 +234,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         unreadMessages={feedItemUserMetadata?.count || 0}
         onMessagesClick={handleOpenChat}
         onClick={handleOpenChat}
+        onMouseEnter={() => {
+          onHover(true);
+        }}
+        onMouseLeave={() => {
+          onHover(false);
+        }}
       />
     </FeedCard>
   );

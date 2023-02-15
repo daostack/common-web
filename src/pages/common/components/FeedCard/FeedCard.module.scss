@@ -16,3 +16,8 @@
 .containerActive {
   border: 0.0625rem solid $c-neutrals-300;
 }
+
+.containerHovering {
+  cursor: pointer;
+  box-shadow: 0 0.1875rem 0.5rem #{$c-common-card-shadow-hover};
+}

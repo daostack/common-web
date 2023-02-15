@@ -36,7 +36,8 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
     ((shouldShowFullContent || !isFullTextShowing) && !isDescriptionEmpty) ||
     images.length > 0;
 
-  const handleSeeMoreClick = () => {
+  const handleSeeMoreClick = (event) => {
+    event.stopPropagation();
     toggleFullText();
   };
 
