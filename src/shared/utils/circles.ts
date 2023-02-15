@@ -215,12 +215,11 @@ export const checkIsItemVisibleForUser = (
   itemCircleVisibility: string[],
   userCircleIds: string[],
 ): boolean => {
-  if (itemCircleVisibility.length > 0) {
-    if (
-      !itemCircleVisibility.some((circleId) => userCircleIds.includes(circleId))
-    ) {
-      return false;
-    }
+  if (itemCircleVisibility.length <= 0) {
+    return true;
   }
-  return true;
+
+  return itemCircleVisibility.some((circleId) =>
+    userCircleIds.includes(circleId),
+  );
 };
