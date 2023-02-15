@@ -18,6 +18,10 @@ import {
 } from "@/shared/constants";
 import { useBuildShareLink, useNotification, useModal } from "@/shared/hooks";
 import {
+  MenuItem as DesktopStyleMenuItem,
+  MenuItemType,
+} from "@/shared/interfaces";
+import {
   Common,
   Proposal,
   Discussion,
@@ -26,6 +30,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { DesktopStyleMenu } from "@/shared/ui-kit";
 import { hasPermission } from "@/shared/utils";
 import { DeleteModal } from "../DeleteModal";
 import {
@@ -36,6 +41,7 @@ import {
 } from "../Dropdown";
 import { HideContentTypes, HideModal } from "../HideModal";
 import { ReportModal } from "../ReportModal";
+import elementDropdownStyles from "./ElementDropdown.module.scss";
 import "./index.scss";
 
 interface ElementDropdownProps {
@@ -45,6 +51,7 @@ interface ElementDropdownProps {
   transparent?: boolean;
   className?: string;
   styles?: DropdownStyles;
+  isOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   isDiscussionMessage?: boolean;
   entityType: EntityTypes;
@@ -61,6 +68,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   variant = Orientation.Vertical,
   styles = {},
   className,
+  isOpen,
   onMenuToggle,
   isDiscussionMessage = false,
   entityType,
@@ -99,6 +107,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     onClose: onCloseHide,
   } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const isControlledMenu = typeof isOpen === "boolean";
 
   const onReply = useCallback(() => {
     dispatch(setCurrentDiscussionMessageReply(elem as DiscussionMessage));
@@ -178,7 +187,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const handleMenuToggle = useCallback(
     (isOpen: boolean) => {
-      if (!linkURL) {
+      if (!linkURL && isOpen) {
         handleOpen();
         setIsShareLinkGenerating(true);
       }
@@ -202,7 +211,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   }, [isShareLinkGenerating, setIsShareLinkGenerating, linkURL]);
 
   useEffect(() => {
-    if (selectedItem === null || isShareLinkGenerating || !linkURL) {
+    if (selectedItem === null) {
       return;
     }
 
@@ -215,8 +224,10 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         notify("The message has copied!");
         break;
       case ElementDropdownMenuItems.CopyLink:
-        copyToClipboard(linkURL || "");
-        notify("The link has copied!");
+        if (linkURL) {
+          copyToClipboard(linkURL || "");
+          notify("The link has copied!");
+        }
         break;
       case ElementDropdownMenuItems.Delete:
         onOpenDelete();
@@ -245,6 +256,21 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     setSelectedItem,
   ]);
 
+  const desktopStyleMenuItems = useMemo<DesktopStyleMenuItem[]>(
+    () =>
+      ElementDropdownMenuItemsList.map<DesktopStyleMenuItem>((item) => ({
+        type: MenuItemType.Button,
+        id: item.value as string,
+        className: item.className,
+        text: item.text,
+        onClick: () => {
+          setSelectedItem(item.value);
+          handleMenuToggle(false);
+        },
+      })),
+    [ElementDropdownMenuItemsList, handleMenuToggle],
+  );
+
   const menuInlineStyle = useMemo(
     () => ({
       height: `${2.8125 * (ElementDropdownMenuItemsList.length || 1)}rem`,
@@ -252,26 +278,43 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     [ElementDropdownMenuItemsList],
   );
 
+  useEffect(() => {
+    if (typeof isOpen === "boolean") {
+      handleMenuToggle(isOpen);
+    }
+  }, [isOpen]);
+
   return (
     <>
-      <Dropdown
-        options={ElementDropdownMenuItemsList}
-        menuButton={<MenuButton variant={variant} />}
-        onMenuToggle={handleMenuToggle}
-        className={classNames("element-dropdown__menu-wrapper", className)}
-        shouldBeFixed={false}
-        onSelect={handleMenuItemSelect}
-        isLoading={isShareLinkGenerating}
-        menuInlineStyle={menuInlineStyle}
-        styles={{
-          ...styles,
-          menuButton: classNames({
-            "element-dropdown__menu-button--transparent": transparent,
-          }),
-          menu: "element-dropdown__menu",
-          menuItem: "element-dropdown__menu-item",
-        }}
-      />
+      {!isControlledMenu && (
+        <Dropdown
+          options={ElementDropdownMenuItemsList}
+          menuButton={<MenuButton variant={variant} />}
+          onMenuToggle={handleMenuToggle}
+          className={classNames("element-dropdown__menu-wrapper", className)}
+          shouldBeFixed={false}
+          onSelect={handleMenuItemSelect}
+          isLoading={isShareLinkGenerating}
+          menuInlineStyle={menuInlineStyle}
+          styles={{
+            ...styles,
+            menuButton: classNames({
+              "element-dropdown__menu-button--transparent": transparent,
+            }),
+            menu: "element-dropdown__menu",
+            menuItem: "element-dropdown__menu-item",
+          }}
+        />
+      )}
+      {isControlledMenu && (
+        <DesktopStyleMenu
+          className={elementDropdownStyles.desktopStyleMenu}
+          isOpen={isOpen}
+          onClose={() => handleMenuToggle(false)}
+          items={desktopStyleMenuItems}
+          withTransition={false}
+        />
+      )}
       <ShareModal
         isShowing={isShowing}
         isLoading={isShareLinkGenerating}

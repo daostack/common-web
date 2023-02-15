@@ -47,11 +47,12 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
           ref={ref as RefObject<HTMLButtonElement>}
           {...restProps}
           className={className}
-          onClick={(...args) => {
+          onClick={(event) => {
+            event.stopPropagation();
             item.onClick();
 
             if (restProps.onClick) {
-              restProps.onClick(...args);
+              restProps.onClick(event);
             }
           }}
           type="button"
