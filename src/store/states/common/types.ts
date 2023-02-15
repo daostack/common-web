@@ -3,7 +3,7 @@ import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
 } from "@/shared/interfaces";
-import { CommonFeed } from "@/shared/models";
+import { CommonFeed, CommonMember, Governance } from "@/shared/models";
 import firebase from "@/shared/utils/firebase";
 
 export type EntityCreation<T> = {
@@ -25,4 +25,6 @@ export interface CommonState {
   discussionCreation: EntityCreation<NewDiscussionCreationFormValues>;
   proposalCreation: EntityCreation<NewProposalCreationFormValues>;
   isNewProjectCreated: boolean;
+  commonMember: CommonMember | null;
+  governance: Governance | null;
 }

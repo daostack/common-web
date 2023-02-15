@@ -25,6 +25,8 @@ const initialState: CommonState = {
     data: null,
     loading: false,
   },
+  commonMember: null,
+  governance: null,
 };
 
 export const reducer = createReducer<CommonState, Action>(initialState)
@@ -32,6 +34,16 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.setCommonAction, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.commonAction = payload;
+    }),
+  )
+  .handleAction(actions.setCommonMember, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.commonMember = payload;
+    }),
+  )
+  .handleAction(actions.setCommonGovernance, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.governance = payload;
     }),
   )
   .handleAction(actions.setDiscussionCreationData, (state, { payload }) =>

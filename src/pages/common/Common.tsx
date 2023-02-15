@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { QueryParamKey } from "@/shared/constants";
@@ -9,6 +9,10 @@ import {
   useGlobalCommonData,
 } from "@/shared/hooks/useCases";
 import { Loader, NotFound } from "@/shared/ui-kit";
+import {
+  setCommonGovernance,
+  setCommonMember,
+} from "@/store/states/common/actions";
 import { CommonContent, PureCommonTopNavigation } from "./components";
 import styles from "./Common.module.scss";
 
@@ -19,6 +23,7 @@ interface CommonRouterParams {
 const Common: FC = () => {
   const { id: commonId } = useParams<CommonRouterParams>();
   const queryParams = useQueryParams();
+  const dispatch = useDispatch();
   const {
     data: commonData,
     fetched: isCommonDataFetched,
@@ -55,6 +60,14 @@ const Common: FC = () => {
   useEffect(() => {
     fetchUserRelatedData();
   }, [userId]);
+
+  useEffect(() => {
+    dispatch(setCommonMember(commonMember || null));
+  }, [dispatch, commonMember]);
+
+  useEffect(() => {
+    dispatch(setCommonGovernance(commonData?.governance || null));
+  }, [dispatch, commonData?.governance]);
 
   useEffect(() => {
     if (isCommonDataFetched) {

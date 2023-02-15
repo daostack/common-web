@@ -3,6 +3,12 @@ import { AppState } from "@/shared/interfaces";
 export const selectCommonAction = (state: AppState) =>
   state.common.commonAction;
 
+export const selectCommonMember = (state: AppState) =>
+  state.common.commonMember;
+
+export const selectGovernance = (state: AppState) =>
+  state.common.governance;
+
 export const selectDiscussionCreationData = (state: AppState) =>
   state.common.discussionCreation.data;
 

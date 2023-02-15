@@ -10,7 +10,7 @@ import {
   PayloadWithOptionalCallback,
   UploadFile,
 } from "@/shared/interfaces";
-import { CommonFeed, Discussion, Proposal } from "@/shared/models";
+import { CommonFeed, CommonMember, Discussion, Governance, Proposal } from "@/shared/models";
 import firebase from "@/shared/utils/firebase";
 import { CommonActionType } from "./constants";
 import { FeedItems } from "./types";
@@ -22,6 +22,14 @@ export const resetCommon = createStandardAction(
 export const setCommonAction = createStandardAction(
   CommonActionType.SET_COMMON_ACTION,
 )<CommonAction | null>();
+
+export const setCommonMember = createStandardAction(
+  CommonActionType.SET_COMMON_MEMBER,
+)<CommonMember | null>();
+
+export const setCommonGovernance = createStandardAction(
+  CommonActionType.SET_COMMON_GOVERNANCE,
+)<Governance | null>();
 
 export const setDiscussionCreationData = createStandardAction(
   CommonActionType.SET_DISCUSSION_CREATION_DATA,

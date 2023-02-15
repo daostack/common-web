@@ -116,7 +116,7 @@ export const useCommonMember = (options: Options = {}): Return => {
         });
       }
     },
-    [state, dispatch, userId],
+    [state, userId],
   );
 
   const setCommonMember = useCallback(
