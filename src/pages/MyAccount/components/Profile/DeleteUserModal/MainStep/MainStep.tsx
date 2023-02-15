@@ -49,6 +49,7 @@ const MainStep: FC<MainStepProps> = (props) => {
 
         return {
           circlesString,
+          commonId: common.id,
           commonName: common.name,
         };
       }),
@@ -96,8 +97,8 @@ const MainStep: FC<MainStepProps> = (props) => {
         </h4>
         {membershipInfo.length > 0 ? (
           <ol className="delete-user-main-step__ordered-list">
-            {membershipInfo.map(({ commonName, circlesString }) => (
-              <li key={commonName}>
+            {membershipInfo.map(({ commonId, commonName, circlesString }) => (
+              <li key={commonId}>
                 {commonName} - {circlesString}
               </li>
             ))}
