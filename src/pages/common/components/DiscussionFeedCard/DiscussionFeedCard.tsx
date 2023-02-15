@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect } from "react";
+import React, { FC, memo, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ReportModal } from "@/shared/components";
@@ -82,6 +82,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     },
   );
   const user = useSelector(selectUser());
+  const [isHovering, setHovering] = useState(false);
+  const onHover = (isMouseEnter: boolean): void => {
+    setHovering(isMouseEnter);
+  };
   const userId = user?.uid;
   const isLoading =
     !isDiscussionCreatorFetched ||
@@ -131,7 +135,11 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }
 
   return (
-    <FeedCard isActive={isActive} isLongPressed={isMenuOpen}>
+    <FeedCard
+      isActive={isActive}
+      isLongPressed={isMenuOpen}
+      isHovering={isHovering}
+    >
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}
         title={getUserName(discussionCreator)}
@@ -157,6 +165,12 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         description={discussion?.message}
         images={discussion?.images}
         onClick={handleOpenChat}
+        onMouseEnter={() => {
+          onHover(true);
+        }}
+        onMouseLeave={() => {
+          onHover(false);
+        }}
       />
       <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
@@ -164,6 +178,12 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         unreadMessages={feedItemUserMetadata?.count || 0}
         onMessagesClick={handleOpenChat}
         onClick={handleOpenChat}
+        onMouseEnter={() => {
+          onHover(true);
+        }}
+        onMouseLeave={() => {
+          onHover(false);
+        }}
       />
       {userId && discussion && (
         <ReportModal

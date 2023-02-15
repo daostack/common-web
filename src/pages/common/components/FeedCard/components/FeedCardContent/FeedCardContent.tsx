@@ -12,10 +12,24 @@ export type FeedCardContentProps = JSX.IntrinsicElements["div"] & {
 };
 
 export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {
-  const { children, title, description, subtitle, images, onClick } = props;
+  const {
+    children,
+    title,
+    description,
+    subtitle,
+    images,
+    onClick,
+    onMouseEnter,
+    onMouseLeave,
+  } = props;
 
   return (
-    <div className={styles.container} onClick={onClick}>
+    <div
+      className={styles.container}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <FeedGeneralInfo
         title={title}
         description={description}

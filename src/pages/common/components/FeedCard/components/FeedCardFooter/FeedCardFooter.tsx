@@ -18,9 +18,16 @@ export const FeedCardFooter: React.FC<FeedCardFooterProps> = ({
   unreadMessages,
   onMessagesClick,
   onClick,
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   return (
-    <div className={styles.container} onClick={onClick}>
+    <div
+      className={styles.container}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div className={styles.leftContent} onClick={onMessagesClick}>
         <MessageIcon className={styles.messageIcon} />
         <p className={classNames(styles.text, styles.messageCount)}>

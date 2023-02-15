@@ -8,6 +8,7 @@ interface FeedCardProps {
   className?: string;
   isActive?: boolean;
   isLongPressed?: boolean;
+  isHovering?: boolean;
   onLongPress?: () => void;
 }
 
@@ -16,6 +17,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     className,
     isActive = false,
     isLongPressed = false,
+    isHovering = false,
     onLongPress,
     children,
   } = props;
@@ -44,6 +46,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
         {
           [styles.containerActive]: isActive,
           [styles.containerLongPressing]: isLongPressing || isLongPressed,
+          [styles.containerHovering]: isHovering,
         },
         className,
       )}

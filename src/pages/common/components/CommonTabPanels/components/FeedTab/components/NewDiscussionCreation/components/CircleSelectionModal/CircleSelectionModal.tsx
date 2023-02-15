@@ -3,7 +3,7 @@ import { Dropdown, DropdownOption, Modal } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Circle, Governance } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
-import { addCirclesWithHigherTier } from "@/shared/utils";
+import { addCirclesWithHigherTier, removeProjectCircles } from "@/shared/utils";
 import { getCircleNamesAsString } from "./utils";
 import styles from "./CircleSelectionModal.module.scss";
 
@@ -29,7 +29,9 @@ const CircleSelectionModal: FC<CircleSelectionModalProps> = (props) => {
     initialCircleId,
   );
   const governanceCircles = Object.values(props.governanceCircles);
-  const circleOptions: DropdownOption[] = governanceCircles
+  const circleOptions: DropdownOption[] = removeProjectCircles(
+    governanceCircles,
+  )
     .filter((circle) => userCircleIds.includes(circle.id))
     .map((circle) => ({
       text: circle.name,
