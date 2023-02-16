@@ -29,7 +29,7 @@ const MembersList: FC<MembersListComponentProps> = ({
     if (governanceId) {
       fetchGovernance(governanceId);
     }
-  }, [commonId, governanceId]);
+  }, [governanceId]);
 
   // TODO: show loader?
   if (!isGovernanceFetched) {
