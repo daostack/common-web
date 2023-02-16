@@ -5,9 +5,14 @@
   margin: 0 0 0.375rem;
   font-size: $small;
   color: $c-neutrals-600;
+  display: flex;
+  align-items: center;
 
   @include tablet {
     margin-bottom: 1rem;
+  }
+  &.link {
+    cursor: pointer;
   }
 }
 
@@ -18,4 +23,8 @@
   line-height: 120%;
   letter-spacing: 0.01em;
   color: $c-neutrals-600;
+}
+
+.newTabIcon {
+  margin-left: 0.5rem;
 }
