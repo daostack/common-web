@@ -81,7 +81,11 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
       switch (activeMenuItem) {
         case MemberListTab.Members:
           return (
-            <MembersList members={sortedCommonMembers} commonId={common.id} />
+            <MembersList
+              members={sortedCommonMembers}
+              commonId={common.id}
+              governanceId={common.governanceId}
+            />
           );
 
         case MemberListTab.Pending:
