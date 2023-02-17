@@ -1,4 +1,10 @@
-import React, { FC, PropsWithChildren, useState, useCallback } from "react";
+import React, {
+  FC,
+  PropsWithChildren,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { useDispatch } from "react-redux";
 import { deleteDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { Loader, Button } from "@/shared/components";
@@ -26,6 +32,20 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const [isLoading, setLoading] = useState(false);
+
+  const buttonTypeText = useMemo(() => {
+    switch (type) {
+      case EntityTypes.Common:
+        return "common";
+      case EntityTypes.Discussion:
+        return "discussion";
+      case EntityTypes.Proposal:
+        return "proposal";
+      case EntityTypes.DiscussionMessage:
+      case EntityTypes.ProposalMessage:
+        return "message";
+    }
+  }, [type]);
 
   const onDeleteMessage = useCallback(
     (isProposalMessage: boolean): void => {
@@ -73,7 +93,7 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
       className="delete-modal"
       isShowing={isShowing}
       onClose={onClose}
-      title="Delete"
+      title="Are you sure?"
       closeColor={Colors.black}
       closeIconSize={20}
       styles={{
@@ -98,7 +118,7 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
           {isLoading ? (
             <Loader className="delete-modal__button-container__send__loader" />
           ) : (
-            "Delete"
+            `Delete ${buttonTypeText}`
           )}
         </Button>
       </div>

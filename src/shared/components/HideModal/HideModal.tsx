@@ -1,9 +1,14 @@
-import React, { FC, PropsWithChildren, useState, useCallback } from "react";
+import React, {
+  FC,
+  PropsWithChildren,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   hideDiscussion,
   hideProposal,
-  loadCommonDiscussionList,
   loadDiscussionDetail,
   loadProposalDetail,
 } from "@/pages/OldCommon/store/actions";
@@ -40,6 +45,20 @@ const HideModal: FC<PropsWithChildren<HideModalProps>> = (props) => {
   const currentProposal = useSelector(selectCurrentProposal());
   const { notify } = useNotification();
   const [isLoading, setLoading] = useState(false);
+
+  const buttonTypeText = useMemo(() => {
+    switch (type) {
+      case EntityTypes.Common:
+        return "common";
+      case EntityTypes.Discussion:
+        return "discussion";
+      case EntityTypes.Proposal:
+        return "proposal";
+      case EntityTypes.DiscussionMessage:
+      case EntityTypes.ProposalMessage:
+        return "message";
+    }
+  }, [type]);
 
   const onRefresh = useCallback(() => {
     switch (type) {
@@ -98,7 +117,7 @@ const HideModal: FC<PropsWithChildren<HideModalProps>> = (props) => {
       className="hide-modal"
       isShowing={isShowing}
       onClose={onClose}
-      title="Hide"
+      title="Are you sure?"
       closeColor={Colors.black}
       closeIconSize={20}
       styles={{
@@ -123,7 +142,7 @@ const HideModal: FC<PropsWithChildren<HideModalProps>> = (props) => {
           {isLoading ? (
             <Loader className="hide-modal__button-container__send__loader" />
           ) : (
-            "Hide"
+            `Hide ${buttonTypeText}`
           )}
         </Button>
       </div>
