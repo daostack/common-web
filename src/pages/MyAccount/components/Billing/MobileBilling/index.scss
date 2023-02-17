@@ -1,7 +1,7 @@
 @import "../../../../../constants";
 
 .my-account-mobile-billing {
-  --content-ph: var(--container-pl, $content-padding-mobile);
+  --content-ph: var(--container-pl, #{$content-padding-mobile});
 
   flex: 1;
   display: flex;
