@@ -14,6 +14,7 @@ export * from "./parseLinksForSubmission";
 export * from "./proposals";
 export { default as request } from "./request";
 export * from "./convertDatesToFirestoreTimestamps";
+export * from "./convertLinkToUploadFile";
 export * from "./timeAgo";
 export * from "./transformFirebaseDataToModel";
 export * from "./roles";

@@ -21,7 +21,7 @@ interface ProjectCreationProps {
 }
 
 const ProjectCreation: FC<ProjectCreationProps> = (props) => {
-  const { parentCommonId } = props;
+  const { parentCommonId, initialCommon } = props;
   const history = useHistory();
   const dispatch = useDispatch();
   const {
@@ -127,6 +127,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         <ProjectCreationForm
           parentCommonId={parentCommon.id}
           governanceCircles={parentGovernance.circles}
+          initialCommon={initialCommon}
           onFinish={handleCreatedProject}
         />
       </div>

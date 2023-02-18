@@ -2,13 +2,16 @@ import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { usePreventReload } from "@/shared/hooks";
 import { useProjectCreation } from "@/shared/hooks/useCases";
-import { Circles, Common } from "@/shared/models";
+import { Circles, Common, Project } from "@/shared/models";
 import {
   Loader,
   LoaderVariant,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
-import { getCirclesWithHighestTier } from "@/shared/utils";
+import {
+  convertLinksToUploadFiles,
+  getCirclesWithHighestTier,
+} from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { generateCreationForm, CreationFormRef } from "../../../CreationForm";
 import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
@@ -21,36 +24,51 @@ const CreationForm = generateCreationForm<ProjectCreationFormValues>();
 interface ProjectCreationFormProps {
   parentCommonId: string;
   governanceCircles: Circles;
+  initialCommon?: Project;
   onFinish: (createdProject: Common) => void;
 }
 
 const getInitialValues = (
   governanceCircles: Circles,
+  initialCommon?: Project,
 ): ProjectCreationFormValues => {
   const circlesWithHighestTier = getCirclesWithHighestTier(
     Object.values(governanceCircles),
   );
 
   return {
-    projectImages: [],
-    projectName: "",
-    byline: "",
-    description: parseStringToTextEditorValue(),
-    videoUrl: "",
-    gallery: [],
-    links: [{ title: "", value: "" }],
-    highestCircleId: circlesWithHighestTier[0]?.id || "",
+    projectImages: initialCommon
+      ? [
+          {
+            id: "project_image",
+            title: "project_image",
+            file: initialCommon.image,
+          },
+        ]
+      : [],
+    projectName: initialCommon?.name || "",
+    byline: initialCommon?.byline || "",
+    description: parseStringToTextEditorValue(initialCommon?.description),
+    videoUrl: initialCommon?.video?.value || "",
+    gallery: initialCommon?.gallery
+      ? convertLinksToUploadFiles(initialCommon.gallery)
+      : [],
+    links: initialCommon?.links || [{ title: "", value: "" }],
+    highestCircleId:
+      initialCommon?.directParent.circleId ||
+      circlesWithHighestTier[0]?.id ||
+      "",
   };
 };
 
 const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
-  const { parentCommonId, governanceCircles, onFinish } = props;
+  const { parentCommonId, governanceCircles, initialCommon, onFinish } = props;
   const dispatch = useDispatch();
   const formRef = useRef<CreationFormRef>(null);
   const { isProjectCreationLoading, project, error, createProject } =
     useProjectCreation();
   const initialValues = useMemo(
-    () => getInitialValues(governanceCircles),
+    () => getInitialValues(governanceCircles, initialCommon),
     [governanceCircles],
   );
 
