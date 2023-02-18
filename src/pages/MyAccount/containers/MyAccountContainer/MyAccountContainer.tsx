@@ -9,7 +9,6 @@ import {
   ActivitiesCommonsContainer,
 } from "../../components/Activities";
 import { Billing } from "../../components/Billing";
-import { Profile } from "../../components/Profile";
 import { Sidebar } from "../../components/Sidebar";
 import "./index.scss";
 
@@ -19,11 +18,6 @@ export default function MyAccountContainer() {
   return (
     <div className="my-account-container-wrapper">
       {screenSize === ScreenSize.Desktop && <Sidebar />}
-      <PrivateRoute
-        path={ROUTE_PATHS.MY_ACCOUNT_PROFILE}
-        exact
-        component={Profile}
-      />
       <PrivateRoute
         path={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES}
         exact
