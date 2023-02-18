@@ -1,7 +1,11 @@
 import React, { FC, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCommon } from "@/shared/hooks/useCases";
+import { Loader } from "@/shared/ui-kit";
+import { checkIsProject } from "@/shared/utils";
+import { CenterWrapper } from "./components";
 import { ProjectCreation } from "./components";
+import styles from "./CommonCreation.module.scss";
 
 interface CommonCreationRouterParams {
   id?: string;
@@ -30,7 +34,27 @@ const CommonCreation: FC<CommonCreationProps> = (props) => {
   }, [commonId]);
 
   if (isEditing) {
-    return null;
+    if (!isCommonFetched) {
+      return (
+        <CenterWrapper>
+          <Loader />
+        </CenterWrapper>
+      );
+    }
+    if (!common) {
+      return (
+        <CenterWrapper>
+          <p className={styles.dataErrorText}>Common does not exist</p>
+        </CenterWrapper>
+      );
+    }
+
+    return checkIsProject(common) ? (
+      <ProjectCreation
+        initialCommon={common}
+        parentCommonId={common.directParent.commonId}
+      />
+    ) : null;
   }
 
   if (commonId) {

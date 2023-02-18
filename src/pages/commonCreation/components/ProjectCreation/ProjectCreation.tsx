@@ -7,7 +7,7 @@ import { CommonTab } from "@/pages/common";
 import { GovernanceActions, ROUTE_PATHS } from "@/shared/constants";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
-import { Common } from "@/shared/models";
+import { Common, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
 import { getCommonPagePath } from "@/shared/utils";
 import { commonActions, projectsActions } from "@/store/states";
@@ -17,6 +17,7 @@ import styles from "./ProjectCreation.module.scss";
 
 interface ProjectCreationProps {
   parentCommonId: string;
+  initialCommon?: Project;
 }
 
 const ProjectCreation: FC<ProjectCreationProps> = (props) => {

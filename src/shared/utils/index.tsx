@@ -19,6 +19,7 @@ export * from "./transformFirebaseDataToModel";
 export * from "./roles";
 export * from "./routes";
 export * from "./checkIsIFrame";
+export * from "./checkIsProject";
 export * from "./checkIsURL";
 export * from "./circles";
 export * from "./notifications";
