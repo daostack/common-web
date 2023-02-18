@@ -4,7 +4,6 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
-import { addCirclesWithHigherTier } from "@/shared/utils";
 import {
   selectDiscussionCreationData,
   selectIsDiscussionCreationLoading,
@@ -62,13 +61,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
         return;
       }
 
-      const circleVisibility = values.circle
-        ? addCirclesWithHigherTier(
-            [values.circle],
-            Object.values(governanceCircles),
-            userCircleIds,
-          ).map((circle) => circle.id)
-        : [];
+      const circleVisibility = values.circle ? [values.circle.id] : [];
 
       dispatch(
         commonActions.createDiscussion.request({
