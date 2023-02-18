@@ -11,6 +11,7 @@ import { Common } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
 import { getCommonPagePath } from "@/shared/utils";
 import { commonActions, projectsActions } from "@/store/states";
+import { CenterWrapper } from "../CenterWrapper";
 import { ProjectCreationForm } from "./components";
 import styles from "./ProjectCreation.module.scss";
 
@@ -42,9 +43,9 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const loaderEl = (
-    <div className={styles.centerWrapper}>
+    <CenterWrapper>
       <Loader />
-    </div>
+    </CenterWrapper>
   );
 
   const handleCreatedProject = (createdProject: Common) => {
@@ -81,9 +82,9 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   }
   if (!parentCommon) {
     return (
-      <div className={styles.centerWrapper}>
+      <CenterWrapper>
         <p className={styles.dataErrorText}>Parent common does not exist</p>
-      </div>
+      </CenterWrapper>
     );
   }
   if (!isParentGovernanceFetched || !isCommonMemberFetched) {
@@ -91,11 +92,11 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   }
   if (!parentGovernance) {
     return (
-      <div className={styles.centerWrapper}>
+      <CenterWrapper>
         <p className={styles.dataErrorText}>
           Governance for parent common was not found
         </p>
-      </div>
+      </CenterWrapper>
     );
   }
 
