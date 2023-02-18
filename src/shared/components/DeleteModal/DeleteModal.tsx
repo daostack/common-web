@@ -44,6 +44,8 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
       case EntityTypes.DiscussionMessage:
       case EntityTypes.ProposalMessage:
         return "message";
+      default:
+        return "";
     }
   }, [type]);
 
