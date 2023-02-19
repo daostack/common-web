@@ -22,7 +22,7 @@ import {
   CommonRules,
 } from "./components";
 import { AboutActions } from "./components/AboutActions";
-import { AboutAction } from "./components/AboutActions/AboutActions";
+import { getAllowedActions } from "./utils";
 import styles from "./AboutTab.module.scss";
 
 interface AboutTabProps {
@@ -48,7 +48,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   const isTabletView = useIsTabletView();
   const { parentCommon, parentCommonSubCommons } = useCommonDataContext();
   const isParentCommon = common.directParent === null;
-  const allowedAboutActions = [AboutAction.Edit, AboutAction.InviteFriends];
+  const allowedAboutActions = getAllowedActions(commonMember);
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>

@@ -2,14 +2,10 @@ import React, { FC } from "react";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common } from "@/shared/models";
 import { checkIsProject } from "@/shared/utils";
+import { AboutAction } from "../../constants";
 import { EditButton } from "../EditButton";
 import { InviteFriendsButton } from "../InviteFriendsButton";
 import styles from "./AboutActions.module.scss";
-
-export enum AboutAction {
-  Edit = "edit",
-  InviteFriends = "invite-friends",
-}
 
 interface FeedActionsProps {
   allowedActions?: AboutAction[];
