@@ -95,8 +95,8 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   );
 
   const shouldPreventReload = useCallback(
-    () => (!project && formRef.current?.isDirty()) ?? true,
-    [formRef, project],
+    () => (!project && !updatedProject && formRef.current?.isDirty()) ?? true,
+    [formRef, project, updatedProject],
   );
 
   const handleProjectCreate = (values: ProjectCreationFormValues) => {
