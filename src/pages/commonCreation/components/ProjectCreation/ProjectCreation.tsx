@@ -41,6 +41,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   } = useCommonMember({
     shouldAutoReset: false,
   });
+  const isEditing = Boolean(initialCommon);
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const loaderEl = (
@@ -118,7 +119,9 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           Back
         </NavLink>
         <h1 className={styles.title}>
-          Create a new project in {parentCommon.name}
+          {isEditing
+            ? `Edit project ${initialCommon?.name}`
+            : `Create a new project in ${parentCommon.name}`}
         </h1>
         <p className={styles.subtitle}>
           Project serves a certain group in the common to organize together and
@@ -128,6 +131,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           parentCommonId={parentCommon.id}
           governanceCircles={parentGovernance.circles}
           initialCommon={initialCommon}
+          isEditing={isEditing}
           onFinish={handleCreatedProject}
         />
       </div>

@@ -25,6 +25,7 @@ interface ProjectCreationFormProps {
   parentCommonId: string;
   governanceCircles: Circles;
   initialCommon?: Project;
+  isEditing: boolean;
   onFinish: (createdProject: Common) => void;
 }
 
@@ -62,7 +63,13 @@ const getInitialValues = (
 };
 
 const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
-  const { parentCommonId, governanceCircles, initialCommon, onFinish } = props;
+  const {
+    parentCommonId,
+    governanceCircles,
+    initialCommon,
+    isEditing,
+    onFinish,
+  } = props;
   const dispatch = useDispatch();
   const formRef = useRef<CreationFormRef>(null);
   const { isProjectCreationLoading, project, error, createProject } =
@@ -110,7 +117,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         initialValues={initialValues}
         onSubmit={handleSubmit}
         items={CONFIGURATION}
-        submitButtonText="Create Project"
+        submitButtonText={isEditing ? "Save changes" : "Create Project"}
         disabled={isProjectCreationLoading}
         error={error}
       />
