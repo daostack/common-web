@@ -44,7 +44,7 @@ export interface IntermediateUpdateCommonData {
 
 export interface UpdateCommonData {
   name: string;
-  image: string;
+  image: string | File;
   byline?: string;
   description?: string;
   video?: CommonLink;

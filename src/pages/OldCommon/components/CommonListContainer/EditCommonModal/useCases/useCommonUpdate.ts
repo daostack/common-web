@@ -18,7 +18,7 @@ interface Return {
   common: Common | null;
   error: string;
   updateCommon: (updateData: IntermediateUpdateCommonData) => Promise<void>;
-  updateCommon_old: (updateData: UpdateCommonData) => Promise<void>;
+  updateCommon_DEPRECATED: (updateData: UpdateCommonData) => Promise<void>;
 }
 
 export const getCommonImageURL = async (
@@ -118,7 +118,7 @@ const useCommonUpdate = (commonId?: string): Return => {
     [dispatch, commonId, setIsCommonUpdateLoading],
   );
 
-  const updateCommon_old = useCallback(
+  const updateCommon_DEPRECATED = useCallback(
     async (updatedData) => {
       if (isCommonUpdateLoading || !updatedData.image || !commonId) {
         return;
@@ -168,7 +168,7 @@ const useCommonUpdate = (commonId?: string): Return => {
     common,
     error,
     updateCommon,
-    updateCommon_old,
+    updateCommon_DEPRECATED,
   };
 };
 

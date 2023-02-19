@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { useCommonUpdate } from "@/pages/OldCommon/components/CommonListContainer/EditCommonModal/useCases";
 import { usePreventReload } from "@/shared/hooks";
 import { useProjectCreation } from "@/shared/hooks/useCases";
 import { Circles, Common, Project } from "@/shared/models";
@@ -72,8 +73,20 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   } = props;
   const dispatch = useDispatch();
   const formRef = useRef<CreationFormRef>(null);
-  const { isProjectCreationLoading, project, error, createProject } =
-    useProjectCreation();
+  const {
+    isProjectCreationLoading,
+    project,
+    error: createProjectError,
+    createProject,
+  } = useProjectCreation();
+  const {
+    isCommonUpdateLoading,
+    common: updatedProject,
+    error: updateProjectError,
+    updateCommon: updateProject,
+  } = useCommonUpdate(initialCommon?.id);
+  const isLoading = isProjectCreationLoading || isCommonUpdateLoading;
+  const error = createProjectError || updateProjectError;
   const initialValues = useMemo(
     () => getInitialValues(governanceCircles, initialCommon),
     [governanceCircles],
@@ -84,8 +97,22 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     [formRef, project],
   );
 
-  const handleSubmit = (values: ProjectCreationFormValues) => {
+  const handleProjectCreate = (values: ProjectCreationFormValues) => {
     createProject(parentCommonId, values);
+  };
+
+  const handleProjectUpdate = (values: ProjectCreationFormValues) => {
+    const [image] = values.projectImages;
+
+    if (!image) {
+      return;
+    }
+
+    updateProject({
+      ...values,
+      image,
+      name: values.projectName,
+    });
   };
 
   usePreventReload(shouldPreventReload);
@@ -99,14 +126,16 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (project) {
-      onFinish(project);
+    const finalProject = project || updatedProject;
+
+    if (finalProject) {
+      onFinish(finalProject);
     }
-  }, [project]);
+  }, [project, updatedProject]);
 
   return (
     <>
-      {isProjectCreationLoading && (
+      {isLoading && (
         <Loader
           overlayClassName={styles.globalLoader}
           variant={LoaderVariant.Global}
@@ -115,10 +144,10 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
       <CreationForm
         ref={formRef}
         initialValues={initialValues}
-        onSubmit={handleSubmit}
+        onSubmit={isEditing ? handleProjectUpdate : handleProjectCreate}
         items={CONFIGURATION}
         submitButtonText={isEditing ? "Save changes" : "Create Project"}
-        disabled={isProjectCreationLoading}
+        disabled={isLoading}
         error={error}
       />
       <UnsavedChangesPrompt shouldShowPrompt={shouldPreventReload} />

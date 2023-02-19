@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
+import { updateCommonState } from "@/pages/OldCommon/store/actions";
 import { CommonTab } from "@/pages/common";
 import { GovernanceActions, ROUTE_PATHS } from "@/shared/constants";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
@@ -51,15 +52,35 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   );
 
   const handleCreatedProject = (createdProject: Common) => {
-    dispatch(commonActions.setIsNewProjectCreated(true));
+    if (isEditing) {
+      dispatch(
+        projectsActions.updateProject({
+          commonId: createdProject.id,
+          image: createdProject.image,
+          name: createdProject.name,
+        }),
+      );
+    } else {
+      dispatch(commonActions.setIsNewProjectCreated(true));
+      dispatch(
+        projectsActions.addProject({
+          commonId: createdProject.id,
+          image: createdProject.image,
+          name: createdProject.name,
+          directParent: createdProject.directParent,
+          hasMembership: true,
+          notificationsAmount: 0,
+        }),
+      );
+    }
     dispatch(
-      projectsActions.addProject({
+      updateCommonState({
         commonId: createdProject.id,
-        image: createdProject.image,
-        name: createdProject.name,
-        directParent: createdProject.directParent,
-        hasMembership: true,
-        notificationsAmount: 0,
+        state: {
+          loading: false,
+          fetched: true,
+          data: createdProject,
+        },
       }),
     );
     history.push(getCommonPagePath(createdProject.id, CommonTab.About));
