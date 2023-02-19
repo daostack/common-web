@@ -5,7 +5,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { updateCommonState } from "@/pages/OldCommon/store/actions";
 import { CommonTab } from "@/pages/common";
-import { GovernanceActions, ROUTE_PATHS } from "@/shared/constants";
+import { GovernanceActions } from "@/shared/constants";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Project } from "@/shared/models";
