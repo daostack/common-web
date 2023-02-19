@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { useHistory } from "react-router-dom";
-import { InviteFriendsIcon } from "@/shared/icons";
+import { Edit2Icon } from "@/shared/icons";
 import { Button, ButtonIcon, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
 import { getCommonEditingPagePath } from "@/shared/utils";
 import styles from "./EditButton.module.scss";
@@ -15,7 +15,7 @@ const EditButton: FC<EditButtonProps> = (props) => {
   const { isMobileVersion = false, commonId, isProject = false } = props;
   const history = useHistory();
   const buttonVariant = ButtonVariant.OutlineBlue;
-  const iconEl = <InviteFriendsIcon className={styles.icon} />;
+  const iconEl = <Edit2Icon className={styles.icon} />;
 
   if (!isProject) {
     return null;
