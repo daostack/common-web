@@ -31,7 +31,6 @@ const MembersList: FC<MembersListComponentProps> = ({
     }
   }, [governanceId]);
 
-  // TODO: show loader?
   if (!isGovernanceFetched) {
     return null;
   }

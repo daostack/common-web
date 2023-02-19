@@ -7,13 +7,16 @@
 
 .tabNavigationContainer {
   margin-top: 0.875rem;
+  margin-left: 0;
 
   @include desktop {
     max-width: var(--main-content-mw);
+    padding-left: 0;
   }
 
   @include only-laptop {
     max-width: var(--main-content-mw);
+    padding-left: 0;
   }
 
   @include tablet {
