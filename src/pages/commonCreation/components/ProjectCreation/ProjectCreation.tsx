@@ -123,19 +123,28 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     );
   }
 
-  const parentCommonRoute = ROUTE_PATHS.COMMON.replace(":id", parentCommon.id);
+  const parentCommonRoute = getCommonPagePath(parentCommon.id, CommonTab.About);
+  const projectRoute = getCommonPagePath(
+    initialCommon?.id || "",
+    CommonTab.About,
+  );
+  const backRoute = isEditing ? projectRoute : parentCommonRoute;
 
   if (
     !commonMember ||
-    !commonMember.allowedActions[GovernanceActions.CREATE_PROJECT]
+    !commonMember.allowedActions[
+      isEditing
+        ? GovernanceActions.UPDATE_COMMON
+        : GovernanceActions.CREATE_PROJECT
+    ]
   ) {
-    return <Redirect to={parentCommonRoute} />;
+    return <Redirect to={backRoute} />;
   }
 
   return (
     <Container className={styles.container}>
       <div className={styles.content}>
-        <NavLink className={styles.backLink} to={parentCommonRoute}>
+        <NavLink className={styles.backLink} to={backRoute}>
           <LongLeftArrowIcon className={styles.backArrowIcon} />
           Back
         </NavLink>
