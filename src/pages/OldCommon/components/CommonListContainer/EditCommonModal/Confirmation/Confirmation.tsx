@@ -30,7 +30,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     isCommonUpdateLoading,
     common: updatedCommon,
     error: commonCreationError,
-    updateCommon,
+    updateCommon_old: updateCommon,
   } = useCommonUpdate(commonId);
 
   const isLoading = isCommonUpdateLoading;

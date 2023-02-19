@@ -1,18 +1,24 @@
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
+import { FileService, Logger } from "@/services";
+import { isRequestError } from "@/services/Api";
+import { ErrorCode } from "@/shared/constants";
 import { Common } from "@/shared/models";
+import { getStringFromTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
+import { getFileNameForUploading, uploadFile } from "@/shared/utils";
 import {
-  getFileNameForUploading,
-  uploadFile,
-} from "@/shared/utils/firebaseUploadFile";
-import { UpdateCommonData, UpdateCommonPayload } from "../../../../interfaces";
+  IntermediateUpdateCommonData,
+  UpdateCommonData,
+  UpdateCommonPayload,
+} from "../../../../interfaces";
 import { updateCommon as updateCommonAction } from "../../../../store/actions";
 
 interface Return {
   isCommonUpdateLoading: boolean;
   common: Common | null;
   error: string;
-  updateCommon: (updateData: UpdateCommonData) => Promise<void>;
+  updateCommon: (updateData: IntermediateUpdateCommonData) => Promise<void>;
+  updateCommon_old: (updateData: UpdateCommonData) => Promise<void>;
 }
 
 export const getCommonImageURL = async (
@@ -34,15 +40,87 @@ export const getCommonImageURL = async (
   }
 };
 
-const useCommonUpdate = (commonId): Return => {
+const getErrorMessage = (
+  error: unknown | Error | null,
+  commonName: string,
+): string =>
+  isRequestError(error) &&
+  error.response?.data?.errorCode === ErrorCode.ArgumentDuplicatedError
+    ? `Project with name "${commonName}" already exists`
+    : "Something went wrong...";
+
+const useCommonUpdate = (commonId?: string): Return => {
   const [isCommonUpdateLoading, setIsCommonUpdateLoading] = useState(false);
   const [common, setCommon] = useState<Common | null>(null);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
   const updateCommon = useCallback(
+    async (updatedData: IntermediateUpdateCommonData) => {
+      if (isCommonUpdateLoading || !commonId) {
+        return;
+      }
+
+      setIsCommonUpdateLoading(true);
+
+      try {
+        const image =
+          typeof updatedData.image.file === "string"
+            ? updatedData.image.file
+            : (await FileService.uploadFile(updatedData.image)).value;
+        const gallery =
+          updatedData.gallery &&
+          (await FileService.uploadFiles(updatedData.gallery));
+
+        const payload: UpdateCommonPayload = {
+          commonId,
+          changes: {
+            name: updatedData.name,
+            image,
+            byline: updatedData.byline,
+            description:
+              updatedData.description &&
+              getStringFromTextEditorValue(updatedData.description),
+            video: updatedData.videoUrl
+              ? {
+                  title: `Video of ${updatedData.name}`,
+                  value: updatedData.videoUrl,
+                }
+              : undefined,
+            gallery,
+            links: updatedData.links,
+          },
+        };
+
+        dispatch(
+          updateCommonAction.request({
+            payload,
+            callback: (error, common) => {
+              if (error) {
+                Logger.error(error);
+              }
+              if (error || !common) {
+                setError(getErrorMessage(error, updatedData.name));
+              } else {
+                setCommon(common);
+              }
+
+              setIsCommonUpdateLoading(false);
+            },
+          }),
+        );
+      } catch (err) {
+        Logger.error(error);
+        setError(getErrorMessage(err, updatedData.name));
+        setIsCommonUpdateLoading(true);
+      }
+    },
+    [dispatch, commonId, setIsCommonUpdateLoading],
+  );
+
+  const updateCommon_old = useCallback(
     async (updatedData) => {
-      if (isCommonUpdateLoading || !updatedData.image) {
+      if (isCommonUpdateLoading || !updatedData.image || !commonId) {
         return;
       }
 
@@ -82,7 +160,7 @@ const useCommonUpdate = (commonId): Return => {
         }),
       );
     },
-    [dispatch, setIsCommonUpdateLoading],
+    [dispatch, setIsCommonUpdateLoading, commonId],
   );
 
   return {
@@ -90,6 +168,7 @@ const useCommonUpdate = (commonId): Return => {
     common,
     error,
     updateCommon,
+    updateCommon_old,
   };
 };
 

@@ -7,6 +7,7 @@ export * from "./checkIsParentElementType";
 export * from "./checkIsTextDirectionType";
 export * from "./checkIsTextEditorValueEmpty";
 export * from "./getElementsByType";
+export * from "./getStringFromTextEditorValue";
 export * from "./insertLink";
 export * from "./isElementActive";
 export * from "./isMarkActive";

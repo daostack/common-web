@@ -34,10 +34,10 @@ export interface IntermediateCreateCommonPayload
 
 export interface IntermediateUpdateCommonData {
   name: string;
-  image?: UploadFile;
-  byline: string;
-  description: TextEditorValue;
-  videoUrl: string;
+  image: UploadFile;
+  byline?: string;
+  description?: string | TextEditorValue;
+  videoUrl?: string;
   gallery?: UploadFile[];
   links?: CommonLink[];
 }
