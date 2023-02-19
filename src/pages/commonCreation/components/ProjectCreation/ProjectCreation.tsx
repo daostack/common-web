@@ -97,8 +97,12 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   }, [parentCommon?.governanceId]);
 
   useEffect(() => {
-    fetchCommonMember(parentCommonId, {}, true);
-  }, [parentCommonId, userId]);
+    const commonId = isEditing ? initialCommon?.id : parentCommonId;
+
+    if (commonId) {
+      fetchCommonMember(commonId, {}, true);
+    }
+  }, [isEditing, initialCommon?.id, parentCommonId, userId]);
 
   if (!isParentCommonFetched) {
     return loaderEl;
