@@ -141,6 +141,10 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     return <Redirect to={backRoute} />;
   }
 
+  const handleProjectCreationCancel = () => {
+    history.push(backRoute);
+  };
+
   return (
     <Container className={styles.container}>
       <div className={styles.content}>
@@ -163,6 +167,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           initialCommon={initialCommon}
           isEditing={isEditing}
           onFinish={handleCreatedProject}
+          onCancel={handleProjectCreationCancel}
         />
       </div>
     </Container>

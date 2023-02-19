@@ -28,6 +28,7 @@ interface ProjectCreationFormProps {
   initialCommon?: Project;
   isEditing: boolean;
   onFinish: (createdProject: Common) => void;
+  onCancel: () => void;
 }
 
 const getInitialValues = (
@@ -70,6 +71,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     initialCommon,
     isEditing,
     onFinish,
+    onCancel,
   } = props;
   const dispatch = useDispatch();
   const formRef = useRef<CreationFormRef>(null);
@@ -102,6 +104,11 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   };
 
   const handleProjectUpdate = (values: ProjectCreationFormValues) => {
+    if (!formRef.current?.isDirty()) {
+      onCancel();
+      return;
+    }
+
     const [image] = values.projectImages;
 
     if (!image) {
