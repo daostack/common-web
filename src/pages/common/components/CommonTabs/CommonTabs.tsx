@@ -47,11 +47,6 @@ const TABS: TabConfiguration[] = [
     value: CommonTab.Members,
     icon: <PeopleGroupIcon />,
   },
-  {
-    label: getCommonTabName(CommonTab.Governance),
-    value: CommonTab.Governance,
-    icon: <GovernanceIcon />,
-  },
 ];
 
 const CommonTabs: FC<CommonTabsProps> = (props) => {

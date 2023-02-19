@@ -3,5 +3,4 @@ export enum CommonTab {
   Feed = "feed",
   Wallet = "wallet",
   Members = "members",
-  Governance = "governance",
 }
