@@ -1,0 +1,22 @@
+@import "../../../../../../styles/sizes";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabNavigationContainer {
+  margin-top: 0.875rem;
+
+  @include desktop {
+    max-width: var(--main-content-mw);
+  }
+
+  @include only-laptop {
+    max-width: var(--main-content-mw);
+  }
+
+  @include tablet {
+    margin-top: 0.375rem;
+  }
+}

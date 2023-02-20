@@ -38,7 +38,7 @@ import "./index.scss";
 
 interface WalletComponentProps {
   common: Common;
-  withTitle?: boolean;
+  withTabs?: boolean;
 }
 
 const getTransactionsListTitle = (activeMenuItem: WalletMenuItems): string => {
@@ -54,7 +54,7 @@ const getTransactionsListTitle = (activeMenuItem: WalletMenuItems): string => {
 
 const WalletComponent: FC<WalletComponentProps> = ({
   common,
-  withTitle = true,
+  withTabs = true,
 }) => {
   const walletMenuRef = useRef<HTMLDivElement>(null);
   const initialWalletMenuOffsetTop = walletMenuRef.current?.offsetTop || null;
@@ -265,17 +265,25 @@ const WalletComponent: FC<WalletComponentProps> = ({
     // eslint-disable-next-line
   }, [isMobileView, initialWalletMenuOffsetTop, window.pageYOffset]);
 
+  if (!withTabs) {
+    return (
+      <div className="wallet__component-wrapper">
+        <div className="wallet__transactions-wrapper wallet__transactions-wrapper--without-tabs">
+          {renderTransactionsList(activeMenuItem)}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="wallet__component-wrapper">
       <div className="wallet__component-header-wrapper">
-        {withTitle && (
-          <div className="wallet__common-title-wrapper">
-            <div className="wallet__common-title">Common Wallet</div>
-            {isMobileView && (
-              <div className="wallet__common-name">{common.name || ""}</div>
-            )}
-          </div>
-        )}
+        <div className="wallet__common-title-wrapper">
+          <div className="wallet__common-title">Common Wallet</div>
+          {isMobileView && (
+            <div className="wallet__common-name">{common.name || ""}</div>
+          )}
+        </div>
         <div className="wallet__common-balance-chart-wrapper wallet__section-element">
           <div className="wallet__common-balance-chart">
             <div className="balance">

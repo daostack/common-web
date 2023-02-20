@@ -114,7 +114,7 @@
       align-items: center;
       padding: 0;
 
-      > li {
+      >li {
         cursor: pointer;
         list-style: none;
         display: flex;
@@ -126,6 +126,7 @@
         &.active {
           color: $purple-2;
         }
+
         &.active::after {
           content: "";
           display: block;
@@ -160,6 +161,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .wallet__transactions-wrapper--without-tabs {
+    @include tablet {
+      margin-top: 0.5rem;
+      padding: 0rem 2.5rem;
+    }
+
+    @include big-phone {
+      padding: 0;
+    }
   }
 }
 
