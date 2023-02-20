@@ -10,6 +10,7 @@ const ALLOWED_MOBILE_TABS = [
   CommonTab.About,
   CommonTab.Feed,
   CommonTab.Governance,
+  CommonTab.Wallet,
 ];
 const ALL_TABS = Object.values(CommonTab);
 

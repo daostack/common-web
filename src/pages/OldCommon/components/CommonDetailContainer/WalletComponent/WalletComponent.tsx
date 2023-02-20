@@ -38,6 +38,7 @@ import "./index.scss";
 
 interface WalletComponentProps {
   common: Common;
+  withTitle?: boolean;
 }
 
 const getTransactionsListTitle = (activeMenuItem: WalletMenuItems): string => {
@@ -51,7 +52,10 @@ const getTransactionsListTitle = (activeMenuItem: WalletMenuItems): string => {
   }
 };
 
-const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
+const WalletComponent: FC<WalletComponentProps> = ({
+  common,
+  withTitle = true,
+}) => {
   const walletMenuRef = useRef<HTMLDivElement>(null);
   const initialWalletMenuOffsetTop = walletMenuRef.current?.offsetTop || null;
   const [isWalletMenuSticked, setIsWalletMenuSticked] =
@@ -264,12 +268,14 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
   return (
     <div className="wallet__component-wrapper">
       <div className="wallet__component-header-wrapper">
-        <div className="wallet__common-title-wrapper">
-          <div className="wallet__common-title">Common Wallet</div>
-          {isMobileView && (
-            <div className="wallet__common-name">{common.name || ""}</div>
-          )}
-        </div>
+        {withTitle && (
+          <div className="wallet__common-title-wrapper">
+            <div className="wallet__common-title">Common Wallet</div>
+            {isMobileView && (
+              <div className="wallet__common-name">{common.name || ""}</div>
+            )}
+          </div>
+        )}
         <div className="wallet__common-balance-chart-wrapper wallet__section-element">
           <div className="wallet__common-balance-chart">
             <div className="balance">

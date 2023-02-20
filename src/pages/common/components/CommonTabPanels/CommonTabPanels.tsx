@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { WalletComponent } from "@/pages/OldCommon/components";
 import { TabPanel } from "@/shared/components";
 import { ProposalsTypes, ViewportBreakpointVariant } from "@/shared/constants";
 import {
@@ -49,6 +50,9 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
           commonMember={commonMember}
           common={common}
         />
+      </TabPanel>
+      <TabPanel value={activeTab} panelValue={CommonTab.Wallet}>
+        <WalletComponent common={common} withTitle={false} />
       </TabPanel>
     </Container>
   );
