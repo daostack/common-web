@@ -2,7 +2,9 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCommon } from "@/shared/hooks/useCases";
 import { Loader } from "@/shared/ui-kit";
+import { checkIsProject } from "@/shared/utils";
 import { CommonCreationPage, CenterWrapper } from "../commonCreation";
+import { Editing } from "./components";
 import styles from "./CommonEditing.module.scss";
 
 interface CommonEditingRouterParams {
@@ -41,7 +43,11 @@ const CommonEditing = () => {
     );
   }
 
-  return <CommonCreationPage initialCommon={common} />;
+  return checkIsProject(common) ? (
+    <CommonCreationPage initialCommon={common} />
+  ) : (
+    <Editing common={common} />
+  );
 };
 
 export default CommonEditing;
