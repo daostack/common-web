@@ -6,10 +6,7 @@ import {
   CreationFormRef,
   UnsavedChangesPrompt,
 } from "@/pages/commonCreation/components";
-import {
-  CONFIGURATION,
-  styles,
-} from "@/pages/commonCreation/components/ProjectCreation/components/ProjectCreationForm";
+import { styles } from "@/pages/commonCreation/components/ProjectCreation/components/ProjectCreationForm";
 import { usePreventReload } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import {
@@ -19,6 +16,7 @@ import {
 } from "@/shared/ui-kit";
 import { convertLinksToUploadFiles } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
+import { CONFIGURATION } from "./configuration";
 import { EditingFormValues } from "./types";
 
 const CreationForm = generateCreationForm<EditingFormValues>();
