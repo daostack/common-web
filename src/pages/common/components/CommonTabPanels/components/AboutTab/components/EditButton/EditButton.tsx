@@ -8,18 +8,13 @@ import styles from "./EditButton.module.scss";
 interface EditButtonProps {
   isMobileVersion?: boolean;
   commonId: string;
-  isProject?: boolean;
 }
 
 const EditButton: FC<EditButtonProps> = (props) => {
-  const { isMobileVersion = false, commonId, isProject = false } = props;
+  const { isMobileVersion = false, commonId } = props;
   const history = useHistory();
   const buttonVariant = ButtonVariant.OutlineBlue;
   const iconEl = <Edit2Icon className={styles.icon} />;
-
-  if (!isProject) {
-    return null;
-  }
 
   const handleClick = () => {
     history.push(getCommonEditingPagePath(commonId));
