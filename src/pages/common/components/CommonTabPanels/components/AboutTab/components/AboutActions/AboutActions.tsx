@@ -1,12 +1,11 @@
 import React, { FC } from "react";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common } from "@/shared/models";
+import { checkIsProject } from "@/shared/utils";
+import { AboutAction } from "../../constants";
+import { EditButton } from "../EditButton";
 import { InviteFriendsButton } from "../InviteFriendsButton";
 import styles from "./AboutActions.module.scss";
-
-export enum AboutAction {
-  InviteFriends = "invite-friends",
-}
 
 interface FeedActionsProps {
   allowedActions?: AboutAction[];
@@ -16,6 +15,7 @@ interface FeedActionsProps {
 const AboutActions: FC<FeedActionsProps> = (props) => {
   const { allowedActions = [], common } = props;
   const isMobileVersion = useIsTabletView();
+  const isProject = checkIsProject(common);
 
   if (allowedActions.length === 0) {
     return null;
@@ -24,6 +24,13 @@ const AboutActions: FC<FeedActionsProps> = (props) => {
   return (
     <div>
       <div className={styles.container}>
+        {allowedActions.includes(AboutAction.Edit) && (
+          <EditButton
+            isMobileVersion={isMobileVersion}
+            commonId={common.id}
+            isProject={isProject}
+          />
+        )}
         {allowedActions.includes(AboutAction.InviteFriends) && (
           <InviteFriendsButton
             isMobileVersion={isMobileVersion}

@@ -1,14 +1,18 @@
 import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { useCommonUpdate } from "@/pages/OldCommon/components/CommonListContainer/EditCommonModal/useCases";
 import { usePreventReload } from "@/shared/hooks";
 import { useProjectCreation } from "@/shared/hooks/useCases";
-import { Circles, Common } from "@/shared/models";
+import { Circles, Common, Project } from "@/shared/models";
 import {
   Loader,
   LoaderVariant,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
-import { getCirclesWithHighestTier } from "@/shared/utils";
+import {
+  convertLinksToUploadFiles,
+  getCirclesWithHighestTier,
+} from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { generateCreationForm, CreationFormRef } from "../../../CreationForm";
 import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
@@ -21,46 +25,101 @@ const CreationForm = generateCreationForm<ProjectCreationFormValues>();
 interface ProjectCreationFormProps {
   parentCommonId: string;
   governanceCircles: Circles;
+  initialCommon?: Project;
+  isEditing: boolean;
   onFinish: (createdProject: Common) => void;
+  onCancel: () => void;
 }
 
 const getInitialValues = (
   governanceCircles: Circles,
+  initialCommon?: Project,
 ): ProjectCreationFormValues => {
   const circlesWithHighestTier = getCirclesWithHighestTier(
     Object.values(governanceCircles),
   );
 
   return {
-    projectImages: [],
-    projectName: "",
-    byline: "",
-    description: parseStringToTextEditorValue(),
-    videoUrl: "",
-    gallery: [],
-    links: [{ title: "", value: "" }],
-    highestCircleId: circlesWithHighestTier[0]?.id || "",
+    projectImages: initialCommon
+      ? [
+          {
+            id: "project_image",
+            title: "project_image",
+            file: initialCommon.image,
+          },
+        ]
+      : [],
+    projectName: initialCommon?.name || "",
+    byline: initialCommon?.byline || "",
+    description: parseStringToTextEditorValue(initialCommon?.description),
+    videoUrl: initialCommon?.video?.value || "",
+    gallery: initialCommon?.gallery
+      ? convertLinksToUploadFiles(initialCommon.gallery)
+      : [],
+    links: initialCommon?.links || [{ title: "", value: "" }],
+    highestCircleId:
+      initialCommon?.directParent.circleId ||
+      circlesWithHighestTier[0]?.id ||
+      "",
   };
 };
 
 const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
-  const { parentCommonId, governanceCircles, onFinish } = props;
+  const {
+    parentCommonId,
+    governanceCircles,
+    initialCommon,
+    isEditing,
+    onFinish,
+    onCancel,
+  } = props;
   const dispatch = useDispatch();
   const formRef = useRef<CreationFormRef>(null);
-  const { isProjectCreationLoading, project, error, createProject } =
-    useProjectCreation();
+  const {
+    isProjectCreationLoading,
+    project,
+    error: createProjectError,
+    createProject,
+  } = useProjectCreation();
+  const {
+    isCommonUpdateLoading,
+    common: updatedProject,
+    error: updateProjectError,
+    updateCommon: updateProject,
+  } = useCommonUpdate(initialCommon?.id);
+  const isLoading = isProjectCreationLoading || isCommonUpdateLoading;
+  const error = createProjectError || updateProjectError;
   const initialValues = useMemo(
-    () => getInitialValues(governanceCircles),
+    () => getInitialValues(governanceCircles, initialCommon),
     [governanceCircles],
   );
 
   const shouldPreventReload = useCallback(
-    () => (!project && formRef.current?.isDirty()) ?? true,
-    [formRef, project],
+    () => (!project && !updatedProject && formRef.current?.isDirty()) ?? true,
+    [formRef, project, updatedProject],
   );
 
-  const handleSubmit = (values: ProjectCreationFormValues) => {
+  const handleProjectCreate = (values: ProjectCreationFormValues) => {
     createProject(parentCommonId, values);
+  };
+
+  const handleProjectUpdate = (values: ProjectCreationFormValues) => {
+    if (!formRef.current?.isDirty()) {
+      onCancel();
+      return;
+    }
+
+    const [image] = values.projectImages;
+
+    if (!image) {
+      return;
+    }
+
+    updateProject({
+      ...values,
+      image,
+      name: values.projectName,
+    });
   };
 
   usePreventReload(shouldPreventReload);
@@ -74,14 +133,16 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (project) {
-      onFinish(project);
+    const finalProject = project || updatedProject;
+
+    if (finalProject) {
+      onFinish(finalProject);
     }
-  }, [project]);
+  }, [project, updatedProject]);
 
   return (
     <>
-      {isProjectCreationLoading && (
+      {isLoading && (
         <Loader
           overlayClassName={styles.globalLoader}
           variant={LoaderVariant.Global}
@@ -90,10 +151,10 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
       <CreationForm
         ref={formRef}
         initialValues={initialValues}
-        onSubmit={handleSubmit}
+        onSubmit={isEditing ? handleProjectUpdate : handleProjectCreate}
         items={CONFIGURATION}
-        submitButtonText="Create Project"
-        disabled={isProjectCreationLoading}
+        submitButtonText={isEditing ? "Save changes" : "Create Project"}
+        disabled={isLoading}
         error={error}
       />
       <UnsavedChangesPrompt shouldShowPrompt={shouldPreventReload} />
