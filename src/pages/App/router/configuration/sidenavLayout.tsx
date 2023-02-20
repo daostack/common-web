@@ -1,3 +1,4 @@
+import { BillingPage } from "@/pages/billing";
 import CommonPage from "@/pages/common/Common";
 import { CommonCreationPage } from "@/pages/commonCreation";
 import { CommonEditingPage } from "@/pages/commonEditing";
@@ -33,6 +34,11 @@ export const SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<SidenavLayoutRout
         path: ROUTE_PATHS.PROFILE,
         exact: true,
         component: ProfilePage,
+      },
+      {
+        path: ROUTE_PATHS.BILLING,
+        exact: true,
+        component: BillingPage,
       },
     ],
   };

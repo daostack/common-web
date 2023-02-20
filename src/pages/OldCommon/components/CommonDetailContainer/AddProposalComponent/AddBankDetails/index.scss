@@ -99,6 +99,10 @@
   }
 }
 
+.add-bank-details-form__dropdown {
+  z-index: 1;
+}
+
 @include big-phone {
   .add-bank-details-wrapper {
     height: auto;

@@ -8,7 +8,6 @@ import {
   ActivitiesProposalsContainer,
   ActivitiesCommonsContainer,
 } from "../../components/Activities";
-import { Billing } from "../../components/Billing";
 import { Sidebar } from "../../components/Sidebar";
 import "./index.scss";
 
@@ -32,11 +31,6 @@ export default function MyAccountContainer() {
         path={ROUTE_PATHS.MY_ACCOUNT_ACTIVITIES_PROPOSALS}
         exact
         component={ActivitiesProposalsContainer}
-      />
-      <PrivateRoute
-        path={ROUTE_PATHS.MY_ACCOUNT_BILLING}
-        exact
-        component={Billing}
       />
     </div>
   );

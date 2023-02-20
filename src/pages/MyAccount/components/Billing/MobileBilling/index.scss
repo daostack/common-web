@@ -1,6 +1,8 @@
 @import "../../../../../constants";
 
 .my-account-mobile-billing {
+  --content-ph: var(--container-pl, #{$content-padding-mobile});
+
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -16,8 +18,8 @@
 }
 
 .my-account-mobile-billing__tabs-wrapper {
-  padding: 0 $content-padding-mobile;
-  margin: 0 -#{$content-padding-mobile};
+  padding: 0 var(--content-ph);
+  margin: 0 calc(var(--content-ph) * -1);
   white-space: nowrap;
   border-bottom: 1px solid $light-gray-1;
 }
@@ -35,7 +37,7 @@
   box-sizing: border-box;
 }
 .my-account-mobile-billing__contributions-tab-panel {
-  margin: 0 -#{$content-padding-mobile};
+  margin: 0 calc(var(--content-ph) * -1);
 }
 
 .my-account-mobile-billing__active-contribution-item {
