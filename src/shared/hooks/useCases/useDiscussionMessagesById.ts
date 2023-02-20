@@ -3,22 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { isEqual, xor } from "lodash";
 import { fetchOwners } from "@/pages/OldCommon/store/api";
 import { DiscussionMessageService } from "@/services";
-import { GovernanceActions } from "@/shared/constants";
 import { LoadingState } from "@/shared/interfaces";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
-import {
-  CommonMember,
-  DiscussionMessage,
-  Governance,
-  User,
-} from "@/shared/models";
-import { hasPermission } from "@/shared/utils";
+import { DiscussionMessage, User } from "@/shared/models";
 import {
   cacheActions,
-  selectCommonMember,
   selectDiscussionMessagesStateByDiscussionId,
-  selectGovernance,
 } from "@/store/states";
+
+interface Options {
+  hasPermissionToHide: boolean;
+}
 
 type State = LoadingState<DiscussionMessage[] | null>;
 
@@ -35,14 +30,14 @@ const DEFAULT_STATE: State = {
   data: null,
 };
 
-export const useDiscussionMessagesById = (): Return => {
+export const useDiscussionMessagesById = ({
+  hasPermissionToHide,
+}: Options): Return => {
   const dispatch = useDispatch();
   const [currentDiscussionId, setCurrentDiscussionId] = useState("");
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const [messageOwners, setMessageOwners] = useState<User[]>([]);
   const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
-  const commonMember = useSelector(selectCommonMember) as CommonMember;
-  const governance = useSelector(selectGovernance) as Governance;
   const state =
     useSelector(
       selectDiscussionMessagesStateByDiscussionId(currentDiscussionId),
@@ -77,14 +72,6 @@ export const useDiscussionMessagesById = (): Return => {
   useEffect(() => {
     (async () => {
       const discussionMessages = [...(state.data || [])];
-      const hasPermissionToHide =
-        commonMember && governance
-          ? hasPermission({
-              commonMember,
-              governance,
-              key: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
-            })
-          : false;
       const filteredMessages = (discussionMessages || []).filter(
         ({ moderation }) =>
           (moderation?.flag === ModerationFlags.Hidden &&
@@ -114,7 +101,7 @@ export const useDiscussionMessagesById = (): Return => {
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
     })();
-  }, [state.data, messageOwnersIds, messageOwners, commonMember, governance]);
+  }, [state.data, messageOwnersIds, messageOwners, hasPermissionToHide]);
 
   const setDiscussionMessages = useCallback(
     (discussionMessages: DiscussionMessage[] | null) => {
