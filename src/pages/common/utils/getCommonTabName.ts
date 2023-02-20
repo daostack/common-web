@@ -5,6 +5,7 @@ const COMMON_TAB_TO_NAME_MAP: Record<CommonTab, string> = {
   [CommonTab.Feed]: "Feed",
   [CommonTab.Wallet]: "Wallet",
   [CommonTab.Members]: "Members",
+  [CommonTab.Governance]: "Governance",
 };
 
 export const getCommonTabName = (tab: CommonTab): string =>
