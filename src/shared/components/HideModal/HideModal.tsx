@@ -57,6 +57,8 @@ const HideModal: FC<PropsWithChildren<HideModalProps>> = (props) => {
       case EntityTypes.DiscussionMessage:
       case EntityTypes.ProposalMessage:
         return "message";
+      default:
+        return "";
     }
   }, [type]);
 
