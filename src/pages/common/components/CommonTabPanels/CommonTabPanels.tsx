@@ -9,7 +9,7 @@ import {
 } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
-import { AboutTab, FeedTab } from "./components";
+import { AboutTab, FeedTab, MembersTab } from "./components";
 
 interface CommonTabPanelsProps {
   activeTab: CommonTab;
@@ -49,6 +49,9 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
           commonMember={commonMember}
           common={common}
         />
+      </TabPanel>
+      <TabPanel value={activeTab} panelValue={CommonTab.Members}>
+        <MembersTab activeTab={activeTab} common={common} />
       </TabPanel>
     </Container>
   );

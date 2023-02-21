@@ -1,7 +1,7 @@
 import { ModerationFlags } from "../interfaces/Moderation";
 
 export const getModerationText = (flag?: ModerationFlags): string => {
-  switch(flag) {
+  switch (flag) {
     case ModerationFlags.Hidden:
       return "Hidden";
     case ModerationFlags.Reported:
@@ -9,4 +9,4 @@ export const getModerationText = (flag?: ModerationFlags): string => {
     default:
       return "";
   }
-}
+};

@@ -1,12 +1,13 @@
 import React, { FC, memo, useEffect } from "react";
+import CommonMember from "@/pages/OldCommon/components/CommonDetailContainer/MembersComponent/CommonMemberComponent";
 import { useGovernance } from "@/shared/hooks/useCases";
 import { CommonMemberWithUserInfo } from "@/shared/models";
+import { Loader } from "@/shared/ui-kit";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
   getUserName,
 } from "@/shared/utils";
-import CommonMember from "./CommonMemberComponent";
 
 interface MembersListComponentProps {
   members: CommonMemberWithUserInfo[];
@@ -32,7 +33,7 @@ const MembersList: FC<MembersListComponentProps> = ({
   }, [governanceId]);
 
   if (!isGovernanceFetched) {
-    return null;
+    return <Loader />;
   }
 
   const governanceCircles = Object.values(governance?.circles || {});

@@ -74,8 +74,7 @@ export const useDiscussionMessagesById = ({
       const discussionMessages = [...(state.data || [])];
       const filteredMessages = (discussionMessages || []).filter(
         ({ moderation }) =>
-          moderation?.flag !== ModerationFlags.Hidden ||
-            hasPermissionToHide,
+          moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
       );
       const ownerIds = Array.from(
         new Set(filteredMessages?.map((d) => d.ownerId)),
