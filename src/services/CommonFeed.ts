@@ -127,6 +127,26 @@ class CommonFeedService {
 
     return convertObjectDatesToFirestoreTimestamps(data);
   };
+
+  public subscribeToCommonFeedItem = (
+    commonId: string,
+    feedItemId: string,
+    callback: (item: CommonFeed, isRemoved: boolean) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getCommonFeedSubCollection(commonId).where(
+      "id",
+      "==",
+      feedItemId,
+    );
+
+    return query.onSnapshot((snapshot) => {
+      const docChange = snapshot.docChanges()[0];
+
+      if (docChange && docChange.type !== "added") {
+        callback(docChange.doc.data(), docChange.type === "removed");
+      }
+    });
+  };
 }
 
 export default new CommonFeedService();
