@@ -7,6 +7,7 @@ import {
   ChatType,
   EntityTypes,
 } from "@/shared/constants";
+import { isRTL } from "@/shared/utils";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import { DiscussionMessage, User } from "@/shared/models";
@@ -130,6 +131,7 @@ export default function ChatMessage({
           <div
             className={classNames(styles.messageText, {
               [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
+              [styles.messageTextRtl]: isRTL(discussionMessage.text),
             })}
             onClick={handleMessageClick}
           >
