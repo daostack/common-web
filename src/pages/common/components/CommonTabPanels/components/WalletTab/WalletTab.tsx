@@ -27,7 +27,11 @@ const WalletTab: FC<WalletTabProps> = (props) => {
       >
         <TabNavigation activeTab={activeTab} />
       </Container>
-      <WalletComponent common={common} withTabs={false} />
+      <div className={styles.columnsWrapper}>
+        <div className={styles.mainColumnWrapper}>
+          <WalletComponent common={common} withTabs={false} />
+        </div>
+      </div>
     </div>
   );
 };
