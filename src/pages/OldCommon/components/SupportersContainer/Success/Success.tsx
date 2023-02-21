@@ -15,30 +15,39 @@ import "./index.scss";
 
 interface SuccessProps {
   common: Common;
+  isOldCommonMember: boolean;
   onFinish: () => void;
 }
 
 const Success: FC<SuccessProps> = (props) => {
-  const { common, onFinish } = props;
+  const { common, isOldCommonMember, onFinish } = props;
   const { t } = useTranslation("translation", {
     keyPrefix: "supporters",
   });
   const { currentTranslation } = useSupportersDataContext();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const successPageDescription =
+    (isOldCommonMember &&
+      currentTranslation?.successPageDescriptionForOldMembers) ||
+    currentTranslation?.successPageDescription;
+  const successPageInfoBlockDescription =
+    (isOldCommonMember &&
+      currentTranslation?.successPageInfoBlockDescriptionForOldMembers) ||
+    currentTranslation?.successPageInfoBlockDescription;
 
   return (
     <div className="supporters-page-success">
       <h1 className="supporters-page-success__title">{t("success.title")}</h1>
       <p className="supporters-page-success__description">
-        {currentTranslation?.successPageDescription}
+        {successPageDescription}
       </p>
       <div className="supporters-page-success__info-block">
         <h2 className="supporters-page-success__info-block-title">
           {t("success.infoBlockTitle")}
         </h2>
         <p className="supporters-page-success__info-block-content">
-          {currentTranslation?.successPageInfoBlockDescription}
+          {successPageInfoBlockDescription}
         </p>
       </div>
       <div className="supporters-page-success__buttons-wrapper">

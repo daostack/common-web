@@ -77,6 +77,7 @@ const SupportersContainer = () => {
     (!user || !isCommonMemberFetched) && step === SupportersStep.UserDetails;
   const shouldShowLanguageDropdown =
     Object.keys(supportersData?.translations || {}).length > 1;
+  const isOldCommonMember = Boolean(commonMember);
 
   const handleInitialStepFinish = (
     amount: number,
@@ -212,7 +213,11 @@ const SupportersContainer = () => {
         );
       case SupportersStep.Success:
         return common ? (
-          <Success common={common} onFinish={handleSuccessStepFinish} />
+          <Success
+            common={common}
+            isOldCommonMember={isOldCommonMember}
+            onFinish={handleSuccessStepFinish}
+          />
         ) : null;
       case SupportersStep.Welcome:
         return common?.governanceId ? (
