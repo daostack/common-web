@@ -9,9 +9,8 @@ const ALLOWED_NON_MEMBER_TABS = [CommonTab.About];
 const ALLOWED_MOBILE_TABS = [
   CommonTab.About,
   CommonTab.Feed,
-  CommonTab.Governance,
-  CommonTab.Wallet,
   CommonTab.Members,
+  CommonTab.Wallet,
 ];
 const ALL_TABS = Object.values(CommonTab);
 
