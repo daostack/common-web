@@ -38,6 +38,7 @@ import "./index.scss";
 
 interface WalletComponentProps {
   common: Common;
+  withTabs?: boolean;
 }
 
 const getTransactionsListTitle = (activeMenuItem: WalletMenuItems): string => {
@@ -51,7 +52,10 @@ const getTransactionsListTitle = (activeMenuItem: WalletMenuItems): string => {
   }
 };
 
-const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
+const WalletComponent: FC<WalletComponentProps> = ({
+  common,
+  withTabs = true,
+}) => {
   const walletMenuRef = useRef<HTMLDivElement>(null);
   const initialWalletMenuOffsetTop = walletMenuRef.current?.offsetTop || null;
   const [isWalletMenuSticked, setIsWalletMenuSticked] =
@@ -260,6 +264,16 @@ const WalletComponent: FC<WalletComponentProps> = ({ common }) => {
     );
     // eslint-disable-next-line
   }, [isMobileView, initialWalletMenuOffsetTop, window.pageYOffset]);
+
+  if (!withTabs) {
+    return (
+      <div className="wallet__component-wrapper">
+        <div className="wallet__transactions-wrapper wallet__transactions-wrapper--without-tabs">
+          {renderTransactionsList(activeMenuItem)}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="wallet__component-wrapper">
