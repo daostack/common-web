@@ -158,11 +158,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         commonMember,
         governance,
         key: HideContentTypes[entityType],
-      })
+      }) &&
+      !isOwner
     ) {
       items.push({
         text: (
-          <span className="element-dropdown__menu-item--red-text">Hide</span>
+          <span className={elementDropdownStyles.menuItemRedText}>Hide</span>
         ),
         searchText: "Hide",
         value: ElementDropdownMenuItems.Hide,
@@ -172,7 +173,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     if (isOwner && isDiscussionMessage) {
       items.push({
         text: (
-          <span className="element-dropdown__menu-item--red-text">Delete</span>
+          <span className={elementDropdownStyles.menuItemRedText}>Delete</span>
         ),
         searchText: "Delete",
         value: ElementDropdownMenuItems.Delete,

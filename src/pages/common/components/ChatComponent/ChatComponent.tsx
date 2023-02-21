@@ -19,7 +19,11 @@ import {
 import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
 import { Loader } from "@/shared/components";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
-import { ChatType, LastSeenEntity } from "@/shared/constants";
+import {
+  ChatType,
+  GovernanceActions,
+  LastSeenEntity,
+} from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { useIntersection } from "@/shared/hooks";
 import { usePrevious } from "@/shared/hooks";
@@ -38,6 +42,8 @@ import {
   DiscussionMessage,
   Proposal,
 } from "@/shared/models";
+import { hasPermission } from "@/shared/utils";
+import { selectGovernance } from "@/store/states";
 import { ChatContent } from "./components/ChatContent";
 import { getLastNonUserMessage } from "./utils";
 import "./index.scss";
@@ -100,11 +106,23 @@ export default function ChatComponent({
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
   const dispatch = useDispatch();
+  const governance = useSelector(selectGovernance);
+
+  const hasPermissionToHide =
+    commonMember && governance
+      ? hasPermission({
+          commonMember,
+          governance,
+          key: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
+        })
+      : false;
   const {
     fetchDiscussionMessages,
     data: discussionMessages = [],
     fetched: isFetchedDiscussionMessages,
-  } = useDiscussionMessagesById();
+  } = useDiscussionMessagesById({
+    hasPermissionToHide,
+  });
   const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(
     discussionMessages ?? [],
   );
