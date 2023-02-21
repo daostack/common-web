@@ -55,6 +55,10 @@
   text-align: start;
 }
 
+.messageText--rtl {
+  text-align: end;
+}
+
 .messageTextCurrentUser {
   background-color: $c-neutrals-200;
 }
