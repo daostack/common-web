@@ -32,6 +32,7 @@ interface ChatContentInterface {
   messages: Record<number, DiscussionMessage[]>;
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
+  hasPermissionToHide: boolean;
 }
 
 const isToday = (someDate: Date) => {
@@ -58,6 +59,7 @@ export default function ChatContent({
   messages,
   dateList,
   lastSeenItem,
+  hasPermissionToHide,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -163,6 +165,7 @@ export default function ChatContent({
                     chatType={type}
                     scrollToRepliedMessage={scrollToRepliedMessage}
                     highlighted={message.id === highlightedMessageId}
+                    hasPermissionToHide={hasPermissionToHide}
                     onMessageDropdownOpen={
                       messageIndex === messages[Number(day)].length - 1
                         ? () => {
