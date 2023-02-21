@@ -127,7 +127,7 @@ const HideModal: FC<PropsWithChildren<HideModalProps>> = (props) => {
         content: "hide-modal__content",
       }}
     >
-      <p className="hide-modal__title">This action can be reverted</p>
+      <p className="hide-modal__title">This action cannot be reverted</p>
       <div className="hide-modal__button-container">
         <Button
           disabled={isLoading}

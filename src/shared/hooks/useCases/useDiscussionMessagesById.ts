@@ -93,6 +93,7 @@ export const useDiscussionMessagesById = ({
               id: parentMessage.id,
               text: parentMessage.text,
               ownerName: parentMessage?.ownerName,
+              moderation: parentMessage?.moderation,
             }
           : null;
         return newDiscussionMessage;
