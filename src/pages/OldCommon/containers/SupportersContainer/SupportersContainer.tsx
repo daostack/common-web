@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import classNames from "classnames";
 import { setLoginModalState } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { LanguageDropdown, Loader } from "@/shared/components";
 import { ContributionType, ScreenSize } from "@/shared/constants";
 import { useHeader, useLanguage, useQueryParams } from "@/shared/hooks";
@@ -48,6 +49,13 @@ const SupportersContainer = () => {
   const [contributionType, setContributionType] = useState(() =>
     getContributionType(queryParams),
   );
+  const {
+    data: commonMember,
+    fetched: isCommonMemberFetched,
+    fetchCommonMember,
+  } = useCommonMember({
+    shouldAutoReset: false,
+  });
   const initialLanguage = getInitialLanguage(queryParams);
   const [step, setStep] = useState(
     amount ? SupportersStep.UserDetails : SupportersStep.InitialStep,
@@ -60,11 +68,13 @@ const SupportersContainer = () => {
   const language = useSelector(selectLanguage());
   const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const screenSize = useSelector(getScreenSize());
+  const userId = user?.uid;
   const isMobileView = screenSize === ScreenSize.Mobile;
   const currentTranslation =
     (supportersData && supportersData.translations[language]) || null;
   const isMainDataFetched = isCommonFetched && isSupportersDataFetched;
-  const isInitialLoading = !user && step === SupportersStep.UserDetails;
+  const isInitialLoading =
+    (!user || !isCommonMemberFetched) && step === SupportersStep.UserDetails;
   const shouldShowLanguageDropdown =
     Object.keys(supportersData?.translations || {}).length > 1;
 
@@ -113,6 +123,10 @@ const SupportersContainer = () => {
   }, [commonId]);
 
   useEffect(() => {
+    fetchCommonMember(commonId, {}, true);
+  }, [commonId, userId]);
+
+  useEffect(() => {
     if (isSupportersDataFetched && supportersData) {
       const languageToUse =
         initialLanguage && supportersData.translations[initialLanguage]
@@ -150,6 +164,16 @@ const SupportersContainer = () => {
     window.scrollTo(0, 0);
   }, [step]);
 
+  useEffect(() => {
+    if (
+      isCommonMemberFetched &&
+      commonMember &&
+      step === SupportersStep.UserDetails
+    ) {
+      setStep(SupportersStep.Payment);
+    }
+  }, [isCommonMemberFetched, step]);
+
   const renderContent = () => {
     if (isInitialLoading) {
       return <Loader />;
@@ -172,6 +196,8 @@ const SupportersContainer = () => {
         return (
           <MemberAdmittanceStep
             data={formData}
+            commonMember={commonMember}
+            isCommonMemberFetched={isCommonMemberFetched}
             onFinish={handleMemberAdmittanceStepFinish}
           />
         );
