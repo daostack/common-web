@@ -1,21 +1,40 @@
-import React, { FC, memo } from "react";
-import { useSelector } from "react-redux";
+import React, { FC, memo, useEffect } from "react";
+import { useGovernance } from "@/shared/hooks/useCases";
 import { CommonMemberWithUserInfo } from "@/shared/models";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
   getUserName,
 } from "@/shared/utils";
-import { selectGovernance } from "../../../store/selectors";
 import CommonMember from "./CommonMemberComponent";
 
 interface MembersListComponentProps {
   members: CommonMemberWithUserInfo[];
   commonId: string;
+  governanceId: string | null;
 }
 
-const MembersList: FC<MembersListComponentProps> = ({ members, commonId }) => {
-  const governance = useSelector(selectGovernance());
+const MembersList: FC<MembersListComponentProps> = ({
+  members,
+  commonId,
+  governanceId,
+}) => {
+  const {
+    data: governance,
+    fetched: isGovernanceFetched,
+    fetchGovernance,
+  } = useGovernance();
+
+  useEffect(() => {
+    if (governanceId) {
+      fetchGovernance(governanceId);
+    }
+  }, [governanceId]);
+
+  if (!isGovernanceFetched) {
+    return null;
+  }
+
   const governanceCircles = Object.values(governance?.circles || {});
 
   return (

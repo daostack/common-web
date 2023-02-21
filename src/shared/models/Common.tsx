@@ -12,6 +12,11 @@ import {
   CirclesMap,
 } from "./governance/Circles";
 
+interface DirectParent {
+  commonId: string;
+  circleId: string;
+}
+
 export interface Common extends BaseEntity {
   /**
    * The name of the common showed in the app and
@@ -97,10 +102,7 @@ export interface Common extends BaseEntity {
    */
   score: number;
 
-  directParent: {
-    commonId: string;
-    circleId: string;
-  } | null;
+  directParent: DirectParent | null;
 
   /**
    * This is not fetched from the database. It's calcualted while the commons are fetched.
@@ -108,6 +110,10 @@ export interface Common extends BaseEntity {
   proposals?: Proposal[];
   discussions?: Discussion[];
   messages?: DiscussionMessage[];
+}
+
+export interface Project extends Common {
+  directParent: DirectParent;
 }
 
 /**

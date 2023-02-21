@@ -8,6 +8,7 @@ export { default as CaretIcon } from "./caret.icon";
 export { default as Close2Icon } from "./close2.icon";
 export { default as CopyrightIcon } from "./copyright.icon";
 export { default as CopyLinkChainIcon } from "./copyLinkChain.icon";
+export { default as Edit2Icon } from "./edit2.icon";
 export { default as ExcavatorIcon } from "./excavator.icon";
 export { default as GovernanceIcon } from "./governance.icon";
 export { default as Hamburger2Icon } from "./hamburger2.icon";

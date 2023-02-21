@@ -13,6 +13,7 @@ export enum ROUTE_PATHS {
   COMMON_SUPPORT = "/commons/:id/support",
   COMMON = "/new-commons/:id",
   PROJECT_CREATION = "/new-commons/:id/new-project",
+  COMMON_EDITING = "/new-commons/:id/edit",
   MY_COMMONS = "/my-commons",
   SUBMIT_INVOICES = "/invoices/submission/:proposalId",
   TRUSTEE = "/trustee",
