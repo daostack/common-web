@@ -91,7 +91,6 @@
 
   .user-details__country {
     grid-area: country;
-    z-index: 10000;
   }
 
   .user-details__textarea {
@@ -215,5 +214,6 @@
   .user-details-preview__intro-content {
     margin: 0;
     font-size: $xsmall;
+    white-space: pre-line;
   }
 }

@@ -9,3 +9,6 @@ export const getCommonPagePath = (
 
   return `${path}${tab ? `?${QueryParamKey.Tab}=${tab}` : ""}`;
 };
+
+export const getCommonEditingPagePath = (commonId: string): string =>
+  ROUTE_PATHS.COMMON_EDITING.replace(":id", commonId);

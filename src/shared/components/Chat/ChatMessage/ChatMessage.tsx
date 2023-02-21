@@ -8,8 +8,10 @@ import {
   EntityTypes,
 } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import { DiscussionMessage, User } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
+import { getModerationText } from "@/shared/utils/moderation";
 import { EditMessageInput } from "../EditMessageInput";
 import styles from "./ChatMessage.module.scss";
 
@@ -58,7 +60,7 @@ export default function ChatMessage({
     }
   };
 
-  const handleMessageClick: MouseEventHandler<HTMLDivElement> = (event) => {
+  const handleMessageClick: MouseEventHandler<HTMLDivElement> = () => {
     if (isTabletView) {
       setIsMenuOpen(true);
     }
@@ -169,7 +171,10 @@ export default function ChatMessage({
                     hour12: false,
                     hour: "2-digit",
                     minute: "2-digit",
-                  })}
+                  })}{" "}
+                  {discussionMessage?.moderation?.flag ===
+                    ModerationFlags.Hidden &&
+                    getModerationText(discussionMessage?.moderation?.flag)}
                 </div>
               </div>
             </div>

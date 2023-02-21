@@ -45,7 +45,7 @@ const Projects: FC = () => {
     location.pathname,
   );
   const activeItem = getItemById(activeItemId, items);
-  const isDataReady = areProjectsFetched && Boolean(activeItem);
+  const isDataReady = areProjectsFetched;
 
   const handleGoToCommon = (createdCommon: Common) => {
     onCreateCommonModalClose();

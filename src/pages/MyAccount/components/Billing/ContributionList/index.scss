@@ -47,8 +47,10 @@
   list-style-type: none;
   overflow-y: auto;
   box-sizing: border-box;
+  overscroll-behavior: contain;
 
   @include big-phone {
     padding: 0;
+    overscroll-behavior: initial;
   }
 }
