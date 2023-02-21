@@ -18,7 +18,7 @@ export const MembersTab: FC<MembersTabProps> = (props) => {
     <div className={styles.container}>
       <Container className={styles.tabNavigationContainer}>
         <TabNavigation activeTab={activeTab} />
-        <Members common={common} />
+        <Members commonId={common.id} governanceId={common.governanceId} />
       </Container>
     </div>
   );

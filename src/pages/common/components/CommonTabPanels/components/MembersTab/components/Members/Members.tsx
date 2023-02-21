@@ -1,15 +1,16 @@
 import React, { FC, useEffect, useMemo } from "react";
 import classNames from "classnames";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
-import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { MembersList } from "../MembersList";
 
 interface MembersComponentProps {
-  common: Common;
+  commonId: string;
+  governanceId: string | null;
 }
 
-const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
+const MembersComponent: FC<MembersComponentProps> = (props) => {
+  const { commonId, governanceId } = props;
   const {
     fetched: areCommonMembersFetched,
     data: commonMembers,
@@ -26,8 +27,8 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
   );
 
   useEffect(() => {
-    fetchCommonMembers(common.id);
-  }, [fetchCommonMembers, common.id]);
+    fetchCommonMembers(commonId);
+  }, [fetchCommonMembers, commonId]);
 
   return (
     <div className="members__component-wrapper">
@@ -42,8 +43,8 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
         {areCommonMembersFetched && (
           <MembersList
             members={sortedCommonMembers}
-            commonId={common.id}
-            governanceId={common.governanceId}
+            commonId={commonId}
+            governanceId={governanceId}
           />
         )}
       </div>
