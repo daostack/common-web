@@ -24,6 +24,7 @@ interface ChatMessageProps {
   onMessageDropdownOpen?: (isOpen: boolean) => void;
   user: User | null;
   scrollToRepliedMessage: (messageId: string) => void;
+  hasPermissionToHide: boolean;
 }
 
 const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
@@ -43,6 +44,7 @@ export default function ChatMessage({
   onMessageDropdownOpen,
   user,
   scrollToRepliedMessage,
+  hasPermissionToHide,
 }: ChatMessageProps) {
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -75,7 +77,12 @@ export default function ChatMessage({
   };
 
   const ReplyMessage = useCallback(() => {
-    if (!discussionMessage.parentMessage?.id) {
+    if (
+      !discussionMessage.parentMessage?.id ||
+      (discussionMessage.parentMessage?.moderation?.flag ===
+        ModerationFlags.Hidden &&
+        !hasPermissionToHide)
+    ) {
       return null;
     }
 
@@ -99,7 +106,7 @@ export default function ChatMessage({
         </div>
       </div>
     );
-  }, [discussionMessage.parentMessage]);
+  }, [discussionMessage.parentMessage, hasPermissionToHide]);
 
   return (
     <li

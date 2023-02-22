@@ -5,6 +5,7 @@ import {
 } from "@/pages/common/components";
 import { CommonFeed, CommonFeedType, Governance } from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
+import { useFeedItemSubscription } from "../../../../../../../../hooks";
 
 interface FeedItemProps {
   commonId: string;
@@ -24,6 +25,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isMobileVersion = false,
     governanceId,
   } = props;
+  useFeedItemSubscription(commonId, item.id);
 
   if (!checkIsItemVisibleForUser(item.circleVisibility, userCircleIds)) {
     return null;

@@ -325,6 +325,7 @@ export default function ChatComponent({
             messages={messages}
             dateList={dateList}
             lastSeenItem={lastSeenItem}
+            hasPermissionToHide={hasPermissionToHide}
           />
         ) : (
           <div className="loader-container">

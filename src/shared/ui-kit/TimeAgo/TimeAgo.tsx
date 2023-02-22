@@ -23,6 +23,7 @@ const TimeAgo: FC<TimeAgoProps> = (props) => {
   useEffect(() => {
     let timeoutId;
 
+    setFormattedTime(getTimeAgo(milliseconds, { withFormattedTime: false }));
     const callback = () => {
       const interval = getInterval(milliseconds);
 

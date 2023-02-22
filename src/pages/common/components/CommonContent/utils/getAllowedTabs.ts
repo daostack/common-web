@@ -6,13 +6,13 @@ interface Data {
 }
 
 const ALLOWED_NON_MEMBER_TABS = [CommonTab.About];
-const ALLOWED_MOBILE_TABS = [
+const ALL_TABS = [
   CommonTab.About,
   CommonTab.Feed,
   CommonTab.Members,
   CommonTab.Wallet,
 ];
-const ALL_TABS = Object.values(CommonTab);
+const ALLOWED_MOBILE_TABS = [...ALL_TABS];
 
 export const getAllowedTabs = (data: Data): CommonTab[] => {
   const { isCommonMember, isMobileView } = data;

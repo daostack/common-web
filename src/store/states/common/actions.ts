@@ -10,7 +10,13 @@ import {
   PayloadWithOptionalCallback,
   UploadFile,
 } from "@/shared/interfaces";
-import { CommonFeed, CommonMember, Discussion, Governance, Proposal } from "@/shared/models";
+import {
+  CommonFeed,
+  CommonMember,
+  Discussion,
+  Governance,
+  Proposal,
+} from "@/shared/models";
 import firebase from "@/shared/utils/firebase";
 import { CommonActionType } from "./constants";
 import { FeedItems } from "./types";
@@ -91,6 +97,13 @@ export const addNewFeedItems = createStandardAction(
     docSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed>;
   }[]
 >();
+
+export const updateFeedItem = createStandardAction(
+  CommonActionType.UPDATE_FEED_ITEM,
+)<{
+  item: Partial<CommonFeed> & { id: string };
+  isRemoved?: boolean;
+}>();
 
 export const setIsNewProjectCreated = createStandardAction(
   CommonActionType.SET_IS_NEW_PROJECT_CREATED,
