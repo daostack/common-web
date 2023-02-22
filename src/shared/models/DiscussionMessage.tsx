@@ -22,6 +22,7 @@ export interface ParentDiscussionMessage {
   id: string;
   ownerName: string;
   text: string;
+  moderation?: Moderation;
 }
 
 export interface DiscussionMessage extends BaseEntity {

@@ -17,6 +17,7 @@ import {
   MenuItem as DesktopStyleMenuItem,
   MenuItemType,
 } from "@/shared/interfaces";
+import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
   Common,
   Proposal,
@@ -105,6 +106,9 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
   const isControlledMenu = typeof isOpen === "boolean";
+  const isHiddenElement =
+    (elem as DiscussionMessage | Discussion | Proposal)?.moderation?.flag ===
+    ModerationFlags.Hidden;
 
   const onReply = useCallback(() => {
     dispatch(setCurrentDiscussionMessageReply(elem as DiscussionMessage));
@@ -115,7 +119,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     const items: DropdownOption[] = [];
 
-    if (isDiscussionMessage) {
+    if (isDiscussionMessage && !isHiddenElement) {
       items.push({
         text: <span>Reply</span>,
         searchText: "Reply",
@@ -159,7 +163,8 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         governance,
         key: HideContentTypes[entityType],
       }) &&
-      !isOwner
+      !isOwner &&
+      !isHiddenElement
     ) {
       items.push({
         text: (
@@ -189,6 +194,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     ownerId,
     commonMember,
     governance,
+    isHiddenElement,
   ]);
 
   const handleMenuToggle = useCallback(

@@ -168,6 +168,38 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
+  .handleAction(actions.updateFeedItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      if (!nextState.feedItems.data) {
+        return;
+      }
+
+      const { item: updatedItem, isRemoved = false } = payload;
+      const feedItemIndex = nextState.feedItems.data?.findIndex(
+        (item) => item.id === updatedItem.id,
+      );
+
+      if (feedItemIndex === -1) {
+        return;
+      }
+
+      const nextData = [...nextState.feedItems.data];
+
+      if (isRemoved) {
+        nextData.splice(feedItemIndex, 1);
+      } else {
+        nextData[feedItemIndex] = {
+          ...nextData[feedItemIndex],
+          ...updatedItem,
+        };
+      }
+
+      nextState.feedItems = {
+        ...nextState.feedItems,
+        data: nextData,
+      };
+    }),
+  )
   .handleAction(actions.setIsNewProjectCreated, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.isNewProjectCreated = payload;
