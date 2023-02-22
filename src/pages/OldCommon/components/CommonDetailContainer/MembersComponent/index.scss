@@ -98,7 +98,7 @@
 
 .members__section-list {
   height: auto;
-  min-height: 20rem;
+  //min-height: 20rem;
   flex-direction: row;
   align-items: baseline;
 
@@ -109,11 +109,12 @@
   }
 
   .members__section__members-list {
+    width: 100%;
     cursor: default;
     list-style-type: none;
     overflow: auto;
     flex: 1;
-    padding: 0.5rem;
+    padding: 0.2rem;
     margin: 0;
 
     .members__section__common-member {
@@ -126,7 +127,6 @@
       padding: 1rem;
       background-color: $c-shades-white;
       box-shadow: 0 0.1875rem 0.5rem $box-shadow-color;
-      //margin: 1.125rem 0rem;
       margin-bottom: 1rem;
 
       .members__section__common-member-details {
