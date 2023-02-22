@@ -130,6 +130,16 @@ const CommonData: FC<CommonDataProps> = (props) => {
     handleMenuClose();
   };
 
+  const handleSuccessfulProjectLeave = () => {
+    if (commonMember) {
+      CommonMemberEventEmitter.emit(CommonMemberEvent.Clear, commonMember.id);
+    }
+
+    dispatch(projectsActions.removeMembershipFromProjectAndChildren(common.id));
+    notify("You’ve successfully left the project");
+    handleMenuClose();
+  };
+
   useEffect(() => {
     if (isGlobalDataFetched && !isJoinAllowed && isCommonJoinModalOpen) {
       onCommonJoinModalClose();
@@ -188,6 +198,17 @@ const CommonData: FC<CommonDataProps> = (props) => {
           memberCount={common.memberCount}
           memberCircleIds={Object.values(commonMember.circles.map)}
           onSuccessfulLeave={handleSuccessfulLeave}
+        />
+      )}
+      {commonMember && common.directParent && (
+        <LeaveCommonModal
+          isShowing={selectedMenuItem === CommonMenuItem.LeaveProject}
+          onClose={handleMenuClose}
+          commonId={common.directParent.commonId}
+          memberCount={common.memberCount}
+          memberCircleIds={[common.directParent.circleId]}
+          onSuccessfulLeave={handleSuccessfulProjectLeave}
+          isSubCommon
         />
       )}
       {isProposalCreationModalOpen && commonMember && (

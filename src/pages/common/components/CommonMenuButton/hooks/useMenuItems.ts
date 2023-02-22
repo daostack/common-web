@@ -25,6 +25,14 @@ export const useMenuItems = (options: Options): Item[] => {
       },
     },
     {
+      id: CommonMenuItem.LeaveProject,
+      text: "Leave project",
+      withWarning: true,
+      onClick: () => {
+        onMenuItemSelect(CommonMenuItem.LeaveProject);
+      },
+    },
+    {
       id: CommonMenuItem.DeleteCommon,
       text: "Delete common",
       withWarning: true,

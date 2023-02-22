@@ -24,6 +24,8 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
     ),
   [CommonMenuItem.LeaveCommon]: ({ commonMember, isSubCommon }) =>
     Boolean(commonMember && !isSubCommon),
+  [CommonMenuItem.LeaveProject]: ({ commonMember, isSubCommon }) =>
+    Boolean(commonMember && isSubCommon),
   [CommonMenuItem.DeleteCommon]: ({ commonMember, governance }) =>
     Boolean(
       commonMember &&
@@ -41,6 +43,7 @@ export const getAllowedItems = (
   const orderedItems = [
     CommonMenuItem.InviteToCircle,
     CommonMenuItem.LeaveCommon,
+    CommonMenuItem.LeaveProject,
     CommonMenuItem.DeleteCommon,
   ];
 
