@@ -6,6 +6,7 @@ import { Form } from "@/shared/components/Form/Formik";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { Circles, Governance } from "@/shared/models";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { LoaderColor } from "@/shared/ui-kit/Loader/Loader";
 import { selectProposalCreationData } from "@/store/states";
 import validationSchema from "../../validationSchema";
 import { NewProposalHeader } from "../NewProposalHeader";
@@ -87,6 +88,8 @@ const ProposalCreationForm: FC<ProposalCreationFormProps> = (props) => {
                 className={styles.button}
                 type="submit"
                 disabled={disabled}
+                loading={isLoading}
+                loaderColor={LoaderColor.White}
               >
                 Publish proposal
               </Button>
