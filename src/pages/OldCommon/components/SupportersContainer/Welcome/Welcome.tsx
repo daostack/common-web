@@ -4,8 +4,8 @@ import { useHistory } from "react-router-dom";
 import { useSupportersDataContext } from "@/pages/OldCommon/containers/SupportersContainer/context";
 import { Button, Loader } from "@/shared/components";
 import { Checkbox } from "@/shared/components/Form";
-import { ROUTE_PATHS } from "@/shared/constants";
 import { useGovernance } from "@/shared/hooks/useCases";
+import { getCommonPagePath } from "@/shared/utils";
 import "./index.scss";
 
 interface WelcomeProps {
@@ -29,9 +29,7 @@ const Welcome: FC<WelcomeProps> = (props) => {
 
   const handleJumpIn = () => {
     if (supportersData) {
-      history.push(
-        ROUTE_PATHS.COMMON_DETAIL.replace(":id", supportersData.commonId),
-      );
+      history.push(getCommonPagePath(supportersData.commonId));
     }
   };
 
