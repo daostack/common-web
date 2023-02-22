@@ -1,13 +1,15 @@
 import { useCallback, useState } from "react";
 import { last } from "lodash";
 import { CommonService, GovernanceService } from "@/services";
-import { State } from "./types";
+import { useSupportersData } from "@/shared/hooks/useCases";
+import { State, CombinedState } from "./types";
 import { useCommonSubscription } from "./useCommonSubscription";
 import { useGovernanceSubscription } from "./useGovernanceSubscription";
 import { useParentCommonSubscription } from "./useParentCommonSubscription";
 import { useSubCommonCreateSubscription } from "./useSubCommonCreateSubscription";
+import { getSeparatedState } from "./utils";
 
-interface Return extends State {
+interface Return extends CombinedState {
   fetchCommonData: (commonId: string) => void;
   resetCommonData: () => void;
 }
@@ -18,6 +20,10 @@ export const useFullCommonData = (): Return => {
     fetched: false,
     data: null,
   });
+  const { fetchSupportersData, ...supportersState } = useSupportersData();
+  const separatedState = getSeparatedState({ supportersState });
+  const isLoading = state.loading || separatedState.loading;
+  const isFetched = state.fetched && separatedState.fetched;
   const currentCommonId = state.data?.common.id;
   useSubCommonCreateSubscription(setState, currentCommonId);
   useCommonSubscription(setState, currentCommonId, state.data?.parentCommons);
@@ -45,6 +51,7 @@ export const useFullCommonData = (): Return => {
           throw new Error(`Couldn't find governance by common id= ${commonId}`);
         }
 
+        fetchSupportersData(commonId);
         const [parentCommons, subCommons, parentCommonSubCommons] =
           await Promise.all([
             CommonService.getAllParentCommonsForCommon(common),
@@ -87,7 +94,15 @@ export const useFullCommonData = (): Return => {
   }, []);
 
   return {
-    ...state,
+    loading: isLoading,
+    fetched: isFetched,
+    data:
+      state.data && separatedState.data
+        ? {
+            ...state.data,
+            ...separatedState.data,
+          }
+        : null,
     fetchCommonData,
     resetCommonData,
   };
