@@ -1,8 +1,10 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { leaveCommon } from "@/pages/OldCommon/store/actions";
+import { CommonService } from "@/services";
 import { isRequestError } from "@/services/Api";
 import { Loader, Modal } from "@/shared/components";
 import { ROUTE_PATHS } from "@/shared/constants";
@@ -21,7 +23,8 @@ interface LeaveCommonModalProps
   memberCount: number;
   memberCircleIds: string[];
   onSuccessfulLeave?: () => void;
-  isSubCommon?: boolean;
+  isSubCommon: false;
+  commonMemberId?: string;
 }
 
 const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
@@ -33,6 +36,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     memberCircleIds = [],
     onSuccessfulLeave,
     isSubCommon = false,
+    commonMemberId,
   } = props;
   const {
     loading: areMemberAmountsLoading,
@@ -65,36 +69,65 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     setIsLeaving(true);
     setErrorText("");
 
-    dispatch(
-      leaveCommon.request({
-        payload: {
-          commonId,
-          userId,
-        },
-        callback: (error) => {
-          const isFinishedSuccessfully = !error;
-          const errorText = error
-            ? (isRequestError(error) && error.response?.data?.errorMessage) ||
-              "Something went wrong"
-            : "";
+    const requestCallback = (error) => {
+      const isFinishedSuccessfully = !error;
+      const errorText = error
+        ? (isRequestError(error) && error.response?.data?.errorMessage) ||
+          "Something went wrong"
+        : "";
 
-          setIsLeaving(false);
-          setErrorText(errorText);
+      setIsLeaving(false);
+      setErrorText(errorText);
 
-          if (!isFinishedSuccessfully) {
-            return;
+      if (!isFinishedSuccessfully) {
+        return;
+      }
+
+      if (onSuccessfulLeave) {
+        onSuccessfulLeave();
+      } else {
+        history.push(ROUTE_PATHS.MY_COMMONS);
+        notify(`You’ve successfully left the ${commonWord}`);
+      }
+    };
+
+    if (isSubCommon) {
+      Promise.all(
+        memberCircleIds.map((circleId) =>
+          CommonService.leaveCircle(commonId, circleId),
+        ),
+      )
+        .then(() => {
+          if (commonMemberId) {
+            CommonMemberEventEmitter.emit(
+              CommonMemberEvent.Reset,
+              commonId,
+              commonMemberId,
+            );
           }
-
-          if (onSuccessfulLeave) {
-            onSuccessfulLeave();
-          } else {
-            history.push(ROUTE_PATHS.MY_COMMONS);
-            notify(`You’ve successfully left the ${commonWord}`);
-          }
-        },
-      }),
-    );
-  }, [dispatch, notify, history, commonId, userId]);
+          return requestCallback(null);
+        })
+        .catch((error) => requestCallback(error));
+    } else {
+      dispatch(
+        leaveCommon.request({
+          payload: {
+            commonId,
+            userId,
+          },
+          callback: requestCallback,
+        }),
+      );
+    }
+  }, [
+    dispatch,
+    notify,
+    history,
+    commonId,
+    userId,
+    isSubCommon,
+    commonMemberId,
+  ]);
 
   useEffect(() => {
     if (
