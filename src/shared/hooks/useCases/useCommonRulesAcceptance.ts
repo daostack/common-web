@@ -33,8 +33,8 @@ export const useCommonRulesAcceptance = (): Return => {
       });
 
       cancelTokenRef.current = null;
-      setAreCommonRulesAccepting(false);
       setAreCommonRulesAccepted(true);
+      setAreCommonRulesAccepting(false);
     } catch (error) {
       if (!isRequestCancelled(error)) {
         Logger.error(error);

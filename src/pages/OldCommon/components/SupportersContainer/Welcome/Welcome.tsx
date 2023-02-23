@@ -4,7 +4,10 @@ import { useHistory } from "react-router-dom";
 import { useSupportersDataContext } from "@/pages/OldCommon/containers/SupportersContainer/context";
 import { Button, Loader } from "@/shared/components";
 import { Checkbox } from "@/shared/components/Form";
-import { useGovernance } from "@/shared/hooks/useCases";
+import {
+  useCommonRulesAcceptance,
+  useGovernance,
+} from "@/shared/hooks/useCases";
 import { getCommonPagePath } from "@/shared/utils";
 import "./index.scss";
 
@@ -26,10 +29,13 @@ const Welcome: FC<WelcomeProps> = (props) => {
     fetched: isGovernanceFetched,
     fetchGovernance,
   } = useGovernance();
+  const { acceptCommonRules, areCommonRulesAccepting, areCommonRulesAccepted } =
+    useCommonRulesAcceptance();
   const [areRulesApproved, setAreRulesApproved] = useState(false);
+  const isJumpInDisabled = !areRulesApproved || areCommonRulesAccepting;
 
   const handleJumpIn = () => {
-    history.push(getCommonPagePath(commonId));
+    acceptCommonRules(commonId);
   };
 
   const handleRulesApprovalChange = () => {
@@ -40,7 +46,13 @@ const Welcome: FC<WelcomeProps> = (props) => {
     fetchGovernance(governanceId);
   }, [governanceId]);
 
-  if (!isGovernanceFetched) {
+  useEffect(() => {
+    if (areCommonRulesAccepted) {
+      history.push(getCommonPagePath(commonId));
+    }
+  }, [areCommonRulesAccepted]);
+
+  if (!isGovernanceFetched || areCommonRulesAccepting) {
     return <Loader />;
   }
 
@@ -78,7 +90,7 @@ const Welcome: FC<WelcomeProps> = (props) => {
       <Button
         className="supporters-page-welcome__submit-button"
         onClick={handleJumpIn}
-        disabled={!areRulesApproved}
+        disabled={isJumpInDisabled}
         shouldUseFullWidth
       >
         {t("buttons.jumpIn")}
