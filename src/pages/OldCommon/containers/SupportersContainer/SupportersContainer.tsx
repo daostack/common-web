@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import classNames from "classnames";
 import { setLoginModalState } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -15,6 +15,7 @@ import {
   selectLanguage,
 } from "@/shared/store/selectors";
 import { Portal } from "@/shared/ui-kit";
+import { getCommonPagePath } from "@/shared/utils";
 import {
   DeadSeaUserDetailsFormValuesWithoutUserDetails,
   InitialStep,
@@ -36,6 +37,7 @@ interface SupportersContainerRouterParams {
 const SupportersContainer = () => {
   const { id: commonId } = useParams<SupportersContainerRouterParams>();
   const dispatch = useDispatch();
+  const history = useHistory();
   const { updateHeaderState } = useHeader();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
   const {
@@ -112,7 +114,11 @@ const SupportersContainer = () => {
   };
 
   const handleSuccessStepFinish = () => {
-    setStep(SupportersStep.Welcome);
+    if (commonMember?.rulesAccepted) {
+      history.push(getCommonPagePath(commonId));
+    } else {
+      setStep(SupportersStep.Welcome);
+    }
   };
 
   useEffect(() => {
