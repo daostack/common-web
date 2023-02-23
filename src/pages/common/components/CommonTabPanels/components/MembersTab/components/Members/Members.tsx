@@ -31,23 +31,21 @@ const MembersComponent: FC<MembersComponentProps> = (props) => {
   }, [fetchCommonMembers, commonId]);
 
   return (
-    <div className="members__component-wrapper">
-      <div
-        className={classNames(
-          "members__menu-wrapper",
-          "members__section-element",
-          "members__section-list",
-        )}
-      >
-        {!areCommonMembersFetched && <Loader />}
-        {areCommonMembersFetched && (
-          <MembersList
-            members={sortedCommonMembers}
-            commonId={commonId}
-            governanceId={governanceId}
-          />
-        )}
-      </div>
+    <div
+      className={classNames(
+        "members__menu-wrapper",
+        "members__section-element",
+        "members__section-list",
+      )}
+    >
+      {!areCommonMembersFetched && <Loader />}
+      {areCommonMembersFetched && (
+        <MembersList
+          members={sortedCommonMembers}
+          commonId={commonId}
+          governanceId={governanceId}
+        />
+      )}
     </div>
   );
 };
