@@ -10,16 +10,17 @@ import "./index.scss";
 
 interface WelcomeProps {
   governanceId: string;
+  commonId: string;
   commonName: string;
 }
 
 const Welcome: FC<WelcomeProps> = (props) => {
-  const { governanceId, commonName } = props;
+  const { governanceId, commonId, commonName } = props;
   const history = useHistory();
   const { t } = useTranslation("translation", {
     keyPrefix: "supporters",
   });
-  const { supportersData, currentTranslation } = useSupportersDataContext();
+  const { currentTranslation } = useSupportersDataContext();
   const {
     data: governance,
     fetched: isGovernanceFetched,
@@ -28,9 +29,7 @@ const Welcome: FC<WelcomeProps> = (props) => {
   const [areRulesApproved, setAreRulesApproved] = useState(false);
 
   const handleJumpIn = () => {
-    if (supportersData) {
-      history.push(getCommonPagePath(supportersData.commonId));
-    }
+    history.push(getCommonPagePath(commonId));
   };
 
   const handleRulesApprovalChange = () => {

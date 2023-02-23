@@ -222,6 +222,7 @@ const SupportersContainer = () => {
       case SupportersStep.Welcome:
         return common?.governanceId ? (
           <Welcome
+            commonId={common.id}
             commonName={common.name}
             governanceId={common.governanceId}
           />
