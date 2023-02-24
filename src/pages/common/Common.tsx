@@ -102,6 +102,7 @@ const Common: FC = () => {
       parentCommons={commonData.parentCommons}
       subCommons={commonData.subCommons}
       parentCommonSubCommons={commonData.parentCommonSubCommons}
+      supportersData={commonData.supportersData}
       isGlobalDataFetched={isGlobalDataFetched}
       commonMember={commonMember}
       parentCommonMember={parentCommonMember}

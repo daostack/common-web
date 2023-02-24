@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DeadSeaUserDetailsFormValuesWithoutUserDetails } from "@/pages/OldCommon/components";
 import { useSupportersDataContext } from "@/pages/OldCommon/containers/SupportersContainer/context";
-import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { createMemberAdmittanceProposal } from "@/pages/OldCommon/store/actions";
 import { subscribeToCommonMembers } from "@/pages/OldCommon/store/api";
 import { Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
 import { useLoadingState } from "@/shared/hooks";
+import { CirclesPermissions, CommonMember } from "@/shared/models";
 import { MemberAdmittance } from "@/shared/models/governance/proposals";
 import { getUserName } from "@/shared/utils";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
@@ -16,17 +16,14 @@ import "./index.scss";
 
 interface MemberAdmittanceStepProps {
   data: DeadSeaUserDetailsFormValuesWithoutUserDetails;
+  commonMember: (CommonMember & CirclesPermissions) | null;
+  isCommonMemberFetched: boolean;
   onFinish: () => void;
 }
 
 const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
-  const { data, onFinish } = props;
+  const { data, commonMember, isCommonMemberFetched, onFinish } = props;
   const dispatch = useDispatch();
-  const {
-    data: commonMember,
-    fetched: isCommonMemberFetched,
-    fetchCommonMember,
-  } = useCommonMember();
   const [
     {
       data: createdMemberAdmittance,
@@ -41,12 +38,6 @@ const MemberAdmittanceStep: FC<MemberAdmittanceStepProps> = (props) => {
   const userId = user?.uid;
   const userName = getUserName(user);
   const commonId = supportersData?.commonId;
-
-  useEffect(() => {
-    if (commonId) {
-      fetchCommonMember(commonId, {});
-    }
-  }, [fetchCommonMember, commonId]);
 
   useEffect(() => {
     if (isCommonMemberFetched && commonMember) {

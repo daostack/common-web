@@ -14,6 +14,7 @@ import {
   Common,
   CommonMember,
   Governance,
+  SupportersData,
 } from "@/shared/models";
 import { projectsActions } from "@/store/states";
 import { JoinProjectModal } from "../../components/JoinProjectModal";
@@ -37,6 +38,7 @@ interface CommonDataProps {
   subCommons: Common[];
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
+  supportersData: SupportersData | null;
   isJoinPending: boolean;
   setIsJoinPending: (isJoinPending: boolean) => void;
 }
@@ -52,6 +54,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     subCommons,
     parentCommon,
     parentCommonSubCommons,
+    supportersData,
     setIsJoinPending,
     children,
   } = props;
@@ -152,6 +155,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
+      supportersData,
       isJoinAllowed,
       isJoinPending,
       onJoinCommon: isProject ? onProjectJoinModalOpen : onCommonJoinModalOpen,
@@ -167,6 +171,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       subCommons,
       parentCommon,
       parentCommonSubCommons,
+      supportersData,
       isJoinAllowed,
       isJoinPending,
       isProject,
