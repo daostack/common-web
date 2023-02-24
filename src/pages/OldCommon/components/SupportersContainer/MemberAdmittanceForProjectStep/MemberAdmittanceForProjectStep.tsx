@@ -177,14 +177,15 @@ const MemberAdmittanceForProjectStep: FC<
       }
 
       try {
+        const title = `${userName} joins and supports ${circleName}`;
         const payload: Omit<
           CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"],
           "type"
         > = {
           args: {
             commonId: parentCommonId,
-            title: `Request to join ${circleName} circle by ${userName}`,
-            description: "",
+            title,
+            description: data.supportPlan || title,
             images: [],
             files: [],
             links: [],
