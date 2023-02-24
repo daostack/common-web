@@ -5,7 +5,6 @@ import { Form } from "@/shared/components/Form/Formik";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
 import { Circles } from "@/shared/models";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
-import { LoaderColor } from "@/shared/ui-kit/Loader/Loader";
 import validationSchema from "../../validationSchema";
 import { DiscussionForm } from "../DiscussionForm";
 import { DiscussionFormPersist } from "../DiscussionFormPersist";
@@ -86,7 +85,6 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
                 type="submit"
                 disabled={disabled}
                 loading={isLoading}
-                loaderColor={LoaderColor.White}
               >
                 Publish discussion
               </Button>

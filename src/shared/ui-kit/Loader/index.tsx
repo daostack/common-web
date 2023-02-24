@@ -1,1 +1,1 @@
-export { default as Loader, LoaderVariant } from "./Loader";
+export { default as Loader, LoaderVariant, LoaderColor } from "./Loader";

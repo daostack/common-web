@@ -1,7 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { BoldPlusIcon } from "@/shared/icons";
-import { LoaderColor } from "../Loader/Loader";
 import Button, { ButtonVariant, ButtonSize } from "./Button";
 
 export default {
@@ -66,6 +65,5 @@ OutlineBlueWithIcon.args = {
 export const Loader = Template.bind({});
 Loader.args = {
   loading: true,
-  loaderColor: LoaderColor.White,
   children: "Button Label",
 };
