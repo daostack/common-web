@@ -205,6 +205,7 @@ const SupportersContainer = () => {
           <MemberAdmittanceForProjectStep
             data={formData}
             parentCommonId={common.directParent.commonId}
+            circleId={common.directParent.circleId}
             commonMember={commonMember}
             isCommonMemberFetched={isCommonMemberFetched}
             onFinish={handleMemberAdmittanceStepFinish}

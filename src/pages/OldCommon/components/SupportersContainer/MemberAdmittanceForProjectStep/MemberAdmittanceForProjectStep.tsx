@@ -4,10 +4,13 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { DeadSeaUserDetailsFormValuesWithoutUserDetails } from "@/pages/OldCommon/components";
 import { useSupportersDataContext } from "@/pages/OldCommon/containers/SupportersContainer/context";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
+import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { createMemberAdmittanceProposal } from "@/pages/OldCommon/store/actions";
 import { subscribeToCommonMembers } from "@/pages/OldCommon/store/api";
+import { Logger, ProposalService } from "@/services";
 import { Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
+import { ProposalsTypes } from "@/shared/constants";
 import { useLoadingState } from "@/shared/hooks";
 import { CirclesPermissions, CommonMember } from "@/shared/models";
 import { MemberAdmittance } from "@/shared/models/governance/proposals";
@@ -18,6 +21,7 @@ import styles from "./MemberAdmittanceForProjectStep.module.scss";
 interface MemberAdmittanceForProjectStepProps {
   data: DeadSeaUserDetailsFormValuesWithoutUserDetails;
   parentCommonId: string;
+  circleId: string;
   commonMember: (CommonMember & CirclesPermissions) | null;
   isCommonMemberFetched: boolean;
   onFinish: () => void;
@@ -29,6 +33,7 @@ const MemberAdmittanceForProjectStep: FC<
   const {
     data,
     parentCommonId,
+    circleId,
     commonMember,
     isCommonMemberFetched,
     onFinish,
@@ -52,11 +57,15 @@ const MemberAdmittanceForProjectStep: FC<
   const { supportersData, currentTranslation } = useSupportersDataContext();
   const [isParentCommonMemberCreated, setIsParentCommonMemberCreated] =
     useState(false);
+  const [isProjectCommonMemberCreated, setIsProjectCommonMemberCreated] =
+    useState(false);
+  const [isAssignCircleCreated, setIsAssignCircleCreated] = useState(false);
   const [errorText, setErrorText] = useState("");
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const userName = getUserName(user);
   const commonId = supportersData?.commonId;
+  const circleName = "";
 
   useEffect(() => {
     fetchParentCommonMember(parentCommonId, {}, true);
@@ -66,9 +75,9 @@ const MemberAdmittanceForProjectStep: FC<
     const isParentCommonMemberFinished =
       Boolean(isParentCommonMemberFetched && parentCommonMember) ||
       isParentCommonMemberCreated;
-    const isProjectCommonMemberFinished = Boolean(
-      isCommonMemberFetched && commonMember,
-    );
+    const isProjectCommonMemberFinished =
+      Boolean(isCommonMemberFetched && commonMember) ||
+      isProjectCommonMemberCreated;
 
     if (isParentCommonMemberFinished && isProjectCommonMemberFinished) {
       onFinish();
@@ -79,6 +88,7 @@ const MemberAdmittanceForProjectStep: FC<
     isParentCommonMemberCreated,
     isCommonMemberFetched,
     commonMember,
+    isProjectCommonMemberCreated,
     onFinish,
   ]);
 
@@ -154,6 +164,51 @@ const MemberAdmittanceForProjectStep: FC<
       }
     });
   }, [createdMemberAdmittance, userId, parentCommonId]);
+
+  useEffect(() => {
+    (async () => {
+      if (!isCommonMemberFetched || commonMember || !userId || !circleName) {
+        return;
+      }
+
+      try {
+        const payload: Omit<
+          CreateProposal[ProposalsTypes.ASSIGN_CIRCLE]["data"],
+          "type"
+        > = {
+          args: {
+            commonId: parentCommonId,
+            title: `Request to join ${circleName} circle by ${userName}`,
+            description: "",
+            images: [],
+            files: [],
+            links: [],
+            circleId,
+            userId,
+          },
+        };
+        await ProposalService.createAssignProposal(payload);
+        setIsAssignCircleCreated(true);
+      } catch (err) {
+        Logger.error(err);
+        setErrorText("Something went wrong");
+      }
+    })();
+  }, [isCommonMemberFetched, commonMember, userId, circleName]);
+
+  useEffect(() => {
+    if (!isAssignCircleCreated || !commonId) {
+      return;
+    }
+
+    return subscribeToCommonMembers(commonId, (commonMembers) => {
+      if (
+        commonMembers.some((commonMember) => commonMember.userId === userId)
+      ) {
+        setIsProjectCommonMemberCreated(true);
+      }
+    });
+  }, [isAssignCircleCreated, commonId, userId]);
 
   if (!currentTranslation) {
     return null;
