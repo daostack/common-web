@@ -8,6 +8,7 @@ import {
   getFilteredByIdCircles,
   getUserName,
 } from "@/shared/utils";
+import styles from "./MembersList.module.scss";
 
 interface MembersListComponentProps {
   members: CommonMemberWithUserInfo[];
@@ -33,7 +34,7 @@ const MembersList: FC<MembersListComponentProps> = ({
   }, [governanceId]);
 
   if (!isGovernanceFetched) {
-    return <Loader />;
+    return <Loader className={styles.loader} />;
   }
 
   const governanceCircles = Object.values(governance?.circles || {});
