@@ -172,7 +172,13 @@ const MemberAdmittanceForProjectStep: FC<
 
   useEffect(() => {
     (async () => {
-      if (!isCommonMemberFetched || commonMember || !userId || !circleName) {
+      if (
+        !isCommonMemberFetched ||
+        commonMember ||
+        !userId ||
+        !circleName ||
+        !createdMemberAdmittance
+      ) {
         return;
       }
 
@@ -200,7 +206,13 @@ const MemberAdmittanceForProjectStep: FC<
         setErrorText("Something went wrong");
       }
     })();
-  }, [isCommonMemberFetched, commonMember, userId, circleName]);
+  }, [
+    isCommonMemberFetched,
+    commonMember,
+    userId,
+    circleName,
+    createdMemberAdmittance,
+  ]);
 
   useEffect(() => {
     if (!isAssignCircleCreated || !commonId) {
