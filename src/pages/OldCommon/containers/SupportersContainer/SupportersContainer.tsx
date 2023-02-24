@@ -8,7 +8,11 @@ import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { LanguageDropdown, Loader } from "@/shared/components";
 import { ContributionType, ScreenSize } from "@/shared/constants";
 import { useHeader, useLanguage, useQueryParams } from "@/shared/hooks";
-import { useCommon, useSupportersData } from "@/shared/hooks/useCases";
+import {
+  useCommon,
+  useGovernanceByCommonId,
+  useSupportersData,
+} from "@/shared/hooks/useCases";
 import {
   getScreenSize,
   selectIsRtlLanguage,
@@ -59,6 +63,12 @@ const SupportersContainer = () => {
   } = useCommonMember({
     shouldAutoReset: false,
   });
+  const {
+    data: parentGovernance,
+    fetched: isParentGovernanceFetched,
+    fetchGovernance: fetchParentGovernance,
+    setGovernance: setParentGovernance,
+  } = useGovernanceByCommonId();
   const initialLanguage = getInitialLanguage(queryParams);
   const [step, setStep] = useState(
     amount ? SupportersStep.UserDetails : SupportersStep.InitialStep,
@@ -182,6 +192,14 @@ const SupportersContainer = () => {
     }
   }, [isCommonMemberFetched, step]);
 
+  useEffect(() => {
+    if (common?.directParent?.commonId) {
+      fetchParentGovernance(common.directParent.commonId);
+    } else {
+      setParentGovernance(null);
+    }
+  }, [common?.directParent?.commonId]);
+
   const renderContent = () => {
     if (isInitialLoading) {
       return <Loader />;
@@ -208,6 +226,7 @@ const SupportersContainer = () => {
             circleId={common.directParent.circleId}
             commonMember={commonMember}
             isCommonMemberFetched={isCommonMemberFetched}
+            parentGovernanceCircles={parentGovernance?.circles}
             onFinish={handleMemberAdmittanceStepFinish}
           />
         ) : (

@@ -12,7 +12,7 @@ import { Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
 import { ProposalsTypes } from "@/shared/constants";
 import { useLoadingState } from "@/shared/hooks";
-import { CirclesPermissions, CommonMember } from "@/shared/models";
+import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
 import { MemberAdmittance } from "@/shared/models/governance/proposals";
 import { getUserName } from "@/shared/utils";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
@@ -24,6 +24,7 @@ interface MemberAdmittanceForProjectStepProps {
   circleId: string;
   commonMember: (CommonMember & CirclesPermissions) | null;
   isCommonMemberFetched: boolean;
+  parentGovernanceCircles?: Circles;
   onFinish: () => void;
 }
 
@@ -36,6 +37,7 @@ const MemberAdmittanceForProjectStep: FC<
     circleId,
     commonMember,
     isCommonMemberFetched,
+    parentGovernanceCircles,
     onFinish,
   } = props;
   const dispatch = useDispatch();
@@ -65,7 +67,10 @@ const MemberAdmittanceForProjectStep: FC<
   const userId = user?.uid;
   const userName = getUserName(user);
   const commonId = supportersData?.commonId;
-  const circleName = "";
+  const circleName =
+    Object.values(parentGovernanceCircles || {}).find(
+      ({ id }) => id === circleId,
+    )?.name || "";
 
   useEffect(() => {
     fetchParentCommonMember(parentCommonId, {}, true);
