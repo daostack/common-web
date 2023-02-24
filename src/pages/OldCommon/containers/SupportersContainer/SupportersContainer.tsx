@@ -15,10 +15,11 @@ import {
   selectLanguage,
 } from "@/shared/store/selectors";
 import { Portal } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
+import { checkIsProject, getCommonPagePath } from "@/shared/utils";
 import {
   DeadSeaUserDetailsFormValuesWithoutUserDetails,
   InitialStep,
+  MemberAdmittanceForProjectStep,
   MemberAdmittanceStep,
   PaymentStep,
   Success,
@@ -200,7 +201,15 @@ const SupportersContainer = () => {
           />
         ) : null;
       case SupportersStep.MemberAdmittance:
-        return (
+        return checkIsProject(common) ? (
+          <MemberAdmittanceForProjectStep
+            data={formData}
+            parentCommonId={common.directParent.commonId}
+            commonMember={commonMember}
+            isCommonMemberFetched={isCommonMemberFetched}
+            onFinish={handleMemberAdmittanceStepFinish}
+          />
+        ) : (
           <MemberAdmittanceStep
             data={formData}
             commonMember={commonMember}
