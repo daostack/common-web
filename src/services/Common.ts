@@ -15,7 +15,7 @@ import {
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
-import Api from "./Api";
+import Api, { CancelToken } from "./Api";
 
 const converter = firestoreDataConverter<Common>();
 const commonMemberConverter = firestoreDataConverter<CommonMember>();
@@ -290,6 +290,14 @@ class CommonService {
       type: GovernanceActions.LEAVE_CIRCLE,
       args: { commonId, circleId },
     });
+  };
+
+  public acceptRules = async (
+    commonId: string,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<void> => {
+    const { cancelToken } = options;
+    await Api.post(ApiEndpoint.AcceptRules, { commonId }, { cancelToken });
   };
 }
 

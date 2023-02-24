@@ -136,6 +136,7 @@ export enum CommonState {
 export interface CommonMember {
   readonly id: string;
   readonly userId: string;
+  rulesAccepted?: boolean;
   joinedAt: firebase.firestore.Timestamp;
   circleIds: string[];
 }
