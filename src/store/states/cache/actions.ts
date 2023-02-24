@@ -4,6 +4,7 @@ import {
   CommonFeedObjectUserUnique,
   Discussion,
   DiscussionMessage,
+  Governance,
   Proposal,
   User,
 } from "@/shared/models";
@@ -28,6 +29,27 @@ export const updateUserStateById = createStandardAction(
 )<{
   userId: string;
   state: LoadingState<User | null>;
+}>();
+
+export const getGovernanceStateByCommonId = createAsyncAction(
+  CacheActionType.GET_GOVERNANCE_STATE_BY_COMMON_ID,
+  CacheActionType.GET_GOVERNANCE_STATE_BY_COMMON_ID_SUCCESS,
+  CacheActionType.GET_GOVERNANCE_STATE_BY_COMMON_ID_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    { commonId: string; force?: boolean },
+    Governance | null,
+    Error
+  >,
+  Governance | null,
+  Error
+>();
+
+export const updateGovernanceStateByCommonId = createStandardAction(
+  CacheActionType.UPDATE_GOVERNANCE_STATE_BY_COMMON_ID,
+)<{
+  commonId: string;
+  state: LoadingState<Governance | null>;
 }>();
 
 export const getDiscussionStateById = createAsyncAction(

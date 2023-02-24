@@ -4,6 +4,10 @@ import { AppState } from "@/shared/interfaces";
 export const selectUserStateById = (userId: string) => (state: AppState) =>
   state.cache.userStates[userId] || null;
 
+export const selectGovernanceStateByCommonId =
+  (commonId: string) => (state: AppState) =>
+    state.cache.governanceByCommonIdStates[commonId] || null;
+
 export const selectDiscussionStateById =
   (discussionId: string) => (state: AppState) =>
     state.cache.discussionStates[discussionId] || null;
