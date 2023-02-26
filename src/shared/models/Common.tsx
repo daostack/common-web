@@ -104,6 +104,8 @@ export interface Common extends BaseEntity {
 
   directParent: DirectParent | null;
 
+  governanceDocumentUrl?: string;
+
   /**
    * This is not fetched from the database. It's calcualted while the commons are fetched.
    */

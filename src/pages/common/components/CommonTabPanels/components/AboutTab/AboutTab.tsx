@@ -53,7 +53,10 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
       <CommonDescription common={common} />
-      <CommonGovernance commonName={common.name} />
+      <CommonGovernance
+        commonName={common.name}
+        titleUrl={common.governanceDocumentUrl}
+      />
       {rules.length > 0 && <CommonRules rules={rules} />}
     </div>
   );
@@ -96,7 +99,10 @@ const AboutTab: FC<AboutTabProps> = (props) => {
           <div className={styles.separator} />
         </>
       )}
-      <CommonGovernance commonName={common.name} />
+      <CommonGovernance
+        commonName={common.name}
+        titleUrl={common.governanceDocumentUrl}
+      />
       <div className={styles.separator} />
       {rules.length > 0 && <CommonRules rules={rules} />}
       <div className={styles.separator} />
