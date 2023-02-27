@@ -1,2 +1,2 @@
 export * from "./aboutAction";
-export * from "./defaultGovDoc";
+export * from "./defaultGovDocsLinks";
