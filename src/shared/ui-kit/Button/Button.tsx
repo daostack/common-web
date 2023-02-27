@@ -6,6 +6,8 @@ import React, {
   ReactNode,
 } from "react";
 import classNames from "classnames";
+import { Loader } from "../Loader";
+import { getLoaderColor } from "./utils";
 import styles from "./Button.module.scss";
 
 export enum ButtonVariant {
@@ -27,6 +29,7 @@ type ButtonProps = JSX.IntrinsicElements["button"] & {
   size?: ButtonSize;
   leftIcon?: ReactNode;
   visuallyDisabled?: boolean;
+  loading?: boolean;
 };
 
 const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
@@ -38,6 +41,7 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
     size = ButtonSize.Medium,
     leftIcon,
     visuallyDisabled,
+    loading,
     children,
     ...restProps
   } = props;
@@ -74,7 +78,14 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
       onClick={visuallyDisabled ? undefined : props.onClick}
     >
       {leftIconEl}
-      {children}
+      {loading ? (
+        <Loader
+          color={getLoaderColor(variant)}
+          className={styles.buttonLoader}
+        />
+      ) : (
+        children
+      )}
     </button>
   );
 };

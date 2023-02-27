@@ -84,6 +84,7 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
                 className={styles.button}
                 type="submit"
                 disabled={disabled}
+                loading={isLoading}
               >
                 Publish discussion
               </Button>

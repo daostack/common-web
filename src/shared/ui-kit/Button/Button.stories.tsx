@@ -61,3 +61,9 @@ OutlineBlueWithIcon.args = {
   leftIcon: <BoldPlusIcon />,
   children: "Button Label",
 };
+
+export const Loader = Template.bind({});
+Loader.args = {
+  loading: true,
+  children: "Button Label",
+};
