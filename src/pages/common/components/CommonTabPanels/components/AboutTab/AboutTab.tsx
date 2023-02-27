@@ -22,7 +22,7 @@ import {
   CommonRules,
 } from "./components";
 import { AboutActions } from "./components/AboutActions";
-import { COMMON_GOVERNANCE_DOC_URL } from "./constants";
+import { getDefaultGovDocUrl } from "./constants";
 import { getAllowedActions } from "./utils";
 import styles from "./AboutTab.module.scss";
 
@@ -56,7 +56,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       <CommonDescription common={common} />
       <CommonGovernance
         commonName={common.name}
-        titleUrl={common.governanceDocumentUrl ?? COMMON_GOVERNANCE_DOC_URL}
+        titleUrl={common.governanceDocumentUrl ?? getDefaultGovDocUrl(common)}
       />
       {rules.length > 0 && <CommonRules rules={rules} />}
     </div>
@@ -102,7 +102,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
       )}
       <CommonGovernance
         commonName={common.name}
-        titleUrl={common.governanceDocumentUrl ?? COMMON_GOVERNANCE_DOC_URL}
+        titleUrl={common.governanceDocumentUrl ?? getDefaultGovDocUrl(common)}
       />
       <div className={styles.separator} />
       {rules.length > 0 && <CommonRules rules={rules} />}
