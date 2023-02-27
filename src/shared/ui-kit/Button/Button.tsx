@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import { Loader } from "../Loader";
-import { getLoaderColor } from "../Loader/utils";
+import { getLoaderColor } from "./utils";
 import styles from "./Button.module.scss";
 
 export enum ButtonVariant {

@@ -1,5 +1,5 @@
-import { ButtonVariant } from "../Button";
-import { LoaderColor } from "./Loader";
+import { ButtonVariant } from ".";
+import { LoaderColor } from "../Loader/Loader";
 
 export const getLoaderColor = (buttonVariant: ButtonVariant) => {
   return buttonVariant === ButtonVariant.PrimaryPurple
