@@ -22,6 +22,7 @@ interface LeaveCommonModalProps
   memberCircleIds: string[];
   onSuccessfulLeave?: () => void;
   isSubCommon?: boolean;
+  subCommonId?: string;
 }
 
 const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
@@ -33,6 +34,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     memberCircleIds = [],
     onSuccessfulLeave,
     isSubCommon = false,
+    subCommonId,
   } = props;
   const {
     loading: areMemberAmountsLoading,
@@ -68,7 +70,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     dispatch(
       leaveCommon.request({
         payload: {
-          commonId,
+          commonId: isSubCommon && subCommonId ? subCommonId : commonId,
           userId,
         },
         callback: (error) => {
@@ -94,7 +96,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
         },
       }),
     );
-  }, [dispatch, notify, history, commonId, userId]);
+  }, [dispatch, notify, history, commonId, userId, subCommonId, isSubCommon]);
 
   useEffect(() => {
     if (

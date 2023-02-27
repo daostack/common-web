@@ -208,6 +208,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
           memberCount={common.memberCount}
           memberCircleIds={[common.directParent.circleId]}
           onSuccessfulLeave={handleSuccessfulProjectLeave}
+          subCommonId={common.id}
           isSubCommon
         />
       )}
