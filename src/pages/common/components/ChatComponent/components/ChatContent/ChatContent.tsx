@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
-import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
-import { Loader } from "@/shared/components";
 import { ChatMessage } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
 import {
   CommonFeedObjectUserUnique,
   CommonMember,
   DiscussionMessage,
+  PendingMessage,
 } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
@@ -28,11 +27,11 @@ interface ChatContentInterface {
   hasAccess: boolean;
   isHidden: boolean;
   chatWrapperId: string;
-  isNewMessageLoading: boolean;
   messages: Record<number, DiscussionMessage[]>;
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
+  pendingMessages: PendingMessage[];
 }
 
 const isToday = (someDate: Date) => {
@@ -55,11 +54,11 @@ export default function ChatContent({
   hasAccess,
   isHidden,
   chatWrapperId,
-  isNewMessageLoading,
   messages,
   dateList,
   lastSeenItem,
   hasPermissionToHide,
+  pendingMessages,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -88,9 +87,8 @@ export default function ChatContent({
 
   useEffect(() => {
     if (
-      (Boolean(prevDiscussionMessages) &&
-        prevDiscussionMessages?.length !== discussionMessages?.length) ||
-      isNewMessageLoading
+      Boolean(prevDiscussionMessages) &&
+      prevDiscussionMessages?.length !== discussionMessages?.length
     )
       scrollToContainerBottom();
   }, [
@@ -98,7 +96,6 @@ export default function ChatContent({
     prevDiscussionMessages,
     prevDiscussionMessages?.length,
     discussionMessages?.length,
-    isNewMessageLoading,
   ]);
 
   useEffect(() => {
@@ -194,26 +191,20 @@ export default function ChatContent({
                 );
               },
             )}
+            {pendingMessages?.map((msg) => (
+              <span key={msg.id}>{msg.text}</span>
+            ))}
           </ul>
         );
       })}
-      {!dateList.length && !isNewMessageLoading ? (
+
+      {!dateList.length && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />
           Type in the text box to share your thoughts and begin the
           conversation.
         </p>
-      ) : (
-        isNewMessageLoading && (
-          <div
-            className={classNames(styles.newMessageLoaderWrapper, {
-              [styles.veryFirstMessage]: !dateList.length,
-            })}
-          >
-            <Loader />
-          </div>
-        )
       )}
     </>
   );

@@ -40,6 +40,7 @@ import {
   CommonMember,
   Discussion,
   DiscussionMessage,
+  PendingMessage,
   Proposal,
 } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
@@ -154,14 +155,20 @@ export default function ChatComponent({
 
   const [message, setMessage] = useState("");
   const messages = (discussionMessages ?? []).reduce(groupday, {});
-  const [isNewMessageLoading, setIsNewMessageLoading] =
-    useState<boolean>(false);
   const isTabletView = useIsTabletView();
   const dateList = Object.keys(messages);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
+  const [pendingMessages, setPendingMessages] = useState<PendingMessage[]>([]);
 
   const addMessageByType = useCallback(
     (payload: CreateDiscussionMessageDto) => {
+      const pendingMessageId = uuidv4();
+
+      setPendingMessages((prevState) => [
+        ...prevState,
+        { id: pendingMessageId, text: payload.text },
+      ]);
+
       switch (type) {
         case ChatType.ProposalComments: {
           if (proposal) {
@@ -171,7 +178,22 @@ export default function ChatComponent({
         }
         case ChatType.DiscussionMessages: {
           if (discussion) {
-            dispatch(addMessageToDiscussion.request({ payload, discussion }));
+            dispatch(
+              addMessageToDiscussion.request({
+                payload,
+                discussion,
+                callback(isSucceed) {
+                  if (isSucceed) {
+                    const updatedPendingMessages = pendingMessages.filter(
+                      (msg) => msg.id !== pendingMessageId,
+                    );
+                    setPendingMessages(updatedPendingMessages);
+                  } else {
+                    ////
+                  }
+                },
+              }),
+            );
           }
           break;
         }
@@ -205,7 +227,6 @@ export default function ChatComponent({
 
   const sendChatMessage = (): void => {
     if (message) {
-      setIsNewMessageLoading(true);
       sendMessage && sendMessage(message.trim());
       setMessage("");
     }
@@ -229,21 +250,6 @@ export default function ChatComponent({
 
     setMessage((currentMessage) => `${currentMessage}\r\n`);
   };
-
-  useEffect(() => {
-    if (
-      !prevDiscussionMessages ||
-      prevDiscussionMessages?.length === discussionMessages?.length
-    )
-      return;
-
-    setIsNewMessageLoading(false);
-  }, [
-    discussionMessages?.length,
-    prevDiscussionMessages,
-    prevDiscussionMessages?.length,
-    setIsNewMessageLoading,
-  ]);
 
   useEffect(() => {
     if (
@@ -321,11 +327,11 @@ export default function ChatComponent({
             hasAccess={hasAccess}
             isHidden={isHidden}
             chatWrapperId={chatWrapperId}
-            isNewMessageLoading={isNewMessageLoading}
             messages={messages}
             dateList={dateList}
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
+            pendingMessages={pendingMessages}
           />
         ) : (
           <div className="loader-container">

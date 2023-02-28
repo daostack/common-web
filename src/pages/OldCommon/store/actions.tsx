@@ -180,6 +180,7 @@ export const addMessageToDiscussion = createAsyncAction(
   {
     payload: CreateDiscussionMessageDto;
     discussion: Discussion;
+    callback?: (isSucceed: boolean) => void;
   },
   Discussion,
   Error

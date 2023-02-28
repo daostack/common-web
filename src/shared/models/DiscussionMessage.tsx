@@ -40,3 +40,9 @@ export interface DiscussionMessage extends BaseEntity {
   parentMessage: ParentDiscussionMessage | null;
   editedAt: firebase.firestore.Timestamp;
 }
+
+export interface PendingMessage {
+  id: string;
+  text: string;
+  resend?: () => void;
+}
