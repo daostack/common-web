@@ -1,14 +1,14 @@
 import React, { useCallback, FC } from "react";
 import classNames from "classnames";
-import { Orientation } from "@/shared/constants";
-import { useRadioButtonGroupContext } from "../context";
 import { upperFirst } from "lodash";
+import { useRadioButtonGroupContext } from "../context";
 import "./index.scss";
 
 interface RadioButtonStyles {
   default?: string;
   active?: string;
   vertical?: string;
+  button?: string;
 }
 
 interface RadioButtonProps {
@@ -28,12 +28,13 @@ export const RadioButton: FC<RadioButtonProps> = (props) => {
   return (
     <label className="custom-radio-button_label">
       <input
-        className="custom-radio-button"
+        className={classNames("custom-radio-button", styles?.button)}
         type="radio"
         value={value}
         onChange={handleClick}
         checked={checked}
-      />{upperFirst(value)}
+      />
+      {upperFirst(value)}
     </label>
-    )
+  );
 };

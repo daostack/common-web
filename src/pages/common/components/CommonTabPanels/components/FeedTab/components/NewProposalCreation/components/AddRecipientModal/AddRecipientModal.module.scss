@@ -1,0 +1,98 @@
+@import "../../../../../../../../../../constants";
+@import "../../../../../../../../../../styles/sizes";
+
+.modal {
+  padding: 2.25rem;
+  max-width: 30.5rem;
+  .modalHeaderWrapper {
+    padding: 0;
+    .modalHeader {
+      padding-left: 0;
+      padding-bottom: 1.125rem;
+      justify-content: flex-start;
+    }
+  }
+
+  .modalContent {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.header {
+  margin: 0;
+  font-family: NunitoSans, sans-serif;
+  font-weight: normal;
+  font-size: $moderate-small;
+  line-height: 100%;
+  color: $c-neutrals-600;
+  word-break: break-word;
+}
+
+.field {
+  width: 100%;
+}
+
+.textFieldLabelWrapper {
+  display: inline-flex;
+  font-size: $xsmall !important;
+  color: $c-neutrals-600;
+  margin-bottom: 0.5rem !important;
+}
+
+.amountField {
+  max-width: 13.75rem;
+  margin-right: 1rem;
+}
+
+.currencySelectContainer {
+  max-width: 11.25rem;
+}
+
+.recipientButtonGroup {
+  margin: 1.125rem 0;
+  width: 100%;
+}
+
+.recipientButtons {
+  width: 100% !important;
+  justify-content: space-around;
+}
+
+.goalOfPaymentField {
+  margin-top: 1.125rem;
+}
+
+.buttonsWrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.125rem;
+}
+
+.button {
+  max-width: 9.5rem;
+  width: 100%;
+
+  &:first-child {
+    margin-right: 0.75rem;
+  }
+
+  &:last-child {
+    margin-left: 0.75rem;
+  }
+
+  @include tablet {
+    max-width: 100%;
+  }
+}

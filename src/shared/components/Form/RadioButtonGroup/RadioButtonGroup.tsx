@@ -1,15 +1,17 @@
 import React, { useMemo, FC } from "react";
 import classNames from "classnames";
-
 import { Orientation } from "@/shared/constants";
 import { ErrorText } from "../ErrorText";
-import { RadioButtonGroupContext, RadioButtonGroupContextValue } from "./context";
-
+import {
+  RadioButtonGroupContext,
+  RadioButtonGroupContextValue,
+} from "./context";
 import "./index.scss";
 
 interface RadioButtonGroupStyles {
   label?: string;
   error?: string;
+  buttons?: string;
 }
 
 export interface RadioButtonGroupProps {
@@ -23,25 +25,47 @@ export interface RadioButtonGroupProps {
 }
 
 const RadioButtonGroup: FC<RadioButtonGroupProps> = (props) => {
-  const { className, label, value, onChange, error, styles, children, variant = Orientation.Horizontal } = props;
-
-  const contextValue = useMemo<RadioButtonGroupContextValue>(() => ({
-    currentValue: value,
+  const {
+    className,
+    label,
+    value,
     onChange,
-    variant,
-  }), [value, onChange, variant]);
+    error,
+    styles,
+    children,
+    variant = Orientation.Horizontal,
+  } = props;
+
+  const contextValue = useMemo<RadioButtonGroupContextValue>(
+    () => ({
+      currentValue: value,
+      onChange,
+      variant,
+    }),
+    [value, onChange, variant],
+  );
 
   return (
     <div className={classNames("custom-radio-button-group", className)}>
       {label && (
-        <label className={classNames("custom-radio-button-group__label", styles?.label)}>
+        <label
+          className={classNames(
+            "custom-radio-button-group__label",
+            styles?.label,
+          )}
+        >
           {label}
         </label>
       )}
       <div
-        className={classNames("custom-radio-button-group__buttons", {
-          "custom-radio-button-group__buttons--vertical": variant === Orientation.Vertical,
-        })}
+        className={classNames(
+          "custom-radio-button-group__buttons",
+          styles?.buttons,
+          {
+            "custom-radio-button-group__buttons--vertical":
+              variant === Orientation.Vertical,
+          },
+        )}
         role="group"
         aria-label={label}
       >
@@ -49,7 +73,9 @@ const RadioButtonGroup: FC<RadioButtonGroupProps> = (props) => {
           {children}
         </RadioButtonGroupContext.Provider>
       </div>
-      {Boolean(error) && <ErrorText className={styles?.error}>{error}</ErrorText>}
+      {Boolean(error) && (
+        <ErrorText className={styles?.error}>{error}</ErrorText>
+      )}
     </div>
   );
 };

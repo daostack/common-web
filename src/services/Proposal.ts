@@ -19,6 +19,7 @@ import {
   RemoveCircle,
   Survey,
   MemberAdmittance,
+  FundsAllocation,
 } from "@/shared/models/governance/proposals";
 import {
   checkIsCountdownState,
@@ -133,6 +134,23 @@ class ProposalService {
       },
       type: ProposalsTypes.SURVEY,
     })) as Survey;
+  };
+
+  public createFundingProposal = async (
+    payload: CreateProposalWithFiles<ProposalsTypes.FUNDS_ALLOCATION>,
+  ): Promise<Proposal> => {
+    const [files, images] = await Promise.all([
+      FileService.uploadFiles(payload.files || []),
+      FileService.uploadFiles(payload.images || []),
+    ]);
+    return (await this.createProposal({
+      args: {
+        ...payload,
+        files,
+        images,
+      },
+      type: ProposalsTypes.FUNDS_ALLOCATION,
+    })) as FundsAllocation;
   };
 
   public createMemberAdmittanceProposal = async (

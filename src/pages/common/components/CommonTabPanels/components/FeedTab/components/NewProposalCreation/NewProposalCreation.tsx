@@ -1,7 +1,12 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { PROPOSAL_TYPE_SELECT_OPTIONS } from "@/shared/constants";
+import {
+  PROPOSAL_TYPE_SELECT_OPTIONS,
+  ProposalsTypes,
+  RecipientType,
+  AllocateFundsTo,
+} from "@/shared/constants";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
@@ -65,18 +70,56 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         return;
       }
 
-      dispatch(
-        commonActions.createSurveyProposal.request({
-          payload: {
-            title: values.title,
-            description: JSON.stringify(values.content),
-            images: values.images,
-            files: values.files,
-            links: [],
-            commonId,
-          },
-        }),
-      );
+      if (
+        values.proposalType.value === ProposalsTypes.FUNDS_ALLOCATION &&
+        values.recipientInfo
+      ) {
+        const fundAllocationToUser =
+          userId === values.recipientInfo?.recipientId
+            ? AllocateFundsTo.Proposer
+            : AllocateFundsTo.OtherMember;
+
+        dispatch(
+          commonActions.createFundingProposal.request({
+            payload: {
+              title: values.title,
+              description: JSON.stringify(values.content),
+              images: values.images,
+              files: values.files,
+              links: [],
+              commonId,
+              amount: {
+                amount: values.recipientInfo?.amount,
+                currency: values.recipientInfo?.currency,
+              },
+              to:
+                values.recipientInfo.recipientType === RecipientType.Projects
+                  ? AllocateFundsTo.SubCommon
+                  : fundAllocationToUser,
+              ...(values.recipientInfo.recipientType === RecipientType.Projects
+                ? {
+                    subcommonId: values.recipientInfo.recipientId,
+                  }
+                : {
+                    otherMemberId: values.recipientInfo.recipientId,
+                  }),
+            },
+          }),
+        );
+      } else {
+        dispatch(
+          commonActions.createSurveyProposal.request({
+            payload: {
+              title: values.title,
+              description: JSON.stringify(values.content),
+              images: values.images,
+              files: values.files,
+              links: [],
+              commonId,
+            },
+          }),
+        );
+      }
     },
     [governanceCircles, userCircleIds, userId, commonId],
   );

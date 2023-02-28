@@ -110,6 +110,30 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
+  .handleAction(actions.createFundingProposal.request, (state) =>
+  produce(state, (nextState) => {
+    nextState.proposalCreation = {
+      ...nextState.proposalCreation,
+      loading: true,
+    };
+  }),
+)
+.handleAction(actions.createFundingProposal.success, (state) =>
+  produce(state, (nextState) => {
+    nextState.proposalCreation = {
+      loading: false,
+      data: null,
+    };
+  }),
+)
+.handleAction(actions.createFundingProposal.failure, (state) =>
+  produce(state, (nextState) => {
+    nextState.proposalCreation = {
+      ...nextState.proposalCreation,
+      loading: false,
+    };
+  }),
+)
   .handleAction(actions.getFeedItems.request, (state) =>
     produce(state, (nextState) => {
       nextState.feedItems = {
