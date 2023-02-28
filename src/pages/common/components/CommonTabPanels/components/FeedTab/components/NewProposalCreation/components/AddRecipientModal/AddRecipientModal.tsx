@@ -150,7 +150,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
         validationSchema={validationSchema}
         validateOnMount
       >
-        {({ values, isValid, setFieldValue }) => (
+        {({ values, isValid, setFieldValue, handleSubmit }) => (
           <>
             <div className={styles.formContainer}>
               <TextField
@@ -227,7 +227,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
                 className={styles.button}
                 size={ButtonSize.Large}
                 variant={ButtonVariant.LightPurple}
-                type="submit"
+                onClick={() => handleSubmit()}
                 disabled={!isValid}
               >
                 Save
