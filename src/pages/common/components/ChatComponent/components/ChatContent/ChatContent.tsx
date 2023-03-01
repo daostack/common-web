@@ -4,7 +4,7 @@ import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
-import { ChatMessage } from "@/shared/components";
+import { ChatMessage, PendingChatMessage } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
 import {
   CommonFeedObjectUserUnique,
@@ -32,6 +32,7 @@ interface ChatContentInterface {
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
   pendingMessages: PendingMessage[];
+  prevPendingMessages?: PendingMessage[];
 }
 
 const isToday = (someDate: Date) => {
@@ -59,6 +60,7 @@ export default function ChatContent({
   lastSeenItem,
   hasPermissionToHide,
   pendingMessages,
+  prevPendingMessages,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -87,8 +89,10 @@ export default function ChatContent({
 
   useEffect(() => {
     if (
-      Boolean(prevDiscussionMessages) &&
-      prevDiscussionMessages?.length !== discussionMessages?.length
+      (Boolean(prevDiscussionMessages) &&
+        prevDiscussionMessages?.length !== discussionMessages?.length) ||
+      (Boolean(prevPendingMessages) &&
+        prevPendingMessages?.length !== pendingMessages?.length)
     )
       scrollToContainerBottom();
   }, [
@@ -96,6 +100,9 @@ export default function ChatContent({
     prevDiscussionMessages,
     prevDiscussionMessages?.length,
     discussionMessages?.length,
+    prevPendingMessages,
+    prevPendingMessages?.length,
+    pendingMessages.length,
   ]);
 
   useEffect(() => {
@@ -191,13 +198,12 @@ export default function ChatContent({
                 );
               },
             )}
-            {pendingMessages?.map((msg) => (
-              <span key={msg.id}>{msg.text}</span>
-            ))}
           </ul>
         );
       })}
-
+      {pendingMessages?.map((msg) => (
+        <PendingChatMessage key={msg.id} data={msg} />
+      ))}
       {!dateList.length && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.

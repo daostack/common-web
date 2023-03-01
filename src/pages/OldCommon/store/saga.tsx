@@ -635,8 +635,6 @@ export function* addMessageToDiscussionSaga(
 
     yield addMessageToDiscussion(action.payload.payload);
 
-    yield action.payload.callback?.(true);
-
     const unsubscribe = (yield call(
       subscribeToMessages,
       action.payload.payload.discussionId,
@@ -661,6 +659,7 @@ export function* addMessageToDiscussionSaga(
       },
     )) as () => void;
 
+    yield action.payload.callback?.(true);
     yield put(stopLoading());
   } catch (e) {
     if (isError(e)) {

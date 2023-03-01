@@ -159,6 +159,9 @@ export default function ChatComponent({
   const dateList = Object.keys(messages);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const [pendingMessages, setPendingMessages] = useState<PendingMessage[]>([]);
+  const prevPendingMessages = usePrevious<PendingMessage[]>(
+    pendingMessages ?? [],
+  );
 
   const addMessageByType = useCallback(
     (payload: CreateDiscussionMessageDto) => {
@@ -332,6 +335,7 @@ export default function ChatComponent({
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
             pendingMessages={pendingMessages}
+            prevPendingMessages={prevPendingMessages}
           />
         ) : (
           <div className="loader-container">
