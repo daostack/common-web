@@ -1,8 +1,11 @@
-import React, { FC, useCallback, useEffect, useMemo } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Formik } from "formik";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { useCommonDataContext } from "@/pages/common/providers";
+import { CommonService } from "@/services";
 import { Modal } from "@/shared/components";
 import {
   RadioButtonGroup,
@@ -15,10 +18,14 @@ import {
   Orientation,
   RecipientType,
 } from "@/shared/constants";
-import { SelectType } from "@/shared/interfaces/Select";
-import { Common, CommonMemberWithUserInfo, Currency } from "@/shared/models";
+import { SelectOptionType } from "@/shared/interfaces/Select";
+import {
+  Common,
+  CommonMember,
+  CommonMemberWithUserInfo,
+  Currency,
+} from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
-import { Recipient } from "../AddRecipient/AddRecipient";
 import { validationSchema } from "./validationSchema";
 import styles from "./AddRecipientModal.module.scss";
 
@@ -26,7 +33,7 @@ export interface FormValues {
   recipientType: RecipientType;
   goalOfPayment: string;
   recipient: Common | CommonMemberWithUserInfo | null;
-  currency: SelectType<Currency> | null;
+  currency: SelectOptionType | null;
   commonBalance: number;
   amount: number | null;
 }
@@ -34,7 +41,7 @@ export interface FormValues {
 const INITIAL_VALUES = {
   recipientType: RecipientType.Member,
   goalOfPayment: "",
-  recipient: {},
+  recipient: null,
   currency: CURRENCY_SELECT_OPTIONS[0],
   commonBalance: 0,
   amount: null,
@@ -43,23 +50,23 @@ const INITIAL_VALUES = {
 interface AddRecipientModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (
-    values: Recipient,
-    recipientId: string,
-    recipientType: RecipientType,
-  ) => void;
+  onSubmit: (values: FormValues) => void;
+  initData?: FormValues;
 }
 
 const AddRecipientModal: FC<AddRecipientModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  initData,
 }) => {
   const {
     fetched: areCommonMembersFetched,
     data: commonMembers,
     fetchCommonMembers,
   } = useCommonMembers();
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const { common, subCommons, parentCommons } = useCommonDataContext();
   const commonId = useMemo(() => common.id, [common]);
 
@@ -67,8 +74,9 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
     () => ({
       ...INITIAL_VALUES,
       commonBalance: common.balance.amount,
+      ...initData,
     }),
-    [common.balance],
+    [common.balance, initData],
   );
 
   useEffect(() => {
@@ -81,17 +89,48 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
     return (commonMembers || []).map((member) => ({
       ...member,
       value: member.id,
-      label: `${member.user.firstName} ${member.user.lastName}`,
+      label: `${member.user.firstName} ${member.user.lastName} ${
+        userId === member.userId ? "(me)" : ""
+      }`,
     }));
-  }, [commonMembers]);
+  }, [commonMembers, userId]);
+
+  const [commonsWithCommonMembers, setCommonsWithCommonMembers] = useState<
+    (Common & { commonMember: CommonMember })[]
+  >([]);
+
+  useEffect(() => {
+    if (!userId) {
+      return;
+    }
+
+    (async () => {
+      const updatedCommonsWithCommonMembers = (await Promise.all(
+        [common, ...subCommons, ...parentCommons].map(async (item) => {
+          const commonMember = await CommonService.getCommonMemberByUserId(
+            item.id,
+            userId,
+          );
+
+          return {
+            ...item,
+            value: item.id,
+            label: item.name,
+            commonMember,
+          };
+        }),
+      )) as (Common & { commonMember: CommonMember })[];
+      setCommonsWithCommonMembers(updatedCommonsWithCommonMembers);
+    })();
+  }, [common, subCommons, parentCommons, userId]);
 
   const projectOptions = useMemo(() => {
-    return [common, ...subCommons, ...parentCommons].map((item) => ({
-      ...item,
-      value: item.id,
-      label: item.name,
-    }));
-  }, [common, subCommons, parentCommons]);
+    if (!userId) {
+      return [];
+    }
+
+    return commonsWithCommonMembers.filter(({ commonMember }) => commonMember);
+  }, [commonsWithCommonMembers]);
 
   const getRecipientOptions = useCallback(
     (recipientType) => {
@@ -125,28 +164,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
       <Formik
         enableReinitialize
         initialValues={initialValues}
-        onSubmit={(values) => {
-          const recipient =
-            values.recipientType === RecipientType.Member
-              ? `${
-                  (values.recipient as CommonMemberWithUserInfo).user.firstName
-                } ${
-                  (values.recipient as CommonMemberWithUserInfo).user.lastName
-                }`
-              : (values.recipient as Common).name;
-          onSubmit(
-            {
-              recipient,
-              amount: (values.amount ?? 0) * 100,
-              currency: values.currency.label,
-              goalOfPayment: values.goalOfPayment,
-            },
-            (values.recipientType === RecipientType.Member
-              ? (values.recipient as CommonMemberWithUserInfo).user.uid
-              : (values.recipient as { id: string }).id) as string,
-            values.recipientType,
-          );
-        }}
+        onSubmit={onSubmit}
         validationSchema={validationSchema}
         validateOnMount
       >
@@ -169,6 +187,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
                 placeholder="Currency"
                 options={CURRENCY_SELECT_OPTIONS}
                 containerClassName={styles.currencySelectContainer}
+                isOptionDisabled={(option) => option?.value === Currency.USD}
               />
             </div>
             <RadioButtonGroup
@@ -202,7 +221,12 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
               label="Select recipient"
               formName="recipient"
               placeholder="Recipient"
-              options={getRecipientOptions(values.recipientType)}
+              options={
+                getRecipientOptions(values.recipientType) as Record<
+                  string,
+                  unknown
+                >[]
+              }
               disabled={!areCommonMembersFetched}
             />
             <TextField

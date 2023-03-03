@@ -3,6 +3,7 @@ import Select, { components, DropdownIndicatorProps } from "react-select";
 import classNames from "classnames";
 import { useFormikContext } from "formik";
 import { RightArrowThinIcon } from "@/shared/icons";
+import { SelectOptionType } from "@/shared/interfaces/Select";
 import { selectorStyles } from "./selectorStyles";
 import styles from "./Select.module.scss";
 
@@ -13,6 +14,7 @@ interface FormSelectProps {
   options: Record<string, unknown>[];
   containerClassName?: string;
   disabled?: boolean;
+  isOptionDisabled?: (option: SelectOptionType) => boolean;
 }
 
 const DropdownIndicator = (props: DropdownIndicatorProps<any, true>) => {
@@ -30,6 +32,7 @@ const FormSelect: FC<FormSelectProps> = ({
   options,
   containerClassName,
   disabled,
+  isOptionDisabled,
 }) => {
   const { values, setFieldValue, handleBlur, touched, errors } =
     useFormikContext<Record<string, unknown>>();
@@ -41,8 +44,8 @@ const FormSelect: FC<FormSelectProps> = ({
       <Select
         closeMenuOnSelect
         isDisabled={disabled}
-        value={values?.[formName]}
-        options={options}
+        value={values?.[formName] as SelectOptionType}
+        options={options as SelectOptionType[]}
         placeholder={placeholder}
         onChange={(selectedValue) => {
           setFieldValue(formName, selectedValue);
@@ -53,6 +56,7 @@ const FormSelect: FC<FormSelectProps> = ({
         components={{
           DropdownIndicator,
         }}
+        isOptionDisabled={isOptionDisabled}
       />
     </div>
   );

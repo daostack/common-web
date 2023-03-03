@@ -89,7 +89,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
               links: [],
               commonId,
               amount: {
-                amount: values.recipientInfo?.amount,
+                amount: values.recipientInfo?.amount * 100,
                 currency: values.recipientInfo?.currency,
               },
               to:
