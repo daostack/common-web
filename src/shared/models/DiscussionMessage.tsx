@@ -41,8 +41,14 @@ export interface DiscussionMessage extends BaseEntity {
   editedAt: firebase.firestore.Timestamp;
 }
 
+export enum PendingMessageStatus {
+  Sending,
+  Failed,
+}
+
 export interface PendingMessage {
   id: string;
   text: string;
+  status: PendingMessageStatus;
   resend?: () => void;
 }

@@ -41,6 +41,7 @@ import {
   Discussion,
   DiscussionMessage,
   PendingMessage,
+  PendingMessageStatus,
   Proposal,
 } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
@@ -169,7 +170,11 @@ export default function ChatComponent({
 
       setPendingMessages((prevState) => [
         ...prevState,
-        { id: pendingMessageId, text: payload.text },
+        {
+          id: pendingMessageId,
+          text: payload.text,
+          status: PendingMessageStatus.Sending,
+        },
       ]);
 
       switch (type) {
@@ -192,7 +197,14 @@ export default function ChatComponent({
                     );
                     setPendingMessages(updatedPendingMessages);
                   } else {
-                    ////
+                    console.log("failed...");
+                    const failedMessageIndex = pendingMessages.findIndex(
+                      (msg) => msg.id === pendingMessageId,
+                    );
+                    const updatedPendingMessages = pendingMessages;
+                    updatedPendingMessages[failedMessageIndex].status =
+                      PendingMessageStatus.Failed;
+                    setPendingMessages(updatedPendingMessages);
                   }
                 },
               }),
