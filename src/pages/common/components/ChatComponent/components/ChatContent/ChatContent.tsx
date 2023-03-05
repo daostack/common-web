@@ -192,10 +192,14 @@ export default function ChatContent({
           </ul>
         );
       })}
-      {pendingMessages?.map((msg) => (
-        <PendingChatMessage key={msg.id} data={msg} />
-      ))}
-      {!dateList.length && (
+      {pendingMessages.length > 0 && (
+        <div className={styles.pendingMessagesList}>
+          {pendingMessages.map((msg) => (
+            <PendingChatMessage key={msg.id} data={msg} />
+          ))}
+        </div>
+      )}
+      {!dateList.length && !pendingMessages.length && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />

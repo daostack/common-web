@@ -161,22 +161,22 @@ export default function ChatComponent({
     pendingMessages ?? [],
   );
 
-  const removeFromPending = (pendingMessageId: string) => {
-    const updatedPendingMessages = pendingMessages.filter(
-      (msg) => msg.id !== pendingMessageId,
-    );
-    setPendingMessages(updatedPendingMessages);
-  };
-
-  const setAsFailed = (pendingMessageId: string) => {
-    console.log(pendingMessageId);
-    // const failedMessageIndex = pendingMessages.findIndex(
-    //   (msg) => msg.id === pendingMessageId,
-    // );
-    // const updatedPendingMessages = pendingMessages;
-    // updatedPendingMessages[failedMessageIndex].status =
-    //   PendingMessageStatus.Failed;
-    // setPendingMessages(updatedPendingMessages);
+  const handleResult = (isSucceed: boolean, pendingMessageId: string) => {
+    if (isSucceed) {
+      const updatedPendingMessages = pendingMessages.filter(
+        (msg) => msg.id !== pendingMessageId,
+      );
+      setPendingMessages(updatedPendingMessages);
+    } else {
+      console.log(pendingMessageId);
+      // const failedMessageIndex = pendingMessages.findIndex(
+      //   (msg) => msg.id === pendingMessageId,
+      // );
+      // const updatedPendingMessages = pendingMessages;
+      // updatedPendingMessages[failedMessageIndex].status =
+      //   PendingMessageStatus.Failed;
+      // setPendingMessages(updatedPendingMessages);
+    }
   };
 
   const addMessageByType = useCallback(
@@ -200,11 +200,7 @@ export default function ChatComponent({
                 payload,
                 proposal,
                 callback(isSucceed) {
-                  if (isSucceed) {
-                    removeFromPending(pendingMessageId);
-                  } else {
-                    setAsFailed(pendingMessageId);
-                  }
+                  handleResult(isSucceed, pendingMessageId);
                 },
               }),
             );
@@ -218,11 +214,7 @@ export default function ChatComponent({
                 payload,
                 discussion,
                 callback(isSucceed) {
-                  if (isSucceed) {
-                    removeFromPending(pendingMessageId);
-                  } else {
-                    setAsFailed(pendingMessageId);
-                  }
+                  handleResult(isSucceed, pendingMessageId);
                 },
               }),
             );
