@@ -125,9 +125,6 @@ export default function ChatComponent({
   } = useDiscussionMessagesById({
     hasPermissionToHide,
   });
-  const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(
-    discussionMessages ?? [],
-  );
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const discussionMessageReply = useSelector(
@@ -164,6 +161,24 @@ export default function ChatComponent({
     pendingMessages ?? [],
   );
 
+  const removeFromPending = (pendingMessageId: string) => {
+    const updatedPendingMessages = pendingMessages.filter(
+      (msg) => msg.id !== pendingMessageId,
+    );
+    setPendingMessages(updatedPendingMessages);
+  };
+
+  const setAsFailed = (pendingMessageId: string) => {
+    console.log(pendingMessageId);
+    // const failedMessageIndex = pendingMessages.findIndex(
+    //   (msg) => msg.id === pendingMessageId,
+    // );
+    // const updatedPendingMessages = pendingMessages;
+    // updatedPendingMessages[failedMessageIndex].status =
+    //   PendingMessageStatus.Failed;
+    // setPendingMessages(updatedPendingMessages);
+  };
+
   const addMessageByType = useCallback(
     (payload: CreateDiscussionMessageDto) => {
       const pendingMessageId = uuidv4();
@@ -180,7 +195,19 @@ export default function ChatComponent({
       switch (type) {
         case ChatType.ProposalComments: {
           if (proposal) {
-            dispatch(addMessageToProposal.request({ payload, proposal }));
+            dispatch(
+              addMessageToProposal.request({
+                payload,
+                proposal,
+                callback(isSucceed) {
+                  if (isSucceed) {
+                    removeFromPending(pendingMessageId);
+                  } else {
+                    setAsFailed(pendingMessageId);
+                  }
+                },
+              }),
+            );
           }
           break;
         }
@@ -192,19 +219,9 @@ export default function ChatComponent({
                 discussion,
                 callback(isSucceed) {
                   if (isSucceed) {
-                    const updatedPendingMessages = pendingMessages.filter(
-                      (msg) => msg.id !== pendingMessageId,
-                    );
-                    setPendingMessages(updatedPendingMessages);
+                    removeFromPending(pendingMessageId);
                   } else {
-                    console.log("failed...");
-                    const failedMessageIndex = pendingMessages.findIndex(
-                      (msg) => msg.id === pendingMessageId,
-                    );
-                    const updatedPendingMessages = pendingMessages;
-                    updatedPendingMessages[failedMessageIndex].status =
-                      PendingMessageStatus.Failed;
-                    setPendingMessages(updatedPendingMessages);
+                    setAsFailed(pendingMessageId);
                   }
                 },
               }),
@@ -332,8 +349,6 @@ export default function ChatComponent({
       >
         {isFetchedDiscussionMessages ? (
           <ChatContent
-            discussionMessages={discussionMessages}
-            prevDiscussionMessages={prevDiscussionMessages}
             linkHighlightedMessageId={linkHighlightedMessageId}
             type={type}
             commonMember={commonMember}

@@ -740,9 +740,11 @@ export function* addMessageToProposalSaga(
     };
 
     yield put(actions.loadProposalDetail.request(proposal));
+    yield action.payload.callback?.(true);
     yield put(stopLoading());
   } catch (e) {
     if (isError(e)) {
+      yield action.payload.callback?.(false);
       yield put(actions.addMessageToProposal.failure(e));
       yield put(stopLoading());
     }

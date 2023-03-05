@@ -22,8 +22,6 @@ interface ChatContentInterface {
   isCommonMemberFetched: boolean;
   isJoiningPending?: boolean;
   linkHighlightedMessageId?: string | null;
-  prevDiscussionMessages?: DiscussionMessage[];
-  discussionMessages: DiscussionMessage[] | null;
   hasAccess: boolean;
   isHidden: boolean;
   chatWrapperId: string;
@@ -50,8 +48,6 @@ export default function ChatContent({
   isCommonMemberFetched,
   isJoiningPending,
   linkHighlightedMessageId,
-  prevDiscussionMessages,
-  discussionMessages,
   hasAccess,
   isHidden,
   chatWrapperId,
@@ -89,17 +85,12 @@ export default function ChatContent({
 
   useEffect(() => {
     if (
-      (Boolean(prevDiscussionMessages) &&
-        prevDiscussionMessages?.length !== discussionMessages?.length) ||
-      (Boolean(prevPendingMessages) &&
-        prevPendingMessages?.length !== pendingMessages?.length)
+      prevPendingMessages &&
+      prevPendingMessages?.length < pendingMessages?.length
     )
       scrollToContainerBottom();
   }, [
     scrollToContainerBottom,
-    prevDiscussionMessages,
-    prevDiscussionMessages?.length,
-    discussionMessages?.length,
     prevPendingMessages,
     prevPendingMessages?.length,
     pendingMessages.length,

@@ -317,6 +317,7 @@ export const addMessageToProposal = createAsyncAction(
   {
     payload: CreateDiscussionMessageDto;
     proposal: Proposal;
+    callback?: (isSucceed: boolean) => void;
   },
   Proposal,
   Error
