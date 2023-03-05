@@ -17,7 +17,6 @@ import {
   Governance,
   Proposal,
 } from "@/shared/models";
-import firebase from "@/shared/utils/firebase";
 import { CommonActionType } from "./constants";
 import { FeedItems } from "./types";
 
@@ -91,12 +90,7 @@ export const getFeedItems = createAsyncAction(
 
 export const addNewFeedItems = createStandardAction(
   CommonActionType.ADD_NEW_FEED_ITEMS,
-)<
-  {
-    commonFeedItem: CommonFeed;
-    docSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed>;
-  }[]
->();
+)<CommonFeed[]>();
 
 export const updateFeedItem = createStandardAction(
   CommonActionType.UPDATE_FEED_ITEM,

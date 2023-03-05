@@ -3,8 +3,12 @@ import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
 } from "@/shared/interfaces";
-import { CommonFeed, CommonMember, Governance } from "@/shared/models";
-import firebase from "@/shared/utils/firebase";
+import {
+  CommonFeed,
+  CommonMember,
+  Governance,
+  Timestamp,
+} from "@/shared/models";
 
 export type EntityCreation<T> = {
   data: T | null;
@@ -15,8 +19,8 @@ export interface FeedItems {
   data: CommonFeed[] | null;
   loading: boolean;
   hasMore: boolean;
-  firstDocSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed> | null;
-  lastDocSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed> | null;
+  firstDocTimestamp: Timestamp | null;
+  lastDocTimestamp: Timestamp | null;
 }
 
 export interface CommonState {

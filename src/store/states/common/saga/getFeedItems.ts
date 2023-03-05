@@ -15,12 +15,12 @@ export function* getFeedItems(
 
   try {
     const currentFeedItems = (yield select(selectFeedItems)) as FeedItems;
-    const isFirstRequest = !currentFeedItems.lastDocSnapshot;
-    const { data, firstDocSnapshot, lastDocSnapshot, hasMore } = (yield call(
+    const isFirstRequest = !currentFeedItems.lastDocTimestamp;
+    const { data, firstDocTimestamp, lastDocTimestamp, hasMore } = (yield call(
       CommonFeedService.getCommonFeedItems,
       commonId,
       {
-        startAfter: currentFeedItems.lastDocSnapshot,
+        startAfter: currentFeedItems.lastDocTimestamp,
         limit,
       },
     )) as Awaited<ReturnType<typeof CommonFeedService.getCommonFeedItems>>;
@@ -28,11 +28,11 @@ export function* getFeedItems(
     yield put(
       actions.getFeedItems.success({
         data,
-        lastDocSnapshot,
+        lastDocTimestamp,
         hasMore,
-        firstDocSnapshot: isFirstRequest
-          ? firstDocSnapshot
-          : currentFeedItems.firstDocSnapshot,
+        firstDocTimestamp: isFirstRequest
+          ? firstDocTimestamp
+          : currentFeedItems.firstDocTimestamp,
       }),
     );
   } catch (error) {

@@ -9,8 +9,8 @@ const initialFeedItems: FeedItems = {
   data: null,
   loading: false,
   hasMore: false,
-  firstDocSnapshot: null,
-  lastDocSnapshot: null,
+  firstDocTimestamp: null,
+  lastDocTimestamp: null,
 };
 
 const initialState: CommonState = {
@@ -134,37 +134,34 @@ export const reducer = createReducer<CommonState, Action>(initialState)
         ...nextState.feedItems,
         loading: false,
         hasMore: false,
-        lastDocSnapshot: null,
+        lastDocTimestamp: null,
       };
     }),
   )
   .handleAction(actions.addNewFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
-      let firstDocSnapshot = nextState.feedItems.firstDocSnapshot;
+      let firstDocTimestamp = nextState.feedItems.firstDocTimestamp;
 
-      const data = payload.reduceRight(
-        (acc, { commonFeedItem, docSnapshot }) => {
-          const nextData = [...acc];
-          const itemIndex = nextData.findIndex(
-            (item) => item.id === commonFeedItem.id,
-          );
+      const data = payload.reduceRight((acc, commonFeedItem) => {
+        const nextData = [...acc];
+        const itemIndex = nextData.findIndex(
+          (item) => item.id === commonFeedItem.id,
+        );
 
-          if (itemIndex < 0) {
-            firstDocSnapshot = docSnapshot;
-            return [commonFeedItem, ...nextData];
-          }
+        if (itemIndex < 0) {
+          firstDocTimestamp = commonFeedItem.createdAt;
+          return [commonFeedItem, ...nextData];
+        }
 
-          nextData[itemIndex] = commonFeedItem;
+        nextData[itemIndex] = commonFeedItem;
 
-          return nextData;
-        },
-        nextState.feedItems.data || [],
-      );
+        return nextData;
+      }, nextState.feedItems.data || []);
 
       nextState.feedItems = {
         ...nextState.feedItems,
         data,
-        firstDocSnapshot,
+        firstDocTimestamp,
       };
     }),
   )

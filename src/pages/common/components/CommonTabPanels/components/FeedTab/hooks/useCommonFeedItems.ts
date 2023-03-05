@@ -21,13 +21,13 @@ export const useCommonFeedItems = (commonId: string): Return => {
   };
 
   useEffect(() => {
-    if (!feedItems.firstDocSnapshot) {
+    if (!feedItems.firstDocTimestamp) {
       return;
     }
 
     const unsubscribe = CommonFeedService.subscribeToNewCommonFeedItems(
       commonId,
-      feedItems.firstDocSnapshot,
+      feedItems.firstDocTimestamp,
       (data) => {
         if (data.length > 0) {
           dispatch(commonActions.addNewFeedItems(data));
@@ -36,7 +36,7 @@ export const useCommonFeedItems = (commonId: string): Return => {
     );
 
     return unsubscribe;
-  }, [feedItems.firstDocSnapshot]);
+  }, [feedItems.firstDocTimestamp]);
 
   return {
     ...feedItems,
