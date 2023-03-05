@@ -142,21 +142,33 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       let firstDocTimestamp = nextState.feedItems.firstDocTimestamp;
 
-      const data = payload.reduceRight((acc, commonFeedItem) => {
-        const nextData = [...acc];
-        const itemIndex = nextData.findIndex(
-          (item) => item.id === commonFeedItem.id,
-        );
+      const data = payload.reduceRight(
+        (acc, { commonFeedItem, statuses: { isRemoved } }) => {
+          const nextData = [...acc];
+          const itemIndex = nextData.findIndex(
+            (item) => item.id === commonFeedItem.id,
+          );
 
-        if (itemIndex < 0) {
-          firstDocTimestamp = commonFeedItem.createdAt;
-          return [commonFeedItem, ...nextData];
-        }
+          if (isRemoved) {
+            if (itemIndex >= 0) {
+              nextData.splice(itemIndex, 1);
+            }
 
-        nextData[itemIndex] = commonFeedItem;
+            return nextData;
+          }
 
-        return nextData;
-      }, nextState.feedItems.data || []);
+          firstDocTimestamp = commonFeedItem.updatedAt;
+
+          if (itemIndex < 0) {
+            return [commonFeedItem, ...nextData];
+          }
+
+          nextData[itemIndex] = commonFeedItem;
+
+          return nextData;
+        },
+        nextState.feedItems.data || [],
+      );
 
       nextState.feedItems = {
         ...nextState.feedItems,

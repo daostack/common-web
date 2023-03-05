@@ -17,13 +17,15 @@ export function* getFeedItems(
     const currentFeedItems = (yield select(selectFeedItems)) as FeedItems;
     const isFirstRequest = !currentFeedItems.lastDocTimestamp;
     const { data, firstDocTimestamp, lastDocTimestamp, hasMore } = (yield call(
-      CommonFeedService.getCommonFeedItems,
+      CommonFeedService.getCommonFeedItemsByUpdatedAt,
       commonId,
       {
         startAfter: currentFeedItems.lastDocTimestamp,
         limit,
       },
-    )) as Awaited<ReturnType<typeof CommonFeedService.getCommonFeedItems>>;
+    )) as Awaited<
+      ReturnType<typeof CommonFeedService.getCommonFeedItemsByUpdatedAt>
+    >;
 
     yield put(
       actions.getFeedItems.success({

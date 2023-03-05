@@ -54,7 +54,7 @@ class CommonFeedService {
     };
   };
 
-  public getCommonFeedItems = async (
+  public getCommonFeedItemsByUpdatedAt = async (
     commonId: string,
     options: {
       startAfter?: Timestamp | null;
@@ -68,7 +68,7 @@ class CommonFeedService {
   }> => {
     const { startAfter, limit = 10 } = options;
     let query = this.getCommonFeedSubCollection(commonId).orderBy(
-      "createdAt",
+      "updatedAt",
       "desc",
     );
 
@@ -78,9 +78,9 @@ class CommonFeedService {
 
     const snapshot = await query.limit(limit).get();
     const commonFeedItems = transformFirebaseDataList<CommonFeed>(snapshot);
-    const firstDocTimestamp = snapshot.docs[0]?.data().createdAt || null;
+    const firstDocTimestamp = snapshot.docs[0]?.data().updatedAt || null;
     const lastDocTimestamp =
-      snapshot.docs[snapshot.docs.length - 1]?.data().createdAt || null;
+      snapshot.docs[snapshot.docs.length - 1]?.data().updatedAt || null;
 
     return {
       data: commonFeedItems,
@@ -90,20 +90,31 @@ class CommonFeedService {
     };
   };
 
-  public subscribeToNewCommonFeedItems = (
+  public subscribeToNewUpdatedCommonFeedItems = (
     commonId: string,
     endBefore: Timestamp,
-    callback: (commonFeedItems: CommonFeed[]) => void,
+    callback: (
+      data: {
+        commonFeedItem: CommonFeed;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
   ): UnsubscribeFunction => {
     const query = this.getCommonFeedSubCollection(commonId)
-      .orderBy("createdAt", "desc")
+      .orderBy("updatedAt", "desc")
       .endBefore(endBefore);
 
     return query.onSnapshot((snapshot) => {
-      const data = snapshot
-        .docChanges()
-        .filter((docChange) => docChange.type === "added")
-        .map((docChange) => docChange.doc.data());
+      const data = snapshot.docChanges().map((docChange) => ({
+        commonFeedItem: docChange.doc.data(),
+        statuses: {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        },
+      }));
       callback(data);
     });
   };

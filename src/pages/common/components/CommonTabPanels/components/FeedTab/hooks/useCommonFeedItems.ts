@@ -25,7 +25,7 @@ export const useCommonFeedItems = (commonId: string): Return => {
       return;
     }
 
-    const unsubscribe = CommonFeedService.subscribeToNewCommonFeedItems(
+    const unsubscribe = CommonFeedService.subscribeToNewUpdatedCommonFeedItems(
       commonId,
       feedItems.firstDocTimestamp,
       (data) => {

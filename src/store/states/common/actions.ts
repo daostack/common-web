@@ -90,7 +90,15 @@ export const getFeedItems = createAsyncAction(
 
 export const addNewFeedItems = createStandardAction(
   CommonActionType.ADD_NEW_FEED_ITEMS,
-)<CommonFeed[]>();
+)<
+  {
+    commonFeedItem: CommonFeed;
+    statuses: {
+      isAdded: boolean;
+      isRemoved: boolean;
+    };
+  }[]
+>();
 
 export const updateFeedItem = createStandardAction(
   CommonActionType.UPDATE_FEED_ITEM,
