@@ -1,5 +1,127 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Storyshots UI Kit/Button Light Purple 1`] = `
+<div
+  className="sb-flex-column sb-align-start sb-w-max-content sb-items-mb-2"
+>
+  <button
+    className="button buttonLightPurpleVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonLightPurpleVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonLightPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonLightPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonLightPurpleVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonLightPurpleVariant buttonLargeSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonLightPurpleVariant buttonMediumSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonLightPurpleVariant buttonSmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonLightPurpleVariant buttonSmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonLightPurpleVariant buttonXsmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonLightPurpleVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonLightPurpleVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonLightPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonLightPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonLightPurpleVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+</div>
+`;
+
 exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
 <div
   className="sb-flex-column sb-align-start sb-w-max-content sb-items-mb-2"
@@ -13,6 +135,13 @@ exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
   </button>
   <button
     className="button buttonOutlineBlueVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonOutlineBlueVariant buttonSmallSize"
     tabIndex={0}
     type="button"
   >
@@ -57,6 +186,14 @@ exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
     Button Label
   </button>
   <button
+    className="button buttonDisabled buttonOutlineBlueVariant buttonSmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
     className="button buttonDisabled buttonOutlineBlueVariant buttonXsmallSize"
     disabled={true}
     tabIndex={0}
@@ -75,6 +212,14 @@ exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
   <button
     aria-disabled="true"
     className="button buttonDisabled buttonOutlineBlueVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonOutlineBlueVariant buttonSmallSize"
     tabIndex={0}
     type="button"
   >
@@ -188,6 +333,34 @@ exports[`Storyshots UI Kit/Button Outline Blue With Icon 1`] = `
     Button Label
   </button>
   <button
+    className="button buttonOutlineBlueVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    <svg
+      className="leftIcon"
+      fill="none"
+      height="10"
+      viewBox="0 0 10 10"
+      width="10"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5 1V9"
+        stroke="currentColor"
+        strokeLinecap="square"
+        strokeWidth="2"
+      />
+      <path
+        d="M1 5H9"
+        stroke="currentColor"
+        strokeLinecap="square"
+        strokeWidth="2"
+      />
+    </svg>
+    Button Label
+  </button>
+  <button
     className="button buttonOutlineBlueVariant buttonXsmallSize"
     tabIndex={0}
     type="button"
@@ -303,6 +476,35 @@ exports[`Storyshots UI Kit/Button Outline Blue With Icon 1`] = `
     Button Label
   </button>
   <button
+    className="button buttonDisabled buttonOutlineBlueVariant buttonSmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    <svg
+      className="leftIcon"
+      fill="none"
+      height="10"
+      viewBox="0 0 10 10"
+      width="10"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5 1V9"
+        stroke="currentColor"
+        strokeLinecap="square"
+        strokeWidth="2"
+      />
+      <path
+        d="M1 5H9"
+        stroke="currentColor"
+        strokeLinecap="square"
+        strokeWidth="2"
+      />
+    </svg>
+    Button Label
+  </button>
+  <button
     className="button buttonDisabled buttonOutlineBlueVariant buttonXsmallSize"
     disabled={true}
     tabIndex={0}
@@ -420,6 +622,35 @@ exports[`Storyshots UI Kit/Button Outline Blue With Icon 1`] = `
   </button>
   <button
     aria-disabled="true"
+    className="button buttonDisabled buttonOutlineBlueVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    <svg
+      className="leftIcon"
+      fill="none"
+      height="10"
+      viewBox="0 0 10 10"
+      width="10"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5 1V9"
+        stroke="currentColor"
+        strokeLinecap="square"
+        strokeWidth="2"
+      />
+      <path
+        d="M1 5H9"
+        stroke="currentColor"
+        strokeLinecap="square"
+        strokeWidth="2"
+      />
+    </svg>
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
     className="button buttonDisabled buttonOutlineBlueVariant buttonXsmallSize"
     tabIndex={0}
     type="button"
@@ -476,6 +707,13 @@ exports[`Storyshots UI Kit/Button Primary Gray 1`] = `
     Button Label
   </button>
   <button
+    className="button buttonPrimaryGrayVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
     className="button buttonPrimaryGrayVariant buttonXsmallSize"
     tabIndex={0}
     type="button"
@@ -492,6 +730,14 @@ exports[`Storyshots UI Kit/Button Primary Gray 1`] = `
   </button>
   <button
     className="button buttonDisabled buttonPrimaryGrayVariant buttonMediumSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryGrayVariant buttonSmallSize"
     disabled={true}
     tabIndex={0}
     type="button"
@@ -525,6 +771,14 @@ exports[`Storyshots UI Kit/Button Primary Gray 1`] = `
   <button
     aria-disabled="true"
     className="button buttonDisabled buttonPrimaryGrayVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryGrayVariant buttonSmallSize"
     tabIndex={0}
     type="button"
   >
@@ -575,6 +829,13 @@ exports[`Storyshots UI Kit/Button Primary Purple 1`] = `
     Button Label
   </button>
   <button
+    className="button buttonPrimaryPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
     className="button buttonPrimaryPurpleVariant buttonXsmallSize"
     tabIndex={0}
     type="button"
@@ -591,6 +852,14 @@ exports[`Storyshots UI Kit/Button Primary Purple 1`] = `
   </button>
   <button
     className="button buttonDisabled buttonPrimaryPurpleVariant buttonMediumSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonSmallSize"
     disabled={true}
     tabIndex={0}
     type="button"
@@ -624,6 +893,14 @@ exports[`Storyshots UI Kit/Button Primary Purple 1`] = `
   <button
     aria-disabled="true"
     className="button buttonDisabled buttonPrimaryPurpleVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonSmallSize"
     tabIndex={0}
     type="button"
   >
