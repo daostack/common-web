@@ -1,7 +1,10 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { PROPOSAL_TYPE_SELECT_OPTIONS } from "@/shared/constants";
+import {
+  PROPOSAL_TYPE_SELECT_OPTIONS,
+  ProposalsTypes,
+} from "@/shared/constants";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
@@ -12,6 +15,7 @@ import {
 import { commonActions } from "@/store/states";
 import { useCommonDataContext } from "../../../../../../providers";
 import { ProposalCreationCard, ProposalCreationModal } from "./components";
+import { getFundingProposalPayload, getSurveyProposalPayload } from "./util";
 
 interface NewProposalCreationProps {
   governanceCircles: Governance["circles"];
@@ -65,18 +69,33 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         return;
       }
 
-      dispatch(
-        commonActions.createSurveyProposal.request({
-          payload: {
-            title: values.title,
-            description: JSON.stringify(values.content),
-            images: values.images,
-            files: values.files,
-            links: [],
+      switch (values.proposalType.value) {
+        case ProposalsTypes.FUNDS_ALLOCATION: {
+          const fundingProposalPayload = getFundingProposalPayload(
+            values,
             commonId,
-          },
-        }),
-      );
+            userId,
+          );
+
+          if (!fundingProposalPayload) {
+            break;
+          }
+          dispatch(
+            commonActions.createFundingProposal.request({
+              payload: fundingProposalPayload,
+            }),
+          );
+          break;
+        }
+        case ProposalsTypes.SURVEY: {
+          dispatch(
+            commonActions.createSurveyProposal.request({
+              payload: getSurveyProposalPayload(values, commonId),
+            }),
+          );
+          break;
+        }
+      }
     },
     [governanceCircles, userCircleIds, userId, commonId],
   );

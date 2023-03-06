@@ -18,3 +18,4 @@ export * from "./countryCodes";
 export * from "./webview";
 export * from "./RecipientType";
 export * from "./viewportBreakpoint";
+export * from "./currencyTypes";

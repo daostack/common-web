@@ -1,5 +1,104 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Storyshots UI Kit/Button Light Purple 1`] = `
+<div
+  className="sb-flex-column sb-align-start sb-w-max-content sb-items-mb-2"
+>
+  <button
+    className="button buttonLightPurpleVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonLightPurpleVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonLightPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonLightPurpleVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonLightPurpleVariant buttonLargeSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonLightPurpleVariant buttonMediumSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonLightPurpleVariant buttonSmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    className="button buttonDisabled buttonLightPurpleVariant buttonXsmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    Button Label
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonLightPurpleVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonLightPurpleVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonLightPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonLightPurpleVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    Visually Disabled
+  </button>
+</div>
+`;
+
 exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
 <div
   className="sb-flex-column sb-align-start sb-w-max-content sb-items-mb-2"

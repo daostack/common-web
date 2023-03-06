@@ -22,14 +22,14 @@ exports[`Storyshots UI Kit/ButtonIcon Outline Blue 1`] = `
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.5"
+        strokeWidth={1.5}
       />
       <path
         d="M1 8H15"
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.5"
+        strokeWidth={1.5}
       />
     </svg>
   </button>
@@ -52,14 +52,14 @@ exports[`Storyshots UI Kit/ButtonIcon Outline Blue 1`] = `
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.5"
+        strokeWidth={1.5}
       />
       <path
         d="M1 8H15"
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.5"
+        strokeWidth={1.5}
       />
     </svg>
   </button>
@@ -82,14 +82,14 @@ exports[`Storyshots UI Kit/ButtonIcon Outline Blue 1`] = `
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.5"
+        strokeWidth={1.5}
       />
       <path
         d="M1 8H15"
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.5"
+        strokeWidth={1.5}
       />
     </svg>
   </button>

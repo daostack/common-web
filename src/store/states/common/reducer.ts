@@ -86,29 +86,44 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
-  .handleAction(actions.createSurveyProposal.request, (state) =>
-    produce(state, (nextState) => {
-      nextState.proposalCreation = {
-        ...nextState.proposalCreation,
-        loading: true,
-      };
-    }),
+  .handleAction(
+    [
+      actions.createSurveyProposal.request,
+      actions.createFundingProposal.request,
+    ],
+    (state) =>
+      produce(state, (nextState) => {
+        nextState.proposalCreation = {
+          ...nextState.proposalCreation,
+          loading: true,
+        };
+      }),
   )
-  .handleAction(actions.createSurveyProposal.success, (state) =>
-    produce(state, (nextState) => {
-      nextState.proposalCreation = {
-        loading: false,
-        data: null,
-      };
-    }),
+  .handleAction(
+    [
+      actions.createSurveyProposal.success,
+      actions.createFundingProposal.success,
+    ],
+    (state) =>
+      produce(state, (nextState) => {
+        nextState.proposalCreation = {
+          loading: false,
+          data: null,
+        };
+      }),
   )
-  .handleAction(actions.createSurveyProposal.failure, (state) =>
-    produce(state, (nextState) => {
-      nextState.proposalCreation = {
-        ...nextState.proposalCreation,
-        loading: false,
-      };
-    }),
+  .handleAction(
+    [
+      actions.createSurveyProposal.failure,
+      actions.createFundingProposal.failure,
+    ],
+    (state) =>
+      produce(state, (nextState) => {
+        nextState.proposalCreation = {
+          ...nextState.proposalCreation,
+          loading: false,
+        };
+      }),
   )
   .handleAction(actions.getFeedItems.request, (state) =>
     produce(state, (nextState) => {

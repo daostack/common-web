@@ -55,6 +55,12 @@ OutlineBlue.args = {
   children: "Button Label",
 };
 
+export const LightPurple = Template.bind({});
+LightPurple.args = {
+  variant: ButtonVariant.LightPurple,
+  children: "Button Label",
+};
+
 export const OutlineBlueWithIcon = Template.bind({});
 OutlineBlueWithIcon.args = {
   variant: ButtonVariant.OutlineBlue,

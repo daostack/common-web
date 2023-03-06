@@ -43,3 +43,42 @@ export function* createSurveyProposal(
     }
   }
 }
+
+export function* createFundingProposal(
+  action: ReturnType<typeof actions.createFundingProposal.request>,
+): Generator {
+  const { payload } = action;
+
+  try {
+    const proposal = (yield call(
+      ProposalService.createFundingProposal,
+      payload.payload,
+    )) as Awaited<ReturnType<typeof ProposalService.createFundingProposal>>;
+
+    yield put(
+      cacheActions.updateProposalStateById({
+        proposalId: proposal.id,
+        state: {
+          loading: false,
+          fetched: true,
+          data: proposal,
+        },
+      }),
+    );
+
+    yield put(actions.setCommonAction(null));
+    yield put(actions.createFundingProposal.success(proposal));
+
+    if (payload.callback) {
+      payload.callback(null, proposal);
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.createFundingProposal.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  }
+}

@@ -38,11 +38,11 @@ export const PROPOSAL_TYPE_SELECT_OPTIONS = [
     label: "Survey",
     value: ProposalsTypes.SURVEY,
   },
+  {
+    label: "Fund allocation",
+    value: ProposalsTypes.FUNDS_ALLOCATION,
+  },
   // TODO: Add in future tickets
-  // {
-  //   label: "Fund allocation",
-  //   value: ProposalsTypes.FUNDS_ALLOCATION,
-  // },
   // {
   //   label: "Assign members to a circle",
   //   value: ProposalsTypes.ASSIGN_CIRCLE,

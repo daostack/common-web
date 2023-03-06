@@ -11,3 +11,4 @@ export {
   RadioButtonGroup,
   RadioButton,
 } from "./RadioButtonGroup";
+export * from './Select';

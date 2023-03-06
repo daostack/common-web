@@ -2,9 +2,10 @@ import React, { FC } from "react";
 
 interface PlusIconProps {
   className?: string;
+  strokeWidth?: number;
 }
 
-const PlusIcon: FC<PlusIconProps> = ({ className }) => (
+const PlusIcon: FC<PlusIconProps> = ({ className, strokeWidth = 1.5 }) => (
   <svg
     className={className}
     width="16"
@@ -16,14 +17,14 @@ const PlusIcon: FC<PlusIconProps> = ({ className }) => (
     <path
       d="M8 1V15"
       stroke="currentColor"
-      strokeWidth="1.5"
+      strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <path
       d="M1 8H15"
       stroke="currentColor"
-      strokeWidth="1.5"
+      strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
     />

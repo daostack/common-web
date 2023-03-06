@@ -13,6 +13,7 @@ import styles from "./Button.module.scss";
 export enum ButtonVariant {
   PrimaryGray = "primary-gray",
   PrimaryPurple = "primary-purple",
+  LightPurple = "light-purple",
   OutlineBlue = "outline-blue",
   Warning = "warning",
 }
@@ -50,6 +51,7 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
     [styles.buttonPrimaryGrayVariant]: variant === ButtonVariant.PrimaryGray,
     [styles.buttonPrimaryPurpleVariant]:
       variant === ButtonVariant.PrimaryPurple,
+    [styles.buttonLightPurpleVariant]: variant === ButtonVariant.LightPurple,
     [styles.buttonOutlineBlueVariant]: variant === ButtonVariant.OutlineBlue,
     [styles.buttonWarningVariant]: variant === ButtonVariant.Warning,
     [styles.buttonLargeSize]: size === ButtonSize.Large,

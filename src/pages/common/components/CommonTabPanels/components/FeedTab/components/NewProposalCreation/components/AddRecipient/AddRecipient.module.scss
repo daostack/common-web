@@ -1,0 +1,81 @@
+@import "../../../../../../../../../../constants";
+
+.container {
+  padding: 1.25rem 0.625rem;
+  display: flex;
+  align-items: center;
+  background-color: $c-light-gray;
+  margin-top: 2.5rem;
+}
+
+.table {
+  width: 100%;
+  border-spacing: 0;
+}
+
+.tableHead {
+  border-bottom: 1px solid $c-neutrals-200;
+  padding: 0 1rem;
+}
+
+.tableBody {
+  padding: 0 1rem;
+  background-color: $white;
+  width: 100%;
+}
+
+.tableHeader {
+  text-align: left;
+  padding-bottom: 0.375rem;
+  white-space: nowrap;
+  font-size: $xsmall;
+  font-weight: 400;
+}
+
+.tableHeader:first-child {
+  padding-left: 1rem;
+  width: 10rem;
+}
+
+.tableCell {
+  padding-top: 0.5rem;
+  padding-bottom: 0.375rem;
+  border-top: 0.0625rem solid $c-neutrals-200;
+  border-bottom: 0.0625rem solid $c-neutrals-200;
+}
+
+.tableCell:first-child {
+  padding-left: 0.5625rem;
+  width: 1.125rem;
+  border-left: 0.0625rem solid $c-neutrals-200;
+}
+
+.tableCell:last-child {
+  border-right: 0.0625rem solid $c-neutrals-200;
+}
+
+.addRecipientButton {
+  background-color: $c-primary-100;
+  color: $c-primary-400;
+  padding: 0.5rem 0.8125rem;
+  margin: 0;
+}
+
+.addRecipientButton:hover {
+  background-color: $c-primary-200;
+}
+
+.icon {
+  width: 0.6875rem;
+  height: 0.6875rem;
+}
+
+.clickableRow {
+  cursor: pointer;
+
+  &:hover {
+    background-color: $c-primary-100;
+  }
+}
+
+

@@ -76,6 +76,20 @@ export const createSurveyProposal = createAsyncAction(
   Error
 >();
 
+export const createFundingProposal = createAsyncAction(
+  CommonActionType.CREATE_FUNDING_PROPOSAL,
+  CommonActionType.CREATE_FUNDING_PROPOSAL_SUCCESS,
+  CommonActionType.CREATE_FUNDING_PROPOSAL_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    CreateProposalWithFiles<ProposalsTypes.FUNDS_ALLOCATION>,
+    Proposal,
+    Error
+  >,
+  Proposal,
+  Error
+>();
+
 export const getFeedItems = createAsyncAction(
   CommonActionType.GET_FEED_ITEMS,
   CommonActionType.GET_FEED_ITEMS_SUCCESS,

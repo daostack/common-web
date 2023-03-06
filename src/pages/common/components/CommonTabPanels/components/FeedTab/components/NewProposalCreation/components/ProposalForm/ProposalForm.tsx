@@ -5,9 +5,10 @@ import {
   TextField,
   UploadFiles,
 } from "@/shared/components/Form/Formik";
-import { ProposalTypeSelectOption } from "@/shared/constants";
+import { ProposalTypeSelectOption, ProposalsTypes } from "@/shared/constants";
 import { Circles, Governance } from "@/shared/models";
 import { MAX_PROPOSAL_TITLE_LENGTH } from "../../constants";
+import { AddRecipient } from "../AddRecipient";
 import { ProposalTypeSelect } from "../ProposalTypeSelect";
 import { VotingSettings } from "../VotingSettings";
 import styles from "./ProposalForm.module.scss";
@@ -59,6 +60,9 @@ const ProposalForm: FC<ProposalFormProps> = (props) => {
         disabled={disabled}
       />
       <UploadFiles name="images" disabled={disabled} />
+      {selectedProposalType.value === ProposalsTypes.FUNDS_ALLOCATION && (
+        <AddRecipient />
+      )}
     </div>
   );
 };
