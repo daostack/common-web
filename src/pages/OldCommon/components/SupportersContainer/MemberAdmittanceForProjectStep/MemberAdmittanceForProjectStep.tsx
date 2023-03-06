@@ -71,31 +71,22 @@ const MemberAdmittanceForProjectStep: FC<
     Object.values(parentGovernanceCircles || {}).find(
       ({ id }) => id === circleId,
     )?.name || "";
+  const isParentCommonMemberFinished =
+    Boolean(isParentCommonMemberFetched && parentCommonMember) ||
+    isParentCommonMemberCreated;
+  const isProjectCommonMemberFinished =
+    Boolean(isCommonMemberFetched && commonMember) ||
+    isProjectCommonMemberCreated;
 
   useEffect(() => {
     fetchParentCommonMember(parentCommonId, {}, true);
   }, [parentCommonId, userId]);
 
   useEffect(() => {
-    const isParentCommonMemberFinished =
-      Boolean(isParentCommonMemberFetched && parentCommonMember) ||
-      isParentCommonMemberCreated;
-    const isProjectCommonMemberFinished =
-      Boolean(isCommonMemberFetched && commonMember) ||
-      isProjectCommonMemberCreated;
-
     if (isParentCommonMemberFinished && isProjectCommonMemberFinished) {
       onFinish();
     }
-  }, [
-    isParentCommonMemberFetched,
-    parentCommonMember,
-    isParentCommonMemberCreated,
-    isCommonMemberFetched,
-    commonMember,
-    isProjectCommonMemberCreated,
-    onFinish,
-  ]);
+  }, [isParentCommonMemberFinished, isProjectCommonMemberFinished, onFinish]);
 
   useEffect(() => {
     (async () => {
@@ -177,7 +168,7 @@ const MemberAdmittanceForProjectStep: FC<
         commonMember ||
         !userId ||
         !circleName ||
-        !createdMemberAdmittance
+        !isParentCommonMemberFinished
       ) {
         return;
       }
@@ -211,7 +202,7 @@ const MemberAdmittanceForProjectStep: FC<
     commonMember,
     userId,
     circleName,
-    createdMemberAdmittance,
+    isParentCommonMemberFinished,
   ]);
 
   useEffect(() => {
