@@ -37,7 +37,7 @@ const columns = [
   columnHelper.accessor("recipient", {
     header: () => "Recipient",
     cell: (info) => info.getValue(),
-    size: 180,
+    size: 160,
   }),
   columnHelper.accessor("amount", {
     id: "amount",
