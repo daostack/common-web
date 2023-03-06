@@ -1,11 +1,12 @@
 import React, { FC, LegacyRef, useEffect, useState, useMemo } from "react";
 import { useMeasure } from "react-use";
+import classNames from "classnames";
 import { Image, Modal, ButtonIcon } from "@/shared/components";
 import { Colors } from "@/shared/constants";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import CloseIcon from "@/shared/icons/close.icon";
 import { Common } from "@/shared/models";
-import { emptyFunction } from "@/shared/utils";
+import { emptyFunction, isRTL } from "@/shared/utils";
 import styles from "./ChatMobileModal.module.scss";
 
 interface ChatMobileModalProps {
@@ -91,7 +92,9 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
         {title && (
           <p
             ref={titleRef as LegacyRef<HTMLDivElement>}
-            className={styles.title}
+            className={classNames(styles.title, {
+              [styles.titleRTL]: isRTL(title),
+            })}
           >
             {title}
           </p>

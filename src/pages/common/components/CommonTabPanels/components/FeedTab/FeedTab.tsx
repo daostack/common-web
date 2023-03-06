@@ -1,6 +1,7 @@
 import React, { FC, LegacyRef, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useMeasure } from "react-use";
+import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatMobileModal } from "@/pages/common/components";
 import {
@@ -23,6 +24,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
+import { isRTL } from "@/shared/utils";
 import { selectCommonAction } from "@/store/states";
 import { TabNavigation } from "../TabNavigation";
 import {
@@ -111,7 +113,11 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
         {chatItem && (
           <>
             <p
-              className={styles.chatDiscussionTitle}
+              className={classNames(styles.chatDiscussionTitle, {
+                [styles.chatDiscussionTitleRTL]: isRTL(
+                  chatItem.discussion.title,
+                ),
+              })}
               ref={chatTitleRef as LegacyRef<HTMLParagraphElement>}
             >
               {chatItem.discussion.title}

@@ -81,5 +81,9 @@
   border-bottom: 1px solid $c-neutrals-200;
   font-size: $mobile-title;
   font-family: Lexend, sans-serif;
-  color: $c-neutrals-600
+  color: $c-neutrals-600;
+}
+.chatDiscussionTitleRTL {
+  text-align: right;
+  direction: rtl;
 }

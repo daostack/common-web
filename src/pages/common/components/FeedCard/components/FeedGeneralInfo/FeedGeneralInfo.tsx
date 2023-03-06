@@ -9,6 +9,7 @@ import {
   parseStringToTextEditorValue,
   TextEditor,
 } from "@/shared/ui-kit";
+import { isRTL } from "@/shared/utils";
 import styles from "./FeedGeneralInfo.module.scss";
 
 interface FeedGeneralInfoProps {
@@ -44,7 +45,13 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
   return (
     <div className={styles.container}>
       {title && (
-        <p className={classNames(styles.text, styles.title)}>{title}</p>
+        <p
+          className={classNames(styles.text, styles.title, {
+            [styles.titleRTL]: isRTL(title),
+          })}
+        >
+          {title}
+        </p>
       )}
       {subtitle && (
         <p className={classNames(styles.text, styles.subtitle)}>{subtitle}</p>

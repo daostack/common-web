@@ -48,7 +48,7 @@
 }
 
 .commonName {
-  margin: 0
+  margin: 0;
 }
 
 .title {
@@ -62,7 +62,10 @@
   line-height: 120%;
   color: $c-neutrals-600;
   box-sizing: border-box;
-
+}
+.titleRTL {
+  text-align: right;
+  direction: rtl;
 }
 
 .image {
