@@ -17,6 +17,7 @@ export { useUserById } from "./useUserById";
 export { default as useUserCards } from "./useUserCards";
 export { default as useUserContributions } from "./useUserContributions";
 export { useGovernance } from "./useGovernance";
+export { useGovernanceByCommonId } from "./useGovernanceByCommonId";
 export { useUserInfoAboutMemberships } from "./useUserInfoAboutMemberships";
 export { useBankAccountDetails } from "./useBankAccountDetails";
 export { useDiscussionMessagesById } from "./useDiscussionMessagesById";

@@ -3,6 +3,7 @@ import { takeLeadingByIdentifier } from "@/shared/utils/saga";
 import * as actions from "../actions";
 import { getDiscussionStateById } from "./getDiscussionStateById";
 import { getFeedItemUserMetadataState } from "./getFeedItemUserMetadataState";
+import { getGovernanceStateByCommonId } from "./getGovernanceStateByCommonId";
 import { getProposalStateById } from "./getProposalStateById";
 import { getUserStateById } from "./getUserStateById";
 
@@ -11,6 +12,11 @@ export function* mainSaga() {
     actions.getUserStateById.request,
     (action) => action.payload.payload.userId,
     getUserStateById,
+  );
+  yield takeLeadingByIdentifier(
+    actions.getGovernanceStateByCommonId.request,
+    (action) => action.payload.payload.commonId,
+    getGovernanceStateByCommonId,
   );
   yield takeLeadingByIdentifier(
     actions.getDiscussionStateById.request,

@@ -8,17 +8,22 @@ import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { LanguageDropdown, Loader } from "@/shared/components";
 import { ContributionType, ScreenSize } from "@/shared/constants";
 import { useHeader, useLanguage, useQueryParams } from "@/shared/hooks";
-import { useCommon, useSupportersData } from "@/shared/hooks/useCases";
+import {
+  useCommon,
+  useGovernanceByCommonId,
+  useSupportersData,
+} from "@/shared/hooks/useCases";
 import {
   getScreenSize,
   selectIsRtlLanguage,
   selectLanguage,
 } from "@/shared/store/selectors";
 import { Portal } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
+import { checkIsProject, getCommonPagePath } from "@/shared/utils";
 import {
   DeadSeaUserDetailsFormValuesWithoutUserDetails,
   InitialStep,
+  MemberAdmittanceForProjectStep,
   MemberAdmittanceStep,
   PaymentStep,
   Success,
@@ -58,6 +63,12 @@ const SupportersContainer = () => {
   } = useCommonMember({
     shouldAutoReset: false,
   });
+  const {
+    data: parentGovernance,
+    fetched: isParentGovernanceFetched,
+    fetchGovernance: fetchParentGovernance,
+    setGovernance: setParentGovernance,
+  } = useGovernanceByCommonId();
   const initialLanguage = getInitialLanguage(queryParams);
   const [step, setStep] = useState(
     amount ? SupportersStep.UserDetails : SupportersStep.InitialStep,
@@ -181,6 +192,14 @@ const SupportersContainer = () => {
     }
   }, [isCommonMemberFetched, step]);
 
+  useEffect(() => {
+    if (common?.directParent?.commonId) {
+      fetchParentGovernance(common.directParent.commonId);
+    } else {
+      setParentGovernance(null);
+    }
+  }, [common?.directParent?.commonId]);
+
   const renderContent = () => {
     if (isInitialLoading) {
       return <Loader />;
@@ -200,7 +219,17 @@ const SupportersContainer = () => {
           />
         ) : null;
       case SupportersStep.MemberAdmittance:
-        return (
+        return checkIsProject(common) ? (
+          <MemberAdmittanceForProjectStep
+            data={formData}
+            parentCommonId={common.directParent.commonId}
+            circleId={common.directParent.circleId}
+            commonMember={commonMember}
+            isCommonMemberFetched={isCommonMemberFetched}
+            parentGovernanceCircles={parentGovernance?.circles}
+            onFinish={handleMemberAdmittanceStepFinish}
+          />
+        ) : (
           <MemberAdmittanceStep
             data={formData}
             commonMember={commonMember}
