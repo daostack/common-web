@@ -96,7 +96,7 @@ const AddRecipient: FC = () => {
     ]);
     setFieldValue("recipientInfo", {
       goalOfPayment: values.goalOfPayment,
-      currency: values.currency,
+      currency: values.currency?.label,
       amount: values.amount,
       recipientType: values.recipientType,
       recipientId,
@@ -115,12 +115,12 @@ const AddRecipient: FC = () => {
 
   return (
     <div className={styles.container}>
-      <table>
-        <thead>
+      <table className={styles.table}>
+        <thead className={styles.tableHead}>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id}>
+                <th className={styles.tableHeader} key={header.id}>
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext(),
@@ -130,7 +130,7 @@ const AddRecipient: FC = () => {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody className={styles.tableBody}>
           {table.getRowModel().rows.map((row) => (
             <tr
               className={isFilledTable ? styles.clickableRow : ""}
@@ -138,7 +138,7 @@ const AddRecipient: FC = () => {
               onClick={isFilledTable ? handleOpen : undefined}
             >
               {row.getVisibleCells().map((cell, index) => (
-                <td key={cell.id}>
+                <td className={styles.tableCell} key={cell.id}>
                   {index === 0 && !cell.getValue() ? (
                     <Button
                       className={styles.addRecipientButton}
