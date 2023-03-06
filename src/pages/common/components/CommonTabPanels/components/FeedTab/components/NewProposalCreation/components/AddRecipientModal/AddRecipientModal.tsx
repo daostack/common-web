@@ -86,13 +86,29 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
   }, [fetchCommonMembers, commonId]);
 
   const memberOptions = useMemo(() => {
-    return (commonMembers || []).map((member) => ({
-      ...member,
-      value: member.id,
-      label: `${member.user.firstName} ${member.user.lastName} ${
-        userId === member.userId ? "(me)" : ""
-      }`,
-    }));
+    return (commonMembers || [])
+      .map((member) => ({
+        ...member,
+        value: member.id,
+        label: `${member.user.firstName} ${member.user.lastName} ${
+          userId === member.userId ? "(me)" : ""
+        }`,
+      }))
+      .sort((a, b) => {
+        if (userId === a.userId) {
+          return -1;
+        } else if (userId === b.userId) {
+          return 1;
+        }
+
+        if (b.label > a.label) {
+          return -1;
+        } else if (b.label < a.label) {
+          return 1;
+        }
+
+        return 0;
+      });
   }, [commonMembers, userId]);
 
   const [commonsWithCommonMembers, setCommonsWithCommonMembers] = useState<
@@ -188,6 +204,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
                 options={CURRENCY_SELECT_OPTIONS}
                 containerClassName={styles.currencySelectContainer}
                 isOptionDisabled={(option) => option?.value === Currency.USD}
+                menuPortalTarget={document.body}
               />
             </div>
             <RadioButtonGroup
@@ -228,6 +245,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
                 >[]
               }
               disabled={!areCommonMembersFetched}
+              menuPortalTarget={document.body}
             />
             <TextField
               className={classNames(styles.field, styles.goalOfPaymentField)}

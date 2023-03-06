@@ -15,6 +15,7 @@ interface FormSelectProps {
   containerClassName?: string;
   disabled?: boolean;
   isOptionDisabled?: (option: SelectOptionType) => boolean;
+  menuPortalTarget?: HTMLElement | null;
 }
 
 const DropdownIndicator = (props: DropdownIndicatorProps<any, true>) => {
@@ -33,6 +34,7 @@ const FormSelect: FC<FormSelectProps> = ({
   containerClassName,
   disabled,
   isOptionDisabled,
+  menuPortalTarget,
 }) => {
   const { values, setFieldValue, handleBlur, touched, errors } =
     useFormikContext<Record<string, unknown>>();
@@ -56,6 +58,7 @@ const FormSelect: FC<FormSelectProps> = ({
         components={{
           DropdownIndicator,
         }}
+        menuPortalTarget={menuPortalTarget}
         isOptionDisabled={isOptionDisabled}
       />
     </div>
