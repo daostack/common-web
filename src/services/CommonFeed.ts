@@ -9,6 +9,7 @@ import {
   CommonFeedObjectUserUnique,
   CommonFeedType,
   SubCollections,
+  Timestamp,
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
@@ -53,21 +54,21 @@ class CommonFeedService {
     };
   };
 
-  public getCommonFeedItems = async (
+  public getCommonFeedItemsByUpdatedAt = async (
     commonId: string,
     options: {
-      startAfter?: firebase.firestore.DocumentSnapshot<CommonFeed> | null;
+      startAfter?: Timestamp | null;
       limit?: number;
     } = {},
   ): Promise<{
     data: CommonFeed[];
-    firstDocSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed> | null;
-    lastDocSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed> | null;
+    firstDocTimestamp: Timestamp | null;
+    lastDocTimestamp: Timestamp | null;
     hasMore: boolean;
   }> => {
     const { startAfter, limit = 10 } = options;
     let query = this.getCommonFeedSubCollection(commonId).orderBy(
-      "createdAt",
+      "updatedAt",
       "desc",
     );
 
@@ -77,39 +78,43 @@ class CommonFeedService {
 
     const snapshot = await query.limit(limit).get();
     const commonFeedItems = transformFirebaseDataList<CommonFeed>(snapshot);
-    const firstDocSnapshot = snapshot.docs[0] || null;
-    const lastDocSnapshot = snapshot.docs[snapshot.docs.length - 1] || null;
+    const firstDocTimestamp = snapshot.docs[0]?.data().updatedAt || null;
+    const lastDocTimestamp =
+      snapshot.docs[snapshot.docs.length - 1]?.data().updatedAt || null;
 
     return {
       data: commonFeedItems,
-      firstDocSnapshot,
-      lastDocSnapshot,
+      firstDocTimestamp,
+      lastDocTimestamp,
       hasMore: snapshot.docs.length === limit,
     };
   };
 
-  public subscribeToNewCommonFeedItems = (
+  public subscribeToNewUpdatedCommonFeedItems = (
     commonId: string,
-    endBefore: firebase.firestore.DocumentSnapshot<CommonFeed>,
+    endBefore: Timestamp,
     callback: (
       data: {
         commonFeedItem: CommonFeed;
-        docSnapshot: firebase.firestore.DocumentSnapshot<CommonFeed>;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
       }[],
     ) => void,
   ): UnsubscribeFunction => {
     const query = this.getCommonFeedSubCollection(commonId)
-      .orderBy("createdAt", "desc")
+      .orderBy("updatedAt", "desc")
       .endBefore(endBefore);
 
     return query.onSnapshot((snapshot) => {
-      const data = snapshot
-        .docChanges()
-        .filter((docChange) => docChange.type === "added")
-        .map((docChange) => ({
-          commonFeedItem: docChange.doc.data(),
-          docSnapshot: docChange.doc,
-        }));
+      const data = snapshot.docChanges().map((docChange) => ({
+        commonFeedItem: docChange.doc.data(),
+        statuses: {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        },
+      }));
       callback(data);
     });
   };
