@@ -19,7 +19,6 @@
 }
 
 .tableBody {
-  border: 1px solid $c-neutrals-200;
   padding: 0 1rem;
   background-color: $white;
   width: 100%;
@@ -39,13 +38,20 @@
 }
 
 .tableCell {
-  padding-top: 1.0625rem;
-  padding-bottom: 0.875rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.375rem;
+  border-top: 0.0625rem solid $c-neutrals-200;
+  border-bottom: 0.0625rem solid $c-neutrals-200;
 }
 
 .tableCell:first-child {
-  padding-left: 1rem;
+  padding-left: 0.5625rem;
   width: 1.125rem;
+  border-left: 0.0625rem solid $c-neutrals-200;
+}
+
+.tableCell:last-child {
+  border-right: 0.0625rem solid $c-neutrals-200;
 }
 
 .addRecipientButton {
