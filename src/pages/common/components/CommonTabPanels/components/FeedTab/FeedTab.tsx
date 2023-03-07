@@ -203,6 +203,11 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
 
   useEffect(() => {
     return () => {
+      dispatch(
+        commonActions.getFeedItems.cancel(
+          "Cancel feed items fetch on feed umount",
+        ),
+      );
       dispatch(commonActions.resetFeedItems());
     };
   }, []);

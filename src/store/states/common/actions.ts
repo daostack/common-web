@@ -93,13 +93,15 @@ export const getFeedItems = createAsyncAction(
   CommonActionType.GET_FEED_ITEMS,
   CommonActionType.GET_FEED_ITEMS_SUCCESS,
   CommonActionType.GET_FEED_ITEMS_FAILURE,
+  CommonActionType.GET_FEED_ITEMS_CANCEL,
 )<
   {
     commonId: string;
     limit?: number;
   },
   Omit<FeedItems, "loading">,
-  Error
+  Error,
+  string
 >();
 
 export const addNewFeedItems = createStandardAction(
