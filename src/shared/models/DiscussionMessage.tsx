@@ -50,5 +50,6 @@ export interface PendingMessage {
   id: string;
   text: string;
   status: PendingMessageStatus;
+  /** resend is not implemented yet */
   resend?: () => void;
 }
