@@ -163,19 +163,22 @@ export default function ChatComponent({
 
   const handleResult = (isSucceed: boolean, pendingMessageId: string) => {
     if (isSucceed) {
-      const updatedPendingMessages = pendingMessages.filter(
-        (msg) => msg.id !== pendingMessageId,
+      setPendingMessages((prevState) =>
+        prevState.filter((msg) => msg.id !== pendingMessageId),
       );
-      setPendingMessages(updatedPendingMessages);
     } else {
-      console.log(pendingMessageId);
-      // const failedMessageIndex = pendingMessages.findIndex(
-      //   (msg) => msg.id === pendingMessageId,
-      // );
-      // const updatedPendingMessages = pendingMessages;
-      // updatedPendingMessages[failedMessageIndex].status =
-      //   PendingMessageStatus.Failed;
-      // setPendingMessages(updatedPendingMessages);
+      setPendingMessages((prevState) =>
+        prevState.map((msg) => {
+          if (msg.id !== pendingMessageId) {
+            return msg;
+          }
+          return {
+            id: pendingMessageId,
+            text: msg.text,
+            status: PendingMessageStatus.Failed,
+          };
+        }),
+      );
     }
   };
 

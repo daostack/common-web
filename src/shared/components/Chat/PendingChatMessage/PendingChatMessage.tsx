@@ -9,13 +9,13 @@ interface PendingChatMessageProps {
 
 export default function PendingChatMessage({ data }: PendingChatMessageProps) {
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={classNames(styles.wrapper, {
+        [styles.failed]: data.status === PendingMessageStatus.Failed,
+      })}
+    >
       <div>{data.text}</div>
-      <div
-        className={classNames(styles.status, {
-          failed: data.status === PendingMessageStatus.Failed,
-        })}
-      >
+      <div className={styles.status}>
         {data.status === PendingMessageStatus.Sending ? "Sending..." : "Failed"}
       </div>
     </div>
