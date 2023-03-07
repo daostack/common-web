@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ROUTE_PATHS } from "../../../../../shared/constants";
-import { Common } from "../../../../../shared/models";
 import {
   containsHebrew,
   formatPrice,
+  getCommonPagePath,
   getLastActivity,
-} from "../../../../../shared/utils";
+} from "@/shared/utils";
+import { Common } from "../../../../../shared/models";
 import "./index.scss";
 
 interface CommonListItemInterface {
@@ -18,7 +18,7 @@ export default function CommonListItem({ common }: CommonListItemInterface) {
 
   return (
     <div className="common-item">
-      <Link to={`${ROUTE_PATHS.COMMON_LIST}/` + common.id}>
+      <Link to={getCommonPagePath(common.id)}>
         <div className="image-wrapper">
           <div className="overlay"></div>
           {!imageError ? (
