@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router";
 import { expect } from "@storybook/jest";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { within, userEvent } from "@storybook/testing-library";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { getCommonPagePath } from "@/shared/utils";
 import { Item } from "../../types";
 import TreeItem from "./TreeItem";
 
@@ -12,7 +12,7 @@ const ITEM: Item = {
   image:
     "https://firebasestorage.googleapis.com/v0/b/common-daostack.appspot.com/o/public_img%2Fcover_template_01.png?alt=media",
   name: "Clean Air",
-  path: ROUTE_PATHS.COMMON_DETAIL.replace(":id", "parent-item"),
+  path: getCommonPagePath("parent-item"),
 };
 
 export default {

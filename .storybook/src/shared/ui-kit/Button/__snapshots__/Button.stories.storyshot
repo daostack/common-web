@@ -99,6 +99,153 @@ exports[`Storyshots UI Kit/Button Light Purple 1`] = `
 </div>
 `;
 
+exports[`Storyshots UI Kit/Button Loader 1`] = `
+<div
+  className="sb-flex-column sb-align-start sb-w-max-content sb-items-mb-2"
+>
+  <button
+    className="button buttonPrimaryPurpleVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    className="button buttonPrimaryPurpleVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    className="button buttonPrimaryPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    className="button buttonPrimaryPurpleVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonLargeSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonMediumSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonSmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonXsmallSize"
+    disabled={true}
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonLargeSize"
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonMediumSize"
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonSmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+  <button
+    aria-disabled="true"
+    className="button buttonDisabled buttonPrimaryPurpleVariant buttonXsmallSize"
+    tabIndex={0}
+    type="button"
+  >
+    <img
+      alt="Loader"
+      className="loader buttonLoader"
+      src="test-file-stub"
+    />
+  </button>
+</div>
+`;
+
 exports[`Storyshots UI Kit/Button Outline Blue 1`] = `
 <div
   className="sb-flex-column sb-align-start sb-w-max-content sb-items-mb-2"
