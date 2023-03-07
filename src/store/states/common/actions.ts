@@ -121,6 +121,10 @@ export const updateFeedItem = createStandardAction(
   isRemoved?: boolean;
 }>();
 
+export const resetFeedItems = createStandardAction(
+  CommonActionType.RESET_FEED_ITEMS,
+)();
+
 export const setIsNewProjectCreated = createStandardAction(
   CommonActionType.SET_IS_NEW_PROJECT_CREATED,
 )<boolean>();

@@ -1,5 +1,5 @@
-import React, { FC, LegacyRef, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { FC, LegacyRef, useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useMeasure } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -26,6 +26,7 @@ import {
 import { Container } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import { selectCommonAction } from "@/store/states";
+import { commonActions } from "@/store/states";
 import { TabNavigation } from "../TabNavigation";
 import {
   FeedActions,
@@ -49,6 +50,7 @@ const DISCUSSION_TITLE_PADDING_HEIGHT = 41;
 
 export const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember, common } = props;
+  const dispatch = useDispatch();
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
@@ -198,6 +200,12 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
       </ChatMobileModal>
     </div>
   );
+
+  useEffect(() => {
+    return () => {
+      dispatch(commonActions.resetFeedItems());
+    };
+  }, []);
 
   const contextValue = useMemo(
     () => ({

@@ -224,6 +224,11 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
+  .handleAction(actions.resetFeedItems, (state) =>
+    produce(state, (nextState) => {
+      nextState.feedItems = { ...initialFeedItems };
+    }),
+  )
   .handleAction(actions.setIsNewProjectCreated, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.isNewProjectCreated = payload;
