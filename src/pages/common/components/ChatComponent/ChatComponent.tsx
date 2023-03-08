@@ -157,14 +157,40 @@ export default function ChatComponent({
   const dateList = Object.keys(messages);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const [pendingMessages, setPendingMessages] = useState<PendingMessage[]>([]);
+
+  const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(
+    discussionMessages ?? [],
+  );
+
   const prevPendingMessages = usePrevious<PendingMessage[]>(
     pendingMessages ?? [],
   );
 
+  /** Remove the pending message from the pending array only AFTER the FE receives the updated messages array from the BE */
+  useEffect(() => {
+    if (
+      Boolean(prevDiscussionMessages) &&
+      discussionMessages?.length !== prevDiscussionMessages?.length
+    ) {
+      setPendingMessages((prevState) =>
+        prevState.filter((msg) => msg.status !== PendingMessageStatus.Success),
+      );
+    }
+  }, [discussionMessages, prevDiscussionMessages]);
+
   const handleResult = (isSucceed: boolean, pendingMessageId: string) => {
     if (isSucceed) {
       setPendingMessages((prevState) =>
-        prevState.filter((msg) => msg.id !== pendingMessageId),
+        prevState.map((msg) => {
+          if (msg.id !== pendingMessageId) {
+            return msg;
+          }
+          return {
+            id: pendingMessageId,
+            text: msg.text,
+            status: PendingMessageStatus.Success,
+          };
+        }),
       );
     } else {
       setPendingMessages((prevState) =>

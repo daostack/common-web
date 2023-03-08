@@ -44,6 +44,7 @@ export interface DiscussionMessage extends BaseEntity {
 export enum PendingMessageStatus {
   Sending,
   Failed,
+  Success,
 }
 
 export interface PendingMessage {

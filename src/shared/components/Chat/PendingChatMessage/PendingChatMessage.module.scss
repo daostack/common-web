@@ -13,8 +13,7 @@
   width: fit-content;
   display: flex;
   flex-direction: column;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   &.failed {
     background-color: $light-gray-6;
   }
