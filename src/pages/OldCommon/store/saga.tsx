@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeEvery, takeLatest } from "redux-saga/effects";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { isRequestError } from "@/services/Api";
 import PayMeService from "@/services/PayMeService";
@@ -1682,7 +1682,7 @@ export function* commonsSaga() {
     actions.updateDiscussionMessage.request,
     updateDiscussionMessage,
   );
-  yield takeLatest(
+  yield takeEvery(
     actions.addMessageToDiscussion.request,
     addMessageToDiscussionSaga,
   );
@@ -1709,7 +1709,7 @@ export function* commonsSaga() {
     createDeleteCommonProposal,
   );
   yield takeLatest(actions.loadUserCards.request, loadUserCardsSaga);
-  yield takeLatest(
+  yield takeEvery(
     actions.addMessageToProposal.request,
     addMessageToProposalSaga,
   );
