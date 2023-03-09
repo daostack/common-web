@@ -186,8 +186,7 @@ export default function ChatComponent({
             return msg;
           }
           return {
-            id: pendingMessageId,
-            text: msg.text,
+            ...msg,
             status: PendingMessageStatus.Success,
           };
         }),
@@ -199,8 +198,7 @@ export default function ChatComponent({
             return msg;
           }
           return {
-            id: pendingMessageId,
-            text: msg.text,
+            ...msg,
             status: PendingMessageStatus.Failed,
           };
         }),
