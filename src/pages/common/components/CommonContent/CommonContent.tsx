@@ -6,6 +6,7 @@ import {
   Common,
   CommonMember,
   Governance,
+  SupportersData,
 } from "@/shared/models";
 import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
 import { commonActions, selectIsNewProjectCreated } from "@/store/states";
@@ -28,6 +29,7 @@ interface CommonContentProps {
   parentCommons: Common[];
   subCommons: Common[];
   parentCommonSubCommons: Common[];
+  supportersData: SupportersData | null;
   isGlobalDataFetched: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
   parentCommonMember: CommonMember | null;
@@ -47,6 +49,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     parentCommonMember,
     parentCommon,
     parentCommonSubCommons,
+    supportersData,
     isJoinPending,
     setIsJoinPending,
   } = props;
@@ -99,6 +102,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       parentCommons={parentCommons}
       subCommons={subCommons}
       parentCommonSubCommons={parentCommonSubCommons}
+      supportersData={supportersData}
       isJoinPending={isJoinPending}
       setIsJoinPending={setIsJoinPending}
     >

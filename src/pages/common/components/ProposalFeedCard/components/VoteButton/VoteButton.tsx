@@ -26,7 +26,8 @@ const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
 export const VoteButton: React.FC<VoteButtonProps> = (props) => {
   const { className, voteOutcome, onClick } = props;
 
-  const handleClick = () => {
+  const handleClick = (event) => {
+    event.stopPropagation();
     if (onClick) {
       onClick(voteOutcome);
     }

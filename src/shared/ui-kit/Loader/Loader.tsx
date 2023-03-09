@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import loaderSrc from "@/shared/assets/icons/loader.svg";
+import loaderWhite from "@/shared/assets/icons/loader-white.svg";
+import loaderDefault from "@/shared/assets/icons/loader.svg";
 import { Portal } from "../Portal";
 import styles from "./Loader.module.scss";
 
@@ -9,10 +10,16 @@ export enum LoaderVariant {
   Global,
 }
 
+export enum LoaderColor {
+  Default,
+  White,
+}
+
 interface LoaderProps {
   className?: string;
   overlayClassName?: string;
   variant?: LoaderVariant;
+  color?: LoaderColor;
 }
 
 const Loader: FC<LoaderProps> = (props) => {
@@ -20,11 +27,12 @@ const Loader: FC<LoaderProps> = (props) => {
     className,
     overlayClassName,
     variant = LoaderVariant.Default,
+    color = LoaderColor.Default,
   } = props;
   const loaderEl = (
     <img
       className={classNames(styles.loader, className)}
-      src={loaderSrc}
+      src={color === LoaderColor.White ? loaderWhite : loaderDefault}
       alt="Loader"
     />
   );

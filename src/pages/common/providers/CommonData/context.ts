@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { ProposalsTypes } from "@/shared/constants";
-import { Circle, Common, Governance } from "@/shared/models";
+import { Circle, Common, Governance, SupportersData } from "@/shared/models";
 import { CommonMenuItem } from "../../constants";
 
 interface Data {
@@ -13,6 +13,7 @@ interface Data {
   subCommons: Common[];
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
+  supportersData: SupportersData | null;
   isJoinAllowed: boolean;
   isJoinPending: boolean;
   onJoinCommon?: () => void;

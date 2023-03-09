@@ -22,7 +22,7 @@ import {
   CommonRules,
 } from "./components";
 import { AboutActions } from "./components/AboutActions";
-import { getAllowedActions } from "./utils";
+import { getAllowedActions, getDefaultGovDocUrl } from "./utils";
 import styles from "./AboutTab.module.scss";
 
 interface AboutTabProps {
@@ -49,11 +49,13 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   const { parentCommon, parentCommonSubCommons } = useCommonDataContext();
   const isParentCommon = common.directParent === null;
   const allowedAboutActions = getAllowedActions(commonMember);
+  const governanceDocLink =
+    common.governanceDocumentUrl ?? getDefaultGovDocUrl(common);
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
       <CommonDescription common={common} />
-      <CommonGovernance commonName={common.name} />
+      <CommonGovernance commonName={common.name} titleUrl={governanceDocLink} />
       {rules.length > 0 && <CommonRules rules={rules} />}
     </div>
   );
@@ -96,7 +98,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
           <div className={styles.separator} />
         </>
       )}
-      <CommonGovernance commonName={common.name} />
+      <CommonGovernance commonName={common.name} titleUrl={governanceDocLink} />
       <div className={styles.separator} />
       {rules.length > 0 && <CommonRules rules={rules} />}
       <div className={styles.separator} />

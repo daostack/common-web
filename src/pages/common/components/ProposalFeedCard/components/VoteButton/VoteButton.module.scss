@@ -22,6 +22,10 @@
   box-shadow: $success-100-shadow;
 }
 
+.approveButton:hover {
+  background-color: $success-100-hover;
+}
+
 .abstainText {
   color: $c-neutrals-300;
 }
@@ -31,6 +35,10 @@
   box-shadow: $c-neutrals-100-shadow;
 }
 
+.abstainButton:hover {
+  background-color: $c-neutrals-100-hover;
+}
+
 .rejectText {
   color: $c-error-300;
 }
@@ -38,6 +46,10 @@
 .rejectButton {
   background-color: $c-error-100;
   box-shadow: $c-error-100-shadow;
+}
+
+.rejectButton:hover {
+  background-color: $c-error-100-hover;
 }
 
 .icon {

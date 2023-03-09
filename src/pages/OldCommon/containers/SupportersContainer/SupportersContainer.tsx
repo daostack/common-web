@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import classNames from "classnames";
 import { setLoginModalState } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { LanguageDropdown, Loader } from "@/shared/components";
 import { ContributionType, ScreenSize } from "@/shared/constants";
 import { useHeader, useLanguage, useQueryParams } from "@/shared/hooks";
@@ -14,6 +15,7 @@ import {
   selectLanguage,
 } from "@/shared/store/selectors";
 import { Portal } from "@/shared/ui-kit";
+import { getCommonPagePath } from "@/shared/utils";
 import {
   DeadSeaUserDetailsFormValuesWithoutUserDetails,
   InitialStep,
@@ -35,6 +37,7 @@ interface SupportersContainerRouterParams {
 const SupportersContainer = () => {
   const { id: commonId } = useParams<SupportersContainerRouterParams>();
   const dispatch = useDispatch();
+  const history = useHistory();
   const { updateHeaderState } = useHeader();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
   const {
@@ -48,6 +51,13 @@ const SupportersContainer = () => {
   const [contributionType, setContributionType] = useState(() =>
     getContributionType(queryParams),
   );
+  const {
+    data: commonMember,
+    fetched: isCommonMemberFetched,
+    fetchCommonMember,
+  } = useCommonMember({
+    shouldAutoReset: false,
+  });
   const initialLanguage = getInitialLanguage(queryParams);
   const [step, setStep] = useState(
     amount ? SupportersStep.UserDetails : SupportersStep.InitialStep,
@@ -60,13 +70,16 @@ const SupportersContainer = () => {
   const language = useSelector(selectLanguage());
   const isRtlLanguage = useSelector(selectIsRtlLanguage());
   const screenSize = useSelector(getScreenSize());
+  const userId = user?.uid;
   const isMobileView = screenSize === ScreenSize.Mobile;
   const currentTranslation =
     (supportersData && supportersData.translations[language]) || null;
   const isMainDataFetched = isCommonFetched && isSupportersDataFetched;
-  const isInitialLoading = !user && step === SupportersStep.UserDetails;
+  const isInitialLoading =
+    (!user || !isCommonMemberFetched) && step === SupportersStep.UserDetails;
   const shouldShowLanguageDropdown =
     Object.keys(supportersData?.translations || {}).length > 1;
+  const isOldCommonMember = Boolean(commonMember);
 
   const handleInitialStepFinish = (
     amount: number,
@@ -101,7 +114,11 @@ const SupportersContainer = () => {
   };
 
   const handleSuccessStepFinish = () => {
-    setStep(SupportersStep.Welcome);
+    if (commonMember?.rulesAccepted) {
+      history.push(getCommonPagePath(commonId));
+    } else {
+      setStep(SupportersStep.Welcome);
+    }
   };
 
   useEffect(() => {
@@ -111,6 +128,10 @@ const SupportersContainer = () => {
       shouldHideHeader: true,
     });
   }, [commonId]);
+
+  useEffect(() => {
+    fetchCommonMember(commonId, {}, true);
+  }, [commonId, userId]);
 
   useEffect(() => {
     if (isSupportersDataFetched && supportersData) {
@@ -150,6 +171,16 @@ const SupportersContainer = () => {
     window.scrollTo(0, 0);
   }, [step]);
 
+  useEffect(() => {
+    if (
+      isCommonMemberFetched &&
+      commonMember &&
+      step === SupportersStep.UserDetails
+    ) {
+      setStep(SupportersStep.Payment);
+    }
+  }, [isCommonMemberFetched, step]);
+
   const renderContent = () => {
     if (isInitialLoading) {
       return <Loader />;
@@ -172,6 +203,8 @@ const SupportersContainer = () => {
         return (
           <MemberAdmittanceStep
             data={formData}
+            commonMember={commonMember}
+            isCommonMemberFetched={isCommonMemberFetched}
             onFinish={handleMemberAdmittanceStepFinish}
           />
         );
@@ -186,11 +219,16 @@ const SupportersContainer = () => {
         );
       case SupportersStep.Success:
         return common ? (
-          <Success common={common} onFinish={handleSuccessStepFinish} />
+          <Success
+            common={common}
+            isOldCommonMember={isOldCommonMember}
+            onFinish={handleSuccessStepFinish}
+          />
         ) : null;
       case SupportersStep.Welcome:
         return common?.governanceId ? (
           <Welcome
+            commonId={common.id}
             commonName={common.name}
             governanceId={common.governanceId}
           />

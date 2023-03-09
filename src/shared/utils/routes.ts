@@ -12,3 +12,6 @@ export const getCommonPagePath = (
 
 export const getCommonEditingPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_EDITING.replace(":id", commonId);
+
+export const getCommonSupportPagePath = (commonId: string): string =>
+  ROUTE_PATHS.COMMON_SUPPORT.replace(":id", commonId);

@@ -1,5 +1,6 @@
 export { useCommon } from "./useCommon";
 export { useCommonMembersWithCircleIdsAmount } from "./useCommonMembersWithCircleIdsAmount";
+export { useCommonRulesAcceptance } from "./useCommonRulesAcceptance";
 export { useDiscussionById } from "./useDiscussionById";
 export { useFeedItemUserMetadata } from "./useFeedItemUserMetadata";
 export { useFullCommonData } from "./useFullCommonData";

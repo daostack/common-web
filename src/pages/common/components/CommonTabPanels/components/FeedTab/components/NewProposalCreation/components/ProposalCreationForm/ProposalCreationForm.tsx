@@ -87,6 +87,7 @@ const ProposalCreationForm: FC<ProposalCreationFormProps> = (props) => {
                 className={styles.button}
                 type="submit"
                 disabled={disabled}
+                loading={isLoading}
               >
                 Publish proposal
               </Button>
