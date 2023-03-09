@@ -61,13 +61,18 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     event.stopPropagation();
   };
 
-  const handleClose = useCallback(() => {
-    if (closePrompt) {
-      setShowClosePrompt(true);
-    } else {
-      onClose();
-    }
-  }, [closePrompt, onClose]);
+  const handleClose = useCallback<MouseEventHandler>(
+    (event) => {
+      event.stopPropagation();
+
+      if (closePrompt) {
+        setShowClosePrompt(true);
+      } else {
+        onClose();
+      }
+    },
+    [closePrompt, onClose],
+  );
 
   const handleClosePromptContinue = useCallback(() => {
     setShowClosePrompt(false);
