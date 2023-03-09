@@ -6,8 +6,9 @@ $smallest-breakpoint: 344px;
 .container {
   margin-top: 0.25rem;
   padding: 1.5rem 2.25rem 1.25rem 2rem;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  grid-column-gap: 0.5rem;
   background-color: $c-shades-white;
   border: 0.0625rem solid $c-neutrals-100;
   box-sizing: border-box;
@@ -15,7 +16,6 @@ $smallest-breakpoint: 344px;
   @include viewport-breakpoint(640px) {
     padding-left: 1rem;
     padding-right: 1rem;
-    display: grid;
     grid-template-columns: repeat(2, auto);
     grid-gap: 1.125rem 1rem;
   }
