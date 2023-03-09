@@ -93,13 +93,15 @@ export const getFeedItems = createAsyncAction(
   CommonActionType.GET_FEED_ITEMS,
   CommonActionType.GET_FEED_ITEMS_SUCCESS,
   CommonActionType.GET_FEED_ITEMS_FAILURE,
+  CommonActionType.GET_FEED_ITEMS_CANCEL,
 )<
   {
     commonId: string;
     limit?: number;
   },
   Omit<FeedItems, "loading">,
-  Error
+  Error,
+  string
 >();
 
 export const addNewFeedItems = createStandardAction(
@@ -120,6 +122,10 @@ export const updateFeedItem = createStandardAction(
   item: Partial<CommonFeed> & { id: string };
   isRemoved?: boolean;
 }>();
+
+export const resetFeedItems = createStandardAction(
+  CommonActionType.RESET_FEED_ITEMS,
+)();
 
 export const setIsNewProjectCreated = createStandardAction(
   CommonActionType.SET_IS_NEW_PROJECT_CREATED,
