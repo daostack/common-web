@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { CSSProperties, FC, useCallback } from "react";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import {
@@ -19,6 +19,9 @@ const CommonSidenavLayout: FC = (props) => {
   const { width } = useWindowSize();
   const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
   const sidenavLeft = getSidenavLeft(width);
+  const style = {
+    "--sb-left": `${sidenavLeft}px`,
+  } as CSSProperties;
 
   const handleSidenavOpenToggle = useCallback(
     (isOpen: boolean) => {
@@ -36,6 +39,7 @@ const CommonSidenavLayout: FC = (props) => {
       className={classNames(styles.container, {
         [styles.containerWithSidenav]: isSidenavVisible,
       })}
+      style={style}
     >
       {isSidenavVisible && (
         <Sidenav

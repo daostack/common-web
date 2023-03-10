@@ -28,7 +28,7 @@
   }
 }
 .containerWithSidenav {
-  --main-pl: var(--sb-width);
+  --main-pl: calc(var(--sb-width) + var(--sb-left, 0));
 
   @include tablet {
     --main-pl: unset;
@@ -42,8 +42,10 @@
 
 .main {
   flex: 1;
+  max-width: 120rem;
   padding-left: var(--main-pl);
   display: flex;
   flex-direction: column;
   background-color: var(--page-bg-color);
+  box-sizing: border-box;
 }
