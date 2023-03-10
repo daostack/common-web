@@ -179,31 +179,19 @@ export default function ChatComponent({
   }, [discussionMessages, prevDiscussionMessages]);
 
   const handleResult = (isSucceed: boolean, pendingMessageId: string) => {
-    if (isSucceed) {
-      setPendingMessages((prevState) =>
-        prevState.map((msg) => {
-          if (msg.id !== pendingMessageId) {
-            return msg;
-          }
-          return {
-            ...msg,
-            status: PendingMessageStatus.Success,
-          };
-        }),
-      );
-    } else {
-      setPendingMessages((prevState) =>
-        prevState.map((msg) => {
-          if (msg.id !== pendingMessageId) {
-            return msg;
-          }
-          return {
-            ...msg,
-            status: PendingMessageStatus.Failed,
-          };
-        }),
-      );
-    }
+    setPendingMessages((prevState) =>
+      prevState.map((msg) => {
+        if (msg.id !== pendingMessageId) {
+          return msg;
+        }
+        return {
+          ...msg,
+          status: isSucceed
+            ? PendingMessageStatus.Success
+            : PendingMessageStatus.Failed,
+        };
+      }),
+    );
   };
 
   const addMessageByType = useCallback(
