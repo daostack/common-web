@@ -9,6 +9,7 @@ import { getVotersString } from "@/pages/OldCommon/containers/ProposalContainer/
 import { useCountdown } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Governance, Proposal } from "@/shared/models";
+import { checkIsCountdownState } from "@/shared/utils";
 import { FeedCountdown } from "../../../FeedCard";
 import { ModalTriggerButton } from "../ModalTriggerButton";
 import { Voters } from "../Voters";
@@ -29,7 +30,8 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   const {
     startCountdown,
     timer,
-    isFinished: isCountdownFinished,
+    isFinished: isTimerFinished,
+    ...timerDiff
   } = useCountdown();
   const expirationTimestamp =
     proposal.data.votingExpiresOn || proposal.data.discussionExpiresOn;
@@ -38,6 +40,14 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
     governanceCircles,
   );
   const votingStatus = calculateVotingStatus(proposal);
+  const isCountdownFinished =
+    isTimerFinished || !checkIsCountdownState(proposal);
+  const countdownClassName = !isCountdownFinished
+    ? classNames(styles.countdown, {
+        [styles.countdownLessThanOneDay]: timerDiff.days === 0,
+        [styles.countdownAtLeastOneDay]: timerDiff.days >= 1,
+      })
+    : "";
 
   useLayoutEffect(() => {
     if (expirationTimestamp) {
@@ -52,6 +62,7 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
       >
         <p className={classNames(styles.text, styles.timeToVote)}>
           <FeedCountdown
+            className={countdownClassName}
             timeAgoClassName={styles.timeAgoClassName}
             timer={timer}
             isCountdownFinished={isCountdownFinished}
