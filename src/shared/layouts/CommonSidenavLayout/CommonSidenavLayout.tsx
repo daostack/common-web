@@ -1,4 +1,5 @@
 import React, { FC, useCallback } from "react";
+import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import {
   CommonSidenavLayoutRouteOptions,
@@ -7,6 +8,7 @@ import {
 import { useLockedBody } from "@/shared/hooks";
 import { Sidenav } from "@/shared/ui-kit";
 import { checkSidenavVisibility } from "../SidenavLayout/utils";
+import { getSidenavLeft } from "./utils";
 import styles from "./CommonSidenavLayout.module.scss";
 
 const CommonSidenavLayout: FC = (props) => {
@@ -14,7 +16,9 @@ const CommonSidenavLayout: FC = (props) => {
   const { routeOptions = {} } =
     useLayoutRouteContext<CommonSidenavLayoutRouteOptions>();
   const isSidenavVisible = checkSidenavVisibility(routeOptions.sidenav);
+  const { width } = useWindowSize();
   const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
+  const sidenavLeft = getSidenavLeft(width);
 
   const handleSidenavOpenToggle = useCallback(
     (isOpen: boolean) => {
@@ -34,7 +38,10 @@ const CommonSidenavLayout: FC = (props) => {
       })}
     >
       {isSidenavVisible && (
-        <Sidenav onOpenToggle={handleSidenavOpenToggle}>
+        <Sidenav
+          style={{ left: sidenavLeft }}
+          onOpenToggle={handleSidenavOpenToggle}
+        >
           <div className={styles.sidenavContent}>Sidenav content</div>
         </Sidenav>
       )}
