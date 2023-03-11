@@ -1,4 +1,4 @@
-import { call, put, select, takeLatest } from "redux-saga/effects";
+import { call, put, select, takeEvery, takeLatest } from "redux-saga/effects";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { isRequestError } from "@/services/Api";
 import PayMeService from "@/services/PayMeService";
@@ -659,10 +659,12 @@ export function* addMessageToDiscussionSaga(
       },
     )) as () => void;
 
+    yield action.payload.callback?.(true);
     yield put(stopLoading());
   } catch (e) {
     if (isError(e)) {
       yield put(actions.addMessageToDiscussion.failure(e));
+      yield action.payload.callback?.(false);
       yield put(stopLoading());
     }
   }
@@ -738,9 +740,11 @@ export function* addMessageToProposalSaga(
     };
 
     yield put(actions.loadProposalDetail.request(proposal));
+    yield action.payload.callback?.(true);
     yield put(stopLoading());
   } catch (e) {
     if (isError(e)) {
+      yield action.payload.callback?.(false);
       yield put(actions.addMessageToProposal.failure(e));
       yield put(stopLoading());
     }
@@ -1678,7 +1682,7 @@ export function* commonsSaga() {
     actions.updateDiscussionMessage.request,
     updateDiscussionMessage,
   );
-  yield takeLatest(
+  yield takeEvery(
     actions.addMessageToDiscussion.request,
     addMessageToDiscussionSaga,
   );
@@ -1705,7 +1709,7 @@ export function* commonsSaga() {
     createDeleteCommonProposal,
   );
   yield takeLatest(actions.loadUserCards.request, loadUserCardsSaga);
-  yield takeLatest(
+  yield takeEvery(
     actions.addMessageToProposal.request,
     addMessageToProposalSaga,
   );

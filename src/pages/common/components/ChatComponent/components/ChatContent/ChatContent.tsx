@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
-import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
-import { Loader } from "@/shared/components";
-import { ChatMessage } from "@/shared/components";
+import { ChatMessage, PendingChatMessage } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
 import {
   CommonFeedObjectUserUnique,
   CommonMember,
   DiscussionMessage,
+  PendingMessage,
 } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
@@ -23,16 +22,15 @@ interface ChatContentInterface {
   isCommonMemberFetched: boolean;
   isJoiningPending?: boolean;
   linkHighlightedMessageId?: string | null;
-  prevDiscussionMessages?: DiscussionMessage[];
-  discussionMessages: DiscussionMessage[] | null;
   hasAccess: boolean;
   isHidden: boolean;
   chatWrapperId: string;
-  isNewMessageLoading: boolean;
   messages: Record<number, DiscussionMessage[]>;
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
+  pendingMessages: PendingMessage[];
+  prevPendingMessages?: PendingMessage[];
 }
 
 const isToday = (someDate: Date) => {
@@ -50,16 +48,15 @@ export default function ChatContent({
   isCommonMemberFetched,
   isJoiningPending,
   linkHighlightedMessageId,
-  prevDiscussionMessages,
-  discussionMessages,
   hasAccess,
   isHidden,
   chatWrapperId,
-  isNewMessageLoading,
   messages,
   dateList,
   lastSeenItem,
   hasPermissionToHide,
+  pendingMessages,
+  prevPendingMessages,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -88,17 +85,15 @@ export default function ChatContent({
 
   useEffect(() => {
     if (
-      (Boolean(prevDiscussionMessages) &&
-        prevDiscussionMessages?.length !== discussionMessages?.length) ||
-      isNewMessageLoading
+      prevPendingMessages &&
+      prevPendingMessages?.length < pendingMessages?.length
     )
       scrollToContainerBottom();
   }, [
     scrollToContainerBottom,
-    prevDiscussionMessages,
-    prevDiscussionMessages?.length,
-    discussionMessages?.length,
-    isNewMessageLoading,
+    prevPendingMessages,
+    prevPendingMessages?.length,
+    pendingMessages.length,
   ]);
 
   useEffect(() => {
@@ -197,23 +192,20 @@ export default function ChatContent({
           </ul>
         );
       })}
-      {!dateList.length && !isNewMessageLoading ? (
+      {pendingMessages.length > 0 && (
+        <div className={styles.pendingMessagesList}>
+          {pendingMessages.map((msg) => (
+            <PendingChatMessage key={msg.id} data={msg} />
+          ))}
+        </div>
+      )}
+      {!dateList.length && !pendingMessages.length && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />
           Type in the text box to share your thoughts and begin the
           conversation.
         </p>
-      ) : (
-        isNewMessageLoading && (
-          <div
-            className={classNames(styles.newMessageLoaderWrapper, {
-              [styles.veryFirstMessage]: !dateList.length,
-            })}
-          >
-            <Loader />
-          </div>
-        )
       )}
     </>
   );
