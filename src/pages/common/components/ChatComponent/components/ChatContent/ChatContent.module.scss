@@ -44,3 +44,9 @@
 .veryFirstMessage {
   margin-top: 5rem;
 }
+
+.pendingMessagesList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
