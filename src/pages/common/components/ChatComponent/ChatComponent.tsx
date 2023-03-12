@@ -55,6 +55,7 @@ interface ChatComponentInterface {
   type: ChatType;
   commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;
+  feedItemId: string;
   isJoiningPending?: boolean;
   isAuthorized?: boolean;
   highlightedMessageId?: string | null;
@@ -62,7 +63,6 @@ interface ChatComponentInterface {
   isHidden: boolean;
   proposal?: Proposal;
   discussion: Discussion;
-  feedItemId?: string;
   titleHeight?: number;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
 }
@@ -204,6 +204,7 @@ export default function ChatComponent({
           id: pendingMessageId,
           text: payload.text,
           status: PendingMessageStatus.Sending,
+          feedItemId: feedItemId,
         },
       ]);
 
@@ -370,6 +371,7 @@ export default function ChatComponent({
             hasPermissionToHide={hasPermissionToHide}
             pendingMessages={pendingMessages}
             prevPendingMessages={prevPendingMessages}
+            feedItemId={feedItemId}
           />
         ) : (
           <div className="loader-container">
