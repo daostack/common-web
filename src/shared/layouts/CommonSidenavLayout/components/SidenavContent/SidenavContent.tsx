@@ -10,7 +10,7 @@ import {
   MenuItemsPlacement,
   UserInfo,
 } from "../../../SidenavLayout/components/SidenavContent";
-import { Footer, Projects } from "./components";
+import { Footer, Navigation, Projects } from "./components";
 import styles from "./SidenavContent.module.scss";
 
 interface SidenavContentProps {
@@ -36,6 +36,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         logoSrc={commonLogoSrc}
       />
       {separatorEl}
+      <Navigation />
       <Projects />
       <div className={styles.userInfoSeparator} />
       <UserInfo
