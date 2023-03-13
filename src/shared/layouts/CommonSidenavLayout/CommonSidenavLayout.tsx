@@ -44,6 +44,7 @@ const CommonSidenavLayout: FC = (props) => {
     >
       {isSidenavVisible && (
         <Sidenav
+          contentWrapperClassName={styles.sidenavContentWrapper}
           style={{ left: sidenavLeft }}
           onOpenToggle={handleSidenavOpenToggle}
         >

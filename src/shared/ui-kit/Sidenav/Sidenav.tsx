@@ -7,12 +7,13 @@ import { useAllViews } from "@/shared/hooks/viewport";
 import styles from "./Sidenav.module.scss";
 
 interface SidenavProps {
+  contentWrapperClassName?: string;
   style?: CSSProperties;
   onOpenToggle?: (isOpen: boolean) => void;
 }
 
 const Sidenav: FC<SidenavProps> = (props) => {
-  const { style, onOpenToggle, children } = props;
+  const { contentWrapperClassName, style, onOpenToggle, children } = props;
   const location = useLocation();
   const viewportStates = useAllViews();
   // Sidenav is always visible on desktop and on tablet and lower viewports when hash is as sidenav id
@@ -47,7 +48,11 @@ const Sidenav: FC<SidenavProps> = (props) => {
       onKeyUp={onSidebarKeyUp}
       tabIndex={0}
     >
-      <div className={styles.contentWrapper}>{children}</div>
+      <div
+        className={classNames(styles.contentWrapper, contentWrapperClassName)}
+      >
+        {children}
+      </div>
       <a
         href="#"
         id="sidenav-close"
