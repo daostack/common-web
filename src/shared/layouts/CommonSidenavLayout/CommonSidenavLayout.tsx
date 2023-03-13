@@ -8,6 +8,7 @@ import {
 import { useLockedBody } from "@/shared/hooks";
 import { Sidenav } from "@/shared/ui-kit";
 import { checkSidenavVisibility } from "../SidenavLayout/utils";
+import { SidenavContent } from "./components";
 import { getSidenavLeft } from "./utils";
 import styles from "./CommonSidenavLayout.module.scss";
 
@@ -46,7 +47,7 @@ const CommonSidenavLayout: FC = (props) => {
           style={{ left: sidenavLeft }}
           onOpenToggle={handleSidenavOpenToggle}
         >
-          <div className={styles.sidenavContent}>Sidenav content</div>
+          <SidenavContent className={styles.sidenavContent} />
         </Sidenav>
       )}
       <main className={styles.main}>{children}</main>

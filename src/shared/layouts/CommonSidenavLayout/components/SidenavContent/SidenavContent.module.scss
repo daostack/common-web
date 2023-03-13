@@ -1,0 +1,46 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.container {
+  --sidenav-content-ph: 1.125rem;
+
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  @include tablet {
+    --sidenav-content-ph: 1.25rem;
+  }
+}
+
+.commonLogoContainer {
+  --logo-top-indent: 1.125rem;
+  --logo-bottom-indent: 1.25rem;
+  --logo-left-indent: 1.75rem;
+
+  background-color: $c-light-gray-2;
+}
+
+.commonLogo {
+  width: 6.875rem;
+  height: 2.125rem;
+
+  @include tablet {
+    max-width: 6.125rem;
+    height: 1.875rem;
+  }
+}
+
+.separator {
+  flex-shrink: 0;
+  height: 0.0625rem;
+  background-color: $c-neutrals-200;
+}
+
+.userInfoSeparator {
+  @extend .separator;
+
+  margin-top: auto;
+}
