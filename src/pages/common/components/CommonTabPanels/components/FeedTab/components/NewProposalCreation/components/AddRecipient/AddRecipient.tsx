@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import { useSelector } from "react-redux";
 import { useFormikContext } from "formik";
 import {
   createColumnHelper,
@@ -6,10 +7,11 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { RecipientType } from "@/shared/constants";
+import { RecipientType, ScreenSize } from "@/shared/constants";
 import { PlusIcon } from "@/shared/icons";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { Common, CommonMemberWithUserInfo } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
 import { AddRecipientModal } from "../AddRecipientModal";
 import { FormValues } from "../AddRecipientModal/AddRecipientModal";
@@ -33,7 +35,7 @@ const defaultData: Recipient[] = [
 
 const columnHelper = createColumnHelper<Recipient>();
 
-const columns = [
+const baseColumns = [
   columnHelper.accessor("recipient", {
     header: () => "Recipient",
     cell: (info) => info.getValue(),
@@ -45,6 +47,9 @@ const columns = [
     cell: (info) => info.getValue(),
     size: 70,
   }),
+];
+
+const dekstopColumns = [
   columnHelper.accessor("currency", {
     header: () => "Currency",
     cell: (info) => info.renderValue(),
@@ -62,6 +67,12 @@ const AddRecipient: FC = () => {
   const [isOpen, setOpen] = useState(false);
   const [data, setData] = useState(() => [...defaultData]);
   const [recipientData, setRecipientData] = useState<FormValues>();
+  const screenSize = useSelector(getScreenSize());
+  const isDesktopView = screenSize === ScreenSize.Desktop;
+
+  const columns = isDesktopView
+    ? baseColumns.concat(dekstopColumns)
+    : baseColumns;
 
   const isFilledTable = !!recipientData;
   const iconEl = <PlusIcon className={styles.icon} strokeWidth={2} />;

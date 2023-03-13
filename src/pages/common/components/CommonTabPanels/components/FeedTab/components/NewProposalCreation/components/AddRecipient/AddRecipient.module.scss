@@ -52,6 +52,10 @@
 
 .tableCell:last-child {
   border-right: 0.0625rem solid $c-neutrals-200;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .addRecipientButton {
@@ -77,5 +81,3 @@
     background-color: $c-primary-100;
   }
 }
-
-

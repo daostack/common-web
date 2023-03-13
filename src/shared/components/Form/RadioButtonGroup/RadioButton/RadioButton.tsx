@@ -33,6 +33,7 @@ export const RadioButton: FC<RadioButtonProps> = (props) => {
         value={value}
         onChange={handleClick}
         checked={checked}
+        disabled={isDisabled}
       />
       {upperFirst(value)}
     </label>

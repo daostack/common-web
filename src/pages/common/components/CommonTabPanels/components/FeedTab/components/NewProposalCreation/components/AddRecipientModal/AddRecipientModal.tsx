@@ -145,7 +145,9 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
       return [];
     }
 
-    return commonsWithCommonMembers.filter(({ commonMember }) => commonMember);
+    return commonsWithCommonMembers.filter(
+      ({ commonMember, directParent }) => commonMember && directParent,
+    );
   }, [commonsWithCommonMembers]);
 
   const getRecipientOptions = useCallback(
@@ -227,6 +229,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
               <RadioButton
                 value={RecipientType.Projects}
                 checked={values.recipientType === RecipientType.Projects}
+                isDisabled={projectOptions.length === 0}
               ></RadioButton>
               {/* <RadioButton
                 value={RecipientType.ThirdParty}
