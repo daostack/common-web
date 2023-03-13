@@ -5,7 +5,12 @@ import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
 import commonLogoSrc from "@/shared/assets/images/logo-sidenav-2.svg";
 import { CommonLogo, Footer, FooterVariant } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
-import { Navigation, Projects, UserInfo } from "./components";
+import {
+  ContentStyles,
+  MenuItemsPlacement,
+  UserInfo,
+} from "../../../SidenavLayout/components/SidenavContent";
+import { Navigation, Projects } from "./components";
 import styles from "./SidenavContent.module.scss";
 
 interface SidenavContentProps {
@@ -17,6 +22,11 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const separatorEl = <div className={styles.separator} />;
+  const userInfoContentStyles: ContentStyles = {
+    container: styles.userInfoContentButton,
+    userAvatar: styles.userInfoAvatar,
+    userName: styles.userInfoName,
+  };
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -32,6 +42,9 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         avatarURL={user?.photoURL}
         userName={getUserName(user)}
         isAuthenticated={isAuthenticated}
+        menuItemsPlacement={MenuItemsPlacement.Top}
+        rightArrowIconClassName={styles.userInfoRightArrowIcon}
+        contentStyles={userInfoContentStyles}
       />
       <Footer variant={FooterVariant.Small} />
     </div>

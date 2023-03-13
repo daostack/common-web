@@ -1,17 +1,27 @@
 import React, { FC } from "react";
+import classNames from "classnames";
 import { Menu, Transition } from "@headlessui/react";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { Content } from "../Content";
-import { MenuItems } from "../MenuItems";
+import { Content, ContentStyles } from "../Content";
+import { MenuItems, MenuItemsPlacement } from "../MenuItems";
 import styles from "./AuthenticatedContent.module.scss";
 
 interface AuthenticatedContentProps {
   avatarURL?: string;
   userName?: string;
+  menuItemsPlacement?: MenuItemsPlacement;
+  rightArrowIconClassName?: string;
+  contentStyles?: ContentStyles;
 }
 
 const AuthenticatedContent: FC<AuthenticatedContentProps> = (props) => {
-  const { avatarURL, userName } = props;
+  const {
+    avatarURL,
+    userName,
+    menuItemsPlacement,
+    rightArrowIconClassName,
+    contentStyles,
+  } = props;
 
   return (
     <Menu>
@@ -19,7 +29,12 @@ const AuthenticatedContent: FC<AuthenticatedContentProps> = (props) => {
         <Content
           avatarURL={avatarURL}
           userName={userName}
-          leftSideEl={<RightArrowThinIcon className={styles.arrowIcon} />}
+          leftSideEl={
+            <RightArrowThinIcon
+              className={classNames(styles.arrowIcon, rightArrowIconClassName)}
+            />
+          }
+          styles={contentStyles}
         />
       </Menu.Button>
       <Transition
@@ -28,7 +43,7 @@ const AuthenticatedContent: FC<AuthenticatedContentProps> = (props) => {
         leave={styles.menuTransitionExit}
         leaveTo={styles.menuTransitionExitActive}
       >
-        <MenuItems />
+        <MenuItems placement={menuItemsPlacement} />
       </Transition>
     </Menu>
   );

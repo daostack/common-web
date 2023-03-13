@@ -3,6 +3,7 @@ $notoSerifSCFontName: "NotoSerifSC";
 $assistantFontName: "Assistant";
 $heeboFontName: "Heebo";
 $lexendFontName: "Lexend";
+$poppinsFontName: "Poppins";
 
 $trueTypeFontFormat: "truetype";
 $openTypeFontFormat: "opentype";
@@ -129,4 +130,12 @@ $openTypeFontFormat: "opentype";
   src: local($lexendFontName),
     url("/shared/assets/fonts/Lexend-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
+}
+
+// Poppins
+@font-face {
+  font-family: $poppinsFontName;
+  src: local($poppinsFontName),
+    url("/shared/assets/fonts/Poppins-Medium.ttf") format($trueTypeFontFormat);
+  font-weight: 500;
 }

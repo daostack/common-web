@@ -2,7 +2,7 @@
 @import "../../../../../styles/sizes";
 
 .container {
-  --sidenav-content-ph: 1.125rem;
+  --sidenav-content-ph: 1.375rem;
 
   width: 100%;
   height: 100%;
@@ -43,4 +43,28 @@
   @extend .separator;
 
   margin-top: auto;
+}
+
+.userInfoContentButton {
+  padding: 1rem 0;
+
+  @include tablet {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.userInfoAvatar {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.875rem;
+}
+
+.userInfoName {
+  font-family: Poppins, sans-serif;
+  font-weight: 500;
+}
+
+.userInfoRightArrowIcon {
+  margin-left: auto;
 }
