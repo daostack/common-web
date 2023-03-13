@@ -3,14 +3,14 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
 import commonLogoSrc from "@/shared/assets/images/logo-sidenav-2.svg";
-import { CommonLogo, Footer, FooterVariant } from "@/shared/ui-kit";
+import { CommonLogo } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import {
   ContentStyles,
   MenuItemsPlacement,
   UserInfo,
 } from "../../../SidenavLayout/components/SidenavContent";
-import { Navigation, Projects } from "./components";
+import { Footer, Projects } from "./components";
 import styles from "./SidenavContent.module.scss";
 
 interface SidenavContentProps {
@@ -46,7 +46,8 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         rightArrowIconClassName={styles.userInfoRightArrowIcon}
         contentStyles={userInfoContentStyles}
       />
-      <Footer variant={FooterVariant.Small} />
+      {separatorEl}
+      <Footer />
     </div>
   );
 };

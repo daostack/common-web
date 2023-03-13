@@ -12,6 +12,13 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $nunitoSansFontName;
   src: local($nunitoSansFontName),
+    url("/shared/assets/fonts/NunitoSans-Light.ttf") format($trueTypeFontFormat);
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: $nunitoSansFontName;
+  src: local($nunitoSansFontName),
     url("/shared/assets/fonts/NunitoSans-Regular.ttf")
       format($trueTypeFontFormat);
   font-weight: normal;
