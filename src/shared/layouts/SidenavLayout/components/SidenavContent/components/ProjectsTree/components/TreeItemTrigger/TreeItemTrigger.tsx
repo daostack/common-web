@@ -34,7 +34,10 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
       className={classNames(
         styles.item,
         {
-          [styles.itemActive]: isActive,
+          [classNames(
+            styles.itemActive,
+            treeItemTriggerStyles?.containerActive,
+          )]: isActive,
         },
         treeItemTriggerStyles?.container,
       )}

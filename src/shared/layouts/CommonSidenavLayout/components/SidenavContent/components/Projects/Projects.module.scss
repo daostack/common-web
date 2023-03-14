@@ -1,3 +1,5 @@
+@import "../../../../../../../constants";
+
 .projectsTree {
   box-sizing: border-box;
 }
@@ -7,6 +9,17 @@
   --item-arrow-pl: 0.5rem;
 
   border-radius: 0;
+
+  &:hover {
+    --bg-color: #{$c-pink-hover-feed-cards};
+  }
+}
+.projectsTreeItemTriggerActiveClassName {
+  --bg-color: #{$c-pink-active-feed-cards};
+
+  &:hover {
+    --bg-color: #{$c-pink-active-feed-cards};
+  }
 }
 
 .projectsTreeItemTriggerNameClassName {

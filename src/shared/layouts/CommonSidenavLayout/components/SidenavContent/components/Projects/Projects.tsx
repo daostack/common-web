@@ -61,6 +61,7 @@ const Projects: FC = () => {
   const treeItemTriggerStyles = useMemo<TreeItemTriggerStyles>(
     () => ({
       container: styles.projectsTreeItemTriggerClassName,
+      containerActive: styles.projectsTreeItemTriggerActiveClassName,
       name: styles.projectsTreeItemTriggerNameClassName,
       image: styles.projectsTreeItemTriggerImageClassName,
       imageNonRounded: styles.projectsTreeItemTriggerImageNonRoundedClassName,

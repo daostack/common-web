@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 
 export interface TreeItemTriggerStyles {
   container?: string;
+  containerActive?: string;
   name?: string;
   image?: string;
   imageNonRounded?: string;
