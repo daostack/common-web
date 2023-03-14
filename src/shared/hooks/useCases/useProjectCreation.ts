@@ -74,7 +74,7 @@ export const useProjectCreation = (): Return => {
         const errorMessage =
           isRequestError(error) &&
           error.response?.data?.errorCode === ErrorCode.ArgumentDuplicatedError
-            ? `Space with name "${creationData.projectName}" already exists`
+            ? `Space with name "${creationData.spaceName}" already exists`
             : "Something went wrong...";
 
         Logger.error(error);
