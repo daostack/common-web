@@ -36,7 +36,7 @@ export const UserVoteInfo: FC<UserVoteInfoProps> = (props) => {
     [styles.containerReject]: userVote?.outcome === VoteOutcome.Rejected,
   });
 
-  if (!userVote) {
+  if (!userVote?.outcome) {
     return userHasPermissionsToVote && !isCountdownState ? (
       <div className={styles.container}>You didn’t vote to this proposal</div>
     ) : null;
