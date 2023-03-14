@@ -86,10 +86,10 @@ const OPTIONS: Option[] = [
   {
     text: (
       <>
-        <AddIcon className="edit-common-menu__item-icon" /> Create Project
+        <AddIcon className="edit-common-menu__item-icon" /> Create Space
       </>
     ),
-    searchText: "Create Project",
+    searchText: "Create Space",
     value: MenuItem.CreateProject,
   },
   {

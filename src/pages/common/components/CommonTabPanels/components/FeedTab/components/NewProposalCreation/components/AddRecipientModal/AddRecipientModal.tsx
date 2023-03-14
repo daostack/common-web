@@ -153,7 +153,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
       switch (recipientType) {
         case RecipientType.Member:
           return memberOptions;
-        case RecipientType.Projects:
+        case RecipientType.Spaces:
           return projectOptions;
         default:
           return projectOptions;
@@ -225,8 +225,8 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
                 checked={values.recipientType === RecipientType.Member}
               ></RadioButton>
               <RadioButton
-                value={RecipientType.Projects}
-                checked={values.recipientType === RecipientType.Projects}
+                value={RecipientType.Spaces}
+                checked={values.recipientType === RecipientType.Spaces}
               ></RadioButton>
               {/* <RadioButton
                 value={RecipientType.ThirdParty}

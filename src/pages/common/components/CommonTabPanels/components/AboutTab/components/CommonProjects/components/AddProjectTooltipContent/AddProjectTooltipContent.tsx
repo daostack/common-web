@@ -24,7 +24,7 @@ const AddProjectTooltipContent: FC<AddProjectTooltipContentProps> = (props) => {
 
   return (
     <>
-      Adding a new project is reserved for members of the {circleNames} circle
+      Adding a new space is reserved for members of the {circleNames} circle
       {circlesWithPermissionToAddNewProject.length > 1 ? "s" : ""}
       .
       <br />

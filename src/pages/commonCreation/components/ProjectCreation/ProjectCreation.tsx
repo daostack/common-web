@@ -158,11 +158,11 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         </NavLink>
         <h1 className={styles.title}>
           {isEditing
-            ? `Edit project ${initialCommon?.name}`
-            : `Create a new project in ${parentCommon.name}`}
+            ? `Edit space ${initialCommon?.name}`
+            : `Create a new space in ${parentCommon.name}`}
         </h1>
         <p className={styles.subtitle}>
-          Project serves a certain group in the common to organize together and
+          Space serves a certain group in the common to organize together and
           achieve more focused goals.
         </p>
         <ProjectCreationForm

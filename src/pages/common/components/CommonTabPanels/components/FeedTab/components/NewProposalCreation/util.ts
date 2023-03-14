@@ -24,10 +24,10 @@ export const getFundingProposalPayload = (values: NewProposalCreationFormValues,
         currency: values.recipientInfo?.currency,
       },
       to:
-        values.recipientInfo.recipientType === RecipientType.Projects
+        values.recipientInfo.recipientType === RecipientType.Spaces
           ? AllocateFundsTo.SubCommon
           : fundAllocationToUser,
-      ...(values.recipientInfo.recipientType === RecipientType.Projects
+      ...(values.recipientInfo.recipientType === RecipientType.Spaces
         ? {
             subcommonId: values.recipientInfo.recipientId,
           }

@@ -26,7 +26,7 @@ export const useMenuItems = (options: Options): Item[] => {
     },
     {
       id: CommonMenuItem.LeaveProject,
-      text: "Leave project",
+      text: "Leave space",
       withWarning: true,
       onClick: () => {
         onMenuItemSelect(CommonMenuItem.LeaveProject);

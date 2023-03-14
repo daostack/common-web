@@ -7,7 +7,7 @@ import {
 import styles from "./ProjectCreationForm.module.scss";
 
 export const getConfiguration = (isProject = true): CreationFormItem[] => {
-  const type = isProject ? "Project" : "Common";
+  const type = isProject ? "Space" : "Common";
 
   return [
     {
@@ -28,8 +28,8 @@ export const getConfiguration = (isProject = true): CreationFormItem[] => {
     {
       type: CreationFormItemType.TextField,
       props: {
-        id: "projectName",
-        name: "projectName",
+        id: "spaceName",
+        name: "spaceName",
         label: `${type} name (required)`,
         maxLength: MAX_PROJECT_NAME_LENGTH,
         countAsHint: true,

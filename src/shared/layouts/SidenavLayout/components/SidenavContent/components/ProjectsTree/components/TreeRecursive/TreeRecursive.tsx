@@ -27,13 +27,13 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
       aria-multiselectable={isFirstLevel ? false : undefined}
       aria-label={
         parentName && !isFirstLevel
-          ? `Projects of ${parentName}`
-          : "List of related to you projects"
+          ? `Spaces of ${parentName}`
+          : "List of related to you spaces"
       }
     >
       {Boolean(itemIdWithNewProjectCreation) &&
         parentId === itemIdWithNewProjectCreation && (
-          <PlaceholderTreeItem name="New project" level={level} isActive />
+          <PlaceholderTreeItem name="New space" level={level} isActive />
         )}
       {items.map((item) => (
         <TreeItem
