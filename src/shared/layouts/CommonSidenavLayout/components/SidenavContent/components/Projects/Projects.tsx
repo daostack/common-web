@@ -8,10 +8,14 @@ import { useModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import {
-  projectsActions,
-  selectAreProjectsFetched,
-  selectAreProjectsLoading,
-  selectProjectsData,
+  commonLayoutActions,
+  selectCommonLayoutCommonId,
+  selectCommonLayoutCommons,
+  selectAreCommonLayoutCommonsLoading,
+  selectAreCommonLayoutCommonsFetched,
+  selectCommonLayoutProjects,
+  selectAreCommonLayoutProjectsLoading,
+  selectAreCommonLayoutProjectsFetched,
 } from "@/store/states";
 import {
   ProjectsTree,
@@ -21,7 +25,6 @@ import {
   generateProjectsTreeItems,
   getActiveItemIdByPath,
   getItemById,
-  getItemIdWithNewProjectCreationByPath,
 } from "../../../../../SidenavLayout/components/SidenavContent/components/Projects";
 import styles from "./Projects.module.scss";
 
@@ -35,16 +38,16 @@ const Projects: FC = () => {
     onClose: onCreateCommonModalClose,
   } = useModal(false);
   const isAuthenticated = useSelector(authentificated());
-  const projects = useSelector(selectProjectsData);
-  const areProjectsLoading = useSelector(selectAreProjectsLoading);
-  const areProjectsFetched = useSelector(selectAreProjectsFetched);
+  const currentCommonId = useSelector(selectCommonLayoutCommonId);
+  const commons = useSelector(selectCommonLayoutCommons);
+  const areCommonsLoading = useSelector(selectAreCommonLayoutCommonsLoading);
+  const areCommonsFetched = useSelector(selectAreCommonLayoutCommonsFetched);
+  const projects = useSelector(selectCommonLayoutProjects);
+  const areProjectsLoading = useSelector(selectAreCommonLayoutProjectsLoading);
+  const areProjectsFetched = useSelector(selectAreCommonLayoutProjectsFetched);
   const items = useMemo(() => generateProjectsTreeItems(projects), [projects]);
   const activeItemId = getActiveItemIdByPath(location.pathname);
-  const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
-    location.pathname,
-  );
   const activeItem = getItemById(activeItemId, items);
-  const isDataReady = areProjectsFetched;
 
   const handleGoToCommon = (createdCommon: Common) => {
     onCreateCommonModalClose();
@@ -53,24 +56,33 @@ const Projects: FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(projectsActions.markProjectsAsNotFetched());
+      dispatch(commonLayoutActions.markDataAsNotFetched());
       return;
     }
     if (activeItemId) {
-      dispatch(projectsActions.clearProjectsExceptOfCurrent(activeItemId));
+      dispatch(commonLayoutActions.clearDataExceptOfCurrent(activeItemId));
     } else {
-      dispatch(projectsActions.clearProjects());
+      dispatch(commonLayoutActions.clearData());
     }
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (areProjectsLoading) {
+    if (areCommonsLoading) {
       return;
     }
-    if (!isDataReady) {
-      dispatch(projectsActions.getProjects.request(activeItemId));
+    if (!areCommonsFetched) {
+      dispatch(commonLayoutActions.getCommons.request(activeItemId));
     }
-  }, [areProjectsLoading, isDataReady]);
+  }, [areCommonsLoading, areCommonsFetched]);
+
+  useEffect(() => {
+    if (areProjectsLoading || !currentCommonId) {
+      return;
+    }
+    if (!areProjectsFetched) {
+      dispatch(commonLayoutActions.getProjects.request(currentCommonId));
+    }
+  }, [areProjectsLoading, areProjectsFetched, currentCommonId]);
 
   if (items.length === 0) {
     return areProjectsLoading ? <Loader className={styles.loader} /> : null;
@@ -87,7 +99,6 @@ const Projects: FC = () => {
           }
           items={items}
           activeItem={activeItem}
-          itemIdWithNewProjectCreation={itemIdWithNewProjectCreation}
         />
         {areProjectsLoading && <Loader className={styles.loader} />}
       </Scrollbar>

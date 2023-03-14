@@ -9,7 +9,7 @@ interface ProjectsTreeProps {
   treeItemTriggerNameClassName?: string;
   items: Item[];
   activeItem: Item | null;
-  itemIdWithNewProjectCreation: string;
+  itemIdWithNewProjectCreation?: string;
 }
 
 const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
@@ -19,7 +19,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     treeItemTriggerNameClassName,
     items,
     activeItem,
-    itemIdWithNewProjectCreation,
+    itemIdWithNewProjectCreation = "",
   } = props;
   const contextValue = useMemo<TreeContextValue>(
     () => ({
