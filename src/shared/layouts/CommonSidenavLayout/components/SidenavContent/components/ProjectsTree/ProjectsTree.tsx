@@ -37,7 +37,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
   return (
     <TreeContext.Provider value={contextValue}>
       <Scrollbar>
-        <TreeRecursive className={className} items={items} />
+        <TreeRecursive className={className} items={items} level={2} />
         {isLoading && <Loader className={styles.loader} />}
       </Scrollbar>
     </TreeContext.Provider>
