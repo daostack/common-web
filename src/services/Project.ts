@@ -6,7 +6,7 @@ import Api from "./Api";
 import CommonService from "./Common";
 
 class ProjectService {
-  private parseDataToProjectsInfo = (
+  public parseDataToProjectsInfo = (
     commons: Common[],
     commonIdsWithMembership: string[] = [],
   ): { common: Common; hasMembership: boolean }[] =>
