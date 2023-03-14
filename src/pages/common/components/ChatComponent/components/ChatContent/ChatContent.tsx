@@ -31,6 +31,7 @@ interface ChatContentInterface {
   hasPermissionToHide: boolean;
   pendingMessages: PendingMessage[];
   prevPendingMessages?: PendingMessage[];
+  feedItemId: string;
 }
 
 const isToday = (someDate: Date) => {
@@ -57,6 +58,7 @@ export default function ChatContent({
   hasPermissionToHide,
   pendingMessages,
   prevPendingMessages,
+  feedItemId,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -194,9 +196,11 @@ export default function ChatContent({
       })}
       {pendingMessages.length > 0 && (
         <div className={styles.pendingMessagesList}>
-          {pendingMessages.map((msg) => (
-            <PendingChatMessage key={msg.id} data={msg} />
-          ))}
+          {pendingMessages
+            .filter((msg) => msg.feedItemId === feedItemId)
+            .map((msg) => (
+              <PendingChatMessage key={msg.id} data={msg} />
+            ))}
         </div>
       )}
       {!dateList.length && !pendingMessages.length && (
