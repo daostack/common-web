@@ -1,0 +1,23 @@
+.projectsTree {
+  box-sizing: border-box;
+}
+
+.projectsTreeItemTriggerClassName {
+  border-radius: 0;
+}
+
+.projectsTreeItemTriggerNameClassName {
+  font-family: Poppins, sans-serif;
+  font-weight: 500;
+}
+
+.loader {
+  margin: 1rem auto 0;
+  display: block;
+}
+
+.createCommonButton {
+  width: 100%;
+  padding-left: 2.125rem;
+  padding-right: 0.875rem;
+}
