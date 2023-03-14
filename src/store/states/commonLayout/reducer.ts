@@ -96,6 +96,13 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
         }));
       }),
   )
+  .handleAction(actions.clearProjects, (state) =>
+    produce(state, (nextState) => {
+      nextState.projects = [];
+      nextState.areProjectsLoading = false;
+      nextState.areProjectsFetched = false;
+    }),
+  )
   .handleAction(actions.markDataAsNotFetched, (state) =>
     produce(state, (nextState) => {
       nextState.areCommonsFetched = false;

@@ -29,6 +29,10 @@ export const clearDataExceptOfCurrent = createStandardAction(
   CommonLayoutActionType.CLEAR_DATA_EXCEPT_OF_CURRENT,
 )<string>();
 
+export const clearProjects = createStandardAction(
+  CommonLayoutActionType.CLEAR_PROJECTS,
+)();
+
 export const markDataAsNotFetched = createStandardAction(
   CommonLayoutActionType.MARK_DATA_AS_NOT_FETCHED,
 )();
