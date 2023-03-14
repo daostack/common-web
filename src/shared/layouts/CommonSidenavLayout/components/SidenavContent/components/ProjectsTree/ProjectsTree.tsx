@@ -6,6 +6,7 @@ import {
   ProjectsTreeProps as BaseProjectsTreeProps,
   TreeContext,
   TreeContextValue,
+  TreeItem,
   TreeRecursive,
 } from "../../../../../SidenavLayout/components/SidenavContent/components/ProjectsTree";
 import styles from "./ProjectsTree.module.scss";
@@ -36,6 +37,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
 
   return (
     <TreeContext.Provider value={contextValue}>
+      <TreeItem item={parentItem} isActive={parentItem.id === activeItem?.id} />
       <Scrollbar>
         <TreeRecursive className={className} items={items} level={2} />
         {isLoading && <Loader className={styles.loader} />}
