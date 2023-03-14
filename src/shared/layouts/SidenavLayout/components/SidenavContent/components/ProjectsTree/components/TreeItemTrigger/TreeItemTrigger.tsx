@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { Image } from "@/shared/components/Image";
 import { SmallArrowIcon } from "@/shared/icons";
+import { useTreeContext } from "../../context";
 import { Item } from "../../types";
 import styles from "./TreeItemTrigger.module.scss";
 
@@ -17,6 +18,8 @@ interface TreeItemTriggerProps {
 
 const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
   const { item, level, isActive, isOpen, onToggle } = props;
+  const { treeItemTriggerClassName, treeItemTriggerNameClassName } =
+    useTreeContext();
   const { hasMembership = true } = item;
 
   const handleToggle: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -29,9 +32,13 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
 
   return (
     <NavLink
-      className={classNames(styles.item, {
-        [styles.itemActive]: isActive,
-      })}
+      className={classNames(
+        styles.item,
+        {
+          [styles.itemActive]: isActive,
+        },
+        treeItemTriggerClassName,
+      )}
       to={item.path}
       title={item.name}
       aria-label={`Go to ${item.name}`}
@@ -59,9 +66,13 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
         aria-hidden
       />
       <span
-        className={classNames(styles.name, {
-          [styles.nameWithoutMembership]: !hasMembership,
-        })}
+        className={classNames(
+          styles.name,
+          {
+            [styles.nameWithoutMembership]: !hasMembership,
+          },
+          treeItemTriggerNameClassName,
+        )}
       >
         {item.name}
       </span>

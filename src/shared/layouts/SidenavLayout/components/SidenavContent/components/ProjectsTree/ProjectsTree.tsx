@@ -5,19 +5,35 @@ import { Item } from "./types";
 
 interface ProjectsTreeProps {
   className?: string;
+  treeItemTriggerClassName?: string;
+  treeItemTriggerNameClassName?: string;
   items: Item[];
   activeItem: Item | null;
   itemIdWithNewProjectCreation: string;
 }
 
 const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
-  const { className, items, activeItem, itemIdWithNewProjectCreation } = props;
+  const {
+    className,
+    treeItemTriggerClassName,
+    treeItemTriggerNameClassName,
+    items,
+    activeItem,
+    itemIdWithNewProjectCreation,
+  } = props;
   const contextValue = useMemo<TreeContextValue>(
     () => ({
       activeItemId: activeItem?.id,
       itemIdWithNewProjectCreation,
+      treeItemTriggerClassName,
+      treeItemTriggerNameClassName,
     }),
-    [activeItem?.id, itemIdWithNewProjectCreation],
+    [
+      activeItem?.id,
+      itemIdWithNewProjectCreation,
+      treeItemTriggerClassName,
+      treeItemTriggerNameClassName,
+    ],
   );
 
   return (

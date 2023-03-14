@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { useTreeContext } from "../../context";
 import { getItemStyles } from "../TreeItem/utils";
 import treeItemTriggerStyles from "../TreeItemTrigger/TreeItemTrigger.module.scss";
 import styles from "./PlaceholderTreeItem.module.scss";
@@ -12,13 +13,19 @@ interface PlaceholderTreeItemProps {
 
 const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
   const { name, level = 1, isActive = false } = props;
+  const { treeItemTriggerClassName, treeItemTriggerNameClassName } =
+    useTreeContext();
   const itemStyles = getItemStyles(level);
 
   return (
     <li
-      className={classNames(treeItemTriggerStyles.item, {
-        [treeItemTriggerStyles.itemActive]: isActive,
-      })}
+      className={classNames(
+        treeItemTriggerStyles.item,
+        {
+          [treeItemTriggerStyles.itemActive]: isActive,
+        },
+        treeItemTriggerClassName,
+      )}
       style={itemStyles}
       role="treeitem"
       aria-selected={isActive}
@@ -31,7 +38,13 @@ const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
         })}
         aria-hidden
       />
-      <span className={treeItemTriggerStyles.name} title={name}>
+      <span
+        className={classNames(
+          treeItemTriggerStyles.name,
+          treeItemTriggerNameClassName,
+        )}
+        title={name}
+      >
         {name}
       </span>
     </li>
