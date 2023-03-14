@@ -1,27 +1,29 @@
 import React, { FC, useMemo } from "react";
-import { TreeRecursive } from "./components";
+import { Loader } from "@/shared/ui-kit";
+import { Scrollbar } from "../../../../../SidenavLayout/components/SidenavContent";
 import {
+  Item,
+  ProjectsTreeProps as BaseProjectsTreeProps,
   TreeContext,
   TreeContextValue,
-  TreeItemTriggerStyles,
-} from "./context";
-import { Item } from "./types";
+  TreeRecursive,
+} from "../../../../../SidenavLayout/components/SidenavContent/components/ProjectsTree";
+import styles from "./ProjectsTree.module.scss";
 
-export interface ProjectsTreeProps {
-  className?: string;
-  treeItemTriggerStyles?: TreeItemTriggerStyles;
-  items: Item[];
-  activeItem: Item | null;
-  itemIdWithNewProjectCreation?: string;
+interface ProjectsTreeProps extends BaseProjectsTreeProps {
+  parentItem: Item;
+  isLoading?: boolean;
 }
 
 const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
   const {
     className,
     treeItemTriggerStyles,
+    parentItem,
     items,
     activeItem,
     itemIdWithNewProjectCreation = "",
+    isLoading = false,
   } = props;
   const contextValue = useMemo<TreeContextValue>(
     () => ({
@@ -34,7 +36,10 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
 
   return (
     <TreeContext.Provider value={contextValue}>
-      <TreeRecursive className={className} items={items} />
+      <Scrollbar>
+        <TreeRecursive className={className} items={items} />
+        {isLoading && <Loader className={styles.loader} />}
+      </Scrollbar>
     </TreeContext.Provider>
   );
 };

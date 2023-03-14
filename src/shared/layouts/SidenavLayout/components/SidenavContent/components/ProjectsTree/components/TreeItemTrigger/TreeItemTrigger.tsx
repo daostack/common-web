@@ -18,8 +18,7 @@ interface TreeItemTriggerProps {
 
 const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
   const { item, level, isActive, isOpen, onToggle } = props;
-  const { treeItemTriggerClassName, treeItemTriggerNameClassName } =
-    useTreeContext();
+  const { treeItemTriggerStyles } = useTreeContext();
   const { hasMembership = true } = item;
 
   const handleToggle: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -37,7 +36,7 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
         {
           [styles.itemActive]: isActive,
         },
-        treeItemTriggerClassName,
+        treeItemTriggerStyles?.container,
       )}
       to={item.path}
       title={item.name}
@@ -58,9 +57,17 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
         />
       </ButtonIcon>
       <Image
-        className={classNames(styles.image, {
-          [styles.imageRounded]: level !== 1,
-        })}
+        className={classNames(
+          styles.image,
+          {
+            [classNames(
+              styles.imageNonRounded,
+              treeItemTriggerStyles?.imageNonRounded,
+            )]: level === 1,
+            [styles.imageRounded]: level !== 1,
+          },
+          treeItemTriggerStyles?.image,
+        )}
         src={item.image}
         alt={`${item.name}'s image`}
         aria-hidden
@@ -71,7 +78,7 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
           {
             [styles.nameWithoutMembership]: !hasMembership,
           },
-          treeItemTriggerNameClassName,
+          treeItemTriggerStyles?.name,
         )}
       >
         {item.name}

@@ -18,14 +18,13 @@ import {
   selectAreCommonLayoutProjectsFetched,
 } from "@/store/states";
 import {
-  ProjectsTree,
-  Scrollbar,
-} from "../../../../../SidenavLayout/components/SidenavContent";
-import {
   generateProjectsTreeItems,
   getActiveItemIdByPath,
   getItemById,
+  getItemFromProjectsStateItem,
 } from "../../../../../SidenavLayout/components/SidenavContent/components/Projects";
+import { TreeItemTriggerStyles } from "../../../../../SidenavLayout/components/SidenavContent/components/ProjectsTree";
+import { ProjectsTree } from "../ProjectsTree";
 import styles from "./Projects.module.scss";
 
 const Projects: FC = () => {
@@ -45,7 +44,29 @@ const Projects: FC = () => {
   const projects = useSelector(selectCommonLayoutProjects);
   const areProjectsLoading = useSelector(selectAreCommonLayoutProjectsLoading);
   const areProjectsFetched = useSelector(selectAreCommonLayoutProjectsFetched);
-  const items = useMemo(() => generateProjectsTreeItems(projects), [projects]);
+  const currentCommon = commons.find(
+    ({ commonId }) => commonId === currentCommonId,
+  );
+  const parentItem = useMemo(
+    () => (currentCommon ? getItemFromProjectsStateItem(currentCommon) : null),
+    [currentCommon],
+  );
+  const items = useMemo(() => {
+    const [item] = generateProjectsTreeItems(
+      currentCommon ? projects.concat(currentCommon) : projects,
+    );
+
+    return item?.items || [];
+  }, [currentCommon, projects]);
+  const treeItemTriggerStyles = useMemo<TreeItemTriggerStyles>(
+    () => ({
+      container: styles.projectsTreeItemTriggerClassName,
+      name: styles.projectsTreeItemTriggerNameClassName,
+      image: styles.projectsTreeItemTriggerImageClassName,
+      imageNonRounded: styles.projectsTreeItemTriggerImageNonRoundedClassName,
+    }),
+    [],
+  );
   const activeItemId = getActiveItemIdByPath(location.pathname);
   const activeItem = getItemById(activeItemId, items);
 
@@ -84,24 +105,20 @@ const Projects: FC = () => {
     }
   }, [areProjectsLoading, areProjectsFetched, currentCommonId]);
 
-  if (items.length === 0) {
-    return areProjectsLoading ? <Loader className={styles.loader} /> : null;
+  if (!parentItem) {
+    return areCommonsLoading ? <Loader className={styles.loader} /> : null;
   }
 
   return (
     <>
-      <Scrollbar>
-        <ProjectsTree
-          className={styles.projectsTree}
-          treeItemTriggerClassName={styles.projectsTreeItemTriggerClassName}
-          treeItemTriggerNameClassName={
-            styles.projectsTreeItemTriggerNameClassName
-          }
-          items={items}
-          activeItem={activeItem}
-        />
-        {areProjectsLoading && <Loader className={styles.loader} />}
-      </Scrollbar>
+      <ProjectsTree
+        className={styles.projectsTree}
+        treeItemTriggerStyles={treeItemTriggerStyles}
+        parentItem={parentItem}
+        items={items}
+        activeItem={activeItem}
+        isLoading={areProjectsLoading}
+      />
       <CreateCommonModal
         isShowing={isCreateCommonModalOpen}
         onClose={onCreateCommonModalClose}

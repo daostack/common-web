@@ -3,12 +3,23 @@
 }
 
 .projectsTreeItemTriggerClassName {
+  --item-pl-per-level: 1.25rem;
+  --item-arrow-pl: 0.5rem;
+
   border-radius: 0;
 }
 
 .projectsTreeItemTriggerNameClassName {
   font-family: Poppins, sans-serif;
   font-weight: 500;
+}
+
+.projectsTreeItemTriggerImageClassName {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.projectsTreeItemTriggerImageNonRoundedClassName {
+  border-radius: 0.375rem;
 }
 
 .loader {

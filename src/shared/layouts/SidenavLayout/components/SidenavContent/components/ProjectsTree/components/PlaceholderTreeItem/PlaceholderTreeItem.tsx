@@ -13,7 +13,7 @@ interface PlaceholderTreeItemProps {
 
 const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
   const { name, level = 1, isActive = false } = props;
-  const { treeItemTriggerClassName, treeItemTriggerNameClassName } =
+  const { treeItemTriggerStyles: treeItemTriggerStylesFromContext } =
     useTreeContext();
   const itemStyles = getItemStyles(level);
 
@@ -24,7 +24,7 @@ const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
         {
           [treeItemTriggerStyles.itemActive]: isActive,
         },
-        treeItemTriggerClassName,
+        treeItemTriggerStylesFromContext?.container,
       )}
       style={itemStyles}
       role="treeitem"
@@ -33,15 +33,24 @@ const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
     >
       <div className={styles.gap} />
       <span
-        className={classNames(styles.image, treeItemTriggerStyles.image, {
-          [treeItemTriggerStyles.imageRounded]: level !== 1,
-        })}
+        className={classNames(
+          styles.image,
+          treeItemTriggerStyles.image,
+          {
+            [classNames(
+              treeItemTriggerStyles.imageNonRounded,
+              treeItemTriggerStylesFromContext?.imageNonRounded,
+            )]: level === 1,
+            [treeItemTriggerStyles.imageRounded]: level !== 1,
+          },
+          treeItemTriggerStylesFromContext?.image,
+        )}
         aria-hidden
       />
       <span
         className={classNames(
           treeItemTriggerStyles.name,
-          treeItemTriggerNameClassName,
+          treeItemTriggerStylesFromContext?.name,
         )}
         title={name}
       >
