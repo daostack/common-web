@@ -5,8 +5,7 @@
   left: 50%;
   right: unset;
   z-index: 1;
-  max-width: 13.75rem;
-  width: 100%;
+  min-width: 13.75rem;
   transform: translateX(-50%);
 }
 
