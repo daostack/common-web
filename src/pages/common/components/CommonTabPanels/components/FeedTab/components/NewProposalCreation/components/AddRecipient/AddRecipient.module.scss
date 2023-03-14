@@ -30,6 +30,7 @@
   white-space: nowrap;
   font-size: $xsmall;
   font-weight: 400;
+  padding-right: 1rem;
 }
 
 .tableHeader:first-child {
@@ -50,12 +51,23 @@
   border-left: 0.0625rem solid $c-neutrals-200;
 }
 
+.goalCell {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: center;
+  overflow: hidden;
+  min-height: 2.75rem;
+}
+
 .tableCell:last-child {
   border-right: 0.0625rem solid $c-neutrals-200;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+}
+
+.editIcon {
+  width: 24px;
+  height: 24px;
+  margin: 0 0.5rem;
 }
 
 .addRecipientButton {

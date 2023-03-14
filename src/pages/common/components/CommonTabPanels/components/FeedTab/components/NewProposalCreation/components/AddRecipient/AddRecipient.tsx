@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
+import classNames from "classnames";
 import { useFormikContext } from "formik";
 import {
   createColumnHelper,
@@ -9,6 +10,7 @@ import {
 } from "@tanstack/react-table";
 import { RecipientType, ScreenSize } from "@/shared/constants";
 import { PlusIcon } from "@/shared/icons";
+import { Edit2Icon } from "@/shared/icons";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { Common, CommonMemberWithUserInfo } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
@@ -22,6 +24,7 @@ export type Recipient = {
   amount: number | null;
   currency: string | null;
   goalOfPayment: string;
+  edit: React.ReactNode;
 };
 
 const defaultData: Recipient[] = [
@@ -30,6 +33,7 @@ const defaultData: Recipient[] = [
     amount: null,
     currency: null,
     goalOfPayment: "",
+    edit: null,
   },
 ];
 
@@ -58,6 +62,10 @@ const dekstopColumns = [
   }),
   columnHelper.accessor("goalOfPayment", {
     header: () => "Goal of payment",
+    cell: (info) => info.renderValue(),
+  }),
+  columnHelper.accessor("edit", {
+    header: () => "",
     cell: (info) => info.renderValue(),
   }),
 ];
@@ -103,6 +111,7 @@ const AddRecipient: FC = () => {
         amount: values.amount ?? 0,
         currency: values.currency!.label,
         goalOfPayment: values.goalOfPayment,
+        edit: <Edit2Icon className={styles.editIcon} />,
       },
     ]);
     setFieldValue("recipientInfo", {
@@ -149,7 +158,12 @@ const AddRecipient: FC = () => {
               onClick={isFilledTable ? handleOpen : undefined}
             >
               {row.getVisibleCells().map((cell, index) => (
-                <td className={styles.tableCell} key={cell.id}>
+                <td
+                  className={classNames(styles.tableCell, {
+                    [styles.goalCell]: index === 3,
+                  })}
+                  key={cell.id}
+                >
                   {index === 0 && !cell.getValue() ? (
                     <Button
                       className={styles.addRecipientButton}
