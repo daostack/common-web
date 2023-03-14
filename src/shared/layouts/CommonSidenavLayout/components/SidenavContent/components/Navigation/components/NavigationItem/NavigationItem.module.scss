@@ -18,11 +18,15 @@
   transition: background-color 0.2s;
 
   &:hover {
-    --item-bg-color: #{$c-red-100};
+    --item-bg-color: #{$c-pink-hover-feed-cards};
   }
 }
 .itemActive {
-  --item-bg-color: #{$c-red-100};
+  --item-bg-color: #{$c-pink-active-feed-cards};
+
+  &:hover {
+    --item-bg-color: #{$c-pink-active-feed-cards};
+  }
 }
 
 .textWrapper {
