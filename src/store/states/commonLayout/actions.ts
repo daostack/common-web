@@ -10,7 +10,7 @@ export const getCommons = createAsyncAction(
   string | void,
   {
     data: ProjectsStateItem[];
-    currentCommonId?: string;
+    currentCommonId?: string | null;
   },
   Error
 >();
