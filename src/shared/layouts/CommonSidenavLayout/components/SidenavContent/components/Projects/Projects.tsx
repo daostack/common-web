@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { authentificated } from "@/pages/Auth/store/selectors";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
-import { useModal } from "@/shared/hooks";
+import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { getCommonPagePath } from "@/shared/utils";
@@ -32,10 +32,10 @@ const Projects: FC = () => {
   const history = useHistory();
   const location = history.location;
   const {
-    isShowing: isCreateCommonModalOpen,
+    isModalOpen: isCreateCommonModalOpen,
     onOpen: onCreateCommonModalOpen,
     onClose: onCreateCommonModalClose,
-  } = useModal(false);
+  } = useAuthorizedModal();
   const isAuthenticated = useSelector(authentificated());
   const currentCommonId = useSelector(selectCommonLayoutCommonId);
   const commons = useSelector(selectCommonLayoutCommons);
