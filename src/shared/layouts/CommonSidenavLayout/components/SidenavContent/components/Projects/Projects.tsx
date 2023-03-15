@@ -74,19 +74,15 @@ const Projects: FC = () => {
     parentItem ? [parentItem, ...items] : items,
   );
 
-  const handleCommonClick = (commonId: string) => {
-    if (currentCommonId === commonId) {
-      return;
-    }
-
-    history.push(getCommonPagePath(commonId));
-    dispatch(commonLayoutActions.setCurrentCommonId(commonId));
-    dispatch(commonLayoutActions.clearProjects());
-  };
-
   const handleGoToCommon = (createdCommon: Common) => {
     onCreateCommonModalClose();
-    handleCommonClick(createdCommon.id);
+    history.push(getCommonPagePath(createdCommon.id));
+  };
+
+  const handleCommonClick = (commonId: string) => {
+    if (currentCommonId !== commonId) {
+      history.push(getCommonPagePath(commonId));
+    }
   };
 
   useEffect(() => {
@@ -118,6 +114,18 @@ const Projects: FC = () => {
       dispatch(commonLayoutActions.getProjects.request(currentCommonId));
     }
   }, [areProjectsLoading, areProjectsFetched, currentCommonId]);
+
+  useEffect(() => {
+    if (
+      currentCommonId === activeItemId ||
+      !commons.some((common) => common.commonId === activeItemId)
+    ) {
+      return;
+    }
+
+    dispatch(commonLayoutActions.setCurrentCommonId(activeItemId));
+    dispatch(commonLayoutActions.clearProjects());
+  }, [activeItemId]);
 
   if (!parentItem) {
     return areCommonsLoading ? <Loader className={styles.loader} /> : null;
