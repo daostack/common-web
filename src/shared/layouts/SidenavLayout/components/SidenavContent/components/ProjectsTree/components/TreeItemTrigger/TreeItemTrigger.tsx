@@ -9,6 +9,7 @@ import { Item } from "../../types";
 import styles from "./TreeItemTrigger.module.scss";
 
 interface TreeItemTriggerProps {
+  className?: string;
   item: Item;
   level: number;
   isActive: boolean;
@@ -17,7 +18,7 @@ interface TreeItemTriggerProps {
 }
 
 const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
-  const { item, level, isActive, isOpen, onToggle } = props;
+  const { className, item, level, isActive, isOpen, onToggle } = props;
   const { treeItemTriggerStyles } = useTreeContext();
   const { hasMembership = true } = item;
 
@@ -39,6 +40,7 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
             treeItemTriggerStyles?.containerActive,
           )]: isActive,
         },
+        className,
         treeItemTriggerStyles?.container,
       )}
       to={item.path}
