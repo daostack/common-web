@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ProposalService } from "@/services";
 import { EligibleVoterWithUserInfo } from "@/shared/models";
 import { useIsMounted } from "../useIsMounted";
@@ -8,11 +8,13 @@ interface Return {
   loading: boolean;
   voters: EligibleVoterWithUserInfo[];
   fetchEligibleVoters: (proposalId: string, force?: boolean) => void;
+  error?: boolean;
 }
 
 export const useEligibleVoters = (): Return => {
   const isMounted = useIsMounted();
   const [state, setState] = useLoadingState<EligibleVoterWithUserInfo[]>([]);
+  const [error, setError] = useState<boolean>(false);
 
   const fetchEligibleVoters = useCallback(
     async (proposalId: string, force = false) => {
@@ -31,7 +33,7 @@ export const useEligibleVoters = (): Return => {
       try {
         voters = await ProposalService.getProposalEligibleVoters(proposalId);
       } catch (error) {
-        voters = [];
+        setError(true);
       } finally {
         if (isMounted()) {
           setState({
@@ -49,5 +51,6 @@ export const useEligibleVoters = (): Return => {
     fetchEligibleVoters,
     loading: state.loading || !state.fetched,
     voters: state.data,
+    error: error,
   };
 };

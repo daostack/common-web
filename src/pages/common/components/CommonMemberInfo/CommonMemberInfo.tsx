@@ -49,6 +49,8 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
     governanceCircles,
     circleIds,
   );
+  const userNonProjectCircleIds = filteredByIdCircles.map(({ id }) => id);
+
   const userId = commonMember.userId;
 
   useEffect(() => {
@@ -114,7 +116,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
             commonId={commonId}
             governanceCircles={governanceCircles}
             pendingCircles={pendingCircles}
-            circleIds={circleIds}
+            circleIds={userNonProjectCircleIds}
             userId={userId}
             circleMembersCount={circleMembersCount}
           />
@@ -124,7 +126,7 @@ const CommonMemberInfo: FC<CommonMemberInfoProps> = (props) => {
           commonId={commonId}
           governanceCircles={governanceCircles}
           pendingCircles={pendingCircles}
-          circleIds={circleIds}
+          circleIds={userNonProjectCircleIds}
           userId={userId}
           circleMembersCount={circleMembersCount}
         />

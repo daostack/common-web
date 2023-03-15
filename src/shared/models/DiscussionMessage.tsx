@@ -51,4 +51,5 @@ export interface PendingMessage {
   id: string;
   text: string;
   status: PendingMessageStatus;
+  feedItemId: string;
 }
