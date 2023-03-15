@@ -15,6 +15,7 @@ export const VoterList: React.FC<VoterListProps> = (props) => {
     loading: areVotersLoading,
     voters,
     fetchEligibleVoters,
+    error,
   } = useEligibleVoters();
 
   useEffect(() => {
@@ -23,6 +24,14 @@ export const VoterList: React.FC<VoterListProps> = (props) => {
 
   if (areVotersLoading) {
     return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <p className={styles.noVotesText}>
+        An error occurred while loading the voters
+      </p>
+    );
   }
 
   if (voters.length === 0) {

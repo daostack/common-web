@@ -21,6 +21,8 @@ interface LeaveCommonModalProps
   memberCount: number;
   memberCircleIds: string[];
   onSuccessfulLeave?: () => void;
+  isSubCommon?: boolean;
+  subCommonId?: string;
 }
 
 const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
@@ -31,6 +33,8 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     memberCount,
     memberCircleIds = [],
     onSuccessfulLeave,
+    isSubCommon = false,
+    subCommonId,
   } = props;
   const {
     loading: areMemberAmountsLoading,
@@ -53,6 +57,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
       memberAmountsWithCircleId.some(({ amount }) => amount <= 1),
     [areMemberAmountsFetched, memberAmountsWithCircleId],
   );
+  const commonWord = isSubCommon ? "project" : "common";
 
   const handleLeave = useCallback(() => {
     if (!userId) {
@@ -65,7 +70,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     dispatch(
       leaveCommon.request({
         payload: {
-          commonId,
+          commonId: isSubCommon && subCommonId ? subCommonId : commonId,
           userId,
         },
         callback: (error) => {
@@ -86,12 +91,12 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
             onSuccessfulLeave();
           } else {
             history.push(ROUTE_PATHS.MY_COMMONS);
-            notify("You’ve successfully left the common");
+            notify(`You’ve successfully left the ${commonWord}`);
           }
         },
       }),
     );
-  }, [dispatch, notify, history, commonId, userId]);
+  }, [dispatch, notify, history, commonId, userId, subCommonId, isSubCommon]);
 
   useEffect(() => {
     if (
@@ -114,10 +119,14 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
 
   const renderStep = () => {
     if (isDeleteCommonRequest) {
-      return <DeleteCommonRequest onOkClick={onClose} />;
+      return (
+        <DeleteCommonRequest onOkClick={onClose} isSubCommon={isSubCommon} />
+      );
     }
     if (isLastMemberInCircle) {
-      return <LastMemberInCircle onOkClick={onClose} />;
+      return (
+        <LastMemberInCircle onOkClick={onClose} isSubCommon={isSubCommon} />
+      );
     }
 
     return (
@@ -126,6 +135,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
         errorText={errorText}
         onLeave={handleLeave}
         onCancel={onClose}
+        isSubCommon={isSubCommon}
       />
     );
   };
@@ -135,7 +145,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
       isShowing={isShowing}
       onClose={!isLeaving ? onClose : emptyFunction}
       hideCloseButton={isLeaving}
-      title="Leave common"
+      title={`Leave ${commonWord}`}
       className="leave-common-modal"
     >
       {isLoading ? <Loader /> : renderStep()}

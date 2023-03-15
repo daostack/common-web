@@ -40,3 +40,16 @@ export interface DiscussionMessage extends BaseEntity {
   parentMessage: ParentDiscussionMessage | null;
   editedAt: firebase.firestore.Timestamp;
 }
+
+export enum PendingMessageStatus {
+  Sending,
+  Failed,
+  Success,
+}
+
+export interface PendingMessage {
+  id: string;
+  text: string;
+  status: PendingMessageStatus;
+  feedItemId: string;
+}

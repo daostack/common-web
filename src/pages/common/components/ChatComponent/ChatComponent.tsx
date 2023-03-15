@@ -40,6 +40,8 @@ import {
   CommonMember,
   Discussion,
   DiscussionMessage,
+  PendingMessage,
+  PendingMessageStatus,
   Proposal,
 } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
@@ -53,6 +55,7 @@ interface ChatComponentInterface {
   type: ChatType;
   commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;
+  feedItemId: string;
   isJoiningPending?: boolean;
   isAuthorized?: boolean;
   highlightedMessageId?: string | null;
@@ -60,7 +63,6 @@ interface ChatComponentInterface {
   isHidden: boolean;
   proposal?: Proposal;
   discussion: Discussion;
-  feedItemId?: string;
   titleHeight?: number;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
 }
@@ -123,9 +125,6 @@ export default function ChatComponent({
   } = useDiscussionMessagesById({
     hasPermissionToHide,
   });
-  const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(
-    discussionMessages ?? [],
-  );
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const discussionMessageReply = useSelector(
@@ -154,24 +153,87 @@ export default function ChatComponent({
 
   const [message, setMessage] = useState("");
   const messages = (discussionMessages ?? []).reduce(groupday, {});
-  const [isNewMessageLoading, setIsNewMessageLoading] =
-    useState<boolean>(false);
   const isTabletView = useIsTabletView();
   const dateList = Object.keys(messages);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
+  const [pendingMessages, setPendingMessages] = useState<PendingMessage[]>([]);
+
+  const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(
+    discussionMessages ?? [],
+  );
+
+  const prevPendingMessages = usePrevious<PendingMessage[]>(
+    pendingMessages ?? [],
+  );
+
+  /** Remove the pending message from the pending array only AFTER the FE receives the updated messages array from the BE */
+  useEffect(() => {
+    if (
+      Boolean(prevDiscussionMessages) &&
+      discussionMessages?.length !== prevDiscussionMessages?.length
+    ) {
+      setPendingMessages((prevState) =>
+        prevState.filter((msg) => msg.status !== PendingMessageStatus.Success),
+      );
+    }
+  }, [discussionMessages, prevDiscussionMessages]);
+
+  const handleResult = (isSucceed: boolean, pendingMessageId: string) => {
+    setPendingMessages((prevState) =>
+      prevState.map((msg) => {
+        if (msg.id !== pendingMessageId) {
+          return msg;
+        }
+        return {
+          ...msg,
+          status: isSucceed
+            ? PendingMessageStatus.Success
+            : PendingMessageStatus.Failed,
+        };
+      }),
+    );
+  };
 
   const addMessageByType = useCallback(
     (payload: CreateDiscussionMessageDto) => {
+      const pendingMessageId = uuidv4();
+
+      setPendingMessages((prevState) => [
+        ...prevState,
+        {
+          id: pendingMessageId,
+          text: payload.text,
+          status: PendingMessageStatus.Sending,
+          feedItemId: feedItemId,
+        },
+      ]);
+
       switch (type) {
         case ChatType.ProposalComments: {
           if (proposal) {
-            dispatch(addMessageToProposal.request({ payload, proposal }));
+            dispatch(
+              addMessageToProposal.request({
+                payload,
+                proposal,
+                callback(isSucceed) {
+                  handleResult(isSucceed, pendingMessageId);
+                },
+              }),
+            );
           }
           break;
         }
         case ChatType.DiscussionMessages: {
           if (discussion) {
-            dispatch(addMessageToDiscussion.request({ payload, discussion }));
+            dispatch(
+              addMessageToDiscussion.request({
+                payload,
+                discussion,
+                callback(isSucceed) {
+                  handleResult(isSucceed, pendingMessageId);
+                },
+              }),
+            );
           }
           break;
         }
@@ -205,7 +267,6 @@ export default function ChatComponent({
 
   const sendChatMessage = (): void => {
     if (message) {
-      setIsNewMessageLoading(true);
       sendMessage && sendMessage(message.trim());
       setMessage("");
     }
@@ -229,21 +290,6 @@ export default function ChatComponent({
 
     setMessage((currentMessage) => `${currentMessage}\r\n`);
   };
-
-  useEffect(() => {
-    if (
-      !prevDiscussionMessages ||
-      prevDiscussionMessages?.length === discussionMessages?.length
-    )
-      return;
-
-    setIsNewMessageLoading(false);
-  }, [
-    discussionMessages?.length,
-    prevDiscussionMessages,
-    prevDiscussionMessages?.length,
-    setIsNewMessageLoading,
-  ]);
 
   useEffect(() => {
     if (
@@ -311,8 +357,6 @@ export default function ChatComponent({
       >
         {isFetchedDiscussionMessages ? (
           <ChatContent
-            discussionMessages={discussionMessages}
-            prevDiscussionMessages={prevDiscussionMessages}
             linkHighlightedMessageId={linkHighlightedMessageId}
             type={type}
             commonMember={commonMember}
@@ -321,11 +365,13 @@ export default function ChatComponent({
             hasAccess={hasAccess}
             isHidden={isHidden}
             chatWrapperId={chatWrapperId}
-            isNewMessageLoading={isNewMessageLoading}
             messages={messages}
             dateList={dateList}
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
+            pendingMessages={pendingMessages}
+            prevPendingMessages={prevPendingMessages}
+            feedItemId={feedItemId}
           />
         ) : (
           <div className="loader-container">

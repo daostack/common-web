@@ -8,12 +8,14 @@ interface MainStepProps {
   errorText: string;
   onLeave: () => void;
   onCancel: () => void;
+  isSubCommon: boolean;
 }
 
 const MainStep: FC<MainStepProps> = (props) => {
-  const { isLoading, errorText, onLeave, onCancel } = props;
+  const { isLoading, errorText, onLeave, onCancel, isSubCommon } = props;
   const [isApproved, setIsApproved] = useState(false);
   const isLeaveButtonDisabled = isLoading || !isApproved;
+  const commonWord = isSubCommon ? "Project" : "Common";
 
   const handleApprovalChange = () => {
     setIsApproved((value) => !value);
@@ -22,19 +24,19 @@ const MainStep: FC<MainStepProps> = (props) => {
   return (
     <div className="leave-common-main-step">
       <p className="leave-common-main-step__text">
-        Before you leave the Common, here are some things:
+        Before you leave the {commonWord}, here are some things:
       </p>
       <ol className="leave-common-main-step__ordered-list">
         <li>
-          You will no longer have access to all the Common’s proposals,
+          You will no longer have access to all the {commonWord}’s proposals,
           discussions, wallet transactions, etc. either as reader, or writer
-          according to the Common’s governance
+          according to the {commonWord}’s governance
         </li>
         <li>
           Proposals that are assigned to you (funds transfer, circles) will be
           cancelled
         </li>
-        <li>You will be removed from the Common’s member list</li>
+        <li>You will be removed from the {commonWord}’s member list</li>
         <li>Your monthly contributions will no longer be charged</li>
       </ol>
       <Checkbox
@@ -66,7 +68,7 @@ const MainStep: FC<MainStepProps> = (props) => {
           disabled={isLeaveButtonDisabled}
           shouldUseFullWidth
         >
-          Leave Common
+          Leave {commonWord}
         </Button>
       </div>
     </div>

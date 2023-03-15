@@ -180,6 +180,7 @@ export const addMessageToDiscussion = createAsyncAction(
   {
     payload: CreateDiscussionMessageDto;
     discussion: Discussion;
+    callback?: (isSucceed: boolean) => void;
   },
   Discussion,
   Error
@@ -316,6 +317,7 @@ export const addMessageToProposal = createAsyncAction(
   {
     payload: CreateDiscussionMessageDto;
     proposal: Proposal;
+    callback?: (isSucceed: boolean) => void;
   },
   Proposal,
   Error
