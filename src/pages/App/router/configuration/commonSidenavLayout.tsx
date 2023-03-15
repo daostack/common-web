@@ -1,4 +1,5 @@
-import { Inbox } from "@/pages/inbox";
+import { CommonFeedPage } from "@/pages/commonFeed";
+import { InboxPage } from "@/pages/inbox";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { CommonSidenavLayout } from "@/shared/layouts";
 import { LayoutConfiguration } from "../types";
@@ -14,7 +15,12 @@ export const COMMON_SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<CommonSide
       {
         path: ROUTE_PATHS.INBOX,
         exact: true,
-        component: Inbox,
+        component: InboxPage,
+      },
+      {
+        path: ROUTE_PATHS.COMMON,
+        exact: true,
+        component: CommonFeedPage,
       },
     ],
   };
