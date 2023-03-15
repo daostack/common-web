@@ -69,7 +69,10 @@ const Projects: FC = () => {
     [],
   );
   const activeItemId = getActiveItemIdByPath(location.pathname);
-  const activeItem = getItemById(activeItemId, items);
+  const activeItem = getItemById(
+    activeItemId,
+    parentItem ? [parentItem, ...items] : items,
+  );
 
   const handleGoToCommon = (createdCommon: Common) => {
     onCreateCommonModalClose();
