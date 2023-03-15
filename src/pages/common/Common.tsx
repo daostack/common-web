@@ -1,5 +1,6 @@
 import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { QueryParamKey } from "@/shared/constants";
@@ -14,6 +15,7 @@ import {
   setCommonMember,
 } from "@/store/states/common/actions";
 import { CommonContent } from "./components";
+import { getInitialTab } from "./utils";
 import styles from "./Common.module.scss";
 
 interface CommonRouterParams {
@@ -24,6 +26,7 @@ const Common: FC = () => {
   const { id: commonId } = useParams<CommonRouterParams>();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
+  const location = useLocation();
   const {
     data: commonData,
     fetched: isCommonDataFetched,
@@ -46,6 +49,7 @@ const Common: FC = () => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const tabQueryParam = queryParams[QueryParamKey.Tab];
+  const initialTab = getInitialTab(location.pathname);
   const isDataFetched = isCommonDataFetched;
 
   const fetchData = () => {
@@ -93,9 +97,12 @@ const Common: FC = () => {
     );
   }
 
+  const defaultTab =
+    initialTab || (typeof tabQueryParam === "string" ? tabQueryParam : "");
+
   return (
     <CommonContent
-      defaultTab={typeof tabQueryParam === "string" ? tabQueryParam : ""}
+      defaultTab={defaultTab}
       common={commonData.common}
       parentCommon={commonData.parentCommon}
       governance={commonData.governance}
