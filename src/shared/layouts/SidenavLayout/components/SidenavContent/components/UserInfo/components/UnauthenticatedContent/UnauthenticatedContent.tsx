@@ -3,10 +3,15 @@ import { useDispatch } from "react-redux";
 import { setLoginModalState } from "@/pages/Auth/store/actions";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit/Button";
-import { Content } from "../Content";
+import { Content, ContentStyles } from "../Content";
 import styles from "./UnauthenticatedContent.module.scss";
 
-const UnauthenticatedContent: FC = () => {
+interface UnauthenticatedContentProps {
+  contentStyles?: ContentStyles;
+}
+
+const UnauthenticatedContent: FC<UnauthenticatedContentProps> = (props) => {
+  const { contentStyles } = props;
   const dispatch = useDispatch();
 
   const handleLogin = () => {
@@ -28,6 +33,7 @@ const UnauthenticatedContent: FC = () => {
           Login
         </Button>
       }
+      styles={contentStyles}
     />
   );
 };

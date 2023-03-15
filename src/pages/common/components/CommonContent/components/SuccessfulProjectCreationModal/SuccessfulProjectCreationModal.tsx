@@ -3,9 +3,8 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Modal } from "@/shared/components";
 import { Button } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
+import { getCommonPageAboutTabPath } from "@/shared/utils";
 import { commonActions } from "@/store/states";
-import { CommonTab } from "../../../../constants";
 import styles from "./SuccessfulProjectCreationModal.module.scss";
 
 interface SuccessfulProjectCreationModalProps {
@@ -21,7 +20,7 @@ const SuccessfulProjectCreationModal: FC<
 
   const handleClose = () => {
     dispatch(commonActions.setIsNewProjectCreated(false));
-    history.push(getCommonPagePath(parentCommonId, CommonTab.About));
+    history.push(getCommonPageAboutTabPath(parentCommonId));
   };
 
   const handleJumpToProject = () => {

@@ -6,7 +6,7 @@ interface Data {
 }
 
 const ALLOWED_NON_MEMBER_TABS = [CommonTab.About];
-const ALL_TABS = [
+export const ALL_TABS = [
   CommonTab.About,
   CommonTab.Feed,
   CommonTab.Members,

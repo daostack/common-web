@@ -1,0 +1,18 @@
+@import "../../../../../../../constants";
+
+.footer {
+  flex-shrink: 0;
+  height: 2.625rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: NunitoSans, sans-serif;
+  font-size: $xxsmall;
+  font-weight: 300;
+  text-align: center;
+  word-break: break-word;
+  color: $c-neutrals-300;
+  background-color: $c-shades-white;
+  box-sizing: border-box;
+  overflow: hidden;
+}

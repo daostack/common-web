@@ -1,5 +1,10 @@
 import { RouterState } from "connected-react-router";
-import { CacheState, CommonState, ProjectsState } from "@/store/states";
+import {
+  CacheState,
+  CommonState,
+  CommonLayoutState,
+  ProjectsState,
+} from "@/store/states";
 import { AuthStateType } from "../../pages/Auth/interface";
 import { CommonsStateType } from "../../pages/OldCommon/interfaces";
 import { TrusteeStateType } from "../../pages/Trustee/interfaces";
@@ -13,5 +18,6 @@ export interface AppState {
   trustee: TrusteeStateType;
   projects: ProjectsState;
   common: CommonState;
+  commonLayout: CommonLayoutState;
   cache: CacheState;
 }

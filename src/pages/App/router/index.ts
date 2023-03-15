@@ -5,6 +5,7 @@ export {
   useLayoutRouteContext,
 } from "./components";
 export type {
+  CommonSidenavLayoutRouteOptions,
   OldLayoutRouteOptions,
   SidenavLayoutRouteOptions,
 } from "./configuration";

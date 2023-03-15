@@ -4,13 +4,12 @@ import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { updateCommonState } from "@/pages/OldCommon/store/actions";
-import { CommonTab } from "@/pages/common";
 import { GovernanceActions } from "@/shared/constants";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
+import { getCommonPageAboutTabPath } from "@/shared/utils";
 import { commonActions, projectsActions } from "@/store/states";
 import { CenterWrapper } from "../CenterWrapper";
 import { ProjectCreationForm } from "./components";
@@ -83,7 +82,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         },
       }),
     );
-    history.push(getCommonPagePath(createdProject.id, CommonTab.About));
+    history.push(getCommonPageAboutTabPath(createdProject.id));
   };
 
   useEffect(() => {
@@ -127,11 +126,8 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     );
   }
 
-  const parentCommonRoute = getCommonPagePath(parentCommon.id, CommonTab.About);
-  const projectRoute = getCommonPagePath(
-    initialCommon?.id || "",
-    CommonTab.About,
-  );
+  const parentCommonRoute = getCommonPageAboutTabPath(parentCommon.id);
+  const projectRoute = getCommonPageAboutTabPath(initialCommon?.id || "");
   const backRoute = isEditing ? projectRoute : parentCommonRoute;
 
   if (
