@@ -134,6 +134,7 @@ const Projects: FC = () => {
         activeItem={activeItem}
         currentCommonId={currentCommonId}
         onCommonClick={handleCommonClick}
+        onCommonCreationClick={onCreateCommonModalOpen}
         isLoading={areProjectsLoading}
       />
       <CreateCommonModal

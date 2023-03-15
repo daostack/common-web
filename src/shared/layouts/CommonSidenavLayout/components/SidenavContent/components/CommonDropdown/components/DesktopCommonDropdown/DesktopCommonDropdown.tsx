@@ -4,6 +4,7 @@ import { ButtonIcon } from "@/shared/components";
 import { Check2Icon, Menu2Icon } from "@/shared/icons";
 import { MenuItem, MenuItemType } from "@/shared/interfaces";
 import { DesktopMenu } from "@/shared/ui-kit";
+import { CREATE_COMMON_ITEM_ID } from "../../../ProjectsTree";
 import styles from "./DesktopCommonDropdown.module.scss";
 
 interface DesktopCommonDropdownProps {
@@ -21,7 +22,9 @@ const DesktopCommonDropdown: FC<DesktopCommonDropdownProps> = (props) => {
 
   const finalItems = items.map((item) => ({
     ...item,
-    className: classNames(item.className, styles.menuItem),
+    className: classNames(item.className, styles.menuItem, {
+      [styles.menuItemForCommonCreation]: item.id === CREATE_COMMON_ITEM_ID,
+    }),
     activeClassName: classNames(item.activeClassName, styles.menuItemActive),
     text: (
       <>

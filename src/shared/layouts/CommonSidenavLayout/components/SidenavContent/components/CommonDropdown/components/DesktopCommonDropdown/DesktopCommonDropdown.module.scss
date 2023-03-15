@@ -25,6 +25,10 @@
   font-weight: 500;
 }
 
+.menuItemForCommonCreation {
+  color: $c-pink-primary;
+}
+
 .menuItemActive {
   --item-bg-color: #{$c-pink-hover-feed-cards};
 }
