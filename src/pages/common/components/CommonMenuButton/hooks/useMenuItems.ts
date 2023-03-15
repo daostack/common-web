@@ -34,7 +34,7 @@ export const useMenuItems = (options: Options): Item[] => {
     },
     {
       id: CommonMenuItem.DeleteCommon,
-      text: "Delete common",
+      text: `Delete ${options.isSubCommon ? "space" : "common"}`,
       withWarning: true,
       onClick: () => {
         onMenuItemSelect(CommonMenuItem.DeleteCommon);
