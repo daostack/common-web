@@ -1,4 +1,4 @@
-import CommonPage from "@/pages/common/Common";
+import { Inbox } from "@/pages/inbox";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { CommonSidenavLayout } from "@/shared/layouts";
 import { LayoutConfiguration } from "../types";
@@ -12,9 +12,9 @@ export const COMMON_SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<CommonSide
     component: CommonSidenavLayout,
     routes: [
       {
-        path: ROUTE_PATHS.TEST,
+        path: ROUTE_PATHS.INBOX,
         exact: true,
-        component: CommonPage,
+        component: Inbox,
       },
     ],
   };
