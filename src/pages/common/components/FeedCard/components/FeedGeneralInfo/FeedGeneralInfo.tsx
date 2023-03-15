@@ -32,7 +32,6 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
     [description],
   );
   const isDescriptionEmpty = checkIsTextEditorValueEmpty(parsedDescription);
-  const image = images[0];
   const shouldDisplaySeeMoreButton =
     ((shouldShowFullContent || !isFullTextShowing) && !isDescriptionEmpty) ||
     images.length > 0;
@@ -66,7 +65,7 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           readOnly
         />
       )}
-      {image && shouldShowFullContent && <ImageGallery gallery={images} />}
+      {images.length > 0 && shouldShowFullContent && <ImageGallery gallery={images} />}
       {shouldDisplaySeeMoreButton && (
         <a
           className={classNames(styles.seeMore, styles.text)}
