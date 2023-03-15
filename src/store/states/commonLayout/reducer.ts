@@ -72,6 +72,11 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
       nextState.commons.push(payload);
     }),
   )
+  .handleAction(actions.addProject, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.projects.push(payload);
+    }),
+  )
   .handleAction(actions.setCurrentCommonId, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.currentCommonId = payload;
