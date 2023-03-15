@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { authentificated } from "@/pages/Auth/store/selectors";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
-import { ROUTE_PATHS } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
+import { getCommonPagePath } from "@/shared/utils";
 import {
   commonLayoutActions,
   selectCommonLayoutCommonId,
@@ -76,7 +76,17 @@ const Projects: FC = () => {
 
   const handleGoToCommon = (createdCommon: Common) => {
     onCreateCommonModalClose();
-    history.push(ROUTE_PATHS.COMMON.replace(":id", createdCommon.id));
+    history.push(getCommonPagePath(createdCommon.id));
+  };
+
+  const handleCommonClick = (commonId: string) => {
+    if (currentCommonId === commonId) {
+      return;
+    }
+
+    history.push(getCommonPagePath(commonId));
+    dispatch(commonLayoutActions.setCurrentCommonId(commonId));
+    dispatch(commonLayoutActions.clearProjects());
   };
 
   useEffect(() => {
@@ -119,8 +129,11 @@ const Projects: FC = () => {
         className={styles.projectsTree}
         treeItemTriggerStyles={treeItemTriggerStyles}
         parentItem={parentItem}
+        commons={commons}
         items={items}
         activeItem={activeItem}
+        currentCommonId={currentCommonId}
+        onCommonClick={handleCommonClick}
         isLoading={areProjectsLoading}
       />
       <CreateCommonModal

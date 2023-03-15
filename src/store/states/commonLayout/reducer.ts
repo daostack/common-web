@@ -67,6 +67,11 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
       nextState.areProjectsFetched = true;
     }),
   )
+  .handleAction(actions.setCurrentCommonId, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.currentCommonId = payload;
+    }),
+  )
   .handleAction(actions.clearData, (state) =>
     produce(state, (nextState) => {
       clearData(nextState);

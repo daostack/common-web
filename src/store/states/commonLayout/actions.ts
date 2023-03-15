@@ -21,6 +21,10 @@ export const getProjects = createAsyncAction(
   CommonLayoutActionType.GET_PROJECTS_FAILURE,
 )<string, ProjectsStateItem[], Error>();
 
+export const setCurrentCommonId = createStandardAction(
+  CommonLayoutActionType.SET_CURRENT_COMMON_ID,
+)<string>();
+
 export const clearData = createStandardAction(
   CommonLayoutActionType.CLEAR_DATA,
 )();
