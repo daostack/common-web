@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface Item {
   id: string;
   image: string;
@@ -5,5 +7,6 @@ export interface Item {
   path: string;
   hasMembership?: boolean;
   notificationsAmount?: number;
+  rightContent?: ReactNode;
   items?: Item[];
 }

@@ -88,6 +88,7 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
       >
         {item.name}
       </span>
+      {item.rightContent}
       {!!item.notificationsAmount && (
         <span
           className={styles.notificationsAmount}
