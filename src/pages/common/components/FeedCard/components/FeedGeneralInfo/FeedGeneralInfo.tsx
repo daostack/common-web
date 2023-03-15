@@ -1,6 +1,5 @@
 import React, { ReactNode, useMemo } from "react";
 import classNames from "classnames";
-import { Image } from "@/shared/components";
 import { useFullText } from "@/shared/hooks";
 import { AttachIcon } from "@/shared/icons";
 import { CommonLink } from "@/shared/models";
@@ -8,6 +7,7 @@ import {
   checkIsTextEditorValueEmpty,
   parseStringToTextEditorValue,
   TextEditor,
+  ImageGallery,
 } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import styles from "./FeedGeneralInfo.module.scss";
@@ -66,15 +66,7 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           readOnly
         />
       )}
-      {image && shouldShowFullContent && (
-        <Image
-          src={image.value}
-          className={classNames(styles.image)}
-          alt={image.title}
-          placeholderElement={null}
-          aria-hidden
-        />
-      )}
+      {image && shouldShowFullContent && <ImageGallery gallery={images} />}
       {shouldDisplaySeeMoreButton && (
         <a
           className={classNames(styles.seeMore, styles.text)}
