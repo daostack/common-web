@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { Loader, NotFound } from "@/shared/ui-kit";
+import { checkIsProject } from "@/shared/utils";
 import { commonActions } from "@/store/states";
 import { FeedLayout, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
@@ -91,9 +92,11 @@ const CommonFeedPage: FC = () => {
     <FeedLayout
       headerContent={
         <HeaderContent
-          commonName="Common Name"
-          commonImage=""
-          isProject={false}
+          commonId={commonData.common.id}
+          commonName={commonData.common.name}
+          commonImage={commonData.common.image}
+          commonMembersAmount={2}
+          isProject={checkIsProject(commonData.common)}
         />
       }
       isGlobalLoading={!isGlobalDataFetched}
