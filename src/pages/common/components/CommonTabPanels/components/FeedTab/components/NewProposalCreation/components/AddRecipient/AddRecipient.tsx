@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
-import classNames from "classnames";
 import { useFormikContext } from "formik";
 import {
   createColumnHelper,
@@ -23,7 +22,7 @@ export type Recipient = {
   recipient: string;
   amount: number | null;
   currency: string | null;
-  goalOfPayment: string;
+  goalOfPayment: React.ReactNode;
   edit: React.ReactNode;
 };
 
@@ -32,7 +31,7 @@ const defaultData: Recipient[] = [
     recipient: "",
     amount: null,
     currency: null,
-    goalOfPayment: "",
+    goalOfPayment: null,
     edit: null,
   },
 ];
@@ -110,7 +109,9 @@ const AddRecipient: FC = () => {
         recipient,
         amount: values.amount ?? 0,
         currency: values.currency!.label,
-        goalOfPayment: values.goalOfPayment,
+        goalOfPayment: (
+          <div className={styles.goalCell}>{values.goalOfPayment}</div>
+        ),
         edit: <Edit2Icon className={styles.editIcon} />,
       },
     ]);
@@ -158,12 +159,7 @@ const AddRecipient: FC = () => {
               onClick={isFilledTable ? handleOpen : undefined}
             >
               {row.getVisibleCells().map((cell, index) => (
-                <td
-                  className={classNames(styles.tableCell, {
-                    [styles.goalCell]: index === 3,
-                  })}
-                  key={cell.id}
-                >
+                <td className={styles.tableCell} key={cell.id}>
                   {index === 0 && !cell.getValue() ? (
                     <Button
                       className={styles.addRecipientButton}

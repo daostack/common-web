@@ -34,8 +34,8 @@
 }
 
 .tableHeader:first-child {
-  padding-left: 1rem;
-  width: 10rem;
+  min-width: 6rem;
+  max-width: 10rem;
 }
 
 .tableCell {
@@ -57,7 +57,6 @@
   -webkit-box-orient: vertical;
   -webkit-box-align: center;
   overflow: hidden;
-  min-height: 2.75rem;
 }
 
 .tableCell:last-child {
