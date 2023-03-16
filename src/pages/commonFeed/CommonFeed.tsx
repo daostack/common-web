@@ -95,7 +95,7 @@ const CommonFeedPage: FC = () => {
           commonId={commonData.common.id}
           commonName={commonData.common.name}
           commonImage={commonData.common.image}
-          commonMembersAmount={2}
+          commonMembersAmount={commonData.commonMembersAmount}
           isProject={checkIsProject(commonData.common)}
         />
       }

@@ -1,8 +1,6 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { CommonService } from "@/services";
-import { Common } from "@/shared/models";
 import { State } from "./types";
-import { updateCommonsBySubscription } from "./utils";
 
 export const useCommonSubscription = (
   setState: Dispatch<SetStateAction<State>>,

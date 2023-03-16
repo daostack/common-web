@@ -30,9 +30,10 @@ export const useCommonData = (): Return => {
 
     (async () => {
       try {
-        const [common, governance] = await Promise.all([
+        const [common, governance, commonMembersAmount] = await Promise.all([
           CommonService.getCommonById(commonId),
           GovernanceService.getGovernanceByCommonId(commonId),
+          CommonService.getCommonMembersAmount(commonId),
         ]);
 
         if (!common) {
@@ -48,6 +49,7 @@ export const useCommonData = (): Return => {
           data: {
             common,
             governance,
+            commonMembersAmount,
           },
         });
       } catch (error) {
