@@ -14,7 +14,11 @@ import { useZoomDisabling } from "@/shared/hooks";
 import { Common, Governance } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
-import { projectsActions } from "@/store/states";
+import {
+  commonLayoutActions,
+  projectsActions,
+  ProjectsStateItem,
+} from "@/store/states";
 import {
   IntermediateCreateCommonPayload,
   PaymentPayload,
@@ -282,16 +286,17 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       return;
     }
 
-    dispatch(
-      projectsActions.addProject({
-        commonId: createdCommon.id,
-        image: createdCommon.image,
-        name: createdCommon.name,
-        directParent: createdCommon.directParent,
-        hasMembership: true,
-        notificationsAmount: 0,
-      }),
-    );
+    const projectsStateItem: ProjectsStateItem = {
+      commonId: createdCommon.id,
+      image: createdCommon.image,
+      name: createdCommon.name,
+      directParent: createdCommon.directParent,
+      hasMembership: true,
+      notificationsAmount: 0,
+    };
+
+    dispatch(commonLayoutActions.addCommon(projectsStateItem));
+    dispatch(projectsActions.addProject(projectsStateItem));
     CommonEventEmitter.emit(CommonEvent.Created, createdCommon);
   }, [stage]);
 

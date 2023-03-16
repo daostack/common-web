@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { authentificated } from "@/pages/Auth/store/selectors";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
-import { useModal } from "@/shared/hooks";
+import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { getCommonPagePath } from "@/shared/utils";
@@ -32,10 +32,10 @@ const Projects: FC = () => {
   const history = useHistory();
   const location = history.location;
   const {
-    isShowing: isCreateCommonModalOpen,
+    isModalOpen: isCreateCommonModalOpen,
     onOpen: onCreateCommonModalOpen,
     onClose: onCreateCommonModalClose,
-  } = useModal(false);
+  } = useAuthorizedModal();
   const isAuthenticated = useSelector(authentificated());
   const currentCommonId = useSelector(selectCommonLayoutCommonId);
   const commons = useSelector(selectCommonLayoutCommons);
@@ -80,13 +80,9 @@ const Projects: FC = () => {
   };
 
   const handleCommonClick = (commonId: string) => {
-    if (currentCommonId === commonId) {
-      return;
+    if (currentCommonId !== commonId) {
+      history.push(getCommonPagePath(commonId));
     }
-
-    history.push(getCommonPagePath(commonId));
-    dispatch(commonLayoutActions.setCurrentCommonId(commonId));
-    dispatch(commonLayoutActions.clearProjects());
   };
 
   useEffect(() => {
@@ -119,6 +115,18 @@ const Projects: FC = () => {
     }
   }, [areProjectsLoading, areProjectsFetched, currentCommonId]);
 
+  useEffect(() => {
+    if (
+      currentCommonId === activeItemId ||
+      !commons.some((common) => common.commonId === activeItemId)
+    ) {
+      return;
+    }
+
+    dispatch(commonLayoutActions.setCurrentCommonId(activeItemId));
+    dispatch(commonLayoutActions.clearProjects());
+  }, [activeItemId]);
+
   if (!parentItem) {
     return areCommonsLoading ? <Loader className={styles.loader} /> : null;
   }
@@ -134,6 +142,7 @@ const Projects: FC = () => {
         activeItem={activeItem}
         currentCommonId={currentCommonId}
         onCommonClick={handleCommonClick}
+        onCommonCreationClick={onCreateCommonModalOpen}
         isLoading={areProjectsLoading}
       />
       <CreateCommonModal

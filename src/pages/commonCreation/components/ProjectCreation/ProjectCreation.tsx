@@ -10,7 +10,12 @@ import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
 import { getCommonPageAboutTabPath } from "@/shared/utils";
-import { commonActions, projectsActions } from "@/store/states";
+import {
+  commonActions,
+  commonLayoutActions,
+  projectsActions,
+  ProjectsStateItem,
+} from "@/store/states";
 import { CenterWrapper } from "../CenterWrapper";
 import { ProjectCreationForm } from "./components";
 import styles from "./ProjectCreation.module.scss";
@@ -60,17 +65,18 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         }),
       );
     } else {
+      const projectsStateItem: ProjectsStateItem = {
+        commonId: createdProject.id,
+        image: createdProject.image,
+        name: createdProject.name,
+        directParent: createdProject.directParent,
+        hasMembership: true,
+        notificationsAmount: 0,
+      };
+
       dispatch(commonActions.setIsNewProjectCreated(true));
-      dispatch(
-        projectsActions.addProject({
-          commonId: createdProject.id,
-          image: createdProject.image,
-          name: createdProject.name,
-          directParent: createdProject.directParent,
-          hasMembership: true,
-          notificationsAmount: 0,
-        }),
-      );
+      dispatch(commonLayoutActions.addProject(projectsStateItem));
+      dispatch(projectsActions.addProject(projectsStateItem));
     }
     dispatch(
       updateCommonState({

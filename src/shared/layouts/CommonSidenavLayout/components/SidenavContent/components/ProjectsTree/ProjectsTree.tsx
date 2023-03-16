@@ -19,6 +19,7 @@ interface ProjectsTreeProps extends BaseProjectsTreeProps {
   commons: ProjectsStateItem[];
   currentCommonId?: string | null;
   onCommonClick: (commonId: string) => void;
+  onCommonCreationClick: () => void;
   isLoading?: boolean;
 }
 
@@ -33,11 +34,13 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     currentCommonId,
     itemIdWithNewProjectCreation = "",
     onCommonClick,
+    onCommonCreationClick,
     isLoading = false,
   } = props;
   const menuItems = useMenuItems({
     stateItems: commons,
     onCommonClick,
+    onCommonCreationClick,
   });
   const contextValue = useMemo<TreeContextValue>(
     () => ({
