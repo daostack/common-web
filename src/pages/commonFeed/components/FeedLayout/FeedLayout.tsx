@@ -7,6 +7,7 @@ import { FeedItem } from "../../../common/components";
 
 interface FeedLayoutProps {
   headerContent: ReactNode;
+  isGlobalLoading?: boolean;
   commonId: string;
   governance: Governance;
   userCircleIds: string[];
@@ -18,6 +19,7 @@ interface FeedLayoutProps {
 const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const {
     headerContent,
+    isGlobalLoading,
     commonId,
     governance,
     userCircleIds,
@@ -28,7 +30,10 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const isTabletView = useIsTabletView();
 
   return (
-    <CommonSidenavLayoutPageContent headerContent={headerContent}>
+    <CommonSidenavLayoutPageContent
+      headerContent={headerContent}
+      isGlobalLoading={isGlobalLoading}
+    >
       <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
         {feedItems?.map((item) => (
           <FeedItem

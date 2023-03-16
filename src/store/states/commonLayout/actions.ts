@@ -29,6 +29,10 @@ export const addProject = createStandardAction(
   CommonLayoutActionType.ADD_PROJECT,
 )<ProjectsStateItem>();
 
+export const updateCommonOrProject = createStandardAction(
+  CommonLayoutActionType.UPDATE_COMMON_OR_PROJECT,
+)<{ commonId: string } & Partial<Omit<ProjectsStateItem, "commonId">>>();
+
 export const setCurrentCommonId = createStandardAction(
   CommonLayoutActionType.SET_CURRENT_COMMON_ID,
 )<string>();

@@ -1,13 +1,15 @@
 import React, { cloneElement, FC, isValidElement, ReactNode } from "react";
 import classNames from "classnames";
+import { Loader, LoaderVariant } from "@/shared/ui-kit";
 import styles from "./PageContent.module.scss";
 
 interface FeedLayoutProps {
   headerContent: ReactNode;
+  isGlobalLoading?: boolean;
 }
 
 const PageContent: FC<FeedLayoutProps> = (props) => {
-  const { headerContent, children } = props;
+  const { headerContent, children, isGlobalLoading = false } = props;
   let headerEl: ReactNode = null;
 
   if (isValidElement(headerContent)) {
@@ -18,10 +20,18 @@ const PageContent: FC<FeedLayoutProps> = (props) => {
   }
 
   return (
-    <div className={styles.container}>
-      {headerEl}
-      {children}
-    </div>
+    <>
+      {isGlobalLoading && (
+        <Loader
+          overlayClassName={styles.globalLoader}
+          variant={LoaderVariant.Global}
+        />
+      )}
+      <div className={styles.container}>
+        {headerEl}
+        {children}
+      </div>
+    </>
   );
 };
 
