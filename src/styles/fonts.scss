@@ -143,6 +143,13 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $poppinsFontName;
   src: local($poppinsFontName),
+    url("/shared/assets/fonts/Poppins-Regular.ttf") format($trueTypeFontFormat);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: $poppinsFontName;
+  src: local($poppinsFontName),
     url("/shared/assets/fonts/Poppins-Medium.ttf") format($trueTypeFontFormat);
   font-weight: 500;
 }
