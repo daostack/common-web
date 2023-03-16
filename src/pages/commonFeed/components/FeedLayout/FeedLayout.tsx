@@ -1,8 +1,15 @@
 import React, { FC, ReactNode, useMemo, useState } from "react";
-import { ChatContext, ChatItem } from "@/pages/common/components/ChatComponent";
+import { ChatItem } from "@/pages/common/components/ChatComponent";
+import { ChatContext } from "@/pages/common/components/ChatComponent/context";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
-import { CommonFeed, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonFeed,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
 import { FeedItem } from "../../../common/components";
 import { DesktopChat } from "./components";
@@ -11,9 +18,9 @@ import styles from "./FeedLayout.module.scss";
 interface FeedLayoutProps {
   headerContent: ReactNode;
   isGlobalLoading?: boolean;
-  commonId: string;
+  common: Common;
   governance: Governance;
-  userCircleIds: string[];
+  commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: CommonFeed[] | null;
   loading: boolean;
   onFetchNext: () => void;
@@ -23,15 +30,19 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const {
     headerContent,
     isGlobalLoading,
-    commonId,
+    common,
     governance,
-    userCircleIds,
+    commonMember,
     feedItems,
     loading,
     onFetchNext,
   } = props;
   const isTabletView = useIsTabletView();
   const [chatItem, setChatItem] = useState<ChatItem | null>();
+  const userCircleIds = useMemo(
+    () => Object.values(commonMember?.circles.map ?? {}),
+    [commonMember?.circles.map],
+  );
 
   const chatContextValue = useMemo(
     () => ({
@@ -53,7 +64,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
               <FeedItem
                 key={item.id}
                 governanceId={governance.id}
-                commonId={commonId}
+                commonId={common.id}
                 item={item}
                 governanceCircles={governance.circles}
                 isMobileVersion={isTabletView}
@@ -62,7 +73,14 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
             ))}
           </InfiniteScroll>
         </div>
-        {chatItem && !isTabletView && <DesktopChat chatItem={chatItem} />}
+        {chatItem && !isTabletView && (
+          <DesktopChat
+            className={styles.desktopChat}
+            chatItem={chatItem}
+            common={common}
+            commonMember={commonMember}
+          />
+        )}
       </ChatContext.Provider>
     </CommonSidenavLayoutPageContent>
   );

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo } from "react";
+import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -38,10 +38,6 @@ const CommonFeedPage: FC = () => {
   } = useCommonFeedItems(commonId);
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const userCircleIds = useMemo(
-    () => Object.values(commonMember?.circles.map ?? {}),
-    [commonMember],
-  );
   const isDataFetched = isCommonDataFetched;
 
   const fetchData = () => {
@@ -100,9 +96,9 @@ const CommonFeedPage: FC = () => {
         />
       }
       isGlobalLoading={!isGlobalDataFetched}
-      commonId={commonId}
+      common={commonData.common}
       governance={commonData.governance}
-      userCircleIds={userCircleIds}
+      commonMember={commonMember}
       feedItems={commonFeedItems}
       loading={areCommonFeedItemsLoading}
       onFetchNext={fetchMoreCommonFeedItems}

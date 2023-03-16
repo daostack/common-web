@@ -1,18 +1,39 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { ChatItem } from "@/pages/common/components/ChatComponent";
+import { selectUser } from "@/pages/Auth/store/selectors";
+import {
+  ChatComponent,
+  ChatItem,
+} from "@/pages/common/components/ChatComponent";
+import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
+import { ChatType } from "@/shared/constants";
+import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
 import { isRTL } from "@/shared/utils";
 import styles from "./DesktopChat.module.scss";
 
 interface ChatProps {
+  className?: string;
   chatItem: ChatItem;
+  common: Common;
+  commonMember: (CommonMember & CirclesPermissions) | null;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
-  const { chatItem } = props;
+  const { className, chatItem, common, commonMember } = props;
+  const user = useSelector(selectUser());
+  const userCircleIds = useMemo(
+    () => Object.values(commonMember?.circles.map ?? {}),
+    [commonMember?.circles.map],
+  );
+
+  const hasAccessToChat = useMemo(
+    () => checkHasAccessToChat(userCircleIds, chatItem),
+    [chatItem, userCircleIds],
+  );
 
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, className)}>
       <div className={styles.titleWrapper}>
         <p
           className={classNames(styles.title, {
@@ -23,6 +44,24 @@ const DesktopChat: FC<ChatProps> = (props) => {
           {chatItem.discussion.title}
         </p>
       </div>
+      <ChatComponent
+        commonMember={commonMember}
+        isCommonMemberFetched
+        isAuthorized={Boolean(user)}
+        type={
+          chatItem.proposal
+            ? ChatType.ProposalComments
+            : ChatType.DiscussionMessages
+        }
+        hasAccess={hasAccessToChat}
+        isHidden={false}
+        common={common}
+        discussion={chatItem.discussion}
+        proposal={chatItem.proposal}
+        feedItemId={chatItem.feedItemId}
+        titleHeight={73}
+        lastSeenItem={chatItem.lastSeenItem}
+      />
     </div>
   );
 };
