@@ -1,5 +1,7 @@
+@import "../../../../styles/sizes";
+
 .content {
-  --chat-w: 27rem;
+  --chat-w: 0rem;
 
   padding: 1rem calc(var(--chat-w) + 1.5rem) 0 1.5rem;
 
@@ -11,7 +13,40 @@
     }
   }
 }
+.contentWithChat {
+  --chat-w: 49.5rem;
+
+  @include viewport-breakpoint(1800px) {
+    --chat-w: 40rem;
+  }
+
+  @include viewport-breakpoint(1620px) {
+    --chat-w: 33rem;
+  }
+
+  @include viewport-breakpoint(1460px) {
+    --chat-w: 27rem;
+  }
+
+  @include viewport-breakpoint(1360px) {
+    --chat-w: 22rem;
+  }
+
+  @include viewport-breakpoint(1270px) {
+    --chat-w: 27rem;
+  }
+
+  @include viewport-breakpoint(1180px) {
+    --chat-w: 24rem;
+  }
+
+  @include tablet {
+    --chat-w: 0rem;
+  }
+}
 
 .desktopChat {
-  width: var(--chat-w, 27rem);
+  right: var(--sb-h-indent);
+  width: var(--chat-w, 22rem);
+  border-right: 0.0625rem solid $c-neutrals-200;
 }

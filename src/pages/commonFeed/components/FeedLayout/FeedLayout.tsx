@@ -1,4 +1,5 @@
 import React, { FC, ReactNode, useMemo, useState } from "react";
+import classNames from "classnames";
 import { ChatItem } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -58,7 +59,11 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
       isGlobalLoading={isGlobalLoading}
     >
       <ChatContext.Provider value={chatContextValue}>
-        <div className={styles.content}>
+        <div
+          className={classNames(styles.content, {
+            [styles.contentWithChat]: Boolean(chatItem),
+          })}
+        >
           <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
             {feedItems?.map((item) => (
               <FeedItem
@@ -72,15 +77,15 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
               />
             ))}
           </InfiniteScroll>
+          {chatItem && !isTabletView && (
+            <DesktopChat
+              className={styles.desktopChat}
+              chatItem={chatItem}
+              common={common}
+              commonMember={commonMember}
+            />
+          )}
         </div>
-        {chatItem && !isTabletView && (
-          <DesktopChat
-            className={styles.desktopChat}
-            chatItem={chatItem}
-            common={common}
-            commonMember={commonMember}
-          />
-        )}
       </ChatContext.Provider>
     </CommonSidenavLayoutPageContent>
   );
