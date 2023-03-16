@@ -54,6 +54,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
   return (
     <TreeContext.Provider value={contextValue}>
       <TreeItem
+        className={styles.parentItem}
         treeItemTriggerClassName={styles.parentItemTrigger}
         item={{
           ...parentItem,

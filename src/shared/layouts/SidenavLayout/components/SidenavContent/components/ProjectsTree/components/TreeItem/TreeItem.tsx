@@ -1,10 +1,12 @@
 import React, { FC, useState } from "react";
+import classNames from "classnames";
 import { Item } from "../../types";
 import { TreeItemTrigger } from "../TreeItemTrigger";
 import { getItemStyles } from "./utils";
 import styles from "./TreeItem.module.scss";
 
 interface TreeItemProps {
+  className?: string;
   treeItemTriggerClassName?: string;
   item: Item;
   level?: number;
@@ -13,6 +15,7 @@ interface TreeItemProps {
 
 const TreeItem: FC<TreeItemProps> = (props) => {
   const {
+    className,
     treeItemTriggerClassName,
     item,
     level = 1,
@@ -29,7 +32,7 @@ const TreeItem: FC<TreeItemProps> = (props) => {
 
   return (
     <li
-      className={styles.itemWrapper}
+      className={classNames(styles.itemWrapper, className)}
       style={itemStyles}
       role="treeitem"
       aria-selected={isActive}
