@@ -4,6 +4,7 @@ import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import { CommonFeed, Governance } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
 import { FeedItem } from "../../../common/components";
+import styles from "./FeedLayout.module.scss";
 
 interface FeedLayoutProps {
   headerContent: ReactNode;
@@ -34,19 +35,21 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
       headerContent={headerContent}
       isGlobalLoading={isGlobalLoading}
     >
-      <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
-        {feedItems?.map((item) => (
-          <FeedItem
-            key={item.id}
-            governanceId={governance.id}
-            commonId={commonId}
-            item={item}
-            governanceCircles={governance.circles}
-            isMobileVersion={isTabletView}
-            userCircleIds={userCircleIds}
-          />
-        ))}
-      </InfiniteScroll>
+      <div className={styles.content}>
+        <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
+          {feedItems?.map((item) => (
+            <FeedItem
+              key={item.id}
+              governanceId={governance.id}
+              commonId={commonId}
+              item={item}
+              governanceCircles={governance.circles}
+              isMobileVersion={isTabletView}
+              userCircleIds={userCircleIds}
+            />
+          ))}
+        </InfiniteScroll>
+      </div>
     </CommonSidenavLayoutPageContent>
   );
 };
