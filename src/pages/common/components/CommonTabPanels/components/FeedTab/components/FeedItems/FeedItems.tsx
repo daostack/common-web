@@ -1,9 +1,9 @@
 import React, { FC, useEffect } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { ViewportBreakpointVariant } from "@/shared/constants";
+import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Container, InfiniteScroll } from "@/shared/ui-kit";
-import { useCommonFeedItems } from "../../hooks";
 import { FeedItem } from "./component";
 import styles from "./FeedItems.module.scss";
 
