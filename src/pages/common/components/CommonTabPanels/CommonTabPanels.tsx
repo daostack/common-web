@@ -9,7 +9,7 @@ import {
 } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
 import { CommonTab } from "../../constants";
-import { AboutTab, FeedTab, WalletTab, MembersTab } from "./components";
+import { AboutTab, WalletTab, MembersTab } from "./components";
 
 interface CommonTabPanelsProps {
   activeTab: CommonTab;
@@ -40,14 +40,6 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
           limitations={
             governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE]?.limitations
           }
-        />
-      </TabPanel>
-      <TabPanel value={activeTab} panelValue={CommonTab.Feed}>
-        <FeedTab
-          activeTab={activeTab}
-          governance={governance}
-          commonMember={commonMember}
-          common={common}
         />
       </TabPanel>
       <TabPanel value={activeTab} panelValue={CommonTab.Wallet}>
