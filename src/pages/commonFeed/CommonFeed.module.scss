@@ -5,3 +5,15 @@
   justify-content: center;
   align-items: center;
 }
+
+.feedLayout {
+  padding-bottom: var(--layout-tabs-height);
+}
+
+.tabs {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: var(--safe-area-inset-bottom);
+}

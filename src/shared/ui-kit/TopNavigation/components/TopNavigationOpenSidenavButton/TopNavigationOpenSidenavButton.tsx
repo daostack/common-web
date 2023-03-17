@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from "react";
-import { SIDENAV_ID } from "@/shared/constants";
+import { openSidenav } from "@/shared/utils";
 import { TopNavigationBackButton } from "../TopNavigationBackButton";
 
 interface TopNavigationOpenSidenavButtonProps {
@@ -12,15 +12,11 @@ const TopNavigationOpenSidenavButton: FC<
 > = (props) => {
   const { className, iconEl } = props;
 
-  const handleOpen = () => {
-    window.location.hash = SIDENAV_ID;
-  };
-
   return (
     <TopNavigationBackButton
       className={className}
       iconEl={iconEl}
-      onClick={handleOpen}
+      onClick={openSidenav}
     />
   );
 };

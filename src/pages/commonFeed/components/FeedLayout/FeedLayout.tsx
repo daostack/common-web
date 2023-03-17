@@ -20,6 +20,7 @@ import { DesktopChat } from "./components";
 import styles from "./FeedLayout.module.scss";
 
 interface FeedLayoutProps {
+  className?: string;
   headerContent: ReactNode;
   isGlobalLoading?: boolean;
   common: Common;
@@ -32,6 +33,7 @@ interface FeedLayoutProps {
 
 const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const {
+    className,
     headerContent,
     isGlobalLoading,
     common,
@@ -65,9 +67,13 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     >
       <ChatContext.Provider value={chatContextValue}>
         <div
-          className={classNames(styles.content, {
-            [styles.contentWithChat]: Boolean(chatItem),
-          })}
+          className={classNames(
+            styles.content,
+            {
+              [styles.contentWithChat]: Boolean(chatItem),
+            },
+            className,
+          )}
         >
           <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
             {feedItems?.map((item) => (

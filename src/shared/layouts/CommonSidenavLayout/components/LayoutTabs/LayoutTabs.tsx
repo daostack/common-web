@@ -1,16 +1,15 @@
 import React, { CSSProperties, FC, ReactNode } from "react";
+import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Tab, Tabs } from "@/shared/components";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { InfoIcon, PeopleGroupIcon, WalletIcon } from "@/shared/icons";
+import { getInboxPagePath, openSidenav } from "@/shared/utils";
 import { LayoutTab } from "../../constants";
-import { getLayoutTabName } from "./utils";
+import { getActiveLayoutTab, getLayoutTabName } from "./utils";
 import styles from "./LayoutTabs.module.scss";
 
 interface LayoutTabsProps {
   className?: string;
-  activeTab: LayoutTab;
-  onTabChange: (tab: LayoutTab) => void;
 }
 
 interface TabConfiguration {
@@ -38,8 +37,9 @@ const TABS: TabConfiguration[] = [
 ];
 
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
-  const { className, activeTab, onTabChange } = props;
-  const isTabletView = useIsTabletView();
+  const { className } = props;
+  const history = useHistory();
+  const activeTab = getActiveLayoutTab(history.location.pathname);
   const tabs = TABS;
 
   const itemStyles = {
@@ -47,7 +47,21 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   } as CSSProperties;
 
   const handleTabChange = (value: unknown) => {
-    onTabChange(value as LayoutTab);
+    if (activeTab === value) {
+      return;
+    }
+
+    switch (value) {
+      case LayoutTab.Spaces:
+        openSidenav();
+        break;
+      case LayoutTab.Inbox:
+      case LayoutTab.Profile:
+        history.push(getInboxPagePath());
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -55,7 +69,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
       className={classNames(styles.tabs, className)}
       style={itemStyles}
       value={activeTab}
-      withIcons={isTabletView}
+      withIcons
       onChange={handleTabChange}
     >
       {tabs.map((tab) => (

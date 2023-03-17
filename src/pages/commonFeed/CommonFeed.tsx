@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
+import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { Loader, NotFound } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
 import { commonActions } from "@/store/states";
@@ -85,24 +86,28 @@ const CommonFeedPage: FC = () => {
   }
 
   return (
-    <FeedLayout
-      headerContent={
-        <HeaderContent
-          commonId={commonData.common.id}
-          commonName={commonData.common.name}
-          commonImage={commonData.common.image}
-          commonMembersAmount={commonData.commonMembersAmount}
-          isProject={checkIsProject(commonData.common)}
-        />
-      }
-      isGlobalLoading={!isGlobalDataFetched}
-      common={commonData.common}
-      governance={commonData.governance}
-      commonMember={commonMember}
-      feedItems={commonFeedItems}
-      loading={areCommonFeedItemsLoading}
-      onFetchNext={fetchMoreCommonFeedItems}
-    />
+    <>
+      <FeedLayout
+        className={styles.feedLayout}
+        headerContent={
+          <HeaderContent
+            commonId={commonData.common.id}
+            commonName={commonData.common.name}
+            commonImage={commonData.common.image}
+            commonMembersAmount={commonData.commonMembersAmount}
+            isProject={checkIsProject(commonData.common)}
+          />
+        }
+        isGlobalLoading={!isGlobalDataFetched}
+        common={commonData.common}
+        governance={commonData.governance}
+        commonMember={commonMember}
+        feedItems={commonFeedItems}
+        loading={areCommonFeedItemsLoading}
+        onFetchNext={fetchMoreCommonFeedItems}
+      />
+      <CommonSidenavLayoutTabs className={styles.tabs} />
+    </>
   );
 };
 

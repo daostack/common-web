@@ -5,11 +5,15 @@
   flex-shrink: unset;
   z-index: 2;
   height: var(--layout-tabs-height, 4rem);
-  display: grid;
+  display: none;
   grid-template-columns: repeat(var(--items-amount, 3), minmax(0, 1fr));
   background-color: $c-shades-white;
   border-top: 0.0625rem solid $c-neutrals-100;
   white-space: nowrap;
+
+  @include tablet {
+    display: grid;
+  }
 }
 
 .tab {
