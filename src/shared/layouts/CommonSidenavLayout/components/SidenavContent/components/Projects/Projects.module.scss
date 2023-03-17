@@ -1,4 +1,5 @@
 @import "../../../../../../../constants";
+@import "../../../../../../../styles/sizes";
 
 .projectsTree {
   box-sizing: border-box;
@@ -13,6 +14,10 @@
 
   &:hover {
     --bg-color: #{$c-pink-hover-feed-cards};
+  }
+
+  @include tablet {
+    height: 4rem;
   }
 }
 .projectsTreeItemTriggerActiveClassName {
