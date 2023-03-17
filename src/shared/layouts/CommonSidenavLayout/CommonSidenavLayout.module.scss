@@ -15,6 +15,7 @@
   --page-bg-color: #{$c-shades-white};
   --scroll-bg-color: #{$c-shades-white};
   --scroll-thumb-color: #{$c-neutrals-200};
+  --layout-tabs-height: 0rem;
 
   min-height: 100vh;
   height: 100%;
@@ -27,6 +28,7 @@
     --sb-max-width: 100%;
     --sb-width: 100%;
     --sb-content-width: 100%;
+    --layout-tabs-height: 4rem;
   }
 }
 .containerWithSidenav {
