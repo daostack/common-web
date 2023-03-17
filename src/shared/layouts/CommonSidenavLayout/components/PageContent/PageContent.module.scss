@@ -22,6 +22,7 @@
   box-sizing: border-box;
 
   @include tablet {
+    height: 3.25rem;
     background-color: $c-shades-white;
   }
 }
