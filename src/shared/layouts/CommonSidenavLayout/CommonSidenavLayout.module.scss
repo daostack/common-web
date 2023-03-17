@@ -42,6 +42,10 @@
 .sidenavContentWrapper {
   border-left: 0.0625rem solid $c-neutrals-200;
   border-right: 0.0625rem solid $c-neutrals-200;
+
+  @include tablet {
+    border: 0;
+  }
 }
 
 .sidenavContent {
