@@ -14,9 +14,25 @@
   }
 }
 
+.openSidenavButton {
+  display: none;
+
+  @include tablet {
+    display: flex;
+  }
+}
+
 .commonContent {
   display: flex;
   align-items: center;
+}
+
+.openSidenavIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.625rem;
+  transform: rotate(180deg);
+  color: $c-neutrals-600;
 }
 
 .image {

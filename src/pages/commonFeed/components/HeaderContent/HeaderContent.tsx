@@ -2,6 +2,8 @@ import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { Image } from "@/shared/components";
+import { RightArrowThinIcon } from "@/shared/icons";
+import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getCommonPageAboutTabPath } from "@/shared/utils";
 import styles from "./HeaderContent.module.scss";
 
@@ -27,6 +29,10 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.commonContent}>
+        <TopNavigationOpenSidenavButton
+          className={styles.openSidenavButton}
+          iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+        />
         <Image
           className={classNames(styles.image, {
             [styles.imageNonRounded]: !isProject,
