@@ -35,7 +35,8 @@ interface DiscussionFeedCardProps {
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const { activeItemDiscussionId, setChatItem } = useChatContext();
+  const { activeItemDiscussionId, setChatItem, feedItemIdForAutoChatOpen } =
+    useChatContext();
   const {
     item,
     governanceCircles,
@@ -129,6 +130,16 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       feedObjectId: item.id,
     });
   }, [userId, commonId, item.id]);
+
+  useEffect(() => {
+    if (
+      isDiscussionFetched &&
+      isFeedItemUserMetadataFetched &&
+      item.id === feedItemIdForAutoChatOpen
+    ) {
+      handleOpenChat();
+    }
+  }, [isDiscussionFetched, isFeedItemUserMetadataFetched]);
 
   if (isLoading) {
     return <LoadingFeedCard />;
