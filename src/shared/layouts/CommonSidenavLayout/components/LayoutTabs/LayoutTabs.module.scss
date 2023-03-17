@@ -2,7 +2,7 @@
 @import "../../../../../styles/sizes";
 
 .tabs {
-  flex-shrink: unset;
+  flex-shrink: 0;
   z-index: 2;
   height: var(--layout-tabs-height, 4rem);
   display: none;

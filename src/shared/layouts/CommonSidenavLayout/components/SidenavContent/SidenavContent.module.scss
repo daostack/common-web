@@ -50,15 +50,13 @@
   background-color: $c-neutrals-200;
 }
 
-.navigation {
-  @include tablet {
-    display: none;
-  }
-}
-
 .userInfoSeparator {
   @extend .separator;
 
+  margin-top: auto;
+}
+
+.layoutTabs {
   margin-top: auto;
 }
 
