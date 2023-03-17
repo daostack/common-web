@@ -1,6 +1,9 @@
 import React, { FC, ReactNode, useMemo, useState } from "react";
 import classNames from "classnames";
-import { ChatItem } from "@/pages/common/components/ChatComponent";
+import {
+  ChatContextValue,
+  ChatItem,
+} from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
@@ -44,13 +47,15 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
   );
+  const feedItemIdForAutoChatOpen = feedItems?.[0]?.id;
 
-  const chatContextValue = useMemo(
+  const chatContextValue = useMemo<ChatContextValue>(
     () => ({
       setChatItem,
       activeItemDiscussionId: chatItem?.discussion.id,
+      feedItemIdForAutoChatOpen,
     }),
-    [setChatItem, chatItem?.discussion.id],
+    [setChatItem, chatItem?.discussion.id, feedItemIdForAutoChatOpen],
   );
 
   return (
