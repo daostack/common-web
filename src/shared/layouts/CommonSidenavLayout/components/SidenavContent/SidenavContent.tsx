@@ -36,7 +36,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         logoSrc={commonLogoSrc}
       />
       {separatorEl}
-      <Navigation />
+      <Navigation className={styles.navigation} />
       <Projects />
       <div className={styles.userInfoSeparator} />
       <UserInfo

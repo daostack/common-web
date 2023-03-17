@@ -50,6 +50,12 @@
   background-color: $c-neutrals-200;
 }
 
+.navigation {
+  @include tablet {
+    display: none;
+  }
+}
+
 .userInfoSeparator {
   @extend .separator;
 
