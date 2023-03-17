@@ -24,7 +24,7 @@ $approved-bg-color: $secondary-green;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans-Bold, sans-serif;
     font-size: $xxsmall;
     font-weight: bold;
     color: $pending-color;
@@ -94,7 +94,7 @@ $approved-bg-color: $secondary-green;
     height: 2.75rem;
     margin: 0 0 1rem;
     display: -webkit-box;
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans-Bold, sans-serif;
     font-size: $small;
     font-weight: bold;
     text-align: center;
@@ -113,7 +113,7 @@ $approved-bg-color: $secondary-green;
   .trustee-proposal-card__price-wrapper {
     width: 8rem;
     padding: 10px 8px;
-    font-family: NunitoSans, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     white-space: nowrap;
     display: flex;
     flex-direction: column;
@@ -133,7 +133,7 @@ $approved-bg-color: $secondary-green;
 
   .trustee-proposal-card__price {
     margin-top: 8px;
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans-Bold, sans-serif;
     font-size: $moderate-med;
     font-weight: bold;
   }
@@ -155,7 +155,7 @@ $approved-bg-color: $secondary-green;
     height: unset;
     margin-top: 0.5rem;
     padding: 14px;
-    font-family: NunitoSans, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: $xsmall;
     font-weight: 600;
     color: $black;

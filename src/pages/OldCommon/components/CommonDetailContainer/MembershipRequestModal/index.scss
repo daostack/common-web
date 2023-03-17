@@ -18,7 +18,7 @@ $payment-iframe-height-mobile: 672px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans-Bold, sans-serif;
     font-size: $moderate;
     font-weight: bold;
     text-align: center;
@@ -62,7 +62,7 @@ $payment-iframe-height-mobile: 672px;
 
   .sub-title {
     font-weight: bold;
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans-Bold, sans-serif;
     margin-bottom: 0.2rem;
   }
 
@@ -102,7 +102,7 @@ $payment-iframe-height-mobile: 672px;
   &__title {
     font-size: $xlarge;
     color: $white;
-    font-family: NunitoSans-Bold;
+    font-family: PoppinsSans-Bold;
   }
   .illustrations-container {
     display: flex;
@@ -213,7 +213,7 @@ $payment-iframe-height-mobile: 672px;
 
   .membership-request-rules__rules-item-wrapper {
     margin-bottom: 0.875rem;
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans-Bold, sans-serif;
     font-size: $small;
     font-weight: bold;
     color: $secondary-blue;
@@ -243,7 +243,7 @@ $payment-iframe-height-mobile: 672px;
 
   .membership-request-rules__rules-item-description {
     margin: 0;
-    font-family: NunitoSans-Regular, sans-serif;
+    font-family: PoppinsSans-Regular, sans-serif;
     font-size: $xsmall;
     font-weight: normal;
   }
@@ -267,7 +267,7 @@ $payment-iframe-height-mobile: 672px;
     align-items: center;
 
     button {
-      font-family: NunitoSans-Regular;
+      font-family: PoppinsSans-Regular;
       border: 1px solid $light-gray-1;
       width: 350px;
       height: 60px;
@@ -314,7 +314,7 @@ $payment-iframe-height-mobile: 672px;
   .button-blue {
     font-weight: normal;
     min-width: 11.25rem;
-    font-family: NunitoSans-Regular;
+    font-family: PoppinsSans-Regular;
   }
 }
 
@@ -335,7 +335,7 @@ $payment-iframe-height-mobile: 672px;
 .membership-request-billing {
   .button-blue {
     font-weight: normal;
-    font-family: NunitoSans-Regular;
+    font-family: PoppinsSans-Regular;
     height: 48px;
   }
 
@@ -475,7 +475,7 @@ $payment-iframe-height-mobile: 672px;
   button {
     width: 11.25rem;
     height: 3rem;
-    font-family: NunitoSans-Regular, sans-serif;
+    font-family: PoppinsSans-Regular, sans-serif;
     font-size: $small;
     text-align: center;
     color: $secondary-blue;
