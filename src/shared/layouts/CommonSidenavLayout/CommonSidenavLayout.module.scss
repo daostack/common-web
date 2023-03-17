@@ -7,6 +7,7 @@
   --sb-max-width: unset;
   --sb-width: 21rem;
   --sb-content-max-width: 100%;
+  --sb-content-width: 100%;
   --sb-content-pb: 0;
   --sb-bg-color: #{$c-shades-white};
   --sb-easing: cubic-bezier(0.16, 1, 0.3, 1);
@@ -25,6 +26,7 @@
   @include tablet {
     --sb-max-width: 100%;
     --sb-width: 100%;
+    --sb-content-width: 100%;
   }
 }
 .containerWithSidenav {
