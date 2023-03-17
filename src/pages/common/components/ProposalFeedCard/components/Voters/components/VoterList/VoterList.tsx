@@ -29,7 +29,8 @@ export const VoterList: React.FC<VoterListProps> = (props) => {
   if (error) {
     return (
       <p className={styles.noVotesText}>
-        An error occurred while loading the voters
+        Oops! Something went wrong while loading the voters list. Please try
+        again later.
       </p>
     );
   }

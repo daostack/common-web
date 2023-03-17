@@ -3,7 +3,6 @@ import classNames from "classnames";
 import { Tab, Tabs } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
-  BlocksIcon,
   GovernanceIcon,
   InfoIcon,
   PeopleGroupIcon,
@@ -31,11 +30,6 @@ const TABS: TabConfiguration[] = [
     label: getCommonTabName(CommonTab.About),
     value: CommonTab.About,
     icon: <InfoIcon />,
-  },
-  {
-    label: getCommonTabName(CommonTab.Feed),
-    value: CommonTab.Feed,
-    icon: <BlocksIcon />,
   },
   {
     label: getCommonTabName(CommonTab.Wallet),

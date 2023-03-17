@@ -35,6 +35,7 @@ import {
   NewDiscussionCreation,
   NewProposalCreation,
 } from "./components";
+import { checkHasAccessToChat } from "./utils";
 import styles from "./FeedTab.module.scss";
 
 interface FeedTabProps {
@@ -63,18 +64,10 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
   const commonAction = useSelector(selectCommonAction);
   const allowedFeedActions = !commonAction ? [FeedAction.NewCollaboration] : [];
 
-  const hasAccessToChat = useMemo(() => {
-    if (!chatItem) {
-      return false;
-    }
-
-    return (
-      !chatItem.circleVisibility.length ||
-      chatItem.circleVisibility.some((circleId) =>
-        userCircleIds.includes(circleId),
-      )
-    );
-  }, [chatItem, userCircleIds]);
+  const hasAccessToChat = useMemo(
+    () => checkHasAccessToChat(userCircleIds, chatItem),
+    [chatItem, userCircleIds],
+  );
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>

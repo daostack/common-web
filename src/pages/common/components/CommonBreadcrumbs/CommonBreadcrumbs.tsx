@@ -14,12 +14,10 @@ interface CommonBreadcrumbsProps {
 const CommonBreadcrumbs: FC<CommonBreadcrumbsProps> = (props) => {
   const { activeTab } = props;
   const { common, parentCommons } = useCommonDataContext();
-  const commonAction = useSelector(selectCommonAction);
   const items: BreadcrumbItem[] = getBreadcrumbItems({
     activeTab,
     common,
     parentCommons,
-    commonAction,
   });
 
   return (

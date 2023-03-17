@@ -77,6 +77,32 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
       nextState.projects.push(payload);
     }),
   )
+  .handleAction(actions.updateCommonOrProject, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const commonItemIndex = nextState.commons.findIndex(
+        (item) => item.commonId === payload.commonId,
+      );
+
+      if (commonItemIndex > -1) {
+        nextState.commons[commonItemIndex] = {
+          ...nextState.commons[commonItemIndex],
+          ...payload,
+        };
+        return;
+      }
+
+      const projectItemIndex = nextState.projects.findIndex(
+        (item) => item.commonId === payload.commonId,
+      );
+
+      if (projectItemIndex > -1) {
+        nextState.projects[projectItemIndex] = {
+          ...nextState.projects[projectItemIndex],
+          ...payload,
+        };
+      }
+    }),
+  )
   .handleAction(actions.setCurrentCommonId, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.currentCommonId = payload;

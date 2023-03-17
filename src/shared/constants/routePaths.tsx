@@ -12,7 +12,6 @@ export enum ROUTE_PATHS {
   COMMON_SUPPORT = "/commons/:id/support",
   COMMON = "/commons/:id",
   COMMON_ABOUT_TAB = "/commons/:id/about",
-  COMMON_FEED_TAB = "/commons/:id/feed",
   COMMON_MEMBERS_TAB = "/commons/:id/members",
   COMMON_WALLET_TAB = "/commons/:id/wallet",
   PROJECT_CREATION = "/commons/:id/new-project",

@@ -21,7 +21,7 @@ const CommonSidenavLayout: FC = (props) => {
   const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
   const sidenavLeft = getSidenavLeft(width);
   const style = {
-    "--sb-left": `${sidenavLeft}px`,
+    "--sb-h-indent": `${sidenavLeft}px`,
   } as CSSProperties;
 
   const handleSidenavOpenToggle = useCallback(
