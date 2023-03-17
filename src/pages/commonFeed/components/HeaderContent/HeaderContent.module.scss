@@ -25,6 +25,7 @@
 .commonContent {
   display: flex;
   align-items: center;
+  overflow: hidden;
 }
 
 .openSidenavIcon {
@@ -56,6 +57,7 @@
 .commonInfoWrapper {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .commonName {
@@ -66,7 +68,11 @@
 }
 
 .commonLink {
+  display: block;
+  white-space: nowrap;
   text-decoration: none;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
   &:hover {
     color: $c-pink-primary;
@@ -79,6 +85,9 @@
   font-size: $xsmall;
   letter-spacing: 0.02em;
   color: $c-neutrals-300;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
   @include tablet {
     font-family: Poppins, sans-serif;
