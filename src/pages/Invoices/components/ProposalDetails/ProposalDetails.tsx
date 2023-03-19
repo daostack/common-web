@@ -47,7 +47,10 @@ export default function ProposalDetails({
           }`}</span>
         </span>
         <div className="submit-invoices-wrapper__description-content">
-          <span className="submit-invoices-wrapper__description">{`${proposal?.data.args.description}`}</span>
+          <span className="submit-invoices-wrapper__description">
+            {proposal &&
+              JSON.parse(proposal.data.args.description)[0].children[0].text}
+          </span>
           <span className="submit-invoices-wrapper__description-amount">
             {formatPrice(amount, { shouldMillify: true })}
           </span>
