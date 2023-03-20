@@ -7,10 +7,10 @@ import {
   ChatType,
   EntityTypes,
 } from "@/shared/constants";
-import { isRTL } from "@/shared/utils";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import { DiscussionMessage, User } from "@/shared/models";
+import { isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
 import { getModerationText } from "@/shared/utils/moderation";
 import { EditMessageInput } from "../EditMessageInput";
@@ -91,9 +91,13 @@ export default function ChatMessage({
         onClick={() => {
           scrollToRepliedMessage(discussionMessage.parentMessage?.id as string);
         }}
-        className={styles.replyMessageContainer}
+        className={classNames(styles.replyMessageContainer, {
+          [styles.replyMessageContainerCurrentUser]: !isNotCurrentUserMessage,
+        })}
       >
-        <div className={styles.messageName}>
+        <div
+          className={classNames(styles.messageName, styles.replyMessageName)}
+        >
           {discussionMessage.parentMessage?.ownerName}
         </div>
         <div
@@ -106,7 +110,11 @@ export default function ChatMessage({
         </div>
       </div>
     );
-  }, [discussionMessage.parentMessage, hasPermissionToHide]);
+  }, [
+    discussionMessage.parentMessage,
+    hasPermissionToHide,
+    isNotCurrentUserMessage,
+  ]);
 
   return (
     <li
@@ -142,12 +150,13 @@ export default function ChatMessage({
             })}
             onClick={handleMessageClick}
           >
-            <ReplyMessage />
             {isNotCurrentUserMessage && (
               <div className={styles.messageName}>
                 {getUserName(discussionMessage.owner)}
               </div>
             )}
+            <ReplyMessage />
+
             <div className={styles.messageContent}>
               <Linkify>{discussionMessage.text}</Linkify>
               <div className={styles.timeWrapperContainer}>
