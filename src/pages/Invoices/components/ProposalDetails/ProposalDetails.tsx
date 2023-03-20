@@ -2,6 +2,7 @@ import React from "react";
 import ApprovedIcon from "@/shared/icons/voteFor.icon";
 import { PaymentAmount, Currency, Proposal, User } from "@/shared/models";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
+import { parseStringToTextEditorValue, TextEditor } from "@/shared/ui-kit";
 import { formatEpochTime, formatPrice } from "@/shared/utils";
 import { AddInvoices } from "../AddInvoices";
 import "./index.scss";
@@ -48,8 +49,12 @@ export default function ProposalDetails({
         </span>
         <div className="submit-invoices-wrapper__description-content">
           <span className="submit-invoices-wrapper__description">
-            {proposal &&
-              JSON.parse(proposal.data.args.description)[0].children[0].text}
+            <TextEditor
+              value={parseStringToTextEditorValue(
+                proposal?.data.args.description,
+              )}
+              readOnly
+            />
           </span>
           <span className="submit-invoices-wrapper__description-amount">
             {formatPrice(amount, { shouldMillify: true })}
