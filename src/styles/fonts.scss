@@ -3,7 +3,7 @@ $notoSerifSCFontName: "NotoSerifSC";
 $assistantFontName: "Assistant";
 $heeboFontName: "Heebo";
 $lexendFontName: "Lexend";
-$poppinsFontName: "Poppins";
+$poppinsSansFontName: "PoppinsSans";
 
 $trueTypeFontFormat: "truetype";
 $openTypeFontFormat: "opentype";
@@ -141,15 +141,15 @@ $openTypeFontFormat: "opentype";
 
 // Poppins
 @font-face {
-  font-family: $poppinsFontName;
-  src: local($poppinsFontName),
+  font-family: $poppinsSansFontName;
+  src: local($poppinsSansFontName),
     url("/shared/assets/fonts/Poppins-Regular.ttf") format($trueTypeFontFormat);
   font-weight: normal;
 }
 
 @font-face {
-  font-family: $poppinsFontName;
-  src: local($poppinsFontName),
+  font-family: $poppinsSansFontName;
+  src: local($poppinsSansFontName),
     url("/shared/assets/fonts/Poppins-Medium.ttf") format($trueTypeFontFormat);
   font-weight: 500;
 }
