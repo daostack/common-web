@@ -17,7 +17,7 @@ import {
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
 import { FeedItem } from "../../../common/components";
-import { DesktopChat } from "./components";
+import { DesktopChat, MobileChat } from "./components";
 import styles from "./FeedLayout.module.scss";
 
 interface FeedLayoutProps {
@@ -100,6 +100,13 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
           {chatItem && !isTabletView && (
             <DesktopChat
               className={styles.desktopChat}
+              chatItem={chatItem}
+              common={common}
+              commonMember={commonMember}
+            />
+          )}
+          {isTabletView && (
+            <MobileChat
               chatItem={chatItem}
               common={common}
               commonMember={commonMember}
