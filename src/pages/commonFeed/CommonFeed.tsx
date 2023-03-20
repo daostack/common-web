@@ -88,6 +88,7 @@ const CommonFeedPage: FC = () => {
         <div className={styles.centerWrapper}>
           <NotFound />
         </div>
+        <CommonSidenavLayoutTabs className={styles.tabs} />
       </>
     );
   }
