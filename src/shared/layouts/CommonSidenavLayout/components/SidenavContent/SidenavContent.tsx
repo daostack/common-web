@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
 import commonLogoSrc from "@/shared/assets/images/logo-sidenav-2.svg";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { CommonSidenavLayoutTab } from "@/shared/layouts";
 import { CommonLogo } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import {
@@ -41,7 +42,12 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
       {separatorEl}
       {!isTabletView && <Navigation />}
       <Projects />
-      {isTabletView && <LayoutTabs className={styles.layoutTabs} />}
+      {isTabletView && (
+        <LayoutTabs
+          className={styles.layoutTabs}
+          activeTab={CommonSidenavLayoutTab.Spaces}
+        />
+      )}
       {!isTabletView && (
         <>
           <div className={styles.userInfoSeparator} />

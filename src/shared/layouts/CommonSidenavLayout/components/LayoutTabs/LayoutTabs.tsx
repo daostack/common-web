@@ -10,6 +10,7 @@ import styles from "./LayoutTabs.module.scss";
 
 interface LayoutTabsProps {
   className?: string;
+  activeTab?: LayoutTab;
 }
 
 interface TabConfiguration {
@@ -39,7 +40,8 @@ const TABS: TabConfiguration[] = [
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
   const history = useHistory();
-  const activeTab = getActiveLayoutTab(history.location.pathname);
+  const activeTab =
+    props.activeTab || getActiveLayoutTab(history.location.pathname);
   const tabs = TABS;
 
   const itemStyles = {
