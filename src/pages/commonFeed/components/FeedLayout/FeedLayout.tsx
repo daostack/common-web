@@ -11,15 +11,17 @@ import {
   CirclesPermissions,
   Common,
   CommonFeed,
+  CommonFeedType,
   CommonMember,
   Governance,
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
 import { FeedItem } from "../../../common/components";
-import { DesktopChat } from "./components";
+import { DesktopChat, MobileChat } from "./components";
 import styles from "./FeedLayout.module.scss";
 
 interface FeedLayoutProps {
+  className?: string;
   headerContent: ReactNode;
   isGlobalLoading?: boolean;
   common: Common;
@@ -32,6 +34,7 @@ interface FeedLayoutProps {
 
 const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const {
+    className,
     headerContent,
     isGlobalLoading,
     common,
@@ -47,7 +50,19 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
   );
-  const feedItemIdForAutoChatOpen = feedItems?.[0]?.id;
+  const feedItemIdForAutoChatOpen = useMemo(() => {
+    if (isTabletView) {
+      return;
+    }
+
+    const feedItem = feedItems?.find((item) =>
+      [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
+        item.data.type,
+      ),
+    );
+
+    return feedItem?.id;
+  }, [feedItems, isTabletView]);
 
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
@@ -65,9 +80,13 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     >
       <ChatContext.Provider value={chatContextValue}>
         <div
-          className={classNames(styles.content, {
-            [styles.contentWithChat]: Boolean(chatItem),
-          })}
+          className={classNames(
+            styles.content,
+            {
+              [styles.contentWithChat]: Boolean(chatItem),
+            },
+            className,
+          )}
         >
           <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
             {feedItems?.map((item) => (
@@ -85,6 +104,13 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
           {chatItem && !isTabletView && (
             <DesktopChat
               className={styles.desktopChat}
+              chatItem={chatItem}
+              common={common}
+              commonMember={commonMember}
+            />
+          )}
+          {isTabletView && (
+            <MobileChat
               chatItem={chatItem}
               common={common}
               commonMember={commonMember}

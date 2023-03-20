@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
-import { Loader, NotFound } from "@/shared/ui-kit";
+import { RightArrowThinIcon } from "@/shared/icons";
+import { CommonSidenavLayoutTabs } from "@/shared/layouts";
+import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
 import { commonActions } from "@/store/states";
 import { FeedLayout, HeaderContent } from "./components";
@@ -78,31 +80,42 @@ const CommonFeedPage: FC = () => {
   }
   if (!commonData) {
     return (
-      <div className={styles.centerWrapper}>
-        <NotFound />
-      </div>
+      <>
+        <PureCommonTopNavigation
+          className={styles.pureCommonTopNavigation}
+          iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+        />
+        <div className={styles.centerWrapper}>
+          <NotFound />
+        </div>
+        <CommonSidenavLayoutTabs className={styles.tabs} />
+      </>
     );
   }
 
   return (
-    <FeedLayout
-      headerContent={
-        <HeaderContent
-          commonId={commonData.common.id}
-          commonName={commonData.common.name}
-          commonImage={commonData.common.image}
-          commonMembersAmount={commonData.commonMembersAmount}
-          isProject={checkIsProject(commonData.common)}
-        />
-      }
-      isGlobalLoading={!isGlobalDataFetched}
-      common={commonData.common}
-      governance={commonData.governance}
-      commonMember={commonMember}
-      feedItems={commonFeedItems}
-      loading={areCommonFeedItemsLoading}
-      onFetchNext={fetchMoreCommonFeedItems}
-    />
+    <>
+      <FeedLayout
+        className={styles.feedLayout}
+        headerContent={
+          <HeaderContent
+            commonId={commonData.common.id}
+            commonName={commonData.common.name}
+            commonImage={commonData.common.image}
+            commonMembersAmount={commonData.commonMembersAmount}
+            isProject={checkIsProject(commonData.common)}
+          />
+        }
+        isGlobalLoading={!isGlobalDataFetched}
+        common={commonData.common}
+        governance={commonData.governance}
+        commonMember={commonMember}
+        feedItems={commonFeedItems}
+        loading={areCommonFeedItemsLoading}
+        onFetchNext={fetchMoreCommonFeedItems}
+      />
+      <CommonSidenavLayoutTabs className={styles.tabs} />
+    </>
   );
 };
 

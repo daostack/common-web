@@ -7,6 +7,7 @@
   --sb-max-width: unset;
   --sb-width: 21rem;
   --sb-content-max-width: 100%;
+  --sb-content-width: 100%;
   --sb-content-pb: 0;
   --sb-bg-color: #{$c-shades-white};
   --sb-easing: cubic-bezier(0.16, 1, 0.3, 1);
@@ -14,6 +15,7 @@
   --page-bg-color: #{$c-shades-white};
   --scroll-bg-color: #{$c-shades-white};
   --scroll-thumb-color: #{$c-neutrals-200};
+  --layout-tabs-height: 0rem;
 
   min-height: 100vh;
   height: 100%;
@@ -25,6 +27,8 @@
   @include tablet {
     --sb-max-width: 100%;
     --sb-width: 100%;
+    --sb-content-width: 100%;
+    --layout-tabs-height: 4rem;
   }
 }
 .containerWithSidenav {
@@ -40,6 +44,10 @@
 .sidenavContentWrapper {
   border-left: 0.0625rem solid $c-neutrals-200;
   border-right: 0.0625rem solid $c-neutrals-200;
+
+  @include tablet {
+    border: 0;
+  }
 }
 
 .sidenavContent {

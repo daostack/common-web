@@ -21,6 +21,17 @@
   --logo-left-indent: 1.75rem;
 
   background-color: $c-light-gray-2;
+
+  @include tablet {
+    --logo-top-indent: 0;
+    --logo-right-indent: 0;
+    --logo-left-indent: 0;
+    --logo-bottom-indent: 0;
+
+    height: 3.25rem;
+    align-items: center;
+    background-color: $c-shades-white;
+  }
 }
 
 .commonLogo {
@@ -42,6 +53,10 @@
 .userInfoSeparator {
   @extend .separator;
 
+  margin-top: auto;
+}
+
+.layoutTabs {
   margin-top: auto;
 }
 

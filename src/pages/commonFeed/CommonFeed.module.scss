@@ -1,7 +1,33 @@
+@import "../../constants";
+
 .centerWrapper {
   flex: 1;
   padding: 1rem 0;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.pureCommonTopNavigation {
+  height: 3.25rem;
+}
+
+.openSidenavIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.625rem;
+  transform: rotate(180deg);
+  color: $c-neutrals-600;
+}
+
+.feedLayout {
+  padding-bottom: var(--layout-tabs-height);
+}
+
+.tabs {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: var(--safe-area-inset-bottom);
 }
