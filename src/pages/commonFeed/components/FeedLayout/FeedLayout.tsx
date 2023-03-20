@@ -51,6 +51,10 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     [commonMember?.circles.map],
   );
   const feedItemIdForAutoChatOpen = useMemo(() => {
+    if (isTabletView) {
+      return;
+    }
+
     const feedItem = feedItems?.find((item) =>
       [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
         item.data.type,
@@ -58,7 +62,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     );
 
     return feedItem?.id;
-  }, [feedItems]);
+  }, [feedItems, isTabletView]);
 
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
