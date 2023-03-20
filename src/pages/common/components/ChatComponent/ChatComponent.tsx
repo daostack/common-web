@@ -308,7 +308,7 @@ export default function ChatComponent({
 
   const chatWrapperStyle = useMemo(() => {
     if (isTabletView) {
-      return { height: `calc(100% - 48px)` };
+      return { height: `calc(100% - ${48 + height}px)` };
     }
 
     return { height: `calc(100% - ${52 + height}px - ${titleHeight}px)` };

@@ -39,7 +39,7 @@
     .proposal-item__description {
       display: flex;
       justify-content: space-between;
-      font-family: NunitoSans, sans-serif;
+      font-family: PoppinsSans, sans-serif;
       font-weight: bold;
       font-size: $xsmall;
       height: 2.5rem;
@@ -94,7 +94,7 @@
         align-items: flex-end;
 
         .amount {
-          font-family: NunitoSans, sans-serif;
+          font-family: PoppinsSans, sans-serif;
           font-weight: bold;
           font-size: $xsmall;
         }
@@ -136,7 +136,7 @@
         display: flex;
         cursor: pointer;
         color: $purple-2;
-        font-family: NunitoSans, sans-serif;
+        font-family: PoppinsSans, sans-serif;
         font-weight: bold;
         font-size: $xsmall;
         width: 41%;

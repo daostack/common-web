@@ -17,7 +17,7 @@ $max-content-width: 36.125rem;
 
     @include big-phone {
       padding: 1.5rem 0;
-      font-family: NunitoSans, sans-serif;
+      font-family: PoppinsSans, sans-serif;
       font-weight: bold;
       font-size: $moderate;
       line-height: 100%;
@@ -68,7 +68,7 @@ $max-content-width: 36.125rem;
 
   .proposal-page-votes-modal__tab {
     padding-bottom: 0.375rem;
-    font-family: NunitoSans, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: $xsmall;
     font-weight: 600;
     line-height: 143%;
