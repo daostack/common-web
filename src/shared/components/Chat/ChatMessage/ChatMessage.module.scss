@@ -44,7 +44,7 @@
 }
 
 .messageText {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0rem;
   border-radius: 0.875rem;
   background-color: $c-light-gray;
   flex-direction: row;
@@ -68,6 +68,8 @@
   font-size: $xsmall;
   font-weight: bold;
   color: $secondary-blue;
+  margin-right: 1rem;
+  margin-left: 1rem;
   margin-bottom: 0.5rem;
 }
 
@@ -76,6 +78,8 @@
   color: $secondary-blue;
   word-wrap: break-word;
   white-space: pre-line;
+  margin-right: 1rem;
+  margin-left: 1rem;
 }
 
 .timeWrapperContainer {
@@ -106,18 +110,31 @@
 }
 
 .replyMessageContainer {
-  padding: 0.375rem 1.125rem;
-  background-color: #d2d8ff;
-  margin-right: 2.5rem;
   margin-bottom: 0.3125rem;
-  border-radius: 0.875rem;
   cursor: pointer;
+  border-bottom: 1px solid $c-neutrals-200;
+  border-top: 1px solid $c-neutrals-200;
+}
 
-  .replyMessageContent {
-    line-height: 1.5rem;
-    max-height: 3rem;
-    overflow: hidden;
-  }
+.replyMessageContainerCurrentUser {
+  border-bottom: 1px solid $c-neutrals-300;
+  border-top: 1px solid $c-neutrals-300;
+}
+
+.replyMessageName {
+  font-size: $xxsmall;
+  color: $c-neutrals-300;
+  margin-bottom: 0.2rem;
+  margin-top: 0.4rem;
+}
+
+.replyMessageContent {
+  color: $c-neutrals-300;
+  font-size: $xxsmall;
+  margin-bottom: 0.4rem;
+  line-height: 0.75rem;
+  max-height: 3rem;
+  overflow: hidden;
 }
 
 .dropdownMenu {

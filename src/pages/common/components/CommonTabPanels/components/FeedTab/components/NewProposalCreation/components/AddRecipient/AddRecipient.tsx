@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import { useSelector } from "react-redux";
 import { useFormikContext } from "formik";
 import {
   createColumnHelper,
@@ -6,10 +7,12 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { RecipientType } from "@/shared/constants";
+import { RecipientType, ScreenSize } from "@/shared/constants";
 import { PlusIcon } from "@/shared/icons";
+import { Edit2Icon } from "@/shared/icons";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { Common, CommonMemberWithUserInfo } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
 import { AddRecipientModal } from "../AddRecipientModal";
 import { FormValues } from "../AddRecipientModal/AddRecipientModal";
@@ -19,7 +22,8 @@ export type Recipient = {
   recipient: string;
   amount: number | null;
   currency: string | null;
-  goalOfPayment: string;
+  goalOfPayment: React.ReactNode;
+  edit: React.ReactNode;
 };
 
 const defaultData: Recipient[] = [
@@ -27,13 +31,14 @@ const defaultData: Recipient[] = [
     recipient: "",
     amount: null,
     currency: null,
-    goalOfPayment: "",
+    goalOfPayment: null,
+    edit: null,
   },
 ];
 
 const columnHelper = createColumnHelper<Recipient>();
 
-const columns = [
+const baseColumns = [
   columnHelper.accessor("recipient", {
     header: () => "Recipient",
     cell: (info) => info.getValue(),
@@ -45,6 +50,9 @@ const columns = [
     cell: (info) => info.getValue(),
     size: 70,
   }),
+];
+
+const dekstopColumns = [
   columnHelper.accessor("currency", {
     header: () => "Currency",
     cell: (info) => info.renderValue(),
@@ -55,6 +63,10 @@ const columns = [
     header: () => "Goal of payment",
     cell: (info) => info.renderValue(),
   }),
+  columnHelper.accessor("edit", {
+    header: () => "",
+    cell: (info) => info.renderValue(),
+  }),
 ];
 
 const AddRecipient: FC = () => {
@@ -62,6 +74,12 @@ const AddRecipient: FC = () => {
   const [isOpen, setOpen] = useState(false);
   const [data, setData] = useState(() => [...defaultData]);
   const [recipientData, setRecipientData] = useState<FormValues>();
+  const screenSize = useSelector(getScreenSize());
+  const isDesktopView = screenSize === ScreenSize.Desktop;
+
+  const columns = isDesktopView
+    ? baseColumns.concat(dekstopColumns)
+    : baseColumns;
 
   const isFilledTable = !!recipientData;
   const iconEl = <PlusIcon className={styles.icon} strokeWidth={2} />;
@@ -91,7 +109,10 @@ const AddRecipient: FC = () => {
         recipient,
         amount: values.amount ?? 0,
         currency: values.currency!.label,
-        goalOfPayment: values.goalOfPayment,
+        goalOfPayment: (
+          <div className={styles.goalCell}>{values.goalOfPayment}</div>
+        ),
+        edit: <Edit2Icon className={styles.editIcon} />,
       },
     ]);
     setFieldValue("recipientInfo", {
