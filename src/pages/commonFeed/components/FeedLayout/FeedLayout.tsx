@@ -11,6 +11,7 @@ import {
   CirclesPermissions,
   Common,
   CommonFeed,
+  CommonFeedType,
   CommonMember,
   Governance,
 } from "@/shared/models";
@@ -49,7 +50,15 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
   );
-  const feedItemIdForAutoChatOpen = feedItems?.[0]?.id;
+  const feedItemIdForAutoChatOpen = useMemo(() => {
+    const feedItem = feedItems?.find((item) =>
+      [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
+        item.data.type,
+      ),
+    );
+
+    return feedItem?.id;
+  }, [feedItems]);
 
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
