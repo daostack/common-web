@@ -6,7 +6,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: PoppinsSans-Bold, sans-serif;
+  font-family: PoppinsSans, sans-serif;
+  font-weight: bold;
   .loader {
     position: absolute;
   }

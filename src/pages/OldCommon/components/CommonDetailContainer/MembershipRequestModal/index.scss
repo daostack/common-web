@@ -18,7 +18,7 @@ $payment-iframe-height-mobile: 672px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: PoppinsSans-Bold, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: $moderate;
     font-weight: bold;
     text-align: center;
@@ -62,7 +62,7 @@ $payment-iframe-height-mobile: 672px;
 
   .sub-title {
     font-weight: bold;
-    font-family: PoppinsSans-Bold, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     margin-bottom: 0.2rem;
   }
 
@@ -102,7 +102,8 @@ $payment-iframe-height-mobile: 672px;
   &__title {
     font-size: $xlarge;
     color: $white;
-    font-family: PoppinsSans-Bold;
+    font-family: PoppinsSans, sans-serif;
+    font-weight: bold;
   }
   .illustrations-container {
     display: flex;
@@ -213,7 +214,7 @@ $payment-iframe-height-mobile: 672px;
 
   .membership-request-rules__rules-item-wrapper {
     margin-bottom: 0.875rem;
-    font-family: PoppinsSans-Bold, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: $small;
     font-weight: bold;
     color: $secondary-blue;
