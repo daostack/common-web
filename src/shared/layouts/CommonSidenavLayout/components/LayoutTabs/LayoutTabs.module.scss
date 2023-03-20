@@ -22,8 +22,8 @@
   --tab-fw: 600;
   --tab-fs: #{$small};
   --tab-inactive-color: #{$c-neutrals-300};
-  --tab-inactive-hover-color: #{$c-neutrals-600};
-  --tab-active-color: #{$c-neutrals-600};
+  --tab-inactive-hover-color: #{$c-pink-primary};
+  --tab-active-color: #{$c-pink-primary};
 
   @include tablet {
     --tab-ml: 0;
@@ -38,4 +38,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.avatarIcon {
+  width: 1.5rem;
+  height: 1.5rem;
 }

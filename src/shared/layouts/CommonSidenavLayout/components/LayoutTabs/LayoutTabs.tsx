@@ -2,7 +2,7 @@ import React, { CSSProperties, FC, ReactNode } from "react";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Tab, Tabs } from "@/shared/components";
-import { InfoIcon, PeopleGroupIcon, WalletIcon } from "@/shared/icons";
+import { Avatar2Icon, InboxIcon, Hamburger2Icon } from "@/shared/icons";
 import { getInboxPagePath, openSidenav } from "@/shared/utils";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
@@ -23,17 +23,17 @@ const TABS: TabConfiguration[] = [
   {
     label: getLayoutTabName(LayoutTab.Spaces),
     value: LayoutTab.Spaces,
-    icon: <InfoIcon />,
+    icon: <Hamburger2Icon />,
   },
   {
     label: getLayoutTabName(LayoutTab.Inbox),
     value: LayoutTab.Inbox,
-    icon: <WalletIcon />,
+    icon: <InboxIcon />,
   },
   {
     label: getLayoutTabName(LayoutTab.Profile),
     value: LayoutTab.Profile,
-    icon: <PeopleGroupIcon />,
+    icon: <Avatar2Icon className={styles.avatarIcon} color="currentColor" />,
   },
 ];
 
