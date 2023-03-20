@@ -26,12 +26,12 @@ const JoinProjectForm: FC<PropsWithChildren<JoinProjectFormProps>> = (
 
   return (
     <>
-      <p className={styles.title}>Project membership intro</p>
+      <p className={styles.title}>Space membership intro</p>
       <textarea
         className={styles.input}
         value={message}
         onChange={handleChangeMessage}
-        placeholder="Here is the place to introduce yourself in the context of this project"
+        placeholder="Here is the place to introduce yourself in the context of this space"
       />
       <div className={styles.buttonContainer}>
         <Button className={styles.cancelButton} onClick={onClose}>
@@ -42,7 +42,7 @@ const JoinProjectForm: FC<PropsWithChildren<JoinProjectFormProps>> = (
           className={styles.confirmButton}
           onClick={handleRequestToJoin}
         >
-          {isJoinMemberAdmittanceRequest ? "Request to join" : "Join project"}
+          {isJoinMemberAdmittanceRequest ? "Request to join" : "Join space"}
         </Button>
       </div>
     </>

@@ -43,13 +43,13 @@ const getInitialValues = (
     projectImages: initialCommon
       ? [
           {
-            id: "project_image",
-            title: "project_image",
+            id: "space_image",
+            title: "space_image",
             file: initialCommon.image,
           },
         ]
       : [],
-    projectName: initialCommon?.name || "",
+    spaceName: initialCommon?.name || "",
     byline: initialCommon?.byline || "",
     description: parseStringToTextEditorValue(initialCommon?.description),
     videoUrl: initialCommon?.video?.value || "",
@@ -118,7 +118,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     updateProject({
       ...values,
       image,
-      name: values.projectName,
+      name: values.spaceName,
     });
   };
 
@@ -153,7 +153,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         initialValues={initialValues}
         onSubmit={isEditing ? handleProjectUpdate : handleProjectCreate}
         items={CONFIGURATION}
-        submitButtonText={isEditing ? "Save changes" : "Create Project"}
+        submitButtonText={isEditing ? "Save changes" : "Create Space"}
         disabled={isLoading}
         error={error}
       />

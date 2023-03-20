@@ -15,7 +15,7 @@ const MainStep: FC<MainStepProps> = (props) => {
   const { isLoading, errorText, onLeave, onCancel, isSubCommon } = props;
   const [isApproved, setIsApproved] = useState(false);
   const isLeaveButtonDisabled = isLoading || !isApproved;
-  const commonWord = isSubCommon ? "Project" : "Common";
+  const commonWord = isSubCommon ? "Space" : "Common";
 
   const handleApprovalChange = () => {
     setIsApproved((value) => !value);

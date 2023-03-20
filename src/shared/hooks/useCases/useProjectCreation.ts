@@ -49,7 +49,7 @@ export const useProjectCreation = (): Return => {
         ]);
         const links = parseLinksForSubmission(creationData.links || []);
         const payload: CreateProjectPayload = {
-          name: creationData.projectName,
+          name: creationData.spaceName,
           byline: creationData.byline,
           description: creationData.description
             ? JSON.stringify(creationData.description)
@@ -58,7 +58,7 @@ export const useProjectCreation = (): Return => {
           gallery,
           video: creationData.videoUrl
             ? {
-                title: `Project ${creationData.projectName} Video`,
+                title: `Space ${creationData.spaceName} Video`,
                 value: creationData.videoUrl,
               }
             : undefined,
@@ -74,7 +74,7 @@ export const useProjectCreation = (): Return => {
         const errorMessage =
           isRequestError(error) &&
           error.response?.data?.errorCode === ErrorCode.ArgumentDuplicatedError
-            ? `Project with name "${creationData.projectName}" already exists`
+            ? `Space with name "${creationData.spaceName}" already exists`
             : "Something went wrong...";
 
         Logger.error(error);

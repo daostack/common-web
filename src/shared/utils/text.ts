@@ -1,3 +1,3 @@
 export function commonTypeText(isSubCommon: boolean) {
-  return isSubCommon ? "Project" : "Common";
+  return isSubCommon ? "Space" : "Common";
 }

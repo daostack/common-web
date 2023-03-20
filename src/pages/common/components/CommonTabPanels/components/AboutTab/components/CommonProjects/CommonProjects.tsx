@@ -69,7 +69,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
           ViewportBreakpointVariant.Phone,
         ]}
       >
-        Projects
+        Spaces
       </Container>
       <ul
         className={classNames(

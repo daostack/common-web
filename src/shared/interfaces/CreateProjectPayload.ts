@@ -17,7 +17,7 @@ export interface CreateProjectPayload {
 
 export interface IntermediateCreateProjectPayload {
   projectImages: UploadFile[];
-  projectName: string;
+  spaceName: string;
   byline: string;
   description: TextEditorValue;
   videoUrl: string;

@@ -25,7 +25,7 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
     details = [],
     isProject = false,
     withJoin = true,
-    joinButtonText = isProject ? "Join the project" : "Join the effort",
+    joinButtonText = isProject ? "Join the space" : "Join the effort",
   } = props;
   const { isJoinAllowed, onJoinCommon } = useCommonDataContext();
   const isTabletView = useIsTabletView();
