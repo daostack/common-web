@@ -6,6 +6,7 @@ export interface Item {
   name: string;
   path: string;
   hasMembership?: boolean;
+  hasPermissionToAddProject?: boolean;
   notificationsAmount?: number;
   rightContent?: ReactNode;
   items?: Item[];

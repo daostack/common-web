@@ -39,6 +39,7 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
             styles.itemActive,
             treeItemTriggerStyles?.containerActive,
           )]: isActive,
+          [styles.itemWithoutMembership]: !hasMembership,
         },
         className,
         treeItemTriggerStyles?.container,
@@ -77,15 +78,7 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
         alt={`${item.name}'s image`}
         aria-hidden
       />
-      <span
-        className={classNames(
-          styles.name,
-          {
-            [styles.nameWithoutMembership]: !hasMembership,
-          },
-          treeItemTriggerStyles?.name,
-        )}
-      >
+      <span className={classNames(styles.name, treeItemTriggerStyles?.name)}>
         {item.name}
       </span>
       {item.rightContent}

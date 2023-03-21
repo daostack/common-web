@@ -1,10 +1,12 @@
 import React, { FC, useMemo } from "react";
+import { BoldPlusIcon } from "@/shared/icons";
 import { Loader } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
 import { Scrollbar } from "../../../../../SidenavLayout/components/SidenavContent";
 import {
   Item,
   ProjectsTreeProps as BaseProjectsTreeProps,
+  PlaceholderTreeItem,
   TreeContext,
   TreeContextValue,
   TreeItem,
@@ -66,6 +68,14 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
       />
       <Scrollbar>
         <TreeRecursive className={className} items={items} level={2} />
+        {parentItem.hasPermissionToAddProject && (
+          <PlaceholderTreeItem
+            className={styles.addProjectItem}
+            name="Add a space"
+            level={2}
+            icon={<BoldPlusIcon className={styles.plusIcon} />}
+          />
+        )}
         {isLoading && <Loader className={styles.loader} />}
       </Scrollbar>
     </TreeContext.Provider>
