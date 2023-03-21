@@ -4,6 +4,7 @@ import React, {
   ReactElement,
   ReactNode,
 } from "react";
+import classNames from "classnames";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { UserAvatar } from "@/shared/components/UserAvatar";
 import styles from "./Content.module.scss";
@@ -13,11 +14,18 @@ interface Element {
   div: HTMLDivElement;
 }
 
+export interface ContentStyles {
+  container?: string;
+  userAvatar?: string;
+  userName?: string;
+}
+
 interface ContentProps<T> {
   as?: T;
   avatarURL?: string;
   userName?: string;
   leftSideEl?: ReactNode;
+  styles?: ContentStyles;
 }
 
 function Content<T extends keyof Element>(
@@ -29,20 +37,27 @@ function Content<T extends keyof Element>(
     avatarURL = avatarPlaceholderSrc,
     userName,
     leftSideEl,
+    styles: outerStyles,
     ...restProps
   } = props;
   const Tag = as;
 
   return (
     // @ts-ignore
-    <Tag ref={ref} className={styles.menuButton} {...restProps}>
+    <Tag
+      ref={ref}
+      className={classNames(styles.menuButton, outerStyles?.container)}
+      {...restProps}
+    >
       <UserAvatar
-        className={styles.avatar}
+        className={classNames(styles.avatar, outerStyles?.userAvatar)}
         photoURL={avatarURL}
         userName={userName}
         preloaderSrc={avatarPlaceholderSrc}
       />
-      <span className={styles.name}>{userName}</span>
+      <span className={classNames(styles.name, outerStyles?.userName)}>
+        {userName}
+      </span>
       {leftSideEl}
     </Tag>
   );

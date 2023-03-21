@@ -112,8 +112,6 @@
       }
     }
   }
-
-
 }
 
 @media only screen and (max-width: $header-mobile-breakpoint) {
@@ -172,7 +170,9 @@
       align-items: center;
       margin-left: unset;
       width: 100%;
-      height: calc(100vh - (#{$header-height} + #{$download-common-app-mobile-menu-height}));
+      height: calc(
+        100vh - (#{$header-height} + #{$download-common-app-mobile-menu-height})
+      );
       overflow: scroll;
 
       button,

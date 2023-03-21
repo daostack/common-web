@@ -67,7 +67,6 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   const [tab, setTab] = useState(() =>
     getInitialTab({
       defaultTab,
-      isCommonMember,
       allowedTabs,
     }),
   );
@@ -79,7 +78,6 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     setTab(
       getInitialTab({
         defaultTab,
-        isCommonMember,
         allowedTabs,
       }),
     );

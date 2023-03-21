@@ -50,7 +50,7 @@ $modal-mobile-padding: 1.5rem;
   border-radius: $modal-border-radius;
   overflow: hidden;
 
-  &.notification{
+  &.notification {
     max-width: 23.5rem;
   }
 
@@ -63,7 +63,7 @@ $modal-mobile-padding: 1.5rem;
   .modal__header-wrapper {
     z-index: 2;
     flex: 0 0;
-    transition: box-shadow .1s;
+    transition: box-shadow 0.1s;
   }
   .modal__header-wrapper--with-modal-padding {
     padding-left: $modal-padding;
@@ -169,7 +169,7 @@ $modal-mobile-padding: 1.5rem;
   .modal__footer--fixed {
     padding-left: $modal-padding;
     padding-right: $modal-padding;
-    transition: box-shadow .1s;
+    transition: box-shadow 0.1s;
 
     @include big-phone {
       padding-left: $modal-mobile-padding;

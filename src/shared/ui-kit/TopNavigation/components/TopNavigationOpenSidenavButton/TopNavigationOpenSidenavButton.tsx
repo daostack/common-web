@@ -1,13 +1,24 @@
-import React from "react";
-import { SIDENAV_ID } from "@/shared/constants";
+import React, { FC, ReactNode } from "react";
+import { openSidenav } from "@/shared/utils";
 import { TopNavigationBackButton } from "../TopNavigationBackButton";
 
-const TopNavigationOpenSidenavButton = () => {
-  const handleOpen = () => {
-    window.location.hash = SIDENAV_ID;
-  };
+interface TopNavigationOpenSidenavButtonProps {
+  className?: string;
+  iconEl?: ReactNode;
+}
 
-  return <TopNavigationBackButton onClick={handleOpen} />;
+const TopNavigationOpenSidenavButton: FC<
+  TopNavigationOpenSidenavButtonProps
+> = (props) => {
+  const { className, iconEl } = props;
+
+  return (
+    <TopNavigationBackButton
+      className={className}
+      iconEl={iconEl}
+      onClick={openSidenav}
+    />
+  );
 };
 
 export default TopNavigationOpenSidenavButton;

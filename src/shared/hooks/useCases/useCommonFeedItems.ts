@@ -36,7 +36,7 @@ export const useCommonFeedItems = (commonId: string): Return => {
     );
 
     return unsubscribe;
-  }, [feedItems.firstDocTimestamp]);
+  }, [feedItems.firstDocTimestamp, commonId]);
 
   return {
     ...feedItems,

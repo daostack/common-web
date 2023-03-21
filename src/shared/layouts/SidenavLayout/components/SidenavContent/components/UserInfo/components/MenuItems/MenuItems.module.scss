@@ -4,7 +4,6 @@
   --items-br: 0.5rem;
 
   position: absolute;
-  top: 100%;
   left: var(--sidenav-content-ph);
   right: var(--sidenav-content-ph);
   z-index: 1;
@@ -16,6 +15,12 @@
   background-color: $c-shades-white;
   border-radius: var(--items-br);
   filter: drop-shadow(0 0.25rem 0.9375rem #{$c-sidebar-user-menu-shadow});
+}
+.itemsWrapperPlacementTop {
+  bottom: 100%;
+}
+.itemsWrapperPlacementBottom {
+  top: 100%;
 }
 
 .logoutItem {

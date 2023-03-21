@@ -23,11 +23,15 @@ export const getStepData = (
   },
   [CreationStep.UserAcknowledgment]: {
     title: "User Acknowledgment",
-    description: `Before creating a ${commonTypeText(isSubCommonCreation)}, please make sure that:`,
+    description: `Before creating a ${commonTypeText(
+      isSubCommonCreation,
+    )}, please make sure that:`,
   },
   [CreationStep.Rules]: {
     title: "Rules",
-    description: `Control how this ${commonTypeText(isSubCommonCreation)} will collect and manage funds.`,
+    description: `Control how this ${commonTypeText(
+      isSubCommonCreation,
+    )} will collect and manage funds.`,
   },
   [CreationStep.Funding]: {
     title: "Funding",

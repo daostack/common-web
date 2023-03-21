@@ -14,7 +14,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "@/shared/utils";
-import { projectsActions } from "@/store/states";
+import { commonLayoutActions, projectsActions } from "@/store/states";
 import { CommonService, GovernanceService, Logger } from "../../../services";
 
 interface Options {
@@ -191,12 +191,13 @@ export const useCommonMember = (options: Options = {}): Return => {
           let data: State["data"] = null;
 
           if (isAdded) {
-            dispatch(
-              projectsActions.updateProject({
-                commonId,
-                hasMembership: true,
-              }),
-            );
+            const data = {
+              commonId,
+              hasMembership: true,
+            };
+
+            dispatch(commonLayoutActions.updateCommonOrProject(data));
+            dispatch(projectsActions.updateProject(data));
           }
           if (!isRemoved) {
             data = {

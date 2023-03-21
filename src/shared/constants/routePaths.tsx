@@ -11,6 +11,9 @@ export enum ROUTE_PATHS {
   COMMON_DETAIL = "/prev-commons/:id",
   COMMON_SUPPORT = "/commons/:id/support",
   COMMON = "/commons/:id",
+  COMMON_ABOUT_TAB = "/commons/:id/about",
+  COMMON_MEMBERS_TAB = "/commons/:id/members",
+  COMMON_WALLET_TAB = "/commons/:id/wallet",
   PROJECT_CREATION = "/commons/:id/new-project",
   COMMON_EDITING = "/commons/:id/edit",
   MY_COMMONS = "/my-commons",
@@ -26,4 +29,5 @@ export enum ROUTE_PATHS {
   DEAD_SEA = "/dead-sea",
   PARENTS_FOR_CLIMATE = "/parents-for-climate",
   SAVE_SAADIA = "/save-saadia",
+  INBOX = "/inbox",
 }

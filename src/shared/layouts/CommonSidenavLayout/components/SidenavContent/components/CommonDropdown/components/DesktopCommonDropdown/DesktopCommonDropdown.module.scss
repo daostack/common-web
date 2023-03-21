@@ -1,0 +1,50 @@
+@import "../../../../../../../../../constants";
+
+.container {
+  flex-shrink: 0;
+  position: relative;
+  margin-right: 0.625rem;
+  margin-left: auto;
+  color: $c-neutrals-600;
+}
+
+.icon {
+  flex-shrink: 0;
+  color: $c-neutrals-300;
+}
+
+.menuItems {
+  width: 15.625rem;
+  max-height: 23rem;
+  overflow-y: auto;
+}
+
+.menuItem {
+  padding: 1.125rem 1.5rem;
+  display: flex;
+  align-items: center;
+  font-family: PoppinsSans, sans-serif;
+  font-weight: 500;
+}
+
+.menuItemForCommonCreation {
+  color: $c-pink-primary;
+}
+
+.menuItemActive {
+  --item-bg-color: #{$c-pink-hover-feed-cards};
+}
+
+.menuItemText {
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.checkIcon {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-left: 0.5rem;
+}

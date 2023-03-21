@@ -46,7 +46,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const { commonId, item, governanceCircles, governanceId } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { activeItemDiscussionId, setChatItem } = useChatContext();
+  const { activeItemDiscussionId, setChatItem, feedItemIdForAutoChatOpen } =
+    useChatContext();
   const {
     fetchUser: fetchFeedItemUser,
     data: feedItemUser,
@@ -159,6 +160,17 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     item.circleVisibility,
     feedItemUserMetadata?.lastSeen,
   ]);
+
+  useEffect(() => {
+    if (
+      isDiscussionFetched &&
+      isProposalFetched &&
+      isFeedItemUserMetadataFetched &&
+      item.id === feedItemIdForAutoChatOpen
+    ) {
+      handleOpenChat();
+    }
+  }, [isDiscussionFetched, isProposalFetched, isFeedItemUserMetadataFetched]);
 
   if (isLoading) {
     return <LoadingFeedCard />;
