@@ -6,7 +6,7 @@ import { CreateCommonModal } from "@/pages/OldCommon/components";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
+import { getCommonPagePath, getProjectCreationPagePath } from "@/shared/utils";
 import {
   commonLayoutActions,
   selectCommonLayoutCommonId,
@@ -85,6 +85,10 @@ const Projects: FC = () => {
     }
   };
 
+  const handleAddProjectClick = (commonId: string) => {
+    history.push(getProjectCreationPagePath(commonId));
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       dispatch(commonLayoutActions.markDataAsNotFetched());
@@ -143,6 +147,7 @@ const Projects: FC = () => {
         currentCommonId={currentCommonId}
         onCommonClick={handleCommonClick}
         onCommonCreationClick={onCreateCommonModalOpen}
+        onAddProjectClick={handleAddProjectClick}
         isLoading={areProjectsLoading}
       />
       <CreateCommonModal

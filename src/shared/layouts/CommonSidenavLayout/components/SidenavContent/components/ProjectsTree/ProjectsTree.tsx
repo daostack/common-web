@@ -22,6 +22,7 @@ interface ProjectsTreeProps extends BaseProjectsTreeProps {
   currentCommonId?: string | null;
   onCommonClick: (commonId: string) => void;
   onCommonCreationClick: () => void;
+  onAddProjectClick: (commonId: string) => void;
   isLoading?: boolean;
 }
 
@@ -37,6 +38,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     itemIdWithNewProjectCreation = "",
     onCommonClick,
     onCommonCreationClick,
+    onAddProjectClick,
     isLoading = false,
   } = props;
   const menuItems = useMenuItems({
@@ -74,6 +76,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
             name="Add a space"
             level={2}
             icon={<BoldPlusIcon className={styles.plusIcon} />}
+            onClick={() => onAddProjectClick(parentItem.id)}
           />
         )}
         {isLoading && <Loader className={styles.loader} />}

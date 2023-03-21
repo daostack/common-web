@@ -11,10 +11,11 @@ interface PlaceholderTreeItemProps {
   level?: number;
   isActive?: boolean;
   icon?: ReactNode;
+  onClick?: () => void;
 }
 
 const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
-  const { className, name, level = 1, isActive = false, icon } = props;
+  const { className, name, level = 1, isActive = false, icon, onClick } = props;
   const { treeItemTriggerStyles: treeItemTriggerStylesFromContext } =
     useTreeContext();
   const itemStyles = getItemStyles(level);
@@ -41,6 +42,7 @@ const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
       role="treeitem"
       aria-selected={isActive}
       aria-label={`Item of ${name}`}
+      onClick={onClick}
     >
       <div className={styles.gap} />
       {iconEl || (
