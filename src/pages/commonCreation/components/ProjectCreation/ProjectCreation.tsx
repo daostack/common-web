@@ -9,7 +9,7 @@ import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
-import { getCommonPageAboutTabPath } from "@/shared/utils";
+import { getCommonPagePath } from "@/shared/utils";
 import {
   commonActions,
   commonLayoutActions,
@@ -88,7 +88,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         },
       }),
     );
-    history.push(getCommonPageAboutTabPath(createdProject.id));
+    history.push(getCommonPagePath(createdProject.id));
   };
 
   useEffect(() => {
@@ -132,8 +132,8 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     );
   }
 
-  const parentCommonRoute = getCommonPageAboutTabPath(parentCommon.id);
-  const projectRoute = getCommonPageAboutTabPath(initialCommon?.id || "");
+  const parentCommonRoute = getCommonPagePath(parentCommon.id);
+  const projectRoute = getCommonPagePath(initialCommon?.id || "");
   const backRoute = isEditing ? projectRoute : parentCommonRoute;
 
   if (
