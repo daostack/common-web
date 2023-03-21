@@ -9,7 +9,7 @@ interface LastMemberInCircleProps {
 
 const LastMemberInCircle: FC<LastMemberInCircleProps> = (props) => {
   const { onOkClick, isSubCommon } = props;
-  const commonWord = isSubCommon ? "Project" : "Common";
+  const commonWord = isSubCommon ? "Space" : "Common";
 
   return (
     <div className="last-member-in-circle-step">

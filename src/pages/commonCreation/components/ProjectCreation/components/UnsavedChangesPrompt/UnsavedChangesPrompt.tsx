@@ -27,7 +27,7 @@ const UnsavedChangesPrompt: FC<UnsavedChangesPromptProps> = (props) => {
           <img
             className={styles.image}
             src="/assets/images/floppy-disk.svg"
-            alt="Project created"
+            alt="Space created"
             aria-hidden
           />
           <h2 className={styles.title}>Unsaved changes</h2>

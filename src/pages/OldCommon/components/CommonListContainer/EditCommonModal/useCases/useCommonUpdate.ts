@@ -46,7 +46,7 @@ const getErrorMessage = (
 ): string =>
   isRequestError(error) &&
   error.response?.data?.errorCode === ErrorCode.ArgumentDuplicatedError
-    ? `Project with name "${commonName}" already exists`
+    ? `Space with name "${commonName}" already exists`
     : "Something went wrong...";
 
 const useCommonUpdate = (commonId?: string): Return => {

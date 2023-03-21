@@ -42,8 +42,8 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
     governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE],
   );
   const modalTitle = isJoinMemberAdmittanceRequest
-    ? "Request to Join Project"
-    : "Join Project";
+    ? "Request to Join Space"
+    : "Join Space";
 
   const handleClose = () => {
     setState(INITIAL_STATE);

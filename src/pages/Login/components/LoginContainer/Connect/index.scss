@@ -8,7 +8,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  font-family: NunitoSans, sans-serif;
+  font-family: PoppinsSans, sans-serif;
 
   @include big-phone {
     flex: 1 0;
@@ -58,7 +58,7 @@
   }
   .connect-wrapper__title--small {
     margin: 0 0 1rem;
-    font-family: NunitoSans, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: $small;
     font-weight: bold;
   }

@@ -38,15 +38,15 @@ const SuccessfulProjectCreationModal: FC<
         <img
           className={styles.image}
           src="/assets/images/membership-request-created.svg"
-          alt="Project created"
+          alt="Space created"
           aria-hidden
         />
-        <h2 className={styles.title}>Successfully created a new project</h2>
+        <h2 className={styles.title}>Successfully created a new space</h2>
         <p className={styles.description}>
-          At any time you can add rules, tags, members to the project, etc
+          At any time you can add rules, tags, members to the space, etc
         </p>
         <Button className={styles.button} onClick={handleJumpToProject}>
-          Jump to the project
+          Jump to the space
         </Button>
       </div>
     </Modal>
