@@ -7,6 +7,7 @@ import styles from "./PlaceholderTreeItem.module.scss";
 
 interface PlaceholderTreeItemProps {
   className?: string;
+  imageClassName?: string;
   name: string;
   level?: number;
   isActive?: boolean;
@@ -15,7 +16,15 @@ interface PlaceholderTreeItemProps {
 }
 
 const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
-  const { className, name, level = 1, isActive = false, icon, onClick } = props;
+  const {
+    className,
+    imageClassName,
+    name,
+    level = 1,
+    isActive = false,
+    icon,
+    onClick,
+  } = props;
   const { treeItemTriggerStyles: treeItemTriggerStylesFromContext } =
     useTreeContext();
   const itemStyles = getItemStyles(level);
@@ -33,7 +42,10 @@ const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
       className={classNames(
         treeItemTriggerStyles.item,
         {
-          [treeItemTriggerStyles.itemActive]: isActive,
+          [classNames(
+            treeItemTriggerStyles.itemActive,
+            treeItemTriggerStylesFromContext?.containerActive,
+          )]: isActive,
         },
         className,
         treeItemTriggerStylesFromContext?.container,
@@ -50,6 +62,7 @@ const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
           className={classNames(
             styles.image,
             treeItemTriggerStyles.image,
+            imageClassName,
             {
               [classNames(
                 treeItemTriggerStyles.imageNonRounded,

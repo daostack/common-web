@@ -46,13 +46,20 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     onCommonClick,
     onCommonCreationClick,
   });
+  const isActiveCheckAllowed = !itemIdWithNewProjectCreation;
   const contextValue = useMemo<TreeContextValue>(
     () => ({
       activeItemId: activeItem?.id,
       itemIdWithNewProjectCreation,
+      isActiveCheckAllowed,
       treeItemTriggerStyles,
     }),
-    [activeItem?.id, itemIdWithNewProjectCreation, treeItemTriggerStyles],
+    [
+      activeItem?.id,
+      itemIdWithNewProjectCreation,
+      isActiveCheckAllowed,
+      treeItemTriggerStyles,
+    ],
   );
 
   return (
@@ -66,17 +73,26 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
             <CommonDropdown items={menuItems} activeItemId={currentCommonId} />
           ),
         }}
-        isActive={parentItem.id === activeItem?.id}
+        isActive={isActiveCheckAllowed && parentItem.id === activeItem?.id}
       />
       <Scrollbar>
         <TreeRecursive className={className} items={items} level={2} />
-        {parentItem.hasPermissionToAddProject && (
+        {parentItem.hasPermissionToAddProject &&
+          !itemIdWithNewProjectCreation && (
+            <PlaceholderTreeItem
+              className={styles.addProjectItem}
+              name="Add a space"
+              level={2}
+              icon={<BoldPlusIcon className={styles.plusIcon} />}
+              onClick={() => onAddProjectClick(parentItem.id)}
+            />
+          )}
+        {itemIdWithNewProjectCreation && (
           <PlaceholderTreeItem
-            className={styles.addProjectItem}
-            name="Add a space"
+            imageClassName={styles.newProjectImage}
+            name="New space"
             level={2}
-            icon={<BoldPlusIcon className={styles.plusIcon} />}
-            onClick={() => onAddProjectClick(parentItem.id)}
+            isActive
           />
         )}
         {isLoading && <Loader className={styles.loader} />}

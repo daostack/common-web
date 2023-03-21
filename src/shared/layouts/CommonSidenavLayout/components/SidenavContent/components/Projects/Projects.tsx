@@ -22,6 +22,7 @@ import {
   getActiveItemIdByPath,
   getItemById,
   getItemFromProjectsStateItem,
+  getItemIdWithNewProjectCreationByPath,
 } from "../../../../../SidenavLayout/components/SidenavContent/components/Projects";
 import { TreeItemTriggerStyles } from "../../../../../SidenavLayout/components/SidenavContent/components/ProjectsTree";
 import { ProjectsTree } from "../ProjectsTree";
@@ -72,6 +73,9 @@ const Projects: FC = () => {
   const activeItem = getItemById(
     activeItemId,
     parentItem ? [parentItem, ...items] : items,
+  );
+  const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
+    location.pathname,
   );
 
   const handleGoToCommon = (createdCommon: Common) => {
@@ -144,6 +148,7 @@ const Projects: FC = () => {
         commons={commons}
         items={items}
         activeItem={activeItem}
+        itemIdWithNewProjectCreation={itemIdWithNewProjectCreation}
         currentCommonId={currentCommonId}
         onCommonClick={handleCommonClick}
         onCommonCreationClick={onCreateCommonModalOpen}

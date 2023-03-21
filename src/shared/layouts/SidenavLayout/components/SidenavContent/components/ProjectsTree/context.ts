@@ -11,9 +11,12 @@ export interface TreeItemTriggerStyles {
 export interface TreeContextValue {
   activeItemId?: string;
   itemIdWithNewProjectCreation?: string;
+  isActiveCheckAllowed: boolean;
   treeItemTriggerStyles?: TreeItemTriggerStyles;
 }
 
-export const TreeContext = React.createContext<TreeContextValue>({});
+export const TreeContext = React.createContext<TreeContextValue>({
+  isActiveCheckAllowed: true,
+});
 
 export const useTreeContext = (): TreeContextValue => useContext(TreeContext);
