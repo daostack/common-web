@@ -1,7 +1,10 @@
 import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
 import { CreateProjectPayload } from "@/shared/interfaces";
-import { Common, CommonState } from "@/shared/models";
-import { getProjectCircleDefinition } from "@/shared/utils";
+import { Common, CommonState, Governance } from "@/shared/models";
+import {
+  generateCirclesDataForCommonMember,
+  getProjectCircleDefinition,
+} from "@/shared/utils";
 import Api from "./Api";
 import CommonService from "./Common";
 
@@ -9,15 +12,35 @@ class ProjectService {
   public parseDataToProjectsInfo = (
     commons: Common[],
     commonIdsWithMembership: string[] = [],
-  ): { common: Common; hasMembership: boolean }[] =>
+    permissionsData?: {
+      governance: Governance;
+      commonMemberCircleIds: string[];
+    }[],
+  ): {
+    common: Common;
+    hasMembership: boolean;
+    hasPermissionToAddProject?: boolean;
+  }[] =>
     commons
       .filter((common) => common.state === CommonState.ACTIVE)
-      .map((common) => ({
-        common,
-        hasMembership: commonIdsWithMembership.some(
-          (commonId) => commonId === common.id,
-        ),
-      }));
+      .map((common) => {
+        const permissionsItem = permissionsData?.find(
+          (item) => item.governance.commonId === common.id,
+        );
+
+        return {
+          common,
+          hasMembership: commonIdsWithMembership.some(
+            (commonId) => commonId === common.id,
+          ),
+          hasPermissionToAddProject:
+            permissionsItem &&
+            generateCirclesDataForCommonMember(
+              permissionsItem.governance.circles,
+              permissionsItem.commonMemberCircleIds,
+            ).allowedActions[GovernanceActions.CREATE_PROJECT],
+        };
+      });
 
   public getUserProjectsInfo = async (
     userId: string,

@@ -1,8 +1,8 @@
 import { call, put, select } from "redux-saga/effects";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { CommonService, ProjectService } from "@/services";
+import { CommonService, GovernanceService, ProjectService } from "@/services";
 import { Awaited } from "@/shared/interfaces";
-import { User } from "@/shared/models";
+import { Governance, User } from "@/shared/models";
 import { isError } from "@/shared/utils";
 import { ProjectsStateItem } from "../../projects";
 import * as actions from "../actions";
@@ -14,13 +14,35 @@ const getProjectsInfo = async (
   data: ReturnType<typeof ProjectService.parseDataToProjectsInfo>;
   currentCommonId: string | null;
 }> => {
-  const userCommonIds = userId
-    ? await CommonService.getUserCommonIds(userId)
+  const allUserCommonMemberInfo = userId
+    ? await CommonService.getAllUserCommonMemberInfo(userId)
     : [];
-  const userCommons = await CommonService.getParentCommonsByIds(userCommonIds);
+  const userCommonIds = allUserCommonMemberInfo.map((item) => item.commonId);
+  const [userCommons, governanceList] = await Promise.all([
+    CommonService.getParentCommonsByIds(userCommonIds),
+    GovernanceService.getGovernanceListByCommonIds(userCommonIds),
+  ]);
+  const permissionsData = allUserCommonMemberInfo.reduce<
+    {
+      governance: Governance;
+      commonMemberCircleIds: string[];
+    }[]
+  >((acc, commonMember) => {
+    const governance = governanceList.find(
+      (governance) => governance.commonId === commonMember.commonId,
+    );
+
+    return governance
+      ? acc.concat({
+          governance,
+          commonMemberCircleIds: commonMember.circleIds,
+        })
+      : acc;
+  }, []);
   const data = ProjectService.parseDataToProjectsInfo(
     userCommons,
     userCommonIds,
+    permissionsData,
   );
 
   if (userCommons.some((common) => common.id === commonId)) {
@@ -44,7 +66,11 @@ const getProjectsInfo = async (
   }
 
   const finalData = data.concat(
-    ...ProjectService.parseDataToProjectsInfo([parentCommon], userCommonIds),
+    ...ProjectService.parseDataToProjectsInfo(
+      [parentCommon],
+      userCommonIds,
+      permissionsData,
+    ),
   );
 
   return {
@@ -67,12 +93,13 @@ export function* getCommons(
       userId,
     )) as Awaited<ReturnType<typeof getProjectsInfo>>;
     const projectsData: ProjectsStateItem[] = data.map(
-      ({ common, hasMembership }) => ({
+      ({ common, hasMembership, hasPermissionToAddProject }) => ({
         commonId: common.id,
         image: common.image,
         name: common.name,
         directParent: common.directParent,
         hasMembership,
+        hasPermissionToAddProject,
         notificationsAmount: 0,
       }),
     );
