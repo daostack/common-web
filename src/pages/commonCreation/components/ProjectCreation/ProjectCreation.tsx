@@ -9,7 +9,7 @@ import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
+import { checkIsProject, getCommonPagePath } from "@/shared/utils";
 import {
   commonActions,
   commonLayoutActions,
@@ -116,6 +116,15 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     return (
       <CenterWrapper>
         <p className={styles.dataErrorText}>Parent common does not exist</p>
+      </CenterWrapper>
+    );
+  }
+  if (checkIsProject(parentCommon)) {
+    return (
+      <CenterWrapper>
+        <p className={styles.dataErrorText}>
+          Space creation in the another space is not allowed
+        </p>
       </CenterWrapper>
     );
   }
