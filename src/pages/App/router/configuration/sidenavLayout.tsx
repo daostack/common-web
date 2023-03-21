@@ -1,6 +1,5 @@
 import { BillingPage } from "@/pages/billing";
 import CommonPage from "@/pages/common/Common";
-import { CommonCreationPage } from "@/pages/commonCreation";
 import { CommonEditingPage } from "@/pages/commonEditing";
 import { ProfilePage } from "@/pages/profile";
 import { ROUTE_PATHS } from "@/shared/constants";
@@ -25,11 +24,6 @@ export const SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<SidenavLayoutRout
     component: SidenavLayout,
     routes: [
       ...getCommonPageConfiguration(),
-      {
-        path: ROUTE_PATHS.PROJECT_CREATION,
-        exact: true,
-        component: CommonCreationPage,
-      },
       {
         path: ROUTE_PATHS.COMMON_EDITING,
         exact: true,

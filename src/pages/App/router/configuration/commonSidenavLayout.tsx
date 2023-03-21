@@ -1,3 +1,4 @@
+import { CommonCreationPage } from "@/pages/commonCreation";
 import { CommonFeedPage } from "@/pages/commonFeed";
 import { InboxPage } from "@/pages/inbox";
 import { ROUTE_PATHS } from "@/shared/constants";
@@ -21,6 +22,11 @@ export const COMMON_SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<CommonSide
         path: ROUTE_PATHS.COMMON,
         exact: true,
         component: CommonFeedPage,
+      },
+      {
+        path: ROUTE_PATHS.PROJECT_CREATION,
+        exact: true,
+        component: CommonCreationPage,
       },
     ],
   };
