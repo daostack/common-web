@@ -1,6 +1,6 @@
 export enum RecipientType {
   Member = "member",
   Common = "common",
-  Projects = "projects",
+  Spaces = "spaces",
   ThirdParty = "3rd party"
 }

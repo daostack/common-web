@@ -18,9 +18,9 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
     <>
       {isProject && parentCommon?.name && (
         <p className={styles.joinHint}>
-          <strong>{common.name}</strong> is a project in the{" "}
+          <strong>{common.name}</strong> is a space in the{" "}
           <strong>{parentCommon.name}</strong> common. Only common members can
-          join the project.
+          join the space.
         </p>
       )}
       {withJoinRequest && isJoinAllowed && (
@@ -30,7 +30,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
           size={ButtonSize.Medium}
           onClick={onJoinCommon}
         >
-          Join the {isProject ? "project" : "effort"}
+          Join the {isProject ? "space" : "effort"}
         </Button>
       )}
     </>

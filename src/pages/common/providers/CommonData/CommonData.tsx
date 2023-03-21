@@ -139,7 +139,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     }
 
     dispatch(projectsActions.removeMembershipFromProjectAndChildren(common.id));
-    notify("You’ve successfully left the project");
+    notify("You’ve successfully left the space");
     handleMenuClose();
   };
 

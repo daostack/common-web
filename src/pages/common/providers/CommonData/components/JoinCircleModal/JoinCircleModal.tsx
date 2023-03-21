@@ -38,7 +38,7 @@ const JoinCircleModal: FC<JoinCircleModalProps> = (props) => {
         <p className={styles.description}>
           Your application to join {circleName} has been submitted and is now
           awaiting approval according to the governance guidelines of this
-          project. We will inform you of the outcome as soon as it is available.
+          space. We will inform you of the outcome as soon as it is available.
         </p>
       </>
     );
