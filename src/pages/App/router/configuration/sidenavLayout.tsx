@@ -1,5 +1,4 @@
 import { BillingPage } from "@/pages/billing";
-import { CommonEditingPage } from "@/pages/commonEditing";
 import { ProfilePage } from "@/pages/profile";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { SidenavLayout } from "@/shared/layouts";
@@ -13,11 +12,6 @@ export const SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<SidenavLayoutRout
   {
     component: SidenavLayout,
     routes: [
-      {
-        path: ROUTE_PATHS.COMMON_EDITING,
-        exact: true,
-        component: CommonEditingPage,
-      },
       {
         path: ROUTE_PATHS.PROFILE,
         exact: true,
