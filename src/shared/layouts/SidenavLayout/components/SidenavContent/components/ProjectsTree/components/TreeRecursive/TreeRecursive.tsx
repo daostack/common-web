@@ -16,9 +16,9 @@ interface TreeRecursiveProps {
 
 const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
   const { className, items, parentId, parentName, level = 1 } = props;
-  const { activeItemId, itemIdWithNewProjectCreation } = useTreeContext();
+  const { activeItemId, itemIdWithNewProjectCreation, isActiveCheckAllowed } =
+    useTreeContext();
   const isFirstLevel = level === 1;
-  const isActiveCheckAllowed = !itemIdWithNewProjectCreation;
 
   return (
     <ul

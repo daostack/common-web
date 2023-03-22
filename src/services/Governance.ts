@@ -20,6 +20,32 @@ class GovernanceService {
     return transformFirebaseDataList<Governance>(governanceList)[0] || null;
   };
 
+  public getGovernanceListByCommonIds = async (
+    commonIds: string[],
+  ): Promise<Governance[]> => {
+    if (commonIds.length === 0) {
+      return [];
+    }
+
+    const queries: firebase.firestore.Query[] = [];
+
+    // Firebase allows to use at most 10 items per query for `in` option
+    for (let i = 0; i < commonIds.length; i += 10) {
+      queries.push(
+        governanceCollection.where(
+          "commonId",
+          "in",
+          commonIds.slice(i, i + 10),
+        ),
+      );
+    }
+    const results = await Promise.all(queries.map((query) => query.get()));
+
+    return results
+      .map((result) => transformFirebaseDataList<Governance>(result))
+      .reduce((acc, items) => [...acc, ...items], []);
+  };
+
   public subscribeToGovernance = (
     governanceId: string,
     callback: (governance: Governance, isRemoved: boolean) => void,

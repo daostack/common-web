@@ -13,6 +13,9 @@ export const getCommonPagePath = (
 export const getCommonPageAboutTabPath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_ABOUT_TAB.replace(":id", commonId);
 
+export const getProjectCreationPagePath = (commonId: string): string =>
+  ROUTE_PATHS.PROJECT_CREATION.replace(":id", commonId);
+
 export const getCommonEditingPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_EDITING.replace(":id", commonId);
 

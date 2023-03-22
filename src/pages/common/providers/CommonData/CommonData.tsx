@@ -16,6 +16,7 @@ import {
   Governance,
   SupportersData,
 } from "@/shared/models";
+import { getProjectCreationPagePath } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { JoinProjectModal } from "../../components/JoinProjectModal";
 import { CommonMenuItem } from "../../constants";
@@ -120,7 +121,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
   };
 
   const handleProjectCreate = useCallback(() => {
-    history.push(ROUTE_PATHS.PROJECT_CREATION.replace(":id", common.id));
+    history.push(getProjectCreationPagePath(common.id));
   }, [history, common.id]);
 
   const handleSuccessfulLeave = () => {

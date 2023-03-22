@@ -85,6 +85,7 @@ import {
   updateDiscussionMessage as updateDiscussionMessageApi,
   createReport as createReportApi,
   fetchProposalByDiscussionId,
+  getGovernanceByCommonId,
 } from "./api";
 import {
   selectCommonStateById,
@@ -1220,7 +1221,16 @@ export function* createCommon(
       createCommonApi,
       action.payload.payload,
     )) as Awaited<ReturnType<typeof createCommonApi>>;
+    const governance = (yield call(
+      getGovernanceByCommonId,
+      common.id,
+    )) as Awaited<ReturnType<typeof getGovernanceByCommonId>>;
 
+    if (!governance) {
+      throw new Error(
+        `There is no governance for common with id = "${common.id}"`,
+      );
+    }
     // const governanceCreationPayload = createDefaultGovernanceCreationPayload({
     //   unstructuredRules: rules || [],
     //   commonId: common.id,
@@ -1236,8 +1246,8 @@ export function* createCommon(
     //   circles: governanceCreationPayload.circles.map((circle, index) => index),
     // });
 
-    yield put(actions.createCommon.success(common));
-    action.payload.callback(null, common);
+    yield put(actions.createCommon.success({ common, governance }));
+    action.payload.callback(null, { common, governance });
   } catch (error) {
     if (isError(error)) {
       yield put(actions.createCommon.failure(error));

@@ -6,7 +6,7 @@ import { CreateCommonModal } from "@/pages/OldCommon/components";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
+import { getCommonPagePath, getProjectCreationPagePath } from "@/shared/utils";
 import {
   commonLayoutActions,
   selectCommonLayoutCommonId,
@@ -22,6 +22,7 @@ import {
   getActiveItemIdByPath,
   getItemById,
   getItemFromProjectsStateItem,
+  getItemIdWithNewProjectCreationByPath,
 } from "../../../../../SidenavLayout/components/SidenavContent/components/Projects";
 import { TreeItemTriggerStyles } from "../../../../../SidenavLayout/components/SidenavContent/components/ProjectsTree";
 import { ProjectsTree } from "../ProjectsTree";
@@ -73,6 +74,9 @@ const Projects: FC = () => {
     activeItemId,
     parentItem ? [parentItem, ...items] : items,
   );
+  const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
+    location.pathname,
+  );
 
   const handleGoToCommon = (createdCommon: Common) => {
     onCreateCommonModalClose();
@@ -83,6 +87,10 @@ const Projects: FC = () => {
     if (currentCommonId !== commonId) {
       history.push(getCommonPagePath(commonId));
     }
+  };
+
+  const handleAddProjectClick = (commonId: string) => {
+    history.push(getProjectCreationPagePath(commonId));
   };
 
   useEffect(() => {
@@ -140,9 +148,11 @@ const Projects: FC = () => {
         commons={commons}
         items={items}
         activeItem={activeItem}
+        itemIdWithNewProjectCreation={itemIdWithNewProjectCreation}
         currentCommonId={currentCommonId}
         onCommonClick={handleCommonClick}
         onCommonCreationClick={onCreateCommonModalOpen}
+        onAddProjectClick={handleAddProjectClick}
         isLoading={areProjectsLoading}
       />
       <CreateCommonModal
