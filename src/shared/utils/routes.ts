@@ -23,3 +23,5 @@ export const getCommonSupportPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_SUPPORT.replace(":id", commonId);
 
 export const getInboxPagePath = (): string => ROUTE_PATHS.INBOX;
+
+export const getProfilePagePath = (): string => ROUTE_PATHS.PROFILE;

@@ -1,6 +1,8 @@
+import { BillingPage } from "@/pages/billing";
 import { CommonCreationPage } from "@/pages/commonCreation";
 import { CommonFeedPage } from "@/pages/commonFeed";
 import { InboxPage } from "@/pages/inbox";
+import { ProfilePage } from "@/pages/profile";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { CommonSidenavLayout } from "@/shared/layouts";
 import { LayoutConfiguration } from "../types";
@@ -27,6 +29,16 @@ export const COMMON_SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<CommonSide
         path: ROUTE_PATHS.PROJECT_CREATION,
         exact: true,
         component: CommonCreationPage,
+      },
+      {
+        path: ROUTE_PATHS.PROFILE,
+        exact: true,
+        component: ProfilePage,
+      },
+      {
+        path: ROUTE_PATHS.BILLING,
+        exact: true,
+        component: BillingPage,
       },
     ],
   };
