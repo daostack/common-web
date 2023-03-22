@@ -10,15 +10,15 @@ import {
   MobileMenu,
 } from "@/shared/ui-kit";
 import { useMenuItems } from "./hooks";
-import styles from "./NewCollaborationButton.module.scss";
+import styles from "./NewStreamButton.module.scss";
 
-interface NewCollaborationButtonProps {
+interface NewStreamButtonProps {
   isMobileVersion?: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
   governance: Pick<Governance, "circles">;
 }
 
-const NewCollaborationButton: FC<NewCollaborationButtonProps> = (props) => {
+const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   const { isMobileVersion = false, commonMember, governance } = props;
   const items = useMenuItems({ commonMember, governance });
   const buttonVariant = ButtonVariant.OutlineBlue;
@@ -37,7 +37,7 @@ const NewCollaborationButton: FC<NewCollaborationButtonProps> = (props) => {
             size={ButtonSize.Xsmall}
             leftIcon={iconEl}
           >
-            New Collaboration
+            New stream
           </Button>
         }
         items={items}
@@ -53,4 +53,4 @@ const NewCollaborationButton: FC<NewCollaborationButtonProps> = (props) => {
   );
 };
 
-export default NewCollaborationButton;
+export default NewStreamButton;

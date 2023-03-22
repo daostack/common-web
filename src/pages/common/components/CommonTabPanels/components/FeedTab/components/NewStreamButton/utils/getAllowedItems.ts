@@ -11,13 +11,13 @@ export interface GetAllowedItemsOptions {
   governance: Pick<Governance, "circles">;
 }
 
-type NewCollaborationMenuItems =
+type NewStreamMenuItems =
   | CommonAction.NewProposal
   | CommonAction.NewDiscussion
   | CommonAction.NewContribution;
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
-  NewCollaborationMenuItems,
+  NewStreamMenuItems,
   (options: GetAllowedItemsOptions) => boolean
 > = {
   [CommonAction.NewProposal]: ({ commonMember, governance }) =>
@@ -44,7 +44,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
 export const getAllowedItems = (
   options: GetAllowedItemsOptions,
 ): CommonAction[] => {
-  const orderedItems: NewCollaborationMenuItems[] = [
+  const orderedItems: NewStreamMenuItems[] = [
     CommonAction.NewProposal,
     CommonAction.NewDiscussion,
     CommonAction.NewContribution,

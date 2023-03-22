@@ -62,7 +62,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
   const commonAction = useSelector(selectCommonAction);
-  const allowedFeedActions = !commonAction ? [FeedAction.NewCollaboration] : [];
+  const allowedFeedActions = !commonAction ? [FeedAction.NewStream] : [];
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),

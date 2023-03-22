@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
-import { NewCollaborationButton } from "../NewCollaborationButton";
+import { NewStreamButton } from "../NewStreamButton";
 import styles from "./FeedActions.module.scss";
 
 export enum FeedAction {
-  NewCollaboration = "new-collaboration",
+  NewStream = "new-stream",
 }
 
 interface FeedActionsProps {
@@ -25,8 +25,8 @@ const FeedActions: FC<FeedActionsProps> = (props) => {
   return (
     <div>
       <div className={styles.container}>
-        {allowedActions.includes(FeedAction.NewCollaboration) && (
-          <NewCollaborationButton
+        {allowedActions.includes(FeedAction.NewStream) && (
+          <NewStreamButton
             isMobileVersion={isMobileVersion}
             commonMember={commonMember}
             governance={governance}
