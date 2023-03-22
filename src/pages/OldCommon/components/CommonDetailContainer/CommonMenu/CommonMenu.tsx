@@ -251,6 +251,15 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
     }
   };
 
+  const handleCommonCreate = (data: {
+    common: Common;
+    governance: Governance;
+  }) => {
+    if (onSubCommonCreate) {
+      onSubCommonCreate(data.common);
+    }
+  };
+
   const buttonElement = (
     <MenuButton
       onClick={isMobileView ? handleModalOpen : undefined}
@@ -339,7 +348,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         parentCommonId={common.id}
         isSubCommonCreation={!isSubCommon}
         subCommons={subCommons}
-        onCommonCreate={onSubCommonCreate}
+        onCommonCreate={handleCommonCreate}
         shouldBeWithoutIntroduction
       />
       <EditCommonModal

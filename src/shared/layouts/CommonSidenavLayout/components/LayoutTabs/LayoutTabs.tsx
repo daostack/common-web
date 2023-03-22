@@ -3,7 +3,11 @@ import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Tab, Tabs } from "@/shared/components";
 import { Avatar2Icon, InboxIcon, Hamburger2Icon } from "@/shared/icons";
-import { getInboxPagePath, openSidenav } from "@/shared/utils";
+import {
+  getInboxPagePath,
+  getProfilePagePath,
+  openSidenav,
+} from "@/shared/utils";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
 import styles from "./LayoutTabs.module.scss";
@@ -58,8 +62,10 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
         openSidenav();
         break;
       case LayoutTab.Inbox:
-      case LayoutTab.Profile:
         history.push(getInboxPagePath());
+        break;
+      case LayoutTab.Profile:
+        history.push(getProfilePagePath());
         break;
       default:
         break;

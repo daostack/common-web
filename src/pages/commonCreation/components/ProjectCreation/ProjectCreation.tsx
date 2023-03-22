@@ -9,7 +9,7 @@ import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
-import { getCommonPageAboutTabPath } from "@/shared/utils";
+import { checkIsProject, getCommonPagePath } from "@/shared/utils";
 import {
   commonActions,
   commonLayoutActions,
@@ -88,7 +88,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         },
       }),
     );
-    history.push(getCommonPageAboutTabPath(createdProject.id));
+    history.push(getCommonPagePath(createdProject.id));
   };
 
   useEffect(() => {
@@ -119,6 +119,15 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
       </CenterWrapper>
     );
   }
+  if (checkIsProject(parentCommon)) {
+    return (
+      <CenterWrapper>
+        <p className={styles.dataErrorText}>
+          Space creation in the another space is not allowed
+        </p>
+      </CenterWrapper>
+    );
+  }
   if (!isParentGovernanceFetched || !isCommonMemberFetched) {
     return loaderEl;
   }
@@ -132,8 +141,8 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     );
   }
 
-  const parentCommonRoute = getCommonPageAboutTabPath(parentCommon.id);
-  const projectRoute = getCommonPageAboutTabPath(initialCommon?.id || "");
+  const parentCommonRoute = getCommonPagePath(parentCommon.id);
+  const projectRoute = getCommonPagePath(initialCommon?.id || "");
   const backRoute = isEditing ? projectRoute : parentCommonRoute;
 
   if (

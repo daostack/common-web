@@ -339,7 +339,15 @@ export const createCommon = createAsyncAction(
   CommonsActionTypes.CREATE_COMMON,
   CommonsActionTypes.CREATE_COMMON_SUCCESS,
   CommonsActionTypes.CREATE_COMMON_FAILURE,
-)<PayloadWithCallback<CreateCommonPayload, Common, Error>, Common, Error>();
+)<
+  PayloadWithCallback<
+    CreateCommonPayload,
+    { common: Common; governance: Governance },
+    Error
+  >,
+  { common: Common; governance: Governance },
+  Error
+>();
 
 export const updateCommon = createAsyncAction(
   CommonsActionTypes.UPDATE_COMMON,
