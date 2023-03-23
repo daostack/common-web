@@ -6,18 +6,24 @@ import {
   ProposalsTypes,
 } from "@/shared/constants";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
-import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
 import {
   selectIsProposalCreationLoading,
   selectProposalCreationData,
 } from "@/store/states";
 import { commonActions } from "@/store/states";
-import { useCommonDataContext } from "../../../../../../providers";
 import { ProposalCreationCard, ProposalCreationModal } from "./components";
 import { getFundingProposalPayload, getSurveyProposalPayload } from "./util";
 
 interface NewProposalCreationProps {
+  common: Common;
+  governance: Governance;
   governanceCircles: Governance["circles"];
   commonMember: (CommonMember & CirclesPermissions) | null;
   commonImage?: string;
@@ -35,6 +41,8 @@ const INITIAL_VALUES: NewProposalCreationFormValues = {
 
 const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
   const {
+    common,
+    governance,
     governanceCircles,
     commonMember,
     commonImage,
@@ -42,7 +50,6 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
     isModalVariant = false,
   } = props;
   const dispatch = useDispatch();
-  const { common, governance } = useCommonDataContext();
   const proposalCreationData = useSelector(selectProposalCreationData);
   const isLoading = useSelector(selectIsProposalCreationLoading);
   const user = useSelector(selectUser());

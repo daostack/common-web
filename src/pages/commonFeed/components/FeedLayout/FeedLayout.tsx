@@ -1,10 +1,17 @@
 import React, { FC, ReactNode, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
 import {
   ChatContextValue,
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
+import {
+  FeedItem,
+  NewDiscussionCreation,
+  NewProposalCreation,
+} from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
+import { CommonAction } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
@@ -16,7 +23,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
-import { FeedItem } from "../../../common/components";
+import { selectCommonAction } from "@/store/states";
 import { DesktopChat, MobileChat } from "./components";
 import styles from "./FeedLayout.module.scss";
 
@@ -44,6 +51,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     loading,
     onFetchNext,
   } = props;
+  const commonAction = useSelector(selectCommonAction);
   const isTabletView = useIsTabletView();
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const userCircleIds = useMemo(
@@ -88,6 +96,23 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
             className,
           )}
         >
+          {commonAction === CommonAction.NewDiscussion && (
+            <NewDiscussionCreation
+              common={common}
+              governanceCircles={governance.circles}
+              commonMember={commonMember}
+              isModalVariant={false}
+            />
+          )}
+          {commonAction === CommonAction.NewProposal && (
+            <NewProposalCreation
+              common={common}
+              governance={governance}
+              governanceCircles={governance.circles}
+              commonMember={commonMember}
+              isModalVariant={false}
+            />
+          )}
           <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
             {feedItems?.map((item) => (
               <FeedItem
