@@ -17,7 +17,7 @@ import {
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
 import { FeedItem } from "../../../common/components";
-import { DesktopChat, MobileChat } from "./components";
+import { DesktopChat, MobileChat, FeedItemPreviewModal } from "./components";
 import styles from "./FeedLayout.module.scss";
 
 interface FeedLayoutProps {
@@ -46,6 +46,9 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   } = props;
   const isTabletView = useIsTabletView();
   const [chatItem, setChatItem] = useState<ChatItem | null>();
+  const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
+    useState(false);
+  const [shouldShowSeeMore, setShouldShowSeeMore] = useState(true);
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
@@ -64,11 +67,17 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     return feedItem?.id;
   }, [feedItems, isTabletView]);
 
+  const selectedFeedItem = useMemo(() => {
+    return feedItems?.find((item) => item.id === chatItem?.feedItemId);
+  }, [feedItems, chatItem]);
+
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
       setChatItem,
       activeItemDiscussionId: chatItem?.discussion.id,
       feedItemIdForAutoChatOpen,
+      setIsShowFeedItemDetailsModal,
+      setShouldShowSeeMore,
     }),
     [setChatItem, chatItem?.discussion.id, feedItemIdForAutoChatOpen],
   );
@@ -114,7 +123,16 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
               chatItem={chatItem}
               common={common}
               commonMember={commonMember}
-            />
+              shouldShowSeeMore={shouldShowSeeMore}
+            >
+              <FeedItemPreviewModal
+                common={common}
+                governance={governance}
+                selectedFeedItem={selectedFeedItem}
+                userCircleIds={userCircleIds}
+                isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
+              />
+            </MobileChat>
           )}
         </div>
       </ChatContext.Provider>

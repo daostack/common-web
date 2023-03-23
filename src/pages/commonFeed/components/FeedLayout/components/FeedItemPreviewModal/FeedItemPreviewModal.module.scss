@@ -1,0 +1,28 @@
+.modal {
+  border-radius: 0;
+  box-shadow: 0px -5px 4px rgba(0, 0, 0, 0.07);
+
+
+  .modalWrapper {
+    .modalHeader {
+      margin-left: -0.875rem;
+      margin-right: -1.1875rem;
+      border-bottom: none;
+    }
+  }
+  
+  .modalContent {
+    padding-left: 1.875rem;
+    padding-right: 2.1875rem;
+    min-height: 18.75rem;
+  }
+}
+
+.modalWrapper {
+  backdrop-filter: unset;
+  -webkit-backdrop-filter: unset;
+}
+
+.modalOverlay {
+  background-color: unset;
+}

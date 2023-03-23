@@ -5,7 +5,11 @@ import styles from "./LoadingFeedCard.module.scss";
 
 export const LoadingFeedCard: FC = () => {
   return (
-    <FeedCard className={styles.card}>
+    <FeedCard
+      canBeExpanded={false}
+      className={styles.card}
+      isPreviewMode={false}
+    >
       <Loader />
     </FeedCard>
   );
