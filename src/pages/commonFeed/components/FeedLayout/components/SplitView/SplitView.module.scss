@@ -1,0 +1,27 @@
+@import "../../../../../../constants";
+
+.resizer {
+  flex-shrink: 0;
+  z-index: 1;
+  background: transparent;
+  background-clip: padding-box;
+  opacity: 0.2;
+  box-sizing: border-box;
+
+  &:hover {
+    transition: all 2s ease;
+  }
+
+  &:global(.vertical) {
+    width: 0.6875rem;
+    margin: 0 -0.3125rem;
+    border-left: 0.3125rem solid rgba(255, 255, 255, 0);
+    border-right: 0.3125rem solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+
+    &:hover {
+      border-left: 0.3125rem solid rgba(0, 0, 0, 0.5);
+      border-right: 0.3125rem solid rgba(0, 0, 0, 0.5);
+    }
+  }
+}
