@@ -16,7 +16,7 @@ import {
   Governance,
   SupportersData,
 } from "@/shared/models";
-import { getProjectCreationPagePath } from "@/shared/utils";
+import { getCommonPagePath, getProjectCreationPagePath } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { JoinProjectModal } from "../../components/JoinProjectModal";
 import { CommonMenuItem } from "../../constants";
@@ -64,6 +64,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const { notify } = useNotification();
   const [selectedMenuItem, setSelectedMenuItem] =
     useState<CommonMenuItem | null>(null);
+  const [
+    shouldRedirectToFeedOnCommonMemberExistence,
+    setShouldRedirectToFeedOnCommonMemberExistence,
+  ] = useState(false);
   const {
     isProposalCreationModalOpen,
     initialProposalTypeForCreation,
@@ -144,6 +148,11 @@ const CommonData: FC<CommonDataProps> = (props) => {
     handleMenuClose();
   };
 
+  const handleJoinRequestCreated = () => {
+    setIsJoinPending(true);
+    setShouldRedirectToFeedOnCommonMemberExistence(true);
+  };
+
   useEffect(() => {
     if (isGlobalDataFetched && !isJoinAllowed && isCommonJoinModalOpen) {
       onCommonJoinModalClose();
@@ -155,6 +164,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onProjectJoinModalClose();
     }
   }, [isGlobalDataFetched, isJoinAllowed, isProjectJoinModalOpen]);
+
+  useEffect(() => {
+    if (shouldRedirectToFeedOnCommonMemberExistence && commonMember) {
+      history.push(getCommonPagePath(common.id));
+    }
+  }, [shouldRedirectToFeedOnCommonMemberExistence, commonMember]);
 
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
@@ -251,14 +266,14 @@ const CommonData: FC<CommonDataProps> = (props) => {
         onClose={onCommonJoinModalClose}
         common={common}
         governance={governance}
-        onRequestCreated={() => setIsJoinPending(true)}
+        onRequestCreated={handleJoinRequestCreated}
       />
       <JoinProjectModal
         isShowing={isJoinAllowed && isProjectJoinModalOpen}
         onClose={onProjectJoinModalClose}
         common={common}
         governance={governance}
-        onRequestCreated={() => setIsJoinPending(true)}
+        onRequestCreated={handleJoinRequestCreated}
       />
     </CommonDataContext.Provider>
   );
