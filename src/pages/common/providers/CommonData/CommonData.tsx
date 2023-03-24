@@ -7,7 +7,7 @@ import {
   LeaveCommonModal,
   MembershipRequestModal,
 } from "@/pages/OldCommon/components";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { ProposalsTypes } from "@/shared/constants";
 import { useAuthorizedModal, useNotification } from "@/shared/hooks";
 import {
   CirclesPermissions,
@@ -24,9 +24,9 @@ import { LeaveCircleModal } from "./components";
 import { JoinCircleModal } from "./components/JoinCircleModal";
 import { CommonDataContext, CommonDataContextValue } from "./context";
 import {
+  useJoinCircleModal,
   useLeaveCircleModal,
   useProposalCreationModal,
-  useJoinCircleModal,
 } from "./hooks";
 
 interface CommonDataProps {
@@ -64,6 +64,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const { notify } = useNotification();
   const [selectedMenuItem, setSelectedMenuItem] =
     useState<CommonMenuItem | null>(null);
+  const [
+    shouldKeepShowingCommonJoinModal,
+    setShouldKeepShowingCommonJoinModal,
+  ] = useState(false);
   const [
     shouldRedirectToFeedOnCommonMemberExistence,
     setShouldRedirectToFeedOnCommonMemberExistence,
@@ -151,6 +155,20 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const handleJoinRequestCreated = () => {
     setIsJoinPending(true);
     setShouldRedirectToFeedOnCommonMemberExistence(true);
+  };
+
+  const handleCommonJoinRequestCreated = () => {
+    setShouldKeepShowingCommonJoinModal(true);
+    handleJoinRequestCreated();
+  };
+
+  const handleProjectJoinRequestCreated = () => {
+    handleJoinRequestCreated();
+  };
+
+  const handleCommonJoinModalClose = () => {
+    onCommonJoinModalClose();
+    setShouldKeepShowingCommonJoinModal(false);
   };
 
   useEffect(() => {
@@ -262,18 +280,25 @@ const CommonData: FC<CommonDataProps> = (props) => {
         />
       )}
       <MembershipRequestModal
-        isShowing={isJoinAllowed && isCommonJoinModalOpen}
-        onClose={onCommonJoinModalClose}
+        isShowing={
+          (isJoinAllowed && isCommonJoinModalOpen) ||
+          shouldKeepShowingCommonJoinModal
+        }
+        onClose={handleCommonJoinModalClose}
         common={common}
         governance={governance}
-        onRequestCreated={handleJoinRequestCreated}
+        shouldShowLoadingAfterSuccessfulCreation={
+          governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE]?.global
+            .votingDuration === 0
+        }
+        onRequestCreated={handleCommonJoinRequestCreated}
       />
       <JoinProjectModal
         isShowing={isJoinAllowed && isProjectJoinModalOpen}
         onClose={onProjectJoinModalClose}
         common={common}
         governance={governance}
-        onRequestCreated={handleJoinRequestCreated}
+        onRequestCreated={handleProjectJoinRequestCreated}
       />
     </CommonDataContext.Provider>
   );
