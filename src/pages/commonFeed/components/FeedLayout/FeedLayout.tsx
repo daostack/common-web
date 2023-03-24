@@ -59,6 +59,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const [chatWidth, setChatWidth] = useState(0);
   const isChatItemSet = Boolean(chatItem);
+  const maxChatSize = getSplitViewMaxSize(windowWidth);
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
@@ -96,10 +97,16 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     }
   }, [isChatItemSet]);
 
+  useEffect(() => {
+    if (chatWidth > maxChatSize) {
+      setChatWidth(maxChatSize);
+    }
+  }, [maxChatSize]);
+
   return (
     <SplitView
       minSize={isChatItemSet ? MIN_CHAT_WIDTH : 0}
-      maxSize={getSplitViewMaxSize(windowWidth)}
+      maxSize={maxChatSize}
       onChange={setChatWidth}
     >
       <CommonSidenavLayoutPageContent
