@@ -87,10 +87,6 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     [setChatItem, chatItem?.discussion.id, feedItemIdForAutoChatOpen],
   );
 
-  const contentStyles = {
-    "--chat-w": `${chatWidth}px`,
-  } as CSSProperties;
-
   useEffect(() => {
     if (isChatItemSet) {
       setChatWidth(MIN_CHAT_WIDTH);
@@ -103,53 +99,63 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     }
   }, [maxChatSize]);
 
-  return (
+  const contentStyles = {
+    "--chat-w": `${chatWidth}px`,
+  } as CSSProperties;
+
+  const contentEl = (
+    <CommonSidenavLayoutPageContent
+      className={styles.layoutPageContent}
+      headerContent={headerContent}
+      isGlobalLoading={isGlobalLoading}
+    >
+      <ChatContext.Provider value={chatContextValue}>
+        <div
+          className={classNames(styles.content, className)}
+          style={contentStyles}
+        >
+          <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
+            {feedItems?.map((item) => (
+              <FeedItem
+                key={item.id}
+                governanceId={governance.id}
+                commonId={common.id}
+                item={item}
+                governanceCircles={governance.circles}
+                isMobileVersion={isTabletView}
+                userCircleIds={userCircleIds}
+              />
+            ))}
+          </InfiniteScroll>
+          {chatItem && !isTabletView && (
+            <DesktopChat
+              className={styles.desktopChat}
+              chatItem={chatItem}
+              common={common}
+              commonMember={commonMember}
+            />
+          )}
+          {isTabletView && (
+            <MobileChat
+              chatItem={chatItem}
+              common={common}
+              commonMember={commonMember}
+            />
+          )}
+        </div>
+      </ChatContext.Provider>
+    </CommonSidenavLayoutPageContent>
+  );
+
+  return isTabletView ? (
+    contentEl
+  ) : (
     <SplitView
       minSize={isChatItemSet ? MIN_CHAT_WIDTH : 0}
       maxSize={maxChatSize}
       onChange={setChatWidth}
     >
-      <CommonSidenavLayoutPageContent
-        className={styles.layoutPageContent}
-        headerContent={headerContent}
-        isGlobalLoading={isGlobalLoading}
-      >
-        <ChatContext.Provider value={chatContextValue}>
-          <div
-            className={classNames(styles.content, className)}
-            style={contentStyles}
-          >
-            <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
-              {feedItems?.map((item) => (
-                <FeedItem
-                  key={item.id}
-                  governanceId={governance.id}
-                  commonId={common.id}
-                  item={item}
-                  governanceCircles={governance.circles}
-                  isMobileVersion={isTabletView}
-                  userCircleIds={userCircleIds}
-                />
-              ))}
-            </InfiniteScroll>
-            {chatItem && !isTabletView && (
-              <DesktopChat
-                className={styles.desktopChat}
-                chatItem={chatItem}
-                common={common}
-                commonMember={commonMember}
-              />
-            )}
-            {isTabletView && (
-              <MobileChat
-                chatItem={chatItem}
-                common={common}
-                commonMember={commonMember}
-              />
-            )}
-          </div>
-        </ChatContext.Provider>
-      </CommonSidenavLayoutPageContent>
+      {contentEl}
     </SplitView>
   );
 };
