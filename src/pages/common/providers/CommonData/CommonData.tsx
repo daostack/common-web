@@ -69,6 +69,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
     setShouldKeepShowingCommonJoinModal,
   ] = useState(false);
   const [
+    shouldKeepShowingProjectJoinModal,
+    setShouldKeepShowingProjectJoinModal,
+  ] = useState(false);
+  const [
     shouldRedirectToFeedOnCommonMemberExistence,
     setShouldRedirectToFeedOnCommonMemberExistence,
   ] = useState(false);
@@ -163,12 +167,18 @@ const CommonData: FC<CommonDataProps> = (props) => {
   };
 
   const handleProjectJoinRequestCreated = () => {
+    setShouldKeepShowingProjectJoinModal(true);
     handleJoinRequestCreated();
   };
 
   const handleCommonJoinModalClose = () => {
     onCommonJoinModalClose();
     setShouldKeepShowingCommonJoinModal(false);
+  };
+
+  const handleProjectJoinModalClose = () => {
+    onProjectJoinModalClose();
+    setShouldKeepShowingProjectJoinModal(false);
   };
 
   useEffect(() => {
@@ -294,10 +304,14 @@ const CommonData: FC<CommonDataProps> = (props) => {
         onRequestCreated={handleCommonJoinRequestCreated}
       />
       <JoinProjectModal
-        isShowing={isJoinAllowed && isProjectJoinModalOpen}
-        onClose={onProjectJoinModalClose}
+        isShowing={
+          (isJoinAllowed && isProjectJoinModalOpen) ||
+          shouldKeepShowingProjectJoinModal
+        }
+        onClose={handleProjectJoinModalClose}
         common={common}
         governance={governance}
+        shouldKeepLoadingIfPossible
         onRequestCreated={handleProjectJoinRequestCreated}
       />
     </CommonDataContext.Provider>
