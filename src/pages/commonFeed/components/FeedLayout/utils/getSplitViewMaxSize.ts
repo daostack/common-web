@@ -1,6 +1,8 @@
+import { MIN_CHAT_WIDTH } from "../constants";
+
 export const getSplitViewMaxSize = (width: number): number => {
   if (width < 1152) {
-    return 0;
+    return MIN_CHAT_WIDTH;
   }
   if (width < 1180) {
     return 420;
