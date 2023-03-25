@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
   CirclesPermissions,
   Common,
@@ -8,7 +9,7 @@ import {
   Governance,
   SupportersData,
 } from "@/shared/models";
-import { Container, Loader, LoaderVariant } from "@/shared/ui-kit";
+import { Container } from "@/shared/ui-kit";
 import { commonActions, selectIsNewProjectCreated } from "@/store/states";
 import { CommonDataProvider } from "../../providers";
 import { CommonHeader } from "../CommonHeader";
@@ -16,7 +17,7 @@ import { CommonManagement } from "../CommonManagement";
 import { CommonTabPanels } from "../CommonTabPanels";
 import { CommonTabs } from "../CommonTabs";
 import { CommonTopNavigation } from "../CommonTopNavigation";
-import { SuccessfulProjectCreationModal } from "./components";
+import { HeaderContent, SuccessfulProjectCreationModal } from "./components";
 import { getAllowedTabs, getMainCommonDetails } from "./utils";
 import { getInitialTab } from "./utils";
 import styles from "./CommonContent.module.scss";
@@ -110,55 +111,59 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         isSubCommon={isSubCommon}
         commonId={common.id}
       />
-      {!isGlobalDataFetched && (
-        <Loader
-          overlayClassName={styles.globalLoader}
-          variant={LoaderVariant.Global}
-        />
-      )}
-      <div className={styles.container}>
-        <div className={styles.contentHeaderWrapper}>
-          <Container>
-            <CommonHeader
-              commonImageSrc={common.image}
-              commonName={common.name}
-              description={common.byline}
-              details={getMainCommonDetails(common)}
-              isProject={Boolean(common.directParent)}
-              withJoin={false}
-            />
-          </Container>
-          <div className={styles.commonHeaderSeparator} />
-          {!isTabletView && (
+      <CommonSidenavLayoutPageContent
+        headerContent={
+          <HeaderContent
+            commonId={common.id}
+            withoutBackButton={!commonMember}
+          />
+        }
+        isGlobalLoading={!isGlobalDataFetched}
+      >
+        <div className={styles.container}>
+          <div className={styles.contentHeaderWrapper}>
             <Container>
-              <CommonManagement
-                commonId={common.id}
-                activeTab={tab}
-                allowedTabs={allowedTabs}
-                isSubCommon={isSubCommon}
-                circles={governance.circles}
-                commonMember={commonMember}
-                onTabChange={setTab}
+              <CommonHeader
+                commonImageSrc={common.image}
+                commonName={common.name}
+                description={common.byline}
+                details={getMainCommonDetails(common)}
+                isProject={Boolean(common.directParent)}
+                withJoin={false}
               />
             </Container>
+            <div className={styles.commonHeaderSeparator} />
+            {!isTabletView && (
+              <Container>
+                <CommonManagement
+                  commonId={common.id}
+                  activeTab={tab}
+                  allowedTabs={allowedTabs}
+                  isSubCommon={isSubCommon}
+                  circles={governance.circles}
+                  commonMember={commonMember}
+                  onTabChange={setTab}
+                />
+              </Container>
+            )}
+          </div>
+          <CommonTabPanels
+            activeTab={tab}
+            common={common}
+            governance={governance}
+            commonMember={commonMember}
+            subCommons={subCommons}
+          />
+          {isTabletView && (
+            <CommonTabs
+              className={styles.tabs}
+              activeTab={tab}
+              allowedTabs={allowedTabs}
+              onTabChange={setTab}
+            />
           )}
         </div>
-        <CommonTabPanels
-          activeTab={tab}
-          common={common}
-          governance={governance}
-          commonMember={commonMember}
-          subCommons={subCommons}
-        />
-        {isTabletView && (
-          <CommonTabs
-            className={styles.tabs}
-            activeTab={tab}
-            allowedTabs={allowedTabs}
-            onTabChange={setTab}
-          />
-        )}
-      </div>
+      </CommonSidenavLayoutPageContent>
       {isGlobalDataFetched && isNewProjectCreated && parentCommonId && (
         <SuccessfulProjectCreationModal parentCommonId={parentCommonId} />
       )}

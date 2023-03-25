@@ -1,0 +1,27 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.container {
+  padding: 0 2.125rem;
+  display: flex;
+  align-items: center;
+
+  @include tablet {
+    display: none;
+  }
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.backIcon {
+  flex-shrink: 0;
+  margin-right: 0.375rem;
+}

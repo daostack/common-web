@@ -1,12 +1,15 @@
 import React, { FC, ReactNode } from "react";
+import { useHistory } from "react-router-dom";
+import { LongLeftArrowIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import {
   Button,
   ButtonSize,
   ButtonVariant,
   TopNavigation,
-  TopNavigationOpenSidenavButton,
+  TopNavigationBackButton,
 } from "@/shared/ui-kit";
+import { getCommonPagePath } from "@/shared/utils";
 import { useCommonDataContext } from "../../providers";
 import { CommonMemberInfo } from "../CommonMemberInfo";
 import { CommonMenuButton } from "../CommonMenuButton";
@@ -22,8 +25,13 @@ interface CommonTopNavigationProps {
 
 const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
   const { commonMember, circles, isSubCommon, commonId } = props;
+  const history = useHistory();
   const { isJoinAllowed, isJoinPending, onJoinCommon } = useCommonDataContext();
   const circlesMap = commonMember?.circles.map;
+
+  const handleBackButtonClick = () => {
+    history.push(getCommonPagePath(commonId));
+  };
 
   const renderCentralElement = (): ReactNode => {
     if (commonMember) {
@@ -69,7 +77,15 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
 
   return (
     <TopNavigation className={styles.container}>
-      <TopNavigationOpenSidenavButton />
+      {commonMember ? (
+        <TopNavigationBackButton
+          className={styles.backIconButton}
+          iconEl={<LongLeftArrowIcon className={styles.backIcon} />}
+          onClick={handleBackButtonClick}
+        />
+      ) : (
+        <div className={styles.emptyBlock} />
+      )}
       {renderCentralElement()}
       {renderRightElement()}
     </TopNavigation>
