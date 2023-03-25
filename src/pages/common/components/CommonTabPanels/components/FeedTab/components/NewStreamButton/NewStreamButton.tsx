@@ -31,6 +31,7 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   if (!isMobileVersion) {
     return (
       <DesktopMenu
+        className={styles.desktopMenu}
         triggerEl={
           <Button
             variant={buttonVariant}
