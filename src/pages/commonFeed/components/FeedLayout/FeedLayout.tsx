@@ -1,4 +1,12 @@
-import React, { FC, ReactNode, useMemo, useState } from "react";
+import React, {
+  CSSProperties,
+  FC,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import {
   ChatContextValue,
@@ -17,7 +25,9 @@ import {
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
 import { FeedItem } from "../../../common/components";
-import { DesktopChat, MobileChat } from "./components";
+import { DesktopChat, MobileChat, SplitView } from "./components";
+import { MIN_CHAT_WIDTH } from "./constants";
+import { getSplitViewMaxSize } from "./utils";
 import styles from "./FeedLayout.module.scss";
 
 interface FeedLayoutProps {
@@ -44,8 +54,12 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     loading,
     onFetchNext,
   } = props;
+  const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
   const [chatItem, setChatItem] = useState<ChatItem | null>();
+  const [chatWidth, setChatWidth] = useState(0);
+  const isChatItemSet = Boolean(chatItem);
+  const maxChatSize = getSplitViewMaxSize(windowWidth);
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
@@ -73,20 +87,32 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     [setChatItem, chatItem?.discussion.id, feedItemIdForAutoChatOpen],
   );
 
-  return (
+  useEffect(() => {
+    if (isChatItemSet) {
+      setChatWidth(MIN_CHAT_WIDTH);
+    }
+  }, [isChatItemSet]);
+
+  useEffect(() => {
+    if (chatWidth > maxChatSize) {
+      setChatWidth(maxChatSize);
+    }
+  }, [maxChatSize]);
+
+  const contentStyles = {
+    "--chat-w": `${chatWidth}px`,
+  } as CSSProperties;
+
+  const contentEl = (
     <CommonSidenavLayoutPageContent
+      className={styles.layoutPageContent}
       headerContent={headerContent}
       isGlobalLoading={isGlobalLoading}
     >
       <ChatContext.Provider value={chatContextValue}>
         <div
-          className={classNames(
-            styles.content,
-            {
-              [styles.contentWithChat]: Boolean(chatItem),
-            },
-            className,
-          )}
+          className={classNames(styles.content, className)}
+          style={contentStyles}
         >
           <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
             {feedItems?.map((item) => (
@@ -119,6 +145,18 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
         </div>
       </ChatContext.Provider>
     </CommonSidenavLayoutPageContent>
+  );
+
+  return isTabletView ? (
+    contentEl
+  ) : (
+    <SplitView
+      minSize={isChatItemSet ? MIN_CHAT_WIDTH : 0}
+      maxSize={maxChatSize}
+      onChange={setChatWidth}
+    >
+      {contentEl}
+    </SplitView>
   );
 };
 
