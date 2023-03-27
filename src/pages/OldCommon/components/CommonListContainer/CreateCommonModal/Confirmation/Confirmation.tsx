@@ -1,5 +1,5 @@
 import React, { useEffect, FC, ReactNode } from "react";
-import { Common } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import { IntermediateCreateCommonPayload } from "../../../../interfaces";
 import { useCommonCreation, useSubCommonCreation } from "../useCases";
 import { Processing } from "./Processing";
@@ -10,7 +10,10 @@ interface ConfirmationProps {
   setTitle: (title: ReactNode) => void;
   setGoBackHandler: (handler?: (() => boolean | undefined) | null) => void;
   setShouldShowCloseButton: (shouldShow: boolean) => void;
-  onFinish: (common: Common | null, errorText: string) => void;
+  onFinish: (
+    data: { common: Common; governance: Governance } | null,
+    errorText: string,
+  ) => void;
   creationData: IntermediateCreateCommonPayload;
 }
 
@@ -26,22 +29,22 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
   } = props;
   const {
     isCommonCreationLoading,
-    common: createdCommon,
+    data: createdCommonData,
     error: commonCreationError,
     createCommon,
   } = useCommonCreation();
   const {
     isSubCommonCreationLoading,
-    subCommon: createdSubCommon,
+    data: createdSubCommonData,
     error: subCommonCreationError,
     createSubCommon,
   } = useSubCommonCreation();
   const isLoading = isCommonCreationLoading || isSubCommonCreationLoading;
-  const common = createdCommon || createdSubCommon;
+  const data = createdCommonData || createdSubCommonData;
   const error = commonCreationError || subCommonCreationError;
 
   useEffect(() => {
-    if (isLoading || common || error) {
+    if (isLoading || data || error) {
       return;
     }
 
@@ -52,7 +55,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     }
   }, [
     isLoading,
-    common,
+    data,
     error,
     creationData,
     createCommon,
@@ -62,12 +65,12 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
   ]);
 
   useEffect(() => {
-    if (!common && !error) {
+    if (!data && !error) {
       return;
     }
 
-    onFinish(common, error);
-  }, [common, error, onFinish]);
+    onFinish(data, error);
+  }, [data, error, onFinish]);
 
   useEffect(() => {
     setTitle(null);

@@ -6,6 +6,7 @@ export interface ProjectsStateItem {
   name: string;
   directParent: Common["directParent"];
   hasMembership?: boolean;
+  hasPermissionToAddProject?: boolean;
   notificationsAmount?: number;
 }
 

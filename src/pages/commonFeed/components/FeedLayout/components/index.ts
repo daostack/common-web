@@ -1,3 +1,4 @@
 export * from "./DesktopChat";
-export * from "./MobileChat";
 export * from "./FeedItemPreviewModal";
+export * from "./MobileChat";
+export * from "./SplitView";

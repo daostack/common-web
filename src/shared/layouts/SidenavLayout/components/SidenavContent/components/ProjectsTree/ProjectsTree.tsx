@@ -23,13 +23,20 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     activeItem,
     itemIdWithNewProjectCreation = "",
   } = props;
+  const isActiveCheckAllowed = !itemIdWithNewProjectCreation;
   const contextValue = useMemo<TreeContextValue>(
     () => ({
       activeItemId: activeItem?.id,
       itemIdWithNewProjectCreation,
+      isActiveCheckAllowed,
       treeItemTriggerStyles,
     }),
-    [activeItem?.id, itemIdWithNewProjectCreation, treeItemTriggerStyles],
+    [
+      activeItem?.id,
+      itemIdWithNewProjectCreation,
+      isActiveCheckAllowed,
+      treeItemTriggerStyles,
+    ],
   );
 
   return (

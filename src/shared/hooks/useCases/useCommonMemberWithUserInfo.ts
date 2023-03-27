@@ -53,7 +53,7 @@ export const useCommonMemberWithUserInfo = (
     ? {
         data: {
           id: commonMember.id,
-          userId: commonMember.userId,
+          userId: user.uid,
           joinedAt: commonMember.joinedAt,
           circleIds: [circlesString],
           user: user,

@@ -17,7 +17,7 @@ export interface User {
   createdAt?: Date;
   updatedAt?: Date;
   proposals?: Proposal[];
-  uid?: string;
+  uid: string;
   roles?: UserRole[];
   deleted?: true;
   //  subscriptions?: Subscription[];

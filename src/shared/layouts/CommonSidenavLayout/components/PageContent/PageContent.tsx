@@ -4,12 +4,13 @@ import { Loader, LoaderVariant } from "@/shared/ui-kit";
 import styles from "./PageContent.module.scss";
 
 interface FeedLayoutProps {
+  className?: string;
   headerContent: ReactNode;
   isGlobalLoading?: boolean;
 }
 
 const PageContent: FC<FeedLayoutProps> = (props) => {
-  const { headerContent, children, isGlobalLoading = false } = props;
+  const { className, headerContent, children, isGlobalLoading = false } = props;
   let headerEl: ReactNode = null;
 
   if (isValidElement(headerContent)) {
@@ -27,7 +28,7 @@ const PageContent: FC<FeedLayoutProps> = (props) => {
           variant={LoaderVariant.Global}
         />
       )}
-      <div className={styles.container}>
+      <div className={classNames(styles.container, className)}>
         {headerEl}
         {children}
       </div>

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Common } from "@/shared/models";
+import { Common, Governance } from "@/shared/models";
 import {
   getFileNameForUploading,
   uploadFile,
@@ -13,7 +13,7 @@ import { createCommon as createCommonAction } from "../../../../store/actions";
 
 interface Return {
   isCommonCreationLoading: boolean;
-  common: Common | null;
+  data: { common: Common; governance: Governance } | null;
   error: string;
   createCommon: (
     creationData: IntermediateCreateCommonPayload,
@@ -41,7 +41,10 @@ export const getCommonImageURL = async (
 
 const useCommonCreation = (): Return => {
   const [isCommonCreationLoading, setIsCommonCreationLoading] = useState(false);
-  const [common, setCommon] = useState<Common | null>(null);
+  const [data, setData] = useState<{
+    common: Common;
+    governance: Governance;
+  } | null>(null);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
@@ -76,11 +79,11 @@ const useCommonCreation = (): Return => {
       dispatch(
         createCommonAction.request({
           payload,
-          callback: (error, common) => {
-            if (error || !common) {
+          callback: (error, data) => {
+            if (error || !data) {
               setError("Something went wrong...");
             } else {
-              setCommon(common);
+              setData(data);
             }
 
             setIsCommonCreationLoading(false);
@@ -93,7 +96,7 @@ const useCommonCreation = (): Return => {
 
   return {
     isCommonCreationLoading,
-    common,
+    data,
     error,
     createCommon,
   };

@@ -98,6 +98,22 @@ class CommonService {
         .get()
     ).docs.map((ref) => ref.ref.path.split("/")[1]);
 
+  public getAllUserCommonMemberInfo = async (
+    userId: string,
+  ): Promise<(CommonMember & { commonId: string })[]> => {
+    const snapshot = await firebase
+      .firestore()
+      .collectionGroup(SubCollections.Members)
+      .where("userId", "==", userId)
+      .withConverter(commonMemberConverter)
+      .get();
+
+    return snapshot.docs.map((doc) => ({
+      ...doc.data(),
+      commonId: doc.ref.path.split("/")[1],
+    }));
+  };
+
   public getCommonsWithSubCommons = async (
     commonIds: string[],
   ): Promise<Common[]> => {

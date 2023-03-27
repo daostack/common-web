@@ -4,12 +4,13 @@ import {
   IntermediateCreateCommonPayload,
 } from "@/pages/OldCommon/interfaces";
 import { createSubCommon as createSubCommonApi } from "@/pages/OldCommon/store/api";
-import { Common } from "@/shared/models";
+import { GovernanceService } from "@/services";
+import { Common, Governance } from "@/shared/models";
 import { getCommonImageURL } from "./useCommonCreation";
 
 interface Return {
   isSubCommonCreationLoading: boolean;
-  subCommon: Common | null;
+  data: { common: Common; governance: Governance } | null;
   error: string;
   createSubCommon: (
     creationData: IntermediateCreateCommonPayload,
@@ -20,7 +21,10 @@ interface Return {
 const useSubCommonCreation = (): Return => {
   const [isSubCommonCreationLoading, setIsCommonCreationLoading] =
     useState(false);
-  const [subCommon, setSubCommon] = useState<Common | null>(null);
+  const [data, setData] = useState<{
+    common: Common;
+    governance: Governance;
+  } | null>(null);
   const [error, setError] = useState("");
 
   const createSubCommon = useCallback(
@@ -55,7 +59,17 @@ const useSubCommonCreation = (): Return => {
 
       try {
         const common = await createSubCommonApi(payload);
-        setSubCommon(common);
+        const governance = await GovernanceService.getGovernanceByCommonId(
+          common.id,
+        );
+
+        if (!governance) {
+          throw new Error(
+            `There is no governance for project with id = "${common.id}"`,
+          );
+        }
+
+        setData({ common, governance });
       } catch (error) {
         setError("Something went wrong...");
       } finally {
@@ -67,7 +81,7 @@ const useSubCommonCreation = (): Return => {
 
   return {
     isSubCommonCreationLoading,
-    subCommon,
+    data,
     error,
     createSubCommon,
   };

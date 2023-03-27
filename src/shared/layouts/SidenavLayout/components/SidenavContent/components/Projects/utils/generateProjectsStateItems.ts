@@ -19,6 +19,7 @@ export const getItemFromProjectsStateItem = (
     name: projectsStateItem.name,
     path: ROUTE_PATHS.COMMON.replace(":id", projectsStateItem.commonId),
     hasMembership: projectsStateItem.hasMembership,
+    hasPermissionToAddProject: projectsStateItem.hasPermissionToAddProject,
     notificationsAmount: projectsStateItem.notificationsAmount,
     items,
   };

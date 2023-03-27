@@ -1,9 +1,23 @@
+@import "../../../../../../../constants";
+
 .parentItem {
   flex-shrink: 0;
 }
 
 .parentItemTrigger {
   overflow: unset;
+}
+
+.addProjectItem {
+  --item-text-color: #{$c-pink-primary};
+}
+
+.newProjectImage {
+  background-color: $c-pink-dark;
+}
+
+.plusIcon {
+  padding-right: 0.5rem;
 }
 
 .loader {
