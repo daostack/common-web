@@ -1,0 +1,136 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.container {
+  margin-inline: -1.5rem;
+  min-height: 3.0625rem;
+  max-height: 5rem;
+  padding: 0.875rem 0.875rem 1.0625rem 1.5rem;
+  margin-bottom: 0;
+  border-top: 0.0625rem solid $c-neutrals-200;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 0.1875rem 0.5rem #{$c-common-card-shadow-hover};
+  }
+
+  @include tablet {
+    display: flex;
+    flex-direction: row;
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.containerActive {
+  border: 0.0625rem solid $c-neutrals-300;
+  margin: 0 -1.4375rem 0 -1.5rem;
+  background-color: $c-pink-active-feed-cards;
+
+  @include tablet {
+    margin-right: -1.5rem;
+  }
+}
+
+.containerExpanded {
+  border-bottom: none;
+}
+
+.expandIcon {
+  height: 1.5rem;
+  width: 1.5rem;
+  rotate: 90deg;
+  color: $secondary-blue;
+  align-self: center;
+  margin-right: 0.5rem;
+}
+
+.expandIconActive {
+  rotate: -90deg;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.leftContent {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: $c-neutrals-300;
+}
+
+.rightContent {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.text {
+  margin: 0;
+  font-family: PoppinsSans, sans-serif;
+  font-weight: normal;
+}
+
+.title {
+  color: $secondary-blue;
+  font-size: $moderate-xsmall;
+  line-height: 1.5rem;
+
+  @include tablet {
+    text-overflow: ellipsis;
+    max-width: 11.75rem;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+.lastMessage {
+  color: $c-neutrals-300;
+  font-size: $mobile-title;
+  line-height: 1.25rem;
+  @include tablet {
+    max-width: 16.1875rem;
+  }
+}
+
+.messageCount {
+  font-size: $small;
+  line-height: 1.375rem;
+  margin-left: 0.75rem;
+}
+
+.lastActivity {
+  color: $c-neutrals-300;
+  font-size: $xxsmall;
+  font-weight: 300;
+  text-align: right;
+  word-break: break-word;
+}
+
+.unreadMessages {
+  margin-left: 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.4375rem;
+  height: 1.375rem;
+  background-color: $c-pink-primary;
+  border-radius: 0.625rem;
+  font-size: $xxsmall-2;
+  font-weight: 600;
+  color: $c-neutrals-100;
+}
+
+.unreadMessagesLong {
+  width: 1.9375rem;
+}

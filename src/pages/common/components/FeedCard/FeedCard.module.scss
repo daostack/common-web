@@ -1,8 +1,10 @@
 @import "../../../../constants";
+@import "../../../../styles/sizes";
 
 .container {
   --feed-card-ph: 1.5rem;
 
+  margin: 0 -1.5rem;
   position: relative;
   padding: 0;
   display: flex;
@@ -15,9 +17,14 @@
 }
 .containerActive {
   border: 0.0625rem solid $c-neutrals-300;
+  border-top: none;
+  margin: 0 -1.4375rem 0 -1.5rem;
+
+  @include tablet {
+    margin-right: -1.5rem;
+  }
 }
 
 .containerHovering {
   cursor: pointer;
-  box-shadow: 0 0.1875rem 0.5rem #{$c-common-card-shadow-hover};
 }

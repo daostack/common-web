@@ -41,7 +41,7 @@
           font-size: $moderate-med;
         }
         .pre-upload__sub-title {
-          font-family: PoppinsSans-Regular;
+          font-family: PoppinsSans, sans-serif;
           font-size: $xsmall;
           margin-top: 0.6rem;
           margin-bottom: 1.5rem;
@@ -60,7 +60,7 @@
             width: 115px;
             .summary-item__title {
               font-size: $xxsmall;
-              font-family: PoppinsSans-Regular;
+              font-family: PoppinsSans, sans-serif;
               margin-bottom: 1rem;
             }
             .summary-item__value {
@@ -99,7 +99,7 @@
           font-size: $moderate-med;
         }
         .upload-success__sub-text {
-          font-family: PoppinsSans-Regular;
+          font-family: PoppinsSans, sans-serif;
           font-size: $xsmall;
           margin: 1rem 0;
         }

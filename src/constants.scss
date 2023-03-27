@@ -30,6 +30,7 @@ $moderate-med: 23px; // 1.4375rem
 $moderate-xmed: 21px; // 1.3125rem
 $moderate-small: 19px; // 1.1875rem
 $moderate: 17px; // 1.0625rem
+$moderate-xsmall: 16px; //1rem
 $small: 15px; // 0.9375rem
 $mobile-title: 14px; // 0.875rem
 $xsmall: 13px; // 0.8125rem
@@ -142,6 +143,8 @@ $c-sidebar-shadow: rgba(0, 26, 54, 0.08);
 $c-sidebar-user-menu-shadow: rgba(0, 0, 0, 0.15259);
 $c-common-card-shadow: rgba(0, 26, 54, 0.08);
 $c-common-card-shadow-hover: rgba(0, 26, 54, 0.4);
+$split-view-resizer-border-color: rgba(255, 255, 255, 0);
+$split-view-resizer-border-hover-color: rgba(0, 0, 0, 0.5);
 
 /* breakpoints */
 $small-laptop: 1366px;
