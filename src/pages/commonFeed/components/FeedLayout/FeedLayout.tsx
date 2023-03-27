@@ -138,6 +138,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
                 governanceCircles={governance.circles}
                 isMobileVersion={isTabletView}
                 userCircleIds={userCircleIds}
+                sizeKey={`${windowWidth}_${chatWidth}`}
               />
             ))}
           </InfiniteScroll>
