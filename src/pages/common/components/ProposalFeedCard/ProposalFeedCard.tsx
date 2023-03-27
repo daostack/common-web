@@ -199,7 +199,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       unreadMessages={feedItemUserMetadata?.count || 0}
       title={discussion?.title}
       lastMessage={discussion?.message}
-      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.general}
+      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
     >
       <FeedCardHeader
@@ -252,19 +252,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           isCountdownState={isCountdownState}
         />
       </FeedCardContent>
-      {/* <FeedCardFooter
-        messageCount={discussion?.messageCount || 0}
-        lastActivity={item.updatedAt.seconds * 1000}
-        unreadMessages={feedItemUserMetadata?.count || 0}
-        onMessagesClick={handleOpenChat}
-        onClick={handleOpenChat}
-        onMouseEnter={() => {
-          onHover(true);
-        }}
-        onMouseLeave={() => {
-          onHover(false);
-        }}
-      /> */}
     </FeedCard>
   );
 };

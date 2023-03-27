@@ -42,12 +42,11 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
       }}
       closeIconSize={16}
       isShowing={
-        Boolean(isShowFeedItemDetailsModal) &&
-        Boolean(selectedFeedItem)
+        Boolean(isShowFeedItemDetailsModal) && Boolean(selectedFeedItem)
       }
       onClose={handleCloseModal}
       type={ModalType.MobilePopUp}
-      closeIconVariant={CloseIconVariant.thin}
+      closeIconVariant={CloseIconVariant.Thin}
     >
       {selectedFeedItem && (
         <FeedItem
