@@ -68,6 +68,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const [chatWidth, setChatWidth] = useState(0);
   const isChatItemSet = Boolean(chatItem);
   const maxChatSize = getSplitViewMaxSize(windowWidth);
+  const sizeKey = `${windowWidth}_${chatWidth}`;
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
@@ -139,7 +140,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
                 isMobileVersion={isTabletView}
                 userCircleIds={userCircleIds}
                 isActive={item.id === chatItem?.feedItemId}
-                sizeKey={`${windowWidth}_${chatWidth}`}
+                sizeKey={sizeKey}
               />
             ))}
           </InfiniteScroll>
@@ -164,6 +165,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
                 selectedFeedItem={selectedFeedItem}
                 userCircleIds={userCircleIds}
                 isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
+                sizeKey={sizeKey}
               />
             </MobileChat>
           )}
