@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { FeedItem } from "@/pages/common/components";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
+import { FeedItem } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
 import { Modal } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModalType, CloseIconVariant } from "@/shared/interfaces";

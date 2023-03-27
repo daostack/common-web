@@ -3,7 +3,9 @@
   height: 0.625rem;
 }
 
-.desktopMenu {
+.buttonMenu {
   position: absolute;
-  left: 15rem;
+  left: 100%;
+  transform: translate(-100%, 0rem);
+  margin-left: -1.3125rem;
 }
