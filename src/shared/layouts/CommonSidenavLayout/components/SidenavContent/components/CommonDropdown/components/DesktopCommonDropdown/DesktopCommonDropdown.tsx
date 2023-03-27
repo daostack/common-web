@@ -66,6 +66,7 @@ const DesktopCommonDropdown: FC<DesktopCommonDropdownProps> = (props) => {
         menuItemsClassName={styles.menuItems}
         triggerEl={triggerEl}
         items={finalItems}
+        shouldPreventDefaultOnClose
       />
     </div>
   );

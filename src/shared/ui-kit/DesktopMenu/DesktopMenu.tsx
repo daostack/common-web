@@ -2,7 +2,7 @@ import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import { Menu } from "@headlessui/react";
 import { MenuItem as Item } from "@/shared/interfaces";
-import { MenuItems, Transition } from "./components";
+import { MenuItems, Transition, Trigger } from "./components";
 import styles from "./DesktopMenu.module.scss";
 
 interface DesktopMenuProps {
@@ -10,17 +10,31 @@ interface DesktopMenuProps {
   menuItemsClassName?: string;
   triggerEl: ReactNode;
   items: Item[];
+  shouldPreventDefaultOnClose?: boolean;
 }
 
 const DesktopMenu: FC<DesktopMenuProps> = (props) => {
-  const { className, menuItemsClassName, triggerEl, items } = props;
+  const {
+    className,
+    menuItemsClassName,
+    triggerEl,
+    items,
+    shouldPreventDefaultOnClose,
+  } = props;
 
   return (
     <div className={classNames(styles.container, className)}>
       <Menu>
-        {({ open }) => (
+        {({ open, close }) => (
           <>
-            <Menu.Button as={React.Fragment}>{triggerEl}</Menu.Button>
+            <Menu.Button as={React.Fragment}>
+              <Trigger
+                triggerEl={triggerEl}
+                isOpen={open}
+                onClose={close}
+                shouldPreventDefaultOnClose={shouldPreventDefaultOnClose}
+              />
+            </Menu.Button>
             <Transition show={open}>
               {open && (
                 <MenuItems className={menuItemsClassName} items={items} />
