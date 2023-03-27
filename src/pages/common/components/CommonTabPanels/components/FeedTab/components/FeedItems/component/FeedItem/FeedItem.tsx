@@ -15,6 +15,7 @@ interface FeedItemProps {
   isMobileVersion?: boolean;
   governanceId?: string;
   isPreviewMode?: boolean;
+  isActive?: boolean;
   sizeKey?: string;
 }
 
@@ -27,6 +28,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isMobileVersion = false,
     governanceId,
     isPreviewMode = false,
+    isActive = false,
     sizeKey,
   } = props;
   useFeedItemSubscription(commonId, item.id);
@@ -56,7 +58,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         governanceCircles={governanceCircles}
         governanceId={governanceId}
         isPreviewMode={isPreviewMode}
-        sizeKey={sizeKey}
+        sizeKey={isActive ? sizeKey : undefined}
       />
     );
   }
