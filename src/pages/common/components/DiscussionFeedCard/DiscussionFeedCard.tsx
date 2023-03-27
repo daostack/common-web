@@ -9,7 +9,7 @@ import {
   useFeedItemUserMetadata,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, Governance } from "@/shared/models";
+import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
 import { DesktopStyleMenu } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
@@ -17,7 +17,6 @@ import {
   FeedCard,
   FeedCardHeader,
   FeedCardContent,
-  FeedCardFooter,
   FeedCountdown,
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
@@ -32,10 +31,11 @@ interface DiscussionFeedCardProps {
   isMobileVersion?: boolean;
   commonId: string;
   governanceId?: string;
+  isPreviewMode: boolean;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const { activeItemDiscussionId, setChatItem, feedItemIdForAutoChatOpen } =
+  const { activeItemDiscussionId, setChatItem, feedItemIdForAutoChatOpen, setShouldShowSeeMore} =
     useChatContext();
   const {
     item,
@@ -43,6 +43,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     isMobileVersion = false,
     commonId,
     governanceId,
+    isPreviewMode,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -107,6 +108,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         circleVisibility: item.circleVisibility,
         lastSeenItem: feedItemUserMetadata?.lastSeen,
       });
+      setShouldShowSeeMore && setShouldShowSeeMore(discussion?.predefinedType !== PredefinedTypes.general);
     }
   }, [
     discussion,
@@ -150,6 +152,14 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       isActive={isActive}
       isLongPressed={isMenuOpen}
       isHovering={isHovering}
+      messageCount={discussion?.messageCount || 0}
+      lastActivity={item.updatedAt.seconds * 1000}
+      unreadMessages={feedItemUserMetadata?.count || 0}
+      onClick={handleOpenChat}
+      title={discussion?.title}
+      lastMessage={discussion?.message}
+      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.general}
+      isPreviewMode={isPreviewMode}
     >
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}
@@ -183,7 +193,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           onHover(false);
         }}
       />
-      <FeedCardFooter
+      {/* <FeedCardFooter
         messageCount={discussion?.messageCount || 0}
         lastActivity={item.updatedAt.seconds * 1000}
         unreadMessages={feedItemUserMetadata?.count || 0}
@@ -195,7 +205,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         onMouseLeave={() => {
           onHover(false);
         }}
-      />
+      /> */}
       {userId && discussion && (
         <ReportModal
           userId={userId}
