@@ -188,6 +188,7 @@ const MemberAdmittanceForProjectStep: FC<
             links: [],
             circleId,
             userId,
+            circleVisibility: commonMember!.circleIds,
           },
         };
         await ProposalService.createAssignProposal(payload);
