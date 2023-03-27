@@ -117,7 +117,6 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     "--chat-w": `${chatWidth}px`,
   } as CSSProperties;
 
-  const chatWrapperId = "adsas-dkljnaskdkasdklaslkn";
 
   const contentEl = (
     <CommonSidenavLayoutPageContent
@@ -130,22 +129,20 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
           className={classNames(styles.content, className)}
           style={contentStyles}
         >
-          {/* <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}> */}
-          <div id={chatWrapperId}>
+          <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
             {feedItems?.map((item) => (
               <FeedItem
                 key={item.id}
                 governanceId={governance.id}
                 commonId={common.id}
                 item={item}
-                // chatWrapperId={chatWrapperId}
                 governanceCircles={governance.circles}
                 isMobileVersion={isTabletView}
                 userCircleIds={userCircleIds}
               />
             ))}
           </div>
-          {/* </InfiniteScroll> */}
+          </InfiniteScroll>
           {chatItem && !isTabletView && (
             <DesktopChat
               className={styles.desktopChat}
