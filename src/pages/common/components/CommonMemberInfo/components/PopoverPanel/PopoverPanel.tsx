@@ -55,6 +55,7 @@ export const PopoverPanel: FC<PopoverPanelProps> = (props) => {
             userId={userId}
             userName={getUserName(user)}
             membersCount={circleMembersCount.get(circleId) ?? 0}
+            circleVisibility={circleIds}
           />
         ),
       )}

@@ -21,6 +21,7 @@ interface CommonMemberInfoProps {
   userId: string;
   userName: string;
   membersCount: number;
+  circleVisibility: string[];
 }
 
 export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
@@ -39,6 +40,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     userName,
     membersCount,
     isHighestTierCircle,
+    circleVisibility,
   } = props;
   const { onLeaveCircle, onJoinCircle } = useCommonDataContext();
 
@@ -101,6 +103,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
                 files: [],
                 circleId,
                 userId,
+                circleVisibility,
               },
             },
             circleName,
