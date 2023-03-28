@@ -59,7 +59,6 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
         <div className={styles.leftContent}>
           <p className={classNames(styles.text, styles.title)}>{title}</p>
           <p className={classNames(styles.text, styles.lastActivity)}>
-            {!isTabletView ? "Last Activity: " : ""}
             <TimeAgo milliseconds={lastActivity} />
           </p>
         </div>

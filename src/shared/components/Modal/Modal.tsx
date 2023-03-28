@@ -52,7 +52,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     withoutHorizontalPadding = false,
     withoutHeader = false,
     fullHeight = false,
-    closeIconVariant = CloseIconVariant.regular,
+    closeIconVariant = CloseIconVariant.Regular,
   } = props;
   const contentRef = useRef<HTMLDivElement>(null);
   const [footer, setFooter] = useState<ReactNode>(null);
@@ -200,7 +200,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
             )}
             onClick={handleClose}
           >
-            {closeIconVariant === CloseIconVariant.regular ? (
+            {closeIconVariant === CloseIconVariant.Regular ? (
               <CloseIcon
                 width={closeIconSize}
                 height={closeIconSize}
