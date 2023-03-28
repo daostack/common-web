@@ -68,8 +68,8 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
   }
 
   useEffect(() => {
-    if (isExpanded) {
-      containerRef?.current && scrollToTargetAdjusted();
+    if (isExpanded && containerRef?.current) {
+      scrollToTargetAdjusted();
     }
   }, [isExpanded]);
 
@@ -102,7 +102,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
   });
 
   return (
-    <div ref={containerRef} id={title}>
+    <div ref={containerRef}>
       {!isPreviewMode && (
         <FeedCardPreview
           messageCount={messageCount}
