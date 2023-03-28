@@ -40,7 +40,12 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         logoSrc={commonLogoSrc}
       />
       {separatorEl}
-      {!isTabletView && <Navigation />}
+      {!isTabletView && (
+        <>
+          <Navigation />
+          {separatorEl}
+        </>
+      )}
       <Projects />
       {isTabletView && (
         <LayoutTabs

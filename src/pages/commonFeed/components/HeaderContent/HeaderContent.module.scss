@@ -2,11 +2,9 @@
 @import "../../../../styles/sizes";
 
 .container {
-  padding-left: 1.5rem;
   padding-right: 1rem;
   display: flex;
   justify-content: space-between;
-  align-items: center;
 
   @include tablet {
     padding-left: 1rem;
@@ -24,8 +22,28 @@
 
 .commonContent {
   display: flex;
-  align-items: center;
   overflow: hidden;
+}
+
+.commonLink {
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  &:hover {
+    .commonName {
+      color: $c-pink-primary;
+      text-decoration: underline;
+    }
+  }
+
+  @include tablet {
+    padding-left: 0;
+    padding-right: 0.5rem;
+  }
 }
 
 .openSidenavIcon {
@@ -65,19 +83,9 @@
   font-family: PoppinsSans, sans-serif;
   font-weight: 500;
   font-size: $small;
-}
-
-.commonLink {
-  display: block;
   white-space: nowrap;
-  text-decoration: none;
   text-overflow: ellipsis;
   overflow: hidden;
-
-  &:hover {
-    color: $c-pink-primary;
-    text-decoration: underline;
-  }
 }
 
 .commonMembersAmount {
