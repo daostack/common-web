@@ -7,8 +7,8 @@ export enum ModalType {
 }
 
 export enum CloseIconVariant {
-  regular = "regular",
-  thin = "thin",
+  Regular = "regular",
+  Thin = "thin",
 }
 
 export interface ModalProps {

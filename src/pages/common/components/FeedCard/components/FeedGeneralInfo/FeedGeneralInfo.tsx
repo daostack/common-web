@@ -9,18 +9,16 @@ import {
   TextEditor,
   ImageGallery,
 } from "@/shared/ui-kit";
-import { isRTL } from "@/shared/utils";
 import styles from "./FeedGeneralInfo.module.scss";
 
 interface FeedGeneralInfoProps {
-  title?: string;
   subtitle?: ReactNode;
   description?: string;
   images?: CommonLink[];
 }
 
 export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
-  const { title, subtitle, description, images = [] } = props;
+  const { subtitle, description, images = [] } = props;
   const {
     setRef: setDescriptionRef,
     shouldShowFullText: shouldShowFullContent,
@@ -43,15 +41,6 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      {title && (
-        <p
-          className={classNames(styles.text, styles.title, {
-            [styles.titleRTL]: isRTL(title),
-          })}
-        >
-          {title}
-        </p>
-      )}
       {subtitle && (
         <p className={classNames(styles.text, styles.subtitle)}>{subtitle}</p>
       )}
@@ -65,7 +54,9 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           readOnly
         />
       )}
-      {images.length > 0 && shouldShowFullContent && <ImageGallery gallery={images} />}
+      {images.length > 0 && shouldShowFullContent && (
+        <ImageGallery gallery={images} />
+      )}
       {shouldDisplaySeeMoreButton && (
         <a
           className={classNames(styles.seeMore, styles.text)}

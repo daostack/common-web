@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect, useRef } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -22,6 +22,9 @@ interface FeedCardProps {
   isPreviewMode?: boolean;
 }
 
+const MOBILE_HEADER_HEIGHT = 52;
+const DESKTOP_HEADER_HEIGHT = 72;
+
 export const FeedCard: FC<FeedCardProps> = (props) => {
   const {
     className,
@@ -41,6 +44,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
   } = props;
   const isTabletView = useIsTabletView();
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isExpanded, setExpanded] = useState(false);
 
@@ -49,6 +53,25 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
       setExpanded(false);
     }
   }, [isActive]);
+
+  function scrollToTargetAdjusted() {
+    const headerOffset = isTabletView
+      ? MOBILE_HEADER_HEIGHT
+      : DESKTOP_HEADER_HEIGHT;
+    const elementPosition =
+      containerRef.current?.getBoundingClientRect().top ?? 0;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
+  }
+
+  useEffect(() => {
+    if (isExpanded && containerRef?.current) {
+      scrollToTargetAdjusted();
+    }
+  }, [isExpanded]);
 
   const handleClick = () => {
     if (!isTabletView) {
@@ -79,7 +102,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
   });
 
   return (
-    <>
+    <div ref={containerRef}>
       {!isPreviewMode && (
         <FeedCardPreview
           messageCount={messageCount}
@@ -112,6 +135,6 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           {children}
         </CommonCard>
       )}
-    </>
+    </div>
   );
 };

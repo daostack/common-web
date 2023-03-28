@@ -4,7 +4,6 @@ import { FeedGeneralInfo } from "../FeedGeneralInfo";
 import styles from "./FeedCardContent.module.scss";
 
 export type FeedCardContentProps = JSX.IntrinsicElements["div"] & {
-  title?: string;
   subtitle?: ReactNode;
   description?: string;
   images?: CommonLink[];
@@ -14,7 +13,6 @@ export type FeedCardContentProps = JSX.IntrinsicElements["div"] & {
 export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {
   const {
     children,
-    title,
     description,
     subtitle,
     images,
@@ -31,7 +29,6 @@ export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {
       onMouseLeave={onMouseLeave}
     >
       <FeedGeneralInfo
-        title={title}
         description={description}
         subtitle={subtitle}
         images={images}

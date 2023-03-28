@@ -114,7 +114,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       });
       setShouldShowSeeMore &&
         setShouldShowSeeMore(
-          discussion?.predefinedType !== PredefinedTypes.general,
+          discussion?.predefinedType !== PredefinedTypes.General,
         );
     }
   }, [
@@ -165,7 +165,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       onClick={handleOpenChat}
       title={discussion?.title}
       lastMessage={discussion?.message}
-      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.general}
+      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
     >
       <FeedCardHeader
@@ -189,7 +189,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         governanceId={governanceId}
       />
       <FeedCardContent
-        title={discussion?.title}
         description={discussion?.message}
         images={discussion?.images}
         onClick={handleOpenChat}
@@ -200,19 +199,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           onHover(false);
         }}
       />
-      {/* <FeedCardFooter
-        messageCount={discussion?.messageCount || 0}
-        lastActivity={item.updatedAt.seconds * 1000}
-        unreadMessages={feedItemUserMetadata?.count || 0}
-        onMessagesClick={handleOpenChat}
-        onClick={handleOpenChat}
-        onMouseEnter={() => {
-          onHover(true);
-        }}
-        onMouseLeave={() => {
-          onHover(false);
-        }}
-      /> */}
       {userId && discussion && (
         <ReportModal
           userId={userId}
