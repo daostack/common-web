@@ -13,6 +13,7 @@ interface FeedItemPreviewModalProps {
   common: Common;
   governance: Governance;
   isShowFeedItemDetailsModal?: boolean;
+  sizeKey?: string;
 }
 
 const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
@@ -22,6 +23,7 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
     common,
     governance,
     isShowFeedItemDetailsModal,
+    sizeKey,
   } = props;
   const isTabletView = useIsTabletView();
   const { setIsShowFeedItemDetailsModal } = useChatContext();
@@ -42,8 +44,7 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
       }}
       closeIconSize={16}
       isShowing={
-        Boolean(isShowFeedItemDetailsModal) &&
-        Boolean(selectedFeedItem)
+        Boolean(isShowFeedItemDetailsModal) && Boolean(selectedFeedItem)
       }
       onClose={handleCloseModal}
       type={ModalType.MobilePopUp}
@@ -58,6 +59,8 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
           isMobileVersion={isTabletView}
           userCircleIds={userCircleIds}
           isPreviewMode
+          isActive
+          sizeKey={sizeKey}
         />
       )}
     </Modal>

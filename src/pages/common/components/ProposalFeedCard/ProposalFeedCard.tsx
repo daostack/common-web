@@ -40,6 +40,7 @@ interface ProposalFeedCardProps {
   governanceCircles: Governance["circles"];
   governanceId?: string;
   isPreviewMode?: boolean;
+  sizeKey?: string;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
