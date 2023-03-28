@@ -3,6 +3,7 @@ import { BaseEntity } from "./BaseEntity";
 import { Discussion } from "./Discussion";
 import { DiscussionMessage } from "./DiscussionMessage";
 import { PaymentAmount } from "./Payment";
+import { PinnedFeedItem } from "./PinnedFeedItem";
 import { Proposal } from "./Proposals";
 import { User } from "./User";
 import {
@@ -103,6 +104,8 @@ export interface Common extends BaseEntity {
   score: number;
 
   directParent: DirectParent | null;
+
+  pinnedFeedItems: PinnedFeedItem[];
 
   governanceDocumentUrl?: string;
 

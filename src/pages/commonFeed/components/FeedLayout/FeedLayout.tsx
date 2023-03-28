@@ -117,6 +117,8 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     "--chat-w": `${chatWidth}px`,
   } as CSSProperties;
 
+  //feedItems?.sort((a,b) => (common.pinnedFeedItems.find(item => item.feedObjectId === a.id && common.pinnedFeedItems.find(item => item.feedObjectId !== b.id)) ? 1 : 0));
+
   const contentEl = (
     <CommonSidenavLayoutPageContent
       className={styles.layoutPageContent}
