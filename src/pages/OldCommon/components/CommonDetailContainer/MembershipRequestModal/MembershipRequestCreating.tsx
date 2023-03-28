@@ -9,8 +9,14 @@ import { createMemberAdmittanceProposal } from "../../../store/actions";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
 
-export default function MembershipRequestCreating(props: IStageProps) {
-  const { userData, setUserData, common } = props;
+interface MembershipRequestCreatingProps extends IStageProps {
+  shouldSkipCreation?: boolean;
+}
+
+export default function MembershipRequestCreating(
+  props: MembershipRequestCreatingProps,
+) {
+  const { userData, setUserData, common, shouldSkipCreation = false } = props;
   const [isCreationSubmitted, setIsCreationSubmitted] = useState(false);
   const dispatch = useDispatch();
   const isLoading = useSelector(getLoading());
@@ -19,7 +25,7 @@ export default function MembershipRequestCreating(props: IStageProps) {
 
   useEffect(() => {
     (async () => {
-      if (isCreationSubmitted || !common) {
+      if (isCreationSubmitted || !common || shouldSkipCreation) {
         return;
       }
 
@@ -70,7 +76,15 @@ export default function MembershipRequestCreating(props: IStageProps) {
 
       setIsCreationSubmitted(true);
     })();
-  }, [isCreationSubmitted, common, dispatch, userData, setUserData, userName]);
+  }, [
+    isCreationSubmitted,
+    common,
+    dispatch,
+    userData,
+    setUserData,
+    userName,
+    shouldSkipCreation,
+  ]);
 
   useEffect(() => {
     if (isCreationSubmitted && !isLoading) {
