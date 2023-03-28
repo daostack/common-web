@@ -117,7 +117,6 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     "--chat-w": `${chatWidth}px`,
   } as CSSProperties;
 
-
   const contentEl = (
     <CommonSidenavLayoutPageContent
       className={styles.layoutPageContent}
@@ -141,7 +140,6 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
                 userCircleIds={userCircleIds}
               />
             ))}
-          </div>
           </InfiniteScroll>
           {chatItem && !isTabletView && (
             <DesktopChat
