@@ -221,7 +221,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         governanceId={governanceId}
       />
       <FeedCardContent
-        title={getProposalTitleString(proposal, { governanceCircles })}
         subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
         description={getProposalDescriptionString(
           proposal.data.args.description,

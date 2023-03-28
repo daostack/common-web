@@ -189,7 +189,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         governanceId={governanceId}
       />
       <FeedCardContent
-        title={discussion?.title}
         description={discussion?.message}
         images={discussion?.images}
         onClick={handleOpenChat}
