@@ -15,6 +15,7 @@ const initialFeedItems: FeedItems = {
 
 const initialState: CommonState = {
   feedItems: { ...initialFeedItems },
+  sharedFeedItemId: null,
   commonAction: null,
   discussionCreation: {
     data: null,
@@ -135,10 +136,15 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.getFeedItems.success, (state, { payload }) =>
     produce(state, (nextState) => {
+      const payloadData = nextState.sharedFeedItemId
+        ? payload.data &&
+          payload.data.filter((item) => item.id !== nextState.sharedFeedItemId)
+        : payload.data;
+
       nextState.feedItems = {
         ...payload,
         data:
-          payload.data && (nextState.feedItems.data || []).concat(payload.data),
+          payloadData && (nextState.feedItems.data || []).concat(payloadData),
         loading: false,
       };
     }),
@@ -232,5 +238,10 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.setIsNewProjectCreated, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.isNewProjectCreated = payload;
+    }),
+  )
+  .handleAction(actions.setSharedFeedItemId, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.sharedFeedItemId = payload;
     }),
   );

@@ -4,4 +4,5 @@ export enum QueryParamKey {
   SupportersFlowMonthly = "monthly",
   Language = "language",
   Tab = "tab",
+  Item = "item",
 }

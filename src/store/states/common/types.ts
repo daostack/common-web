@@ -25,6 +25,7 @@ export interface FeedItems {
 
 export interface CommonState {
   feedItems: FeedItems;
+  sharedFeedItemId: string | null;
   commonAction: CommonAction | null;
   discussionCreation: EntityCreation<NewDiscussionCreationFormValues>;
   proposalCreation: EntityCreation<NewProposalCreationFormValues>;

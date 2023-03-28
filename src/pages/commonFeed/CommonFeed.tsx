@@ -2,6 +2,8 @@ import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { QueryParamKey } from "@/shared/constants";
+import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
@@ -18,6 +20,7 @@ interface CommonFeedPageRouterParams {
 
 const CommonFeedPage: FC = () => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
+  const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const {
     data: commonData,
@@ -40,6 +43,9 @@ const CommonFeedPage: FC = () => {
   } = useCommonFeedItems(commonId);
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const sharedItemIdQueryParam = queryParams[QueryParamKey.Item];
+  const sharedItemId =
+    typeof sharedItemIdQueryParam === "string" ? sharedItemIdQueryParam : null;
   const isDataFetched = isCommonDataFetched;
 
   const fetchData = () => {
@@ -52,6 +58,10 @@ const CommonFeedPage: FC = () => {
       fetchCommonFeedItems();
     }
   };
+
+  useEffect(() => {
+    commonActions.setSharedFeedItemId(sharedItemId);
+  }, [sharedItemId]);
 
   useEffect(() => {
     fetchData();

@@ -6,8 +6,7 @@ export const selectCommonAction = (state: AppState) =>
 export const selectCommonMember = (state: AppState) =>
   state.common.commonMember;
 
-export const selectGovernance = (state: AppState) =>
-  state.common.governance;
+export const selectGovernance = (state: AppState) => state.common.governance;
 
 export const selectDiscussionCreationData = (state: AppState) =>
   state.common.discussionCreation.data;
@@ -25,3 +24,6 @@ export const selectFeedItems = (state: AppState) => state.common.feedItems;
 
 export const selectIsNewProjectCreated = (state: AppState) =>
   state.common.isNewProjectCreated;
+
+export const selectSharedFeedItemId = (state: AppState) =>
+  state.common.sharedFeedItemId;
