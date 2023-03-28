@@ -43,13 +43,18 @@ const CommonFeedPage: FC = () => {
   } = useCommonFeedItems(commonId);
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const sharedItemIdQueryParam = queryParams[QueryParamKey.Item];
-  const sharedItemId =
-    typeof sharedItemIdQueryParam === "string" ? sharedItemIdQueryParam : null;
+  const sharedFeedItemIdQueryParam = queryParams[QueryParamKey.Item];
+  const sharedFeedItemId =
+    (typeof sharedFeedItemIdQueryParam === "string" &&
+      sharedFeedItemIdQueryParam) ||
+    null;
   const isDataFetched = isCommonDataFetched;
 
   const fetchData = () => {
-    fetchCommonData(commonId);
+    fetchCommonData({
+      commonId,
+      sharedFeedItemId,
+    });
     fetchUserRelatedData();
   };
 
@@ -60,8 +65,8 @@ const CommonFeedPage: FC = () => {
   };
 
   useEffect(() => {
-    commonActions.setSharedFeedItemId(sharedItemId);
-  }, [sharedItemId]);
+    commonActions.setSharedFeedItemId(sharedFeedItemId);
+  }, [sharedFeedItemId]);
 
   useEffect(() => {
     fetchData();
