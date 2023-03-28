@@ -6,6 +6,7 @@
 .buttonMenu {
   position: absolute;
   left: 100%;
-  transform: translate(-100%, 0rem);
+  top: 50%;
+  transform: translate(-100%, -50%);
   margin-left: -1.3125rem;
 }
