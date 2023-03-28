@@ -62,12 +62,12 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
               {commonMembersAmount} member{commonMembersAmount === 1 ? "" : "s"}
             </p>
           </div>
-          <NewStreamButton
-            commonMember={commonMember}
-            governance={governance}
-            isMobileVersion={isMobileVersion}
-          />
         </NavLink>
+        <NewStreamButton
+          commonMember={commonMember}
+          governance={governance}
+          isMobileVersion={isMobileVersion}
+        />
       </div>
     </div>
   );
