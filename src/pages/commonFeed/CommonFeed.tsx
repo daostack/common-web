@@ -138,6 +138,7 @@ const CommonFeedPage: FC = () => {
         commonMember={commonMember}
         topFeedItems={topFeedItems}
         feedItems={commonFeedItems}
+        expandedFeedItemId={sharedFeedItemId}
         loading={areCommonFeedItemsLoading}
         onFetchNext={fetchMoreCommonFeedItems}
       />

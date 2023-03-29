@@ -35,8 +35,13 @@ interface DiscussionFeedCardProps {
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const { activeItemDiscussionId, setChatItem, feedItemIdForAutoChatOpen, setShouldShowSeeMore} =
-    useChatContext();
+  const {
+    activeItemDiscussionId,
+    setChatItem,
+    feedItemIdForAutoChatOpen,
+    expandedFeedItemId,
+    setShouldShowSeeMore,
+  } = useChatContext();
   const {
     item,
     governanceCircles,
@@ -94,6 +99,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     !isDiscussionFetched ||
     !isFeedItemUserMetadataFetched;
   const isActive = discussion?.id === activeItemDiscussionId;
+  const isExpanded = item.id === expandedFeedItemId;
 
   const circleVisibility = getVisibilityString(
     governanceCircles,
@@ -108,7 +114,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         circleVisibility: item.circleVisibility,
         lastSeenItem: feedItemUserMetadata?.lastSeen,
       });
-      setShouldShowSeeMore && setShouldShowSeeMore(discussion?.predefinedType !== PredefinedTypes.general);
+      setShouldShowSeeMore &&
+        setShouldShowSeeMore(
+          discussion?.predefinedType !== PredefinedTypes.general,
+        );
     }
   }, [
     discussion,
@@ -150,6 +159,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   return (
     <FeedCard
       isActive={isActive}
+      isExpanded={isExpanded}
       isLongPressed={isMenuOpen}
       isHovering={isHovering}
       messageCount={discussion?.messageCount || 0}

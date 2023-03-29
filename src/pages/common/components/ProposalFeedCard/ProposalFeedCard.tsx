@@ -48,8 +48,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { activeItemDiscussionId, setChatItem, feedItemIdForAutoChatOpen } =
-    useChatContext();
+  const {
+    activeItemDiscussionId,
+    setChatItem,
+    feedItemIdForAutoChatOpen,
+    expandedFeedItemId,
+  } = useChatContext();
   const {
     fetchUser: fetchFeedItemUser,
     data: feedItemUser,
@@ -105,6 +109,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   };
   const proposalId = item.data.id;
   const isActive = discussion?.id === activeItemDiscussionId;
+  const isExpanded = item.id === expandedFeedItemId;
 
   useEffect(() => {
     fetchFeedItemUser(item.userId);
@@ -193,6 +198,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   return (
     <FeedCard
       isActive={isActive}
+      isExpanded={isExpanded}
       isHovering={isHovering}
       onClick={handleOpenChat}
       messageCount={discussion?.messageCount || 0}

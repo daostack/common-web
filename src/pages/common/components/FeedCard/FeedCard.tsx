@@ -9,6 +9,7 @@ import styles from "./FeedCard.module.scss";
 interface FeedCardProps {
   className?: string;
   isActive?: boolean;
+  isExpanded?: boolean;
   isLongPressed?: boolean;
   isHovering?: boolean;
   messageCount?: number;
@@ -26,6 +27,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
   const {
     className,
     isActive = false,
+    isExpanded: isExpandedExternal = false,
     isLongPressed = false,
     isHovering = false,
     onLongPress,
@@ -49,6 +51,10 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
       setExpanded(false);
     }
   }, [isActive]);
+
+  useEffect(() => {
+    setExpanded(isExpandedExternal);
+  }, [isExpandedExternal]);
 
   const handleClick = () => {
     if (!isTabletView) {

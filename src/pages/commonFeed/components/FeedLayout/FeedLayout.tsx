@@ -44,6 +44,7 @@ interface FeedLayoutProps {
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: CommonFeed[] | null;
   topFeedItems?: CommonFeed[];
+  expandedFeedItemId?: string | null;
   loading: boolean;
   onFetchNext: () => void;
 }
@@ -58,6 +59,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     commonMember,
     feedItems,
     topFeedItems = [],
+    expandedFeedItemId,
     loading,
     onFetchNext,
   } = props;
@@ -110,10 +112,16 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
       setChatItem,
       activeItemDiscussionId: chatItem?.discussion.id,
       feedItemIdForAutoChatOpen,
+      expandedFeedItemId,
       setIsShowFeedItemDetailsModal,
       setShouldShowSeeMore,
     }),
-    [setChatItem, chatItem?.discussion.id, feedItemIdForAutoChatOpen],
+    [
+      setChatItem,
+      chatItem?.discussion.id,
+      feedItemIdForAutoChatOpen,
+      expandedFeedItemId,
+    ],
   );
 
   useEffect(() => {
