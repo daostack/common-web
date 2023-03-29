@@ -51,6 +51,7 @@ interface FeedLayoutProps {
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: CommonFeed[] | null;
   loading: boolean;
+  shouldHideContent?: boolean;
   onFetchNext: () => void;
 }
 
@@ -64,6 +65,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     commonMember,
     feedItems,
     loading,
+    shouldHideContent = false,
     onFetchNext,
   } = props;
   const commonAction = useSelector(selectCommonAction);
@@ -133,68 +135,70 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
       isGlobalLoading={isGlobalLoading}
     >
       <ChatContext.Provider value={chatContextValue}>
-        <div
-          className={classNames(styles.content, className)}
-          style={contentStyles}
-        >
-          {commonAction === CommonAction.NewDiscussion && (
-            <NewDiscussionCreation
-              common={common}
-              governanceCircles={governance.circles}
-              commonMember={commonMember}
-              isModalVariant={false}
-            />
-          )}
-          {commonAction === CommonAction.NewProposal && (
-            <NewProposalCreation
-              common={common}
-              governance={governance}
-              governanceCircles={governance.circles}
-              commonMember={commonMember}
-              isModalVariant={false}
-            />
-          )}
-          <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
-            {feedItems?.map((item) => (
-              <FeedItem
-                key={item.id}
-                governanceId={governance.id}
-                commonId={common.id}
-                item={item}
+        {!shouldHideContent && (
+          <div
+            className={classNames(styles.content, className)}
+            style={contentStyles}
+          >
+            {commonAction === CommonAction.NewDiscussion && (
+              <NewDiscussionCreation
+                common={common}
                 governanceCircles={governance.circles}
-                isMobileVersion={isTabletView}
-                userCircleIds={userCircleIds}
-                isActive={item.id === chatItem?.feedItemId}
-                sizeKey={sizeKey}
+                commonMember={commonMember}
+                isModalVariant={false}
               />
-            ))}
-          </InfiniteScroll>
-          {chatItem && !isTabletView && (
-            <DesktopChat
-              className={styles.desktopChat}
-              chatItem={chatItem}
-              common={common}
-              commonMember={commonMember}
-            />
-          )}
-          {isTabletView && (
-            <MobileChat
-              chatItem={chatItem}
-              common={common}
-              commonMember={commonMember}
-              shouldShowSeeMore={shouldShowSeeMore}
-            >
-              <FeedItemPreviewModal
+            )}
+            {commonAction === CommonAction.NewProposal && (
+              <NewProposalCreation
                 common={common}
                 governance={governance}
-                selectedFeedItem={selectedFeedItem}
-                userCircleIds={userCircleIds}
-                isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
-                sizeKey={sizeKey}
+                governanceCircles={governance.circles}
+                commonMember={commonMember}
+                isModalVariant={false}
               />
-            </MobileChat>
-          )}
-        </div>
+            )}
+            <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
+              {feedItems?.map((item) => (
+                <FeedItem
+                  key={item.id}
+                  governanceId={governance.id}
+                  commonId={common.id}
+                  item={item}
+                  governanceCircles={governance.circles}
+                  isMobileVersion={isTabletView}
+                  userCircleIds={userCircleIds}
+                  isActive={item.id === chatItem?.feedItemId}
+                  sizeKey={sizeKey}
+                />
+              ))}
+            </InfiniteScroll>
+            {chatItem && !isTabletView && (
+              <DesktopChat
+                className={styles.desktopChat}
+                chatItem={chatItem}
+                common={common}
+                commonMember={commonMember}
+              />
+            )}
+            {isTabletView && (
+              <MobileChat
+                chatItem={chatItem}
+                common={common}
+                commonMember={commonMember}
+                shouldShowSeeMore={shouldShowSeeMore}
+              >
+                <FeedItemPreviewModal
+                  common={common}
+                  governance={governance}
+                  selectedFeedItem={selectedFeedItem}
+                  userCircleIds={userCircleIds}
+                  isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
+                  sizeKey={sizeKey}
+                />
+              </MobileChat>
+            )}
+          </div>
+        )}
       </ChatContext.Provider>
     </CommonSidenavLayoutPageContent>
   );
