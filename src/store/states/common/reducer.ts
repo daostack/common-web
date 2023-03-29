@@ -16,6 +16,7 @@ const initialFeedItems: FeedItems = {
 const initialState: CommonState = {
   feedItems: { ...initialFeedItems },
   sharedFeedItemId: null,
+  sharedFeedItem: null,
   commonAction: null,
   discussionCreation: {
     data: null,
@@ -243,5 +244,10 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.setSharedFeedItemId, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.sharedFeedItemId = payload;
+    }),
+  )
+  .handleAction(actions.setSharedFeedItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.sharedFeedItem = payload;
     }),
   );

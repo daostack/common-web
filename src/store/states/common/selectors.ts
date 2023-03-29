@@ -25,5 +25,5 @@ export const selectFeedItems = (state: AppState) => state.common.feedItems;
 export const selectIsNewProjectCreated = (state: AppState) =>
   state.common.isNewProjectCreated;
 
-export const selectSharedFeedItemId = (state: AppState) =>
-  state.common.sharedFeedItemId;
+export const selectSharedFeedItem = (state: AppState) =>
+  state.common.sharedFeedItem;

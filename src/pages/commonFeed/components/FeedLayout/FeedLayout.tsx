@@ -43,7 +43,7 @@ interface FeedLayoutProps {
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: CommonFeed[] | null;
-  topFeedItem?: CommonFeed | null;
+  topFeedItems?: CommonFeed[];
   loading: boolean;
   onFetchNext: () => void;
 }
@@ -57,7 +57,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     governance,
     commonMember,
     feedItems,
-    topFeedItem,
+    topFeedItems = [],
     loading,
     onFetchNext,
   } = props;
@@ -74,15 +74,15 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const allFeedItems = useMemo(() => {
     const items: CommonFeed[] = [];
 
-    if (topFeedItem) {
-      items.push(topFeedItem);
+    if (topFeedItems) {
+      items.push(...topFeedItems);
     }
     if (feedItems) {
       items.push(...feedItems);
     }
 
     return items;
-  }, [topFeedItem, feedItems]);
+  }, [topFeedItems, feedItems]);
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],

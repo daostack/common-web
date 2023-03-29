@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -9,7 +9,7 @@ import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
-import { commonActions } from "@/store/states";
+import { commonActions, selectSharedFeedItem } from "@/store/states";
 import { FeedLayout, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
 import styles from "./CommonFeed.module.scss";
@@ -41,6 +41,7 @@ const CommonFeedPage: FC = () => {
     hasMore: hasMoreCommonFeedItems,
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(commonId);
+  const sharedFeedItem = useSelector(selectSharedFeedItem);
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const sharedFeedItemIdQueryParam = queryParams[QueryParamKey.Item];
@@ -48,6 +49,10 @@ const CommonFeedPage: FC = () => {
     (typeof sharedFeedItemIdQueryParam === "string" &&
       sharedFeedItemIdQueryParam) ||
     null;
+  const topFeedItems = useMemo(
+    () => (sharedFeedItem ? [sharedFeedItem] : []),
+    [sharedFeedItem],
+  );
   const isDataFetched = isCommonDataFetched;
 
   const fetchData = () => {
@@ -67,6 +72,12 @@ const CommonFeedPage: FC = () => {
   useEffect(() => {
     commonActions.setSharedFeedItemId(sharedFeedItemId);
   }, [sharedFeedItemId]);
+
+  useEffect(() => {
+    if (commonData?.sharedFeedItem) {
+      commonActions.setSharedFeedItem(commonData.sharedFeedItem);
+    }
+  }, [commonData?.sharedFeedItem]);
 
   useEffect(() => {
     fetchData();
@@ -125,6 +136,7 @@ const CommonFeedPage: FC = () => {
         common={commonData.common}
         governance={commonData.governance}
         commonMember={commonMember}
+        topFeedItems={topFeedItems}
         feedItems={commonFeedItems}
         loading={areCommonFeedItemsLoading}
         onFetchNext={fetchMoreCommonFeedItems}

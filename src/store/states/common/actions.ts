@@ -134,3 +134,7 @@ export const setIsNewProjectCreated = createStandardAction(
 export const setSharedFeedItemId = createStandardAction(
   CommonActionType.SET_SHARED_FEED_ITEM_ID,
 )<string | null>();
+
+export const setSharedFeedItem = createStandardAction(
+  CommonActionType.SET_SHARED_FEED_ITEM,
+)<CommonFeed | null>();
