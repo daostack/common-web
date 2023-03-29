@@ -44,6 +44,7 @@ interface FeedLayoutProps {
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: CommonFeed[] | null;
   loading: boolean;
+  shouldHideContent?: boolean;
   onFetchNext: () => void;
 }
 
@@ -57,6 +58,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     commonMember,
     feedItems,
     loading,
+    shouldHideContent = false,
     onFetchNext,
   } = props;
   const { width: windowWidth } = useWindowSize();
@@ -125,51 +127,53 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
       isGlobalLoading={isGlobalLoading}
     >
       <ChatContext.Provider value={chatContextValue}>
-        <div
-          className={classNames(styles.content, className)}
-          style={contentStyles}
-        >
-          <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
-            {feedItems?.map((item) => (
-              <FeedItem
-                key={item.id}
-                governanceId={governance.id}
-                commonId={common.id}
-                item={item}
-                governanceCircles={governance.circles}
-                isMobileVersion={isTabletView}
-                userCircleIds={userCircleIds}
-                isActive={item.id === chatItem?.feedItemId}
-                sizeKey={sizeKey}
-              />
-            ))}
-          </InfiniteScroll>
-          {chatItem && !isTabletView && (
-            <DesktopChat
-              className={styles.desktopChat}
-              chatItem={chatItem}
-              common={common}
-              commonMember={commonMember}
-            />
-          )}
-          {isTabletView && (
-            <MobileChat
-              chatItem={chatItem}
-              common={common}
-              commonMember={commonMember}
-              shouldShowSeeMore={shouldShowSeeMore}
-            >
-              <FeedItemPreviewModal
+        {!shouldHideContent && (
+          <div
+            className={classNames(styles.content, className)}
+            style={contentStyles}
+          >
+            <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
+              {feedItems?.map((item) => (
+                <FeedItem
+                  key={item.id}
+                  governanceId={governance.id}
+                  commonId={common.id}
+                  item={item}
+                  governanceCircles={governance.circles}
+                  isMobileVersion={isTabletView}
+                  userCircleIds={userCircleIds}
+                  isActive={item.id === chatItem?.feedItemId}
+                  sizeKey={sizeKey}
+                />
+              ))}
+            </InfiniteScroll>
+            {chatItem && !isTabletView && (
+              <DesktopChat
+                className={styles.desktopChat}
+                chatItem={chatItem}
                 common={common}
-                governance={governance}
-                selectedFeedItem={selectedFeedItem}
-                userCircleIds={userCircleIds}
-                isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
-                sizeKey={sizeKey}
+                commonMember={commonMember}
               />
-            </MobileChat>
-          )}
-        </div>
+            )}
+            {isTabletView && (
+              <MobileChat
+                chatItem={chatItem}
+                common={common}
+                commonMember={commonMember}
+                shouldShowSeeMore={shouldShowSeeMore}
+              >
+                <FeedItemPreviewModal
+                  common={common}
+                  governance={governance}
+                  selectedFeedItem={selectedFeedItem}
+                  userCircleIds={userCircleIds}
+                  isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
+                  sizeKey={sizeKey}
+                />
+              </MobileChat>
+            )}
+          </div>
+        )}
       </ChatContext.Provider>
     </CommonSidenavLayoutPageContent>
   );
