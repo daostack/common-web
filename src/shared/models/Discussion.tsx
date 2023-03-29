@@ -6,7 +6,7 @@ import { User } from "./User";
 import { Moderation } from "./shared";
 
 export enum PredefinedTypes {
-  general = "general",
+  General = "general",
 }
 
 export interface Discussion extends BaseEntity {

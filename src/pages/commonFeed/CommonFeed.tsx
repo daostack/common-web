@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { QueryParamKey } from "@/shared/constants";
@@ -8,7 +9,7 @@ import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
-import { checkIsProject } from "@/shared/utils";
+import { checkIsProject, getCommonPageAboutTabPath } from "@/shared/utils";
 import { commonActions, selectSharedFeedItem } from "@/store/states";
 import { FeedLayout, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
@@ -22,6 +23,7 @@ const CommonFeedPage: FC = () => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
+  const history = useHistory();
   const {
     data: commonData,
     fetched: isCommonDataFetched,
@@ -54,6 +56,7 @@ const CommonFeedPage: FC = () => {
     [sharedFeedItem],
   );
   const isDataFetched = isCommonDataFetched;
+  const hasAccessToPage = Boolean(commonMember);
 
   const fetchData = () => {
     fetchCommonData({
@@ -68,6 +71,12 @@ const CommonFeedPage: FC = () => {
       fetchCommonFeedItems();
     }
   };
+
+  useEffect(() => {
+    if (!user || (isGlobalDataFetched && !commonMember)) {
+      history.push(getCommonPageAboutTabPath(commonId));
+    }
+  }, [user, isGlobalDataFetched, commonMember, commonId]);
 
   useEffect(() => {
     dispatch(commonActions.setSharedFeedItemId(sharedFeedItemId));
@@ -139,7 +148,8 @@ const CommonFeedPage: FC = () => {
         topFeedItems={topFeedItems}
         feedItems={commonFeedItems}
         expandedFeedItemId={sharedFeedItemId}
-        loading={areCommonFeedItemsLoading}
+        loading={areCommonFeedItemsLoading || !hasAccessToPage}
+        shouldHideContent={!hasAccessToPage}
         onFetchNext={fetchMoreCommonFeedItems}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
