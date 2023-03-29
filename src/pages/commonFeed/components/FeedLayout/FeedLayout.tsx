@@ -43,6 +43,7 @@ interface FeedLayoutProps {
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: CommonFeed[] | null;
+  topFeedItem?: CommonFeed | null;
   loading: boolean;
   onFetchNext: () => void;
 }
@@ -56,6 +57,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     governance,
     commonMember,
     feedItems,
+    topFeedItem,
     loading,
     onFetchNext,
   } = props;
@@ -69,6 +71,18 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const isChatItemSet = Boolean(chatItem);
   const maxChatSize = getSplitViewMaxSize(windowWidth);
   const sizeKey = `${windowWidth}_${chatWidth}`;
+  const allFeedItems = useMemo(() => {
+    const items: CommonFeed[] = [];
+
+    if (topFeedItem) {
+      items.push(topFeedItem);
+    }
+    if (feedItems) {
+      items.push(...feedItems);
+    }
+
+    return items;
+  }, [topFeedItem, feedItems]);
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
@@ -78,18 +92,18 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
       return;
     }
 
-    const feedItem = feedItems?.find((item) =>
+    const feedItem = allFeedItems?.find((item) =>
       [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
         item.data.type,
       ),
     );
 
     return feedItem?.id;
-  }, [feedItems, isTabletView]);
+  }, [allFeedItems, isTabletView]);
 
   const selectedFeedItem = useMemo(() => {
-    return feedItems?.find((item) => item.id === chatItem?.feedItemId);
-  }, [feedItems, chatItem]);
+    return allFeedItems?.find((item) => item.id === chatItem?.feedItemId);
+  }, [allFeedItems, chatItem]);
 
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
@@ -130,7 +144,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
           style={contentStyles}
         >
           <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
-            {feedItems?.map((item) => (
+            {allFeedItems?.map((item) => (
               <FeedItem
                 key={item.id}
                 governanceId={governance.id}
