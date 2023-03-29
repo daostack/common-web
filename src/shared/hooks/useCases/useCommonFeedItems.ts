@@ -7,7 +7,10 @@ interface Return extends Pick<FeedItems, "data" | "loading" | "hasMore"> {
   fetch: () => void;
 }
 
-export const useCommonFeedItems = (commonId: string): Return => {
+export const useCommonFeedItems = (
+  commonId: string,
+  idsForNotListening?: string[],
+): Return => {
   const dispatch = useDispatch();
   const feedItems = useSelector(selectFeedItems);
 
@@ -29,14 +32,23 @@ export const useCommonFeedItems = (commonId: string): Return => {
       commonId,
       feedItems.firstDocTimestamp,
       (data) => {
-        if (data.length > 0) {
-          dispatch(commonActions.addNewFeedItems(data));
+        if (data.length === 0) {
+          return;
         }
+
+        const finalData =
+          idsForNotListening && idsForNotListening.length > 0
+            ? data.filter(
+                (item) => !idsForNotListening.includes(item.commonFeedItem.id),
+              )
+            : data;
+
+        dispatch(commonActions.addNewFeedItems(finalData));
       },
     );
 
     return unsubscribe;
-  }, [feedItems.firstDocTimestamp, commonId]);
+  }, [feedItems.firstDocTimestamp, commonId, idsForNotListening]);
 
   return {
     ...feedItems,

@@ -24,6 +24,15 @@ const CommonFeedPage: FC = () => {
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
+  const sharedFeedItemIdQueryParam = queryParams[QueryParamKey.Item];
+  const sharedFeedItemId =
+    (typeof sharedFeedItemIdQueryParam === "string" &&
+      sharedFeedItemIdQueryParam) ||
+    null;
+  const commonFeedItemIdsForNotListening = useMemo(
+    () => (sharedFeedItemId ? [sharedFeedItemId] : []),
+    [sharedFeedItemId],
+  );
   const {
     data: commonData,
     fetched: isCommonDataFetched,
@@ -42,15 +51,10 @@ const CommonFeedPage: FC = () => {
     loading: areCommonFeedItemsLoading,
     hasMore: hasMoreCommonFeedItems,
     fetch: fetchCommonFeedItems,
-  } = useCommonFeedItems(commonId);
+  } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const sharedFeedItemIdQueryParam = queryParams[QueryParamKey.Item];
-  const sharedFeedItemId =
-    (typeof sharedFeedItemIdQueryParam === "string" &&
-      sharedFeedItemIdQueryParam) ||
-    null;
   const topFeedItems = useMemo(
     () => (sharedFeedItem ? [sharedFeedItem] : []),
     [sharedFeedItem],
