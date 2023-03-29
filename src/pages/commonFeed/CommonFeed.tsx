@@ -70,12 +70,12 @@ const CommonFeedPage: FC = () => {
   };
 
   useEffect(() => {
-    commonActions.setSharedFeedItemId(sharedFeedItemId);
+    dispatch(commonActions.setSharedFeedItemId(sharedFeedItemId));
   }, [sharedFeedItemId]);
 
   useEffect(() => {
     if (commonData?.sharedFeedItem) {
-      commonActions.setSharedFeedItem(commonData.sharedFeedItem);
+      dispatch(commonActions.setSharedFeedItem(commonData.sharedFeedItem));
     }
   }, [commonData?.sharedFeedItem]);
 
