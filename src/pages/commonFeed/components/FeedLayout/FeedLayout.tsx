@@ -38,7 +38,7 @@ import styles from "./FeedLayout.module.scss";
 interface FeedLayoutProps {
   className?: string;
   headerContent: ReactNode;
-  commonActions: ReactNode;
+  topContent: ReactNode;
   isGlobalLoading?: boolean;
   common: Common;
   governance: Governance;
@@ -53,7 +53,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const {
     className,
     headerContent,
-    commonActions,
+    topContent,
     isGlobalLoading,
     common,
     governance,
@@ -134,7 +134,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
             className={classNames(styles.content, className)}
             style={contentStyles}
           >
-            {commonActions}
+            {topContent}
             <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
               {feedItems?.map((item) => (
                 <FeedItem

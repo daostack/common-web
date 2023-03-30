@@ -123,7 +123,7 @@ const CommonFeedPage: FC = () => {
             isProject={checkIsProject(commonData.common)}
           />
         }
-        commonActions={
+        topContent={
           <>
             {commonAction === CommonAction.NewDiscussion && (
               <NewDiscussionCreation
