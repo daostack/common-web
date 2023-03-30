@@ -1,18 +1,14 @@
 import firebase from "firebase";
+import { SynchronizedDate } from "@/shared/interfaces";
 
-interface SynchronizedDate {
-  _seconds: number;
-  _nanoseconds: number;
-}
-
-const convertToTimestamp = (
-  date: SynchronizedDate
+export const convertToTimestamp = (
+  date: SynchronizedDate,
 ): firebase.firestore.Timestamp =>
   new firebase.firestore.Timestamp(date._seconds, date._nanoseconds);
 
 const convertDateInObject = (
   data: Record<string, unknown>,
-  fieldName: string
+  fieldName: string,
 ): void => {
   if (data[fieldName]) {
     data[fieldName] = convertToTimestamp(data[fieldName] as SynchronizedDate);
@@ -20,7 +16,7 @@ const convertDateInObject = (
 };
 
 export const convertObjectDatesToFirestoreTimestamps = <T extends unknown>(
-  data: unknown
+  data: unknown,
 ): T => {
   if (typeof data !== "object") {
     return data as T;

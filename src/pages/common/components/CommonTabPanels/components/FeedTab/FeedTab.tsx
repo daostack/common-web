@@ -62,7 +62,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
   const commonAction = useSelector(selectCommonAction);
-  const allowedFeedActions = !commonAction ? [FeedAction.NewCollaboration] : [];
+  const allowedFeedActions = !commonAction ? [FeedAction.NewStream] : [];
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
@@ -73,6 +73,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
     <div className={styles.mainColumnWrapper}>
       {commonAction === CommonAction.NewDiscussion && (
         <NewDiscussionCreation
+          common={common}
           governanceCircles={governance.circles}
           commonMember={commonMember}
           isModalVariant={false}
@@ -80,7 +81,8 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
       )}
       {commonAction === CommonAction.NewProposal && (
         <NewProposalCreation
-          governanceCircles={governance.circles}
+          common={common}
+          governance={governance}
           commonMember={commonMember}
           isModalVariant={false}
         />
@@ -147,24 +149,6 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
 
   const renderMobileColumn = () => (
     <div className={styles.mainColumnWrapper}>
-      {commonAction === CommonAction.NewDiscussion && (
-        <NewDiscussionCreation
-          governanceCircles={governance.circles}
-          commonMember={commonMember}
-          commonImage={common.image}
-          commonName={common.name}
-          isModalVariant
-        />
-      )}
-      {commonAction === CommonAction.NewProposal && (
-        <NewProposalCreation
-          governanceCircles={governance.circles}
-          commonMember={commonMember}
-          commonImage={common.image}
-          commonName={common.name}
-          isModalVariant
-        />
-      )}
       <FeedItems userCircleIds={userCircleIds} />
       <ChatMobileModal
         isShowing={Boolean(chatItem)}

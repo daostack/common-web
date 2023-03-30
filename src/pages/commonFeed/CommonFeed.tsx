@@ -3,14 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { QueryParamKey } from "@/shared/constants";
+import { CommonAction, QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { checkIsProject, getCommonPageAboutTabPath } from "@/shared/utils";
-import { commonActions, selectSharedFeedItem } from "@/store/states";
+import {
+  commonActions,
+  selectCommonAction,
+  selectSharedFeedItem,
+} from "@/store/states";
+import {
+  NewDiscussionCreation,
+  NewProposalCreation,
+} from "../common/components/CommonTabPanels/components/FeedTab/components";
 import { FeedLayout, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
 import styles from "./CommonFeed.module.scss";
@@ -33,6 +41,7 @@ const CommonFeedPage: FC = () => {
     () => (sharedFeedItemId ? [sharedFeedItemId] : []),
     [sharedFeedItemId],
   );
+  const commonAction = useSelector(selectCommonAction);
   const {
     data: commonData,
     fetched: isCommonDataFetched,
@@ -142,8 +151,30 @@ const CommonFeedPage: FC = () => {
             commonName={commonData.common.name}
             commonImage={commonData.common.image}
             commonMembersAmount={commonData.commonMembersAmount}
+            commonMember={commonMember}
+            governance={commonData.governance}
             isProject={checkIsProject(commonData.common)}
           />
+        }
+        topContent={
+          <>
+            {commonAction === CommonAction.NewDiscussion && (
+              <NewDiscussionCreation
+                common={commonData.common}
+                governanceCircles={commonData.governance.circles}
+                commonMember={commonMember}
+                isModalVariant={false}
+              />
+            )}
+            {commonAction === CommonAction.NewProposal && (
+              <NewProposalCreation
+                common={commonData.common}
+                governance={commonData.governance}
+                commonMember={commonMember}
+                isModalVariant={false}
+              />
+            )}
+          </>
         }
         isGlobalLoading={!isGlobalDataFetched}
         common={commonData.common}
