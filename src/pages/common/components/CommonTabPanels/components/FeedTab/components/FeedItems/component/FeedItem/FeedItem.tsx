@@ -9,6 +9,8 @@ import { useFeedItemSubscription } from "../../../../../../../../hooks";
 
 interface FeedItemProps {
   commonId: string;
+  commonName: string;
+  isProject: boolean;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
   userCircleIds: string[];
@@ -22,6 +24,8 @@ interface FeedItemProps {
 const FeedItem: FC<FeedItemProps> = (props) => {
   const {
     commonId,
+    commonName,
+    isProject,
     item,
     governanceCircles,
     userCircleIds,
@@ -44,6 +48,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         governanceCircles={governanceCircles}
         isMobileVersion={isMobileVersion}
         commonId={commonId}
+        commonName={commonName}
+        isProject={isProject}
         governanceId={governanceId}
         isPreviewMode={isPreviewMode}
       />
@@ -54,6 +60,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     return (
       <ProposalFeedCard
         commonId={commonId}
+        commonName={commonName}
+        isProject={isProject}
         item={item}
         governanceCircles={governanceCircles}
         governanceId={governanceId}

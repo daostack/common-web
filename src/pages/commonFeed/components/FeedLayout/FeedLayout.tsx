@@ -24,6 +24,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
+import { checkIsProject } from "@/shared/utils";
 import { FeedItem } from "../../../common/components";
 import {
   DesktopChat,
@@ -138,6 +139,8 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
                   key={item.id}
                   governanceId={governance.id}
                   commonId={common.id}
+                  commonName={common.name}
+                  isProject={checkIsProject(common)}
                   item={item}
                   governanceCircles={governance.circles}
                   isMobileVersion={isTabletView}

@@ -15,7 +15,7 @@ interface FeedCardPreviewProps {
   isActive?: boolean;
   isExpanded?: boolean;
   title?: string;
-  lastMessage?: CommonFeed["data"]["lastMessage"];
+  lastMessage?: string;
   canBeExpanded?: boolean;
   onClick?: () => void;
   onExpand?: () => void;
@@ -66,7 +66,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
         <div className={styles.bottomContent}>
           {lastMessage ? (
             <p className={classNames(styles.text, styles.lastMessage)}>
-              {lastMessage.userName}: {lastMessage.content}
+              {lastMessage}
             </p>
           ) : (
             <div />

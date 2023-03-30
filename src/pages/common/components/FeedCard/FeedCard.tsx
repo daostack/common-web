@@ -19,7 +19,7 @@ interface FeedCardProps {
   onClick?: () => void;
   title?: string;
   canBeExpanded?: boolean;
-  lastMessage?: CommonFeed["data"]["lastMessage"];
+  lastMessage?: string;
   isPreviewMode?: boolean;
 }
 

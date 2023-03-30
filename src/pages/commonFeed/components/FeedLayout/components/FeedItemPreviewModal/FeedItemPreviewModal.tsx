@@ -5,6 +5,7 @@ import { Modal } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModalType, CloseIconVariant } from "@/shared/interfaces";
 import { CommonFeed, Common, Governance } from "@/shared/models";
+import { checkIsProject } from "@/shared/utils";
 import styles from "./FeedItemPreviewModal.module.scss";
 
 interface FeedItemPreviewModalProps {
@@ -54,6 +55,8 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
         <FeedItem
           governanceId={governance.id}
           commonId={common.id}
+          commonName={common.name}
+          isProject={checkIsProject(common)}
           item={selectedFeedItem}
           governanceCircles={governance.circles}
           isMobileVersion={isTabletView}

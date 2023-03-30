@@ -17,6 +17,7 @@ import {
   FeedCardContent,
   getVisibilityString,
   FeedCountdown,
+  getLastMessage,
 } from "../FeedCard";
 import { LoadingFeedCard } from "../LoadingFeedCard";
 import {
@@ -30,12 +31,13 @@ import {
   checkUserPermissionsToVote,
   getProposalDescriptionString,
   getProposalSubtitle,
-  getProposalTitleString,
   getProposalTypeString,
 } from "./utils";
 
 interface ProposalFeedCardProps {
   commonId: string;
+  commonName: string;
+  isProject: boolean;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
   governanceId?: string;
@@ -44,8 +46,15 @@ interface ProposalFeedCardProps {
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
-  const { commonId, item, governanceCircles, governanceId, isPreviewMode } =
-    props;
+  const {
+    commonId,
+    commonName,
+    isProject,
+    item,
+    governanceCircles,
+    governanceId,
+    isPreviewMode,
+  } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { activeItemDiscussionId, setChatItem, feedItemIdForAutoChatOpen } =
@@ -199,7 +208,15 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       lastActivity={item.updatedAt.seconds * 1000}
       unreadMessages={feedItemUserMetadata?.count || 0}
       title={discussion?.title}
-      lastMessage={item.data.lastMessage}
+      lastMessage={getLastMessage({
+        commonFeedType: item.data.type,
+        lastMessage: item.data.lastMessage,
+        discussion,
+        currentUserId: userId,
+        feedItemCreatorName: getUserName(feedItemUser),
+        commonName,
+        isProject,
+      })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
     >
