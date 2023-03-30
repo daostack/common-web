@@ -38,7 +38,7 @@ import styles from "./FeedLayout.module.scss";
 interface FeedLayoutProps {
   className?: string;
   headerContent: ReactNode;
-  topContent: ReactNode;
+  topContent?: ReactNode;
   isGlobalLoading?: boolean;
   common: Common;
   governance: Governance;
