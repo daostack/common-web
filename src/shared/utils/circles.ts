@@ -214,8 +214,14 @@ export const addCirclesWithHigherTier = <
 export const checkIsItemVisibleForUser = (
   itemCircleVisibility: string[],
   userCircleIds: string[],
+  itemUserId: string,
+  commonMemberUserId: string | undefined,
 ): boolean => {
   if (itemCircleVisibility.length <= 0) {
+    return true;
+  }
+
+  if (itemUserId === commonMemberUserId) {
     return true;
   }
 

@@ -144,6 +144,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
                   userCircleIds={userCircleIds}
                   isActive={item.id === chatItem?.feedItemId}
                   sizeKey={sizeKey}
+                  commonMemberUserId={commonMember?.userId}
                 />
               ))}
             </InfiniteScroll>
