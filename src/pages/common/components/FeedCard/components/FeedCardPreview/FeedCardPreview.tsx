@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
+import { CommonFeed } from "@/shared/models";
 import { TimeAgo } from "@/shared/ui-kit";
 import styles from "./FeedCardPreview.module.scss";
 
@@ -14,7 +15,7 @@ interface FeedCardPreviewProps {
   isActive?: boolean;
   isExpanded?: boolean;
   title?: string;
-  lastMessage?: string;
+  lastMessage?: CommonFeed["data"]["lastMessage"];
   canBeExpanded?: boolean;
   onClick?: () => void;
   onExpand?: () => void;
@@ -28,7 +29,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
     isExpanded = false,
     canBeExpanded = true,
     title,
-    //TODO: Add after product will decide what should be there lastMessage,
+    lastMessage,
     onClick,
     onExpand,
   } = props;
@@ -56,19 +57,20 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
         </ButtonIcon>
       )}
       <div className={styles.content}>
-        <div className={styles.leftContent}>
+        <div className={styles.topContent}>
           <p className={classNames(styles.text, styles.title)}>{title}</p>
           <p className={classNames(styles.text, styles.lastActivity)}>
             <TimeAgo milliseconds={lastActivity} />
           </p>
         </div>
-        <div className={styles.rightContent}>
-          <div />
-          {/* {lastMessage && (
-          <p className={classNames(styles.text, styles.lastMessage)}>
-            {lastMessage}
-          </p>
-        )} */}
+        <div className={styles.bottomContent}>
+          {lastMessage ? (
+            <p className={classNames(styles.text, styles.lastMessage)}>
+              {lastMessage.userName}: {lastMessage.content}
+            </p>
+          ) : (
+            <div />
+          )}
           {Boolean(unreadMessages) && (
             <div
               className={classNames(styles.unreadMessages, {

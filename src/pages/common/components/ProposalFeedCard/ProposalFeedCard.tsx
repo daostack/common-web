@@ -199,7 +199,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       lastActivity={item.updatedAt.seconds * 1000}
       unreadMessages={feedItemUserMetadata?.count || 0}
       title={discussion?.title}
-      lastMessage={discussion?.message}
+      lastMessage={item.data.lastMessage}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
     >

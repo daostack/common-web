@@ -164,7 +164,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       unreadMessages={feedItemUserMetadata?.count || 0}
       onClick={handleOpenChat}
       title={discussion?.title}
-      lastMessage={discussion?.message}
+      lastMessage={item.data.lastMessage}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
     >
