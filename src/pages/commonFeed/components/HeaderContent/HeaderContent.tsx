@@ -1,8 +1,11 @@
 import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
+import { NewStreamButton } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
 import { Image } from "@/shared/components";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getCommonPageAboutTabPath } from "@/shared/utils";
 import styles from "./HeaderContent.module.scss";
@@ -14,6 +17,8 @@ interface HeaderContentProps {
   commonImage: string;
   commonMembersAmount: number;
   isProject?: boolean;
+  commonMember: (CommonMember & CirclesPermissions) | null;
+  governance: Governance;
 }
 
 const HeaderContent: FC<HeaderContentProps> = (props) => {
@@ -24,7 +29,11 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
     commonImage,
     commonMembersAmount,
     isProject = false,
+    commonMember,
+    governance,
   } = props;
+
+  const isMobileVersion = useIsTabletView();
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -54,6 +63,11 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
             </p>
           </div>
         </NavLink>
+        <NewStreamButton
+          commonMember={commonMember}
+          governance={governance}
+          isMobileVersion={isMobileVersion}
+        />
       </div>
     </div>
   );

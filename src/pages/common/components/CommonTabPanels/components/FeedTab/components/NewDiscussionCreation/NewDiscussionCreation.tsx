@@ -2,17 +2,22 @@ import React, { FC, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
-import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
 import {
   selectDiscussionCreationData,
   selectIsDiscussionCreationLoading,
 } from "@/store/states";
 import { commonActions } from "@/store/states";
-import { useCommonDataContext } from "../../../../../../providers";
 import { DiscussionCreationCard, DiscussionCreationModal } from "./components";
 
 interface NewDiscussionCreationProps {
+  common: Common;
   governanceCircles: Governance["circles"];
   commonMember: (CommonMember & CirclesPermissions) | null;
   commonImage?: string;
@@ -29,6 +34,7 @@ const INITIAL_VALUES: NewDiscussionCreationFormValues = {
 
 const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const {
+    common,
     governanceCircles,
     commonMember,
     commonImage,
@@ -36,7 +42,6 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     isModalVariant = false,
   } = props;
   const dispatch = useDispatch();
-  const { common } = useCommonDataContext();
   const discussionCreationData = useSelector(selectDiscussionCreationData);
   const isLoading = useSelector(selectIsDiscussionCreationLoading);
   const user = useSelector(selectUser());

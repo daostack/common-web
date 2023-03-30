@@ -6,19 +6,24 @@ import {
   ProposalsTypes,
 } from "@/shared/constants";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
-import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
 import {
   selectIsProposalCreationLoading,
   selectProposalCreationData,
 } from "@/store/states";
 import { commonActions } from "@/store/states";
-import { useCommonDataContext } from "../../../../../../providers";
 import { ProposalCreationCard, ProposalCreationModal } from "./components";
 import { getFundingProposalPayload, getSurveyProposalPayload } from "./util";
 
 interface NewProposalCreationProps {
-  governanceCircles: Governance["circles"];
+  common: Common;
+  governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
   commonImage?: string;
   commonName?: string;
@@ -35,14 +40,14 @@ const INITIAL_VALUES: NewProposalCreationFormValues = {
 
 const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
   const {
-    governanceCircles,
+    common,
+    governance,
     commonMember,
     commonImage,
     commonName,
     isModalVariant = false,
   } = props;
   const dispatch = useDispatch();
-  const { common, governance } = useCommonDataContext();
   const proposalCreationData = useSelector(selectProposalCreationData);
   const isLoading = useSelector(selectIsProposalCreationLoading);
   const user = useSelector(selectUser());
@@ -97,7 +102,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         }
       }
     },
-    [governanceCircles, userCircleIds, userId, commonId],
+    [governance.circles, userCircleIds, userId, commonId],
   );
 
   if (
@@ -108,7 +113,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
     return (
       <ProposalCreationModal
         initialValues={initialValues}
-        governanceCircles={governanceCircles}
+        governanceCircles={governance.circles}
         governance={governance}
         userCircleIds={userCircleIds}
         onSubmit={handleSubmit}
@@ -123,7 +128,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
   return (
     <ProposalCreationCard
       initialValues={initialValues}
-      governanceCircles={governanceCircles}
+      governanceCircles={governance.circles}
       governance={governance}
       userCircleIds={userCircleIds}
       onSubmit={handleSubmit}

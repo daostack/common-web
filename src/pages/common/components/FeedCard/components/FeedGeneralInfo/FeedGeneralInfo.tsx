@@ -54,7 +54,9 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           readOnly
         />
       )}
-      {images.length > 0 && shouldShowFullContent && <ImageGallery gallery={images} />}
+      {images.length > 0 && shouldShowFullContent && (
+        <ImageGallery gallery={images} />
+      )}
       {shouldDisplaySeeMoreButton && (
         <a
           className={classNames(styles.seeMore, styles.text)}

@@ -13,6 +13,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
+import { FeedItem } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
@@ -25,7 +26,6 @@ import {
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
-import { FeedItem } from "../../../common/components";
 import {
   DesktopChat,
   FeedItemPreviewModal,
@@ -39,6 +39,7 @@ import styles from "./FeedLayout.module.scss";
 interface FeedLayoutProps {
   className?: string;
   headerContent: ReactNode;
+  topContent?: ReactNode;
   isGlobalLoading?: boolean;
   common: Common;
   governance: Governance;
@@ -53,6 +54,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const {
     className,
     headerContent,
+    topContent,
     isGlobalLoading,
     common,
     governance,
@@ -133,6 +135,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
             className={classNames(styles.content, className)}
             style={contentStyles}
           >
+            {topContent}
             <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
               {feedItems?.map((item) => (
                 <FeedItem

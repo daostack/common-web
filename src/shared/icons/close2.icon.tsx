@@ -7,7 +7,11 @@ interface Close2IconProps {
 }
 
 // Reference: https://www.figma.com/file/blLDX3L1CwCIAIHwrghKIQ/Common-Platform?node-id=1019%3A11097&t=2uPcQansNEngZ6FI-4
-const Close2Icon: FC<Close2IconProps> = ({ className, width = 14, height = 14}) => {
+const Close2Icon: FC<Close2IconProps> = ({
+  className,
+  width = 14,
+  height = 14,
+}) => {
   const color = "currentColor";
 
   return (
