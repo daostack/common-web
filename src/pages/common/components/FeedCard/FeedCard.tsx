@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect, useRef } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { CommonFeed } from "@/shared/models";
 import { CommonCard } from "../CommonCard";
 import { FeedCardPreview } from "./components";
 import styles from "./FeedCard.module.scss";

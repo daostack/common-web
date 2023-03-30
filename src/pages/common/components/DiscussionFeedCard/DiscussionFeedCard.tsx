@@ -18,6 +18,7 @@ import {
   FeedCardHeader,
   FeedCardContent,
   FeedCountdown,
+  getLastMessage,
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
@@ -30,6 +31,8 @@ interface DiscussionFeedCardProps {
   governanceCircles: Governance["circles"];
   isMobileVersion?: boolean;
   commonId: string;
+  commonName: string;
+  isProject: boolean;
   governanceId?: string;
   isPreviewMode: boolean;
 }
@@ -46,6 +49,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     governanceCircles,
     isMobileVersion = false,
     commonId,
+    commonName,
+    isProject,
     governanceId,
     isPreviewMode,
   } = props;
@@ -164,7 +169,15 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       unreadMessages={feedItemUserMetadata?.count || 0}
       onClick={handleOpenChat}
       title={discussion?.title}
-      lastMessage={discussion?.message}
+      lastMessage={getLastMessage({
+        commonFeedType: item.data.type,
+        lastMessage: item.data.lastMessage,
+        discussion,
+        currentUserId: userId,
+        feedItemCreatorName: getUserName(discussionCreator),
+        commonName,
+        isProject,
+      })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
     >

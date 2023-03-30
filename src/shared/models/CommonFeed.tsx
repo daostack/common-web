@@ -15,6 +15,10 @@ export interface CommonFeed extends BaseEntity {
     type: CommonFeedType;
     id: string;
     discussionId: string;
+    lastMessage?: {
+      userName: string;
+      content: string;
+    };
   };
   circleVisibility: string[];
 }
