@@ -18,7 +18,7 @@ interface HeaderContentProps {
   commonMembersAmount: number;
   isProject?: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  governance: Pick<Governance, "circles">;
+  governance: Governance;
 }
 
 const HeaderContent: FC<HeaderContentProps> = (props) => {

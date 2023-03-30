@@ -24,7 +24,6 @@ import { getFundingProposalPayload, getSurveyProposalPayload } from "./util";
 interface NewProposalCreationProps {
   common: Common;
   governance: Governance;
-  governanceCircles: Governance["circles"];
   commonMember: (CommonMember & CirclesPermissions) | null;
   commonImage?: string;
   commonName?: string;
@@ -43,7 +42,6 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
   const {
     common,
     governance,
-    governanceCircles,
     commonMember,
     commonImage,
     commonName,
@@ -104,7 +102,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         }
       }
     },
-    [governanceCircles, userCircleIds, userId, commonId],
+    [governance.circles, userCircleIds, userId, commonId],
   );
 
   if (
@@ -115,7 +113,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
     return (
       <ProposalCreationModal
         initialValues={initialValues}
-        governanceCircles={governanceCircles}
+        governanceCircles={governance.circles}
         governance={governance}
         userCircleIds={userCircleIds}
         onSubmit={handleSubmit}
@@ -130,7 +128,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
   return (
     <ProposalCreationCard
       initialValues={initialValues}
-      governanceCircles={governanceCircles}
+      governanceCircles={governance.circles}
       governance={governance}
       userCircleIds={userCircleIds}
       onSubmit={handleSubmit}

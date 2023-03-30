@@ -83,7 +83,6 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
         <NewProposalCreation
           common={common}
           governance={governance}
-          governanceCircles={governance.circles}
           commonMember={commonMember}
           isModalVariant={false}
         />
@@ -150,27 +149,6 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
 
   const renderMobileColumn = () => (
     <div className={styles.mainColumnWrapper}>
-      {commonAction === CommonAction.NewDiscussion && (
-        <NewDiscussionCreation
-          common={common}
-          governanceCircles={governance.circles}
-          commonMember={commonMember}
-          commonImage={common.image}
-          commonName={common.name}
-          isModalVariant
-        />
-      )}
-      {commonAction === CommonAction.NewProposal && (
-        <NewProposalCreation
-          common={common}
-          governance={governance}
-          governanceCircles={governance.circles}
-          commonMember={commonMember}
-          commonImage={common.image}
-          commonName={common.name}
-          isModalVariant
-        />
-      )}
       <FeedItems userCircleIds={userCircleIds} />
       <ChatMobileModal
         isShowing={Boolean(chatItem)}

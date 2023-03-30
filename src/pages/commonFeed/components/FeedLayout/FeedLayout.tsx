@@ -6,7 +6,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useSelector } from "react-redux";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import {
@@ -14,12 +13,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
-import {
-  FeedItem,
-  NewDiscussionCreation,
-  NewProposalCreation,
-} from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
-import { CommonAction } from "@/shared/constants";
+import { FeedItem } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
@@ -31,7 +25,6 @@ import {
   Governance,
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
-import { selectCommonAction } from "@/store/states";
 import {
   DesktopChat,
   FeedItemPreviewModal,
@@ -45,6 +38,7 @@ import styles from "./FeedLayout.module.scss";
 interface FeedLayoutProps {
   className?: string;
   headerContent: ReactNode;
+  commonActions: ReactNode;
   isGlobalLoading?: boolean;
   common: Common;
   governance: Governance;
@@ -59,6 +53,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const {
     className,
     headerContent,
+    commonActions,
     isGlobalLoading,
     common,
     governance,
@@ -68,7 +63,6 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     shouldHideContent = false,
     onFetchNext,
   } = props;
-  const commonAction = useSelector(selectCommonAction);
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
   const [chatItem, setChatItem] = useState<ChatItem | null>();
@@ -140,23 +134,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
             className={classNames(styles.content, className)}
             style={contentStyles}
           >
-            {commonAction === CommonAction.NewDiscussion && (
-              <NewDiscussionCreation
-                common={common}
-                governanceCircles={governance.circles}
-                commonMember={commonMember}
-                isModalVariant={false}
-              />
-            )}
-            {commonAction === CommonAction.NewProposal && (
-              <NewProposalCreation
-                common={common}
-                governance={governance}
-                governanceCircles={governance.circles}
-                commonMember={commonMember}
-                isModalVariant={false}
-              />
-            )}
+            {commonActions}
             <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
               {feedItems?.map((item) => (
                 <FeedItem
