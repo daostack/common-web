@@ -4,6 +4,7 @@ import { useCommonDataContext } from "@/pages/common/providers";
 import { Circle } from "@/shared/models";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui-kit";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { getCirclesWithHighestTier } from "@/shared/utils";
 import styles from "./PopoverItem.module.scss";
 
 interface CommonMemberInfoProps {
@@ -21,7 +22,6 @@ interface CommonMemberInfoProps {
   userId: string;
   userName: string;
   membersCount: number;
-  circleVisibility: string[];
 }
 
 export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
@@ -40,9 +40,13 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     userName,
     membersCount,
     isHighestTierCircle,
-    circleVisibility,
   } = props;
-  const { onLeaveCircle, onJoinCircle } = useCommonDataContext();
+  const { onLeaveCircle, onJoinCircle, governance } = useCommonDataContext();
+
+  /** Highest circle */
+  const circleVisibility = [
+    getCirclesWithHighestTier(Object.values(governance.circles))[0].id,
+  ];
 
   const handleLeaveCircle = useCallback(() => {
     onLeaveCircle(commonId, userId, circle);

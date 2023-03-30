@@ -16,7 +16,7 @@ import {
 } from "@/shared/models";
 import { AssignCircle } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
-import { getUserName } from "@/shared/utils";
+import { getCirclesWithHighestTier, getUserName } from "@/shared/utils";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
 import { Confirmation } from "./Confirmation";
@@ -90,7 +90,9 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
         files: [],
         circleId: assignCircleData.circle.id,
         userId: assignCircleData.commonMember.userId,
-        circleVisibility: commonMember.circleIds,
+        circleVisibility: [
+          getCirclesWithHighestTier(Object.values(governance.circles))[0].id,
+        ],
       },
     };
 
