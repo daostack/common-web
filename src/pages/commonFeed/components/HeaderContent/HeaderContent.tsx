@@ -33,29 +33,27 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           className={styles.openSidenavButton}
           iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
         />
-        <Image
-          className={classNames(styles.image, {
-            [styles.imageNonRounded]: !isProject,
-            [styles.imageRounded]: isProject,
-          })}
-          src={commonImage}
-          alt={`${commonName}'s image`}
-          placeholderElement={null}
-          aria-hidden
-        />
-        <div className={styles.commonInfoWrapper}>
-          <h1 className={styles.commonName}>
-            <NavLink
-              className={styles.commonLink}
-              to={getCommonPageAboutTabPath(commonId)}
-            >
-              {commonName}
-            </NavLink>
-          </h1>
-          <p className={styles.commonMembersAmount}>
-            {commonMembersAmount} member{commonMembersAmount === 1 ? "" : "s"}
-          </p>
-        </div>
+        <NavLink
+          className={styles.commonLink}
+          to={getCommonPageAboutTabPath(commonId)}
+        >
+          <Image
+            className={classNames(styles.image, {
+              [styles.imageNonRounded]: !isProject,
+              [styles.imageRounded]: isProject,
+            })}
+            src={commonImage}
+            alt={`${commonName}'s image`}
+            placeholderElement={null}
+            aria-hidden
+          />
+          <div className={styles.commonInfoWrapper}>
+            <h1 className={styles.commonName}>{commonName}</h1>
+            <p className={styles.commonMembersAmount}>
+              {commonMembersAmount} member{commonMembersAmount === 1 ? "" : "s"}
+            </p>
+          </div>
+        </NavLink>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 @import "../../../../../../constants";
-@import "../../../../../../styles/sizes";
 
 $two-columns-breakpoint: 1270px;
 $regular-columns-breakpoint: 1270px;
@@ -7,7 +6,7 @@ $two-columns-breakpoint-2: 640px;
 $smallest-breakpoint: 380px;
 
 $regular-columns-grid-gap: 0 0.5rem;
-$two-columns-grid-gap: 1.125rem 1rem;
+$two-columns-grid-gap: 1rem 0.5rem;
 
 .container {
   --columns-amount: 4;
@@ -21,64 +20,40 @@ $two-columns-grid-gap: 1.125rem 1rem;
   background-color: $c-shades-white;
   border: 0.0625rem solid $c-neutrals-100;
   box-sizing: border-box;
+}
+.containerCol4 {
+  --columns-amount: 4;
+  --columns-gap: #{$regular-columns-grid-gap};
 
-  @include viewport-breakpoint($two-columns-breakpoint) {
-    --columns-amount: 2;
-    --columns-gap: #{$two-columns-grid-gap};
+  padding-left: 2rem;
+  padding-right: 2.25rem;
+}
+.containerCol2 {
+  --columns-amount: 2;
+  --columns-gap: #{$two-columns-grid-gap};
 
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.containerCol1 {
+  --columns-gap: #{$two-columns-grid-gap};
 
-  @include tablet {
-    --columns-amount: 4;
-    --columns-gap: #{$regular-columns-grid-gap};
-
-    padding-left: 2rem;
-    padding-right: 2.25rem;
-  }
-
-  @include viewport-breakpoint($two-columns-breakpoint-2) {
-    --columns-amount: 2;
-    --columns-gap: #{$two-columns-grid-gap};
-
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  @include phone {
-    grid-gap: 1rem 0.5rem;
-  }
-
-  @include viewport-breakpoint($smallest-breakpoint) {
-    grid-template-columns: 1fr;
-  }
+  padding-left: 1rem;
+  padding-right: 1rem;
+  grid-template-columns: 1fr;
 }
 
 .countdown {
   display: inline-block;
 }
-.countdownLessThanOneDay {
+.countdownNarrow {
   width: 5.75rem;
 }
-.countdownAtLeastOneDay {
+.countdownWide {
   width: 10.25rem;
-
-  @include viewport-breakpoint(1240px) {
-    width: 5.75rem;
-  }
-
-  @include tablet {
-    width: 10.25rem;
-  }
-
-  @include viewport-breakpoint($two-columns-breakpoint-2) {
-    width: 10.25rem;
-  }
-
-  @include viewport-breakpoint($smallest-breakpoint) {
-    width: unset;
-  }
+}
+.countdownWidthUnset {
+  width: unset;
 }
 
 .text {
@@ -105,14 +80,13 @@ $two-columns-grid-gap: 1.125rem 1rem;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-
-  @include viewport-breakpoint($smallest-breakpoint) {
-    max-width: unset;
-    text-overflow: unset;
-    white-space: unset;
-    overflow: unset;
-    word-break: break-word;
-  }
+}
+.votersNonShortened {
+  max-width: unset;
+  text-overflow: unset;
+  white-space: unset;
+  overflow: unset;
+  word-break: break-word;
 }
 
 .votingStatus {

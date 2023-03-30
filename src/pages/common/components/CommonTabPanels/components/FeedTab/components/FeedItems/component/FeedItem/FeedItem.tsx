@@ -14,6 +14,9 @@ interface FeedItemProps {
   userCircleIds: string[];
   isMobileVersion?: boolean;
   governanceId?: string;
+  isPreviewMode?: boolean;
+  isActive?: boolean;
+  sizeKey?: string;
 }
 
 const FeedItem: FC<FeedItemProps> = (props) => {
@@ -24,6 +27,9 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     userCircleIds,
     isMobileVersion = false,
     governanceId,
+    isPreviewMode = false,
+    isActive = false,
+    sizeKey,
   } = props;
   useFeedItemSubscription(commonId, item.id);
 
@@ -39,9 +45,11 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         isMobileVersion={isMobileVersion}
         commonId={commonId}
         governanceId={governanceId}
+        isPreviewMode={isPreviewMode}
       />
     );
   }
+
   if (item.data.type === CommonFeedType.Proposal) {
     return (
       <ProposalFeedCard
@@ -49,6 +57,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         item={item}
         governanceCircles={governanceCircles}
         governanceId={governanceId}
+        isPreviewMode={isPreviewMode}
+        sizeKey={isActive ? sizeKey : undefined}
       />
     );
   }

@@ -1,4 +1,12 @@
-import React, { FC, ReactNode, useMemo, useState } from "react";
+import React, {
+  CSSProperties,
+  FC,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import {
   ChatContextValue,
@@ -17,7 +25,14 @@ import {
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
 import { FeedItem } from "../../../common/components";
-import { DesktopChat, MobileChat } from "./components";
+import {
+  DesktopChat,
+  FeedItemPreviewModal,
+  MobileChat,
+  SplitView,
+} from "./components";
+import { MIN_CHAT_WIDTH } from "./constants";
+import { getSplitViewMaxSize } from "./utils";
 import styles from "./FeedLayout.module.scss";
 
 interface FeedLayoutProps {
@@ -29,6 +44,7 @@ interface FeedLayoutProps {
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: CommonFeed[] | null;
   loading: boolean;
+  shouldHideContent?: boolean;
   onFetchNext: () => void;
 }
 
@@ -42,10 +58,19 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     commonMember,
     feedItems,
     loading,
+    shouldHideContent = false,
     onFetchNext,
   } = props;
+  const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
   const [chatItem, setChatItem] = useState<ChatItem | null>();
+  const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
+    useState(false);
+  const [shouldShowSeeMore, setShouldShowSeeMore] = useState(true);
+  const [chatWidth, setChatWidth] = useState(0);
+  const isChatItemSet = Boolean(chatItem);
+  const maxChatSize = getSplitViewMaxSize(windowWidth);
+  const sizeKey = `${windowWidth}_${chatWidth}`;
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
@@ -64,61 +89,105 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     return feedItem?.id;
   }, [feedItems, isTabletView]);
 
+  const selectedFeedItem = useMemo(() => {
+    return feedItems?.find((item) => item.id === chatItem?.feedItemId);
+  }, [feedItems, chatItem]);
+
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
       setChatItem,
       activeItemDiscussionId: chatItem?.discussion.id,
       feedItemIdForAutoChatOpen,
+      setIsShowFeedItemDetailsModal,
+      setShouldShowSeeMore,
     }),
     [setChatItem, chatItem?.discussion.id, feedItemIdForAutoChatOpen],
   );
 
-  return (
+  useEffect(() => {
+    if (isChatItemSet) {
+      setChatWidth(MIN_CHAT_WIDTH);
+    }
+  }, [isChatItemSet]);
+
+  useEffect(() => {
+    if (chatWidth > maxChatSize) {
+      setChatWidth(maxChatSize);
+    }
+  }, [maxChatSize]);
+
+  const contentStyles = {
+    "--chat-w": `${chatWidth}px`,
+  } as CSSProperties;
+
+  const contentEl = (
     <CommonSidenavLayoutPageContent
+      className={styles.layoutPageContent}
       headerContent={headerContent}
       isGlobalLoading={isGlobalLoading}
     >
       <ChatContext.Provider value={chatContextValue}>
-        <div
-          className={classNames(
-            styles.content,
-            {
-              [styles.contentWithChat]: Boolean(chatItem),
-            },
-            className,
-          )}
-        >
-          <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
-            {feedItems?.map((item) => (
-              <FeedItem
-                key={item.id}
-                governanceId={governance.id}
-                commonId={common.id}
-                item={item}
-                governanceCircles={governance.circles}
-                isMobileVersion={isTabletView}
-                userCircleIds={userCircleIds}
+        {!shouldHideContent && (
+          <div
+            className={classNames(styles.content, className)}
+            style={contentStyles}
+          >
+            <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
+              {feedItems?.map((item) => (
+                <FeedItem
+                  key={item.id}
+                  governanceId={governance.id}
+                  commonId={common.id}
+                  item={item}
+                  governanceCircles={governance.circles}
+                  isMobileVersion={isTabletView}
+                  userCircleIds={userCircleIds}
+                  isActive={item.id === chatItem?.feedItemId}
+                  sizeKey={sizeKey}
+                />
+              ))}
+            </InfiniteScroll>
+            {chatItem && !isTabletView && (
+              <DesktopChat
+                className={styles.desktopChat}
+                chatItem={chatItem}
+                common={common}
+                commonMember={commonMember}
               />
-            ))}
-          </InfiniteScroll>
-          {chatItem && !isTabletView && (
-            <DesktopChat
-              className={styles.desktopChat}
-              chatItem={chatItem}
-              common={common}
-              commonMember={commonMember}
-            />
-          )}
-          {isTabletView && (
-            <MobileChat
-              chatItem={chatItem}
-              common={common}
-              commonMember={commonMember}
-            />
-          )}
-        </div>
+            )}
+            {isTabletView && (
+              <MobileChat
+                chatItem={chatItem}
+                common={common}
+                commonMember={commonMember}
+                shouldShowSeeMore={shouldShowSeeMore}
+              >
+                <FeedItemPreviewModal
+                  common={common}
+                  governance={governance}
+                  selectedFeedItem={selectedFeedItem}
+                  userCircleIds={userCircleIds}
+                  isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
+                  sizeKey={sizeKey}
+                />
+              </MobileChat>
+            )}
+          </div>
+        )}
       </ChatContext.Provider>
     </CommonSidenavLayoutPageContent>
+  );
+
+  return isTabletView ? (
+    contentEl
+  ) : (
+    <SplitView
+      minSize={isChatItemSet ? MIN_CHAT_WIDTH : 0}
+      maxSize={maxChatSize}
+      onChange={setChatWidth}
+    >
+      {contentEl}
+    </SplitView>
   );
 };
 

@@ -244,9 +244,9 @@ $payment-iframe-height-mobile: 672px;
 
   .membership-request-rules__rules-item-description {
     margin: 0;
-    font-family: PoppinsSans-Regular, sans-serif;
-    font-size: $xsmall;
+    font-family: PoppinsSans, sans-serif;
     font-weight: normal;
+    font-size: $xsmall;
   }
 
   .membership-request-rules__submit-button {
@@ -268,7 +268,8 @@ $payment-iframe-height-mobile: 672px;
     align-items: center;
 
     button {
-      font-family: PoppinsSans-Regular;
+      font-family: PoppinsSans, sans-serif;
+      font-weight: normal;
       border: 1px solid $light-gray-1;
       width: 350px;
       height: 60px;
@@ -313,9 +314,9 @@ $payment-iframe-height-mobile: 672px;
   }
 
   .button-blue {
-    font-weight: normal;
     min-width: 11.25rem;
-    font-family: PoppinsSans-Regular;
+    font-family: PoppinsSans, sans-serif;
+    font-weight: normal;
   }
 }
 
@@ -335,8 +336,8 @@ $payment-iframe-height-mobile: 672px;
 
 .membership-request-billing {
   .button-blue {
+    font-family: PoppinsSans, sans-serif;
     font-weight: normal;
-    font-family: PoppinsSans-Regular;
     height: 48px;
   }
 
@@ -476,7 +477,8 @@ $payment-iframe-height-mobile: 672px;
   button {
     width: 11.25rem;
     height: 3rem;
-    font-family: PoppinsSans-Regular, sans-serif;
+    font-family: PoppinsSans, sans-serif;
+    font-weight: normal;
     font-size: $small;
     text-align: center;
     color: $secondary-blue;

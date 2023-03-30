@@ -17,11 +17,19 @@ interface ChatProps {
   chatItem?: ChatItem | null;
   common: Common;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  shouldShowSeeMore?: boolean;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
-  const { chatItem, common, commonMember } = props;
-  const { setChatItem } = useChatContext();
+  const {
+    chatItem,
+    common,
+    commonMember,
+    children,
+    shouldShowSeeMore = true,
+  } = props;
+  const { setChatItem, setIsShowFeedItemDetailsModal, setShouldShowSeeMore } =
+    useChatContext();
   const user = useSelector(selectUser());
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
@@ -35,42 +43,60 @@ const MobileChat: FC<ChatProps> = (props) => {
 
   const handleClose = () => {
     setChatItem(null);
+    setShouldShowSeeMore && setShouldShowSeeMore(true);
+  };
+
+  const handleOpenFeedItemDetails = () => {
+    setIsShowFeedItemDetailsModal && setIsShowFeedItemDetailsModal(true);
   };
 
   return (
-    <ChatMobileModal
-      isShowing={Boolean(chatItem)}
-      hasBackButton
-      onClose={handleClose}
-      common={common}
-      header={
-        <Header
-          title={chatItem?.discussion.title || ""}
-          onBackClick={handleClose}
-        />
-      }
-      styles={{
-        modal: styles.modal,
-        modalHeaderWrapper: styles.modalHeaderWrapper,
-        modalHeader: styles.modalHeader,
-      }}
-    >
-      {chatItem && (
-        <ChatComponent
-          commonMember={commonMember}
-          isCommonMemberFetched
-          isAuthorized={Boolean(user)}
-          type={ChatType.DiscussionMessages}
-          hasAccess={hasAccessToChat}
-          isHidden={false}
-          common={common}
-          discussion={chatItem.discussion}
-          proposal={chatItem.proposal}
-          feedItemId={chatItem.feedItemId}
-          lastSeenItem={chatItem.lastSeenItem}
-        />
-      )}
-    </ChatMobileModal>
+    <>
+      {children}
+      <ChatMobileModal
+        isShowing={Boolean(chatItem)}
+        hasBackButton
+        onClose={handleClose}
+        common={common}
+        header={
+          <Header
+            title={chatItem?.discussion.title || ""}
+            onBackClick={handleClose}
+            titleActionElement={
+              shouldShowSeeMore ? (
+                <span
+                  onClick={handleOpenFeedItemDetails}
+                  className={styles.headerActionElement}
+                >
+                  See more
+                </span>
+              ) : null
+            }
+          />
+        }
+        styles={{
+          modal: styles.modal,
+          modalHeaderWrapper: styles.modalHeaderWrapper,
+          modalHeader: styles.modalHeader,
+        }}
+      >
+        {chatItem && (
+          <ChatComponent
+            commonMember={commonMember}
+            isCommonMemberFetched
+            isAuthorized={Boolean(user)}
+            type={ChatType.DiscussionMessages}
+            hasAccess={hasAccessToChat}
+            isHidden={false}
+            common={common}
+            discussion={chatItem.discussion}
+            proposal={chatItem.proposal}
+            feedItemId={chatItem.feedItemId}
+            lastSeenItem={chatItem.lastSeenItem}
+          />
+        )}
+      </ChatMobileModal>
+    </>
   );
 };
 

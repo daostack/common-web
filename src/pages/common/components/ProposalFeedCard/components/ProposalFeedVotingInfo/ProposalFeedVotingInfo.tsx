@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import classNames from "classnames";
 import {
   calculateVotingStatus,
@@ -14,7 +14,11 @@ import { FeedCountdown } from "../../../FeedCard";
 import { ModalTriggerButton } from "../ModalTriggerButton";
 import { Voters } from "../Voters";
 import { VotingInfo } from "../VotingInfo";
-import { getCountdownLabel } from "./utils";
+import { CountdownWidth } from "./constants";
+import {
+  getCountdownLabel,
+  getProposalVotingStylesConfiguration,
+} from "./utils";
 import styles from "./ProposalFeedVotingInfo.module.scss";
 
 export interface ProposalFeedVotingInfoProps {
@@ -26,6 +30,7 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   props,
 ) => {
   const { proposal, governanceCircles } = props;
+  const containerRef = useRef<HTMLDivElement>(null);
   const isTabletView = useIsTabletView();
   const {
     startCountdown,
@@ -42,11 +47,28 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   const votingStatus = calculateVotingStatus(proposal);
   const isCountdownFinished =
     isTimerFinished || !checkIsCountdownState(proposal);
+  const proposalVotingStylesConfiguration =
+    getProposalVotingStylesConfiguration(containerRef.current?.clientWidth);
   const countdownClassName = !isCountdownFinished
-    ? classNames(styles.countdown, {
-        [styles.countdownLessThanOneDay]: timerDiff.days === 0,
-        [styles.countdownAtLeastOneDay]: timerDiff.days >= 1,
-      })
+    ? classNames(
+        styles.countdown,
+        {
+          [styles.countdownNarrow]: timerDiff.days === 0,
+        },
+        timerDiff.days >= 1
+          ? {
+              [styles.countdownWide]:
+                proposalVotingStylesConfiguration.countdownWidth ===
+                CountdownWidth.Wide,
+              [styles.countdownNarrow]:
+                proposalVotingStylesConfiguration.countdownWidth ===
+                CountdownWidth.Narrow,
+              [styles.countdownWidthUnset]:
+                proposalVotingStylesConfiguration.countdownWidth ===
+                CountdownWidth.Unset,
+            }
+          : {},
+      )
     : "";
 
   useLayoutEffect(() => {
@@ -56,7 +78,17 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   }, [startCountdown, expirationTimestamp]);
 
   return (
-    <div className={styles.container}>
+    <div
+      ref={containerRef}
+      className={classNames(styles.container, {
+        [styles.containerCol1]:
+          proposalVotingStylesConfiguration.columnsAmount === 1,
+        [styles.containerCol2]:
+          proposalVotingStylesConfiguration.columnsAmount === 2,
+        [styles.containerCol4]:
+          proposalVotingStylesConfiguration.columnsAmount === 4,
+      })}
+    >
       <VotingInfo
         label={getCountdownLabel(proposal.state, isCountdownFinished)}
       >
@@ -88,7 +120,10 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
       </VotingInfo>
       <VotingInfo label="Voters">
         <p
-          className={classNames(styles.text, styles.voters)}
+          className={classNames(styles.text, styles.voters, {
+            [styles.votersNonShortened]:
+              !proposalVotingStylesConfiguration.shouldVotersBeShortened,
+          })}
           title={votersString}
         >
           {votersString}

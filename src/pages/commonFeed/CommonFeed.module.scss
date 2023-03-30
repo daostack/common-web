@@ -21,7 +21,7 @@
 }
 
 .feedLayout {
-  padding-bottom: var(--layout-tabs-height);
+  padding-bottom: calc(var(--layout-tabs-height) + 1.5rem)
 }
 
 .tabs {

@@ -5,6 +5,10 @@ import { Link } from "./Link";
 import { User } from "./User";
 import { Moderation } from "./shared";
 
+export enum PredefinedTypes {
+  General = "general",
+}
+
 export interface Discussion extends BaseEntity {
   title: string;
   message: string;
@@ -18,6 +22,7 @@ export interface Discussion extends BaseEntity {
   moderation?: Moderation;
   messageCount: number;
   discussionMessages: DiscussionMessage[];
+  predefinedType?: PredefinedTypes;
 
   /**
    * A discussion can be linked to a proposal, if it does - proposalId will exist.
@@ -40,6 +45,6 @@ export interface DiscussionWithHighlightedMessage extends Discussion {
 }
 
 export const isDiscussionWithHighlightedMessage = (
-  discussion: any
+  discussion: any,
 ): discussion is DiscussionWithHighlightedMessage =>
   discussion && discussion.highlightedMessageId;
