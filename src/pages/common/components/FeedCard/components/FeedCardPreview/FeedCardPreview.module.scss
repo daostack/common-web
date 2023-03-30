@@ -11,7 +11,7 @@
   cursor: pointer;
 
   &:hover {
-    box-shadow: 0 0.1875rem 0.5rem #{$c-common-card-shadow-hover};
+    background-color: $c-pink-hover-feed-cards;
   }
 
   @include tablet {
@@ -26,6 +26,10 @@
 .containerActive {
   margin: 0 -1.4375rem 0 -1.5rem;
   background-color: $c-pink-active-feed-cards;
+
+  &:hover {
+    background-color: $c-pink-active-feed-cards;
+  }
 
   @include tablet {
     margin-right: -1.5rem;
