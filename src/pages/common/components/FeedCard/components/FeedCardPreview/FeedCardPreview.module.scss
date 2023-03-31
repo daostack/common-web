@@ -102,6 +102,10 @@
   color: $c-neutrals-300;
   font-size: $mobile-title;
   line-height: 1.25rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+
   @include tablet {
     max-width: 16.1875rem;
   }
