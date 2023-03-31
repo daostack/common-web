@@ -130,3 +130,11 @@ export const resetFeedItems = createStandardAction(
 export const setIsNewProjectCreated = createStandardAction(
   CommonActionType.SET_IS_NEW_PROJECT_CREATED,
 )<boolean>();
+
+export const setSharedFeedItemId = createStandardAction(
+  CommonActionType.SET_SHARED_FEED_ITEM_ID,
+)<string | null>();
+
+export const setSharedFeedItem = createStandardAction(
+  CommonActionType.SET_SHARED_FEED_ITEM,
+)<CommonFeed | null>();
