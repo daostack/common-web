@@ -215,7 +215,7 @@ export const checkIsItemVisibleForUser = (
   itemCircleVisibility: string[],
   userCircleIds: string[],
   itemUserId: string,
-  commonMemberUserId: string | undefined,
+  commonMemberUserId?: string,
 ): boolean => {
   if (itemCircleVisibility.length <= 0) {
     return true;

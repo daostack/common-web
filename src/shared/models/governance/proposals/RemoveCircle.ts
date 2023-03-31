@@ -6,7 +6,6 @@ import { BasicArgsProposal } from "./BasicArgsProposal";
 export interface RemoveCircleArgs extends BasicArgsProposal {
   circleId: string;
   userId: string;
-  circleVisibility: string[];
 }
 
 export interface RemoveCircle extends BaseProposal {

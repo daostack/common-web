@@ -44,9 +44,9 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
   const { onLeaveCircle, onJoinCircle, governance } = useCommonDataContext();
 
   /** Highest circle */
-  const circleVisibility = [
-    getCirclesWithHighestTier(Object.values(governance.circles))[0].id,
-  ];
+  const circleVisibility = getCirclesWithHighestTier(
+    Object.values(governance.circles),
+  ).map((circle) => circle.id);
 
   const handleLeaveCircle = useCallback(() => {
     onLeaveCircle(commonId, userId, circle);

@@ -68,6 +68,11 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
     setStep(AssignCircleStep.Confirmation);
   };
 
+  /** Highest circle */
+  const circleVisibility = getCirclesWithHighestTier(
+    Object.values(governance.circles),
+  ).map((circle) => circle.id);
+
   const handleConfirm = () => {
     if (!assignCircleData || !user) {
       return;
@@ -90,9 +95,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
         files: [],
         circleId: assignCircleData.circle.id,
         userId: assignCircleData.commonMember.userId,
-        circleVisibility: [
-          getCirclesWithHighestTier(Object.values(governance.circles))[0].id,
-        ],
+        circleVisibility: circleVisibility,
       },
     };
 

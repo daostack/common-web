@@ -12,9 +12,9 @@ import { Loader } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
 import { ProposalsTypes } from "@/shared/constants";
 import { useLoadingState } from "@/shared/hooks";
-import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
+import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { MemberAdmittance } from "@/shared/models/governance/proposals";
-import { getUserName } from "@/shared/utils";
+import { getCirclesWithHighestTier, getUserName } from "@/shared/utils";
 import { GeneralInfoWrapper } from "../GeneralInfoWrapper";
 import styles from "./MemberAdmittanceForProjectStep.module.scss";
 
@@ -24,7 +24,7 @@ interface MemberAdmittanceForProjectStepProps {
   circleId: string;
   commonMember: (CommonMember & CirclesPermissions) | null;
   isCommonMemberFetched: boolean;
-  parentGovernanceCircles?: Circles;
+  parentGovernance?: Governance | null;
   onFinish: () => void;
 }
 
@@ -37,7 +37,7 @@ const MemberAdmittanceForProjectStep: FC<
     circleId,
     commonMember,
     isCommonMemberFetched,
-    parentGovernanceCircles,
+    parentGovernance,
     onFinish,
   } = props;
   const dispatch = useDispatch();
@@ -68,7 +68,7 @@ const MemberAdmittanceForProjectStep: FC<
   const userName = getUserName(user);
   const commonId = supportersData?.commonId;
   const circleName =
-    Object.values(parentGovernanceCircles || {}).find(
+    Object.values(parentGovernance?.circles || {}).find(
       ({ id }) => id === circleId,
     )?.name || "";
   const isParentCommonMemberFinished =
@@ -147,6 +147,13 @@ const MemberAdmittanceForProjectStep: FC<
     data,
   ]);
 
+  /** Highest circle */
+  const circleVisibility =
+    parentGovernance &&
+    getCirclesWithHighestTier(Object.values(parentGovernance?.circles)).map(
+      (circle) => circle.id,
+    );
+
   useEffect(() => {
     if (!createdMemberAdmittance) {
       return;
@@ -188,7 +195,7 @@ const MemberAdmittanceForProjectStep: FC<
             links: [],
             circleId,
             userId,
-            circleVisibility: commonMember!.circleIds,
+            circleVisibility: circleVisibility,
           },
         };
         await ProposalService.createAssignProposal(payload);
