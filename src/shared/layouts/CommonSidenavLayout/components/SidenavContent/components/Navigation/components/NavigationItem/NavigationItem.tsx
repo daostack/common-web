@@ -13,14 +13,16 @@ const NavigationItem: FC<NavigationItemProps> = (props) => {
     icon,
     type = NavigationItemType.Link,
     isActive = false,
+    isDisabled = false,
     notificationsAmount,
   } = props;
   const itemClassName = classNames(styles.item, {
     [styles.itemActive]: isActive,
+    [styles.itemDisabled]: isDisabled,
   });
 
   const Wrapper: FC = ({ children }) => {
-    if (type === NavigationItemType.Block) {
+    if (type === NavigationItemType.Block || isDisabled) {
       return <div className={itemClassName}>{children}</div>;
     }
 
