@@ -141,22 +141,21 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     }
   }, [maxChatSize]);
 
-  const contentStyles = {
+  const pageContentStyles = {
     "--chat-w": `${chatWidth}px`,
   } as CSSProperties;
 
   const contentEl = (
     <CommonSidenavLayoutPageContent
       className={styles.layoutPageContent}
+      headerClassName={styles.layoutHeader}
       headerContent={headerContent}
       isGlobalLoading={isGlobalLoading}
+      styles={pageContentStyles}
     >
       <ChatContext.Provider value={chatContextValue}>
         {!shouldHideContent && (
-          <div
-            className={classNames(styles.content, className)}
-            style={contentStyles}
-          >
+          <div className={classNames(styles.content, className)}>
             {topContent}
             <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
               {allFeedItems?.map((item) => (
