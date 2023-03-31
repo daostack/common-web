@@ -13,7 +13,7 @@ const PageContent: FC<FeedLayoutProps> = (props) => {
   const { className, headerContent, children, isGlobalLoading = false } = props;
   let headerEl: ReactNode = null;
 
-  if (isValidElement(headerContent)) {
+  if (headerContent && isValidElement(headerContent)) {
     headerEl = cloneElement(headerContent, {
       ...headerContent.props,
       className: classNames(styles.header, headerContent.props.className),
@@ -28,7 +28,15 @@ const PageContent: FC<FeedLayoutProps> = (props) => {
           variant={LoaderVariant.Global}
         />
       )}
-      <div className={classNames(styles.container, className)}>
+      <div
+        className={classNames(
+          styles.container,
+          {
+            [styles.containerWithHeader]: headerEl,
+          },
+          className,
+        )}
+      >
         {headerEl}
         {children}
       </div>
