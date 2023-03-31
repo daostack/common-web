@@ -23,6 +23,7 @@ const Navigation: FC<NavigationProps> = (props) => {
       isActive: matchRoute(location.pathname, ROUTE_PATHS.INBOX, {
         exact: true,
       }),
+      isDisabled: true,
     },
   ];
 

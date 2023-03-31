@@ -1,11 +1,20 @@
 import { useCallback, useState } from "react";
-import { CommonService, GovernanceService } from "@/services";
+import {
+  CommonFeedService,
+  CommonService,
+  GovernanceService,
+} from "@/services";
 import { State, CombinedState } from "./types";
 import { useCommonSubscription } from "./useCommonSubscription";
 import { useGovernanceSubscription } from "./useGovernanceSubscription";
 
+interface FetchCommonDataOptions {
+  commonId: string;
+  sharedFeedItemId?: string | null;
+}
+
 interface Return extends CombinedState {
-  fetchCommonData: (commonId: string) => void;
+  fetchCommonData: (options: FetchCommonDataOptions) => void;
   resetCommonData: () => void;
 }
 
@@ -21,7 +30,8 @@ export const useCommonData = (): Return => {
   useCommonSubscription(setState, currentCommonId);
   useGovernanceSubscription(setState, state.data?.governance.id);
 
-  const fetchCommonData = useCallback((commonId: string) => {
+  const fetchCommonData = useCallback((options: FetchCommonDataOptions) => {
+    const { commonId, sharedFeedItemId } = options;
     setState({
       loading: true,
       fetched: false,
@@ -30,11 +40,18 @@ export const useCommonData = (): Return => {
 
     (async () => {
       try {
-        const [common, governance, commonMembersAmount] = await Promise.all([
-          CommonService.getCommonById(commonId),
-          GovernanceService.getGovernanceByCommonId(commonId),
-          CommonService.getCommonMembersAmount(commonId),
-        ]);
+        const [common, governance, commonMembersAmount, sharedFeedItem] =
+          await Promise.all([
+            CommonService.getCommonById(commonId),
+            GovernanceService.getGovernanceByCommonId(commonId),
+            CommonService.getCommonMembersAmount(commonId),
+            sharedFeedItemId
+              ? CommonFeedService.getCommonFeedItemById(
+                  commonId,
+                  sharedFeedItemId,
+                )
+              : null,
+          ]);
 
         if (!common) {
           throw new Error(`Couldn't find common by id = ${commonId}`);
@@ -50,6 +67,7 @@ export const useCommonData = (): Return => {
             common,
             governance,
             commonMembersAmount,
+            sharedFeedItem,
           },
         });
       } catch (error) {

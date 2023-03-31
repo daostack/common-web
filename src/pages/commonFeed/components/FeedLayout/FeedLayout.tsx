@@ -45,6 +45,8 @@ interface FeedLayoutProps {
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: CommonFeed[] | null;
+  topFeedItems?: CommonFeed[];
+  expandedFeedItemId?: string | null;
   loading: boolean;
   shouldHideContent?: boolean;
   onFetchNext: () => void;
@@ -60,6 +62,8 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     governance,
     commonMember,
     feedItems,
+    topFeedItems = [],
+    expandedFeedItemId,
     loading,
     shouldHideContent = false,
     onFetchNext,
@@ -74,6 +78,18 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   const isChatItemSet = Boolean(chatItem);
   const maxChatSize = getSplitViewMaxSize(windowWidth);
   const sizeKey = `${windowWidth}_${chatWidth}`;
+  const allFeedItems = useMemo(() => {
+    const items: CommonFeed[] = [];
+
+    if (topFeedItems) {
+      items.push(...topFeedItems);
+    }
+    if (feedItems) {
+      items.push(...feedItems);
+    }
+
+    return items;
+  }, [topFeedItems, feedItems]);
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
@@ -83,28 +99,34 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
       return;
     }
 
-    const feedItem = feedItems?.find((item) =>
+    const feedItem = allFeedItems?.find((item) =>
       [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
         item.data.type,
       ),
     );
 
     return feedItem?.id;
-  }, [feedItems, isTabletView]);
+  }, [allFeedItems, isTabletView]);
 
   const selectedFeedItem = useMemo(() => {
-    return feedItems?.find((item) => item.id === chatItem?.feedItemId);
-  }, [feedItems, chatItem]);
+    return allFeedItems?.find((item) => item.id === chatItem?.feedItemId);
+  }, [allFeedItems, chatItem]);
 
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
       setChatItem,
       activeItemDiscussionId: chatItem?.discussion.id,
       feedItemIdForAutoChatOpen,
+      expandedFeedItemId,
       setIsShowFeedItemDetailsModal,
       setShouldShowSeeMore,
     }),
-    [setChatItem, chatItem?.discussion.id, feedItemIdForAutoChatOpen],
+    [
+      setChatItem,
+      chatItem?.discussion.id,
+      feedItemIdForAutoChatOpen,
+      expandedFeedItemId,
+    ],
   );
 
   useEffect(() => {
@@ -136,7 +158,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
           <div className={classNames(styles.content, className)}>
             {topContent}
             <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
-              {feedItems?.map((item) => (
+              {allFeedItems?.map((item) => (
                 <FeedItem
                   key={item.id}
                   governanceId={governance.id}

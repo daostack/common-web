@@ -32,6 +32,17 @@ class CommonFeedService {
       .collection(SubCollections.CommonFeed)
       .withConverter(converter);
 
+  public getCommonFeedItemById = async (
+    commonId: string,
+    commonFeedId: string,
+  ): Promise<CommonFeed | null> => {
+    const snapshot = await this.getCommonFeedSubCollection(commonId)
+      .doc(commonFeedId)
+      .get();
+
+    return snapshot?.data() || null;
+  };
+
   public getCommonFeedItemWithSnapshot = async (
     commonId: string,
     dataId: string,

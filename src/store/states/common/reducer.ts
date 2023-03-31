@@ -1,5 +1,7 @@
 import produce from "immer";
+import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
+import { CommonFeed } from "@/shared/models";
 import * as actions from "./actions";
 import { CommonState, FeedItems } from "./types";
 
@@ -15,6 +17,8 @@ const initialFeedItems: FeedItems = {
 
 const initialState: CommonState = {
   feedItems: { ...initialFeedItems },
+  sharedFeedItemId: null,
+  sharedFeedItem: null,
   commonAction: null,
   discussionCreation: {
     data: null,
@@ -27,6 +31,67 @@ const initialState: CommonState = {
   },
   commonMember: null,
   governance: null,
+};
+
+const updateFeedItemInList = (
+  state: WritableDraft<CommonState>,
+  payload: {
+    item: Partial<CommonFeed> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  if (!state.feedItems.data) {
+    return;
+  }
+
+  const { item: updatedItem, isRemoved = false } = payload;
+  const feedItemIndex = state.feedItems.data?.findIndex(
+    (item) => item.id === updatedItem.id,
+  );
+
+  if (feedItemIndex === -1) {
+    return;
+  }
+
+  const nextData = [...state.feedItems.data];
+
+  if (isRemoved) {
+    nextData.splice(feedItemIndex, 1);
+  } else {
+    nextData[feedItemIndex] = {
+      ...nextData[feedItemIndex],
+      ...updatedItem,
+    };
+  }
+
+  state.feedItems = {
+    ...state.feedItems,
+    data: nextData,
+  };
+};
+
+const updateSharedFeedItem = (
+  state: WritableDraft<CommonState>,
+  payload: {
+    item: Partial<CommonFeed> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  const { item: updatedItem, isRemoved = false } = payload;
+
+  if (state.sharedFeedItem?.id !== updatedItem.id) {
+    return;
+  }
+
+  if (isRemoved) {
+    state.sharedFeedItem = null;
+    state.sharedFeedItemId = null;
+  } else {
+    state.sharedFeedItem = {
+      ...state.sharedFeedItem,
+      ...updatedItem,
+    };
+  }
 };
 
 export const reducer = createReducer<CommonState, Action>(initialState)
@@ -135,10 +200,15 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.getFeedItems.success, (state, { payload }) =>
     produce(state, (nextState) => {
+      const payloadData = nextState.sharedFeedItemId
+        ? payload.data &&
+          payload.data.filter((item) => item.id !== nextState.sharedFeedItemId)
+        : payload.data;
+
       nextState.feedItems = {
         ...payload,
         data:
-          payload.data && (nextState.feedItems.data || []).concat(payload.data),
+          payloadData && (nextState.feedItems.data || []).concat(payloadData),
         loading: false,
       };
     }),
@@ -194,34 +264,8 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.updateFeedItem, (state, { payload }) =>
     produce(state, (nextState) => {
-      if (!nextState.feedItems.data) {
-        return;
-      }
-
-      const { item: updatedItem, isRemoved = false } = payload;
-      const feedItemIndex = nextState.feedItems.data?.findIndex(
-        (item) => item.id === updatedItem.id,
-      );
-
-      if (feedItemIndex === -1) {
-        return;
-      }
-
-      const nextData = [...nextState.feedItems.data];
-
-      if (isRemoved) {
-        nextData.splice(feedItemIndex, 1);
-      } else {
-        nextData[feedItemIndex] = {
-          ...nextData[feedItemIndex],
-          ...updatedItem,
-        };
-      }
-
-      nextState.feedItems = {
-        ...nextState.feedItems,
-        data: nextData,
-      };
+      updateFeedItemInList(nextState, payload);
+      updateSharedFeedItem(nextState, payload);
     }),
   )
   .handleAction(actions.resetFeedItems, (state) =>
@@ -232,5 +276,15 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.setIsNewProjectCreated, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.isNewProjectCreated = payload;
+    }),
+  )
+  .handleAction(actions.setSharedFeedItemId, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.sharedFeedItemId = payload;
+    }),
+  )
+  .handleAction(actions.setSharedFeedItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.sharedFeedItem = payload;
     }),
   );

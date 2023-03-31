@@ -28,6 +28,11 @@
     --item-bg-color: #{$c-pink-active-feed-cards};
   }
 }
+.itemDisabled {
+  --item-color: #{$c-neutrals-300};
+
+  cursor: not-allowed;
+}
 
 .textWrapper {
   display: flex;
