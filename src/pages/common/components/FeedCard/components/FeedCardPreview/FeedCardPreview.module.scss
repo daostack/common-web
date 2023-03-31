@@ -125,6 +125,7 @@
 }
 
 .unreadMessages {
+  flex-shrink: 0;
   margin-left: 0.75rem;
   display: flex;
   justify-content: center;
