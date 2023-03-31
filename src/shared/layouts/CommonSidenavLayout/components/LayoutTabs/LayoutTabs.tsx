@@ -29,11 +29,11 @@ const TABS: TabConfiguration[] = [
     value: LayoutTab.Spaces,
     icon: <Hamburger2Icon />,
   },
-  {
-    label: getLayoutTabName(LayoutTab.Inbox),
-    value: LayoutTab.Inbox,
-    icon: <InboxIcon />,
-  },
+  // {
+  //   label: getLayoutTabName(LayoutTab.Inbox),
+  //   value: LayoutTab.Inbox,
+  //   icon: <InboxIcon />,
+  // },
   {
     label: getLayoutTabName(LayoutTab.Profile),
     value: LayoutTab.Profile,
