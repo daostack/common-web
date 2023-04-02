@@ -13,7 +13,7 @@
   border: var(--item-border);
   border-bottom: 0;
   font-family: PoppinsSans, sans-serif;
-  font-weight: 600;
+  font-weight: 500;
   font-size: $small;
   text-align: left;
   cursor: pointer;
@@ -33,7 +33,7 @@
   }
 
   &:hover {
-    --item-bg-color: #{$c-primary-200}99;
+    --item-bg-color: #{$c-pink-hover-feed-cards};
   }
 }
 
