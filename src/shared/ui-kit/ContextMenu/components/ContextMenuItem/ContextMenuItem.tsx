@@ -53,6 +53,13 @@ const ContextMenuItem: ForwardRefRenderFunction<
               restProps.onClick(event);
             }
           }}
+          onMouseUp={(event) => {
+            item.onClick(event);
+
+            if (restProps.onClick) {
+              restProps.onClick(event);
+            }
+          }}
           type="button"
           role="menuitem"
         >
