@@ -1,6 +1,11 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
 
+.feedCardPreviewLongPressing {
+  box-shadow: 0 0.1875rem 0.5rem #{$c-shades-neutrals-30};
+  transition: box-shadow 0.4s;
+}
+
 .container {
   --feed-card-ph: 1.5rem;
 
@@ -11,10 +16,6 @@
   flex-direction: column;
   color: $c-neutrals-600;
   box-shadow: none;
-}
-.containerLongPressing {
-  box-shadow: 0 0.1875rem 0.5rem #{$c-shades-neutrals-30};
-  transition: box-shadow 0.4s;
 }
 .containerActive {
   border: 0.0625rem solid $c-neutrals-200;

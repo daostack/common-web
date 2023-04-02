@@ -3,11 +3,11 @@ import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { CommonFeed } from "@/shared/models";
-import { TimeAgo } from "@/shared/ui-kit";
+import { MenuItem } from "@/shared/interfaces";
+import { DesktopStyleMenu, TimeAgo } from "@/shared/ui-kit";
 import styles from "./FeedCardPreview.module.scss";
 
-interface FeedCardPreviewProps {
+type FeedCardPreviewProps = {
   className?: string;
   messageCount: number;
   lastActivity: number;
@@ -19,7 +19,10 @@ interface FeedCardPreviewProps {
   canBeExpanded?: boolean;
   onClick?: () => void;
   onExpand?: () => void;
-}
+  isMenuOpen?: boolean;
+  onMenuClose?: () => void;
+  menuItems?: MenuItem[];
+} & JSX.IntrinsicElements["div"];
 
 export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
   const {
@@ -32,6 +35,10 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
     lastMessage,
     onClick,
     onExpand,
+    isMenuOpen = false,
+    onMenuClose,
+    menuItems,
+    ...restProps
   } = props;
   const isTabletView = useIsTabletView();
 
@@ -41,10 +48,15 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
 
   return (
     <div
-      className={classNames(styles.container, {
-        [styles.containerActive]: isActive || (isExpanded && isTabletView),
-        [styles.containerExpanded]: isExpanded && canBeExpanded,
-      })}
+      {...restProps}
+      className={classNames(
+        styles.container,
+        {
+          [styles.containerActive]: isActive || (isExpanded && isTabletView),
+          [styles.containerExpanded]: isExpanded && canBeExpanded,
+        },
+        restProps.className,
+      )}
       onClick={onClick}
     >
       {isTabletView && canBeExpanded && (
@@ -82,6 +94,14 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
           )}
         </div>
       </div>
+      {menuItems && onMenuClose && (
+        <DesktopStyleMenu
+          className={styles.desktopStyleMenu}
+          isOpen={isMenuOpen}
+          onClose={onMenuClose}
+          items={menuItems}
+        />
+      )}
     </div>
   );
 };

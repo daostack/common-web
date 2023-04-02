@@ -10,7 +10,6 @@ import {
   useUserById,
 } from "@/shared/hooks/useCases";
 import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
-import { DesktopStyleMenu } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
@@ -24,7 +23,6 @@ import { getVisibilityString } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
 import { LoadingFeedCard } from "../LoadingFeedCard";
 import { useMenuItems } from "./hooks";
-import styles from "./DiscussionFeedCard.module.scss";
 
 interface DiscussionFeedCardProps {
   item: CommonFeed;
@@ -65,7 +63,11 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     onOpen: onShareModalOpen,
     onClose: onShareModalClose,
   } = useModal(false);
-  const { isShowing: isMenuOpen, onClose: onMenuClose } = useModal(false);
+  const {
+    isShowing: isMenuOpen,
+    onOpen: onMenuOpen,
+    onClose: onMenuClose,
+  } = useModal(false);
   const {
     fetchUser: fetchDiscussionCreator,
     data: discussionCreator,
@@ -165,6 +167,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     <FeedCard
       isActive={isActive}
       isExpanded={isExpanded}
+      onLongPress={isMobileVersion ? onMenuOpen : undefined}
       isLongPressed={isMenuOpen}
       isHovering={isHovering}
       messageCount={discussion?.messageCount || 0}
@@ -183,6 +186,9 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
+      isMenuOpen={isMenuOpen}
+      onMenuClose={onMenuClose}
+      menuItems={menuItems}
     >
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}
@@ -233,12 +239,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           isMobileVersion={isMobileVersion}
         />
       )}
-      <DesktopStyleMenu
-        className={styles.desktopStyleMenu}
-        isOpen={isMenuOpen}
-        onClose={onMenuClose}
-        items={menuItems}
-      />
     </FeedCard>
   );
 };
