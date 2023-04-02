@@ -1,5 +1,6 @@
-import React, { FC, MouseEventHandler, useRef } from "react";
+import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
+import { useLongPress } from "use-long-press";
 import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
@@ -7,7 +8,7 @@ import { ContextMenuItem } from "@/shared/interfaces";
 import { ContextMenu, ContextMenuRef, TimeAgo } from "@/shared/ui-kit";
 import styles from "./FeedCardPreview.module.scss";
 
-type FeedCardPreviewProps = {
+interface FeedCardPreviewProps {
   className?: string;
   messageCount: number;
   lastActivity: number;
@@ -20,7 +21,7 @@ type FeedCardPreviewProps = {
   onClick?: () => void;
   onExpand?: () => void;
   menuItems?: ContextMenuItem[];
-} & JSX.IntrinsicElements["div"];
+}
 
 export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
   const {
@@ -34,10 +35,40 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
     onClick,
     onExpand,
     menuItems,
-    ...restProps
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const isTabletView = useIsTabletView();
+  const [isLongPressing, setIsLongPressing] = useState(false);
+  const [isLongPressed, setIsLongPressed] = useState(false);
+
+  const handleLongPress = (event) => {
+    let x = 0;
+    let y = 0;
+
+    if (event.touches) {
+      const touch = event.touches[0];
+      x = touch?.clientX || 0;
+      y = touch?.clientY || 0;
+    } else {
+      x = event.clientX;
+      y = event.clientY;
+    }
+
+    setIsLongPressed(true);
+    contextMenuRef.current?.open(x, y);
+    setIsLongPressing(false);
+  };
+
+  const getLongPressProps = useLongPress(
+    isTabletView ? handleLongPress : null,
+    {
+      threshold: 400,
+      cancelOnMovement: true,
+      onStart: () => setIsLongPressing(true),
+      onFinish: () => setIsLongPressing(false),
+      onCancel: () => setIsLongPressing(false),
+    },
+  );
 
   const handleContextMenu: MouseEventHandler = (event) => {
     if (!isTabletView) {
@@ -52,17 +83,14 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
 
   return (
     <div
-      {...restProps}
-      className={classNames(
-        styles.container,
-        {
-          [styles.containerActive]: isActive || (isExpanded && isTabletView),
-          [styles.containerExpanded]: isExpanded && canBeExpanded,
-        },
-        restProps.className,
-      )}
-      onClick={onClick}
+      className={classNames(styles.container, {
+        [styles.containerActive]: isActive || (isExpanded && isTabletView),
+        [styles.containerExpanded]: isExpanded && canBeExpanded,
+        [styles.containerLongPressing]: isLongPressing || isLongPressed,
+      })}
+      onClick={!isLongPressed ? onClick : undefined}
       onContextMenu={handleContextMenu}
+      {...getLongPressProps()}
     >
       {isTabletView && canBeExpanded && (
         <ButtonIcon onClick={onExpand}>

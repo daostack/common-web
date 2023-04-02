@@ -41,6 +41,11 @@
   border-bottom: none;
 }
 
+.containerLongPressing {
+  box-shadow: 0 0.1875rem 0.5rem #{$c-shades-neutrals-30};
+  transition: box-shadow 0.4s;
+}
+
 .expandIcon {
   height: 1.5rem;
   width: 1.5rem;

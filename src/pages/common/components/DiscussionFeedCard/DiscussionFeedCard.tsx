@@ -64,11 +64,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     onClose: onShareModalClose,
   } = useModal(false);
   const {
-    isShowing: isMenuOpen,
-    onOpen: onMenuOpen,
-    onClose: onMenuClose,
-  } = useModal(false);
-  const {
     fetchUser: fetchDiscussionCreator,
     data: discussionCreator,
     fetched: isDiscussionCreatorFetched,
@@ -167,8 +162,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     <FeedCard
       isActive={isActive}
       isExpanded={isExpanded}
-      onLongPress={isMobileVersion ? onMenuOpen : undefined}
-      isLongPressed={isMenuOpen}
       isHovering={isHovering}
       messageCount={discussion?.messageCount || 0}
       lastActivity={item.updatedAt.seconds * 1000}
