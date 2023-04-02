@@ -1,14 +1,8 @@
-import React, {
-  FC,
-  useState,
-  useEffect,
-  useRef,
-  MouseEventHandler,
-} from "react";
+import React, { FC, useState, useEffect, useRef } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { MenuItem } from "@/shared/interfaces";
+import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonCard } from "../CommonCard";
 import { FeedCardPreview } from "./components";
 import styles from "./FeedCard.module.scss";
@@ -24,14 +18,11 @@ interface FeedCardProps {
   unreadMessages?: number;
   onLongPress?: () => void;
   onClick?: () => void;
-  onContextMenu?: MouseEventHandler;
   title?: string;
   canBeExpanded?: boolean;
   lastMessage?: string;
   isPreviewMode?: boolean;
-  isMenuOpen?: boolean;
-  onMenuClose?: () => void;
-  menuItems?: MenuItem[];
+  menuItems?: ContextMenuItem[];
 }
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -50,13 +41,10 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     unreadMessages = 0,
     canBeExpanded = true,
     onClick,
-    onContextMenu,
     children,
     title,
     lastMessage,
     isPreviewMode = true,
-    isMenuOpen,
-    onMenuClose,
     menuItems,
   } = props;
   const isTabletView = useIsTabletView();
@@ -141,11 +129,8 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           canBeExpanded={canBeExpanded}
           onClick={handleClick}
           onExpand={handleExpand as () => void}
-          onContextMenu={onContextMenu}
           title={title}
           lastMessage={lastMessage}
-          isMenuOpen={isMenuOpen}
-          onMenuClose={onMenuClose}
           menuItems={menuItems}
           {...getLongPressProps()}
         />

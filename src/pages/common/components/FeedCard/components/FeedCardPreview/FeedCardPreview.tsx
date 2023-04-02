@@ -1,10 +1,10 @@
-import React, { FC, MouseEventHandler, useEffect } from "react";
+import React, { FC, MouseEventHandler, useRef } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { MenuItem } from "@/shared/interfaces";
-import { DesktopStyleMenu, TimeAgo } from "@/shared/ui-kit";
+import { ContextMenuItem } from "@/shared/interfaces";
+import { ContextMenu, ContextMenuRef, TimeAgo } from "@/shared/ui-kit";
 import styles from "./FeedCardPreview.module.scss";
 
 type FeedCardPreviewProps = {
@@ -19,10 +19,7 @@ type FeedCardPreviewProps = {
   canBeExpanded?: boolean;
   onClick?: () => void;
   onExpand?: () => void;
-  onContextMenu?: MouseEventHandler;
-  isMenuOpen?: boolean;
-  onMenuClose?: () => void;
-  menuItems?: MenuItem[];
+  menuItems?: ContextMenuItem[];
 } & JSX.IntrinsicElements["div"];
 
 export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
@@ -36,24 +33,18 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
     lastMessage,
     onClick,
     onExpand,
-    isMenuOpen = false,
-    onMenuClose,
     menuItems,
     ...restProps
   } = props;
+  const contextMenuRef = useRef<ContextMenuRef>(null);
   const isTabletView = useIsTabletView();
 
-  useEffect(() => {
-    if (!isMenuOpen || !onMenuClose) {
-      return;
+  const handleContextMenu: MouseEventHandler = (event) => {
+    if (!isTabletView) {
+      event.preventDefault();
+      contextMenuRef.current?.open(event.clientX, event.clientY);
     }
-
-    document.addEventListener("scroll", onMenuClose);
-
-    return () => {
-      document.removeEventListener("scroll", onMenuClose);
-    };
-  }, [isMenuOpen, onMenuClose]);
+  };
 
   if (!title && !lastActivity) {
     return null;
@@ -71,6 +62,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
         restProps.className,
       )}
       onClick={onClick}
+      onContextMenu={handleContextMenu}
     >
       {isTabletView && canBeExpanded && (
         <ButtonIcon onClick={onExpand}>
@@ -107,14 +99,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
           )}
         </div>
       </div>
-      {menuItems && onMenuClose && (
-        <DesktopStyleMenu
-          className={styles.desktopStyleMenu}
-          isOpen={isMenuOpen}
-          onClose={onMenuClose}
-          items={menuItems}
-        />
-      )}
+      {menuItems && <ContextMenu ref={contextMenuRef} menuItems={menuItems} />}
     </div>
   );
 };
