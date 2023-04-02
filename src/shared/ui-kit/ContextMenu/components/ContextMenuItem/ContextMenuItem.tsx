@@ -5,7 +5,7 @@ import React, {
   RefObject,
 } from "react";
 import classNames from "classnames";
-import { ContextMenuItem as Item } from "../../types";
+import { ContextMenuItem as Item } from "@/shared/interfaces";
 import styles from "./ContextMenuItem.module.scss";
 
 interface ContextMenuItemProps {

@@ -20,8 +20,8 @@ import {
   FloatingFocusManager,
   FloatingOverlay,
 } from "@floating-ui/react";
+import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { ContextMenuItem } from "./components";
-import { ContextMenuItem as Item } from "./types";
 import styles from "./ContextMenu.module.scss";
 
 export interface ContextMenuRef {
