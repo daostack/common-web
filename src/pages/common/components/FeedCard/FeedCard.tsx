@@ -1,4 +1,10 @@
-import React, { FC, useState, useEffect, useRef } from "react";
+import React, {
+  FC,
+  useState,
+  useEffect,
+  useRef,
+  MouseEventHandler,
+} from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -18,6 +24,7 @@ interface FeedCardProps {
   unreadMessages?: number;
   onLongPress?: () => void;
   onClick?: () => void;
+  onContextMenu?: MouseEventHandler;
   title?: string;
   canBeExpanded?: boolean;
   lastMessage?: string;
@@ -43,6 +50,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     unreadMessages = 0,
     canBeExpanded = true,
     onClick,
+    onContextMenu,
     children,
     title,
     lastMessage,
@@ -133,6 +141,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           canBeExpanded={canBeExpanded}
           onClick={handleClick}
           onExpand={handleExpand as () => void}
+          onContextMenu={onContextMenu}
           title={title}
           lastMessage={lastMessage}
           isMenuOpen={isMenuOpen}

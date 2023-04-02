@@ -1,4 +1,11 @@
-import React, { FC, memo, useCallback, useEffect, useState } from "react";
+import React, {
+  FC,
+  memo,
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ReportModal } from "@/shared/components";
@@ -133,6 +140,13 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     feedItemUserMetadata?.lastSeen,
   ]);
 
+  const handleContextMenu: MouseEventHandler = (event) => {
+    if (!isMobileVersion) {
+      event.preventDefault();
+      onMenuOpen();
+    }
+  };
+
   useEffect(() => {
     fetchDiscussionCreator(item.userId);
   }, [item.userId]);
@@ -186,6 +200,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
+      onContextMenu={handleContextMenu}
       isMenuOpen={isMenuOpen}
       onMenuClose={onMenuClose}
       menuItems={menuItems}

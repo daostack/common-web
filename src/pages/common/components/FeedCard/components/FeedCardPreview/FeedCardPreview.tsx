@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, MouseEventHandler, useEffect } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -19,6 +19,7 @@ type FeedCardPreviewProps = {
   canBeExpanded?: boolean;
   onClick?: () => void;
   onExpand?: () => void;
+  onContextMenu?: MouseEventHandler;
   isMenuOpen?: boolean;
   onMenuClose?: () => void;
   menuItems?: MenuItem[];
