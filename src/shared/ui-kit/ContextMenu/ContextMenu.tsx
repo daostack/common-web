@@ -22,6 +22,7 @@ import {
 } from "@floating-ui/react";
 import { ContextMenuItem } from "./components";
 import { ContextMenuItem as Item } from "./types";
+import styles from "./ContextMenu.module.scss";
 
 export interface ContextMenuRef {
   open: (x: number, y: number) => void;
@@ -128,7 +129,7 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
     return (
       <FloatingPortal>
         {isOpen && (
-          <FloatingOverlay lockScroll>
+          <FloatingOverlay className={styles.overlay} lockScroll>
             <FloatingFocusManager
               context={context}
               initialFocus={refs.floating}
@@ -140,6 +141,7 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
                   left: x ?? 0,
                   top: y ?? 0,
                 }}
+                className={styles.list}
                 {...getFloatingProps()}
               >
                 {menuItems.map((item, index) => (
