@@ -1,5 +1,8 @@
-import { MenuItem } from "@/shared/interfaces";
+import { MouseEventHandler } from "react";
 
-export type ContextMenuItem = MenuItem<string>;
-
-export { MenuItemType as ContextMenuItemType } from "@/shared/interfaces";
+export interface ContextMenuItem {
+  className?: string;
+  text: string;
+  onClick: MouseEventHandler;
+  withWarning?: boolean;
+}

@@ -146,7 +146,7 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
               >
                 {menuItems.map((item, index) => (
                   <ContextMenuItem
-                    key={item.id}
+                    key={index}
                     item={item}
                     {...getItemProps({
                       tabIndex: activeIndex === index ? 0 : -1,
