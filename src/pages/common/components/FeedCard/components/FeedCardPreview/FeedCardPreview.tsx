@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -41,6 +41,18 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
     ...restProps
   } = props;
   const isTabletView = useIsTabletView();
+
+  useEffect(() => {
+    if (!isMenuOpen || !onMenuClose) {
+      return;
+    }
+
+    document.addEventListener("scroll", onMenuClose);
+
+    return () => {
+      document.removeEventListener("scroll", onMenuClose);
+    };
+  }, [isMenuOpen, onMenuClose]);
 
   if (!title && !lastActivity) {
     return null;
