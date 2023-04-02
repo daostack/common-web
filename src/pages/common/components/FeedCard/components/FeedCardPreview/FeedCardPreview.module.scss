@@ -124,21 +124,6 @@
   word-break: break-word;
 }
 
-.unreadMessages {
-  flex-shrink: 0;
-  margin-left: 0.75rem;
+.bottomContentRight {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 1.4375rem;
-  height: 1.375rem;
-  background-color: $c-pink-primary;
-  border-radius: 0.625rem;
-  font-size: $xxsmall-2;
-  font-weight: 600;
-  color: $c-neutrals-100;
-}
-
-.unreadMessagesLong {
-  width: 1.9375rem;
 }

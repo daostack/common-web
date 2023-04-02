@@ -3,8 +3,9 @@ import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { CommonFeed } from "@/shared/models";
+import { CommonFeedType } from "@/shared/models";
 import { TimeAgo } from "@/shared/ui-kit";
+import { FeedCardTags } from "../FeedCardTags";
 import styles from "./FeedCardPreview.module.scss";
 
 interface FeedCardPreviewProps {
@@ -19,6 +20,7 @@ interface FeedCardPreviewProps {
   canBeExpanded?: boolean;
   onClick?: () => void;
   onExpand?: () => void;
+  type?: CommonFeedType;
 }
 
 export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
@@ -32,6 +34,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
     lastMessage,
     onClick,
     onExpand,
+    type,
   } = props;
   const isTabletView = useIsTabletView();
 
@@ -71,15 +74,9 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
           ) : (
             <div />
           )}
-          {Boolean(unreadMessages) && (
-            <div
-              className={classNames(styles.unreadMessages, {
-                [styles.unreadMessagesLong]: Number(unreadMessages) > 9,
-              })}
-            >
-              {unreadMessages}
-            </div>
-          )}
+          <div className={classNames(styles.bottomContentRight)}>
+            <FeedCardTags unreadMessages={unreadMessages} type={type} />
+          </div>
         </div>
       </div>
     </div>

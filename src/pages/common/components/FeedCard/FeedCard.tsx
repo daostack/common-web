@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect, useRef } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { CommonFeed } from "@/shared/models";
+import { CommonFeedType } from "@/shared/models";
 import { CommonCard } from "../CommonCard";
 import { FeedCardPreview } from "./components";
 import styles from "./FeedCard.module.scss";
@@ -22,6 +22,7 @@ interface FeedCardProps {
   canBeExpanded?: boolean;
   lastMessage?: string;
   isPreviewMode?: boolean;
+  type?: CommonFeedType;
 }
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -44,6 +45,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     title,
     lastMessage,
     isPreviewMode = true,
+    type,
   } = props;
   const isTabletView = useIsTabletView();
 
@@ -122,6 +124,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           onExpand={handleExpand as () => void}
           title={title}
           lastMessage={lastMessage}
+          type={type}
         />
       )}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (

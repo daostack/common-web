@@ -225,6 +225,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
+      type={item.data.type}
     >
       <FeedCardHeader
         avatar={feedItemUser?.photoURL}

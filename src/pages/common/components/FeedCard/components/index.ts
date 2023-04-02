@@ -7,3 +7,4 @@ export * from "./FeedGeneralInfo";
 export * from "./FeedInfoHeader";
 export * from "./FeedUserPopup";
 export * from "./FeedCardPreview";
+export * from "./FeedCardTags";
