@@ -94,6 +94,14 @@ export const updateDiscussionMessagesStateByDiscussionId = createStandardAction(
   state: LoadingState<DiscussionMessage[] | null>;
 }>();
 
+export const updateDiscussionMessageWithActualId = createStandardAction(
+  CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_MESSAGES_ACTUAL_ID,
+)<{
+  discussionId: string;
+  pendingMessageId: string;
+  actualId: string;
+}>();
+
 export const getProposalStateById = createAsyncAction(
   CacheActionType.GET_PROPOSAL_STATE_BY_ID,
   CacheActionType.GET_PROPOSAL_STATE_BY_ID_SUCCESS,

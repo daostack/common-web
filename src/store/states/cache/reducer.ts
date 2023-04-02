@@ -3,6 +3,7 @@ import { ActionType, createReducer } from "typesafe-actions";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import * as actions from "./actions";
 import { CacheState } from "./types";
+import { unionWith } from "lodash";
 
 type Action = ActionType<typeof actions>;
 
@@ -41,11 +42,31 @@ export const reducer = createReducer<CacheState, Action>(initialState)
     actions.updateDiscussionMessagesStateByDiscussionId,
     (state, { payload }) =>
       produce(state, (nextState) => {
-        const { discussionId, state } = payload;
+        const { discussionId } = payload;
 
-        nextState.discussionMessagesStates[discussionId] = { ...state };
+      const newState = unionWith(payload.state?.data ?? [],state.discussionMessagesStates[discussionId]?.data ?? [] , (prevMsg, nextMsg) => {
+        return prevMsg.id === nextMsg.id;
+      })
+
+        nextState.discussionMessagesStates[discussionId] = { ...payload.state, data: newState };
       }),
   )
+  .handleAction(actions.updateDiscussionMessageWithActualId, (state, { payload }) =>
+  produce(state, (nextState) => {
+    const { pendingMessageId, actualId, discussionId } = payload;
+    const newState = {...state.discussionMessagesStates[discussionId]};
+    const indexOfPendingMessage = newState.data?.findIndex(({id}) => id === pendingMessageId) ?? 0;
+    const updatedDate = (newState.data ?? []).map((item, index) => {
+      if(index === indexOfPendingMessage) {
+        return {...item, id:actualId}
+      }
+
+      return item;
+      
+    });
+    nextState.discussionMessagesStates[discussionId] = { ...newState, data: updatedDate };
+  }),
+)
   .handleAction(actions.updateProposalStateById, (state, { payload }) =>
     produce(state, (nextState) => {
       const { proposalId, state } = payload;

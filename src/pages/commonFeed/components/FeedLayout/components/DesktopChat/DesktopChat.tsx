@@ -5,7 +5,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import {
   ChatComponent,
   ChatItem,
-} from "@/pages/common/components/ChatComponent";
+} from "@/pages/common/components/ChatComponentUpdated";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { ChatType } from "@/shared/constants";
 import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
@@ -46,21 +46,14 @@ const DesktopChat: FC<ChatProps> = (props) => {
       </div>
       <ChatComponent
         commonMember={commonMember}
-        isCommonMemberFetched
-        isAuthorized={Boolean(user)}
         type={
           chatItem.proposal
             ? ChatType.ProposalComments
             : ChatType.DiscussionMessages
         }
-        hasAccess={hasAccessToChat}
-        isHidden={false}
         common={common}
         discussion={chatItem.discussion}
         proposal={chatItem.proposal}
-        feedItemId={chatItem.feedItemId}
-        titleHeight={73}
-        lastSeenItem={chatItem.lastSeenItem}
       />
     </div>
   );

@@ -50,7 +50,9 @@ export default function ChatMessage({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isTabletView = useIsTabletView();
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
-  const editedAtDate = new Date(discussionMessage.editedAt?.seconds * 1000);
+  const editedAtDate = new Date(
+    (discussionMessage?.editedAt?.seconds ?? 0) * 1000,
+  );
 
   const isNotCurrentUserMessage = user?.uid !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
