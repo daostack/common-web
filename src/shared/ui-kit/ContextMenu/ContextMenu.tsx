@@ -1,0 +1,166 @@
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import {
+  useFloating,
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  useRole,
+  useDismiss,
+  useInteractions,
+  useListNavigation,
+  useTypeahead,
+  FloatingPortal,
+  FloatingFocusManager,
+  FloatingOverlay,
+} from "@floating-ui/react";
+import { ContextMenuItem } from "./components";
+import { ContextMenuItem as Item } from "./types";
+
+export interface ContextMenuRef {
+  open: (x: number, y: number) => void;
+}
+
+interface ContextMenuProps {
+  menuItems: Item[];
+}
+
+export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
+  (props, forwardedRef) => {
+    const { menuItems } = props;
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const timeoutRef = useRef(0);
+    const listItemsRef = useRef<(HTMLElement | null)[]>([]);
+    const listContentRef = useRef(menuItems.map((item) => item.text));
+    const allowMouseUpCloseRef = useRef(false);
+
+    const { x, y, refs, strategy, context } = useFloating({
+      open: isOpen,
+      onOpenChange: setIsOpen,
+      middleware: [
+        offset({ mainAxis: 5, alignmentAxis: 4 }),
+        flip({
+          fallbackPlacements: ["left-start"],
+        }),
+        shift({ padding: 10 }),
+      ],
+      placement: "right-start",
+      strategy: "fixed",
+      whileElementsMounted: autoUpdate,
+    });
+
+    const role = useRole(context, { role: "menu" });
+    const dismiss = useDismiss(context);
+    const listNavigation = useListNavigation(context, {
+      listRef: listItemsRef,
+      onNavigate: setActiveIndex,
+      activeIndex,
+    });
+    const typeahead = useTypeahead(context, {
+      enabled: isOpen,
+      listRef: listContentRef,
+      onMatch: setActiveIndex,
+      activeIndex,
+    });
+
+    const { getFloatingProps, getItemProps } = useInteractions([
+      role,
+      dismiss,
+      listNavigation,
+      typeahead,
+    ]);
+
+    const handleItemClick = () => {
+      setIsOpen(false);
+    };
+
+    useEffect(() => {
+      const onMouseUp = () => {
+        if (allowMouseUpCloseRef.current) {
+          setIsOpen(false);
+        }
+      };
+
+      document.addEventListener("mouseup", onMouseUp);
+
+      return () => {
+        document.removeEventListener("mouseup", onMouseUp);
+        clearTimeout(timeoutRef.current);
+      };
+    }, [refs]);
+
+    useImperativeHandle(
+      forwardedRef,
+      () => ({
+        open: (x, y) => {
+          refs.setPositionReference({
+            getBoundingClientRect: () => ({
+              width: 0,
+              height: 0,
+              x,
+              y,
+              top: y,
+              right: x,
+              bottom: y,
+              left: x,
+            }),
+          });
+
+          setIsOpen(true);
+          clearTimeout(timeoutRef.current);
+
+          allowMouseUpCloseRef.current = false;
+          timeoutRef.current = window.setTimeout(() => {
+            allowMouseUpCloseRef.current = true;
+          }, 300);
+        },
+      }),
+      [refs],
+    );
+
+    return (
+      <FloatingPortal>
+        {isOpen && (
+          <FloatingOverlay lockScroll>
+            <FloatingFocusManager
+              context={context}
+              initialFocus={refs.floating}
+            >
+              <div
+                ref={refs.setFloating}
+                style={{
+                  position: strategy,
+                  left: x ?? 0,
+                  top: y ?? 0,
+                }}
+                {...getFloatingProps()}
+              >
+                {menuItems.map((item, index) => (
+                  <ContextMenuItem
+                    key={item.id}
+                    item={item}
+                    {...getItemProps({
+                      tabIndex: activeIndex === index ? 0 : -1,
+                      ref: (node: HTMLElement) => {
+                        listItemsRef.current[index] = node;
+                      },
+                      onClick: handleItemClick,
+                      onMouseUp: handleItemClick,
+                    })}
+                  />
+                ))}
+              </div>
+            </FloatingFocusManager>
+          </FloatingOverlay>
+        )}
+      </FloatingPortal>
+    );
+  },
+);
