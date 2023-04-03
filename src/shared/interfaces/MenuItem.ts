@@ -6,24 +6,24 @@ export enum MenuItemType {
   Button,
 }
 
-interface GeneralItem {
+interface GeneralItem<Text = ReactNode> {
   id: string;
   className?: string;
   activeClassName?: string;
-  text: ReactNode;
+  text: Text;
   withWarning?: boolean;
 }
 
-interface LinkItem extends GeneralItem {
+interface LinkItem<Text = ReactNode> extends GeneralItem<Text> {
   type: MenuItemType.Link;
   to: ROUTE_PATHS;
 }
 
-interface ButtonItem extends GeneralItem {
+interface ButtonItem<Text = ReactNode> extends GeneralItem<Text> {
   type?: MenuItemType.Button;
   onClick: MouseEventHandler;
 }
 
-export type MenuItem = LinkItem | ButtonItem;
+export type MenuItem<Text = ReactNode> = LinkItem<Text> | ButtonItem<Text>;
 
 export const CANCEL_MENU_ITEM_ID = "cancel";

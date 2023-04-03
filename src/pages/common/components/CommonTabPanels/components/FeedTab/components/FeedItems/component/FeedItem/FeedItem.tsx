@@ -14,6 +14,7 @@ interface FeedItemProps {
   item: CommonFeed;
   governanceCircles: Governance["circles"];
   userCircleIds: string[];
+  commonMemberUserId?: string;
   isMobileVersion?: boolean;
   governanceId?: string;
   isPreviewMode?: boolean;
@@ -34,10 +35,18 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isPreviewMode = false,
     isActive = false,
     sizeKey,
+    commonMemberUserId,
   } = props;
   useFeedItemSubscription(commonId, item.id);
 
-  if (!checkIsItemVisibleForUser(item.circleVisibility, userCircleIds)) {
+  if (
+    !checkIsItemVisibleForUser(
+      item.circleVisibility,
+      userCircleIds,
+      item.userId,
+      commonMemberUserId,
+    )
+  ) {
     return null;
   }
 

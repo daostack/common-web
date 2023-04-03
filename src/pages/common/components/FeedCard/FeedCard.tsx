@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect, useRef } from "react";
 import classNames from "classnames";
-import { useLongPress } from "use-long-press";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonFeedType } from "@/shared/models";
 import { CommonCard } from "../CommonCard";
 import { FeedCardPreview } from "./components";
@@ -11,18 +11,17 @@ interface FeedCardProps {
   className?: string;
   isActive?: boolean;
   isExpanded?: boolean;
-  isLongPressed?: boolean;
   isHovering?: boolean;
   messageCount?: number;
   lastActivity?: number;
   unreadMessages?: number;
-  onLongPress?: () => void;
   onClick?: () => void;
   title?: string;
   canBeExpanded?: boolean;
   lastMessage?: string;
   isPreviewMode?: boolean;
   type?: CommonFeedType;
+  menuItems?: ContextMenuItem[];
 }
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -33,9 +32,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     className,
     isActive = false,
     isExpanded: isExpandedExternal = false,
-    isLongPressed = false,
     isHovering = false,
-    onLongPress,
     messageCount = 0,
     lastActivity = 0,
     unreadMessages = 0,
@@ -46,11 +43,10 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     lastMessage,
     isPreviewMode = true,
     type,
+    menuItems,
   } = props;
   const isTabletView = useIsTabletView();
-
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isLongPressing, setIsLongPressing] = useState(false);
   const [isExpanded, setExpanded] = useState(false);
 
   useEffect(() => {
@@ -94,22 +90,6 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     setExpanded((expanded) => !expanded);
   };
 
-  const handleLongPress = () => {
-    if (onLongPress) {
-      onLongPress();
-    }
-
-    setIsLongPressing(false);
-  };
-
-  const getLongPressProps = useLongPress(onLongPress ? handleLongPress : null, {
-    threshold: 400,
-    cancelOnMovement: true,
-    onStart: () => setIsLongPressing(true),
-    onFinish: () => setIsLongPressing(false),
-    onCancel: () => setIsLongPressing(false),
-  });
-
   return (
     <div ref={containerRef}>
       {!isPreviewMode && (
@@ -125,6 +105,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           title={title}
           lastMessage={lastMessage}
           type={type}
+          menuItems={menuItems}
         />
       )}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (
@@ -134,13 +115,10 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
             {
               [styles.containerActive]:
                 (isActive || (isExpanded && isTabletView)) && !isPreviewMode,
-              [styles.containerLongPressing]:
-                (isLongPressing || isLongPressed) && !isPreviewMode,
               [styles.containerHovering]: isHovering && !isPreviewMode,
             },
             className,
           )}
-          {...getLongPressProps()}
         >
           {children}
         </CommonCard>

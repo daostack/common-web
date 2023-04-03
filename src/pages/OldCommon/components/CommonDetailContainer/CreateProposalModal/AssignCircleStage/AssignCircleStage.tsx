@@ -16,7 +16,7 @@ import {
 } from "@/shared/models";
 import { AssignCircle } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
-import { getUserName } from "@/shared/utils";
+import { getCirclesWithHighestTier, getUserName } from "@/shared/utils";
 import { useCreateProposalContext } from "../context";
 import { Configuration } from "./Configuration";
 import { Confirmation } from "./Confirmation";
@@ -68,6 +68,11 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
     setStep(AssignCircleStep.Confirmation);
   };
 
+  /** Highest circle */
+  const circleVisibility = getCirclesWithHighestTier(
+    Object.values(governance.circles),
+  ).map((circle) => circle.id);
+
   const handleConfirm = () => {
     if (!assignCircleData || !user) {
       return;
@@ -81,15 +86,16 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
       args: {
         commonId: common.id,
         // TODO: Use here name of common member
-        title: `Request to join ${assignCircleData.circle.name} circle by ${getUserName(
-          assignCircleData.commonMember.user,
-        )}`,
+        title: `Request to join ${
+          assignCircleData.circle.name
+        } circle by ${getUserName(assignCircleData.commonMember.user)}`,
         description: assignCircleData.description,
         images: [],
         links: [],
         files: [],
         circleId: assignCircleData.circle.id,
         userId: assignCircleData.commonMember.userId,
+        circleVisibility,
       },
     };
 

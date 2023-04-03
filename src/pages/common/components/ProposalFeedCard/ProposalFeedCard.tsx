@@ -111,6 +111,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const circleVisibility = getVisibilityString(
     governanceCircles,
     item.circleVisibility,
+    proposal?.type,
+    getUserName(feedItemUser),
   );
   const [isHovering, setHovering] = useState(false);
   const onHover = (isMouseEnter: boolean): void => {

@@ -34,6 +34,11 @@
   cursor: not-allowed;
 }
 
+.tooltipContent {
+  max-width: 20rem;
+  z-index: 3;
+}
+
 .textWrapper {
   display: flex;
   align-items: center;
