@@ -53,7 +53,9 @@ const DesktopChat: FC<ChatProps> = (props) => {
         }
         common={common}
         discussion={chatItem.discussion}
-        proposal={chatItem.proposal}
+        feedItemId={chatItem.feedItemId}
+        hasAccess={hasAccessToChat}
+        lastSeenItem={chatItem.lastSeenItem}
       />
     </div>
   );

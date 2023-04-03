@@ -29,9 +29,6 @@ interface ChatContentInterface {
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
-  pendingMessages: PendingMessage[];
-  prevPendingMessages?: PendingMessage[];
-  feedItemId: string;
 }
 
 const isToday = (someDate: Date) => {
@@ -56,9 +53,6 @@ export default function ChatContent({
   dateList,
   lastSeenItem,
   hasPermissionToHide,
-  pendingMessages,
-  prevPendingMessages,
-  feedItemId,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -84,19 +78,6 @@ export default function ChatContent({
   useEffect(() => {
     if (!highlightedMessageId) scrollToContainerBottom();
   }, [highlightedMessageId, scrollToContainerBottom]);
-
-  useEffect(() => {
-    if (
-      prevPendingMessages &&
-      prevPendingMessages?.length < pendingMessages?.length
-    )
-      scrollToContainerBottom();
-  }, [
-    scrollToContainerBottom,
-    prevPendingMessages,
-    prevPendingMessages?.length,
-    pendingMessages.length,
-  ]);
 
   useEffect(() => {
     if (!highlightedMessageId) return;
@@ -194,16 +175,7 @@ export default function ChatContent({
           </ul>
         );
       })}
-      {pendingMessages.length > 0 && (
-        <div className={styles.pendingMessagesList}>
-          {pendingMessages
-            .filter((msg) => msg.feedItemId === feedItemId)
-            .map((msg) => (
-              <PendingChatMessage key={msg.id} data={msg} />
-            ))}
-        </div>
-      )}
-      {!dateList.length && !pendingMessages.length && (
+      {!dateList.length && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />

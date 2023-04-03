@@ -62,8 +62,10 @@ interface ChatComponentInterface {
   common: Common | null;
   type: ChatType;
   commonMember: CommonMember | null;
-  proposal?: Proposal;
+  hasAccess?: boolean;
   discussion: Discussion;
+  lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
+  feedItemId: string;
 }
 
 interface Messages {
@@ -85,13 +87,17 @@ export default function ChatComponent({
   common,
   type,
   commonMember,
-  proposal,
   discussion,
+  hasAccess,
+  lastSeenItem,
+  feedItemId,
 }: ChatComponentInterface) {
   // const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
   const dispatch = useDispatch();
   const governance = useSelector(selectGovernance);
+  const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
+  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
   const hasPermissionToHide =
     commonMember && governance
@@ -116,6 +122,11 @@ export default function ChatComponent({
     selectCurrentDiscussionMessageReply(),
   );
   const discussionId = discussion.id;
+
+  const lastNonUserMessage = getLastNonUserMessage(
+    discussionMessages || [],
+    userId,
+  );
 
   const messages = (discussionMessages ?? []).reduce(groupday, {});
   const dateList = Object.keys(messages);
@@ -237,11 +248,47 @@ export default function ChatComponent({
     setMessage((currentMessage) => `${currentMessage}\r\n`);
   };
 
+  useEffect(() => {
+    if (
+      lastNonUserMessage &&
+      lastSeenItem?.id !== lastNonUserMessage.id &&
+      feedItemId
+    ) {
+      markFeedItemAsSeen({
+        feedObjectId: feedItemId,
+        commonId: lastNonUserMessage.commonId,
+        lastSeenId: lastNonUserMessage.id,
+        type: LastSeenEntity.DiscussionMessage,
+      });
+    }
+  }, [lastNonUserMessage?.id]);
+
   return (
     <div className="chat-wrapper">
-      {discussionMessages?.map(({ text, id }) => (
-        <p key={id}>{text}</p>
-      ))}
+      <div
+        className={`messages ${!dateList.length ? "empty" : ""}`}
+        id={chatWrapperId}
+      >
+        {isFetchedDiscussionMessages ? (
+          <ChatContent
+            type={type}
+            commonMember={commonMember}
+            isCommonMemberFetched
+            isJoiningPending={false}
+            hasAccess={hasAccess}
+            isHidden={false}
+            chatWrapperId={chatWrapperId}
+            messages={messages}
+            dateList={dateList}
+            lastSeenItem={lastSeenItem}
+            hasPermissionToHide={hasPermissionToHide}
+          />
+        ) : (
+          <div className="loader-container">
+            <Loader />
+          </div>
+        )}
+      </div>
       <>
         <textarea
           className="message-input"
