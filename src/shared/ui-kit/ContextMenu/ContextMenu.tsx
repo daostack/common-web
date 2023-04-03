@@ -54,7 +54,7 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
       middleware: [
         offset({ mainAxis: 5, alignmentAxis: 4 }),
         flip({
-          fallbackPlacements: ["left-start", "top"],
+          fallbackPlacements: ["left-start", "top", "bottom"],
         }),
         shift({ padding: 10 }),
       ],
