@@ -163,7 +163,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       isActive={isActive}
       isExpanded={isExpanded}
       isHovering={isHovering}
-      messageCount={discussion?.messageCount || 0}
       lastActivity={item.updatedAt.seconds * 1000}
       unreadMessages={feedItemUserMetadata?.count || 0}
       onClick={handleOpenChat}

@@ -212,7 +212,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       isExpanded={isExpanded}
       isHovering={isHovering}
       onClick={handleOpenChat}
-      messageCount={discussion?.messageCount || 0}
       lastActivity={item.updatedAt.seconds * 1000}
       unreadMessages={feedItemUserMetadata?.count || 0}
       title={discussion?.title}

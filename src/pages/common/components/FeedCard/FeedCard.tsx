@@ -11,7 +11,6 @@ interface FeedCardProps {
   isActive?: boolean;
   isExpanded?: boolean;
   isHovering?: boolean;
-  messageCount?: number;
   lastActivity?: number;
   unreadMessages?: number;
   onClick?: () => void;
@@ -31,7 +30,6 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     isActive = false,
     isExpanded: isExpandedExternal = false,
     isHovering = false,
-    messageCount = 0,
     lastActivity = 0,
     unreadMessages = 0,
     canBeExpanded = true,
@@ -91,7 +89,6 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     <div ref={containerRef}>
       {!isPreviewMode && (
         <FeedCardPreview
-          messageCount={messageCount}
           lastActivity={lastActivity}
           unreadMessages={unreadMessages}
           isActive={isActive}

@@ -10,7 +10,6 @@ import styles from "./FeedCardPreview.module.scss";
 
 interface FeedCardPreviewProps {
   className?: string;
-  messageCount: number;
   lastActivity: number;
   unreadMessages?: number;
   isActive?: boolean;
