@@ -24,6 +24,13 @@ const Navigation: FC<NavigationProps> = (props) => {
         exact: true,
       }),
       isDisabled: true,
+      tooltipContent: (
+        <>
+          We’re building a new Inbox section for your messages.
+          <br />
+          Stay tuned for updates!
+        </>
+      ),
     },
   ];
 

@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import { animateScroll } from "react-scroll";
 import { CommonAction } from "@/shared/constants";
 import { MenuItem as Item } from "@/shared/interfaces";
 import { commonActions } from "@/store/states";
@@ -12,6 +13,7 @@ export const useMenuItems = (options: Options): Item[] => {
 
   const setMenuItem = (menuItem: CommonAction) => {
     dispatch(commonActions.setCommonAction(menuItem));
+    animateScroll.scrollToTop({ containerId: document.body, smooth: true });
   };
 
   const items: Item[] = [

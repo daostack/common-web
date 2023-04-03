@@ -89,6 +89,7 @@ const RemoveCircleStage: FC<RemoveCircleStageProps> = (props) => {
         files: [],
         circleId: removeCircleData.circle.id,
         userId: removeCircleData.commonMember.userId,
+        circleVisibility: commonMember.circleIds,
       },
     };
 

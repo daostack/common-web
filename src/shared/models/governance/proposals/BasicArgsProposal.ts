@@ -14,6 +14,8 @@ export interface BasicArgsProposal {
   files: CommonLink[];
 
   links: CommonLink[];
+
+  circleVisibility?: string[] | null;
 }
 
 export interface ProposalImage {

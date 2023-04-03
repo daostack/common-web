@@ -69,7 +69,6 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
             <Image
               className={classNames(styles.image, {
                 [styles.leftItem]: !hasOneImage,
-                [styles.rightItem]: hasOneImage,
                 [styles.singleImage]: singleImageWithoutVideo,
               })}
               style={singleImageWithoutVideo ? {} : imagePreviewStyle}
