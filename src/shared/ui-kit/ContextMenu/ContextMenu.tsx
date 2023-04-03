@@ -30,11 +30,12 @@ export interface ContextMenuRef {
 
 interface ContextMenuProps {
   menuItems: Item[];
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
   (props, forwardedRef) => {
-    const { menuItems } = props;
+    const { menuItems, onOpenChange } = props;
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const timeoutRef = useRef(0);
@@ -42,9 +43,17 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
     const listContentRef = useRef(menuItems.map((item) => item.text));
     const allowMouseUpCloseRef = useRef(false);
 
+    const handleOpenChange = (open: boolean) => {
+      setIsOpen(open);
+
+      if (onOpenChange) {
+        onOpenChange(open);
+      }
+    };
+
     const { x, y, refs, strategy, context } = useFloating({
       open: isOpen,
-      onOpenChange: setIsOpen,
+      onOpenChange: handleOpenChange,
       middleware: [
         offset({ mainAxis: 5, alignmentAxis: 4 }),
         flip({
@@ -79,13 +88,13 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
     ]);
 
     const handleItemClick = () => {
-      setIsOpen(false);
+      handleOpenChange(false);
     };
 
     useEffect(() => {
       const onMouseUp = () => {
         if (allowMouseUpCloseRef.current) {
-          setIsOpen(false);
+          handleOpenChange(false);
         }
       };
 
@@ -114,7 +123,7 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
             }),
           });
 
-          setIsOpen(true);
+          handleOpenChange(true);
           clearTimeout(timeoutRef.current);
 
           allowMouseUpCloseRef.current = false;

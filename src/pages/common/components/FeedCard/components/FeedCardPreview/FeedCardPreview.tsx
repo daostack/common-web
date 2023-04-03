@@ -77,6 +77,12 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
     }
   };
 
+  const handleContextMenuOpenChange = (open: boolean) => {
+    if (!open) {
+      setIsLongPressed(false);
+    }
+  };
+
   if (!title && !lastActivity) {
     return null;
   }
@@ -128,7 +134,11 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
         </div>
       </div>
       {menuItems && menuItems.length > 0 && (
-        <ContextMenu ref={contextMenuRef} menuItems={menuItems} />
+        <ContextMenu
+          ref={contextMenuRef}
+          menuItems={menuItems}
+          onOpenChange={handleContextMenuOpenChange}
+        />
       )}
     </div>
   );
