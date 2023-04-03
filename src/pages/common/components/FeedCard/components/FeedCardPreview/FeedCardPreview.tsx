@@ -40,6 +40,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
   const isTabletView = useIsTabletView();
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isLongPressed, setIsLongPressed] = useState(false);
+  const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
 
   const handleLongPress = (event) => {
     let x = 0;
@@ -60,7 +61,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
   };
 
   const getLongPressProps = useLongPress(
-    isTabletView ? handleLongPress : null,
+    isTabletView && isContextMenuEnabled ? handleLongPress : null,
     {
       threshold: 400,
       cancelOnMovement: true,
@@ -71,7 +72,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
   );
 
   const handleContextMenu: MouseEventHandler = (event) => {
-    if (!isTabletView) {
+    if (!isTabletView && isContextMenuEnabled) {
       event.preventDefault();
       contextMenuRef.current?.open(event.clientX, event.clientY);
     }
