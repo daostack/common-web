@@ -1,6 +1,5 @@
 import React, {
   forwardRef,
-  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -38,10 +37,8 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
     const { menuItems, onOpenChange } = props;
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [isOpen, setIsOpen] = useState(false);
-    const timeoutRef = useRef(0);
     const listItemsRef = useRef<(HTMLElement | null)[]>([]);
     const listContentRef = useRef(menuItems.map((item) => item.text));
-    const allowMouseUpCloseRef = useRef(false);
 
     const handleOpenChange = (open: boolean) => {
       setIsOpen(open);
@@ -91,21 +88,6 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
       handleOpenChange(false);
     };
 
-    useEffect(() => {
-      const onMouseUp = () => {
-        if (allowMouseUpCloseRef.current) {
-          handleOpenChange(false);
-        }
-      };
-
-      document.addEventListener("mouseup", onMouseUp);
-
-      return () => {
-        document.removeEventListener("mouseup", onMouseUp);
-        clearTimeout(timeoutRef.current);
-      };
-    }, [refs]);
-
     useImperativeHandle(
       forwardedRef,
       () => ({
@@ -124,12 +106,6 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
           });
 
           handleOpenChange(true);
-          clearTimeout(timeoutRef.current);
-
-          allowMouseUpCloseRef.current = false;
-          timeoutRef.current = window.setTimeout(() => {
-            allowMouseUpCloseRef.current = true;
-          }, 300);
         },
       }),
       [refs],
