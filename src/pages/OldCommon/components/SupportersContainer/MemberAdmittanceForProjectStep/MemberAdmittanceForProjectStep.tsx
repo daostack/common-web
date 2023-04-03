@@ -195,7 +195,7 @@ const MemberAdmittanceForProjectStep: FC<
             links: [],
             circleId,
             userId,
-            circleVisibility: circleVisibility,
+            circleVisibility,
           },
         };
         await ProposalService.createAssignProposal(payload);
