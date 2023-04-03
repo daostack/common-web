@@ -91,6 +91,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
         <FeedCardPreview
           lastActivity={lastActivity}
           unreadMessages={unreadMessages}
+          isMobileView={isTabletView}
           isActive={isActive}
           isExpanded={isExpanded}
           canBeExpanded={canBeExpanded}
