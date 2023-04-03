@@ -127,7 +127,9 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
           )}
         </div>
       </div>
-      {menuItems && <ContextMenu ref={contextMenuRef} menuItems={menuItems} />}
+      {menuItems && menuItems.length > 0 && (
+        <ContextMenu ref={contextMenuRef} menuItems={menuItems} />
+      )}
     </div>
   );
 };
