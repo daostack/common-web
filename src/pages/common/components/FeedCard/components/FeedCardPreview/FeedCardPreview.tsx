@@ -72,8 +72,9 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
   );
 
   const handleContextMenu: MouseEventHandler = (event) => {
+    event.preventDefault();
+
     if (!isTabletView && isContextMenuEnabled) {
-      event.preventDefault();
       contextMenuRef.current?.open(event.clientX, event.clientY);
     }
   };
