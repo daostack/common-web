@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { isEqual, unionWith, xor } from "lodash";
+import { isEqual, xor } from "lodash";
 import { fetchOwners } from "@/pages/OldCommon/store/api";
 import { DiscussionMessageService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
@@ -22,9 +22,6 @@ interface Return extends State {
   setDiscussionMessages: (
     discussionMessages: DiscussionMessage[] | null,
   ) => void;
-  addPendingMessage: (
-    pendingMessage: DiscussionMessage,
-  ) => void;
 }
 
 const DEFAULT_STATE: State = {
@@ -41,7 +38,6 @@ export const useDiscussionMessagesById = ({
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const [messageOwners, setMessageOwners] = useState<User[]>([]);
   const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
-  const [pendingMessageIds, setPendingMessageIds] = useState<string[]>([]);
   const state =
     useSelector(
       selectDiscussionMessagesStateByDiscussionId(currentDiscussionId),
@@ -61,12 +57,6 @@ export const useDiscussionMessagesById = ({
     },
     [dispatch],
   );
-  
-  const addPendingMessage = (pendingMessage: DiscussionMessage): void => {
-    setPendingMessageIds([...pendingMessageIds, pendingMessage.id]);
-    // console.log('------test',b )
-    // setDiscussionMessages([...(state.data ?? []), pendingMessage])
-  };
 
   const fetchMessageOwners = async (ids: string[]): Promise<User[]> => {
     if (isEqual(messageOwnersIds, ids)) {
@@ -82,10 +72,6 @@ export const useDiscussionMessagesById = ({
   useEffect(() => {
     (async () => {
       const discussionMessages = [...(state.data || [])];
-      // console.log('----discussionMessages',discussionMessages, pendingMessages);
-      // const newArr = unionWith(discussionMessages, pendingMessages ?? [], (prevMsg, nextMsg) => {
-      //   return prevMsg.text === nextMsg.text;
-      // })
       const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
@@ -124,7 +110,6 @@ export const useDiscussionMessagesById = ({
         data: discussionMessages,
       };
 
-      // console.log('---discussionMessages',discussionMessages);
       if (currentDiscussionId) {
         dispatch(
           cacheActions.updateDiscussionMessagesStateByDiscussionId({
@@ -148,10 +133,6 @@ export const useDiscussionMessagesById = ({
       currentDiscussionId,
       (updatedDiscussionMessages) => {
 
-// 
-        // const pendingMessageIndex = updatedDiscussionMessages.includes((msg) => {
-        //   msg
-        // })
         dispatch(
           cacheActions.updateDiscussionMessagesStateByDiscussionId({
             discussionId: currentDiscussionId,
@@ -173,6 +154,5 @@ export const useDiscussionMessagesById = ({
     data: discussionMessagesWithOwners,
     fetchDiscussionMessages,
     setDiscussionMessages,
-    addPendingMessage,
   };
 };

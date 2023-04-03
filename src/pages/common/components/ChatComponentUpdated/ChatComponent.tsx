@@ -88,7 +88,7 @@ export default function ChatComponent({
   type,
   commonMember,
   discussion,
-  hasAccess,
+  hasAccess = true,
   lastSeenItem,
   feedItemId,
 }: ChatComponentInterface) {
