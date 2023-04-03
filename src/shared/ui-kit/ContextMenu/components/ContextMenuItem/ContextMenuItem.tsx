@@ -22,26 +22,21 @@ const ContextMenuItem: ForwardRefRenderFunction<
   const className = classNames(styles.item, item.className, {
     [styles.itemWithWarning]: item.withWarning,
   });
+  const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+    item.onClick(event);
+
+    if (restProps.onClick) {
+      restProps.onClick(event);
+    }
+  };
 
   return (
     <button
       ref={ref as RefObject<HTMLButtonElement>}
       {...restProps}
       className={className}
-      onClick={(event) => {
-        item.onClick(event);
-
-        if (restProps.onClick) {
-          restProps.onClick(event);
-        }
-      }}
-      onMouseUp={(event) => {
-        item.onClick(event);
-
-        if (restProps.onClick) {
-          restProps.onClick(event);
-        }
-      }}
+      onClick={handleClick}
+      onMouseUp={handleClick}
       type="button"
       role="menuitem"
     >
