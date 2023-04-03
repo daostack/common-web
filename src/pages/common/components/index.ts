@@ -4,6 +4,8 @@ export * from "./CommonTabPanels";
 export * from "./CommonTopNavigation";
 export * from "./DiscussionFeedCard";
 export * from "./FeedCard";
+export * from "./FeedItem";
+export * from "./FeedItems";
 export * from "./PendingJoinInfo";
 export * from "./ProposalFeedCard";
 export * from "./ChatMobileModal";

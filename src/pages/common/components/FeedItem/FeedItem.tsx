@@ -1,11 +1,9 @@
 import React, { FC } from "react";
-import {
-  DiscussionFeedCard,
-  ProposalFeedCard,
-} from "@/pages/common/components";
 import { CommonFeed, CommonFeedType, Governance } from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
-import { useFeedItemSubscription } from "../../../../../../../../hooks";
+import { useFeedItemSubscription } from "../../hooks";
+import { DiscussionFeedCard } from "../DiscussionFeedCard";
+import { ProposalFeedCard } from "../ProposalFeedCard";
 
 interface FeedItemProps {
   commonId: string;
