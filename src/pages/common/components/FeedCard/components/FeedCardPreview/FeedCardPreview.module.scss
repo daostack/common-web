@@ -8,6 +8,7 @@
   padding: 0.875rem 0.875rem 1.0625rem 1.5rem;
   border-bottom: 0.0625rem solid $c-neutrals-200;
   cursor: pointer;
+  user-select: none;
 
   &:hover {
     background-color: $c-pink-hover-feed-cards;
@@ -38,6 +39,11 @@
 .containerExpanded {
   border: 0.0625rem solid $c-neutrals-200;
   border-bottom: none;
+}
+
+.containerLongPressing {
+  box-shadow: 0 0.1875rem 0.5rem #{$c-shades-neutrals-30};
+  transition: box-shadow 0.4s;
 }
 
 .expandIcon {

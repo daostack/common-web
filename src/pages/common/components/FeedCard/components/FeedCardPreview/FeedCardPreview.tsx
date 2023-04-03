@@ -1,10 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
+import { useLongPress } from "use-long-press";
 import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { CommonFeed } from "@/shared/models";
-import { TimeAgo } from "@/shared/ui-kit";
+import { ContextMenuItem } from "@/shared/interfaces";
+import { ContextMenu, ContextMenuRef, TimeAgo } from "@/shared/ui-kit";
 import styles from "./FeedCardPreview.module.scss";
 
 interface FeedCardPreviewProps {
@@ -19,6 +20,7 @@ interface FeedCardPreviewProps {
   canBeExpanded?: boolean;
   onClick?: () => void;
   onExpand?: () => void;
+  menuItems?: ContextMenuItem[];
 }
 
 export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
@@ -32,8 +34,58 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
     lastMessage,
     onClick,
     onExpand,
+    menuItems,
   } = props;
+  const contextMenuRef = useRef<ContextMenuRef>(null);
   const isTabletView = useIsTabletView();
+  const [isLongPressing, setIsLongPressing] = useState(false);
+  const [isLongPressed, setIsLongPressed] = useState(false);
+  const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
+
+  // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
+  // and use here to have correct types.
+  const handleLongPress = (event) => {
+    let x = 0;
+    let y = 0;
+
+    if (event.touches) {
+      const touch = event.touches[0];
+      x = touch?.clientX || 0;
+      y = touch?.clientY || 0;
+    } else {
+      x = event.clientX;
+      y = event.clientY;
+    }
+
+    setIsLongPressed(true);
+    contextMenuRef.current?.open(x, y);
+    setIsLongPressing(false);
+  };
+
+  const getLongPressProps = useLongPress(
+    isTabletView && isContextMenuEnabled ? handleLongPress : null,
+    {
+      threshold: 400,
+      cancelOnMovement: true,
+      onStart: () => setIsLongPressing(true),
+      onFinish: () => setIsLongPressing(false),
+      onCancel: () => setIsLongPressing(false),
+    },
+  );
+
+  const handleContextMenu: MouseEventHandler = (event) => {
+    event.preventDefault();
+
+    if (!isTabletView && isContextMenuEnabled) {
+      contextMenuRef.current?.open(event.clientX, event.clientY);
+    }
+  };
+
+  const handleContextMenuOpenChange = (open: boolean) => {
+    if (!open) {
+      setIsLongPressed(false);
+    }
+  };
 
   if (!title && !lastActivity) {
     return null;
@@ -44,8 +96,11 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
       className={classNames(styles.container, {
         [styles.containerActive]: isActive || (isExpanded && isTabletView),
         [styles.containerExpanded]: isExpanded && canBeExpanded,
+        [styles.containerLongPressing]: isLongPressing || isLongPressed,
       })}
-      onClick={onClick}
+      onClick={!isLongPressed ? onClick : undefined}
+      onContextMenu={handleContextMenu}
+      {...getLongPressProps()}
     >
       {isTabletView && canBeExpanded && (
         <ButtonIcon onClick={onExpand}>
@@ -82,6 +137,13 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
           )}
         </div>
       </div>
+      {menuItems && menuItems.length > 0 && (
+        <ContextMenu
+          ref={contextMenuRef}
+          menuItems={menuItems}
+          onOpenChange={handleContextMenuOpenChange}
+        />
+      )}
     </div>
   );
 };
