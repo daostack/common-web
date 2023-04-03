@@ -42,6 +42,8 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
   const [isLongPressed, setIsLongPressed] = useState(false);
   const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
 
+  // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
+  // and use here to have correct types.
   const handleLongPress = (event) => {
     let x = 0;
     let y = 0;
