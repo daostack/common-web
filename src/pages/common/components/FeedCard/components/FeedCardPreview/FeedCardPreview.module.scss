@@ -9,6 +9,7 @@
   padding: 0.875rem 0.875rem 1.0625rem 1.5rem;
   border-bottom: 0.0625rem solid $c-neutrals-200;
   cursor: pointer;
+  user-select: none;
 
   &:hover {
     background-color: $c-pink-hover-feed-cards;
