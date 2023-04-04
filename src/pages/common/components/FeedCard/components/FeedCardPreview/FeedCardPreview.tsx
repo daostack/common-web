@@ -3,26 +3,11 @@ import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { ButtonIcon } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { ContextMenuItem } from "@/shared/interfaces";
 import { ContextMenu, ContextMenuRef, TimeAgo } from "@/shared/ui-kit";
+import { FeedItemBaseContentProps } from "../../../FeedItem";
 import styles from "./FeedCardPreview.module.scss";
 
-interface FeedCardPreviewProps {
-  className?: string;
-  lastActivity: number;
-  unreadMessages?: number;
-  isMobileView: boolean;
-  isActive?: boolean;
-  isExpanded?: boolean;
-  title?: string;
-  lastMessage?: string;
-  canBeExpanded?: boolean;
-  onClick?: () => void;
-  onExpand?: MouseEventHandler;
-  menuItems?: ContextMenuItem[];
-}
-
-export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
+export const FeedCardPreview: FC<FeedItemBaseContentProps> = (props) => {
   const {
     lastActivity,
     unreadMessages,

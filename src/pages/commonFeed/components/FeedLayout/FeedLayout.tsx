@@ -11,6 +11,7 @@ import React, {
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import {
+  FeedCardPreview,
   FeedItem,
   FeedItemContext,
   FeedItemContextValue,
@@ -128,6 +129,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       activeFeedItemId: chatItem?.feedItemId,
       expandedFeedItemId,
       setExpandedFeedItemId,
+      renderFeedItemBaseContent: (props) => <FeedCardPreview {...props} />,
     }),
     [chatItem?.feedItemId, expandedFeedItemId],
   );

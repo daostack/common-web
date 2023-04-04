@@ -4,7 +4,6 @@ import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonCard } from "../CommonCard";
-import { FeedCardPreview } from "./components";
 import styles from "./FeedCard.module.scss";
 
 interface FeedCardProps {
@@ -40,8 +39,12 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     menuItems,
   } = props;
   const isTabletView = useIsTabletView();
-  const { activeFeedItemId, expandedFeedItemId, setExpandedFeedItemId } =
-    useFeedItemContext();
+  const {
+    activeFeedItemId,
+    expandedFeedItemId,
+    setExpandedFeedItemId,
+    renderFeedItemBaseContent,
+  } = useFeedItemContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const isActive = feedItemId === activeFeedItemId;
   const isExpanded = feedItemId === expandedFeedItemId;
@@ -85,21 +88,20 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
 
   return (
     <div ref={containerRef}>
-      {!isPreviewMode && (
-        <FeedCardPreview
-          lastActivity={lastActivity}
-          unreadMessages={unreadMessages}
-          isMobileView={isTabletView}
-          isActive={isActive}
-          isExpanded={isExpanded}
-          canBeExpanded={canBeExpanded}
-          onClick={handleClick}
-          onExpand={handleExpand}
-          title={title}
-          lastMessage={lastMessage}
-          menuItems={menuItems}
-        />
-      )}
+      {!isPreviewMode &&
+        renderFeedItemBaseContent?.({
+          lastActivity,
+          unreadMessages,
+          isMobileView: isTabletView,
+          isActive,
+          isExpanded,
+          canBeExpanded,
+          onClick: handleClick,
+          onExpand: handleExpand,
+          title,
+          lastMessage,
+          menuItems,
+        })}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (
         <CommonCard
           className={classNames(
