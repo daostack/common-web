@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useRef } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
@@ -32,7 +32,9 @@ const CommonFeedPage: FC = () => {
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
-  const feedLayoutRef = useRef<FeedLayoutRef>(null);
+  const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
+    null,
+  );
   const sharedFeedItemIdQueryParam = queryParams[QueryParamKey.Item];
   const sharedFeedItemId =
     (typeof sharedFeedItemIdQueryParam === "string" &&
@@ -96,9 +98,9 @@ const CommonFeedPage: FC = () => {
     dispatch(commonActions.setSharedFeedItemId(sharedFeedItemId));
 
     if (sharedFeedItemId) {
-      feedLayoutRef.current?.setExpandedFeedItemId(sharedFeedItemId);
+      feedLayoutRef?.setExpandedFeedItemId(sharedFeedItemId);
     }
-  }, [sharedFeedItemId]);
+  }, [sharedFeedItemId, feedLayoutRef]);
 
   useEffect(() => {
     if (commonData?.sharedFeedItem) {
@@ -149,7 +151,7 @@ const CommonFeedPage: FC = () => {
   return (
     <>
       <FeedLayout
-        ref={feedLayoutRef}
+        ref={setFeedLayoutRef}
         className={styles.feedLayout}
         headerContent={
           <HeaderContent
