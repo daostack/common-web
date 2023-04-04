@@ -1,11 +1,9 @@
 import React, { FC } from "react";
-import {
-  DiscussionFeedCard,
-  ProposalFeedCard,
-} from "@/pages/common/components";
 import { CommonFeed, CommonFeedType, Governance } from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
-import { useFeedItemSubscription } from "../../../../../../../../hooks";
+import { useFeedItemSubscription } from "../../hooks";
+import { DiscussionFeedCard } from "../DiscussionFeedCard";
+import { ProposalFeedCard } from "../ProposalFeedCard";
 
 interface FeedItemProps {
   commonId: string;
@@ -19,6 +17,7 @@ interface FeedItemProps {
   governanceId?: string;
   isPreviewMode?: boolean;
   isActive?: boolean;
+  isExpanded?: boolean;
   sizeKey?: string;
 }
 
@@ -34,6 +33,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     governanceId,
     isPreviewMode = false,
     isActive = false,
+    isExpanded = false,
     sizeKey,
     commonMemberUserId,
   } = props;
@@ -50,6 +50,11 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     return null;
   }
 
+  const generalProps = {
+    isActive,
+    isExpanded,
+  };
+
   if (item.data.type === CommonFeedType.Discussion) {
     return (
       <DiscussionFeedCard
@@ -61,6 +66,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         isProject={isProject}
         governanceId={governanceId}
         isPreviewMode={isPreviewMode}
+        {...generalProps}
       />
     );
   }
@@ -76,6 +82,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         governanceId={governanceId}
         isPreviewMode={isPreviewMode}
         sizeKey={isActive ? sizeKey : undefined}
+        {...generalProps}
       />
     );
   }

@@ -33,16 +33,13 @@ interface DiscussionFeedCardProps {
   isProject: boolean;
   governanceId?: string;
   isPreviewMode: boolean;
+  isActive: boolean;
+  isExpanded: boolean;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const {
-    activeItemDiscussionId,
-    setChatItem,
-    feedItemIdForAutoChatOpen,
-    expandedFeedItemId,
-    setShouldShowSeeMore,
-  } = useChatContext();
+  const { setChatItem, feedItemIdForAutoChatOpen, setShouldShowSeeMore } =
+    useChatContext();
   const {
     item,
     governanceCircles,
@@ -52,6 +49,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     isProject,
     governanceId,
     isPreviewMode,
+    isActive,
+    isExpanded,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -100,8 +99,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     !isDiscussionCreatorFetched ||
     !isDiscussionFetched ||
     !isFeedItemUserMetadataFetched;
-  const isActive = discussion?.id === activeItemDiscussionId;
-  const isExpanded = item.id === expandedFeedItemId;
 
   const circleVisibility = getVisibilityString(
     governanceCircles,
@@ -160,12 +157,12 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
 
   return (
     <FeedCard
-      isActive={isActive}
-      isExpanded={isExpanded}
+      feedItemId={item.id}
       isHovering={isHovering}
-      messageCount={discussion?.messageCount || 0}
       lastActivity={item.updatedAt.seconds * 1000}
       unreadMessages={feedItemUserMetadata?.count || 0}
+      isActive={isActive}
+      isExpanded={isExpanded}
       onClick={handleOpenChat}
       title={discussion?.title}
       lastMessage={getLastMessage({

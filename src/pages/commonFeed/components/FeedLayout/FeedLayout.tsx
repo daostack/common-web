@@ -1,19 +1,26 @@
 import React, {
   CSSProperties,
-  FC,
+  forwardRef,
+  ForwardRefRenderFunction,
   ReactNode,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useState,
 } from "react";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import {
+  FeedItem,
+  FeedItemBaseContent,
+  FeedItemContext,
+  FeedItemContextValue,
+} from "@/pages/common";
+import {
   ChatContextValue,
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
-import { FeedItem } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
@@ -33,6 +40,7 @@ import {
   SplitView,
 } from "./components";
 import { MIN_CHAT_WIDTH } from "./constants";
+import { FeedLayoutRef } from "./types";
 import { getSplitViewMaxSize } from "./utils";
 import styles from "./FeedLayout.module.scss";
 
@@ -46,13 +54,15 @@ interface FeedLayoutProps {
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: CommonFeed[] | null;
   topFeedItems?: CommonFeed[];
-  expandedFeedItemId?: string | null;
   loading: boolean;
   shouldHideContent?: boolean;
   onFetchNext: () => void;
 }
 
-const FeedLayout: FC<FeedLayoutProps> = (props) => {
+const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
+  props,
+  ref,
+) => {
   const {
     className,
     headerContent,
@@ -63,7 +73,6 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     commonMember,
     feedItems,
     topFeedItems = [],
-    expandedFeedItemId,
     loading,
     shouldHideContent = false,
     onFetchNext,
@@ -75,8 +84,12 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     useState(false);
   const [shouldShowSeeMore, setShouldShowSeeMore] = useState(true);
   const [chatWidth, setChatWidth] = useState(0);
+  const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
+    null,
+  );
   const isChatItemSet = Boolean(chatItem);
   const maxChatSize = getSplitViewMaxSize(windowWidth);
+  const activeFeedItemId = chatItem?.feedItemId;
   const sizeKey = `${windowWidth}_${chatWidth}`;
   const allFeedItems = useMemo(() => {
     const items: CommonFeed[] = [];
@@ -112,21 +125,24 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     return allFeedItems?.find((item) => item.id === chatItem?.feedItemId);
   }, [allFeedItems, chatItem]);
 
+  // We should try to set here only the data which rarely can be changed,
+  // so we will not have extra re-renders of ALL rendered items
+  const feedItemContextValue = useMemo<FeedItemContextValue>(
+    () => ({
+      setExpandedFeedItemId,
+      renderFeedItemBaseContent: (props) => <FeedItemBaseContent {...props} />,
+    }),
+    [],
+  );
+
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
       setChatItem,
-      activeItemDiscussionId: chatItem?.discussion.id,
       feedItemIdForAutoChatOpen,
-      expandedFeedItemId,
       setIsShowFeedItemDetailsModal,
       setShouldShowSeeMore,
     }),
-    [
-      setChatItem,
-      chatItem?.discussion.id,
-      feedItemIdForAutoChatOpen,
-      expandedFeedItemId,
-    ],
+    [setChatItem, feedItemIdForAutoChatOpen],
   );
 
   useEffect(() => {
@@ -141,6 +157,8 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     }
   }, [maxChatSize]);
 
+  useImperativeHandle(ref, () => ({ setExpandedFeedItemId }), []);
+
   const pageContentStyles = {
     "--chat-w": `${chatWidth}px`,
   } as CSSProperties;
@@ -153,56 +171,59 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
       isGlobalLoading={isGlobalLoading}
       styles={pageContentStyles}
     >
-      <ChatContext.Provider value={chatContextValue}>
-        {!shouldHideContent && (
-          <div className={classNames(styles.content, className)}>
-            {topContent}
-            <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
-              {allFeedItems?.map((item) => (
-                <FeedItem
-                  key={item.id}
-                  governanceId={governance.id}
-                  commonId={common.id}
-                  commonName={common.name}
-                  isProject={checkIsProject(common)}
-                  item={item}
-                  governanceCircles={governance.circles}
-                  isMobileVersion={isTabletView}
-                  userCircleIds={userCircleIds}
-                  isActive={item.id === chatItem?.feedItemId}
-                  sizeKey={sizeKey}
-                  commonMemberUserId={commonMember?.userId}
-                />
-              ))}
-            </InfiniteScroll>
-            {chatItem && !isTabletView && (
-              <DesktopChat
-                className={styles.desktopChat}
-                chatItem={chatItem}
-                common={common}
-                commonMember={commonMember}
-              />
-            )}
-            {isTabletView && (
-              <MobileChat
-                chatItem={chatItem}
-                common={common}
-                commonMember={commonMember}
-                shouldShowSeeMore={shouldShowSeeMore}
-              >
-                <FeedItemPreviewModal
+      <FeedItemContext.Provider value={feedItemContextValue}>
+        <ChatContext.Provider value={chatContextValue}>
+          {!shouldHideContent && (
+            <div className={classNames(styles.content, className)}>
+              {topContent}
+              <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
+                {allFeedItems?.map((item) => (
+                  <FeedItem
+                    key={item.id}
+                    governanceId={governance.id}
+                    commonId={common.id}
+                    commonName={common.name}
+                    isProject={checkIsProject(common)}
+                    item={item}
+                    governanceCircles={governance.circles}
+                    isMobileVersion={isTabletView}
+                    userCircleIds={userCircleIds}
+                    isActive={item.id === activeFeedItemId}
+                    isExpanded={item.id === expandedFeedItemId}
+                    sizeKey={sizeKey}
+                    commonMemberUserId={commonMember?.userId}
+                  />
+                ))}
+              </InfiniteScroll>
+              {chatItem && !isTabletView && (
+                <DesktopChat
+                  className={styles.desktopChat}
+                  chatItem={chatItem}
                   common={common}
-                  governance={governance}
-                  selectedFeedItem={selectedFeedItem}
-                  userCircleIds={userCircleIds}
-                  isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
-                  sizeKey={sizeKey}
+                  commonMember={commonMember}
                 />
-              </MobileChat>
-            )}
-          </div>
-        )}
-      </ChatContext.Provider>
+              )}
+              {isTabletView && (
+                <MobileChat
+                  chatItem={chatItem}
+                  common={common}
+                  commonMember={commonMember}
+                  shouldShowSeeMore={shouldShowSeeMore}
+                >
+                  <FeedItemPreviewModal
+                    common={common}
+                    governance={governance}
+                    selectedFeedItem={selectedFeedItem}
+                    userCircleIds={userCircleIds}
+                    isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
+                    sizeKey={sizeKey}
+                  />
+                </MobileChat>
+              )}
+            </div>
+          )}
+        </ChatContext.Provider>
+      </FeedItemContext.Provider>
     </CommonSidenavLayoutPageContent>
   );
 
@@ -219,4 +240,4 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   );
 };
 
-export default FeedLayout;
+export default forwardRef(FeedLayout);
