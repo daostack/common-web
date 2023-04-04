@@ -5,9 +5,9 @@ import { ButtonIcon } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { ContextMenu, ContextMenuRef, TimeAgo } from "@/shared/ui-kit";
 import { FeedItemBaseContentProps } from "../../../FeedItem";
-import styles from "./FeedCardPreview.module.scss";
+import styles from "./FeedItemBaseContent.module.scss";
 
-export const FeedCardPreview: FC<FeedItemBaseContentProps> = (props) => {
+export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   const {
     lastActivity,
     unreadMessages,

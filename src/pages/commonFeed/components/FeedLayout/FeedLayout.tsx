@@ -11,8 +11,8 @@ import React, {
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import {
-  FeedCardPreview,
   FeedItem,
+  FeedItemBaseContent,
   FeedItemContext,
   FeedItemContextValue,
 } from "@/pages/common";
@@ -130,7 +130,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const feedItemContextValue = useMemo<FeedItemContextValue>(
     () => ({
       setExpandedFeedItemId,
-      renderFeedItemBaseContent: (props) => <FeedCardPreview {...props} />,
+      renderFeedItemBaseContent: (props) => <FeedItemBaseContent {...props} />,
     }),
     [],
   );
