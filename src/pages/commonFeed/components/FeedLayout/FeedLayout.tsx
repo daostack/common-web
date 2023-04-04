@@ -89,6 +89,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
   const isChatItemSet = Boolean(chatItem);
   const maxChatSize = getSplitViewMaxSize(windowWidth);
+  const activeFeedItemId = chatItem?.feedItemId;
   const sizeKey = `${windowWidth}_${chatWidth}`;
   const allFeedItems = useMemo(() => {
     const items: CommonFeed[] = [];
@@ -124,14 +125,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     return allFeedItems?.find((item) => item.id === chatItem?.feedItemId);
   }, [allFeedItems, chatItem]);
 
+  // We should try to set here only the data which rarely can be changed,
+  // so we will not have extra re-renders of ALL rendered items
   const feedItemContextValue = useMemo<FeedItemContextValue>(
     () => ({
-      activeFeedItemId: chatItem?.feedItemId,
-      expandedFeedItemId,
       setExpandedFeedItemId,
       renderFeedItemBaseContent: (props) => <FeedCardPreview {...props} />,
     }),
-    [chatItem?.feedItemId, expandedFeedItemId],
+    [],
   );
 
   const chatContextValue = useMemo<ChatContextValue>(
@@ -187,7 +188,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     governanceCircles={governance.circles}
                     isMobileVersion={isTabletView}
                     userCircleIds={userCircleIds}
-                    isActive={item.id === chatItem?.feedItemId}
+                    isActive={item.id === activeFeedItemId}
+                    isExpanded={item.id === expandedFeedItemId}
                     sizeKey={sizeKey}
                     commonMemberUserId={commonMember?.userId}
                   />

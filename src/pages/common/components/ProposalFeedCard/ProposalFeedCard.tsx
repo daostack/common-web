@@ -43,6 +43,8 @@ interface ProposalFeedCardProps {
   governanceId?: string;
   isPreviewMode?: boolean;
   sizeKey?: string;
+  isActive: boolean;
+  isExpanded: boolean;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -54,6 +56,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     governanceCircles,
     governanceId,
     isPreviewMode,
+    isActive,
+    isExpanded,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -205,6 +209,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       isHovering={isHovering}
       onClick={handleOpenChat}
       lastActivity={item.updatedAt.seconds * 1000}
+      isActive={isActive}
+      isExpanded={isExpanded}
       unreadMessages={feedItemUserMetadata?.count || 0}
       title={discussion?.title}
       lastMessage={getLastMessage({

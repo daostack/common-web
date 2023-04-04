@@ -14,6 +14,8 @@ interface FeedCardProps {
   unreadMessages?: number;
   onClick?: () => void;
   title?: string;
+  isActive?: boolean;
+  isExpanded?: boolean;
   canBeExpanded?: boolean;
   lastMessage?: string;
   isPreviewMode?: boolean;
@@ -30,6 +32,8 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     isHovering = false,
     lastActivity = 0,
     unreadMessages = 0,
+    isActive = false,
+    isExpanded = false,
     canBeExpanded = true,
     onClick,
     children,
@@ -39,15 +43,9 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     menuItems,
   } = props;
   const isTabletView = useIsTabletView();
-  const {
-    activeFeedItemId,
-    expandedFeedItemId,
-    setExpandedFeedItemId,
-    renderFeedItemBaseContent,
-  } = useFeedItemContext();
+  const { setExpandedFeedItemId, renderFeedItemBaseContent } =
+    useFeedItemContext();
   const containerRef = useRef<HTMLDivElement>(null);
-  const isActive = feedItemId === activeFeedItemId;
-  const isExpanded = feedItemId === expandedFeedItemId;
 
   const toggleExpanding = () => {
     if (setExpandedFeedItemId) {

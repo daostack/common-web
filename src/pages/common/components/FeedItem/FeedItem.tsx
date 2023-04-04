@@ -17,6 +17,7 @@ interface FeedItemProps {
   governanceId?: string;
   isPreviewMode?: boolean;
   isActive?: boolean;
+  isExpanded?: boolean;
   sizeKey?: string;
 }
 
@@ -32,6 +33,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     governanceId,
     isPreviewMode = false,
     isActive = false,
+    isExpanded = false,
     sizeKey,
     commonMemberUserId,
   } = props;
@@ -48,6 +50,11 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     return null;
   }
 
+  const generalProps = {
+    isActive,
+    isExpanded,
+  };
+
   if (item.data.type === CommonFeedType.Discussion) {
     return (
       <DiscussionFeedCard
@@ -59,6 +66,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         isProject={isProject}
         governanceId={governanceId}
         isPreviewMode={isPreviewMode}
+        {...generalProps}
       />
     );
   }
@@ -74,6 +82,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         governanceId={governanceId}
         isPreviewMode={isPreviewMode}
         sizeKey={isActive ? sizeKey : undefined}
+        {...generalProps}
       />
     );
   }

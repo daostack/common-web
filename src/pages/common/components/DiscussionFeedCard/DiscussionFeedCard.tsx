@@ -33,6 +33,8 @@ interface DiscussionFeedCardProps {
   isProject: boolean;
   governanceId?: string;
   isPreviewMode: boolean;
+  isActive: boolean;
+  isExpanded: boolean;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
@@ -47,6 +49,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     isProject,
     governanceId,
     isPreviewMode,
+    isActive,
+    isExpanded,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -157,6 +161,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       isHovering={isHovering}
       lastActivity={item.updatedAt.seconds * 1000}
       unreadMessages={feedItemUserMetadata?.count || 0}
+      isActive={isActive}
+      isExpanded={isExpanded}
       onClick={handleOpenChat}
       title={discussion?.title}
       lastMessage={getLastMessage({

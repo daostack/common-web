@@ -17,8 +17,6 @@ export interface FeedItemBaseContentProps {
 }
 
 export interface FeedItemContextValue {
-  activeFeedItemId?: string | null;
-  expandedFeedItemId?: string | null;
   setExpandedFeedItemId?: (feedItemId: string | null) => void;
   renderFeedItemBaseContent?: (props: FeedItemBaseContentProps) => ReactNode;
 }
