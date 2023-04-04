@@ -1,10 +1,4 @@
-import React, {
-  FC,
-  useState,
-  useEffect,
-  useRef,
-  MouseEventHandler,
-} from "react";
+import React, { FC, useEffect, useRef, MouseEventHandler } from "react";
 import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -46,21 +40,17 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     menuItems,
   } = props;
   const isTabletView = useIsTabletView();
-  const { activeFeedItemId, expandedFeedItemId } = useFeedItemContext();
+  const { activeFeedItemId, expandedFeedItemId, setExpandedFeedItemId } =
+    useFeedItemContext();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isExpanded, setExpanded] = useState(false);
   const isActive = feedItemId === activeFeedItemId;
-  const isExpandedExternal = feedItemId === expandedFeedItemId;
+  const isExpanded = feedItemId === expandedFeedItemId;
 
-  useEffect(() => {
-    if (!isActive) {
-      setExpanded(false);
+  const toggleExpanding = () => {
+    if (setExpandedFeedItemId) {
+      setExpandedFeedItemId(isExpanded ? null : feedItemId);
     }
-  }, [isActive]);
-
-  useEffect(() => {
-    setExpanded(isExpandedExternal);
-  }, [isExpandedExternal]);
+  };
 
   function scrollToTargetAdjusted() {
     const headerOffset = isTabletView
@@ -83,14 +73,14 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
 
   const handleClick = () => {
     if (!isTabletView) {
-      setExpanded((expanded) => !expanded);
+      toggleExpanding();
     }
     onClick && onClick();
   };
 
   const handleExpand: MouseEventHandler = (event) => {
     event.stopPropagation();
-    setExpanded((expanded) => !expanded);
+    toggleExpanding();
   };
 
   return (

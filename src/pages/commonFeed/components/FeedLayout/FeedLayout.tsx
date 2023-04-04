@@ -1,8 +1,10 @@
 import React, {
   CSSProperties,
-  FC,
+  forwardRef,
+  ForwardRefRenderFunction,
   ReactNode,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useState,
 } from "react";
@@ -37,6 +39,7 @@ import {
   SplitView,
 } from "./components";
 import { MIN_CHAT_WIDTH } from "./constants";
+import { FeedLayoutRef } from "./types";
 import { getSplitViewMaxSize } from "./utils";
 import styles from "./FeedLayout.module.scss";
 
@@ -50,13 +53,15 @@ interface FeedLayoutProps {
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: CommonFeed[] | null;
   topFeedItems?: CommonFeed[];
-  expandedFeedItemId?: string | null;
   loading: boolean;
   shouldHideContent?: boolean;
   onFetchNext: () => void;
 }
 
-const FeedLayout: FC<FeedLayoutProps> = (props) => {
+const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
+  props,
+  ref,
+) => {
   const {
     className,
     headerContent,
@@ -67,7 +72,6 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     commonMember,
     feedItems,
     topFeedItems = [],
-    expandedFeedItemId,
     loading,
     shouldHideContent = false,
     onFetchNext,
@@ -79,6 +83,9 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     useState(false);
   const [shouldShowSeeMore, setShouldShowSeeMore] = useState(true);
   const [chatWidth, setChatWidth] = useState(0);
+  const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
+    null,
+  );
   const isChatItemSet = Boolean(chatItem);
   const maxChatSize = getSplitViewMaxSize(windowWidth);
   const sizeKey = `${windowWidth}_${chatWidth}`;
@@ -120,6 +127,7 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
     () => ({
       activeFeedItemId: chatItem?.feedItemId,
       expandedFeedItemId,
+      setExpandedFeedItemId,
     }),
     [chatItem?.feedItemId, expandedFeedItemId],
   );
@@ -145,6 +153,8 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
       setChatWidth(maxChatSize);
     }
   }, [maxChatSize]);
+
+  useImperativeHandle(ref, () => ({ setExpandedFeedItemId }), []);
 
   const pageContentStyles = {
     "--chat-w": `${chatWidth}px`,
@@ -226,4 +236,4 @@ const FeedLayout: FC<FeedLayoutProps> = (props) => {
   );
 };
 
-export default FeedLayout;
+export default forwardRef(FeedLayout);
