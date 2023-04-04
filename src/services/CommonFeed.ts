@@ -95,7 +95,7 @@ class CommonFeedService {
     const { data } = await Api.get<GetFeedItemsResponse>(
       `${endpoint}?${stringify(queryParams)}`,
     );
-    const commonFeedItems = data.data.map((item) =>
+    const commonFeedItems = data.data.feedItems.map((item) =>
       convertObjectDatesToFirestoreTimestamps<CommonFeed>(item),
     );
     const firstDocTimestamp =
