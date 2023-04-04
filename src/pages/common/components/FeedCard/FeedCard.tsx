@@ -1,4 +1,10 @@
-import React, { FC, useState, useEffect, useRef } from "react";
+import React, {
+  FC,
+  useState,
+  useEffect,
+  useRef,
+  MouseEventHandler,
+} from "react";
 import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -82,7 +88,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     onClick && onClick();
   };
 
-  const handleExpand = (event: MouseEvent | TouchEvent) => {
+  const handleExpand: MouseEventHandler = (event) => {
     event.stopPropagation();
     setExpanded((expanded) => !expanded);
   };
@@ -98,7 +104,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           isExpanded={isExpanded}
           canBeExpanded={canBeExpanded}
           onClick={handleClick}
-          onExpand={handleExpand as () => void}
+          onExpand={handleExpand}
           title={title}
           lastMessage={lastMessage}
           menuItems={menuItems}

@@ -18,7 +18,7 @@ interface FeedCardPreviewProps {
   lastMessage?: string;
   canBeExpanded?: boolean;
   onClick?: () => void;
-  onExpand?: () => void;
+  onExpand?: MouseEventHandler;
   menuItems?: ContextMenuItem[];
 }
 
