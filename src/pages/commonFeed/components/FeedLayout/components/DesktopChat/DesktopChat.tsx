@@ -5,7 +5,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import {
   ChatComponent,
   ChatItem,
-} from "@/pages/common/components/ChatComponentUpdated";
+} from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { ChatType } from "@/shared/constants";
 import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
@@ -51,6 +51,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
             ? ChatType.ProposalComments
             : ChatType.DiscussionMessages
         }
+        isCommonMemberFetched
         common={common}
         discussion={chatItem.discussion}
         feedItemId={chatItem.feedItemId}

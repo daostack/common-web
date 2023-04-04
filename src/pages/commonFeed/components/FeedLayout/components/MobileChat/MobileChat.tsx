@@ -90,7 +90,6 @@ const MobileChat: FC<ChatProps> = (props) => {
             isHidden={false}
             common={common}
             discussion={chatItem.discussion}
-            proposal={chatItem.proposal}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
           />
