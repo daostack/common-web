@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { CommonAction } from "@/shared/constants";
-import { MenuItem as Item } from "@/shared/interfaces";
+import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { commonActions } from "@/store/states";
 import { DiscussionCardMenuItem } from "../constants";

@@ -113,10 +113,12 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       />
       <CommonSidenavLayoutPageContent
         headerContent={
-          <HeaderContent
-            commonId={common.id}
-            withoutBackButton={!commonMember}
-          />
+          !isTabletView ? (
+            <HeaderContent
+              commonId={common.id}
+              withoutBackButton={!commonMember}
+            />
+          ) : null
         }
         isGlobalLoading={!isGlobalDataFetched}
       >

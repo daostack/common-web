@@ -1,22 +1,41 @@
-import React, { cloneElement, FC, isValidElement, ReactNode } from "react";
+import React, {
+  cloneElement,
+  CSSProperties,
+  FC,
+  isValidElement,
+  ReactNode,
+} from "react";
 import classNames from "classnames";
 import { Loader, LoaderVariant } from "@/shared/ui-kit";
 import styles from "./PageContent.module.scss";
 
 interface FeedLayoutProps {
   className?: string;
+  headerClassName?: string;
   headerContent: ReactNode;
   isGlobalLoading?: boolean;
+  styles?: CSSProperties;
 }
 
 const PageContent: FC<FeedLayoutProps> = (props) => {
-  const { className, headerContent, children, isGlobalLoading = false } = props;
+  const {
+    className,
+    headerClassName,
+    headerContent,
+    children,
+    isGlobalLoading = false,
+    styles: pageContentStyles,
+  } = props;
   let headerEl: ReactNode = null;
 
-  if (isValidElement(headerContent)) {
+  if (headerContent && isValidElement(headerContent)) {
     headerEl = cloneElement(headerContent, {
       ...headerContent.props,
-      className: classNames(styles.header, headerContent.props.className),
+      className: classNames(
+        styles.header,
+        headerContent.props.className,
+        headerClassName,
+      ),
     });
   }
 
@@ -28,7 +47,16 @@ const PageContent: FC<FeedLayoutProps> = (props) => {
           variant={LoaderVariant.Global}
         />
       )}
-      <div className={classNames(styles.container, className)}>
+      <div
+        className={classNames(
+          styles.container,
+          {
+            [styles.containerWithHeader]: headerEl,
+          },
+          className,
+        )}
+        style={pageContentStyles}
+      >
         {headerEl}
         {children}
       </div>

@@ -1,99 +1,105 @@
-import React, { FC, useState, useEffect } from "react";
+import React, { FC, useEffect, useRef, MouseEventHandler } from "react";
 import classNames from "classnames";
-import { useLongPress } from "use-long-press";
+import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonCard } from "../CommonCard";
-import { FeedCardPreview } from "./components";
 import styles from "./FeedCard.module.scss";
 
 interface FeedCardProps {
   className?: string;
-  isActive?: boolean;
-  isLongPressed?: boolean;
+  feedItemId: string;
   isHovering?: boolean;
-  messageCount?: number;
   lastActivity?: number;
   unreadMessages?: number;
-  onLongPress?: () => void;
   onClick?: () => void;
   title?: string;
+  isActive?: boolean;
+  isExpanded?: boolean;
   canBeExpanded?: boolean;
   lastMessage?: string;
   isPreviewMode?: boolean;
+  menuItems?: ContextMenuItem[];
 }
+
+const MOBILE_HEADER_HEIGHT = 52;
+const DESKTOP_HEADER_HEIGHT = 72;
 
 export const FeedCard: FC<FeedCardProps> = (props) => {
   const {
     className,
-    isActive = false,
-    isLongPressed = false,
+    feedItemId,
     isHovering = false,
-    onLongPress,
-    messageCount = 0,
     lastActivity = 0,
     unreadMessages = 0,
+    isActive = false,
+    isExpanded = false,
     canBeExpanded = true,
     onClick,
     children,
     title,
     lastMessage,
     isPreviewMode = true,
+    menuItems,
   } = props;
   const isTabletView = useIsTabletView();
+  const { setExpandedFeedItemId, renderFeedItemBaseContent } =
+    useFeedItemContext();
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const [isLongPressing, setIsLongPressing] = useState(false);
-  const [isExpanded, setExpanded] = useState(false);
+  const toggleExpanding = () => {
+    if (setExpandedFeedItemId) {
+      setExpandedFeedItemId(isExpanded ? null : feedItemId);
+    }
+  };
+
+  function scrollToTargetAdjusted() {
+    const headerOffset = isTabletView
+      ? MOBILE_HEADER_HEIGHT
+      : DESKTOP_HEADER_HEIGHT;
+    const elementPosition =
+      containerRef.current?.getBoundingClientRect().top ?? 0;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
+  }
 
   useEffect(() => {
-    if (!isActive) {
-      setExpanded(false);
+    if (isExpanded && containerRef?.current) {
+      scrollToTargetAdjusted();
     }
-  }, [isActive]);
+  }, [isExpanded]);
 
   const handleClick = () => {
     if (!isTabletView) {
-      setExpanded((expanded) => !expanded);
+      toggleExpanding();
     }
     onClick && onClick();
   };
 
-  const handleExpand = (event: MouseEvent | TouchEvent) => {
+  const handleExpand: MouseEventHandler = (event) => {
     event.stopPropagation();
-    setExpanded((expanded) => !expanded);
+    toggleExpanding();
   };
-
-  const handleLongPress = () => {
-    if (onLongPress) {
-      onLongPress();
-    }
-
-    setIsLongPressing(false);
-  };
-
-  const getLongPressProps = useLongPress(onLongPress ? handleLongPress : null, {
-    threshold: 400,
-    cancelOnMovement: true,
-    onStart: () => setIsLongPressing(true),
-    onFinish: () => setIsLongPressing(false),
-    onCancel: () => setIsLongPressing(false),
-  });
 
   return (
-    <>
-      {!isPreviewMode && (
-        <FeedCardPreview
-          messageCount={messageCount}
-          lastActivity={lastActivity}
-          unreadMessages={unreadMessages}
-          isActive={isActive}
-          isExpanded={isExpanded}
-          canBeExpanded={canBeExpanded}
-          onClick={handleClick}
-          onExpand={handleExpand as () => void}
-          title={title}
-          lastMessage={lastMessage}
-        />
-      )}
+    <div ref={containerRef}>
+      {!isPreviewMode &&
+        renderFeedItemBaseContent?.({
+          lastActivity,
+          unreadMessages,
+          isMobileView: isTabletView,
+          isActive,
+          isExpanded,
+          canBeExpanded,
+          onClick: handleClick,
+          onExpand: handleExpand,
+          title,
+          lastMessage,
+          menuItems,
+        })}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (
         <CommonCard
           className={classNames(
@@ -101,17 +107,14 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
             {
               [styles.containerActive]:
                 (isActive || (isExpanded && isTabletView)) && !isPreviewMode,
-              [styles.containerLongPressing]:
-                (isLongPressing || isLongPressed) && !isPreviewMode,
               [styles.containerHovering]: isHovering && !isPreviewMode,
             },
             className,
           )}
-          {...getLongPressProps()}
         >
           {children}
         </CommonCard>
       )}
-    </>
+    </div>
   );
 };

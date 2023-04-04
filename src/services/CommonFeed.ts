@@ -1,8 +1,10 @@
+import { stringify } from "query-string";
 import { ApiEndpoint } from "@/shared/constants";
 import {
   MarkCommonFeedItemAsSeenPayload,
   UnsubscribeFunction,
 } from "@/shared/interfaces";
+import { GetFeedItemsResponse } from "@/shared/interfaces/api";
 import {
   Collection,
   CommonFeed,
@@ -13,8 +15,8 @@ import {
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
+  convertToTimestamp,
   firestoreDataConverter,
-  transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
@@ -29,6 +31,17 @@ class CommonFeedService {
       .doc(commonId)
       .collection(SubCollections.CommonFeed)
       .withConverter(converter);
+
+  public getCommonFeedItemById = async (
+    commonId: string,
+    commonFeedId: string,
+  ): Promise<CommonFeed | null> => {
+    const snapshot = await this.getCommonFeedSubCollection(commonId)
+      .doc(commonFeedId)
+      .get();
+
+    return snapshot?.data() || null;
+  };
 
   public getCommonFeedItemWithSnapshot = async (
     commonId: string,
@@ -67,26 +80,36 @@ class CommonFeedService {
     hasMore: boolean;
   }> => {
     const { startAfter, limit = 10 } = options;
-    let query = this.getCommonFeedSubCollection(commonId).orderBy(
-      "updatedAt",
-      "desc",
+    const endpoint = ApiEndpoint.GetCommonFeedItems.replace(
+      ":commonId",
+      commonId,
     );
+    const queryParams: Record<string, unknown> = {
+      limit,
+    };
 
     if (startAfter) {
-      query = query.startAfter(startAfter);
+      queryParams.startAfter = startAfter.toDate().toISOString();
     }
 
-    const snapshot = await query.limit(limit).get();
-    const commonFeedItems = transformFirebaseDataList<CommonFeed>(snapshot);
-    const firstDocTimestamp = snapshot.docs[0]?.data().updatedAt || null;
+    const { data } = await Api.get<GetFeedItemsResponse>(
+      `${endpoint}?${stringify(queryParams)}`,
+    );
+    const commonFeedItems = data.data.feedItems.map((item) =>
+      convertObjectDatesToFirestoreTimestamps<CommonFeed>(item),
+    );
+    const firstDocTimestamp =
+      (data.firstDocTimestamp && convertToTimestamp(data.firstDocTimestamp)) ||
+      null;
     const lastDocTimestamp =
-      snapshot.docs[snapshot.docs.length - 1]?.data().updatedAt || null;
+      (data.lastDocTimestamp && convertToTimestamp(data.lastDocTimestamp)) ||
+      null;
 
     return {
       data: commonFeedItems,
       firstDocTimestamp,
       lastDocTimestamp,
-      hasMore: snapshot.docs.length === limit,
+      hasMore: data.hasMore,
     };
   };
 

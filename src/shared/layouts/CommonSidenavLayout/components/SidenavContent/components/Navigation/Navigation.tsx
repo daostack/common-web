@@ -23,6 +23,14 @@ const Navigation: FC<NavigationProps> = (props) => {
       isActive: matchRoute(location.pathname, ROUTE_PATHS.INBOX, {
         exact: true,
       }),
+      isDisabled: true,
+      tooltipContent: (
+        <>
+          We’re building a new Inbox section for your messages.
+          <br />
+          Stay tuned for updates!
+        </>
+      ),
     },
   ];
 

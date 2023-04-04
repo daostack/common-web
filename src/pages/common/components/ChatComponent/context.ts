@@ -15,7 +15,6 @@ export interface ChatItem {
 
 export interface ChatContextValue {
   setChatItem: (data: ChatItem | null) => void;
-  activeItemDiscussionId?: string;
   feedItemIdForAutoChatOpen?: string;
   setIsShowFeedItemDetailsModal?: (isShowing: boolean) => void;
   setShouldShowSeeMore?: (shouldShow: boolean) => void;
@@ -26,10 +25,14 @@ export const ChatContext = React.createContext<ChatContextValue>({
     throw new Error("setChatItem is called not from the child of FeedTab");
   },
   setIsShowFeedItemDetailsModal: () => {
-    throw new Error("setIsShowFeedItemDetailsModal is called not from the child of FeedTab");
+    throw new Error(
+      "setIsShowFeedItemDetailsModal is called not from the child of FeedTab",
+    );
   },
   setShouldShowSeeMore: () => {
-    throw new Error("setShouldShowSeeMore is called not from the child of FeedTab");
+    throw new Error(
+      "setShouldShowSeeMore is called not from the child of FeedTab",
+    );
   },
 });
 

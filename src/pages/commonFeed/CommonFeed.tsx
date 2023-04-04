@@ -1,14 +1,25 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { CommonAction, QueryParamKey } from "@/shared/constants";
+import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
-import { checkIsProject } from "@/shared/utils";
-import { commonActions } from "@/store/states";
-import { FeedLayout, HeaderContent } from "./components";
+import { checkIsProject, getCommonPageAboutTabPath } from "@/shared/utils";
+import {
+  commonActions,
+  selectCommonAction,
+  selectSharedFeedItem,
+} from "@/store/states";
+import {
+  NewDiscussionCreation,
+  NewProposalCreation,
+} from "../common/components/CommonTabPanels/components/FeedTab/components";
+import { FeedLayout, FeedLayoutRef, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
 import styles from "./CommonFeed.module.scss";
 
@@ -18,7 +29,22 @@ interface CommonFeedPageRouterParams {
 
 const CommonFeedPage: FC = () => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
+  const queryParams = useQueryParams();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
+    null,
+  );
+  const sharedFeedItemIdQueryParam = queryParams[QueryParamKey.Item];
+  const sharedFeedItemId =
+    (typeof sharedFeedItemIdQueryParam === "string" &&
+      sharedFeedItemIdQueryParam) ||
+    null;
+  const commonFeedItemIdsForNotListening = useMemo(
+    () => (sharedFeedItemId ? [sharedFeedItemId] : []),
+    [sharedFeedItemId],
+  );
+  const commonAction = useSelector(selectCommonAction);
   const {
     data: commonData,
     fetched: isCommonDataFetched,
@@ -37,13 +63,22 @@ const CommonFeedPage: FC = () => {
     loading: areCommonFeedItemsLoading,
     hasMore: hasMoreCommonFeedItems,
     fetch: fetchCommonFeedItems,
-  } = useCommonFeedItems(commonId);
+  } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
+  const sharedFeedItem = useSelector(selectSharedFeedItem);
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const topFeedItems = useMemo(
+    () => (sharedFeedItem ? [sharedFeedItem] : []),
+    [sharedFeedItem],
+  );
   const isDataFetched = isCommonDataFetched;
+  const hasAccessToPage = Boolean(commonMember);
 
   const fetchData = () => {
-    fetchCommonData(commonId);
+    fetchCommonData({
+      commonId,
+      sharedFeedItemId,
+    });
     fetchUserRelatedData();
   };
 
@@ -52,6 +87,26 @@ const CommonFeedPage: FC = () => {
       fetchCommonFeedItems();
     }
   };
+
+  useEffect(() => {
+    if (!user || (isGlobalDataFetched && !commonMember)) {
+      history.push(getCommonPageAboutTabPath(commonId));
+    }
+  }, [user, isGlobalDataFetched, commonMember, commonId]);
+
+  useEffect(() => {
+    dispatch(commonActions.setSharedFeedItemId(sharedFeedItemId));
+
+    if (sharedFeedItemId) {
+      feedLayoutRef?.setExpandedFeedItemId(sharedFeedItemId);
+    }
+  }, [sharedFeedItemId, feedLayoutRef]);
+
+  useEffect(() => {
+    if (commonData?.sharedFeedItem) {
+      dispatch(commonActions.setSharedFeedItem(commonData.sharedFeedItem));
+    }
+  }, [commonData?.sharedFeedItem]);
 
   useEffect(() => {
     fetchData();
@@ -96,6 +151,7 @@ const CommonFeedPage: FC = () => {
   return (
     <>
       <FeedLayout
+        ref={setFeedLayoutRef}
         className={styles.feedLayout}
         headerContent={
           <HeaderContent
@@ -103,15 +159,39 @@ const CommonFeedPage: FC = () => {
             commonName={commonData.common.name}
             commonImage={commonData.common.image}
             commonMembersAmount={commonData.commonMembersAmount}
+            commonMember={commonMember}
+            governance={commonData.governance}
             isProject={checkIsProject(commonData.common)}
           />
+        }
+        topContent={
+          <>
+            {commonAction === CommonAction.NewDiscussion && (
+              <NewDiscussionCreation
+                common={commonData.common}
+                governanceCircles={commonData.governance.circles}
+                commonMember={commonMember}
+                isModalVariant={false}
+              />
+            )}
+            {commonAction === CommonAction.NewProposal && (
+              <NewProposalCreation
+                common={commonData.common}
+                governance={commonData.governance}
+                commonMember={commonMember}
+                isModalVariant={false}
+              />
+            )}
+          </>
         }
         isGlobalLoading={!isGlobalDataFetched}
         common={commonData.common}
         governance={commonData.governance}
         commonMember={commonMember}
+        topFeedItems={topFeedItems}
         feedItems={commonFeedItems}
-        loading={areCommonFeedItemsLoading}
+        loading={areCommonFeedItemsLoading || !hasAccessToPage}
+        shouldHideContent={!hasAccessToPage}
         onFetchNext={fetchMoreCommonFeedItems}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />

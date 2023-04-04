@@ -12,5 +12,7 @@ export interface NavigationItemOptions {
   icon: ReactNode;
   type?: NavigationItemType;
   isActive?: boolean;
+  isDisabled?: boolean;
   notificationsAmount?: number;
+  tooltipContent?: ReactNode | null;
 }

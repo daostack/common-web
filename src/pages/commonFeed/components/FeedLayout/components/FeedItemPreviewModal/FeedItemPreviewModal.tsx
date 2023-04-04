@@ -1,10 +1,11 @@
 import React, { FC } from "react";
-import { FeedItem } from "@/pages/common/components";
+import { FeedItem } from "@/pages/common";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { Modal } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModalType, CloseIconVariant } from "@/shared/interfaces";
 import { CommonFeed, Common, Governance } from "@/shared/models";
+import { checkIsProject } from "@/shared/utils";
 import styles from "./FeedItemPreviewModal.module.scss";
 
 interface FeedItemPreviewModalProps {
@@ -48,12 +49,14 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
       }
       onClose={handleCloseModal}
       type={ModalType.MobilePopUp}
-      closeIconVariant={CloseIconVariant.thin}
+      closeIconVariant={CloseIconVariant.Thin}
     >
       {selectedFeedItem && (
         <FeedItem
           governanceId={governance.id}
           commonId={common.id}
+          commonName={common.name}
+          isProject={checkIsProject(common)}
           item={selectedFeedItem}
           governanceCircles={governance.circles}
           isMobileVersion={isTabletView}

@@ -4,7 +4,8 @@ import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Container, InfiniteScroll } from "@/shared/ui-kit";
-import { FeedItem } from "./component";
+import { checkIsProject } from "@/shared/utils";
+import { FeedItem } from "../FeedItem";
 import styles from "./FeedItems.module.scss";
 
 interface FeedItemsProps {
@@ -49,6 +50,8 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
             key={item.id}
             governanceId={governance.id}
             commonId={common.id}
+            commonName={common.name}
+            isProject={checkIsProject(common)}
             item={item}
             governanceCircles={governance.circles}
             isMobileVersion={isTabletView}

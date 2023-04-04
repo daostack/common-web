@@ -65,7 +65,6 @@ const SupportersContainer = () => {
   });
   const {
     data: parentGovernance,
-    fetched: isParentGovernanceFetched,
     fetchGovernance: fetchParentGovernance,
     setGovernance: setParentGovernance,
   } = useGovernanceByCommonId();
@@ -226,7 +225,7 @@ const SupportersContainer = () => {
             circleId={common.directParent.circleId}
             commonMember={commonMember}
             isCommonMemberFetched={isCommonMemberFetched}
-            parentGovernanceCircles={parentGovernance?.circles}
+            parentGovernance={parentGovernance}
             onFinish={handleMemberAdmittanceStepFinish}
           />
         ) : (
