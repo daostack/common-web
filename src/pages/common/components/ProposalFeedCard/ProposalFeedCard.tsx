@@ -8,16 +8,16 @@ import {
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, Governance } from "@/shared/models";
+import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
 import { checkIsCountdownState, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
   FeedCardHeader,
   FeedCardContent,
-  FeedCardFooter,
   getVisibilityString,
   FeedCountdown,
+  getLastMessage,
 } from "../FeedCard";
 import { LoadingFeedCard } from "../LoadingFeedCard";
 import {
@@ -31,22 +31,38 @@ import {
   checkUserPermissionsToVote,
   getProposalDescriptionString,
   getProposalSubtitle,
-  getProposalTitleString,
   getProposalTypeString,
 } from "./utils";
 
 interface ProposalFeedCardProps {
   commonId: string;
+  commonName: string;
+  isProject: boolean;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
   governanceId?: string;
+  isPreviewMode?: boolean;
+  sizeKey?: string;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
-  const { commonId, item, governanceCircles, governanceId } = props;
+  const {
+    commonId,
+    commonName,
+    isProject,
+    item,
+    governanceCircles,
+    governanceId,
+    isPreviewMode,
+  } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { activeItemDiscussionId, setChatItem } = useChatContext();
+  const {
+    activeItemDiscussionId,
+    setChatItem,
+    feedItemIdForAutoChatOpen,
+    expandedFeedItemId,
+  } = useChatContext();
   const {
     fetchUser: fetchFeedItemUser,
     data: feedItemUser,
@@ -95,6 +111,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const circleVisibility = getVisibilityString(
     governanceCircles,
     item.circleVisibility,
+    proposal?.type,
+    getUserName(feedItemUser),
   );
   const [isHovering, setHovering] = useState(false);
   const onHover = (isMouseEnter: boolean): void => {
@@ -102,6 +120,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   };
   const proposalId = item.data.id;
   const isActive = discussion?.id === activeItemDiscussionId;
+  const isExpanded = item.id === expandedFeedItemId;
 
   useEffect(() => {
     fetchFeedItemUser(item.userId);
@@ -160,6 +179,17 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     feedItemUserMetadata?.lastSeen,
   ]);
 
+  useEffect(() => {
+    if (
+      isDiscussionFetched &&
+      isProposalFetched &&
+      isFeedItemUserMetadataFetched &&
+      item.id === feedItemIdForAutoChatOpen
+    ) {
+      handleOpenChat();
+    }
+  }, [isDiscussionFetched, isProposalFetched, isFeedItemUserMetadataFetched]);
+
   if (isLoading) {
     return <LoadingFeedCard />;
   }
@@ -177,7 +207,27 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     });
 
   return (
-    <FeedCard isActive={isActive} isHovering={isHovering}>
+    <FeedCard
+      isActive={isActive}
+      isExpanded={isExpanded}
+      isHovering={isHovering}
+      onClick={handleOpenChat}
+      messageCount={discussion?.messageCount || 0}
+      lastActivity={item.updatedAt.seconds * 1000}
+      unreadMessages={feedItemUserMetadata?.count || 0}
+      title={discussion?.title}
+      lastMessage={getLastMessage({
+        commonFeedType: item.data.type,
+        lastMessage: item.data.lastMessage,
+        discussion,
+        currentUserId: userId,
+        feedItemCreatorName: getUserName(feedItemUser),
+        commonName,
+        isProject,
+      })}
+      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
+      isPreviewMode={isPreviewMode}
+    >
       <FeedCardHeader
         avatar={feedItemUser?.photoURL}
         title={getUserName(feedItemUser)}
@@ -197,7 +247,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         governanceId={governanceId}
       />
       <FeedCardContent
-        title={getProposalTitleString(proposal, { governanceCircles })}
         subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
         description={getProposalDescriptionString(
           proposal.data.args.description,
@@ -228,19 +277,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           isCountdownState={isCountdownState}
         />
       </FeedCardContent>
-      <FeedCardFooter
-        messageCount={discussion?.messageCount || 0}
-        lastActivity={item.updatedAt.seconds * 1000}
-        unreadMessages={feedItemUserMetadata?.count || 0}
-        onMessagesClick={handleOpenChat}
-        onClick={handleOpenChat}
-        onMouseEnter={() => {
-          onHover(true);
-        }}
-        onMouseLeave={() => {
-          onHover(false);
-        }}
-      />
     </FeedCard>
   );
 };

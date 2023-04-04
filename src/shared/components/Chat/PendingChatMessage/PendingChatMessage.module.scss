@@ -19,10 +19,15 @@
   }
 }
 
+.content {
+  font-size: $small;
+}
+
 .status {
   font-size: $xxxsmall;
   font-weight: bold;
   color: $light-gray-2;
   text-align: left;
   margin-top: 0.6875rem;
+  height: 0.833rem;
 }

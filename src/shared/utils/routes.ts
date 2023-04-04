@@ -10,8 +10,18 @@ export const getCommonPagePath = (
   return `${path}${tab ? `?${QueryParamKey.Tab}=${tab}` : ""}`;
 };
 
+export const getCommonPageAboutTabPath = (commonId: string): string =>
+  ROUTE_PATHS.COMMON_ABOUT_TAB.replace(":id", commonId);
+
+export const getProjectCreationPagePath = (commonId: string): string =>
+  ROUTE_PATHS.PROJECT_CREATION.replace(":id", commonId);
+
 export const getCommonEditingPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_EDITING.replace(":id", commonId);
 
 export const getCommonSupportPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_SUPPORT.replace(":id", commonId);
+
+export const getInboxPagePath = (): string => ROUTE_PATHS.INBOX;
+
+export const getProfilePagePath = (): string => ROUTE_PATHS.PROFILE;

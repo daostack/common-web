@@ -2,17 +2,23 @@ import React, { FC } from "react";
 
 interface Close2IconProps {
   className?: string;
+  width?: number;
+  height?: number;
 }
 
 // Reference: https://www.figma.com/file/blLDX3L1CwCIAIHwrghKIQ/Common-Platform?node-id=1019%3A11097&t=2uPcQansNEngZ6FI-4
-const Close2Icon: FC<Close2IconProps> = ({ className }) => {
+const Close2Icon: FC<Close2IconProps> = ({
+  className,
+  width = 14,
+  height = 14,
+}) => {
   const color = "currentColor";
 
   return (
     <svg
       className={className}
-      width="14"
-      height="14"
+      width={width}
+      height={height}
       viewBox="0 0 14 14"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

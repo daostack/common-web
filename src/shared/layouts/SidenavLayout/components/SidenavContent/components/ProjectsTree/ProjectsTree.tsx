@@ -1,23 +1,42 @@
 import React, { FC, useMemo } from "react";
 import { TreeRecursive } from "./components";
-import { TreeContext, TreeContextValue } from "./context";
+import {
+  TreeContext,
+  TreeContextValue,
+  TreeItemTriggerStyles,
+} from "./context";
 import { Item } from "./types";
 
-interface ProjectsTreeProps {
+export interface ProjectsTreeProps {
   className?: string;
+  treeItemTriggerStyles?: TreeItemTriggerStyles;
   items: Item[];
   activeItem: Item | null;
-  itemIdWithNewProjectCreation: string;
+  itemIdWithNewProjectCreation?: string;
 }
 
 const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
-  const { className, items, activeItem, itemIdWithNewProjectCreation } = props;
+  const {
+    className,
+    treeItemTriggerStyles,
+    items,
+    activeItem,
+    itemIdWithNewProjectCreation = "",
+  } = props;
+  const isActiveCheckAllowed = !itemIdWithNewProjectCreation;
   const contextValue = useMemo<TreeContextValue>(
     () => ({
       activeItemId: activeItem?.id,
       itemIdWithNewProjectCreation,
+      isActiveCheckAllowed,
+      treeItemTriggerStyles,
     }),
-    [activeItem?.id, itemIdWithNewProjectCreation],
+    [
+      activeItem?.id,
+      itemIdWithNewProjectCreation,
+      isActiveCheckAllowed,
+      treeItemTriggerStyles,
+    ],
   );
 
   return (

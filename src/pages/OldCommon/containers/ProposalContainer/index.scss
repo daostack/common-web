@@ -48,7 +48,7 @@ $max-details-width: 74.875rem;
     line-height: 133%;
 
     @include big-phone {
-      font-family: NunitoSans, sans-serif;
+      font-family: PoppinsSans, sans-serif;
       font-size: $moderate;
       font-weight: bold;
       text-align: center;
@@ -151,7 +151,7 @@ $max-details-width: 74.875rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-family: NunitoSans, sans-serif;
+      font-family: PoppinsSans, sans-serif;
       font-weight: bold;
       font-size: $small;
       list-style: none;

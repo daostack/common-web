@@ -3,6 +3,10 @@ import {
   LayoutConfiguration,
   LayoutConfigurationWithRouteProps,
 } from "../types";
+import {
+  COMMON_SIDENAV_LAYOUT_CONFIGURATION,
+  CommonSidenavLayoutRouteOptions,
+} from "./commonSidenavLayout";
 import { OLD_LAYOUT_CONFIGURATION, OldLayoutRouteOptions } from "./oldLayout";
 import {
   SIDENAV_LAYOUT_CONFIGURATION,
@@ -12,11 +16,13 @@ import {
 type LayoutRouteOptions =
   | OldLayoutRouteOptions
   | SidenavLayoutRouteOptions
+  | CommonSidenavLayoutRouteOptions
   | unknown;
 
 const CONFIGURATIONS: LayoutConfiguration<LayoutRouteOptions>[] = [
   OLD_LAYOUT_CONFIGURATION,
   SIDENAV_LAYOUT_CONFIGURATION,
+  COMMON_SIDENAV_LAYOUT_CONFIGURATION,
 ];
 
 export const ROUTES: LayoutConfigurationWithRouteProps<LayoutRouteOptions>[] =
@@ -34,4 +40,8 @@ export const ROUTES: LayoutConfigurationWithRouteProps<LayoutRouteOptions>[] =
     };
   });
 
-export type { OldLayoutRouteOptions, SidenavLayoutRouteOptions };
+export type {
+  OldLayoutRouteOptions,
+  SidenavLayoutRouteOptions,
+  CommonSidenavLayoutRouteOptions,
+};

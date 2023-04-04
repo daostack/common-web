@@ -1,0 +1,56 @@
+@import "../../../../styles/sizes";
+
+.layoutPageContent {
+  --chat-w: 0rem;
+
+  border: 0;
+}
+
+.layoutHeader {
+  right: calc(var(--sb-h-indent) + var(--chat-w) + 1px);
+
+  @include tablet {
+    right: 0;
+  }
+}
+
+.content {
+  padding: 0 1.5rem;
+
+  & > * {
+    margin-bottom: 0;
+  }
+}
+
+.desktopChat {
+  right: var(--sb-h-indent);
+  width: var(--chat-w, 22rem);
+  border-right: 0.0625rem solid $c-neutrals-200;
+}
+
+.feedItemDetailsModal {
+  border-radius: 0;
+  box-shadow: 0px -5px 4px rgba(0, 0, 0, 0.07);
+
+  .feedItemDetailsModalWrapper {
+    .feedItemDetailsModalHeader {
+      margin-left: -0.875rem;
+      margin-right: -1.1875rem;
+    }
+  }
+
+  .feedItemDetailsContent {
+    padding-left: 1.875rem;
+    padding-right: 2.1875rem;
+    min-height: 18.75rem;
+  }
+}
+
+.feedItemDetailsModalWrapper {
+  backdrop-filter: unset;
+  -webkit-backdrop-filter: unset;
+}
+
+.feedItemDetailsModalOverlay {
+  background-color: unset;
+}

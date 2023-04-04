@@ -3,6 +3,9 @@
 .item {
   --bg-color: #{$c-shades-white};
   --item-pl-per-level: 1.125rem;
+  --item-arrow-pl: var(--item-pl-per-level);
+  --item-image-mr: 0.5rem;
+  --item-text-color: #{$c-neutrals-600};
 
   height: 2.75rem;
   padding-left: calc(var(--item-pl-per-level) * (var(--tree-level, 1) - 1));
@@ -27,9 +30,12 @@
     --bg-color: #{$c-primary-200}99;
   }
 }
+.itemWithoutMembership {
+  --item-text-color: #{$c-neutrals-300};
+}
 
 .arrowIconButton {
-  padding: 0.75rem 0.625rem 0.75rem var(--item-pl-per-level);
+  padding: 0.75rem 0.625rem 0.75rem var(--item-arrow-pl);
 }
 .arrowIconButtonHidden {
   visibility: hidden;
@@ -46,29 +52,26 @@
 
 .image {
   flex-shrink: 0;
-  margin-right: 0.5rem;
+  margin-right: var(--item-image-mr);
   width: 1.25rem;
   height: 1.25rem;
-  border-radius: 0.1875rem;
   object-fit: cover;
+}
+.imageNonRounded {
+  border-radius: 0.1875rem;
 }
 .imageRounded {
   border-radius: 50%;
 }
 
 .name {
-  --color: #{$c-neutrals-600};
-
-  font-family: NunitoSans, sans-serif;
+  font-family: PoppinsSans, sans-serif;
   font-weight: 600;
   font-size: $small;
-  color: var(--color);
+  color: var(--item-text-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.nameWithoutMembership {
-  --color: #{$c-neutrals-300};
 }
 
 .notificationsAmount {

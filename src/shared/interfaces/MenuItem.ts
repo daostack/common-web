@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { MouseEventHandler, ReactNode } from "react";
 import { ROUTE_PATHS } from "@/shared/constants";
 
 export enum MenuItemType {
@@ -9,6 +9,7 @@ export enum MenuItemType {
 interface GeneralItem {
   id: string;
   className?: string;
+  activeClassName?: string;
   text: ReactNode;
   withWarning?: boolean;
 }
@@ -20,7 +21,7 @@ interface LinkItem extends GeneralItem {
 
 interface ButtonItem extends GeneralItem {
   type?: MenuItemType.Button;
-  onClick: () => void;
+  onClick: MouseEventHandler;
 }
 
 export type MenuItem = LinkItem | ButtonItem;

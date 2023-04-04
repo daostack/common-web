@@ -16,9 +16,9 @@ interface TreeRecursiveProps {
 
 const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
   const { className, items, parentId, parentName, level = 1 } = props;
-  const { activeItemId, itemIdWithNewProjectCreation } = useTreeContext();
+  const { activeItemId, itemIdWithNewProjectCreation, isActiveCheckAllowed } =
+    useTreeContext();
   const isFirstLevel = level === 1;
-  const isActiveCheckAllowed = !itemIdWithNewProjectCreation;
 
   return (
     <ul
@@ -27,13 +27,13 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
       aria-multiselectable={isFirstLevel ? false : undefined}
       aria-label={
         parentName && !isFirstLevel
-          ? `Projects of ${parentName}`
-          : "List of related to you projects"
+          ? `Spaces of ${parentName}`
+          : "List of related to you spaces"
       }
     >
       {Boolean(itemIdWithNewProjectCreation) &&
         parentId === itemIdWithNewProjectCreation && (
-          <PlaceholderTreeItem name="New project" level={level} isActive />
+          <PlaceholderTreeItem name="New space" level={level} isActive />
         )}
       {items.map((item) => (
         <TreeItem

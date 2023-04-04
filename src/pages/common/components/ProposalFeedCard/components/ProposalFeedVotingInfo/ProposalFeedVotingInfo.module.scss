@@ -1,59 +1,59 @@
 @import "../../../../../../constants";
-@import "../../../../../../styles/sizes";
 
-$two-columns-breakpoint: 640px;
+$two-columns-breakpoint: 1270px;
+$regular-columns-breakpoint: 1270px;
+$two-columns-breakpoint-2: 640px;
 $smallest-breakpoint: 380px;
 
+$regular-columns-grid-gap: 0 0.5rem;
+$two-columns-grid-gap: 1rem 0.5rem;
+
 .container {
+  --columns-amount: 4;
+  --columns-gap: #{$regular-columns-grid-gap};
+
   margin-top: 0.25rem;
   padding: 1.5rem 2.25rem 1.25rem 2rem;
   display: grid;
-  grid-template-columns: repeat(4, auto);
-  grid-column-gap: 0.5rem;
+  grid-template-columns: repeat(var(--columns-amount, 4), auto);
+  grid-gap: var(--columns-gap);
   background-color: $c-shades-white;
   border: 0.0625rem solid $c-neutrals-100;
   box-sizing: border-box;
+}
+.containerCol4 {
+  --columns-amount: 4;
+  --columns-gap: #{$regular-columns-grid-gap};
 
-  @include viewport-breakpoint($two-columns-breakpoint) {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    grid-template-columns: repeat(2, auto);
-    grid-gap: 1.125rem 1rem;
-  }
+  padding-left: 2rem;
+  padding-right: 2.25rem;
+}
+.containerCol2 {
+  --columns-amount: 2;
+  --columns-gap: #{$two-columns-grid-gap};
 
-  @include phone {
-    grid-gap: 1rem 0.5rem;
-  }
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.containerCol1 {
+  --columns-gap: #{$two-columns-grid-gap};
 
-  @include viewport-breakpoint($smallest-breakpoint) {
-    grid-template-columns: 1fr;
-  }
+  padding-left: 1rem;
+  padding-right: 1rem;
+  grid-template-columns: 1fr;
 }
 
 .countdown {
   display: inline-block;
 }
-.countdownLessThanOneDay {
+.countdownNarrow {
   width: 5.75rem;
 }
-.countdownAtLeastOneDay {
+.countdownWide {
   width: 10.25rem;
-
-  @include viewport-breakpoint(1240px) {
-    width: 5.75rem;
-  }
-
-  @include tablet {
-    width: 10.25rem;
-  }
-
-  @include viewport-breakpoint($two-columns-breakpoint) {
-    width: 10.25rem;
-  }
-
-  @include viewport-breakpoint($smallest-breakpoint) {
-    width: unset;
-  }
+}
+.countdownWidthUnset {
+  width: unset;
 }
 
 .text {
@@ -80,14 +80,13 @@ $smallest-breakpoint: 380px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-
-  @include viewport-breakpoint($smallest-breakpoint) {
-    max-width: unset;
-    text-overflow: unset;
-    white-space: unset;
-    overflow: unset;
-    word-break: break-word;
-  }
+}
+.votersNonShortened {
+  max-width: unset;
+  text-overflow: unset;
+  white-space: unset;
+  overflow: unset;
+  word-break: break-word;
 }
 
 .votingStatus {

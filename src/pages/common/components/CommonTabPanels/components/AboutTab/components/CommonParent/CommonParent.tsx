@@ -43,7 +43,7 @@ const CommonParent: FC<CommonParentProps> = (props) => {
               className={styles.commonLink}
               to={ROUTE_PATHS.COMMON.replace(":id", parentCommon.id)}
             >
-              {projectsAmountInParentCommon} Project
+              {projectsAmountInParentCommon} Space
               {projectsAmountInParentCommon === 1 ? "" : "s"}
             </NavLink>
           </div>

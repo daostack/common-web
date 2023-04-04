@@ -48,6 +48,7 @@ const INIT_DATA: IMembershipRequestData = {
 interface IProps extends Pick<ModalProps, "isShowing" | "onClose"> {
   common: Common;
   governance: Governance;
+  shouldShowLoadingAfterSuccessfulCreation?: boolean;
   onCreationStageReach?: (reached: boolean) => void;
   onRequestCreated?: () => void;
 }
@@ -65,6 +66,7 @@ export function MembershipRequestModal(props: IProps) {
     onClose,
     common,
     governance,
+    shouldShowLoadingAfterSuccessfulCreation = false,
     onCreationStageReach,
     onRequestCreated,
   } = props;
@@ -175,7 +177,16 @@ export function MembershipRequestModal(props: IProps) {
           />
         );
       case MembershipRequestStage.Created:
-        return <MembershipRequestCreated closeModal={onClose} />;
+        return shouldShowLoadingAfterSuccessfulCreation ? (
+          <MembershipRequestCreating
+            userData={userData}
+            setUserData={setUserData}
+            common={common}
+            shouldSkipCreation
+          />
+        ) : (
+          <MembershipRequestCreated closeModal={onClose} />
+        );
     }
   };
 

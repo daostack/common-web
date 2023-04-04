@@ -3,11 +3,19 @@ $notoSerifSCFontName: "NotoSerifSC";
 $assistantFontName: "Assistant";
 $heeboFontName: "Heebo";
 $lexendFontName: "Lexend";
+$poppinsSansFontName: "PoppinsSans";
 
 $trueTypeFontFormat: "truetype";
 $openTypeFontFormat: "opentype";
 
 // NunitoSans
+@font-face {
+  font-family: $nunitoSansFontName;
+  src: local($nunitoSansFontName),
+    url("/shared/assets/fonts/NunitoSans-Light.ttf") format($trueTypeFontFormat);
+  font-weight: 300;
+}
+
 @font-face {
   font-family: $nunitoSansFontName;
   src: local($nunitoSansFontName),
@@ -129,4 +137,49 @@ $openTypeFontFormat: "opentype";
   src: local($lexendFontName),
     url("/shared/assets/fonts/Lexend-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
+}
+
+// Poppins
+@font-face {
+  font-family: $poppinsSansFontName;
+  src: local($poppinsSansFontName),
+    url("/shared/assets/fonts/Poppins-Regular.ttf") format($trueTypeFontFormat);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: $poppinsSansFontName;
+  src: local($poppinsSansFontName),
+    url("/shared/assets/fonts/Poppins-Italic.ttf") format($trueTypeFontFormat);
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: $poppinsSansFontName;
+  src: local($poppinsSansFontName),
+    url("/shared/assets/fonts/Poppins-Medium.ttf") format($trueTypeFontFormat);
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: $poppinsSansFontName;
+  src: local($poppinsSansFontName),
+    url("/shared/assets/fonts/Poppins-SemiBold.ttf") format($trueTypeFontFormat);
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: $poppinsSansFontName;
+  src: local($poppinsSansFontName),
+    url("/shared/assets/fonts/Poppins-Bold.ttf") format($trueTypeFontFormat);
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: $poppinsSansFontName;
+  src: local($poppinsSansFontName),
+    url("/shared/assets/fonts/Poppins-ExtraBold.ttf")
+      format($trueTypeFontFormat);
+  font-weight: 800;
 }

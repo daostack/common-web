@@ -10,7 +10,7 @@
   }
 
   .common-title {
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: 1.125rem;
     font-weight: bold;
 
@@ -22,7 +22,7 @@
   }
 
   .add-proposal-title {
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: 1rem;
     font-weight: bold;
     line-height: 1.5;
@@ -51,7 +51,7 @@
       margin: 0 auto;
       text-align: center;
       .add-bank-details-content-text {
-        font-family: NunitoSans;
+        font-family: PoppinsSans;
         font-size: 0.875rem;
         line-height: 1.43;
         text-align: center;
@@ -67,7 +67,7 @@
         outline: none;
         background: $white;
         cursor: pointer;
-        font-family: NunitoSans;
+        font-family: PoppinsSans;
         font-size: 0.875rem;
         line-height: 1.43;
         &:hover {
@@ -78,7 +78,7 @@
   }
 
   .add-proposal-description {
-    font-family: NunitoSans, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: 0.875rem;
 
     line-height: 1.43;
@@ -108,7 +108,7 @@
       }
 
       .funding-description {
-        font-family: NunitoSans, sans-serif;
+        font-family: PoppinsSans, sans-serif;
         font-size: 0.75rem;
         letter-spacing: normal;
         color: $light-gray-2;
@@ -134,7 +134,7 @@
 
         .link {
           cursor: pointer;
-          font-family: NunitoSans, sans-serif;
+          font-family: PoppinsSans, sans-serif;
           font-size: 1rem;
           font-weight: 600;
           line-height: 1.25;
@@ -203,7 +203,8 @@
 
       .note-title {
         margin-top: 0.5rem;
-        font-family: NunitoSans-Bold, sans-serif;
+        font-family: PoppinsSans, sans-serif;
+        font-weight: bold;
         font-size: 0.875rem;
         line-height: 1.43;
         letter-spacing: normal;
@@ -212,7 +213,7 @@
 
       .note-text {
         position: relative;
-        font-family: NunitoSans, sans-serif;
+        font-family: PoppinsSans, sans-serif;
         font-size: 0.875rem;
         line-height: 1.43;
         letter-spacing: normal;
@@ -249,7 +250,7 @@
   }
 
   .add-proposal-confirm-title {
-    font-family: NunitoSans, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: 1rem;
     font-weight: bold;
     line-height: 1.5;
@@ -261,7 +262,7 @@
   }
 
   .add-proposal-confirm-description {
-    font-family: NunitoSans, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: 1rem;
     line-height: 1.5;
     letter-spacing: normal;
@@ -276,7 +277,7 @@
     width: 70%;
 
     .checkboxes-title {
-      font-family: NunitoSans-Bold, sans-serif;
+      font-family: PoppinsSans, sans-serif;
       font-size: 1rem;
       font-weight: bold;
       line-height: 1.5;
@@ -307,7 +308,7 @@
       padding: 1rem 1.5rem;
       border-radius: 14px;
       background-color: #f4f6ff;
-      font-family: NunitoSans, sans-serif;
+      font-family: PoppinsSans, sans-serif;
       font-size: 0.875rem;
       line-height: 1.43;
       letter-spacing: normal;
@@ -336,7 +337,7 @@
   }
 
   .loader-title {
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: 1.5rem;
     font-weight: bold;
     line-height: 1.33;
@@ -370,7 +371,7 @@
   }
 
   .add-proposal-success-title {
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: 1.5rem;
     font-weight: bold;
     line-height: 1.33;
@@ -381,7 +382,7 @@
   }
 
   .add-proposal-success-description {
-    font-family: NunitoSans, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: 0.875rem;
     line-height: 1.43;
     letter-spacing: normal;
@@ -420,7 +421,7 @@
   }
 
   .add-proposal-failure-title {
-    font-family: NunitoSans-Bold, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: 1.5rem;
     font-weight: bold;
     line-height: 1.33;
@@ -431,7 +432,7 @@
   }
 
   .add-proposal-failure-description {
-    font-family: NunitoSans, sans-serif;
+    font-family: PoppinsSans, sans-serif;
     font-size: 0.875rem;
     line-height: 1.43;
     letter-spacing: normal;
@@ -460,7 +461,7 @@
 
     .error-details {
       margin-top: 1.5rem;
-      font-family: NunitoSans, sans-serif;
+      font-family: PoppinsSans, sans-serif;
       font-size: 0.875rem;
       color: $light-gray-2;
       text-align: center;

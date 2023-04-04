@@ -12,7 +12,7 @@ interface AddProjectButtonProps {
 }
 
 const AddProjectButton: FC<AddProjectButtonProps> = (props) => {
-  const { text = "Add new project", tooltipContent, onClick, disabled } = props;
+  const { text = "Add new space", tooltipContent, onClick, disabled } = props;
   const buttonEl = (
     <button
       className={classNames(styles.item, {

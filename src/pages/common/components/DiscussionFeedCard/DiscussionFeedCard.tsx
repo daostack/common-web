@@ -9,7 +9,7 @@ import {
   useFeedItemUserMetadata,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, Governance } from "@/shared/models";
+import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
 import { DesktopStyleMenu } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
@@ -17,8 +17,8 @@ import {
   FeedCard,
   FeedCardHeader,
   FeedCardContent,
-  FeedCardFooter,
   FeedCountdown,
+  getLastMessage,
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
@@ -31,17 +31,29 @@ interface DiscussionFeedCardProps {
   governanceCircles: Governance["circles"];
   isMobileVersion?: boolean;
   commonId: string;
+  commonName: string;
+  isProject: boolean;
   governanceId?: string;
+  isPreviewMode: boolean;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const { activeItemDiscussionId, setChatItem } = useChatContext();
+  const {
+    activeItemDiscussionId,
+    setChatItem,
+    feedItemIdForAutoChatOpen,
+    expandedFeedItemId,
+    setShouldShowSeeMore,
+  } = useChatContext();
   const {
     item,
     governanceCircles,
     isMobileVersion = false,
     commonId,
+    commonName,
+    isProject,
     governanceId,
+    isPreviewMode,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -92,6 +104,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     !isDiscussionFetched ||
     !isFeedItemUserMetadataFetched;
   const isActive = discussion?.id === activeItemDiscussionId;
+  const isExpanded = item.id === expandedFeedItemId;
 
   const circleVisibility = getVisibilityString(
     governanceCircles,
@@ -106,6 +119,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         circleVisibility: item.circleVisibility,
         lastSeenItem: feedItemUserMetadata?.lastSeen,
       });
+      setShouldShowSeeMore &&
+        setShouldShowSeeMore(
+          discussion?.predefinedType !== PredefinedTypes.General,
+        );
     }
   }, [
     discussion,
@@ -130,6 +147,16 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     });
   }, [userId, commonId, item.id]);
 
+  useEffect(() => {
+    if (
+      isDiscussionFetched &&
+      isFeedItemUserMetadataFetched &&
+      item.id === feedItemIdForAutoChatOpen
+    ) {
+      handleOpenChat();
+    }
+  }, [isDiscussionFetched, isFeedItemUserMetadataFetched]);
+
   if (isLoading) {
     return <LoadingFeedCard />;
   }
@@ -137,8 +164,25 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   return (
     <FeedCard
       isActive={isActive}
+      isExpanded={isExpanded}
       isLongPressed={isMenuOpen}
       isHovering={isHovering}
+      messageCount={discussion?.messageCount || 0}
+      lastActivity={item.updatedAt.seconds * 1000}
+      unreadMessages={feedItemUserMetadata?.count || 0}
+      onClick={handleOpenChat}
+      title={discussion?.title}
+      lastMessage={getLastMessage({
+        commonFeedType: item.data.type,
+        lastMessage: item.data.lastMessage,
+        discussion,
+        currentUserId: userId,
+        feedItemCreatorName: getUserName(discussionCreator),
+        commonName,
+        isProject,
+      })}
+      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
+      isPreviewMode={isPreviewMode}
     >
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}
@@ -161,22 +205,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         governanceId={governanceId}
       />
       <FeedCardContent
-        title={discussion?.title}
         description={discussion?.message}
         images={discussion?.images}
-        onClick={handleOpenChat}
-        onMouseEnter={() => {
-          onHover(true);
-        }}
-        onMouseLeave={() => {
-          onHover(false);
-        }}
-      />
-      <FeedCardFooter
-        messageCount={discussion?.messageCount || 0}
-        lastActivity={item.updatedAt.seconds * 1000}
-        unreadMessages={feedItemUserMetadata?.count || 0}
-        onMessagesClick={handleOpenChat}
         onClick={handleOpenChat}
         onMouseEnter={() => {
           onHover(true);

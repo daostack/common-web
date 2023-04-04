@@ -1,0 +1,16 @@
+@import "../../../../../../constants";
+
+.modal {
+  .modalHeaderWrapper {
+    padding: 0;
+
+    .modalHeader {
+      padding: 0;
+    }
+  }
+}
+
+.headerActionElement {
+  color: $c-pink-primary;
+  cursor: pointer;
+}

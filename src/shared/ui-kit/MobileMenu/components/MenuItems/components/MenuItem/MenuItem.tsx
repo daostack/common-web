@@ -48,7 +48,7 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
           {...restProps}
           className={className}
           onClick={(...args) => {
-            item.onClick();
+            item.onClick(...args);
 
             if (restProps.onClick) {
               restProps.onClick(...args);

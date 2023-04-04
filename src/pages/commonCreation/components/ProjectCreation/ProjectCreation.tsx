@@ -4,14 +4,18 @@ import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { updateCommonState } from "@/pages/OldCommon/store/actions";
-import { CommonTab } from "@/pages/common";
 import { GovernanceActions } from "@/shared/constants";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
-import { commonActions, projectsActions } from "@/store/states";
+import { checkIsProject, getCommonPagePath } from "@/shared/utils";
+import {
+  commonActions,
+  commonLayoutActions,
+  projectsActions,
+  ProjectsStateItem,
+} from "@/store/states";
 import { CenterWrapper } from "../CenterWrapper";
 import { ProjectCreationForm } from "./components";
 import styles from "./ProjectCreation.module.scss";
@@ -61,17 +65,18 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         }),
       );
     } else {
+      const projectsStateItem: ProjectsStateItem = {
+        commonId: createdProject.id,
+        image: createdProject.image,
+        name: createdProject.name,
+        directParent: createdProject.directParent,
+        hasMembership: true,
+        notificationsAmount: 0,
+      };
+
       dispatch(commonActions.setIsNewProjectCreated(true));
-      dispatch(
-        projectsActions.addProject({
-          commonId: createdProject.id,
-          image: createdProject.image,
-          name: createdProject.name,
-          directParent: createdProject.directParent,
-          hasMembership: true,
-          notificationsAmount: 0,
-        }),
-      );
+      dispatch(commonLayoutActions.addProject(projectsStateItem));
+      dispatch(projectsActions.addProject(projectsStateItem));
     }
     dispatch(
       updateCommonState({
@@ -83,7 +88,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         },
       }),
     );
-    history.push(getCommonPagePath(createdProject.id, CommonTab.About));
+    history.push(getCommonPagePath(createdProject.id));
   };
 
   useEffect(() => {
@@ -114,6 +119,15 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
       </CenterWrapper>
     );
   }
+  if (checkIsProject(parentCommon)) {
+    return (
+      <CenterWrapper>
+        <p className={styles.dataErrorText}>
+          Space creation in the another space is not allowed
+        </p>
+      </CenterWrapper>
+    );
+  }
   if (!isParentGovernanceFetched || !isCommonMemberFetched) {
     return loaderEl;
   }
@@ -127,11 +141,8 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     );
   }
 
-  const parentCommonRoute = getCommonPagePath(parentCommon.id, CommonTab.About);
-  const projectRoute = getCommonPagePath(
-    initialCommon?.id || "",
-    CommonTab.About,
-  );
+  const parentCommonRoute = getCommonPagePath(parentCommon.id);
+  const projectRoute = getCommonPagePath(initialCommon?.id || "");
   const backRoute = isEditing ? projectRoute : parentCommonRoute;
 
   if (
@@ -158,11 +169,11 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         </NavLink>
         <h1 className={styles.title}>
           {isEditing
-            ? `Edit project ${initialCommon?.name}`
-            : `Create a new project in ${parentCommon.name}`}
+            ? `Edit space ${initialCommon?.name}`
+            : `Create a new space in ${parentCommon.name}`}
         </h1>
         <p className={styles.subtitle}>
-          Project serves a certain group in the common to organize together and
+          Space serves a certain group in the common to organize together and
           achieve more focused goals.
         </p>
         <ProjectCreationForm

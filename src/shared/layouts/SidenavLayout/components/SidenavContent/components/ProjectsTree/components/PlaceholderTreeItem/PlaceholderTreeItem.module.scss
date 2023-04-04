@@ -2,10 +2,16 @@
 
 // based on TreeItemTrigger arrow icon button
 .gap {
-  // {item-pl-per-level} + {arrow-icon-button-pr} + {arrow-icon-button-width}
-  width: calc(var(--item-pl-per-level) + 0.625rem + 0.375rem);
+  // {item-arrow-pl} + {arrow-icon-button-pr} + {arrow-icon-button-width}
+  width: calc(var(--item-arrow-pl) + 0.625rem + 0.375rem);
 }
 
 .image {
   background-color: $c-neutrals-300;
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-right: var(--item-image-mr);
+  color: var(--item-text-color);
 }

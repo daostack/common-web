@@ -44,7 +44,7 @@ describe("calculateVoters", () => {
       },
       4: {
         allowedProposals: {},
-        name: "Project",
+        name: "Space",
         allowedActions: {},
         id: "6df2148b-0142-4976-a3d5-656d52f77984",
         hierarchy: null,

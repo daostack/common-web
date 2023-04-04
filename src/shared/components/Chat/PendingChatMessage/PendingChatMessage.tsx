@@ -14,9 +14,9 @@ export default function PendingChatMessage({ data }: PendingChatMessageProps) {
         [styles.failed]: data.status === PendingMessageStatus.Failed,
       })}
     >
-      <div>{data.text}</div>
+      <div className={styles.content}>{data.text}</div>
       <div className={styles.status}>
-        {data.status === PendingMessageStatus.Failed ? "Failed" : "Sending..."}
+        {data.status === PendingMessageStatus.Failed && "Failed"}
       </div>
     </div>
   );

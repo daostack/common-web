@@ -1,4 +1,5 @@
 export { useCommon } from "./useCommon";
+export { useCommonFeedItems } from "./useCommonFeedItems";
 export { useCommonMembersWithCircleIdsAmount } from "./useCommonMembersWithCircleIdsAmount";
 export { useCommonRulesAcceptance } from "./useCommonRulesAcceptance";
 export { useDiscussionById } from "./useDiscussionById";

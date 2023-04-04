@@ -16,7 +16,7 @@ const INPUT_STYLE: CSSProperties = {
   boxShadow: `0 3px 8px 0 ${Colors.shadow2}`,
   border: `1px solid ${Colors.lightGray3}`,
   backgroundColor: Colors.white,
-  fontFamily: "NunitoSans, sans-serif",
+  fontFamily: "PoppinsSans, sans-serif",
   fontSize: "2.25rem",
   textAlign: "center",
   color: Colors.secondaryBlue,

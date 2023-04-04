@@ -36,7 +36,7 @@ const getInitialValues = (common: Common): EditingFormValues => {
         file: common.image,
       },
     ],
-    projectName: common.name,
+    spaceName: common.name,
     byline: common.byline || "",
     description: parseStringToTextEditorValue(common.description),
     videoUrl: common.video?.value || "",
@@ -77,7 +77,7 @@ const EditingForm: FC<EditingFormProps> = (props) => {
     updateCommon({
       ...values,
       image,
-      name: values.projectName,
+      name: values.spaceName,
     });
   };
 

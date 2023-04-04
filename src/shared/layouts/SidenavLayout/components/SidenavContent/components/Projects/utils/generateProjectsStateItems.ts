@@ -1,23 +1,27 @@
-import { ROUTE_PATHS } from "@/shared/constants";
+import { getCommonPageAboutTabPath, getCommonPagePath } from "@/shared/utils";
 import { ProjectsStateItem } from "@/store/states";
 import { Item } from "../../ProjectsTree/types";
 
-const getItemFromProjectsStateItem = (
+export const getItemFromProjectsStateItem = (
   projectsStateItem: ProjectsStateItem,
-  itemsGroupedByCommonParentId: Map<string | null, ProjectsStateItem[]>,
+  itemsGroupedByCommonParentId?: Map<string | null, ProjectsStateItem[]>,
 ): Item => {
-  const items = (
-    itemsGroupedByCommonParentId.get(projectsStateItem.commonId) || []
-  ).map((subCommon) =>
-    getItemFromProjectsStateItem(subCommon, itemsGroupedByCommonParentId),
-  );
+  const items = itemsGroupedByCommonParentId
+    ? (itemsGroupedByCommonParentId.get(projectsStateItem.commonId) || []).map(
+        (subCommon) =>
+          getItemFromProjectsStateItem(subCommon, itemsGroupedByCommonParentId),
+      )
+    : [];
 
   return {
     id: projectsStateItem.commonId,
     image: projectsStateItem.image,
     name: projectsStateItem.name,
-    path: ROUTE_PATHS.COMMON.replace(":id", projectsStateItem.commonId),
+    path: projectsStateItem.hasMembership
+      ? getCommonPagePath(projectsStateItem.commonId)
+      : getCommonPageAboutTabPath(projectsStateItem.commonId),
     hasMembership: projectsStateItem.hasMembership,
+    hasPermissionToAddProject: projectsStateItem.hasPermissionToAddProject,
     notificationsAmount: projectsStateItem.notificationsAmount,
     items,
   };

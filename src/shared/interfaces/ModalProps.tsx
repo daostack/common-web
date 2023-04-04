@@ -6,6 +6,11 @@ export enum ModalType {
   MobilePopUp,
 }
 
+export enum CloseIconVariant {
+  Regular = "regular",
+  Thin = "thin",
+}
+
 export interface ModalProps {
   isShowing: boolean;
   type?: ModalType;
@@ -17,6 +22,7 @@ export interface ModalProps {
   mobileFullScreen?: boolean;
   title?: ReactNode;
   hideCloseButton?: boolean;
+  closeIconVariant?: CloseIconVariant;
   closeIconSize?: number;
   isHeaderSticky?: boolean;
   shouldShowHeaderShadow?: boolean;

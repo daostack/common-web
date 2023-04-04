@@ -1,17 +1,27 @@
 import React, { FC, useState } from "react";
+import classNames from "classnames";
 import { Item } from "../../types";
 import { TreeItemTrigger } from "../TreeItemTrigger";
 import { getItemStyles } from "./utils";
 import styles from "./TreeItem.module.scss";
 
 interface TreeItemProps {
+  className?: string;
+  treeItemTriggerClassName?: string;
   item: Item;
   level?: number;
   isActive?: boolean;
 }
 
 const TreeItem: FC<TreeItemProps> = (props) => {
-  const { item, level = 1, isActive = false, children } = props;
+  const {
+    className,
+    treeItemTriggerClassName,
+    item,
+    level = 1,
+    isActive = false,
+    children,
+  } = props;
   const [isOpen, setIsOpen] = useState(false);
   const itemStyles = getItemStyles(level);
   const hasNestedContent = Boolean(children);
@@ -22,13 +32,14 @@ const TreeItem: FC<TreeItemProps> = (props) => {
 
   return (
     <li
-      className={styles.itemWrapper}
+      className={classNames(styles.itemWrapper, className)}
       style={itemStyles}
       role="treeitem"
       aria-selected={isActive}
       aria-label={`Item of ${item.name}`}
     >
       <TreeItemTrigger
+        className={treeItemTriggerClassName}
         item={item}
         level={level}
         isActive={isActive}

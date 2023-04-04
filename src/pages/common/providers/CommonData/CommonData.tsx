@@ -7,7 +7,7 @@ import {
   LeaveCommonModal,
   MembershipRequestModal,
 } from "@/pages/OldCommon/components";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { ProposalsTypes } from "@/shared/constants";
 import { useAuthorizedModal, useNotification } from "@/shared/hooks";
 import {
   CirclesPermissions,
@@ -16,6 +16,7 @@ import {
   Governance,
   SupportersData,
 } from "@/shared/models";
+import { getCommonPagePath, getProjectCreationPagePath } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { JoinProjectModal } from "../../components/JoinProjectModal";
 import { CommonMenuItem } from "../../constants";
@@ -23,9 +24,9 @@ import { LeaveCircleModal } from "./components";
 import { JoinCircleModal } from "./components/JoinCircleModal";
 import { CommonDataContext, CommonDataContextValue } from "./context";
 import {
+  useJoinCircleModal,
   useLeaveCircleModal,
   useProposalCreationModal,
-  useJoinCircleModal,
 } from "./hooks";
 
 interface CommonDataProps {
@@ -63,6 +64,18 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const { notify } = useNotification();
   const [selectedMenuItem, setSelectedMenuItem] =
     useState<CommonMenuItem | null>(null);
+  const [
+    shouldKeepShowingCommonJoinModal,
+    setShouldKeepShowingCommonJoinModal,
+  ] = useState(false);
+  const [
+    shouldKeepShowingProjectJoinModal,
+    setShouldKeepShowingProjectJoinModal,
+  ] = useState(false);
+  const [
+    shouldRedirectToFeedOnCommonMemberExistence,
+    setShouldRedirectToFeedOnCommonMemberExistence,
+  ] = useState(false);
   const {
     isProposalCreationModalOpen,
     initialProposalTypeForCreation,
@@ -120,7 +133,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
   };
 
   const handleProjectCreate = useCallback(() => {
-    history.push(ROUTE_PATHS.PROJECT_CREATION.replace(":id", common.id));
+    history.push(getProjectCreationPagePath(common.id));
   }, [history, common.id]);
 
   const handleSuccessfulLeave = () => {
@@ -139,8 +152,33 @@ const CommonData: FC<CommonDataProps> = (props) => {
     }
 
     dispatch(projectsActions.removeMembershipFromProjectAndChildren(common.id));
-    notify("You’ve successfully left the project");
+    notify("You’ve successfully left the space");
     handleMenuClose();
+  };
+
+  const handleJoinRequestCreated = () => {
+    setIsJoinPending(true);
+    setShouldRedirectToFeedOnCommonMemberExistence(true);
+  };
+
+  const handleCommonJoinRequestCreated = () => {
+    setShouldKeepShowingCommonJoinModal(true);
+    handleJoinRequestCreated();
+  };
+
+  const handleProjectJoinRequestCreated = () => {
+    setShouldKeepShowingProjectJoinModal(true);
+    handleJoinRequestCreated();
+  };
+
+  const handleCommonJoinModalClose = () => {
+    onCommonJoinModalClose();
+    setShouldKeepShowingCommonJoinModal(false);
+  };
+
+  const handleProjectJoinModalClose = () => {
+    onProjectJoinModalClose();
+    setShouldKeepShowingProjectJoinModal(false);
   };
 
   useEffect(() => {
@@ -154,6 +192,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onProjectJoinModalClose();
     }
   }, [isGlobalDataFetched, isJoinAllowed, isProjectJoinModalOpen]);
+
+  useEffect(() => {
+    if (shouldRedirectToFeedOnCommonMemberExistence && commonMember) {
+      history.push(getCommonPagePath(common.id));
+    }
+  }, [shouldRedirectToFeedOnCommonMemberExistence, commonMember]);
 
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
@@ -246,18 +290,29 @@ const CommonData: FC<CommonDataProps> = (props) => {
         />
       )}
       <MembershipRequestModal
-        isShowing={isJoinAllowed && isCommonJoinModalOpen}
-        onClose={onCommonJoinModalClose}
+        isShowing={
+          (isJoinAllowed && isCommonJoinModalOpen) ||
+          shouldKeepShowingCommonJoinModal
+        }
+        onClose={handleCommonJoinModalClose}
         common={common}
         governance={governance}
-        onRequestCreated={() => setIsJoinPending(true)}
+        shouldShowLoadingAfterSuccessfulCreation={
+          governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE]?.global
+            .votingDuration === 0
+        }
+        onRequestCreated={handleCommonJoinRequestCreated}
       />
       <JoinProjectModal
-        isShowing={isJoinAllowed && isProjectJoinModalOpen}
-        onClose={onProjectJoinModalClose}
+        isShowing={
+          (isJoinAllowed && isProjectJoinModalOpen) ||
+          shouldKeepShowingProjectJoinModal
+        }
+        onClose={handleProjectJoinModalClose}
         common={common}
         governance={governance}
-        onRequestCreated={() => setIsJoinPending(true)}
+        shouldKeepLoadingIfPossible
+        onRequestCreated={handleProjectJoinRequestCreated}
       />
     </CommonDataContext.Provider>
   );

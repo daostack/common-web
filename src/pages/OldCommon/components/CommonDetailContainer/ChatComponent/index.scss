@@ -11,6 +11,7 @@
   .messages {
     height: 100%;
     overflow: auto;
+    overscroll-behavior: contain;
 
     &.empty {
       display: flex;
@@ -145,7 +146,7 @@
           margin-right: 2.5rem;
           margin-bottom: 0.3125rem;
           border-radius: 0.875rem;
-          cursor: pointer; 
+          cursor: pointer;
 
           .reply-message-content {
             line-height: 1.5rem;
@@ -224,7 +225,7 @@
         cursor: pointer;
         text-decoration: none;
         margin-right: 10px;
-        font-family: NunitoSans-Bold;
+        font-family: PoppinsSans, sans-serif;
 
         &:hover {
           opacity: 0.9;

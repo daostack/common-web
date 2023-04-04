@@ -9,12 +9,16 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { CommonEvent, CommonEventEmitter } from "@/events";
 import { Modal } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { GovernanceActions, ScreenSize } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
 import { Common, Governance } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
-import { projectsActions } from "@/store/states";
+import {
+  commonLayoutActions,
+  projectsActions,
+  ProjectsStateItem,
+} from "@/store/states";
 import {
   IntermediateCreateCommonPayload,
   PaymentPayload,
@@ -42,7 +46,7 @@ interface CreateCommonModalProps {
   isSubCommonCreation: boolean;
   subCommons?: Common[];
   shouldBeWithoutIntroduction?: boolean;
-  onCommonCreate?: (common: Common) => void;
+  onCommonCreate?: (data: { common: Common; governance: Governance }) => void;
   onGoToCommon?: (common: Common) => void;
 }
 
@@ -80,7 +84,10 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     (() => boolean | undefined) | undefined
   >();
   const [shouldShowCloseButton, setShouldShowCloseButton] = useState(true);
-  const [createdCommon, setCreatedCommon] = useState<Common | null>(null);
+  const [createdCommonData, setCreatedCommonData] = useState<{
+    common: Common;
+    governance: Governance;
+  } | null>(null);
   const [errorText, setErrorText] = useState("");
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -126,17 +133,20 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     }));
   }, []);
   const handleCommonCreation = useCallback(
-    (common: Common | null, errorText: string) => {
-      if (errorText || !common) {
+    (
+      data: { common: Common; governance: Governance } | null,
+      errorText: string,
+    ) => {
+      if (errorText || !data) {
         handleError(errorText);
         return;
       }
 
       if (onCommonCreate) {
-        onCommonCreate(common);
+        onCommonCreate(data);
       }
 
-      setCreatedCommon(common);
+      setCreatedCommonData(data);
       setStageState((state) => ({
         ...state,
         stage: isSubCommonCreation
@@ -201,7 +211,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
           />
         );
       case CreateCommonStage.Payment:
-        return createdCommon ? (
+        return createdCommonData ? (
           <Payment
             isHeaderScrolledToTop={isHeaderScrolledToTop}
             setTitle={setSmallTitle}
@@ -209,7 +219,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
             setShouldShowCloseButton={setShouldShowCloseButton}
             onFinish={handlePaymentFinish}
             onError={handleError}
-            common={createdCommon}
+            common={createdCommonData.common}
             paymentData={paymentData}
             setPaymentData={setPaymentData}
             memberAdmittanceOptions={
@@ -218,9 +228,9 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
           />
         ) : null;
       case CreateCommonStage.Success:
-        return createdCommon ? (
+        return createdCommonData ? (
           <Success
-            common={createdCommon}
+            common={createdCommonData.common}
             isSubCommonCreation={isSubCommonCreation}
             setTitle={setSmallTitle}
             setGoBackHandler={setGoBackHandler}
@@ -252,7 +262,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
     setGoBackHandler,
     moveStageForward,
     creationData,
-    createdCommon,
+    createdCommonData,
     shouldStartFromLastStep,
     props.onClose,
     errorText,
@@ -278,21 +288,26 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   }, [props.isShowing, initialStage, disableZoom, resetZoom]);
 
   useEffect(() => {
-    if (stage !== CreateCommonStage.Success || !createdCommon) {
+    if (stage !== CreateCommonStage.Success || !createdCommonData) {
       return;
     }
 
-    dispatch(
-      projectsActions.addProject({
-        commonId: createdCommon.id,
-        image: createdCommon.image,
-        name: createdCommon.name,
-        directParent: createdCommon.directParent,
-        hasMembership: true,
-        notificationsAmount: 0,
-      }),
-    );
-    CommonEventEmitter.emit(CommonEvent.Created, createdCommon);
+    const hasPermissionToAddProject = Object.values(
+      createdCommonData.governance.circles,
+    ).some((circle) => circle.allowedActions[GovernanceActions.CREATE_PROJECT]);
+    const projectsStateItem: ProjectsStateItem = {
+      commonId: createdCommonData.common.id,
+      image: createdCommonData.common.image,
+      name: createdCommonData.common.name,
+      directParent: createdCommonData.common.directParent,
+      hasMembership: true,
+      hasPermissionToAddProject,
+      notificationsAmount: 0,
+    };
+
+    dispatch(commonLayoutActions.addCommon(projectsStateItem));
+    dispatch(projectsActions.addProject(projectsStateItem));
+    CommonEventEmitter.emit(CommonEvent.Created, createdCommonData.common);
   }, [stage]);
 
   return (

@@ -1,3 +1,4 @@
+import { ProposalsTypes } from "@/shared/constants";
 import { Governance } from "@/shared/models";
 import {
   getCirclesWithLowestTier,
@@ -7,6 +8,8 @@ import {
 export const getVisibilityString = (
   governanceCircles: Governance["circles"],
   circleVisibility?: string[],
+  proposalType?: ProposalsTypes,
+  memberName?: string,
 ): string => {
   const filteredByIdCircles = getFilteredByIdCircles(
     governanceCircles ? Object.values(governanceCircles) : null,
@@ -16,5 +19,8 @@ export const getVisibilityString = (
     .map(({ name }) => name)
     .join(", ");
 
-  return circleNames ? `Private, ${circleNames}` : "Public";
+  const memberSpecific =
+    proposalType === ProposalsTypes.ASSIGN_CIRCLE ? `, ${memberName}` : "";
+
+  return circleNames ? `Private, ${circleNames} ${memberSpecific}` : "Public";
 };

@@ -33,16 +33,24 @@ class CommonService {
     return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
   };
 
-  public getCommonsByIds = async (ids: string[]): Promise<Common[]> => {
+  public getCommonsByIds = async (
+    ids: string[],
+    extendInitialQuery?: (
+      query: firebase.firestore.Query,
+    ) => firebase.firestore.Query,
+  ): Promise<Common[]> => {
     if (ids.length === 0) {
       return [];
     }
 
     const queries: firebase.firestore.Query[] = [];
-    const config = firebase
+    const initialConfig = firebase
       .firestore()
       .collection(Collection.Daos)
       .where("state", "==", CommonState.ACTIVE);
+    const config = extendInitialQuery
+      ? extendInitialQuery(initialConfig)
+      : initialConfig;
 
     // Firebase allows to use at most 10 items per query for `in` option
     for (let i = 0; i < ids.length; i += 10) {
@@ -89,6 +97,22 @@ class CommonService {
         .where("userId", "==", userId)
         .get()
     ).docs.map((ref) => ref.ref.path.split("/")[1]);
+
+  public getAllUserCommonMemberInfo = async (
+    userId: string,
+  ): Promise<(CommonMember & { commonId: string })[]> => {
+    const snapshot = await firebase
+      .firestore()
+      .collectionGroup(SubCollections.Members)
+      .where("userId", "==", userId)
+      .withConverter(commonMemberConverter)
+      .get();
+
+    return snapshot.docs.map((doc) => ({
+      ...doc.data(),
+      commonId: doc.ref.path.split("/")[1],
+    }));
+  };
 
   public getCommonsWithSubCommons = async (
     commonIds: string[],
@@ -156,6 +180,11 @@ class CommonService {
 
     return null;
   };
+
+  public getParentCommonsByIds = async (ids: string[]): Promise<Common[]> =>
+    this.getCommonsByIds(ids, (query) =>
+      query.where("directParent", "==", null),
+    );
 
   public getCommonMemberByUserId = async (
     commonId: string,
@@ -280,6 +309,12 @@ class CommonService {
         });
       }
     });
+  };
+
+  public getCommonMembersAmount = async (commonId: string): Promise<number> => {
+    const snapshot = await commonMembersSubCollection(commonId).get();
+
+    return snapshot.size;
   };
 
   public leaveCircle = async (

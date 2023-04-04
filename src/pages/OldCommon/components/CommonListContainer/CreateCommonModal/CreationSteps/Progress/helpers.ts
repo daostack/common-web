@@ -15,7 +15,7 @@ export const getStepData = (
   [CreationStep.GeneralInfo]: {
     title: "General Info",
     description: isSubCommonCreation
-      ? "Project is based on a circle from its parent common and serve as a separate space for its members to collaborate on their goals."
+      ? "Space is based on a circle from its parent common and serve as a separate space for its members to collaborate on their goals."
       : "Describe your cause and let the community learn more about your plans and goals.",
     descriptionClassName: isSubCommonCreation
       ? "create-common-steps-progress__description--sub-common"
@@ -23,11 +23,15 @@ export const getStepData = (
   },
   [CreationStep.UserAcknowledgment]: {
     title: "User Acknowledgment",
-    description: `Before creating a ${commonTypeText(isSubCommonCreation)}, please make sure that:`,
+    description: `Before creating a ${commonTypeText(
+      isSubCommonCreation,
+    )}, please make sure that:`,
   },
   [CreationStep.Rules]: {
     title: "Rules",
-    description: `Control how this ${commonTypeText(isSubCommonCreation)} will collect and manage funds.`,
+    description: `Control how this ${commonTypeText(
+      isSubCommonCreation,
+    )} will collect and manage funds.`,
   },
   [CreationStep.Funding]: {
     title: "Funding",

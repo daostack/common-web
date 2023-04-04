@@ -153,8 +153,8 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
   )
   .handleAction(actions.createCommon.success, (state, action) =>
     produce(state, (nextState) => {
-      if (action.payload.state === CommonState.ACTIVE) {
-        nextState.commons = [action.payload, ...nextState.commons];
+      if (action.payload.common.state === CommonState.ACTIVE) {
+        nextState.commons = [action.payload.common, ...nextState.commons];
       }
     }),
   )

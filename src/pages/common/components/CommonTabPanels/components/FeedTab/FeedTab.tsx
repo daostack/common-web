@@ -35,6 +35,7 @@ import {
   NewDiscussionCreation,
   NewProposalCreation,
 } from "./components";
+import { checkHasAccessToChat } from "./utils";
 import styles from "./FeedTab.module.scss";
 
 interface FeedTabProps {
@@ -61,25 +62,18 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
   const commonAction = useSelector(selectCommonAction);
-  const allowedFeedActions = !commonAction ? [FeedAction.NewCollaboration] : [];
+  const allowedFeedActions = !commonAction ? [FeedAction.NewStream] : [];
 
-  const hasAccessToChat = useMemo(() => {
-    if (!chatItem) {
-      return false;
-    }
-
-    return (
-      !chatItem.circleVisibility.length ||
-      chatItem.circleVisibility.some((circleId) =>
-        userCircleIds.includes(circleId),
-      )
-    );
-  }, [chatItem, userCircleIds]);
+  const hasAccessToChat = useMemo(
+    () => checkHasAccessToChat(userCircleIds, chatItem),
+    [chatItem, userCircleIds],
+  );
 
   const renderMainColumn = () => (
     <div className={styles.mainColumnWrapper}>
       {commonAction === CommonAction.NewDiscussion && (
         <NewDiscussionCreation
+          common={common}
           governanceCircles={governance.circles}
           commonMember={commonMember}
           isModalVariant={false}
@@ -87,7 +81,8 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
       )}
       {commonAction === CommonAction.NewProposal && (
         <NewProposalCreation
-          governanceCircles={governance.circles}
+          common={common}
+          governance={governance}
           commonMember={commonMember}
           isModalVariant={false}
         />
@@ -154,24 +149,6 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
 
   const renderMobileColumn = () => (
     <div className={styles.mainColumnWrapper}>
-      {commonAction === CommonAction.NewDiscussion && (
-        <NewDiscussionCreation
-          governanceCircles={governance.circles}
-          commonMember={commonMember}
-          commonImage={common.image}
-          commonName={common.name}
-          isModalVariant
-        />
-      )}
-      {commonAction === CommonAction.NewProposal && (
-        <NewProposalCreation
-          governanceCircles={governance.circles}
-          commonMember={commonMember}
-          commonImage={common.image}
-          commonName={common.name}
-          isModalVariant
-        />
-      )}
       <FeedItems userCircleIds={userCircleIds} />
       <ChatMobileModal
         isShowing={Boolean(chatItem)}

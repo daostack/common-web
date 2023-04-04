@@ -4,14 +4,13 @@ import { NavLink, Redirect, useHistory } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { updateCommonState } from "@/pages/OldCommon/store/actions";
-import { CommonTab } from "@/pages/common";
 import { CenterWrapper } from "@/pages/commonCreation/components";
 import { styles } from "@/pages/commonCreation/components/ProjectCreation";
 import { GovernanceActions } from "@/shared/constants";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
+import { getCommonPageAboutTabPath } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { EditingForm } from "./components";
 import editingStyles from "./Editing.module.scss";
@@ -57,7 +56,7 @@ const Editing: FC<EditingProps> = (props) => {
         },
       }),
     );
-    history.push(getCommonPagePath(updatedCommon.id, CommonTab.About));
+    history.push(getCommonPageAboutTabPath(updatedCommon.id));
   };
 
   useEffect(() => {
@@ -68,7 +67,7 @@ const Editing: FC<EditingProps> = (props) => {
     return loaderEl;
   }
 
-  const backRoute = getCommonPagePath(common.id, CommonTab.About);
+  const backRoute = getCommonPageAboutTabPath(common.id);
 
   if (
     !commonMember ||

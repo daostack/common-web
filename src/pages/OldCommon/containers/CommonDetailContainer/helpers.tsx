@@ -27,7 +27,7 @@ export const getCommonSubtitle = (
   if (subCommons.length > 0) {
     return (
       <>
-        Projects:{" "}
+        Spaces:{" "}
         {subCommons.reduce<ReactNode[]>((acc, common, index) => {
           const nextItems = [
             <a

@@ -4,10 +4,12 @@ import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { Image } from "@/shared/components/Image";
 import { SmallArrowIcon } from "@/shared/icons";
+import { useTreeContext } from "../../context";
 import { Item } from "../../types";
 import styles from "./TreeItemTrigger.module.scss";
 
 interface TreeItemTriggerProps {
+  className?: string;
   item: Item;
   level: number;
   isActive: boolean;
@@ -16,7 +18,8 @@ interface TreeItemTriggerProps {
 }
 
 const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
-  const { item, level, isActive, isOpen, onToggle } = props;
+  const { className, item, level, isActive, isOpen, onToggle } = props;
+  const { treeItemTriggerStyles } = useTreeContext();
   const { hasMembership = true } = item;
 
   const handleToggle: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -29,9 +32,18 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
 
   return (
     <NavLink
-      className={classNames(styles.item, {
-        [styles.itemActive]: isActive,
-      })}
+      className={classNames(
+        styles.item,
+        {
+          [classNames(
+            styles.itemActive,
+            treeItemTriggerStyles?.containerActive,
+          )]: isActive,
+          [styles.itemWithoutMembership]: !hasMembership,
+        },
+        className,
+        treeItemTriggerStyles?.container,
+      )}
       to={item.path}
       title={item.name}
       aria-label={`Go to ${item.name}`}
@@ -51,20 +63,25 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
         />
       </ButtonIcon>
       <Image
-        className={classNames(styles.image, {
-          [styles.imageRounded]: level !== 1,
-        })}
+        className={classNames(
+          styles.image,
+          {
+            [classNames(
+              styles.imageNonRounded,
+              treeItemTriggerStyles?.imageNonRounded,
+            )]: level === 1,
+            [styles.imageRounded]: level !== 1,
+          },
+          treeItemTriggerStyles?.image,
+        )}
         src={item.image}
         alt={`${item.name}'s image`}
         aria-hidden
       />
-      <span
-        className={classNames(styles.name, {
-          [styles.nameWithoutMembership]: !hasMembership,
-        })}
-      >
+      <span className={classNames(styles.name, treeItemTriggerStyles?.name)}>
         {item.name}
       </span>
+      {item.rightContent}
       {!!item.notificationsAmount && (
         <span
           className={styles.notificationsAmount}

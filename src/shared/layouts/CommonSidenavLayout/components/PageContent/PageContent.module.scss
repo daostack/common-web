@@ -1,0 +1,47 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.globalLoader {
+  z-index: 10;
+}
+
+.container {
+  --header-h: 0;
+
+  flex: 1;
+  padding-top: var(--header-h);
+  display: flex;
+  flex-direction: column;
+  border-right: 0.0625rem solid $c-neutrals-200;
+
+  @include tablet {
+    border: 0;
+  }
+}
+.containerWithHeader {
+  --header-h: 4.5625rem;
+
+  @include tablet {
+    --header-h: 3.25rem;
+  }
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  right: var(--sb-h-indent);
+  left: calc(var(--sb-h-indent) + var(--sb-width));
+  z-index: 2;
+  height: var(--header-h);
+  background-color: $c-light-gray-2;
+  border-right: 0.0625rem solid $c-neutrals-200;
+  border-bottom: 0.0625rem solid $c-neutrals-200;
+  box-sizing: border-box;
+
+  @include tablet {
+    right: 0;
+    left: 0;
+    background-color: $c-shades-white;
+    border-right: 0;
+  }
+}

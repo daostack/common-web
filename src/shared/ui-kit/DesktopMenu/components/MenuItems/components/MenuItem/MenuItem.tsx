@@ -25,7 +25,7 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
   const { item, active = false, ...restProps } = props;
   const content = item.text;
   const className = classNames(styles.item, item.className, {
-    [styles.itemActive]: active,
+    [classNames(styles.itemActive, item.activeClassName)]: active,
     [styles.itemWithWarning]: item.withWarning,
   });
 
@@ -49,7 +49,7 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
           className={className}
           onClick={(event) => {
             event.stopPropagation();
-            item.onClick();
+            item.onClick(event);
 
             if (restProps.onClick) {
               restProps.onClick(event);

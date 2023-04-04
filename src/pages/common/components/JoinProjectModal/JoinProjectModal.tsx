@@ -15,6 +15,7 @@ interface JoinProjectModalProps {
   onClose: () => void;
   common: Common;
   governance: Governance;
+  shouldKeepLoadingIfPossible?: boolean;
   onRequestCreated: () => void;
 }
 
@@ -32,7 +33,14 @@ const INITIAL_STATE = {
 const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
   props,
 ) => {
-  const { isShowing, onClose, governance, common, onRequestCreated } = props;
+  const {
+    isShowing,
+    onClose,
+    governance,
+    common,
+    shouldKeepLoadingIfPossible = false,
+    onRequestCreated,
+  } = props;
   const isTabletView = useIsTabletView();
   const [state, setState] = useState(INITIAL_STATE);
   const user = useSelector(selectUser());
@@ -41,9 +49,14 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
   const isJoinMemberAdmittanceRequest = Boolean(
     governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE],
   );
+  const shouldKeepLoading =
+    shouldKeepLoadingIfPossible &&
+    (!isJoinMemberAdmittanceRequest ||
+      governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE]?.global
+        .votingDuration === 0);
   const modalTitle = isJoinMemberAdmittanceRequest
-    ? "Request to Join Project"
-    : "Join Project";
+    ? "Request to Join Space"
+    : "Join Space";
 
   const handleClose = () => {
     setState(INITIAL_STATE);
@@ -174,7 +187,7 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
         />
       ) : (
         <JoinProjectCreation
-          isLoading={state.isLoading}
+          isLoading={state.isLoading || shouldKeepLoading}
           isJoinMemberAdmittanceRequest={isJoinMemberAdmittanceRequest}
           errorText={state.errorText}
           onClose={handleClose}
