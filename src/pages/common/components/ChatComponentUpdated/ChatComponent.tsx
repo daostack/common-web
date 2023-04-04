@@ -4,39 +4,31 @@ import React, {
   useMemo,
   useCallback,
   useLayoutEffect,
+  useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "react-use";
 import classNames from "classnames";
 import firebase from "firebase/app";
 import isHotkey from "is-hotkey";
-import { chunk, debounce, delay, isEmpty, throttle } from "lodash";
+import { delay } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import {
-  clearCurrentDiscussionMessageReply,
-  addMessageToDiscussion,
-  addMessageToProposal,
-} from "@/pages/OldCommon/store/actions";
+import { clearCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
 import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
 import { DiscussionMessageService } from "@/services";
 import { Loader } from "@/shared/components";
-import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import {
   ChatType,
   GovernanceActions,
   LastSeenEntity,
 } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
-import { useIntersection } from "@/shared/hooks";
-import { usePrevious } from "@/shared/hooks";
 import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { SendIcon } from "@/shared/icons";
-import CloseIcon from "@/shared/icons/close.icon";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   Common,
@@ -44,19 +36,13 @@ import {
   CommonMember,
   Discussion,
   DiscussionMessage,
-  PendingMessage,
-  PendingMessageStatus,
-  Proposal,
 } from "@/shared/models";
 import { getUserName, hasPermission } from "@/shared/utils";
 import { selectGovernance } from "@/store/states";
-import {
-  cacheActions,
-  selectDiscussionMessagesStateByDiscussionId,
-} from "@/store/states";
-import { ChatContent } from "./components/ChatContent";
+import { cacheActions } from "@/store/states";
+import { ChatContent, MessageReply } from "./components";
 import { getLastNonUserMessage } from "./utils";
-import "./index.scss";
+import styles from "./ChatComponent.module.scss";
 
 interface ChatComponentInterface {
   common: Common | null;
@@ -66,6 +52,8 @@ interface ChatComponentInterface {
   discussion: Discussion;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   feedItemId: string;
+  isAuthorized?: boolean;
+  isHidden: boolean;
 }
 
 interface Messages {
@@ -91,11 +79,15 @@ export default function ChatComponent({
   hasAccess = true,
   lastSeenItem,
   feedItemId,
+  isAuthorized,
+  isHidden = false,
 }: ChatComponentInterface) {
-  // const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
-
   const dispatch = useDispatch();
   const governance = useSelector(selectGovernance);
+  const discussionMessageReply = useSelector(
+    selectCurrentDiscussionMessageReply(),
+  );
+  const inputRef = useRef<HTMLDivElement>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
@@ -111,16 +103,12 @@ export default function ChatComponent({
     fetchDiscussionMessages,
     data: discussionMessages = [],
     fetched: isFetchedDiscussionMessages,
-    addPendingMessage,
     setDiscussionMessages,
   } = useDiscussionMessagesById({
     hasPermissionToHide,
   });
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const discussionMessageReply = useSelector(
-    selectCurrentDiscussionMessageReply(),
-  );
   const discussionId = discussion.id;
 
   const lastNonUserMessage = getLastNonUserMessage(
@@ -138,11 +126,17 @@ export default function ChatComponent({
   }, [discussionId]);
 
   const [message, setMessage] = useState("");
-  const isTabletView = useIsTabletView();
+
+  const [inputHeight, setInputHeight] = useState(0);
+  const [replyMessageHeight, setReplyMessageHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    setInputHeight(inputRef.current?.clientHeight || 0);
+  }, [message]);
 
   const [newMessages, setMessages] = useState<CreateDiscussionMessageDto[]>([]);
 
-  const [, cancel] = useDebounce(
+  useDebounce(
     async () => {
       newMessages.map((payload, index) => {
         delay(async () => {
@@ -163,7 +157,7 @@ export default function ChatComponent({
       setMessages([]);
     },
     1500,
-    [newMessages, discussionId, dispatch],
+    [JSON.stringify(newMessages), discussionId, dispatch],
   );
 
   const sendMessage = useCallback(
@@ -201,8 +195,6 @@ export default function ChatComponent({
               }
             : null,
         };
-
-        // addPendingMessage(msg);
 
         setMessages((prev) => [...prev, payload]);
         setDiscussionMessages([...(discussionMessages ?? []), msg]);
@@ -264,9 +256,11 @@ export default function ChatComponent({
   }, [lastNonUserMessage?.id]);
 
   return (
-    <div className="chat-wrapper">
+    <div className={styles.chatWrapper}>
       <div
-        className={`messages ${!dateList.length ? "empty" : ""}`}
+        className={classNames(styles.messages, {
+          [styles.emptyChat]: !dateList.length,
+        })}
         id={chatWrapperId}
       >
         {isFetchedDiscussionMessages ? (
@@ -282,29 +276,46 @@ export default function ChatComponent({
             dateList={dateList}
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
+            bottomWrapperHeight={inputHeight + replyMessageHeight + 40}
           />
         ) : (
-          <div className="loader-container">
+          <div className={styles.loaderContainer}>
             <Loader />
           </div>
         )}
       </div>
-      <>
-        <textarea
-          className="message-input"
-          placeholder="What do you think?"
-          value={message}
-          onKeyDown={onEnterKeyDown}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button
-          className="send"
-          onClick={sendChatMessage}
-          disabled={!message.length}
-        >
-          <SendIcon />
-        </button>
-      </>
+      {isAuthorized && (
+        <>
+          <MessageReply
+            inputHeight={inputHeight}
+            setHeight={setReplyMessageHeight}
+          />
+          <div ref={inputRef} className={styles.bottomChatWrapper}>
+            {!commonMember || !hasAccess || isHidden ? (
+              <span className={styles.permissionsText}>
+                Only members can send messages
+              </span>
+            ) : (
+              <>
+                <textarea
+                  className={styles.messageInput}
+                  placeholder="What do you think?"
+                  value={message}
+                  onKeyDown={onEnterKeyDown}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+                <button
+                  className={styles.send}
+                  onClick={sendChatMessage}
+                  disabled={!message.length}
+                >
+                  <SendIcon />
+                </button>
+              </>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

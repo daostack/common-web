@@ -56,6 +56,8 @@ const DesktopChat: FC<ChatProps> = (props) => {
         feedItemId={chatItem.feedItemId}
         hasAccess={hasAccessToChat}
         lastSeenItem={chatItem.lastSeenItem}
+        isHidden={false}
+        isAuthorized={Boolean(user)}
       />
     </div>
   );
