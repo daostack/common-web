@@ -68,7 +68,7 @@ const production: Configuration = {
   env: Environment.Production,
   firebase: {
     apiKey: "AIzaSyAml-zMhoG_amLvM8mTxrydDOYXTGuubsA",
-    authDomain: "common.io",
+    authDomain: "common-daostack.firebaseapp.com",
     databaseURL: "https://common-daostack.firebaseio.com",
     projectId: "common-daostack",
     storageBucket: "common-daostack.appspot.com",
