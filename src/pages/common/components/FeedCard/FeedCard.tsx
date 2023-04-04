@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect, useRef } from "react";
 import classNames from "classnames";
+import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonCard } from "../CommonCard";
@@ -8,8 +9,7 @@ import styles from "./FeedCard.module.scss";
 
 interface FeedCardProps {
   className?: string;
-  isActive?: boolean;
-  isExpanded?: boolean;
+  feedItemId: string;
   isHovering?: boolean;
   lastActivity?: number;
   unreadMessages?: number;
@@ -27,8 +27,7 @@ const DESKTOP_HEADER_HEIGHT = 72;
 export const FeedCard: FC<FeedCardProps> = (props) => {
   const {
     className,
-    isActive = false,
-    isExpanded: isExpandedExternal = false,
+    feedItemId,
     isHovering = false,
     lastActivity = 0,
     unreadMessages = 0,
@@ -41,8 +40,11 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     menuItems,
   } = props;
   const isTabletView = useIsTabletView();
+  const { activeFeedItemId, expandedFeedItemId } = useFeedItemContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setExpanded] = useState(false);
+  const isActive = feedItemId === activeFeedItemId;
+  const isExpandedExternal = feedItemId === expandedFeedItemId;
 
   useEffect(() => {
     if (!isActive) {

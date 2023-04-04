@@ -36,13 +36,8 @@ interface DiscussionFeedCardProps {
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const {
-    activeItemDiscussionId,
-    setChatItem,
-    feedItemIdForAutoChatOpen,
-    expandedFeedItemId,
-    setShouldShowSeeMore,
-  } = useChatContext();
+  const { setChatItem, feedItemIdForAutoChatOpen, setShouldShowSeeMore } =
+    useChatContext();
   const {
     item,
     governanceCircles,
@@ -100,8 +95,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     !isDiscussionCreatorFetched ||
     !isDiscussionFetched ||
     !isFeedItemUserMetadataFetched;
-  const isActive = discussion?.id === activeItemDiscussionId;
-  const isExpanded = item.id === expandedFeedItemId;
 
   const circleVisibility = getVisibilityString(
     governanceCircles,
@@ -160,8 +153,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
 
   return (
     <FeedCard
-      isActive={isActive}
-      isExpanded={isExpanded}
+      feedItemId={item.id}
       isHovering={isHovering}
       lastActivity={item.updatedAt.seconds * 1000}
       unreadMessages={feedItemUserMetadata?.count || 0}
