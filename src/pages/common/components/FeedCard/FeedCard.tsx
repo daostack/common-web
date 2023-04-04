@@ -22,6 +22,7 @@ interface FeedCardProps {
   isPreviewMode?: boolean;
   type?: CommonFeedType;
   menuItems?: ContextMenuItem[];
+  seenOnce?: boolean;
 }
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -44,6 +45,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     isPreviewMode = true,
     type,
     menuItems,
+    seenOnce,
   } = props;
   const isTabletView = useIsTabletView();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -106,6 +108,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           lastMessage={lastMessage}
           type={type}
           menuItems={menuItems}
+          seenOnce={seenOnce}
         />
       )}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (

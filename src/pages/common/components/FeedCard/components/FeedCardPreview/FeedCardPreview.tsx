@@ -24,6 +24,7 @@ interface FeedCardPreviewProps {
   onExpand?: () => void;
   type?: CommonFeedType;
   menuItems?: ContextMenuItem[];
+  seenOnce?: boolean;
 }
 
 export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
@@ -39,6 +40,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
     onExpand,
     type,
     menuItems,
+    seenOnce,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const isTabletView = useIsTabletView();
@@ -131,7 +133,11 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
             <div />
           )}
           <div className={classNames(styles.bottomContentRight)}>
-            <FeedCardTags unreadMessages={unreadMessages} type={type} />
+            <FeedCardTags
+              unreadMessages={unreadMessages}
+              type={type}
+              seenOnce={seenOnce}
+            />
           </div>
         </div>
       </div>
