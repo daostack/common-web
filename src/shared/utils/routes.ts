@@ -25,3 +25,13 @@ export const getCommonSupportPagePath = (commonId: string): string =>
 export const getInboxPagePath = (): string => ROUTE_PATHS.INBOX;
 
 export const getProfilePagePath = (): string => ROUTE_PATHS.PROFILE;
+
+// v03
+export const getCommonPagePath_v03 = (
+  commonId: string,
+  tab?: CommonTab,
+): string => {
+  const path = ROUTE_PATHS.V03_COMMON.replace(":id", commonId);
+
+  return `${path}${tab ? `?${QueryParamKey.Tab}=${tab}` : ""}`;
+};

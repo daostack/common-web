@@ -18,7 +18,7 @@ export const getCommonSubtitle = (
     return (
       <>
         Parent:{" "}
-        <a href={ROUTE_PATHS.V2_COMMON.replace(":id", parentCommon.id)}>
+        <a href={ROUTE_PATHS.V02_COMMON.replace(":id", parentCommon.id)}>
           {parentCommon.name}
         </a>
       </>
@@ -32,7 +32,7 @@ export const getCommonSubtitle = (
           const nextItems = [
             <a
               key={common.id}
-              href={ROUTE_PATHS.V2_COMMON.replace(":id", common.id)}
+              href={ROUTE_PATHS.V02_COMMON.replace(":id", common.id)}
             >
               {common.name}
             </a>,

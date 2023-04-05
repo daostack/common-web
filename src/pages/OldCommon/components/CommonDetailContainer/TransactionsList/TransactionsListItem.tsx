@@ -90,7 +90,7 @@ const TransactionsListItem: FC<TransactionsListItemProps> = (props) => {
           <div className="payer-name">
             Parent Common:{" "}
             <a
-              href={ROUTE_PATHS.V2_COMMON.replace(":id", parentCommon.id)}
+              href={ROUTE_PATHS.V02_COMMON.replace(":id", parentCommon.id)}
               target="_blank"
               rel="noopener noreferrer"
             >
