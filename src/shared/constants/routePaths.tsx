@@ -8,7 +8,7 @@ export enum ROUTE_PATHS {
   MY_ACCOUNT_ACTIVITIES_PROPOSALS = "/my-account/activities/proposals/:proposalType",
   MY_ACCOUNT_ACTIVITIES_COMMONS = "/my-account/activities/commons",
   COMMON_LIST = "/commons",
-  COMMON_DETAIL = "/prev-commons/:id",
+  V2_COMMON = "/commons-v02/:id",
   COMMON_SUPPORT = "/commons/:id/support",
   COMMON = "/commons/:id",
   COMMON_ABOUT_TAB = "/commons/:id/about",
