@@ -27,11 +27,11 @@ import { Container } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import { selectCommonAction } from "@/store/states";
 import { commonActions } from "@/store/states";
+import { FeedItems } from "../../../FeedItems";
 import { TabNavigation } from "../TabNavigation";
 import {
   FeedActions,
   FeedAction,
-  FeedItems,
   NewDiscussionCreation,
   NewProposalCreation,
 } from "./components";

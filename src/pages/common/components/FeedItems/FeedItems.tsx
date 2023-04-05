@@ -5,7 +5,7 @@ import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Container, InfiniteScroll } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
-import { FeedItem } from "./component";
+import { FeedItem } from "../FeedItem";
 import styles from "./FeedItems.module.scss";
 
 interface FeedItemsProps {
