@@ -1,8 +1,15 @@
-import React from "react";
-import { CommonPage } from "../common";
+import React, { useMemo } from "react";
+import { CommonPage, CommonPageSettings } from "../common";
 
 const Common = () => {
-  return <CommonPage />;
+  const settings = useMemo<CommonPageSettings>(
+    () => ({
+      renderHeaderContent: () => null,
+    }),
+    [],
+  );
+
+  return <CommonPage settings={settings} />;
 };
 
 export default Common;

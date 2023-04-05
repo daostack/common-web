@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CommonPageSettings } from "@/pages/common/types";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
@@ -23,6 +24,7 @@ import { getInitialTab } from "./utils";
 import styles from "./CommonContent.module.scss";
 
 interface CommonContentProps {
+  settings?: CommonPageSettings;
   defaultTab: string;
   common: Common;
   parentCommon?: Common;
@@ -40,6 +42,7 @@ interface CommonContentProps {
 
 const CommonContent: FC<CommonContentProps> = (props) => {
   const {
+    settings,
     defaultTab,
     common,
     governance,
@@ -113,7 +116,9 @@ const CommonContent: FC<CommonContentProps> = (props) => {
       />
       <CommonSidenavLayoutPageContent
         headerContent={
-          !isTabletView ? (
+          settings?.renderHeaderContent ? (
+            settings.renderHeaderContent()
+          ) : !isTabletView ? (
             <HeaderContent
               commonId={common.id}
               withoutBackButton={!commonMember}
