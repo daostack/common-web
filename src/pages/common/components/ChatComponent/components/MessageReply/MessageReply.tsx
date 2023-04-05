@@ -1,10 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
-import { clearCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
-import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import CloseIcon from "@/shared/icons/close.icon";
+import {
+  selectCurrentDiscussionMessageReply,
+  chatActions,
+} from "@/store/states";
 import styles from "./MessageReply.module.scss";
 
 export default function MessageReply() {
@@ -34,7 +36,7 @@ export default function MessageReply() {
           <ButtonIcon
             className={styles.closeButton}
             onClick={() => {
-              dispatch(clearCurrentDiscussionMessageReply());
+              dispatch(chatActions.clearCurrentDiscussionMessageReply());
             }}
           >
             <CloseIcon fill="#001A36" height={16} width={16} />

@@ -7,8 +7,6 @@ import isHotkey from "is-hotkey";
 import { delay } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { clearCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
-import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
 import { DiscussionMessageService } from "@/services";
 import { Loader } from "@/shared/components";
 import {
@@ -31,8 +29,12 @@ import {
   DiscussionMessage,
 } from "@/shared/models";
 import { getUserName, hasPermission } from "@/shared/utils";
-import { selectGovernance } from "@/store/states";
-import { cacheActions } from "@/store/states";
+import {
+  cacheActions,
+  chatActions,
+  selectGovernance,
+  selectCurrentDiscussionMessageReply,
+} from "@/store/states";
 import { ChatContent, MessageReply } from "./components";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
@@ -187,7 +189,7 @@ export default function ChatComponent({
         setDiscussionMessages([...(discussionMessages ?? []), msg]);
 
         if (discussionMessageReply) {
-          dispatch(clearCurrentDiscussionMessageReply());
+          dispatch(chatActions.clearCurrentDiscussionMessageReply());
         }
       }
     },

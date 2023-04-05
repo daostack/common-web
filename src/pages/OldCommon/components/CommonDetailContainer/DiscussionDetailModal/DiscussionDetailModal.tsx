@@ -3,12 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
-import {
-  addMessageToDiscussion,
-  clearCurrentDiscussionMessageReply,
-} from "@/pages/OldCommon/store/actions";
+import { addMessageToDiscussion } from "@/pages/OldCommon/store/actions";
 import { getCommonGovernanceCircles } from "@/pages/OldCommon/store/api";
-import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
+import "@/pages/OldCommon/store/selectors";
 import { Loader } from "@/shared/components";
 import { ScreenSize, ChatType } from "@/shared/constants";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
@@ -27,6 +24,10 @@ import {
   getUserName,
 } from "@/shared/utils";
 import { getFilteredByIdCircles } from "@/shared/utils/circles";
+import {
+  chatActions,
+  selectCurrentDiscussionMessageReply,
+} from "@/store/states";
 import { ChatComponent } from "../ChatComponent";
 import "./index.scss";
 
@@ -93,7 +94,7 @@ export default function DiscussionDetailModal({
     }
 
     return () => {
-      dispatch(clearCurrentDiscussionMessageReply());
+      dispatch(chatActions.clearCurrentDiscussionMessageReply());
     };
   }, [governance.id, discussion]);
 
@@ -115,7 +116,7 @@ export default function DiscussionDetailModal({
         );
 
         if (currentDiscussionMessageReply) {
-          dispatch(clearCurrentDiscussionMessageReply());
+          dispatch(chatActions.clearCurrentDiscussionMessageReply());
         }
       }
     },
