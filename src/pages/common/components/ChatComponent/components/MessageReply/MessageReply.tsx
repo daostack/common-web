@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { clearCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
@@ -7,36 +7,21 @@ import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import CloseIcon from "@/shared/icons/close.icon";
 import styles from "./MessageReply.module.scss";
 
-const INPUT_BORDER_WIDTH = 2;
-
-interface MessageReplyProps {
-  inputHeight: number;
-  setHeight: (value: number) => void;
-}
-
-export default function MessageReply({
-  inputHeight,
-  setHeight,
-}: MessageReplyProps) {
-  const messageReplyRef = useRef<HTMLDivElement>(null);
+export default function MessageReply() {
   const dispatch = useDispatch();
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
 
-  useLayoutEffect(() => {
-    setHeight(messageReplyRef.current?.clientHeight || 0);
-  }, [discussionMessageReply]);
+  if (!discussionMessageReply) {
+    return null;
+  }
 
   return (
     <div
-      ref={messageReplyRef}
       className={classNames(styles.container, {
         [styles.containerEmpty]: !discussionMessageReply,
       })}
-      style={{
-        bottom: inputHeight + INPUT_BORDER_WIDTH,
-      }}
     >
       {discussionMessageReply && (
         <>

@@ -1,11 +1,9 @@
 @import "../../../../../../constants.scss";
 
 .container {
-  position: fixed;
   display: flex;
-  box-sizing: border-box;
   flex-direction: row;
-  width: inherit;
+  width: 100%;
   background-color: $white;
   margin: 0px -2rem;
   padding: 0.4375rem 2rem 0.625rem;

@@ -2,13 +2,21 @@
 @import "../../../../styles/sizes";
 
 .chatWrapper {
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 2rem;
   width: inherit;
-  padding-top: 0.5rem;
-  height: 100%;
+  margin-top: 0.5rem;
+  height: calc(100% - 4.5625rem);
   background-color: $white;
   position: relative;
   box-sizing: border-box;
+
+  @include tablet {
+    height: 100%;
+    margin-top: 0;
+  }
 
   ::-webkit-scrollbar {
     width: 0;
@@ -37,20 +45,19 @@
 }
 
 .bottomChatWrapper {
-  position: fixed;
+  display: flex;
+  flex-shrink: 0;
   padding: 1rem 1.875rem 1rem 2.125rem;
   background-color: $c-input-100;
   border: 0.0625rem solid $c-neutrals-100;
   border-left-width: 0;
   border-right-width: 0;
   box-shadow: none;
-  width: inherit;
+  width: 100%;
   margin: 0 -2rem 0px;
-  bottom: 0px;
-  height: 5.125rem;
+  height: 3.125rem;
   display: flex;
   align-items: center;
-  box-sizing: border-box;
   justify-content: space-between;
   border-radius: 0;
 }

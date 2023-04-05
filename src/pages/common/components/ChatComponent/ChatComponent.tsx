@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-} from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "react-use";
 import classNames from "classnames";
@@ -28,7 +21,6 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
@@ -72,7 +64,6 @@ function groupday(acc: any, currentValue: DiscussionMessage): Messages {
 }
 
 const CHAT_HOT_KEYS = [HotKeys.Enter, HotKeys.ModEnter, HotKeys.ShiftEnter];
-const PADDING_BOTTOM_WRAPPER = 40;
 
 export default function ChatComponent({
   common,
@@ -87,12 +78,10 @@ export default function ChatComponent({
   isCommonMemberFetched,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
-  const isTabletView = useIsTabletView();
   const governance = useSelector(selectGovernance);
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
-  const inputRef = useRef<HTMLDivElement>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
@@ -131,13 +120,6 @@ export default function ChatComponent({
   }, [discussionId]);
 
   const [message, setMessage] = useState("");
-
-  const [inputHeight, setInputHeight] = useState(0);
-  const [replyMessageHeight, setReplyMessageHeight] = useState(0);
-
-  useLayoutEffect(() => {
-    setInputHeight(inputRef.current?.clientHeight || 0);
-  }, [message]);
 
   const [newMessages, setMessages] = useState<CreateDiscussionMessageDto[]>([]);
 
@@ -219,7 +201,7 @@ export default function ChatComponent({
     ],
   );
 
-  const sendChatMessage = async (): Promise<void> => {
+  const sendChatMessage = (): void => {
     if (message) {
       sendMessage && sendMessage(message.trim());
       setMessage("");
@@ -281,11 +263,6 @@ export default function ChatComponent({
             dateList={dateList}
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
-            bottomWrapperHeight={
-              (isTabletView ? 0 : inputHeight) +
-              replyMessageHeight +
-              PADDING_BOTTOM_WRAPPER
-            }
           />
         ) : (
           <div className={styles.loaderContainer}>
@@ -295,11 +272,8 @@ export default function ChatComponent({
       </div>
       {isAuthorized && (
         <>
-          <MessageReply
-            inputHeight={inputHeight}
-            setHeight={setReplyMessageHeight}
-          />
-          <div ref={inputRef} className={styles.bottomChatWrapper}>
+          <MessageReply />
+          <div className={styles.bottomChatWrapper}>
             {!commonMember || !hasAccess || isHidden ? (
               <span className={styles.permissionsText}>
                 Only members can send messages

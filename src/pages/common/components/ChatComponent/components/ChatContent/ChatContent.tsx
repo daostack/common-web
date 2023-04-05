@@ -28,7 +28,6 @@ interface ChatContentInterface {
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
-  bottomWrapperHeight: number;
 }
 
 const isToday = (someDate: Date) => {
@@ -53,7 +52,6 @@ export default function ChatContent({
   dateList,
   lastSeenItem,
   hasPermissionToHide,
-  bottomWrapperHeight,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -130,16 +128,7 @@ export default function ChatContent({
         const date = new Date(Number(day));
 
         return (
-          <ul
-            id={chatId}
-            className={styles.messageList}
-            style={
-              dateList.length - 1 === dayIndex
-                ? { paddingBottom: bottomWrapperHeight }
-                : {}
-            }
-            key={day}
-          >
+          <ul id={chatId} className={styles.messageList} key={day}>
             <li className={styles.dateTitle}>
               {isToday(date) ? "Today" : formatDate(date)}
             </li>
