@@ -126,7 +126,7 @@ export default function ChatComponent({
   const [newMessages, setMessages] = useState<CreateDiscussionMessageDto[]>([]);
 
   useDebounce(
-    async () => {
+    () => {
       newMessages.map((payload, index) => {
         delay(async () => {
           const response = await DiscussionMessageService.createMessage(
