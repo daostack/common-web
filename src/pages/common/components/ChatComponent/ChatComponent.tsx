@@ -143,10 +143,13 @@ export default function ChatComponent({
         }, 2000 * index);
         return payload;
       });
-      setMessages([]);
+
+      if (newMessages.length > 0) {
+        setMessages([]);
+      }
     },
     1500,
-    [JSON.stringify(newMessages), discussionId, dispatch],
+    [newMessages, discussionId, dispatch],
   );
 
   const sendMessage = useCallback(
