@@ -41,7 +41,7 @@ import {
 } from "./components";
 import { MIN_CHAT_WIDTH } from "./constants";
 import { FeedLayoutRef } from "./types";
-import { getSplitViewMaxSize } from "./utils";
+import { getDefaultSize, getSplitViewMaxSize } from "./utils";
 import styles from "./FeedLayout.module.scss";
 
 interface FeedLayoutProps {
@@ -89,6 +89,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
   const isChatItemSet = Boolean(chatItem);
   const maxChatSize = getSplitViewMaxSize(windowWidth);
+  const defaultChatSize = useMemo(
+    () => getDefaultSize(windowWidth, maxChatSize),
+    [],
+  );
   const activeFeedItemId = chatItem?.feedItemId;
   const sizeKey = `${windowWidth}_${chatWidth}`;
   const allFeedItems = useMemo(() => {
@@ -147,7 +151,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
   useEffect(() => {
     if (isChatItemSet) {
-      setChatWidth(MIN_CHAT_WIDTH);
+      setChatWidth(defaultChatSize);
     }
   }, [isChatItemSet]);
 
@@ -233,6 +237,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     <SplitView
       minSize={isChatItemSet ? MIN_CHAT_WIDTH : 0}
       maxSize={maxChatSize}
+      defaultSize={defaultChatSize}
       onChange={setChatWidth}
     >
       {contentEl}
