@@ -94,6 +94,13 @@ export const updateDiscussionMessagesStateByDiscussionId = createStandardAction(
   state: LoadingState<DiscussionMessage[] | null>;
 }>();
 
+export const addDiscussionMessageByDiscussionId = createStandardAction(
+  CacheActionType.ADD_DISCUSSION_MESSAGE_BY_DISCUSSION_ID,
+)<{
+  discussionId: string;
+  discussionMessage: DiscussionMessage
+}>();
+
 export const updateDiscussionMessageWithActualId = createStandardAction(
   CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_MESSAGES_ACTUAL_ID,
 )<{

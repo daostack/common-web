@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "react-use";
 import classNames from "classnames";
-import firebase from "firebase/app";
 import isHotkey from "is-hotkey";
 import { delay } from "lodash";
 import { v4 as uuidv4 } from "uuid";
@@ -27,6 +26,7 @@ import {
   CommonMember,
   Discussion,
   DiscussionMessage,
+  Timestamp,
 } from "@/shared/models";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
@@ -99,7 +99,7 @@ export default function ChatComponent({
     fetchDiscussionMessages,
     data: discussionMessages = [],
     fetched: isFetchedDiscussionMessages,
-    setDiscussionMessages,
+    addDiscussionMessage,
   } = useDiscussionMessagesById({
     hasPermissionToHide,
   });
@@ -163,7 +163,7 @@ export default function ChatComponent({
             parentId: discussionMessageReply?.id,
           }),
         };
-        const firebaseDate = firebase.firestore.Timestamp.fromDate(new Date());
+        const firebaseDate = Timestamp.fromDate(new Date());
 
         const msg = {
           id: pendingMessageId,
@@ -186,7 +186,7 @@ export default function ChatComponent({
         };
 
         setMessages((prev) => [...prev, payload]);
-        setDiscussionMessages([...(discussionMessages ?? []), msg]);
+        addDiscussionMessage(discussionId, msg);
 
         if (discussionMessageReply) {
           dispatch(chatActions.clearCurrentDiscussionMessageReply());
