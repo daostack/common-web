@@ -156,10 +156,7 @@ const ProposalContainer = () => {
       : CommonDetailsTabs.Proposals;
 
     history.push(
-      `${ROUTE_PATHS.COMMON_DETAIL.replace(
-        ":id",
-        currentCommon.id,
-      )}?tab=${tab}`,
+      `${ROUTE_PATHS.V02_COMMON.replace(":id", currentCommon.id)}?tab=${tab}`,
     );
   };
 

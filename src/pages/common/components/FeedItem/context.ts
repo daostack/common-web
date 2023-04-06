@@ -1,5 +1,6 @@
 import React, { MouseEventHandler, ReactNode, useContext } from "react";
 import { ContextMenuItem } from "@/shared/interfaces";
+import { FeedCardSettings } from "../FeedCard";
 
 export interface FeedItemBaseContentProps {
   className?: string;
@@ -19,6 +20,7 @@ export interface FeedItemBaseContentProps {
 export interface FeedItemContextValue {
   setExpandedFeedItemId?: (feedItemId: string | null) => void;
   renderFeedItemBaseContent?: (props: FeedItemBaseContentProps) => ReactNode;
+  feedCardSettings?: FeedCardSettings;
 }
 
 export const FeedItemContext = React.createContext<FeedItemContextValue>({});

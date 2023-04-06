@@ -43,7 +43,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     menuItems,
   } = props;
   const isTabletView = useIsTabletView();
-  const { setExpandedFeedItemId, renderFeedItemBaseContent } =
+  const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -107,10 +107,14 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
             {
               [styles.containerActive]:
                 (isActive || (isExpanded && isTabletView)) && !isPreviewMode,
-              [styles.containerHovering]: isHovering && !isPreviewMode,
+              [styles.containerHovering]:
+                isHovering &&
+                (feedCardSettings?.withHovering ?? !isPreviewMode),
             },
             className,
+            feedCardSettings?.commonCardClassName,
           )}
+          hideCardStyles={feedCardSettings?.shouldHideCardStyles ?? true}
         >
           {children}
         </CommonCard>

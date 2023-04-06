@@ -21,6 +21,7 @@ import {
   isDiscussionWithHighlightedMessage,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { parseStringToTextEditorValue, TextEditor } from "@/shared/ui-kit";
 import {
   getCirclesWithLowestTier,
   getDaysAgo,
@@ -74,6 +75,11 @@ export default function DiscussionDetailModal({
     }
     return userDiscussions.some(({ id }) => id === discussion.id);
   }, [userDiscussions, discussion]);
+  const parsedDiscussionMessage = useMemo(
+    () =>
+      discussion ? parseStringToTextEditorValue(discussion.message) : null,
+    [discussion?.message],
+  );
 
   useEffect(() => {
     if (discussion?.circleVisibility) {
@@ -162,9 +168,9 @@ export default function DiscussionDetailModal({
           </div>
         )}
 
-        {expanded && (
+        {expanded && parsedDiscussionMessage && (
           <div className="description-container">
-            <p className="description">{discussion.message}</p>
+            <TextEditor value={parsedDiscussionMessage} readOnly />
           </div>
         )}
 
