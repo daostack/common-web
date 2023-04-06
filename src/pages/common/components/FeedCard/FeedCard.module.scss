@@ -6,11 +6,9 @@
 
   margin: 0 -1.5rem;
   position: relative;
-  padding: 0;
   display: flex;
   flex-direction: column;
   color: $c-neutrals-600;
-  box-shadow: none;
 }
 .containerActive {
   border: 0.0625rem solid $c-neutrals-200;

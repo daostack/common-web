@@ -111,6 +111,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
             },
             className,
           )}
+          hideCardStyles
         >
           {children}
         </CommonCard>
