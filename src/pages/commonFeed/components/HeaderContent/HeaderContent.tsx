@@ -63,12 +63,13 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
             </p>
           </div>
         </NavLink>
-        <NewStreamButton
-          commonMember={commonMember}
-          governance={governance}
-          isMobileVersion={isMobileVersion}
-        />
       </div>
+      <NewStreamButton
+        className={styles.newStreamButton}
+        commonMember={commonMember}
+        governance={governance}
+        isMobileVersion={isMobileVersion}
+      />
     </div>
   );
 };
