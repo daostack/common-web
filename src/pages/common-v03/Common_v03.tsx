@@ -7,6 +7,7 @@ const Common = () => {
     () => ({
       renderHeaderContent: () => null,
       generatePagePath: (commonId) => getCommonPagePath_v03(commonId),
+      withFeedTab: true,
     }),
     [],
   );

@@ -64,9 +64,9 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     () =>
       getAllowedTabs({
         isCommonMember,
-        isMobileView: isTabletView,
+        withFeed: settings.withFeedTab,
       }),
-    [isCommonMember, isTabletView],
+    [isCommonMember, settings.withFeedTab],
   );
   const [tab, setTab] = useState(() =>
     getInitialTab({
