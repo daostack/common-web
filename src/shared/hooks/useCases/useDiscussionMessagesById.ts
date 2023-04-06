@@ -21,7 +21,7 @@ interface Return extends State {
   fetchDiscussionMessages: (discussionId: string) => void;
   addDiscussionMessage: (
     discussionId: string,
-    discussionMessages: DiscussionMessage,
+    discussionMessage: DiscussionMessage,
   ) => void;
 }
 

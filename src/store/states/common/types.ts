@@ -7,7 +7,7 @@ import {
   CommonFeed,
   CommonMember,
   Governance,
-  FirebaseTimestamp,
+  Timestamp,
 } from "@/shared/models";
 
 export type EntityCreation<T> = {
@@ -19,8 +19,8 @@ export interface FeedItems {
   data: CommonFeed[] | null;
   loading: boolean;
   hasMore: boolean;
-  firstDocTimestamp: FirebaseTimestamp | null;
-  lastDocTimestamp: FirebaseTimestamp | null;
+  firstDocTimestamp: Timestamp | null;
+  lastDocTimestamp: Timestamp | null;
 }
 
 export interface CommonState {

@@ -11,7 +11,7 @@ import {
   CommonFeedObjectUserUnique,
   CommonFeedType,
   SubCollections,
-  FirebaseTimestamp,
+  Timestamp,
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
@@ -70,13 +70,13 @@ class CommonFeedService {
   public getCommonFeedItemsByUpdatedAt = async (
     commonId: string,
     options: {
-      startAfter?: FirebaseTimestamp | null;
+      startAfter?: Timestamp | null;
       limit?: number;
     } = {},
   ): Promise<{
     data: CommonFeed[];
-    firstDocTimestamp: FirebaseTimestamp | null;
-    lastDocTimestamp: FirebaseTimestamp | null;
+    firstDocTimestamp: Timestamp | null;
+    lastDocTimestamp: Timestamp | null;
     hasMore: boolean;
   }> => {
     const { startAfter, limit = 10 } = options;
@@ -115,7 +115,7 @@ class CommonFeedService {
 
   public subscribeToNewUpdatedCommonFeedItems = (
     commonId: string,
-    endBefore: FirebaseTimestamp,
+    endBefore: Timestamp,
     callback: (
       data: {
         commonFeedItem: CommonFeed;

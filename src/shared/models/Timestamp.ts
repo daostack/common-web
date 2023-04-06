@@ -1,4 +1,3 @@
 import firebase from "firebase";
 
-export type FirebaseTimestamp = firebase.firestore.Timestamp;
-export const Timestamp = firebase.firestore.Timestamp;
+export class Timestamp extends firebase.firestore.Timestamp {}
