@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonAction, QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
@@ -23,12 +22,12 @@ import { FeedLayout, FeedLayoutRef, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
 import styles from "./CommonFeed.module.scss";
 
-interface CommonFeedPageRouterParams {
-  id: string;
+interface CommonFeedProps {
+  commonId: string;
 }
 
-const CommonFeedPage: FC = () => {
-  const { id: commonId } = useParams<CommonFeedPageRouterParams>();
+const CommonFeed: FC<CommonFeedProps> = (props) => {
+  const { commonId } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -199,4 +198,4 @@ const CommonFeedPage: FC = () => {
   );
 };
 
-export default CommonFeedPage;
+export default CommonFeed;

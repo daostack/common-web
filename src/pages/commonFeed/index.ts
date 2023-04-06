@@ -1,1 +1,1 @@
-export { default as CommonFeedPage } from "./CommonFeed";
+export { default as CommonFeedPage } from "./CommonFeedPage";
