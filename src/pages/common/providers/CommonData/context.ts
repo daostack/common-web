@@ -3,8 +3,10 @@ import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { ProposalsTypes } from "@/shared/constants";
 import { Circle, Common, Governance, SupportersData } from "@/shared/models";
 import { CommonMenuItem } from "../../constants";
+import { CommonPageSettings } from "../../types";
 
 interface Data {
+  settings: CommonPageSettings;
   onMenuItemSelect: (menuItem: CommonMenuItem | null) => void;
   onProjectCreate: () => void;
   common: Common;

@@ -1,7 +1,6 @@
 import { CommonAction } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { BreadcrumbItem } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
 import { CommonTab } from "../../../constants";
 import { getCommonTabName } from "../../../utils";
 
@@ -17,17 +16,19 @@ export const getBreadcrumbItems = ({
   common,
   parentCommons,
   commonAction,
+  generatePagePath,
 }: {
   activeTab: CommonTab;
   common: Common;
   parentCommons: Common[];
   commonAction: CommonAction | null;
+  generatePagePath: (commonId: string) => string;
 }): BreadcrumbItem[] => {
   const items: BreadcrumbItem[] = parentCommons
     .map<BreadcrumbItem>((parentCommon) => ({
       id: parentCommon.id,
       text: parentCommon.name,
-      url: getCommonPagePath(parentCommon.id),
+      url: generatePagePath(parentCommon.id),
     }))
     .concat({ text: common.name }, { text: getCommonTabName(activeTab) });
 

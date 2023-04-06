@@ -24,7 +24,7 @@ import { getInitialTab } from "./utils";
 import styles from "./CommonContent.module.scss";
 
 interface CommonContentProps {
-  settings?: CommonPageSettings;
+  settings: CommonPageSettings;
   defaultTab: string;
   common: Common;
   parentCommon?: Common;
@@ -95,6 +95,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
 
   return (
     <CommonDataProvider
+      settings={settings}
       common={common}
       parentCommon={parentCommon}
       governance={governance}

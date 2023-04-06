@@ -10,6 +10,7 @@ import {
   useGlobalCommonData,
 } from "@/shared/hooks/useCases";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
+import { getCommonPagePath } from "@/shared/utils";
 import {
   setCommonGovernance,
   setCommonMember,
@@ -27,8 +28,12 @@ interface CommonProps {
   settings?: CommonPageSettings;
 }
 
+const DEFAULT_SETTINGS: CommonPageSettings = {
+  generatePagePath: (commonId) => getCommonPagePath(commonId),
+};
+
 const Common: FC<CommonProps> = (props) => {
-  const { settings } = props;
+  const { settings = DEFAULT_SETTINGS } = props;
   const { id: commonId } = useParams<CommonRouterParams>();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
