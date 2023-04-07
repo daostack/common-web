@@ -11,6 +11,7 @@ import {
   commonReducer,
   commonLayoutReducer,
   projectsReducer,
+  chatReducer,
 } from "./states";
 
 export default (history: History) => {
@@ -24,6 +25,7 @@ export default (history: History) => {
     common: commonReducer,
     commonLayout: commonLayoutReducer,
     cache: cacheReducer,
+    chat: chatReducer,
   });
 
   return (state: AppState | undefined, action: AnyAction) => {

@@ -38,7 +38,7 @@ export interface DiscussionMessage extends BaseEntity {
   images?: Link[];
   tags?: DiscussionMessageTag[];
   parentMessage: ParentDiscussionMessage | null;
-  editedAt: firebase.firestore.Timestamp;
+  editedAt?: firebase.firestore.Timestamp;
 }
 
 export enum PendingMessageStatus {

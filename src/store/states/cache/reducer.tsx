@@ -1,4 +1,5 @@
 import produce from "immer";
+import { unionWith } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import * as actions from "./actions";
@@ -41,9 +42,59 @@ export const reducer = createReducer<CacheState, Action>(initialState)
     actions.updateDiscussionMessagesStateByDiscussionId,
     (state, { payload }) =>
       produce(state, (nextState) => {
-        const { discussionId, state } = payload;
+        const { discussionId } = payload;
 
-        nextState.discussionMessagesStates[discussionId] = { ...state };
+        const newState = unionWith(
+          payload.state?.data ?? [],
+          state.discussionMessagesStates[discussionId]?.data ?? [],
+          (prevMsg, nextMsg) => {
+            return prevMsg.id === nextMsg.id;
+          },
+        );
+
+        nextState.discussionMessagesStates[discussionId] = {
+          ...payload.state,
+          data: newState,
+        };
+      }),
+  )
+  .handleAction(
+    actions.addDiscussionMessageByDiscussionId,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { discussionId, discussionMessage } = payload;
+
+        const updatedDiscussionMessages = [
+          ...(state.discussionMessagesStates[discussionId]?.data ?? []),
+          discussionMessage,
+        ];
+
+        nextState.discussionMessagesStates[discussionId] = {
+          ...state.discussionMessagesStates[discussionId],
+          data: updatedDiscussionMessages,
+        };
+      }),
+  )
+  .handleAction(
+    actions.updateDiscussionMessageWithActualId,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { pendingMessageId, actualId, discussionId } = payload;
+        const newState = { ...state.discussionMessagesStates[discussionId] };
+        const indexOfPendingMessage =
+          newState.data?.findIndex(({ id }) => id === pendingMessageId) ?? 0;
+        const updatedDate = (newState.data ?? []).map((item, index) => {
+          if (index === indexOfPendingMessage) {
+            return { ...item, id: actualId };
+          }
+
+          return item;
+        });
+        nextState.discussionMessagesStates[discussionId] = {
+          data: updatedDate,
+          loading: false,
+          fetched: true,
+        };
       }),
   )
   .handleAction(actions.updateProposalStateById, (state, { payload }) =>

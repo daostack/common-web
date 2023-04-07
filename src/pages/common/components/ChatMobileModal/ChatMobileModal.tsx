@@ -1,12 +1,4 @@
-import React, {
-  FC,
-  LegacyRef,
-  useEffect,
-  useState,
-  useMemo,
-  ReactNode,
-} from "react";
-import { useMeasure } from "react-use";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import { Image, Modal, ButtonIcon } from "@/shared/components";
 import { Colors } from "@/shared/constants";
@@ -35,11 +27,6 @@ interface ChatMobileModalProps {
 
 const closeIconSize = 12;
 
-const MIN_TITLE_HEIGHT = 59;
-const TITLE_PADDING_SIZE = 40;
-const HEADER_HEIGHT = 38;
-const MODAL_TOP_PADDING = 24;
-
 const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
   const {
     isShowing,
@@ -52,23 +39,6 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
     header,
     styles: outerStyles,
   } = props;
-  const [titleHeight, setTitleHeight] = useState(title ? MIN_TITLE_HEIGHT : 0);
-  const [titleRef, { height }] = useMeasure();
-
-  useEffect(() => {
-    if (height) {
-      setTitleHeight(height + (title ? TITLE_PADDING_SIZE : 0));
-    }
-  }, [height, title]);
-
-  const childrenWrapper = useMemo(
-    () => ({
-      maxHeight: `calc(100vh - ${MODAL_TOP_PADDING}px - ${HEADER_HEIGHT}px - ${titleHeight}px)`,
-      height: "100%",
-      width: "100%",
-    }),
-    [titleHeight],
-  );
 
   return (
     <Modal
@@ -113,7 +83,6 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
         )}
         {title && (
           <p
-            ref={titleRef as LegacyRef<HTMLDivElement>}
             className={classNames(styles.title, {
               [styles.titleRTL]: isRTL(title),
             })}
@@ -121,7 +90,7 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
             {title}
           </p>
         )}
-        <div style={childrenWrapper}>{children}</div>
+        <div className={styles.modalChildren}>{children}</div>
       </div>
     </Modal>
   );

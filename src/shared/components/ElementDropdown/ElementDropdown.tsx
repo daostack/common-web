@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import copyToClipboard from "copy-to-clipboard";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { setCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
+import { chatActions } from "@/store/states";
 import { MenuButton, ShareModal } from "@/shared/components";
 import {
   DynamicLinkType,
@@ -111,7 +111,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     ModerationFlags.Hidden;
 
   const onReply = useCallback(() => {
-    dispatch(setCurrentDiscussionMessageReply(elem as DiscussionMessage));
+    dispatch(chatActions.setCurrentDiscussionMessageReply(elem as DiscussionMessage));
   }, [elem]);
 
   const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(() => {
