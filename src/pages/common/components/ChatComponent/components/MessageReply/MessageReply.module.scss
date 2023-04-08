@@ -1,0 +1,39 @@
+@import "../../../../../../constants.scss";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: $white;
+  margin: 0px -2rem;
+  padding: 0.4375rem 2rem 0.625rem;
+}
+
+.containerEmpty {
+  display: none;
+}
+
+.messageWrapper {
+  width: 100%;
+  background-color: $light-gray-4;
+  border-radius: 0.875rem;
+  padding: 0.4375rem 0.75rem;
+}
+
+.username {
+  font-size: $xsmall;
+  line-height: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.125rem;
+}
+
+.text {
+  font-size: $small;
+  line-height: 1.5rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.closeButton {
+  margin-left: 1.375rem;
+}

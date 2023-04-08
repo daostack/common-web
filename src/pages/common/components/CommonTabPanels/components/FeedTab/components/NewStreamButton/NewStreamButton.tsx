@@ -13,13 +13,19 @@ import { useMenuItems } from "./hooks";
 import styles from "./NewStreamButton.module.scss";
 
 interface NewStreamButtonProps {
+  className?: string;
   isMobileVersion?: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
   governance: Pick<Governance, "circles">;
 }
 
 const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
-  const { isMobileVersion = false, commonMember, governance } = props;
+  const {
+    className,
+    isMobileVersion = false,
+    commonMember,
+    governance,
+  } = props;
   const items = useMenuItems({ commonMember, governance });
   const buttonVariant = ButtonVariant.OutlineBlue;
   const iconEl = <BoldPlusIcon className={styles.icon} />;
@@ -31,7 +37,7 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   if (!isMobileVersion) {
     return (
       <DesktopMenu
-        className={styles.buttonMenu}
+        className={className}
         triggerEl={
           <Button
             variant={buttonVariant}
@@ -48,7 +54,7 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
 
   return (
     <MobileMenu
-      className={styles.buttonMenu}
+      className={className}
       triggerEl={<ButtonIcon variant={buttonVariant}>{iconEl}</ButtonIcon>}
       items={items}
     />

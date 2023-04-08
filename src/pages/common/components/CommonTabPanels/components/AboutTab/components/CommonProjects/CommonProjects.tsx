@@ -3,7 +3,6 @@ import classNames from "classnames";
 import { useCommonDataContext } from "@/pages/common/providers";
 import {
   GovernanceActions,
-  ROUTE_PATHS,
   ViewportBreakpointVariant,
 } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -44,7 +43,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
     circles,
     styles: outerStyles,
   } = props;
-  const { onProjectCreate } = useCommonDataContext();
+  const { settings, onProjectCreate } = useCommonDataContext();
   const isTabletView = useIsTabletView();
   const isAddingNewProjectAllowed = Boolean(
     commonMember &&
@@ -81,7 +80,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
           <li key={subCommon.id} className={styles.projectsItem}>
             <Project
               title={subCommon.name}
-              url={ROUTE_PATHS.COMMON.replace(":id", subCommon.id)}
+              url={settings.generatePagePath(subCommon.id)}
               imageURL={subCommon.image}
               imageAlt={`${subCommon.name}'s image`}
               tooltipContent={

@@ -6,7 +6,6 @@ import {
   Governance,
   Proposal,
   Card,
-  DiscussionMessage,
   CommonMember,
 } from "@/shared/models";
 
@@ -26,7 +25,6 @@ export interface CommonsStateType {
   userProposals: Proposal[];
   cards: Card[];
   activeTab: Tabs | null;
-  currentDiscussionMessageReply: DiscussionMessage | null;
   commonStates: Record<string, LoadingState<Common | null>>;
   commonMember: CommonMember | null;
 }

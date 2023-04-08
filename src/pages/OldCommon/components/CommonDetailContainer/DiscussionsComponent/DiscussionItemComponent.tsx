@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import classNames from "classnames";
 import { getCommonGovernanceCircles } from "@/pages/OldCommon/store/api";
 import { ElementDropdown } from "@/shared/components";
@@ -6,11 +6,17 @@ import { DynamicLinkType, EntityTypes } from "@/shared/constants";
 import { useFullText } from "@/shared/hooks";
 import { Discussion, Governance } from "@/shared/models";
 import {
+  checkIsTextEditorValueEmpty,
+  parseStringToTextEditorValue,
+  TextEditor,
+} from "@/shared/ui-kit";
+import {
   getUserName,
   getDaysAgo,
   getCirclesWithLowestTier,
 } from "@/shared/utils";
 import { getFilteredByIdCircles } from "@/shared/utils/circles";
+import styles from "./DiscussionItemComponent.module.scss";
 
 interface DiscussionItemComponentProps {
   discussion: Discussion;
@@ -26,11 +32,20 @@ export default function DiscussionItemComponent({
   const [imageError, setImageError] = useState(false);
   const [circleNames, setCircleNames] = useState("");
   const {
-    ref: messageRef,
-    isFullTextShowing,
+    setRef: setDescriptionRef,
     shouldShowFullText,
-    showFullText,
-  } = useFullText();
+    isFullTextShowing,
+    toggleFullText,
+  } = useFullText<HTMLElement>();
+  const parsedDiscussionMessage = useMemo(
+    () => parseStringToTextEditorValue(discussion.message),
+    [discussion.message],
+  );
+  const isDiscussionMessageEmpty = checkIsTextEditorValueEmpty(
+    parsedDiscussionMessage,
+  );
+  const shouldDisplaySeeMoreButton =
+    (shouldShowFullText || !isFullTextShowing) && !isDiscussionMessageEmpty;
   const date = new Date();
 
   useEffect(() => {
@@ -92,17 +107,23 @@ export default function DiscussionItemComponent({
         >
           {discussion.title}
         </div>
-        <div
-          className={classNames("description", { full: shouldShowFullText })}
-          ref={messageRef}
-        >
-          {circleNames ? `Limited to: ${circleNames}` : discussion.message}
-        </div>
-        {!shouldShowFullText && !isFullTextShowing ? (
-          <div className="read-more" onClick={showFullText}>
-            Read More
+        {circleNames ? (
+          <div className="description">{`Limited to: ${circleNames}`}</div>
+        ) : (
+          <TextEditor
+            editorRef={setDescriptionRef}
+            editorClassName={classNames(styles.description, {
+              [styles.descriptionShortened]: !shouldShowFullText,
+            })}
+            value={parsedDiscussionMessage}
+            readOnly
+          />
+        )}
+        {shouldDisplaySeeMoreButton && (
+          <div className="read-more" onClick={toggleFullText}>
+            {shouldShowFullText ? "Hide content" : "Read More"}
           </div>
-        ) : null}
+        )}
         <div className="line"></div>
       </div>
       <div className="bottom-content">

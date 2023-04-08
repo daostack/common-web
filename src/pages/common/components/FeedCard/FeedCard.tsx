@@ -1,22 +1,22 @@
-import React, { FC, useState, useEffect, useRef } from "react";
+import React, { FC, useEffect, useRef, MouseEventHandler } from "react";
 import classNames from "classnames";
+import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonFeedType } from "@/shared/models";
 import { CommonCard } from "../CommonCard";
-import { FeedCardPreview } from "./components";
 import styles from "./FeedCard.module.scss";
 
 interface FeedCardProps {
   className?: string;
-  isActive?: boolean;
-  isExpanded?: boolean;
+  feedItemId: string;
   isHovering?: boolean;
-  messageCount?: number;
   lastActivity?: number;
   unreadMessages?: number;
   onClick?: () => void;
   title?: string;
+  isActive?: boolean;
+  isExpanded?: boolean;
   canBeExpanded?: boolean;
   lastMessage?: string;
   isPreviewMode?: boolean;
@@ -31,12 +31,12 @@ const DESKTOP_HEADER_HEIGHT = 72;
 export const FeedCard: FC<FeedCardProps> = (props) => {
   const {
     className,
-    isActive = false,
-    isExpanded: isExpandedExternal = false,
+    feedItemId,
     isHovering = false,
-    messageCount = 0,
     lastActivity = 0,
     unreadMessages = 0,
+    isActive = false,
+    isExpanded = false,
     canBeExpanded = true,
     onClick,
     children,
@@ -48,18 +48,15 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     seenOnce,
   } = props;
   const isTabletView = useIsTabletView();
+  const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
+    useFeedItemContext();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isExpanded, setExpanded] = useState(false);
 
-  useEffect(() => {
-    if (!isActive) {
-      setExpanded(false);
+  const toggleExpanding = () => {
+    if (setExpandedFeedItemId) {
+      setExpandedFeedItemId(isExpanded ? null : feedItemId);
     }
-  }, [isActive]);
-
-  useEffect(() => {
-    setExpanded(isExpandedExternal);
-  }, [isExpandedExternal]);
+  };
 
   function scrollToTargetAdjusted() {
     const headerOffset = isTabletView
@@ -82,35 +79,34 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
 
   const handleClick = () => {
     if (!isTabletView) {
-      setExpanded((expanded) => !expanded);
+      toggleExpanding();
     }
     onClick && onClick();
   };
 
-  const handleExpand = (event: MouseEvent | TouchEvent) => {
+  const handleExpand: MouseEventHandler = (event) => {
     event.stopPropagation();
-    setExpanded((expanded) => !expanded);
+    toggleExpanding();
   };
 
   return (
     <div ref={containerRef}>
-      {!isPreviewMode && (
-        <FeedCardPreview
-          messageCount={messageCount}
-          lastActivity={lastActivity}
-          unreadMessages={unreadMessages}
-          isActive={isActive}
-          isExpanded={isExpanded}
-          canBeExpanded={canBeExpanded}
-          onClick={handleClick}
-          onExpand={handleExpand as () => void}
-          title={title}
-          lastMessage={lastMessage}
-          type={type}
-          menuItems={menuItems}
-          seenOnce={seenOnce}
-        />
-      )}
+      {!isPreviewMode &&
+        renderFeedItemBaseContent?.({
+          lastActivity,
+          unreadMessages,
+          isMobileView: isTabletView,
+          isActive,
+          isExpanded,
+          canBeExpanded,
+          onClick: handleClick,
+          onExpand: handleExpand,
+          title,
+          lastMessage,
+          menuItems,
+          type,
+          seenOnce,
+        })}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (
         <CommonCard
           className={classNames(
@@ -118,10 +114,14 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
             {
               [styles.containerActive]:
                 (isActive || (isExpanded && isTabletView)) && !isPreviewMode,
-              [styles.containerHovering]: isHovering && !isPreviewMode,
+              [styles.containerHovering]:
+                isHovering &&
+                (feedCardSettings?.withHovering ?? !isPreviewMode),
             },
             className,
+            feedCardSettings?.commonCardClassName,
           )}
+          hideCardStyles={feedCardSettings?.shouldHideCardStyles ?? true}
         >
           {children}
         </CommonCard>

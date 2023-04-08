@@ -2,35 +2,17 @@ import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { ButtonIcon } from "@/shared/components";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { ContextMenuItem } from "@/shared/interfaces";
-import { CommonFeedType } from "@/shared/models";
 import { ContextMenu, ContextMenuRef, TimeAgo } from "@/shared/ui-kit";
+import { FeedItemBaseContentProps } from "../../../FeedItem";
 import { FeedCardTags } from "../FeedCardTags";
-import styles from "./FeedCardPreview.module.scss";
+import styles from "./FeedItemBaseContent.module.scss";
 
-interface FeedCardPreviewProps {
-  className?: string;
-  messageCount: number;
-  lastActivity: number;
-  unreadMessages?: number;
-  isActive?: boolean;
-  isExpanded?: boolean;
-  title?: string;
-  lastMessage?: string;
-  canBeExpanded?: boolean;
-  onClick?: () => void;
-  onExpand?: () => void;
-  type?: CommonFeedType;
-  menuItems?: ContextMenuItem[];
-  seenOnce?: boolean;
-}
-
-export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
+export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   const {
     lastActivity,
     unreadMessages,
+    isMobileView,
     isActive = false,
     isExpanded = false,
     canBeExpanded = true,
@@ -43,7 +25,6 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
     seenOnce,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
-  const isTabletView = useIsTabletView();
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isLongPressed, setIsLongPressed] = useState(false);
   const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
@@ -69,7 +50,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
   };
 
   const getLongPressProps = useLongPress(
-    isTabletView && isContextMenuEnabled ? handleLongPress : null,
+    isMobileView && isContextMenuEnabled ? handleLongPress : null,
     {
       threshold: 400,
       cancelOnMovement: true,
@@ -82,7 +63,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
   const handleContextMenu: MouseEventHandler = (event) => {
     event.preventDefault();
 
-    if (!isTabletView && isContextMenuEnabled) {
+    if (!isMobileView && isContextMenuEnabled) {
       contextMenuRef.current?.open(event.clientX, event.clientY);
     }
   };
@@ -100,7 +81,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
   return (
     <div
       className={classNames(styles.container, {
-        [styles.containerActive]: isActive || (isExpanded && isTabletView),
+        [styles.containerActive]: isActive || (isExpanded && isMobileView),
         [styles.containerExpanded]: isExpanded && canBeExpanded,
         [styles.containerLongPressing]: isLongPressing || isLongPressed,
       })}
@@ -108,7 +89,7 @@ export const FeedCardPreview: FC<FeedCardPreviewProps> = (props) => {
       onContextMenu={handleContextMenu}
       {...getLongPressProps()}
     >
-      {isTabletView && canBeExpanded && (
+      {isMobileView && canBeExpanded && (
         <ButtonIcon onClick={onExpand}>
           <RightArrowThinIcon
             className={classNames(styles.expandIcon, {

@@ -1,70 +1,55 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useLayoutEffect,
-} from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useDebounce } from "react-use";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
+import { delay } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
-import {
-  clearCurrentDiscussionMessageReply,
-  addMessageToDiscussion,
-  addMessageToProposal,
-} from "@/pages/OldCommon/store/actions";
-import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
+import { DiscussionMessageService } from "@/services";
 import { Loader } from "@/shared/components";
-import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import {
   ChatType,
   GovernanceActions,
   LastSeenEntity,
 } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
-import { useIntersection } from "@/shared/hooks";
-import { usePrevious } from "@/shared/hooks";
 import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { SendIcon } from "@/shared/icons";
-import CloseIcon from "@/shared/icons/close.icon";
+import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   Common,
   CommonFeedObjectUserUnique,
   CommonMember,
   Discussion,
   DiscussionMessage,
-  PendingMessage,
-  PendingMessageStatus,
-  Proposal,
+  Timestamp,
 } from "@/shared/models";
-import { hasPermission } from "@/shared/utils";
-import { selectGovernance } from "@/store/states";
-import { ChatContent } from "./components/ChatContent";
+import { getUserName, hasPermission } from "@/shared/utils";
+import {
+  cacheActions,
+  chatActions,
+  selectGovernance,
+  selectCurrentDiscussionMessageReply,
+} from "@/store/states";
+import { ChatContent, MessageReply } from "./components";
 import { getLastNonUserMessage } from "./utils";
-import "./index.scss";
+import styles from "./ChatComponent.module.scss";
 
 interface ChatComponentInterface {
   common: Common | null;
   type: ChatType;
-  commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;
-  feedItemId: string;
-  isJoiningPending?: boolean;
-  isAuthorized?: boolean;
-  highlightedMessageId?: string | null;
+  commonMember: CommonMember | null;
   hasAccess?: boolean;
-  isHidden: boolean;
-  proposal?: Proposal;
   discussion: Discussion;
-  titleHeight?: number;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
+  feedItemId: string;
+  isAuthorized?: boolean;
+  isHidden: boolean;
 }
 
 interface Messages {
@@ -86,29 +71,21 @@ export default function ChatComponent({
   common,
   type,
   commonMember,
-  isCommonMemberFetched,
-  isJoiningPending,
-  isAuthorized,
-  highlightedMessageId: linkHighlightedMessageId,
-  hasAccess = true,
-  isHidden = false,
-  proposal,
   discussion,
-  feedItemId,
-  titleHeight = 0,
+  hasAccess = true,
   lastSeenItem,
+  feedItemId,
+  isAuthorized,
+  isHidden = false,
+  isCommonMemberFetched,
 }: ChatComponentInterface) {
-  const intersectionRef = React.useRef(null);
-  const replyDivRef = React.useRef(null);
-  const intersection = useIntersection(intersectionRef, {
-    root: null,
-    rootMargin: "0px",
-    threshold: 0,
-  });
-  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
-
   const dispatch = useDispatch();
   const governance = useSelector(selectGovernance);
+  const discussionMessageReply = useSelector(
+    selectCurrentDiscussionMessageReply(),
+  );
+  const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
+  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
   const hasPermissionToHide =
     commonMember && governance
@@ -122,21 +99,21 @@ export default function ChatComponent({
     fetchDiscussionMessages,
     data: discussionMessages = [],
     fetched: isFetchedDiscussionMessages,
+    addDiscussionMessage,
   } = useDiscussionMessagesById({
     hasPermissionToHide,
   });
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const discussionMessageReply = useSelector(
-    selectCurrentDiscussionMessageReply(),
-  );
   const discussionId = discussion.id;
+
   const lastNonUserMessage = getLastNonUserMessage(
     discussionMessages || [],
     userId,
   );
 
-  const [height, setHeight] = useState(0);
+  const messages = (discussionMessages ?? []).reduce(groupday, {});
+  const dateList = Object.keys(messages);
 
   useEffect(() => {
     if (discussionId) {
@@ -144,108 +121,43 @@ export default function ChatComponent({
     }
   }, [discussionId]);
 
-  useLayoutEffect(() => {
-    setHeight(
-      (replyDivRef.current as unknown as { clientHeight: number })
-        ?.clientHeight || 0,
-    );
-  }, [discussionMessageReply]);
-
   const [message, setMessage] = useState("");
-  const messages = (discussionMessages ?? []).reduce(groupday, {});
-  const isTabletView = useIsTabletView();
-  const dateList = Object.keys(messages);
-  const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
-  const [pendingMessages, setPendingMessages] = useState<PendingMessage[]>([]);
 
-  const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(
-    discussionMessages ?? [],
-  );
+  const [newMessages, setMessages] = useState<CreateDiscussionMessageDto[]>([]);
 
-  const prevPendingMessages = usePrevious<PendingMessage[]>(
-    pendingMessages ?? [],
-  );
+  useDebounce(
+    () => {
+      newMessages.map((payload, index) => {
+        delay(async () => {
+          const response = await DiscussionMessageService.createMessage(
+            payload,
+          );
 
-  /** Remove the pending message from the pending array only AFTER the FE receives the updated messages array from the BE */
-  useEffect(() => {
-    if (
-      Boolean(prevDiscussionMessages) &&
-      discussionMessages?.length !== prevDiscussionMessages?.length
-    ) {
-      setPendingMessages((prevState) =>
-        prevState.filter((msg) => msg.status !== PendingMessageStatus.Success),
-      );
-    }
-  }, [discussionMessages, prevDiscussionMessages]);
+          dispatch(
+            cacheActions.updateDiscussionMessageWithActualId({
+              discussionId,
+              pendingMessageId: payload.pendingMessageId as string,
+              actualId: response.id,
+            }),
+          );
+        }, 2000 * index);
+        return payload;
+      });
 
-  const handleResult = (isSucceed: boolean, pendingMessageId: string) => {
-    setPendingMessages((prevState) =>
-      prevState.map((msg) => {
-        if (msg.id !== pendingMessageId) {
-          return msg;
-        }
-        return {
-          ...msg,
-          status: isSucceed
-            ? PendingMessageStatus.Success
-            : PendingMessageStatus.Failed,
-        };
-      }),
-    );
-  };
-
-  const addMessageByType = useCallback(
-    (payload: CreateDiscussionMessageDto) => {
-      const pendingMessageId = uuidv4();
-
-      setPendingMessages((prevState) => [
-        ...prevState,
-        {
-          id: pendingMessageId,
-          text: payload.text,
-          status: PendingMessageStatus.Sending,
-          feedItemId: feedItemId,
-        },
-      ]);
-
-      switch (type) {
-        case ChatType.ProposalComments: {
-          if (proposal) {
-            dispatch(
-              addMessageToProposal.request({
-                payload,
-                proposal,
-                callback(isSucceed) {
-                  handleResult(isSucceed, pendingMessageId);
-                },
-              }),
-            );
-          }
-          break;
-        }
-        case ChatType.DiscussionMessages: {
-          if (discussion) {
-            dispatch(
-              addMessageToDiscussion.request({
-                payload,
-                discussion,
-                callback(isSucceed) {
-                  handleResult(isSucceed, pendingMessageId);
-                },
-              }),
-            );
-          }
-          break;
-        }
+      if (newMessages.length > 0) {
+        setMessages([]);
       }
     },
-    [discussion, proposal, type],
+    1500,
+    [newMessages, discussionId, dispatch],
   );
 
   const sendMessage = useCallback(
-    (message: string) => {
+    async (message: string) => {
       if (user && user.uid && common?.id) {
+        const pendingMessageId = uuidv4();
         const payload: CreateDiscussionMessageDto = {
+          pendingMessageId,
           text: message,
           ownerId: user.uid,
           commonId: common?.id,
@@ -254,15 +166,44 @@ export default function ChatComponent({
             parentId: discussionMessageReply?.id,
           }),
         };
+        const firebaseDate = Timestamp.fromDate(new Date());
 
-        addMessageByType(payload);
+        const msg = {
+          id: pendingMessageId,
+          owner: user,
+          ownerAvatar: (user.photo || user.photoURL) as string,
+          ownerId: userId as string,
+          ownerName: getUserName(user),
+          text: message,
+          commonId: common?.id,
+          discussionId,
+          createdAt: firebaseDate,
+          updatedAt: firebaseDate,
+          parentMessage: discussionMessageReply?.id
+            ? {
+                id: discussionMessageReply?.id,
+                ownerName: discussionMessageReply.ownerName,
+                text: discussionMessageReply.text,
+              }
+            : null,
+        };
+
+        setMessages((prev) => [...prev, payload]);
+        addDiscussionMessage(discussionId, msg);
 
         if (discussionMessageReply) {
-          dispatch(clearCurrentDiscussionMessageReply());
+          dispatch(chatActions.clearCurrentDiscussionMessageReply());
         }
       }
     },
-    [dispatch, user, discussionMessageReply, common, discussionId],
+    [
+      dispatch,
+      user,
+      discussionMessageReply,
+      common,
+      discussionId,
+      discussionMessages,
+    ],
   );
 
   const sendChatMessage = (): void => {
@@ -306,102 +247,53 @@ export default function ChatComponent({
     }
   }, [lastNonUserMessage?.id]);
 
-  const chatWrapperStyle = useMemo(() => {
-    if (isTabletView) {
-      return { height: `calc(100% - ${48 + height}px)` };
-    }
-
-    return { height: `calc(100% - ${52 + height}px - ${titleHeight}px)` };
-  }, [height, isTabletView, titleHeight]);
-  const chatInputStyle = useMemo(() => ({ minHeight: 82 + height }), [height]);
-
-  const MessageReply = useCallback(() => {
-    if (!discussionMessageReply) {
-      return null;
-    }
-
-    return (
-      <div
-        ref={replyDivRef}
-        className={classNames("bottom-reply-wrapper", {
-          "bottom-reply-wrapper__fixed": !(
-            Number(intersection?.intersectionRatio) > 0
-          ),
-        })}
-      >
-        <div className="bottom-reply-message-container">
-          <span className="bottom-reply-message-user-name">
-            {discussionMessageReply.ownerName}
-          </span>
-          <p className="bottom-reply-message-text">
-            {discussionMessageReply.text}
-          </p>
-        </div>
-        <ButtonIcon
-          className="bottom-reply-message-close-button"
-          onClick={() => {
-            dispatch(clearCurrentDiscussionMessageReply());
-          }}
-        >
-          <CloseIcon fill="#001A36" height={16} width={16} />
-        </ButtonIcon>
-      </div>
-    );
-  }, [intersection, discussionMessageReply]);
-
   return (
-    <div className="chat-wrapper" style={chatWrapperStyle}>
+    <div className={styles.chatWrapper}>
       <div
-        className={`messages ${!dateList.length ? "empty" : ""}`}
+        className={classNames(styles.messages, {
+          [styles.emptyChat]: !dateList.length,
+        })}
         id={chatWrapperId}
       >
         {isFetchedDiscussionMessages ? (
           <ChatContent
-            linkHighlightedMessageId={linkHighlightedMessageId}
             type={type}
             commonMember={commonMember}
             isCommonMemberFetched={isCommonMemberFetched}
-            isJoiningPending={isJoiningPending}
+            isJoiningPending={false}
             hasAccess={hasAccess}
-            isHidden={isHidden}
+            isHidden={false}
             chatWrapperId={chatWrapperId}
             messages={messages}
             dateList={dateList}
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
-            pendingMessages={pendingMessages}
-            prevPendingMessages={prevPendingMessages}
-            feedItemId={feedItemId}
           />
         ) : (
-          <div className="loader-container">
+          <div className={styles.loaderContainer}>
             <Loader />
           </div>
         )}
       </div>
       {isAuthorized && (
-        <div ref={intersectionRef} style={chatInputStyle}>
+        <>
           <MessageReply />
-          <div
-            className={classNames("bottom-chat-wrapper", {
-              "bottom-chat-wrapper__fixed": !(
-                Number(intersection?.intersectionRatio) > 0
-              ),
-            })}
-          >
+          <div className={styles.bottomChatWrapper}>
             {!commonMember || !hasAccess || isHidden ? (
-              <span className="text">Only members can send messages</span>
+              <span className={styles.permissionsText}>
+                Only members can send messages
+              </span>
             ) : (
               <>
                 <textarea
-                  className="message-input"
+                  className={styles.messageInput}
                   placeholder="What do you think?"
                   value={message}
                   onKeyDown={onEnterKeyDown}
                   onChange={(e) => setMessage(e.target.value)}
                 />
                 <button
-                  className="send"
+                  className={styles.send}
                   onClick={sendChatMessage}
                   disabled={!message.length}
                 >
@@ -410,7 +302,7 @@ export default function ChatComponent({
               </>
             )}
           </div>
-        </div>
+        </>
       )}
     </div>
   );

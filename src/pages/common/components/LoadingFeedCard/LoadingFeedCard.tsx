@@ -6,6 +6,7 @@ import styles from "./LoadingFeedCard.module.scss";
 export const LoadingFeedCard: FC = () => {
   return (
     <FeedCard
+      feedItemId=""
       canBeExpanded={false}
       className={styles.card}
       isPreviewMode={false}

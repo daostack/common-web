@@ -15,9 +15,7 @@ export interface ChatItem {
 
 export interface ChatContextValue {
   setChatItem: (data: ChatItem | null) => void;
-  activeItemDiscussionId?: string;
   feedItemIdForAutoChatOpen?: string;
-  expandedFeedItemId?: string | null;
   setIsShowFeedItemDetailsModal?: (isShowing: boolean) => void;
   setShouldShowSeeMore?: (shouldShow: boolean) => void;
 }

@@ -43,6 +43,8 @@ interface ProposalFeedCardProps {
   governanceId?: string;
   isPreviewMode?: boolean;
   sizeKey?: string;
+  isActive: boolean;
+  isExpanded: boolean;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -54,15 +56,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     governanceCircles,
     governanceId,
     isPreviewMode,
+    isActive,
+    isExpanded,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const {
-    activeItemDiscussionId,
-    setChatItem,
-    feedItemIdForAutoChatOpen,
-    expandedFeedItemId,
-  } = useChatContext();
+  const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
   const {
     fetchUser: fetchFeedItemUser,
     data: feedItemUser,
@@ -119,8 +118,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setHovering(isMouseEnter);
   };
   const proposalId = item.data.id;
-  const isActive = discussion?.id === activeItemDiscussionId;
-  const isExpanded = item.id === expandedFeedItemId;
 
   useEffect(() => {
     fetchFeedItemUser(item.userId);
@@ -208,12 +205,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
 
   return (
     <FeedCard
-      isActive={isActive}
-      isExpanded={isExpanded}
+      feedItemId={item.id}
       isHovering={isHovering}
       onClick={handleOpenChat}
-      messageCount={discussion?.messageCount || 0}
       lastActivity={item.updatedAt.seconds * 1000}
+      isActive={isActive}
+      isExpanded={isExpanded}
       unreadMessages={feedItemUserMetadata?.count || 0}
       title={discussion?.title}
       lastMessage={getLastMessage({

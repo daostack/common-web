@@ -4,13 +4,12 @@ import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
-import { ChatMessage, PendingChatMessage } from "@/shared/components";
+import { ChatMessage } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
 import {
   CommonFeedObjectUserUnique,
   CommonMember,
   DiscussionMessage,
-  PendingMessage,
 } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
@@ -29,9 +28,6 @@ interface ChatContentInterface {
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
-  pendingMessages: PendingMessage[];
-  prevPendingMessages?: PendingMessage[];
-  feedItemId: string;
 }
 
 const isToday = (someDate: Date) => {
@@ -56,9 +52,6 @@ export default function ChatContent({
   dateList,
   lastSeenItem,
   hasPermissionToHide,
-  pendingMessages,
-  prevPendingMessages,
-  feedItemId,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -84,19 +77,6 @@ export default function ChatContent({
   useEffect(() => {
     if (!highlightedMessageId) scrollToContainerBottom();
   }, [highlightedMessageId, scrollToContainerBottom]);
-
-  useEffect(() => {
-    if (
-      prevPendingMessages &&
-      prevPendingMessages?.length < pendingMessages?.length
-    )
-      scrollToContainerBottom();
-  }, [
-    scrollToContainerBottom,
-    prevPendingMessages,
-    prevPendingMessages?.length,
-    pendingMessages.length,
-  ]);
 
   useEffect(() => {
     if (!highlightedMessageId) return;
@@ -194,16 +174,7 @@ export default function ChatContent({
           </ul>
         );
       })}
-      {pendingMessages.length > 0 && (
-        <div className={styles.pendingMessagesList}>
-          {pendingMessages
-            .filter((msg) => msg.feedItemId === feedItemId)
-            .map((msg) => (
-              <PendingChatMessage key={msg.id} data={msg} />
-            ))}
-        </div>
-      )}
-      {!dateList.length && !pendingMessages.length && (
+      {!dateList.length && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />

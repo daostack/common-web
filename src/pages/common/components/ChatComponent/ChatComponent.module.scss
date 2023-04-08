@@ -1,0 +1,102 @@
+@import "../../../../constants.scss";
+@import "../../../../styles/sizes";
+
+.chatWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0.5rem 2rem 0;
+  width: inherit;
+  height: calc(100% - #{$container-desktop-header-height});
+  background-color: $white;
+  position: relative;
+  box-sizing: border-box;
+
+  @include tablet {
+    height: 100%;
+    margin-top: 0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0;
+    /* Remove scrollbar space */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
+  }
+}
+
+.messages {
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.emptyChat {
+  display: flex;
+  justify-content: center;
+}
+
+.loaderContainer {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.bottomChatWrapper {
+  display: flex;
+  flex-shrink: 0;
+  padding: 1rem 1.875rem 1rem 2.125rem;
+  background-color: $c-input-100;
+  border: 0.0625rem solid $c-neutrals-100;
+  border-left-width: 0;
+  border-right-width: 0;
+  box-shadow: none;
+  width: 100%;
+  margin: 0 -2rem;
+  height: 3.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0;
+}
+
+.permissionsText {
+  font-size: $mobile-title;
+  color: $light-gray-2;
+  margin-right: 0.3125rem;
+  width: 100%;
+  text-align: center;
+}
+
+.messageInput {
+  width: 100%;
+  height: 3rem;
+  padding: 0.75rem 1rem 0.5rem;
+  border-radius: 1.25rem;
+  background-color: $light-gray-1;
+  border: 0.0625rem solid $c-neutrals-200;
+  outline: none;
+  resize: none;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  color: $c-neutrals-600;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.send {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 2.5rem;
+  margin-left: 1rem;
+  border: none;
+  outline: none;
+  background: $c-input-100;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}

@@ -1,4 +1,4 @@
-@import "../../../../../../../../styles/mixins";
+@import "../../../../styles/mixins";
 
 .container {
   display: flex;
@@ -11,4 +11,9 @@
       margin-bottom: 0;
     }
   }
+}
+
+.commonCardClassName {
+  margin: 0;
+  padding: 0;
 }

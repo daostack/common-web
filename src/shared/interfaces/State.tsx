@@ -4,6 +4,7 @@ import {
   CommonState,
   CommonLayoutState,
   ProjectsState,
+  ChatState,
 } from "@/store/states";
 import { AuthStateType } from "../../pages/Auth/interface";
 import { CommonsStateType } from "../../pages/OldCommon/interfaces";
@@ -20,4 +21,5 @@ export interface AppState {
   common: CommonState;
   commonLayout: CommonLayoutState;
   cache: CacheState;
+  chat: ChatState;
 }

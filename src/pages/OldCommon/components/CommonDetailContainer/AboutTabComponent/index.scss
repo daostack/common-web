@@ -50,20 +50,6 @@
       }
     }
   }
-  .description {
-    margin-bottom: 1.75rem;
-    word-wrap: break-word;
-    white-space: pre-line;
-  }
-  .description--rtl {
-    direction: rtl;
-  }
-  .description--shortened {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
 
   .join-wrapper {
     .button-blue {
@@ -82,6 +68,16 @@
     color: gray;
     text-align: right;
   }
+}
+.about-name-wrapper__description {
+  white-space: pre-line;
+}
+
+.about-name-wrapper__description--shortened {
+  display: -webkit-box;
+  -webkit-line-clamp: 9;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {

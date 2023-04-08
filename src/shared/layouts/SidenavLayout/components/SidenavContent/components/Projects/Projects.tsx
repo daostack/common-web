@@ -7,6 +7,7 @@ import { ROUTE_PATHS } from "@/shared/constants";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
+import { getCommonPagePath_v03 } from "@/shared/utils";
 import {
   projectsActions,
   selectAreProjectsFetched,
@@ -39,7 +40,13 @@ const Projects: FC = () => {
   const areProjectsLoading = useSelector(selectAreProjectsLoading);
   const areProjectsFetched = useSelector(selectAreProjectsFetched);
   const isCommonCreationDisabled = useSelector(selectIsCommonCreationDisabled);
-  const items = useMemo(() => generateProjectsTreeItems(projects), [projects]);
+  const items = useMemo(
+    () =>
+      generateProjectsTreeItems(projects, (projectsStateItem) =>
+        getCommonPagePath_v03(projectsStateItem.commonId),
+      ),
+    [projects],
+  );
   const activeItemId = getActiveItemIdByPath(location.pathname);
   const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
     location.pathname,

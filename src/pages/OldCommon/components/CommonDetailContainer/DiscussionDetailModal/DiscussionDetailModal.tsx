@@ -3,12 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
-import {
-  addMessageToDiscussion,
-  clearCurrentDiscussionMessageReply,
-} from "@/pages/OldCommon/store/actions";
+import { addMessageToDiscussion } from "@/pages/OldCommon/store/actions";
 import { getCommonGovernanceCircles } from "@/pages/OldCommon/store/api";
-import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
+import "@/pages/OldCommon/store/selectors";
 import { Loader } from "@/shared/components";
 import { ScreenSize, ChatType } from "@/shared/constants";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
@@ -21,12 +18,17 @@ import {
   isDiscussionWithHighlightedMessage,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { parseStringToTextEditorValue, TextEditor } from "@/shared/ui-kit";
 import {
   getCirclesWithLowestTier,
   getDaysAgo,
   getUserName,
 } from "@/shared/utils";
 import { getFilteredByIdCircles } from "@/shared/utils/circles";
+import {
+  chatActions,
+  selectCurrentDiscussionMessageReply,
+} from "@/store/states";
 import { ChatComponent } from "../ChatComponent";
 import "./index.scss";
 
@@ -74,6 +76,11 @@ export default function DiscussionDetailModal({
     }
     return userDiscussions.some(({ id }) => id === discussion.id);
   }, [userDiscussions, discussion]);
+  const parsedDiscussionMessage = useMemo(
+    () =>
+      discussion ? parseStringToTextEditorValue(discussion.message) : null,
+    [discussion?.message],
+  );
 
   useEffect(() => {
     if (discussion?.circleVisibility) {
@@ -93,7 +100,7 @@ export default function DiscussionDetailModal({
     }
 
     return () => {
-      dispatch(clearCurrentDiscussionMessageReply());
+      dispatch(chatActions.clearCurrentDiscussionMessageReply());
     };
   }, [governance.id, discussion]);
 
@@ -115,7 +122,7 @@ export default function DiscussionDetailModal({
         );
 
         if (currentDiscussionMessageReply) {
-          dispatch(clearCurrentDiscussionMessageReply());
+          dispatch(chatActions.clearCurrentDiscussionMessageReply());
         }
       }
     },
@@ -162,9 +169,9 @@ export default function DiscussionDetailModal({
           </div>
         )}
 
-        {expanded && (
+        {expanded && parsedDiscussionMessage && (
           <div className="description-container">
-            <p className="description">{discussion.message}</p>
+            <TextEditor value={parsedDiscussionMessage} readOnly />
           </div>
         )}
 

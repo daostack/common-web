@@ -27,11 +27,11 @@ import { Container } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import { selectCommonAction } from "@/store/states";
 import { commonActions } from "@/store/states";
+import { FeedItems } from "../../../FeedItems";
 import { TabNavigation } from "../TabNavigation";
 import {
   FeedActions,
   FeedAction,
-  FeedItems,
   NewDiscussionCreation,
   NewProposalCreation,
 } from "./components";
@@ -47,7 +47,6 @@ interface FeedTabProps {
 
 const HEADER_HEIGHT = 221;
 const BREADCRUMBS_HEIGHT = 64;
-const DISCUSSION_TITLE_PADDING_HEIGHT = 41;
 
 export const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember, common } = props;
@@ -58,7 +57,6 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
     [commonMember],
   );
   const [chatColumnRef, { width: chatWidth }] = useMeasure();
-  const [chatTitleRef, { height: chatTitleHeight }] = useMeasure();
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
   const commonAction = useSelector(selectCommonAction);
@@ -115,7 +113,6 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
                   chatItem.discussion.title,
                 ),
               })}
-              ref={chatTitleRef as LegacyRef<HTMLParagraphElement>}
             >
               {chatItem.discussion.title}
             </p>
@@ -132,13 +129,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
               isHidden={false}
               common={common}
               discussion={chatItem.discussion}
-              proposal={chatItem.proposal}
               feedItemId={chatItem.feedItemId}
-              titleHeight={
-                chatTitleHeight
-                  ? chatTitleHeight + DISCUSSION_TITLE_PADDING_HEIGHT
-                  : 0
-              }
               lastSeenItem={chatItem.lastSeenItem}
             />
           </>
@@ -169,7 +160,6 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
             isHidden={false}
             common={common}
             discussion={chatItem.discussion}
-            proposal={chatItem.proposal}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
           />

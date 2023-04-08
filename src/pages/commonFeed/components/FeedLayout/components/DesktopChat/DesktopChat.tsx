@@ -46,21 +46,19 @@ const DesktopChat: FC<ChatProps> = (props) => {
       </div>
       <ChatComponent
         commonMember={commonMember}
-        isCommonMemberFetched
-        isAuthorized={Boolean(user)}
         type={
           chatItem.proposal
             ? ChatType.ProposalComments
             : ChatType.DiscussionMessages
         }
-        hasAccess={hasAccessToChat}
-        isHidden={false}
+        isCommonMemberFetched
         common={common}
         discussion={chatItem.discussion}
-        proposal={chatItem.proposal}
         feedItemId={chatItem.feedItemId}
-        titleHeight={73}
+        hasAccess={hasAccessToChat}
         lastSeenItem={chatItem.lastSeenItem}
+        isHidden={false}
+        isAuthorized={Boolean(user)}
       />
     </div>
   );
