@@ -1,10 +1,11 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import classNames from "classnames";
 import { Formik } from "formik";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
-import { useCommonDataContext } from "@/pages/common/providers";
+import { CommonRouterParams } from "@/pages/common/types";
 import { CommonService } from "@/services";
 import { Modal } from "@/shared/components";
 import {
@@ -18,6 +19,7 @@ import {
   Orientation,
   RecipientType,
 } from "@/shared/constants";
+import { useFullCommonData } from "@/shared/hooks/useCases";
 import { SelectOptionType } from "@/shared/interfaces/Select";
 import {
   Common,
@@ -67,16 +69,25 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
   } = useCommonMembers();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { common, subCommons, parentCommons } = useCommonDataContext();
-  const commonId = useMemo(() => common.id, [common]);
+  const { id: commonId } = useParams<CommonRouterParams>();
+
+  const {
+    data: commonData,
+    fetched: isCommonDataFetched,
+    fetchCommonData,
+  } = useFullCommonData();
+
+  useEffect(() => {
+    fetchCommonData(commonId);
+  }, [commonId]);
 
   const initialValues = useMemo(
     () => ({
       ...INITIAL_VALUES,
-      commonBalance: common.balance.amount,
+      commonBalance: commonData?.common.balance.amount ?? 0,
       ...initData,
     }),
-    [common.balance, initData],
+    [commonData?.common.balance, initData],
   );
 
   useEffect(() => {
@@ -116,13 +127,17 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
   >([]);
 
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !commonData || !isCommonDataFetched) {
       return;
     }
 
     (async () => {
       const updatedCommonsWithCommonMembers = (await Promise.all(
-        [common, ...subCommons, ...parentCommons].map(async (item) => {
+        [
+          commonData.common,
+          ...commonData.subCommons,
+          ...commonData.parentCommons,
+        ].map(async (item) => {
           const commonMember = await CommonService.getCommonMemberByUserId(
             item.id,
             userId,
@@ -138,7 +153,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
       )) as (Common & { commonMember: CommonMember })[];
       setCommonsWithCommonMembers(updatedCommonsWithCommonMembers);
     })();
-  }, [common, subCommons, parentCommons, userId]);
+  }, [commonData, isCommonDataFetched, userId]);
 
   const projectOptions = useMemo(() => {
     if (!userId) {

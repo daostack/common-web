@@ -16,13 +16,9 @@ import {
   setCommonMember,
 } from "@/store/states/common/actions";
 import { CommonContent } from "./components";
-import { CommonPageSettings } from "./types";
+import { CommonPageSettings, CommonRouterParams } from "./types";
 import { getInitialTab } from "./utils";
 import styles from "./Common.module.scss";
-
-interface CommonRouterParams {
-  id: string;
-}
 
 interface CommonProps {
   settings?: CommonPageSettings;

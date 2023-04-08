@@ -5,3 +5,7 @@ export interface CommonPageSettings {
   generatePagePath: (commonId: string) => string;
   withFeedTab?: boolean;
 }
+
+export interface CommonRouterParams {
+  id: string;
+}
