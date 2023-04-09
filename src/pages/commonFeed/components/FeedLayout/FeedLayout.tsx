@@ -84,6 +84,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
     useState(false);
   const [shouldShowSeeMore, setShouldShowSeeMore] = useState(true);
+  const [isFollowingFeedItem, setIsFollowingFeedItem] = useState(false);
   const [chatWidth, setChatWidth] = useState(0);
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
     null,
@@ -150,6 +151,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [setChatItem, feedItemIdForAutoChatOpen],
   );
 
+  const handleFeedItemFollowClick = () => {
+    setIsFollowingFeedItem((value) => !value);
+  };
+
   useEffect(() => {
     if (isChatItemSet) {
       setChatWidth(defaultChatSize);
@@ -168,7 +173,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     "--chat-w": `${chatWidth}px`,
   } as CSSProperties;
 
-  const followFeedItemEl = <FollowFeedItemButton />;
+  const followFeedItemEl = (
+    <FollowFeedItemButton
+      isFollowing={isFollowingFeedItem}
+      onClick={handleFeedItemFollowClick}
+    />
+  );
   const contentEl = (
     <CommonSidenavLayoutPageContent
       className={styles.layoutPageContent}

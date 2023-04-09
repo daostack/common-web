@@ -2,18 +2,14 @@
 
 .button {
   --btn-w: 3rem;
-  color: transparent;
-
-  &:hover {
-    color: $c-pink-primary;
-  }
 }
 
 .icon {
   flex-shrink: 0;
   width: 1.375rem;
   height: 1.3125rem;
-  transition: all 0.2s;
+  color: transparent;
+  transition: color 0.2s;
 }
 .iconFilled {
   color: $c-pink-primary;
