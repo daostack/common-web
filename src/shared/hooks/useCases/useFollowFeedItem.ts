@@ -11,6 +11,7 @@ import { FollowFeedItemPayload } from "@/shared/interfaces/api";
 interface State {
   isFollowingInProgress: boolean;
   isFollowingFinished: boolean;
+  isFollowingFinishedWithError?: boolean;
 }
 
 interface Return extends State {
@@ -53,6 +54,7 @@ export const useFollowFeedItem = (): Return => {
         setFollowingState({
           isFollowingInProgress: false,
           isFollowingFinished: false,
+          isFollowingFinishedWithError: true,
         });
       }
     }

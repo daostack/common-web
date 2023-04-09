@@ -8,6 +8,7 @@ type State = LoadingState<FeedItemFollow | null>;
 
 interface Return extends State {
   fetchUserFeedItemFollowData: (userId: string, feedItemId: string) => void;
+  setUserFeedItemFollowData: (data: FeedItemFollow | null) => void;
 }
 
 export const useUserFeedItemFollowData = (): Return => {
@@ -44,8 +45,20 @@ export const useUserFeedItemFollowData = (): Return => {
     [],
   );
 
+  const setUserFeedItemFollowData = useCallback(
+    (data: FeedItemFollow | null) => {
+      setState({
+        loading: false,
+        fetched: true,
+        data,
+      });
+    },
+    [],
+  );
+
   return {
     ...state,
     fetchUserFeedItemFollowData,
+    setUserFeedItemFollowData,
   };
 };
