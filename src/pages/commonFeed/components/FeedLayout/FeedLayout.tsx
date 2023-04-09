@@ -168,6 +168,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     "--chat-w": `${chatWidth}px`,
   } as CSSProperties;
 
+  const followFeedItemEl = <FollowFeedItemButton />;
   const contentEl = (
     <CommonSidenavLayoutPageContent
       className={styles.layoutPageContent}
@@ -206,7 +207,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   chatItem={chatItem}
                   common={common}
                   commonMember={commonMember}
-                  titleRightContent={<FollowFeedItemButton />}
+                  titleRightContent={followFeedItemEl}
                 />
               )}
               {isTabletView && (
@@ -215,6 +216,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   common={common}
                   commonMember={commonMember}
                   shouldShowSeeMore={shouldShowSeeMore}
+                  rightHeaderContent={followFeedItemEl}
                 >
                   <FeedItemPreviewModal
                     common={common}
