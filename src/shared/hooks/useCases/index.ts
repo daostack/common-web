@@ -18,6 +18,7 @@ export { useSupportersData } from "./useSupportersData";
 export { useUserById } from "./useUserById";
 export { default as useUserCards } from "./useUserCards";
 export { default as useUserContributions } from "./useUserContributions";
+export { useUserFeedItemFollowData } from "./useUserFeedItemFollowData";
 export { useGovernance } from "./useGovernance";
 export { useGovernanceByCommonId } from "./useGovernanceByCommonId";
 export { useUserInfoAboutMemberships } from "./useUserInfoAboutMemberships";
