@@ -8,16 +8,22 @@ import {
 } from "@/services";
 import { FollowFeedItemPayload } from "@/shared/interfaces/api";
 
-interface Return {
+interface State {
   isFollowingInProgress: boolean;
   isFollowingFinished: boolean;
+}
+
+interface Return extends State {
   followFeedItem: (data: FollowFeedItemPayload) => void;
+  cancelFeedItemFollowing: () => void;
 }
 
 export const useFollowFeedItem = (): Return => {
   const cancelTokenRef = useRef<CancelTokenSource | null>(null);
-  const [isFollowingInProgress, setIsFollowingInProgress] = useState(false);
-  const [isFollowingFinished, setIsFollowingFinished] = useState(false);
+  const [followingState, setFollowingState] = useState<State>({
+    isFollowingInProgress: false,
+    isFollowingFinished: false,
+  });
 
   const followFeedItem = useCallback(async (data: FollowFeedItemPayload) => {
     if (cancelTokenRef.current) {
@@ -25,8 +31,10 @@ export const useFollowFeedItem = (): Return => {
     }
 
     try {
-      setIsFollowingInProgress(true);
-      setIsFollowingFinished(false);
+      setFollowingState({
+        isFollowingInProgress: true,
+        isFollowingFinished: false,
+      });
       cancelTokenRef.current = getCancelTokenSource();
 
       await FeedItemFollowsService.followFeedItem(data, {
@@ -34,20 +42,38 @@ export const useFollowFeedItem = (): Return => {
       });
 
       cancelTokenRef.current = null;
-      setIsFollowingFinished(true);
-      setIsFollowingInProgress(false);
+      setFollowingState({
+        isFollowingInProgress: false,
+        isFollowingFinished: true,
+      });
     } catch (error) {
       if (!isRequestCancelled(error)) {
         Logger.error(error);
         cancelTokenRef.current = null;
-        setIsFollowingInProgress(false);
+        setFollowingState({
+          isFollowingInProgress: false,
+          isFollowingFinished: false,
+        });
       }
     }
   }, []);
 
+  const cancelFeedItemFollowing = useCallback(() => {
+    if (!cancelTokenRef.current) {
+      return;
+    }
+
+    cancelTokenRef.current.cancel();
+    cancelTokenRef.current = null;
+    setFollowingState({
+      isFollowingInProgress: false,
+      isFollowingFinished: false,
+    });
+  }, []);
+
   return {
-    isFollowingInProgress,
-    isFollowingFinished,
+    ...followingState,
     followFeedItem,
+    cancelFeedItemFollowing,
   };
 };
