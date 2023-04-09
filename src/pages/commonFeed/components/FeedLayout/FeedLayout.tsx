@@ -36,6 +36,7 @@ import { checkIsProject } from "@/shared/utils";
 import {
   DesktopChat,
   FeedItemPreviewModal,
+  FollowFeedItemButton,
   MobileChat,
   SplitView,
 } from "./components";
@@ -205,6 +206,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   chatItem={chatItem}
                   common={common}
                   commonMember={commonMember}
+                  titleRightContent={<FollowFeedItemButton />}
                 />
               )}
               {isTabletView && (
