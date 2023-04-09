@@ -124,6 +124,25 @@
   }
 }
 
+.buttonOutlinePinkVariant {
+  --btn-color: #{$c-pink-primary};
+  --btn-bg-color: #{$c-pink-active-feed-cards};
+  --btn-border-color: #{$c-pink-active-btn};
+  --btn-border: 0.0625rem solid var(--btn-border-color);
+
+  &:hover {
+    --btn-bg-color: #{$c-pink-hover-feed-cards};
+  }
+
+  &:active {
+    --btn-bg-color: #{$c-pink-active-btn};
+  }
+
+  &.buttonDisabled {
+    --btn-bg-color: #{$c-neutrals-100};
+  }
+}
+
 .buttonWarningVariant {
   --btn-color: #{$c-error-300};
   --btn-bg-color: #{$c-primary-100};
