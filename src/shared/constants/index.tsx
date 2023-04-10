@@ -6,6 +6,7 @@ export * from "./dynamicLink";
 export * from "./endpoint";
 export * from "./environment";
 export * from "./errorCode";
+export * from "./followFeedItemAction";
 export * from "./formErrorMessages";
 export * from "./getFeedItemUserMetadataKey";
 export * from "./language";

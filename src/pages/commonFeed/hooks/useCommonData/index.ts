@@ -4,8 +4,8 @@ import {
   CommonService,
   GovernanceService,
 } from "@/services";
+import { useCommonSubscription } from "@/shared/hooks/useCases/useFullCommonData/useCommonSubscription";
 import { State, CombinedState } from "./types";
-import { useCommonSubscription } from "./useCommonSubscription";
 import { useGovernanceSubscription } from "./useGovernanceSubscription";
 
 interface FetchCommonDataOptions {
@@ -27,7 +27,7 @@ export const useCommonData = (): Return => {
   const isLoading = state.loading;
   const isFetched = state.fetched;
   const currentCommonId = state.data?.common.id;
-  useCommonSubscription(setState, currentCommonId);
+  useCommonSubscription(setState, currentCommonId, state.data?.parentCommons);
   useGovernanceSubscription(setState, state.data?.governance.id);
 
   const fetchCommonData = useCallback((options: FetchCommonDataOptions) => {
@@ -60,12 +60,19 @@ export const useCommonData = (): Return => {
           throw new Error(`Couldn't find governance by common id= ${commonId}`);
         }
 
+        const [parentCommons, subCommons] = await Promise.all([
+          CommonService.getAllParentCommonsForCommon(common),
+          CommonService.getCommonsByDirectParentIds([common.id]),
+        ]);
+
         setState({
           loading: false,
           fetched: true,
           data: {
             common,
             governance,
+            parentCommons,
+            subCommons,
             commonMembersAmount,
             sharedFeedItem,
           },

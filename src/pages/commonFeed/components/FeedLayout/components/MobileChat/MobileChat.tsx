@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, ReactNode, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatMobileModal } from "@/pages/common/components";
@@ -18,6 +18,7 @@ interface ChatProps {
   common: Common;
   commonMember: (CommonMember & CirclesPermissions) | null;
   shouldShowSeeMore?: boolean;
+  rightHeaderContent?: ReactNode;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -27,6 +28,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     commonMember,
     children,
     shouldShowSeeMore = true,
+    rightHeaderContent,
   } = props;
   const { setChatItem, setIsShowFeedItemDetailsModal, setShouldShowSeeMore } =
     useChatContext();
@@ -72,6 +74,7 @@ const MobileChat: FC<ChatProps> = (props) => {
                 </span>
               ) : null
             }
+            rightContent={rightHeaderContent}
           />
         }
         styles={{

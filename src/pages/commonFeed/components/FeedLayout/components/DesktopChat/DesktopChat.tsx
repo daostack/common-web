@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, ReactNode, useMemo } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -17,10 +17,12 @@ interface ChatProps {
   chatItem: ChatItem;
   common: Common;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  titleRightContent?: ReactNode;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
-  const { className, chatItem, common, commonMember } = props;
+  const { className, chatItem, common, commonMember, titleRightContent } =
+    props;
   const user = useSelector(selectUser());
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
@@ -43,6 +45,9 @@ const DesktopChat: FC<ChatProps> = (props) => {
         >
           {chatItem.discussion.title}
         </p>
+        {titleRightContent && (
+          <div className={styles.titleRightContent}>{titleRightContent}</div>
+        )}
       </div>
       <ChatComponent
         commonMember={commonMember}
