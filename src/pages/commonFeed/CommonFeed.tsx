@@ -177,6 +177,8 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
               <NewProposalCreation
                 common={commonData.common}
                 governance={commonData.governance}
+                parentCommons={commonData.parentCommons}
+                subCommons={commonData.subCommons}
                 commonMember={commonMember}
                 isModalVariant={false}
               />
