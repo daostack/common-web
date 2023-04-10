@@ -20,5 +20,5 @@ export interface User {
   uid: string;
   roles?: UserRole[];
   deleted?: true;
-  //  subscriptions?: Subscription[];
+  inboxCounter?: number;
 }

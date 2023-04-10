@@ -1,6 +1,8 @@
 import React, { CSSProperties, FC, ReactNode } from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
+import { selectUserNotificationsAmount } from "@/pages/Auth/store/selectors";
 import { Tab, Tabs } from "@/shared/components";
 import { Avatar2Icon, InboxIcon, Hamburger2Icon } from "@/shared/icons";
 import {
@@ -27,9 +29,13 @@ interface TabConfiguration {
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
   const history = useHistory();
+  const userNotificationsAmount = useSelector(selectUserNotificationsAmount());
+  const finalUserNotificationsAmount =
+    userNotificationsAmount && userNotificationsAmount > 99
+      ? 99
+      : userNotificationsAmount;
   const activeTab =
     props.activeTab || getActiveLayoutTab(history.location.pathname);
-  const inboxCounter = 3;
   const tabs: TabConfiguration[] = [
     {
       label: getLayoutTabName(LayoutTab.Spaces),
@@ -40,7 +46,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
       label: getLayoutTabName(LayoutTab.Inbox),
       value: LayoutTab.Inbox,
       icon: <InboxIcon />,
-      notificationsAmount: inboxCounter || null,
+      notificationsAmount: finalUserNotificationsAmount || null,
     },
     {
       label: getLayoutTabName(LayoutTab.Profile),
