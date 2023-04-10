@@ -15,6 +15,7 @@ interface NavigationProps {
 const Navigation: FC<NavigationProps> = (props) => {
   const { className } = props;
   const location = useLocation();
+  const inboxCounter = 3;
   const items: NavigationItemOptions[] = [
     {
       text: "Inbox",
@@ -23,7 +24,7 @@ const Navigation: FC<NavigationProps> = (props) => {
       isActive: matchRoute(location.pathname, ROUTE_PATHS.INBOX, {
         exact: true,
       }),
-      isDisabled: true,
+      notificationsAmount: inboxCounter || null,
       tooltipContent: (
         <>
           We’re building a new Inbox section for your messages.

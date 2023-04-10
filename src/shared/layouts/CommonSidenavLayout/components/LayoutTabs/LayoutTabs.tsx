@@ -20,33 +20,34 @@ interface LayoutTabsProps {
 interface TabConfiguration {
   label: string;
   value: LayoutTab;
-  icon?: ReactNode;
+  icon: ReactNode;
+  notificationsAmount?: number | null;
 }
-
-const TABS: TabConfiguration[] = [
-  {
-    label: getLayoutTabName(LayoutTab.Spaces),
-    value: LayoutTab.Spaces,
-    icon: <Hamburger2Icon />,
-  },
-  // {
-  //   label: getLayoutTabName(LayoutTab.Inbox),
-  //   value: LayoutTab.Inbox,
-  //   icon: <InboxIcon />,
-  // },
-  {
-    label: getLayoutTabName(LayoutTab.Profile),
-    value: LayoutTab.Profile,
-    icon: <Avatar2Icon className={styles.avatarIcon} color="currentColor" />,
-  },
-];
 
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
   const history = useHistory();
   const activeTab =
     props.activeTab || getActiveLayoutTab(history.location.pathname);
-  const tabs = TABS;
+  const inboxCounter = 3;
+  const tabs: TabConfiguration[] = [
+    {
+      label: getLayoutTabName(LayoutTab.Spaces),
+      value: LayoutTab.Spaces,
+      icon: <Hamburger2Icon />,
+    },
+    {
+      label: getLayoutTabName(LayoutTab.Inbox),
+      value: LayoutTab.Inbox,
+      icon: <InboxIcon />,
+      notificationsAmount: inboxCounter || null,
+    },
+    {
+      label: getLayoutTabName(LayoutTab.Profile),
+      value: LayoutTab.Profile,
+      icon: <Avatar2Icon className={styles.avatarIcon} color="currentColor" />,
+    },
+  ];
 
   const itemStyles = {
     "--items-amount": tabs.length,
@@ -87,9 +88,14 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
           label={tab.label}
           value={tab.value}
           icon={
-            tab.icon ? (
-              <div className={styles.iconWrapper}>{tab.icon}</div>
-            ) : undefined
+            <div className={styles.iconWrapper}>
+              {tab.icon}
+              {typeof tab.notificationsAmount === "number" && (
+                <span className={styles.iconBadge}>
+                  {tab.notificationsAmount}
+                </span>
+              )}
+            </div>
           }
           includeDefaultMobileStyles={false}
         />
