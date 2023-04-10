@@ -10,6 +10,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { CommonTab } from "@/pages/common/constants";
+import { useCommonDataContext } from "@/pages/common/providers";
 import {
   CommonAction,
   ViewportBreakpointVariant,
@@ -51,6 +52,7 @@ const BREADCRUMBS_HEIGHT = 64;
 export const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember, common } = props;
   const dispatch = useDispatch();
+  const { parentCommons, subCommons } = useCommonDataContext();
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
@@ -81,6 +83,8 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
         <NewProposalCreation
           common={common}
           governance={governance}
+          parentCommons={parentCommons}
+          subCommons={subCommons}
           commonMember={commonMember}
           isModalVariant={false}
         />

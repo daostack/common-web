@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
@@ -8,11 +8,13 @@ interface HeaderProps {
   className?: string;
   title: string;
   titleActionElement?: React.ReactElement | null;
+  rightContent?: ReactNode;
   onBackClick?: () => void;
 }
 
 const Header: FC<HeaderProps> = (props) => {
-  const { className, title, onBackClick, titleActionElement } = props;
+  const { className, title, onBackClick, titleActionElement, rightContent } =
+    props;
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -22,6 +24,7 @@ const Header: FC<HeaderProps> = (props) => {
       <p className={styles.title}>
         {title} {titleActionElement}
       </p>
+      <div className={styles.rightContent}>{rightContent}</div>
     </div>
   );
 };

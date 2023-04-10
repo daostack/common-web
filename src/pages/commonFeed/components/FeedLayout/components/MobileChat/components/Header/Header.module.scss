@@ -23,4 +23,15 @@
 
 .title {
   margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  text-overflow: ellipsis;
+}
+
+.rightContent {
+  margin-left: auto;
+  padding-left: 0.5rem;
 }
