@@ -19,11 +19,17 @@ import {
 } from "@/store/states";
 import { commonActions } from "@/store/states";
 import { ProposalCreationCard, ProposalCreationModal } from "./components";
+import {
+  NewProposalCreationContext,
+  NewProposalCreationContextValue,
+} from "./context";
 import { getFundingProposalPayload, getSurveyProposalPayload } from "./util";
 
 interface NewProposalCreationProps {
   common: Common;
   governance: Governance;
+  parentCommons: Common[];
+  subCommons: Common[];
   commonMember: (CommonMember & CirclesPermissions) | null;
   commonImage?: string;
   commonName?: string;
@@ -42,6 +48,8 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
   const {
     common,
     governance,
+    parentCommons,
+    subCommons,
     commonMember,
     commonImage,
     commonName,
@@ -105,13 +113,48 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
     [governance.circles, userCircleIds, userId, commonId],
   );
 
+  const Wrapper: FC = ({ children }) => {
+    const contextValue = useMemo<NewProposalCreationContextValue>(
+      () => ({
+        common,
+        parentCommons,
+        subCommons,
+      }),
+      [common, parentCommons, subCommons],
+    );
+
+    return (
+      <NewProposalCreationContext.Provider value={contextValue}>
+        {children}
+      </NewProposalCreationContext.Provider>
+    );
+  };
+
   if (
     isModalVariant &&
     typeof commonImage === "string" &&
     typeof commonName === "string"
   ) {
     return (
-      <ProposalCreationModal
+      <Wrapper>
+        <ProposalCreationModal
+          initialValues={initialValues}
+          governanceCircles={governance.circles}
+          governance={governance}
+          userCircleIds={userCircleIds}
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          isLoading={isLoading}
+          commonImage={commonImage}
+          commonName={commonName}
+        />
+      </Wrapper>
+    );
+  }
+
+  return (
+    <Wrapper>
+      <ProposalCreationCard
         initialValues={initialValues}
         governanceCircles={governance.circles}
         governance={governance}
@@ -119,22 +162,8 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isLoading={isLoading}
-        commonImage={commonImage}
-        commonName={commonName}
       />
-    );
-  }
-
-  return (
-    <ProposalCreationCard
-      initialValues={initialValues}
-      governanceCircles={governance.circles}
-      governance={governance}
-      userCircleIds={userCircleIds}
-      onSubmit={handleSubmit}
-      onCancel={handleCancel}
-      isLoading={isLoading}
-    />
+    </Wrapper>
   );
 };
 
