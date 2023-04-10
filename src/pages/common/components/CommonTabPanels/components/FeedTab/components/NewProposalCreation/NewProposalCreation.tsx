@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from "react";
+import React, { FC, ReactNode, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
@@ -113,47 +113,36 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
     [governance.circles, userCircleIds, userId, commonId],
   );
 
-  const Wrapper: FC = ({ children }) => {
-    const contextValue = useMemo<NewProposalCreationContextValue>(
-      () => ({
-        common,
-        parentCommons,
-        subCommons,
-      }),
-      [common, parentCommons, subCommons],
-    );
-
-    return (
-      <NewProposalCreationContext.Provider value={contextValue}>
-        {children}
-      </NewProposalCreationContext.Provider>
-    );
-  };
+  const contextValue = useMemo<NewProposalCreationContextValue>(
+    () => ({
+      common,
+      parentCommons,
+      subCommons,
+    }),
+    [common, parentCommons, subCommons],
+  );
+  let contentEl: ReactNode;
 
   if (
     isModalVariant &&
     typeof commonImage === "string" &&
     typeof commonName === "string"
   ) {
-    return (
-      <Wrapper>
-        <ProposalCreationModal
-          initialValues={initialValues}
-          governanceCircles={governance.circles}
-          governance={governance}
-          userCircleIds={userCircleIds}
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-          isLoading={isLoading}
-          commonImage={commonImage}
-          commonName={commonName}
-        />
-      </Wrapper>
+    contentEl = (
+      <ProposalCreationModal
+        initialValues={initialValues}
+        governanceCircles={governance.circles}
+        governance={governance}
+        userCircleIds={userCircleIds}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        isLoading={isLoading}
+        commonImage={commonImage}
+        commonName={commonName}
+      />
     );
-  }
-
-  return (
-    <Wrapper>
+  } else {
+    contentEl = (
       <ProposalCreationCard
         initialValues={initialValues}
         governanceCircles={governance.circles}
@@ -163,7 +152,13 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         onCancel={handleCancel}
         isLoading={isLoading}
       />
-    </Wrapper>
+    );
+  }
+
+  return (
+    <NewProposalCreationContext.Provider value={contextValue}>
+      {contentEl}
+    </NewProposalCreationContext.Provider>
   );
 };
 
