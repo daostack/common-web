@@ -3,6 +3,7 @@ import {
   CacheState,
   CommonState,
   CommonLayoutState,
+  InboxState,
   ProjectsState,
   ChatState,
 } from "@/store/states";
@@ -22,4 +23,5 @@ export interface AppState {
   commonLayout: CommonLayoutState;
   cache: CacheState;
   chat: ChatState;
+  inbox: InboxState;
 }

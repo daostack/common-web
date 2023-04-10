@@ -1,10 +1,21 @@
+import { stringify } from "query-string";
+import { ApiEndpoint } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
-import { Collection, User } from "@/shared/models";
+import { GetInboxResponse } from "@/shared/interfaces/api";
 import {
+  Collection,
+  FeedItemFollowWithMetadata,
+  Timestamp,
+  User,
+} from "@/shared/models";
+import {
+  convertObjectDatesToFirestoreTimestamps,
+  convertToTimestamp,
   firestoreDataConverter,
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import Api from "./Api";
 
 const converter = firestoreDataConverter<User>();
 
@@ -33,6 +44,47 @@ class UserService {
         callback(docChange.doc.data(), docChange.type === "removed");
       }
     });
+  };
+
+  public getInboxItems = async (
+    options: {
+      startAfter?: Timestamp | null;
+      limit?: number;
+    } = {},
+  ): Promise<{
+    data: FeedItemFollowWithMetadata[];
+    firstDocTimestamp: Timestamp | null;
+    lastDocTimestamp: Timestamp | null;
+    hasMore: boolean;
+  }> => {
+    const { startAfter, limit = 10 } = options;
+    const queryParams: Record<string, unknown> = {
+      limit,
+    };
+
+    if (startAfter) {
+      queryParams.startAfter = startAfter.toDate().toISOString();
+    }
+
+    const { data } = await Api.get<GetInboxResponse>(
+      `${ApiEndpoint.GetInbox}?${stringify(queryParams)}`,
+    );
+    const inboxItems = data.inboxWithMetadata.map((item) =>
+      convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>(item),
+    );
+    const firstDocTimestamp =
+      (data.firstDocTimestamp && convertToTimestamp(data.firstDocTimestamp)) ||
+      null;
+    const lastDocTimestamp =
+      (data.lastDocTimestamp && convertToTimestamp(data.lastDocTimestamp)) ||
+      null;
+
+    return {
+      data: inboxItems,
+      firstDocTimestamp,
+      lastDocTimestamp,
+      hasMore: data.hasMore,
+    };
   };
 }
 
