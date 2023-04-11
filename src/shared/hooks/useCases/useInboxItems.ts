@@ -19,7 +19,9 @@ interface ItemBatch<T = FeedItemFollow> {
 
 type ItemsBatch = ItemBatch[];
 
-export const useInboxItems = (idsForNotListening?: string[]): Return => {
+export const useInboxItems = (
+  feedItemIdsForNotListening?: string[],
+): Return => {
   const dispatch = useDispatch();
   const [newItemsBatches, setNewItemsBatches] = useState<ItemsBatch[]>([]);
   const inboxItems = useSelector(selectInboxItems);
@@ -50,9 +52,10 @@ export const useInboxItems = (idsForNotListening?: string[]): Return => {
           }
 
           const finalData =
-            idsForNotListening && idsForNotListening.length > 0
+            feedItemIdsForNotListening && feedItemIdsForNotListening.length > 0
               ? data.filter(
-                  (item) => !idsForNotListening.includes(item.item.id),
+                  (item) =>
+                    !feedItemIdsForNotListening.includes(item.item.feedItemId),
                 )
               : data;
           setNewItemsBatches((currentItems) => currentItems.concat(finalData));
@@ -60,7 +63,7 @@ export const useInboxItems = (idsForNotListening?: string[]): Return => {
       );
 
     return unsubscribe;
-  }, [inboxItems.firstDocTimestamp, userId, idsForNotListening]);
+  }, [inboxItems.firstDocTimestamp, userId, feedItemIdsForNotListening]);
 
   useEffect(() => {
     if (!lastBatch) {
