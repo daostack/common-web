@@ -17,7 +17,7 @@ const initialInboxItems: InboxItems = {
 
 const initialState: InboxState = {
   items: { ...initialInboxItems },
-  sharedItemId: null,
+  sharedFeedItemId: null,
   sharedItem: null,
 };
 
@@ -73,7 +73,7 @@ const updateSharedInboxItem = (
 
   if (isRemoved) {
     state.sharedItem = null;
-    state.sharedItemId = null;
+    state.sharedFeedItemId = null;
   } else {
     state.sharedItem = {
       ...state.sharedItem,
@@ -93,9 +93,11 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   )
   .handleAction(actions.getInboxItems.success, (state, { payload }) =>
     produce(state, (nextState) => {
-      const payloadData = nextState.sharedItemId
+      const payloadData = nextState.sharedFeedItemId
         ? payload.data &&
-          payload.data.filter((item) => item.id !== nextState.sharedItemId)
+          payload.data.filter(
+            (item) => item.feedItemId !== nextState.sharedFeedItemId,
+          )
         : payload.data;
 
       nextState.items = {
@@ -163,9 +165,9 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       nextState.items = { ...initialInboxItems };
     }),
   )
-  .handleAction(actions.setSharedInboxItemId, (state, { payload }) =>
+  .handleAction(actions.setSharedFeedItemId, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.sharedItemId = payload;
+      nextState.sharedFeedItemId = payload;
     }),
   )
   .handleAction(actions.setSharedInboxItem, (state, { payload }) =>

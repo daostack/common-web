@@ -10,6 +10,6 @@ export interface InboxItems {
 
 export interface InboxState {
   items: InboxItems;
-  sharedItemId: string | null;
+  sharedFeedItemId: string | null;
   sharedItem: FeedItemFollowWithMetadata | null;
 }
