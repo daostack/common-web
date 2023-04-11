@@ -23,7 +23,7 @@ export const addNewInboxItems = createStandardAction(
   InboxActionType.ADD_NEW_INBOX_ITEMS,
 )<
   {
-    inboxItem: FeedItemFollowWithMetadata;
+    item: FeedItemFollowWithMetadata;
     statuses: {
       isAdded: boolean;
       isRemoved: boolean;

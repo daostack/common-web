@@ -120,11 +120,9 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       let firstDocTimestamp = nextState.items.firstDocTimestamp;
 
       const data = payload.reduceRight(
-        (acc, { inboxItem, statuses: { isRemoved } }) => {
+        (acc, { item, statuses: { isRemoved } }) => {
           const nextData = [...acc];
-          const itemIndex = nextData.findIndex(
-            (item) => item.id === inboxItem.id,
-          );
+          const itemIndex = nextData.findIndex((item) => item.id === item.id);
 
           if (isRemoved) {
             if (itemIndex >= 0) {
@@ -134,13 +132,13 @@ export const reducer = createReducer<InboxState, Action>(initialState)
             return nextData;
           }
 
-          firstDocTimestamp = inboxItem.updatedAt;
+          firstDocTimestamp = item.updatedAt;
 
           if (itemIndex < 0) {
-            return [inboxItem, ...nextData];
+            return [item, ...nextData];
           }
 
-          nextData[itemIndex] = inboxItem;
+          nextData[itemIndex] = item;
 
           return nextData;
         },
