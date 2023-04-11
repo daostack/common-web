@@ -23,6 +23,7 @@ interface FeedCardProps {
   type?: CommonFeedType;
   menuItems?: ContextMenuItem[];
   seenOnce?: boolean;
+  ownerId?: string;
 }
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -46,6 +47,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     type,
     menuItems,
     seenOnce,
+    ownerId,
   } = props;
   const isTabletView = useIsTabletView();
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
@@ -106,6 +108,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           menuItems,
           type,
           seenOnce,
+          ownerId,
         })}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (
         <CommonCard

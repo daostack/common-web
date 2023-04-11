@@ -178,6 +178,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       isPreviewMode={isPreviewMode}
       menuItems={menuItems}
       seenOnce={feedItemUserMetadata?.seenOnce}
+      ownerId={item.userId}
     >
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}

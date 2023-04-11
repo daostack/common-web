@@ -18,6 +18,7 @@ export interface FeedItemBaseContentProps {
   menuItems?: ContextMenuItem[];
   type?: CommonFeedType;
   seenOnce?: boolean;
+  ownerId?: string;
 }
 
 export interface FeedItemContextValue {

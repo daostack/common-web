@@ -226,6 +226,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       isPreviewMode={isPreviewMode}
       type={item.data.type}
       seenOnce={feedItemUserMetadata?.seenOnce}
+      ownerId={item.userId}
     >
       <FeedCardHeader
         avatar={feedItemUser?.photoURL}
