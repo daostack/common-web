@@ -1,6 +1,12 @@
 import { ApiEndpoint } from "@/shared/constants";
+import { UnsubscribeFunction } from "@/shared/interfaces";
 import { FollowFeedItemPayload } from "@/shared/interfaces/api";
-import { Collection, FeedItemFollow, SubCollections } from "@/shared/models";
+import {
+  Collection,
+  FeedItemFollow,
+  SubCollections,
+  Timestamp,
+} from "@/shared/models";
 import { firestoreDataConverter } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
@@ -33,6 +39,35 @@ class FeedItemFollowsService {
   ): Promise<void> => {
     const { cancelToken } = options;
     await Api.post(ApiEndpoint.FollowFeedItem, data, { cancelToken });
+  };
+
+  public subscribeToNewUpdatedFollowFeedItem = (
+    userId: string,
+    endBefore: Timestamp,
+    callback: (
+      data: {
+        item: FeedItemFollow;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getFeedItemFollowsSubCollection(userId)
+      .orderBy("lastActivity", "desc")
+      .endBefore(endBefore);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        item: docChange.doc.data(),
+        statuses: {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        },
+      }));
+      callback(data);
+    });
   };
 }
 
