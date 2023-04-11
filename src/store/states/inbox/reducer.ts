@@ -1,7 +1,7 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
-import { CommonFeed, FeedItemFollowWithMetadata } from "@/shared/models";
+import { FeedItemFollowWithMetadata } from "@/shared/models";
 import * as actions from "./actions";
 import { InboxState, InboxItems } from "./types";
 
@@ -83,6 +83,7 @@ const updateSharedInboxItem = (
 };
 
 export const reducer = createReducer<InboxState, Action>(initialState)
+  .handleAction(actions.resetInbox, () => ({ ...initialState }))
   .handleAction(actions.getInboxItems.request, (state) =>
     produce(state, (nextState) => {
       nextState.items = {
