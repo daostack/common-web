@@ -66,7 +66,9 @@ class UserService {
       queryParams.startAfter = startAfter.toDate().toISOString();
     }
 
-    const { data } = await Api.get<GetInboxResponse>(
+    const {
+      data: { data },
+    } = await Api.get<GetInboxResponse>(
       `${ApiEndpoint.GetInbox}?${stringify(queryParams)}`,
     );
     const inboxItems = data.inboxWithMetadata.map((item) =>
