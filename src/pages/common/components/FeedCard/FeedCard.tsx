@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useRef, MouseEventHandler } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { selectRecentFeedItemId } from "@/pages/OldCommon/store/selectors";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
+import { selectRecentFeedItemId } from "@/store/states";
 import { CommonCard } from "../CommonCard";
 import styles from "./FeedCard.module.scss";
 
@@ -22,6 +22,7 @@ interface FeedCardProps {
   lastMessage?: string;
   isPreviewMode?: boolean;
   menuItems?: ContextMenuItem[];
+  itemId?: string;
 }
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -43,9 +44,10 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     lastMessage,
     isPreviewMode = true,
     menuItems,
+    itemId,
   } = props;
   const isTabletView = useIsTabletView();
-  const recentFeedItemId = useSelector(selectRecentFeedItemId());
+  const recentFeedItemId = useSelector(selectRecentFeedItemId);
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -56,8 +58,11 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     }
   };
 
-  console.log("recentFeedItemId " + recentFeedItemId);
-  console.log(feedItemId);
+  useEffect(() => {
+    if (recentFeedItemId === itemId) {
+      toggleExpanding();
+    }
+  }, [recentFeedItemId, itemId]);
 
   function scrollToTargetAdjusted() {
     const headerOffset = isTabletView

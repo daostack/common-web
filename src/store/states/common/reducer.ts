@@ -31,6 +31,7 @@ const initialState: CommonState = {
   },
   commonMember: null,
   governance: null,
+  recentFeedItemId: "",
 };
 
 const updateFeedItemInList = (
@@ -286,5 +287,10 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.setSharedFeedItem, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.sharedFeedItem = payload;
+    }),
+  )
+  .handleAction(actions.setRecentFeedItemId, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.recentFeedItemId = payload;
     }),
   );

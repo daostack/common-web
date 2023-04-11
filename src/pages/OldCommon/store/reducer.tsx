@@ -22,7 +22,6 @@ const initialState: CommonsStateType = {
   activeTab: null,
   commonStates: {},
   commonMember: null,
-  recentFeedItemId: "",
 };
 
 type Action = ActionType<typeof actions>;
@@ -200,11 +199,6 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
           ...payload,
         };
       }
-    }),
-  )
-  .handleAction(actions.setRecentFeedItemId, (state, action) =>
-    produce(state, (nextState) => {
-      nextState.recentFeedItemId = action.payload;
     }),
   )
   .handleAction(actions.updateCommonState, (state, { payload }) =>

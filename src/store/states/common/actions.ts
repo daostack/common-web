@@ -138,3 +138,7 @@ export const setSharedFeedItemId = createStandardAction(
 export const setSharedFeedItem = createStandardAction(
   CommonActionType.SET_SHARED_FEED_ITEM,
 )<CommonFeed | null>();
+
+export const setRecentFeedItemId = createStandardAction(
+  CommonActionType.SET_RECENT_FEED_ITEM_ID,
+)<string>();

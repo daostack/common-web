@@ -538,7 +538,6 @@ export function* createDiscussionSaga(
     yield call(async () => {
       const ds = await fetchCommonDiscussions(discussion.commonId);
 
-      store.dispatch(actions.setRecentFeedItemId(discussion.id));
       store.dispatch(actions.setDiscussion(ds));
       store.dispatch(actions.loadCommonDiscussionList.request());
       store.dispatch(actions.getCommonsList.request());

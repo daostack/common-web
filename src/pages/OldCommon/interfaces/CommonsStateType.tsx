@@ -27,5 +27,4 @@ export interface CommonsStateType {
   activeTab: Tabs | null;
   commonStates: Record<string, LoadingState<Common | null>>;
   commonMember: CommonMember | null;
-  recentFeedItemId: string;
 }

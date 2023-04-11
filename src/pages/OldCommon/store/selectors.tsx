@@ -40,5 +40,3 @@ export const selectCommonStateById = (commonId: string) =>
   );
 export const selectCommonMember = () =>
   createSelector(selectCommons, (state) => state.commonMember);
-export const selectRecentFeedItemId = () =>
-  createSelector(selectCommons, (state) => state.recentFeedItemId);
