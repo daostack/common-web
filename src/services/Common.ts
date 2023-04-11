@@ -1,5 +1,7 @@
 import { isEqual } from "lodash";
+import { getCommonState } from "@/pages/OldCommon/store/actions";
 import { commonMembersSubCollection } from "@/pages/OldCommon/store/api";
+import { store } from "@/shared/appConfig";
 import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import {
@@ -16,6 +18,7 @@ import {
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
+import { waitForCommonToBeLoaded } from "./utils";
 
 const converter = firestoreDataConverter<Common>();
 const commonMemberConverter = firestoreDataConverter<CommonMember>();
@@ -31,6 +34,27 @@ class CommonService {
     const data = transformFirebaseDataList<Common>(common);
 
     return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
+  };
+
+  public getCachedCommonById = async (
+    commonId: string,
+  ): Promise<Common | null> => {
+    const commonState = store.getState().commons.commonStates[commonId];
+
+    if (commonState?.fetched) {
+      return commonState.data;
+    }
+    if (commonState?.loading) {
+      return await waitForCommonToBeLoaded(commonId);
+    }
+
+    store.dispatch(
+      getCommonState.request({
+        payload: { commonId },
+      }),
+    );
+
+    return await waitForCommonToBeLoaded(commonId);
   };
 
   public getCommonsByIds = async (
