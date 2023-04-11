@@ -82,10 +82,10 @@ const InboxPage: FC = () => {
   }, [userId]);
 
   useEffect(() => {
-    if (!inboxItems && !areInboxItemsLoading) {
+    if (userId && !inboxItems && !areInboxItemsLoading) {
       fetchInboxItems();
     }
-  }, [inboxItems, areInboxItemsLoading]);
+  }, [userId, inboxItems, areInboxItemsLoading]);
 
   if (!isDataFetched) {
     return (
