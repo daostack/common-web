@@ -1,5 +1,7 @@
 import React, { FC, useEffect, useRef, MouseEventHandler } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { selectRecentFeedItemId } from "@/pages/OldCommon/store/selectors";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
@@ -43,6 +45,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     menuItems,
   } = props;
   const isTabletView = useIsTabletView();
+  const recentFeedItemId = useSelector(selectRecentFeedItemId());
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -52,6 +55,9 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
       setExpandedFeedItemId(isExpanded ? null : feedItemId);
     }
   };
+
+  console.log("recentFeedItemId " + recentFeedItemId);
+  console.log(feedItemId);
 
   function scrollToTargetAdjusted() {
     const headerOffset = isTabletView

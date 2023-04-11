@@ -590,3 +590,7 @@ export const updateCommonState = createStandardAction(
   commonId: string;
   state: LoadingState<Common | null>;
 }>();
+
+export const setRecentFeedItemId = createStandardAction(
+  CommonsActionTypes.SET_RECENT_FEED_ITEM_ID,
+)<string>();
