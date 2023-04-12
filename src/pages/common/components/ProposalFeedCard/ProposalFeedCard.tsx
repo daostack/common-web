@@ -1,4 +1,10 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, {
+  memo,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
@@ -19,7 +25,6 @@ import {
   FeedCountdown,
   getLastMessage,
 } from "../FeedCard";
-import { LoadingFeedCard } from "../LoadingFeedCard";
 import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
@@ -40,7 +45,6 @@ interface ProposalFeedCardProps {
   isProject: boolean;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
-  governanceId?: string;
   isPreviewMode?: boolean;
   sizeKey?: string;
   isActive: boolean;
@@ -54,7 +58,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     isProject,
     item,
     governanceCircles,
-    governanceId,
     isPreviewMode,
     isActive,
     isExpanded,
@@ -187,21 +190,76 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     }
   }, [isDiscussionFetched, isProposalFetched, isFeedItemUserMetadataFetched]);
 
-  if (isLoading) {
-    return <LoadingFeedCard />;
-  }
+  const renderContent = (): ReactNode => {
+    if (isLoading) {
+      return null;
+    }
 
-  const isCountdownState = checkIsCountdownState(proposal);
-  const userHasPermissionsToVote = checkUserPermissionsToVote({
-    proposal,
-    commonMember,
-  });
-  const isVotingAllowed =
-    userHasPermissionsToVote &&
-    checkIsVotingAllowed({
-      userVote,
+    const isCountdownState = checkIsCountdownState(proposal);
+    const userHasPermissionsToVote = checkUserPermissionsToVote({
       proposal,
+      commonMember,
     });
+    const isVotingAllowed =
+      userHasPermissionsToVote &&
+      checkIsVotingAllowed({
+        userVote,
+        proposal,
+      });
+
+    return (
+      <>
+        <FeedCardHeader
+          avatar={feedItemUser?.photoURL}
+          title={getUserName(feedItemUser)}
+          createdAt={
+            <>
+              Created:{" "}
+              <FeedCountdown
+                isCountdownFinished
+                expirationTimestamp={item.createdAt}
+              />
+            </>
+          }
+          type={getProposalTypeString(proposal.type)}
+          circleVisibility={circleVisibility}
+          commonId={commonId}
+          userId={item.userId}
+        />
+        <FeedCardContent
+          subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
+          description={getProposalDescriptionString(
+            proposal.data.args.description,
+            proposal.type,
+          )}
+          images={discussion?.images}
+          onClick={handleOpenChat}
+          onMouseEnter={() => {
+            onHover(true);
+          }}
+          onMouseLeave={() => {
+            onHover(false);
+          }}
+        >
+          <ProposalFeedVotingInfo
+            proposal={proposal}
+            governanceCircles={governanceCircles}
+          />
+          {isVotingAllowed && (
+            <ProposalFeedButtonContainer
+              proposalId={proposal.id}
+              onVoteCreate={setVote}
+            />
+          )}
+          <UserVoteInfo
+            userVote={userVote}
+            userHasPermissionsToVote={userHasPermissionsToVote}
+            isCountdownState={isCountdownState}
+          />
+        </FeedCardContent>
+      </>
+    );
+  };
 
   return (
     <FeedCard
@@ -224,56 +282,9 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
+      isLoading={isLoading}
     >
-      <FeedCardHeader
-        avatar={feedItemUser?.photoURL}
-        title={getUserName(feedItemUser)}
-        createdAt={
-          <>
-            Created:{" "}
-            <FeedCountdown
-              isCountdownFinished
-              expirationTimestamp={item.createdAt}
-            />
-          </>
-        }
-        type={getProposalTypeString(proposal.type)}
-        circleVisibility={circleVisibility}
-        commonId={commonId}
-        userId={item.userId}
-        governanceId={governanceId}
-      />
-      <FeedCardContent
-        subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
-        description={getProposalDescriptionString(
-          proposal.data.args.description,
-          proposal.type,
-        )}
-        images={discussion?.images}
-        onClick={handleOpenChat}
-        onMouseEnter={() => {
-          onHover(true);
-        }}
-        onMouseLeave={() => {
-          onHover(false);
-        }}
-      >
-        <ProposalFeedVotingInfo
-          proposal={proposal}
-          governanceCircles={governanceCircles}
-        />
-        {isVotingAllowed && (
-          <ProposalFeedButtonContainer
-            proposalId={proposal.id}
-            onVoteCreate={setVote}
-          />
-        )}
-        <UserVoteInfo
-          userVote={userVote}
-          userHasPermissionsToVote={userHasPermissionsToVote}
-          isCountdownState={isCountdownState}
-        />
-      </FeedCardContent>
+      {renderContent()}
     </FeedCard>
   );
 };

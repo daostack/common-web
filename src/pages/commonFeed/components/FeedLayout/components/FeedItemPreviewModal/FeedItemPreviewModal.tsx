@@ -53,7 +53,6 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
     >
       {selectedFeedItem && (
         <FeedItem
-          governanceId={governance.id}
           commonId={common.id}
           commonName={common.name}
           isProject={checkIsProject(common)}

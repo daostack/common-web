@@ -14,7 +14,6 @@ interface FeedItemProps {
   userCircleIds: string[];
   commonMemberUserId?: string;
   isMobileVersion?: boolean;
-  governanceId?: string;
   isPreviewMode?: boolean;
   isActive?: boolean;
   isExpanded?: boolean;
@@ -30,7 +29,6 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     governanceCircles,
     userCircleIds,
     isMobileVersion = false,
-    governanceId,
     isPreviewMode = false,
     isActive = false,
     isExpanded = false,
@@ -64,7 +62,6 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         commonId={commonId}
         commonName={commonName}
         isProject={isProject}
-        governanceId={governanceId}
         isPreviewMode={isPreviewMode}
         {...generalProps}
       />
@@ -79,7 +76,6 @@ const FeedItem: FC<FeedItemProps> = (props) => {
         isProject={isProject}
         item={item}
         governanceCircles={governanceCircles}
-        governanceId={governanceId}
         isPreviewMode={isPreviewMode}
         sizeKey={isActive ? sizeKey : undefined}
         {...generalProps}

@@ -21,7 +21,6 @@ import {
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
-import { LoadingFeedCard } from "../LoadingFeedCard";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -31,7 +30,6 @@ interface DiscussionFeedCardProps {
   commonId: string;
   commonName: string;
   isProject: boolean;
-  governanceId?: string;
   isPreviewMode: boolean;
   isActive: boolean;
   isExpanded: boolean;
@@ -47,7 +45,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     commonId,
     commonName,
     isProject,
-    governanceId,
     isPreviewMode,
     isActive,
     isExpanded,
@@ -151,10 +148,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     }
   }, [isDiscussionFetched, isFeedItemUserMetadataFetched]);
 
-  if (isLoading) {
-    return <LoadingFeedCard />;
-  }
-
   return (
     <FeedCard
       feedItemId={item.id}
@@ -176,6 +169,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
+      isLoading={isLoading}
       menuItems={menuItems}
     >
       <FeedCardHeader
@@ -196,7 +190,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         isMobileVersion={isMobileVersion}
         commonId={commonId}
         userId={item.userId}
-        governanceId={governanceId}
       />
       <FeedCardContent
         description={discussion?.message}

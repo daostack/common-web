@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
+import { Loader } from "@/shared/ui-kit";
 import { CommonCard } from "../CommonCard";
 import styles from "./FeedCard.module.scss";
 
@@ -19,6 +20,7 @@ interface FeedCardProps {
   canBeExpanded?: boolean;
   lastMessage?: string;
   isPreviewMode?: boolean;
+  isLoading?: boolean;
   menuItems?: ContextMenuItem[];
 }
 
@@ -40,6 +42,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     title,
     lastMessage,
     isPreviewMode = true,
+    isLoading = false,
     menuItems,
   } = props;
   const isTabletView = useIsTabletView();
@@ -116,7 +119,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           )}
           hideCardStyles={feedCardSettings?.shouldHideCardStyles ?? true}
         >
-          {children}
+          {isLoading ? <Loader className={styles.loader} /> : children}
         </CommonCard>
       )}
     </div>
