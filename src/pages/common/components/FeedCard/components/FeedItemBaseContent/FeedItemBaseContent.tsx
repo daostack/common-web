@@ -71,10 +71,6 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     }
   };
 
-  if (!title && !lastActivity) {
-    return null;
-  }
-
   return (
     <div
       className={classNames(styles.container, {
@@ -97,7 +93,9 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       )}
       <div className={styles.content}>
         <div className={styles.topContent}>
-          <p className={classNames(styles.text, styles.title)}>{title}</p>
+          <p className={classNames(styles.text, styles.title)}>
+            {title || "Loading..."}
+          </p>
           <p className={classNames(styles.text, styles.lastActivity)}>
             <TimeAgo milliseconds={lastActivity} />
           </p>

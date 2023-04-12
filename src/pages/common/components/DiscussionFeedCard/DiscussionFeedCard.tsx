@@ -21,7 +21,6 @@ import {
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
-import { LoadingFeedCard } from "../LoadingFeedCard";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -149,10 +148,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     }
   }, [isDiscussionFetched, isFeedItemUserMetadataFetched]);
 
-  if (isLoading) {
-    return <LoadingFeedCard />;
-  }
-
   return (
     <FeedCard
       feedItemId={item.id}
@@ -174,6 +169,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
+      isLoading={isLoading}
       menuItems={menuItems}
     >
       <FeedCardHeader
