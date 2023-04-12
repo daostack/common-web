@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import { InboxIcon, RightArrowThinIcon } from "@/shared/icons";
 import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
+import { getPluralEnding } from "@/shared/utils";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
@@ -25,7 +26,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
             <h1 className={styles.title}>Inbox</h1>
             <p className={styles.newMessagesAmount}>
               {newMessagesAmount} new message
-              {newMessagesAmount === 1 ? "" : "s"}
+              {getPluralEnding(newMessagesAmount)}
             </p>
           </div>
         </div>
