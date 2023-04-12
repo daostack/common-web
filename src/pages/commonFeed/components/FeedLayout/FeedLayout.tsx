@@ -35,6 +35,7 @@ import { InfiniteScroll } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
 import {
   DesktopChat,
+  DesktopChatPlaceholder,
   FeedItemPreviewModal,
   FollowFeedItemButton,
   MobileChat,
@@ -84,18 +85,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
     useState(false);
   const [shouldShowSeeMore, setShouldShowSeeMore] = useState(true);
-  const [chatWidth, setChatWidth] = useState(0);
-  const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
-    null,
-  );
-  const isChatItemSet = Boolean(chatItem);
   const maxChatSize = getSplitViewMaxSize(windowWidth);
   const defaultChatSize = useMemo(
     () => getDefaultSize(windowWidth, maxChatSize),
     [],
   );
-  const activeFeedItemId = chatItem?.feedItemId;
-  const sizeKey = `${windowWidth}_${chatWidth}`;
+  const [chatWidth, setChatWidth] = useState(defaultChatSize);
+  const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
+    null,
+  );
   const allFeedItems = useMemo(() => {
     const items: CommonFeed[] = [];
 
@@ -108,10 +106,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return items;
   }, [topFeedItems, feedItems]);
-  const userCircleIds = useMemo(
-    () => Object.values(commonMember?.circles.map ?? {}),
-    [commonMember?.circles.map],
-  );
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (isTabletView) {
       return;
@@ -125,6 +119,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return feedItem?.id;
   }, [allFeedItems, isTabletView]);
+  const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
+  const sizeKey = `${windowWidth}_${chatWidth}`;
+  const userCircleIds = useMemo(
+    () => Object.values(commonMember?.circles.map ?? {}),
+    [commonMember?.circles.map],
+  );
 
   const selectedFeedItem = useMemo(() => {
     return allFeedItems?.find((item) => item.id === chatItem?.feedItemId);
@@ -149,12 +149,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }),
     [setChatItem, feedItemIdForAutoChatOpen],
   );
-
-  useEffect(() => {
-    if (isChatItemSet) {
-      setChatWidth(defaultChatSize);
-    }
-  }, [isChatItemSet]);
 
   useEffect(() => {
     if (chatWidth > maxChatSize) {
@@ -206,15 +200,18 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   />
                 ))}
               </InfiniteScroll>
-              {chatItem && !isTabletView && (
-                <DesktopChat
-                  className={styles.desktopChat}
-                  chatItem={chatItem}
-                  common={common}
-                  commonMember={commonMember}
-                  titleRightContent={followFeedItemEl}
-                />
-              )}
+              {!isTabletView &&
+                (chatItem ? (
+                  <DesktopChat
+                    className={styles.desktopChat}
+                    chatItem={chatItem}
+                    common={common}
+                    commonMember={commonMember}
+                    titleRightContent={followFeedItemEl}
+                  />
+                ) : (
+                  <DesktopChatPlaceholder className={styles.desktopChat} />
+                ))}
               {isTabletView && (
                 <MobileChat
                   chatItem={chatItem}
@@ -244,7 +241,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     contentEl
   ) : (
     <SplitView
-      minSize={isChatItemSet ? MIN_CHAT_WIDTH : 0}
+      minSize={MIN_CHAT_WIDTH}
       maxSize={maxChatSize}
       defaultSize={defaultChatSize}
       onChange={setChatWidth}
