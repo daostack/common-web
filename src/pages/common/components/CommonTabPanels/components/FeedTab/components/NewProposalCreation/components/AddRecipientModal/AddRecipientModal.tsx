@@ -4,7 +4,6 @@ import classNames from "classnames";
 import { Formik } from "formik";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
-import { useCommonDataContext } from "@/pages/common/providers";
 import { CommonService } from "@/services";
 import { Modal } from "@/shared/components";
 import {
@@ -26,6 +25,7 @@ import {
   Currency,
 } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
+import { useNewProposalCreationContext } from "../../context";
 import { validationSchema } from "./validationSchema";
 import styles from "./AddRecipientModal.module.scss";
 
@@ -67,7 +67,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
   } = useCommonMembers();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { common, subCommons, parentCommons } = useCommonDataContext();
+  const { common, subCommons, parentCommons } = useNewProposalCreationContext();
   const commonId = useMemo(() => common.id, [common]);
 
   const initialValues = useMemo(

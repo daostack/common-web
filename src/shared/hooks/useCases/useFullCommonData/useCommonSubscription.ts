@@ -1,11 +1,14 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { CommonService } from "@/services";
+import { LoadingState } from "@/shared/interfaces";
 import { Common } from "@/shared/models";
-import { State } from "./types";
+import { Data } from "./types";
 import { updateCommonsBySubscription } from "./utils";
 
-export const useCommonSubscription = (
-  setState: Dispatch<SetStateAction<State>>,
+type BaseData = Pick<Data, "common" | "parentCommons" | "subCommons">;
+
+export const useCommonSubscription = <T extends BaseData>(
+  setState: Dispatch<SetStateAction<LoadingState<T | null>>>,
   commonId?: string,
   parentCommons: Common[] = [],
 ) => {

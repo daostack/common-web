@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from "react";
+import React, { FC, ReactNode, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
@@ -19,11 +19,17 @@ import {
 } from "@/store/states";
 import { commonActions } from "@/store/states";
 import { ProposalCreationCard, ProposalCreationModal } from "./components";
+import {
+  NewProposalCreationContext,
+  NewProposalCreationContextValue,
+} from "./context";
 import { getFundingProposalPayload, getSurveyProposalPayload } from "./util";
 
 interface NewProposalCreationProps {
   common: Common;
   governance: Governance;
+  parentCommons: Common[];
+  subCommons: Common[];
   commonMember: (CommonMember & CirclesPermissions) | null;
   commonImage?: string;
   commonName?: string;
@@ -42,6 +48,8 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
   const {
     common,
     governance,
+    parentCommons,
+    subCommons,
     commonMember,
     commonImage,
     commonName,
@@ -105,12 +113,22 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
     [governance.circles, userCircleIds, userId, commonId],
   );
 
+  const contextValue = useMemo<NewProposalCreationContextValue>(
+    () => ({
+      common,
+      parentCommons,
+      subCommons,
+    }),
+    [common, parentCommons, subCommons],
+  );
+  let contentEl: ReactNode;
+
   if (
     isModalVariant &&
     typeof commonImage === "string" &&
     typeof commonName === "string"
   ) {
-    return (
+    contentEl = (
       <ProposalCreationModal
         initialValues={initialValues}
         governanceCircles={governance.circles}
@@ -123,18 +141,24 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         commonName={commonName}
       />
     );
+  } else {
+    contentEl = (
+      <ProposalCreationCard
+        initialValues={initialValues}
+        governanceCircles={governance.circles}
+        governance={governance}
+        userCircleIds={userCircleIds}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        isLoading={isLoading}
+      />
+    );
   }
 
   return (
-    <ProposalCreationCard
-      initialValues={initialValues}
-      governanceCircles={governance.circles}
-      governance={governance}
-      userCircleIds={userCircleIds}
-      onSubmit={handleSubmit}
-      onCancel={handleCancel}
-      isLoading={isLoading}
-    />
+    <NewProposalCreationContext.Provider value={contextValue}>
+      {contentEl}
+    </NewProposalCreationContext.Provider>
   );
 };
 
