@@ -21,7 +21,10 @@ export default function ChatFilePreview() {
     <div className={styles.container}>
       <div className={styles.wrapper}>
         {filesPreview.map((file, index) => (
-          <div className={styles.filePreviewWrapper}>
+          <div
+            key={`${file.info.name} ${index}`}
+            className={styles.filePreviewWrapper}
+          >
             {file.info.type.startsWith(MimePrefixes.image) ? (
               <img className={styles.filePreview} src={file.src} />
             ) : (

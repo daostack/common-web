@@ -17,9 +17,9 @@ const MinusIcon: FC<MinusIconProps> = ({ className }) => {
       <path
         d="M4.16699 10H15.8337"
         stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
