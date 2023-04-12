@@ -31,7 +31,6 @@ interface DiscussionFeedCardProps {
   commonId: string;
   commonName: string;
   isProject: boolean;
-  governanceId?: string;
   isPreviewMode: boolean;
   isActive: boolean;
   isExpanded: boolean;
@@ -47,7 +46,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     commonId,
     commonName,
     isProject,
-    governanceId,
     isPreviewMode,
     isActive,
     isExpanded,
@@ -196,7 +194,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         isMobileVersion={isMobileVersion}
         commonId={commonId}
         userId={item.userId}
-        governanceId={governanceId}
       />
       <FeedCardContent
         description={discussion?.message}

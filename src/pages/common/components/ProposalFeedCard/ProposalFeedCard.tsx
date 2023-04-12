@@ -40,7 +40,6 @@ interface ProposalFeedCardProps {
   isProject: boolean;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
-  governanceId?: string;
   isPreviewMode?: boolean;
   sizeKey?: string;
   isActive: boolean;
@@ -54,7 +53,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     isProject,
     item,
     governanceCircles,
-    governanceId,
     isPreviewMode,
     isActive,
     isExpanded,
@@ -241,7 +239,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         circleVisibility={circleVisibility}
         commonId={commonId}
         userId={item.userId}
-        governanceId={governanceId}
       />
       <FeedCardContent
         subtitle={getProposalSubtitle(proposal, proposalSpecificData)}

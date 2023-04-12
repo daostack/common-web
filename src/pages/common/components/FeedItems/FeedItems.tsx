@@ -59,7 +59,6 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
           {commonFeedItems?.map((item) => (
             <FeedItem
               key={item.id}
-              governanceId={governance.id}
               commonId={common.id}
               commonName={common.name}
               isProject={checkIsProject(common)}

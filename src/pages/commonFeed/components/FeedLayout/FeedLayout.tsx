@@ -192,7 +192,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 {allFeedItems?.map((item) => (
                   <FeedItem
                     key={item.id}
-                    governanceId={governance.id}
                     commonId={common.id}
                     commonName={common.name}
                     isProject={checkIsProject(common)}
