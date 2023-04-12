@@ -27,7 +27,6 @@ export function* createSurveyProposal(
       }),
     );
 
-    yield put(actions.setRecentFeedItemId(proposal.id));
     yield put(actions.setCommonAction(null));
     yield put(actions.createSurveyProposal.success(proposal));
 
@@ -67,7 +66,6 @@ export function* createFundingProposal(
       }),
     );
 
-    yield put(actions.setRecentFeedItemId(proposal.id));
     yield put(actions.setCommonAction(null));
     yield put(actions.createFundingProposal.success(proposal));
 

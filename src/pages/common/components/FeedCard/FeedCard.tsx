@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
-import { selectRecentFeedItemId } from "@/store/states";
+import { selectRecentStreamId } from "@/store/states";
 import { CommonCard } from "../CommonCard";
 import styles from "./FeedCard.module.scss";
 
@@ -47,7 +47,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     itemId,
   } = props;
   const isTabletView = useIsTabletView();
-  const recentFeedItemId = useSelector(selectRecentFeedItemId);
+  const recentStreamId = useSelector(selectRecentStreamId);
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,10 +59,10 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
   };
 
   useEffect(() => {
-    if (recentFeedItemId === itemId) {
+    if (recentStreamId === itemId) {
       toggleExpanding();
     }
-  }, [recentFeedItemId, itemId]);
+  }, [recentStreamId, itemId]);
 
   function scrollToTargetAdjusted() {
     const headerOffset = isTabletView

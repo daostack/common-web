@@ -55,7 +55,6 @@ export function* createDiscussion(
       }),
     );
 
-    yield put(actions.setRecentFeedItemId(discussion.id));
     yield put(actions.setCommonAction(null));
     yield put(actions.createDiscussion.success(discussion));
 
