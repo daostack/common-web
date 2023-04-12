@@ -36,7 +36,7 @@ const InboxPage: FC = () => {
   const userId = user?.uid;
   const {
     data: inboxData,
-    fetched: isInboxDataFetched,
+    fetched: isDataFetched,
     fetchInboxData,
   } = useInboxData(userId);
   const {
@@ -50,7 +50,6 @@ const InboxPage: FC = () => {
     () => (sharedInboxItem ? [sharedInboxItem] : []),
     [sharedInboxItem],
   );
-  const isDataFetched = isInboxDataFetched;
 
   const fetchData = () => {
     fetchInboxData({
