@@ -128,11 +128,9 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
   }, [commonFeedItems, areCommonFeedItemsLoading]);
 
   useEffect(() => {
-    const itemToExpand = commonFeedItems?.find(
-      (item) => item.data.id === recentStreamId,
-    );
-    if (itemToExpand) {
-      feedLayoutRef?.setExpandedFeedItemId(itemToExpand.id);
+    if (recentStreamId === commonFeedItems?.[0]?.data.id) {
+      feedLayoutRef?.setExpandedFeedItemId(commonFeedItems[0].id);
+      dispatch(commonActions.setRecentStreamId(""));
     }
   }, [feedLayoutRef, recentStreamId, commonFeedItems]);
 
