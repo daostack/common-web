@@ -5,6 +5,7 @@ import { ChatState } from "./types";
 
 const initialState: ChatState = {
   currentDiscussionMessageReply: null,
+  filesPreview: null,
 };
 
 type Action = ActionType<typeof actions>;
@@ -20,5 +21,15 @@ export const reducer = createReducer<ChatState, Action>(initialState)
   .handleAction(actions.clearCurrentDiscussionMessageReply, (state) =>
     produce(state, (nextState) => {
       nextState.currentDiscussionMessageReply = null;
+    }),
+  )
+  .handleAction(actions.setFilesPreview, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.filesPreview = payload;
+    }),
+  )
+  .handleAction(actions.clearFilesPreview, (state) =>
+    produce(state, (nextState) => {
+      nextState.filesPreview = null;
     }),
   );

@@ -1,0 +1,39 @@
+@import "../../../../../../constants.scss";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: $c-neutrals-100;
+  padding: 0 1rem;
+}
+
+.wrapper {
+  overflow-x: scroll;
+  display: flex;
+  width: 100%;
+}
+
+.filePreviewWrapper {
+  position: relative;
+  margin: 1rem 0.5rem 0;
+  height: 6.25rem;
+}
+
+.filePreview {
+  height: 6.25rem;
+  width: 6.25rem;
+  object-fit: cover;
+  border-radius: 0.25rem;
+}
+
+.closeButton {
+  position: absolute;
+  top: -0.375rem;
+  left: -0.3125rem;
+  background-color: $white;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 0.75rem;
+  border: 0.0625rem solid $c-neutrals-200;
+}
