@@ -10,4 +10,5 @@ export interface AuthStateType {
   isAuthLoading: boolean;
   authProvider: AuthProvider | null;
   isAuthenticationReady: boolean;
+  userNotificationsAmount: number | null;
 }

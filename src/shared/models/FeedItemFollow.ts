@@ -13,3 +13,9 @@ export interface FeedItemFollow extends BaseEntity {
   count: number;
   lastActivity: Timestamp;
 }
+
+export interface FeedItemFollowWithMetadata extends FeedItemFollow {
+  commonName: string;
+  parentCommonName?: string;
+  commonAvatar: string;
+}
