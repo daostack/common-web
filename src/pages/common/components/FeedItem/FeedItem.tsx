@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import { CommonFeed, CommonFeedType, Governance } from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
@@ -49,41 +49,27 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   }
 
   const generalProps = {
+    item,
+    commonId,
+    commonName,
     isActive,
     isExpanded,
+    isProject,
+    governanceCircles,
+    isPreviewMode,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {
     return (
-      <DiscussionFeedCard
-        item={item}
-        governanceCircles={governanceCircles}
-        isMobileVersion={isMobileVersion}
-        commonId={commonId}
-        commonName={commonName}
-        isProject={isProject}
-        isPreviewMode={isPreviewMode}
-        {...generalProps}
-      />
+      <DiscussionFeedCard isMobileVersion={isMobileVersion} {...generalProps} />
     );
   }
 
   if (item.data.type === CommonFeedType.Proposal) {
-    return (
-      <ProposalFeedCard
-        commonId={commonId}
-        commonName={commonName}
-        isProject={isProject}
-        item={item}
-        governanceCircles={governanceCircles}
-        isPreviewMode={isPreviewMode}
-        sizeKey={isActive ? sizeKey : undefined}
-        {...generalProps}
-      />
-    );
+    return <ProposalFeedCard sizeKey={sizeKey} {...generalProps} />;
   }
 
   return null;
 };
 
-export default FeedItem;
+export default memo(FeedItem);

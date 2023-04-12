@@ -1,10 +1,4 @@
-import React, {
-  memo,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
@@ -289,4 +283,4 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   );
 };
 
-export default memo(ProposalFeedCard);
+export default ProposalFeedCard;

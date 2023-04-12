@@ -183,22 +183,26 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             <div className={classNames(styles.content, className)}>
               {topContent}
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
-                {allFeedItems?.map((item) => (
-                  <FeedItem
-                    key={item.id}
-                    commonId={common.id}
-                    commonName={common.name}
-                    isProject={checkIsProject(common)}
-                    item={item}
-                    governanceCircles={governance.circles}
-                    isMobileVersion={isTabletView}
-                    userCircleIds={userCircleIds}
-                    isActive={item.id === activeFeedItemId}
-                    isExpanded={item.id === expandedFeedItemId}
-                    sizeKey={sizeKey}
-                    commonMemberUserId={commonMember?.userId}
-                  />
-                ))}
+                {allFeedItems?.map((item) => {
+                  const isActive = item.id === activeFeedItemId;
+
+                  return (
+                    <FeedItem
+                      key={item.id}
+                      commonId={common.id}
+                      commonName={common.name}
+                      isProject={checkIsProject(common)}
+                      item={item}
+                      governanceCircles={governance.circles}
+                      isMobileVersion={isTabletView}
+                      userCircleIds={userCircleIds}
+                      isActive={isActive}
+                      isExpanded={item.id === expandedFeedItemId}
+                      sizeKey={isActive ? sizeKey : undefined}
+                      commonMemberUserId={commonMember?.userId}
+                    />
+                  );
+                })}
               </InfiniteScroll>
               {!isTabletView &&
                 (chatItem ? (
