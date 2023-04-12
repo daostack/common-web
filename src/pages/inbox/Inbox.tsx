@@ -1,6 +1,10 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "@/pages/Auth/store/selectors";
+import {
+  selectUser,
+  selectUserNotificationsAmount,
+} from "@/pages/Auth/store/selectors";
+import { FeedLayout, FeedLayoutRef } from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
@@ -8,7 +12,7 @@ import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { inboxActions, selectSharedInboxItem } from "@/store/states";
-import { FeedLayout, FeedLayoutRef, HeaderContent } from "./components";
+import { HeaderContent } from "./components";
 import { useInboxData } from "./hooks";
 import styles from "./Inbox.module.scss";
 
@@ -27,6 +31,7 @@ const InboxPage: FC = () => {
     () => (sharedFeedItemId ? [sharedFeedItemId] : []),
     [sharedFeedItemId],
   );
+  const userNotificationsAmount = useSelector(selectUserNotificationsAmount());
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const {
@@ -111,30 +116,22 @@ const InboxPage: FC = () => {
 
   return (
     <>
-      {/*<FeedLayout*/}
-      {/*  ref={setFeedLayoutRef}*/}
-      {/*  className={styles.feedLayout}*/}
-      {/*  headerContent={*/}
-      {/*    <HeaderContent*/}
-      {/*      commonId={inboxData.common.id}*/}
-      {/*      commonName={inboxData.common.name}*/}
-      {/*      commonImage={inboxData.common.image}*/}
-      {/*      commonMembersAmount={inboxData.commonMembersAmount}*/}
-      {/*      commonMember={commonMember}*/}
-      {/*      governance={inboxData.governance}*/}
-      {/*      isProject={checkIsProject(inboxData.common)}*/}
-      {/*    />*/}
-      {/*  }*/}
-      {/*  isGlobalLoading={!isGlobalDataFetched}*/}
-      {/*  common={inboxData.common}*/}
-      {/*  governance={inboxData.governance}*/}
-      {/*  commonMember={commonMember}*/}
-      {/*  topFeedItems={topFeedItems}*/}
-      {/*  feedItems={inboxItems}*/}
-      {/*  loading={areInboxItemsLoading || !hasAccessToPage}*/}
-      {/*  shouldHideContent={!hasAccessToPage}*/}
-      {/*  onFetchNext={fetchMoreInboxItems}*/}
-      {/*/>*/}
+      <FeedLayout
+        ref={setFeedLayoutRef}
+        className={styles.feedLayout}
+        headerContent={
+          <HeaderContent newMessagesAmount={userNotificationsAmount || 0} />
+        }
+        isGlobalLoading={false}
+        common={{} as any}
+        governance={{} as any}
+        commonMember={null}
+        topFeedItems={[]}
+        feedItems={[]}
+        loading={areInboxItemsLoading || !user}
+        shouldHideContent={!user}
+        onFetchNext={fetchMoreInboxItems}
+      />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>
   );
