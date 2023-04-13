@@ -132,7 +132,7 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
       feedLayoutRef?.setExpandedFeedItemId(commonFeedItems[0].id);
       dispatch(commonActions.setRecentStreamId(""));
     }
-  }, [feedLayoutRef, recentStreamId, commonFeedItems]);
+  }, [feedLayoutRef, recentStreamId, commonFeedItems?.[0]]);
 
   if (!isDataFetched) {
     return (
