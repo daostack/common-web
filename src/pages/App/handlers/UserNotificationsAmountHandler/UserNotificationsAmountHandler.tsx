@@ -1,6 +1,6 @@
-import React, { FC, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserNotificationsAmount } from "@/pages/Auth/store/actions";
+import { setUserStreamsWithNotificationsAmount } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { UserService } from "@/services";
 
@@ -15,7 +15,9 @@ const UserNotificationsAmountHandler: FC = () => {
     }
 
     const unsubscribe = UserService.subscribeToUser(userId, (updatedUser) => {
-      dispatch(setUserNotificationsAmount(updatedUser.inboxCounter ?? null));
+      dispatch(
+        setUserStreamsWithNotificationsAmount(updatedUser.inboxCounter ?? null),
+      );
     });
 
     return unsubscribe;
