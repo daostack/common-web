@@ -8,8 +8,10 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { useSelector } from "react-redux";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import {
   FeedItem,
   FeedItemBaseContent,
@@ -84,6 +86,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
     useState(false);
@@ -221,7 +225,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       isActive={isActive}
                       isExpanded={item.feedItem.id === expandedFeedItemId}
                       sizeKey={isActive ? sizeKey : undefined}
-                      commonMemberUserId={commonMember?.userId}
+                      currentUserId={userId}
                     />
                   );
                 })}
