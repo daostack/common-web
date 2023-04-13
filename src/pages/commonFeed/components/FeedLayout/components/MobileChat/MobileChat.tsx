@@ -91,7 +91,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             type={ChatType.DiscussionMessages}
             hasAccess={hasAccessToChat}
             isHidden={false}
-            common={common}
+            commonId={common.id}
             discussion={chatItem.discussion}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}

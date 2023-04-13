@@ -8,20 +8,20 @@ import {
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { ChatType } from "@/shared/constants";
-import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
+import { CirclesPermissions, CommonMember } from "@/shared/models";
 import { isRTL } from "@/shared/utils";
 import styles from "./DesktopChat.module.scss";
 
 interface ChatProps {
   className?: string;
   chatItem: ChatItem;
-  common: Common;
+  commonId: string;
   commonMember: (CommonMember & CirclesPermissions) | null;
   titleRightContent?: ReactNode;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
-  const { className, chatItem, common, commonMember, titleRightContent } =
+  const { className, chatItem, commonId, commonMember, titleRightContent } =
     props;
   const user = useSelector(selectUser());
   const userCircleIds = useMemo(
@@ -57,7 +57,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
             : ChatType.DiscussionMessages
         }
         isCommonMemberFetched
-        common={common}
+        commonId={commonId}
         discussion={chatItem.discussion}
         feedItemId={chatItem.feedItemId}
         hasAccess={hasAccessToChat}

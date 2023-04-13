@@ -21,7 +21,6 @@ import {
 import { SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
-  Common,
   CommonFeedObjectUserUnique,
   CommonMember,
   Discussion,
@@ -40,7 +39,7 @@ import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
 
 interface ChatComponentInterface {
-  common: Common | null;
+  commonId: string;
   type: ChatType;
   isCommonMemberFetched: boolean;
   commonMember: CommonMember | null;
@@ -68,7 +67,7 @@ function groupday(acc: any, currentValue: DiscussionMessage): Messages {
 const CHAT_HOT_KEYS = [HotKeys.Enter, HotKeys.ModEnter, HotKeys.ShiftEnter];
 
 export default function ChatComponent({
-  common,
+  commonId,
   type,
   commonMember,
   discussion,
@@ -154,13 +153,13 @@ export default function ChatComponent({
 
   const sendMessage = useCallback(
     async (message: string) => {
-      if (user && user.uid && common?.id) {
+      if (user && user.uid && commonId) {
         const pendingMessageId = uuidv4();
         const payload: CreateDiscussionMessageDto = {
           pendingMessageId,
           text: message,
           ownerId: user.uid,
-          commonId: common?.id,
+          commonId,
           discussionId,
           ...(discussionMessageReply && {
             parentId: discussionMessageReply?.id,
@@ -175,7 +174,7 @@ export default function ChatComponent({
           ownerId: userId as string,
           ownerName: getUserName(user),
           text: message,
-          commonId: common?.id,
+          commonId,
           discussionId,
           createdAt: firebaseDate,
           updatedAt: firebaseDate,
@@ -200,7 +199,7 @@ export default function ChatComponent({
       dispatch,
       user,
       discussionMessageReply,
-      common,
+      commonId,
       discussionId,
       discussionMessages,
     ],

@@ -131,7 +131,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
               }
               hasAccess={hasAccessToChat}
               isHidden={false}
-              common={common}
+              commonId={common.id}
               discussion={chatItem.discussion}
               feedItemId={chatItem.feedItemId}
               lastSeenItem={chatItem.lastSeenItem}
@@ -162,7 +162,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
             type={ChatType.DiscussionMessages}
             hasAccess={hasAccessToChat}
             isHidden={false}
-            common={common}
+            commonId={common.id}
             discussion={chatItem.discussion}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
