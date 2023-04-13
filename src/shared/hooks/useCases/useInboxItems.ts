@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { CommonService, FeedItemFollowsService, Logger } from "@/services";
+import {
+  CommonFeedService,
+  CommonService,
+  FeedItemFollowsService,
+  Logger,
+} from "@/services";
 import { FeedItemFollow, FeedItemFollowWithMetadata } from "@/shared/models";
 import { inboxActions, InboxItems, selectInboxItems } from "@/store/states";
 
@@ -18,6 +23,77 @@ interface ItemBatch<T = FeedItemFollow> {
 }
 
 type ItemsBatch = ItemBatch[];
+
+const addMetadataToItemsBatch = async (
+  batch: ItemsBatch,
+): Promise<ItemBatch<FeedItemFollowWithMetadata>[]> => {
+  const data = await Promise.all(
+    batch.map(async ({ item }) => {
+      try {
+        const [common, feedItem] = await Promise.all([
+          CommonService.getCachedCommonById(item.commonId),
+          CommonFeedService.getCommonFeedItemById(
+            item.commonId,
+            item.feedItemId,
+          ),
+        ]);
+
+        return {
+          common,
+          feedItem,
+        };
+      } catch (error) {
+        return null;
+      }
+    }),
+  );
+  const parentCommons = await Promise.all(
+    data.map(async (item) => {
+      try {
+        return item?.common?.directParent?.commonId
+          ? await CommonService.getCachedCommonById(
+              item.common?.directParent?.commonId,
+            )
+          : null;
+      } catch (error) {
+        return null;
+      }
+    }),
+  );
+  const finalData = batch.map<ItemBatch<FeedItemFollowWithMetadata> | null>(
+    (batchItem) => {
+      const foundItem = data.find(
+        (item) => item?.feedItem?.id === batchItem.item.feedItemId,
+      );
+
+      if (!foundItem || !foundItem.common || !foundItem.feedItem) {
+        return null;
+      }
+
+      const foundParentCommon = foundItem.common.directParent?.commonId
+        ? parentCommons.find(
+            (parentCommon) =>
+              parentCommon?.id === foundItem.common?.directParent?.commonId,
+          )
+        : null;
+
+      return {
+        ...batchItem,
+        item: {
+          ...batchItem.item,
+          commonName: foundItem.common.name,
+          parentCommonName: foundParentCommon?.name,
+          commonAvatar: foundItem.common.image,
+          feedItem: foundItem.feedItem,
+        },
+      };
+    },
+  );
+
+  return finalData.filter(
+    (item): item is ItemBatch<FeedItemFollowWithMetadata> => Boolean(item),
+  );
+};
 
 export const useInboxItems = (
   feedItemIdsForNotListening?: string[],
@@ -76,53 +152,7 @@ export const useInboxItems = (
 
     (async () => {
       try {
-        const commons = await Promise.all(
-          lastBatch.map(async (item) => {
-            try {
-              return await CommonService.getCachedCommonById(
-                item.item.commonId,
-              );
-            } catch (error) {
-              return null;
-            }
-          }),
-        );
-        const parentCommons = await Promise.all(
-          commons.map(async (common) => {
-            try {
-              return common?.directParent?.commonId
-                ? await CommonService.getCachedCommonById(
-                    common?.directParent?.commonId,
-                  )
-                : null;
-            } catch (error) {
-              return null;
-            }
-          }),
-        );
-        const finalData = lastBatch.map<ItemBatch<FeedItemFollowWithMetadata>>(
-          (item) => {
-            const foundCommon = commons.find(
-              (common) => common?.id === item.item.commonId,
-            );
-            const foundParentCommon = foundCommon?.directParent?.commonId
-              ? parentCommons.find(
-                  (parentCommon) =>
-                    parentCommon?.id === foundCommon?.directParent?.commonId,
-                )
-              : null;
-
-            return {
-              ...item,
-              item: {
-                ...item.item,
-                commonName: foundCommon?.name || "Unknown",
-                parentCommonName: foundParentCommon?.name,
-                commonAvatar: foundCommon?.image || "",
-              },
-            };
-          },
-        );
+        const finalData = await addMetadataToItemsBatch(lastBatch);
         dispatch(inboxActions.addNewInboxItems(finalData));
       } catch (error) {
         Logger.error(error);

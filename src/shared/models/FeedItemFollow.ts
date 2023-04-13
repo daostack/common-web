@@ -1,5 +1,5 @@
 import { BaseEntity } from "./BaseEntity";
-import { CommonFeedType } from "./CommonFeed";
+import { CommonFeed, CommonFeedType } from "./CommonFeed";
 import { Timestamp } from "./Timestamp";
 
 export interface FeedItemFollow extends BaseEntity {
@@ -15,6 +15,7 @@ export interface FeedItemFollow extends BaseEntity {
 }
 
 export interface FeedItemFollowWithMetadata extends FeedItemFollow {
+  feedItem: CommonFeed;
   commonName: string;
   parentCommonName?: string;
   commonAvatar: string;
