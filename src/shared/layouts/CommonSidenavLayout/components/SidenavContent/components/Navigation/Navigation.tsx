@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import classNames from "classnames";
-import { selectUserNotificationsAmount } from "@/pages/Auth/store/selectors";
+import { selectUserStreamsWithNotificationsAmount } from "@/pages/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { InboxIcon } from "@/shared/icons";
 import { matchRoute } from "@/shared/utils";
@@ -17,7 +17,9 @@ interface NavigationProps {
 const Navigation: FC<NavigationProps> = (props) => {
   const { className } = props;
   const location = useLocation();
-  const userNotificationsAmount = useSelector(selectUserNotificationsAmount());
+  const userStreamsWithNotificationsAmount = useSelector(
+    selectUserStreamsWithNotificationsAmount(),
+  );
   const items: NavigationItemOptions[] = [
     {
       text: "Inbox",
@@ -26,7 +28,7 @@ const Navigation: FC<NavigationProps> = (props) => {
       isActive: matchRoute(location.pathname, ROUTE_PATHS.INBOX, {
         exact: true,
       }),
-      notificationsAmount: userNotificationsAmount || null,
+      notificationsAmount: userStreamsWithNotificationsAmount || null,
       tooltipContent: (
         <>
           We’re building a new Inbox section for your messages.

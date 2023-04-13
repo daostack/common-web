@@ -2,7 +2,7 @@ import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectUser,
-  selectUserNotificationsAmount,
+  selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
 import { FeedLayout, FeedLayoutRef } from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
@@ -31,7 +31,9 @@ const InboxPage: FC = () => {
     () => (sharedFeedItemId ? [sharedFeedItemId] : []),
     [sharedFeedItemId],
   );
-  const userNotificationsAmount = useSelector(selectUserNotificationsAmount());
+  const userStreamsWithNotificationsAmount = useSelector(
+    selectUserStreamsWithNotificationsAmount(),
+  );
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const {
@@ -119,7 +121,11 @@ const InboxPage: FC = () => {
         ref={setFeedLayoutRef}
         className={styles.feedLayout}
         headerContent={
-          <HeaderContent newMessagesAmount={userNotificationsAmount || 0} />
+          <HeaderContent
+            streamsWithNotificationsAmount={
+              userStreamsWithNotificationsAmount || 0
+            }
+          />
         }
         isGlobalLoading={false}
         common={{} as any}
