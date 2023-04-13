@@ -151,7 +151,8 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
         onClose={() => {
           setChatItem(null);
         }}
-        common={common}
+        commonName={common.name}
+        commonImage={common.image}
         title={chatItem?.discussion.title}
       >
         {chatItem && (

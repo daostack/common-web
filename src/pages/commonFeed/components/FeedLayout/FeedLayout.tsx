@@ -31,7 +31,6 @@ import {
   Governance,
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
-import { checkIsProject } from "@/shared/utils";
 import {
   DesktopChat,
   DesktopChatPlaceholder,
@@ -42,7 +41,11 @@ import {
 } from "./components";
 import { MIN_CHAT_WIDTH } from "./constants";
 import { FeedLayoutItem, FeedLayoutRef } from "./types";
-import { getDefaultSize, getSplitViewMaxSize } from "./utils";
+import {
+  getDefaultSize,
+  getItemCommonData,
+  getSplitViewMaxSize,
+} from "./utils";
 import styles from "./FeedLayout.module.scss";
 
 interface FeedLayoutProps {
@@ -50,7 +53,7 @@ interface FeedLayoutProps {
   headerContent: ReactNode;
   topContent?: ReactNode;
   isGlobalLoading?: boolean;
-  common: Common;
+  common?: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: FeedLayoutItem[] | null;
@@ -69,7 +72,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     headerContent,
     topContent,
     isGlobalLoading,
-    common,
+    common: outerCommon,
     governance,
     commonMember,
     feedItems,
@@ -130,6 +133,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       (item) => item.feedItem.id === chatItem?.feedItemId,
     );
   }, [allFeedItems, chatItem?.feedItemId]);
+  const selectedItemCommonData = getItemCommonData(
+    selectedFeedItem?.feedItemFollowWithMetadata,
+    outerCommon,
+  );
 
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
@@ -164,10 +171,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } as CSSProperties;
 
   const followFeedItemEl =
-    commonMember && activeFeedItemId ? (
+    commonMember && activeFeedItemId && selectedItemCommonData ? (
       <FollowFeedItemButton
         feedItemId={activeFeedItemId}
-        commonId={common.id}
+        commonId={selectedItemCommonData.id}
       />
     ) : null;
   const contentEl = (
@@ -186,13 +193,17 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => {
                   const isActive = item.feedItem.id === activeFeedItemId;
+                  const commonData = getItemCommonData(
+                    item.feedItemFollowWithMetadata,
+                    outerCommon,
+                  );
 
                   return (
                     <FeedItem
                       key={item.feedItem.id}
-                      commonId={common.id}
-                      commonName={common.name}
-                      isProject={checkIsProject(common)}
+                      commonId={commonData?.id}
+                      commonName={commonData?.name || ""}
+                      isProject={commonData?.isProject}
                       item={item.feedItem}
                       governanceCircles={governance.circles}
                       isMobileVersion={isTabletView}
@@ -206,27 +217,31 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 })}
               </InfiniteScroll>
               {!isTabletView &&
-                (chatItem ? (
+                (chatItem && selectedItemCommonData ? (
                   <DesktopChat
                     className={styles.desktopChat}
                     chatItem={chatItem}
-                    common={common}
+                    commonId={selectedItemCommonData.id}
                     commonMember={commonMember}
                     titleRightContent={followFeedItemEl}
                   />
                 ) : (
                   <DesktopChatPlaceholder className={styles.desktopChat} />
                 ))}
-              {isTabletView && (
+              {isTabletView && selectedItemCommonData && (
                 <MobileChat
                   chatItem={chatItem}
-                  common={common}
+                  commonId={selectedItemCommonData.id}
+                  commonName={selectedItemCommonData.name}
+                  commonImage={selectedItemCommonData.image}
                   commonMember={commonMember}
                   shouldShowSeeMore={shouldShowSeeMore}
                   rightHeaderContent={followFeedItemEl}
                 >
                   <FeedItemPreviewModal
-                    common={common}
+                    commonId={selectedItemCommonData.id}
+                    commonName={selectedItemCommonData.name}
+                    isProject={selectedItemCommonData.isProject}
                     governance={governance}
                     selectedFeedItem={selectedFeedItem?.feedItem}
                     userCircleIds={userCircleIds}

@@ -9,7 +9,7 @@ import {
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { ChatType } from "@/shared/constants";
-import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
+import { CirclesPermissions, CommonMember } from "@/shared/models";
 import { Header } from "./components";
 import styles from "./MobileChat.module.scss";
 

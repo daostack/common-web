@@ -128,7 +128,6 @@ const InboxPage: FC = () => {
           />
         }
         isGlobalLoading={false}
-        common={{} as any}
         governance={{} as any}
         commonMember={null}
         topFeedItems={topFeedItems}
