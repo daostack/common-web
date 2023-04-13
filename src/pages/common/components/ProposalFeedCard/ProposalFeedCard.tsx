@@ -38,7 +38,7 @@ interface ProposalFeedCardProps {
   commonName: string;
   isProject: boolean;
   item: CommonFeed;
-  governanceCircles: Governance["circles"];
+  governanceCircles?: Governance["circles"];
   isPreviewMode?: boolean;
   sizeKey?: string;
   isActive: boolean;
@@ -104,13 +104,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     !isCommonMemberFetched ||
     !isProposalSpecificDataFetched ||
     !isFeedItemUserMetadataFetched ||
-    !commonId;
-  const circleVisibility = getVisibilityString(
-    governanceCircles,
-    item.circleVisibility,
-    proposal?.type,
-    getUserName(feedItemUser),
-  );
+    !commonId ||
+    !governanceCircles;
   const [isHovering, setHovering] = useState(false);
   const onHover = (isMouseEnter: boolean): void => {
     setHovering(isMouseEnter);
@@ -203,6 +198,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         userVote,
         proposal,
       });
+    const circleVisibility = getVisibilityString(
+      governanceCircles,
+      item.circleVisibility,
+      proposal?.type,
+      getUserName(feedItemUser),
+    );
 
     return (
       <>

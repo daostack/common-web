@@ -8,7 +8,7 @@ import {
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { ChatType } from "@/shared/constants";
-import { CirclesPermissions, CommonMember } from "@/shared/models";
+import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
 import { isRTL } from "@/shared/utils";
 import styles from "./DesktopChat.module.scss";
 
@@ -16,13 +16,20 @@ interface ChatProps {
   className?: string;
   chatItem: ChatItem;
   commonId: string;
+  governanceCircles?: Circles;
   commonMember: (CommonMember & CirclesPermissions) | null;
   titleRightContent?: ReactNode;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
-  const { className, chatItem, commonId, commonMember, titleRightContent } =
-    props;
+  const {
+    className,
+    chatItem,
+    commonId,
+    governanceCircles,
+    commonMember,
+    titleRightContent,
+  } = props;
   const user = useSelector(selectUser());
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
@@ -50,6 +57,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         )}
       </div>
       <ChatComponent
+        governanceCircles={governanceCircles}
         commonMember={commonMember}
         type={
           chatItem.proposal

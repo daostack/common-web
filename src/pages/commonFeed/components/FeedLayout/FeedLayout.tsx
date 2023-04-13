@@ -21,6 +21,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
+import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
@@ -54,7 +55,7 @@ interface FeedLayoutProps {
   topContent?: ReactNode;
   isGlobalLoading?: boolean;
   common?: Common;
-  governance: Governance;
+  governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: FeedLayoutItem[] | null;
   topFeedItems?: FeedLayoutItem[];
@@ -73,7 +74,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     topContent,
     isGlobalLoading,
     common: outerCommon,
-    governance,
+    governance: outerGovernance,
     commonMember,
     feedItems,
     topFeedItems = [],
@@ -87,6 +88,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
     useState(false);
   const [shouldShowSeeMore, setShouldShowSeeMore] = useState(true);
+  const { data: fetchedGovernance, fetchGovernance } =
+    useGovernanceByCommonId();
+  const governance = outerGovernance || fetchedGovernance;
   const maxChatSize = getSplitViewMaxSize(windowWidth);
   const defaultChatSize = useMemo(
     () => getDefaultSize(windowWidth, maxChatSize),
@@ -164,6 +168,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
   }, [maxChatSize]);
 
+  useEffect(() => {
+    if (!outerGovernance && selectedItemCommonData?.id) {
+      fetchGovernance(selectedItemCommonData.id);
+    }
+  }, [outerGovernance, selectedItemCommonData?.id]);
+
   useImperativeHandle(ref, () => ({ setExpandedFeedItemId }), []);
 
   const pageContentStyles = {
@@ -205,7 +215,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       commonName={commonData?.name || ""}
                       isProject={commonData?.isProject}
                       item={item.feedItem}
-                      governanceCircles={governance.circles}
+                      governanceCircles={governance?.circles}
                       isMobileVersion={isTabletView}
                       userCircleIds={userCircleIds}
                       isActive={isActive}
@@ -222,6 +232,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     className={styles.desktopChat}
                     chatItem={chatItem}
                     commonId={selectedItemCommonData.id}
+                    governanceCircles={governance?.circles}
                     commonMember={commonMember}
                     titleRightContent={followFeedItemEl}
                   />
@@ -234,6 +245,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   commonId={selectedItemCommonData.id}
                   commonName={selectedItemCommonData.name}
                   commonImage={selectedItemCommonData.image}
+                  governanceCircles={governance?.circles}
                   commonMember={commonMember}
                   shouldShowSeeMore={shouldShowSeeMore}
                   rightHeaderContent={followFeedItemEl}
@@ -242,7 +254,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     commonId={selectedItemCommonData.id}
                     commonName={selectedItemCommonData.name}
                     isProject={selectedItemCommonData.isProject}
-                    governance={governance}
+                    governanceCircles={governance?.circles}
                     selectedFeedItem={selectedFeedItem?.feedItem}
                     userCircleIds={userCircleIds}
                     isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}

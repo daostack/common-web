@@ -21,6 +21,7 @@ import {
 import { SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
+  Circles,
   CommonFeedObjectUserUnique,
   CommonMember,
   Discussion,
@@ -31,7 +32,6 @@ import { getUserName, hasPermission } from "@/shared/utils";
 import {
   cacheActions,
   chatActions,
-  selectGovernance,
   selectCurrentDiscussionMessageReply,
 } from "@/store/states";
 import { ChatContent, MessageReply } from "./components";
@@ -42,6 +42,7 @@ interface ChatComponentInterface {
   commonId: string;
   type: ChatType;
   isCommonMemberFetched: boolean;
+  governanceCircles?: Circles;
   commonMember: CommonMember | null;
   hasAccess?: boolean;
   discussion: Discussion;
@@ -69,6 +70,7 @@ const CHAT_HOT_KEYS = [HotKeys.Enter, HotKeys.ModEnter, HotKeys.ShiftEnter];
 export default function ChatComponent({
   commonId,
   type,
+  governanceCircles,
   commonMember,
   discussion,
   hasAccess = true,
@@ -79,7 +81,6 @@ export default function ChatComponent({
   isCommonMemberFetched,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
-  const governance = useSelector(selectGovernance);
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
@@ -87,10 +88,12 @@ export default function ChatComponent({
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
   const hasPermissionToHide =
-    commonMember && governance
+    commonMember && governanceCircles
       ? hasPermission({
           commonMember,
-          governance,
+          governance: {
+            circles: governanceCircles,
+          },
           key: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
         })
       : false;

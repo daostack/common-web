@@ -121,6 +121,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
               {chatItem.discussion.title}
             </p>
             <ChatComponent
+              governanceCircles={governance.circles}
               commonMember={commonMember}
               isCommonMemberFetched
               isAuthorized={Boolean(user)}
@@ -157,6 +158,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
       >
         {chatItem && (
           <ChatComponent
+            governanceCircles={governance.circles}
             commonMember={commonMember}
             isCommonMemberFetched
             isAuthorized={Boolean(user)}

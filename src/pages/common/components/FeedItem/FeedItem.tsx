@@ -1,5 +1,5 @@
 import React, { FC, memo } from "react";
-import { CommonFeed, CommonFeedType, Governance } from "@/shared/models";
+import { Circles, CommonFeed, CommonFeedType } from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
@@ -10,7 +10,7 @@ interface FeedItemProps {
   commonName: string;
   isProject?: boolean;
   item: CommonFeed;
-  governanceCircles: Governance["circles"];
+  governanceCircles?: Circles;
   userCircleIds: string[];
   commonMemberUserId?: string;
   isMobileVersion?: boolean;

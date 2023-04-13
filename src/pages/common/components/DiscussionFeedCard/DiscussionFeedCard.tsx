@@ -25,7 +25,7 @@ import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
   item: CommonFeed;
-  governanceCircles: Governance["circles"];
+  governanceCircles?: Governance["circles"];
   isMobileVersion?: boolean;
   commonId?: string;
   commonName: string;
@@ -77,9 +77,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   const menuItems = useMenuItems(
     {
       discussion,
-      governance: {
-        circles: governanceCircles,
-      },
+      governanceCircles,
     },
     {
       report: onReportModalOpen,
@@ -96,12 +94,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     !isDiscussionCreatorFetched ||
     !isDiscussionFetched ||
     !isFeedItemUserMetadataFetched ||
-    !commonId;
-
-  const circleVisibility = getVisibilityString(
-    governanceCircles,
-    discussion?.circleVisibility,
-  );
+    !commonId ||
+    !governanceCircles;
 
   const handleOpenChat = useCallback(() => {
     if (discussion) {
@@ -155,6 +149,11 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     if (isLoading) {
       return null;
     }
+
+    const circleVisibility = getVisibilityString(
+      governanceCircles,
+      discussion?.circleVisibility,
+    );
 
     return (
       <>

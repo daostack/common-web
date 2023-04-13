@@ -9,7 +9,7 @@ import {
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { ChatType } from "@/shared/constants";
-import { CirclesPermissions, CommonMember } from "@/shared/models";
+import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
 import { Header } from "./components";
 import styles from "./MobileChat.module.scss";
 
@@ -18,6 +18,7 @@ interface ChatProps {
   commonId: string;
   commonName: string;
   commonImage: string;
+  governanceCircles?: Circles;
   commonMember: (CommonMember & CirclesPermissions) | null;
   shouldShowSeeMore?: boolean;
   rightHeaderContent?: ReactNode;
@@ -29,6 +30,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    governanceCircles,
     commonMember,
     children,
     shouldShowSeeMore = true,
@@ -90,6 +92,7 @@ const MobileChat: FC<ChatProps> = (props) => {
       >
         {chatItem && (
           <ChatComponent
+            governanceCircles={governanceCircles}
             commonMember={commonMember}
             isCommonMemberFetched
             isAuthorized={Boolean(user)}
