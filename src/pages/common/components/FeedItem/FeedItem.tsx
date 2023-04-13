@@ -6,9 +6,9 @@ import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
 
 interface FeedItemProps {
-  commonId: string;
+  commonId?: string;
   commonName: string;
-  isProject: boolean;
+  isProject?: boolean;
   item: CommonFeed;
   governanceCircles: Governance["circles"];
   userCircleIds: string[];
@@ -24,7 +24,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   const {
     commonId,
     commonName,
-    isProject,
+    isProject = false,
     item,
     governanceCircles,
     userCircleIds,
@@ -35,7 +35,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     sizeKey,
     commonMemberUserId,
   } = props;
-  useFeedItemSubscription(commonId, item.id);
+  useFeedItemSubscription(item.id, commonId);
 
   if (
     !checkIsItemVisibleForUser(

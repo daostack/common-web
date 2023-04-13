@@ -4,14 +4,15 @@ import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { Modal } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModalType, CloseIconVariant } from "@/shared/interfaces";
-import { CommonFeed, Common, Governance } from "@/shared/models";
-import { checkIsProject } from "@/shared/utils";
+import { CommonFeed, Governance } from "@/shared/models";
 import styles from "./FeedItemPreviewModal.module.scss";
 
 interface FeedItemPreviewModalProps {
   userCircleIds: string[];
   selectedFeedItem?: CommonFeed;
-  common: Common;
+  commonId: string;
+  commonName: string;
+  isProject: boolean;
   governance: Governance;
   isShowFeedItemDetailsModal?: boolean;
   sizeKey?: string;
@@ -21,7 +22,9 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
   const {
     userCircleIds,
     selectedFeedItem,
-    common,
+    commonId,
+    commonName,
+    isProject,
     governance,
     isShowFeedItemDetailsModal,
     sizeKey,
@@ -53,9 +56,9 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
     >
       {selectedFeedItem && (
         <FeedItem
-          commonId={common.id}
-          commonName={common.name}
-          isProject={checkIsProject(common)}
+          commonId={commonId}
+          commonName={commonName}
+          isProject={isProject}
           item={selectedFeedItem}
           governanceCircles={governance.circles}
           isMobileVersion={isTabletView}

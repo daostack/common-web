@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ReportModal } from "@/shared/components";
@@ -27,7 +27,7 @@ interface DiscussionFeedCardProps {
   item: CommonFeed;
   governanceCircles: Governance["circles"];
   isMobileVersion?: boolean;
-  commonId: string;
+  commonId?: string;
   commonName: string;
   isProject: boolean;
   isPreviewMode: boolean;
@@ -95,7 +95,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   const isLoading =
     !isDiscussionCreatorFetched ||
     !isDiscussionFetched ||
-    !isFeedItemUserMetadataFetched;
+    !isFeedItemUserMetadataFetched ||
+    !commonId;
 
   const circleVisibility = getVisibilityString(
     governanceCircles,
@@ -131,11 +132,13 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }, [item.data.id]);
 
   useEffect(() => {
-    fetchFeedItemUserMetadata({
-      userId: userId || "",
-      commonId,
-      feedObjectId: item.id,
-    });
+    if (commonId) {
+      fetchFeedItemUserMetadata({
+        userId: userId || "",
+        commonId,
+        feedObjectId: item.id,
+      });
+    }
   }, [userId, commonId, item.id]);
 
   useEffect(() => {
@@ -147,6 +150,65 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       handleOpenChat();
     }
   }, [isDiscussionFetched, isFeedItemUserMetadataFetched]);
+
+  const renderContent = (): ReactNode => {
+    if (isLoading) {
+      return null;
+    }
+
+    return (
+      <>
+        <FeedCardHeader
+          avatar={discussionCreator?.photoURL}
+          title={getUserName(discussionCreator)}
+          createdAt={
+            <>
+              Created:{" "}
+              <FeedCountdown
+                isCountdownFinished
+                expirationTimestamp={item.createdAt}
+              />
+            </>
+          }
+          type="Discussion"
+          circleVisibility={circleVisibility}
+          menuItems={menuItems}
+          isMobileVersion={isMobileVersion}
+          commonId={commonId}
+          userId={item.userId}
+        />
+        <FeedCardContent
+          description={discussion?.message}
+          images={discussion?.images}
+          onClick={handleOpenChat}
+          onMouseEnter={() => {
+            onHover(true);
+          }}
+          onMouseLeave={() => {
+            onHover(false);
+          }}
+        />
+        {userId && discussion && (
+          <ReportModal
+            userId={userId}
+            isShowing={isReportModalOpen}
+            onClose={onReportModalClose}
+            entity={discussion}
+            type={EntityTypes.Discussion}
+          />
+        )}
+        {discussion && (
+          <FeedCardShare
+            isOpen={isShareModalOpen}
+            onClose={onShareModalClose}
+            linkType={DynamicLinkType.Discussion}
+            element={discussion}
+            isMobileVersion={isMobileVersion}
+          />
+        )}
+      </>
+    );
+  };
 
   return (
     <FeedCard
@@ -172,54 +234,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       isLoading={isLoading}
       menuItems={menuItems}
     >
-      <FeedCardHeader
-        avatar={discussionCreator?.photoURL}
-        title={getUserName(discussionCreator)}
-        createdAt={
-          <>
-            Created:{" "}
-            <FeedCountdown
-              isCountdownFinished
-              expirationTimestamp={item.createdAt}
-            />
-          </>
-        }
-        type="Discussion"
-        circleVisibility={circleVisibility}
-        menuItems={menuItems}
-        isMobileVersion={isMobileVersion}
-        commonId={commonId}
-        userId={item.userId}
-      />
-      <FeedCardContent
-        description={discussion?.message}
-        images={discussion?.images}
-        onClick={handleOpenChat}
-        onMouseEnter={() => {
-          onHover(true);
-        }}
-        onMouseLeave={() => {
-          onHover(false);
-        }}
-      />
-      {userId && discussion && (
-        <ReportModal
-          userId={userId}
-          isShowing={isReportModalOpen}
-          onClose={onReportModalClose}
-          entity={discussion}
-          type={EntityTypes.Discussion}
-        />
-      )}
-      {discussion && (
-        <FeedCardShare
-          isOpen={isShareModalOpen}
-          onClose={onShareModalClose}
-          linkType={DynamicLinkType.Discussion}
-          element={discussion}
-          isMobileVersion={isMobileVersion}
-        />
-      )}
+      {renderContent()}
     </FeedCard>
   );
 };

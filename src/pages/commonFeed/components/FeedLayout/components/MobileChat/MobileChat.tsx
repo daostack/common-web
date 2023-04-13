@@ -15,7 +15,9 @@ import styles from "./MobileChat.module.scss";
 
 interface ChatProps {
   chatItem?: ChatItem | null;
-  common: Common;
+  commonId: string;
+  commonName: string;
+  commonImage: string;
   commonMember: (CommonMember & CirclesPermissions) | null;
   shouldShowSeeMore?: boolean;
   rightHeaderContent?: ReactNode;
@@ -24,7 +26,9 @@ interface ChatProps {
 const MobileChat: FC<ChatProps> = (props) => {
   const {
     chatItem,
-    common,
+    commonId,
+    commonName,
+    commonImage,
     commonMember,
     children,
     shouldShowSeeMore = true,
@@ -59,7 +63,8 @@ const MobileChat: FC<ChatProps> = (props) => {
         isShowing={Boolean(chatItem)}
         hasBackButton
         onClose={handleClose}
-        common={common}
+        commonName={commonName}
+        commonImage={commonImage}
         header={
           <Header
             title={chatItem?.discussion.title || ""}
@@ -91,7 +96,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             type={ChatType.DiscussionMessages}
             hasAccess={hasAccessToChat}
             isHidden={false}
-            commonId={common.id}
+            commonId={commonId}
             discussion={chatItem.discussion}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}

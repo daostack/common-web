@@ -4,12 +4,16 @@ import { CommonFeedService } from "@/services";
 import { commonActions } from "@/store/states";
 
 export const useFeedItemSubscription = (
-  commonId: string,
   feedItemId: string,
+  commonId?: string,
 ): void => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!commonId) {
+      return;
+    }
+
     const unsubscribe = CommonFeedService.subscribeToCommonFeedItem(
       commonId,
       feedItemId,
@@ -24,5 +28,5 @@ export const useFeedItemSubscription = (
     );
 
     return unsubscribe;
-  }, [dispatch]);
+  }, [dispatch, feedItemId, commonId]);
 };

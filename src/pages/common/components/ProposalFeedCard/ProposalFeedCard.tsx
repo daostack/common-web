@@ -34,7 +34,7 @@ import {
 } from "./utils";
 
 interface ProposalFeedCardProps {
-  commonId: string;
+  commonId?: string;
   commonName: string;
   isProject: boolean;
   item: CommonFeed;
@@ -103,7 +103,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     isUserVoteLoading ||
     !isCommonMemberFetched ||
     !isProposalSpecificDataFetched ||
-    !isFeedItemUserMetadataFetched;
+    !isFeedItemUserMetadataFetched ||
+    !commonId;
   const circleVisibility = getVisibilityString(
     governanceCircles,
     item.circleVisibility,
@@ -141,11 +142,13 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   }, [fetchCommonMember, commonId]);
 
   useEffect(() => {
-    fetchFeedItemUserMetadata({
-      userId: userId || "",
-      commonId,
-      feedObjectId: item.id,
-    });
+    if (commonId) {
+      fetchFeedItemUserMetadata({
+        userId: userId || "",
+        commonId,
+        feedObjectId: item.id,
+      });
+    }
   }, [userId, commonId, item.id]);
 
   useEffect(() => {
