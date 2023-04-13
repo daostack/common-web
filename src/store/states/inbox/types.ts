@@ -1,7 +1,8 @@
-import { FeedItemFollowWithMetadata, Timestamp } from "@/shared/models";
+import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
+import { Timestamp } from "@/shared/models";
 
 export interface InboxItems {
-  data: FeedItemFollowWithMetadata[] | null;
+  data: FeedLayoutItemWithFollowData[] | null;
   loading: boolean;
   hasMore: boolean;
   firstDocTimestamp: Timestamp | null;
@@ -11,5 +12,5 @@ export interface InboxItems {
 export interface InboxState {
   items: InboxItems;
   sharedFeedItemId: string | null;
-  sharedItem: FeedItemFollowWithMetadata | null;
+  sharedItem: FeedLayoutItemWithFollowData | null;
 }

@@ -1,6 +1,7 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
+import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
 import { FeedItemFollowWithMetadata } from "@/shared/models";
 import * as actions from "./actions";
 import { InboxState, InboxItems } from "./types";
@@ -34,7 +35,7 @@ const updateInboxItemInList = (
 
   const { item: updatedItem, isRemoved = false } = payload;
   const itemIndex = state.items.data?.findIndex(
-    (item) => item.id === updatedItem.id,
+    (item) => item.feedItemFollowWithMetadata.id === updatedItem.id,
   );
 
   if (itemIndex === -1) {
@@ -48,7 +49,10 @@ const updateInboxItemInList = (
   } else {
     nextData[itemIndex] = {
       ...nextData[itemIndex],
-      ...updatedItem,
+      feedItemFollowWithMetadata: {
+        ...nextData[itemIndex].feedItemFollowWithMetadata,
+        ...updatedItem,
+      },
     };
   }
 
@@ -67,7 +71,7 @@ const updateSharedInboxItem = (
 ): void => {
   const { item: updatedItem, isRemoved = false } = payload;
 
-  if (state.sharedItem?.id !== updatedItem.id) {
+  if (state.sharedItem?.feedItemFollowWithMetadata.id !== updatedItem.id) {
     return;
   }
 
@@ -77,7 +81,10 @@ const updateSharedInboxItem = (
   } else {
     state.sharedItem = {
       ...state.sharedItem,
-      ...updatedItem,
+      feedItemFollowWithMetadata: {
+        ...state.sharedItem.feedItemFollowWithMetadata,
+        ...updatedItem,
+      },
     };
   }
 };
@@ -97,7 +104,9 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       const payloadData = nextState.sharedFeedItemId
         ? payload.data &&
           payload.data.filter(
-            (item) => item.feedItemId !== nextState.sharedFeedItemId,
+            (item) =>
+              item.feedItemFollowWithMetadata.feedItemId !==
+              nextState.sharedFeedItemId,
           )
         : payload.data;
 
@@ -125,7 +134,10 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       const data = payload.reduceRight(
         (acc, { item, statuses: { isRemoved } }) => {
           const nextData = [...acc];
-          const itemIndex = nextData.findIndex((item) => item.id === item.id);
+          const itemIndex = nextData.findIndex(
+            (nextDataItem) =>
+              nextDataItem.feedItemFollowWithMetadata.id === item.id,
+          );
 
           if (isRemoved) {
             if (itemIndex >= 0) {
@@ -135,13 +147,17 @@ export const reducer = createReducer<InboxState, Action>(initialState)
             return nextData;
           }
 
+          const finalItem: FeedLayoutItemWithFollowData = {
+            feedItem: item.feedItem,
+            feedItemFollowWithMetadata: item,
+          };
           firstDocTimestamp = item.updatedAt;
 
           if (itemIndex < 0) {
-            return [item, ...nextData];
+            return [finalItem, ...nextData];
           }
 
-          nextData[itemIndex] = item;
+          nextData[itemIndex] = finalItem;
 
           return nextData;
         },
@@ -173,6 +189,11 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   )
   .handleAction(actions.setSharedInboxItem, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.sharedItem = payload;
+      nextState.sharedItem = payload
+        ? {
+            feedItem: payload.feedItem,
+            feedItemFollowWithMetadata: payload,
+          }
+        : null;
     }),
   );

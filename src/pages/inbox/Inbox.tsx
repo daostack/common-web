@@ -131,8 +131,8 @@ const InboxPage: FC = () => {
         common={{} as any}
         governance={{} as any}
         commonMember={null}
-        topFeedItems={[]}
-        feedItems={[]}
+        topFeedItems={topFeedItems}
+        feedItems={inboxItems}
         loading={areInboxItemsLoading || !user}
         shouldHideContent={!user}
         onFetchNext={fetchMoreInboxItems}
