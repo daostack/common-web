@@ -4,7 +4,6 @@ import { Image, Modal, ButtonIcon } from "@/shared/components";
 import { Colors } from "@/shared/constants";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import CloseIcon from "@/shared/icons/close.icon";
-import { Common } from "@/shared/models";
 import { emptyFunction, isRTL } from "@/shared/utils";
 import styles from "./ChatMobileModal.module.scss";
 

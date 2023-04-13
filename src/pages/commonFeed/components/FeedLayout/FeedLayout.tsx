@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { useCommonMember } from "@/pages/OldCommon/hooks";
 import {
   FeedItem,
   FeedItemBaseContent,
@@ -77,7 +78,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     isGlobalLoading,
     common: outerCommon,
     governance: outerGovernance,
-    commonMember,
+    commonMember: outerCommonMember,
     feedItems,
     topFeedItems = [],
     loading,
@@ -94,7 +95,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const [shouldShowSeeMore, setShouldShowSeeMore] = useState(true);
   const { data: fetchedGovernance, fetchGovernance } =
     useGovernanceByCommonId();
+  const { data: fetchedCommonMember, fetchCommonMember } = useCommonMember({
+    shouldAutoReset: false,
+  });
   const governance = outerGovernance || fetchedGovernance;
+  const commonMember = outerCommonMember || fetchedCommonMember;
   const maxChatSize = getSplitViewMaxSize(windowWidth);
   const defaultChatSize = useMemo(
     () => getDefaultSize(windowWidth, maxChatSize),
@@ -136,11 +141,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [commonMember?.circles.map],
   );
 
-  const selectedFeedItem = useMemo(() => {
-    return allFeedItems?.find(
-      (item) => item.feedItem.id === chatItem?.feedItemId,
-    );
-  }, [allFeedItems, chatItem?.feedItemId]);
+  const selectedFeedItem = useMemo(
+    () => allFeedItems?.find((item) => item.feedItem.id === activeFeedItemId),
+    [allFeedItems, activeFeedItemId],
+  );
   const selectedItemCommonData = getItemCommonData(
     selectedFeedItem?.feedItemFollowWithMetadata,
     outerCommon,
@@ -178,6 +182,16 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
   }, [outerGovernance, selectedItemCommonData?.id]);
 
+  useEffect(() => {
+    if (selectedFeedItem?.feedItemFollowWithMetadata?.commonId) {
+      fetchCommonMember(
+        selectedFeedItem.feedItemFollowWithMetadata.commonId,
+        {},
+        true,
+      );
+    }
+  }, [selectedFeedItem?.feedItemFollowWithMetadata?.commonId, userId]);
+
   useImperativeHandle(ref, () => ({ setExpandedFeedItemId }), []);
 
   const pageContentStyles = {
@@ -185,7 +199,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } as CSSProperties;
 
   const followFeedItemEl =
-    commonMember && activeFeedItemId && selectedItemCommonData ? (
+    (commonMember || selectedFeedItem?.feedItemFollowWithMetadata) &&
+    activeFeedItemId &&
+    selectedItemCommonData ? (
       <FollowFeedItemButton
         feedItemId={activeFeedItemId}
         commonId={selectedItemCommonData.id}
