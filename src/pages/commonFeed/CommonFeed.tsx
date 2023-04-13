@@ -72,6 +72,7 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
     () => (sharedFeedItem ? [sharedFeedItem] : []),
     [sharedFeedItem],
   );
+  const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
   const hasAccessToPage = Boolean(commonMember);
 
@@ -128,11 +129,11 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
   }, [commonFeedItems, areCommonFeedItemsLoading]);
 
   useEffect(() => {
-    if (recentStreamId === commonFeedItems?.[0]?.data.id) {
-      feedLayoutRef?.setExpandedFeedItemId(commonFeedItems[0].id);
+    if (recentStreamId === firstItem?.feedItem.data.id) {
+      feedLayoutRef?.setExpandedFeedItemId(firstItem.feedItem.id);
       dispatch(commonActions.setRecentStreamId(""));
     }
-  }, [feedLayoutRef, recentStreamId, commonFeedItems?.[0]]);
+  }, [feedLayoutRef, recentStreamId, firstItem]);
 
   if (!isDataFetched) {
     return (

@@ -58,11 +58,11 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
         <InfiniteScroll onFetchNext={fetchMore} isLoading={loading}>
           {commonFeedItems?.map((item) => (
             <FeedItem
-              key={item.id}
+              key={item.feedItem.id}
               commonId={common.id}
               commonName={common.name}
               isProject={checkIsProject(common)}
-              item={item}
+              item={item.feedItem}
               governanceCircles={governance.circles}
               isMobileVersion={isTabletView}
               userCircleIds={userCircleIds}

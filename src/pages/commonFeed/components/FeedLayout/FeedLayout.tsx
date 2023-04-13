@@ -26,7 +26,6 @@ import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
   CirclesPermissions,
   Common,
-  CommonFeed,
   CommonFeedType,
   CommonMember,
   Governance,
@@ -42,7 +41,7 @@ import {
   SplitView,
 } from "./components";
 import { MIN_CHAT_WIDTH } from "./constants";
-import { FeedLayoutRef } from "./types";
+import { FeedLayoutItem, FeedLayoutRef } from "./types";
 import { getDefaultSize, getSplitViewMaxSize } from "./utils";
 import styles from "./FeedLayout.module.scss";
 
@@ -54,8 +53,8 @@ interface FeedLayoutProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  feedItems: CommonFeed[] | null;
-  topFeedItems?: CommonFeed[];
+  feedItems: FeedLayoutItem[] | null;
+  topFeedItems?: FeedLayoutItem[];
   loading: boolean;
   shouldHideContent?: boolean;
   onFetchNext: () => void;
@@ -95,7 +94,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     null,
   );
   const allFeedItems = useMemo(() => {
-    const items: CommonFeed[] = [];
+    const items: FeedLayoutItem[] = [];
 
     if (topFeedItems) {
       items.push(...topFeedItems);
@@ -111,13 +110,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
-    const feedItem = allFeedItems?.find((item) =>
+    const foundItem = allFeedItems?.find((item) =>
       [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
-        item.data.type,
+        item.feedItem.data.type,
       ),
     );
 
-    return feedItem?.id;
+    return foundItem?.feedItem.id;
   }, [allFeedItems, isTabletView]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
@@ -127,8 +126,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const selectedFeedItem = useMemo(() => {
-    return allFeedItems?.find((item) => item.id === chatItem?.feedItemId);
-  }, [allFeedItems, chatItem]);
+    return allFeedItems?.find(
+      (item) => item.feedItem.id === chatItem?.feedItemId,
+    );
+  }, [allFeedItems, chatItem?.feedItemId]);
 
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
@@ -184,20 +185,20 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               {topContent}
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => {
-                  const isActive = item.id === activeFeedItemId;
+                  const isActive = item.feedItem.id === activeFeedItemId;
 
                   return (
                     <FeedItem
-                      key={item.id}
+                      key={item.feedItem.id}
                       commonId={common.id}
                       commonName={common.name}
                       isProject={checkIsProject(common)}
-                      item={item}
+                      item={item.feedItem}
                       governanceCircles={governance.circles}
                       isMobileVersion={isTabletView}
                       userCircleIds={userCircleIds}
                       isActive={isActive}
-                      isExpanded={item.id === expandedFeedItemId}
+                      isExpanded={item.feedItem.id === expandedFeedItemId}
                       sizeKey={isActive ? sizeKey : undefined}
                       commonMemberUserId={commonMember?.userId}
                     />
@@ -227,7 +228,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   <FeedItemPreviewModal
                     common={common}
                     governance={governance}
-                    selectedFeedItem={selectedFeedItem}
+                    selectedFeedItem={selectedFeedItem?.feedItem}
                     userCircleIds={userCircleIds}
                     isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
                     sizeKey={sizeKey}
