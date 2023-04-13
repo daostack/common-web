@@ -2,7 +2,10 @@ import React, { CSSProperties, FC, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
-import { selectUserStreamsWithNotificationsAmount } from "@/pages/Auth/store/selectors";
+import {
+  authentificated,
+  selectUserStreamsWithNotificationsAmount,
+} from "@/pages/Auth/store/selectors";
 import { Tab, Tabs } from "@/shared/components";
 import { Avatar2Icon, InboxIcon, Hamburger2Icon } from "@/shared/icons";
 import {
@@ -29,6 +32,7 @@ interface TabConfiguration {
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
   const history = useHistory();
+  const isAuthenticated = useSelector(authentificated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
   );
@@ -46,17 +50,20 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
       icon: <Hamburger2Icon />,
     },
     {
-      label: getLayoutTabName(LayoutTab.Inbox),
-      value: LayoutTab.Inbox,
-      icon: <InboxIcon />,
-      notificationsAmount: finalUserStreamsWithNotificationsAmount || null,
-    },
-    {
       label: getLayoutTabName(LayoutTab.Profile),
       value: LayoutTab.Profile,
       icon: <Avatar2Icon className={styles.avatarIcon} color="currentColor" />,
     },
   ];
+
+  if (isAuthenticated) {
+    tabs.splice(1, 0, {
+      label: getLayoutTabName(LayoutTab.Inbox),
+      value: LayoutTab.Inbox,
+      icon: <InboxIcon />,
+      notificationsAmount: finalUserStreamsWithNotificationsAmount || null,
+    });
+  }
 
   const itemStyles = {
     "--items-amount": tabs.length,
