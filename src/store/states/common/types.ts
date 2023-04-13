@@ -33,4 +33,5 @@ export interface CommonState {
   isNewProjectCreated: boolean;
   commonMember: CommonMember | null;
   governance: Governance | null;
+  recentStreamId: string;
 }
