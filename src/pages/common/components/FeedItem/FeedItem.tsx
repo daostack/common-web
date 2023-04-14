@@ -4,6 +4,7 @@ import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
+import { useFeedItemContext } from "./context";
 
 interface FeedItemProps {
   commonId?: string;
@@ -37,7 +38,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     sizeKey,
     currentUserId,
   } = props;
-  useFeedItemSubscription(item.id, commonId);
+  const { onFeedItemUpdate } = useFeedItemContext();
+  useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
   if (
     !checkIsItemVisibleForUser(

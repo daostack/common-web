@@ -1,5 +1,6 @@
 import React, { MouseEventHandler, ReactNode, useContext } from "react";
 import { ContextMenuItem } from "@/shared/interfaces";
+import { CommonFeed } from "@/shared/models";
 import { FeedCardSettings } from "../FeedCard";
 
 export interface FeedItemBaseContentProps {
@@ -23,6 +24,7 @@ export interface FeedItemBaseContentProps {
 export interface FeedItemContextValue {
   setExpandedFeedItemId?: (feedItemId: string | null) => void;
   renderFeedItemBaseContent?: (props: FeedItemBaseContentProps) => ReactNode;
+  onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   feedCardSettings?: FeedCardSettings;
 }
 

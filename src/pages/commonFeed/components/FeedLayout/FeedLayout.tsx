@@ -30,6 +30,7 @@ import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
   CirclesPermissions,
   Common,
+  CommonFeed,
   CommonFeedType,
   CommonMember,
   Governance,
@@ -66,6 +67,7 @@ interface FeedLayoutProps {
   shouldHideContent?: boolean;
   onFetchNext: () => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
+  onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -86,6 +88,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     shouldHideContent = false,
     onFetchNext,
     renderFeedItemBaseContent,
+    onFeedItemUpdate,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -158,8 +161,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     () => ({
       setExpandedFeedItemId,
       renderFeedItemBaseContent,
+      onFeedItemUpdate,
     }),
-    [renderFeedItemBaseContent],
+    [renderFeedItemBaseContent, onFeedItemUpdate],
   );
 
   const chatContextValue = useMemo<ChatContextValue>(

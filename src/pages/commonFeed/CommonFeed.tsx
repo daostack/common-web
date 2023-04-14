@@ -8,6 +8,7 @@ import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
+import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { checkIsProject, getCommonPageAboutTabPath } from "@/shared/utils";
 import {
@@ -28,7 +29,7 @@ interface CommonFeedProps {
   commonId: string;
 }
 
-const CommonFeed: FC<CommonFeedProps> = (props) => {
+const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const { commonId } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
@@ -94,6 +95,18 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
   const renderFeedItemBaseContent = useCallback(
     (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,
     [],
+  );
+
+  const handleFeedItemUpdate = useCallback(
+    (item: CommonFeed, isRemoved: boolean) => {
+      dispatch(
+        commonActions.updateFeedItem({
+          item,
+          isRemoved,
+        }),
+      );
+    },
+    [dispatch],
   );
 
   useEffect(() => {
@@ -211,10 +224,11 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
         shouldHideContent={!hasAccessToPage}
         onFetchNext={fetchMoreCommonFeedItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
+        onFeedItemUpdate={handleFeedItemUpdate}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>
   );
 };
 
-export default CommonFeed;
+export default CommonFeedComponent;
