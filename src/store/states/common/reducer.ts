@@ -61,8 +61,10 @@ const updateFeedItemInList = (
     nextData.splice(feedItemIndex, 1);
   } else {
     nextData[feedItemIndex] = {
-      ...nextData[feedItemIndex],
-      ...updatedItem,
+      feedItem: {
+        ...nextData[feedItemIndex].feedItem,
+        ...updatedItem,
+      },
     };
   }
 
@@ -90,8 +92,10 @@ const updateSharedFeedItem = (
     state.sharedFeedItemId = null;
   } else {
     state.sharedFeedItem = {
-      ...state.sharedFeedItem,
-      ...updatedItem,
+      feedItem: {
+        ...state.sharedFeedItem.feedItem,
+        ...updatedItem,
+      },
     };
   }
 };
