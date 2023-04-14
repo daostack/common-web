@@ -15,7 +15,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import {
   FeedItem,
-  FeedItemBaseContent,
+  FeedItemBaseContentProps,
   FeedItemContext,
   FeedItemContextValue,
 } from "@/pages/common";
@@ -65,6 +65,7 @@ interface FeedLayoutProps {
   loading: boolean;
   shouldHideContent?: boolean;
   onFetchNext: () => void;
+  renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -84,6 +85,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     loading,
     shouldHideContent = false,
     onFetchNext,
+    renderFeedItemBaseContent,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -155,9 +157,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const feedItemContextValue = useMemo<FeedItemContextValue>(
     () => ({
       setExpandedFeedItemId,
-      renderFeedItemBaseContent: (props) => <FeedItemBaseContent {...props} />,
+      renderFeedItemBaseContent,
     }),
-    [],
+    [renderFeedItemBaseContent],
   );
 
   const chatContextValue = useMemo<ChatContextValue>(

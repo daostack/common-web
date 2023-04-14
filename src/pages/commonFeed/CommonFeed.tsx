@@ -1,7 +1,15 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, {
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { FeedItemBaseContent, FeedItemBaseContentProps } from "@/pages/common";
 import { CommonAction, QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
@@ -89,6 +97,11 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
       fetchCommonFeedItems();
     }
   };
+
+  const renderFeedItemBaseContent = useCallback(
+    (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,
+    [],
+  );
 
   useEffect(() => {
     if (!user || (isGlobalDataFetched && !commonMember)) {
@@ -204,6 +217,7 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
         loading={areCommonFeedItemsLoading || !hasAccessToPage}
         shouldHideContent={!hasAccessToPage}
         onFetchNext={fetchMoreCommonFeedItems}
+        renderFeedItemBaseContent={renderFeedItemBaseContent}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

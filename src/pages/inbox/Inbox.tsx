@@ -1,9 +1,10 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectUser,
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
+import { FeedItemBaseContent, FeedItemBaseContentProps } from "@/pages/common";
 import { FeedLayout, FeedLayoutRef } from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
@@ -64,6 +65,11 @@ const InboxPage: FC = () => {
       fetchInboxItems();
     }
   };
+
+  const renderFeedItemBaseContent = useCallback(
+    (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,
+    [],
+  );
 
   useEffect(() => {
     dispatch(inboxActions.setSharedFeedItemId(sharedFeedItemId));
@@ -134,6 +140,7 @@ const InboxPage: FC = () => {
         loading={areInboxItemsLoading || !user}
         shouldHideContent={!user}
         onFetchNext={fetchMoreInboxItems}
+        renderFeedItemBaseContent={renderFeedItemBaseContent}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>
