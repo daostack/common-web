@@ -23,6 +23,7 @@ import {
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
 import { FeedLayout, FeedLayoutRef, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
+import { getLastMessage } from "./utils";
 import styles from "./CommonFeed.module.scss";
 
 interface CommonFeedProps {
@@ -225,6 +226,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         onFetchNext={fetchMoreCommonFeedItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         onFeedItemUpdate={handleFeedItemUpdate}
+        getLastMessage={getLastMessage}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

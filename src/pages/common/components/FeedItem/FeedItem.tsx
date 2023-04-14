@@ -38,7 +38,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     sizeKey,
     currentUserId,
   } = props;
-  const { onFeedItemUpdate } = useFeedItemContext();
+  const { onFeedItemUpdate, getLastMessage } = useFeedItemContext();
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
   if (
@@ -62,6 +62,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isProject,
     governanceCircles,
     isPreviewMode,
+    getLastMessage,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {

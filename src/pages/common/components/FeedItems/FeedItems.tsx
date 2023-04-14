@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useMemo } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
+import { getLastMessage } from "@/pages/commonFeed/utils";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -29,6 +30,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
         shouldHideCardStyles: false,
         withHovering: true,
       },
+      getLastMessage,
     }),
     [],
   );

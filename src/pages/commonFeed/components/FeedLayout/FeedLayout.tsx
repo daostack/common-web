@@ -18,6 +18,7 @@ import {
   FeedItemBaseContentProps,
   FeedItemContext,
   FeedItemContextValue,
+  GetLastMessageOptions,
 } from "@/pages/common";
 import {
   ChatContextValue,
@@ -68,6 +69,7 @@ interface FeedLayoutProps {
   onFetchNext: () => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
+  getLastMessage: (options: GetLastMessageOptions) => string;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -89,6 +91,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onFetchNext,
     renderFeedItemBaseContent,
     onFeedItemUpdate,
+    getLastMessage,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -162,8 +165,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId,
       renderFeedItemBaseContent,
       onFeedItemUpdate,
+      getLastMessage,
     }),
-    [renderFeedItemBaseContent, onFeedItemUpdate],
+    [renderFeedItemBaseContent, onFeedItemUpdate, getLastMessage],
   );
 
   const chatContextValue = useMemo<ChatContextValue>(

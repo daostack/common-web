@@ -17,10 +17,10 @@ import {
   FeedCardHeader,
   FeedCardContent,
   FeedCountdown,
-  getLastMessage,
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
+import { GetLastMessageOptions } from "../FeedItem";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -34,6 +34,7 @@ interface DiscussionFeedCardProps {
   isPreviewMode: boolean;
   isActive: boolean;
   isExpanded: boolean;
+  getLastMessage: (options: GetLastMessageOptions) => string;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
@@ -50,6 +51,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     isPreviewMode,
     isActive,
     isExpanded,
+    getLastMessage,
   } = props;
   const {
     isShowing: isReportModalOpen,

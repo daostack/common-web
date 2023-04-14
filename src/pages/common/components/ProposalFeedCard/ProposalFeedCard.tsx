@@ -17,8 +17,8 @@ import {
   FeedCardContent,
   getVisibilityString,
   FeedCountdown,
-  getLastMessage,
 } from "../FeedCard";
+import { GetLastMessageOptions } from "../FeedItem";
 import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
@@ -44,6 +44,7 @@ interface ProposalFeedCardProps {
   sizeKey?: string;
   isActive: boolean;
   isExpanded: boolean;
+  getLastMessage: (options: GetLastMessageOptions) => string;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -57,6 +58,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     isPreviewMode,
     isActive,
     isExpanded,
+    getLastMessage,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
