@@ -46,13 +46,17 @@ export const useDiscussionMessagesById = ({
   const [discussionMessagesWithOwners, setDiscussionMessagesWithOwners] =
     useState<any>();
 
-  const addDiscussionMessage = (discussionId: string, discussionMessage: DiscussionMessage): void => {
+  const addDiscussionMessage = (
+    discussionId: string,
+    discussionMessage: DiscussionMessage,
+  ): void => {
     dispatch(
       cacheActions.addDiscussionMessageByDiscussionId({
-        discussionId, discussionMessage 
+        discussionId,
+        discussionMessage,
       }),
     );
-  }
+  };
 
   const fetchDiscussionMessages = useCallback(
     (discussionId: string) => {
@@ -119,7 +123,6 @@ export const useDiscussionMessagesById = ({
     const unsubscribe = DiscussionMessageService.subscribeToDiscussionMessages(
       currentDiscussionId,
       (updatedDiscussionMessages) => {
-
         dispatch(
           cacheActions.updateDiscussionMessagesStateByDiscussionId({
             discussionId: currentDiscussionId,

@@ -177,6 +177,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
       menuItems={menuItems}
+      seenOnce={feedItemUserMetadata?.seenOnce}
+      ownerId={item.userId}
     >
       <FeedCardHeader
         avatar={discussionCreator?.photoURL}

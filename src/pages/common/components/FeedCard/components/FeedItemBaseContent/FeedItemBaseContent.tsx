@@ -5,6 +5,7 @@ import { ButtonIcon } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { ContextMenu, ContextMenuRef, TimeAgo } from "@/shared/ui-kit";
 import { FeedItemBaseContentProps } from "../../../FeedItem";
+import { FeedCardTags } from "../FeedCardTags";
 import styles from "./FeedItemBaseContent.module.scss";
 
 export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
@@ -19,7 +20,10 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     lastMessage,
     onClick,
     onExpand,
+    type,
     menuItems,
+    seenOnce,
+    ownerId,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -110,15 +114,14 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           ) : (
             <div />
           )}
-          {Boolean(unreadMessages) && (
-            <div
-              className={classNames(styles.unreadMessages, {
-                [styles.unreadMessagesLong]: Number(unreadMessages) > 9,
-              })}
-            >
-              {unreadMessages}
-            </div>
-          )}
+          <div className={classNames(styles.bottomContentRight)}>
+            <FeedCardTags
+              unreadMessages={unreadMessages}
+              type={type}
+              seenOnce={seenOnce}
+              ownerId={ownerId}
+            />
+          </div>
         </div>
       </div>
       {menuItems && menuItems.length > 0 && (
