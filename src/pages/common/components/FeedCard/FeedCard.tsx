@@ -20,6 +20,9 @@ interface FeedCardProps {
   canBeExpanded?: boolean;
   lastMessage?: string;
   isPreviewMode?: boolean;
+  image?: string;
+  imageAlt?: string;
+  isProject?: boolean;
   isLoading?: boolean;
   menuItems?: ContextMenuItem[];
 }
@@ -42,6 +45,9 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     title,
     lastMessage,
     isPreviewMode = true,
+    image,
+    imageAlt,
+    isProject,
     isLoading = false,
     menuItems,
   } = props;
@@ -102,6 +108,9 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           title,
           lastMessage,
           menuItems,
+          image,
+          imageAlt,
+          isProject,
         })}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (
         <CommonCard

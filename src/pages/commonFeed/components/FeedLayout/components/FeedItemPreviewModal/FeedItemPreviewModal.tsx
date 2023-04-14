@@ -12,6 +12,7 @@ interface FeedItemPreviewModalProps {
   selectedFeedItem?: CommonFeed;
   commonId: string;
   commonName: string;
+  commonImage: string;
   isProject: boolean;
   governanceCircles?: Circles;
   isShowFeedItemDetailsModal?: boolean;
@@ -24,6 +25,7 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
     selectedFeedItem,
     commonId,
     commonName,
+    commonImage,
     isProject,
     governanceCircles,
     isShowFeedItemDetailsModal,
@@ -58,6 +60,7 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
         <FeedItem
           commonId={commonId}
           commonName={commonName}
+          commonImage={commonImage}
           isProject={isProject}
           item={selectedFeedItem}
           governanceCircles={governanceCircles}

@@ -8,6 +8,7 @@ import { ProposalFeedCard } from "../ProposalFeedCard";
 interface FeedItemProps {
   commonId?: string;
   commonName: string;
+  commonImage: string;
   isProject?: boolean;
   item: CommonFeed;
   governanceCircles?: Circles;
@@ -24,6 +25,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   const {
     commonId,
     commonName,
+    commonImage,
     isProject = false,
     item,
     governanceCircles,
@@ -52,6 +54,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     item,
     commonId,
     commonName,
+    commonImage,
     isActive,
     isExpanded,
     isProject,

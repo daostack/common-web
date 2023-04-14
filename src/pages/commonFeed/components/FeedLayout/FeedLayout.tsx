@@ -235,6 +235,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       key={item.feedItem.id}
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
+                      commonImage={commonData?.image || ""}
                       isProject={commonData?.isProject}
                       item={item.feedItem}
                       governanceCircles={governance?.circles}
@@ -275,6 +276,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   <FeedItemPreviewModal
                     commonId={selectedItemCommonData.id}
                     commonName={selectedItemCommonData.name}
+                    commonImage={selectedItemCommonData.image}
                     isProject={selectedItemCommonData.isProject}
                     governanceCircles={governance?.circles}
                     selectedFeedItem={selectedFeedItem?.feedItem}

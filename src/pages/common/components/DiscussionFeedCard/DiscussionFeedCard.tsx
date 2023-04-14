@@ -29,6 +29,7 @@ interface DiscussionFeedCardProps {
   isMobileVersion?: boolean;
   commonId?: string;
   commonName: string;
+  commonImage: string;
   isProject: boolean;
   isPreviewMode: boolean;
   isActive: boolean;
@@ -44,6 +45,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     isMobileVersion = false,
     commonId,
     commonName,
+    commonImage,
     isProject,
     isPreviewMode,
     isActive,
@@ -230,6 +232,9 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
+      image={commonImage}
+      imageAlt={`${commonName}'s image`}
+      isProject={isProject}
       isLoading={isLoading}
       menuItems={menuItems}
     >

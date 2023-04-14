@@ -36,6 +36,7 @@ import {
 interface ProposalFeedCardProps {
   commonId?: string;
   commonName: string;
+  commonImage: string;
   isProject: boolean;
   item: CommonFeed;
   governanceCircles?: Governance["circles"];
@@ -49,6 +50,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const {
     commonId,
     commonName,
+    commonImage,
     isProject,
     item,
     governanceCircles,
@@ -280,6 +282,9 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
+      image={commonImage}
+      imageAlt={`${commonName}'s image`}
+      isProject={isProject}
       isLoading={isLoading}
     >
       {renderContent()}

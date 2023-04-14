@@ -4,7 +4,7 @@ import {
   selectUser,
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
-import { FeedItemBaseContent, FeedItemBaseContentProps } from "@/pages/common";
+import { FeedItemBaseContentProps } from "@/pages/common";
 import { FeedLayout, FeedLayoutRef } from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
@@ -13,7 +13,7 @@ import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { inboxActions, selectSharedInboxItem } from "@/store/states";
-import { HeaderContent } from "./components";
+import { HeaderContent, FeedItemBaseContent } from "./components";
 import { useInboxData } from "./hooks";
 import styles from "./Inbox.module.scss";
 
