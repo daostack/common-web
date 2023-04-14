@@ -1,4 +1,4 @@
-@import "../../../../../../constants.scss";
+@import "../../../../../../constants";
 
 .tag {
   display: flex;
@@ -22,7 +22,7 @@
 }
 
 .proposal {
-  background-color: $light-gray-12;
+  background-color: $c-neutrals-300;
   padding: 0 0.5rem;
 }
 
