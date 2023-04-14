@@ -5,3 +5,6 @@ const selectChat = (state: AppState) => state.chat;
 
 export const selectCurrentDiscussionMessageReply = () =>
   createSelector(selectChat, (state) => state.currentDiscussionMessageReply);
+
+export const selectFilesPreview = () =>
+  createSelector(selectChat, (state) => state.filesPreview);

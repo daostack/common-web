@@ -1,13 +1,20 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  ChangeEvent,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "react-use";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
-import { delay } from "lodash";
+import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { DiscussionMessageService } from "@/services";
+import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
+import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import {
   ChatType,
   GovernanceActions,
@@ -18,7 +25,7 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { SendIcon } from "@/shared/icons";
+import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   Common,
@@ -34,8 +41,10 @@ import {
   chatActions,
   selectGovernance,
   selectCurrentDiscussionMessageReply,
+  selectFilesPreview,
+  FileInfo,
 } from "@/store/states";
-import { ChatContent, MessageReply } from "./components";
+import { ChatContent, MessageReply, ChatFilePreview } from "./components";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
 
@@ -55,6 +64,11 @@ interface ChatComponentInterface {
 interface Messages {
   [key: number]: DiscussionMessage[];
 }
+
+type CreateDiscussionMessageDtoWithFilesPreview = CreateDiscussionMessageDto & {
+  filesPreview?: FileInfo[] | null;
+  imagesPreview?: FileInfo[] | null;
+};
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
   const d = new Date(currentValue.createdAt.seconds * 1000);
@@ -84,6 +98,7 @@ export default function ChatComponent({
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
+  const currentFilesPreview = useSelector(selectFilesPreview());
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
@@ -123,11 +138,43 @@ export default function ChatComponent({
 
   const [message, setMessage] = useState("");
 
-  const [newMessages, setMessages] = useState<CreateDiscussionMessageDto[]>([]);
+  const [newMessages, setMessages] = useState<
+    CreateDiscussionMessageDtoWithFilesPreview[]
+  >([]);
+
+  const canSendMessage = message.length || currentFilesPreview?.length;
 
   useDebounce(
-    () => {
-      newMessages.map((payload, index) => {
+    async () => {
+      const newMessagesWithFiles = await Promise.all(
+        newMessages.map(async (payload) => {
+          const [uploadedFiles, uploadedImages] = await Promise.all([
+            FileService.uploadFiles(
+              (payload.filesPreview ?? []).map((file) =>
+                FileService.convertFileInfoToUploadFile(file),
+              ),
+            ),
+            FileService.uploadFiles(
+              (payload.imagesPreview ?? []).map((file) =>
+                FileService.convertFileInfoToUploadFile(file),
+              ),
+            ),
+          ]);
+
+          const updatedPayload = omit(payload, [
+            "filesPreview",
+            "imagesPreview",
+          ]);
+
+          return {
+            ...updatedPayload,
+            images: uploadedImages,
+            files: uploadedFiles,
+          };
+        }),
+      );
+
+      newMessagesWithFiles.map(async (payload, index) => {
         delay(async () => {
           const response = await DiscussionMessageService.createMessage(
             payload,
@@ -152,11 +199,32 @@ export default function ChatComponent({
     [newMessages, discussionId, dispatch],
   );
 
+  const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(
+      chatActions.setFilesPreview(
+        Array.from(event.target.files || []).map((file) => {
+          return {
+            info: file,
+            src: URL.createObjectURL(file),
+          };
+        }),
+      ),
+    );
+  };
+
   const sendMessage = useCallback(
     async (message: string) => {
       if (user && user.uid && common?.id) {
         const pendingMessageId = uuidv4();
-        const payload: CreateDiscussionMessageDto = {
+
+        const imagesPreview = FileService.getImageTypeFromFiles(
+          currentFilesPreview ?? [],
+        );
+        const filesPreview = FileService.getExcludeImageTypeFromFiles(
+          currentFilesPreview ?? [],
+        );
+
+        const payload: CreateDiscussionMessageDtoWithFilesPreview = {
           pendingMessageId,
           text: message,
           ownerId: user.uid,
@@ -165,6 +233,8 @@ export default function ChatComponent({
           ...(discussionMessageReply && {
             parentId: discussionMessageReply?.id,
           }),
+          filesPreview,
+          imagesPreview,
         };
         const firebaseDate = Timestamp.fromDate(new Date());
 
@@ -186,6 +256,12 @@ export default function ChatComponent({
                 text: discussionMessageReply.text,
               }
             : null,
+          images: imagesPreview?.map((file) =>
+            FileService.convertFileInfoToCommonLink(file),
+          ),
+          files: filesPreview?.map((file) =>
+            FileService.convertFileInfoToCommonLink(file),
+          ),
         };
 
         setMessages((prev) => [...prev, payload]);
@@ -194,12 +270,16 @@ export default function ChatComponent({
         if (discussionMessageReply) {
           dispatch(chatActions.clearCurrentDiscussionMessageReply());
         }
+        if (currentFilesPreview) {
+          dispatch(chatActions.clearFilesPreview());
+        }
       }
     },
     [
       dispatch,
       user,
       discussionMessageReply,
+      currentFilesPreview,
       common,
       discussionId,
       discussionMessages,
@@ -207,7 +287,7 @@ export default function ChatComponent({
   );
 
   const sendChatMessage = (): void => {
-    if (message) {
+    if (canSendMessage) {
       sendMessage && sendMessage(message.trim());
       setMessage("");
     }
@@ -276,15 +356,31 @@ export default function ChatComponent({
         )}
       </div>
       {isAuthorized && (
-        <>
+        <div className={styles.bottomChatContainer}>
           <MessageReply />
-          <div className={styles.bottomChatWrapper}>
+          <ChatFilePreview />
+          <div className={styles.chatInputWrapper}>
             {!commonMember || !hasAccess || isHidden ? (
               <span className={styles.permissionsText}>
                 Only members can send messages
               </span>
             ) : (
               <>
+                <ButtonIcon
+                  className={styles.addFilesIcon}
+                  onClick={() => {
+                    document.getElementById("file")?.click();
+                  }}
+                >
+                  <PlusIcon />
+                </ButtonIcon>
+                <input
+                  id="file"
+                  type="file"
+                  onChange={uploadFiles}
+                  style={{ display: "none" }}
+                  multiple
+                />
                 <textarea
                   className={styles.messageInput}
                   placeholder="What do you think?"
@@ -293,16 +389,16 @@ export default function ChatComponent({
                   onChange={(e) => setMessage(e.target.value)}
                 />
                 <button
-                  className={styles.send}
+                  className={styles.sendIcon}
                   onClick={sendChatMessage}
-                  disabled={!message.length}
+                  disabled={!canSendMessage}
                 >
                   <SendIcon />
                 </button>
               </>
             )}
           </div>
-        </>
+        </div>
       )}
     </div>
   );

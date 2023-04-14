@@ -9,6 +9,7 @@ export interface CreateDiscussionMessageDto {
   commonId: string;
   discussionId: string;
   images?: InfoItem[];
+  files?: InfoItem[];
   parentId?: string;
   tags?: InfoItem[];
 }
