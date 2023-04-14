@@ -124,7 +124,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     return items;
   }, [topFeedItems, feedItems]);
   const feedItemIdForAutoChatOpen = useMemo(() => {
-    if (isTabletView) {
+    if (isTabletView || chatItem?.feedItemId) {
       return;
     }
 
@@ -135,7 +135,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     );
 
     return foundItem?.feedItem.id;
-  }, [allFeedItems, isTabletView]);
+  }, [allFeedItems, isTabletView, chatItem?.feedItemId]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
   const userCircleIds = useMemo(
