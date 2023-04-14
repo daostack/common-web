@@ -12,6 +12,7 @@ import { checkIsProject, getCommonPageAboutTabPath } from "@/shared/utils";
 import {
   commonActions,
   selectCommonAction,
+  selectRecentStreamId,
   selectSharedFeedItem,
 } from "@/store/states";
 import {
@@ -31,6 +32,7 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
+  const recentStreamId = useSelector(selectRecentStreamId);
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
@@ -124,6 +126,13 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
       fetchCommonFeedItems();
     }
   }, [commonFeedItems, areCommonFeedItemsLoading]);
+
+  useEffect(() => {
+    if (recentStreamId === commonFeedItems?.[0]?.data.id) {
+      feedLayoutRef?.setExpandedFeedItemId(commonFeedItems[0].id);
+      dispatch(commonActions.setRecentStreamId(""));
+    }
+  }, [feedLayoutRef, recentStreamId, commonFeedItems?.[0]]);
 
   if (!isDataFetched) {
     return (

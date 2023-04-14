@@ -27,3 +27,6 @@ export const selectIsNewProjectCreated = (state: AppState) =>
 
 export const selectSharedFeedItem = (state: AppState) =>
   state.common.sharedFeedItem;
+
+export const selectRecentStreamId = (state: AppState) =>
+  state.common.recentStreamId;
