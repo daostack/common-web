@@ -134,7 +134,7 @@ export const useInboxItems = (
                     !feedItemIdsForNotListening.includes(item.item.feedItemId),
                 )
               : data;
-          setNewItemsBatches((currentItems) => currentItems.concat(finalData));
+          setNewItemsBatches((currentItems) => [...currentItems, finalData]);
         },
       );
 
