@@ -2,7 +2,7 @@ import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
-import { FeedItemFollowWithMetadata } from "@/shared/models";
+import { CommonFeed, FeedItemFollowWithMetadata } from "@/shared/models";
 import * as actions from "./actions";
 import { InboxState, InboxItems } from "./types";
 
@@ -62,6 +62,50 @@ const updateInboxItemInList = (
   };
 };
 
+const updateFeedItemInInboxItem = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: Partial<CommonFeed> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  if (!state.items.data) {
+    return;
+  }
+
+  const { item: updatedFeedItem, isRemoved = false } = payload;
+  const itemIndex = state.items.data?.findIndex(
+    (item) => item.feedItemFollowWithMetadata.feedItemId === updatedFeedItem.id,
+  );
+
+  if (itemIndex === -1) {
+    return;
+  }
+
+  const nextData = [...state.items.data];
+
+  if (isRemoved) {
+    nextData.splice(itemIndex, 1);
+  } else {
+    const newFeedItem = {
+      ...nextData[itemIndex].feedItem,
+      ...updatedFeedItem,
+    };
+    nextData[itemIndex] = {
+      feedItem: { ...newFeedItem },
+      feedItemFollowWithMetadata: {
+        ...nextData[itemIndex].feedItemFollowWithMetadata,
+        feedItem: { ...newFeedItem },
+      },
+    };
+  }
+
+  state.items = {
+    ...state.items,
+    data: nextData,
+  };
+};
+
 const updateSharedInboxItem = (
   state: WritableDraft<InboxState>,
   payload: {
@@ -84,6 +128,40 @@ const updateSharedInboxItem = (
       feedItemFollowWithMetadata: {
         ...state.sharedItem.feedItemFollowWithMetadata,
         ...updatedItem,
+      },
+    };
+  }
+};
+
+const updateFeedItemInSharedInboxItem = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: Partial<CommonFeed> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  const { item: updatedFeedItem, isRemoved = false } = payload;
+
+  if (
+    state.sharedItem?.feedItemFollowWithMetadata.feedItemId !==
+    updatedFeedItem.id
+  ) {
+    return;
+  }
+
+  if (isRemoved) {
+    state.sharedItem = null;
+    state.sharedFeedItemId = null;
+  } else {
+    const newFeedItem = {
+      ...state.sharedItem.feedItem,
+      ...updatedFeedItem,
+    };
+    state.sharedItem = {
+      feedItem: { ...newFeedItem },
+      feedItemFollowWithMetadata: {
+        ...state.sharedItem.feedItemFollowWithMetadata,
+        feedItem: { ...newFeedItem },
       },
     };
   }
@@ -175,6 +253,12 @@ export const reducer = createReducer<InboxState, Action>(initialState)
     produce(state, (nextState) => {
       updateInboxItemInList(nextState, payload);
       updateSharedInboxItem(nextState, payload);
+    }),
+  )
+  .handleAction(actions.updateFeedItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      updateFeedItemInInboxItem(nextState, payload);
+      updateFeedItemInSharedInboxItem(nextState, payload);
     }),
   )
   .handleAction(actions.resetInboxItems, (state) =>

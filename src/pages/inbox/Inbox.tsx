@@ -11,6 +11,7 @@ import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
+import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { inboxActions, selectSharedInboxItem } from "@/store/states";
 import { HeaderContent, FeedItemBaseContent } from "./components";
@@ -69,6 +70,18 @@ const InboxPage: FC = () => {
   const renderFeedItemBaseContent = useCallback(
     (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,
     [],
+  );
+
+  const handleFeedItemUpdate = useCallback(
+    (item: CommonFeed, isRemoved: boolean) => {
+      dispatch(
+        inboxActions.updateFeedItem({
+          item,
+          isRemoved,
+        }),
+      );
+    },
+    [dispatch],
   );
 
   useEffect(() => {
@@ -141,6 +154,7 @@ const InboxPage: FC = () => {
         shouldHideContent={!user}
         onFetchNext={fetchMoreInboxItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
+        onFeedItemUpdate={handleFeedItemUpdate}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>
