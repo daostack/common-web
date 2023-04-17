@@ -35,7 +35,7 @@ export const getLastMessage = (options: GetLastMessageOptions): string => {
 
   if (discussion?.predefinedType === PredefinedTypes.General) {
     return `${creatorName} created the ${
-      isProject ? "project" : "common"
+      isProject ? "space" : "common"
     } ${commonName}`;
   }
   if (
