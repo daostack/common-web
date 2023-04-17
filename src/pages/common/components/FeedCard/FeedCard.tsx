@@ -4,6 +4,7 @@ import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
 import { Loader } from "@/shared/ui-kit";
+import { CommonFeedType } from "@/shared/models";
 import { CommonCard } from "../CommonCard";
 import styles from "./FeedCard.module.scss";
 
@@ -24,7 +25,10 @@ interface FeedCardProps {
   imageAlt?: string;
   isProject?: boolean;
   isLoading?: boolean;
+  type?: CommonFeedType;
   menuItems?: ContextMenuItem[];
+  seenOnce?: boolean;
+  ownerId?: string;
 }
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -49,7 +53,10 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     imageAlt,
     isProject,
     isLoading = false,
+    type,
     menuItems,
+    seenOnce,
+    ownerId,
   } = props;
   const isTabletView = useIsTabletView();
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
@@ -111,6 +118,9 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           image,
           imageAlt,
           isProject,
+          type,
+          seenOnce,
+          ownerId,
         })}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (
         <CommonCard

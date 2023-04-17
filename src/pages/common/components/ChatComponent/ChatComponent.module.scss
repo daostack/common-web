@@ -36,26 +36,29 @@
   justify-content: center;
 }
 
-
 .loaderContainer {
   display: flex;
   height: 100%;
   align-items: center;
 }
 
-.bottomChatWrapper {
+.bottomChatContainer {
+  position: relative;
+  left: -2rem;
+  width: calc(100% + 2rem);
+}
+
+.chatInputWrapper {
   display: flex;
   flex-shrink: 0;
-  padding: 1rem 1.875rem 1rem 2.125rem;
+  padding: 1rem 1.125rem 1rem 1.125rem;
   background-color: $c-input-100;
   border: 0.0625rem solid $c-neutrals-100;
   border-left-width: 0;
   border-right-width: 0;
   box-shadow: none;
   width: 100%;
-  margin: 0 -2rem;
   height: 3.125rem;
-  display: flex;
   align-items: center;
   justify-content: space-between;
   border-radius: 0;
@@ -68,7 +71,6 @@
   width: 100%;
   text-align: center;
 }
-
 
 .messageInput {
   width: 100%;
@@ -87,7 +89,12 @@
   box-sizing: border-box;
 }
 
-.send {
+.addFilesIcon {
+  padding: 0.4375rem;
+  margin-right: 0.9375rem;
+}
+
+.sendIcon {
   display: flex;
   justify-content: center;
   align-items: center;

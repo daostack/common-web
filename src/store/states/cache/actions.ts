@@ -98,7 +98,7 @@ export const addDiscussionMessageByDiscussionId = createStandardAction(
   CacheActionType.ADD_DISCUSSION_MESSAGE_BY_DISCUSSION_ID,
 )<{
   discussionId: string;
-  discussionMessage: DiscussionMessage
+  discussionMessage: DiscussionMessage;
 }>();
 
 export const updateDiscussionMessageWithActualId = createStandardAction(

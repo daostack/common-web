@@ -29,6 +29,9 @@ export interface GetLastMessageOptions {
   feedItemCreatorName?: string;
   commonName: string;
   isProject: boolean;
+  type?: CommonFeedType;
+  seenOnce?: boolean;
+  ownerId?: string;
 }
 
 export interface FeedItemContextValue {

@@ -239,6 +239,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       isProject={isProject}
       isLoading={isLoading}
       menuItems={menuItems}
+      seenOnce={feedItemUserMetadata?.seenOnce}
+      ownerId={item.userId}
     >
       {renderContent()}
     </FeedCard>
