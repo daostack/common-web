@@ -111,6 +111,6 @@ export const deleteUser = createAsyncAction(
   AuthActionTypes.DELETE_USER_FAILURE,
 )<PayloadWithOptionalCallback<void, void, Error>, void, Error>();
 
-export const setUserNotificationsAmount = createStandardAction(
-  AuthActionTypes.SET_USER_NOTIFICATIONS_AMOUNT,
+export const setUserStreamsWithNotificationsAmount = createStandardAction(
+  AuthActionTypes.SET_USER_STREAMS_WITH_NOTIFICATIONS_AMOUNT,
 )<number | null>();

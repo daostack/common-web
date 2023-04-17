@@ -1,4 +1,5 @@
 import { call, put, select } from "redux-saga/effects";
+import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
 import { UserService } from "@/services";
 import { Awaited } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
@@ -23,10 +24,14 @@ export function* getInboxItems(
         limit,
       },
     )) as Awaited<ReturnType<typeof UserService.getInboxItems>>;
+    const convertedData = data.map<FeedLayoutItemWithFollowData>((item) => ({
+      feedItem: item.feedItem,
+      feedItemFollowWithMetadata: item,
+    }));
 
     yield put(
       actions.getInboxItems.success({
-        data,
+        data: convertedData,
         lastDocTimestamp,
         hasMore,
         firstDocTimestamp: isFirstRequest

@@ -1,4 +1,5 @@
 import { call, put, select } from "redux-saga/effects";
+import { FeedLayoutItem } from "@/pages/commonFeed";
 import { CommonFeedService } from "@/services";
 import { Awaited } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
@@ -26,10 +27,13 @@ export function* getFeedItems(
     )) as Awaited<
       ReturnType<typeof CommonFeedService.getCommonFeedItemsByUpdatedAt>
     >;
+    const convertedData: FeedLayoutItem[] = data.map((item) => ({
+      feedItem: item,
+    }));
 
     yield put(
       actions.getFeedItems.success({
-        data,
+        data: convertedData,
         lastDocTimestamp,
         hasMore,
         firstDocTimestamp: isFirstRequest

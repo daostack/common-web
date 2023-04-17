@@ -1,7 +1,8 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
-import { FeedItemFollowWithMetadata } from "@/shared/models";
+import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
+import { CommonFeed, FeedItemFollowWithMetadata } from "@/shared/models";
 import * as actions from "./actions";
 import { InboxState, InboxItems } from "./types";
 
@@ -34,7 +35,7 @@ const updateInboxItemInList = (
 
   const { item: updatedItem, isRemoved = false } = payload;
   const itemIndex = state.items.data?.findIndex(
-    (item) => item.id === updatedItem.id,
+    (item) => item.feedItemFollowWithMetadata.id === updatedItem.id,
   );
 
   if (itemIndex === -1) {
@@ -48,7 +49,54 @@ const updateInboxItemInList = (
   } else {
     nextData[itemIndex] = {
       ...nextData[itemIndex],
-      ...updatedItem,
+      feedItemFollowWithMetadata: {
+        ...nextData[itemIndex].feedItemFollowWithMetadata,
+        ...updatedItem,
+      },
+    };
+  }
+
+  state.items = {
+    ...state.items,
+    data: nextData,
+  };
+};
+
+const updateFeedItemInInboxItem = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: Partial<CommonFeed> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  if (!state.items.data) {
+    return;
+  }
+
+  const { item: updatedFeedItem, isRemoved = false } = payload;
+  const itemIndex = state.items.data?.findIndex(
+    (item) => item.feedItemFollowWithMetadata.feedItemId === updatedFeedItem.id,
+  );
+
+  if (itemIndex === -1) {
+    return;
+  }
+
+  const nextData = [...state.items.data];
+
+  if (isRemoved) {
+    nextData.splice(itemIndex, 1);
+  } else {
+    const newFeedItem = {
+      ...nextData[itemIndex].feedItem,
+      ...updatedFeedItem,
+    };
+    nextData[itemIndex] = {
+      feedItem: { ...newFeedItem },
+      feedItemFollowWithMetadata: {
+        ...nextData[itemIndex].feedItemFollowWithMetadata,
+        feedItem: { ...newFeedItem },
+      },
     };
   }
 
@@ -67,7 +115,7 @@ const updateSharedInboxItem = (
 ): void => {
   const { item: updatedItem, isRemoved = false } = payload;
 
-  if (state.sharedItem?.id !== updatedItem.id) {
+  if (state.sharedItem?.feedItemFollowWithMetadata.id !== updatedItem.id) {
     return;
   }
 
@@ -77,7 +125,44 @@ const updateSharedInboxItem = (
   } else {
     state.sharedItem = {
       ...state.sharedItem,
-      ...updatedItem,
+      feedItemFollowWithMetadata: {
+        ...state.sharedItem.feedItemFollowWithMetadata,
+        ...updatedItem,
+      },
+    };
+  }
+};
+
+const updateFeedItemInSharedInboxItem = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: Partial<CommonFeed> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  const { item: updatedFeedItem, isRemoved = false } = payload;
+
+  if (
+    state.sharedItem?.feedItemFollowWithMetadata.feedItemId !==
+    updatedFeedItem.id
+  ) {
+    return;
+  }
+
+  if (isRemoved) {
+    state.sharedItem = null;
+    state.sharedFeedItemId = null;
+  } else {
+    const newFeedItem = {
+      ...state.sharedItem.feedItem,
+      ...updatedFeedItem,
+    };
+    state.sharedItem = {
+      feedItem: { ...newFeedItem },
+      feedItemFollowWithMetadata: {
+        ...state.sharedItem.feedItemFollowWithMetadata,
+        feedItem: { ...newFeedItem },
+      },
     };
   }
 };
@@ -97,7 +182,9 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       const payloadData = nextState.sharedFeedItemId
         ? payload.data &&
           payload.data.filter(
-            (item) => item.feedItemId !== nextState.sharedFeedItemId,
+            (item) =>
+              item.feedItemFollowWithMetadata.feedItemId !==
+              nextState.sharedFeedItemId,
           )
         : payload.data;
 
@@ -125,7 +212,10 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       const data = payload.reduceRight(
         (acc, { item, statuses: { isRemoved } }) => {
           const nextData = [...acc];
-          const itemIndex = nextData.findIndex((item) => item.id === item.id);
+          const itemIndex = nextData.findIndex(
+            (nextDataItem) =>
+              nextDataItem.feedItemFollowWithMetadata.id === item.id,
+          );
 
           if (isRemoved) {
             if (itemIndex >= 0) {
@@ -135,13 +225,17 @@ export const reducer = createReducer<InboxState, Action>(initialState)
             return nextData;
           }
 
+          const finalItem: FeedLayoutItemWithFollowData = {
+            feedItem: item.feedItem,
+            feedItemFollowWithMetadata: item,
+          };
           firstDocTimestamp = item.updatedAt;
 
           if (itemIndex < 0) {
-            return [item, ...nextData];
+            return [finalItem, ...nextData];
           }
 
-          nextData[itemIndex] = item;
+          nextData[itemIndex] = finalItem;
 
           return nextData;
         },
@@ -161,6 +255,12 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       updateSharedInboxItem(nextState, payload);
     }),
   )
+  .handleAction(actions.updateFeedItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      updateFeedItemInInboxItem(nextState, payload);
+      updateFeedItemInSharedInboxItem(nextState, payload);
+    }),
+  )
   .handleAction(actions.resetInboxItems, (state) =>
     produce(state, (nextState) => {
       nextState.items = { ...initialInboxItems };
@@ -173,6 +273,11 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   )
   .handleAction(actions.setSharedInboxItem, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.sharedItem = payload;
+      nextState.sharedItem = payload
+        ? {
+            feedItem: payload.feedItem,
+            feedItemFollowWithMetadata: payload,
+          }
+        : null;
     }),
   );

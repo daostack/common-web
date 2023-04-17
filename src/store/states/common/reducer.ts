@@ -1,6 +1,7 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
+import { FeedLayoutItem } from "@/pages/commonFeed";
 import { CommonFeed } from "@/shared/models";
 import * as actions from "./actions";
 import { CommonState, FeedItems } from "./types";
@@ -47,7 +48,7 @@ const updateFeedItemInList = (
 
   const { item: updatedItem, isRemoved = false } = payload;
   const feedItemIndex = state.feedItems.data?.findIndex(
-    (item) => item.id === updatedItem.id,
+    (item) => item.feedItem.id === updatedItem.id,
   );
 
   if (feedItemIndex === -1) {
@@ -60,8 +61,10 @@ const updateFeedItemInList = (
     nextData.splice(feedItemIndex, 1);
   } else {
     nextData[feedItemIndex] = {
-      ...nextData[feedItemIndex],
-      ...updatedItem,
+      feedItem: {
+        ...nextData[feedItemIndex].feedItem,
+        ...updatedItem,
+      },
     };
   }
 
@@ -80,7 +83,7 @@ const updateSharedFeedItem = (
 ): void => {
   const { item: updatedItem, isRemoved = false } = payload;
 
-  if (state.sharedFeedItem?.id !== updatedItem.id) {
+  if (state.sharedFeedItem?.feedItem.id !== updatedItem.id) {
     return;
   }
 
@@ -89,8 +92,10 @@ const updateSharedFeedItem = (
     state.sharedFeedItemId = null;
   } else {
     state.sharedFeedItem = {
-      ...state.sharedFeedItem,
-      ...updatedItem,
+      feedItem: {
+        ...state.sharedFeedItem.feedItem,
+        ...updatedItem,
+      },
     };
   }
 };
@@ -205,7 +210,9 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       const payloadData = nextState.sharedFeedItemId
         ? payload.data &&
-          payload.data.filter((item) => item.id !== nextState.sharedFeedItemId)
+          payload.data.filter(
+            (item) => item.feedItem.id !== nextState.sharedFeedItemId,
+          )
         : payload.data;
 
       nextState.feedItems = {
@@ -234,7 +241,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
         (acc, { commonFeedItem, statuses: { isRemoved } }) => {
           const nextData = [...acc];
           const itemIndex = nextData.findIndex(
-            (item) => item.id === commonFeedItem.id,
+            (item) => item.feedItem.id === commonFeedItem.id,
           );
 
           if (isRemoved) {
@@ -245,13 +252,16 @@ export const reducer = createReducer<CommonState, Action>(initialState)
             return nextData;
           }
 
+          const finalItem: FeedLayoutItem = {
+            feedItem: commonFeedItem,
+          };
           firstDocTimestamp = commonFeedItem.updatedAt;
 
           if (itemIndex < 0) {
-            return [commonFeedItem, ...nextData];
+            return [finalItem, ...nextData];
           }
 
-          nextData[itemIndex] = commonFeedItem;
+          nextData[itemIndex] = finalItem;
 
           return nextData;
         },
@@ -288,6 +298,10 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.setSharedFeedItem, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.sharedFeedItem = payload;
+      nextState.sharedFeedItem = payload
+        ? {
+            feedItem: payload,
+          }
+        : null;
     }),
   );

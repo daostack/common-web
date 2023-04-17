@@ -4,6 +4,7 @@ import { UnsubscribeFunction } from "@/shared/interfaces";
 import { GetInboxResponse } from "@/shared/interfaces/api";
 import {
   Collection,
+  CommonFeed,
   FeedItemFollowWithMetadata,
   Timestamp,
   User,
@@ -72,7 +73,12 @@ class UserService {
       `${ApiEndpoint.GetInbox}?${stringify(queryParams)}`,
     );
     const inboxItems = data.inboxWithMetadata.map((item) =>
-      convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>(item),
+      convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>({
+        ...item,
+        feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
+          item.feedItem,
+        ),
+      }),
     );
     const firstDocTimestamp =
       (data.firstDocTimestamp && convertToTimestamp(data.firstDocTimestamp)) ||

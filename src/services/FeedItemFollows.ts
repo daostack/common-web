@@ -12,6 +12,7 @@ import { firestoreDataConverter } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
 import CommonService from "./Common";
+import CommonFeedService from "./CommonFeed";
 
 const converter = firestoreDataConverter<FeedItemFollow>();
 
@@ -48,9 +49,18 @@ class FeedItemFollowsService {
       return null;
     }
 
-    const itemCommon = feedItemFollowData
-      ? await CommonService.getCachedCommonById(feedItemFollowData.commonId)
-      : null;
+    const [itemCommon, feedItem] = await Promise.all([
+      CommonService.getCachedCommonById(feedItemFollowData.commonId),
+      CommonFeedService.getCommonFeedItemById(
+        feedItemFollowData.commonId,
+        feedItemFollowData.feedItemId,
+      ),
+    ]);
+
+    if (!itemCommon || !feedItem) {
+      return null;
+    }
+
     const itemParentCommon = itemCommon?.directParent?.commonId
       ? await CommonService.getCachedCommonById(
           itemCommon.directParent.commonId,
@@ -59,9 +69,10 @@ class FeedItemFollowsService {
 
     return {
       ...feedItemFollowData,
-      commonName: itemCommon?.name || "Unknown",
+      feedItem,
+      commonName: itemCommon.name,
       parentCommonName: itemParentCommon?.name,
-      commonAvatar: itemCommon?.image || "",
+      commonAvatar: itemCommon.image,
     };
   };
 

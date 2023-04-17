@@ -1,14 +1,10 @@
+import { FeedLayoutItem } from "@/pages/commonFeed";
 import { CommonAction } from "@/shared/constants";
 import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
 } from "@/shared/interfaces";
-import {
-  CommonFeed,
-  CommonMember,
-  Governance,
-  Timestamp,
-} from "@/shared/models";
+import { CommonMember, Governance, Timestamp } from "@/shared/models";
 
 export type EntityCreation<T> = {
   data: T | null;
@@ -16,7 +12,7 @@ export type EntityCreation<T> = {
 };
 
 export interface FeedItems {
-  data: CommonFeed[] | null;
+  data: FeedLayoutItem[] | null;
   loading: boolean;
   hasMore: boolean;
   firstDocTimestamp: Timestamp | null;
@@ -26,7 +22,7 @@ export interface FeedItems {
 export interface CommonState {
   feedItems: FeedItems;
   sharedFeedItemId: string | null;
-  sharedFeedItem: CommonFeed | null;
+  sharedFeedItem: FeedLayoutItem | null;
   commonAction: CommonAction | null;
   discussionCreation: EntityCreation<NewDiscussionCreationFormValues>;
   proposalCreation: EntityCreation<NewProposalCreationFormValues>;

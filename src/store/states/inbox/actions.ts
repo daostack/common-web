@@ -1,5 +1,5 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
-import { FeedItemFollowWithMetadata } from "@/shared/models";
+import { CommonFeed, FeedItemFollowWithMetadata } from "@/shared/models";
 import { InboxActionType } from "./constants";
 import { InboxItems } from "./types";
 
@@ -35,6 +35,13 @@ export const updateInboxItem = createStandardAction(
   InboxActionType.UPDATE_INBOX_ITEM,
 )<{
   item: Partial<FeedItemFollowWithMetadata> & { id: string };
+  isRemoved?: boolean;
+}>();
+
+export const updateFeedItem = createStandardAction(
+  InboxActionType.UPDATE_FEED_ITEM,
+)<{
+  item: Partial<CommonFeed> & { id: string };
   isRemoved?: boolean;
 }>();
 

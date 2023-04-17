@@ -1,19 +1,22 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectUser,
-  selectUserNotificationsAmount,
+  selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
+import { FeedItemBaseContentProps } from "@/pages/common";
 import { FeedLayout, FeedLayoutRef } from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
+import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { inboxActions, selectSharedInboxItem } from "@/store/states";
-import { HeaderContent } from "./components";
+import { HeaderContent, FeedItemBaseContent } from "./components";
 import { useInboxData } from "./hooks";
+import { getLastMessage } from "./utils";
 import styles from "./Inbox.module.scss";
 
 const InboxPage: FC = () => {
@@ -31,7 +34,9 @@ const InboxPage: FC = () => {
     () => (sharedFeedItemId ? [sharedFeedItemId] : []),
     [sharedFeedItemId],
   );
-  const userNotificationsAmount = useSelector(selectUserNotificationsAmount());
+  const userStreamsWithNotificationsAmount = useSelector(
+    selectUserStreamsWithNotificationsAmount(),
+  );
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const {
@@ -62,6 +67,23 @@ const InboxPage: FC = () => {
       fetchInboxItems();
     }
   };
+
+  const renderFeedItemBaseContent = useCallback(
+    (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,
+    [],
+  );
+
+  const handleFeedItemUpdate = useCallback(
+    (item: CommonFeed, isRemoved: boolean) => {
+      dispatch(
+        inboxActions.updateFeedItem({
+          item,
+          isRemoved,
+        }),
+      );
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     dispatch(inboxActions.setSharedFeedItemId(sharedFeedItemId));
@@ -119,17 +141,22 @@ const InboxPage: FC = () => {
         ref={setFeedLayoutRef}
         className={styles.feedLayout}
         headerContent={
-          <HeaderContent newMessagesAmount={userNotificationsAmount || 0} />
+          <HeaderContent
+            streamsWithNotificationsAmount={
+              userStreamsWithNotificationsAmount || 0
+            }
+          />
         }
         isGlobalLoading={false}
-        common={{} as any}
-        governance={{} as any}
         commonMember={null}
-        topFeedItems={[]}
-        feedItems={[]}
+        topFeedItems={topFeedItems}
+        feedItems={inboxItems}
         loading={areInboxItemsLoading || !user}
         shouldHideContent={!user}
         onFetchNext={fetchMoreInboxItems}
+        renderFeedItemBaseContent={renderFeedItemBaseContent}
+        onFeedItemUpdate={handleFeedItemUpdate}
+        getLastMessage={getLastMessage}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>
