@@ -18,8 +18,6 @@ export function* getPinnedFeedItems(
       ReturnType<typeof CommonFeedService.getCommonPinnedFeedItems>
     >;
 
-    console.log(data);
-
     yield put(
       actions.getPinnedFeedItems.success({
         data,

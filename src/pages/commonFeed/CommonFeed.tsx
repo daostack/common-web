@@ -73,8 +73,6 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
     fetch: fetchCommonPinnedFeedItems,
   } = useCommonPinnedFeedItems(commonId);
 
-  console.log(commonPinnedFeedItems);
-
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const user = useSelector(selectUser());
   const userId = user?.uid;
