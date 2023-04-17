@@ -23,8 +23,14 @@ export interface FeedItems {
   lastDocTimestamp: Timestamp | null;
 }
 
+export interface PinnedFeedItems {
+  data: CommonFeed[] | null;
+  loading: boolean;
+}
+
 export interface CommonState {
   feedItems: FeedItems;
+  pinnedFeedItems: PinnedFeedItems;
   sharedFeedItemId: string | null;
   sharedFeedItem: CommonFeed | null;
   commonAction: CommonAction | null;

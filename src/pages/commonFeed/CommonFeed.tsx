@@ -5,6 +5,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonAction, QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
+import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
@@ -65,6 +66,15 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
     hasMore: hasMoreCommonFeedItems,
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
+
+  const {
+    data: commonPinnedFeedItems,
+    loading: areCommonPinnedFeedItemsLoading,
+    fetch: fetchCommonPinnedFeedItems,
+  } = useCommonPinnedFeedItems(commonId);
+
+  console.log(commonPinnedFeedItems);
+
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -126,6 +136,12 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
       fetchCommonFeedItems();
     }
   }, [commonFeedItems, areCommonFeedItemsLoading]);
+
+  useEffect(() => {
+    if (!commonPinnedFeedItems && !areCommonPinnedFeedItemsLoading) {
+      fetchCommonPinnedFeedItems();
+    }
+  }, [commonPinnedFeedItems, areCommonPinnedFeedItemsLoading]);
 
   useEffect(() => {
     if (recentStreamId === commonFeedItems?.[0]?.data.id) {
@@ -198,6 +214,7 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
         common={commonData.common}
         governance={commonData.governance}
         commonMember={commonMember}
+        pinnedFeedItems={commonPinnedFeedItems}
         topFeedItems={topFeedItems}
         feedItems={commonFeedItems}
         loading={areCommonFeedItemsLoading || !hasAccessToPage}

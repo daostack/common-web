@@ -8,6 +8,7 @@ export const ApiEndpoint = {
   MarkFeedObjectSeenForUser: "/commons/mark-feed-object-seen-for-user",
   AcceptRules: "/commons/accept-rules",
   GetCommonFeedItems: "/commons/:commonId/feed-items",
+  GetCommonPinnedFeedItems: "/commons/:commonId/pinned-feed-items",
   CreateAction: "/proposals/action",
   CreateProposal: "/proposals/create",
   VoteProposal: "/proposals/vote",

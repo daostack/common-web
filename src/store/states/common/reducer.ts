@@ -3,7 +3,7 @@ import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import { CommonFeed } from "@/shared/models";
 import * as actions from "./actions";
-import { CommonState, FeedItems } from "./types";
+import { CommonState, FeedItems, PinnedFeedItems } from "./types";
 
 type Action = ActionType<typeof actions>;
 
@@ -15,8 +15,14 @@ const initialFeedItems: FeedItems = {
   lastDocTimestamp: null,
 };
 
+const initialPinnedFeedItems: PinnedFeedItems = {
+  data: null,
+  loading: false,
+};
+
 const initialState: CommonState = {
   feedItems: { ...initialFeedItems },
+  pinnedFeedItems: { ...initialPinnedFeedItems },
   sharedFeedItemId: null,
   sharedFeedItem: null,
   commonAction: null,
@@ -223,6 +229,30 @@ export const reducer = createReducer<CommonState, Action>(initialState)
         loading: false,
         hasMore: false,
         lastDocTimestamp: null,
+      };
+    }),
+  )
+  .handleAction(actions.getPinnedFeedItems.request, (state) =>
+    produce(state, (nextState) => {
+      nextState.pinnedFeedItems = {
+        ...nextState.pinnedFeedItems,
+        loading: true,
+      };
+    }),
+  )
+  .handleAction(actions.getPinnedFeedItems.success, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.pinnedFeedItems = {
+        data: payload.data,
+        loading: false,
+      };
+    }),
+  )
+  .handleAction(actions.getPinnedFeedItems.failure, (state) =>
+    produce(state, (nextState) => {
+      nextState.pinnedFeedItems = {
+        ...nextState.pinnedFeedItems,
+        loading: false,
       };
     }),
   )

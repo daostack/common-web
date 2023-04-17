@@ -2,6 +2,7 @@ import React, { FC, useEffect, useMemo } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
+import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Container, InfiniteScroll } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
@@ -21,6 +22,14 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
     hasMore,
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(common.id);
+
+  // TO DELETE? NOT IN USE
+  const {
+    data: commonPinnedFeedItems,
+    loading: loadingPinnedItems,
+    fetch: fetchCommonPinnedFeedItems,
+  } = useCommonPinnedFeedItems(common.id);
+
   const isTabletView = useIsTabletView();
   const feedItemContextValue = useMemo<FeedItemContextValue>(
     () => ({
@@ -42,6 +51,12 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
   useEffect(() => {
     if (!commonFeedItems && !loading) {
       fetchCommonFeedItems();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!commonPinnedFeedItems && !loadingPinnedItems) {
+      fetchCommonPinnedFeedItems();
     }
   }, []);
 

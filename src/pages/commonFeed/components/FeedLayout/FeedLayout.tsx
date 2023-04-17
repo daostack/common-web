@@ -53,6 +53,7 @@ interface FeedLayoutProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  pinnedFeedItems: CommonFeed[] | null;
   feedItems: CommonFeed[] | null;
   topFeedItems?: CommonFeed[];
   loading: boolean;
@@ -72,6 +73,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     common,
     governance,
     commonMember,
+    pinnedFeedItems,
     feedItems,
     topFeedItems = [],
     loading,
@@ -188,6 +190,23 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
           {!shouldHideContent && (
             <div className={classNames(styles.content, className)}>
               {topContent}
+              {pinnedFeedItems?.map((item) => (
+                <FeedItem
+                  key={item.id}
+                  governanceId={governance.id}
+                  commonId={common.id}
+                  commonName={common.name}
+                  isProject={checkIsProject(common)}
+                  item={item}
+                  governanceCircles={governance.circles}
+                  isMobileVersion={isTabletView}
+                  userCircleIds={userCircleIds}
+                  isActive={item.id === activeFeedItemId}
+                  isExpanded={item.id === expandedFeedItemId}
+                  sizeKey={sizeKey}
+                  commonMemberUserId={commonMember?.userId}
+                />
+              ))}
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => (
                   <FeedItem
