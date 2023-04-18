@@ -16,6 +16,9 @@ export interface FeedItemBaseContentProps {
   onClick?: () => void;
   onExpand?: MouseEventHandler;
   menuItems?: ContextMenuItem[];
+  type?: CommonFeedType;
+  seenOnce?: boolean;
+  ownerId?: string;
   image?: string;
   imageAlt?: string;
   isProject?: boolean;

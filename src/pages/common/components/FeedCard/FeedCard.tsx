@@ -3,8 +3,8 @@ import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
-import { Loader } from "@/shared/ui-kit";
 import { CommonFeedType } from "@/shared/models";
+import { Loader } from "@/shared/ui-kit";
 import { CommonCard } from "../CommonCard";
 import styles from "./FeedCard.module.scss";
 
