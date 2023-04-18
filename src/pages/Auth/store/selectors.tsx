@@ -17,3 +17,8 @@ export const selectAuthProvider = () =>
   createSelector(selectAuth, (state) => state.authProvider);
 export const selectUserPhoneNumber = () =>
   createSelector(selectAuth, (state) => state.userPhoneNumber);
+export const selectUserStreamsWithNotificationsAmount = () =>
+  createSelector(
+    selectAuth,
+    (state) => state.userStreamsWithNotificationsAmount,
+  );

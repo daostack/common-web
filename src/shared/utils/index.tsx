@@ -8,6 +8,7 @@ export * from "./countdown";
 export * from "./firebaseUploadFile";
 export * from "./formatDate";
 export * from "./generateCircleDataForCommonMember";
+export * from "./getPluralEnding";
 export * from "./isError";
 export * from "./matchRoute";
 export * from "./parseLinksForSubmission";

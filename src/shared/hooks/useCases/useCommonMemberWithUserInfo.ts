@@ -6,20 +6,18 @@ import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
 } from "@/shared/utils";
-import { useGovernance } from "./useGovernance";
+import { useGovernanceByCommonId } from "./useGovernanceByCommonId";
 import { useUserById } from "./useUserById";
 
 export const useCommonMemberWithUserInfo = (
   commonId: string,
   userId?: string,
-  governanceId?: string,
 ): LoadingState<CommonMemberWithUserInfo | null> => {
   const {
     data: governance,
     fetched: isGovernanceFetched,
     fetchGovernance,
-  } = useGovernance();
-
+  } = useGovernanceByCommonId();
   const {
     fetchUser,
     data: user,
@@ -38,10 +36,8 @@ export const useCommonMemberWithUserInfo = (
       fetchUser(userId);
     }
     fetchCommonMember(commonId, {}, true);
-    if (governanceId) {
-      fetchGovernance(governanceId);
-    }
-  }, [userId, commonId, governanceId]);
+    fetchGovernance(commonId);
+  }, [userId, commonId]);
 
   const governanceCircles = Object.values(governance?.circles || {});
   const memberCircles = getFilteredByIdCircles(governanceCircles);

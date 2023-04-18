@@ -1,9 +1,9 @@
-import { Discussion, Governance } from "@/shared/models";
+import { Circles, Discussion } from "@/shared/models";
 import { DiscussionCardMenuItem } from "../constants";
 
 export interface GetAllowedItemsOptions {
   discussion?: Discussion | null;
-  governance: Pick<Governance, "circles">;
+  governanceCircles?: Circles;
 }
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<

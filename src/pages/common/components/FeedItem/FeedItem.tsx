@@ -1,20 +1,21 @@
-import React, { FC } from "react";
-import { CommonFeed, CommonFeedType, Governance } from "@/shared/models";
+import React, { FC, memo } from "react";
+import { Circles, CommonFeed, CommonFeedType } from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
+import { useFeedItemContext } from "./context";
 
 interface FeedItemProps {
-  commonId: string;
+  commonId?: string;
   commonName: string;
-  isProject: boolean;
+  commonImage: string;
+  isProject?: boolean;
   item: CommonFeed;
-  governanceCircles: Governance["circles"];
+  governanceCircles?: Circles;
   userCircleIds: string[];
-  commonMemberUserId?: string;
+  currentUserId?: string;
   isMobileVersion?: boolean;
-  governanceId?: string;
   isPreviewMode?: boolean;
   isActive?: boolean;
   isExpanded?: boolean;
@@ -25,69 +26,56 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   const {
     commonId,
     commonName,
-    isProject,
+    commonImage,
+    isProject = false,
     item,
     governanceCircles,
     userCircleIds,
     isMobileVersion = false,
-    governanceId,
     isPreviewMode = false,
     isActive = false,
     isExpanded = false,
     sizeKey,
-    commonMemberUserId,
+    currentUserId,
   } = props;
-  useFeedItemSubscription(commonId, item.id);
+  const { onFeedItemUpdate, getLastMessage } = useFeedItemContext();
+  useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
   if (
     !checkIsItemVisibleForUser(
       item.circleVisibility,
       userCircleIds,
       item.userId,
-      commonMemberUserId,
+      currentUserId,
     )
   ) {
     return null;
   }
 
   const generalProps = {
+    item,
+    commonId,
+    commonName,
+    commonImage,
     isActive,
     isExpanded,
+    isProject,
+    governanceCircles,
+    isPreviewMode,
+    getLastMessage,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {
     return (
-      <DiscussionFeedCard
-        item={item}
-        governanceCircles={governanceCircles}
-        isMobileVersion={isMobileVersion}
-        commonId={commonId}
-        commonName={commonName}
-        isProject={isProject}
-        governanceId={governanceId}
-        isPreviewMode={isPreviewMode}
-        {...generalProps}
-      />
+      <DiscussionFeedCard isMobileVersion={isMobileVersion} {...generalProps} />
     );
   }
 
   if (item.data.type === CommonFeedType.Proposal) {
-    return (
-      <ProposalFeedCard
-        commonId={commonId}
-        commonName={commonName}
-        isProject={isProject}
-        item={item}
-        governanceCircles={governanceCircles}
-        governanceId={governanceId}
-        isPreviewMode={isPreviewMode}
-        sizeKey={isActive ? sizeKey : undefined}
-        {...generalProps}
-      />
-    );
+    return <ProposalFeedCard sizeKey={sizeKey} {...generalProps} />;
   }
 
   return null;
 };
 
-export default FeedItem;
+export default memo(FeedItem);

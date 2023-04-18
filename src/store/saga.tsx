@@ -8,6 +8,7 @@ import {
   cacheSaga,
   commonSaga,
   commonLayoutSaga,
+  inboxSaga,
   projectsSaga,
 } from "./states";
 
@@ -20,6 +21,7 @@ const allSagas = [
   commonSaga,
   commonLayoutSaga,
   cacheSaga,
+  inboxSaga,
   saga,
 ];
 

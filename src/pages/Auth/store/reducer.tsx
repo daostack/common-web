@@ -15,6 +15,7 @@ const initialState: AuthStateType = {
   isAuthLoading: false,
   authProvider: null,
   isAuthenticationReady: false,
+  userStreamsWithNotificationsAmount: null,
 };
 
 const reducer = createReducer<AuthStateType, Action>(initialState)
@@ -29,6 +30,8 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
       produce(state, (nextState) => {
         nextState.authentificated = true;
         nextState.user = action.payload;
+        nextState.userStreamsWithNotificationsAmount =
+          action.payload.inboxCounter ?? null;
       }),
   )
   .handleAction(actions.logOut, (state) =>
@@ -36,6 +39,7 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
       nextState.authentificated = false;
       nextState.user = null;
       nextState.userPhoneNumber = null;
+      nextState.userStreamsWithNotificationsAmount = null;
       nextState.isAuthLoading = false;
       nextState.authProvider = null;
     }),
@@ -69,6 +73,13 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.isAuthenticationReady = action.payload;
     }),
+  )
+  .handleAction(
+    actions.setUserStreamsWithNotificationsAmount,
+    (state, action) =>
+      produce(state, (nextState) => {
+        nextState.userStreamsWithNotificationsAmount = action.payload;
+      }),
   );
 
 export { reducer as AuthReducer };
