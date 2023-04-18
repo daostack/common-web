@@ -62,7 +62,7 @@ interface FeedLayoutProps {
   common?: Common;
   governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  pinnedFeedItems: FeedLayoutItem[] | null;
+  pinnedFeedItems?: FeedLayoutItem[] | null;
   feedItems: FeedLayoutItem[] | null;
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;

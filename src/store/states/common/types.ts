@@ -20,7 +20,7 @@ export interface FeedItems {
 }
 
 export interface PinnedFeedItems {
-  data: CommonFeed[] | null;
+  data: FeedLayoutItem[] | null;
   loading: boolean;
 }
 

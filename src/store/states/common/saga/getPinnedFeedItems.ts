@@ -1,4 +1,5 @@
 import { call, put } from "redux-saga/effects";
+import { FeedLayoutItem } from "@/pages/commonFeed";
 import { CommonFeedService } from "@/services";
 import { isError } from "@/shared/utils";
 import * as actions from "../actions";
@@ -18,9 +19,13 @@ export function* getPinnedFeedItems(
       ReturnType<typeof CommonFeedService.getCommonPinnedFeedItems>
     >;
 
+    const convertedData: FeedLayoutItem[] = data.map((item) => ({
+      feedItem: item,
+    }));
+
     yield put(
       actions.getPinnedFeedItems.success({
-        data,
+        data: convertedData,
       }),
     );
   } catch (error) {
