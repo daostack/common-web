@@ -57,7 +57,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
       memberAmountsWithCircleId.some(({ amount }) => amount <= 1),
     [areMemberAmountsFetched, memberAmountsWithCircleId],
   );
-  const commonWord = isSubCommon ? "project" : "common";
+  const commonWord = isSubCommon ? "space" : "common";
 
   const handleLeave = useCallback(() => {
     if (!userId) {
