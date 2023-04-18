@@ -2,6 +2,7 @@ import React, {
   FC,
   FocusEventHandler,
   KeyboardEventHandler,
+  KeyboardEvent,
   useCallback,
 } from "react";
 import classNames from "classnames";
@@ -21,6 +22,7 @@ interface EditorProps {
   readOnly?: boolean;
   disabled?: boolean;
   onBlur?: FocusEventHandler;
+  onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
 }
 
 const Editor: FC<EditorProps> = (props) => {
@@ -30,6 +32,7 @@ const Editor: FC<EditorProps> = (props) => {
     readOnly = false,
     disabled = false,
     onBlur,
+    onKeyDown,
   } = props;
   const editor = useSlate();
   const renderElement = useCallback((props) => <Element {...props} />, []);
@@ -46,6 +49,7 @@ const Editor: FC<EditorProps> = (props) => {
   const id = props.id || props.name;
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
+    onKeyDown && onKeyDown(event);
     Object.entries(HOTKEYS).forEach(([hotkey, format]) => {
       if (!isHotkey(hotkey, event)) {
         return;

@@ -16,11 +16,15 @@ const TextEditor: FC<TextEditorProps> = (props) => {
   const [{ value }, { touched, error }, { setValue }] = useField(name);
   const hintToShow = restProps.hint || (isRequired ? "Required" : "");
 
+  console.log("---value", value, restProps);
   return (
     <BaseTextEditor
       {...restProps}
       value={value}
-      onChange={setValue}
+      onChange={(val) => {
+        console.log("-val,", val);
+        setValue(val);
+      }}
       hint={hintToShow}
       error={touched ? error : ""}
     />

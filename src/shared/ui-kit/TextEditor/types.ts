@@ -51,6 +51,12 @@ export interface ListItemElement extends BaseElement {
   type: ElementType.ListItem;
 }
 
+export interface MentionElement extends BaseElement {
+  type: ElementType.Mention;
+  character: string;
+  children: CustomText[];
+}
+
 export interface TextEditorStyles {
   label?: string;
   hint?: string;
@@ -64,4 +70,5 @@ export type CustomElement =
   | LinkElement
   | NumberedListElement
   | BulletedListElement
-  | ListItemElement;
+  | ListItemElement
+  | MentionElement;

@@ -35,6 +35,12 @@ import {
   DiscussionMessage,
   Timestamp,
 } from "@/shared/models";
+import {
+  BaseTextEditor,
+  TextEditor,
+  TextEditorValue,
+  parseStringToTextEditorValue,
+} from "@/shared/ui-kit";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
   cacheActions,
@@ -297,7 +303,6 @@ export default function ChatComponent({
     const enteredHotkey = CHAT_HOT_KEYS.find((hotkey) =>
       isHotkey(hotkey, event),
     );
-
     if (!enteredHotkey) {
       return;
     }
@@ -326,6 +331,10 @@ export default function ChatComponent({
       });
     }
   }, [lastNonUserMessage?.id]);
+
+  const [val, setVal] = useState<TextEditorValue>(
+    parseStringToTextEditorValue(),
+  );
 
   return (
     <div className={styles.chatWrapper}>
@@ -381,12 +390,19 @@ export default function ChatComponent({
                   style={{ display: "none" }}
                   multiple
                 />
-                <textarea
+                {/* <textarea
                   className={styles.messageInput}
                   placeholder="What do you think?"
                   value={message}
                   onKeyDown={onEnterKeyDown}
                   onChange={(e) => setMessage(e.target.value)}
+                /> */}
+                <BaseTextEditor
+                  className={styles.messageInput}
+                  value={val}
+                  onChange={setVal}
+                  placeholder="What do you think?"
+                  onKeyDown={onEnterKeyDown}
                 />
                 <button
                   className={styles.sendIcon}

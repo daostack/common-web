@@ -1,11 +1,44 @@
 import React, { CSSProperties, FC } from "react";
 import classNames from "classnames";
-import { RenderElementProps } from "slate-react";
+import { RenderElementProps, useSelected, useFocused } from "slate-react";
 import { ElementType } from "../../constants";
 import { Link } from "./components";
 import { ElementAttributes } from "./types";
 import { getElementTextDirection } from "./utils";
 import styles from "./Element.module.scss";
+
+const Mention = ({ attributes, children, element }) => {
+  const selected = useSelected();
+  const focused = useFocused();
+  const style: React.CSSProperties = {
+    padding: "3px 3px 2px",
+    margin: "0 1px",
+    verticalAlign: "baseline",
+    display: "inline-block",
+    borderRadius: "4px",
+    backgroundColor: "#eee",
+    fontSize: "0.9em",
+    boxShadow: selected && focused ? "0 0 0 2px #B4D5FF" : "none",
+  };
+  // See if our empty text child has any styling marks applied and apply those
+  if (element.children[0].bold) {
+    style.fontWeight = "bold";
+  }
+  if (element.children[0].italic) {
+    style.fontStyle = "italic";
+  }
+  return (
+    <span
+      {...attributes}
+      contentEditable={false}
+      data-cy={`mention-${element.character.replace(" ", "-")}`}
+      style={style}
+    >
+      @{element.character}
+      {children}
+    </span>
+  );
+};
 
 const Element: FC<RenderElementProps> = (props) => {
   const { attributes, children, element } = props;
@@ -58,6 +91,9 @@ const Element: FC<RenderElementProps> = (props) => {
           {children}
         </Link>
       );
+    case ElementType.Mention: {
+      return <Mention {...props} />;
+    }
     default:
       return (
         <p
