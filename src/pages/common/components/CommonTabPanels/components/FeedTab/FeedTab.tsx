@@ -121,6 +121,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
               {chatItem.discussion.title}
             </p>
             <ChatComponent
+              governanceCircles={governance.circles}
               commonMember={commonMember}
               isCommonMemberFetched
               isAuthorized={Boolean(user)}
@@ -131,7 +132,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
               }
               hasAccess={hasAccessToChat}
               isHidden={false}
-              common={common}
+              commonId={common.id}
               discussion={chatItem.discussion}
               feedItemId={chatItem.feedItemId}
               lastSeenItem={chatItem.lastSeenItem}
@@ -151,18 +152,20 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
         onClose={() => {
           setChatItem(null);
         }}
-        common={common}
+        commonName={common.name}
+        commonImage={common.image}
         title={chatItem?.discussion.title}
       >
         {chatItem && (
           <ChatComponent
+            governanceCircles={governance.circles}
             commonMember={commonMember}
             isCommonMemberFetched
             isAuthorized={Boolean(user)}
             type={ChatType.DiscussionMessages}
             hasAccess={hasAccessToChat}
             isHidden={false}
-            common={common}
+            commonId={common.id}
             discussion={chatItem.discussion}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}

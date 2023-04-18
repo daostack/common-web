@@ -28,7 +28,7 @@ import {
 import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
-  Common,
+  Circles,
   CommonFeedObjectUserUnique,
   CommonMember,
   Discussion,
@@ -39,7 +39,6 @@ import { getUserName, hasPermission } from "@/shared/utils";
 import {
   cacheActions,
   chatActions,
-  selectGovernance,
   selectCurrentDiscussionMessageReply,
   selectFilesPreview,
   FileInfo,
@@ -49,9 +48,10 @@ import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
 
 interface ChatComponentInterface {
-  common: Common | null;
+  commonId: string;
   type: ChatType;
   isCommonMemberFetched: boolean;
+  governanceCircles?: Circles;
   commonMember: CommonMember | null;
   hasAccess?: boolean;
   discussion: Discussion;
@@ -82,8 +82,9 @@ function groupday(acc: any, currentValue: DiscussionMessage): Messages {
 const CHAT_HOT_KEYS = [HotKeys.Enter, HotKeys.ModEnter, HotKeys.ShiftEnter];
 
 export default function ChatComponent({
-  common,
+  commonId,
   type,
+  governanceCircles,
   commonMember,
   discussion,
   hasAccess = true,
@@ -94,7 +95,6 @@ export default function ChatComponent({
   isCommonMemberFetched,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
-  const governance = useSelector(selectGovernance);
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
@@ -103,10 +103,12 @@ export default function ChatComponent({
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
   const hasPermissionToHide =
-    commonMember && governance
+    commonMember && governanceCircles
       ? hasPermission({
           commonMember,
-          governance,
+          governance: {
+            circles: governanceCircles,
+          },
           key: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
         })
       : false;
@@ -214,7 +216,7 @@ export default function ChatComponent({
 
   const sendMessage = useCallback(
     async (message: string) => {
-      if (user && user.uid && common?.id) {
+      if (user && user.uid && commonId) {
         const pendingMessageId = uuidv4();
 
         const imagesPreview = FileService.getImageTypeFromFiles(
@@ -228,7 +230,7 @@ export default function ChatComponent({
           pendingMessageId,
           text: message,
           ownerId: user.uid,
-          commonId: common?.id,
+          commonId,
           discussionId,
           ...(discussionMessageReply && {
             parentId: discussionMessageReply?.id,
@@ -245,7 +247,7 @@ export default function ChatComponent({
           ownerId: userId as string,
           ownerName: getUserName(user),
           text: message,
-          commonId: common?.id,
+          commonId,
           discussionId,
           createdAt: firebaseDate,
           updatedAt: firebaseDate,
@@ -279,8 +281,8 @@ export default function ChatComponent({
       dispatch,
       user,
       discussionMessageReply,
+      commonId,
       currentFilesPreview,
-      common,
       discussionId,
       discussionMessages,
     ],

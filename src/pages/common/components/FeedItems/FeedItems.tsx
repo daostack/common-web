@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useMemo } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
+import { getLastMessage } from "@/pages/commonFeed/utils";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
@@ -38,6 +39,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
         shouldHideCardStyles: false,
         withHovering: true,
       },
+      getLastMessage,
     }),
     [],
   );
@@ -73,12 +75,12 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
         <InfiniteScroll onFetchNext={fetchMore} isLoading={loading}>
           {commonFeedItems?.map((item) => (
             <FeedItem
-              key={item.id}
-              governanceId={governance.id}
+              key={item.feedItem.id}
               commonId={common.id}
               commonName={common.name}
+              commonImage={common.image}
               isProject={checkIsProject(common)}
-              item={item}
+              item={item.feedItem}
               governanceCircles={governance.circles}
               isMobileVersion={isTabletView}
               userCircleIds={userCircleIds}

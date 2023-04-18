@@ -13,6 +13,6 @@ export interface NavigationItemOptions {
   type?: NavigationItemType;
   isActive?: boolean;
   isDisabled?: boolean;
-  notificationsAmount?: number;
+  notificationsAmount?: number | null;
   tooltipContent?: ReactNode | null;
 }

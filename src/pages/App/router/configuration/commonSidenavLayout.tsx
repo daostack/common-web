@@ -7,7 +7,7 @@ import { InboxPage } from "@/pages/inbox";
 import { ProfilePage } from "@/pages/profile";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { CommonSidenavLayout } from "@/shared/layouts";
-import { LayoutConfiguration } from "../types";
+import { LayoutConfiguration, RouteType } from "../types";
 
 export interface CommonSidenavLayoutRouteOptions {
   sidenav?: boolean;
@@ -29,6 +29,8 @@ export const COMMON_SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<CommonSide
         path: ROUTE_PATHS.INBOX,
         exact: true,
         component: InboxPage,
+        type: RouteType.Private,
+        unauthenticatedRedirectPath: ROUTE_PATHS.COMMON_LIST,
       },
       {
         path: ROUTE_PATHS.COMMON,

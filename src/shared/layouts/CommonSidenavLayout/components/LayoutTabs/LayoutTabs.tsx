@@ -1,6 +1,11 @@
 import React, { CSSProperties, FC, ReactNode } from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
+import {
+  authentificated,
+  selectUserStreamsWithNotificationsAmount,
+} from "@/pages/Auth/store/selectors";
 import { Tab, Tabs } from "@/shared/components";
 import { Avatar2Icon, InboxIcon, Hamburger2Icon } from "@/shared/icons";
 import {
@@ -20,33 +25,45 @@ interface LayoutTabsProps {
 interface TabConfiguration {
   label: string;
   value: LayoutTab;
-  icon?: ReactNode;
+  icon: ReactNode;
+  notificationsAmount?: number | null;
 }
-
-const TABS: TabConfiguration[] = [
-  {
-    label: getLayoutTabName(LayoutTab.Spaces),
-    value: LayoutTab.Spaces,
-    icon: <Hamburger2Icon />,
-  },
-  // {
-  //   label: getLayoutTabName(LayoutTab.Inbox),
-  //   value: LayoutTab.Inbox,
-  //   icon: <InboxIcon />,
-  // },
-  {
-    label: getLayoutTabName(LayoutTab.Profile),
-    value: LayoutTab.Profile,
-    icon: <Avatar2Icon className={styles.avatarIcon} color="currentColor" />,
-  },
-];
 
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
   const history = useHistory();
+  const isAuthenticated = useSelector(authentificated());
+  const userStreamsWithNotificationsAmount = useSelector(
+    selectUserStreamsWithNotificationsAmount(),
+  );
+  const finalUserStreamsWithNotificationsAmount =
+    userStreamsWithNotificationsAmount &&
+    userStreamsWithNotificationsAmount > 99
+      ? 99
+      : userStreamsWithNotificationsAmount;
   const activeTab =
     props.activeTab || getActiveLayoutTab(history.location.pathname);
-  const tabs = TABS;
+  const tabs: TabConfiguration[] = [
+    {
+      label: getLayoutTabName(LayoutTab.Spaces),
+      value: LayoutTab.Spaces,
+      icon: <Hamburger2Icon />,
+    },
+    {
+      label: getLayoutTabName(LayoutTab.Profile),
+      value: LayoutTab.Profile,
+      icon: <Avatar2Icon className={styles.avatarIcon} color="currentColor" />,
+    },
+  ];
+
+  if (isAuthenticated) {
+    tabs.splice(1, 0, {
+      label: getLayoutTabName(LayoutTab.Inbox),
+      value: LayoutTab.Inbox,
+      icon: <InboxIcon />,
+      notificationsAmount: finalUserStreamsWithNotificationsAmount || null,
+    });
+  }
 
   const itemStyles = {
     "--items-amount": tabs.length,
@@ -87,9 +104,14 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
           label={tab.label}
           value={tab.value}
           icon={
-            tab.icon ? (
-              <div className={styles.iconWrapper}>{tab.icon}</div>
-            ) : undefined
+            <div className={styles.iconWrapper}>
+              {tab.icon}
+              {typeof tab.notificationsAmount === "number" && (
+                <span className={styles.iconBadge}>
+                  {tab.notificationsAmount}
+                </span>
+              )}
+            </div>
           }
           includeDefaultMobileStyles={false}
         />

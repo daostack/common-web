@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
@@ -17,9 +17,8 @@ import {
   FeedCardContent,
   getVisibilityString,
   FeedCountdown,
-  getLastMessage,
 } from "../FeedCard";
-import { LoadingFeedCard } from "../LoadingFeedCard";
+import { GetLastMessageOptions } from "../FeedItem";
 import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
@@ -35,29 +34,31 @@ import {
 } from "./utils";
 
 interface ProposalFeedCardProps {
-  commonId: string;
+  commonId?: string;
   commonName: string;
+  commonImage: string;
   isProject: boolean;
   item: CommonFeed;
-  governanceCircles: Governance["circles"];
-  governanceId?: string;
+  governanceCircles?: Governance["circles"];
   isPreviewMode?: boolean;
   sizeKey?: string;
   isActive: boolean;
   isExpanded: boolean;
+  getLastMessage: (options: GetLastMessageOptions) => string;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const {
     commonId,
     commonName,
+    commonImage,
     isProject,
     item,
     governanceCircles,
-    governanceId,
     isPreviewMode,
     isActive,
     isExpanded,
+    getLastMessage,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -106,13 +107,9 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     isUserVoteLoading ||
     !isCommonMemberFetched ||
     !isProposalSpecificDataFetched ||
-    !isFeedItemUserMetadataFetched;
-  const circleVisibility = getVisibilityString(
-    governanceCircles,
-    item.circleVisibility,
-    proposal?.type,
-    getUserName(feedItemUser),
-  );
+    !isFeedItemUserMetadataFetched ||
+    !commonId ||
+    !governanceCircles;
   const [isHovering, setHovering] = useState(false);
   const onHover = (isMouseEnter: boolean): void => {
     setHovering(isMouseEnter);
@@ -144,11 +141,13 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   }, [fetchCommonMember, commonId]);
 
   useEffect(() => {
-    fetchFeedItemUserMetadata({
-      userId: userId || "",
-      commonId,
-      feedObjectId: item.id,
-    });
+    if (commonId) {
+      fetchFeedItemUserMetadata({
+        userId: userId || "",
+        commonId,
+        feedObjectId: item.id,
+      });
+    }
   }, [userId, commonId, item.id]);
 
   useEffect(() => {
@@ -187,21 +186,82 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     }
   }, [isDiscussionFetched, isProposalFetched, isFeedItemUserMetadataFetched]);
 
-  if (isLoading) {
-    return <LoadingFeedCard />;
-  }
+  const renderContent = (): ReactNode => {
+    if (isLoading) {
+      return null;
+    }
 
-  const isCountdownState = checkIsCountdownState(proposal);
-  const userHasPermissionsToVote = checkUserPermissionsToVote({
-    proposal,
-    commonMember,
-  });
-  const isVotingAllowed =
-    userHasPermissionsToVote &&
-    checkIsVotingAllowed({
-      userVote,
+    const isCountdownState = checkIsCountdownState(proposal);
+    const userHasPermissionsToVote = checkUserPermissionsToVote({
       proposal,
+      commonMember,
     });
+    const isVotingAllowed =
+      userHasPermissionsToVote &&
+      checkIsVotingAllowed({
+        userVote,
+        proposal,
+      });
+    const circleVisibility = getVisibilityString(
+      governanceCircles,
+      item.circleVisibility,
+      proposal?.type,
+      getUserName(feedItemUser),
+    );
+
+    return (
+      <>
+        <FeedCardHeader
+          avatar={feedItemUser?.photoURL}
+          title={getUserName(feedItemUser)}
+          createdAt={
+            <>
+              Created:{" "}
+              <FeedCountdown
+                isCountdownFinished
+                expirationTimestamp={item.createdAt}
+              />
+            </>
+          }
+          type={getProposalTypeString(proposal.type)}
+          circleVisibility={circleVisibility}
+          commonId={commonId}
+          userId={item.userId}
+        />
+        <FeedCardContent
+          subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
+          description={getProposalDescriptionString(
+            proposal.data.args.description,
+            proposal.type,
+          )}
+          images={discussion?.images}
+          onClick={handleOpenChat}
+          onMouseEnter={() => {
+            onHover(true);
+          }}
+          onMouseLeave={() => {
+            onHover(false);
+          }}
+        >
+          <ProposalFeedVotingInfo
+            proposal={proposal}
+            governanceCircles={governanceCircles}
+          />
+          {isVotingAllowed && (
+            <ProposalFeedButtonContainer
+              proposalId={proposal.id}
+              onVoteCreate={setVote}
+            />
+          )}
+          <UserVoteInfo
+            userVote={userVote}
+            userHasPermissionsToVote={userHasPermissionsToVote}
+            isCountdownState={isCountdownState}
+          />
+        </FeedCardContent>
+      </>
+    );
+  };
 
   return (
     <FeedCard
@@ -224,61 +284,17 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
+      image={commonImage}
+      imageAlt={`${commonName}'s image`}
+      isProject={isProject}
+      isLoading={isLoading}
       type={item.data.type}
       seenOnce={feedItemUserMetadata?.seenOnce}
       ownerId={item.userId}
     >
-      <FeedCardHeader
-        avatar={feedItemUser?.photoURL}
-        title={getUserName(feedItemUser)}
-        createdAt={
-          <>
-            Created:{" "}
-            <FeedCountdown
-              isCountdownFinished
-              expirationTimestamp={item.createdAt}
-            />
-          </>
-        }
-        type={getProposalTypeString(proposal.type)}
-        circleVisibility={circleVisibility}
-        commonId={commonId}
-        userId={item.userId}
-        governanceId={governanceId}
-      />
-      <FeedCardContent
-        subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
-        description={getProposalDescriptionString(
-          proposal.data.args.description,
-          proposal.type,
-        )}
-        images={discussion?.images}
-        onClick={handleOpenChat}
-        onMouseEnter={() => {
-          onHover(true);
-        }}
-        onMouseLeave={() => {
-          onHover(false);
-        }}
-      >
-        <ProposalFeedVotingInfo
-          proposal={proposal}
-          governanceCircles={governanceCircles}
-        />
-        {isVotingAllowed && (
-          <ProposalFeedButtonContainer
-            proposalId={proposal.id}
-            onVoteCreate={setVote}
-          />
-        )}
-        <UserVoteInfo
-          userVote={userVote}
-          userHasPermissionsToVote={userHasPermissionsToVote}
-          isCountdownState={isCountdownState}
-        />
-      </FeedCardContent>
+      {renderContent()}
     </FeedCard>
   );
 };
 
-export default memo(ProposalFeedCard);
+export default ProposalFeedCard;

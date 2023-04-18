@@ -1,13 +1,15 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { FeedItemBaseContent, FeedItemBaseContentProps } from "@/pages/common";
 import { CommonAction, QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
+import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { checkIsProject, getCommonPageAboutTabPath } from "@/shared/utils";
 import {
@@ -22,13 +24,14 @@ import {
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
 import { FeedLayout, FeedLayoutRef, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
+import { getLastMessage } from "./utils";
 import styles from "./CommonFeed.module.scss";
 
 interface CommonFeedProps {
   commonId: string;
 }
 
-const CommonFeed: FC<CommonFeedProps> = (props) => {
+const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const { commonId } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
@@ -80,6 +83,7 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
     () => (sharedFeedItem ? [sharedFeedItem] : []),
     [sharedFeedItem],
   );
+  const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
   const hasAccessToPage = Boolean(commonMember);
 
@@ -96,6 +100,23 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
       fetchCommonFeedItems();
     }
   };
+
+  const renderFeedItemBaseContent = useCallback(
+    (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,
+    [],
+  );
+
+  const handleFeedItemUpdate = useCallback(
+    (item: CommonFeed, isRemoved: boolean) => {
+      dispatch(
+        commonActions.updateFeedItem({
+          item,
+          isRemoved,
+        }),
+      );
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     if (!user || (isGlobalDataFetched && !commonMember)) {
@@ -142,11 +163,11 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
   }, [commonPinnedFeedItems, areCommonPinnedFeedItemsLoading]);
 
   useEffect(() => {
-    if (recentStreamId === commonFeedItems?.[0]?.data.id) {
-      feedLayoutRef?.setExpandedFeedItemId(commonFeedItems[0].id);
+    if (recentStreamId === firstItem?.feedItem.data.id) {
+      feedLayoutRef?.setExpandedFeedItemId(firstItem.feedItem.id);
       dispatch(commonActions.setRecentStreamId(""));
     }
-  }, [feedLayoutRef, recentStreamId, commonFeedItems?.[0]]);
+  }, [feedLayoutRef, recentStreamId, firstItem]);
 
   if (!isDataFetched) {
     return (
@@ -218,10 +239,13 @@ const CommonFeed: FC<CommonFeedProps> = (props) => {
         loading={areCommonFeedItemsLoading || !hasAccessToPage}
         shouldHideContent={!hasAccessToPage}
         onFetchNext={fetchMoreCommonFeedItems}
+        renderFeedItemBaseContent={renderFeedItemBaseContent}
+        onFeedItemUpdate={handleFeedItemUpdate}
+        getLastMessage={getLastMessage}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>
   );
 };
 
-export default CommonFeed;
+export default CommonFeedComponent;
