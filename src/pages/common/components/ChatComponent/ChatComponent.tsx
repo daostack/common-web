@@ -368,14 +368,14 @@ export default function ChatComponent({
               </span>
             ) : (
               <>
-                <ButtonIcon
+                {/* <ButtonIcon
                   className={styles.addFilesIcon}
                   onClick={() => {
                     document.getElementById("file")?.click();
                   }}
                 >
                   <PlusIcon />
-                </ButtonIcon>
+                </ButtonIcon> */}
                 <input
                   id="file"
                   type="file"

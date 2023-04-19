@@ -159,7 +159,11 @@ export default function ChatMessage({
             )}
             <ReplyMessage />
 
-            <div className={styles.messageContent}>
+            <div
+              className={classNames(styles.messageContent, {
+                [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
+              })}
+            >
               <Linkify>{discussionMessage.text}</Linkify>
               <div className={styles.timeWrapperContainer}>
                 {isEdited && (
@@ -167,6 +171,10 @@ export default function ChatMessage({
                     className={classNames(
                       styles.timeWrapper,
                       styles.editedTimeWrapper,
+                      {
+                        [styles.timeWrapperCurrentUser]:
+                          !isNotCurrentUserMessage,
+                      },
                     )}
                   >
                     (Edited{" "}
@@ -184,6 +192,8 @@ export default function ChatMessage({
                     styles.creationTimeWrapper,
                     {
                       [styles.timeWrapperEdited]: isEdited,
+                      [styles.timeWrapperCurrentUser]:
+                      !isNotCurrentUserMessage,
                     },
                   )}
                 >

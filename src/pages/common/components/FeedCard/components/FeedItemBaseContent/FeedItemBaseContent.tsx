@@ -97,16 +97,28 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       )}
       <div className={styles.content}>
         <div className={styles.topContent}>
-          <p className={classNames(styles.text, styles.title)}>
+          <p
+            className={classNames(styles.text, styles.title, {
+              [styles.titleActive]: isActive,
+            })}
+          >
             {title || "Loading..."}
           </p>
-          <p className={classNames(styles.text, styles.lastActivity)}>
+          <p
+            className={classNames(styles.text, styles.lastActivity, {
+              [styles.lastActivityActive]: isActive,
+            })}
+          >
             <TimeAgo milliseconds={lastActivity} />
           </p>
         </div>
         <div className={styles.bottomContent}>
           {lastMessage ? (
-            <p className={classNames(styles.text, styles.lastMessage)}>
+            <p
+              className={classNames(styles.text, styles.lastMessage, {
+                [styles.lastMessageActive]: isActive,
+              })}
+            >
               {lastMessage}
             </p>
           ) : (
@@ -118,6 +130,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               type={type}
               seenOnce={seenOnce}
               ownerId={ownerId}
+              isActive={isActive}
             />
           </div>
         </div>

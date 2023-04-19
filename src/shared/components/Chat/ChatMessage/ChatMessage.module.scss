@@ -61,7 +61,7 @@
 }
 
 .messageTextCurrentUser {
-  background-color: $c-neutrals-200;
+  background-color: $c-pink-active-feed-cards;
 }
 
 .messageName {
@@ -82,6 +82,10 @@
   margin-left: 1rem;
 }
 
+.messageContentCurrentUser {
+  color: $white;
+}
+
 .timeWrapperContainer {
   display: flex;
   flex: 1;
@@ -94,6 +98,10 @@
   font-weight: bold;
   color: $light-gray-2;
   text-align: left;
+}
+
+.timeWrapperCurrentUser {
+  color: $c-neutrals-100;
 }
 
 .timeWrapperEdited {
