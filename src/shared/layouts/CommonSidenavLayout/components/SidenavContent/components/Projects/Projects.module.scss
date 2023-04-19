@@ -22,7 +22,7 @@
 }
 .projectsTreeItemTriggerActiveClassName {
   --bg-color: #{$c-pink-active-feed-cards};
-
+  color: $white;
   &:hover {
     --bg-color: #{$c-pink-active-feed-cards};
   }

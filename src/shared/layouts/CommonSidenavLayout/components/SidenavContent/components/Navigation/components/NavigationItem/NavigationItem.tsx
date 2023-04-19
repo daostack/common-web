@@ -51,7 +51,11 @@ const NavigationItem: FC<NavigationItemProps> = (props) => {
 
   return (
     <Wrapper>
-      <div className={styles.textWrapper}>
+      <div
+        className={classNames(styles.textWrapper, {
+          [styles.textWrapperActive]: isActive,
+        })}
+      >
         {icon}
         <span className={styles.text}>{text}</span>
       </div>

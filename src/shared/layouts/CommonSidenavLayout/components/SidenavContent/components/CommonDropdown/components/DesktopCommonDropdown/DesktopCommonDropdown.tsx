@@ -13,10 +13,11 @@ import styles from "./DesktopCommonDropdown.module.scss";
 interface DesktopCommonDropdownProps {
   items: MenuItem[];
   activeItemId?: string | null;
+  isActive: boolean;
 }
 
 const DesktopCommonDropdown: FC<DesktopCommonDropdownProps> = (props) => {
-  const { items, activeItemId } = props;
+  const { items, activeItemId, isActive } = props;
   const [menuRerenderHack, setMenuRerenderHack] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -63,7 +64,11 @@ const DesktopCommonDropdown: FC<DesktopCommonDropdownProps> = (props) => {
       {isMobileView ? (
         <span className={styles.changeLabel}>Change</span>
       ) : (
-        <Menu2Icon className={styles.icon} />
+        <Menu2Icon
+          className={classNames(styles.icon, {
+            [styles.iconActive]: isActive,
+          })}
+        />
       )}
     </ButtonIcon>
   );
