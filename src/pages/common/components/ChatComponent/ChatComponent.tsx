@@ -12,6 +12,7 @@ import isHotkey from "is-hotkey";
 import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
@@ -107,6 +108,28 @@ export default function ChatComponent({
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
+  const commonId = common?.id;
+
+  console.log("----discussion", discussion);
+  const {
+    fetched: areCommonMembersFetched,
+    data: commonMembers,
+    fetchCommonMembers,
+  } = useCommonMembers();
+
+  console.log("commonMembers", commonMembers);
+
+  const users = useMemo(() => {
+    return commonMembers
+      .filter((member) => member.userId !== commonMember?.userId)
+      .map(({ user }) => user);
+  }, [commonMember, commonMembers]);
+
+  useEffect(() => {
+    if (commonId) {
+      fetchCommonMembers(commonId, discussion.circleVisibility);
+    }
+  }, [commonId, discussion.circleVisibility]);
 
   const hasPermissionToHide =
     commonMember && governance
@@ -403,6 +426,7 @@ export default function ChatComponent({
                   onChange={setVal}
                   placeholder="What do you think?"
                   onKeyDown={onEnterKeyDown}
+                  users={users}
                 />
                 <button
                   className={styles.sendIcon}

@@ -13,6 +13,7 @@ import { createEditor, Transforms, Range, Editor as EditorSlate } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
 import { ErrorText } from "@/shared/components/Form/ErrorText";
+import { User } from "@/shared/models";
 import { Portal } from "@/shared/ui-kit";
 import { Editor, Header, Toolbar } from "./components";
 import { ElementType, TextEditorSize } from "./constants";
@@ -33,6 +34,7 @@ export interface TextEditorProps {
   size?: TextEditorSize;
   disabled?: boolean;
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
+  users?: User[];
 }
 
 const BaseTextEditor: FC<TextEditorProps> = (props) => {
@@ -48,13 +50,14 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     size,
     placeholder,
     disabled = false,
+    users,
   } = props;
   const editor = useMemo(
     () => withMentions(withInlines(withHistory(withReact(createEditor())))),
     [],
   );
 
-  const [target, setTarget] = useState<Range | undefined>();
+  const [target, setTarget] = useState<Range | null>();
   const [index, setIndex] = useState(0);
   const [search, setSearch] = useState("");
 
@@ -72,18 +75,22 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   }, [editorRef, editor]);
 
-  const chars = CHARACTERS.filter((c) =>
-    c.toLowerCase().startsWith(search.toLowerCase()),
-  ).slice(0, 10);
+  const chars = (users ?? [])
+    .filter(({ displayName }) =>
+      displayName?.toLowerCase().startsWith(search.toLowerCase()),
+    )
+    .slice(0, 10);
 
-  console.log("---search", search, chars);
+  console.log("---search", search, chars, target, value);
   return (
     <Slate
       editor={editor}
       value={value}
-      onChange={() => {
+      onChange={(val) => {
+        onChange && onChange(val);
         const { selection } = editor;
 
+        console.log("---selection", selection);
         if (selection && Range.isCollapsed(selection)) {
           const [start] = Range.edges(selection);
           const wordBefore = EditorSlate.before(editor, start, {
@@ -123,39 +130,39 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
         onKeyDown={onKeyDown}
       />
       {target && chars.length > 0 && (
-        <Portal>
-          <div
-            style={{
-              top: "-9999px",
-              left: "-9999px",
-              position: "absolute",
-              zIndex: 1,
-              padding: "3px",
-              background: "white",
-              borderRadius: "4px",
-              boxShadow: "0 1px 5px rgba(0,0,0,.2)",
-            }}
-            data-cy="mentions-portal"
-          >
-            {chars.map((char, i) => (
-              <div
-                key={char}
-                onClick={() => {
-                  Transforms.select(editor, target);
-                  insertMention(editor, char);
-                  setTarget(null);
-                }}
-                style={{
-                  padding: "1px 3px",
-                  borderRadius: "3px",
-                  background: i === index ? "#B4D5FF" : "transparent",
-                }}
-              >
-                {char}
-              </div>
-            ))}
-          </div>
-        </Portal>
+        // <Portal>
+        <div
+          style={{
+            top: 0,
+            left: 0,
+            position: "absolute",
+            zIndex: 1,
+            padding: "3px",
+            background: "white",
+            borderRadius: "4px",
+            boxShadow: "0 1px 5px rgba(0,0,0,.2)",
+          }}
+          data-cy="mentions-portal"
+        >
+          {chars.map((char, i) => (
+            <div
+              key={char.uid}
+              onClick={() => {
+                Transforms.select(editor, target);
+                insertMention(editor, char);
+                setTarget(null);
+              }}
+              style={{
+                padding: "1px 3px",
+                borderRadius: "3px",
+                background: i === index ? "#B4D5FF" : "transparent",
+              }}
+            >
+              {char.displayName}
+            </div>
+          ))}
+        </div>
+        // </Portal>
       )}
     </Slate>
   );
