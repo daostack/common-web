@@ -5,11 +5,16 @@ import { SynchronizedDate } from "../SynchronizedDate";
 export interface GetFeedItemsResponse {
   data: {
     feedItems: CommonFeed[];
-    pinnedFeedItems: CommonFeed[];
   };
   firstDocTimestamp: SynchronizedDate | null;
   lastDocTimestamp: SynchronizedDate | null;
   hasMore: boolean;
+}
+
+export interface GetPinnedFeedItemsResponse {
+  data: {
+    pinnedFeedItems: CommonFeed[];
+  };
 }
 
 export interface FollowFeedItemPayload {

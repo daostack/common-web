@@ -22,6 +22,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
     hasMore,
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(common.id);
+
   const isTabletView = useIsTabletView();
   const feedItemContextValue = useMemo<FeedItemContextValue>(
     () => ({

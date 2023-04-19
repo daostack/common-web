@@ -22,6 +22,9 @@ export const selectIsProposalCreationLoading = (state: AppState) =>
 
 export const selectFeedItems = (state: AppState) => state.common.feedItems;
 
+export const selectPinnedFeedItems = (state: AppState) =>
+  state.common.pinnedFeedItems;
+
 export const selectIsNewProjectCreated = (state: AppState) =>
   state.common.isNewProjectCreated;
 
