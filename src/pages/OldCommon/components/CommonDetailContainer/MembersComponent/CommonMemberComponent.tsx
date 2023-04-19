@@ -1,6 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, MouseEventHandler, useState } from "react";
 import firebase from "firebase/app";
 import { v4 } from "uuid";
+import { MemberDropdown } from "@/pages/common/components/CommonTabPanels/components/MembersTab/components/MemberDropdown";
 import { useModal } from "@/shared/hooks";
 import { CommonMemberWithUserInfo } from "@/shared/models";
 import { UserAvatar } from "../../../../../shared/components";
@@ -24,12 +25,23 @@ const CommonMember: FC<CommonMemberProps> = ({
   joinedAt,
 }) => {
   const { isShowing, onClose, onOpen } = useModal(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
+    event.preventDefault();
+    handleMenuToggle(true);
+  };
+
+  const handleMenuToggle = (isOpen: boolean) => {
+    setIsMenuOpen(isOpen);
+  };
 
   return (
     <>
       <li
         key={v4()}
         onClick={onOpen}
+        onContextMenu={handleContextMenu}
         className="members__section__common-member"
       >
         <div className="members__section__common-member-details">
@@ -64,6 +76,7 @@ const CommonMember: FC<CommonMemberProps> = ({
         about={member.user.intro}
         onClose={onClose}
       />
+      <MemberDropdown isOpen={isMenuOpen} onMenuToggle={handleMenuToggle} />
     </>
   );
 };
