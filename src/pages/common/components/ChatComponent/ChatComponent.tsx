@@ -110,14 +110,11 @@ export default function ChatComponent({
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
   const commonId = common?.id;
 
-  console.log("----discussion", discussion);
   const {
     fetched: areCommonMembersFetched,
     data: commonMembers,
     fetchCommonMembers,
   } = useCommonMembers();
-
-  console.log("commonMembers", commonMembers);
 
   const users = useMemo(() => {
     return commonMembers

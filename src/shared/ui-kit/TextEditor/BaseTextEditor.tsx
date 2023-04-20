@@ -12,6 +12,8 @@ import classNames from "classnames";
 import { createEditor, Transforms, Range, Editor as EditorSlate } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
+import { MentionDropdown } from "@/pages/common/components/ChatComponent/components/MentionDropdown";
+import { UserAvatar } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form/ErrorText";
 import { User } from "@/shared/models";
 import { Portal } from "@/shared/ui-kit";
@@ -90,7 +92,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
         onChange && onChange(val);
         const { selection } = editor;
 
-        console.log("---selection", selection);
         if (selection && Range.isCollapsed(selection)) {
           const [start] = Range.edges(selection);
           const wordBefore = EditorSlate.before(editor, start, {
@@ -130,39 +131,14 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
         onKeyDown={onKeyDown}
       />
       {target && chars.length > 0 && (
-        // <Portal>
-        <div
-          style={{
-            top: 0,
-            left: 0,
-            position: "absolute",
-            zIndex: 1,
-            padding: "3px",
-            background: "white",
-            borderRadius: "4px",
-            boxShadow: "0 1px 5px rgba(0,0,0,.2)",
+        <MentionDropdown
+          onClick={(user: User) => {
+            Transforms.select(editor, target);
+            insertMention(editor, user);
+            setTarget(null);
           }}
-          data-cy="mentions-portal"
-        >
-          {chars.map((char, i) => (
-            <div
-              key={char.uid}
-              onClick={() => {
-                Transforms.select(editor, target);
-                insertMention(editor, char);
-                setTarget(null);
-              }}
-              style={{
-                padding: "1px 3px",
-                borderRadius: "3px",
-                background: i === index ? "#B4D5FF" : "transparent",
-              }}
-            >
-              {char.displayName}
-            </div>
-          ))}
-        </div>
-        // </Portal>
+          users={chars}
+        />
       )}
     </Slate>
   );
@@ -171,29 +147,11 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 const insertMention = (editor, character) => {
   const mention: MentionElement = {
     type: ElementType.Mention,
-    character,
+    character: character?.displayName,
     children: [{ text: "" }],
   };
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
 };
-
-const CHARACTERS = [
-  "Aayla Secura",
-  "Adi Gallia",
-  "Admiral Dodd Rancit",
-  "Admiral Firmus Piett",
-  "Admiral Gial Ackbar",
-  "Admiral Ozzel",
-  "Admiral Raddus",
-  "Admiral Terrinald Screed",
-  "Admiral Trench",
-  "Admiral U.O. Statura",
-  "Agen Kolar",
-  "Agent Kallus",
-  "Aiolin and Morit Astarte",
-  "Aks Moe",
-  "Almec",
-];
 
 export default BaseTextEditor;
