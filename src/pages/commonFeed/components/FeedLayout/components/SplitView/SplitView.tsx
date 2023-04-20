@@ -5,11 +5,12 @@ import styles from "./SplitView.module.scss";
 interface SplitViewProps {
   minSize: number;
   maxSize: number;
+  defaultSize?: number;
   onChange?: (newSize: number) => void;
 }
 
 const SplitView: FC<SplitViewProps> = (props) => {
-  const { minSize, maxSize, onChange, children } = props;
+  const { minSize, maxSize, defaultSize, onChange, children } = props;
 
   return (
     <SplitPane
@@ -17,6 +18,7 @@ const SplitView: FC<SplitViewProps> = (props) => {
       primary="second"
       minSize={minSize}
       maxSize={maxSize}
+      defaultSize={defaultSize}
       onChange={onChange}
       resizerClassName={styles.resizer}
       style={{

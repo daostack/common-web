@@ -3,20 +3,16 @@ import React, {
   useEffect,
   useMemo,
   useCallback,
-  useLayoutEffect,
+  ChangeEvent,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useDebounce } from "react-use";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
+import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
-import {
-  clearCurrentDiscussionMessageReply,
-  addMessageToDiscussion,
-  addMessageToProposal,
-} from "@/pages/OldCommon/store/actions";
-import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
+import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import {
@@ -25,51 +21,54 @@ import {
   LastSeenEntity,
 } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
-import { useIntersection } from "@/shared/hooks";
-import { usePrevious } from "@/shared/hooks";
 import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { useIsTabletView } from "@/shared/hooks/viewport";
-import { SendIcon } from "@/shared/icons";
-import CloseIcon from "@/shared/icons/close.icon";
+import { PlusIcon, SendIcon } from "@/shared/icons";
+import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
-  Common,
+  Circles,
   CommonFeedObjectUserUnique,
   CommonMember,
   Discussion,
   DiscussionMessage,
-  PendingMessage,
-  PendingMessageStatus,
-  Proposal,
+  Timestamp,
 } from "@/shared/models";
-import { hasPermission } from "@/shared/utils";
-import { selectGovernance } from "@/store/states";
-import { ChatContent } from "./components/ChatContent";
+import { getUserName, hasPermission } from "@/shared/utils";
+import {
+  cacheActions,
+  chatActions,
+  selectCurrentDiscussionMessageReply,
+  selectFilesPreview,
+  FileInfo,
+} from "@/store/states";
+import { ChatContent, MessageReply, ChatFilePreview } from "./components";
 import { getLastNonUserMessage } from "./utils";
-import "./index.scss";
+import styles from "./ChatComponent.module.scss";
 
 interface ChatComponentInterface {
-  common: Common | null;
+  commonId: string;
   type: ChatType;
-  commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;
-  feedItemId: string;
-  isJoiningPending?: boolean;
-  isAuthorized?: boolean;
-  highlightedMessageId?: string | null;
+  governanceCircles?: Circles;
+  commonMember: CommonMember | null;
   hasAccess?: boolean;
-  isHidden: boolean;
-  proposal?: Proposal;
   discussion: Discussion;
-  titleHeight?: number;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
+  feedItemId: string;
+  isAuthorized?: boolean;
+  isHidden: boolean;
 }
 
 interface Messages {
   [key: number]: DiscussionMessage[];
 }
+
+type CreateDiscussionMessageDtoWithFilesPreview = CreateDiscussionMessageDto & {
+  filesPreview?: FileInfo[] | null;
+  imagesPreview?: FileInfo[] | null;
+};
 
 function groupday(acc: any, currentValue: DiscussionMessage): Messages {
   const d = new Date(currentValue.createdAt.seconds * 1000);
@@ -83,38 +82,33 @@ function groupday(acc: any, currentValue: DiscussionMessage): Messages {
 const CHAT_HOT_KEYS = [HotKeys.Enter, HotKeys.ModEnter, HotKeys.ShiftEnter];
 
 export default function ChatComponent({
-  common,
+  commonId,
   type,
+  governanceCircles,
   commonMember,
-  isCommonMemberFetched,
-  isJoiningPending,
-  isAuthorized,
-  highlightedMessageId: linkHighlightedMessageId,
-  hasAccess = true,
-  isHidden = false,
-  proposal,
   discussion,
-  feedItemId,
-  titleHeight = 0,
+  hasAccess = true,
   lastSeenItem,
+  feedItemId,
+  isAuthorized,
+  isHidden = false,
+  isCommonMemberFetched,
 }: ChatComponentInterface) {
-  const intersectionRef = React.useRef(null);
-  const replyDivRef = React.useRef(null);
-  const intersection = useIntersection(intersectionRef, {
-    root: null,
-    rootMargin: "0px",
-    threshold: 0,
-  });
+  const dispatch = useDispatch();
+  const discussionMessageReply = useSelector(
+    selectCurrentDiscussionMessageReply(),
+  );
+  const currentFilesPreview = useSelector(selectFilesPreview());
+  const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
-  const dispatch = useDispatch();
-  const governance = useSelector(selectGovernance);
-
   const hasPermissionToHide =
-    commonMember && governance
+    commonMember && governanceCircles
       ? hasPermission({
           commonMember,
-          governance,
+          governance: {
+            circles: governanceCircles,
+          },
           key: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
         })
       : false;
@@ -122,21 +116,21 @@ export default function ChatComponent({
     fetchDiscussionMessages,
     data: discussionMessages = [],
     fetched: isFetchedDiscussionMessages,
+    addDiscussionMessage,
   } = useDiscussionMessagesById({
     hasPermissionToHide,
   });
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const discussionMessageReply = useSelector(
-    selectCurrentDiscussionMessageReply(),
-  );
   const discussionId = discussion.id;
+
   const lastNonUserMessage = getLastNonUserMessage(
     discussionMessages || [],
     userId,
   );
 
-  const [height, setHeight] = useState(0);
+  const messages = (discussionMessages ?? []).reduce(groupday, {});
+  const dateList = Object.keys(messages);
 
   useEffect(() => {
     if (discussionId) {
@@ -144,129 +138,158 @@ export default function ChatComponent({
     }
   }, [discussionId]);
 
-  useLayoutEffect(() => {
-    setHeight(
-      (replyDivRef.current as unknown as { clientHeight: number })
-        ?.clientHeight || 0,
-    );
-  }, [discussionMessageReply]);
-
   const [message, setMessage] = useState("");
-  const messages = (discussionMessages ?? []).reduce(groupday, {});
-  const isTabletView = useIsTabletView();
-  const dateList = Object.keys(messages);
-  const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
-  const [pendingMessages, setPendingMessages] = useState<PendingMessage[]>([]);
 
-  const prevDiscussionMessages = usePrevious<DiscussionMessage[]>(
-    discussionMessages ?? [],
-  );
+  const [newMessages, setMessages] = useState<
+    CreateDiscussionMessageDtoWithFilesPreview[]
+  >([]);
 
-  const prevPendingMessages = usePrevious<PendingMessage[]>(
-    pendingMessages ?? [],
-  );
+  const canSendMessage = message.length || currentFilesPreview?.length;
 
-  /** Remove the pending message from the pending array only AFTER the FE receives the updated messages array from the BE */
-  useEffect(() => {
-    if (
-      Boolean(prevDiscussionMessages) &&
-      discussionMessages?.length !== prevDiscussionMessages?.length
-    ) {
-      setPendingMessages((prevState) =>
-        prevState.filter((msg) => msg.status !== PendingMessageStatus.Success),
+  useDebounce(
+    async () => {
+      const newMessagesWithFiles = await Promise.all(
+        newMessages.map(async (payload) => {
+          const [uploadedFiles, uploadedImages] = await Promise.all([
+            FileService.uploadFiles(
+              (payload.filesPreview ?? []).map((file) =>
+                FileService.convertFileInfoToUploadFile(file),
+              ),
+            ),
+            FileService.uploadFiles(
+              (payload.imagesPreview ?? []).map((file) =>
+                FileService.convertFileInfoToUploadFile(file),
+              ),
+            ),
+          ]);
+
+          const updatedPayload = omit(payload, [
+            "filesPreview",
+            "imagesPreview",
+          ]);
+
+          return {
+            ...updatedPayload,
+            images: uploadedImages,
+            files: uploadedFiles,
+          };
+        }),
       );
-    }
-  }, [discussionMessages, prevDiscussionMessages]);
 
-  const handleResult = (isSucceed: boolean, pendingMessageId: string) => {
-    setPendingMessages((prevState) =>
-      prevState.map((msg) => {
-        if (msg.id !== pendingMessageId) {
-          return msg;
-        }
-        return {
-          ...msg,
-          status: isSucceed
-            ? PendingMessageStatus.Success
-            : PendingMessageStatus.Failed,
-        };
-      }),
+      newMessagesWithFiles.map(async (payload, index) => {
+        delay(async () => {
+          const response = await DiscussionMessageService.createMessage(
+            payload,
+          );
+
+          dispatch(
+            cacheActions.updateDiscussionMessageWithActualId({
+              discussionId,
+              pendingMessageId: payload.pendingMessageId as string,
+              actualId: response.id,
+            }),
+          );
+        }, 2000 * index);
+        return payload;
+      });
+
+      if (newMessages.length > 0) {
+        setMessages([]);
+      }
+    },
+    1500,
+    [newMessages, discussionId, dispatch],
+  );
+
+  const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(
+      chatActions.setFilesPreview(
+        Array.from(event.target.files || []).map((file) => {
+          return {
+            info: file,
+            src: URL.createObjectURL(file),
+          };
+        }),
+      ),
     );
   };
 
-  const addMessageByType = useCallback(
-    (payload: CreateDiscussionMessageDto) => {
-      const pendingMessageId = uuidv4();
-
-      setPendingMessages((prevState) => [
-        ...prevState,
-        {
-          id: pendingMessageId,
-          text: payload.text,
-          status: PendingMessageStatus.Sending,
-          feedItemId: feedItemId,
-        },
-      ]);
-
-      switch (type) {
-        case ChatType.ProposalComments: {
-          if (proposal) {
-            dispatch(
-              addMessageToProposal.request({
-                payload,
-                proposal,
-                callback(isSucceed) {
-                  handleResult(isSucceed, pendingMessageId);
-                },
-              }),
-            );
-          }
-          break;
-        }
-        case ChatType.DiscussionMessages: {
-          if (discussion) {
-            dispatch(
-              addMessageToDiscussion.request({
-                payload,
-                discussion,
-                callback(isSucceed) {
-                  handleResult(isSucceed, pendingMessageId);
-                },
-              }),
-            );
-          }
-          break;
-        }
-      }
-    },
-    [discussion, proposal, type],
-  );
-
   const sendMessage = useCallback(
-    (message: string) => {
-      if (user && user.uid && common?.id) {
-        const payload: CreateDiscussionMessageDto = {
+    async (message: string) => {
+      if (user && user.uid && commonId) {
+        const pendingMessageId = uuidv4();
+
+        const imagesPreview = FileService.getImageTypeFromFiles(
+          currentFilesPreview ?? [],
+        );
+        const filesPreview = FileService.getExcludeImageTypeFromFiles(
+          currentFilesPreview ?? [],
+        );
+
+        const payload: CreateDiscussionMessageDtoWithFilesPreview = {
+          pendingMessageId,
           text: message,
           ownerId: user.uid,
-          commonId: common?.id,
+          commonId,
           discussionId,
           ...(discussionMessageReply && {
             parentId: discussionMessageReply?.id,
           }),
+          filesPreview,
+          imagesPreview,
+        };
+        const firebaseDate = Timestamp.fromDate(new Date());
+
+        const msg = {
+          id: pendingMessageId,
+          owner: user,
+          ownerAvatar: (user.photo || user.photoURL) as string,
+          ownerId: userId as string,
+          ownerName: getUserName(user),
+          text: message,
+          commonId,
+          discussionId,
+          createdAt: firebaseDate,
+          updatedAt: firebaseDate,
+          parentMessage: discussionMessageReply?.id
+            ? {
+                id: discussionMessageReply?.id,
+                ownerName: discussionMessageReply.ownerName,
+                text: discussionMessageReply.text,
+              }
+            : null,
+          images: imagesPreview?.map((file) =>
+            FileService.convertFileInfoToCommonLink(file),
+          ),
+          files: filesPreview?.map((file) =>
+            FileService.convertFileInfoToCommonLink(file),
+          ),
         };
 
-        addMessageByType(payload);
+        setMessages((prev) => [...prev, payload]);
+        addDiscussionMessage(discussionId, msg);
 
         if (discussionMessageReply) {
-          dispatch(clearCurrentDiscussionMessageReply());
+          dispatch(chatActions.clearCurrentDiscussionMessageReply());
+        }
+        if (currentFilesPreview) {
+          dispatch(chatActions.clearFilesPreview());
         }
       }
     },
-    [dispatch, user, discussionMessageReply, common, discussionId],
+    [
+      dispatch,
+      user,
+      discussionMessageReply,
+      commonId,
+      currentFilesPreview,
+      discussionId,
+      discussionMessages,
+    ],
   );
 
   const sendChatMessage = (): void => {
-    if (message) {
+    if (canSendMessage) {
       sendMessage && sendMessage(message.trim());
       setMessage("");
     }
@@ -306,104 +329,71 @@ export default function ChatComponent({
     }
   }, [lastNonUserMessage?.id]);
 
-  const chatWrapperStyle = useMemo(() => {
-    if (isTabletView) {
-      return { height: `calc(100% - ${48 + height}px)` };
-    }
-
-    return { height: `calc(100% - ${52 + height}px - ${titleHeight}px)` };
-  }, [height, isTabletView, titleHeight]);
-  const chatInputStyle = useMemo(() => ({ minHeight: 82 + height }), [height]);
-
-  const MessageReply = useCallback(() => {
-    if (!discussionMessageReply) {
-      return null;
-    }
-
-    return (
-      <div
-        ref={replyDivRef}
-        className={classNames("bottom-reply-wrapper", {
-          "bottom-reply-wrapper__fixed": !(
-            Number(intersection?.intersectionRatio) > 0
-          ),
-        })}
-      >
-        <div className="bottom-reply-message-container">
-          <span className="bottom-reply-message-user-name">
-            {discussionMessageReply.ownerName}
-          </span>
-          <p className="bottom-reply-message-text">
-            {discussionMessageReply.text}
-          </p>
-        </div>
-        <ButtonIcon
-          className="bottom-reply-message-close-button"
-          onClick={() => {
-            dispatch(clearCurrentDiscussionMessageReply());
-          }}
-        >
-          <CloseIcon fill="#001A36" height={16} width={16} />
-        </ButtonIcon>
-      </div>
-    );
-  }, [intersection, discussionMessageReply]);
-
   return (
-    <div className="chat-wrapper" style={chatWrapperStyle}>
+    <div className={styles.chatWrapper}>
       <div
-        className={`messages ${!dateList.length ? "empty" : ""}`}
+        className={classNames(styles.messages, {
+          [styles.emptyChat]: !dateList.length,
+        })}
         id={chatWrapperId}
       >
         {isFetchedDiscussionMessages ? (
           <ChatContent
-            linkHighlightedMessageId={linkHighlightedMessageId}
             type={type}
             commonMember={commonMember}
             isCommonMemberFetched={isCommonMemberFetched}
-            isJoiningPending={isJoiningPending}
+            isJoiningPending={false}
             hasAccess={hasAccess}
-            isHidden={isHidden}
+            isHidden={false}
             chatWrapperId={chatWrapperId}
             messages={messages}
             dateList={dateList}
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
-            pendingMessages={pendingMessages}
-            prevPendingMessages={prevPendingMessages}
-            feedItemId={feedItemId}
           />
         ) : (
-          <div className="loader-container">
+          <div className={styles.loaderContainer}>
             <Loader />
           </div>
         )}
       </div>
       {isAuthorized && (
-        <div ref={intersectionRef} style={chatInputStyle}>
+        <div className={styles.bottomChatContainer}>
           <MessageReply />
-          <div
-            className={classNames("bottom-chat-wrapper", {
-              "bottom-chat-wrapper__fixed": !(
-                Number(intersection?.intersectionRatio) > 0
-              ),
-            })}
-          >
+          <ChatFilePreview />
+          <div className={styles.chatInputWrapper}>
             {!commonMember || !hasAccess || isHidden ? (
-              <span className="text">Only members can send messages</span>
+              <span className={styles.permissionsText}>
+                Only members can send messages
+              </span>
             ) : (
               <>
+                {/* <ButtonIcon
+                  className={styles.addFilesIcon}
+                  onClick={() => {
+                    document.getElementById("file")?.click();
+                  }}
+                >
+                  <PlusIcon />
+                </ButtonIcon> */}
+                <input
+                  id="file"
+                  type="file"
+                  onChange={uploadFiles}
+                  style={{ display: "none" }}
+                  multiple
+                />
                 <textarea
-                  className="message-input"
+                  className={styles.messageInput}
                   placeholder="What do you think?"
                   value={message}
                   onKeyDown={onEnterKeyDown}
                   onChange={(e) => setMessage(e.target.value)}
                 />
                 <button
-                  className="send"
+                  className={styles.sendIcon}
                   onClick={sendChatMessage}
-                  disabled={!message.length}
+                  disabled={!canSendMessage}
                 >
                   <SendIcon />
                 </button>

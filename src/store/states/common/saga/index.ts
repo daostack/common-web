@@ -4,6 +4,7 @@ import * as actions from "../actions";
 import { createDiscussion } from "./createDiscussion";
 import { createSurveyProposal, createFundingProposal } from "./createProposal";
 import { getFeedItems } from "./getFeedItems";
+import { getPinnedFeedItems } from "./getPinnedFeedItems";
 
 export function* mainSaga() {
   yield takeLatest(actions.createSurveyProposal.request, createSurveyProposal);
@@ -16,5 +17,10 @@ export function* mainSaga() {
     actions.getFeedItems.request,
     actions.getFeedItems.cancel,
     getFeedItems,
+  );
+  yield takeLatestWithCancel(
+    actions.getPinnedFeedItems.request,
+    actions.getPinnedFeedItems.cancel,
+    getPinnedFeedItems,
   );
 }

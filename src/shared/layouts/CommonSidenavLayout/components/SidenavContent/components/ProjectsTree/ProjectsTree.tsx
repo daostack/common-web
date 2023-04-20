@@ -70,7 +70,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
         item={{
           ...parentItem,
           rightContent: (
-            <CommonDropdown items={menuItems} activeItemId={currentCommonId} />
+            <CommonDropdown items={menuItems} activeItemId={currentCommonId} isActive={parentItem.id === activeItem?.id} />
           ),
         }}
         isActive={isActiveCheckAllowed && parentItem.id === activeItem?.id}

@@ -1,8 +1,11 @@
 import React, { FC, MouseEventHandler, useState } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
 import { Check2Icon, Menu2Icon } from "@/shared/icons";
 import { MenuItem, MenuItemType } from "@/shared/interfaces";
+import { getScreenSize } from "@/shared/store/selectors";
 import { DesktopMenu } from "@/shared/ui-kit";
 import { CREATE_COMMON_ITEM_ID } from "../../../ProjectsTree";
 import styles from "./DesktopCommonDropdown.module.scss";
@@ -10,11 +13,14 @@ import styles from "./DesktopCommonDropdown.module.scss";
 interface DesktopCommonDropdownProps {
   items: MenuItem[];
   activeItemId?: string | null;
+  isActive: boolean;
 }
 
 const DesktopCommonDropdown: FC<DesktopCommonDropdownProps> = (props) => {
-  const { items, activeItemId } = props;
+  const { items, activeItemId, isActive } = props;
   const [menuRerenderHack, setMenuRerenderHack] = useState(false);
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleItemClick = () => {
     setMenuRerenderHack((value) => !value);
@@ -55,7 +61,15 @@ const DesktopCommonDropdown: FC<DesktopCommonDropdownProps> = (props) => {
 
   const triggerEl = (
     <ButtonIcon onClick={onClick}>
-      <Menu2Icon className={styles.icon} />
+      {isMobileView ? (
+        <span className={styles.changeLabel}>Change</span>
+      ) : (
+        <Menu2Icon
+          className={classNames(styles.icon, {
+            [styles.iconActive]: isActive,
+          })}
+        />
+      )}
     </ButtonIcon>
   );
 

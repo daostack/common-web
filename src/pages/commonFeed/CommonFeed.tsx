@@ -1,37 +1,45 @@
-import React, { FC, useEffect, useMemo } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { FeedItemBaseContent, FeedItemBaseContentProps } from "@/pages/common";
 import { CommonAction, QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
+import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
+import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { checkIsProject, getCommonPageAboutTabPath } from "@/shared/utils";
 import {
   commonActions,
   selectCommonAction,
+  selectRecentStreamId,
   selectSharedFeedItem,
 } from "@/store/states";
 import {
   NewDiscussionCreation,
   NewProposalCreation,
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
-import { FeedLayout, HeaderContent } from "./components";
+import { FeedLayout, FeedLayoutRef, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
+import { getLastMessage } from "./utils";
 import styles from "./CommonFeed.module.scss";
 
-interface CommonFeedPageRouterParams {
-  id: string;
+interface CommonFeedProps {
+  commonId: string;
 }
 
-const CommonFeedPage: FC = () => {
-  const { id: commonId } = useParams<CommonFeedPageRouterParams>();
+const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
+  const { commonId } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
+  const recentStreamId = useSelector(selectRecentStreamId);
+  const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
+    null,
+  );
   const sharedFeedItemIdQueryParam = queryParams[QueryParamKey.Item];
   const sharedFeedItemId =
     (typeof sharedFeedItemIdQueryParam === "string" &&
@@ -61,6 +69,13 @@ const CommonFeedPage: FC = () => {
     hasMore: hasMoreCommonFeedItems,
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
+
+  const {
+    data: commonPinnedFeedItems,
+    loading: areCommonPinnedFeedItemsLoading,
+    fetch: fetchCommonPinnedFeedItems,
+  } = useCommonPinnedFeedItems(commonId);
+
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -68,6 +83,7 @@ const CommonFeedPage: FC = () => {
     () => (sharedFeedItem ? [sharedFeedItem] : []),
     [sharedFeedItem],
   );
+  const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
   const hasAccessToPage = Boolean(commonMember);
 
@@ -85,6 +101,23 @@ const CommonFeedPage: FC = () => {
     }
   };
 
+  const renderFeedItemBaseContent = useCallback(
+    (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,
+    [],
+  );
+
+  const handleFeedItemUpdate = useCallback(
+    (item: CommonFeed, isRemoved: boolean) => {
+      dispatch(
+        commonActions.updateFeedItem({
+          item,
+          isRemoved,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
   useEffect(() => {
     if (!user || (isGlobalDataFetched && !commonMember)) {
       history.push(getCommonPageAboutTabPath(commonId));
@@ -93,7 +126,11 @@ const CommonFeedPage: FC = () => {
 
   useEffect(() => {
     dispatch(commonActions.setSharedFeedItemId(sharedFeedItemId));
-  }, [sharedFeedItemId]);
+
+    if (sharedFeedItemId) {
+      feedLayoutRef?.setExpandedFeedItemId(sharedFeedItemId);
+    }
+  }, [sharedFeedItemId, feedLayoutRef]);
 
   useEffect(() => {
     if (commonData?.sharedFeedItem) {
@@ -118,6 +155,19 @@ const CommonFeedPage: FC = () => {
       fetchCommonFeedItems();
     }
   }, [commonFeedItems, areCommonFeedItemsLoading]);
+
+  useEffect(() => {
+    if (!commonPinnedFeedItems && !areCommonPinnedFeedItemsLoading) {
+      fetchCommonPinnedFeedItems();
+    }
+  }, [commonPinnedFeedItems, areCommonPinnedFeedItemsLoading]);
+
+  useEffect(() => {
+    if (recentStreamId === firstItem?.feedItem.data.id) {
+      feedLayoutRef?.setExpandedFeedItemId(firstItem.feedItem.id);
+      dispatch(commonActions.setRecentStreamId(""));
+    }
+  }, [feedLayoutRef, recentStreamId, firstItem]);
 
   if (!isDataFetched) {
     return (
@@ -144,6 +194,7 @@ const CommonFeedPage: FC = () => {
   return (
     <>
       <FeedLayout
+        ref={setFeedLayoutRef}
         className={styles.feedLayout}
         headerContent={
           <HeaderContent
@@ -170,6 +221,8 @@ const CommonFeedPage: FC = () => {
               <NewProposalCreation
                 common={commonData.common}
                 governance={commonData.governance}
+                parentCommons={commonData.parentCommons}
+                subCommons={commonData.subCommons}
                 commonMember={commonMember}
                 isModalVariant={false}
               />
@@ -180,16 +233,19 @@ const CommonFeedPage: FC = () => {
         common={commonData.common}
         governance={commonData.governance}
         commonMember={commonMember}
+        pinnedFeedItems={commonPinnedFeedItems}
         topFeedItems={topFeedItems}
         feedItems={commonFeedItems}
-        expandedFeedItemId={sharedFeedItemId}
         loading={areCommonFeedItemsLoading || !hasAccessToPage}
         shouldHideContent={!hasAccessToPage}
         onFetchNext={fetchMoreCommonFeedItems}
+        renderFeedItemBaseContent={renderFeedItemBaseContent}
+        onFeedItemUpdate={handleFeedItemUpdate}
+        getLastMessage={getLastMessage}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>
   );
 };
 
-export default CommonFeedPage;
+export default CommonFeedComponent;

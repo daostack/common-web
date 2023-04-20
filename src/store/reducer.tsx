@@ -10,7 +10,9 @@ import {
   cacheReducer,
   commonReducer,
   commonLayoutReducer,
+  inboxReducer,
   projectsReducer,
+  chatReducer,
 } from "./states";
 
 export default (history: History) => {
@@ -24,6 +26,8 @@ export default (history: History) => {
     common: commonReducer,
     commonLayout: commonLayoutReducer,
     cache: cacheReducer,
+    chat: chatReducer,
+    inbox: inboxReducer,
   });
 
   return (state: AppState | undefined, action: AnyAction) => {

@@ -1,28 +1,26 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { CommonFeedService } from "@/services";
-import { commonActions } from "@/store/states";
+import { CommonFeed } from "@/shared/models";
 
 export const useFeedItemSubscription = (
-  commonId: string,
   feedItemId: string,
+  commonId?: string,
+  callback?: (item: CommonFeed, isRemoved: boolean) => void,
 ): void => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!commonId || !callback) {
+      return;
+    }
+
     const unsubscribe = CommonFeedService.subscribeToCommonFeedItem(
       commonId,
       feedItemId,
-      (item, isRemoved) => {
-        dispatch(
-          commonActions.updateFeedItem({
-            item,
-            isRemoved,
-          }),
-        );
-      },
+      callback,
     );
 
     return unsubscribe;
-  }, [dispatch]);
+  }, [dispatch, feedItemId, commonId, callback]);
 };

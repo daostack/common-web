@@ -556,14 +556,6 @@ export const getUserCommons = createAsyncAction(
   CommonsActionTypes.GET_USER_COMMONS_FAILURE,
 )<PayloadWithOptionalCallback<string, Common[], Error>, Common[], Error>();
 
-export const setCurrentDiscussionMessageReply = createStandardAction(
-  CommonsActionTypes.SET_DISCUSSION_MESSAGE_REPLY,
-)<DiscussionMessage>();
-
-export const clearCurrentDiscussionMessageReply = createStandardAction(
-  CommonsActionTypes.CLEAR_DISCUSSION_MESSAGE_REPLY,
-)();
-
 export const createReport = createAsyncAction(
   CommonsActionTypes.CREATE_REPORT,
   CommonsActionTypes.CREATE_REPORT_SUCCESS,

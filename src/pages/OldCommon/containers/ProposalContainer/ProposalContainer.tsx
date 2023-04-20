@@ -25,12 +25,15 @@ import { Proposal, ProposalState } from "@/shared/models";
 import { isMemberAdmittanceProposal } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
 import { getUserName, checkIsCountdownState } from "@/shared/utils";
+import {
+  chatActions,
+  selectCurrentDiscussionMessageReply,
+} from "@/store/states";
 import { ChatComponent } from "../../components";
 import { VotesModal } from "../../components/ProposalContainer";
 import { useCommonMember, useProposalUserVote } from "../../hooks";
 import {
   addMessageToProposal,
-  clearCurrentDiscussionMessageReply,
   clearCurrentProposal,
   getCommonDetail,
   loadProposalDetail,
@@ -39,7 +42,6 @@ import {
 import { fetchProposalById, subscribeToProposal } from "../../store/api";
 import {
   selectCommonDetail,
-  selectCurrentDiscussionMessageReply,
   selectCurrentProposal,
   selectGovernance,
 } from "../../store/selectors";
@@ -139,7 +141,7 @@ const ProposalContainer = () => {
         );
 
         if (currentDiscussionMessageReply) {
-          dispatch(clearCurrentDiscussionMessageReply());
+          dispatch(chatActions.clearCurrentDiscussionMessageReply());
         }
       }
     },
@@ -156,10 +158,7 @@ const ProposalContainer = () => {
       : CommonDetailsTabs.Proposals;
 
     history.push(
-      `${ROUTE_PATHS.COMMON_DETAIL.replace(
-        ":id",
-        currentCommon.id,
-      )}?tab=${tab}`,
+      `${ROUTE_PATHS.V02_COMMON.replace(":id", currentCommon.id)}?tab=${tab}`,
     );
   };
 
@@ -262,7 +261,7 @@ const ProposalContainer = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(clearCurrentDiscussionMessageReply());
+      dispatch(chatActions.clearCurrentDiscussionMessageReply());
       dispatch(clearCurrentProposal());
     };
   }, []);

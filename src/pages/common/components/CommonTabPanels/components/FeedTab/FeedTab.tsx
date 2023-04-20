@@ -10,6 +10,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { CommonTab } from "@/pages/common/constants";
+import { useCommonDataContext } from "@/pages/common/providers";
 import {
   CommonAction,
   ViewportBreakpointVariant,
@@ -27,11 +28,11 @@ import { Container } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import { selectCommonAction } from "@/store/states";
 import { commonActions } from "@/store/states";
+import { FeedItems } from "../../../FeedItems";
 import { TabNavigation } from "../TabNavigation";
 import {
   FeedActions,
   FeedAction,
-  FeedItems,
   NewDiscussionCreation,
   NewProposalCreation,
 } from "./components";
@@ -47,18 +48,17 @@ interface FeedTabProps {
 
 const HEADER_HEIGHT = 221;
 const BREADCRUMBS_HEIGHT = 64;
-const DISCUSSION_TITLE_PADDING_HEIGHT = 41;
 
 export const FeedTab: FC<FeedTabProps> = (props) => {
   const { activeTab, governance, commonMember, common } = props;
   const dispatch = useDispatch();
+  const { parentCommons, subCommons } = useCommonDataContext();
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember],
   );
   const [chatColumnRef, { width: chatWidth }] = useMeasure();
-  const [chatTitleRef, { height: chatTitleHeight }] = useMeasure();
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
   const commonAction = useSelector(selectCommonAction);
@@ -83,6 +83,8 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
         <NewProposalCreation
           common={common}
           governance={governance}
+          parentCommons={parentCommons}
+          subCommons={subCommons}
           commonMember={commonMember}
           isModalVariant={false}
         />
@@ -115,11 +117,11 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
                   chatItem.discussion.title,
                 ),
               })}
-              ref={chatTitleRef as LegacyRef<HTMLParagraphElement>}
             >
               {chatItem.discussion.title}
             </p>
             <ChatComponent
+              governanceCircles={governance.circles}
               commonMember={commonMember}
               isCommonMemberFetched
               isAuthorized={Boolean(user)}
@@ -130,15 +132,9 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
               }
               hasAccess={hasAccessToChat}
               isHidden={false}
-              common={common}
+              commonId={common.id}
               discussion={chatItem.discussion}
-              proposal={chatItem.proposal}
               feedItemId={chatItem.feedItemId}
-              titleHeight={
-                chatTitleHeight
-                  ? chatTitleHeight + DISCUSSION_TITLE_PADDING_HEIGHT
-                  : 0
-              }
               lastSeenItem={chatItem.lastSeenItem}
             />
           </>
@@ -156,20 +152,21 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
         onClose={() => {
           setChatItem(null);
         }}
-        common={common}
+        commonName={common.name}
+        commonImage={common.image}
         title={chatItem?.discussion.title}
       >
         {chatItem && (
           <ChatComponent
+            governanceCircles={governance.circles}
             commonMember={commonMember}
             isCommonMemberFetched
             isAuthorized={Boolean(user)}
             type={ChatType.DiscussionMessages}
             hasAccess={hasAccessToChat}
             isHidden={false}
-            common={common}
+            commonId={common.id}
             discussion={chatItem.discussion}
-            proposal={chatItem.proposal}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
           />

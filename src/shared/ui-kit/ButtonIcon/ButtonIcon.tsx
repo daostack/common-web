@@ -33,6 +33,8 @@ const ButtonIcon: ForwardRefRenderFunction<
       [buttonStyles.buttonDisabled]: visuallyDisabled || props.disabled,
       [buttonStyles.buttonOutlineBlueVariant]:
         variant === ButtonVariant.OutlineBlue,
+      [buttonStyles.buttonOutlinePinkVariant]:
+        variant === ButtonVariant.OutlinePink,
     },
   );
   let iconEl: ReactNode | null = null;

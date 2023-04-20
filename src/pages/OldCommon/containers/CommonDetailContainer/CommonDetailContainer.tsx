@@ -378,7 +378,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     if (props.commonId) {
       dispatch(setCommonActiveTab(tab));
 
-      history.push(ROUTE_PATHS.COMMON_DETAIL.replace(":id", props.commonId));
+      history.push(ROUTE_PATHS.V02_COMMON.replace(":id", props.commonId));
     } else {
       dispatch(loadCommonDiscussionList.request());
     }

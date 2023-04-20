@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useState } from "react";
+import React, { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ReportModal } from "@/shared/components";
@@ -10,7 +10,6 @@ import {
   useUserById,
 } from "@/shared/hooks/useCases";
 import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
-import { DesktopStyleMenu } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
@@ -18,42 +17,41 @@ import {
   FeedCardHeader,
   FeedCardContent,
   FeedCountdown,
-  getLastMessage,
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
-import { LoadingFeedCard } from "../LoadingFeedCard";
+import { GetLastMessageOptions } from "../FeedItem";
 import { useMenuItems } from "./hooks";
-import styles from "./DiscussionFeedCard.module.scss";
 
 interface DiscussionFeedCardProps {
   item: CommonFeed;
-  governanceCircles: Governance["circles"];
+  governanceCircles?: Governance["circles"];
   isMobileVersion?: boolean;
-  commonId: string;
+  commonId?: string;
   commonName: string;
+  commonImage: string;
   isProject: boolean;
-  governanceId?: string;
   isPreviewMode: boolean;
+  isActive: boolean;
+  isExpanded: boolean;
+  getLastMessage: (options: GetLastMessageOptions) => string;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const {
-    activeItemDiscussionId,
-    setChatItem,
-    feedItemIdForAutoChatOpen,
-    expandedFeedItemId,
-    setShouldShowSeeMore,
-  } = useChatContext();
+  const { setChatItem, feedItemIdForAutoChatOpen, setShouldShowSeeMore } =
+    useChatContext();
   const {
     item,
     governanceCircles,
     isMobileVersion = false,
     commonId,
     commonName,
+    commonImage,
     isProject,
-    governanceId,
     isPreviewMode,
+    isActive,
+    isExpanded,
+    getLastMessage,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -65,7 +63,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     onOpen: onShareModalOpen,
     onClose: onShareModalClose,
   } = useModal(false);
-  const { isShowing: isMenuOpen, onClose: onMenuClose } = useModal(false);
   const {
     fetchUser: fetchDiscussionCreator,
     data: discussionCreator,
@@ -84,9 +81,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   const menuItems = useMenuItems(
     {
       discussion,
-      governance: {
-        circles: governanceCircles,
-      },
+      governanceCircles,
     },
     {
       report: onReportModalOpen,
@@ -102,14 +97,9 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   const isLoading =
     !isDiscussionCreatorFetched ||
     !isDiscussionFetched ||
-    !isFeedItemUserMetadataFetched;
-  const isActive = discussion?.id === activeItemDiscussionId;
-  const isExpanded = item.id === expandedFeedItemId;
-
-  const circleVisibility = getVisibilityString(
-    governanceCircles,
-    discussion?.circleVisibility,
-  );
+    !isFeedItemUserMetadataFetched ||
+    !commonId ||
+    !governanceCircles;
 
   const handleOpenChat = useCallback(() => {
     if (discussion) {
@@ -140,11 +130,13 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   }, [item.data.id]);
 
   useEffect(() => {
-    fetchFeedItemUserMetadata({
-      userId: userId || "",
-      commonId,
-      feedObjectId: item.id,
-    });
+    if (commonId) {
+      fetchFeedItemUserMetadata({
+        userId: userId || "",
+        commonId,
+        feedObjectId: item.id,
+      });
+    }
   }, [userId, commonId, item.id]);
 
   useEffect(() => {
@@ -157,19 +149,78 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     }
   }, [isDiscussionFetched, isFeedItemUserMetadataFetched]);
 
-  if (isLoading) {
-    return <LoadingFeedCard />;
-  }
+  const renderContent = (): ReactNode => {
+    if (isLoading) {
+      return null;
+    }
+
+    const circleVisibility = getVisibilityString(
+      governanceCircles,
+      discussion?.circleVisibility,
+    );
+
+    return (
+      <>
+        <FeedCardHeader
+          avatar={discussionCreator?.photoURL}
+          title={getUserName(discussionCreator)}
+          createdAt={
+            <>
+              Created:{" "}
+              <FeedCountdown
+                isCountdownFinished
+                expirationTimestamp={item.createdAt}
+              />
+            </>
+          }
+          type="Discussion"
+          circleVisibility={circleVisibility}
+          menuItems={menuItems}
+          isMobileVersion={isMobileVersion}
+          commonId={commonId}
+          userId={item.userId}
+        />
+        <FeedCardContent
+          description={discussion?.message}
+          images={discussion?.images}
+          onClick={handleOpenChat}
+          onMouseEnter={() => {
+            onHover(true);
+          }}
+          onMouseLeave={() => {
+            onHover(false);
+          }}
+        />
+        {userId && discussion && (
+          <ReportModal
+            userId={userId}
+            isShowing={isReportModalOpen}
+            onClose={onReportModalClose}
+            entity={discussion}
+            type={EntityTypes.Discussion}
+          />
+        )}
+        {discussion && (
+          <FeedCardShare
+            isOpen={isShareModalOpen}
+            onClose={onShareModalClose}
+            linkType={DynamicLinkType.Discussion}
+            element={discussion}
+            isMobileVersion={isMobileVersion}
+          />
+        )}
+      </>
+    );
+  };
 
   return (
     <FeedCard
-      isActive={isActive}
-      isExpanded={isExpanded}
-      isLongPressed={isMenuOpen}
+      feedItemId={item.id}
       isHovering={isHovering}
-      messageCount={discussion?.messageCount || 0}
       lastActivity={item.updatedAt.seconds * 1000}
       unreadMessages={feedItemUserMetadata?.count || 0}
+      isActive={isActive}
+      isExpanded={isExpanded}
       onClick={handleOpenChat}
       title={discussion?.title}
       lastMessage={getLastMessage({
@@ -183,64 +234,17 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
+      image={commonImage}
+      imageAlt={`${commonName}'s image`}
+      isProject={isProject}
+      isLoading={isLoading}
+      menuItems={menuItems}
+      seenOnce={feedItemUserMetadata?.seenOnce}
+      ownerId={item.userId}
     >
-      <FeedCardHeader
-        avatar={discussionCreator?.photoURL}
-        title={getUserName(discussionCreator)}
-        createdAt={
-          <>
-            Created:{" "}
-            <FeedCountdown
-              isCountdownFinished
-              expirationTimestamp={item.createdAt}
-            />
-          </>
-        }
-        type="Discussion"
-        circleVisibility={circleVisibility}
-        menuItems={menuItems}
-        isMobileVersion={isMobileVersion}
-        commonId={commonId}
-        userId={item.userId}
-        governanceId={governanceId}
-      />
-      <FeedCardContent
-        description={discussion?.message}
-        images={discussion?.images}
-        onClick={handleOpenChat}
-        onMouseEnter={() => {
-          onHover(true);
-        }}
-        onMouseLeave={() => {
-          onHover(false);
-        }}
-      />
-      {userId && discussion && (
-        <ReportModal
-          userId={userId}
-          isShowing={isReportModalOpen}
-          onClose={onReportModalClose}
-          entity={discussion}
-          type={EntityTypes.Discussion}
-        />
-      )}
-      {discussion && (
-        <FeedCardShare
-          isOpen={isShareModalOpen}
-          onClose={onShareModalClose}
-          linkType={DynamicLinkType.Discussion}
-          element={discussion}
-          isMobileVersion={isMobileVersion}
-        />
-      )}
-      <DesktopStyleMenu
-        className={styles.desktopStyleMenu}
-        isOpen={isMenuOpen}
-        onClose={onMenuClose}
-        items={menuItems}
-      />
+      {renderContent()}
     </FeedCard>
   );
 };
 
-export default memo(DiscussionFeedCard);
+export default DiscussionFeedCard;

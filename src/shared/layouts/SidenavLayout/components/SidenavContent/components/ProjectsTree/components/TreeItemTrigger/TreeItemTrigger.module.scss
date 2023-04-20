@@ -25,6 +25,7 @@
 }
 .itemActive {
   --bg-color: #{$c-primary-200}99;
+  --item-text-color: #{$white};
 
   &:hover {
     --bg-color: #{$c-primary-200}99;
@@ -72,6 +73,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.nameActive {
+  color: $white;
 }
 
 .notificationsAmount {

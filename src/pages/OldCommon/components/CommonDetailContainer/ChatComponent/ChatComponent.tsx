@@ -11,8 +11,6 @@ import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
-import { clearCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/actions";
-import { selectCurrentDiscussionMessageReply } from "@/pages/OldCommon/store/selectors";
 import { CommonShare, Loader } from "@/shared/components";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import {
@@ -28,6 +26,10 @@ import CloseIcon from "@/shared/icons/close.icon";
 import { Common, CommonMember, DiscussionMessage } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate } from "@/shared/utils";
+import {
+  chatActions,
+  selectCurrentDiscussionMessageReply,
+} from "@/store/states";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
 
@@ -243,7 +245,7 @@ export default function ChatComponent({
         <ButtonIcon
           className="bottom-reply-message-close-button"
           onClick={() => {
-            dispatch(clearCurrentDiscussionMessageReply());
+            dispatch(chatActions.clearCurrentDiscussionMessageReply());
           }}
         >
           <CloseIcon fill="#001A36" height={16} width={16} />

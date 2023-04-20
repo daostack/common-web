@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useMemo } from "react";
 import classNames from "classnames";
-import { CommonShare, Linkify } from "@/shared/components";
+import { CommonShare } from "@/shared/components";
 import { Colors, ScreenSize, ShareViewType } from "@/shared/constants";
 import { useFullText } from "@/shared/hooks";
 import { Common, UnstructuredRules } from "@/shared/models";
-import { isRTL } from "@/shared/utils";
+import {
+  checkIsTextEditorValueEmpty,
+  parseStringToTextEditorValue,
+  TextEditor,
+} from "@/shared/ui-kit";
 import { CommonWhitepaper } from "../CommonWhitepaper";
 import { Rules } from "./Rules";
 import "./index.scss";
@@ -27,12 +31,19 @@ export default function AboutTabComponent({
   isJoiningPending,
 }: AboutTabComponentProps) {
   const {
-    ref: descriptionRef,
+    setRef: setDescriptionRef,
     shouldShowFullText,
     isFullTextShowing,
     toggleFullText,
-  } = useFullText();
+  } = useFullText<HTMLElement>();
+  const parsedDescription = useMemo(
+    () => parseStringToTextEditorValue(common.description),
+    [common.description],
+  );
   const isSubCommon = Boolean(common?.directParent);
+  const isDescriptionEmpty = checkIsTextEditorValueEmpty(parsedDescription);
+  const shouldDisplaySeeMoreButton =
+    (shouldShowFullText || !isFullTextShowing) && !isDescriptionEmpty;
   const shouldShowJoinToCommonButton =
     screenSize === ScreenSize.Desktop &&
     !isCommonMember &&
@@ -41,16 +52,15 @@ export default function AboutTabComponent({
 
   return (
     <div className="about-name-wrapper">
-      <div
-        ref={descriptionRef}
-        className={classNames("description", {
-          "description--rtl": isRTL(common.description),
-          "description--shortened": !shouldShowFullText,
+      <TextEditor
+        editorRef={setDescriptionRef}
+        editorClassName={classNames("about-name-wrapper__description", {
+          "about-name-wrapper__description--shortened": !shouldShowFullText,
         })}
-      >
-        <Linkify>{common.description}</Linkify>
-      </div>
-      {(shouldShowFullText || !isFullTextShowing) && (
+        value={parsedDescription}
+        readOnly
+      />
+      {shouldDisplaySeeMoreButton && (
         <a className="about-name-wrapper__see-more" onClick={toggleFullText}>
           See {shouldShowFullText ? "less <" : "more >"}
         </a>

@@ -44,7 +44,7 @@ export const OLD_LAYOUT_CONFIGURATION: LayoutConfiguration<OldLayoutRouteOptions
         component: CommonListContainer,
       },
       {
-        path: ROUTE_PATHS.COMMON_DETAIL,
+        path: ROUTE_PATHS.V02_COMMON,
         exact: true,
         component: CommonDetailContainer,
         routeOptions: {

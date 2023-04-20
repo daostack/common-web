@@ -1,6 +1,11 @@
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import classNames from "classnames";
+import {
+  authentificated,
+  selectUserStreamsWithNotificationsAmount,
+} from "@/pages/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { InboxIcon } from "@/shared/icons";
 import { matchRoute } from "@/shared/utils";
@@ -15,6 +20,10 @@ interface NavigationProps {
 const Navigation: FC<NavigationProps> = (props) => {
   const { className } = props;
   const location = useLocation();
+  const isAuthenticated = useSelector(authentificated());
+  const userStreamsWithNotificationsAmount = useSelector(
+    selectUserStreamsWithNotificationsAmount(),
+  );
   const items: NavigationItemOptions[] = [
     {
       text: "Inbox",
@@ -23,14 +32,11 @@ const Navigation: FC<NavigationProps> = (props) => {
       isActive: matchRoute(location.pathname, ROUTE_PATHS.INBOX, {
         exact: true,
       }),
-      isDisabled: true,
-      tooltipContent: (
-        <>
-          We’re building a new Inbox section for your messages.
-          <br />
-          Stay tuned for updates!
-        </>
-      ),
+      isDisabled: !isAuthenticated,
+      notificationsAmount: userStreamsWithNotificationsAmount || null,
+      tooltipContent: !isAuthenticated ? (
+        <>Inbox is only allowed for authenticated users.</>
+      ) : null,
     },
   ];
 

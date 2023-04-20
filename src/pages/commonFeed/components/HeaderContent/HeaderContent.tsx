@@ -7,7 +7,7 @@ import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
-import { getCommonPageAboutTabPath } from "@/shared/utils";
+import { getCommonPageAboutTabPath, getPluralEnding } from "@/shared/utils";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
@@ -59,16 +59,17 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           <div className={styles.commonInfoWrapper}>
             <h1 className={styles.commonName}>{commonName}</h1>
             <p className={styles.commonMembersAmount}>
-              {commonMembersAmount} member{commonMembersAmount === 1 ? "" : "s"}
+              {commonMembersAmount} member{getPluralEnding(commonMembersAmount)}
             </p>
           </div>
         </NavLink>
-        <NewStreamButton
-          commonMember={commonMember}
-          governance={governance}
-          isMobileVersion={isMobileVersion}
-        />
       </div>
+      <NewStreamButton
+        className={styles.newStreamButton}
+        commonMember={commonMember}
+        governance={governance}
+        isMobileVersion={isMobileVersion}
+      />
     </div>
   );
 };

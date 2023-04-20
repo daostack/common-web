@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, ReactNode, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatMobileModal } from "@/pages/common/components";
@@ -9,24 +9,32 @@ import {
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { ChatType } from "@/shared/constants";
-import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
+import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
 import { Header } from "./components";
 import styles from "./MobileChat.module.scss";
 
 interface ChatProps {
   chatItem?: ChatItem | null;
-  common: Common;
+  commonId: string;
+  commonName: string;
+  commonImage: string;
+  governanceCircles?: Circles;
   commonMember: (CommonMember & CirclesPermissions) | null;
   shouldShowSeeMore?: boolean;
+  rightHeaderContent?: ReactNode;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
   const {
     chatItem,
-    common,
+    commonId,
+    commonName,
+    commonImage,
+    governanceCircles,
     commonMember,
     children,
     shouldShowSeeMore = true,
+    rightHeaderContent,
   } = props;
   const { setChatItem, setIsShowFeedItemDetailsModal, setShouldShowSeeMore } =
     useChatContext();
@@ -57,7 +65,8 @@ const MobileChat: FC<ChatProps> = (props) => {
         isShowing={Boolean(chatItem)}
         hasBackButton
         onClose={handleClose}
-        common={common}
+        commonName={commonName}
+        commonImage={commonImage}
         header={
           <Header
             title={chatItem?.discussion.title || ""}
@@ -72,6 +81,7 @@ const MobileChat: FC<ChatProps> = (props) => {
                 </span>
               ) : null
             }
+            rightContent={rightHeaderContent}
           />
         }
         styles={{
@@ -82,15 +92,15 @@ const MobileChat: FC<ChatProps> = (props) => {
       >
         {chatItem && (
           <ChatComponent
+            governanceCircles={governanceCircles}
             commonMember={commonMember}
             isCommonMemberFetched
             isAuthorized={Boolean(user)}
             type={ChatType.DiscussionMessages}
             hasAccess={hasAccessToChat}
             isHidden={false}
-            common={common}
+            commonId={commonId}
             discussion={chatItem.discussion}
-            proposal={chatItem.proposal}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
           />

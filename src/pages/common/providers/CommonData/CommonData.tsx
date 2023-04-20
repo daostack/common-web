@@ -20,6 +20,7 @@ import { getCommonPagePath, getProjectCreationPagePath } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { JoinProjectModal } from "../../components/JoinProjectModal";
 import { CommonMenuItem } from "../../constants";
+import { CommonPageSettings } from "../../types";
 import { LeaveCircleModal } from "./components";
 import { JoinCircleModal } from "./components/JoinCircleModal";
 import { CommonDataContext, CommonDataContextValue } from "./context";
@@ -30,6 +31,7 @@ import {
 } from "./hooks";
 
 interface CommonDataProps {
+  settings: CommonPageSettings;
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
@@ -46,6 +48,7 @@ interface CommonDataProps {
 
 const CommonData: FC<CommonDataProps> = (props) => {
   const {
+    settings,
     common,
     governance,
     commonMember,
@@ -201,6 +204,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
 
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({
+      settings,
       onMenuItemSelect: handleMenuItemSelect,
       onProjectCreate: handleProjectCreate,
       common,
@@ -217,6 +221,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onJoinCircle: onJoinCircleModalOpen,
     }),
     [
+      settings,
       handleMenuItemSelect,
       handleProjectCreate,
       common,
