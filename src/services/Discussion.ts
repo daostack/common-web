@@ -53,6 +53,10 @@ class DiscussionService {
       callback(transformFirebaseDataSingle<Discussion>(snapshot));
     });
   };
+
+  public deleteDiscussion = async (discussionId: string): Promise<void> => {
+    await Api.delete<Discussion>(ApiEndpoint.DeleteDiscussion(discussionId));
+  };
 }
 
 export default new DiscussionService();

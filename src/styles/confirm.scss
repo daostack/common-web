@@ -1,0 +1,11 @@
+@import "~react-alert-confirm/lib/style.css";
+@import "../constants.scss";
+
+.alert-confirm-button.primary-button {
+  background-color: $c-pink-primary;
+}
+
+.alert-confirm-button.default-button:hover,
+.alert-confirm-button.default-button:focus {
+  color: #5c5c5c;
+}

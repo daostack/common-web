@@ -1,8 +1,11 @@
+import AlertConfirm from "react-alert-confirm";
 import { useDispatch } from "react-redux";
+import { DiscussionService } from "@/services";
 import { CommonAction } from "@/shared/constants";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { commonActions } from "@/store/states";
+import { CommonFeedType } from "../../../../../shared/models";
 import { DiscussionCardMenuItem } from "../constants";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
@@ -15,7 +18,7 @@ interface Actions {
 
 export const useMenuItems = (options: Options, actions: Actions): Item[] => {
   const dispatch = useDispatch();
-  const { discussion, governanceCircles } = options;
+  const { discussion, governanceCircles, feedItem } = options;
   const { report, share } = actions;
   const allowedMenuItems = getAllowedItems(options);
   const items: Item[] = [
@@ -56,8 +59,33 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
     {
       id: DiscussionCardMenuItem.Remove,
       text: "Remove",
-      onClick: () => {
-        console.log(DiscussionCardMenuItem.Remove);
+      onClick: async () => {
+        if (!feedItem || !discussion) return;
+        let deletePromise: Promise<void> | undefined;
+        let resource = "discussion";
+        if (feedItem.data.type === CommonFeedType.Proposal) {
+          resource = "proposal";
+        }
+        await AlertConfirm({
+          title: `Are you sure you want to delete this ${resource}?`,
+          desc: "Note that this action could not be undone.",
+          okText: "Delete",
+          style: { width: 474 },
+          async closeBefore(shouldDelete) {
+            if (deletePromise) {
+              await deletePromise;
+              return;
+            }
+            if (!shouldDelete) return;
+            deletePromise = DiscussionService.deleteDiscussion(discussion.id);
+            await deletePromise.catch((err) => {
+              console.error(err);
+              deletePromise = undefined;
+              AlertConfirm.alert({ title: "There was an error" });
+              throw err;
+            });
+          },
+        });
       },
     },
   ];

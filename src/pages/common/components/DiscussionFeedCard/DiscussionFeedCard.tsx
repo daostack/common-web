@@ -9,7 +9,12 @@ import {
   useFeedItemUserMetadata,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
+import {
+  CommonFeed,
+  CommonMember,
+  Governance,
+  PredefinedTypes,
+} from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
@@ -30,6 +35,7 @@ interface DiscussionFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  commonMember?: CommonMember | null;
   isProject: boolean;
   isPreviewMode: boolean;
   isActive: boolean;
@@ -47,6 +53,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    commonMember,
     isProject,
     isPreviewMode,
     isActive,
@@ -80,8 +87,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   } = useFeedItemUserMetadata();
   const menuItems = useMenuItems(
     {
+      feedItem: item,
       discussion,
       governanceCircles,
+      commonMember,
     },
     {
       report: onReportModalOpen,
