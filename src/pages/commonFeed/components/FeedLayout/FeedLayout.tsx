@@ -274,7 +274,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     titleRightContent={followFeedItemEl}
                   />
                 ) : (
-                  <DesktopChatPlaceholder className={styles.desktopChat} />
+                  <DesktopChatPlaceholder
+                    className={styles.desktopChat}
+                    isItemSelected={Boolean(selectedItemCommonData)}
+                  />
                 ))}
               {isTabletView && selectedItemCommonData && (
                 <MobileChat
