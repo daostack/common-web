@@ -1,9 +1,21 @@
-import { Circles, Discussion } from "@/shared/models";
+import {
+  Circles,
+  CommonFeed,
+  CommonMember,
+  Discussion,
+  Proposal,
+  ProposalState,
+} from "@/shared/models";
+import { GovernanceActions } from "../../../../../shared/constants";
+import { hasPermission } from "../../../../../shared/utils";
 import { DiscussionCardMenuItem } from "../constants";
 
 export interface GetAllowedItemsOptions {
   discussion?: Discussion | null;
   governanceCircles?: Circles;
+  feedItem?: CommonFeed;
+  proposal?: Proposal;
+  commonMember?: CommonMember | null;
 }
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<

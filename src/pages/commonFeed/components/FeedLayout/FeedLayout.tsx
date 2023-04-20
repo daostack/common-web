@@ -247,6 +247,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   return (
                     <FeedItem
                       key={item.feedItem.id}
+                      commonMember={commonMember}
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}

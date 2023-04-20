@@ -12,6 +12,7 @@ import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
 import { checkIsCountdownState, getUserName } from "@/shared/utils";
 import { selectRecentStreamId } from "@/store/states";
 import { useChatContext } from "../ChatComponent";
+import { useMenuItems } from "../DiscussionFeedCard/hooks";
 import {
   FeedCard,
   FeedCardHeader,
@@ -117,6 +118,18 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setHovering(isMouseEnter);
   };
   const proposalId = item.data.id;
+  const menuItems = useMenuItems(
+    {
+      feedItem: item,
+      discussion,
+      governanceCircles,
+      commonMember,
+    },
+    {
+      report: () => {},
+      share: () => {},
+    },
+  );
 
   useEffect(() => {
     fetchFeedItemUser(item.userId);
@@ -229,6 +242,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           circleVisibility={circleVisibility}
           commonId={commonId}
           userId={item.userId}
+          menuItems={menuItems}
         />
         <FeedCardContent
           subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
@@ -292,6 +306,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       isLoading={isLoading}
       type={item.data.type}
       seenOnce={feedItemUserMetadata?.seenOnce}
+      menuItems={menuItems}
       ownerId={item.userId}
     >
       {renderContent()}
