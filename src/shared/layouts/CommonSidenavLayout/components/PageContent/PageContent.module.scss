@@ -19,10 +19,10 @@
   }
 }
 .containerWithHeader {
-  --header-h: 4.5625rem;
+  --header-h: #{$container-desktop-header-height};
 
   @include tablet {
-    --header-h: 3.25rem;
+    --header-h: #{$container-mobile-header-height};
   }
 }
 

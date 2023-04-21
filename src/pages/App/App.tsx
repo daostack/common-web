@@ -11,7 +11,11 @@ import { SMALL_SCREEN_BREAKPOINT, ScreenSize } from "@/shared/constants";
 import { useScreenSize } from "@/shared/hooks";
 import { changeScreenSize } from "@/shared/store/actions";
 import { selectTutorialModalState } from "@/shared/store/selectors";
-import { TextDirectionHandler, WebViewLoginHandler } from "./handlers";
+import {
+  TextDirectionHandler,
+  UserNotificationsAmountHandler,
+  WebViewLoginHandler,
+} from "./handlers";
 import { Router } from "./router";
 
 const App = () => {
@@ -30,6 +34,7 @@ const App = () => {
       <BackgroundNotificationModal />
       <TutorialModal isShowing={tutorialModalState.isShowing} />
       <TextDirectionHandler />
+      <UserNotificationsAmountHandler />
       <WebViewLoginHandler />
       <LoginContainer />
       <Router />

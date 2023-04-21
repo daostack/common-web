@@ -4,7 +4,6 @@ import { useCommonMemberWithUserInfo } from "@/shared/hooks/useCases";
 import { getUserName } from "@/shared/utils";
 
 interface FeedUserPopupProps {
-  governanceId?: string;
   commonId: string;
   userId?: string;
   avatar: string;
@@ -13,18 +12,13 @@ interface FeedUserPopupProps {
 }
 
 export const FeedUserPopup = ({
-  governanceId,
   commonId,
   userId,
   avatar,
   isShowing,
   onClose,
 }: FeedUserPopupProps) => {
-  const { data, fetched } = useCommonMemberWithUserInfo(
-    commonId,
-    userId,
-    governanceId,
-  );
+  const { data, fetched } = useCommonMemberWithUserInfo(commonId, userId);
 
   return (
     <CommonMemberPreview

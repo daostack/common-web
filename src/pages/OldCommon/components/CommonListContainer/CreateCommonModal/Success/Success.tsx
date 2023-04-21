@@ -5,13 +5,12 @@ import { Button, ButtonVariant, CommonShare } from "@/shared/components";
 import {
   Colors,
   ScreenSize,
-  ROUTE_PATHS,
   ShareViewType,
   SharePopupVariant,
 } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { commonTypeText } from "@/shared/utils";
+import { commonTypeText, getCommonPagePath } from "@/shared/utils";
 import "./index.scss";
 
 interface SuccessProps {
@@ -35,13 +34,14 @@ const Success: FC<SuccessProps> = (props) => {
   const history = useHistory();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const commonPath = ROUTE_PATHS.COMMON_DETAIL.replace(":id", common.id);
 
   const handleGoToCommon = () => {
     if (onGoToCommon) {
       onGoToCommon(common);
       return;
     }
+
+    const commonPath = getCommonPagePath(common.id);
 
     if (isSubCommonCreation) {
       window.location.href = commonPath;

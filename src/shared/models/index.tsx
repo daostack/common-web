@@ -9,6 +9,7 @@ export * from "./shared";
 export * from "./Proposals";
 export * from "./DiscussionMessage";
 export * from "./Discussion";
+export * from "./FeedItemFollow";
 export * from "./Gender";
 export * from "./Invoices";
 export * from "./Link";

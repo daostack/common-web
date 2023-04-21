@@ -4,6 +4,8 @@ $content-padding-mobile: 20px;
 $content-padding-bottom: 20px;
 $header-height: 80px;
 $header-height-mobile: 60px;
+$container-desktop-header-height: 4.5625rem;
+$container-mobile-header-height: 3.25rem;
 $share-z-index: 2;
 $header-z-index: 10;
 $date-picker-z-index: $header-z-index - 1;
@@ -29,6 +31,7 @@ $medium: 25px; // 1.5625rem
 $moderate-med: 23px; // 1.4375rem
 $moderate-xmed: 21px; // 1.3125rem
 $moderate-small: 19px; // 1.1875rem
+$moderate-small-2: 18px; // 1.125rem
 $moderate: 17px; // 1.0625rem
 $moderate-xsmall: 16px; //1rem
 $small: 15px; // 0.9375rem
@@ -36,8 +39,10 @@ $mobile-title: 14px; // 0.875rem
 $xsmall: 13px; // 0.8125rem
 $xxsmall-2: 12px; // 0.75rem
 $xxsmall: 11px; // 0.6875rem
-$xxxsmall-2: 10px; // 0.625rem
+$xxsmall-3: 10px; // 0.625rem
 $xxxsmall: 9px; // 0.5625rem
+$xxxsmall-2: 8px; // 0.5rem
+$xxxsmall-3: 7px; // 0.4375rem
 $xxxxsmall: 5px; // 0.3125rem
 
 /* colors */
@@ -127,7 +132,8 @@ $c-green-300: #62a541;
 $c-pink-dark: #826a7d;
 $c-pink-primary: #de189b;
 $c-pink-active-btn: #f0daec;
-$c-pink-active-feed-cards: #fcf4ff;
+$c-pink-active-feed-cards-light: #fcf4ff;
+$c-pink-active-feed-cards: #A75A93;
 $c-pink-hover-feed-cards: #fff9fd;
 $c-separator-light-non-opaque: rgba(60, 60, 67, 0.36);
 $logo-1: #99ca80;

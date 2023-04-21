@@ -22,8 +22,14 @@ export const selectIsProposalCreationLoading = (state: AppState) =>
 
 export const selectFeedItems = (state: AppState) => state.common.feedItems;
 
+export const selectPinnedFeedItems = (state: AppState) =>
+  state.common.pinnedFeedItems;
+
 export const selectIsNewProjectCreated = (state: AppState) =>
   state.common.isNewProjectCreated;
 
 export const selectSharedFeedItem = (state: AppState) =>
   state.common.sharedFeedItem;
+
+export const selectRecentStreamId = (state: AppState) =>
+  state.common.recentStreamId;

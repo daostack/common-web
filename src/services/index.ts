@@ -8,6 +8,7 @@ export { default as CommonService } from "./Common";
 export { default as CommonFeedService } from "./CommonFeed";
 export { default as CommonFeedObjectUserUniqueService } from "./CommonFeedObjectUserUnique";
 export { default as DiscussionService } from "./Discussion";
+export { default as FeedItemFollowsService } from "./FeedItemFollows";
 export { default as FileService } from "./File";
 export { default as GeneralApi } from "./GeneralApi";
 export { default as GovernanceService } from "./Governance";

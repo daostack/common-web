@@ -10,11 +10,13 @@ import {
   useGlobalCommonData,
 } from "@/shared/hooks/useCases";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
+import { getCommonPagePath } from "@/shared/utils";
 import {
   setCommonGovernance,
   setCommonMember,
 } from "@/store/states/common/actions";
 import { CommonContent } from "./components";
+import { CommonPageSettings } from "./types";
 import { getInitialTab } from "./utils";
 import styles from "./Common.module.scss";
 
@@ -22,7 +24,16 @@ interface CommonRouterParams {
   id: string;
 }
 
-const Common: FC = () => {
+interface CommonProps {
+  settings?: CommonPageSettings;
+}
+
+const DEFAULT_SETTINGS: CommonPageSettings = {
+  generatePagePath: (commonId) => getCommonPagePath(commonId),
+};
+
+const Common: FC<CommonProps> = (props) => {
+  const { settings = DEFAULT_SETTINGS } = props;
   const { id: commonId } = useParams<CommonRouterParams>();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
@@ -102,6 +113,7 @@ const Common: FC = () => {
 
   return (
     <CommonContent
+      settings={settings}
       defaultTab={defaultTab}
       common={commonData.common}
       parentCommon={commonData.parentCommon}

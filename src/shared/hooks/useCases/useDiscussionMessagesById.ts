@@ -19,8 +19,9 @@ type State = LoadingState<DiscussionMessage[] | null>;
 
 interface Return extends State {
   fetchDiscussionMessages: (discussionId: string) => void;
-  setDiscussionMessages: (
-    discussionMessages: DiscussionMessage[] | null,
+  addDiscussionMessage: (
+    discussionId: string,
+    discussionMessage: DiscussionMessage,
   ) => void;
 }
 
@@ -44,6 +45,18 @@ export const useDiscussionMessagesById = ({
     ) || defaultState;
   const [discussionMessagesWithOwners, setDiscussionMessagesWithOwners] =
     useState<any>();
+
+  const addDiscussionMessage = (
+    discussionId: string,
+    discussionMessage: DiscussionMessage,
+  ): void => {
+    dispatch(
+      cacheActions.addDiscussionMessageByDiscussionId({
+        discussionId,
+        discussionMessage,
+      }),
+    );
+  };
 
   const fetchDiscussionMessages = useCallback(
     (discussionId: string) => {
@@ -72,7 +85,7 @@ export const useDiscussionMessagesById = ({
   useEffect(() => {
     (async () => {
       const discussionMessages = [...(state.data || [])];
-      const filteredMessages = (discussionMessages || []).filter(
+      const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
       );
@@ -102,28 +115,6 @@ export const useDiscussionMessagesById = ({
     })();
   }, [state.data, messageOwnersIds, messageOwners, hasPermissionToHide]);
 
-  const setDiscussionMessages = useCallback(
-    (discussionMessages: DiscussionMessage[] | null) => {
-      const nextState: State = {
-        loading: false,
-        fetched: true,
-        data: discussionMessages,
-      };
-
-      if (currentDiscussionId) {
-        dispatch(
-          cacheActions.updateDiscussionMessagesStateByDiscussionId({
-            discussionId: currentDiscussionId,
-            state: nextState,
-          }),
-        );
-      }
-
-      setDefaultState(nextState);
-    },
-    [dispatch, currentDiscussionId],
-  );
-
   useEffect(() => {
     if (!currentDiscussionId) {
       return;
@@ -152,6 +143,6 @@ export const useDiscussionMessagesById = ({
     ...state,
     data: discussionMessagesWithOwners,
     fetchDiscussionMessages,
-    setDiscussionMessages,
+    addDiscussionMessage,
   };
 };

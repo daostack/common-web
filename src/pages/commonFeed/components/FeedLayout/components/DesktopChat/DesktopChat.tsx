@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, ReactNode, useMemo } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -8,19 +8,28 @@ import {
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { ChatType } from "@/shared/constants";
-import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
+import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
 import { isRTL } from "@/shared/utils";
 import styles from "./DesktopChat.module.scss";
 
 interface ChatProps {
   className?: string;
   chatItem: ChatItem;
-  common: Common;
+  commonId: string;
+  governanceCircles?: Circles;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  titleRightContent?: ReactNode;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
-  const { className, chatItem, common, commonMember } = props;
+  const {
+    className,
+    chatItem,
+    commonId,
+    governanceCircles,
+    commonMember,
+    titleRightContent,
+  } = props;
   const user = useSelector(selectUser());
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
@@ -43,24 +52,26 @@ const DesktopChat: FC<ChatProps> = (props) => {
         >
           {chatItem.discussion.title}
         </p>
+        {titleRightContent && (
+          <div className={styles.titleRightContent}>{titleRightContent}</div>
+        )}
       </div>
       <ChatComponent
+        governanceCircles={governanceCircles}
         commonMember={commonMember}
-        isCommonMemberFetched
-        isAuthorized={Boolean(user)}
         type={
           chatItem.proposal
             ? ChatType.ProposalComments
             : ChatType.DiscussionMessages
         }
-        hasAccess={hasAccessToChat}
-        isHidden={false}
-        common={common}
+        isCommonMemberFetched
+        commonId={commonId}
         discussion={chatItem.discussion}
-        proposal={chatItem.proposal}
         feedItemId={chatItem.feedItemId}
-        titleHeight={73}
+        hasAccess={hasAccessToChat}
         lastSeenItem={chatItem.lastSeenItem}
+        isHidden={false}
+        isAuthorized={Boolean(user)}
       />
     </div>
   );

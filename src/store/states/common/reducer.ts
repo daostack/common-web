@@ -1,9 +1,10 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
+import { FeedLayoutItem } from "@/pages/commonFeed";
 import { CommonFeed } from "@/shared/models";
 import * as actions from "./actions";
-import { CommonState, FeedItems } from "./types";
+import { CommonState, FeedItems, PinnedFeedItems } from "./types";
 
 type Action = ActionType<typeof actions>;
 
@@ -15,8 +16,14 @@ const initialFeedItems: FeedItems = {
   lastDocTimestamp: null,
 };
 
+const initialPinnedFeedItems: PinnedFeedItems = {
+  data: null,
+  loading: false,
+};
+
 const initialState: CommonState = {
   feedItems: { ...initialFeedItems },
+  pinnedFeedItems: { ...initialPinnedFeedItems },
   sharedFeedItemId: null,
   sharedFeedItem: null,
   commonAction: null,
@@ -31,6 +38,7 @@ const initialState: CommonState = {
   },
   commonMember: null,
   governance: null,
+  recentStreamId: "",
 };
 
 const updateFeedItemInList = (
@@ -46,7 +54,7 @@ const updateFeedItemInList = (
 
   const { item: updatedItem, isRemoved = false } = payload;
   const feedItemIndex = state.feedItems.data?.findIndex(
-    (item) => item.id === updatedItem.id,
+    (item) => item.feedItem.id === updatedItem.id,
   );
 
   if (feedItemIndex === -1) {
@@ -59,8 +67,10 @@ const updateFeedItemInList = (
     nextData.splice(feedItemIndex, 1);
   } else {
     nextData[feedItemIndex] = {
-      ...nextData[feedItemIndex],
-      ...updatedItem,
+      feedItem: {
+        ...nextData[feedItemIndex].feedItem,
+        ...updatedItem,
+      },
     };
   }
 
@@ -79,7 +89,7 @@ const updateSharedFeedItem = (
 ): void => {
   const { item: updatedItem, isRemoved = false } = payload;
 
-  if (state.sharedFeedItem?.id !== updatedItem.id) {
+  if (state.sharedFeedItem?.feedItem.id !== updatedItem.id) {
     return;
   }
 
@@ -88,8 +98,10 @@ const updateSharedFeedItem = (
     state.sharedFeedItemId = null;
   } else {
     state.sharedFeedItem = {
-      ...state.sharedFeedItem,
-      ...updatedItem,
+      feedItem: {
+        ...state.sharedFeedItem.feedItem,
+        ...updatedItem,
+      },
     };
   }
 };
@@ -135,12 +147,13 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
-  .handleAction(actions.createDiscussion.success, (state) =>
+  .handleAction(actions.createDiscussion.success, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.discussionCreation = {
         loading: false,
         data: null,
       };
+      nextState.recentStreamId = payload.id;
     }),
   )
   .handleAction(actions.createDiscussion.failure, (state) =>
@@ -169,12 +182,13 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       actions.createSurveyProposal.success,
       actions.createFundingProposal.success,
     ],
-    (state) =>
+    (state, { payload }) =>
       produce(state, (nextState) => {
         nextState.proposalCreation = {
           loading: false,
           data: null,
         };
+        nextState.recentStreamId = payload.id;
       }),
   )
   .handleAction(
@@ -202,7 +216,9 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       const payloadData = nextState.sharedFeedItemId
         ? payload.data &&
-          payload.data.filter((item) => item.id !== nextState.sharedFeedItemId)
+          payload.data.filter(
+            (item) => item.feedItem.id !== nextState.sharedFeedItemId,
+          )
         : payload.data;
 
       nextState.feedItems = {
@@ -223,6 +239,30 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
+  .handleAction(actions.getPinnedFeedItems.request, (state) =>
+    produce(state, (nextState) => {
+      nextState.pinnedFeedItems = {
+        ...nextState.pinnedFeedItems,
+        loading: true,
+      };
+    }),
+  )
+  .handleAction(actions.getPinnedFeedItems.success, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.pinnedFeedItems = {
+        data: payload.data,
+        loading: false,
+      };
+    }),
+  )
+  .handleAction(actions.getPinnedFeedItems.failure, (state) =>
+    produce(state, (nextState) => {
+      nextState.pinnedFeedItems = {
+        ...nextState.pinnedFeedItems,
+        loading: false,
+      };
+    }),
+  )
   .handleAction(actions.addNewFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
       let firstDocTimestamp = nextState.feedItems.firstDocTimestamp;
@@ -231,7 +271,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
         (acc, { commonFeedItem, statuses: { isRemoved } }) => {
           const nextData = [...acc];
           const itemIndex = nextData.findIndex(
-            (item) => item.id === commonFeedItem.id,
+            (item) => item.feedItem.id === commonFeedItem.id,
           );
 
           if (isRemoved) {
@@ -242,13 +282,16 @@ export const reducer = createReducer<CommonState, Action>(initialState)
             return nextData;
           }
 
+          const finalItem: FeedLayoutItem = {
+            feedItem: commonFeedItem,
+          };
           firstDocTimestamp = commonFeedItem.updatedAt;
 
           if (itemIndex < 0) {
-            return [commonFeedItem, ...nextData];
+            return [finalItem, ...nextData];
           }
 
-          nextData[itemIndex] = commonFeedItem;
+          nextData[itemIndex] = finalItem;
 
           return nextData;
         },
@@ -285,6 +328,10 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.setSharedFeedItem, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.sharedFeedItem = payload;
+      nextState.sharedFeedItem = payload
+        ? {
+            feedItem: payload,
+          }
+        : null;
     }),
   );
