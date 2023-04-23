@@ -141,12 +141,17 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [topFeedItems, feedItems]);
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
-    if (recentStreamId || sharedFeedItemId) {
+    if (recentStreamId) {
       const foundItem = allFeedItems.find(
-        (item) => item.feedItem.data.id === recentStreamId ?? sharedFeedItemId,
+        (item) => item.feedItem.data.id === recentStreamId,
       );
       return foundItem?.feedItem.id;
     }
+
+    if (sharedFeedItemId) {
+      return sharedFeedItemId;
+    }
+
     if (isTabletView || chatItem?.feedItemId) {
       return;
     }
