@@ -4,7 +4,10 @@ import {
   MarkCommonFeedItemAsSeenPayload,
   UnsubscribeFunction,
 } from "@/shared/interfaces";
-import { GetFeedItemsResponse } from "@/shared/interfaces/api";
+import {
+  GetFeedItemsResponse,
+  GetPinnedFeedItemsResponse,
+} from "@/shared/interfaces/api";
 import {
   Collection,
   CommonFeed,
@@ -110,6 +113,26 @@ class CommonFeedService {
       firstDocTimestamp,
       lastDocTimestamp,
       hasMore: data.hasMore,
+    };
+  };
+
+  public getCommonPinnedFeedItems = async (
+    commonId: string,
+  ): Promise<{
+    data: CommonFeed[];
+  }> => {
+    const endpoint = ApiEndpoint.GetCommonPinnedFeedItems.replace(
+      ":commonId",
+      commonId,
+    );
+
+    const { data } = await Api.get<GetPinnedFeedItemsResponse>(`${endpoint}`);
+    const commonPinnedFeedItems = data.data.pinnedFeedItems.map((item) =>
+      convertObjectDatesToFirestoreTimestamps<CommonFeed>(item),
+    );
+
+    return {
+      data: commonPinnedFeedItems,
     };
   };
 

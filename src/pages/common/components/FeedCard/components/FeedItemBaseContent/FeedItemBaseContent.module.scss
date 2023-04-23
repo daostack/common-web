@@ -103,6 +103,10 @@
   }
 }
 
+.titleActive {
+  color: $white;
+}
+
 .lastMessage {
   color: $c-neutrals-300;
   font-size: $mobile-title;
@@ -114,6 +118,10 @@
   @include tablet {
     max-width: 16.1875rem;
   }
+}
+
+.lastMessageActive {
+  color: $c-neutrals-200;
 }
 
 .messageCount {
@@ -128,6 +136,10 @@
   font-weight: 300;
   text-align: right;
   word-break: break-word;
+}
+
+.lastActivityActive {
+  color: $white;
 }
 
 .bottomContentRight {

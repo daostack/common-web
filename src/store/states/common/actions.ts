@@ -18,7 +18,7 @@ import {
   Proposal,
 } from "@/shared/models";
 import { CommonActionType } from "./constants";
-import { FeedItems } from "./types";
+import { FeedItems, PinnedFeedItems } from "./types";
 
 export const resetCommon = createStandardAction(
   CommonActionType.RESET_COMMON,
@@ -100,6 +100,20 @@ export const getFeedItems = createAsyncAction(
     limit?: number;
   },
   Omit<FeedItems, "loading">,
+  Error,
+  string
+>();
+
+export const getPinnedFeedItems = createAsyncAction(
+  CommonActionType.GET_PINNED_FEED_ITEMS,
+  CommonActionType.GET_PINNED_FEED_ITEMS_SUCCESS,
+  CommonActionType.GET_PINNED_FEED_ITEMS_FAILURE,
+  CommonActionType.GET_PINNED_FEED_ITEMS_CANCEL,
+)<
+  {
+    commonId: string;
+  },
+  Omit<PinnedFeedItems, "loading">,
   Error,
   string
 >();
