@@ -72,7 +72,7 @@ interface FeedLayoutProps {
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   getLastMessage: (options: GetLastMessageOptions) => string;
-  sharedFeedItemId: string | null;
+  sharedFeedItemId?: string | null;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
