@@ -158,7 +158,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     );
 
     return foundItem?.feedItem.id;
-  }, [allFeedItems, isTabletView, chatItem?.feedItemId, recentStreamId]);
+  }, [
+    allFeedItems,
+    isTabletView,
+    chatItem?.feedItemId,
+    recentStreamId,
+    sharedFeedItemId,
+  ]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
   const userCircleIds = useMemo(
