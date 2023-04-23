@@ -10,6 +10,7 @@ import {
 } from "@/shared/hooks/useCases";
 import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
 import { checkIsCountdownState, getUserName } from "@/shared/utils";
+import { selectRecentStreamId } from "@/store/states";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
@@ -61,6 +62,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     getLastMessage,
   } = props;
   const user = useSelector(selectUser());
+  const recentStreamId = useSelector(selectRecentStreamId);
   const userId = user?.uid;
   const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
   const {
@@ -180,7 +182,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       isDiscussionFetched &&
       isProposalFetched &&
       isFeedItemUserMetadataFetched &&
-      item.id === feedItemIdForAutoChatOpen
+      (item.id === feedItemIdForAutoChatOpen || recentStreamId)
     ) {
       handleOpenChat();
     }
