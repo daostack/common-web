@@ -3,6 +3,7 @@ import { CommonAction } from "@/shared/constants";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { commonActions } from "@/store/states";
+import { CommonFeedService } from "../../../../../services";
 import { DiscussionCardMenuItem } from "../constants";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
@@ -15,10 +16,18 @@ interface Actions {
 
 export const useMenuItems = (options: Options, actions: Actions): Item[] => {
   const dispatch = useDispatch();
-  const { discussion, governanceCircles } = options;
+  const { discussion, governanceCircles, common, feedItem } = options;
   const { report, share } = actions;
   const allowedMenuItems = getAllowedItems(options);
   const items: Item[] = [
+    {
+      id: DiscussionCardMenuItem.Pin,
+      text: "Pin",
+      onClick: async () => {
+        if (!common || !feedItem) return;
+        await CommonFeedService.pinItem(common.id, feedItem.id);
+      },
+    },
     {
       id: DiscussionCardMenuItem.Share,
       text: "Share",

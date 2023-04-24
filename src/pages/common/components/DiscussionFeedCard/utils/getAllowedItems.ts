@@ -4,6 +4,7 @@ import {
   CommonMember,
   Discussion,
   Proposal,
+  Common,
   ProposalState,
 } from "@/shared/models";
 import { GovernanceActions } from "../../../../../shared/constants";
@@ -11,6 +12,7 @@ import { hasPermission } from "../../../../../shared/utils";
 import { DiscussionCardMenuItem } from "../constants";
 
 export interface GetAllowedItemsOptions {
+  common?: Common;
   discussion?: Discussion | null;
   governanceCircles?: Circles;
   feedItem?: CommonFeed;
@@ -26,12 +28,30 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   [DiscussionCardMenuItem.Report]: () => false,
   [DiscussionCardMenuItem.Edit]: () => false,
   [DiscussionCardMenuItem.Remove]: () => false,
+  [DiscussionCardMenuItem.Pin]: (options) => {
+    const { feedItem, commonMember } = options;
+    const pinnedFeedItems = options.common?.pinnedFeedItems || [];
+    const isDiscussionPinned = pinnedFeedItems.some(
+      (pinnedFeedItem) => pinnedFeedItem.feedObjectId === feedItem?.id,
+    );
+    const hasReachedPinLimit = pinnedFeedItems.length >= 3;
+    if (isDiscussionPinned || hasReachedPinLimit || !commonMember) return false;
+    const isAllowed = hasPermission({
+      commonMember,
+      governance: {
+        circles: options.governanceCircles || {},
+      },
+      key: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
+    });
+    return isAllowed;
+  },
 };
 
 export const getAllowedItems = (
   options: GetAllowedItemsOptions,
 ): DiscussionCardMenuItem[] => {
   const orderedItems = [
+    DiscussionCardMenuItem.Pin,
     DiscussionCardMenuItem.Share,
     DiscussionCardMenuItem.Report,
     DiscussionCardMenuItem.Edit,
