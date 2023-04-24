@@ -242,6 +242,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         onFeedItemUpdate={handleFeedItemUpdate}
         getLastMessage={getLastMessage}
+        sharedFeedItemId={sharedFeedItemId}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>
