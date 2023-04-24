@@ -10,6 +10,7 @@ import {
   TimeAgo,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
+import { CustomText } from "@/shared/ui-kit/TextEditor/types";
 import { FeedItemBaseContentProps } from "../../../FeedItem";
 import { FeedCardTags } from "../FeedCardTags";
 import styles from "./FeedItemBaseContent.module.scss";
@@ -88,7 +89,9 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       );
 
       const parsedContent = parseStringToTextEditorValue(lastMessageContent);
-      parsedContent?.[0]?.children.unshift({ text: `${lastMessageUser}: ` });
+      (parsedContent?.[0] as { children: CustomText[] })?.children.unshift({
+        text: `${lastMessageUser}: `,
+      });
 
       return parsedContent;
     } catch (err) {
