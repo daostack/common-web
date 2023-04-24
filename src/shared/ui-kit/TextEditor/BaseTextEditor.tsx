@@ -8,20 +8,17 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import classNames from "classnames";
 import { createEditor, Transforms, Range, Editor as EditorSlate } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
 import { MentionDropdown } from "@/pages/common/components/ChatComponent/components/MentionDropdown";
-import { UserAvatar } from "@/shared/components";
-import { ErrorText } from "@/shared/components/Form/ErrorText";
 import { User } from "@/shared/models";
-import { Portal } from "@/shared/ui-kit";
-import { Editor, Header, Toolbar } from "./components";
-import { ElementType, TextEditorSize } from "./constants";
+import { Editor } from "./components";
+import { TextEditorSize } from "./constants";
 import { withInlines, withMentions } from "./hofs";
-import { TextEditorValue, TextEditorStyles, MentionElement } from "./types";
-import styles from "./TextEditor.module.scss";
+import { TextEditorValue } from "./types";
+import { parseStringToTextEditorValue } from "./utils";
+import { insertMention } from "./utils/insertMention";
 
 export interface TextEditorProps {
   className?: string;
@@ -37,6 +34,8 @@ export interface TextEditorProps {
   disabled?: boolean;
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
   users?: User[];
+  shouldReinitializeEditor: boolean;
+  onClearFinished: () => void;
 }
 
 const BaseTextEditor: FC<TextEditorProps> = (props) => {
@@ -53,6 +52,8 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     placeholder,
     disabled = false,
     users,
+    shouldReinitializeEditor = false,
+    onClearFinished,
   } = props;
   const editor = useMemo(
     () => withMentions(withInlines(withHistory(withReact(createEditor())))),
@@ -60,8 +61,27 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   );
 
   const [target, setTarget] = useState<Range | null>();
-  const [index, setIndex] = useState(0);
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    if (shouldReinitializeEditor) {
+      Transforms.delete(editor, {
+        at: {
+          anchor: EditorSlate.start(editor, []),
+          focus: EditorSlate.end(editor, []),
+        },
+      });
+
+      // Removes empty node
+      Transforms.removeNodes(editor, {
+        at: [0],
+      });
+
+      // Insert array of children nodes
+      Transforms.insertNodes(editor, parseStringToTextEditorValue());
+      onClearFinished();
+    }
+  }, [shouldReinitializeEditor, onClearFinished]);
 
   useEffect(() => {
     if (!editorRef) {
@@ -83,7 +103,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     )
     .slice(0, 10);
 
-  console.log("---search", search, chars, target, value);
   return (
     <Slate
       editor={editor}
@@ -111,7 +130,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           if (beforeMatch && afterMatch) {
             setTarget(beforeRange);
             setSearch(beforeMatch[1]);
-            setIndex(0);
             return;
           }
         }
@@ -142,16 +160,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       )}
     </Slate>
   );
-};
-
-const insertMention = (editor, character) => {
-  const mention: MentionElement = {
-    type: ElementType.Mention,
-    character: character?.displayName,
-    children: [{ text: "" }],
-  };
-  Transforms.insertNodes(editor, mention);
-  Transforms.move(editor);
 };
 
 export default BaseTextEditor;

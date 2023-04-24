@@ -28,6 +28,7 @@ interface BaseElement<Child = BaseElementChild> {
 
 export interface ParagraphElement extends BaseElement {
   type: ElementType.Paragraph;
+  text?: string;
 }
 
 export interface HeadingElement extends BaseElement {
@@ -53,7 +54,8 @@ export interface ListItemElement extends BaseElement {
 
 export interface MentionElement extends BaseElement {
   type: ElementType.Mention;
-  character: string;
+  displayName: string;
+  userId: string;
   children: CustomText[];
 }
 

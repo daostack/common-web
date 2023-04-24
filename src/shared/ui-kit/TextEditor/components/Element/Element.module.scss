@@ -1,3 +1,5 @@
+@import "../../../../../constants";
+
 .element {
   --element-indent: 0rem;
   --element-calculated-indent: calc(
@@ -30,4 +32,11 @@
 
 .list {
   --element-indent: 1.5rem;
+}
+
+.mention {
+  vertical-align: baseline;
+  display: inline-block;
+  font-size: inherit;
+  color: $c-pink-mention;
 }

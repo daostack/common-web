@@ -38,10 +38,10 @@ import {
 } from "@/shared/models";
 import {
   BaseTextEditor,
-  TextEditor,
   TextEditorValue,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
+import { getMentionTags } from "@/shared/ui-kit/TextEditor/utils";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
   cacheActions,
@@ -110,11 +110,17 @@ export default function ChatComponent({
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
   const commonId = common?.id;
 
-  const {
-    fetched: areCommonMembersFetched,
-    data: commonMembers,
-    fetchCommonMembers,
-  } = useCommonMembers();
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+
+  const [message, setMessage] = useState<TextEditorValue>(
+    parseStringToTextEditorValue(),
+  );
+  const [shouldReinitializeEditor, setShouldReinitializeEditor] =
+    useState(false);
+  const onClear = () => {
+    setShouldReinitializeEditor(true);
+    setMessage(parseStringToTextEditorValue());
+  };
 
   const users = useMemo(() => {
     return commonMembers
@@ -161,8 +167,6 @@ export default function ChatComponent({
       fetchDiscussionMessages(discussionId);
     }
   }, [discussionId]);
-
-  const [message, setMessage] = useState("");
 
   const [newMessages, setMessages] = useState<
     CreateDiscussionMessageDtoWithFilesPreview[]
@@ -239,10 +243,13 @@ export default function ChatComponent({
   };
 
   const sendMessage = useCallback(
-    async (message: string) => {
+    async (message: TextEditorValue) => {
       if (user && user.uid && common?.id) {
         const pendingMessageId = uuidv4();
 
+        const mentionTags = getMentionTags(message).map((tag) => ({
+          value: tag.userId,
+        }));
         const imagesPreview = FileService.getImageTypeFromFiles(
           currentFilesPreview ?? [],
         );
@@ -252,7 +259,7 @@ export default function ChatComponent({
 
         const payload: CreateDiscussionMessageDtoWithFilesPreview = {
           pendingMessageId,
-          text: message,
+          text: JSON.stringify(message),
           ownerId: user.uid,
           commonId: common?.id,
           discussionId,
@@ -261,6 +268,7 @@ export default function ChatComponent({
           }),
           filesPreview,
           imagesPreview,
+          tags: mentionTags,
         };
         const firebaseDate = Timestamp.fromDate(new Date());
 
@@ -270,7 +278,7 @@ export default function ChatComponent({
           ownerAvatar: (user.photo || user.photoURL) as string,
           ownerId: userId as string,
           ownerName: getUserName(user),
-          text: message,
+          text: JSON.stringify(message),
           commonId: common?.id,
           discussionId,
           createdAt: firebaseDate,
@@ -288,6 +296,7 @@ export default function ChatComponent({
           files: filesPreview?.map((file) =>
             FileService.convertFileInfoToCommonLink(file),
           ),
+          tags: mentionTags,
         };
 
         setMessages((prev) => [...prev, payload]);
@@ -312,10 +321,14 @@ export default function ChatComponent({
     ],
   );
 
+  const onClearFinished = () => {
+    setShouldReinitializeEditor(false);
+  };
+
   const sendChatMessage = (): void => {
     if (canSendMessage) {
-      sendMessage && sendMessage(message.trim());
-      setMessage("");
+      sendMessage && sendMessage(message);
+      onClear();
     }
   };
 
@@ -333,8 +346,6 @@ export default function ChatComponent({
       sendChatMessage();
       return;
     }
-
-    setMessage((currentMessage) => `${currentMessage}\r\n`);
   };
 
   useEffect(() => {
@@ -351,10 +362,6 @@ export default function ChatComponent({
       });
     }
   }, [lastNonUserMessage?.id]);
-
-  const [val, setVal] = useState<TextEditorValue>(
-    parseStringToTextEditorValue(),
-  );
 
   return (
     <div className={styles.chatWrapper}>
@@ -377,6 +384,7 @@ export default function ChatComponent({
             dateList={dateList}
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
+            commonMembers={commonMembers}
           />
         ) : (
           <div className={styles.loaderContainer}>
@@ -410,20 +418,15 @@ export default function ChatComponent({
                   style={{ display: "none" }}
                   multiple
                 />
-                {/* <textarea
-                  className={styles.messageInput}
-                  placeholder="What do you think?"
-                  value={message}
-                  onKeyDown={onEnterKeyDown}
-                  onChange={(e) => setMessage(e.target.value)}
-                /> */}
                 <BaseTextEditor
                   className={styles.messageInput}
-                  value={val}
-                  onChange={setVal}
+                  value={message}
+                  onChange={setMessage}
                   placeholder="What do you think?"
                   onKeyDown={onEnterKeyDown}
                   users={users}
+                  shouldReinitializeEditor={shouldReinitializeEditor}
+                  onClearFinished={onClearFinished}
                 />
                 <button
                   className={styles.sendIcon}

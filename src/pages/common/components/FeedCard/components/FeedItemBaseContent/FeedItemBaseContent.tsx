@@ -1,9 +1,15 @@
-import React, { FC, MouseEventHandler, useRef, useState } from "react";
+import React, { FC, MouseEventHandler, useRef, useState, useMemo } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { ButtonIcon } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { ContextMenu, ContextMenuRef, TimeAgo } from "@/shared/ui-kit";
+import {
+  ContextMenu,
+  ContextMenuRef,
+  TextEditor,
+  TimeAgo,
+  parseStringToTextEditorValue,
+} from "@/shared/ui-kit";
 import { FeedItemBaseContentProps } from "../../../FeedItem";
 import styles from "./FeedItemBaseContent.module.scss";
 
@@ -71,6 +77,21 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     }
   };
 
+  const lastMessageValue = useMemo(() => {
+    try {
+      const [lastMessageUser, lastMessageContent] = (lastMessage ?? "").split(
+        ": ",
+      );
+
+      const parsedContent = parseStringToTextEditorValue(lastMessageContent);
+      parsedContent?.[0]?.children.unshift({ text: `${lastMessageUser}: ` });
+
+      return parsedContent;
+    } catch (err) {
+      return parseStringToTextEditorValue();
+    }
+  }, [lastMessage]);
+
   if (!title && !lastActivity) {
     return null;
   }
@@ -104,9 +125,14 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
         </div>
         <div className={styles.bottomContent}>
           {lastMessage ? (
-            <p className={classNames(styles.text, styles.lastMessage)}>
-              {lastMessage}
-            </p>
+            <TextEditor
+              className={styles.lastMessageContainer}
+              editorClassName={classNames(styles.text, styles.lastMessage, {
+                [styles.lastMessageActive]: isActive,
+              })}
+              value={lastMessageValue}
+              readOnly
+            />
           ) : (
             <div />
           )}

@@ -1,5 +1,11 @@
-import React, { MouseEventHandler, useCallback, useState } from "react";
+import React, {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import classNames from "classnames";
+import { UserService } from "@/services";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import {
   DynamicLinkType,
@@ -9,7 +15,14 @@ import {
 } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
-import { DiscussionMessage, User } from "@/shared/models";
+import {
+  CommonMemberWithUserInfo,
+  DiscussionMessage,
+  User,
+} from "@/shared/models";
+import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
+import { ParagraphElement } from "@/shared/ui-kit/TextEditor/types";
+import { parseTextEditorValueToString } from "@/shared/ui-kit/TextEditor/utils";
 import { isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
 import { getModerationText } from "@/shared/utils/moderation";
@@ -25,6 +38,7 @@ interface ChatMessageProps {
   user: User | null;
   scrollToRepliedMessage: (messageId: string) => void;
   hasPermissionToHide: boolean;
+  commonMembers: CommonMemberWithUserInfo[];
 }
 
 const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
@@ -45,6 +59,7 @@ export default function ChatMessage({
   user,
   scrollToRepliedMessage,
   hasPermissionToHide,
+  commonMembers,
 }: ChatMessageProps) {
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,6 +71,45 @@ export default function ChatMessage({
 
   const isNotCurrentUserMessage = user?.uid !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
+
+  const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const parsedText = await Promise.all(
+        parseTextEditorValueToString(discussionMessage.text)?.map(
+          async (tag) => {
+            if (tag.type === ElementType.Mention) {
+              const commonMember = commonMembers.find(
+                ({ user }) => user.uid === tag.userId,
+              );
+
+              if (!commonMember) {
+                const fetchedUser = await UserService.getUserById(tag.userId);
+                return fetchedUser ? (
+                  <span
+                    className={styles.mentionText}
+                  >{`@${fetchedUser.displayName} `}</span>
+                ) : (
+                  ""
+                );
+              }
+
+              return (
+                <span
+                  className={styles.mentionText}
+                >{`@${commonMember.user.displayName} `}</span>
+              );
+            }
+
+            return (tag as ParagraphElement)?.text ?? "";
+          },
+        ),
+      );
+
+      setMessageText(parsedText);
+    })();
+  }, [commonMembers, discussionMessage.text]);
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuOpen(isOpen);
@@ -118,6 +172,8 @@ export default function ChatMessage({
     isNotCurrentUserMessage,
   ]);
 
+  parseTextEditorValueToString(discussionMessage.text);
+
   return (
     <li
       id={discussionMessage.id}
@@ -160,7 +216,7 @@ export default function ChatMessage({
             <ReplyMessage />
 
             <div className={styles.messageContent}>
-              <Linkify>{discussionMessage.text}</Linkify>
+              <Linkify>{messageText.map((text) => text)}</Linkify>
               <div className={styles.timeWrapperContainer}>
                 {isEdited && (
                   <div
