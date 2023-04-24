@@ -13,6 +13,16 @@
   color: $c-neutrals-300;
 }
 
+.iconActive {
+  color: $white;
+}
+
+.changeLabel {
+  color: $c-pink-primary;
+  font-size: $mobile-title;
+  font-family: PoppinsSans, sans-serif;
+}
+
 .menuItems {
   width: 15.625rem;
   max-height: 23rem;

@@ -61,7 +61,7 @@
 }
 
 .messageTextCurrentUser {
-  background-color: $c-neutrals-200;
+  background-color: $c-pink-active-feed-cards;
 }
 
 .messageName {
@@ -82,6 +82,10 @@
   margin-left: 1rem;
 }
 
+.messageContentCurrentUser {
+  color: $white;
+}
+
 .mentionText {
   color: $c-pink-mention;
 }
@@ -94,10 +98,14 @@
 }
 
 .timeWrapper {
-  font-size: $xxxsmall;
-  font-weight: bold;
+  font-size: $xxsmall-3;
+  font-weight: 400;
   color: $light-gray-2;
   text-align: left;
+}
+
+.timeWrapperCurrentUser {
+  color: $c-neutrals-100;
 }
 
 .timeWrapperEdited {
@@ -121,8 +129,8 @@
 }
 
 .replyMessageContainerCurrentUser {
-  border-bottom: 1px solid $c-neutrals-300;
-  border-top: 1px solid $c-neutrals-300;
+  border-bottom: 1px solid $c-neutrals-100;
+  border-top: 1px solid $c-neutrals-100;
 }
 
 .replyMessageName {
@@ -132,6 +140,10 @@
   margin-top: 0.4rem;
 }
 
+.replyMessageNameCurrentUser {
+  color: $c-neutrals-100;
+}
+
 .replyMessageContent {
   color: $c-neutrals-300;
   font-size: $xxsmall;
@@ -139,6 +151,10 @@
   line-height: 0.75rem;
   max-height: 3rem;
   overflow: hidden;
+}
+
+.replyMessageContentCurrentUser {
+  color: $c-neutrals-100;
 }
 
 .dropdownMenu {

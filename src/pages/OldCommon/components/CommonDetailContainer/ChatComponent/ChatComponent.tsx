@@ -26,7 +26,10 @@ import CloseIcon from "@/shared/icons/close.icon";
 import { Common, CommonMember, DiscussionMessage } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate } from "@/shared/utils";
-import { chatActions, selectCurrentDiscussionMessageReply } from "@/store/states";
+import {
+  chatActions,
+  selectCurrentDiscussionMessageReply,
+} from "@/store/states";
 import ChatMessage from "./ChatMessage";
 import "./index.scss";
 

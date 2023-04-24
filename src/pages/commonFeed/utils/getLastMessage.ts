@@ -1,19 +1,5 @@
-import {
-  CommonFeed,
-  CommonFeedType,
-  Discussion,
-  PredefinedTypes,
-} from "@/shared/models";
-
-interface GetLastMessageOptions {
-  commonFeedType: CommonFeedType;
-  lastMessage?: CommonFeed["data"]["lastMessage"];
-  discussion?: Discussion | null;
-  currentUserId?: string;
-  feedItemCreatorName?: string;
-  commonName: string;
-  isProject: boolean;
-}
+import { GetLastMessageOptions } from "@/pages/common";
+import { CommonFeedType, PredefinedTypes } from "@/shared/models";
 
 export const getLastMessage = (options: GetLastMessageOptions): string => {
   const {
@@ -35,7 +21,7 @@ export const getLastMessage = (options: GetLastMessageOptions): string => {
 
   if (discussion?.predefinedType === PredefinedTypes.General) {
     return `${creatorName} created the ${
-      isProject ? "project" : "common"
+      isProject ? "space" : "common"
     } ${commonName}`;
   }
   if (

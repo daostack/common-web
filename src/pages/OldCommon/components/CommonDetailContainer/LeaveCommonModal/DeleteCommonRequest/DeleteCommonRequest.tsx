@@ -9,15 +9,14 @@ interface DeleteCommonRequestProps {
 
 const DeleteCommonRequest: FC<DeleteCommonRequestProps> = (props) => {
   const { onOkClick, isSubCommon } = props;
-  const commonWord = isSubCommon ? "project" : "common";
+  const commonWord = isSubCommon ? "space" : "common";
 
   return (
     <div className="delete-common-request">
       <p className="delete-common-request__text">
         It turns out that you are the only member in this {commonWord}. A{" "}
-        {commonWord}
-        cannot be left empty, so you will have to close it. Please use the
-        "Delete {commonWord.toUpperCase()}" action.
+        {commonWord} cannot be left empty, so you will have to close it. Please
+        use the "Delete {commonWord.toUpperCase()}" action.
       </p>
       <Button
         className="delete-common-request__button"

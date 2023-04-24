@@ -152,7 +152,9 @@ export default function ChatMessage({
         })}
       >
         <div
-          className={classNames(styles.messageName, styles.replyMessageName)}
+          className={classNames(styles.messageName, styles.replyMessageName, {
+            [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
+          })}
         >
           {discussionMessage.parentMessage?.ownerName}
         </div>
@@ -160,6 +162,9 @@ export default function ChatMessage({
           className={classNames(
             styles.messageContent,
             styles.replyMessageContent,
+            {
+              [styles.replyMessageContentCurrentUser]: !isNotCurrentUserMessage,
+            },
           )}
         >
           <Linkify>{discussionMessage.parentMessage.text}</Linkify>
@@ -215,7 +220,10 @@ export default function ChatMessage({
             )}
             <ReplyMessage />
 
-            <div className={styles.messageContent}>
+            <div className={styles.messageContent, {
+                [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
+              }}
+            >
               <Linkify>{messageText.map((text) => text)}</Linkify>
               <div className={styles.timeWrapperContainer}>
                 {isEdited && (
@@ -223,6 +231,10 @@ export default function ChatMessage({
                     className={classNames(
                       styles.timeWrapper,
                       styles.editedTimeWrapper,
+                      {
+                        [styles.timeWrapperCurrentUser]:
+                          !isNotCurrentUserMessage,
+                      },
                     )}
                   >
                     (Edited{" "}
@@ -240,6 +252,7 @@ export default function ChatMessage({
                     styles.creationTimeWrapper,
                     {
                       [styles.timeWrapperEdited]: isEdited,
+                      [styles.timeWrapperCurrentUser]: !isNotCurrentUserMessage,
                     },
                   )}
                 >

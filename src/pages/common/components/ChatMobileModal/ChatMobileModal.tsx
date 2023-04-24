@@ -4,7 +4,6 @@ import { Image, Modal, ButtonIcon } from "@/shared/components";
 import { Colors } from "@/shared/constants";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import CloseIcon from "@/shared/icons/close.icon";
-import { Common } from "@/shared/models";
 import { emptyFunction, isRTL } from "@/shared/utils";
 import styles from "./ChatMobileModal.module.scss";
 
@@ -20,7 +19,8 @@ interface ChatMobileModalProps {
   hasCloseIcon?: boolean;
   hasBackButton?: boolean;
   onClose: () => void;
-  common: Common;
+  commonName: string;
+  commonImage: string;
   header?: ReactNode;
   styles?: Styles;
 }
@@ -33,7 +33,8 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
     hasCloseIcon,
     hasBackButton,
     onClose,
-    common,
+    commonName,
+    commonImage,
     children,
     title,
     header,
@@ -65,12 +66,12 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
               )}
               <Image
                 className={styles.image}
-                src={common.image}
-                alt={`${common.name}'s image`}
+                src={commonImage}
+                alt={`${commonName}'s image`}
                 placeholderElement={null}
                 aria-hidden
               />
-              <p className={styles.commonName}>{common.name}</p>
+              <p className={styles.commonName}>{commonName}</p>
             </div>
             {hasCloseIcon && (
               <CloseIcon

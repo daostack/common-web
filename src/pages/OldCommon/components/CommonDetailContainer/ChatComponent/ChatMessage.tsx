@@ -41,7 +41,9 @@ export default function ChatMessage({
 }: ChatMessageProps) {
   const [isEditMode, setEditMode] = useState(false);
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
-  const editedAtDate = new Date((discussionMessage?.editedAt?.seconds ?? 0) * 1000);
+  const editedAtDate = new Date(
+    (discussionMessage?.editedAt?.seconds ?? 0) * 1000,
+  );
 
   const isEdited = editedAtDate > createdAtDate;
 

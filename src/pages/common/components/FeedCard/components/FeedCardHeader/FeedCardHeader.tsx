@@ -18,7 +18,6 @@ export interface FeedCardHeaderProps {
   isMobileVersion?: boolean;
   commonId: string;
   userId?: string;
-  governanceId?: string;
 }
 
 export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
@@ -32,7 +31,6 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
     isMobileVersion = false,
     commonId,
     userId,
-    governanceId,
   } = props;
   const {
     isShowing: isShowingUserProfile,
@@ -57,7 +55,6 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
         </div>
         {isShowingUserProfile && (
           <FeedUserPopup
-            governanceId={governanceId}
             commonId={commonId}
             userId={userId}
             avatar={avatar}

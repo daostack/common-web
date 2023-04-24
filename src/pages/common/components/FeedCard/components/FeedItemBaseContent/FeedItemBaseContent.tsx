@@ -11,6 +11,7 @@ import {
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
 import { FeedItemBaseContentProps } from "../../../FeedItem";
+import { FeedCardTags } from "../FeedCardTags";
 import styles from "./FeedItemBaseContent.module.scss";
 
 export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
@@ -25,7 +26,10 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     lastMessage,
     onClick,
     onExpand,
+    type,
     menuItems,
+    seenOnce,
+    ownerId,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -118,8 +122,18 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       )}
       <div className={styles.content}>
         <div className={styles.topContent}>
-          <p className={classNames(styles.text, styles.title)}>{title}</p>
-          <p className={classNames(styles.text, styles.lastActivity)}>
+          <p
+            className={classNames(styles.text, styles.title, {
+              [styles.titleActive]: isActive,
+            })}
+          >
+            {title || "Loading..."}
+          </p>
+          <p
+            className={classNames(styles.text, styles.lastActivity, {
+              [styles.lastActivityActive]: isActive,
+            })}
+          >
             <TimeAgo milliseconds={lastActivity} />
           </p>
         </div>
@@ -136,15 +150,15 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           ) : (
             <div />
           )}
-          {Boolean(unreadMessages) && (
-            <div
-              className={classNames(styles.unreadMessages, {
-                [styles.unreadMessagesLong]: Number(unreadMessages) > 9,
-              })}
-            >
-              {unreadMessages}
-            </div>
-          )}
+          <div className={classNames(styles.bottomContentRight)}>
+            <FeedCardTags
+              unreadMessages={unreadMessages}
+              type={type}
+              seenOnce={seenOnce}
+              ownerId={ownerId}
+              isActive={isActive}
+            />
+          </div>
         </div>
       </div>
       {menuItems && menuItems.length > 0 && (
