@@ -11,6 +11,7 @@ interface FeedItemProps {
   commonName: string;
   commonImage: string;
   isProject?: boolean;
+  isPinned?: boolean;
   item: CommonFeed;
   governanceCircles?: Circles;
   userCircleIds: string[];
@@ -28,6 +29,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonName,
     commonImage,
     isProject = false,
+    isPinned = false,
     item,
     governanceCircles,
     userCircleIds,
@@ -60,6 +62,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isActive,
     isExpanded,
     isProject,
+    isPinned,
     governanceCircles,
     isPreviewMode,
     getLastMessage,

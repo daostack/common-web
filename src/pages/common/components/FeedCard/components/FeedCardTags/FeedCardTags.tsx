@@ -11,10 +11,11 @@ interface FeedCardTagsProps {
   seenOnce?: boolean;
   ownerId?: string;
   isActive: boolean;
+  isPinned?: boolean;
 }
 
 export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
-  const { unreadMessages, type, seenOnce, ownerId, isActive } = props;
+  const { unreadMessages, type, seenOnce, ownerId, isActive, isPinned } = props;
   const user = useSelector(selectUser());
   const isOwner = ownerId === user?.uid;
 
@@ -48,6 +49,9 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
           {unreadMessages}
         </div>
       )}
+      {seenOnce && !unreadMessages && isPinned ? (
+        <img src="/icons/pinned-item.svg" alt="pin icon" />
+      ) : null}
     </>
   );
 };

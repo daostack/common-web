@@ -24,6 +24,7 @@ interface FeedCardProps {
   image?: string;
   imageAlt?: string;
   isProject?: boolean;
+  isPinned?: boolean;
   isLoading?: boolean;
   type?: CommonFeedType;
   menuItems?: ContextMenuItem[];
@@ -52,6 +53,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     image,
     imageAlt,
     isProject,
+    isPinned,
     isLoading = false,
     type,
     menuItems,
@@ -118,6 +120,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           image,
           imageAlt,
           isProject,
+          isPinned,
           type,
           seenOnce,
           ownerId,
