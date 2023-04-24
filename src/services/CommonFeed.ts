@@ -143,6 +143,13 @@ class CommonFeedService {
     });
   };
 
+  public unpinItem = async (commonId: string, feedObjectId: string) => {
+    return Api.post(ApiEndpoint.CreateAction, {
+      type: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
+      args: { pinOrUnpin: "UNPIN_FEED_ITEM", commonId, feedObjectId },
+    });
+  };
+
   public subscribeToNewUpdatedCommonFeedItems = (
     commonId: string,
     endBefore: Timestamp,

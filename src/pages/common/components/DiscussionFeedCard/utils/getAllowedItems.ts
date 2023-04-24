@@ -5,7 +5,7 @@ import {
   Discussion,
   Proposal,
   Common,
-  ProposalState,
+  PredefinedTypes,
 } from "@/shared/models";
 import { GovernanceActions } from "../../../../../shared/constants";
 import { hasPermission } from "../../../../../shared/utils";
@@ -45,6 +45,27 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
     });
     return isAllowed;
   },
+  [DiscussionCardMenuItem.Unpin]: (options) => {
+    const { feedItem, commonMember, discussion } = options;
+    const pinnedFeedItems = options.common?.pinnedFeedItems || [];
+    const isDiscussionPinned = pinnedFeedItems.some(
+      (pinnedFeedItem) => pinnedFeedItem.feedObjectId === feedItem?.id,
+    );
+    if (
+      !isDiscussionPinned ||
+      discussion?.predefinedType === PredefinedTypes.General ||
+      !commonMember
+    )
+      return false;
+    const isAllowed = hasPermission({
+      commonMember,
+      governance: {
+        circles: options.governanceCircles || {},
+      },
+      key: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
+    });
+    return isAllowed;
+  },
 };
 
 export const getAllowedItems = (
@@ -52,6 +73,7 @@ export const getAllowedItems = (
 ): DiscussionCardMenuItem[] => {
   const orderedItems = [
     DiscussionCardMenuItem.Pin,
+    DiscussionCardMenuItem.Unpin,
     DiscussionCardMenuItem.Share,
     DiscussionCardMenuItem.Report,
     DiscussionCardMenuItem.Edit,

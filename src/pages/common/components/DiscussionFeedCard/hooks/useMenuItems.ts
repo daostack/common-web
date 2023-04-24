@@ -29,6 +29,14 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       },
     },
     {
+      id: DiscussionCardMenuItem.Unpin,
+      text: "Unpin",
+      onClick: async () => {
+        if (!common || !feedItem) return;
+        await CommonFeedService.unpinItem(common.id, feedItem.id);
+      },
+    },
+    {
       id: DiscussionCardMenuItem.Share,
       text: "Share",
       onClick: share,
