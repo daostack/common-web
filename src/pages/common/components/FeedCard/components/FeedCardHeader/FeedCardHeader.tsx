@@ -4,7 +4,7 @@ import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg"
 import { MenuButton, UserAvatar } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { MenuItem } from "@/shared/interfaces";
-import { DesktopMenu, parseStringToTextEditorValue } from "@/shared/ui-kit";
+import { DesktopMenu } from "@/shared/ui-kit";
 import { FeedUserPopup } from "../FeedUserPopup";
 import styles from "./FeedCardHeader.module.scss";
 

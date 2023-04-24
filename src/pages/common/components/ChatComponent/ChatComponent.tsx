@@ -15,7 +15,6 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
-import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import {
   ChatType,
   GovernanceActions,
@@ -26,7 +25,7 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { PlusIcon, SendIcon } from "@/shared/icons";
+import { SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   Circles,
@@ -108,7 +107,6 @@ export default function ChatComponent({
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
-  const commonId = common?.id;
 
   const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
 
@@ -246,7 +244,7 @@ export default function ChatComponent({
 
   const sendMessage = useCallback(
     async (message: TextEditorValue) => {
-      if (user && user.uid && common?.id) {
+      if (user && user.uid && commonId) {
         const pendingMessageId = uuidv4();
 
         const mentionTags = getMentionTags(message).map((tag) => ({

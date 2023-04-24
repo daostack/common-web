@@ -220,9 +220,10 @@ export default function ChatMessage({
             )}
             <ReplyMessage />
 
-            <div className={styles.messageContent, {
+            <div
+              className={classNames(styles.messageContent, {
                 [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
-              }}
+              })}
             >
               <Linkify>{messageText.map((text) => text)}</Linkify>
               <div className={styles.timeWrapperContainer}>
