@@ -29,10 +29,10 @@ const MessageReply: React.FC<MessageReplyProps> = ({ commonMembers }) => {
     }
 
     (async () => {
-      const parsedText = await getTextFromTextEditorString(
-        discussionMessageReply.text,
+      const parsedText = await getTextFromTextEditorString({
+        textEditorString: discussionMessageReply.text,
         commonMembers,
-      );
+    });
 
       setMessageText(parsedText);
     })();

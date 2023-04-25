@@ -76,14 +76,17 @@ export default function ChatMessage({
 
   useEffect(() => {
     (async () => {
-      const parsedText = await getTextFromTextEditorString(
-        discussionMessage.text,
+      const parsedText = await getTextFromTextEditorString({
+        textEditorString: discussionMessage.text,
         commonMembers,
-      );
+        mentionTextClassName: !isNotCurrentUserMessage
+          ? styles.mentionTextCurrentUser
+          : "",
+      });
 
       setMessageText(parsedText);
     })();
-  }, [commonMembers, discussionMessage.text]);
+  }, [commonMembers, discussionMessage.text, isNotCurrentUserMessage]);
 
   useEffect(() => {
     (async () => {
@@ -91,14 +94,21 @@ export default function ChatMessage({
         return;
       }
 
-      const parsedText = await getTextFromTextEditorString(
-        discussionMessage?.parentMessage.text,
+      const parsedText = await getTextFromTextEditorString({
+        textEditorString: discussionMessage?.parentMessage.text,
         commonMembers,
-      );
+        mentionTextClassName: !isNotCurrentUserMessage
+          ? styles.mentionTextCurrentUser
+          : "",
+      });
 
       setReplyMessageText(parsedText);
     })();
-  }, [commonMembers, discussionMessage?.parentMessage?.text]);
+  }, [
+    commonMembers,
+    discussionMessage?.parentMessage?.text,
+    isNotCurrentUserMessage,
+  ]);
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuOpen(isOpen);

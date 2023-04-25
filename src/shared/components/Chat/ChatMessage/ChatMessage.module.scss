@@ -90,6 +90,11 @@
   color: $c-pink-mention;
 }
 
+.mentionTextCurrentUser {
+  color: $c-pink-active-feed-cards-light;
+  font-weight: bold;
+}
+
 .timeWrapperContainer {
   display: flex;
   flex: 1;

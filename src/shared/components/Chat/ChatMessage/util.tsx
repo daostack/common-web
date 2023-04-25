@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 import { UserService } from "@/services";
 import { CommonMemberWithUserInfo } from "@/shared/models";
 import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
@@ -6,10 +7,13 @@ import { ParagraphElement } from "@/shared/ui-kit/TextEditor/types";
 import { parseTextEditorValueToString } from "@/shared/ui-kit/TextEditor/utils";
 import styles from "./ChatMessage.module.scss";
 
-export const getTextFromTextEditorString = async (
-  textEditorString: string,
-  commonMembers: CommonMemberWithUserInfo[],
-) => {
+export const getTextFromTextEditorString = async ({
+  textEditorString,
+  commonMembers,
+  mentionTextClassName
+}:   {textEditorString: string,
+commonMembers: CommonMemberWithUserInfo[],
+mentionTextClassName?: string}) => {
   return await Promise.all(
     parseTextEditorValueToString(textEditorString)?.map(async (tag) => {
       if (tag.type === ElementType.Mention) {
@@ -21,7 +25,7 @@ export const getTextFromTextEditorString = async (
           const fetchedUser = await UserService.getUserById(tag.userId);
           return fetchedUser ? (
             <span
-              className={styles.mentionText}
+              className={classNames(styles.mentionText, mentionTextClassName)}
             >{`@${fetchedUser.displayName} `}</span>
           ) : (
             ""
@@ -30,7 +34,7 @@ export const getTextFromTextEditorString = async (
 
         return (
           <span
-            className={styles.mentionText}
+            className={classNames(styles.mentionText, mentionTextClassName)}
           >{`@${commonMember.user.displayName} `}</span>
         );
       }
