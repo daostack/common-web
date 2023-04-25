@@ -127,14 +127,15 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
         <div className={styles.topContent}>
           <p
             className={classNames(styles.text, styles.title, {
-              [styles.titleActive]: isActive,
+              [styles.titleActive]: isActive || (isExpanded && isMobileView),
             })}
           >
             {title || "Loading..."}
           </p>
           <p
             className={classNames(styles.text, styles.lastActivity, {
-              [styles.lastActivityActive]: isActive,
+              [styles.lastActivityActive]:
+                isActive || (isExpanded && isMobileView),
             })}
           >
             <TimeAgo milliseconds={lastActivity} />
@@ -145,7 +146,8 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
             <TextEditor
               className={styles.lastMessageContainer}
               editorClassName={classNames(styles.text, styles.lastMessage, {
-                [styles.lastMessageActive]: isActive,
+                [styles.lastMessageActive]:
+                  isActive || (isExpanded && isMobileView),
               })}
               value={lastMessageValue}
               readOnly
