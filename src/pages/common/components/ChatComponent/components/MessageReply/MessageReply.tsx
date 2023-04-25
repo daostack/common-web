@@ -1,19 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
+import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/util";
 import CloseIcon from "@/shared/icons/close.icon";
+import { CommonMemberWithUserInfo } from "@/shared/models";
 import {
   selectCurrentDiscussionMessageReply,
   chatActions,
 } from "@/store/states";
 import styles from "./MessageReply.module.scss";
 
-export default function MessageReply() {
+interface MessageReplyProps {
+  commonMembers: CommonMemberWithUserInfo[];
+}
+
+const MessageReply: React.FC<MessageReplyProps> = ({ commonMembers }) => {
   const dispatch = useDispatch();
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
+
+  const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
+
+  useEffect(() => {
+    if (!discussionMessageReply?.text) {
+      return;
+    }
+
+    (async () => {
+      const parsedText = await getTextFromTextEditorString(
+        discussionMessageReply.text,
+        commonMembers,
+      );
+
+      setMessageText(parsedText);
+    })();
+  }, [commonMembers]);
 
   if (!discussionMessageReply) {
     return null;
@@ -31,7 +54,7 @@ export default function MessageReply() {
             <span className={styles.username}>
               {discussionMessageReply.ownerName}
             </span>
-            <p className={styles.text}>{discussionMessageReply.text}</p>
+            <p className={styles.text}>{messageText.map((text) => text)}</p>
           </div>
           <ButtonIcon
             className={styles.closeButton}
@@ -45,4 +68,6 @@ export default function MessageReply() {
       )}
     </div>
   );
-}
+};
+
+export default MessageReply;

@@ -394,7 +394,7 @@ export default function ChatComponent({
       </div>
       {isAuthorized && (
         <div className={styles.bottomChatContainer}>
-          <MessageReply />
+          <MessageReply commonMembers={commonMembers}/>
           <ChatFilePreview />
           <div className={styles.chatInputWrapper}>
             {!commonMember || !hasAccess || isHidden ? (
