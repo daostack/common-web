@@ -68,7 +68,7 @@
   font-size: $xsmall;
   font-weight: bold;
   color: $secondary-blue;
-  margin-right: 1rem;
+  margin-right: 2.5rem;
   margin-left: 1rem;
   margin-bottom: 0.5rem;
 }
@@ -84,6 +84,7 @@
 
 .messageContentCurrentUser {
   color: $white;
+  margin-right: 2.5rem;
 }
 
 .timeWrapperContainer {

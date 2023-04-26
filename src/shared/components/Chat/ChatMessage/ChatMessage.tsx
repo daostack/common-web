@@ -221,8 +221,7 @@ export default function ChatMessage({
               }
               elem={discussionMessage}
               className={styles.dropdownMenu}
-              variant={Orientation.Horizontal}
-              isOpen={isMenuOpen}
+              variant={Orientation.Arrow}
               onMenuToggle={handleMenuToggle}
               transparent
               isDiscussionMessage
@@ -230,6 +229,7 @@ export default function ChatMessage({
               userId={user?.uid}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}
+              {...(isTabletView && { isOpen: isMenuOpen })}
             />
           </div>
         )}
