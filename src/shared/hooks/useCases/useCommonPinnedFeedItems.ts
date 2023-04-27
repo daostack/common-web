@@ -35,12 +35,9 @@ export const useCommonPinnedFeedItems = (
             return;
           }
 
-          const finalData =
-            idsForListening && idsForListening.length > 0
-              ? data.filter((item) =>
-                  idsForListening.includes(item.commonFeedItem.id),
-                )
-              : data;
+          const finalData = data.filter((item) =>
+            idsForListening?.includes(item.commonFeedItem.id),
+          );
 
           dispatch(commonActions.addNewPinnedFeedItems(finalData));
         },
