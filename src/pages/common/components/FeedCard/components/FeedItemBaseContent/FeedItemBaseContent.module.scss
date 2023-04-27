@@ -82,6 +82,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  @include big-phone {
+    justify-content: unset;
+  }
 }
 
 .text {
@@ -115,8 +118,8 @@
   white-space: nowrap;
   overflow: hidden;
 
-  @include tablet {
-    max-width: 16.1875rem;
+  @include big-phone {
+    max-width: 40%;
   }
 }
 
