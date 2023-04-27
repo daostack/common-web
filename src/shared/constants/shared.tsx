@@ -18,6 +18,7 @@ export const HEADER_MOBILE_SCREEN_SIZE = 1062;
 export enum Orientation {
   Horizontal,
   Vertical,
+  Arrow,
 }
 
 export const CONTACT_EMAIL = "hi@common.io";

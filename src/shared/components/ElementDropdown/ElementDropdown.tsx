@@ -11,6 +11,7 @@ import {
   ScreenSize,
   EntityTypes,
 } from "@/shared/constants";
+import { REACT_APP_ENV, Environment } from "@/shared/constants";
 import { useBuildShareLink, useNotification, useModal } from "@/shared/hooks";
 import {
   MenuItem as DesktopStyleMenuItem,
@@ -203,7 +204,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     (isOpen: boolean) => {
       if (!linkURL && isOpen) {
         handleOpen();
-        setIsShareLinkGenerating(true);
+        REACT_APP_ENV !== Environment.Dev && setIsShareLinkGenerating(true);
       }
 
       if (onMenuToggle) onMenuToggle(isOpen);
@@ -287,7 +288,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const menuInlineStyle = useMemo(
     () => ({
-      height: `${2.8125 * (ElementDropdownMenuItemsList.length || 1)}rem`,
+      height: `${2.5 * (ElementDropdownMenuItemsList.length || 1)}rem`,
     }),
     [ElementDropdownMenuItemsList],
   );
