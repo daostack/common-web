@@ -1,5 +1,6 @@
 import { Common, FeedItemFollowWithMetadata } from "@/shared/models";
 import { checkIsProject } from "@/shared/utils";
+import { FeedLayoutItem } from "../types";
 
 type Return =
   | (Pick<Common, "id" | "name" | "image"> & {
@@ -9,14 +10,15 @@ type Return =
   | null;
 
 export const getItemCommonData = (
-  feedItemFollowWithMetadata?: FeedItemFollowWithMetadata,
+  feedLayoutItem: FeedLayoutItem,
   common?: Common | null,
 ): Return => {
   const isPinned = (common?.pinnedFeedItems || []).some(
     (pinnedFeedItem) =>
-      pinnedFeedItem.feedObjectId === feedItemFollowWithMetadata?.feedItemId,
+      pinnedFeedItem.feedObjectId === feedLayoutItem.feedItem.id,
   );
-  if (feedItemFollowWithMetadata) {
+  if (feedLayoutItem.feedItemFollowWithMetadata) {
+    const { feedItemFollowWithMetadata } = feedLayoutItem;
     return {
       id: feedItemFollowWithMetadata.commonId,
       name: feedItemFollowWithMetadata.commonName,

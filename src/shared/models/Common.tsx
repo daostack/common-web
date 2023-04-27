@@ -112,6 +112,7 @@ export interface Common extends BaseEntity {
   proposals?: Proposal[];
   discussions?: Discussion[];
   messages?: DiscussionMessage[];
+  pinnedFeedItems: { pinnedAt: Date; feedObjectId: string }[];
 }
 
 export interface Project extends Common {
