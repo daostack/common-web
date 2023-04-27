@@ -288,7 +288,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const menuInlineStyle = useMemo(
     () => ({
-      height: `${2.8125 * (ElementDropdownMenuItemsList.length || 1)}rem`,
+      height: `${2.5 * (ElementDropdownMenuItemsList.length || 1)}rem`,
     }),
     [ElementDropdownMenuItemsList],
   );
