@@ -55,6 +55,10 @@
   text-align: start;
 }
 
+.messageTextWithReply {
+  padding: 0.25rem 0rem 0.5rem;
+}
+
 .messageTextRtl {
   text-align: right;
   direction: rtl;
@@ -119,39 +123,40 @@
 }
 
 .replyMessageContainer {
-  margin-bottom: 0.3125rem;
   cursor: pointer;
-  border-bottom: 1px solid $c-neutrals-200;
-  border-top: 1px solid $c-neutrals-200;
+  background-color: $c-neutrals-200;
+  border-radius: 0.625rem;
+  padding: 0.25rem 0 0.625rem;
+  margin: 0.25rem;
+  margin-top: 0;
 }
 
 .replyMessageContainerCurrentUser {
-  border-bottom: 1px solid $c-neutrals-100;
-  border-top: 1px solid $c-neutrals-100;
+  background-color: $c-pink-light;
 }
 
 .replyMessageName {
   font-size: $xxsmall;
-  color: $c-neutrals-300;
-  margin-bottom: 0.2rem;
-  margin-top: 0.4rem;
+  color: $c-neutrals-600;
+  font-weight: 600;
+  line-height: 1.25rem;
+  margin-bottom: 0.125rem;
 }
 
 .replyMessageNameCurrentUser {
-  color: $c-neutrals-100;
+  color: $c-neutrals-600;
 }
 
 .replyMessageContent {
-  color: $c-neutrals-300;
-  font-size: $xxsmall;
-  margin-bottom: 0.4rem;
+  color: $c-neutrals-600;
+  font-size: $xxsmall-3;
   line-height: 0.75rem;
   max-height: 3rem;
   overflow: hidden;
 }
 
 .replyMessageContentCurrentUser {
-  color: $c-neutrals-100;
+  color: $c-neutrals-600;
 }
 
 .dropdownMenu {

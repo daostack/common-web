@@ -102,7 +102,9 @@ export default function ChatMessage({
             [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
           })}
         >
-          {discussionMessage.parentMessage?.ownerName}
+          {isNotCurrentUserMessage
+            ? discussionMessage.parentMessage?.ownerName
+            : "You"}
         </div>
         <div
           className={classNames(
@@ -154,6 +156,8 @@ export default function ChatMessage({
             className={classNames(styles.messageText, {
               [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
               [styles.messageTextRtl]: isRTL(discussionMessage.text),
+              [styles.messageTextWithReply]:
+                !!discussionMessage.parentMessage?.id,
             })}
             onClick={handleMessageClick}
           >
