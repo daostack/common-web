@@ -138,7 +138,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
 
     return items;
-  }, [topFeedItems, feedItems]);
+  }, [topFeedItems, feedItems, pinnedFeedItems]);
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (recentStreamId) {
