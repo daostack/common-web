@@ -1,8 +1,7 @@
 @import "../../../../constants.scss";
 @import "../../../../styles/sizes";
 
-.container {
-}
+.container {}
 
 .message {
   display: flex;
@@ -123,16 +122,24 @@
 }
 
 .replyMessageContainer {
+  display: flex;
   cursor: pointer;
   background-color: $c-neutrals-200;
   border-radius: 0.625rem;
-  padding: 0.25rem 0 0.625rem;
+  padding: 0.5rem 0 0.625rem;
   margin: 0.25rem;
   margin-top: 0;
 }
 
 .replyMessageContainerCurrentUser {
   background-color: $c-pink-light;
+}
+
+.replyMessageImage {
+  height: 2.8125rem;
+  width: 2.625rem;
+  object-fit: cover;
+  margin-left: 0.75rem;
 }
 
 .replyMessageName {
@@ -147,6 +154,10 @@
   color: $c-neutrals-600;
 }
 
+.replyMessageNameWithImage {
+  margin-left: 0.5rem;
+}
+
 .replyMessageContent {
   color: $c-neutrals-600;
   font-size: $xxsmall-3;
@@ -157,6 +168,10 @@
 
 .replyMessageContentCurrentUser {
   color: $c-neutrals-600;
+}
+
+.replyMessageContentWithImage {
+  margin-left: 0.5rem;
 }
 
 .dropdownMenu {

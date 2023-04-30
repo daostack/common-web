@@ -19,6 +19,8 @@ export default function MessageReply() {
     return null;
   }
 
+  const image = discussionMessageReply.images?.[0].value;
+
   return (
     <div
       className={classNames(styles.container, {
@@ -27,11 +29,14 @@ export default function MessageReply() {
     >
       {discussionMessageReply && (
         <>
-          <div className={styles.messageWrapper}>
-            <span className={styles.username}>
-              {discussionMessageReply.ownerName}
-            </span>
-            <p className={styles.text}>{discussionMessageReply.text}</p>
+          <div className={styles.messageContainer}>
+            {image && <img className={styles.image} src={image} />}
+            <div className={styles.messageWrapper}>
+              <span className={styles.username}>
+                {discussionMessageReply.ownerName}
+              </span>
+              <p className={styles.text}>{discussionMessageReply.text}</p>
+            </div>
           </div>
           <ButtonIcon
             className={styles.closeButton}

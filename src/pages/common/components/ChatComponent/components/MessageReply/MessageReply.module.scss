@@ -15,14 +15,26 @@
   display: none;
 }
 
-.messageWrapper {
+.messageContainer {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-start;
   width: 100%;
   background-color: $c-pink-light;
   border-radius: 0.875rem;
   padding: 0.5rem 0.75rem;
+}
+
+.image {
+  height: 3.4375rem;
+  width: 3.1875rem;
+  object-fit: cover;
+  margin-right: 0.6875rem;
+}
+
+.messageWrapper {
+  display: flex;
+  flex-direction: column;
 }
 
 .username {

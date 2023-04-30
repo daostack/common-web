@@ -54,7 +54,8 @@ export default function ChatMessage({
     (discussionMessage?.editedAt?.seconds ?? 0) * 1000,
   );
 
-  const isNotCurrentUserMessage = user?.uid !== discussionMessage.ownerId;
+  const userId = user?.uid;
+  const isNotCurrentUserMessage = userId !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
 
   const handleMenuToggle = (isOpen: boolean) => {
@@ -88,6 +89,8 @@ export default function ChatMessage({
       return null;
     }
 
+    const image = discussionMessage.parentMessage?.images?.[0]?.value;
+
     return (
       <div
         onClick={() => {
@@ -97,25 +100,31 @@ export default function ChatMessage({
           [styles.replyMessageContainerCurrentUser]: !isNotCurrentUserMessage,
         })}
       >
-        <div
-          className={classNames(styles.messageName, styles.replyMessageName, {
-            [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
-          })}
-        >
-          {isNotCurrentUserMessage
-            ? discussionMessage.parentMessage?.ownerName
-            : "You"}
-        </div>
-        <div
-          className={classNames(
-            styles.messageContent,
-            styles.replyMessageContent,
-            {
-              [styles.replyMessageContentCurrentUser]: !isNotCurrentUserMessage,
-            },
-          )}
-        >
-          <Linkify>{discussionMessage.parentMessage.text}</Linkify>
+        {image && <img className={styles.replyMessageImage} src={image} />}
+        <div>
+          <div
+            className={classNames(styles.messageName, styles.replyMessageName, {
+              [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
+              [styles.replyMessageNameWithImage]: image,
+            })}
+          >
+            {userId === discussionMessage.parentMessage.ownerId
+              ? discussionMessage.parentMessage?.ownerName
+              : "You"}
+          </div>
+          <div
+            className={classNames(
+              styles.messageContent,
+              styles.replyMessageContent,
+              {
+                [styles.replyMessageContentCurrentUser]:
+                  !isNotCurrentUserMessage,
+                [styles.replyMessageContentWithImage]: image,
+              },
+            )}
+          >
+            <Linkify>{discussionMessage.parentMessage.text}</Linkify>
+          </div>
         </div>
       </div>
     );
@@ -123,6 +132,7 @@ export default function ChatMessage({
     discussionMessage.parentMessage,
     hasPermissionToHide,
     isNotCurrentUserMessage,
+    userId,
   ]);
 
   return (
@@ -230,7 +240,7 @@ export default function ChatMessage({
               transparent
               isDiscussionMessage
               ownerId={discussionMessage.owner?.uid}
-              userId={user?.uid}
+              userId={userId}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}
               {...(isTabletView && { isOpen: isMenuOpen })}
