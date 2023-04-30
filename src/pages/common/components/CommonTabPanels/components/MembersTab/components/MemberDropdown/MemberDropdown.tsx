@@ -21,6 +21,8 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
   const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(() => {
     const items: DropdownOption[] = [];
 
+    // TODO: check and push the right circles.
+
     items.push({
       text: <span>Assign</span>,
       value: "Assign",

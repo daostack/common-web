@@ -3,7 +3,8 @@ import firebase from "firebase/app";
 import { v4 } from "uuid";
 import { MemberDropdown } from "@/pages/common/components/CommonTabPanels/components/MembersTab/components/MemberDropdown";
 import { useModal } from "@/shared/hooks";
-import { CommonMemberWithUserInfo } from "@/shared/models";
+import { CirclesPermissions, CommonMemberWithUserInfo } from "@/shared/models";
+import { CommonMember as CommonMemberModel } from "@/shared/models";
 import { UserAvatar } from "../../../../../shared/components";
 import { CommonMemberPreview } from "./CommonMemberPreview";
 
@@ -14,6 +15,7 @@ interface CommonMemberProps {
   joinedAt: firebase.firestore.Timestamp;
   member: CommonMemberWithUserInfo;
   commonId: string;
+  commonMember?: (CommonMemberModel & CirclesPermissions) | null;
 }
 
 const CommonMember: FC<CommonMemberProps> = ({
@@ -23,14 +25,18 @@ const CommonMember: FC<CommonMemberProps> = ({
   memberName,
   avatar,
   joinedAt,
+  commonMember,
 }) => {
   const { isShowing, onClose, onOpen } = useModal(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
     event.preventDefault();
+    // TODO: check if menu should open
     handleMenuToggle(true);
   };
+
+  console.log(member.circleIds);
+  console.log(commonMember);
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuOpen(isOpen);
@@ -63,6 +69,7 @@ const CommonMember: FC<CommonMemberProps> = ({
             .toDate()
             .toLocaleDateString("en-US", { month: "short", day: "numeric" })}
         </div>
+        <MemberDropdown isOpen={isMenuOpen} onMenuToggle={handleMenuToggle} />
       </li>
       <CommonMemberPreview
         key={member.id}
@@ -76,7 +83,6 @@ const CommonMember: FC<CommonMemberProps> = ({
         about={member.user.intro}
         onClose={onClose}
       />
-      <MemberDropdown isOpen={isMenuOpen} onMenuToggle={handleMenuToggle} />
     </>
   );
 };

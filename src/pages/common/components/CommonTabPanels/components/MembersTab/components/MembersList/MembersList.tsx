@@ -1,7 +1,8 @@
 import React, { FC, memo, useEffect } from "react";
 import CommonMember from "@/pages/OldCommon/components/CommonDetailContainer/MembersComponent/CommonMemberComponent";
 import { useGovernance } from "@/shared/hooks/useCases";
-import { CommonMemberWithUserInfo } from "@/shared/models";
+import { CirclesPermissions, CommonMemberWithUserInfo } from "@/shared/models";
+import { CommonMember as CommonMemberModel } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import {
   getCirclesWithHighestTier,
@@ -14,12 +15,14 @@ interface MembersListComponentProps {
   members: CommonMemberWithUserInfo[];
   commonId: string;
   governanceId: string | null;
+  commonMember: (CommonMemberModel & CirclesPermissions) | null;
 }
 
 const MembersList: FC<MembersListComponentProps> = ({
   members,
   commonId,
   governanceId,
+  commonMember,
 }) => {
   const {
     data: governance,
@@ -46,6 +49,7 @@ const MembersList: FC<MembersListComponentProps> = ({
           governanceCircles,
           member.circleIds,
         );
+        console.log(memberCircles);
         const circlesString = getCirclesWithHighestTier(memberCircles)
           .map((circle) => circle.name)
           .join(", ");
@@ -60,6 +64,7 @@ const MembersList: FC<MembersListComponentProps> = ({
             joinedAt={member.joinedAt}
             member={member}
             commonId={commonId}
+            commonMember={commonMember}
           />
         );
       })}

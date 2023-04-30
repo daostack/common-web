@@ -58,7 +58,11 @@ const CommonTabPanels: FC<CommonTabPanelsProps> = (props) => {
         />
       </TabPanel>
       <TabPanel value={activeTab} panelValue={CommonTab.Members}>
-        <MembersTab activeTab={activeTab} common={common} />
+        <MembersTab
+          activeTab={activeTab}
+          common={common}
+          commonMember={commonMember}
+        />
       </TabPanel>
     </Container>
   );
