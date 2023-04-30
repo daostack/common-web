@@ -130,6 +130,18 @@ export const addNewFeedItems = createStandardAction(
   }[]
 >();
 
+export const addNewPinnedFeedItems = createStandardAction(
+  CommonActionType.ADD_NEW_PINNED_FEED_ITEMS,
+)<
+  {
+    commonFeedItem: CommonFeed;
+    statuses: {
+      isAdded: boolean;
+      isRemoved: boolean;
+    };
+  }[]
+>();
+
 export const updateFeedItem = createStandardAction(
   CommonActionType.UPDATE_FEED_ITEM,
 )<{
