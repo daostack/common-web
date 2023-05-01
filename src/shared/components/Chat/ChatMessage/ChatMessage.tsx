@@ -1,4 +1,5 @@
-import React, { MouseEventHandler, useCallback, useState } from "react";
+import React, { MouseEventHandler, useCallback, useState, useRef } from "react";
+import { useHoverDirty } from "react-use";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import {
@@ -46,9 +47,12 @@ export default function ChatMessage({
   scrollToRepliedMessage,
   hasPermissionToHide,
 }: ChatMessageProps) {
+  const messageRef = useRef<HTMLDivElement>(null);
+
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isTabletView = useIsTabletView();
+  const isHovering = useHoverDirty(messageRef);
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
   const editedAtDate = new Date(
     (discussionMessage?.editedAt?.seconds ?? 0) * 1000,
@@ -163,6 +167,7 @@ export default function ChatMessage({
           />
         ) : (
           <div
+            ref={messageRef}
             className={classNames(styles.messageText, {
               [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
               [styles.messageTextRtl]: isRTL(discussionMessage.text),
@@ -227,6 +232,8 @@ export default function ChatMessage({
               </div>
             </div>
             <ElementDropdown
+              isHovering={isHovering}
+              withHover
               linkType={getDynamicLinkByChatType(chatType)}
               entityType={
                 chatType === ChatType.DiscussionMessages

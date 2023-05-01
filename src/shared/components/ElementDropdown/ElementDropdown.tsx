@@ -58,6 +58,8 @@ interface ElementDropdownProps {
   userId?: string;
   ownerId?: string;
   commonId?: string;
+  isHovering?: boolean;
+  withHover?: boolean;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
@@ -75,6 +77,8 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   userId,
   ownerId,
   commonId,
+  isHovering,
+  withHover = false,
 }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
@@ -303,6 +307,8 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     <>
       {!isControlledMenu && (
         <Dropdown
+          isHovering={isHovering}
+          withHover={withHover}
           options={ElementDropdownMenuItemsList}
           menuButton={<MenuButton variant={variant} />}
           onMenuToggle={handleMenuToggle}

@@ -8,6 +8,7 @@ import React, {
   ForwardRefRenderFunction,
   ReactNode,
   RefObject,
+  useEffect,
 } from "react";
 import {
   Button as MenuButton,
@@ -50,7 +51,7 @@ export enum ElementDropdownMenuItems {
   Edit,
   Reply,
   CopyLink,
-  Hide
+  Hide,
 }
 
 export interface DropdownRef {
@@ -73,6 +74,8 @@ export interface DropdownProps {
   onMenuToggle?: (isOpen: boolean) => void;
   isLoading?: boolean;
   menuInlineStyle?: CSSProperties;
+  withHover?: boolean;
+  isHovering?: boolean;
 }
 
 const getFixedMenuStyles = (
@@ -122,7 +125,10 @@ const getMenuStyles = (
   }
 };
 
-const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (props, dropdownRef) => {
+const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
+  props,
+  dropdownRef,
+) => {
   const {
     className,
     value,
@@ -137,6 +143,8 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (props, d
     fullMenuButtonChange = false,
     shouldBeFixed = true,
     isLoading = false,
+    withHover = false,
+    isHovering = false,
     menuInlineStyle,
   } = props;
   const menuButtonRef = useRef<HTMLElement>(null);
@@ -145,12 +153,23 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (props, d
   const selectedOption = options.find((option) => option.value === value);
   const dropdownId = useMemo(() => `dropdown-${uuidv4()}`, []);
 
-  const handleSelection: MenuWrapperProps<HTMLElement>["onSelection"] = (value, event) => {
+  const handleSelection: MenuWrapperProps<HTMLElement>["onSelection"] = (
+    value,
+    event,
+  ) => {
     event.stopPropagation();
     onSelect(value);
   };
 
-  const handleMenuToggle: MenuWrapperProps<HTMLElement>["onMenuToggle"] = ({ isOpen }) => {
+  // useEffect(() => {
+  //   if (openMenu && dropdownId) {
+  //     openMenu(dropdownId);
+  //   }
+  // }, [dropdownId]);
+
+  const handleMenuToggle: MenuWrapperProps<HTMLElement>["onMenuToggle"] = ({
+    isOpen,
+  }) => {
     setIsOpen(isOpen);
 
     if (onMenuToggle) {
@@ -158,7 +177,10 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (props, d
     }
   };
 
-  const menuStyles = useMemo(() => getMenuStyles(menuButtonRef, menuRef, shouldBeFixed), [menuRef, shouldBeFixed]);
+  const menuStyles = useMemo(
+    () => getMenuStyles(menuButtonRef, menuRef, shouldBeFixed),
+    [menuRef, shouldBeFixed],
+  );
 
   useImperativeHandle(
     dropdownRef,
@@ -196,23 +218,33 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (props, d
           <MenuButton
             className={classNames(styles?.menuButton, {
               "custom-dropdown-wrapper__menu-button": !menuButton,
+              "custom-dropdown-wrapper_menu-button--hidden":
+                !isHovering && withHover,
             })}
             ref={menuButtonRef}
           >
             {menuButton || (
               <>
                 <span
-                  className={classNames("custom-dropdown-wrapper__value", styles?.value, {
-                    [classNames("custom-dropdown-wrapper__placeholder", styles?.placeholder)]:
-                      !menuButtonText && !selectedOption && placeholder,
-                  })}
+                  className={classNames(
+                    "custom-dropdown-wrapper__value",
+                    styles?.value,
+                    {
+                      [classNames(
+                        "custom-dropdown-wrapper__placeholder",
+                        styles?.placeholder,
+                      )]: !menuButtonText && !selectedOption && placeholder,
+                    },
+                  )}
                 >
-                  {menuButtonText ?? (selectedOption ? selectedOption.text : placeholder)}
+                  {menuButtonText ??
+                    (selectedOption ? selectedOption.text : placeholder)}
                 </span>
                 <RightArrowIcon
-                  className={classNames("custom-dropdown-wrapper__arrow-icon", styles?.arrowIcon, {
-                    "custom-dropdown-wrapper__arrow-icon--opened": isOpen,
-                  })}
+                  className={classNames(
+                    "custom-dropdown-wrapper__arrow-icon",
+                    styles?.arrowIcon,
+                  )}
                 />
               </>
             )}
@@ -228,19 +260,33 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (props, d
             <Loader />
           ) : (
             <ul
-              className={classNames("custom-dropdown-wrapper__menu-list", styles?.menuList)}
-              style={menuStyles?.bottom === 0 ? { maxHeight: "100%" } : undefined}
+              className={classNames(
+                "custom-dropdown-wrapper__menu-list",
+                styles?.menuList,
+              )}
+              style={
+                menuStyles?.bottom === 0 ? { maxHeight: "100%" } : undefined
+              }
               ref={setMenuRef}
             >
               {options.map((option) => (
                 <MenuItem
                   key={String(option.value)}
-                  className={classNames("custom-dropdown-wrapper__menu-item", styles?.menuItem, option.className, {
-                    "custom-dropdown-wrapper__menu-item--active": option.value === selectedOption?.value,
-                  })}
+                  className={classNames(
+                    "custom-dropdown-wrapper__menu-item",
+                    styles?.menuItem,
+                    option.className,
+                    {
+                      "custom-dropdown-wrapper__menu-item--active":
+                        option.value === selectedOption?.value,
+                    },
+                  )}
                   tag="li"
                   value={option.value}
-                  text={option.searchText || (typeof option.text === "string" ? option.text : undefined)}
+                  text={
+                    option.searchText ||
+                    (typeof option.text === "string" ? option.text : undefined)
+                  }
                 >
                   {option.text}
                 </MenuItem>
@@ -249,7 +295,9 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (props, d
           )}
         </Menu>
       </MenuWrapper>
-      {isOpen && shouldBeFixed && <GlobalOverlay className="custom-dropdown-wrapper__global-overlay" />}
+      {isOpen && shouldBeFixed && (
+        <GlobalOverlay className="custom-dropdown-wrapper__global-overlay" />
+      )}
     </>
   );
 };
