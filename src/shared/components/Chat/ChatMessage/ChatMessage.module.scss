@@ -141,12 +141,16 @@
 }
 
 .replyMessageContent {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: $c-neutrals-300;
   font-size: $xxsmall;
   margin-bottom: 0.4rem;
-  line-height: 0.75rem;
-  max-height: 1.5rem;
-  overflow: hidden;
+  line-height: 0.8rem;
+  max-height: 1.6rem;   
 }
 
 .replyMessageContentCurrentUser {
