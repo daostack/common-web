@@ -2,6 +2,7 @@ import React, { FC, MouseEventHandler, useState } from "react";
 import firebase from "firebase/app";
 import { v4 } from "uuid";
 import { MemberDropdown } from "@/pages/common/components/CommonTabPanels/components/MembersTab/components/MemberDropdown";
+import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import { CirclesPermissions, CommonMemberWithUserInfo } from "@/shared/models";
 import { CommonMember as CommonMemberModel } from "@/shared/models";
@@ -31,8 +32,22 @@ const CommonMember: FC<CommonMemberProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
     event.preventDefault();
-    // TODO: check if menu should open
-    handleMenuToggle(true);
+    const canInvite =
+      commonMember?.allowedActions[GovernanceActions.INVITE_TO_CIRCLE];
+    const canAssign =
+      commonMember?.allowedProposals[ProposalsTypes.ASSIGN_CIRCLE];
+
+    if (canInvite || canAssign) {
+      handleMenuToggle(true);
+    }
+
+    // if (canInvite || (canInvite && canAssign)) {
+    //   // CREATE AS AN ACTION
+    // }
+
+    // if (canAssign) {
+    //   // CREATE AS PROPOSAL
+    // }
   };
 
   console.log(member.circleIds);
