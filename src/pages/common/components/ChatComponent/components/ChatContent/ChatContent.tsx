@@ -76,6 +76,10 @@ export default function ChatContent({
     [chatWrapperId],
   );
 
+  const dateListReverse = useMemo(() => {
+    return [...dateList].reverse();
+  }, [JSON.stringify(dateList)]);
+
   useEffect(() => {
     if (!highlightedMessageId) {
       scrollToContainerBottom();
@@ -128,7 +132,7 @@ export default function ChatContent({
 
   return (
     <>
-      {dateList.reverse().map((day, dayIndex) => {
+      {dateListReverse.map((day, dayIndex) => {
         const date = new Date(Number(day));
 
         return (
