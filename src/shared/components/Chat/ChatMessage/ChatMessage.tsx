@@ -113,8 +113,8 @@ export default function ChatMessage({
             })}
           >
             {userId === discussionMessage.parentMessage.ownerId
-              ? discussionMessage.parentMessage?.ownerName
-              : "You"}
+              ? "You"
+              : discussionMessage.parentMessage?.ownerName}
           </div>
           <div
             className={classNames(
