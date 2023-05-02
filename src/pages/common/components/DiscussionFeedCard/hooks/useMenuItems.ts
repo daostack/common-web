@@ -4,9 +4,11 @@ import { DiscussionService } from "@/services";
 import { CommonAction } from "@/shared/constants";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
+import { asyncConfirm } from "@/shared/utils/asyncConfirm";
 import { commonActions } from "@/store/states";
 import { CommonFeedType } from "../../../../../shared/models";
 import { DiscussionCardMenuItem } from "../constants";
+import { DELETE_CONFIRM_OPTIONS } from "../constants/confirms";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
 type Options = GetAllowedItemsOptions;
@@ -63,31 +65,15 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       text: "Remove",
       onClick: async () => {
         if (!feedItem || !discussion) return;
-        let deletePromise: Promise<void> | undefined;
         // If the feed type is not a proposal or discussion, treat it as discussion
         let feedType = feedItem.data.type;
         if (!FeedTypesToRemove.includes(feedType)) {
           feedType = CommonFeedType.Discussion;
         }
-        await AlertConfirm({
+        await asyncConfirm({
+          ...DELETE_CONFIRM_OPTIONS,
           title: `Are you sure you want to delete this ${feedType.toLowerCase()}?`,
-          desc: "Note that this action could not be undone.",
-          okText: "Delete",
-          style: { width: 474 },
-          async closeBefore(shouldDelete) {
-            if (deletePromise) {
-              await deletePromise;
-              return;
-            }
-            if (!shouldDelete) return;
-            deletePromise = DiscussionService.deleteDiscussion(discussion.id);
-            await deletePromise.catch((err) => {
-              console.error(err);
-              deletePromise = undefined;
-              AlertConfirm.alert({ title: "There was an error" });
-              throw err;
-            });
-          },
+          onConfirm: () => DiscussionService.deleteDiscussion(discussion.id),
         });
       },
     },
