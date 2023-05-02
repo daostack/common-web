@@ -261,15 +261,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 {allFeedItems?.map((item) => {
                   const isActive = item.feedItem.id === activeFeedItemId;
                   const commonData = getItemCommonData(item, outerCommon);
-                  console.log({ commonData, outerCommon, item });
 
                   return (
                     <FeedItem
                       key={item.feedItem.id}
+                      common={outerCommon}
                       commonMember={commonMember}
-                      commonId={commonData?.id}
-                      commonName={commonData?.name || ""}
-                      commonImage={commonData?.image || ""}
                       isProject={commonData?.isProject}
                       isPinned={commonData?.isPinned}
                       item={item.feedItem}
@@ -312,9 +309,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   rightHeaderContent={followFeedItemEl}
                 >
                   <FeedItemPreviewModal
-                    commonId={selectedItemCommonData.id}
-                    commonName={selectedItemCommonData.name}
-                    commonImage={selectedItemCommonData.image}
+                    common={outerCommon}
                     isProject={selectedItemCommonData.isProject}
                     isPinned={selectedItemCommonData.isPinned}
                     governanceCircles={governance?.circles}

@@ -8,7 +8,12 @@ import {
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
+import {
+  Common,
+  CommonFeed,
+  Governance,
+  PredefinedTypes,
+} from "@/shared/models";
 import { checkIsCountdownState, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
@@ -35,9 +40,7 @@ import {
 } from "./utils";
 
 interface ProposalFeedCardProps {
-  commonId?: string;
-  commonName: string;
-  commonImage: string;
+  common: Common | undefined;
   isProject: boolean;
   isPinned: boolean;
   item: CommonFeed;
@@ -51,9 +54,7 @@ interface ProposalFeedCardProps {
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const {
-    commonId,
-    commonName,
-    commonImage,
+    common,
     isProject,
     isPinned,
     item,
@@ -102,6 +103,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     fetched: isFeedItemUserMetadataFetched,
     fetchFeedItemUserMetadata,
   } = useFeedItemUserMetadata();
+  const commonId = common?.id;
+  const commonName = common?.name ?? "";
   const isLoading =
     !isFeedItemUserFetched ||
     !isDiscussionFetched ||
@@ -120,6 +123,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const proposalId = item.data.id;
   const menuItems = useMenuItems(
     {
+      common,
       feedItem: item,
       discussion,
       governanceCircles,
@@ -300,7 +304,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
-      image={commonImage}
+      image={common?.image}
       imageAlt={`${commonName}'s image`}
       isProject={isProject}
       isPinned={isPinned}

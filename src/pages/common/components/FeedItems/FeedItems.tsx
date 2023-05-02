@@ -66,9 +66,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
             return (
               <FeedItem
                 key={item.feedItem.id}
-                commonId={common.id}
-                commonName={common.name}
-                commonImage={common.image}
+                common={common}
                 isPinned={isPinned}
                 isProject={checkIsProject(common)}
                 item={item.feedItem}

@@ -1,6 +1,7 @@
 import React, { FC, memo } from "react";
 import {
   Circles,
+  Common,
   CommonFeed,
   CommonFeedType,
   CommonMember,
@@ -12,10 +13,8 @@ import { ProposalFeedCard } from "../ProposalFeedCard";
 import { useFeedItemContext } from "./context";
 
 interface FeedItemProps {
-  commonId?: string;
-  commonName: string;
+  common: Common | undefined;
   commonMember?: CommonMember | null;
-  commonImage: string;
   isProject?: boolean;
   isPinned?: boolean;
   item: CommonFeed;
@@ -31,9 +30,7 @@ interface FeedItemProps {
 
 const FeedItem: FC<FeedItemProps> = (props) => {
   const {
-    commonId,
-    commonName,
-    commonImage,
+    common,
     commonMember,
     isProject = false,
     isPinned = false,
@@ -48,7 +45,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     currentUserId,
   } = props;
   const { onFeedItemUpdate, getLastMessage } = useFeedItemContext();
-  useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
+  useFeedItemSubscription(item.id, common?.id, onFeedItemUpdate);
 
   if (
     !checkIsItemVisibleForUser(
@@ -63,9 +60,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
 
   const generalProps = {
     item,
-    commonId,
-    commonName,
-    commonImage,
+    common,
     isActive,
     isExpanded,
     isProject,

@@ -10,6 +10,7 @@ import {
   useUserById,
 } from "@/shared/hooks/useCases";
 import {
+  Common,
   CommonFeed,
   CommonMember,
   Governance,
@@ -32,9 +33,7 @@ interface DiscussionFeedCardProps {
   item: CommonFeed;
   governanceCircles?: Governance["circles"];
   isMobileVersion?: boolean;
-  commonId?: string;
-  commonName: string;
-  commonImage: string;
+  common: Common | undefined;
   commonMember?: CommonMember | null;
   isProject: boolean;
   isPinned: boolean;
@@ -51,9 +50,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     item,
     governanceCircles,
     isMobileVersion = false,
-    commonId,
-    commonName,
-    commonImage,
+    common,
     commonMember,
     isProject,
     isPinned,
@@ -89,6 +86,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   } = useFeedItemUserMetadata();
   const menuItems = useMenuItems(
     {
+      common,
       feedItem: item,
       discussion,
       governanceCircles,
@@ -105,6 +103,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     setHovering(isMouseEnter);
   };
   const userId = user?.uid;
+  const commonId = common?.id;
+  const commonName = common?.name ?? "";
   const isLoading =
     !isDiscussionCreatorFetched ||
     !isDiscussionFetched ||
@@ -245,7 +245,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
-      image={commonImage}
+      image={common?.image}
       imageAlt={`${commonName}'s image`}
       isProject={isProject}
       isPinned={isPinned}
