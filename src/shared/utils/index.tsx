@@ -20,6 +20,7 @@ export * from "./timeAgo";
 export * from "./transformFirebaseDataToModel";
 export * from "./roles";
 export * from "./routes";
+export * from "./checkIsAutomaticJoin";
 export * from "./checkIsIFrame";
 export * from "./checkIsProject";
 export * from "./checkIsURL";
