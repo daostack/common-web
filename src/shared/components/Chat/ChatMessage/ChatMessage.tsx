@@ -250,7 +250,8 @@ export default function ChatMessage({
               userId={userId}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}
-              {...(isTabletView && { isOpen: isMenuOpen })}
+              isControlledDropdown={false}
+              isOpen={isMenuOpen}
             />
           </div>
         )}

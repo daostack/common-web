@@ -60,6 +60,7 @@ interface ElementDropdownProps {
   commonId?: string;
   isHovering?: boolean;
   withHover?: boolean;
+  isControlledDropdown?: boolean;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
@@ -79,6 +80,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   commonId,
   isHovering,
   withHover = false,
+  isControlledDropdown = true,
 }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
@@ -110,7 +112,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     onClose: onCloseHide,
   } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const isControlledMenu = typeof isOpen === "boolean";
+  const isControlledMenu = typeof isOpen === "boolean" && isControlledDropdown;
   const isHiddenElement =
     (elem as DiscussionMessage | Discussion | Proposal)?.moderation?.flag ===
     ModerationFlags.Hidden;
@@ -307,6 +309,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     <>
       {!isControlledMenu && (
         <Dropdown
+          isOpen={isOpen}
           isHovering={isHovering}
           withHover={withHover}
           options={ElementDropdownMenuItemsList}

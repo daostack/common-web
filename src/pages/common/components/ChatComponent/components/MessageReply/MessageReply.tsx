@@ -19,7 +19,7 @@ export default function MessageReply() {
     return null;
   }
 
-  const image = discussionMessageReply.images?.[0].value;
+  const image = discussionMessageReply.images?.[0]?.value;
 
   return (
     <div

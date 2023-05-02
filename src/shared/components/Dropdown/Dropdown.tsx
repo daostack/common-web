@@ -19,6 +19,7 @@ import {
   openMenu,
   closeMenu,
 } from "react-aria-menubutton";
+import { useHoverDirty } from "react-use";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { Loader } from "@/shared/components";
@@ -76,6 +77,7 @@ export interface DropdownProps {
   menuInlineStyle?: CSSProperties;
   withHover?: boolean;
   isHovering?: boolean;
+  isOpen?: boolean;
 }
 
 const getFixedMenuStyles = (
@@ -146,6 +148,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     withHover = false,
     isHovering = false,
     menuInlineStyle,
+    isOpen: isMenuOpen,
   } = props;
   const menuButtonRef = useRef<HTMLElement>(null);
   const [menuRef, setMenuRef] = useState<HTMLUListElement | null>(null);
@@ -161,11 +164,12 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     onSelect(value);
   };
 
-  // useEffect(() => {
-  //   if (openMenu && dropdownId) {
-  //     openMenu(dropdownId);
-  //   }
-  // }, [dropdownId]);
+  useEffect(() => {
+    if (dropdownId && isMenuOpen) {
+      openMenu(dropdownId, { focusMenu: true });
+      setIsOpen(true);
+    }
+  }, [dropdownId, isMenuOpen]);
 
   const handleMenuToggle: MenuWrapperProps<HTMLElement>["onMenuToggle"] = ({
     isOpen,
