@@ -59,20 +59,20 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
     >
       <FeedItemContext.Provider value={feedItemContextValue}>
         <InfiniteScroll onFetchNext={fetchMore} isLoading={loading}>
-          {commonFeedItems?.map((item) => (
-            <FeedItem
-              key={item.feedItem.id}
-              commonId={common.id}
-              commonName={common.name}
-              commonImage={common.image}
-              isProject={checkIsProject(common)}
-              item={item.feedItem}
-              governanceCircles={governance.circles}
-              isMobileVersion={isTabletView}
-              userCircleIds={userCircleIds}
-              isPreviewMode
-            />
-          ))}
+          {commonFeedItems?.map((item) => {
+            return (
+              <FeedItem
+                key={item.feedItem.id}
+                common={common}
+                isProject={checkIsProject(common)}
+                item={item.feedItem}
+                governanceCircles={governance.circles}
+                isMobileVersion={isTabletView}
+                userCircleIds={userCircleIds}
+                isPreviewMode
+              />
+            );
+          })}
         </InfiniteScroll>
       </FeedItemContext.Provider>
     </Container>

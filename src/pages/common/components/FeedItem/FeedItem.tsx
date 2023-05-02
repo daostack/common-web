@@ -1,5 +1,11 @@
 import React, { FC, memo } from "react";
-import { Circles, CommonFeed, CommonFeedType } from "@/shared/models";
+import {
+  Circles,
+  Common,
+  CommonFeed,
+  CommonFeedType,
+  CommonMember,
+} from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
@@ -7,9 +13,8 @@ import { ProposalFeedCard } from "../ProposalFeedCard";
 import { useFeedItemContext } from "./context";
 
 interface FeedItemProps {
-  commonId?: string;
-  commonName: string;
-  commonImage: string;
+  common: Common | undefined;
+  commonMember?: CommonMember | null;
   isProject?: boolean;
   item: CommonFeed;
   governanceCircles?: Circles;
@@ -24,9 +29,8 @@ interface FeedItemProps {
 
 const FeedItem: FC<FeedItemProps> = (props) => {
   const {
-    commonId,
-    commonName,
-    commonImage,
+    common,
+    commonMember,
     isProject = false,
     item,
     governanceCircles,
@@ -39,7 +43,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     currentUserId,
   } = props;
   const { onFeedItemUpdate, getLastMessage } = useFeedItemContext();
-  useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
+  useFeedItemSubscription(item.id, common?.id, onFeedItemUpdate);
 
   if (
     !checkIsItemVisibleForUser(
@@ -54,15 +58,14 @@ const FeedItem: FC<FeedItemProps> = (props) => {
 
   const generalProps = {
     item,
-    commonId,
-    commonName,
-    commonImage,
+    common,
     isActive,
     isExpanded,
     isProject,
     governanceCircles,
     isPreviewMode,
     getLastMessage,
+    commonMember,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {

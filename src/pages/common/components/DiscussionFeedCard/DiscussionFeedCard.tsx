@@ -9,7 +9,13 @@ import {
   useFeedItemUserMetadata,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
+import {
+  Common,
+  CommonFeed,
+  CommonMember,
+  Governance,
+  PredefinedTypes,
+} from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
@@ -27,9 +33,8 @@ interface DiscussionFeedCardProps {
   item: CommonFeed;
   governanceCircles?: Governance["circles"];
   isMobileVersion?: boolean;
-  commonId?: string;
-  commonName: string;
-  commonImage: string;
+  common: Common | undefined;
+  commonMember?: CommonMember | null;
   isProject: boolean;
   isPreviewMode: boolean;
   isActive: boolean;
@@ -44,9 +49,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     item,
     governanceCircles,
     isMobileVersion = false,
-    commonId,
-    commonName,
-    commonImage,
+    common,
+    commonMember,
     isProject,
     isPreviewMode,
     isActive,
@@ -80,8 +84,11 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   } = useFeedItemUserMetadata();
   const menuItems = useMenuItems(
     {
+      common,
+      feedItem: item,
       discussion,
       governanceCircles,
+      commonMember,
     },
     {
       report: onReportModalOpen,
@@ -94,6 +101,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     setHovering(isMouseEnter);
   };
   const userId = user?.uid;
+  const commonId = common?.id;
+  const commonName = common?.name ?? "";
   const isLoading =
     !isDiscussionCreatorFetched ||
     !isDiscussionFetched ||
@@ -234,7 +243,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
-      image={commonImage}
+      image={common?.image}
       imageAlt={`${commonName}'s image`}
       isProject={isProject}
       isLoading={isLoading}
