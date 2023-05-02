@@ -50,7 +50,12 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
         </div>
       )}
       {seenOnce && !unreadMessages && isPinned && (
-        <img src="/icons/pinned-item.svg" alt="pin icon" />
+        <img
+          src={
+            isActive ? "/icons/pinned-item-white.svg" : "/icons/pinned-item.svg"
+          }
+          alt="pin icon"
+        />
       )}
     </>
   );
