@@ -49,6 +49,9 @@
   line-height: 1.25rem;
   font-weight: 400;
   margin: 0;
+  max-height: 3rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .closeButton {
