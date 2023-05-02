@@ -45,16 +45,28 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     (typeof sharedFeedItemIdQueryParam === "string" &&
       sharedFeedItemIdQueryParam) ||
     null;
-  const commonFeedItemIdsForNotListening = useMemo(
-    () => (sharedFeedItemId ? [sharedFeedItemId] : []),
-    [sharedFeedItemId],
-  );
   const commonAction = useSelector(selectCommonAction);
   const {
     data: commonData,
     fetched: isCommonDataFetched,
     fetchCommonData,
   } = useCommonData();
+  const pinnedItemIds = useMemo(
+    () => commonData?.common.pinnedFeedItems.map((item) => item.feedObjectId),
+    [commonData?.common.pinnedFeedItems],
+  );
+
+  const commonFeedItemIdsForNotListening = useMemo(() => {
+    const items: string[] = [];
+    if (pinnedItemIds) {
+      items.push(...pinnedItemIds);
+    }
+    if (sharedFeedItemId) {
+      items.push(sharedFeedItemId);
+    }
+    return items;
+  }, [sharedFeedItemId, pinnedItemIds]);
+
   const {
     fetched: isGlobalDataFetched,
     fetchUserRelatedData,
@@ -74,7 +86,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     data: commonPinnedFeedItems,
     loading: areCommonPinnedFeedItemsLoading,
     fetch: fetchCommonPinnedFeedItems,
-  } = useCommonPinnedFeedItems(commonId);
+  } = useCommonPinnedFeedItems(commonId, pinnedItemIds);
 
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const user = useSelector(selectUser());
@@ -242,6 +254,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         onFeedItemUpdate={handleFeedItemUpdate}
         getLastMessage={getLastMessage}
+        sharedFeedItemId={sharedFeedItemId}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

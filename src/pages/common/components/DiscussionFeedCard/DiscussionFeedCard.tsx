@@ -16,7 +16,6 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
-import { selectRecentStreamId } from "@/store/states";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
@@ -99,7 +98,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     },
   );
   const user = useSelector(selectUser());
-  const recentStreamId = useSelector(selectRecentStreamId);
   const [isHovering, setHovering] = useState(false);
   const onHover = (isMouseEnter: boolean): void => {
     setHovering(isMouseEnter);
@@ -154,7 +152,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     if (
       isDiscussionFetched &&
       isFeedItemUserMetadataFetched &&
-      (item.id === feedItemIdForAutoChatOpen || recentStreamId)
+      item.id === feedItemIdForAutoChatOpen
     ) {
       handleOpenChat();
     }

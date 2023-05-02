@@ -179,6 +179,35 @@ class CommonFeedService {
     });
   };
 
+  public subscribeToNewUpdatedCommonPinnedFeedItems = (
+    commonId: string,
+    callback: (
+      data: {
+        commonFeedItem: CommonFeed;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getCommonFeedSubCollection(commonId).orderBy(
+      "updatedAt",
+      "desc",
+    );
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        commonFeedItem: docChange.doc.data(),
+        statuses: {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        },
+      }));
+      callback(data);
+    });
+  };
+
   public markCommonFeedItemAsSeen = async (
     payload: MarkCommonFeedItemAsSeenPayload,
     options: { cancelToken?: CancelToken } = {},
