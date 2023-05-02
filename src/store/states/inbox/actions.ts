@@ -56,3 +56,11 @@ export const setSharedFeedItemId = createStandardAction(
 export const setSharedInboxItem = createStandardAction(
   InboxActionType.SET_SHARED_INBOX_ITEM,
 )<FeedItemFollowWithMetadata | null>();
+
+export const setFeedItemFollow = createStandardAction(
+  InboxActionType.SET_FEED_ITEM_FOLLOW,
+)<{
+  itemId: string;
+  commonId: string;
+  isFollowing: boolean;
+}>();

@@ -3,4 +3,6 @@ export enum DiscussionCardMenuItem {
   Report = "report",
   Edit = "edit",
   Remove = "remove",
+  Follow = "follow",
+  Unfollow = "unfollow",
 }

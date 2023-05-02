@@ -1,23 +1,32 @@
 import { useDispatch } from "react-redux";
-import { CommonAction } from "@/shared/constants";
+import { CommonAction, FollowFeedItemAction } from "@/shared/constants";
+import { useFeedItemFollow } from "@/shared/hooks/useCases";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { commonActions } from "@/store/states";
 import { DiscussionCardMenuItem } from "../constants";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
-type Options = GetAllowedItemsOptions;
+export type MenuItemOptions = Omit<GetAllowedItemsOptions, "feedItemFollow">;
 
 interface Actions {
   report: () => void;
   share: () => void;
 }
 
-export const useMenuItems = (options: Options, actions: Actions): Item[] => {
+export const useMenuItems = (
+  options: MenuItemOptions,
+  actions: Actions,
+): Item[] => {
   const dispatch = useDispatch();
   const { discussion, governanceCircles } = options;
   const { report, share } = actions;
-  const allowedMenuItems = getAllowedItems(options);
+  const feedItemFollow = useFeedItemFollow(
+    options.feedItem?.id,
+    options.common?.id,
+  );
+  const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
+
   const items: Item[] = [
     {
       id: DiscussionCardMenuItem.Share,
@@ -59,6 +68,17 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       onClick: () => {
         console.log(DiscussionCardMenuItem.Remove);
       },
+    },
+    {
+      id: DiscussionCardMenuItem.Follow,
+      text: "Follow",
+      onClick: () => feedItemFollow.onFollowToggle(FollowFeedItemAction.Follow),
+    },
+    {
+      id: DiscussionCardMenuItem.Unfollow,
+      text: "Unfollow",
+      onClick: () =>
+        feedItemFollow.onFollowToggle(FollowFeedItemAction.Unfollow),
     },
   ];
 

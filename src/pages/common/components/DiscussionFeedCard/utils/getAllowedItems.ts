@@ -1,3 +1,4 @@
+import { FeedItemFollowState } from "@/shared/hooks/useCases";
 import {
   Circles,
   CommonFeed,
@@ -5,10 +6,7 @@ import {
   Discussion,
   Proposal,
   Common,
-  PredefinedTypes,
 } from "@/shared/models";
-import { GovernanceActions } from "../../../../../shared/constants";
-import { hasPermission } from "../../../../../shared/utils";
 import { DiscussionCardMenuItem } from "../constants";
 
 export interface GetAllowedItemsOptions {
@@ -18,6 +16,7 @@ export interface GetAllowedItemsOptions {
   feedItem?: CommonFeed;
   proposal?: Proposal;
   commonMember?: CommonMember | null;
+  feedItemFollow: FeedItemFollowState;
 }
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
@@ -28,12 +27,24 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   [DiscussionCardMenuItem.Report]: () => false,
   [DiscussionCardMenuItem.Edit]: () => false,
   [DiscussionCardMenuItem.Remove]: () => false,
+  [DiscussionCardMenuItem.Follow]: (options) => {
+    return (
+      !options.feedItemFollow.isDisabled && !options.feedItemFollow.isFollowing
+    );
+  },
+  [DiscussionCardMenuItem.Unfollow]: (options) => {
+    return (
+      !options.feedItemFollow.isDisabled && options.feedItemFollow.isFollowing
+    );
+  },
 };
 
 export const getAllowedItems = (
   options: GetAllowedItemsOptions,
 ): DiscussionCardMenuItem[] => {
   const orderedItems = [
+    DiscussionCardMenuItem.Follow,
+    DiscussionCardMenuItem.Unfollow,
     DiscussionCardMenuItem.Share,
     DiscussionCardMenuItem.Report,
     DiscussionCardMenuItem.Edit,
