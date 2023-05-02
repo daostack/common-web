@@ -124,6 +124,10 @@
   }
 }
 
+.titleActive {
+  color: $white;
+}
+
 .lastMessage {
   color: $c-neutrals-300;
   font-size: $mobile-title;
@@ -135,6 +139,10 @@
   @include tablet {
     max-width: 16.1875rem;
   }
+}
+
+.lastMessageActive {
+  color: $c-neutrals-200;
 }
 
 .messageCount {
@@ -151,6 +159,10 @@
   word-break: break-word;
 }
 
+.lastActivityActive {
+  color: $white;
+}
+
 .unreadMessages {
   flex-shrink: 0;
   margin-left: 0.75rem;
@@ -164,6 +176,11 @@
   font-size: $xxsmall-2;
   font-weight: 600;
   color: $c-neutrals-100;
+}
+
+.unreadMessagesActive {
+  background-color: $c-neutrals-100;
+  color: $c-pink-active-feed-cards;
 }
 
 .unreadMessagesLong {

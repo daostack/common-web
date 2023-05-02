@@ -6,10 +6,11 @@ import styles from "./DesktopChatPlaceholder.module.scss";
 
 interface DesktopChatPlaceholderProps {
   className?: string;
+  isItemSelected: boolean;
 }
 
 const DesktopChatPlaceholder: FC<DesktopChatPlaceholderProps> = (props) => {
-  const { className } = props;
+  const { className, isItemSelected } = props;
 
   return (
     <div
@@ -20,9 +21,7 @@ const DesktopChatPlaceholder: FC<DesktopChatPlaceholderProps> = (props) => {
       )}
     >
       <div className={desktopChatStyles.titleWrapper} />
-      <div className={styles.loaderWrapper}>
-        <Loader />
-      </div>
+      <div className={styles.loaderWrapper}>{isItemSelected && <Loader />}</div>
     </div>
   );
 };

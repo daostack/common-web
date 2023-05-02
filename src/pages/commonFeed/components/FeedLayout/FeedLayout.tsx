@@ -37,6 +37,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
+import { selectRecentStreamId } from "@/store/states";
 import {
   DesktopChat,
   DesktopChatPlaceholder,
@@ -71,6 +72,7 @@ interface FeedLayoutProps {
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   getLastMessage: (options: GetLastMessageOptions) => string;
+  sharedFeedItemId?: string | null;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -94,10 +96,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     renderFeedItemBaseContent,
     onFeedItemUpdate,
     getLastMessage,
+    sharedFeedItemId,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
+  const recentStreamId = useSelector(selectRecentStreamId);
   const userId = user?.uid;
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
@@ -134,8 +138,20 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
 
     return items;
-  }, [topFeedItems, feedItems]);
+  }, [topFeedItems, feedItems, pinnedFeedItems]);
+
   const feedItemIdForAutoChatOpen = useMemo(() => {
+    if (recentStreamId) {
+      const foundItem = allFeedItems.find(
+        (item) => item.feedItem.data.id === recentStreamId,
+      );
+      return foundItem?.feedItem.id;
+    }
+
+    if (sharedFeedItemId) {
+      return sharedFeedItemId;
+    }
+
     if (isTabletView || chatItem?.feedItemId) {
       return;
     }
@@ -147,7 +163,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     );
 
     return foundItem?.feedItem.id;
-  }, [allFeedItems, isTabletView, chatItem?.feedItemId]);
+  }, [
+    allFeedItems,
+    isTabletView,
+    chatItem?.feedItemId,
+    recentStreamId,
+    sharedFeedItemId,
+  ]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
   const userCircleIds = useMemo(
@@ -275,7 +297,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     titleRightContent={followFeedItemEl}
                   />
                 ) : (
-                  <DesktopChatPlaceholder className={styles.desktopChat} />
+                  <DesktopChatPlaceholder
+                    className={styles.desktopChat}
+                    isItemSelected={Boolean(selectedItemCommonData)}
+                  />
                 ))}
               {isTabletView && selectedItemCommonData && (
                 <MobileChat

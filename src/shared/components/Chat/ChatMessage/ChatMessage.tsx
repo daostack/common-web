@@ -98,7 +98,9 @@ export default function ChatMessage({
         })}
       >
         <div
-          className={classNames(styles.messageName, styles.replyMessageName)}
+          className={classNames(styles.messageName, styles.replyMessageName, {
+            [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
+          })}
         >
           {discussionMessage.parentMessage?.ownerName}
         </div>
@@ -106,6 +108,9 @@ export default function ChatMessage({
           className={classNames(
             styles.messageContent,
             styles.replyMessageContent,
+            {
+              [styles.replyMessageContentCurrentUser]: !isNotCurrentUserMessage,
+            },
           )}
         >
           <Linkify>{discussionMessage.parentMessage.text}</Linkify>
@@ -192,8 +197,7 @@ export default function ChatMessage({
                     styles.creationTimeWrapper,
                     {
                       [styles.timeWrapperEdited]: isEdited,
-                      [styles.timeWrapperCurrentUser]:
-                      !isNotCurrentUserMessage,
+                      [styles.timeWrapperCurrentUser]: !isNotCurrentUserMessage,
                     },
                   )}
                 >
@@ -217,8 +221,7 @@ export default function ChatMessage({
               }
               elem={discussionMessage}
               className={styles.dropdownMenu}
-              variant={Orientation.Horizontal}
-              isOpen={isMenuOpen}
+              variant={Orientation.Arrow}
               onMenuToggle={handleMenuToggle}
               transparent
               isDiscussionMessage
@@ -226,6 +229,7 @@ export default function ChatMessage({
               userId={user?.uid}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}
+              {...(isTabletView && { isOpen: isMenuOpen })}
             />
           </div>
         )}
