@@ -16,6 +16,8 @@ interface Actions {
   share: () => void;
 }
 
+const FeedTypesToRemove = [CommonFeedType.Proposal, CommonFeedType.Discussion];
+
 export const useMenuItems = (options: Options, actions: Actions): Item[] => {
   const dispatch = useDispatch();
   const { discussion, governanceCircles, feedItem } = options;
@@ -62,12 +64,13 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       onClick: async () => {
         if (!feedItem || !discussion) return;
         let deletePromise: Promise<void> | undefined;
-        let resource = "discussion";
-        if (feedItem.data.type === CommonFeedType.Proposal) {
-          resource = "proposal";
+        // If the feed type is not a proposal or discussion, treat it as discussion
+        let feedType = feedItem.data.type;
+        if (!FeedTypesToRemove.includes(feedType)) {
+          feedType = CommonFeedType.Discussion;
         }
         await AlertConfirm({
-          title: `Are you sure you want to delete this ${resource}?`,
+          title: `Are you sure you want to delete this ${feedType.toLowerCase()}?`,
           desc: "Note that this action could not be undone.",
           okText: "Delete",
           style: { width: 474 },
