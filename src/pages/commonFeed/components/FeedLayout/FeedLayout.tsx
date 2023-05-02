@@ -181,10 +181,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     () => allFeedItems?.find((item) => item.feedItem.id === activeFeedItemId),
     [allFeedItems, activeFeedItemId],
   );
-  const selectedItemCommonData = getItemCommonData(
-    selectedFeedItem?.feedItemFollowWithMetadata,
-    outerCommon,
-  );
+  const selectedItemCommonData = selectedFeedItem
+    ? getItemCommonData(selectedFeedItem, outerCommon)
+    : undefined;
 
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
@@ -261,10 +260,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => {
                   const isActive = item.feedItem.id === activeFeedItemId;
-                  const commonData = getItemCommonData(
-                    item.feedItemFollowWithMetadata,
-                    outerCommon,
-                  );
+                  const commonData = getItemCommonData(item, outerCommon);
+                  console.log({ commonData, outerCommon, item });
 
                   return (
                     <FeedItem
@@ -274,6 +271,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
                       isProject={commonData?.isProject}
+                      isPinned={commonData?.isPinned}
                       item={item.feedItem}
                       governanceCircles={governance?.circles}
                       isMobileVersion={isTabletView}
@@ -318,6 +316,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     commonName={selectedItemCommonData.name}
                     commonImage={selectedItemCommonData.image}
                     isProject={selectedItemCommonData.isProject}
+                    isPinned={selectedItemCommonData.isPinned}
                     governanceCircles={governance?.circles}
                     selectedFeedItem={selectedFeedItem?.feedItem}
                     userCircleIds={userCircleIds}
