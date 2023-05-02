@@ -305,6 +305,44 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
+  .handleAction(actions.addNewPinnedFeedItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const data = payload.reduceRight(
+        (acc, { commonFeedItem, statuses: { isRemoved } }) => {
+          const nextData = [...acc];
+          const itemIndex = nextData.findIndex(
+            (item) => item.feedItem.id === commonFeedItem.id,
+          );
+
+          if (isRemoved) {
+            if (itemIndex >= 0) {
+              nextData.splice(itemIndex, 1);
+            }
+
+            return nextData;
+          }
+
+          const finalItem: FeedLayoutItem = {
+            feedItem: commonFeedItem,
+          };
+
+          if (itemIndex < 0) {
+            return [finalItem, ...nextData];
+          }
+
+          nextData[itemIndex] = finalItem;
+
+          return nextData;
+        },
+        nextState.pinnedFeedItems.data || [],
+      );
+
+      nextState.pinnedFeedItems = {
+        ...nextState.pinnedFeedItems,
+        data,
+      };
+    }),
+  )
   .handleAction(actions.updateFeedItem, (state, { payload }) =>
     produce(state, (nextState) => {
       updateFeedItemInList(nextState, payload);

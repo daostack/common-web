@@ -14,12 +14,12 @@
 .content {
   display: flex;
   align-items: center;
-  // cursor: pointer;
   position: relative;
 }
 
 .avatar {
   margin-right: 0.5rem;
+  cursor: pointer;
 }
 
 .text {
@@ -32,6 +32,7 @@
   font-weight: 500;
   line-height: 1.3125rem;
   word-break: break-word;
+  cursor: pointer;
 }
 
 .createdAt {

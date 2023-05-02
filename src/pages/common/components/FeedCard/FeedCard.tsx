@@ -132,9 +132,6 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
             {
               [styles.containerActive]:
                 (isActive || (isExpanded && isTabletView)) && !isPreviewMode,
-              [styles.containerHovering]:
-                isHovering &&
-                (feedCardSettings?.withHovering ?? !isPreviewMode),
             },
             className,
             feedCardSettings?.commonCardClassName,
