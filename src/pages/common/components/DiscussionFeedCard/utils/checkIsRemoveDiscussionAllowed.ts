@@ -3,7 +3,9 @@ import { PredefinedTypes } from "@/shared/models";
 import { checkIsCountdownState, hasPermission } from "@/shared/utils";
 import { GetAllowedItemsOptions } from "./types";
 
-export function isRemoveDiscussionAllowed(options: GetAllowedItemsOptions) {
+export function checkIsRemoveDiscussionAllowed(
+  options: GetAllowedItemsOptions,
+) {
   if (!options.commonMember) return false;
   if (options.discussion?.predefinedType === PredefinedTypes.General)
     return false;

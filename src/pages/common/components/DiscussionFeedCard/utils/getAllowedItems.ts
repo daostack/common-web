@@ -1,5 +1,5 @@
 import { DiscussionCardMenuItem } from "../constants";
-import { isRemoveDiscussionAllowed } from "./isRemoveDiscussionAllowed";
+import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
 import { GetAllowedItemsOptions } from "./types";
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
@@ -9,7 +9,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   [DiscussionCardMenuItem.Share]: () => false,
   [DiscussionCardMenuItem.Report]: () => false,
   [DiscussionCardMenuItem.Edit]: () => false,
-  [DiscussionCardMenuItem.Remove]: isRemoveDiscussionAllowed,
+  [DiscussionCardMenuItem.Remove]: checkIsRemoveDiscussionAllowed,
 };
 
 export const getAllowedItems = (
