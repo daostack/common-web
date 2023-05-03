@@ -359,10 +359,14 @@ class CommonService {
     await Api.post(ApiEndpoint.AcceptRules, { commonId }, { cancelToken });
   };
 
-  public inviteToCircle = async (circleId: string): Promise<void> => {
+  public inviteToCircle = async (
+    commonId: string,
+    circleId: string,
+    inviteeId: string,
+  ): Promise<void> => {
     await Api.post(ApiEndpoint.CreateAction, {
       type: GovernanceActions.INVITE_TO_CIRCLE,
-      args: { circleId },
+      args: { commonId, circleId, inviteeId },
     });
   };
 }

@@ -11,6 +11,8 @@ interface AssignCircleModalProps {
   onMenuToggle: (isOpen: boolean) => void;
   memberName: string;
   selectedCircle?: SelectedCircle;
+  commonId: string;
+  memberId: string;
 }
 export default function AssignCircleModal({
   isShowing,
@@ -18,6 +20,8 @@ export default function AssignCircleModal({
   onMenuToggle,
   selectedCircle,
   memberName,
+  commonId,
+  memberId,
 }: AssignCircleModalProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -29,7 +33,7 @@ export default function AssignCircleModal({
       setIsAdding(true);
       setErrorText("");
 
-      await CommonService.inviteToCircle(selectedCircle.id);
+      await CommonService.inviteToCircle(commonId, selectedCircle.id, memberId);
 
       handleClose();
     } catch (error) {
@@ -54,15 +58,15 @@ export default function AssignCircleModal({
           Add {memberName} to {selectedCircle?.name}?
         </h3>
         <div>
-          <Button onClick={handleAdd} disabled={isAdding}>
-            Add
-          </Button>
           <Button
             variant={ButtonVariant.Secondary}
             onClick={handleClose}
             disabled={isAdding}
           >
             Cancel
+          </Button>
+          <Button onClick={handleAdd} disabled={isAdding}>
+            Yes
           </Button>
         </div>
         {errorText && (

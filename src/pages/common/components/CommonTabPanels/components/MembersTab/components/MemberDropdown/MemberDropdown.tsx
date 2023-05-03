@@ -15,6 +15,8 @@ interface MemberDropdownProps {
   onMenuToggle: (isOpen: boolean) => void;
   notMemberCircles: Circle[];
   memberName: string;
+  commonId: string;
+  memberId: string;
 }
 
 export interface SelectedCircle {
@@ -23,7 +25,14 @@ export interface SelectedCircle {
 }
 
 const MemberDropdown: FC<MemberDropdownProps> = (props) => {
-  const { isOpen, onMenuToggle, notMemberCircles, memberName } = props;
+  const {
+    isOpen,
+    onMenuToggle,
+    notMemberCircles,
+    memberName,
+    commonId,
+    memberId,
+  } = props;
   const { isShowing, onClose, onOpen } = useModal(false);
   const [selectedCircle, setSelectedCircle] = useState<SelectedCircle>();
 
@@ -70,6 +79,8 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
         selectedCircle={selectedCircle}
         memberName={memberName}
         onMenuToggle={onMenuToggle}
+        commonId={commonId}
+        memberId={memberId}
       />
     </>
   );

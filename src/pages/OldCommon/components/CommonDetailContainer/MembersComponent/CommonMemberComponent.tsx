@@ -104,6 +104,8 @@ const CommonMember: FC<CommonMemberProps> = ({
           onMenuToggle={handleMenuToggle}
           notMemberCircles={notMemberCircles}
           memberName={memberName}
+          commonId={commonId}
+          memberId={member.userId}
         />
       </li>
       <CommonMemberPreview
