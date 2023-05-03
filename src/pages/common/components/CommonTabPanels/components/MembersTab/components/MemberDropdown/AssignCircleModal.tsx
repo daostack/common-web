@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { CommonService } from "@/services";
-import { Button, ButtonVariant, Modal } from "@/shared/components";
+import { Modal } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { SelectedCircle } from "./MemberDropdown";
 import styles from "./AssignCircleModal.module.scss";
 
@@ -52,20 +53,25 @@ export default function AssignCircleModal({
       isShowing={isShowing}
       onClose={handleClose}
       hideCloseButton={isAdding}
+      className={styles.modal}
     >
       <div className={styles.content}>
         <h3>
           Add {memberName} to {selectedCircle?.name}?
         </h3>
-        <div>
+        <div className={styles.buttonsContainer}>
           <Button
-            variant={ButtonVariant.Secondary}
+            variant={ButtonVariant.Warning}
             onClick={handleClose}
             disabled={isAdding}
           >
             Cancel
           </Button>
-          <Button onClick={handleAdd} disabled={isAdding}>
+          <Button
+            variant={ButtonVariant.OutlineBlue}
+            onClick={handleAdd}
+            disabled={isAdding}
+          >
             Yes
           </Button>
         </div>
