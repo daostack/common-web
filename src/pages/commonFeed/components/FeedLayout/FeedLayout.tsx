@@ -63,7 +63,6 @@ interface FeedLayoutProps {
   common?: Common;
   governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  pinnedFeedItems?: FeedLayoutItem[] | null;
   feedItems: FeedLayoutItem[] | null;
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;
@@ -87,7 +86,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     common: outerCommon,
     governance: outerGovernance,
     commonMember: outerCommonMember,
-    pinnedFeedItems,
     feedItems,
     topFeedItems = [],
     loading,
@@ -126,10 +124,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const allFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
 
-    if (pinnedFeedItems) {
-      items.push(...pinnedFeedItems);
-    }
-
     if (topFeedItems) {
       items.push(...topFeedItems);
     }
@@ -138,7 +132,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
 
     return items;
-  }, [topFeedItems, feedItems, pinnedFeedItems]);
+  }, [topFeedItems, feedItems]);
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (recentStreamId) {

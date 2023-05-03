@@ -22,7 +22,12 @@ import {
   NewDiscussionCreation,
   NewProposalCreation,
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
-import { FeedLayout, FeedLayoutRef, HeaderContent } from "./components";
+import {
+  FeedLayout,
+  FeedLayoutItem,
+  FeedLayoutRef,
+  HeaderContent,
+} from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
 import { getLastMessage } from "./utils";
 import styles from "./CommonFeed.module.scss";
@@ -81,7 +86,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     hasMore: hasMoreCommonFeedItems,
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
-
   const {
     data: commonPinnedFeedItems,
     loading: areCommonPinnedFeedItemsLoading,
@@ -91,10 +95,22 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const topFeedItems = useMemo(
-    () => (sharedFeedItem ? [sharedFeedItem] : []),
-    [sharedFeedItem],
-  );
+  const topFeedItems = useMemo(() => {
+    const items: FeedLayoutItem[] = [];
+    const filteredPinnedItems =
+      commonPinnedFeedItems?.filter(
+        (item) => item.feedItem.id !== sharedFeedItemId,
+      ) || [];
+
+    if (sharedFeedItem) {
+      items.push(sharedFeedItem);
+    }
+    if (filteredPinnedItems.length > 0) {
+      items.push(...filteredPinnedItems);
+    }
+
+    return items;
+  }, [sharedFeedItem, sharedFeedItemId, commonPinnedFeedItems]);
   const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
   const hasAccessToPage = Boolean(commonMember);
@@ -245,7 +261,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         common={commonData.common}
         governance={commonData.governance}
         commonMember={commonMember}
-        pinnedFeedItems={commonPinnedFeedItems}
         topFeedItems={topFeedItems}
         feedItems={commonFeedItems}
         loading={areCommonFeedItemsLoading || !hasAccessToPage}
