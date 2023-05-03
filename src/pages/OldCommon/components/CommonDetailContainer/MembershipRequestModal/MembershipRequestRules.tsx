@@ -5,7 +5,7 @@ import { MembershipRequestStage } from "./constants";
 import "./index.scss";
 
 export default function MembershipRequestRules(props: IStageProps) {
-  const { userData, setUserData, governance } = props;
+  const { userData, setUserData, governance, isAutomaticAcceptance } = props;
   const rules = governance?.unstructuredRules || [];
   const paymentMustGoThrough =
     governance?.proposals?.MEMBER_ADMITTANCE?.limitations.paymentMustGoThrough;
@@ -14,8 +14,12 @@ export default function MembershipRequestRules(props: IStageProps) {
     <div className="membership-request-content membership-request-rules">
       <div className="sub-title">Accept Common Rules</div>
       <div className="sub-text">
-        If the Common approves your request you will <br /> become a member with
-        equal voting rights
+        {!isAutomaticAcceptance && (
+          <>
+            If the Common approves your request you will <br /> become a member
+            with equal voting rights
+          </>
+        )}
       </div>
       <ol className="membership-request-rules__rules-wrapper">
         {rules.map((rule, index) => (
