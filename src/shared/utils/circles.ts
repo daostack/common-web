@@ -16,6 +16,7 @@ export const filterProjectCircles = <T extends Pick<Circle, "type">>(
 export const getFilteredByIdCircles = (
   circles: Circle[] | null,
   circleIds: string[] = [],
+  notIn = false,
 ): Circle[] => {
   if (
     !circles ||
@@ -26,7 +27,9 @@ export const getFilteredByIdCircles = (
     return [];
   }
 
-  return circles.filter(({ id }) => circleIds.includes(id));
+  return circles.filter(({ id }) =>
+    notIn ? !circleIds.includes(id) : circleIds.includes(id),
+  );
 };
 
 export const getCircleNamesWithSeparator = (

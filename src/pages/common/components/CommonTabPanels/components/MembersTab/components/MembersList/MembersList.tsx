@@ -4,11 +4,6 @@ import { useGovernance } from "@/shared/hooks/useCases";
 import { CirclesPermissions, CommonMemberWithUserInfo } from "@/shared/models";
 import { CommonMember as CommonMemberModel } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
-import {
-  getCirclesWithHighestTier,
-  getFilteredByIdCircles,
-  getUserName,
-} from "@/shared/utils";
 import styles from "./MembersList.module.scss";
 
 interface MembersListComponentProps {
@@ -39,32 +34,20 @@ const MembersList: FC<MembersListComponentProps> = ({
   if (!isGovernanceFetched) {
     return <Loader className={styles.loader} />;
   }
-
   const governanceCircles = Object.values(governance?.circles || {});
 
   return (
     <ul className="members__section__members-list">
       {members.map((member) => {
-        const memberCircles = getFilteredByIdCircles(
-          governanceCircles,
-          member.circleIds,
-        );
-        console.log(memberCircles);
-        const circlesString = getCirclesWithHighestTier(memberCircles)
-          .map((circle) => circle.name)
-          .join(", ");
-        const memberName = getUserName(member.user);
-
         return (
           <CommonMember
             key={member.id}
-            circles={circlesString}
-            memberName={memberName}
             avatar={member.user.photoURL}
             joinedAt={member.joinedAt}
             member={member}
             commonId={commonId}
             commonMember={commonMember}
+            governanceCircles={governanceCircles}
           />
         );
       })}

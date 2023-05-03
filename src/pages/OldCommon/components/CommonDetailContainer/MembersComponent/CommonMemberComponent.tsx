@@ -2,31 +2,38 @@ import React, { FC, MouseEventHandler, useState } from "react";
 import firebase from "firebase/app";
 import { v4 } from "uuid";
 import { MemberDropdown } from "@/pages/common/components/CommonTabPanels/components/MembersTab/components/MemberDropdown";
-import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
+import { GovernanceActions } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
-import { CirclesPermissions, CommonMemberWithUserInfo } from "@/shared/models";
+import {
+  Circle,
+  CirclesPermissions,
+  CommonMemberWithUserInfo,
+} from "@/shared/models";
 import { CommonMember as CommonMemberModel } from "@/shared/models";
+import {
+  getCirclesWithHighestTier,
+  getFilteredByIdCircles,
+  getUserName,
+} from "@/shared/utils";
 import { UserAvatar } from "../../../../../shared/components";
 import { CommonMemberPreview } from "./CommonMemberPreview";
 
 interface CommonMemberProps {
-  circles: string;
-  memberName: string;
   avatar: string | undefined;
   joinedAt: firebase.firestore.Timestamp;
   member: CommonMemberWithUserInfo;
   commonId: string;
   commonMember?: (CommonMemberModel & CirclesPermissions) | null;
+  governanceCircles: Circle[];
 }
 
 const CommonMember: FC<CommonMemberProps> = ({
   member,
   commonId,
-  circles,
-  memberName,
   avatar,
   joinedAt,
   commonMember,
+  governanceCircles,
 }) => {
   const { isShowing, onClose, onOpen } = useModal(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,24 +41,32 @@ const CommonMember: FC<CommonMemberProps> = ({
     event.preventDefault();
     const canInvite =
       commonMember?.allowedActions[GovernanceActions.INVITE_TO_CIRCLE];
-    const canAssign =
-      commonMember?.allowedProposals[ProposalsTypes.ASSIGN_CIRCLE];
 
-    if (canInvite || canAssign) {
+    /**
+     * For now, handle only the case of INVITE_TO_CIRCLE.
+     * See https://github.com/daostack/common-web/issues/1344 for more details.
+     */
+    // const canAssign =
+    //   commonMember?.allowedProposals[ProposalsTypes.ASSIGN_CIRCLE];
+
+    if (canInvite) {
       handleMenuToggle(true);
     }
-
-    // if (canInvite || (canInvite && canAssign)) {
-    //   // CREATE AS AN ACTION
-    // }
-
-    // if (canAssign) {
-    //   // CREATE AS PROPOSAL
-    // }
   };
 
-  console.log(member.circleIds);
-  console.log(commonMember);
+  const memberCircles = getFilteredByIdCircles(
+    governanceCircles,
+    member.circleIds,
+  );
+  const notMemberCircles = getFilteredByIdCircles(
+    governanceCircles,
+    member.circleIds,
+    true,
+  );
+  const circlesString = getCirclesWithHighestTier(memberCircles)
+    .map((circle) => circle.name)
+    .join(", ");
+  const memberName = getUserName(member.user);
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuOpen(isOpen);
@@ -72,7 +87,7 @@ const CommonMember: FC<CommonMemberProps> = ({
           />
           <div className="members__section__common-member-text-container">
             <div className="members__section__common-member-circles">
-              {circles}
+              {circlesString}
             </div>
             <div className="members__section__common-member-name">
               {memberName}
@@ -84,12 +99,16 @@ const CommonMember: FC<CommonMemberProps> = ({
             .toDate()
             .toLocaleDateString("en-US", { month: "short", day: "numeric" })}
         </div>
-        <MemberDropdown isOpen={isMenuOpen} onMenuToggle={handleMenuToggle} />
+        <MemberDropdown
+          isOpen={isMenuOpen}
+          onMenuToggle={handleMenuToggle}
+          notMemberCircles={notMemberCircles}
+        />
       </li>
       <CommonMemberPreview
         key={member.id}
         member={member}
-        circles={circles}
+        circles={circlesString}
         memberName={memberName}
         avatar={avatar}
         isShowing={isShowing}

@@ -1,35 +1,37 @@
 import React, { FC, useMemo, useState } from "react";
-import { DropdownOption, ElementDropdownMenuItems } from "@/shared/components";
+import { DropdownOption } from "@/shared/components";
+import { useModal } from "@/shared/hooks";
 import {
   MenuItem as DesktopStyleMenuItem,
   MenuItemType,
 } from "@/shared/interfaces";
+import { Circle } from "@/shared/models";
 import { DesktopStyleMenu } from "@/shared/ui-kit";
+import AssignCircleModal from "./AssignCircleModal";
 import elementDropdownStyles from "./MemberDropdown.module.scss";
 
 interface MemberDropdownProps {
   isOpen: boolean;
   onMenuToggle: (isOpen: boolean) => void;
+  notMemberCircles: Circle[];
 }
 
 const MemberDropdown: FC<MemberDropdownProps> = (props) => {
-  const { isOpen, onMenuToggle } = props;
-  const [selectedItem, setSelectedItem] = useState<
-    ElementDropdownMenuItems | unknown
-  >(null);
+  const { isOpen, onMenuToggle, notMemberCircles } = props;
+  const { isShowing, onClose, onOpen } = useModal(false);
+  const [selectedCircleId, setSelectedCircleId] = useState<string>();
+
+  console.log(selectedCircleId);
 
   const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(() => {
-    const items: DropdownOption[] = [];
-
-    // TODO: check and push the right circles.
-
-    items.push({
-      text: <span>Assign</span>,
-      value: "Assign",
-    });
+    // INVITE_TO_CIRCLE --> CREATE AS AN ACTION
+    const items: DropdownOption[] = notMemberCircles.map((circle) => ({
+      text: <span>Add to {circle.name}</span>,
+      value: circle.id,
+    }));
 
     return items;
-  }, []);
+  }, [notMemberCircles]);
 
   const desktopStyleMenuItems = useMemo<DesktopStyleMenuItem[]>(
     () =>
@@ -39,11 +41,12 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
         className: item.className,
         text: item.text,
         onClick: () => {
-          setSelectedItem(item.value);
+          setSelectedCircleId(item.value as string);
+          onOpen();
           onMenuToggle(false);
         },
       })),
-    [ElementDropdownMenuItemsList, setSelectedItem, selectedItem],
+    [ElementDropdownMenuItemsList, setSelectedCircleId, onOpen],
   );
 
   return (
@@ -55,6 +58,7 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
         items={desktopStyleMenuItems}
         withTransition={false}
       />
+      <AssignCircleModal isShowing={isShowing} onClose={onClose} />
     </>
   );
 };
