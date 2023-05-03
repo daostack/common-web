@@ -83,10 +83,18 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
 
   const {
-    data: commonPinnedFeedItems,
+    data: rawCommonPinnedFeedItems,
     loading: areCommonPinnedFeedItemsLoading,
     fetch: fetchCommonPinnedFeedItems,
   } = useCommonPinnedFeedItems(commonId, pinnedItemIds);
+  const commonPinnedFeedItems = useMemo(
+    () =>
+      rawCommonPinnedFeedItems &&
+      rawCommonPinnedFeedItems.filter(
+        (item) => item.feedItem.id !== sharedFeedItemId,
+      ),
+    [rawCommonPinnedFeedItems, sharedFeedItemId],
+  );
 
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const user = useSelector(selectUser());
@@ -169,10 +177,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [commonFeedItems, areCommonFeedItemsLoading]);
 
   useEffect(() => {
-    if (!commonPinnedFeedItems && !areCommonPinnedFeedItemsLoading) {
+    if (!rawCommonPinnedFeedItems && !areCommonPinnedFeedItemsLoading) {
       fetchCommonPinnedFeedItems();
     }
-  }, [commonPinnedFeedItems, areCommonPinnedFeedItemsLoading]);
+  }, [rawCommonPinnedFeedItems, areCommonPinnedFeedItemsLoading]);
 
   useEffect(() => {
     if (recentStreamId === firstItem?.feedItem.data.id) {
