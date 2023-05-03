@@ -55,7 +55,7 @@ class DiscussionService {
   };
 
   public deleteDiscussion = async (discussionId: string): Promise<void> => {
-    await Api.delete<Discussion>(ApiEndpoint.DeleteDiscussion(discussionId));
+    await Api.delete(ApiEndpoint.DeleteDiscussion(discussionId));
   };
 }
 
