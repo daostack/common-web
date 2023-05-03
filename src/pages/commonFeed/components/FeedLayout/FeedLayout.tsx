@@ -261,7 +261,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 {allFeedItems?.map((item) => {
                   const isActive = item.feedItem.id === activeFeedItemId;
                   const commonData = getItemCommonData(item, outerCommon);
-                  console.log({ commonData, outerCommon, item });
 
                   return (
                     <FeedItem
