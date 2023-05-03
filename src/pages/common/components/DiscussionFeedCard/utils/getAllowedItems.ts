@@ -1,6 +1,6 @@
 import { DiscussionCardMenuItem } from "../constants";
 import { isRemoveDiscussionAllowed } from "./isRemoveDiscussionAllowed";
-import { GetAllowedItemsOptions } from "./shared";
+import { GetAllowedItemsOptions } from "./types";
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   DiscussionCardMenuItem,

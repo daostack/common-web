@@ -1,2 +1,2 @@
 export * from "./getAllowedItems";
-export type { GetAllowedItemsOptions } from "./shared";
+export type { GetAllowedItemsOptions } from "./types";
