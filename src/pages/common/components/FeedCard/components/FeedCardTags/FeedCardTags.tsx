@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { PinIcon } from "@/shared/icons/pin.icon";
 import { CommonFeedType } from "@/shared/models";
 import styles from "./FeedCardTags.module.scss";
 
@@ -50,11 +51,10 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
         </div>
       )}
       {seenOnce && !unreadMessages && isPinned && (
-        <img
-          src={
-            isActive ? "/icons/pinned-item-white.svg" : "/icons/pinned-item.svg"
-          }
-          alt="pin icon"
+        <PinIcon
+          className={classNames(styles.pin, {
+            [styles.pinActive]: isActive,
+          })}
         />
       )}
     </>
