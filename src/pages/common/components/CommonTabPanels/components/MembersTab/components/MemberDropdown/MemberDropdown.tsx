@@ -14,20 +14,27 @@ interface MemberDropdownProps {
   isOpen: boolean;
   onMenuToggle: (isOpen: boolean) => void;
   notMemberCircles: Circle[];
+  memberName: string;
+}
+
+export interface SelectedCircle {
+  id: string;
+  name: string;
 }
 
 const MemberDropdown: FC<MemberDropdownProps> = (props) => {
-  const { isOpen, onMenuToggle, notMemberCircles } = props;
+  const { isOpen, onMenuToggle, notMemberCircles, memberName } = props;
   const { isShowing, onClose, onOpen } = useModal(false);
-  const [selectedCircleId, setSelectedCircleId] = useState<string>();
-
-  console.log(selectedCircleId);
+  const [selectedCircle, setSelectedCircle] = useState<SelectedCircle>();
 
   const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(() => {
     // INVITE_TO_CIRCLE --> CREATE AS AN ACTION
     const items: DropdownOption[] = notMemberCircles.map((circle) => ({
-      text: <span>Add to {circle.name}</span>,
-      value: circle.id,
+      text: `Add to ${circle.name}`,
+      value: {
+        id: circle.id,
+        name: circle.name,
+      },
     }));
 
     return items;
@@ -37,16 +44,15 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
     () =>
       ElementDropdownMenuItemsList.map<DesktopStyleMenuItem>((item) => ({
         type: MenuItemType.Button,
-        id: item.value as string,
+        id: (item.value as SelectedCircle).id,
         className: item.className,
         text: item.text,
         onClick: () => {
-          setSelectedCircleId(item.value as string);
+          setSelectedCircle(item.value as SelectedCircle);
           onOpen();
-          onMenuToggle(false);
         },
       })),
-    [ElementDropdownMenuItemsList, setSelectedCircleId, onOpen],
+    [ElementDropdownMenuItemsList, setSelectedCircle, onOpen],
   );
 
   return (
@@ -54,11 +60,17 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
       <DesktopStyleMenu
         className={elementDropdownStyles.desktopStyleMenu}
         isOpen={isOpen}
-        onClose={() => onMenuToggle(false)}
+        onClose={() => !isShowing && onMenuToggle(false)}
         items={desktopStyleMenuItems}
         withTransition={false}
       />
-      <AssignCircleModal isShowing={isShowing} onClose={onClose} />
+      <AssignCircleModal
+        isShowing={isShowing}
+        onClose={onClose}
+        selectedCircle={selectedCircle}
+        memberName={memberName}
+        onMenuToggle={onMenuToggle}
+      />
     </>
   );
 };

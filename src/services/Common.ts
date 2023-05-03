@@ -358,6 +358,13 @@ class CommonService {
     const { cancelToken } = options;
     await Api.post(ApiEndpoint.AcceptRules, { commonId }, { cancelToken });
   };
+
+  public inviteToCircle = async (circleId: string): Promise<void> => {
+    await Api.post(ApiEndpoint.CreateAction, {
+      type: GovernanceActions.INVITE_TO_CIRCLE,
+      args: { circleId },
+    });
+  };
 }
 
 export default new CommonService();

@@ -103,6 +103,7 @@ const CommonMember: FC<CommonMemberProps> = ({
           isOpen={isMenuOpen}
           onMenuToggle={handleMenuToggle}
           notMemberCircles={notMemberCircles}
+          memberName={memberName}
         />
       </li>
       <CommonMemberPreview

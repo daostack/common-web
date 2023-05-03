@@ -1,0 +1,11 @@
+@import "../../../../../../../../constants.scss";
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error {
+  font-size: $xsmall;
+}
