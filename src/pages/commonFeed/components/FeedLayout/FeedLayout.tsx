@@ -72,6 +72,7 @@ interface FeedLayoutProps {
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   getLastMessage: (options: GetLastMessageOptions) => string;
   sharedFeedItemId?: string | null;
+  emptyText?: string;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -95,6 +96,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onFeedItemUpdate,
     getLastMessage,
     sharedFeedItemId,
+    emptyText,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -134,7 +136,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     return items;
   }, [topFeedItems, feedItems]);
   const isContentEmpty =
-    !loading && (!allFeedItems || allFeedItems.length === 0);
+    !loading && (!allFeedItems || allFeedItems.length === 0) && emptyText;
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (recentStreamId) {
@@ -259,7 +261,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             >
               {topContent}
               {isContentEmpty && (
-                <p className={styles.emptyText}>Your inbox is empty</p>
+                <p className={styles.emptyText}>{emptyText}</p>
               )}
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => {
