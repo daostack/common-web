@@ -15,7 +15,10 @@
 }
 
 .content {
+  flex: 1;
   padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
 
   & > * {
     margin-bottom: 0;
@@ -23,14 +26,11 @@
 }
 
 .contentEmpty {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .emptyText {
-  align-self: center;
-  justify-self: center;
   margin: 0;
   font-weight: 500;
   font-size: $moderate-xsmall;
