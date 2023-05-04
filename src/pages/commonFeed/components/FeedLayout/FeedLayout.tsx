@@ -259,6 +259,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     item.feedItemFollowWithMetadata,
                     outerCommon,
                   );
+                  const isPinned = (outerCommon?.pinnedFeedItems || []).some(
+                    (pinnedItem) =>
+                      pinnedItem.feedObjectId === item.feedItem.id,
+                  );
 
                   return (
                     <FeedItem
@@ -267,6 +271,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
                       isProject={commonData?.isProject}
+                      isPinned={isPinned}
                       item={item.feedItem}
                       governanceCircles={governance?.circles}
                       isMobileVersion={isTabletView}

@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { PinIcon } from "@/shared/icons/pin.icon";
 import { CommonFeedType } from "@/shared/models";
 import styles from "./FeedCardTags.module.scss";
 
@@ -11,10 +12,11 @@ interface FeedCardTagsProps {
   seenOnce?: boolean;
   ownerId?: string;
   isActive: boolean;
+  isPinned?: boolean;
 }
 
 export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
-  const { unreadMessages, type, seenOnce, ownerId, isActive } = props;
+  const { unreadMessages, type, seenOnce, ownerId, isActive, isPinned } = props;
   const user = useSelector(selectUser());
   const isOwner = ownerId === user?.uid;
 
@@ -47,6 +49,13 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
         >
           {unreadMessages}
         </div>
+      )}
+      {seenOnce && !unreadMessages && isPinned && (
+        <PinIcon
+          className={classNames(styles.pin, {
+            [styles.pinActive]: isActive,
+          })}
+        />
       )}
     </>
   );

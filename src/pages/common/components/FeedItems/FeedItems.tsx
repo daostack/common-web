@@ -59,20 +59,26 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
     >
       <FeedItemContext.Provider value={feedItemContextValue}>
         <InfiniteScroll onFetchNext={fetchMore} isLoading={loading}>
-          {commonFeedItems?.map((item) => (
-            <FeedItem
-              key={item.feedItem.id}
-              commonId={common.id}
-              commonName={common.name}
-              commonImage={common.image}
-              isProject={checkIsProject(common)}
-              item={item.feedItem}
-              governanceCircles={governance.circles}
-              isMobileVersion={isTabletView}
-              userCircleIds={userCircleIds}
-              isPreviewMode
-            />
-          ))}
+          {commonFeedItems?.map((item) => {
+            const isPinned = (common.pinnedFeedItems || []).some(
+              (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
+            );
+            return (
+              <FeedItem
+                key={item.feedItem.id}
+                commonId={common.id}
+                commonName={common.name}
+                commonImage={common.image}
+                isPinned={isPinned}
+                isProject={checkIsProject(common)}
+                item={item.feedItem}
+                governanceCircles={governance.circles}
+                isMobileVersion={isTabletView}
+                userCircleIds={userCircleIds}
+                isPreviewMode
+              />
+            );
+          })}
         </InfiniteScroll>
       </FeedItemContext.Provider>
     </Container>
