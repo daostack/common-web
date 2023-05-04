@@ -76,9 +76,7 @@ export default function ChatContent({
     [chatWrapperId],
   );
 
-  const dateListReverse = useMemo(() => {
-    return [...dateList].reverse();
-  }, [JSON.stringify(dateList)]);
+  const dateListReverse = useMemo(() => [...dateList].reverse(), [dateList]);
 
   useEffect(() => {
     if (!highlightedMessageId) {
