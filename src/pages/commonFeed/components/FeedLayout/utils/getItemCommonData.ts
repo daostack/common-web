@@ -1,6 +1,5 @@
 import { Common, FeedItemFollowWithMetadata } from "@/shared/models";
 import { checkIsProject } from "@/shared/utils";
-import { FeedLayoutItem } from "../types";
 
 type Return =
   | (Pick<Common, "id" | "name" | "image"> & {

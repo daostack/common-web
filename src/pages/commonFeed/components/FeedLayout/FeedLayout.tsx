@@ -181,18 +181,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     () => allFeedItems?.find((item) => item.feedItem.id === activeFeedItemId),
     [allFeedItems, activeFeedItemId],
   );
-  const selectedItemCommonData = selectedFeedItem
-    ? getItemCommonData(
-        selectedFeedItem.feedItemFollowWithMetadata,
-        outerCommon,
-      )
-    : null;
-  const isSelectedItemPinned = selectedFeedItem
-    ? (outerCommon?.pinnedFeedItems || []).some(
-        (pinnedItem) =>
-          pinnedItem.feedObjectId === selectedFeedItem.feedItem.id,
-      )
-    : false;
+  const selectedItemCommonData = getItemCommonData(
+    selectedFeedItem?.feedItemFollowWithMetadata,
+    outerCommon,
+  );
 
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
@@ -330,7 +322,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     commonName={selectedItemCommonData.name}
                     commonImage={selectedItemCommonData.image}
                     isProject={selectedItemCommonData.isProject}
-                    isPinned={isSelectedItemPinned}
                     governanceCircles={governance?.circles}
                     selectedFeedItem={selectedFeedItem?.feedItem}
                     userCircleIds={userCircleIds}

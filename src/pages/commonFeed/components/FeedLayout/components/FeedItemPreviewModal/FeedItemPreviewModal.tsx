@@ -14,7 +14,6 @@ interface FeedItemPreviewModalProps {
   commonName: string;
   commonImage: string;
   isProject: boolean;
-  isPinned: boolean;
   governanceCircles?: Circles;
   isShowFeedItemDetailsModal?: boolean;
   sizeKey?: string;
@@ -28,7 +27,6 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
     commonName,
     commonImage,
     isProject,
-    isPinned,
     governanceCircles,
     isShowFeedItemDetailsModal,
     sizeKey,
@@ -64,7 +62,6 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
           commonName={commonName}
           commonImage={commonImage}
           isProject={isProject}
-          isPinned={isPinned}
           item={selectedFeedItem}
           governanceCircles={governanceCircles}
           isMobileVersion={isTabletView}
