@@ -255,6 +255,7 @@ export default function ChatComponent({
             ? {
                 id: discussionMessageReply?.id,
                 ownerName: discussionMessageReply.ownerName,
+                ownerId: discussionMessageReply.ownerId,
                 text: discussionMessageReply.text,
               }
             : null,

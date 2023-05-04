@@ -58,6 +58,7 @@ interface ElementDropdownProps {
   userId?: string;
   ownerId?: string;
   commonId?: string;
+  isControlledDropdown?: boolean;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
@@ -75,6 +76,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   userId,
   ownerId,
   commonId,
+  isControlledDropdown = true,
 }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
@@ -106,7 +108,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     onClose: onCloseHide,
   } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const isControlledMenu = typeof isOpen === "boolean";
+  const isControlledMenu = typeof isOpen === "boolean" && isControlledDropdown;
   const isHiddenElement =
     (elem as DiscussionMessage | Discussion | Proposal)?.moderation?.flag ===
     ModerationFlags.Hidden;
@@ -303,6 +305,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     <>
       {!isControlledMenu && (
         <Dropdown
+          isOpen={isOpen}
           options={ElementDropdownMenuItemsList}
           menuButton={<MenuButton variant={variant} />}
           onMenuToggle={handleMenuToggle}
@@ -313,7 +316,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
           menuInlineStyle={menuInlineStyle}
           styles={{
             ...styles,
-            menuButton: classNames({
+            menuButton: classNames(styles?.menuButton, {
               "element-dropdown__menu-button--transparent": transparent,
             }),
             menu: "element-dropdown__menu",

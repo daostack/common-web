@@ -56,10 +56,6 @@
   transition: all 0.2s;
 }
 
-.custom-dropdown-wrapper__arrow-icon--opened {
-  transform: rotate(-90deg);
-}
-
 .custom-dropdown-wrapper__menu {
   position: absolute;
   top: 100%;
@@ -75,6 +71,14 @@
 .custom-dropdown-wrapper__menu--fixed {
   position: fixed;
   max-width: 17.125rem;
+}
+
+.custom-dropdown-wrapper__arrow-icon--opened {
+  transform: rotate(-90deg);
+}
+
+.custom-dropdown-wrapper__menu-button--hidden {
+  display: none;
 }
 
 .custom-dropdown-wrapper__menu-list {
