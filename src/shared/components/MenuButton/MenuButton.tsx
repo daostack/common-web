@@ -40,7 +40,7 @@ const MenuButton: ForwardRefRenderFunction<
       ref={ref}
       className={classNames("menu-button", className, {
         "menu-button--with-border": withBorder,
-        "menu-button--arrow": variant === Orientation.Arrow
+        "menu-button--arrow": variant === Orientation.Arrow,
       })}
       onClick={onClick}
     >

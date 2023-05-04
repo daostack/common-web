@@ -42,6 +42,7 @@ interface ProposalFeedCardProps {
   commonName: string;
   commonImage: string;
   isProject: boolean;
+  isPinned: boolean;
   item: CommonFeed;
   governanceCircles?: Governance["circles"];
   isPreviewMode?: boolean;
@@ -57,6 +58,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     commonName,
     commonImage,
     isProject,
+    isPinned,
     item,
     governanceCircles,
     isPreviewMode,
@@ -326,6 +328,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         image={commonImage}
         imageAlt={`${commonName}'s image`}
         isProject={isProject}
+        isPinned={isPinned}
         isLoading={isLoading}
         type={item.data.type}
         seenOnce={feedItemUserMetadata?.seenOnce}

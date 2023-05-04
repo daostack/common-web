@@ -43,6 +43,7 @@ interface DiscussionFeedCardProps {
   commonImage: string;
   commonMember?: CommonMember | null;
   isProject: boolean;
+  isPinned: boolean;
   isPreviewMode: boolean;
   isActive: boolean;
   isExpanded: boolean;
@@ -62,6 +63,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     commonImage,
     commonMember,
     isProject,
+    isPinned,
     isPreviewMode,
     isActive,
     isExpanded,
@@ -253,6 +255,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         })}
         canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
         isPreviewMode={isPreviewMode}
+        isPinned={isPinned}
         image={commonImage}
         imageAlt={`${commonName}'s image`}
         isProject={isProject}
