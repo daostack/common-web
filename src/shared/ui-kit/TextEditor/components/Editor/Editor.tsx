@@ -49,7 +49,6 @@ const Editor: FC<EditorProps> = (props) => {
   const id = props.id || props.name;
 
   const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (event) => {
-    onKeyDown && onKeyDown(event);
     Object.entries(HOTKEYS).forEach(([hotkey, format]) => {
       if (!isHotkey(hotkey, event)) {
         return;
@@ -58,6 +57,7 @@ const Editor: FC<EditorProps> = (props) => {
       event.preventDefault();
       toggleMark(editor, format);
     });
+    onKeyDown && onKeyDown(event);
   };
 
   return (

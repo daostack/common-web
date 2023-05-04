@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useCallback,
   ChangeEvent,
+  useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "react-use";
@@ -340,8 +341,6 @@ export default function ChatComponent({
       return;
     }
 
-    event.preventDefault();
-
     if (enteredHotkey === HotKeys.Enter) {
       sendChatMessage();
       return;
@@ -362,6 +361,8 @@ export default function ChatComponent({
       });
     }
   }, [lastNonUserMessage?.id]);
+
+  const editorRef = useRef(null);
 
   return (
     <div className={styles.chatWrapper}>
@@ -394,7 +395,7 @@ export default function ChatComponent({
       </div>
       {isAuthorized && (
         <div className={styles.bottomChatContainer}>
-          <MessageReply commonMembers={commonMembers}/>
+          <MessageReply commonMembers={commonMembers} />
           <ChatFilePreview />
           <div className={styles.chatInputWrapper}>
             {!commonMember || !hasAccess || isHidden ? (
@@ -419,6 +420,7 @@ export default function ChatComponent({
                   multiple
                 />
                 <BaseTextEditor
+                  editorRef={editorRef}
                   className={styles.messageInput}
                   value={message}
                   onChange={setMessage}

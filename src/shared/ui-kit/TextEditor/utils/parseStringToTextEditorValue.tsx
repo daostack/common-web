@@ -50,7 +50,10 @@ export const parseTextEditorValueToString = (
     const textEditorValue = JSON.parse(initialValue);
 
     const textEditorMap = textEditorValue.map((item) => {
-      return item.children.map((tag: CustomElement) => tag);
+      return item.children.map((tag: CustomElement) => ({
+        ...tag,
+        type: item.type,
+      }));
     });
 
     return flattenDeep(textEditorMap);

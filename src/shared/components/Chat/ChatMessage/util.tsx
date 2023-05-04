@@ -10,10 +10,12 @@ import styles from "./ChatMessage.module.scss";
 export const getTextFromTextEditorString = async ({
   textEditorString,
   commonMembers,
-  mentionTextClassName
-}:   {textEditorString: string,
-commonMembers: CommonMemberWithUserInfo[],
-mentionTextClassName?: string}) => {
+  mentionTextClassName,
+}: {
+  textEditorString: string;
+  commonMembers: CommonMemberWithUserInfo[];
+  mentionTextClassName?: string;
+}) => {
   return await Promise.all(
     parseTextEditorValueToString(textEditorString)?.map(async (tag) => {
       if (tag.type === ElementType.Mention) {
@@ -37,9 +39,12 @@ mentionTextClassName?: string}) => {
             className={classNames(styles.mentionText, mentionTextClassName)}
           >{`@${commonMember.user.displayName} `}</span>
         );
+      } else if (tag.type === ElementType.Paragraph) {
+        return `${(tag as ParagraphElement)?.text ?? ""}\n`;
       }
 
-      return (tag as ParagraphElement)?.text ?? "";
+      console.log("----tag", tag);
+      return (tag as { text: string })?.text ?? "";
     }),
   );
 };

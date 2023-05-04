@@ -98,9 +98,12 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   }, [editorRef, editor]);
 
   const chars = (users ?? [])
-    .filter(({ displayName }) =>
-      displayName?.toLowerCase().startsWith(search.toLowerCase()),
-    )
+    .filter(({ displayName }) => {
+      if (!search) {
+        return true;
+      }
+      return displayName?.toLowerCase().startsWith(search.toLowerCase());
+    })
     .slice(0, 10);
 
   return (
@@ -113,15 +116,15 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
         if (selection && Range.isCollapsed(selection)) {
           const [start] = Range.edges(selection);
-          const wordBefore = EditorSlate.before(editor, start, {
-            unit: "word",
-          });
-          const before = wordBefore && EditorSlate.before(editor, wordBefore);
+          const before = EditorSlate.before(editor, start);
           const beforeRange =
             before && EditorSlate.range(editor, before, start);
           const beforeText =
             beforeRange && EditorSlate.string(editor, beforeRange);
-          const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/);
+          console.log("---beforeText", beforeText);
+          const beforeMatch =
+            beforeText &&
+            beforeText.match(/^@([a-zA-Z\u0590-\u05FF\u200f\u200e]+)$|^@/);
           const after = EditorSlate.after(editor, start);
           const afterRange = EditorSlate.range(editor, start, after);
           const afterText = EditorSlate.string(editor, afterRange);
@@ -156,6 +159,9 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
             setTarget(null);
           }}
           users={chars}
+          onClose={() => {
+            setTarget(null);
+          }}
         />
       )}
     </Slate>
