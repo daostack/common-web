@@ -35,7 +35,6 @@
     "openpgp": "4.10.4",
     "query-string": "^7.1.0",
     "react": "^17.0.1",
-    "react-alert-confirm": "^4.1.7",
     "react-aria-menubutton": "^7.0.3",
     "react-currency-input-field": "^3.6.0",
     "react-datepicker": "^4.7.0",

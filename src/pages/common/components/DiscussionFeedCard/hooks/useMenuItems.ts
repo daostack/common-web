@@ -1,14 +1,11 @@
-import AlertConfirm from "react-alert-confirm";
 import { useDispatch } from "react-redux";
 import { DiscussionService } from "@/services";
 import { CommonAction } from "@/shared/constants";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
-import { asyncConfirm } from "@/shared/utils/asyncConfirm";
 import { commonActions } from "@/store/states";
 import { CommonFeedType } from "../../../../../shared/models";
 import { DiscussionCardMenuItem } from "../constants";
-import { DELETE_CONFIRM_OPTIONS } from "../constants/confirms";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
 type Options = GetAllowedItemsOptions;
@@ -63,19 +60,7 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
     {
       id: DiscussionCardMenuItem.Remove,
       text: "Remove",
-      onClick: async () => {
-        if (!feedItem || !discussion) return;
-        // If the feed type is not a proposal or discussion, treat it as discussion
-        let feedType = feedItem.data.type;
-        if (!FeedTypesToRemove.includes(feedType)) {
-          feedType = CommonFeedType.Discussion;
-        }
-        await asyncConfirm({
-          ...DELETE_CONFIRM_OPTIONS,
-          title: `Are you sure you want to delete this ${feedType.toLowerCase()}?`,
-          onConfirm: () => DiscussionService.deleteDiscussion(discussion.id),
-        });
-      },
+      onClick: async () => {},
     },
   ];
 
