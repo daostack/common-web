@@ -133,6 +133,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return items;
   }, [topFeedItems, feedItems]);
+  const isContentEmpty =
+    !loading && (!allFeedItems || allFeedItems.length === 0);
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (recentStreamId) {
@@ -250,8 +252,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       <FeedItemContext.Provider value={feedItemContextValue}>
         <ChatContext.Provider value={chatContextValue}>
           {!shouldHideContent && (
-            <div className={classNames(styles.content, className)}>
+            <div
+              className={classNames(styles.content, className, {
+                [styles.contentEmpty]: isContentEmpty,
+              })}
+            >
               {topContent}
+              {isContentEmpty && (
+                <p className={styles.emptyText}>Your inbox is empty</p>
+              )}
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => {
                   const isActive = item.feedItem.id === activeFeedItemId;
