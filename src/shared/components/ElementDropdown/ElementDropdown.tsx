@@ -58,8 +58,6 @@ interface ElementDropdownProps {
   userId?: string;
   ownerId?: string;
   commonId?: string;
-  isHovering?: boolean;
-  withHover?: boolean;
   isControlledDropdown?: boolean;
 }
 
@@ -78,8 +76,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   userId,
   ownerId,
   commonId,
-  isHovering,
-  withHover = false,
   isControlledDropdown = true,
 }) => {
   const dispatch = useDispatch();
@@ -310,8 +306,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       {!isControlledMenu && (
         <Dropdown
           isOpen={isOpen}
-          isHovering={isHovering}
-          withHover={withHover}
           options={ElementDropdownMenuItemsList}
           menuButton={<MenuButton variant={variant} />}
           onMenuToggle={handleMenuToggle}
@@ -322,7 +316,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
           menuInlineStyle={menuInlineStyle}
           styles={{
             ...styles,
-            menuButton: classNames({
+            menuButton: classNames(styles?.menuButton, {
               "element-dropdown__menu-button--transparent": transparent,
             }),
             menu: "element-dropdown__menu",

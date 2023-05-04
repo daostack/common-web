@@ -75,8 +75,6 @@ export interface DropdownProps {
   onMenuToggle?: (isOpen: boolean) => void;
   isLoading?: boolean;
   menuInlineStyle?: CSSProperties;
-  withHover?: boolean;
-  isHovering?: boolean;
   isOpen?: boolean;
 }
 
@@ -145,8 +143,6 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     fullMenuButtonChange = false,
     shouldBeFixed = true,
     isLoading = false,
-    withHover = false,
-    isHovering = false,
     menuInlineStyle,
     isOpen: isMenuOpen,
   } = props;
@@ -222,8 +218,6 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
           <MenuButton
             className={classNames(styles?.menuButton, {
               "custom-dropdown-wrapper__menu-button": !menuButton,
-              "custom-dropdown-wrapper_menu-button--hidden":
-                !isHovering && withHover,
             })}
             ref={menuButtonRef}
           >
@@ -248,6 +242,9 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
                   className={classNames(
                     "custom-dropdown-wrapper__arrow-icon",
                     styles?.arrowIcon,
+                    {
+                      "custom-dropdown-wrapper__arrow-icon--opened": isOpen,
+                    },
                   )}
                 />
               </>

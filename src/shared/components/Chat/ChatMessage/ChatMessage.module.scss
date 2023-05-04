@@ -52,6 +52,12 @@
   box-sizing: border-box;
   position: relative;
   text-align: start;
+
+  &:hover {
+    .menuArrowButton {
+      display: block;
+    }
+  }
 }
 
 .messageTextWithReply {
@@ -192,4 +198,8 @@
   svg {
     color: $light-gray-2;
   }
+}
+
+.menuArrowButton {
+  display: none;
 }

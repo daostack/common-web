@@ -73,7 +73,11 @@
   max-width: 17.125rem;
 }
 
-.custom-dropdown-wrapper_menu-button--hidden {
+.custom-dropdown-wrapper__arrow-icon--opened {
+  transform: rotate(-90deg);
+}
+
+.custom-dropdown-wrapper__menu-button--hidden {
   display: none;
 }
 
