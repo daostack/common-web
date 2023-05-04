@@ -1,24 +1,6 @@
-import {
-  Circles,
-  CommonFeed,
-  CommonMember,
-  Discussion,
-  Proposal,
-  Common,
-  PredefinedTypes,
-} from "@/shared/models";
-import { GovernanceActions } from "../../../../../shared/constants";
-import { hasPermission } from "../../../../../shared/utils";
 import { DiscussionCardMenuItem } from "../constants";
-
-export interface GetAllowedItemsOptions {
-  common?: Common;
-  discussion?: Discussion | null;
-  governanceCircles?: Circles;
-  feedItem?: CommonFeed;
-  proposal?: Proposal;
-  commonMember?: CommonMember | null;
-}
+import { checkIsPinUnpinAlloweed } from "./checkIsPinUnpinAllowed";
+import { GetAllowedItemsOptions, PinAction } from "./types";
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   DiscussionCardMenuItem,
@@ -28,44 +10,10 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   [DiscussionCardMenuItem.Report]: () => false,
   [DiscussionCardMenuItem.Edit]: () => false,
   [DiscussionCardMenuItem.Remove]: () => false,
-  [DiscussionCardMenuItem.Pin]: (options) => {
-    const { feedItem, commonMember } = options;
-    const pinnedFeedItems = options.common?.pinnedFeedItems || [];
-    const isDiscussionPinned = pinnedFeedItems.some(
-      (pinnedFeedItem) => pinnedFeedItem.feedObjectId === feedItem?.id,
-    );
-    const hasReachedPinLimit = pinnedFeedItems.length >= 3;
-    if (isDiscussionPinned || hasReachedPinLimit || !commonMember) return false;
-    const isAllowed = hasPermission({
-      commonMember,
-      governance: {
-        circles: options.governanceCircles || {},
-      },
-      key: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
-    });
-    return isAllowed;
-  },
-  [DiscussionCardMenuItem.Unpin]: (options) => {
-    const { feedItem, commonMember, discussion } = options;
-    const pinnedFeedItems = options.common?.pinnedFeedItems || [];
-    const isDiscussionPinned = pinnedFeedItems.some(
-      (pinnedFeedItem) => pinnedFeedItem.feedObjectId === feedItem?.id,
-    );
-    if (
-      !isDiscussionPinned ||
-      discussion?.predefinedType === PredefinedTypes.General ||
-      !commonMember
-    )
-      return false;
-    const isAllowed = hasPermission({
-      commonMember,
-      governance: {
-        circles: options.governanceCircles || {},
-      },
-      key: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
-    });
-    return isAllowed;
-  },
+  [DiscussionCardMenuItem.Pin]: (options) =>
+    checkIsPinUnpinAlloweed(PinAction.Pin, options),
+  [DiscussionCardMenuItem.Unpin]: (options) =>
+    checkIsPinUnpinAlloweed(PinAction.Unpin, options),
 };
 
 export const getAllowedItems = (
