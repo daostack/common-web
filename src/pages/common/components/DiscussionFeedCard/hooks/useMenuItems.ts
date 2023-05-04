@@ -4,7 +4,6 @@ import { CommonAction } from "@/shared/constants";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { commonActions } from "@/store/states";
-import { CommonFeedType } from "../../../../../shared/models";
 import { DiscussionCardMenuItem } from "../constants";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
@@ -13,14 +12,13 @@ type Options = GetAllowedItemsOptions;
 interface Actions {
   report: () => void;
   share: () => void;
+  remove: () => void;
 }
-
-const FeedTypesToRemove = [CommonFeedType.Proposal, CommonFeedType.Discussion];
 
 export const useMenuItems = (options: Options, actions: Actions): Item[] => {
   const dispatch = useDispatch();
   const { discussion, governanceCircles, feedItem } = options;
-  const { report, share } = actions;
+  const { report, share, remove } = actions;
   const allowedMenuItems = getAllowedItems(options);
   const items: Item[] = [
     {
@@ -60,7 +58,7 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
     {
       id: DiscussionCardMenuItem.Remove,
       text: "Remove",
-      onClick: async () => {},
+      onClick: remove,
     },
   ];
 

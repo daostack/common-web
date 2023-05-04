@@ -1,9 +1,15 @@
 import React, { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { ReportModal } from "@/shared/components";
+import { DiscussionService } from "@/services";
+import {
+  DeletePrompt,
+  GlobalOverlay,
+  Modal,
+  ReportModal,
+} from "@/shared/components";
 import { DynamicLinkType, EntityTypes } from "@/shared/constants";
-import { useModal } from "@/shared/hooks";
+import { useModal, useNotification } from "@/shared/hooks";
 import {
   useDiscussionById,
   useFeedItemUserMetadata,
@@ -46,6 +52,7 @@ interface DiscussionFeedCardProps {
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   const { setChatItem, feedItemIdForAutoChatOpen, setShouldShowSeeMore } =
     useChatContext();
+  const { notify } = useNotification();
   const {
     item,
     governanceCircles,
@@ -71,6 +78,12 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     onClose: onShareModalClose,
   } = useModal(false);
   const {
+    isShowing: isDeleteModalOpen,
+    onOpen: onDeleteModalOpen,
+    onClose: onDeleteModalClose,
+  } = useModal(false);
+  const [isDeletingInProgress, setDeletingInProgress] = useState(false);
+  const {
     fetchUser: fetchDiscussionCreator,
     data: discussionCreator,
     fetched: isDiscussionCreatorFetched,
@@ -95,6 +108,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     {
       report: onReportModalOpen,
       share: onShareModalOpen,
+      remove: onDeleteModalOpen,
     },
   );
   const user = useSelector(selectUser());
@@ -129,6 +143,19 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     item.circleVisibility,
     feedItemUserMetadata?.lastSeen,
   ]);
+
+  const onDiscussionDelete = useCallback(async () => {
+    try {
+      if (discussion) {
+        setDeletingInProgress(true);
+        await DiscussionService.deleteDiscussion(discussion.id);
+      }
+    } catch {
+      notify("Something went wrong");
+    } finally {
+      setDeletingInProgress(false);
+    }
+  }, [discussion]);
 
   useEffect(() => {
     fetchDiscussionCreator(item.userId);
@@ -200,59 +227,72 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
             onHover(false);
           }}
         />
-        {userId && discussion && (
-          <ReportModal
-            userId={userId}
-            isShowing={isReportModalOpen}
-            onClose={onReportModalClose}
-            entity={discussion}
-            type={EntityTypes.Discussion}
-          />
-        )}
-        {discussion && (
-          <FeedCardShare
-            isOpen={isShareModalOpen}
-            onClose={onShareModalClose}
-            linkType={DynamicLinkType.Discussion}
-            element={discussion}
-            isMobileVersion={isMobileVersion}
-          />
-        )}
       </>
     );
   };
 
   return (
-    <FeedCard
-      feedItemId={item.id}
-      isHovering={isHovering}
-      lastActivity={item.updatedAt.seconds * 1000}
-      unreadMessages={feedItemUserMetadata?.count || 0}
-      isActive={isActive}
-      isExpanded={isExpanded}
-      onClick={handleOpenChat}
-      title={discussion?.title}
-      lastMessage={getLastMessage({
-        commonFeedType: item.data.type,
-        lastMessage: item.data.lastMessage,
-        discussion,
-        currentUserId: userId,
-        feedItemCreatorName: getUserName(discussionCreator),
-        commonName,
-        isProject,
-      })}
-      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
-      isPreviewMode={isPreviewMode}
-      image={commonImage}
-      imageAlt={`${commonName}'s image`}
-      isProject={isProject}
-      isLoading={isLoading}
-      menuItems={menuItems}
-      seenOnce={feedItemUserMetadata?.seenOnce}
-      ownerId={item.userId}
-    >
-      {renderContent()}
-    </FeedCard>
+    <>
+      <FeedCard
+        feedItemId={item.id}
+        isHovering={isHovering}
+        lastActivity={item.updatedAt.seconds * 1000}
+        unreadMessages={feedItemUserMetadata?.count || 0}
+        isActive={isActive}
+        isExpanded={isExpanded}
+        onClick={handleOpenChat}
+        title={discussion?.title}
+        lastMessage={getLastMessage({
+          commonFeedType: item.data.type,
+          lastMessage: item.data.lastMessage,
+          discussion,
+          currentUserId: userId,
+          feedItemCreatorName: getUserName(discussionCreator),
+          commonName,
+          isProject,
+        })}
+        canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
+        isPreviewMode={isPreviewMode}
+        image={commonImage}
+        imageAlt={`${commonName}'s image`}
+        isProject={isProject}
+        isLoading={isLoading}
+        menuItems={menuItems}
+        seenOnce={feedItemUserMetadata?.seenOnce}
+        ownerId={item.userId}
+      >
+        {renderContent()}
+      </FeedCard>
+      {userId && discussion && (
+        <ReportModal
+          userId={userId}
+          isShowing={isReportModalOpen}
+          onClose={onReportModalClose}
+          entity={discussion}
+          type={EntityTypes.Discussion}
+        />
+      )}
+      {discussion && (
+        <FeedCardShare
+          isOpen={isShareModalOpen}
+          onClose={onShareModalClose}
+          linkType={DynamicLinkType.Discussion}
+          element={discussion}
+          isMobileVersion={isMobileVersion}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <GlobalOverlay>
+          <DeletePrompt
+            title="Are you sure you want to delete this discussion?"
+            description="Note that this action could not be undone."
+            onCancel={onDeleteModalClose}
+            onDelete={onDiscussionDelete}
+            isDeletingInProgress={isDeletingInProgress}
+          />
+        </GlobalOverlay>
+      )}
+    </>
   );
 };
 
