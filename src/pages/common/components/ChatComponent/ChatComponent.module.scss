@@ -29,6 +29,8 @@
   height: 100%;
   overflow: auto;
   overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .emptyChat {
