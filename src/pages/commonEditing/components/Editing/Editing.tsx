@@ -11,7 +11,7 @@ import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
 import { getCommonPageAboutTabPath } from "@/shared/utils";
-import { projectsActions } from "@/store/states";
+import { commonLayoutActions, projectsActions } from "@/store/states";
 import { EditingForm } from "./components";
 import editingStyles from "./Editing.module.scss";
 
@@ -39,13 +39,13 @@ const Editing: FC<EditingProps> = (props) => {
   );
 
   const handleUpdatedCommon = (updatedCommon: Common) => {
-    dispatch(
-      projectsActions.updateProject({
-        commonId: updatedCommon.id,
-        image: updatedCommon.image,
-        name: updatedCommon.name,
-      }),
-    );
+    const data = {
+      commonId: updatedCommon.id,
+      image: updatedCommon.image,
+      name: updatedCommon.name,
+    };
+    dispatch(commonLayoutActions.updateCommonOrProject(data));
+    dispatch(projectsActions.updateProject(data));
     dispatch(
       updateCommonState({
         commonId: updatedCommon.id,
