@@ -256,7 +256,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
           {!shouldHideContent && (
             <div
               className={classNames(styles.content, className, {
-                [styles.contentEmpty]: isContentEmpty,
+                [styles.contentCentered]: isContentEmpty,
               })}
             >
               {topContent}
