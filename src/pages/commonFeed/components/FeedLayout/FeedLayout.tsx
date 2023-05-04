@@ -63,7 +63,6 @@ interface FeedLayoutProps {
   common?: Common;
   governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  pinnedFeedItems?: FeedLayoutItem[] | null;
   feedItems: FeedLayoutItem[] | null;
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;
@@ -87,7 +86,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     common: outerCommon,
     governance: outerGovernance,
     commonMember: outerCommonMember,
-    pinnedFeedItems,
     feedItems,
     topFeedItems = [],
     loading,
@@ -126,10 +124,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const allFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
 
-    if (pinnedFeedItems) {
-      items.push(...pinnedFeedItems);
-    }
-
     if (topFeedItems) {
       items.push(...topFeedItems);
     }
@@ -138,7 +132,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
 
     return items;
-  }, [topFeedItems, feedItems, pinnedFeedItems]);
+  }, [topFeedItems, feedItems]);
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (recentStreamId) {
@@ -181,9 +175,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     () => allFeedItems?.find((item) => item.feedItem.id === activeFeedItemId),
     [allFeedItems, activeFeedItemId],
   );
-  const selectedItemCommonData = selectedFeedItem
-    ? getItemCommonData(selectedFeedItem, outerCommon)
-    : undefined;
+  const selectedItemCommonData = getItemCommonData(
+    selectedFeedItem?.feedItemFollowWithMetadata,
+    outerCommon,
+  );
 
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
@@ -260,7 +255,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => {
                   const isActive = item.feedItem.id === activeFeedItemId;
-                  const commonData = getItemCommonData(item, outerCommon);
+                  const commonData = getItemCommonData(
+                    item.feedItemFollowWithMetadata,
+                    outerCommon,
+                  );
+                  const isPinned = (outerCommon?.pinnedFeedItems || []).some(
+                    (pinnedItem) =>
+                      pinnedItem.feedObjectId === item.feedItem.id,
+                  );
 
                   return (
                     <FeedItem
@@ -268,7 +270,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       common={outerCommon}
                       commonMember={commonMember}
                       isProject={commonData?.isProject}
-                      isPinned={commonData?.isPinned}
+                      isPinned={isPinned}
                       item={item.feedItem}
                       governanceCircles={governance?.circles}
                       isMobileVersion={isTabletView}
@@ -311,7 +313,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   <FeedItemPreviewModal
                     common={outerCommon}
                     isProject={selectedItemCommonData.isProject}
-                    isPinned={selectedItemCommonData.isPinned}
                     governanceCircles={governance?.circles}
                     selectedFeedItem={selectedFeedItem?.feedItem}
                     userCircleIds={userCircleIds}
