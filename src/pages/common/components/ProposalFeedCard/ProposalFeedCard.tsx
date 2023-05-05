@@ -2,9 +2,6 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
-import { DiscussionService } from "@/services";
-import { DeletePrompt, GlobalOverlay } from "@/shared/components";
-import { useModal, useNotification } from "@/shared/hooks";
 import {
   useDiscussionById,
   useFeedItemUserMetadata,
@@ -75,14 +72,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { notify } = useNotification();
   const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
-  const {
-    isShowing: isDeleteModalOpen,
-    onOpen: onDeleteModalOpen,
-    onClose: onDeleteModalClose,
-  } = useModal(false);
-  const [isDeletingInProgress, setDeletingInProgress] = useState(false);
   const {
     fetchUser: fetchFeedItemUser,
     data: feedItemUser,
@@ -147,22 +137,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     {
       report: () => {},
       share: () => {},
-      remove: onDeleteModalOpen,
     },
   );
-
-  const onProposalDelete = useCallback(async () => {
-    try {
-      if (discussion) {
-        setDeletingInProgress(true);
-        await DiscussionService.deleteDiscussion(discussion.id);
-      }
-    } catch {
-      notify("Something went wrong");
-    } finally {
-      setDeletingInProgress(false);
-    }
-  }, [discussion]);
 
   useEffect(() => {
     fetchFeedItemUser(item.userId);
@@ -346,17 +322,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       >
         {renderContent()}
       </FeedCard>
-      {isDeleteModalOpen && (
-        <GlobalOverlay>
-          <DeletePrompt
-            title="Are you sure you want to delete this proposal?"
-            description="Note that this action could not be undone."
-            onCancel={onDeleteModalClose}
-            onDelete={onProposalDelete}
-            isDeletingInProgress={isDeletingInProgress}
-          />
-        </GlobalOverlay>
-      )}
     </>
   );
 };
