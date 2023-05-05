@@ -1,7 +1,8 @@
 @import "../../../../constants.scss";
 @import "../../../../styles/sizes";
 
-.container {}
+.container {
+}
 
 .message {
   display: flex;
@@ -146,6 +147,10 @@
   width: 2.625rem;
   object-fit: cover;
   margin-left: 0.75rem;
+}
+
+.replyMessagesWrapper {
+  max-width: 100%;
 }
 
 .replyMessageName {

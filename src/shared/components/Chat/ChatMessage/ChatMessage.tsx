@@ -103,7 +103,7 @@ export default function ChatMessage({
         })}
       >
         {image && <img className={styles.replyMessageImage} src={image} />}
-        <div>
+        <div className={styles.replyMessagesWrapper}>
           <div
             className={classNames(styles.messageName, styles.replyMessageName, {
               [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
