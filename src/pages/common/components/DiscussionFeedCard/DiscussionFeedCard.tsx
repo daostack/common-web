@@ -36,7 +36,7 @@ interface DiscussionFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
-  pinnedFeedItems: Common["pinnedFeedItems"];
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   commonMember?: CommonMember | null;
   isProject: boolean;
   isPinned: boolean;

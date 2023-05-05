@@ -43,7 +43,7 @@ interface ProposalFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
-  pinnedFeedItems: Common["pinnedFeedItems"];
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject: boolean;
   isPinned: boolean;
   item: CommonFeed;
