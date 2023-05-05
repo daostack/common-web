@@ -278,7 +278,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   return (
                     <FeedItem
                       key={item.feedItem.id}
-                      common={outerCommon}
+                      commonId={commonData?.id}
+                      commonName={commonData?.name || ""}
+                      commonImage={commonData?.image || ""}
+                      pinnedFeedItems={outerCommon?.pinnedFeedItems}
                       commonMember={commonMember}
                       isProject={commonData?.isProject}
                       isPinned={isPinned}
@@ -322,7 +325,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   rightHeaderContent={followFeedItemEl}
                 >
                   <FeedItemPreviewModal
-                    common={outerCommon}
+                    commonId={selectedItemCommonData.id}
+                    commonName={selectedItemCommonData.name}
+                    commonImage={selectedItemCommonData.image}
                     isProject={selectedItemCommonData.isProject}
                     governanceCircles={governance?.circles}
                     selectedFeedItem={selectedFeedItem?.feedItem}

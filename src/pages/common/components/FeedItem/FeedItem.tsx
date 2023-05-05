@@ -13,7 +13,10 @@ import { ProposalFeedCard } from "../ProposalFeedCard";
 import { useFeedItemContext } from "./context";
 
 interface FeedItemProps {
-  common: Common | undefined;
+  commonId?: string;
+  commonName: string;
+  commonImage: string;
+  pinnedFeedItems: Common["pinnedFeedItems"];
   commonMember?: CommonMember | null;
   isProject?: boolean;
   isPinned?: boolean;
@@ -30,7 +33,10 @@ interface FeedItemProps {
 
 const FeedItem: FC<FeedItemProps> = (props) => {
   const {
-    common,
+    commonId,
+    commonName,
+    commonImage,
+    pinnedFeedItems,
     commonMember,
     isProject = false,
     isPinned = false,
@@ -45,7 +51,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     currentUserId,
   } = props;
   const { onFeedItemUpdate, getLastMessage } = useFeedItemContext();
-  useFeedItemSubscription(item.id, common?.id, onFeedItemUpdate);
+  useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
   if (
     !checkIsItemVisibleForUser(
@@ -60,7 +66,10 @@ const FeedItem: FC<FeedItemProps> = (props) => {
 
   const generalProps = {
     item,
-    common,
+    commonId,
+    commonName,
+    commonImage,
+    pinnedFeedItems,
     isActive,
     isExpanded,
     isProject,

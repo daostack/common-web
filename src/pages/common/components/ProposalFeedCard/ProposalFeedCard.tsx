@@ -40,7 +40,10 @@ import {
 } from "./utils";
 
 interface ProposalFeedCardProps {
-  common: Common | undefined;
+  commonId?: string;
+  commonName: string;
+  commonImage: string;
+  pinnedFeedItems: Common["pinnedFeedItems"];
   isProject: boolean;
   isPinned: boolean;
   item: CommonFeed;
@@ -54,7 +57,10 @@ interface ProposalFeedCardProps {
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const {
-    common,
+    commonId,
+    commonName,
+    commonImage,
+    pinnedFeedItems,
     isProject,
     isPinned,
     item,
@@ -103,8 +109,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     fetched: isFeedItemUserMetadataFetched,
     fetchFeedItemUserMetadata,
   } = useFeedItemUserMetadata();
-  const commonId = common?.id;
-  const commonName = common?.name ?? "";
   const isLoading =
     !isFeedItemUserFetched ||
     !isDiscussionFetched ||
@@ -123,7 +127,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const proposalId = item.data.id;
   const menuItems = useMenuItems(
     {
-      common,
+      commonId,
+      pinnedFeedItems,
       feedItem: item,
       discussion,
       governanceCircles,
@@ -304,7 +309,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       })}
       canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
       isPreviewMode={isPreviewMode}
-      image={common?.image}
+      image={commonImage}
       imageAlt={`${commonName}'s image`}
       isProject={isProject}
       isPinned={isPinned}
