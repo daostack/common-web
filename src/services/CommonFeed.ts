@@ -1,5 +1,9 @@
 import { stringify } from "query-string";
-import { ApiEndpoint } from "@/shared/constants";
+import {
+  ApiEndpoint,
+  GovernanceActions,
+  PinOrUnpinEndpointAction,
+} from "@/shared/constants";
 import {
   MarkCommonFeedItemAsSeenPayload,
   UnsubscribeFunction,
@@ -136,6 +140,28 @@ class CommonFeedService {
     };
   };
 
+  public pinItem = async (commonId: string, feedObjectId: string) => {
+    return Api.post(ApiEndpoint.CreateAction, {
+      type: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
+      args: {
+        pinOrUnpin: PinOrUnpinEndpointAction.Pin,
+        commonId,
+        feedObjectId,
+      },
+    });
+  };
+
+  public unpinItem = async (commonId: string, feedObjectId: string) => {
+    return Api.post(ApiEndpoint.CreateAction, {
+      type: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
+      args: {
+        pinOrUnpin: PinOrUnpinEndpointAction.Unpin,
+        commonId,
+        feedObjectId,
+      },
+    });
+  };
+
   public subscribeToNewUpdatedCommonFeedItems = (
     commonId: string,
     endBefore: Timestamp,
@@ -152,6 +178,35 @@ class CommonFeedService {
     const query = this.getCommonFeedSubCollection(commonId)
       .orderBy("updatedAt", "desc")
       .endBefore(endBefore);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        commonFeedItem: docChange.doc.data(),
+        statuses: {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        },
+      }));
+      callback(data);
+    });
+  };
+
+  public subscribeToNewUpdatedCommonPinnedFeedItems = (
+    commonId: string,
+    callback: (
+      data: {
+        commonFeedItem: CommonFeed;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getCommonFeedSubCollection(commonId).orderBy(
+      "updatedAt",
+      "desc",
+    );
 
     return query.onSnapshot((snapshot) => {
       const data = snapshot.docChanges().map((docChange) => ({

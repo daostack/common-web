@@ -8,10 +8,15 @@ import {
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
+import {
+  Common,
+  CommonFeed,
+  Governance,
+  PredefinedTypes,
+} from "@/shared/models";
 import { checkIsCountdownState, getUserName } from "@/shared/utils";
-import { selectRecentStreamId } from "@/store/states";
 import { useChatContext } from "../ChatComponent";
+import { useMenuItems } from "../DiscussionFeedCard/hooks";
 import {
   FeedCard,
   FeedCardHeader,
@@ -38,7 +43,9 @@ interface ProposalFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject: boolean;
+  isPinned: boolean;
   item: CommonFeed;
   governanceCircles?: Governance["circles"];
   isPreviewMode?: boolean;
@@ -53,7 +60,9 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
     isProject,
+    isPinned,
     item,
     governanceCircles,
     isPreviewMode,
@@ -62,7 +71,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     getLastMessage,
   } = props;
   const user = useSelector(selectUser());
-  const recentStreamId = useSelector(selectRecentStreamId);
   const userId = user?.uid;
   const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
   const {
@@ -117,6 +125,20 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setHovering(isMouseEnter);
   };
   const proposalId = item.data.id;
+  const menuItems = useMenuItems(
+    {
+      commonId,
+      pinnedFeedItems,
+      feedItem: item,
+      discussion,
+      governanceCircles,
+      commonMember,
+    },
+    {
+      report: () => {},
+      share: () => {},
+    },
+  );
 
   useEffect(() => {
     fetchFeedItemUser(item.userId);
@@ -182,7 +204,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       isDiscussionFetched &&
       isProposalFetched &&
       isFeedItemUserMetadataFetched &&
-      (item.id === feedItemIdForAutoChatOpen || recentStreamId)
+      item.id === feedItemIdForAutoChatOpen
     ) {
       handleOpenChat();
     }
@@ -229,6 +251,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           circleVisibility={circleVisibility}
           commonId={commonId}
           userId={item.userId}
+          menuItems={menuItems}
         />
         <FeedCardContent
           subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
@@ -289,9 +312,11 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       image={commonImage}
       imageAlt={`${commonName}'s image`}
       isProject={isProject}
+      isPinned={isPinned}
       isLoading={isLoading}
       type={item.data.type}
       seenOnce={feedItemUserMetadata?.seenOnce}
+      menuItems={menuItems}
       ownerId={item.userId}
     >
       {renderContent()}

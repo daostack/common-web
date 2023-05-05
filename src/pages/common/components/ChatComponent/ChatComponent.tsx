@@ -161,7 +161,7 @@ export default function ChatComponent({
   );
 
   const messages = (discussionMessages ?? []).reduce(groupday, {});
-  const dateList = Object.keys(messages);
+  const dateList = useMemo(() => Object.keys(messages), [messages]);
 
   useEffect(() => {
     if (discussionId) {
@@ -288,6 +288,7 @@ export default function ChatComponent({
             ? {
                 id: discussionMessageReply?.id,
                 ownerName: discussionMessageReply.ownerName,
+                ownerId: discussionMessageReply.ownerId,
                 text: discussionMessageReply.text,
               }
             : null,
@@ -386,6 +387,8 @@ export default function ChatComponent({
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
             commonMembers={commonMembers}
+            discussionId={discussionId}
+
           />
         ) : (
           <div className={styles.loaderContainer}>

@@ -43,7 +43,7 @@ const ProposalForm: FC<ProposalFormProps> = (props) => {
         className={styles.field}
         id="proposalTitle"
         name="title"
-        label="Proposal Title"
+        label="Proposal Title (required)"
         maxLength={MAX_PROPOSAL_TITLE_LENGTH}
         countAsHint
         disabled={disabled}

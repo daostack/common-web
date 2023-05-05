@@ -157,6 +157,7 @@ const InboxPage: FC = () => {
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         onFeedItemUpdate={handleFeedItemUpdate}
         getLastMessage={getLastMessage}
+        emptyText="Your inbox is empty"
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

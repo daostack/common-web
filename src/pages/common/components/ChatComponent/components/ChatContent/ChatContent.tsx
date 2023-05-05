@@ -30,6 +30,7 @@ interface ChatContentInterface {
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
   commonMembers: CommonMemberWithUserInfo[];
+  discussionId: string;
 }
 
 const isToday = (someDate: Date) => {
@@ -55,6 +56,7 @@ export default function ChatContent({
   lastSeenItem,
   hasPermissionToHide,
   commonMembers,
+  discussionId,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -77,9 +79,13 @@ export default function ChatContent({
     [chatWrapperId],
   );
 
+  const dateListReverse = useMemo(() => [...dateList].reverse(), [dateList]);
+
   useEffect(() => {
-    if (!highlightedMessageId) scrollToContainerBottom();
-  }, [highlightedMessageId, scrollToContainerBottom]);
+    if (!highlightedMessageId) {
+      scrollToContainerBottom();
+    }
+  }, [highlightedMessageId, scrollToContainerBottom, discussionId]);
 
   useEffect(() => {
     if (!highlightedMessageId) return;
@@ -89,7 +95,7 @@ export default function ChatContent({
         scroller.scrollTo(highlightedMessageId, {
           containerId: chatId,
           delay: 0,
-          duration: 300,
+          duration: 100,
           offset: -15,
           smooth: true,
         }),
@@ -127,7 +133,7 @@ export default function ChatContent({
 
   return (
     <>
-      {dateList.map((day, dayIndex) => {
+      {dateListReverse.map((day, dayIndex) => {
         const date = new Date(Number(day));
 
         return (

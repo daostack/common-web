@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/util";
-import CloseIcon from "@/shared/icons/close.icon";
 import { CommonMemberWithUserInfo } from "@/shared/models";
+import CloseIcon from "@/shared/icons/close2.icon";
 import {
   selectCurrentDiscussionMessageReply,
   chatActions,
@@ -42,6 +42,8 @@ const MessageReply: React.FC<MessageReplyProps> = ({ commonMembers }) => {
     return null;
   }
 
+  const image = discussionMessageReply.images?.[0]?.value;
+
   return (
     <div
       className={classNames(styles.container, {
@@ -50,11 +52,14 @@ const MessageReply: React.FC<MessageReplyProps> = ({ commonMembers }) => {
     >
       {discussionMessageReply && (
         <>
-          <div className={styles.messageWrapper}>
-            <span className={styles.username}>
-              {discussionMessageReply.ownerName}
-            </span>
-            <p className={styles.text}>{messageText.map((text) => text)}</p>
+          <div className={styles.messageContainer}>
+            {image && <img className={styles.image} src={image} />}
+            <div className={styles.messageWrapper}>
+              <span className={styles.username}>
+                {discussionMessageReply.ownerName}
+              </span>
+              <p className={styles.text}>{messageText.map((text) => text)}</p>
+            </div>
           </div>
           <ButtonIcon
             className={styles.closeButton}
@@ -62,7 +67,7 @@ const MessageReply: React.FC<MessageReplyProps> = ({ commonMembers }) => {
               dispatch(chatActions.clearCurrentDiscussionMessageReply());
             }}
           >
-            <CloseIcon fill="#001A36" height={16} width={16} />
+            <CloseIcon height={12} width={12} />
           </ButtonIcon>
         </>
       )}

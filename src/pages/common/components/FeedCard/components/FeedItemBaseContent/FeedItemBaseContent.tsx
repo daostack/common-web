@@ -31,6 +31,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     menuItems,
     seenOnce,
     ownerId,
+    isPinned,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -162,6 +163,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               seenOnce={seenOnce}
               ownerId={ownerId}
               isActive={isActive}
+              isPinned={isPinned}
             />
           </div>
         </div>

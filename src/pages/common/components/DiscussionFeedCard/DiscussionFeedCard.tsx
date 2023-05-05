@@ -9,9 +9,14 @@ import {
   useFeedItemUserMetadata,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
+import {
+  Common,
+  CommonFeed,
+  CommonMember,
+  Governance,
+  PredefinedTypes,
+} from "@/shared/models";
 import { getUserName } from "@/shared/utils";
-import { selectRecentStreamId } from "@/store/states";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
@@ -31,7 +36,10 @@ interface DiscussionFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
+  commonMember?: CommonMember | null;
   isProject: boolean;
+  isPinned: boolean;
   isPreviewMode: boolean;
   isActive: boolean;
   isExpanded: boolean;
@@ -48,7 +56,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
+    commonMember,
     isProject,
+    isPinned,
     isPreviewMode,
     isActive,
     isExpanded,
@@ -81,8 +92,12 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   } = useFeedItemUserMetadata();
   const menuItems = useMenuItems(
     {
+      commonId,
+      pinnedFeedItems,
+      feedItem: item,
       discussion,
       governanceCircles,
+      commonMember,
     },
     {
       report: onReportModalOpen,
@@ -90,7 +105,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     },
   );
   const user = useSelector(selectUser());
-  const recentStreamId = useSelector(selectRecentStreamId);
   const [isHovering, setHovering] = useState(false);
   const onHover = (isMouseEnter: boolean): void => {
     setHovering(isMouseEnter);
@@ -145,7 +159,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     if (
       isDiscussionFetched &&
       isFeedItemUserMetadataFetched &&
-      (item.id === feedItemIdForAutoChatOpen || recentStreamId)
+      item.id === feedItemIdForAutoChatOpen
     ) {
       handleOpenChat();
     }
@@ -239,6 +253,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       image={commonImage}
       imageAlt={`${commonName}'s image`}
       isProject={isProject}
+      isPinned={isPinned}
       isLoading={isLoading}
       menuItems={menuItems}
       seenOnce={feedItemUserMetadata?.seenOnce}

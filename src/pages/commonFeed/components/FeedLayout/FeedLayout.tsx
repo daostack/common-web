@@ -37,6 +37,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { InfiniteScroll } from "@/shared/ui-kit";
+import { selectRecentStreamId } from "@/store/states";
 import {
   DesktopChat,
   DesktopChatPlaceholder,
@@ -62,7 +63,6 @@ interface FeedLayoutProps {
   common?: Common;
   governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  pinnedFeedItems?: FeedLayoutItem[] | null;
   feedItems: FeedLayoutItem[] | null;
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;
@@ -71,6 +71,8 @@ interface FeedLayoutProps {
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   getLastMessage: (options: GetLastMessageOptions) => string;
+  sharedFeedItemId?: string | null;
+  emptyText?: string;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -85,7 +87,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     common: outerCommon,
     governance: outerGovernance,
     commonMember: outerCommonMember,
-    pinnedFeedItems,
     feedItems,
     topFeedItems = [],
     loading,
@@ -94,10 +95,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     renderFeedItemBaseContent,
     onFeedItemUpdate,
     getLastMessage,
+    sharedFeedItemId,
+    emptyText,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
+  const recentStreamId = useSelector(selectRecentStreamId);
   const userId = user?.uid;
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
@@ -122,10 +126,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const allFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
 
-    if (pinnedFeedItems) {
-      items.push(...pinnedFeedItems);
-    }
-
     if (topFeedItems) {
       items.push(...topFeedItems);
     }
@@ -135,7 +135,21 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return items;
   }, [topFeedItems, feedItems]);
+  const isContentEmpty =
+    !loading && (!allFeedItems || allFeedItems.length === 0) && emptyText;
+
   const feedItemIdForAutoChatOpen = useMemo(() => {
+    if (recentStreamId) {
+      const foundItem = allFeedItems.find(
+        (item) => item.feedItem.data.id === recentStreamId,
+      );
+      return foundItem?.feedItem.id;
+    }
+
+    if (sharedFeedItemId) {
+      return sharedFeedItemId;
+    }
+
     if (isTabletView || chatItem?.feedItemId) {
       return;
     }
@@ -147,7 +161,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     );
 
     return foundItem?.feedItem.id;
-  }, [allFeedItems, isTabletView, chatItem?.feedItemId]);
+  }, [
+    allFeedItems,
+    isTabletView,
+    chatItem?.feedItemId,
+    recentStreamId,
+    sharedFeedItemId,
+  ]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
   const userCircleIds = useMemo(
@@ -234,14 +254,25 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       <FeedItemContext.Provider value={feedItemContextValue}>
         <ChatContext.Provider value={chatContextValue}>
           {!shouldHideContent && (
-            <div className={classNames(styles.content, className)}>
+            <div
+              className={classNames(styles.content, className, {
+                [styles.contentCentered]: isContentEmpty,
+              })}
+            >
               {topContent}
+              {isContentEmpty && (
+                <p className={styles.emptyText}>{emptyText}</p>
+              )}
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => {
                   const isActive = item.feedItem.id === activeFeedItemId;
                   const commonData = getItemCommonData(
                     item.feedItemFollowWithMetadata,
                     outerCommon,
+                  );
+                  const isPinned = (outerCommon?.pinnedFeedItems || []).some(
+                    (pinnedItem) =>
+                      pinnedItem.feedObjectId === item.feedItem.id,
                   );
 
                   return (
@@ -250,7 +281,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
+                      pinnedFeedItems={outerCommon?.pinnedFeedItems}
+                      commonMember={commonMember}
                       isProject={commonData?.isProject}
+                      isPinned={isPinned}
                       item={item.feedItem}
                       governanceCircles={governance?.circles}
                       isMobileVersion={isTabletView}
