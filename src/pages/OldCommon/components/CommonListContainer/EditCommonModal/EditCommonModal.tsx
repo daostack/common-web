@@ -13,7 +13,7 @@ import { useZoomDisabling } from "@/shared/hooks";
 import { Common, Governance } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { emptyFunction } from "@/shared/utils";
-import { projectsActions } from "@/store/states";
+import { commonLayoutActions, projectsActions } from "@/store/states";
 import { UpdateCommonData } from "../../../interfaces";
 import { Confirmation } from "./Confirmation";
 import { EditSteps } from "./EditSteps";
@@ -116,13 +116,13 @@ export default function EditCommonModal(props: EditCommonModalProps) {
         ...state,
         stage: UpdateCommonStage.Success,
       }));
-      dispatch(
-        projectsActions.updateProject({
-          commonId: common.id,
-          image: common.image,
-          name: common.name,
-        }),
-      );
+      const data = {
+        commonId: common.id,
+        image: common.image,
+        name: common.name,
+      };
+      dispatch(commonLayoutActions.updateCommonOrProject(data));
+      dispatch(projectsActions.updateProject(data));
     },
     [handleError],
   );
