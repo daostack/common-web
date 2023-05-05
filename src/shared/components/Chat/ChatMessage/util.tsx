@@ -43,8 +43,7 @@ export const getTextFromTextEditorString = async ({
         return `${(tag as ParagraphElement)?.text ?? ""}\n`;
       }
 
-      console.log("----tag", tag);
-      return (tag as { text: string })?.text ?? "";
+      return tag?.text ?? "";
     }),
   );
 };

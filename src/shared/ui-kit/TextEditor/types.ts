@@ -21,6 +21,7 @@ type BaseElementChild = CustomText | LinkElement;
 
 interface BaseElement<Child = BaseElementChild> {
   type: ElementType;
+  text?: string;
   children: Child[];
   indentLevel?: number;
   textDirection?: FormatType.LTR | FormatType.RTL;
