@@ -1,5 +1,5 @@
 import { DiscussionCardMenuItem } from "../constants";
-import { checkIsPinUnpinAlloweed } from "./checkIsPinUnpinAllowed";
+import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
 import { GetAllowedItemsOptions, PinAction } from "./types";
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
@@ -11,9 +11,9 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   [DiscussionCardMenuItem.Edit]: () => false,
   [DiscussionCardMenuItem.Remove]: () => false,
   [DiscussionCardMenuItem.Pin]: (options) =>
-    checkIsPinUnpinAlloweed(PinAction.Pin, options),
+    checkIsPinUnpinAllowed(PinAction.Pin, options),
   [DiscussionCardMenuItem.Unpin]: (options) =>
-    checkIsPinUnpinAlloweed(PinAction.Unpin, options),
+    checkIsPinUnpinAllowed(PinAction.Unpin, options),
 };
 
 export const getAllowedItems = (

@@ -3,12 +3,11 @@ import { PredefinedTypes } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
 import { GetAllowedItemsOptions, PinAction } from "./types";
 
-export function checkIsPinUnpinAlloweed(
+export function checkIsPinUnpinAllowed(
   action: PinAction,
   options: GetAllowedItemsOptions,
 ) {
-  const { feedItem, commonMember, discussion } = options;
-  const pinnedFeedItems = options.common?.pinnedFeedItems || [];
+  const { feedItem, commonMember, discussion, pinnedFeedItems = [] } = options;
   const isDiscussionPinned = pinnedFeedItems.some(
     (pinnedFeedItem) => pinnedFeedItem.feedObjectId === feedItem?.id,
   );

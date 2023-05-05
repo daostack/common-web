@@ -1,9 +1,9 @@
 import { useDispatch } from "react-redux";
+import { CommonFeedService } from "@/services";
 import { CommonAction } from "@/shared/constants";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { commonActions } from "@/store/states";
-import { CommonFeedService } from "@/services";
 import { DiscussionCardMenuItem } from "../constants";
 import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
 
@@ -16,7 +16,7 @@ interface Actions {
 
 export const useMenuItems = (options: Options, actions: Actions): Item[] => {
   const dispatch = useDispatch();
-  const { discussion, governanceCircles, common, feedItem } = options;
+  const { discussion, governanceCircles, commonId, feedItem } = options;
   const { report, share } = actions;
   const allowedMenuItems = getAllowedItems(options);
   const items: Item[] = [
@@ -24,16 +24,16 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       id: DiscussionCardMenuItem.Pin,
       text: "Pin",
       onClick: async () => {
-        if (!common || !feedItem) return;
-        await CommonFeedService.pinItem(common.id, feedItem.id);
+        if (!commonId || !feedItem) return;
+        await CommonFeedService.pinItem(commonId, feedItem.id);
       },
     },
     {
       id: DiscussionCardMenuItem.Unpin,
       text: "Unpin",
       onClick: async () => {
-        if (!common || !feedItem) return;
-        await CommonFeedService.unpinItem(common.id, feedItem.id);
+        if (!commonId || !feedItem) return;
+        await CommonFeedService.unpinItem(commonId, feedItem.id);
       },
     },
     {

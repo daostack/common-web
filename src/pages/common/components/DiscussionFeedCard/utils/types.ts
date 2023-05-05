@@ -8,7 +8,8 @@ import {
 } from "@/shared/models";
 
 export interface GetAllowedItemsOptions {
-  common?: Common;
+  commonId?: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   discussion?: Discussion | null;
   governanceCircles?: Circles;
   feedItem?: CommonFeed;
