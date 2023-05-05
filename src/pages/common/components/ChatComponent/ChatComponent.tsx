@@ -24,7 +24,7 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { PlusIcon, SendIcon } from "@/shared/icons";
+import { SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   Circles,
@@ -55,6 +55,7 @@ interface ChatComponentInterface {
   hasAccess?: boolean;
   discussion: Discussion;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
+  seenOnce?: CommonFeedObjectUserUnique["seenOnce"];
   feedItemId: string;
   isAuthorized?: boolean;
   isHidden: boolean;
@@ -88,6 +89,7 @@ export default function ChatComponent({
   discussion,
   hasAccess = true,
   lastSeenItem,
+  seenOnce,
   feedItemId,
   isAuthorized,
   isHidden = false,
@@ -315,7 +317,11 @@ export default function ChatComponent({
   };
 
   useEffect(() => {
-    if (isFetchedDiscussionMessages && discussionMessages?.length === 0) {
+    if (
+      isFetchedDiscussionMessages &&
+      discussionMessages?.length === 0 &&
+      !seenOnce
+    ) {
       markFeedItemAsSeen({
         feedObjectId: feedItemId,
         commonId,
