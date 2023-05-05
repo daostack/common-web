@@ -339,6 +339,7 @@ export function* loadDiscussionDetail(
               id: parentMessage.id,
               text: parentMessage.text,
               ownerName: parentMessage?.ownerName,
+              ownerId: parentMessage.ownerId,
             }
           : null;
         return newDiscussionMessage;
@@ -446,6 +447,7 @@ export function* loadProposalDetail(
             id: parentMessage.id,
             text: parentMessage.text,
             ownerName: parentMessage?.ownerName,
+            ownerId: parentMessage.ownerId,
           }
         : null;
       return newDiscussionMessage;
