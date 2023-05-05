@@ -367,13 +367,13 @@ class CommonService {
    * If a member can INVITE_TO_CIRCLE we use ASSIGN_CIRCLE to execute the action.
    */
   public inviteToCircle = async (
-    commonId: string,
     circleId: string,
-    inviteeId: string,
+    commonId: string,
+    userId: string,
   ): Promise<void> => {
     await Api.post(ApiEndpoint.CreateAction, {
       type: ProposalsTypes.ASSIGN_CIRCLE,
-      args: { commonId, circleId, inviteeId },
+      args: { circleId, commonId, userId },
     });
   };
 }

@@ -34,7 +34,7 @@ export default function AssignCircleModal({
       setIsAdding(true);
       setErrorText("");
 
-      await CommonService.inviteToCircle(commonId, selectedCircle.id, memberId);
+      await CommonService.inviteToCircle(selectedCircle.id, commonId, memberId);
 
       handleClose();
     } catch (error) {
