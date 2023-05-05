@@ -1,6 +1,7 @@
 import React, { FC, memo } from "react";
 import {
   Circles,
+  Common,
   CommonFeed,
   CommonFeedType,
   CommonMember,
@@ -16,6 +17,7 @@ interface FeedItemProps {
   commonName: string;
   commonMember?: CommonMember | null;
   commonImage: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject?: boolean;
   isPinned?: boolean;
   item: CommonFeed;
@@ -34,6 +36,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
     commonMember,
     isProject = false,
     isPinned = false,
@@ -66,6 +69,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
     isActive,
     isExpanded,
     isProject,

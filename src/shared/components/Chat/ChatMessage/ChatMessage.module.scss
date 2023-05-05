@@ -1,9 +1,6 @@
 @import "../../../../constants.scss";
 @import "../../../../styles/sizes";
 
-.container {
-}
-
 .message {
   display: flex;
   position: relative;
@@ -53,6 +50,16 @@
   box-sizing: border-box;
   position: relative;
   text-align: start;
+
+  &:hover {
+    .menuArrowButton {
+      display: block;
+    }
+  }
+}
+
+.messageTextWithReply {
+  padding: 0.25rem 0rem 0.5rem;
 }
 
 .messageTextRtl {
@@ -119,26 +126,44 @@
 }
 
 .replyMessageContainer {
-  margin-bottom: 0.3125rem;
+  display: flex;
   cursor: pointer;
-  border-bottom: 1px solid $c-neutrals-200;
-  border-top: 1px solid $c-neutrals-200;
+  background-color: $c-neutrals-200;
+  border-radius: 0.625rem;
+  padding: 0.5rem 0 0.625rem;
+  margin: 0.25rem;
+  margin-top: 0;
 }
 
 .replyMessageContainerCurrentUser {
-  border-bottom: 1px solid $c-neutrals-100;
-  border-top: 1px solid $c-neutrals-100;
+  background-color: $c-pink-light;
+}
+
+.replyMessageImage {
+  height: 2.8125rem;
+  width: 2.625rem;
+  object-fit: cover;
+  margin-left: 0.75rem;
+}
+
+.replyMessagesWrapper {
+  max-width: 100%;
 }
 
 .replyMessageName {
   font-size: $xxsmall;
-  color: $c-neutrals-300;
-  margin-bottom: 0.2rem;
-  margin-top: 0.4rem;
+  color: $c-neutrals-600;
+  font-weight: 600;
+  line-height: 1.25rem;
+  margin-bottom: 0.125rem;
 }
 
 .replyMessageNameCurrentUser {
-  color: $c-neutrals-100;
+  color: $c-neutrals-600;
+}
+
+.replyMessageNameWithImage {
+  margin-left: 0.5rem;
 }
 
 .replyMessageContent {
@@ -155,7 +180,11 @@
 }
 
 .replyMessageContentCurrentUser {
-  color: $c-neutrals-100;
+  color: $c-neutrals-600;
+}
+
+.replyMessageContentWithImage {
+  margin-left: 0.5rem;
 }
 
 .dropdownMenu {
@@ -171,4 +200,8 @@
   svg {
     color: $light-gray-2;
   }
+}
+
+.menuArrowButton {
+  display: none;
 }

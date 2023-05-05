@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useCallback, useState } from "react";
+import React, { MouseEventHandler, useCallback, useState, useRef } from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import {
@@ -46,6 +46,8 @@ export default function ChatMessage({
   scrollToRepliedMessage,
   hasPermissionToHide,
 }: ChatMessageProps) {
+  const messageRef = useRef<HTMLDivElement>(null);
+
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isTabletView = useIsTabletView();
@@ -54,7 +56,8 @@ export default function ChatMessage({
     (discussionMessage?.editedAt?.seconds ?? 0) * 1000,
   );
 
-  const isNotCurrentUserMessage = user?.uid !== discussionMessage.ownerId;
+  const userId = user?.uid;
+  const isNotCurrentUserMessage = userId !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
 
   const handleMenuToggle = (isOpen: boolean) => {
@@ -88,6 +91,8 @@ export default function ChatMessage({
       return null;
     }
 
+    const image = discussionMessage.parentMessage?.images?.[0]?.value;
+
     return (
       <div
         onClick={() => {
@@ -97,23 +102,31 @@ export default function ChatMessage({
           [styles.replyMessageContainerCurrentUser]: !isNotCurrentUserMessage,
         })}
       >
-        <div
-          className={classNames(styles.messageName, styles.replyMessageName, {
-            [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
-          })}
-        >
-          {discussionMessage.parentMessage?.ownerName}
-        </div>
-        <div
-          className={classNames(
-            styles.messageContent,
-            styles.replyMessageContent,
-            {
-              [styles.replyMessageContentCurrentUser]: !isNotCurrentUserMessage,
-            },
-          )}
-        >
-          <Linkify>{discussionMessage.parentMessage.text}</Linkify>
+        {image && <img className={styles.replyMessageImage} src={image} />}
+        <div className={styles.replyMessagesWrapper}>
+          <div
+            className={classNames(styles.messageName, styles.replyMessageName, {
+              [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
+              [styles.replyMessageNameWithImage]: image,
+            })}
+          >
+            {userId === discussionMessage.parentMessage.ownerId
+              ? "You"
+              : discussionMessage.parentMessage?.ownerName}
+          </div>
+          <div
+            className={classNames(
+              styles.messageContent,
+              styles.replyMessageContent,
+              {
+                [styles.replyMessageContentCurrentUser]:
+                  !isNotCurrentUserMessage,
+                [styles.replyMessageContentWithImage]: image,
+              },
+            )}
+          >
+            <Linkify>{discussionMessage.parentMessage.text}</Linkify>
+          </div>
         </div>
       </div>
     );
@@ -121,6 +134,7 @@ export default function ChatMessage({
     discussionMessage.parentMessage,
     hasPermissionToHide,
     isNotCurrentUserMessage,
+    userId,
   ]);
 
   return (
@@ -151,9 +165,12 @@ export default function ChatMessage({
           />
         ) : (
           <div
+            ref={messageRef}
             className={classNames(styles.messageText, {
               [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
               [styles.messageTextRtl]: isRTL(discussionMessage.text),
+              [styles.messageTextWithReply]:
+                !!discussionMessage.parentMessage?.id,
             })}
             onClick={handleMessageClick}
           >
@@ -226,10 +243,14 @@ export default function ChatMessage({
               transparent
               isDiscussionMessage
               ownerId={discussionMessage.owner?.uid}
-              userId={user?.uid}
+              userId={userId}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}
-              {...(isTabletView && { isOpen: isMenuOpen })}
+              isControlledDropdown={false}
+              isOpen={isMenuOpen}
+              styles={{
+                menuButton: styles.menuArrowButton,
+              }}
             />
           </div>
         )}

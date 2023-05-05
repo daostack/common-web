@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import { CommonFeedService } from "@/services";
 import { CommonAction } from "@/shared/constants";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
@@ -16,10 +17,26 @@ interface Actions {
 
 export const useMenuItems = (options: Options, actions: Actions): Item[] => {
   const dispatch = useDispatch();
-  const { discussion, governanceCircles, feedItem } = options;
+  const { discussion, governanceCircles, commonId, feedItem } = options;
   const { report, share, remove } = actions;
   const allowedMenuItems = getAllowedItems(options);
   const items: Item[] = [
+    {
+      id: DiscussionCardMenuItem.Pin,
+      text: "Pin",
+      onClick: async () => {
+        if (!commonId || !feedItem) return;
+        await CommonFeedService.pinItem(commonId, feedItem.id);
+      },
+    },
+    {
+      id: DiscussionCardMenuItem.Unpin,
+      text: "Unpin",
+      onClick: async () => {
+        if (!commonId || !feedItem) return;
+        await CommonFeedService.unpinItem(commonId, feedItem.id);
+      },
+    },
     {
       id: DiscussionCardMenuItem.Share,
       text: "Share",

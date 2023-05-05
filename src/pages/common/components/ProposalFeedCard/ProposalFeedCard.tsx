@@ -11,7 +11,12 @@ import {
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
+import {
+  Common,
+  CommonFeed,
+  Governance,
+  PredefinedTypes,
+} from "@/shared/models";
 import { checkIsCountdownState, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
@@ -41,6 +46,7 @@ interface ProposalFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject: boolean;
   isPinned: boolean;
   item: CommonFeed;
@@ -57,6 +63,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
     isProject,
     isPinned,
     item,
@@ -130,6 +137,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const proposalId = item.data.id;
   const menuItems = useMenuItems(
     {
+      commonId,
+      pinnedFeedItems,
       feedItem: item,
       discussion,
       governanceCircles,

@@ -16,6 +16,7 @@ import {
   useUserById,
 } from "@/shared/hooks/useCases";
 import {
+  Common,
   CommonFeed,
   CommonMember,
   Governance,
@@ -41,6 +42,7 @@ interface DiscussionFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   commonMember?: CommonMember | null;
   isProject: boolean;
   isPinned: boolean;
@@ -61,6 +63,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
     commonMember,
     isProject,
     isPinned,
@@ -102,6 +105,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   } = useFeedItemUserMetadata();
   const menuItems = useMenuItems(
     {
+      commonId,
+      pinnedFeedItems,
       feedItem: item,
       discussion,
       governanceCircles,

@@ -72,6 +72,7 @@ interface FeedLayoutProps {
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   getLastMessage: (options: GetLastMessageOptions) => string;
   sharedFeedItemId?: string | null;
+  emptyText?: string;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -95,6 +96,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onFeedItemUpdate,
     getLastMessage,
     sharedFeedItemId,
+    emptyText,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -133,6 +135,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return items;
   }, [topFeedItems, feedItems]);
+  const isContentEmpty =
+    !loading && (!allFeedItems || allFeedItems.length === 0) && emptyText;
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (recentStreamId) {
@@ -250,8 +254,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       <FeedItemContext.Provider value={feedItemContextValue}>
         <ChatContext.Provider value={chatContextValue}>
           {!shouldHideContent && (
-            <div className={classNames(styles.content, className)}>
+            <div
+              className={classNames(styles.content, className, {
+                [styles.contentCentered]: isContentEmpty,
+              })}
+            >
               {topContent}
+              {isContentEmpty && (
+                <p className={styles.emptyText}>{emptyText}</p>
+              )}
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => {
                   const isActive = item.feedItem.id === activeFeedItemId;
@@ -271,6 +282,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
+                      pinnedFeedItems={outerCommon?.pinnedFeedItems}
                       isProject={commonData?.isProject}
                       isPinned={isPinned}
                       item={item.feedItem}

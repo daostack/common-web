@@ -21,8 +21,10 @@ export interface DiscussionMessageTag {
 export interface ParentDiscussionMessage {
   id: string;
   ownerName: string;
+  ownerId: string;
   text: string;
   moderation?: Moderation;
+  images?: Link[];
 }
 
 export interface DiscussionMessage extends BaseEntity {
