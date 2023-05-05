@@ -1,5 +1,4 @@
 import { useDispatch } from "react-redux";
-import { DiscussionService } from "@/services";
 import { CommonAction } from "@/shared/constants";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
