@@ -38,7 +38,7 @@ export default function AssignCircleModal({
 
       handleClose();
     } catch (error) {
-      setErrorText("Something went wrong");
+      setErrorText("Something went wrong...");
       setIsAdding(false);
     }
   };

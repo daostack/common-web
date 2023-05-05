@@ -2,7 +2,11 @@ import { isEqual } from "lodash";
 import { getCommonState } from "@/pages/OldCommon/store/actions";
 import { commonMembersSubCollection } from "@/pages/OldCommon/store/api";
 import { store } from "@/shared/appConfig";
-import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
+import {
+  ApiEndpoint,
+  GovernanceActions,
+  ProposalsTypes,
+} from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import {
   Collection,
@@ -359,13 +363,16 @@ class CommonService {
     await Api.post(ApiEndpoint.AcceptRules, { commonId }, { cancelToken });
   };
 
+  /**
+   * If a member can INVITE_TO_CIRCLE we use ASSIGN_CIRCLE to execute the action.
+   */
   public inviteToCircle = async (
     commonId: string,
     circleId: string,
     inviteeId: string,
   ): Promise<void> => {
     await Api.post(ApiEndpoint.CreateAction, {
-      type: GovernanceActions.INVITE_TO_CIRCLE,
+      type: ProposalsTypes.ASSIGN_CIRCLE,
       args: { commonId, circleId, inviteeId },
     });
   };

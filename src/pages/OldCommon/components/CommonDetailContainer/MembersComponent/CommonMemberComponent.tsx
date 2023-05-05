@@ -44,6 +44,7 @@ const CommonMember: FC<CommonMemberProps> = ({
 
     /**
      * For now, handle only the case of INVITE_TO_CIRCLE.
+     * If a member can INVITE_TO_CIRCLE we use ASSIGN_CIRCLE to execute the action.
      * See https://github.com/daostack/common-web/issues/1344 for more details.
      */
     // const canAssign =
@@ -58,11 +59,11 @@ const CommonMember: FC<CommonMemberProps> = ({
     governanceCircles,
     member.circleIds,
   );
-  const notMemberCircles = getFilteredByIdCircles(
-    governanceCircles,
-    member.circleIds,
-    true,
+
+  const notMemberCircles = governanceCircles.filter(
+    ({ id }) => !memberCircles.map((circle) => circle.id).includes(id),
   );
+
   const circlesString = getCirclesWithHighestTier(memberCircles)
     .map((circle) => circle.name)
     .join(", ");

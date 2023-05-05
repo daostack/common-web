@@ -37,13 +37,13 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
   const [selectedCircle, setSelectedCircle] = useState<SelectedCircle>();
 
   const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(() => {
-    // INVITE_TO_CIRCLE --> CREATE AS AN ACTION
     const items: DropdownOption[] = notMemberCircles.map((circle) => ({
       text: `Add to ${circle.name}`,
       value: {
         id: circle.id,
         name: circle.name,
       },
+      className: elementDropdownStyles.dropdownItem,
     }));
 
     return items;
