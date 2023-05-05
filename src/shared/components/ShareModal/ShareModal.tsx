@@ -66,16 +66,7 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (props) => {
               desktop: !isMobileModal,
             })}
           >
-            {!isMobileModal && (
-              <>
-                <img
-                  src="/assets/images/share-modal.svg"
-                  alt="Share modal"
-                  className="share-modal_image"
-                />
-                <div className="share-modal_title">{title}</div>
-              </>
-            )}
+            {!isMobileModal && <div className="share-modal_title">{title}</div>}
             <SocialLinks
               shareViewType={type}
               sourceUrl={sourceUrl}
@@ -86,7 +77,7 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (props) => {
               <ButtonIcon className="share-modal__copy-button">
                 <CopyLinkChainIcon />
               </ButtonIcon>
-              <p className="share-modal_copy-link-text">Copy Link</p>
+              <p className="share-modal_copy-link-text">Copy link</p>
             </button>
           </div>
         ))}
