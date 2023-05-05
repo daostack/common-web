@@ -12,17 +12,22 @@ export function checkIsPinUnpinAllowed(
     (pinnedFeedItem) => pinnedFeedItem.feedObjectId === feedItem?.id,
   );
 
-  if (!commonMember) return false;
+  if (!commonMember) {
+    return false;
+  }
 
   if (action === PinAction.Pin) {
     const hasReachedPinLimit = pinnedFeedItems.length >= 3;
-    if (isDiscussionPinned || hasReachedPinLimit) return false;
-  } else if (action === PinAction.Unpin) {
-    if (
-      !isDiscussionPinned ||
-      discussion?.predefinedType === PredefinedTypes.General
-    )
+
+    if (isDiscussionPinned || hasReachedPinLimit) {
       return false;
+    }
+  } else if (
+    action === PinAction.Unpin &&
+    (!isDiscussionPinned ||
+      discussion?.predefinedType === PredefinedTypes.General)
+  ) {
+    return false;
   }
 
   const isAllowed = hasPermission({
@@ -32,5 +37,6 @@ export function checkIsPinUnpinAllowed(
     },
     key: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
   });
+
   return isAllowed;
 }
