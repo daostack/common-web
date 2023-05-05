@@ -14,7 +14,6 @@ import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
-import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import {
   ChatType,
   GovernanceActions,
@@ -25,7 +24,7 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { PlusIcon, SendIcon } from "@/shared/icons";
+import { SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   Circles,
@@ -56,6 +55,7 @@ interface ChatComponentInterface {
   hasAccess?: boolean;
   discussion: Discussion;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
+  seenOnce?: CommonFeedObjectUserUnique["seenOnce"];
   feedItemId: string;
   isAuthorized?: boolean;
   isHidden: boolean;
@@ -89,6 +89,7 @@ export default function ChatComponent({
   discussion,
   hasAccess = true,
   lastSeenItem,
+  seenOnce,
   feedItemId,
   isAuthorized,
   isHidden = false,
@@ -314,6 +315,24 @@ export default function ChatComponent({
 
     setMessage((currentMessage) => `${currentMessage}\r\n`);
   };
+
+  useEffect(() => {
+    if (
+      isFetchedDiscussionMessages &&
+      discussionMessages?.length === 0 &&
+      !seenOnce
+    ) {
+      markFeedItemAsSeen({
+        feedObjectId: feedItemId,
+        commonId,
+      });
+    }
+  }, [
+    isFetchedDiscussionMessages,
+    discussionMessages?.length,
+    feedItemId,
+    commonId,
+  ]);
 
   useEffect(() => {
     if (
