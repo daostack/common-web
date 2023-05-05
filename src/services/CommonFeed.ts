@@ -1,5 +1,9 @@
 import { stringify } from "query-string";
-import { ApiEndpoint, GovernanceActions } from "@/shared/constants";
+import {
+  ApiEndpoint,
+  GovernanceActions,
+  PinOrUnpinEndpointAction,
+} from "@/shared/constants";
 import {
   MarkCommonFeedItemAsSeenPayload,
   UnsubscribeFunction,
@@ -139,14 +143,22 @@ class CommonFeedService {
   public pinItem = async (commonId: string, feedObjectId: string) => {
     return Api.post(ApiEndpoint.CreateAction, {
       type: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
-      args: { pinOrUnpin: "PIN_FEED_ITEM", commonId, feedObjectId },
+      args: {
+        pinOrUnpin: PinOrUnpinEndpointAction.Pin,
+        commonId,
+        feedObjectId,
+      },
     });
   };
 
   public unpinItem = async (commonId: string, feedObjectId: string) => {
     return Api.post(ApiEndpoint.CreateAction, {
       type: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
-      args: { pinOrUnpin: "UNPIN_FEED_ITEM", commonId, feedObjectId },
+      args: {
+        pinOrUnpin: PinOrUnpinEndpointAction.Unpin,
+        commonId,
+        feedObjectId,
+      },
     });
   };
 
