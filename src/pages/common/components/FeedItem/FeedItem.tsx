@@ -1,5 +1,11 @@
 import React, { FC, memo } from "react";
-import { Circles, CommonFeed, CommonFeedType } from "@/shared/models";
+import {
+  Circles,
+  Common,
+  CommonFeed,
+  CommonFeedType,
+  CommonMember,
+} from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
@@ -10,6 +16,8 @@ interface FeedItemProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
+  commonMember?: CommonMember | null;
   isProject?: boolean;
   isPinned?: boolean;
   item: CommonFeed;
@@ -28,6 +36,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
+    commonMember,
     isProject = false,
     isPinned = false,
     item,
@@ -59,6 +69,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
     isActive,
     isExpanded,
     isProject,
@@ -66,6 +77,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     governanceCircles,
     isPreviewMode,
     getLastMessage,
+    commonMember,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {
