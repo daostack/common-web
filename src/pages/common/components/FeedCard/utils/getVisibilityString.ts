@@ -22,5 +22,10 @@ export const getVisibilityString = (
   const memberSpecific =
     proposalType === ProposalsTypes.ASSIGN_CIRCLE ? `, ${memberName}` : "";
 
-  return circleNames ? `Private, ${circleNames} ${memberSpecific}` : "Public";
+  /**
+   * Temporary hide memberSpecific. See https://github.com/daostack/common-web/issues/1529
+   */
+  //return circleNames ? `Private, ${circleNames} ${memberSpecific}` : "Public";
+
+  return circleNames ? `Private, ${circleNames}` : "Public";
 };
