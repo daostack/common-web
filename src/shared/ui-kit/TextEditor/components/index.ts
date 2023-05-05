@@ -5,3 +5,4 @@ export * from "./Header";
 export * from "./Leaf";
 export * from "./MarkButton";
 export * from "./Toolbar";
+export * from "./MentionDropdown";

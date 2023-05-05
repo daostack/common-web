@@ -8,12 +8,19 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { createEditor, Transforms, Range, Editor as EditorSlate } from "slate";
+import { isEqual } from "lodash";
+import {
+  createEditor,
+  Transforms,
+  Range,
+  Editor as EditorSlate,
+  BaseRange,
+} from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
-import { MentionDropdown } from "@/pages/common/components/ChatComponent/components/MentionDropdown";
+import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { User } from "@/shared/models";
-import { Editor } from "./components";
+import { Editor, MentionDropdown, MENTION_TAG } from "./components";
 import { TextEditorSize } from "./constants";
 import { withInlines, withMentions } from "./hofs";
 import { TextEditorValue } from "./types";
@@ -38,6 +45,16 @@ export interface TextEditorProps {
   onClearFinished: () => void;
 }
 
+const INITIAL_SEARCH_VALUE = {
+  path: [0, 0],
+  offset: 0,
+  text: "",
+  range: {
+    anchor: { path: [0, 0], offset: 0 },
+    focus: { path: [0, 0], offset: 0 },
+  },
+};
+
 const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const {
     className,
@@ -61,8 +78,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   );
 
   const [target, setTarget] = useState<Range | null>();
-  const [search, setSearch] = useState("");
-
   useEffect(() => {
     if (shouldReinitializeEditor) {
       Transforms.delete(editor, {
@@ -97,14 +112,61 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   }, [editorRef, editor]);
 
-  const chars = (users ?? [])
-    .filter(({ displayName }) => {
-      if (!search) {
-        return true;
-      }
-      return displayName?.toLowerCase().startsWith(search.toLowerCase());
-    })
-    .slice(0, 10);
+  const [search, setSearch] = useState(INITIAL_SEARCH_VALUE);
+
+  const handleSearch = (text: string, value?: BaseRange) => {
+    if (!value || !value?.anchor || !text || text === "") {
+      setSearch(INITIAL_SEARCH_VALUE);
+      setTarget(null);
+      setShouldFocusTarget(false);
+      return;
+    }
+
+    if (text === MENTION_TAG) {
+      setSearch({
+        text,
+        ...value.anchor,
+        range: value,
+      });
+    } else if (text.match(/^(\s|$)/)) {
+      setSearch(INITIAL_SEARCH_VALUE);
+      setTarget(null);
+      setShouldFocusTarget(false);
+    } else if (
+      search.text.includes(MENTION_TAG) &&
+      isEqual(search.path, value.anchor.path) &&
+      search.offset + 1 === value.anchor.offset
+    ) {
+      setSearch({
+        text: search.text + text,
+        ...value.anchor,
+        range: value,
+      });
+    }
+  };
+
+  const chars = (users ?? []).filter(({ displayName }) => {
+    return displayName
+      ?.toLowerCase()
+      .startsWith(search.text.substring(1).toLowerCase());
+  });
+
+  useEffect(() => {
+    if (search && search.text && !target) {
+      setTarget({ ...search.range });
+    }
+  }, [search]);
+
+  const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === KeyboardKeys.ArrowUp && target && !shouldFocusTarget) {
+      event.preventDefault();
+      setShouldFocusTarget(true);
+    } else {
+      onKeyDown && onKeyDown(event);
+    }
+  };
 
   return (
     <Slate
@@ -121,23 +183,9 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
             before && EditorSlate.range(editor, before, start);
           const beforeText =
             beforeRange && EditorSlate.string(editor, beforeRange);
-          console.log("---beforeText", beforeText);
-          const beforeMatch =
-            beforeText &&
-            beforeText.match(/^@([a-zA-Z\u0590-\u05FF\u200f\u200e]+)$|^@/);
-          const after = EditorSlate.after(editor, start);
-          const afterRange = EditorSlate.range(editor, start, after);
-          const afterText = EditorSlate.string(editor, afterRange);
-          const afterMatch = afterText.match(/^(\s|$)/);
 
-          if (beforeMatch && afterMatch) {
-            setTarget(beforeRange);
-            setSearch(beforeMatch[1]);
-            return;
-          }
+          handleSearch(beforeText ?? "", beforeRange);
         }
-
-        setTarget(null);
       }}
     >
       <Editor
@@ -149,18 +197,21 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
         readOnly={false}
         disabled={disabled}
         onBlur={onBlur}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
       />
       {target && chars.length > 0 && (
         <MentionDropdown
+          shouldFocusTarget={shouldFocusTarget}
           onClick={(user: User) => {
             Transforms.select(editor, target);
             insertMention(editor, user);
             setTarget(null);
+            setShouldFocusTarget(false);
           }}
           users={chars}
           onClose={() => {
             setTarget(null);
+            setShouldFocusTarget(false);
           }}
         />
       )}

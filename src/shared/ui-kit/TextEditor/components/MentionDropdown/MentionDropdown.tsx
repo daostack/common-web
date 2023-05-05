@@ -1,31 +1,43 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import { UserAvatar } from "@/shared/components";
+import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useOutsideClick } from "@/shared/hooks";
 import { User } from "@/shared/models";
 import styles from "./MentionDropdown.module.scss";
+
+export const MENTION_TAG = "@";
 
 export interface MentionDropdownProps {
   onClick: (user: User) => void;
   onClose: () => void;
   users?: User[];
+  shouldFocusTarget?: boolean;
 }
 
 const MentionDropdown: FC<MentionDropdownProps> = (props) => {
-  const { onClick, users = [], onClose } = props;
-  const mentionRef = useRef<HTMLUListElement>(null);
+  const { onClick, users = [], onClose, shouldFocusTarget } = props;
+  const mentionRef = useRef(null);
   const listRefs = useRef<HTMLLIElement[]>([]);
   const { isOutside, setOutsideValue } = useOutsideClick(mentionRef);
   const [index, setIndex] = useState(0);
 
-  // useEffect(() => {
-  //   listRefs && listRefs.current?.[index]?.focus();
-  // }, [index]);
+  useEffect(() => {
+    if (shouldFocusTarget) {
+      listRefs && listRefs.current?.[index]?.focus();
+    }
+  }, [index, shouldFocusTarget]);
 
-  const increment = () => setIndex((value) => value + 1);
-  const decrement = () => setIndex((value) => value - 1);
-  const chooseUser = () => {
-    onClick(users[index]);
+  const increment = () => {
+    setIndex((value) => {
+      const updatedValue = value + 1;
+      return updatedValue > users.length - 1 ? value : value + 1;
+    });
   };
+  const decrement = () =>
+    setIndex((value) => {
+      const updatedValue = value - 1;
+      return updatedValue > 0 ? updatedValue : value;
+    });
 
   useEffect(() => {
     if (isOutside) {
@@ -45,16 +57,16 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       onKeyDown={(event) => {
         event.preventDefault();
         switch (event.key) {
-          case "ArrowUp": {
+          case KeyboardKeys.ArrowUp: {
             decrement();
             break;
           }
-          case "ArrowDown": {
+          case KeyboardKeys.ArrowDown: {
             increment();
             break;
           }
-          case "Enter": {
-            chooseUser();
+          case KeyboardKeys.Enter: {
+            onClick(users[index]);
           }
         }
       }}
