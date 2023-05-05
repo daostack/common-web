@@ -1,4 +1,5 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import { uniq } from "lodash";
 import { UserAvatar } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useOutsideClick } from "@/shared/hooks";
@@ -20,12 +21,22 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const listRefs = useRef<HTMLLIElement[]>([]);
   const { isOutside, setOutsideValue } = useOutsideClick(mentionRef);
   const [index, setIndex] = useState(0);
+  const userIds = useMemo(() => users.map(({ uid }) => uid), [users]);
 
   useEffect(() => {
     if (shouldFocusTarget) {
-      listRefs && listRefs.current?.[index]?.focus();
+      const filteredListRefs = uniq(listRefs.current).filter((item) => {
+        if (userIds.includes(item?.id)) {
+          return true;
+        }
+
+        return false;
+      });
+
+      listRefs.current = filteredListRefs;
+      filteredListRefs && filteredListRefs?.[index]?.focus();
     }
-  }, [index, shouldFocusTarget]);
+  }, [index, shouldFocusTarget, userIds]);
 
   const increment = () => {
     setIndex((value) => {
@@ -36,7 +47,7 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const decrement = () =>
     setIndex((value) => {
       const updatedValue = value - 1;
-      return updatedValue > 0 ? updatedValue : value;
+      return updatedValue === 0 ? updatedValue : value;
     });
 
   useEffect(() => {
@@ -46,6 +57,23 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
     }
   }, [isOutside, setOutsideValue, onClose]);
 
+  const onKeyDown = (event) => {
+    event.preventDefault();
+    switch (event.key) {
+      case KeyboardKeys.ArrowUp: {
+        decrement();
+        break;
+      }
+      case KeyboardKeys.ArrowDown: {
+        increment();
+        break;
+      }
+      case KeyboardKeys.Enter: {
+        onClick(users[index]);
+      }
+    }
+  };
+
   const getRef = (element) => listRefs.current.push(element);
 
   return (
@@ -54,25 +82,11 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
       ref={mentionRef}
       className={styles.container}
       data-cy="mentions-portal"
-      onKeyDown={(event) => {
-        event.preventDefault();
-        switch (event.key) {
-          case KeyboardKeys.ArrowUp: {
-            decrement();
-            break;
-          }
-          case KeyboardKeys.ArrowDown: {
-            increment();
-            break;
-          }
-          case KeyboardKeys.Enter: {
-            onClick(users[index]);
-          }
-        }
-      }}
+      onKeyDown={onKeyDown}
     >
       {users.map((user, index) => (
         <li
+          id={user.uid}
           ref={getRef}
           tabIndex={index}
           key={user.uid}

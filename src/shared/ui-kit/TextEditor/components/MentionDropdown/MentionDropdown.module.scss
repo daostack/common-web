@@ -28,8 +28,9 @@
     background-color: $c-pink-hover-feed-cards;
   }
 
-  :focus {
+  &:focus {
     background-color: $c-pink-hover-feed-cards;
+    outline: none;
   }
 }
 

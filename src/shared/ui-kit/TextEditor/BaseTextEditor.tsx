@@ -78,6 +78,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   );
 
   const [target, setTarget] = useState<Range | null>();
+  const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
   useEffect(() => {
     if (shouldReinitializeEditor) {
       Transforms.delete(editor, {
@@ -138,10 +139,11 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       search.offset + 1 === value.anchor.offset
     ) {
       setSearch({
+        ...search,
         text: search.text + text,
         ...value.anchor,
-        range: value,
       });
+      setShouldFocusTarget(false);
     }
   };
 
@@ -152,15 +154,19 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   });
 
   useEffect(() => {
-    if (search && search.text && !target) {
-      setTarget({ ...search.range });
+    if (search && search.text) {
+      setTarget({
+        ...search.range,
+        focus: {
+          ...search.range.focus,
+          offset: search.range.focus.offset + search.text.length - 1,
+        },
+      });
     }
   }, [search]);
 
-  const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
-
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-    if (event.key === KeyboardKeys.ArrowUp && target && !shouldFocusTarget) {
+    if (event.key === KeyboardKeys.ArrowUp && target) {
       event.preventDefault();
       setShouldFocusTarget(true);
     } else {
