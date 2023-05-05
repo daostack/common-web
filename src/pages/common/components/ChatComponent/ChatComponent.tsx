@@ -14,7 +14,6 @@ import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
-import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import {
   ChatType,
   GovernanceActions,
@@ -314,6 +313,20 @@ export default function ChatComponent({
 
     setMessage((currentMessage) => `${currentMessage}\r\n`);
   };
+
+  useEffect(() => {
+    if (isFetchedDiscussionMessages && discussionMessages?.length === 0) {
+      markFeedItemAsSeen({
+        feedObjectId: feedItemId,
+        commonId,
+      });
+    }
+  }, [
+    isFetchedDiscussionMessages,
+    discussionMessages?.length,
+    feedItemId,
+    commonId,
+  ]);
 
   useEffect(() => {
     if (
