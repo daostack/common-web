@@ -24,7 +24,7 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { SendIcon } from "@/shared/icons";
+import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   Circles,
@@ -34,6 +34,7 @@ import {
   DiscussionMessage,
   Timestamp,
 } from "@/shared/models";
+import { ButtonIcon } from "@/shared/ui-kit";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
   cacheActions,
@@ -45,6 +46,8 @@ import {
 import { ChatContent, MessageReply, ChatFilePreview } from "./components";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
+
+const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
 
 interface ChatComponentInterface {
   commonId: string;
@@ -389,20 +392,21 @@ export default function ChatComponent({
               </span>
             ) : (
               <>
-                {/* <ButtonIcon
+                <ButtonIcon
                   className={styles.addFilesIcon}
                   onClick={() => {
                     document.getElementById("file")?.click();
                   }}
                 >
                   <PlusIcon />
-                </ButtonIcon> */}
+                </ButtonIcon>
                 <input
                   id="file"
                   type="file"
                   onChange={uploadFiles}
                   style={{ display: "none" }}
                   multiple
+                  accept={ACCEPTED_EXTENSIONS}
                 />
                 <textarea
                   className={styles.messageInput}

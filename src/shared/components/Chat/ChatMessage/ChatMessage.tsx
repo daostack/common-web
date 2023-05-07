@@ -10,6 +10,7 @@ import {
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import { DiscussionMessage, User } from "@/shared/models";
+import { ChatImageGallery } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
 import { getModerationText } from "@/shared/utils/moderation";
@@ -186,6 +187,7 @@ export default function ChatMessage({
                 [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
               })}
             >
+              <ChatImageGallery gallery={discussionMessage.images ?? []} />
               <Linkify>{discussionMessage.text}</Linkify>
               <div className={styles.timeWrapperContainer}>
                 {isEdited && (
