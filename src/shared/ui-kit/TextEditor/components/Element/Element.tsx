@@ -8,7 +8,7 @@ import { ElementAttributes } from "./types";
 import { getElementTextDirection } from "./utils";
 import styles from "./Element.module.scss";
 
-const Mention = ({ attributes, children, element, className }) => {
+const Mention = ({ attributes, element, className }) => {
   return (
     <span
       {...attributes}
@@ -17,7 +17,6 @@ const Mention = ({ attributes, children, element, className }) => {
       className={className}
     >
       @{element.displayName}
-      {children}
     </span>
   );
 };

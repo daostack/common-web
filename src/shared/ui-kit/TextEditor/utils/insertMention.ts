@@ -6,9 +6,9 @@ import { ReactEditor } from "slate-react";
 export const insertMention = (editor, character) => {
   const mention: MentionElement = {
     type: ElementType.Mention,
-    displayName: character?.displayName,
+    displayName: `${character?.displayName} `,
     userId: character?.uid,
-    children: [{ text: " " }],
+    children: [{ text: "" }],
   };
   Transforms.insertNodes(editor, mention);
   Transforms.move(editor);
