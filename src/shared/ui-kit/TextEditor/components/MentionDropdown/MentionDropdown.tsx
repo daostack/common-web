@@ -41,13 +41,13 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
   const increment = () => {
     setIndex((value) => {
       const updatedValue = value + 1;
-      return updatedValue > users.length - 1 ? value : value + 1;
+      return updatedValue > users.length - 1 ? value : updatedValue;
     });
   };
   const decrement = () =>
     setIndex((value) => {
       const updatedValue = value - 1;
-      return updatedValue === 0 ? updatedValue : value;
+      return updatedValue >= 0 ? updatedValue : value;
     });
 
   useEffect(() => {

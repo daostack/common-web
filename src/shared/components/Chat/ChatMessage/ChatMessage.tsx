@@ -1,4 +1,10 @@
-import React, { MouseEventHandler, useCallback, useEffect, useState, useRef } from "react";
+import React, {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import {

@@ -155,6 +155,9 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
                   isActive || (isExpanded && isMobileView),
               })}
               value={lastMessageValue}
+              elementStyles={{
+                mention: isActive ? styles.mentionText : "",
+              }}
               readOnly
             />
           ) : (

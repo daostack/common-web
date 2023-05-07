@@ -52,7 +52,7 @@ export const parseTextEditorValueToString = (
     const textEditorMap = textEditorValue.map((item) => {
       return item.children.map((tag: CustomElement) => ({
         ...tag,
-        type: item.type,
+        type: tag?.type,
       }));
     });
 

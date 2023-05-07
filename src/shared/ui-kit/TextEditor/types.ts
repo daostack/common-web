@@ -67,6 +67,11 @@ export interface TextEditorStyles {
   error?: string;
 }
 
+
+export interface EditorElementStyles {
+  mention?: string;
+}
+
 export type CustomElement =
   | ParagraphElement
   | HeadingElement

@@ -2,18 +2,19 @@ import React, { CSSProperties, FC } from "react";
 import classNames from "classnames";
 import { RenderElementProps } from "slate-react";
 import { ElementType } from "../../constants";
+import { EditorElementStyles } from "../../types";
 import { Link } from "./components";
 import { ElementAttributes } from "./types";
 import { getElementTextDirection } from "./utils";
 import styles from "./Element.module.scss";
 
-const Mention = ({ attributes, children, element }) => {
+const Mention = ({ attributes, children, element, className }) => {
   return (
     <span
       {...attributes}
       contentEditable={false}
       data-cy={`mention-${element.displayName.replace(" ", "-")}`}
-      className={styles.mention}
+      className={className}
     >
       @{element.displayName}
       {children}
@@ -21,8 +22,10 @@ const Mention = ({ attributes, children, element }) => {
   );
 };
 
-const Element: FC<RenderElementProps> = (props) => {
-  const { attributes, children, element } = props;
+const Element: FC<RenderElementProps & { styles?: EditorElementStyles }> = (
+  props,
+) => {
+  const { attributes, children, element, styles: elementStyles } = props;
   const elementProps: ElementAttributes = {
     ...attributes,
     className: styles.element,
@@ -73,7 +76,12 @@ const Element: FC<RenderElementProps> = (props) => {
         </Link>
       );
     case ElementType.Mention: {
-      return <Mention {...props} />;
+      return (
+        <Mention
+          {...props}
+          className={classNames(styles.mention, elementStyles?.mention)}
+        />
+      );
     }
     default:
       return (

@@ -14,7 +14,11 @@ import { ErrorText } from "@/shared/components/Form/ErrorText";
 import { Editor, Header, Toolbar } from "./components";
 import { TextEditorSize } from "./constants";
 import { withInlines } from "./hofs";
-import { TextEditorValue, TextEditorStyles } from "./types";
+import {
+  TextEditorValue,
+  TextEditorStyles,
+  EditorElementStyles,
+} from "./types";
 import styles from "./TextEditor.module.scss";
 
 export interface TextEditorProps {
@@ -35,6 +39,7 @@ export interface TextEditorProps {
   readOnly?: boolean;
   disabled?: boolean;
   styles?: TextEditorStyles;
+  elementStyles?: EditorElementStyles;
 }
 
 const TextEditor: FC<TextEditorProps> = (props) => {
@@ -56,6 +61,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
     readOnly = false,
     disabled = false,
     styles: outerStyles,
+    elementStyles,
   } = props;
   const editor = useMemo(
     () => withInlines(withHistory(withReact(createEditor()))),
@@ -99,6 +105,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
             readOnly={readOnly}
             disabled={disabled}
             onBlur={onBlur}
+            elementStyles={elementStyles}
           />
           {!readOnly && <Toolbar disabled={disabled} />}
         </div>
