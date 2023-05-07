@@ -101,9 +101,6 @@ export default function ChatMessage({
       const parsedText = await getTextFromTextEditorString({
         textEditorString: discussionMessage?.parentMessage.text,
         commonMembers,
-        mentionTextClassName: !isNotCurrentUserMessage
-          ? styles.mentionTextCurrentUser
-          : "",
       });
 
       setReplyMessageText(parsedText);

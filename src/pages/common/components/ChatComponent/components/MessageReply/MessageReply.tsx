@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/util";
-import { CommonMemberWithUserInfo } from "@/shared/models";
 import CloseIcon from "@/shared/icons/close2.icon";
+import { CommonMemberWithUserInfo } from "@/shared/models";
 import {
   selectCurrentDiscussionMessageReply,
   chatActions,
@@ -32,11 +32,11 @@ const MessageReply: React.FC<MessageReplyProps> = ({ commonMembers }) => {
       const parsedText = await getTextFromTextEditorString({
         textEditorString: discussionMessageReply.text,
         commonMembers,
-    });
+      });
 
       setMessageText(parsedText);
     })();
-  }, [commonMembers]);
+  }, [commonMembers, discussionMessageReply]);
 
   if (!discussionMessageReply) {
     return null;
