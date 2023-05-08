@@ -38,7 +38,7 @@ $viewport-breakpoint: 1000px;
   @include viewport-breakpoint($viewport-breakpoint) {
     top: 50%;
     bottom: unset;
-    transform: translateX(-50%) translateY(-50%); 
+    transform: translateX(-50%) translateY(-50%);
   }
 }
 
