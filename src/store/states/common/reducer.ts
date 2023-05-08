@@ -80,6 +80,102 @@ const updateFeedItemInList = (
   };
 };
 
+const addNewFeedItems = (
+  state: WritableDraft<CommonState>,
+  payload: {
+    commonFeedItem: CommonFeed;
+    statuses: {
+      isAdded: boolean;
+      isRemoved: boolean;
+    };
+  }[],
+) => {
+  let firstDocTimestamp = state.feedItems.firstDocTimestamp;
+
+  const data = payload.reduceRight(
+    (acc, { commonFeedItem, statuses: { isRemoved } }) => {
+      const nextData = [...acc];
+      const itemIndex = nextData.findIndex(
+        (item) => item.feedItem.id === commonFeedItem.id,
+      );
+
+      if (isRemoved) {
+        if (itemIndex >= 0) {
+          nextData.splice(itemIndex, 1);
+        }
+
+        return nextData;
+      }
+
+      const finalItem: FeedLayoutItem = {
+        feedItem: commonFeedItem,
+      };
+      firstDocTimestamp = commonFeedItem.updatedAt;
+
+      if (itemIndex < 0) {
+        return [finalItem, ...nextData];
+      }
+
+      nextData[itemIndex] = finalItem;
+
+      return nextData;
+    },
+    state.feedItems.data || [],
+  );
+
+  state.feedItems = {
+    ...state.feedItems,
+    data,
+    firstDocTimestamp,
+  };
+};
+
+const addNewPinnedFeedItems = (
+  state: WritableDraft<CommonState>,
+  payload: {
+    commonFeedItem: CommonFeed;
+    statuses: {
+      isAdded: boolean;
+      isRemoved: boolean;
+    };
+  }[],
+) => {
+  const data = payload.reduceRight(
+    (acc, { commonFeedItem, statuses: { isRemoved } }) => {
+      const nextData = [...acc];
+      const itemIndex = nextData.findIndex(
+        (item) => item.feedItem.id === commonFeedItem.id,
+      );
+
+      if (isRemoved) {
+        if (itemIndex >= 0) {
+          nextData.splice(itemIndex, 1);
+        }
+
+        return nextData;
+      }
+
+      const finalItem: FeedLayoutItem = {
+        feedItem: commonFeedItem,
+      };
+
+      if (itemIndex < 0) {
+        return [finalItem, ...nextData];
+      }
+
+      nextData[itemIndex] = finalItem;
+
+      return nextData;
+    },
+    state.pinnedFeedItems.data || [],
+  );
+
+  state.pinnedFeedItems = {
+    ...state.pinnedFeedItems,
+    data,
+  };
+};
+
 const updatePinnedFeedItemInList = (
   state: WritableDraft<CommonState>,
   payload: {
@@ -304,82 +400,22 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   )
   .handleAction(actions.addNewFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
-      let firstDocTimestamp = nextState.feedItems.firstDocTimestamp;
-
-      const data = payload.reduceRight(
-        (acc, { commonFeedItem, statuses: { isRemoved } }) => {
-          const nextData = [...acc];
-          const itemIndex = nextData.findIndex(
-            (item) => item.feedItem.id === commonFeedItem.id,
-          );
-
-          if (isRemoved) {
-            if (itemIndex >= 0) {
-              nextData.splice(itemIndex, 1);
-            }
-
-            return nextData;
-          }
-
-          const finalItem: FeedLayoutItem = {
-            feedItem: commonFeedItem,
-          };
-          firstDocTimestamp = commonFeedItem.updatedAt;
-
-          if (itemIndex < 0) {
-            return [finalItem, ...nextData];
-          }
-
-          nextData[itemIndex] = finalItem;
-
-          return nextData;
-        },
-        nextState.feedItems.data || [],
-      );
-
-      nextState.feedItems = {
-        ...nextState.feedItems,
-        data,
-        firstDocTimestamp,
-      };
+      addNewFeedItems(nextState, payload);
     }),
   )
   .handleAction(actions.addNewPinnedFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
-      const data = payload.reduceRight(
-        (acc, { commonFeedItem, statuses: { isRemoved } }) => {
-          const nextData = [...acc];
-          const itemIndex = nextData.findIndex(
-            (item) => item.feedItem.id === commonFeedItem.id,
-          );
-
-          if (isRemoved) {
-            if (itemIndex >= 0) {
-              nextData.splice(itemIndex, 1);
-            }
-
-            return nextData;
-          }
-
-          const finalItem: FeedLayoutItem = {
-            feedItem: commonFeedItem,
-          };
-
-          if (itemIndex < 0) {
-            return [finalItem, ...nextData];
-          }
-
-          nextData[itemIndex] = finalItem;
-
-          return nextData;
-        },
-        nextState.pinnedFeedItems.data || [],
+      addNewPinnedFeedItems(nextState, payload);
+      addNewFeedItems(
+        nextState,
+        payload.map((item) => ({
+          ...item,
+          statuses: {
+            isAdded: false,
+            isRemoved: true,
+          },
+        })),
       );
-
-      nextState.pinnedFeedItems = {
-        ...nextState.pinnedFeedItems,
-        data,
-      };
     }),
   )
   .handleAction(actions.updateFeedItem, (state, { payload }) =>
