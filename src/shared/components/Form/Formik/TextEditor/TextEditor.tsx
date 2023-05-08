@@ -20,7 +20,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
     <BaseTextEditor
       {...restProps}
       value={value}
-      onChange={setValue}
+      onChange={(val) => setValue(val)}
       hint={hintToShow}
       error={touched ? error : ""}
     />
