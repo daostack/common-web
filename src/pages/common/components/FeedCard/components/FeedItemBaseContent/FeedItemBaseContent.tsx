@@ -1,9 +1,16 @@
-import React, { FC, MouseEventHandler, useRef, useState } from "react";
+import React, { FC, MouseEventHandler, useRef, useState, useMemo } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { ButtonIcon } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { ContextMenu, ContextMenuRef, TimeAgo } from "@/shared/ui-kit";
+import {
+  ContextMenu,
+  ContextMenuRef,
+  TextEditor,
+  TimeAgo,
+  parseStringToTextEditorValue,
+} from "@/shared/ui-kit";
+import { CustomText } from "@/shared/ui-kit/TextEditor/types";
 import { FeedItemBaseContentProps } from "../../../FeedItem";
 import { FeedCardTags } from "../FeedCardTags";
 import styles from "./FeedItemBaseContent.module.scss";
@@ -24,6 +31,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     menuItems,
     seenOnce,
     ownerId,
+    isPinned,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -75,6 +83,27 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     }
   };
 
+  const lastMessageValue = useMemo(() => {
+    try {
+      const [lastMessageUser, lastMessageContent] = (lastMessage ?? "").split(
+        ": ",
+      );
+
+      const parsedContent = parseStringToTextEditorValue(lastMessageContent);
+      (parsedContent?.[0] as { children: CustomText[] })?.children.unshift({
+        text: `${lastMessageUser}: `,
+      });
+
+      return parsedContent;
+    } catch (err) {
+      return parseStringToTextEditorValue();
+    }
+  }, [lastMessage]);
+
+  if (!title && !lastActivity) {
+    return null;
+  }
+
   return (
     <div
       className={classNames(styles.container, {
@@ -99,14 +128,15 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
         <div className={styles.topContent}>
           <p
             className={classNames(styles.text, styles.title, {
-              [styles.titleActive]: isActive,
+              [styles.titleActive]: isActive || (isExpanded && isMobileView),
             })}
           >
             {title || "Loading..."}
           </p>
           <p
             className={classNames(styles.text, styles.lastActivity, {
-              [styles.lastActivityActive]: isActive,
+              [styles.lastActivityActive]:
+                isActive || (isExpanded && isMobileView),
             })}
           >
             <TimeAgo milliseconds={lastActivity} />
@@ -114,13 +144,18 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
         </div>
         <div className={styles.bottomContent}>
           {lastMessage ? (
-            <p
-              className={classNames(styles.text, styles.lastMessage, {
-                [styles.lastMessageActive]: isActive,
+            <TextEditor
+              className={styles.lastMessageContainer}
+              editorClassName={classNames(styles.text, styles.lastMessage, {
+                [styles.lastMessageActive]:
+                  isActive || (isExpanded && isMobileView),
               })}
-            >
-              {lastMessage}
-            </p>
+              elementStyles={{
+                mention: isActive ? styles.mentionText : "",
+              }}
+              value={lastMessageValue}
+              readOnly
+            />
           ) : (
             <div />
           )}
@@ -131,6 +166,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               seenOnce={seenOnce}
               ownerId={ownerId}
               isActive={isActive}
+              isPinned={isPinned}
             />
           </div>
         </div>

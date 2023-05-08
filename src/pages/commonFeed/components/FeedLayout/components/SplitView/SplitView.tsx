@@ -25,6 +25,10 @@ const SplitView: FC<SplitViewProps> = (props) => {
         position: "relative",
         overflow: "unset",
       }}
+      paneStyle={{
+        display: "flex",
+        flexDirection: "column",
+      }}
       pane1Style={{
         overflow: "hidden",
       }}

@@ -1,7 +1,6 @@
 import React, { ReactNode, useMemo } from "react";
 import classNames from "classnames";
 import { useFullText } from "@/shared/hooks";
-import { AttachIcon } from "@/shared/icons";
 import { CommonLink } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
@@ -31,8 +30,7 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
   );
   const isDescriptionEmpty = checkIsTextEditorValueEmpty(parsedDescription);
   const shouldDisplaySeeMoreButton =
-    ((shouldShowFullContent || !isFullTextShowing) && !isDescriptionEmpty) ||
-    images.length > 0;
+    (shouldShowFullContent || !isFullTextShowing) && !isDescriptionEmpty;
 
   const handleSeeMoreClick = (event) => {
     event.stopPropagation();
@@ -54,27 +52,15 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           readOnly
         />
       )}
-      {images.length > 0 && shouldShowFullContent && (
-        <ImageGallery gallery={images} />
-      )}
       {shouldDisplaySeeMoreButton && (
         <a
           className={classNames(styles.seeMore, styles.text)}
           onClick={handleSeeMoreClick}
         >
-          See{" "}
-          {shouldShowFullContent ? (
-            "less"
-          ) : (
-            <>
-              more
-              {images.length > 0 && (
-                <AttachIcon className={styles.attachIcon} />
-              )}
-            </>
-          )}
+          See {shouldShowFullContent ? "less" : "more"}
         </a>
       )}
+      {images.length > 0 && <ImageGallery gallery={images} />}
     </div>
   );
 };

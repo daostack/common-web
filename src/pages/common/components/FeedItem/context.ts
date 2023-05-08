@@ -22,6 +22,7 @@ export interface FeedItemBaseContentProps {
   image?: string;
   imageAlt?: string;
   isProject?: boolean;
+  isPinned?: boolean;
 }
 
 export interface GetLastMessageOptions {

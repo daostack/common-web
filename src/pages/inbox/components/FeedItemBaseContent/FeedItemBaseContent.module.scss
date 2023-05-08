@@ -13,6 +13,12 @@
 
   &:hover {
     background-color: $c-pink-hover-feed-cards;
+    .lastMessage {
+      background-color: $c-pink-hover-feed-cards;
+    }
+    .lastMessageActive {
+      background-color: $c-pink-active-feed-cards;
+    }
   }
 
   @include tablet {
@@ -84,6 +90,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  overflow: hidden;
 }
 
 .topContent {
@@ -115,12 +122,12 @@
   color: $secondary-blue;
   font-size: $moderate-xsmall;
   line-height: 1.5rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 
   @include tablet {
-    text-overflow: ellipsis;
     max-width: 11.75rem;
-    overflow: hidden;
-    white-space: nowrap;
   }
 }
 
@@ -129,6 +136,7 @@
 }
 
 .lastMessage {
+  max-height: 1.25rem;
   color: $c-neutrals-300;
   font-size: $mobile-title;
   line-height: 1.25rem;
@@ -143,6 +151,11 @@
 
 .lastMessageActive {
   color: $c-neutrals-200;
+  background-color: $c-pink-active-feed-cards;
+}
+
+.mentionText {
+  color: $c-pink-active-feed-cards-light;
 }
 
 .messageCount {

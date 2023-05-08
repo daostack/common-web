@@ -29,6 +29,8 @@
   height: 100%;
   overflow: auto;
   overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .emptyChat {
@@ -84,13 +86,10 @@
   font-size: 0.875rem;
   line-height: 1.43;
   color: $c-neutrals-600;
-  display: flex;
-  align-items: center;
   box-sizing: border-box;
 }
 
 .addFilesIcon {
-  padding: 0.4375rem;
   margin-right: 0.9375rem;
 }
 

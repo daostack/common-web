@@ -1,0 +1,88 @@
+@import "../../../constants";
+@import "../../../styles/sizes";
+
+.container {
+  position: relative;
+  margin-bottom: 0.125rem;
+  width: 15.4375rem;
+  cursor: pointer;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
+.mainContentContainer {
+  position: relative;
+  flex: 0;
+  max-width: 15.4375rem;
+  max-height: 7.5rem;
+}
+
+.imageContainer {
+  display: flex;
+  margin-top: 0.0625rem;
+  padding: 0.25rem;
+}
+
+.imageContainerSecondRow {
+  padding-top: 0;
+}
+
+.imageContainerSingleImage {
+  margin-top: 0;
+  width: 100%;
+  padding: 0;
+}
+
+.image {
+  width: 7.3125rem;
+  height: 7.3125rem;
+  object-fit: cover;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.singleImage {
+  max-width: 15.4375rem;
+  max-height: 16.625rem;
+  width: 15.4375rem;
+  height: 16.625rem;
+  margin: auto;
+  margin-top: 0.125rem;
+}
+
+.leftItem {
+  margin-right: 0.15625rem;
+  margin-left: 0;
+}
+
+.rightItem {
+  margin-left: 0.15625rem;
+  margin-right: 0;
+}
+
+.imageCountButton {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  height: 4.375rem;
+  width: 4.375rem;
+  border-radius: 2.1875rem;
+  background-color: $c-neutrals-600;
+  opacity: 0.8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageCountButtonText {
+  font-size: $moderate-xsmall;
+  line-height: 1.375rem;
+  color: $c-light-gray;
+}

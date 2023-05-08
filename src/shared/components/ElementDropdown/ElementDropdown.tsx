@@ -11,6 +11,7 @@ import {
   ScreenSize,
   EntityTypes,
 } from "@/shared/constants";
+import { REACT_APP_ENV, Environment } from "@/shared/constants";
 import { useBuildShareLink, useNotification, useModal } from "@/shared/hooks";
 import {
   MenuItem as DesktopStyleMenuItem,
@@ -57,6 +58,7 @@ interface ElementDropdownProps {
   userId?: string;
   ownerId?: string;
   commonId?: string;
+  isControlledDropdown?: boolean;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
@@ -74,6 +76,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   userId,
   ownerId,
   commonId,
+  isControlledDropdown = true,
 }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
@@ -105,7 +108,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     onClose: onCloseHide,
   } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const isControlledMenu = typeof isOpen === "boolean";
+  const isControlledMenu = typeof isOpen === "boolean" && isControlledDropdown;
   const isHiddenElement =
     (elem as DiscussionMessage | Discussion | Proposal)?.moderation?.flag ===
     ModerationFlags.Hidden;
@@ -203,7 +206,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     (isOpen: boolean) => {
       if (!linkURL && isOpen) {
         handleOpen();
-        setIsShareLinkGenerating(true);
+        REACT_APP_ENV !== Environment.Dev && setIsShareLinkGenerating(true);
       }
 
       if (onMenuToggle) onMenuToggle(isOpen);
@@ -287,7 +290,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const menuInlineStyle = useMemo(
     () => ({
-      height: `${2.8125 * (ElementDropdownMenuItemsList.length || 1)}rem`,
+      height: `${2.5 * (ElementDropdownMenuItemsList.length || 1)}rem`,
     }),
     [ElementDropdownMenuItemsList],
   );
@@ -302,6 +305,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     <>
       {!isControlledMenu && (
         <Dropdown
+          isOpen={isOpen}
           options={ElementDropdownMenuItemsList}
           menuButton={<MenuButton variant={variant} />}
           onMenuToggle={handleMenuToggle}
@@ -312,7 +316,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
           menuInlineStyle={menuInlineStyle}
           styles={{
             ...styles,
-            menuButton: classNames({
+            menuButton: classNames(styles?.menuButton, {
               "element-dropdown__menu-button--transparent": transparent,
             }),
             menu: "element-dropdown__menu",

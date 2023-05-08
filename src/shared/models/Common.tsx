@@ -11,6 +11,7 @@ import {
   Circles,
   CirclesMap,
 } from "./governance/Circles";
+import { Time } from "./shared";
 
 interface DirectParent {
   commonId: string;
@@ -112,6 +113,8 @@ export interface Common extends BaseEntity {
   proposals?: Proposal[];
   discussions?: Discussion[];
   messages?: DiscussionMessage[];
+
+  pinnedFeedItems: FeedItem[];
 }
 
 export interface Project extends Common {
@@ -178,4 +181,9 @@ export interface CommonLink {
 
 export interface CommonPayment {
   link: string;
+}
+
+interface FeedItem {
+  feedObjectId: string;
+  pinnedAt: Time;
 }

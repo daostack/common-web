@@ -136,6 +136,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
               discussion={chatItem.discussion}
               feedItemId={chatItem.feedItemId}
               lastSeenItem={chatItem.lastSeenItem}
+              seenOnce={chatItem.seenOnce}
             />
           </>
         )}

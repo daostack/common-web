@@ -15,7 +15,7 @@ export const getConfiguration = (isProject = true): CreationFormItem[] => {
       className: styles.projectImages,
       props: {
         name: "projectImages",
-        label: `${type} picture`,
+        label: `${type} picture ${isProject && "(required)"}`,
         maxImagesAmount: 1,
       },
       validation: {

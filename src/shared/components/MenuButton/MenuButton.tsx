@@ -2,6 +2,7 @@ import React, { ForwardRefRenderFunction, forwardRef } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { Orientation } from "@/shared/constants";
+import { RightArrowThinIcon } from "@/shared/icons";
 import MenuIcon from "@/shared/icons/menu.icon";
 import "./index.scss";
 
@@ -18,16 +19,34 @@ const MenuButton: ForwardRefRenderFunction<
 > = (
   { onClick, className, withBorder, variant = Orientation.Vertical },
   ref,
-) => (
-  <ButtonIcon
-    ref={ref}
-    className={classNames("menu-button", className, {
-      "menu-button--with-border": withBorder,
-    })}
-    onClick={onClick}
-  >
-    <MenuIcon className="menu-button__icon" variant={variant} />
-  </ButtonIcon>
-);
+) => {
+  const Icon = React.useCallback(() => {
+    switch (variant) {
+      case Orientation.Arrow: {
+        return (
+          <RightArrowThinIcon
+            className={classNames("menu-button__icon", "arrow__icon")}
+          />
+        );
+      }
+      default: {
+        return <MenuIcon className="menu-button__icon" variant={variant} />;
+      }
+    }
+  }, [variant]);
+
+  return (
+    <ButtonIcon
+      ref={ref}
+      className={classNames("menu-button", className, {
+        "menu-button--with-border": withBorder,
+        "menu-button--arrow": variant === Orientation.Arrow,
+      })}
+      onClick={onClick}
+    >
+      <Icon />
+    </ButtonIcon>
+  );
+};
 
 export default forwardRef(MenuButton);

@@ -11,7 +11,9 @@ export const getAllowedActions = (
     ? [AboutAction.Edit]
     : [];
 
-  allowedActions.push(AboutAction.InviteFriends);
+  if (commonMember) {
+    allowedActions.push(AboutAction.InviteFriends);
+  }
 
   return allowedActions;
 };
