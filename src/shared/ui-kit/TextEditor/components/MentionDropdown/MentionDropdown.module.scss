@@ -8,7 +8,7 @@
   max-height: 22.75rem;
   background: $white;
   border-radius: 0.25rem;
-  box-shadow: 0 0.0625rem 0.3125rem rgba(0,0,0,.2);
+  box-shadow: 0 0.0625rem 0.3125rem rgba(0, 0, 0, 0.2);
   padding: 0;
   margin: 0;
   overflow-y: auto;
@@ -41,5 +41,4 @@
 .userName {
   font-weight: 500;
   font-size: $mobile-title;
-
 }

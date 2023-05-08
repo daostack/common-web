@@ -1,7 +1,7 @@
 import { Transforms } from "slate";
+import { ReactEditor } from "slate-react";
 import { ElementType } from "../constants";
 import { MentionElement } from "../types";
-import { ReactEditor } from "slate-react";
 
 export const insertMention = (editor, character) => {
   const mention: MentionElement = {

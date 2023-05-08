@@ -16,7 +16,6 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
-import { PlusIcon } from "@/shared/icons";
 import {
   ChatType,
   GovernanceActions,
@@ -27,6 +26,7 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
+import { PlusIcon } from "@/shared/icons";
 import { SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
@@ -412,7 +412,6 @@ export default function ChatComponent({
             hasPermissionToHide={hasPermissionToHide}
             commonMembers={commonMembers}
             discussionId={discussionId}
-
           />
         ) : (
           <div className={styles.loaderContainer}>

@@ -291,38 +291,40 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   };
 
   return (
-    <FeedCard
-      feedItemId={item.id}
-      isHovering={isHovering}
-      onClick={handleOpenChat}
-      lastActivity={item.updatedAt.seconds * 1000}
-      isActive={isActive}
-      isExpanded={isExpanded}
-      unreadMessages={feedItemUserMetadata?.count || 0}
-      title={discussion?.title}
-      lastMessage={getLastMessage({
-        commonFeedType: item.data.type,
-        lastMessage: item.data.lastMessage,
-        discussion,
-        currentUserId: userId,
-        feedItemCreatorName: getUserName(feedItemUser),
-        commonName,
-        isProject,
-      })}
-      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
-      isPreviewMode={isPreviewMode}
-      image={commonImage}
-      imageAlt={`${commonName}'s image`}
-      isProject={isProject}
-      isPinned={isPinned}
-      isLoading={isLoading}
-      type={item.data.type}
-      seenOnce={feedItemUserMetadata?.seenOnce}
-      menuItems={menuItems}
-      ownerId={item.userId}
-    >
-      {renderContent()}
-    </FeedCard>
+    <>
+      <FeedCard
+        feedItemId={item.id}
+        isHovering={isHovering}
+        onClick={handleOpenChat}
+        lastActivity={item.updatedAt.seconds * 1000}
+        isActive={isActive}
+        isExpanded={isExpanded}
+        unreadMessages={feedItemUserMetadata?.count || 0}
+        title={discussion?.title}
+        lastMessage={getLastMessage({
+          commonFeedType: item.data.type,
+          lastMessage: item.data.lastMessage,
+          discussion,
+          currentUserId: userId,
+          feedItemCreatorName: getUserName(feedItemUser),
+          commonName,
+          isProject,
+        })}
+        canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
+        isPreviewMode={isPreviewMode}
+        image={commonImage}
+        imageAlt={`${commonName}'s image`}
+        isProject={isProject}
+        isPinned={isPinned}
+        isLoading={isLoading}
+        type={item.data.type}
+        seenOnce={feedItemUserMetadata?.seenOnce}
+        menuItems={menuItems}
+        ownerId={item.userId}
+      >
+        {renderContent()}
+      </FeedCard>
+    </>
   );
 };
 

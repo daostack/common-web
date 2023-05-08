@@ -545,7 +545,11 @@ export const getCommonMembers = createAsyncAction(
   CommonsActionTypes.GET_COMMON_MEMBERS_SUCCESS,
   CommonsActionTypes.GET_COMMON_MEMBERS_FAILURE,
 )<
-  PayloadWithOptionalCallback<{commonId: string, circleVisibility: string[]}, CommonMemberWithUserInfo[], Error>,
+  PayloadWithOptionalCallback<
+    { commonId: string; circleVisibility: string[] },
+    CommonMemberWithUserInfo[],
+    Error
+  >,
   CommonMemberWithUserInfo[],
   Error
 >();
