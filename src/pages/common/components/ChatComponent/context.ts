@@ -11,6 +11,7 @@ export interface ChatItem {
   discussion: Discussion;
   circleVisibility: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
+  seenOnce?: boolean;
 }
 
 export interface ChatContextValue {
