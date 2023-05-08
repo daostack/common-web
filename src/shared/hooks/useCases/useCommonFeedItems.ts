@@ -29,8 +29,10 @@ export const useCommonFeedItems = (
     }
 
     const unsubscribe = CommonFeedService.subscribeToNewUpdatedCommonFeedItems(
-      commonId,
-      feedItems.firstDocTimestamp,
+      {
+        commonId,
+        endBefore: feedItems.firstDocTimestamp,
+      },
       (data) => {
         if (data.length === 0) {
           return;
