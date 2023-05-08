@@ -9,7 +9,7 @@ function useOutsideClick<
     setOutside(Boolean(ref.current) && !ref?.current?.contains(event.target));
   };
 
-  const setOusideValue = () => {
+  const setOutsideValue = () => {
     setOutside(!isOutside);
   };
 
@@ -23,7 +23,7 @@ function useOutsideClick<
     };
   });
 
-  return { isOutside, setOusideValue };
+  return { isOutside, setOutsideValue };
 }
 
 export default useOutsideClick;

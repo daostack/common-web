@@ -2,11 +2,13 @@ import React, {
   FC,
   FocusEventHandler,
   KeyboardEventHandler,
+  KeyboardEvent,
   useCallback,
 } from "react";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
 import { Editable, useSlate } from "slate-react";
+import { EditorElementStyles } from "../../types";
 import { Element, Leaf } from "../../components";
 import { HOTKEYS, TextEditorSize } from "../../constants";
 import { toggleMark } from "../../utils";
@@ -21,6 +23,8 @@ interface EditorProps {
   readOnly?: boolean;
   disabled?: boolean;
   onBlur?: FocusEventHandler;
+  elementStyles?: EditorElementStyles;
+  onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
 }
 
 const Editor: FC<EditorProps> = (props) => {
@@ -30,9 +34,14 @@ const Editor: FC<EditorProps> = (props) => {
     readOnly = false,
     disabled = false,
     onBlur,
+    onKeyDown,
+    elementStyles,
   } = props;
   const editor = useSlate();
-  const renderElement = useCallback((props) => <Element {...props} />, []);
+  const renderElement = useCallback(
+    (props) => <Element {...props} styles={elementStyles} />,
+    [elementStyles],
+  );
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const className = classNames(
     styles.editor,
@@ -54,6 +63,7 @@ const Editor: FC<EditorProps> = (props) => {
       event.preventDefault();
       toggleMark(editor, format);
     });
+    onKeyDown && onKeyDown(event);
   };
 
   return (

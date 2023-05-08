@@ -21,6 +21,7 @@ type BaseElementChild = CustomText | LinkElement;
 
 interface BaseElement<Child = BaseElementChild> {
   type: ElementType;
+  text?: string;
   children: Child[];
   indentLevel?: number;
   textDirection?: FormatType.LTR | FormatType.RTL;
@@ -28,6 +29,7 @@ interface BaseElement<Child = BaseElementChild> {
 
 export interface ParagraphElement extends BaseElement {
   type: ElementType.Paragraph;
+  text?: string;
 }
 
 export interface HeadingElement extends BaseElement {
@@ -51,11 +53,23 @@ export interface ListItemElement extends BaseElement {
   type: ElementType.ListItem;
 }
 
+export interface MentionElement extends BaseElement {
+  type: ElementType.Mention;
+  displayName: string;
+  userId: string;
+  children: CustomText[];
+}
+
 export interface TextEditorStyles {
   label?: string;
   hint?: string;
   labelWrapper?: string;
   error?: string;
+}
+
+
+export interface EditorElementStyles {
+  mention?: string;
 }
 
 export type CustomElement =
@@ -64,4 +78,5 @@ export type CustomElement =
   | LinkElement
   | NumberedListElement
   | BulletedListElement
-  | ListItemElement;
+  | ListItemElement
+  | MentionElement;
