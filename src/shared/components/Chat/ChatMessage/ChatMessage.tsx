@@ -240,7 +240,7 @@ export default function ChatMessage({
               })}
             >
               <ChatImageGallery gallery={discussionMessage.images ?? []} />
-               <Linkify>{messageText.map((text) => text)}</Linkify>
+              <Linkify>{messageText.map((text) => text)}</Linkify>
               <div className={styles.timeWrapperContainer}>
                 {isEdited && (
                   <div

@@ -15,9 +15,9 @@ import { useFeedItemContext } from "./context";
 interface FeedItemProps {
   commonId?: string;
   commonName: string;
+  commonMember?: CommonMember | null;
   commonImage: string;
   pinnedFeedItems?: Common["pinnedFeedItems"];
-  commonMember?: CommonMember | null;
   isProject?: boolean;
   isPinned?: boolean;
   item: CommonFeed;

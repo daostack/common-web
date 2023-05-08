@@ -278,11 +278,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   return (
                     <FeedItem
                       key={item.feedItem.id}
+                      commonMember={commonMember}
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
                       pinnedFeedItems={outerCommon?.pinnedFeedItems}
-                      commonMember={commonMember}
                       isProject={commonData?.isProject}
                       isPinned={isPinned}
                       item={item.feedItem}

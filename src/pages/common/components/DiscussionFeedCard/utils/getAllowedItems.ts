@@ -1,5 +1,6 @@
 import { DiscussionCardMenuItem } from "../constants";
 import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
+import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
 import { GetAllowedItemsOptions, PinAction } from "./types";
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
@@ -9,7 +10,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   [DiscussionCardMenuItem.Share]: () => false,
   [DiscussionCardMenuItem.Report]: () => false,
   [DiscussionCardMenuItem.Edit]: () => false,
-  [DiscussionCardMenuItem.Remove]: () => false,
+  [DiscussionCardMenuItem.Remove]: checkIsRemoveDiscussionAllowed,
   [DiscussionCardMenuItem.Pin]: (options) =>
     checkIsPinUnpinAllowed(PinAction.Pin, options),
   [DiscussionCardMenuItem.Unpin]: (options) =>

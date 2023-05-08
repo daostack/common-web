@@ -8,9 +8,9 @@ import React, {
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
 import { Editable, useSlate } from "slate-react";
-import { EditorElementStyles } from "../../types";
 import { Element, Leaf } from "../../components";
 import { HOTKEYS, TextEditorSize } from "../../constants";
+import { EditorElementStyles } from "../../types";
 import { toggleMark } from "../../utils";
 import styles from "./Editor.module.scss";
 
