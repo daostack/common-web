@@ -14,10 +14,11 @@ interface ImageGalleryProps {
   isShowing: boolean;
   onClose: () => void;
   videoSrc?: string;
+  initialSlide?: number;
 }
 
 const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
-  const { images, isShowing, onClose, videoSrc } = props;
+  const { images, isShowing, onClose, videoSrc, initialSlide = 0 } = props;
   const [swiperRef, setSwiperRef] = useState<SwiperClass | null>(null);
 
   const handleLeftClick = useCallback(() => {
@@ -43,7 +44,7 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
   return (
     <Modal isShowing={isShowing} onClose={onClose}>
       <div className="container">
-        <Swiper onSwiper={setSwiperRef} loop={true} pagination>
+        <Swiper onSwiper={setSwiperRef} loop={true} pagination initialSlide={initialSlide}>
           {videoSrc && (
             <SwiperSlide key={videoSrc} className="slider-wrapper">
               <div className="video-container">

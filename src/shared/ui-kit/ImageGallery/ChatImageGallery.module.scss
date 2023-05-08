@@ -20,6 +20,10 @@
   flex: 0;  
   max-width: 15.4375rem;
   max-height: 7.5rem;
+
+  &:hover {
+    opacity: 0.9;
+  }
 }
 
 .imageContainer {
@@ -44,7 +48,7 @@
   object-fit: cover;
 
   &:hover {
-    opacity: 0.8;
+    opacity: 0.9;
   }
 }
 
