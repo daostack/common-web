@@ -36,7 +36,7 @@ export default function Share(props: PropsWithChildren<IProps>) {
   } = props;
   const wrapperRef = useRef(null);
   const [isShown, setShown] = useState(false);
-  const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
+  const { isOutside, setOutsideValue } = useOutsideClick(wrapperRef);
   const { isShowing, onOpen, onClose } = useModal(false);
 
   document.documentElement.style.setProperty("--share-button-bg", color);
@@ -44,9 +44,9 @@ export default function Share(props: PropsWithChildren<IProps>) {
   useEffect(() => {
     if (type === ShareViewType.Popup && isOutside) {
       setShown(false);
-      setOusideValue();
+      setOutsideValue();
     }
-  }, [isOutside, setShown, setOusideValue, type]);
+  }, [isOutside, setShown, setOutsideValue, type]);
 
   const handleClick = () => {
     if (type !== ShareViewType.Popup) {

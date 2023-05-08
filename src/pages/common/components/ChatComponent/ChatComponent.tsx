@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useCallback,
   ChangeEvent,
+  useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "react-use";
@@ -12,8 +13,10 @@ import isHotkey from "is-hotkey";
 import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
+import { PlusIcon } from "@/shared/icons";
 import {
   ChatType,
   GovernanceActions,
@@ -24,7 +27,7 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { PlusIcon, SendIcon } from "@/shared/icons";
+import { SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   Circles,
@@ -34,7 +37,13 @@ import {
   DiscussionMessage,
   Timestamp,
 } from "@/shared/models";
-import { ButtonIcon } from "@/shared/ui-kit";
+import {
+  BaseTextEditor,
+  TextEditorValue,
+  parseStringToTextEditorValue,
+  ButtonIcon,
+} from "@/shared/ui-kit";
+import { getMentionTags } from "@/shared/ui-kit/TextEditor/utils";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
   cacheActions,
@@ -106,6 +115,30 @@ export default function ChatComponent({
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+
+  const [message, setMessage] = useState<TextEditorValue>(
+    parseStringToTextEditorValue(),
+  );
+  const [shouldReinitializeEditor, setShouldReinitializeEditor] =
+    useState(false);
+  const onClear = () => {
+    setShouldReinitializeEditor(true);
+    setMessage(parseStringToTextEditorValue());
+  };
+
+  const users = useMemo(() => {
+    return commonMembers
+      .filter((member) => member.userId !== commonMember?.userId)
+      .map(({ user }) => user);
+  }, [commonMember, commonMembers]);
+
+  useEffect(() => {
+    if (commonId) {
+      fetchCommonMembers(commonId, discussion.circleVisibility);
+    }
+  }, [commonId, discussion.circleVisibility]);
+
   const hasPermissionToHide =
     commonMember && governanceCircles
       ? hasPermission({
@@ -141,8 +174,6 @@ export default function ChatComponent({
       fetchDiscussionMessages(discussionId);
     }
   }, [discussionId]);
-
-  const [message, setMessage] = useState("");
 
   const [newMessages, setMessages] = useState<
     CreateDiscussionMessageDtoWithFilesPreview[]
@@ -219,10 +250,13 @@ export default function ChatComponent({
   };
 
   const sendMessage = useCallback(
-    async (message: string) => {
+    async (message: TextEditorValue) => {
       if (user && user.uid && commonId) {
         const pendingMessageId = uuidv4();
 
+        const mentionTags = getMentionTags(message).map((tag) => ({
+          value: tag.userId,
+        }));
         const imagesPreview = FileService.getImageTypeFromFiles(
           currentFilesPreview ?? [],
         );
@@ -232,7 +266,7 @@ export default function ChatComponent({
 
         const payload: CreateDiscussionMessageDtoWithFilesPreview = {
           pendingMessageId,
-          text: message,
+          text: JSON.stringify(message),
           ownerId: user.uid,
           commonId,
           discussionId,
@@ -241,6 +275,7 @@ export default function ChatComponent({
           }),
           filesPreview,
           imagesPreview,
+          tags: mentionTags,
         };
         const firebaseDate = Timestamp.fromDate(new Date());
 
@@ -250,7 +285,7 @@ export default function ChatComponent({
           ownerAvatar: (user.photo || user.photoURL) as string,
           ownerId: userId as string,
           ownerName: getUserName(user),
-          text: message,
+          text: JSON.stringify(message),
           commonId,
           discussionId,
           createdAt: firebaseDate,
@@ -269,6 +304,7 @@ export default function ChatComponent({
           files: filesPreview?.map((file) =>
             FileService.convertFileInfoToCommonLink(file),
           ),
+          tags: mentionTags,
         };
 
         setMessages((prev) => [...prev, payload]);
@@ -293,10 +329,14 @@ export default function ChatComponent({
     ],
   );
 
+  const onClearFinished = () => {
+    setShouldReinitializeEditor(false);
+  };
+
   const sendChatMessage = (): void => {
     if (canSendMessage) {
-      sendMessage && sendMessage(message.trim());
-      setMessage("");
+      sendMessage && sendMessage(message);
+      onClear();
     }
   };
 
@@ -304,19 +344,14 @@ export default function ChatComponent({
     const enteredHotkey = CHAT_HOT_KEYS.find((hotkey) =>
       isHotkey(hotkey, event),
     );
-
     if (!enteredHotkey) {
       return;
     }
-
-    event.preventDefault();
 
     if (enteredHotkey === HotKeys.Enter) {
       sendChatMessage();
       return;
     }
-
-    setMessage((currentMessage) => `${currentMessage}\r\n`);
   };
 
   useEffect(() => {
@@ -352,6 +387,8 @@ export default function ChatComponent({
     }
   }, [lastNonUserMessage?.id]);
 
+  const editorRef = useRef(null);
+
   return (
     <div className={styles.chatWrapper}>
       <div
@@ -373,7 +410,9 @@ export default function ChatComponent({
             dateList={dateList}
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
+            commonMembers={commonMembers}
             discussionId={discussionId}
+
           />
         ) : (
           <div className={styles.loaderContainer}>
@@ -383,7 +422,7 @@ export default function ChatComponent({
       </div>
       {isAuthorized && (
         <div className={styles.bottomChatContainer}>
-          <MessageReply />
+          <MessageReply commonMembers={commonMembers} />
           <ChatFilePreview />
           <div className={styles.chatInputWrapper}>
             {!commonMember || !hasAccess || isHidden ? (
@@ -408,12 +447,16 @@ export default function ChatComponent({
                   multiple
                   accept={ACCEPTED_EXTENSIONS}
                 />
-                <textarea
+                <BaseTextEditor
+                  editorRef={editorRef}
                   className={styles.messageInput}
-                  placeholder="What do you think?"
                   value={message}
+                  onChange={setMessage}
+                  placeholder="What do you think?"
                   onKeyDown={onEnterKeyDown}
-                  onChange={(e) => setMessage(e.target.value)}
+                  users={users}
+                  shouldReinitializeEditor={shouldReinitializeEditor}
+                  onClearFinished={onClearFinished}
                 />
                 <button
                   className={styles.sendIcon}

@@ -9,6 +9,7 @@ import { ChatType } from "@/shared/constants";
 import {
   CommonFeedObjectUserUnique,
   CommonMember,
+  CommonMemberWithUserInfo,
   DiscussionMessage,
 } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
@@ -28,6 +29,7 @@ interface ChatContentInterface {
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
+  commonMembers: CommonMemberWithUserInfo[];
   discussionId: string;
 }
 
@@ -53,6 +55,7 @@ export default function ChatContent({
   dateList,
   lastSeenItem,
   hasPermissionToHide,
+  commonMembers,
   discussionId,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
@@ -157,6 +160,7 @@ export default function ChatContent({
                           }
                         : undefined
                     }
+                    commonMembers={commonMembers}
                   />
                 );
 
