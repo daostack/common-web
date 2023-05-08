@@ -40,6 +40,7 @@ import {
   BaseTextEditor,
   TextEditorValue,
   parseStringToTextEditorValue,
+  ButtonIcon,
 } from "@/shared/ui-kit";
 import { getMentionTags } from "@/shared/ui-kit/TextEditor/utils";
 import { getUserName, hasPermission } from "@/shared/utils";
@@ -54,6 +55,8 @@ import { ChatContent, MessageReply, ChatFilePreview } from "./components";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
 
+const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
+
 interface ChatComponentInterface {
   commonId: string;
   type: ChatType;
@@ -63,6 +66,7 @@ interface ChatComponentInterface {
   hasAccess?: boolean;
   discussion: Discussion;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
+  seenOnce?: CommonFeedObjectUserUnique["seenOnce"];
   feedItemId: string;
   isAuthorized?: boolean;
   isHidden: boolean;
@@ -96,6 +100,7 @@ export default function ChatComponent({
   discussion,
   hasAccess = true,
   lastSeenItem,
+  seenOnce,
   feedItemId,
   isAuthorized,
   isHidden = false,
@@ -350,6 +355,24 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (
+      isFetchedDiscussionMessages &&
+      discussionMessages?.length === 0 &&
+      !seenOnce
+    ) {
+      markFeedItemAsSeen({
+        feedObjectId: feedItemId,
+        commonId,
+      });
+    }
+  }, [
+    isFetchedDiscussionMessages,
+    discussionMessages?.length,
+    feedItemId,
+    commonId,
+  ]);
+
+  useEffect(() => {
+    if (
       lastNonUserMessage &&
       lastSeenItem?.id !== lastNonUserMessage.id &&
       feedItemId
@@ -407,20 +430,21 @@ export default function ChatComponent({
               </span>
             ) : (
               <>
-                {/* <ButtonIcon
+                <ButtonIcon
                   className={styles.addFilesIcon}
                   onClick={() => {
                     document.getElementById("file")?.click();
                   }}
                 >
                   <PlusIcon />
-                </ButtonIcon> */}
+                </ButtonIcon>
                 <input
                   id="file"
                   type="file"
                   onChange={uploadFiles}
                   style={{ display: "none" }}
                   multiple
+                  accept={ACCEPTED_EXTENSIONS}
                 />
                 <BaseTextEditor
                   editorRef={editorRef}

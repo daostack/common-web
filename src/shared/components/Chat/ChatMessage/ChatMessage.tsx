@@ -20,6 +20,7 @@ import {
   DiscussionMessage,
   User,
 } from "@/shared/models";
+import { ChatImageGallery } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
 import { getModerationText } from "@/shared/utils/moderation";
@@ -238,7 +239,8 @@ export default function ChatMessage({
                 [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
               })}
             >
-              <Linkify>{messageText.map((text) => text)}</Linkify>
+              <ChatImageGallery gallery={discussionMessage.images ?? []} />
+               <Linkify>{messageText.map((text) => text)}</Linkify>
               <div className={styles.timeWrapperContainer}>
                 {isEdited && (
                   <div

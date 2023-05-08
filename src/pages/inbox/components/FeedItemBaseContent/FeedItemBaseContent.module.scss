@@ -122,12 +122,12 @@
   color: $secondary-blue;
   font-size: $moderate-xsmall;
   line-height: 1.5rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 
   @include tablet {
-    text-overflow: ellipsis;
     max-width: 11.75rem;
-    overflow: hidden;
-    white-space: nowrap;
   }
 }
 

@@ -7,7 +7,7 @@ interface GalleryMainContentProps {
   videoSrc?: string;
   mainImage: string;
   hasOneImage: boolean;
-  imagePreviewStyle: React.CSSProperties;
+  imagePreviewStyle?: React.CSSProperties;
 }
 
 const GalleryMainContent: FC<GalleryMainContentProps> = (props) => {
@@ -33,7 +33,7 @@ const GalleryMainContent: FC<GalleryMainContentProps> = (props) => {
           className={classNames(styles.mainContent, {
             [styles.leftItem]: hasOneImage,
           })}
-          style={hasOneImage ? imagePreviewStyle : {}}
+          style={hasOneImage && imagePreviewStyle ? imagePreviewStyle : {}}
           playsInline
           preload="auto"
           controls={isPlaying}
