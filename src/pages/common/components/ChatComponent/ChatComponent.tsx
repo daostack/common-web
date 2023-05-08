@@ -16,6 +16,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
+import { PlusIcon } from "@/shared/icons";
 import {
   ChatType,
   GovernanceActions,
