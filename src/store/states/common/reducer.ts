@@ -80,6 +80,45 @@ const updateFeedItemInList = (
   };
 };
 
+const updatePinnedFeedItemInList = (
+  state: WritableDraft<CommonState>,
+  payload: {
+    item: Partial<CommonFeed> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  if (!state.pinnedFeedItems.data) {
+    return;
+  }
+
+  const { item: updatedItem, isRemoved = false } = payload;
+  const feedItemIndex = state.pinnedFeedItems.data?.findIndex(
+    (item) => item.feedItem.id === updatedItem.id,
+  );
+
+  if (feedItemIndex === -1) {
+    return;
+  }
+
+  const nextData = [...state.pinnedFeedItems.data];
+
+  if (isRemoved) {
+    nextData.splice(feedItemIndex, 1);
+  } else {
+    nextData[feedItemIndex] = {
+      feedItem: {
+        ...nextData[feedItemIndex].feedItem,
+        ...updatedItem,
+      },
+    };
+  }
+
+  state.pinnedFeedItems = {
+    ...state.pinnedFeedItems,
+    data: nextData,
+  };
+};
+
 const updateSharedFeedItem = (
   state: WritableDraft<CommonState>,
   payload: {
@@ -346,6 +385,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.updateFeedItem, (state, { payload }) =>
     produce(state, (nextState) => {
       updateFeedItemInList(nextState, payload);
+      updatePinnedFeedItemInList(nextState, payload);
       updateSharedFeedItem(nextState, payload);
     }),
   )
