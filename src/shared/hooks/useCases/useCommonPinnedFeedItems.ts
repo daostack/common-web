@@ -27,21 +27,18 @@ export const useCommonPinnedFeedItems = (
   };
 
   useEffect(() => {
-    const unsubscribe =
-      CommonFeedService.subscribeToNewUpdatedCommonPinnedFeedItems(
-        commonId,
-        (data) => {
-          if (data.length === 0) {
-            return;
-          }
+    if (!idsForListening || idsForListening.length === 0) {
+      return;
+    }
 
-          const finalData = data.filter((item) =>
-            idsForListening?.includes(item.commonFeedItem.id),
-          );
-
-          dispatch(commonActions.addNewPinnedFeedItems(finalData));
-        },
-      );
+    const unsubscribe = CommonFeedService.subscribeToNewUpdatedCommonFeedItems(
+      { commonId, idsForListening },
+      (data) => {
+        if (data.length > 0) {
+          dispatch(commonActions.addNewPinnedFeedItems(data));
+        }
+      },
+    );
 
     return unsubscribe;
   }, [commonId, idsForListening]);
