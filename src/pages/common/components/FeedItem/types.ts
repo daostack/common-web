@@ -5,7 +5,9 @@ import {
   CommonMember,
   Discussion,
   Proposal,
+  CommonFeedType,
 } from "@/shared/models";
+import { FeedItemMenuItem } from "./constants";
 
 export interface GetAllowedItemsOptions {
   commonId?: string;
@@ -15,5 +17,8 @@ export interface GetAllowedItemsOptions {
   feedItem?: CommonFeed;
   proposal?: Proposal;
   commonMember?: CommonMember | null;
-  isLimitedMenu?: boolean;
+  getNonAllowedItems?: (
+    type: CommonFeedType,
+    options?: GetAllowedItemsOptions,
+  ) => FeedItemMenuItem[];
 }

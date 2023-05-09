@@ -1,3 +1,4 @@
+import { CommonFeedType } from "@/shared/models";
 import {
   FeedItemMenuItem,
   FeedItemPinAction,
@@ -5,12 +6,6 @@ import {
 } from "../../FeedItem";
 import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
 import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
-
-const MENU_ITEMS_TO_LIMIT = [
-  FeedItemMenuItem.Pin,
-  FeedItemMenuItem.Unpin,
-  FeedItemMenuItem.Remove,
-];
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   FeedItemMenuItem,
@@ -37,10 +32,12 @@ export const getAllowedItems = (
     FeedItemMenuItem.Edit,
     FeedItemMenuItem.Remove,
   ];
+  const nonAllowedItems =
+    options.getNonAllowedItems?.(CommonFeedType.Discussion, options) || [];
 
   return orderedItems.filter(
     (item) =>
-      (!options.isLimitedMenu || !MENU_ITEMS_TO_LIMIT.includes(item)) &&
+      !nonAllowedItems.includes(item) &&
       MENU_ITEM_TO_CHECK_FUNCTION_MAP[item](options),
   );
 };
