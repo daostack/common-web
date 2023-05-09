@@ -14,6 +14,7 @@ import {
   Governance,
   PredefinedTypes,
 } from "@/shared/models";
+import { TextEditorValue } from "@/shared/ui-kit";
 import { checkIsCountdownState, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
@@ -24,7 +25,7 @@ import {
   getVisibilityString,
   FeedCountdown,
 } from "../FeedCard";
-import { GetLastMessageOptions } from "../FeedItem";
+import { GetLastMessageOptions, GetNonAllowedItemsOptions } from "../FeedItem";
 import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
@@ -52,7 +53,8 @@ interface ProposalFeedCardProps {
   sizeKey?: string;
   isActive: boolean;
   isExpanded: boolean;
-  getLastMessage: (options: GetLastMessageOptions) => string;
+  getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -69,6 +71,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     isActive,
     isExpanded,
     getLastMessage,
+    getNonAllowedItems,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -133,6 +136,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       discussion,
       governanceCircles,
       commonMember,
+      getNonAllowedItems,
     },
     {
       report: () => {},

@@ -2,12 +2,7 @@ import React, { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionService } from "@/services";
-import {
-  DeletePrompt,
-  GlobalOverlay,
-  Modal,
-  ReportModal,
-} from "@/shared/components";
+import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
 import { DynamicLinkType, EntityTypes } from "@/shared/constants";
 import { useModal, useNotification } from "@/shared/hooks";
 import {
@@ -22,6 +17,7 @@ import {
   Governance,
   PredefinedTypes,
 } from "@/shared/models";
+import { TextEditorValue } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
@@ -32,7 +28,7 @@ import {
 } from "../FeedCard";
 import { getVisibilityString } from "../FeedCard";
 import { FeedCardShare } from "../FeedCard";
-import { GetLastMessageOptions } from "../FeedItem";
+import { GetLastMessageOptions, GetNonAllowedItemsOptions } from "../FeedItem";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -49,7 +45,8 @@ interface DiscussionFeedCardProps {
   isPreviewMode: boolean;
   isActive: boolean;
   isExpanded: boolean;
-  getLastMessage: (options: GetLastMessageOptions) => string;
+  getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
@@ -71,6 +68,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     isActive,
     isExpanded,
     getLastMessage,
+    getNonAllowedItems,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -111,6 +109,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       discussion,
       governanceCircles,
       commonMember,
+      getNonAllowedItems,
     },
     {
       report: onReportModalOpen,

@@ -19,6 +19,7 @@ import {
   FeedItemContext,
   FeedItemContextValue,
   GetLastMessageOptions,
+  GetNonAllowedItemsOptions,
 } from "@/pages/common";
 import {
   ChatContextValue,
@@ -36,7 +37,7 @@ import {
   CommonMember,
   Governance,
 } from "@/shared/models";
-import { InfiniteScroll } from "@/shared/ui-kit";
+import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import { selectRecentStreamId } from "@/store/states";
 import {
   DesktopChat,
@@ -70,9 +71,10 @@ interface FeedLayoutProps {
   onFetchNext: () => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
-  getLastMessage: (options: GetLastMessageOptions) => string;
+  getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   sharedFeedItemId?: string | null;
   emptyText?: string;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -97,6 +99,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     getLastMessage,
     sharedFeedItemId,
     emptyText,
+    getNonAllowedItems,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -192,8 +195,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       renderFeedItemBaseContent,
       onFeedItemUpdate,
       getLastMessage,
+      getNonAllowedItems,
     }),
-    [renderFeedItemBaseContent, onFeedItemUpdate, getLastMessage],
+    [
+      renderFeedItemBaseContent,
+      onFeedItemUpdate,
+      getLastMessage,
+      getNonAllowedItems,
+    ],
   );
 
   const chatContextValue = useMemo<ChatContextValue>(

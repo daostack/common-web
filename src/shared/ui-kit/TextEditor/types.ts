@@ -29,7 +29,6 @@ interface BaseElement<Child = BaseElementChild> {
 
 export interface ParagraphElement extends BaseElement {
   type: ElementType.Paragraph;
-  text?: string;
 }
 
 export interface HeadingElement extends BaseElement {
