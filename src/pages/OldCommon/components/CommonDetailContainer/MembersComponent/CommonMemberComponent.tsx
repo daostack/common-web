@@ -1,8 +1,10 @@
-import React, { FC, MouseEventHandler, useState } from "react";
+import React, { FC, MouseEventHandler, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import firebase from "firebase/app";
+import { useLongPress } from "use-long-press";
 import { v4 } from "uuid";
 import { MemberDropdown } from "@/pages/common/components/CommonTabPanels/components/MembersTab/components/MemberDropdown";
-import { GovernanceActions } from "@/shared/constants";
+import { GovernanceActions, ScreenSize } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import {
   Circle,
@@ -10,6 +12,8 @@ import {
   CommonMemberWithUserInfo,
 } from "@/shared/models";
 import { CommonMember as CommonMemberModel } from "@/shared/models";
+import { getScreenSize } from "@/shared/store/selectors";
+import { ContextMenuRef } from "@/shared/ui-kit";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
@@ -36,22 +40,57 @@ const CommonMember: FC<CommonMemberProps> = ({
   governanceCircles,
 }) => {
   const { isShowing, onClose, onOpen } = useModal(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const contextMenuRef = useRef<ContextMenuRef>(null);
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
+  const [isLongPressing, setIsLongPressing] = useState(false);
+  const [isLongPressed, setIsLongPressed] = useState(false);
+
+  /**
+   * For now, handle only the case of INVITE_TO_CIRCLE.
+   * If a member can INVITE_TO_CIRCLE we use ASSIGN_CIRCLE to execute the action.
+   * See https://github.com/daostack/common-web/issues/1344 for more details.
+   */
+  // const canAssign =
+  //   commonMember?.allowedProposals[ProposalsTypes.ASSIGN_CIRCLE];
+  const canInvite =
+    commonMember?.allowedActions[GovernanceActions.INVITE_TO_CIRCLE];
+
+  const handleLongPress = (event) => {
+    let x = 0;
+    let y = 0;
+
+    if (event.touches) {
+      const touch = event.touches[0];
+      x = touch?.clientX || 0;
+      y = touch?.clientY || 0;
+    } else {
+      x = event.clientX;
+      y = event.clientY;
+    }
+
+    setIsLongPressed(true);
+    console.log("sdfsdf");
+    contextMenuRef.current?.open(x, y);
+    setIsLongPressing(false);
+  };
+
+  const getLongPressProps = useLongPress(
+    isMobileView && canInvite ? handleLongPress : null,
+    {
+      threshold: 400,
+      cancelOnMovement: true,
+      onStart: () => setIsLongPressing(true),
+      onFinish: () => setIsLongPressing(false),
+      onCancel: () => setIsLongPressing(false),
+    },
+  );
+
   const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
     event.preventDefault();
-    const canInvite =
-      commonMember?.allowedActions[GovernanceActions.INVITE_TO_CIRCLE];
 
-    /**
-     * For now, handle only the case of INVITE_TO_CIRCLE.
-     * If a member can INVITE_TO_CIRCLE we use ASSIGN_CIRCLE to execute the action.
-     * See https://github.com/daostack/common-web/issues/1344 for more details.
-     */
-    // const canAssign =
-    //   commonMember?.allowedProposals[ProposalsTypes.ASSIGN_CIRCLE];
-
-    if (canInvite) {
-      handleMenuToggle(true);
+    if (!isMobileView && canInvite) {
+      contextMenuRef.current?.open(event.clientX, event.clientY);
     }
   };
 
@@ -69,16 +108,13 @@ const CommonMember: FC<CommonMemberProps> = ({
     .join(", ");
   const memberName = getUserName(member.user);
 
-  const handleMenuToggle = (isOpen: boolean) => {
-    setIsMenuOpen(isOpen);
-  };
-
   return (
     <>
       <li
         key={v4()}
         onClick={onOpen}
         onContextMenu={handleContextMenu}
+        {...getLongPressProps()}
         className="members__section__common-member"
       >
         <div className="members__section__common-member-details">
@@ -101,12 +137,11 @@ const CommonMember: FC<CommonMemberProps> = ({
             .toLocaleDateString("en-US", { month: "short", day: "numeric" })}
         </div>
         <MemberDropdown
-          isOpen={isMenuOpen}
-          onMenuToggle={handleMenuToggle}
           notMemberCircles={notMemberCircles}
           memberName={memberName}
           commonId={commonId}
           memberId={member.userId}
+          contextMenuRef={contextMenuRef}
         />
       </li>
       <CommonMemberPreview

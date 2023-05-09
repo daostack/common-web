@@ -9,7 +9,6 @@ import styles from "./AssignCircleModal.module.scss";
 interface AssignCircleModalProps {
   isShowing: boolean;
   onClose: () => void;
-  onMenuToggle: (isOpen: boolean) => void;
   memberName: string;
   selectedCircle?: SelectedCircle;
   commonId: string;
@@ -18,7 +17,6 @@ interface AssignCircleModalProps {
 export default function AssignCircleModal({
   isShowing,
   onClose,
-  onMenuToggle,
   selectedCircle,
   memberName,
   commonId,
@@ -45,8 +43,7 @@ export default function AssignCircleModal({
 
   const handleClose = useCallback(() => {
     onClose();
-    onMenuToggle(false);
-  }, [onClose, onMenuToggle]);
+  }, [onClose]);
 
   return (
     <Modal

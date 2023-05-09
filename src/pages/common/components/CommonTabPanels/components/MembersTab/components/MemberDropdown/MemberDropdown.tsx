@@ -1,22 +1,19 @@
 import React, { FC, useMemo, useState } from "react";
 import { DropdownOption } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
-import {
-  MenuItem as DesktopStyleMenuItem,
-  MenuItemType,
-} from "@/shared/interfaces";
+import { MenuItemType } from "@/shared/interfaces";
+import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { Circle } from "@/shared/models";
-import { DesktopStyleMenu } from "@/shared/ui-kit";
+import { ContextMenu, ContextMenuRef } from "@/shared/ui-kit";
 import AssignCircleModal from "./AssignCircleModal";
 import elementDropdownStyles from "./MemberDropdown.module.scss";
 
 interface MemberDropdownProps {
-  isOpen: boolean;
-  onMenuToggle: (isOpen: boolean) => void;
   notMemberCircles: Circle[];
   memberName: string;
   commonId: string;
   memberId: string;
+  contextMenuRef: React.RefObject<ContextMenuRef>;
 }
 
 export interface SelectedCircle {
@@ -25,14 +22,8 @@ export interface SelectedCircle {
 }
 
 const MemberDropdown: FC<MemberDropdownProps> = (props) => {
-  const {
-    isOpen,
-    onMenuToggle,
-    notMemberCircles,
-    memberName,
-    commonId,
-    memberId,
-  } = props;
+  const { notMemberCircles, memberName, commonId, memberId, contextMenuRef } =
+    props;
   const { isShowing, onClose, onOpen } = useModal(false);
   const [selectedCircle, setSelectedCircle] = useState<SelectedCircle>();
 
@@ -49,13 +40,13 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
     return items;
   }, [notMemberCircles]);
 
-  const desktopStyleMenuItems = useMemo<DesktopStyleMenuItem[]>(
+  const menuItems = useMemo<Item[]>(
     () =>
-      ElementDropdownMenuItemsList.map<DesktopStyleMenuItem>((item) => ({
+      ElementDropdownMenuItemsList.map<Item>((item) => ({
         type: MenuItemType.Button,
         id: (item.value as SelectedCircle).id,
         className: item.className,
-        text: item.text,
+        text: (item.value as SelectedCircle).name,
         onClick: () => {
           setSelectedCircle(item.value as SelectedCircle);
           onOpen();
@@ -66,19 +57,13 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
 
   return (
     <>
-      <DesktopStyleMenu
-        className={elementDropdownStyles.desktopStyleMenu}
-        isOpen={isOpen}
-        onClose={() => !isShowing && onMenuToggle(false)}
-        items={desktopStyleMenuItems}
-        withTransition={false}
-      />
+      <ContextMenu ref={contextMenuRef} menuItems={menuItems} />
+
       <AssignCircleModal
         isShowing={isShowing}
         onClose={onClose}
         selectedCircle={selectedCircle}
         memberName={memberName}
-        onMenuToggle={onMenuToggle}
         commonId={commonId}
         memberId={memberId}
       />
