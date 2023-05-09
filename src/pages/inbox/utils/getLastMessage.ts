@@ -1,5 +1,9 @@
 import { GetLastMessageOptions } from "@/pages/common";
-import { parseStringToTextEditorValue, TextEditorValue } from "@/shared/ui-kit";
+import {
+  parseStringToTextEditorValue,
+  prependTextInTextEditorValue,
+  TextEditorValue,
+} from "@/shared/ui-kit";
 
 export const getLastMessage = (
   options: GetLastMessageOptions,
@@ -10,12 +14,12 @@ export const getLastMessage = (
     return parseStringToTextEditorValue(commonName);
   }
 
-  const parsedMessageUserName = parseStringToTextEditorValue(
-    `${lastMessage.userName}: `,
-  );
   const parsedMessageContent = parseStringToTextEditorValue(
     lastMessage.content,
   );
 
-  return [...parsedMessageUserName, ...parsedMessageContent];
+  return prependTextInTextEditorValue(
+    `${lastMessage.userName}: `,
+    parsedMessageContent,
+  );
 };

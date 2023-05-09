@@ -1,6 +1,10 @@
 import { GetLastMessageOptions } from "@/pages/common";
 import { CommonFeedType, PredefinedTypes } from "@/shared/models";
-import { parseStringToTextEditorValue, TextEditorValue } from "@/shared/ui-kit";
+import {
+  parseStringToTextEditorValue,
+  prependTextInTextEditorValue,
+  TextEditorValue,
+} from "@/shared/ui-kit";
 
 const getCustomizedMessageString = (options: GetLastMessageOptions): string => {
   const {
@@ -43,12 +47,12 @@ export const getLastMessage = (
     return parseStringToTextEditorValue(getCustomizedMessageString(options));
   }
 
-  const parsedMessageUserName = parseStringToTextEditorValue(
-    `${lastMessage.userName}: `,
-  );
   const parsedMessageContent = parseStringToTextEditorValue(
     lastMessage.content,
   );
 
-  return [...parsedMessageUserName, ...parsedMessageContent];
+  return prependTextInTextEditorValue(
+    `${lastMessage.userName}: `,
+    parsedMessageContent,
+  );
 };

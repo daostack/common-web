@@ -9,4 +9,5 @@ export type { TextEditorValue, TextEditorStyles } from "./types";
 export {
   checkIsTextEditorValueEmpty,
   parseStringToTextEditorValue,
+  prependTextInTextEditorValue,
 } from "./utils";
