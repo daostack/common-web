@@ -3,7 +3,6 @@ import classNames from "classnames";
 import { UserService } from "@/services";
 import { CommonMemberWithUserInfo } from "@/shared/models";
 import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
-import { ParagraphElement } from "@/shared/ui-kit/TextEditor/types";
 import { parseTextEditorValueToString } from "@/shared/ui-kit/TextEditor/utils";
 import styles from "./ChatMessage.module.scss";
 
@@ -40,7 +39,7 @@ export const getTextFromTextEditorString = async ({
           >{`@${commonMember.user.displayName} `}</span>
         );
       } else if (tag.type === ElementType.Paragraph) {
-        return `${(tag as ParagraphElement)?.text ?? ""}\n`;
+        return `${tag.text ?? ""}\n`;
       }
 
       return tag?.text ?? "";

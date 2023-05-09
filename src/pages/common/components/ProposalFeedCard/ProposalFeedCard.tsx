@@ -14,6 +14,7 @@ import {
   Governance,
   PredefinedTypes,
 } from "@/shared/models";
+import { TextEditorValue } from "@/shared/ui-kit";
 import { checkIsCountdownState, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
@@ -52,7 +53,7 @@ interface ProposalFeedCardProps {
   sizeKey?: string;
   isActive: boolean;
   isExpanded: boolean;
-  getLastMessage: (options: GetLastMessageOptions) => string;
+  getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
