@@ -3,6 +3,12 @@ import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
 import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
 import { GetAllowedItemsOptions, PinAction } from "./types";
 
+const MENU_ITEMS_TO_LIMIT = [
+  DiscussionCardMenuItem.Pin,
+  DiscussionCardMenuItem.Unpin,
+  DiscussionCardMenuItem.Remove,
+];
+
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   DiscussionCardMenuItem,
   (options: GetAllowedItemsOptions) => boolean
@@ -29,7 +35,9 @@ export const getAllowedItems = (
     DiscussionCardMenuItem.Remove,
   ];
 
-  return orderedItems.filter((item) =>
-    MENU_ITEM_TO_CHECK_FUNCTION_MAP[item](options),
+  return orderedItems.filter(
+    (item) =>
+      (!options.isLimitedMenu || !MENU_ITEMS_TO_LIMIT.includes(item)) &&
+      MENU_ITEM_TO_CHECK_FUNCTION_MAP[item](options),
   );
 };

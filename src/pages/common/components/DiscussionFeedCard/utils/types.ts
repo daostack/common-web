@@ -15,6 +15,7 @@ export interface GetAllowedItemsOptions {
   feedItem?: CommonFeed;
   proposal?: Proposal;
   commonMember?: CommonMember | null;
+  isLimitedMenu?: boolean;
 }
 
 export enum PinAction {
