@@ -1,7 +1,5 @@
 import React, { FC, useMemo, useState } from "react";
-import { DropdownOption } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
-import { MenuItemType } from "@/shared/interfaces";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { Circle } from "@/shared/models";
 import { ContextMenu, ContextMenuRef } from "@/shared/ui-kit";
@@ -27,32 +25,18 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
   const { isShowing, onClose, onOpen } = useModal(false);
   const [selectedCircle, setSelectedCircle] = useState<SelectedCircle>();
 
-  const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(() => {
-    const items: DropdownOption[] = notMemberCircles.map((circle) => ({
-      text: `Add to ${circle.name}`,
-      value: {
-        id: circle.id,
-        name: circle.name,
-      },
-      className: elementDropdownStyles.dropdownItem,
-    }));
-
-    return items;
-  }, [notMemberCircles]);
-
   const menuItems = useMemo<Item[]>(
     () =>
-      ElementDropdownMenuItemsList.map<Item>((item) => ({
-        type: MenuItemType.Button,
-        id: (item.value as SelectedCircle).id,
-        className: item.className,
-        text: (item.value as SelectedCircle).name,
+      notMemberCircles.map((circle) => ({
+        id: circle.id,
+        text: `Add to ${circle.name}`,
         onClick: () => {
-          setSelectedCircle(item.value as SelectedCircle);
+          setSelectedCircle({ id: circle.id, name: circle.name });
           onOpen();
         },
+        className: elementDropdownStyles.dropdownItem,
       })),
-    [ElementDropdownMenuItemsList, setSelectedCircle, onOpen],
+    [notMemberCircles, setSelectedCircle, onOpen],
   );
 
   return (

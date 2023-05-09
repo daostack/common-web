@@ -51,25 +51,27 @@ export default function AssignCircleModal({
       onClose={handleClose}
       hideCloseButton={isAdding}
       className={styles.modal}
+      title={`Add ${memberName} to ${selectedCircle?.name}?`}
     >
       <div className={styles.content}>
-        <h3>
-          Add {memberName} to {selectedCircle?.name}?
-        </h3>
+        <div className={styles.text}>
+          The action will grant {memberName} access to private discussions and
+          additional permissions in this common.
+        </div>
         <div className={styles.buttonsContainer}>
           <Button
-            variant={ButtonVariant.Warning}
+            variant={ButtonVariant.PrimaryGray}
             onClick={handleClose}
             disabled={isAdding}
           >
             Cancel
           </Button>
           <Button
-            variant={ButtonVariant.OutlineBlue}
+            variant={ButtonVariant.PrimaryPurple}
             onClick={handleAdd}
             disabled={isAdding}
           >
-            Yes
+            Confirm
           </Button>
         </div>
         {errorText && (
