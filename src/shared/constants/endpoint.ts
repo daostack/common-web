@@ -35,6 +35,7 @@ export const ApiEndpoint = {
   SendEmail: "/notifications/send-email",
   SeenNotification: "/notifications/seen",
   CreateDiscussion: "/discussions/create",
+  DeleteDiscussion: (id: string) => `/discussions/delete/${id}`,
   CreateDiscussionMessage: "/discussions/message",
   DeleteDiscussionMessage: "/discussions/delete",
   GetProposalEligibleVoters:

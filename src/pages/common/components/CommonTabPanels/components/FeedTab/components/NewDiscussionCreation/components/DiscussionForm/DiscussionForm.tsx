@@ -22,7 +22,7 @@ const DiscussionForm: FC<DiscussionFormProps> = (props) => {
         className={styles.field}
         id="discussionTitle"
         name="title"
-        label="Discussion Title"
+        label="Discussion Title (required)"
         maxLength={MAX_DISCUSSION_TITLE_LENGTH}
         countAsHint
         disabled={disabled}

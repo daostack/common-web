@@ -12,6 +12,7 @@ export * from "./insertLink";
 export * from "./isElementActive";
 export * from "./isMarkActive";
 export * from "./parseStringToTextEditorValue";
+export * from "./prependTextInTextEditorValue";
 export * from "./toggleElement";
 export * from "./toggleList";
 export * from "./toggleMark";

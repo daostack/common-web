@@ -1,5 +1,11 @@
 import React, { FC, memo } from "react";
-import { Circles, CommonFeed, CommonFeedType } from "@/shared/models";
+import {
+  Circles,
+  Common,
+  CommonFeed,
+  CommonFeedType,
+  CommonMember,
+} from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
@@ -9,7 +15,9 @@ import { useFeedItemContext } from "./context";
 interface FeedItemProps {
   commonId?: string;
   commonName: string;
+  commonMember?: CommonMember | null;
   commonImage: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject?: boolean;
   isPinned?: boolean;
   item: CommonFeed;
@@ -28,6 +36,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
+    commonMember,
     isProject = false,
     isPinned = false,
     item,
@@ -40,7 +50,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     sizeKey,
     currentUserId,
   } = props;
-  const { onFeedItemUpdate, getLastMessage } = useFeedItemContext();
+  const { onFeedItemUpdate, getLastMessage, getNonAllowedItems } =
+    useFeedItemContext();
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
   if (
@@ -59,6 +70,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
     isActive,
     isExpanded,
     isProject,
@@ -66,6 +78,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     governanceCircles,
     isPreviewMode,
     getLastMessage,
+    commonMember,
+    getNonAllowedItems,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {

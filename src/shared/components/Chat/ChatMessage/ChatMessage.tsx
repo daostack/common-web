@@ -1,4 +1,10 @@
-import React, { MouseEventHandler, useCallback, useState, useRef } from "react";
+import React, {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import {
@@ -9,11 +15,17 @@ import {
 } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
-import { DiscussionMessage, User } from "@/shared/models";
+import {
+  CommonMemberWithUserInfo,
+  DiscussionMessage,
+  User,
+} from "@/shared/models";
+import { ChatImageGallery } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
 import { getModerationText } from "@/shared/utils/moderation";
 import { EditMessageInput } from "../EditMessageInput";
+import { getTextFromTextEditorString } from "./util";
 import styles from "./ChatMessage.module.scss";
 
 interface ChatMessageProps {
@@ -25,6 +37,7 @@ interface ChatMessageProps {
   user: User | null;
   scrollToRepliedMessage: (messageId: string) => void;
   hasPermissionToHide: boolean;
+  commonMembers: CommonMemberWithUserInfo[];
 }
 
 const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
@@ -45,6 +58,7 @@ export default function ChatMessage({
   user,
   scrollToRepliedMessage,
   hasPermissionToHide,
+  commonMembers,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +73,44 @@ export default function ChatMessage({
   const userId = user?.uid;
   const isNotCurrentUserMessage = userId !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
+
+  const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
+  const [replyMessageText, setReplyMessageText] = useState<
+    (string | JSX.Element)[]
+  >([]);
+
+  useEffect(() => {
+    (async () => {
+      const parsedText = await getTextFromTextEditorString({
+        textEditorString: discussionMessage.text,
+        commonMembers,
+        mentionTextClassName: !isNotCurrentUserMessage
+          ? styles.mentionTextCurrentUser
+          : "",
+      });
+
+      setMessageText(parsedText);
+    })();
+  }, [commonMembers, discussionMessage.text, isNotCurrentUserMessage]);
+
+  useEffect(() => {
+    (async () => {
+      if (!discussionMessage?.parentMessage?.text) {
+        return;
+      }
+
+      const parsedText = await getTextFromTextEditorString({
+        textEditorString: discussionMessage?.parentMessage.text,
+        commonMembers,
+      });
+
+      setReplyMessageText(parsedText);
+    })();
+  }, [
+    commonMembers,
+    discussionMessage?.parentMessage?.text,
+    isNotCurrentUserMessage,
+  ]);
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuOpen(isOpen);
@@ -103,7 +155,7 @@ export default function ChatMessage({
         })}
       >
         {image && <img className={styles.replyMessageImage} src={image} />}
-        <div>
+        <div className={styles.replyMessagesWrapper}>
           <div
             className={classNames(styles.messageName, styles.replyMessageName, {
               [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
@@ -125,13 +177,14 @@ export default function ChatMessage({
               },
             )}
           >
-            <Linkify>{discussionMessage.parentMessage.text}</Linkify>
+            <Linkify>{replyMessageText.map((text) => text)}</Linkify>
           </div>
         </div>
       </div>
     );
   }, [
     discussionMessage.parentMessage,
+    replyMessageText,
     hasPermissionToHide,
     isNotCurrentUserMessage,
     userId,
@@ -186,7 +239,8 @@ export default function ChatMessage({
                 [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
               })}
             >
-              <Linkify>{discussionMessage.text}</Linkify>
+              <ChatImageGallery gallery={discussionMessage.images ?? []} />
+              <Linkify>{messageText.map((text) => text)}</Linkify>
               <div className={styles.timeWrapperContainer}>
                 {isEdited && (
                   <div

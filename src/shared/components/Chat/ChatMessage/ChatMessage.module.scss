@@ -1,8 +1,6 @@
 @import "../../../../constants.scss";
 @import "../../../../styles/sizes";
 
-.container {}
-
 .message {
   display: flex;
   position: relative;
@@ -96,6 +94,15 @@
   margin-right: 2.5rem;
 }
 
+.mentionText {
+  color: $c-pink-mention;
+}
+
+.mentionTextCurrentUser {
+  color: $c-pink-active-feed-cards-light;
+  font-weight: bold;
+}
+
 .timeWrapperContainer {
   display: flex;
   flex: 1;
@@ -146,6 +153,10 @@
   width: 2.625rem;
   object-fit: cover;
   margin-left: 0.75rem;
+}
+
+.replyMessagesWrapper {
+  max-width: 100%;
 }
 
 .replyMessageName {
