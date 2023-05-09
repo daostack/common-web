@@ -1,7 +1,7 @@
 import { GovernanceActions } from "@/shared/constants";
 import { PredefinedTypes } from "@/shared/models";
 import { checkIsCountdownState, hasPermission } from "@/shared/utils";
-import { GetAllowedItemsOptions } from "./types";
+import { GetAllowedItemsOptions } from "../../FeedItem";
 
 export function checkIsRemoveDiscussionAllowed(
   options: GetAllowedItemsOptions,

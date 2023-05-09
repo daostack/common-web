@@ -1,35 +1,40 @@
-import { DiscussionCardMenuItem } from "../constants";
+import { CommonFeedType } from "@/shared/models";
+import { FeedItemMenuItem, FeedItemPinAction } from "../../FeedItem/constants";
+import { GetAllowedItemsOptions } from "../../FeedItem/types";
 import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
 import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
-import { GetAllowedItemsOptions, PinAction } from "./types";
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
-  DiscussionCardMenuItem,
+  FeedItemMenuItem,
   (options: GetAllowedItemsOptions) => boolean
 > = {
-  [DiscussionCardMenuItem.Share]: () => false,
-  [DiscussionCardMenuItem.Report]: () => false,
-  [DiscussionCardMenuItem.Edit]: () => false,
-  [DiscussionCardMenuItem.Remove]: checkIsRemoveDiscussionAllowed,
-  [DiscussionCardMenuItem.Pin]: (options) =>
-    checkIsPinUnpinAllowed(PinAction.Pin, options),
-  [DiscussionCardMenuItem.Unpin]: (options) =>
-    checkIsPinUnpinAllowed(PinAction.Unpin, options),
+  [FeedItemMenuItem.Share]: () => false,
+  [FeedItemMenuItem.Report]: () => false,
+  [FeedItemMenuItem.Edit]: () => false,
+  [FeedItemMenuItem.Remove]: checkIsRemoveDiscussionAllowed,
+  [FeedItemMenuItem.Pin]: (options) =>
+    checkIsPinUnpinAllowed(FeedItemPinAction.Pin, options),
+  [FeedItemMenuItem.Unpin]: (options) =>
+    checkIsPinUnpinAllowed(FeedItemPinAction.Unpin, options),
 };
 
 export const getAllowedItems = (
   options: GetAllowedItemsOptions,
-): DiscussionCardMenuItem[] => {
+): FeedItemMenuItem[] => {
   const orderedItems = [
-    DiscussionCardMenuItem.Pin,
-    DiscussionCardMenuItem.Unpin,
-    DiscussionCardMenuItem.Share,
-    DiscussionCardMenuItem.Report,
-    DiscussionCardMenuItem.Edit,
-    DiscussionCardMenuItem.Remove,
+    FeedItemMenuItem.Pin,
+    FeedItemMenuItem.Unpin,
+    FeedItemMenuItem.Share,
+    FeedItemMenuItem.Report,
+    FeedItemMenuItem.Edit,
+    FeedItemMenuItem.Remove,
   ];
+  const nonAllowedItems =
+    options.getNonAllowedItems?.(CommonFeedType.Discussion, options) || [];
 
-  return orderedItems.filter((item) =>
-    MENU_ITEM_TO_CHECK_FUNCTION_MAP[item](options),
+  return orderedItems.filter(
+    (item) =>
+      !nonAllowedItems.includes(item) &&
+      MENU_ITEM_TO_CHECK_FUNCTION_MAP[item](options),
   );
 };

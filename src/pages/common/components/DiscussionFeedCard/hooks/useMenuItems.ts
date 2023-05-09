@@ -5,8 +5,8 @@ import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { notEmpty } from "@/shared/utils/notEmpty";
 import { commonActions } from "@/store/states";
-import { DiscussionCardMenuItem } from "../constants";
-import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
+import { FeedItemMenuItem, GetAllowedItemsOptions } from "../../FeedItem";
+import { getAllowedItems } from "../utils";
 
 type Options = GetAllowedItemsOptions;
 
@@ -23,7 +23,7 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
   const allowedMenuItems = getAllowedItems(options);
   const items: Item[] = [
     {
-      id: DiscussionCardMenuItem.Pin,
+      id: FeedItemMenuItem.Pin,
       text: "Pin",
       onClick: async () => {
         if (!commonId || !feedItem) return;
@@ -31,7 +31,7 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       },
     },
     {
-      id: DiscussionCardMenuItem.Unpin,
+      id: FeedItemMenuItem.Unpin,
       text: "Unpin",
       onClick: async () => {
         if (!commonId || !feedItem) return;
@@ -39,17 +39,17 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       },
     },
     {
-      id: DiscussionCardMenuItem.Share,
+      id: FeedItemMenuItem.Share,
       text: "Share",
       onClick: share,
     },
     {
-      id: DiscussionCardMenuItem.Report,
+      id: FeedItemMenuItem.Report,
       text: "Report",
       onClick: report,
     },
     {
-      id: DiscussionCardMenuItem.Edit,
+      id: FeedItemMenuItem.Edit,
       text: "Edit",
       onClick: () => {
         if (!discussion || !governanceCircles) {
@@ -74,7 +74,7 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
     },
     remove
       ? {
-          id: DiscussionCardMenuItem.Remove,
+          id: FeedItemMenuItem.Remove,
           text: "Remove",
           onClick: remove,
         }
@@ -82,6 +82,6 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
   ].filter(notEmpty);
 
   return items.filter((item) =>
-    allowedMenuItems.includes(item.id as DiscussionCardMenuItem),
+    allowedMenuItems.includes(item.id as FeedItemMenuItem),
   );
 };
