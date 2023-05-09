@@ -7,7 +7,7 @@ import { getCommonMembers } from "../store/actions";
 type State = LoadingState<CommonMemberWithUserInfo[]>;
 
 interface Return extends State {
-  fetchCommonMembers: (commonId: string) => void;
+  fetchCommonMembers: (commonId: string, circleVisibility?: string[]) => void;
   setCommonMembers: (commonMembers: CommonMemberWithUserInfo[]) => void;
   resetCommonMembers: () => void;
 }
@@ -21,7 +21,7 @@ export const useCommonMembers = (): Return => {
   });
 
   const fetchCommonMembers = useCallback(
-    (commonId: string) => {
+    (commonId: string, circleVisibility: string[] = []) => {
       if (state.loading || state.fetched) {
         return;
       }
@@ -33,7 +33,7 @@ export const useCommonMembers = (): Return => {
 
       dispatch(
         getCommonMembers.request({
-          payload: commonId,
+          payload: { commonId, circleVisibility },
           callback: (error, commonMembers) => {
             const nextState: State = {
               loading: false,

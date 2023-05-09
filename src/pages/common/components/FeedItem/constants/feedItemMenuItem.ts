@@ -1,4 +1,6 @@
-export enum DiscussionCardMenuItem {
+export enum FeedItemMenuItem {
+  Pin = "pin",
+  Unpin = "unpin",
   Share = "share",
   Report = "report",
   Edit = "edit",

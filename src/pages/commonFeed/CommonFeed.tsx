@@ -61,17 +61,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     [commonData?.common.pinnedFeedItems],
   );
 
-  const commonFeedItemIdsForNotListening = useMemo(() => {
-    const items: string[] = [];
-    if (pinnedItemIds) {
-      items.push(...pinnedItemIds);
-    }
-    if (sharedFeedItemId) {
-      items.push(sharedFeedItemId);
-    }
-    return items;
-  }, [sharedFeedItemId, pinnedItemIds]);
-
   const {
     fetched: isGlobalDataFetched,
     fetchUserRelatedData,
@@ -81,16 +70,30 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     governanceCircles: commonData?.governance.circles,
   });
   const {
+    data: commonPinnedFeedItems,
+    loading: areCommonPinnedFeedItemsLoading,
+    fetch: fetchCommonPinnedFeedItems,
+  } = useCommonPinnedFeedItems(commonId, pinnedItemIds);
+
+  const commonFeedItemIdsForNotListening = useMemo(() => {
+    const items: string[] = [];
+    if (pinnedItemIds) {
+      items.push(...pinnedItemIds);
+    }
+    if (commonPinnedFeedItems) {
+      items.push(...commonPinnedFeedItems.map((item) => item.feedItem.id));
+    }
+    if (sharedFeedItemId) {
+      items.push(sharedFeedItemId);
+    }
+    return Array.from(new Set(items));
+  }, [sharedFeedItemId, pinnedItemIds, commonPinnedFeedItems]);
+  const {
     data: commonFeedItems,
     loading: areCommonFeedItemsLoading,
     hasMore: hasMoreCommonFeedItems,
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
-  const {
-    data: commonPinnedFeedItems,
-    loading: areCommonPinnedFeedItemsLoading,
-    fetch: fetchCommonPinnedFeedItems,
-  } = useCommonPinnedFeedItems(commonId, pinnedItemIds);
 
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const user = useSelector(selectUser());

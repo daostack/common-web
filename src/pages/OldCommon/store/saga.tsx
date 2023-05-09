@@ -1510,7 +1510,8 @@ export function* getCommonMembers({
     yield put(startLoading());
     const commonMembers = (yield call(
       getCommonMembersApi,
-      payload.payload,
+      payload.payload.commonId,
+      payload.payload.circleVisibility,
     )) as Awaited<ReturnType<typeof getCommonMembersApi>>;
 
     yield put(actions.getCommonMembers.success(commonMembers));
