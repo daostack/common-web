@@ -7,7 +7,7 @@ import {
   checkIsTextEditorValueEmpty,
   ContextMenu,
   ContextMenuRef,
-  TextEditor,
+  TextEditorWithReinitialization as TextEditor,
   TimeAgo,
 } from "@/shared/ui-kit";
 import { FeedItemBaseContentProps } from "../../../FeedItem";

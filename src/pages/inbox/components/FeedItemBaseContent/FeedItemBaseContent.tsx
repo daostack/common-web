@@ -7,7 +7,7 @@ import { RightArrowThinIcon } from "@/shared/icons";
 import {
   ContextMenu,
   ContextMenuRef,
-  TextEditor,
+  TextEditorWithReinitialization as TextEditor,
   TimeAgo,
   checkIsTextEditorValueEmpty,
 } from "@/shared/ui-kit";
