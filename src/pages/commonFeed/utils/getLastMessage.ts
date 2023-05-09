@@ -1,20 +1,16 @@
 import { GetLastMessageOptions } from "@/pages/common";
 import { CommonFeedType, PredefinedTypes } from "@/shared/models";
+import { parseStringToTextEditorValue, TextEditorValue } from "@/shared/ui-kit";
 
-export const getLastMessage = (options: GetLastMessageOptions): string => {
+const getCustomizedMessageString = (options: GetLastMessageOptions): string => {
   const {
     commonFeedType,
-    lastMessage,
     discussion,
     currentUserId,
     feedItemCreatorName,
     commonName,
     isProject,
   } = options;
-
-  if (lastMessage) {
-    return `${lastMessage.userName}: ${lastMessage.content}`;
-  }
 
   const creatorName =
     discussion?.ownerId === currentUserId ? "You" : feedItemCreatorName;
@@ -36,4 +32,23 @@ export const getLastMessage = (options: GetLastMessageOptions): string => {
   }
 
   return "";
+};
+
+export const getLastMessage = (
+  options: GetLastMessageOptions,
+): TextEditorValue => {
+  const { lastMessage } = options;
+
+  if (!lastMessage) {
+    return parseStringToTextEditorValue(getCustomizedMessageString(options));
+  }
+
+  const parsedMessageUserName = parseStringToTextEditorValue(
+    `${lastMessage.userName}: `,
+  );
+  const parsedMessageContent = parseStringToTextEditorValue(
+    lastMessage.content,
+  );
+
+  return [...parsedMessageUserName, ...parsedMessageContent];
 };

@@ -17,6 +17,7 @@ import {
   Governance,
   PredefinedTypes,
 } from "@/shared/models";
+import { TextEditorValue } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
@@ -44,7 +45,7 @@ interface DiscussionFeedCardProps {
   isPreviewMode: boolean;
   isActive: boolean;
   isExpanded: boolean;
-  getLastMessage: (options: GetLastMessageOptions) => string;
+  getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
