@@ -23,6 +23,7 @@ export const MembersTab: FC<MembersTabProps> = (props) => {
           commonId={common.id}
           governanceId={common.governanceId}
           commonMember={commonMember}
+          isSubCommon={common.directParent !== null}
         />
       </Container>
     </div>

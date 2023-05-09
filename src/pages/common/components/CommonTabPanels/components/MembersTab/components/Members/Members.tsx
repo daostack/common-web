@@ -9,10 +9,11 @@ interface MembersComponentProps {
   commonId: string;
   governanceId: string | null;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  isSubCommon: boolean;
 }
 
 const MembersComponent: FC<MembersComponentProps> = (props) => {
-  const { commonId, governanceId, commonMember } = props;
+  const { commonId, governanceId, commonMember, isSubCommon } = props;
   const {
     fetched: areCommonMembersFetched,
     data: commonMembers,
@@ -47,6 +48,7 @@ const MembersComponent: FC<MembersComponentProps> = (props) => {
           commonId={commonId}
           governanceId={governanceId}
           commonMember={commonMember}
+          isSubCommon={isSubCommon}
         />
       )}
     </div>

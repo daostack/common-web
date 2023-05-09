@@ -85,6 +85,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
               members={sortedCommonMembers}
               commonId={common.id}
               governanceId={common.governanceId}
+              isSubCommon={common.directParent !== null}
             />
           );
 

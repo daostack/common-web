@@ -7,12 +7,14 @@ interface MembersListComponentProps {
   members: CommonMemberWithUserInfo[];
   commonId: string;
   governanceId: string | null;
+  isSubCommon: boolean;
 }
 
 const MembersList: FC<MembersListComponentProps> = ({
   members,
   commonId,
   governanceId,
+  isSubCommon,
 }) => {
   const {
     data: governance,
@@ -43,6 +45,7 @@ const MembersList: FC<MembersListComponentProps> = ({
             member={member}
             commonId={commonId}
             governanceCircles={governanceCircles}
+            isSubCommon={isSubCommon}
           />
         );
       })}
