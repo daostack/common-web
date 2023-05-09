@@ -1,7 +1,14 @@
 import React, { FC, useEffect, useState } from "react";
 import TextEditor, { TextEditorProps } from "./TextEditor";
 
-const TextEditorWithReinitialization: FC<TextEditorProps> = (props) => {
+interface TextEditorWithReinitializationProps
+  extends Omit<TextEditorProps, "readOnly"> {
+  readOnly: true;
+}
+
+const TextEditorWithReinitialization: FC<
+  TextEditorWithReinitializationProps
+> = (props) => {
   const [textEditorKey, setTextEditorKey] = useState(true);
 
   useEffect(() => {
