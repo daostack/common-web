@@ -5,8 +5,8 @@ import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { notEmpty } from "@/shared/utils/notEmpty";
 import { commonActions } from "@/store/states";
-import { FeedItemMenuItem } from "../../FeedItem";
-import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
+import { FeedItemMenuItem, GetAllowedItemsOptions } from "../../FeedItem";
+import { getAllowedItems } from "../utils";
 
 type Options = GetAllowedItemsOptions;
 

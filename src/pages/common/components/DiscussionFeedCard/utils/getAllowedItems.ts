@@ -1,7 +1,10 @@
-import { FeedItemMenuItem, FeedItemPinAction } from "../../FeedItem";
+import {
+  FeedItemMenuItem,
+  FeedItemPinAction,
+  GetAllowedItemsOptions,
+} from "../../FeedItem";
 import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
 import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
-import { GetAllowedItemsOptions } from "./types";
 
 const MENU_ITEMS_TO_LIMIT = [
   FeedItemMenuItem.Pin,

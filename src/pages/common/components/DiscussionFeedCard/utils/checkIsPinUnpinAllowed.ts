@@ -1,8 +1,7 @@
 import { GovernanceActions } from "@/shared/constants";
 import { PredefinedTypes } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
-import { FeedItemPinAction } from "../../FeedItem";
-import { GetAllowedItemsOptions } from "./types";
+import { FeedItemPinAction, GetAllowedItemsOptions } from "../../FeedItem";
 
 export function checkIsPinUnpinAllowed(
   action: FeedItemPinAction,
