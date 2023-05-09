@@ -1,10 +1,11 @@
 import { GovernanceActions } from "@/shared/constants";
 import { PredefinedTypes } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
-import { GetAllowedItemsOptions, PinAction } from "./types";
+import { FeedItemPinAction } from "../../FeedItem";
+import { GetAllowedItemsOptions } from "./types";
 
 export function checkIsPinUnpinAllowed(
-  action: PinAction,
+  action: FeedItemPinAction,
   options: GetAllowedItemsOptions,
 ) {
   const { feedItem, commonMember, discussion, pinnedFeedItems = [] } = options;
@@ -16,14 +17,14 @@ export function checkIsPinUnpinAllowed(
     return false;
   }
 
-  if (action === PinAction.Pin) {
+  if (action === FeedItemPinAction.Pin) {
     const hasReachedPinLimit = pinnedFeedItems.length >= 3;
 
     if (isDiscussionPinned || hasReachedPinLimit) {
       return false;
     }
   } else if (
-    action === PinAction.Unpin &&
+    action === FeedItemPinAction.Unpin &&
     (!isDiscussionPinned ||
       discussion?.predefinedType === PredefinedTypes.General)
   ) {

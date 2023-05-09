@@ -1,7 +1,7 @@
-import { FeedItemMenuItem } from "../../FeedItem";
+import { FeedItemMenuItem, FeedItemPinAction } from "../../FeedItem";
 import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
 import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
-import { GetAllowedItemsOptions, PinAction } from "./types";
+import { GetAllowedItemsOptions } from "./types";
 
 const MENU_ITEMS_TO_LIMIT = [
   FeedItemMenuItem.Pin,
@@ -18,9 +18,9 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   [FeedItemMenuItem.Edit]: () => false,
   [FeedItemMenuItem.Remove]: checkIsRemoveDiscussionAllowed,
   [FeedItemMenuItem.Pin]: (options) =>
-    checkIsPinUnpinAllowed(PinAction.Pin, options),
+    checkIsPinUnpinAllowed(FeedItemPinAction.Pin, options),
   [FeedItemMenuItem.Unpin]: (options) =>
-    checkIsPinUnpinAllowed(PinAction.Unpin, options),
+    checkIsPinUnpinAllowed(FeedItemPinAction.Unpin, options),
 };
 
 export const getAllowedItems = (

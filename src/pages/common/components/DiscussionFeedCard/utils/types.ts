@@ -17,8 +17,3 @@ export interface GetAllowedItemsOptions {
   commonMember?: CommonMember | null;
   isLimitedMenu?: boolean;
 }
-
-export enum PinAction {
-  Pin = "pin",
-  Unpin = "unpin",
-}
