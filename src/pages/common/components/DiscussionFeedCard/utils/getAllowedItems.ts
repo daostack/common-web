@@ -1,9 +1,6 @@
 import { CommonFeedType } from "@/shared/models";
-import {
-  FeedItemMenuItem,
-  FeedItemPinAction,
-  GetAllowedItemsOptions,
-} from "../../FeedItem";
+import { FeedItemMenuItem, FeedItemPinAction } from "../../FeedItem/constants";
+import { GetAllowedItemsOptions } from "../../FeedItem/types";
 import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
 import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
 
