@@ -115,7 +115,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           onClick: handleClick,
           onExpand: handleExpand,
           title,
-          lastMessage,
+          lastMessage: !isLoading ? lastMessage : undefined,
           menuItems,
           image,
           imageAlt,
