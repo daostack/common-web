@@ -1,15 +1,5 @@
 @import "../../../../../../../../constants.scss";
 
-.desktopStyleMenu {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  right: unset;
-  z-index: 1;
-  min-width: 13.75rem;
-  transform: translateX(-50%);
-}
-
 .dropdownItem {
   &:hover {
     background-color: $c-primary-200;

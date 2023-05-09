@@ -18,6 +18,7 @@ import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
   getUserName,
+  removeProjectCircles,
 } from "@/shared/utils";
 import { UserAvatar } from "../../../../../shared/components";
 import { CommonMemberPreview } from "./CommonMemberPreview";
@@ -72,7 +73,7 @@ const CommonMember: FC<CommonMemberProps> = ({
     }
 
     setIsLongPressed(true);
-    console.log("sdfsdf");
+    console.log(x, y);
     contextMenuRef.current?.open(x, y);
     setIsLongPressing(false);
   };
@@ -101,8 +102,10 @@ const CommonMember: FC<CommonMemberProps> = ({
     member.circleIds,
   );
 
-  const notMemberCircles = governanceCircles.filter(
-    ({ id }) => !memberCircles.map((circle) => circle.id).includes(id),
+  const notMemberCircles = removeProjectCircles(
+    governanceCircles.filter(
+      ({ id }) => !memberCircles.map((circle) => circle.id).includes(id),
+    ),
   );
 
   const circlesString = getCirclesWithHighestTier(memberCircles)
