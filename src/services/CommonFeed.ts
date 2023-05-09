@@ -163,8 +163,12 @@ class CommonFeedService {
   };
 
   public subscribeToNewUpdatedCommonFeedItems = (
-    commonId: string,
-    endBefore: Timestamp,
+    options: {
+      commonId: string;
+      endBefore?: Timestamp;
+      // ids amount should be <= 10
+      idsForListening?: string[];
+    },
     callback: (
       data: {
         commonFeedItem: CommonFeed;
@@ -175,38 +179,18 @@ class CommonFeedService {
       }[],
     ) => void,
   ): UnsubscribeFunction => {
-    const query = this.getCommonFeedSubCollection(commonId)
-      .orderBy("updatedAt", "desc")
-      .endBefore(endBefore);
-
-    return query.onSnapshot((snapshot) => {
-      const data = snapshot.docChanges().map((docChange) => ({
-        commonFeedItem: docChange.doc.data(),
-        statuses: {
-          isAdded: docChange.type === "added",
-          isRemoved: docChange.type === "removed",
-        },
-      }));
-      callback(data);
-    });
-  };
-
-  public subscribeToNewUpdatedCommonPinnedFeedItems = (
-    commonId: string,
-    callback: (
-      data: {
-        commonFeedItem: CommonFeed;
-        statuses: {
-          isAdded: boolean;
-          isRemoved: boolean;
-        };
-      }[],
-    ) => void,
-  ): UnsubscribeFunction => {
-    const query = this.getCommonFeedSubCollection(commonId).orderBy(
+    const { commonId, endBefore, idsForListening } = options;
+    let query = this.getCommonFeedSubCollection(commonId).orderBy(
       "updatedAt",
       "desc",
     );
+
+    if (idsForListening && idsForListening.length > 0) {
+      query = query.where("id", "in", idsForListening);
+    }
+    if (endBefore) {
+      query = query.endBefore(endBefore);
+    }
 
     return query.onSnapshot((snapshot) => {
       const data = snapshot.docChanges().map((docChange) => ({
