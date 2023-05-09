@@ -9,6 +9,11 @@ import {
 } from "@/shared/models";
 import { FeedItemMenuItem } from "./constants";
 
+export type GetNonAllowedItemsOptions = (
+  type: CommonFeedType,
+  options?: GetAllowedItemsOptions,
+) => FeedItemMenuItem[];
+
 export interface GetAllowedItemsOptions {
   commonId?: string;
   pinnedFeedItems?: Common["pinnedFeedItems"];
@@ -17,8 +22,5 @@ export interface GetAllowedItemsOptions {
   feedItem?: CommonFeed;
   proposal?: Proposal;
   commonMember?: CommonMember | null;
-  getNonAllowedItems?: (
-    type: CommonFeedType,
-    options?: GetAllowedItemsOptions,
-  ) => FeedItemMenuItem[];
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }

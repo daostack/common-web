@@ -24,7 +24,7 @@ import {
   getVisibilityString,
   FeedCountdown,
 } from "../FeedCard";
-import { GetLastMessageOptions } from "../FeedItem";
+import { GetLastMessageOptions, GetNonAllowedItemsOptions } from "../FeedItem";
 import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
@@ -53,6 +53,7 @@ interface ProposalFeedCardProps {
   isActive: boolean;
   isExpanded: boolean;
   getLastMessage: (options: GetLastMessageOptions) => string;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -69,6 +70,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     isActive,
     isExpanded,
     getLastMessage,
+    getNonAllowedItems,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -133,6 +135,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       discussion,
       governanceCircles,
       commonMember,
+      getNonAllowedItems,
     },
     {
       report: () => {},

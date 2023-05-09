@@ -50,7 +50,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     sizeKey,
     currentUserId,
   } = props;
-  const { onFeedItemUpdate, getLastMessage } = useFeedItemContext();
+  const { onFeedItemUpdate, getLastMessage, getNonAllowedItems } =
+    useFeedItemContext();
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
   if (
@@ -78,6 +79,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isPreviewMode,
     getLastMessage,
     commonMember,
+    getNonAllowedItems,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {

@@ -2,6 +2,7 @@ import React, { MouseEventHandler, ReactNode, useContext } from "react";
 import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonFeed, CommonFeedType, Discussion } from "@/shared/models";
 import { FeedCardSettings } from "../FeedCard";
+import { GetNonAllowedItemsOptions } from "./types";
 
 export interface FeedItemBaseContentProps {
   className?: string;
@@ -44,6 +45,7 @@ export interface FeedItemContextValue {
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   feedCardSettings?: FeedCardSettings;
   getLastMessage: (options: GetLastMessageOptions) => string;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 export const FeedItemContext = React.createContext<FeedItemContextValue>({
