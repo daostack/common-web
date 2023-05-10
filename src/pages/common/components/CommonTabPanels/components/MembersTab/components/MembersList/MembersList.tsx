@@ -1,9 +1,11 @@
 import React, { FC, memo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import CommonMember from "@/pages/OldCommon/components/CommonDetailContainer/MembersComponent/CommonMemberComponent";
 import { useGovernance } from "@/shared/hooks/useCases";
 import { CirclesPermissions, CommonMemberWithUserInfo } from "@/shared/models";
 import { CommonMember as CommonMemberModel } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
+import { commonActions, selectRecentAssignedCircle } from "@/store/states";
 import styles from "./MembersList.module.scss";
 
 interface MembersListComponentProps {
@@ -26,6 +28,16 @@ const MembersList: FC<MembersListComponentProps> = ({
     fetched: isGovernanceFetched,
     fetchGovernance,
   } = useGovernance();
+  const dispatch = useDispatch();
+  const recentAssignedCircle = useSelector(selectRecentAssignedCircle);
+
+  useEffect(() => {
+    return () => {
+      if (recentAssignedCircle) {
+        dispatch(commonActions.setRecentAssignedCircle(null));
+      }
+    };
+  }, [recentAssignedCircle]);
 
   useEffect(() => {
     if (governanceId) {

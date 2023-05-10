@@ -172,4 +172,4 @@ export const setRecentStreamId = createStandardAction(
 
 export const setRecentAssignedCircle = createStandardAction(
   CommonActionType.SET_RECENT_ASSIGNED_CIRCLE,
-)<RecentAssignedCircle>();
+)<RecentAssignedCircle | null>();
