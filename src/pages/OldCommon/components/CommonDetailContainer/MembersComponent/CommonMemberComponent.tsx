@@ -74,7 +74,7 @@ const CommonMember: FC<CommonMemberProps> = ({
     ),
   );
 
-  if (recentAssignedCircle && member.userId == recentAssignedCircle.memberId) {
+  if (recentAssignedCircle && member.userId === recentAssignedCircle.memberId) {
     memberCircles.push(recentAssignedCircle.circle);
   }
 
