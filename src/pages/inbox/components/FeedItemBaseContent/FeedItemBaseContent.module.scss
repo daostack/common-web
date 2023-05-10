@@ -144,6 +144,12 @@
   white-space: nowrap;
   overflow: hidden;
 
+  & > p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
   @include tablet {
     max-width: 16.1875rem;
   }
