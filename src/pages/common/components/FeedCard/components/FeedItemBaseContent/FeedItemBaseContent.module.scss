@@ -115,7 +115,7 @@
 }
 
 .lastMessageContainer {
-  max-width: calc(100% - 2.125rem);
+  overflow: hidden;
 }
 
 .lastMessage {
@@ -131,10 +131,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-  }
-
-  @include tablet {
-    max-width: 16.1875rem;
   }
 }
 
