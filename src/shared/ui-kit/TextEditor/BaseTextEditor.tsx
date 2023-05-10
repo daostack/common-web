@@ -99,6 +99,8 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
       // Insert array of children nodes
       Transforms.insertNodes(editor, parseStringToTextEditorValue());
+      const editorEl = ReactEditor.toDOMNode(editor, editor);
+      editorEl.scrollTo(0, 0);
       onClearFinished();
     }, 0);
   }, [shouldReinitializeEditor, onClearFinished]);
