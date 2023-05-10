@@ -126,9 +126,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+
   & > p {
-    overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   @include tablet {
