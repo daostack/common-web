@@ -15,11 +15,6 @@ interface MemberDropdownProps {
   isSubCommon: boolean;
 }
 
-export interface SelectedCircle {
-  id: string;
-  name: string;
-}
-
 const MemberDropdown: FC<MemberDropdownProps> = (props) => {
   const {
     notMemberCircles,
@@ -30,7 +25,7 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
     isSubCommon,
   } = props;
   const { isShowing, onClose, onOpen } = useModal(false);
-  const [selectedCircle, setSelectedCircle] = useState<SelectedCircle>();
+  const [selectedCircle, setSelectedCircle] = useState<Circle>();
 
   const menuItems = useMemo<Item[]>(
     () =>
@@ -38,7 +33,7 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
         id: circle.id,
         text: `Add to ${circle.name}`,
         onClick: () => {
-          setSelectedCircle({ id: circle.id, name: circle.name });
+          setSelectedCircle(circle);
           onOpen();
         },
         className: elementDropdownStyles.dropdownItem,

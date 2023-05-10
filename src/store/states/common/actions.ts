@@ -16,6 +16,7 @@ import {
   Discussion,
   Governance,
   Proposal,
+  RecentAssignedCircle,
 } from "@/shared/models";
 import { CommonActionType } from "./constants";
 import { FeedItems, PinnedFeedItems } from "./types";
@@ -168,3 +169,7 @@ export const setSharedFeedItem = createStandardAction(
 export const setRecentStreamId = createStandardAction(
   CommonActionType.SET_RECENT_STREAM_ID,
 )<string>();
+
+export const setRecentAssignedCircle = createStandardAction(
+  CommonActionType.SET_RECENT_ASSIGNED_CIRCLE,
+)<RecentAssignedCircle>();

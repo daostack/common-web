@@ -20,3 +20,4 @@ export * from "./BankAccountDetails";
 export * from "./Currency";
 export * from "./SupportersData";
 export * from "./Timestamp";
+export * from "./RecentAssignedCircle";

@@ -1,16 +1,18 @@
 import React, { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
 import { CommonService } from "@/services";
 import { Modal } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
+import { Circle } from "@/shared/models";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
-import { SelectedCircle } from "./MemberDropdown";
+import { commonActions } from "@/store/states";
 import styles from "./AssignCircleModal.module.scss";
 
 interface AssignCircleModalProps {
   isShowing: boolean;
   onClose: () => void;
   memberName: string;
-  selectedCircle?: SelectedCircle;
+  selectedCircle?: Circle;
   commonId: string;
   memberId: string;
   isSubCommon: boolean;
@@ -24,6 +26,7 @@ export default function AssignCircleModal({
   memberId,
   isSubCommon,
 }: AssignCircleModalProps) {
+  const dispatch = useDispatch();
   const [isAdding, setIsAdding] = useState(false);
   const [errorText, setErrorText] = useState("");
 
@@ -35,6 +38,12 @@ export default function AssignCircleModal({
       setErrorText("");
 
       await CommonService.inviteToCircle(selectedCircle.id, commonId, memberId);
+      dispatch(
+        commonActions.setRecentAssignedCircle({
+          memberId: memberId,
+          circle: selectedCircle,
+        }),
+      );
 
       handleClose();
     } catch (error) {

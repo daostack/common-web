@@ -1,4 +1,5 @@
 import React, { FC, MouseEventHandler, useRef } from "react";
+import { useSelector } from "react-redux";
 import firebase from "firebase/app";
 import { v4 } from "uuid";
 import { MemberDropdown } from "@/pages/common/components/CommonTabPanels/components/MembersTab/components/MemberDropdown";
@@ -17,6 +18,7 @@ import {
   getUserName,
   removeProjectCircles,
 } from "@/shared/utils";
+import { selectRecentAssignedCircle } from "@/store/states";
 import { UserAvatar } from "../../../../../shared/components";
 import { CommonMemberPreview } from "./CommonMemberPreview";
 
@@ -41,6 +43,7 @@ const CommonMember: FC<CommonMemberProps> = ({
 }) => {
   const { isShowing, onClose, onOpen } = useModal(false);
   const contextMenuRef = useRef<ContextMenuRef>(null);
+  const recentAssignedCircle = useSelector(selectRecentAssignedCircle);
 
   const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
     event.preventDefault();
@@ -70,6 +73,10 @@ const CommonMember: FC<CommonMemberProps> = ({
       ({ id }) => !memberCircles.map((circle) => circle.id).includes(id),
     ),
   );
+
+  if (recentAssignedCircle && member.userId == recentAssignedCircle.memberId) {
+    memberCircles.push(recentAssignedCircle.circle);
+  }
 
   const circlesString = getCirclesWithHighestTier(memberCircles)
     .map((circle) => circle.name)
