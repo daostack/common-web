@@ -118,11 +118,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const governance = outerGovernance || fetchedGovernance;
   const commonMember = outerCommonMember || fetchedCommonMember;
   const maxChatSize = getSplitViewMaxSize(windowWidth);
-  const defaultChatSize = useMemo(
-    () => getDefaultSize(windowWidth, maxChatSize),
-    [],
+  const [chatWidth, setChatWidth] = useState(() =>
+    getDefaultSize(windowWidth, maxChatSize),
   );
-  const [chatWidth, setChatWidth] = useState(defaultChatSize);
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
     null,
   );
@@ -357,9 +355,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     contentEl
   ) : (
     <SplitView
+      size={chatWidth}
       minSize={MIN_CHAT_WIDTH}
       maxSize={maxChatSize}
-      defaultSize={defaultChatSize}
       onChange={setChatWidth}
     >
       {contentEl}
