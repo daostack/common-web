@@ -4,6 +4,7 @@ import SwiperClass from "swiper/types/swiper-class";
 import { ButtonIcon, Image, Modal } from "@/shared/components";
 import LeftArrowIcon from "@/shared/icons/leftArrow.icon";
 import RightArrowIcon from "@/shared/icons/rightArrow.icon";
+import { formatVideoSource, isYouTubeUrl } from "../../utils";
 import "./ImageGalleryModal.scss";
 import "swiper/components/pagination/pagination.min.css";
 
@@ -47,14 +48,21 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
           {videoSrc && (
             <SwiperSlide key={videoSrc} className="slider-wrapper">
               <div className="video-container">
-                <video
-                  id="videoPlayer"
-                  className="video"
-                  preload="auto"
-                  controls
-                >
-                  <source src={videoSrc} type="video/mp4" />
-                </video>
+                {isYouTubeUrl(videoSrc) ? (
+                  <iframe
+                    allowFullScreen
+                    src={formatVideoSource(videoSrc)}
+                  ></iframe>
+                ) : (
+                  <video
+                    id="videoPlayer"
+                    className="video"
+                    preload="auto"
+                    controls
+                  >
+                    <source src={videoSrc} type="video/mp4" />
+                  </video>
+                )}
               </div>
             </SwiperSlide>
           )}
