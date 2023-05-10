@@ -80,7 +80,11 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const [target, setTarget] = useState<Range | null>();
   const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
   useEffect(() => {
-    if (shouldReinitializeEditor) {
+    if (!shouldReinitializeEditor) {
+      return;
+    }
+
+    setTimeout(() => {
       Transforms.delete(editor, {
         at: {
           anchor: EditorSlate.start(editor, []),
@@ -96,7 +100,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       // Insert array of children nodes
       Transforms.insertNodes(editor, parseStringToTextEditorValue());
       onClearFinished();
-    }
+    }, 0);
   }, [shouldReinitializeEditor, onClearFinished]);
 
   useEffect(() => {
