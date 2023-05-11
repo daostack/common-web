@@ -17,7 +17,7 @@ export interface FormattedText {
 
 export type CustomText = FormattedText;
 
-type BaseElementChild = CustomText | LinkElement;
+type BaseElementChild = CustomText | LinkElement | MentionElement;
 
 interface BaseElement<Child = BaseElementChild> {
   type: ElementType;
@@ -52,11 +52,10 @@ export interface ListItemElement extends BaseElement {
   type: ElementType.ListItem;
 }
 
-export interface MentionElement extends BaseElement {
+export interface MentionElement extends BaseElement<CustomText> {
   type: ElementType.Mention;
   displayName: string;
   userId: string;
-  children: CustomText[];
 }
 
 export interface TextEditorStyles {
