@@ -11,4 +11,5 @@ export {
   checkIsTextEditorValueEmpty,
   parseStringToTextEditorValue,
   prependTextInTextEditorValue,
+  serializeTextEditorValue,
 } from "./utils";
