@@ -8,6 +8,7 @@ import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
   PayloadWithOptionalCallback,
+  RecentAssignedCircle,
   UploadFile,
 } from "@/shared/interfaces";
 import {
@@ -16,7 +17,6 @@ import {
   Discussion,
   Governance,
   Proposal,
-  RecentAssignedCircle,
 } from "@/shared/models";
 import { CommonActionType } from "./constants";
 import { FeedItems, PinnedFeedItems } from "./types";

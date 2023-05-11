@@ -1,4 +1,4 @@
-import { Circle } from "./governance";
+import { Circle } from "../models/governance";
 
 export interface RecentAssignedCircle {
   memberId: string;

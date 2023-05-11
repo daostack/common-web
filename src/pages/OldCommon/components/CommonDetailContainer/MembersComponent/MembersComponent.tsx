@@ -12,7 +12,7 @@ import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { ProposalsTypes, ScreenSize } from "@/shared/constants";
 import { Common, ProposalState } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { checkIsCountdownState } from "@/shared/utils";
+import { checkIsCountdownState, checkIsProject } from "@/shared/utils";
 import { Loader } from "../../../../../shared/components";
 import { MemberAdmittance } from "../../../../../shared/models/governance/proposals";
 import { selectProposals } from "../../../store/selectors";
@@ -85,7 +85,7 @@ const MembersComponent: FC<MembersComponentProps> = ({ common }) => {
               members={sortedCommonMembers}
               commonId={common.id}
               governanceId={common.governanceId}
-              isSubCommon={common.directParent !== null}
+              isProject={checkIsProject(common)}
             />
           );
 

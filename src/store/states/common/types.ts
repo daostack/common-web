@@ -3,13 +3,9 @@ import { CommonAction } from "@/shared/constants";
 import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
-} from "@/shared/interfaces";
-import {
-  CommonMember,
-  Governance,
   RecentAssignedCircle,
-  Timestamp,
-} from "@/shared/models";
+} from "@/shared/interfaces";
+import { CommonMember, Governance, Timestamp } from "@/shared/models";
 
 export type EntityCreation<T> = {
   data: T | null;

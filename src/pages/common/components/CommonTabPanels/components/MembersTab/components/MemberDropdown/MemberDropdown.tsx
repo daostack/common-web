@@ -12,7 +12,7 @@ interface MemberDropdownProps {
   commonId: string;
   memberId: string;
   contextMenuRef: React.RefObject<ContextMenuRef>;
-  isSubCommon: boolean;
+  isProject: boolean;
 }
 
 const MemberDropdown: FC<MemberDropdownProps> = (props) => {
@@ -22,7 +22,7 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
     commonId,
     memberId,
     contextMenuRef,
-    isSubCommon,
+    isProject,
   } = props;
   const { isShowing, onClose, onOpen } = useModal(false);
   const [selectedCircle, setSelectedCircle] = useState<Circle>();
@@ -52,7 +52,7 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
         memberName={memberName}
         commonId={commonId}
         memberId={memberId}
-        isSubCommon={isSubCommon}
+        isProject={isProject}
       />
     </>
   );

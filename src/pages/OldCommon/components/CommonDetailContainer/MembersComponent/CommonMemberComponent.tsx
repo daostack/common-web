@@ -29,7 +29,7 @@ interface CommonMemberProps {
   commonId: string;
   commonMember?: (CommonMemberModel & CirclesPermissions) | null;
   governanceCircles: Circle[];
-  isSubCommon: boolean;
+  isProject: boolean;
 }
 
 const CommonMember: FC<CommonMemberProps> = ({
@@ -39,7 +39,7 @@ const CommonMember: FC<CommonMemberProps> = ({
   joinedAt,
   commonMember,
   governanceCircles,
-  isSubCommon,
+  isProject,
 }) => {
   const { isShowing, onClose, onOpen } = useModal(false);
   const contextMenuRef = useRef<ContextMenuRef>(null);
@@ -114,7 +114,7 @@ const CommonMember: FC<CommonMemberProps> = ({
           notMemberCircles={notMemberCircles}
           memberName={memberName}
           commonId={commonId}
-          isSubCommon={isSubCommon}
+          isProject={isProject}
           memberId={member.userId}
           contextMenuRef={contextMenuRef}
         />

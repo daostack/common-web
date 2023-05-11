@@ -13,7 +13,7 @@ interface MembersListComponentProps {
   commonId: string;
   governanceId: string | null;
   commonMember: (CommonMemberModel & CirclesPermissions) | null;
-  isSubCommon: boolean;
+  isProject: boolean;
 }
 
 const MembersList: FC<MembersListComponentProps> = ({
@@ -21,7 +21,7 @@ const MembersList: FC<MembersListComponentProps> = ({
   commonId,
   governanceId,
   commonMember,
-  isSubCommon,
+  isProject,
 }) => {
   const {
     data: governance,
@@ -62,7 +62,7 @@ const MembersList: FC<MembersListComponentProps> = ({
             commonId={commonId}
             commonMember={commonMember}
             governanceCircles={governanceCircles}
-            isSubCommon={isSubCommon}
+            isProject={isProject}
           />
         );
       })}

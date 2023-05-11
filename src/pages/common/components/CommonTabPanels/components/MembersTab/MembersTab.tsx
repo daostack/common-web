@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { CommonTab } from "@/pages/common/constants";
 import { CirclesPermissions, Common, CommonMember } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
+import { checkIsProject } from "@/shared/utils";
 import { TabNavigation } from "../TabNavigation";
 import { Members } from "./components";
 import styles from "./MembersTab.module.scss";
@@ -23,7 +24,7 @@ export const MembersTab: FC<MembersTabProps> = (props) => {
           commonId={common.id}
           governanceId={common.governanceId}
           commonMember={commonMember}
-          isSubCommon={common.directParent !== null}
+          isProject={checkIsProject(common)}
         />
       </Container>
     </div>

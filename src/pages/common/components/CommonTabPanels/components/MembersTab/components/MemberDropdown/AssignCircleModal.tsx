@@ -15,7 +15,7 @@ interface AssignCircleModalProps {
   selectedCircle?: Circle;
   commonId: string;
   memberId: string;
-  isSubCommon: boolean;
+  isProject: boolean;
 }
 export default function AssignCircleModal({
   isShowing,
@@ -24,7 +24,7 @@ export default function AssignCircleModal({
   memberName,
   commonId,
   memberId,
-  isSubCommon,
+  isProject,
 }: AssignCircleModalProps) {
   const dispatch = useDispatch();
   const [isAdding, setIsAdding] = useState(false);
@@ -67,7 +67,7 @@ export default function AssignCircleModal({
       <div className={styles.content}>
         <div className={styles.text}>
           The action will grant {memberName} access to private discussions and
-          additional permissions in this {isSubCommon ? "space" : "common"}.
+          additional permissions in this {isProject ? "space" : "common"}.
         </div>
         <div className={styles.buttonsContainer}>
           <Button
