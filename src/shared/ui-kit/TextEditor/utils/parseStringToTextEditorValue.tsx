@@ -1,6 +1,5 @@
-import { flattenDeep } from "lodash";
 import { ElementType } from "../constants";
-import { CustomElement, TextEditorValue } from "../types";
+import { TextEditorValue } from "../types";
 
 const serializeTextEditorValue = (value = ""): TextEditorValue => {
   return value.split("\n").map((valuePart) => ({
@@ -30,40 +29,5 @@ export const parseStringToTextEditorValue = (
     return serializeTextEditorValue(initialValue);
   } catch (error) {
     return serializeTextEditorValue(initialValue);
-  }
-};
-
-export const parseTextEditorValueToString = (
-  initialValue = "",
-): CustomElement[] => {
-  if (!initialValue) {
-    return [
-      {
-        type: ElementType.Paragraph,
-        text: "",
-        children: [],
-      },
-    ];
-  }
-
-  try {
-    const textEditorValue = JSON.parse(initialValue);
-
-    const textEditorMap = textEditorValue.map((item) => {
-      return item.children.map((tag: CustomElement) => ({
-        ...tag,
-        type: tag?.type,
-      }));
-    });
-
-    return flattenDeep(textEditorMap);
-  } catch (error) {
-    return [
-      {
-        type: ElementType.Paragraph,
-        text: initialValue,
-        children: [],
-      },
-    ];
   }
 };
