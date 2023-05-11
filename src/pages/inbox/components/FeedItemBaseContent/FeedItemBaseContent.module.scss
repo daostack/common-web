@@ -135,6 +135,10 @@
   color: $white;
 }
 
+.lastMessageContainer {
+  overflow: hidden;
+}
+
 .lastMessage {
   max-height: 1.25rem;
   color: $c-neutrals-300;
@@ -144,8 +148,10 @@
   white-space: nowrap;
   overflow: hidden;
 
-  @include tablet {
-    max-width: 16.1875rem;
+  & > p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 }
 

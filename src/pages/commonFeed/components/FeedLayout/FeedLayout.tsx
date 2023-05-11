@@ -118,11 +118,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const governance = outerGovernance || fetchedGovernance;
   const commonMember = outerCommonMember || fetchedCommonMember;
   const maxChatSize = getSplitViewMaxSize(windowWidth);
-  const defaultChatSize = useMemo(
-    () => getDefaultSize(windowWidth, maxChatSize),
-    [],
+  const [realChatWidth, setRealChatWidth] = useState(() =>
+    getDefaultSize(windowWidth, maxChatSize),
   );
-  const [chatWidth, setChatWidth] = useState(defaultChatSize);
+  const chatWidth = Math.min(realChatWidth, maxChatSize);
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
     null,
   );
@@ -214,12 +213,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }),
     [setChatItem, feedItemIdForAutoChatOpen],
   );
-
-  useEffect(() => {
-    if (chatWidth > maxChatSize) {
-      setChatWidth(maxChatSize);
-    }
-  }, [maxChatSize]);
 
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
@@ -357,10 +350,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     contentEl
   ) : (
     <SplitView
+      size={chatWidth}
       minSize={MIN_CHAT_WIDTH}
       maxSize={maxChatSize}
-      defaultSize={defaultChatSize}
-      onChange={setChatWidth}
+      onChange={setRealChatWidth}
     >
       {contentEl}
     </SplitView>
