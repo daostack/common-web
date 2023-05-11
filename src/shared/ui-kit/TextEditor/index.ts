@@ -9,6 +9,7 @@ export {
 export type { TextEditorValue, TextEditorStyles } from "./types";
 export {
   checkIsTextEditorValueEmpty,
+  getMentionTags,
   parseStringToTextEditorValue,
   prependTextInTextEditorValue,
   serializeTextEditorValue,
