@@ -313,6 +313,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       image={common?.image}
       imageAlt={`${commonName}'s image`}
       isProject={isProject}
+      isPinned={isPinned}
       isLoading={isLoading}
       type={item.data.type}
       seenOnce={feedItemUserMetadata?.seenOnce}
