@@ -16,12 +16,21 @@ interface MembershipRequestCreatingProps extends IStageProps {
 export default function MembershipRequestCreating(
   props: MembershipRequestCreatingProps,
 ) {
-  const { userData, setUserData, common, shouldSkipCreation = false } = props;
+  const {
+    userData,
+    setUserData,
+    common,
+    isAutomaticAcceptance,
+    shouldSkipCreation = false,
+  } = props;
   const [isCreationSubmitted, setIsCreationSubmitted] = useState(false);
   const dispatch = useDispatch();
   const isLoading = useSelector(getLoading());
   const user = useSelector(selectUser());
   const userName = getUserName(user);
+  const title = isAutomaticAcceptance
+    ? "Joining in a moment"
+    : "Creating your membership request";
 
   useEffect(() => {
     (async () => {
@@ -101,7 +110,7 @@ export default function MembershipRequestCreating(
         src="/assets/images/membership-request-creating.svg"
         alt="introduce"
       />
-      <div className="title">Creating your membership request</div>
+      <div className="title">{title}</div>
       <div className="loader-container">
         <Loader />
       </div>

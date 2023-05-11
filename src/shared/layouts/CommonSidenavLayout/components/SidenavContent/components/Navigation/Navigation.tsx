@@ -35,7 +35,7 @@ const Navigation: FC<NavigationProps> = (props) => {
       isDisabled: !isAuthenticated,
       notificationsAmount: userStreamsWithNotificationsAmount || null,
       tooltipContent: !isAuthenticated ? (
-        <>Inbox is only allowed for authenticated users.</>
+        <>Inbox will be enabled once you log in 🙂</>
       ) : null,
     },
   ];

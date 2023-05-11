@@ -1,38 +1,27 @@
-import { FeedItemFollowState } from "@/shared/hooks/useCases";
-import {
-  Circles,
-  CommonFeed,
-  CommonMember,
-  Discussion,
-  Proposal,
-  Common,
-} from "@/shared/models";
-import { DiscussionCardMenuItem } from "../constants";
-
-export interface GetAllowedItemsOptions {
-  common?: Common;
-  discussion?: Discussion | null;
-  governanceCircles?: Circles;
-  feedItem?: CommonFeed;
-  proposal?: Proposal;
-  commonMember?: CommonMember | null;
-  feedItemFollow: FeedItemFollowState;
-}
+import { CommonFeedType } from "@/shared/models";
+import { FeedItemMenuItem, FeedItemPinAction } from "../../FeedItem/constants";
+import { GetAllowedItemsOptions } from "../../FeedItem/types";
+import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
+import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
-  DiscussionCardMenuItem,
+  FeedItemMenuItem,
   (options: GetAllowedItemsOptions) => boolean
 > = {
-  [DiscussionCardMenuItem.Share]: () => false,
-  [DiscussionCardMenuItem.Report]: () => false,
-  [DiscussionCardMenuItem.Edit]: () => false,
-  [DiscussionCardMenuItem.Remove]: () => false,
-  [DiscussionCardMenuItem.Follow]: (options) => {
+  [FeedItemMenuItem.Share]: () => false,
+  [FeedItemMenuItem.Report]: () => false,
+  [FeedItemMenuItem.Edit]: () => false,
+  [FeedItemMenuItem.Remove]: checkIsRemoveDiscussionAllowed,
+  [FeedItemMenuItem.Pin]: (options) =>
+    checkIsPinUnpinAllowed(FeedItemPinAction.Pin, options),
+  [FeedItemMenuItem.Unpin]: (options) =>
+    checkIsPinUnpinAllowed(FeedItemPinAction.Unpin, options),
+  [FeedItemMenuItem.Follow]: (options) => {
     return (
       !options.feedItemFollow.isDisabled && !options.feedItemFollow.isFollowing
     );
   },
-  [DiscussionCardMenuItem.Unfollow]: (options) => {
+  [FeedItemMenuItem.Unfollow]: (options) => {
     return (
       !options.feedItemFollow.isDisabled && options.feedItemFollow.isFollowing
     );
@@ -41,17 +30,23 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
 
 export const getAllowedItems = (
   options: GetAllowedItemsOptions,
-): DiscussionCardMenuItem[] => {
+): FeedItemMenuItem[] => {
   const orderedItems = [
-    DiscussionCardMenuItem.Follow,
-    DiscussionCardMenuItem.Unfollow,
-    DiscussionCardMenuItem.Share,
-    DiscussionCardMenuItem.Report,
-    DiscussionCardMenuItem.Edit,
-    DiscussionCardMenuItem.Remove,
+    FeedItemMenuItem.Follow,
+    FeedItemMenuItem.Unfollow,
+    FeedItemMenuItem.Pin,
+    FeedItemMenuItem.Unpin,
+    FeedItemMenuItem.Share,
+    FeedItemMenuItem.Report,
+    FeedItemMenuItem.Edit,
+    FeedItemMenuItem.Remove,
   ];
+  const nonAllowedItems =
+    options.getNonAllowedItems?.(CommonFeedType.Discussion, options) || [];
 
-  return orderedItems.filter((item) =>
-    MENU_ITEM_TO_CHECK_FUNCTION_MAP[item](options),
+  return orderedItems.filter(
+    (item) =>
+      !nonAllowedItems.includes(item) &&
+      MENU_ITEM_TO_CHECK_FUNCTION_MAP[item](options),
   );
 };

@@ -14,6 +14,7 @@ import { GlobalLoader, Modal } from "@/shared/components";
 import { useZoomDisabling } from "@/shared/hooks";
 import { ModalProps, ModalRef } from "@/shared/interfaces";
 import { Common, CommonLink, Governance } from "@/shared/models";
+import { checkIsAutomaticJoin } from "@/shared/utils";
 import { useMemberInAnyCommon } from "../../../hooks";
 import MembershipRequestCreated from "./MembershipRequestCreated";
 import MembershipRequestCreating from "./MembershipRequestCreating";
@@ -30,6 +31,7 @@ export interface IStageProps {
   userData: IMembershipRequestData;
   common?: Common;
   governance?: Governance;
+  isAutomaticAcceptance?: boolean;
 }
 
 export interface IMembershipRequestData {
@@ -86,6 +88,7 @@ export function MembershipRequestModal(props: IProps) {
     (stage > MembershipRequestStage.Introduce &&
       stage < MembershipRequestStage.Creating) ||
     (stage === MembershipRequestStage.Introduce && !isMember);
+  const isAutomaticAcceptance = checkIsAutomaticJoin(governance);
 
   useEffect(() => {
     if (isShowing) {
@@ -157,6 +160,7 @@ export function MembershipRequestModal(props: IProps) {
             userData={userData}
             setUserData={setUserData}
             governance={governance}
+            isAutomaticAcceptance={isAutomaticAcceptance}
           />
         );
       case MembershipRequestStage.Payment:
@@ -174,6 +178,7 @@ export function MembershipRequestModal(props: IProps) {
             userData={userData}
             setUserData={setUserData}
             common={common}
+            isAutomaticAcceptance={isAutomaticAcceptance}
           />
         );
       case MembershipRequestStage.Created:
@@ -182,6 +187,7 @@ export function MembershipRequestModal(props: IProps) {
             userData={userData}
             setUserData={setUserData}
             common={common}
+            isAutomaticAcceptance={isAutomaticAcceptance}
             shouldSkipCreation
           />
         ) : (
@@ -197,10 +203,11 @@ export function MembershipRequestModal(props: IProps) {
     ) {
       return null;
     }
-    return (
-      <h3 className="membership-request-modal__title">Membership Request</h3>
-    );
-  }, [stage]);
+
+    const text = isAutomaticAcceptance ? "Join Common" : "Membership Request";
+
+    return <h3 className="membership-request-modal__title">{text}</h3>;
+  }, [stage, isAutomaticAcceptance]);
 
   const moveStageBack = useCallback(() => {
     setUserData((data) => {

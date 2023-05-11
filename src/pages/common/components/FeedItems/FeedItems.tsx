@@ -60,12 +60,16 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
       <FeedItemContext.Provider value={feedItemContextValue}>
         <InfiniteScroll onFetchNext={fetchMore} isLoading={loading}>
           {commonFeedItems?.map((item) => {
+            const isPinned = (common.pinnedFeedItems || []).some(
+              (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
+            );
             return (
               <FeedItem
                 key={item.feedItem.id}
                 common={common}
                 isProject={checkIsProject(common)}
                 item={item.feedItem}
+                isPinned={isPinned}
                 governanceCircles={governance.circles}
                 isMobileVersion={isTabletView}
                 userCircleIds={userCircleIds}

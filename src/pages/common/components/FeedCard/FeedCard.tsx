@@ -4,7 +4,7 @@ import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonFeedType } from "@/shared/models";
-import { Loader } from "@/shared/ui-kit";
+import { Loader, TextEditorValue } from "@/shared/ui-kit";
 import { CommonCard } from "../CommonCard";
 import styles from "./FeedCard.module.scss";
 
@@ -19,11 +19,12 @@ interface FeedCardProps {
   isActive?: boolean;
   isExpanded?: boolean;
   canBeExpanded?: boolean;
-  lastMessage?: string;
+  lastMessage?: TextEditorValue;
   isPreviewMode?: boolean;
   image?: string;
   imageAlt?: string;
   isProject?: boolean;
+  isPinned?: boolean;
   isLoading?: boolean;
   type?: CommonFeedType;
   menuItems?: ContextMenuItem[];
@@ -52,6 +53,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     image,
     imageAlt,
     isProject,
+    isPinned,
     isLoading = false,
     type,
     menuItems,
@@ -113,11 +115,12 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           onClick: handleClick,
           onExpand: handleExpand,
           title,
-          lastMessage,
+          lastMessage: !isLoading ? lastMessage : undefined,
           menuItems,
           image,
           imageAlt,
           isProject,
+          isPinned,
           type,
           seenOnce,
           ownerId,

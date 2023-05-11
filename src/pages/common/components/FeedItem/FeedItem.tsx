@@ -16,6 +16,7 @@ interface FeedItemProps {
   common: Common | undefined;
   commonMember?: CommonMember | null;
   isProject?: boolean;
+  isPinned?: boolean;
   item: CommonFeed;
   governanceCircles?: Circles;
   userCircleIds: string[];
@@ -32,6 +33,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     common,
     commonMember,
     isProject = false,
+    isPinned = false,
     item,
     governanceCircles,
     userCircleIds,
@@ -62,10 +64,12 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isActive,
     isExpanded,
     isProject,
+    isPinned,
     governanceCircles,
     isPreviewMode,
     getLastMessage,
     commonMember,
+    // TODO: Add getNonAllowedItems
   };
 
   if (item.data.type === CommonFeedType.Discussion) {

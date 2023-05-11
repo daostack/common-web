@@ -1,4 +1,10 @@
-import React, { MouseEventHandler, useCallback, useState } from "react";
+import React, {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import {
@@ -9,11 +15,17 @@ import {
 } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
-import { DiscussionMessage, User } from "@/shared/models";
+import {
+  CommonMemberWithUserInfo,
+  DiscussionMessage,
+  User,
+} from "@/shared/models";
+import { ChatImageGallery } from "@/shared/ui-kit";
 import { isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
 import { getModerationText } from "@/shared/utils/moderation";
 import { EditMessageInput } from "../EditMessageInput";
+import { getTextFromTextEditorString } from "./util";
 import styles from "./ChatMessage.module.scss";
 
 interface ChatMessageProps {
@@ -25,6 +37,7 @@ interface ChatMessageProps {
   user: User | null;
   scrollToRepliedMessage: (messageId: string) => void;
   hasPermissionToHide: boolean;
+  commonMembers: CommonMemberWithUserInfo[];
 }
 
 const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
@@ -45,7 +58,10 @@ export default function ChatMessage({
   user,
   scrollToRepliedMessage,
   hasPermissionToHide,
+  commonMembers,
 }: ChatMessageProps) {
+  const messageRef = useRef<HTMLDivElement>(null);
+
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isTabletView = useIsTabletView();
@@ -54,8 +70,47 @@ export default function ChatMessage({
     (discussionMessage?.editedAt?.seconds ?? 0) * 1000,
   );
 
-  const isNotCurrentUserMessage = user?.uid !== discussionMessage.ownerId;
+  const userId = user?.uid;
+  const isNotCurrentUserMessage = userId !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
+
+  const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
+  const [replyMessageText, setReplyMessageText] = useState<
+    (string | JSX.Element)[]
+  >([]);
+
+  useEffect(() => {
+    (async () => {
+      const parsedText = await getTextFromTextEditorString({
+        textEditorString: discussionMessage.text,
+        commonMembers,
+        mentionTextClassName: !isNotCurrentUserMessage
+          ? styles.mentionTextCurrentUser
+          : "",
+      });
+
+      setMessageText(parsedText);
+    })();
+  }, [commonMembers, discussionMessage.text, isNotCurrentUserMessage]);
+
+  useEffect(() => {
+    (async () => {
+      if (!discussionMessage?.parentMessage?.text) {
+        return;
+      }
+
+      const parsedText = await getTextFromTextEditorString({
+        textEditorString: discussionMessage?.parentMessage.text,
+        commonMembers,
+      });
+
+      setReplyMessageText(parsedText);
+    })();
+  }, [
+    commonMembers,
+    discussionMessage?.parentMessage?.text,
+    isNotCurrentUserMessage,
+  ]);
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuOpen(isOpen);
@@ -88,6 +143,8 @@ export default function ChatMessage({
       return null;
     }
 
+    const image = discussionMessage.parentMessage?.images?.[0]?.value;
+
     return (
       <div
         onClick={() => {
@@ -97,30 +154,40 @@ export default function ChatMessage({
           [styles.replyMessageContainerCurrentUser]: !isNotCurrentUserMessage,
         })}
       >
-        <div
-          className={classNames(styles.messageName, styles.replyMessageName, {
-            [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
-          })}
-        >
-          {discussionMessage.parentMessage?.ownerName}
-        </div>
-        <div
-          className={classNames(
-            styles.messageContent,
-            styles.replyMessageContent,
-            {
-              [styles.replyMessageContentCurrentUser]: !isNotCurrentUserMessage,
-            },
-          )}
-        >
-          <Linkify>{discussionMessage.parentMessage.text}</Linkify>
+        {image && <img className={styles.replyMessageImage} src={image} />}
+        <div className={styles.replyMessagesWrapper}>
+          <div
+            className={classNames(styles.messageName, styles.replyMessageName, {
+              [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
+              [styles.replyMessageNameWithImage]: image,
+            })}
+          >
+            {userId === discussionMessage.parentMessage.ownerId
+              ? "You"
+              : discussionMessage.parentMessage?.ownerName}
+          </div>
+          <div
+            className={classNames(
+              styles.messageContent,
+              styles.replyMessageContent,
+              {
+                [styles.replyMessageContentCurrentUser]:
+                  !isNotCurrentUserMessage,
+                [styles.replyMessageContentWithImage]: image,
+              },
+            )}
+          >
+            <Linkify>{replyMessageText.map((text) => text)}</Linkify>
+          </div>
         </div>
       </div>
     );
   }, [
     discussionMessage.parentMessage,
+    replyMessageText,
     hasPermissionToHide,
     isNotCurrentUserMessage,
+    userId,
   ]);
 
   return (
@@ -151,9 +218,12 @@ export default function ChatMessage({
           />
         ) : (
           <div
+            ref={messageRef}
             className={classNames(styles.messageText, {
               [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
               [styles.messageTextRtl]: isRTL(discussionMessage.text),
+              [styles.messageTextWithReply]:
+                !!discussionMessage.parentMessage?.id,
             })}
             onClick={handleMessageClick}
           >
@@ -169,7 +239,8 @@ export default function ChatMessage({
                 [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
               })}
             >
-              <Linkify>{discussionMessage.text}</Linkify>
+              <ChatImageGallery gallery={discussionMessage.images ?? []} />
+              <Linkify>{messageText.map((text) => text)}</Linkify>
               <div className={styles.timeWrapperContainer}>
                 {isEdited && (
                   <div
@@ -226,10 +297,14 @@ export default function ChatMessage({
               transparent
               isDiscussionMessage
               ownerId={discussionMessage.owner?.uid}
-              userId={user?.uid}
+              userId={userId}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}
-              {...(isTabletView && { isOpen: isMenuOpen })}
+              isControlledDropdown={false}
+              isOpen={isMenuOpen}
+              styles={{
+                menuButton: styles.menuArrowButton,
+              }}
             />
           </div>
         )}

@@ -19,6 +19,7 @@ import {
   FeedItemContext,
   FeedItemContextValue,
   GetLastMessageOptions,
+  GetNonAllowedItemsOptions,
 } from "@/pages/common";
 import {
   ChatContextValue,
@@ -36,7 +37,7 @@ import {
   CommonMember,
   Governance,
 } from "@/shared/models";
-import { InfiniteScroll } from "@/shared/ui-kit";
+import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import { selectRecentStreamId } from "@/store/states";
 import {
   DesktopChat,
@@ -63,7 +64,6 @@ interface FeedLayoutProps {
   common?: Common;
   governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
-  pinnedFeedItems?: FeedLayoutItem[] | null;
   feedItems: FeedLayoutItem[] | null;
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;
@@ -71,8 +71,10 @@ interface FeedLayoutProps {
   onFetchNext: () => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
-  getLastMessage: (options: GetLastMessageOptions) => string;
+  getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   sharedFeedItemId?: string | null;
+  emptyText?: string;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -87,7 +89,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     common: outerCommon,
     governance: outerGovernance,
     commonMember: outerCommonMember,
-    pinnedFeedItems,
     feedItems,
     topFeedItems = [],
     loading,
@@ -97,6 +98,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onFeedItemUpdate,
     getLastMessage,
     sharedFeedItemId,
+    emptyText,
+    getNonAllowedItems,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -115,20 +118,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const governance = outerGovernance || fetchedGovernance;
   const commonMember = outerCommonMember || fetchedCommonMember;
   const maxChatSize = getSplitViewMaxSize(windowWidth);
-  const defaultChatSize = useMemo(
-    () => getDefaultSize(windowWidth, maxChatSize),
-    [],
+  const [realChatWidth, setRealChatWidth] = useState(() =>
+    getDefaultSize(windowWidth, maxChatSize),
   );
-  const [chatWidth, setChatWidth] = useState(defaultChatSize);
+  const chatWidth = Math.min(realChatWidth, maxChatSize);
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
     null,
   );
   const allFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
-
-    if (pinnedFeedItems) {
-      items.push(...pinnedFeedItems);
-    }
 
     if (topFeedItems) {
       items.push(...topFeedItems);
@@ -138,7 +136,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
 
     return items;
-  }, [topFeedItems, feedItems, pinnedFeedItems]);
+  }, [topFeedItems, feedItems]);
+  const isContentEmpty =
+    !loading && (!allFeedItems || allFeedItems.length === 0) && emptyText;
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (recentStreamId) {
@@ -196,8 +196,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       renderFeedItemBaseContent,
       onFeedItemUpdate,
       getLastMessage,
+      getNonAllowedItems,
     }),
-    [renderFeedItemBaseContent, onFeedItemUpdate, getLastMessage],
+    [
+      renderFeedItemBaseContent,
+      onFeedItemUpdate,
+      getLastMessage,
+      getNonAllowedItems,
+    ],
   );
 
   const chatContextValue = useMemo<ChatContextValue>(
@@ -209,12 +215,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }),
     [setChatItem, feedItemIdForAutoChatOpen],
   );
-
-  useEffect(() => {
-    if (chatWidth > maxChatSize) {
-      setChatWidth(maxChatSize);
-    }
-  }, [maxChatSize]);
 
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
@@ -258,14 +258,25 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       <FeedItemContext.Provider value={feedItemContextValue}>
         <ChatContext.Provider value={chatContextValue}>
           {!shouldHideContent && (
-            <div className={classNames(styles.content, className)}>
+            <div
+              className={classNames(styles.content, className, {
+                [styles.contentCentered]: isContentEmpty,
+              })}
+            >
               {topContent}
+              {isContentEmpty && (
+                <p className={styles.emptyText}>{emptyText}</p>
+              )}
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => {
                   const isActive = item.feedItem.id === activeFeedItemId;
                   const commonData = getItemCommonData(
                     item.feedItemFollowWithMetadata,
                     outerCommon,
+                  );
+                  const isPinned = (outerCommon?.pinnedFeedItems || []).some(
+                    (pinnedItem) =>
+                      pinnedItem.feedObjectId === item.feedItem.id,
                   );
 
                   return (
@@ -274,6 +285,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       common={outerCommon}
                       commonMember={commonMember}
                       isProject={commonData?.isProject}
+                      isPinned={isPinned}
                       item={item.feedItem}
                       governanceCircles={governance?.circles}
                       isMobileVersion={isTabletView}
@@ -335,10 +347,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     contentEl
   ) : (
     <SplitView
+      size={chatWidth}
       minSize={MIN_CHAT_WIDTH}
       maxSize={maxChatSize}
-      defaultSize={defaultChatSize}
-      onChange={setChatWidth}
+      onChange={setRealChatWidth}
     >
       {contentEl}
     </SplitView>

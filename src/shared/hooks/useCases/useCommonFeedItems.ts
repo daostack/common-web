@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CommonFeedService } from "@/services";
 import { commonActions, FeedItems, selectFeedItems } from "@/store/states";
@@ -13,6 +13,7 @@ export const useCommonFeedItems = (
 ): Return => {
   const dispatch = useDispatch();
   const feedItems = useSelector(selectFeedItems);
+  const idsForNotListeningRef = useRef<string[]>(idsForNotListening || []);
 
   const fetch = () => {
     dispatch(
@@ -24,22 +25,31 @@ export const useCommonFeedItems = (
   };
 
   useEffect(() => {
+    idsForNotListeningRef.current = idsForNotListening || [];
+  }, [idsForNotListening]);
+
+  useEffect(() => {
     if (!feedItems.firstDocTimestamp) {
       return;
     }
 
     const unsubscribe = CommonFeedService.subscribeToNewUpdatedCommonFeedItems(
-      commonId,
-      feedItems.firstDocTimestamp,
+      {
+        commonId,
+        endBefore: feedItems.firstDocTimestamp,
+      },
       (data) => {
         if (data.length === 0) {
           return;
         }
 
         const finalData =
-          idsForNotListening && idsForNotListening.length > 0
+          idsForNotListeningRef.current.length > 0
             ? data.filter(
-                (item) => !idsForNotListening.includes(item.commonFeedItem.id),
+                (item) =>
+                  !idsForNotListeningRef.current.includes(
+                    item.commonFeedItem.id,
+                  ),
               )
             : data;
 
@@ -48,7 +58,7 @@ export const useCommonFeedItems = (
     );
 
     return unsubscribe;
-  }, [feedItems.firstDocTimestamp, commonId, idsForNotListening]);
+  }, [feedItems.firstDocTimestamp, commonId]);
 
   return {
     ...feedItems,

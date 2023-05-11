@@ -14,6 +14,7 @@ import {
   Governance,
   PredefinedTypes,
 } from "@/shared/models";
+import { TextEditorValue } from "@/shared/ui-kit";
 import { checkIsCountdownState, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
@@ -24,7 +25,7 @@ import {
   getVisibilityString,
   FeedCountdown,
 } from "../FeedCard";
-import { GetLastMessageOptions } from "../FeedItem";
+import { GetLastMessageOptions, GetNonAllowedItemsOptions } from "../FeedItem";
 import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
@@ -42,25 +43,29 @@ import {
 interface ProposalFeedCardProps {
   common: Common | undefined;
   isProject: boolean;
+  isPinned: boolean;
   item: CommonFeed;
   governanceCircles?: Governance["circles"];
   isPreviewMode?: boolean;
   sizeKey?: string;
   isActive: boolean;
   isExpanded: boolean;
-  getLastMessage: (options: GetLastMessageOptions) => string;
+  getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const {
     common,
     isProject,
+    isPinned,
     item,
     governanceCircles,
     isPreviewMode,
     isActive,
     isExpanded,
     getLastMessage,
+    getNonAllowedItems,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -126,6 +131,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       discussion,
       governanceCircles,
       commonMember,
+      getNonAllowedItems,
     },
     {
       report: () => {},
@@ -181,6 +187,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         proposal,
         circleVisibility: item.circleVisibility,
         lastSeenItem: feedItemUserMetadata?.lastSeen,
+        seenOnce: feedItemUserMetadata?.seenOnce,
       });
     }
   }, [
@@ -190,6 +197,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setChatItem,
     item.circleVisibility,
     feedItemUserMetadata?.lastSeen,
+    feedItemUserMetadata?.seenOnce,
   ]);
 
   useEffect(() => {
