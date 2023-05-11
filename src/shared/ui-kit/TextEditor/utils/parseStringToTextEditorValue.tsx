@@ -1,6 +1,6 @@
 import { flattenDeep } from "lodash";
 import { ElementType } from "../constants";
-import { CustomElement, MentionElement, TextEditorValue } from "../types";
+import { CustomElement, TextEditorValue } from "../types";
 
 const serializeTextEditorValue = (value = ""): TextEditorValue => {
   return value.split("\n").map((valuePart) => ({
@@ -66,17 +66,4 @@ export const parseTextEditorValueToString = (
       },
     ];
   }
-};
-
-export const getMentionTags = (editorValue: TextEditorValue) => {
-  const mentionTags: MentionElement[] = [];
-  (editorValue as { children: CustomElement[] }[]).forEach((item) => {
-    (item.children ?? []).forEach((tag) => {
-      if (tag.type === ElementType.Mention) {
-        mentionTags.push(tag);
-      }
-    });
-  });
-
-  return mentionTags;
 };

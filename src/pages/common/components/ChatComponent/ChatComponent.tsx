@@ -40,10 +40,10 @@ import {
 import {
   BaseTextEditor,
   TextEditorValue,
+  getMentionTags,
   parseStringToTextEditorValue,
   ButtonIcon,
 } from "@/shared/ui-kit";
-import { getMentionTags } from "@/shared/ui-kit/TextEditor/utils";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
   cacheActions,
