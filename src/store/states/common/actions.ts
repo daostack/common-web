@@ -8,6 +8,7 @@ import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
   PayloadWithOptionalCallback,
+  RecentAssignedCircle,
   UploadFile,
 } from "@/shared/interfaces";
 import {
@@ -168,3 +169,7 @@ export const setSharedFeedItem = createStandardAction(
 export const setRecentStreamId = createStandardAction(
   CommonActionType.SET_RECENT_STREAM_ID,
 )<string>();
+
+export const setRecentAssignedCircle = createStandardAction(
+  CommonActionType.SET_RECENT_ASSIGNED_CIRCLE,
+)<RecentAssignedCircle | null>();
