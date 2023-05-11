@@ -16,3 +16,4 @@ export * from "./SynchronizedDate";
 export * from "./UnsubscribeFunction";
 export * from "./UploadFile";
 export * from "./ViewportStates";
+export * from "./RecentAssignedCircle";

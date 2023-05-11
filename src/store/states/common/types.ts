@@ -3,6 +3,7 @@ import { CommonAction } from "@/shared/constants";
 import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
+  RecentAssignedCircle,
 } from "@/shared/interfaces";
 import { CommonMember, Governance, Timestamp } from "@/shared/models";
 
@@ -36,4 +37,5 @@ export interface CommonState {
   commonMember: CommonMember | null;
   governance: Governance | null;
   recentStreamId: string;
+  recentAssignedCircle: RecentAssignedCircle | null;
 }
