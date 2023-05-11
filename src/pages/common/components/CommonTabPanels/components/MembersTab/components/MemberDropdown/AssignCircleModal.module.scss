@@ -1,0 +1,26 @@
+@import "../../../../../../../../constants.scss";
+
+.modal {
+  max-width: 25rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.text {
+  color: $gray-2;
+}
+
+.buttonsContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  margin-top: 2.8125rem;
+}
+
+.error {
+  font-size: $xsmall;
+}
