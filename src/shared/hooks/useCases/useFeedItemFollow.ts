@@ -2,8 +2,13 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { FollowFeedItemAction } from "@/shared/constants";
-import { selectInboxFollows, inboxActions } from "@/store/states";
-import { useFollowFeedItem } from "./useFollowFeedItem";
+import {
+  selectCommonFeedFollows,
+  selectFollowFeedItemMutationState,
+  FollowFeedItemMutationState,
+  commonFeedFollowsActions,
+} from "@/store/states";
+import { getFollowFeedItemMutationId } from "@/store/states/commonFeedFollows/utils";
 import { useUserFeedItemFollowData } from "./useUserFeedItemFollowData";
 
 export interface FeedItemFollowState {
@@ -17,7 +22,7 @@ export function useFeedItemFollow(
   commonId?: string,
 ): FeedItemFollowState {
   const dispatch = useDispatch();
-  const follows = useSelector(selectInboxFollows);
+  const follows = useSelector(selectCommonFeedFollows);
   const isFollowing =
     feedItemId && commonId ? !!follows[commonId]?.[feedItemId] : false;
   const {
@@ -26,32 +31,36 @@ export function useFeedItemFollow(
     fetchUserFeedItemFollowData,
     setUserFeedItemFollowData,
   } = useUserFeedItemFollowData();
-  const {
-    isFollowingInProgress,
-    isFollowingFinishedWithError,
-    followFeedItem,
-    cancelFeedItemFollowing,
-  } = useFollowFeedItem();
+  const followFeedItemMutationState = useSelector(
+    selectFollowFeedItemMutationState,
+  );
+  const mutationId =
+    commonId && feedItemId
+      ? getFollowFeedItemMutationId(commonId, feedItemId)
+      : undefined;
+  const { isFollowingInProgress }: FollowFeedItemMutationState =
+    mutationId && followFeedItemMutationState[mutationId]
+      ? followFeedItemMutationState[mutationId]
+      : {
+          isFollowingInProgress: false,
+          isFollowingFinished: false,
+        };
+
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const isDisabled = !isUserFeedItemFollowDataFetched || isFollowingInProgress;
 
   const onFollowToggle = (action?: FollowFeedItemAction) => {
     if (feedItemId && commonId) {
-      followFeedItem({
-        feedItemId,
-        commonId,
-        action:
-          action ||
-          (isFollowing
-            ? FollowFeedItemAction.Unfollow
-            : FollowFeedItemAction.Follow),
-      });
       dispatch(
-        inboxActions.setFeedItemFollow({
-          itemId: feedItemId,
-          commonId: commonId,
-          isFollowing: !isFollowing,
+        commonFeedFollowsActions.followFeedItem.request({
+          feedItemId,
+          commonId,
+          action:
+            action ||
+            (isFollowing
+              ? FollowFeedItemAction.Unfollow
+              : FollowFeedItemAction.Follow),
         }),
       );
     }
@@ -59,30 +68,18 @@ export function useFeedItemFollow(
 
   useEffect(() => {
     if (feedItemId && commonId) {
-      dispatch(
-        inboxActions.setFeedItemFollow({
-          itemId: feedItemId,
-          commonId: commonId,
-          isFollowing: false,
-        }),
-      );
-
       if (userId) {
         fetchUserFeedItemFollowData(userId, feedItemId);
       } else {
         setUserFeedItemFollowData(null);
       }
     }
-
-    return () => {
-      cancelFeedItemFollowing();
-    };
   }, [userId, feedItemId, commonId]);
 
   useEffect(() => {
     if (isUserFeedItemFollowDataFetched && feedItemId && commonId) {
       dispatch(
-        inboxActions.setFeedItemFollow({
+        commonFeedFollowsActions.setFeedItemFollow({
           itemId: feedItemId,
           commonId: commonId,
           isFollowing: Boolean(userFeedItemFollowData),
@@ -90,18 +87,6 @@ export function useFeedItemFollow(
       );
     }
   }, [isUserFeedItemFollowDataFetched]);
-
-  useEffect(() => {
-    if (isFollowingFinishedWithError && feedItemId && commonId) {
-      dispatch(
-        inboxActions.setFeedItemFollow({
-          itemId: feedItemId,
-          commonId: commonId,
-          isFollowing: false,
-        }),
-      );
-    }
-  }, [isFollowingFinishedWithError]);
 
   return {
     isFollowing,

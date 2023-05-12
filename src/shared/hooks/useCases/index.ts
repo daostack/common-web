@@ -4,7 +4,6 @@ export { useCommonMembersWithCircleIdsAmount } from "./useCommonMembersWithCircl
 export { useCommonRulesAcceptance } from "./useCommonRulesAcceptance";
 export { useDiscussionById } from "./useDiscussionById";
 export { useFeedItemUserMetadata } from "./useFeedItemUserMetadata";
-export { useFollowFeedItem } from "./useFollowFeedItem";
 export { useFullCommonData } from "./useFullCommonData";
 export { useGlobalCommonData } from "./useGlobalCommonData";
 export { useImmediateContribution } from "./useImmediateContribution";

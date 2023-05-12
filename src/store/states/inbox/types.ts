@@ -13,5 +13,4 @@ export interface InboxState {
   items: InboxItems;
   sharedFeedItemId: string | null;
   sharedItem: FeedLayoutItemWithFollowData | null;
-  follows: Record<string, Record<string, boolean>>;
 }

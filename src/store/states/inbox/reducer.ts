@@ -20,7 +20,6 @@ const initialState: InboxState = {
   items: { ...initialInboxItems },
   sharedFeedItemId: null,
   sharedItem: null,
-  follows: {},
 };
 
 const updateInboxItemInList = (
@@ -280,12 +279,5 @@ export const reducer = createReducer<InboxState, Action>(initialState)
             feedItemFollowWithMetadata: payload,
           }
         : null;
-    }),
-  )
-  .handleAction(actions.setFeedItemFollow, (state, { payload }) =>
-    produce(state, (nextState) => {
-      nextState.follows[payload.commonId] =
-        nextState.follows[payload.commonId] || {};
-      nextState.follows[payload.commonId][payload.itemId] = payload.isFollowing;
     }),
   );

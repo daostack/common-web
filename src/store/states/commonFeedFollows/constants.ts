@@ -1,0 +1,7 @@
+export enum CommonFeedFollowsActionType {
+  FOLLOW_FEED_ITEM = "@CommonFeedFollows/FOLLOW_FEED_ITEM",
+  FOLLOW_FEED_ITEM_SUCCESS = "@CommonFeedFollows/FOLLOW_FEED_ITEM_SUCCESS",
+  FOLLOW_FEED_ITEM_FAILURE = "@CommonFeedFollows/FOLLOW_FEED_ITEM_FAILURE",
+  FOLLOW_FEED_ITEM_CANCEL = "@CommonFeedFollows/FOLLOW_FEED_ITEM_CANCEL",
+  SET_FEED_ITEM_FOLLOW = "@CommonFeedFollows/SET_FEED_ITEM_FOLLOW",
+}
