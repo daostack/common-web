@@ -30,6 +30,7 @@ export { default as PeopleGroupIcon } from "./people-group.icon";
 export { default as PlusIcon } from "./plus.icon";
 export { default as RightArrowThinIcon } from "./rightArrowThin.icon";
 export { default as RTLDirectionMarkIcon } from "./rtlDirection.icon";
+export { default as SearchIcon } from "./search.icon";
 export { default as SmallArrowIcon } from "./smallArrow.icon";
 export { default as StarIcon } from "./star.icon";
 export { default as UploadIcon } from "./upload.icon";

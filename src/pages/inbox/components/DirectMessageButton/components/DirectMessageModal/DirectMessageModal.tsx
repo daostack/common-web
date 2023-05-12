@@ -1,5 +1,6 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Modal } from "@/shared/components";
+import { SearchInput } from "./components";
 import styles from "./DirectMessageModal.module.scss";
 
 interface DirectMessageModalProps {
@@ -10,6 +11,7 @@ interface DirectMessageModalProps {
 
 const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   const { isOpen, onClose, isMobileVersion = false } = props;
+  const [searchText, setSearchText] = useState("");
 
   return (
     <Modal
@@ -30,7 +32,13 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
         content: styles.modalContent,
       }}
     >
-      <div className={styles.content}>Content</div>
+      <div className={styles.content}>
+        <SearchInput
+          className={styles.searchInput}
+          value={searchText}
+          onChange={setSearchText}
+        />
+      </div>
     </Modal>
   );
 };
