@@ -1,6 +1,11 @@
 import React, { MouseEventHandler, ReactNode, useContext } from "react";
 import { ContextMenuItem } from "@/shared/interfaces";
-import { CommonFeed, CommonFeedType, Discussion } from "@/shared/models";
+import {
+  CommonFeed,
+  CommonFeedType,
+  Discussion,
+  PredefinedTypes,
+} from "@/shared/models";
 import { parseStringToTextEditorValue, TextEditorValue } from "@/shared/ui-kit";
 import { FeedCardSettings } from "../FeedCard";
 import { GetNonAllowedItemsOptions } from "./types";
@@ -21,10 +26,12 @@ export interface FeedItemBaseContentProps {
   type?: CommonFeedType;
   seenOnce?: boolean;
   ownerId?: string;
+  commonName?: string;
   image?: string;
   imageAlt?: string;
   isProject?: boolean;
   isPinned?: boolean;
+  discussionPredefinedType?: PredefinedTypes;
 }
 
 export interface GetLastMessageOptions {
