@@ -200,7 +200,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     return items;
   }, [
-    //linkURL,
     isDiscussionMessage,
     elem,
     user,
