@@ -5,7 +5,6 @@ import copyToClipboard from "copy-to-clipboard";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { MenuButton, ShareModal } from "@/shared/components";
 import {
-  DynamicLinkType,
   Orientation,
   ShareViewType,
   ScreenSize,
@@ -31,7 +30,11 @@ import {
   parseStringToTextEditorValue,
   serializeTextEditorValue,
 } from "@/shared/ui-kit";
-import { generateStaticShareLink, hasPermission } from "@/shared/utils";
+import {
+  StaticLinkType,
+  generateStaticShareLink,
+  hasPermission,
+} from "@/shared/utils";
 import { chatActions } from "@/store/states";
 import { selectCommonMember, selectGovernance } from "@/store/states";
 import { DeleteModal } from "../DeleteModal";
@@ -47,7 +50,7 @@ import elementDropdownStyles from "./ElementDropdown.module.scss";
 import "./index.scss";
 
 interface ElementDropdownProps {
-  linkType: DynamicLinkType;
+  linkType: StaticLinkType;
   elem: Common | Proposal | Discussion | DiscussionMessage;
   variant?: Orientation;
   transparent?: boolean;

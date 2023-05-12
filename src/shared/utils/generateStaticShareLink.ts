@@ -1,15 +1,41 @@
-import { DYNAMIC_LINK_URI_PREFIX, DynamicLinkType } from "../constants";
+import { Environment, REACT_APP_ENV } from "../constants";
 import { Common, Discussion, DiscussionMessage, Proposal } from "../models";
 
+const staticLinkPrefix = () => {
+  if (location.hostname === "localhost") {
+    return "http://localhost:3000";
+  }
+  switch (REACT_APP_ENV) {
+    case Environment.Dev:
+      return "https://web-dev.common.io";
+    case Environment.Stage:
+      return "https://web-staging.common.io";
+    case Environment.Production:
+      return "https://app.common.io";
+  }
+};
+
+export const enum StaticLinkType {
+  DiscussionMessage,
+  ProposalComment,
+  Proposal,
+  Discussion,
+}
+
+/**
+ * TODO: handle the rest of the link types.
+ */
 export const generateStaticShareLink = (
-  linkType: DynamicLinkType,
+  linkType: StaticLinkType,
   elem: Common | Proposal | Discussion | DiscussionMessage,
   feedItemId?: string,
 ) => {
   switch (linkType) {
-    case DynamicLinkType.DiscussionMessage:
-    case DynamicLinkType.ProposalComment:
+    case StaticLinkType.DiscussionMessage:
+    case StaticLinkType.ProposalComment:
       elem = elem as DiscussionMessage;
-      return `${DYNAMIC_LINK_URI_PREFIX}/commons/${elem.commonId}?item=${feedItemId}&message=${elem.id}`;
+      return `${staticLinkPrefix()}/commons/${
+        elem.commonId
+      }?item=${feedItemId}&message=${elem.id}`;
   }
 };

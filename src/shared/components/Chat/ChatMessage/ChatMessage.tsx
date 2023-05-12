@@ -7,12 +7,7 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
-import {
-  DynamicLinkType,
-  Orientation,
-  ChatType,
-  EntityTypes,
-} from "@/shared/constants";
+import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -21,7 +16,7 @@ import {
   User,
 } from "@/shared/models";
 import { ChatImageGallery } from "@/shared/ui-kit";
-import { isRTL } from "@/shared/utils";
+import { StaticLinkType, isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
 import { getModerationText } from "@/shared/utils/moderation";
 import { EditMessageInput } from "../EditMessageInput";
@@ -41,12 +36,12 @@ interface ChatMessageProps {
   feedItemId: string;
 }
 
-const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
+const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
   switch (chatType) {
     case ChatType.DiscussionMessages:
-      return DynamicLinkType.DiscussionMessage;
+      return StaticLinkType.DiscussionMessage;
     case ChatType.ProposalComments:
-      return DynamicLinkType.ProposalComment;
+      return StaticLinkType.ProposalComment;
   }
 };
 
@@ -286,7 +281,7 @@ export default function ChatMessage({
               </div>
             </div>
             <ElementDropdown
-              linkType={getDynamicLinkByChatType(chatType)}
+              linkType={getStaticLinkByChatType(chatType)}
               entityType={
                 chatType === ChatType.DiscussionMessages
                   ? EntityTypes.DiscussionMessage
