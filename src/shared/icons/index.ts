@@ -35,10 +35,11 @@ export { default as StarIcon } from "./star.icon";
 export { default as UploadIcon } from "./upload.icon";
 export { default as WalletIcon } from "./wallet.icon";
 export { default as MessageIcon } from "./message.icon";
+export { default as Message2Icon } from "./message2.icon";
 export { default as VoteAgainst } from "./voteAgainst.icon";
 export { default as VoteFor } from "./voteFor.icon";
 export { default as VoteAbstain } from "./voteAbstain.icon";
 export { default as InviteFriendsIcon } from "./inviteFriends.icon";
 export { default as ShareIcon } from "./share.icon";
 export { default as SendIcon } from "./send.icon";
-export { default as MinusIcon } from "./minus.icon"
+export { default as MinusIcon } from "./minus.icon";
