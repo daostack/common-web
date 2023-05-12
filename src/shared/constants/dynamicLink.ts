@@ -4,7 +4,7 @@ import { REACT_APP_ENV } from "./shared";
 export const DYNAMIC_LINK_URI_PREFIX =
   REACT_APP_ENV === Environment.Production
     ? "https://app.common.io"
-    : "https://web-staging.common.io";
+    : "https://staging.common.io";
 
 export enum DynamicLinkType {
   Common = "common",

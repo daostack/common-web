@@ -29,7 +29,7 @@ export const generateStaticShareLink = (
   linkType: StaticLinkType,
   elem: Common | Proposal | Discussion | DiscussionMessage,
   feedItemId?: string,
-) => {
+): string => {
   switch (linkType) {
     case StaticLinkType.DiscussionMessage:
     case StaticLinkType.ProposalComment:
@@ -37,5 +37,7 @@ export const generateStaticShareLink = (
       return `${staticLinkPrefix()}/commons/${
         elem.commonId
       }?item=${feedItemId}&message=${elem.id}`;
+    default:
+      return "";
   }
 };

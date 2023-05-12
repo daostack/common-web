@@ -95,8 +95,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   const [selectedItem, setSelectedItem] = useState<
     ElementDropdownMenuItems | unknown
   >(null);
-  const [isShareLinkGenerating, setIsShareLinkGenerating] =
-    useState<boolean>(false);
+
   const staticShareLink = generateStaticShareLink(linkType, elem, feedItemId);
 
   const { isShowing, onOpen, onClose } = useModal(false);
@@ -213,7 +212,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     (isOpen: boolean) => {
       if (onMenuToggle) onMenuToggle(isOpen);
     },
-    [onMenuToggle, setIsShareLinkGenerating],
+    [onMenuToggle],
   );
 
   const handleMenuItemSelect = useCallback(
@@ -262,7 +261,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     }
 
     setSelectedItem(null);
-  }, [selectedItem, notify, isShareLinkGenerating, onOpen, setSelectedItem]);
+  }, [selectedItem, notify, onOpen, setSelectedItem]);
 
   const desktopStyleMenuItems = useMemo<DesktopStyleMenuItem[]>(
     () =>
@@ -303,7 +302,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
           className={classNames("element-dropdown__menu-wrapper", className)}
           shouldBeFixed={false}
           onSelect={handleMenuItemSelect}
-          isLoading={isShareLinkGenerating}
           menuInlineStyle={menuInlineStyle}
           styles={{
             ...styles,
@@ -326,7 +324,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       )}
       <ShareModal
         isShowing={isShowing}
-        isLoading={isShareLinkGenerating}
         sourceUrl={staticShareLink || ""}
         onClose={onClose}
         type={
