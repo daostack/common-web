@@ -31,6 +31,7 @@ interface ChatContentInterface {
   hasPermissionToHide: boolean;
   commonMembers: CommonMemberWithUserInfo[];
   discussionId: string;
+  feedItemId: string;
 }
 
 const isToday = (someDate: Date) => {
@@ -57,6 +58,7 @@ export default function ChatContent({
   hasPermissionToHide,
   commonMembers,
   discussionId,
+  feedItemId,
 }: ChatContentInterface) {
   const user = useSelector(selectUser());
 
@@ -161,6 +163,7 @@ export default function ChatContent({
                         : undefined
                     }
                     commonMembers={commonMembers}
+                    feedItemId={feedItemId}
                   />
                 );
 

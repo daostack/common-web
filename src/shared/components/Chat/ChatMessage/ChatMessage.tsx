@@ -38,6 +38,7 @@ interface ChatMessageProps {
   scrollToRepliedMessage: (messageId: string) => void;
   hasPermissionToHide: boolean;
   commonMembers: CommonMemberWithUserInfo[];
+  feedItemId: string;
 }
 
 const getDynamicLinkByChatType = (chatType: ChatType): DynamicLinkType => {
@@ -59,6 +60,7 @@ export default function ChatMessage({
   scrollToRepliedMessage,
   hasPermissionToHide,
   commonMembers,
+  feedItemId,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
 
@@ -305,6 +307,7 @@ export default function ChatMessage({
               styles={{
                 menuButton: styles.menuArrowButton,
               }}
+              feedItemId={feedItemId}
             />
           </div>
         )}
