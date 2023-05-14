@@ -1,6 +1,8 @@
 import { FC } from "react";
 import React from "react";
+import classNames from "classnames";
 import { formatVideoSource, isYouTubeUrl } from "../ImageGallery/utils";
+import styles from "./VideoEmbed.module.scss";
 
 /**
  * TODO: add more props to control the component
@@ -20,7 +22,7 @@ const VideoEmbed: FC<VideoEmbedProps> = (props) => {
         <iframe
           allowFullScreen
           src={formatVideoSource(videoSrc)}
-          className={className}
+          className={classNames(styles.iframe, className)}
           style={style}
         ></iframe>
       ) : (
