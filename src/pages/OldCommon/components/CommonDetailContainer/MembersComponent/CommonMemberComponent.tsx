@@ -15,6 +15,7 @@ import { ContextMenuRef } from "@/shared/ui-kit";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
+  getHighestCircle,
   getUserName,
   removeProjectCircles,
 } from "@/shared/utils";
@@ -78,6 +79,26 @@ const CommonMember: FC<CommonMemberProps> = ({
     memberCircles.push(recentAssignedCircle.circle);
   }
 
+  const highestMemberCircle = getHighestCircle(memberCircles);
+
+  const finalNotMemberCircles = notMemberCircles.filter((circle) => {
+    if (
+      recentAssignedCircle &&
+      member.userId === recentAssignedCircle.memberId
+    ) {
+      if (recentAssignedCircle.circle.id === circle.id) {
+        return;
+      }
+    }
+    if (!highestMemberCircle.hierarchy) {
+      return circle;
+    }
+    if (!circle.hierarchy) {
+      return highestMemberCircle;
+    }
+    return circle.hierarchy.tier > highestMemberCircle.hierarchy.tier;
+  });
+
   const circlesString = getCirclesWithHighestTier(memberCircles)
     .map((circle) => circle.name)
     .join(", ");
@@ -111,7 +132,7 @@ const CommonMember: FC<CommonMemberProps> = ({
             .toLocaleDateString("en-US", { month: "short", day: "numeric" })}
         </div>
         <MemberDropdown
-          notMemberCircles={notMemberCircles}
+          notMemberCircles={finalNotMemberCircles}
           memberName={memberName}
           commonId={commonId}
           isProject={isProject}
