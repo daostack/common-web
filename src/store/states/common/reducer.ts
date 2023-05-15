@@ -39,6 +39,7 @@ const initialState: CommonState = {
   commonMember: null,
   governance: null,
   recentStreamId: "",
+  recentAssignedCircle: null,
 };
 
 const updateFeedItemInList = (
@@ -438,6 +439,11 @@ export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.setSharedFeedItemId, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.sharedFeedItemId = payload;
+    }),
+  )
+  .handleAction(actions.setRecentAssignedCircle, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.recentAssignedCircle = payload;
     }),
   )
   .handleAction(actions.setSharedFeedItem, (state, { payload }) =>

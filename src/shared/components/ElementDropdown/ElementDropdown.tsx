@@ -27,7 +27,11 @@ import {
   Governance,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { DesktopStyleMenu } from "@/shared/ui-kit";
+import {
+  DesktopStyleMenu,
+  parseStringToTextEditorValue,
+  serializeTextEditorValue,
+} from "@/shared/ui-kit";
 import { hasPermission } from "@/shared/utils";
 import { chatActions } from "@/store/states";
 import { selectCommonMember, selectGovernance } from "@/store/states";
@@ -237,7 +241,11 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         onOpen();
         break;
       case ElementDropdownMenuItems.Copy:
-        copyToClipboard((elem as DiscussionMessage).text);
+        copyToClipboard(
+          serializeTextEditorValue(
+            parseStringToTextEditorValue((elem as DiscussionMessage).text),
+          ),
+        );
         notify("The message has copied!");
         break;
       case ElementDropdownMenuItems.CopyLink:
