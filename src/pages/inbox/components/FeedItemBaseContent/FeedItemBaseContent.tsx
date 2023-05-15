@@ -4,6 +4,7 @@ import { useLongPress } from "use-long-press";
 import { FeedItemBaseContentProps } from "@/pages/common";
 import { ButtonIcon, Image } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
+import { PredefinedTypes } from "@/shared/models";
 import {
   ContextMenu,
   ContextMenuRef,
@@ -26,14 +27,20 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     onClick,
     onExpand,
     menuItems,
+    commonName,
     image,
     imageAlt,
     isProject,
+    discussionPredefinedType,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isLongPressed, setIsLongPressed] = useState(false);
   const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
+  const finalTitle =
+    discussionPredefinedType === PredefinedTypes.General && commonName
+      ? `${title} (${commonName})`
+      : title;
 
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
@@ -117,7 +124,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               [styles.titleActive]: isActive,
             })}
           >
-            {title || "Loading..."}
+            {finalTitle || "Loading..."}
           </p>
           <p
             className={classNames(styles.text, styles.lastActivity, {

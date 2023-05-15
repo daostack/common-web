@@ -262,6 +262,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
         isPreviewMode={isPreviewMode}
         isPinned={isPinned}
+        commonName={commonName}
         image={commonImage}
         imageAlt={`${commonName}'s image`}
         isProject={isProject}
@@ -269,6 +270,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         menuItems={menuItems}
         seenOnce={feedItemUserMetadata?.seenOnce}
         ownerId={item.userId}
+        discussionPredefinedType={discussion?.predefinedType}
       >
         {renderContent()}
       </FeedCard>
