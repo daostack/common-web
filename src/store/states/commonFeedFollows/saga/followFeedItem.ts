@@ -13,7 +13,6 @@ export function* followFeedItem(
   const { payload } = action;
   const cancelToken = getCancelTokenSource();
   try {
-    yield delay(2000);
     yield call(FeedItemFollowsService.followFeedItem, payload, {
       cancelToken: cancelToken.token,
     });
