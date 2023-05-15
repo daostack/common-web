@@ -2,6 +2,8 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
+import { DynamicLinkType } from "@/shared/constants";
+import { useModal } from "@/shared/hooks";
 import {
   useDiscussionById,
   useFeedItemUserMetadata,
@@ -24,6 +26,7 @@ import {
   FeedCardContent,
   getVisibilityString,
   FeedCountdown,
+  FeedCardShare,
 } from "../FeedCard";
 import { GetLastMessageOptions, GetNonAllowedItemsOptions } from "../FeedItem";
 import {
@@ -128,6 +131,11 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setHovering(isMouseEnter);
   };
   const proposalId = item.data.id;
+  const {
+    isShowing: isShareModalOpen,
+    onOpen: onShareModalOpen,
+    onClose: onShareModalClose,
+  } = useModal(false);
   const menuItems = useMenuItems(
     {
       commonId,
@@ -140,7 +148,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     },
     {
       report: () => {},
-      share: () => {},
+      share: () => onShareModalOpen(),
     },
   );
 
@@ -328,6 +336,14 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       >
         {renderContent()}
       </FeedCard>
+      {proposal?.discussion && (
+        <FeedCardShare
+          isOpen={isShareModalOpen}
+          onClose={onShareModalClose}
+          linkType={DynamicLinkType.Proposal}
+          element={proposal?.discussion}
+        />
+      )}
     </>
   );
 };

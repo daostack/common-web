@@ -8,7 +8,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   FeedItemMenuItem,
   (options: GetAllowedItemsOptions) => boolean
 > = {
-  [FeedItemMenuItem.Share]: () => false,
+  [FeedItemMenuItem.Share]: () => true,
   [FeedItemMenuItem.Report]: () => false,
   [FeedItemMenuItem.Edit]: () => false,
   [FeedItemMenuItem.Remove]: checkIsRemoveDiscussionAllowed,

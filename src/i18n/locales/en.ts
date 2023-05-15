@@ -8,7 +8,7 @@ export default {
       },
     },
     share: {
-      title: "Share with",
+      title: "Share with friends",
     },
     login: {
       description: "Connect your account to continue",

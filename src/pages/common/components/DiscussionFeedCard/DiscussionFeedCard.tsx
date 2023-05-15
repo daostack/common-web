@@ -113,7 +113,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     },
     {
       report: onReportModalOpen,
-      share: onShareModalOpen,
+      share: () => onShareModalOpen(),
       // remove: onDeleteModalOpen,
     },
   );
