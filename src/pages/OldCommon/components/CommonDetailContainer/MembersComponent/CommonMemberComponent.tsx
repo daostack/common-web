@@ -69,35 +69,29 @@ const CommonMember: FC<CommonMemberProps> = ({
     member.circleIds,
   );
 
-  const notMemberCircles = removeProjectCircles(
-    governanceCircles.filter(
-      ({ id }) => !memberCircles.map((circle) => circle.id).includes(id),
-    ),
-  );
-
   if (recentAssignedCircle && member.userId === recentAssignedCircle.memberId) {
     memberCircles.push(recentAssignedCircle.circle);
   }
 
   const highestMemberCircle = getHighestCircle(memberCircles);
 
-  const finalNotMemberCircles = notMemberCircles.filter((circle) => {
-    if (
-      recentAssignedCircle &&
-      member.userId === recentAssignedCircle.memberId
-    ) {
-      if (recentAssignedCircle.circle.id === circle.id) {
-        return;
-      }
-    }
+  governanceCircles.map((circle) => {
     if (!highestMemberCircle.hierarchy) {
-      return circle;
+      return;
     }
     if (!circle.hierarchy) {
-      return highestMemberCircle;
+      return;
     }
-    return circle.hierarchy.tier > highestMemberCircle.hierarchy.tier;
+    if (circle.hierarchy.tier < highestMemberCircle.hierarchy.tier) {
+      memberCircles.push(circle);
+    }
   });
+
+  const notMemberCircles = removeProjectCircles(
+    governanceCircles.filter(
+      ({ id }) => !memberCircles.map((circle) => circle.id).includes(id),
+    ),
+  );
 
   const circlesString = getCirclesWithHighestTier(memberCircles)
     .map((circle) => circle.name)
@@ -132,7 +126,7 @@ const CommonMember: FC<CommonMemberProps> = ({
             .toLocaleDateString("en-US", { month: "short", day: "numeric" })}
         </div>
         <MemberDropdown
-          notMemberCircles={finalNotMemberCircles}
+          notMemberCircles={notMemberCircles}
           memberName={memberName}
           commonId={commonId}
           isProject={isProject}
