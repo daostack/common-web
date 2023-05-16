@@ -15,7 +15,6 @@ import { ContextMenuRef } from "@/shared/ui-kit";
 import {
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
-  getHighestCircle,
   getUserName,
   removeProjectCircles,
 } from "@/shared/utils";
@@ -73,9 +72,11 @@ const CommonMember: FC<CommonMemberProps> = ({
     memberCircles.push(recentAssignedCircle.circle);
   }
 
-  const highestMemberCircle = getHighestCircle(memberCircles);
+  const circlesWithHighestTier = getCirclesWithHighestTier(memberCircles);
+  const highestMemberCircle =
+    circlesWithHighestTier[circlesWithHighestTier.length - 1];
 
-  governanceCircles.map((circle) => {
+  governanceCircles.forEach((circle) => {
     if (!highestMemberCircle.hierarchy) {
       return;
     }

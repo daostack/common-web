@@ -211,17 +211,6 @@ export const addCirclesWithHigherTier = <
   });
 };
 
-export const getHighestCircle = (circles: Circle[]) =>
-  circles.reduce((circleA, circleB) => {
-    if (!circleA.hierarchy) {
-      return circleB;
-    }
-    if (!circleB.hierarchy) {
-      return circleA;
-    }
-    return circleA.hierarchy.tier > circleB.hierarchy.tier ? circleA : circleB;
-  });
-
 export const checkIsItemVisibleForUser = (
   itemCircleVisibility: string[],
   userCircleIds: string[],
