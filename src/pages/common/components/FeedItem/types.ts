@@ -16,7 +16,7 @@ export type GetNonAllowedItemsOptions = (
 ) => FeedItemMenuItem[];
 
 export interface GetAllowedItemsOptions {
-  common?: Common;
+  commonId?: string;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   discussion?: Discussion | null;
   governanceCircles?: Circles;

@@ -35,7 +35,10 @@ interface DiscussionFeedCardProps {
   item: CommonFeed;
   governanceCircles?: Governance["circles"];
   isMobileVersion?: boolean;
-  common: Common | undefined;
+  commonId?: string;
+  commonName: string;
+  commonImage: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   commonMember?: CommonMember | null;
   isProject: boolean;
   isPinned: boolean;
@@ -54,7 +57,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     item,
     governanceCircles,
     isMobileVersion = false,
-    common,
+    commonId,
+    commonName,
+    commonImage,
+    pinnedFeedItems,
     commonMember,
     isProject,
     isPinned,
@@ -97,7 +103,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
   } = useFeedItemUserMetadata();
   const menuItems = useMenuItems(
     {
-      common,
+      commonId,
+      pinnedFeedItems,
       feedItem: item,
       discussion,
       governanceCircles,
@@ -116,8 +123,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     setHovering(isMouseEnter);
   };
   const userId = user?.uid;
-  const commonId = common?.id;
-  const commonName = common?.name ?? "";
   const isLoading =
     !isDiscussionCreatorFetched ||
     !isDiscussionFetched ||
@@ -257,7 +262,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
         isPreviewMode={isPreviewMode}
         isPinned={isPinned}
-        image={common?.image}
+        commonName={commonName}
+        image={commonImage}
         imageAlt={`${commonName}'s image`}
         isProject={isProject}
         isLoading={isLoading}

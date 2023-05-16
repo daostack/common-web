@@ -41,7 +41,10 @@ import {
 } from "./utils";
 
 interface ProposalFeedCardProps {
-  common: Common | undefined;
+  commonId?: string;
+  commonName: string;
+  commonImage: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject: boolean;
   isPinned: boolean;
   item: CommonFeed;
@@ -56,7 +59,10 @@ interface ProposalFeedCardProps {
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const {
-    common,
+    commonId,
+    commonName,
+    commonImage,
+    pinnedFeedItems,
     isProject,
     isPinned,
     item,
@@ -106,8 +112,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     fetched: isFeedItemUserMetadataFetched,
     fetchFeedItemUserMetadata,
   } = useFeedItemUserMetadata();
-  const commonId = common?.id;
-  const commonName = common?.name ?? "";
   const isLoading =
     !isFeedItemUserFetched ||
     !isDiscussionFetched ||
@@ -126,7 +130,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const proposalId = item.data.id;
   const menuItems = useMenuItems(
     {
-      common,
+      commonId,
+      pinnedFeedItems,
       feedItem: item,
       discussion,
       governanceCircles,
@@ -290,38 +295,40 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   };
 
   return (
-    <FeedCard
-      feedItemId={item.id}
-      isHovering={isHovering}
-      onClick={handleOpenChat}
-      lastActivity={item.updatedAt.seconds * 1000}
-      isActive={isActive}
-      isExpanded={isExpanded}
-      unreadMessages={feedItemUserMetadata?.count || 0}
-      title={discussion?.title}
-      lastMessage={getLastMessage({
-        commonFeedType: item.data.type,
-        lastMessage: item.data.lastMessage,
-        discussion,
-        currentUserId: userId,
-        feedItemCreatorName: getUserName(feedItemUser),
-        commonName,
-        isProject,
-      })}
-      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
-      isPreviewMode={isPreviewMode}
-      image={common?.image}
-      imageAlt={`${commonName}'s image`}
-      isProject={isProject}
-      isPinned={isPinned}
-      isLoading={isLoading}
-      type={item.data.type}
-      seenOnce={feedItemUserMetadata?.seenOnce}
-      menuItems={menuItems}
-      ownerId={item.userId}
-    >
-      {renderContent()}
-    </FeedCard>
+    <>
+      <FeedCard
+        feedItemId={item.id}
+        isHovering={isHovering}
+        onClick={handleOpenChat}
+        lastActivity={item.updatedAt.seconds * 1000}
+        isActive={isActive}
+        isExpanded={isExpanded}
+        unreadMessages={feedItemUserMetadata?.count || 0}
+        title={discussion?.title}
+        lastMessage={getLastMessage({
+          commonFeedType: item.data.type,
+          lastMessage: item.data.lastMessage,
+          discussion,
+          currentUserId: userId,
+          feedItemCreatorName: getUserName(feedItemUser),
+          commonName,
+          isProject,
+        })}
+        canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
+        isPreviewMode={isPreviewMode}
+        image={commonImage}
+        imageAlt={`${commonName}'s image`}
+        isProject={isProject}
+        isPinned={isPinned}
+        isLoading={isLoading}
+        type={item.data.type}
+        seenOnce={feedItemUserMetadata?.seenOnce}
+        menuItems={menuItems}
+        ownerId={item.userId}
+      >
+        {renderContent()}
+      </FeedCard>
+    </>
   );
 };
 

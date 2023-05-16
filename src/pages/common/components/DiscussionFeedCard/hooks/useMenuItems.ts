@@ -22,11 +22,11 @@ export const useMenuItems = (
   actions: Actions,
 ): Item[] => {
   const dispatch = useDispatch();
-  const { discussion, governanceCircles, common, feedItem } = options;
+  const { discussion, governanceCircles, commonId, feedItem } = options;
   const { report, share, remove } = actions;
   const feedItemFollow = useFeedItemFollow(
     options.feedItem?.id,
-    options.common?.id,
+    options.commonId,
   );
   const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
   const items: Item[] = [
@@ -34,16 +34,16 @@ export const useMenuItems = (
       id: FeedItemMenuItem.Pin,
       text: "Pin",
       onClick: async () => {
-        if (!common?.id || !feedItem) return;
-        await CommonFeedService.pinItem(common.id, feedItem.id);
+        if (!commonId || !feedItem) return;
+        await CommonFeedService.pinItem(commonId, feedItem.id);
       },
     },
     {
       id: FeedItemMenuItem.Unpin,
       text: "Unpin",
       onClick: async () => {
-        if (!common?.id || !feedItem) return;
-        await CommonFeedService.unpinItem(common.id, feedItem.id);
+        if (!commonId || !feedItem) return;
+        await CommonFeedService.unpinItem(commonId, feedItem.id);
       },
     },
     {
