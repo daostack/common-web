@@ -2,7 +2,6 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
-import { DynamicLinkType } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import {
   useDiscussionById,
@@ -17,7 +16,11 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { checkIsCountdownState, getUserName } from "@/shared/utils";
+import {
+  StaticLinkType,
+  checkIsCountdownState,
+  getUserName,
+} from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
 import {
@@ -336,12 +339,13 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       >
         {renderContent()}
       </FeedCard>
-      {proposal?.discussion && (
+      {discussion && (
         <FeedCardShare
           isOpen={isShareModalOpen}
           onClose={onShareModalClose}
-          linkType={DynamicLinkType.Proposal}
-          element={proposal?.discussion}
+          linkType={StaticLinkType.Proposal}
+          element={discussion}
+          feedCardId={item.id}
         />
       )}
     </>

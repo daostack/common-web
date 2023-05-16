@@ -98,6 +98,7 @@ export default function DiscussionItemComponent({
           commonId={governance.commonId}
           className="dropdown-menu"
           transparent
+          feedItemId="" // this is old ui - adding this to avoid error. feedItemId can't be optional here.
         />
       </div>
       <div className="discussion-content">

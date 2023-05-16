@@ -50,6 +50,7 @@ export default function ProposalItemComponent({
               ownerId={proposal.proposer?.uid}
               commonId={proposal.data?.args?.commonId}
               transparent
+              feedItemId="" // this is old ui - adding this to avoid error. feedItemId can't be optional here.
             />
           </div>
         </div>
