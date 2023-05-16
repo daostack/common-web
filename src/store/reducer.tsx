@@ -9,6 +9,7 @@ import { SharedReducer } from "../shared/store/reducer";
 import {
   cacheReducer,
   commonReducer,
+  commonFeedFollowsReducer,
   commonLayoutReducer,
   inboxReducer,
   projectsReducer,
@@ -25,6 +26,7 @@ export default (history: History) => {
     projects: projectsReducer,
     common: commonReducer,
     commonLayout: commonLayoutReducer,
+    commonFeedFollows: commonFeedFollowsReducer,
     cache: cacheReducer,
     chat: chatReducer,
     inbox: inboxReducer,
