@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import classNames from "classnames";
 import { getCommonGovernanceCircles } from "@/pages/OldCommon/store/api";
 import { ElementDropdown } from "@/shared/components";
-import { DynamicLinkType, EntityTypes } from "@/shared/constants";
+import { EntityTypes } from "@/shared/constants";
 import { useFullText } from "@/shared/hooks";
 import { Discussion, Governance } from "@/shared/models";
 import {
@@ -14,6 +14,7 @@ import {
   getUserName,
   getDaysAgo,
   getCirclesWithLowestTier,
+  StaticLinkType,
 } from "@/shared/utils";
 import { getFilteredByIdCircles } from "@/shared/utils/circles";
 import styles from "./DiscussionItemComponent.module.scss";
@@ -91,7 +92,7 @@ export default function DiscussionItemComponent({
         </div>
         <ElementDropdown
           entityType={EntityTypes.Discussion}
-          linkType={DynamicLinkType.Discussion}
+          linkType={StaticLinkType.Discussion}
           elem={discussion}
           ownerId={discussion.ownerId}
           commonId={governance.commonId}

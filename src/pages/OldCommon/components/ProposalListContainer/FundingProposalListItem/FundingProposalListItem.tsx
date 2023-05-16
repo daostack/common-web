@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { UserAvatar, Separator, ElementDropdown } from "@/shared/components";
-import { DynamicLinkType, EntityTypes } from "@/shared/constants";
-import { Currency, ProposalListItem } from "@/shared/models";
+import { EntityTypes } from "@/shared/constants";
+import { ProposalListItem } from "@/shared/models";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
 import {
   checkIsCountdownState,
@@ -9,6 +9,7 @@ import {
   getDaysAgo,
   getProposalExpirationDate,
   formatPrice,
+  StaticLinkType,
 } from "@/shared/utils";
 import {
   VotesComponent,
@@ -32,7 +33,7 @@ const FundingProposalListItem: FC<ProposalListItem> = ({
         <p>{proposal.data.args.title || proposal.data.args.description}</p>
         <ElementDropdown
           entityType={EntityTypes.Proposal}
-          linkType={DynamicLinkType.Proposal}
+          linkType={StaticLinkType.Proposal}
           elem={proposal}
           ownerId={proposal.proposer?.uid}
           commonId={proposal.data?.args?.commonId}

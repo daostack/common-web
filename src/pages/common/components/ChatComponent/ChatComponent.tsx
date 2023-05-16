@@ -412,6 +412,7 @@ export default function ChatComponent({
             hasPermissionToHide={hasPermissionToHide}
             commonMembers={commonMembers}
             discussionId={discussionId}
+            feedItemId={feedItemId}
           />
         ) : (
           <div className={styles.loaderContainer}>

@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { CommonFeedService } from "@/services";
-import { CommonAction } from "@/shared/constants";
+import { CommonAction, FollowFeedItemAction } from "@/shared/constants";
+import { useFeedItemFollow } from "@/shared/hooks/useCases";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { notEmpty } from "@/shared/utils/notEmpty";
@@ -8,7 +9,7 @@ import { commonActions } from "@/store/states";
 import { FeedItemMenuItem, GetAllowedItemsOptions } from "../../FeedItem";
 import { getAllowedItems } from "../utils";
 
-type Options = GetAllowedItemsOptions;
+export type MenuItemOptions = Omit<GetAllowedItemsOptions, "feedItemFollow">;
 
 interface Actions {
   report: () => void;
@@ -16,11 +17,18 @@ interface Actions {
   remove?: () => void;
 }
 
-export const useMenuItems = (options: Options, actions: Actions): Item[] => {
+export const useMenuItems = (
+  options: MenuItemOptions,
+  actions: Actions,
+): Item[] => {
   const dispatch = useDispatch();
   const { discussion, governanceCircles, commonId, feedItem } = options;
   const { report, share, remove } = actions;
-  const allowedMenuItems = getAllowedItems(options);
+  const feedItemFollow = useFeedItemFollow(
+    options.feedItem?.id,
+    options.commonId,
+  );
+  const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
   const items: Item[] = [
     {
       id: FeedItemMenuItem.Pin,
@@ -71,6 +79,17 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
         );
         dispatch(commonActions.setCommonAction(CommonAction.EditDiscussion));
       },
+    },
+    {
+      id: FeedItemMenuItem.Follow,
+      text: "Follow",
+      onClick: () => feedItemFollow.onFollowToggle(FollowFeedItemAction.Follow),
+    },
+    {
+      id: FeedItemMenuItem.Unfollow,
+      text: "Unfollow",
+      onClick: () =>
+        feedItemFollow.onFollowToggle(FollowFeedItemAction.Unfollow),
     },
     remove
       ? {

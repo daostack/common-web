@@ -5,4 +5,6 @@ export enum FeedItemMenuItem {
   Report = "report",
   Edit = "edit",
   Remove = "remove",
+  Follow = "follow",
+  Unfollow = "unfollow",
 }
