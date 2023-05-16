@@ -15,7 +15,7 @@ interface ShareModalProps {
   title?: string;
   type: ShareViewType.ModalDesktop | ShareViewType.ModalMobile;
   sourceUrl: string;
-  isLoading: boolean;
+  isLoading?: boolean;
   linkText?: string;
 }
 

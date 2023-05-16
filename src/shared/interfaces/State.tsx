@@ -6,6 +6,7 @@ import {
   InboxState,
   ProjectsState,
   ChatState,
+  CommonFeedFollowsState,
 } from "@/store/states";
 import { AuthStateType } from "../../pages/Auth/interface";
 import { CommonsStateType } from "../../pages/OldCommon/interfaces";
@@ -21,6 +22,7 @@ export interface AppState {
   projects: ProjectsState;
   common: CommonState;
   commonLayout: CommonLayoutState;
+  commonFeedFollows: CommonFeedFollowsState;
   cache: CacheState;
   chat: ChatState;
   inbox: InboxState;
