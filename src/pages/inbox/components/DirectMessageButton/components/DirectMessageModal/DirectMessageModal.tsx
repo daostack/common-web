@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { Modal } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants";
 import { DirectMessageUserItem, SearchInput } from "./components";
@@ -12,6 +12,7 @@ interface DirectMessageModalProps {
 
 const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   const { isOpen, onClose, isMobileVersion = false } = props;
+  const listRef = useRef<HTMLUListElement>(null);
   const [searchText, setSearchText] = useState("");
   const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null);
   const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -56,6 +57,13 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   useEffect(() => {
     setActiveItemIndex(null);
   }, [searchText]);
+
+  useEffect(() => {
+    if (activeItemIndex !== null) {
+      const listElement = listRef.current?.children.item(activeItemIndex);
+      listElement?.scrollIntoView(false);
+    }
+  }, [activeItemIndex]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -110,7 +118,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
           onChange={setSearchText}
           autoFocus
         />
-        <ul className={styles.itemList}>
+        <ul ref={listRef} className={styles.itemList}>
           {items.map((item, index) => {
             const isActive = index === activeItemIndex;
 
