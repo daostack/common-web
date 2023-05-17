@@ -2,7 +2,7 @@ import { Environment, REACT_APP_ENV } from "../constants";
 import { Common, Discussion, DiscussionMessage, Proposal } from "../models";
 
 const staticLinkPrefix = () => {
-  if (location.hostname === "localhost") {
+  if (window.location.hostname === "localhost") {
     return "http://localhost:3000";
   }
   switch (REACT_APP_ENV) {
