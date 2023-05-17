@@ -39,6 +39,7 @@ const FundingProposalListItem: FC<ProposalListItem> = ({
           commonId={proposal.data?.args?.commonId}
           className="dropdown-menu"
           transparent
+          feedItemId="" // this is old ui - adding this to avoid error. feedItemId can't be optional here.
         />
       </div>
       <div className="proposal-item__info">

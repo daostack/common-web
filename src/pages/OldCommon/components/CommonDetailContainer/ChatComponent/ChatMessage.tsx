@@ -129,6 +129,7 @@ export default function ChatMessage({
               userId={user?.uid}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}
+              feedItemId="" // this is old ui - adding this to avoid error. feedItemId can't be optional here.
             />
           </div>
         )}

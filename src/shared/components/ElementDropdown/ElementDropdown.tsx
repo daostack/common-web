@@ -65,7 +65,7 @@ interface ElementDropdownProps {
   ownerId?: string;
   commonId?: string;
   isControlledDropdown?: boolean;
-  feedItemId?: string;
+  feedItemId: string;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
