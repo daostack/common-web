@@ -1,21 +1,35 @@
 import React, { FC } from "react";
+import classNames from "classnames";
 import { Image } from "@/shared/components";
 import { TimeAgo } from "@/shared/ui-kit";
 import styles from "./DirectMessageUserItem.module.scss";
 
 interface DirectMessageUserItemProps {
+  className?: string;
   image: string;
   name: string;
   lastActivity?: number;
   notificationsAmount?: number;
+  isActive?: boolean;
 }
 
 const DirectMessageUserItem: FC<DirectMessageUserItemProps> = (props) => {
-  const { image, name, lastActivity, notificationsAmount } = props;
+  const {
+    className,
+    image,
+    name,
+    lastActivity,
+    notificationsAmount,
+    isActive = false,
+  } = props;
   const hasRightContent = Boolean(lastActivity || notificationsAmount);
 
   return (
-    <div className={styles.container}>
+    <div
+      className={classNames(styles.container, className, {
+        [styles.containerActive]: isActive,
+      })}
+    >
       <div className={styles.left}>
         <Image
           className={styles.image}
