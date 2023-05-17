@@ -1,6 +1,6 @@
 import { Circle } from "../models/governance";
 
 export interface RecentAssignedCircle {
-  memberId: string;
+  userId: string;
   circle: Circle;
 }
