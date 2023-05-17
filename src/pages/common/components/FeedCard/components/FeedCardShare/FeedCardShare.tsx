@@ -1,33 +1,32 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { ShareModal } from "@/shared/components";
-import { DynamicLinkType, ShareViewType } from "@/shared/constants";
-import { useBuildShareLink } from "@/shared/hooks";
+import { ShareViewType } from "@/shared/constants";
 import { Discussion } from "@/shared/models";
+import { StaticLinkType, generateStaticShareLink } from "@/shared/utils";
 
 interface FeedCardShareProps {
   isOpen: boolean;
   onClose: () => void;
-  linkType: DynamicLinkType;
+  linkType: StaticLinkType;
   element: Discussion;
+  feedItemId: string;
   isMobileVersion?: boolean;
 }
 
 export const FeedCardShare: FC<FeedCardShareProps> = (props) => {
-  const { isOpen, onClose, linkType, element, isMobileVersion = false } = props;
-  const [linkURL, setLinkURL] = useState<string | null>(null);
-  const { handleOpen } = useBuildShareLink(linkType, element, setLinkURL);
-
-  useEffect(() => {
-    if (isOpen) {
-      handleOpen();
-    }
-  }, [isOpen]);
+  const {
+    isOpen,
+    onClose,
+    linkType,
+    element,
+    feedItemId,
+    isMobileVersion = false,
+  } = props;
 
   return (
     <ShareModal
       isShowing={isOpen}
-      isLoading={!linkURL}
-      sourceUrl={linkURL || ""}
+      sourceUrl={generateStaticShareLink(linkType, element, feedItemId)}
       onClose={onClose}
       type={
         isMobileVersion ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop
