@@ -1,0 +1,44 @@
+@import "../../../../../../../../constants";
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left,
+.right {
+  display: flex;
+  align-items: center;
+}
+
+.image {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  box-sizing: border-box;
+}
+
+.name {
+  font-weight: 500;
+  font-size: $mobile-title;
+  color: $c-gray-100;
+}
+
+.lastActivity {
+  margin-right: 0.75rem;
+  font-size: $mobile-title;
+  line-height: 143%;
+  letter-spacing: 0.02em;
+  color: $c-gray-40;
+}
+
+.notificationsAmount {
+  padding: 0.125rem 0.375rem;
+  font-weight: 600;
+  font-size: $xxsmall-2;
+  color: $c-light-gray;
+  background-color: $c-pink-mention;
+  border-radius: 0.625rem;
+}

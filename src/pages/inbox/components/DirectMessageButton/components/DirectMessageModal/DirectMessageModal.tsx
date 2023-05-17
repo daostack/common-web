@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { Modal } from "@/shared/components";
-import { SearchInput } from "./components";
+import { DirectMessageUserItem, SearchInput } from "./components";
 import styles from "./DirectMessageModal.module.scss";
 
 interface DirectMessageModalProps {
@@ -38,6 +38,22 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
           value={searchText}
           onChange={setSearchText}
         />
+        <ul className={styles.itemList}>
+          <li className={styles.item}>
+            <DirectMessageUserItem
+              image="https://lh3.googleusercontent.com/a-/AOh14GheOzF9_fO5iwVRvoOjTQNWutv8kf7caOZNGFHBqw=s96-c"
+              name="Andrey Mikhadyuk"
+              lastActivity={Date.now() - 3 * 60 * 60 * 1000 - 35 * 45 * 1000}
+              notificationsAmount={5}
+            />
+          </li>
+          <li className={styles.item}>
+            <DirectMessageUserItem
+              image="https://lh3.googleusercontent.com/a-/AOh14GheOzF9_fO5iwVRvoOjTQNWutv8kf7caOZNGFHBqw=s96-c"
+              name="Andrey Mikhadyuk"
+            />
+          </li>
+        </ul>
       </div>
     </Modal>
   );
