@@ -37,6 +37,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
           className={styles.searchInput}
           value={searchText}
           onChange={setSearchText}
+          autoFocus
         />
         <ul className={styles.itemList}>
           <li className={styles.item}>

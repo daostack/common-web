@@ -7,10 +7,11 @@ interface SearchInputProps {
   className?: string;
   value: string;
   onChange: (text: string) => void;
+  autoFocus?: boolean;
 }
 
 const SearchInput: FC<SearchInputProps> = (props) => {
-  const { className, value, onChange } = props;
+  const { className, value, onChange, autoFocus } = props;
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onChange(event.target.value);
@@ -25,6 +26,7 @@ const SearchInput: FC<SearchInputProps> = (props) => {
           value={value}
           onChange={handleInputChange}
           placeholder="Search"
+          autoFocus={autoFocus}
         />
       </div>
     </div>
