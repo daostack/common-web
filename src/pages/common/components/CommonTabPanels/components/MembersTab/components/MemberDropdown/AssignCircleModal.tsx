@@ -40,7 +40,7 @@ export default function AssignCircleModal({
       await CommonService.inviteToCircle(selectedCircle.id, commonId, memberId);
       dispatch(
         commonActions.setRecentAssignedCircle({
-          memberId: memberId,
+          userId: memberId,
           circle: selectedCircle,
         }),
       );
