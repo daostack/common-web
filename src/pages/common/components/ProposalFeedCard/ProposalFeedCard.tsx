@@ -2,24 +2,36 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
+import { useModal } from "@/shared/hooks";
 import {
   useDiscussionById,
   useFeedItemUserMetadata,
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { CommonFeed, Governance, PredefinedTypes } from "@/shared/models";
-import { checkIsCountdownState, getUserName } from "@/shared/utils";
-import { selectRecentStreamId } from "@/store/states";
+import {
+  Common,
+  CommonFeed,
+  Governance,
+  PredefinedTypes,
+} from "@/shared/models";
+import { TextEditorValue } from "@/shared/ui-kit";
+import {
+  StaticLinkType,
+  checkIsCountdownState,
+  getUserName,
+} from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
+import { useMenuItems } from "../DiscussionFeedCard/hooks";
 import {
   FeedCard,
   FeedCardHeader,
   FeedCardContent,
   getVisibilityString,
   FeedCountdown,
+  FeedCardShare,
 } from "../FeedCard";
-import { GetLastMessageOptions } from "../FeedItem";
+import { GetLastMessageOptions, GetNonAllowedItemsOptions } from "../FeedItem";
 import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
@@ -38,14 +50,17 @@ interface ProposalFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject: boolean;
+  isPinned: boolean;
   item: CommonFeed;
   governanceCircles?: Governance["circles"];
   isPreviewMode?: boolean;
   sizeKey?: string;
   isActive: boolean;
   isExpanded: boolean;
-  getLastMessage: (options: GetLastMessageOptions) => string;
+  getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -53,16 +68,18 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    pinnedFeedItems,
     isProject,
+    isPinned,
     item,
     governanceCircles,
     isPreviewMode,
     isActive,
     isExpanded,
     getLastMessage,
+    getNonAllowedItems,
   } = props;
   const user = useSelector(selectUser());
-  const recentStreamId = useSelector(selectRecentStreamId);
   const userId = user?.uid;
   const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
   const {
@@ -117,6 +134,26 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setHovering(isMouseEnter);
   };
   const proposalId = item.data.id;
+  const {
+    isShowing: isShareModalOpen,
+    onOpen: onShareModalOpen,
+    onClose: onShareModalClose,
+  } = useModal(false);
+  const menuItems = useMenuItems(
+    {
+      commonId,
+      pinnedFeedItems,
+      feedItem: item,
+      discussion,
+      governanceCircles,
+      commonMember,
+      getNonAllowedItems,
+    },
+    {
+      report: () => {},
+      share: () => onShareModalOpen(),
+    },
+  );
 
   useEffect(() => {
     fetchFeedItemUser(item.userId);
@@ -166,6 +203,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         proposal,
         circleVisibility: item.circleVisibility,
         lastSeenItem: feedItemUserMetadata?.lastSeen,
+        seenOnce: feedItemUserMetadata?.seenOnce,
       });
     }
   }, [
@@ -175,6 +213,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setChatItem,
     item.circleVisibility,
     feedItemUserMetadata?.lastSeen,
+    feedItemUserMetadata?.seenOnce,
   ]);
 
   useEffect(() => {
@@ -182,7 +221,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       isDiscussionFetched &&
       isProposalFetched &&
       isFeedItemUserMetadataFetched &&
-      (item.id === feedItemIdForAutoChatOpen || recentStreamId)
+      item.id === feedItemIdForAutoChatOpen
     ) {
       handleOpenChat();
     }
@@ -229,6 +268,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           circleVisibility={circleVisibility}
           commonId={commonId}
           userId={item.userId}
+          menuItems={menuItems}
         />
         <FeedCardContent
           subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
@@ -266,36 +306,49 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   };
 
   return (
-    <FeedCard
-      feedItemId={item.id}
-      isHovering={isHovering}
-      onClick={handleOpenChat}
-      lastActivity={item.updatedAt.seconds * 1000}
-      isActive={isActive}
-      isExpanded={isExpanded}
-      unreadMessages={feedItemUserMetadata?.count || 0}
-      title={discussion?.title}
-      lastMessage={getLastMessage({
-        commonFeedType: item.data.type,
-        lastMessage: item.data.lastMessage,
-        discussion,
-        currentUserId: userId,
-        feedItemCreatorName: getUserName(feedItemUser),
-        commonName,
-        isProject,
-      })}
-      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
-      isPreviewMode={isPreviewMode}
-      image={commonImage}
-      imageAlt={`${commonName}'s image`}
-      isProject={isProject}
-      isLoading={isLoading}
-      type={item.data.type}
-      seenOnce={feedItemUserMetadata?.seenOnce}
-      ownerId={item.userId}
-    >
-      {renderContent()}
-    </FeedCard>
+    <>
+      <FeedCard
+        feedItemId={item.id}
+        isHovering={isHovering}
+        onClick={handleOpenChat}
+        lastActivity={item.updatedAt.seconds * 1000}
+        isActive={isActive}
+        isExpanded={isExpanded}
+        unreadMessages={feedItemUserMetadata?.count || 0}
+        title={discussion?.title}
+        lastMessage={getLastMessage({
+          commonFeedType: item.data.type,
+          lastMessage: item.data.lastMessage,
+          discussion,
+          currentUserId: userId,
+          feedItemCreatorName: getUserName(feedItemUser),
+          commonName,
+          isProject,
+        })}
+        canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
+        isPreviewMode={isPreviewMode}
+        image={commonImage}
+        imageAlt={`${commonName}'s image`}
+        isProject={isProject}
+        isPinned={isPinned}
+        isLoading={isLoading}
+        type={item.data.type}
+        seenOnce={feedItemUserMetadata?.seenOnce}
+        menuItems={menuItems}
+        ownerId={item.userId}
+      >
+        {renderContent()}
+      </FeedCard>
+      {discussion && (
+        <FeedCardShare
+          isOpen={isShareModalOpen}
+          onClose={onShareModalClose}
+          linkType={StaticLinkType.Proposal}
+          element={discussion}
+          feedItemId={item.id}
+        />
+      )}
+    </>
   );
 };
 

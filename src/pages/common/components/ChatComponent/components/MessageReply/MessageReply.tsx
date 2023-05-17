@@ -1,23 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
-import CloseIcon from "@/shared/icons/close.icon";
+import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/util";
+import CloseIcon from "@/shared/icons/close2.icon";
+import { CommonMemberWithUserInfo } from "@/shared/models";
 import {
   selectCurrentDiscussionMessageReply,
   chatActions,
 } from "@/store/states";
 import styles from "./MessageReply.module.scss";
 
-export default function MessageReply() {
+interface MessageReplyProps {
+  commonMembers: CommonMemberWithUserInfo[];
+}
+
+const MessageReply: React.FC<MessageReplyProps> = ({ commonMembers }) => {
   const dispatch = useDispatch();
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
 
+  const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
+
+  useEffect(() => {
+    if (!discussionMessageReply?.text) {
+      return;
+    }
+
+    (async () => {
+      const parsedText = await getTextFromTextEditorString({
+        textEditorString: discussionMessageReply.text,
+        commonMembers,
+      });
+
+      setMessageText(parsedText);
+    })();
+  }, [commonMembers, discussionMessageReply]);
+
   if (!discussionMessageReply) {
     return null;
   }
+
+  const image = discussionMessageReply.images?.[0]?.value;
 
   return (
     <div
@@ -27,11 +52,14 @@ export default function MessageReply() {
     >
       {discussionMessageReply && (
         <>
-          <div className={styles.messageWrapper}>
-            <span className={styles.username}>
-              {discussionMessageReply.ownerName}
-            </span>
-            <p className={styles.text}>{discussionMessageReply.text}</p>
+          <div className={styles.messageContainer}>
+            {image && <img className={styles.image} src={image} />}
+            <div className={styles.messageWrapper}>
+              <span className={styles.username}>
+                {discussionMessageReply.ownerName}
+              </span>
+              <p className={styles.text}>{messageText.map((text) => text)}</p>
+            </div>
           </div>
           <ButtonIcon
             className={styles.closeButton}
@@ -39,10 +67,12 @@ export default function MessageReply() {
               dispatch(chatActions.clearCurrentDiscussionMessageReply());
             }}
           >
-            <CloseIcon fill="#001A36" height={16} width={16} />
+            <CloseIcon height={12} width={12} />
           </ButtonIcon>
         </>
       )}
     </div>
   );
-}
+};
+
+export default MessageReply;

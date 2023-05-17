@@ -12,6 +12,7 @@ export * from "./getFeedItemUserMetadataKey";
 export * from "./language";
 export * from "./lastSeenEntity";
 export * from "./Math";
+export * from "./pinOrUnpinEndpointAction";
 export * from "./queryParamKey";
 export * from "./routePaths";
 export * from "./shared";

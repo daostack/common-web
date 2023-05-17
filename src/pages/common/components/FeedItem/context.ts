@@ -1,7 +1,14 @@
 import React, { MouseEventHandler, ReactNode, useContext } from "react";
 import { ContextMenuItem } from "@/shared/interfaces";
-import { CommonFeed, CommonFeedType, Discussion } from "@/shared/models";
+import {
+  CommonFeed,
+  CommonFeedType,
+  Discussion,
+  PredefinedTypes,
+} from "@/shared/models";
+import { parseStringToTextEditorValue, TextEditorValue } from "@/shared/ui-kit";
 import { FeedCardSettings } from "../FeedCard";
+import { GetNonAllowedItemsOptions } from "./types";
 
 export interface FeedItemBaseContentProps {
   className?: string;
@@ -11,7 +18,7 @@ export interface FeedItemBaseContentProps {
   isActive?: boolean;
   isExpanded?: boolean;
   title?: string;
-  lastMessage?: string;
+  lastMessage?: TextEditorValue;
   canBeExpanded?: boolean;
   onClick?: () => void;
   onExpand?: MouseEventHandler;
@@ -19,9 +26,12 @@ export interface FeedItemBaseContentProps {
   type?: CommonFeedType;
   seenOnce?: boolean;
   ownerId?: string;
+  commonName?: string;
   image?: string;
   imageAlt?: string;
   isProject?: boolean;
+  isPinned?: boolean;
+  discussionPredefinedType?: PredefinedTypes;
 }
 
 export interface GetLastMessageOptions {
@@ -42,11 +52,12 @@ export interface FeedItemContextValue {
   renderFeedItemBaseContent?: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   feedCardSettings?: FeedCardSettings;
-  getLastMessage: (options: GetLastMessageOptions) => string;
+  getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 export const FeedItemContext = React.createContext<FeedItemContextValue>({
-  getLastMessage: () => "",
+  getLastMessage: () => parseStringToTextEditorValue(),
 });
 
 export const useFeedItemContext = (): FeedItemContextValue =>

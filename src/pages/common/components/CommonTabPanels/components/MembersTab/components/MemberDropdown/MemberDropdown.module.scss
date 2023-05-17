@@ -1,0 +1,7 @@
+@import "../../../../../../../../constants.scss";
+
+.dropdownItem {
+  &:hover {
+    background-color: $c-primary-200;
+  }
+}

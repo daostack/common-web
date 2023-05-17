@@ -10,10 +10,10 @@ export const useMenuItems = (options: Options): Item[] => {
   const { onMenuItemSelect } = useCommonDataContext();
   const items: Item[] = [
     {
-      id: CommonMenuItem.InviteToCircle,
-      text: "Invite to circle",
+      id: CommonMenuItem.Governance,
+      text: "Governance",
       onClick: () => {
-        console.log(CommonMenuItem.InviteToCircle);
+        onMenuItemSelect(CommonMenuItem.Governance);
       },
     },
     {

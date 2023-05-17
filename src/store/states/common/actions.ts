@@ -8,6 +8,7 @@ import {
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
   PayloadWithOptionalCallback,
+  RecentAssignedCircle,
   UploadFile,
 } from "@/shared/interfaces";
 import {
@@ -130,6 +131,18 @@ export const addNewFeedItems = createStandardAction(
   }[]
 >();
 
+export const addNewPinnedFeedItems = createStandardAction(
+  CommonActionType.ADD_NEW_PINNED_FEED_ITEMS,
+)<
+  {
+    commonFeedItem: CommonFeed;
+    statuses: {
+      isAdded: boolean;
+      isRemoved: boolean;
+    };
+  }[]
+>();
+
 export const updateFeedItem = createStandardAction(
   CommonActionType.UPDATE_FEED_ITEM,
 )<{
@@ -156,3 +169,7 @@ export const setSharedFeedItem = createStandardAction(
 export const setRecentStreamId = createStandardAction(
   CommonActionType.SET_RECENT_STREAM_ID,
 )<string>();
+
+export const setRecentAssignedCircle = createStandardAction(
+  CommonActionType.SET_RECENT_ASSIGNED_CIRCLE,
+)<RecentAssignedCircle | null>();

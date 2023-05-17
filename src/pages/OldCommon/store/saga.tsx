@@ -339,6 +339,7 @@ export function* loadDiscussionDetail(
               id: parentMessage.id,
               text: parentMessage.text,
               ownerName: parentMessage?.ownerName,
+              ownerId: parentMessage.ownerId,
             }
           : null;
         return newDiscussionMessage;
@@ -446,6 +447,7 @@ export function* loadProposalDetail(
             id: parentMessage.id,
             text: parentMessage.text,
             ownerName: parentMessage?.ownerName,
+            ownerId: parentMessage.ownerId,
           }
         : null;
       return newDiscussionMessage;
@@ -1508,7 +1510,8 @@ export function* getCommonMembers({
     yield put(startLoading());
     const commonMembers = (yield call(
       getCommonMembersApi,
-      payload.payload,
+      payload.payload.commonId,
+      payload.payload.circleVisibility,
     )) as Awaited<ReturnType<typeof getCommonMembersApi>>;
 
     yield put(actions.getCommonMembers.success(commonMembers));

@@ -18,6 +18,7 @@ import {
 } from "@/shared/models";
 import { getCommonPagePath, getProjectCreationPagePath } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
+import { getDefaultGovDocUrl } from "../../components/CommonTabPanels/components/AboutTab/utils";
 import { JoinProjectModal } from "../../components/JoinProjectModal";
 import { CommonMenuItem } from "../../constants";
 import { CommonPageSettings } from "../../types";
@@ -240,6 +241,13 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onProjectJoinModalOpen,
     ],
   );
+
+  useEffect(() => {
+    if (selectedMenuItem === CommonMenuItem.Governance) {
+      window.open(common.governanceDocumentUrl ?? getDefaultGovDocUrl(common));
+      handleMenuClose();
+    }
+  }, [selectedMenuItem]);
 
   return (
     <CommonDataContext.Provider value={contextValue}>

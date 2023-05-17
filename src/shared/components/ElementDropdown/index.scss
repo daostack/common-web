@@ -15,8 +15,11 @@
   .element-dropdown__menu-item {
     display: flex;
     align-items: center;
-    padding: 0.7rem 1.1rem;
+    box-sizing: border-box;
+    height: 2.5rem;
+    padding: 0.65625rem 1.5rem;
     font-size: $small;
+    box-shadow: inset 0 -0.0625rem 0 $c-neutrals-100;
 
     > :first-child {
       margin-right: 0.3rem;

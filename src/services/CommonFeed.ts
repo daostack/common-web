@@ -1,5 +1,9 @@
 import { stringify } from "query-string";
-import { ApiEndpoint } from "@/shared/constants";
+import {
+  ApiEndpoint,
+  GovernanceActions,
+  PinOrUnpinEndpointAction,
+} from "@/shared/constants";
 import {
   MarkCommonFeedItemAsSeenPayload,
   UnsubscribeFunction,
@@ -136,9 +140,35 @@ class CommonFeedService {
     };
   };
 
+  public pinItem = async (commonId: string, feedObjectId: string) => {
+    return Api.post(ApiEndpoint.CreateAction, {
+      type: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
+      args: {
+        pinOrUnpin: PinOrUnpinEndpointAction.Pin,
+        commonId,
+        feedObjectId,
+      },
+    });
+  };
+
+  public unpinItem = async (commonId: string, feedObjectId: string) => {
+    return Api.post(ApiEndpoint.CreateAction, {
+      type: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
+      args: {
+        pinOrUnpin: PinOrUnpinEndpointAction.Unpin,
+        commonId,
+        feedObjectId,
+      },
+    });
+  };
+
   public subscribeToNewUpdatedCommonFeedItems = (
-    commonId: string,
-    endBefore: Timestamp,
+    options: {
+      commonId: string;
+      endBefore?: Timestamp;
+      // ids amount should be <= 10
+      idsForListening?: string[];
+    },
     callback: (
       data: {
         commonFeedItem: CommonFeed;
@@ -149,9 +179,18 @@ class CommonFeedService {
       }[],
     ) => void,
   ): UnsubscribeFunction => {
-    const query = this.getCommonFeedSubCollection(commonId)
-      .orderBy("updatedAt", "desc")
-      .endBefore(endBefore);
+    const { commonId, endBefore, idsForListening } = options;
+    let query = this.getCommonFeedSubCollection(commonId).orderBy(
+      "updatedAt",
+      "desc",
+    );
+
+    if (idsForListening && idsForListening.length > 0) {
+      query = query.where("id", "in", idsForListening);
+    }
+    if (endBefore) {
+      query = query.endBefore(endBefore);
+    }
 
     return query.onSnapshot((snapshot) => {
       const data = snapshot.docChanges().map((docChange) => ({

@@ -37,7 +37,7 @@
 
 .descriptionShortened {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -56,11 +56,4 @@
 
 .image {
   max-width: 33.0625rem;
-}
-
-.attachIcon {
-  flex-shrink: 0;
-  width: 0.875rem;
-  height: 0.9375rem;
-  margin-left: 0.75rem;
 }

@@ -28,7 +28,7 @@ const Account = ({
   const history = useHistory();
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
-  const { isOutside, setOusideValue } = useOutsideClick(wrapperRef);
+  const { isOutside, setOutsideValue } = useOutsideClick(wrapperRef);
   const areReportsLoading = useSelector(selectAreReportsLoading());
 
   const handleReportsDownload = async () => {
@@ -44,9 +44,9 @@ const Account = ({
   useEffect(() => {
     if (isOutside) {
       setShowMenu(false);
-      setOusideValue();
+      setOutsideValue();
     }
-  }, [isOutside, setShowMenu, setOusideValue]);
+  }, [isOutside, setShowMenu, setOutsideValue]);
 
   const showMyAccount = () => {
     history.push(ROUTE_PATHS.PROFILE);

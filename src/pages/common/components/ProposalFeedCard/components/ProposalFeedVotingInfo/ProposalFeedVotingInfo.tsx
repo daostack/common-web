@@ -132,13 +132,13 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
       <VotingInfo
         label={checkIsVotingFinished(votingStatus) ? "Result" : "Status"}
       >
-        <ModalTriggerButton
+        <span
           className={classNames(styles.votingStatus, {
             [styles.votingStatusFailing]: checkIsFailingVoting(votingStatus),
           })}
         >
           {votingStatus}
-        </ModalTriggerButton>
+        </span>
       </VotingInfo>
     </div>
   );
