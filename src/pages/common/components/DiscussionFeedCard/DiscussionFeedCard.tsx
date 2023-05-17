@@ -290,7 +290,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           linkType={StaticLinkType.Discussion}
           element={discussion}
           isMobileVersion={isMobileVersion}
-          feedCardId={item.id}
+          feedItemId={item.id}
         />
       )}
       {isDeleteModalOpen && (

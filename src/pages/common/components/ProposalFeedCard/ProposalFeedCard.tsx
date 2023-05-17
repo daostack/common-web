@@ -345,7 +345,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           onClose={onShareModalClose}
           linkType={StaticLinkType.Proposal}
           element={discussion}
-          feedCardId={item.id}
+          feedItemId={item.id}
         />
       )}
     </>

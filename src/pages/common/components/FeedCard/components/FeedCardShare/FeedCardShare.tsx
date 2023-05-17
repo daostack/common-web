@@ -9,7 +9,7 @@ interface FeedCardShareProps {
   onClose: () => void;
   linkType: StaticLinkType;
   element: Discussion;
-  feedCardId: string;
+  feedItemId: string;
   isMobileVersion?: boolean;
 }
 
@@ -19,14 +19,14 @@ export const FeedCardShare: FC<FeedCardShareProps> = (props) => {
     onClose,
     linkType,
     element,
-    feedCardId,
+    feedItemId,
     isMobileVersion = false,
   } = props;
 
   return (
     <ShareModal
       isShowing={isOpen}
-      sourceUrl={generateStaticShareLink(linkType, element, feedCardId)}
+      sourceUrl={generateStaticShareLink(linkType, element, feedItemId)}
       onClose={onClose}
       type={
         isMobileVersion ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop
