@@ -1,3 +1,4 @@
+import { FeedItemFollowState } from "@/shared/hooks/useCases";
 import {
   Common,
   Circles,
@@ -22,5 +23,8 @@ export interface GetAllowedItemsOptions {
   feedItem?: CommonFeed;
   proposal?: Proposal;
   commonMember?: CommonMember | null;
+  feedItemFollow: FeedItemFollowState;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
+
+export type MenuItemOptions = Omit<GetAllowedItemsOptions, "feedItemFollow">;

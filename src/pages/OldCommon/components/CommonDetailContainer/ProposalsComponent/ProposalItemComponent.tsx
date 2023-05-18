@@ -1,13 +1,10 @@
 import React from "react";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { UserAvatar, ElementDropdown } from "@/shared/components";
-import {
-  DynamicLinkType,
-  EntityTypes,
-  ProposalsTypes,
-} from "@/shared/constants";
+import { EntityTypes, ProposalsTypes } from "@/shared/constants";
 import { Proposal } from "@/shared/models";
 import {
+  StaticLinkType,
   formatPrice,
   getTextForProposalType,
   getUserName,
@@ -48,11 +45,12 @@ export default function ProposalItemComponent({
           <div onClick={(e) => e.stopPropagation()}>
             <ElementDropdown
               entityType={EntityTypes.Proposal}
-              linkType={DynamicLinkType.Proposal}
+              linkType={StaticLinkType.Proposal}
               elem={proposal}
               ownerId={proposal.proposer?.uid}
               commonId={proposal.data?.args?.commonId}
               transparent
+              feedItemId="" // this is old ui - adding this to avoid error. feedItemId can't be optional here.
             />
           </div>
         </div>

@@ -8,7 +8,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   FeedItemMenuItem,
   (options: GetAllowedItemsOptions) => boolean
 > = {
-  [FeedItemMenuItem.Share]: () => false,
+  [FeedItemMenuItem.Share]: () => true,
   [FeedItemMenuItem.Report]: () => false,
   [FeedItemMenuItem.Edit]: () => false,
   [FeedItemMenuItem.Remove]: checkIsRemoveDiscussionAllowed,
@@ -16,12 +16,24 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
     checkIsPinUnpinAllowed(FeedItemPinAction.Pin, options),
   [FeedItemMenuItem.Unpin]: (options) =>
     checkIsPinUnpinAllowed(FeedItemPinAction.Unpin, options),
+  [FeedItemMenuItem.Follow]: (options) => {
+    return (
+      !options.feedItemFollow.isDisabled && !options.feedItemFollow.isFollowing
+    );
+  },
+  [FeedItemMenuItem.Unfollow]: (options) => {
+    return (
+      !options.feedItemFollow.isDisabled && options.feedItemFollow.isFollowing
+    );
+  },
 };
 
 export const getAllowedItems = (
   options: GetAllowedItemsOptions,
 ): FeedItemMenuItem[] => {
   const orderedItems = [
+    FeedItemMenuItem.Follow,
+    FeedItemMenuItem.Unfollow,
     FeedItemMenuItem.Pin,
     FeedItemMenuItem.Unpin,
     FeedItemMenuItem.Share,

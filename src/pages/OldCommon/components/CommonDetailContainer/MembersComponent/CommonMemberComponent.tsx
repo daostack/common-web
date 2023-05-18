@@ -68,15 +68,31 @@ const CommonMember: FC<CommonMemberProps> = ({
     member.circleIds,
   );
 
+  if (recentAssignedCircle && member.userId === recentAssignedCircle.userId) {
+    memberCircles.push(recentAssignedCircle.circle);
+  }
+
+  const circlesWithHighestTier = getCirclesWithHighestTier(memberCircles);
+  const highestMemberCircle =
+    circlesWithHighestTier[circlesWithHighestTier.length - 1];
+
+  governanceCircles.forEach((circle) => {
+    if (!highestMemberCircle.hierarchy) {
+      return;
+    }
+    if (!circle.hierarchy) {
+      return;
+    }
+    if (circle.hierarchy.tier < highestMemberCircle.hierarchy.tier) {
+      memberCircles.push(circle);
+    }
+  });
+
   const notMemberCircles = removeProjectCircles(
     governanceCircles.filter(
       ({ id }) => !memberCircles.map((circle) => circle.id).includes(id),
     ),
   );
-
-  if (recentAssignedCircle && member.userId === recentAssignedCircle.memberId) {
-    memberCircles.push(recentAssignedCircle.circle);
-  }
 
   const circlesString = getCirclesWithHighestTier(memberCircles)
     .map((circle) => circle.name)

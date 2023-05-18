@@ -276,6 +276,7 @@ export default function ChatComponent({
           filesPreview,
           imagesPreview,
           tags: mentionTags,
+          mentions: mentionTags.map((tag) => tag.value),
         };
         const firebaseDate = Timestamp.fromDate(new Date());
 
@@ -412,6 +413,7 @@ export default function ChatComponent({
             hasPermissionToHide={hasPermissionToHide}
             commonMembers={commonMembers}
             discussionId={discussionId}
+            feedItemId={feedItemId}
           />
         ) : (
           <div className={styles.loaderContainer}>

@@ -12,4 +12,5 @@ export interface CreateDiscussionMessageDto {
   files?: InfoItem[];
   parentId?: string;
   tags?: InfoItem[];
+  mentions?: string[];
 }

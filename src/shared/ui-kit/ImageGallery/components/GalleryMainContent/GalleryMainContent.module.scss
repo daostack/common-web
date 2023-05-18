@@ -1,32 +1,10 @@
 @import "../../../../../constants";
 
 .mainContent {
-  width: 14.9375rem;
-  max-height: 7.375rem;
-  height: 7.375rem;
+  width: 100%;
+  max-height: 24rem;
   padding: 0.125rem 0.25rem 0;
   object-fit: cover;
-}
-
-.playButtonContainer {
-  position: absolute;
-  height: 5rem;
-  width: 5rem;
-  border-radius: 2.5rem;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background-color: $white;
-  box-shadow: 0 0.25rem 0.5rem $shadow-2;
-}
-
-.playButton {
-  position: absolute;
-  height: 2.0625rem;
-  width: 2.25rem;
-  left: calc(50% + 3px);
-  top: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .leftItem {

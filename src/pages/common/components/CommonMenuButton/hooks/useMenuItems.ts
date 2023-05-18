@@ -10,6 +10,13 @@ export const useMenuItems = (options: Options): Item[] => {
   const { onMenuItemSelect } = useCommonDataContext();
   const items: Item[] = [
     {
+      id: CommonMenuItem.Governance,
+      text: "Governance",
+      onClick: () => {
+        onMenuItemSelect(CommonMenuItem.Governance);
+      },
+    },
+    {
       id: CommonMenuItem.LeaveCommon,
       text: "Leave common",
       withWarning: true,

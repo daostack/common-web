@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionService } from "@/services";
 import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
-import { DynamicLinkType, EntityTypes } from "@/shared/constants";
+import { EntityTypes } from "@/shared/constants";
 import { useModal, useNotification } from "@/shared/hooks";
 import {
   useDiscussionById,
@@ -18,7 +18,7 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { getUserName } from "@/shared/utils";
+import { StaticLinkType, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
@@ -113,7 +113,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     },
     {
       report: onReportModalOpen,
-      share: onShareModalOpen,
+      share: () => onShareModalOpen(),
       // remove: onDeleteModalOpen,
     },
   );
@@ -287,9 +287,10 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         <FeedCardShare
           isOpen={isShareModalOpen}
           onClose={onShareModalClose}
-          linkType={DynamicLinkType.Discussion}
+          linkType={StaticLinkType.Discussion}
           element={discussion}
           isMobileVersion={isMobileVersion}
+          feedItemId={item.id}
         />
       )}
       {isDeleteModalOpen && (

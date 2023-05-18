@@ -24,7 +24,7 @@ enum Social {
 interface SocialLinksProps {
   shareViewType: ShareViewType;
   sourceUrl: string;
-  isLoading: boolean;
+  isLoading?: boolean;
   popupVariant?: SharePopupVariant;
   top?: string;
   linkText?: string;
