@@ -1,4 +1,5 @@
 @import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
 
 .modal {
   max-width: 36.125rem;
@@ -20,6 +21,16 @@
 
   .modalContent {
     padding: 0;
+  }
+
+  .modalCloseWrapper {
+    top: 0.5rem;
+    margin: 0;
+  }
+
+  @include tablet {
+    max-width: unset;
+    max-height: unset;
   }
 }
 

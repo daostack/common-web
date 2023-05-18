@@ -105,11 +105,13 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
       }
       isHeaderSticky
       hideCloseButton={!isMobileVersion}
+      mobileFullScreen
       styles={{
         modalOverlay: styles.modalOverlay,
         headerWrapper: styles.modalHeaderWrapper,
         header: styles.modalHeader,
         content: styles.modalContent,
+        closeWrapper: styles.modalCloseWrapper,
       }}
     >
       <div className={styles.content}>
