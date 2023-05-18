@@ -44,6 +44,7 @@ import {
   parseStringToTextEditorValue,
   ButtonIcon,
 } from "@/shared/ui-kit";
+import { ParagraphElement } from "@/shared/ui-kit/TextEditor/types";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
   cacheActions,
@@ -179,7 +180,9 @@ export default function ChatComponent({
     CreateDiscussionMessageDtoWithFilesPreview[]
   >([]);
 
-  const canSendMessage = message.length || currentFilesPreview?.length;
+  const canSendMessage =
+    (message[0] as ParagraphElement).children[0].text !== "" ||
+    currentFilesPreview?.length;
 
   useDebounce(
     async () => {

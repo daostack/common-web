@@ -32,14 +32,14 @@
   display: flex;
   flex-direction: column-reverse;
   padding: 0.5rem 2rem 0;
-  padding-bottom: calc(var(--chat-input-wrapper-height) + 1.5rem);
+  padding-bottom: calc(var(--chat-input-wrapper-height) + 7rem);
 }
 
 .emptyChat {
   display: flex;
   justify-content: center;
   padding: 0.5rem 2rem 0;
-  padding-bottom: calc(var(--chat-input-wrapper-height) + 1.5rem);
+  padding-bottom: calc(var(--chat-input-wrapper-height) + 7rem);
 }
 
 .loaderContainer {
@@ -49,7 +49,7 @@
 }
 
 .bottomChatContainer {
-  position: fixed;
+  position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
