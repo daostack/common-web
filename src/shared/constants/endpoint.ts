@@ -40,4 +40,5 @@ export const ApiEndpoint = {
   DeleteDiscussionMessage: "/discussions/delete",
   GetProposalEligibleVoters:
     "/proposals/get-all-eligible-proposal-voters/:proposalId",
+  GetDMUsers: "/chat/users",
 };

@@ -1,7 +1,17 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Modal } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants";
+import { Loader } from "@/shared/ui-kit";
 import { DirectMessageUserItem, SearchInput } from "./components";
+import { useDMUsers } from "./hooks";
 import styles from "./DirectMessageModal.module.scss";
 
 interface DirectMessageModalProps {
@@ -15,26 +25,43 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   const listRef = useRef<HTMLUListElement>(null);
   const [searchText, setSearchText] = useState("");
   const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null);
-  const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const {
+    loading: areDMUsersLoading,
+    dmUsers,
+    fetchDMUsers,
+    error: dmUsersFetchError,
+  } = useDMUsers();
+  const filteredDMUsers = useMemo(() => {
+    if (!searchText) {
+      return dmUsers;
+    }
+
+    const lowerCasedSearchText = searchText.toLowerCase();
+
+    return dmUsers.filter((item) =>
+      item.userName.toLowerCase().startsWith(lowerCasedSearchText),
+    );
+  }, [dmUsers, searchText]);
+  const totalUsersAmount = filteredDMUsers.length;
 
   const handleArrowUp = useCallback(() => {
     setActiveItemIndex((currentIndex) => {
-      if (items.length === 0) {
+      if (totalUsersAmount === 0) {
         return null;
       }
       if (currentIndex === null) {
-        return items.length - 1;
+        return totalUsersAmount - 1;
       }
 
       const nextIndex = currentIndex - 1;
 
-      return nextIndex < 0 ? items.length - 1 : nextIndex;
+      return nextIndex < 0 ? totalUsersAmount - 1 : nextIndex;
     });
-  }, [items]);
+  }, [totalUsersAmount]);
 
   const handleArrowDown = useCallback(() => {
     setActiveItemIndex((currentIndex) => {
-      if (items.length === 0) {
+      if (totalUsersAmount === 0) {
         return null;
       }
       if (currentIndex === null) {
@@ -43,15 +70,18 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
 
       const nextIndex = currentIndex + 1;
 
-      return nextIndex >= items.length ? 0 : nextIndex;
+      return nextIndex >= totalUsersAmount ? 0 : nextIndex;
     });
-  }, [items]);
+  }, [totalUsersAmount]);
 
   useEffect(() => {
-    if (!isOpen) {
-      setActiveItemIndex(null);
-      setSearchText("");
+    if (isOpen) {
+      fetchDMUsers();
+      return;
     }
+
+    setActiveItemIndex(null);
+    setSearchText("");
   }, [isOpen]);
 
   useEffect(() => {
@@ -92,6 +122,47 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     };
   }, [isOpen, handleArrowUp, handleArrowDown]);
 
+  const renderContent = (): ReactElement => {
+    if (areDMUsersLoading) {
+      return <Loader />;
+    }
+
+    if (dmUsersFetchError) {
+      return (
+        <p className={styles.noDMUsersTest}>
+          Oops! Something went wrong while loading the user list. Please try
+          again later.
+        </p>
+      );
+    }
+
+    return (
+      <ul ref={listRef} className={styles.itemList}>
+        {filteredDMUsers.map((item, index) => {
+          const isActive = index === activeItemIndex;
+
+          return (
+            <li
+              key={item.uid}
+              className={styles.item}
+              tabIndex={0}
+              role="button"
+              aria-pressed={isActive}
+              onFocus={() => setActiveItemIndex(index)}
+            >
+              <DirectMessageUserItem
+                className={styles.userItem}
+                image={item.photoURL}
+                name={item.userName}
+                isActive={isActive}
+              />
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
+
   return (
     <Modal
       className={styles.modal}
@@ -114,35 +185,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
         closeWrapper: styles.modalCloseWrapper,
       }}
     >
-      <div className={styles.content}>
-        <ul ref={listRef} className={styles.itemList}>
-          {items.map((item, index) => {
-            const isActive = index === activeItemIndex;
-
-            return (
-              <li
-                key={index}
-                className={styles.item}
-                tabIndex={0}
-                role="button"
-                aria-pressed={isActive}
-                onFocus={() => setActiveItemIndex(index)}
-              >
-                <DirectMessageUserItem
-                  className={styles.userItem}
-                  image="https://lh3.googleusercontent.com/a-/AOh14GheOzF9_fO5iwVRvoOjTQNWutv8kf7caOZNGFHBqw=s96-c"
-                  name="Andrey Mikhadyuk"
-                  lastActivity={
-                    Date.now() - 3 * 60 * 60 * 1000 - 35 * 45 * 1000
-                  }
-                  notificationsAmount={5}
-                  isActive={isActive}
-                />
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <div className={styles.content}>{renderContent()}</div>
     </Modal>
   );
 };
