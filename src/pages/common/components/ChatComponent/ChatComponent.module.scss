@@ -5,7 +5,6 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 0.5rem 2rem 0;
   width: inherit;
   height: calc(100% - #{$container-desktop-header-height});
   background-color: $white;
@@ -31,11 +30,13 @@
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column-reverse;
+  padding: 0.5rem 2rem 0;
 }
 
 .emptyChat {
   display: flex;
   justify-content: center;
+  padding: 0.5rem 2rem 0;
 }
 
 .loaderContainer {
@@ -46,8 +47,6 @@
 
 .bottomChatContainer {
   position: relative;
-  left: -2rem;
-  width: calc(100% + 2rem);
 }
 
 .chatInputWrapper {
@@ -59,7 +58,6 @@
   border-left-width: 0;
   border-right-width: 0;
   box-shadow: none;
-  width: 100%;
   height: 3.125rem;
   align-items: center;
   justify-content: space-between;
@@ -87,6 +85,7 @@
   line-height: 1.43;
   color: $c-neutrals-600;
   box-sizing: border-box;
+  text-align: left;
 }
 
 .addFilesIcon {
