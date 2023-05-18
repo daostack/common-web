@@ -276,6 +276,7 @@ export default function ChatComponent({
           filesPreview,
           imagesPreview,
           tags: mentionTags,
+          mentions: mentionTags.map((tag) => tag.value),
         };
         const firebaseDate = Timestamp.fromDate(new Date());
 
