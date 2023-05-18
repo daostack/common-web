@@ -100,6 +100,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
       title={
         <div className={styles.modalTitleWrapper}>
           <h3 className={styles.modalTitle}>Direct message</h3>
+          <SearchInput value={searchText} onChange={setSearchText} autoFocus />
         </div>
       }
       isHeaderSticky
@@ -112,12 +113,6 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
       }}
     >
       <div className={styles.content}>
-        <SearchInput
-          className={styles.searchInput}
-          value={searchText}
-          onChange={setSearchText}
-          autoFocus
-        />
         <ul ref={listRef} className={styles.itemList}>
           {items.map((item, index) => {
             const isActive = index === activeItemIndex;

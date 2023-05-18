@@ -9,7 +9,7 @@
 
   :global(.modal__header-wrapper--with-modal-padding) {
     .modalHeader {
-      padding: 0.875rem 0;
+      padding: 0.875rem 0 0.5rem;
       justify-content: flex-start;
     }
   }
@@ -19,19 +19,19 @@
   }
 
   .modalContent {
-    padding: 0.625rem 0 0;
+    padding: 0;
   }
 }
 
 .modalTitleWrapper {
-  padding-right: 2.375rem;
+  width: 100%;
   display: flex;
   flex-direction: column;
   color: $c-neutrals-600;
 }
 
 .modalTitle {
-  margin: 0;
+  margin: 0 0 1.5rem;
   font-family: PoppinsSans, sans-serif;
   font-weight: normal;
   font-size: $moderate-small-2;
@@ -48,11 +48,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.searchInput {
-  margin-bottom: 0.5rem;
-  padding: 0 1rem;
 }
 
 .itemList {
