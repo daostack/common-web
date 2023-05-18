@@ -8,7 +8,6 @@
   width: inherit;
   height: calc(100% - #{$container-desktop-header-height});
   background-color: $white;
-  position: relative;
   box-sizing: border-box;
   --chat-input-wrapper-height: 3.125rem;
 
@@ -54,6 +53,9 @@
   bottom: 0;
   left: 0;
   padding-bottom: var(--safe-area-inset-bottom);
+  @include big-phone {
+    position: fixed;
+  }
 }
 
 .chatInputWrapper {
