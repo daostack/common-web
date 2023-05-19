@@ -1,4 +1,12 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  ForwardRefRenderFunction,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
@@ -15,6 +23,10 @@ import {
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
 import styles from "./ChatContent.module.scss";
+
+export interface ChatContentRef {
+  scrollToContainerBottom: () => void;
+}
 
 interface ChatContentInterface {
   type: ChatType;
@@ -43,23 +55,29 @@ const isToday = (someDate: Date) => {
   );
 };
 
-export default function ChatContent({
-  type,
-  commonMember,
-  isCommonMemberFetched,
-  isJoiningPending,
-  linkHighlightedMessageId,
-  hasAccess,
-  isHidden,
-  chatWrapperId,
-  messages,
-  dateList,
-  lastSeenItem,
-  hasPermissionToHide,
-  commonMembers,
-  discussionId,
-  feedItemId,
-}: ChatContentInterface) {
+const ChatContent: ForwardRefRenderFunction<
+  ChatContentRef,
+  ChatContentInterface
+> = (
+  {
+    type,
+    commonMember,
+    isCommonMemberFetched,
+    isJoiningPending,
+    linkHighlightedMessageId,
+    hasAccess,
+    isHidden,
+    chatWrapperId,
+    messages,
+    dateList,
+    lastSeenItem,
+    hasPermissionToHide,
+    commonMembers,
+    discussionId,
+    feedItemId,
+  },
+  chatContentRef,
+) => {
   const user = useSelector(selectUser());
 
   const [highlightedMessageId, setHighlightedMessageId] = useState(
@@ -115,6 +133,14 @@ export default function ChatContent({
     });
     setHighlightedMessageId(messageId);
   }
+
+  useImperativeHandle(
+    chatContentRef,
+    () => ({
+      scrollToContainerBottom,
+    }),
+    [scrollToContainerBottom],
+  );
 
   if (!hasAccess || isHidden) {
     return (
@@ -197,4 +223,6 @@ export default function ChatContent({
       )}
     </>
   );
-}
+};
+
+export default forwardRef(ChatContent);
