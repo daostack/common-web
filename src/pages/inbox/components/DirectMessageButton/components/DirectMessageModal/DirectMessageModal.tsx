@@ -129,11 +129,15 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
 
     if (dmUsersFetchError) {
       return (
-        <p className={styles.noDMUsersTest}>
+        <p className={styles.infoText}>
           Oops! Something went wrong while loading the user list. Please try
           again later.
         </p>
       );
+    }
+
+    if (totalUsersAmount === 0) {
+      return <p className={styles.infoText}>No users found</p>;
     }
 
     return (
