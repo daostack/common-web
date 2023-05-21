@@ -72,7 +72,7 @@ class UserService {
     } = await Api.get<GetInboxResponse>(
       `${ApiEndpoint.GetInbox}?${stringify(queryParams)}`,
     );
-    const inboxItems = data.inboxWithMetadata.map((item) =>
+    const inboxItems = data.inboxWithMetadata.feedItemFollows.map((item) =>
       convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>({
         ...item,
         feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(

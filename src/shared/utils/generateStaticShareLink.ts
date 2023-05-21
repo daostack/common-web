@@ -11,7 +11,7 @@ const staticLinkPrefix = () => {
     case Environment.Stage:
       return "https://web-staging.common.io";
     case Environment.Production:
-      return "https://app.common.io";
+      return "https://common.io";
   }
 };
 

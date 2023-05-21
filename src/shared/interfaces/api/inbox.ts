@@ -3,7 +3,10 @@ import { SynchronizedDate } from "../SynchronizedDate";
 
 export interface GetInboxResponse {
   data: {
-    inboxWithMetadata: FeedItemFollowWithMetadata[];
+    inboxWithMetadata: {
+      chatChannels: any[];
+      feedItemFollows: FeedItemFollowWithMetadata[];
+    };
     inboxCounter?: number;
     firstDocTimestamp: SynchronizedDate | null;
     lastDocTimestamp: SynchronizedDate | null;
