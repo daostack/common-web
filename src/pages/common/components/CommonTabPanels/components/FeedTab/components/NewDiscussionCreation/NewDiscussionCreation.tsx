@@ -81,22 +81,20 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
             },
           }),
         );
-
-        return;
+      } else {
+        dispatch(
+          commonActions.createDiscussion.request({
+            payload: {
+              title: values.title,
+              message: JSON.stringify(values.content),
+              ownerId: userId,
+              commonId: common.id,
+              images: values.images,
+              circleVisibility,
+            },
+          }),
+        );
       }
-
-      dispatch(
-        commonActions.createDiscussion.request({
-          payload: {
-            title: values.title,
-            message: JSON.stringify(values.content),
-            ownerId: userId,
-            commonId: common.id,
-            images: values.images,
-            circleVisibility,
-          },
-        }),
-      );
     },
     [governanceCircles, userCircleIds, userId, common.id, edit],
   );
