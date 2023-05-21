@@ -53,6 +53,7 @@ import {
   getDefaultSize,
   getItemCommonData,
   getSplitViewMaxSize,
+  saveChatSize,
 } from "./utils";
 import styles from "./FeedLayout.module.scss";
 
@@ -229,6 +230,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       );
     }
   }, [selectedFeedItem?.feedItemFollowWithMetadata?.commonId, userId]);
+
+  useEffect(() => {
+    saveChatSize(chatWidth);
+  }, [chatWidth]);
 
   useImperativeHandle(ref, () => ({ setExpandedFeedItemId }), []);
 

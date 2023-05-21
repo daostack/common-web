@@ -53,7 +53,12 @@ import {
   selectFilesPreview,
   FileInfo,
 } from "@/store/states";
-import { ChatContent, MessageReply, ChatFilePreview } from "./components";
+import {
+  ChatContent,
+  ChatContentRef,
+  MessageReply,
+  ChatFilePreview,
+} from "./components";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
 
@@ -113,6 +118,7 @@ export default function ChatComponent({
     selectCurrentDiscussionMessageReply(),
   );
   const currentFilesPreview = useSelector(selectFilesPreview());
+  const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
@@ -279,6 +285,7 @@ export default function ChatComponent({
           filesPreview,
           imagesPreview,
           tags: mentionTags,
+          mentions: mentionTags.map((tag) => tag.value),
         };
         const firebaseDate = Timestamp.fromDate(new Date());
 
@@ -339,6 +346,7 @@ export default function ChatComponent({
   const sendChatMessage = (): void => {
     if (canSendMessage) {
       sendMessage && sendMessage(message);
+      chatContentRef.current?.scrollToContainerBottom();
       onClear();
     }
   };
@@ -402,6 +410,7 @@ export default function ChatComponent({
       >
         {isFetchedDiscussionMessages ? (
           <ChatContent
+            ref={chatContentRef}
             type={type}
             commonMember={commonMember}
             isCommonMemberFetched={isCommonMemberFetched}
