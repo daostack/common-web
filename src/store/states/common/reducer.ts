@@ -300,6 +300,30 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
+  .handleAction(actions.editDiscussion.request, (state) =>
+    produce(state, (nextState) => {
+      nextState.discussionCreation = {
+        ...nextState.discussionCreation,
+        loading: true,
+      };
+    }),
+  )
+  .handleAction(actions.editDiscussion.success, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.discussionCreation = {
+        loading: false,
+        data: null,
+      };
+    }),
+  )
+  .handleAction(actions.editDiscussion.failure, (state) =>
+    produce(state, (nextState) => {
+      nextState.discussionCreation = {
+        ...nextState.discussionCreation,
+        loading: false,
+      };
+    }),
+  )
   .handleAction(
     [
       actions.createSurveyProposal.request,

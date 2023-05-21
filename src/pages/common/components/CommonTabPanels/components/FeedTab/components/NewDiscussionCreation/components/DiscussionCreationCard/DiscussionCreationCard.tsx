@@ -13,6 +13,7 @@ interface DiscussionCreationCardProps {
   onSubmit: (values: FormValues) => void;
   onCancel?: () => void;
   isLoading?: boolean;
+  edit?: boolean;
 }
 
 const DiscussionCreationCard: FC<DiscussionCreationCardProps> = (props) => {
@@ -23,6 +24,7 @@ const DiscussionCreationCard: FC<DiscussionCreationCardProps> = (props) => {
     onSubmit,
     onCancel,
     isLoading = false,
+    edit,
   } = props;
 
   return (
@@ -34,6 +36,7 @@ const DiscussionCreationCard: FC<DiscussionCreationCardProps> = (props) => {
         onSubmit={onSubmit}
         onCancel={onCancel}
         isLoading={isLoading}
+        edit={edit}
       />
     </CommonCard>
   );

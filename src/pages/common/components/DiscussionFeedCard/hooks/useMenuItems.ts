@@ -75,6 +75,7 @@ export const useMenuItems = (
             title: discussion.title,
             content: parseStringToTextEditorValue(discussion.message),
             images: [],
+            id: discussion.id,
           }),
         );
         dispatch(commonActions.setCommonAction(CommonAction.EditDiscussion));

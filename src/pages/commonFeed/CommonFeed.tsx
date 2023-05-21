@@ -240,12 +240,14 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         }
         topContent={
           <>
-            {commonAction === CommonAction.NewDiscussion && (
+            {(commonAction === CommonAction.NewDiscussion ||
+              commonAction === CommonAction.EditDiscussion) && (
               <NewDiscussionCreation
                 common={commonData.common}
                 governanceCircles={commonData.governance.circles}
                 commonMember={commonMember}
                 isModalVariant={false}
+                edit={commonAction === CommonAction.EditDiscussion}
               />
             )}
             {commonAction === CommonAction.NewProposal && (

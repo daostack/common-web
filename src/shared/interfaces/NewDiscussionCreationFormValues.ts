@@ -7,4 +7,5 @@ export interface NewDiscussionCreationFormValues {
   title: string;
   content: TextEditorValue;
   images: UploadFile[];
+  id?: string;
 }

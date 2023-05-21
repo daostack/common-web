@@ -1,4 +1,7 @@
-import { CreateDiscussionDto } from "@/pages/OldCommon/interfaces";
+import {
+  CreateDiscussionDto,
+  EditDiscussionDto,
+} from "@/pages/OldCommon/interfaces";
 import { ApiEndpoint } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { Collection, Discussion } from "@/shared/models";
@@ -37,6 +40,17 @@ class DiscussionService {
   ): Promise<Discussion> => {
     const { data } = await Api.post<Discussion>(
       ApiEndpoint.CreateDiscussion,
+      payload,
+    );
+
+    return convertObjectDatesToFirestoreTimestamps(data);
+  };
+
+  public editDiscussion = async (
+    payload: EditDiscussionDto,
+  ): Promise<Discussion> => {
+    const { data } = await Api.patch<Discussion>(
+      ApiEndpoint.EditDiscussion,
       payload,
     );
 

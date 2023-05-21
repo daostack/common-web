@@ -16,6 +16,7 @@ interface DiscussionCreationModalProps {
   isLoading?: boolean;
   commonImage: string;
   commonName: string;
+  edit?: boolean;
 }
 
 const DiscussionCreationModal: FC<DiscussionCreationModalProps> = (props) => {
@@ -28,6 +29,7 @@ const DiscussionCreationModal: FC<DiscussionCreationModalProps> = (props) => {
     isLoading = false,
     commonImage,
     commonName,
+    edit,
   } = props;
 
   return (
@@ -50,6 +52,7 @@ const DiscussionCreationModal: FC<DiscussionCreationModalProps> = (props) => {
           header: styles.discussionCreationFormHeader,
           buttonsWrapper: styles.buttonsWrapper,
         }}
+        edit={edit}
       />
     </CommonMobileModal>
   );

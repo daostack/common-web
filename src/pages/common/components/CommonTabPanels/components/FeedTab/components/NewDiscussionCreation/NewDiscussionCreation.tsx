@@ -23,6 +23,7 @@ interface NewDiscussionCreationProps {
   commonImage?: string;
   commonName?: string;
   isModalVariant?: boolean;
+  edit?: boolean;
 }
 
 const INITIAL_VALUES: NewDiscussionCreationFormValues = {
@@ -40,6 +41,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     commonImage,
     commonName,
     isModalVariant = false,
+    edit,
   } = props;
   const dispatch = useDispatch();
   const discussionCreationData = useSelector(selectDiscussionCreationData);
@@ -68,6 +70,21 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
 
       const circleVisibility = values.circle ? [values.circle.id] : [];
 
+      if (edit) {
+        dispatch(
+          commonActions.editDiscussion.request({
+            payload: {
+              id: values.id ?? "",
+              title: values.title,
+              message: JSON.stringify(values.content),
+              images: values.images,
+            },
+          }),
+        );
+
+        return;
+      }
+
       dispatch(
         commonActions.createDiscussion.request({
           payload: {
@@ -81,7 +98,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
         }),
       );
     },
-    [governanceCircles, userCircleIds, userId, common.id],
+    [governanceCircles, userCircleIds, userId, common.id, edit],
   );
 
   if (
@@ -99,6 +116,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
         isLoading={isLoading}
         commonImage={commonImage}
         commonName={commonName}
+        edit={edit}
       />
     );
   }
@@ -111,6 +129,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
       onSubmit={handleSubmit}
       onCancel={handleCancel}
       isLoading={isLoading}
+      edit={edit}
     />
   );
 };
