@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { Image } from "@/shared/components";
+import { UserAvatar } from "@/shared/components";
 import { TimeAgo } from "@/shared/ui-kit";
 import styles from "./DirectMessageUserItem.module.scss";
 
@@ -31,12 +31,11 @@ const DirectMessageUserItem: FC<DirectMessageUserItemProps> = (props) => {
       })}
     >
       <div className={styles.left}>
-        <Image
+        <UserAvatar
           className={styles.image}
-          src={image}
-          alt={`${name}'s image`}
-          placeholderElement={null}
-          aria-hidden
+          photoURL={image}
+          nameForRandomAvatar={name}
+          userName={name}
         />
         <span className={styles.name}>{name}</span>
       </div>
