@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { CommonFeedService } from "@/services";
 import { CommonAction, FollowFeedItemAction } from "@/shared/constants";
 import { useFeedItemFollow } from "@/shared/hooks/useCases";
-import { ContextMenuItem as Item } from "@/shared/interfaces";
+import { ContextMenuItem as Item, UploadFile } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { notEmpty } from "@/shared/utils/notEmpty";
 import { commonActions } from "@/store/states";
@@ -64,17 +64,18 @@ export const useMenuItems = (
           return;
         }
 
-        const circles = Object.values(governanceCircles).filter((circle) =>
-          discussion.circleVisibility?.includes(circle.id),
-        );
-        const circle = null;
+        const files: UploadFile[] = discussion.images.map((file, index) => ({
+          id: index.toString(),
+          title: file.title,
+          file: file.value,
+        }));
 
         dispatch(
           commonActions.setDiscussionCreationData({
             circle: null,
             title: discussion.title,
             content: parseStringToTextEditorValue(discussion.message),
-            images: [],
+            images: files,
             id: discussion.id,
           }),
         );

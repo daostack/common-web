@@ -74,7 +74,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
         dispatch(
           commonActions.editDiscussion.request({
             payload: {
-              id: values.id ?? "",
+              id: values.id,
               title: values.title,
               message: JSON.stringify(values.content),
               images: values.images,
