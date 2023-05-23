@@ -45,7 +45,6 @@ import {
   ButtonIcon,
   checkIsTextEditorValueEmpty,
 } from "@/shared/ui-kit";
-import { ParagraphElement } from "@/shared/ui-kit/TextEditor/types";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
   cacheActions,
