@@ -43,6 +43,7 @@ import {
   getMentionTags,
   parseStringToTextEditorValue,
   ButtonIcon,
+  checkIsTextEditorValueEmpty,
 } from "@/shared/ui-kit";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
@@ -185,7 +186,8 @@ export default function ChatComponent({
     CreateDiscussionMessageDtoWithFilesPreview[]
   >([]);
 
-  const canSendMessage = message.length || currentFilesPreview?.length;
+  const canSendMessage =
+    !checkIsTextEditorValueEmpty(message) || currentFilesPreview?.length;
 
   useDebounce(
     async () => {
