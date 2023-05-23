@@ -43,6 +43,7 @@ import {
   getMentionTags,
   parseStringToTextEditorValue,
   ButtonIcon,
+  checkIsTextEditorValueEmpty,
 } from "@/shared/ui-kit";
 import { ParagraphElement } from "@/shared/ui-kit/TextEditor/types";
 import { getUserName, hasPermission } from "@/shared/utils";
@@ -187,8 +188,7 @@ export default function ChatComponent({
   >([]);
 
   const canSendMessage =
-    (message[0] as ParagraphElement).children[0].text !== "" ||
-    currentFilesPreview?.length;
+    !checkIsTextEditorValueEmpty(message) || currentFilesPreview?.length;
 
   useDebounce(
     async () => {
