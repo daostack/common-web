@@ -50,7 +50,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const userId = user?.uid;
   const initialValues = useMemo(
     () => discussionCreationData || INITIAL_VALUES,
-    [],
+    [discussionCreationData],
   );
   const userCircleIds = useMemo(
     () => (commonMember ? Object.values(commonMember.circles.map) : []),

@@ -47,6 +47,7 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
   return (
     <Formik
       initialValues={initialValues}
+      enableReinitialize
       onSubmit={onSubmit}
       validationSchema={validationSchema}
       validateOnMount

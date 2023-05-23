@@ -308,7 +308,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
-  .handleAction(actions.editDiscussion.success, (state, { payload }) =>
+  .handleAction(actions.editDiscussion.success, (state) =>
     produce(state, (nextState) => {
       nextState.discussionCreation = {
         loading: false,

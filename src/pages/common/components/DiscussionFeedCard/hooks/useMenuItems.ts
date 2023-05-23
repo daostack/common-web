@@ -22,7 +22,7 @@ export const useMenuItems = (
   actions: Actions,
 ): Item[] => {
   const dispatch = useDispatch();
-  const { discussion, governanceCircles, commonId, feedItem } = options;
+  const { discussion, commonId, feedItem } = options;
   const { report, share, remove } = actions;
   const feedItemFollow = useFeedItemFollow(
     options.feedItem?.id,
@@ -60,7 +60,7 @@ export const useMenuItems = (
       id: FeedItemMenuItem.Edit,
       text: "Edit",
       onClick: () => {
-        if (!discussion || !governanceCircles) {
+        if (!discussion) {
           return;
         }
 
