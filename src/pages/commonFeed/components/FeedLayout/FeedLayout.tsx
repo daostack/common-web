@@ -48,7 +48,11 @@ import {
   SplitView,
 } from "./components";
 import { MIN_CHAT_WIDTH } from "./constants";
-import { FeedLayoutItem, FeedLayoutRef } from "./types";
+import {
+  checkIsFeedItemFollowLayoutItem,
+  FeedLayoutItem,
+  FeedLayoutRef,
+} from "./types";
 import {
   getDefaultSize,
   getItemCommonData,
@@ -113,7 +117,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const [shouldShowSeeMore, setShouldShowSeeMore] = useState(true);
   const { data: fetchedGovernance, fetchGovernance } =
     useGovernanceByCommonId();
-  const { data: fetchedCommonMember, fetchCommonMember } = useCommonMember({
+  const {
+    data: fetchedCommonMember,
+    fetchCommonMember,
+    setCommonMember,
+  } = useCommonMember({
     shouldAutoReset: false,
   });
   const governance = outerGovernance || fetchedGovernance;
@@ -144,9 +152,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (recentStreamId) {
       const foundItem = allFeedItems.find(
-        (item) => item.feedItem.data.id === recentStreamId,
+        (item) =>
+          checkIsFeedItemFollowLayoutItem(item) &&
+          item.feedItem.data.id === recentStreamId,
       );
-      return foundItem?.feedItem.id;
+      return foundItem?.itemId;
     }
 
     if (sharedFeedItemId) {
@@ -157,13 +167,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
-    const foundItem = allFeedItems?.find((item) =>
-      [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
-        item.feedItem.data.type,
-      ),
+    const foundItem = allFeedItems?.find(
+      (item) =>
+        !checkIsFeedItemFollowLayoutItem(item) ||
+        [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
+          item.feedItem.data.type,
+        ),
     );
 
-    return foundItem?.feedItem.id;
+    return foundItem?.itemId;
   }, [
     allFeedItems,
     isTabletView,
@@ -179,13 +191,17 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const selectedFeedItem = useMemo(
-    () => allFeedItems?.find((item) => item.feedItem.id === activeFeedItemId),
+    () => allFeedItems?.find((item) => item.itemId === activeFeedItemId),
     [allFeedItems, activeFeedItemId],
   );
-  const selectedItemCommonData = getItemCommonData(
-    selectedFeedItem?.feedItemFollowWithMetadata,
-    outerCommon,
-  );
+  const selectedItemCommonData = checkIsFeedItemFollowLayoutItem(
+    selectedFeedItem,
+  )
+    ? getItemCommonData(
+        selectedFeedItem?.feedItemFollowWithMetadata,
+        outerCommon,
+      )
+    : null;
 
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
@@ -222,14 +238,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [outerGovernance, selectedItemCommonData?.id]);
 
   useEffect(() => {
-    if (selectedFeedItem?.feedItemFollowWithMetadata?.commonId) {
-      fetchCommonMember(
-        selectedFeedItem.feedItemFollowWithMetadata.commonId,
-        {},
-        true,
-      );
+    if (selectedItemCommonData?.id) {
+      fetchCommonMember(selectedItemCommonData.id, {}, true);
+    } else {
+      setCommonMember(null);
     }
-  }, [selectedFeedItem?.feedItemFollowWithMetadata?.commonId, userId]);
+  }, [selectedItemCommonData?.id, userId]);
 
   useEffect(() => {
     saveChatSize(chatWidth);
@@ -242,7 +256,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } as CSSProperties;
 
   const followFeedItemEl =
-    (commonMember || selectedFeedItem?.feedItemFollowWithMetadata) &&
+    (commonMember ||
+      (checkIsFeedItemFollowLayoutItem(selectedFeedItem) &&
+        selectedFeedItem?.feedItemFollowWithMetadata)) &&
     activeFeedItemId &&
     selectedItemCommonData ? (
       <FollowFeedItemButton
@@ -272,36 +288,39 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               )}
               <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
                 {allFeedItems?.map((item) => {
-                  const isActive = item.feedItem.id === activeFeedItemId;
-                  const commonData = getItemCommonData(
-                    item.feedItemFollowWithMetadata,
-                    outerCommon,
-                  );
-                  const isPinned = (outerCommon?.pinnedFeedItems || []).some(
-                    (pinnedItem) =>
-                      pinnedItem.feedObjectId === item.feedItem.id,
-                  );
+                  const isActive = item.itemId === activeFeedItemId;
 
-                  return (
-                    <FeedItem
-                      key={item.feedItem.id}
-                      commonMember={commonMember}
-                      commonId={commonData?.id}
-                      commonName={commonData?.name || ""}
-                      commonImage={commonData?.image || ""}
-                      pinnedFeedItems={outerCommon?.pinnedFeedItems}
-                      isProject={commonData?.isProject}
-                      isPinned={isPinned}
-                      item={item.feedItem}
-                      governanceCircles={governance?.circles}
-                      isMobileVersion={isTabletView}
-                      userCircleIds={userCircleIds}
-                      isActive={isActive}
-                      isExpanded={item.feedItem.id === expandedFeedItemId}
-                      sizeKey={isActive ? sizeKey : undefined}
-                      currentUserId={userId}
-                    />
-                  );
+                  if (checkIsFeedItemFollowLayoutItem(item)) {
+                    const commonData = getItemCommonData(
+                      item.feedItemFollowWithMetadata,
+                      outerCommon,
+                    );
+                    const isPinned = (outerCommon?.pinnedFeedItems || []).some(
+                      (pinnedItem) =>
+                        pinnedItem.feedObjectId === item.feedItem.id,
+                    );
+
+                    return (
+                      <FeedItem
+                        key={item.feedItem.id}
+                        commonMember={commonMember}
+                        commonId={commonData?.id}
+                        commonName={commonData?.name || ""}
+                        commonImage={commonData?.image || ""}
+                        pinnedFeedItems={outerCommon?.pinnedFeedItems}
+                        isProject={commonData?.isProject}
+                        isPinned={isPinned}
+                        item={item.feedItem}
+                        governanceCircles={governance?.circles}
+                        isMobileVersion={isTabletView}
+                        userCircleIds={userCircleIds}
+                        isActive={isActive}
+                        isExpanded={item.feedItem.id === expandedFeedItemId}
+                        sizeKey={isActive ? sizeKey : undefined}
+                        currentUserId={userId}
+                      />
+                    );
+                  }
                 })}
               </InfiniteScroll>
               {!isTabletView &&
@@ -320,30 +339,32 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     isItemSelected={Boolean(selectedItemCommonData)}
                   />
                 ))}
-              {isTabletView && selectedItemCommonData && (
-                <MobileChat
-                  chatItem={chatItem}
-                  commonId={selectedItemCommonData.id}
-                  commonName={selectedItemCommonData.name}
-                  commonImage={selectedItemCommonData.image}
-                  governanceCircles={governance?.circles}
-                  commonMember={commonMember}
-                  shouldShowSeeMore={shouldShowSeeMore}
-                  rightHeaderContent={followFeedItemEl}
-                >
-                  <FeedItemPreviewModal
+              {isTabletView &&
+                selectedItemCommonData &&
+                checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
+                  <MobileChat
+                    chatItem={chatItem}
                     commonId={selectedItemCommonData.id}
                     commonName={selectedItemCommonData.name}
                     commonImage={selectedItemCommonData.image}
-                    isProject={selectedItemCommonData.isProject}
                     governanceCircles={governance?.circles}
-                    selectedFeedItem={selectedFeedItem?.feedItem}
-                    userCircleIds={userCircleIds}
-                    isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
-                    sizeKey={sizeKey}
-                  />
-                </MobileChat>
-              )}
+                    commonMember={commonMember}
+                    shouldShowSeeMore={shouldShowSeeMore}
+                    rightHeaderContent={followFeedItemEl}
+                  >
+                    <FeedItemPreviewModal
+                      commonId={selectedItemCommonData.id}
+                      commonName={selectedItemCommonData.name}
+                      commonImage={selectedItemCommonData.image}
+                      isProject={selectedItemCommonData.isProject}
+                      governanceCircles={governance?.circles}
+                      selectedFeedItem={selectedFeedItem?.feedItem}
+                      userCircleIds={userCircleIds}
+                      isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
+                      sizeKey={sizeKey}
+                    />
+                  </MobileChat>
+                )}
             </div>
           )}
         </ChatContext.Provider>
