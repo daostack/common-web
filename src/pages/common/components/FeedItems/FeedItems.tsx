@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useMemo } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
+import { checkIsFeedItemFollowLayoutItem } from "@/pages/commonFeed/components";
 import { getLastMessage } from "@/pages/commonFeed/utils";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
@@ -60,6 +61,10 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
       <FeedItemContext.Provider value={feedItemContextValue}>
         <InfiniteScroll onFetchNext={fetchMore} isLoading={loading}>
           {commonFeedItems?.map((item) => {
+            if (!checkIsFeedItemFollowLayoutItem(item)) {
+              return null;
+            }
+
             const isPinned = (common.pinnedFeedItems || []).some(
               (pinnedItem) => pinnedItem.feedObjectId === item.feedItem.id,
             );
