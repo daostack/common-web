@@ -23,6 +23,7 @@ import {
   NewProposalCreation,
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
 import {
+  checkIsFeedItemFollowLayoutItem,
   FeedLayout,
   FeedLayoutItem,
   FeedLayoutRef,
@@ -81,7 +82,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       items.push(...pinnedItemIds);
     }
     if (commonPinnedFeedItems) {
-      items.push(...commonPinnedFeedItems.map((item) => item.feedItem.id));
+      items.push(...commonPinnedFeedItems.map((item) => item.itemId));
     }
     if (sharedFeedItemId) {
       items.push(sharedFeedItemId);
@@ -102,7 +103,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     const items: FeedLayoutItem[] = [];
     const filteredPinnedItems =
       commonPinnedFeedItems?.filter(
-        (item) => item.feedItem.id !== sharedFeedItemId,
+        (item) => item.itemId !== sharedFeedItemId,
       ) || [];
 
     if (sharedFeedItem) {
@@ -194,7 +195,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [commonPinnedFeedItems, areCommonPinnedFeedItemsLoading]);
 
   useEffect(() => {
-    if (recentStreamId === firstItem?.feedItem.data.id) {
+    if (
+      checkIsFeedItemFollowLayoutItem(firstItem) &&
+      recentStreamId === firstItem.feedItem.data.id
+    ) {
       feedLayoutRef?.setExpandedFeedItemId(firstItem.feedItem.id);
       dispatch(commonActions.setRecentStreamId(""));
     }
