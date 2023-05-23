@@ -1,4 +1,5 @@
 import { useDispatch } from "react-redux";
+import { animateScroll } from "react-scroll";
 import { CommonFeedService } from "@/services";
 import { CommonAction, FollowFeedItemAction } from "@/shared/constants";
 import { useFeedItemFollow } from "@/shared/hooks/useCases";
@@ -80,6 +81,7 @@ export const useMenuItems = (
           }),
         );
         dispatch(commonActions.setCommonAction(CommonAction.EditDiscussion));
+        animateScroll.scrollToTop({ containerId: document.body, smooth: true });
       },
     },
     {
