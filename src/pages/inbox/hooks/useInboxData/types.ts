@@ -1,8 +1,8 @@
+import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
 import { LoadingState } from "@/shared/interfaces";
-import { FeedItemFollowWithMetadata } from "@/shared/models";
 
 export interface Data {
-  sharedInboxItem: FeedItemFollowWithMetadata | null;
+  sharedInboxItem: FeedLayoutItemWithFollowData | null;
 }
 
 export type State = LoadingState<Data | null>;
