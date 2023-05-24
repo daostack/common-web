@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { FeedItemFollowsService } from "@/services";
-import { State, CombinedState } from "./types";
+import { InboxItemType } from "@/shared/constants";
+import { CombinedState, State } from "./types";
 
 interface FetchInboxDataOptions {
   sharedFeedItemId?: string | null;
@@ -43,7 +44,12 @@ export const useInboxData = (userId?: string): Return => {
             loading: false,
             fetched: true,
             data: {
-              sharedInboxItem,
+              sharedInboxItem: sharedInboxItem && {
+                type: InboxItemType.FeedItemFollow,
+                itemId: sharedInboxItem.feedItemId,
+                feedItem: sharedInboxItem.feedItem,
+                feedItemFollowWithMetadata: sharedInboxItem,
+              },
             },
           });
         } catch (error) {
