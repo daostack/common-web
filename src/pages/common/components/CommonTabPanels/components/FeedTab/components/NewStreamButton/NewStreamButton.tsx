@@ -27,7 +27,7 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
     governance,
   } = props;
   const items = useMenuItems({ commonMember, governance });
-  const buttonVariant = ButtonVariant.OutlineBlue;
+  const buttonVariant = ButtonVariant.OutlinePink;
   const iconEl = <BoldPlusIcon className={styles.icon} />;
 
   if (items.length === 0) {
