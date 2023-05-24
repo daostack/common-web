@@ -1,5 +1,6 @@
 import { ApiEndpoint } from "@/shared/constants";
 import { DMUser } from "@/shared/interfaces";
+import { ChatChannel } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import Api from "./Api";
 
@@ -13,6 +14,19 @@ class ChatService {
       ...item,
       userName: getUserName(item),
     }));
+  };
+
+  public createChatChannel = async (
+    participants: string[],
+  ): Promise<ChatChannel> => {
+    const { data } = await Api.post<ChatChannel>(
+      ApiEndpoint.CreateChatChannel,
+      {
+        participants,
+      },
+    );
+
+    return data;
   };
 }
 

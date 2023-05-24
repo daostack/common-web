@@ -41,4 +41,5 @@ export const ApiEndpoint = {
   GetProposalEligibleVoters:
     "/proposals/get-all-eligible-proposal-voters/:proposalId",
   GetDMUsers: "/chat/users",
+  CreateChatChannel: "/chat/channel",
 };
