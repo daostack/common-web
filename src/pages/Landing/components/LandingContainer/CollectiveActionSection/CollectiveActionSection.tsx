@@ -37,7 +37,7 @@ const CollectiveActionSection: FC<CollectiveActionSectionProps> = ({
           className="landing-collective-action-section__button"
           onClick={onLaunchClick}
         >
-          {t("buttons.launchCommon")}
+          {t("buttons.joinWaitlist")}
         </Button>
       </div>
     </section>

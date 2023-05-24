@@ -43,7 +43,7 @@ const VideoSection: FC<VideoSectionProps> = ({ onLaunchClick }) => {
           onClick={onLaunchClick}
           shouldUseFullWidth
         >
-          {t("buttons.launchCommon")}
+          {t("buttons.joinWaitlist")}
         </Button>
       </div>
     </section>

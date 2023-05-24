@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
-import { useHistory } from "react-router-dom";
 import { Modal } from "@/shared/components";
 import {
   AuthProvider,
@@ -16,13 +15,11 @@ import {
   ScreenSize,
   QueryParamKey,
 } from "@/shared/constants";
-import { ROUTE_PATHS } from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
 import { setTutorialModalState } from "@/shared/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import { emptyFunction, isGeneralError } from "@/shared/utils";
-import { matchRoute } from "@/shared/utils";
 import { isFirebaseError } from "@/shared/utils/firebase";
 import { LoginModalType } from "../../../Auth/interface";
 import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
@@ -52,7 +49,6 @@ const LoginContainer: FC = () => {
   const isLoading = useSelector(selectIsAuthLoading());
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
-  const history = useHistory();
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [stage, setStage] = useState(AuthStage.AuthMethodSelect);
   const [errorText, setErrorText] = useState("");
@@ -84,9 +80,6 @@ const LoginContainer: FC = () => {
     if (stage === AuthStage.CompleteAccountDetails) {
       dispatch(setTutorialModalState({ isShowing: true }));
       return;
-    }
-    if (matchRoute(location.pathname, ROUTE_PATHS.HOME, { exact: true })) {
-      history.push(ROUTE_PATHS.COMMON_LIST);
     }
   }, [dispatch, stage, location.pathname]);
 
