@@ -1,4 +1,4 @@
-import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
+import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { Timestamp } from "@/shared/models";
 
 export interface InboxItems {

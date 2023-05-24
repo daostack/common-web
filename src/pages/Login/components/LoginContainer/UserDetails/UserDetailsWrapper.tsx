@@ -18,7 +18,12 @@ export default function UserDetailsWrapper(props: UserDetailsWrapperProps) {
       <p className="user-details__sub-title">
         Help the community to get to know you better
       </p>
-      <UserDetails user={user} isNewUser={isNewUser} closeModal={closeModal} />
+      <UserDetails
+        user={user}
+        isNewUser={isNewUser}
+        closeModal={closeModal}
+        isCountryDropdownFixed={false}
+      />
     </div>
   );
 }
