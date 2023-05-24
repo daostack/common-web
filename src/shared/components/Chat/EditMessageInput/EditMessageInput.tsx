@@ -5,6 +5,10 @@ import { updateDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { Loader, Button } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
 import { DiscussionMessage } from "@/shared/models";
+import {
+  getTextFromTextEditorValue,
+  parseStringToTextEditorValue,
+} from "@/shared/ui-kit/TextEditor/utils";
 import { getUserName } from "@/shared/utils";
 import styles from "./EditMessageInput.module.scss";
 
@@ -60,7 +64,9 @@ export default function EditMessageInput({
       </div>
       <textarea
         className={styles.input}
-        value={message}
+        value={getTextFromTextEditorValue(
+          parseStringToTextEditorValue(message),
+        )}
         onChange={handleChangeMessage}
       />
       <div className={styles.buttonContainer}>
