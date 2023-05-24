@@ -1,5 +1,7 @@
-import { FeedLayoutItem } from "@/pages/commonFeed";
-import { checkIsFeedItemFollowLayoutItem } from "@/pages/commonFeed/components";
+import {
+  checkIsFeedItemFollowLayoutItem,
+  FeedLayoutItem,
+} from "@/shared/interfaces";
 import { Timestamp } from "@/shared/models";
 
 export const getFeedLayoutItemDateForSorting = (

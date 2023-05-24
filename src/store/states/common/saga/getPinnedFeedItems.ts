@@ -1,7 +1,7 @@
 import { call, put } from "redux-saga/effects";
-import { FeedItemFollowLayoutItem } from "@/pages/commonFeed";
 import { CommonFeedService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
+import { FeedItemFollowLayoutItem } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
 import * as actions from "../actions";
 

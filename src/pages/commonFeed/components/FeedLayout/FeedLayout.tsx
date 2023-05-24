@@ -28,6 +28,11 @@ import {
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import {
+  checkIsFeedItemFollowLayoutItem,
+  FeedLayoutItem,
+  FeedLayoutRef,
+} from "@/shared/interfaces";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
   CirclesPermissions,
@@ -48,11 +53,6 @@ import {
   SplitView,
 } from "./components";
 import { MIN_CHAT_WIDTH } from "./constants";
-import {
-  checkIsFeedItemFollowLayoutItem,
-  FeedLayoutItem,
-  FeedLayoutRef,
-} from "./types";
 import {
   getDefaultSize,
   getItemCommonData,

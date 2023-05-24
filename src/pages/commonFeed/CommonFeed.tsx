@@ -8,6 +8,11 @@ import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
 import { RightArrowThinIcon } from "@/shared/icons";
+import {
+  checkIsFeedItemFollowLayoutItem,
+  FeedLayoutItem,
+  FeedLayoutRef,
+} from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
@@ -22,13 +27,7 @@ import {
   NewDiscussionCreation,
   NewProposalCreation,
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
-import {
-  checkIsFeedItemFollowLayoutItem,
-  FeedLayout,
-  FeedLayoutItem,
-  FeedLayoutRef,
-  HeaderContent,
-} from "./components";
+import { FeedLayout, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
 import { getLastMessage } from "./utils";
 import styles from "./CommonFeed.module.scss";

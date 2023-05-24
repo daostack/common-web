@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useMemo } from "react";
 import { useCommonDataContext } from "@/pages/common/providers";
-import { checkIsFeedItemFollowLayoutItem } from "@/pages/commonFeed/components";
 import { getLastMessage } from "@/pages/commonFeed/utils";
 import { ViewportBreakpointVariant } from "@/shared/constants";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { checkIsFeedItemFollowLayoutItem } from "@/shared/interfaces";
 import { Container, InfiniteScroll } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
 import { FeedItem, FeedItemContext, FeedItemContextValue } from "../FeedItem";

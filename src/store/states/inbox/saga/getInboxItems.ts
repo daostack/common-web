@@ -1,12 +1,12 @@
 import { call, put, select } from "redux-saga/effects";
+import { UserService } from "@/services";
+import { InboxItemType } from "@/shared/constants";
 import {
+  Awaited,
   ChatChannelLayoutItem,
   FeedItemFollowLayoutItemWithFollowData,
   FeedLayoutItemWithFollowData,
-} from "@/pages/commonFeed/components";
-import { UserService } from "@/services";
-import { InboxItemType } from "@/shared/constants";
-import { Awaited } from "@/shared/interfaces";
+} from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
 import * as actions from "../actions";
 import { selectInboxItems } from "../selectors";

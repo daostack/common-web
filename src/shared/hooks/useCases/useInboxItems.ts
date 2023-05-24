@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
 import {
   CommonFeedService,
   CommonService,
@@ -9,6 +8,7 @@ import {
   Logger,
 } from "@/services";
 import { InboxItemType } from "@/shared/constants";
+import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { FeedItemFollow, FeedItemFollowWithMetadata } from "@/shared/models";
 import { inboxActions, InboxItems, selectInboxItems } from "@/store/states";
 

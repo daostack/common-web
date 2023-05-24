@@ -1,5 +1,5 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
-import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
+import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
 import { InboxActionType } from "./constants";
 import { InboxItems } from "./types";

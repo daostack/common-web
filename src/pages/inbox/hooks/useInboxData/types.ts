@@ -1,5 +1,7 @@
-import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
-import { LoadingState } from "@/shared/interfaces";
+import {
+  FeedLayoutItemWithFollowData,
+  LoadingState,
+} from "@/shared/interfaces";
 
 export interface Data {
   sharedInboxItem: FeedLayoutItemWithFollowData | null;

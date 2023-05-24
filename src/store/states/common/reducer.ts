@@ -1,8 +1,8 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
-import { FeedItemFollowLayoutItem } from "@/pages/commonFeed";
 import { InboxItemType } from "@/shared/constants";
+import { FeedItemFollowLayoutItem } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
 import * as actions from "./actions";
 import { CommonState, FeedItems, PinnedFeedItems } from "./types";

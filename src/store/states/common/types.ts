@@ -1,6 +1,6 @@
-import { FeedItemFollowLayoutItem } from "@/pages/commonFeed";
 import { CommonAction } from "@/shared/constants";
 import {
+  FeedItemFollowLayoutItem,
   NewDiscussionCreationFormValues,
   NewProposalCreationFormValues,
   RecentAssignedCircle,
