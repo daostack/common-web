@@ -1,4 +1,4 @@
-import { FeedLayoutItem } from "@/pages/commonFeed";
+import { FeedItemFollowLayoutItem } from "@/pages/commonFeed";
 import { CommonAction } from "@/shared/constants";
 import {
   NewDiscussionCreationFormValues,
@@ -13,7 +13,7 @@ export type EntityCreation<T> = {
 };
 
 export interface FeedItems {
-  data: FeedLayoutItem[] | null;
+  data: FeedItemFollowLayoutItem[] | null;
   loading: boolean;
   hasMore: boolean;
   firstDocTimestamp: Timestamp | null;
@@ -21,7 +21,7 @@ export interface FeedItems {
 }
 
 export interface PinnedFeedItems {
-  data: FeedLayoutItem[] | null;
+  data: FeedItemFollowLayoutItem[] | null;
   loading: boolean;
 }
 
@@ -29,7 +29,7 @@ export interface CommonState {
   feedItems: FeedItems;
   pinnedFeedItems: PinnedFeedItems;
   sharedFeedItemId: string | null;
-  sharedFeedItem: FeedLayoutItem | null;
+  sharedFeedItem: FeedItemFollowLayoutItem | null;
   commonAction: CommonAction | null;
   discussionCreation: EntityCreation<NewDiscussionCreationFormValues>;
   proposalCreation: EntityCreation<NewProposalCreationFormValues>;
