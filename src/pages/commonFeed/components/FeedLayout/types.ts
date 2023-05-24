@@ -10,7 +10,7 @@ export interface FeedLayoutRef {
 }
 
 interface BaseLayoutItem {
-  type?: InboxItemType;
+  type: InboxItemType;
   itemId: string; // feed item id or chat channel id
 }
 
@@ -20,7 +20,7 @@ export interface ChatChannelLayoutItem extends BaseLayoutItem {
 }
 
 export interface FeedItemFollowLayoutItem extends BaseLayoutItem {
-  type?: InboxItemType.FeedItemFollow;
+  type: InboxItemType.FeedItemFollow;
   feedItem: CommonFeed;
   feedItemFollowWithMetadata?: FeedItemFollowWithMetadata;
 }
@@ -38,18 +38,12 @@ export type FeedLayoutItemWithFollowData =
 export const checkIsFeedItemFollowLayoutItem = (
   layoutItem?: BaseLayoutItem,
 ): layoutItem is FeedItemFollowLayoutItem =>
-  Boolean(
-    layoutItem &&
-      (!layoutItem.type || layoutItem.type === InboxItemType.FeedItemFollow),
-  );
+  layoutItem?.type === InboxItemType.FeedItemFollow;
 
 export const checkIsFeedItemFollowLayoutItemWithFollowData = (
   layoutItem?: BaseLayoutItem,
 ): layoutItem is FeedItemFollowLayoutItemWithFollowData =>
-  Boolean(
-    layoutItem &&
-      (!layoutItem.type || layoutItem.type === InboxItemType.FeedItemFollow),
-  );
+  layoutItem?.type === InboxItemType.FeedItemFollow;
 
 export const checkIsChatChannelLayoutItem = (
   layoutItem?: BaseLayoutItem,

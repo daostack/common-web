@@ -1,7 +1,6 @@
 import { call, put, select } from "redux-saga/effects";
 import {
   ChatChannelLayoutItem,
-  checkIsFeedItemFollowLayoutItem,
   FeedItemFollowLayoutItemWithFollowData,
   FeedLayoutItemWithFollowData,
 } from "@/pages/commonFeed/components";
@@ -12,18 +11,16 @@ import { isError } from "@/shared/utils";
 import * as actions from "../actions";
 import { selectInboxItems } from "../selectors";
 import { InboxItems } from "../types";
-
-const getItemDateForSorting = (item: FeedLayoutItemWithFollowData): number =>
-  checkIsFeedItemFollowLayoutItem(item)
-    ? item.feedItem.updatedAt.seconds * 1000
-    : item.chatChannel.updatedAt.seconds * 1000;
+import { getFeedLayoutItemDateForSorting } from "../utils";
 
 const sortItems = (
   data: FeedLayoutItemWithFollowData[],
 ): FeedLayoutItemWithFollowData[] =>
   [...data].sort((prevItem, nextItem) => {
-    const prevItemDate = getItemDateForSorting(prevItem);
-    const nextItemDate = getItemDateForSorting(nextItem);
+    const prevItemDate =
+      getFeedLayoutItemDateForSorting(prevItem).seconds * 1000;
+    const nextItemDate =
+      getFeedLayoutItemDateForSorting(nextItem).seconds * 1000;
 
     return nextItemDate - prevItemDate;
   });
