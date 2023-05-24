@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
 import {
   CommonFeedService,
   CommonService,
   FeedItemFollowsService,
   Logger,
 } from "@/services";
+import { InboxItemType } from "@/shared/constants";
 import { FeedItemFollow, FeedItemFollowWithMetadata } from "@/shared/models";
 import { inboxActions, InboxItems, selectInboxItems } from "@/store/states";
 
@@ -26,7 +28,7 @@ type ItemsBatch = ItemBatch[];
 
 const addMetadataToItemsBatch = async (
   batch: ItemsBatch,
-): Promise<ItemBatch<FeedItemFollowWithMetadata>[]> => {
+): Promise<ItemBatch<FeedLayoutItemWithFollowData>[]> => {
   const data = await Promise.all(
     batch.map(async ({ item }) => {
       try {
@@ -90,9 +92,19 @@ const addMetadataToItemsBatch = async (
     },
   );
 
-  return finalData.filter(
-    (item): item is ItemBatch<FeedItemFollowWithMetadata> => Boolean(item),
-  );
+  return finalData
+    .filter((item): item is ItemBatch<FeedItemFollowWithMetadata> =>
+      Boolean(item),
+    )
+    .map<ItemBatch<FeedLayoutItemWithFollowData>>((item) => ({
+      statuses: item.statuses,
+      item: {
+        type: InboxItemType.FeedItemFollow,
+        itemId: item.item.feedItemId,
+        feedItem: item.item.feedItem,
+        feedItemFollowWithMetadata: item.item,
+      },
+    }));
 };
 
 export const useInboxItems = (
