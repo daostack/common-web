@@ -8,11 +8,10 @@ import styles from "./DirectMessageButton.module.scss";
 interface DirectMessageButtonProps {
   className?: string;
   isMobileVersion?: boolean;
-  isHidden?: boolean;
 }
 
 const DirectMessageButton: FC<DirectMessageButtonProps> = (props) => {
-  const { className, isMobileVersion = false, isHidden = false } = props;
+  const { className, isMobileVersion = false } = props;
   const {
     isShowing: isDirectMessageModalOpen,
     onOpen: onDirectMessageModalOpen,
@@ -39,10 +38,6 @@ const DirectMessageButton: FC<DirectMessageButtonProps> = (props) => {
       Direct message
     </Button>
   );
-
-  if (isHidden) {
-    return null;
-  }
 
   return (
     <>
