@@ -10,12 +10,19 @@ import { QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { FeedLayoutRef } from "@/shared/interfaces";
+import {
+  ChatChannelFeedLayoutItemProps,
+  FeedLayoutRef,
+} from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { inboxActions, selectSharedInboxItem } from "@/store/states";
-import { HeaderContent, FeedItemBaseContent } from "./components";
+import {
+  ChatChannelItem,
+  HeaderContent,
+  FeedItemBaseContent,
+} from "./components";
 import { useInboxData } from "./hooks";
 import { getLastMessage, getNonAllowedItems } from "./utils";
 import styles from "./Inbox.module.scss";
@@ -71,6 +78,11 @@ const InboxPage: FC = () => {
 
   const renderFeedItemBaseContent = useCallback(
     (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,
+    [],
+  );
+
+  const renderChatChannelItem = useCallback(
+    (props: ChatChannelFeedLayoutItemProps) => <ChatChannelItem {...props} />,
     [],
   );
 
@@ -156,6 +168,7 @@ const InboxPage: FC = () => {
         shouldHideContent={!user}
         onFetchNext={fetchMoreInboxItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
+        renderChatChannelItem={renderChatChannelItem}
         onFeedItemUpdate={handleFeedItemUpdate}
         getLastMessage={getLastMessage}
         emptyText="Your inbox is empty"

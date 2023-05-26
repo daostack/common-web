@@ -29,6 +29,8 @@ import { ChatContext } from "@/pages/common/components/ChatComponent/context";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
+  ChatChannelFeedLayoutItemProps,
+  checkIsChatChannelLayoutItem,
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItem,
   FeedLayoutRef,
@@ -75,6 +77,7 @@ interface FeedLayoutProps {
   shouldHideContent?: boolean;
   onFetchNext: () => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
+  renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   sharedFeedItemId?: string | null;
@@ -100,6 +103,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     shouldHideContent = false,
     onFetchNext,
     renderFeedItemBaseContent,
+    renderChatChannelItem,
     onFeedItemUpdate,
     getLastMessage,
     sharedFeedItemId,
@@ -319,6 +323,19 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         sizeKey={isActive ? sizeKey : undefined}
                         currentUserId={userId}
                       />
+                    );
+                  }
+                  if (
+                    renderChatChannelItem &&
+                    checkIsChatChannelLayoutItem(item)
+                  ) {
+                    return (
+                      <React.Fragment key={item.itemId}>
+                        {renderChatChannelItem({
+                          chatChannel: item.chatChannel,
+                          isActive,
+                        })}
+                      </React.Fragment>
                     );
                   }
                 })}

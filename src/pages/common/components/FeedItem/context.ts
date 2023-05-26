@@ -27,8 +27,10 @@ export interface FeedItemBaseContentProps {
   seenOnce?: boolean;
   ownerId?: string;
   commonName?: string;
+  renderImage?: (className?: string) => ReactNode;
   image?: string;
   imageAlt?: string;
+  isImageRounded?: boolean;
   isProject?: boolean;
   isPinned?: boolean;
   discussionPredefinedType?: PredefinedTypes;
