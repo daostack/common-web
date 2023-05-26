@@ -3,6 +3,7 @@ import { ApiEndpoint } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { GetInboxResponse } from "@/shared/interfaces/api";
 import {
+  ChatChannel,
   Collection,
   CommonFeed,
   FeedItemFollowWithMetadata,
@@ -53,7 +54,7 @@ class UserService {
       limit?: number;
     } = {},
   ): Promise<{
-    data: FeedItemFollowWithMetadata[];
+    data: GetInboxResponse["data"]["inboxWithMetadata"];
     firstDocTimestamp: Timestamp | null;
     lastDocTimestamp: Timestamp | null;
     hasMore: boolean;
@@ -72,14 +73,19 @@ class UserService {
     } = await Api.get<GetInboxResponse>(
       `${ApiEndpoint.GetInbox}?${stringify(queryParams)}`,
     );
-    const inboxItems = data.inboxWithMetadata.map((item) =>
-      convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>({
-        ...item,
-        feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
-          item.feedItem,
-        ),
-      }),
-    );
+    const inboxItems: GetInboxResponse["data"]["inboxWithMetadata"] = {
+      chatChannels: data.inboxWithMetadata.chatChannels.map((item) =>
+        convertObjectDatesToFirestoreTimestamps<ChatChannel>(item),
+      ),
+      feedItemFollows: data.inboxWithMetadata.feedItemFollows.map((item) =>
+        convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>({
+          ...item,
+          feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
+            item.feedItem,
+          ),
+        }),
+      ),
+    };
     const firstDocTimestamp =
       (data.firstDocTimestamp && convertToTimestamp(data.firstDocTimestamp)) ||
       null;

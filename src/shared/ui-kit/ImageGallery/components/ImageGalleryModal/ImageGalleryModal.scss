@@ -7,7 +7,7 @@
   max-height: 43.125rem;
   height: 100%;
   margin-top: 1.625rem;
-  
+
   & .swiper-container {
     padding-bottom: 2rem;
     max-height: 35rem;
@@ -28,7 +28,6 @@
 .slider-wrapper {
   align-self: center;
   max-height: 35rem;
-
 }
 
 .slide-img {
@@ -77,9 +76,8 @@
   position: relative;
   width: fit-content;
   z-index: 3;
-}
-
-.video {
+  display: flex;
+  justify-content: center;
   width: 100%;
   height: 100%;
 }

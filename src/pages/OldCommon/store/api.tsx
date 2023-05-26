@@ -821,8 +821,13 @@ export const getCommonMember = async (
 
 export const getCommonMembers = async (
   commonId: string,
+  circleVisibility: string[],
 ): Promise<CommonMemberWithUserInfo[]> => {
-  const result = await commonMembersSubCollection(commonId).get();
+  const result = await (circleVisibility.length > 0
+    ? commonMembersSubCollection(commonId)
+        .where("circleIds", "array-contains-any", circleVisibility)
+        .get()
+    : commonMembersSubCollection(commonId).get());
   const members = transformFirebaseDataList<CommonMember>(result);
   const userIds = Array.from(new Set(members.map(({ userId }) => userId)));
   const users = await getUserListByIds(userIds);

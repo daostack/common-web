@@ -3,6 +3,3 @@
 
 ### What was changed?
 - [ ] 
-
-### How to test?
-- [ ] 

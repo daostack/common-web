@@ -1,9 +1,12 @@
-import { FeedItemFollowWithMetadata } from "@/shared/models";
+import { ChatChannel, FeedItemFollowWithMetadata } from "@/shared/models";
 import { SynchronizedDate } from "../SynchronizedDate";
 
 export interface GetInboxResponse {
   data: {
-    inboxWithMetadata: FeedItemFollowWithMetadata[];
+    inboxWithMetadata: {
+      chatChannels: ChatChannel[];
+      feedItemFollows: FeedItemFollowWithMetadata[];
+    };
     inboxCounter?: number;
     firstDocTimestamp: SynchronizedDate | null;
     lastDocTimestamp: SynchronizedDate | null;

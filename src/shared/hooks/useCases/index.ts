@@ -4,7 +4,6 @@ export { useCommonMembersWithCircleIdsAmount } from "./useCommonMembersWithCircl
 export { useCommonRulesAcceptance } from "./useCommonRulesAcceptance";
 export { useDiscussionById } from "./useDiscussionById";
 export { useFeedItemUserMetadata } from "./useFeedItemUserMetadata";
-export { useFollowFeedItem } from "./useFollowFeedItem";
 export { useFullCommonData } from "./useFullCommonData";
 export { useGlobalCommonData } from "./useGlobalCommonData";
 export { useImmediateContribution } from "./useImmediateContribution";
@@ -20,6 +19,8 @@ export { useUserById } from "./useUserById";
 export { default as useUserCards } from "./useUserCards";
 export { default as useUserContributions } from "./useUserContributions";
 export { useUserFeedItemFollowData } from "./useUserFeedItemFollowData";
+export { useFeedItemFollow } from "./useFeedItemFollow";
+export type { FeedItemFollowState } from "./useFeedItemFollow";
 export { useGovernance } from "./useGovernance";
 export { useGovernanceByCommonId } from "./useGovernanceByCommonId";
 export { useUserInfoAboutMemberships } from "./useUserInfoAboutMemberships";

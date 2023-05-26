@@ -1,27 +1,37 @@
 import { useDispatch } from "react-redux";
 import { CommonFeedService } from "@/services";
-import { CommonAction } from "@/shared/constants";
+import { CommonAction, FollowFeedItemAction } from "@/shared/constants";
+import { useFeedItemFollow } from "@/shared/hooks/useCases";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
+import { notEmpty } from "@/shared/utils/notEmpty";
 import { commonActions } from "@/store/states";
-import { DiscussionCardMenuItem } from "../constants";
-import { getAllowedItems, GetAllowedItemsOptions } from "../utils";
+import { FeedItemMenuItem, GetAllowedItemsOptions } from "../../FeedItem";
+import { getAllowedItems } from "../utils";
 
-type Options = GetAllowedItemsOptions;
+export type MenuItemOptions = Omit<GetAllowedItemsOptions, "feedItemFollow">;
 
 interface Actions {
   report: () => void;
   share: () => void;
+  remove?: () => void;
 }
 
-export const useMenuItems = (options: Options, actions: Actions): Item[] => {
+export const useMenuItems = (
+  options: MenuItemOptions,
+  actions: Actions,
+): Item[] => {
   const dispatch = useDispatch();
   const { discussion, governanceCircles, commonId, feedItem } = options;
-  const { report, share } = actions;
-  const allowedMenuItems = getAllowedItems(options);
+  const { report, share, remove } = actions;
+  const feedItemFollow = useFeedItemFollow(
+    options.feedItem?.id,
+    options.commonId,
+  );
+  const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
   const items: Item[] = [
     {
-      id: DiscussionCardMenuItem.Pin,
+      id: FeedItemMenuItem.Pin,
       text: "Pin",
       onClick: async () => {
         if (!commonId || !feedItem) return;
@@ -29,7 +39,7 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       },
     },
     {
-      id: DiscussionCardMenuItem.Unpin,
+      id: FeedItemMenuItem.Unpin,
       text: "Unpin",
       onClick: async () => {
         if (!commonId || !feedItem) return;
@@ -37,17 +47,17 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       },
     },
     {
-      id: DiscussionCardMenuItem.Share,
+      id: FeedItemMenuItem.Share,
       text: "Share",
       onClick: share,
     },
     {
-      id: DiscussionCardMenuItem.Report,
+      id: FeedItemMenuItem.Report,
       text: "Report",
       onClick: report,
     },
     {
-      id: DiscussionCardMenuItem.Edit,
+      id: FeedItemMenuItem.Edit,
       text: "Edit",
       onClick: () => {
         if (!discussion || !governanceCircles) {
@@ -71,15 +81,26 @@ export const useMenuItems = (options: Options, actions: Actions): Item[] => {
       },
     },
     {
-      id: DiscussionCardMenuItem.Remove,
-      text: "Remove",
-      onClick: () => {
-        console.log(DiscussionCardMenuItem.Remove);
-      },
+      id: FeedItemMenuItem.Follow,
+      text: "Follow",
+      onClick: () => feedItemFollow.onFollowToggle(FollowFeedItemAction.Follow),
     },
-  ];
+    {
+      id: FeedItemMenuItem.Unfollow,
+      text: "Unfollow",
+      onClick: () =>
+        feedItemFollow.onFollowToggle(FollowFeedItemAction.Unfollow),
+    },
+    remove
+      ? {
+          id: FeedItemMenuItem.Remove,
+          text: "Remove",
+          onClick: remove,
+        }
+      : undefined,
+  ].filter(notEmpty);
 
   return items.filter((item) =>
-    allowedMenuItems.includes(item.id as DiscussionCardMenuItem),
+    allowedMenuItems.includes(item.id as FeedItemMenuItem),
   );
 };

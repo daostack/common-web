@@ -1,23 +1,20 @@
 import React, { FC, memo, useEffect } from "react";
 import { useGovernance } from "@/shared/hooks/useCases";
 import { CommonMemberWithUserInfo } from "@/shared/models";
-import {
-  getCirclesWithHighestTier,
-  getFilteredByIdCircles,
-  getUserName,
-} from "@/shared/utils";
 import CommonMember from "./CommonMemberComponent";
 
 interface MembersListComponentProps {
   members: CommonMemberWithUserInfo[];
   commonId: string;
   governanceId: string | null;
+  isProject: boolean;
 }
 
 const MembersList: FC<MembersListComponentProps> = ({
   members,
   commonId,
   governanceId,
+  isProject,
 }) => {
   const {
     data: governance,
@@ -40,24 +37,15 @@ const MembersList: FC<MembersListComponentProps> = ({
   return (
     <ul className="members__section__members-list">
       {members.map((member) => {
-        const memberCircles = getFilteredByIdCircles(
-          governanceCircles,
-          member.circleIds,
-        );
-        const circlesString = getCirclesWithHighestTier(memberCircles)
-          .map((circle) => circle.name)
-          .join(", ");
-        const memberName = getUserName(member.user);
-
         return (
           <CommonMember
             key={member.id}
-            circles={circlesString}
-            memberName={memberName}
             avatar={member.user.photoURL}
             joinedAt={member.joinedAt}
             member={member}
             commonId={commonId}
+            governanceCircles={governanceCircles}
+            isProject={isProject}
           />
         );
       })}

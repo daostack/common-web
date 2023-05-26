@@ -43,7 +43,7 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
 
   return (
     <Modal
-      className={classNames(styles.modal, outerStyles?.modal)}
+      className={classNames(outerStyles?.modal)}
       isShowing={isShowing}
       title={header}
       styles={{
@@ -54,6 +54,7 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
       onClose={emptyFunction}
       hideCloseButton
       isHeaderSticky={Boolean(header)}
+      mobileFullScreen
     >
       <div className={styles.content}>
         {!header && (

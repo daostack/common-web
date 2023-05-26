@@ -35,8 +35,11 @@ export const ApiEndpoint = {
   SendEmail: "/notifications/send-email",
   SeenNotification: "/notifications/seen",
   CreateDiscussion: "/discussions/create",
+  DeleteDiscussion: (id: string) => `/discussions/delete/${id}`,
   CreateDiscussionMessage: "/discussions/message",
   DeleteDiscussionMessage: "/discussions/delete",
   GetProposalEligibleVoters:
     "/proposals/get-all-eligible-proposal-voters/:proposalId",
+  GetDMUsers: "/chat/users",
+  CreateChatChannel: "/chat/channel",
 };

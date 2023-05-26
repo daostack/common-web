@@ -2,6 +2,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
+import { useModal } from "@/shared/hooks";
 import {
   useDiscussionById,
   useFeedItemUserMetadata,
@@ -14,7 +15,12 @@ import {
   Governance,
   PredefinedTypes,
 } from "@/shared/models";
-import { checkIsCountdownState, getUserName } from "@/shared/utils";
+import { TextEditorValue } from "@/shared/ui-kit";
+import {
+  StaticLinkType,
+  checkIsCountdownState,
+  getUserName,
+} from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import { useMenuItems } from "../DiscussionFeedCard/hooks";
 import {
@@ -23,8 +29,9 @@ import {
   FeedCardContent,
   getVisibilityString,
   FeedCountdown,
+  FeedCardShare,
 } from "../FeedCard";
-import { GetLastMessageOptions } from "../FeedItem";
+import { GetLastMessageOptions, GetNonAllowedItemsOptions } from "../FeedItem";
 import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
@@ -52,7 +59,8 @@ interface ProposalFeedCardProps {
   sizeKey?: string;
   isActive: boolean;
   isExpanded: boolean;
-  getLastMessage: (options: GetLastMessageOptions) => string;
+  getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
+  getNonAllowedItems?: GetNonAllowedItemsOptions;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -69,6 +77,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     isActive,
     isExpanded,
     getLastMessage,
+    getNonAllowedItems,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -125,6 +134,11 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setHovering(isMouseEnter);
   };
   const proposalId = item.data.id;
+  const {
+    isShowing: isShareModalOpen,
+    onOpen: onShareModalOpen,
+    onClose: onShareModalClose,
+  } = useModal(false);
   const menuItems = useMenuItems(
     {
       commonId,
@@ -133,10 +147,11 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       discussion,
       governanceCircles,
       commonMember,
+      getNonAllowedItems,
     },
     {
       report: () => {},
-      share: () => {},
+      share: () => onShareModalOpen(),
     },
   );
 
@@ -291,38 +306,49 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   };
 
   return (
-    <FeedCard
-      feedItemId={item.id}
-      isHovering={isHovering}
-      onClick={handleOpenChat}
-      lastActivity={item.updatedAt.seconds * 1000}
-      isActive={isActive}
-      isExpanded={isExpanded}
-      unreadMessages={feedItemUserMetadata?.count || 0}
-      title={discussion?.title}
-      lastMessage={getLastMessage({
-        commonFeedType: item.data.type,
-        lastMessage: item.data.lastMessage,
-        discussion,
-        currentUserId: userId,
-        feedItemCreatorName: getUserName(feedItemUser),
-        commonName,
-        isProject,
-      })}
-      canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
-      isPreviewMode={isPreviewMode}
-      image={commonImage}
-      imageAlt={`${commonName}'s image`}
-      isProject={isProject}
-      isPinned={isPinned}
-      isLoading={isLoading}
-      type={item.data.type}
-      seenOnce={feedItemUserMetadata?.seenOnce}
-      menuItems={menuItems}
-      ownerId={item.userId}
-    >
-      {renderContent()}
-    </FeedCard>
+    <>
+      <FeedCard
+        feedItemId={item.id}
+        isHovering={isHovering}
+        onClick={handleOpenChat}
+        lastActivity={item.updatedAt.seconds * 1000}
+        isActive={isActive}
+        isExpanded={isExpanded}
+        unreadMessages={feedItemUserMetadata?.count || 0}
+        title={discussion?.title}
+        lastMessage={getLastMessage({
+          commonFeedType: item.data.type,
+          lastMessage: item.data.lastMessage,
+          discussion,
+          currentUserId: userId,
+          feedItemCreatorName: getUserName(feedItemUser),
+          commonName,
+          isProject,
+        })}
+        canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
+        isPreviewMode={isPreviewMode}
+        image={commonImage}
+        imageAlt={`${commonName}'s image`}
+        isProject={isProject}
+        isPinned={isPinned}
+        isLoading={isLoading}
+        type={item.data.type}
+        seenOnce={feedItemUserMetadata?.seenOnce}
+        menuItems={menuItems}
+        ownerId={item.userId}
+      >
+        {renderContent()}
+      </FeedCard>
+      {discussion && (
+        <FeedCardShare
+          isOpen={isShareModalOpen}
+          onClose={onShareModalClose}
+          linkType={StaticLinkType.Proposal}
+          element={discussion}
+          feedItemId={item.id}
+        />
+      )}
+    </>
   );
 };
 

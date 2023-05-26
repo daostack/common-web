@@ -3,8 +3,8 @@ import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
-import { CommonFeedType } from "@/shared/models";
-import { Loader } from "@/shared/ui-kit";
+import { CommonFeedType, PredefinedTypes } from "@/shared/models";
+import { Loader, TextEditorValue } from "@/shared/ui-kit";
 import { CommonCard } from "../CommonCard";
 import styles from "./FeedCard.module.scss";
 
@@ -19,8 +19,9 @@ interface FeedCardProps {
   isActive?: boolean;
   isExpanded?: boolean;
   canBeExpanded?: boolean;
-  lastMessage?: string;
+  lastMessage?: TextEditorValue;
   isPreviewMode?: boolean;
+  commonName?: string;
   image?: string;
   imageAlt?: string;
   isProject?: boolean;
@@ -30,6 +31,7 @@ interface FeedCardProps {
   menuItems?: ContextMenuItem[];
   seenOnce?: boolean;
   ownerId?: string;
+  discussionPredefinedType?: PredefinedTypes;
 }
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -50,6 +52,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     title,
     lastMessage,
     isPreviewMode = true,
+    commonName,
     image,
     imageAlt,
     isProject,
@@ -59,6 +62,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     menuItems,
     seenOnce,
     ownerId,
+    discussionPredefinedType,
   } = props;
   const isTabletView = useIsTabletView();
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
@@ -115,8 +119,9 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           onClick: handleClick,
           onExpand: handleExpand,
           title,
-          lastMessage,
+          lastMessage: !isLoading ? lastMessage : undefined,
           menuItems,
+          commonName,
           image,
           imageAlt,
           isProject,
@@ -124,6 +129,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           type,
           seenOnce,
           ownerId,
+          discussionPredefinedType,
         })}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (
         <CommonCard

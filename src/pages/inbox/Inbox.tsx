@@ -5,18 +5,19 @@ import {
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
 import { FeedItemBaseContentProps } from "@/pages/common";
-import { FeedLayout, FeedLayoutRef } from "@/pages/commonFeed";
+import { FeedLayout } from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
+import { FeedLayoutRef } from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { inboxActions, selectSharedInboxItem } from "@/store/states";
 import { HeaderContent, FeedItemBaseContent } from "./components";
 import { useInboxData } from "./hooks";
-import { getLastMessage } from "./utils";
+import { getLastMessage, getNonAllowedItems } from "./utils";
 import styles from "./Inbox.module.scss";
 
 const InboxPage: FC = () => {
@@ -158,6 +159,7 @@ const InboxPage: FC = () => {
         onFeedItemUpdate={handleFeedItemUpdate}
         getLastMessage={getLastMessage}
         emptyText="Your inbox is empty"
+        getNonAllowedItems={getNonAllowedItems}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

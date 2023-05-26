@@ -5,14 +5,12 @@ import copyToClipboard from "copy-to-clipboard";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { MenuButton, ShareModal } from "@/shared/components";
 import {
-  DynamicLinkType,
   Orientation,
   ShareViewType,
   ScreenSize,
   EntityTypes,
 } from "@/shared/constants";
-import { REACT_APP_ENV, Environment } from "@/shared/constants";
-import { useBuildShareLink, useNotification, useModal } from "@/shared/hooks";
+import { useNotification, useModal } from "@/shared/hooks";
 import {
   MenuItem as DesktopStyleMenuItem,
   MenuItemType,
@@ -27,8 +25,16 @@ import {
   Governance,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { DesktopStyleMenu } from "@/shared/ui-kit";
-import { hasPermission } from "@/shared/utils";
+import {
+  DesktopStyleMenu,
+  parseStringToTextEditorValue,
+  serializeTextEditorValue,
+} from "@/shared/ui-kit";
+import {
+  StaticLinkType,
+  generateStaticShareLink,
+  hasPermission,
+} from "@/shared/utils";
 import { chatActions } from "@/store/states";
 import { selectCommonMember, selectGovernance } from "@/store/states";
 import { DeleteModal } from "../DeleteModal";
@@ -44,7 +50,7 @@ import elementDropdownStyles from "./ElementDropdown.module.scss";
 import "./index.scss";
 
 interface ElementDropdownProps {
-  linkType: DynamicLinkType;
+  linkType: StaticLinkType;
   elem: Common | Proposal | Discussion | DiscussionMessage;
   variant?: Orientation;
   transparent?: boolean;
@@ -59,6 +65,7 @@ interface ElementDropdownProps {
   ownerId?: string;
   commonId?: string;
   isControlledDropdown?: boolean;
+  feedItemId: string;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
@@ -77,6 +84,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   ownerId,
   commonId,
   isControlledDropdown = true,
+  feedItemId,
 }) => {
   const dispatch = useDispatch();
   const screenSize = useSelector(getScreenSize());
@@ -84,13 +92,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   const commonMember = useSelector(selectCommonMember) as CommonMember;
   const governance = useSelector(selectGovernance) as Governance;
   const { notify } = useNotification();
-  const [linkURL, setLinkURL] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<
     ElementDropdownMenuItems | unknown
   >(null);
-  const [isShareLinkGenerating, setIsShareLinkGenerating] =
-    useState<boolean>(false);
-  const { handleOpen } = useBuildShareLink(linkType, elem, setLinkURL);
+
+  const staticShareLink = generateStaticShareLink(linkType, elem, feedItemId);
+
   const { isShowing, onOpen, onClose } = useModal(false);
   const {
     isShowing: isShowingReport,
@@ -192,7 +199,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     return items;
   }, [
-    linkURL,
     isDiscussionMessage,
     elem,
     user,
@@ -204,14 +210,9 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
   const handleMenuToggle = useCallback(
     (isOpen: boolean) => {
-      if (!linkURL && isOpen) {
-        handleOpen();
-        REACT_APP_ENV !== Environment.Dev && setIsShareLinkGenerating(true);
-      }
-
       if (onMenuToggle) onMenuToggle(isOpen);
     },
-    [linkURL, onMenuToggle, setIsShareLinkGenerating],
+    [onMenuToggle],
   );
 
   const handleMenuItemSelect = useCallback(
@@ -220,12 +221,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     },
     [setSelectedItem],
   );
-
-  useEffect(() => {
-    if (!linkURL || !isShareLinkGenerating) return;
-
-    setIsShareLinkGenerating(false);
-  }, [isShareLinkGenerating, setIsShareLinkGenerating, linkURL]);
 
   useEffect(() => {
     if (selectedItem === null) {
@@ -237,14 +232,16 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         onOpen();
         break;
       case ElementDropdownMenuItems.Copy:
-        copyToClipboard((elem as DiscussionMessage).text);
+        copyToClipboard(
+          serializeTextEditorValue(
+            parseStringToTextEditorValue((elem as DiscussionMessage).text),
+          ),
+        );
         notify("The message has copied!");
         break;
       case ElementDropdownMenuItems.CopyLink:
-        if (linkURL) {
-          copyToClipboard(linkURL || "");
-          notify("The link has copied!");
-        }
+        copyToClipboard(staticShareLink || "");
+        notify("The link has copied!");
         break;
       case ElementDropdownMenuItems.Delete:
         onOpenDelete();
@@ -264,14 +261,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     }
 
     setSelectedItem(null);
-  }, [
-    selectedItem,
-    notify,
-    isShareLinkGenerating,
-    linkURL,
-    onOpen,
-    setSelectedItem,
-  ]);
+  }, [selectedItem, notify, onOpen, setSelectedItem]);
 
   const desktopStyleMenuItems = useMemo<DesktopStyleMenuItem[]>(
     () =>
@@ -312,7 +302,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
           className={classNames("element-dropdown__menu-wrapper", className)}
           shouldBeFixed={false}
           onSelect={handleMenuItemSelect}
-          isLoading={isShareLinkGenerating}
           menuInlineStyle={menuInlineStyle}
           styles={{
             ...styles,
@@ -335,8 +324,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       )}
       <ShareModal
         isShowing={isShowing}
-        isLoading={isShareLinkGenerating}
-        sourceUrl={linkURL || ""}
+        sourceUrl={staticShareLink || ""}
         onClose={onClose}
         type={
           isMobileView ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop

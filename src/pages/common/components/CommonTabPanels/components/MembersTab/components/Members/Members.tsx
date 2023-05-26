@@ -1,16 +1,19 @@
 import React, { FC, useEffect, useMemo } from "react";
 import classNames from "classnames";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
+import { CirclesPermissions, CommonMember } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { MembersList } from "../MembersList";
 
 interface MembersComponentProps {
   commonId: string;
   governanceId: string | null;
+  commonMember: (CommonMember & CirclesPermissions) | null;
+  isProject: boolean;
 }
 
 const MembersComponent: FC<MembersComponentProps> = (props) => {
-  const { commonId, governanceId } = props;
+  const { commonId, governanceId, commonMember, isProject } = props;
   const {
     fetched: areCommonMembersFetched,
     data: commonMembers,
@@ -44,6 +47,8 @@ const MembersComponent: FC<MembersComponentProps> = (props) => {
           members={sortedCommonMembers}
           commonId={commonId}
           governanceId={governanceId}
+          commonMember={commonMember}
+          isProject={isProject}
         />
       )}
     </div>

@@ -4,7 +4,14 @@ import { useLongPress } from "use-long-press";
 import { FeedItemBaseContentProps } from "@/pages/common";
 import { ButtonIcon, Image } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { ContextMenu, ContextMenuRef, TimeAgo } from "@/shared/ui-kit";
+import { PredefinedTypes } from "@/shared/models";
+import {
+  ContextMenu,
+  ContextMenuRef,
+  TextEditorWithReinitialization as TextEditor,
+  TimeAgo,
+  checkIsTextEditorValueEmpty,
+} from "@/shared/ui-kit";
 import styles from "./FeedItemBaseContent.module.scss";
 
 export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
@@ -20,14 +27,20 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     onClick,
     onExpand,
     menuItems,
+    commonName,
     image,
     imageAlt,
     isProject,
+    discussionPredefinedType,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isLongPressed, setIsLongPressed] = useState(false);
   const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
+  const finalTitle =
+    discussionPredefinedType === PredefinedTypes.General && commonName
+      ? `${title} (${commonName})`
+      : title;
 
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
@@ -111,25 +124,31 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               [styles.titleActive]: isActive,
             })}
           >
-            {title || "Loading..."}
+            {finalTitle || "Loading..."}
           </p>
           <p
             className={classNames(styles.text, styles.lastActivity, {
-              [styles.lastActivityActive]: isActive,
+              [styles.lastActivityActive]:
+                isActive || (isExpanded && isMobileView),
             })}
           >
             <TimeAgo milliseconds={lastActivity} />
           </p>
         </div>
         <div className={styles.bottomContent}>
-          {lastMessage ? (
-            <p
-              className={classNames(styles.text, styles.lastMessage, {
-                [styles.lastMessageActive]: isActive,
+          {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
+            <TextEditor
+              className={styles.lastMessageContainer}
+              editorClassName={classNames(styles.text, styles.lastMessage, {
+                [styles.lastMessageActive]:
+                  isActive || (isExpanded && isMobileView),
               })}
-            >
-              {lastMessage}
-            </p>
+              value={lastMessage}
+              elementStyles={{
+                mention: isActive ? styles.mentionText : "",
+              }}
+              readOnly
+            />
           ) : (
             <div />
           )}
