@@ -1,7 +1,8 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
-import { FeedLayoutItem } from "@/pages/commonFeed";
+import { InboxItemType } from "@/shared/constants";
+import { FeedItemFollowLayoutItem } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
 import * as actions from "./actions";
 import { CommonState, FeedItems, PinnedFeedItems } from "./types";
@@ -68,6 +69,7 @@ const updateFeedItemInList = (
     nextData.splice(feedItemIndex, 1);
   } else {
     nextData[feedItemIndex] = {
+      ...nextData[feedItemIndex],
       feedItem: {
         ...nextData[feedItemIndex].feedItem,
         ...updatedItem,
@@ -108,7 +110,9 @@ const addNewFeedItems = (
         return nextData;
       }
 
-      const finalItem: FeedLayoutItem = {
+      const finalItem: FeedItemFollowLayoutItem = {
+        type: InboxItemType.FeedItemFollow,
+        itemId: commonFeedItem.id,
         feedItem: commonFeedItem,
       };
       firstDocTimestamp = commonFeedItem.updatedAt;
@@ -156,7 +160,9 @@ const addNewPinnedFeedItems = (
         return nextData;
       }
 
-      const finalItem: FeedLayoutItem = {
+      const finalItem: FeedItemFollowLayoutItem = {
+        type: InboxItemType.FeedItemFollow,
+        itemId: commonFeedItem.id,
         feedItem: commonFeedItem,
       };
 
@@ -203,6 +209,7 @@ const updatePinnedFeedItemInList = (
     nextData.splice(feedItemIndex, 1);
   } else {
     nextData[feedItemIndex] = {
+      ...nextData[feedItemIndex],
       feedItem: {
         ...nextData[feedItemIndex].feedItem,
         ...updatedItem,
@@ -234,6 +241,7 @@ const updateSharedFeedItem = (
     state.sharedFeedItemId = null;
   } else {
     state.sharedFeedItem = {
+      ...state.sharedFeedItem,
       feedItem: {
         ...state.sharedFeedItem.feedItem,
         ...updatedItem,
@@ -474,6 +482,8 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       nextState.sharedFeedItem = payload
         ? {
+            type: InboxItemType.FeedItemFollow,
+            itemId: payload.id,
             feedItem: payload,
           }
         : null;

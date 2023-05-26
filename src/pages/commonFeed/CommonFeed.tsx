@@ -8,6 +8,11 @@ import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
 import { RightArrowThinIcon } from "@/shared/icons";
+import {
+  checkIsFeedItemFollowLayoutItem,
+  FeedLayoutItem,
+  FeedLayoutRef,
+} from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
@@ -22,12 +27,7 @@ import {
   NewDiscussionCreation,
   NewProposalCreation,
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
-import {
-  FeedLayout,
-  FeedLayoutItem,
-  FeedLayoutRef,
-  HeaderContent,
-} from "./components";
+import { FeedLayout, HeaderContent } from "./components";
 import { useCommonData, useGlobalCommonData } from "./hooks";
 import { getLastMessage } from "./utils";
 import styles from "./CommonFeed.module.scss";
@@ -81,7 +81,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       items.push(...pinnedItemIds);
     }
     if (commonPinnedFeedItems) {
-      items.push(...commonPinnedFeedItems.map((item) => item.feedItem.id));
+      items.push(...commonPinnedFeedItems.map((item) => item.itemId));
     }
     if (sharedFeedItemId) {
       items.push(sharedFeedItemId);
@@ -102,7 +102,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     const items: FeedLayoutItem[] = [];
     const filteredPinnedItems =
       commonPinnedFeedItems?.filter(
-        (item) => item.feedItem.id !== sharedFeedItemId,
+        (item) => item.itemId !== sharedFeedItemId,
       ) || [];
 
     if (sharedFeedItem) {
@@ -194,7 +194,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [commonPinnedFeedItems, areCommonPinnedFeedItemsLoading]);
 
   useEffect(() => {
-    if (recentStreamId === firstItem?.feedItem.data.id) {
+    if (
+      checkIsFeedItemFollowLayoutItem(firstItem) &&
+      recentStreamId === firstItem.feedItem.data.id
+    ) {
       feedLayoutRef?.setExpandedFeedItemId(firstItem.feedItem.id);
       dispatch(commonActions.setRecentStreamId(""));
     }

@@ -1,11 +1,29 @@
 import { call, put, select } from "redux-saga/effects";
-import { FeedLayoutItemWithFollowData } from "@/pages/commonFeed";
 import { UserService } from "@/services";
-import { Awaited } from "@/shared/interfaces";
+import { InboxItemType } from "@/shared/constants";
+import {
+  Awaited,
+  ChatChannelLayoutItem,
+  FeedItemFollowLayoutItemWithFollowData,
+  FeedLayoutItemWithFollowData,
+} from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
 import * as actions from "../actions";
 import { selectInboxItems } from "../selectors";
 import { InboxItems } from "../types";
+import { getFeedLayoutItemDateForSorting } from "../utils";
+
+const sortItems = (
+  data: FeedLayoutItemWithFollowData[],
+): FeedLayoutItemWithFollowData[] =>
+  [...data].sort((prevItem, nextItem) => {
+    const prevItemDate =
+      getFeedLayoutItemDateForSorting(prevItem).seconds * 1000;
+    const nextItemDate =
+      getFeedLayoutItemDateForSorting(nextItem).seconds * 1000;
+
+    return nextItemDate - prevItemDate;
+  });
 
 export function* getInboxItems(
   action: ReturnType<typeof actions.getInboxItems.request>,
@@ -24,10 +42,26 @@ export function* getInboxItems(
         limit,
       },
     )) as Awaited<ReturnType<typeof UserService.getInboxItems>>;
-    const convertedData = data.map<FeedLayoutItemWithFollowData>((item) => ({
-      feedItem: item.feedItem,
-      feedItemFollowWithMetadata: item,
-    }));
+    const chatChannelItems = data.chatChannels.map<ChatChannelLayoutItem>(
+      (chatChannel) => ({
+        type: InboxItemType.ChatChannel,
+        itemId: chatChannel.id,
+        chatChannel,
+      }),
+    );
+    const feedItemFollowItems =
+      data.feedItemFollows.map<FeedItemFollowLayoutItemWithFollowData>(
+        (feedItemFollowWithMetadata) => ({
+          type: InboxItemType.FeedItemFollow,
+          itemId: feedItemFollowWithMetadata.feedItemId,
+          feedItem: feedItemFollowWithMetadata.feedItem,
+          feedItemFollowWithMetadata: feedItemFollowWithMetadata,
+        }),
+      );
+    const convertedData = sortItems([
+      ...chatChannelItems,
+      ...feedItemFollowItems,
+    ]);
 
     yield put(
       actions.getInboxItems.success({
