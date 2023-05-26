@@ -1,7 +1,7 @@
 import { call, put, select } from "redux-saga/effects";
-import { FeedLayoutItem } from "@/pages/commonFeed";
 import { CommonFeedService } from "@/services";
-import { Awaited } from "@/shared/interfaces";
+import { InboxItemType } from "@/shared/constants";
+import { Awaited, FeedItemFollowLayoutItem } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
 import * as actions from "../actions";
 import { selectFeedItems } from "../selectors";
@@ -27,7 +27,9 @@ export function* getFeedItems(
     )) as Awaited<
       ReturnType<typeof CommonFeedService.getCommonFeedItemsByUpdatedAt>
     >;
-    const convertedData: FeedLayoutItem[] = data.map((item) => ({
+    const convertedData: FeedItemFollowLayoutItem[] = data.map((item) => ({
+      type: InboxItemType.FeedItemFollow,
+      itemId: item.id,
       feedItem: item,
     }));
 
