@@ -1,6 +1,7 @@
 import { ApiEndpoint } from "@/shared/constants";
 import { DMUser } from "@/shared/interfaces";
-import { ChatChannel } from "@/shared/models";
+import { SendChatMessageDto } from "@/shared/interfaces/api";
+import { ChatChannel, ChatMessage } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import Api from "./Api";
 
@@ -24,6 +25,18 @@ class ChatService {
       {
         participants,
       },
+    );
+
+    return data;
+  };
+
+  public sendChatMessage = async (
+    payload: SendChatMessageDto,
+  ): Promise<ChatMessage> => {
+    const { chatChannelId, ...body } = payload;
+    const { data } = await Api.post<ChatMessage>(
+      ApiEndpoint.SendChatMessage(chatChannelId),
+      body,
     );
 
     return data;

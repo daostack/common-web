@@ -42,4 +42,5 @@ export const ApiEndpoint = {
     "/proposals/get-all-eligible-proposal-voters/:proposalId",
   GetDMUsers: "/chat/users",
   CreateChatChannel: "/chat/channel",
+  SendChatMessage: (channelId: string) => `/chat/${channelId}/message`,
 };
