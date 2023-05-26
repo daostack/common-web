@@ -5,7 +5,7 @@ import { updateDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { Loader, Button } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
 import { DiscussionMessage } from "@/shared/models";
-import { TextEditor, TextEditorValue } from "@/shared/ui-kit";
+import { TextEditor } from "@/shared/ui-kit";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import { getUserName } from "@/shared/utils";
 import styles from "./EditMessageInput.module.scss";
@@ -49,10 +49,6 @@ export default function EditMessageInput({
     );
   };
 
-  const handleChangeMessage = (value: TextEditorValue): void => {
-    setMessage(JSON.stringify(value));
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.ownerName}>
@@ -62,7 +58,8 @@ export default function EditMessageInput({
       <TextEditor
         className={styles.input}
         value={parseStringToTextEditorValue(message)}
-        onChange={(e) => handleChangeMessage(e)}
+        onChange={(value) => setMessage(JSON.stringify(value))}
+        hideToolbar
       />
 
       <div className={styles.buttonContainer}>
