@@ -1,5 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
-import { CommonFeed, FeedItemFollowWithMetadata } from "@/shared/models";
+import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
+import { CommonFeed } from "@/shared/models";
 import { InboxActionType } from "./constants";
 import { InboxItems } from "./types";
 
@@ -23,7 +24,7 @@ export const addNewInboxItems = createStandardAction(
   InboxActionType.ADD_NEW_INBOX_ITEMS,
 )<
   {
-    item: FeedItemFollowWithMetadata;
+    item: FeedLayoutItemWithFollowData;
     statuses: {
       isAdded: boolean;
       isRemoved: boolean;
@@ -34,7 +35,7 @@ export const addNewInboxItems = createStandardAction(
 export const updateInboxItem = createStandardAction(
   InboxActionType.UPDATE_INBOX_ITEM,
 )<{
-  item: Partial<FeedItemFollowWithMetadata> & { id: string };
+  item: FeedLayoutItemWithFollowData;
   isRemoved?: boolean;
 }>();
 
@@ -55,4 +56,4 @@ export const setSharedFeedItemId = createStandardAction(
 
 export const setSharedInboxItem = createStandardAction(
   InboxActionType.SET_SHARED_INBOX_ITEM,
-)<FeedItemFollowWithMetadata | null>();
+)<FeedLayoutItemWithFollowData | null>();

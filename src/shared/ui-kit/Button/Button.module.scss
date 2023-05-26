@@ -143,6 +143,25 @@
   }
 }
 
+.buttonOutlineDarkPinkVariant {
+  --btn-color: #{$c-pink-next-dark};
+  --btn-bg-color: #{$c-shades-white};
+  --btn-border-color: #{$c-pink-next-dark};
+  --btn-border: 0.0625rem solid var(--btn-border-color);
+
+  &:hover {
+    --btn-bg-color: #{$c-pink-hover-feed-cards};
+  }
+
+  &:active {
+    --btn-bg-color: #{$c-pink-active-btn};
+  }
+
+  &.buttonDisabled {
+    --btn-bg-color: #{$c-neutrals-100};
+  }
+}
+
 .buttonWarningVariant {
   --btn-color: #{$c-error-300};
   --btn-bg-color: #{$c-primary-100};

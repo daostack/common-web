@@ -1,6 +1,7 @@
 import { call, put } from "redux-saga/effects";
-import { FeedLayoutItem } from "@/pages/commonFeed";
 import { CommonFeedService } from "@/services";
+import { InboxItemType } from "@/shared/constants";
+import { FeedItemFollowLayoutItem } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
 import * as actions from "../actions";
 
@@ -19,7 +20,9 @@ export function* getPinnedFeedItems(
       ReturnType<typeof CommonFeedService.getCommonPinnedFeedItems>
     >;
 
-    const convertedData: FeedLayoutItem[] = data.map((item) => ({
+    const convertedData: FeedItemFollowLayoutItem[] = data.map((item) => ({
+      type: InboxItemType.FeedItemFollow,
+      itemId: item.id,
       feedItem: item,
     }));
 
