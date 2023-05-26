@@ -1,14 +1,12 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import classNames from "classnames";
 import { updateDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { Loader, Button } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
 import { DiscussionMessage } from "@/shared/models";
-import {
-  getTextFromTextEditorValue,
-  parseStringToTextEditorValue,
-} from "@/shared/ui-kit/TextEditor/utils";
+import { TextEditor, TextEditorValue } from "@/shared/ui-kit";
+import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import { getUserName } from "@/shared/utils";
 import styles from "./EditMessageInput.module.scss";
 
@@ -51,10 +49,8 @@ export default function EditMessageInput({
     );
   };
 
-  const handleChangeMessage = (
-    event: ChangeEvent<HTMLTextAreaElement>,
-  ): void => {
-    setMessage(event.target.value);
+  const handleChangeMessage = (value: TextEditorValue): void => {
+    setMessage(JSON.stringify(value));
   };
 
   return (
@@ -62,13 +58,13 @@ export default function EditMessageInput({
       <div className={styles.ownerName}>
         {getUserName(discussionMessage.owner)}
       </div>
-      <textarea
+
+      <TextEditor
         className={styles.input}
-        value={getTextFromTextEditorValue(
-          parseStringToTextEditorValue(message),
-        )}
-        onChange={handleChangeMessage}
+        value={parseStringToTextEditorValue(message)}
+        onChange={(e) => handleChangeMessage(e)}
       />
+
       <div className={styles.buttonContainer}>
         <Button
           disabled={isLoading}

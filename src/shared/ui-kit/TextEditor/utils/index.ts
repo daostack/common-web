@@ -20,4 +20,3 @@ export * from "./toggleList";
 export * from "./toggleMark";
 export * from "./unwrapLink";
 export * from "./wrapLink";
-export * from "./getTextFromTextEditorValue";
