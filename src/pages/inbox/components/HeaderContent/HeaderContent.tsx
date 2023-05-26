@@ -1,8 +1,10 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { InboxIcon, RightArrowThinIcon } from "@/shared/icons";
 import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getPluralEnding } from "@/shared/utils";
+import { DirectMessageButton } from "../DirectMessageButton";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
@@ -12,6 +14,7 @@ interface HeaderContentProps {
 
 const HeaderContent: FC<HeaderContentProps> = (props) => {
   const { className, streamsWithNotificationsAmount } = props;
+  const isMobileVersion = useIsTabletView();
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -31,6 +34,11 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           </div>
         </div>
       </div>
+      <DirectMessageButton
+        className={styles.directMessageButton}
+        isMobileVersion={isMobileVersion}
+        isHidden
+      />
     </div>
   );
 };

@@ -16,6 +16,7 @@ export enum ButtonVariant {
   LightPurple = "light-purple",
   OutlineBlue = "outline-blue",
   OutlinePink = "outline-pink",
+  OutlineDarkPink = "outline-dark-pink",
   Warning = "warning",
 }
 
@@ -55,6 +56,8 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
     [styles.buttonLightPurpleVariant]: variant === ButtonVariant.LightPurple,
     [styles.buttonOutlineBlueVariant]: variant === ButtonVariant.OutlineBlue,
     [styles.buttonOutlinePinkVariant]: variant === ButtonVariant.OutlinePink,
+    [styles.buttonOutlineDarkPinkVariant]:
+      variant === ButtonVariant.OutlineDarkPink,
     [styles.buttonWarningVariant]: variant === ButtonVariant.Warning,
     [styles.buttonLargeSize]: size === ButtonSize.Large,
     [styles.buttonMediumSize]: size === ButtonSize.Medium,

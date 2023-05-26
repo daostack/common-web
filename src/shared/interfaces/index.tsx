@@ -3,6 +3,8 @@ export * from "./State";
 export * from "./Configuration";
 export * from "./ContextMenuItem";
 export * from "./CreateProjectPayload";
+export * from "./DMUser";
+export * from "./feedLayout";
 export * from "./LoadingState";
 export * from "./MarkCommonFeedItemAsSeenPayload";
 export * from "./MenuItem";

@@ -4,6 +4,7 @@ export {
   isRequestCancelled,
 } from "./Api";
 export type { CancelToken, CancelTokenSource } from "./Api";
+export { default as ChatService } from "./Chat";
 export { default as CommonService } from "./Common";
 export { default as CommonFeedService } from "./CommonFeed";
 export { default as CommonFeedObjectUserUniqueService } from "./CommonFeedObjectUserUnique";

@@ -35,6 +35,8 @@ const ButtonIcon: ForwardRefRenderFunction<
         variant === ButtonVariant.OutlineBlue,
       [buttonStyles.buttonOutlinePinkVariant]:
         variant === ButtonVariant.OutlinePink,
+      [buttonStyles.buttonOutlineDarkPinkVariant]:
+        variant === ButtonVariant.OutlineDarkPink,
     },
   );
   let iconEl: ReactNode | null = null;
