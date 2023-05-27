@@ -16,7 +16,7 @@ import {
   selectAreReportsLoading,
   selectHeader,
 } from "@/shared/store/selectors";
-import { Button } from "@/shared/ui-kit";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { logOut, setLoginModalState } from "../../../pages/Auth/store/actions";
 import {
   authentificated,
@@ -31,6 +31,7 @@ import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
 import { isMobile, saveByURL } from "../../utils";
 import { LanguageDropdown } from "./LanguageDropdown";
+import styles from "./Header.module.scss";
 import "./index.scss";
 
 const ADMIN_ACCESS_ROLES: UserRole[] = [UserRole.Trustee];
@@ -173,11 +174,19 @@ const Header = () => {
     return null;
   }
 
+  const launchAppButton = (
+    <Button
+      className={styles.launchAppButton}
+      onClick={handleLaunchApp}
+      variant={ButtonVariant.OutlinePink}
+    >
+      Launch App
+    </Button>
+  );
+
   return (
     <section className={headerWrapperClassName}>
-      {shouldDisplayLaunchApp && (
-        <Button onClick={handleLaunchApp}>Launch App</Button>
-      )}
+      {shouldDisplayLaunchApp && launchAppButton}
       <Link
         to="/"
         className={classNames("common-logo", {
@@ -190,7 +199,7 @@ const Header = () => {
         <>
           {links}
           {shouldShowLanguageDropdown && <LanguageDropdown />}
-          {user && <Button onClick={handleLaunchApp}>Launch App</Button>}
+          {user && launchAppButton}
         </>
       ) : (
         <>
