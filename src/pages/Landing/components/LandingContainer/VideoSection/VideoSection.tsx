@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import landingVideoPosterSrc from "@/shared/assets/images/landing-video-poster.jpeg";
 import landingVideoSrc from "@/shared/assets/videos/landing-video.mp4";
-import { Button } from "@/shared/components";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
 interface VideoSectionProps {
@@ -39,9 +39,9 @@ const VideoSection: FC<VideoSectionProps> = ({ onLaunchClick }) => {
           {t("videoSection.description")}
         </p>
         <Button
-          className="landing-video-section__launch-common-button"
+          className="landing-video-section__join-waitlist-button"
           onClick={onLaunchClick}
-          shouldUseFullWidth
+          variant={ButtonVariant.OutlinePink}
         >
           {t("buttons.joinWaitlist")}
         </Button>

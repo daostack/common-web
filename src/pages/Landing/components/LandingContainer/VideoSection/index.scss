@@ -56,8 +56,9 @@ $viewport-breakpoint: 1000px;
   line-height: 120%;
 }
 
-.landing-video-section__launch-common-button {
+.landing-video-section__join-waitlist-button {
   max-width: 11.75rem;
+  color: $white;
 }
 
 @include rtl-direction {
