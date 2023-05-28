@@ -7,7 +7,7 @@ import { TextField } from "@/shared/components/Form/Formik";
 import { ApiEndpoint } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
 import { EmailType } from "@/shared/interfaces/SendEmail";
-import { Button } from "@/shared/ui-kit";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./JoinWaitlistModal.module.scss";
 
 interface JoinWaitlistFormValues {
@@ -31,11 +31,16 @@ const JoinWaitlistModal: FC<Pick<ModalProps, "isShowing" | "onClose">> = ({
   const onSubmit = async (values: JoinWaitlistFormValues) => {
     setLoading(true);
 
+    /**
+     * We use the SendEmail endpoint here.
+     * The new form requires only 'email' so we give temporary values in the other fields
+     * to satisfy the request body.
+     */
     try {
       await Api.post(ApiEndpoint.SendEmail, {
         senderEmail: values.email,
-        senderName: "test",
-        text: "test",
+        senderName: "JoinWaitlist",
+        text: "Join Waitlist",
         type: EmailType.ContactUsAdmin,
       });
       setLoading(false);
@@ -47,8 +52,14 @@ const JoinWaitlistModal: FC<Pick<ModalProps, "isShowing" | "onClose">> = ({
   };
 
   return (
-    <Modal isShowing={isShowing} onClose={onClose}>
+    <Modal
+      isShowing={isShowing}
+      onClose={onClose}
+      mobileFullScreen
+      className={styles.modal}
+    >
       <h1>Join Waitlist</h1>
+      <h6>Add your email and we will back to you soon</h6>
 
       <Formik
         initialValues={INITIAL_VALUES}
@@ -64,7 +75,12 @@ const JoinWaitlistModal: FC<Pick<ModalProps, "isShowing" | "onClose">> = ({
             placeholder="example@email.com"
           />
 
-          <Button type="submit" disabled={loading}>
+          <Button
+            type="submit"
+            disabled={loading}
+            className={styles.sendButton}
+            variant={ButtonVariant.OutlinePink}
+          >
             Send
           </Button>
         </Form>

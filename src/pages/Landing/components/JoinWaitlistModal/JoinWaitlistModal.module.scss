@@ -1,0 +1,12 @@
+@import "../../../../constants.scss";
+
+.modal {
+  max-width: 37rem;
+  background-color: $light-gray-12;
+  box-shadow: 0rem 0.25rem 1rem rgba(0, 0, 0, 0.15259);
+  border: 0.063rem solid $light-gray-3;
+}
+
+.sendButton {
+  width: 100%;
+}
