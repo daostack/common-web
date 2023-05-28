@@ -24,6 +24,10 @@ export default function EditMessageInput({
   const [isLoading, setLoading] = useState(false);
 
   const updateMessage = () => {
+    if (discussionMessage.ownerType === "system") {
+      notify("Something went wrong");
+      return;
+    }
     setLoading(true);
     dispatch(
       updateDiscussionMessage.request({
@@ -55,7 +59,9 @@ export default function EditMessageInput({
   return (
     <div className="edit-message-input">
       <div className="edit-message-input__owner-name">
-        {getUserName(discussionMessage.owner)}
+        {discussionMessage.ownerType === "system"
+          ? "System"
+          : getUserName(discussionMessage.owner)}
       </div>
       <textarea
         className="edit-message-input__input"

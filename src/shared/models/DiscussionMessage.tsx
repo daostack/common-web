@@ -21,18 +21,16 @@ export interface DiscussionMessageTag {
 export interface ParentDiscussionMessage {
   id: string;
   ownerName: string;
-  ownerId: string;
+  ownerId?: string;
   text: string;
   moderation?: Moderation;
   images?: Link[];
 }
 
-export interface DiscussionMessage extends BaseEntity {
+export type DiscussionMessage = BaseEntity & {
   discussionId: string;
   commonId: string;
-  ownerId: string;
   ownerName: string;
-  owner?: User;
   text: string;
   ownerAvatar: string;
   moderation?: Moderation;
@@ -41,7 +39,16 @@ export interface DiscussionMessage extends BaseEntity {
   tags?: DiscussionMessageTag[];
   parentMessage: ParentDiscussionMessage | null;
   editedAt?: firebase.firestore.Timestamp;
-}
+} & (
+    | {
+        ownerType: "user";
+        ownerId: string;
+        owner?: User;
+      }
+    | {
+        ownerType: "system";
+      }
+  );
 
 export enum PendingMessageStatus {
   Sending,

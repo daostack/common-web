@@ -68,7 +68,9 @@ export default function ChatMessage({
   );
 
   const userId = user?.uid;
-  const isNotCurrentUserMessage = userId !== discussionMessage.ownerId;
+  const isNotCurrentUserMessage =
+    discussionMessage.ownerType !== "user" ||
+    userId !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
 
   const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
@@ -198,7 +200,7 @@ export default function ChatMessage({
           [styles.messageCurrentUser]: !isNotCurrentUserMessage,
         })}
       >
-        {isNotCurrentUserMessage && (
+        {isNotCurrentUserMessage && discussionMessage.ownerType === "user" && (
           <div className={styles.iconWrapper}>
             <UserAvatar
               photoURL={discussionMessage.owner?.photoURL}
@@ -226,7 +228,9 @@ export default function ChatMessage({
           >
             {isNotCurrentUserMessage && (
               <div className={styles.messageName}>
-                {getUserName(discussionMessage.owner)}
+                {discussionMessage.ownerType === "system"
+                  ? "System"
+                  : getUserName(discussionMessage.owner)}
               </div>
             )}
             <ReplyMessage />
@@ -293,7 +297,11 @@ export default function ChatMessage({
               onMenuToggle={handleMenuToggle}
               transparent
               isDiscussionMessage
-              ownerId={discussionMessage.owner?.uid}
+              ownerId={
+                discussionMessage.ownerType === "user"
+                  ? discussionMessage.owner?.uid
+                  : undefined
+              }
               userId={userId}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}

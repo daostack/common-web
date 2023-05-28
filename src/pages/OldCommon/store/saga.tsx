@@ -319,7 +319,14 @@ export function* loadDiscussionDetail(
     }
 
     const ownerIds = Array.from(
-      new Set(discussionMessage?.map((d) => d.ownerId)),
+      new Set(
+        discussionMessage?.flatMap((d) => {
+          if (d.ownerType === "user") {
+            return [d.ownerId];
+          }
+          return [];
+        }),
+      ),
     );
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
@@ -333,13 +340,20 @@ export function* loadDiscussionDetail(
         const parentMessage = discussionMessage.find(
           ({ id }) => id === d.parentId,
         );
-        newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+        if (
+          d.ownerType === "user" &&
+          newDiscussionMessage.ownerType === "user"
+        ) {
+          newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+        }
         newDiscussionMessage.parentMessage = parentMessage
           ? {
               id: parentMessage.id,
               text: parentMessage.text,
               ownerName: parentMessage?.ownerName,
-              ownerId: parentMessage.ownerId,
+              ...(parentMessage.ownerType === "user" && {
+                ownerId: parentMessage.ownerId,
+              }),
             }
           : null;
         return newDiscussionMessage;
@@ -433,7 +447,14 @@ export function* loadProposalDetail(
         ])) as DiscussionMessage[])
       : [];
     const ownerIds = Array.from(
-      new Set(discussionMessages?.map((d) => d.ownerId)),
+      new Set(
+        discussionMessages?.flatMap((d) => {
+          if (d.ownerType === "user") {
+            return [d.ownerId];
+          }
+          return [];
+        }),
+      ),
     );
     const owners = (yield fetchOwners(ownerIds)) as User[];
     const loadedDiscussionMessages = discussionMessages?.map((d) => {
@@ -441,13 +462,17 @@ export function* loadProposalDetail(
       const parentMessage = discussionMessages.find(
         ({ id }) => id === d.parentId,
       );
-      newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      if (d.ownerType === "user" && newDiscussionMessage.ownerType === "user") {
+        newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      }
       newDiscussionMessage.parentMessage = parentMessage
         ? {
             id: parentMessage.id,
             text: parentMessage.text,
             ownerName: parentMessage?.ownerName,
-            ownerId: parentMessage.ownerId,
+            ...(parentMessage.ownerType === "user" && {
+              ownerId: parentMessage.ownerId,
+            }),
           }
         : null;
       return newDiscussionMessage;

@@ -90,7 +90,14 @@ export const useDiscussionMessagesById = ({
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
       );
       const ownerIds = Array.from(
-        new Set(filteredMessages?.map((d) => d.ownerId)),
+        new Set(
+          filteredMessages?.flatMap((d) => {
+            if (d.ownerType === "user") {
+              return [d.ownerId];
+            }
+            return [];
+          }),
+        ),
       ) as string[];
       const owners = await fetchMessageOwners(ownerIds);
 
@@ -99,13 +106,20 @@ export const useDiscussionMessagesById = ({
         const parentMessage = filteredMessages.find(
           ({ id }) => id === d.parentId,
         );
-        newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+        if (
+          d.ownerType === "user" &&
+          newDiscussionMessage.ownerType === "user"
+        ) {
+          newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+        }
         newDiscussionMessage.parentMessage = parentMessage
           ? {
               id: parentMessage.id,
               text: parentMessage.text,
               ownerName: parentMessage?.ownerName,
-              ownerId: parentMessage.ownerId,
+              ...(parentMessage.ownerType === "user" && {
+                ownerId: parentMessage.ownerId,
+              }),
               moderation: parentMessage?.moderation,
               images: parentMessage?.images,
             }

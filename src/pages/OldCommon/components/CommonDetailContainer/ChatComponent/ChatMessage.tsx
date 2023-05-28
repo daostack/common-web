@@ -71,11 +71,13 @@ export default function ChatMessage({
     >
       <div className="message">
         <div className="icon-wrapper">
-          <UserAvatar
-            photoURL={discussionMessage.owner?.photoURL}
-            nameForRandomAvatar={discussionMessage.owner?.email}
-            userName={getUserName(discussionMessage.owner)}
-          />
+          {discussionMessage.ownerType === "user" && (
+            <UserAvatar
+              photoURL={discussionMessage.owner?.photoURL}
+              nameForRandomAvatar={discussionMessage.owner?.email}
+              userName={getUserName(discussionMessage.owner)}
+            />
+          )}
         </div>
         {isEditMode ? (
           <EditMessageInput
@@ -87,7 +89,9 @@ export default function ChatMessage({
           <div className="message-text">
             <ReplyMessage />
             <div className="message-name">
-              {getUserName(discussionMessage.owner)}
+              {discussionMessage.ownerType === "system"
+                ? "System"
+                : getUserName(discussionMessage.owner)}
             </div>
             <div className="message-content">
               <Linkify>{discussionMessage.text}</Linkify>
@@ -125,7 +129,11 @@ export default function ChatMessage({
               onMenuToggle={onMessageDropdownOpen}
               transparent
               isDiscussionMessage
-              ownerId={discussionMessage.owner?.uid}
+              ownerId={
+                discussionMessage.ownerType === "user"
+                  ? discussionMessage.owner?.uid
+                  : undefined
+              }
               userId={user?.uid}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}

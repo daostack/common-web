@@ -292,6 +292,7 @@ export default function ChatComponent({
           id: pendingMessageId,
           owner: user,
           ownerAvatar: (user.photo || user.photoURL) as string,
+          ownerType: "user" as const,
           ownerId: userId as string,
           ownerName: getUserName(user),
           text: JSON.stringify(message),
@@ -303,7 +304,9 @@ export default function ChatComponent({
             ? {
                 id: discussionMessageReply?.id,
                 ownerName: discussionMessageReply.ownerName,
-                ownerId: discussionMessageReply.ownerId,
+                ...(discussionMessageReply.ownerType === "user" && {
+                  ownerId: discussionMessageReply.ownerId,
+                }),
                 text: discussionMessageReply.text,
               }
             : null,
