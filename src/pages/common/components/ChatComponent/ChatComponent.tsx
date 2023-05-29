@@ -256,14 +256,15 @@ export default function ChatComponent({
   );
 
   const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
+    const newFilesPreview = Array.from(event.target.files || []).map((file) => {
+      return {
+        info: file,
+        src: URL.createObjectURL(file),
+      };
+    });
     dispatch(
       chatActions.setFilesPreview(
-        Array.from(event.target.files || []).map((file) => {
-          return {
-            info: file,
-            src: URL.createObjectURL(file),
-          };
-        }),
+        [...(currentFilesPreview ?? []), ...newFilesPreview].slice(0, 10),
       ),
     );
   };
