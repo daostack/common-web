@@ -9,6 +9,7 @@ export * from "./Common";
 export * from "./CommonFeed";
 export * from "./CommonFeedObjectUserUnique";
 export * from "./shared";
+export * from "./SoftDeleteEntity";
 export * from "./Proposals";
 export * from "./DiscussionMessage";
 export * from "./Discussion";

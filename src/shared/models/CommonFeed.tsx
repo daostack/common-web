@@ -1,4 +1,5 @@
 import { BaseEntity } from "./BaseEntity";
+import { SoftDeleteEntity } from "./SoftDeleteEntity";
 
 export enum CommonFeedType {
   Proposal = "Proposal",
@@ -9,16 +10,18 @@ export enum CommonFeedType {
   JoinProjectInCommon = "JoinProjectInCommon",
 }
 
-export interface CommonFeed extends BaseEntity {
+export interface CommonFeed extends BaseEntity, SoftDeleteEntity {
   userId: string;
   data: Record<string, unknown> & {
     type: CommonFeedType;
     id: string;
-    discussionId: string;
+    discussionId: string | null;
     lastMessage?: {
       userName: string;
       content: string;
     };
+    hasFiles?: boolean;
+    hasImages?: boolean;
   };
   circleVisibility: string[];
 }
