@@ -168,6 +168,7 @@ export default function ChatComponent({
     fetchDiscussionMessages,
     data: discussionMessages = [],
     fetched: isFetchedDiscussionMessages,
+    loading: isLoadingDiscussionMessages,
     addDiscussionMessage,
   } = useDiscussionMessagesById({
     hasPermissionToHide,
@@ -413,7 +414,7 @@ export default function ChatComponent({
         })}
         id={chatWrapperId}
       >
-        {isFetchedDiscussionMessages ? (
+        {isFetchedDiscussionMessages && !isLoadingDiscussionMessages ? (
           <ChatContent
             ref={chatContentRef}
             type={type}
