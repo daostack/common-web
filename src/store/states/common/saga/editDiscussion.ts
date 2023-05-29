@@ -1,9 +1,9 @@
 import { call, put } from "redux-saga/effects";
 import { DiscussionService } from "@/services";
+import { FileService } from "@/services";
 import { isError } from "@/shared/utils";
 import { cacheActions } from "../../cache";
 import * as actions from "../actions";
-import { uploadDiscussionFiles } from "./utils";
 
 export function* editDiscussion(
   action: ReturnType<typeof actions.editDiscussion.request>,
@@ -11,8 +11,9 @@ export function* editDiscussion(
   const { payload } = action;
 
   try {
-    const files = yield call(uploadDiscussionFiles, payload.payload.files);
-    const images = yield call(uploadDiscussionFiles, payload.payload.images);
+    const files = yield FileService.uploadFiles(payload.payload.files || []);
+    const images = yield FileService.uploadFiles(payload.payload.images || []);
+
     const discussion = (yield call(DiscussionService.editDiscussion, {
       ...payload.payload,
       files,
