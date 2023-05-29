@@ -67,3 +67,13 @@ export interface PendingMessage {
   status: PendingMessageStatus;
   feedItemId: string;
 }
+
+export const checkIsUserDiscussionMessage = (
+  discussionMessage?: BaseDiscussionMessage,
+): discussionMessage is UserDiscussionMessage =>
+  discussionMessage?.ownerType === DiscussionMessageOwnerType.User;
+
+export const checkIsSystemDiscussionMessage = (
+  discussionMessage?: BaseDiscussionMessage,
+): discussionMessage is SystemDiscussionMessage =>
+  discussionMessage?.ownerType === DiscussionMessageOwnerType.System;
