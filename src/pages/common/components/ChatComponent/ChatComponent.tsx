@@ -18,6 +18,7 @@ import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
 import {
   ChatType,
+  DiscussionMessageOwnerType,
   GovernanceActions,
   LastSeenEntity,
 } from "@/shared/constants";
@@ -26,8 +27,7 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { PlusIcon } from "@/shared/icons";
-import { SendIcon } from "@/shared/icons";
+import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
   checkIsUserDiscussionMessage,
@@ -37,6 +37,7 @@ import {
   Discussion,
   DiscussionMessage,
   Timestamp,
+  UserDiscussionMessage,
 } from "@/shared/models";
 import {
   BaseTextEditor,
@@ -298,11 +299,11 @@ export default function ChatComponent({
         };
         const firebaseDate = Timestamp.fromDate(new Date());
 
-        const msg = {
+        const msg: UserDiscussionMessage = {
           id: pendingMessageId,
           owner: user,
           ownerAvatar: (user.photo || user.photoURL) as string,
-          ownerType: "user" as const,
+          ownerType: DiscussionMessageOwnerType.User,
           ownerId: userId as string,
           ownerName: getUserName(user),
           text: JSON.stringify(message),

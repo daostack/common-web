@@ -37,19 +37,20 @@ interface BaseDiscussionMessage extends BaseEntity {
   moderation?: Moderation;
   parentId?: string;
   images?: Link[];
+  files?: Link[];
   tags?: DiscussionMessageTag[];
   parentMessage: ParentDiscussionMessage | null;
   editedAt?: firebase.firestore.Timestamp;
   ownerType: DiscussionMessageOwnerType;
 }
 
-interface UserDiscussionMessage extends BaseDiscussionMessage {
+export interface UserDiscussionMessage extends BaseDiscussionMessage {
   ownerType: DiscussionMessageOwnerType.User;
   ownerId: string;
   owner?: User;
 }
 
-interface SystemDiscussionMessage extends BaseDiscussionMessage {
+export interface SystemDiscussionMessage extends BaseDiscussionMessage {
   ownerType: DiscussionMessageOwnerType.System;
 }
 
