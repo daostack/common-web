@@ -39,6 +39,7 @@ export const useDiscussionMessagesById = ({
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const [messageOwners, setMessageOwners] = useState<User[]>([]);
   const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const state =
     useSelector(
       selectDiscussionMessagesStateByDiscussionId(currentDiscussionId),
@@ -84,6 +85,7 @@ export const useDiscussionMessagesById = ({
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       const discussionMessages = [...(state.data || [])];
       const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
@@ -128,6 +130,7 @@ export const useDiscussionMessagesById = ({
       });
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
+      setIsLoading(false);
     })();
   }, [state.data, messageOwnersIds, messageOwners, hasPermissionToHide]);
 
@@ -157,6 +160,7 @@ export const useDiscussionMessagesById = ({
 
   return {
     ...state,
+    loading: state.loading || isLoading,
     data: discussionMessagesWithOwners,
     fetchDiscussionMessages,
     addDiscussionMessage,
