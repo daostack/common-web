@@ -54,7 +54,8 @@ const updateFeedItemInList = (
     return;
   }
 
-  const { item: updatedItem, isRemoved = false } = payload;
+  const { item: updatedItem } = payload;
+  const isRemoved = payload.isRemoved || updatedItem.isDeleted;
   const feedItemIndex = state.feedItems.data?.findIndex(
     (item) => item.feedItem.id === updatedItem.id,
   );
@@ -95,38 +96,36 @@ const addNewFeedItems = (
 ) => {
   let firstDocTimestamp = state.feedItems.firstDocTimestamp;
 
-  const data = payload.reduceRight(
-    (acc, { commonFeedItem, statuses: { isRemoved } }) => {
-      const nextData = [...acc];
-      const itemIndex = nextData.findIndex(
-        (item) => item.feedItem.id === commonFeedItem.id,
-      );
+  const data = payload.reduceRight((acc, { commonFeedItem, statuses }) => {
+    const nextData = [...acc];
+    const itemIndex = nextData.findIndex(
+      (item) => item.feedItem.id === commonFeedItem.id,
+    );
+    const isRemoved = statuses.isRemoved || commonFeedItem.isDeleted;
 
-      if (isRemoved) {
-        if (itemIndex >= 0) {
-          nextData.splice(itemIndex, 1);
-        }
-
-        return nextData;
+    if (isRemoved) {
+      if (itemIndex >= 0) {
+        nextData.splice(itemIndex, 1);
       }
-
-      const finalItem: FeedItemFollowLayoutItem = {
-        type: InboxItemType.FeedItemFollow,
-        itemId: commonFeedItem.id,
-        feedItem: commonFeedItem,
-      };
-      firstDocTimestamp = commonFeedItem.updatedAt;
-
-      if (itemIndex < 0) {
-        return [finalItem, ...nextData];
-      }
-
-      nextData[itemIndex] = finalItem;
 
       return nextData;
-    },
-    state.feedItems.data || [],
-  );
+    }
+
+    const finalItem: FeedItemFollowLayoutItem = {
+      type: InboxItemType.FeedItemFollow,
+      itemId: commonFeedItem.id,
+      feedItem: commonFeedItem,
+    };
+    firstDocTimestamp = commonFeedItem.updatedAt;
+
+    if (itemIndex < 0) {
+      return [finalItem, ...nextData];
+    }
+
+    nextData[itemIndex] = finalItem;
+
+    return nextData;
+  }, state.feedItems.data || []);
 
   state.feedItems = {
     ...state.feedItems,
@@ -145,37 +144,35 @@ const addNewPinnedFeedItems = (
     };
   }[],
 ) => {
-  const data = payload.reduceRight(
-    (acc, { commonFeedItem, statuses: { isRemoved } }) => {
-      const nextData = [...acc];
-      const itemIndex = nextData.findIndex(
-        (item) => item.feedItem.id === commonFeedItem.id,
-      );
+  const data = payload.reduceRight((acc, { commonFeedItem, statuses }) => {
+    const nextData = [...acc];
+    const itemIndex = nextData.findIndex(
+      (item) => item.feedItem.id === commonFeedItem.id,
+    );
+    const isRemoved = statuses.isRemoved || commonFeedItem.isDeleted;
 
-      if (isRemoved) {
-        if (itemIndex >= 0) {
-          nextData.splice(itemIndex, 1);
-        }
-
-        return nextData;
+    if (isRemoved) {
+      if (itemIndex >= 0) {
+        nextData.splice(itemIndex, 1);
       }
-
-      const finalItem: FeedItemFollowLayoutItem = {
-        type: InboxItemType.FeedItemFollow,
-        itemId: commonFeedItem.id,
-        feedItem: commonFeedItem,
-      };
-
-      if (itemIndex < 0) {
-        return [finalItem, ...nextData];
-      }
-
-      nextData[itemIndex] = finalItem;
 
       return nextData;
-    },
-    state.pinnedFeedItems.data || [],
-  );
+    }
+
+    const finalItem: FeedItemFollowLayoutItem = {
+      type: InboxItemType.FeedItemFollow,
+      itemId: commonFeedItem.id,
+      feedItem: commonFeedItem,
+    };
+
+    if (itemIndex < 0) {
+      return [finalItem, ...nextData];
+    }
+
+    nextData[itemIndex] = finalItem;
+
+    return nextData;
+  }, state.pinnedFeedItems.data || []);
 
   state.pinnedFeedItems = {
     ...state.pinnedFeedItems,
@@ -194,7 +191,8 @@ const updatePinnedFeedItemInList = (
     return;
   }
 
-  const { item: updatedItem, isRemoved = false } = payload;
+  const { item: updatedItem } = payload;
+  const isRemoved = payload.isRemoved || updatedItem.isDeleted;
   const feedItemIndex = state.pinnedFeedItems.data?.findIndex(
     (item) => item.feedItem.id === updatedItem.id,
   );
@@ -230,7 +228,8 @@ const updateSharedFeedItem = (
     isRemoved?: boolean;
   },
 ): void => {
-  const { item: updatedItem, isRemoved = false } = payload;
+  const { item: updatedItem } = payload;
+  const isRemoved = payload.isRemoved || updatedItem.isDeleted;
 
   if (state.sharedFeedItem?.feedItem.id !== updatedItem.id) {
     return;
