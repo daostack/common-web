@@ -157,6 +157,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       if (discussion) {
         setDeletingInProgress(true);
         await DiscussionService.deleteDiscussion(discussion.id);
+        onDeleteModalClose();
       }
     } catch {
       notify("Something went wrong");
