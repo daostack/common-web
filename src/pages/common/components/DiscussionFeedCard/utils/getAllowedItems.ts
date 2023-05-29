@@ -42,7 +42,10 @@ export const getAllowedItems = (
     FeedItemMenuItem.Remove,
   ];
   const nonAllowedItems =
-    options.getNonAllowedItems?.(CommonFeedType.Discussion, options) || [];
+    options.getNonAllowedItems?.(
+      options?.feedItem?.data.type ?? CommonFeedType.Discussion,
+      options,
+    ) || [];
 
   return orderedItems.filter(
     (item) =>
