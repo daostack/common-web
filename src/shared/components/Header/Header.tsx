@@ -55,7 +55,6 @@ const Header = () => {
   const user = useSelector(selectUser());
   const myAccountBtnRef = useRef(null);
   const { isOutside } = useOutsideClick(myAccountBtnRef);
-  const shouldDisplayLaunchApp = Boolean(!isDesktop && user);
   const hasAdminAccess = useAnyMandatoryRoles(ADMIN_ACCESS_ROLES, user?.roles);
   const isTrusteeRoute = useMatchRoute(
     ROUTE_PATHS.TRUSTEE,
@@ -77,14 +76,13 @@ const Header = () => {
   const [showAccountLinks, setShowAccountLinks] =
     useState<boolean>(isMyAccountRoute);
   const shouldHideHeader = sharedHeaderState.shouldHideHeader ?? false;
-  const shouldShowAuth = sharedHeaderState.shouldShowAuth ?? !isTrusteeRoute;
   const shouldShowLanguageDropdown = isHomeRoute || isContactUsRoute;
 
   useEffect(() => {
     setShowAccountLinks(isMyAccountRoute);
   }, [showMenu, isMyAccountRoute]);
 
-  const handleOpen = useCallback(() => {
+  const handleLogIn = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: true }));
     setShowMenu(false);
   }, [dispatch]);
@@ -158,11 +156,6 @@ const Header = () => {
           <button onClick={logOutUser}>Log out</button>
         </>
       )}
-      {!isAuthorized && shouldShowAuth && (
-        <button className="login-button" onClick={handleOpen}>
-          Login / Sign up
-        </button>
-      )}
     </div>
   );
 
@@ -174,10 +167,10 @@ const Header = () => {
     return null;
   }
 
-  const launchAppButton = (
+  const appButton = (
     <Button
-      className={styles.launchAppButton}
-      onClick={handleLaunchApp}
+      className={styles.appButton}
+      onClick={!isAuthorized ? handleLogIn : handleLaunchApp}
       variant={ButtonVariant.OutlinePink}
     >
       Launch App
@@ -186,20 +179,15 @@ const Header = () => {
 
   return (
     <section className={headerWrapperClassName}>
-      {shouldDisplayLaunchApp && launchAppButton}
-      <Link
-        to="/"
-        className={classNames("common-logo", {
-          "common-logo--without-avatar": !shouldDisplayLaunchApp,
-        })}
-      >
+      {!isDesktop && appButton}
+      <Link to="/" className="common-logo">
         <img src="/icons/logo.svg" alt="logo" className="logo" />
       </Link>
       {isDesktop ? (
         <>
           {links}
           {shouldShowLanguageDropdown && <LanguageDropdown />}
-          {user && launchAppButton}
+          {appButton}
         </>
       ) : (
         <>
