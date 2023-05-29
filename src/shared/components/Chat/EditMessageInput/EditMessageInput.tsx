@@ -1,30 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import classNames from "classnames";
+import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { updateDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { Loader, Button } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
-import { DiscussionMessage } from "@/shared/models";
-import { TextEditor } from "@/shared/ui-kit";
+import { CommonMember, DiscussionMessage } from "@/shared/models";
+import { BaseTextEditor } from "@/shared/ui-kit";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
-import { getUserName } from "@/shared/utils";
+import { emptyFunction, getUserName } from "@/shared/utils";
 import styles from "./EditMessageInput.module.scss";
 
 interface Props {
   discussionMessage: DiscussionMessage;
   onClose: () => void;
   isProposalMessage: boolean;
+  commonMember: CommonMember | null;
 }
 
 export default function EditMessageInput({
   discussionMessage,
   onClose,
   isProposalMessage,
+  commonMember,
 }: Props) {
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const [message, setMessage] = useState(discussionMessage.text);
   const [isLoading, setLoading] = useState(false);
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+
+  useEffect(() => {
+    if (discussionMessage.commonId) {
+      fetchCommonMembers(discussionMessage.commonId);
+    }
+  }, [discussionMessage.commonId]);
 
   const updateMessage = () => {
     setLoading(true);
@@ -49,17 +59,25 @@ export default function EditMessageInput({
     );
   };
 
+  const users = useMemo(() => {
+    return commonMembers
+      .filter((member) => member.userId !== commonMember?.userId)
+      .map(({ user }) => user);
+  }, [commonMember, commonMembers]);
+
   return (
     <div className={styles.container}>
       <div className={styles.ownerName}>
         {getUserName(discussionMessage.owner)}
       </div>
 
-      <TextEditor
+      <BaseTextEditor
         className={styles.input}
         value={parseStringToTextEditorValue(message)}
         onChange={(value) => setMessage(JSON.stringify(value))}
-        hideToolbar
+        users={users}
+        shouldReinitializeEditor={false}
+        onClearFinished={emptyFunction}
       />
 
       <div className={styles.buttonContainer}>
