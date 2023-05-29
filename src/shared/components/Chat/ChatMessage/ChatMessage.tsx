@@ -11,6 +11,8 @@ import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
+  checkIsSystemDiscussionMessage,
+  checkIsUserDiscussionMessage,
   CommonMemberWithUserInfo,
   DiscussionMessage,
   User,
@@ -69,7 +71,7 @@ export default function ChatMessage({
 
   const userId = user?.uid;
   const isNotCurrentUserMessage =
-    discussionMessage.ownerType !== "user" ||
+    !checkIsUserDiscussionMessage(discussionMessage) ||
     userId !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
 
@@ -200,15 +202,16 @@ export default function ChatMessage({
           [styles.messageCurrentUser]: !isNotCurrentUserMessage,
         })}
       >
-        {isNotCurrentUserMessage && discussionMessage.ownerType === "user" && (
-          <div className={styles.iconWrapper}>
-            <UserAvatar
-              photoURL={discussionMessage.owner?.photoURL}
-              nameForRandomAvatar={discussionMessage.owner?.email}
-              userName={getUserName(discussionMessage.owner)}
-            />
-          </div>
-        )}
+        {isNotCurrentUserMessage &&
+          checkIsUserDiscussionMessage(discussionMessage) && (
+            <div className={styles.iconWrapper}>
+              <UserAvatar
+                photoURL={discussionMessage.owner?.photoURL}
+                nameForRandomAvatar={discussionMessage.owner?.email}
+                userName={getUserName(discussionMessage.owner)}
+              />
+            </div>
+          )}
         {isEditMode ? (
           <EditMessageInput
             isProposalMessage={chatType === ChatType.ProposalComments}
@@ -228,7 +231,7 @@ export default function ChatMessage({
           >
             {isNotCurrentUserMessage && (
               <div className={styles.messageName}>
-                {discussionMessage.ownerType === "system"
+                {checkIsSystemDiscussionMessage(discussionMessage)
                   ? "System"
                   : getUserName(discussionMessage.owner)}
               </div>
@@ -298,7 +301,7 @@ export default function ChatMessage({
               transparent
               isDiscussionMessage
               ownerId={
-                discussionMessage.ownerType === "user"
+                checkIsUserDiscussionMessage(discussionMessage)
                   ? discussionMessage.owner?.uid
                   : undefined
               }

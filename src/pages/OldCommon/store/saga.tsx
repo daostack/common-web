@@ -33,6 +33,7 @@ import {
   BankAccountDetails,
   Vote,
   Governance,
+  checkIsUserDiscussionMessage,
 } from "../../../shared/models";
 import { getUserData } from "../../Auth/store/api";
 import { ImmediateContributionResponse } from "../interfaces";
@@ -320,12 +321,9 @@ export function* loadDiscussionDetail(
 
     const ownerIds = Array.from(
       new Set(
-        discussionMessage?.flatMap((d) => {
-          if (d.ownerType === "user") {
-            return [d.ownerId];
-          }
-          return [];
-        }),
+        discussionMessage
+          ?.filter(checkIsUserDiscussionMessage)
+          .map((d) => d.ownerId),
       ),
     );
 
@@ -341,8 +339,8 @@ export function* loadDiscussionDetail(
           ({ id }) => id === d.parentId,
         );
         if (
-          d.ownerType === "user" &&
-          newDiscussionMessage.ownerType === "user"
+          checkIsUserDiscussionMessage(d) &&
+          checkIsUserDiscussionMessage(newDiscussionMessage)
         ) {
           newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
         }
@@ -351,7 +349,7 @@ export function* loadDiscussionDetail(
               id: parentMessage.id,
               text: parentMessage.text,
               ownerName: parentMessage?.ownerName,
-              ...(parentMessage.ownerType === "user" && {
+              ...(checkIsUserDiscussionMessage(parentMessage) && {
                 ownerId: parentMessage.ownerId,
               }),
             }
@@ -448,12 +446,9 @@ export function* loadProposalDetail(
       : [];
     const ownerIds = Array.from(
       new Set(
-        discussionMessages?.flatMap((d) => {
-          if (d.ownerType === "user") {
-            return [d.ownerId];
-          }
-          return [];
-        }),
+        discussionMessages
+          ?.filter(checkIsUserDiscussionMessage)
+          .map((d) => d.ownerId),
       ),
     );
     const owners = (yield fetchOwners(ownerIds)) as User[];
@@ -462,7 +457,10 @@ export function* loadProposalDetail(
       const parentMessage = discussionMessages.find(
         ({ id }) => id === d.parentId,
       );
-      if (d.ownerType === "user" && newDiscussionMessage.ownerType === "user") {
+      if (
+        checkIsUserDiscussionMessage(d) &&
+        checkIsUserDiscussionMessage(newDiscussionMessage)
+      ) {
         newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
       }
       newDiscussionMessage.parentMessage = parentMessage
@@ -470,7 +468,7 @@ export function* loadProposalDetail(
             id: parentMessage.id,
             text: parentMessage.text,
             ownerName: parentMessage?.ownerName,
-            ...(parentMessage.ownerType === "user" && {
+            ...(checkIsUserDiscussionMessage(parentMessage) && {
               ownerId: parentMessage.ownerId,
             }),
           }

@@ -4,7 +4,10 @@ import classNames from "classnames";
 import { updateDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { Loader, Button } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
-import { DiscussionMessage } from "@/shared/models";
+import {
+  checkIsUserDiscussionMessage,
+  DiscussionMessage,
+} from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import styles from "./EditMessageInput.module.scss";
 
@@ -25,7 +28,7 @@ export default function EditMessageInput({
   const [isLoading, setLoading] = useState(false);
 
   const updateMessage = () => {
-    if (discussionMessage.ownerType !== "user") {
+    if (!checkIsUserDiscussionMessage(discussionMessage)) {
       notify("Something went wrong");
       return;
     }
@@ -60,7 +63,7 @@ export default function EditMessageInput({
   return (
     <div className={styles.container}>
       <div className={styles.ownerName}>
-        {discussionMessage.ownerType === "user"
+        {checkIsUserDiscussionMessage(discussionMessage)
           ? getUserName(discussionMessage.owner)
           : "System"}
       </div>

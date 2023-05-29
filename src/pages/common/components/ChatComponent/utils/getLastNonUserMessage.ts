@@ -1,5 +1,8 @@
 import findLast from "lodash/findLast";
-import { DiscussionMessage } from "@/shared/models";
+import {
+  checkIsUserDiscussionMessage,
+  DiscussionMessage,
+} from "@/shared/models";
 
 export const getLastNonUserMessage = (
   discussionMessages: DiscussionMessage[],
@@ -7,5 +10,6 @@ export const getLastNonUserMessage = (
 ): DiscussionMessage | null =>
   findLast(
     discussionMessages,
-    (message) => message.ownerType !== "user" || message.ownerId !== userId,
+    (message) =>
+      !checkIsUserDiscussionMessage(message) || message.ownerId !== userId,
   ) || null;

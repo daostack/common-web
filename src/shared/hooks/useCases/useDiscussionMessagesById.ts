@@ -5,7 +5,11 @@ import { fetchOwners } from "@/pages/OldCommon/store/api";
 import { DiscussionMessageService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
-import { DiscussionMessage, User } from "@/shared/models";
+import {
+  checkIsUserDiscussionMessage,
+  DiscussionMessage,
+  User,
+} from "@/shared/models";
 import {
   cacheActions,
   selectDiscussionMessagesStateByDiscussionId,
@@ -93,12 +97,9 @@ export const useDiscussionMessagesById = ({
       );
       const ownerIds = Array.from(
         new Set(
-          filteredMessages?.flatMap((d) => {
-            if (d.ownerType === "user") {
-              return [d.ownerId];
-            }
-            return [];
-          }),
+          filteredMessages
+            ?.filter(checkIsUserDiscussionMessage)
+            .map((d) => d.ownerId),
         ),
       ) as string[];
       const owners = await fetchMessageOwners(ownerIds);
@@ -109,8 +110,8 @@ export const useDiscussionMessagesById = ({
           ({ id }) => id === d.parentId,
         );
         if (
-          d.ownerType === "user" &&
-          newDiscussionMessage.ownerType === "user"
+          checkIsUserDiscussionMessage(d) &&
+          checkIsUserDiscussionMessage(newDiscussionMessage)
         ) {
           newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
         }
@@ -119,7 +120,7 @@ export const useDiscussionMessagesById = ({
               id: parentMessage.id,
               text: parentMessage.text,
               ownerName: parentMessage?.ownerName,
-              ...(parentMessage.ownerType === "user" && {
+              ...(checkIsUserDiscussionMessage(parentMessage) && {
                 ownerId: parentMessage.ownerId,
               }),
               moderation: parentMessage?.moderation,

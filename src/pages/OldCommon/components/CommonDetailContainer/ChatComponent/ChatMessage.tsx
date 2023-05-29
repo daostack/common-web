@@ -2,7 +2,12 @@ import React, { useCallback, useState } from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
-import { DiscussionMessage, User } from "@/shared/models";
+import {
+  checkIsSystemDiscussionMessage,
+  checkIsUserDiscussionMessage,
+  DiscussionMessage,
+  User,
+} from "@/shared/models";
 import { StaticLinkType, getUserName } from "@/shared/utils";
 import EditMessageInput from "./EditMessageInput";
 
@@ -71,7 +76,7 @@ export default function ChatMessage({
     >
       <div className="message">
         <div className="icon-wrapper">
-          {discussionMessage.ownerType === "user" && (
+          {checkIsUserDiscussionMessage(discussionMessage) && (
             <UserAvatar
               photoURL={discussionMessage.owner?.photoURL}
               nameForRandomAvatar={discussionMessage.owner?.email}
@@ -89,7 +94,7 @@ export default function ChatMessage({
           <div className="message-text">
             <ReplyMessage />
             <div className="message-name">
-              {discussionMessage.ownerType === "system"
+              {checkIsSystemDiscussionMessage(discussionMessage)
                 ? "System"
                 : getUserName(discussionMessage.owner)}
             </div>
@@ -130,7 +135,7 @@ export default function ChatMessage({
               transparent
               isDiscussionMessage
               ownerId={
-                discussionMessage.ownerType === "user"
+                checkIsUserDiscussionMessage(discussionMessage)
                   ? discussionMessage.owner?.uid
                   : undefined
               }

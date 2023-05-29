@@ -30,6 +30,7 @@ import { PlusIcon } from "@/shared/icons";
 import { SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
+  checkIsUserDiscussionMessage,
   Circles,
   CommonFeedObjectUserUnique,
   CommonMember,
@@ -313,7 +314,7 @@ export default function ChatComponent({
             ? {
                 id: discussionMessageReply?.id,
                 ownerName: discussionMessageReply.ownerName,
-                ...(discussionMessageReply.ownerType === "user" && {
+                ...(checkIsUserDiscussionMessage(discussionMessageReply) && {
                   ownerId: discussionMessageReply.ownerId,
                 }),
                 text: discussionMessageReply.text,
