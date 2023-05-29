@@ -1,4 +1,6 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useMemo } from "react";
+import { scroller } from "react-scroll";
+import { v4 as uuidv4 } from "uuid";
 import { Image, Modal, ButtonIcon } from "@/shared/components";
 import { Colors } from "@/shared/constants";
 import { LongLeftArrowIcon } from "@/shared/icons";
@@ -10,10 +12,31 @@ interface ImageGalleryMobileModalProps {
   isShowing: boolean;
   onClose: () => void;
   videoSrc?: string;
+  initialSlide?: number;
 }
 
 const ImageGalleryMobileModal: FC<ImageGalleryMobileModalProps> = (props) => {
-  const { isShowing, onClose, images, videoSrc } = props;
+  const { isShowing, onClose, images, videoSrc, initialSlide = 0 } = props;
+
+  const chatWrapperId = useMemo(() => `chat-gallery-${uuidv4()}`, []);
+
+  useEffect(() => {
+    if (!initialSlide) {
+      return;
+    }
+
+    setTimeout(
+      () =>
+        scroller.scrollTo(`gallery-${initialSlide}`, {
+          containerId: chatWrapperId,
+          delay: 0,
+          duration: 300,
+          offset: -15,
+          smooth: true,
+        }),
+      0,
+    );
+  }, [initialSlide]);
 
   return (
     <Modal
@@ -35,7 +58,7 @@ const ImageGalleryMobileModal: FC<ImageGalleryMobileModalProps> = (props) => {
             />
           </ButtonIcon>
         </div>
-        <div className={styles.imageWrapper}>
+        <div className={styles.imageWrapper} id={chatWrapperId}>
           {videoSrc && (
             <div className={styles.videoContainer}>
               <video
@@ -50,6 +73,7 @@ const ImageGalleryMobileModal: FC<ImageGalleryMobileModalProps> = (props) => {
           )}
           {images.map((imageURL, index) => (
             <Image
+              id={`gallery-${index}`}
               key={imageURL}
               className={styles.image}
               src={imageURL}
