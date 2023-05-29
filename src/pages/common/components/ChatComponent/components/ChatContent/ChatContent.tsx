@@ -190,6 +190,7 @@ const ChatContent: ForwardRefRenderFunction<
                     }
                     commonMembers={commonMembers}
                     feedItemId={feedItemId}
+                    commonMember={commonMember}
                   />
                 );
 
