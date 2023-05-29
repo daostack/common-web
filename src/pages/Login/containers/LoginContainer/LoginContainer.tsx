@@ -8,12 +8,14 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
+import { useHistory } from "react-router-dom";
 import { Modal } from "@/shared/components";
 import {
   AuthProvider,
   ErrorCode,
   ScreenSize,
   QueryParamKey,
+  ROUTE_PATHS,
 } from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
@@ -41,6 +43,7 @@ import { getAuthCode } from "./helpers";
 import "./index.scss";
 
 const LoginContainer: FC = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const queryParams = useQueryParams();
   const location = useLocation();
@@ -98,6 +101,7 @@ const LoginContainer: FC = () => {
       } else {
         handleClose();
       }
+      history.push(ROUTE_PATHS.INBOX);
     },
     [removeQueryParams, handleClose, shouldShowUserDetailsAfterSignUp],
   );

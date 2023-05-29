@@ -7,6 +7,18 @@
   border: 0.063rem solid $light-gray-3;
 }
 
+.title {
+  font-size: $large;
+  font-weight: 600;
+}
+
+.subTitle {
+  font-size: $moderate-small;
+  margin-bottom: 2rem;
+}
+
 .sendButton {
   width: 100%;
+  margin-top: 1rem;
+  border-radius: 6.25rem;
 }

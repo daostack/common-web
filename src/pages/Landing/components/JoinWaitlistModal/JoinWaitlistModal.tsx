@@ -3,6 +3,7 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Api } from "@/services";
 import { Modal } from "@/shared/components";
+import { ErrorText } from "@/shared/components/Form";
 import { TextField } from "@/shared/components/Form/Formik";
 import { ApiEndpoint } from "@/shared/constants";
 import { ModalProps } from "@/shared/interfaces";
@@ -27,9 +28,12 @@ const JoinWaitlistModal: FC<Pick<ModalProps, "isShowing" | "onClose">> = ({
   onClose,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [joined, setJoined] = useState(false);
+  const [errorText, setErrorText] = useState("");
 
   const onSubmit = async (values: JoinWaitlistFormValues) => {
     setLoading(true);
+    setErrorText("");
 
     /**
      * We use the SendEmail endpoint here.
@@ -44,22 +48,31 @@ const JoinWaitlistModal: FC<Pick<ModalProps, "isShowing" | "onClose">> = ({
         type: EmailType.ContactUsAdmin,
       });
       setLoading(false);
-      onClose();
+      setJoined(true);
     } catch (error) {
       setLoading(false);
       console.error(error);
+      setErrorText("Something went wrong...");
     }
+  };
+
+  const handleClose = () => {
+    setJoined(false);
+    setErrorText("");
+    onClose();
   };
 
   return (
     <Modal
       isShowing={isShowing}
-      onClose={onClose}
+      onClose={handleClose}
       mobileFullScreen
       className={styles.modal}
     >
-      <h1>Join Waitlist</h1>
-      <h6>Add your email and we will back to you soon</h6>
+      <div className={styles.title}>Join Waitlist</div>
+      <div className={styles.subTitle}>
+        Add your email and we will back to you soon
+      </div>
 
       <Formik
         initialValues={INITIAL_VALUES}
@@ -73,18 +86,20 @@ const JoinWaitlistModal: FC<Pick<ModalProps, "isShowing" | "onClose">> = ({
             name="email"
             label="email"
             placeholder="example@email.com"
+            disabled={loading || joined}
           />
 
           <Button
             type="submit"
-            disabled={loading}
+            disabled={loading || joined}
             className={styles.sendButton}
-            variant={ButtonVariant.OutlinePink}
+            variant={ButtonVariant.PrimaryPink}
           >
-            Send
+            {loading ? "Sending..." : joined ? "Joined waiting list" : "Send"}
           </Button>
         </Form>
       </Formik>
+      {errorText && <ErrorText className={styles.error}>{errorText}</ErrorText>}
     </Modal>
   );
 };

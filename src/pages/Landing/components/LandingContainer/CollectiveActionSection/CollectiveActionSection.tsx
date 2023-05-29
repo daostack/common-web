@@ -36,7 +36,7 @@ const CollectiveActionSection: FC<CollectiveActionSectionProps> = ({
         <Button
           className="landing-collective-action-section__button"
           onClick={onLaunchClick}
-          variant={ButtonVariant.OutlinePink}
+          variant={ButtonVariant.PrimaryPink}
         >
           {t("buttons.joinWaitlist")}
         </Button>

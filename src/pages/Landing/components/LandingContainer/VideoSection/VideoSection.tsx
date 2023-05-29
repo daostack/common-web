@@ -41,7 +41,7 @@ const VideoSection: FC<VideoSectionProps> = ({ onLaunchClick }) => {
         <Button
           className="landing-video-section__join-waitlist-button"
           onClick={onLaunchClick}
-          variant={ButtonVariant.OutlinePink}
+          variant={ButtonVariant.PrimaryPink}
         >
           {t("buttons.joinWaitlist")}
         </Button>

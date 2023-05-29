@@ -171,7 +171,7 @@ const Header = () => {
     <Button
       className={styles.appButton}
       onClick={!isAuthorized ? handleLogIn : handleLaunchApp}
-      variant={ButtonVariant.OutlinePink}
+      variant={ButtonVariant.PrimaryPink}
     >
       Launch App
     </Button>
