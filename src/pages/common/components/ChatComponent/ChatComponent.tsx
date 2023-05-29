@@ -120,11 +120,9 @@ export default function ChatComponent({
   );
 
   useEffect(() => {
-    if (!discussionMessageReply) {
-      return;
+    if (discussionMessageReply) {
+      editorRef.current?.focus();
     }
-
-    editorRef.current?.focus();
   }, [discussionMessageReply]);
 
   const currentFilesPreview = useSelector(selectFilesPreview());
