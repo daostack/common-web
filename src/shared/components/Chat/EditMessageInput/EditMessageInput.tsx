@@ -26,7 +26,9 @@ export default function EditMessageInput({
 }: Props) {
   const dispatch = useDispatch();
   const { notify } = useNotification();
-  const [message, setMessage] = useState(discussionMessage.text);
+  const [message, setMessage] = useState(
+    parseStringToTextEditorValue(discussionMessage.text),
+  );
   const [isLoading, setLoading] = useState(false);
   const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
 
@@ -43,7 +45,7 @@ export default function EditMessageInput({
         payload: {
           discussionMessageId: discussionMessage.id,
           ownerId: discussionMessage.ownerId,
-          text: message,
+          text: JSON.stringify(message),
         },
         isProposalMessage,
         discussionId: discussionMessage.discussionId,
@@ -73,8 +75,8 @@ export default function EditMessageInput({
 
       <BaseTextEditor
         className={styles.input}
-        value={parseStringToTextEditorValue(message)}
-        onChange={(value) => setMessage(JSON.stringify(value))}
+        value={message}
+        onChange={setMessage}
         users={users}
         shouldReinitializeEditor={false}
         onClearFinished={emptyFunction}
