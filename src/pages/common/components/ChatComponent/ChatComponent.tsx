@@ -116,9 +116,17 @@ export default function ChatComponent({
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
   useZoomDisabling();
+  const editorRef = useRef<HTMLElement>(null);
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
+
+  useEffect(() => {
+    if (discussionMessageReply) {
+      editorRef.current?.focus();
+    }
+  }, [discussionMessageReply]);
+
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
@@ -162,6 +170,7 @@ export default function ChatComponent({
     fetchDiscussionMessages,
     data: discussionMessages = [],
     fetched: isFetchedDiscussionMessages,
+    loading: isLoadingDiscussionMessages,
     addDiscussionMessage,
   } = useDiscussionMessagesById({
     hasPermissionToHide,
@@ -399,8 +408,6 @@ export default function ChatComponent({
     }
   }, [lastNonUserMessage?.id]);
 
-  const editorRef = useRef(null);
-
   return (
     <div className={styles.chatWrapper}>
       <div
@@ -409,7 +416,7 @@ export default function ChatComponent({
         })}
         id={chatWrapperId}
       >
-        {isFetchedDiscussionMessages ? (
+        {isFetchedDiscussionMessages && !isLoadingDiscussionMessages ? (
           <ChatContent
             ref={chatContentRef}
             type={type}
