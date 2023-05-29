@@ -22,6 +22,7 @@ import {
   LastSeenEntity,
 } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
+import { useZoomDisabling } from "@/shared/hooks";
 import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
@@ -114,6 +115,7 @@ export default function ChatComponent({
   isCommonMemberFetched,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
+  useZoomDisabling();
   const editorRef = useRef<HTMLElement>(null);
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
