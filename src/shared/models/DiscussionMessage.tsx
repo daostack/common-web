@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import { DiscussionMessageOwnerType } from "@/shared/constants";
 import { Moderation } from "@/shared/interfaces/Moderation";
 import { BaseEntity } from "./BaseEntity";
 import { Link } from "./Link";
@@ -27,7 +28,7 @@ export interface ParentDiscussionMessage {
   images?: Link[];
 }
 
-export type DiscussionMessage = BaseEntity & {
+interface BaseDiscussionMessage extends BaseEntity {
   discussionId: string;
   commonId: string;
   ownerName: string;
@@ -39,16 +40,20 @@ export type DiscussionMessage = BaseEntity & {
   tags?: DiscussionMessageTag[];
   parentMessage: ParentDiscussionMessage | null;
   editedAt?: firebase.firestore.Timestamp;
-} & (
-    | {
-        ownerType: "user";
-        ownerId: string;
-        owner?: User;
-      }
-    | {
-        ownerType: "system";
-      }
-  );
+  ownerType: DiscussionMessageOwnerType;
+}
+
+interface UserDiscussionMessage extends BaseDiscussionMessage {
+  ownerType: DiscussionMessageOwnerType.User;
+  ownerId: string;
+  owner?: User;
+}
+
+interface SystemDiscussionMessage extends BaseDiscussionMessage {
+  ownerType: DiscussionMessageOwnerType.System;
+}
+
+export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
 
 export enum PendingMessageStatus {
   Sending,
