@@ -184,7 +184,14 @@ export default function ChatComponent({
     userId,
   );
 
-  const messages = (discussionMessages ?? []).reduce(groupday, {});
+  const messages = useMemo(
+    () =>
+      (discussionMessages?.filter(checkIsUserDiscussionMessage) ?? []).reduce(
+        groupday,
+        {},
+      ),
+    [discussionMessages],
+  );
   const dateList = useMemo(() => Object.keys(messages), [messages]);
 
   useEffect(() => {
