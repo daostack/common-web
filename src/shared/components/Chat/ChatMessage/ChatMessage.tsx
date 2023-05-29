@@ -11,9 +11,10 @@ import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
+  CommonMember,
+  CommonMemberWithUserInfo,
   checkIsSystemDiscussionMessage,
   checkIsUserDiscussionMessage,
-  CommonMemberWithUserInfo,
   DiscussionMessage,
   User,
 } from "@/shared/models";
@@ -36,6 +37,7 @@ interface ChatMessageProps {
   hasPermissionToHide: boolean;
   commonMembers: CommonMemberWithUserInfo[];
   feedItemId: string;
+  commonMember: CommonMember | null;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -58,6 +60,7 @@ export default function ChatMessage({
   hasPermissionToHide,
   commonMembers,
   feedItemId,
+  commonMember,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
 
@@ -217,6 +220,7 @@ export default function ChatMessage({
             isProposalMessage={chatType === ChatType.ProposalComments}
             discussionMessage={discussionMessage}
             onClose={() => setEditMode(false)}
+            commonMember={commonMember}
           />
         ) : (
           <div

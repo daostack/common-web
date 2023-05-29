@@ -23,6 +23,7 @@ import {
   LastSeenEntity,
 } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
+import { useZoomDisabling } from "@/shared/hooks";
 import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
@@ -116,6 +117,7 @@ export default function ChatComponent({
   isCommonMemberFetched,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
+  useZoomDisabling();
   const editorRef = useRef<HTMLElement>(null);
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
@@ -263,14 +265,15 @@ export default function ChatComponent({
   );
 
   const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
+    const newFilesPreview = Array.from(event.target.files || []).map((file) => {
+      return {
+        info: file,
+        src: URL.createObjectURL(file),
+      };
+    });
     dispatch(
       chatActions.setFilesPreview(
-        Array.from(event.target.files || []).map((file) => {
-          return {
-            info: file,
-            src: URL.createObjectURL(file),
-          };
-        }),
+        [...(currentFilesPreview ?? []), ...newFilesPreview].slice(0, 10),
       ),
     );
   };
