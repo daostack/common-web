@@ -114,7 +114,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     {
       report: onReportModalOpen,
       share: () => onShareModalOpen(),
-      // remove: onDeleteModalOpen,
+      remove: onDeleteModalOpen,
     },
   );
   const user = useSelector(selectUser());
