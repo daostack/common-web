@@ -2,6 +2,8 @@ import React, { FC } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
+import { JoinWaitlistModal } from "@/pages/Landing/components/JoinWaitlistModal";
+import { useModal } from "@/shared/hooks";
 import { Loader } from "../../../../../shared/components";
 import { AuthProvider, ScreenSize } from "../../../../../shared/constants";
 import { getScreenSize } from "../../../../../shared/store/selectors";
@@ -30,6 +32,11 @@ const Connect: FC<ConnectProps> = (props) => {
   });
   const screenSize = useSelector(getScreenSize());
   const isLoading = useSelector(selectIsAuthLoading());
+  const {
+    isShowing: isWaitlistModalOpen,
+    onOpen: onWaitlistModalOpen,
+    onClose: onWaitlistModalClose,
+  } = useModal(false);
   const isMobileView = screenSize === ScreenSize.Mobile;
   const hasError = Boolean(errorText);
 
@@ -81,6 +88,14 @@ const Connect: FC<ConnectProps> = (props) => {
         {hasError && (
           <LoginError className="connect-wrapper__error">
             {errorText}
+            <div className="connect-wrapper__error__join-waitlist">
+              To join our waiting list, please{" "}
+              <b onClick={onWaitlistModalOpen}>click here.</b>
+            </div>
+            <JoinWaitlistModal
+              isShowing={isWaitlistModalOpen}
+              onClose={onWaitlistModalClose}
+            />
           </LoginError>
         )}
         <LoginButtons onLogin={onAuthButtonClick} />

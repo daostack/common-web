@@ -1,0 +1,24 @@
+@import "../../../../constants.scss";
+
+.modal {
+  max-width: 37rem;
+  background-color: $light-gray-12;
+  box-shadow: 0rem 0.25rem 1rem rgba(0, 0, 0, 0.15259);
+  border: 0.063rem solid $light-gray-3;
+}
+
+.title {
+  font-size: $large;
+  font-weight: 600;
+}
+
+.subTitle {
+  font-size: $moderate-small;
+  margin-bottom: 2rem;
+}
+
+.sendButton {
+  width: 100%;
+  margin-top: 1rem;
+  border-radius: 6.25rem;
+}

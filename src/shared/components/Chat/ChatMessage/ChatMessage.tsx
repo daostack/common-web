@@ -13,6 +13,8 @@ import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
   CommonMember,
   CommonMemberWithUserInfo,
+  checkIsSystemDiscussionMessage,
+  checkIsUserDiscussionMessage,
   DiscussionMessage,
   User,
 } from "@/shared/models";
@@ -71,7 +73,9 @@ export default function ChatMessage({
   );
 
   const userId = user?.uid;
-  const isNotCurrentUserMessage = userId !== discussionMessage.ownerId;
+  const isNotCurrentUserMessage =
+    !checkIsUserDiscussionMessage(discussionMessage) ||
+    userId !== discussionMessage.ownerId;
   const isEdited = editedAtDate > createdAtDate;
 
   const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
@@ -201,15 +205,16 @@ export default function ChatMessage({
           [styles.messageCurrentUser]: !isNotCurrentUserMessage,
         })}
       >
-        {isNotCurrentUserMessage && (
-          <div className={styles.iconWrapper}>
-            <UserAvatar
-              photoURL={discussionMessage.owner?.photoURL}
-              nameForRandomAvatar={discussionMessage.owner?.email}
-              userName={getUserName(discussionMessage.owner)}
-            />
-          </div>
-        )}
+        {isNotCurrentUserMessage &&
+          checkIsUserDiscussionMessage(discussionMessage) && (
+            <div className={styles.iconWrapper}>
+              <UserAvatar
+                photoURL={discussionMessage.owner?.photoURL}
+                nameForRandomAvatar={discussionMessage.owner?.email}
+                userName={getUserName(discussionMessage.owner)}
+              />
+            </div>
+          )}
         {isEditMode ? (
           <EditMessageInput
             isProposalMessage={chatType === ChatType.ProposalComments}
@@ -230,7 +235,9 @@ export default function ChatMessage({
           >
             {isNotCurrentUserMessage && (
               <div className={styles.messageName}>
-                {getUserName(discussionMessage.owner)}
+                {checkIsSystemDiscussionMessage(discussionMessage)
+                  ? "System"
+                  : getUserName(discussionMessage.owner)}
               </div>
             )}
             <ReplyMessage />
@@ -297,7 +304,11 @@ export default function ChatMessage({
               onMenuToggle={handleMenuToggle}
               transparent
               isDiscussionMessage
-              ownerId={discussionMessage.owner?.uid}
+              ownerId={
+                checkIsUserDiscussionMessage(discussionMessage)
+                  ? discussionMessage.owner?.uid
+                  : undefined
+              }
               userId={userId}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}

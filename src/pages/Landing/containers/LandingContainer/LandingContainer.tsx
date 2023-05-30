@@ -1,9 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router";
 import classNames from "classnames";
-import { Language, ROUTE_PATHS } from "@/shared/constants";
+import { Language } from "@/shared/constants";
+import { useModal } from "@/shared/hooks";
 import { selectLanguage } from "@/shared/store/selectors";
+import { JoinWaitlistModal } from "../../components/JoinWaitlistModal";
 import {
   CollectiveActionSection,
   CommonInfoSection,
@@ -15,11 +16,11 @@ import "./index.scss";
 
 const LandingContainer = () => {
   const language = useSelector(selectLanguage());
-  const history = useHistory();
-
-  const moveToContactUsPage = () => {
-    history.push(ROUTE_PATHS.CONTACT_US);
-  };
+  const {
+    isShowing: isWaitlistModalOpen,
+    onOpen: onWaitlistModalOpen,
+    onClose: onWaitlistModalClose,
+  } = useModal(false);
 
   return (
     <div
@@ -27,11 +28,15 @@ const LandingContainer = () => {
         "hebrew-font": language === Language.Hebrew,
       })}
     >
-      <VideoSection onLaunchClick={moveToContactUsPage} />
+      <VideoSection onLaunchClick={onWaitlistModalOpen} />
       <ImagineSection />
       <StructureInfoSection />
       {language !== Language.Hebrew && <CommonInfoSection />}
-      <CollectiveActionSection onLaunchClick={moveToContactUsPage} />
+      <CollectiveActionSection onLaunchClick={onWaitlistModalOpen} />
+      <JoinWaitlistModal
+        isShowing={isWaitlistModalOpen}
+        onClose={onWaitlistModalClose}
+      />
     </div>
   );
 };

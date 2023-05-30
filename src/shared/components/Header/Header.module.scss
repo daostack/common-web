@@ -1,0 +1,15 @@
+@import "../../../constants.scss";
+@import "../../../styles/sizes.scss";
+
+.appButton {
+  border: 0.06rem solid $white;
+  border-radius: 6.25rem;
+  padding: 0 2rem;
+}
+
+@include big-phone {
+  .appButton {
+    padding: 0 1rem;
+    font-size: $xsmall;
+  }
+}

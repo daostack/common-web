@@ -27,25 +27,6 @@
       flex-shrink: 0;
     }
 
-    .my-account-button {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1rem;
-
-      .my-account-button__arrow-icon {
-        flex-shrink: 0;
-        width: 1.5rem;
-        height: 1.5rem;
-        transform: rotate(90deg);
-        transition: all 0.2s;
-        margin-left: 0.5rem;
-      }
-
-      .my-account-button__arrow-icon--opened {
-        transform: rotate(-90deg);
-      }
-    }
-
     .header-wrapper__mobile-link {
       position: relative;
 
@@ -64,11 +45,6 @@
         height: 2rem;
         transform: translateY(-50%);
       }
-    }
-
-    .login-button {
-      margin-left: auto;
-      margin-right: 1.5rem;
     }
 
     button,
@@ -130,10 +106,6 @@
       display: flex;
     }
 
-    .common-logo--without-avatar {
-      padding-right: 2.5rem;
-    }
-
     .humburger-menu {
       margin-right: 1rem;
       display: flex;
@@ -170,10 +142,6 @@
       align-items: center;
       margin-left: unset;
       width: 100%;
-      height: calc(
-        100vh - (#{$header-height} + #{$download-common-app-mobile-menu-height})
-      );
-      overflow: scroll;
 
       button,
       a {

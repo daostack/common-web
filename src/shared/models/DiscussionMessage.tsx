@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import { DiscussionMessageOwnerType } from "@/shared/constants";
 import { Moderation } from "@/shared/interfaces/Moderation";
 import { BaseEntity } from "./BaseEntity";
 import { Link } from "./Link";
@@ -21,27 +22,39 @@ export interface DiscussionMessageTag {
 export interface ParentDiscussionMessage {
   id: string;
   ownerName: string;
-  ownerId: string;
+  ownerId?: string;
   text: string;
   moderation?: Moderation;
   images?: Link[];
 }
 
-export interface DiscussionMessage extends BaseEntity {
+interface BaseDiscussionMessage extends BaseEntity {
   discussionId: string;
   commonId: string;
-  ownerId: string;
   ownerName: string;
-  owner?: User;
   text: string;
   ownerAvatar: string;
   moderation?: Moderation;
   parentId?: string;
   images?: Link[];
+  files?: Link[];
   tags?: DiscussionMessageTag[];
   parentMessage: ParentDiscussionMessage | null;
   editedAt?: firebase.firestore.Timestamp;
+  ownerType: DiscussionMessageOwnerType;
 }
+
+export interface UserDiscussionMessage extends BaseDiscussionMessage {
+  ownerType: DiscussionMessageOwnerType.User;
+  ownerId: string;
+  owner?: User;
+}
+
+export interface SystemDiscussionMessage extends BaseDiscussionMessage {
+  ownerType: DiscussionMessageOwnerType.System;
+}
+
+export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
 
 export enum PendingMessageStatus {
   Sending,
@@ -55,3 +68,13 @@ export interface PendingMessage {
   status: PendingMessageStatus;
   feedItemId: string;
 }
+
+export const checkIsUserDiscussionMessage = (
+  discussionMessage?: BaseDiscussionMessage,
+): discussionMessage is UserDiscussionMessage =>
+  discussionMessage?.ownerType === DiscussionMessageOwnerType.User;
+
+export const checkIsSystemDiscussionMessage = (
+  discussionMessage?: BaseDiscussionMessage,
+): discussionMessage is SystemDiscussionMessage =>
+  discussionMessage?.ownerType === DiscussionMessageOwnerType.System;
