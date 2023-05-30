@@ -1,6 +1,7 @@
 import { CommonFeedType } from "@/shared/models";
 import { FeedItemMenuItem, FeedItemPinAction } from "../../FeedItem/constants";
 import { GetAllowedItemsOptions } from "../../FeedItem/types";
+import { checkIsEditItemAllowed } from "./checkIsEditItemAllowed";
 import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
 import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
 
@@ -10,7 +11,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
 > = {
   [FeedItemMenuItem.Share]: () => true,
   [FeedItemMenuItem.Report]: () => false,
-  [FeedItemMenuItem.Edit]: () => false,
+  [FeedItemMenuItem.Edit]: (options) => checkIsEditItemAllowed(options),
   [FeedItemMenuItem.Remove]: checkIsRemoveDiscussionAllowed,
   [FeedItemMenuItem.Pin]: (options) =>
     checkIsPinUnpinAllowed(FeedItemPinAction.Pin, options),

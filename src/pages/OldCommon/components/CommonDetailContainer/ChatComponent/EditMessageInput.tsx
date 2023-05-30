@@ -3,7 +3,10 @@ import { useDispatch } from "react-redux";
 import { updateDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { Loader, Button } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
-import { DiscussionMessage } from "@/shared/models";
+import {
+  checkIsSystemDiscussionMessage,
+  DiscussionMessage,
+} from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import "./edit-message-input.scss";
 
@@ -24,6 +27,10 @@ export default function EditMessageInput({
   const [isLoading, setLoading] = useState(false);
 
   const updateMessage = () => {
+    if (checkIsSystemDiscussionMessage(discussionMessage)) {
+      notify("Something went wrong");
+      return;
+    }
     setLoading(true);
     dispatch(
       updateDiscussionMessage.request({
@@ -55,7 +62,9 @@ export default function EditMessageInput({
   return (
     <div className="edit-message-input">
       <div className="edit-message-input__owner-name">
-        {getUserName(discussionMessage.owner)}
+        {checkIsSystemDiscussionMessage(discussionMessage)
+          ? "System"
+          : getUserName(discussionMessage.owner)}
       </div>
       <textarea
         className="edit-message-input__input"

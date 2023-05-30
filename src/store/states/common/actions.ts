@@ -2,6 +2,7 @@ import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import {
   CreateDiscussionDto,
   CreateProposalWithFiles,
+  EditDiscussionDto,
 } from "@/pages/OldCommon/interfaces";
 import { CommonAction, ProposalsTypes } from "@/shared/constants";
 import {
@@ -52,6 +53,23 @@ export const createDiscussion = createAsyncAction(
 )<
   PayloadWithOptionalCallback<
     Omit<CreateDiscussionDto, "files" | "images"> & {
+      files?: UploadFile[];
+      images?: UploadFile[];
+    },
+    Discussion,
+    Error
+  >,
+  Discussion,
+  Error
+>();
+
+export const editDiscussion = createAsyncAction(
+  CommonActionType.EDIT_DISCUSSION,
+  CommonActionType.EDIT_DISCUSSION_SUCCESS,
+  CommonActionType.EDIT_DISCUSSION_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    Omit<EditDiscussionDto, "files" | "images"> & {
       files?: UploadFile[];
       images?: UploadFile[];
     },

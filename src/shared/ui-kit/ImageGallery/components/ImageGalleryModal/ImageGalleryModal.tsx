@@ -45,7 +45,12 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
   return (
     <Modal isShowing={isShowing} onClose={onClose}>
       <div className="container">
-        <Swiper onSwiper={setSwiperRef} loop={true} pagination initialSlide={initialSlide}>
+        <Swiper
+          onSwiper={setSwiperRef}
+          loop={true}
+          pagination
+          initialSlide={initialSlide}
+        >
           {videoSrc && (
             <SwiperSlide key={videoSrc} className="slider-wrapper">
               <div className="video-container">

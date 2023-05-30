@@ -2,7 +2,12 @@ import React, { useCallback, useState } from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
-import { DiscussionMessage, User } from "@/shared/models";
+import {
+  checkIsSystemDiscussionMessage,
+  checkIsUserDiscussionMessage,
+  DiscussionMessage,
+  User,
+} from "@/shared/models";
 import { StaticLinkType, getUserName } from "@/shared/utils";
 import EditMessageInput from "./EditMessageInput";
 
@@ -71,11 +76,13 @@ export default function ChatMessage({
     >
       <div className="message">
         <div className="icon-wrapper">
-          <UserAvatar
-            photoURL={discussionMessage.owner?.photoURL}
-            nameForRandomAvatar={discussionMessage.owner?.email}
-            userName={getUserName(discussionMessage.owner)}
-          />
+          {checkIsUserDiscussionMessage(discussionMessage) && (
+            <UserAvatar
+              photoURL={discussionMessage.owner?.photoURL}
+              nameForRandomAvatar={discussionMessage.owner?.email}
+              userName={getUserName(discussionMessage.owner)}
+            />
+          )}
         </div>
         {isEditMode ? (
           <EditMessageInput
@@ -87,7 +94,9 @@ export default function ChatMessage({
           <div className="message-text">
             <ReplyMessage />
             <div className="message-name">
-              {getUserName(discussionMessage.owner)}
+              {checkIsSystemDiscussionMessage(discussionMessage)
+                ? "System"
+                : getUserName(discussionMessage.owner)}
             </div>
             <div className="message-content">
               <Linkify>{discussionMessage.text}</Linkify>
@@ -125,7 +134,11 @@ export default function ChatMessage({
               onMenuToggle={onMessageDropdownOpen}
               transparent
               isDiscussionMessage
-              ownerId={discussionMessage.owner?.uid}
+              ownerId={
+                checkIsUserDiscussionMessage(discussionMessage)
+                  ? discussionMessage.owner?.uid
+                  : undefined
+              }
               userId={user?.uid}
               commonId={discussionMessage.commonId}
               onEdit={() => setEditMode(true)}

@@ -1,25 +1,22 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink, RouteProps, useHistory } from "react-router-dom";
+import { Link, RouteProps, useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Routes } from "@/pages/MyAccount/components/Routes";
-import { Loader, UserAvatar } from "@/shared/components";
+import { Loader } from "@/shared/components";
 import {
   useAnyMandatoryRoles,
   useMatchRoute,
   useOutsideClick,
   useScreenSize,
 } from "@/shared/hooks";
-import RightArrowIcon from "@/shared/icons/rightArrow.icon";
 import { UserRole } from "@/shared/models";
-import {
-  setAreReportsLoading,
-  setTutorialModalState,
-} from "@/shared/store/actions";
+import { setAreReportsLoading } from "@/shared/store/actions";
 import {
   selectAreReportsLoading,
   selectHeader,
 } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { logOut, setLoginModalState } from "../../../pages/Auth/store/actions";
 import {
   authentificated,
@@ -32,9 +29,9 @@ import {
 } from "../../constants";
 import CloseIcon from "../../icons/close.icon";
 import HamburgerIcon from "../../icons/hamburger.icon";
-import { getUserName, isMobile, saveByURL } from "../../utils";
-import { Account } from "../Account";
+import { isMobile, saveByURL } from "../../utils";
 import { LanguageDropdown } from "./LanguageDropdown";
+import styles from "./Header.module.scss";
 import "./index.scss";
 
 const ADMIN_ACCESS_ROLES: UserRole[] = [UserRole.Trustee];
@@ -58,7 +55,6 @@ const Header = () => {
   const user = useSelector(selectUser());
   const myAccountBtnRef = useRef(null);
   const { isOutside } = useOutsideClick(myAccountBtnRef);
-  const shouldDisplayAvatar = Boolean(!isDesktop && user);
   const hasAdminAccess = useAnyMandatoryRoles(ADMIN_ACCESS_ROLES, user?.roles);
   const isTrusteeRoute = useMatchRoute(
     ROUTE_PATHS.TRUSTEE,
@@ -80,16 +76,13 @@ const Header = () => {
   const [showAccountLinks, setShowAccountLinks] =
     useState<boolean>(isMyAccountRoute);
   const shouldHideHeader = sharedHeaderState.shouldHideHeader ?? false;
-  const shouldShowMenuItems =
-    sharedHeaderState.shouldShowMenuItems ?? !isTrusteeRoute;
-  const shouldShowAuth = sharedHeaderState.shouldShowAuth ?? !isTrusteeRoute;
   const shouldShowLanguageDropdown = isHomeRoute || isContactUsRoute;
 
   useEffect(() => {
     setShowAccountLinks(isMyAccountRoute);
   }, [showMenu, isMyAccountRoute]);
 
-  const handleOpen = useCallback(() => {
+  const handleLogIn = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: true }));
     setShowMenu(false);
   }, [dispatch]);
@@ -100,7 +93,7 @@ const Header = () => {
     dispatch(setAreReportsLoading(false));
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unlisten = history.listen(() => {
       window.scrollTo(0, 0);
     });
@@ -123,8 +116,8 @@ const Header = () => {
     dispatch(logOut());
   };
 
-  const handleOpenTutorialModal = () => {
-    dispatch(setTutorialModalState({ isShowing: true }));
+  const handleLaunchApp = () => {
+    history.push(ROUTE_PATHS.INBOX);
   };
 
   const links = (
@@ -134,32 +127,8 @@ const Header = () => {
           className="my-account-button-wrapper"
           onClick={() => setShowAccountLinks(!showAccountLinks)}
         >
-          <div ref={myAccountBtnRef} className="my-account-button">
-            My Account
-            <RightArrowIcon
-              className={classNames("my-account-button__arrow-icon", {
-                "my-account-button__arrow-icon--opened": showAccountLinks,
-              })}
-            />
-          </div>
-
           {showAccountLinks && <Routes />}
         </button>
-      )}
-
-      {shouldShowMenuItems && isAuthorized && (
-        <>
-          <NavLink to="/" exact activeClassName="active">
-            About
-          </NavLink>
-          <NavLink to={ROUTE_PATHS.COMMON_LIST} activeClassName="active">
-            Explore
-          </NavLink>
-          <NavLink to={ROUTE_PATHS.MY_COMMONS} exact activeClassName="active">
-            My Commons
-          </NavLink>
-          <button onClick={handleOpenTutorialModal}>App tour</button>
-        </>
       )}
 
       {shouldShowLanguageDropdown && isMobile() && (
@@ -187,11 +156,6 @@ const Header = () => {
           <button onClick={logOutUser}>Log out</button>
         </>
       )}
-      {!isAuthorized && shouldShowAuth && (
-        <button className="login-button" onClick={handleOpen}>
-          Login / Sign up
-        </button>
-      )}
     </div>
   );
 
@@ -203,36 +167,27 @@ const Header = () => {
     return null;
   }
 
+  const appButton = (
+    <Button
+      className={styles.appButton}
+      onClick={!isAuthorized ? handleLogIn : handleLaunchApp}
+      variant={ButtonVariant.PrimaryPink}
+    >
+      Launch App
+    </Button>
+  );
+
   return (
     <section className={headerWrapperClassName}>
-      {shouldDisplayAvatar && (
-        <UserAvatar
-          photoURL={user?.photoURL}
-          nameForRandomAvatar={user?.email}
-          userName={getUserName(user)}
-          onClick={toggleMenuShowing}
-        />
-      )}
-      <Link
-        to="/"
-        className={classNames("common-logo", {
-          "common-logo--without-avatar": !shouldDisplayAvatar,
-        })}
-      >
+      {!isDesktop && appButton}
+      <Link to="/" className="common-logo">
         <img src="/icons/logo.svg" alt="logo" className="logo" />
       </Link>
       {isDesktop ? (
         <>
           {links}
           {shouldShowLanguageDropdown && <LanguageDropdown />}
-          {user && (
-            <Account
-              user={user}
-              logOut={logOutUser}
-              isTrusteeRoute={isTrusteeRoute}
-              hasAdminAccess={hasAdminAccess}
-            />
-          )}
+          {appButton}
         </>
       ) : (
         <>

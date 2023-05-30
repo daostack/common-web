@@ -80,6 +80,27 @@
   }
 }
 
+.buttonPrimaryPinkVariant {
+  --btn-color: #{$c-shades-white};
+  --btn-bg-color: #{$c-pink-primary};
+  --btn-border-color: none;
+  --btn-border: 0;
+
+  &:hover {
+    // TODO: need the correct color for primary pink hover
+    //--btn-bg-color: #{$c-primary-300};
+    opacity: 0.8;
+  }
+
+  &:active {
+    --btn-bg-color: #{$c-pink-active-feed-cards};
+  }
+
+  &.buttonDisabled {
+    --btn-bg-color: #{$c-shades-neutrals-30};
+  }
+}
+
 .buttonLightPurpleVariant {
   --btn-color: #{$c-shades-white};
   --btn-bg-color: #{$c-primary-300};

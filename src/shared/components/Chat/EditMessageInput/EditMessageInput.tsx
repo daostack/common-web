@@ -5,7 +5,11 @@ import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { updateDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { Loader, Button } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
-import { CommonMember, DiscussionMessage } from "@/shared/models";
+import {
+  CommonMember,
+  checkIsUserDiscussionMessage,
+  DiscussionMessage,
+} from "@/shared/models";
 import { BaseTextEditor } from "@/shared/ui-kit";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import { emptyFunction, getUserName } from "@/shared/utils";
@@ -39,6 +43,10 @@ export default function EditMessageInput({
   }, [discussionMessage.commonId]);
 
   const updateMessage = () => {
+    if (!checkIsUserDiscussionMessage(discussionMessage)) {
+      notify("Something went wrong");
+      return;
+    }
     setLoading(true);
     dispatch(
       updateDiscussionMessage.request({
@@ -70,7 +78,9 @@ export default function EditMessageInput({
   return (
     <div className={styles.container}>
       <div className={styles.ownerName}>
-        {getUserName(discussionMessage.owner)}
+        {checkIsUserDiscussionMessage(discussionMessage)
+          ? getUserName(discussionMessage.owner)
+          : "System"}
       </div>
 
       <BaseTextEditor

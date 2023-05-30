@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import collectiveActionImageSrc from "@/shared/assets/images/collective-action.png";
-import { Button } from "@/shared/components";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
 interface CollectiveActionSectionProps {
@@ -36,8 +36,9 @@ const CollectiveActionSection: FC<CollectiveActionSectionProps> = ({
         <Button
           className="landing-collective-action-section__button"
           onClick={onLaunchClick}
+          variant={ButtonVariant.PrimaryPink}
         >
-          {t("buttons.launchCommon")}
+          {t("buttons.joinWaitlist")}
         </Button>
       </div>
     </section>

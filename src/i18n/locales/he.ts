@@ -20,7 +20,7 @@ export default {
     },
     landing: {
       buttons: {
-        launchCommon: "צרו קומון",
+        joinWaitlist: "הצטרפו לרשימת המתנה",
       },
       videoSection: {
         title: {
