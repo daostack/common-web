@@ -20,10 +20,6 @@
   max-width: 15.4375rem;
   max-height: 7.5rem;
   display: flex;
-
-  &:hover {
-    opacity: 0.9;
-  }
 }
 
 .imageContainer {
@@ -46,10 +42,6 @@
   width: 7.3125rem;
   height: 7.3125rem;
   object-fit: cover;
-
-  &:hover {
-    opacity: 0.9;
-  }
 }
 
 .singleImage {
@@ -57,8 +49,11 @@
   max-height: 16.625rem;
   width: 15.4375rem;
   height: 16.625rem;
-  margin: auto;
+}
+
+.singleImageContainer {
   margin-top: 0.125rem;
+  margin: auto;
 }
 
 .leftItem {
@@ -96,8 +91,6 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  height: calc(100% - 0.125rem);
-  margin-top: 0.125rem;
   &:hover {
     background-color: rgba(0,0,0,0.2);
   }

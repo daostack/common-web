@@ -67,8 +67,10 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
           {leftImage && (
             <Image
               className={classNames(styles.image, {
-                [styles.leftItem]: !hasOneImage,
                 [styles.singleImage]: singleImageWithoutVideo,
+              })}
+              imageContainer={classNames({
+                [styles.leftItem]: !hasOneImage,
               })}
               src={leftImage}
               imageOverlay={styles.imageOverlay}
@@ -78,8 +80,9 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
           )}
           {rightImage && (
             <Image
-              className={classNames(styles.image, styles.rightItem)}
+              className={styles.image}
               src={rightImage}
+              imageContainer={styles.rightItem}
               imageOverlay={styles.imageOverlay}
               alt="2nd Image"
               onClick={() => handleOpenSlide(1)}
@@ -97,8 +100,9 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
             )}
           >
             <Image
-              className={classNames(styles.image, {
-                [styles.leftItem]: !hasOneImage,
+              className={styles.image}
+              imageContainer={classNames({
+                [styles.leftImage]: !hasOneImage,
                 [styles.singleImage]: singleImageWithoutVideo,
               })}
               imageOverlay={styles.imageOverlay}
@@ -107,7 +111,8 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
               onClick={() => handleOpenSlide(2)}
             />
             <Image
-              className={classNames(styles.image, styles.rightItem)}
+              className={styles.image}
+              imageContainer={styles.rightItem}
               src={secondRowRightImage}
               imageOverlay={styles.imageOverlay}
               alt="4nd Image"
