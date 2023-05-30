@@ -86,3 +86,14 @@
   line-height: 1.375rem;
   color: $c-light-gray;
 }
+
+.imageOverlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  height: calc(100% - 0.125rem);
+  margin-top: 0.125rem;
+  &:hover {
+    background-color: rgba(0,0,0,0.2);
+  }
+}

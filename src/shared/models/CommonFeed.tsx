@@ -19,6 +19,8 @@ export interface CommonFeed extends BaseEntity {
       userName: string;
       content: string;
     };
+    hasFiles?: boolean;
+    hasImages?: boolean;
   };
   circleVisibility: string[];
 }

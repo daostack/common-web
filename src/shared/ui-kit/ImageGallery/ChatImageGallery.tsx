@@ -63,6 +63,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
                 [styles.singleImage]: singleImageWithoutVideo,
               })}
               src={leftImage}
+              imageOverlay={styles.imageOverlay}
               alt="1st Image"
             />
           )}
@@ -70,6 +71,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
             <Image
               className={classNames(styles.image, styles.rightItem)}
               src={rightImage}
+              imageOverlay={styles.imageOverlay}
               alt="2nd Image"
             />
           )}
@@ -89,12 +91,14 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
                 [styles.leftItem]: !hasOneImage,
                 [styles.singleImage]: singleImageWithoutVideo,
               })}
+              imageOverlay={styles.imageOverlay}
               src={secondRowLeftImage}
               alt="3st Image"
             />
             <Image
               className={classNames(styles.image, styles.rightItem)}
               src={secondRowRightImage}
+              imageOverlay={styles.imageOverlay}
               alt="4nd Image"
             />
           </div>

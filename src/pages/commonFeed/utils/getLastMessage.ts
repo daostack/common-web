@@ -38,10 +38,28 @@ const getCustomizedMessageString = (options: GetLastMessageOptions): string => {
   return "";
 };
 
+const getIconWithText = ({
+  hasText,
+  hasImages,
+  hasFiles,
+}: {
+  hasText?: boolean;
+  hasImages?: boolean;
+  hasFiles?: boolean;
+}): string => {
+  if (hasImages) {
+    return `📷 ${hasText ? "" : "Picture"}`;
+  } else if (hasFiles) {
+    return `📁 ${hasText ? "" : "File"}`;
+  }
+
+  return "";
+};
+
 export const getLastMessage = (
   options: GetLastMessageOptions,
 ): TextEditorValue => {
-  const { lastMessage } = options;
+  const { lastMessage, hasImages, hasFiles } = options;
 
   if (!lastMessage) {
     return parseStringToTextEditorValue(getCustomizedMessageString(options));
@@ -51,8 +69,17 @@ export const getLastMessage = (
     lastMessage.content,
   );
 
+  const hasText = Boolean(
+    (parsedMessageContent[0] as { children: { text: string }[] }).children[0]
+      .text,
+  );
+
   return prependTextInTextEditorValue(
-    `${lastMessage.userName}: `,
+    `${lastMessage.userName}: ${getIconWithText({
+      hasText,
+      hasImages,
+      hasFiles,
+    })}`,
     parsedMessageContent,
   );
 };
