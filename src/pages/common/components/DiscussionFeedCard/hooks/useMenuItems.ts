@@ -1,8 +1,9 @@
 import { useDispatch } from "react-redux";
+import { animateScroll } from "react-scroll";
 import { CommonFeedService } from "@/services";
 import { CommonAction, FollowFeedItemAction } from "@/shared/constants";
 import { useFeedItemFollow } from "@/shared/hooks/useCases";
-import { ContextMenuItem as Item } from "@/shared/interfaces";
+import { ContextMenuItem as Item, UploadFile } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { notEmpty } from "@/shared/utils/notEmpty";
 import { commonActions } from "@/store/states";
@@ -22,7 +23,7 @@ export const useMenuItems = (
   actions: Actions,
 ): Item[] => {
   const dispatch = useDispatch();
-  const { discussion, governanceCircles, commonId, feedItem } = options;
+  const { discussion, commonId, feedItem } = options;
   const { report, share, remove } = actions;
   const feedItemFollow = useFeedItemFollow(
     options.feedItem?.id,
@@ -60,24 +61,27 @@ export const useMenuItems = (
       id: FeedItemMenuItem.Edit,
       text: "Edit",
       onClick: () => {
-        if (!discussion || !governanceCircles) {
+        if (!discussion) {
           return;
         }
 
-        const circles = Object.values(governanceCircles).filter((circle) =>
-          discussion.circleVisibility?.includes(circle.id),
-        );
-        const circle = null;
+        const files: UploadFile[] = discussion.images.map((file, index) => ({
+          id: index.toString(),
+          title: file.title,
+          file: file.value,
+        }));
 
         dispatch(
           commonActions.setDiscussionCreationData({
             circle: null,
             title: discussion.title,
             content: parseStringToTextEditorValue(discussion.message),
-            images: [],
+            images: files,
+            id: discussion.id,
           }),
         );
         dispatch(commonActions.setCommonAction(CommonAction.EditDiscussion));
+        animateScroll.scrollToTop({ containerId: document.body, smooth: true });
       },
     },
     {

@@ -27,6 +27,7 @@ interface DiscussionCreationFormProps {
   onCancel?: () => void;
   isLoading?: boolean;
   styles?: Styles;
+  edit?: boolean;
 }
 
 const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
@@ -39,12 +40,14 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
     onCancel,
     isLoading = false,
     styles: outerStyles,
+    edit,
   } = props;
   const disabled = isLoading;
 
   return (
     <Formik
       initialValues={initialValues}
+      enableReinitialize
       onSubmit={onSubmit}
       validationSchema={validationSchema}
       validateOnMount
@@ -57,7 +60,7 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
             governanceCircles={governanceCircles}
             userCircleIds={userCircleIds}
             onCircleSave={(circle) => setFieldValue("circle", circle)}
-            disabled={disabled}
+            disabled={disabled || edit}
           />
           <DiscussionForm
             className={styles.discussionForm}
@@ -86,7 +89,7 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
                 disabled={disabled}
                 loading={isLoading}
               >
-                Publish discussion
+                {edit ? "Save changes" : "Publish discussion"}
               </Button>
             </div>
           </div>
