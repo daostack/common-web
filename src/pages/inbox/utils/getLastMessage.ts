@@ -18,10 +18,8 @@ export const getLastMessage = (
     lastMessage.content,
   );
 
-  return lastMessage.userName !== "System"
-    ? prependTextInTextEditorValue(
-        `${lastMessage.userName}: `,
-        parsedMessageContent,
-      )
-    : parseStringToTextEditorValue();
+  return prependTextInTextEditorValue(
+    `${lastMessage.userName}: `,
+    parsedMessageContent,
+  );
 };
