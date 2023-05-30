@@ -475,12 +475,10 @@ function* logOut() {
   localStorage.clear();
   firebase.auth().signOut();
 
-  if (window.location.pathname === ROUTE_PATHS.MY_COMMONS) {
-    history.push(ROUTE_PATHS.HOME);
-  }
   if (window.ReactNativeWebView) {
     window.ReactNativeWebView.postMessage(WebviewActions.logout);
   }
+  history.push(ROUTE_PATHS.HOME);
   yield true;
 }
 

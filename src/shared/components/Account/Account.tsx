@@ -1,14 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import classNames from "classnames";
-import { setAreReportsLoading } from "@/shared/store/actions";
-import { selectAreReportsLoading } from "@/shared/store/selectors";
-import { Loader, UserAvatar } from "../../../shared/components";
+import { UserAvatar } from "../../../shared/components";
 import { User } from "../../../shared/models";
-import { ApiEndpoint, ROUTE_PATHS } from "../../constants";
 import { useOutsideClick } from "../../hooks";
-import { getUserName, saveByURL } from "../../utils";
+import { getUserName } from "../../utils";
 import "./index.scss";
 
 interface AccountProps {
@@ -18,28 +12,10 @@ interface AccountProps {
   hasAdminAccess: boolean;
 }
 
-const Account = ({
-  user,
-  logOut,
-  isTrusteeRoute,
-  hasAdminAccess,
-}: AccountProps) => {
-  const dispatch = useDispatch();
-  const history = useHistory();
+const Account = ({ user }: AccountProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOutsideValue } = useOutsideClick(wrapperRef);
-  const areReportsLoading = useSelector(selectAreReportsLoading());
-
-  const handleReportsDownload = async () => {
-    if (areReportsLoading) {
-      return;
-    }
-
-    dispatch(setAreReportsLoading(true));
-    await saveByURL(ApiEndpoint.GetReports, "reports.zip");
-    dispatch(setAreReportsLoading(false));
-  };
 
   useEffect(() => {
     if (isOutside) {
@@ -47,10 +23,6 @@ const Account = ({
       setOutsideValue();
     }
   }, [isOutside, setShowMenu, setOutsideValue]);
-
-  const showMyAccount = () => {
-    history.push(ROUTE_PATHS.PROFILE);
-  };
 
   return (
     <div className="account-wrapper" onClick={() => setShowMenu(!showMenu)}>
@@ -61,43 +33,6 @@ const Account = ({
         userName={getUserName(user)}
       />
       <div>{getUserName(user)}</div>
-      <div className="vertical-menu" />
-      {showMenu && (
-        <div className="menu-wrapper" ref={wrapperRef}>
-          {!isTrusteeRoute && (
-            <>
-              <div
-                className="account-wrapper__menu-item"
-                onClick={showMyAccount}
-              >
-                My Account
-              </div>
-              <div
-                className="account-wrapper__menu-item"
-                onClick={() => (window.location.href = ROUTE_PATHS.MY_COMMONS)}
-              >
-                My Commons
-              </div>
-            </>
-          )}
-          {hasAdminAccess && (
-            <div
-              className={classNames("account-wrapper__menu-item", {
-                "account-wrapper__menu-item--disabled": areReportsLoading,
-              })}
-              onClick={handleReportsDownload}
-            >
-              Download Reports
-              {areReportsLoading && (
-                <Loader className="account-wrapper__menu-item-loader" />
-              )}
-            </div>
-          )}
-          <div className="account-wrapper__menu-item" onClick={() => logOut()}>
-            Log out
-          </div>
-        </div>
-      )}
     </div>
   );
 };
