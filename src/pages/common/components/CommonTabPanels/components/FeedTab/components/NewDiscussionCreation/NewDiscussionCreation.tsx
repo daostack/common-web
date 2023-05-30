@@ -23,6 +23,7 @@ interface NewDiscussionCreationProps {
   commonImage?: string;
   commonName?: string;
   isModalVariant?: boolean;
+  edit?: boolean;
 }
 
 const INITIAL_VALUES: NewDiscussionCreationFormValues = {
@@ -40,6 +41,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     commonImage,
     commonName,
     isModalVariant = false,
+    edit,
   } = props;
   const dispatch = useDispatch();
   const discussionCreationData = useSelector(selectDiscussionCreationData);
@@ -48,7 +50,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const userId = user?.uid;
   const initialValues = useMemo(
     () => discussionCreationData || INITIAL_VALUES,
-    [],
+    [discussionCreationData],
   );
   const userCircleIds = useMemo(
     () => (commonMember ? Object.values(commonMember.circles.map) : []),
@@ -68,20 +70,33 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
 
       const circleVisibility = values.circle ? [values.circle.id] : [];
 
-      dispatch(
-        commonActions.createDiscussion.request({
-          payload: {
-            title: values.title,
-            message: JSON.stringify(values.content),
-            ownerId: userId,
-            commonId: common.id,
-            images: values.images,
-            circleVisibility,
-          },
-        }),
-      );
+      if (edit) {
+        dispatch(
+          commonActions.editDiscussion.request({
+            payload: {
+              id: values.id,
+              title: values.title,
+              message: JSON.stringify(values.content),
+              images: values.images,
+            },
+          }),
+        );
+      } else {
+        dispatch(
+          commonActions.createDiscussion.request({
+            payload: {
+              title: values.title,
+              message: JSON.stringify(values.content),
+              ownerId: userId,
+              commonId: common.id,
+              images: values.images,
+              circleVisibility,
+            },
+          }),
+        );
+      }
     },
-    [governanceCircles, userCircleIds, userId, common.id],
+    [governanceCircles, userCircleIds, userId, common.id, edit],
   );
 
   if (
@@ -99,6 +114,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
         isLoading={isLoading}
         commonImage={commonImage}
         commonName={commonName}
+        edit={edit}
       />
     );
   }
@@ -111,6 +127,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
       onSubmit={handleSubmit}
       onCancel={handleCancel}
       isLoading={isLoading}
+      edit={edit}
     />
   );
 };

@@ -18,6 +18,10 @@
   & [dir="rtl"] {
     font-family: Heebo, sans-serif;
   }
+
+  &:focus {
+    border-color: $c-pink-active-feed-cards;
+  }
 }
 
 .editorSmallSize {

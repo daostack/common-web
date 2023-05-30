@@ -15,14 +15,13 @@ import {
   ErrorCode,
   ScreenSize,
   QueryParamKey,
+  ROUTE_PATHS,
 } from "@/shared/constants";
-import { ROUTE_PATHS } from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
 import { setTutorialModalState } from "@/shared/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import { emptyFunction, isGeneralError } from "@/shared/utils";
-import { matchRoute } from "@/shared/utils";
 import { isFirebaseError } from "@/shared/utils/firebase";
 import { LoginModalType } from "../../../Auth/interface";
 import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
@@ -44,6 +43,7 @@ import { getAuthCode } from "./helpers";
 import "./index.scss";
 
 const LoginContainer: FC = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const queryParams = useQueryParams();
   const location = useLocation();
@@ -52,7 +52,6 @@ const LoginContainer: FC = () => {
   const isLoading = useSelector(selectIsAuthLoading());
   const user = useSelector(selectUser());
   const screenSize = useSelector(getScreenSize());
-  const history = useHistory();
   const isMobileView = screenSize === ScreenSize.Mobile;
   const [stage, setStage] = useState(AuthStage.AuthMethodSelect);
   const [errorText, setErrorText] = useState("");
@@ -85,9 +84,6 @@ const LoginContainer: FC = () => {
       dispatch(setTutorialModalState({ isShowing: true }));
       return;
     }
-    if (matchRoute(location.pathname, ROUTE_PATHS.HOME, { exact: true })) {
-      history.push(ROUTE_PATHS.COMMON_LIST);
-    }
   }, [dispatch, stage, location.pathname]);
 
   const handleError = useCallback((errorText?: string) => {
@@ -105,6 +101,7 @@ const LoginContainer: FC = () => {
       } else {
         handleClose();
       }
+      history.push(ROUTE_PATHS.INBOX);
     },
     [removeQueryParams, handleClose, shouldShowUserDetailsAfterSignUp],
   );

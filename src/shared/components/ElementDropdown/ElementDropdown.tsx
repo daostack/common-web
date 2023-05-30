@@ -127,7 +127,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   }, [elem]);
 
   const ElementDropdownMenuItemsList: DropdownOption[] = useMemo(() => {
-    const isOwner = ownerId === user?.uid;
+    const isOwner = Boolean(ownerId && ownerId === user?.uid);
 
     const items: DropdownOption[] = [];
 

@@ -40,6 +40,7 @@ export interface TextEditorProps {
   disabled?: boolean;
   styles?: TextEditorStyles;
   elementStyles?: EditorElementStyles;
+  hideToolbar?: boolean;
 }
 
 const TextEditor: FC<TextEditorProps> = (props) => {
@@ -62,6 +63,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
     disabled = false,
     styles: outerStyles,
     elementStyles,
+    hideToolbar = false,
   } = props;
   const editor = useMemo(
     () => withInlines(withHistory(withReact(createEditor()))),
@@ -107,7 +109,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
             onBlur={onBlur}
             elementStyles={elementStyles}
           />
-          {!readOnly && <Toolbar disabled={disabled} />}
+          {!readOnly && !hideToolbar && <Toolbar disabled={disabled} />}
         </div>
         {Boolean(error) && (
           <ErrorText className={outerStyles?.error}>{error}</ErrorText>

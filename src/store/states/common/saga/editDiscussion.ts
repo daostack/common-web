@@ -1,13 +1,12 @@
 import { call, put } from "redux-saga/effects";
 import { DiscussionService } from "@/services";
 import { FileService } from "@/services";
-import { Awaited } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
-import * as cacheActions from "../../cache/actions";
+import { cacheActions } from "../../cache";
 import * as actions from "../actions";
 
-export function* createDiscussion(
-  action: ReturnType<typeof actions.createDiscussion.request>,
+export function* editDiscussion(
+  action: ReturnType<typeof actions.editDiscussion.request>,
 ) {
   const { payload } = action;
 
@@ -15,11 +14,11 @@ export function* createDiscussion(
     const files = yield FileService.uploadFiles(payload.payload.files || []);
     const images = yield FileService.uploadFiles(payload.payload.images || []);
 
-    const discussion = (yield call(DiscussionService.createDiscussion, {
+    const discussion = (yield call(DiscussionService.editDiscussion, {
       ...payload.payload,
       files,
       images,
-    })) as Awaited<ReturnType<typeof DiscussionService.createDiscussion>>;
+    })) as Awaited<ReturnType<typeof DiscussionService.editDiscussion>>;
 
     yield put(
       cacheActions.updateDiscussionStateById({
@@ -33,14 +32,14 @@ export function* createDiscussion(
     );
 
     yield put(actions.setCommonAction(null));
-    yield put(actions.createDiscussion.success(discussion));
+    yield put(actions.editDiscussion.success(discussion));
 
     if (payload.callback) {
       payload.callback(null, discussion);
     }
   } catch (error) {
     if (isError(error)) {
-      yield put(actions.createDiscussion.failure(error));
+      yield put(actions.editDiscussion.failure(error));
 
       if (payload.callback) {
         payload.callback(error);

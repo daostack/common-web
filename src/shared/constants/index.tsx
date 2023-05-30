@@ -2,6 +2,7 @@ export * from "./governance";
 export * from "./authProvider";
 export * from "./commonAction";
 export * from "./ContributionType";
+export * from "./discussionMessageOwnerType";
 export * from "./dynamicLink";
 export * from "./endpoint";
 export * from "./environment";

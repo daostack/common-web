@@ -18,24 +18,27 @@ import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
 import {
   ChatType,
+  DiscussionMessageOwnerType,
   GovernanceActions,
   LastSeenEntity,
 } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
+import { useZoomDisabling } from "@/shared/hooks";
 import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { PlusIcon } from "@/shared/icons";
-import { SendIcon } from "@/shared/icons";
+import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
+  checkIsUserDiscussionMessage,
   Circles,
   CommonFeedObjectUserUnique,
   CommonMember,
   Discussion,
   DiscussionMessage,
   Timestamp,
+  UserDiscussionMessage,
 } from "@/shared/models";
 import {
   BaseTextEditor,
@@ -114,9 +117,18 @@ export default function ChatComponent({
   isCommonMemberFetched,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
+  useZoomDisabling();
+  const editorRef = useRef<HTMLElement>(null);
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
+
+  useEffect(() => {
+    if (discussionMessageReply) {
+      editorRef.current?.focus();
+    }
+  }, [discussionMessageReply]);
+
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
@@ -160,6 +172,7 @@ export default function ChatComponent({
     fetchDiscussionMessages,
     data: discussionMessages = [],
     fetched: isFetchedDiscussionMessages,
+    loading: isLoadingDiscussionMessages,
     addDiscussionMessage,
   } = useDiscussionMessagesById({
     hasPermissionToHide,
@@ -173,7 +186,14 @@ export default function ChatComponent({
     userId,
   );
 
-  const messages = (discussionMessages ?? []).reduce(groupday, {});
+  const messages = useMemo(
+    () =>
+      (discussionMessages?.filter(checkIsUserDiscussionMessage) ?? []).reduce(
+        groupday,
+        {},
+      ),
+    [discussionMessages],
+  );
   const dateList = useMemo(() => Object.keys(messages), [messages]);
 
   useEffect(() => {
@@ -245,14 +265,15 @@ export default function ChatComponent({
   );
 
   const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
+    const newFilesPreview = Array.from(event.target.files || []).map((file) => {
+      return {
+        info: file,
+        src: URL.createObjectURL(file),
+      };
+    });
     dispatch(
       chatActions.setFilesPreview(
-        Array.from(event.target.files || []).map((file) => {
-          return {
-            info: file,
-            src: URL.createObjectURL(file),
-          };
-        }),
+        [...(currentFilesPreview ?? []), ...newFilesPreview].slice(0, 10),
       ),
     );
   };
@@ -288,10 +309,11 @@ export default function ChatComponent({
         };
         const firebaseDate = Timestamp.fromDate(new Date());
 
-        const msg = {
+        const msg: UserDiscussionMessage = {
           id: pendingMessageId,
           owner: user,
           ownerAvatar: (user.photo || user.photoURL) as string,
+          ownerType: DiscussionMessageOwnerType.User,
           ownerId: userId as string,
           ownerName: getUserName(user),
           text: JSON.stringify(message),
@@ -303,7 +325,9 @@ export default function ChatComponent({
             ? {
                 id: discussionMessageReply?.id,
                 ownerName: discussionMessageReply.ownerName,
-                ownerId: discussionMessageReply.ownerId,
+                ...(checkIsUserDiscussionMessage(discussionMessageReply) && {
+                  ownerId: discussionMessageReply.ownerId,
+                }),
                 text: discussionMessageReply.text,
               }
             : null,
@@ -397,8 +421,6 @@ export default function ChatComponent({
     }
   }, [lastNonUserMessage?.id]);
 
-  const editorRef = useRef(null);
-
   return (
     <div className={styles.chatWrapper}>
       <div
@@ -407,7 +429,7 @@ export default function ChatComponent({
         })}
         id={chatWrapperId}
       >
-        {isFetchedDiscussionMessages ? (
+        {isFetchedDiscussionMessages && !isLoadingDiscussionMessages ? (
           <ChatContent
             ref={chatContentRef}
             type={type}

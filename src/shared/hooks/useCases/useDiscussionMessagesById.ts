@@ -5,7 +5,11 @@ import { fetchOwners } from "@/pages/OldCommon/store/api";
 import { DiscussionMessageService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
-import { DiscussionMessage, User } from "@/shared/models";
+import {
+  checkIsUserDiscussionMessage,
+  DiscussionMessage,
+  User,
+} from "@/shared/models";
 import {
   cacheActions,
   selectDiscussionMessagesStateByDiscussionId,
@@ -39,6 +43,7 @@ export const useDiscussionMessagesById = ({
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const [messageOwners, setMessageOwners] = useState<User[]>([]);
   const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const state =
     useSelector(
       selectDiscussionMessagesStateByDiscussionId(currentDiscussionId),
@@ -84,13 +89,18 @@ export const useDiscussionMessagesById = ({
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       const discussionMessages = [...(state.data || [])];
       const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
       );
       const ownerIds = Array.from(
-        new Set(filteredMessages?.map((d) => d.ownerId)),
+        new Set(
+          filteredMessages
+            ?.filter(checkIsUserDiscussionMessage)
+            .map((d) => d.ownerId),
+        ),
       ) as string[];
       const owners = await fetchMessageOwners(ownerIds);
 
@@ -99,13 +109,20 @@ export const useDiscussionMessagesById = ({
         const parentMessage = filteredMessages.find(
           ({ id }) => id === d.parentId,
         );
-        newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+        if (
+          checkIsUserDiscussionMessage(d) &&
+          checkIsUserDiscussionMessage(newDiscussionMessage)
+        ) {
+          newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+        }
         newDiscussionMessage.parentMessage = parentMessage
           ? {
               id: parentMessage.id,
               text: parentMessage.text,
               ownerName: parentMessage?.ownerName,
-              ownerId: parentMessage.ownerId,
+              ...(checkIsUserDiscussionMessage(parentMessage) && {
+                ownerId: parentMessage.ownerId,
+              }),
               moderation: parentMessage?.moderation,
               images: parentMessage?.images,
             }
@@ -114,6 +131,7 @@ export const useDiscussionMessagesById = ({
       });
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
+      setIsLoading(false);
     })();
   }, [state.data, messageOwnersIds, messageOwners, hasPermissionToHide]);
 
@@ -143,6 +161,7 @@ export const useDiscussionMessagesById = ({
 
   return {
     ...state,
+    loading: state.loading || isLoading,
     data: discussionMessagesWithOwners,
     fetchDiscussionMessages,
     addDiscussionMessage,

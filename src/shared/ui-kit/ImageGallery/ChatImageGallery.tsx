@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import classNames from "classnames";
 import { Image } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
@@ -21,6 +21,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
   const { gallery, videoSrc } = props;
   const isTabletView = useIsTabletView();
   const { isShowing, onOpen, onClose } = useModal(false);
+  const [initialSlide, setInitialSlide] = useState(0);
   const images = (gallery || []).map(({ value }) => value);
 
   const [leftImage, rightImage, secondRowLeftImage, secondRowRightImage] =
@@ -29,6 +30,11 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
   const hasOneImage = Boolean(leftImage && !rightImage);
   const singleImageWithoutVideo = hasOneImage && !videoSrc;
   const shouldShowImageCountButton = images.length > 4;
+
+  const handleOpenSlide = (slideNumber = 0) => {
+    setInitialSlide(slideNumber);
+    onOpen();
+  };
 
   if (images.length === 0 && !videoSrc) {
     return null;
@@ -40,10 +46,12 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
         className={classNames({
           [styles.content]: hasOneImage,
         })}
-        onClick={onOpen}
       >
         {!secondRowRightImage && (
-          <div className={styles.mainContentContainer}>
+          <div
+            className={styles.mainContentContainer}
+            onClick={() => handleOpenSlide(2)}
+          >
             <GalleryMainContent
               videoSrc={videoSrc}
               mainImage={secondRowLeftImage}
@@ -65,6 +73,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
               src={leftImage}
               imageOverlay={styles.imageOverlay}
               alt="1st Image"
+              onClick={() => handleOpenSlide(0)}
             />
           )}
           {rightImage && (
@@ -73,6 +82,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
               src={rightImage}
               imageOverlay={styles.imageOverlay}
               alt="2nd Image"
+              onClick={() => handleOpenSlide(1)}
             />
           )}
         </div>
@@ -94,19 +104,24 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
               imageOverlay={styles.imageOverlay}
               src={secondRowLeftImage}
               alt="3st Image"
+              onClick={() => handleOpenSlide(2)}
             />
             <Image
               className={classNames(styles.image, styles.rightItem)}
               src={secondRowRightImage}
               imageOverlay={styles.imageOverlay}
               alt="4nd Image"
+              onClick={() => handleOpenSlide(3)}
             />
           </div>
         )}
       </div>
       {shouldShowImageCountButton && (
-        <Button className={styles.imageCountButton} onClick={onOpen}>
-          <p className={styles.imageCountButtonText}>8 Pic</p>
+        <Button
+          className={styles.imageCountButton}
+          onClick={() => handleOpenSlide()}
+        >
+          <p className={styles.imageCountButtonText}>{images.length} Pic</p>
         </Button>
       )}
       {isTabletView ? (
@@ -115,6 +130,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
           isShowing={isShowing}
           onClose={onClose}
           videoSrc={videoSrc}
+          initialSlide={initialSlide}
         />
       ) : (
         <ImageGalleryModal
@@ -122,6 +138,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
           onClose={onClose}
           images={images}
           videoSrc={videoSrc}
+          initialSlide={initialSlide}
         />
       )}
     </div>

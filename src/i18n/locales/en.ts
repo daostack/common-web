@@ -20,7 +20,7 @@ export default {
     },
     landing: {
       buttons: {
-        launchCommon: "Launch a Common",
+        joinWaitlist: "Join Waitlist",
       },
       videoSection: {
         title: {

@@ -33,6 +33,7 @@ import {
   BankAccountDetails,
   Vote,
   Governance,
+  checkIsUserDiscussionMessage,
 } from "../../../shared/models";
 import { getUserData } from "../../Auth/store/api";
 import { ImmediateContributionResponse } from "../interfaces";
@@ -319,7 +320,11 @@ export function* loadDiscussionDetail(
     }
 
     const ownerIds = Array.from(
-      new Set(discussionMessage?.map((d) => d.ownerId)),
+      new Set(
+        discussionMessage
+          ?.filter(checkIsUserDiscussionMessage)
+          .map((d) => d.ownerId),
+      ),
     );
 
     const owners = (yield fetchOwners(ownerIds)) as User[];
@@ -333,13 +338,20 @@ export function* loadDiscussionDetail(
         const parentMessage = discussionMessage.find(
           ({ id }) => id === d.parentId,
         );
-        newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+        if (
+          checkIsUserDiscussionMessage(d) &&
+          checkIsUserDiscussionMessage(newDiscussionMessage)
+        ) {
+          newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+        }
         newDiscussionMessage.parentMessage = parentMessage
           ? {
               id: parentMessage.id,
               text: parentMessage.text,
               ownerName: parentMessage?.ownerName,
-              ownerId: parentMessage.ownerId,
+              ...(checkIsUserDiscussionMessage(parentMessage) && {
+                ownerId: parentMessage.ownerId,
+              }),
             }
           : null;
         return newDiscussionMessage;
@@ -433,7 +445,11 @@ export function* loadProposalDetail(
         ])) as DiscussionMessage[])
       : [];
     const ownerIds = Array.from(
-      new Set(discussionMessages?.map((d) => d.ownerId)),
+      new Set(
+        discussionMessages
+          ?.filter(checkIsUserDiscussionMessage)
+          .map((d) => d.ownerId),
+      ),
     );
     const owners = (yield fetchOwners(ownerIds)) as User[];
     const loadedDiscussionMessages = discussionMessages?.map((d) => {
@@ -441,13 +457,20 @@ export function* loadProposalDetail(
       const parentMessage = discussionMessages.find(
         ({ id }) => id === d.parentId,
       );
-      newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      if (
+        checkIsUserDiscussionMessage(d) &&
+        checkIsUserDiscussionMessage(newDiscussionMessage)
+      ) {
+        newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+      }
       newDiscussionMessage.parentMessage = parentMessage
         ? {
             id: parentMessage.id,
             text: parentMessage.text,
             ownerName: parentMessage?.ownerName,
-            ownerId: parentMessage.ownerId,
+            ...(checkIsUserDiscussionMessage(parentMessage) && {
+              ownerId: parentMessage.ownerId,
+            }),
           }
         : null;
       return newDiscussionMessage;
