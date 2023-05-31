@@ -1,7 +1,9 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { UserAvatar } from "@/shared/components";
+import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useUserById } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ChatChannelFeedLayoutItemProps } from "@/shared/interfaces";
@@ -17,6 +19,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     data: dmUser,
     fetched: isDMUserFetched,
   } = useUserById();
+  const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const dmUserId = chatChannel.participants.filter(
@@ -25,7 +28,15 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const dmUserName = getUserName(dmUser);
   const finalTitle = dmUserName;
 
-  const handleClick = () => {};
+  const handleOpenChat = useCallback(() => {
+    setChatItem({
+      feedItemId: chatChannel.id,
+      discussion: ChatChannelToDiscussionConverter.toTargetEntity(chatChannel),
+      circleVisibility: [],
+      // lastSeenItem: chatChannel.lastSeen,
+      // seenOnce: chatChannel.seenOnce,
+    });
+  }, [chatChannel]);
 
   const renderImage = (className?: string) => (
     <UserAvatar
@@ -40,6 +51,12 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     fetchDMUser(dmUserId);
   }, [dmUserId]);
 
+  useEffect(() => {
+    if (chatChannel.id === feedItemIdForAutoChatOpen) {
+      handleOpenChat();
+    }
+  }, []);
+
   return (
     <FeedItemBaseContent
       lastActivity={chatChannel.updatedAt.seconds * 1000}
@@ -53,7 +70,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
           : undefined
       }
       canBeExpanded={false}
-      onClick={handleClick}
+      onClick={handleOpenChat}
       menuItems={[]}
       seenOnce={true}
       ownerId={userId}
