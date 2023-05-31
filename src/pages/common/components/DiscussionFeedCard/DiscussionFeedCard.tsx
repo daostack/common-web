@@ -114,7 +114,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     {
       report: onReportModalOpen,
       share: () => onShareModalOpen(),
-      // remove: onDeleteModalOpen,
+      remove: onDeleteModalOpen,
     },
   );
   const user = useSelector(selectUser());
@@ -157,6 +157,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       if (discussion) {
         setDeletingInProgress(true);
         await DiscussionService.deleteDiscussion(discussion.id);
+        onDeleteModalClose();
       }
     } catch {
       notify("Something went wrong");

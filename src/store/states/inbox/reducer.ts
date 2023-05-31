@@ -2,7 +2,10 @@ import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType } from "@/shared/constants";
-import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
+import {
+  checkIsFeedItemFollowLayoutItem,
+  FeedLayoutItemWithFollowData,
+} from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
 import * as actions from "./actions";
 import { InboxItems, InboxState } from "./types";
@@ -35,7 +38,11 @@ const updateInboxItemInList = (
     return;
   }
 
-  const { item: updatedItem, isRemoved = false } = payload;
+  const { item: updatedItem } = payload;
+  const isRemoved =
+    payload.isRemoved ||
+    (checkIsFeedItemFollowLayoutItem(updatedItem) &&
+      updatedItem.feedItem.isDeleted);
   const itemIndex = state.items.data?.findIndex(
     (item) =>
       item.type === updatedItem.type && item.itemId === updatedItem.itemId,
@@ -73,7 +80,8 @@ const updateFeedItemInInboxItem = (
     return;
   }
 
-  const { item: updatedFeedItem, isRemoved = false } = payload;
+  const { item: updatedFeedItem } = payload;
+  const isRemoved = payload.isRemoved || updatedFeedItem.isDeleted;
   const itemIndex = state.items.data?.findIndex(
     (item) =>
       item.type === InboxItemType.FeedItemFollow &&
@@ -127,7 +135,11 @@ const updateSharedInboxItem = (
     isRemoved?: boolean;
   },
 ): void => {
-  const { item: updatedItem, isRemoved = false } = payload;
+  const { item: updatedItem } = payload;
+  const isRemoved =
+    payload.isRemoved ||
+    (checkIsFeedItemFollowLayoutItem(updatedItem) &&
+      updatedItem.feedItem.isDeleted);
 
   if (
     state.sharedItem?.type !== updatedItem.type ||
@@ -154,7 +166,8 @@ const updateFeedItemInSharedInboxItem = (
     isRemoved?: boolean;
   },
 ): void => {
-  const { item: updatedFeedItem, isRemoved = false } = payload;
+  const { item: updatedFeedItem } = payload;
+  const isRemoved = payload.isRemoved || updatedFeedItem.isDeleted;
 
   if (
     state.sharedItem?.type !== InboxItemType.FeedItemFollow ||
@@ -224,36 +237,36 @@ export const reducer = createReducer<InboxState, Action>(initialState)
     produce(state, (nextState) => {
       let firstDocTimestamp = nextState.items.firstDocTimestamp;
 
-      const data = payload.reduceRight(
-        (acc, { item, statuses: { isRemoved } }) => {
-          const nextData = [...acc];
-          const itemIndex = nextData.findIndex(
-            (nextDataItem) =>
-              nextDataItem.type === item.type &&
-              nextDataItem.itemId === item.itemId,
-          );
+      const data = payload.reduceRight((acc, { item, statuses }) => {
+        const nextData = [...acc];
+        const itemIndex = nextData.findIndex(
+          (nextDataItem) =>
+            nextDataItem.type === item.type &&
+            nextDataItem.itemId === item.itemId,
+        );
+        const isRemoved =
+          statuses.isRemoved ||
+          (checkIsFeedItemFollowLayoutItem(item) && item.feedItem.isDeleted);
 
-          if (isRemoved) {
-            if (itemIndex >= 0) {
-              nextData.splice(itemIndex, 1);
-            }
-
-            return nextData;
+        if (isRemoved) {
+          if (itemIndex >= 0) {
+            nextData.splice(itemIndex, 1);
           }
-
-          const finalItem: FeedLayoutItemWithFollowData = { ...item };
-          firstDocTimestamp = getFeedLayoutItemDateForSorting(item);
-
-          if (itemIndex < 0) {
-            return [finalItem, ...nextData];
-          }
-
-          nextData[itemIndex] = finalItem;
 
           return nextData;
-        },
-        nextState.items.data || [],
-      );
+        }
+
+        const finalItem: FeedLayoutItemWithFollowData = { ...item };
+        firstDocTimestamp = getFeedLayoutItemDateForSorting(item);
+
+        if (itemIndex < 0) {
+          return [finalItem, ...nextData];
+        }
+
+        nextData[itemIndex] = finalItem;
+
+        return nextData;
+      }, nextState.items.data || []);
 
       nextState.items = {
         ...nextState.items,
