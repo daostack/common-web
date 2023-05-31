@@ -48,9 +48,9 @@ const getIconWithText = ({
   hasFiles?: boolean;
 }): string => {
   if (hasImages) {
-    return `📷 ${hasText ? "" : "Picture"}`;
+    return `📷 ${hasText ? "" : "Picture"}`.trim();
   } else if (hasFiles) {
-    return `📁 ${hasText ? "" : "File"}`;
+    return `📁 ${hasText ? "" : "File"}`.trim();
   }
 
   return "";
