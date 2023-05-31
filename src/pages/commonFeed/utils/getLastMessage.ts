@@ -49,9 +49,9 @@ const getIconWithText = ({
   hasFiles?: boolean;
 }): string => {
   if (hasImages) {
-    return `📷 ${hasText ? "" : "Picture"}`.trim();
+    return `📷 ${hasText ? "" : "Picture"} `;
   } else if (hasFiles) {
-    return `📁 ${hasText ? "" : "File"}`.trim();
+    return `📁 ${hasText ? "" : "File"} `;
   }
 
   return "";
@@ -77,7 +77,7 @@ export const getLastMessage = (
       hasText,
       hasImages,
       hasFiles,
-    })} `,
+    })}`,
     parsedMessageContent,
   );
 };
