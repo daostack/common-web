@@ -122,6 +122,8 @@ export default function ChatComponent({
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
 
   useEffect(() => {
     if (discussionMessageReply) {
@@ -146,11 +148,13 @@ export default function ChatComponent({
     setMessage(parseStringToTextEditorValue());
   };
 
-  const users = useMemo(() => {
-    return commonMembers
-      .filter((member) => member.userId !== commonMember?.userId)
-      .map(({ user }) => user);
-  }, [commonMember, commonMembers]);
+  const users = useMemo(
+    () =>
+      commonMembers
+        .filter((member) => member.userId !== userId)
+        .map(({ user }) => user),
+    [userId, commonMembers],
+  );
 
   useEffect(() => {
     if (commonId) {
@@ -177,8 +181,6 @@ export default function ChatComponent({
   } = useDiscussionMessagesById({
     hasPermissionToHide,
   });
-  const user = useSelector(selectUser());
-  const userId = user?.uid;
   const discussionId = discussion.id;
 
   const lastNonUserMessage = getLastNonUserMessage(
@@ -443,7 +445,7 @@ export default function ChatComponent({
             dateList={dateList}
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
-            commonMembers={commonMembers}
+            users={users}
             discussionId={discussionId}
             feedItemId={feedItemId}
           />
@@ -455,7 +457,7 @@ export default function ChatComponent({
       </div>
       {isAuthorized && (
         <div className={styles.bottomChatContainer}>
-          <MessageReply commonMembers={commonMembers} />
+          <MessageReply users={users} />
           <ChatFilePreview />
           <div className={styles.chatInputWrapper}>
             {!commonMember || !hasAccess || isHidden ? (

@@ -54,11 +54,11 @@ const getTextFromDescendant = (
 
 export const getTextFromTextEditorString = async ({
   textEditorString,
-  commonMembers,
+  users,
   mentionTextClassName,
 }: {
   textEditorString: string;
-  commonMembers: CommonMemberWithUserInfo[];
+  users: User[];
   mentionTextClassName?: string;
 }): Promise<Text[]> => {
   const textEditorValue = parseStringToTextEditorValue(textEditorString);
@@ -67,8 +67,8 @@ export const getTextFromTextEditorString = async ({
     mentionTags.map(async (mentionTag) => {
       try {
         return (
-          commonMembers.find(({ user }) => user.uid === mentionTag.userId)
-            ?.user || (await UserService.getUserById(mentionTag.userId))
+          users.find((user) => user.uid === mentionTag.userId) ||
+          (await UserService.getUserById(mentionTag.userId))
         );
       } catch (error) {
         return null;

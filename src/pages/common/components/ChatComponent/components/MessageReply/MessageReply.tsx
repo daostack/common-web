@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/util";
 import CloseIcon from "@/shared/icons/close2.icon";
-import { CommonMemberWithUserInfo } from "@/shared/models";
+import { User } from "@/shared/models";
 import {
   selectCurrentDiscussionMessageReply,
   chatActions,
@@ -12,10 +12,10 @@ import {
 import styles from "./MessageReply.module.scss";
 
 interface MessageReplyProps {
-  commonMembers: CommonMemberWithUserInfo[];
+  users: User[];
 }
 
-const MessageReply: React.FC<MessageReplyProps> = ({ commonMembers }) => {
+const MessageReply: React.FC<MessageReplyProps> = ({ users }) => {
   const dispatch = useDispatch();
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
@@ -31,12 +31,12 @@ const MessageReply: React.FC<MessageReplyProps> = ({ commonMembers }) => {
     (async () => {
       const parsedText = await getTextFromTextEditorString({
         textEditorString: discussionMessageReply.text,
-        commonMembers,
+        users,
       });
 
       setMessageText(parsedText);
     })();
-  }, [commonMembers, discussionMessageReply]);
+  }, [users, discussionMessageReply]);
 
   if (!discussionMessageReply) {
     return null;
