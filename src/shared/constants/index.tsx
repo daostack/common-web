@@ -9,6 +9,7 @@ export * from "./environment";
 export * from "./errorCode";
 export * from "./followFeedItemAction";
 export * from "./formErrorMessages";
+export * from "./getChatMessageUserStatusKey";
 export * from "./getFeedItemUserMetadataKey";
 export * from "./inboxItemType";
 export * from "./keyboardKeys";

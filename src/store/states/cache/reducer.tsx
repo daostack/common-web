@@ -1,6 +1,7 @@
 import produce from "immer";
 import { unionWith } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
+import { getChatMessageUserStatusKey } from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import * as actions from "./actions";
 import { CacheState } from "./types";
@@ -14,6 +15,7 @@ const initialState: CacheState = {
   discussionMessagesStates: {},
   proposalStates: {},
   feedItemUserMetadataStates: {},
+  chatMessageUserStatusStates: {},
 };
 
 export const reducer = createReducer<CacheState, Action>(initialState)
@@ -113,6 +115,18 @@ export const reducer = createReducer<CacheState, Action>(initialState)
           commonId,
           userId,
           feedObjectId,
+        })
+      ] = { ...state };
+    }),
+  )
+  .handleAction(actions.updateChatMessageUserStatus, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { userId, chatChannelId, state } = payload;
+
+      nextState.chatMessageUserStatusStates[
+        getChatMessageUserStatusKey({
+          userId,
+          chatChannelId,
         })
       ] = { ...state };
     }),

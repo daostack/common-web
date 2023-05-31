@@ -1,11 +1,34 @@
 import { ApiEndpoint } from "@/shared/constants";
-import { DMUser } from "@/shared/interfaces";
+import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
 import { SendChatMessageDto } from "@/shared/interfaces/api";
-import { ChatChannel, ChatMessage } from "@/shared/models";
-import { getUserName } from "@/shared/utils";
+import {
+  ChatChannel,
+  ChatMessage,
+  ChatMessageUserStatus,
+  Collection,
+  SubCollections,
+} from "@/shared/models";
+import { firestoreDataConverter, getUserName } from "@/shared/utils";
+import firebase from "@/shared/utils/firebase";
 import Api from "./Api";
 
+const chatChannelConverter = firestoreDataConverter<ChatChannel>();
+const chatMessageUserStatusConverter =
+  firestoreDataConverter<ChatMessageUserStatus>();
+
 class ChatService {
+  private getChatChannelCollection = () =>
+    firebase
+      .firestore()
+      .collection(Collection.ChatChannel)
+      .withConverter(chatChannelConverter);
+
+  private getChatMessageUserStatusSubCollection = (chatChannelId: string) =>
+    this.getChatChannelCollection()
+      .doc(chatChannelId)
+      .collection(SubCollections.ChatMessagesUserUnique)
+      .withConverter(chatMessageUserStatusConverter);
+
   public getDMUsers = async (): Promise<DMUser[]> => {
     const { data } = await Api.get<{ data: Omit<DMUser, "userName">[] }>(
       ApiEndpoint.GetDMUsers,
@@ -40,6 +63,24 @@ class ChatService {
     );
 
     return data;
+  };
+
+  public subscribeToChatMessageUserStatus = (
+    userId: string,
+    chatChannelId: string,
+    callback: (data: ChatMessageUserStatus) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getChatMessageUserStatusSubCollection(chatChannelId)
+      .where("chatChannelId", "==", chatChannelId)
+      .where("userId", "==", userId);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges()[0]?.doc.data();
+
+      if (data) {
+        callback(data);
+      }
+    });
   };
 }
 

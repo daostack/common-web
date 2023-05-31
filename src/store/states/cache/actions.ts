@@ -1,6 +1,7 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { LoadingState, PayloadWithOptionalCallback } from "@/shared/interfaces";
 import {
+  ChatMessageUserStatus,
   CommonFeedObjectUserUnique,
   Discussion,
   DiscussionMessage,
@@ -148,6 +149,23 @@ export const getFeedItemUserMetadata = createAsyncAction(
   Error
 >();
 
+export const getChatMessageUserStatus = createAsyncAction(
+  CacheActionType.GET_CHAT_MESSAGE_USER_STATUS,
+  CacheActionType.GET_CHAT_MESSAGE_USER_STATUS_SUCCESS,
+  CacheActionType.GET_CHAT_MESSAGE_USER_STATUS_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    {
+      userId: string;
+      chatChannelId: string;
+    },
+    ChatMessageUserStatus | null,
+    Error
+  >,
+  ChatMessageUserStatus | null,
+  Error
+>();
+
 export const updateFeedItemUserMetadata = createStandardAction(
   CacheActionType.UPDATE_FEED_ITEM_USER_METADATA,
 )<{
@@ -155,4 +173,12 @@ export const updateFeedItemUserMetadata = createStandardAction(
   userId: string;
   feedObjectId: string;
   state: LoadingState<CommonFeedObjectUserUnique | null>;
+}>();
+
+export const updateChatMessageUserStatus = createStandardAction(
+  CacheActionType.UPDATE_CHAT_MESSAGE_USER_STATUS,
+)<{
+  userId: string;
+  chatChannelId: string;
+  state: LoadingState<ChatMessageUserStatus | null>;
 }>();
