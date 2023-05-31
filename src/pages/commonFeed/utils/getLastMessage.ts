@@ -72,14 +72,12 @@ export const getLastMessage = (
 
   const hasText = !checkIsTextEditorValueEmpty(parsedMessageContent);
 
-  return lastMessage.userName !== "System"
-    ? prependTextInTextEditorValue(
-      `${lastMessage.userName}: ${getIconWithText({
-        hasText,
-        hasImages,
-        hasFiles,
-      })} `,
-        parsedMessageContent,
-      )
-    : parseStringToTextEditorValue();
+  return prependTextInTextEditorValue(
+    `${lastMessage.userName}: ${getIconWithText({
+      hasText,
+      hasImages,
+      hasFiles,
+    })} `,
+    parsedMessageContent,
+  );
 };
