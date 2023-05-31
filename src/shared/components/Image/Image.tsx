@@ -14,8 +14,8 @@ interface CustomImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   alt: string;
   preloaderSrc?: string;
   placeholderElement?: ReactNode;
-  imageOverlay?: string;
-  imageContainer?: string;
+  imageOverlayClassName?: string;
+  imageContainerClassName?: string;
 }
 
 const CustomImage: FC<CustomImageProps> = (props) => {
@@ -25,8 +25,8 @@ const CustomImage: FC<CustomImageProps> = (props) => {
     preloaderSrc,
     onError,
     placeholderElement,
-    imageOverlay,
-    imageContainer,
+    imageOverlayClassName,
+    imageContainerClassName,
     ...restProps
   } = props;
   const [isLoaded, setIsLoaded] = useState(false);
@@ -68,9 +68,9 @@ const CustomImage: FC<CustomImageProps> = (props) => {
   return hasError && (placeholderElement || placeholderElement === null) ? (
     <>{placeholderElement}</>
   ) : (
-    <div className={classNames(styles.imageContainer, imageContainer)}>
+    <div className={classNames(styles.imageContainer, imageContainerClassName)}>
       <img {...restProps} src={imageSrc} alt={alt} onError={handleError} />
-      <div className={imageOverlay} />
+      <div className={imageOverlayClassName} />
     </div>
   );
 };

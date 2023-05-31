@@ -1,6 +1,7 @@
 import { GetLastMessageOptions } from "@/pages/common";
 import { CommonFeedType, PredefinedTypes } from "@/shared/models";
 import {
+  checkIsTextEditorValueEmpty,
   parseStringToTextEditorValue,
   prependTextInTextEditorValue,
   TextEditorValue,
@@ -69,10 +70,7 @@ export const getLastMessage = (
     lastMessage.content,
   );
 
-  const hasText = Boolean(
-    (parsedMessageContent[0] as { children: { text: string }[] }).children[0]
-      .text,
-  );
+  const hasText = checkIsTextEditorValueEmpty(parsedMessageContent);
 
   return lastMessage.userName !== "System"
     ? prependTextInTextEditorValue(

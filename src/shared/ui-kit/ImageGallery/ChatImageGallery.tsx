@@ -69,11 +69,11 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
               className={classNames(styles.image, {
                 [styles.singleImage]: singleImageWithoutVideo,
               })}
-              imageContainer={classNames({
+              imageContainerClassName={classNames({
                 [styles.leftItem]: !hasOneImage,
               })}
               src={leftImage}
-              imageOverlay={styles.imageOverlay}
+              imageOverlayClassName={styles.imageOverlay}
               alt="1st Image"
               onClick={() => handleOpenSlide(0)}
             />
@@ -82,8 +82,8 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
             <Image
               className={styles.image}
               src={rightImage}
-              imageContainer={styles.rightItem}
-              imageOverlay={styles.imageOverlay}
+              imageContainerClassName={styles.rightItem}
+              imageOverlayClassName={styles.imageOverlay}
               alt="2nd Image"
               onClick={() => handleOpenSlide(1)}
             />
@@ -101,20 +101,20 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
           >
             <Image
               className={styles.image}
-              imageContainer={classNames({
+              imageContainerClassName={classNames({
                 [styles.leftImage]: !hasOneImage,
                 [styles.singleImage]: singleImageWithoutVideo,
               })}
-              imageOverlay={styles.imageOverlay}
+              imageOverlayClassName={styles.imageOverlay}
               src={secondRowLeftImage}
               alt="3st Image"
               onClick={() => handleOpenSlide(2)}
             />
             <Image
               className={styles.image}
-              imageContainer={styles.rightItem}
+              imageContainerClassName={styles.rightItem}
               src={secondRowRightImage}
-              imageOverlay={styles.imageOverlay}
+              imageOverlayClassName={styles.imageOverlay}
               alt="4nd Image"
               onClick={() => handleOpenSlide(3)}
             />
