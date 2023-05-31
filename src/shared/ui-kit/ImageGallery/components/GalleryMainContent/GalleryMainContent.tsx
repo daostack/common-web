@@ -34,8 +34,8 @@ const GalleryMainContent: FC<GalleryMainContentProps> = (props) => {
     <Image
       className={styles.mainContent}
       src={mainImage}
-      imageContainer={styles.imageContainer}
-      imageOverlay={styles.imageOverlay}
+      imageContainerClassName={styles.imageContainer}
+      imageOverlayClassName={styles.imageOverlay}
       alt="3rd Image"
     />
   );

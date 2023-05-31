@@ -70,7 +70,7 @@ export const getLastMessage = (
     lastMessage.content,
   );
 
-  const hasText = checkIsTextEditorValueEmpty(parsedMessageContent);
+  const hasText = !checkIsTextEditorValueEmpty(parsedMessageContent);
 
   return lastMessage.userName !== "System"
     ? prependTextInTextEditorValue(
@@ -78,7 +78,7 @@ export const getLastMessage = (
         hasText,
         hasImages,
         hasFiles,
-      })}`,
+      })} `,
         parsedMessageContent,
       )
     : parseStringToTextEditorValue();
