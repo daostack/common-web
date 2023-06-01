@@ -4,6 +4,7 @@ import { UserAvatar } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useOutsideClick } from "@/shared/hooks";
 import { User } from "@/shared/models";
+import { getUserName } from "@/shared/utils";
 import styles from "./MentionDropdown.module.scss";
 
 export const MENTION_TAG = "@";
@@ -95,10 +96,10 @@ const MentionDropdown: FC<MentionDropdownProps> = (props) => {
         >
           <UserAvatar
             className={styles.userAvatar}
-            userName={user.displayName}
+            userName={getUserName(user)}
             photoURL={user?.photo || user?.photoURL}
           />
-          <p className={styles.userName}>{user.displayName}</p>
+          <p className={styles.userName}>{getUserName(user)}</p>
         </li>
       ))}
     </ul>
