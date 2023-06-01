@@ -65,7 +65,8 @@ import {
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
 
-const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
+const ACCEPTED_EXTENSIONS =
+  ".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .pages, .numbers, .key, .jpg, .jpeg, .png, .gif, .tiff, .bmp, .webp, .mp4, .avi, .mov, .mkv, .mpeg, .mp3, .aac, .flac, .wav, .ogg, .zip, .rar, .7z, .tar, .gz, .apk, .epub, .vcf, .xml, .csv, .json, .docm, .dot, .dotm, .dotx, .fdf, .fodp, .fods, .fodt, .pot, .potm, .potx, .ppa, .ppam, .pps, .ppsm, .ppsx, .pptm, .sldx, .xlm, .xlsb, .xlsm, .xlt, .xltm, .xltx, .xps, .mobi, .azw, .azw3, .prc, .svg, .ico, .jp2, .3gp, .3g2, .flv, .m4v, .mk3d, .mks, .mpg, .mpeg2, .mpeg4, .mts, .vob, .wmv, .m4a, .opus, .wma, .cbr, .cbz, .tgz, .apng, .m4b, .m4p, .m4r, .webm, .sh, .py, .java, .cpp, .cs, .js, .html, .css, .php, .rb, .pl, .sql";
 
 interface ChatComponentInterface {
   commonId: string;
@@ -302,11 +303,18 @@ export default function ChatComponent({
           ...(discussionMessageReply && {
             parentId: discussionMessageReply?.id,
           }),
-          filesPreview,
           imagesPreview,
           tags: mentionTags,
           mentions: mentionTags.map((tag) => tag.value),
         };
+
+        const filePreviewPayload = filesPreview.map((filePreview) => ({
+          ownerId: user.uid,
+          commonId,
+          discussionId,
+          filesPreview: [filePreview],
+        }));
+
         const firebaseDate = Timestamp.fromDate(new Date());
 
         const msg: UserDiscussionMessage = {
@@ -334,13 +342,17 @@ export default function ChatComponent({
           images: imagesPreview?.map((file) =>
             FileService.convertFileInfoToCommonLink(file),
           ),
-          files: filesPreview?.map((file) =>
-            FileService.convertFileInfoToCommonLink(file),
-          ),
+          ...(filesPreview.length === 1 && !message
+            ? {
+                files: filesPreview?.map((file) =>
+                  FileService.convertFileInfoToCommonLink(file),
+                ),
+              }
+            : null),
           tags: mentionTags,
         };
 
-        setMessages((prev) => [...prev, payload]);
+        setMessages((prev) => [...prev, ...filePreviewPayload, payload]);
         addDiscussionMessage(discussionId, msg);
 
         if (discussionMessageReply) {

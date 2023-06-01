@@ -4,7 +4,7 @@ interface InfoItem {
 
 export interface CreateDiscussionMessageDto {
   pendingMessageId?: string;
-  text: string;
+  text?: string;
   ownerId: string;
   commonId: string;
   discussionId: string;
