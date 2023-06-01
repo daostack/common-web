@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { ShareModal } from "@/shared/components";
-import { DynamicLinkType, ShareViewType } from "@/shared/constants";
+import { DynamicLinkType } from "@/shared/constants";
 import { useBuildShareLink, useModal } from "@/shared/hooks";
 import { InviteFriendsIcon, ShareIcon } from "@/shared/icons";
 import { Common } from "@/shared/models";
@@ -52,11 +52,6 @@ const InviteFriendsButton: FC<InviteFriendsButtonProps> = (props) => {
         isLoading={!linkURL}
         sourceUrl={linkURL || ""}
         onClose={onClose}
-        type={
-          isMobileVersion
-            ? ShareViewType.ModalMobile
-            : ShareViewType.ModalDesktop
-        }
       />
     </>
   );

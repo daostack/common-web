@@ -4,12 +4,7 @@ import classNames from "classnames";
 import copyToClipboard from "copy-to-clipboard";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { MenuButton, ShareModal } from "@/shared/components";
-import {
-  Orientation,
-  ShareViewType,
-  ScreenSize,
-  EntityTypes,
-} from "@/shared/constants";
+import { Orientation, EntityTypes } from "@/shared/constants";
 import { useNotification, useModal } from "@/shared/hooks";
 import {
   MenuItem as DesktopStyleMenuItem,
@@ -24,7 +19,6 @@ import {
   CommonMember,
   Governance,
 } from "@/shared/models";
-import { getScreenSize } from "@/shared/store/selectors";
 import {
   DesktopStyleMenu,
   parseStringToTextEditorValue,
@@ -87,7 +81,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   feedItemId,
 }) => {
   const dispatch = useDispatch();
-  const screenSize = useSelector(getScreenSize());
   const user = useSelector(selectUser());
   const commonMember = useSelector(selectCommonMember) as CommonMember;
   const governance = useSelector(selectGovernance) as Governance;
@@ -114,7 +107,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     onOpen: onOpenHide,
     onClose: onCloseHide,
   } = useModal(false);
-  const isMobileView = screenSize === ScreenSize.Mobile;
   const isControlledMenu = typeof isOpen === "boolean" && isControlledDropdown;
   const isHiddenElement =
     (elem as DiscussionMessage | Discussion | Proposal)?.moderation?.flag ===
@@ -326,9 +318,6 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         isShowing={isShowing}
         sourceUrl={staticShareLink || ""}
         onClose={onClose}
-        type={
-          isMobileView ? ShareViewType.ModalMobile : ShareViewType.ModalDesktop
-        }
       />
       <HideModal
         userId={userId as string}
