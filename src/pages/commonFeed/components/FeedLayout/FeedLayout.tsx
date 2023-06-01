@@ -240,6 +240,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
   const setActiveItem = useCallback((item: ChatItem) => {
     setChatItem(item);
+    setExpandedFeedItemId(item.feedItemId);
   }, []);
 
   useEffect(() => {
