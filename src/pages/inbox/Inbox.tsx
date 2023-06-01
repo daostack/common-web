@@ -21,7 +21,8 @@ import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
   inboxActions,
-  selectActiveChatChannelItem,
+  selectChatChannelItems,
+  selectNextChatChannelItemId,
   selectSharedInboxItem,
 } from "@/store/states";
 import {
@@ -65,19 +66,20 @@ const InboxPage: FC = () => {
     fetch: fetchInboxItems,
   } = useInboxItems(feedItemIdsForNotListening);
   const sharedInboxItem = useSelector(selectSharedInboxItem);
-  const activeChatChannelItem = useSelector(selectActiveChatChannelItem);
+  const chatChannelItems = useSelector(selectChatChannelItems);
+  const nextChatChannelItemId = useSelector(selectNextChatChannelItemId);
   const topFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
 
-    if (activeChatChannelItem) {
-      items.push(activeChatChannelItem);
+    if (chatChannelItems.length > 0) {
+      items.push(...chatChannelItems);
     }
     if (sharedInboxItem) {
       items.push(sharedInboxItem);
     }
 
     return items;
-  }, [activeChatChannelItem, sharedInboxItem]);
+  }, [chatChannelItems, sharedInboxItem]);
 
   const fetchData = () => {
     fetchInboxData({
@@ -122,18 +124,28 @@ const InboxPage: FC = () => {
   }, [sharedFeedItemId, feedLayoutRef]);
 
   useEffect(() => {
-    if (activeChatChannelItem) {
-      feedLayoutRef?.setActiveItem({
-        feedItemId: activeChatChannelItem.itemId,
-        discussion: ChatChannelToDiscussionConverter.toTargetEntity(
-          activeChatChannelItem.chatChannel,
-        ),
-        circleVisibility: [],
-        // lastSeenItem: chatChannel.lastSeen,
-        // seenOnce: chatChannel.seenOnce,
-      });
+    if (!nextChatChannelItemId) {
+      return;
     }
-  }, [activeChatChannelItem, feedLayoutRef]);
+
+    const chatChannelItem = chatChannelItems.find(
+      (item) => item.itemId === nextChatChannelItemId,
+    );
+
+    if (!chatChannelItem) {
+      return;
+    }
+
+    feedLayoutRef?.setActiveItem({
+      feedItemId: chatChannelItem.itemId,
+      discussion: ChatChannelToDiscussionConverter.toTargetEntity(
+        chatChannelItem.chatChannel,
+      ),
+      circleVisibility: [],
+      // lastSeenItem: chatChannel.lastSeen,
+      // seenOnce: chatChannel.seenOnce,
+    });
+  }, [nextChatChannelItemId, feedLayoutRef]);
 
   useEffect(() => {
     if (inboxData?.sharedInboxItem) {

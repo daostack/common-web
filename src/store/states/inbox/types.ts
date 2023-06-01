@@ -16,5 +16,6 @@ export interface InboxState {
   items: InboxItems;
   sharedFeedItemId: string | null;
   sharedItem: FeedLayoutItemWithFollowData | null;
-  activeChatChannelItem: ChatChannelLayoutItem | null;
+  chatChannelItems: ChatChannelLayoutItem[];
+  nextChatChannelItemId: string | null;
 }

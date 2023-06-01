@@ -169,7 +169,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
 
   useEffect(() => {
     if (dmUserChatChannel) {
-      dispatch(inboxActions.setActiveChatChannelItem(dmUserChatChannel));
+      dispatch(inboxActions.addChatChannelItem(dmUserChatChannel));
       onClose();
     }
   }, [dmUserChatChannel]);

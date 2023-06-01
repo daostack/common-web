@@ -58,6 +58,6 @@ export const setSharedInboxItem = createStandardAction(
   InboxActionType.SET_SHARED_INBOX_ITEM,
 )<FeedLayoutItemWithFollowData | null>();
 
-export const setActiveChatChannelItem = createStandardAction(
-  InboxActionType.SET_ACTIVE_CHAT_CHANNEL_ITEM,
-)<ChatChannel | null>();
+export const addChatChannelItem = createStandardAction(
+  InboxActionType.ADD_CHAT_CHANNEL_ITEM,
+)<ChatChannel>();

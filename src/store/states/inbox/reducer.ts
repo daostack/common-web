@@ -25,7 +25,8 @@ const initialState: InboxState = {
   items: { ...initialInboxItems },
   sharedFeedItemId: null,
   sharedItem: null,
-  activeChatChannelItem: null,
+  chatChannelItems: [],
+  nextChatChannelItemId: null,
 };
 
 const updateInboxItemInList = (
@@ -303,13 +304,17 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       nextState.sharedItem = payload && { ...payload };
     }),
   )
-  .handleAction(actions.setActiveChatChannelItem, (state, { payload }) =>
+  .handleAction(actions.addChatChannelItem, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.activeChatChannelItem = payload && {
-        type: InboxItemType.ChatChannel,
-        itemId: payload.id,
-        chatChannel: { ...payload },
-      };
+      nextState.chatChannelItems = [
+        {
+          type: InboxItemType.ChatChannel,
+          itemId: payload.id,
+          chatChannel: { ...payload },
+        },
+        ...nextState.chatChannelItems,
+      ];
+      nextState.nextChatChannelItemId = payload.id;
 
       if (!payload) {
         return;
