@@ -3,6 +3,7 @@ import React, {
   forwardRef,
   ForwardRefRenderFunction,
   ReactNode,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -235,6 +236,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [setChatItem, feedItemIdForAutoChatOpen],
   );
 
+  const setActiveItem = useCallback((item: ChatItem) => {
+    setChatItem(item);
+  }, []);
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -253,7 +258,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     saveChatSize(chatWidth);
   }, [chatWidth]);
 
-  useImperativeHandle(ref, () => ({ setExpandedFeedItemId }), []);
+  useImperativeHandle(
+    ref,
+    () => ({
+      setExpandedFeedItemId,
+      setActiveItem,
+    }),
+    [setActiveItem],
+  );
 
   const pageContentStyles = {
     "--chat-w": `${chatWidth}px`,

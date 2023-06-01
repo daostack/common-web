@@ -25,6 +25,7 @@ const initialState: InboxState = {
   items: { ...initialInboxItems },
   sharedFeedItemId: null,
   sharedItem: null,
+  activeChatChannelItem: null,
 };
 
 const updateInboxItemInList = (
@@ -300,5 +301,37 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   .handleAction(actions.setSharedInboxItem, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.sharedItem = payload && { ...payload };
+    }),
+  )
+  .handleAction(actions.setActiveChatChannelItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.activeChatChannelItem = payload && {
+        type: InboxItemType.ChatChannel,
+        itemId: payload.id,
+        chatChannel: { ...payload },
+      };
+
+      if (!payload) {
+        return;
+      }
+      if (
+        nextState.sharedItem?.type === InboxItemType.ChatChannel &&
+        nextState.sharedItem.itemId === payload.id
+      ) {
+        nextState.sharedFeedItemId = null;
+        nextState.sharedItem = null;
+        return;
+      }
+
+      nextState.items = {
+        ...nextState.items,
+        data:
+          nextState.items.data &&
+          nextState.items.data.filter(
+            (item) =>
+              item.type !== InboxItemType.ChatChannel ||
+              item.itemId !== payload.id,
+          ),
+      };
     }),
   );

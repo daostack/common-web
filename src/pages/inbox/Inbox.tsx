@@ -7,17 +7,23 @@ import {
 import { FeedItemBaseContentProps } from "@/pages/common";
 import { FeedLayout } from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
+import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
 import {
   ChatChannelFeedLayoutItemProps,
+  FeedLayoutItem,
   FeedLayoutRef,
 } from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
-import { inboxActions, selectSharedInboxItem } from "@/store/states";
+import {
+  inboxActions,
+  selectActiveChatChannelItem,
+  selectSharedInboxItem,
+} from "@/store/states";
 import {
   ChatChannelItem,
   HeaderContent,
@@ -59,10 +65,19 @@ const InboxPage: FC = () => {
     fetch: fetchInboxItems,
   } = useInboxItems(feedItemIdsForNotListening);
   const sharedInboxItem = useSelector(selectSharedInboxItem);
-  const topFeedItems = useMemo(
-    () => (sharedInboxItem ? [sharedInboxItem] : []),
-    [sharedInboxItem],
-  );
+  const activeChatChannelItem = useSelector(selectActiveChatChannelItem);
+  const topFeedItems = useMemo(() => {
+    const items: FeedLayoutItem[] = [];
+
+    if (activeChatChannelItem) {
+      items.push(activeChatChannelItem);
+    }
+    if (sharedInboxItem) {
+      items.push(sharedInboxItem);
+    }
+
+    return items;
+  }, [activeChatChannelItem, sharedInboxItem]);
 
   const fetchData = () => {
     fetchInboxData({
@@ -105,6 +120,20 @@ const InboxPage: FC = () => {
       feedLayoutRef?.setExpandedFeedItemId(sharedFeedItemId);
     }
   }, [sharedFeedItemId, feedLayoutRef]);
+
+  useEffect(() => {
+    if (activeChatChannelItem) {
+      feedLayoutRef?.setActiveItem({
+        feedItemId: activeChatChannelItem.itemId,
+        discussion: ChatChannelToDiscussionConverter.toTargetEntity(
+          activeChatChannelItem.chatChannel,
+        ),
+        circleVisibility: [],
+        // lastSeenItem: chatChannel.lastSeen,
+        // seenOnce: chatChannel.seenOnce,
+      });
+    }
+  }, [activeChatChannelItem, feedLayoutRef]);
 
   useEffect(() => {
     if (inboxData?.sharedInboxItem) {

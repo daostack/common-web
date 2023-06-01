@@ -7,11 +7,13 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useDispatch } from "react-redux";
 import { Modal } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants";
 import { DMUser } from "@/shared/interfaces";
 import { Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
+import { inboxActions } from "@/store/states";
 import { DirectMessageUserItem, SearchInput } from "./components";
 import { useDMUserChatChannel, useDMUsers } from "./hooks";
 import styles from "./DirectMessageModal.module.scss";
@@ -24,6 +26,7 @@ interface DirectMessageModalProps {
 
 const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   const { isOpen, onClose, isMobileVersion = false } = props;
+  const dispatch = useDispatch();
   const listRef = useRef<HTMLUListElement>(null);
   const [searchText, setSearchText] = useState("");
   const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null);
@@ -163,6 +166,13 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
       window.removeEventListener("keyup", handler);
     };
   }, [isOpen, activeItemIndex, filteredDMUsers]);
+
+  useEffect(() => {
+    if (dmUserChatChannel) {
+      dispatch(inboxActions.setActiveChatChannelItem(dmUserChatChannel));
+      onClose();
+    }
+  }, [dmUserChatChannel]);
 
   const renderContent = (): ReactElement => {
     if (areDMUsersLoading || isChannelLoading) {

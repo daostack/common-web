@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
-import { CommonFeed } from "@/shared/models";
+import { ChatChannel, CommonFeed } from "@/shared/models";
 import { InboxActionType } from "./constants";
 import { InboxItems } from "./types";
 
@@ -57,3 +57,7 @@ export const setSharedFeedItemId = createStandardAction(
 export const setSharedInboxItem = createStandardAction(
   InboxActionType.SET_SHARED_INBOX_ITEM,
 )<FeedLayoutItemWithFollowData | null>();
+
+export const setActiveChatChannelItem = createStandardAction(
+  InboxActionType.SET_ACTIVE_CHAT_CHANNEL_ITEM,
+)<ChatChannel | null>();
