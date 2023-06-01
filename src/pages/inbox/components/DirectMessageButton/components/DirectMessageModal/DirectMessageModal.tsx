@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { Modal } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants";
+import { DMUser } from "@/shared/interfaces";
 import { Loader } from "@/shared/ui-kit";
 import { DirectMessageUserItem, SearchInput } from "./components";
 import { useDMUsers } from "./hooks";
@@ -74,6 +75,10 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     });
   }, [totalUsersAmount]);
 
+  const handleUserItemClick = (item: DMUser) => {
+    console.log(item);
+  };
+
   useEffect(() => {
     if (isOpen) {
       fetchDMUsers();
@@ -122,6 +127,34 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     };
   }, [isOpen, handleArrowUp, handleArrowDown]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const handler = (event: KeyboardEvent) => {
+      const key = event.key as KeyboardKeys;
+
+      if (key !== KeyboardKeys.Enter) {
+        return;
+      }
+
+      const item = filteredDMUsers.find(
+        (dmUser, index) => index === activeItemIndex,
+      );
+
+      if (item) {
+        handleUserItemClick(item);
+      }
+    };
+
+    window.addEventListener("keyup", handler);
+
+    return () => {
+      window.removeEventListener("keyup", handler);
+    };
+  }, [isOpen, activeItemIndex, filteredDMUsers]);
+
   const renderContent = (): ReactElement => {
     if (areDMUsersLoading) {
       return <Loader />;
@@ -153,6 +186,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
               role="button"
               aria-pressed={isActive}
               onFocus={() => setActiveItemIndex(index)}
+              onClick={() => handleUserItemClick(item)}
             >
               <DirectMessageUserItem
                 className={styles.userItem}
