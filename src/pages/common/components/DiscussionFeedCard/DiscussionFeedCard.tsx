@@ -259,6 +259,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           feedItemCreatorName: getUserName(discussionCreator),
           commonName,
           isProject,
+          hasFiles: item.data.hasFiles,
+          hasImages: item.data.hasImages,
         })}
         canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
         isPreviewMode={isPreviewMode}

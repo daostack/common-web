@@ -324,6 +324,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           feedItemCreatorName: getUserName(feedItemUser),
           commonName,
           isProject,
+          hasFiles: item.data.hasFiles,
+          hasImages: item.data.hasImages,
         })}
         canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
         isPreviewMode={isPreviewMode}

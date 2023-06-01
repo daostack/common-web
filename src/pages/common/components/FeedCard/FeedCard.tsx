@@ -32,6 +32,8 @@ interface FeedCardProps {
   seenOnce?: boolean;
   ownerId?: string;
   discussionPredefinedType?: PredefinedTypes;
+  hasFiles?: boolean;
+  hasImages?: boolean;
 }
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -41,7 +43,6 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
   const {
     className,
     feedItemId,
-    isHovering = false,
     lastActivity = 0,
     unreadMessages = 0,
     isActive = false,
@@ -63,6 +64,8 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     seenOnce,
     ownerId,
     discussionPredefinedType,
+    hasImages,
+    hasFiles,
   } = props;
   const isTabletView = useIsTabletView();
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
@@ -130,6 +133,8 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
           seenOnce,
           ownerId,
           discussionPredefinedType,
+          hasFiles,
+          hasImages,
         })}
       {((isExpanded && canBeExpanded) || isPreviewMode) && (
         <CommonCard

@@ -31,7 +31,13 @@ const GalleryMainContent: FC<GalleryMainContentProps> = (props) => {
   }
 
   return (
-    <Image className={styles.mainContent} src={mainImage} alt="3rd Image" />
+    <Image
+      className={styles.mainContent}
+      src={mainImage}
+      imageContainerClassName={styles.imageContainer}
+      imageOverlayClassName={styles.imageOverlay}
+      alt="3rd Image"
+    />
   );
 };
 

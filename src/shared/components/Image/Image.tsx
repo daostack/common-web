@@ -7,16 +7,28 @@ import React, {
   ReactNode,
   ReactEventHandler,
 } from "react";
+import classNames from "classnames";
+import styles from "./Image.module.scss";
 
 interface CustomImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   alt: string;
   preloaderSrc?: string;
   placeholderElement?: ReactNode;
+  imageOverlayClassName?: string;
+  imageContainerClassName?: string;
 }
 
 const CustomImage: FC<CustomImageProps> = (props) => {
-  const { src, alt, preloaderSrc, onError, placeholderElement, ...restProps } =
-    props;
+  const {
+    src,
+    alt,
+    preloaderSrc,
+    onError,
+    placeholderElement,
+    imageOverlayClassName,
+    imageContainerClassName,
+    ...restProps
+  } = props;
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const imageSrc = isLoaded || !preloaderSrc ? src : preloaderSrc;
@@ -56,7 +68,10 @@ const CustomImage: FC<CustomImageProps> = (props) => {
   return hasError && (placeholderElement || placeholderElement === null) ? (
     <>{placeholderElement}</>
   ) : (
-    <img {...restProps} src={imageSrc} alt={alt} onError={handleError} />
+    <div className={classNames(styles.imageContainer, imageContainerClassName)}>
+      <img {...restProps} src={imageSrc} alt={alt} onError={handleError} />
+      <div className={imageOverlayClassName} />
+    </div>
   );
 };
 

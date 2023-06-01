@@ -67,18 +67,23 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
           {leftImage && (
             <Image
               className={classNames(styles.image, {
-                [styles.leftItem]: !hasOneImage,
                 [styles.singleImage]: singleImageWithoutVideo,
               })}
+              imageContainerClassName={classNames({
+                [styles.leftItem]: !hasOneImage,
+              })}
               src={leftImage}
+              imageOverlayClassName={styles.imageOverlay}
               alt="1st Image"
               onClick={() => handleOpenSlide(0)}
             />
           )}
           {rightImage && (
             <Image
-              className={classNames(styles.image, styles.rightItem)}
+              className={styles.image}
               src={rightImage}
+              imageContainerClassName={styles.rightItem}
+              imageOverlayClassName={styles.imageOverlay}
               alt="2nd Image"
               onClick={() => handleOpenSlide(1)}
             />
@@ -95,17 +100,21 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
             )}
           >
             <Image
-              className={classNames(styles.image, {
-                [styles.leftItem]: !hasOneImage,
+              className={styles.image}
+              imageContainerClassName={classNames({
+                [styles.leftImage]: !hasOneImage,
                 [styles.singleImage]: singleImageWithoutVideo,
               })}
+              imageOverlayClassName={styles.imageOverlay}
               src={secondRowLeftImage}
               alt="3st Image"
               onClick={() => handleOpenSlide(2)}
             />
             <Image
-              className={classNames(styles.image, styles.rightItem)}
+              className={styles.image}
+              imageContainerClassName={styles.rightItem}
               src={secondRowRightImage}
+              imageOverlayClassName={styles.imageOverlay}
               alt="4nd Image"
               onClick={() => handleOpenSlide(3)}
             />
