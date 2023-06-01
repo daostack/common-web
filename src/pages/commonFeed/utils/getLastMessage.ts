@@ -49,9 +49,9 @@ export const getLastMessageIconWithText = ({
   hasFiles?: boolean;
 }): string => {
   if (hasImages) {
-    return `📷 ${hasText ? "" : "Picture"} `;
+    return `📷 ${hasText ? "" : "Picture "}`;
   } else if (hasFiles) {
-    return `📁 ${hasText ? "" : "File"} `;
+    return `📁 ${hasText ? "" : "File "}`;
   }
 
   return "";
