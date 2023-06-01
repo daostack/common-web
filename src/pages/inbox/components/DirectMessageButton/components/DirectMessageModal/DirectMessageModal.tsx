@@ -11,6 +11,7 @@ import { Modal } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants";
 import { DMUser } from "@/shared/interfaces";
 import { Loader } from "@/shared/ui-kit";
+import { emptyFunction } from "@/shared/utils";
 import { DirectMessageUserItem, SearchInput } from "./components";
 import { useDMUserChatChannel, useDMUsers } from "./hooks";
 import styles from "./DirectMessageModal.module.scss";
@@ -164,7 +165,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   }, [isOpen, activeItemIndex, filteredDMUsers]);
 
   const renderContent = (): ReactElement => {
-    if (areDMUsersLoading) {
+    if (areDMUsersLoading || isChannelLoading) {
       return <Loader />;
     }
 
@@ -213,15 +214,21 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     <Modal
       className={styles.modal}
       isShowing={isOpen}
-      onClose={onClose}
+      onClose={isChannelLoading ? emptyFunction : onClose}
       title={
         <div className={styles.modalTitleWrapper}>
           <h3 className={styles.modalTitle}>Direct message</h3>
-          <SearchInput value={searchText} onChange={setSearchText} autoFocus />
+          {!isChannelLoading && (
+            <SearchInput
+              value={searchText}
+              onChange={setSearchText}
+              autoFocus
+            />
+          )}
         </div>
       }
       isHeaderSticky
-      hideCloseButton={!isMobileVersion}
+      hideCloseButton={!isMobileVersion || isChannelLoading}
       mobileFullScreen
       styles={{
         modalOverlay: styles.modalOverlay,
