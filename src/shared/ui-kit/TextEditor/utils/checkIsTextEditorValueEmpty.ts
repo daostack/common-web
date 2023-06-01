@@ -1,5 +1,5 @@
 import { Element, Text } from "slate";
-import { TextEditorValue } from "../types";
+import { MentionElement, TextEditorValue } from "../types";
 
 export const checkIsTextEditorValueEmpty = (
   value: TextEditorValue,
@@ -18,6 +18,11 @@ export const checkIsTextEditorValueEmpty = (
   }
 
   const firstChild = firstElement.children[0];
+  const secondChild = firstElement.children[1] as MentionElement;
+
+  if (secondChild) {
+    return secondChild.displayName === "";
+  }
 
   if (!Text.isText(firstChild)) {
     return false;
