@@ -1,20 +1,26 @@
+import { stringify } from "query-string";
 import { ApiEndpoint } from "@/shared/constants";
 import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
-import { SendChatMessageDto } from "@/shared/interfaces/api";
+import {
+  GetChatChannelMessagesResponse,
+  SendChatMessageDto,
+} from "@/shared/interfaces/api";
 import {
   ChatChannel,
   ChatMessage,
   ChatMessageUserStatus,
   Collection,
   SubCollections,
+  Timestamp,
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
+  convertToTimestamp,
   firestoreDataConverter,
   getUserName,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
-import Api from "./Api";
+import Api, { CancelToken } from "./Api";
 
 const chatChannelConverter = firestoreDataConverter<ChatChannel>();
 const chatMessageUserStatusConverter =
@@ -62,6 +68,40 @@ class ChatService {
     }
 
     return docSnapshot.data();
+  };
+
+  public getChatMessages = async (
+    chatChannelId: string,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<ChatMessage[]> => {
+    const { cancelToken } = options;
+    const messages: ChatMessage[] = [];
+    let hasMore = true;
+    let startAfter: Timestamp | null = null;
+
+    while (hasMore) {
+      const queryParams: Record<string, unknown> = { limit: 50 };
+
+      if (startAfter) {
+        queryParams.startAfter = startAfter.toDate().toISOString();
+      }
+
+      const { data } = await Api.get<GetChatChannelMessagesResponse>(
+        `${ApiEndpoint.GetChatChannelMessages(chatChannelId)}?${stringify(
+          queryParams,
+        )}`,
+        { cancelToken },
+      );
+      messages.push(...data.chatMessages);
+      hasMore = data.hasMore;
+      startAfter =
+        (data.lastDocTimestamp && convertToTimestamp(data.lastDocTimestamp)) ||
+        null;
+    }
+
+    return messages.map((message) =>
+      convertObjectDatesToFirestoreTimestamps(message),
+    );
   };
 
   public createChatChannel = async (
