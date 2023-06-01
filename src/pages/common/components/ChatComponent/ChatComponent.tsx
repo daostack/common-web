@@ -62,6 +62,7 @@ import {
   MessageReply,
   ChatFilePreview,
 } from "./components";
+import { useDiscussionChatAdapter } from "./hooks";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
 
@@ -125,43 +126,7 @@ export default function ChatComponent({
   );
   const user = useSelector(selectUser());
   const userId = user?.uid;
-
-  useEffect(() => {
-    if (discussionMessageReply) {
-      editorRef.current?.focus();
-    }
-  }, [discussionMessageReply]);
-
-  const currentFilesPreview = useSelector(selectFilesPreview());
-  const chatContentRef = useRef<ChatContentRef>(null);
-  const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
-  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
-
-  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
-
-  const [message, setMessage] = useState<TextEditorValue>(
-    parseStringToTextEditorValue(),
-  );
-  const [shouldReinitializeEditor, setShouldReinitializeEditor] =
-    useState(false);
-  const onClear = () => {
-    setShouldReinitializeEditor(true);
-    setMessage(parseStringToTextEditorValue());
-  };
-
-  const users = useMemo(
-    () =>
-      commonMembers
-        .filter((member) => member.userId !== userId)
-        .map(({ user }) => user),
-    [userId, commonMembers],
-  );
-
-  useEffect(() => {
-    if (commonId) {
-      fetchCommonMembers(commonId, discussion.circleVisibility);
-    }
-  }, [commonId, discussion.circleVisibility]);
+  const discussionId = discussion.id;
 
   const hasPermissionToHide =
     commonMember && governanceCircles
@@ -174,15 +139,42 @@ export default function ChatComponent({
         })
       : false;
   const {
-    fetchDiscussionMessages,
-    data: discussionMessages = [],
-    fetched: isFetchedDiscussionMessages,
-    loading: isLoadingDiscussionMessages,
-    addDiscussionMessage,
-  } = useDiscussionMessagesById({
+    discussionMessagesData,
+    markDiscussionMessageItemAsSeen,
+    discussionUsers: users,
+    fetchDiscussionUsers,
+  } = useDiscussionChatAdapter({
     hasPermissionToHide,
   });
-  const discussionId = discussion.id;
+  const discussionMessages = discussionMessagesData.data || [];
+  const isFetchedDiscussionMessages = discussionMessagesData.fetched;
+  const isLoadingDiscussionMessages = discussionMessagesData.loading;
+
+  useEffect(() => {
+    if (discussionMessageReply) {
+      editorRef.current?.focus();
+    }
+  }, [discussionMessageReply]);
+
+  const currentFilesPreview = useSelector(selectFilesPreview());
+  const chatContentRef = useRef<ChatContentRef>(null);
+  const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
+
+  const [message, setMessage] = useState<TextEditorValue>(
+    parseStringToTextEditorValue(),
+  );
+  const [shouldReinitializeEditor, setShouldReinitializeEditor] =
+    useState(false);
+  const onClear = () => {
+    setShouldReinitializeEditor(true);
+    setMessage(parseStringToTextEditorValue());
+  };
+
+  useEffect(() => {
+    if (commonId) {
+      fetchDiscussionUsers(commonId, discussion.circleVisibility);
+    }
+  }, [commonId, discussion.circleVisibility]);
 
   const lastNonUserMessage = getLastNonUserMessage(
     discussionMessages || [],
@@ -201,7 +193,7 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (discussionId) {
-      fetchDiscussionMessages(discussionId);
+      discussionMessagesData.fetchDiscussionMessages(discussionId);
     }
   }, [discussionId]);
 
@@ -355,7 +347,7 @@ export default function ChatComponent({
         };
 
         setMessages((prev) => [...prev, ...filePreviewPayload, payload]);
-        addDiscussionMessage(discussionId, msg);
+        discussionMessagesData.addDiscussionMessage(discussionId, msg);
 
         if (discussionMessageReply) {
           dispatch(chatActions.clearCurrentDiscussionMessageReply());
@@ -408,7 +400,7 @@ export default function ChatComponent({
       discussionMessages?.length === 0 &&
       !seenOnce
     ) {
-      markFeedItemAsSeen({
+      markDiscussionMessageItemAsSeen({
         feedObjectId: feedItemId,
         commonId,
       });
@@ -426,7 +418,7 @@ export default function ChatComponent({
       lastSeenItem?.id !== lastNonUserMessage.id &&
       feedItemId
     ) {
-      markFeedItemAsSeen({
+      markDiscussionMessageItemAsSeen({
         feedObjectId: feedItemId,
         commonId: lastNonUserMessage.commonId,
         lastSeenId: lastNonUserMessage.id,
