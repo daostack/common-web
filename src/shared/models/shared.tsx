@@ -38,6 +38,7 @@ export enum Collection {
 export enum SubCollections {
   Members = "members",
   Votes = "votes",
+  ChatMessages = "chatMessages",
   ChatMessagesUserUnique = "chatMessagesUserUnique",
   CommonFeed = "commonFeed",
   CommonFeedObjectUserUnique = "commonFeedObjectUserUnique",

@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   CancelTokenSource,
   isRequestCancelled,
@@ -17,6 +17,7 @@ interface Return extends LoadingState<ChatMessage[]> {
 export const useChatMessages = (): Return => {
   const cancelTokenRef = useRef<CancelTokenSource | null>(null);
   const [state, setState] = useLoadingState<ChatMessage[]>([]);
+  const currentChatChannelId = state.data?.[0]?.chatChannelId;
 
   const fetchChatMessages = useCallback(async (chatChannelId: string) => {
     if (cancelTokenRef.current) {
@@ -53,6 +54,45 @@ export const useChatMessages = (): Return => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (!currentChatChannelId) {
+      return;
+    }
+
+    const unsubscribe = ChatService.subscribeToChatChannelMessages(
+      currentChatChannelId,
+      (messages) => {
+        setState((currentState) => {
+          if (!currentState.data) {
+            return currentState;
+          }
+
+          const newMessages: ChatMessage[] = [];
+          const nextData = [...currentState.data];
+          messages.forEach((message) => {
+            const messageIndex = nextData.findIndex(
+              (item) => item.id === message.id,
+            );
+
+            if (messageIndex === -1) {
+              newMessages.push(message);
+            } else {
+              nextData[messageIndex] = message;
+            }
+          });
+          nextData.push(...newMessages);
+
+          return {
+            ...currentState,
+            data: nextData,
+          };
+        });
+      },
+    );
+
+    return unsubscribe;
+  }, [currentChatChannelId]);
 
   return {
     ...state,

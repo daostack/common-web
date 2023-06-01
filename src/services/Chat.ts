@@ -23,6 +23,7 @@ import firebase from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
 
 const chatChannelConverter = firestoreDataConverter<ChatChannel>();
+const chatMessagesConverter = firestoreDataConverter<ChatMessage>();
 const chatMessageUserStatusConverter =
   firestoreDataConverter<ChatMessageUserStatus>();
 
@@ -32,6 +33,12 @@ class ChatService {
       .firestore()
       .collection(Collection.ChatChannel)
       .withConverter(chatChannelConverter);
+
+  private getChatMessagesSubCollection = (chatChannelId: string) =>
+    this.getChatChannelCollection()
+      .doc(chatChannelId)
+      .collection(SubCollections.ChatMessages)
+      .withConverter(chatMessagesConverter);
 
   private getChatMessageUserStatusSubCollection = (chatChannelId: string) =>
     this.getChatChannelCollection()
@@ -128,6 +135,20 @@ class ChatService {
 
     return data;
   };
+
+  public subscribeToChatChannelMessages = (
+    chatChannelId: string,
+    callback: (messages: ChatMessage[]) => void,
+  ): UnsubscribeFunction =>
+    this.getChatMessagesSubCollection(chatChannelId).onSnapshot((snapshot) => {
+      const messages = snapshot.docs
+        .map((doc) => doc.data())
+        .sort(
+          (prevMessage: ChatMessage, nextMessage: ChatMessage) =>
+            prevMessage.createdAt.seconds - nextMessage.createdAt.seconds,
+        );
+      callback(messages);
+    });
 
   public subscribeToChatMessageUserStatus = (
     userId: string,
