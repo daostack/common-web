@@ -99,9 +99,9 @@ class ChatService {
         null;
     }
 
-    return messages.map((message) =>
-      convertObjectDatesToFirestoreTimestamps(message),
-    );
+    return messages
+      .reverse()
+      .map((message) => convertObjectDatesToFirestoreTimestamps(message));
   };
 
   public createChatChannel = async (
