@@ -1,13 +1,11 @@
 import React from "react";
-import { Document, Page } from "react-pdf/dist/esm/entry.webpack5";
 import { useDispatch, useSelector } from "react-redux";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { MimePrefixes } from "@/shared/constants/mimeTypes";
 import { MinusIcon } from "@/shared/icons";
+import { FilePreview } from "@/shared/ui-kit";
 import { selectFilesPreview, chatActions } from "@/store/states";
 import styles from "./ChatFilePreview.module.scss";
-
-const PAGE_SIZE = 100;
 
 export default function ChatFilePreview() {
   const dispatch = useDispatch();
@@ -28,9 +26,7 @@ export default function ChatFilePreview() {
             {file.info.type.startsWith(MimePrefixes.image) ? (
               <img className={styles.filePreview} src={file.src} />
             ) : (
-              <Document className={styles.filePreview} file={file.src}>
-                <Page width={PAGE_SIZE} height={PAGE_SIZE} pageNumber={1} />
-              </Document>
+              <FilePreview src={file.src} name={file.info.name} size={100} />
             )}
             <ButtonIcon
               className={styles.closeButton}

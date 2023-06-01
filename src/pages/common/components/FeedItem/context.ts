@@ -34,6 +34,8 @@ export interface FeedItemBaseContentProps {
   isProject?: boolean;
   isPinned?: boolean;
   discussionPredefinedType?: PredefinedTypes;
+  hasFiles?: boolean;
+  hasImages?: boolean;
 }
 
 export interface GetLastMessageOptions {
@@ -47,6 +49,8 @@ export interface GetLastMessageOptions {
   type?: CommonFeedType;
   seenOnce?: boolean;
   ownerId?: string;
+  hasFiles?: boolean;
+  hasImages?: boolean;
 }
 
 export interface FeedItemContextValue {

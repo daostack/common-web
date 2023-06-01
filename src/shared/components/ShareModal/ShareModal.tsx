@@ -5,6 +5,7 @@ import copyToClipboard from "copy-to-clipboard";
 import { ButtonIcon, SocialLinks, Loader } from "@/shared/components";
 import { Colors, ShareViewType } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CopyLinkChainIcon } from "@/shared/icons";
 import { Modal } from "../Modal";
 import "./index.scss";
@@ -13,7 +14,6 @@ interface ShareModalProps {
   isShowing: boolean;
   onClose: () => void;
   title?: string;
-  type: ShareViewType.ModalDesktop | ShareViewType.ModalMobile;
   sourceUrl: string;
   isLoading?: boolean;
   linkText?: string;
@@ -27,13 +27,12 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (props) => {
     children,
     isShowing,
     onClose,
-    type,
     title = t("title"),
     sourceUrl,
     isLoading,
     linkText,
   } = props;
-  const isMobileModal = type === ShareViewType.ModalMobile;
+  const isTabletView = useIsTabletView();
   const { notify } = useNotification();
 
   const handleCopyClick = () => {
@@ -44,16 +43,16 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (props) => {
   return (
     <Modal
       className={classNames("share-modal__wrapper", {
-        mobile: isMobileModal,
+        mobile: isTabletView,
       })}
       isShowing={isShowing}
       onClose={onClose}
-      title={isMobileModal && title}
+      title={isTabletView && title}
       closeColor={Colors.black}
-      closeIconSize={isMobileModal ? 16 : 20}
+      closeIconSize={isTabletView ? 16 : 20}
       styles={{
         header: "share-modal__wrapper-header",
-        content: isMobileModal ? "share-modal__wrapper-content-mobile" : "",
+        content: isTabletView ? "share-modal__wrapper-content-mobile" : "",
       }}
     >
       {children ||
@@ -62,13 +61,17 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (props) => {
         ) : (
           <div
             className={classNames("share-modal__wrapper-content", {
-              mobile: isMobileModal,
-              desktop: !isMobileModal,
+              mobile: isTabletView,
+              desktop: !isTabletView,
             })}
           >
-            {!isMobileModal && <div className="share-modal_title">{title}</div>}
+            {!isTabletView && <div className="share-modal_title">{title}</div>}
             <SocialLinks
-              shareViewType={type}
+              shareViewType={
+                isTabletView
+                  ? ShareViewType.ModalMobile
+                  : ShareViewType.ModalDesktop
+              }
               sourceUrl={sourceUrl}
               isLoading={isLoading}
               linkText={linkText}

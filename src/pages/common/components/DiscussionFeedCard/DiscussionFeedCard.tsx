@@ -259,6 +259,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           feedItemCreatorName: getUserName(discussionCreator),
           commonName,
           isProject,
+          hasFiles: item.data.hasFiles,
+          hasImages: item.data.hasImages,
         })}
         canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
         isPreviewMode={isPreviewMode}
@@ -290,7 +292,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           onClose={onShareModalClose}
           linkType={StaticLinkType.Discussion}
           element={discussion}
-          isMobileVersion={isMobileVersion}
           feedItemId={item.id}
         />
       )}

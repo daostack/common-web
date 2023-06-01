@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useState,
   useRef,
+  useMemo,
 } from "react";
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
@@ -17,6 +18,7 @@ import {
   DiscussionMessage,
   User,
 } from "@/shared/models";
+import { FilePreview, FilePreviewVariant } from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
 import { StaticLinkType, isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
@@ -189,6 +191,11 @@ export default function ChatMessage({
     userId,
   ]);
 
+  const filesPreview = useMemo(
+    () => discussionMessage.files?.[0],
+    [discussionMessage.files],
+  );
+
   return (
     <li
       id={discussionMessage.id}
@@ -242,6 +249,18 @@ export default function ChatMessage({
                 [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
               })}
             >
+              {filesPreview && (
+                <FilePreview
+                  src={filesPreview.value}
+                  name={filesPreview.title}
+                  size={128}
+                  variant={FilePreviewVariant.medium}
+                  iconContainerClassName={classNames({
+                    [styles.iconContainerFilePreviewCurrentUser]:
+                      !isNotCurrentUserMessage,
+                  })}
+                />
+              )}
               <ChatImageGallery gallery={discussionMessage.images ?? []} />
               <Linkify>{messageText.map((text) => text)}</Linkify>
               <div className={styles.timeWrapperContainer}>

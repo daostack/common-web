@@ -54,18 +54,15 @@
   }
 
   .create-common-confirmation-success__button-wrapper {
-    max-width: 10.75rem;
     width: 100%;
-
-    @include big-phone {
-      max-width: unset;
-    }
   }
 
   .create-common-confirmation-success__continue-button {
+    margin-left: 1rem;
     @extend .create-common-confirmation-success__button-wrapper;
 
     @include big-phone {
+      margin-left: unset;
       margin-top: 1rem;
     }
   }

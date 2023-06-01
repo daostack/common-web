@@ -1,5 +1,7 @@
 import { GetLastMessageOptions } from "@/pages/common";
+import { getLastMessageIconWithText } from "@/pages/commonFeed/utils";
 import {
+  checkIsTextEditorValueEmpty,
   parseStringToTextEditorValue,
   prependTextInTextEditorValue,
   TextEditorValue,
@@ -8,7 +10,7 @@ import {
 export const getLastMessage = (
   options: GetLastMessageOptions,
 ): TextEditorValue => {
-  const { lastMessage, commonName } = options;
+  const { lastMessage, hasImages, hasFiles, commonName } = options;
 
   if (!lastMessage) {
     return parseStringToTextEditorValue(commonName);
@@ -18,8 +20,14 @@ export const getLastMessage = (
     lastMessage.content,
   );
 
+  const hasText = !checkIsTextEditorValueEmpty(parsedMessageContent);
+
   return prependTextInTextEditorValue(
-    `${lastMessage.userName}: `,
+    `${lastMessage.userName}: ${getLastMessageIconWithText({
+      hasText,
+      hasImages,
+      hasFiles,
+    })}`,
     parsedMessageContent,
   );
 };

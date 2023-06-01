@@ -1,2 +1,2 @@
-export * from "./getLastMessage";
 export * from "./getNonAllowedItems";
+export * from "./getLastMessage";
