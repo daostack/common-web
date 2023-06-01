@@ -290,7 +290,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           onClose={onShareModalClose}
           linkType={StaticLinkType.Discussion}
           element={discussion}
-          isMobileVersion={isMobileVersion}
           feedItemId={item.id}
         />
       )}

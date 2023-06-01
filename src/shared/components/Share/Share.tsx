@@ -92,7 +92,6 @@ export default function Share(props: PropsWithChildren<IProps>) {
           isLoading={isLoading}
           sourceUrl={url}
           onClose={onClose}
-          type={type}
           linkText={text}
         />
       )}

@@ -1,16 +1,17 @@
 import React, { useEffect, useMemo, FC, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { Button, ButtonVariant, CommonShare } from "@/shared/components";
-import {
-  Colors,
-  ScreenSize,
-  ShareViewType,
-  SharePopupVariant,
-} from "@/shared/constants";
+import { Button, ButtonVariant, ShareModal } from "@/shared/components";
+import { ScreenSize } from "@/shared/constants";
+import { useModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
-import { commonTypeText, getCommonPagePath } from "@/shared/utils";
+import {
+  StaticLinkType,
+  commonTypeText,
+  generateStaticShareLink,
+  getCommonPagePath,
+} from "@/shared/utils";
 import "./index.scss";
 
 interface SuccessProps {
@@ -34,6 +35,12 @@ const Success: FC<SuccessProps> = (props) => {
   const history = useHistory();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+
+  const {
+    isShowing: isShareModalOpen,
+    onOpen: onShareModalOpen,
+    onClose: onShareModalClose,
+  } = useModal(false);
 
   const handleGoToCommon = () => {
     if (onGoToCommon) {
@@ -89,25 +96,17 @@ const Success: FC<SuccessProps> = (props) => {
         invite others to join you. You can always share it later.
       </p>
       <div className="create-common-confirmation-success__buttons">
-        <CommonShare
-          className="create-common-confirmation-success__button-wrapper"
-          common={common}
-          type={isMobileView ? ShareViewType.ModalMobile : ShareViewType.Popup}
-          color={Colors.lightPurple}
-          top=""
-          popupVariant={SharePopupVariant.TopCenter}
+        <Button
+          key="create-common-confirmation-success-share-btn"
+          className="create-common-confirmation-success__button"
+          variant={
+            isMobileView ? ButtonVariant.Primary : ButtonVariant.Secondary
+          }
+          shouldUseFullWidth
+          onClick={onShareModalOpen}
         >
-          <Button
-            key="create-common-confirmation-success-share-btn"
-            className="create-common-confirmation-success__button"
-            variant={
-              isMobileView ? ButtonVariant.Primary : ButtonVariant.Secondary
-            }
-            shouldUseFullWidth
-          >
-            Share now
-          </Button>
-        </CommonShare>
+          Share now
+        </Button>
         <Button
           key="create-common-confirmation-success-go-to-common-btn"
           className="create-common-confirmation-success__continue-button"
@@ -119,6 +118,12 @@ const Success: FC<SuccessProps> = (props) => {
         >
           Go to {commonTypeText(isSubCommonCreation)}
         </Button>
+
+        <ShareModal
+          isShowing={isShareModalOpen}
+          sourceUrl={generateStaticShareLink(StaticLinkType.Common, common)}
+          onClose={onShareModalClose}
+        />
       </div>
     </div>
   );
