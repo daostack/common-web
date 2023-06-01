@@ -12,7 +12,7 @@ import { KeyboardKeys } from "@/shared/constants";
 import { DMUser } from "@/shared/interfaces";
 import { Loader } from "@/shared/ui-kit";
 import { DirectMessageUserItem, SearchInput } from "./components";
-import { useDMUsers } from "./hooks";
+import { useDMUserChatChannel, useDMUsers } from "./hooks";
 import styles from "./DirectMessageModal.module.scss";
 
 interface DirectMessageModalProps {
@@ -32,6 +32,13 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     fetchDMUsers,
     error: dmUsersFetchError,
   } = useDMUsers();
+  const {
+    loading: isChannelLoading,
+    dmUserChatChannel,
+    fetchDMUserChatChannel,
+    resetDMUserChatChannel,
+    error: isChannelLoadedWithError,
+  } = useDMUserChatChannel();
   const filteredDMUsers = useMemo(() => {
     if (!searchText) {
       return dmUsers;
@@ -76,7 +83,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   }, [totalUsersAmount]);
 
   const handleUserItemClick = (item: DMUser) => {
-    console.log(item);
+    fetchDMUserChatChannel(item.uid);
   };
 
   useEffect(() => {
@@ -87,6 +94,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
 
     setActiveItemIndex(null);
     setSearchText("");
+    resetDMUserChatChannel();
   }, [isOpen]);
 
   useEffect(() => {

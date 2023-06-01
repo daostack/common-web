@@ -8,7 +8,11 @@ import {
   Collection,
   SubCollections,
 } from "@/shared/models";
-import { firestoreDataConverter, getUserName } from "@/shared/utils";
+import {
+  convertObjectDatesToFirestoreTimestamps,
+  firestoreDataConverter,
+  getUserName,
+} from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import Api from "./Api";
 
@@ -40,6 +44,26 @@ class ChatService {
     }));
   };
 
+  public getDMUserChatChannel = async (
+    currentUserId: string,
+    dmUserId: string,
+  ): Promise<ChatChannel | null> => {
+    const snapshot = await this.getChatChannelCollection()
+      .where("participants", "array-contains", currentUserId)
+      .get();
+    const docSnapshot = snapshot.docs.find((doc) => {
+      const { participants } = doc.data();
+
+      return participants.length === 2 && participants.includes(dmUserId);
+    });
+
+    if (!docSnapshot) {
+      return null;
+    }
+
+    return docSnapshot.data();
+  };
+
   public createChatChannel = async (
     participants: string[],
   ): Promise<ChatChannel> => {
@@ -50,7 +74,7 @@ class ChatService {
       },
     );
 
-    return data;
+    return convertObjectDatesToFirestoreTimestamps(data);
   };
 
   public sendChatMessage = async (
