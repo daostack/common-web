@@ -20,6 +20,7 @@ import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { User } from "@/shared/models";
+import { getUserName } from "@/shared/utils";
 import { Editor, MentionDropdown, MENTION_TAG } from "./components";
 import { TextEditorSize } from "./constants";
 import { withInlines, withMentions } from "./hofs";
@@ -153,8 +154,8 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
-  const chars = (users ?? []).filter(({ displayName }) => {
-    return displayName
+  const chars = (users ?? []).filter((user) => {
+    return getUserName(user)
       ?.toLowerCase()
       .startsWith(search.text.substring(1).toLowerCase());
   });
