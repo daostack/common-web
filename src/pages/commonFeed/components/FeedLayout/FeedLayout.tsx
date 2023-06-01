@@ -84,6 +84,7 @@ interface FeedLayoutProps {
   sharedFeedItemId?: string | null;
   emptyText?: string;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
+  onActiveItemChange?: (itemId?: string) => void;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -110,6 +111,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     sharedFeedItemId,
     emptyText,
     getNonAllowedItems,
+    onActiveItemChange,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -257,6 +259,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   useEffect(() => {
     saveChatSize(chatWidth);
   }, [chatWidth]);
+
+  useEffect(() => {
+    onActiveItemChange?.(activeFeedItemId);
+  }, [activeFeedItemId]);
 
   useImperativeHandle(
     ref,

@@ -312,7 +312,9 @@ export const reducer = createReducer<InboxState, Action>(initialState)
           itemId: payload.id,
           chatChannel: { ...payload },
         },
-        ...nextState.chatChannelItems,
+        ...nextState.chatChannelItems.filter(
+          (item) => item.chatChannel.messageCount !== 0,
+        ),
       ];
       nextState.nextChatChannelItemId = payload.id;
 
@@ -339,4 +341,27 @@ export const reducer = createReducer<InboxState, Action>(initialState)
           ),
       };
     }),
+  )
+  .handleAction(
+    actions.removeEmptyChatChannelItems,
+    (state, { payload: nextActiveItemId }) =>
+      produce(state, (nextState) => {
+        if (nextState.nextChatChannelItemId !== nextActiveItemId) {
+          nextState.nextChatChannelItemId = null;
+        }
+
+        const hasItemToRemove = nextState.chatChannelItems.some(
+          (item) =>
+            item.chatChannel.messageCount === 0 &&
+            item.itemId !== nextActiveItemId,
+        );
+
+        if (hasItemToRemove) {
+          nextState.chatChannelItems = nextState.chatChannelItems.filter(
+            (item) =>
+              item.chatChannel.messageCount !== 0 ||
+              item.itemId === nextActiveItemId,
+          );
+        }
+      }),
   );

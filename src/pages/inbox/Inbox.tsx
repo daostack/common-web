@@ -115,6 +115,13 @@ const InboxPage: FC = () => {
     [dispatch],
   );
 
+  const handleActiveItemChange = useCallback(
+    (activeItemId?: string) => {
+      dispatch(inboxActions.removeEmptyChatChannelItems(activeItemId));
+    },
+    [dispatch],
+  );
+
   useEffect(() => {
     dispatch(inboxActions.setSharedFeedItemId(sharedFeedItemId));
 
@@ -214,6 +221,7 @@ const InboxPage: FC = () => {
         getLastMessage={getLastMessage}
         emptyText="Your inbox is empty"
         getNonAllowedItems={getNonAllowedItems}
+        onActiveItemChange={handleActiveItemChange}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

@@ -61,3 +61,7 @@ export const setSharedInboxItem = createStandardAction(
 export const addChatChannelItem = createStandardAction(
   InboxActionType.ADD_CHAT_CHANNEL_ITEM,
 )<ChatChannel>();
+
+export const removeEmptyChatChannelItems = createStandardAction(
+  InboxActionType.REMOVE_EMPTY_CHAT_CHANNEL_ITEMS,
+)<string | void>();
