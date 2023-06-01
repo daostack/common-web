@@ -17,8 +17,7 @@ import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { inboxActions, selectSharedInboxItem } from "@/store/states";
 import { HeaderContent, FeedItemBaseContent } from "./components";
 import { useInboxData } from "./hooks";
-import { getLastMessage } from "../commonFeed/utils";
-import { getNonAllowedItems } from "./utils";
+import { getNonAllowedItems, getLastMessage } from "./utils";
 import styles from "./Inbox.module.scss";
 
 const InboxPage: FC = () => {

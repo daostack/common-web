@@ -39,7 +39,7 @@ const getCustomizedMessageString = (options: GetLastMessageOptions): string => {
   return "";
 };
 
-const getIconWithText = ({
+export const getLastMessageIconWithText = ({
   hasText,
   hasImages,
   hasFiles,
@@ -73,7 +73,7 @@ export const getLastMessage = (
   const hasText = !checkIsTextEditorValueEmpty(parsedMessageContent);
 
   return prependTextInTextEditorValue(
-    `${lastMessage.userName}: ${getIconWithText({
+    `${lastMessage.userName}: ${getLastMessageIconWithText({
       hasText,
       hasImages,
       hasFiles,
