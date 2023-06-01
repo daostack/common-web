@@ -26,12 +26,14 @@ export const enum StaticLinkType {
 export const generateStaticShareLink = (
   linkType: StaticLinkType,
   elem: Common | Proposal | Discussion | DiscussionMessage,
-  feedItemId: string,
+  feedItemId?: string,
 ): string => {
+  if (!feedItemId && linkType === StaticLinkType.Common) {
+    elem = elem as Common;
+    return `${staticLinkPrefix()}/commons/${elem.id}`;
+  }
+
   switch (linkType) {
-    case StaticLinkType.Common:
-      elem = elem as Common;
-      return `${staticLinkPrefix()}/commons/${elem.id}`;
     case StaticLinkType.Proposal:
     case StaticLinkType.Discussion:
       elem = elem as Discussion;

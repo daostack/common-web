@@ -121,7 +121,7 @@ const Success: FC<SuccessProps> = (props) => {
 
         <ShareModal
           isShowing={isShareModalOpen}
-          sourceUrl={generateStaticShareLink(StaticLinkType.Common, common, "")}
+          sourceUrl={generateStaticShareLink(StaticLinkType.Common, common)}
           onClose={onShareModalClose}
         />
       </div>
