@@ -133,7 +133,7 @@ class ChatService {
       body,
     );
 
-    return data;
+    return convertObjectDatesToFirestoreTimestamps(data);
   };
 
   public markChatMessageAsSeen = async (

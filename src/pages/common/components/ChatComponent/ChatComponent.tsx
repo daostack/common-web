@@ -13,7 +13,7 @@ import isHotkey from "is-hotkey";
 import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { DiscussionMessageService, FileService } from "@/services";
+import { ChatService, DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
 import {
   ChatType,
@@ -22,6 +22,7 @@ import {
   LastSeenEntity,
 } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
+import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
 import { useZoomDisabling } from "@/shared/hooks";
 import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
@@ -250,6 +251,24 @@ export default function ChatComponent({
 
       newMessagesWithFiles.map(async (payload, index) => {
         delay(async () => {
+          const pendingMessageId = payload.pendingMessageId as string;
+
+          if (chatChannel) {
+            const response = await ChatService.sendChatMessage({
+              chatChannelId: chatChannel.id,
+              text: payload.text || "",
+              images: payload.images,
+              files: payload.files,
+              mentions: payload.tags?.map((tag) => tag.value),
+            });
+            chatMessagesData.updateChatMessageWithActualId(
+              pendingMessageId,
+              response,
+            );
+
+            return;
+          }
+
           const response = await DiscussionMessageService.createMessage(
             payload,
           );
@@ -257,7 +276,7 @@ export default function ChatComponent({
           dispatch(
             cacheActions.updateDiscussionMessageWithActualId({
               discussionId,
-              pendingMessageId: payload.pendingMessageId as string,
+              pendingMessageId,
               actualId: response.id,
             }),
           );
@@ -289,7 +308,7 @@ export default function ChatComponent({
 
   const sendMessage = useCallback(
     async (message: TextEditorValue) => {
-      if (user && user.uid && commonId) {
+      if (user && user.uid) {
         const pendingMessageId = uuidv4();
 
         const mentionTags = getMentionTags(message).map((tag) => ({
@@ -364,7 +383,14 @@ export default function ChatComponent({
         };
 
         setMessages((prev) => [...prev, ...filePreviewPayload, payload]);
-        discussionMessagesData.addDiscussionMessage(discussionId, msg);
+
+        if (isChatChannel) {
+          chatMessagesData.addChatMessage(
+            ChatMessageToUserDiscussionMessageConverter.toBaseEntity(msg),
+          );
+        } else {
+          discussionMessagesData.addDiscussionMessage(discussionId, msg);
+        }
 
         if (discussionMessageReply) {
           dispatch(chatActions.clearCurrentDiscussionMessageReply());
@@ -382,6 +408,7 @@ export default function ChatComponent({
       currentFilesPreview,
       discussionId,
       discussionMessages,
+      isChatChannel,
     ],
   );
 

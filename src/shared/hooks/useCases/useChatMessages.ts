@@ -12,6 +12,11 @@ import { ChatMessage } from "@/shared/models";
 
 interface Return extends LoadingState<ChatMessage[]> {
   fetchChatMessages: (chatChannelId: string) => void;
+  addChatMessage: (chatMessage: ChatMessage) => void;
+  updateChatMessageWithActualId: (
+    pendingMessageId: string,
+    chatMessage: ChatMessage,
+  ) => void;
 }
 
 export const useChatMessages = (): Return => {
@@ -55,6 +60,38 @@ export const useChatMessages = (): Return => {
     }
   }, []);
 
+  const addChatMessage = useCallback((chatMessage: ChatMessage) => {
+    setState((currentState) => ({
+      ...currentState,
+      data: (currentState.data || []).concat(chatMessage),
+    }));
+  }, []);
+
+  const updateChatMessageWithActualId = useCallback(
+    (pendingMessageId: string, chatMessage: ChatMessage) => {
+      setState((currentState) => {
+        if (!currentState.data) {
+          return currentState;
+        }
+
+        const data = [...currentState.data];
+        const pendingMessageIndex = data.findIndex(
+          (item) => item.id === pendingMessageId,
+        );
+
+        if (pendingMessageIndex !== -1) {
+          data[pendingMessageIndex] = { ...chatMessage };
+        }
+
+        return {
+          ...currentState,
+          data,
+        };
+      });
+    },
+    [],
+  );
+
   useEffect(() => {
     if (!currentChatChannelId) {
       return;
@@ -97,5 +134,7 @@ export const useChatMessages = (): Return => {
   return {
     ...state,
     fetchChatMessages,
+    addChatMessage,
+    updateChatMessageWithActualId,
   };
 };

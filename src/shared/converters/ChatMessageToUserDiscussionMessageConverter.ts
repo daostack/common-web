@@ -37,7 +37,7 @@ class ChatMessageToUserDiscussionMessageConverter extends Converter<
     ownerName: discussionMessage.ownerName,
     text: discussionMessage.text,
     ownerAvatar: {
-      title: "avatar",
+      title: discussionMessage.ownerAvatar.split("/").reverse()[0] || "avatar",
       value: discussionMessage.ownerAvatar,
     },
     images: discussionMessage.images,
