@@ -80,6 +80,8 @@
 
   .connect-wrapper__error {
     margin: 0.5rem 0 1.5rem;
+    background-color: $c-pink-active-feed-cards-light;
+    color: $c-pink-primary;
   }
 
   .connect-wrapper__error__join-waitlist {
