@@ -191,7 +191,7 @@ export default function ChatMessage({
     userId,
   ]);
 
-  const filesPreview = useMemo(
+  const filePreview = useMemo(
     () => discussionMessage.files?.[0],
     [discussionMessage.files],
   );
@@ -249,10 +249,10 @@ export default function ChatMessage({
                 [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
               })}
             >
-              {filesPreview && (
+              {filePreview && (
                 <FilePreview
-                  src={filesPreview.value}
-                  name={filesPreview.title}
+                  src={filePreview.value}
+                  name={filePreview.title}
                   size={128}
                   variant={FilePreviewVariant.medium}
                   iconContainerClassName={classNames({
@@ -318,6 +318,7 @@ export default function ChatMessage({
               onMenuToggle={handleMenuToggle}
               transparent
               isDiscussionMessage
+              isDiscussionMessageWithFile={Boolean(filePreview)}
               ownerId={
                 checkIsUserDiscussionMessage(discussionMessage)
                   ? discussionMessage.owner?.uid
