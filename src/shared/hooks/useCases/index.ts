@@ -10,6 +10,7 @@ export { useFullCommonData } from "./useFullCommonData";
 export { useGlobalCommonData } from "./useGlobalCommonData";
 export { useImmediateContribution } from "./useImmediateContribution";
 export { useInboxItems } from "./useInboxItems";
+export { useMarkChatMessageAsSeen } from "./useMarkChatMessageAsSeen";
 export { useMarkFeedItemAsSeen } from "./useMarkFeedItemAsSeen";
 export { default as usePaymentMethodChange } from "./usePaymentMethodChange";
 export type { ChangePaymentMethodState } from "./usePaymentMethodChange";

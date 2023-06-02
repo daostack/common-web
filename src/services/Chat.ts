@@ -136,6 +136,18 @@ class ChatService {
     return data;
   };
 
+  public markChatMessageAsSeen = async (
+    chatMessageId: string,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<void> => {
+    const { cancelToken } = options;
+    await Api.post(
+      ApiEndpoint.MarkChatMessageAsSeen(chatMessageId),
+      undefined,
+      { cancelToken },
+    );
+  };
+
   public subscribeToChatChannelMessages = (
     chatChannelId: string,
     callback: (messages: ChatMessage[]) => void,
