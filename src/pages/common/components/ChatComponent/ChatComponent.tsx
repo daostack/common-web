@@ -13,7 +13,6 @@ import isHotkey from "is-hotkey";
 import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
 import {
@@ -24,13 +23,10 @@ import {
 } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { useZoomDisabling } from "@/shared/hooks";
-import {
-  useDiscussionMessagesById,
-  useMarkFeedItemAsSeen,
-} from "@/shared/hooks/useCases";
 import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
+  ChatChannel,
   checkIsUserDiscussionMessage,
   Circles,
   CommonFeedObjectUserUnique,
@@ -62,7 +58,7 @@ import {
   MessageReply,
   ChatFilePreview,
 } from "./components";
-import { useDiscussionChatAdapter } from "./hooks";
+import { useChatChannelChatAdapter, useDiscussionChatAdapter } from "./hooks";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
 
@@ -77,6 +73,7 @@ interface ChatComponentInterface {
   commonMember: CommonMember | null;
   hasAccess?: boolean;
   discussion: Discussion;
+  chatChannel?: ChatChannel;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   seenOnce?: CommonFeedObjectUserUnique["seenOnce"];
   feedItemId: string;
@@ -110,6 +107,7 @@ export default function ChatComponent({
   governanceCircles,
   commonMember,
   discussion,
+  chatChannel,
   hasAccess = true,
   lastSeenItem,
   seenOnce,
@@ -127,6 +125,7 @@ export default function ChatComponent({
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const discussionId = discussion.id;
+  const isChatChannel = Boolean(chatChannel);
 
   const hasPermissionToHide =
     commonMember && governanceCircles
@@ -141,12 +140,21 @@ export default function ChatComponent({
   const {
     discussionMessagesData,
     markDiscussionMessageItemAsSeen,
-    discussionUsers: users,
+    discussionUsers,
     fetchDiscussionUsers,
   } = useDiscussionChatAdapter({
     hasPermissionToHide,
   });
-  const discussionMessages = discussionMessagesData.data || [];
+  const {
+    chatMessagesData,
+    markChatMessageItemAsSeen,
+    chatUsers,
+    fetchChatUsers,
+  } = useChatChannelChatAdapter({ participants: chatChannel?.participants });
+  const users = chatChannel ? chatUsers : discussionUsers;
+  const discussionMessages = chatChannel
+    ? chatMessagesData.data
+    : discussionMessagesData.data || [];
   const isFetchedDiscussionMessages = discussionMessagesData.fetched;
   const isLoadingDiscussionMessages = discussionMessagesData.loading;
 
@@ -171,10 +179,16 @@ export default function ChatComponent({
   };
 
   useEffect(() => {
-    if (commonId) {
+    if (commonId && !isChatChannel) {
       fetchDiscussionUsers(commonId, discussion.circleVisibility);
     }
   }, [commonId, discussion.circleVisibility]);
+
+  useEffect(() => {
+    if (chatChannel?.id) {
+      fetchChatUsers();
+    }
+  }, [chatChannel?.id]);
 
   const lastNonUserMessage = getLastNonUserMessage(
     discussionMessages || [],
@@ -399,6 +413,7 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (
+      !isChatChannel &&
       isFetchedDiscussionMessages &&
       discussionMessages?.length === 0 &&
       !seenOnce
@@ -417,6 +432,7 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (
+      !isChatChannel &&
       lastNonUserMessage &&
       lastSeenItem?.id !== lastNonUserMessage.id &&
       feedItemId
@@ -467,7 +483,7 @@ export default function ChatComponent({
           <MessageReply users={users} />
           <ChatFilePreview />
           <div className={styles.chatInputWrapper}>
-            {!commonMember || !hasAccess || isHidden ? (
+            {!isChatChannel && (!commonMember || !hasAccess || isHidden) ? (
               <span className={styles.permissionsText}>
                 Only members can send messages
               </span>

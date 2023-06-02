@@ -145,6 +145,7 @@ const InboxPage: FC = () => {
 
     feedLayoutRef?.setActiveItem({
       feedItemId: chatChannelItem.itemId,
+      chatChannel: chatChannelItem.chatChannel,
       discussion: ChatChannelToDiscussionConverter.toTargetEntity(
         chatChannelItem.chatChannel,
       ),

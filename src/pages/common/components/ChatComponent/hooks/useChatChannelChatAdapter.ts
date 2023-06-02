@@ -1,19 +1,22 @@
 import { useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
 import {
   useChatMessages,
   useMarkChatMessageAsSeen,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { User } from "@/shared/models";
+import { User, UserDiscussionMessage } from "@/shared/models";
 
 interface Options {
-  participants: string[];
+  participants?: string[];
 }
 
 interface Return {
-  chatMessagesData: ReturnType<typeof useChatMessages>;
+  chatMessagesData: Omit<ReturnType<typeof useChatMessages>, "data"> & {
+    data: UserDiscussionMessage[];
+  };
   markChatMessageItemAsSeen: ReturnType<
     typeof useMarkChatMessageAsSeen
   >["markChatMessageAsSeen"];
@@ -22,7 +25,7 @@ interface Return {
 }
 
 export const useChatChannelChatAdapter = (options: Options): Return => {
-  const { participants } = options;
+  const { participants = [] } = options;
   const chatMessagesData = useChatMessages();
   const { markChatMessageAsSeen } = useMarkChatMessageAsSeen();
   const { fetchUser: fetchDMUser, data: dmUser } = useUserById();
@@ -30,6 +33,13 @@ export const useChatChannelChatAdapter = (options: Options): Return => {
   const userId = user?.uid;
   const dmUserId = participants.find((participant) => participant !== userId);
   const users = useMemo(() => (dmUser ? [dmUser] : []), [dmUser]);
+  const messages = useMemo(
+    () =>
+      chatMessagesData.data.map((item) =>
+        ChatMessageToUserDiscussionMessageConverter.toTargetEntity(item),
+      ),
+    [chatMessagesData.data],
+  );
 
   const fetchChatUsers = useCallback(() => {
     if (dmUserId) {
@@ -38,7 +48,10 @@ export const useChatChannelChatAdapter = (options: Options): Return => {
   }, [fetchDMUser, dmUserId]);
 
   return {
-    chatMessagesData,
+    chatMessagesData: {
+      ...chatMessagesData,
+      data: messages,
+    },
     markChatMessageItemAsSeen: markChatMessageAsSeen,
     chatUsers: users,
     fetchChatUsers,

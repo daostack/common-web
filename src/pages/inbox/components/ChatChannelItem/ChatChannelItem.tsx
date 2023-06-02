@@ -32,6 +32,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     setChatItem({
       feedItemId: chatChannel.id,
       discussion: ChatChannelToDiscussionConverter.toTargetEntity(chatChannel),
+      chatChannel,
       circleVisibility: [],
       // lastSeenItem: chatChannel.lastSeen,
       // seenOnce: chatChannel.seenOnce,

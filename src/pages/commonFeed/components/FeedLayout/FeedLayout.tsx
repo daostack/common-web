@@ -360,11 +360,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 })}
               </InfiniteScroll>
               {!isTabletView &&
-                (chatItem && selectedItemCommonData ? (
+                (chatItem ? (
                   <DesktopChat
                     className={styles.desktopChat}
                     chatItem={chatItem}
-                    commonId={selectedItemCommonData.id}
+                    commonId={selectedItemCommonData?.id || ""}
                     governanceCircles={governance?.circles}
                     commonMember={commonMember}
                     titleRightContent={followFeedItemEl}
