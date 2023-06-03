@@ -53,6 +53,7 @@ interface ElementDropdownProps {
   isOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   isDiscussionMessage?: boolean;
+  isDiscussionMessageWithFile?: boolean;
   entityType: EntityTypes;
   onEdit?: () => void;
   userId?: string;
@@ -72,6 +73,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   isOpen,
   onMenuToggle,
   isDiscussionMessage = false,
+  isDiscussionMessageWithFile = false,
   entityType,
   onEdit,
   userId,
@@ -131,7 +133,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       });
     }
 
-    if (isOwner && isDiscussionMessage) {
+    if (isOwner && isDiscussionMessage && !isDiscussionMessageWithFile) {
       items.push({
         text: <span>Edit</span>,
         searchText: "Edit",
@@ -139,7 +141,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       });
     }
 
-    if (isDiscussionMessage) {
+    if (isDiscussionMessage && !isDiscussionMessageWithFile) {
       items.push({
         text: <span>Copy</span>,
         searchText: "Copy",

@@ -289,6 +289,9 @@ export default function ChatComponent({
         const filesPreview = FileService.getExcludeImageTypeFromFiles(
           currentFilesPreview ?? [],
         );
+        const isEmptyText = checkIsTextEditorValueEmpty(message);
+        const isSingleFileWithoutText =
+          filesPreview.length === 1 && isEmptyText;
 
         const payload: CreateDiscussionMessageDtoWithFilesPreview = {
           pendingMessageId,
@@ -300,17 +303,19 @@ export default function ChatComponent({
             parentId: discussionMessageReply?.id,
           }),
           imagesPreview,
+          filesPreview: isSingleFileWithoutText ? filesPreview : [],
           tags: mentionTags,
           mentions: mentionTags.map((tag) => tag.value),
         };
 
-        const filePreviewPayload = filesPreview.map((filePreview) => ({
-          ownerId: user.uid,
-          commonId,
-          discussionId,
-          filesPreview: [filePreview],
-        }));
-
+        const filePreviewPayload = isSingleFileWithoutText
+          ? []
+          : filesPreview.map((filePreview) => ({
+              ownerId: user.uid,
+              commonId,
+              discussionId,
+              filesPreview: [filePreview],
+            }));
         const firebaseDate = Timestamp.fromDate(new Date());
 
         const msg: UserDiscussionMessage = {
@@ -338,13 +343,11 @@ export default function ChatComponent({
           images: imagesPreview?.map((file) =>
             FileService.convertFileInfoToCommonLink(file),
           ),
-          ...(filesPreview.length === 1 && !message
-            ? {
-                files: filesPreview?.map((file) =>
-                  FileService.convertFileInfoToCommonLink(file),
-                ),
-              }
-            : null),
+          ...(isSingleFileWithoutText && {
+            files: filesPreview?.map((file) =>
+              FileService.convertFileInfoToCommonLink(file),
+            ),
+          }),
           tags: mentionTags,
         };
 

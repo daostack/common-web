@@ -29,7 +29,7 @@ export default function FilePreview(props: FilePreviewProps) {
   const extension = useMemo(() => name.split(".")[1], [name]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ width: size }}>
       <ButtonLink
         className={styles.linkWrapper}
         download={name}
@@ -41,16 +41,16 @@ export default function FilePreview(props: FilePreviewProps) {
           className={classNames(styles.iconContainer, iconContainerClassName)}
           size={size}
         />
+        <div
+          className={classNames(styles.fileExtension, {
+            [styles.fileExtensionSmall]: variant === FilePreviewVariant.small,
+            [styles.fileExtensionMedium]: variant === FilePreviewVariant.medium,
+          })}
+        >
+          {extension}
+        </div>
+        <div className={styles.overlay} />
       </ButtonLink>
-      <div
-        className={classNames(styles.fileExtension, {
-          [styles.fileExtensionSmall]: variant === FilePreviewVariant.small,
-          [styles.fileExtensionMedium]: variant === FilePreviewVariant.medium,
-        })}
-      >
-        {extension}
-      </div>
-      <div className={styles.overlay} />
     </div>
   );
 }
