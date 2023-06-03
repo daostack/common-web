@@ -75,6 +75,13 @@
   background-color: $c-pink-active-feed-cards;
 }
 
+.systemMessage {
+  width: 100%;
+  max-width: unset;
+  min-width: unset;
+  background-color: $c-pink-light;
+}
+
 .messageName {
   font-size: $xsmall;
   font-weight: bold;

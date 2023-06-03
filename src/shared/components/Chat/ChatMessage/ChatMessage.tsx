@@ -65,7 +65,6 @@ export default function ChatMessage({
   commonMember,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
-
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isTabletView = useIsTabletView();
@@ -73,7 +72,7 @@ export default function ChatMessage({
   const editedAtDate = new Date(
     (discussionMessage?.editedAt?.seconds ?? 0) * 1000,
   );
-
+  const isSystemMessage = checkIsSystemDiscussionMessage(discussionMessage);
   const userId = user?.uid;
   const isNotCurrentUserMessage =
     !checkIsUserDiscussionMessage(discussionMessage) ||
@@ -81,6 +80,7 @@ export default function ChatMessage({
   const isEdited = editedAtDate > createdAtDate;
 
   const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
+
   const [replyMessageText, setReplyMessageText] = useState<
     (string | JSX.Element)[]
   >([]);
@@ -237,14 +237,13 @@ export default function ChatMessage({
               [styles.messageTextRtl]: isRTL(discussionMessage.text),
               [styles.messageTextWithReply]:
                 !!discussionMessage.parentMessage?.id,
+              [styles.systemMessage]: isSystemMessage,
             })}
             onClick={handleMessageClick}
           >
             {isNotCurrentUserMessage && (
               <div className={styles.messageName}>
-                {checkIsSystemDiscussionMessage(discussionMessage)
-                  ? "System"
-                  : getUserName(discussionMessage.owner)}
+                {!isSystemMessage && getUserName(discussionMessage.owner)}
               </div>
             )}
             <ReplyMessage />
@@ -310,34 +309,36 @@ export default function ChatMessage({
                 </div>
               </div>
             </div>
-            <ElementDropdown
-              linkType={getStaticLinkByChatType(chatType)}
-              entityType={
-                chatType === ChatType.DiscussionMessages
-                  ? EntityTypes.DiscussionMessage
-                  : EntityTypes.ProposalMessage
-              }
-              elem={discussionMessage}
-              className={styles.dropdownMenu}
-              variant={Orientation.Arrow}
-              onMenuToggle={handleMenuToggle}
-              transparent
-              isDiscussionMessage
-              ownerId={
-                checkIsUserDiscussionMessage(discussionMessage)
-                  ? discussionMessage.owner?.uid
-                  : undefined
-              }
-              userId={userId}
-              commonId={discussionMessage.commonId}
-              onEdit={() => setEditMode(true)}
-              isControlledDropdown={false}
-              isOpen={isMenuOpen}
-              styles={{
-                menuButton: styles.menuArrowButton,
-              }}
-              feedItemId={feedItemId}
-            />
+            {!isSystemMessage && (
+              <ElementDropdown
+                linkType={getStaticLinkByChatType(chatType)}
+                entityType={
+                  chatType === ChatType.DiscussionMessages
+                    ? EntityTypes.DiscussionMessage
+                    : EntityTypes.ProposalMessage
+                }
+                elem={discussionMessage}
+                className={styles.dropdownMenu}
+                variant={Orientation.Arrow}
+                onMenuToggle={handleMenuToggle}
+                transparent
+                isDiscussionMessage
+                ownerId={
+                  checkIsUserDiscussionMessage(discussionMessage)
+                    ? discussionMessage.owner?.uid
+                    : undefined
+                }
+                userId={userId}
+                commonId={discussionMessage.commonId}
+                onEdit={() => setEditMode(true)}
+                isControlledDropdown={false}
+                isOpen={isMenuOpen}
+                styles={{
+                  menuButton: styles.menuArrowButton,
+                }}
+                feedItemId={feedItemId}
+              />
+            )}
           </div>
         )}
       </div>

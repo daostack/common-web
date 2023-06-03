@@ -62,7 +62,9 @@ export const getTextFromTextEditorString = async ({
   mentionTextClassName?: string;
 }): Promise<Text[]> => {
   const textEditorValue = parseStringToTextEditorValue(textEditorString);
+  //console.log(textEditorValue)
   const mentionTags = getMentionTags(textEditorValue);
+  //console.log(mentionTags)
   const allNecessaryUsers = await Promise.all(
     mentionTags.map(async (mentionTag) => {
       try {
