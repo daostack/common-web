@@ -140,28 +140,23 @@ export const useDiscussionMessagesById = ({
       return;
     }
 
-    try {
-      const unsubscribe =
-        DiscussionMessageService.subscribeToDiscussionMessages(
-          currentDiscussionId,
-          (updatedDiscussionMessages) => {
-            dispatch(
-              cacheActions.updateDiscussionMessagesStateByDiscussionId({
-                discussionId: currentDiscussionId,
-                state: {
-                  loading: false,
-                  fetched: true,
-                  data: updatedDiscussionMessages,
-                },
-              }),
-            );
-          },
+    const unsubscribe = DiscussionMessageService.subscribeToDiscussionMessages(
+      currentDiscussionId,
+      (updatedDiscussionMessages) => {
+        dispatch(
+          cacheActions.updateDiscussionMessagesStateByDiscussionId({
+            discussionId: currentDiscussionId,
+            state: {
+              loading: false,
+              fetched: true,
+              data: updatedDiscussionMessages,
+            },
+          }),
         );
+      },
+    );
 
-      return unsubscribe;
-    } catch (error) {
-      console.log(error);
-    }
+    return unsubscribe;
   }, [currentDiscussionId]);
 
   return {
