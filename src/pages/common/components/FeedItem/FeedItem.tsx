@@ -89,7 +89,13 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   }
 
   if (item.data.type === CommonFeedType.Proposal) {
-    return <ProposalFeedCard sizeKey={sizeKey} {...generalProps} />;
+    return (
+      <ProposalFeedCard
+        sizeKey={sizeKey}
+        isMobileVersion={isMobileVersion}
+        {...generalProps}
+      />
+    );
   }
 
   return null;

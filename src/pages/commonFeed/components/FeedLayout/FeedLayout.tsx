@@ -163,7 +163,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return sharedFeedItemId;
     }
 
-    if (isTabletView || chatItem?.feedItemId) {
+    if (chatItem?.feedItemId) {
       return;
     }
 
