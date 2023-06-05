@@ -61,10 +61,23 @@ export const useChatMessages = (): Return => {
   }, []);
 
   const addChatMessage = useCallback((chatMessage: ChatMessage) => {
-    setState((currentState) => ({
-      ...currentState,
-      data: (currentState.data || []).concat(chatMessage),
-    }));
+    setState((currentState) => {
+      const nextData = currentState.data || [];
+      const messageIndex = nextData.findIndex(
+        (item) => item.id === chatMessage.id,
+      );
+
+      if (messageIndex === -1) {
+        nextData.push(chatMessage);
+      } else {
+        nextData[messageIndex] = { ...chatMessage };
+      }
+
+      return {
+        ...currentState,
+        data: nextData,
+      };
+    });
   }, []);
 
   const updateChatMessageWithActualId = useCallback(
