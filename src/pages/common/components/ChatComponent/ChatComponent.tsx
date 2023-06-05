@@ -15,7 +15,6 @@ import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { DiscussionMessageService, FileService } from "@/services";
-import { Loader } from "@/shared/components";
 import {
   ChatType,
   DiscussionMessageOwnerType,
@@ -445,29 +444,26 @@ export default function ChatComponent({
         })}
         id={chatWrapperId}
       >
-        {isFetchedDiscussionMessages && !isLoadingDiscussionMessages ? (
-          <ChatContent
-            ref={chatContentRef}
-            type={type}
-            commonMember={commonMember}
-            isCommonMemberFetched={isCommonMemberFetched}
-            isJoiningPending={false}
-            hasAccess={hasAccess}
-            isHidden={false}
-            chatWrapperId={chatWrapperId}
-            messages={messages}
-            dateList={dateList}
-            lastSeenItem={lastSeenItem}
-            hasPermissionToHide={hasPermissionToHide}
-            commonMembers={commonMembers}
-            discussionId={discussionId}
-            feedItemId={feedItemId}
-          />
-        ) : (
-          <div className={styles.loaderContainer}>
-            <Loader />
-          </div>
-        )}
+        <ChatContent
+          ref={chatContentRef}
+          type={type}
+          commonMember={commonMember}
+          isCommonMemberFetched={isCommonMemberFetched}
+          isJoiningPending={false}
+          hasAccess={hasAccess}
+          isHidden={false}
+          chatWrapperId={chatWrapperId}
+          messages={messages}
+          dateList={dateList}
+          lastSeenItem={lastSeenItem}
+          hasPermissionToHide={hasPermissionToHide}
+          commonMembers={commonMembers}
+          discussionId={discussionId}
+          feedItemId={feedItemId}
+          isLoading={
+            isFetchedDiscussionMessages && !isLoadingDiscussionMessages
+          }
+        />
       </div>
       {isAuthorized && (
         <div className={styles.bottomChatContainer}>
