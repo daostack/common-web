@@ -93,7 +93,9 @@ class ChatService {
         queryParams.startAfter = startAfter.toDate().toISOString();
       }
 
-      const { data } = await Api.get<GetChatChannelMessagesResponse>(
+      const {
+        data: { data },
+      } = await Api.get<GetChatChannelMessagesResponse>(
         `${ApiEndpoint.GetChatChannelMessages(chatChannelId)}?${stringify(
           queryParams,
         )}`,

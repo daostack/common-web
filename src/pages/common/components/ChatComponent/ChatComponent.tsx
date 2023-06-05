@@ -187,6 +187,7 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (chatChannel?.id) {
+      chatMessagesData.fetchChatMessages(chatChannel.id);
       fetchChatUsers();
     }
   }, [chatChannel?.id]);
