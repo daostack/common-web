@@ -18,17 +18,17 @@ export const useMenuItems = (options: Options): Item[] => {
 
   const items: Item[] = [
     {
-      id: CommonAction.NewProposal,
-      text: "New Proposal",
-      onClick: () => {
-        setMenuItem(CommonAction.NewProposal);
-      },
-    },
-    {
       id: CommonAction.NewDiscussion,
       text: "New Discussion",
       onClick: () => {
         setMenuItem(CommonAction.NewDiscussion);
+      },
+    },
+    {
+      id: CommonAction.NewProposal,
+      text: "New Proposal",
+      onClick: () => {
+        setMenuItem(CommonAction.NewProposal);
       },
     },
     {
