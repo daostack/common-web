@@ -200,6 +200,7 @@ export default function ChatComponent({
   useEffect(() => {
     if (discussionId) {
       fetchDiscussionMessages(discussionId);
+      dispatch(chatActions.clearCurrentDiscussionMessageReply());
     }
   }, [discussionId]);
 
