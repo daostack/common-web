@@ -13,6 +13,7 @@ import isHotkey from "is-hotkey";
 import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";
 import { Loader } from "@/shared/components";
 import {
@@ -210,6 +211,7 @@ export default function ChatComponent({
   useEffect(() => {
     if (discussionId) {
       discussionMessagesData.fetchDiscussionMessages(discussionId);
+      dispatch(chatActions.clearCurrentDiscussionMessageReply());
     }
   }, [discussionId]);
 
@@ -482,29 +484,26 @@ export default function ChatComponent({
         })}
         id={chatWrapperId}
       >
-        {isFetchedDiscussionMessages && !isLoadingDiscussionMessages ? (
-          <ChatContent
-            ref={chatContentRef}
-            type={type}
-            commonMember={commonMember}
-            isCommonMemberFetched={isCommonMemberFetched}
-            isJoiningPending={false}
-            hasAccess={hasAccess}
-            isHidden={false}
-            chatWrapperId={chatWrapperId}
-            messages={messages}
-            dateList={dateList}
-            lastSeenItem={lastSeenItem}
-            hasPermissionToHide={hasPermissionToHide}
-            users={users}
-            discussionId={discussionId}
-            feedItemId={feedItemId}
-          />
-        ) : (
-          <div className={styles.loaderContainer}>
-            <Loader />
-          </div>
-        )}
+        <ChatContent
+          ref={chatContentRef}
+          type={type}
+          commonMember={commonMember}
+          isCommonMemberFetched={isCommonMemberFetched}
+          isJoiningPending={false}
+          hasAccess={hasAccess}
+          isHidden={false}
+          chatWrapperId={chatWrapperId}
+          messages={messages}
+          dateList={dateList}
+          lastSeenItem={lastSeenItem}
+          hasPermissionToHide={hasPermissionToHide}
+          users={users}
+          discussionId={discussionId}
+          feedItemId={feedItemId}
+          isLoading={
+            isFetchedDiscussionMessages && !isLoadingDiscussionMessages
+          }
+        />
       </div>
       {isAuthorized && (
         <div className={styles.bottomChatContainer}>

@@ -58,6 +58,7 @@ $viewport-breakpoint: 1000px;
 
 .landing-video-section__join-waitlist-button {
   max-width: 11.75rem;
+  border-radius: 6.25rem;
 }
 
 @include rtl-direction {

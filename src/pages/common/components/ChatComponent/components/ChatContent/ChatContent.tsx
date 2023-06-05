@@ -12,6 +12,7 @@ import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
+import { Loader } from "@/shared/components";
 import { ChatMessage } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
 import {
@@ -44,6 +45,7 @@ interface ChatContentInterface {
   users: User[];
   discussionId: string;
   feedItemId: string;
+  isLoading: boolean;
 }
 
 const isToday = (someDate: Date) => {
@@ -75,6 +77,7 @@ const ChatContent: ForwardRefRenderFunction<
     users,
     discussionId,
     feedItemId,
+    isLoading,
   },
   chatContentRef,
 ) => {
@@ -157,6 +160,12 @@ const ChatContent: ForwardRefRenderFunction<
         isJoiningPending={isJoiningPending}
       />
     );
+  }
+
+  if (isLoading) {
+    <div className={styles.loaderContainer}>
+      <Loader />
+    </div>;
   }
 
   return (
