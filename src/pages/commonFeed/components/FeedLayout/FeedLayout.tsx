@@ -3,6 +3,7 @@ import React, {
   forwardRef,
   ForwardRefRenderFunction,
   ReactNode,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -221,14 +222,19 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     ],
   );
 
+  const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
+    setExpandedFeedItemId(null);
+    setChatItem(nextChatItem);
+  }, []);
+
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
-      setChatItem,
+      setChatItem: setActiveChatItem,
       feedItemIdForAutoChatOpen,
       setIsShowFeedItemDetailsModal,
       setShouldShowSeeMore,
     }),
-    [setChatItem, feedItemIdForAutoChatOpen],
+    [setActiveChatItem, feedItemIdForAutoChatOpen],
   );
 
   useEffect(() => {
