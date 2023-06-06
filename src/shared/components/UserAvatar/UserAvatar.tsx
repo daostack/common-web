@@ -6,6 +6,7 @@ import "./index.scss";
 
 interface UserAvatarProps {
   className?: string;
+  imageContainerClassName?: string;
   photoURL?: string;
   nameForRandomAvatar?: string;
   userName?: string;
@@ -16,6 +17,7 @@ interface UserAvatarProps {
 const UserAvatar: FC<UserAvatarProps> = (props) => {
   const {
     className,
+    imageContainerClassName,
     photoURL,
     userName,
     nameForRandomAvatar = userName,
@@ -30,6 +32,7 @@ const UserAvatar: FC<UserAvatarProps> = (props) => {
   return (
     <Image
       className={imageClassName}
+      imageContainerClassName={imageContainerClassName}
       src={userAvatarURL}
       alt={userAvatarAlt}
       preloaderSrc={preloaderSrc}
