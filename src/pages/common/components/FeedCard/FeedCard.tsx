@@ -98,10 +98,11 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
   }, [isExpanded]);
 
   const handleClick = () => {
+    onClick && onClick();
+
     if (!isTabletView) {
       toggleExpanding();
     }
-    onClick && onClick();
   };
 
   const handleExpand: MouseEventHandler = (event) => {
