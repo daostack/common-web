@@ -98,7 +98,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
   }, [isExpanded]);
 
   const handleClick = () => {
-    onClick && onClick();
+    onClick?.();
 
     if (!isTabletView && (isActive || !seenOnce)) {
       toggleExpanding();
