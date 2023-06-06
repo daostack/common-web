@@ -190,10 +190,11 @@ const ChatContent: ForwardRefRenderFunction<
                     highlighted={message.id === highlightedMessageId}
                     hasPermissionToHide={hasPermissionToHide}
                     onMessageDropdownOpen={
-                      messageIndex === messages[Number(day)].length - 1
-                        ? () => {
-                            if (dayIndex === dateList.length - 1)
+                      dayIndex === 0 && messageIndex === 0
+                        ? (isOpen) => {
+                            if (isOpen) {
                               scrollToContainerBottom();
+                            }
                           }
                         : undefined
                     }
