@@ -12,6 +12,7 @@ import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
+import { Loader } from "@/shared/components";
 import { ChatMessage } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
 import {
@@ -44,6 +45,7 @@ interface ChatContentInterface {
   commonMembers: CommonMemberWithUserInfo[];
   discussionId: string;
   feedItemId: string;
+  isLoading: boolean;
 }
 
 const isToday = (someDate: Date) => {
@@ -75,6 +77,7 @@ const ChatContent: ForwardRefRenderFunction<
     commonMembers,
     discussionId,
     feedItemId,
+    isLoading,
   },
   chatContentRef,
 ) => {
@@ -159,6 +162,12 @@ const ChatContent: ForwardRefRenderFunction<
     );
   }
 
+  if (isLoading) {
+    <div className={styles.loaderContainer}>
+      <Loader />
+    </div>;
+  }
+
   return (
     <>
       {dateListReverse.map((day, dayIndex) => {
@@ -181,10 +190,11 @@ const ChatContent: ForwardRefRenderFunction<
                     highlighted={message.id === highlightedMessageId}
                     hasPermissionToHide={hasPermissionToHide}
                     onMessageDropdownOpen={
-                      messageIndex === messages[Number(day)].length - 1
-                        ? () => {
-                            if (dayIndex === dateList.length - 1)
+                      dayIndex === 0 && messageIndex === 0
+                        ? (isOpen) => {
+                            if (isOpen) {
                               scrollToContainerBottom();
+                            }
                           }
                         : undefined
                     }

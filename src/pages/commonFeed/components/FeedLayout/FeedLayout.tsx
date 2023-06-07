@@ -3,6 +3,7 @@ import React, {
   forwardRef,
   ForwardRefRenderFunction,
   ReactNode,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -163,7 +164,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return sharedFeedItemId;
     }
 
-    if (isTabletView || chatItem?.feedItemId) {
+    if (chatItem?.feedItemId) {
       return;
     }
 
@@ -176,13 +177,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     );
 
     return foundItem?.itemId;
-  }, [
-    allFeedItems,
-    isTabletView,
-    chatItem?.feedItemId,
-    recentStreamId,
-    sharedFeedItemId,
-  ]);
+  }, [allFeedItems, chatItem?.feedItemId, recentStreamId, sharedFeedItemId]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
   const userCircleIds = useMemo(
@@ -221,14 +216,19 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     ],
   );
 
+  const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
+    setExpandedFeedItemId(null);
+    setChatItem(nextChatItem);
+  }, []);
+
   const chatContextValue = useMemo<ChatContextValue>(
     () => ({
-      setChatItem,
+      setChatItem: setActiveChatItem,
       feedItemIdForAutoChatOpen,
       setIsShowFeedItemDetailsModal,
       setShouldShowSeeMore,
     }),
-    [setChatItem, feedItemIdForAutoChatOpen],
+    [setActiveChatItem, feedItemIdForAutoChatOpen],
   );
 
   useEffect(() => {

@@ -12,7 +12,7 @@
   padding-top: var(--header-h);
   display: flex;
   flex-direction: column;
-  border-right: 0.0625rem solid $c-neutrals-200;
+  border-right: 0.0625rem solid $c-light-gray;
 
   @include tablet {
     border: 0;
@@ -34,8 +34,8 @@
   z-index: 2;
   height: var(--header-h);
   background-color: $c-light-gray-2;
-  border-right: 0.0625rem solid $c-neutrals-200;
-  border-bottom: 0.0625rem solid $c-neutrals-200;
+  border-right: 0.0625rem solid $c-light-gray;
+  border-bottom: 0.0625rem solid $c-light-gray;
   box-sizing: border-box;
 
   @include tablet {

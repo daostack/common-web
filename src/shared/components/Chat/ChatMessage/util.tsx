@@ -24,6 +24,7 @@ const getTextFromDescendant = (
 
   switch (descendant.type) {
     case ElementType.Paragraph:
+    case ElementType.Link:
       return (
         <span>
           {descendant.children.map((item, index) => (

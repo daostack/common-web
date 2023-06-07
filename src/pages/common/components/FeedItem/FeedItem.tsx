@@ -80,12 +80,11 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     getLastMessage,
     commonMember,
     getNonAllowedItems,
+    isMobileVersion,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {
-    return (
-      <DiscussionFeedCard isMobileVersion={isMobileVersion} {...generalProps} />
-    );
+    return <DiscussionFeedCard {...generalProps} />;
   }
 
   if (item.data.type === CommonFeedType.Proposal) {

@@ -7,7 +7,7 @@
   bottom: 0;
   z-index: 1;
   background-color: $c-shades-white;
-  border-left: 0.0625rem solid $c-neutrals-200;
+  border-left: 0.0625rem solid $c-light-gray;
 }
 
 .titleWrapper {
@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   background-color: $c-light-gray-2;
-  border-bottom: 0.0625rem solid $c-neutrals-200;
+  border-bottom: 0.0625rem solid $c-light-gray;
   box-sizing: border-box;
 }
 .title {

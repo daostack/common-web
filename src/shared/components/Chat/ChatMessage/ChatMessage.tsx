@@ -212,6 +212,7 @@ export default function ChatMessage({
           checkIsUserDiscussionMessage(discussionMessage) && (
             <div className={styles.iconWrapper}>
               <UserAvatar
+                imageContainerClassName={styles.userAvatarContainer}
                 photoURL={discussionMessage.owner?.photoURL}
                 nameForRandomAvatar={discussionMessage.owner?.email}
                 userName={getUserName(discussionMessage.owner)}

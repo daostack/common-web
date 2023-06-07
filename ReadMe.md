@@ -26,6 +26,11 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 ## Project architecture
 Check out structure of the `components` folder [here](./docs/page-structure.md).
 
+## Principles
+1. We should make the logic to be more abstract. Lots of our components are tied to specific types, even though we need only a few fields from that type. Later this leads to the point where for example we use discussion messages everywhere and now we have chat messages, the types are different and we should reinvent the wheel to make it working in a kinda good way. 
+   
+   A lot of such code issues are because we do not have enough time, or we didn't know future plans that time. But, anyway, big feature should be written in an abstract way with understanding that it may be extended somehow in the future.
+
 ## Storybook
 
 Check out [Write stories](https://storybook.js.org/docs/react/writing-stories/introduction) series of articles on Storybook docs site to understand what is "story" and how to write them. [Testing](https://storybook.js.org/docs/react/writing-tests/introduction) articles will show which kind of tests we can write for our stories.
