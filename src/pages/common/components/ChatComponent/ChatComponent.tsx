@@ -334,6 +334,7 @@ export default function ChatComponent({
           discussionId,
           createdAt: firebaseDate,
           updatedAt: firebaseDate,
+          parentId: discussionMessageReply?.id,
           parentMessage: discussionMessageReply?.id
             ? {
                 id: discussionMessageReply?.id,
