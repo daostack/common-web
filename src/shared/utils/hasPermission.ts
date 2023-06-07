@@ -20,25 +20,31 @@ export const hasPermission = ({
     return false;
   }
 
-  const circlesPermissions = generateCirclesDataForCommonMember(
-    governance.circles,
-    commonMember.circleIds,
-  );
+  try {
+    const circlesPermissions = generateCirclesDataForCommonMember(
+      governance.circles,
+      commonMember.circleIds,
+    );
 
-  if (Object.values(ProposalsTypes).includes(key as ProposalsTypes)) {
-    if (
-      !circlesPermissions?.allowedActions[GovernanceActions.CREATE_PROPOSAL]
-    ) {
-      return false;
+    if (Object.values(ProposalsTypes).includes(key as ProposalsTypes)) {
+      if (
+        !circlesPermissions?.allowedActions[GovernanceActions.CREATE_PROPOSAL]
+      ) {
+        return false;
+      }
+
+      return Boolean(
+        circlesPermissions?.allowedProposals[key as ProposalsTypes],
+      );
     }
 
-    return Boolean(circlesPermissions?.allowedProposals[key as ProposalsTypes]);
-  }
-
-  if (Object.values(GovernanceActions).includes(key as GovernanceActions)) {
-    return Boolean(
-      circlesPermissions?.allowedActions[key as GovernanceActions],
-    );
+    if (Object.values(GovernanceActions).includes(key as GovernanceActions)) {
+      return Boolean(
+        circlesPermissions?.allowedActions[key as GovernanceActions],
+      );
+    }
+  } catch (err) {
+    return false;
   }
 
   return false;
