@@ -107,7 +107,7 @@ export const useDiscussionMessagesById = ({
       const loadedDiscussionMessages = filteredMessages.map((d) => {
         const newDiscussionMessage = { ...d };
         const parentMessage = filteredMessages.find(
-          ({ id }) => id === d.parentId,
+          ({ id }) => id === d?.parentId,
         );
         if (
           checkIsUserDiscussionMessage(d) &&
