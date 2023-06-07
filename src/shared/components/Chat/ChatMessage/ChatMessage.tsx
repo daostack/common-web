@@ -80,6 +80,11 @@ export default function ChatMessage({
     (string | JSX.Element)[]
   >([]);
 
+  const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
+  const editedAtDate = new Date(
+    (discussionMessage.editedAt?.seconds ?? 0) * 1000,
+  );
+
   useEffect(() => {
     (async () => {
       const parsedText = await getTextFromTextEditorString({
@@ -267,7 +272,9 @@ export default function ChatMessage({
                 <Linkify>{messageText.map((text) => text)}</Linkify>
                 {!isSystemMessage && (
                   <Time
-                    discussionMessage={discussionMessage}
+                    createdAtDate={createdAtDate}
+                    editedAtDate={editedAtDate}
+                    moderation={discussionMessage.moderation}
                     isNotCurrentUserMessage={isNotCurrentUserMessage}
                   />
                 )}
@@ -306,7 +313,9 @@ export default function ChatMessage({
             </div>
             {isSystemMessage && (
               <Time
-                discussionMessage={discussionMessage}
+                createdAtDate={createdAtDate}
+                editedAtDate={editedAtDate}
+                moderation={discussionMessage.moderation}
                 isNotCurrentUserMessage={isNotCurrentUserMessage}
               />
             )}

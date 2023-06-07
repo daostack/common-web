@@ -1,25 +1,22 @@
 import React from "react";
 import classNames from "classnames";
-import { ModerationFlags } from "@/shared/interfaces/Moderation";
-import { DiscussionMessage } from "@/shared/models";
+import { Moderation, ModerationFlags } from "@/shared/interfaces/Moderation";
 import { getModerationText } from "@/shared/utils/moderation";
 import styles from "./Time.module.scss";
 
 interface TimeProps {
-  discussionMessage: DiscussionMessage;
+  createdAtDate: Date;
+  editedAtDate: Date;
+  moderation?: Moderation;
   isNotCurrentUserMessage: boolean;
 }
 
 export default function Time({
-  discussionMessage,
+  createdAtDate,
+  editedAtDate,
   isNotCurrentUserMessage,
+  moderation,
 }: TimeProps) {
-  const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
-
-  const editedAtDate = new Date(
-    (discussionMessage.editedAt?.seconds ?? 0) * 1000,
-  );
-
   const isEdited = editedAtDate > createdAtDate;
 
   return (
@@ -50,8 +47,8 @@ export default function Time({
           hour: "2-digit",
           minute: "2-digit",
         })}{" "}
-        {discussionMessage.moderation?.flag === ModerationFlags.Hidden &&
-          getModerationText(discussionMessage.moderation?.flag)}
+        {moderation?.flag === ModerationFlags.Hidden &&
+          getModerationText(moderation?.flag)}
       </div>
     </div>
   );
