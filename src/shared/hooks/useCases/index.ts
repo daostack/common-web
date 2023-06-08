@@ -1,5 +1,5 @@
+export { useChatChannelUserStatus } from "./useChatChannelUserStatus";
 export { useChatMessages } from "./useChatMessages";
-export { useChatMessageUserStatus } from "./useChatMessageUserStatus";
 export { useCommon } from "./useCommon";
 export { useCommonFeedItems } from "./useCommonFeedItems";
 export { useCommonMembersWithCircleIdsAmount } from "./useCommonMembersWithCircleIdsAmount";

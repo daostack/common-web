@@ -1,6 +1,6 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
-import { getChatMessageUserStatusKey } from "@/shared/constants";
+import { getChatChannelUserStatusKey } from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import * as actions from "./actions";
 import { CacheState } from "./types";
@@ -14,7 +14,7 @@ const initialState: CacheState = {
   discussionMessagesStates: {},
   proposalStates: {},
   feedItemUserMetadataStates: {},
-  chatMessageUserStatusStates: {},
+  chatChannelUserStatusStates: {},
 };
 
 export const reducer = createReducer<CacheState, Action>(initialState)
@@ -110,12 +110,12 @@ export const reducer = createReducer<CacheState, Action>(initialState)
       ] = { ...state };
     }),
   )
-  .handleAction(actions.updateChatMessageUserStatus, (state, { payload }) =>
+  .handleAction(actions.updateChatChannelUserStatus, (state, { payload }) =>
     produce(state, (nextState) => {
       const { userId, chatChannelId, state } = payload;
 
-      nextState.chatMessageUserStatusStates[
-        getChatMessageUserStatusKey({
+      nextState.chatChannelUserStatusStates[
+        getChatChannelUserStatusKey({
           userId,
           chatChannelId,
         })

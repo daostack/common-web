@@ -7,8 +7,8 @@ import {
 } from "@/shared/interfaces/api";
 import {
   ChatChannel,
+  ChatChannelUserStatus,
   ChatMessage,
-  ChatMessageUserStatus,
   Collection,
   SubCollections,
   Timestamp,
@@ -24,8 +24,8 @@ import Api, { CancelToken } from "./Api";
 
 const chatChannelConverter = firestoreDataConverter<ChatChannel>();
 const chatMessagesConverter = firestoreDataConverter<ChatMessage>();
-const chatMessageUserStatusConverter =
-  firestoreDataConverter<ChatMessageUserStatus>();
+const chatChannelUserStatusConverter =
+  firestoreDataConverter<ChatChannelUserStatus>();
 
 class ChatService {
   private getChatChannelCollection = () =>
@@ -40,11 +40,11 @@ class ChatService {
       .collection(SubCollections.ChatMessages)
       .withConverter(chatMessagesConverter);
 
-  private getChatChannelUserUniqueSubCollection = (chatChannelId: string) =>
+  private getChatChannelUserStatusSubCollection = (chatChannelId: string) =>
     this.getChatChannelCollection()
       .doc(chatChannelId)
       .collection(SubCollections.ChatChannelUserUnique)
-      .withConverter(chatMessageUserStatusConverter);
+      .withConverter(chatChannelUserStatusConverter);
 
   public getDMUsers = async (): Promise<DMUser[]> => {
     const { data } = await Api.get<{ data: Omit<DMUser, "userName">[] }>(
@@ -164,12 +164,12 @@ class ChatService {
       callback(messages);
     });
 
-  public subscribeToChatMessageUserStatus = (
+  public subscribeToChatChannelUserStatus = (
     userId: string,
     chatChannelId: string,
-    callback: (data: ChatMessageUserStatus) => void,
+    callback: (data: ChatChannelUserStatus) => void,
   ): UnsubscribeFunction => {
-    const query = this.getChatChannelUserUniqueSubCollection(chatChannelId)
+    const query = this.getChatChannelUserStatusSubCollection(chatChannelId)
       .where("chatChannelId", "==", chatChannelId)
       .where("userId", "==", userId);
 

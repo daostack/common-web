@@ -1,4 +1,4 @@
-import { getChatMessageUserStatusKey } from "@/shared/constants";
+import { getChatChannelUserStatusKey } from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import { AppState } from "@/shared/interfaces";
 
@@ -27,8 +27,8 @@ export const selectFeedItemUserMetadata =
     state.cache.feedItemUserMetadataStates[getFeedItemUserMetadataKey(info)] ||
     null;
 
-export const selectChatMessageUserStatus =
+export const selectChatChannelUserStatus =
   (info: { userId: string; chatChannelId: string }) => (state: AppState) =>
-    state.cache.chatMessageUserStatusStates[
-      getChatMessageUserStatusKey(info)
+    state.cache.chatChannelUserStatusStates[
+      getChatChannelUserStatusKey(info)
     ] || null;

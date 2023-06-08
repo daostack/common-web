@@ -1,6 +1,6 @@
 import { LoadingState } from "@/shared/interfaces";
 import {
-  ChatMessageUserStatus,
+  ChatChannelUserStatus,
   CommonFeedObjectUserUnique,
   Discussion,
   DiscussionMessage,
@@ -24,8 +24,8 @@ export interface CacheState {
     LoadingState<CommonFeedObjectUserUnique | null>
   >;
   // key: {userId}_{chatChannelId}
-  chatMessageUserStatusStates: Record<
+  chatChannelUserStatusStates: Record<
     string,
-    LoadingState<ChatMessageUserStatus | null>
+    LoadingState<ChatChannelUserStatus | null>
   >;
 }

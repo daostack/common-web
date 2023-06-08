@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ChatService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
-import { ChatMessageUserStatus } from "@/shared/models";
-import { cacheActions, selectChatMessageUserStatus } from "@/store/states";
+import { ChatChannelUserStatus } from "@/shared/models";
+import { cacheActions, selectChatChannelUserStatus } from "@/store/states";
 
-type State = LoadingState<ChatMessageUserStatus | null>;
+type State = LoadingState<ChatChannelUserStatus | null>;
 
 interface IdentificationInfo {
   userId: string;
@@ -13,7 +13,7 @@ interface IdentificationInfo {
 }
 
 interface Return extends State {
-  fetchChatMessageUserStatus: (info: IdentificationInfo) => void;
+  fetchChatChannelUserStatus: (info: IdentificationInfo) => void;
 }
 
 const DEFAULT_STATE: State = {
@@ -22,24 +22,24 @@ const DEFAULT_STATE: State = {
   data: null,
 };
 
-export const useChatMessageUserStatus = (): Return => {
+export const useChatChannelUserStatus = (): Return => {
   const dispatch = useDispatch();
   const [identificationInfo, setIdentificationInfo] =
     useState<IdentificationInfo | null>(null);
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const state =
     useSelector(
-      selectChatMessageUserStatus(
+      selectChatChannelUserStatus(
         identificationInfo || { userId: "", chatChannelId: "" },
       ),
     ) || defaultState;
 
-  const fetchChatMessageUserStatus = useCallback(
+  const fetchChatChannelUserStatus = useCallback(
     (info: IdentificationInfo) => {
       setDefaultState({ ...DEFAULT_STATE });
       setIdentificationInfo(info);
       dispatch(
-        cacheActions.getChatMessageUserStatus.request({
+        cacheActions.getChatChannelUserStatus.request({
           payload: info,
         }),
       );
@@ -52,12 +52,12 @@ export const useChatMessageUserStatus = (): Return => {
       return;
     }
 
-    const unsubscribe = ChatService.subscribeToChatMessageUserStatus(
+    const unsubscribe = ChatService.subscribeToChatChannelUserStatus(
       identificationInfo.userId,
       identificationInfo.chatChannelId,
       (data) => {
         dispatch(
-          cacheActions.updateChatMessageUserStatus({
+          cacheActions.updateChatChannelUserStatus({
             ...identificationInfo,
             state: {
               loading: false,
@@ -74,6 +74,6 @@ export const useChatMessageUserStatus = (): Return => {
 
   return {
     ...state,
-    fetchChatMessageUserStatus,
+    fetchChatChannelUserStatus,
   };
 };

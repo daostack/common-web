@@ -1,7 +1,7 @@
 import { BaseEntity } from "./BaseEntity";
 import { Timestamp } from "./Timestamp";
 
-export interface ChatMessageUserStatus extends BaseEntity {
+export interface ChatChannelUserStatus extends BaseEntity {
   chatChannelId: string;
   userId: string;
   lastSeenChatMessageId?: string;
