@@ -62,7 +62,7 @@ export const useChatMessages = (): Return => {
 
   const addChatMessage = useCallback((chatMessage: ChatMessage) => {
     setState((currentState) => {
-      const nextData = currentState.data || [];
+      const nextData = currentState.data ? [...currentState.data] : [];
       const messageIndex = nextData.findIndex(
         (item) => item.id === chatMessage.id,
       );
@@ -91,9 +91,15 @@ export const useChatMessages = (): Return => {
         const pendingMessageIndex = data.findIndex(
           (item) => item.id === pendingMessageId,
         );
+        const realMessageIndex = data.findIndex(
+          (item) => item.id === chatMessage.id,
+        );
 
         if (pendingMessageIndex !== -1) {
           data[pendingMessageIndex] = { ...chatMessage };
+        }
+        if (realMessageIndex !== -1) {
+          data.splice(realMessageIndex, 1);
         }
 
         return {
