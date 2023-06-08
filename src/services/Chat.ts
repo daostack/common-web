@@ -150,6 +150,25 @@ class ChatService {
     );
   };
 
+  public subscribeToChatChannel = (
+    chatChannelId: string,
+    callback: (chatChannel: ChatChannel, isRemoved: boolean) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getChatChannelCollection().where(
+      "id",
+      "==",
+      chatChannelId,
+    );
+
+    return query.onSnapshot((snapshot) => {
+      const docChange = snapshot.docChanges()[0];
+
+      if (docChange && docChange.type !== "added") {
+        callback(docChange.doc.data(), docChange.type === "removed");
+      }
+    });
+  };
+
   public subscribeToChatChannelMessages = (
     chatChannelId: string,
     callback: (messages: ChatMessage[]) => void,

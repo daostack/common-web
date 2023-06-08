@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { UserAvatar } from "@/shared/components";
@@ -8,12 +8,16 @@ import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useChatChannelUserStatus, useUserById } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ChatChannelFeedLayoutItemProps } from "@/shared/interfaces";
+import { ChatChannel } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
+import { inboxActions } from "@/store/states";
 import { FeedItemBaseContent } from "../FeedItemBaseContent";
+import { useChatChannelSubscription } from "./hooks";
 
 export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const { chatChannel, isActive } = props;
+  const dispatch = useDispatch();
   const isTabletView = useIsTabletView();
   const {
     fetchUser: fetchDMUser,
@@ -54,6 +58,18 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     chatChannelUserStatus?.seenOnce,
   ]);
 
+  const handleChatChannelUpdate = useCallback(
+    (item: ChatChannel, isRemoved: boolean) => {
+      dispatch(
+        inboxActions.updateChatChannelItem({
+          item,
+          isRemoved,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
   const renderImage = (className?: string) => (
     <UserAvatar
       className={className}
@@ -62,6 +78,8 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       userName={dmUserName}
     />
   );
+
+  useChatChannelSubscription(chatChannel.id, handleChatChannelUpdate);
 
   useEffect(() => {
     fetchDMUser(dmUserId);

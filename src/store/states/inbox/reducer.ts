@@ -6,7 +6,7 @@ import {
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
-import { CommonFeed } from "@/shared/models";
+import { ChatChannel, CommonFeed } from "@/shared/models";
 import * as actions from "./actions";
 import { InboxItems, InboxState } from "./types";
 import { getFeedLayoutItemDateForSorting } from "./utils";
@@ -199,6 +199,91 @@ const updateFeedItemInSharedInboxItem = (
   };
 };
 
+const updateChatChannelItemInInboxItem = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: Partial<ChatChannel> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  if (!state.items.data) {
+    return;
+  }
+
+  const { item: updatedChatChannelItem, isRemoved } = payload;
+  const itemIndex = state.items.data?.findIndex(
+    (item) =>
+      item.type === InboxItemType.ChatChannel &&
+      item.itemId === updatedChatChannelItem.id,
+  );
+
+  if (itemIndex === -1) {
+    return;
+  }
+
+  const nextData = [...state.items.data];
+
+  if (isRemoved) {
+    nextData.splice(itemIndex, 1);
+    state.items = {
+      ...state.items,
+      data: nextData,
+    };
+    return;
+  }
+
+  const itemByIndex = nextData[itemIndex];
+
+  if (itemByIndex.type !== InboxItemType.ChatChannel) {
+    return;
+  }
+
+  nextData[itemIndex] = {
+    ...itemByIndex,
+    chatChannel: {
+      ...itemByIndex.chatChannel,
+      ...updatedChatChannelItem,
+    },
+  };
+
+  state.items = {
+    ...state.items,
+    data: nextData,
+  };
+};
+
+const updateChatChannelItemInSharedInboxItem = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: Partial<ChatChannel> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  const { item: updatedChatChannelItem, isRemoved } = payload;
+
+  if (
+    state.sharedItem?.type !== InboxItemType.ChatChannel ||
+    state.sharedItem?.itemId !== updatedChatChannelItem.id
+  ) {
+    return;
+  }
+
+  if (isRemoved) {
+    state.sharedItem = null;
+    state.sharedFeedItemId = null;
+
+    return;
+  }
+
+  state.sharedItem = {
+    ...state.sharedItem,
+    chatChannel: {
+      ...state.sharedItem.chatChannel,
+      ...updatedChatChannelItem,
+    },
+  };
+};
+
 export const reducer = createReducer<InboxState, Action>(initialState)
   .handleAction(actions.resetInbox, () => ({ ...initialState }))
   .handleAction(actions.getInboxItems.request, (state) =>
@@ -287,6 +372,12 @@ export const reducer = createReducer<InboxState, Action>(initialState)
     produce(state, (nextState) => {
       updateFeedItemInInboxItem(nextState, payload);
       updateFeedItemInSharedInboxItem(nextState, payload);
+    }),
+  )
+  .handleAction(actions.updateChatChannelItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      updateChatChannelItemInInboxItem(nextState, payload);
+      updateChatChannelItemInSharedInboxItem(nextState, payload);
     }),
   )
   .handleAction(actions.resetInboxItems, (state) =>

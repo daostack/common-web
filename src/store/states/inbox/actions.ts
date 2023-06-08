@@ -46,6 +46,13 @@ export const updateFeedItem = createStandardAction(
   isRemoved?: boolean;
 }>();
 
+export const updateChatChannelItem = createStandardAction(
+  InboxActionType.UPDATE_CHAT_CHANNEL_ITEM,
+)<{
+  item: Partial<ChatChannel> & { id: string };
+  isRemoved?: boolean;
+}>();
+
 export const resetInboxItems = createStandardAction(
   InboxActionType.RESET_INBOX_ITEMS,
 )();
