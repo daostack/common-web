@@ -40,10 +40,10 @@ class ChatService {
       .collection(SubCollections.ChatMessages)
       .withConverter(chatMessagesConverter);
 
-  private getChatMessageUserStatusSubCollection = (chatChannelId: string) =>
+  private getChatChannelUserUniqueSubCollection = (chatChannelId: string) =>
     this.getChatChannelCollection()
       .doc(chatChannelId)
-      .collection(SubCollections.ChatMessagesUserUnique)
+      .collection(SubCollections.ChatChannelUserUnique)
       .withConverter(chatMessageUserStatusConverter);
 
   public getDMUsers = async (): Promise<DMUser[]> => {
@@ -169,7 +169,7 @@ class ChatService {
     chatChannelId: string,
     callback: (data: ChatMessageUserStatus) => void,
   ): UnsubscribeFunction => {
-    const query = this.getChatMessageUserStatusSubCollection(chatChannelId)
+    const query = this.getChatChannelUserUniqueSubCollection(chatChannelId)
       .where("chatChannelId", "==", chatChannelId)
       .where("userId", "==", userId);
 
