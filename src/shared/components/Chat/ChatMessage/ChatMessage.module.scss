@@ -80,6 +80,18 @@
   background-color: $c-pink-active-feed-cards;
 }
 
+.systemMessageContainer {
+  flex-direction: column;
+  align-items: center;
+}
+
+.systemMessage {
+  width: 100%;
+  max-width: unset;
+  min-width: unset;
+  background-color: $c-pink-light;
+}
+
 .messageName {
   font-size: $xsmall;
   font-weight: bold;
@@ -110,37 +122,6 @@
 .mentionTextCurrentUser {
   color: $c-pink-active-feed-cards-light;
   font-weight: bold;
-}
-
-.timeWrapperContainer {
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
-  margin-top: 0.6875rem;
-}
-
-.timeWrapper {
-  font-size: $xxsmall-3;
-  font-weight: 400;
-  color: $light-gray-2;
-  text-align: left;
-}
-
-.timeWrapperCurrentUser {
-  color: $c-neutrals-100;
-}
-
-.timeWrapperEdited {
-  text-align: right;
-}
-
-.editedTimeWrapper {
-  font-size: $xxsmall;
-}
-
-.creationTimeWrapper {
-  align-self: flex-end;
-  flex: 1;
 }
 
 .replyMessageContainer {
