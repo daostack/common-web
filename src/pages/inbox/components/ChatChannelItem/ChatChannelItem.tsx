@@ -3,8 +3,9 @@ import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { UserAvatar } from "@/shared/components";
+import { LastSeenEntity } from "@/shared/constants";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
-import { useUserById } from "@/shared/hooks/useCases";
+import { useChatChannelUserStatus, useUserById } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ChatChannelFeedLayoutItemProps } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
@@ -19,6 +20,11 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     data: dmUser,
     fetched: isDMUserFetched,
   } = useUserById();
+  const {
+    data: chatChannelUserStatus,
+    fetched: isChatChannelUserStatusFetched,
+    fetchChatChannelUserStatus,
+  } = useChatChannelUserStatus();
   const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -34,10 +40,19 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       discussion: ChatChannelToDiscussionConverter.toTargetEntity(chatChannel),
       chatChannel,
       circleVisibility: [],
-      // lastSeenItem: chatChannel.lastSeen,
-      // seenOnce: chatChannel.seenOnce,
+      lastSeenItem: chatChannelUserStatus?.lastSeenChatMessageId
+        ? {
+            type: LastSeenEntity.DiscussionMessage,
+            id: chatChannelUserStatus.lastSeenChatMessageId,
+          }
+        : undefined,
+      seenOnce: chatChannelUserStatus?.seenOnce,
     });
-  }, [chatChannel]);
+  }, [
+    chatChannel,
+    chatChannelUserStatus?.lastSeenChatMessageId,
+    chatChannelUserStatus?.seenOnce,
+  ]);
 
   const renderImage = (className?: string) => (
     <UserAvatar
@@ -53,10 +68,20 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   }, [dmUserId]);
 
   useEffect(() => {
-    if (chatChannel.id === feedItemIdForAutoChatOpen) {
+    fetchChatChannelUserStatus({
+      userId: userId || "",
+      chatChannelId: chatChannel.id,
+    });
+  }, [userId, chatChannel.id]);
+
+  useEffect(() => {
+    if (
+      isChatChannelUserStatusFetched &&
+      chatChannel.id === feedItemIdForAutoChatOpen
+    ) {
       handleOpenChat();
     }
-  }, []);
+  }, [isChatChannelUserStatusFetched]);
 
   return (
     <FeedItemBaseContent

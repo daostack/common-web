@@ -150,8 +150,6 @@ const InboxPage: FC = () => {
         chatChannelItem.chatChannel,
       ),
       circleVisibility: [],
-      // lastSeenItem: chatChannel.lastSeen,
-      // seenOnce: chatChannel.seenOnce,
     });
   }, [nextChatChannelItemId, feedLayoutRef]);
 
