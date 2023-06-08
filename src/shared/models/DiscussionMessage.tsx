@@ -52,7 +52,6 @@ export interface UserDiscussionMessage extends BaseDiscussionMessage {
 
 export interface SystemDiscussionMessage extends BaseDiscussionMessage {
   ownerType: DiscussionMessageOwnerType.System;
-  isSystemMessage: boolean;
 }
 
 export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
