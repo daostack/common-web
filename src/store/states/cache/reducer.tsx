@@ -1,5 +1,4 @@
 import produce from "immer";
-import { unionWith } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
 import { getChatMessageUserStatusKey } from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
@@ -46,17 +45,9 @@ export const reducer = createReducer<CacheState, Action>(initialState)
       produce(state, (nextState) => {
         const { discussionId } = payload;
 
-        const newState = unionWith(
-          payload.state?.data ?? [],
-          state.discussionMessagesStates[discussionId]?.data ?? [],
-          (prevMsg, nextMsg) => {
-            return prevMsg.id === nextMsg.id;
-          },
-        );
-
         nextState.discussionMessagesStates[discussionId] = {
           ...payload.state,
-          data: newState,
+          data: payload.state.data,
         };
       }),
   )

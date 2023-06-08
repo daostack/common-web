@@ -188,7 +188,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     if (
       isDiscussionFetched &&
       isFeedItemUserMetadataFetched &&
-      item.id === feedItemIdForAutoChatOpen
+      item.id === feedItemIdForAutoChatOpen &&
+      !isMobileVersion
     ) {
       handleOpenChat();
     }
