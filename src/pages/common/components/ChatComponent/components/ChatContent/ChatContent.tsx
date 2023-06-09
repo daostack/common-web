@@ -102,6 +102,20 @@ const ChatContent: ForwardRefRenderFunction<
     [chatWrapperId],
   );
 
+  const scrollMore = useCallback(
+    (toY: number) =>
+      setTimeout(
+        () =>
+          animateScroll.scrollMore(toY, {
+            containerId: chatWrapperId,
+            smooth: true,
+            delay: 0,
+          }),
+        0,
+      ),
+    [chatWrapperId],
+  );
+
   const dateListReverse = useMemo(() => [...dateList].reverse(), [dateList]);
 
   useEffect(() => {
@@ -203,15 +217,17 @@ const ChatContent: ForwardRefRenderFunction<
                   scrollToRepliedMessage={scrollToRepliedMessage}
                   highlighted={message.id === highlightedMessageId}
                   hasPermissionToHide={hasPermissionToHide}
-                  onMessageDropdownOpen={
-                    dayIndex === 0 && messageIndex === 0
-                      ? (isOpen) => {
-                          if (isOpen) {
-                            scrollToContainerBottom();
-                          }
-                        }
-                      : undefined
-                  }
+                  onMessageDropdownOpen={(isOpen, messageTopPosition = 0) => {
+                    const dropdownHeight = 240;
+                    const visibleDropdownHeight =
+                      window.innerHeight - messageTopPosition;
+                    const hasEnoughSpaceForMenu =
+                      visibleDropdownHeight >= dropdownHeight;
+
+                    if (isOpen && !hasEnoughSpaceForMenu) {
+                      scrollMore(dropdownHeight - visibleDropdownHeight + 20);
+                    }
+                  }}
                   commonMembers={commonMembers}
                   feedItemId={feedItemId}
                   commonMember={commonMember}

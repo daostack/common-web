@@ -33,7 +33,10 @@ interface ChatMessageProps {
   chatType: ChatType;
   highlighted?: boolean;
   className?: string;
-  onMessageDropdownOpen?: (isOpen: boolean) => void;
+  onMessageDropdownOpen?: (
+    isOpen: boolean,
+    messageTopPosition?: number,
+  ) => void;
   user: User | null;
   scrollToRepliedMessage: (messageId: string) => void;
   hasPermissionToHide: boolean;
@@ -85,6 +88,15 @@ export default function ChatMessage({
     (discussionMessage.editedAt?.seconds ?? 0) * 1000,
   );
 
+  const handleMessageDropdownOpen =
+    onMessageDropdownOpen &&
+    ((isOpen: boolean) => {
+      onMessageDropdownOpen(
+        isOpen,
+        messageRef.current?.getBoundingClientRect().top,
+      );
+    });
+
   useEffect(() => {
     (async () => {
       const parsedText = await getTextFromTextEditorString({
@@ -121,8 +133,8 @@ export default function ChatMessage({
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuOpen(isOpen);
 
-    if (onMessageDropdownOpen) {
-      onMessageDropdownOpen(isOpen);
+    if (handleMessageDropdownOpen) {
+      handleMessageDropdownOpen(isOpen);
     }
   };
 
