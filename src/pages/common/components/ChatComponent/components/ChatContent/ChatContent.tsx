@@ -172,55 +172,66 @@ const ChatContent: ForwardRefRenderFunction<
     <>
       {dateListReverse.map((day, dayIndex) => {
         const date = new Date(Number(day));
+        const currentMessages = messages[Number(day)];
+        const previousDayMessages =
+          messages[Number(dateListReverse[dayIndex + 1])] || [];
+        const lastMessageInPreviousDay =
+          previousDayMessages[previousDayMessages.length - 1];
+        const isLastSeenInPreviousDay = Boolean(
+          lastMessageInPreviousDay &&
+            lastMessageInPreviousDay.id === lastSeenItem?.id,
+        );
+        const newSeparatorEl = (
+          <li>
+            <Separator>New</Separator>
+          </li>
+        );
 
         return (
           <ul id={chatId} className={styles.messageList} key={day}>
+            {isLastSeenInPreviousDay && newSeparatorEl}
             <li className={styles.dateTitle}>
               {isToday(date) ? "Today" : formatDate(date)}
             </li>
-            {messages[Number(day)].map(
-              (message, messageIndex, currentMessages) => {
-                const messageEl = (
-                  <ChatMessage
-                    key={message.id}
-                    user={user}
-                    discussionMessage={message}
-                    chatType={type}
-                    scrollToRepliedMessage={scrollToRepliedMessage}
-                    highlighted={message.id === highlightedMessageId}
-                    hasPermissionToHide={hasPermissionToHide}
-                    onMessageDropdownOpen={
-                      dayIndex === 0 && messageIndex === 0
-                        ? (isOpen) => {
-                            if (isOpen) {
-                              scrollToContainerBottom();
-                            }
+            {currentMessages.map((message, messageIndex) => {
+              const messageEl = (
+                <ChatMessage
+                  key={message.id}
+                  user={user}
+                  discussionMessage={message}
+                  chatType={type}
+                  scrollToRepliedMessage={scrollToRepliedMessage}
+                  highlighted={message.id === highlightedMessageId}
+                  hasPermissionToHide={hasPermissionToHide}
+                  onMessageDropdownOpen={
+                    dayIndex === 0 && messageIndex === 0
+                      ? (isOpen) => {
+                          if (isOpen) {
+                            scrollToContainerBottom();
                           }
-                        : undefined
-                    }
-                    users={users}
-                    feedItemId={feedItemId}
-                    commonMember={commonMember}
-                  />
-                );
+                        }
+                      : undefined
+                  }
+                  users={users}
+                  feedItemId={feedItemId}
+                  commonMember={commonMember}
+                />
+              );
 
-                if (
-                  message.id !== lastSeenItem?.id ||
-                  messageIndex === currentMessages.length - 1
-                ) {
-                  return messageEl;
-                }
+              if (
+                message.id !== lastSeenItem?.id ||
+                messageIndex === currentMessages.length - 1
+              ) {
+                return messageEl;
+              }
 
-                return (
-                  <React.Fragment key={message.id}>
-                    {messageEl}
-                    <li>
-                      <Separator>New</Separator>
-                    </li>
-                  </React.Fragment>
-                );
-              },
-            )}
+              return (
+                <React.Fragment key={message.id}>
+                  {messageEl}
+                  {newSeparatorEl}
+                </React.Fragment>
+              );
+            })}
           </ul>
         );
       })}
