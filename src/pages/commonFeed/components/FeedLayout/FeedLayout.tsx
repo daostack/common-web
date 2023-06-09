@@ -30,6 +30,8 @@ import { ChatContext } from "@/pages/common/components/ChatComponent/context";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
+  ChatChannelFeedLayoutItemProps,
+  checkIsChatChannelLayoutItem,
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItem,
   FeedLayoutRef,
@@ -76,11 +78,13 @@ interface FeedLayoutProps {
   shouldHideContent?: boolean;
   onFetchNext: () => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
+  renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   sharedFeedItemId?: string | null;
   emptyText?: string;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
+  onActiveItemChange?: (itemId?: string) => void;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -101,11 +105,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     shouldHideContent = false,
     onFetchNext,
     renderFeedItemBaseContent,
+    renderChatChannelItem,
     onFeedItemUpdate,
     getLastMessage,
     sharedFeedItemId,
     emptyText,
     getNonAllowedItems,
+    onActiveItemChange,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -231,6 +237,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [setActiveChatItem, feedItemIdForAutoChatOpen],
   );
 
+  const setActiveItem = useCallback((item: ChatItem) => {
+    setChatItem(item);
+    setExpandedFeedItemId(item.feedItemId);
+  }, []);
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -249,7 +260,18 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     saveChatSize(chatWidth);
   }, [chatWidth]);
 
-  useImperativeHandle(ref, () => ({ setExpandedFeedItemId }), []);
+  useEffect(() => {
+    onActiveItemChange?.(activeFeedItemId);
+  }, [activeFeedItemId]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      setExpandedFeedItemId,
+      setActiveItem,
+    }),
+    [setActiveItem],
+  );
 
   const pageContentStyles = {
     "--chat-w": `${chatWidth}px`,
@@ -321,14 +343,27 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       />
                     );
                   }
+                  if (
+                    renderChatChannelItem &&
+                    checkIsChatChannelLayoutItem(item)
+                  ) {
+                    return (
+                      <React.Fragment key={item.itemId}>
+                        {renderChatChannelItem({
+                          chatChannel: item.chatChannel,
+                          isActive,
+                        })}
+                      </React.Fragment>
+                    );
+                  }
                 })}
               </InfiniteScroll>
               {!isTabletView &&
-                (chatItem && selectedItemCommonData ? (
+                (chatItem ? (
                   <DesktopChat
                     className={styles.desktopChat}
                     chatItem={chatItem}
-                    commonId={selectedItemCommonData.id}
+                    commonId={selectedItemCommonData?.id || ""}
                     governanceCircles={governance?.circles}
                     commonMember={commonMember}
                     titleRightContent={followFeedItemEl}

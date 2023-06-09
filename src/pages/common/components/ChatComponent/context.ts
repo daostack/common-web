@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import {
+  ChatChannel,
   CommonFeedObjectUserUnique,
   Discussion,
   Proposal,
@@ -9,6 +10,7 @@ export interface ChatItem {
   feedItemId: string;
   proposal?: Proposal;
   discussion: Discussion;
+  chatChannel?: ChatChannel;
   circleVisibility: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   seenOnce?: boolean;

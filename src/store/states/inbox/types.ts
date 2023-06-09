@@ -1,4 +1,7 @@
-import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
+import {
+  ChatChannelLayoutItem,
+  FeedLayoutItemWithFollowData,
+} from "@/shared/interfaces";
 import { Timestamp } from "@/shared/models";
 
 export interface InboxItems {
@@ -13,4 +16,6 @@ export interface InboxState {
   items: InboxItems;
   sharedFeedItemId: string | null;
   sharedItem: FeedLayoutItemWithFollowData | null;
+  chatChannelItems: ChatChannelLayoutItem[];
+  nextChatChannelItemId: string | null;
 }

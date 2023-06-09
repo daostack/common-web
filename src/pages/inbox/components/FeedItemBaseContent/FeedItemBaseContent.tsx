@@ -28,8 +28,10 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     onExpand,
     menuItems,
     commonName,
+    renderImage,
     image,
     imageAlt,
+    isImageRounded,
     isProject,
     discussionPredefinedType,
   } = props;
@@ -41,6 +43,12 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     discussionPredefinedType === PredefinedTypes.General && commonName
       ? `${title} (${commonName})`
       : title;
+  const shouldImageBeRounded =
+    typeof isImageRounded === "boolean" ? isImageRounded : isProject;
+  const imageClassName = classNames(styles.image, {
+    [styles.imageNonRounded]: !shouldImageBeRounded,
+    [styles.imageRounded]: shouldImageBeRounded,
+  });
 
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
@@ -107,16 +115,15 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           />
         </ButtonIcon>
       )}
-      <Image
-        className={classNames(styles.image, {
-          [styles.imageNonRounded]: !isProject,
-          [styles.imageRounded]: isProject,
-        })}
-        src={image}
-        alt={imageAlt || ""}
-        placeholderElement={null}
-        aria-hidden
-      />
+      {renderImage?.(imageClassName) || (
+        <Image
+          className={imageClassName}
+          src={image}
+          alt={imageAlt || ""}
+          placeholderElement={null}
+          aria-hidden
+        />
+      )}
       <div className={styles.content}>
         <div className={styles.topContent}>
           <p

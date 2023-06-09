@@ -7,15 +7,29 @@ import {
 import { FeedItemBaseContentProps } from "@/pages/common";
 import { FeedLayout } from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
+import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { FeedLayoutRef } from "@/shared/interfaces";
+import {
+  ChatChannelFeedLayoutItemProps,
+  FeedLayoutItem,
+  FeedLayoutRef,
+} from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
-import { inboxActions, selectSharedInboxItem } from "@/store/states";
-import { HeaderContent, FeedItemBaseContent } from "./components";
+import {
+  inboxActions,
+  selectChatChannelItems,
+  selectNextChatChannelItemId,
+  selectSharedInboxItem,
+} from "@/store/states";
+import {
+  ChatChannelItem,
+  HeaderContent,
+  FeedItemBaseContent,
+} from "./components";
 import { useInboxData } from "./hooks";
 import { getNonAllowedItems, getLastMessage } from "./utils";
 import styles from "./Inbox.module.scss";
@@ -52,10 +66,20 @@ const InboxPage: FC = () => {
     fetch: fetchInboxItems,
   } = useInboxItems(feedItemIdsForNotListening);
   const sharedInboxItem = useSelector(selectSharedInboxItem);
-  const topFeedItems = useMemo(
-    () => (sharedInboxItem ? [sharedInboxItem] : []),
-    [sharedInboxItem],
-  );
+  const chatChannelItems = useSelector(selectChatChannelItems);
+  const nextChatChannelItemId = useSelector(selectNextChatChannelItemId);
+  const topFeedItems = useMemo(() => {
+    const items: FeedLayoutItem[] = [];
+
+    if (chatChannelItems.length > 0) {
+      items.push(...chatChannelItems);
+    }
+    if (sharedInboxItem) {
+      items.push(sharedInboxItem);
+    }
+
+    return items;
+  }, [chatChannelItems, sharedInboxItem]);
 
   const fetchData = () => {
     fetchInboxData({
@@ -74,6 +98,11 @@ const InboxPage: FC = () => {
     [],
   );
 
+  const renderChatChannelItem = useCallback(
+    (props: ChatChannelFeedLayoutItemProps) => <ChatChannelItem {...props} />,
+    [],
+  );
+
   const handleFeedItemUpdate = useCallback(
     (item: CommonFeed, isRemoved: boolean) => {
       dispatch(
@@ -86,6 +115,13 @@ const InboxPage: FC = () => {
     [dispatch],
   );
 
+  const handleActiveItemChange = useCallback(
+    (activeItemId?: string) => {
+      dispatch(inboxActions.removeEmptyChatChannelItems(activeItemId));
+    },
+    [dispatch],
+  );
+
   useEffect(() => {
     dispatch(inboxActions.setSharedFeedItemId(sharedFeedItemId));
 
@@ -93,6 +129,29 @@ const InboxPage: FC = () => {
       feedLayoutRef?.setExpandedFeedItemId(sharedFeedItemId);
     }
   }, [sharedFeedItemId, feedLayoutRef]);
+
+  useEffect(() => {
+    if (!nextChatChannelItemId) {
+      return;
+    }
+
+    const chatChannelItem = chatChannelItems.find(
+      (item) => item.itemId === nextChatChannelItemId,
+    );
+
+    if (!chatChannelItem) {
+      return;
+    }
+
+    feedLayoutRef?.setActiveItem({
+      feedItemId: chatChannelItem.itemId,
+      chatChannel: chatChannelItem.chatChannel,
+      discussion: ChatChannelToDiscussionConverter.toTargetEntity(
+        chatChannelItem.chatChannel,
+      ),
+      circleVisibility: [],
+    });
+  }, [nextChatChannelItemId, feedLayoutRef]);
 
   useEffect(() => {
     if (inboxData?.sharedInboxItem) {
@@ -156,10 +215,12 @@ const InboxPage: FC = () => {
         shouldHideContent={!user}
         onFetchNext={fetchMoreInboxItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
+        renderChatChannelItem={renderChatChannelItem}
         onFeedItemUpdate={handleFeedItemUpdate}
         getLastMessage={getLastMessage}
         emptyText="Your inbox is empty"
         getNonAllowedItems={getNonAllowedItems}
+        onActiveItemChange={handleActiveItemChange}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

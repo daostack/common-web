@@ -1,4 +1,4 @@
-interface InfoItem {
+export interface InfoItem {
   value: string;
 }
 

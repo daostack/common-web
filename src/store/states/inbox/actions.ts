@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
-import { CommonFeed } from "@/shared/models";
+import { ChatChannel, CommonFeed } from "@/shared/models";
 import { InboxActionType } from "./constants";
 import { InboxItems } from "./types";
 
@@ -46,6 +46,13 @@ export const updateFeedItem = createStandardAction(
   isRemoved?: boolean;
 }>();
 
+export const updateChatChannelItem = createStandardAction(
+  InboxActionType.UPDATE_CHAT_CHANNEL_ITEM,
+)<{
+  item: Partial<ChatChannel> & { id: string };
+  isRemoved?: boolean;
+}>();
+
 export const resetInboxItems = createStandardAction(
   InboxActionType.RESET_INBOX_ITEMS,
 )();
@@ -57,3 +64,11 @@ export const setSharedFeedItemId = createStandardAction(
 export const setSharedInboxItem = createStandardAction(
   InboxActionType.SET_SHARED_INBOX_ITEM,
 )<FeedLayoutItemWithFollowData | null>();
+
+export const addChatChannelItem = createStandardAction(
+  InboxActionType.ADD_CHAT_CHANNEL_ITEM,
+)<ChatChannel>();
+
+export const removeEmptyChatChannelItems = createStandardAction(
+  InboxActionType.REMOVE_EMPTY_CHAT_CHANNEL_ITEMS,
+)<string | void>();

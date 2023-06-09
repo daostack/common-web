@@ -1,3 +1,4 @@
+import { ChatItem } from "@/pages/common/components/ChatComponent";
 import { InboxItemType } from "@/shared/constants";
 import {
   ChatChannel,
@@ -7,6 +8,7 @@ import {
 
 export interface FeedLayoutRef {
   setExpandedFeedItemId: (feedItemId: string | null) => void;
+  setActiveItem: (item: ChatItem) => void;
 }
 
 interface BaseLayoutItem {

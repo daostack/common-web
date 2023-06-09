@@ -22,6 +22,7 @@ export interface File {
 export enum Collection {
   Governance = "governance",
   Cards = "cards",
+  ChatChannel = "chatChannel",
   Proposals = "proposals",
   Discussion = "discussion",
   Users = "users",
@@ -37,6 +38,8 @@ export enum Collection {
 export enum SubCollections {
   Members = "members",
   Votes = "votes",
+  ChatMessages = "chatMessages",
+  ChatChannelUserUnique = "chatChannelUserUnique",
   CommonFeed = "commonFeed",
   CommonFeedObjectUserUnique = "commonFeedObjectUserUnique",
   Inbox = "Inbox",

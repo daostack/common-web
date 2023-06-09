@@ -18,8 +18,8 @@ import { ChatType } from "@/shared/constants";
 import {
   CommonFeedObjectUserUnique,
   CommonMember,
-  CommonMemberWithUserInfo,
   DiscussionMessage,
+  User,
 } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
@@ -42,7 +42,7 @@ interface ChatContentInterface {
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
-  commonMembers: CommonMemberWithUserInfo[];
+  users: User[];
   discussionId: string;
   feedItemId: string;
   isLoading: boolean;
@@ -74,7 +74,7 @@ const ChatContent: ForwardRefRenderFunction<
     dateList,
     lastSeenItem,
     hasPermissionToHide,
-    commonMembers,
+    users,
     discussionId,
     feedItemId,
     isLoading,
@@ -93,6 +93,20 @@ const ChatContent: ForwardRefRenderFunction<
       setTimeout(
         () =>
           animateScroll.scrollToBottom({
+            containerId: chatWrapperId,
+            smooth: true,
+            delay: 0,
+          }),
+        0,
+      ),
+    [chatWrapperId],
+  );
+
+  const scrollMore = useCallback(
+    (toY: number) =>
+      setTimeout(
+        () =>
+          animateScroll.scrollMore(toY, {
             containerId: chatWrapperId,
             smooth: true,
             delay: 0,
@@ -172,55 +186,68 @@ const ChatContent: ForwardRefRenderFunction<
     <>
       {dateListReverse.map((day, dayIndex) => {
         const date = new Date(Number(day));
+        const currentMessages = messages[Number(day)];
+        const previousDayMessages =
+          messages[Number(dateListReverse[dayIndex + 1])] || [];
+        const lastMessageInPreviousDay =
+          previousDayMessages[previousDayMessages.length - 1];
+        const isLastSeenInPreviousDay = Boolean(
+          lastMessageInPreviousDay &&
+            lastMessageInPreviousDay.id === lastSeenItem?.id,
+        );
+        const newSeparatorEl = (
+          <li>
+            <Separator>New</Separator>
+          </li>
+        );
 
         return (
           <ul id={chatId} className={styles.messageList} key={day}>
+            {isLastSeenInPreviousDay && newSeparatorEl}
             <li className={styles.dateTitle}>
               {isToday(date) ? "Today" : formatDate(date)}
             </li>
-            {messages[Number(day)].map(
-              (message, messageIndex, currentMessages) => {
-                const messageEl = (
-                  <ChatMessage
-                    key={message.id}
-                    user={user}
-                    discussionMessage={message}
-                    chatType={type}
-                    scrollToRepliedMessage={scrollToRepliedMessage}
-                    highlighted={message.id === highlightedMessageId}
-                    hasPermissionToHide={hasPermissionToHide}
-                    onMessageDropdownOpen={
-                      dayIndex === 0 && messageIndex === 0
-                        ? (isOpen) => {
-                            if (isOpen) {
-                              scrollToContainerBottom();
-                            }
-                          }
-                        : undefined
+            {currentMessages.map((message, messageIndex) => {
+              const messageEl = (
+                <ChatMessage
+                  key={message.id}
+                  user={user}
+                  discussionMessage={message}
+                  chatType={type}
+                  scrollToRepliedMessage={scrollToRepliedMessage}
+                  highlighted={message.id === highlightedMessageId}
+                  hasPermissionToHide={hasPermissionToHide}
+                  onMessageDropdownOpen={(isOpen, messageTopPosition = 0) => {
+                    const dropdownHeight = 240;
+                    const visibleDropdownHeight =
+                      window.innerHeight - messageTopPosition;
+                    const hasEnoughSpaceForMenu =
+                      visibleDropdownHeight >= dropdownHeight;
+
+                    if (isOpen && !hasEnoughSpaceForMenu) {
+                      scrollMore(dropdownHeight - visibleDropdownHeight + 20);
                     }
-                    commonMembers={commonMembers}
-                    feedItemId={feedItemId}
-                    commonMember={commonMember}
-                  />
-                );
+                  }}
+                  users={users}
+                  feedItemId={feedItemId}
+                  commonMember={commonMember}
+                />
+              );
 
-                if (
-                  message.id !== lastSeenItem?.id ||
-                  messageIndex === currentMessages.length - 1
-                ) {
-                  return messageEl;
-                }
+              if (
+                message.id !== lastSeenItem?.id ||
+                messageIndex === currentMessages.length - 1
+              ) {
+                return messageEl;
+              }
 
-                return (
-                  <React.Fragment key={message.id}>
-                    {messageEl}
-                    <li>
-                      <Separator>New</Separator>
-                    </li>
-                  </React.Fragment>
-                );
-              },
-            )}
+              return (
+                <React.Fragment key={message.id}>
+                  {messageEl}
+                  {newSeparatorEl}
+                </React.Fragment>
+              );
+            })}
           </ul>
         );
       })}
