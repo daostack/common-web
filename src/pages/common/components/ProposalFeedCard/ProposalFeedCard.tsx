@@ -61,6 +61,7 @@ interface ProposalFeedCardProps {
   isExpanded: boolean;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
+  isMobileVersion?: boolean;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -78,6 +79,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     isExpanded,
     getLastMessage,
     getNonAllowedItems,
+    isMobileVersion,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -221,7 +223,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       isDiscussionFetched &&
       isProposalFetched &&
       isFeedItemUserMetadataFetched &&
-      item.id === feedItemIdForAutoChatOpen
+      item.id === feedItemIdForAutoChatOpen &&
+      !isMobileVersion
     ) {
       handleOpenChat();
     }

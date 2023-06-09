@@ -1,0 +1,32 @@
+@import "../../../../../../constants.scss";
+
+.timeWrapperContainer {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  margin-top: 0.6875rem;
+}
+
+.timeWrapper {
+  font-size: $xxsmall-3;
+  font-weight: 400;
+  color: $light-gray-2;
+  text-align: left;
+}
+
+.timeWrapperCurrentUser {
+  color: $c-neutrals-100;
+}
+
+.timeWrapperEdited {
+  text-align: right;
+}
+
+.editedTimeWrapper {
+  font-size: $xxsmall;
+}
+
+.creationTimeWrapper {
+  align-self: flex-end;
+  flex: 1;
+}

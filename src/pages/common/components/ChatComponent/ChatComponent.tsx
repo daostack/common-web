@@ -187,11 +187,7 @@ export default function ChatComponent({
   );
 
   const messages = useMemo(
-    () =>
-      (discussionMessages?.filter(checkIsUserDiscussionMessage) ?? []).reduce(
-        groupday,
-        {},
-      ),
+    () => (discussionMessages ?? []).reduce(groupday, {}),
     [discussionMessages],
   );
   const dateList = useMemo(() => Object.keys(messages), [messages]);
@@ -334,6 +330,7 @@ export default function ChatComponent({
           discussionId,
           createdAt: firebaseDate,
           updatedAt: firebaseDate,
+          parentId: discussionMessageReply?.id,
           parentMessage: discussionMessageReply?.id
             ? {
                 id: discussionMessageReply?.id,
