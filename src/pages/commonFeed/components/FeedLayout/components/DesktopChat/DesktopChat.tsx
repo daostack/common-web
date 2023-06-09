@@ -67,6 +67,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         isCommonMemberFetched
         commonId={commonId}
         discussion={chatItem.discussion}
+        chatChannel={chatItem.chatChannel}
         feedItemId={chatItem.feedItemId}
         hasAccess={hasAccessToChat}
         lastSeenItem={chatItem.lastSeenItem}

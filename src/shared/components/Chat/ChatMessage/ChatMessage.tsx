@@ -13,7 +13,6 @@ import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
   CommonMember,
-  CommonMemberWithUserInfo,
   checkIsSystemDiscussionMessage,
   checkIsUserDiscussionMessage,
   DiscussionMessage,
@@ -40,7 +39,7 @@ interface ChatMessageProps {
   user: User | null;
   scrollToRepliedMessage: (messageId: string) => void;
   hasPermissionToHide: boolean;
-  commonMembers: CommonMemberWithUserInfo[];
+  users: User[];
   feedItemId: string;
   commonMember: CommonMember | null;
 }
@@ -63,7 +62,7 @@ export default function ChatMessage({
   user,
   scrollToRepliedMessage,
   hasPermissionToHide,
-  commonMembers,
+  users,
   feedItemId,
   commonMember,
 }: ChatMessageProps) {
@@ -101,7 +100,7 @@ export default function ChatMessage({
     (async () => {
       const parsedText = await getTextFromTextEditorString({
         textEditorString: discussionMessage.text,
-        commonMembers,
+        users,
         mentionTextClassName: !isNotCurrentUserMessage
           ? styles.mentionTextCurrentUser
           : "",
@@ -109,7 +108,7 @@ export default function ChatMessage({
 
       setMessageText(parsedText);
     })();
-  }, [commonMembers, discussionMessage.text, isNotCurrentUserMessage]);
+  }, [users, discussionMessage.text, isNotCurrentUserMessage]);
 
   useEffect(() => {
     (async () => {
@@ -119,16 +118,12 @@ export default function ChatMessage({
 
       const parsedText = await getTextFromTextEditorString({
         textEditorString: discussionMessage?.parentMessage.text,
-        commonMembers,
+        users,
       });
 
       setReplyMessageText(parsedText);
     })();
-  }, [
-    commonMembers,
-    discussionMessage?.parentMessage?.text,
-    isNotCurrentUserMessage,
-  ]);
+  }, [users, discussionMessage?.parentMessage?.text, isNotCurrentUserMessage]);
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuOpen(isOpen);

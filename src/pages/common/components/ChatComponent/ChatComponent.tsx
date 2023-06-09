@@ -14,7 +14,8 @@ import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
-import { DiscussionMessageService, FileService } from "@/services";
+import { ChatService, DiscussionMessageService, FileService } from "@/services";
+import { Loader } from "@/shared/components";
 import {
   ChatType,
   DiscussionMessageOwnerType,
@@ -22,14 +23,12 @@ import {
   LastSeenEntity,
 } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
+import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
 import { useZoomDisabling } from "@/shared/hooks";
-import {
-  useDiscussionMessagesById,
-  useMarkFeedItemAsSeen,
-} from "@/shared/hooks/useCases";
 import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
+  ChatChannel,
   checkIsUserDiscussionMessage,
   Circles,
   CommonFeedObjectUserUnique,
@@ -61,6 +60,7 @@ import {
   MessageReply,
   ChatFilePreview,
 } from "./components";
+import { useChatChannelChatAdapter, useDiscussionChatAdapter } from "./hooks";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
 
@@ -75,6 +75,7 @@ interface ChatComponentInterface {
   commonMember: CommonMember | null;
   hasAccess?: boolean;
   discussion: Discussion;
+  chatChannel?: ChatChannel;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   seenOnce?: CommonFeedObjectUserUnique["seenOnce"];
   feedItemId: string;
@@ -108,6 +109,7 @@ export default function ChatComponent({
   governanceCircles,
   commonMember,
   discussion,
+  chatChannel,
   hasAccess = true,
   lastSeenItem,
   seenOnce,
@@ -122,41 +124,10 @@ export default function ChatComponent({
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
-
-  useEffect(() => {
-    if (discussionMessageReply) {
-      editorRef.current?.focus();
-    }
-  }, [discussionMessageReply]);
-
-  const currentFilesPreview = useSelector(selectFilesPreview());
-  const chatContentRef = useRef<ChatContentRef>(null);
-  const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
-  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
-
-  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
-
-  const [message, setMessage] = useState<TextEditorValue>(
-    parseStringToTextEditorValue(),
-  );
-  const [shouldReinitializeEditor, setShouldReinitializeEditor] =
-    useState(false);
-  const onClear = () => {
-    setShouldReinitializeEditor(true);
-    setMessage(parseStringToTextEditorValue());
-  };
-
-  const users = useMemo(() => {
-    return commonMembers
-      .filter((member) => member.userId !== commonMember?.userId)
-      .map(({ user }) => user);
-  }, [commonMember, commonMembers]);
-
-  useEffect(() => {
-    if (commonId) {
-      fetchCommonMembers(commonId, discussion.circleVisibility);
-    }
-  }, [commonId, discussion.circleVisibility]);
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+  const discussionId = discussion.id;
+  const isChatChannel = Boolean(chatChannel);
 
   const hasPermissionToHide =
     commonMember && governanceCircles
@@ -169,17 +140,58 @@ export default function ChatComponent({
         })
       : false;
   const {
-    fetchDiscussionMessages,
-    data: discussionMessages = [],
-    fetched: isFetchedDiscussionMessages,
-    loading: isLoadingDiscussionMessages,
-    addDiscussionMessage,
-  } = useDiscussionMessagesById({
+    discussionMessagesData,
+    markDiscussionMessageItemAsSeen,
+    discussionUsers,
+    fetchDiscussionUsers,
+  } = useDiscussionChatAdapter({
     hasPermissionToHide,
   });
-  const user = useSelector(selectUser());
-  const userId = user?.uid;
-  const discussionId = discussion.id;
+  const {
+    chatMessagesData,
+    markChatMessageItemAsSeen,
+    chatUsers,
+    fetchChatUsers,
+  } = useChatChannelChatAdapter({ participants: chatChannel?.participants });
+  const users = chatChannel ? chatUsers : discussionUsers;
+  const discussionMessages = chatChannel
+    ? chatMessagesData.data
+    : discussionMessagesData.data || [];
+  const isFetchedDiscussionMessages = discussionMessagesData.fetched;
+  const isLoadingDiscussionMessages = discussionMessagesData.loading;
+
+  useEffect(() => {
+    if (discussionMessageReply) {
+      editorRef.current?.focus();
+    }
+  }, [discussionMessageReply]);
+
+  const currentFilesPreview = useSelector(selectFilesPreview());
+  const chatContentRef = useRef<ChatContentRef>(null);
+  const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
+
+  const [message, setMessage] = useState<TextEditorValue>(
+    parseStringToTextEditorValue(),
+  );
+  const [shouldReinitializeEditor, setShouldReinitializeEditor] =
+    useState(false);
+  const onClear = () => {
+    setShouldReinitializeEditor(true);
+    setMessage(parseStringToTextEditorValue());
+  };
+
+  useEffect(() => {
+    if (commonId && !isChatChannel) {
+      fetchDiscussionUsers(commonId, discussion.circleVisibility);
+    }
+  }, [commonId, discussion.circleVisibility]);
+
+  useEffect(() => {
+    if (chatChannel?.id) {
+      chatMessagesData.fetchChatMessages(chatChannel.id);
+      fetchChatUsers();
+    }
+  }, [chatChannel?.id]);
 
   const lastNonUserMessage = getLastNonUserMessage(
     discussionMessages || [],
@@ -194,7 +206,7 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (discussionId) {
-      fetchDiscussionMessages(discussionId);
+      discussionMessagesData.fetchDiscussionMessages(discussionId);
       dispatch(chatActions.clearCurrentDiscussionMessageReply());
     }
   }, [discussionId]);
@@ -238,6 +250,24 @@ export default function ChatComponent({
 
       newMessagesWithFiles.map(async (payload, index) => {
         delay(async () => {
+          const pendingMessageId = payload.pendingMessageId as string;
+
+          if (chatChannel) {
+            const response = await ChatService.sendChatMessage({
+              chatChannelId: chatChannel.id,
+              text: payload.text || "",
+              images: payload.images,
+              files: payload.files,
+              mentions: payload.tags?.map((tag) => tag.value),
+            });
+            chatMessagesData.updateChatMessageWithActualId(
+              pendingMessageId,
+              response,
+            );
+
+            return;
+          }
+
           const response = await DiscussionMessageService.createMessage(
             payload,
           );
@@ -245,7 +275,7 @@ export default function ChatComponent({
           dispatch(
             cacheActions.updateDiscussionMessageWithActualId({
               discussionId,
-              pendingMessageId: payload.pendingMessageId as string,
+              pendingMessageId,
               actualId: response.id,
             }),
           );
@@ -277,7 +307,7 @@ export default function ChatComponent({
 
   const sendMessage = useCallback(
     async (message: TextEditorValue) => {
-      if (user && user.uid && commonId) {
+      if (user && user.uid) {
         const pendingMessageId = uuidv4();
 
         const mentionTags = getMentionTags(message).map((tag) => ({
@@ -353,7 +383,14 @@ export default function ChatComponent({
         };
 
         setMessages((prev) => [...prev, ...filePreviewPayload, payload]);
-        addDiscussionMessage(discussionId, msg);
+
+        if (isChatChannel) {
+          chatMessagesData.addChatMessage(
+            ChatMessageToUserDiscussionMessageConverter.toBaseEntity(msg),
+          );
+        } else {
+          discussionMessagesData.addDiscussionMessage(discussionId, msg);
+        }
 
         if (discussionMessageReply) {
           dispatch(chatActions.clearCurrentDiscussionMessageReply());
@@ -371,6 +408,7 @@ export default function ChatComponent({
       currentFilesPreview,
       discussionId,
       discussionMessages,
+      isChatChannel,
     ],
   );
 
@@ -402,11 +440,12 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (
+      !isChatChannel &&
       isFetchedDiscussionMessages &&
       discussionMessages?.length === 0 &&
       !seenOnce
     ) {
-      markFeedItemAsSeen({
+      markDiscussionMessageItemAsSeen({
         feedObjectId: feedItemId,
         commonId,
       });
@@ -420,11 +459,12 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (
+      !isChatChannel &&
       lastNonUserMessage &&
       lastSeenItem?.id !== lastNonUserMessage.id &&
       feedItemId
     ) {
-      markFeedItemAsSeen({
+      markDiscussionMessageItemAsSeen({
         feedObjectId: feedItemId,
         commonId: lastNonUserMessage.commonId,
         lastSeenId: lastNonUserMessage.id,
@@ -454,7 +494,7 @@ export default function ChatComponent({
           dateList={dateList}
           lastSeenItem={lastSeenItem}
           hasPermissionToHide={hasPermissionToHide}
-          commonMembers={commonMembers}
+          users={users}
           discussionId={discussionId}
           feedItemId={feedItemId}
           isLoading={
@@ -464,10 +504,10 @@ export default function ChatComponent({
       </div>
       {isAuthorized && (
         <div className={styles.bottomChatContainer}>
-          <MessageReply commonMembers={commonMembers} />
+          <MessageReply users={users} />
           <ChatFilePreview />
           <div className={styles.chatInputWrapper}>
-            {!commonMember || !hasAccess || isHidden ? (
+            {!isChatChannel && (!commonMember || !hasAccess || isHidden) ? (
               <span className={styles.permissionsText}>
                 Only members can send messages
               </span>

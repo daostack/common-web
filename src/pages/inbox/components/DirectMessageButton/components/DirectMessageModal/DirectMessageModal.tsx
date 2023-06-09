@@ -7,11 +7,15 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useDispatch } from "react-redux";
 import { Modal } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants";
+import { DMUser } from "@/shared/interfaces";
 import { Loader } from "@/shared/ui-kit";
+import { emptyFunction } from "@/shared/utils";
+import { inboxActions } from "@/store/states";
 import { DirectMessageUserItem, SearchInput } from "./components";
-import { useDMUsers } from "./hooks";
+import { useDMUserChatChannel, useDMUsers } from "./hooks";
 import styles from "./DirectMessageModal.module.scss";
 
 interface DirectMessageModalProps {
@@ -22,6 +26,7 @@ interface DirectMessageModalProps {
 
 const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   const { isOpen, onClose, isMobileVersion = false } = props;
+  const dispatch = useDispatch();
   const listRef = useRef<HTMLUListElement>(null);
   const [searchText, setSearchText] = useState("");
   const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null);
@@ -31,6 +36,13 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     fetchDMUsers,
     error: dmUsersFetchError,
   } = useDMUsers();
+  const {
+    loading: isChannelLoading,
+    dmUserChatChannel,
+    fetchDMUserChatChannel,
+    resetDMUserChatChannel,
+    error: isChannelLoadedWithError,
+  } = useDMUserChatChannel();
   const filteredDMUsers = useMemo(() => {
     if (!searchText) {
       return dmUsers;
@@ -74,6 +86,10 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     });
   }, [totalUsersAmount]);
 
+  const handleUserItemClick = (item: DMUser) => {
+    fetchDMUserChatChannel(item.uid);
+  };
+
   useEffect(() => {
     if (isOpen) {
       fetchDMUsers();
@@ -82,6 +98,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
 
     setActiveItemIndex(null);
     setSearchText("");
+    resetDMUserChatChannel();
   }, [isOpen]);
 
   useEffect(() => {
@@ -122,8 +139,43 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     };
   }, [isOpen, handleArrowUp, handleArrowDown]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const handler = (event: KeyboardEvent) => {
+      const key = event.key as KeyboardKeys;
+
+      if (key !== KeyboardKeys.Enter) {
+        return;
+      }
+
+      const item = filteredDMUsers.find(
+        (dmUser, index) => index === activeItemIndex,
+      );
+
+      if (item) {
+        handleUserItemClick(item);
+      }
+    };
+
+    window.addEventListener("keyup", handler);
+
+    return () => {
+      window.removeEventListener("keyup", handler);
+    };
+  }, [isOpen, activeItemIndex, filteredDMUsers]);
+
+  useEffect(() => {
+    if (dmUserChatChannel) {
+      dispatch(inboxActions.addChatChannelItem(dmUserChatChannel));
+      onClose();
+    }
+  }, [dmUserChatChannel]);
+
   const renderContent = (): ReactElement => {
-    if (areDMUsersLoading) {
+    if (areDMUsersLoading || isChannelLoading) {
       return <Loader />;
     }
 
@@ -153,6 +205,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
               role="button"
               aria-pressed={isActive}
               onFocus={() => setActiveItemIndex(index)}
+              onClick={() => handleUserItemClick(item)}
             >
               <DirectMessageUserItem
                 className={styles.userItem}
@@ -171,15 +224,21 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     <Modal
       className={styles.modal}
       isShowing={isOpen}
-      onClose={onClose}
+      onClose={isChannelLoading ? emptyFunction : onClose}
       title={
         <div className={styles.modalTitleWrapper}>
           <h3 className={styles.modalTitle}>Direct message</h3>
-          <SearchInput value={searchText} onChange={setSearchText} autoFocus />
+          {!isChannelLoading && (
+            <SearchInput
+              value={searchText}
+              onChange={setSearchText}
+              autoFocus
+            />
+          )}
         </div>
       }
       isHeaderSticky
-      hideCloseButton={!isMobileVersion}
+      hideCloseButton={!isMobileVersion || isChannelLoading}
       mobileFullScreen
       styles={{
         modalOverlay: styles.modalOverlay,

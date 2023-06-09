@@ -18,8 +18,8 @@ import { ChatType } from "@/shared/constants";
 import {
   CommonFeedObjectUserUnique,
   CommonMember,
-  CommonMemberWithUserInfo,
   DiscussionMessage,
+  User,
 } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
@@ -42,7 +42,7 @@ interface ChatContentInterface {
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
-  commonMembers: CommonMemberWithUserInfo[];
+  users: User[];
   discussionId: string;
   feedItemId: string;
   isLoading: boolean;
@@ -74,7 +74,7 @@ const ChatContent: ForwardRefRenderFunction<
     dateList,
     lastSeenItem,
     hasPermissionToHide,
-    commonMembers,
+    users,
     discussionId,
     feedItemId,
     isLoading,
@@ -228,7 +228,7 @@ const ChatContent: ForwardRefRenderFunction<
                       scrollMore(dropdownHeight - visibleDropdownHeight + 20);
                     }
                   }}
-                  commonMembers={commonMembers}
+                  users={users}
                   feedItemId={feedItemId}
                   commonMember={commonMember}
                 />

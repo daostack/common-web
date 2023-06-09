@@ -42,13 +42,13 @@ export function* getInboxItems(
         limit,
       },
     )) as Awaited<ReturnType<typeof UserService.getInboxItems>>;
-    const chatChannelItems = data.chatChannels.map<ChatChannelLayoutItem>(
-      (chatChannel) => ({
+    const chatChannelItems = data.chatChannels
+      .map<ChatChannelLayoutItem>((chatChannel) => ({
         type: InboxItemType.ChatChannel,
         itemId: chatChannel.id,
         chatChannel,
-      }),
-    );
+      }))
+      .filter((item) => item.chatChannel.messageCount !== 0);
     const feedItemFollowItems =
       data.feedItemFollows.map<FeedItemFollowLayoutItemWithFollowData>(
         (feedItemFollowWithMetadata) => ({

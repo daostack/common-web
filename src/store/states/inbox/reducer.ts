@@ -6,7 +6,7 @@ import {
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
-import { CommonFeed } from "@/shared/models";
+import { ChatChannel, CommonFeed } from "@/shared/models";
 import * as actions from "./actions";
 import { InboxItems, InboxState } from "./types";
 import { getFeedLayoutItemDateForSorting } from "./utils";
@@ -25,6 +25,8 @@ const initialState: InboxState = {
   items: { ...initialInboxItems },
   sharedFeedItemId: null,
   sharedItem: null,
+  chatChannelItems: [],
+  nextChatChannelItemId: null,
 };
 
 const updateInboxItemInList = (
@@ -197,6 +199,91 @@ const updateFeedItemInSharedInboxItem = (
   };
 };
 
+const updateChatChannelItemInInboxItem = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: Partial<ChatChannel> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  if (!state.items.data) {
+    return;
+  }
+
+  const { item: updatedChatChannelItem, isRemoved } = payload;
+  const itemIndex = state.items.data?.findIndex(
+    (item) =>
+      item.type === InboxItemType.ChatChannel &&
+      item.itemId === updatedChatChannelItem.id,
+  );
+
+  if (itemIndex === -1) {
+    return;
+  }
+
+  const nextData = [...state.items.data];
+
+  if (isRemoved) {
+    nextData.splice(itemIndex, 1);
+    state.items = {
+      ...state.items,
+      data: nextData,
+    };
+    return;
+  }
+
+  const itemByIndex = nextData[itemIndex];
+
+  if (itemByIndex.type !== InboxItemType.ChatChannel) {
+    return;
+  }
+
+  nextData[itemIndex] = {
+    ...itemByIndex,
+    chatChannel: {
+      ...itemByIndex.chatChannel,
+      ...updatedChatChannelItem,
+    },
+  };
+
+  state.items = {
+    ...state.items,
+    data: nextData,
+  };
+};
+
+const updateChatChannelItemInSharedInboxItem = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: Partial<ChatChannel> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  const { item: updatedChatChannelItem, isRemoved } = payload;
+
+  if (
+    state.sharedItem?.type !== InboxItemType.ChatChannel ||
+    state.sharedItem?.itemId !== updatedChatChannelItem.id
+  ) {
+    return;
+  }
+
+  if (isRemoved) {
+    state.sharedItem = null;
+    state.sharedFeedItemId = null;
+
+    return;
+  }
+
+  state.sharedItem = {
+    ...state.sharedItem,
+    chatChannel: {
+      ...state.sharedItem.chatChannel,
+      ...updatedChatChannelItem,
+    },
+  };
+};
+
 export const reducer = createReducer<InboxState, Action>(initialState)
   .handleAction(actions.resetInbox, () => ({ ...initialState }))
   .handleAction(actions.getInboxItems.request, (state) =>
@@ -287,6 +374,12 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       updateFeedItemInSharedInboxItem(nextState, payload);
     }),
   )
+  .handleAction(actions.updateChatChannelItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      updateChatChannelItemInInboxItem(nextState, payload);
+      updateChatChannelItemInSharedInboxItem(nextState, payload);
+    }),
+  )
   .handleAction(actions.resetInboxItems, (state) =>
     produce(state, (nextState) => {
       nextState.items = { ...initialInboxItems };
@@ -301,4 +394,65 @@ export const reducer = createReducer<InboxState, Action>(initialState)
     produce(state, (nextState) => {
       nextState.sharedItem = payload && { ...payload };
     }),
+  )
+  .handleAction(actions.addChatChannelItem, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.chatChannelItems = [
+        {
+          type: InboxItemType.ChatChannel,
+          itemId: payload.id,
+          chatChannel: { ...payload },
+        },
+        ...nextState.chatChannelItems.filter(
+          (item) => item.chatChannel.messageCount !== 0,
+        ),
+      ];
+      nextState.nextChatChannelItemId = payload.id;
+
+      if (!payload) {
+        return;
+      }
+      if (
+        nextState.sharedItem?.type === InboxItemType.ChatChannel &&
+        nextState.sharedItem.itemId === payload.id
+      ) {
+        nextState.sharedFeedItemId = null;
+        nextState.sharedItem = null;
+        return;
+      }
+
+      nextState.items = {
+        ...nextState.items,
+        data:
+          nextState.items.data &&
+          nextState.items.data.filter(
+            (item) =>
+              item.type !== InboxItemType.ChatChannel ||
+              item.itemId !== payload.id,
+          ),
+      };
+    }),
+  )
+  .handleAction(
+    actions.removeEmptyChatChannelItems,
+    (state, { payload: nextActiveItemId }) =>
+      produce(state, (nextState) => {
+        if (nextState.nextChatChannelItemId !== nextActiveItemId) {
+          nextState.nextChatChannelItemId = null;
+        }
+
+        const hasItemToRemove = nextState.chatChannelItems.some(
+          (item) =>
+            item.chatChannel.messageCount === 0 &&
+            item.itemId !== nextActiveItemId,
+        );
+
+        if (hasItemToRemove) {
+          nextState.chatChannelItems = nextState.chatChannelItems.filter(
+            (item) =>
+              item.chatChannel.messageCount !== 0 ||
+              item.itemId === nextActiveItemId,
+          );
+        }
+      }),
   );
