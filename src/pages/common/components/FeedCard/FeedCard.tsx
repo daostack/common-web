@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useRef, MouseEventHandler } from "react";
+import { useCollapse } from "react-collapsed";
 import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -70,6 +71,10 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
   const isTabletView = useIsTabletView();
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
+  const isContentVisible = (isExpanded && canBeExpanded) || isPreviewMode;
+  const { getCollapseProps, getToggleProps } = useCollapse({
+    isExpanded: isContentVisible,
+  });
   const containerRef = useRef<HTMLDivElement>(null);
 
   const toggleExpanding = () => {
@@ -112,32 +117,35 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
 
   return (
     <div ref={containerRef}>
-      {!isPreviewMode &&
-        renderFeedItemBaseContent?.({
-          lastActivity,
-          unreadMessages,
-          isMobileView: isTabletView,
-          isActive,
-          isExpanded,
-          canBeExpanded,
-          onClick: handleClick,
-          onExpand: handleExpand,
-          title,
-          lastMessage: !isLoading ? lastMessage : undefined,
-          menuItems,
-          commonName,
-          image,
-          imageAlt,
-          isProject,
-          isPinned,
-          type,
-          seenOnce,
-          ownerId,
-          discussionPredefinedType,
-          hasFiles,
-          hasImages,
-        })}
-      {((isExpanded && canBeExpanded) || isPreviewMode) && (
+      {!isPreviewMode && (
+        <div {...getToggleProps()}>
+          {renderFeedItemBaseContent?.({
+            lastActivity,
+            unreadMessages,
+            isMobileView: isTabletView,
+            isActive,
+            isExpanded,
+            canBeExpanded,
+            onClick: handleClick,
+            onExpand: handleExpand,
+            title,
+            lastMessage: !isLoading ? lastMessage : undefined,
+            menuItems,
+            commonName,
+            image,
+            imageAlt,
+            isProject,
+            isPinned,
+            type,
+            seenOnce,
+            ownerId,
+            discussionPredefinedType,
+            hasFiles,
+            hasImages,
+          })}
+        </div>
+      )}
+      <div {...getCollapseProps()}>
         <CommonCard
           className={classNames(
             styles.container,
@@ -152,7 +160,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
         >
           {isLoading ? <Loader className={styles.loader} /> : children}
         </CommonCard>
-      )}
+      </div>
     </div>
   );
 };

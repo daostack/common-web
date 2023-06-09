@@ -16512,6 +16512,13 @@ react-aria-menubutton@^7.0.3:
     prop-types "^15.6.0"
     teeny-tap "^0.2.0"
 
+react-collapsed@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/react-collapsed/-/react-collapsed-4.0.2.tgz#5f2b2f9695c6f3858b44771dc36fa40f63b8fa51"
+  integrity sha512-mzGhppOLzW3PGtU+RlSYPANpShYd5wt6LdFWnDgHy/asyIfQT8BHDognr5sYFPouXiHPwGWUtQ6ZfI5jd7bU6Q==
+  dependencies:
+    tiny-warning "^1.0.3"
+
 react-currency-input-field@^3.6.0:
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/react-currency-input-field/-/react-currency-input-field-3.6.4.tgz#8063f9a445ba246063f0254ced4015210c90593a"
