@@ -45,3 +45,4 @@ export { default as ShareIcon } from "./share.icon";
 export { default as SendIcon } from "./send.icon";
 export { default as MinusIcon } from "./minus.icon";
 export { default as FileIcon } from "./file.icon";
+export { default as EmojiIcon } from "./emoji.icon";

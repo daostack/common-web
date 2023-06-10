@@ -21,15 +21,23 @@ import { ReactEditor, Slate, withReact } from "slate-react";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { User } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
-import { Editor, MentionDropdown, MENTION_TAG } from "./components";
+import {
+  Editor,
+  MentionDropdown,
+  MENTION_TAG,
+  EmojiPicker,
+} from "./components";
 import { TextEditorSize } from "./constants";
 import { withInlines, withMentions } from "./hofs";
 import { TextEditorValue } from "./types";
 import { parseStringToTextEditorValue } from "./utils";
 import { insertMention } from "./utils/insertMention";
+import styles from "./BaseTextEditor.module.scss";
 
 export interface TextEditorProps {
   className?: string;
+  emojiContainerClassName?: string;
+  emojiPickerContainerClassName?: string;
   editorRef?: MutableRefObject<HTMLElement | null> | RefCallback<HTMLElement>;
   id?: string;
   name?: string;
@@ -59,6 +67,8 @@ const INITIAL_SEARCH_VALUE = {
 const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const {
     className,
+    emojiContainerClassName,
+    emojiPickerContainerClassName,
     editorRef,
     id,
     name,
@@ -182,53 +192,64 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   };
 
   return (
-    <Slate
-      editor={editor}
-      value={value}
-      onChange={(val) => {
-        onChange && onChange(val);
-        const { selection } = editor;
+    <div className={styles.container}>
+      <Slate
+        editor={editor}
+        value={value}
+        onChange={(val) => {
+          onChange && onChange(val);
+          const { selection } = editor;
 
-        if (selection && Range.isCollapsed(selection)) {
-          const [start] = Range.edges(selection);
-          const before = EditorSlate.before(editor, start);
-          const beforeRange =
-            before && EditorSlate.range(editor, before, start);
-          const beforeText =
-            beforeRange && EditorSlate.string(editor, beforeRange);
+          if (selection && Range.isCollapsed(selection)) {
+            const [start] = Range.edges(selection);
+            const before = EditorSlate.before(editor, start);
+            const beforeRange =
+              before && EditorSlate.range(editor, before, start);
+            const beforeText =
+              beforeRange && EditorSlate.string(editor, beforeRange);
 
-          handleSearch(beforeText ?? "", beforeRange);
-        }
-      }}
-    >
-      <Editor
-        className={className}
-        id={id}
-        name={name}
-        size={size}
-        placeholder={placeholder}
-        readOnly={false}
-        disabled={disabled}
-        onBlur={onBlur}
-        onKeyDown={handleKeyDown}
-      />
-      {target && chars.length > 0 && (
-        <MentionDropdown
-          shouldFocusTarget={shouldFocusTarget}
-          onClick={(user: User) => {
-            Transforms.select(editor, target);
-            insertMention(editor, user);
-            setTarget(null);
-            setShouldFocusTarget(false);
-          }}
-          users={chars}
-          onClose={() => {
-            setTarget(null);
-            setShouldFocusTarget(false);
+            handleSearch(beforeText ?? "", beforeRange);
+          }
+        }}
+      >
+        <Editor
+          className={className}
+          id={id}
+          name={name}
+          size={size}
+          placeholder={placeholder}
+          readOnly={false}
+          disabled={disabled}
+          onBlur={onBlur}
+          onKeyDown={handleKeyDown}
+        />
+        <EmojiPicker
+          containerClassName={emojiContainerClassName}
+          pickerContainerClassName={emojiPickerContainerClassName}
+          onEmojiSelect={(emoji) => {
+            Transforms.select(editor, EditorSlate.end(editor, []));
+            Transforms.insertText(editor, emoji.native);
           }}
         />
-      )}
-    </Slate>
+
+        {target && chars.length > 0 && (
+          <MentionDropdown
+            shouldFocusTarget={shouldFocusTarget}
+            onClick={(user: User) => {
+              Transforms.select(editor, target);
+              insertMention(editor, user);
+              setTarget(null);
+              setShouldFocusTarget(false);
+            }}
+            users={chars}
+            onClose={() => {
+              setTarget(null);
+              setShouldFocusTarget(false);
+            }}
+          />
+        )}
+      </Slate>
+    </div>
   );
 };
 

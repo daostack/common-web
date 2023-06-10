@@ -1,0 +1,14 @@
+@import "../../../../../constants";
+
+.container {
+  position: absolute;
+  bottom: 50%;
+  right: 0.5625rem;
+  transform: translateY(50%);
+}
+
+.pickerContainer {
+  position: absolute;
+  bottom: 3.125rem;
+  right: 0.5625rem;
+}
