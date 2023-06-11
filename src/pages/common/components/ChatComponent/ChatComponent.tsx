@@ -320,8 +320,8 @@ export default function ChatComponent({
           currentFilesPreview ?? [],
         );
         const isEmptyText = checkIsTextEditorValueEmpty(message);
-        const isSingleFileWithoutText =
-          filesPreview.length === 1 && isEmptyText;
+        const isFilesMessageWithoutTextAndImages =
+          filesPreview.length > 0 && isEmptyText && imagesPreview.length === 0;
 
         const payload: CreateDiscussionMessageDtoWithFilesPreview = {
           pendingMessageId,
@@ -333,19 +333,17 @@ export default function ChatComponent({
             parentId: discussionMessageReply?.id,
           }),
           imagesPreview,
-          filesPreview: isSingleFileWithoutText ? filesPreview : [],
+          filesPreview: [],
           tags: mentionTags,
           mentions: mentionTags.map((tag) => tag.value),
         };
 
-        const filePreviewPayload = isSingleFileWithoutText
-          ? []
-          : filesPreview.map((filePreview) => ({
-              ownerId: user.uid,
-              commonId,
-              discussionId,
-              filesPreview: [filePreview],
-            }));
+        const filePreviewPayload = filesPreview.map((filePreview) => ({
+          ownerId: user.uid,
+          commonId,
+          discussionId,
+          filesPreview: [filePreview],
+        }));
         const firebaseDate = Timestamp.fromDate(new Date());
 
         const msg: UserDiscussionMessage = {
@@ -374,15 +372,19 @@ export default function ChatComponent({
           images: imagesPreview?.map((file) =>
             FileService.convertFileInfoToCommonLink(file),
           ),
-          ...(isSingleFileWithoutText && {
-            files: filesPreview?.map((file) =>
-              FileService.convertFileInfoToCommonLink(file),
-            ),
-          }),
+          files: filesPreview?.map((file) =>
+            FileService.convertFileInfoToCommonLink(file),
+          ),
           tags: mentionTags,
         };
 
-        setMessages((prev) => [...prev, ...filePreviewPayload, payload]);
+        setMessages((prev) => {
+          if (isFilesMessageWithoutTextAndImages) {
+            return [...prev, ...filePreviewPayload];
+          }
+
+          return [...prev, ...filePreviewPayload, payload];
+        });
 
         if (isChatChannel) {
           chatMessagesData.addChatMessage(
