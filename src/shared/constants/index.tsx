@@ -17,6 +17,7 @@ export * from "./language";
 export * from "./lastSeenEntity";
 export * from "./Math";
 export * from "./pinOrUnpinEndpointAction";
+export * from "./proposalOutcomeUnit";
 export * from "./queryParamKey";
 export * from "./routePaths";
 export * from "./shared";
