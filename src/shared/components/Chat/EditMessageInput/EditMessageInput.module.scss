@@ -1,7 +1,12 @@
 @import "../../../../constants.scss";
 @import "../../../../styles/sizes";
 
+$big-phone-breakpoint: 460px;
+$phone-breakpoint: 415px;
+
 .container {
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   border-radius: 0.875rem;
   border: 0.0625rem $light-gray-2 solid;
@@ -58,4 +63,18 @@
 .loader {
   height: 1.25rem;
   width: 1.25rem;
+}
+
+.pickerContainer {
+  position: absolute;
+  bottom: 3.25rem;
+  right: 0.5625rem;
+
+  @media only screen and (max-width: $big-phone-breakpoint) {
+    right: -1.5rem; // Picker would be at the left corner of send button icon
+  }
+
+  @media only screen and (max-width: $phone-breakpoint) {
+    right: -3rem; // Picker would be at the right corner of send button icon
+  }
 }
