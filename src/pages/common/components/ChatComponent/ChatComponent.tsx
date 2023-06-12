@@ -260,10 +260,7 @@ export default function ChatComponent({
               mentions: payload.tags?.map((tag) => tag.value),
               parentId: payload.parentId,
             });
-            chatMessagesData.updateChatMessageWithActualId(
-              pendingMessageId,
-              response,
-            );
+            chatMessagesData.updateChatMessage(response);
 
             return;
           }

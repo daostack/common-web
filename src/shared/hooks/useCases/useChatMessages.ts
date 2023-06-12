@@ -13,10 +13,7 @@ import { ChatMessage } from "@/shared/models";
 interface Return extends LoadingState<ChatMessage[]> {
   fetchChatMessages: (chatChannelId: string) => void;
   addChatMessage: (chatMessage: ChatMessage) => void;
-  updateChatMessageWithActualId: (
-    pendingMessageId: string,
-    chatMessage: ChatMessage,
-  ) => void;
+  updateChatMessage: (chatMessage: ChatMessage) => void;
   deleteChatMessage: (chatMessageId: string) => void;
 }
 
@@ -81,36 +78,25 @@ export const useChatMessages = (): Return => {
     });
   }, []);
 
-  const updateChatMessageWithActualId = useCallback(
-    (pendingMessageId: string, chatMessage: ChatMessage) => {
-      setState((currentState) => {
-        if (!currentState.data) {
-          return currentState;
-        }
+  const updateChatMessage = useCallback((chatMessage: ChatMessage) => {
+    setState((currentState) => {
+      if (!currentState.data) {
+        return currentState;
+      }
 
-        const data = [...currentState.data];
-        const pendingMessageIndex = data.findIndex(
-          (item) => item.id === pendingMessageId,
-        );
-        const realMessageIndex = data.findIndex(
-          (item) => item.id === chatMessage.id,
-        );
+      const data = [...currentState.data];
+      const messageIndex = data.findIndex((item) => item.id === chatMessage.id);
 
-        if (pendingMessageIndex !== -1) {
-          data[pendingMessageIndex] = { ...chatMessage };
-        }
-        if (realMessageIndex !== -1) {
-          data.splice(realMessageIndex, 1);
-        }
+      if (messageIndex !== -1) {
+        data[messageIndex] = { ...chatMessage };
+      }
 
-        return {
-          ...currentState,
-          data,
-        };
-      });
-    },
-    [],
-  );
+      return {
+        ...currentState,
+        data,
+      };
+    });
+  }, []);
 
   const deleteChatMessage = useCallback((chatMessageId: string) => {
     setState((currentState) => {
@@ -168,7 +154,7 @@ export const useChatMessages = (): Return => {
     ...state,
     fetchChatMessages,
     addChatMessage,
-    updateChatMessageWithActualId,
+    updateChatMessage,
     deleteChatMessage,
   };
 };
