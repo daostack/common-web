@@ -13,9 +13,7 @@ import isHotkey from "is-hotkey";
 import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";
-import { Loader } from "@/shared/components";
 import {
   ChatType,
   DiscussionMessageOwnerType,
