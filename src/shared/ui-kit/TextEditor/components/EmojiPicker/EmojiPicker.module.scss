@@ -1,5 +1,8 @@
 @import "../../../../../constants";
 
+$big-phone-breakpoint: 460px;
+$phone-breakpoint: 415px;
+
 .container {
   position: absolute;
   bottom: 50%;
@@ -9,6 +12,14 @@
 
 .pickerContainer {
   position: absolute;
-  bottom: 3.125rem;
+  bottom: 3.25rem;
   right: 0.5625rem;
+
+  @media only screen and (max-width: $big-phone-breakpoint) {
+    right: -1.5rem; // Picker would be at the left corner of send button icon
+  }
+
+  @media only screen and (max-width: $phone-breakpoint) {
+    right: -4.5rem; // Picker would be at the right corner of send button icon
+  }
 }
