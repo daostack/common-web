@@ -79,7 +79,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     />
   );
 
-  useChatChannelSubscription(chatChannel.id, handleChatChannelUpdate);
+  useChatChannelSubscription(chatChannel.id, userId, handleChatChannelUpdate);
 
   useEffect(() => {
     fetchDMUser(dmUserId);

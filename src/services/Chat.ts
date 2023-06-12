@@ -156,13 +156,12 @@ class ChatService {
 
   public subscribeToChatChannel = (
     chatChannelId: string,
+    participantId: string,
     callback: (chatChannel: ChatChannel, isRemoved: boolean) => void,
   ): UnsubscribeFunction => {
-    const query = this.getChatChannelCollection().where(
-      "id",
-      "==",
-      chatChannelId,
-    );
+    const query = this.getChatChannelCollection()
+      .where("id", "==", chatChannelId)
+      .where("participants", "array-contains", participantId);
 
     return query.onSnapshot((snapshot) => {
       const docChange = snapshot.docChanges()[0];
