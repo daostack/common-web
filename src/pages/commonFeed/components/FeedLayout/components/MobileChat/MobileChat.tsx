@@ -96,7 +96,11 @@ const MobileChat: FC<ChatProps> = (props) => {
             commonMember={commonMember}
             isCommonMemberFetched
             isAuthorized={Boolean(user)}
-            type={ChatType.DiscussionMessages}
+            type={
+              chatItem.chatChannel
+                ? ChatType.ChatMessages
+                : ChatType.DiscussionMessages
+            }
             hasAccess={hasAccessToChat}
             isHidden={false}
             commonId={commonId}
