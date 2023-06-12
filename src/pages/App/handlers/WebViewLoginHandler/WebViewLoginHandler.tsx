@@ -25,7 +25,7 @@ const WebViewLoginHandler: FC = () => {
                 window.ReactNativeWebView.postMessage(
                   WebviewActions.loginSuccess,
                 );
-                history.push(ROUTE_PATHS.MY_COMMONS);
+                history.push(ROUTE_PATHS.INBOX);
               } else {
                 window.ReactNativeWebView.postMessage(
                   WebviewActions.loginError,
