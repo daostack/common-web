@@ -13,6 +13,7 @@ export interface GetChatChannelMessagesResponse {
 }
 
 export interface SendChatMessageDto {
+  id?: string;
   chatChannelId: string;
   text: string;
   images?: InfoItem[];

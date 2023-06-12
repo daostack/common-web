@@ -252,6 +252,7 @@ export default function ChatComponent({
 
           if (chatChannel) {
             const response = await ChatService.sendChatMessage({
+              id: pendingMessageId,
               chatChannelId: chatChannel.id,
               text: payload.text || "",
               images: payload.images,
