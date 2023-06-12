@@ -155,8 +155,10 @@ export default function ChatComponent({
   const discussionMessages = chatChannel
     ? chatMessagesData.data
     : discussionMessagesData.data || [];
-  const isFetchedDiscussionMessages = discussionMessagesData.fetched;
-  const isLoadingDiscussionMessages = discussionMessagesData.loading;
+  const isFetchedDiscussionMessages =
+    discussionMessagesData.fetched || chatMessagesData.fetched;
+  const isLoadingDiscussionMessages =
+    discussionMessagesData.loading || chatMessagesData.loading;
 
   useEffect(() => {
     if (discussionMessageReply) {
@@ -467,17 +469,20 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (
-      !isChatChannel &&
       lastNonUserMessage &&
       lastSeenItem?.id !== lastNonUserMessage.id &&
       feedItemId
     ) {
-      markDiscussionMessageItemAsSeen({
-        feedObjectId: feedItemId,
-        commonId: lastNonUserMessage.commonId,
-        lastSeenId: lastNonUserMessage.id,
-        type: LastSeenEntity.DiscussionMessage,
-      });
+      if (isChatChannel) {
+        markChatMessageItemAsSeen(lastNonUserMessage.id);
+      } else {
+        markDiscussionMessageItemAsSeen({
+          feedObjectId: feedItemId,
+          commonId: lastNonUserMessage.commonId,
+          lastSeenId: lastNonUserMessage.id,
+          type: LastSeenEntity.DiscussionMessage,
+        });
+      }
     }
   }, [lastNonUserMessage?.id]);
 
