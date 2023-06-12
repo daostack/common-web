@@ -257,6 +257,7 @@ export default function ChatComponent({
               images: payload.images,
               files: payload.files,
               mentions: payload.tags?.map((tag) => tag.value),
+              parentId: payload.parentId,
             });
             chatMessagesData.updateChatMessageWithActualId(
               pendingMessageId,

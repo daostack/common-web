@@ -12,4 +12,5 @@ export interface ChatMessage extends BaseEntity {
   files?: CommonLink[];
   editedAt?: Timestamp;
   mentions: string[]; // userIds
+  parentId?: string;
 }

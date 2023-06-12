@@ -18,4 +18,5 @@ export interface SendChatMessageDto {
   images?: InfoItem[];
   files?: InfoItem[];
   mentions?: string[];
+  parentId?: string;
 }
