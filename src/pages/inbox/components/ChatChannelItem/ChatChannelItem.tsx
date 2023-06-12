@@ -104,7 +104,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   return (
     <FeedItemBaseContent
       lastActivity={chatChannel.updatedAt.seconds * 1000}
-      unreadMessages={0}
+      unreadMessages={chatChannelUserStatus?.notSeenCount}
       isMobileView={isTabletView}
       isActive={isActive}
       title={finalTitle}
@@ -116,7 +116,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       canBeExpanded={false}
       onClick={handleOpenChat}
       menuItems={[]}
-      seenOnce={true}
+      seenOnce={chatChannelUserStatus?.seenOnce}
       ownerId={userId}
       renderImage={renderImage}
       isImageRounded
