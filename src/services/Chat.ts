@@ -138,6 +138,10 @@ class ChatService {
     return convertObjectDatesToFirestoreTimestamps(data);
   };
 
+  public deleteChatMessage = async (chatMessageId: string): Promise<void> => {
+    await Api.delete(ApiEndpoint.DeleteChatMessage(chatMessageId));
+  };
+
   public markChatMessageAsSeen = async (
     chatMessageId: string,
     options: { cancelToken?: CancelToken } = {},
