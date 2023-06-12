@@ -136,6 +136,7 @@ export default function ChatMessage({
               onMenuToggle={onMessageDropdownOpen}
               transparent
               isDiscussionMessage
+              isChatMessage={chatType === ChatType.ChatMessages}
               ownerId={
                 checkIsUserDiscussionMessage(discussionMessage)
                   ? discussionMessage.owner?.uid

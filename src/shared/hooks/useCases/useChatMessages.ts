@@ -17,6 +17,7 @@ interface Return extends LoadingState<ChatMessage[]> {
     pendingMessageId: string,
     chatMessage: ChatMessage,
   ) => void;
+  deleteChatMessage: (chatMessageId: string) => void;
 }
 
 export const useChatMessages = (): Return => {
@@ -111,6 +112,19 @@ export const useChatMessages = (): Return => {
     [],
   );
 
+  const deleteChatMessage = useCallback((chatMessageId: string) => {
+    setState((currentState) => {
+      if (!currentState.data) {
+        return currentState;
+      }
+
+      return {
+        ...currentState,
+        data: currentState.data.filter((item) => item.id !== chatMessageId),
+      };
+    });
+  }, []);
+
   useEffect(() => {
     if (!currentChatChannelId) {
       return;
@@ -155,5 +169,6 @@ export const useChatMessages = (): Return => {
     fetchChatMessages,
     addChatMessage,
     updateChatMessageWithActualId,
+    deleteChatMessage,
   };
 };

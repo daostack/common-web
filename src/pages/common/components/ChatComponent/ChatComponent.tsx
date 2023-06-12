@@ -438,6 +438,15 @@ export default function ChatComponent({
     }
   };
 
+  const handleMessageDelete = useCallback(
+    (messageId: string) => {
+      if (isChatChannel) {
+        chatMessagesData.deleteChatMessage(messageId);
+      }
+    },
+    [isChatChannel, chatMessagesData.deleteChatMessage],
+  );
+
   useEffect(() => {
     if (
       !isChatChannel &&
@@ -500,6 +509,7 @@ export default function ChatComponent({
           isLoading={
             isFetchedDiscussionMessages && !isLoadingDiscussionMessages
           }
+          onMessageDelete={handleMessageDelete}
         />
       </div>
       {isAuthorized && (

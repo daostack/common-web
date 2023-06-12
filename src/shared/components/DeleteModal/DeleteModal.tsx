@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useDispatch } from "react-redux";
 import { deleteDiscussionMessage } from "@/pages/OldCommon/store/actions";
+import { ChatService } from "@/services";
 import { Loader, Button } from "@/shared/components";
 import { Colors, EntityTypes } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
@@ -25,10 +26,19 @@ interface ReportModalProps {
   type: EntityTypes;
   linkText?: string;
   entity: DiscussionMessage | Discussion | Proposal | Common;
+  isChatMessage: boolean;
+  onDelete?: (entityId: string) => void;
 }
 
 const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
-  const { isShowing, onClose, type, entity } = props;
+  const {
+    isShowing,
+    onClose,
+    type,
+    entity,
+    isChatMessage,
+    onDelete: onDeleteOutside,
+  } = props;
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const [isLoading, setLoading] = useState(false);
@@ -76,7 +86,27 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
     [entity],
   );
 
+  const onChatMessageDelete = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      await ChatService.deleteChatMessage(entity.id);
+      onDeleteOutside?.(entity.id);
+      setLoading(false);
+      notify("The message has deleted!");
+      onClose();
+    } catch (err) {
+      setLoading(false);
+      notify("Something went wrong");
+    }
+  }, [entity.id, onDeleteOutside]);
+
   const onDelete = useCallback(() => {
+    if (isChatMessage) {
+      onChatMessageDelete();
+      return;
+    }
+
     // TODO: Add other entities
     switch (type) {
       case EntityTypes.DiscussionMessage: {
@@ -87,8 +117,10 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
         onDeleteMessage(true);
         break;
       }
+      default:
+        break;
     }
-  }, [entity, type, dispatch]);
+  }, [entity, type, dispatch, isChatMessage, onChatMessageDelete]);
 
   return (
     <Modal

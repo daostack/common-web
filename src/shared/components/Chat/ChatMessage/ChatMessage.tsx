@@ -42,6 +42,7 @@ interface ChatMessageProps {
   users: User[];
   feedItemId: string;
   commonMember: CommonMember | null;
+  onMessageDelete?: (messageId: string) => void;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -65,6 +66,7 @@ export default function ChatMessage({
   users,
   feedItemId,
   commonMember,
+  onMessageDelete,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
   const [isEditMode, setEditMode] = useState(false);
@@ -303,6 +305,7 @@ export default function ChatMessage({
                   onMenuToggle={handleMenuToggle}
                   transparent
                   isDiscussionMessage
+                  isChatMessage={chatType === ChatType.ChatMessages}
                   isDiscussionMessageWithFile={Boolean(filePreview)}
                   ownerId={
                     checkIsUserDiscussionMessage(discussionMessage)
@@ -318,6 +321,7 @@ export default function ChatMessage({
                     menuButton: styles.menuArrowButton,
                   }}
                   feedItemId={feedItemId}
+                  onDelete={onMessageDelete}
                 />
               )}
             </div>
