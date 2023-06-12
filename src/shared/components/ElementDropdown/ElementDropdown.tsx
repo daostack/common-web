@@ -185,7 +185,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       });
     }
 
-    if (isOwner && isDiscussionMessage) {
+    if (isOwner && (isDiscussionMessage || isChatMessage)) {
       items.push({
         text: (
           <span className={elementDropdownStyles.menuItemRedText}>Delete</span>
@@ -198,6 +198,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     return items;
   }, [
     isDiscussionMessage,
+    isChatMessage,
     elem,
     user,
     ownerId,

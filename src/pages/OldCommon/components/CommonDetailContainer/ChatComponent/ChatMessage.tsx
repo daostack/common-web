@@ -139,7 +139,7 @@ export default function ChatMessage({
               isChatMessage={chatType === ChatType.ChatMessages}
               ownerId={
                 checkIsUserDiscussionMessage(discussionMessage)
-                  ? discussionMessage.owner?.uid
+                  ? discussionMessage.ownerId
                   : undefined
               }
               userId={user?.uid}

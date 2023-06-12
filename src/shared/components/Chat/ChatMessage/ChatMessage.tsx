@@ -309,7 +309,7 @@ export default function ChatMessage({
                   isDiscussionMessageWithFile={Boolean(filePreview)}
                   ownerId={
                     checkIsUserDiscussionMessage(discussionMessage)
-                      ? discussionMessage.owner?.uid
+                      ? discussionMessage.ownerId
                       : undefined
                   }
                   userId={userId}
