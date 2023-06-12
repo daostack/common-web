@@ -189,7 +189,7 @@ class ChatService {
   public subscribeToChatChannelUserStatus = (
     userId: string,
     chatChannelId: string,
-    callback: (data: ChatChannelUserStatus) => void,
+    callback: (data: ChatChannelUserStatus | null) => void,
   ): UnsubscribeFunction => {
     const query = this.getChatChannelUserStatusSubCollection(chatChannelId)
       .where("chatChannelId", "==", chatChannelId)
@@ -197,10 +197,7 @@ class ChatService {
 
     return query.onSnapshot((snapshot) => {
       const data = snapshot.docChanges()[0]?.doc.data();
-
-      if (data) {
-        callback(data);
-      }
+      callback(data || null);
     });
   };
 }
