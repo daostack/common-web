@@ -84,15 +84,20 @@ class UserService {
     );
     const inboxItems: GetInboxResponse["data"]["inboxWithMetadata"] = {
       chatChannels: data.inboxWithMetadata.chatChannels.map((item) =>
-        convertObjectDatesToFirestoreTimestamps<ChatChannel>(item),
+        convertObjectDatesToFirestoreTimestamps<ChatChannel>(item, [
+          "lastMessage.createdAt",
+        ]),
       ),
       feedItemFollows: data.inboxWithMetadata.feedItemFollows.map((item) =>
-        convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>({
-          ...item,
-          feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
-            item.feedItem,
-          ),
-        }),
+        convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>(
+          {
+            ...item,
+            feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
+              item.feedItem,
+            ),
+          },
+          ["lastSeen", "lastActivity"],
+        ),
       ),
     };
     const firstDocTimestamp =

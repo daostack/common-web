@@ -1,4 +1,5 @@
 import firebase from "firebase";
+import { get, set } from "lodash";
 import { SynchronizedDate } from "@/shared/interfaces";
 
 export const convertToTimestamp = (
@@ -8,25 +9,29 @@ export const convertToTimestamp = (
 
 const convertDateInObject = (
   data: Record<string, unknown>,
-  fieldName: string,
+  path: string,
 ): void => {
-  if (data[fieldName]) {
-    data[fieldName] = convertToTimestamp(data[fieldName] as SynchronizedDate);
+  const value = get(data, path);
+
+  if (value) {
+    set(data, path, convertToTimestamp(value as SynchronizedDate));
   }
 };
 
 export const convertObjectDatesToFirestoreTimestamps = <T extends unknown>(
   data: unknown,
+  paths: string[] = [],
 ): T => {
   if (typeof data !== "object") {
     return data as T;
   }
 
   const newData = { ...data };
+  const allPaths = ["createdAt", "updatedAt", ...paths];
 
-  convertDateInObject(newData, "createdAt");
-  convertDateInObject(newData, "updatedAt");
-  convertDateInObject(newData, "lastMessage");
+  allPaths.forEach((path) => {
+    convertDateInObject(newData, path);
+  });
 
   return newData as T;
 };
