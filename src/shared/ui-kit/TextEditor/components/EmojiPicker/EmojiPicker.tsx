@@ -40,12 +40,7 @@ const EmojiPicker: FC<EmojiPickerProps> = (props) => {
       </ButtonIcon>
 
       {isOpen && (
-        <div
-          className={classNames(
-            styles.pickerContainer,
-            pickerContainerClassName,
-          )}
-        >
+        <div className={pickerContainerClassName || styles.pickerContainer}>
           <Picker data={data} onEmojiSelect={onEmojiSelect} />
         </div>
       )}
