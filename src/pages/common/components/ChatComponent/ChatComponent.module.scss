@@ -95,6 +95,9 @@
 
 .messageInputEmpty {
   line-height: 3rem;
+  @include tablet {
+    line-height: 0;
+  }
 }
 
 .addFilesIcon {
