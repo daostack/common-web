@@ -1,6 +1,7 @@
 import { BaseEntity } from "./BaseEntity";
 import { CommonLink } from "./Common";
 import { Timestamp } from "./Timestamp";
+import { User } from "./User";
 
 export interface ChatMessage extends BaseEntity {
   chatChannelId: string;
@@ -13,4 +14,6 @@ export interface ChatMessage extends BaseEntity {
   editedAt?: Timestamp;
   mentions: string[]; // userIds
   parentId?: string;
+
+  owner?: User;
 }

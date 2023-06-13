@@ -5,6 +5,7 @@ import {
   getCancelTokenSource,
   Logger,
   ChatService,
+  UserService,
 } from "@/services";
 import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
@@ -16,6 +17,20 @@ interface Return extends LoadingState<ChatMessage[]> {
   updateChatMessage: (chatMessage: ChatMessage) => void;
   deleteChatMessage: (chatMessageId: string) => void;
 }
+
+const addAdditionalDataToMessages = async (
+  chatMessages: ChatMessage[],
+): Promise<ChatMessage[]> => {
+  const ownerIds = Array.from(
+    new Set(chatMessages.map((message) => message.ownerId)),
+  );
+  const owners = await UserService.getCachedUsersById(ownerIds);
+  chatMessages.forEach((message) => {
+    message.owner = owners.find((owner) => owner.uid === message.ownerId);
+  });
+
+  return chatMessages;
+};
 
 export const useChatMessages = (): Return => {
   const cancelTokenRef = useRef<CancelTokenSource | null>(null);
@@ -38,6 +53,7 @@ export const useChatMessages = (): Return => {
       const chatMessages = await ChatService.getChatMessages(chatChannelId, {
         cancelToken: cancelTokenRef.current.token,
       });
+      await addAdditionalDataToMessages(chatMessages);
 
       cancelTokenRef.current = null;
       setState({
@@ -118,7 +134,9 @@ export const useChatMessages = (): Return => {
 
     const unsubscribe = ChatService.subscribeToChatChannelMessages(
       currentChatChannelId,
-      (messages) => {
+      async (messages) => {
+        await addAdditionalDataToMessages(messages);
+
         setState((currentState) => {
           if (!currentState.data) {
             return currentState;

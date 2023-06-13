@@ -25,6 +25,7 @@ class ChatMessageToUserDiscussionMessageConverter extends Converter<
     ownerType: DiscussionMessageOwnerType.User,
     ownerId: chatMessage.ownerId,
     parentId: chatMessage.parentId,
+    owner: chatMessage.owner,
   });
 
   public toBaseEntity = (
@@ -46,6 +47,7 @@ class ChatMessageToUserDiscussionMessageConverter extends Converter<
     editedAt: discussionMessage.editedAt,
     mentions: discussionMessage.tags?.map((tag) => tag.value) || [],
     parentId: discussionMessage.parentId,
+    owner: discussionMessage.owner,
   });
 }
 
