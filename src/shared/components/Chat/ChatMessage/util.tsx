@@ -2,7 +2,7 @@ import React from "react";
 import classNames from "classnames";
 import { Descendant, Element } from "slate";
 import { UserService } from "@/services";
-import { CommonMemberWithUserInfo, User } from "@/shared/models";
+import { User } from "@/shared/models";
 import {
   getMentionTags,
   parseStringToTextEditorValue,
