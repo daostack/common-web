@@ -10,6 +10,7 @@ import {
 import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
 import { ChatMessage } from "@/shared/models";
+import { getUserName } from "@/shared/utils";
 
 interface Return extends LoadingState<ChatMessage[]> {
   fetchChatMessages: (chatChannelId: string) => void;
@@ -18,9 +19,9 @@ interface Return extends LoadingState<ChatMessage[]> {
   deleteChatMessage: (chatMessageId: string) => void;
 }
 
-const addAdditionalDataToMessages = async (
+const addOwnersToMessages = async (
   chatMessages: ChatMessage[],
-): Promise<ChatMessage[]> => {
+): Promise<void> => {
   const ownerIds = Array.from(
     new Set(chatMessages.map((message) => message.ownerId)),
   );
@@ -28,8 +29,22 @@ const addAdditionalDataToMessages = async (
   chatMessages.forEach((message) => {
     message.owner = owners.find((owner) => owner.uid === message.ownerId);
   });
+};
 
-  return chatMessages;
+const addParentMessageToMessages = (chatMessages: ChatMessage[]): void => {
+  chatMessages.forEach((message) => {
+    const parentMessage =
+      (message.parentId &&
+        chatMessages.find(({ id }) => id === message.parentId)) ||
+      null;
+    message.parentMessage = parentMessage && {
+      id: parentMessage.id,
+      ownerName: getUserName(parentMessage.owner) || parentMessage.ownerName,
+      ownerId: parentMessage.ownerId,
+      text: parentMessage.text,
+      images: parentMessage.images,
+    };
+  });
 };
 
 export const useChatMessages = (): Return => {
@@ -53,7 +68,8 @@ export const useChatMessages = (): Return => {
       const chatMessages = await ChatService.getChatMessages(chatChannelId, {
         cancelToken: cancelTokenRef.current.token,
       });
-      await addAdditionalDataToMessages(chatMessages);
+      await addOwnersToMessages(chatMessages);
+      addParentMessageToMessages(chatMessages);
 
       cancelTokenRef.current = null;
       setState({
@@ -135,7 +151,7 @@ export const useChatMessages = (): Return => {
     const unsubscribe = ChatService.subscribeToChatChannelMessages(
       currentChatChannelId,
       async (messages) => {
-        await addAdditionalDataToMessages(messages);
+        await addOwnersToMessages(messages);
 
         setState((currentState) => {
           if (!currentState.data) {
@@ -156,6 +172,7 @@ export const useChatMessages = (): Return => {
             }
           });
           nextData.push(...newMessages);
+          addParentMessageToMessages(nextData);
 
           return {
             ...currentState,
