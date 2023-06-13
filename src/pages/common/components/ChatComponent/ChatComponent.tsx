@@ -145,25 +145,14 @@ export default function ChatComponent({
   } = useDiscussionChatAdapter({
     hasPermissionToHide,
   });
-  const {
-    chatMessagesData,
-    markChatMessageItemAsSeen,
-    chatUsers,
-    fetchChatUsers,
-  } = useChatChannelChatAdapter({ participants: chatChannel?.participants });
+  const { chatMessagesData, chatUsers, fetchChatUsers } =
+    useChatChannelChatAdapter({ participants: chatChannel?.participants });
   const users = chatChannel ? chatUsers : discussionUsers;
   const discussionMessages = chatChannel
     ? chatMessagesData.data
     : discussionMessagesData.data || [];
   const isFetchedDiscussionMessages = discussionMessagesData.fetched;
   const isLoadingDiscussionMessages = discussionMessagesData.loading;
-
-  useEffect(() => {
-    if (discussionMessageReply) {
-      editorRef.current?.focus();
-    }
-  }, [discussionMessageReply]);
-
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
@@ -215,6 +204,10 @@ export default function ChatComponent({
 
   const canSendMessage =
     !checkIsTextEditorValueEmpty(message) || currentFilesPreview?.length;
+
+  const focusOnChat = () => {
+    editorRef.current?.focus();
+  };
 
   useDebounce(
     async () => {
@@ -398,6 +391,7 @@ export default function ChatComponent({
         if (currentFilesPreview) {
           dispatch(chatActions.clearFilesPreview());
         }
+        focusOnChat();
       }
     },
     [
@@ -473,6 +467,12 @@ export default function ChatComponent({
     }
   }, [lastNonUserMessage?.id]);
 
+  useEffect(() => {
+    if (discussionMessageReply || currentFilesPreview) {
+      focusOnChat();
+    }
+  }, [discussionMessageReply, currentFilesPreview]);
+
   return (
     <div className={styles.chatWrapper}>
       <div
@@ -531,7 +531,10 @@ export default function ChatComponent({
                 />
                 <BaseTextEditor
                   editorRef={editorRef}
-                  className={styles.messageInput}
+                  className={classNames(styles.messageInput, {
+                    [styles.messageInputEmpty]:
+                      checkIsTextEditorValueEmpty(message),
+                  })}
                   value={message}
                   onChange={setMessage}
                   placeholder="What do you think?"
