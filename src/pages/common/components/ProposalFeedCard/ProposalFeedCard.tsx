@@ -2,7 +2,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
-import { useModal } from "@/shared/hooks";
+import { useForceUpdate, useModal } from "@/shared/hooks";
 import {
   useDiscussionById,
   useFeedItemUserMetadata,
@@ -84,6 +84,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
+  const forceUpdate = useForceUpdate();
   const {
     fetchUser: fetchFeedItemUser,
     data: feedItemUser,
@@ -229,6 +230,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       handleOpenChat();
     }
   }, [isDiscussionFetched, isProposalFetched, isFeedItemUserMetadataFetched]);
+
+  useEffect(() => {
+    if (isExpanded) {
+      forceUpdate();
+    }
+  }, [isExpanded]);
 
   const renderContent = (): ReactNode => {
     if (isLoading) {
