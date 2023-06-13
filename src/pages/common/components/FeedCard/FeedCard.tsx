@@ -39,6 +39,7 @@ interface FeedCardProps {
 
 const MOBILE_HEADER_HEIGHT = 52;
 const DESKTOP_HEADER_HEIGHT = 72;
+const COLLAPSE_DURATION = 300;
 
 export const FeedCard: FC<FeedCardProps> = (props) => {
   const {
@@ -68,12 +69,14 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     hasImages,
     hasFiles,
   } = props;
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isTabletView = useIsTabletView();
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
   const isContentVisible = (isExpanded && canBeExpanded) || isPreviewMode;
   const { getCollapseProps, getToggleProps } = useCollapse({
     isExpanded: isContentVisible,
+    duration: COLLAPSE_DURATION,
   });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -83,10 +86,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     }
   };
 
-  function scrollToTargetAdjusted() {
-    const headerOffset = isTabletView
-      ? MOBILE_HEADER_HEIGHT
-      : DESKTOP_HEADER_HEIGHT;
+  const scrollToTargetTop = (headerOffset: number) => {
     const elementPosition =
       containerRef.current?.getBoundingClientRect().top ?? 0;
     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -94,11 +94,47 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
       top: offsetPosition,
       behavior: "smooth",
     });
-  }
+  };
+
+  const scrollToTargetAdjusted = () => {
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    scrollTimeoutRef.current = setTimeout(() => {
+      const headerOffset = isTabletView
+        ? MOBILE_HEADER_HEIGHT
+        : DESKTOP_HEADER_HEIGHT;
+      const itemHeight =
+        containerRef.current?.getBoundingClientRect().height || 0;
+      const itemBottom = containerRef.current?.getBoundingClientRect().bottom;
+      const visibleSpaceForItems = window.innerHeight - headerOffset;
+      scrollTimeoutRef.current = null;
+
+      if (!itemBottom || itemHeight > visibleSpaceForItems) {
+        scrollToTargetTop(headerOffset);
+        return;
+      }
+
+      const itemPositionDifference = window.innerHeight - itemBottom;
+
+      if (itemPositionDifference < 0) {
+        window.scrollBy({
+          top: -itemPositionDifference + 10,
+          behavior: "smooth",
+        });
+      }
+    }, COLLAPSE_DURATION + 10);
+  };
 
   useEffect(() => {
     if (isExpanded && containerRef?.current) {
       scrollToTargetAdjusted();
+      return;
+    }
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = null;
     }
   }, [isExpanded]);
 
