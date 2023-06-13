@@ -71,10 +71,10 @@ $phone-breakpoint: 415px;
   right: 0.5625rem;
 
   @media only screen and (max-width: $big-phone-breakpoint) {
-    right: -1.5rem; // Picker would be at the left corner of send button icon
+    right: -1.5rem;
   }
 
   @media only screen and (max-width: $phone-breakpoint) {
-    right: -3rem; // Picker would be at the right corner of send button icon
+    right: -3rem;
   }
 }
