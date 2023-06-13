@@ -76,6 +76,7 @@ export const DAYS_TILL_REMOVAL_FROM_COMMON_AFTER_CANCELING = 16;
 export enum ChatType {
   ProposalComments,
   DiscussionMessages,
+  ChatMessages,
 }
 
 export enum ChartType {

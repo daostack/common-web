@@ -1,4 +1,5 @@
 import { stringify } from "query-string";
+import { store } from "@/shared/appConfig";
 import { ApiEndpoint } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { GetInboxResponse } from "@/shared/interfaces/api";
@@ -17,7 +18,9 @@ import {
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
+import { cacheActions } from "@/store/states";
 import Api from "./Api";
+import { waitForUserToBeLoaded } from "./utils";
 
 const converter = firestoreDataConverter<User>();
 
@@ -32,6 +35,34 @@ class UserService {
 
     return transformFirebaseDataList<User>(userSnapshot)[0] || null;
   };
+
+  public getCachedUserById = async (userId: string): Promise<User | null> => {
+    const userState = store.getState().cache.userStates[userId];
+
+    if (userState?.fetched) {
+      return userState.data;
+    }
+    if (userState?.loading) {
+      return await waitForUserToBeLoaded(userId);
+    }
+
+    store.dispatch(
+      cacheActions.getUserStateById.request({
+        payload: { userId },
+      }),
+    );
+
+    return await waitForUserToBeLoaded(userId);
+  };
+
+  public getCachedUsersById = async (userIds: string[]): Promise<User[]> =>
+    (
+      await Promise.allSettled(
+        userIds.map((userId) => this.getCachedUserById(userId)),
+      )
+    )
+      .map((item) => (item.status === "fulfilled" ? item.value : null))
+      .filter((user): user is User => Boolean(user));
 
   public subscribeToUser = (
     userId: string,
@@ -84,15 +115,20 @@ class UserService {
     );
     const inboxItems: GetInboxResponse["data"]["inboxWithMetadata"] = {
       chatChannels: data.inboxWithMetadata.chatChannels.map((item) =>
-        convertObjectDatesToFirestoreTimestamps<ChatChannel>(item),
+        convertObjectDatesToFirestoreTimestamps<ChatChannel>(item, [
+          "lastMessage.createdAt",
+        ]),
       ),
       feedItemFollows: data.inboxWithMetadata.feedItemFollows.map((item) =>
-        convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>({
-          ...item,
-          feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
-            item.feedItem,
-          ),
-        }),
+        convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>(
+          {
+            ...item,
+            feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
+              item.feedItem,
+            ),
+          },
+          ["lastSeen", "lastActivity"],
+        ),
       ),
     };
     const firstDocTimestamp =

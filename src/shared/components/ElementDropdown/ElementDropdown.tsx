@@ -53,6 +53,7 @@ interface ElementDropdownProps {
   isOpen?: boolean;
   onMenuToggle?: (isOpen: boolean) => void;
   isDiscussionMessage?: boolean;
+  isChatMessage?: boolean;
   isDiscussionMessageWithFile?: boolean;
   entityType: EntityTypes;
   onEdit?: () => void;
@@ -61,6 +62,7 @@ interface ElementDropdownProps {
   commonId?: string;
   isControlledDropdown?: boolean;
   feedItemId: string;
+  onDelete?: (elemId: string) => void;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
@@ -73,6 +75,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   isOpen,
   onMenuToggle,
   isDiscussionMessage = false,
+  isChatMessage = false,
   isDiscussionMessageWithFile = false,
   entityType,
   onEdit,
@@ -81,6 +84,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   commonId,
   isControlledDropdown = true,
   feedItemId,
+  onDelete,
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
@@ -181,7 +185,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       });
     }
 
-    if (isOwner && isDiscussionMessage) {
+    if (isOwner && (isDiscussionMessage || isChatMessage)) {
       items.push({
         text: (
           <span className={elementDropdownStyles.menuItemRedText}>Delete</span>
@@ -194,6 +198,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     return items;
   }, [
     isDiscussionMessage,
+    isChatMessage,
     elem,
     user,
     ownerId,
@@ -341,6 +346,8 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         onClose={onCloseDelete}
         entity={elem}
         type={entityType}
+        isChatMessage={isChatMessage}
+        onDelete={onDelete}
       />
     </>
   );

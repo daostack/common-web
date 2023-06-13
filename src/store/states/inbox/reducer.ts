@@ -243,6 +243,7 @@ const updateChatChannelItemInInboxItem = (
     chatChannel: {
       ...itemByIndex.chatChannel,
       ...updatedChatChannelItem,
+      lastMessage: updatedChatChannelItem.lastMessage || undefined,
     },
   };
 
@@ -280,6 +281,7 @@ const updateChatChannelItemInSharedInboxItem = (
     chatChannel: {
       ...state.sharedItem.chatChannel,
       ...updatedChatChannelItem,
+      lastMessage: updatedChatChannelItem.lastMessage || undefined,
     },
   };
 };

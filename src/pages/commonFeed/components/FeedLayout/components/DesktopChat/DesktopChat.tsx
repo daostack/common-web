@@ -7,9 +7,9 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
-import { ChatType } from "@/shared/constants";
 import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
 import { isRTL } from "@/shared/utils";
+import { getChatType } from "./utils";
 import styles from "./DesktopChat.module.scss";
 
 interface ChatProps {
@@ -59,11 +59,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
       <ChatComponent
         governanceCircles={governanceCircles}
         commonMember={commonMember}
-        type={
-          chatItem.proposal
-            ? ChatType.ProposalComments
-            : ChatType.DiscussionMessages
-        }
+        type={getChatType(chatItem)}
         isCommonMemberFetched
         commonId={commonId}
         discussion={chatItem.discussion}

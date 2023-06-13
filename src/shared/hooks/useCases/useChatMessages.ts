@@ -5,19 +5,47 @@ import {
   getCancelTokenSource,
   Logger,
   ChatService,
+  UserService,
 } from "@/services";
 import { useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
 import { ChatMessage } from "@/shared/models";
+import { getUserName } from "@/shared/utils";
 
 interface Return extends LoadingState<ChatMessage[]> {
   fetchChatMessages: (chatChannelId: string) => void;
   addChatMessage: (chatMessage: ChatMessage) => void;
-  updateChatMessageWithActualId: (
-    pendingMessageId: string,
-    chatMessage: ChatMessage,
-  ) => void;
+  updateChatMessage: (chatMessage: ChatMessage) => void;
+  deleteChatMessage: (chatMessageId: string) => void;
 }
+
+const addOwnersToMessages = async (
+  chatMessages: ChatMessage[],
+): Promise<void> => {
+  const ownerIds = Array.from(
+    new Set(chatMessages.map((message) => message.ownerId)),
+  );
+  const owners = await UserService.getCachedUsersById(ownerIds);
+  chatMessages.forEach((message) => {
+    message.owner = owners.find((owner) => owner.uid === message.ownerId);
+  });
+};
+
+const addParentMessageToMessages = (chatMessages: ChatMessage[]): void => {
+  chatMessages.forEach((message) => {
+    const parentMessage =
+      (message.parentId &&
+        chatMessages.find(({ id }) => id === message.parentId)) ||
+      null;
+    message.parentMessage = parentMessage && {
+      id: parentMessage.id,
+      ownerName: getUserName(parentMessage.owner) || parentMessage.ownerName,
+      ownerId: parentMessage.ownerId,
+      text: parentMessage.text,
+      images: parentMessage.images,
+    };
+  });
+};
 
 export const useChatMessages = (): Return => {
   const cancelTokenRef = useRef<CancelTokenSource | null>(null);
@@ -40,6 +68,8 @@ export const useChatMessages = (): Return => {
       const chatMessages = await ChatService.getChatMessages(chatChannelId, {
         cancelToken: cancelTokenRef.current.token,
       });
+      await addOwnersToMessages(chatMessages);
+      addParentMessageToMessages(chatMessages);
 
       cancelTokenRef.current = null;
       setState({
@@ -80,36 +110,38 @@ export const useChatMessages = (): Return => {
     });
   }, []);
 
-  const updateChatMessageWithActualId = useCallback(
-    (pendingMessageId: string, chatMessage: ChatMessage) => {
-      setState((currentState) => {
-        if (!currentState.data) {
-          return currentState;
-        }
+  const updateChatMessage = useCallback((chatMessage: ChatMessage) => {
+    setState((currentState) => {
+      if (!currentState.data) {
+        return currentState;
+      }
 
-        const data = [...currentState.data];
-        const pendingMessageIndex = data.findIndex(
-          (item) => item.id === pendingMessageId,
-        );
-        const realMessageIndex = data.findIndex(
-          (item) => item.id === chatMessage.id,
-        );
+      const data = [...currentState.data];
+      const messageIndex = data.findIndex((item) => item.id === chatMessage.id);
 
-        if (pendingMessageIndex !== -1) {
-          data[pendingMessageIndex] = { ...chatMessage };
-        }
-        if (realMessageIndex !== -1) {
-          data.splice(realMessageIndex, 1);
-        }
+      if (messageIndex !== -1) {
+        data[messageIndex] = { ...chatMessage };
+      }
 
-        return {
-          ...currentState,
-          data,
-        };
-      });
-    },
-    [],
-  );
+      return {
+        ...currentState,
+        data,
+      };
+    });
+  }, []);
+
+  const deleteChatMessage = useCallback((chatMessageId: string) => {
+    setState((currentState) => {
+      if (!currentState.data) {
+        return currentState;
+      }
+
+      return {
+        ...currentState,
+        data: currentState.data.filter((item) => item.id !== chatMessageId),
+      };
+    });
+  }, []);
 
   useEffect(() => {
     if (!currentChatChannelId) {
@@ -118,7 +150,9 @@ export const useChatMessages = (): Return => {
 
     const unsubscribe = ChatService.subscribeToChatChannelMessages(
       currentChatChannelId,
-      (messages) => {
+      async (messages) => {
+        await addOwnersToMessages(messages);
+
         setState((currentState) => {
           if (!currentState.data) {
             return currentState;
@@ -138,6 +172,7 @@ export const useChatMessages = (): Return => {
             }
           });
           nextData.push(...newMessages);
+          addParentMessageToMessages(nextData);
 
           return {
             ...currentState,
@@ -154,6 +189,7 @@ export const useChatMessages = (): Return => {
     ...state,
     fetchChatMessages,
     addChatMessage,
-    updateChatMessageWithActualId,
+    updateChatMessage,
+    deleteChatMessage,
   };
 };

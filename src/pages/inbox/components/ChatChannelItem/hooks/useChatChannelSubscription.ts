@@ -4,18 +4,20 @@ import { ChatChannel } from "@/shared/models";
 
 export const useChatChannelSubscription = (
   chatChannelId: string,
+  userId?: string,
   callback?: (item: ChatChannel, isRemoved: boolean) => void,
 ): void => {
   useEffect(() => {
-    if (!callback) {
+    if (!callback || !userId) {
       return;
     }
 
     const unsubscribe = ChatService.subscribeToChatChannel(
       chatChannelId,
+      userId,
       callback,
     );
 
     return unsubscribe;
-  }, [chatChannelId, callback]);
+  }, [userId, chatChannelId, callback]);
 };

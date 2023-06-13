@@ -4,6 +4,7 @@ import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
 import {
   GetChatChannelMessagesResponse,
   SendChatMessageDto,
+  UpdateChatMessageDto,
 } from "@/shared/interfaces/api";
 import {
   ChatChannel,
@@ -110,7 +111,9 @@ class ChatService {
 
     return messages
       .reverse()
-      .map((message) => convertObjectDatesToFirestoreTimestamps(message));
+      .map((message) =>
+        convertObjectDatesToFirestoreTimestamps(message, ["editedAt"]),
+      );
   };
 
   public createChatChannel = async (
@@ -135,7 +138,23 @@ class ChatService {
       body,
     );
 
-    return convertObjectDatesToFirestoreTimestamps(data);
+    return convertObjectDatesToFirestoreTimestamps(data, ["editedAt"]);
+  };
+
+  public updateChatMessage = async (
+    payload: UpdateChatMessageDto,
+  ): Promise<ChatMessage> => {
+    const { chatMessageId, ...body } = payload;
+    const { data } = await Api.patch<ChatMessage>(
+      ApiEndpoint.UpdateChatMessage(chatMessageId),
+      body,
+    );
+
+    return convertObjectDatesToFirestoreTimestamps(data, ["editedAt"]);
+  };
+
+  public deleteChatMessage = async (chatMessageId: string): Promise<void> => {
+    await Api.delete(ApiEndpoint.DeleteChatMessage(chatMessageId));
   };
 
   public markChatMessageAsSeen = async (
@@ -152,13 +171,12 @@ class ChatService {
 
   public subscribeToChatChannel = (
     chatChannelId: string,
+    participantId: string,
     callback: (chatChannel: ChatChannel, isRemoved: boolean) => void,
   ): UnsubscribeFunction => {
-    const query = this.getChatChannelCollection().where(
-      "id",
-      "==",
-      chatChannelId,
-    );
+    const query = this.getChatChannelCollection()
+      .where("id", "==", chatChannelId)
+      .where("participants", "array-contains", participantId);
 
     return query.onSnapshot((snapshot) => {
       const docChange = snapshot.docChanges()[0];
@@ -186,7 +204,7 @@ class ChatService {
   public subscribeToChatChannelUserStatus = (
     userId: string,
     chatChannelId: string,
-    callback: (data: ChatChannelUserStatus) => void,
+    callback: (data: ChatChannelUserStatus | null) => void,
   ): UnsubscribeFunction => {
     const query = this.getChatChannelUserStatusSubCollection(chatChannelId)
       .where("chatChannelId", "==", chatChannelId)
@@ -194,10 +212,7 @@ class ChatService {
 
     return query.onSnapshot((snapshot) => {
       const data = snapshot.docChanges()[0]?.doc.data();
-
-      if (data) {
-        callback(data);
-      }
+      callback(data || null);
     });
   };
 }

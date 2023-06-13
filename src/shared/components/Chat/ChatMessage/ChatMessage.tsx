@@ -42,14 +42,15 @@ interface ChatMessageProps {
   users: User[];
   feedItemId: string;
   commonMember: CommonMember | null;
+  onMessageDelete?: (messageId: string) => void;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
   switch (chatType) {
-    case ChatType.DiscussionMessages:
-      return StaticLinkType.DiscussionMessage;
     case ChatType.ProposalComments:
       return StaticLinkType.ProposalComment;
+    default:
+      return StaticLinkType.DiscussionMessage;
   }
 };
 
@@ -65,6 +66,7 @@ export default function ChatMessage({
   users,
   feedItemId,
   commonMember,
+  onMessageDelete,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
   const [isEditMode, setEditMode] = useState(false);
@@ -234,6 +236,7 @@ export default function ChatMessage({
         {isEditMode ? (
           <EditMessageInput
             isProposalMessage={chatType === ChatType.ProposalComments}
+            isChatMessage={chatType === ChatType.ChatMessages}
             discussionMessage={discussionMessage}
             onClose={() => setEditMode(false)}
             commonMember={commonMember}
@@ -290,7 +293,10 @@ export default function ChatMessage({
                 <ElementDropdown
                   linkType={getStaticLinkByChatType(chatType)}
                   entityType={
-                    chatType === ChatType.DiscussionMessages
+                    [
+                      ChatType.DiscussionMessages,
+                      ChatType.ChatMessages,
+                    ].includes(chatType)
                       ? EntityTypes.DiscussionMessage
                       : EntityTypes.ProposalMessage
                   }
@@ -300,10 +306,11 @@ export default function ChatMessage({
                   onMenuToggle={handleMenuToggle}
                   transparent
                   isDiscussionMessage
+                  isChatMessage={chatType === ChatType.ChatMessages}
                   isDiscussionMessageWithFile={Boolean(filePreview)}
                   ownerId={
                     checkIsUserDiscussionMessage(discussionMessage)
-                      ? discussionMessage.owner?.uid
+                      ? discussionMessage.ownerId
                       : undefined
                   }
                   userId={userId}
@@ -315,6 +322,7 @@ export default function ChatMessage({
                     menuButton: styles.menuArrowButton,
                   }}
                   feedItemId={feedItemId}
+                  onDelete={onMessageDelete}
                 />
               )}
             </div>

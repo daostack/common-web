@@ -145,14 +145,20 @@ export default function ChatComponent({
   } = useDiscussionChatAdapter({
     hasPermissionToHide,
   });
-  const { chatMessagesData, chatUsers, fetchChatUsers } =
-    useChatChannelChatAdapter({ participants: chatChannel?.participants });
+  const {
+    chatMessagesData,
+    markChatMessageItemAsSeen,
+    chatUsers,
+    fetchChatUsers,
+  } = useChatChannelChatAdapter({ participants: chatChannel?.participants });
   const users = chatChannel ? chatUsers : discussionUsers;
   const discussionMessages = chatChannel
     ? chatMessagesData.data
     : discussionMessagesData.data || [];
-  const isFetchedDiscussionMessages = discussionMessagesData.fetched;
-  const isLoadingDiscussionMessages = discussionMessagesData.loading;
+  const isFetchedDiscussionMessages =
+    discussionMessagesData.fetched || chatMessagesData.fetched;
+  const isLoadingDiscussionMessages =
+    discussionMessagesData.loading || chatMessagesData.loading;
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
@@ -245,16 +251,15 @@ export default function ChatComponent({
 
           if (chatChannel) {
             const response = await ChatService.sendChatMessage({
+              id: pendingMessageId,
               chatChannelId: chatChannel.id,
               text: payload.text || "",
               images: payload.images,
               files: payload.files,
               mentions: payload.tags?.map((tag) => tag.value),
+              parentId: payload.parentId,
             });
-            chatMessagesData.updateChatMessageWithActualId(
-              pendingMessageId,
-              response,
-            );
+            chatMessagesData.updateChatMessage(response);
 
             return;
           }
@@ -432,6 +437,15 @@ export default function ChatComponent({
     }
   };
 
+  const handleMessageDelete = useCallback(
+    (messageId: string) => {
+      if (isChatChannel) {
+        chatMessagesData.deleteChatMessage(messageId);
+      }
+    },
+    [isChatChannel, chatMessagesData.deleteChatMessage],
+  );
+
   useEffect(() => {
     if (
       !isChatChannel &&
@@ -453,17 +467,20 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (
-      !isChatChannel &&
       lastNonUserMessage &&
       lastSeenItem?.id !== lastNonUserMessage.id &&
       feedItemId
     ) {
-      markDiscussionMessageItemAsSeen({
-        feedObjectId: feedItemId,
-        commonId: lastNonUserMessage.commonId,
-        lastSeenId: lastNonUserMessage.id,
-        type: LastSeenEntity.DiscussionMessage,
-      });
+      if (isChatChannel) {
+        markChatMessageItemAsSeen(lastNonUserMessage.id);
+      } else {
+        markDiscussionMessageItemAsSeen({
+          feedObjectId: feedItemId,
+          commonId: lastNonUserMessage.commonId,
+          lastSeenId: lastNonUserMessage.id,
+          type: LastSeenEntity.DiscussionMessage,
+        });
+      }
     }
   }, [lastNonUserMessage?.id]);
 
@@ -500,6 +517,7 @@ export default function ChatComponent({
           isLoading={
             isFetchedDiscussionMessages && !isLoadingDiscussionMessages
           }
+          onMessageDelete={handleMessageDelete}
         />
       </div>
       {isAuthorized && (

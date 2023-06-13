@@ -20,10 +20,12 @@ class ChatMessageToUserDiscussionMessageConverter extends Converter<
     images: chatMessage.images,
     files: chatMessage.files,
     tags: chatMessage.mentions.map((mention) => ({ value: mention })),
-    parentMessage: null,
     editedAt: chatMessage.editedAt,
     ownerType: DiscussionMessageOwnerType.User,
     ownerId: chatMessage.ownerId,
+    parentId: chatMessage.parentId,
+    owner: chatMessage.owner,
+    parentMessage: chatMessage.parentMessage || null,
   });
 
   public toBaseEntity = (
@@ -44,6 +46,9 @@ class ChatMessageToUserDiscussionMessageConverter extends Converter<
     files: discussionMessage.files,
     editedAt: discussionMessage.editedAt,
     mentions: discussionMessage.tags?.map((tag) => tag.value) || [],
+    parentId: discussionMessage.parentId,
+    owner: discussionMessage.owner,
+    parentMessage: discussionMessage.parentMessage,
   });
 }
 
