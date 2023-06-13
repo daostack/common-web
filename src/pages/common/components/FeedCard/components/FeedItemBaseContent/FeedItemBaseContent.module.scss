@@ -131,6 +131,10 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+
+    & > a {
+      color: $c-pink-mention-2;
+    }
   }
 }
 
@@ -140,7 +144,7 @@
 }
 
 .mentionText {
-  color: $c-pink-active-feed-cards-light;
+  color: $c-pink-mention-2;
 }
 
 .messageCount {
