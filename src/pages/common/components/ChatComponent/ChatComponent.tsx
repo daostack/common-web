@@ -13,9 +13,7 @@ import isHotkey from "is-hotkey";
 import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";
-import { Loader } from "@/shared/components";
 import {
   ChatType,
   DiscussionMessageOwnerType,
@@ -147,25 +145,14 @@ export default function ChatComponent({
   } = useDiscussionChatAdapter({
     hasPermissionToHide,
   });
-  const {
-    chatMessagesData,
-    markChatMessageItemAsSeen,
-    chatUsers,
-    fetchChatUsers,
-  } = useChatChannelChatAdapter({ participants: chatChannel?.participants });
+  const { chatMessagesData, chatUsers, fetchChatUsers } =
+    useChatChannelChatAdapter({ participants: chatChannel?.participants });
   const users = chatChannel ? chatUsers : discussionUsers;
   const discussionMessages = chatChannel
     ? chatMessagesData.data
     : discussionMessagesData.data || [];
   const isFetchedDiscussionMessages = discussionMessagesData.fetched;
   const isLoadingDiscussionMessages = discussionMessagesData.loading;
-
-  useEffect(() => {
-    if (discussionMessageReply) {
-      editorRef.current?.focus();
-    }
-  }, [discussionMessageReply]);
-
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
@@ -217,6 +204,10 @@ export default function ChatComponent({
 
   const canSendMessage =
     !checkIsTextEditorValueEmpty(message) || currentFilesPreview?.length;
+
+  const focusOnChat = () => {
+    editorRef.current?.focus();
+  };
 
   useDebounce(
     async () => {
@@ -320,8 +311,8 @@ export default function ChatComponent({
           currentFilesPreview ?? [],
         );
         const isEmptyText = checkIsTextEditorValueEmpty(message);
-        const isSingleFileWithoutText =
-          filesPreview.length === 1 && isEmptyText;
+        const isFilesMessageWithoutTextAndImages =
+          filesPreview.length > 0 && isEmptyText && imagesPreview.length === 0;
 
         const payload: CreateDiscussionMessageDtoWithFilesPreview = {
           pendingMessageId,
@@ -333,19 +324,17 @@ export default function ChatComponent({
             parentId: discussionMessageReply?.id,
           }),
           imagesPreview,
-          filesPreview: isSingleFileWithoutText ? filesPreview : [],
+          filesPreview: [],
           tags: mentionTags,
           mentions: mentionTags.map((tag) => tag.value),
         };
 
-        const filePreviewPayload = isSingleFileWithoutText
-          ? []
-          : filesPreview.map((filePreview) => ({
-              ownerId: user.uid,
-              commonId,
-              discussionId,
-              filesPreview: [filePreview],
-            }));
+        const filePreviewPayload = filesPreview.map((filePreview) => ({
+          ownerId: user.uid,
+          commonId,
+          discussionId,
+          filesPreview: [filePreview],
+        }));
         const firebaseDate = Timestamp.fromDate(new Date());
 
         const msg: UserDiscussionMessage = {
@@ -374,15 +363,19 @@ export default function ChatComponent({
           images: imagesPreview?.map((file) =>
             FileService.convertFileInfoToCommonLink(file),
           ),
-          ...(isSingleFileWithoutText && {
-            files: filesPreview?.map((file) =>
-              FileService.convertFileInfoToCommonLink(file),
-            ),
-          }),
+          files: filesPreview?.map((file) =>
+            FileService.convertFileInfoToCommonLink(file),
+          ),
           tags: mentionTags,
         };
 
-        setMessages((prev) => [...prev, ...filePreviewPayload, payload]);
+        setMessages((prev) => {
+          if (isFilesMessageWithoutTextAndImages) {
+            return [...prev, ...filePreviewPayload];
+          }
+
+          return [...prev, ...filePreviewPayload, payload];
+        });
 
         if (isChatChannel) {
           chatMessagesData.addChatMessage(
@@ -398,6 +391,7 @@ export default function ChatComponent({
         if (currentFilesPreview) {
           dispatch(chatActions.clearFilesPreview());
         }
+        focusOnChat();
       }
     },
     [
@@ -473,6 +467,12 @@ export default function ChatComponent({
     }
   }, [lastNonUserMessage?.id]);
 
+  useEffect(() => {
+    if (discussionMessageReply || currentFilesPreview) {
+      focusOnChat();
+    }
+  }, [discussionMessageReply, currentFilesPreview]);
+
   return (
     <div className={styles.chatWrapper}>
       <div
@@ -531,7 +531,10 @@ export default function ChatComponent({
                 />
                 <BaseTextEditor
                   editorRef={editorRef}
-                  className={styles.messageInput}
+                  className={classNames(styles.messageInput, {
+                    [styles.messageInputEmpty]:
+                      checkIsTextEditorValueEmpty(message),
+                  })}
                   value={message}
                   onChange={setMessage}
                   placeholder="What do you think?"
