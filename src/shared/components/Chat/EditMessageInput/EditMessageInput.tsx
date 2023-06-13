@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import classNames from "classnames";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
-import { updateDiscussionMessage } from "@/pages/OldCommon/store/actions";
+import * as oldCommonActions from "@/pages/OldCommon/store/actions";
+import { ChatService } from "@/services";
 import { Loader, Button } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
 import {
@@ -19,6 +20,7 @@ interface Props {
   discussionMessage: DiscussionMessage;
   onClose: () => void;
   isProposalMessage: boolean;
+  isChatMessage: boolean;
   commonMember: CommonMember | null;
 }
 
@@ -26,6 +28,7 @@ export default function EditMessageInput({
   discussionMessage,
   onClose,
   isProposalMessage,
+  isChatMessage,
   commonMember,
 }: Props) {
   const dispatch = useDispatch();
@@ -42,14 +45,14 @@ export default function EditMessageInput({
     }
   }, [discussionMessage.commonId]);
 
-  const updateMessage = () => {
+  const updateDiscussionMessage = () => {
     if (!checkIsUserDiscussionMessage(discussionMessage)) {
       notify("Something went wrong");
       return;
     }
     setLoading(true);
     dispatch(
-      updateDiscussionMessage.request({
+      oldCommonActions.updateDiscussionMessage.request({
         payload: {
           discussionMessageId: discussionMessage.id,
           ownerId: discussionMessage.ownerId,
@@ -67,6 +70,30 @@ export default function EditMessageInput({
         },
       }),
     );
+  };
+
+  const updateChatMessage = async () => {
+    setLoading(true);
+
+    try {
+      const updatedMessage = await ChatService.updateChatMessage({
+        chatMessageId: discussionMessage.id,
+        text: JSON.stringify(message),
+      });
+      onClose();
+    } catch (err) {
+      notify("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateMessage = () => {
+    if (isChatMessage) {
+      updateChatMessage();
+    } else {
+      updateDiscussionMessage();
+    }
   };
 
   const users = useMemo(() => {

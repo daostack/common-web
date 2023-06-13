@@ -21,3 +21,11 @@ export interface SendChatMessageDto {
   mentions?: string[];
   parentId?: string;
 }
+
+export interface UpdateChatMessageDto {
+  chatMessageId: string;
+  text?: string;
+  images?: InfoItem[];
+  files?: InfoItem[];
+  mentions?: string[];
+}

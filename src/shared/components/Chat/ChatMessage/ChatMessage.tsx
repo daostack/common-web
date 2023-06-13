@@ -236,6 +236,7 @@ export default function ChatMessage({
         {isEditMode ? (
           <EditMessageInput
             isProposalMessage={chatType === ChatType.ProposalComments}
+            isChatMessage={chatType === ChatType.ChatMessages}
             discussionMessage={discussionMessage}
             onClose={() => setEditMode(false)}
             commonMember={commonMember}

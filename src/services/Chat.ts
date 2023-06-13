@@ -4,6 +4,7 @@ import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
 import {
   GetChatChannelMessagesResponse,
   SendChatMessageDto,
+  UpdateChatMessageDto,
 } from "@/shared/interfaces/api";
 import {
   ChatChannel,
@@ -110,7 +111,9 @@ class ChatService {
 
     return messages
       .reverse()
-      .map((message) => convertObjectDatesToFirestoreTimestamps(message));
+      .map((message) =>
+        convertObjectDatesToFirestoreTimestamps(message, ["editedAt"]),
+      );
   };
 
   public createChatChannel = async (
@@ -135,7 +138,19 @@ class ChatService {
       body,
     );
 
-    return convertObjectDatesToFirestoreTimestamps(data);
+    return convertObjectDatesToFirestoreTimestamps(data, ["editedAt"]);
+  };
+
+  public updateChatMessage = async (
+    payload: UpdateChatMessageDto,
+  ): Promise<ChatMessage> => {
+    const { chatMessageId, ...body } = payload;
+    const { data } = await Api.patch<ChatMessage>(
+      ApiEndpoint.UpdateChatMessage(chatMessageId),
+      body,
+    );
+
+    return convertObjectDatesToFirestoreTimestamps(data, ["editedAt"]);
   };
 
   public deleteChatMessage = async (chatMessageId: string): Promise<void> => {
