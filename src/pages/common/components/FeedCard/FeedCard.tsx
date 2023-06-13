@@ -39,6 +39,7 @@ interface FeedCardProps {
 
 const MOBILE_HEADER_HEIGHT = 52;
 const DESKTOP_HEADER_HEIGHT = 72;
+const MOBILE_TAB_NAVIGATION_HEIGHT = 65;
 const COLLAPSE_DURATION = 300;
 
 export const FeedCard: FC<FeedCardProps> = (props) => {
@@ -105,10 +106,14 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
       const headerOffset = isTabletView
         ? MOBILE_HEADER_HEIGHT
         : DESKTOP_HEADER_HEIGHT;
+      const tabNavigationOffset = isTabletView
+        ? MOBILE_TAB_NAVIGATION_HEIGHT
+        : 0;
       const itemHeight =
         containerRef.current?.getBoundingClientRect().height || 0;
       const itemBottom = containerRef.current?.getBoundingClientRect().bottom;
-      const visibleSpaceForItems = window.innerHeight - headerOffset;
+      const visibleSpaceForItems =
+        window.innerHeight - headerOffset - tabNavigationOffset;
       scrollTimeoutRef.current = null;
 
       if (!itemBottom || itemHeight > visibleSpaceForItems) {
@@ -116,7 +121,8 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
         return;
       }
 
-      const itemPositionDifference = window.innerHeight - itemBottom;
+      const itemPositionDifference =
+        window.innerHeight - tabNavigationOffset - itemBottom;
 
       if (itemPositionDifference < 0) {
         window.scrollBy({
