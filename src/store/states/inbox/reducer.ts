@@ -427,6 +427,10 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   .handleAction(actions.resetInboxItems, (state) =>
     produce(state, (nextState) => {
       nextState.items = { ...initialInboxItems };
+      nextState.sharedFeedItemId = null;
+      nextState.sharedItem = null;
+      nextState.chatChannelItems = [];
+      nextState.nextChatChannelItemId = null;
     }),
   )
   .handleAction(actions.setSharedFeedItemId, (state, { payload }) =>
