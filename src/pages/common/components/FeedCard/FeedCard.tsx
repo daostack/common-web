@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useRef, MouseEventHandler } from "react";
+import { useCollapse } from "react-collapsed";
 import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -38,6 +39,10 @@ interface FeedCardProps {
 
 const MOBILE_HEADER_HEIGHT = 52;
 const DESKTOP_HEADER_HEIGHT = 72;
+const MOBILE_TAB_NAVIGATION_HEIGHT = 65;
+const COLLAPSE_DURATION = 300;
+const OFFSET_FROM_BOTTOM_FOR_SCROLLING = 10;
+const EXTRA_WAITING_TIME_FOR_TIMEOUT = 10;
 
 export const FeedCard: FC<FeedCardProps> = (props) => {
   const {
@@ -67,9 +72,15 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     hasImages,
     hasFiles,
   } = props;
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isTabletView = useIsTabletView();
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
+  const isContentVisible = (isExpanded && canBeExpanded) || isPreviewMode;
+  const { getCollapseProps, getToggleProps } = useCollapse({
+    isExpanded: isContentVisible,
+    duration: COLLAPSE_DURATION,
+  });
   const containerRef = useRef<HTMLDivElement>(null);
 
   const toggleExpanding = () => {
@@ -78,10 +89,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     }
   };
 
-  function scrollToTargetAdjusted() {
-    const headerOffset = isTabletView
-      ? MOBILE_HEADER_HEIGHT
-      : DESKTOP_HEADER_HEIGHT;
+  const scrollToTargetTop = (headerOffset: number) => {
     const elementPosition =
       containerRef.current?.getBoundingClientRect().top ?? 0;
     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -89,11 +97,52 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
       top: offsetPosition,
       behavior: "smooth",
     });
-  }
+  };
+
+  const scrollToTargetAdjusted = () => {
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    scrollTimeoutRef.current = setTimeout(() => {
+      const headerOffset = isTabletView
+        ? MOBILE_HEADER_HEIGHT
+        : DESKTOP_HEADER_HEIGHT;
+      const tabNavigationOffset = isTabletView
+        ? MOBILE_TAB_NAVIGATION_HEIGHT
+        : 0;
+      const itemHeight =
+        containerRef.current?.getBoundingClientRect().height || 0;
+      const itemBottom = containerRef.current?.getBoundingClientRect().bottom;
+      const visibleSpaceForItems =
+        window.innerHeight - headerOffset - tabNavigationOffset;
+      scrollTimeoutRef.current = null;
+
+      if (!itemBottom || itemHeight > visibleSpaceForItems) {
+        scrollToTargetTop(headerOffset);
+        return;
+      }
+
+      const itemPositionDifference =
+        window.innerHeight - tabNavigationOffset - itemBottom;
+
+      if (itemPositionDifference < 0) {
+        window.scrollBy({
+          top: -itemPositionDifference + OFFSET_FROM_BOTTOM_FOR_SCROLLING,
+          behavior: "smooth",
+        });
+      }
+    }, COLLAPSE_DURATION + EXTRA_WAITING_TIME_FOR_TIMEOUT);
+  };
 
   useEffect(() => {
     if (isExpanded && containerRef?.current) {
       scrollToTargetAdjusted();
+      return;
+    }
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = null;
     }
   }, [isExpanded]);
 
@@ -112,32 +161,35 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
 
   return (
     <div ref={containerRef}>
-      {!isPreviewMode &&
-        renderFeedItemBaseContent?.({
-          lastActivity,
-          unreadMessages,
-          isMobileView: isTabletView,
-          isActive,
-          isExpanded,
-          canBeExpanded,
-          onClick: handleClick,
-          onExpand: handleExpand,
-          title,
-          lastMessage: !isLoading ? lastMessage : undefined,
-          menuItems,
-          commonName,
-          image,
-          imageAlt,
-          isProject,
-          isPinned,
-          type,
-          seenOnce,
-          ownerId,
-          discussionPredefinedType,
-          hasFiles,
-          hasImages,
-        })}
-      {((isExpanded && canBeExpanded) || isPreviewMode) && (
+      {!isPreviewMode && (
+        <div {...getToggleProps()}>
+          {renderFeedItemBaseContent?.({
+            lastActivity,
+            unreadMessages,
+            isMobileView: isTabletView,
+            isActive,
+            isExpanded,
+            canBeExpanded,
+            onClick: handleClick,
+            onExpand: handleExpand,
+            title,
+            lastMessage: !isLoading ? lastMessage : undefined,
+            menuItems,
+            commonName,
+            image,
+            imageAlt,
+            isProject,
+            isPinned,
+            type,
+            seenOnce,
+            ownerId,
+            discussionPredefinedType,
+            hasFiles,
+            hasImages,
+          })}
+        </div>
+      )}
+      <div {...getCollapseProps()}>
         <CommonCard
           className={classNames(
             styles.container,
@@ -152,7 +204,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
         >
           {isLoading ? <Loader className={styles.loader} /> : children}
         </CommonCard>
-      )}
+      </div>
     </div>
   );
 };
