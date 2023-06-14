@@ -448,15 +448,20 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (
-      !isChatChannel &&
       isFetchedDiscussionMessages &&
       discussionMessages?.length === 0 &&
       !seenOnce
     ) {
-      markDiscussionMessageItemAsSeen({
-        feedObjectId: feedItemId,
-        commonId,
-      });
+      if (isChatChannel) {
+        markChatMessageItemAsSeen({
+          chatChannelId: feedItemId,
+        });
+      } else {
+        markDiscussionMessageItemAsSeen({
+          feedObjectId: feedItemId,
+          commonId,
+        });
+      }
     }
   }, [
     isFetchedDiscussionMessages,
@@ -472,7 +477,9 @@ export default function ChatComponent({
       feedItemId
     ) {
       if (isChatChannel) {
-        markChatMessageItemAsSeen(lastNonUserMessage.id);
+        markChatMessageItemAsSeen({
+          chatMessageId: lastNonUserMessage.id,
+        });
       } else {
         markDiscussionMessageItemAsSeen({
           feedObjectId: feedItemId,

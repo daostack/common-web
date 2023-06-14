@@ -143,9 +143,9 @@ class ChatService {
 
   public updateChatMessage = async (
     payload: UpdateChatMessageDto,
-  ): Promise<ChatMessage> => {
+  ): Promise<Partial<ChatMessage>> => {
     const { chatMessageId, ...body } = payload;
-    const { data } = await Api.patch<ChatMessage>(
+    const { data } = await Api.patch<Partial<ChatMessage>>(
       ApiEndpoint.UpdateChatMessage(chatMessageId),
       body,
     );
@@ -155,6 +155,18 @@ class ChatService {
 
   public deleteChatMessage = async (chatMessageId: string): Promise<void> => {
     await Api.delete(ApiEndpoint.DeleteChatMessage(chatMessageId));
+  };
+
+  public markChatChannelAsSeen = async (
+    chatChannelId: string,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<void> => {
+    const { cancelToken } = options;
+    await Api.post(
+      ApiEndpoint.MarkChatChannelAsSeen(chatChannelId),
+      undefined,
+      { cancelToken },
+    );
   };
 
   public markChatMessageAsSeen = async (
