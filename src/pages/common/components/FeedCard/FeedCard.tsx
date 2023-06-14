@@ -41,6 +41,8 @@ const MOBILE_HEADER_HEIGHT = 52;
 const DESKTOP_HEADER_HEIGHT = 72;
 const MOBILE_TAB_NAVIGATION_HEIGHT = 65;
 const COLLAPSE_DURATION = 300;
+const OFFSET_FROM_BOTTOM_FOR_SCROLLING = 10;
+const EXTRA_WAITING_TIME_FOR_TIMEOUT = 10;
 
 export const FeedCard: FC<FeedCardProps> = (props) => {
   const {
@@ -126,11 +128,11 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
 
       if (itemPositionDifference < 0) {
         window.scrollBy({
-          top: -itemPositionDifference + 10,
+          top: -itemPositionDifference + OFFSET_FROM_BOTTOM_FOR_SCROLLING,
           behavior: "smooth",
         });
       }
-    }, COLLAPSE_DURATION + 10);
+    }, COLLAPSE_DURATION + EXTRA_WAITING_TIME_FOR_TIMEOUT);
   };
 
   useEffect(() => {
