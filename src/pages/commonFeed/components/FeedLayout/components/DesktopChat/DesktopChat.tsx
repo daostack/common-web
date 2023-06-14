@@ -19,6 +19,7 @@ interface ChatProps {
   governanceCircles?: Circles;
   commonMember: (CommonMember & CirclesPermissions) | null;
   titleRightContent?: ReactNode;
+  onMessagesAmountChange?: (newMessagesAmount: number) => void;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -29,6 +30,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
     governanceCircles,
     commonMember,
     titleRightContent,
+    onMessagesAmountChange,
   } = props;
   const user = useSelector(selectUser());
   const userCircleIds = useMemo(
@@ -70,6 +72,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         seenOnce={chatItem.seenOnce}
         isHidden={false}
         isAuthorized={Boolean(user)}
+        onMessagesAmountChange={onMessagesAmountChange}
       />
     </div>
   );

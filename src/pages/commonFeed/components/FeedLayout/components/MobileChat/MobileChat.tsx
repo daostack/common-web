@@ -22,6 +22,7 @@ interface ChatProps {
   commonMember: (CommonMember & CirclesPermissions) | null;
   shouldShowSeeMore?: boolean;
   rightHeaderContent?: ReactNode;
+  onMessagesAmountChange?: (newMessagesAmount: number) => void;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -35,6 +36,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     children,
     shouldShowSeeMore = true,
     rightHeaderContent,
+    onMessagesAmountChange,
   } = props;
   const { setChatItem, setIsShowFeedItemDetailsModal, setShouldShowSeeMore } =
     useChatContext();
@@ -109,6 +111,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
             seenOnce={chatItem.seenOnce}
+            onMessagesAmountChange={onMessagesAmountChange}
           />
         )}
       </ChatMobileModal>

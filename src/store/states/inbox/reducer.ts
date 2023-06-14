@@ -365,6 +365,18 @@ const updateChatChannelItemInSharedInboxItem = (
   };
 };
 
+const updateChatChannelItem = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: Partial<ChatChannel> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  updateChatChannelItemInInboxItem(state, payload);
+  updateChatChannelItemInChatChannelItem(state, payload);
+  updateChatChannelItemInSharedInboxItem(state, payload);
+};
+
 export const reducer = createReducer<InboxState, Action>(initialState)
   .handleAction(actions.resetInbox, () => ({ ...initialState }))
   .handleAction(actions.getInboxItems.request, (state) =>
@@ -458,9 +470,34 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   )
   .handleAction(actions.updateChatChannelItem, (state, { payload }) =>
     produce(state, (nextState) => {
-      updateChatChannelItemInInboxItem(nextState, payload);
-      updateChatChannelItemInChatChannelItem(nextState, payload);
-      updateChatChannelItemInSharedInboxItem(nextState, payload);
+      updateChatChannelItem(nextState, payload);
+    }),
+  )
+  .handleAction(actions.updateChatChannelItemEmptiness, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const foundItem =
+        state.items.data?.find(
+          (item) =>
+            checkIsChatChannelLayoutItem(item) && item.itemId === payload.id,
+        ) ||
+        state.chatChannelItems.find((item) => item.itemId === payload.id) ||
+        (checkIsChatChannelLayoutItem(state.sharedItem) &&
+        state.sharedItem.itemId === payload.id
+          ? state.sharedItem
+          : null);
+
+      if (
+        checkIsChatChannelLayoutItem(foundItem) &&
+        ((foundItem.chatChannel.messageCount === 0 && !payload.becameEmpty) ||
+          (foundItem.chatChannel.messageCount > 0 && payload.becameEmpty))
+      ) {
+        updateChatChannelItem(nextState, {
+          item: {
+            ...foundItem.chatChannel,
+            messageCount: payload.becameEmpty ? 0 : 1,
+          },
+        });
+      }
     }),
   )
   .handleAction(actions.resetInboxItems, (state) =>

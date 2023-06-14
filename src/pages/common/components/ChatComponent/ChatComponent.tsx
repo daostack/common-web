@@ -79,6 +79,7 @@ interface ChatComponentInterface {
   feedItemId: string;
   isAuthorized?: boolean;
   isHidden: boolean;
+  onMessagesAmountChange?: (newMessagesAmount: number) => void;
 }
 
 interface Messages {
@@ -115,6 +116,7 @@ export default function ChatComponent({
   isAuthorized,
   isHidden = false,
   isCommonMemberFetched,
+  onMessagesAmountChange,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
   useZoomDisabling();
@@ -496,6 +498,12 @@ export default function ChatComponent({
       focusOnChat();
     }
   }, [discussionMessageReply, currentFilesPreview]);
+
+  useEffect(() => {
+    if (isFetchedDiscussionMessages) {
+      onMessagesAmountChange?.(discussionMessages.length);
+    }
+  }, [discussionMessages.length]);
 
   return (
     <div className={styles.chatWrapper}>

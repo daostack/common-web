@@ -53,6 +53,13 @@ export const updateChatChannelItem = createStandardAction(
   isRemoved?: boolean;
 }>();
 
+export const updateChatChannelItemEmptiness = createStandardAction(
+  InboxActionType.UPDATE_CHAT_CHANNEL_ITEM_EMPTINESS,
+)<{
+  id: string;
+  becameEmpty: boolean;
+}>();
+
 export const resetInboxItems = createStandardAction(
   InboxActionType.RESET_INBOX_ITEMS,
 )();
