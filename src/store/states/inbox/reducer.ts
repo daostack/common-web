@@ -3,6 +3,7 @@ import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType } from "@/shared/constants";
 import {
+  checkIsChatChannelLayoutItem,
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
@@ -213,7 +214,7 @@ const updateChatChannelItemInInboxItem = (
   const { item: updatedChatChannelItem, isRemoved } = payload;
   const itemIndex = state.items.data?.findIndex(
     (item) =>
-      item.type === InboxItemType.ChatChannel &&
+      checkIsChatChannelLayoutItem(item) &&
       item.itemId === updatedChatChannelItem.id,
   );
 
@@ -251,6 +252,46 @@ const updateChatChannelItemInInboxItem = (
     ...state.items,
     data: nextData,
   };
+};
+
+const updateChatChannelItemInChatChannelItem = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: Partial<ChatChannel> & { id: string };
+    isRemoved?: boolean;
+  },
+): void => {
+  if (state.chatChannelItems.length === 0) {
+    return;
+  }
+
+  const { item: updatedChatChannelItem, isRemoved } = payload;
+  const itemIndex = state.chatChannelItems.findIndex(
+    (item) => item.itemId === updatedChatChannelItem.id,
+  );
+
+  if (itemIndex === -1) {
+    return;
+  }
+
+  const nextData = [...state.chatChannelItems];
+
+  if (isRemoved) {
+    nextData.splice(itemIndex, 1);
+    state.chatChannelItems = nextData;
+    return;
+  }
+
+  const itemByIndex = nextData[itemIndex];
+  nextData[itemIndex] = {
+    ...itemByIndex,
+    chatChannel: {
+      ...itemByIndex.chatChannel,
+      ...updatedChatChannelItem,
+      lastMessage: updatedChatChannelItem.lastMessage || undefined,
+    },
+  };
+  state.chatChannelItems = nextData;
 };
 
 const updateChatChannelItemInSharedInboxItem = (
@@ -379,6 +420,7 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   .handleAction(actions.updateChatChannelItem, (state, { payload }) =>
     produce(state, (nextState) => {
       updateChatChannelItemInInboxItem(nextState, payload);
+      updateChatChannelItemInChatChannelItem(nextState, payload);
       updateChatChannelItemInSharedInboxItem(nextState, payload);
     }),
   )
