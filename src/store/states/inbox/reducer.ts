@@ -72,6 +72,44 @@ const updateInboxItemInList = (
   };
 };
 
+const updateInboxItemInChatChannelItems = (
+  state: WritableDraft<InboxState>,
+  payload: {
+    item: FeedLayoutItemWithFollowData;
+    isRemoved?: boolean;
+  },
+): void => {
+  const { item: updatedItem, isRemoved } = payload;
+
+  if (
+    state.chatChannelItems.length === 0 ||
+    !checkIsChatChannelLayoutItem(updatedItem)
+  ) {
+    return;
+  }
+
+  const itemIndex = state.chatChannelItems.findIndex(
+    (item) => item.itemId === updatedItem.itemId,
+  );
+
+  if (itemIndex === -1) {
+    return;
+  }
+
+  const nextData = [...state.chatChannelItems];
+
+  if (isRemoved) {
+    nextData.splice(itemIndex, 1);
+  } else {
+    nextData[itemIndex] = {
+      ...nextData[itemIndex],
+      ...updatedItem,
+    };
+  }
+
+  state.chatChannelItems = nextData;
+};
+
 const updateFeedItemInInboxItem = (
   state: WritableDraft<InboxState>,
   payload: {
@@ -408,6 +446,7 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   .handleAction(actions.updateInboxItem, (state, { payload }) =>
     produce(state, (nextState) => {
       updateInboxItemInList(nextState, payload);
+      updateInboxItemInChatChannelItems(nextState, payload);
       updateSharedInboxItem(nextState, payload);
     }),
   )
