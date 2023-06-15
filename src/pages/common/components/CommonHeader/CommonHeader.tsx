@@ -4,6 +4,7 @@ import { useCommonDataContext } from "@/pages/common/providers/CommonData/contex
 import { Image } from "@/shared/components/Image";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit/Button";
+import { getRandomUserAvatarURL } from "@/shared/utils";
 import { KeyValueItem, KeyValuePairs } from "./components";
 import styles from "./CommonHeader.module.scss";
 
@@ -44,11 +45,13 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
           src={commonImageSrc}
           alt={`${commonName}'s image`}
           placeholderElement={
-            <div
+            <Image
               className={classNames(
                 commonImageClassName,
                 styles.commonImagePlaceholder,
               )}
+              src={getRandomUserAvatarURL(commonName)}
+              alt={commonName}
             />
           }
         />

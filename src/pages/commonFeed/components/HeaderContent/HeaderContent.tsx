@@ -7,7 +7,11 @@ import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
-import { getCommonPageAboutTabPath, getPluralEnding } from "@/shared/utils";
+import {
+  getCommonPageAboutTabPath,
+  getPluralEnding,
+  getRandomUserAvatarURL,
+} from "@/shared/utils";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
@@ -53,7 +57,13 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
             })}
             src={commonImage}
             alt={`${commonName}'s image`}
-            placeholderElement={null}
+            placeholderElement={
+              <Image
+                className={styles.image}
+                src={getRandomUserAvatarURL(commonName)}
+                alt={commonName}
+              />
+            }
             aria-hidden
           />
           <div className={styles.commonInfoWrapper}>

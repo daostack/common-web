@@ -36,7 +36,7 @@ export const useProjectCreation = (): Return => {
     ) => {
       const [projectImageFile] = creationData.projectImages;
 
-      if (isProjectCreationLoading || !projectImageFile) {
+      if (isProjectCreationLoading) {
         return;
       }
 
@@ -44,7 +44,7 @@ export const useProjectCreation = (): Return => {
 
       try {
         const [projectImage, gallery] = await Promise.all([
-          getFileDownloadInfo(projectImageFile),
+          projectImageFile ? getFileDownloadInfo(projectImageFile) : null,
           getFilesDownloadInfo(creationData.gallery),
         ]);
         const links = parseLinksForSubmission(creationData.links || []);
@@ -54,7 +54,7 @@ export const useProjectCreation = (): Return => {
           description: creationData.description
             ? JSON.stringify(creationData.description)
             : "",
-          image: projectImage.value,
+          image: projectImage ? projectImage.value : "",
           gallery,
           video: creationData.videoUrl
             ? {

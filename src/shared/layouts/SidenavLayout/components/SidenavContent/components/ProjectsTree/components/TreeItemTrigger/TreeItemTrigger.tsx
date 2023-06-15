@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { Image } from "@/shared/components/Image";
 import { SmallArrowIcon } from "@/shared/icons";
+import { getRandomUserAvatarURL } from "@/shared/utils";
 import { useTreeContext } from "../../context";
 import { Item } from "../../types";
 import styles from "./TreeItemTrigger.module.scss";
@@ -77,6 +78,13 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
         src={item.image}
         alt={`${item.name}'s image`}
         aria-hidden
+        placeholderElement={
+          <Image
+            className={styles.image}
+            src={getRandomUserAvatarURL(item.name)}
+            alt={item.name}
+          />
+        }
       />
       <span className={classNames(styles.name, treeItemTriggerStyles?.name)}>
         {item.name}
