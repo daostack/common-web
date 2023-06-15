@@ -266,9 +266,10 @@ export default function ChatComponent({
             return;
           }
 
-          const response = await DiscussionMessageService.createMessage(
-            payload,
-          );
+          const response = await DiscussionMessageService.createMessage({
+            ...payload,
+            id: pendingMessageId,
+          });
 
           dispatch(
             cacheActions.updateDiscussionMessageWithActualId({
