@@ -1,3 +1,4 @@
+import { words } from "lodash";
 import millify from "millify";
 import moment from "moment";
 import { store } from "@/shared/appConfig";
@@ -119,11 +120,13 @@ export const getUserInitials = (user: User | undefined) => {
   return user.displayName || `${user.firstName[0]}${user.lastName[0]}`;
 };
 
-export const getRandomUserAvatarURL = (name?: string | null): string =>
-  `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name?.replaceAll(
+export const getRandomUserAvatarURL = (name?: string | null): string => {
+  const isOneWord = words(name ?? "").length === 1;
+  return `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name?.replaceAll(
     " ",
     "+",
-  )}&rounded=true`;
+  )}&rounded=true&${isOneWord ? "uppercase=false" : ""}`;
+};
 
 export const isRandomUserAvatarURL = (url: string): boolean =>
   url.startsWith("https://eu.ui-avatars.com/api");
