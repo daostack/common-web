@@ -3,6 +3,7 @@ export interface InfoItem {
 }
 
 export interface CreateDiscussionMessageDto {
+  id?: string;
   pendingMessageId?: string;
   text?: string;
   ownerId: string;
