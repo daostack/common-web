@@ -5,6 +5,8 @@ import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/util";
 import CloseIcon from "@/shared/icons/close2.icon";
 import { User } from "@/shared/models";
+import { FilePreview, FilePreviewVariant, getFileName } from "@/shared/ui-kit";
+import { convertBytes } from "@/shared/utils/convertBytes";
 import {
   selectCurrentDiscussionMessageReply,
   chatActions,
@@ -14,6 +16,8 @@ import styles from "./MessageReply.module.scss";
 interface MessageReplyProps {
   users: User[];
 }
+
+const FILE_NAME_LIMIT = 18;
 
 const MessageReply: React.FC<MessageReplyProps> = ({ users }) => {
   const dispatch = useDispatch();
@@ -43,6 +47,7 @@ const MessageReply: React.FC<MessageReplyProps> = ({ users }) => {
   }
 
   const image = discussionMessageReply.images?.[0]?.value;
+  const file = discussionMessageReply.files?.[0];
 
   return (
     <div
@@ -54,11 +59,33 @@ const MessageReply: React.FC<MessageReplyProps> = ({ users }) => {
         <>
           <div className={styles.messageContainer}>
             {image && <img className={styles.image} src={image} />}
+            {file && (
+              <FilePreview
+                containerClassName={styles.fileContainer}
+                name={file.title}
+                src={file.value}
+                isPreview
+                size={24}
+                variant={FilePreviewVariant.extraSmall}
+              />
+            )}
             <div className={styles.messageWrapper}>
               <span className={styles.username}>
                 {discussionMessageReply.ownerName}
               </span>
-              <p className={styles.text}>{messageText.map((text) => text)}</p>
+
+              {file ? (
+                <>
+                  <p className={styles.text}>
+                    {getFileName(file.title, FILE_NAME_LIMIT)}
+                  </p>
+                  {file.size && (
+                    <p className={styles.fileSize}>{convertBytes(file.size)}</p>
+                  )}
+                </>
+              ) : (
+                <p className={styles.text}>{messageText.map((text) => text)}</p>
+              )}
             </div>
           </div>
           <ButtonIcon

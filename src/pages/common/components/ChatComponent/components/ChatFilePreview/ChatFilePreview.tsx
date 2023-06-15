@@ -26,7 +26,13 @@ export default function ChatFilePreview() {
             {file.info.type.startsWith(MimePrefixes.image) ? (
               <img className={styles.filePreview} src={file.src} />
             ) : (
-              <FilePreview src={file.src} name={file.info.name} size={100} />
+              <FilePreview
+                containerClassName={styles.filePreviewContainer}
+                src={file.src}
+                name={file.info.name}
+                fileSize={file.size}
+                isPreview
+              />
             )}
             <ButtonIcon
               className={styles.closeButton}

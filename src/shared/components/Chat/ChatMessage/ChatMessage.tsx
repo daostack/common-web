@@ -9,6 +9,7 @@ import React, {
 import classNames from "classnames";
 import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
 import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
+import { Colors } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -267,12 +268,12 @@ export default function ChatMessage({
                   <FilePreview
                     src={filePreview.value}
                     name={filePreview.title}
-                    size={128}
+                    fileSize={filePreview.size}
                     variant={FilePreviewVariant.medium}
-                    iconContainerClassName={classNames({
-                      [styles.iconContainerFilePreviewCurrentUser]:
-                        !isNotCurrentUserMessage,
-                    })}
+                    iconColor={
+                      isNotCurrentUserMessage ? Colors.black : Colors.lightPink
+                    }
+                    isCurrentUser={!isNotCurrentUserMessage}
                   />
                 )}
                 <ChatImageGallery gallery={discussionMessage.images ?? []} />
