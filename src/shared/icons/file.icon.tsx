@@ -3,7 +3,7 @@ import { Colors } from "@/shared/constants";
 
 const BASE_WIDTH = 66;
 const BASE_HEIGHT = 78;
-const HEIGHT_COEF = BASE_HEIGHT / BASE_WIDTH;
+const HEIGHT_COEFFICIENT = BASE_HEIGHT / BASE_WIDTH;
 
 interface GalleryIconProps {
   color?: string;
@@ -20,7 +20,7 @@ export default function FileIcon({
     <svg
       className={className}
       width={size}
-      height={size * HEIGHT_COEF}
+      height={size * HEIGHT_COEFFICIENT}
       viewBox="0 0 66 78"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
