@@ -113,6 +113,7 @@ export default function EditMessageInput({
       <BaseTextEditor
         className={styles.input}
         emojiPickerContainerClassName={styles.pickerContainer}
+        emojiContainerClassName={styles.emojiContainer}
         value={message}
         onChange={setMessage}
         users={users}
