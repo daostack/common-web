@@ -1,7 +1,7 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
-import { FeedItemBaseContentProps } from "@/pages/common";
+import { FeedCardTags, FeedItemBaseContentProps } from "@/pages/common";
 import { ButtonIcon, Image } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { PredefinedTypes } from "@/shared/models";
@@ -26,7 +26,10 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     lastMessage,
     onClick,
     onExpand,
+    type,
     menuItems,
+    seenOnce,
+    ownerId,
     commonName,
     renderImage,
     image,
@@ -159,16 +162,16 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           ) : (
             <div />
           )}
-          {Boolean(unreadMessages) && (
-            <div
-              className={classNames(styles.unreadMessages, {
-                [styles.unreadMessagesLong]: Number(unreadMessages) > 9,
-                [styles.unreadMessagesActive]: isActive,
-              })}
-            >
-              {unreadMessages}
-            </div>
-          )}
+          <div className={styles.bottomContentRight}>
+            <FeedCardTags
+              unreadMessages={unreadMessages}
+              type={type}
+              seenOnce={seenOnce}
+              ownerId={ownerId}
+              isActive={isActive}
+              isPinned={false}
+            />
+          </div>
         </div>
       </div>
       {menuItems && menuItems.length > 0 && (
