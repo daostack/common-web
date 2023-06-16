@@ -7,6 +7,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
+import { UserAvatar } from "@/shared/components";
 import { useUserById } from "@/shared/hooks/useCases";
 import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
 import { getUserName, isRTL } from "@/shared/utils";
@@ -65,6 +66,14 @@ const DesktopChat: FC<ChatProps> = (props) => {
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.titleWrapper}>
+        {dmUser?.photoURL && (
+          <UserAvatar
+            className={styles.userAvatar}
+            photoURL={dmUser.photoURL}
+            nameForRandomAvatar={title}
+            userName={title}
+          />
+        )}
         <p
           className={classNames(styles.title, {
             [styles.titleRTL]: isRTL(title),

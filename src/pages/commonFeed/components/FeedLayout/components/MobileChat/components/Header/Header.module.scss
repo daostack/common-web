@@ -21,6 +21,13 @@
   color: $c-neutrals-600;
 }
 
+.userAvatar {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+}
+
 .title {
   margin: 0;
   display: -webkit-box;

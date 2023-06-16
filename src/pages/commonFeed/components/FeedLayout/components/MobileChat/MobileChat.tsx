@@ -92,6 +92,8 @@ const MobileChat: FC<ChatProps> = (props) => {
         header={
           <Header
             title={title}
+            userAvatar={dmUser?.photoURL}
+            userName={title}
             onBackClick={handleClose}
             titleActionElement={
               shouldShowSeeMore ? (
