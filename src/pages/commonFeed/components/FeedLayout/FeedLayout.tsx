@@ -403,33 +403,36 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     isItemSelected={Boolean(selectedItemCommonData)}
                   />
                 ))}
-              {isTabletView &&
-                selectedItemCommonData &&
-                checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
-                  <MobileChat
-                    chatItem={chatItem}
-                    commonId={selectedItemCommonData.id}
-                    commonName={selectedItemCommonData.name}
-                    commonImage={selectedItemCommonData.image}
-                    governanceCircles={governance?.circles}
-                    commonMember={commonMember}
-                    shouldShowSeeMore={shouldShowSeeMore}
-                    rightHeaderContent={followFeedItemEl}
-                    onMessagesAmountChange={handleMessagesAmountChange}
-                  >
-                    <FeedItemPreviewModal
-                      commonId={selectedItemCommonData.id}
-                      commonName={selectedItemCommonData.name}
-                      commonImage={selectedItemCommonData.image}
-                      isProject={selectedItemCommonData.isProject}
-                      governanceCircles={governance?.circles}
-                      selectedFeedItem={selectedFeedItem?.feedItem}
-                      userCircleIds={userCircleIds}
-                      isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
-                      sizeKey={sizeKey}
-                    />
-                  </MobileChat>
-                )}
+              {isTabletView && (
+                <MobileChat
+                  chatItem={chatItem}
+                  commonId={selectedItemCommonData?.id || ""}
+                  commonName={selectedItemCommonData?.name || ""}
+                  commonImage={selectedItemCommonData?.image || ""}
+                  governanceCircles={governance?.circles}
+                  commonMember={commonMember}
+                  shouldShowSeeMore={
+                    !chatItem?.chatChannel && shouldShowSeeMore
+                  }
+                  rightHeaderContent={followFeedItemEl}
+                  onMessagesAmountChange={handleMessagesAmountChange}
+                >
+                  {selectedItemCommonData &&
+                    checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
+                      <FeedItemPreviewModal
+                        commonId={selectedItemCommonData.id}
+                        commonName={selectedItemCommonData.name}
+                        commonImage={selectedItemCommonData.image}
+                        isProject={selectedItemCommonData.isProject}
+                        governanceCircles={governance?.circles}
+                        selectedFeedItem={selectedFeedItem?.feedItem}
+                        userCircleIds={userCircleIds}
+                        isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
+                        sizeKey={sizeKey}
+                      />
+                    )}
+                </MobileChat>
+              )}
             </div>
           )}
         </ChatContext.Provider>
