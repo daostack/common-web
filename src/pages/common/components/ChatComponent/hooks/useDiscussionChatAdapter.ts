@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
@@ -39,10 +39,17 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     [userId, commonMembers],
   );
 
+  const fetchDiscussionUsers = useCallback(
+    (commonId: string, circleVisibility?: string[]) => {
+      fetchCommonMembers(commonId, circleVisibility, true);
+    },
+    [fetchCommonMembers],
+  );
+
   return {
     discussionMessagesData,
     markDiscussionMessageItemAsSeen: markFeedItemAsSeen,
     discussionUsers: users,
-    fetchDiscussionUsers: fetchCommonMembers,
+    fetchDiscussionUsers,
   };
 };
