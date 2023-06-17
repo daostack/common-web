@@ -204,3 +204,7 @@
 .menuArrowButton {
   display: none;
 }
+
+.highlighted {
+  border: 0.06rem solid $c-pink-active-feed-cards;
+}

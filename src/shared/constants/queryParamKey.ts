@@ -5,4 +5,5 @@ export enum QueryParamKey {
   Language = "language",
   Tab = "tab",
   Item = "item",
+  Message = "message",
 }

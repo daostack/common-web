@@ -213,7 +213,7 @@ export default function ChatMessage({
   return (
     <li
       id={discussionMessage.id}
-      className={classNames(styles.container, className, { highlighted })}
+      className={classNames(styles.container, className)}
       onContextMenu={handleContextMenu}
     >
       <div
@@ -251,6 +251,7 @@ export default function ChatMessage({
                 [styles.messageTextWithReply]:
                   !!discussionMessage.parentMessage?.id,
                 [styles.systemMessage]: isSystemMessage,
+                [styles.highlighted]: highlighted,
               })}
               onClick={handleMessageClick}
             >
