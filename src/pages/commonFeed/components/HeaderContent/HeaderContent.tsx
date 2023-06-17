@@ -1,17 +1,13 @@
 import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
+import { CommonAvatar } from "@/pages/common/components/CommonAvatar";
 import { NewStreamButton } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
-import { Image } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
-import {
-  getCommonPageAboutTabPath,
-  getPluralEnding,
-  getRandomUserAvatarURL,
-} from "@/shared/utils";
+import { getCommonPageAboutTabPath, getPluralEnding } from "@/shared/utils";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
@@ -50,22 +46,15 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           className={styles.commonLink}
           to={getCommonPageAboutTabPath(commonId)}
         >
-          <Image
+          <CommonAvatar
+            name={commonName}
+            src={commonImage}
             className={classNames(styles.image, {
               [styles.imageNonRounded]: !isProject,
               [styles.imageRounded]: isProject,
             })}
-            src={commonImage}
-            alt={`${commonName}'s image`}
-            placeholderElement={
-              <Image
-                className={styles.image}
-                src={getRandomUserAvatarURL(commonName)}
-                alt={commonName}
-              />
-            }
-            aria-hidden
           />
+
           <div className={styles.commonInfoWrapper}>
             <h1 className={styles.commonName}>{commonName}</h1>
             <p className={styles.commonMembersAmount}>

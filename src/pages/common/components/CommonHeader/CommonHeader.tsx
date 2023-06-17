@@ -1,10 +1,9 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { useCommonDataContext } from "@/pages/common/providers/CommonData/context";
-import { Image } from "@/shared/components/Image";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit/Button";
-import { getRandomUserAvatarURL } from "@/shared/utils";
+import { CommonAvatar } from "../CommonAvatar";
 import { KeyValueItem, KeyValuePairs } from "./components";
 import styles from "./CommonHeader.module.scss";
 
@@ -40,21 +39,12 @@ const CommonHeader: FC<CommonHeaderProps> = (props) => {
   return (
     <section className={styles.container}>
       <header className={styles.header}>
-        <Image
-          className={commonImageClassName}
+        <CommonAvatar
+          name={commonName}
           src={commonImageSrc}
-          alt={`${commonName}'s image`}
-          placeholderElement={
-            <Image
-              className={classNames(
-                commonImageClassName,
-                styles.commonImagePlaceholder,
-              )}
-              src={getRandomUserAvatarURL(commonName)}
-              alt={commonName}
-            />
-          }
+          className={commonImageClassName}
         />
+
         <div className={styles.commonInfoWrapper}>
           <h1 className={styles.commonName} title={commonName}>
             {commonName}

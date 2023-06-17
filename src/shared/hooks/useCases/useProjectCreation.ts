@@ -54,7 +54,7 @@ export const useProjectCreation = (): Return => {
           description: creationData.description
             ? JSON.stringify(creationData.description)
             : "",
-          image: projectImage ? projectImage.value : "",
+          image: projectImage?.value || "",
           gallery,
           video: creationData.videoUrl
             ? {
