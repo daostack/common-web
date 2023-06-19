@@ -17,7 +17,7 @@ interface MessageReplyProps {
   users: User[];
 }
 
-const FILE_NAME_LIMIT = 18;
+const FILE_NAME_LIMIT = 21;
 
 const MessageReply: React.FC<MessageReplyProps> = ({ users }) => {
   const dispatch = useDispatch();
