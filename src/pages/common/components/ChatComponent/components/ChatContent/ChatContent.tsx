@@ -93,6 +93,8 @@ const ChatContent: ForwardRefRenderFunction<
 
   const [highlightedMessageId, setHighlightedMessageId] =
     useState(sharedMessageId);
+  const [scrolledToMessage, setScrolledToMessage] = useState(false);
+
   const chatId = useMemo(() => `chat-${uuidv4()}`, []);
 
   const scrollToContainerBottom = useCallback(
@@ -132,7 +134,8 @@ const ChatContent: ForwardRefRenderFunction<
   }, [highlightedMessageId, scrollToContainerBottom, discussionId]);
 
   useEffect(() => {
-    if (!highlightedMessageId || dateList.length === 0) return;
+    if (!highlightedMessageId || dateList.length === 0 || scrolledToMessage)
+      return;
 
     setTimeout(
       () =>
@@ -145,7 +148,9 @@ const ChatContent: ForwardRefRenderFunction<
         }),
       0,
     );
-  }, [chatWrapperId, highlightedMessageId, dateList.length]);
+
+    setScrolledToMessage(true);
+  }, [chatWrapperId, highlightedMessageId, dateList.length, scrolledToMessage]);
 
   function scrollToRepliedMessage(messageId: string) {
     scroller.scrollTo(messageId, {

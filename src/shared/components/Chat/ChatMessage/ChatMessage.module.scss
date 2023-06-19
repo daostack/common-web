@@ -207,4 +207,15 @@
 
 .highlighted {
   border: 0.06rem solid $c-pink-active-feed-cards;
+  animation: highlighted 5s forwards;
+}
+
+.highlightedOwn {
+  border-color: $dark-yellow;
+}
+
+@keyframes highlighted {
+  100% {
+    border-color: transparent;
+  }
 }
