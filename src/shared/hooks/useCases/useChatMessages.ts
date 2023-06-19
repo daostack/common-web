@@ -21,31 +21,39 @@ interface Return extends LoadingState<ChatMessage[]> {
 
 const addOwnersToMessages = async (
   chatMessages: ChatMessage[],
-): Promise<void> => {
+): Promise<ChatMessage[]> => {
+  const newChatMessages = [...chatMessages];
   const ownerIds = Array.from(
-    new Set(chatMessages.map((message) => message.ownerId)),
+    new Set(newChatMessages.map((message) => message.ownerId)),
   );
   const owners = await UserService.getCachedUsersById(ownerIds);
-  chatMessages.forEach((message) => {
-    message.owner = owners.find((owner) => owner.uid === message.ownerId);
-  });
+
+  return newChatMessages.map((message) => ({
+    ...message,
+    owner: owners.find((owner) => owner.uid === message.ownerId),
+  }));
 };
 
-const addParentMessageToMessages = (chatMessages: ChatMessage[]): void => {
-  chatMessages.forEach((message) => {
+const addParentMessageToMessages = (
+  chatMessages: ChatMessage[],
+): ChatMessage[] =>
+  chatMessages.map((message) => {
     const parentMessage =
       (message.parentId &&
         chatMessages.find(({ id }) => id === message.parentId)) ||
       null;
-    message.parentMessage = parentMessage && {
-      id: parentMessage.id,
-      ownerName: getUserName(parentMessage.owner) || parentMessage.ownerName,
-      ownerId: parentMessage.ownerId,
-      text: parentMessage.text,
-      images: parentMessage.images,
+
+    return {
+      ...message,
+      parentMessage: parentMessage && {
+        id: parentMessage.id,
+        ownerName: getUserName(parentMessage.owner) || parentMessage.ownerName,
+        ownerId: parentMessage.ownerId,
+        text: parentMessage.text,
+        images: parentMessage.images,
+      },
     };
   });
-};
 
 export const useChatMessages = (): Return => {
   const cancelTokenRef = useRef<CancelTokenSource | null>(null);
@@ -65,11 +73,15 @@ export const useChatMessages = (): Return => {
       });
       cancelTokenRef.current = getCancelTokenSource();
 
-      const chatMessages = await ChatService.getChatMessages(chatChannelId, {
-        cancelToken: cancelTokenRef.current.token,
-      });
-      await addOwnersToMessages(chatMessages);
-      addParentMessageToMessages(chatMessages);
+      const fetchedChatMessages = await ChatService.getChatMessages(
+        chatChannelId,
+        {
+          cancelToken: cancelTokenRef.current.token,
+        },
+      );
+      const chatMessages = addParentMessageToMessages(
+        await addOwnersToMessages(fetchedChatMessages),
+      );
 
       cancelTokenRef.current = null;
       setState({
@@ -150,8 +162,14 @@ export const useChatMessages = (): Return => {
 
     const unsubscribe = ChatService.subscribeToChatChannelMessages(
       currentChatChannelId,
-      async (messages) => {
-        await addOwnersToMessages(messages);
+      async (fetchedMessages) => {
+        const messagesWithOwners = await addOwnersToMessages(
+          fetchedMessages.map(({ message }) => message),
+        );
+        const messages = messagesWithOwners.map((message, index) => ({
+          ...fetchedMessages[index],
+          message,
+        }));
 
         setState((currentState) => {
           if (!currentState.data) {
@@ -160,23 +178,29 @@ export const useChatMessages = (): Return => {
 
           const newMessages: ChatMessage[] = [];
           const nextData = [...currentState.data];
-          messages.forEach((message) => {
+          messages.forEach(({ message, statuses: { isRemoved } }) => {
             const messageIndex = nextData.findIndex(
               (item) => item.id === message.id,
             );
 
             if (messageIndex === -1) {
-              newMessages.push(message);
+              if (!isRemoved) {
+                newMessages.push(message);
+              }
+              return;
+            }
+
+            if (isRemoved) {
+              nextData.splice(messageIndex, 1);
             } else {
               nextData[messageIndex] = message;
             }
           });
           nextData.push(...newMessages);
-          addParentMessageToMessages(nextData);
 
           return {
             ...currentState,
-            data: nextData,
+            data: addParentMessageToMessages(nextData),
           };
         });
       },
