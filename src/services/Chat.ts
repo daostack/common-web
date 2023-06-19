@@ -201,14 +201,30 @@ class ChatService {
 
   public subscribeToChatChannelMessages = (
     chatChannelId: string,
-    callback: (messages: ChatMessage[]) => void,
+    callback: (
+      data: {
+        message: ChatMessage;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
   ): UnsubscribeFunction =>
     this.getChatMessagesSubCollection(chatChannelId).onSnapshot((snapshot) => {
-      const messages = snapshot.docs
-        .map((doc) => doc.data())
+      const messages = snapshot
+        .docChanges()
+        .map((docChange) => ({
+          message: docChange.doc.data(),
+          statuses: {
+            isAdded: docChange.type === "added",
+            isRemoved: docChange.type === "removed",
+          },
+        }))
         .sort(
-          (prevMessage: ChatMessage, nextMessage: ChatMessage) =>
-            prevMessage.createdAt.seconds - nextMessage.createdAt.seconds,
+          (prevItem, nextItem) =>
+            prevItem.message.createdAt.seconds -
+            nextItem.message.createdAt.seconds,
         );
       callback(messages);
     });
