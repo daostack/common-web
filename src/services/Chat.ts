@@ -199,6 +199,36 @@ class ChatService {
     });
   };
 
+  public subscribeToNewUpdatedChatChannels = (
+    participantId: string,
+    endBefore: Timestamp,
+    callback: (
+      data: {
+        chatChannel: ChatChannel;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getChatChannelCollection()
+      .where("participants", "array-contains", participantId)
+      .orderBy("updatedAt", "desc")
+      .endBefore(endBefore);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        chatChannel: docChange.doc.data(),
+        statuses: {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        },
+      }));
+      callback(data);
+    });
+  };
+
   public subscribeToChatChannelMessages = (
     chatChannelId: string,
     callback: (

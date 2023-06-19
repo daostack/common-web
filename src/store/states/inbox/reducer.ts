@@ -413,8 +413,14 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       };
     }),
   )
-  .handleAction(actions.addNewInboxItems, (state, { payload }) =>
+  .handleAction(actions.addNewInboxItems, (state, action) =>
     produce(state, (nextState) => {
+      const payload = action.payload.filter(
+        (item) =>
+          !nextState.chatChannelItems.some(
+            (chatChannelItem) => chatChannelItem.itemId === item.item.itemId,
+          ),
+      );
       let firstDocTimestamp = nextState.items.firstDocTimestamp;
 
       const data = payload.reduceRight((acc, { item, statuses }) => {
