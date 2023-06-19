@@ -153,11 +153,13 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       });
     }
 
-    items.push({
-      text: <span>Share</span>,
-      searchText: "Share",
-      value: ElementDropdownMenuItems.Share,
-    });
+    if (!isChatMessage) {
+      items.push({
+        text: <span>Share</span>,
+        searchText: "Share",
+        value: ElementDropdownMenuItems.Share,
+      });
+    }
 
     if (!isOwner) {
       items.push({
