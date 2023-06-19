@@ -23,10 +23,10 @@ interface ChatMessageProps {
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
   switch (chatType) {
-    case ChatType.DiscussionMessages:
-      return StaticLinkType.DiscussionMessage;
     case ChatType.ProposalComments:
       return StaticLinkType.ProposalComment;
+    default:
+      return StaticLinkType.DiscussionMessage;
   }
 };
 
@@ -124,7 +124,9 @@ export default function ChatMessage({
             <ElementDropdown
               linkType={getStaticLinkByChatType(chatType)}
               entityType={
-                chatType === ChatType.DiscussionMessages
+                [ChatType.DiscussionMessages, ChatType.ChatMessages].includes(
+                  chatType,
+                )
                   ? EntityTypes.DiscussionMessage
                   : EntityTypes.ProposalMessage
               }
@@ -134,9 +136,10 @@ export default function ChatMessage({
               onMenuToggle={onMessageDropdownOpen}
               transparent
               isDiscussionMessage
+              isChatMessage={chatType === ChatType.ChatMessages}
               ownerId={
                 checkIsUserDiscussionMessage(discussionMessage)
-                  ? discussionMessage.owner?.uid
+                  ? discussionMessage.ownerId
                   : undefined
               }
               userId={user?.uid}

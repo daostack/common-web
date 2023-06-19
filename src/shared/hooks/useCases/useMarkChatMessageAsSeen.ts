@@ -7,9 +7,14 @@ import {
   ChatService,
 } from "@/services";
 
+interface MarkChatMessageAsSeenOptions {
+  chatChannelId?: string;
+  chatMessageId?: string;
+}
+
 interface Return {
   isChatMessageMarkingAsSeen: boolean;
-  markChatMessageAsSeen: (chatMessageId: string) => void;
+  markChatMessageAsSeen: (options?: MarkChatMessageAsSeenOptions) => void;
 }
 
 export const useMarkChatMessageAsSeen = (): Return => {
@@ -17,29 +22,45 @@ export const useMarkChatMessageAsSeen = (): Return => {
   const [isChatMessageMarkingAsSeen, setIsChatMessageMarkingAsSeen] =
     useState(false);
 
-  const markChatMessageAsSeen = useCallback(async (chatMessageId: string) => {
-    if (cancelTokenRef.current) {
-      cancelTokenRef.current.cancel();
-    }
+  const markChatMessageAsSeen = useCallback(
+    async (options: MarkChatMessageAsSeenOptions = {}) => {
+      const { chatChannelId, chatMessageId } = options;
 
-    try {
-      setIsChatMessageMarkingAsSeen(true);
-      cancelTokenRef.current = getCancelTokenSource();
+      if (cancelTokenRef.current) {
+        cancelTokenRef.current.cancel();
+      }
 
-      await ChatService.markChatMessageAsSeen(chatMessageId, {
-        cancelToken: cancelTokenRef.current.token,
-      });
+      try {
+        setIsChatMessageMarkingAsSeen(true);
+        cancelTokenRef.current = getCancelTokenSource();
+        const endpointOptions = {
+          cancelToken: cancelTokenRef.current.token,
+        };
 
-      cancelTokenRef.current = null;
-      setIsChatMessageMarkingAsSeen(false);
-    } catch (error) {
-      if (!isRequestCancelled(error)) {
-        Logger.error(error);
+        if (chatMessageId) {
+          await ChatService.markChatMessageAsSeen(
+            chatMessageId,
+            endpointOptions,
+          );
+        } else if (chatChannelId) {
+          await ChatService.markChatChannelAsSeen(
+            chatChannelId,
+            endpointOptions,
+          );
+        }
+
         cancelTokenRef.current = null;
         setIsChatMessageMarkingAsSeen(false);
+      } catch (error) {
+        if (!isRequestCancelled(error)) {
+          Logger.error(error);
+          cancelTokenRef.current = null;
+          setIsChatMessageMarkingAsSeen(false);
+        }
       }
-    }
-  }, []);
+    },
+    [],
+  );
 
   return {
     isChatMessageMarkingAsSeen,

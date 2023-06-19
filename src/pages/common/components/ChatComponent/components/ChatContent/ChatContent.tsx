@@ -46,6 +46,7 @@ interface ChatContentInterface {
   discussionId: string;
   feedItemId: string;
   isLoading: boolean;
+  onMessageDelete?: (messageId: string) => void;
 }
 
 const isToday = (someDate: Date) => {
@@ -78,6 +79,7 @@ const ChatContent: ForwardRefRenderFunction<
     discussionId,
     feedItemId,
     isLoading,
+    onMessageDelete,
   },
   chatContentRef,
 ) => {
@@ -231,6 +233,7 @@ const ChatContent: ForwardRefRenderFunction<
                   users={users}
                   feedItemId={feedItemId}
                   commonMember={commonMember}
+                  onMessageDelete={onMessageDelete}
                 />
               );
 

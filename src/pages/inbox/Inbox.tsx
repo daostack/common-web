@@ -13,6 +13,7 @@ import { useInboxItems } from "@/shared/hooks/useCases";
 import { RightArrowThinIcon } from "@/shared/icons";
 import {
   ChatChannelFeedLayoutItemProps,
+  checkIsChatChannelLayoutItem,
   FeedLayoutItem,
   FeedLayoutRef,
 } from "@/shared/interfaces";
@@ -27,11 +28,11 @@ import {
 } from "@/store/states";
 import {
   ChatChannelItem,
-  HeaderContent,
   FeedItemBaseContent,
+  HeaderContent,
 } from "./components";
 import { useInboxData } from "./hooks";
-import { getNonAllowedItems, getLastMessage } from "./utils";
+import { getLastMessage, getNonAllowedItems } from "./utils";
 import styles from "./Inbox.module.scss";
 
 const InboxPage: FC = () => {
@@ -118,6 +119,20 @@ const InboxPage: FC = () => {
   const handleActiveItemChange = useCallback(
     (activeItemId?: string) => {
       dispatch(inboxActions.removeEmptyChatChannelItems(activeItemId));
+    },
+    [dispatch],
+  );
+
+  const handleMessagesAmountEmptinessToggle = useCallback(
+    (feedItem: FeedLayoutItem, becameEmpty: boolean) => {
+      if (checkIsChatChannelLayoutItem(feedItem)) {
+        dispatch(
+          inboxActions.updateChatChannelItemEmptiness({
+            id: feedItem.itemId,
+            becameEmpty,
+          }),
+        );
+      }
     },
     [dispatch],
   );
@@ -221,6 +236,7 @@ const InboxPage: FC = () => {
         emptyText="Your inbox is empty"
         getNonAllowedItems={getNonAllowedItems}
         onActiveItemChange={handleActiveItemChange}
+        onMessagesAmountEmptinessToggle={handleMessagesAmountEmptinessToggle}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

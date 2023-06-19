@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useMemo } from "react";
+import React, { FC, ReactNode, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -7,9 +7,11 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
-import { ChatType } from "@/shared/constants";
+import { UserAvatar } from "@/shared/components";
+import { useUserById } from "@/shared/hooks/useCases";
 import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
-import { isRTL } from "@/shared/utils";
+import { getUserName, isRTL } from "@/shared/utils";
+import { getChatType } from "./utils";
 import styles from "./DesktopChat.module.scss";
 
 interface ChatProps {
@@ -19,6 +21,7 @@ interface ChatProps {
   governanceCircles?: Circles;
   commonMember: (CommonMember & CirclesPermissions) | null;
   titleRightContent?: ReactNode;
+  onMessagesAmountChange?: (newMessagesAmount: number) => void;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -29,28 +32,55 @@ const DesktopChat: FC<ChatProps> = (props) => {
     governanceCircles,
     commonMember,
     titleRightContent,
+    onMessagesAmountChange,
   } = props;
+  const {
+    fetchUser: fetchDMUser,
+    setUser: setDMUser,
+    data: dmUser,
+  } = useUserById();
   const user = useSelector(selectUser());
+  const userId = user?.uid;
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
   );
+  const dmUserId = chatItem.chatChannel?.participants.filter(
+    (participant) => participant !== userId,
+  )[0];
+  const title = getUserName(dmUser) || chatItem.discussion.title;
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
     [chatItem, userCircleIds],
   );
 
+  useEffect(() => {
+    if (dmUserId) {
+      fetchDMUser(dmUserId);
+    } else {
+      setDMUser(null);
+    }
+  }, [dmUserId]);
+
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.titleWrapper}>
+        {dmUser?.photoURL && (
+          <UserAvatar
+            className={styles.userAvatar}
+            photoURL={dmUser.photoURL}
+            nameForRandomAvatar={title}
+            userName={title}
+          />
+        )}
         <p
           className={classNames(styles.title, {
-            [styles.titleRTL]: isRTL(chatItem.discussion.title),
+            [styles.titleRTL]: isRTL(title),
           })}
-          title={chatItem.discussion.title}
+          title={title}
         >
-          {chatItem.discussion.title}
+          {title}
         </p>
         {titleRightContent && (
           <div className={styles.titleRightContent}>{titleRightContent}</div>
@@ -59,11 +89,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
       <ChatComponent
         governanceCircles={governanceCircles}
         commonMember={commonMember}
-        type={
-          chatItem.proposal
-            ? ChatType.ProposalComments
-            : ChatType.DiscussionMessages
-        }
+        type={getChatType(chatItem)}
         isCommonMemberFetched
         commonId={commonId}
         discussion={chatItem.discussion}
@@ -74,6 +100,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         seenOnce={chatItem.seenOnce}
         isHidden={false}
         isAuthorized={Boolean(user)}
+        onMessagesAmountChange={onMessagesAmountChange}
       />
     </div>
   );

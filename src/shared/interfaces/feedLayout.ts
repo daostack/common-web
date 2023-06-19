@@ -48,6 +48,6 @@ export const checkIsFeedItemFollowLayoutItemWithFollowData = (
   layoutItem?.type === InboxItemType.FeedItemFollow;
 
 export const checkIsChatChannelLayoutItem = (
-  layoutItem?: BaseLayoutItem,
+  layoutItem?: BaseLayoutItem | null,
 ): layoutItem is ChatChannelLayoutItem =>
   layoutItem?.type === InboxItemType.ChatChannel;

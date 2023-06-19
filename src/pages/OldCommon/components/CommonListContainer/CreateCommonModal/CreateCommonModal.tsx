@@ -26,7 +26,6 @@ import {
 import { Confirmation } from "./Confirmation";
 import { CreationSteps } from "./CreationSteps";
 import { Error } from "./Error";
-import { Introduction } from "./Introduction";
 import { Payment } from "./Payment";
 import { Success } from "./Success";
 import { CreateCommonStage } from "./constants";
@@ -45,7 +44,6 @@ interface CreateCommonModalProps {
   parentCommonId?: string;
   isSubCommonCreation: boolean;
   subCommons?: Common[];
-  shouldBeWithoutIntroduction?: boolean;
   onCommonCreate?: (data: { common: Common; governance: Governance }) => void;
   onGoToCommon?: (common: Common) => void;
 }
@@ -67,9 +65,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   const { disableZoom, resetZoom } = useZoomDisabling({
     shouldDisableAutomatically: false,
   });
-  const initialStage = props.shouldBeWithoutIntroduction
-    ? CreateCommonStage.CreationSteps
-    : CreateCommonStage.Introduction;
+  const initialStage = CreateCommonStage.CreationSteps;
   const [{ stage, shouldStartFromLastStep }, setStageState] = useState({
     stage: initialStage,
     shouldStartFromLastStep: false,
@@ -110,7 +106,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   );
   const moveStageBack = useCallback(() => {
     setStageState(({ stage }) => ({
-      stage: stage === CreateCommonStage.Introduction ? stage : stage - 1,
+      stage: stage === CreateCommonStage.CreationSteps ? stage : stage - 1,
       shouldStartFromLastStep: true,
     }));
   }, []);
@@ -174,14 +170,6 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
   }, [title, isBigTitle]);
   const content = useMemo(() => {
     switch (stage) {
-      case CreateCommonStage.Introduction:
-        return (
-          <Introduction
-            setTitle={isMobileView ? setSmallTitle : setBigTitle}
-            setGoBackHandler={setGoBackHandler}
-            onFinish={moveStageForward}
-          />
-        );
       case CreateCommonStage.CreationSteps:
         return (
           <CreationSteps

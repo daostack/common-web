@@ -65,6 +65,10 @@ $phone-breakpoint: 415px;
   width: 1.25rem;
 }
 
+.emojiContainer {
+  z-index: 10;
+}
+
 .pickerContainer {
   position: absolute;
   bottom: 3.25rem;

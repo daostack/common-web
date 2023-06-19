@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useMemo } from "react";
+import React, { FC, ReactNode, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatMobileModal } from "@/pages/common/components";
@@ -9,7 +9,9 @@ import {
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { ChatType } from "@/shared/constants";
+import { useUserById } from "@/shared/hooks/useCases";
 import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
+import { getUserName } from "@/shared/utils";
 import { Header } from "./components";
 import styles from "./MobileChat.module.scss";
 
@@ -22,6 +24,7 @@ interface ChatProps {
   commonMember: (CommonMember & CirclesPermissions) | null;
   shouldShowSeeMore?: boolean;
   rightHeaderContent?: ReactNode;
+  onMessagesAmountChange?: (newMessagesAmount: number) => void;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -35,14 +38,25 @@ const MobileChat: FC<ChatProps> = (props) => {
     children,
     shouldShowSeeMore = true,
     rightHeaderContent,
+    onMessagesAmountChange,
   } = props;
   const { setChatItem, setIsShowFeedItemDetailsModal, setShouldShowSeeMore } =
     useChatContext();
+  const {
+    fetchUser: fetchDMUser,
+    setUser: setDMUser,
+    data: dmUser,
+  } = useUserById();
   const user = useSelector(selectUser());
+  const userId = user?.uid;
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
   );
+  const dmUserId = chatItem?.chatChannel?.participants.filter(
+    (participant) => participant !== userId,
+  )[0];
+  const title = getUserName(dmUser) || chatItem?.discussion.title || "";
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
@@ -58,6 +72,14 @@ const MobileChat: FC<ChatProps> = (props) => {
     setIsShowFeedItemDetailsModal && setIsShowFeedItemDetailsModal(true);
   };
 
+  useEffect(() => {
+    if (dmUserId) {
+      fetchDMUser(dmUserId);
+    } else {
+      setDMUser(null);
+    }
+  }, [dmUserId]);
+
   return (
     <>
       {children}
@@ -69,7 +91,9 @@ const MobileChat: FC<ChatProps> = (props) => {
         commonImage={commonImage}
         header={
           <Header
-            title={chatItem?.discussion.title || ""}
+            title={title}
+            userAvatar={dmUser?.photoURL}
+            userName={title}
             onBackClick={handleClose}
             titleActionElement={
               shouldShowSeeMore ? (
@@ -96,7 +120,11 @@ const MobileChat: FC<ChatProps> = (props) => {
             commonMember={commonMember}
             isCommonMemberFetched
             isAuthorized={Boolean(user)}
-            type={ChatType.DiscussionMessages}
+            type={
+              chatItem.chatChannel
+                ? ChatType.ChatMessages
+                : ChatType.DiscussionMessages
+            }
             hasAccess={hasAccessToChat}
             isHidden={false}
             commonId={commonId}
@@ -105,6 +133,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
             seenOnce={chatItem.seenOnce}
+            onMessagesAmountChange={onMessagesAmountChange}
           />
         )}
       </ChatMobileModal>

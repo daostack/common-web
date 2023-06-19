@@ -85,6 +85,10 @@ interface FeedLayoutProps {
   emptyText?: string;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemChange?: (itemId?: string) => void;
+  onMessagesAmountEmptinessToggle?: (
+    feedItem: FeedLayoutItem,
+    becameEmpty: boolean,
+  ) => void;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -112,6 +116,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     emptyText,
     getNonAllowedItems,
     onActiveItemChange,
+    onMessagesAmountEmptinessToggle,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -242,6 +247,29 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     setExpandedFeedItemId(item.feedItemId);
   }, []);
 
+  const handleMessagesAmountChange = useCallback(
+    (newMessagesAmount: number) => {
+      if (
+        !checkIsChatChannelLayoutItem(selectedFeedItem) ||
+        !onMessagesAmountEmptinessToggle
+      ) {
+        return;
+      }
+
+      const becameEmpty =
+        newMessagesAmount === 0 &&
+        selectedFeedItem.chatChannel.messageCount > 0;
+      const becameNonEmpty =
+        newMessagesAmount > 0 &&
+        selectedFeedItem.chatChannel.messageCount === 0;
+
+      if (becameEmpty || becameNonEmpty) {
+        onMessagesAmountEmptinessToggle(selectedFeedItem, becameEmpty);
+      }
+    },
+    [selectedFeedItem, onMessagesAmountEmptinessToggle],
+  );
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -367,6 +395,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     governanceCircles={governance?.circles}
                     commonMember={commonMember}
                     titleRightContent={followFeedItemEl}
+                    onMessagesAmountChange={handleMessagesAmountChange}
                   />
                 ) : (
                   <DesktopChatPlaceholder
@@ -374,32 +403,36 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     isItemSelected={Boolean(selectedItemCommonData)}
                   />
                 ))}
-              {isTabletView &&
-                selectedItemCommonData &&
-                checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
-                  <MobileChat
-                    chatItem={chatItem}
-                    commonId={selectedItemCommonData.id}
-                    commonName={selectedItemCommonData.name}
-                    commonImage={selectedItemCommonData.image}
-                    governanceCircles={governance?.circles}
-                    commonMember={commonMember}
-                    shouldShowSeeMore={shouldShowSeeMore}
-                    rightHeaderContent={followFeedItemEl}
-                  >
-                    <FeedItemPreviewModal
-                      commonId={selectedItemCommonData.id}
-                      commonName={selectedItemCommonData.name}
-                      commonImage={selectedItemCommonData.image}
-                      isProject={selectedItemCommonData.isProject}
-                      governanceCircles={governance?.circles}
-                      selectedFeedItem={selectedFeedItem?.feedItem}
-                      userCircleIds={userCircleIds}
-                      isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
-                      sizeKey={sizeKey}
-                    />
-                  </MobileChat>
-                )}
+              {isTabletView && (
+                <MobileChat
+                  chatItem={chatItem}
+                  commonId={selectedItemCommonData?.id || ""}
+                  commonName={selectedItemCommonData?.name || ""}
+                  commonImage={selectedItemCommonData?.image || ""}
+                  governanceCircles={governance?.circles}
+                  commonMember={commonMember}
+                  shouldShowSeeMore={
+                    !chatItem?.chatChannel && shouldShowSeeMore
+                  }
+                  rightHeaderContent={followFeedItemEl}
+                  onMessagesAmountChange={handleMessagesAmountChange}
+                >
+                  {selectedItemCommonData &&
+                    checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
+                      <FeedItemPreviewModal
+                        commonId={selectedItemCommonData.id}
+                        commonName={selectedItemCommonData.name}
+                        commonImage={selectedItemCommonData.image}
+                        isProject={selectedItemCommonData.isProject}
+                        governanceCircles={governance?.circles}
+                        selectedFeedItem={selectedFeedItem?.feedItem}
+                        userCircleIds={userCircleIds}
+                        isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
+                        sizeKey={sizeKey}
+                      />
+                    )}
+                </MobileChat>
+              )}
             </div>
           )}
         </ChatContext.Provider>
