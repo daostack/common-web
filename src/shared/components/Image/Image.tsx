@@ -27,6 +27,7 @@ const CustomImage: FC<CustomImageProps> = (props) => {
     placeholderElement,
     imageOverlayClassName,
     imageContainerClassName,
+    onClick,
     ...restProps
   } = props;
   const [isLoaded, setIsLoaded] = useState(false);
@@ -68,7 +69,10 @@ const CustomImage: FC<CustomImageProps> = (props) => {
   return hasError && (placeholderElement || placeholderElement === null) ? (
     <>{placeholderElement}</>
   ) : (
-    <div className={classNames(styles.imageContainer, imageContainerClassName)}>
+    <div
+      onClick={onClick}
+      className={classNames(styles.imageContainer, imageContainerClassName)}
+    >
       <img {...restProps} src={imageSrc} alt={alt} onError={handleError} />
       <div className={imageOverlayClassName} />
     </div>

@@ -30,7 +30,7 @@ export const COMMON_SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<CommonSide
         exact: true,
         component: InboxPage,
         type: RouteType.Private,
-        unauthenticatedRedirectPath: ROUTE_PATHS.COMMON_LIST,
+        unauthenticatedRedirectPath: ROUTE_PATHS.HOME,
       },
       {
         path: ROUTE_PATHS.COMMON,
