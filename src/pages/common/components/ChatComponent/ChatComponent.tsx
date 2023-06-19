@@ -295,6 +295,7 @@ export default function ChatComponent({
       return {
         info: file,
         src: URL.createObjectURL(file),
+        size: file.size,
       };
     });
     dispatch(
