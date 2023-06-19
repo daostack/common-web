@@ -1,8 +1,8 @@
 import React, { FC, MouseEventHandler } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
+import { CommonAvatar } from "@/pages/common/components/CommonAvatar";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
-import { Image } from "@/shared/components/Image";
 import { SmallArrowIcon } from "@/shared/icons";
 import { useTreeContext } from "../../context";
 import { Item } from "../../types";
@@ -62,22 +62,19 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
           })}
         />
       </ButtonIcon>
-      <Image
-        className={classNames(
-          styles.image,
-          {
-            [classNames(
-              styles.imageNonRounded,
-              treeItemTriggerStyles?.imageNonRounded,
-            )]: level === 1,
-            [styles.imageRounded]: level !== 1,
-          },
-          treeItemTriggerStyles?.image,
-        )}
+
+      <CommonAvatar
+        name={item.name}
         src={item.image}
-        alt={`${item.name}'s image`}
-        aria-hidden
+        className={classNames(styles.image, {
+          [classNames(
+            styles.imageNonRounded,
+            treeItemTriggerStyles?.imageNonRounded,
+          )]: level === 1,
+          [styles.imageRounded]: level !== 1,
+        })}
       />
+
       <span className={classNames(styles.name, treeItemTriggerStyles?.name)}>
         {item.name}
       </span>
