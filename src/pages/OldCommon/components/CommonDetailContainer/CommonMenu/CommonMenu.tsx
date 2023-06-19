@@ -349,7 +349,6 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         isSubCommonCreation={!isSubCommon}
         subCommons={subCommons}
         onCommonCreate={handleCommonCreate}
-        shouldBeWithoutIntroduction
       />
       <EditCommonModal
         isShowing={selectedMenuItem === MenuItem.EditAgenda}
@@ -358,7 +357,6 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         common={common}
         parentCommonId={common.id}
         isSubCommonCreation={!isSubCommon}
-        shouldBeWithoutIntroduction
       />
       <EditRulesModal
         isShowing={selectedMenuItem === MenuItem.EditRules}
@@ -366,7 +364,6 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
         common={common}
         governance={governance}
         parentCommonId={common.id}
-        shouldBeWithoutIntroduction={false}
         isSubCommon={isSubCommon}
       />
     </div>

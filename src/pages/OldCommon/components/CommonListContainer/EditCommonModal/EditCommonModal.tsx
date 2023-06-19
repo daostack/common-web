@@ -29,7 +29,6 @@ interface EditCommonModalProps {
   parentCommonId?: string;
   isSubCommonCreation: boolean;
   common: Common;
-  shouldBeWithoutIntroduction?: boolean;
 }
 
 export default function EditCommonModal(props: EditCommonModalProps) {

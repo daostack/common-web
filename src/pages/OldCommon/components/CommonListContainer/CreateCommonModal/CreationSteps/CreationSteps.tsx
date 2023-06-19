@@ -145,11 +145,9 @@ export default function CreationSteps(props: CreationStepsProps) {
 
   useEffect(() => {
     setGoBackHandler(
-      !isSubCommonCreation || step !== CreationStep.GeneralInfo
-        ? handleGoBack
-        : undefined,
+      step !== CreationStep.GeneralInfo ? handleGoBack : undefined,
     );
-  }, [setGoBackHandler, isSubCommonCreation, handleGoBack, step]);
+  }, [setGoBackHandler, handleGoBack, step]);
 
   useEffect(() => {
     setShouldShowCloseButton(true);

@@ -27,7 +27,6 @@ interface EditRulesModalProps {
   governance: Governance;
   parentCommonId?: string;
   common: Common;
-  shouldBeWithoutIntroduction?: boolean;
   isSubCommon: boolean;
 }
 
