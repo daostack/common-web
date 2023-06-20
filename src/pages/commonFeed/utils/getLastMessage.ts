@@ -1,4 +1,5 @@
 import { GetLastMessageOptions } from "@/pages/common";
+import { DiscussionMessageOwnerType } from "@/shared/constants";
 import { CommonFeedType, PredefinedTypes } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
@@ -71,9 +72,13 @@ export const getLastMessage = (
   );
 
   const hasText = !checkIsTextEditorValueEmpty(parsedMessageContent);
+  const userName =
+    lastMessage.ownerType === DiscussionMessageOwnerType.System
+      ? ""
+      : `${lastMessage.userName}: `;
 
   return prependTextInTextEditorValue(
-    `${lastMessage.userName}: ${getLastMessageIconWithText({
+    `${userName}${getLastMessageIconWithText({
       hasText,
       hasImages,
       hasFiles,

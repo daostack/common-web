@@ -1,3 +1,4 @@
+import { DiscussionMessageOwnerType } from "@/shared/constants";
 import { BaseEntity } from "./BaseEntity";
 import { SoftDeleteEntity } from "./SoftDeleteEntity";
 
@@ -19,6 +20,7 @@ export interface CommonFeed extends BaseEntity, SoftDeleteEntity {
     lastMessage?: {
       userName: string;
       content: string;
+      ownerType?: DiscussionMessageOwnerType;
     };
     hasFiles?: boolean;
     hasImages?: boolean;
