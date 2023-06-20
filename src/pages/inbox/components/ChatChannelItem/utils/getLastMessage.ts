@@ -10,7 +10,7 @@ import {
 export const getLastMessage = (
   lastMessage: ChatChannel["lastMessage"],
 ): TextEditorValue | undefined => {
-  if (!lastMessage?.text) {
+  if (!lastMessage) {
     return;
   }
 
