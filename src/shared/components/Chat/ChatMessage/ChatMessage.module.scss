@@ -206,16 +206,27 @@
 }
 
 .highlighted {
+  animation: highlighted 10s forwards;
   border: 0.06rem solid $c-pink-active-feed-cards;
-  animation: highlighted 5s forwards;
+  background-color: $c-pink-active-btn;
 }
 
 .highlightedOwn {
-  border-color: $dark-yellow;
+  animation: highlightedOwn 10s forwards;
+  border: 0.094rem solid $dark-yellow;
+  background-color: $c-pink-mention;
 }
 
 @keyframes highlighted {
   100% {
     border-color: transparent;
+    background-color: $c-light-gray;
+  }
+}
+
+@keyframes highlightedOwn {
+  100% {
+    border-color: transparent;
+    background-color: $c-pink-active-feed-cards;
   }
 }

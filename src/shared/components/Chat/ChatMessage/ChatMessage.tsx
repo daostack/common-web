@@ -252,8 +252,9 @@ export default function ChatMessage({
                 [styles.messageTextWithReply]:
                   !!discussionMessage.parentMessage?.id,
                 [styles.systemMessage]: isSystemMessage,
-                [styles.highlighted]: highlighted,
-                [styles.highlightedOwn]: !isNotCurrentUserMessage,
+                [styles.highlighted]: highlighted && isNotCurrentUserMessage,
+                [styles.highlightedOwn]:
+                  highlighted && !isNotCurrentUserMessage,
               })}
               onClick={handleMessageClick}
             >
