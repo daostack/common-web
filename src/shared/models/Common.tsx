@@ -177,6 +177,8 @@ export interface CommonLink {
    * The address, to which the link is pointing
    */
   value: string;
+
+  size?: number;
 }
 
 export interface CommonPayment {

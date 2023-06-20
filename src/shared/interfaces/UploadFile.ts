@@ -3,4 +3,5 @@ export interface UploadFile {
   id: string;
   title: string;
   file: File | string;
+  size?: number;
 }

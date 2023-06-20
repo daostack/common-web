@@ -9,11 +9,11 @@ import { useChatChannelUserStatus, useUserById } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ChatChannelFeedLayoutItemProps } from "@/shared/interfaces";
 import { ChatChannel } from "@/shared/models";
-import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { inboxActions } from "@/store/states";
 import { FeedItemBaseContent } from "../FeedItemBaseContent";
 import { useChatChannelSubscription } from "./hooks";
+import { getLastMessage } from "./utils";
 
 export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const { chatChannel, isActive } = props;
@@ -108,11 +108,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       isMobileView={isTabletView}
       isActive={isActive}
       title={finalTitle}
-      lastMessage={
-        chatChannel.lastMessage?.text
-          ? parseStringToTextEditorValue(chatChannel.lastMessage.text)
-          : undefined
-      }
+      lastMessage={getLastMessage(chatChannel.lastMessage)}
       canBeExpanded={false}
       onClick={handleOpenChat}
       menuItems={[]}

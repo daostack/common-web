@@ -12,6 +12,7 @@ class FileService {
   public uploadFile = async ({
     title,
     file,
+    size,
   }: UploadFile): Promise<CommonLink> => {
     const fileName =
       typeof file === "string" ? title : getFileNameForUploading(file.name);
@@ -23,6 +24,7 @@ class FileService {
     return {
       title: fileName,
       value,
+      size,
     };
   };
 
@@ -39,12 +41,14 @@ class FileService {
   public convertFileInfoToCommonLink = (file: FileInfo) => ({
     title: file.info.name,
     value: file.src,
+    size: file.size,
   });
 
   public convertFileInfoToUploadFile = (file: FileInfo) => ({
     id: uuidv4(),
     title: file.info.name,
     file: file.info,
+    size: file.size,
   });
 }
 

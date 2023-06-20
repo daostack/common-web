@@ -199,16 +199,62 @@ class ChatService {
     });
   };
 
+  public subscribeToNewUpdatedChatChannels = (
+    participantId: string,
+    endBefore: Timestamp,
+    callback: (
+      data: {
+        chatChannel: ChatChannel;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getChatChannelCollection()
+      .where("participants", "array-contains", participantId)
+      .orderBy("updatedAt", "desc")
+      .endBefore(endBefore);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        chatChannel: docChange.doc.data(),
+        statuses: {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        },
+      }));
+      callback(data);
+    });
+  };
+
   public subscribeToChatChannelMessages = (
     chatChannelId: string,
-    callback: (messages: ChatMessage[]) => void,
+    callback: (
+      data: {
+        message: ChatMessage;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
   ): UnsubscribeFunction =>
     this.getChatMessagesSubCollection(chatChannelId).onSnapshot((snapshot) => {
-      const messages = snapshot.docs
-        .map((doc) => doc.data())
+      const messages = snapshot
+        .docChanges()
+        .map((docChange) => ({
+          message: docChange.doc.data(),
+          statuses: {
+            isAdded: docChange.type === "added",
+            isRemoved: docChange.type === "removed",
+          },
+        }))
         .sort(
-          (prevMessage: ChatMessage, nextMessage: ChatMessage) =>
-            prevMessage.createdAt.seconds - nextMessage.createdAt.seconds,
+          (prevItem, nextItem) =>
+            prevItem.message.createdAt.seconds -
+            nextItem.message.createdAt.seconds,
         );
       callback(messages);
     });

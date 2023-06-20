@@ -55,7 +55,7 @@
   background-color: $c-light-gray;
   flex-direction: row;
   max-width: 85%;
-  min-width: 30%;
+  min-width: 10rem;
   box-sizing: border-box;
   position: relative;
   text-align: start;
@@ -171,7 +171,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: $c-neutrals-300;
+  color: $c-neutrals-600;
   font-size: $xxsmall;
   margin-bottom: 0.4rem;
   line-height: 0.8rem;

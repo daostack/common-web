@@ -48,7 +48,7 @@ export function* getInboxItems(
         itemId: chatChannel.id,
         chatChannel,
       }))
-      .filter((item) => item.chatChannel.messageCount !== 0);
+      .filter((item) => item.chatChannel.messageCount > 0);
     const feedItemFollowItems =
       data.feedItemFollows.map<FeedItemFollowLayoutItemWithFollowData>(
         (feedItemFollowWithMetadata) => ({

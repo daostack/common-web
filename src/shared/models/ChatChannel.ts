@@ -12,6 +12,8 @@ export interface ChatChannel extends BaseEntity {
     ownerName: string;
     ownerAvatar: CommonLink;
     id: string;
+    hasFiles?: boolean;
+    hasImages?: boolean;
   };
   messageCount: number;
   createdBy: string;

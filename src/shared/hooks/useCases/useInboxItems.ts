@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
+  ChatService,
   CommonFeedService,
   CommonService,
   FeedItemFollowsService,
@@ -124,6 +125,45 @@ export const useInboxItems = (
       }),
     );
   };
+
+  useEffect(() => {
+    if (!inboxItems.firstDocTimestamp || !userId) {
+      return;
+    }
+
+    const unsubscribe = ChatService.subscribeToNewUpdatedChatChannels(
+      userId,
+      inboxItems.firstDocTimestamp,
+      (data) => {
+        const finalData =
+          feedItemIdsForNotListening && feedItemIdsForNotListening.length > 0
+            ? data.filter(
+                (item) =>
+                  !feedItemIdsForNotListening.includes(item.chatChannel.id),
+              )
+            : data;
+
+        if (finalData.length === 0) {
+          return;
+        }
+
+        dispatch(
+          inboxActions.addNewInboxItems(
+            finalData.map((item) => ({
+              item: {
+                itemId: item.chatChannel.id,
+                type: InboxItemType.ChatChannel,
+                chatChannel: item.chatChannel,
+              },
+              statuses: item.statuses,
+            })),
+          ),
+        );
+      },
+    );
+
+    return unsubscribe;
+  }, [inboxItems.firstDocTimestamp, userId, feedItemIdsForNotListening]);
 
   useEffect(() => {
     if (!inboxItems.firstDocTimestamp || !userId) {
