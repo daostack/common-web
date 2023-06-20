@@ -9,7 +9,6 @@ import { useChatChannelUserStatus, useUserById } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ChatChannelFeedLayoutItemProps } from "@/shared/interfaces";
 import { ChatChannel } from "@/shared/models";
-import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { inboxActions } from "@/store/states";
 import { FeedItemBaseContent } from "../FeedItemBaseContent";
