@@ -205,6 +205,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
               role="button"
               aria-pressed={isActive}
               onFocus={() => setActiveItemIndex(index)}
+              onMouseDown={(event) => event.preventDefault()}
               onClick={() => handleUserItemClick(item)}
             >
               <DirectMessageUserItem
