@@ -338,15 +338,13 @@ export default function ChatComponent({
           mentions: mentionTags.map((tag) => tag.value),
         };
 
-        const filePreviewPayload = filesPreview.map((filePreview) => ({
-          ownerId: user.uid,
-          commonId,
-          discussionId,
-          filesPreview: [filePreview],
-        }));
+        const filePreviewPayload: CreateDiscussionMessageDtoWithFilesPreview[] =
+          [];
+        const msgs: UserDiscussionMessage[] = [];
+
         const firebaseDate = Timestamp.fromDate(new Date());
 
-        const msg: UserDiscussionMessage = {
+        msgs.push({
           id: pendingMessageId,
           owner: user,
           ownerAvatar: (user.photo || user.photoURL) as string,
@@ -376,7 +374,35 @@ export default function ChatComponent({
             FileService.convertFileInfoToCommonLink(file),
           ),
           tags: mentionTags,
-        };
+        });
+
+        filesPreview.map((filePreview) => {
+          const filePendingMessageId = uuidv4();
+
+          filePreviewPayload.push({
+            pendingMessageId: filePendingMessageId,
+            ownerId: user.uid,
+            commonId,
+            discussionId,
+            filesPreview: [filePreview],
+          });
+
+          msgs.push({
+            id: filePendingMessageId,
+            text: JSON.stringify(parseStringToTextEditorValue()),
+            owner: user,
+            ownerAvatar: (user.photo || user.photoURL) as string,
+            ownerType: DiscussionMessageOwnerType.User,
+            ownerId: userId as string,
+            ownerName: getUserName(user),
+            commonId,
+            discussionId,
+            parentMessage: null,
+            createdAt: firebaseDate,
+            updatedAt: firebaseDate,
+            files: [FileService.convertFileInfoToCommonLink(filePreview)],
+          });
+        });
 
         setMessages((prev) => {
           if (isFilesMessageWithoutTextAndImages) {
@@ -387,11 +413,15 @@ export default function ChatComponent({
         });
 
         if (isChatChannel) {
-          chatMessagesData.addChatMessage(
-            ChatMessageToUserDiscussionMessageConverter.toBaseEntity(msg),
-          );
+          msgs.forEach((msg) => {
+            chatMessagesData.addChatMessage(
+              ChatMessageToUserDiscussionMessageConverter.toBaseEntity(msg),
+            )
+          })
         } else {
-          discussionMessagesData.addDiscussionMessage(discussionId, msg);
+          msgs.forEach((msg) => {
+            discussionMessagesData.addDiscussionMessage(discussionId, msg);
+          })
         }
 
         if (discussionMessageReply) {
