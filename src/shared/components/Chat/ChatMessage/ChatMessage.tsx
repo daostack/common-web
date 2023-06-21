@@ -56,6 +56,8 @@ const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
   }
 };
 
+const FILE_NAME_LIMIT = 20;
+
 export default function ChatMessage({
   discussionMessage,
   chatType,
