@@ -3,7 +3,7 @@ import { CommonMemberPreview } from "@/pages/OldCommon/components/CommonDetailCo
 import { useCommonMemberWithUserInfo } from "@/shared/hooks/useCases";
 import { getUserName } from "@/shared/utils";
 
-interface FeedUserPopupProps {
+interface UserPopupProps {
   commonId: string;
   userId?: string;
   avatar: string;
@@ -11,13 +11,13 @@ interface FeedUserPopupProps {
   onClose: () => void;
 }
 
-export const FeedUserPopup = ({
+const UserPopup = ({
   commonId,
   userId,
   avatar,
   isShowing,
   onClose,
-}: FeedUserPopupProps) => {
+}: UserPopupProps) => {
   const { data, fetched } = useCommonMemberWithUserInfo(commonId, userId);
 
   return (
@@ -36,3 +36,5 @@ export const FeedUserPopup = ({
     />
   );
 };
+
+export default UserPopup;
