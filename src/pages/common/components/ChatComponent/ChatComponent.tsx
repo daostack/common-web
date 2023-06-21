@@ -367,6 +367,8 @@ export default function ChatComponent({
                   ownerId: discussionMessageReply.ownerId,
                 }),
                 text: discussionMessageReply.text,
+                files: discussionMessageReply.files,
+                images: discussionMessageReply.images,
               }
             : null,
           images: imagesPreview?.map((file) =>
