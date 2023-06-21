@@ -340,11 +340,11 @@ export default function ChatComponent({
 
         const filePreviewPayload: CreateDiscussionMessageDtoWithFilesPreview[] =
           [];
-        const msgs: UserDiscussionMessage[] = [];
+        const pendingMessages: UserDiscussionMessage[] = [];
 
         const firebaseDate = Timestamp.fromDate(new Date());
 
-        msgs.push({
+        pendingMessages.push({
           id: pendingMessageId,
           owner: user,
           ownerAvatar: (user.photo || user.photoURL) as string,
@@ -387,7 +387,7 @@ export default function ChatComponent({
             filesPreview: [filePreview],
           });
 
-          msgs.push({
+          pendingMessages.push({
             id: filePendingMessageId,
             text: JSON.stringify(parseStringToTextEditorValue()),
             owner: user,
@@ -413,15 +413,15 @@ export default function ChatComponent({
         });
 
         if (isChatChannel) {
-          msgs.forEach((msg) => {
+          pendingMessages.forEach((pendingMessage) => {
             chatMessagesData.addChatMessage(
               ChatMessageToUserDiscussionMessageConverter.toBaseEntity(msg),
-            )
-          })
+            );
+          });
         } else {
-          msgs.forEach((msg) => {
+          pendingMessages.forEach((pendingMessage) => {
             discussionMessagesData.addDiscussionMessage(discussionId, msg);
-          })
+          });
         }
 
         if (discussionMessageReply) {
