@@ -3,7 +3,6 @@ import { ContactUsContainer, LandingContainer } from "@/pages/Landing";
 import { MyAccountContainer } from "@/pages/MyAccount";
 import {
   CommonDetailContainer,
-  CommonListContainer,
   DiscussionContainer,
   DiscussionMessageContainer,
   ProposalCommentContainer,
@@ -37,11 +36,6 @@ export const OLD_LAYOUT_CONFIGURATION: LayoutConfiguration<OldLayoutRouteOptions
         path: ROUTE_PATHS.CONTACT_US,
         exact: true,
         component: ContactUsContainer,
-      },
-      {
-        path: ROUTE_PATHS.COMMON_LIST,
-        exact: true,
-        component: CommonListContainer,
       },
       {
         path: ROUTE_PATHS.V02_COMMON,

@@ -10,10 +10,6 @@ const ITEMS: NavigationItemOptions[] = [
     route: ROUTE_PATHS.HOME,
   },
   {
-    text: "Commons",
-    route: ROUTE_PATHS.COMMON_LIST,
-  },
-  {
     text: "Notifications",
     route: ROUTE_PATHS.HOME,
     disabled: true,
