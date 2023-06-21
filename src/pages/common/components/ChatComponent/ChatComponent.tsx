@@ -415,12 +415,17 @@ export default function ChatComponent({
         if (isChatChannel) {
           pendingMessages.forEach((pendingMessage) => {
             chatMessagesData.addChatMessage(
-              ChatMessageToUserDiscussionMessageConverter.toBaseEntity(msg),
+              ChatMessageToUserDiscussionMessageConverter.toBaseEntity(
+                pendingMessage,
+              ),
             );
           });
         } else {
           pendingMessages.forEach((pendingMessage) => {
-            discussionMessagesData.addDiscussionMessage(discussionId, msg);
+            discussionMessagesData.addDiscussionMessage(
+              discussionId,
+              pendingMessage,
+            );
           });
         }
 
