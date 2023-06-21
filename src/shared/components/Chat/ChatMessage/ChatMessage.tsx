@@ -19,10 +19,11 @@ import {
   DiscussionMessage,
   User,
 } from "@/shared/models";
-import { FilePreview, FilePreviewVariant } from "@/shared/ui-kit";
+import { FilePreview, FilePreviewVariant, getFileName } from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
 import { StaticLinkType, isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
+import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
 import { Time } from "./components/Time";
 import { getTextFromTextEditorString } from "./util";
@@ -54,6 +55,8 @@ const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
       return StaticLinkType.DiscussionMessage;
   }
 };
+
+const FILE_NAME_LIMIT = 20;
 
 export default function ChatMessage({
   discussionMessage,
@@ -160,6 +163,7 @@ export default function ChatMessage({
     }
 
     const image = discussionMessage.parentMessage?.images?.[0]?.value;
+    const file = discussionMessage.parentMessage?.files?.[0];
 
     return (
       <div
@@ -171,6 +175,16 @@ export default function ChatMessage({
         })}
       >
         {image && <img className={styles.replyMessageImage} src={image} />}
+        {file && (
+          <FilePreview
+            containerClassName={styles.fileContainer}
+            name={file.title}
+            src={file.value}
+            isPreview
+            size={24}
+            variant={FilePreviewVariant.extraSmall}
+          />
+        )}
         <div className={styles.replyMessagesWrapper}>
           <div
             className={classNames(styles.messageName, styles.replyMessageName, {
@@ -186,14 +200,27 @@ export default function ChatMessage({
             className={classNames(
               styles.messageContent,
               styles.replyMessageContent,
+
               {
                 [styles.replyMessageContentCurrentUser]:
                   !isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
+                [styles.replyMessageContentWithFile]: file,
               },
             )}
           >
-            <Linkify>{replyMessageText.map((text) => text)}</Linkify>
+            {file ? (
+              <>
+                <p className={styles.fileTitle}>
+                  {getFileName(file.title, FILE_NAME_LIMIT)}
+                </p>
+                {file.size && (
+                  <p className={styles.fileSize}>{convertBytes(file.size)}</p>
+                )}
+              </>
+            ) : (
+              <Linkify>{replyMessageText.map((text) => text)}</Linkify>
+            )}
           </div>
         </div>
       </div>
