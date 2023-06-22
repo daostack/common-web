@@ -85,14 +85,15 @@ const ChatContent: ForwardRefRenderFunction<
   const user = useSelector(selectUser());
   const queryParams = useQueryParams();
 
-  const sharedMessageIdQueryParam = queryParams[QueryParamKey.Message];
-  const sharedMessageId =
-    (typeof sharedMessageIdQueryParam === "string" &&
-      sharedMessageIdQueryParam) ||
-    null;
+  const [highlightedMessageId, setHighlightedMessageId] = useState(() => {
+    const sharedMessageIdQueryParam = queryParams[QueryParamKey.Message];
+    return (
+      (typeof sharedMessageIdQueryParam === "string" &&
+        sharedMessageIdQueryParam) ||
+      null
+    );
+  });
 
-  const [highlightedMessageId, setHighlightedMessageId] =
-    useState(sharedMessageId);
   const [scrolledToMessage, setScrolledToMessage] = useState(false);
 
   const chatId = useMemo(() => `chat-${uuidv4()}`, []);
