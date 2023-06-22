@@ -26,6 +26,7 @@ export interface ParentDiscussionMessage {
   text: string;
   moderation?: Moderation;
   images?: Link[];
+  files?: Link[];
 }
 
 interface BaseDiscussionMessage extends BaseEntity {

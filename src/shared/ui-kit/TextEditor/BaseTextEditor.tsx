@@ -84,7 +84,12 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     onClearFinished,
   } = props;
   const editor = useMemo(
-    () => withMentions(withInlines(withHistory(withReact(createEditor())))),
+    () =>
+      withMentions(
+        withInlines(withHistory(withReact(createEditor())), {
+          shouldInsertURLAsLink: false,
+        }),
+      ),
     [],
   );
 

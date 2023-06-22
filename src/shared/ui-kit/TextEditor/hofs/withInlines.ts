@@ -2,14 +2,19 @@ import { Editor } from "slate";
 import { checkIsURL } from "@/shared/utils";
 import { checkIsInlineType, wrapLink } from "../utils";
 
-export const withInlines = (editor: Editor): Editor => {
+interface Options {
+  shouldInsertURLAsLink?: boolean;
+}
+
+export const withInlines = (editor: Editor, options: Options = {}): Editor => {
   const { insertData, insertText, isInline } = editor;
+  const { shouldInsertURLAsLink = true } = options;
 
   editor.isInline = (element) =>
     checkIsInlineType(element.type) || isInline(element);
 
   editor.insertText = (text) => {
-    if (text && checkIsURL(text)) {
+    if (text && checkIsURL(text) && shouldInsertURLAsLink) {
       wrapLink(editor, text);
     } else {
       insertText(text);
@@ -19,7 +24,7 @@ export const withInlines = (editor: Editor): Editor => {
   editor.insertData = (data) => {
     const text = data.getData("text/plain");
 
-    if (text && checkIsURL(text)) {
+    if (text && checkIsURL(text) && shouldInsertURLAsLink) {
       wrapLink(editor, text);
     } else {
       insertData(data);
