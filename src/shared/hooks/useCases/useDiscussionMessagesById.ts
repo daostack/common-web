@@ -125,6 +125,7 @@ export const useDiscussionMessagesById = ({
               }),
               moderation: parentMessage?.moderation,
               images: parentMessage?.images,
+              files: parentMessage?.files,
             }
           : null;
         return newDiscussionMessage;

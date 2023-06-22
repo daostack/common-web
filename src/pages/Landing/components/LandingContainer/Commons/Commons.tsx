@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import SwiperCore, { Pagination } from "swiper/core";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { CommonListItem } from "@/pages/OldCommon/components";
 import { Loader } from "../../../../../shared/components";
-import { ROUTE_PATHS, ScreenSize } from "../../../../../shared/constants";
+import { ScreenSize } from "../../../../../shared/constants";
 import { Common } from "../../../../../shared/models";
 import {
   getLoading,
@@ -70,13 +69,6 @@ export default function Commons() {
           </Swiper>
         </div>
       )}
-
-      <Link
-        className="button-blue explore-commons"
-        to={ROUTE_PATHS.COMMON_LIST}
-      >
-        Explore all commons
-      </Link>
     </div>
   );
 }

@@ -338,15 +338,13 @@ export default function ChatComponent({
           mentions: mentionTags.map((tag) => tag.value),
         };
 
-        const filePreviewPayload = filesPreview.map((filePreview) => ({
-          ownerId: user.uid,
-          commonId,
-          discussionId,
-          filesPreview: [filePreview],
-        }));
+        const filePreviewPayload: CreateDiscussionMessageDtoWithFilesPreview[] =
+          [];
+        const pendingMessages: UserDiscussionMessage[] = [];
+
         const firebaseDate = Timestamp.fromDate(new Date());
 
-        const msg: UserDiscussionMessage = {
+        pendingMessages.push({
           id: pendingMessageId,
           owner: user,
           ownerAvatar: (user.photo || user.photoURL) as string,
@@ -367,6 +365,8 @@ export default function ChatComponent({
                   ownerId: discussionMessageReply.ownerId,
                 }),
                 text: discussionMessageReply.text,
+                files: discussionMessageReply.files,
+                images: discussionMessageReply.images,
               }
             : null,
           images: imagesPreview?.map((file) =>
@@ -376,7 +376,35 @@ export default function ChatComponent({
             FileService.convertFileInfoToCommonLink(file),
           ),
           tags: mentionTags,
-        };
+        });
+
+        filesPreview.map((filePreview) => {
+          const filePendingMessageId = uuidv4();
+
+          filePreviewPayload.push({
+            pendingMessageId: filePendingMessageId,
+            ownerId: user.uid,
+            commonId,
+            discussionId,
+            filesPreview: [filePreview],
+          });
+
+          pendingMessages.push({
+            id: filePendingMessageId,
+            text: JSON.stringify(parseStringToTextEditorValue()),
+            owner: user,
+            ownerAvatar: (user.photo || user.photoURL) as string,
+            ownerType: DiscussionMessageOwnerType.User,
+            ownerId: userId as string,
+            ownerName: getUserName(user),
+            commonId,
+            discussionId,
+            parentMessage: null,
+            createdAt: firebaseDate,
+            updatedAt: firebaseDate,
+            files: [FileService.convertFileInfoToCommonLink(filePreview)],
+          });
+        });
 
         setMessages((prev) => {
           if (isFilesMessageWithoutTextAndImages) {
@@ -387,11 +415,20 @@ export default function ChatComponent({
         });
 
         if (isChatChannel) {
-          chatMessagesData.addChatMessage(
-            ChatMessageToUserDiscussionMessageConverter.toBaseEntity(msg),
-          );
+          pendingMessages.forEach((pendingMessage) => {
+            chatMessagesData.addChatMessage(
+              ChatMessageToUserDiscussionMessageConverter.toBaseEntity(
+                pendingMessage,
+              ),
+            );
+          });
         } else {
-          discussionMessagesData.addDiscussionMessage(discussionId, msg);
+          pendingMessages.forEach((pendingMessage) => {
+            discussionMessagesData.addDiscussionMessage(
+              discussionId,
+              pendingMessage,
+            );
+          });
         }
 
         if (discussionMessageReply) {

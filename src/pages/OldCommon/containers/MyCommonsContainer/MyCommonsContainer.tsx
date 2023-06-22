@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { Loader } from "@/shared/components";
-import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
+import { ProposalsTypes } from "@/shared/constants";
 import { Common } from "@/shared/models";
 import { getLoading } from "@/shared/store/selectors";
 import { checkIsCountdownState } from "@/shared/utils";
@@ -71,11 +70,6 @@ export default function MyCommonsContainer() {
     <div className="content-element my-commons-wrapper">
       <div className="page-top-wrapper">
         <h1 className="page-title">My Commons</h1>
-        {myCommons.length || pendingCommons.length ? (
-          <Link className="button-blue" to={ROUTE_PATHS.COMMON_LIST}>
-            Browse all Commons
-          </Link>
-        ) : null}
       </div>
       {isDataLoading && <Loader />}
 

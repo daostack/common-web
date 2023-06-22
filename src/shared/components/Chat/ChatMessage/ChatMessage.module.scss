@@ -186,6 +186,11 @@
   margin-left: 0.5rem;
 }
 
+.replyMessageContentWithFile {
+  margin-left: 1rem;
+  max-height: 2.5rem;
+}
+
 .dropdownMenu {
   position: absolute;
   top: 0.375rem;
@@ -229,4 +234,26 @@
     border-color: transparent;
     background-color: $c-pink-active-feed-cards;
   }
+}
+
+.fileContainer {
+  margin-left: 1.25rem;
+  margin-right: 0.25rem;
+  align-self: center;
+}
+
+.fileTitle {
+  font-size: $xxsmall;
+  color: $c-gray-100;
+  font-weight: 600;
+  line-height: 1.25rem;
+  margin: 0;
+  margin-bottom: 0.125rem;
+}
+
+.fileSize {
+  color: $c-gray-100;
+  font-size: $xxsmall-3;
+  font-weight: 400;
+  margin: 0;
 }

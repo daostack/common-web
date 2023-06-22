@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { LoginModalType } from "@/pages/Auth/interface";
 import { Tabs } from "@/pages/OldCommon/containers/CommonDetailContainer";
-import { ROUTE_PATHS } from "@/shared/constants";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { Common, Governance } from "@/shared/models";
 import { MembershipRequestModal } from "../MembershipRequestModal";
@@ -97,14 +95,6 @@ export default function EmptyTabComponent({
               >
                 Join the effort
               </button>
-            )}
-            {currentTab === "my-commons" && (
-              <Link
-                className="empty-tab-content-wrapper__button"
-                to={`${ROUTE_PATHS.COMMON_LIST}`}
-              >
-                <button className={`button-blue`}>Browse all Commons</button>
-              </Link>
             )}
           </div>
         </div>
