@@ -291,7 +291,7 @@ export default function ChatMessage({
               onClick={handleMessageClick}
             >
               {isNotCurrentUserMessage && !isSystemMessage && (
-                <div className={styles.messageName}>
+                <div className={styles.messageName} onClick={onOpenUserProfile}>
                   {getUserName(discussionMessage.owner)}
                 </div>
               )}
