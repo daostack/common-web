@@ -14,7 +14,8 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
 import { Loader } from "@/shared/components";
 import { ChatMessage } from "@/shared/components";
-import { ChatType } from "@/shared/constants";
+import { ChatType, QueryParamKey } from "@/shared/constants";
+import { useQueryParams } from "@/shared/hooks";
 import {
   CommonFeedObjectUserUnique,
   CommonMember,
@@ -34,7 +35,6 @@ interface ChatContentInterface {
   commonMember: CommonMember | null;
   isCommonMemberFetched: boolean;
   isJoiningPending?: boolean;
-  linkHighlightedMessageId?: string | null;
   hasAccess: boolean;
   isHidden: boolean;
   chatWrapperId: string;
@@ -67,7 +67,6 @@ const ChatContent: ForwardRefRenderFunction<
     commonMember,
     isCommonMemberFetched,
     isJoiningPending,
-    linkHighlightedMessageId,
     hasAccess,
     isHidden,
     chatWrapperId,
@@ -84,10 +83,19 @@ const ChatContent: ForwardRefRenderFunction<
   chatContentRef,
 ) => {
   const user = useSelector(selectUser());
+  const queryParams = useQueryParams();
 
-  const [highlightedMessageId, setHighlightedMessageId] = useState(
-    linkHighlightedMessageId,
-  );
+  const [highlightedMessageId, setHighlightedMessageId] = useState(() => {
+    const sharedMessageIdQueryParam = queryParams[QueryParamKey.Message];
+    return (
+      (typeof sharedMessageIdQueryParam === "string" &&
+        sharedMessageIdQueryParam) ||
+      null
+    );
+  });
+
+  const [scrolledToMessage, setScrolledToMessage] = useState(false);
+
   const chatId = useMemo(() => `chat-${uuidv4()}`, []);
 
   const scrollToContainerBottom = useCallback(
@@ -127,20 +135,23 @@ const ChatContent: ForwardRefRenderFunction<
   }, [highlightedMessageId, scrollToContainerBottom, discussionId]);
 
   useEffect(() => {
-    if (!highlightedMessageId) return;
+    if (!highlightedMessageId || dateList.length === 0 || scrolledToMessage)
+      return;
 
     setTimeout(
       () =>
         scroller.scrollTo(highlightedMessageId, {
-          containerId: chatId,
+          containerId: chatWrapperId,
           delay: 0,
-          duration: 100,
-          offset: -15,
+          duration: 300,
+          offset: -100,
           smooth: true,
         }),
       0,
     );
-  }, [chatId, highlightedMessageId]);
+
+    setScrolledToMessage(true);
+  }, [chatWrapperId, highlightedMessageId, dateList.length, scrolledToMessage]);
 
   function scrollToRepliedMessage(messageId: string) {
     scroller.scrollTo(messageId, {

@@ -212,6 +212,32 @@
   display: none;
 }
 
+.highlighted {
+  animation: highlighted 10s forwards;
+  border: 0.06rem solid $c-pink-active-feed-cards;
+  background-color: $c-pink-active-btn;
+}
+
+.highlightedOwn {
+  animation: highlightedOwn 10s forwards;
+  border: 0.094rem solid $dark-yellow;
+  background-color: $c-pink-mention;
+}
+
+@keyframes highlighted {
+  100% {
+    border-color: transparent;
+    background-color: $c-light-gray;
+  }
+}
+
+@keyframes highlightedOwn {
+  100% {
+    border-color: transparent;
+    background-color: $c-pink-active-feed-cards;
+  }
+}
+
 .fileContainer {
   margin-left: 1.25rem;
   margin-right: 0.25rem;
