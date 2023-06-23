@@ -3,11 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { authentificated } from "@/pages/Auth/store/selectors";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
-import { ROUTE_PATHS } from "@/shared/constants";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
-import { getCommonPagePath_v03 } from "@/shared/utils";
+import { getCommonPagePath, getCommonPagePath_v03 } from "@/shared/utils";
 import {
   projectsActions,
   selectAreProjectsFetched,
@@ -56,7 +55,7 @@ const Projects: FC = () => {
 
   const handleGoToCommon = (createdCommon: Common) => {
     onCreateCommonModalClose();
-    history.push(ROUTE_PATHS.COMMON.replace(":id", createdCommon.id));
+    history.push(getCommonPagePath(createdCommon.id));
   };
 
   useEffect(() => {

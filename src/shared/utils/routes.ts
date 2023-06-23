@@ -5,19 +5,19 @@ export const getCommonPagePath = (
   commonId: string,
   tab?: CommonTab,
 ): string => {
-  const path = ROUTE_PATHS.COMMON.replace(":id", commonId);
+  const path = ROUTE_PATHS.V04_COMMON.replace(":id", commonId);
 
   return `${path}${tab ? `?${QueryParamKey.Tab}=${tab}` : ""}`;
 };
 
 export const getCommonPageAboutTabPath = (commonId: string): string =>
-  ROUTE_PATHS.COMMON_ABOUT_TAB.replace(":id", commonId);
+  ROUTE_PATHS.V04_COMMON_ABOUT_TAB.replace(":id", commonId);
 
 export const getProjectCreationPagePath = (commonId: string): string =>
-  ROUTE_PATHS.PROJECT_CREATION.replace(":id", commonId);
+  ROUTE_PATHS.V04_PROJECT_CREATION.replace(":id", commonId);
 
 export const getCommonEditingPagePath = (commonId: string): string =>
-  ROUTE_PATHS.COMMON_EDITING.replace(":id", commonId);
+  ROUTE_PATHS.V04_COMMON_EDITING.replace(":id", commonId);
 
 export const getCommonSupportPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_SUPPORT.replace(":id", commonId);

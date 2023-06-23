@@ -1,8 +1,12 @@
 import React, { ReactNode } from "react";
-import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
+import { ProposalsTypes } from "@/shared/constants";
 import { Proposal } from "@/shared/models";
 import { FundsAllocation } from "@/shared/models/governance/proposals";
-import { formatPriceEntrance, getUserName } from "@/shared/utils";
+import {
+  formatPriceEntrance,
+  getCommonPagePath,
+  getUserName,
+} from "@/shared/utils";
 import { ProposalSpecificData } from "../types";
 
 const getSubtitleForFundsAllocation = (
@@ -17,7 +21,7 @@ const getSubtitleForFundsAllocation = (
       <>
         {formattedPrice} to project{" "}
         <a
-          href={ROUTE_PATHS.COMMON.replace(":id", targetCommon.id)}
+          href={getCommonPagePath(targetCommon.id)}
           target="_blank"
           rel="noopener noreferrer"
         >

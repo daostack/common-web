@@ -9,7 +9,7 @@ export const getActiveLayoutTab = (path: string): LayoutTab | null => {
   if (matchRoute(path, ROUTE_PATHS.INBOX)) {
     return LayoutTab.Inbox;
   }
-  if (matchRoute(path, ROUTE_PATHS.COMMON, { exact: false })) {
+  if (matchRoute(path, ROUTE_PATHS.V04_COMMON, { exact: false })) {
     return LayoutTab.Spaces;
   }
 
