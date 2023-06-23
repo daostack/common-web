@@ -9,4 +9,3 @@ export * from "./FeedItems";
 export * from "./PendingJoinInfo";
 export * from "./ProposalFeedCard";
 export * from "./ChatMobileModal";
-export * from "./UserPopup";

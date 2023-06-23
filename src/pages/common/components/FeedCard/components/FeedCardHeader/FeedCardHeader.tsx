@@ -1,11 +1,10 @@
 import React, { ReactNode } from "react";
 import classNames from "classnames";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
-import { MenuButton, UserAvatar } from "@/shared/components";
+import { MenuButton, UserAvatar, UserInfoPopup } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { MenuItem } from "@/shared/interfaces";
 import { DesktopMenu } from "@/shared/ui-kit";
-import { UserPopup } from "../../../UserPopup";
 import styles from "./FeedCardHeader.module.scss";
 
 export interface FeedCardHeaderProps {
@@ -54,7 +53,7 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
           </p>
         </div>
         {isShowingUserProfile && (
-          <UserPopup
+          <UserInfoPopup
             commonId={commonId}
             userId={userId}
             avatar={avatar}

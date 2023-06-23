@@ -19,8 +19,7 @@ import {
   removeProjectCircles,
 } from "@/shared/utils";
 import { selectRecentAssignedCircle } from "@/store/states";
-import { UserAvatar } from "../../../../../shared/components";
-import { CommonMemberPreview } from "./CommonMemberPreview";
+import { UserAvatar, UserInfoPopup } from "../../../../../shared/components";
 
 interface CommonMemberProps {
   avatar: string | undefined;
@@ -135,7 +134,16 @@ const CommonMember: FC<CommonMemberProps> = ({
           contextMenuRef={contextMenuRef}
         />
       </li>
-      <CommonMemberPreview
+
+      <UserInfoPopup
+        commonId={commonId}
+        userId={member.userId}
+        onClose={onClose}
+        isShowing={isShowing}
+        avatar={avatar}
+      />
+
+      {/* <CommonMemberPreview
         key={member.id}
         member={member}
         circles={circlesString}
@@ -146,7 +154,7 @@ const CommonMember: FC<CommonMemberProps> = ({
         country={member.user.country}
         about={member.user.intro}
         onClose={onClose}
-      />
+      /> */}
     </>
   );
 };

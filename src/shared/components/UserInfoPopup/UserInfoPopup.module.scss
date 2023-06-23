@@ -1,0 +1,46 @@
+@import "../../../constants.scss";
+
+.modal {
+  max-height: 35rem;
+  max-width: 35rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+}
+
+.userAvatar {
+  margin-right: 1.5rem;
+  height: 5rem;
+  width: 5rem;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.userName {
+  font-weight: bold;
+  font-size: $moderate-small;
+}
+
+.country {
+  margin-top: 0.75rem;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+}
+
+.bodySectionTitle {
+  font-weight: bold;
+  font-size: $small;
+}

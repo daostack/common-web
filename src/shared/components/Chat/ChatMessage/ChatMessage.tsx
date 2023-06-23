@@ -7,8 +7,12 @@ import React, {
   useMemo,
 } from "react";
 import classNames from "classnames";
-import { UserPopup } from "@/pages/common/components/UserPopup";
-import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
+import {
+  Linkify,
+  ElementDropdown,
+  UserAvatar,
+  UserInfoPopup,
+} from "@/shared/components";
 import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
 import { Colors } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
@@ -119,11 +123,17 @@ export default function ChatMessage({
         mentionTextClassName: !isNotCurrentUserMessage
           ? styles.mentionTextCurrentUser
           : "",
+        commonId: discussionMessage.commonId,
       });
 
       setMessageText(parsedText);
     })();
-  }, [users, discussionMessage.text, isNotCurrentUserMessage]);
+  }, [
+    users,
+    discussionMessage.text,
+    isNotCurrentUserMessage,
+    discussionMessage.commonId,
+  ]);
 
   useEffect(() => {
     (async () => {
@@ -134,11 +144,17 @@ export default function ChatMessage({
       const parsedText = await getTextFromTextEditorString({
         textEditorString: discussionMessage?.parentMessage.text,
         users,
+        commonId: discussionMessage.commonId,
       });
 
       setReplyMessageText(parsedText);
     })();
-  }, [users, discussionMessage?.parentMessage?.text, isNotCurrentUserMessage]);
+  }, [
+    users,
+    discussionMessage?.parentMessage?.text,
+    isNotCurrentUserMessage,
+    discussionMessage.commonId,
+  ]);
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuOpen(isOpen);
@@ -377,7 +393,7 @@ export default function ChatMessage({
         )}
       </div>
       {isShowingUserProfile && isUserDiscussionMessage && (
-        <UserPopup
+        <UserInfoPopup
           commonId={discussionMessage.commonId}
           userId={discussionMessage.ownerId}
           avatar={discussionMessage.ownerAvatar}

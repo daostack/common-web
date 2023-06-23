@@ -10,7 +10,7 @@ import { useGovernanceByCommonId } from "./useGovernanceByCommonId";
 import { useUserById } from "./useUserById";
 
 export const useCommonMemberWithUserInfo = (
-  commonId: string,
+  commonId?: string,
   userId?: string,
 ): LoadingState<CommonMemberWithUserInfo | null> => {
   const {
@@ -35,8 +35,10 @@ export const useCommonMemberWithUserInfo = (
     if (userId) {
       fetchUser(userId);
     }
-    fetchCommonMember(commonId, {}, true);
-    fetchGovernance(commonId);
+    if (commonId) {
+      fetchCommonMember(commonId, {}, true);
+      fetchGovernance(commonId);
+    }
   }, [userId, commonId]);
 
   const governanceCircles = Object.values(governance?.circles || {});
