@@ -26,7 +26,6 @@ export * from "./checkIsProject";
 export * from "./checkIsURL";
 export * from "./circles";
 export * from "./notifications";
-export * from "./openSidenav";
 export * from "./getFirebaseToken";
 export * from "./text";
 export * from "./hasPermission";
