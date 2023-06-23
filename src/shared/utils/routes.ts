@@ -1,17 +1,25 @@
 import { CommonTab } from "@/pages/common";
 import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
 
-export const getCommonPagePath = (
+export type GetCommonPagePath = (commonId: string, tab?: CommonTab) => string;
+export type GetCommonPageAboutTabPath = (commonId: string) => string;
+
+export const buildCommonPagePath = (
+  baseCommonPagePath: string,
   commonId: string,
   tab?: CommonTab,
 ): string => {
-  const path = ROUTE_PATHS.V04_COMMON.replace(":id", commonId);
+  const path = baseCommonPagePath.replace(":id", commonId);
 
   return `${path}${tab ? `?${QueryParamKey.Tab}=${tab}` : ""}`;
 };
 
-export const getCommonPageAboutTabPath = (commonId: string): string =>
-  ROUTE_PATHS.V04_COMMON_ABOUT_TAB.replace(":id", commonId);
+export const getCommonPagePath: GetCommonPagePath = (...args) =>
+  buildCommonPagePath(ROUTE_PATHS.V04_COMMON, ...args);
+
+export const getCommonPageAboutTabPath: GetCommonPageAboutTabPath = (
+  commonId,
+) => ROUTE_PATHS.V04_COMMON_ABOUT_TAB.replace(":id", commonId);
 
 export const getProjectCreationPagePath = (commonId: string): string =>
   ROUTE_PATHS.V04_PROJECT_CREATION.replace(":id", commonId);
@@ -27,11 +35,5 @@ export const getInboxPagePath = (): string => ROUTE_PATHS.INBOX;
 export const getProfilePagePath = (): string => ROUTE_PATHS.PROFILE;
 
 // v03
-export const getCommonPagePath_v03 = (
-  commonId: string,
-  tab?: CommonTab,
-): string => {
-  const path = ROUTE_PATHS.V03_COMMON.replace(":id", commonId);
-
-  return `${path}${tab ? `?${QueryParamKey.Tab}=${tab}` : ""}`;
-};
+export const getCommonPagePath_v03: GetCommonPagePath = (...args) =>
+  buildCommonPagePath(ROUTE_PATHS.V03_COMMON, ...args);

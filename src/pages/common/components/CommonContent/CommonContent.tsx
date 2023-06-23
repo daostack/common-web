@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CommonPageSettings } from "@/pages/common/types";
+import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
@@ -59,6 +60,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
   } = props;
   const isTabletView = useIsTabletView();
   const dispatch = useDispatch();
+  const { getCommonPagePath } = useRoutesContext();
   const isCommonMember = Boolean(commonMember);
   const allowedTabs = useMemo(
     () =>
@@ -121,7 +123,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
             settings.renderHeaderContent()
           ) : !isTabletView ? (
             <HeaderContent
-              commonId={common.id}
+              backButtonPath={getCommonPagePath(common.id)}
               withoutBackButton={!commonMember}
             />
           ) : null

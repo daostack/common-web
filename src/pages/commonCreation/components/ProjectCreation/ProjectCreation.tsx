@@ -5,11 +5,12 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { updateCommonState } from "@/pages/OldCommon/store/actions";
 import { GovernanceActions } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
-import { checkIsProject, getCommonPagePath } from "@/shared/utils";
+import { checkIsProject } from "@/shared/utils";
 import {
   commonActions,
   commonLayoutActions,
@@ -29,6 +30,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   const { parentCommonId, initialCommon } = props;
   const history = useHistory();
   const dispatch = useDispatch();
+  const { getCommonPagePath } = useRoutesContext();
   const {
     data: parentCommon,
     fetched: isParentCommonFetched,

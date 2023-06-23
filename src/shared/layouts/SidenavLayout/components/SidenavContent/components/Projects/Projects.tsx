@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { authentificated } from "@/pages/Auth/store/selectors";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
+import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
-import { getCommonPagePath, getCommonPagePath_v03 } from "@/shared/utils";
 import {
   projectsActions,
   selectAreProjectsFetched,
@@ -28,6 +28,7 @@ import styles from "./Projects.module.scss";
 const Projects: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { getCommonPagePath } = useRoutesContext();
   const location = history.location;
   const {
     isModalOpen: isCreateCommonModalOpen,
@@ -42,9 +43,9 @@ const Projects: FC = () => {
   const items = useMemo(
     () =>
       generateProjectsTreeItems(projects, (projectsStateItem) =>
-        getCommonPagePath_v03(projectsStateItem.commonId),
+        getCommonPagePath(projectsStateItem.commonId),
       ),
-    [projects],
+    [projects, getCommonPagePath],
   );
   const activeItemId = getActiveItemIdByPath(location.pathname);
   const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(

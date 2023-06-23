@@ -5,6 +5,7 @@ import {
   CommonSidenavLayoutRouteOptions,
   useLayoutRouteContext,
 } from "@/pages/App/router";
+import { RoutesV04Provider } from "@/shared/contexts";
 import { useLockedBody } from "@/shared/hooks";
 import { Sidenav } from "@/shared/ui-kit";
 import { checkSidenavVisibility } from "../SidenavLayout/utils";
@@ -43,13 +44,15 @@ const CommonSidenavLayout: FC = (props) => {
       style={style}
     >
       {isSidenavVisible && (
-        <Sidenav
-          contentWrapperClassName={styles.sidenavContentWrapper}
-          style={{ left: sidenavLeft }}
-          onOpenToggle={handleSidenavOpenToggle}
-        >
-          <SidenavContent className={styles.sidenavContent} />
-        </Sidenav>
+        <RoutesV04Provider>
+          <Sidenav
+            contentWrapperClassName={styles.sidenavContentWrapper}
+            style={{ left: sidenavLeft }}
+            onOpenToggle={handleSidenavOpenToggle}
+          >
+            <SidenavContent className={styles.sidenavContent} />
+          </Sidenav>
+        </RoutesV04Provider>
       )}
       <main className={styles.main}>{children}</main>
     </div>
