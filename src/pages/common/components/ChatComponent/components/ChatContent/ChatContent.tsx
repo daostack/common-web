@@ -265,7 +265,7 @@ const ChatContent: ForwardRefRenderFunction<
           </ul>
         );
       })}
-      {!dateList.length && (
+      {!dateList.length && !isLoading && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />
