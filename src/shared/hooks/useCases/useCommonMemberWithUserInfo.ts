@@ -42,7 +42,10 @@ export const useCommonMemberWithUserInfo = (
   }, [userId, commonId]);
 
   const governanceCircles = Object.values(governance?.circles || {});
-  const memberCircles = getFilteredByIdCircles(governanceCircles);
+  const memberCircles = getFilteredByIdCircles(
+    governanceCircles,
+    commonMember?.circleIds,
+  );
   const circlesString = getCirclesWithHighestTier(memberCircles)
     .map((circle) => circle.name)
     .join(", ");

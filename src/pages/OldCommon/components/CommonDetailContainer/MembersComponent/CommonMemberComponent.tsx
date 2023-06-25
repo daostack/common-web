@@ -142,19 +142,6 @@ const CommonMember: FC<CommonMemberProps> = ({
         isShowing={isShowing}
         avatar={avatar}
       />
-
-      {/* <CommonMemberPreview
-        key={member.id}
-        member={member}
-        circles={circlesString}
-        memberName={memberName}
-        avatar={avatar}
-        isShowing={isShowing}
-        commonId={commonId}
-        country={member.user.country}
-        about={member.user.intro}
-        onClose={onClose}
-      /> */}
     </>
   );
 };
