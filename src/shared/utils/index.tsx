@@ -31,3 +31,4 @@ export * from "./text";
 export * from "./hasPermission";
 export * from "./getProjectCircleDefinition";
 export * from "./generateStaticShareLink";
+export * from "./openSidenav";
