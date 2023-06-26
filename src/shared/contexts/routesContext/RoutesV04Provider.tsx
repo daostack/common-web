@@ -1,8 +1,8 @@
 import React, { FC, useMemo } from "react";
 import {
-  getCommonPagePath,
-  getCommonPageAboutTabPath,
-  getInboxPagePath,
+  getCommonPagePath_v04,
+  getCommonPageAboutTabPath_v04,
+  getInboxPagePath_v04,
 } from "@/shared/utils";
 import { RoutesContext, RoutesContextValue } from "../routesContext";
 
@@ -10,9 +10,9 @@ export const RoutesV04Provider: FC = (props) => {
   const { children } = props;
   const routesContextValue = useMemo<RoutesContextValue>(
     () => ({
-      getCommonPagePath,
-      getCommonPageAboutTabPath,
-      getInboxPagePath,
+      getCommonPagePath: getCommonPagePath_v04,
+      getCommonPageAboutTabPath: getCommonPageAboutTabPath_v04,
+      getInboxPagePath: getInboxPagePath_v04,
     }),
     [],
   );

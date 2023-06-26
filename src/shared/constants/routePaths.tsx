@@ -15,6 +15,12 @@ export enum ROUTE_PATHS {
   V04_COMMON_WALLET_TAB = "/commons-v04/:id/wallet",
   V04_PROJECT_CREATION = "/commons-v04/:id/new-project",
   V04_COMMON_EDITING = "/commons-v04/:id/edit",
+  COMMON = "/commons/:id",
+  COMMON_ABOUT_TAB = "/commons/:id/about",
+  COMMON_MEMBERS_TAB = "/commons/:id/members",
+  COMMON_WALLET_TAB = "/commons/:id/wallet",
+  PROJECT_CREATION = "/commons/:id/new-project",
+  COMMON_EDITING = "/commons/:id/edit",
   COMMON_SUPPORT = "/commons/:id/support",
   MY_COMMONS = "/my-commons",
   SUBMIT_INVOICES = "/invoices/submission/:proposalId",
@@ -30,4 +36,5 @@ export enum ROUTE_PATHS {
   PARENTS_FOR_CLIMATE = "/parents-for-climate",
   SAVE_SAADIA = "/save-saadia",
   V04_INBOX = "/inbox-v04",
+  INBOX = "/inbox",
 }
