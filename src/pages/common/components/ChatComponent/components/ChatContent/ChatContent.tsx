@@ -190,9 +190,11 @@ const ChatContent: ForwardRefRenderFunction<
   }
 
   if (isLoading) {
-    <div className={styles.loaderContainer}>
-      <Loader />
-    </div>;
+    return (
+      <div className={styles.loaderContainer}>
+        <Loader />
+      </div>
+    );
   }
 
   return (
@@ -265,7 +267,7 @@ const ChatContent: ForwardRefRenderFunction<
           </ul>
         );
       })}
-      {!dateList.length && (
+      {!dateList.length && !isLoading && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />
