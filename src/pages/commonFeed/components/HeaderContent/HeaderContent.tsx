@@ -3,11 +3,12 @@ import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { CommonAvatar } from "@/pages/common/components/CommonAvatar";
 import { NewStreamButton } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
+import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
-import { getCommonPageAboutTabPath, getPluralEnding } from "@/shared/utils";
+import { getPluralEnding } from "@/shared/utils";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
@@ -32,7 +33,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
     commonMember,
     governance,
   } = props;
-
+  const { getCommonPageAboutTabPath } = useRoutesContext();
   const isMobileVersion = useIsTabletView();
 
   return (
