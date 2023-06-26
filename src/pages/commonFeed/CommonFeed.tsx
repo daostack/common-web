@@ -1,4 +1,12 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  CSSProperties,
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -13,7 +21,10 @@ import {
   FeedLayoutItem,
   FeedLayoutRef,
 } from "@/shared/interfaces";
-import { CommonSidenavLayoutTabs } from "@/shared/layouts";
+import {
+  CommonSidenavLayoutPageContent,
+  CommonSidenavLayoutTabs,
+} from "@/shared/layouts";
 import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import { checkIsProject, getCommonPageAboutTabPath } from "@/shared/utils";
@@ -225,22 +236,37 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     );
   }
 
+  const renderContentWrapper = (
+    children: ReactNode,
+    wrapperStyles?: CSSProperties,
+  ): ReactNode => (
+    <CommonSidenavLayoutPageContent
+      className={styles.layoutPageContent}
+      headerClassName={styles.layoutHeader}
+      headerContent={
+        <HeaderContent
+          commonId={commonData.common.id}
+          commonName={commonData.common.name}
+          commonImage={commonData.common.image}
+          commonMembersAmount={commonData.commonMembersAmount}
+          commonMember={commonMember}
+          governance={commonData.governance}
+          isProject={checkIsProject(commonData.common)}
+        />
+      }
+      isGlobalLoading={!isGlobalDataFetched}
+      styles={wrapperStyles}
+    >
+      {children}
+    </CommonSidenavLayoutPageContent>
+  );
+
   return (
     <>
       <FeedLayout
         ref={setFeedLayoutRef}
         className={styles.feedLayout}
-        headerContent={
-          <HeaderContent
-            commonId={commonData.common.id}
-            commonName={commonData.common.name}
-            commonImage={commonData.common.image}
-            commonMembersAmount={commonData.commonMembersAmount}
-            commonMember={commonMember}
-            governance={commonData.governance}
-            isProject={checkIsProject(commonData.common)}
-          />
-        }
+        renderContentWrapper={renderContentWrapper}
         topContent={
           <>
             {(commonAction === CommonAction.NewDiscussion ||
@@ -265,7 +291,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
             )}
           </>
         }
-        isGlobalLoading={!isGlobalDataFetched}
         common={commonData.common}
         governance={commonData.governance}
         commonMember={commonMember}

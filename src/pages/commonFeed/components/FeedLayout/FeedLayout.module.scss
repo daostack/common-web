@@ -1,19 +1,5 @@
 @import "../../../../styles/sizes";
 
-.layoutPageContent {
-  --chat-w: 0rem;
-
-  border: 0;
-}
-
-.layoutHeader {
-  right: calc(var(--sb-h-indent) + var(--chat-w) + 1px);
-
-  @include tablet {
-    right: 0;
-  }
-}
-
 .content {
   flex: 1;
   padding: 0 1.5rem;
