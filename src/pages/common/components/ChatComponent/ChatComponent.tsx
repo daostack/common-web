@@ -568,9 +568,7 @@ export default function ChatComponent({
           users={users}
           discussionId={discussionId}
           feedItemId={feedItemId}
-          isLoading={
-            isFetchedDiscussionMessages && !isLoadingDiscussionMessages
-          }
+          isLoading={isLoadingDiscussionMessages}
           onMessageDelete={handleMessageDelete}
         />
       </div>
