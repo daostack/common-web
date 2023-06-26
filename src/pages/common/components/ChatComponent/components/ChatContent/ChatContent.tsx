@@ -190,9 +190,11 @@ const ChatContent: ForwardRefRenderFunction<
   }
 
   if (isLoading) {
-    <div className={styles.loaderContainer}>
-      <Loader />
-    </div>;
+    return (
+      <div className={styles.loaderContainer}>
+        <Loader />
+      </div>
+    );
   }
 
   return (
