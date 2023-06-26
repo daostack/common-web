@@ -101,7 +101,8 @@ export enum EntityTypes {
 }
 
 export const FOOTER_ID = "footer";
-export const SIDENAV_ID = "sidenav-open";
+export const SIDENAV_OPEN = "open";
+export const SIDENAV_KEY = "sidenav";
 
 export const ANONYMOUS_USER_FIRST_NAME = "Anonymous";
 export const ANONYMOUS_USER_LAST_NAME = "User";
