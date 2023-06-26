@@ -3,9 +3,8 @@
 
 .container {
   --main-mw: 100%;
-  --main-pl: unset;
   --sb-max-width: unset;
-  --sb-width: 21rem;
+  --sb-width: 0rem;
   --sb-content-max-width: 100%;
   --sb-content-width: 100%;
   --sb-content-pb: 0;
@@ -33,11 +32,9 @@
 }
 .containerWithSidenav {
   --main-mw: calc(120rem + var(--sb-h-indent, 0));
-  --main-pl: calc(var(--sb-width) + var(--sb-h-indent, 0));
 
   @include tablet {
     --main-mw: 100%;
-    --main-pl: unset;
   }
 }
 
@@ -56,11 +53,23 @@
 }
 
 .main {
+  --header-h: 3.5rem;
+
   flex: 1;
   max-width: var(--main-mw);
-  padding-left: var(--main-pl);
   display: flex;
   flex-direction: column;
   background-color: var(--page-bg-color);
+  box-sizing: border-box;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  right: var(--sb-h-indent);
+  left: var(--sb-h-indent);
+  z-index: 2;
+  height: var(--header-h);
+  background-color: $c-light-gray-2;
   box-sizing: border-box;
 }

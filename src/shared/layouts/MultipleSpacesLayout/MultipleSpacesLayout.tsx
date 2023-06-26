@@ -42,7 +42,10 @@ const MultipleSpacesLayout: FC = (props) => {
             <SidenavContent className={styles.sidenavContent} />
           </Sidenav>
         )}
-        <main className={styles.main}>{children}</main>
+        <main className={styles.main}>
+          {!isTabletView && <div className={styles.header}>Header</div>}
+          {children}
+        </main>
       </div>
     </MainRoutesProvider>
   );

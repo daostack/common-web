@@ -9,7 +9,7 @@ import classNames from "classnames";
 import { Loader, LoaderVariant } from "@/shared/ui-kit";
 import styles from "./PageContent.module.scss";
 
-interface FeedLayoutProps {
+interface PageContentProps {
   className?: string;
   headerClassName?: string;
   headerContent: ReactNode;
@@ -17,7 +17,7 @@ interface FeedLayoutProps {
   styles?: CSSProperties;
 }
 
-const PageContent: FC<FeedLayoutProps> = (props) => {
+const PageContent: FC<PageContentProps> = (props) => {
   const {
     className,
     headerClassName,
