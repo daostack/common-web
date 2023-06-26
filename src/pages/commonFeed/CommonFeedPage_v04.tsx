@@ -1,11 +1,11 @@
 import React, { FC } from "react";
-import { MainRoutesProvider } from "@/shared/contexts";
+import { RoutesV04Provider } from "@/shared/contexts";
 import BaseCommonFeedPage from "./BaseCommonFeedPage";
 
 const CommonFeedPage: FC = () => (
-  <MainRoutesProvider>
+  <RoutesV04Provider>
     <BaseCommonFeedPage />
-  </MainRoutesProvider>
+  </RoutesV04Provider>
 );
 
 export default CommonFeedPage;

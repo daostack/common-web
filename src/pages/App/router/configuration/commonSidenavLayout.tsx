@@ -2,7 +2,7 @@ import { BillingPage } from "@/pages/billing";
 import { ALL_COMMON_PAGE_TABS, CommonPage_v04 } from "@/pages/common";
 import { CommonCreationV04Page } from "@/pages/commonCreation";
 import { CommonEditingV04Page } from "@/pages/commonEditing";
-import { CommonFeedPage } from "@/pages/commonFeed";
+import { CommonFeedPage_v04 } from "@/pages/commonFeed";
 import { InboxPage } from "@/pages/inbox";
 import { ProfilePage } from "@/pages/profile";
 import { ROUTE_PATHS } from "@/shared/constants";
@@ -35,7 +35,7 @@ export const COMMON_SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<CommonSide
       {
         path: ROUTE_PATHS.V04_COMMON,
         exact: true,
-        component: CommonFeedPage,
+        component: CommonFeedPage_v04,
       },
       ...getCommonPageConfiguration(),
       {
