@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Menu, Transition } from "@headlessui/react";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { Content, ContentStyles } from "../Content";
-import { MenuItems, MenuItemsPlacement } from "../MenuItems";
+import { MenuItems, MenuItemsPlacement, MenuItemsStyles } from "../MenuItems";
 import styles from "./AuthenticatedContent.module.scss";
 
 interface AuthenticatedContentProps {
@@ -12,6 +12,7 @@ interface AuthenticatedContentProps {
   menuItemsPlacement?: MenuItemsPlacement;
   rightArrowIconClassName?: string;
   contentStyles?: ContentStyles;
+  menuItemsStyles?: MenuItemsStyles;
 }
 
 const AuthenticatedContent: FC<AuthenticatedContentProps> = (props) => {
@@ -21,6 +22,7 @@ const AuthenticatedContent: FC<AuthenticatedContentProps> = (props) => {
     menuItemsPlacement,
     rightArrowIconClassName,
     contentStyles,
+    menuItemsStyles,
   } = props;
 
   return (
@@ -43,7 +45,7 @@ const AuthenticatedContent: FC<AuthenticatedContentProps> = (props) => {
         leave={styles.menuTransitionExit}
         leaveTo={styles.menuTransitionExitActive}
       >
-        <MenuItems placement={menuItemsPlacement} />
+        <MenuItems placement={menuItemsPlacement} styles={menuItemsStyles} />
       </Transition>
     </Menu>
   );

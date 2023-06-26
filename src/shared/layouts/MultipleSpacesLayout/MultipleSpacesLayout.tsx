@@ -5,6 +5,7 @@ import { useLockedBody } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Sidenav } from "@/shared/ui-kit";
 import { SidenavContent } from "../CommonSidenavLayout/components";
+import { Header } from "./components";
 import styles from "./MultipleSpacesLayout.module.scss";
 
 const MultipleSpacesLayout: FC = (props) => {
@@ -43,7 +44,7 @@ const MultipleSpacesLayout: FC = (props) => {
           </Sidenav>
         )}
         <main className={styles.main}>
-          {!isTabletView && <div className={styles.header}>Header</div>}
+          {!isTabletView && <Header />}
           {children}
         </main>
       </div>
