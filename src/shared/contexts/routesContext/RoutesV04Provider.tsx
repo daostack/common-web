@@ -1,5 +1,9 @@
 import React, { FC, useMemo } from "react";
-import { getCommonPagePath, getCommonPageAboutTabPath } from "@/shared/utils";
+import {
+  getCommonPagePath,
+  getCommonPageAboutTabPath,
+  getInboxPagePath,
+} from "@/shared/utils";
 import { RoutesContext, RoutesContextValue } from "../routesContext";
 
 export const RoutesV04Provider: FC = (props) => {
@@ -8,6 +12,7 @@ export const RoutesV04Provider: FC = (props) => {
     () => ({
       getCommonPagePath,
       getCommonPageAboutTabPath,
+      getInboxPagePath,
     }),
     [],
   );

@@ -6,7 +6,7 @@ export const getActiveLayoutTab = (path: string): LayoutTab | null => {
   if (matchRoute(path, ROUTE_PATHS.PROFILE)) {
     return LayoutTab.Profile;
   }
-  if (matchRoute(path, ROUTE_PATHS.INBOX)) {
+  if (matchRoute(path, ROUTE_PATHS.V04_INBOX)) {
     return LayoutTab.Inbox;
   }
   if (matchRoute(path, ROUTE_PATHS.V04_COMMON, { exact: false })) {

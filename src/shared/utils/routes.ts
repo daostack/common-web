@@ -3,6 +3,7 @@ import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
 
 export type GetCommonPagePath = (commonId: string, tab?: CommonTab) => string;
 export type GetCommonPageAboutTabPath = (commonId: string) => string;
+export type GetInboxPagePath = () => string;
 
 export const buildCommonPagePath = (
   baseCommonPagePath: string,
@@ -30,7 +31,7 @@ export const getCommonEditingPagePath = (commonId: string): string =>
 export const getCommonSupportPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_SUPPORT.replace(":id", commonId);
 
-export const getInboxPagePath = (): string => ROUTE_PATHS.INBOX;
+export const getInboxPagePath: GetInboxPagePath = () => ROUTE_PATHS.V04_INBOX;
 
 export const getProfilePagePath = (): string => ROUTE_PATHS.PROFILE;
 

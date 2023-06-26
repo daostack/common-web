@@ -1,9 +1,14 @@
 import { createContext, useContext } from "react";
-import { GetCommonPageAboutTabPath, GetCommonPagePath } from "@/shared/utils";
+import {
+  GetCommonPageAboutTabPath,
+  GetCommonPagePath,
+  GetInboxPagePath,
+} from "@/shared/utils";
 
 interface Data {
   getCommonPagePath: GetCommonPagePath;
   getCommonPageAboutTabPath: GetCommonPageAboutTabPath;
+  getInboxPagePath: GetInboxPagePath;
 }
 
 export type RoutesContextValue = Data | null;
