@@ -1,35 +1,11 @@
 import React, { FC } from "react";
-import { useParams } from "react-router-dom";
-import { Common } from "@/shared/models";
-import { checkIsProject } from "@/shared/utils";
-import { ProjectCreation } from "./components";
+import { MainRoutesProvider } from "@/shared/contexts";
+import BaseCommonCreation, { CommonCreationProps } from "./BaseCommonCreation";
 
-interface CommonCreationRouterParams {
-  id?: string;
-}
-
-interface CommonCreationProps {
-  initialCommon?: Common;
-}
-
-const CommonCreation: FC<CommonCreationProps> = (props) => {
-  const { initialCommon } = props;
-  const { id: commonId } = useParams<CommonCreationRouterParams>();
-
-  if (initialCommon) {
-    return checkIsProject(initialCommon) ? (
-      <ProjectCreation
-        initialCommon={initialCommon}
-        parentCommonId={initialCommon.directParent.commonId}
-      />
-    ) : null;
-  }
-
-  if (commonId) {
-    return <ProjectCreation parentCommonId={commonId} />;
-  }
-
-  return null;
-};
+const CommonCreation: FC<CommonCreationProps> = (props) => (
+  <MainRoutesProvider>
+    <BaseCommonCreation {...props} />
+  </MainRoutesProvider>
+);
 
 export default CommonCreation;

@@ -1,11 +1,11 @@
 import React from "react";
-import { MainRoutesProvider } from "@/shared/contexts";
+import { RoutesV04Provider } from "@/shared/contexts";
 import BaseCommonPage from "./BaseCommon";
 
 const Common = () => (
-  <MainRoutesProvider>
+  <RoutesV04Provider>
     <BaseCommonPage />
-  </MainRoutesProvider>
+  </RoutesV04Provider>
 );
 
 export default Common;

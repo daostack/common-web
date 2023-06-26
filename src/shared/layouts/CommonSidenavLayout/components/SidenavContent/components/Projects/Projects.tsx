@@ -1,12 +1,13 @@
-import React, { FC, useEffect, useMemo } from "react";
+import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { authentificated } from "@/pages/Auth/store/selectors";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
+import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
-import { getCommonPagePath, getProjectCreationPagePath } from "@/shared/utils";
+import { getProjectCreationPagePath } from "@/shared/utils";
 import {
   commonLayoutActions,
   selectCommonLayoutCommonId,
@@ -16,6 +17,7 @@ import {
   selectCommonLayoutProjects,
   selectAreCommonLayoutProjectsLoading,
   selectAreCommonLayoutProjectsFetched,
+  ProjectsStateItem,
 } from "@/store/states";
 import {
   generateProjectsTreeItems,
@@ -32,6 +34,7 @@ const Projects: FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = history.location;
+  const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const {
     isModalOpen: isCreateCommonModalOpen,
     onOpen: onCreateCommonModalOpen,
@@ -48,17 +51,31 @@ const Projects: FC = () => {
   const currentCommon = commons.find(
     ({ commonId }) => commonId === currentCommonId,
   );
+  const generateItemCommonPagePath = useCallback(
+    (projectsStateItem: ProjectsStateItem): string =>
+      projectsStateItem.hasMembership
+        ? getCommonPagePath(projectsStateItem.commonId)
+        : getCommonPageAboutTabPath(projectsStateItem.commonId),
+    [getCommonPagePath, getCommonPageAboutTabPath],
+  );
   const parentItem = useMemo(
-    () => (currentCommon ? getItemFromProjectsStateItem(currentCommon) : null),
-    [currentCommon],
+    () =>
+      currentCommon
+        ? getItemFromProjectsStateItem(
+            currentCommon,
+            generateItemCommonPagePath,
+          )
+        : null,
+    [currentCommon, generateItemCommonPagePath],
   );
   const items = useMemo(() => {
     const [item] = generateProjectsTreeItems(
       currentCommon ? projects.concat(currentCommon) : projects,
+      generateItemCommonPagePath,
     );
 
     return item?.items || [];
-  }, [currentCommon, projects]);
+  }, [currentCommon, projects, generateItemCommonPagePath]);
   const treeItemTriggerStyles = useMemo<TreeItemTriggerStyles>(
     () => ({
       container: styles.projectsTreeItemTriggerClassName,

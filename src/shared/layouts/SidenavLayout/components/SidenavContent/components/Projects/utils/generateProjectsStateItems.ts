@@ -1,33 +1,27 @@
-import { getCommonPageAboutTabPath, getCommonPagePath } from "@/shared/utils";
 import { ProjectsStateItem } from "@/store/states";
 import { Item } from "../../ProjectsTree/types";
 
 export const getItemFromProjectsStateItem = (
   projectsStateItem: ProjectsStateItem,
+  generatePath: (projectsStateItem: ProjectsStateItem) => string,
   itemsGroupedByCommonParentId?: Map<string | null, ProjectsStateItem[]>,
-  generatePath?: (projectsStateItem: ProjectsStateItem) => string,
 ): Item => {
   const items = itemsGroupedByCommonParentId
     ? (itemsGroupedByCommonParentId.get(projectsStateItem.commonId) || []).map(
         (subCommon) =>
           getItemFromProjectsStateItem(
             subCommon,
-            itemsGroupedByCommonParentId,
             generatePath,
+            itemsGroupedByCommonParentId,
           ),
       )
     : [];
-  const path =
-    generatePath?.(projectsStateItem) ||
-    (projectsStateItem.hasMembership
-      ? getCommonPagePath(projectsStateItem.commonId)
-      : getCommonPageAboutTabPath(projectsStateItem.commonId));
 
   return {
     id: projectsStateItem.commonId,
     image: projectsStateItem.image,
     name: projectsStateItem.name,
-    path,
+    path: generatePath(projectsStateItem),
     hasMembership: projectsStateItem.hasMembership,
     hasPermissionToAddProject: projectsStateItem.hasPermissionToAddProject,
     notificationsAmount: projectsStateItem.notificationsAmount,
@@ -37,7 +31,7 @@ export const getItemFromProjectsStateItem = (
 
 export const generateProjectsTreeItems = (
   data: ProjectsStateItem[],
-  generatePath?: (projectsStateItem: ProjectsStateItem) => string,
+  generatePath: (projectsStateItem: ProjectsStateItem) => string,
 ): Item[] => {
   const itemsGroupedByCommonParentId = data.reduce((map, item) => {
     const commonId = item.directParent?.commonId || null;
@@ -54,8 +48,8 @@ export const generateProjectsTreeItems = (
       acc.concat(
         getItemFromProjectsStateItem(
           item,
-          itemsGroupedByCommonParentId,
           generatePath,
+          itemsGroupedByCommonParentId,
         ),
       ),
     [],

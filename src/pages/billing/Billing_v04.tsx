@@ -1,18 +1,18 @@
 import React, { FC } from "react";
 import { Billing } from "@/pages/MyAccount/components/Billing";
-import { MainRoutesProvider } from "@/shared/contexts";
+import { RoutesV04Provider } from "@/shared/contexts";
 import { Container, PureCommonTopNavigation } from "@/shared/ui-kit";
 import styles from "./Billing.module.scss";
 
-const BillingPage: FC = () => {
+const BillingPage_v04: FC = () => {
   return (
-    <MainRoutesProvider>
+    <RoutesV04Provider>
       <PureCommonTopNavigation className={styles.topNavigation} />
       <Container className={styles.container}>
         <Billing />
       </Container>
-    </MainRoutesProvider>
+    </RoutesV04Provider>
   );
 };
 
-export default BillingPage;
+export default BillingPage_v04;

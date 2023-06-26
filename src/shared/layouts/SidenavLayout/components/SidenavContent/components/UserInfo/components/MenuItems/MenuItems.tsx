@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import classNames from "classnames";
 import { Menu } from "@headlessui/react";
 import { logOut } from "@/pages/Auth/store/actions";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { MenuItem } from "./components";
 import { Item, ItemType } from "./types";
 import styles from "./MenuItems.module.scss";
@@ -20,16 +20,17 @@ interface MenuItemsProps {
 const MenuItems: FC<MenuItemsProps> = (props) => {
   const { placement = MenuItemsPlacement.Bottom } = props;
   const dispatch = useDispatch();
+  const { getProfilePagePath, getBillingPagePath } = useRoutesContext();
   const items: Item[] = [
     {
       key: "my-profile",
       text: "My profile",
-      to: ROUTE_PATHS.PROFILE,
+      to: getProfilePagePath(),
     },
     {
       key: "billing",
       text: "Billing",
-      to: ROUTE_PATHS.BILLING,
+      to: getBillingPagePath(),
     },
     {
       key: "log-out",

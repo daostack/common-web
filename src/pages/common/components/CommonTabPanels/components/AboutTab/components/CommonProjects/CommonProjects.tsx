@@ -5,6 +5,7 @@ import {
   GovernanceActions,
   ViewportBreakpointVariant,
 } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   CirclesPermissions,
@@ -43,7 +44,8 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
     circles,
     styles: outerStyles,
   } = props;
-  const { settings, onProjectCreate } = useCommonDataContext();
+  const { getCommonPagePath } = useRoutesContext();
+  const { onProjectCreate } = useCommonDataContext();
   const isTabletView = useIsTabletView();
   const isAddingNewProjectAllowed = Boolean(
     commonMember &&
@@ -80,7 +82,7 @@ const CommonProjects: FC<CommonProjectsProps> = (props) => {
           <li key={subCommon.id} className={styles.projectsItem}>
             <Project
               title={subCommon.name}
-              url={settings.generatePagePath(subCommon.id)}
+              url={getCommonPagePath(subCommon.id)}
               imageURL={subCommon.image}
               imageAlt={`${subCommon.name}'s image`}
               tooltipContent={

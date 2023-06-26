@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
+import { useRoutesContext } from "@/shared/contexts";
 import { BreadcrumbItem, Breadcrumbs } from "@/shared/ui-kit";
 import { selectCommonAction } from "@/store/states";
 import { CommonTab } from "../../constants";
@@ -13,14 +14,15 @@ interface CommonBreadcrumbsProps {
 
 const CommonBreadcrumbs: FC<CommonBreadcrumbsProps> = (props) => {
   const { activeTab } = props;
-  const { settings, common, parentCommons } = useCommonDataContext();
+  const { getCommonPagePath } = useRoutesContext();
+  const { common, parentCommons } = useCommonDataContext();
   const commonAction = useSelector(selectCommonAction);
   const items: BreadcrumbItem[] = getBreadcrumbItems({
     activeTab,
     common,
     parentCommons,
     commonAction,
-    generatePagePath: settings.generatePagePath,
+    generatePagePath: getCommonPagePath,
   });
 
   return (

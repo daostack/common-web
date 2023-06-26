@@ -2,6 +2,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
+import { useRoutesContext } from "@/shared/contexts";
 import { useForceUpdate, useModal } from "@/shared/hooks";
 import {
   useDiscussionById,
@@ -85,6 +86,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   const userId = user?.uid;
   const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
   const forceUpdate = useForceUpdate();
+  const { getCommonPagePath } = useRoutesContext();
   const {
     fetchUser: fetchFeedItemUser,
     data: feedItemUser,
@@ -281,7 +283,11 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           menuItems={menuItems}
         />
         <FeedCardContent
-          subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
+          subtitle={getProposalSubtitle(
+            proposal,
+            proposalSpecificData,
+            getCommonPagePath(proposalSpecificData.targetCommon?.id || ""),
+          )}
           description={getProposalDescriptionString(
             proposal.data.args.description,
             proposal.type,

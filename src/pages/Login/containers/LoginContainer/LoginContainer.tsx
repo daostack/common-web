@@ -15,13 +15,16 @@ import {
   ErrorCode,
   ScreenSize,
   QueryParamKey,
-  ROUTE_PATHS,
 } from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
 import { setTutorialModalState } from "@/shared/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
-import { emptyFunction, isGeneralError } from "@/shared/utils";
+import {
+  emptyFunction,
+  getInboxPagePath,
+  isGeneralError,
+} from "@/shared/utils";
 import { isFirebaseError } from "@/shared/utils/firebase";
 import { LoginModalType } from "../../../Auth/interface";
 import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
@@ -101,7 +104,7 @@ const LoginContainer: FC = () => {
       } else {
         handleClose();
       }
-      history.push(ROUTE_PATHS.INBOX);
+      history.push(getInboxPagePath());
     },
     [removeQueryParams, handleClose, shouldShowUserDetailsAfterSignUp],
   );

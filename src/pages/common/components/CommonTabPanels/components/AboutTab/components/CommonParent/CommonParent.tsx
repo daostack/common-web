@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
-import { useCommonDataContext } from "@/pages/common/providers";
 import { Image } from "@/shared/components";
 import { ViewportBreakpointVariant } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common } from "@/shared/models";
 import { Container } from "@/shared/ui-kit";
@@ -16,7 +16,7 @@ interface CommonParentProps {
 
 const CommonParent: FC<CommonParentProps> = (props) => {
   const { parentCommon, projectsAmountInParentCommon } = props;
-  const { settings } = useCommonDataContext();
+  const { getCommonPagePath } = useRoutesContext();
   const isTabletView = useIsTabletView();
 
   return (
@@ -43,7 +43,7 @@ const CommonParent: FC<CommonParentProps> = (props) => {
             )}
             <NavLink
               className={styles.commonLink}
-              to={settings.generatePagePath(parentCommon.id)}
+              to={getCommonPagePath(parentCommon.id)}
             >
               {projectsAmountInParentCommon} Space
               {projectsAmountInParentCommon === 1 ? "" : "s"}

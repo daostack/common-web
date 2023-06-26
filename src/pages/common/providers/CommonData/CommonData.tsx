@@ -8,6 +8,7 @@ import {
   MembershipRequestModal,
 } from "@/pages/OldCommon/components";
 import { ProposalsTypes } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useNotification } from "@/shared/hooks";
 import {
   CirclesPermissions,
@@ -16,7 +17,7 @@ import {
   Governance,
   SupportersData,
 } from "@/shared/models";
-import { getCommonPagePath, getProjectCreationPagePath } from "@/shared/utils";
+import { getProjectCreationPagePath } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { getDefaultGovDocUrl } from "../../components/CommonTabPanels/components/AboutTab/utils";
 import { JoinProjectModal } from "../../components/JoinProjectModal";
@@ -66,6 +67,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { notify } = useNotification();
+  const { getCommonPagePath } = useRoutesContext();
   const [selectedMenuItem, setSelectedMenuItem] =
     useState<CommonMenuItem | null>(null);
   const [
@@ -201,7 +203,11 @@ const CommonData: FC<CommonDataProps> = (props) => {
     if (shouldRedirectToFeedOnCommonMemberExistence && commonMember) {
       history.push(getCommonPagePath(common.id));
     }
-  }, [shouldRedirectToFeedOnCommonMemberExistence, commonMember]);
+  }, [
+    shouldRedirectToFeedOnCommonMemberExistence,
+    commonMember,
+    getCommonPagePath,
+  ]);
 
   const contextValue = useMemo<CommonDataContextValue>(
     () => ({

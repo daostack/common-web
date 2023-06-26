@@ -4,7 +4,7 @@ import { ROUTE_PATHS } from "../constants";
 export const matchRoute = (
   pathname: string,
   path: ROUTE_PATHS,
-  props: RouteProps = {}
+  props: RouteProps = {},
 ): boolean => {
   const pathMatch = matchPath(pathname, {
     path,
@@ -14,3 +14,9 @@ export const matchRoute = (
 
   return Boolean(pathMatch);
 };
+
+export const matchOneOfRoutes = (
+  pathname: string,
+  paths: ROUTE_PATHS[],
+  props: RouteProps = {},
+): boolean => paths.some((path) => matchRoute(pathname, path, props));

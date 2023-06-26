@@ -1,18 +1,21 @@
 import React, { useMemo } from "react";
-import { getCommonPagePath_v03 } from "@/shared/utils";
-import { CommonPage, CommonPageSettings } from "../common";
+import { RoutesV03Provider } from "@/shared/contexts";
+import { BaseCommonPage, CommonPageSettings } from "../common";
 
 const Common = () => {
   const settings = useMemo<CommonPageSettings>(
     () => ({
       renderHeaderContent: () => null,
-      generatePagePath: (commonId) => getCommonPagePath_v03(commonId),
       withFeedTab: true,
     }),
     [],
   );
 
-  return <CommonPage settings={settings} />;
+  return (
+    <RoutesV03Provider>
+      <BaseCommonPage settings={settings} />
+    </RoutesV03Provider>
+  );
 };
 
 export default Common;

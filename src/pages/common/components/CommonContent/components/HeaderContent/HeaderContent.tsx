@@ -3,22 +3,21 @@ import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
   className?: string;
-  commonId: string;
+  backButtonPath: string;
   withoutBackButton?: boolean;
 }
 
 const HeaderContent: FC<HeaderContentProps> = (props) => {
-  const { className, commonId, withoutBackButton = false } = props;
+  const { className, backButtonPath, withoutBackButton = false } = props;
 
   return (
     <div className={classNames(styles.container, className)}>
       {!withoutBackButton && (
-        <NavLink className={styles.link} to={getCommonPagePath(commonId)}>
+        <NavLink className={styles.link} to={backButtonPath}>
           <TopNavigationOpenSidenavButton
             iconEl={<LongLeftArrowIcon className={styles.backIcon} />}
           />
