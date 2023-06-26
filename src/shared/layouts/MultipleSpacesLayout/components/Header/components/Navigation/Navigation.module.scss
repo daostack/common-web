@@ -1,0 +1,27 @@
+@import "../../../../../../../constants";
+
+.container {
+  flex-shrink: 0;
+  display: flex;
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: inherit;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  list-style-type: none;
+
+  & > * {
+    margin-right: 2rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
