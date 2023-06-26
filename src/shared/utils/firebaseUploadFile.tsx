@@ -24,6 +24,8 @@ export async function uploadFile(
 export const getFileDownloadInfo = async ({
   title,
   file,
+  size,
+  name,
 }: UploadFile): Promise<CommonLink> => {
   const fileName =
     typeof file === "string" ? title : getFileNameForUploading(file.name);
@@ -35,6 +37,8 @@ export const getFileDownloadInfo = async ({
   return {
     title: fileName,
     value,
+    size,
+    name
   };
 };
 

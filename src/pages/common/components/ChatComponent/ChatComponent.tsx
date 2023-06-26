@@ -291,11 +291,13 @@ export default function ChatComponent({
   );
 
   const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
+    console.log("---event.target.files", event.target.files);
     const newFilesPreview = Array.from(event.target.files || []).map((file) => {
       return {
         info: file,
         src: URL.createObjectURL(file),
         size: file.size,
+        name: file.name,
       };
     });
     dispatch(

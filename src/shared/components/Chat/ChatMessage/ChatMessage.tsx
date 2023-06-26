@@ -233,6 +233,7 @@ export default function ChatMessage({
     userId,
   ]);
 
+  console.log("---discussionMessage", discussionMessage);
   const filePreview = useMemo(
     () => discussionMessage.files?.[0],
     [discussionMessage.files],
@@ -297,6 +298,7 @@ export default function ChatMessage({
                   [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
                 })}
               >
+                {console.log("---filePreview", filePreview)}
                 {filePreview && (
                   <FilePreview
                     src={filePreview.value}
