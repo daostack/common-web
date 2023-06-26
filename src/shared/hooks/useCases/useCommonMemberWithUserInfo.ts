@@ -3,6 +3,7 @@ import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { LoadingState } from "@/shared/interfaces";
 import { CommonMemberWithUserInfo } from "@/shared/models";
 import {
+  convertToTimestamp,
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
 } from "@/shared/utils";
@@ -49,6 +50,20 @@ export const useCommonMemberWithUserInfo = (
   const circlesString = getCirclesWithHighestTier(memberCircles)
     .map((circle) => circle.name)
     .join(", ");
+
+  if (!commonId && user) {
+    return {
+      data: {
+        id: "",
+        userId: user.uid,
+        joinedAt: convertToTimestamp({ _seconds: 0, _nanoseconds: 0 }),
+        circleIds: [],
+        user: user,
+      },
+      loading: isUserLoading,
+      fetched: isUserFetched,
+    };
+  }
 
   return commonMember && user && governance
     ? {
