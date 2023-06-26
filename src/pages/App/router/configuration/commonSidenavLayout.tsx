@@ -1,10 +1,10 @@
-import { BillingPage } from "@/pages/billing";
+import { BillingPage_v04 } from "@/pages/billing";
 import { ALL_COMMON_PAGE_TABS, CommonPage_v04 } from "@/pages/common";
 import { CommonCreationPage_v04 } from "@/pages/commonCreation";
 import { CommonEditingPage_v04 } from "@/pages/commonEditing";
 import { CommonFeedPage_v04 } from "@/pages/commonFeed";
 import { InboxPage_v04 } from "@/pages/inbox";
-import { ProfilePage } from "@/pages/profile";
+import { ProfilePage_v04 } from "@/pages/profile";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { CommonSidenavLayout } from "@/shared/layouts";
 import { LayoutConfiguration, RouteType } from "../types";
@@ -49,14 +49,14 @@ export const COMMON_SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<CommonSide
         component: CommonEditingPage_v04,
       },
       {
-        path: ROUTE_PATHS.PROFILE,
+        path: ROUTE_PATHS.V04_PROFILE,
         exact: true,
-        component: ProfilePage,
+        component: ProfilePage_v04,
       },
       {
-        path: ROUTE_PATHS.BILLING,
+        path: ROUTE_PATHS.V04_BILLING,
         exact: true,
-        component: BillingPage,
+        component: BillingPage_v04,
       },
     ],
   };

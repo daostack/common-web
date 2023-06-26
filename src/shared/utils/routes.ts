@@ -3,7 +3,7 @@ import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
 
 export type GetCommonPagePath = (commonId: string, tab?: CommonTab) => string;
 export type GetCommonPageAboutTabPath = (commonId: string) => string;
-export type GetInboxPagePath = () => string;
+export type GetGeneralPagePath = () => ROUTE_PATHS;
 
 export const buildCommonPagePath = (
   baseCommonPagePath: string,
@@ -31,9 +31,11 @@ export const getCommonEditingPagePath = (commonId: string): string =>
 export const getCommonSupportPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_SUPPORT.replace(":id", commonId);
 
-export const getInboxPagePath: GetInboxPagePath = () => ROUTE_PATHS.INBOX;
+export const getInboxPagePath: GetGeneralPagePath = () => ROUTE_PATHS.INBOX;
 
-export const getProfilePagePath = (): string => ROUTE_PATHS.PROFILE;
+export const getProfilePagePath: GetGeneralPagePath = () => ROUTE_PATHS.PROFILE;
+
+export const getBillingPagePath: GetGeneralPagePath = () => ROUTE_PATHS.BILLING;
 
 // v03
 export const getCommonPagePath_v03: GetCommonPagePath = (...args) =>
@@ -53,5 +55,11 @@ export const getProjectCreationPagePath_v04 = (commonId: string): string =>
 export const getCommonEditingPagePath_v04 = (commonId: string): string =>
   ROUTE_PATHS.V04_COMMON_EDITING.replace(":id", commonId);
 
-export const getInboxPagePath_v04: GetInboxPagePath = () =>
+export const getInboxPagePath_v04: GetGeneralPagePath = () =>
   ROUTE_PATHS.V04_INBOX;
+
+export const getProfilePagePath_v04: GetGeneralPagePath = () =>
+  ROUTE_PATHS.V04_PROFILE;
+
+export const getBillingPagePath_v04: GetGeneralPagePath = () =>
+  ROUTE_PATHS.V04_BILLING;

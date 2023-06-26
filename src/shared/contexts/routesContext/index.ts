@@ -2,30 +2,34 @@ import { createContext, useContext } from "react";
 import {
   GetCommonPageAboutTabPath,
   GetCommonPagePath,
-  GetInboxPagePath,
+  GetGeneralPagePath,
 } from "@/shared/utils";
 
 interface Data {
   getCommonPagePath: GetCommonPagePath;
   getCommonPageAboutTabPath: GetCommonPageAboutTabPath;
-  getInboxPagePath: GetInboxPagePath;
+  getInboxPagePath: GetGeneralPagePath;
+  getProfilePagePath: GetGeneralPagePath;
+  getBillingPagePath: GetGeneralPagePath;
 }
 
 export type RoutesContextValue = Data | null;
 
 export const RoutesContext = createContext<RoutesContextValue>(null);
 
-export const useRoutesContext = (): Data => {
+export function useRoutesContext(): Data;
+export function useRoutesContext(shouldThrow: false): Data | null;
+export function useRoutesContext(shouldThrow = true): unknown {
   const context = useContext(RoutesContext);
 
-  if (context === null) {
+  if (context === null && shouldThrow) {
     throw new Error(
       "Routes context usage is not wrapped in RoutesContext.Provider",
     );
   }
 
   return context;
-};
+}
 
 export * from "./MainRoutesProvider";
 export * from "./RoutesV03Provider";

@@ -1,9 +1,9 @@
 import { ROUTE_PATHS } from "@/shared/constants";
-import { matchOneOfRoutes, matchRoute } from "@/shared/utils";
+import { matchOneOfRoutes } from "@/shared/utils";
 import { LayoutTab } from "../../../constants";
 
 export const getActiveLayoutTab = (path: string): LayoutTab | null => {
-  if (matchRoute(path, ROUTE_PATHS.PROFILE)) {
+  if (matchOneOfRoutes(path, [ROUTE_PATHS.PROFILE, ROUTE_PATHS.V04_PROFILE])) {
     return LayoutTab.Profile;
   }
   if (matchOneOfRoutes(path, [ROUTE_PATHS.INBOX, ROUTE_PATHS.V04_INBOX])) {

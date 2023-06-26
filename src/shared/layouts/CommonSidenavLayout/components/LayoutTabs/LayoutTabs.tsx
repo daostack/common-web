@@ -7,12 +7,9 @@ import {
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
 import { Tab, Tabs } from "@/shared/components";
+import { useRoutesContext } from "@/shared/contexts";
 import { Avatar2Icon, InboxIcon, Hamburger2Icon } from "@/shared/icons";
-import {
-  getInboxPagePath,
-  getProfilePagePath,
-  openSidenav,
-} from "@/shared/utils";
+import { openSidenav } from "@/shared/utils";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
 import styles from "./LayoutTabs.module.scss";
@@ -32,6 +29,7 @@ interface TabConfiguration {
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
   const history = useHistory();
+  const { getInboxPagePath, getProfilePagePath } = useRoutesContext();
   const isAuthenticated = useSelector(authentificated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
