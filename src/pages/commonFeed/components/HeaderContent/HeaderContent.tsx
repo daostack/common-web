@@ -1,13 +1,12 @@
 import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { CommonAvatar } from "@/pages/common/components/CommonAvatar";
 import { NewStreamButton } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
-import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
+import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getPluralEnding } from "@/shared/utils";
 import styles from "./HeaderContent.module.scss";
 

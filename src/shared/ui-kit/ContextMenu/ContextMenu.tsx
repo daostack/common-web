@@ -4,6 +4,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import classNames from "classnames";
 import {
   useFloating,
   autoUpdate,
@@ -30,11 +31,12 @@ export interface ContextMenuRef {
 interface ContextMenuProps {
   menuItems: Item[];
   onOpenChange?: (open: boolean) => void;
+  listClassName?: string;
 }
 
 export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
   (props, forwardedRef) => {
-    const { menuItems, onOpenChange } = props;
+    const { menuItems, onOpenChange, listClassName } = props;
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const listItemsRef = useRef<(HTMLElement | null)[]>([]);
@@ -126,7 +128,7 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
                   left: x ?? 0,
                   top: y ?? 0,
                 }}
-                className={styles.list}
+                className={classNames(styles.list, listClassName)}
                 {...getFloatingProps()}
               >
                 {menuItems.map((item, index) => (

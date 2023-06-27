@@ -1,0 +1,16 @@
+@import "../../../../../../../constants";
+
+.container {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: $c-gray-40;
+  list-style-type: none;
+  overflow-x: auto;
+}
+
+.iconItem {
+  display: flex;
+  align-items: center;
+}

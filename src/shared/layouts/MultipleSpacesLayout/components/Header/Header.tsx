@@ -8,7 +8,7 @@ import {
   MenuItemsStyles,
   UserInfo,
 } from "../../../SidenavLayout/components/SidenavContent";
-import { Navigation } from "./components";
+import { Breadcrumbs, Navigation } from "./components";
 import styles from "./Header.module.scss";
 
 interface HeaderProps {
@@ -30,7 +30,9 @@ const Header: FC<HeaderProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.leftContent}>Breadcrumbs</div>
+      <div className={styles.leftContent}>
+        <Breadcrumbs />
+      </div>
       <div className={styles.rightContent}>
         <Navigation className={styles.navigation} />
         <UserInfo
