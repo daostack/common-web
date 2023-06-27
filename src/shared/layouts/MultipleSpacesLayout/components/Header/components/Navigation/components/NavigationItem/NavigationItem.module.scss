@@ -15,14 +15,14 @@
   transition: color 0.2s;
 
   &:hover {
-    --item-color: #{$c-gray-100};
+    --item-color: #{$c-shades-black};
   }
 }
 .itemActive {
   --item-color: #{$c-pink-mention};
 
   &:hover {
-    --item-color: #{$c-pink-primary};
+    --item-color: #{$c-pink-next-dark};
   }
 }
 .itemDisabled {
