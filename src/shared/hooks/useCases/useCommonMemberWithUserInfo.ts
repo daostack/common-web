@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { LoadingState } from "@/shared/interfaces";
-import { CommonMemberWithUserInfo } from "@/shared/models";
+import { CommonMemberWithUserInfo, Timestamp } from "@/shared/models";
 import {
-  convertToTimestamp,
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
 } from "@/shared/utils";
@@ -56,7 +55,7 @@ export const useCommonMemberWithUserInfo = (
       data: {
         id: "",
         userId: user.uid,
-        joinedAt: convertToTimestamp({ _seconds: 0, _nanoseconds: 0 }),
+        joinedAt: new Timestamp(0, 0),
         circleIds: [],
         user: user,
       },
