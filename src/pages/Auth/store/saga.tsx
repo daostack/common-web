@@ -130,12 +130,8 @@ const getFirebaseAuthProvider = (
     }
     case AuthProvider.Facebook:
       return new firebase.auth.FacebookAuthProvider();
-    default: {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      provider.setCustomParameters({ redirect_uri: "common.io" });
-
-      return provider;
-    }
+    default:
+      return new firebase.auth.GoogleAuthProvider();
   }
 };
 
