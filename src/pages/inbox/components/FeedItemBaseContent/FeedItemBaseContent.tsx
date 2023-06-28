@@ -2,7 +2,8 @@ import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { FeedCardTags, FeedItemBaseContentProps } from "@/pages/common";
-import { ButtonIcon, Image } from "@/shared/components";
+import { CommonAvatar } from "@/pages/common/components/CommonAvatar";
+import { ButtonIcon } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { PredefinedTypes } from "@/shared/models";
 import {
@@ -119,12 +120,11 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
         </ButtonIcon>
       )}
       {renderImage?.(imageClassName) || (
-        <Image
-          className={imageClassName}
+        <CommonAvatar
+          name={commonName}
           src={image}
-          alt={imageAlt || ""}
-          placeholderElement={null}
-          aria-hidden
+          className={imageClassName}
+          alt={imageAlt}
         />
       )}
       <div className={styles.content}>
