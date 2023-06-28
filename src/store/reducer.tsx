@@ -12,6 +12,7 @@ import {
   commonFeedFollowsReducer,
   commonLayoutReducer,
   inboxReducer,
+  multipleSpacesLayoutReducer,
   projectsReducer,
   chatReducer,
 } from "./states";
@@ -30,6 +31,7 @@ export default (history: History) => {
     cache: cacheReducer,
     chat: chatReducer,
     inbox: inboxReducer,
+    multipleSpacesLayout: multipleSpacesLayoutReducer,
   });
 
   return (state: AppState | undefined, action: AnyAction) => {
