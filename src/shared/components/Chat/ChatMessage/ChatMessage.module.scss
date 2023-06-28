@@ -32,6 +32,7 @@
   position: relative;
   margin-bottom: 8px;
   overflow: hidden;
+  cursor: pointer;
 
   img {
     position: absolute;
@@ -99,6 +100,7 @@
   margin-right: 2.5rem;
   margin-left: 1rem;
   margin-bottom: 0.5rem;
+  cursor: pointer;
 }
 
 .messageContent {
@@ -116,6 +118,7 @@
 }
 
 .mentionText {
+  cursor: pointer;
   color: $c-pink-mention;
 }
 

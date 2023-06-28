@@ -6,5 +6,4 @@ export * from "./FeedCountdown";
 export * from "./FeedGeneralInfo";
 export * from "./FeedInfoHeader";
 export * from "./FeedItemBaseContent";
-export * from "./FeedUserPopup";
 export * from "./FeedCardTags";
