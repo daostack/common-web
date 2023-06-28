@@ -2,7 +2,6 @@ import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { FeedCardTags, FeedItemBaseContentProps } from "@/pages/common";
-import { CommonAvatar } from "@/pages/common/components/CommonAvatar";
 import { ButtonIcon } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { PredefinedTypes } from "@/shared/models";
@@ -13,6 +12,7 @@ import {
   TimeAgo,
   checkIsTextEditorValueEmpty,
 } from "@/shared/ui-kit";
+import { CommonAvatar } from "@/shared/ui-kit/CommonAvatar";
 import styles from "./FeedItemBaseContent.module.scss";
 
 export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
