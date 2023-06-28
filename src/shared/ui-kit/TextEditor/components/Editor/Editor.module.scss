@@ -32,6 +32,11 @@
   --text-editor-h: 8.625rem;
 }
 
+.editorAutoSize {
+  --text-editor-h: auto;
+  max-height: 50vh;
+}
+
 .editorReadOnly {
   --text-editor-h: auto;
 

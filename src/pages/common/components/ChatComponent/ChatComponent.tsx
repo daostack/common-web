@@ -43,6 +43,8 @@ import {
   parseStringToTextEditorValue,
   ButtonIcon,
   checkIsTextEditorValueEmpty,
+  TextEditorSize,
+  removeTextEditorEmptyEndLinesValues,
 } from "@/shared/ui-kit";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
@@ -306,9 +308,10 @@ export default function ChatComponent({
   };
 
   const sendMessage = useCallback(
-    async (message: TextEditorValue) => {
+    async (editorMessage: TextEditorValue) => {
       if (user && user.uid) {
         const pendingMessageId = uuidv4();
+        const message = removeTextEditorEmptyEndLinesValues(editorMessage);
 
         const mentionTags = getMentionTags(message).map((tag) => ({
           value: tag.userId,
@@ -600,6 +603,7 @@ export default function ChatComponent({
                   accept={ACCEPTED_EXTENSIONS}
                 />
                 <BaseTextEditor
+                  size={TextEditorSize.Auto}
                   editorRef={editorRef}
                   className={classNames(styles.messageInput, {
                     [styles.messageInputEmpty]:

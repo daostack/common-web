@@ -48,6 +48,7 @@ const Editor: FC<EditorProps> = (props) => {
     {
       [styles.editorSmallSize]: size === TextEditorSize.Small,
       [styles.editorBigSize]: size === TextEditorSize.Big,
+      [styles.editorAutoSize]: size === TextEditorSize.Auto,
       [styles.editorReadOnly]: readOnly,
     },
     props.className,
