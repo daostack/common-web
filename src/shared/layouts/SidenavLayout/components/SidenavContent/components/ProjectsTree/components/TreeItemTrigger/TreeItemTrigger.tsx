@@ -1,9 +1,9 @@
 import React, { FC, MouseEventHandler } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { CommonAvatar } from "@/pages/common/components/CommonAvatar";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { SmallArrowIcon } from "@/shared/icons";
+import { CommonAvatar } from "@/shared/ui-kit/CommonAvatar";
 import { useTreeContext } from "../../context";
 import { Item } from "../../types";
 import styles from "./TreeItemTrigger.module.scss";

@@ -2,7 +2,7 @@ import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { FeedCardTags, FeedItemBaseContentProps } from "@/pages/common";
-import { ButtonIcon, Image } from "@/shared/components";
+import { ButtonIcon } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { PredefinedTypes } from "@/shared/models";
 import {
@@ -12,6 +12,7 @@ import {
   TimeAgo,
   checkIsTextEditorValueEmpty,
 } from "@/shared/ui-kit";
+import { CommonAvatar } from "@/shared/ui-kit/CommonAvatar";
 import styles from "./FeedItemBaseContent.module.scss";
 
 export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
@@ -119,12 +120,11 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
         </ButtonIcon>
       )}
       {renderImage?.(imageClassName) || (
-        <Image
-          className={imageClassName}
+        <CommonAvatar
+          name={commonName}
           src={image}
-          alt={imageAlt || ""}
-          placeholderElement={null}
-          aria-hidden
+          className={imageClassName}
+          alt={imageAlt}
         />
       )}
       <div className={styles.content}>

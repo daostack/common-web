@@ -23,3 +23,4 @@ export * from "./Tooltip";
 export * from "./TopNavigation";
 export * from "./UploadFiles";
 export * from "./FilePreview";
+export * from "./CommonAvatar";
