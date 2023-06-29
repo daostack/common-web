@@ -1,40 +1,20 @@
 import React, { FC } from "react";
-import { RightArrowThinIcon } from "@/shared/icons";
-import { ProjectsStateItem } from "@/store/states";
-import { BreadcrumbsItem } from "./components";
-import styles from "./Breadcrumbs.module.scss";
+import { useSelector } from "react-redux";
+import { InboxItemType } from "@/shared/constants";
+import { selectMultipleSpacesLayoutBreadcrumbs } from "@/store/states";
+import { ChatChannelBreadcrumbs, FeedItemBreadcrumbs } from "./components";
 
 const Breadcrumbs: FC = () => {
-  const items: ProjectsStateItem[] = [
-    {
-      commonId: "1",
-      image: "",
-      name: "Common 1",
-      directParent: null,
-    },
-    {
-      commonId: "2",
-      image: "",
-      name: "Common 2 asd adsaasdasdasdasdaadasdasdadadadadadadadasd",
-      directParent: null,
-    },
-    {
-      commonId: "3",
-      image: "",
-      name: "Common 3",
-      directParent: null,
-    },
-  ];
+  const breadcrumbs = useSelector(selectMultipleSpacesLayoutBreadcrumbs);
 
-  return (
-    <ul className={styles.container}>
-      <BreadcrumbsItem activeItemId="1" items={items} />
-      <li className={styles.iconItem}>
-        <RightArrowThinIcon />
-      </li>
-      <BreadcrumbsItem activeItemId="2" items={items} />
-    </ul>
-  );
+  if (breadcrumbs?.type === InboxItemType.ChatChannel) {
+    return <ChatChannelBreadcrumbs breadcrumbs={breadcrumbs} />;
+  }
+  if (breadcrumbs?.type === InboxItemType.FeedItemFollow) {
+    return <FeedItemBreadcrumbs breadcrumbs={breadcrumbs} />;
+  }
+
+  return null;
 };
 
 export default Breadcrumbs;

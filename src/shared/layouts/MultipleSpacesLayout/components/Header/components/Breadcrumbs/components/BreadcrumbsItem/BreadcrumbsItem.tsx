@@ -25,7 +25,10 @@ const BreadcrumbsItem: FC<BreadcrumbsItemData> = (props) => {
     return (
       <>
         <CommonAvatar
-          className={styles.contextMenuItemImage}
+          className={classNames(styles.contextMenuItemImage, {
+            [styles.contextMenuItemImageRounded]: item.directParent,
+            [styles.contextMenuItemImageNonRounded]: !item.directParent,
+          })}
           name={item.name}
           src={item.image}
         />
@@ -45,8 +48,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemData> = (props) => {
     text: item.name,
     onClick: emptyFunction,
     className: classNames(styles.contextMenuItem, {
-      [styles.contextMenuItemImageRounded]: item.directParent,
-      [styles.contextMenuItemImageNonRounded]: !item.directParent,
+      [styles.contextMenuItemWithoutMembership]: !item.hasMembership,
     }),
     renderContent: () => renderMenuItemContent(item),
   }));
