@@ -184,11 +184,7 @@ export default function ChatComponent({
   const [isMultiLineInput, setIsMultiLineInput] = useState(false);
 
   useEffect(() => {
-    if (chatInputHeight > BASE_CHAT_INPUT_HEIGHT) {
-      setIsMultiLineInput(true);
-    } else {
-      setIsMultiLineInput(false);
-    }
+    setIsMultiLineInput(chatInputHeight > BASE_CHAT_INPUT_HEIGHT);
   }, [chatInputHeight]);
 
   useEffect(() => {
