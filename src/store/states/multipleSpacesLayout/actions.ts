@@ -10,11 +10,8 @@ export const resetMultipleSpacesLayout = createStandardAction(
   MultipleSpacesLayoutActionType.RESET,
 )();
 
-export const fetchBreadcrumbsData = createAsyncAction(
-  MultipleSpacesLayoutActionType.FETCH_BREADCRUMBS_DATA,
-  MultipleSpacesLayoutActionType.FETCH_BREADCRUMBS_DATA_SUCCESS,
-  MultipleSpacesLayoutActionType.FETCH_BREADCRUMBS_DATA_FAILURE,
-  MultipleSpacesLayoutActionType.FETCH_BREADCRUMBS_DATA_CANCEL,
+export const configureBreadcrumbsData = createStandardAction(
+  MultipleSpacesLayoutActionType.CONFIGURE_BREADCRUMBS_DATA,
 )<
   | {
       type: InboxItemType.ChatChannel;
@@ -24,11 +21,15 @@ export const fetchBreadcrumbsData = createAsyncAction(
       type: InboxItemType.FeedItemFollow;
       activeItem?: MultipleSpacesLayoutActiveItem;
       activeCommonId: string;
-    },
-  void,
-  Error,
-  string
+    }
 >();
+
+export const fetchBreadcrumbsItemsByCommonId = createAsyncAction(
+  MultipleSpacesLayoutActionType.FETCH_BREADCRUMBS_ITEMS_BY_COMMON_ID,
+  MultipleSpacesLayoutActionType.FETCH_BREADCRUMBS_ITEMS_BY_COMMON_ID_SUCCESS,
+  MultipleSpacesLayoutActionType.FETCH_BREADCRUMBS_ITEMS_BY_COMMON_ID_FAILURE,
+  MultipleSpacesLayoutActionType.FETCH_BREADCRUMBS_ITEMS_BY_COMMON_ID_CANCEL,
+)<string | null, void, Error, string>();
 
 export const setBreadcrumbsData = createStandardAction(
   MultipleSpacesLayoutActionType.SET_BREADCRUMBS_DATA,

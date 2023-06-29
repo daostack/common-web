@@ -1,11 +1,14 @@
+import { takeLatest } from "redux-saga/effects";
 import { takeLatestWithCancel } from "@/shared/utils/saga";
 import * as actions from "../actions";
-import { fetchBreadcrumbsData } from "./fetchBreadcrumbsData";
+import { configureBreadcrumbsData } from "./configureBreadcrumbsData";
+import { fetchBreadcrumbsItemsByCommonId } from "./fetchBreadcrumbsItemsByCommonId";
 
 export function* mainSaga() {
+  yield takeLatest(actions.configureBreadcrumbsData, configureBreadcrumbsData);
   yield takeLatestWithCancel(
-    actions.fetchBreadcrumbsData.request,
-    actions.fetchBreadcrumbsData.cancel,
-    fetchBreadcrumbsData,
+    actions.fetchBreadcrumbsItemsByCommonId.request,
+    actions.fetchBreadcrumbsItemsByCommonId.cancel,
+    fetchBreadcrumbsItemsByCommonId,
   );
 }

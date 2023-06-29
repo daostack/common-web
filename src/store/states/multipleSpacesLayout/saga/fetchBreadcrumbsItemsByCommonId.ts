@@ -28,14 +28,12 @@ const fetchProjectsInfoByActiveCommonId = async (
   let lastParentCommon: Common | null = null;
 
   while (commonForSiblings?.directParent?.commonId) {
-    const commonIdForSubCommons = commonForSiblings.directParent.commonId;
-    const commonSubCommons = await CommonService.getCommonsByDirectParentIds([
-      commonIdForSubCommons,
+    const commonIdForProjects = commonForSiblings.directParent.commonId;
+    const commonProjects = await CommonService.getCommonsByDirectParentIds([
+      commonIdForProjects,
     ]);
-    commonForSiblings = await CommonService.getCommonById(
-      commonIdForSubCommons,
-    );
-    finalCommons.push(...commonSubCommons);
+    commonForSiblings = await CommonService.getCommonById(commonIdForProjects);
+    finalCommons.push(...commonProjects);
 
     if (!commonForSiblings?.directParent) {
       lastParentCommon = commonForSiblings;
@@ -46,12 +44,13 @@ const fetchProjectsInfoByActiveCommonId = async (
     ? await CommonService.getAllUserCommonMemberInfo(userId)
     : [];
   const userCommonIds = allUserCommonMemberInfo.map((item) => item.commonId);
-  const [userCommons, activeCommonSubCommons, governanceList] =
-    await Promise.all([
+  const [userCommons, activeCommonProjects, governanceList] = await Promise.all(
+    [
       CommonService.getParentCommonsByIds(userCommonIds),
       CommonService.getCommonsByDirectParentIds([commonId]),
       GovernanceService.getGovernanceListByCommonIds(userCommonIds),
-    ]);
+    ],
+  );
   const permissionsData = getPermissionsDataByAllUserCommonMemberInfo(
     allUserCommonMemberInfo,
     governanceList,
@@ -64,7 +63,7 @@ const fetchProjectsInfoByActiveCommonId = async (
     userCommons.push(lastParentCommon);
   }
 
-  finalCommons.push(...userCommons, ...activeCommonSubCommons);
+  finalCommons.push(...userCommons, ...activeCommonProjects);
 
   return ProjectService.parseDataToProjectsInfo(
     finalCommons,
@@ -73,18 +72,12 @@ const fetchProjectsInfoByActiveCommonId = async (
   );
 };
 
-export function* fetchBreadcrumbsData(
-  action: ReturnType<typeof actions.fetchBreadcrumbsData.request>,
+export function* fetchBreadcrumbsItemsByCommonId(
+  action: ReturnType<typeof actions.fetchBreadcrumbsItemsByCommonId.request>,
 ) {
-  const { payload } = action;
+  const { payload: commonId } = action;
 
-  if (payload.type === InboxItemType.ChatChannel) {
-    yield put(
-      actions.setBreadcrumbsData({
-        type: InboxItemType.ChatChannel,
-        activeItem: { ...payload.activeItem },
-      }),
-    );
+  if (!commonId) {
     return;
   }
 
@@ -92,24 +85,12 @@ export function* fetchBreadcrumbsData(
     selectMultipleSpacesLayoutBreadcrumbs,
   )) as MultipleSpacesLayoutState["breadcrumbs"];
 
-  if (
-    currentBreadcrumbs?.type === InboxItemType.FeedItemFollow &&
-    currentBreadcrumbs?.activeCommonId === payload.activeCommonId &&
-    payload.activeItem
-  ) {
-    yield put(
-      actions.setBreadcrumbsData({
-        ...currentBreadcrumbs,
-        activeItem: { ...payload.activeItem },
-      }),
-    );
+  if (currentBreadcrumbs?.type !== InboxItemType.FeedItemFollow) {
     return;
   }
 
   const nextBreadcrumbs: MultipleSpacesLayoutFeedItemBreadcrumbs = {
-    type: InboxItemType.FeedItemFollow,
-    activeItem: payload.activeItem ? { ...payload.activeItem } : null,
-    activeCommonId: payload.activeCommonId,
+    ...currentBreadcrumbs,
     items: [],
     areItemsLoading: true,
     areItemsFetched: false,
@@ -120,9 +101,10 @@ export function* fetchBreadcrumbsData(
     const user = (yield select(selectUser())) as User | null;
     const projectsInfo = (yield call(
       fetchProjectsInfoByActiveCommonId,
-      payload.activeCommonId,
+      commonId,
       user?.uid,
     )) as Awaited<ReturnType<typeof fetchProjectsInfoByActiveCommonId>>;
+    console.log(projectsInfo);
     const projectsData: ProjectsStateItem[] = projectsInfo.map(
       ({ common, hasMembership, hasPermissionToAddProject }) => ({
         commonId: common.id,
