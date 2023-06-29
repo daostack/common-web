@@ -1,28 +1,21 @@
 import { InboxItemType } from "@/shared/constants";
 import { ProjectsStateItem } from "../projects";
 
-export interface MultipleSpacesLayoutBaseActiveItem {
+export interface MultipleSpacesLayoutActiveItem {
   id: string; // feed item id or chat channel id
   name: string;
   image?: string;
 }
 
-export type MultipleSpacesLayoutActiveChatChannelItem =
-  MultipleSpacesLayoutBaseActiveItem;
-
-export interface MultipleSpacesLayoutActiveFeedItem
-  extends MultipleSpacesLayoutBaseActiveItem {
-  commonId: string;
-}
-
 export interface MultipleSpacesLayoutChatChannelBreadcrumbs {
   type: InboxItemType.ChatChannel;
-  activeItem: MultipleSpacesLayoutActiveChatChannelItem;
+  activeItem: MultipleSpacesLayoutActiveItem;
 }
 
 export interface MultipleSpacesLayoutFeedItemBreadcrumbs {
   type: InboxItemType.FeedItemFollow;
-  activeItem: MultipleSpacesLayoutActiveFeedItem | null;
+  activeItem: MultipleSpacesLayoutActiveItem | null;
+  activeCommonId: string;
   items: ProjectsStateItem[];
   areItemsLoading: boolean;
   areItemsFetched: boolean;

@@ -2,8 +2,7 @@ import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { InboxItemType } from "@/shared/constants";
 import { MultipleSpacesLayoutActionType } from "./constants";
 import {
-  MultipleSpacesLayoutActiveChatChannelItem,
-  MultipleSpacesLayoutActiveFeedItem,
+  MultipleSpacesLayoutActiveItem,
   MultipleSpacesLayoutBreadcrumbs,
 } from "./types";
 
@@ -17,18 +16,15 @@ export const fetchBreadcrumbsData = createAsyncAction(
   MultipleSpacesLayoutActionType.FETCH_BREADCRUMBS_DATA_FAILURE,
   MultipleSpacesLayoutActionType.FETCH_BREADCRUMBS_DATA_CANCEL,
 )<
-  {
-    item?:
-      | {
-          type: InboxItemType.ChatChannel;
-          activeItem: MultipleSpacesLayoutActiveChatChannelItem;
-        }
-      | {
-          type: InboxItemType.FeedItemFollow;
-          activeItem: MultipleSpacesLayoutActiveFeedItem;
-        };
-    commonId?: string;
-  },
+  | {
+      type: InboxItemType.ChatChannel;
+      activeItem: MultipleSpacesLayoutActiveItem;
+    }
+  | {
+      type: InboxItemType.FeedItemFollow;
+      activeItem?: MultipleSpacesLayoutActiveItem;
+      activeCommonId: string;
+    },
   void,
   Error,
   string
