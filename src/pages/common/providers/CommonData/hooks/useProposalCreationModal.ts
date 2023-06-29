@@ -1,8 +1,13 @@
 import { useCallback, useState } from "react";
 import { useHistory } from "react-router";
+import { CommonFeedService } from "@/services";
 import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
-import { Proposal, ProposalWithHighlightedComment } from "@/shared/models";
+import {
+  CommonFeedType,
+  Proposal,
+  ProposalWithHighlightedComment,
+} from "@/shared/models";
 
 interface Return {
   isProposalCreationModalOpen: boolean;
@@ -26,14 +31,18 @@ export const useProposalCreationModal = (): Return => {
     useState<ProposalsTypes | null>(null);
 
   const redirectToProposalPage = useCallback(
-    (payload: Proposal | ProposalWithHighlightedComment) => {
-      history.push({
-        pathname: ROUTE_PATHS.PROPOSAL_DETAIL.replace(":id", payload.id),
-        state: {
-          highlightedCommentId: (payload as ProposalWithHighlightedComment)
-            ?.highlightedCommentId,
-        },
-      });
+    async (payload: Proposal | ProposalWithHighlightedComment) => {
+      const proposalFeedItem =
+        await CommonFeedService.getCommonFeedItemWithSnapshot(
+          payload.data.args.commonId,
+          payload.id,
+          CommonFeedType.Proposal,
+        );
+      const url = `${ROUTE_PATHS.COMMON.replace(
+        ":id",
+        payload.data.args.commonId,
+      )}?item=${proposalFeedItem?.commonFeedItem.id}`;
+      history.push(url);
     },
     [],
   );
