@@ -38,11 +38,20 @@ export const useProposalCreationModal = (): Return => {
           payload.id,
           CommonFeedType.Proposal,
         );
-      const url = `${ROUTE_PATHS.COMMON.replace(
-        ":id",
-        payload.data.args.commonId,
-      )}?item=${proposalFeedItem?.commonFeedItem.id}`;
-      history.push(url);
+
+      if (proposalFeedItem) {
+        const feedItemUrl = ROUTE_PATHS.FEED_ITEM.replace(
+          ":id",
+          payload.data.args.commonId,
+        ).replace(":feedItemId", proposalFeedItem.commonFeedItem.id);
+        history.push(feedItemUrl);
+      } else {
+        const commonUrl = ROUTE_PATHS.COMMON.replace(
+          ":id",
+          payload.data.args.commonId,
+        );
+        history.push(commonUrl);
+      }
     },
     [],
   );
