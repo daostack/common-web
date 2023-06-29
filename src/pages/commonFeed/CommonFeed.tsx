@@ -21,13 +21,10 @@ import {
   FeedLayoutItem,
   FeedLayoutRef,
 } from "@/shared/interfaces";
-import {
-  CommonSidenavLayoutPageContent,
-  CommonSidenavLayoutTabs,
-} from "@/shared/layouts";
-import { CommonFeed } from "@/shared/models";
+import { CommonSidenavLayoutTabs } from "@/shared/layouts";
+import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
-import { checkIsProject, getCommonPageAboutTabPath } from "@/shared/utils";
+import { getCommonPageAboutTabPath } from "@/shared/utils";
 import {
   commonActions,
   selectCommonAction,
@@ -38,17 +35,26 @@ import {
   NewDiscussionCreation,
   NewProposalCreation,
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
-import { FeedLayout, HeaderContent } from "./components";
-import { useCommonData, useGlobalCommonData } from "./hooks";
+import { FeedLayout } from "./components";
+import { CommonData, useCommonData, useGlobalCommonData } from "./hooks";
 import { getLastMessage } from "./utils";
 import styles from "./CommonFeed.module.scss";
 
-interface CommonFeedProps {
+export type RenderCommonFeedContentWrapper = (data: {
+  children: ReactNode;
+  wrapperStyles?: CSSProperties;
+  commonData: CommonData;
+  commonMember: (CommonMember & CirclesPermissions) | null;
+  isGlobalDataFetched: boolean;
+}) => ReactNode;
+
+export interface CommonFeedProps {
   commonId: string;
+  renderContentWrapper: RenderCommonFeedContentWrapper;
 }
 
 const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
-  const { commonId } = props;
+  const { commonId, renderContentWrapper: outerContentWrapperRenderer } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -239,27 +245,14 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const renderContentWrapper = (
     children: ReactNode,
     wrapperStyles?: CSSProperties,
-  ): ReactNode => (
-    <CommonSidenavLayoutPageContent
-      className={styles.layoutPageContent}
-      headerClassName={styles.layoutHeader}
-      headerContent={
-        <HeaderContent
-          commonId={commonData.common.id}
-          commonName={commonData.common.name}
-          commonImage={commonData.common.image}
-          commonMembersAmount={commonData.commonMembersAmount}
-          commonMember={commonMember}
-          governance={commonData.governance}
-          isProject={checkIsProject(commonData.common)}
-        />
-      }
-      isGlobalLoading={!isGlobalDataFetched}
-      styles={wrapperStyles}
-    >
-      {children}
-    </CommonSidenavLayoutPageContent>
-  );
+  ): ReactNode =>
+    outerContentWrapperRenderer({
+      children,
+      wrapperStyles,
+      commonData,
+      commonMember,
+      isGlobalDataFetched,
+    });
 
   return (
     <>

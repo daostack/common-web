@@ -103,3 +103,5 @@ export const useCommonData = (): Return => {
     resetCommonData,
   };
 };
+
+export type { Data as CommonData } from "./types";
