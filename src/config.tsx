@@ -33,7 +33,7 @@ const dev: Configuration = {
   env: Environment.Dev,
   firebase: {
     apiKey: "AIzaSyACs4Fof0wNmAvknR_ykBMD7SxwdxFzKKk",
-    authDomain: "common-dev-dea4e.firebaseapp.com",
+    authDomain: "auth-dev.common.io",
     databaseURL: "https://common-dev-dea4e.firebaseio.com",
     projectId: "common-dev-dea4e",
     storageBucket: "common-dev-dea4e.appspot.com",

@@ -7,7 +7,7 @@ import React, {
   useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useDebounce } from "react-use";
+import { useDebounce, useMeasure } from "react-use";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
 import { delay, omit } from "lodash";
@@ -43,6 +43,8 @@ import {
   parseStringToTextEditorValue,
   ButtonIcon,
   checkIsTextEditorValueEmpty,
+  TextEditorSize,
+  removeTextEditorEmptyEndLinesValues,
 } from "@/shared/ui-kit";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
@@ -64,6 +66,8 @@ import styles from "./ChatComponent.module.scss";
 
 const ACCEPTED_EXTENSIONS =
   ".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .pages, .numbers, .key, .jpg, .jpeg, .png, .gif, .tiff, .bmp, .webp, .mp4, .avi, .mov, .mkv, .mpeg, .mp3, .aac, .flac, .wav, .ogg, .zip, .rar, .7z, .tar, .gz, .apk, .epub, .vcf, .xml, .csv, .json, .docm, .dot, .dotm, .dotx, .fdf, .fodp, .fods, .fodt, .pot, .potm, .potx, .ppa, .ppam, .pps, .ppsm, .ppsx, .pptm, .sldx, .xlm, .xlsb, .xlsm, .xlt, .xltm, .xltx, .xps, .mobi, .azw, .azw3, .prc, .svg, .ico, .jp2, .3gp, .3g2, .flv, .m4v, .mk3d, .mks, .mpg, .mpeg2, .mpeg4, .mts, .vob, .wmv, .m4a, .opus, .wma, .cbr, .cbz, .tgz, .apng, .m4b, .m4p, .m4r, .webm, .sh, .py, .java, .cpp, .cs, .js, .html, .css, .php, .rb, .pl, .sql";
+
+const BASE_CHAT_INPUT_HEIGHT = 48;
 
 interface ChatComponentInterface {
   commonId: string;
@@ -121,6 +125,8 @@ export default function ChatComponent({
   const dispatch = useDispatch();
   useZoomDisabling();
   const editorRef = useRef<HTMLElement>(null);
+  const [inputContainerRef, { height: chatInputHeight }] =
+    useMeasure<HTMLDivElement>();
   const discussionMessageReply = useSelector(
     selectCurrentDiscussionMessageReply(),
   );
@@ -174,6 +180,12 @@ export default function ChatComponent({
     setShouldReinitializeEditor(true);
     setMessage(parseStringToTextEditorValue());
   };
+
+  const [isMultiLineInput, setIsMultiLineInput] = useState(false);
+
+  useEffect(() => {
+    setIsMultiLineInput(chatInputHeight > BASE_CHAT_INPUT_HEIGHT);
+  }, [chatInputHeight]);
 
   useEffect(() => {
     if (commonId && !isChatChannel) {
@@ -306,9 +318,10 @@ export default function ChatComponent({
   };
 
   const sendMessage = useCallback(
-    async (message: TextEditorValue) => {
+    async (editorMessage: TextEditorValue) => {
       if (user && user.uid) {
         const pendingMessageId = uuidv4();
+        const message = removeTextEditorEmptyEndLinesValues(editorMessage);
 
         const mentionTags = getMentionTags(message).map((tag) => ({
           value: tag.userId,
@@ -344,6 +357,34 @@ export default function ChatComponent({
 
         const firebaseDate = Timestamp.fromDate(new Date());
 
+        filesPreview.map((filePreview) => {
+          const filePendingMessageId = uuidv4();
+
+          filePreviewPayload.push({
+            pendingMessageId: filePendingMessageId,
+            ownerId: user.uid,
+            commonId,
+            discussionId,
+            filesPreview: [filePreview],
+          });
+
+          pendingMessages.push({
+            id: filePendingMessageId,
+            text: JSON.stringify(parseStringToTextEditorValue()),
+            owner: user,
+            ownerAvatar: (user.photo || user.photoURL) as string,
+            ownerType: DiscussionMessageOwnerType.User,
+            ownerId: userId as string,
+            ownerName: getUserName(user),
+            commonId,
+            discussionId,
+            parentMessage: null,
+            createdAt: firebaseDate,
+            updatedAt: firebaseDate,
+            files: [FileService.convertFileInfoToCommonLink(filePreview)],
+          });
+        });
+
         pendingMessages.push({
           id: pendingMessageId,
           owner: user,
@@ -372,38 +413,7 @@ export default function ChatComponent({
           images: imagesPreview?.map((file) =>
             FileService.convertFileInfoToCommonLink(file),
           ),
-          files: filesPreview?.map((file) =>
-            FileService.convertFileInfoToCommonLink(file),
-          ),
           tags: mentionTags,
-        });
-
-        filesPreview.map((filePreview) => {
-          const filePendingMessageId = uuidv4();
-
-          filePreviewPayload.push({
-            pendingMessageId: filePendingMessageId,
-            ownerId: user.uid,
-            commonId,
-            discussionId,
-            filesPreview: [filePreview],
-          });
-
-          pendingMessages.push({
-            id: filePendingMessageId,
-            text: JSON.stringify(parseStringToTextEditorValue()),
-            owner: user,
-            ownerAvatar: (user.photo || user.photoURL) as string,
-            ownerType: DiscussionMessageOwnerType.User,
-            ownerId: userId as string,
-            ownerName: getUserName(user),
-            commonId,
-            discussionId,
-            parentMessage: null,
-            createdAt: firebaseDate,
-            updatedAt: firebaseDate,
-            files: [FileService.convertFileInfoToCommonLink(filePreview)],
-          });
         });
 
         setMessages((prev) => {
@@ -576,7 +586,11 @@ export default function ChatComponent({
         <div className={styles.bottomChatContainer}>
           <MessageReply users={users} />
           <ChatFilePreview />
-          <div className={styles.chatInputWrapper}>
+          <div
+            className={classNames(styles.chatInputWrapper, {
+              [styles.chatInputWrapperMultiLine]: isMultiLineInput,
+            })}
+          >
             {!isChatChannel && (!commonMember || !hasAccess || isHidden) ? (
               <span className={styles.permissionsText}>
                 Only members can send messages
@@ -600,6 +614,11 @@ export default function ChatComponent({
                   accept={ACCEPTED_EXTENSIONS}
                 />
                 <BaseTextEditor
+                  inputContainerRef={inputContainerRef}
+                  emojiContainerClassName={classNames({
+                    [styles.emojiContainer]: isMultiLineInput,
+                  })}
+                  size={TextEditorSize.Auto}
                   editorRef={editorRef}
                   className={classNames(styles.messageInput, {
                     [styles.messageInputEmpty]:
