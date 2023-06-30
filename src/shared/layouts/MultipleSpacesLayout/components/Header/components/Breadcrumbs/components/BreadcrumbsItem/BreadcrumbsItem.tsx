@@ -1,5 +1,7 @@
 import React, { FC, useRef } from "react";
+import { useHistory } from "react-router";
 import classNames from "classnames";
+import { useRoutesContext } from "@/shared/contexts";
 import { CheckIcon } from "@/shared/icons";
 import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonAvatar } from "@/shared/ui-kit";
@@ -11,6 +13,8 @@ import styles from "./BreadcrumbsItem.module.scss";
 
 const BreadcrumbsItem: FC<BreadcrumbsItemData> = (props) => {
   const { activeItemId, items } = props;
+  const history = useHistory();
+  const { getCommonPagePath } = useRoutesContext();
   const containerRef = useRef<HTMLLIElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const activeItem = items.find((item) => item.commonId === activeItemId);
@@ -46,7 +50,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemData> = (props) => {
   const menuItems: ContextMenuItem[] = items.map((item) => ({
     id: item.commonId,
     text: item.name,
-    onClick: emptyFunction,
+    onClick: () => history.push(getCommonPagePath(item.commonId)),
     className: classNames(styles.contextMenuItem, {
       [styles.contextMenuItemWithoutMembership]: !item.hasMembership,
     }),
