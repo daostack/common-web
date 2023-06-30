@@ -8,10 +8,7 @@ import React, {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectUser,
-  selectUserStreamsWithNotificationsAmount,
-} from "@/pages/Auth/store/selectors";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { FeedItemBaseContentProps } from "@/pages/common";
 import { FeedLayout } from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
@@ -25,10 +22,7 @@ import {
   FeedLayoutItem,
   FeedLayoutRef,
 } from "@/shared/interfaces";
-import {
-  CommonSidenavLayoutPageContent,
-  CommonSidenavLayoutTabs,
-} from "@/shared/layouts";
+import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
@@ -37,16 +31,20 @@ import {
   selectNextChatChannelItemId,
   selectSharedInboxItem,
 } from "@/store/states";
-import {
-  ChatChannelItem,
-  FeedItemBaseContent,
-  HeaderContent,
-} from "./components";
+import { ChatChannelItem, FeedItemBaseContent } from "./components";
 import { useInboxData } from "./hooks";
 import { getLastMessage, getNonAllowedItems } from "./utils";
-import styles from "./Inbox.module.scss";
+import styles from "./BaseInbox.module.scss";
 
-const InboxPage: FC = () => {
+interface InboxPageProps {
+  renderContentWrapper: (
+    children: ReactNode,
+    wrapperStyles?: CSSProperties,
+  ) => ReactNode;
+}
+
+const InboxPage: FC<InboxPageProps> = (props) => {
+  const { renderContentWrapper } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
@@ -60,9 +58,6 @@ const InboxPage: FC = () => {
   const feedItemIdsForNotListening = useMemo(
     () => (sharedFeedItemId ? [sharedFeedItemId] : []),
     [sharedFeedItemId],
-  );
-  const userStreamsWithNotificationsAmount = useSelector(
-    selectUserStreamsWithNotificationsAmount(),
   );
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -220,27 +215,6 @@ const InboxPage: FC = () => {
       </>
     );
   }
-
-  const renderContentWrapper = (
-    children: ReactNode,
-    wrapperStyles?: CSSProperties,
-  ): ReactNode => (
-    <CommonSidenavLayoutPageContent
-      className={styles.layoutPageContent}
-      headerClassName={styles.layoutHeader}
-      headerContent={
-        <HeaderContent
-          streamsWithNotificationsAmount={
-            userStreamsWithNotificationsAmount || 0
-          }
-        />
-      }
-      isGlobalLoading={false}
-      styles={wrapperStyles}
-    >
-      {children}
-    </CommonSidenavLayoutPageContent>
-  );
 
   return (
     <>
