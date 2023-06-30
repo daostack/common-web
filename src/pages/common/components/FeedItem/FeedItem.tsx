@@ -1,4 +1,5 @@
 import React, { FC, memo } from "react";
+import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Circles,
   Common,
@@ -29,6 +30,7 @@ interface FeedItemProps {
   isActive?: boolean;
   isExpanded?: boolean;
   sizeKey?: string;
+  onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
 }
 
 const FeedItem: FC<FeedItemProps> = (props) => {
@@ -49,6 +51,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isExpanded = false,
     sizeKey,
     currentUserId,
+    onActiveItemDataChange,
   } = props;
   const { onFeedItemUpdate, getLastMessage, getNonAllowedItems } =
     useFeedItemContext();
@@ -81,6 +84,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonMember,
     getNonAllowedItems,
     isMobileVersion,
+    onActiveItemDataChange,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {

@@ -27,6 +27,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
+import { InboxItemType } from "@/shared/constants";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -34,6 +35,8 @@ import {
   checkIsChatChannelLayoutItem,
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItem,
+  FeedLayoutItemChangeData,
+  FeedLayoutItemChangeDataWithType,
   FeedLayoutRef,
 } from "@/shared/interfaces";
 import {
@@ -86,6 +89,7 @@ interface FeedLayoutProps {
   emptyText?: string;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemChange?: (itemId?: string) => void;
+  onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
   onMessagesAmountEmptinessToggle?: (
     feedItem: FeedLayoutItem,
     becameEmpty: boolean,
@@ -116,6 +120,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     emptyText,
     getNonAllowedItems,
     onActiveItemChange,
+    onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
   } = props;
   const { width: windowWidth } = useWindowSize();
@@ -270,6 +275,28 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [selectedFeedItem, onMessagesAmountEmptinessToggle],
   );
 
+  const handleActiveFeedItemDataChange = (
+    data: FeedLayoutItemChangeData,
+    commonId?: string,
+  ) => {
+    if (commonId) {
+      onActiveItemDataChange?.({
+        ...data,
+        type: InboxItemType.FeedItemFollow,
+        commonId,
+      });
+    }
+  };
+
+  const handleActiveChatChannelItemDataChange = (
+    data: FeedLayoutItemChangeData,
+  ) => {
+    onActiveItemDataChange?.({
+      ...data,
+      type: InboxItemType.ChatChannel,
+    });
+  };
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -359,6 +386,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       isExpanded={item.feedItem.id === expandedFeedItemId}
                       sizeKey={isActive ? sizeKey : undefined}
                       currentUserId={userId}
+                      onActiveItemDataChange={(...args) =>
+                        handleActiveFeedItemDataChange(...args, commonData?.id)
+                      }
                     />
                   );
                 }
@@ -371,6 +401,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       {renderChatChannelItem({
                         chatChannel: item.chatChannel,
                         isActive,
+                        onActiveItemDataChange:
+                          handleActiveChatChannelItemDataChange,
                       })}
                     </React.Fragment>
                   );

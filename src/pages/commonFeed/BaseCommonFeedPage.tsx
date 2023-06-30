@@ -6,9 +6,9 @@ export interface CommonFeedPageRouterParams {
   id: string;
 }
 
-const BaseCommonFeedPage: FC<Pick<CommonFeedProps, "renderContentWrapper">> = (
-  props,
-) => {
+const BaseCommonFeedPage: FC<
+  Pick<CommonFeedProps, "renderContentWrapper" | "onActiveItemDataChange">
+> = (props) => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
 
   return <CommonFeed key={commonId} commonId={commonId} {...props} />;
