@@ -92,7 +92,6 @@ export function* fetchBreadcrumbsItemsByCommonId(
   yield put(
     actions.setBreadcrumbsData({
       ...currentBreadcrumbs,
-      items: [],
       areItemsLoading: true,
       areItemsFetched: false,
     }),
