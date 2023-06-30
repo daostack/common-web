@@ -17,7 +17,7 @@ const BreadcrumbsMenu = forwardRef<ContextMenuRef, BreadcrumbsMenuProps>(
   (props, ref) => {
     const { items, activeItemId } = props;
     const history = useHistory();
-    const { getCommonPagePath } = useRoutesContext();
+    const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
 
     const renderMenuItemContent = (item: ProjectsStateItem): ReactNode => {
       const isActive = item.commonId === activeItemId;
@@ -46,7 +46,12 @@ const BreadcrumbsMenu = forwardRef<ContextMenuRef, BreadcrumbsMenuProps>(
     const menuItems: ContextMenuItem[] = items.map((item) => ({
       id: item.commonId,
       text: item.name,
-      onClick: () => history.push(getCommonPagePath(item.commonId)),
+      onClick: () =>
+        history.push(
+          item.hasMembership
+            ? getCommonPagePath(item.commonId)
+            : getCommonPageAboutTabPath(item.commonId),
+        ),
       className: classNames(styles.contextMenuItem, {
         [styles.contextMenuItemWithoutMembership]: !item.hasMembership,
       }),
