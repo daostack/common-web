@@ -42,3 +42,4 @@ export * from "./BackgroundNotificationModal";
 export * from "./Chat";
 export * from "./ReportModal";
 export * from "./UserInfoPopup";
+export * from "./Theme";
