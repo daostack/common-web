@@ -7,9 +7,15 @@ import React, {
   useMemo,
 } from "react";
 import classNames from "classnames";
-import { Linkify, ElementDropdown, UserAvatar } from "@/shared/components";
+import {
+  Linkify,
+  ElementDropdown,
+  UserAvatar,
+  UserInfoPopup,
+} from "@/shared/components";
 import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
 import { Colors } from "@/shared/constants";
+import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -76,11 +82,12 @@ export default function ChatMessage({
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isTabletView = useIsTabletView();
+  const isUserDiscussionMessage =
+    checkIsUserDiscussionMessage(discussionMessage);
   const isSystemMessage = checkIsSystemDiscussionMessage(discussionMessage);
   const userId = user?.uid;
   const isNotCurrentUserMessage =
-    !checkIsUserDiscussionMessage(discussionMessage) ||
-    userId !== discussionMessage.ownerId;
+    !isUserDiscussionMessage || userId !== discussionMessage.ownerId;
 
   const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
 
@@ -92,6 +99,12 @@ export default function ChatMessage({
   const editedAtDate = new Date(
     (discussionMessage.editedAt?.seconds ?? 0) * 1000,
   );
+
+  const {
+    isShowing: isShowingUserProfile,
+    onClose: onCloseUserProfile,
+    onOpen: onOpenUserProfile,
+  } = useModal(false);
 
   const handleMessageDropdownOpen =
     onMessageDropdownOpen &&
@@ -110,11 +123,17 @@ export default function ChatMessage({
         mentionTextClassName: !isNotCurrentUserMessage
           ? styles.mentionTextCurrentUser
           : "",
+        commonId: discussionMessage.commonId,
       });
 
       setMessageText(parsedText);
     })();
-  }, [users, discussionMessage.text, isNotCurrentUserMessage]);
+  }, [
+    users,
+    discussionMessage.text,
+    isNotCurrentUserMessage,
+    discussionMessage.commonId,
+  ]);
 
   useEffect(() => {
     (async () => {
@@ -125,11 +144,17 @@ export default function ChatMessage({
       const parsedText = await getTextFromTextEditorString({
         textEditorString: discussionMessage?.parentMessage.text,
         users,
+        commonId: discussionMessage.commonId,
       });
 
       setReplyMessageText(parsedText);
     })();
-  }, [users, discussionMessage?.parentMessage?.text, isNotCurrentUserMessage]);
+  }, [
+    users,
+    discussionMessage?.parentMessage?.text,
+    isNotCurrentUserMessage,
+    discussionMessage.commonId,
+  ]);
 
   const handleMenuToggle = (isOpen: boolean) => {
     setIsMenuOpen(isOpen);
@@ -250,17 +275,16 @@ export default function ChatMessage({
           [styles.systemMessageContainer]: isSystemMessage,
         })}
       >
-        {isNotCurrentUserMessage &&
-          checkIsUserDiscussionMessage(discussionMessage) && (
-            <div className={styles.iconWrapper}>
-              <UserAvatar
-                imageContainerClassName={styles.userAvatarContainer}
-                photoURL={discussionMessage.owner?.photoURL}
-                nameForRandomAvatar={discussionMessage.owner?.email}
-                userName={getUserName(discussionMessage.owner)}
-              />
-            </div>
-          )}
+        {isNotCurrentUserMessage && isUserDiscussionMessage && (
+          <div className={styles.iconWrapper} onClick={onOpenUserProfile}>
+            <UserAvatar
+              imageContainerClassName={styles.userAvatarContainer}
+              photoURL={discussionMessage.owner?.photoURL}
+              nameForRandomAvatar={discussionMessage.owner?.email}
+              userName={getUserName(discussionMessage.owner)}
+            />
+          </div>
+        )}
         {isEditMode ? (
           <EditMessageInput
             isProposalMessage={chatType === ChatType.ProposalComments}
@@ -286,7 +310,7 @@ export default function ChatMessage({
               onClick={handleMessageClick}
             >
               {isNotCurrentUserMessage && !isSystemMessage && (
-                <div className={styles.messageName}>
+                <div className={styles.messageName} onClick={onOpenUserProfile}>
                   {getUserName(discussionMessage.owner)}
                 </div>
               )}
@@ -340,7 +364,7 @@ export default function ChatMessage({
                   isChatMessage={chatType === ChatType.ChatMessages}
                   isDiscussionMessageWithFile={Boolean(filePreview)}
                   ownerId={
-                    checkIsUserDiscussionMessage(discussionMessage)
+                    isUserDiscussionMessage
                       ? discussionMessage.ownerId
                       : undefined
                   }
@@ -368,6 +392,15 @@ export default function ChatMessage({
           </>
         )}
       </div>
+      {isShowingUserProfile && isUserDiscussionMessage && (
+        <UserInfoPopup
+          commonId={discussionMessage.commonId}
+          userId={discussionMessage.ownerId}
+          avatar={discussionMessage.ownerAvatar}
+          isShowing={isShowingUserProfile}
+          onClose={onCloseUserProfile}
+        />
+      )}
     </li>
   );
 }

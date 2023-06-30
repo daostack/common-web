@@ -41,3 +41,4 @@ export * from "./SupportShare";
 export * from "./BackgroundNotificationModal";
 export * from "./Chat";
 export * from "./ReportModal";
+export * from "./UserInfoPopup";

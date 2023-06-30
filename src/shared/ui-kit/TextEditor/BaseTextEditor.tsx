@@ -38,6 +38,9 @@ export interface TextEditorProps {
   className?: string;
   emojiContainerClassName?: string;
   emojiPickerContainerClassName?: string;
+  inputContainerRef?:
+    | MutableRefObject<HTMLDivElement | null>
+    | RefCallback<HTMLDivElement>;
   editorRef?: MutableRefObject<HTMLElement | null> | RefCallback<HTMLElement>;
   id?: string;
   name?: string;
@@ -70,6 +73,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     emojiContainerClassName,
     emojiPickerContainerClassName,
     editorRef,
+    inputContainerRef,
     id,
     name,
     value,
@@ -197,7 +201,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   };
 
   return (
-    <div className={styles.container}>
+    <div ref={inputContainerRef} className={styles.container}>
       <Slate
         editor={editor}
         value={value}

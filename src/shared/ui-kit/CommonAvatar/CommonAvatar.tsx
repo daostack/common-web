@@ -4,24 +4,29 @@ import { Image } from "@/shared/components/Image";
 import { getRandomUserAvatarURL } from "@/shared/utils";
 
 interface CommonAvatarProps {
-  name: string;
+  name?: string;
   src?: string;
   className?: string;
+  alt?: string;
 }
 
 const CommonAvatar: FC<CommonAvatarProps> = (props) => {
-  const { src, name, className } = props;
+  const { src, name, className, alt } = props;
+
+  if (!name) {
+    return null;
+  }
 
   return (
     <Image
       className={className}
       src={src}
-      alt={`${name}'s image`}
+      alt={alt ?? `${name}'s image`}
       placeholderElement={
         <Image
           className={className}
           src={getRandomUserAvatarURL(name)}
-          alt={name}
+          alt={alt ?? name}
         />
       }
     />
