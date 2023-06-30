@@ -19,7 +19,7 @@ import { CommonPageSettings } from "./types";
 import { getInitialTab } from "./utils";
 import styles from "./Common.module.scss";
 
-interface CommonRouterParams {
+export interface CommonRouterParams {
   id: string;
 }
 
