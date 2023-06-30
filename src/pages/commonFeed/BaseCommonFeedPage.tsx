@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import CommonFeed, { CommonFeedProps } from "./CommonFeed";
 
-interface CommonFeedPageRouterParams {
+export interface CommonFeedPageRouterParams {
   id: string;
 }
 
