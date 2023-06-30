@@ -89,13 +89,14 @@ export function* fetchBreadcrumbsItemsByCommonId(
     return;
   }
 
-  const nextBreadcrumbs: MultipleSpacesLayoutFeedItemBreadcrumbs = {
-    ...currentBreadcrumbs,
-    items: [],
-    areItemsLoading: true,
-    areItemsFetched: false,
-  };
-  yield put(actions.setBreadcrumbsData(nextBreadcrumbs));
+  yield put(
+    actions.setBreadcrumbsData({
+      ...currentBreadcrumbs,
+      items: [],
+      areItemsLoading: true,
+      areItemsFetched: false,
+    }),
+  );
 
   try {
     const user = (yield select(selectUser())) as User | null;
@@ -104,7 +105,6 @@ export function* fetchBreadcrumbsItemsByCommonId(
       commonId,
       user?.uid,
     )) as Awaited<ReturnType<typeof fetchProjectsInfoByActiveCommonId>>;
-    console.log(projectsInfo);
     const projectsData: ProjectsStateItem[] = projectsInfo.map(
       ({ common, hasMembership, hasPermissionToAddProject }) => ({
         commonId: common.id,
@@ -116,22 +116,34 @@ export function* fetchBreadcrumbsItemsByCommonId(
       }),
     );
 
-    yield put(
-      actions.setBreadcrumbsData({
-        ...nextBreadcrumbs,
-        items: projectsData,
-        areItemsLoading: false,
-        areItemsFetched: true,
-      }),
-    );
+    const currentBreadcrumbs = (yield select(
+      selectMultipleSpacesLayoutBreadcrumbs,
+    )) as MultipleSpacesLayoutState["breadcrumbs"];
+
+    if (currentBreadcrumbs?.type === InboxItemType.FeedItemFollow) {
+      yield put(
+        actions.setBreadcrumbsData({
+          ...currentBreadcrumbs,
+          items: projectsData,
+          areItemsLoading: false,
+          areItemsFetched: true,
+        }),
+      );
+    }
   } catch (error) {
-    yield put(
-      actions.setBreadcrumbsData({
-        ...nextBreadcrumbs,
-        items: [],
-        areItemsLoading: false,
-        areItemsFetched: true,
-      }),
-    );
+    const currentBreadcrumbs = (yield select(
+      selectMultipleSpacesLayoutBreadcrumbs,
+    )) as MultipleSpacesLayoutState["breadcrumbs"];
+
+    if (currentBreadcrumbs?.type === InboxItemType.FeedItemFollow) {
+      yield put(
+        actions.setBreadcrumbsData({
+          ...currentBreadcrumbs,
+          items: [],
+          areItemsLoading: false,
+          areItemsFetched: true,
+        }),
+      );
+    }
   }
 }
