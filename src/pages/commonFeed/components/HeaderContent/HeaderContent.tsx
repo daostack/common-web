@@ -6,8 +6,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
-import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
-import { CommonAvatar } from "@/shared/ui-kit/CommonAvatar";
+import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getPluralEnding } from "@/shared/utils";
 import styles from "./HeaderContent.module.scss";
 

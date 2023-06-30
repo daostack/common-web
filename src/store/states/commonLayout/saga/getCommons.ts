@@ -2,10 +2,11 @@ import { call, put, select } from "redux-saga/effects";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonService, GovernanceService, ProjectService } from "@/services";
 import { Awaited } from "@/shared/interfaces";
-import { Governance, User } from "@/shared/models";
+import { User } from "@/shared/models";
 import { isError } from "@/shared/utils";
 import { ProjectsStateItem } from "../../projects";
 import * as actions from "../actions";
+import { getPermissionsDataByAllUserCommonMemberInfo } from "./utils";
 
 const getProjectsInfo = async (
   commonId: string,
@@ -22,23 +23,10 @@ const getProjectsInfo = async (
     CommonService.getParentCommonsByIds(userCommonIds),
     GovernanceService.getGovernanceListByCommonIds(userCommonIds),
   ]);
-  const permissionsData = allUserCommonMemberInfo.reduce<
-    {
-      governance: Governance;
-      commonMemberCircleIds: string[];
-    }[]
-  >((acc, commonMember) => {
-    const governance = governanceList.find(
-      (governance) => governance.commonId === commonMember.commonId,
-    );
-
-    return governance
-      ? acc.concat({
-          governance,
-          commonMemberCircleIds: commonMember.circleIds,
-        })
-      : acc;
-  }, []);
+  const permissionsData = getPermissionsDataByAllUserCommonMemberInfo(
+    allUserCommonMemberInfo,
+    governanceList,
+  );
   const data = ProjectService.parseDataToProjectsInfo(
     userCommons,
     userCommonIds,

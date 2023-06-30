@@ -1,6 +1,7 @@
 export * from "./Breadcrumbs";
 export * from "./Button";
 export * from "./ButtonIcon";
+export * from "./CommonAvatar";
 export * from "./CommonLogo";
 export * from "./Container";
 export * from "./ContextMenu";
@@ -23,4 +24,3 @@ export * from "./Tooltip";
 export * from "./TopNavigation";
 export * from "./UploadFiles";
 export * from "./FilePreview";
-export * from "./CommonAvatar";

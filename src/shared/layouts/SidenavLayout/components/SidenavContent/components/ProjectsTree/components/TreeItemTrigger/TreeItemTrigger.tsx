@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { SmallArrowIcon } from "@/shared/icons";
-import { CommonAvatar } from "@/shared/ui-kit/CommonAvatar";
+import { CommonAvatar } from "@/shared/ui-kit";
 import { useTreeContext } from "../../context";
 import { Item } from "../../types";
 import styles from "./TreeItemTrigger.module.scss";

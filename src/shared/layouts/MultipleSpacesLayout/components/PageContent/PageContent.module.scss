@@ -1,0 +1,33 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.globalLoader {
+  z-index: 10;
+}
+
+.container {
+  --page-content-header: 5rem;
+
+  flex: 1;
+  padding-top: calc(var(--header-h) + var(--page-content-header));
+  display: flex;
+  flex-direction: column;
+
+  @include tablet {
+    --page-content-header: 0;
+
+    border: 0;
+  }
+}
+
+.header {
+  position: fixed;
+  top: var(--header-h);
+  right: var(--sb-h-indent);
+  left: var(--sb-h-indent);
+  z-index: 2;
+  height: var(--page-content-header);
+  background-color: $c-shades-white;
+  border-bottom: 0.0625rem solid $c-light-gray;
+  box-sizing: border-box;
+}

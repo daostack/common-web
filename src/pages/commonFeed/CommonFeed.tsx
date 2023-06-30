@@ -1,4 +1,12 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  CSSProperties,
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -14,9 +22,9 @@ import {
   FeedLayoutRef,
 } from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
-import { CommonFeed } from "@/shared/models";
+import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
-import { checkIsProject, getCommonPageAboutTabPath } from "@/shared/utils";
+import { getCommonPageAboutTabPath } from "@/shared/utils";
 import {
   commonActions,
   selectCommonAction,
@@ -27,17 +35,26 @@ import {
   NewDiscussionCreation,
   NewProposalCreation,
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
-import { FeedLayout, HeaderContent } from "./components";
-import { useCommonData, useGlobalCommonData } from "./hooks";
+import { FeedLayout } from "./components";
+import { CommonData, useCommonData, useGlobalCommonData } from "./hooks";
 import { getLastMessage } from "./utils";
 import styles from "./CommonFeed.module.scss";
 
-interface CommonFeedProps {
+export type RenderCommonFeedContentWrapper = (data: {
+  children: ReactNode;
+  wrapperStyles?: CSSProperties;
+  commonData: CommonData;
+  commonMember: (CommonMember & CirclesPermissions) | null;
+  isGlobalDataFetched: boolean;
+}) => ReactNode;
+
+export interface CommonFeedProps {
   commonId: string;
+  renderContentWrapper: RenderCommonFeedContentWrapper;
 }
 
 const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
-  const { commonId } = props;
+  const { commonId, renderContentWrapper: outerContentWrapperRenderer } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -225,22 +242,24 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     );
   }
 
+  const renderContentWrapper = (
+    children: ReactNode,
+    wrapperStyles?: CSSProperties,
+  ): ReactNode =>
+    outerContentWrapperRenderer({
+      children,
+      wrapperStyles,
+      commonData,
+      commonMember,
+      isGlobalDataFetched,
+    });
+
   return (
     <>
       <FeedLayout
         ref={setFeedLayoutRef}
         className={styles.feedLayout}
-        headerContent={
-          <HeaderContent
-            commonId={commonData.common.id}
-            commonName={commonData.common.name}
-            commonImage={commonData.common.image}
-            commonMembersAmount={commonData.commonMembersAmount}
-            commonMember={commonMember}
-            governance={commonData.governance}
-            isProject={checkIsProject(commonData.common)}
-          />
-        }
+        renderContentWrapper={renderContentWrapper}
         topContent={
           <>
             {(commonAction === CommonAction.NewDiscussion ||
@@ -265,7 +284,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
             )}
           </>
         }
-        isGlobalLoading={!isGlobalDataFetched}
         common={commonData.common}
         governance={commonData.governance}
         commonMember={commonMember}

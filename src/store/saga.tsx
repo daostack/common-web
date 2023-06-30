@@ -10,6 +10,7 @@ import {
   commonLayoutSaga,
   commonFeedFollowsSaga,
   inboxSaga,
+  multipleSpacesLayoutSaga,
   projectsSaga,
 } from "./states";
 
@@ -24,6 +25,7 @@ const allSagas = [
   commonFeedFollowsSaga,
   cacheSaga,
   inboxSaga,
+  multipleSpacesLayoutSaga,
   saga,
 ];
 

@@ -7,6 +7,7 @@ import {
   COMMON_SIDENAV_LAYOUT_CONFIGURATION,
   CommonSidenavLayoutRouteOptions,
 } from "./commonSidenavLayout";
+import { MULTIPLE_SPACES_LAYOUT_CONFIGURATION } from "./multipleSpacesLayout";
 import { OLD_LAYOUT_CONFIGURATION, OldLayoutRouteOptions } from "./oldLayout";
 import {
   SIDENAV_LAYOUT_CONFIGURATION,
@@ -23,6 +24,7 @@ const CONFIGURATIONS: LayoutConfiguration<LayoutRouteOptions>[] = [
   OLD_LAYOUT_CONFIGURATION,
   SIDENAV_LAYOUT_CONFIGURATION,
   COMMON_SIDENAV_LAYOUT_CONFIGURATION,
+  MULTIPLE_SPACES_LAYOUT_CONFIGURATION,
 ];
 
 export const ROUTES: LayoutConfigurationWithRouteProps<LayoutRouteOptions>[] =

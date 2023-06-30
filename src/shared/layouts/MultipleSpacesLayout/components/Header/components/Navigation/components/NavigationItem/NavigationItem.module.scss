@@ -1,0 +1,46 @@
+@import "../../../../../../../../../constants";
+@import "../../../../../../../../../styles/sizes";
+
+.item {
+  --item-color: #{$c-gray-40};
+
+  height: 100%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  font-family: PoppinsSans, sans-serif;
+  font-size: $mobile-title;
+  color: var(--item-color);
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    --item-color: #{$c-shades-black};
+  }
+}
+.itemActive {
+  --item-color: #{$c-pink-mention};
+
+  &:hover {
+    --item-color: #{$c-pink-next-dark};
+  }
+}
+.itemDisabled {
+  --item-color: #{$c-neutrals-300};
+
+  cursor: not-allowed;
+}
+
+.tooltipContent {
+  max-width: 20rem;
+  z-index: 3;
+}
+
+.textWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.text {
+  margin-left: 0.5rem;
+}

@@ -18,7 +18,7 @@ const ContextMenuItem: ForwardRefRenderFunction<
   ContextMenuItemProps
 > = (props, ref) => {
   const { item, ...restProps } = props;
-  const content = item.text;
+  const content = item.renderContent?.() || item.text;
   const className = classNames(styles.item, item.className, {
     [styles.itemWithWarning]: item.withWarning,
   });

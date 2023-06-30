@@ -1,4 +1,4 @@
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, ReactNode } from "react";
 
 export interface ContextMenuItem {
   id: string;
@@ -6,4 +6,5 @@ export interface ContextMenuItem {
   text: string;
   onClick: MouseEventHandler;
   withWarning?: boolean;
+  renderContent?: () => ReactNode;
 }

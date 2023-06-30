@@ -13,12 +13,17 @@ export enum MenuItemsPlacement {
   Bottom,
 }
 
+export interface MenuItemsStyles {
+  wrapper?: string;
+}
+
 interface MenuItemsProps {
   placement?: MenuItemsPlacement;
+  styles?: MenuItemsStyles;
 }
 
 const MenuItems: FC<MenuItemsProps> = (props) => {
-  const { placement = MenuItemsPlacement.Bottom } = props;
+  const { placement = MenuItemsPlacement.Bottom, styles: outerStyles } = props;
   const dispatch = useDispatch();
   const { getProfilePagePath, getBillingPagePath } = useRoutesContext();
   const items: Item[] = [
@@ -46,7 +51,7 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
   return (
     <Menu.Items as={React.Fragment}>
       <ul
-        className={classNames(styles.itemsWrapper, {
+        className={classNames(styles.itemsWrapper, outerStyles?.wrapper, {
           [styles.itemsWrapperPlacementTop]:
             placement === MenuItemsPlacement.Top,
           [styles.itemsWrapperPlacementBottom]:

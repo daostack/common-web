@@ -1,4 +1,12 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  CSSProperties,
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectUser,
@@ -17,7 +25,10 @@ import {
   FeedLayoutItem,
   FeedLayoutRef,
 } from "@/shared/interfaces";
-import { CommonSidenavLayoutTabs } from "@/shared/layouts";
+import {
+  CommonSidenavLayoutPageContent,
+  CommonSidenavLayoutTabs,
+} from "@/shared/layouts";
 import { CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
@@ -210,19 +221,33 @@ const InboxPage: FC = () => {
     );
   }
 
+  const renderContentWrapper = (
+    children: ReactNode,
+    wrapperStyles?: CSSProperties,
+  ): ReactNode => (
+    <CommonSidenavLayoutPageContent
+      className={styles.layoutPageContent}
+      headerClassName={styles.layoutHeader}
+      headerContent={
+        <HeaderContent
+          streamsWithNotificationsAmount={
+            userStreamsWithNotificationsAmount || 0
+          }
+        />
+      }
+      isGlobalLoading={false}
+      styles={wrapperStyles}
+    >
+      {children}
+    </CommonSidenavLayoutPageContent>
+  );
+
   return (
     <>
       <FeedLayout
         ref={setFeedLayoutRef}
         className={styles.feedLayout}
-        headerContent={
-          <HeaderContent
-            streamsWithNotificationsAmount={
-              userStreamsWithNotificationsAmount || 0
-            }
-          />
-        }
-        isGlobalLoading={false}
+        renderContentWrapper={renderContentWrapper}
         commonMember={null}
         topFeedItems={topFeedItems}
         feedItems={inboxItems}
