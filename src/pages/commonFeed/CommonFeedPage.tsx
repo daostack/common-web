@@ -4,11 +4,13 @@ import { useParams } from "react-router-dom";
 import { InboxItemType } from "@/shared/constants";
 import { MainRoutesProvider } from "@/shared/contexts";
 import { MultipleSpacesLayoutPageContent } from "@/shared/layouts";
+import { checkIsProject } from "@/shared/utils";
 import { multipleSpacesLayoutActions } from "@/store/states";
 import BaseCommonFeedPage, {
   CommonFeedPageRouterParams,
 } from "./BaseCommonFeedPage";
 import { RenderCommonFeedContentWrapper } from "./CommonFeed";
+import { HeaderContent } from "./components";
 import { useActiveItemDataChange } from "./hooks";
 
 const renderContentWrapper: RenderCommonFeedContentWrapper = ({
@@ -18,7 +20,21 @@ const renderContentWrapper: RenderCommonFeedContentWrapper = ({
   commonMember,
   isGlobalDataFetched,
 }) => (
-  <MultipleSpacesLayoutPageContent headerContent={<div>Header</div>}>
+  <MultipleSpacesLayoutPageContent
+    headerContent={
+      <HeaderContent
+        commonId={commonData.common.id}
+        commonName={commonData.common.name}
+        commonImage={commonData.common.image}
+        commonMembersAmount={commonData.commonMembersAmount}
+        commonMember={commonMember}
+        governance={commonData.governance}
+        isProject={checkIsProject(commonData.common)}
+      />
+    }
+    isGlobalLoading={!isGlobalDataFetched}
+    styles={wrapperStyles}
+  >
     {children}
   </MultipleSpacesLayoutPageContent>
 );
