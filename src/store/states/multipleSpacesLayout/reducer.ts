@@ -21,4 +21,12 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
     produce(state, (nextState) => {
       nextState.breadcrumbs = payload && { ...payload };
     }),
+  )
+  .handleAction(actions.moveBreadcrumbsToPrevious, (state) =>
+    produce(state, (nextState) => {
+      nextState.previousBreadcrumbs = nextState.breadcrumbs && {
+        ...nextState.breadcrumbs,
+      };
+      nextState.breadcrumbs = null;
+    }),
   );

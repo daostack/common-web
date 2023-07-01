@@ -20,6 +20,7 @@ import {
   ChatChannelFeedLayoutItemProps,
   checkIsChatChannelLayoutItem,
   FeedLayoutItem,
+  FeedLayoutItemChangeDataWithType,
   FeedLayoutRef,
 } from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
@@ -41,10 +42,11 @@ interface InboxPageProps {
     children: ReactNode,
     wrapperStyles?: CSSProperties,
   ) => ReactNode;
+  onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
 }
 
 const InboxPage: FC<InboxPageProps> = (props) => {
-  const { renderContentWrapper } = props;
+  const { renderContentWrapper, onActiveItemDataChange } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
@@ -235,6 +237,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         emptyText="Your inbox is empty"
         getNonAllowedItems={getNonAllowedItems}
         onActiveItemChange={handleActiveItemChange}
+        onActiveItemDataChange={onActiveItemDataChange}
         onMessagesAmountEmptinessToggle={handleMessagesAmountEmptinessToggle}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
