@@ -5,13 +5,14 @@ import { MainRoutesProvider } from "@/shared/contexts";
 import { MultipleSpacesLayoutPageContent } from "@/shared/layouts";
 import { multipleSpacesLayoutActions } from "@/store/states";
 import BaseInboxPage from "./BaseInbox";
+import { HeaderContent } from "./components";
 
 const InboxPage: FC = () => {
   const dispatch = useDispatch();
   const onActiveItemDataChange = useActiveItemDataChange();
 
   const renderContentWrapper = (children: ReactNode): ReactNode => (
-    <MultipleSpacesLayoutPageContent headerContent={<div>Header</div>}>
+    <MultipleSpacesLayoutPageContent headerContent={<HeaderContent />}>
       {children}
     </MultipleSpacesLayoutPageContent>
   );

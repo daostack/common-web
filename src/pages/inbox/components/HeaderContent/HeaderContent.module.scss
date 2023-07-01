@@ -1,0 +1,32 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.container {
+  padding-left: 1.25rem;
+  padding-right: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+
+  @include tablet {
+    padding-left: 1rem;
+    padding-right: 1.375rem;
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+}
+
+.inboxIcon {
+  width: 2.125rem;
+  height: 2.125rem;
+  margin-right: 0.75rem;
+}
+
+.title {
+  margin: 0;
+  font-family: PoppinsSans, sans-serif;
+  font-weight: 500;
+  font-size: $moderate-small;
+}
