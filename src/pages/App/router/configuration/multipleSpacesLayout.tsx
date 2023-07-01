@@ -1,4 +1,5 @@
 import { ALL_COMMON_PAGE_TABS, CommonPage } from "@/pages/common";
+import { CommonCreationPage } from "@/pages/commonCreation";
 import { CommonFeedPage } from "@/pages/commonFeed";
 import { InboxPage } from "@/pages/inbox";
 import { ROUTE_PATHS } from "@/shared/constants";
@@ -28,5 +29,10 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration = {
       component: CommonFeedPage,
     },
     ...getCommonPageConfiguration(),
+    {
+      path: ROUTE_PATHS.PROJECT_CREATION,
+      exact: true,
+      component: CommonCreationPage,
+    },
   ],
 };
