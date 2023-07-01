@@ -1,13 +1,14 @@
 import { useCallback, useState } from "react";
 import { useHistory } from "react-router";
 import { CommonFeedService } from "@/services";
-import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
+import { ProposalsTypes } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import {
   CommonFeedType,
   Proposal,
   ProposalWithHighlightedComment,
 } from "@/shared/models";
+import { getCommonPagePath } from "@/shared/utils";
 
 interface Return {
   isProposalCreationModalOpen: boolean;
@@ -39,19 +40,10 @@ export const useProposalCreationModal = (): Return => {
           CommonFeedType.Proposal,
         );
 
-      if (proposalFeedItem) {
-        const feedItemUrl = ROUTE_PATHS.FEED_ITEM.replace(
-          ":id",
-          payload.data.args.commonId,
-        ).replace(":feedItemId", proposalFeedItem.commonFeedItem.id);
-        history.push(feedItemUrl);
-      } else {
-        const commonUrl = ROUTE_PATHS.COMMON.replace(
-          ":id",
-          payload.data.args.commonId,
-        );
-        history.push(commonUrl);
-      }
+      const feedItemUrl = getCommonPagePath(payload.data.args.commonId, {
+        item: proposalFeedItem?.commonFeedItem.id,
+      });
+      history.push(feedItemUrl);
     },
     [],
   );

@@ -30,5 +30,4 @@ export enum ROUTE_PATHS {
   PARENTS_FOR_CLIMATE = "/parents-for-climate",
   SAVE_SAADIA = "/save-saadia",
   INBOX = "/inbox",
-  FEED_ITEM = "/commons/:id?item=:feedItemId",
 }
