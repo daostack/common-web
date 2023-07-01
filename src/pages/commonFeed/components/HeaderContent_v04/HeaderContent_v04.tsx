@@ -8,7 +8,7 @@ import { RightArrowThinIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getPluralEnding } from "@/shared/utils";
-import styles from "./HeaderContent.module.scss";
+import styles from "./HeaderContent_v04.module.scss";
 
 interface HeaderContentProps {
   className?: string;
@@ -21,7 +21,7 @@ interface HeaderContentProps {
   governance: Governance;
 }
 
-const HeaderContent: FC<HeaderContentProps> = (props) => {
+const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
   const {
     className,
     commonId,
@@ -73,4 +73,4 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
   );
 };
 
-export default HeaderContent;
+export default HeaderContent_v04;
