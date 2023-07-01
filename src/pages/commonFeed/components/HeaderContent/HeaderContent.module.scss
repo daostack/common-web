@@ -103,6 +103,15 @@
   }
 }
 
-.newStreamButton {
-  align-self: center;
+.actionButtonsWrapper {
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin-right: 1rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }

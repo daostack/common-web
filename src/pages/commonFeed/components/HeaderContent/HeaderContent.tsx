@@ -1,36 +1,31 @@
 import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
+import { InviteFriendsButton } from "@/pages/common/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { CommonAvatar } from "@/shared/ui-kit";
-import { getPluralEnding } from "@/shared/utils";
-import { NewStreamButton } from "./components";
+import { checkIsProject, getPluralEnding } from "@/shared/utils";
+import { NewStreamButton, ShareButton } from "./components";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
   className?: string;
-  commonId: string;
-  commonName: string;
-  commonImage: string;
+  common: Common;
   commonMembersAmount: number;
-  isProject?: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
   governance: Governance;
 }
 
 const HeaderContent: FC<HeaderContentProps> = (props) => {
-  const {
-    className,
-    commonId,
-    commonName,
-    commonImage,
-    commonMembersAmount,
-    isProject = false,
-    commonMember,
-    governance,
-  } = props;
+  const { className, common, commonMembersAmount, commonMember, governance } =
+    props;
   const { getCommonPageAboutTabPath } = useRoutesContext();
   const isMobileVersion = useIsTabletView();
 
@@ -38,16 +33,18 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
     return null;
   }
 
+  const isProject = checkIsProject(common);
+
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.commonContent}>
         <NavLink
           className={styles.commonLink}
-          to={getCommonPageAboutTabPath(commonId)}
+          to={getCommonPageAboutTabPath(common.id)}
         >
           <CommonAvatar
-            name={commonName}
-            src={commonImage}
+            name={common.name}
+            src={common.image}
             className={classNames(styles.image, {
               [styles.imageNonRounded]: !isProject,
               [styles.imageRounded]: isProject,
@@ -55,20 +52,26 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           />
 
           <div className={styles.commonInfoWrapper}>
-            <h1 className={styles.commonName}>{commonName}</h1>
+            <h1 className={styles.commonName}>{common.name}</h1>
             <p className={styles.commonMembersAmount}>
               {commonMembersAmount} member{getPluralEnding(commonMembersAmount)}
             </p>
           </div>
         </NavLink>
       </div>
-      <NewStreamButton
-        className={styles.newStreamButton}
-        commonId={commonId}
-        commonMember={commonMember}
-        governance={governance}
-        isMobileVersion={isMobileVersion}
-      />
+      <div className={styles.actionButtonsWrapper}>
+        <NewStreamButton
+          commonId={common.id}
+          commonMember={commonMember}
+          governance={governance}
+          isMobileVersion={isMobileVersion}
+        />
+        <InviteFriendsButton
+          isMobileVersion={isMobileVersion}
+          common={common}
+          TriggerComponent={ShareButton}
+        />
+      </div>
     </div>
   );
 };

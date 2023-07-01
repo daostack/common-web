@@ -23,13 +23,10 @@ const renderContentWrapper: RenderCommonFeedContentWrapper = ({
   <MultipleSpacesLayoutPageContent
     headerContent={
       <HeaderContent
-        commonId={commonData.common.id}
-        commonName={commonData.common.name}
-        commonImage={commonData.common.image}
+        common={commonData.common}
         commonMembersAmount={commonData.commonMembersAmount}
         commonMember={commonMember}
         governance={commonData.governance}
-        isProject={checkIsProject(commonData.common)}
       />
     }
     isGlobalLoading={!isGlobalDataFetched}
@@ -38,6 +35,7 @@ const renderContentWrapper: RenderCommonFeedContentWrapper = ({
     {children}
   </MultipleSpacesLayoutPageContent>
 );
+
 const CommonFeedPage: FC = () => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
   const dispatch = useDispatch();
