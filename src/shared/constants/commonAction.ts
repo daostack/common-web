@@ -3,4 +3,5 @@ export enum CommonAction {
   NewDiscussion = "new-discussion",
   EditDiscussion = "edit-discussion",
   NewContribution = "new-contribution",
+  NewSpace = "new-space",
 }

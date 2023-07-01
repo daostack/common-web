@@ -9,12 +9,14 @@ import { hasPermission } from "@/shared/utils";
 export interface GetAllowedItemsOptions {
   commonMember: (CommonMember & CirclesPermissions) | null;
   governance: Pick<Governance, "circles">;
+  onNewSpace?: () => void;
 }
 
 type NewStreamMenuItems =
   | CommonAction.NewProposal
   | CommonAction.NewDiscussion
-  | CommonAction.NewContribution;
+  | CommonAction.NewContribution
+  | CommonAction.NewSpace;
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   NewStreamMenuItems,
@@ -39,6 +41,12 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
         }),
     ),
   [CommonAction.NewContribution]: () => false,
+  [CommonAction.NewSpace]: ({ commonMember, onNewSpace }) =>
+    Boolean(
+      onNewSpace &&
+        commonMember &&
+        commonMember.allowedActions[GovernanceActions.CREATE_PROJECT],
+    ),
 };
 
 export const getAllowedItems = (

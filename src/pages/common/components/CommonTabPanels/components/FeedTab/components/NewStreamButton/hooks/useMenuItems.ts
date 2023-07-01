@@ -38,6 +38,13 @@ export const useMenuItems = (options: Options): Item[] => {
         setMenuItem(CommonAction.NewContribution);
       },
     },
+    {
+      id: CommonAction.NewSpace,
+      text: "New Space",
+      onClick: () => {
+        options.onNewSpace?.();
+      },
+    },
   ];
 
   return items.filter((item) =>

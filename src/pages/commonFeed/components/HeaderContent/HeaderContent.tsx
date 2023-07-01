@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { NewStreamButton } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { CommonAvatar } from "@/shared/ui-kit";
 import { getPluralEnding } from "@/shared/utils";
+import { NewStreamButton } from "./components";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
@@ -64,6 +64,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
       </div>
       <NewStreamButton
         className={styles.newStreamButton}
+        commonId={commonId}
         commonMember={commonMember}
         governance={governance}
         isMobileVersion={isMobileVersion}
