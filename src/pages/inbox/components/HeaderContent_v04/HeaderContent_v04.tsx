@@ -5,14 +5,14 @@ import { InboxIcon, RightArrowThinIcon } from "@/shared/icons";
 import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getPluralEnding } from "@/shared/utils";
 import { DirectMessageButton } from "../DirectMessageButton";
-import styles from "./HeaderContent.module.scss";
+import styles from "./HeaderContent_v04.module.scss";
 
 interface HeaderContentProps {
   className?: string;
   streamsWithNotificationsAmount: number;
 }
 
-const HeaderContent: FC<HeaderContentProps> = (props) => {
+const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
   const { className, streamsWithNotificationsAmount } = props;
   const isMobileVersion = useIsTabletView();
 
@@ -42,4 +42,4 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
   );
 };
 
-export default HeaderContent;
+export default HeaderContent_v04;
