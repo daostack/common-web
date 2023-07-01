@@ -1,18 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StorageKey } from "@/shared/constants";
 import { changeTheme } from "@/shared/store/actions";
 import { selectTheme } from "@/shared/store/selectors";
 import { Theme as Themes } from "../../constants/theme";
 
 const Theme = () => {
-  const theme = useSelector(selectTheme());
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem(StorageKey.Theme, theme);
-  }, [theme]);
+  const theme = useSelector(selectTheme());
 
   const handleChange = () => {
     dispatch(changeTheme(theme === Themes.Dark ? Themes.Light : Themes.Dark));

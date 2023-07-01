@@ -16,6 +16,7 @@ import {
   UserNotificationsAmountHandler,
   WebViewLoginHandler,
 } from "./handlers";
+import { ThemeHandler } from "./handlers/ThemeHandler";
 import { Router } from "./router";
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
       <BackgroundNotificationModal />
       <TutorialModal isShowing={tutorialModalState.isShowing} />
       <TextDirectionHandler />
+      <ThemeHandler />
       <UserNotificationsAmountHandler />
       <WebViewLoginHandler />
       <LoginContainer />
