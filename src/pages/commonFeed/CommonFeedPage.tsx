@@ -61,6 +61,7 @@ const CommonFeedPage: FC = () => {
         }}
         feedLayoutSettings={{
           withDesktopChatTitle: false,
+          sidenavWidth: 0,
         }}
       />
     </MainRoutesProvider>

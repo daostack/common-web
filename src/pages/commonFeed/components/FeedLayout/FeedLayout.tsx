@@ -73,6 +73,7 @@ export interface FeedLayoutOuterStyles {
 
 export interface FeedLayoutSettings {
   withDesktopChatTitle?: boolean;
+  sidenavWidth?: number;
 }
 
 interface FeedLayoutProps {
@@ -158,7 +159,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const commonMember = outerCommonMember || fetchedCommonMember;
   const maxChatSize = getSplitViewMaxSize(windowWidth);
   const [realChatWidth, setRealChatWidth] = useState(() =>
-    getDefaultSize(windowWidth, maxChatSize),
+    getDefaultSize(windowWidth, maxChatSize, settings?.sidenavWidth),
   );
   const chatWidth = Math.min(realChatWidth, maxChatSize);
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
