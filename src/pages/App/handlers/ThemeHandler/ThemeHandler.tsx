@@ -4,7 +4,7 @@ import { StorageKey } from "@/shared/constants";
 import { selectTheme } from "@/shared/store/selectors";
 
 const ThemeHandler = () => {
-  const theme = useSelector(selectTheme());
+  const theme = useSelector(selectTheme);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;

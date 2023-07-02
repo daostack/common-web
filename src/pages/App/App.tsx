@@ -13,10 +13,10 @@ import { changeScreenSize } from "@/shared/store/actions";
 import { selectTutorialModalState } from "@/shared/store/selectors";
 import {
   TextDirectionHandler,
+  ThemeHandler,
   UserNotificationsAmountHandler,
   WebViewLoginHandler,
 } from "./handlers";
-import { ThemeHandler } from "./handlers/ThemeHandler";
 import { Router } from "./router";
 
 const App = () => {

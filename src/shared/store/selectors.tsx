@@ -40,5 +40,4 @@ export const selectLanguage = () =>
 export const selectIsRtlLanguage = () =>
   createSelector(selectShared, (state) => state.isRtlLanguage);
 
-export const selectTheme = () =>
-  createSelector(selectShared, (state) => state.theme);
+export const selectTheme = (state) => selectShared(state).theme;

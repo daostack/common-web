@@ -6,7 +6,7 @@ import { Theme as Themes } from "../../constants/theme";
 
 const Theme = () => {
   const dispatch = useDispatch();
-  const theme = useSelector(selectTheme());
+  const theme = useSelector(selectTheme);
 
   const handleChange = () => {
     dispatch(changeTheme(theme === Themes.Dark ? Themes.Light : Themes.Dark));
