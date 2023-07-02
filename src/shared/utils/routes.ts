@@ -3,11 +3,22 @@ import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
 
 export const getCommonPagePath = (
   commonId: string,
-  tab?: CommonTab,
+  queryParamKey?: {
+    tab?: CommonTab;
+    item?: string;
+  },
 ): string => {
-  const path = ROUTE_PATHS.COMMON.replace(":id", commonId);
+  const basePath = ROUTE_PATHS.COMMON.replace(":id", commonId);
 
-  return `${path}${tab ? `?${QueryParamKey.Tab}=${tab}` : ""}`;
+  if (queryParamKey?.item) {
+    return `${basePath}?${QueryParamKey.Item}=${queryParamKey?.item}`;
+  }
+
+  if (queryParamKey?.tab) {
+    return `${basePath}?${QueryParamKey.Tab}=${queryParamKey.tab}`;
+  }
+
+  return basePath;
 };
 
 export const getCommonPageAboutTabPath = (commonId: string): string =>
