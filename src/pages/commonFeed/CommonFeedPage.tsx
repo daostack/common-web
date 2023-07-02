@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { InboxItemType } from "@/shared/constants";
 import { MainRoutesProvider } from "@/shared/contexts";
 import { MultipleSpacesLayoutPageContent } from "@/shared/layouts";
-import { checkIsProject } from "@/shared/utils";
 import { multipleSpacesLayoutActions } from "@/store/states";
 import BaseCommonFeedPage, {
   CommonFeedPageRouterParams,

@@ -1,13 +1,12 @@
 import React, { CSSProperties, FC, useCallback } from "react";
 import { useWindowSize } from "react-use";
-import classNames from "classnames";
 import { MainRoutesProvider } from "@/shared/contexts";
 import { useLockedBody } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Sidenav } from "@/shared/ui-kit";
 import { SidenavContent } from "../CommonSidenavLayout/components";
 import { getSidenavLeft } from "../CommonSidenavLayout/utils";
-import { Header, PageContent } from "./components";
+import { Header } from "./components";
 import styles from "./MultipleSpacesLayout.module.scss";
 
 const MultipleSpacesLayout: FC = (props) => {
@@ -33,12 +32,7 @@ const MultipleSpacesLayout: FC = (props) => {
 
   return (
     <MainRoutesProvider>
-      <div
-        className={classNames(styles.container, {
-          [styles.containerWithSidenav]: isTabletView,
-        })}
-        style={style}
-      >
+      <div className={styles.container} style={style}>
         {isTabletView && (
           <Sidenav
             contentWrapperClassName={styles.sidenavContentWrapper}
