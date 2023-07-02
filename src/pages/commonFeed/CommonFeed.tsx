@@ -36,7 +36,7 @@ import {
   NewDiscussionCreation,
   NewProposalCreation,
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
-import { FeedLayout } from "./components";
+import { FeedLayout, FeedLayoutOuterStyles } from "./components";
 import { CommonData, useCommonData, useGlobalCommonData } from "./hooks";
 import { getLastMessage } from "./utils";
 import styles from "./CommonFeed.module.scss";
@@ -52,7 +52,7 @@ export type RenderCommonFeedContentWrapper = (data: {
 export interface CommonFeedProps {
   commonId: string;
   renderContentWrapper: RenderCommonFeedContentWrapper;
-  splitViewClassName?: string;
+  feedLayoutOuterStyles?: FeedLayoutOuterStyles;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
 }
 
@@ -60,7 +60,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const {
     commonId,
     renderContentWrapper: outerContentWrapperRenderer,
-    splitViewClassName,
+    feedLayoutOuterStyles,
     onActiveItemDataChange,
   } = props;
   const queryParams = useQueryParams();
@@ -268,7 +268,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         ref={setFeedLayoutRef}
         className={styles.feedLayout}
         renderContentWrapper={renderContentWrapper}
-        splitViewClassName={splitViewClassName}
         topContent={
           <>
             {(commonAction === CommonAction.NewDiscussion ||
@@ -306,6 +305,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         getLastMessage={getLastMessage}
         sharedFeedItemId={sharedFeedItemId}
         onActiveItemDataChange={onActiveItemDataChange}
+        outerStyles={feedLayoutOuterStyles}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

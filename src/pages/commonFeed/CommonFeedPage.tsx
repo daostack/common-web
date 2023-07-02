@@ -54,8 +54,11 @@ const CommonFeedPage: FC = () => {
     <MainRoutesProvider>
       <BaseCommonFeedPage
         renderContentWrapper={renderContentWrapper}
-        splitViewClassName={styles.splitView}
         onActiveItemDataChange={onActiveItemDataChange}
+        feedLayoutOuterStyles={{
+          splitView: styles.splitView,
+          desktopChat: styles.desktopChat,
+        }}
       />
     </MainRoutesProvider>
   );

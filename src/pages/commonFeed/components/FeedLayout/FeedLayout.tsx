@@ -66,6 +66,11 @@ import {
 } from "./utils";
 import styles from "./FeedLayout.module.scss";
 
+export interface FeedLayoutOuterStyles {
+  splitView?: string;
+  desktopChat?: string;
+}
+
 interface FeedLayoutProps {
   className?: string;
   renderContentWrapper: (
@@ -73,7 +78,6 @@ interface FeedLayoutProps {
     wrapperStyles?: CSSProperties,
   ) => ReactNode;
   topContent?: ReactNode;
-  splitViewClassName?: string;
   common?: Common;
   governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
@@ -95,6 +99,7 @@ interface FeedLayoutProps {
     feedItem: FeedLayoutItem,
     becameEmpty: boolean,
   ) => void;
+  outerStyles?: FeedLayoutOuterStyles;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -105,7 +110,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     className,
     renderContentWrapper,
     topContent,
-    splitViewClassName,
     common: outerCommon,
     governance: outerGovernance,
     commonMember: outerCommonMember,
@@ -124,6 +128,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onActiveItemChange,
     onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
+    outerStyles,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -414,7 +419,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             {!isTabletView &&
               (chatItem ? (
                 <DesktopChat
-                  className={styles.desktopChat}
+                  className={classNames(
+                    styles.desktopChat,
+                    outerStyles?.desktopChat,
+                  )}
                   chatItem={chatItem}
                   commonId={selectedItemCommonData?.id || ""}
                   governanceCircles={governance?.circles}
@@ -467,7 +475,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     <>{contentEl}</>
   ) : (
     <SplitView
-      className={splitViewClassName}
+      className={outerStyles?.splitView}
       size={chatWidth}
       minSize={MIN_CHAT_WIDTH}
       maxSize={maxChatSize}
