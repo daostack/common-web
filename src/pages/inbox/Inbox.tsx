@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect } from "react";
+import React, { CSSProperties, FC, ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useActiveItemDataChange } from "@/pages/commonFeed/hooks";
 import { MainRoutesProvider } from "@/shared/contexts";
@@ -11,8 +11,14 @@ const InboxPage: FC = () => {
   const dispatch = useDispatch();
   const onActiveItemDataChange = useActiveItemDataChange();
 
-  const renderContentWrapper = (children: ReactNode): ReactNode => (
-    <MultipleSpacesLayoutPageContent headerContent={<HeaderContent />}>
+  const renderContentWrapper = (
+    children: ReactNode,
+    wrapperStyles?: CSSProperties,
+  ): ReactNode => (
+    <MultipleSpacesLayoutPageContent
+      headerContent={<HeaderContent />}
+      styles={wrapperStyles}
+    >
       {children}
     </MultipleSpacesLayoutPageContent>
   );
