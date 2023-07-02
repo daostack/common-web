@@ -59,6 +59,9 @@ const CommonFeedPage: FC = () => {
           splitView: styles.splitView,
           desktopChat: styles.desktopChat,
         }}
+        feedLayoutSettings={{
+          withDesktopChatTitle: false,
+        }}
       />
     </MainRoutesProvider>
   );

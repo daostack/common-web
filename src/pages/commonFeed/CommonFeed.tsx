@@ -36,7 +36,11 @@ import {
   NewDiscussionCreation,
   NewProposalCreation,
 } from "../common/components/CommonTabPanels/components/FeedTab/components";
-import { FeedLayout, FeedLayoutOuterStyles } from "./components";
+import {
+  FeedLayout,
+  FeedLayoutOuterStyles,
+  FeedLayoutSettings,
+} from "./components";
 import { CommonData, useCommonData, useGlobalCommonData } from "./hooks";
 import { getLastMessage } from "./utils";
 import styles from "./CommonFeed.module.scss";
@@ -53,6 +57,7 @@ export interface CommonFeedProps {
   commonId: string;
   renderContentWrapper: RenderCommonFeedContentWrapper;
   feedLayoutOuterStyles?: FeedLayoutOuterStyles;
+  feedLayoutSettings?: FeedLayoutSettings;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
 }
 
@@ -61,6 +66,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     commonId,
     renderContentWrapper: outerContentWrapperRenderer,
     feedLayoutOuterStyles,
+    feedLayoutSettings,
     onActiveItemDataChange,
   } = props;
   const queryParams = useQueryParams();
@@ -306,6 +312,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         sharedFeedItemId={sharedFeedItemId}
         onActiveItemDataChange={onActiveItemDataChange}
         outerStyles={feedLayoutOuterStyles}
+        settings={feedLayoutSettings}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

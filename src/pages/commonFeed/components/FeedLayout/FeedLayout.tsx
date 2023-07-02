@@ -71,6 +71,10 @@ export interface FeedLayoutOuterStyles {
   desktopChat?: string;
 }
 
+export interface FeedLayoutSettings {
+  withDesktopChatTitle?: boolean;
+}
+
 interface FeedLayoutProps {
   className?: string;
   renderContentWrapper: (
@@ -100,6 +104,7 @@ interface FeedLayoutProps {
     becameEmpty: boolean,
   ) => void;
   outerStyles?: FeedLayoutOuterStyles;
+  settings?: FeedLayoutSettings;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -129,6 +134,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
     outerStyles,
+    settings,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -427,6 +433,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   commonId={selectedItemCommonData?.id || ""}
                   governanceCircles={governance?.circles}
                   commonMember={commonMember}
+                  withTitle={settings?.withDesktopChatTitle}
                   titleRightContent={followFeedItemEl}
                   onMessagesAmountChange={handleMessagesAmountChange}
                 />
