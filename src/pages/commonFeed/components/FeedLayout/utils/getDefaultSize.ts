@@ -1,4 +1,4 @@
-import { MIN_CHAT_WIDTH } from "../constants";
+import { MIN_CHAT_WIDTH } from "../../../constants";
 import { getSavedChatSize } from "./chatSize";
 
 export const getDefaultSize = (

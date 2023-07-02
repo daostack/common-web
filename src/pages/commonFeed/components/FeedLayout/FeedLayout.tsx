@@ -49,6 +49,7 @@ import {
 } from "@/shared/models";
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import { selectRecentStreamId } from "@/store/states";
+import { MIN_CHAT_WIDTH } from "../../constants";
 import {
   DesktopChat,
   DesktopChatPlaceholder,
@@ -57,7 +58,6 @@ import {
   MobileChat,
   SplitView,
 } from "./components";
-import { MIN_CHAT_WIDTH } from "./constants";
 import {
   getDefaultSize,
   getItemCommonData,
@@ -74,6 +74,7 @@ export interface FeedLayoutOuterStyles {
 export interface FeedLayoutSettings {
   withDesktopChatTitle?: boolean;
   sidenavWidth?: number;
+  getSplitViewMaxSize?: (width: number) => number;
 }
 
 interface FeedLayoutProps {
@@ -157,7 +158,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   });
   const governance = outerGovernance || fetchedGovernance;
   const commonMember = outerCommonMember || fetchedCommonMember;
-  const maxChatSize = getSplitViewMaxSize(windowWidth);
+  const maxChatSize =
+    settings?.getSplitViewMaxSize?.(windowWidth) ??
+    getSplitViewMaxSize(windowWidth);
   const [realChatWidth, setRealChatWidth] = useState(() =>
     getDefaultSize(windowWidth, maxChatSize, settings?.sidenavWidth),
   );

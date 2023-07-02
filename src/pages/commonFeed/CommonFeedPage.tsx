@@ -14,6 +14,7 @@ import {
   FeedLayoutSettings,
   HeaderContent,
 } from "./components";
+import { MIN_CHAT_WIDTH } from "./constants";
 import { useActiveItemDataChange } from "./hooks";
 import styles from "./CommonFeedPage.module.scss";
 
@@ -25,6 +26,8 @@ export const FEED_LAYOUT_OUTER_STYLES: FeedLayoutOuterStyles = {
 export const FEED_LAYOUT_SETTINGS: FeedLayoutSettings = {
   withDesktopChatTitle: false,
   sidenavWidth: 0,
+  getSplitViewMaxSize: (width) =>
+    width < 1100 ? MIN_CHAT_WIDTH : Math.floor(width * 0.6),
 };
 
 const renderContentWrapper: RenderCommonFeedContentWrapper = ({
