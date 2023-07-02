@@ -50,7 +50,7 @@ const stage: Configuration = {
   env: Environment.Stage,
   firebase: {
     apiKey: "AIzaSyClh8UZh-PDyVgwPrHZwURoA4HWuiXUbR8",
-    authDomain: "common-staging-50741.firebaseapp.com",
+    authDomain: "auth-staging.common.io",
     databaseURL: "https://common-staging-50741.firebaseio.com",
     projectId: "common-staging-50741",
     storageBucket: "common-staging-50741.appspot.com",
