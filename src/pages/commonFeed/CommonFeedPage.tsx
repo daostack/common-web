@@ -9,9 +9,23 @@ import BaseCommonFeedPage, {
   CommonFeedPageRouterParams,
 } from "./BaseCommonFeedPage";
 import { RenderCommonFeedContentWrapper } from "./CommonFeed";
-import { HeaderContent } from "./components";
+import {
+  FeedLayoutOuterStyles,
+  FeedLayoutSettings,
+  HeaderContent,
+} from "./components";
 import { useActiveItemDataChange } from "./hooks";
 import styles from "./CommonFeedPage.module.scss";
+
+export const FEED_LAYOUT_OUTER_STYLES: FeedLayoutOuterStyles = {
+  splitView: styles.splitView,
+  desktopChat: styles.desktopChat,
+};
+
+export const FEED_LAYOUT_SETTINGS: FeedLayoutSettings = {
+  withDesktopChatTitle: false,
+  sidenavWidth: 0,
+};
 
 const renderContentWrapper: RenderCommonFeedContentWrapper = ({
   children,
@@ -55,14 +69,8 @@ const CommonFeedPage: FC = () => {
       <BaseCommonFeedPage
         renderContentWrapper={renderContentWrapper}
         onActiveItemDataChange={onActiveItemDataChange}
-        feedLayoutOuterStyles={{
-          splitView: styles.splitView,
-          desktopChat: styles.desktopChat,
-        }}
-        feedLayoutSettings={{
-          withDesktopChatTitle: false,
-          sidenavWidth: 0,
-        }}
+        feedLayoutOuterStyles={FEED_LAYOUT_OUTER_STYLES}
+        feedLayoutSettings={FEED_LAYOUT_SETTINGS}
       />
     </MainRoutesProvider>
   );
