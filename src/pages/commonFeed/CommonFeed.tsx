@@ -52,6 +52,7 @@ export type RenderCommonFeedContentWrapper = (data: {
 export interface CommonFeedProps {
   commonId: string;
   renderContentWrapper: RenderCommonFeedContentWrapper;
+  splitViewClassName?: string;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
 }
 
@@ -59,6 +60,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const {
     commonId,
     renderContentWrapper: outerContentWrapperRenderer,
+    splitViewClassName,
     onActiveItemDataChange,
   } = props;
   const queryParams = useQueryParams();
@@ -266,6 +268,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         ref={setFeedLayoutRef}
         className={styles.feedLayout}
         renderContentWrapper={renderContentWrapper}
+        splitViewClassName={splitViewClassName}
         topContent={
           <>
             {(commonAction === CommonAction.NewDiscussion ||

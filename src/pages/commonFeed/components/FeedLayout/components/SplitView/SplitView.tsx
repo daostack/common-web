@@ -3,6 +3,7 @@ import SplitPane from "react-split-pane";
 import styles from "./SplitView.module.scss";
 
 interface SplitViewProps {
+  className?: string;
   size: number;
   minSize: number;
   maxSize: number;
@@ -11,10 +12,12 @@ interface SplitViewProps {
 }
 
 const SplitView: FC<SplitViewProps> = (props) => {
-  const { size, minSize, maxSize, defaultSize, onChange, children } = props;
+  const { className, size, minSize, maxSize, defaultSize, onChange, children } =
+    props;
 
   return (
     <SplitPane
+      className={className}
       split="vertical"
       primary="second"
       size={size}

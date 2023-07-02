@@ -1,2 +1,7 @@
 @import "../../constants";
 @import "../../styles/sizes";
+@import "../../shared/layouts/MultipleSpacesLayout/styles";
+
+.splitView {
+  padding-top: calc(var(--header-h) + #{$page-content-header-height});
+}

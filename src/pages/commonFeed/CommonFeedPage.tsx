@@ -11,6 +11,7 @@ import BaseCommonFeedPage, {
 import { RenderCommonFeedContentWrapper } from "./CommonFeed";
 import { HeaderContent } from "./components";
 import { useActiveItemDataChange } from "./hooks";
+import styles from "./CommonFeedPage.module.scss";
 
 const renderContentWrapper: RenderCommonFeedContentWrapper = ({
   children,
@@ -53,6 +54,7 @@ const CommonFeedPage: FC = () => {
     <MainRoutesProvider>
       <BaseCommonFeedPage
         renderContentWrapper={renderContentWrapper}
+        splitViewClassName={styles.splitView}
         onActiveItemDataChange={onActiveItemDataChange}
       />
     </MainRoutesProvider>

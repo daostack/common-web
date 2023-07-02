@@ -73,6 +73,7 @@ interface FeedLayoutProps {
     wrapperStyles?: CSSProperties,
   ) => ReactNode;
   topContent?: ReactNode;
+  splitViewClassName?: string;
   common?: Common;
   governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
@@ -104,6 +105,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     className,
     renderContentWrapper,
     topContent,
+    splitViewClassName,
     common: outerCommon,
     governance: outerGovernance,
     commonMember: outerCommonMember,
@@ -465,6 +467,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     <>{contentEl}</>
   ) : (
     <SplitView
+      className={splitViewClassName}
       size={chatWidth}
       minSize={MIN_CHAT_WIDTH}
       maxSize={maxChatSize}
