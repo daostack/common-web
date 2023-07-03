@@ -2,14 +2,62 @@ import React from "react";
 import classNames from "classnames";
 import { Descendant, Element } from "slate";
 import { UserService } from "@/services";
+import { useModal } from "@/shared/hooks";
 import { User } from "@/shared/models";
 import {
   getMentionTags,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
 import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
+import { MentionElement } from "@/shared/ui-kit/TextEditor/types";
 import { getUserName } from "@/shared/utils";
+import { UserInfoPopup } from "../../UserInfoPopup";
 import styles from "./ChatMessage.module.scss";
+
+interface UserMention {
+  users: User[];
+  descendant: MentionElement;
+  mentionTextClassName?: string;
+  commonId?: string;
+}
+
+const UserMention = ({
+  users,
+  descendant,
+  mentionTextClassName,
+  commonId,
+}: UserMention) => {
+  const {
+    isShowing: isShowingUserProfile,
+    onClose: onCloseUserProfile,
+    onOpen: onOpenUserProfile,
+  } = useModal(false);
+
+  const user = users.find(({ uid }) => uid === descendant.userId);
+  const withSpace =
+    descendant.displayName[descendant.displayName.length - 1] === " ";
+  const userName = user
+    ? `${getUserName(user)}${withSpace ? " " : ""}`
+    : descendant.displayName;
+
+  return (
+    <>
+      <span
+        className={classNames(styles.mentionText, mentionTextClassName)}
+        onClick={onOpenUserProfile}
+      >
+        @{userName}
+      </span>
+      <UserInfoPopup
+        avatar={user?.photoURL}
+        isShowing={isShowingUserProfile}
+        onClose={onCloseUserProfile}
+        commonId={commonId}
+        userId={user?.uid}
+      />
+    </>
+  );
+};
 
 type Text = string | JSX.Element;
 
@@ -17,6 +65,7 @@ const getTextFromDescendant = (
   descendant: Descendant,
   users: User[],
   mentionTextClassName?: string,
+  commonId?: string,
 ): Text => {
   if (!Element.isElement(descendant)) {
     return descendant.text || "";
@@ -29,24 +78,25 @@ const getTextFromDescendant = (
         <span>
           {descendant.children.map((item, index) => (
             <React.Fragment key={index}>
-              {getTextFromDescendant(item, users, mentionTextClassName)}
+              {getTextFromDescendant(
+                item,
+                users,
+                mentionTextClassName,
+                commonId,
+              )}
             </React.Fragment>
           ))}
           <br />
         </span>
       );
     case ElementType.Mention:
-      const user = users.find(({ uid }) => uid === descendant.userId);
-      const withSpace =
-        descendant.displayName[descendant.displayName.length - 1] === " ";
-      const userName = user
-        ? `${getUserName(user)}${withSpace ? " " : ""}`
-        : descendant.displayName;
-
       return (
-        <span className={classNames(styles.mentionText, mentionTextClassName)}>
-          @{userName}
-        </span>
+        <UserMention
+          descendant={descendant}
+          users={users}
+          mentionTextClassName={mentionTextClassName}
+          commonId={commonId}
+        />
       );
     default:
       return descendant.text || "";
@@ -57,10 +107,12 @@ export const getTextFromTextEditorString = async ({
   textEditorString,
   users,
   mentionTextClassName,
+  commonId,
 }: {
   textEditorString: string;
   users: User[];
   mentionTextClassName?: string;
+  commonId?: string;
 }): Promise<Text[]> => {
   const textEditorValue = parseStringToTextEditorValue(textEditorString);
   const mentionTags = getMentionTags(textEditorValue);
@@ -84,7 +136,12 @@ export const getTextFromTextEditorString = async ({
     (acc, item, index) => [
       ...acc,
       <React.Fragment key={index}>
-        {getTextFromDescendant(item, filteredUsers, mentionTextClassName)}
+        {getTextFromDescendant(
+          item,
+          filteredUsers,
+          mentionTextClassName,
+          commonId,
+        )}
       </React.Fragment>,
     ],
     [],

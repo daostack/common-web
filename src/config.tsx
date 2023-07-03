@@ -33,7 +33,7 @@ const dev: Configuration = {
   env: Environment.Dev,
   firebase: {
     apiKey: "AIzaSyACs4Fof0wNmAvknR_ykBMD7SxwdxFzKKk",
-    authDomain: "common-dev-dea4e.firebaseapp.com",
+    authDomain: "auth-dev.common.io",
     databaseURL: "https://common-dev-dea4e.firebaseio.com",
     projectId: "common-dev-dea4e",
     storageBucket: "common-dev-dea4e.appspot.com",
@@ -50,7 +50,7 @@ const stage: Configuration = {
   env: Environment.Stage,
   firebase: {
     apiKey: "AIzaSyClh8UZh-PDyVgwPrHZwURoA4HWuiXUbR8",
-    authDomain: "common-staging-50741.firebaseapp.com",
+    authDomain: "auth-staging.common.io",
     databaseURL: "https://common-staging-50741.firebaseio.com",
     projectId: "common-staging-50741",
     storageBucket: "common-staging-50741.appspot.com",
@@ -68,7 +68,7 @@ const production: Configuration = {
   env: Environment.Production,
   firebase: {
     apiKey: "AIzaSyAml-zMhoG_amLvM8mTxrydDOYXTGuubsA",
-    authDomain: "common-daostack.firebaseapp.com",
+    authDomain: "auth.common.io",
     databaseURL: "https://common-daostack.firebaseio.com",
     projectId: "common-daostack",
     storageBucket: "common-daostack.appspot.com",

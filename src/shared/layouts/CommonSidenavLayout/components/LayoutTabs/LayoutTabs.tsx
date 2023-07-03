@@ -8,11 +8,8 @@ import {
 } from "@/pages/Auth/store/selectors";
 import { Tab, Tabs } from "@/shared/components";
 import { Avatar2Icon, InboxIcon, Hamburger2Icon } from "@/shared/icons";
-import {
-  getInboxPagePath,
-  getProfilePagePath,
-  openSidenav,
-} from "@/shared/utils";
+import { getInboxPagePath, getProfilePagePath } from "@/shared/utils";
+import { openSidenav } from "@/shared/utils/openSidenav";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
 import styles from "./LayoutTabs.module.scss";
