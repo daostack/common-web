@@ -18,10 +18,7 @@ export const removeTextEditorEmptyEndLinesValues = (
       const firstChild = element.children?.[0];
       const secondChild = element.children?.[1];
 
-      if (Element.isElementType(secondChild, ElementType.Mention)) {
-        isEndOfTextIndex = index;
-        return false;
-      } else if (firstChild?.text !== "") {
+      if (firstChild?.text !== "" || Element.isElementType(secondChild, ElementType.Mention)) {
         isEndOfTextIndex = index;
         return true;
       }
