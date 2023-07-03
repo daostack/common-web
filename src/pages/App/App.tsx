@@ -13,6 +13,7 @@ import { changeScreenSize } from "@/shared/store/actions";
 import { selectTutorialModalState } from "@/shared/store/selectors";
 import {
   TextDirectionHandler,
+  ThemeHandler,
   UserNotificationsAmountHandler,
   WebViewLoginHandler,
 } from "./handlers";
@@ -34,6 +35,7 @@ const App = () => {
       <BackgroundNotificationModal />
       <TutorialModal isShowing={tutorialModalState.isShowing} />
       <TextDirectionHandler />
+      <ThemeHandler />
       <UserNotificationsAmountHandler />
       <WebViewLoginHandler />
       <LoginContainer />
