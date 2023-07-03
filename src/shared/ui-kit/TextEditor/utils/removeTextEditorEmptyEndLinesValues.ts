@@ -7,10 +7,10 @@ export const removeTextEditorEmptyEndLinesValues = (
 ): TextEditorValue => {
   const editorValue = [...value];
 
-  let isEndOfTextIndex = -1;
+  let endOfTextIndex = -1;
   const updatedValue = editorValue.reverse().filter((element, index) => {
 
-    if(isEndOfTextIndex >= 0) {
+    if(endOfTextIndex >= 0) {
       return true;
     }
 
@@ -19,13 +19,13 @@ export const removeTextEditorEmptyEndLinesValues = (
       const secondChild = element.children?.[1];
 
       if (firstChild?.text !== "" || Element.isElementType(secondChild, ElementType.Mention)) {
-        isEndOfTextIndex = index;
+        endOfTextIndex = index;
         return true;
       }
 
       return false;
     } else {
-      isEndOfTextIndex = index;
+      endOfTextIndex = index;
     }
   })
 
