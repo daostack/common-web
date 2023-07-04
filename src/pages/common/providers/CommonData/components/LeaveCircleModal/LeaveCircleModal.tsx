@@ -81,7 +81,7 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
             </Button>
             <Button
               className={`${styles.button} ${styles.confirmButton}`}
-              variant={ButtonVariant.PrimaryPurple}
+              variant={ButtonVariant.PrimaryPink}
               size={ButtonSize.Medium}
               onClick={handleLeave}
               disabled={isLeaving}

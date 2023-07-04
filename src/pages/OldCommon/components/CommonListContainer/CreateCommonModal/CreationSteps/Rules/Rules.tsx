@@ -2,12 +2,13 @@ import React, { useCallback, useRef, ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-import { Button, Separator } from "@/shared/components";
+import { Separator } from "@/shared/components";
 import { Form, RulesArray } from "@/shared/components/Form/Formik";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { BaseRule } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { commonTypeText } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
@@ -100,9 +101,9 @@ export default function Rules({
               <ModalFooter sticky>
                 <div className="create-common-rules__modal-footer">
                   <Button
+                    variant={ButtonVariant.PrimaryPink}
                     key="rules-continue"
                     onClick={handleContinueClick}
-                    shouldUseFullWidth={isMobileView}
                     disabled={!isValid}
                   >
                     {`Continue to ${
