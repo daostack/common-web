@@ -1,7 +1,7 @@
 @import "../../../../../constants";
 
 .container {
-  --upload-trigger-color: #{$c-neutrals-200};
+  --upload-trigger-color: var(--gentle-fill);
   --upload-trigger-border-color: #{$c-neutrals-100};
   --upload-trigger-border: 0.0625rem solid var(--upload-trigger-border-color);
 
@@ -22,7 +22,7 @@
   box-sizing: border-box;
 
   &:hover {
-    --upload-trigger-color: #{$c-primary-200};
+    --upload-trigger-color: var(--hover-fill);
     --upload-trigger-border-color: #{$c-primary-200};
   }
 

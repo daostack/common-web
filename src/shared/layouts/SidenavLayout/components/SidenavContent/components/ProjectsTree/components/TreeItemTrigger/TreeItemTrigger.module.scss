@@ -28,7 +28,7 @@
   --item-text-color: #{$white};
 
   &:hover {
-    --bg-color: #{$c-primary-200}99;
+    --bg-color: var(--hover-fill);
   }
 }
 .itemWithoutMembership {

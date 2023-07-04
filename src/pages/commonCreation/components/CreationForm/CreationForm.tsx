@@ -10,7 +10,7 @@ import { Formik, FormikValues } from "formik";
 import { FormikProps } from "formik/dist/types";
 import { ErrorText } from "@/shared/components/Form";
 import { Form } from "@/shared/components/Form/Formik";
-import { Button } from "@/shared/ui-kit";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Item } from "./components";
 import { CreationFormItem } from "./types";
 import { generateValidationSchema } from "./utils";
@@ -72,6 +72,7 @@ const CreationForm = <T extends FormikValues>(
           ))}
         </div>
         <Button
+          variant={ButtonVariant.PrimaryPink}
           className={styles.submitButton}
           type="submit"
           disabled={disabled}

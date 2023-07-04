@@ -84,6 +84,7 @@ const ProposalCreationForm: FC<ProposalCreationFormProps> = (props) => {
                 </Button>
               )}
               <Button
+                variant={ButtonVariant.PrimaryPink}
                 className={styles.button}
                 type="submit"
                 disabled={disabled}

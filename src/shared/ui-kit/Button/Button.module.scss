@@ -81,8 +81,8 @@
 }
 
 .buttonPrimaryPinkVariant {
-  --btn-color: #{$c-shades-white};
-  --btn-bg-color: #{$c-pink-primary};
+  --btn-color: var(--white-text);
+  --btn-bg-color: var(--primary-fill);
   --btn-border-color: none;
   --btn-border: 0;
 

@@ -84,6 +84,7 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
                 </Button>
               )}
               <Button
+                variant={ButtonVariant.PrimaryPink}
                 className={styles.button}
                 type="submit"
                 disabled={disabled}

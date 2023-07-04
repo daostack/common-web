@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import loaderDefault from "@/shared/assets/icons/loader-pink.svg";
 import loaderWhite from "@/shared/assets/icons/loader-white.svg";
-import loaderDefault from "@/shared/assets/icons/loader.svg";
 import { Portal } from "../Portal";
 import styles from "./Loader.module.scss";
 
