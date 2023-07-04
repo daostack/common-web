@@ -46,16 +46,10 @@ $phone-breakpoint: 415px;
 }
 
 .cancelButton {
-  border: 0.0625rem $light-gray-2 solid;
-  color: $light-gray-2;
-  background-color: $light-gray-1;
   margin-right: 0.5rem;
 }
 
 .saveButton {
-  border: 0.0625rem $purple-2 solid;
-  color: $white;
-  background-color: $purple-2;
   margin-left: 0.5rem;
   width: 3.6875rem;
 }

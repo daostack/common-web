@@ -76,7 +76,7 @@ const DiscussionCreationForm: FC<DiscussionCreationFormProps> = (props) => {
               {onCancel && (
                 <Button
                   className={styles.button}
-                  variant={ButtonVariant.PrimaryGray}
+                  variant={ButtonVariant.OutlineDarkPink}
                   onClick={onCancel}
                   disabled={disabled}
                 >

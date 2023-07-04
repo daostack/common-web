@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
-import { Button, ButtonVariant } from "@/shared/components";
 import { Checkbox, ErrorText } from "@/shared/components/Form";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
 interface MainStepProps {
@@ -56,17 +56,16 @@ const MainStep: FC<MainStepProps> = (props) => {
         <Button
           className="leave-common-main-step__button"
           onClick={onCancel}
-          variant={ButtonVariant.Secondary}
+          variant={ButtonVariant.OutlineDarkPink}
           disabled={isLoading}
-          shouldUseFullWidth
         >
           Cancel
         </Button>
         <Button
+          variant={ButtonVariant.PrimaryPink}
           className="leave-common-main-step__button"
           onClick={onLeave}
           disabled={isLeaveButtonDisabled}
-          shouldUseFullWidth
         >
           Leave {commonWord}
         </Button>

@@ -17,12 +17,13 @@
 
   .delete-prompt__buttons-wrapper {
     display: flex;
-    margin-top: 3.5rem;
+    margin-top: 2rem;
 
     button {
       font-family: PoppinsSans, sans-serif;
       font-weight: 100;
       min-width: 9.5rem;
+      margin: 0 0.5rem;
 
       &.delete {
         background-color: $red;
@@ -32,8 +33,12 @@
     }
   }
 
+  .delete-prompt__title {
+    margin: 0.5rem 1rem;
+  }
+
   .delete-prompt__description {
-    margin-top: 1rem;
+    margin: 0.5rem 1rem;
   }
 }
 
@@ -50,8 +55,15 @@
     }
 
     .delete-prompt__buttons-wrapper {
-      margin-top: 3rem;
-      margin-bottom: 2rem;
+      flex-direction: column;
+      width: 100%;
+      padding: 1rem;
+      box-sizing: border-box;
+      margin-top: unset;
+      button {
+        margin: 0.5rem 0;
+        width: 100%;
+      }
     }
   }
 }

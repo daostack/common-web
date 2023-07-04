@@ -51,7 +51,7 @@ export default function Profile() {
     <div className="profile-wrapper__buttons-wrapper">
       <Button
         className="profile-wrapper__button"
-        variant={ButtonVariant.PrimaryGray}
+        variant={ButtonVariant.OutlineDarkPink}
         onClick={handleCancelClick}
         disabled={isSubmitting}
       >
