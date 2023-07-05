@@ -1,18 +1,34 @@
 import { CommonTab } from "@/pages/common";
 import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
 
-export type GetCommonPagePath = (commonId: string, tab?: CommonTab) => string;
+export type GetCommonPagePath = (
+  commonId: string,
+  queryParamKey?: {
+    tab?: CommonTab;
+    item?: string;
+  },
+) => string;
 export type GetCommonPageAboutTabPath = (commonId: string) => string;
 export type GetGeneralPagePath = () => ROUTE_PATHS;
 
 export const buildCommonPagePath = (
   baseCommonPagePath: string,
   commonId: string,
-  tab?: CommonTab,
+  queryParamKey?: {
+    tab?: CommonTab;
+    item?: string;
+  },
 ): string => {
   const path = baseCommonPagePath.replace(":id", commonId);
 
-  return `${path}${tab ? `?${QueryParamKey.Tab}=${tab}` : ""}`;
+  if (queryParamKey?.item) {
+    return `${path}?${QueryParamKey.Item}=${queryParamKey.item}`;
+  }
+  if (queryParamKey?.tab) {
+    return `${path}?${QueryParamKey.Tab}=${queryParamKey.tab}`;
+  }
+
+  return path;
 };
 
 export const getCommonPagePath: GetCommonPagePath = (...args) =>
