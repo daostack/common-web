@@ -1,7 +1,13 @@
 import { CommonTab } from "@/pages/common";
 import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
 
-export type GetCommonPagePath = (commonId: string, tab?: CommonTab) => string;
+export type GetCommonPagePath = (
+  commonId: string,
+  queryParamKey?: {
+    tab?: CommonTab;
+    item?: string;
+  },
+) => string;
 export type GetCommonPageAboutTabPath = (commonId: string) => string;
 export type GetGeneralPagePath = () => ROUTE_PATHS;
 
