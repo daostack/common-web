@@ -179,6 +179,8 @@ export interface CommonLink {
   value: string;
 
   size?: number;
+
+  name?: string;
 }
 
 export interface CommonPayment {

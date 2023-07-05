@@ -308,6 +308,7 @@ export default function ChatComponent({
         info: file,
         src: URL.createObjectURL(file),
         size: file.size,
+        name: file.name,
       };
     });
     dispatch(
@@ -385,36 +386,38 @@ export default function ChatComponent({
           });
         });
 
-        pendingMessages.push({
-          id: pendingMessageId,
-          owner: user,
-          ownerAvatar: (user.photo || user.photoURL) as string,
-          ownerType: DiscussionMessageOwnerType.User,
-          ownerId: userId as string,
-          ownerName: getUserName(user),
-          text: JSON.stringify(message),
-          commonId,
-          discussionId,
-          createdAt: firebaseDate,
-          updatedAt: firebaseDate,
-          parentId: discussionMessageReply?.id,
-          parentMessage: discussionMessageReply?.id
-            ? {
-                id: discussionMessageReply?.id,
-                ownerName: discussionMessageReply.ownerName,
-                ...(checkIsUserDiscussionMessage(discussionMessageReply) && {
-                  ownerId: discussionMessageReply.ownerId,
-                }),
-                text: discussionMessageReply.text,
-                files: discussionMessageReply.files,
-                images: discussionMessageReply.images,
-              }
-            : null,
-          images: imagesPreview?.map((file) =>
-            FileService.convertFileInfoToCommonLink(file),
-          ),
-          tags: mentionTags,
-        });
+        if (!isEmptyText || imagesPreview.length) {
+          pendingMessages.push({
+            id: pendingMessageId,
+            owner: user,
+            ownerAvatar: (user.photo || user.photoURL) as string,
+            ownerType: DiscussionMessageOwnerType.User,
+            ownerId: userId as string,
+            ownerName: getUserName(user),
+            text: JSON.stringify(message),
+            commonId,
+            discussionId,
+            createdAt: firebaseDate,
+            updatedAt: firebaseDate,
+            parentId: discussionMessageReply?.id,
+            parentMessage: discussionMessageReply?.id
+              ? {
+                  id: discussionMessageReply?.id,
+                  ownerName: discussionMessageReply.ownerName,
+                  ...(checkIsUserDiscussionMessage(discussionMessageReply) && {
+                    ownerId: discussionMessageReply.ownerId,
+                  }),
+                  text: discussionMessageReply.text,
+                  files: discussionMessageReply.files,
+                  images: discussionMessageReply.images,
+                }
+              : null,
+            images: imagesPreview?.map((file) =>
+              FileService.convertFileInfoToCommonLink(file),
+            ),
+            tags: mentionTags,
+          });
+        }
 
         setMessages((prev) => {
           if (isFilesMessageWithoutTextAndImages) {
