@@ -33,7 +33,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
         ))}
       {breadcrumbs.activeItem && (
         <>
-          {data.length > 0 && <Separator />}
+          {(breadcrumbs.areItemsLoading || data.length > 0) && <Separator />}
           <ActiveBreadcrumbsItem
             name={breadcrumbs.activeItem.name}
             image={breadcrumbs.activeItem.image}
