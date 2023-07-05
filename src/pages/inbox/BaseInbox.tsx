@@ -10,7 +10,11 @@ import React, {
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { FeedItemBaseContentProps } from "@/pages/common";
-import { FeedLayout } from "@/pages/commonFeed";
+import {
+  FeedLayout,
+  FeedLayoutOuterStyles,
+  FeedLayoutSettings,
+} from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useQueryParams } from "@/shared/hooks";
@@ -42,11 +46,18 @@ interface InboxPageProps {
     children: ReactNode,
     wrapperStyles?: CSSProperties,
   ) => ReactNode;
+  feedLayoutOuterStyles?: FeedLayoutOuterStyles;
+  feedLayoutSettings?: FeedLayoutSettings;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
 }
 
 const InboxPage: FC<InboxPageProps> = (props) => {
-  const { renderContentWrapper, onActiveItemDataChange } = props;
+  const {
+    renderContentWrapper,
+    feedLayoutOuterStyles,
+    feedLayoutSettings,
+    onActiveItemDataChange,
+  } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
@@ -239,6 +250,8 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         onActiveItemChange={handleActiveItemChange}
         onActiveItemDataChange={onActiveItemDataChange}
         onMessagesAmountEmptinessToggle={handleMessagesAmountEmptinessToggle}
+        outerStyles={feedLayoutOuterStyles}
+        settings={feedLayoutSettings}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

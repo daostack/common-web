@@ -3,12 +3,14 @@ import {
   GetCommonPageAboutTabPath,
   GetCommonPagePath,
   GetGeneralPagePath,
+  GetGeneralPageWithCommonIdPath,
 } from "@/shared/utils";
 
 interface Data {
   getCommonPagePath: GetCommonPagePath;
   getCommonPageAboutTabPath: GetCommonPageAboutTabPath;
   getInboxPagePath: GetGeneralPagePath;
+  getProjectCreationPagePath: GetGeneralPageWithCommonIdPath;
   getProfilePagePath: GetGeneralPagePath;
   getBillingPagePath: GetGeneralPagePath;
 }

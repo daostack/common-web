@@ -4,6 +4,7 @@ import {
   getCommonPagePath_v03,
   getInboxPagePath,
   getProfilePagePath,
+  getProjectCreationPagePath,
 } from "@/shared/utils";
 import { RoutesContext, RoutesContextValue } from "../routesContext";
 
@@ -14,6 +15,7 @@ export const RoutesV03Provider: FC = (props) => {
       getCommonPagePath: getCommonPagePath_v03,
       getCommonPageAboutTabPath: getCommonPagePath_v03,
       getInboxPagePath,
+      getProjectCreationPagePath,
       getProfilePagePath,
       getBillingPagePath,
     }),

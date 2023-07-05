@@ -10,6 +10,7 @@ export type GetCommonPagePath = (
 ) => string;
 export type GetCommonPageAboutTabPath = (commonId: string) => string;
 export type GetGeneralPagePath = () => ROUTE_PATHS;
+export type GetGeneralPageWithCommonIdPath = (commonId: string) => string;
 
 export const buildCommonPagePath = (
   baseCommonPagePath: string,
@@ -38,8 +39,9 @@ export const getCommonPageAboutTabPath: GetCommonPageAboutTabPath = (
   commonId,
 ) => ROUTE_PATHS.COMMON_ABOUT_TAB.replace(":id", commonId);
 
-export const getProjectCreationPagePath = (commonId: string): string =>
-  ROUTE_PATHS.PROJECT_CREATION.replace(":id", commonId);
+export const getProjectCreationPagePath: GetGeneralPageWithCommonIdPath = (
+  commonId,
+) => ROUTE_PATHS.PROJECT_CREATION.replace(":id", commonId);
 
 export const getCommonEditingPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_EDITING.replace(":id", commonId);
@@ -65,8 +67,9 @@ export const getCommonPageAboutTabPath_v04: GetCommonPageAboutTabPath = (
   commonId,
 ) => ROUTE_PATHS.V04_COMMON_ABOUT_TAB.replace(":id", commonId);
 
-export const getProjectCreationPagePath_v04 = (commonId: string): string =>
-  ROUTE_PATHS.V04_PROJECT_CREATION.replace(":id", commonId);
+export const getProjectCreationPagePath_v04: GetGeneralPageWithCommonIdPath = (
+  commonId,
+) => ROUTE_PATHS.V04_PROJECT_CREATION.replace(":id", commonId);
 
 export const getCommonEditingPagePath_v04 = (commonId: string): string =>
   ROUTE_PATHS.V04_COMMON_EDITING.replace(":id", commonId);

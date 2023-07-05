@@ -2,7 +2,8 @@
 @import "../../../styles/sizes";
 
 .container {
-  --main-mw: 100%;
+  --main-mw: calc(120rem + var(--sb-h-indent, 0));
+  --main-pl: calc(var(--sb-width) + var(--sb-h-indent, 0));
   --sb-max-width: unset;
   --sb-width: 0rem;
   --sb-content-max-width: 100%;
@@ -24,17 +25,12 @@
   box-sizing: border-box;
 
   @include tablet {
+    --main-mw: 100%;
+    --main-pl: unset;
     --sb-max-width: 100%;
     --sb-width: 100%;
     --sb-content-width: 100%;
     --layout-tabs-height: 4rem;
-  }
-}
-.containerWithSidenav {
-  --main-mw: calc(120rem + var(--sb-h-indent, 0));
-
-  @include tablet {
-    --main-mw: 100%;
   }
 }
 
@@ -57,6 +53,7 @@
 
   flex: 1;
   max-width: var(--main-mw);
+  padding-left: var(--main-pl);
   display: flex;
   flex-direction: column;
   background-color: var(--page-bg-color);

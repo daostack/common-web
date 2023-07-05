@@ -4,7 +4,7 @@ import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import { checkIsProject } from "@/shared/utils";
 import BaseCommonFeedPage from "./BaseCommonFeedPage";
 import { RenderCommonFeedContentWrapper } from "./CommonFeed";
-import { HeaderContent } from "./components";
+import HeaderContent_v04 from "./components/HeaderContent_v04/HeaderContent_v04";
 import styles from "./CommonFeedPage_v04.module.scss";
 
 const renderContentWrapper: RenderCommonFeedContentWrapper = ({
@@ -18,7 +18,7 @@ const renderContentWrapper: RenderCommonFeedContentWrapper = ({
     className={styles.layoutPageContent}
     headerClassName={styles.layoutHeader}
     headerContent={
-      <HeaderContent
+      <HeaderContent_v04
         commonId={commonData.common.id}
         commonName={commonData.common.name}
         commonImage={commonData.common.image}

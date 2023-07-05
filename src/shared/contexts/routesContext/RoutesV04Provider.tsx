@@ -5,6 +5,7 @@ import {
   getInboxPagePath_v04,
   getProfilePagePath_v04,
   getBillingPagePath_v04,
+  getProjectCreationPagePath_v04,
 } from "@/shared/utils";
 import { RoutesContext, RoutesContextValue } from "../routesContext";
 
@@ -15,6 +16,7 @@ export const RoutesV04Provider: FC = (props) => {
       getCommonPagePath: getCommonPagePath_v04,
       getCommonPageAboutTabPath: getCommonPageAboutTabPath_v04,
       getInboxPagePath: getInboxPagePath_v04,
+      getProjectCreationPagePath: getProjectCreationPagePath_v04,
       getProfilePagePath: getProfilePagePath_v04,
       getBillingPagePath: getBillingPagePath_v04,
     }),

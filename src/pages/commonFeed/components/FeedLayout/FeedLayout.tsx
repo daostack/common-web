@@ -49,6 +49,7 @@ import {
 } from "@/shared/models";
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import { selectRecentStreamId } from "@/store/states";
+import { MIN_CHAT_WIDTH } from "../../constants";
 import {
   DesktopChat,
   DesktopChatPlaceholder,
@@ -57,7 +58,6 @@ import {
   MobileChat,
   SplitView,
 } from "./components";
-import { MIN_CHAT_WIDTH } from "./constants";
 import {
   getDefaultSize,
   getItemCommonData,
@@ -65,6 +65,17 @@ import {
   saveChatSize,
 } from "./utils";
 import styles from "./FeedLayout.module.scss";
+
+export interface FeedLayoutOuterStyles {
+  splitView?: string;
+  desktopChat?: string;
+}
+
+export interface FeedLayoutSettings {
+  withDesktopChatTitle?: boolean;
+  sidenavWidth?: number;
+  getSplitViewMaxSize?: (width: number) => number;
+}
 
 interface FeedLayoutProps {
   className?: string;
@@ -94,6 +105,8 @@ interface FeedLayoutProps {
     feedItem: FeedLayoutItem,
     becameEmpty: boolean,
   ) => void;
+  outerStyles?: FeedLayoutOuterStyles;
+  settings?: FeedLayoutSettings;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -122,6 +135,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onActiveItemChange,
     onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
+    outerStyles,
+    settings,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -143,9 +158,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   });
   const governance = outerGovernance || fetchedGovernance;
   const commonMember = outerCommonMember || fetchedCommonMember;
-  const maxChatSize = getSplitViewMaxSize(windowWidth);
+  const maxChatSize =
+    settings?.getSplitViewMaxSize?.(windowWidth) ??
+    getSplitViewMaxSize(windowWidth);
   const [realChatWidth, setRealChatWidth] = useState(() =>
-    getDefaultSize(windowWidth, maxChatSize),
+    getDefaultSize(windowWidth, maxChatSize, settings?.sidenavWidth),
   );
   const chatWidth = Math.min(realChatWidth, maxChatSize);
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
@@ -412,11 +429,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             {!isTabletView &&
               (chatItem ? (
                 <DesktopChat
-                  className={styles.desktopChat}
+                  className={classNames(
+                    styles.desktopChat,
+                    outerStyles?.desktopChat,
+                  )}
                   chatItem={chatItem}
                   commonId={selectedItemCommonData?.id || ""}
                   governanceCircles={governance?.circles}
                   commonMember={commonMember}
+                  withTitle={settings?.withDesktopChatTitle}
                   titleRightContent={followFeedItemEl}
                   onMessagesAmountChange={handleMessagesAmountChange}
                 />
@@ -465,6 +486,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     <>{contentEl}</>
   ) : (
     <SplitView
+      className={outerStyles?.splitView}
       size={chatWidth}
       minSize={MIN_CHAT_WIDTH}
       maxSize={maxChatSize}

@@ -1,23 +1,24 @@
 @import "../../../../../constants";
 @import "../../../../../styles/sizes";
+@import "../../styles";
 
 .globalLoader {
   z-index: 10;
 }
 
 .container {
-  --page-content-header: 5rem;
+  --page-content-header: 0rem;
 
   flex: 1;
-  padding-top: calc(var(--header-h) + var(--page-content-header));
   display: flex;
   flex-direction: column;
 
   @include tablet {
-    --page-content-header: 0;
-
     border: 0;
   }
+}
+.containerWithHeader {
+  --page-content-header: #{$page-content-header-height};
 }
 
 .header {

@@ -1,43 +1,27 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { InboxIcon, RightArrowThinIcon } from "@/shared/icons";
-import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
-import { getPluralEnding } from "@/shared/utils";
-import { DirectMessageButton } from "../DirectMessageButton";
+import { InboxIcon } from "@/shared/icons";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
   className?: string;
-  streamsWithNotificationsAmount: number;
 }
 
 const HeaderContent: FC<HeaderContentProps> = (props) => {
-  const { className, streamsWithNotificationsAmount } = props;
+  const { className } = props;
   const isMobileVersion = useIsTabletView();
+
+  if (isMobileVersion) {
+    return null;
+  }
 
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.content}>
-        <TopNavigationOpenSidenavButton
-          className={styles.openSidenavButton}
-          iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
-        />
-        <div className={styles.infoContainer}>
-          <InboxIcon className={styles.inboxIcon} />
-          <div className={styles.infoWrapper}>
-            <h1 className={styles.title}>Inbox</h1>
-            <p className={styles.streamsWithNotificationsAmount}>
-              {streamsWithNotificationsAmount} updated stream
-              {getPluralEnding(streamsWithNotificationsAmount)}
-            </p>
-          </div>
-        </div>
+        <InboxIcon className={styles.inboxIcon} />
+        <h1 className={styles.title}>Inbox</h1>
       </div>
-      <DirectMessageButton
-        className={styles.directMessageButton}
-        isMobileVersion={isMobileVersion}
-      />
     </div>
   );
 };

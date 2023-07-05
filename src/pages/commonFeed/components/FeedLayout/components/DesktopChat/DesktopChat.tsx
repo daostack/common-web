@@ -20,6 +20,7 @@ interface ChatProps {
   commonId: string;
   governanceCircles?: Circles;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  withTitle?: boolean;
   titleRightContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
 }
@@ -31,6 +32,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
     commonId,
     governanceCircles,
     commonMember,
+    withTitle = true,
     titleRightContent,
     onMessagesAmountChange,
   } = props;
@@ -65,27 +67,29 @@ const DesktopChat: FC<ChatProps> = (props) => {
 
   return (
     <div className={classNames(styles.container, className)}>
-      <div className={styles.titleWrapper}>
-        {dmUser?.photoURL && (
-          <UserAvatar
-            className={styles.userAvatar}
-            photoURL={dmUser.photoURL}
-            nameForRandomAvatar={title}
-            userName={title}
-          />
-        )}
-        <p
-          className={classNames(styles.title, {
-            [styles.titleRTL]: isRTL(title),
-          })}
-          title={title}
-        >
-          {title}
-        </p>
-        {titleRightContent && (
-          <div className={styles.titleRightContent}>{titleRightContent}</div>
-        )}
-      </div>
+      {withTitle && (
+        <div className={styles.titleWrapper}>
+          {dmUser?.photoURL && (
+            <UserAvatar
+              className={styles.userAvatar}
+              photoURL={dmUser.photoURL}
+              nameForRandomAvatar={title}
+              userName={title}
+            />
+          )}
+          <p
+            className={classNames(styles.title, {
+              [styles.titleRTL]: isRTL(title),
+            })}
+            title={title}
+          >
+            {title}
+          </p>
+          {titleRightContent && (
+            <div className={styles.titleRightContent}>{titleRightContent}</div>
+          )}
+        </div>
+      )}
       <ChatComponent
         governanceCircles={governanceCircles}
         commonMember={commonMember}

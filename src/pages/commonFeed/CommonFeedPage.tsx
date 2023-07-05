@@ -9,7 +9,26 @@ import BaseCommonFeedPage, {
   CommonFeedPageRouterParams,
 } from "./BaseCommonFeedPage";
 import { RenderCommonFeedContentWrapper } from "./CommonFeed";
+import {
+  FeedLayoutOuterStyles,
+  FeedLayoutSettings,
+  HeaderContent,
+} from "./components";
+import { MIN_CHAT_WIDTH } from "./constants";
 import { useActiveItemDataChange } from "./hooks";
+import styles from "./CommonFeedPage.module.scss";
+
+export const FEED_LAYOUT_OUTER_STYLES: FeedLayoutOuterStyles = {
+  splitView: styles.splitView,
+  desktopChat: styles.desktopChat,
+};
+
+export const FEED_LAYOUT_SETTINGS: FeedLayoutSettings = {
+  withDesktopChatTitle: false,
+  sidenavWidth: 0,
+  getSplitViewMaxSize: (width) =>
+    width < 1100 ? MIN_CHAT_WIDTH : Math.floor(width * 0.6),
+};
 
 const renderContentWrapper: RenderCommonFeedContentWrapper = ({
   children,
@@ -18,10 +37,22 @@ const renderContentWrapper: RenderCommonFeedContentWrapper = ({
   commonMember,
   isGlobalDataFetched,
 }) => (
-  <MultipleSpacesLayoutPageContent headerContent={<div>Header</div>}>
+  <MultipleSpacesLayoutPageContent
+    headerContent={
+      <HeaderContent
+        common={commonData.common}
+        commonMembersAmount={commonData.commonMembersAmount}
+        commonMember={commonMember}
+        governance={commonData.governance}
+      />
+    }
+    isGlobalLoading={!isGlobalDataFetched}
+    styles={wrapperStyles}
+  >
     {children}
   </MultipleSpacesLayoutPageContent>
 );
+
 const CommonFeedPage: FC = () => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
   const dispatch = useDispatch();
@@ -41,6 +72,8 @@ const CommonFeedPage: FC = () => {
       <BaseCommonFeedPage
         renderContentWrapper={renderContentWrapper}
         onActiveItemDataChange={onActiveItemDataChange}
+        feedLayoutOuterStyles={FEED_LAYOUT_OUTER_STYLES}
+        feedLayoutSettings={FEED_LAYOUT_SETTINGS}
       />
     </MainRoutesProvider>
   );

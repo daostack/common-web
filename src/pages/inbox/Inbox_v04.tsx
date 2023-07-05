@@ -4,7 +4,7 @@ import { selectUserStreamsWithNotificationsAmount } from "@/pages/Auth/store/sel
 import { RoutesV04Provider } from "@/shared/contexts";
 import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import BaseInboxPage from "./BaseInbox";
-import { HeaderContent } from "./components";
+import { HeaderContent_v04 } from "./components";
 import styles from "./Inbox_v04.module.scss";
 
 const InboxPage_v04: FC = () => {
@@ -20,7 +20,7 @@ const InboxPage_v04: FC = () => {
       className={styles.layoutPageContent}
       headerClassName={styles.layoutHeader}
       headerContent={
-        <HeaderContent
+        <HeaderContent_v04
           streamsWithNotificationsAmount={
             userStreamsWithNotificationsAmount || 0
           }
