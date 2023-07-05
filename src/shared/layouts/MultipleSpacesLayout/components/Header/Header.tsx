@@ -11,12 +11,7 @@ import {
 import { Breadcrumbs, Navigation } from "./components";
 import styles from "./Header.module.scss";
 
-interface HeaderProps {
-  a?: string;
-}
-
-const Header: FC<HeaderProps> = (props) => {
-  const { a } = props;
+const Header: FC = () => {
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const userInfoContentStyles: ContentStyles = {

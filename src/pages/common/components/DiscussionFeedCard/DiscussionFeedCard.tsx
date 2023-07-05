@@ -10,6 +10,7 @@ import {
   useFeedItemUserMetadata,
   useUserById,
 } from "@/shared/hooks/useCases";
+import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Common,
   CommonFeed,
@@ -47,6 +48,7 @@ interface DiscussionFeedCardProps {
   isExpanded: boolean;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
+  onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
@@ -69,6 +71,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     isExpanded,
     getLastMessage,
     getNonAllowedItems,
+    onActiveItemDataChange,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -129,6 +132,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     !isFeedItemUserMetadataFetched ||
     !commonId ||
     !governanceCircles;
+  const cardTitle = discussion?.title;
 
   const handleOpenChat = useCallback(() => {
     if (discussion) {
@@ -195,6 +199,15 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     }
   }, [isDiscussionFetched, isFeedItemUserMetadataFetched]);
 
+  useEffect(() => {
+    if (isActive && cardTitle) {
+      onActiveItemDataChange?.({
+        itemId: item.id,
+        title: cardTitle,
+      });
+    }
+  }, [isActive, cardTitle]);
+
   const renderContent = (): ReactNode => {
     if (isLoading) {
       return null;
@@ -251,7 +264,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         isActive={isActive}
         isExpanded={isExpanded}
         onClick={handleOpenChat}
-        title={discussion?.title}
+        title={cardTitle}
         lastMessage={getLastMessage({
           commonFeedType: item.data.type,
           lastMessage: item.data.lastMessage,

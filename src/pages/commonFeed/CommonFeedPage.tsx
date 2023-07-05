@@ -9,7 +9,7 @@ import BaseCommonFeedPage, {
   CommonFeedPageRouterParams,
 } from "./BaseCommonFeedPage";
 import { RenderCommonFeedContentWrapper } from "./CommonFeed";
-import styles from "./CommonFeedPage.module.scss";
+import { useActiveItemDataChange } from "./hooks";
 
 const renderContentWrapper: RenderCommonFeedContentWrapper = ({
   children,
@@ -25,6 +25,7 @@ const renderContentWrapper: RenderCommonFeedContentWrapper = ({
 const CommonFeedPage: FC = () => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
   const dispatch = useDispatch();
+  const onActiveItemDataChange = useActiveItemDataChange();
 
   useEffect(() => {
     dispatch(
@@ -37,7 +38,10 @@ const CommonFeedPage: FC = () => {
 
   return (
     <MainRoutesProvider>
-      <BaseCommonFeedPage renderContentWrapper={renderContentWrapper} />
+      <BaseCommonFeedPage
+        renderContentWrapper={renderContentWrapper}
+        onActiveItemDataChange={onActiveItemDataChange}
+      />
     </MainRoutesProvider>
   );
 };

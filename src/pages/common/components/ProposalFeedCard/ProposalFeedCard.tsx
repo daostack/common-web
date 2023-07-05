@@ -10,6 +10,7 @@ import {
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
+import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Common,
   CommonFeed,
@@ -63,6 +64,7 @@ interface ProposalFeedCardProps {
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   isMobileVersion?: boolean;
+  onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -81,6 +83,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     getLastMessage,
     getNonAllowedItems,
     isMobileVersion,
+    onActiveItemDataChange,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -159,6 +162,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       share: () => onShareModalOpen(),
     },
   );
+  const cardTitle = discussion?.title;
 
   useEffect(() => {
     fetchFeedItemUser(item.userId);
@@ -199,6 +203,15 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       fetchProposalSpecificData(proposal, true);
     }
   }, [proposal?.id]);
+
+  useEffect(() => {
+    if (isActive && cardTitle) {
+      onActiveItemDataChange?.({
+        itemId: item.id,
+        title: cardTitle,
+      });
+    }
+  }, [isActive, cardTitle]);
 
   const handleOpenChat = useCallback(() => {
     if (discussion && proposal) {
@@ -331,7 +344,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         isActive={isActive}
         isExpanded={isExpanded}
         unreadMessages={feedItemUserMetadata?.count || 0}
-        title={discussion?.title}
+        title={cardTitle}
         lastMessage={getLastMessage({
           commonFeedType: item.data.type,
           lastMessage: item.data.lastMessage,

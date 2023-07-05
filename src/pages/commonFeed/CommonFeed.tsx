@@ -19,6 +19,7 @@ import { RightArrowThinIcon } from "@/shared/icons";
 import {
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItem,
+  FeedLayoutItemChangeDataWithType,
   FeedLayoutRef,
 } from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
@@ -51,10 +52,15 @@ export type RenderCommonFeedContentWrapper = (data: {
 export interface CommonFeedProps {
   commonId: string;
   renderContentWrapper: RenderCommonFeedContentWrapper;
+  onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
 }
 
 const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
-  const { commonId, renderContentWrapper: outerContentWrapperRenderer } = props;
+  const {
+    commonId,
+    renderContentWrapper: outerContentWrapperRenderer,
+    onActiveItemDataChange,
+  } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -296,6 +302,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         onFeedItemUpdate={handleFeedItemUpdate}
         getLastMessage={getLastMessage}
         sharedFeedItemId={sharedFeedItemId}
+        onActiveItemDataChange={onActiveItemDataChange}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

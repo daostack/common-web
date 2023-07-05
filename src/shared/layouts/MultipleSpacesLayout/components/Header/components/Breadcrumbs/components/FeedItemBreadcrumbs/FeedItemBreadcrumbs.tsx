@@ -1,5 +1,6 @@
 import React, { FC, useMemo } from "react";
 import { MultipleSpacesLayoutFeedItemBreadcrumbs } from "@/store/states";
+import { ActiveBreadcrumbsItem } from "../ActiveBreadcrumbsItem";
 import { BreadcrumbsItem } from "../BreadcrumbsItem";
 import { Separator } from "../Separator";
 import { getBreadcrumbsData } from "./utils";
@@ -30,7 +31,11 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
       {breadcrumbs.activeItem && (
         <>
           {data.length > 0 && <Separator />}
-          {breadcrumbs.activeItem.name}
+          <ActiveBreadcrumbsItem
+            name={breadcrumbs.activeItem.name}
+            image={breadcrumbs.activeItem.image}
+            items={projects}
+          />
         </>
       )}
     </ul>

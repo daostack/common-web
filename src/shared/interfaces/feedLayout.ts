@@ -51,3 +51,18 @@ export const checkIsChatChannelLayoutItem = (
   layoutItem?: BaseLayoutItem | null,
 ): layoutItem is ChatChannelLayoutItem =>
   layoutItem?.type === InboxItemType.ChatChannel;
+
+export interface FeedLayoutItemChangeData {
+  itemId: string; // feed item id or chat channel id
+  title: string;
+  image?: string;
+}
+
+export type FeedLayoutItemChangeDataWithType = FeedLayoutItemChangeData &
+  (
+    | { type: InboxItemType.ChatChannel }
+    | {
+        type: InboxItemType.FeedItemFollow;
+        commonId: string;
+      }
+  );

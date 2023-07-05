@@ -1,7 +1,18 @@
+@import "../../constants";
+@import "../../styles/sizes";
+
 .centerWrapper {
   flex: 1;
   padding: 1rem 0;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.mainPageContent {
+  --header-h: #{$container-desktop-header-height};
+
+  @include tablet {
+    --header-h: #{$container-mobile-header-height};
+  }
 }

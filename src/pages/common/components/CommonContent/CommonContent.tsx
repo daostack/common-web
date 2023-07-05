@@ -118,6 +118,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
         commonId={common.id}
       />
       <CommonSidenavLayoutPageContent
+        className={settings?.pageContentClassName}
         headerContent={
           settings?.renderHeaderContent ? (
             settings.renderHeaderContent()

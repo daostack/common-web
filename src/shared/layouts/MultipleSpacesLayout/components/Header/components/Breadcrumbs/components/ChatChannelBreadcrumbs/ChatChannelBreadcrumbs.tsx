@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { MultipleSpacesLayoutChatChannelBreadcrumbs } from "@/store/states";
+import { ActiveBreadcrumbsItem } from "../ActiveBreadcrumbsItem";
 import feedItemBreadcrumbsStyles from "../FeedItemBreadcrumbs/FeedItemBreadcrumbs.module.scss";
 
 interface ChatChannelBreadcrumbsProps {
@@ -11,7 +12,10 @@ const ChatChannelBreadcrumbs: FC<ChatChannelBreadcrumbsProps> = (props) => {
 
   return (
     <ul className={feedItemBreadcrumbsStyles.container}>
-      {breadcrumbs.activeItem.name}
+      <ActiveBreadcrumbsItem
+        name={breadcrumbs.activeItem.name}
+        image={breadcrumbs.activeItem.image}
+      />
     </ul>
   );
 };
