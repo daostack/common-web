@@ -67,6 +67,12 @@ const CommonFeedPage: FC = () => {
     );
   }, [commonId]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(multipleSpacesLayoutActions.moveBreadcrumbsToPrevious());
+    };
+  }, []);
+
   return (
     <MainRoutesProvider>
       <BaseCommonFeedPage

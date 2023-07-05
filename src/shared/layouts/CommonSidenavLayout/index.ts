@@ -4,3 +4,4 @@ export {
   PageContent as CommonSidenavLayoutPageContent,
 } from "./components";
 export { LayoutTab as CommonSidenavLayoutTab } from "./constants";
+export { getActiveLayoutTab } from "./components/LayoutTabs/utils";

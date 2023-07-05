@@ -1,9 +1,7 @@
-import React, { CSSProperties, FC, ReactNode, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { CSSProperties, FC, ReactNode } from "react";
 import { useActiveItemDataChange } from "@/pages/commonFeed/hooks";
 import { MainRoutesProvider } from "@/shared/contexts";
 import { MultipleSpacesLayoutPageContent } from "@/shared/layouts";
-import { multipleSpacesLayoutActions } from "@/store/states";
 import {
   FEED_LAYOUT_OUTER_STYLES,
   FEED_LAYOUT_SETTINGS,
@@ -12,7 +10,6 @@ import BaseInboxPage from "./BaseInbox";
 import { HeaderContent } from "./components";
 
 const InboxPage: FC = () => {
-  const dispatch = useDispatch();
   const onActiveItemDataChange = useActiveItemDataChange();
 
   const renderContentWrapper = (
@@ -26,10 +23,6 @@ const InboxPage: FC = () => {
       {children}
     </MultipleSpacesLayoutPageContent>
   );
-
-  useEffect(() => {
-    dispatch(multipleSpacesLayoutActions.moveBreadcrumbsToPrevious());
-  }, []);
 
   return (
     <MainRoutesProvider>

@@ -6,10 +6,17 @@ import {
   authentificated,
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { InboxItemType, ROUTE_PATHS } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { InboxIcon } from "@/shared/icons";
-import { matchRoute } from "@/shared/utils";
+import { BlocksIcon, InboxIcon } from "@/shared/icons";
+import {
+  CommonSidenavLayoutTab,
+  getActiveLayoutTab,
+} from "@/shared/layouts/CommonSidenavLayout";
+import {
+  selectMultipleSpacesLayoutBreadcrumbs,
+  selectMultipleSpacesLayoutPreviousBreadcrumbs,
+} from "@/store/states";
 import { NavigationItem } from "./components";
 import { NavigationItemOptions } from "./types";
 import styles from "./Navigation.module.scss";
@@ -21,13 +28,31 @@ interface NavigationProps {
 const Navigation: FC<NavigationProps> = (props) => {
   const { className } = props;
   const location = useLocation();
-  const { getInboxPagePath } = useRoutesContext();
+  const { getCommonPagePath, getInboxPagePath } = useRoutesContext();
   const isAuthenticated = useSelector(authentificated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
   );
+  const currentBreadcrumbs = useSelector(selectMultipleSpacesLayoutBreadcrumbs);
+  const previousBreadcrumbs = useSelector(
+    selectMultipleSpacesLayoutPreviousBreadcrumbs,
+  );
+  const breadcrumbs = previousBreadcrumbs || currentBreadcrumbs;
+  const activeTab = getActiveLayoutTab(location.pathname);
+  const commonPagePath = (
+    breadcrumbs?.type === InboxItemType.FeedItemFollow
+      ? getCommonPagePath(breadcrumbs.activeCommonId)
+      : ""
+  ) as ROUTE_PATHS;
   const inboxPagePath = getInboxPagePath() as ROUTE_PATHS;
   const items: NavigationItemOptions[] = [
+    {
+      text: "My spaces",
+      route: commonPagePath,
+      icon: <BlocksIcon className={styles.icon} />,
+      isActive: activeTab === CommonSidenavLayoutTab.Spaces,
+      isDisabled: !isAuthenticated,
+    },
     {
       text: `Inbox${
         userStreamsWithNotificationsAmount
@@ -36,9 +61,7 @@ const Navigation: FC<NavigationProps> = (props) => {
       }`,
       route: inboxPagePath,
       icon: <InboxIcon className={styles.icon} />,
-      isActive: matchRoute(location.pathname, inboxPagePath, {
-        exact: true,
-      }),
+      isActive: activeTab === CommonSidenavLayoutTab.Inbox,
       isDisabled: !isAuthenticated,
       tooltipContent: !isAuthenticated ? (
         <>Inbox will be enabled once you log in 🙂</>
