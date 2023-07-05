@@ -324,7 +324,7 @@ export default function ChatMessage({
                 {filePreview && (
                   <FilePreview
                     src={filePreview.value}
-                    name={filePreview.title}
+                    name={filePreview.name || filePreview.title}
                     fileSize={filePreview.size}
                     variant={FilePreviewVariant.medium}
                     iconColor={
