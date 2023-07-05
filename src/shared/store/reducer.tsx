@@ -2,7 +2,7 @@ import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
 import { Language, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
 import { SharedStateType } from "../interfaces";
-import { getTheme } from "../utils";
+import { getTheme } from "../utils/getTheme";
 import * as actions from "./actions";
 
 type Action = ActionType<typeof actions>;
