@@ -4,6 +4,8 @@ import {
   CommonMemberEventEmitter,
   CommonMemberEvent,
   CommonMemberEventToListener,
+  CommonEventEmitter,
+  CommonEvent,
 } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { LoadingState } from "@/shared/interfaces";
@@ -14,7 +16,6 @@ import {
   Governance,
 } from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "@/shared/utils";
-import { commonLayoutActions, projectsActions } from "@/store/states";
 import { CommonService, GovernanceService, Logger } from "../../../services";
 
 interface Options {
@@ -191,13 +192,10 @@ export const useCommonMember = (options: Options = {}): Return => {
           let data: State["data"] = null;
 
           if (isAdded) {
-            const data = {
+            CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
               commonId,
               hasMembership: true,
-            };
-
-            dispatch(commonLayoutActions.updateCommonOrProject(data));
-            dispatch(projectsActions.updateProject(data));
+            });
           }
           if (!isRemoved) {
             data = {
