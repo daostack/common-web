@@ -43,3 +43,7 @@ export const moveBreadcrumbsToPrevious = createStandardAction(
 export const addProjectToBreadcrumbs = createStandardAction(
   MultipleSpacesLayoutActionType.ADD_PROJECT_TO_BREADCRUMBS,
 )<ProjectsStateItem>();
+
+export const updateProjectInBreadcrumbs = createStandardAction(
+  MultipleSpacesLayoutActionType.UPDATE_PROJECT_IN_BREADCRUMBS,
+)<{ commonId: string } & Partial<Omit<ProjectsStateItem, "commonId">>>();

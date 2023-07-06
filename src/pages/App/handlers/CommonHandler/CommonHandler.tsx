@@ -62,6 +62,11 @@ const CommonHandler: FC = () => {
     const handler: CommonEventToListener[CommonEvent.ProjectUpdated] = (
       projectsStateItem,
     ) => {
+      dispatch(
+        multipleSpacesLayoutActions.updateProjectInBreadcrumbs(
+          projectsStateItem,
+        ),
+      );
       dispatch(commonLayoutActions.updateCommonOrProject(projectsStateItem));
       dispatch(projectsActions.updateProject(projectsStateItem));
     };
