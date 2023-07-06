@@ -10,9 +10,14 @@
   align-items: center;
   font-family: PoppinsSans, sans-serif;
   font-size: $mobile-title;
+  font-weight: normal;
   color: var(--item-color);
+  background-color: transparent;
+  border: none;
+  text-align: center;
   text-decoration: none;
   transition: color 0.2s;
+  cursor: pointer;
 
   &:hover {
     --item-color: #{$c-shades-black};

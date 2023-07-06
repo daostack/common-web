@@ -8,6 +8,7 @@ import {
 } from "@/pages/Auth/store/selectors";
 import { InboxItemType, ROUTE_PATHS } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
+import { useModal } from "@/shared/hooks";
 import { useUserCommonIds } from "@/shared/hooks/useCases";
 import { BlocksIcon, InboxIcon } from "@/shared/icons";
 import {
@@ -18,7 +19,7 @@ import {
   selectMultipleSpacesLayoutBreadcrumbs,
   selectMultipleSpacesLayoutPreviousBreadcrumbs,
 } from "@/store/states";
-import { NavigationItem } from "./components";
+import { CreateCommonPrompt, NavigationItem } from "./components";
 import { NavigationItemOptions } from "./types";
 import styles from "./Navigation.module.scss";
 
@@ -30,6 +31,11 @@ const Navigation: FC<NavigationProps> = (props) => {
   const { className } = props;
   const location = useLocation();
   const { getCommonPagePath, getInboxPagePath } = useRoutesContext();
+  const {
+    isShowing: isCreateCommonPromptOpen,
+    onOpen: onCreateCommonPromptOpen,
+    onClose: onCreateCommonPromptClose,
+  } = useModal(false);
   const isAuthenticated = useSelector(authentificated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
@@ -56,6 +62,7 @@ const Navigation: FC<NavigationProps> = (props) => {
       route: mySpacesPagePath,
       icon: <BlocksIcon className={styles.icon} />,
       isActive: activeTab === CommonSidenavLayoutTab.Spaces,
+      onClick: !mySpacesPagePath ? onCreateCommonPromptOpen : undefined,
     },
     {
       text: `Inbox${
@@ -82,6 +89,9 @@ const Navigation: FC<NavigationProps> = (props) => {
           </li>
         ))}
       </ul>
+      {isCreateCommonPromptOpen && (
+        <CreateCommonPrompt isOpen onClose={onCreateCommonPromptClose} />
+      )}
     </nav>
   );
 };
