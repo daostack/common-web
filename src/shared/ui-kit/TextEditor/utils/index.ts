@@ -21,3 +21,6 @@ export * from "./toggleMark";
 export * from "./unwrapLink";
 export * from "./wrapLink";
 export * from "./removeTextEditorEmptyEndLinesValues";
+export * from "./countTextEditorEmojiElements";
+export * from "./insertEmoji";
+export * from "./insertMention";

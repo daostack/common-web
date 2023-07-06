@@ -67,13 +67,16 @@ const getTextFromDescendant = (
   mentionTextClassName?: string,
   commonId?: string,
 ): Text => {
+  console.log("----descendant", descendant);
   if (!Element.isElement(descendant)) {
     return descendant.text || "";
   }
 
+  console.log("---descendant.type", descendant);
   switch (descendant.type) {
     case ElementType.Paragraph:
     case ElementType.Link:
+    case ElementType.Emoji:
       return (
         <span>
           {descendant.children.map((item, index) => (
