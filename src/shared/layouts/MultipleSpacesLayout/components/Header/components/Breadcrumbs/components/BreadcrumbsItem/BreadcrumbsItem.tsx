@@ -8,16 +8,11 @@ interface BreadcrumbsItemProps {
   activeItemId: string;
   items: ProjectsStateItem[];
   commonIdToAddProject?: string | null;
-  isMainLevel?: boolean;
+  onCommonCreate?: () => void;
 }
 
 const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
-  const {
-    activeItemId,
-    items,
-    commonIdToAddProject,
-    isMainLevel = false,
-  } = props;
+  const { activeItemId, items, commonIdToAddProject, onCommonCreate } = props;
   const containerRef = useRef<HTMLLIElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const activeItem = items.find((item) => item.commonId === activeItemId);
@@ -43,7 +38,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
         items={items}
         activeItemId={activeItemId}
         commonIdToAddProject={commonIdToAddProject}
-        isMainLevel={isMainLevel}
+        onCommonCreate={onCommonCreate}
       />
     </li>
   );

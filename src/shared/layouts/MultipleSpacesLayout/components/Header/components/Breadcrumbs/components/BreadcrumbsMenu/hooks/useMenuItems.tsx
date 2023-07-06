@@ -11,11 +11,11 @@ interface Options {
   items: ProjectsStateItem[];
   activeItemId?: string;
   commonIdToAddProject?: string | null;
-  isMainLevel?: boolean;
+  onCommonCreate?: () => void;
 }
 
 export const useMenuItems = (options: Options): ContextMenuItem[] => {
-  const { items, activeItemId, commonIdToAddProject, isMainLevel } = options;
+  const { items, activeItemId, commonIdToAddProject, onCommonCreate } = options;
   const history = useHistory();
   const {
     getCommonPagePath,
@@ -40,13 +40,11 @@ export const useMenuItems = (options: Options): ContextMenuItem[] => {
     ),
   }));
 
-  if (isMainLevel) {
+  if (onCommonCreate) {
     menuItems.push({
       id: "create-a-common",
       text: "Create a common",
-      onClick: () => {
-        console.log("Create a common");
-      },
+      onClick: onCommonCreate,
       className: classNames(
         styles.contextMenuItem,
         styles.contextMenuItemToAddProject,

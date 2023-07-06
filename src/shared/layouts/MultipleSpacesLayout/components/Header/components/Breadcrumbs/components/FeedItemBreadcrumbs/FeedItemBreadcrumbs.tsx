@@ -1,4 +1,9 @@
 import React, { FC, useMemo } from "react";
+import { useHistory } from "react-router";
+import { CreateCommonModal } from "@/pages/OldCommon/components";
+import { useRoutesContext } from "@/shared/contexts";
+import { useModal } from "@/shared/hooks";
+import { Common } from "@/shared/models";
 import { MultipleSpacesLayoutFeedItemBreadcrumbs } from "@/store/states";
 import { ActiveBreadcrumbsItem } from "../ActiveBreadcrumbsItem";
 import { BreadcrumbsItem } from "../BreadcrumbsItem";
@@ -13,10 +18,22 @@ interface FeedItemBreadcrumbsProps {
 
 const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
   const { breadcrumbs } = props;
+  const history = useHistory();
+  const { getCommonPagePath } = useRoutesContext();
+  const {
+    isShowing: isCommonCreationModalOpen,
+    onOpen: onCommonCreationModalOpen,
+    onClose: onCommonCreationModalClose,
+  } = useModal(false);
   const { data, projects } = useMemo(
     () => getBreadcrumbsData(breadcrumbs.items, breadcrumbs.activeCommonId),
     [breadcrumbs.items, breadcrumbs.activeCommonId],
   );
+
+  const handleGoToCommon = (common: Common) => {
+    onCommonCreationModalClose();
+    history.push(getCommonPagePath(common.id));
+  };
 
   return (
     <ul className={styles.container}>
@@ -29,7 +46,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
               activeItemId={item.activeCommonId}
               items={item.items}
               commonIdToAddProject={item.commonIdToAddProject}
-              isMainLevel={index === 0}
+              onCommonCreate={onCommonCreationModalOpen}
             />
           </React.Fragment>
         ))}
@@ -43,6 +60,14 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
             commonIdToAddProject={breadcrumbs.activeCommonId}
           />
         </>
+      )}
+      {isCommonCreationModalOpen && (
+        <CreateCommonModal
+          isShowing
+          onClose={onCommonCreationModalClose}
+          isSubCommonCreation={false}
+          onGoToCommon={handleGoToCommon}
+        />
       )}
     </ul>
   );

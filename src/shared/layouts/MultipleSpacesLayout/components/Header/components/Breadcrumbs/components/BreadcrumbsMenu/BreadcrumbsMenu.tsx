@@ -8,17 +8,17 @@ interface BreadcrumbsMenuProps {
   items: ProjectsStateItem[];
   activeItemId?: string;
   commonIdToAddProject?: string | null;
-  isMainLevel?: boolean;
+  onCommonCreate?: () => void;
 }
 
 const BreadcrumbsMenu = forwardRef<ContextMenuRef, BreadcrumbsMenuProps>(
   (props, ref) => {
-    const { items, activeItemId, commonIdToAddProject, isMainLevel } = props;
+    const { items, activeItemId, commonIdToAddProject, onCommonCreate } = props;
     const menuItems = useMenuItems({
       items,
       activeItemId,
       commonIdToAddProject,
-      isMainLevel,
+      onCommonCreate,
     });
 
     if (menuItems.length === 0) {
