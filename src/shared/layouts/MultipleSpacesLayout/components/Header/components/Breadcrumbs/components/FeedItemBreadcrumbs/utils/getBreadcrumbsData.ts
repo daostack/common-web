@@ -4,6 +4,7 @@ interface Return {
   data: {
     activeCommonId: string;
     items: ProjectsStateItem[];
+    commonIdToAddProject?: string | null;
   }[];
   projects: ProjectsStateItem[];
 }
@@ -59,6 +60,9 @@ export const getBreadcrumbsData = (
     data.unshift({
       activeCommonId: activeCommonIdInParentCommonProjects,
       items: parentCommonProjects,
+      commonIdToAddProject: parentCommon.hasPermissionToAddProject
+        ? parentCommon.commonId
+        : null,
     });
 
     activeCommonIdInParentCommonProjects = parentCommon.commonId;

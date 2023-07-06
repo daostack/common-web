@@ -5,43 +5,25 @@ import { useRoutesContext } from "@/shared/contexts";
 import { ContextMenuItem } from "@/shared/interfaces";
 import { ContextMenu, ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
-import { MenuItemContent } from "./components";
+import { AddProjectMenuItemContent, MenuItemContent } from "./components";
 import styles from "./BreadcrumbsMenu.module.scss";
 
 interface BreadcrumbsMenuProps {
   items: ProjectsStateItem[];
   activeItemId?: string;
+  commonIdToAddProject?: string | null;
+  isMainLevel?: boolean;
 }
 
 const BreadcrumbsMenu = forwardRef<ContextMenuRef, BreadcrumbsMenuProps>(
   (props, ref) => {
-    const { items, activeItemId } = props;
+    const { items, activeItemId, commonIdToAddProject, isMainLevel } = props;
     const history = useHistory();
-    const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
-
-    const renderMenuItemContent = (item: ProjectsStateItem): ReactNode => {
-      const isActive = item.commonId === activeItemId;
-
-      return (
-        <>
-          <CommonAvatar
-            className={classNames(styles.contextMenuItemImage, {
-              [styles.contextMenuItemImageRounded]: item.directParent,
-              [styles.contextMenuItemImageNonRounded]: !item.directParent,
-            })}
-            name={item.name}
-            src={item.image}
-          />
-          <span className={styles.contextMenuItemName}>{item.name}</span>
-          {isActive && (
-            <CheckIcon
-              className={styles.contextMenuItemCheckIcon}
-              fill="currentColor"
-            />
-          )}
-        </>
-      );
-    };
+    const {
+      getCommonPagePath,
+      getCommonPageAboutTabPath,
+      getProjectCreationPagePath,
+    } = useRoutesContext();
 
     const menuItems: ContextMenuItem[] = items.map((item) => ({
       id: item.commonId,
@@ -63,6 +45,35 @@ const BreadcrumbsMenu = forwardRef<ContextMenuRef, BreadcrumbsMenuProps>(
       ),
     }));
 
+    if (isMainLevel) {
+      menuItems.push({
+        id: "create-a-common",
+        text: "Create a common",
+        onClick: () => {
+          console.log("Create a common");
+        },
+        className: classNames(
+          styles.contextMenuItem,
+          styles.contextMenuItemToAddProject,
+        ),
+        renderContent: () => (
+          <AddProjectMenuItemContent text="Create a common" />
+        ),
+      });
+    }
+    if (commonIdToAddProject) {
+      menuItems.push({
+        id: "add-a-space",
+        text: "Add a space",
+        onClick: () =>
+          history.push(getProjectCreationPagePath(commonIdToAddProject)),
+        className: classNames(
+          styles.contextMenuItem,
+          styles.contextMenuItemToAddProject,
+        ),
+        renderContent: () => <AddProjectMenuItemContent text="Add a space" />,
+      });
+    }
     if (menuItems.length === 0) {
       return null;
     }

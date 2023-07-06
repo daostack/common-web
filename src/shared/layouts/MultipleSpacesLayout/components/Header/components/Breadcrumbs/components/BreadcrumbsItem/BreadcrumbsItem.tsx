@@ -1,11 +1,23 @@
 import React, { FC, useRef } from "react";
 import { ContextMenuRef } from "@/shared/ui-kit";
-import { BreadcrumbsItemData } from "../../types";
+import { ProjectsStateItem } from "@/store/states";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
 import styles from "./BreadcrumbsItem.module.scss";
 
-const BreadcrumbsItem: FC<BreadcrumbsItemData> = (props) => {
-  const { activeItemId, items } = props;
+interface BreadcrumbsItemProps {
+  activeItemId: string;
+  items: ProjectsStateItem[];
+  commonIdToAddProject?: string | null;
+  isMainLevel?: boolean;
+}
+
+const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
+  const {
+    activeItemId,
+    items,
+    commonIdToAddProject,
+    isMainLevel = false,
+  } = props;
   const containerRef = useRef<HTMLLIElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const activeItem = items.find((item) => item.commonId === activeItemId);
@@ -30,6 +42,8 @@ const BreadcrumbsItem: FC<BreadcrumbsItemData> = (props) => {
         ref={contextMenuRef}
         items={items}
         activeItemId={activeItemId}
+        commonIdToAddProject={commonIdToAddProject}
+        isMainLevel={isMainLevel}
       />
     </li>
   );

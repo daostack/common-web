@@ -28,6 +28,8 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
             <BreadcrumbsItem
               activeItemId={item.activeCommonId}
               items={item.items}
+              commonIdToAddProject={item.commonIdToAddProject}
+              isMainLevel={index === 0}
             />
           </React.Fragment>
         ))}
@@ -38,6 +40,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
             name={breadcrumbs.activeItem.name}
             image={breadcrumbs.activeItem.image}
             items={projects}
+            commonIdToAddProject={breadcrumbs.activeCommonId}
           />
         </>
       )}
