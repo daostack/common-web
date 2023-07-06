@@ -1,6 +1,9 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
+import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal } from "@/shared/hooks";
+import { Common } from "@/shared/models";
 import { NoCommonsInfo } from "./components";
 
 interface CreateCommonPromptProps {
@@ -10,27 +13,43 @@ interface CreateCommonPromptProps {
 
 const CreateCommonPrompt: FC<CreateCommonPromptProps> = (props) => {
   const { isOpen, onClose } = props;
+  const history = useHistory();
+  const { getCommonPagePath } = useRoutesContext();
   const {
     isModalOpen: isCreateCommonModalOpen,
     onOpen: onCreateCommonModalOpen,
     onClose: onCreateCommonModalClose,
   } = useAuthorizedModal();
+  const [createdCommon, setCreatedCommon] = useState<Common | null>(null);
 
-  const handleCreateCommonModalOpen = () => {
-    onCreateCommonModalOpen();
+  const handleClose = () => {
+    if (createdCommon) {
+      history.push(getCommonPagePath(createdCommon.id));
+    }
+
+    onClose();
   };
 
-  const handleGoToCommon = () => {
-    console.log("handleGoToCommon");
+  const handleCommonCreate = (data: { common: Common }) => {
+    setCreatedCommon(data.common);
+  };
+
+  const handleCreateCommonModalClose = () => {
+    if (createdCommon) {
+      handleClose();
+    } else {
+      onCreateCommonModalClose();
+    }
   };
 
   if (isCreateCommonModalOpen) {
     return (
       <CreateCommonModal
         isShowing={isCreateCommonModalOpen}
-        onClose={onCreateCommonModalClose}
+        onClose={handleCreateCommonModalClose}
         isSubCommonCreation={false}
-        onGoToCommon={handleGoToCommon}
+        onCommonCreate={handleCommonCreate}
+        onGoToCommon={handleClose}
       />
     );
   }
@@ -38,8 +57,8 @@ const CreateCommonPrompt: FC<CreateCommonPromptProps> = (props) => {
   return (
     <NoCommonsInfo
       isOpen={isOpen}
-      onClose={onClose}
-      onCommonCreate={handleCreateCommonModalOpen}
+      onClose={handleClose}
+      onCommonCreate={onCreateCommonModalOpen}
     />
   );
 };
