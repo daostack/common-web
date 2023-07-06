@@ -38,18 +38,17 @@ export const useSubCommonCreateSubscription = (
       });
     };
 
-    const handleCommonCreate: CommonEventToListener[CommonEvent.Created] = (
-      createdCommon,
-    ) => {
-      if (createdCommon.directParent?.commonId === commonId) {
-        handleSubCommonCreate(createdCommon);
-      }
-    };
+    const handleCommonCreate: CommonEventToListener[CommonEvent.CommonCreated] =
+      (createdCommon) => {
+        if (createdCommon.directParent?.commonId === commonId) {
+          handleSubCommonCreate(createdCommon);
+        }
+      };
 
-    CommonEventEmitter.on(CommonEvent.Created, handleCommonCreate);
+    CommonEventEmitter.on(CommonEvent.CommonCreated, handleCommonCreate);
 
     return () => {
-      CommonEventEmitter.off(CommonEvent.Created, handleCommonCreate);
+      CommonEventEmitter.off(CommonEvent.CommonCreated, handleCommonCreate);
     };
   }, [commonId]);
 };

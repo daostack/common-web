@@ -12,6 +12,7 @@ import { useScreenSize } from "@/shared/hooks";
 import { changeScreenSize } from "@/shared/store/actions";
 import { selectTutorialModalState } from "@/shared/store/selectors";
 import {
+  CommonHandler,
   TextDirectionHandler,
   ThemeHandler,
   UserNotificationsAmountHandler,
@@ -34,6 +35,7 @@ const App = () => {
     <ReactRouter history={history}>
       <BackgroundNotificationModal />
       <TutorialModal isShowing={tutorialModalState.isShowing} />
+      <CommonHandler />
       <TextDirectionHandler />
       <ThemeHandler />
       <UserNotificationsAmountHandler />
