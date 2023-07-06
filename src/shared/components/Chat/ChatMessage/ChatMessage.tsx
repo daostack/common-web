@@ -25,7 +25,12 @@ import {
   DiscussionMessage,
   User,
 } from "@/shared/models";
-import { FilePreview, FilePreviewVariant, getFileName } from "@/shared/ui-kit";
+import {
+  FilePreview,
+  FilePreviewVariant,
+  countTextEditorEmojiElements,
+  getFileName,
+} from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
 import { StaticLinkType, isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
@@ -117,12 +122,19 @@ export default function ChatMessage({
 
   useEffect(() => {
     (async () => {
+      const emojiCount = countTextEditorEmojiElements(
+        JSON.parse(discussionMessage.text),
+      );
       const parsedText = await getTextFromTextEditorString({
         textEditorString: discussionMessage.text,
         users,
         mentionTextClassName: !isNotCurrentUserMessage
           ? styles.mentionTextCurrentUser
           : "",
+        emojiTextClassName: classNames({
+          [styles.singleEmojiText]: emojiCount.isSingleEmoji,
+          [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+        }),
         commonId: discussionMessage.commonId,
       });
 

@@ -45,6 +45,7 @@ import {
   checkIsTextEditorValueEmpty,
   TextEditorSize,
   removeTextEditorEmptyEndLinesValues,
+  countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
 import { getUserName, hasPermission } from "@/shared/utils";
 import {
@@ -173,6 +174,11 @@ export default function ChatComponent({
 
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
+  );
+
+  const emojiCount = useMemo(
+    () => countTextEditorEmojiElements(message),
+    [message],
   );
   const [shouldReinitializeEditor, setShouldReinitializeEditor] =
     useState(false);
@@ -627,6 +633,12 @@ export default function ChatComponent({
                     [styles.messageInputEmpty]:
                       checkIsTextEditorValueEmpty(message),
                   })}
+                  elementStyles={{
+                    emoji: classNames({
+                      [styles.singleEmojiText]: emojiCount.isSingleEmoji,
+                      [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+                    }),
+                  }}
                   value={message}
                   onChange={setMessage}
                   placeholder="What do you think?"

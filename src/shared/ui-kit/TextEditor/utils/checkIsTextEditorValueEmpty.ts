@@ -25,6 +25,10 @@ export const checkIsTextEditorValueEmpty = (
     return false;
   }
 
+  if (Element.isElementType(secondChild, ElementType.Emoji)) {
+    return false;
+  }
+
   if (!Text.isText(firstChild)) {
     return false;
   }
