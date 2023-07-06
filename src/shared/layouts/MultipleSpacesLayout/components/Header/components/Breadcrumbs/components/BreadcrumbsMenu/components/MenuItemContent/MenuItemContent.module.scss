@@ -1,0 +1,28 @@
+@import "../../../../../../../../../../../constants";
+
+.contextMenuItemImage {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.875rem;
+}
+.contextMenuItemImageNonRounded {
+  border-radius: 0.375rem;
+}
+.contextMenuItemImageRounded {
+  border-radius: 50%;
+}
+
+.contextMenuItemName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contextMenuItemCheckIcon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  margin-left: auto;
+  color: $c-pink-mention;
+}

@@ -1,11 +1,11 @@
-import React, { forwardRef, ReactNode } from "react";
+import React, { forwardRef } from "react";
 import { useHistory } from "react-router";
 import classNames from "classnames";
 import { useRoutesContext } from "@/shared/contexts";
-import { CheckIcon } from "@/shared/icons";
 import { ContextMenuItem } from "@/shared/interfaces";
-import { CommonAvatar, ContextMenu, ContextMenuRef } from "@/shared/ui-kit";
+import { ContextMenu, ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
+import { MenuItemContent } from "./components";
 import styles from "./BreadcrumbsMenu.module.scss";
 
 interface BreadcrumbsMenuProps {
@@ -55,7 +55,12 @@ const BreadcrumbsMenu = forwardRef<ContextMenuRef, BreadcrumbsMenuProps>(
       className: classNames(styles.contextMenuItem, {
         [styles.contextMenuItemWithoutMembership]: !item.hasMembership,
       }),
-      renderContent: () => renderMenuItemContent(item),
+      renderContent: () => (
+        <MenuItemContent
+          item={item}
+          isActive={item.commonId === activeItemId}
+        />
+      ),
     }));
 
     if (menuItems.length === 0) {
