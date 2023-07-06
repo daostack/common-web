@@ -2,6 +2,7 @@ import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
 import { Language, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
 import { SharedStateType } from "../interfaces";
+import { getTheme } from "../utils/getTheme";
 import * as actions from "./actions";
 
 type Action = ActionType<typeof actions>;
@@ -27,6 +28,7 @@ const initialState: SharedStateType = {
   },
   language: Language.English,
   isRtlLanguage: false,
+  theme: getTheme(),
 };
 
 const reducer = createReducer<SharedStateType, Action>(initialState)
@@ -110,6 +112,11 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
     produce(state, (nextState) => {
       nextState.language = action.payload;
       nextState.isRtlLanguage = nextState.language === Language.Hebrew;
+    }),
+  )
+  .handleAction(actions.changeTheme, (state, action) =>
+    produce(state, (nextState) => {
+      nextState.theme = action.payload;
     }),
   );
 

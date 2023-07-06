@@ -308,6 +308,7 @@ export default function ChatComponent({
         info: file,
         src: URL.createObjectURL(file),
         size: file.size,
+        name: file.name,
       };
     });
     dispatch(

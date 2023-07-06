@@ -13,6 +13,7 @@ class FileService {
     title,
     file,
     size,
+    name
   }: UploadFile): Promise<CommonLink> => {
     const fileName =
       typeof file === "string" ? title : getFileNameForUploading(file.name);
@@ -25,6 +26,7 @@ class FileService {
       title: fileName,
       value,
       size,
+      name,
     };
   };
 
@@ -42,6 +44,7 @@ class FileService {
     title: file.info.name,
     value: file.src,
     size: file.size,
+    name: file.name,
   });
 
   public convertFileInfoToUploadFile = (file: FileInfo) => ({
@@ -49,6 +52,7 @@ class FileService {
     title: file.info.name,
     file: file.info,
     size: file.size,
+    name: file.name,
   });
 }
 
