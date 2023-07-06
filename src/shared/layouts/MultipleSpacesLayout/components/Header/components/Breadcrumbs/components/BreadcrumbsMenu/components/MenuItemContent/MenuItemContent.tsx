@@ -23,7 +23,9 @@ const MenuItemContent: FC<MenuItemContentProps> = (props) => {
         name={item.name}
         src={item.image}
       />
-      <span className={styles.contextMenuItemName}>{item.name}</span>
+      <span className={styles.contextMenuItemName} title={item.name}>
+        {item.name}
+      </span>
       {isActive && (
         <CheckIcon
           className={styles.contextMenuItemCheckIcon}
