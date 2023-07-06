@@ -329,135 +329,134 @@ export default function ChatComponent({
       if (user && user.uid) {
         const pendingMessageId = uuidv4();
         const message = removeTextEditorEmptyEndLinesValues(editorMessage);
-        console.log("---editorMessage", editorMessage, "----message", message);
 
-        //   const mentionTags = getMentionTags(message).map((tag) => ({
-        //     value: tag.userId,
-        //   }));
-        //   const imagesPreview = FileService.getImageTypeFromFiles(
-        //     currentFilesPreview ?? [],
-        //   );
-        //   const filesPreview = FileService.getExcludeImageTypeFromFiles(
-        //     currentFilesPreview ?? [],
-        //   );
-        //   const isEmptyText = checkIsTextEditorValueEmpty(message);
-        //   const isFilesMessageWithoutTextAndImages =
-        //     filesPreview.length > 0 && isEmptyText && imagesPreview.length === 0;
+        const mentionTags = getMentionTags(message).map((tag) => ({
+          value: tag.userId,
+        }));
+        const imagesPreview = FileService.getImageTypeFromFiles(
+          currentFilesPreview ?? [],
+        );
+        const filesPreview = FileService.getExcludeImageTypeFromFiles(
+          currentFilesPreview ?? [],
+        );
+        const isEmptyText = checkIsTextEditorValueEmpty(message);
+        const isFilesMessageWithoutTextAndImages =
+          filesPreview.length > 0 && isEmptyText && imagesPreview.length === 0;
 
-        //   const payload: CreateDiscussionMessageDtoWithFilesPreview = {
-        //     pendingMessageId,
-        //     text: JSON.stringify(message),
-        //     ownerId: user.uid,
-        //     commonId,
-        //     discussionId,
-        //     ...(discussionMessageReply && {
-        //       parentId: discussionMessageReply?.id,
-        //     }),
-        //     imagesPreview,
-        //     filesPreview: [],
-        //     tags: mentionTags,
-        //     mentions: mentionTags.map((tag) => tag.value),
-        //   };
+        const payload: CreateDiscussionMessageDtoWithFilesPreview = {
+          pendingMessageId,
+          text: JSON.stringify(message),
+          ownerId: user.uid,
+          commonId,
+          discussionId,
+          ...(discussionMessageReply && {
+            parentId: discussionMessageReply?.id,
+          }),
+          imagesPreview,
+          filesPreview: [],
+          tags: mentionTags,
+          mentions: mentionTags.map((tag) => tag.value),
+        };
 
-        //   const filePreviewPayload: CreateDiscussionMessageDtoWithFilesPreview[] =
-        //     [];
-        //   const pendingMessages: UserDiscussionMessage[] = [];
+        const filePreviewPayload: CreateDiscussionMessageDtoWithFilesPreview[] =
+          [];
+        const pendingMessages: UserDiscussionMessage[] = [];
 
-        //   const firebaseDate = Timestamp.fromDate(new Date());
+        const firebaseDate = Timestamp.fromDate(new Date());
 
-        //   filesPreview.map((filePreview) => {
-        //     const filePendingMessageId = uuidv4();
+        filesPreview.map((filePreview) => {
+          const filePendingMessageId = uuidv4();
 
-        //     filePreviewPayload.push({
-        //       pendingMessageId: filePendingMessageId,
-        //       ownerId: user.uid,
-        //       commonId,
-        //       discussionId,
-        //       filesPreview: [filePreview],
-        //     });
+          filePreviewPayload.push({
+            pendingMessageId: filePendingMessageId,
+            ownerId: user.uid,
+            commonId,
+            discussionId,
+            filesPreview: [filePreview],
+          });
 
-        //     pendingMessages.push({
-        //       id: filePendingMessageId,
-        //       text: JSON.stringify(parseStringToTextEditorValue()),
-        //       owner: user,
-        //       ownerAvatar: (user.photo || user.photoURL) as string,
-        //       ownerType: DiscussionMessageOwnerType.User,
-        //       ownerId: userId as string,
-        //       ownerName: getUserName(user),
-        //       commonId,
-        //       discussionId,
-        //       parentMessage: null,
-        //       createdAt: firebaseDate,
-        //       updatedAt: firebaseDate,
-        //       files: [FileService.convertFileInfoToCommonLink(filePreview)],
-        //     });
-        //   });
+          pendingMessages.push({
+            id: filePendingMessageId,
+            text: JSON.stringify(parseStringToTextEditorValue()),
+            owner: user,
+            ownerAvatar: (user.photo || user.photoURL) as string,
+            ownerType: DiscussionMessageOwnerType.User,
+            ownerId: userId as string,
+            ownerName: getUserName(user),
+            commonId,
+            discussionId,
+            parentMessage: null,
+            createdAt: firebaseDate,
+            updatedAt: firebaseDate,
+            files: [FileService.convertFileInfoToCommonLink(filePreview)],
+          });
+        });
 
-        //   if (!isEmptyText || imagesPreview.length) {
-        //     pendingMessages.push({
-        //       id: pendingMessageId,
-        //       owner: user,
-        //       ownerAvatar: (user.photo || user.photoURL) as string,
-        //       ownerType: DiscussionMessageOwnerType.User,
-        //       ownerId: userId as string,
-        //       ownerName: getUserName(user),
-        //       text: JSON.stringify(message),
-        //       commonId,
-        //       discussionId,
-        //       createdAt: firebaseDate,
-        //       updatedAt: firebaseDate,
-        //       parentId: discussionMessageReply?.id,
-        //       parentMessage: discussionMessageReply?.id
-        //         ? {
-        //             id: discussionMessageReply?.id,
-        //             ownerName: discussionMessageReply.ownerName,
-        //             ...(checkIsUserDiscussionMessage(discussionMessageReply) && {
-        //               ownerId: discussionMessageReply.ownerId,
-        //             }),
-        //             text: discussionMessageReply.text,
-        //             files: discussionMessageReply.files,
-        //             images: discussionMessageReply.images,
-        //           }
-        //         : null,
-        //       images: imagesPreview?.map((file) =>
-        //         FileService.convertFileInfoToCommonLink(file),
-        //       ),
-        //       tags: mentionTags,
-        //     });
-        //   }
+        if (!isEmptyText || imagesPreview.length) {
+          pendingMessages.push({
+            id: pendingMessageId,
+            owner: user,
+            ownerAvatar: (user.photo || user.photoURL) as string,
+            ownerType: DiscussionMessageOwnerType.User,
+            ownerId: userId as string,
+            ownerName: getUserName(user),
+            text: JSON.stringify(message),
+            commonId,
+            discussionId,
+            createdAt: firebaseDate,
+            updatedAt: firebaseDate,
+            parentId: discussionMessageReply?.id,
+            parentMessage: discussionMessageReply?.id
+              ? {
+                  id: discussionMessageReply?.id,
+                  ownerName: discussionMessageReply.ownerName,
+                  ...(checkIsUserDiscussionMessage(discussionMessageReply) && {
+                    ownerId: discussionMessageReply.ownerId,
+                  }),
+                  text: discussionMessageReply.text,
+                  files: discussionMessageReply.files,
+                  images: discussionMessageReply.images,
+                }
+              : null,
+            images: imagesPreview?.map((file) =>
+              FileService.convertFileInfoToCommonLink(file),
+            ),
+            tags: mentionTags,
+          });
+        }
 
-        //   setMessages((prev) => {
-        //     if (isFilesMessageWithoutTextAndImages) {
-        //       return [...prev, ...filePreviewPayload];
-        //     }
+        setMessages((prev) => {
+          if (isFilesMessageWithoutTextAndImages) {
+            return [...prev, ...filePreviewPayload];
+          }
 
-        //     return [...prev, ...filePreviewPayload, payload];
-        //   });
+          return [...prev, ...filePreviewPayload, payload];
+        });
 
-        //   if (isChatChannel) {
-        //     pendingMessages.forEach((pendingMessage) => {
-        //       chatMessagesData.addChatMessage(
-        //         ChatMessageToUserDiscussionMessageConverter.toBaseEntity(
-        //           pendingMessage,
-        //         ),
-        //       );
-        //     });
-        //   } else {
-        //     pendingMessages.forEach((pendingMessage) => {
-        //       discussionMessagesData.addDiscussionMessage(
-        //         discussionId,
-        //         pendingMessage,
-        //       );
-        //     });
-        //   }
+        if (isChatChannel) {
+          pendingMessages.forEach((pendingMessage) => {
+            chatMessagesData.addChatMessage(
+              ChatMessageToUserDiscussionMessageConverter.toBaseEntity(
+                pendingMessage,
+              ),
+            );
+          });
+        } else {
+          pendingMessages.forEach((pendingMessage) => {
+            discussionMessagesData.addDiscussionMessage(
+              discussionId,
+              pendingMessage,
+            );
+          });
+        }
 
-        //   if (discussionMessageReply) {
-        //     dispatch(chatActions.clearCurrentDiscussionMessageReply());
-        //   }
-        //   if (currentFilesPreview) {
-        //     dispatch(chatActions.clearFilesPreview());
-        //   }
-        //   focusOnChat();
+        if (discussionMessageReply) {
+          dispatch(chatActions.clearCurrentDiscussionMessageReply());
+        }
+        if (currentFilesPreview) {
+          dispatch(chatActions.clearFilesPreview());
+        }
+        focusOnChat();
       }
     },
     [
@@ -636,9 +635,8 @@ export default function ChatComponent({
                   })}
                   elementStyles={{
                     emoji: classNames({
-                      [styles.singleEmojiText]: emojiCount === 1,
-                      [styles.multipleEmojiText]:
-                        emojiCount >= 2 && emojiCount <= 3,
+                      [styles.singleEmojiText]: emojiCount.isSingleEmoji,
+                      [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
                     }),
                   }}
                   value={message}

@@ -2,9 +2,14 @@ import { Element } from "slate";
 import { ElementType } from "../constants";
 import { TextEditorValue, ParagraphElement } from "../types";
 
+interface EmojiCount {
+  isSingleEmoji: boolean;
+  isMultipleEmoji: boolean;
+}
+
 export const countTextEditorEmojiElements = (
   value: TextEditorValue,
-): number => {
+): EmojiCount => {
   const editorValue = [...value];
 
   let hasText = false;
@@ -28,6 +33,10 @@ export const countTextEditorEmojiElements = (
     }
   })
 
+  const emojiCountWithoutText = hasText ? -1 : emojiCount;
 
-  return hasText ? -1 : emojiCount;
+  return {
+    isSingleEmoji: emojiCountWithoutText === 1,
+    isMultipleEmoji: emojiCountWithoutText >= 2 && emojiCountWithoutText <= 3,
+  };
 };

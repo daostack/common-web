@@ -4,7 +4,6 @@ import { ElementType } from "../constants";
 import { EmojiElement } from "../types";
 
 export const insertEmoji = (editor, emoji) => {
-  console.log('---',emoji.native);
   const emojiElement: EmojiElement = {
     type: ElementType.Emoji,
     emoji,

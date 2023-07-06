@@ -9,7 +9,7 @@ import {
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
 import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
-import { MentionElement } from "@/shared/ui-kit/TextEditor/types";
+import { MentionElement, EmojiElement } from "@/shared/ui-kit/TextEditor/types";
 import { getUserName } from "@/shared/utils";
 import { UserInfoPopup } from "../../UserInfoPopup";
 import styles from "./ChatMessage.module.scss";
@@ -59,34 +59,50 @@ const UserMention = ({
   );
 };
 
+interface ChatEmoji {
+  descendant: EmojiElement;
+  emojiTextClassName?: string;
+}
+
+const ChatEmoji = ({ descendant, emojiTextClassName }: ChatEmoji) => {
+  return <span className={emojiTextClassName}>{descendant.emoji}</span>;
+};
+
 type Text = string | JSX.Element;
 
-const getTextFromDescendant = (
-  descendant: Descendant,
-  users: User[],
-  mentionTextClassName?: string,
-  commonId?: string,
-): Text => {
-  console.log("----descendant", descendant);
+interface TextFromDescendant {
+  descendant: Descendant;
+  users: User[];
+  mentionTextClassName?: string;
+  emojiTextClassName?: string;
+  commonId?: string;
+}
+
+const getTextFromDescendant = ({
+  descendant,
+  users,
+  mentionTextClassName,
+  emojiTextClassName,
+  commonId,
+}: TextFromDescendant): Text => {
   if (!Element.isElement(descendant)) {
     return descendant.text || "";
   }
 
-  console.log("---descendant.type", descendant);
   switch (descendant.type) {
     case ElementType.Paragraph:
     case ElementType.Link:
-    case ElementType.Emoji:
       return (
         <span>
           {descendant.children.map((item, index) => (
             <React.Fragment key={index}>
-              {getTextFromDescendant(
-                item,
+              {getTextFromDescendant({
+                descendant: item,
                 users,
                 mentionTextClassName,
+                emojiTextClassName,
                 commonId,
-              )}
+              })}
             </React.Fragment>
           ))}
           <br />
@@ -101,6 +117,13 @@ const getTextFromDescendant = (
           commonId={commonId}
         />
       );
+    case ElementType.Emoji:
+      return (
+        <ChatEmoji
+          descendant={descendant}
+          emojiTextClassName={emojiTextClassName}
+        />
+      );
     default:
       return descendant.text || "";
   }
@@ -110,11 +133,13 @@ export const getTextFromTextEditorString = async ({
   textEditorString,
   users,
   mentionTextClassName,
+  emojiTextClassName,
   commonId,
 }: {
   textEditorString: string;
   users: User[];
   mentionTextClassName?: string;
+  emojiTextClassName?: string;
   commonId?: string;
 }): Promise<Text[]> => {
   const textEditorValue = parseStringToTextEditorValue(textEditorString);
@@ -139,12 +164,13 @@ export const getTextFromTextEditorString = async ({
     (acc, item, index) => [
       ...acc,
       <React.Fragment key={index}>
-        {getTextFromDescendant(
-          item,
-          filteredUsers,
+        {getTextFromDescendant({
+          descendant: item,
+          users: filteredUsers,
           mentionTextClassName,
+          emojiTextClassName,
           commonId,
-        )}
+        })}
       </React.Fragment>,
     ],
     [],

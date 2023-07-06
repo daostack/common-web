@@ -29,7 +29,5 @@ export const removeTextEditorEmptyEndLinesValues = (
     }
   })
 
-  console.log('---value',value, "-----updatedValue",updatedValue);
-
   return updatedValue.reverse();
 };
