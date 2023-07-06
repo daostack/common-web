@@ -14,4 +14,5 @@ export {
   parseStringToTextEditorValue,
   prependTextInTextEditorValue,
   serializeTextEditorValue,
+  countTextEditorEmojiElements,
 } from "./utils";
