@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import { useModal } from "@/shared/hooks";
+import { CreateCommonModal } from "@/pages/OldCommon/components";
+import { useAuthorizedModal } from "@/shared/hooks";
 import { NoCommonsInfo } from "./components";
 
 interface CreateCommonPromptProps {
@@ -10,12 +11,37 @@ interface CreateCommonPromptProps {
 const CreateCommonPrompt: FC<CreateCommonPromptProps> = (props) => {
   const { isOpen, onClose } = props;
   const {
-    isShowing: isNoCommonsInfoOpen,
-    onOpen: onNoCommonsInfoOpen,
-    onClose: onNoCommonsInfoClose,
-  } = useModal(false);
+    isModalOpen: isCreateCommonModalOpen,
+    onOpen: onCreateCommonModalOpen,
+    onClose: onCreateCommonModalClose,
+  } = useAuthorizedModal();
 
-  return <NoCommonsInfo isOpen={isOpen} onClose={onClose} />;
+  const handleCreateCommonModalOpen = () => {
+    onCreateCommonModalOpen();
+  };
+
+  const handleGoToCommon = () => {
+    console.log("handleGoToCommon");
+  };
+
+  if (isCreateCommonModalOpen) {
+    return (
+      <CreateCommonModal
+        isShowing={isCreateCommonModalOpen}
+        onClose={onCreateCommonModalClose}
+        isSubCommonCreation={false}
+        onGoToCommon={handleGoToCommon}
+      />
+    );
+  }
+
+  return (
+    <NoCommonsInfo
+      isOpen={isOpen}
+      onClose={onClose}
+      onCommonCreate={handleCreateCommonModalOpen}
+    />
+  );
 };
 
 export default CreateCommonPrompt;

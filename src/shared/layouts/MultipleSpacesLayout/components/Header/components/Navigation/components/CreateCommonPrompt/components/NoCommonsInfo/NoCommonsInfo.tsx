@@ -7,10 +7,11 @@ import styles from "./NoCommonsInfo.module.scss";
 interface NoCommonsInfoProps {
   isOpen: boolean;
   onClose: () => void;
+  onCommonCreate: () => void;
 }
 
 const NoCommonsInfo: FC<NoCommonsInfoProps> = (props) => {
-  const { isOpen, onClose } = props;
+  const { isOpen, onClose, onCommonCreate } = props;
 
   return (
     <Modal
@@ -26,6 +27,7 @@ const NoCommonsInfo: FC<NoCommonsInfoProps> = (props) => {
       <Button
         className={styles.createCommonButton}
         variant={ButtonVariant.PrimaryPink}
+        onClick={onCommonCreate}
       >
         Create common
       </Button>
