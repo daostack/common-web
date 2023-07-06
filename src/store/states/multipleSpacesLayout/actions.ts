@@ -4,6 +4,7 @@ import { MultipleSpacesLayoutActionType } from "./constants";
 import {
   MultipleSpacesLayoutActiveItem,
   MultipleSpacesLayoutBreadcrumbs,
+  ProjectsStateItem,
 } from "./types";
 
 export const resetMultipleSpacesLayout = createStandardAction(
@@ -38,3 +39,7 @@ export const setBreadcrumbsData = createStandardAction(
 export const moveBreadcrumbsToPrevious = createStandardAction(
   MultipleSpacesLayoutActionType.MOVE_BREADCRUMBS_TO_PREVIOUS,
 )();
+
+export const addProjectToBreadcrumbs = createStandardAction(
+  MultipleSpacesLayoutActionType.ADD_PROJECT_TO_BREADCRUMBS,
+)<ProjectsStateItem>();

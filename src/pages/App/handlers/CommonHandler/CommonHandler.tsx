@@ -6,7 +6,11 @@ import {
   CommonEventToListener,
 } from "@/events";
 import { updateCommonState } from "@/pages/OldCommon/store/actions";
-import { commonLayoutActions, projectsActions } from "@/store/states";
+import {
+  commonLayoutActions,
+  multipleSpacesLayoutActions,
+  projectsActions,
+} from "@/store/states";
 
 const CommonHandler: FC = () => {
   const dispatch = useDispatch();
@@ -40,6 +44,9 @@ const CommonHandler: FC = () => {
     const handler: CommonEventToListener[CommonEvent.ProjectCreated] = (
       projectsStateItem,
     ) => {
+      dispatch(
+        multipleSpacesLayoutActions.addProjectToBreadcrumbs(projectsStateItem),
+      );
       dispatch(commonLayoutActions.addProject(projectsStateItem));
       dispatch(projectsActions.addProject(projectsStateItem));
     };
