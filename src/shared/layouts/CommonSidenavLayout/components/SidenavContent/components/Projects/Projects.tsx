@@ -1,81 +1,34 @@
-import React, { FC, useCallback, useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { FC, useMemo } from "react";
 import { useHistory } from "react-router";
-import { authentificated } from "@/pages/Auth/store/selectors";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { getProjectCreationPagePath } from "@/shared/utils";
-import {
-  commonLayoutActions,
-  selectCommonLayoutCommonId,
-  selectCommonLayoutCommons,
-  selectAreCommonLayoutCommonsLoading,
-  selectAreCommonLayoutCommonsFetched,
-  selectCommonLayoutProjects,
-  selectAreCommonLayoutProjectsLoading,
-  selectAreCommonLayoutProjectsFetched,
-  ProjectsStateItem,
-} from "@/store/states";
-import {
-  generateProjectsTreeItems,
-  getActiveItemIdByPath,
-  getItemById,
-  getItemFromProjectsStateItem,
-  getItemIdWithNewProjectCreationByPath,
-} from "../../../../../SidenavLayout/components/SidenavContent/components/Projects";
 import { TreeItemTriggerStyles } from "../../../../../SidenavLayout/components/SidenavContent/components/ProjectsTree";
+import { useProjectsData } from "../../hooks";
 import { ProjectsTree } from "../ProjectsTree";
 import styles from "./Projects.module.scss";
 
 const Projects: FC = () => {
-  const dispatch = useDispatch();
   const history = useHistory();
-  const location = history.location;
-  const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
+  const { getCommonPagePath } = useRoutesContext();
+  const {
+    currentCommonId,
+    parentItem,
+    areCommonsLoading,
+    areProjectsLoading,
+    commons,
+    items,
+    activeItem,
+    itemIdWithNewProjectCreation,
+  } = useProjectsData();
   const {
     isModalOpen: isCreateCommonModalOpen,
     onOpen: onCreateCommonModalOpen,
     onClose: onCreateCommonModalClose,
   } = useAuthorizedModal();
-  const isAuthenticated = useSelector(authentificated());
-  const currentCommonId = useSelector(selectCommonLayoutCommonId);
-  const commons = useSelector(selectCommonLayoutCommons);
-  const areCommonsLoading = useSelector(selectAreCommonLayoutCommonsLoading);
-  const areCommonsFetched = useSelector(selectAreCommonLayoutCommonsFetched);
-  const projects = useSelector(selectCommonLayoutProjects);
-  const areProjectsLoading = useSelector(selectAreCommonLayoutProjectsLoading);
-  const areProjectsFetched = useSelector(selectAreCommonLayoutProjectsFetched);
-  const currentCommon = commons.find(
-    ({ commonId }) => commonId === currentCommonId,
-  );
-  const generateItemCommonPagePath = useCallback(
-    (projectsStateItem: ProjectsStateItem): string =>
-      projectsStateItem.hasMembership
-        ? getCommonPagePath(projectsStateItem.commonId)
-        : getCommonPageAboutTabPath(projectsStateItem.commonId),
-    [getCommonPagePath, getCommonPageAboutTabPath],
-  );
-  const parentItem = useMemo(
-    () =>
-      currentCommon
-        ? getItemFromProjectsStateItem(
-            currentCommon,
-            generateItemCommonPagePath,
-          )
-        : null,
-    [currentCommon, generateItemCommonPagePath],
-  );
-  const items = useMemo(() => {
-    const [item] = generateProjectsTreeItems(
-      currentCommon ? projects.concat(currentCommon) : projects,
-      generateItemCommonPagePath,
-    );
-
-    return item?.items || [];
-  }, [currentCommon, projects, generateItemCommonPagePath]);
   const treeItemTriggerStyles = useMemo<TreeItemTriggerStyles>(
     () => ({
       container: styles.projectsTreeItemTriggerClassName,
@@ -85,14 +38,6 @@ const Projects: FC = () => {
       imageNonRounded: styles.projectsTreeItemTriggerImageNonRoundedClassName,
     }),
     [],
-  );
-  const activeItemId = getActiveItemIdByPath(location.pathname);
-  const activeItem = getItemById(
-    activeItemId,
-    parentItem ? [parentItem, ...items] : items,
-  );
-  const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
-    location.pathname,
   );
 
   const handleGoToCommon = (createdCommon: Common) => {
@@ -109,48 +54,6 @@ const Projects: FC = () => {
   const handleAddProjectClick = (commonId: string) => {
     history.push(getProjectCreationPagePath(commonId));
   };
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(commonLayoutActions.markDataAsNotFetched());
-      return;
-    }
-    if (activeItemId) {
-      dispatch(commonLayoutActions.clearDataExceptOfCurrent(activeItemId));
-    } else {
-      dispatch(commonLayoutActions.clearData());
-    }
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (areCommonsLoading) {
-      return;
-    }
-    if (!areCommonsFetched) {
-      dispatch(commonLayoutActions.getCommons.request(activeItemId));
-    }
-  }, [areCommonsLoading, areCommonsFetched]);
-
-  useEffect(() => {
-    if (areProjectsLoading || !currentCommonId) {
-      return;
-    }
-    if (!areProjectsFetched) {
-      dispatch(commonLayoutActions.getProjects.request(currentCommonId));
-    }
-  }, [areProjectsLoading, areProjectsFetched, currentCommonId]);
-
-  useEffect(() => {
-    if (
-      currentCommonId === activeItemId ||
-      !commons.some((common) => common.commonId === activeItemId)
-    ) {
-      return;
-    }
-
-    dispatch(commonLayoutActions.setCurrentCommonId(activeItemId));
-    dispatch(commonLayoutActions.clearProjects());
-  }, [activeItemId]);
 
   if (!parentItem) {
     return areCommonsLoading ? <Loader className={styles.loader} /> : null;
