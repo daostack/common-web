@@ -1,4 +1,4 @@
-import queryString from "query-string";
+import queryString, { parse } from "query-string";
 import { history } from "@/shared/appConfig";
 import { SIDENAV_KEY, SIDENAV_OPEN } from "@/shared/constants";
 
@@ -18,3 +18,6 @@ export const openSidenav = () => {
 export const closeSidenav = () => {
   window.location.search = "";
 };
+
+export const checkIsSidenavOpen = (queryParams: ReturnType<typeof parse>) =>
+  queryParams[SIDENAV_KEY] === SIDENAV_OPEN;
