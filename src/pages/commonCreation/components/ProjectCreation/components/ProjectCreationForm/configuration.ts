@@ -6,7 +6,10 @@ import {
 } from "../../constants";
 import styles from "./ProjectCreationForm.module.scss";
 
-export const getConfiguration = (isProject = true): CreationFormItem[] => {
+export const getConfiguration = (
+  isProject = true,
+  shouldBeUnique?: { existingNames: string[] },
+): CreationFormItem[] => {
   const type = isProject ? "Space" : "Common";
 
   return [
@@ -36,6 +39,10 @@ export const getConfiguration = (isProject = true): CreationFormItem[] => {
         max: {
           value: MAX_PROJECT_NAME_LENGTH,
           message: `${type} name is too long`,
+        },
+        unique: {
+          values: shouldBeUnique?.existingNames,
+          message: "This name is already in use, please choose another name",
         },
       },
     },
@@ -97,5 +104,3 @@ export const getConfiguration = (isProject = true): CreationFormItem[] => {
     },
   ];
 };
-
-export const CONFIGURATION = getConfiguration();
