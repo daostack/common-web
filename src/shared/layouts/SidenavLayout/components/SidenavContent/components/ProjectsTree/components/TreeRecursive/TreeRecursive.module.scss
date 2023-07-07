@@ -21,3 +21,11 @@
 .newProjectImage {
   background-color: $c-pink-dark;
 }
+
+.addProjectItem {
+  --item-text-color: #{$c-pink-primary};
+}
+
+.plusIcon {
+  padding-right: 0.875rem;
+}

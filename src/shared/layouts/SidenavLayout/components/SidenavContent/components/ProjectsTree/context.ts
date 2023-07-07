@@ -13,6 +13,7 @@ export interface TreeContextValue {
   itemIdWithNewProjectCreation?: string;
   isActiveCheckAllowed: boolean;
   treeItemTriggerStyles?: TreeItemTriggerStyles;
+  onAddProjectClick?: (commonId: string) => void;
 }
 
 export const TreeContext = React.createContext<TreeContextValue>({

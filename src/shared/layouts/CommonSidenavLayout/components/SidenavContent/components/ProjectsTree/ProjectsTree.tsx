@@ -1,12 +1,10 @@
 import React, { FC, useMemo } from "react";
-import { BoldPlusIcon } from "@/shared/icons";
 import { Loader } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
 import { Scrollbar } from "../../../../../SidenavLayout/components/SidenavContent";
 import {
   Item,
   ProjectsTreeProps as BaseProjectsTreeProps,
-  PlaceholderTreeItem,
   TreeContext,
   TreeContextValue,
   TreeItem,
@@ -47,18 +45,22 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     onCommonCreationClick,
   });
   const isActiveCheckAllowed = !itemIdWithNewProjectCreation;
+  const isParentItemActive =
+    isActiveCheckAllowed && parentItem.id === activeItem?.id;
   const contextValue = useMemo<TreeContextValue>(
     () => ({
       activeItemId: activeItem?.id,
       itemIdWithNewProjectCreation,
       isActiveCheckAllowed,
       treeItemTriggerStyles,
+      onAddProjectClick,
     }),
     [
       activeItem?.id,
       itemIdWithNewProjectCreation,
       isActiveCheckAllowed,
       treeItemTriggerStyles,
+      onAddProjectClick,
     ],
   );
 
@@ -70,31 +72,24 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
         item={{
           ...parentItem,
           rightContent: (
-            <CommonDropdown items={menuItems} activeItemId={currentCommonId} isActive={parentItem.id === activeItem?.id} />
+            <CommonDropdown
+              items={menuItems}
+              activeItemId={currentCommonId}
+              isActive={isParentItemActive}
+            />
           ),
         }}
-        isActive={isActiveCheckAllowed && parentItem.id === activeItem?.id}
+        isActive={isParentItemActive}
       />
       <Scrollbar>
-        <TreeRecursive className={className} items={items} level={2} />
-        {parentItem.hasPermissionToAddProject &&
-          !itemIdWithNewProjectCreation && (
-            <PlaceholderTreeItem
-              className={styles.addProjectItem}
-              name="Add a space"
-              level={2}
-              icon={<BoldPlusIcon className={styles.plusIcon} />}
-              onClick={() => onAddProjectClick(parentItem.id)}
-            />
-          )}
-        {itemIdWithNewProjectCreation && (
-          <PlaceholderTreeItem
-            imageClassName={styles.newProjectImage}
-            name="New space"
-            level={2}
-            isActive
-          />
-        )}
+        <TreeRecursive
+          className={className}
+          parentId={parentItem.id}
+          parentName={parentItem.name}
+          items={items}
+          hasPermissionToAddProject={parentItem.hasPermissionToAddProject}
+          level={2}
+        />
         {isLoading && <Loader className={styles.loader} />}
       </Scrollbar>
     </TreeContext.Provider>

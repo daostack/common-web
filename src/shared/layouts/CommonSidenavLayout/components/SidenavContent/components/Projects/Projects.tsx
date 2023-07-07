@@ -1,11 +1,10 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 import { useHistory } from "react-router";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
-import { getProjectCreationPagePath } from "@/shared/utils";
 import { TreeItemTriggerStyles } from "../../../../../SidenavLayout/components/SidenavContent/components/ProjectsTree";
 import { useProjectsData } from "../../hooks";
 import { ProjectsTree } from "../ProjectsTree";
@@ -13,7 +12,7 @@ import styles from "./Projects.module.scss";
 
 const Projects: FC = () => {
   const history = useHistory();
-  const { getCommonPagePath } = useRoutesContext();
+  const { getCommonPagePath, getProjectCreationPagePath } = useRoutesContext();
   const {
     currentCommonId,
     parentItem,
@@ -51,9 +50,12 @@ const Projects: FC = () => {
     }
   };
 
-  const handleAddProjectClick = (commonId: string) => {
-    history.push(getProjectCreationPagePath(commonId));
-  };
+  const handleAddProjectClick = useCallback(
+    (commonId: string) => {
+      history.push(getProjectCreationPagePath(commonId));
+    },
+    [history.push, getProjectCreationPagePath],
+  );
 
   if (!parentItem) {
     return areCommonsLoading ? <Loader className={styles.loader} /> : null;
