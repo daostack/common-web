@@ -34,20 +34,6 @@
   }
 }
 
-.sidenavContentWrapper {
-  border-left: 0.0625rem solid $c-light-gray;
-  border-right: 0.0625rem solid $c-light-gray;
-
-  @include tablet {
-    border: 0;
-  }
-}
-
-.sidenavContent {
-  margin: 0 auto;
-  max-width: 25rem;
-}
-
 .main {
   --header-h: 3.5rem;
 
