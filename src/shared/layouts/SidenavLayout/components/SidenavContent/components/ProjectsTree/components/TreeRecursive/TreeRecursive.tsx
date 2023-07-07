@@ -33,7 +33,12 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
     >
       {Boolean(itemIdWithNewProjectCreation) &&
         parentId === itemIdWithNewProjectCreation && (
-          <PlaceholderTreeItem name="New space" level={level} isActive />
+          <PlaceholderTreeItem
+            imageClassName={styles.newProjectImage}
+            name="New space"
+            level={level}
+            isActive
+          />
         )}
       {items.map((item) => (
         <TreeItem
@@ -42,9 +47,10 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
           level={level}
           isActive={isActiveCheckAllowed && item.id === activeItemId}
         >
-          {item.items && item.items.length > 0 ? (
+          {(item.items && item.items.length > 0) ||
+          item.id === itemIdWithNewProjectCreation ? (
             <TreeRecursive
-              items={item.items}
+              items={item.items || []}
               parentId={item.id}
               parentName={item.name}
               level={level + 1}
