@@ -1,0 +1,10 @@
+@import "../../../../../constants";
+
+.modal {
+  height: 82vh;
+  box-shadow: 0rem -1rem 1rem 0rem #{$c-shades-black}0f;
+}
+
+.modalOverlay {
+  background-color: transparent;
+}

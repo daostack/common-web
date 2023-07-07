@@ -3,7 +3,7 @@ import { useWindowSize } from "react-use";
 import { MainRoutesProvider } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { getSidenavLeft } from "../CommonSidenavLayout/utils";
-import { Header } from "./components";
+import { Header, Menu } from "./components";
 import styles from "./MultipleSpacesLayout.module.scss";
 
 const MultipleSpacesLayout: FC = (props) => {
@@ -18,7 +18,7 @@ const MultipleSpacesLayout: FC = (props) => {
   return (
     <MainRoutesProvider>
       <div className={styles.container} style={style}>
-        {isTabletView && <div>Sidenav</div>}
+        <Menu />
         <main className={styles.main}>
           {!isTabletView && <Header />}
           {children}
