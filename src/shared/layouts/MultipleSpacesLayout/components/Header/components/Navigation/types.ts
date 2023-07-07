@@ -14,4 +14,5 @@ export interface NavigationItemOptions {
   isActive?: boolean;
   isDisabled?: boolean;
   tooltipContent?: ReactNode | null;
+  onClick?: () => void;
 }

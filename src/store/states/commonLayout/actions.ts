@@ -21,10 +21,6 @@ export const getProjects = createAsyncAction(
   CommonLayoutActionType.GET_PROJECTS_FAILURE,
 )<string, ProjectsStateItem[], Error>();
 
-export const addCommon = createStandardAction(
-  CommonLayoutActionType.ADD_COMMON,
-)<ProjectsStateItem>();
-
 export const addProject = createStandardAction(
   CommonLayoutActionType.ADD_PROJECT,
 )<ProjectsStateItem>();

@@ -16,6 +16,7 @@ const NavigationItem: FC<NavigationItemProps> = (props) => {
     isActive = false,
     isDisabled = false,
     tooltipContent,
+    onClick,
   } = props;
   const itemClassName = classNames(styles.item, {
     [styles.itemActive]: isActive,
@@ -27,6 +28,12 @@ const NavigationItem: FC<NavigationItemProps> = (props) => {
 
     if (type === NavigationItemType.Block || isDisabled) {
       triggerEl = <div className={itemClassName}>{children}</div>;
+    } else if (onClick) {
+      triggerEl = (
+        <button className={itemClassName} onClick={onClick}>
+          {children}
+        </button>
+      );
     } else {
       triggerEl = (
         <NavLink className={itemClassName} to={route}>

@@ -1,6 +1,7 @@
 import produce from "immer";
 import { cloneDeep } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
+import { InboxItemType } from "@/shared/constants";
 import * as actions from "./actions";
 import { MultipleSpacesLayoutState } from "./types";
 
@@ -28,5 +29,31 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
         ...nextState.breadcrumbs,
       };
       nextState.breadcrumbs = null;
+    }),
+  )
+  .handleAction(actions.addProjectToBreadcrumbs, (state, { payload }) =>
+    produce(state, (nextState) => {
+      if (nextState.breadcrumbs?.type === InboxItemType.FeedItemFollow) {
+        nextState.breadcrumbs.items =
+          nextState.breadcrumbs.items.concat(payload);
+      }
+    }),
+  )
+  .handleAction(actions.updateProjectInBreadcrumbs, (state, { payload }) =>
+    produce(state, (nextState) => {
+      if (nextState.breadcrumbs?.type !== InboxItemType.FeedItemFollow) {
+        return;
+      }
+
+      const itemIndex = nextState.breadcrumbs.items.findIndex(
+        (item) => item.commonId === payload.commonId,
+      );
+
+      if (itemIndex > -1) {
+        nextState.breadcrumbs.items[itemIndex] = {
+          ...nextState.breadcrumbs.items[itemIndex],
+          ...payload,
+        };
+      }
     }),
   );

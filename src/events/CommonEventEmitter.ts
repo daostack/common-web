@@ -1,12 +1,23 @@
 import { EventEmitter } from "eventemitter3";
 import { Common } from "@/shared/models";
+import { ProjectsStateItem } from "@/store/states";
 
 export enum CommonEvent {
-  Created = "created",
+  CommonCreated = "common-created",
+  CommonUpdated = "common-updated",
+  ProjectCreated = "project-created",
+  ProjectUpdated = "project-updated",
 }
 
 export interface CommonEventToListener {
-  [CommonEvent.Created]: (common: Common) => void;
+  [CommonEvent.CommonCreated]: (common: Common) => void;
+  [CommonEvent.CommonUpdated]: (common: Common) => void;
+  [CommonEvent.ProjectCreated]: (projectsStateItem: ProjectsStateItem) => void;
+  [CommonEvent.ProjectUpdated]: (
+    projectsStateItem: { commonId: string } & Partial<
+      Omit<ProjectsStateItem, "commonId">
+    >,
+  ) => void;
 }
 
 class CommonEventEmitter extends EventEmitter<CommonEventToListener> {}

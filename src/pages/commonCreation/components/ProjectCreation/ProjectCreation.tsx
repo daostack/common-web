@@ -1,9 +1,9 @@
 import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Redirect, useHistory } from "react-router-dom";
+import { CommonEvent, CommonEventEmitter } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
-import { updateCommonState } from "@/pages/OldCommon/store/actions";
 import { GovernanceActions } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
@@ -11,12 +11,7 @@ import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
-import {
-  commonActions,
-  commonLayoutActions,
-  projectsActions,
-  ProjectsStateItem,
-} from "@/store/states";
+import { commonActions, ProjectsStateItem } from "@/store/states";
 import { CenterWrapper } from "../CenterWrapper";
 import { ProjectCreationForm } from "./components";
 import styles from "./ProjectCreation.module.scss";
@@ -59,13 +54,11 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
 
   const handleCreatedProject = (createdProject: Common) => {
     if (isEditing) {
-      dispatch(
-        projectsActions.updateProject({
-          commonId: createdProject.id,
-          image: createdProject.image,
-          name: createdProject.name,
-        }),
-      );
+      CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
+        commonId: createdProject.id,
+        image: createdProject.image,
+        name: createdProject.name,
+      });
     } else {
       const projectsStateItem: ProjectsStateItem = {
         commonId: createdProject.id,
@@ -77,19 +70,9 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
       };
 
       dispatch(commonActions.setIsNewProjectCreated(true));
-      dispatch(commonLayoutActions.addProject(projectsStateItem));
-      dispatch(projectsActions.addProject(projectsStateItem));
+      CommonEventEmitter.emit(CommonEvent.ProjectCreated, projectsStateItem);
     }
-    dispatch(
-      updateCommonState({
-        commonId: createdProject.id,
-        state: {
-          loading: false,
-          fetched: true,
-          data: createdProject,
-        },
-      }),
-    );
+    CommonEventEmitter.emit(CommonEvent.CommonUpdated, createdProject);
     history.push(getCommonPagePath(createdProject.id));
   };
 

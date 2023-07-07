@@ -8,7 +8,7 @@ import { ElementAttributes } from "./types";
 import { getElementTextDirection } from "./utils";
 import styles from "./Element.module.scss";
 
-const Mention = ({ attributes, element, className }) => {
+const Mention = ({ attributes, element, className, children }) => {
   return (
     <span
       {...attributes}
@@ -17,6 +17,7 @@ const Mention = ({ attributes, element, className }) => {
       className={className}
     >
       @{element.displayName}
+      {children}
     </span>
   );
 };
@@ -29,7 +30,7 @@ const Element: FC<RenderElementProps & { styles?: EditorElementStyles }> = (
     ...attributes,
     className: styles.element,
     style: {
-      "--element-indent-level": element.indentLevel || 0,
+      "--element-indent-level": element?.indentLevel || 0,
     } as CSSProperties,
     dir: getElementTextDirection(element, attributes.dir),
   };
@@ -80,6 +81,18 @@ const Element: FC<RenderElementProps & { styles?: EditorElementStyles }> = (
           {...props}
           className={classNames(styles.mention, elementStyles?.mention)}
         />
+      );
+    }
+    case ElementType.Emoji: {
+      return (
+        <span
+          {...attributes}
+          className={elementStyles?.emoji}
+          contentEditable={false}
+        >
+          {element.emoji}
+          {children}
+        </span>
       );
     }
     default:

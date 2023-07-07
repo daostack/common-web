@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
+import { CommonEvent, CommonEventEmitter } from "@/events";
 import { Modal } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useZoomDisabling } from "@/shared/hooks";
@@ -115,13 +116,11 @@ export default function EditCommonModal(props: EditCommonModalProps) {
         ...state,
         stage: UpdateCommonStage.Success,
       }));
-      const data = {
+      CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
         commonId: common.id,
         image: common.image,
         name: common.name,
-      };
-      dispatch(commonLayoutActions.updateCommonOrProject(data));
-      dispatch(projectsActions.updateProject(data));
+      });
     },
     [handleError],
   );

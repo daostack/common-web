@@ -1,6 +1,7 @@
 import { BaseEditor, Descendant } from "slate";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
+import { Skin } from "@emoji-mart/data";
 import { ElementType, FormatType } from "./constants";
 
 export type TextEditorValue = Descendant[];
@@ -58,6 +59,11 @@ export interface MentionElement extends BaseElement<CustomText> {
   userId: string;
 }
 
+export interface EmojiElement extends BaseElement<CustomText> {
+  type: ElementType.Emoji;
+  emoji: Skin;
+}
+
 export interface TextEditorStyles {
   label?: string;
   hint?: string;
@@ -67,6 +73,7 @@ export interface TextEditorStyles {
 
 export interface EditorElementStyles {
   mention?: string;
+  emoji?: string;
 }
 
 export type CustomElement =
@@ -76,4 +83,5 @@ export type CustomElement =
   | NumberedListElement
   | BulletedListElement
   | ListItemElement
-  | MentionElement;
+  | MentionElement
+  | EmojiElement;
