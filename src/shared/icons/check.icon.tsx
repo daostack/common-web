@@ -1,10 +1,15 @@
 import React from "react";
+import { Colors } from "../constants/shared";
 
 interface CheckIconProps {
   className?: string;
+  fill?: string;
 }
 
-export default function CheckIcon({ className }: CheckIconProps) {
+export default function CheckIcon({
+  className,
+  fill = Colors.pink,
+}: CheckIconProps) {
   return (
     <svg
       className={className}
@@ -14,7 +19,7 @@ export default function CheckIcon({ className }: CheckIconProps) {
       viewBox="0 0 16 16"
     >
       <g fill="none" fillRule="evenodd">
-        <g fill="#c32ea3" fillRule="nonzero">
+        <g fill={fill} fillRule="nonzero">
           <g>
             <g>
               <g>
