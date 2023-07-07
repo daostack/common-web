@@ -4,6 +4,7 @@ import { SIDENAV_KEY, SIDENAV_OPEN } from "@/shared/constants";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useQueryParams } from "@/shared/hooks";
 import { useAllViews } from "@/shared/hooks/viewport";
+import { closeSidenav } from "@/shared/utils";
 import styles from "./Sidenav.module.scss";
 
 interface SidenavProps {
@@ -20,10 +21,6 @@ const Sidenav: FC<SidenavProps> = (props) => {
     !viewportStates.isTabletView || queryParams[SIDENAV_KEY] === SIDENAV_OPEN;
   // Sidenav can be open only on tablet and lower viewports
   const isSidenavOpen = viewportStates.isTabletView && isSidenavVisible;
-
-  const closeSidenav = () => {
-    window.location.search = "";
-  };
 
   const onSidebarKeyUp = (event: KeyboardEvent<HTMLElement>): void => {
     if (event.key === KeyboardKeys.Escape) {

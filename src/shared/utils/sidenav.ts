@@ -14,3 +14,7 @@ export const openSidenav = () => {
     search,
   });
 };
+
+export const closeSidenav = () => {
+  window.location.search = "";
+};
