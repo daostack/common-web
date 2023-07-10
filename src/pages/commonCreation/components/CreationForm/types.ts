@@ -23,6 +23,10 @@ interface ItemValidation {
     enabled: boolean;
     max?: number;
   };
+  unique?: {
+    values?: string[];
+    message?: string;
+  };
 }
 
 interface BaseFormItem<Props extends { name: string } = { name: string }> {
@@ -34,7 +38,7 @@ interface BaseFormItem<Props extends { name: string } = { name: string }> {
 
 export interface TextFieldFormItem extends BaseFormItem<TextFieldProps> {
   type: CreationFormItemType.TextField;
-  validation?: Pick<ItemValidation, "required" | "max">;
+  validation?: Pick<ItemValidation, "required" | "max" | "unique">;
 }
 
 interface TextEditorFormItem extends BaseFormItem<TextEditorProps> {
