@@ -28,7 +28,7 @@ const InviteFriendsButton: FC<InviteFriendsButtonProps> = (props) => {
     }
   }, [isShowing]);
 
-  const buttonVariant = ButtonVariant.OutlineBlue;
+  const buttonVariant = ButtonVariant.OutlineDarkPink;
   const iconEl = <InviteFriendsIcon className={styles.icon} />;
 
   return (

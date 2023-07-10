@@ -1,9 +1,11 @@
 :root[data-theme="light"] {
-  --pink-primary: #ffffff;
-  --pink-secondary: #1c1e21;
+  --primary-fill: #c32ea3;
+  --secondary-fill: #a75a93;
+  --gentle-fill: #f3d4eb;
+  --hover-fill: #fff3fc;
+
+  --white-text: #ffffff;
 }
 
 :root[data-theme="dark"] {
-  --blue-primary: #18191a;
-  --blue-secondary: #f5f6f7;
 }

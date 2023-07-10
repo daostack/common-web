@@ -65,10 +65,7 @@ const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
       )}
       {!isLoading && isFinished && (
         <>
-          <CheckIcon
-            className="approve-invoices-prompt-wrapper__check-icon"
-            fill="currentColor"
-          />
+          <CheckIcon className="approve-invoices-prompt-wrapper__check-icon" />
           <h3 className="approve-invoices-prompt-wrapper__title">
             Invoices are successfully approved!
           </h3>
