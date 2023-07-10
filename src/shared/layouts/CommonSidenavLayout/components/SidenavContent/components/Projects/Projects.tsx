@@ -1,4 +1,11 @@
-import React, { FC, useCallback, useMemo } from "react";
+import React, {
+  forwardRef,
+  ForwardRefRenderFunction,
+  ReactNode,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+} from "react";
 import { useHistory } from "react-router";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
 import { useRoutesContext } from "@/shared/contexts";
@@ -10,7 +17,19 @@ import { useProjectsData } from "../../hooks";
 import { ProjectsTree } from "../ProjectsTree";
 import styles from "./Projects.module.scss";
 
-const Projects: FC = () => {
+export interface ProjectsRef {
+  openCreateCommonModal: () => void;
+}
+
+interface ProjectsProps {
+  renderNoItemsInfo?: () => ReactNode;
+}
+
+const Projects: ForwardRefRenderFunction<ProjectsRef, ProjectsProps> = (
+  props,
+  ref,
+) => {
+  const { renderNoItemsInfo } = props;
   const history = useHistory();
   const { getCommonPagePath, getProjectCreationPagePath } = useRoutesContext();
   const {
@@ -57,8 +76,32 @@ const Projects: FC = () => {
     [history.push, getProjectCreationPagePath],
   );
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      openCreateCommonModal: onCreateCommonModalOpen,
+    }),
+    [onCreateCommonModalOpen],
+  );
+
+  const createCommonModalEl = (
+    <CreateCommonModal
+      isShowing={isCreateCommonModalOpen}
+      onClose={onCreateCommonModalClose}
+      isSubCommonCreation={false}
+      onGoToCommon={handleGoToCommon}
+    />
+  );
+
   if (!parentItem) {
-    return areCommonsLoading ? <Loader className={styles.loader} /> : null;
+    return areCommonsLoading ? (
+      <Loader className={styles.loader} />
+    ) : (
+      <>
+        {renderNoItemsInfo?.() || null}
+        {createCommonModalEl}
+      </>
+    );
   }
 
   return (
@@ -77,14 +120,9 @@ const Projects: FC = () => {
         onAddProjectClick={handleAddProjectClick}
         isLoading={areProjectsLoading}
       />
-      <CreateCommonModal
-        isShowing={isCreateCommonModalOpen}
-        onClose={onCreateCommonModalClose}
-        isSubCommonCreation={false}
-        onGoToCommon={handleGoToCommon}
-      />
+      {createCommonModalEl}
     </>
   );
 };
 
-export default Projects;
+export default forwardRef(Projects);
