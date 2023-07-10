@@ -11,6 +11,7 @@ import { getLoaderColor } from "./utils";
 import styles from "./Button.module.scss";
 
 export enum ButtonVariant {
+  Transparent = "transparent",
   PrimaryGray = "primary-gray",
   PrimaryPurple = "primary-purple",
   PrimaryPink = "primary-pink",
@@ -51,6 +52,7 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
   } = props;
   const className = classNames(styles.button, props.className, {
     [styles.buttonDisabled]: visuallyDisabled || props.disabled,
+    [styles.buttonTransparentVariant]: variant === ButtonVariant.Transparent,
     [styles.buttonPrimaryGrayVariant]: variant === ButtonVariant.PrimaryGray,
     [styles.buttonPrimaryPurpleVariant]:
       variant === ButtonVariant.PrimaryPurple,

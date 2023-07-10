@@ -31,6 +31,8 @@ const ButtonIcon: ForwardRefRenderFunction<
     props.className,
     {
       [buttonStyles.buttonDisabled]: visuallyDisabled || props.disabled,
+      [buttonStyles.buttonTransparentVariant]:
+        variant === ButtonVariant.Transparent,
       [buttonStyles.buttonPrimaryGrayVariant]:
         variant === ButtonVariant.PrimaryGray,
       [buttonStyles.buttonOutlineBlueVariant]:
