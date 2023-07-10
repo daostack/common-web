@@ -11,6 +11,7 @@ import {
   TreeRecursive,
 } from "../../../../../SidenavLayout/components/SidenavContent/components/ProjectsTree";
 import { CommonDropdown } from "../CommonDropdown";
+import { INITIAL_TREE_ITEMS_LEVEL } from "./constants";
 import { useMenuItems } from "./hooks";
 import styles from "./ProjectsTree.module.scss";
 
@@ -88,7 +89,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
           parentName={parentItem.name}
           items={items}
           hasPermissionToAddProject={parentItem.hasPermissionToAddProject}
-          level={2}
+          level={INITIAL_TREE_ITEMS_LEVEL}
         />
         {isLoading && <Loader className={styles.loader} />}
       </Scrollbar>
