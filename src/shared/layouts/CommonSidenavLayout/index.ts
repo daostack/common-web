@@ -5,3 +5,4 @@ export {
 } from "./components";
 export { LayoutTab as CommonSidenavLayoutTab } from "./constants";
 export { getActiveLayoutTab } from "./components/LayoutTabs/utils";
+export { useProjectsData } from "./components/SidenavContent/hooks";

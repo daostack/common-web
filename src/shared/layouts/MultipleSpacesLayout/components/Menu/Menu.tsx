@@ -3,19 +3,24 @@ import { useQueryParams } from "@/shared/hooks";
 import { useAllViews } from "@/shared/hooks/viewport";
 import { checkIsSidenavOpen, closeSidenav } from "@/shared/utils";
 import { MenuPopUp } from "../MenuPopUp";
+import { Projects } from "../Projects";
+import styles from "./Menu.module.scss";
 
-interface MenuProps {
-  a?: boolean;
-}
-
-const Menu: FC<MenuProps> = (props) => {
-  const { a } = props;
+const Menu: FC = () => {
   const queryParams = useQueryParams();
   const viewportStates = useAllViews();
   const isSidenavOpen =
     viewportStates.isTabletView && checkIsSidenavOpen(queryParams);
 
-  return <MenuPopUp isOpen={isSidenavOpen} onClose={closeSidenav} />;
+  return (
+    <MenuPopUp
+      isOpen={isSidenavOpen}
+      onClose={closeSidenav}
+      modalContentClassName={styles.modalContent}
+    >
+      <Projects />
+    </MenuPopUp>
+  );
 };
 
 export default Menu;

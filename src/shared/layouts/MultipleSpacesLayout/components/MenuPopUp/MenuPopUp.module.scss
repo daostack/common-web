@@ -3,6 +3,10 @@
 .modal {
   height: 82vh;
   box-shadow: 0rem -1rem 1rem 0rem #{$c-shades-black}0f;
+
+  .modalContent {
+    padding-bottom: 0;
+  }
 }
 
 .modalOverlay {
