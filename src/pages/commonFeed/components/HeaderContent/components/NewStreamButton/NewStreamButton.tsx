@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useHistory } from "react-router";
 import { useMenuItems } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components/NewStreamButton";
 import { useRoutesContext } from "@/shared/contexts";
-import { BoldPlusIcon } from "@/shared/icons";
+import { BoldPlusIcon, PlusIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import {
   ButtonIcon,
@@ -43,8 +43,16 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   }
 
   const triggerEl = (
-    <ButtonIcon variant={ButtonVariant.PrimaryGray}>
-      <BoldPlusIcon className={styles.icon} />
+    <ButtonIcon
+      variant={
+        isMobileVersion ? ButtonVariant.Transparent : ButtonVariant.PrimaryGray
+      }
+    >
+      {isMobileVersion ? (
+        <PlusIcon className={styles.icon} />
+      ) : (
+        <BoldPlusIcon className={styles.icon} />
+      )}
     </ButtonIcon>
   );
   const menuProps = {

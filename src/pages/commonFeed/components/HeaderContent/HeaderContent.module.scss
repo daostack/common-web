@@ -62,6 +62,8 @@
   box-sizing: border-box;
 
   @include tablet {
+    width: 2rem;
+    height: 2rem;
     margin-right: 0.625rem;
   }
 }
@@ -86,6 +88,10 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  @include tablet {
+    font-size: $moderate-xsmall;
+  }
 }
 
 .commonMembersAmount {
@@ -99,7 +105,7 @@
 
   @include tablet {
     font-family: PoppinsSans, sans-serif;
-    font-size: $xxsmall;
+    font-size: $xxsmall-2;
   }
 }
 
