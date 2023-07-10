@@ -16,7 +16,14 @@ export const openSidenav = () => {
 };
 
 export const closeSidenav = () => {
-  window.location.search = "";
+  const params = queryString.parse(window.location.search);
+
+  if (params[SIDENAV_KEY]) {
+    delete params[SIDENAV_KEY];
+    history.push({
+      search: queryString.stringify(params),
+    });
+  }
 };
 
 export const checkIsSidenavOpen = (queryParams: ReturnType<typeof parse>) =>
