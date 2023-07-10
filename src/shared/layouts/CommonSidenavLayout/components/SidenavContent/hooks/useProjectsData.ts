@@ -6,13 +6,9 @@ import { useRoutesContext } from "@/shared/contexts";
 import {
   commonLayoutActions,
   ProjectsStateItem,
-  selectAreCommonLayoutCommonsFetched,
-  selectAreCommonLayoutCommonsLoading,
-  selectAreCommonLayoutProjectsFetched,
-  selectAreCommonLayoutProjectsLoading,
   selectCommonLayoutCommonId,
-  selectCommonLayoutCommons,
-  selectCommonLayoutProjects,
+  selectCommonLayoutCommonsState,
+  selectCommonLayoutProjectsState,
 } from "@/store/states";
 import {
   generateProjectsTreeItems,
@@ -41,12 +37,12 @@ export const useProjectsData = (): Return => {
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const isAuthenticated = useSelector(authentificated());
   const currentCommonId = useSelector(selectCommonLayoutCommonId);
-  const commons = useSelector(selectCommonLayoutCommons);
-  const areCommonsLoading = useSelector(selectAreCommonLayoutCommonsLoading);
-  const areCommonsFetched = useSelector(selectAreCommonLayoutCommonsFetched);
-  const projects = useSelector(selectCommonLayoutProjects);
-  const areProjectsLoading = useSelector(selectAreCommonLayoutProjectsLoading);
-  const areProjectsFetched = useSelector(selectAreCommonLayoutProjectsFetched);
+  const { commons, areCommonsLoading, areCommonsFetched } = useSelector(
+    selectCommonLayoutCommonsState,
+  );
+  const { projects, areProjectsLoading, areProjectsFetched } = useSelector(
+    selectCommonLayoutProjectsState,
+  );
   const currentCommon = commons.find(
     ({ commonId }) => commonId === currentCommonId,
   );
