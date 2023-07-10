@@ -27,6 +27,7 @@ const MenuPopUp: FC<MenuPopUpProps> = (props) => {
         content: classNames(styles.modalContent, modalContentClassName),
       }}
     >
+      <span className={styles.brow} />
       {children}
     </Modal>
   );

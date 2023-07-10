@@ -1,14 +1,27 @@
 @import "../../../../../constants";
 
+$modal-height: 82vh;
+
 .modal {
-  height: 82vh;
+  height: $modal-height;
   box-shadow: 0rem -1rem 1rem 0rem #{$c-shades-black}0f;
 
   .modalContent {
+    padding-top: 1.875rem;
     padding-bottom: 0;
   }
 }
 
 .modalOverlay {
   background-color: transparent;
+}
+
+.brow {
+  position: fixed;
+  bottom: calc(#{$modal-height} - 0.5rem);
+  left: 50%;
+  width: 3.5rem;
+  height: 0.3125rem;
+  background-color: $c-gray-20;
+  transform: translateX(-50%) translateY(100%);
 }
