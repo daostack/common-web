@@ -4,13 +4,14 @@ import classNames from "classnames";
 import { InviteFriendsButton } from "@/pages/common/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { RightArrowThinIcon } from "@/shared/icons";
 import {
   CirclesPermissions,
   Common,
   CommonMember,
   Governance,
 } from "@/shared/models";
-import { CommonAvatar } from "@/shared/ui-kit";
+import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { checkIsProject, getPluralEnding } from "@/shared/utils";
 import { NewStreamButton, ShareButton } from "./components";
 import styles from "./HeaderContent.module.scss";
@@ -28,16 +29,15 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
     props;
   const { getCommonPageAboutTabPath } = useRoutesContext();
   const isMobileVersion = useIsTabletView();
-
-  if (isMobileVersion) {
-    return null;
-  }
-
   const isProject = checkIsProject(common);
 
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.commonContent}>
+        <TopNavigationOpenSidenavButton
+          className={styles.openSidenavButton}
+          iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+        />
         <NavLink
           className={styles.commonLink}
           to={getCommonPageAboutTabPath(common.id)}
@@ -66,11 +66,13 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           governance={governance}
           isMobileVersion={isMobileVersion}
         />
-        <InviteFriendsButton
-          isMobileVersion={isMobileVersion}
-          common={common}
-          TriggerComponent={ShareButton}
-        />
+        {!isMobileVersion && (
+          <InviteFriendsButton
+            isMobileVersion={isMobileVersion}
+            common={common}
+            TriggerComponent={ShareButton}
+          />
+        )}
       </div>
     </div>
   );

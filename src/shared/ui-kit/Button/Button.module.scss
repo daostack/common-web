@@ -39,6 +39,25 @@
   }
 }
 
+.buttonTransparentVariant {
+  --btn-color: #{$c-gray-100};
+  --btn-bg-color: transparent;
+  --btn-border-color: none;
+  --btn-border: 0;
+
+  &:hover {
+    --btn-color: #{$c-neutrals-300};
+  }
+
+  &:active {
+    --btn-color: #{$c-neutrals-300};
+  }
+
+  &.buttonDisabled {
+    --btn-color: #{$c-neutrals-200};
+  }
+}
+
 .buttonPrimaryGrayVariant {
   --btn-color: #{$c-neutrals-300};
   --btn-bg-color: #{$c-neutrals-100};

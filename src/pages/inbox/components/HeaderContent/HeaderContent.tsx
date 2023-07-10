@@ -2,18 +2,25 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { InboxIcon } from "@/shared/icons";
+import { HeaderContent_v04 } from "../HeaderContent_v04";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
   className?: string;
+  streamsWithNotificationsAmount: number;
 }
 
 const HeaderContent: FC<HeaderContentProps> = (props) => {
-  const { className } = props;
+  const { className, streamsWithNotificationsAmount } = props;
   const isMobileVersion = useIsTabletView();
 
   if (isMobileVersion) {
-    return null;
+    return (
+      <HeaderContent_v04
+        className={className}
+        streamsWithNotificationsAmount={streamsWithNotificationsAmount}
+      />
+    );
   }
 
   return (
