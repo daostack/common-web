@@ -1,8 +1,19 @@
+import React from "react";
 import { useDispatch } from "react-redux";
 import { animateScroll } from "react-scroll";
 import { CommonFeedService } from "@/services";
 import { CommonAction, FollowFeedItemAction } from "@/shared/constants";
 import { useFeedItemFollow } from "@/shared/hooks/useCases";
+import {
+  Edit3Icon,
+  Pin2Icon,
+  Report2Icon,
+  Share3Icon,
+  FollowIcon,
+  Trash2Icon,
+  UnfollowIcon,
+  UnpinIcon,
+} from "@/shared/icons";
 import { ContextMenuItem as Item, UploadFile } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { notEmpty } from "@/shared/utils/notEmpty";
@@ -38,6 +49,7 @@ export const useMenuItems = (
         if (!commonId || !feedItem) return;
         await CommonFeedService.pinItem(commonId, feedItem.id);
       },
+      icon: <Pin2Icon />,
     },
     {
       id: FeedItemMenuItem.Unpin,
@@ -46,16 +58,19 @@ export const useMenuItems = (
         if (!commonId || !feedItem) return;
         await CommonFeedService.unpinItem(commonId, feedItem.id);
       },
+      icon: <UnpinIcon />,
     },
     {
       id: FeedItemMenuItem.Share,
       text: "Share",
       onClick: share,
+      icon: <Share3Icon />,
     },
     {
       id: FeedItemMenuItem.Report,
       text: "Report",
       onClick: report,
+      icon: <Report2Icon />,
     },
     {
       id: FeedItemMenuItem.Edit,
@@ -83,23 +98,28 @@ export const useMenuItems = (
         dispatch(commonActions.setCommonAction(CommonAction.EditDiscussion));
         animateScroll.scrollToTop({ containerId: document.body, smooth: true });
       },
+      icon: <Edit3Icon />,
     },
     {
       id: FeedItemMenuItem.Follow,
       text: "Follow",
       onClick: () => feedItemFollow.onFollowToggle(FollowFeedItemAction.Follow),
+      icon: <FollowIcon />,
     },
     {
       id: FeedItemMenuItem.Unfollow,
       text: "Unfollow",
       onClick: () =>
         feedItemFollow.onFollowToggle(FollowFeedItemAction.Unfollow),
+      icon: <UnfollowIcon />,
     },
     remove
       ? {
           id: FeedItemMenuItem.Remove,
-          text: "Remove",
+          text: "Delete",
           onClick: remove,
+          withWarning: true,
+          icon: <Trash2Icon />,
         }
       : undefined,
   ].filter(notEmpty);

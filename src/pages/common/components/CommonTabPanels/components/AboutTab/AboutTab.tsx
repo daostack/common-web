@@ -46,7 +46,6 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   } = props;
   const isTabletView = useIsTabletView();
   const { parentCommon, parentCommonSubCommons } = useCommonDataContext();
-  const isParentCommon = common.directParent === null;
   const allowedAboutActions = getAllowedActions(commonMember);
 
   const renderMainColumn = () => (
@@ -63,13 +62,11 @@ const AboutTab: FC<AboutTabProps> = (props) => {
         withJoinRequest={!commonMember}
         common={common}
       />
-      {isParentCommon && (
-        <CommonProjects
-          commonMember={commonMember}
-          subCommons={subCommons}
-          circles={governance.circles}
-        />
-      )}
+      <CommonProjects
+        commonMember={commonMember}
+        subCommons={subCommons}
+        circles={governance.circles}
+      />
       {parentCommon && (
         <CommonParent
           parentCommon={parentCommon}
@@ -83,7 +80,7 @@ const AboutTab: FC<AboutTabProps> = (props) => {
     <div className={styles.mainColumnWrapper}>
       <CommonDescription common={common} />
       <div className={styles.separator} />
-      {isParentCommon && subCommons.length > 0 && (
+      {subCommons.length > 0 && (
         <>
           <CommonProjects
             commonMember={commonMember}
