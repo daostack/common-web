@@ -35,6 +35,6 @@
     --scroll-thumb-color: #{$c-neutrals-300};
   }
   &:hover {
-    background-color: var(--medium-gray);
+    --scroll-thumb-color: var(--medium-gray);
   }
 }
