@@ -18,7 +18,7 @@ export const removeTextEditorEmptyEndLinesValues = (
       const firstChild = element.children?.[0];
       const secondChild = element.children?.[1];
 
-      if (firstChild?.text !== "" || Element.isElementType(secondChild, ElementType.Mention)) {
+      if (firstChild?.text !== "" || Element.isElementType(secondChild, ElementType.Mention) || Element.isElementType(secondChild, ElementType.Emoji)) {
         endOfTextIndex = index;
         return true;
       }
@@ -28,7 +28,6 @@ export const removeTextEditorEmptyEndLinesValues = (
       endOfTextIndex = index;
     }
   })
-
 
   return updatedValue.reverse();
 };

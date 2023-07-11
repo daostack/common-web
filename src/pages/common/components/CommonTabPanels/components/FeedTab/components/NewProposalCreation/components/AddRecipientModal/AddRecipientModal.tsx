@@ -262,7 +262,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
             <div className={styles.buttonsWrapper}>
               <Button
                 className={styles.button}
-                variant={ButtonVariant.PrimaryGray}
+                variant={ButtonVariant.OutlineDarkPink}
                 size={ButtonSize.Large}
                 onClick={onClose}
               >
@@ -271,7 +271,7 @@ const AddRecipientModal: FC<AddRecipientModalProps> = ({
               <Button
                 className={styles.button}
                 size={ButtonSize.Large}
-                variant={ButtonVariant.LightPurple}
+                variant={ButtonVariant.PrimaryPink}
                 onClick={() => handleSubmit()}
                 disabled={!isValid}
               >

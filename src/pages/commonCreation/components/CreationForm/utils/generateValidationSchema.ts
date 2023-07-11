@@ -24,6 +24,12 @@ const getValidationSchemaForTextFieldItem = ({
   if (validation.required?.value) {
     schema = schema.required(validation.required.message);
   }
+  if (validation.unique?.values) {
+    schema = schema.notOneOf(
+      validation.unique.values,
+      validation.unique.message,
+    );
+  }
 
   return schema;
 };

@@ -1,8 +1,5 @@
 import React, { FC } from "react";
-import { useSelector } from "react-redux";
-import { Button, ButtonVariant } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
-import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
 interface SuccessProps {
@@ -12,8 +9,6 @@ interface SuccessProps {
 
 const Success: FC<SuccessProps> = (props) => {
   const { onBackToCommon, onViewProposal } = props;
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
 
   return (
     <div className="delete-common-success">
@@ -28,19 +23,10 @@ const Success: FC<SuccessProps> = (props) => {
         reject it. You will be notified when the voting ends.
       </p>
       <div className="delete-common-success__buttons-wrapper">
-        <Button
-          className="delete-common-success__back-button"
-          onClick={onBackToCommon}
-          variant={
-            isMobileView
-              ? ButtonVariant.SecondaryPurple
-              : ButtonVariant.Secondary
-          }
-          shouldUseFullWidth
-        >
+        <Button variant={ButtonVariant.PrimaryGray} onClick={onBackToCommon}>
           Back to Common
         </Button>
-        <Button onClick={onViewProposal} shouldUseFullWidth>
+        <Button variant={ButtonVariant.PrimaryPink} onClick={onViewProposal}>
           View proposal
         </Button>
       </div>

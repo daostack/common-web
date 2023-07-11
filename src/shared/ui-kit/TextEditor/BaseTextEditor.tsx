@@ -28,10 +28,13 @@ import {
   EmojiPicker,
 } from "./components";
 import { TextEditorSize } from "./constants";
-import { withInlines, withMentions } from "./hofs";
-import { TextEditorValue } from "./types";
-import { parseStringToTextEditorValue } from "./utils";
-import { insertMention } from "./utils/insertMention";
+import { withInlines, withMentions, withEmojis } from "./hofs";
+import { TextEditorValue, EditorElementStyles } from "./types";
+import {
+  parseStringToTextEditorValue,
+  insertEmoji,
+  insertMention,
+} from "./utils";
 import styles from "./BaseTextEditor.module.scss";
 
 export interface TextEditorProps {
@@ -55,6 +58,7 @@ export interface TextEditorProps {
   users?: User[];
   shouldReinitializeEditor: boolean;
   onClearFinished: () => void;
+  elementStyles?: EditorElementStyles;
 }
 
 const INITIAL_SEARCH_VALUE = {
@@ -86,13 +90,16 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     users,
     shouldReinitializeEditor = false,
     onClearFinished,
+    elementStyles,
   } = props;
   const editor = useMemo(
     () =>
-      withMentions(
-        withInlines(withHistory(withReact(createEditor())), {
-          shouldInsertURLAsLink: false,
-        }),
+      withEmojis(
+        withMentions(
+          withInlines(withHistory(withReact(createEditor())), {
+            shouldInsertURLAsLink: false,
+          }),
+        ),
       ),
     [],
   );
@@ -231,13 +238,15 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           disabled={disabled}
           onBlur={onBlur}
           onKeyDown={handleKeyDown}
+          elementStyles={elementStyles}
         />
         <EmojiPicker
           containerClassName={emojiContainerClassName}
           pickerContainerClassName={emojiPickerContainerClassName}
           onEmojiSelect={(emoji) => {
             Transforms.select(editor, EditorSlate.end(editor, []));
-            Transforms.insertText(editor, emoji.native);
+            // Transforms.insertText(editor, emoji.native);
+            insertEmoji(editor, emoji.native);
           }}
         />
 

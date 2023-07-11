@@ -4,7 +4,6 @@
 .container {
   position: relative;
   margin-bottom: 0.125rem;
-  width: 15.4375rem;
   cursor: pointer;
 }
 
@@ -47,8 +46,8 @@
 .singleImage {
   max-width: 15.4375rem;
   max-height: 16.625rem;
-  width: 15.4375rem;
-  height: 16.625rem;
+  width: 100%;
+  height: 100%;
 }
 
 .singleImageContainer {

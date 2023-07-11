@@ -9,7 +9,7 @@ import React, {
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-import { Button, Separator } from "@/shared/components";
+import { Separator } from "@/shared/components";
 import {
   Checkbox,
   CurrencyInput,
@@ -26,6 +26,7 @@ import {
 import { Currency } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { commonTypeText, formatPrice } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
@@ -267,9 +268,9 @@ export default function Funding({
               <ModalFooter sticky>
                 <div className="create-common-funding__modal-footer">
                   <Button
+                    variant={ButtonVariant.PrimaryPink}
                     key="funding-continue"
                     onClick={handleContinueClick}
-                    shouldUseFullWidth={isMobileView}
                     disabled={!isValid}
                   >
                     Continue to Review

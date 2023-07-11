@@ -2,11 +2,12 @@ import React, { FC, useCallback, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
 import { FormikProps } from "formik/dist/types";
-import { Button, ModalFooter } from "@/shared/components";
+import { ModalFooter } from "@/shared/components";
 import { Checkbox, Form, TextField } from "@/shared/components/Form/Formik";
 import { ScreenSize } from "@/shared/constants";
 import TrashIcon from "@/shared/icons/trash.icon";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { StageName } from "../../StageName";
 import { DeleteCommonData } from "../types";
 import validationSchema from "./validationSchema";
@@ -96,11 +97,9 @@ const Configuration: FC<ConfigurationProps> = (props) => {
             <ModalFooter sticky>
               <div className="delete-common-configuration__modal-footer">
                 <Button
-                  key="delete-common-configuration"
-                  className="delete-common-configuration__submit-button"
                   onClick={handleContinue}
                   disabled={!isValid || !isCommonDeletionAllowed}
-                  shouldUseFullWidth
+                  variant={ButtonVariant.PrimaryPink}
                 >
                   {isMobileView ? "Continue" : "Create Proposal"}
                 </Button>

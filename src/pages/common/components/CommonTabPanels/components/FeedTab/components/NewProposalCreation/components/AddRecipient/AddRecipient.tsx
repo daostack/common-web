@@ -164,7 +164,7 @@ const AddRecipient: FC = () => {
                     <Button
                       className={styles.addRecipientButton}
                       onClick={handleOpen}
-                      variant={ButtonVariant.PrimaryPurple}
+                      variant={ButtonVariant.PrimaryPink}
                       size={ButtonSize.Medium}
                       leftIcon={iconEl}
                     >

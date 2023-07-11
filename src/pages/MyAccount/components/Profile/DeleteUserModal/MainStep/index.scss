@@ -83,6 +83,10 @@
   margin-top: 3.25rem;
   display: flex;
   justify-content: flex-end;
+
+  @include big-phone {
+    flex-direction: column;
+  }
 }
 
 .delete-user-main-step__button {
@@ -95,5 +99,9 @@
 
   @include big-phone {
     max-width: unset;
+    margin: unset;
+    &:last-child {
+      margin-top: 1rem;
+    }
   }
 }

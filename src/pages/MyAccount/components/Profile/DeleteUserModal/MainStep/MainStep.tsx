@@ -2,9 +2,9 @@ import React, { ChangeEventHandler, FC, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { UserMembershipInfo } from "@/pages/OldCommon/interfaces";
-import { Button, ButtonVariant } from "@/shared/components";
 import { Checkbox, ErrorText, Input } from "@/shared/components/Form";
 import { ErrorCode } from "@/shared/constants";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { DeleteError, LeaveCommonErrors } from "../types";
 import "./index.scss";
@@ -166,17 +166,16 @@ const MainStep: FC<MainStepProps> = (props) => {
         <Button
           className="delete-user-main-step__button"
           onClick={onCancel}
-          variant={ButtonVariant.Secondary}
+          variant={ButtonVariant.OutlineDarkPink}
           disabled={isLoading}
-          shouldUseFullWidth
         >
           Cancel
         </Button>
         <Button
+          variant={ButtonVariant.PrimaryPink}
           className="delete-user-main-step__button"
           onClick={onDelete}
           disabled={isDeleteButtonDisabled}
-          shouldUseFullWidth
         >
           Delete me
         </Button>

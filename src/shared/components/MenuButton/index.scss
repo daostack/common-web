@@ -7,11 +7,10 @@
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  background-color: $light-gray-4;
-  color: $secondary-blue;
+  background-color: var(--gentle-fill);
 
   &:hover {
-    background-color: $purple-hover;
+    background-color: var(--hover-fill);
   }
 
   &.menu-button--with-border {

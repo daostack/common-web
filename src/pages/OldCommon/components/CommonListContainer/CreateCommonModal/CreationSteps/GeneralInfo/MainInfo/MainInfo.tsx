@@ -2,11 +2,11 @@ import React, { FC, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Formik } from "formik";
 import { FormikProps } from "formik/dist/types";
-import { Button } from "@/shared/components";
 import { Form, LinksArray, TextField } from "@/shared/components/Form/Formik";
 import { ModalFooter } from "@/shared/components/Modal";
 import { MAX_LINK_TITLE_LENGTH, ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { commonTypeText } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../../interfaces";
 import {
@@ -95,8 +95,8 @@ const MainInfo: FC<GeneralInfoProps> = (props) => {
           <ModalFooter sticky>
             <div className="create-common-general-info__modal-footer">
               <Button
+                variant={ButtonVariant.PrimaryPink}
                 onClick={handleContinueClick}
-                shouldUseFullWidth={isMobileView}
                 disabled={!isValid}
               >
                 Continue to Acknowledgment

@@ -46,6 +46,7 @@ export enum Colors {
   primary400 = "#5666F5",
   lightPink = "#F3D4EB",
   darkBlue = "#2E3452",
+  pink = "#c32ea3",
 }
 
 export const AXIOS_TIMEOUT = 1000000;
