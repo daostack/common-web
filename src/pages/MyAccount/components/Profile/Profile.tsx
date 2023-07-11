@@ -5,11 +5,12 @@ import {
   UserDetails,
   UserDetailsRef,
 } from "@/pages/Login/components/LoginContainer/UserDetails";
-import { Button, ButtonIcon, ButtonVariant, Loader } from "@/shared/components";
+import { ButtonIcon, Loader } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import EditIcon from "@/shared/icons/edit.icon";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { DeleteUserModal } from "../../components/Profile";
 import "./index.scss";
 
@@ -50,18 +51,17 @@ export default function Profile() {
     <div className="profile-wrapper__buttons-wrapper">
       <Button
         className="profile-wrapper__button"
-        variant={ButtonVariant.Secondary}
+        variant={ButtonVariant.OutlineDarkPink}
         onClick={handleCancelClick}
         disabled={isSubmitting}
-        shouldUseFullWidth
       >
         Cancel
       </Button>
       <Button
+        variant={ButtonVariant.PrimaryPink}
         className="profile-wrapper__button"
         onClick={handleSubmit}
         disabled={isSubmitting}
-        shouldUseFullWidth
       >
         Save
       </Button>
@@ -105,9 +105,9 @@ export default function Profile() {
           {isEditing && isMobileView && buttonsWrapperEl}
           {!isEditing && (
             <Button
+              variant={ButtonVariant.Warning}
               className="profile-wrapper__delete-account-button"
               onClick={onDeleteAccountModalOpen}
-              shouldUseFullWidth
             >
               Delete My Account
             </Button>

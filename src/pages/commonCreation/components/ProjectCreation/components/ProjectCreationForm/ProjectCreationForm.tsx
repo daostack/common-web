@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useCommonUpdate } from "@/pages/OldCommon/components/CommonListContainer/EditCommonModal/useCases";
 import { usePreventReload } from "@/shared/hooks";
 import { useProjectCreation } from "@/shared/hooks/useCases";
@@ -13,10 +13,10 @@ import {
   convertLinksToUploadFiles,
   getCirclesWithHighestTier,
 } from "@/shared/utils";
-import { projectsActions } from "@/store/states";
+import { projectsActions, selectCommonLayoutProjects } from "@/store/states";
 import { generateCreationForm, CreationFormRef } from "../../../CreationForm";
 import { UnsavedChangesPrompt } from "../UnsavedChangesPrompt";
-import { CONFIGURATION } from "./configuration";
+import { getConfiguration } from "./configuration";
 import { ProjectCreationFormValues } from "./types";
 import styles from "./ProjectCreationForm.module.scss";
 
@@ -74,6 +74,9 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     onCancel,
   } = props;
   const dispatch = useDispatch();
+  const projects = useSelector(selectCommonLayoutProjects);
+  const existingProjectsNames = projects.map((project) => project?.name);
+
   const formRef = useRef<CreationFormRef>(null);
   const {
     isProjectCreationLoading,
@@ -152,7 +155,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         ref={formRef}
         initialValues={initialValues}
         onSubmit={isEditing ? handleProjectUpdate : handleProjectCreate}
-        items={CONFIGURATION}
+        items={getConfiguration(true, { existingNames: existingProjectsNames })}
         submitButtonText={isEditing ? "Save changes" : "Create Space"}
         disabled={isLoading}
         error={error}

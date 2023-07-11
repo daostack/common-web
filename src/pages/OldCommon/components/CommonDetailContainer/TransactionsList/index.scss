@@ -16,7 +16,7 @@
 .transactions-list-empty-set {
   font-size: $xsmall;
   font-weight: bold;
-  color: $purple-2;
+  color: var(--primary-fill);
 }
 
 .transaction__wrapper {

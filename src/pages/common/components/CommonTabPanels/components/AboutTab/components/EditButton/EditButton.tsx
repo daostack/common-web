@@ -13,7 +13,7 @@ interface EditButtonProps {
 const EditButton: FC<EditButtonProps> = (props) => {
   const { isMobileVersion = false, commonId } = props;
   const history = useHistory();
-  const buttonVariant = ButtonVariant.OutlineBlue;
+  const buttonVariant = ButtonVariant.OutlineDarkPink;
   const iconEl = <Edit2Icon className={styles.icon} />;
 
   const handleClick = () => {

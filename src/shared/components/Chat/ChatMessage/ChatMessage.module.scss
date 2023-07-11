@@ -60,6 +60,7 @@
   box-sizing: border-box;
   position: relative;
   text-align: start;
+  width: 100%;
 
   &:hover {
     .menuArrowButton {
@@ -268,4 +269,3 @@
 .multipleEmojiText {
   font-size: $large;
 }
-

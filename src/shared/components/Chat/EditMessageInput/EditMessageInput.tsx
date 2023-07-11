@@ -4,14 +4,14 @@ import classNames from "classnames";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import * as oldCommonActions from "@/pages/OldCommon/store/actions";
 import { ChatService } from "@/services";
-import { Loader, Button } from "@/shared/components";
+import { Loader } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
 import {
   CommonMember,
   checkIsUserDiscussionMessage,
   DiscussionMessage,
 } from "@/shared/models";
-import { BaseTextEditor } from "@/shared/ui-kit";
+import { BaseTextEditor, Button, ButtonVariant } from "@/shared/ui-kit";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import { emptyFunction, getUserName } from "@/shared/utils";
 import styles from "./EditMessageInput.module.scss";
@@ -123,6 +123,7 @@ export default function EditMessageInput({
 
       <div className={styles.buttonContainer}>
         <Button
+          variant={ButtonVariant.OutlineDarkPink}
           disabled={isLoading}
           onClick={onClose}
           className={classNames(styles.button, styles.cancelButton)}
@@ -130,6 +131,7 @@ export default function EditMessageInput({
           Cancel
         </Button>
         <Button
+          variant={ButtonVariant.PrimaryPink}
           disabled={isLoading}
           onClick={updateMessage}
           className={classNames(styles.button, styles.saveButton)}

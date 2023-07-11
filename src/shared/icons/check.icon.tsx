@@ -8,7 +8,7 @@ interface CheckIconProps {
 
 export default function CheckIcon({
   className,
-  fill = Colors.purple,
+  fill = Colors.pink,
 }: CheckIconProps) {
   return (
     <svg

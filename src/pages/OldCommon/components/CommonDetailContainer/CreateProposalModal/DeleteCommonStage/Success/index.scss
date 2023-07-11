@@ -56,9 +56,3 @@
     grid-template-columns: 1fr;
   }
 }
-
-.delete-common-success__back-button {
-  @include big-phone {
-    grid-row: 2;
-  }
-}
