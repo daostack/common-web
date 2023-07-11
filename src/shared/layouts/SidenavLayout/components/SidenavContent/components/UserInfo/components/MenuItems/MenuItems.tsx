@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import classNames from "classnames";
 import { Menu } from "@headlessui/react";
 import { logOut } from "@/pages/Auth/store/actions";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { MenuItem } from "./components";
 import { Item, ItemType } from "./types";
 import styles from "./MenuItems.module.scss";
@@ -13,23 +13,29 @@ export enum MenuItemsPlacement {
   Bottom,
 }
 
+export interface MenuItemsStyles {
+  wrapper?: string;
+}
+
 interface MenuItemsProps {
   placement?: MenuItemsPlacement;
+  styles?: MenuItemsStyles;
 }
 
 const MenuItems: FC<MenuItemsProps> = (props) => {
-  const { placement = MenuItemsPlacement.Bottom } = props;
+  const { placement = MenuItemsPlacement.Bottom, styles: outerStyles } = props;
   const dispatch = useDispatch();
+  const { getProfilePagePath, getBillingPagePath } = useRoutesContext();
   const items: Item[] = [
     {
       key: "my-profile",
       text: "My profile",
-      to: ROUTE_PATHS.PROFILE,
+      to: getProfilePagePath(),
     },
     {
       key: "billing",
       text: "Billing",
-      to: ROUTE_PATHS.BILLING,
+      to: getBillingPagePath(),
     },
     {
       key: "log-out",
@@ -45,7 +51,7 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
   return (
     <Menu.Items as={React.Fragment}>
       <ul
-        className={classNames(styles.itemsWrapper, {
+        className={classNames(styles.itemsWrapper, outerStyles?.wrapper, {
           [styles.itemsWrapperPlacementTop]:
             placement === MenuItemsPlacement.Top,
           [styles.itemsWrapperPlacementBottom]:

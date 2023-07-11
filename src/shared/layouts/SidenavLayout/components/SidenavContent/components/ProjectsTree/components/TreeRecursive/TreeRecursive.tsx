@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { BoldPlusIcon } from "@/shared/icons";
 import { useTreeContext } from "../../context";
 import { Item } from "../../types";
 import { PlaceholderTreeItem } from "../PlaceholderTreeItem";
@@ -11,14 +12,34 @@ interface TreeRecursiveProps {
   items: Item[];
   parentId?: string;
   parentName?: string;
+  hasPermissionToAddProject?: boolean;
   level?: number;
 }
 
 const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
-  const { className, items, parentId, parentName, level = 1 } = props;
-  const { activeItemId, itemIdWithNewProjectCreation, isActiveCheckAllowed } =
-    useTreeContext();
+  const {
+    className,
+    items,
+    parentId,
+    parentName,
+    hasPermissionToAddProject,
+    level = 1,
+  } = props;
+  const {
+    activeItemId,
+    itemIdWithNewProjectCreation,
+    isActiveCheckAllowed,
+    onAddProjectClick,
+  } = useTreeContext();
   const isFirstLevel = level === 1;
+  const isTreeWithNewSpaceCreation =
+    Boolean(itemIdWithNewProjectCreation) &&
+    parentId === itemIdWithNewProjectCreation;
+  const shouldDisplayAddSpaceItem =
+    hasPermissionToAddProject &&
+    !isTreeWithNewSpaceCreation &&
+    parentId &&
+    onAddProjectClick;
 
   return (
     <ul
@@ -31,10 +52,6 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
           : "List of related to you spaces"
       }
     >
-      {Boolean(itemIdWithNewProjectCreation) &&
-        parentId === itemIdWithNewProjectCreation && (
-          <PlaceholderTreeItem name="New space" level={level} isActive />
-        )}
       {items.map((item) => (
         <TreeItem
           key={item.id}
@@ -42,16 +59,36 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
           level={level}
           isActive={isActiveCheckAllowed && item.id === activeItemId}
         >
-          {item.items && item.items.length > 0 ? (
+          {(item.items && item.items.length > 0) ||
+          item.id === itemIdWithNewProjectCreation ||
+          item.hasPermissionToAddProject ? (
             <TreeRecursive
-              items={item.items}
+              items={item.items || []}
               parentId={item.id}
               parentName={item.name}
+              hasPermissionToAddProject={item.hasPermissionToAddProject}
               level={level + 1}
             />
           ) : null}
         </TreeItem>
       ))}
+      {isTreeWithNewSpaceCreation && (
+        <PlaceholderTreeItem
+          imageClassName={styles.newProjectImage}
+          name="New space"
+          level={level}
+          isActive
+        />
+      )}
+      {shouldDisplayAddSpaceItem && (
+        <PlaceholderTreeItem
+          className={styles.addProjectItem}
+          name="Add a space"
+          level={level}
+          icon={<BoldPlusIcon className={styles.plusIcon} />}
+          onClick={() => onAddProjectClick(parentId)}
+        />
+      )}
     </ul>
   );
 };

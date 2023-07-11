@@ -2,6 +2,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
+import { useRoutesContext } from "@/shared/contexts";
 import { useForceUpdate, useModal } from "@/shared/hooks";
 import {
   useDiscussionById,
@@ -9,6 +10,7 @@ import {
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
+import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Common,
   CommonFeed,
@@ -62,6 +64,7 @@ interface ProposalFeedCardProps {
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   isMobileVersion?: boolean;
+  onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -80,11 +83,13 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     getLastMessage,
     getNonAllowedItems,
     isMobileVersion,
+    onActiveItemDataChange,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
   const forceUpdate = useForceUpdate();
+  const { getCommonPagePath } = useRoutesContext();
   const {
     fetchUser: fetchFeedItemUser,
     data: feedItemUser,
@@ -157,6 +162,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       share: () => onShareModalOpen(),
     },
   );
+  const cardTitle = discussion?.title;
 
   useEffect(() => {
     fetchFeedItemUser(item.userId);
@@ -197,6 +203,15 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       fetchProposalSpecificData(proposal, true);
     }
   }, [proposal?.id]);
+
+  useEffect(() => {
+    if (isActive && cardTitle) {
+      onActiveItemDataChange?.({
+        itemId: item.id,
+        title: cardTitle,
+      });
+    }
+  }, [isActive, cardTitle]);
 
   const handleOpenChat = useCallback(() => {
     if (discussion && proposal) {
@@ -281,7 +296,11 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           menuItems={menuItems}
         />
         <FeedCardContent
-          subtitle={getProposalSubtitle(proposal, proposalSpecificData)}
+          subtitle={getProposalSubtitle(
+            proposal,
+            proposalSpecificData,
+            getCommonPagePath(proposalSpecificData.targetCommon?.id || ""),
+          )}
           description={getProposalDescriptionString(
             proposal.data.args.description,
             proposal.type,
@@ -325,7 +344,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         isActive={isActive}
         isExpanded={isExpanded}
         unreadMessages={feedItemUserMetadata?.count || 0}
-        title={discussion?.title}
+        title={cardTitle}
         lastMessage={getLastMessage({
           commonFeedType: item.data.type,
           lastMessage: item.data.lastMessage,

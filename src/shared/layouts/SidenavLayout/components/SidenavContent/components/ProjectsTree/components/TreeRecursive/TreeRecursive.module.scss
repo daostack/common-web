@@ -1,3 +1,5 @@
+@import "../../../../../../../../../constants";
+
 .list {
   margin: 0;
   padding: 0;
@@ -14,4 +16,16 @@
       opacity: 1;
     }
   }
+}
+
+.newProjectImage {
+  background-color: $c-pink-dark;
+}
+
+.addProjectItem {
+  --item-text-color: #{$c-pink-primary};
+}
+
+.plusIcon {
+  padding-right: 0.875rem;
 }

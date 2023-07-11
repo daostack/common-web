@@ -1,0 +1,29 @@
+@import "../../../../../../../../../constants";
+
+.button {
+  --breadcrumbs-color: #{$c-gray-40};
+  --breadcrumbs-bg-color: transparent;
+
+  max-width: 17rem;
+  padding: 0.375rem 0.75rem;
+  font-family: PoppinsSans, sans-serif;
+  font-size: $moderate-xsmall;
+  font-weight: normal;
+  color: var(--breadcrumbs-color);
+  background-color: var(--breadcrumbs-bg-color);
+  text-align: center;
+  border: 0;
+  border-radius: 0.3125rem;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.2s;
+  box-sizing: border-box;
+
+  &:hover {
+    --breadcrumbs-color: #{$c-shades-black};
+    --breadcrumbs-bg-color: #{$c-gray-20};
+  }
+}

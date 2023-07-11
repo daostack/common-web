@@ -1,8 +1,8 @@
 import { BaseEditor, Descendant } from "slate";
 import { HistoryEditor } from "slate-history";
 import { ReactEditor } from "slate-react";
-import { ElementType, FormatType } from "./constants";
 import { Skin } from "@emoji-mart/data";
+import { ElementType, FormatType } from "./constants";
 
 export type TextEditorValue = Descendant[];
 

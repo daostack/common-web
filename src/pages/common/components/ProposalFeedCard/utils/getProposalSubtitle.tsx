@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { ProposalsTypes, ROUTE_PATHS } from "@/shared/constants";
+import { ProposalsTypes } from "@/shared/constants";
 import { Proposal } from "@/shared/models";
 import { FundsAllocation } from "@/shared/models/governance/proposals";
 import { formatPriceEntrance, getUserName } from "@/shared/utils";
@@ -8,6 +8,7 @@ import { ProposalSpecificData } from "../types";
 const getSubtitleForFundsAllocation = (
   fundsAllocation: FundsAllocation,
   proposalSpecificData: ProposalSpecificData,
+  commonPagePath: string,
 ): ReactNode => {
   const { targetUser, targetCommon } = proposalSpecificData;
   const formattedPrice = formatPriceEntrance(fundsAllocation.data.args.amount);
@@ -16,11 +17,7 @@ const getSubtitleForFundsAllocation = (
     return (
       <>
         {formattedPrice} to project{" "}
-        <a
-          href={ROUTE_PATHS.COMMON.replace(":id", targetCommon.id)}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={commonPagePath} target="_blank" rel="noopener noreferrer">
           {targetCommon.name}
         </a>
       </>
@@ -36,10 +33,15 @@ const getSubtitleForFundsAllocation = (
 export const getProposalSubtitle = (
   proposal: Proposal,
   proposalSpecificData: ProposalSpecificData,
+  commonPagePath: string,
 ): ReactNode => {
   switch (proposal.type) {
     case ProposalsTypes.FUNDS_ALLOCATION:
-      return getSubtitleForFundsAllocation(proposal, proposalSpecificData);
+      return getSubtitleForFundsAllocation(
+        proposal,
+        proposalSpecificData,
+        commonPagePath,
+      );
     default:
       return null;
   }

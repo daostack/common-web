@@ -1,31 +1,47 @@
 import { CommonTab } from "@/pages/common";
 import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
 
-export const getCommonPagePath = (
+export type GetCommonPagePath = (
+  commonId: string,
+  queryParamKey?: {
+    tab?: CommonTab;
+    item?: string;
+  },
+) => string;
+export type GetCommonPageAboutTabPath = (commonId: string) => string;
+export type GetGeneralPagePath = () => ROUTE_PATHS;
+export type GetGeneralPageWithCommonIdPath = (commonId: string) => string;
+
+export const buildCommonPagePath = (
+  baseCommonPagePath: string,
   commonId: string,
   queryParamKey?: {
     tab?: CommonTab;
     item?: string;
   },
 ): string => {
-  const basePath = ROUTE_PATHS.COMMON.replace(":id", commonId);
+  const path = baseCommonPagePath.replace(":id", commonId);
 
   if (queryParamKey?.item) {
-    return `${basePath}?${QueryParamKey.Item}=${queryParamKey?.item}`;
+    return `${path}?${QueryParamKey.Item}=${queryParamKey.item}`;
   }
-
   if (queryParamKey?.tab) {
-    return `${basePath}?${QueryParamKey.Tab}=${queryParamKey.tab}`;
+    return `${path}?${QueryParamKey.Tab}=${queryParamKey.tab}`;
   }
 
-  return basePath;
+  return path;
 };
 
-export const getCommonPageAboutTabPath = (commonId: string): string =>
-  ROUTE_PATHS.COMMON_ABOUT_TAB.replace(":id", commonId);
+export const getCommonPagePath: GetCommonPagePath = (...args) =>
+  buildCommonPagePath(ROUTE_PATHS.COMMON, ...args);
 
-export const getProjectCreationPagePath = (commonId: string): string =>
-  ROUTE_PATHS.PROJECT_CREATION.replace(":id", commonId);
+export const getCommonPageAboutTabPath: GetCommonPageAboutTabPath = (
+  commonId,
+) => ROUTE_PATHS.COMMON_ABOUT_TAB.replace(":id", commonId);
+
+export const getProjectCreationPagePath: GetGeneralPageWithCommonIdPath = (
+  commonId,
+) => ROUTE_PATHS.PROJECT_CREATION.replace(":id", commonId);
 
 export const getCommonEditingPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_EDITING.replace(":id", commonId);
@@ -33,16 +49,36 @@ export const getCommonEditingPagePath = (commonId: string): string =>
 export const getCommonSupportPagePath = (commonId: string): string =>
   ROUTE_PATHS.COMMON_SUPPORT.replace(":id", commonId);
 
-export const getInboxPagePath = (): string => ROUTE_PATHS.INBOX;
+export const getInboxPagePath: GetGeneralPagePath = () => ROUTE_PATHS.INBOX;
 
-export const getProfilePagePath = (): string => ROUTE_PATHS.PROFILE;
+export const getProfilePagePath: GetGeneralPagePath = () => ROUTE_PATHS.PROFILE;
+
+export const getBillingPagePath: GetGeneralPagePath = () => ROUTE_PATHS.BILLING;
 
 // v03
-export const getCommonPagePath_v03 = (
-  commonId: string,
-  tab?: CommonTab,
-): string => {
-  const path = ROUTE_PATHS.V03_COMMON.replace(":id", commonId);
+export const getCommonPagePath_v03: GetCommonPagePath = (...args) =>
+  buildCommonPagePath(ROUTE_PATHS.V03_COMMON, ...args);
 
-  return `${path}${tab ? `?${QueryParamKey.Tab}=${tab}` : ""}`;
-};
+// v04
+export const getCommonPagePath_v04: GetCommonPagePath = (...args) =>
+  buildCommonPagePath(ROUTE_PATHS.V04_COMMON, ...args);
+
+export const getCommonPageAboutTabPath_v04: GetCommonPageAboutTabPath = (
+  commonId,
+) => ROUTE_PATHS.V04_COMMON_ABOUT_TAB.replace(":id", commonId);
+
+export const getProjectCreationPagePath_v04: GetGeneralPageWithCommonIdPath = (
+  commonId,
+) => ROUTE_PATHS.V04_PROJECT_CREATION.replace(":id", commonId);
+
+export const getCommonEditingPagePath_v04 = (commonId: string): string =>
+  ROUTE_PATHS.V04_COMMON_EDITING.replace(":id", commonId);
+
+export const getInboxPagePath_v04: GetGeneralPagePath = () =>
+  ROUTE_PATHS.V04_INBOX;
+
+export const getProfilePagePath_v04: GetGeneralPagePath = () =>
+  ROUTE_PATHS.V04_PROFILE;
+
+export const getBillingPagePath_v04: GetGeneralPagePath = () =>
+  ROUTE_PATHS.V04_BILLING;

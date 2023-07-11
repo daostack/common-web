@@ -1,0 +1,45 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+@import "../../styles";
+
+.globalLoader {
+  z-index: 10;
+}
+
+.container {
+  --page-content-header: 0rem;
+
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  @include tablet {
+    padding-top: var(--page-content-header);
+    border: 0;
+  }
+}
+.containerWithHeader {
+  --page-content-header: #{$page-content-header-height};
+
+  @include tablet {
+    --page-content-header: #{$page-content-header-height-mobile};
+  }
+}
+
+.header {
+  position: fixed;
+  top: var(--header-h);
+  right: var(--sb-h-indent);
+  left: var(--sb-h-indent);
+  z-index: 2;
+  height: var(--page-content-header);
+  background-color: $c-shades-white;
+  border-bottom: 0.0625rem solid $c-light-gray;
+  box-sizing: border-box;
+
+  @include tablet {
+    top: 0;
+    right: 0;
+    left: 0;
+  }
+}

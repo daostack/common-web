@@ -15,4 +15,8 @@ export const PARENT_TYPES = [
   ElementType.Paragraph,
   ElementType.Heading,
 ];
-export const INLINE_TYPES = [ElementType.Link, ElementType.Mention, ElementType.Emoji];
+export const INLINE_TYPES = [
+  ElementType.Link,
+  ElementType.Mention,
+  ElementType.Emoji,
+];

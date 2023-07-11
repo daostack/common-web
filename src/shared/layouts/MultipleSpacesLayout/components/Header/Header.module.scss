@@ -1,0 +1,71 @@
+@import "../../../../../constants";
+@import "../../../../../styles/sizes";
+
+.container {
+  position: fixed;
+  top: 0;
+  right: var(--sb-h-indent);
+  left: var(--sb-h-indent);
+  z-index: 3;
+  height: var(--header-h);
+  padding-left: 1.625rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $c-light-gray-2;
+  box-sizing: border-box;
+}
+
+.leftContent {
+  flex: 1;
+}
+
+.rightContent {
+  flex-shrink: 0;
+  height: 100%;
+  display: flex;
+}
+
+.navigation {
+  position: relative;
+  padding-right: 2rem;
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    right: 0;
+    bottom: 0.5rem;
+    width: 0.0625rem;
+    background-color: $c-gray-30;
+  }
+}
+
+.userInfo {
+}
+
+.userInfoContentButton {
+  height: 100%;
+  padding: 0 2.625rem 0 2rem;
+}
+
+.userInfoAvatar {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.875rem;
+}
+
+.userInfoName {
+  font-family: PoppinsSans, sans-serif;
+  font-size: $moderate-xsmall;
+  font-weight: normal;
+}
+
+.userInfoRightArrowIcon {
+  margin-left: 2.5rem;
+}
+
+.menuItemsWrapper {
+  left: 0;
+  right: 0;
+}

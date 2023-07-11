@@ -38,7 +38,7 @@ export const getFileDownloadInfo = async ({
     title: fileName,
     value,
     size,
-    name
+    name,
   };
 };
 

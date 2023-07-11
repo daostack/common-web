@@ -5,11 +5,11 @@ import { CommonEvent, CommonEventEmitter } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { GovernanceActions } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
-import { checkIsProject, getCommonPagePath } from "@/shared/utils";
 import { commonActions, ProjectsStateItem } from "@/store/states";
 import { CenterWrapper } from "../CenterWrapper";
 import { ProjectCreationForm } from "./components";
@@ -24,6 +24,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   const { parentCommonId, initialCommon } = props;
   const history = useHistory();
   const dispatch = useDispatch();
+  const { getCommonPagePath } = useRoutesContext();
   const {
     data: parentCommon,
     fetched: isParentCommonFetched,
@@ -99,15 +100,6 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     return (
       <CenterWrapper>
         <p className={styles.dataErrorText}>Parent common does not exist</p>
-      </CenterWrapper>
-    );
-  }
-  if (checkIsProject(parentCommon)) {
-    return (
-      <CenterWrapper>
-        <p className={styles.dataErrorText}>
-          Space creation in the another space is not allowed
-        </p>
       </CenterWrapper>
     );
   }

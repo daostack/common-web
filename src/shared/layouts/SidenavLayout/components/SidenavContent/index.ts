@@ -5,4 +5,4 @@ export {
   Scrollbar,
   UserInfo,
 } from "./components";
-export type { ContentStyles } from "./components";
+export type { ContentStyles, MenuItemsStyles } from "./components";

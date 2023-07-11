@@ -2,7 +2,7 @@
 @import "../../../../styles/sizes";
 
 .container {
-  padding-right: 1rem;
+  padding-right: 1.5rem;
   display: flex;
   justify-content: space-between;
 
@@ -26,7 +26,7 @@
 }
 
 .commonLink {
-  padding: 0 1.5rem;
+  padding: 0 1.5rem 0 1.375rem;
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -55,13 +55,15 @@
 }
 
 .image {
-  width: 2rem;
-  height: 2rem;
-  margin-right: 1rem;
+  width: 2.125rem;
+  height: 2.125rem;
+  margin-right: 0.75rem;
   object-fit: cover;
   box-sizing: border-box;
 
   @include tablet {
+    width: 2rem;
+    height: 2rem;
     margin-right: 0.625rem;
   }
 }
@@ -82,27 +84,40 @@
   margin: 0;
   font-family: PoppinsSans, sans-serif;
   font-weight: 500;
-  font-size: $small;
+  font-size: $moderate-small;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  @include tablet {
+    font-size: $moderate-xsmall;
+  }
 }
 
 .commonMembersAmount {
   margin: 0;
-  font-size: $xsmall;
+  font-size: $mobile-title;
   letter-spacing: 0.02em;
-  color: $c-neutrals-300;
+  color: $c-gray-40;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 
   @include tablet {
     font-family: PoppinsSans, sans-serif;
-    font-size: $xxsmall;
+    font-size: $xxsmall-2;
   }
 }
 
-.newStreamButton {
-  align-self: center;
+.actionButtonsWrapper {
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin-right: 1rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }

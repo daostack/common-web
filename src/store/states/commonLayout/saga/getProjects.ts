@@ -1,11 +1,12 @@
 import { call, put, select } from "redux-saga/effects";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { CommonService, ProjectService } from "@/services";
+import { CommonService, GovernanceService, ProjectService } from "@/services";
 import { Awaited } from "@/shared/interfaces";
 import { User } from "@/shared/models";
 import { isError } from "@/shared/utils";
 import { ProjectsStateItem } from "../../projects";
 import * as actions from "../actions";
+import { getPermissionsDataByAllUserCommonMemberInfo } from "./utils";
 
 export function* getProjects(
   action: ReturnType<typeof actions.getProjects.request>,
@@ -23,22 +24,38 @@ export function* getProjects(
     const commonsWithoutMainParentCommon = commonsWithSubCommons.filter(
       (common) => common.id !== commonId,
     );
-    const userCommonIds = userId
-      ? ((yield call(CommonService.getUserCommonIds, userId)) as Awaited<
-          ReturnType<typeof CommonService.getUserCommonIds>
+    const allUserCommonMemberInfo = userId
+      ? ((yield call(
+          CommonService.getAllUserCommonMemberInfo,
+          userId,
+        )) as Awaited<
+          ReturnType<typeof CommonService.getAllUserCommonMemberInfo>
         >)
       : [];
+    const userCommonIds = allUserCommonMemberInfo.map((item) => item.commonId);
+    const governanceList = (yield call(
+      GovernanceService.getGovernanceListByCommonIds,
+      userCommonIds,
+    )) as Awaited<
+      ReturnType<typeof GovernanceService.getGovernanceListByCommonIds>
+    >;
+    const permissionsData = getPermissionsDataByAllUserCommonMemberInfo(
+      allUserCommonMemberInfo,
+      governanceList,
+    );
     const data = ProjectService.parseDataToProjectsInfo(
       commonsWithoutMainParentCommon,
       userCommonIds,
+      permissionsData,
     );
     const projectsData: ProjectsStateItem[] = data.map(
-      ({ common, hasMembership }) => ({
+      ({ common, hasMembership, hasPermissionToAddProject }) => ({
         commonId: common.id,
         image: common.image,
         name: common.name,
         directParent: common.directParent,
         hasMembership,
+        hasPermissionToAddProject,
         notificationsAmount: 0,
       }),
     );

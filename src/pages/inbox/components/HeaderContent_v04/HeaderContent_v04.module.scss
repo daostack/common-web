@@ -1,0 +1,96 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.container {
+  padding-right: 1rem;
+  display: flex;
+  justify-content: space-between;
+
+  @include tablet {
+    padding-left: 1rem;
+    padding-right: 1.375rem;
+  }
+}
+
+.openSidenavButton {
+  display: none;
+
+  @include tablet {
+    display: flex;
+  }
+}
+
+.content {
+  display: flex;
+  overflow: hidden;
+}
+
+.infoContainer {
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  @include tablet {
+    padding-left: 0;
+    padding-right: 0.5rem;
+  }
+}
+
+.inboxIcon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 1rem;
+
+  @include tablet {
+    margin-right: 0.625rem;
+  }
+}
+
+.openSidenavIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.625rem;
+  transform: rotate(180deg);
+  color: $c-neutrals-600;
+}
+
+.infoWrapper {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.title {
+  margin: 0;
+  font-family: PoppinsSans, sans-serif;
+  font-weight: normal;
+  font-size: $moderate-small-2;
+  line-height: 127%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: $c-neutrals-600;
+}
+
+.streamsWithNotificationsAmount {
+  margin: 0;
+  font-size: $mobile-title;
+  line-height: 143%;
+  letter-spacing: 0.02em;
+  color: $c-neutrals-300;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  @include tablet {
+    font-family: PoppinsSans, sans-serif;
+    font-size: $xxsmall;
+  }
+}
+
+.directMessageButton {
+  align-self: center;
+}

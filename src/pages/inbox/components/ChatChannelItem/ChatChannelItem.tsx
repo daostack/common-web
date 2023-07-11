@@ -16,7 +16,7 @@ import { useChatChannelSubscription } from "./hooks";
 import { getLastMessage } from "./utils";
 
 export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
-  const { chatChannel, isActive } = props;
+  const { chatChannel, isActive, onActiveItemDataChange } = props;
   const dispatch = useDispatch();
   const isTabletView = useIsTabletView();
   const {
@@ -100,6 +100,16 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       handleOpenChat();
     }
   }, [isChatChannelUserStatusFetched]);
+
+  useEffect(() => {
+    if (isActive && finalTitle) {
+      onActiveItemDataChange?.({
+        itemId: chatChannel.id,
+        title: finalTitle,
+        image: dmUser?.photoURL,
+      });
+    }
+  }, [isActive, finalTitle, dmUser?.photoURL]);
 
   return (
     <FeedItemBaseContent

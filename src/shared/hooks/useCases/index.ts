@@ -20,6 +20,7 @@ export { useSubCommons } from "./useSubCommons";
 export { useSupportersData } from "./useSupportersData";
 export { useUserById } from "./useUserById";
 export { default as useUserCards } from "./useUserCards";
+export { useUserCommonIds } from "./useUserCommonIds";
 export { default as useUserContributions } from "./useUserContributions";
 export { useUserFeedItemFollowData } from "./useUserFeedItemFollowData";
 export { useFeedItemFollow } from "./useFeedItemFollow";

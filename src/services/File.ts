@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { MimePrefixes } from "@/shared/constants/mimeTypes";
 import { UploadFile } from "@/shared/interfaces";
 import { CommonLink } from "@/shared/models";
 import {
@@ -6,14 +7,13 @@ import {
   uploadFile as uploadFileToFirebase,
 } from "@/shared/utils/firebaseUploadFile";
 import { FileInfo } from "@/store/states";
-import { MimePrefixes } from "@/shared/constants/mimeTypes";
 
 class FileService {
   public uploadFile = async ({
     title,
     file,
     size,
-    name
+    name,
   }: UploadFile): Promise<CommonLink> => {
     const fileName =
       typeof file === "string" ? title : getFileNameForUploading(file.name);

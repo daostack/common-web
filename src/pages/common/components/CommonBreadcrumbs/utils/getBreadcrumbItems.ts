@@ -9,6 +9,7 @@ const COMMON_ACTION_TO_TEXT_MAP: Record<CommonAction, string> = {
   [CommonAction.NewDiscussion]: "New discussion",
   [CommonAction.EditDiscussion]: "Edit discussion",
   [CommonAction.NewContribution]: "New contribution",
+  [CommonAction.NewSpace]: "New space",
 };
 
 export const getBreadcrumbItems = ({

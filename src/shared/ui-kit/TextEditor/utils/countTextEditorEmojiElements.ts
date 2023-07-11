@@ -15,23 +15,23 @@ export const countTextEditorEmojiElements = (
   let hasText = false;
   let emojiCount = 0;
   editorValue.forEach((element) => {
-
-    if((element as ParagraphElement)?.type === ElementType.Paragraph && Element.isElement(element)) {
-
+    if (
+      (element as ParagraphElement)?.type === ElementType.Paragraph &&
+      Element.isElement(element)
+    ) {
       element.children.forEach((children) => {
-        if(Element.isElementType(children, ElementType.Emoji)) {
+        if (Element.isElementType(children, ElementType.Emoji)) {
           emojiCount = emojiCount + 1;
         } else if (children?.text !== "") {
-
           hasText = true;
-      } else if(Element.isElementType(children, ElementType.Mention)) {
-        hasText = true;
-      }}
-      );
+        } else if (Element.isElementType(children, ElementType.Mention)) {
+          hasText = true;
+        }
+      });
     } else {
       hasText = true;
     }
-  })
+  });
 
   const emojiCountWithoutText = hasText ? -1 : emojiCount;
 

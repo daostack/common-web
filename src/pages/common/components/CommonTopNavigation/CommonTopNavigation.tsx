@@ -1,5 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import { useHistory } from "react-router-dom";
+import { useRoutesContext } from "@/shared/contexts";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import {
@@ -9,7 +10,6 @@ import {
   TopNavigation,
   TopNavigationBackButton,
 } from "@/shared/ui-kit";
-import { getCommonPagePath } from "@/shared/utils";
 import { useCommonDataContext } from "../../providers";
 import { CommonMemberInfo } from "../CommonMemberInfo";
 import { CommonMenuButton } from "../CommonMenuButton";
@@ -26,6 +26,7 @@ interface CommonTopNavigationProps {
 const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
   const { commonMember, circles, isSubCommon, commonId } = props;
   const history = useHistory();
+  const { getCommonPagePath } = useRoutesContext();
   const { isJoinAllowed, isJoinPending, onJoinCommon } = useCommonDataContext();
   const circlesMap = commonMember?.circles.map;
 

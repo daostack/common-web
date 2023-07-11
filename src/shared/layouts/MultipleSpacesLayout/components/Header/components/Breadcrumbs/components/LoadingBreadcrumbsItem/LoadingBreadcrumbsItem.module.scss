@@ -1,0 +1,13 @@
+.container {
+  padding: 0 0.75rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.separator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}

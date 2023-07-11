@@ -1,15 +1,14 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { ComponentType, FC, useEffect, useState } from "react";
 import { ShareModal } from "@/shared/components";
 import { DynamicLinkType } from "@/shared/constants";
 import { useBuildShareLink, useModal } from "@/shared/hooks";
-import { InviteFriendsIcon, ShareIcon } from "@/shared/icons";
 import { Common } from "@/shared/models";
-import { Button, ButtonIcon, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
-import styles from "./InviteFriendsButton.module.scss";
+import { Trigger, TriggerProps } from "./components";
 
 interface InviteFriendsButtonProps {
   isMobileVersion?: boolean;
   common: Common;
+  TriggerComponent?: ComponentType<TriggerProps>;
 }
 
 const InviteFriendsButton: FC<InviteFriendsButtonProps> = (props) => {
@@ -21,6 +20,7 @@ const InviteFriendsButton: FC<InviteFriendsButtonProps> = (props) => {
     common,
     setLinkURL,
   );
+  const TriggerComponent = props.TriggerComponent || Trigger;
 
   useEffect(() => {
     if (isShowing) {
@@ -28,25 +28,9 @@ const InviteFriendsButton: FC<InviteFriendsButtonProps> = (props) => {
     }
   }, [isShowing]);
 
-  const buttonVariant = ButtonVariant.OutlineDarkPink;
-  const iconEl = <InviteFriendsIcon className={styles.icon} />;
-
   return (
     <>
-      {isMobileVersion ? (
-        <ButtonIcon onClick={onOpen} variant={buttonVariant}>
-          <ShareIcon className={styles.icon} />
-        </ButtonIcon>
-      ) : (
-        <Button
-          onClick={onOpen}
-          variant={buttonVariant}
-          size={ButtonSize.Xsmall}
-          leftIcon={iconEl}
-        >
-          Invite friends
-        </Button>
-      )}
+      <TriggerComponent onClick={onOpen} isMobileVersion={isMobileVersion} />
       <ShareModal
         isShowing={isShowing}
         isLoading={!linkURL}

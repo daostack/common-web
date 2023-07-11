@@ -27,6 +27,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
+import { InboxItemType } from "@/shared/constants";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -34,9 +35,10 @@ import {
   checkIsChatChannelLayoutItem,
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItem,
+  FeedLayoutItemChangeData,
+  FeedLayoutItemChangeDataWithType,
   FeedLayoutRef,
 } from "@/shared/interfaces";
-import { CommonSidenavLayoutPageContent } from "@/shared/layouts";
 import {
   CirclesPermissions,
   Common,
@@ -47,6 +49,7 @@ import {
 } from "@/shared/models";
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import { selectRecentStreamId } from "@/store/states";
+import { MIN_CHAT_WIDTH } from "../../constants";
 import {
   DesktopChat,
   DesktopChatPlaceholder,
@@ -55,7 +58,6 @@ import {
   MobileChat,
   SplitView,
 } from "./components";
-import { MIN_CHAT_WIDTH } from "./constants";
 import {
   getDefaultSize,
   getItemCommonData,
@@ -64,11 +66,24 @@ import {
 } from "./utils";
 import styles from "./FeedLayout.module.scss";
 
+export interface FeedLayoutOuterStyles {
+  splitView?: string;
+  desktopChat?: string;
+}
+
+export interface FeedLayoutSettings {
+  withDesktopChatTitle?: boolean;
+  sidenavWidth?: number;
+  getSplitViewMaxSize?: (width: number) => number;
+}
+
 interface FeedLayoutProps {
   className?: string;
-  headerContent: ReactNode;
+  renderContentWrapper: (
+    children: ReactNode,
+    wrapperStyles?: CSSProperties,
+  ) => ReactNode;
   topContent?: ReactNode;
-  isGlobalLoading?: boolean;
   common?: Common;
   governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
@@ -85,10 +100,13 @@ interface FeedLayoutProps {
   emptyText?: string;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemChange?: (itemId?: string) => void;
+  onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
   onMessagesAmountEmptinessToggle?: (
     feedItem: FeedLayoutItem,
     becameEmpty: boolean,
   ) => void;
+  outerStyles?: FeedLayoutOuterStyles;
+  settings?: FeedLayoutSettings;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -97,9 +115,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 ) => {
   const {
     className,
-    headerContent,
+    renderContentWrapper,
     topContent,
-    isGlobalLoading,
     common: outerCommon,
     governance: outerGovernance,
     commonMember: outerCommonMember,
@@ -116,7 +133,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     emptyText,
     getNonAllowedItems,
     onActiveItemChange,
+    onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
+    outerStyles,
+    settings,
   } = props;
   const { width: windowWidth } = useWindowSize();
   const isTabletView = useIsTabletView();
@@ -138,9 +158,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   });
   const governance = outerGovernance || fetchedGovernance;
   const commonMember = outerCommonMember || fetchedCommonMember;
-  const maxChatSize = getSplitViewMaxSize(windowWidth);
+  const maxChatSize =
+    settings?.getSplitViewMaxSize?.(windowWidth) ??
+    getSplitViewMaxSize(windowWidth);
   const [realChatWidth, setRealChatWidth] = useState(() =>
-    getDefaultSize(windowWidth, maxChatSize),
+    getDefaultSize(windowWidth, maxChatSize, settings?.sidenavWidth),
   );
   const chatWidth = Math.min(realChatWidth, maxChatSize);
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
@@ -270,6 +292,28 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [selectedFeedItem, onMessagesAmountEmptinessToggle],
   );
 
+  const handleActiveFeedItemDataChange = (
+    data: FeedLayoutItemChangeData,
+    commonId?: string,
+  ) => {
+    if (commonId) {
+      onActiveItemDataChange?.({
+        ...data,
+        type: InboxItemType.FeedItemFollow,
+        commonId,
+      });
+    }
+  };
+
+  const handleActiveChatChannelItemDataChange = (
+    data: FeedLayoutItemChangeData,
+  ) => {
+    onActiveItemDataChange?.({
+      ...data,
+      type: InboxItemType.ChatChannel,
+    });
+  };
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -316,134 +360,133 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
         commonId={selectedItemCommonData.id}
       />
     ) : null;
-  const contentEl = (
-    <CommonSidenavLayoutPageContent
-      className={styles.layoutPageContent}
-      headerClassName={styles.layoutHeader}
-      headerContent={headerContent}
-      isGlobalLoading={isGlobalLoading}
-      styles={pageContentStyles}
-    >
-      <FeedItemContext.Provider value={feedItemContextValue}>
-        <ChatContext.Provider value={chatContextValue}>
-          {!shouldHideContent && (
-            <div
-              className={classNames(styles.content, className, {
-                [styles.contentCentered]: isContentEmpty,
+  const contentEl = renderContentWrapper(
+    <FeedItemContext.Provider value={feedItemContextValue}>
+      <ChatContext.Provider value={chatContextValue}>
+        {!shouldHideContent && (
+          <div
+            className={classNames(styles.content, className, {
+              [styles.contentCentered]: isContentEmpty,
+            })}
+          >
+            {topContent}
+            {isContentEmpty && <p className={styles.emptyText}>{emptyText}</p>}
+            <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
+              {allFeedItems?.map((item) => {
+                const isActive = item.itemId === activeFeedItemId;
+
+                if (checkIsFeedItemFollowLayoutItem(item)) {
+                  const commonData = getItemCommonData(
+                    item.feedItemFollowWithMetadata,
+                    outerCommon,
+                  );
+                  const isPinned = (outerCommon?.pinnedFeedItems || []).some(
+                    (pinnedItem) =>
+                      pinnedItem.feedObjectId === item.feedItem.id,
+                  );
+
+                  return (
+                    <FeedItem
+                      key={item.feedItem.id}
+                      commonMember={commonMember}
+                      commonId={commonData?.id}
+                      commonName={commonData?.name || ""}
+                      commonImage={commonData?.image || ""}
+                      pinnedFeedItems={outerCommon?.pinnedFeedItems}
+                      isProject={commonData?.isProject}
+                      isPinned={isPinned}
+                      item={item.feedItem}
+                      governanceCircles={governance?.circles}
+                      isMobileVersion={isTabletView}
+                      userCircleIds={userCircleIds}
+                      isActive={isActive}
+                      isExpanded={item.feedItem.id === expandedFeedItemId}
+                      sizeKey={isActive ? sizeKey : undefined}
+                      currentUserId={userId}
+                      onActiveItemDataChange={(...args) =>
+                        handleActiveFeedItemDataChange(...args, commonData?.id)
+                      }
+                    />
+                  );
+                }
+                if (
+                  renderChatChannelItem &&
+                  checkIsChatChannelLayoutItem(item)
+                ) {
+                  return (
+                    <React.Fragment key={item.itemId}>
+                      {renderChatChannelItem({
+                        chatChannel: item.chatChannel,
+                        isActive,
+                        onActiveItemDataChange:
+                          handleActiveChatChannelItemDataChange,
+                      })}
+                    </React.Fragment>
+                  );
+                }
               })}
-            >
-              {topContent}
-              {isContentEmpty && (
-                <p className={styles.emptyText}>{emptyText}</p>
-              )}
-              <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
-                {allFeedItems?.map((item) => {
-                  const isActive = item.itemId === activeFeedItemId;
-
-                  if (checkIsFeedItemFollowLayoutItem(item)) {
-                    const commonData = getItemCommonData(
-                      item.feedItemFollowWithMetadata,
-                      outerCommon,
-                    );
-                    const isPinned = (outerCommon?.pinnedFeedItems || []).some(
-                      (pinnedItem) =>
-                        pinnedItem.feedObjectId === item.feedItem.id,
-                    );
-
-                    return (
-                      <FeedItem
-                        key={item.feedItem.id}
-                        commonMember={commonMember}
-                        commonId={commonData?.id}
-                        commonName={commonData?.name || ""}
-                        commonImage={commonData?.image || ""}
-                        pinnedFeedItems={outerCommon?.pinnedFeedItems}
-                        isProject={commonData?.isProject}
-                        isPinned={isPinned}
-                        item={item.feedItem}
-                        governanceCircles={governance?.circles}
-                        isMobileVersion={isTabletView}
-                        userCircleIds={userCircleIds}
-                        isActive={isActive}
-                        isExpanded={item.feedItem.id === expandedFeedItemId}
-                        sizeKey={isActive ? sizeKey : undefined}
-                        currentUserId={userId}
-                      />
-                    );
-                  }
-                  if (
-                    renderChatChannelItem &&
-                    checkIsChatChannelLayoutItem(item)
-                  ) {
-                    return (
-                      <React.Fragment key={item.itemId}>
-                        {renderChatChannelItem({
-                          chatChannel: item.chatChannel,
-                          isActive,
-                        })}
-                      </React.Fragment>
-                    );
-                  }
-                })}
-              </InfiniteScroll>
-              {!isTabletView &&
-                (chatItem ? (
-                  <DesktopChat
-                    className={styles.desktopChat}
-                    chatItem={chatItem}
-                    commonId={selectedItemCommonData?.id || ""}
-                    governanceCircles={governance?.circles}
-                    commonMember={commonMember}
-                    titleRightContent={followFeedItemEl}
-                    onMessagesAmountChange={handleMessagesAmountChange}
-                  />
-                ) : (
-                  <DesktopChatPlaceholder
-                    className={styles.desktopChat}
-                    isItemSelected={Boolean(selectedItemCommonData)}
-                  />
-                ))}
-              {isTabletView && (
-                <MobileChat
+            </InfiniteScroll>
+            {!isTabletView &&
+              (chatItem ? (
+                <DesktopChat
+                  className={classNames(
+                    styles.desktopChat,
+                    outerStyles?.desktopChat,
+                  )}
                   chatItem={chatItem}
                   commonId={selectedItemCommonData?.id || ""}
-                  commonName={selectedItemCommonData?.name || ""}
-                  commonImage={selectedItemCommonData?.image || ""}
                   governanceCircles={governance?.circles}
                   commonMember={commonMember}
-                  shouldShowSeeMore={
-                    !chatItem?.chatChannel && shouldShowSeeMore
-                  }
-                  rightHeaderContent={followFeedItemEl}
+                  withTitle={settings?.withDesktopChatTitle}
+                  titleRightContent={followFeedItemEl}
                   onMessagesAmountChange={handleMessagesAmountChange}
-                >
-                  {selectedItemCommonData &&
-                    checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
-                      <FeedItemPreviewModal
-                        commonId={selectedItemCommonData.id}
-                        commonName={selectedItemCommonData.name}
-                        commonImage={selectedItemCommonData.image}
-                        isProject={selectedItemCommonData.isProject}
-                        governanceCircles={governance?.circles}
-                        selectedFeedItem={selectedFeedItem?.feedItem}
-                        userCircleIds={userCircleIds}
-                        isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
-                        sizeKey={sizeKey}
-                      />
-                    )}
-                </MobileChat>
-              )}
-            </div>
-          )}
-        </ChatContext.Provider>
-      </FeedItemContext.Provider>
-    </CommonSidenavLayoutPageContent>
+                />
+              ) : (
+                <DesktopChatPlaceholder
+                  className={styles.desktopChat}
+                  isItemSelected={Boolean(selectedItemCommonData)}
+                />
+              ))}
+            {isTabletView && (
+              <MobileChat
+                chatItem={chatItem}
+                commonId={selectedItemCommonData?.id || ""}
+                commonName={selectedItemCommonData?.name || ""}
+                commonImage={selectedItemCommonData?.image || ""}
+                governanceCircles={governance?.circles}
+                commonMember={commonMember}
+                shouldShowSeeMore={!chatItem?.chatChannel && shouldShowSeeMore}
+                rightHeaderContent={followFeedItemEl}
+                onMessagesAmountChange={handleMessagesAmountChange}
+              >
+                {selectedItemCommonData &&
+                  checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
+                    <FeedItemPreviewModal
+                      commonId={selectedItemCommonData.id}
+                      commonName={selectedItemCommonData.name}
+                      commonImage={selectedItemCommonData.image}
+                      isProject={selectedItemCommonData.isProject}
+                      governanceCircles={governance?.circles}
+                      selectedFeedItem={selectedFeedItem?.feedItem}
+                      userCircleIds={userCircleIds}
+                      isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
+                      sizeKey={sizeKey}
+                    />
+                  )}
+              </MobileChat>
+            )}
+          </div>
+        )}
+      </ChatContext.Provider>
+    </FeedItemContext.Provider>,
+    pageContentStyles,
   );
 
   return isTabletView ? (
-    contentEl
+    <>{contentEl}</>
   ) : (
     <SplitView
+      className={outerStyles?.splitView}
       size={chatWidth}
       minSize={MIN_CHAT_WIDTH}
       maxSize={maxChatSize}

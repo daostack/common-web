@@ -7,6 +7,7 @@ import {
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
 import { ROUTE_PATHS } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { InboxIcon } from "@/shared/icons";
 import { matchRoute } from "@/shared/utils";
 import { NavigationItem } from "./components";
@@ -20,16 +21,18 @@ interface NavigationProps {
 const Navigation: FC<NavigationProps> = (props) => {
   const { className } = props;
   const location = useLocation();
+  const { getInboxPagePath } = useRoutesContext();
   const isAuthenticated = useSelector(authentificated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
   );
+  const inboxPagePath = getInboxPagePath() as ROUTE_PATHS;
   const items: NavigationItemOptions[] = [
     {
       text: "Inbox",
-      route: ROUTE_PATHS.INBOX,
+      route: inboxPagePath,
       icon: <InboxIcon className={styles.icon} />,
-      isActive: matchRoute(location.pathname, ROUTE_PATHS.INBOX, {
+      isActive: matchRoute(location.pathname, inboxPagePath, {
         exact: true,
       }),
       isDisabled: !isAuthenticated,
