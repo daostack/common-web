@@ -28,10 +28,13 @@
 }
 
 .thumbY {
-  background: var(--scroll-thumb-color);
+  background-color: var(--scroll-thumb-color);
   border-radius: 0.5rem;
 
   &:active {
     --scroll-thumb-color: #{$c-neutrals-300};
+  }
+  &:hover {
+    --scroll-thumb-color: var(--medium-gray);
   }
 }

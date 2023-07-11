@@ -229,3 +229,17 @@ code {
     --safe-area-inset-bottom: env(safe-area-inset-bottom);
   }
 }
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--gentle-gray);
+  border-radius: 0.5rem;
+  &:hover {
+    background-color: var(--medium-gray);
+    cursor: pointer;
+  }
+}
