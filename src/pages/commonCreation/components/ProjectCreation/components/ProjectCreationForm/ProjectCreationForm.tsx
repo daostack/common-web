@@ -75,7 +75,6 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   } = props;
   const dispatch = useDispatch();
   const projects = useSelector(selectCommonLayoutProjects);
-  const existingProjectsNames = projects.map((project) => project?.name);
 
   const formRef = useRef<CreationFormRef>(null);
   const {
@@ -96,6 +95,10 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     () => getInitialValues(governanceCircles, initialCommon),
     [governanceCircles],
   );
+
+  const existingProjectsNames = projects
+    .map((project) => project?.name)
+    .filter((spaceName) => spaceName !== initialValues?.spaceName);
 
   const shouldPreventReload = useCallback(
     () => (!project && !updatedProject && formRef.current?.isDirty()) ?? true,
