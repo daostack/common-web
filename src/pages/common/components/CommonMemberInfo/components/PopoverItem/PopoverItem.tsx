@@ -63,7 +63,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
       const buttonEl = (
         <Button
           className={styles.actionButton}
-          variant={ButtonVariant.OutlineBlue}
+          variant={ButtonVariant.OutlineDarkPink}
           onClick={handleLeaveCircle}
           visuallyDisabled={disabledLeaveButton}
         >

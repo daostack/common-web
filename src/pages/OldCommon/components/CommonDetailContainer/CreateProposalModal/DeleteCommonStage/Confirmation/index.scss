@@ -60,9 +60,3 @@
     grid-template-columns: 1fr;
   }
 }
-
-.delete-common-confirmation__cancel-button {
-  @include big-phone {
-    grid-row: 2;
-  }
-}

@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren, useState, ChangeEvent } from "react";
-import { Button } from "@/shared/components";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./JoinProjectForm.module.scss";
 
 interface JoinProjectFormProps {
@@ -34,12 +34,12 @@ const JoinProjectForm: FC<PropsWithChildren<JoinProjectFormProps>> = (
         placeholder="Here is the place to introduce yourself in the context of this space"
       />
       <div className={styles.buttonContainer}>
-        <Button className={styles.cancelButton} onClick={onClose}>
+        <Button variant={ButtonVariant.OutlineDarkPink} onClick={onClose}>
           Cancel
         </Button>
         <Button
+          variant={ButtonVariant.PrimaryPink}
           disabled={!message}
-          className={styles.confirmButton}
           onClick={handleRequestToJoin}
         >
           {isJoinMemberAdmittanceRequest ? "Request to join" : "Join space"}

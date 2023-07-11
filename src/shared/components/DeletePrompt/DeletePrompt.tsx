@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Button, ButtonVariant } from "@/shared/components";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
 interface DeletePromptProps {
@@ -19,24 +19,22 @@ const DeletePrompt: FC<DeletePromptProps> = ({
 }) => {
   return (
     <div className="delete-prompt__wrapper">
-      <span className="delete-prompt__title">{title}</span>
+      <div className="delete-prompt__title">{title}</div>
       {description ? (
-        <span className="delete-prompt__description">{description}</span>
+        <div className="delete-prompt__description">{description}</div>
       ) : null}
       <div className="delete-prompt__buttons-wrapper">
         <Button
           disabled={isDeletingInProgress}
           onClick={onCancel}
-          variant={ButtonVariant.Secondary}
-          className="button-blue transparent"
+          variant={ButtonVariant.OutlineDarkPink}
         >
           Cancel
         </Button>
         <Button
           disabled={isDeletingInProgress}
           onClick={onDelete}
-          variant={ButtonVariant.Secondary}
-          className="button-blue delete"
+          variant={ButtonVariant.PrimaryPink}
         >
           {!isDeletingInProgress ? "Delete" : "Deleting..."}
         </Button>

@@ -26,7 +26,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
       {withJoinRequest && isJoinAllowed && (
         <Button
           className={styles.joinButton}
-          variant={ButtonVariant.OutlineBlue}
+          variant={ButtonVariant.OutlineDarkPink}
           size={ButtonSize.Medium}
           onClick={onJoinCommon}
         >

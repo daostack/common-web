@@ -2,7 +2,7 @@
 
 .button-link {
   display: inline-block;
-  color: $purple;
+  color: var(--primary-fill);
 
   &:hover {
     text-decoration: underline;

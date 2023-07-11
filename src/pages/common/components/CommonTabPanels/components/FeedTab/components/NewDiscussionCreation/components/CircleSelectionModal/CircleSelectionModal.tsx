@@ -108,13 +108,14 @@ const CircleSelectionModal: FC<CircleSelectionModalProps> = (props) => {
           <div className={styles.buttonsWrapper}>
             <Button
               className={styles.button}
-              variant={ButtonVariant.PrimaryGray}
+              variant={ButtonVariant.OutlineDarkPink}
               size={buttonSize}
               onClick={onClose}
             >
               Cancel
             </Button>
             <Button
+              variant={ButtonVariant.PrimaryPink}
               className={styles.button}
               size={buttonSize}
               onClick={handleSave}

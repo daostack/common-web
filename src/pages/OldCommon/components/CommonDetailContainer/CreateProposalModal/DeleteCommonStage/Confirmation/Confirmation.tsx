@@ -1,8 +1,5 @@
 import React, { FC } from "react";
-import { useSelector } from "react-redux";
-import { Button, ButtonVariant } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
-import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
 interface ConfirmationProps {
@@ -12,8 +9,6 @@ interface ConfirmationProps {
 
 const Confirmation: FC<ConfirmationProps> = (props) => {
   const { onSubmit, onCancel } = props;
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
 
   return (
     <div className="delete-common-confirmation">
@@ -24,19 +19,10 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
       />
       <h4 className="delete-common-confirmation__title">Delete Common</h4>
       <div className="delete-common-confirmation__buttons-wrapper">
-        <Button
-          className="delete-common-confirmation__cancel-button"
-          onClick={onCancel}
-          variant={
-            isMobileView
-              ? ButtonVariant.SecondaryPurple
-              : ButtonVariant.Secondary
-          }
-          shouldUseFullWidth
-        >
+        <Button onClick={onCancel} variant={ButtonVariant.PrimaryGray}>
           Cancel
         </Button>
-        <Button onClick={onSubmit} shouldUseFullWidth>
+        <Button onClick={onSubmit} variant={ButtonVariant.PrimaryPink}>
           Create Proposal
         </Button>
       </div>

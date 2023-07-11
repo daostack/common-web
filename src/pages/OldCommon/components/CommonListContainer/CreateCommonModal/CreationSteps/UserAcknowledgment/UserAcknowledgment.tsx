@@ -1,11 +1,12 @@
 import React, { useCallback, useMemo, useState, ReactElement } from "react";
 import { useSelector } from "react-redux";
-import { Button, ButtonLink, Separator } from "@/shared/components";
+import { ButtonLink, Separator } from "@/shared/components";
 import { Checkbox } from "@/shared/components/Form";
 import { ModalFooter, ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import ExplanationIcon from "@/shared/icons/explanation.icon";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { commonTypeText } from "@/shared/utils";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
 import { Progress } from "../Progress";
@@ -137,9 +138,9 @@ export default function UserAcknowledgment({
         <ModalFooter sticky={!isMobileView}>
           <div className="create-common-user-acknowledgment__modal-footer">
             <Button
+              variant={ButtonVariant.PrimaryPink}
               key="user-acknowledgement-continue"
               onClick={handleContinue}
-              shouldUseFullWidth={isMobileView}
               disabled={!areTermsConfirmed}
             >
               Continue to Rules

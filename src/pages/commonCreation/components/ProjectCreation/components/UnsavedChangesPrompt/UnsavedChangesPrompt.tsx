@@ -38,7 +38,11 @@ const UnsavedChangesPrompt: FC<UnsavedChangesPromptProps> = (props) => {
           </p>
           <div className={styles.buttonsContainer}>
             <div className={styles.buttonsWrapper}>
-              <Button className={styles.button} onClick={cancelNavigation}>
+              <Button
+                variant={ButtonVariant.PrimaryPink}
+                className={styles.button}
+                onClick={cancelNavigation}
+              >
                 Continue editing
               </Button>
               <Button
