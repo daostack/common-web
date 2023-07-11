@@ -40,6 +40,7 @@ const ContextMenuItem: ForwardRefRenderFunction<
       type="button"
       role="menuitem"
     >
+      {item.icon && <div className={styles.iconWrapper}>{item.icon}</div>}
       {content}
     </button>
   );

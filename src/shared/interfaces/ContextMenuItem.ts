@@ -6,5 +6,6 @@ export interface ContextMenuItem {
   text: string;
   onClick: MouseEventHandler;
   withWarning?: boolean;
+  icon?: ReactNode;
   renderContent?: () => ReactNode;
 }
