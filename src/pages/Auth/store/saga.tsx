@@ -12,6 +12,10 @@ import { showNotification } from "@/shared/store/actions";
 import { getProvider } from "@/shared/utils/authProvider";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
 import {
+  commonLayoutActions,
+  multipleSpacesLayoutActions,
+} from "@/store/states";
+import {
   ANONYMOUS_USER_FIRST_NAME,
   ANONYMOUS_USER_LAST_NAME,
   AUTH_CODE_FOR_SIGN_UP,
@@ -478,6 +482,9 @@ function* logOut() {
   if (window.ReactNativeWebView) {
     window.ReactNativeWebView.postMessage(WebviewActions.logout);
   }
+
+  yield put(multipleSpacesLayoutActions.resetMultipleSpacesLayout());
+  yield put(commonLayoutActions.clearData());
   history.push(ROUTE_PATHS.HOME);
   yield true;
 }
