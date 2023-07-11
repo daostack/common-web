@@ -47,7 +47,7 @@ import {
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
-import { getUserName, hasPermission } from "@/shared/utils";
+import { getUserName, hasPermission, isMobile } from "@/shared/utils";
 import {
   cacheActions,
   chatActions,
@@ -491,7 +491,7 @@ export default function ChatComponent({
       return;
     }
 
-    if (enteredHotkey === HotKeys.Enter) {
+    if (enteredHotkey === HotKeys.Enter && !isMobile()) {
       sendChatMessage();
       return;
     }
