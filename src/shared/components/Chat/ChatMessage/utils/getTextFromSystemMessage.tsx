@@ -119,28 +119,37 @@ export const getTextFromSystemMessage = async (
   data: TextData,
 ): Promise<Text[]> => {
   const { systemMessage } = data;
+  let text: Text[] = [];
 
   if (!systemMessage) {
-    return [];
+    return text;
   }
 
   switch (systemMessage.systemMessageType) {
     case SystemDiscussionMessageType.CommonCreated:
-      return getCommonCreatedSystemMessageText(
+      text = await getCommonCreatedSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );
+      break;
     case SystemDiscussionMessageType.CommonEdited:
-      return getCommonEditedSystemMessageText(
+      text = await getCommonEditedSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );
+      break;
     case SystemDiscussionMessageType.CommonMemberAdded:
-      return getCommonMemberAddedSystemMessageText(
+      text = await getCommonMemberAddedSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );
+      break;
     default:
-      return [];
+      text = [];
+      break;
   }
+
+  return text.map((item, index) => (
+    <React.Fragment key={index}>{item}</React.Fragment>
+  ));
 };
