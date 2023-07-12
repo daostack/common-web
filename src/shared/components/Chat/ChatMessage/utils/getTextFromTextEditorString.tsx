@@ -111,8 +111,9 @@ const getTextFromDescendant = ({
     case ElementType.Mention:
       return (
         <UserMention
-          descendant={descendant}
           users={users}
+          userId={descendant.userId}
+          displayName={descendant.displayName}
           mentionTextClassName={mentionTextClassName}
           commonId={commonId}
         />
