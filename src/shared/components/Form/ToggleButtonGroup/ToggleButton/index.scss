@@ -11,7 +11,7 @@ $custom-toggle-button-border-radius: 0.5rem;
   font-family: inherit;
   font-size: inherit;
   text-align: center;
-  color: $purple;
+  color: var(--primary-fill);
   box-sizing: border-box;
   cursor: pointer;
 
@@ -37,13 +37,13 @@ $custom-toggle-button-border-radius: 0.5rem;
   }
 }
 .custom-toggle-button--active {
-  border-color: $purple;
-  background-color: $purple;
+  border: var(--primary-fill);
+  background-color: var(--primary-fill);
   color: $white;
 
   &:hover,
   &:active {
-    background-color: $purple;
+    background-color: var(--primary-fill);
   }
 }
 .custom-toggle-button--vertical {
