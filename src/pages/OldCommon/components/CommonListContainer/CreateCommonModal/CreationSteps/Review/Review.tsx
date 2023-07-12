@@ -1,10 +1,11 @@
 import React, { ReactElement } from "react";
 import { useSelector } from "react-redux";
-import { Button, Separator } from "@/shared/components";
+import { Separator } from "@/shared/components";
 import { ModalHeaderContent } from "@/shared/components/Modal";
 import { ScreenSize } from "@/shared/constants";
 import { Currency } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { commonTypeText } from "@/shared/utils";
 import { formatPrice } from "@/shared/utils/shared";
 import { IntermediateCreateCommonPayload } from "../../../../../interfaces";
@@ -109,9 +110,9 @@ export default function Review({
         </div> */}
         <div className="create-common-review__submit-button-wrapper">
           <Button
+            variant={ButtonVariant.PrimaryPink}
             key="rules-continue"
             onClick={handleContinueClick}
-            shouldUseFullWidth={isMobileView}
           >
             Create a {commonTypeText(isSubCommonCreation)}
           </Button>

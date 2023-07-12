@@ -131,6 +131,7 @@ const CommonImageSlider: FC<CommonImageSliderProps> = (props) => {
                   className="create-common-review-image-slider__image"
                   src={imageURL}
                   alt={`Common example image #${index + 1}`}
+                  imageContainerClassName="create-common-review-image-slider__image-container"
                 />
               </SwiperSlide>
             ))}
