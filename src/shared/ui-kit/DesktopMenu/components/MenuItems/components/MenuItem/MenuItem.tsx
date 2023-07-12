@@ -23,7 +23,13 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
   ref,
 ) => {
   const { item, active = false, ...restProps } = props;
-  const content = item.text;
+  const content = (
+    <>
+      {item.icon && <div className={styles.iconWrapper}>{item.icon}</div>}
+      {item.text}
+    </>
+  );
+
   const className = classNames(styles.item, item.className, {
     [classNames(styles.itemActive, item.activeClassName)]: active,
     [styles.itemWithWarning]: item.withWarning,
