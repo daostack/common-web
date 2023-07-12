@@ -27,4 +27,5 @@ export * from "./RecipientType";
 export * from "./storageKey";
 export * from "./viewportBreakpoint";
 export * from "./currencyTypes";
+export * from "./systemDiscussionMessage";
 export * from "./theme";
