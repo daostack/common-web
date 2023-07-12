@@ -65,7 +65,8 @@ interface BaseSystemDiscussionMessage extends BaseDiscussionMessage {
   systemMessageData: unknown;
 }
 
-interface CommonCreatedSystemMessage extends BaseSystemDiscussionMessage {
+export interface CommonCreatedSystemMessage
+  extends BaseSystemDiscussionMessage {
   systemMessageType: SystemDiscussionMessageType.CommonCreated;
   systemMessageData: {
     commonType: SystemMessageCommonType;
@@ -74,7 +75,8 @@ interface CommonCreatedSystemMessage extends BaseSystemDiscussionMessage {
   };
 }
 
-interface CommonMemberAddedSystemMessage extends BaseSystemDiscussionMessage {
+export interface CommonMemberAddedSystemMessage
+  extends BaseSystemDiscussionMessage {
   systemMessageType: SystemDiscussionMessageType.CommonMemberAdded;
   systemMessageData: {
     commonType: SystemMessageCommonType;
@@ -83,7 +85,7 @@ interface CommonMemberAddedSystemMessage extends BaseSystemDiscussionMessage {
   };
 }
 
-interface CommonEditedSystemMessage extends BaseSystemDiscussionMessage {
+export interface CommonEditedSystemMessage extends BaseSystemDiscussionMessage {
   systemMessageType: SystemDiscussionMessageType.CommonEdited;
   systemMessageData: {
     commonType: SystemMessageCommonType;

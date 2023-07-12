@@ -1,5 +1,5 @@
 import { SystemDiscussionMessage, User } from "@/shared/models";
-import { GetCommonPagePath } from "@/shared/utils";
+import { GetCommonPageAboutTabPath, GetCommonPagePath } from "@/shared/utils";
 
 export type Text = string | JSX.Element;
 
@@ -14,4 +14,5 @@ export interface TextData {
     "systemMessageType" | "systemMessageData"
   >;
   getCommonPagePath?: GetCommonPagePath;
+  getCommonPageAboutTabPath?: GetCommonPageAboutTabPath;
 }
