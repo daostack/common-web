@@ -46,7 +46,9 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
               activeItemId={item.activeCommonId}
               items={item.items}
               commonIdToAddProject={item.commonIdToAddProject}
-              onCommonCreate={onCommonCreationModalOpen}
+              onCommonCreate={
+                index === 0 ? onCommonCreationModalOpen : undefined
+              }
             />
           </React.Fragment>
         ))}
