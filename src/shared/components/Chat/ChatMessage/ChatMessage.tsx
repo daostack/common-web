@@ -122,6 +122,11 @@ export default function ChatMessage({
 
   useEffect(() => {
     (async () => {
+      if (!discussionMessage.text) {
+        setMessageText([]);
+        return;
+      }
+
       const emojiCount = countTextEditorEmojiElements(
         JSON.parse(discussionMessage.text),
       );
