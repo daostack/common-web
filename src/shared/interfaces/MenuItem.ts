@@ -12,6 +12,7 @@ interface GeneralItem<Text = ReactNode> {
   activeClassName?: string;
   text: Text;
   withWarning?: boolean;
+  icon?: ReactNode;
 }
 
 interface LinkItem<Text = ReactNode> extends GeneralItem<Text> {
