@@ -29,7 +29,7 @@ const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
   )
     .filter((circle) => userCircleIds?.includes(circle.id))
     .map((circle) => ({
-      id: Permission.Private,
+      id: `${Permission.Private}_${circle.id}`,
       text: `Private to ${circle.name}`,
       onClick: () => onCircleSave(circle),
     }));
