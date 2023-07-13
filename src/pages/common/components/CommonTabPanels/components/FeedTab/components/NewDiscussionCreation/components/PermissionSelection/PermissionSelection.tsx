@@ -1,10 +1,9 @@
 import React, { FC } from "react";
-import { useModal } from "@/shared/hooks";
 import { LeftArrowIcon } from "@/shared/icons";
 import { MenuItem } from "@/shared/interfaces";
 import { Circle, Governance } from "@/shared/models";
 import { DesktopMenu } from "@/shared/ui-kit";
-import { CircleSelectionModal } from "../CircleSelectionModal";
+import { removeProjectCircles } from "@/shared/utils";
 import { Permission } from "./constants";
 import styles from "./PermissionSelection.module.scss";
 
@@ -24,24 +23,24 @@ const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
     onCircleSave,
     disabled,
   } = props;
-  const {
-    isShowing: isCircleSelectionModalOpen,
-    onOpen: onCircleSelectionModalOpen,
-    onClose: onCircleSelectionModalClose,
-  } = useModal(false);
+
+  const circleOptions: MenuItem[] = removeProjectCircles(
+    Object.values(governanceCircles),
+  )
+    .filter((circle) => userCircleIds?.includes(circle.id))
+    .map((circle) => ({
+      id: `${Permission.Private}_${circle.id}`,
+      text: `Private to ${circle.name}`,
+      onClick: () => onCircleSave(circle),
+    }));
+
   const items: MenuItem[] = [
     {
       id: Permission.Public,
       text: "Public discussion",
-      onClick: () => {
-        onCircleSave(null);
-      },
+      onClick: () => onCircleSave(null),
     },
-    {
-      id: Permission.Private,
-      text: "Private to a circle",
-      onClick: onCircleSelectionModalOpen,
-    },
+    ...circleOptions,
   ];
   const buttonEl = (
     <button className={styles.button} type="button" disabled={disabled}>
@@ -51,21 +50,11 @@ const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
   );
 
   return (
-    <>
-      <DesktopMenu
-        menuItemsClassName={styles.desktopMenuItems}
-        triggerEl={buttonEl}
-        items={items}
-      />
-      <CircleSelectionModal
-        isOpen={isCircleSelectionModalOpen}
-        onClose={onCircleSelectionModalClose}
-        onSave={onCircleSave}
-        initialCircleId={currentCircle?.id}
-        governanceCircles={governanceCircles}
-        userCircleIds={userCircleIds}
-      />
-    </>
+    <DesktopMenu
+      menuItemsClassName={styles.desktopMenuItems}
+      triggerEl={buttonEl}
+      items={items}
+    />
   );
 };
 

@@ -284,6 +284,9 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
                 commonMember={commonMember}
                 isModalVariant={false}
                 edit={commonAction === CommonAction.EditDiscussion}
+                defaultVisibility={
+                  commonData.governance.discussions.defaultVisibility
+                }
               />
             )}
             {commonAction === CommonAction.NewProposal && (
