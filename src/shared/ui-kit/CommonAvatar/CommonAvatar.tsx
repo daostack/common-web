@@ -11,7 +11,7 @@ interface CommonAvatarProps {
 }
 
 const CommonAvatar: FC<CommonAvatarProps> = (props) => {
-  const { src, name, className, alt } = props;
+  const { src = "", name, className, alt } = props;
 
   if (!name) {
     return null;
