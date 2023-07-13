@@ -35,7 +35,7 @@ interface NewDiscussionCreationProps {
   defaultVisibility?: string;
 }
 
-interface IntiialValues {
+interface InitialValues {
   circle: Circle | null;
   title: string;
   content: TextEditorValue;
