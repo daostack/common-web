@@ -40,7 +40,7 @@ const getInitialValues = (
   );
 
   return {
-    projectImages: initialCommon
+    projectImages: initialCommon?.image
       ? [
           {
             id: "space_image",
