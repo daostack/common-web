@@ -1,7 +1,10 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
+import {
+  NewDiscussionCreationFormValues,
+  UploadFile,
+} from "@/shared/interfaces";
 import {
   Circle,
   CirclesPermissions,
@@ -36,7 +39,7 @@ interface IntiialValues {
   circle: Circle | null;
   title: string;
   content: TextEditorValue;
-  images: [];
+  images: UploadFile[];
 }
 
 const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
@@ -90,10 +93,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     return values;
   }, [defaultVisibility, governanceCircles, userCircleIds]);
 
-  const initialFormValues = useMemo(
-    () => discussionCreationData || initialValues,
-    [discussionCreationData, initialValues],
-  );
+  const initialFormValues = discussionCreationData || initialValues;
 
   const handleSubmit = useCallback(
     (values: NewDiscussionCreationFormValues) => {
