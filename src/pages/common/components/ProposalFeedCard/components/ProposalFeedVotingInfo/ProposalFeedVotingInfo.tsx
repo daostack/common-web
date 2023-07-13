@@ -1,11 +1,16 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
+import { useHistory, useParams } from "react-router";
 import classNames from "classnames";
 import {
+  VotingStatus,
   calculateVotingStatus,
   checkIsFailingVoting,
   checkIsVotingFinished,
 } from "@/pages/OldCommon/components/ProposalContainer/CountDownCard/helpers";
 import { getVotersString } from "@/pages/OldCommon/containers/ProposalContainer/helpers";
+import { CommonRouterParams } from "@/pages/common/BaseCommon";
+import { ProposalsTypes } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useCountdown } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Governance, Proposal } from "@/shared/models";
@@ -24,14 +29,18 @@ import styles from "./ProposalFeedVotingInfo.module.scss";
 export interface ProposalFeedVotingInfoProps {
   proposal: Proposal;
   governanceCircles: Governance["circles"];
+  directParentId?: string;
 }
 
 export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
   props,
 ) => {
-  const { proposal, governanceCircles } = props;
+  const { proposal, governanceCircles, directParentId } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const isTabletView = useIsTabletView();
+  const history = useHistory();
+  const { id: commonId } = useParams<CommonRouterParams>();
+  const { getCommonPagePath } = useRoutesContext();
   const {
     startCountdown,
     timer,
@@ -76,6 +85,17 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
       startCountdown(new Date(expirationTimestamp.seconds * 1000));
     }
   }, [startCountdown, expirationTimestamp]);
+
+  useEffect(() => {
+    if (
+      proposal.type === ProposalsTypes.DELETE_COMMON &&
+      votingStatus === VotingStatus.Approved &&
+      proposal.data.args.commonId === commonId &&
+      directParentId
+    ) {
+      history.push(getCommonPagePath(directParentId));
+    }
+  }, [votingStatus, directParentId]);
 
   return (
     <div

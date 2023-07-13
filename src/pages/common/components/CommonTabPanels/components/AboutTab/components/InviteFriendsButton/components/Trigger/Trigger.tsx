@@ -10,7 +10,7 @@ export interface TriggerProps {
 
 const Trigger: FC<TriggerProps> = (props) => {
   const { isMobileVersion, onClick } = props;
-  const buttonVariant = ButtonVariant.OutlineBlue;
+  const buttonVariant = ButtonVariant.OutlineDarkPink;
   const iconEl = <InviteFriendsIcon className={styles.icon} />;
 
   return isMobileVersion ? (

@@ -78,13 +78,14 @@ export const VoteModal: FC<VoteModalProps> = (props) => {
           <div className={styles.buttonsWrapper}>
             <Button
               className={styles.button}
-              variant={ButtonVariant.PrimaryGray}
+              variant={ButtonVariant.OutlineDarkPink}
               onClick={onClose}
               disabled={isVoting}
             >
               Cancel
             </Button>
             <Button
+              variant={ButtonVariant.PrimaryPink}
               className={styles.button}
               onClick={handleVote}
               disabled={isVoting}
