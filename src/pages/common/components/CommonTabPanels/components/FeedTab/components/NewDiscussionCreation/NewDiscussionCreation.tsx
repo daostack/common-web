@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useMemo } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { NewDiscussionCreationFormValues } from "@/shared/interfaces";
@@ -9,7 +9,10 @@ import {
   CommonMember,
   Governance,
 } from "@/shared/models";
-import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor";
+import {
+  TextEditorValue,
+  parseStringToTextEditorValue,
+} from "@/shared/ui-kit/TextEditor";
 import { removeProjectCircles } from "@/shared/utils";
 import {
   selectDiscussionCreationData,
@@ -29,17 +32,14 @@ interface NewDiscussionCreationProps {
   defaultVisibility?: string;
 }
 
-const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
-  const INITIAL_VALUES: NewDiscussionCreationFormValues = useMemo(
-    () => ({
-      circle: null,
-      title: "",
-      content: parseStringToTextEditorValue(),
-      images: [],
-    }),
-    [],
-  );
+interface IntiialValues {
+  circle: Circle | null;
+  title: string;
+  content: TextEditorValue;
+  images: [];
+}
 
+const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const {
     common,
     governanceCircles,
@@ -55,10 +55,6 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   const isLoading = useSelector(selectIsDiscussionCreationLoading);
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const initialValues = useMemo(
-    () => discussionCreationData || INITIAL_VALUES,
-    [discussionCreationData, INITIAL_VALUES],
-  );
   const userCircleIds = useMemo(
     () => (commonMember ? Object.values(commonMember.circles.map) : []),
     [commonMember?.circles.map],
@@ -69,7 +65,14 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
     dispatch(commonActions.setDiscussionCreationData(null));
   };
 
-  useEffect(() => {
+  const initialValues: NewDiscussionCreationFormValues = useMemo(() => {
+    const values: IntiialValues = {
+      circle: null,
+      title: "",
+      content: parseStringToTextEditorValue(),
+      images: [],
+    };
+
     if (defaultVisibility) {
       const circles: Circle[] = removeProjectCircles(
         Object.values(governanceCircles),
@@ -78,11 +81,19 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
       const defaultCircle = circles.find(
         (circle) => circle.id === defaultVisibility,
       );
+
       if (defaultCircle) {
-        INITIAL_VALUES.circle = defaultCircle;
+        values.circle = defaultCircle;
       }
     }
+
+    return values;
   }, [defaultVisibility, governanceCircles, userCircleIds]);
+
+  const initialFormValues = useMemo(
+    () => discussionCreationData || initialValues,
+    [discussionCreationData, initialValues],
+  );
 
   const handleSubmit = useCallback(
     (values: NewDiscussionCreationFormValues) => {
@@ -128,7 +139,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   ) {
     return (
       <DiscussionCreationModal
-        initialValues={initialValues}
+        initialValues={initialFormValues}
         governanceCircles={governanceCircles}
         userCircleIds={userCircleIds}
         onSubmit={handleSubmit}
@@ -143,7 +154,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
 
   return (
     <DiscussionCreationCard
-      initialValues={initialValues}
+      initialValues={initialFormValues}
       governanceCircles={governanceCircles}
       userCircleIds={userCircleIds}
       onSubmit={handleSubmit}
