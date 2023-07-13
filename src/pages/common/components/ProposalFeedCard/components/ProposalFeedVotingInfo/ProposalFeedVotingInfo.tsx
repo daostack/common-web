@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { useHistory, useParams } from "react-router";
 import classNames from "classnames";
+import { CommonEvent, CommonEventEmitter } from "@/events";
 import {
   VotingStatus,
   calculateVotingStatus,
@@ -93,7 +94,11 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
       proposal.data.args.commonId === commonId &&
       directParentId
     ) {
-      history.push(getCommonPagePath(directParentId));
+      CommonEventEmitter.emit(
+        CommonEvent.CommonDeleted,
+        proposal.data.args.commonId,
+      );
+      // history.push(getCommonPagePath(directParentId));
     }
   }, [votingStatus, directParentId]);
 
