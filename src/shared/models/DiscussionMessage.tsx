@@ -1,5 +1,8 @@
 import firebase from "firebase/app";
-import { DiscussionMessageOwnerType } from "@/shared/constants";
+import {
+  DiscussionMessageOwnerType,
+  SystemDiscussionMessageType,
+} from "@/shared/constants";
 import { Moderation } from "@/shared/interfaces/Moderation";
 import { BaseEntity } from "./BaseEntity";
 import { Link } from "./Link";
@@ -13,6 +16,11 @@ export enum DiscussionMessageFlag {
   Clear = "Clear",
   Reported = "Reported",
   Hidden = "Hidden",
+}
+
+export enum SystemMessageCommonType {
+  Common = "common",
+  Space = "space",
 }
 
 export interface DiscussionMessageTag {
@@ -51,9 +59,45 @@ export interface UserDiscussionMessage extends BaseDiscussionMessage {
   owner?: User;
 }
 
-export interface SystemDiscussionMessage extends BaseDiscussionMessage {
+interface BaseSystemDiscussionMessage extends BaseDiscussionMessage {
   ownerType: DiscussionMessageOwnerType.System;
+  systemMessageType: SystemDiscussionMessageType;
+  systemMessageData: unknown;
 }
+
+export interface CommonCreatedSystemMessage
+  extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.CommonCreated;
+  systemMessageData: {
+    commonType: SystemMessageCommonType;
+    commonId: string;
+    userId: string;
+  };
+}
+
+export interface CommonMemberAddedSystemMessage
+  extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.CommonMemberAdded;
+  systemMessageData: {
+    commonType: SystemMessageCommonType;
+    commonId: string;
+    userId: string;
+  };
+}
+
+export interface CommonEditedSystemMessage extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.CommonEdited;
+  systemMessageData: {
+    commonType: SystemMessageCommonType;
+    commonId: string;
+    userId: string;
+  };
+}
+
+export type SystemDiscussionMessage =
+  | CommonCreatedSystemMessage
+  | CommonMemberAddedSystemMessage
+  | CommonEditedSystemMessage;
 
 export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
 

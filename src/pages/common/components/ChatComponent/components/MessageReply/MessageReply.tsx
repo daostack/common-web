@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components/ButtonIcon";
-import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/util";
+import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
 import CloseIcon from "@/shared/icons/close2.icon";
 import { User } from "@/shared/models";
 import { FilePreview, FilePreviewVariant, getFileName } from "@/shared/ui-kit";

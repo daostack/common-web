@@ -125,6 +125,15 @@
   font-weight: bold;
 }
 
+.systemMessageCommonLink {
+  color: $c-pink-mention;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .replyMessageContainer {
   display: flex;
   cursor: pointer;

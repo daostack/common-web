@@ -15,6 +15,7 @@ import {
 } from "@/shared/components";
 import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
 import { Colors } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
@@ -37,7 +38,7 @@ import { getUserName } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
 import { Time } from "./components/Time";
-import { getTextFromTextEditorString } from "./util";
+import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
 
 interface ChatMessageProps {
@@ -84,6 +85,7 @@ export default function ChatMessage({
   onMessageDelete,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
+  const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isTabletView = useIsTabletView();
@@ -141,6 +143,9 @@ export default function ChatMessage({
           [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
         }),
         commonId: discussionMessage.commonId,
+        systemMessage: isSystemMessage ? discussionMessage : undefined,
+        getCommonPagePath,
+        getCommonPageAboutTabPath,
       });
 
       setMessageText(parsedText);
@@ -150,6 +155,9 @@ export default function ChatMessage({
     discussionMessage.text,
     isNotCurrentUserMessage,
     discussionMessage.commonId,
+    isSystemMessage,
+    getCommonPagePath,
+    getCommonPageAboutTabPath,
   ]);
 
   useEffect(() => {
