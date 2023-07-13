@@ -69,7 +69,7 @@ const NewDiscussionCreation: FC<NewDiscussionCreationProps> = (props) => {
   };
 
   const initialValues: NewDiscussionCreationFormValues = useMemo(() => {
-    const values: IntiialValues = {
+    const values: InitialValues = {
       circle: null,
       title: "",
       content: parseStringToTextEditorValue(),
