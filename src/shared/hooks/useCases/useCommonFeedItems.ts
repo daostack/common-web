@@ -60,6 +60,15 @@ export const useCommonFeedItems = (
     return unsubscribe;
   }, [feedItems.firstDocTimestamp, commonId]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(
+        commonActions.getFeedItems.cancel("Cancel feed items fetch on unmount"),
+      );
+      dispatch(commonActions.resetFeedItems());
+    };
+  }, []);
+
   return {
     ...feedItems,
     fetch,
