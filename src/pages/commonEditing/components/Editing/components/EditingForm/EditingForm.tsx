@@ -29,13 +29,15 @@ interface EditingFormProps {
 
 const getInitialValues = (common: Common): EditingFormValues => {
   return {
-    projectImages: [
-      {
-        id: "common_image",
-        title: "common_image",
-        file: common.image,
-      },
-    ],
+    projectImages: common.image
+      ? [
+          {
+            id: "common_image",
+            title: "common_image",
+            file: common.image,
+          },
+        ]
+      : [],
     spaceName: common.name,
     byline: common.byline || "",
     description: parseStringToTextEditorValue(common.description),
