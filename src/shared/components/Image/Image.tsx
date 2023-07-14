@@ -51,6 +51,7 @@ const CustomImage: FC<CustomImageProps> = (props) => {
     }
 
     setIsLoaded(false);
+    setHasError(false);
 
     const handleLoad = () => {
       setIsLoaded(true);
