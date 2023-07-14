@@ -31,7 +31,6 @@ interface FeedItemProps {
   isExpanded?: boolean;
   sizeKey?: string;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
-  directParentId?: string;
 }
 
 const FeedItem: FC<FeedItemProps> = (props) => {
@@ -53,7 +52,6 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     sizeKey,
     currentUserId,
     onActiveItemDataChange,
-    directParentId,
   } = props;
   const { onFeedItemUpdate, getLastMessage, getNonAllowedItems } =
     useFeedItemContext();
@@ -87,7 +85,6 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     getNonAllowedItems,
     isMobileVersion,
     onActiveItemDataChange,
-    directParentId,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {

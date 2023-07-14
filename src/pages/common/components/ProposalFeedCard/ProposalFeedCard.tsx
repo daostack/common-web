@@ -65,7 +65,6 @@ interface ProposalFeedCardProps {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   isMobileVersion?: boolean;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
-  directParentId?: string;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -85,7 +84,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     getNonAllowedItems,
     isMobileVersion,
     onActiveItemDataChange,
-    directParentId,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -319,7 +317,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           <ProposalFeedVotingInfo
             proposal={proposal}
             governanceCircles={governanceCircles}
-            directParentId={directParentId}
           />
           {isVotingAllowed && (
             <ProposalFeedButtonContainer
