@@ -24,6 +24,7 @@ import {
 } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
+import { checkIsLastSeenInPreviousDay } from "./utils";
 import styles from "./ChatContent.module.scss";
 
 export interface ChatContentRef {
@@ -204,11 +205,9 @@ const ChatContent: ForwardRefRenderFunction<
         const currentMessages = messages[Number(day)];
         const previousDayMessages =
           messages[Number(dateListReverse[dayIndex + 1])] || [];
-        const lastMessageInPreviousDay =
-          previousDayMessages[previousDayMessages.length - 1];
-        const isLastSeenInPreviousDay = Boolean(
-          lastMessageInPreviousDay &&
-            lastMessageInPreviousDay.id === lastSeenItem?.id,
+        const isLastSeenInPreviousDay = checkIsLastSeenInPreviousDay(
+          previousDayMessages,
+          lastSeenItem?.id,
         );
         const newSeparatorEl = (
           <li>
