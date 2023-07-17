@@ -7,11 +7,7 @@ import { Common, User } from "@/shared/models";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "../../commonLayout/saga/utils";
 import * as actions from "../actions";
 import { selectMultipleSpacesLayoutBreadcrumbs } from "../selectors";
-import {
-  MultipleSpacesLayoutFeedItemBreadcrumbs,
-  MultipleSpacesLayoutState,
-  ProjectsStateItem,
-} from "../types";
+import { MultipleSpacesLayoutState, ProjectsStateItem } from "../types";
 
 const fetchProjectsInfoByActiveCommonId = async (
   commonId: string,

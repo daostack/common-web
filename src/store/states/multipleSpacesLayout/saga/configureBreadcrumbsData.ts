@@ -54,7 +54,12 @@ export function* configureBreadcrumbsData(
     }),
   );
 
-  if (currentBreadcrumbs?.activeCommonId !== payload.activeCommonId) {
+  if (
+    currentBreadcrumbs?.activeCommonId !== payload.activeCommonId ||
+    !currentBreadcrumbs.items.some(
+      (item) => item.commonId === payload.activeCommonId,
+    )
+  ) {
     yield put(
       actions.fetchBreadcrumbsItemsByCommonId.request(payload.activeCommonId),
     );
