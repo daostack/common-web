@@ -30,21 +30,21 @@ const PermissionSelection: FC<PermissionSelectionProps> = (props) => {
     .filter((circle) => userCircleIds?.includes(circle.id))
     .map((circle) => ({
       id: `${Permission.Private}_${circle.id}`,
-      text: `Private to ${circle.name}`,
+      text: circle.name,
       onClick: () => onCircleSave(circle),
     }));
 
   const items: MenuItem[] = [
     {
       id: Permission.Public,
-      text: "Public discussion",
+      text: "Public",
       onClick: () => onCircleSave(null),
     },
     ...circleOptions,
   ];
   const buttonEl = (
     <button className={styles.button} type="button" disabled={disabled}>
-      {!currentCircle ? "Public" : `Private: ${currentCircle.name}`}
+      {!currentCircle ? "Public" : currentCircle.name}
       <LeftArrowIcon className={styles.arrowIcon} />
     </button>
   );
