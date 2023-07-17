@@ -17,6 +17,7 @@ import { ChatMessage } from "@/shared/components";
 import { ChatType, QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import {
+  checkIsUserDiscussionMessage,
   CommonFeedObjectUserUnique,
   CommonMember,
   DiscussionMessage,
@@ -24,6 +25,7 @@ import {
 } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
+import { checkIsLastSeenInPreviousDay } from "./utils";
 import styles from "./ChatContent.module.scss";
 
 export interface ChatContentRef {
@@ -83,6 +85,7 @@ const ChatContent: ForwardRefRenderFunction<
   chatContentRef,
 ) => {
   const user = useSelector(selectUser());
+  const userId = user?.uid;
   const queryParams = useQueryParams();
 
   const [highlightedMessageId, setHighlightedMessageId] = useState(() => {
@@ -204,12 +207,13 @@ const ChatContent: ForwardRefRenderFunction<
         const currentMessages = messages[Number(day)];
         const previousDayMessages =
           messages[Number(dateListReverse[dayIndex + 1])] || [];
-        const lastMessageInPreviousDay =
-          previousDayMessages[previousDayMessages.length - 1];
-        const isLastSeenInPreviousDay = Boolean(
-          lastMessageInPreviousDay &&
-            lastMessageInPreviousDay.id === lastSeenItem?.id,
+        const isLastSeenInPreviousDay = checkIsLastSeenInPreviousDay(
+          previousDayMessages,
+          lastSeenItem?.id,
         );
+        const isMyMessageFirst =
+          checkIsUserDiscussionMessage(currentMessages[0]) &&
+          currentMessages[0].ownerId === userId;
         const newSeparatorEl = (
           <li>
             <Separator>New</Separator>
@@ -218,11 +222,15 @@ const ChatContent: ForwardRefRenderFunction<
 
         return (
           <ul id={chatId} className={styles.messageList} key={day}>
-            {isLastSeenInPreviousDay && newSeparatorEl}
+            {isLastSeenInPreviousDay && !isMyMessageFirst && newSeparatorEl}
             <li className={styles.dateTitle}>
               {isToday(date) ? "Today" : formatDate(date)}
             </li>
             {currentMessages.map((message, messageIndex) => {
+              const nextMessage = currentMessages[messageIndex + 1];
+              const isMyMessageNext =
+                checkIsUserDiscussionMessage(nextMessage) &&
+                nextMessage.ownerId === userId;
               const messageEl = (
                 <ChatMessage
                   key={message.id}
@@ -252,7 +260,8 @@ const ChatContent: ForwardRefRenderFunction<
 
               if (
                 message.id !== lastSeenItem?.id ||
-                messageIndex === currentMessages.length - 1
+                messageIndex === currentMessages.length - 1 ||
+                isMyMessageNext
               ) {
                 return messageEl;
               }
