@@ -30,3 +30,16 @@
   font-weight: 500;
   font-size: $moderate-small;
 }
+
+.actionButtonsWrapper {
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin-right: 1rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
