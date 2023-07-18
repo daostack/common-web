@@ -16,6 +16,7 @@ import {
   CommonFeed,
   Governance,
   PredefinedTypes,
+  ResolutionType,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
 import {
@@ -314,6 +315,10 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
             onHover(false);
           }}
         >
+          {proposal.resolutionType === ResolutionType.IMMEDIATE && (
+            <span>NEED TO UPDATE</span>
+          )}
+
           <ProposalFeedVotingInfo
             proposal={proposal}
             governanceCircles={governanceCircles}
