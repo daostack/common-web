@@ -9,9 +9,15 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import {
+  CommonEvent,
+  CommonEventEmitter,
+  CommonEventToListener,
+} from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { FeedItemBaseContent, FeedItemBaseContentProps } from "@/pages/common";
 import { CommonAction, QueryParamKey } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
@@ -69,6 +75,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     feedLayoutSettings,
     onActiveItemDataChange,
   } = props;
+  const { getCommonPagePath } = useRoutesContext();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -233,6 +240,28 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       dispatch(commonActions.setRecentStreamId(""));
     }
   }, [feedLayoutRef, recentStreamId, firstItem]);
+
+  useEffect(() => {
+    const parentCommonId = commonData?.common.directParent?.commonId;
+
+    if (!parentCommonId) {
+      return;
+    }
+
+    const handler: CommonEventToListener[CommonEvent.CommonDeleted] = (
+      deletedCommonId,
+    ) => {
+      if (deletedCommonId === commonId) {
+        history.push(getCommonPagePath(parentCommonId));
+      }
+    };
+
+    CommonEventEmitter.on(CommonEvent.CommonDeleted, handler);
+
+    return () => {
+      CommonEventEmitter.off(CommonEvent.CommonDeleted, handler);
+    };
+  }, [commonId, commonData?.common.directParent?.commonId, getCommonPagePath]);
 
   if (!isDataFetched) {
     return (

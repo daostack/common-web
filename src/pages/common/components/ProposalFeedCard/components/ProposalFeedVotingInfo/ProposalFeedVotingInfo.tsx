@@ -1,11 +1,14 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import classNames from "classnames";
+import { CommonEvent, CommonEventEmitter } from "@/events";
 import {
+  VotingStatus,
   calculateVotingStatus,
   checkIsFailingVoting,
   checkIsVotingFinished,
 } from "@/pages/OldCommon/components/ProposalContainer/CountDownCard/helpers";
 import { getVotersString } from "@/pages/OldCommon/containers/ProposalContainer/helpers";
+import { ProposalsTypes } from "@/shared/constants";
 import { useCountdown } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Governance, Proposal } from "@/shared/models";
@@ -76,6 +79,18 @@ export const ProposalFeedVotingInfo: React.FC<ProposalFeedVotingInfoProps> = (
       startCountdown(new Date(expirationTimestamp.seconds * 1000));
     }
   }, [startCountdown, expirationTimestamp]);
+
+  useEffect(() => {
+    if (
+      proposal.type === ProposalsTypes.DELETE_COMMON &&
+      votingStatus === VotingStatus.Approved
+    ) {
+      CommonEventEmitter.emit(
+        CommonEvent.CommonDeleted,
+        proposal.data.args.commonId,
+      );
+    }
+  }, [votingStatus]);
 
   return (
     <div

@@ -5,6 +5,7 @@ import { ProjectsStateItem } from "@/store/states";
 export enum CommonEvent {
   CommonCreated = "common-created",
   CommonUpdated = "common-updated",
+  CommonDeleted = "common-deleted",
   ProjectCreated = "project-created",
   ProjectUpdated = "project-updated",
 }
@@ -12,6 +13,7 @@ export enum CommonEvent {
 export interface CommonEventToListener {
   [CommonEvent.CommonCreated]: (common: Common) => void;
   [CommonEvent.CommonUpdated]: (common: Common) => void;
+  [CommonEvent.CommonDeleted]: (deletedCommonId: string) => void;
   [CommonEvent.ProjectCreated]: (projectsStateItem: ProjectsStateItem) => void;
   [CommonEvent.ProjectUpdated]: (
     projectsStateItem: { commonId: string } & Partial<
