@@ -18,6 +18,7 @@ const Header: FC = () => {
     container: styles.userInfoContentButton,
     userAvatar: styles.userInfoAvatar,
     userName: styles.userInfoName,
+    loginButton: styles.userInfoLoginButton,
   };
   const menuItemsStyles: MenuItemsStyles = {
     wrapper: styles.menuItemsWrapper,

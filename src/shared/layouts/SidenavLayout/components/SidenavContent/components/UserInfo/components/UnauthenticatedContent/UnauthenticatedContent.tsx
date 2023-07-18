@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useDispatch } from "react-redux";
+import classNames from "classnames";
 import { setLoginModalState } from "@/pages/Auth/store/actions";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit/Button";
@@ -25,7 +26,7 @@ const UnauthenticatedContent: FC<UnauthenticatedContentProps> = (props) => {
       as="div"
       leftSideEl={
         <Button
-          className={styles.loginButton}
+          className={classNames(styles.loginButton, contentStyles?.loginButton)}
           variant={ButtonVariant.OutlineBlue}
           size={ButtonSize.Xsmall}
           onClick={handleLogin}
