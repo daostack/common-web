@@ -1,0 +1,13 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.icon {
+  width: 0.625rem;
+  height: 0.625rem;
+  color: $c-gray-800;
+
+  @include tablet {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
