@@ -25,7 +25,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
     onOpen: onCommonCreationModalOpen,
     onClose: onCommonCreationModalClose,
   } = useModal(false);
-  const { data, projects } = useMemo(
+  const { data, projects, hasPermissionToAddProjectInActiveCommon } = useMemo(
     () => getBreadcrumbsData(breadcrumbs.items, breadcrumbs.activeCommonId),
     [breadcrumbs.items, breadcrumbs.activeCommonId],
   );
@@ -59,7 +59,11 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
             name={breadcrumbs.activeItem.name}
             image={breadcrumbs.activeItem.image}
             items={projects}
-            commonIdToAddProject={breadcrumbs.activeCommonId}
+            commonIdToAddProject={
+              hasPermissionToAddProjectInActiveCommon
+                ? breadcrumbs.activeCommonId
+                : null
+            }
           />
         </>
       )}

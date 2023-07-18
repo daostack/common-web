@@ -7,6 +7,7 @@ interface Return {
     commonIdToAddProject?: string | null;
   }[];
   projects: ProjectsStateItem[];
+  hasPermissionToAddProjectInActiveCommon?: boolean;
 }
 
 export const getBreadcrumbsData = (
@@ -19,6 +20,7 @@ export const getBreadcrumbsData = (
     return {
       data: [],
       projects: [],
+      hasPermissionToAddProjectInActiveCommon: false,
     };
   }
 
@@ -36,6 +38,8 @@ export const getBreadcrumbsData = (
         },
       ],
       projects: activeCommonProjects,
+      hasPermissionToAddProjectInActiveCommon:
+        activeCommon.hasPermissionToAddProject,
     };
   }
 
@@ -47,6 +51,7 @@ export const getBreadcrumbsData = (
     return {
       data: [],
       projects: [],
+      hasPermissionToAddProjectInActiveCommon: false,
     };
   }
 
@@ -79,5 +84,7 @@ export const getBreadcrumbsData = (
   return {
     data,
     projects: activeCommonProjects,
+    hasPermissionToAddProjectInActiveCommon:
+      activeCommon.hasPermissionToAddProject,
   };
 };
