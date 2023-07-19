@@ -6,6 +6,7 @@ export {
 } from "./components";
 export type {
   CommonSidenavLayoutRouteOptions,
+  MultipleSpacesLayoutRouteOptions,
   OldLayoutRouteOptions,
   SidenavLayoutRouteOptions,
 } from "./configuration";

@@ -9,48 +9,60 @@ import { ROUTE_PATHS } from "@/shared/constants";
 import { MultipleSpacesLayout } from "@/shared/layouts";
 import { LayoutConfiguration, RouteType } from "../types";
 
-const getCommonPageConfiguration = (): LayoutConfiguration["routes"] =>
-  ALL_COMMON_PAGE_TABS.map((tab) => ({
-    path: `${ROUTE_PATHS.COMMON}/${tab}` as ROUTE_PATHS,
-    exact: true,
-    component: CommonPage,
-  }));
+export interface MultipleSpacesLayoutRouteOptions {
+  withBreadcrumbs?: boolean;
+}
 
-export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration = {
-  component: MultipleSpacesLayout,
-  routes: [
-    {
-      path: ROUTE_PATHS.INBOX,
+const getCommonPageConfiguration =
+  (): LayoutConfiguration<MultipleSpacesLayoutRouteOptions>["routes"] =>
+    ALL_COMMON_PAGE_TABS.map((tab) => ({
+      path: `${ROUTE_PATHS.COMMON}/${tab}` as ROUTE_PATHS,
       exact: true,
-      component: InboxPage,
-      type: RouteType.Private,
-      unauthenticatedRedirectPath: ROUTE_PATHS.HOME,
-    },
-    {
-      path: ROUTE_PATHS.COMMON,
-      exact: true,
-      component: CommonFeedPage,
-    },
-    ...getCommonPageConfiguration(),
-    {
-      path: ROUTE_PATHS.PROJECT_CREATION,
-      exact: true,
-      component: CommonCreationPage,
-    },
-    {
-      path: ROUTE_PATHS.COMMON_EDITING,
-      exact: true,
-      component: CommonEditingPage,
-    },
-    {
-      path: ROUTE_PATHS.PROFILE,
-      exact: true,
-      component: ProfilePage,
-    },
-    {
-      path: ROUTE_PATHS.BILLING,
-      exact: true,
-      component: BillingPage,
-    },
-  ],
-};
+      component: CommonPage,
+    }));
+
+export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleSpacesLayoutRouteOptions> =
+  {
+    component: MultipleSpacesLayout,
+    routes: [
+      {
+        path: ROUTE_PATHS.INBOX,
+        exact: true,
+        component: InboxPage,
+        type: RouteType.Private,
+        unauthenticatedRedirectPath: ROUTE_PATHS.HOME,
+      },
+      {
+        path: ROUTE_PATHS.COMMON,
+        exact: true,
+        component: CommonFeedPage,
+      },
+      ...getCommonPageConfiguration(),
+      {
+        path: ROUTE_PATHS.PROJECT_CREATION,
+        exact: true,
+        component: CommonCreationPage,
+      },
+      {
+        path: ROUTE_PATHS.COMMON_EDITING,
+        exact: true,
+        component: CommonEditingPage,
+      },
+      {
+        path: ROUTE_PATHS.PROFILE,
+        exact: true,
+        component: ProfilePage,
+        routeOptions: {
+          withBreadcrumbs: false,
+        },
+      },
+      {
+        path: ROUTE_PATHS.BILLING,
+        exact: true,
+        component: BillingPage,
+        routeOptions: {
+          withBreadcrumbs: false,
+        },
+      },
+    ],
+  };

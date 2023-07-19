@@ -11,7 +11,12 @@ import {
 import { Breadcrumbs, Navigation } from "./components";
 import styles from "./Header.module.scss";
 
-const Header: FC = () => {
+interface HeaderProps {
+  withBreadcrumbs?: boolean;
+}
+
+const Header: FC<HeaderProps> = (props) => {
+  const { withBreadcrumbs = true } = props;
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const userInfoContentStyles: ContentStyles = {
@@ -27,7 +32,7 @@ const Header: FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
-        <Breadcrumbs />
+        {withBreadcrumbs && <Breadcrumbs />}
       </div>
       <div className={styles.rightContent}>
         <Navigation className={styles.navigation} />
