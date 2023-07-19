@@ -33,6 +33,7 @@ const MultipleSpacesLayout: FC = (props) => {
             <Header
               backUrl={backUrl}
               withBreadcrumbs={routeOptions.withBreadcrumbs}
+              breadcrumbsItemsWithMenus={routeOptions.breadcrumbsItemsWithMenus}
             />
           )}
           {children}

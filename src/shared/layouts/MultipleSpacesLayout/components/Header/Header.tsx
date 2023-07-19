@@ -16,10 +16,15 @@ import styles from "./Header.module.scss";
 interface HeaderProps {
   backUrl?: string | null;
   withBreadcrumbs?: boolean;
+  breadcrumbsItemsWithMenus?: boolean;
 }
 
 const Header: FC<HeaderProps> = (props) => {
-  const { backUrl = null, withBreadcrumbs = true } = props;
+  const {
+    backUrl = null,
+    withBreadcrumbs = true,
+    breadcrumbsItemsWithMenus = true,
+  } = props;
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const userInfoContentStyles: ContentStyles = {
@@ -35,7 +40,9 @@ const Header: FC<HeaderProps> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
-        {withBreadcrumbs && !backUrl && <Breadcrumbs />}
+        {withBreadcrumbs && !backUrl && (
+          <Breadcrumbs itemsWithMenus={breadcrumbsItemsWithMenus} />
+        )}
         {backUrl && (
           <NavLink className={styles.backLink} to={backUrl}>
             <LongLeftArrowIcon className={styles.backIcon} />

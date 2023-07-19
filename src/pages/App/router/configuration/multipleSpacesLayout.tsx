@@ -11,6 +11,7 @@ import { LayoutConfiguration, RouteType } from "../types";
 
 export interface MultipleSpacesLayoutRouteOptions {
   withBreadcrumbs?: boolean;
+  breadcrumbsItemsWithMenus?: boolean;
 }
 
 const getCommonPageConfiguration =
@@ -31,6 +32,9 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         component: InboxPage,
         type: RouteType.Private,
         unauthenticatedRedirectPath: ROUTE_PATHS.HOME,
+        routeOptions: {
+          breadcrumbsItemsWithMenus: false,
+        },
       },
       {
         path: ROUTE_PATHS.COMMON,

@@ -14,10 +14,11 @@ import styles from "./FeedItemBreadcrumbs.module.scss";
 
 interface FeedItemBreadcrumbsProps {
   breadcrumbs: MultipleSpacesLayoutFeedItemBreadcrumbs;
+  itemsWithMenus: boolean;
 }
 
 const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
-  const { breadcrumbs } = props;
+  const { breadcrumbs, itemsWithMenus } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
   const {
@@ -49,6 +50,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
               onCommonCreate={
                 index === 0 ? onCommonCreationModalOpen : undefined
               }
+              withMenu={itemsWithMenus}
             />
           </React.Fragment>
         ))}
@@ -64,6 +66,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
                 ? breadcrumbs.activeCommonId
                 : null
             }
+            withMenu={itemsWithMenus}
           />
         </>
       )}
