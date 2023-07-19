@@ -11,10 +11,18 @@ export interface EmojiPickerProps {
   containerClassName?: string;
   pickerContainerClassName?: string;
   onEmojiSelect: (emoji: Skin) => void;
+  isMessageSent?: boolean;
+  onToggleIsMessageSent?: () => void;
 }
 
 const EmojiPicker: FC<EmojiPickerProps> = (props) => {
-  const { containerClassName, pickerContainerClassName, onEmojiSelect } = props;
+  const {
+    containerClassName,
+    pickerContainerClassName,
+    onEmojiSelect,
+    isMessageSent,
+    onToggleIsMessageSent,
+  } = props;
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOutsideValue } = useOutsideClick(wrapperRef);
@@ -25,6 +33,13 @@ const EmojiPicker: FC<EmojiPickerProps> = (props) => {
       setOutsideValue();
     }
   }, [isOutside, setOutsideValue]);
+
+  useEffect(() => {
+    if (isMessageSent) {
+      onToggleIsMessageSent && onToggleIsMessageSent();
+      setIsOpen(false);
+    }
+  }, [isMessageSent, onToggleIsMessageSent]);
 
   const handleOpenPicker = () => {
     setIsOpen((value) => !value);

@@ -20,7 +20,7 @@ import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { User } from "@/shared/models";
-import { getUserName } from "@/shared/utils";
+import { getUserName, isMobile } from "@/shared/utils";
 import {
   Editor,
   MentionDropdown,
@@ -198,12 +198,21 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   }, [search]);
 
+  const [isMessageSent, setIsMessageSent] = useState(false);
+
+  const onToggleIsMessageSent = () => {
+    setIsMessageSent((value) => !value);
+  };
+
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key === KeyboardKeys.ArrowUp && target) {
       event.preventDefault();
       setShouldFocusTarget(true);
     } else {
       onKeyDown && onKeyDown(event);
+      if (event.key === KeyboardKeys.Enter && !isMobile()) {
+        onToggleIsMessageSent();
+      }
     }
   };
 
@@ -241,11 +250,12 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           elementStyles={elementStyles}
         />
         <EmojiPicker
+          isMessageSent={isMessageSent}
+          onToggleIsMessageSent={onToggleIsMessageSent}
           containerClassName={emojiContainerClassName}
           pickerContainerClassName={emojiPickerContainerClassName}
           onEmojiSelect={(emoji) => {
             Transforms.select(editor, EditorSlate.end(editor, []));
-            // Transforms.insertText(editor, emoji.native);
             insertEmoji(editor, emoji.native);
           }}
         />
