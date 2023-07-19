@@ -18,6 +18,7 @@ export interface ContentStyles {
   container?: string;
   userAvatar?: string;
   userName?: string;
+  loginButton?: string;
 }
 
 interface ContentProps<T> {
