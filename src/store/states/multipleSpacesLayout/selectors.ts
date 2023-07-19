@@ -6,3 +6,6 @@ export const selectMultipleSpacesLayoutBreadcrumbs = (state: AppState) =>
 export const selectMultipleSpacesLayoutPreviousBreadcrumbs = (
   state: AppState,
 ) => state.multipleSpacesLayout.previousBreadcrumbs;
+
+export const selectMultipleSpacesLayoutBackUrl = (state: AppState) =>
+  state.multipleSpacesLayout.backUrl;
