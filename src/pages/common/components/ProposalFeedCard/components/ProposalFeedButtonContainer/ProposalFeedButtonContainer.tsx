@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { useModal } from "@/shared/hooks";
-import { Vote, VoteOutcome } from "@/shared/models";
+import { ResolutionType, Vote, VoteOutcome } from "@/shared/models";
 import { VoteButton } from "../VoteButton";
 import { VoteModal } from "./components";
 import styles from "./ProposalFeedButtonContainer.module.scss";
@@ -8,12 +8,13 @@ import styles from "./ProposalFeedButtonContainer.module.scss";
 interface ProposalFeedButtonContainerProps {
   proposalId: string;
   onVoteCreate: (vote: Vote) => void;
+  resolutionType: ResolutionType;
 }
 
 export const ProposalFeedButtonContainer: FC<
   ProposalFeedButtonContainerProps
 > = (props) => {
-  const { proposalId, onVoteCreate } = props;
+  const { proposalId, onVoteCreate, resolutionType } = props;
   const [voteOutcome, setVoteOutcome] = useState<VoteOutcome | null>(null);
   const {
     isShowing: isVoteModalOpen,
@@ -39,11 +40,13 @@ export const ProposalFeedButtonContainer: FC<
           voteOutcome={VoteOutcome.Approved}
           onClick={handleVoteButtonClick}
         />
-        <VoteButton
-          className={styles.buttonAbstain}
-          voteOutcome={VoteOutcome.Abstained}
-          onClick={handleVoteButtonClick}
-        />
+        {resolutionType === ResolutionType.WAIT_FOR_EXPIRATION && (
+          <VoteButton
+            className={styles.buttonAbstain}
+            voteOutcome={VoteOutcome.Abstained}
+            onClick={handleVoteButtonClick}
+          />
+        )}
         <VoteButton
           className={styles.buttonReject}
           voteOutcome={VoteOutcome.Rejected}

@@ -39,6 +39,7 @@ import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
   UserVoteInfo,
+  ImmediateProposalInfo,
 } from "./components";
 import { useProposalSpecificData } from "./hooks";
 import {
@@ -315,18 +316,26 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
             onHover(false);
           }}
         >
-          {proposal.resolutionType === ResolutionType.IMMEDIATE && (
-            <span>NEED TO UPDATE</span>
+          {proposal.resolutionType === ResolutionType.WAIT_FOR_EXPIRATION && (
+            <ProposalFeedVotingInfo
+              proposal={proposal}
+              governanceCircles={governanceCircles}
+            />
           )}
 
-          <ProposalFeedVotingInfo
-            proposal={proposal}
-            governanceCircles={governanceCircles}
-          />
+          {proposal.resolutionType === ResolutionType.IMMEDIATE && (
+            <ImmediateProposalInfo
+              proposal={proposal}
+              governanceCircles={governanceCircles}
+              proposerUserName={getUserName(feedItemUser)}
+            />
+          )}
+
           {isVotingAllowed && (
             <ProposalFeedButtonContainer
               proposalId={proposal.id}
               onVoteCreate={setVote}
+              resolutionType={proposal.resolutionType}
             />
           )}
           <UserVoteInfo
