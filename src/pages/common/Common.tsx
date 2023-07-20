@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { InboxItemType } from "@/shared/constants";
-import { MainRoutesProvider } from "@/shared/contexts";
+import { MainRoutesProvider, useRoutesContext } from "@/shared/contexts";
+import { CirclesPermissions, CommonMember } from "@/shared/models";
 import { multipleSpacesLayoutActions } from "@/store/states";
 import BaseCommonPage, { CommonRouterParams } from "./BaseCommon";
 import { CommonPageSettings } from "./types";
@@ -16,19 +16,33 @@ const SETTINGS: CommonPageSettings = {
 const Common = () => {
   const { id: commonId } = useParams<CommonRouterParams>();
   const dispatch = useDispatch();
+  const { getCommonPagePath } = useRoutesContext();
+
+  const handleCommonMemberChange = useCallback(
+    (commonMember: (CommonMember & CirclesPermissions) | null) => {
+      dispatch(
+        multipleSpacesLayoutActions.setBackUrl(
+          commonMember && getCommonPagePath(commonId),
+        ),
+      );
+    },
+    [commonId, getCommonPagePath],
+  );
 
   useEffect(() => {
-    dispatch(
-      multipleSpacesLayoutActions.configureBreadcrumbsData({
-        type: InboxItemType.FeedItemFollow,
-        activeCommonId: commonId,
-      }),
-    );
-  }, [commonId]);
+    dispatch(multipleSpacesLayoutActions.resetMultipleSpacesLayout());
+
+    return () => {
+      dispatch(multipleSpacesLayoutActions.setBackUrl(null));
+    };
+  }, []);
 
   return (
     <MainRoutesProvider>
-      <BaseCommonPage settings={SETTINGS} />
+      <BaseCommonPage
+        settings={SETTINGS}
+        onCommonMemberChange={handleCommonMemberChange}
+      />
     </MainRoutesProvider>
   );
 };

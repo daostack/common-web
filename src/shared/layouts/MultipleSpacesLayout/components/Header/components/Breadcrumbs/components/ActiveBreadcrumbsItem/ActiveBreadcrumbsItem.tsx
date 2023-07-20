@@ -11,10 +11,17 @@ interface ActiveBreadcrumbsItemProps {
   image?: string;
   items?: ProjectsStateItem[];
   commonIdToAddProject?: string | null;
+  withMenu?: boolean;
 }
 
 const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
-  const { name, image, items = [], commonIdToAddProject } = props;
+  const {
+    name,
+    image,
+    items = [],
+    commonIdToAddProject,
+    withMenu = true,
+  } = props;
   const itemsButtonRef = useRef<HTMLButtonElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
 
@@ -36,7 +43,7 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
         />
       )}
       <span className={styles.name}>{name}</span>
-      {(items.length > 0 || commonIdToAddProject) && (
+      {(items.length > 0 || commonIdToAddProject) && withMenu && (
         <ButtonIcon
           ref={itemsButtonRef}
           className={styles.itemsButton}
@@ -45,11 +52,13 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
           <RightArrowThinIcon className={styles.itemsIcon} />
         </ButtonIcon>
       )}
-      <BreadcrumbsMenu
-        ref={contextMenuRef}
-        items={items}
-        commonIdToAddProject={commonIdToAddProject}
-      />
+      {withMenu && (
+        <BreadcrumbsMenu
+          ref={contextMenuRef}
+          items={items}
+          commonIdToAddProject={commonIdToAddProject}
+        />
+      )}
     </li>
   );
 };

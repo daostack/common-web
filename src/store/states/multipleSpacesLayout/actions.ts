@@ -47,3 +47,7 @@ export const addProjectToBreadcrumbs = createStandardAction(
 export const updateProjectInBreadcrumbs = createStandardAction(
   MultipleSpacesLayoutActionType.UPDATE_PROJECT_IN_BREADCRUMBS,
 )<{ commonId: string } & Partial<Omit<ProjectsStateItem, "commonId">>>();
+
+export const setBackUrl = createStandardAction(
+  MultipleSpacesLayoutActionType.SET_BACK_URL,
+)<string | null>();

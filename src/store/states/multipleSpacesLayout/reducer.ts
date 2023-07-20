@@ -10,6 +10,7 @@ type Action = ActionType<typeof actions>;
 const initialState: MultipleSpacesLayoutState = {
   breadcrumbs: null,
   previousBreadcrumbs: null,
+  backUrl: null,
 };
 
 export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
@@ -55,5 +56,10 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
           ...payload,
         };
       }
+    }),
+  )
+  .handleAction(actions.setBackUrl, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.backUrl = payload;
     }),
   );

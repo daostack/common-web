@@ -9,6 +9,7 @@ import {
   useFullCommonData,
   useGlobalCommonData,
 } from "@/shared/hooks/useCases";
+import { CirclesPermissions, CommonMember } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
   setCommonGovernance,
@@ -23,12 +24,15 @@ export interface CommonRouterParams {
   id: string;
 }
 
-interface CommonProps {
+export interface CommonProps {
   settings?: CommonPageSettings;
+  onCommonMemberChange?: (
+    commonMember: (CommonMember & CirclesPermissions) | null,
+  ) => void;
 }
 
 const BaseCommon: FC<CommonProps> = (props) => {
-  const { settings = {} } = props;
+  const { settings = {}, onCommonMemberChange } = props;
   const { id: commonId } = useParams<CommonRouterParams>();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
@@ -73,6 +77,7 @@ const BaseCommon: FC<CommonProps> = (props) => {
 
   useEffect(() => {
     dispatch(setCommonMember(commonMember || null));
+    onCommonMemberChange?.(commonMember || null);
   }, [dispatch, commonMember]);
 
   useEffect(() => {
