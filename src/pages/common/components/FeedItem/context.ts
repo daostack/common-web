@@ -17,7 +17,7 @@ export interface FeedItemBaseContentProps {
   isMobileView: boolean;
   isActive?: boolean;
   isExpanded?: boolean;
-  title?: string;
+  title?: string | ReactNode;
   lastMessage?: TextEditorValue;
   canBeExpanded?: boolean;
   onClick?: () => void;

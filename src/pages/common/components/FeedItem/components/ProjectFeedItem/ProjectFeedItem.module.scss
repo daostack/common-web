@@ -1,0 +1,19 @@
+@import "../../../../../../constants";
+
+.container {
+  &:hover {
+    --title-color: var(--primary-fill);
+
+    .openIcon {
+      display: inline;
+    }
+  }
+}
+
+.openIcon {
+  display: none;
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-left: 0.625rem;
+}

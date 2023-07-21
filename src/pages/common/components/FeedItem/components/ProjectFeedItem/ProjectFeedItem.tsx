@@ -3,8 +3,10 @@ import { useHistory } from "react-router-dom";
 import { useFeedItemContext } from "@/pages/common";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon } from "@/shared/hooks/useCases";
+import { OpenIcon } from "@/shared/icons";
 import { CommonFeed } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
+import styles from "./ProjectFeedItem.module.scss";
 
 interface ProjectFeedItemProps {
   item: CommonFeed;
@@ -18,6 +20,12 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const { renderFeedItemBaseContent } = useFeedItemContext();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
   const commonId = item.data.id;
+  const titleEl = (
+    <>
+      {common?.name}
+      <OpenIcon className={styles.openIcon} />
+    </>
+  );
 
   const handleClick = useCallback(() => {
     history.push(getCommonPagePath(commonId));
@@ -59,10 +67,11 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     (
       <>
         {renderFeedItemBaseContent?.({
+          className: styles.container,
           lastActivity: item.updatedAt.seconds * 1000,
           unreadMessages: 0,
           isMobileView: isMobileVersion,
-          title: common?.name,
+          title: titleEl,
           lastMessage: parseStringToTextEditorValue("4 Updated streams"),
           onClick: handleClick,
           seenOnce: true,
