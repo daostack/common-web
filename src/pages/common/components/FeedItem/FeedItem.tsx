@@ -11,6 +11,7 @@ import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
 import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
+import { ProjectFeedItem } from "./components";
 import { useFeedItemContext } from "./context";
 
 interface FeedItemProps {
@@ -96,6 +97,10 @@ const FeedItem: FC<FeedItemProps> = (props) => {
 
   if (item.data.type === CommonFeedType.Proposal) {
     return <ProposalFeedCard sizeKey={sizeKey} {...generalProps} />;
+  }
+
+  if (item.data.type === CommonFeedType.Project) {
+    return <ProjectFeedItem item={item} isMobileVersion={isMobileVersion} />;
   }
 
   return null;
