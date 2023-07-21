@@ -5,7 +5,6 @@ import { useRoutesContext } from "@/shared/contexts";
 import { useCommon } from "@/shared/hooks/useCases";
 import { OpenIcon } from "@/shared/icons";
 import { CommonFeed } from "@/shared/models";
-import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import styles from "./ProjectFeedItem.module.scss";
 
 interface ProjectFeedItemProps {
@@ -31,18 +30,6 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     history.push(getCommonPagePath(commonId));
   }, [history.push, getCommonPagePath, commonId]);
 
-  // const handleChatChannelUpdate = useCallback(
-  //   (item: ChatChannel, isRemoved: boolean) => {
-  //     dispatch(
-  //       inboxActions.updateChatChannelItem({
-  //         item,
-  //         isRemoved,
-  //       }),
-  //     );
-  //   },
-  //   [dispatch],
-  // );
-  //
   // const renderImage = (className?: string) => (
   //   <UserAvatar
   //     className={className}
@@ -56,13 +43,6 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     fetchCommon(commonId);
   }, [commonId]);
 
-  // useEffect(() => {
-  //   fetchChatChannelUserStatus({
-  //     userId: userId || "",
-  //     chatChannelId: chatChannel.id,
-  //   });
-  // }, [userId, chatChannel.id]);
-
   return (
     (
       <>
@@ -72,7 +52,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           unreadMessages: 0,
           isMobileView: isMobileVersion,
           title: titleEl,
-          lastMessage: parseStringToTextEditorValue("4 Updated streams"),
+          // lastMessage: parseStringToTextEditorValue("4 Updated streams"),
           onClick: handleClick,
           seenOnce: true,
           isLoading: !isCommonFetched,
