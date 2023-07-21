@@ -30,6 +30,7 @@ interface FeedItemProps {
   isActive?: boolean;
   isExpanded?: boolean;
   sizeKey?: string;
+  shouldCheckItemVisibility?: boolean;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
 }
 
@@ -51,6 +52,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isExpanded = false,
     sizeKey,
     currentUserId,
+    shouldCheckItemVisibility = true,
     onActiveItemDataChange,
   } = props;
   const { onFeedItemUpdate, getLastMessage, getNonAllowedItems } =
@@ -58,6 +60,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
   if (
+    shouldCheckItemVisibility &&
     !checkIsItemVisibleForUser(
       item.circleVisibility,
       userCircleIds,

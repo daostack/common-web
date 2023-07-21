@@ -403,6 +403,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       isExpanded={item.feedItem.id === expandedFeedItemId}
                       sizeKey={isActive ? sizeKey : undefined}
                       currentUserId={userId}
+                      shouldCheckItemVisibility={
+                        !item.feedItemFollowWithMetadata ||
+                        item.feedItemFollowWithMetadata.userId !== userId
+                      }
                       onActiveItemDataChange={(...args) =>
                         handleActiveFeedItemDataChange(...args, commonData?.id)
                       }
