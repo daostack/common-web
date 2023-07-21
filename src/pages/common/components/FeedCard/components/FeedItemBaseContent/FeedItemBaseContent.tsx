@@ -31,6 +31,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     seenOnce,
     ownerId,
     isPinned,
+    isLoading = false,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -113,7 +114,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               [styles.titleActive]: isActive || (isExpanded && isMobileView),
             })}
           >
-            {title || "Loading..."}
+            {isLoading || !title ? "Loading..." : title}
           </p>
           <p
             className={classNames(styles.text, styles.lastActivity, {

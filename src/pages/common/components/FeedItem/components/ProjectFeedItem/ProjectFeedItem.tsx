@@ -66,6 +66,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           lastMessage: parseStringToTextEditorValue("4 Updated streams"),
           onClick: handleClick,
           seenOnce: true,
+          isLoading: !isCommonFetched,
         })}
       </>
     ) || null

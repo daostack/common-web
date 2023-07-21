@@ -36,6 +36,7 @@ export interface FeedItemBaseContentProps {
   discussionPredefinedType?: PredefinedTypes;
   hasFiles?: boolean;
   hasImages?: boolean;
+  isLoading?: boolean;
 }
 
 export interface GetLastMessageOptions {
