@@ -41,6 +41,7 @@ import {
   UserVoteInfo,
   ImmediateProposalInfo,
 } from "./components";
+import { ImmediateProposalVoteInfo } from "./components/ImmediateProposalVoteInfo";
 import { useProposalSpecificData } from "./hooks";
 import {
   checkIsVotingAllowed,
@@ -317,18 +318,28 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           }}
         >
           {proposal.resolutionType === ResolutionType.WAIT_FOR_EXPIRATION && (
-            <ProposalFeedVotingInfo
-              proposal={proposal}
-              governanceCircles={governanceCircles}
-            />
+            <>
+              <ProposalFeedVotingInfo
+                proposal={proposal}
+                governanceCircles={governanceCircles}
+              />
+              <UserVoteInfo
+                userVote={userVote}
+                userHasPermissionsToVote={userHasPermissionsToVote}
+                isCountdownState={isCountdownState}
+              />
+            </>
           )}
 
           {proposal.resolutionType === ResolutionType.IMMEDIATE && (
-            <ImmediateProposalInfo
-              proposal={proposal}
-              governanceCircles={governanceCircles}
-              proposerUserName={getUserName(feedItemUser)}
-            />
+            <>
+              <ImmediateProposalInfo
+                proposal={proposal}
+                governanceCircles={governanceCircles}
+                proposerUserName={getUserName(feedItemUser)}
+              />
+              <ImmediateProposalVoteInfo proposal={proposal} />
+            </>
           )}
 
           {isVotingAllowed && (
@@ -338,11 +349,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
               resolutionType={proposal.resolutionType}
             />
           )}
-          <UserVoteInfo
-            userVote={userVote}
-            userHasPermissionsToVote={userHasPermissionsToVote}
-            isCountdownState={isCountdownState}
-          />
         </FeedCardContent>
       </>
     );
