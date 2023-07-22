@@ -2,7 +2,11 @@
 
 .container {
   display: flex;
+}
+
+.voteInfo {
   flex-direction: column;
+  margin-left: 0.8rem;
 }
 
 .title {
