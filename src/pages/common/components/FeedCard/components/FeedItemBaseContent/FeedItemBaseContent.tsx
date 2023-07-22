@@ -17,6 +17,7 @@ import styles from "./FeedItemBaseContent.module.scss";
 export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   const {
     className,
+    titleWrapperClassName,
     lastActivity,
     unreadMessages,
     isMobileView,
@@ -116,7 +117,13 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       {renderLeftContent?.()}
       <div className={styles.content}>
         <div className={styles.topContent}>
-          <p className={classNames(styles.text, styles.title)}>
+          <p
+            className={classNames(
+              styles.text,
+              styles.title,
+              titleWrapperClassName,
+            )}
+          >
             {isLoading || !title ? "Loading..." : title}
           </p>
           <p

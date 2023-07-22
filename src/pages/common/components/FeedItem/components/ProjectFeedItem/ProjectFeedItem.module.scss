@@ -11,6 +11,17 @@
   }
 }
 
+.titleWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .openIcon {
   display: none;
   flex-shrink: 0;

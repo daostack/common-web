@@ -12,6 +12,7 @@ import { GetNonAllowedItemsOptions } from "./types";
 
 export interface FeedItemBaseContentProps {
   className?: string;
+  titleWrapperClassName?: string;
   lastActivity: number;
   unreadMessages?: number;
   isMobileView: boolean;

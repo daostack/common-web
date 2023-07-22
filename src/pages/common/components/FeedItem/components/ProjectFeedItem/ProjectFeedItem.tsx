@@ -25,7 +25,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const isProject = checkIsProject(common);
   const titleEl = (
     <>
-      {common?.name}
+      <span className={styles.title}>{common?.name}</span>
       <OpenIcon className={styles.openIcon} />
     </>
   );
@@ -55,6 +55,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
       <>
         {renderFeedItemBaseContent?.({
           className: styles.container,
+          titleWrapperClassName: styles.titleWrapper,
           lastActivity: item.updatedAt.seconds * 1000,
           unreadMessages: 0,
           isMobileView: isMobileVersion,
