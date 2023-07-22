@@ -1,10 +1,13 @@
-import React, { FC, useCallback, useEffect } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon } from "@/shared/hooks/useCases";
 import { OpenIcon } from "@/shared/icons";
 import { CommonFeed } from "@/shared/models";
+import { CommonAvatar, parseStringToTextEditorValue } from "@/shared/ui-kit";
+import { checkIsProject } from "@/shared/utils";
 import styles from "./ProjectFeedItem.module.scss";
 
 interface ProjectFeedItemProps {
@@ -19,6 +22,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const { renderFeedItemBaseContent } = useFeedItemContext();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
   const commonId = item.data.id;
+  const isProject = checkIsProject(common);
   const titleEl = (
     <>
       {common?.name}
@@ -26,18 +30,21 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     </>
   );
 
-  const handleClick = useCallback(() => {
+  const handleClick = () => {
     history.push(getCommonPagePath(commonId));
-  }, [history.push, getCommonPagePath, commonId]);
+  };
 
-  // const renderImage = (className?: string) => (
-  //   <UserAvatar
-  //     className={className}
-  //     photoURL={dmUser?.photoURL}
-  //     nameForRandomAvatar={dmUserName}
-  //     userName={dmUserName}
-  //   />
-  // );
+  const renderLeftContent = (): ReactNode => (
+    <CommonAvatar
+      className={classNames(styles.image, {
+        [styles.imageNonRounded]: !isProject,
+        [styles.imageRounded]: isProject,
+      })}
+      src={common?.image}
+      alt={`${common?.name}'s image`}
+      name={common?.name}
+    />
+  );
 
   useEffect(() => {
     fetchCommon(commonId);
@@ -52,10 +59,11 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           unreadMessages: 0,
           isMobileView: isMobileVersion,
           title: titleEl,
-          // lastMessage: parseStringToTextEditorValue("4 Updated streams"),
+          lastMessage: parseStringToTextEditorValue("0 Updated streams"),
           onClick: handleClick,
           seenOnce: true,
           isLoading: !isCommonFetched,
+          renderLeftContent,
         })}
       </>
     ) || null

@@ -31,6 +31,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     menuItems,
     seenOnce,
     ownerId,
+    renderLeftContent,
     isPinned,
     isLoading = false,
   } = props;
@@ -112,6 +113,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           />
         </ButtonIcon>
       )}
+      {renderLeftContent?.()}
       <div className={styles.content}>
         <div className={styles.topContent}>
           <p className={classNames(styles.text, styles.title)}>
