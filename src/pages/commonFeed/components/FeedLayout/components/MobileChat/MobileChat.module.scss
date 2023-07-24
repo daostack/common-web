@@ -10,7 +10,16 @@
   }
 }
 
+.headerTitleWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .headerActionElement {
-  color: $c-pink-primary;
+  font-size: $mobile-title;
+  color: $c-gray-30;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
