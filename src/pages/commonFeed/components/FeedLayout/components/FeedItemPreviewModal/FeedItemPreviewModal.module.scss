@@ -1,3 +1,5 @@
+@import "../../../../../../constants";
+
 .modal {
   border-radius: 0;
   box-shadow: 0px -5px 4px rgba(0, 0, 0, 0.07);
@@ -24,4 +26,12 @@
 
 .modalOverlay {
   background-color: unset;
+}
+
+.itemTitle {
+  margin: 0;
+  font-weight: 500;
+  font-size: $moderate-med-2;
+  color: $c-gray-100;
+  word-break: break-word;
 }

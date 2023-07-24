@@ -1,9 +1,13 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { FeedItem } from "@/pages/common";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { Modal } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { ModalType, CloseIconVariant } from "@/shared/interfaces";
+import {
+  ModalType,
+  CloseIconVariant,
+  FeedLayoutItemChangeData,
+} from "@/shared/interfaces";
 import { Circles, CommonFeed } from "@/shared/models";
 import styles from "./FeedItemPreviewModal.module.scss";
 
@@ -33,9 +37,15 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
   } = props;
   const isTabletView = useIsTabletView();
   const { setIsShowFeedItemDetailsModal } = useChatContext();
+  const [title, setTitle] = useState("");
 
   const handleCloseModal = () => {
     setIsShowFeedItemDetailsModal && setIsShowFeedItemDetailsModal(false);
+    setTitle("");
+  };
+
+  const handleActiveItemDataChange = (data: FeedLayoutItemChangeData) => {
+    setTitle(data.title);
   };
 
   return (
@@ -57,19 +67,23 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
       closeIconVariant={CloseIconVariant.Thin}
     >
       {selectedFeedItem && (
-        <FeedItem
-          commonId={commonId}
-          commonName={commonName}
-          commonImage={commonImage}
-          isProject={isProject}
-          item={selectedFeedItem}
-          governanceCircles={governanceCircles}
-          isMobileVersion={isTabletView}
-          userCircleIds={userCircleIds}
-          isPreviewMode
-          isActive
-          sizeKey={sizeKey}
-        />
+        <>
+          {title && <h3 className={styles.itemTitle}>{title}</h3>}
+          <FeedItem
+            commonId={commonId}
+            commonName={commonName}
+            commonImage={commonImage}
+            isProject={isProject}
+            item={selectedFeedItem}
+            governanceCircles={governanceCircles}
+            isMobileVersion={isTabletView}
+            userCircleIds={userCircleIds}
+            isPreviewMode
+            isActive
+            sizeKey={sizeKey}
+            onActiveItemDataChange={handleActiveItemDataChange}
+          />
+        </>
       )}
     </Modal>
   );
