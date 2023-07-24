@@ -1,4 +1,5 @@
 import React, { FC, useState } from "react";
+import classNames from "classnames";
 import { useModal } from "@/shared/hooks";
 import { ResolutionType, Vote, VoteOutcome } from "@/shared/models";
 import { VoteButton } from "../VoteButton";
@@ -32,16 +33,22 @@ export const ProposalFeedButtonContainer: FC<
     onVoteCreate(vote);
   };
 
+  const isImmediate = resolutionType === ResolutionType.IMMEDIATE;
+
   return (
     <>
-      <div className={styles.container}>
+      <div
+        className={classNames(styles.container, {
+          [styles.isImmediate]: isImmediate,
+        })}
+      >
         <VoteButton
           className={styles.buttonApprove}
           voteOutcome={VoteOutcome.Approved}
           onClick={handleVoteButtonClick}
           resolutionType={resolutionType}
         />
-        {resolutionType === ResolutionType.WAIT_FOR_EXPIRATION && (
+        {!isImmediate && (
           <VoteButton
             className={styles.buttonAbstain}
             voteOutcome={VoteOutcome.Abstained}

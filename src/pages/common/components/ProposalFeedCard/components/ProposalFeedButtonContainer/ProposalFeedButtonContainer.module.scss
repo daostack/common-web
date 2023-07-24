@@ -16,6 +16,10 @@
   }
 }
 
+.isImmediate {
+  grid-template-areas: "approve reject";
+}
+
 .buttonApprove {
   grid-area: approve;
 }
