@@ -1,0 +1,51 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.container {
+  &:hover {
+    --title-color: var(--primary-fill);
+
+    .openIcon {
+      display: inline;
+    }
+  }
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.openIcon {
+  display: none;
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-left: 0.625rem;
+}
+
+.image {
+  align-self: center;
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.75rem;
+  object-fit: cover;
+  box-sizing: border-box;
+
+  @include tablet {
+    margin-right: 0.625rem;
+  }
+}
+.imageNonRounded {
+  border-radius: 0.375rem;
+}
+.imageRounded {
+  border-radius: 50%;
+}

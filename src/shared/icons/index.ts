@@ -29,6 +29,7 @@ export { default as LongLeftArrowIcon } from "./longLeftArrow.icon";
 export { default as LTRDirectionMarkIcon } from "./ltrDirection.icon";
 export { default as Menu2Icon } from "./menu2.icon";
 export { default as MoreIcon } from "./more.icon";
+export { OpenIcon } from "./open.icon";
 export { default as PeopleGroupIcon } from "./people-group.icon";
 export { Pin2Icon } from "./pin2.icon";
 export { default as PlusIcon } from "./plus.icon";

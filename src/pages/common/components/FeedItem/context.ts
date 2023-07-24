@@ -12,12 +12,13 @@ import { GetNonAllowedItemsOptions } from "./types";
 
 export interface FeedItemBaseContentProps {
   className?: string;
+  titleWrapperClassName?: string;
   lastActivity: number;
   unreadMessages?: number;
   isMobileView: boolean;
   isActive?: boolean;
   isExpanded?: boolean;
-  title?: string;
+  title?: string | ReactNode;
   lastMessage?: TextEditorValue;
   canBeExpanded?: boolean;
   onClick?: () => void;
@@ -28,6 +29,7 @@ export interface FeedItemBaseContentProps {
   ownerId?: string;
   commonName?: string;
   renderImage?: (className?: string) => ReactNode;
+  renderLeftContent?: () => ReactNode;
   image?: string;
   imageAlt?: string;
   isImageRounded?: boolean;
@@ -36,6 +38,7 @@ export interface FeedItemBaseContentProps {
   discussionPredefinedType?: PredefinedTypes;
   hasFiles?: boolean;
   hasImages?: boolean;
+  isLoading?: boolean;
 }
 
 export interface GetLastMessageOptions {

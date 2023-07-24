@@ -16,6 +16,8 @@ import styles from "./FeedItemBaseContent.module.scss";
 
 export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   const {
+    className,
+    titleWrapperClassName,
     lastActivity,
     unreadMessages,
     isMobileView,
@@ -30,7 +32,9 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     menuItems,
     seenOnce,
     ownerId,
+    renderLeftContent,
     isPinned,
+    isLoading = false,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -88,11 +92,15 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
 
   return (
     <div
-      className={classNames(styles.container, {
-        [styles.containerActive]: isActive || (isExpanded && isMobileView),
-        [styles.containerExpanded]: isExpanded && canBeExpanded,
-        [styles.containerLongPressing]: isLongPressing || isLongPressed,
-      })}
+      className={classNames(
+        styles.container,
+        {
+          [styles.containerActive]: isActive || (isExpanded && isMobileView),
+          [styles.containerExpanded]: isExpanded && canBeExpanded,
+          [styles.containerLongPressing]: isLongPressing || isLongPressed,
+        },
+        className,
+      )}
       onClick={!isLongPressed ? onClick : undefined}
       onContextMenu={handleContextMenu}
       {...getLongPressProps()}
@@ -106,14 +114,17 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           />
         </ButtonIcon>
       )}
+      {renderLeftContent?.()}
       <div className={styles.content}>
         <div className={styles.topContent}>
           <p
-            className={classNames(styles.text, styles.title, {
-              [styles.titleActive]: isActive || (isExpanded && isMobileView),
-            })}
+            className={classNames(
+              styles.text,
+              styles.title,
+              titleWrapperClassName,
+            )}
           >
-            {title || "Loading..."}
+            {isLoading || !title ? "Loading..." : title}
           </p>
           <p
             className={classNames(styles.text, styles.lastActivity, {

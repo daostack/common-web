@@ -5,6 +5,7 @@ import { SoftDeleteEntity } from "./SoftDeleteEntity";
 export enum CommonFeedType {
   Proposal = "Proposal",
   Discussion = "Discussion",
+  Project = "Project",
   PayIn = "PayIn",
   ProjectCreation = "ProjectCreation",
   JoinCommon = "JoinCommon",
