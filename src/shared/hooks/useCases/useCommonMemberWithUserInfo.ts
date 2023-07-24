@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CommonService } from "@/services";
+import { CommonService, Logger } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
 import {
   CirclesPermissions,
@@ -47,19 +47,23 @@ export const useCommonMemberWithUserInfo = (
   useEffect(() => {
     (async () => {
       if (userId && commonId && governance) {
-        const data = await CommonService.getCommonMemberByUserId(
-          commonId,
-          userId,
-        );
+        try {
+          const data = await CommonService.getCommonMemberByUserId(
+            commonId,
+            userId,
+          );
 
-        if (data) {
-          setCommonMember({
-            ...data,
-            ...generateCirclesDataForCommonMember(
-              governance?.circles,
-              data?.circleIds,
-            ),
-          });
+          if (data) {
+            setCommonMember({
+              ...data,
+              ...generateCirclesDataForCommonMember(
+                governance?.circles,
+                data?.circleIds,
+              ),
+            });
+          }
+        } catch (error) {
+          Logger.error(error);
         }
       }
     })();
