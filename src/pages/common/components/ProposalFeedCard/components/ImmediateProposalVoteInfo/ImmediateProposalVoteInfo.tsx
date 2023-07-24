@@ -73,13 +73,11 @@ export const ImmediateProposalVoteInfo = ({
       {vote?.vote && VOTE_OUTCOME_TO_ICON_MAP[vote.vote.outcome]}
       <div className={styles.voteInfo}>
         <div className={styles.title}>
-          {isExpired
-            ? "Expired"
-            : `${
-                vote?.vote && VOTE_OUTCOME_TO_TEXT_MAP[vote.vote.outcome]
-              } by ${
-                user?.uid === vote?.userId ? "You" : vote?.user.displayName
-              }`}
+          {isExpired && "Expired"}
+          {vote?.vote &&
+            `${VOTE_OUTCOME_TO_TEXT_MAP[vote.vote.outcome]} by ${
+              user?.uid === vote?.userId ? "You" : vote?.user.displayName
+            }`}
         </div>
         <div className={styles.subtitle}>
           {vote?.vote &&
