@@ -39,6 +39,7 @@ export const ProposalFeedButtonContainer: FC<
           className={styles.buttonApprove}
           voteOutcome={VoteOutcome.Approved}
           onClick={handleVoteButtonClick}
+          resolutionType={resolutionType}
         />
         {resolutionType === ResolutionType.WAIT_FOR_EXPIRATION && (
           <VoteButton
@@ -51,6 +52,7 @@ export const ProposalFeedButtonContainer: FC<
           className={styles.buttonReject}
           voteOutcome={VoteOutcome.Rejected}
           onClick={handleVoteButtonClick}
+          resolutionType={resolutionType}
         />
       </div>
       {voteOutcome && (
