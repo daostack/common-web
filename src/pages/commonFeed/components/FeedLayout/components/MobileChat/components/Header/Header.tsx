@@ -6,6 +6,7 @@ import styles from "./Header.module.scss";
 
 interface HeaderProps {
   className?: string;
+  titleWrapperClassName?: string;
   title: string;
   titleActionElement?: React.ReactElement | null;
   userAvatar?: string;
@@ -17,6 +18,7 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = (props) => {
   const {
     className,
+    titleWrapperClassName,
     title,
     userAvatar,
     userName,
@@ -38,8 +40,8 @@ const Header: FC<HeaderProps> = (props) => {
           userName={userName}
         />
       )}
-      <p className={styles.title}>
-        {title} {titleActionElement}
+      <p className={classNames(styles.titleWrapper, titleWrapperClassName)}>
+        <span className={styles.title}>{title}</span> {titleActionElement}
       </p>
       <div className={styles.rightContent}>{rightContent}</div>
     </div>

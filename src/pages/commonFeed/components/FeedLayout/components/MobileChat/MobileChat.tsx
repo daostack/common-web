@@ -91,6 +91,7 @@ const MobileChat: FC<ChatProps> = (props) => {
         commonImage={commonImage}
         header={
           <Header
+            titleWrapperClassName={styles.headerTitleWrapper}
             title={title}
             userAvatar={dmUser?.photoURL}
             userName={title}
@@ -101,7 +102,7 @@ const MobileChat: FC<ChatProps> = (props) => {
                   onClick={handleOpenFeedItemDetails}
                   className={styles.headerActionElement}
                 >
-                  See more
+                  Tap to see more
                 </span>
               ) : null
             }
