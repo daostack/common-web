@@ -149,6 +149,7 @@ export default function ChatMessage({
         systemMessage: isSystemMessage ? discussionMessage : undefined,
         getCommonPagePath,
         getCommonPageAboutTabPath,
+        directParent: directParent,
       });
 
       setMessageText(parsedText);
@@ -173,6 +174,7 @@ export default function ChatMessage({
         textEditorString: discussionMessage?.parentMessage.text,
         users,
         commonId: discussionMessage.commonId,
+        directParent: directParent,
       });
 
       setReplyMessageText(parsedText);

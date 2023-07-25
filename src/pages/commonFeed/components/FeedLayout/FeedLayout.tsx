@@ -445,6 +445,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   withTitle={settings?.withDesktopChatTitle}
                   titleRightContent={followFeedItemEl}
                   onMessagesAmountChange={handleMessagesAmountChange}
+                  directParent={outerCommon?.directParent}
                 />
               ) : (
                 <DesktopChatPlaceholder

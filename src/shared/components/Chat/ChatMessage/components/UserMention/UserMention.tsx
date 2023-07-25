@@ -12,7 +12,7 @@ interface UserMentionProps {
   displayName: string;
   mentionTextClassName?: string;
   commonId?: string;
-  directParent: DirectParent;
+  directParent?: DirectParent | null;
 }
 
 const UserMention: FC<UserMentionProps> = (props) => {

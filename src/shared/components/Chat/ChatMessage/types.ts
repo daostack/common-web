@@ -1,4 +1,4 @@
-import { SystemDiscussionMessage, User } from "@/shared/models";
+import { DirectParent, SystemDiscussionMessage, User } from "@/shared/models";
 import { GetCommonPageAboutTabPath, GetCommonPagePath } from "@/shared/utils";
 
 export type Text = string | JSX.Element;
@@ -15,4 +15,5 @@ export interface TextData {
   >;
   getCommonPagePath?: GetCommonPagePath;
   getCommonPageAboutTabPath?: GetCommonPageAboutTabPath;
+  directParent?: DirectParent | null;
 }
