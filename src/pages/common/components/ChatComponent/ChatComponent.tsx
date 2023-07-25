@@ -31,6 +31,7 @@ import {
   Circles,
   CommonFeedObjectUserUnique,
   CommonMember,
+  DirectParent,
   Discussion,
   DiscussionMessage,
   Timestamp,
@@ -85,6 +86,7 @@ interface ChatComponentInterface {
   isAuthorized?: boolean;
   isHidden: boolean;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
+  directParent?: DirectParent | null;
 }
 
 interface Messages {
@@ -122,6 +124,7 @@ export default function ChatComponent({
   isHidden = false,
   isCommonMemberFetched,
   onMessagesAmountChange,
+  directParent,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
   useZoomDisabling();
@@ -589,6 +592,7 @@ export default function ChatComponent({
           feedItemId={feedItemId}
           isLoading={isLoadingDiscussionMessages}
           onMessageDelete={handleMessageDelete}
+          directParent={directParent}
         />
       </div>
       {isAuthorized && (

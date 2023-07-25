@@ -15,7 +15,6 @@ interface MembersTabProps {
 
 export const MembersTab: FC<MembersTabProps> = (props) => {
   const { activeTab, common, commonMember } = props;
-
   return (
     <div className={styles.container}>
       <Container className={styles.tabNavigationContainer}>
@@ -25,6 +24,7 @@ export const MembersTab: FC<MembersTabProps> = (props) => {
           governanceId={common.governanceId}
           commonMember={commonMember}
           isProject={checkIsProject(common)}
+          directParent={common.directParent}
         />
       </Container>
     </div>

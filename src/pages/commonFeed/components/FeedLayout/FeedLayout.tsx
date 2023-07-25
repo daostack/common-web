@@ -410,6 +410,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       onActiveItemDataChange={(...args) =>
                         handleActiveFeedItemDataChange(...args, commonData?.id)
                       }
+                      directParent={outerCommon?.directParent}
                     />
                   );
                 }
@@ -462,6 +463,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 shouldShowSeeMore={!chatItem?.chatChannel && shouldShowSeeMore}
                 rightHeaderContent={followFeedItemEl}
                 onMessagesAmountChange={handleMessagesAmountChange}
+                directParent={outerCommon?.directParent}
               >
                 {selectedItemCommonData &&
                   checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (

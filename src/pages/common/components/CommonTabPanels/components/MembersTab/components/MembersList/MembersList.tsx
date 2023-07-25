@@ -2,7 +2,11 @@ import React, { FC, memo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CommonMember from "@/pages/OldCommon/components/CommonDetailContainer/MembersComponent/CommonMemberComponent";
 import { useGovernance } from "@/shared/hooks/useCases";
-import { CirclesPermissions, CommonMemberWithUserInfo } from "@/shared/models";
+import {
+  CirclesPermissions,
+  CommonMemberWithUserInfo,
+  DirectParent,
+} from "@/shared/models";
 import { CommonMember as CommonMemberModel } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { commonActions, selectRecentAssignedCircle } from "@/store/states";
@@ -14,6 +18,7 @@ interface MembersListComponentProps {
   governanceId: string | null;
   commonMember: (CommonMemberModel & CirclesPermissions) | null;
   isProject: boolean;
+  directParent?: DirectParent | null;
 }
 
 const MembersList: FC<MembersListComponentProps> = ({
@@ -22,6 +27,7 @@ const MembersList: FC<MembersListComponentProps> = ({
   governanceId,
   commonMember,
   isProject,
+  directParent,
 }) => {
   const {
     data: governance,
@@ -63,6 +69,7 @@ const MembersList: FC<MembersListComponentProps> = ({
             commonMember={commonMember}
             governanceCircles={governanceCircles}
             isProject={isProject}
+            directParent={directParent}
           />
         );
       })}

@@ -1,7 +1,11 @@
 import React, { FC, useEffect, useMemo } from "react";
 import classNames from "classnames";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
-import { CirclesPermissions, CommonMember } from "@/shared/models";
+import {
+  CirclesPermissions,
+  CommonMember,
+  DirectParent,
+} from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { MembersList } from "../MembersList";
 
@@ -10,10 +14,12 @@ interface MembersComponentProps {
   governanceId: string | null;
   commonMember: (CommonMember & CirclesPermissions) | null;
   isProject: boolean;
+  directParent?: DirectParent | null;
 }
 
 const MembersComponent: FC<MembersComponentProps> = (props) => {
-  const { commonId, governanceId, commonMember, isProject } = props;
+  const { commonId, governanceId, commonMember, isProject, directParent } =
+    props;
   const {
     fetched: areCommonMembersFetched,
     data: commonMembers,
@@ -49,6 +55,7 @@ const MembersComponent: FC<MembersComponentProps> = (props) => {
           governanceId={governanceId}
           commonMember={commonMember}
           isProject={isProject}
+          directParent={directParent}
         />
       )}
     </div>

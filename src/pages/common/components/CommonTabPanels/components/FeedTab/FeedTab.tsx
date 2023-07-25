@@ -137,6 +137,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
               feedItemId={chatItem.feedItemId}
               lastSeenItem={chatItem.lastSeenItem}
               seenOnce={chatItem.seenOnce}
+              directParent={common.directParent}
             />
           </>
         )}
@@ -170,6 +171,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
             discussion={chatItem.discussion}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
+            directParent={common.directParent}
           />
         )}
       </ChatMobileModal>

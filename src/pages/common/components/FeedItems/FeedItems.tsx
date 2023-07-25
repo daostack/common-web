@@ -82,6 +82,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
                 isMobileVersion={isTabletView}
                 userCircleIds={userCircleIds}
                 isPreviewMode
+                directParent={common.directParent}
               />
             );
           })}
