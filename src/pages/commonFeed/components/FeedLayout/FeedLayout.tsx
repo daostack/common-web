@@ -250,7 +250,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
-    setExpandedFeedItemId(null);
+    setExpandedFeedItemId((currentExpandedFeedItemId) =>
+      currentExpandedFeedItemId === nextChatItem?.feedItemId
+        ? currentExpandedFeedItemId
+        : null,
+    );
     setChatItem(nextChatItem);
   }, []);
 
