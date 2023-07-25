@@ -95,7 +95,8 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   useEffect(() => {
     if (
       isChatChannelUserStatusFetched &&
-      chatChannel.id === feedItemIdForAutoChatOpen
+      chatChannel.id === feedItemIdForAutoChatOpen &&
+      !isTabletView
     ) {
       handleOpenChat();
     }
