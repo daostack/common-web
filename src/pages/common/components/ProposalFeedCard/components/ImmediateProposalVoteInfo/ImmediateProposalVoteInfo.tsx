@@ -7,6 +7,7 @@ import {
   DateFormat,
   Proposal,
   ProposalState,
+  Vote,
   VoteOutcome,
 } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
@@ -15,6 +16,7 @@ import styles from "./ImmediateProposalVoteInfo.module.scss";
 
 interface ImmediateProposalVoteInfoProps {
   proposal: Proposal;
+  userVote: Vote | null;
 }
 
 const VOTE_OUTCOME_TO_TEXT_MAP: Record<VoteOutcome, string> = {
@@ -31,6 +33,7 @@ const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
 
 export const ImmediateProposalVoteInfo = ({
   proposal,
+  userVote,
 }: ImmediateProposalVoteInfoProps) => {
   const user = useSelector(selectUser());
   const { loading, voters, fetchEligibleVoters, error } = useEligibleVoters();
@@ -64,23 +67,25 @@ export const ImmediateProposalVoteInfo = ({
     return <Loader />;
   }
 
+  const outcome = userVote?.outcome || vote?.vote?.outcome;
+  const userId = userVote?.voterId || vote?.userId;
+  const createdAt =
+    userVote?.createdAt.seconds || vote?.vote?.createdAt.seconds;
+
   return (
     <div className={styles.container}>
-      {vote?.vote && VOTE_OUTCOME_TO_ICON_MAP[vote.vote.outcome]}
+      {outcome && VOTE_OUTCOME_TO_ICON_MAP[outcome]}
       <div className={styles.voteInfo}>
         <div className={styles.title}>
           {isExpired && "Expired"}
-          {vote?.vote &&
-            `${VOTE_OUTCOME_TO_TEXT_MAP[vote.vote.outcome]} by ${
-              user?.uid === vote?.userId ? "You" : vote?.user.displayName
+          {outcome &&
+            `${VOTE_OUTCOME_TO_TEXT_MAP[outcome]} by ${
+              user?.uid === userId ? "You" : vote?.user.displayName
             }`}
         </div>
         <div className={styles.subtitle}>
-          {vote?.vote &&
-            formatDate(
-              new Date(vote.vote.createdAt.seconds * 1000),
-              DateFormat.LongHuman,
-            )}
+          {createdAt &&
+            formatDate(new Date(createdAt * 1000), DateFormat.LongHuman)}
         </div>
       </div>
     </div>

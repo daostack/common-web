@@ -338,7 +338,10 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
                 governanceCircles={governanceCircles}
                 proposerUserName={getUserName(feedItemUser)}
               />
-              <ImmediateProposalVoteInfo proposal={proposal} />
+              <ImmediateProposalVoteInfo
+                proposal={proposal}
+                userVote={userVote}
+              />
             </>
           )}
 
