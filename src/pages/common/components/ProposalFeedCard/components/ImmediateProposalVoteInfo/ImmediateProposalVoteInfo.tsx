@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useMemo } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useEligibleVoters } from "@/shared/hooks/useCases";
@@ -40,14 +40,10 @@ export const ImmediateProposalVoteInfo = ({
 
   /**
    * For now we assume that IMMEDIATE proposal is always a single vote proposal.
-   * In future we would want to support more then a single vote so the logic and the UI might change.
+   * In future we would want to support more than a single vote so the logic and the UI might change.
    * See more details here https://github.com/daostack/common-backend/issues/1844.
    */
-  const vote = useMemo(() => {
-    if (voters && voters.length > 0) {
-      return voters[0];
-    }
-  }, [voters]);
+  const vote = voters && voters.length > 0 ? voters[0] : undefined;
 
   useEffect(() => {
     if (!isExpired) {

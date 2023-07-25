@@ -39,7 +39,7 @@ export const ProposalFeedButtonContainer: FC<
     <>
       <div
         className={classNames(styles.container, {
-          [styles.isImmediate]: isImmediate,
+          [styles.containerImmediate]: isImmediate,
         })}
       >
         <VoteButton

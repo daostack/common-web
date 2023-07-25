@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from "react";
+import React, { ReactNode } from "react";
 import classNames from "classnames";
 import { VoteAbstain, VoteAgainst, VoteFor } from "@/shared/icons";
 import { ResolutionType, VoteOutcome } from "@/shared/models";
@@ -18,19 +18,25 @@ const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
   [VoteOutcome.Rejected]: <VoteAgainst className={styles.icon} />,
 };
 
+const getVoteOutcomeText = (
+  voteOutcome: VoteOutcome,
+  resolutionType?: ResolutionType,
+) => {
+  if (voteOutcome === VoteOutcome.Approved) {
+    return resolutionType === ResolutionType.IMMEDIATE ? "Approve" : "Vote for";
+  }
+  if (voteOutcome === VoteOutcome.Rejected) {
+    return resolutionType === ResolutionType.IMMEDIATE
+      ? "Reject"
+      : "Vote against";
+  }
+  if (voteOutcome === VoteOutcome.Abstained) {
+    return "Abstain";
+  }
+};
+
 export const VoteButton: React.FC<VoteButtonProps> = (props) => {
   const { className, voteOutcome, onClick, resolutionType } = props;
-
-  const voteOutcomeToTextMap = useMemo(
-    () => ({
-      [VoteOutcome.Approved]:
-        resolutionType === ResolutionType.IMMEDIATE ? "Approve" : "Vote for",
-      [VoteOutcome.Abstained]: "Abstain",
-      [VoteOutcome.Rejected]:
-        resolutionType === ResolutionType.IMMEDIATE ? "Reject" : "Vote against",
-    }),
-    [resolutionType],
-  );
 
   const handleClick = (event) => {
     event.stopPropagation();
@@ -59,7 +65,7 @@ export const VoteButton: React.FC<VoteButtonProps> = (props) => {
           [styles.rejectText]: VoteOutcome.Rejected === voteOutcome,
         })}
       >
-        {voteOutcomeToTextMap[voteOutcome]}
+        {getVoteOutcomeText(voteOutcome, resolutionType)}
       </p>
       {VOTE_OUTCOME_TO_ICON_MAP[voteOutcome]}
     </Button>
