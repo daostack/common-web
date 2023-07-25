@@ -13,6 +13,7 @@ interface HeaderProps {
   userName?: string;
   rightContent?: ReactNode;
   onBackClick?: () => void;
+  onTitleWrapperClick?: () => void;
 }
 
 const Header: FC<HeaderProps> = (props) => {
@@ -25,6 +26,7 @@ const Header: FC<HeaderProps> = (props) => {
     onBackClick,
     titleActionElement,
     rightContent,
+    onTitleWrapperClick,
   } = props;
 
   return (
@@ -40,7 +42,10 @@ const Header: FC<HeaderProps> = (props) => {
           userName={userName}
         />
       )}
-      <p className={classNames(styles.titleWrapper, titleWrapperClassName)}>
+      <p
+        className={classNames(styles.titleWrapper, titleWrapperClassName)}
+        onClick={onTitleWrapperClick}
+      >
         <span className={styles.title}>{title}</span> {titleActionElement}
       </p>
       <div className={styles.rightContent}>{rightContent}</div>

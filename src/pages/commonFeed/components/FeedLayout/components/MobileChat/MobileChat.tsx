@@ -96,12 +96,12 @@ const MobileChat: FC<ChatProps> = (props) => {
             userAvatar={dmUser?.photoURL}
             userName={title}
             onBackClick={handleClose}
+            onTitleWrapperClick={
+              shouldShowSeeMore ? handleOpenFeedItemDetails : undefined
+            }
             titleActionElement={
               shouldShowSeeMore ? (
-                <span
-                  onClick={handleOpenFeedItemDetails}
-                  className={styles.headerActionElement}
-                >
+                <span className={styles.headerActionElement}>
                   Tap to see more
                 </span>
               ) : null
