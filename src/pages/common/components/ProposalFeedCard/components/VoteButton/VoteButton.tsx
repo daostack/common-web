@@ -21,17 +21,20 @@ const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
 const getVoteOutcomeText = (
   voteOutcome: VoteOutcome,
   resolutionType?: ResolutionType,
-) => {
-  if (voteOutcome === VoteOutcome.Approved) {
-    return resolutionType === ResolutionType.IMMEDIATE ? "Approve" : "Vote for";
-  }
-  if (voteOutcome === VoteOutcome.Rejected) {
-    return resolutionType === ResolutionType.IMMEDIATE
-      ? "Reject"
-      : "Vote against";
-  }
-  if (voteOutcome === VoteOutcome.Abstained) {
-    return "Abstain";
+): string => {
+  switch (voteOutcome) {
+    case VoteOutcome.Approved:
+      return resolutionType === ResolutionType.IMMEDIATE
+        ? "Approve"
+        : "Vote for";
+    case VoteOutcome.Rejected:
+      return resolutionType === ResolutionType.IMMEDIATE
+        ? "Reject"
+        : "Vote against";
+    case VoteOutcome.Abstained:
+      return "Abstain";
+    default:
+      return "";
   }
 };
 
