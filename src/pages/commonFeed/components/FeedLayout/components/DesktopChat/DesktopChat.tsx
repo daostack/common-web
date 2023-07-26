@@ -9,7 +9,12 @@ import {
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { UserAvatar } from "@/shared/components";
 import { useUserById } from "@/shared/hooks/useCases";
-import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
+import {
+  Circles,
+  CirclesPermissions,
+  CommonMember,
+  DirectParent,
+} from "@/shared/models";
 import { getUserName, isRTL } from "@/shared/utils";
 import { getChatType } from "./utils";
 import styles from "./DesktopChat.module.scss";
@@ -23,6 +28,7 @@ interface ChatProps {
   withTitle?: boolean;
   titleRightContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
+  directParent?: DirectParent | null;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -35,6 +41,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
     withTitle = true,
     titleRightContent,
     onMessagesAmountChange,
+    directParent,
   } = props;
   const {
     fetchUser: fetchDMUser,
@@ -105,6 +112,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         isHidden={false}
         isAuthorized={Boolean(user)}
         onMessagesAmountChange={onMessagesAmountChange}
+        directParent={directParent}
       />
     </div>
   );

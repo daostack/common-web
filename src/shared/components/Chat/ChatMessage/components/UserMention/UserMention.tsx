@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import { UserInfoPopup } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
-import { User } from "@/shared/models";
+import { DirectParent, User } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import styles from "../../ChatMessage.module.scss";
 
@@ -12,10 +12,18 @@ interface UserMentionProps {
   displayName: string;
   mentionTextClassName?: string;
   commonId?: string;
+  directParent?: DirectParent | null;
 }
 
 const UserMention: FC<UserMentionProps> = (props) => {
-  const { users, userId, displayName, mentionTextClassName, commonId } = props;
+  const {
+    users,
+    userId,
+    displayName,
+    mentionTextClassName,
+    commonId,
+    directParent,
+  } = props;
   const {
     isShowing: isShowingUserProfile,
     onClose: onCloseUserProfile,
@@ -41,6 +49,7 @@ const UserMention: FC<UserMentionProps> = (props) => {
         onClose={onCloseUserProfile}
         commonId={commonId}
         userId={user?.uid}
+        directParent={directParent}
       />
     </>
   );

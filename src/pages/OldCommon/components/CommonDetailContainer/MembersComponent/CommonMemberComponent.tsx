@@ -9,6 +9,7 @@ import {
   Circle,
   CirclesPermissions,
   CommonMemberWithUserInfo,
+  DirectParent,
 } from "@/shared/models";
 import { CommonMember as CommonMemberModel } from "@/shared/models";
 import { ContextMenuRef } from "@/shared/ui-kit";
@@ -29,6 +30,7 @@ interface CommonMemberProps {
   commonMember?: (CommonMemberModel & CirclesPermissions) | null;
   governanceCircles: Circle[];
   isProject: boolean;
+  directParent?: DirectParent | null;
 }
 
 const CommonMember: FC<CommonMemberProps> = ({
@@ -39,6 +41,7 @@ const CommonMember: FC<CommonMemberProps> = ({
   commonMember,
   governanceCircles,
   isProject,
+  directParent,
 }) => {
   const { isShowing, onClose, onOpen } = useModal(false);
   const contextMenuRef = useRef<ContextMenuRef>(null);
@@ -141,6 +144,7 @@ const CommonMember: FC<CommonMemberProps> = ({
         onClose={onClose}
         isShowing={isShowing}
         avatar={avatar}
+        directParent={directParent}
       />
     </>
   );

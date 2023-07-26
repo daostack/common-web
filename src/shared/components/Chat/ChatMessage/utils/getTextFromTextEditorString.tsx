@@ -1,7 +1,7 @@
 import React from "react";
 import { Descendant, Element } from "slate";
 import { UserService } from "@/services";
-import { User } from "@/shared/models";
+import { DirectParent, User } from "@/shared/models";
 import {
   getMentionTags,
   parseStringToTextEditorValue,
@@ -27,6 +27,7 @@ interface TextFromDescendant {
   mentionTextClassName?: string;
   emojiTextClassName?: string;
   commonId?: string;
+  directParent?: DirectParent | null;
 }
 
 const getTextFromDescendant = ({
@@ -35,6 +36,7 @@ const getTextFromDescendant = ({
   mentionTextClassName,
   emojiTextClassName,
   commonId,
+  directParent,
 }: TextFromDescendant): Text => {
   if (!Element.isElement(descendant)) {
     return descendant.text || "";
@@ -53,6 +55,7 @@ const getTextFromDescendant = ({
                 mentionTextClassName,
                 emojiTextClassName,
                 commonId,
+                directParent,
               })}
             </React.Fragment>
           ))}
@@ -67,6 +70,7 @@ const getTextFromDescendant = ({
           displayName={descendant.displayName}
           mentionTextClassName={mentionTextClassName}
           commonId={commonId}
+          directParent={directParent}
         />
       );
     case ElementType.Emoji:
@@ -91,6 +95,7 @@ export const getTextFromTextEditorString = async (
     emojiTextClassName,
     commonId,
     systemMessage,
+    directParent,
   } = data;
 
   if (systemMessage) {
@@ -125,6 +130,7 @@ export const getTextFromTextEditorString = async (
           mentionTextClassName,
           emojiTextClassName,
           commonId,
+          directParent,
         })}
       </React.Fragment>,
     ],

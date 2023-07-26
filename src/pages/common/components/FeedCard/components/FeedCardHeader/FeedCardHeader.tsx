@@ -4,6 +4,7 @@ import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg"
 import { MenuButton, UserAvatar, UserInfoPopup } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { MenuItem } from "@/shared/interfaces";
+import { DirectParent } from "@/shared/models";
 import { DesktopMenu } from "@/shared/ui-kit";
 import styles from "./FeedCardHeader.module.scss";
 
@@ -17,6 +18,7 @@ export interface FeedCardHeaderProps {
   isMobileVersion?: boolean;
   commonId: string;
   userId?: string;
+  directParent?: DirectParent | null;
 }
 
 export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
@@ -30,6 +32,7 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
     isMobileVersion = false,
     commonId,
     userId,
+    directParent,
   } = props;
   const {
     isShowing: isShowingUserProfile,
@@ -59,6 +62,7 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
             avatar={avatar}
             isShowing={isShowingUserProfile}
             onClose={onCloseUserProfile}
+            directParent={directParent}
           />
         )}
       </div>

@@ -7,6 +7,7 @@ import {
   CommonCreatedSystemMessage,
   CommonEditedSystemMessage,
   CommonMemberAddedSystemMessage,
+  DirectParent,
   SystemMessageCommonType,
   User,
 } from "@/shared/models";
@@ -41,6 +42,7 @@ const renderUserMention = (
       displayName={getUserName(user)}
       mentionTextClassName={data.mentionTextClassName}
       commonId={data.commonId}
+      directParent={data.directParent}
     />
   ) : (
     defaultName
