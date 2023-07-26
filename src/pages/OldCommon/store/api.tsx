@@ -215,7 +215,7 @@ export async function fetchUserMemberAdmittanceProposalWithCommonId(
   commonId: string,
   directParent?: DirectParent | null,
 ) {
-  let proposal = firebase
+  let proposalQuery = firebase
     .firestore()
     .collection(Collection.Proposals)
     .where("data.args.proposerId", "==", userId)
@@ -229,16 +229,16 @@ export async function fetchUserMemberAdmittanceProposalWithCommonId(
     );
 
   if (directParent?.circleId) {
-    proposal = proposal.where(
+    proposalQuery = proposalQuery.where(
       "data.args.circleId",
       "==",
       directParent.circleId,
     );
   }
 
-  const res = await proposal.get();
+  const proposal = await proposalQuery.get();
 
-  return transformFirebaseDataList<Proposal>(res)[0];
+  return transformFirebaseDataList<Proposal>(proposal)[0];
 }
 
 export async function fetchCommonList(): Promise<Common[]> {
