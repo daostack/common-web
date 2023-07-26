@@ -1,14 +1,8 @@
-import { useEffect, useState } from "react";
-import { CommonService, Logger } from "@/services";
+import { useEffect } from "react";
+import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { LoadingState } from "@/shared/interfaces";
+import { CommonMemberWithUserInfo, Timestamp } from "@/shared/models";
 import {
-  CirclesPermissions,
-  CommonMember,
-  CommonMemberWithUserInfo,
-  Timestamp,
-} from "@/shared/models";
-import {
-  generateCirclesDataForCommonMember,
   getCirclesWithHighestTier,
   getFilteredByIdCircles,
 } from "@/shared/utils";
@@ -19,10 +13,6 @@ export const useCommonMemberWithUserInfo = (
   commonId?: string,
   userId?: string,
 ): LoadingState<CommonMemberWithUserInfo | null> => {
-  const [commonMember, setCommonMember] = useState<
-    (CommonMember & CirclesPermissions) | null
-  >(null);
-
   const {
     data: governance,
     fetched: isGovernanceFetched,
@@ -34,6 +24,12 @@ export const useCommonMemberWithUserInfo = (
     loading: isUserLoading,
     fetched: isUserFetched,
   } = useUserById();
+  const {
+    data: commonMember,
+    fetchCommonMember,
+    loading: isCommonMemberLoading,
+    fetched: isCommonMemberFetched,
+  } = useCommonMember();
 
   useEffect(() => {
     if (userId) {
@@ -42,32 +38,10 @@ export const useCommonMemberWithUserInfo = (
     if (commonId) {
       fetchGovernance(commonId);
     }
+    if (userId && commonId) {
+      fetchCommonMember(commonId, {}, true, userId);
+    }
   }, [userId, commonId]);
-
-  useEffect(() => {
-    (async () => {
-      if (userId && commonId && governance) {
-        try {
-          const data = await CommonService.getCommonMemberByUserId(
-            commonId,
-            userId,
-          );
-
-          if (data) {
-            setCommonMember({
-              ...data,
-              ...generateCirclesDataForCommonMember(
-                governance?.circles,
-                data?.circleIds,
-              ),
-            });
-          }
-        } catch (error) {
-          Logger.error(error);
-        }
-      }
-    })();
-  }, [userId, commonId, governance]);
 
   const governanceCircles = Object.values(governance?.circles || {});
   const memberCircles = getFilteredByIdCircles(
@@ -106,7 +80,7 @@ export const useCommonMemberWithUserInfo = (
       }
     : {
         data: null,
-        loading: isUserLoading || isGovernanceFetched,
-        fetched: isUserFetched && isGovernanceFetched,
+        loading: isUserLoading || isCommonMemberLoading || isGovernanceFetched,
+        fetched: isUserFetched && isCommonMemberFetched && isGovernanceFetched,
       };
 };

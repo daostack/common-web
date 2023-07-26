@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   CommonMemberEventEmitter,
   CommonMemberEvent,
@@ -32,6 +32,7 @@ interface Return extends State {
     commonId: string,
     options: { governance?: Governance; commonMember?: CommonMember },
     force?: boolean,
+    userId?: string,
   ) => void;
   setCommonMember: (
     commonMember: (CommonMember & CirclesPermissions) | null,
@@ -46,7 +47,6 @@ export const useCommonMember = (options: Options = {}): Return => {
     commonId,
     governanceCircles,
   } = options;
-  const dispatch = useDispatch();
   const [state, setState] = useState<State>({
     loading: false,
     fetched: false,
@@ -61,6 +61,7 @@ export const useCommonMember = (options: Options = {}): Return => {
       commonId: string,
       options: { governance?: Governance; commonMember?: CommonMember } = {},
       force = false,
+      userId?: string,
     ) => {
       if (!force && (state.loading || state.fetched)) {
         return;
