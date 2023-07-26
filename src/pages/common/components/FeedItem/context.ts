@@ -35,6 +35,7 @@ export interface FeedItemBaseContentProps {
   isImageRounded?: boolean;
   isProject?: boolean;
   isPinned?: boolean;
+  isFollowing?: boolean;
   discussionPredefinedType?: PredefinedTypes;
   hasFiles?: boolean;
   hasImages?: boolean;
