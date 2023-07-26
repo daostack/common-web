@@ -64,3 +64,8 @@ export const isProposalWithHighlightedComment = (
   proposal && proposal.highlightedCommentId;
 
 export const isDocInfo = (data: any): data is DocInfo => data.downloadURL;
+
+export enum ResolutionType {
+  WAIT_FOR_EXPIRATION = "WAIT_FOR_EXPIRATION",
+  IMMEDIATE = "IMMEDIATE",
+}

@@ -1,6 +1,7 @@
 import React, { FC, useState } from "react";
+import classNames from "classnames";
 import { useModal } from "@/shared/hooks";
-import { Vote, VoteOutcome } from "@/shared/models";
+import { ResolutionType, Vote, VoteOutcome } from "@/shared/models";
 import { VoteButton } from "../VoteButton";
 import { VoteModal } from "./components";
 import styles from "./ProposalFeedButtonContainer.module.scss";
@@ -8,12 +9,13 @@ import styles from "./ProposalFeedButtonContainer.module.scss";
 interface ProposalFeedButtonContainerProps {
   proposalId: string;
   onVoteCreate: (vote: Vote) => void;
+  resolutionType: ResolutionType;
 }
 
 export const ProposalFeedButtonContainer: FC<
   ProposalFeedButtonContainerProps
 > = (props) => {
-  const { proposalId, onVoteCreate } = props;
+  const { proposalId, onVoteCreate, resolutionType } = props;
   const [voteOutcome, setVoteOutcome] = useState<VoteOutcome | null>(null);
   const {
     isShowing: isVoteModalOpen,
@@ -31,23 +33,33 @@ export const ProposalFeedButtonContainer: FC<
     onVoteCreate(vote);
   };
 
+  const isImmediate = resolutionType === ResolutionType.IMMEDIATE;
+
   return (
     <>
-      <div className={styles.container}>
+      <div
+        className={classNames(styles.container, {
+          [styles.containerImmediate]: isImmediate,
+        })}
+      >
         <VoteButton
           className={styles.buttonApprove}
           voteOutcome={VoteOutcome.Approved}
           onClick={handleVoteButtonClick}
+          resolutionType={resolutionType}
         />
-        <VoteButton
-          className={styles.buttonAbstain}
-          voteOutcome={VoteOutcome.Abstained}
-          onClick={handleVoteButtonClick}
-        />
+        {!isImmediate && (
+          <VoteButton
+            className={styles.buttonAbstain}
+            voteOutcome={VoteOutcome.Abstained}
+            onClick={handleVoteButtonClick}
+          />
+        )}
         <VoteButton
           className={styles.buttonReject}
           voteOutcome={VoteOutcome.Rejected}
           onClick={handleVoteButtonClick}
+          resolutionType={resolutionType}
         />
       </div>
       {voteOutcome && (
