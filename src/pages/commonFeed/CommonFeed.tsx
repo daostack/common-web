@@ -19,7 +19,7 @@ import { FeedItemBaseContent, FeedItemBaseContentProps } from "@/pages/common";
 import { CommonAction, QueryParamKey } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useQueryParams } from "@/shared/hooks";
-import { useCommonFeedItems } from "@/shared/hooks/useCases";
+import { useCommonFeedItems, useUserCommonIds } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
 import { RightArrowThinIcon } from "@/shared/icons";
 import {
@@ -75,7 +75,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     feedLayoutSettings,
     onActiveItemDataChange,
   } = props;
-  const { getCommonPagePath } = useRoutesContext();
+  const { getCommonPagePath, getProfilePagePath } = useRoutesContext();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -83,6 +83,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
+  const { data: userCommonIds } = useUserCommonIds();
   const sharedFeedItemIdQueryParam = queryParams[QueryParamKey.Item];
   const sharedFeedItemId =
     (typeof sharedFeedItemIdQueryParam === "string" &&
@@ -94,6 +95,9 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetched: isCommonDataFetched,
     fetchCommonData,
   } = useCommonData();
+  const parentCommonId = commonData?.common.directParent?.commonId;
+  const anotherCommonId =
+    userCommonIds[0] === commonId ? userCommonIds[1] : userCommonIds[0];
   const pinnedItemIds = useMemo(
     () => commonData?.common.pinnedFeedItems.map((item) => item.feedObjectId),
     [commonData?.common.pinnedFeedItems],
@@ -242,17 +246,16 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [feedLayoutRef, recentStreamId, firstItem]);
 
   useEffect(() => {
-    const parentCommonId = commonData?.common.directParent?.commonId;
-
-    if (!parentCommonId) {
-      return;
-    }
-
     const handler: CommonEventToListener[CommonEvent.CommonDeleted] = (
       deletedCommonId,
     ) => {
-      if (deletedCommonId === commonId) {
-        history.push(getCommonPagePath(parentCommonId));
+      if (deletedCommonId !== commonId) {
+        return;
+      }
+      if (parentCommonId || anotherCommonId) {
+        history.push(getCommonPagePath(parentCommonId || anotherCommonId));
+      } else {
+        history.push(getProfilePagePath());
       }
     };
 
@@ -261,7 +264,13 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     return () => {
       CommonEventEmitter.off(CommonEvent.CommonDeleted, handler);
     };
-  }, [commonId, commonData?.common.directParent?.commonId, getCommonPagePath]);
+  }, [
+    commonId,
+    parentCommonId,
+    anotherCommonId,
+    getCommonPagePath,
+    getProfilePagePath,
+  ]);
 
   if (!isDataFetched) {
     return (
