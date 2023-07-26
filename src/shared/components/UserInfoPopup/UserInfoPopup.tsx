@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { fetchUserMemberAdmittanceProposalWithCommonId } from "@/pages/OldCommon/store/api";
 import { getCountryNameFromCode } from "@/shared/assets/countries";
 import { useCommonMemberWithUserInfo } from "@/shared/hooks/useCases";
-import { Proposal } from "@/shared/models";
+import { DirectParent, Proposal } from "@/shared/models";
 import { Loader } from "../Loader";
 import { Modal } from "../Modal";
 import { UserAvatar } from "../UserAvatar";
@@ -14,6 +14,7 @@ interface UserInfoPopupProps {
   avatar?: string;
   isShowing: boolean;
   onClose: () => void;
+  directParent?: DirectParent | null;
 }
 
 const UserInfoPopup = ({
@@ -22,6 +23,7 @@ const UserInfoPopup = ({
   avatar,
   isShowing,
   onClose,
+  directParent,
 }: UserInfoPopupProps) => {
   const { data, fetched } = useCommonMemberWithUserInfo(commonId, userId);
   const [memberAdmittanceProposal, setMemberAdmittanceProposal] =
@@ -33,6 +35,7 @@ const UserInfoPopup = ({
         const proposal = await fetchUserMemberAdmittanceProposalWithCommonId(
           userId,
           commonId,
+          directParent,
         );
         setMemberAdmittanceProposal(proposal);
       }

@@ -52,26 +52,27 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
           : "List of related to you spaces"
       }
     >
-      {items.map((item) => (
-        <TreeItem
-          key={item.id}
-          item={item}
-          level={level}
-          isActive={isActiveCheckAllowed && item.id === activeItemId}
-        >
-          {(item.items && item.items.length > 0) ||
-          item.id === itemIdWithNewProjectCreation ||
-          item.hasPermissionToAddProject ? (
-            <TreeRecursive
-              items={item.items || []}
-              parentId={item.id}
-              parentName={item.name}
-              hasPermissionToAddProject={item.hasPermissionToAddProject}
-              level={level + 1}
-            />
-          ) : null}
-        </TreeItem>
-      ))}
+      {items.map((item) => {
+        const isActive = isActiveCheckAllowed && item.id === activeItemId;
+        const hasPermissionToAddProject =
+          item.hasPermissionToAddProject && isActive;
+
+        return (
+          <TreeItem key={item.id} item={item} level={level} isActive={isActive}>
+            {(item.items && item.items.length > 0) ||
+            item.id === itemIdWithNewProjectCreation ||
+            hasPermissionToAddProject ? (
+              <TreeRecursive
+                items={item.items || []}
+                parentId={item.id}
+                parentName={item.name}
+                hasPermissionToAddProject={hasPermissionToAddProject}
+                level={level + 1}
+              />
+            ) : null}
+          </TreeItem>
+        );
+      })}
       {isTreeWithNewSpaceCreation && (
         <PlaceholderTreeItem
           imageClassName={styles.newProjectImage}

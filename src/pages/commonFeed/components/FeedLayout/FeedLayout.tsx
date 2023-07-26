@@ -250,7 +250,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
-    setExpandedFeedItemId(null);
+    setExpandedFeedItemId((currentExpandedFeedItemId) =>
+      currentExpandedFeedItemId === nextChatItem?.feedItemId
+        ? currentExpandedFeedItemId
+        : null,
+    );
     setChatItem(nextChatItem);
   }, []);
 
@@ -410,6 +414,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       onActiveItemDataChange={(...args) =>
                         handleActiveFeedItemDataChange(...args, commonData?.id)
                       }
+                      directParent={outerCommon?.directParent}
                     />
                   );
                 }
@@ -444,6 +449,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   withTitle={settings?.withDesktopChatTitle}
                   titleRightContent={followFeedItemEl}
                   onMessagesAmountChange={handleMessagesAmountChange}
+                  directParent={outerCommon?.directParent}
                 />
               ) : (
                 <DesktopChatPlaceholder
@@ -462,6 +468,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 shouldShowSeeMore={!chatItem?.chatChannel && shouldShowSeeMore}
                 rightHeaderContent={followFeedItemEl}
                 onMessagesAmountChange={handleMessagesAmountChange}
+                directParent={outerCommon?.directParent}
               >
                 {selectedItemCommonData &&
                   checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (

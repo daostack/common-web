@@ -15,7 +15,7 @@ const VoteForIcon: FC<VoteForIconProps> = ({ className }) => (
   >
     <path
       d="M20.2222 6L9.22217 17L4.22217 12"
-      stroke="#6EE569"
+      stroke="#c32ea3"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

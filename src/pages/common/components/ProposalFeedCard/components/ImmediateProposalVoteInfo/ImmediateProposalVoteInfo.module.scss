@@ -1,0 +1,19 @@
+@import "../../../../../../constants";
+
+.container {
+  display: flex;
+}
+
+.voteInfo {
+  flex-direction: column;
+  margin-left: 0.8rem;
+}
+
+.title {
+  font-size: $moderate-small-2;
+}
+
+.subtitle {
+  font-size: $mobile-title;
+  color: var(--gray-60);
+}

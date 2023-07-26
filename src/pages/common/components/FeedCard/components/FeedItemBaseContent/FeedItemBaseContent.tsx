@@ -34,6 +34,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     ownerId,
     renderLeftContent,
     isPinned,
+    isFollowing,
     isLoading = false,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
@@ -160,6 +161,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               ownerId={ownerId}
               isActive={isActive}
               isPinned={isPinned}
+              isFollowing={isFollowing}
             />
           </div>
         </div>

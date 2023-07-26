@@ -10,7 +10,12 @@ import {
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { ChatType } from "@/shared/constants";
 import { useUserById } from "@/shared/hooks/useCases";
-import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
+import {
+  Circles,
+  CirclesPermissions,
+  CommonMember,
+  DirectParent,
+} from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import { Header } from "./components";
 import styles from "./MobileChat.module.scss";
@@ -25,6 +30,7 @@ interface ChatProps {
   shouldShowSeeMore?: boolean;
   rightHeaderContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
+  directParent?: DirectParent | null;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -39,6 +45,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     shouldShowSeeMore = true,
     rightHeaderContent,
     onMessagesAmountChange,
+    directParent,
   } = props;
   const { setChatItem, setIsShowFeedItemDetailsModal, setShouldShowSeeMore } =
     useChatContext();
@@ -96,12 +103,12 @@ const MobileChat: FC<ChatProps> = (props) => {
             userAvatar={dmUser?.photoURL}
             userName={title}
             onBackClick={handleClose}
+            onTitleWrapperClick={
+              shouldShowSeeMore ? handleOpenFeedItemDetails : undefined
+            }
             titleActionElement={
               shouldShowSeeMore ? (
-                <span
-                  onClick={handleOpenFeedItemDetails}
-                  className={styles.headerActionElement}
-                >
+                <span className={styles.headerActionElement}>
                   Tap to see more
                 </span>
               ) : null
@@ -135,6 +142,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             lastSeenItem={chatItem.lastSeenItem}
             seenOnce={chatItem.seenOnce}
             onMessagesAmountChange={onMessagesAmountChange}
+            directParent={directParent}
           />
         )}
       </ChatMobileModal>

@@ -88,7 +88,9 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
           parentId={parentItem.id}
           parentName={parentItem.name}
           items={items}
-          hasPermissionToAddProject={parentItem.hasPermissionToAddProject}
+          hasPermissionToAddProject={
+            parentItem.hasPermissionToAddProject && isParentItemActive
+          }
           level={INITIAL_TREE_ITEMS_LEVEL}
         />
         {isLoading && <Loader className={styles.loader} />}

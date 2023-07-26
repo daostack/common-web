@@ -6,6 +6,7 @@ import {
   Moderation,
   ProposalState,
   VoteOutcome,
+  ResolutionType,
 } from "@/shared/models";
 
 export interface VoteTracker {
@@ -73,4 +74,6 @@ export interface BaseProposal extends BaseEntity {
   type: ProposalsTypes;
 
   moderation: Moderation;
+
+  resolutionType: ResolutionType;
 }

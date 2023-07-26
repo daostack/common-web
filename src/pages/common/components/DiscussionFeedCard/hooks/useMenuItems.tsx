@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { animateScroll } from "react-scroll";
 import { CommonFeedService } from "@/services";
 import { CommonAction, FollowFeedItemAction } from "@/shared/constants";
-import { useFeedItemFollow } from "@/shared/hooks/useCases";
 import {
   Edit3Icon,
   Pin2Icon,
@@ -21,8 +20,6 @@ import { commonActions } from "@/store/states";
 import { FeedItemMenuItem, GetAllowedItemsOptions } from "../../FeedItem";
 import { getAllowedItems } from "../utils";
 
-export type MenuItemOptions = Omit<GetAllowedItemsOptions, "feedItemFollow">;
-
 interface Actions {
   report: () => void;
   share: () => void;
@@ -30,16 +27,12 @@ interface Actions {
 }
 
 export const useMenuItems = (
-  options: MenuItemOptions,
+  options: GetAllowedItemsOptions,
   actions: Actions,
 ): Item[] => {
   const dispatch = useDispatch();
-  const { discussion, commonId, feedItem } = options;
+  const { discussion, commonId, feedItem, feedItemFollow } = options;
   const { report, share, remove } = actions;
-  const feedItemFollow = useFeedItemFollow(
-    options.feedItem?.id,
-    options.commonId,
-  );
   const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
   const items: Item[] = [
     {
