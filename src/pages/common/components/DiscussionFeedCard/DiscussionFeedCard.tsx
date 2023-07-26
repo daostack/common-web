@@ -16,6 +16,7 @@ import {
   Common,
   CommonFeed,
   CommonMember,
+  DirectParent,
   Governance,
   PredefinedTypes,
 } from "@/shared/models";
@@ -50,6 +51,7 @@ interface DiscussionFeedCardProps {
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
+  directParent?: DirectParent | null;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
@@ -73,6 +75,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     getLastMessage,
     getNonAllowedItems,
     onActiveItemDataChange,
+    directParent,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -241,6 +244,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           isMobileVersion={isMobileVersion}
           commonId={commonId}
           userId={item.userId}
+          directParent={directParent}
         />
         <FeedCardContent
           description={discussion?.message}

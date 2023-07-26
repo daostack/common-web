@@ -20,6 +20,7 @@ import {
   checkIsUserDiscussionMessage,
   CommonFeedObjectUserUnique,
   CommonMember,
+  DirectParent,
   DiscussionMessage,
   User,
 } from "@/shared/models";
@@ -49,6 +50,7 @@ interface ChatContentInterface {
   feedItemId: string;
   isLoading: boolean;
   onMessageDelete?: (messageId: string) => void;
+  directParent?: DirectParent | null;
 }
 
 const isToday = (someDate: Date) => {
@@ -81,6 +83,7 @@ const ChatContent: ForwardRefRenderFunction<
     feedItemId,
     isLoading,
     onMessageDelete,
+    directParent,
   },
   chatContentRef,
 ) => {
@@ -255,6 +258,7 @@ const ChatContent: ForwardRefRenderFunction<
                   feedItemId={feedItemId}
                   commonMember={commonMember}
                   onMessageDelete={onMessageDelete}
+                  directParent={directParent}
                 />
               );
 

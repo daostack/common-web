@@ -25,6 +25,7 @@ import {
   checkIsUserDiscussionMessage,
   DiscussionMessage,
   User,
+  DirectParent,
 } from "@/shared/models";
 import {
   FilePreview,
@@ -57,6 +58,7 @@ interface ChatMessageProps {
   feedItemId: string;
   commonMember: CommonMember | null;
   onMessageDelete?: (messageId: string) => void;
+  directParent?: DirectParent | null;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -83,6 +85,7 @@ export default function ChatMessage({
   feedItemId,
   commonMember,
   onMessageDelete,
+  directParent,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
@@ -146,6 +149,7 @@ export default function ChatMessage({
         systemMessage: isSystemMessage ? discussionMessage : undefined,
         getCommonPagePath,
         getCommonPageAboutTabPath,
+        directParent: directParent,
       });
 
       setMessageText(parsedText);
@@ -170,6 +174,7 @@ export default function ChatMessage({
         textEditorString: discussionMessage?.parentMessage.text,
         users,
         commonId: discussionMessage.commonId,
+        directParent: directParent,
       });
 
       setReplyMessageText(parsedText);
@@ -424,6 +429,7 @@ export default function ChatMessage({
           avatar={discussionMessage.ownerAvatar}
           isShowing={isShowingUserProfile}
           onClose={onCloseUserProfile}
+          directParent={directParent}
         />
       )}
     </li>

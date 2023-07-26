@@ -17,7 +17,11 @@ import {
 } from "@/pages/OldCommon/interfaces";
 import { CreateDiscussionMessageDto } from "@/pages/OldCommon/interfaces";
 import Api from "@/services/Api";
-import { AllocateFundsTo, ApiEndpoint } from "@/shared/constants";
+import {
+  AllocateFundsTo,
+  ApiEndpoint,
+  ProposalsTypes,
+} from "@/shared/constants";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import { SubscriptionUpdateData } from "@/shared/interfaces/api/subscription";
 import {
@@ -46,6 +50,7 @@ import {
   Vote,
   VoteWithUserInfo,
   CommonMemberPreviewInfo,
+  DirectParent,
 } from "@/shared/models";
 import { BankAccountDetails as AddBankDetailsPayload } from "@/shared/models/BankAccountDetails";
 import { NotificationItem } from "@/shared/models/Notification";
@@ -200,17 +205,38 @@ export async function fetchUserProposals(userId: string) {
   );
 }
 
+/**
+ * For a space:
+ * 1. The commonId needs to be the direct parent id and not the space id.
+ * 2. circleId of the direct parent is required.
+ */
 export async function fetchUserMemberAdmittanceProposalWithCommonId(
   userId: string,
   commonId: string,
+  directParent?: DirectParent | null,
 ) {
-  const proposal = await firebase
+  let proposalQuery = firebase
     .firestore()
     .collection(Collection.Proposals)
     .where("data.args.proposerId", "==", userId)
-    .where("data.args.commonId", "==", commonId)
-    .where("type", "==", "MEMBER_ADMITTANCE")
-    .get();
+    .where("data.args.commonId", "==", directParent?.commonId ?? commonId)
+    .where(
+      "type",
+      "==",
+      directParent?.circleId
+        ? ProposalsTypes.ASSIGN_CIRCLE
+        : ProposalsTypes.MEMBER_ADMITTANCE,
+    );
+
+  if (directParent?.circleId) {
+    proposalQuery = proposalQuery.where(
+      "data.args.circleId",
+      "==",
+      directParent.circleId,
+    );
+  }
+
+  const proposal = await proposalQuery.get();
 
   return transformFirebaseDataList<Proposal>(proposal)[0];
 }

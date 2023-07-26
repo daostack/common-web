@@ -13,7 +13,7 @@ import {
 } from "./governance/Circles";
 import { Time } from "./shared";
 
-interface DirectParent {
+export interface DirectParent {
   commonId: string;
   circleId: string;
 }

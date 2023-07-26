@@ -6,6 +6,7 @@ import {
   CommonFeed,
   CommonFeedType,
   CommonMember,
+  DirectParent,
 } from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
 import { useFeedItemSubscription } from "../../hooks";
@@ -33,6 +34,7 @@ interface FeedItemProps {
   sizeKey?: string;
   shouldCheckItemVisibility?: boolean;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
+  directParent?: DirectParent | null;
 }
 
 const FeedItem: FC<FeedItemProps> = (props) => {
@@ -55,6 +57,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     currentUserId,
     shouldCheckItemVisibility = true,
     onActiveItemDataChange,
+    directParent,
   } = props;
   const { onFeedItemUpdate, getLastMessage, getNonAllowedItems } =
     useFeedItemContext();
@@ -89,6 +92,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     getNonAllowedItems,
     isMobileVersion,
     onActiveItemDataChange,
+    directParent,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {
