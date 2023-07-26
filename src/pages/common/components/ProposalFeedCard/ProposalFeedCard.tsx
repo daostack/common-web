@@ -16,6 +16,7 @@ import {
   CommonFeed,
   Governance,
   PredefinedTypes,
+  ResolutionType,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
 import {
@@ -38,7 +39,9 @@ import {
   ProposalFeedVotingInfo,
   ProposalFeedButtonContainer,
   UserVoteInfo,
+  ImmediateProposalInfo,
 } from "./components";
+import { ImmediateProposalVoteInfo } from "./components/ImmediateProposalVoteInfo";
 import { useProposalSpecificData } from "./hooks";
 import {
   checkIsVotingAllowed,
@@ -314,21 +317,41 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
             onHover(false);
           }}
         >
-          <ProposalFeedVotingInfo
-            proposal={proposal}
-            governanceCircles={governanceCircles}
-          />
+          {proposal.resolutionType === ResolutionType.WAIT_FOR_EXPIRATION && (
+            <>
+              <ProposalFeedVotingInfo
+                proposal={proposal}
+                governanceCircles={governanceCircles}
+              />
+              <UserVoteInfo
+                userVote={userVote}
+                userHasPermissionsToVote={userHasPermissionsToVote}
+                isCountdownState={isCountdownState}
+              />
+            </>
+          )}
+
+          {proposal.resolutionType === ResolutionType.IMMEDIATE && (
+            <>
+              <ImmediateProposalInfo
+                proposal={proposal}
+                governanceCircles={governanceCircles}
+                proposerUserName={getUserName(feedItemUser)}
+              />
+              <ImmediateProposalVoteInfo
+                proposal={proposal}
+                userVote={userVote}
+              />
+            </>
+          )}
+
           {isVotingAllowed && (
             <ProposalFeedButtonContainer
               proposalId={proposal.id}
               onVoteCreate={setVote}
+              resolutionType={proposal.resolutionType}
             />
           )}
-          <UserVoteInfo
-            userVote={userVote}
-            userHasPermissionsToVote={userHasPermissionsToVote}
-            isCountdownState={isCountdownState}
-          />
         </FeedCardContent>
       </>
     );

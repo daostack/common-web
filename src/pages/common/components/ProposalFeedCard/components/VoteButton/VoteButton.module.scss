@@ -3,8 +3,10 @@
 .button {
   display: flex;
   justify-content: space-between;
-  border-radius: 0.25rem;
+  border-radius: 0.3rem;
   padding: 0.875rem 1.25rem;
+  background-color: transparent;
+  border: 0.06rem solid;
 }
 
 .buttonText {
@@ -15,41 +17,35 @@
 }
 
 .approveText {
-  color: $logo-1;
 }
 .approveButton {
-  background-color: $success-100;
-  box-shadow: $success-100-shadow;
+  color: var(--primary-fill);
+  border-color: var(--primary-fill);
 }
 
 .approveButton:hover {
-  background-color: $success-100-hover;
 }
 
 .abstainText {
-  color: $c-neutrals-300;
 }
 
 .abstainButton {
-  background-color: $c-neutrals-100;
-  box-shadow: $c-neutrals-100-shadow;
+  color: var(--strong-gray);
+  border-color: var(--strong-gray);
 }
 
 .abstainButton:hover {
-  background-color: $c-neutrals-100-hover;
 }
 
 .rejectText {
-  color: $c-error-300;
 }
 
 .rejectButton {
-  background-color: $c-error-100;
-  box-shadow: $c-error-100-shadow;
+  color: var(--red);
+  border-color: var(--red);
 }
 
 .rejectButton:hover {
-  background-color: $c-error-100-hover;
 }
 
 .icon {
