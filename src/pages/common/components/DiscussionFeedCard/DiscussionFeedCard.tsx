@@ -7,6 +7,7 @@ import { EntityTypes } from "@/shared/constants";
 import { useModal, useNotification } from "@/shared/hooks";
 import {
   useDiscussionById,
+  useFeedItemFollow,
   useFeedItemUserMetadata,
   useUserById,
 } from "@/shared/hooks/useCases";
@@ -107,6 +108,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     fetched: isFeedItemUserMetadataFetched,
     fetchFeedItemUserMetadata,
   } = useFeedItemUserMetadata();
+  const feedItemFollow = useFeedItemFollow(item.id, commonId);
   const menuItems = useMenuItems(
     {
       commonId,
@@ -115,6 +117,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       discussion,
       governanceCircles,
       commonMember,
+      feedItemFollow,
       getNonAllowedItems,
     },
     {
@@ -287,6 +290,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         image={commonImage}
         imageAlt={`${commonName}'s image`}
         isProject={isProject}
+        isFollowing={feedItemFollow.isFollowing}
         isLoading={isLoading}
         menuItems={menuItems}
         seenOnce={feedItemUserMetadata?.seenOnce}

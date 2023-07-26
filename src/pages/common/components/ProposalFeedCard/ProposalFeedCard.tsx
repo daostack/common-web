@@ -6,6 +6,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { useForceUpdate, useModal } from "@/shared/hooks";
 import {
   useDiscussionById,
+  useFeedItemFollow,
   useFeedItemUserMetadata,
   useProposalById,
   useUserById,
@@ -150,6 +151,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     onOpen: onShareModalOpen,
     onClose: onShareModalClose,
   } = useModal(false);
+  const feedItemFollow = useFeedItemFollow(item.id, commonId);
   const menuItems = useMenuItems(
     {
       commonId,
@@ -158,6 +160,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       discussion,
       governanceCircles,
       commonMember,
+      feedItemFollow,
       getNonAllowedItems,
     },
     {
@@ -385,6 +388,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         imageAlt={`${commonName}'s image`}
         isProject={isProject}
         isPinned={isPinned}
+        isFollowing={feedItemFollow.isFollowing}
         isLoading={isLoading}
         type={item.data.type}
         seenOnce={feedItemUserMetadata?.seenOnce}
