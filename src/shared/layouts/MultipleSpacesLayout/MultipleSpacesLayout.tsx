@@ -33,13 +33,16 @@ const MultipleSpacesLayout: FC = (props) => {
     (isOpen: boolean) => {
       setIsSidenavOpen(isOpen);
 
+      if (!isTabletView) {
+        return;
+      }
       if (isOpen) {
         lockBodyScroll();
       } else {
         unlockBodyScroll();
       }
     },
-    [lockBodyScroll, unlockBodyScroll],
+    [isTabletView, lockBodyScroll, unlockBodyScroll],
   );
 
   return (
