@@ -11,6 +11,7 @@ interface SidenavProps {
   className?: string;
   contentWrapperClassName?: string;
   style?: CSSProperties;
+  isOpen?: boolean;
   shouldCheckViewportForOpenState?: boolean;
   withAnimation?: boolean;
   onOpenToggle?: (isOpen: boolean) => void;
@@ -31,7 +32,8 @@ const Sidenav: FC<SidenavProps> = (props) => {
   // Sidenav can be open only on tablet and lower viewports if shouldCheckViewportForOpenState is `true`
   const isAllowedToBeShown =
     !shouldCheckViewportForOpenState || viewportStates.isTabletView;
-  const isSidenavOpen = isAllowedToBeShown && checkIsSidenavOpen(queryParams);
+  const isSidenavOpen =
+    props.isOpen ?? (isAllowedToBeShown && checkIsSidenavOpen(queryParams));
   const isSidenavWithAnimation = withAnimation ?? viewportStates.isTabletView;
 
   const onSidebarKeyUp = (event: KeyboardEvent<HTMLElement>): void => {
