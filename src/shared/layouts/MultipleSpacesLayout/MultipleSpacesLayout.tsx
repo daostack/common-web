@@ -49,6 +49,7 @@ const MultipleSpacesLayout: FC = (props) => {
           className={styles.sidenav}
           style={{ left: sidenavLeft }}
           shouldCheckViewportForOpenState={false}
+          withAnimation
           onOpenToggle={handleSidenavOpenToggle}
         >
           <SidenavContent className={styles.sidenavContent} />

@@ -12,6 +12,7 @@ interface SidenavProps {
   contentWrapperClassName?: string;
   style?: CSSProperties;
   shouldCheckViewportForOpenState?: boolean;
+  withAnimation?: boolean;
   onOpenToggle?: (isOpen: boolean) => void;
 }
 
@@ -21,6 +22,7 @@ const Sidenav: FC<SidenavProps> = (props) => {
     contentWrapperClassName,
     style,
     shouldCheckViewportForOpenState = true,
+    withAnimation,
     onOpenToggle,
     children,
   } = props;
@@ -30,6 +32,7 @@ const Sidenav: FC<SidenavProps> = (props) => {
   const isAllowedToBeShown =
     !shouldCheckViewportForOpenState || viewportStates.isTabletView;
   const isSidenavOpen = isAllowedToBeShown && checkIsSidenavOpen(queryParams);
+  const isSidenavWithAnimation = withAnimation ?? viewportStates.isTabletView;
 
   const onSidebarKeyUp = (event: KeyboardEvent<HTMLElement>): void => {
     if (event.key === KeyboardKeys.Escape) {
@@ -49,7 +52,9 @@ const Sidenav: FC<SidenavProps> = (props) => {
       className={classNames(
         styles.sidenav,
         {
-          [styles.sidenavOpen]: isSidenavOpen,
+          [styles.sidenavWithAnimation]: isSidenavWithAnimation,
+          [styles.sidenavWithAnimationOpen]:
+            isSidenavWithAnimation && isSidenavOpen,
         },
         className,
       )}
