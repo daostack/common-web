@@ -52,6 +52,7 @@ const MultipleSpacesLayout: FC = (props) => {
       >
         <Sidenav
           className={styles.sidenav}
+          contentWrapperClassName={styles.sidenavContentWrapper}
           style={{ left: sidenavLeft }}
           shouldCheckViewportForOpenState={false}
           withAnimation

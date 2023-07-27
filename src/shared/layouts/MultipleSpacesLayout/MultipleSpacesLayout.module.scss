@@ -47,6 +47,14 @@
   top: var(--header-h);
 }
 
+.sidenavContentWrapper {
+  border-right: 0.25rem solid $c-light-gray-2;
+
+  @include tablet {
+    border: 0;
+  }
+}
+
 .sidenavContent {
   margin: 0 auto;
   max-width: 25rem;
