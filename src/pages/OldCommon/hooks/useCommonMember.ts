@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   CommonMemberEventEmitter,
   CommonMemberEvent,
@@ -23,6 +23,7 @@ interface Options {
   withSubscription?: boolean;
   commonId?: string;
   governanceCircles?: Circles;
+  userId?: string;
 }
 
 type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
@@ -46,14 +47,13 @@ export const useCommonMember = (options: Options = {}): Return => {
     commonId,
     governanceCircles,
   } = options;
-  const dispatch = useDispatch();
   const [state, setState] = useState<State>({
     loading: false,
     fetched: false,
     data: null,
   });
   const user = useSelector(selectUser());
-  const userId = user?.uid;
+  const userId = options.userId || user?.uid;
   const commonMemberId = state.data?.id;
 
   const fetchCommonMember = useCallback(
