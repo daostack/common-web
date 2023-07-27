@@ -23,6 +23,7 @@ interface Options {
   withSubscription?: boolean;
   commonId?: string;
   governanceCircles?: Circles;
+  userId?: string;
 }
 
 type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
@@ -32,7 +33,6 @@ interface Return extends State {
     commonId: string,
     options: { governance?: Governance; commonMember?: CommonMember },
     force?: boolean,
-    userId?: string,
   ) => void;
   setCommonMember: (
     commonMember: (CommonMember & CirclesPermissions) | null,
@@ -53,7 +53,7 @@ export const useCommonMember = (options: Options = {}): Return => {
     data: null,
   });
   const user = useSelector(selectUser());
-  const userId = user?.uid;
+  const userId = options.userId || user?.uid;
   const commonMemberId = state.data?.id;
 
   const fetchCommonMember = useCallback(
@@ -61,7 +61,6 @@ export const useCommonMember = (options: Options = {}): Return => {
       commonId: string,
       options: { governance?: Governance; commonMember?: CommonMember } = {},
       force = false,
-      userId?: string,
     ) => {
       if (!force && (state.loading || state.fetched)) {
         return;

@@ -29,17 +29,15 @@ export const useCommonMemberWithUserInfo = (
     fetchCommonMember,
     loading: isCommonMemberLoading,
     fetched: isCommonMemberFetched,
-  } = useCommonMember();
+  } = useCommonMember({ userId });
 
   useEffect(() => {
     if (userId) {
       fetchUser(userId);
     }
     if (commonId) {
+      fetchCommonMember(commonId, {}, true);
       fetchGovernance(commonId);
-    }
-    if (userId && commonId) {
-      fetchCommonMember(commonId, {}, true, userId);
     }
   }, [userId, commonId]);
 
