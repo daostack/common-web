@@ -1,6 +1,7 @@
 import React, { CSSProperties, FC, useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { useWindowSize } from "react-use";
+import classNames from "classnames";
 import {
   useLayoutRouteContext,
   MultipleSpacesLayoutRouteOptions,
@@ -44,7 +45,12 @@ const MultipleSpacesLayout: FC = (props) => {
 
   return (
     <MainRoutesProvider>
-      <div className={styles.container} style={style}>
+      <div
+        className={classNames(styles.container, {
+          [styles.containerWithOpenedSidenav]: isSidenavOpen,
+        })}
+        style={style}
+      >
         <Sidenav
           className={styles.sidenav}
           style={{ left: sidenavLeft }}
