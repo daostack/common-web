@@ -10,17 +10,24 @@ import styles from "./Sidenav.module.scss";
 interface SidenavProps {
   contentWrapperClassName?: string;
   style?: CSSProperties;
+  shouldCheckViewportForOpenState?: boolean;
   onOpenToggle?: (isOpen: boolean) => void;
 }
 
 const Sidenav: FC<SidenavProps> = (props) => {
-  const { contentWrapperClassName, style, onOpenToggle, children } = props;
+  const {
+    contentWrapperClassName,
+    style,
+    shouldCheckViewportForOpenState = true,
+    onOpenToggle,
+    children,
+  } = props;
   const queryParams = useQueryParams();
   const viewportStates = useAllViews();
-  const isSidenavVisible =
-    !viewportStates.isTabletView || checkIsSidenavOpen(queryParams);
-  // Sidenav can be open only on tablet and lower viewports
-  const isSidenavOpen = viewportStates.isTabletView && isSidenavVisible;
+  // Sidenav can be open only on tablet and lower viewports if shouldCheckViewportForOpenState is `true`
+  const isAllowedToBeShown =
+    !shouldCheckViewportForOpenState || viewportStates.isTabletView;
+  const isSidenavOpen = isAllowedToBeShown && checkIsSidenavOpen(queryParams);
 
   const onSidebarKeyUp = (event: KeyboardEvent<HTMLElement>): void => {
     if (event.key === KeyboardKeys.Escape) {
