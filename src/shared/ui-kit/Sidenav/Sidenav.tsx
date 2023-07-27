@@ -8,6 +8,7 @@ import { checkIsSidenavOpen, closeSidenav } from "@/shared/utils";
 import styles from "./Sidenav.module.scss";
 
 interface SidenavProps {
+  className?: string;
   contentWrapperClassName?: string;
   style?: CSSProperties;
   shouldCheckViewportForOpenState?: boolean;
@@ -16,6 +17,7 @@ interface SidenavProps {
 
 const Sidenav: FC<SidenavProps> = (props) => {
   const {
+    className,
     contentWrapperClassName,
     style,
     shouldCheckViewportForOpenState = true,
@@ -44,9 +46,13 @@ const Sidenav: FC<SidenavProps> = (props) => {
   return (
     <aside
       id={SIDENAV_KEY}
-      className={classNames(styles.sidenav, {
-        [styles.sidenavOpen]: isSidenavOpen,
-      })}
+      className={classNames(
+        styles.sidenav,
+        {
+          [styles.sidenavOpen]: isSidenavOpen,
+        },
+        className,
+      )}
       style={style}
       onKeyUp={onSidebarKeyUp}
       tabIndex={0}

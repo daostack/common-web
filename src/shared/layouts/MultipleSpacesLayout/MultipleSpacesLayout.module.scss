@@ -16,6 +16,7 @@
   --scroll-bg-color: #{$c-shades-white};
   --scroll-thumb-color: #{$c-neutrals-200};
   --layout-tabs-height: 0rem;
+  --header-h: 3.5rem;
 
   min-height: 100vh;
   height: 100%;
@@ -31,12 +32,20 @@
     --sb-width: 100%;
     --sb-content-width: 100%;
     --layout-tabs-height: 4rem;
+    --header-h: 0;
   }
 }
 
-.main {
-  --header-h: 3.5rem;
+.sidenav {
+  top: var(--header-h);
+}
 
+.sidenavContent {
+  margin: 0 auto;
+  max-width: 25rem;
+}
+
+.main {
   flex: 1;
   max-width: var(--main-mw);
   padding-left: var(--main-pl);
