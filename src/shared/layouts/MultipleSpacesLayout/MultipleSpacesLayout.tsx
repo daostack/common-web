@@ -11,9 +11,8 @@ import { useLockedBody } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Sidenav } from "@/shared/ui-kit";
 import { selectMultipleSpacesLayoutBackUrl } from "@/store/states";
-import { SidenavContent } from "../CommonSidenavLayout/components";
 import { getSidenavLeft } from "../CommonSidenavLayout/utils";
-import { Header } from "./components";
+import { Header, SidenavContent } from "./components";
 import styles from "./MultipleSpacesLayout.module.scss";
 
 const MultipleSpacesLayout: FC = (props) => {
