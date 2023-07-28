@@ -1,5 +1,5 @@
 import React, { CSSProperties, FC, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import {
@@ -12,16 +12,21 @@ import { useLockedBody, useQueryParams } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Sidenav } from "@/shared/ui-kit";
 import { checkIsSidenavOpen, closeSidenav, openSidenav } from "@/shared/utils";
-import { selectMultipleSpacesLayoutBackUrl } from "@/store/states";
+import {
+  multipleSpacesLayoutActions,
+  selectMultipleSpacesLayoutBackUrl,
+} from "@/store/states";
 import { getSidenavLeft } from "../CommonSidenavLayout/utils";
 import { Header, SidenavContent } from "./components";
 import styles from "./MultipleSpacesLayout.module.scss";
 
 const MULTIPLE_SPACES_LAYOUT_SIDENAV_OPEN_STATE = "open";
+const MULTIPLE_SPACES_LAYOUT_SIDENAV_WIDTH = 336;
 
 const MultipleSpacesLayout: FC = (props) => {
   const { children } = props;
   const queryParams = useQueryParams();
+  const dispatch = useDispatch();
   const { routeOptions = {} } =
     useLayoutRouteContext<MultipleSpacesLayoutRouteOptions>();
   const backUrl = useSelector(selectMultipleSpacesLayoutBackUrl);
@@ -39,6 +44,10 @@ const MultipleSpacesLayout: FC = (props) => {
   const style = {
     "--sb-h-indent": `${sidenavLeft}px`,
   } as CSSProperties;
+  const mainWidth =
+    isSidenavOpen && !isTabletView
+      ? width - MULTIPLE_SPACES_LAYOUT_SIDENAV_WIDTH
+      : width;
 
   const handleSidenavOpen = () => {
     setIsSidenavOpen(true);
@@ -54,6 +63,10 @@ const MultipleSpacesLayout: FC = (props) => {
     localStorage.removeItem(StorageKey.MultipleSpacesLayoutSidenavState);
     closeSidenav();
   };
+
+  useEffect(() => {
+    dispatch(multipleSpacesLayoutActions.setMainWidth(mainWidth));
+  }, [mainWidth]);
 
   useEffect(() => {
     if (!isTabletView) {

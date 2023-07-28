@@ -1,10 +1,13 @@
-import React, { FC, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { FC, useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { InboxItemType } from "@/shared/constants";
 import { MainRoutesProvider } from "@/shared/contexts";
 import { MultipleSpacesLayoutPageContent } from "@/shared/layouts";
-import { multipleSpacesLayoutActions } from "@/store/states";
+import {
+  multipleSpacesLayoutActions,
+  selectMultipleSpacesLayoutMainWidth,
+} from "@/store/states";
 import BaseCommonFeedPage, {
   CommonFeedPageRouterParams,
 } from "./BaseCommonFeedPage";
@@ -14,8 +17,8 @@ import {
   FeedLayoutSettings,
   HeaderContent,
 } from "./components";
-import { MIN_CHAT_WIDTH } from "./constants";
 import { useActiveItemDataChange } from "./hooks";
+import { generateSplitViewMaxSizeGetter } from "./utils";
 import styles from "./CommonFeedPage.module.scss";
 
 export const FEED_LAYOUT_OUTER_STYLES: FeedLayoutOuterStyles = {
@@ -23,11 +26,9 @@ export const FEED_LAYOUT_OUTER_STYLES: FeedLayoutOuterStyles = {
   desktopChat: styles.desktopChat,
 };
 
-export const FEED_LAYOUT_SETTINGS: FeedLayoutSettings = {
+export const BASE_FEED_LAYOUT_SETTINGS: FeedLayoutSettings = {
   withDesktopChatTitle: false,
   sidenavWidth: 0,
-  getSplitViewMaxSize: (width) =>
-    width < 1100 ? MIN_CHAT_WIDTH : Math.floor(width * 0.6),
 };
 
 const renderContentWrapper: RenderCommonFeedContentWrapper = ({
@@ -56,7 +57,15 @@ const renderContentWrapper: RenderCommonFeedContentWrapper = ({
 const CommonFeedPage: FC = () => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
   const dispatch = useDispatch();
+  const layoutMainWidth = useSelector(selectMultipleSpacesLayoutMainWidth);
   const onActiveItemDataChange = useActiveItemDataChange();
+  const feedLayoutSettings = useMemo<FeedLayoutSettings>(
+    () => ({
+      ...BASE_FEED_LAYOUT_SETTINGS,
+      getSplitViewMaxSize: generateSplitViewMaxSizeGetter(layoutMainWidth),
+    }),
+    [layoutMainWidth],
+  );
 
   useEffect(() => {
     dispatch(
@@ -79,7 +88,7 @@ const CommonFeedPage: FC = () => {
         renderContentWrapper={renderContentWrapper}
         onActiveItemDataChange={onActiveItemDataChange}
         feedLayoutOuterStyles={FEED_LAYOUT_OUTER_STYLES}
-        feedLayoutSettings={FEED_LAYOUT_SETTINGS}
+        feedLayoutSettings={feedLayoutSettings}
       />
     </MainRoutesProvider>
   );
