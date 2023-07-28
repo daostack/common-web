@@ -19,6 +19,7 @@ interface HeaderProps {
   withBreadcrumbs?: boolean;
   breadcrumbsItemsWithMenus?: boolean;
   withMenuButton?: boolean;
+  onMenuClick?: () => void;
 }
 
 const Header: FC<HeaderProps> = (props) => {
@@ -27,6 +28,7 @@ const Header: FC<HeaderProps> = (props) => {
     withBreadcrumbs = true,
     breadcrumbsItemsWithMenus = true,
     withMenuButton = true,
+    onMenuClick,
   } = props;
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
@@ -44,7 +46,10 @@ const Header: FC<HeaderProps> = (props) => {
     <div className={styles.container}>
       <div className={styles.leftContent}>
         {withMenuButton && (
-          <TopNavigationOpenSidenavButton className={styles.menuButton} />
+          <TopNavigationOpenSidenavButton
+            className={styles.menuButton}
+            onClick={onMenuClick}
+          />
         )}
         {withBreadcrumbs && !backUrl && (
           <Breadcrumbs itemsWithMenus={breadcrumbsItemsWithMenus} />
