@@ -1,8 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { InboxIcon, RightArrowThinIcon } from "@/shared/icons";
-import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
+import { InboxIcon } from "@/shared/icons";
 import { getPluralEnding } from "@/shared/utils";
 import { DirectMessageButton } from "../DirectMessageButton";
 import styles from "./HeaderContent_v04.module.scss";
@@ -19,10 +18,6 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.content}>
-        <TopNavigationOpenSidenavButton
-          className={styles.openSidenavButton}
-          iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
-        />
         <div className={styles.infoContainer}>
           <InboxIcon className={styles.inboxIcon} />
           <div className={styles.infoWrapper}>

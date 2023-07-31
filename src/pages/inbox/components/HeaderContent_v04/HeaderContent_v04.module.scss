@@ -12,14 +12,6 @@
   }
 }
 
-.openSidenavButton {
-  display: none;
-
-  @include tablet {
-    display: flex;
-  }
-}
-
 .content {
   display: flex;
   overflow: hidden;
@@ -47,14 +39,6 @@
   @include tablet {
     margin-right: 0.625rem;
   }
-}
-
-.openSidenavIcon {
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 0.625rem;
-  transform: rotate(180deg);
-  color: $c-neutrals-600;
 }
 
 .infoWrapper {
