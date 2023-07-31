@@ -14,6 +14,7 @@ export interface ChatItem {
   circleVisibility: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   seenOnce?: boolean;
+  isLiveVoting?: boolean;
 }
 
 export interface ChatContextValue {
