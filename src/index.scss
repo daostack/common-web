@@ -236,10 +236,10 @@ code {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--gentle-gray);
+  background-color: var(--medium-gray);
   border-radius: 0.5rem;
   &:hover {
-    background-color: var(--medium-gray);
+    background-color: var(--strong-gray);
     cursor: pointer;
   }
 }
