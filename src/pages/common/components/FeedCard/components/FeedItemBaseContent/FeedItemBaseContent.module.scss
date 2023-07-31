@@ -57,19 +57,6 @@
   transition: box-shadow 0.4s;
 }
 
-.expandIcon {
-  height: 1.5rem;
-  width: 1.5rem;
-  rotate: 90deg;
-  color: $secondary-blue;
-  align-self: center;
-  margin-right: 0.5rem;
-}
-
-.expandIconActive {
-  rotate: -90deg;
-}
-
 .content {
   display: flex;
   flex-direction: column;
