@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { FeedItem } from "@/pages/common";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { Modal } from "@/shared/components";
@@ -21,6 +21,8 @@ interface FeedItemPreviewModalProps {
   governanceCircles?: Circles;
   isShowFeedItemDetailsModal?: boolean;
   sizeKey?: string;
+  isMainModalOpen: boolean;
+  seenOnce?: boolean;
 }
 
 const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
@@ -34,6 +36,8 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
     governanceCircles,
     isShowFeedItemDetailsModal,
     sizeKey,
+    isMainModalOpen,
+    seenOnce,
   } = props;
   const isTabletView = useIsTabletView();
   const { setIsShowFeedItemDetailsModal } = useChatContext();
@@ -47,6 +51,12 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
   const handleActiveItemDataChange = (data: FeedLayoutItemChangeData) => {
     setTitle(data.title);
   };
+
+  useEffect(() => {
+    if (isMainModalOpen && !seenOnce) {
+      setIsShowFeedItemDetailsModal?.(true);
+    }
+  }, [isMainModalOpen]);
 
   return (
     <Modal
