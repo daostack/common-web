@@ -100,8 +100,8 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
             {
               args: {
                 commonId,
-                title: `Request to join ${circleName} circle by ${userName}`,
-                description: `Join circle request: ${circleName}`,
+                title: `Request to join ${circleName} by ${userName}`,
+                description: `Join request: ${circleName}`,
                 images: [],
                 links: [],
                 files: [],
