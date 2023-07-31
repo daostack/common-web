@@ -12,26 +12,26 @@
 
   @include tablet {
     right: 0;
-    display: flex;
-    will-change: transform;
-    transform: translateX(-110vw);
-    transition: transform var(--sb-transition-duration) var(--sb-easing),
-      visibility 0s linear var(--sb-transition-duration);
-    overflow: hidden;
-    overscroll-behavior: contain;
-    visibility: hidden;
   }
 
   @media (prefers-reduced-motion: reduce) {
     --sb-transition-duration: 1ms;
   }
 }
-.sidenavOpen {
-  @include tablet {
-    transform: translateX(0);
-    transition: transform var(--sb-transition-duration) var(--sb-easing);
-    visibility: visible;
-  }
+.sidenavWithAnimation {
+  display: flex;
+  will-change: transform;
+  transform: translateX(-110vw);
+  transition: transform var(--sb-transition-duration) var(--sb-easing),
+    visibility 0s linear var(--sb-transition-duration);
+  overflow: hidden;
+  overscroll-behavior: contain;
+  visibility: hidden;
+}
+.sidenavWithAnimationOpen {
+  transform: translateX(0);
+  transition: transform var(--sb-transition-duration) var(--sb-easing);
+  visibility: visible;
 }
 
 .contentWrapper {

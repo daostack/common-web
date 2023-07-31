@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
 import { LongLeftArrowIcon } from "@/shared/icons";
+import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import {
   ContentStyles,
@@ -17,6 +18,8 @@ interface HeaderProps {
   backUrl?: string | null;
   withBreadcrumbs?: boolean;
   breadcrumbsItemsWithMenus?: boolean;
+  withMenuButton?: boolean;
+  onMenuClick?: () => void;
 }
 
 const Header: FC<HeaderProps> = (props) => {
@@ -24,6 +27,8 @@ const Header: FC<HeaderProps> = (props) => {
     backUrl = null,
     withBreadcrumbs = true,
     breadcrumbsItemsWithMenus = true,
+    withMenuButton = true,
+    onMenuClick,
   } = props;
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
@@ -40,6 +45,12 @@ const Header: FC<HeaderProps> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.leftContent}>
+        {withMenuButton && (
+          <TopNavigationOpenSidenavButton
+            className={styles.menuButton}
+            onClick={onMenuClick}
+          />
+        )}
         {withBreadcrumbs && !backUrl && (
           <Breadcrumbs itemsWithMenus={breadcrumbsItemsWithMenus} />
         )}

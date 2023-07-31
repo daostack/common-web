@@ -1,0 +1,28 @@
+@import "../../../../../constants";
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.closeIconWrapper {
+  margin-left: auto;
+  padding: 1.25rem 1.5rem;
+}
+
+.noCommonsInfoContainer {
+  padding: 0 1rem;
+}
+
+.noCommonsText {
+  margin: 0 0 1rem;
+  padding: 0;
+  text-align: center;
+}
+
+.createCommonButton {
+  margin: 0 auto;
+}

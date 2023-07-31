@@ -30,7 +30,7 @@
   position: fixed;
   top: var(--header-h);
   right: var(--sb-h-indent);
-  left: var(--sb-h-indent);
+  left: var(--main-pl);
   z-index: 2;
   height: var(--page-content-header);
   background-color: $c-shades-white;
