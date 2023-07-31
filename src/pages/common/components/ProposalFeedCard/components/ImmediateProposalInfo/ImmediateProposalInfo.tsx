@@ -14,12 +14,11 @@ export const ImmediateProposalInfo = ({
   governanceCircles,
   proposerUserName,
 }: ImmediateProposalInfoProps) => {
-  let circleName: string | undefined;
-  if (isAssignCircleProposal(proposal)) {
-    circleName = Object.values(governanceCircles).find(
-      (circle) => circle.id === proposal.data.args.circleId,
-    )?.name;
-  }
+  const circleName = isAssignCircleProposal(proposal)
+    ? Object.values(governanceCircles).find(
+        (circle) => circle.id === proposal.data.args.circleId,
+      )?.name
+    : "unknown";
 
   return (
     <div className={styles.container}>
