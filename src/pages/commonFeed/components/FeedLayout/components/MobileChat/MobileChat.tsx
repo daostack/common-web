@@ -31,6 +31,7 @@ interface ChatProps {
   rightHeaderContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  onClose: () => void;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -46,9 +47,9 @@ const MobileChat: FC<ChatProps> = (props) => {
     rightHeaderContent,
     onMessagesAmountChange,
     directParent,
+    onClose,
   } = props;
-  const { setChatItem, setIsShowFeedItemDetailsModal, setShouldShowSeeMore } =
-    useChatContext();
+  const { setIsShowFeedItemDetailsModal } = useChatContext();
   const {
     fetchUser: fetchDMUser,
     setUser: setDMUser,
@@ -70,11 +71,6 @@ const MobileChat: FC<ChatProps> = (props) => {
     [chatItem, userCircleIds],
   );
 
-  const handleClose = () => {
-    setChatItem(null);
-    setShouldShowSeeMore && setShouldShowSeeMore(true);
-  };
-
   const handleOpenFeedItemDetails = () => {
     setIsShowFeedItemDetailsModal && setIsShowFeedItemDetailsModal(true);
   };
@@ -93,7 +89,7 @@ const MobileChat: FC<ChatProps> = (props) => {
       <ChatMobileModal
         isShowing={Boolean(chatItem)}
         hasBackButton
-        onClose={handleClose}
+        onClose={onClose}
         commonName={commonName}
         commonImage={commonImage}
         header={
@@ -102,7 +98,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             title={title}
             userAvatar={dmUser?.photoURL}
             userName={title}
-            onBackClick={handleClose}
+            onBackClick={onClose}
             onTitleWrapperClick={
               shouldShowSeeMore ? handleOpenFeedItemDetails : undefined
             }

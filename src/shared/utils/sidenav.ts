@@ -1,29 +1,13 @@
-import queryString, { parse } from "query-string";
-import { history } from "@/shared/appConfig";
+import { parse } from "query-string";
 import { SIDENAV_KEY, SIDENAV_OPEN } from "@/shared/constants";
+import { addQueryParam, deleteQueryParam } from "./queryParams";
 
 export const openSidenav = () => {
-  const params = queryString.parse(window.location.search);
-
-  const search = queryString.stringify({
-    ...params,
-    [SIDENAV_KEY]: SIDENAV_OPEN,
-  });
-  history.push({
-    pathname: window.location.pathname,
-    search,
-  });
+  addQueryParam(SIDENAV_KEY, SIDENAV_OPEN);
 };
 
 export const closeSidenav = () => {
-  const params = queryString.parse(window.location.search);
-
-  if (params[SIDENAV_KEY]) {
-    delete params[SIDENAV_KEY];
-    history.push({
-      search: queryString.stringify(params),
-    });
-  }
+  deleteQueryParam(SIDENAV_KEY);
 };
 
 export const checkIsSidenavOpen = (queryParams: ReturnType<typeof parse>) =>
