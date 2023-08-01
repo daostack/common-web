@@ -336,12 +336,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   };
 
   useEffect(() => {
-    if (chatItemIdFromQueryParam) {
-      deleteQueryParam(QueryParamKey.ChatItem);
-    }
-  }, []);
-
-  useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
     }
@@ -372,6 +366,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   useEffect(() => {
     if (!chatItemIdFromQueryParam && chatItem?.feedItemId) {
       handleMobileChatClose(false);
+    } else if (chatItemIdFromQueryParam && !chatItem?.feedItemId) {
+      deleteQueryParam(QueryParamKey.ChatItem, true);
     }
   }, [chatItemIdFromQueryParam]);
 

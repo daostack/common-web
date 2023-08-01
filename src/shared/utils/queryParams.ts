@@ -10,13 +10,16 @@ export const addQueryParam = (key: string, value: string) => {
   history.push({ search });
 };
 
-export const deleteQueryParam = (key: string) => {
+export const deleteQueryParam = (key: string, shouldReplace = false) => {
   const params = queryString.parse(window.location.search);
 
-  if (params[key]) {
-    delete params[key];
-    history.push({
-      search: queryString.stringify(params),
-    });
+  if (!params[key]) {
+    return;
   }
+
+  delete params[key];
+  const callback = shouldReplace ? history.replace : history.push;
+  callback({
+    search: queryString.stringify(params),
+  });
 };
