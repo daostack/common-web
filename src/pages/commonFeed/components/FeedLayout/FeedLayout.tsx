@@ -318,6 +318,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     });
   };
 
+  const handleMobileChatClose = () => {
+    setChatItem(null);
+    setShouldShowSeeMore(true);
+  };
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -469,6 +474,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 rightHeaderContent={followFeedItemEl}
                 onMessagesAmountChange={handleMessagesAmountChange}
                 directParent={outerCommon?.directParent}
+                onClose={handleMobileChatClose}
               >
                 {selectedItemCommonData &&
                   checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
