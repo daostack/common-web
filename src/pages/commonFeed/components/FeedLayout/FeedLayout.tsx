@@ -482,6 +482,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       userCircleIds={userCircleIds}
                       isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
                       sizeKey={sizeKey}
+                      isMainModalOpen={Boolean(chatItem)}
+                      seenOnce={chatItem?.seenOnce}
+                      isLiveVoting={chatItem?.isLiveVoting}
                     />
                   )}
               </MobileChat>
