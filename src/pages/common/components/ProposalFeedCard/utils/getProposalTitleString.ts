@@ -23,7 +23,7 @@ export const getProposalTitleString = (
 
     return `Request to join ${
       targetCircle?.name ? `${targetCircle.name} ` : ""
-    }circle`;
+    }`;
   }
 
   return proposal.data.args.title;

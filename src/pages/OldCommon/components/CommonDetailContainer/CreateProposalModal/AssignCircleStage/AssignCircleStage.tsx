@@ -88,7 +88,7 @@ const AssignCircleStage: FC<AssignCircleStageProps> = (props) => {
         // TODO: Use here name of common member
         title: `Request to join ${
           assignCircleData.circle.name
-        } circle by ${getUserName(assignCircleData.commonMember.user)}`,
+        } by ${getUserName(assignCircleData.commonMember.user)}`,
         description: assignCircleData.description,
         images: [],
         links: [],
