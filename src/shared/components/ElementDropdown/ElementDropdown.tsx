@@ -7,6 +7,14 @@ import { MenuButton, ShareModal } from "@/shared/components";
 import { Orientation, EntityTypes } from "@/shared/constants";
 import { useNotification, useModal } from "@/shared/hooks";
 import {
+  CopyIcon,
+  Edit3Icon,
+  ReplyIcon,
+  Report2Icon,
+  Share3Icon,
+  Trash2Icon,
+} from "@/shared/icons";
+import {
   MenuItem as DesktopStyleMenuItem,
   MenuItemType,
 } from "@/shared/interfaces";
@@ -131,7 +139,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     if (isDiscussionMessage && !isHiddenElement) {
       items.push({
-        text: <span>Reply</span>,
+        text: (
+          <div className={elementDropdownStyles.itemContent}>
+            <ReplyIcon />
+            <span>Reply</span>
+          </div>
+        ),
         searchText: "Reply",
         value: ElementDropdownMenuItems.Reply,
       });
@@ -139,7 +152,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     if (isOwner && isDiscussionMessage && !isDiscussionMessageWithFile) {
       items.push({
-        text: <span>Edit</span>,
+        text: (
+          <div className={elementDropdownStyles.itemContent}>
+            <Edit3Icon />
+            <span>Edit</span>
+          </div>
+        ),
         searchText: "Edit",
         value: ElementDropdownMenuItems.Edit,
       });
@@ -147,7 +165,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     if (isDiscussionMessage && !isDiscussionMessageWithFile) {
       items.push({
-        text: <span>Copy</span>,
+        text: (
+          <div className={elementDropdownStyles.itemContent}>
+            <CopyIcon />
+            <span>Copy</span>
+          </div>
+        ),
         searchText: "Copy",
         value: ElementDropdownMenuItems.Copy,
       });
@@ -155,7 +178,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     if (!isChatMessage) {
       items.push({
-        text: <span>Share</span>,
+        text: (
+          <div className={elementDropdownStyles.itemContent}>
+            <Share3Icon />
+            <span>Share</span>
+          </div>
+        ),
         searchText: "Share",
         value: ElementDropdownMenuItems.Share,
       });
@@ -163,7 +191,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
 
     if (!isOwner) {
       items.push({
-        text: <span>Report</span>,
+        text: (
+          <div className={elementDropdownStyles.itemContent}>
+            <Report2Icon />
+            <span>Report</span>
+          </div>
+        ),
         searchText: "Report",
         value: ElementDropdownMenuItems.Report,
       });
@@ -190,7 +223,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     if (isOwner && (isDiscussionMessage || isChatMessage)) {
       items.push({
         text: (
-          <span className={elementDropdownStyles.menuItemRedText}>Delete</span>
+          <div className={elementDropdownStyles.itemContent}>
+            <Trash2Icon />
+            <span className={elementDropdownStyles.menuItemRedText}>
+              Delete
+            </span>
+          </div>
         ),
         searchText: "Delete",
         value: ElementDropdownMenuItems.Delete,

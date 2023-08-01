@@ -12,3 +12,11 @@
 .menuItemRedText {
   color: $red;
 }
+
+.itemContent {
+  display: flex;
+  align-items: center;
+  span {
+    margin-left: 1rem;
+  }
+}
