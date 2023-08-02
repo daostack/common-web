@@ -48,6 +48,7 @@ import {
   CommonFeedType,
   CommonMember,
   Governance,
+  ProposalState,
 } from "@/shared/models";
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import { addQueryParam, deleteQueryParam } from "@/shared/utils";
@@ -516,7 +517,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       sizeKey={sizeKey}
                       isMainModalOpen={Boolean(chatItem)}
                       seenOnce={chatItem?.seenOnce}
-                      isLiveVoting={chatItem?.isLiveVoting}
+                      isLiveVoting={
+                        chatItem?.proposal?.state === ProposalState.VOTING
+                      }
                     />
                   )}
               </MobileChat>
