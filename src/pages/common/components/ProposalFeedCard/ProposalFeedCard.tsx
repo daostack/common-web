@@ -228,6 +228,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         proposal,
         circleVisibility: item.circleVisibility,
         lastSeenItem: feedItemUserMetadata?.lastSeen,
+        lastSeenAt: feedItemUserMetadata?.lastSeenAt,
         seenOnce: feedItemUserMetadata?.seenOnce,
       });
     }
@@ -238,6 +239,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setChatItem,
     item.circleVisibility,
     feedItemUserMetadata?.lastSeen,
+    feedItemUserMetadata?.lastSeenAt,
     feedItemUserMetadata?.seenOnce,
   ]);
 

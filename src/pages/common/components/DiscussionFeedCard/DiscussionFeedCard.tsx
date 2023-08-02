@@ -147,6 +147,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         discussion,
         circleVisibility: item.circleVisibility,
         lastSeenItem: feedItemUserMetadata?.lastSeen,
+        lastSeenAt: feedItemUserMetadata?.lastSeenAt,
         seenOnce: feedItemUserMetadata?.seenOnce,
       });
       setShouldShowSeeMore &&
@@ -159,6 +160,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     item.id,
     item.circleVisibility,
     feedItemUserMetadata?.lastSeen,
+    feedItemUserMetadata?.lastSeenAt,
     feedItemUserMetadata?.seenOnce,
   ]);
 
