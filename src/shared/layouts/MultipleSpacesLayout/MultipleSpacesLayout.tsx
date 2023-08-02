@@ -119,7 +119,7 @@ const MultipleSpacesLayout: FC = (props) => {
               backUrl={backUrl}
               withBreadcrumbs={routeOptions.withBreadcrumbs}
               breadcrumbsItemsWithMenus={routeOptions.breadcrumbsItemsWithMenus}
-              withMenuButton={!isSidenavDisabled && !isSidenavTechnicallyOpen}
+              withMenuButton={!isSidenavDisabled && !isSidenavOpen}
               onMenuClick={handleSidenavOpen}
             />
           )}
