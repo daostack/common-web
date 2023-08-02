@@ -10,6 +10,7 @@ import { MultipleSpacesLayout } from "@/shared/layouts";
 import { LayoutConfiguration, RouteType } from "../types";
 
 export interface MultipleSpacesLayoutRouteOptions {
+  sidenav?: boolean;
   withBreadcrumbs?: boolean;
   breadcrumbsItemsWithMenus?: boolean;
 }
