@@ -48,7 +48,6 @@ import {
   CommonFeedType,
   CommonMember,
   Governance,
-  ProposalState,
 } from "@/shared/models";
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import { addQueryParam, deleteQueryParam } from "@/shared/utils";
@@ -63,6 +62,7 @@ import {
   SplitView,
 } from "./components";
 import {
+  checkShouldAutoOpenPreview,
   getDefaultSize,
   getItemCommonData,
   getSplitViewMaxSize,
@@ -516,10 +516,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
                       sizeKey={sizeKey}
                       isMainModalOpen={Boolean(chatItem)}
-                      seenOnce={chatItem?.seenOnce}
-                      isLiveVoting={
-                        chatItem?.proposal?.state === ProposalState.VOTING
-                      }
+                      shouldAutoOpenPreview={checkShouldAutoOpenPreview(
+                        chatItem,
+                      )}
                     />
                   )}
               </MobileChat>

@@ -22,8 +22,7 @@ interface FeedItemPreviewModalProps {
   isShowFeedItemDetailsModal?: boolean;
   sizeKey?: string;
   isMainModalOpen: boolean;
-  seenOnce?: boolean;
-  isLiveVoting?: boolean;
+  shouldAutoOpenPreview: boolean;
 }
 
 const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
@@ -38,8 +37,7 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
     isShowFeedItemDetailsModal,
     sizeKey,
     isMainModalOpen,
-    seenOnce,
-    isLiveVoting,
+    shouldAutoOpenPreview,
   } = props;
   const isTabletView = useIsTabletView();
   const { setIsShowFeedItemDetailsModal } = useChatContext();
@@ -55,7 +53,7 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
   };
 
   useEffect(() => {
-    if (isMainModalOpen && (!seenOnce || isLiveVoting)) {
+    if (isMainModalOpen && shouldAutoOpenPreview) {
       setIsShowFeedItemDetailsModal?.(true);
     }
   }, [isMainModalOpen]);
