@@ -13,8 +13,8 @@ export interface ChatItem {
   chatChannel?: ChatChannel;
   circleVisibility: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
+  lastSeenAt?: CommonFeedObjectUserUnique["lastSeenAt"];
   seenOnce?: boolean;
-  isLiveVoting?: boolean;
 }
 
 export interface ChatContextValue {

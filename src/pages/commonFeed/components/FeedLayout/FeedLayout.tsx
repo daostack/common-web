@@ -62,6 +62,7 @@ import {
   SplitView,
 } from "./components";
 import {
+  checkShouldAutoOpenPreview,
   getDefaultSize,
   getItemCommonData,
   getSplitViewMaxSize,
@@ -515,8 +516,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
                       sizeKey={sizeKey}
                       isMainModalOpen={Boolean(chatItem)}
-                      seenOnce={chatItem?.seenOnce}
-                      isLiveVoting={chatItem?.isLiveVoting}
+                      shouldAutoOpenPreview={checkShouldAutoOpenPreview(
+                        chatItem,
+                      )}
                     />
                   )}
               </MobileChat>

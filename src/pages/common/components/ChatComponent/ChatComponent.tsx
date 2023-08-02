@@ -81,7 +81,6 @@ interface ChatComponentInterface {
   discussion: Discussion;
   chatChannel?: ChatChannel;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
-  seenOnce?: CommonFeedObjectUserUnique["seenOnce"];
   feedItemId: string;
   isAuthorized?: boolean;
   isHidden: boolean;
@@ -118,7 +117,6 @@ export default function ChatComponent({
   chatChannel,
   hasAccess = true,
   lastSeenItem,
-  seenOnce,
   feedItemId,
   isAuthorized,
   isHidden = false,
@@ -510,28 +508,17 @@ export default function ChatComponent({
   );
 
   useEffect(() => {
-    if (
-      isFetchedDiscussionMessages &&
-      discussionMessages?.length === 0 &&
-      !seenOnce
-    ) {
-      if (isChatChannel) {
-        markChatMessageItemAsSeen({
-          chatChannelId: feedItemId,
-        });
-      } else {
-        markDiscussionMessageItemAsSeen({
-          feedObjectId: feedItemId,
-          commonId,
-        });
-      }
+    if (isChatChannel) {
+      markChatMessageItemAsSeen({
+        chatChannelId: feedItemId,
+      });
+    } else {
+      markDiscussionMessageItemAsSeen({
+        feedObjectId: feedItemId,
+        commonId,
+      });
     }
-  }, [
-    isFetchedDiscussionMessages,
-    discussionMessages?.length,
-    feedItemId,
-    commonId,
-  ]);
+  }, [feedItemId, commonId]);
 
   useEffect(() => {
     if (

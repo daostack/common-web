@@ -136,7 +136,6 @@ const MobileChat: FC<ChatProps> = (props) => {
             chatChannel={chatItem.chatChannel}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
-            seenOnce={chatItem.seenOnce}
             onMessagesAmountChange={onMessagesAmountChange}
             directParent={directParent}
           />
