@@ -58,6 +58,7 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         exact: true,
         component: ProfilePage,
         routeOptions: {
+          sidenav: false,
           withBreadcrumbs: false,
         },
       },
@@ -66,6 +67,7 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         exact: true,
         component: BillingPage,
         routeOptions: {
+          sidenav: false,
           withBreadcrumbs: false,
         },
       },
