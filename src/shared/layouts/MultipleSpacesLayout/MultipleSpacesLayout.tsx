@@ -33,7 +33,7 @@ const MultipleSpacesLayout: FC = (props) => {
   const isTabletView = useIsTabletView();
   const { width } = useWindowSize();
   const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
-  const isSidenavDisabled = !isTabletView && routeOptions.sidenav === false;
+  const isSidenavDisabled = !isTabletView && routeOptions.withSidenav === false;
   const isSidenavOpenFromQueryParams = checkIsSidenavOpen(queryParams);
   const [isSidenavTechnicallyOpen, setIsSidenavTechnicallyOpen] = useState(
     () =>
