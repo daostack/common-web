@@ -33,13 +33,15 @@ const MultipleSpacesLayout: FC = (props) => {
   const isTabletView = useIsTabletView();
   const { width } = useWindowSize();
   const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
+  const isSidenavDisabled = !isTabletView && routeOptions.withSidenav === false;
   const isSidenavOpenFromQueryParams = checkIsSidenavOpen(queryParams);
-  const [isSidenavOpen, setIsSidenavOpen] = useState(
+  const [isSidenavTechnicallyOpen, setIsSidenavTechnicallyOpen] = useState(
     () =>
       localStorage.getItem(StorageKey.MultipleSpacesLayoutSidenavState) ===
         MULTIPLE_SPACES_LAYOUT_SIDENAV_OPEN_STATE ??
       isSidenavOpenFromQueryParams,
   );
+  const isSidenavOpen = !isSidenavDisabled && isSidenavTechnicallyOpen;
   const sidenavLeft = getSidenavLeft(width);
   const style = {
     "--sb-h-indent": `${sidenavLeft}px`,
@@ -50,7 +52,7 @@ const MultipleSpacesLayout: FC = (props) => {
       : width;
 
   const handleSidenavOpen = () => {
-    setIsSidenavOpen(true);
+    setIsSidenavTechnicallyOpen(true);
     localStorage.setItem(
       StorageKey.MultipleSpacesLayoutSidenavState,
       MULTIPLE_SPACES_LAYOUT_SIDENAV_OPEN_STATE,
@@ -59,7 +61,7 @@ const MultipleSpacesLayout: FC = (props) => {
   };
 
   const handleSidenavClose = () => {
-    setIsSidenavOpen(false);
+    setIsSidenavTechnicallyOpen(false);
     localStorage.removeItem(StorageKey.MultipleSpacesLayoutSidenavState);
     closeSidenav();
   };
@@ -117,7 +119,7 @@ const MultipleSpacesLayout: FC = (props) => {
               backUrl={backUrl}
               withBreadcrumbs={routeOptions.withBreadcrumbs}
               breadcrumbsItemsWithMenus={routeOptions.breadcrumbsItemsWithMenus}
-              withMenuButton={!isSidenavOpen}
+              withMenuButton={!isSidenavDisabled && !isSidenavOpen}
               onMenuClick={handleSidenavOpen}
             />
           )}

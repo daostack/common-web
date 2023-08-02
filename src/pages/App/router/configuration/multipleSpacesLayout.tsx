@@ -10,6 +10,7 @@ import { MultipleSpacesLayout } from "@/shared/layouts";
 import { LayoutConfiguration, RouteType } from "../types";
 
 export interface MultipleSpacesLayoutRouteOptions {
+  withSidenav?: boolean;
   withBreadcrumbs?: boolean;
   breadcrumbsItemsWithMenus?: boolean;
 }
@@ -57,6 +58,7 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         exact: true,
         component: ProfilePage,
         routeOptions: {
+          withSidenav: false,
           withBreadcrumbs: false,
         },
       },
@@ -65,6 +67,7 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         exact: true,
         component: BillingPage,
         routeOptions: {
+          withSidenav: false,
           withBreadcrumbs: false,
         },
       },

@@ -17,6 +17,7 @@ import {
   CommonFeed,
   Governance,
   PredefinedTypes,
+  ProposalState,
   ResolutionType,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
@@ -227,6 +228,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         proposal,
         circleVisibility: item.circleVisibility,
         lastSeenItem: feedItemUserMetadata?.lastSeen,
+        lastSeenAt: feedItemUserMetadata?.lastSeenAt,
         seenOnce: feedItemUserMetadata?.seenOnce,
       });
     }
@@ -237,6 +239,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setChatItem,
     item.circleVisibility,
     feedItemUserMetadata?.lastSeen,
+    feedItemUserMetadata?.lastSeenAt,
     feedItemUserMetadata?.seenOnce,
   ]);
 

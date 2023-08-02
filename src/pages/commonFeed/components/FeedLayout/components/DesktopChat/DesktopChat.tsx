@@ -108,7 +108,6 @@ const DesktopChat: FC<ChatProps> = (props) => {
         feedItemId={chatItem.feedItemId}
         hasAccess={hasAccessToChat}
         lastSeenItem={chatItem.lastSeenItem}
-        seenOnce={chatItem.seenOnce}
         isHidden={false}
         isAuthorized={Boolean(user)}
         onMessagesAmountChange={onMessagesAmountChange}

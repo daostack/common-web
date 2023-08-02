@@ -10,6 +10,7 @@ import React, {
   useState,
 } from "react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -27,7 +28,8 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
-import { InboxItemType } from "@/shared/constants";
+import { InboxItemType, QueryParamKey } from "@/shared/constants";
+import { useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -48,6 +50,7 @@ import {
   Governance,
 } from "@/shared/models";
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
+import { addQueryParam, deleteQueryParam } from "@/shared/utils";
 import { selectRecentStreamId } from "@/store/states";
 import { MIN_CHAT_WIDTH } from "../../constants";
 import {
@@ -59,6 +62,7 @@ import {
   SplitView,
 } from "./components";
 import {
+  checkShouldAutoOpenPreview,
   getDefaultSize,
   getItemCommonData,
   getSplitViewMaxSize,
@@ -139,6 +143,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     settings,
   } = props;
   const { width: windowWidth } = useWindowSize();
+  const history = useHistory();
+  const queryParams = useQueryParams();
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
   const recentStreamId = useSelector(selectRecentStreamId);
@@ -182,6 +188,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [topFeedItems, feedItems]);
   const isContentEmpty =
     !loading && (!allFeedItems || allFeedItems.length === 0) && emptyText;
+  const chatItemQueryParam = queryParams[QueryParamKey.ChatItem];
+  const chatItemIdFromQueryParam =
+    (typeof chatItemQueryParam === "string" && chatItemQueryParam) || null;
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (recentStreamId) {
@@ -318,6 +327,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     });
   };
 
+  const handleMobileChatClose = (shouldChangeHistory = true) => {
+    setChatItem(null);
+    setShouldShowSeeMore(true);
+
+    if (isTabletView && chatItemIdFromQueryParam && shouldChangeHistory) {
+      history.goBack();
+    }
+  };
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -339,6 +357,20 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   useEffect(() => {
     onActiveItemChange?.(activeFeedItemId);
   }, [activeFeedItemId]);
+
+  useEffect(() => {
+    if (isTabletView && chatItem?.feedItemId) {
+      addQueryParam(QueryParamKey.ChatItem, chatItem.feedItemId);
+    }
+  }, [isTabletView, chatItem?.feedItemId]);
+
+  useEffect(() => {
+    if (!chatItemIdFromQueryParam && chatItem?.feedItemId) {
+      handleMobileChatClose(false);
+    } else if (chatItemIdFromQueryParam && !chatItem?.feedItemId) {
+      deleteQueryParam(QueryParamKey.ChatItem, true);
+    }
+  }, [chatItemIdFromQueryParam]);
 
   useImperativeHandle(
     ref,
@@ -469,6 +501,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 rightHeaderContent={followFeedItemEl}
                 onMessagesAmountChange={handleMessagesAmountChange}
                 directParent={outerCommon?.directParent}
+                onClose={handleMobileChatClose}
               >
                 {selectedItemCommonData &&
                   checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
@@ -482,6 +515,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       userCircleIds={userCircleIds}
                       isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
                       sizeKey={sizeKey}
+                      isMainModalOpen={Boolean(chatItem)}
+                      shouldAutoOpenPreview={checkShouldAutoOpenPreview(
+                        chatItem,
+                      )}
                     />
                   )}
               </MobileChat>
