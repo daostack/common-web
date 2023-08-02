@@ -9,6 +9,7 @@ import { useNotification, useModal } from "@/shared/hooks";
 import {
   CopyIcon,
   Edit3Icon,
+  HideIcon,
   ReplyIcon,
   Report2Icon,
   Share3Icon,
@@ -213,7 +214,10 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     ) {
       items.push({
         text: (
-          <span className={elementDropdownStyles.menuItemRedText}>Hide</span>
+          <div className={elementDropdownStyles.itemContent}>
+            <HideIcon />
+            <span>Hide</span>
+          </div>
         ),
         searchText: "Hide",
         value: ElementDropdownMenuItems.Hide,
@@ -224,7 +228,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       items.push({
         text: (
           <div className={elementDropdownStyles.itemContent}>
-            <Trash2Icon />
+            <Trash2Icon className={elementDropdownStyles.redIcon} />
             <span className={elementDropdownStyles.menuItemRedText}>
               Delete
             </span>

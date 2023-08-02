@@ -60,3 +60,4 @@ export { default as FileIcon } from "./file.icon";
 export { default as EmojiIcon } from "./emoji.icon";
 export { default as ReplyIcon } from "./reply.icon";
 export { default as CopyIcon } from "./copy.icon";
+export { default as HideIcon } from "./hide.icon";
