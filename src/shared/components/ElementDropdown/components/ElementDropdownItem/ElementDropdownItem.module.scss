@@ -1,0 +1,16 @@
+@import "../../../../../constants.scss";
+
+.content {
+  display: flex;
+  align-items: center;
+}
+
+.withWarning {
+  color: $red;
+}
+
+.withIcon {
+  span {
+    margin-left: 1rem;
+  }
+}
