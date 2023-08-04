@@ -72,7 +72,7 @@ import styles from "./FeedLayout.module.scss";
 
 export interface FeedLayoutOuterStyles {
   splitView?: string;
-  desktopChat?: string;
+  desktopRightPane?: string;
 }
 
 export interface FeedLayoutSettings {
@@ -471,8 +471,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               (chatItem ? (
                 <DesktopChat
                   className={classNames(
-                    styles.desktopChat,
-                    outerStyles?.desktopChat,
+                    styles.desktopRightPane,
+                    outerStyles?.desktopRightPane,
                   )}
                   chatItem={chatItem}
                   commonId={selectedItemCommonData?.id || ""}
@@ -485,7 +485,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 />
               ) : (
                 <DesktopChatPlaceholder
-                  className={styles.desktopChat}
+                  className={styles.desktopRightPane}
                   isItemSelected={Boolean(selectedItemCommonData)}
                 />
               ))}
