@@ -32,6 +32,7 @@ import {
   FilePreviewVariant,
   countTextEditorEmojiElements,
   getFileName,
+  parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
 import { StaticLinkType, isRTL } from "@/shared/utils";
@@ -133,7 +134,7 @@ export default function ChatMessage({
       }
 
       const emojiCount = countTextEditorEmojiElements(
-        JSON.parse(discussionMessage.text),
+        parseStringToTextEditorValue(discussionMessage.text),
       );
       const parsedText = await getTextFromTextEditorString({
         textEditorString: discussionMessage.text,
