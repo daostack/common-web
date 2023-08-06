@@ -17,6 +17,7 @@ interface ProposalCreationModalProps {
   commonImage: string;
   commonName: string;
   governance: Governance;
+  commonBalance: number;
 }
 
 const ProposalCreationModal: FC<ProposalCreationModalProps> = (props) => {
@@ -30,6 +31,7 @@ const ProposalCreationModal: FC<ProposalCreationModalProps> = (props) => {
     commonImage,
     commonName,
     governance,
+    commonBalance,
   } = props;
 
   return (
@@ -53,6 +55,7 @@ const ProposalCreationModal: FC<ProposalCreationModalProps> = (props) => {
           header: styles.discussionCreationFormHeader,
           buttonsWrapper: styles.buttonsWrapper,
         }}
+        commonBalance={commonBalance}
       />
     </CommonMobileModal>
   );

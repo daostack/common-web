@@ -139,6 +139,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         isLoading={isLoading}
         commonImage={commonImage}
         commonName={commonName}
+        commonBalance={common.balance.amount}
       />
     );
   } else {
@@ -151,6 +152,7 @@ const NewProposalCreation: FC<NewProposalCreationProps> = (props) => {
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         isLoading={isLoading}
+        commonBalance={common.balance.amount}
       />
     );
   }
