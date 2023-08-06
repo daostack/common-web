@@ -1,10 +1,7 @@
 import React from "react";
 import Select, { components, DropdownIndicatorProps } from "react-select";
 import { useFormikContext } from "formik";
-import {
-  PROPOSAL_TYPE_SELECT_OPTIONS,
-  ProposalsTypes,
-} from "@/shared/constants";
+import { ProposalsTypes } from "@/shared/constants";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { selectorStyles } from "./selectorStyles";
@@ -31,9 +28,10 @@ const getProposalOptions = (commonBalance: number) => {
     {
       label: "Fund allocation",
       value: ProposalsTypes.FUNDS_ALLOCATION,
+      isDisabled: commonBalance === 0,
     },
   ];
-  options[1]["isDisabled"] = commonBalance === 0;
+
   return options;
 };
 
