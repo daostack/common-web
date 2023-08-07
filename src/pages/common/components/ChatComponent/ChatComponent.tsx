@@ -86,6 +86,7 @@ interface ChatComponentInterface {
   isHidden: boolean;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  onUserClick?: (userId: string) => void;
 }
 
 interface Messages {
@@ -123,6 +124,7 @@ export default function ChatComponent({
   isCommonMemberFetched,
   onMessagesAmountChange,
   directParent,
+  onUserClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
   useZoomDisabling();
@@ -580,6 +582,7 @@ export default function ChatComponent({
           isLoading={isLoadingDiscussionMessages}
           onMessageDelete={handleMessageDelete}
           directParent={directParent}
+          onUserClick={onUserClick}
         />
       </div>
       {isAuthorized && (

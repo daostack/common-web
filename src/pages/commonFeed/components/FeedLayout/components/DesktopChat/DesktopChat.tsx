@@ -30,6 +30,7 @@ interface ChatProps {
   titleRightContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  onUserClick?: (userId: string) => void;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -43,6 +44,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
     titleRightContent,
     onMessagesAmountChange,
     directParent,
+    onUserClick,
   } = props;
   const {
     fetchUser: fetchDMUser,
@@ -113,6 +115,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         isAuthorized={Boolean(user)}
         onMessagesAmountChange={onMessagesAmountChange}
         directParent={directParent}
+        onUserClick={onUserClick}
       />
     </DesktopRightPane>
   );
