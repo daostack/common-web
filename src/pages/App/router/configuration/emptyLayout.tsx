@@ -1,4 +1,4 @@
-import { MobileLoaderPage } from "@/pages/mobileLoader";
+import { EmptyPage } from "@/pages/empty";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { EmptyLayout } from "@/shared/layouts";
 import { LayoutConfiguration } from "../types";
@@ -9,7 +9,7 @@ export const EMPTY_LAYOUT_CONFIGURATION: LayoutConfiguration = {
     {
       path: ROUTE_PATHS.MOBILE_LOADER,
       exact: true,
-      component: MobileLoaderPage,
+      component: EmptyPage,
     },
   ],
 };
