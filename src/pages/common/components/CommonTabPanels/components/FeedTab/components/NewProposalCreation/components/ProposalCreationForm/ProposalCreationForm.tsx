@@ -30,6 +30,7 @@ interface ProposalCreationFormProps {
   isLoading?: boolean;
   styles?: Styles;
   governance: Governance;
+  commonBalance: number;
 }
 
 const ProposalCreationForm: FC<ProposalCreationFormProps> = (props) => {
@@ -42,6 +43,7 @@ const ProposalCreationForm: FC<ProposalCreationFormProps> = (props) => {
     isLoading = false,
     styles: outerStyles,
     governance,
+    commonBalance,
   } = props;
   const disabled = isLoading;
   const creationData = useSelector(selectProposalCreationData);
@@ -65,6 +67,7 @@ const ProposalCreationForm: FC<ProposalCreationFormProps> = (props) => {
             governanceCircles={governanceCircles}
             governance={governance}
             selectedProposalType={values.proposalType}
+            commonBalance={commonBalance}
           />
           <div
             className={classNames(

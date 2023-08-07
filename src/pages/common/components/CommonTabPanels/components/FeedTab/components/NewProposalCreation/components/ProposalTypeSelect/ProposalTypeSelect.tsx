@@ -1,11 +1,15 @@
-import React, { FC } from "react";
+import React from "react";
 import Select, { components, DropdownIndicatorProps } from "react-select";
 import { useFormikContext } from "formik";
-import { PROPOSAL_TYPE_SELECT_OPTIONS } from "@/shared/constants";
+import { ProposalsTypes } from "@/shared/constants";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { selectorStyles } from "./selectorStyles";
 import styles from "./ProposalTypeSelect.module.scss";
+
+interface ProposalTypeSelectProps {
+  commonBalance: number;
+}
 
 const DropdownIndicator = (props: DropdownIndicatorProps<any, true>) => {
   return (
@@ -15,7 +19,23 @@ const DropdownIndicator = (props: DropdownIndicatorProps<any, true>) => {
   );
 };
 
-const ProposalTypeSelect: FC = () => {
+const getProposalOptions = (commonBalance: number) => {
+  const options = [
+    {
+      label: "Survey",
+      value: ProposalsTypes.SURVEY,
+    },
+    {
+      label: "Fund allocation",
+      value: ProposalsTypes.FUNDS_ALLOCATION,
+      isDisabled: commonBalance === 0,
+    },
+  ];
+
+  return options;
+};
+
+const ProposalTypeSelect = ({ commonBalance }: ProposalTypeSelectProps) => {
   const { values, setFieldValue, handleBlur, touched, errors } =
     useFormikContext<NewProposalCreationFormValues>();
   const hasError = Boolean(touched.proposalType && errors.proposalType);
@@ -26,7 +46,7 @@ const ProposalTypeSelect: FC = () => {
       <Select
         closeMenuOnSelect
         value={values.proposalType}
-        options={PROPOSAL_TYPE_SELECT_OPTIONS}
+        options={getProposalOptions(commonBalance)}
         onChange={(selectedValue) => {
           setFieldValue("proposalType", selectedValue);
         }}

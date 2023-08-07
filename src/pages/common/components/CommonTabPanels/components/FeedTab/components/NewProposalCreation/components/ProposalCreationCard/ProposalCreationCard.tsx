@@ -14,6 +14,7 @@ interface ProposalCreationCardProps {
   onCancel?: () => void;
   isLoading?: boolean;
   governance: Governance;
+  commonBalance: number;
 }
 
 const ProposalCreationCard: FC<ProposalCreationCardProps> = (props) => {
@@ -25,6 +26,7 @@ const ProposalCreationCard: FC<ProposalCreationCardProps> = (props) => {
     onCancel,
     isLoading = false,
     governance,
+    commonBalance,
   } = props;
 
   return (
@@ -37,6 +39,7 @@ const ProposalCreationCard: FC<ProposalCreationCardProps> = (props) => {
         onCancel={onCancel}
         isLoading={isLoading}
         governance={governance}
+        commonBalance={commonBalance}
       />
     </CommonCard>
   );

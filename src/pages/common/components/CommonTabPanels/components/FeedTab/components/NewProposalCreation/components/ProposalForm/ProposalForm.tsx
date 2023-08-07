@@ -19,6 +19,7 @@ interface ProposalFormProps {
   selectedProposalType: ProposalTypeSelectOption;
   governanceCircles: Circles;
   governance: Governance;
+  commonBalance: number;
 }
 
 const ProposalForm: FC<ProposalFormProps> = (props) => {
@@ -28,11 +29,12 @@ const ProposalForm: FC<ProposalFormProps> = (props) => {
     governanceCircles,
     selectedProposalType,
     governance,
+    commonBalance,
   } = props;
 
   return (
     <div className={classNames(styles.container, className)}>
-      <ProposalTypeSelect />
+      <ProposalTypeSelect commonBalance={commonBalance} />
       <VotingSettings
         governance={governance}
         governanceCircles={governanceCircles}
