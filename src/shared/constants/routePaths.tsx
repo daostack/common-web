@@ -1,5 +1,6 @@
 export enum ROUTE_PATHS {
   HOME = "/",
+  MOBILE_LOADER = "/mobile-loader",
   CONTACT_US = "/contact-us",
   MY_ACCOUNT = "/my-account",
   V04_PROFILE = "/profile-v04",
