@@ -191,6 +191,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const chatItemQueryParam = queryParams[QueryParamKey.ChatItem];
   const chatItemIdFromQueryParam =
     (typeof chatItemQueryParam === "string" && chatItemQueryParam) || null;
+  const desktopRightPaneClassName = classNames(
+    styles.desktopRightPane,
+    outerStyles?.desktopRightPane,
+  );
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
     if (recentStreamId) {
@@ -470,10 +474,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             {!isTabletView &&
               (chatItem ? (
                 <DesktopChat
-                  className={classNames(
-                    styles.desktopRightPane,
-                    outerStyles?.desktopRightPane,
-                  )}
+                  className={desktopRightPaneClassName}
                   chatItem={chatItem}
                   commonId={selectedItemCommonData?.id || ""}
                   governanceCircles={governance?.circles}
@@ -485,8 +486,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 />
               ) : (
                 <DesktopChatPlaceholder
-                  className={styles.desktopRightPane}
+                  className={desktopRightPaneClassName}
                   isItemSelected={Boolean(selectedItemCommonData)}
+                  withTitle={settings?.withDesktopChatTitle}
                 />
               ))}
             {isTabletView && (

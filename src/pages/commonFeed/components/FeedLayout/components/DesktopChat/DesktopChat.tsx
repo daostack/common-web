@@ -16,6 +16,7 @@ import {
   DirectParent,
 } from "@/shared/models";
 import { getUserName, isRTL } from "@/shared/utils";
+import { DesktopRightPane } from "../DesktopRightPane";
 import { getChatType } from "./utils";
 import styles from "./DesktopChat.module.scss";
 
@@ -73,7 +74,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
   }, [dmUserId]);
 
   return (
-    <div className={classNames(styles.container, className)}>
+    <DesktopRightPane className={className}>
       {withTitle && (
         <div className={styles.titleWrapper}>
           {dmUser?.photoURL && (
@@ -113,7 +114,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         onMessagesAmountChange={onMessagesAmountChange}
         directParent={directParent}
       />
-    </div>
+    </DesktopRightPane>
   );
 };
 
