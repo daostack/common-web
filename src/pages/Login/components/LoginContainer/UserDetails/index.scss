@@ -150,7 +150,6 @@
 .user-details-wrapper {
   .user-details__title {
     margin: 0;
-    font-family: NotoSerifSC, serif;
     text-align: center;
 
     @include big-phone {
@@ -179,7 +178,6 @@
   .user-details-preview__name {
     margin: 0 0 0.5rem;
     height: 1.5rem;
-    font-family: NotoSerifSC, serif;
     font-size: $moderate-small;
     font-weight: bold;
   }
@@ -207,7 +205,6 @@
 
   .user-details-preview__intro-title {
     margin: 0 0 0.5rem;
-    font-family: PoppinsSans, sans-serif;
     font-size: $moderate;
   }
 
