@@ -61,6 +61,7 @@ import {
   MobileChat,
   SplitView,
 } from "./components";
+import { useUserForProfile } from "./hooks";
 import {
   checkShouldAutoOpenPreview,
   getDefaultSize,
@@ -162,6 +163,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } = useCommonMember({
     shouldAutoReset: false,
   });
+  const userForProfile = useUserForProfile();
   const governance = outerGovernance || fetchedGovernance;
   const commonMember = outerCommonMember || fetchedCommonMember;
   const maxChatSize =
