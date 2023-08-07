@@ -1,0 +1,37 @@
+@import "../../../../../../constants";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.loader {
+  margin: auto;
+}
+
+.errorText {
+  margin: auto;
+  font-size: $moderate-xsmall;
+  color: $c-gray-40;
+}
+
+.userAvatar {
+  flex-shrink: 0;
+  width: 8rem;
+  height: 8rem;
+}
+
+.userName {
+  margin: 0.625rem 0 0;
+  font-weight: 500;
+  font-size: $moderate-xsmall;
+  color: $c-gray-100;
+}
+
+.country {
+  margin: 0.25rem 0 0;
+  font-size: $mobile-title;
+  color: $c-gray-40;
+}

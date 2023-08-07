@@ -59,6 +59,7 @@ import {
   FeedItemPreviewModal,
   FollowFeedItemButton,
   MobileChat,
+  ProfilePane,
   SplitView,
 } from "./components";
 import { useUserForProfile } from "./hooks";
@@ -501,6 +502,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   withTitle={settings?.withDesktopChatTitle}
                 />
               ))}
+            {userForProfile.userForProfileData && (
+              <ProfilePane
+                className={desktopRightPaneClassName}
+                userId={userForProfile.userForProfileData.userId}
+                commonId={userForProfile.userForProfileData.commonId}
+              />
+            )}
             {isTabletView && (
               <MobileChat
                 chatItem={chatItem}
