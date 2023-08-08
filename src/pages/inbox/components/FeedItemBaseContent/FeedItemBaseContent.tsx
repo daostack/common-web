@@ -42,7 +42,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
   const finalTitle =
     discussionPredefinedType === PredefinedTypes.General && commonName
-      ? `${commonName} (${title})`
+      ? commonName
       : title;
   const shouldImageBeRounded =
     typeof isImageRounded === "boolean" ? isImageRounded : isProject;
