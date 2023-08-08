@@ -90,6 +90,10 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
       return <p className={styles.pendingStatus}>Pending</p>;
     }
 
+    if (!canRequestToJoin) {
+      return <></>;
+    }
+
     return (
       <Button
         className={styles.actionButton}
