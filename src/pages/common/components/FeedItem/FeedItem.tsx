@@ -5,6 +5,7 @@ import {
   Common,
   CommonFeed,
   CommonFeedType,
+  CommonLink,
   CommonMember,
   DirectParent,
 } from "@/shared/models";
@@ -35,6 +36,8 @@ interface FeedItemProps {
   shouldCheckItemVisibility?: boolean;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   directParent?: DirectParent | null;
+  commonDescription?: string;
+  commonGallery?: CommonLink[];
 }
 
 const FeedItem: FC<FeedItemProps> = (props) => {
@@ -58,6 +61,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     shouldCheckItemVisibility = true,
     onActiveItemDataChange,
     directParent,
+    commonDescription,
+    commonGallery,
   } = props;
   const { onFeedItemUpdate, getLastMessage, getNonAllowedItems } =
     useFeedItemContext();
@@ -96,7 +101,13 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   };
 
   if (item.data.type === CommonFeedType.Discussion) {
-    return <DiscussionFeedCard {...generalProps} />;
+    return (
+      <DiscussionFeedCard
+        {...generalProps}
+        commonDescription={commonDescription}
+        commonGallery={commonGallery}
+      />
+    );
   }
 
   if (item.data.type === CommonFeedType.Proposal) {
