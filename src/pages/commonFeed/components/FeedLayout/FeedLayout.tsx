@@ -201,6 +201,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
+    if (userForProfile.userForProfileData) {
+      return;
+    }
     if (recentStreamId) {
       const foundItem = allFeedItems.find(
         (item) =>
@@ -227,7 +230,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     );
 
     return foundItem?.itemId;
-  }, [allFeedItems, chatItem?.feedItemId, recentStreamId, sharedFeedItemId]);
+  }, [
+    allFeedItems,
+    chatItem?.feedItemId,
+    recentStreamId,
+    sharedFeedItemId,
+    userForProfile.userForProfileData,
+  ]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
   const userCircleIds = useMemo(
@@ -371,7 +380,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
   useEffect(() => {
     onActiveItemChange?.(activeFeedItemId);
-    userForProfile.resetUserForProfileData();
+
+    if (activeFeedItemId) {
+      userForProfile.resetUserForProfileData();
+    }
   }, [activeFeedItemId]);
 
   useEffect(() => {
@@ -393,6 +405,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId(activeFeedItemId);
     }
   }, [isTabletView, shouldAutoExpandItem, activeFeedItemId]);
+
+  useEffect(() => {
+    if (userForProfile.userForProfileData?.chatChannel) {
+      setActiveChatItem(null);
+    }
+  }, [userForProfile.userForProfileData?.chatChannel || null]);
 
   useImperativeHandle(
     ref,
