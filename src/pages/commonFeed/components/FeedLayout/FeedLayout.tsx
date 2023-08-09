@@ -516,6 +516,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 className={desktopRightPaneClassName}
                 userId={userForProfile.userForProfileData.userId}
                 commonId={userForProfile.userForProfileData.commonId}
+                onClose={userForProfile.resetUserForProfileData}
               />
             )}
             {isTabletView && (

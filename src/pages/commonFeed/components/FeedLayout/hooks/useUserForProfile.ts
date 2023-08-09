@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export interface UserForProfileData {
   userId: string;
@@ -8,6 +8,7 @@ export interface UserForProfileData {
 interface Return {
   userForProfileData: UserForProfileData | null;
   setUserForProfileData: (data: UserForProfileData) => void;
+  resetUserForProfileData: () => void;
 }
 
 export const useUserForProfile = (): Return => {
@@ -15,8 +16,13 @@ export const useUserForProfile = (): Return => {
     null,
   );
 
+  const resetUserForProfileData = useCallback(() => {
+    setCurrentData(null);
+  }, []);
+
   return {
     userForProfileData: currentData,
     setUserForProfileData: setCurrentData,
+    resetUserForProfileData,
   };
 };

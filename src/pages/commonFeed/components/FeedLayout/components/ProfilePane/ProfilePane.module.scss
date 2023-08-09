@@ -7,6 +7,12 @@
   align-items: center;
 }
 
+.closeButton {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+}
+
 .content {
   max-width: 24.875rem;
 }
