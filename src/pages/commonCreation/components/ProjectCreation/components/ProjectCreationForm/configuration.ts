@@ -1,3 +1,4 @@
+import { TextEditorSize } from "@/shared/ui-kit";
 import { CreationFormItem, CreationFormItemType } from "../../../CreationForm";
 import {
   MAX_LINK_TITLE_LENGTH,
@@ -70,6 +71,7 @@ export const getConfiguration = (
         id: "description",
         name: "description",
         label: "Mission",
+        size: TextEditorSize.Auto,
       },
     },
     {

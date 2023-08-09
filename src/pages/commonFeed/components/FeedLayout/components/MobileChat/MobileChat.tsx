@@ -15,6 +15,7 @@ import {
   CirclesPermissions,
   CommonMember,
   DirectParent,
+  PredefinedTypes,
 } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import { Header } from "./components";
@@ -66,7 +67,11 @@ const MobileChat: FC<ChatProps> = (props) => {
   const dmUserId = chatItem?.chatChannel?.participants.filter(
     (participant) => participant !== userId,
   )[0];
-  const title = getUserName(dmUser) || chatItem?.discussion.title || "";
+  const title =
+    getUserName(dmUser) ||
+    chatItem?.discussion.predefinedType === PredefinedTypes.General
+      ? commonName
+      : chatItem?.discussion.title || "";
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),

@@ -5,6 +5,7 @@ import {
   TextField,
   UploadFiles,
 } from "@/shared/components/Form/Formik";
+import { TextEditorSize } from "@/shared/ui-kit";
 import { MAX_DISCUSSION_TITLE_LENGTH } from "../../constants";
 import styles from "./DiscussionForm.module.scss";
 
@@ -37,6 +38,7 @@ const DiscussionForm: FC<DiscussionFormProps> = (props) => {
         label="Content"
         optional
         disabled={disabled}
+        size={TextEditorSize.Auto}
       />
       <UploadFiles name="images" disabled={disabled} />
     </div>

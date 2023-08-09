@@ -7,6 +7,7 @@ import {
 } from "@/shared/components/Form/Formik";
 import { ProposalTypeSelectOption, ProposalsTypes } from "@/shared/constants";
 import { Circles, Governance } from "@/shared/models";
+import { TextEditorSize } from "@/shared/ui-kit";
 import { MAX_PROPOSAL_TITLE_LENGTH } from "../../constants";
 import { AddRecipient } from "../AddRecipient";
 import { ProposalTypeSelect } from "../ProposalTypeSelect";
@@ -60,6 +61,7 @@ const ProposalForm: FC<ProposalFormProps> = (props) => {
         label="Content"
         optional
         disabled={disabled}
+        size={TextEditorSize.Auto}
       />
       <UploadFiles name="images" disabled={disabled} />
       {selectedProposalType.value === ProposalsTypes.FUNDS_ALLOCATION && (

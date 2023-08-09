@@ -2,7 +2,6 @@
 
 .editor {
   --text-editor-h: auto;
-
   height: var(--text-editor-h);
   text-indent: 0.75rem;
   font-family: PoppinsSans, sans-serif;
@@ -35,6 +34,7 @@
 .editorAutoSize {
   --text-editor-h: auto;
   max-height: 50vh;
+  min-height: 4.5rem;
 }
 
 .editorReadOnly {
