@@ -21,11 +21,13 @@ const ProfilePane: FC<ProfilePaneProps> = (props) => {
       <ButtonIcon className={styles.closeButton} onClick={onClose}>
         <Close2Icon />
       </ButtonIcon>
-      <ProfileContent
-        className={styles.content}
-        userId={userId}
-        commonId={commonId}
-      />
+      <div className={styles.contentWrapper}>
+        <ProfileContent
+          className={styles.content}
+          userId={userId}
+          commonId={commonId}
+        />
+      </div>
     </DesktopRightPane>
   );
 };
