@@ -88,7 +88,7 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
 
   if (!isUserFetched) {
     return (
-      <div className={className}>
+      <div className={classNames(className, styles.containerCentered)}>
         <Loader className={styles.loader} />
       </div>
     );
@@ -96,7 +96,7 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
 
   if (!user) {
     return (
-      <div className={className}>
+      <div className={classNames(className, styles.containerCentered)}>
         <p className={styles.errorText}>Something went wrong</p>
       </div>
     );
