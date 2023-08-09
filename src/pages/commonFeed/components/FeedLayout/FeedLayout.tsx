@@ -194,6 +194,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const chatItemQueryParam = queryParams[QueryParamKey.ChatItem];
   const chatItemIdFromQueryParam =
     (typeof chatItemQueryParam === "string" && chatItemQueryParam) || null;
+  const shouldAutoExpandItem = checkShouldAutoOpenPreview(chatItem);
   const desktopRightPaneClassName = classNames(
     styles.desktopRightPane,
     outerStyles?.desktopRightPane,
@@ -386,6 +387,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
   }, [chatItemIdFromQueryParam]);
 
+  useEffect(() => {
+    if (!isTabletView && shouldAutoExpandItem && activeFeedItemId) {
+      setExpandedFeedItemId(activeFeedItemId);
+    }
+  }, [isTabletView, shouldAutoExpandItem, activeFeedItemId]);
+
   useImperativeHandle(
     ref,
     () => ({
@@ -539,9 +546,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       isShowFeedItemDetailsModal={isShowFeedItemDetailsModal}
                       sizeKey={sizeKey}
                       isMainModalOpen={Boolean(chatItem)}
-                      shouldAutoOpenPreview={checkShouldAutoOpenPreview(
-                        chatItem,
-                      )}
+                      shouldAutoOpenPreview={shouldAutoExpandItem}
                     />
                   )}
               </MobileChat>
