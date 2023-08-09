@@ -25,10 +25,11 @@ interface ProfileContentProps {
   userId: string;
   commonId?: string;
   onChatChannelCreate: (chatChannel: ChatChannel) => void;
+  onChatChannelLoading?: (isLoading: boolean) => void;
 }
 
 const ProfileContent: FC<ProfileContentProps> = (props) => {
-  const { userId, commonId, onChatChannelCreate } = props;
+  const { userId, commonId, onChatChannelCreate, onChatChannelLoading } = props;
   const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
   const {
     data: common,
@@ -98,6 +99,10 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
       setMembershipIntro("");
     }
   }, [userId, commonId]);
+
+  useEffect(() => {
+    onChatChannelLoading?.(isChannelLoading);
+  }, [isChannelLoading]);
 
   useEffect(() => {
     if (dmUserChatChannel) {

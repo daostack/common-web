@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
@@ -29,6 +29,7 @@ const ProfilePane: FC<ProfilePaneProps> = (props) => {
     onClose,
     onChatChannelCreate,
   } = props;
+  const [isChatChannelLoading, setIsChatChannelLoading] = useState(false);
 
   if (chatChannel) {
     return (
@@ -50,15 +51,18 @@ const ProfilePane: FC<ProfilePaneProps> = (props) => {
 
   return (
     <DesktopRightPane className={classNames(styles.container, className)}>
-      <ButtonIcon className={styles.closeButton} onClick={onClose}>
-        <Close2Icon />
-      </ButtonIcon>
+      {!isChatChannelLoading && (
+        <ButtonIcon className={styles.closeButton} onClick={onClose}>
+          <Close2Icon />
+        </ButtonIcon>
+      )}
       <div className={styles.contentWrapper}>
         <ProfileContent
           className={styles.content}
           userId={userId}
           commonId={commonId}
           onChatChannelCreate={onChatChannelCreate}
+          onChatChannelLoading={setIsChatChannelLoading}
         />
       </div>
     </DesktopRightPane>
