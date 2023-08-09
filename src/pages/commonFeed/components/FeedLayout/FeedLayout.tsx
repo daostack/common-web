@@ -371,6 +371,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
   useEffect(() => {
     onActiveItemChange?.(activeFeedItemId);
+    userForProfile.resetUserForProfileData();
   }, [activeFeedItemId]);
 
   useEffect(() => {
