@@ -10,7 +10,7 @@ import {
   useRootCommonMembershipIntro,
   useUserById,
 } from "@/shared/hooks/useCases";
-import { DateFormat } from "@/shared/models";
+import { ChatChannel, DateFormat } from "@/shared/models";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import {
   formatDate,
@@ -24,10 +24,11 @@ interface ProfileContentProps {
   className?: string;
   userId: string;
   commonId?: string;
+  onChatChannelCreate: (chatChannel: ChatChannel) => void;
 }
 
 const ProfileContent: FC<ProfileContentProps> = (props) => {
-  const { userId, commonId } = props;
+  const { userId, commonId, onChatChannelCreate } = props;
   const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
   const {
     data: common,
@@ -99,7 +100,9 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
   }, [userId, commonId]);
 
   useEffect(() => {
-    console.log(dmUserChatChannel);
+    if (dmUserChatChannel) {
+      onChatChannelCreate(dmUserChatChannel);
+    }
   }, [dmUserChatChannel]);
 
   if (!isUserFetched || isChannelLoading) {

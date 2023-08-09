@@ -517,7 +517,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 className={desktopRightPaneClassName}
                 userId={userForProfile.userForProfileData.userId}
                 commonId={userForProfile.userForProfileData.commonId}
+                chatChannel={userForProfile.userForProfileData.chatChannel}
+                withTitle={settings?.withDesktopChatTitle}
                 onClose={userForProfile.resetUserForProfileData}
+                onChatChannelCreate={userForProfile.setChatChannel}
               />
             )}
             {isTabletView && (
