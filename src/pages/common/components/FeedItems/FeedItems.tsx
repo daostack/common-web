@@ -83,6 +83,8 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
                 userCircleIds={userCircleIds}
                 isPreviewMode
                 directParent={common.directParent}
+                commonDescription={common.description}
+                commonGallery={common.gallery}
               />
             );
           })}
