@@ -16,6 +16,7 @@ export { default as usePaymentMethodChange } from "./usePaymentMethodChange";
 export type { ChangePaymentMethodState } from "./usePaymentMethodChange";
 export { useProjectCreation } from "./useProjectCreation";
 export { useProposalById } from "./useProposalById";
+export { useRootCommonMembershipIntro } from "./useRootCommonMembershipIntro";
 export { useSubCommons } from "./useSubCommons";
 export { useSupportersData } from "./useSupportersData";
 export { useUserById } from "./useUserById";

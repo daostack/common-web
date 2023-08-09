@@ -6,6 +6,7 @@ import { UserAvatar } from "@/shared/components";
 import {
   useCommon,
   useGovernanceByCommonId,
+  useRootCommonMembershipIntro,
   useUserById,
 } from "@/shared/hooks/useCases";
 import { DateFormat } from "@/shared/models";
@@ -40,6 +41,12 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
     setGovernance,
   } = useGovernanceByCommonId();
   const {
+    membershipIntro,
+    isMembershipIntroLoading,
+    fetchMembershipIntro,
+    setMembershipIntro,
+  } = useRootCommonMembershipIntro();
+  const {
     data: commonMember,
     fetched: isCommonMemberFetched,
     fetchCommonMember,
@@ -47,7 +54,10 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
   } = useCommonMember({ userId });
   const userName = getUserName(user);
   const isCommonDataLoading =
-    !isCommonFetched || !isGovernanceFetched || !isCommonMemberFetched;
+    !isCommonFetched ||
+    !isGovernanceFetched ||
+    !isCommonMemberFetched ||
+    isMembershipIntroLoading;
   const isCommonDataFetched = common && governance && commonMember;
   const className = classNames(styles.container, props.className);
   const country = countryList.find(({ value }) => value === user?.country);
@@ -69,8 +79,10 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
   useEffect(() => {
     if (commonId) {
       fetchCommonMember(commonId, {}, true);
+      fetchMembershipIntro(commonId, userId);
     } else {
       setCommonMember(null);
+      setMembershipIntro("");
     }
   }, [userId, commonId]);
 
@@ -130,6 +142,9 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
               .map((circle) => circle.name)
               .join(", ")}
           </p>
+          {membershipIntro && (
+            <p className={styles.infoContent}>{membershipIntro}</p>
+          )}
         </>
       )}
     </div>
