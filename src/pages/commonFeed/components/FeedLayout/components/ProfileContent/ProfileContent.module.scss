@@ -1,4 +1,5 @@
 @import "../../../../../../constants";
+@import "../../../../../../styles/typography";
 
 .container {
   display: flex;
@@ -24,14 +25,29 @@
 }
 
 .userName {
+  @include h6;
+
   margin: 0.625rem 0 0;
-  font-weight: 500;
-  font-size: $moderate-xsmall;
-  color: $c-gray-100;
 }
 
 .country {
   margin: 0.25rem 0 0;
   font-size: $mobile-title;
   color: $c-gray-40;
+}
+
+.dmButton {
+  margin: 2.25rem 0 0;
+}
+
+.infoTitle {
+  @include h5;
+
+  margin: 2.25rem 0 0;
+}
+
+.infoContent {
+  @include body-sm-regular;
+
+  margin: 0.5rem 0 0;
 }
