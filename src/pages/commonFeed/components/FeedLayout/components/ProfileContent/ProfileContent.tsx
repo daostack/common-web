@@ -5,6 +5,7 @@ import { countryList } from "@/shared/assets/countries";
 import { UserAvatar } from "@/shared/components";
 import {
   useCommon,
+  useDMUserChatChannel,
   useGovernanceByCommonId,
   useRootCommonMembershipIntro,
   useUserById,
@@ -52,6 +53,12 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
     fetchCommonMember,
     setCommonMember,
   } = useCommonMember({ userId });
+  const {
+    loading: isChannelLoading,
+    dmUserChatChannel,
+    fetchDMUserChatChannel,
+    resetDMUserChatChannel,
+  } = useDMUserChatChannel();
   const userName = getUserName(user);
   const isCommonDataLoading =
     !isCommonFetched ||
@@ -62,8 +69,13 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
   const className = classNames(styles.container, props.className);
   const country = countryList.find(({ value }) => value === user?.country);
 
+  const handleDMButtonClick = () => {
+    fetchDMUserChatChannel(userId);
+  };
+
   useEffect(() => {
     fetchUser(userId);
+    resetDMUserChatChannel();
   }, [userId]);
 
   useEffect(() => {
@@ -86,7 +98,11 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
     }
   }, [userId, commonId]);
 
-  if (!isUserFetched) {
+  useEffect(() => {
+    console.log(dmUserChatChannel);
+  }, [dmUserChatChannel]);
+
+  if (!isUserFetched || isChannelLoading) {
     return (
       <div className={classNames(className, styles.containerCentered)}>
         <Loader className={styles.loader} />
@@ -112,7 +128,11 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
       />
       <h5 className={styles.userName}>{userName}</h5>
       {country && <p className={styles.country}>{country.name}</p>}
-      <Button className={styles.dmButton} variant={ButtonVariant.PrimaryGray}>
+      <Button
+        className={styles.dmButton}
+        variant={ButtonVariant.PrimaryGray}
+        onClick={handleDMButtonClick}
+      >
         Direct message
       </Button>
       {user?.intro && (
