@@ -408,10 +408,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [isTabletView, shouldAutoExpandItem, activeFeedItemId]);
 
   useEffect(() => {
-    if (userForProfile.userForProfileData?.chatChannel) {
+    if (!isTabletView && userForProfile.userForProfileData?.chatChannel) {
       setActiveChatItem(null);
     }
-  }, [userForProfile.userForProfileData?.chatChannel || null]);
+  }, [isTabletView, userForProfile.userForProfileData?.chatChannel || null]);
 
   useImperativeHandle(
     ref,
