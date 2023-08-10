@@ -64,10 +64,11 @@ const useCommonUpdate = (commonId?: string): Return => {
       setIsCommonUpdateLoading(true);
 
       try {
-        const image =
-          typeof updatedData.image.file === "string"
+        const image = updatedData.image
+          ? typeof updatedData.image.file === "string"
             ? updatedData.image.file
-            : (await FileService.uploadFile(updatedData.image)).value;
+            : (await FileService.uploadFile(updatedData.image)).value
+          : "";
         const gallery =
           updatedData.gallery &&
           (await FileService.uploadFiles(updatedData.gallery));

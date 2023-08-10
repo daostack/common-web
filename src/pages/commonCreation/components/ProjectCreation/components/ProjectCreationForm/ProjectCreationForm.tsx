@@ -117,10 +117,6 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
 
     const [image] = values.projectImages;
 
-    if (!image) {
-      return;
-    }
-
     updateProject({
       ...values,
       image,
