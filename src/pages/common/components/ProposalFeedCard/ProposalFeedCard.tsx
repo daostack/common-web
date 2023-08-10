@@ -70,6 +70,7 @@ interface ProposalFeedCardProps {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   isMobileVersion?: boolean;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
+  onUserSelect?: (userId: string, commonId?: string) => void;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -89,6 +90,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     getNonAllowedItems,
     isMobileVersion,
     onActiveItemDataChange,
+    onUserSelect,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -303,6 +305,9 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           commonId={commonId}
           userId={item.userId}
           menuItems={menuItems}
+          onUserSelect={
+            onUserSelect && (() => onUserSelect(item.userId, commonId))
+          }
         />
         <FeedCardContent
           subtitle={getProposalSubtitle(

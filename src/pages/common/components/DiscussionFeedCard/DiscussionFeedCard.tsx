@@ -55,6 +55,7 @@ interface DiscussionFeedCardProps {
   directParent?: DirectParent | null;
   commonDescription?: string;
   commonGallery?: CommonLink[];
+  onUserSelect?: (userId: string, commonId?: string) => void;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
@@ -81,6 +82,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     directParent,
     commonDescription,
     commonGallery,
+    onUserSelect,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -255,6 +257,9 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
             commonId={commonId}
             userId={item.userId}
             directParent={directParent}
+            onUserSelect={
+              onUserSelect && (() => onUserSelect(item.userId, commonId))
+            }
           />
         )}
         <FeedCardContent

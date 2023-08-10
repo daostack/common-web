@@ -258,6 +258,23 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       )
     : null;
 
+  const handleUserWithCommonClick = useCallback(
+    (userId: string, commonId?: string) => {
+      userForProfile.setUserForProfileData({
+        userId,
+        commonId,
+      });
+    },
+    [userForProfile.setUserForProfileData],
+  );
+
+  const handleUserClick = (userId: string) => {
+    userForProfile.setUserForProfileData({
+      userId,
+      commonId: selectedItemCommonData?.id,
+    });
+  };
+
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
   const feedItemContextValue = useMemo<FeedItemContextValue>(
@@ -267,12 +284,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       onFeedItemUpdate,
       getLastMessage,
       getNonAllowedItems,
+      onUserSelect: handleUserWithCommonClick,
     }),
     [
       renderFeedItemBaseContent,
       onFeedItemUpdate,
       getLastMessage,
       getNonAllowedItems,
+      handleUserWithCommonClick,
     ],
   );
 
@@ -352,13 +371,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     if (isTabletView && chatItemIdFromQueryParam && shouldChangeHistory) {
       history.goBack();
     }
-  };
-
-  const handleUserClick = (userId: string) => {
-    userForProfile.setUserForProfileData({
-      userId,
-      commonId: selectedItemCommonData?.id,
-    });
   };
 
   useEffect(() => {
