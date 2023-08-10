@@ -11,7 +11,14 @@ import {
 export const getLastMessage = (
   options: GetLastMessageOptions,
 ): TextEditorValue => {
-  const { lastMessage, hasImages, hasFiles, commonName } = options;
+  const {
+    lastMessage,
+    hasImages,
+    hasFiles,
+    commonName,
+    ownerId,
+    currentUserId,
+  } = options;
 
   if (!lastMessage) {
     return parseStringToTextEditorValue(commonName);
@@ -25,7 +32,7 @@ export const getLastMessage = (
   const userName =
     lastMessage.ownerType === DiscussionMessageOwnerType.System
       ? ""
-      : `${lastMessage.userName}: `;
+      : `${ownerId === currentUserId ? "You" : lastMessage.userName}: `;
 
   return prependTextInTextEditorValue(
     `${userName}${getLastMessageIconWithText({
