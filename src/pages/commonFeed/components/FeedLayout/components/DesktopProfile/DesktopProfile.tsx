@@ -7,9 +7,9 @@ import { ChatChannel } from "@/shared/models";
 import { DesktopChat } from "../DesktopChat";
 import { DesktopRightPane } from "../DesktopRightPane";
 import { ProfileContent } from "../ProfileContent";
-import styles from "./ProfilePane.module.scss";
+import styles from "./DesktopProfile.module.scss";
 
-interface ProfilePaneProps {
+interface DesktopProfileProps {
   className?: string;
   userId: string;
   commonId?: string;
@@ -19,7 +19,7 @@ interface ProfilePaneProps {
   onChatChannelCreate: (chatChannel: ChatChannel) => void;
 }
 
-const ProfilePane: FC<ProfilePaneProps> = (props) => {
+const DesktopProfile: FC<DesktopProfileProps> = (props) => {
   const {
     className,
     userId,
@@ -69,4 +69,4 @@ const ProfilePane: FC<ProfilePaneProps> = (props) => {
   );
 };
 
-export default ProfilePane;
+export default DesktopProfile;

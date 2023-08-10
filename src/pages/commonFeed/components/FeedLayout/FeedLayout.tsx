@@ -56,10 +56,10 @@ import { MIN_CHAT_WIDTH } from "../../constants";
 import {
   DesktopChat,
   DesktopChatPlaceholder,
+  DesktopProfile,
   FeedItemPreviewModal,
   FollowFeedItemButton,
   MobileChat,
-  ProfilePane,
   SplitView,
 } from "./components";
 import { useUserForProfile } from "./hooks";
@@ -531,7 +531,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 />
               ))}
             {userForProfile.userForProfileData && (
-              <ProfilePane
+              <DesktopProfile
                 className={desktopRightPaneClassName}
                 userId={userForProfile.userForProfileData.userId}
                 commonId={userForProfile.userForProfileData.commonId}
