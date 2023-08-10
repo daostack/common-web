@@ -42,15 +42,17 @@ import {
   FeedLayoutRef,
 } from "@/shared/interfaces";
 import {
+  ChatChannel,
   CirclesPermissions,
   Common,
   CommonFeed,
   CommonFeedType,
   CommonMember,
   Governance,
+  User,
 } from "@/shared/models";
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
-import { addQueryParam, deleteQueryParam } from "@/shared/utils";
+import { addQueryParam, deleteQueryParam, getUserName } from "@/shared/utils";
 import { selectRecentStreamId } from "@/store/states";
 import { MIN_CHAT_WIDTH } from "../../constants";
 import {
@@ -373,6 +375,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
   };
 
+  const handleChatChannelCreate = (chatChannel: ChatChannel, dmUser: User) => {
+    userForProfile.setChatChannel(chatChannel);
+    handleActiveChatChannelItemDataChange({
+      itemId: chatChannel.id,
+      title: getUserName(dmUser),
+      image: dmUser.photoURL,
+    });
+  };
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -588,7 +599,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   )}
                   withTitle={settings?.withDesktopChatTitle}
                   onClose={userForProfile.resetUserForProfileData}
-                  onChatChannelCreate={userForProfile.setChatChannel}
+                  onChatChannelCreate={handleChatChannelCreate}
                   onUserClick={handleUserClick}
                 />
               ) : (
@@ -600,7 +611,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     selectedFeedItem,
                   )}
                   onClose={userForProfile.resetUserForProfileData}
-                  onChatChannelCreate={userForProfile.setChatChannel}
+                  onChatChannelCreate={handleChatChannelCreate}
                   onUserClick={handleUserClick}
                 />
               ))}

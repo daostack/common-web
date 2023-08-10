@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { Close2Icon } from "@/shared/icons";
-import { ChatChannel } from "@/shared/models";
+import { ChatChannel, User } from "@/shared/models";
 import { DesktopChat } from "../DesktopChat";
 import { DesktopRightPane } from "../DesktopRightPane";
 import { ProfileContent } from "../ProfileContent";
@@ -17,7 +17,7 @@ interface DesktopProfileProps {
   shouldCloseOnDMClick: boolean;
   withTitle?: boolean;
   onClose: () => void;
-  onChatChannelCreate: (chatChannel: ChatChannel) => void;
+  onChatChannelCreate: (chatChannel: ChatChannel, dmUser: User) => void;
   onUserClick: (userId: string) => void;
 }
 

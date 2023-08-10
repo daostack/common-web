@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
 import { Modal } from "@/shared/components";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
-import { ChatChannel } from "@/shared/models";
+import { ChatChannel, User } from "@/shared/models";
 import { MobileChat } from "../MobileChat";
 import { ProfileContent } from "../ProfileContent";
 import styles from "./MobileProfile.module.scss";
@@ -12,7 +12,7 @@ interface MobileProfileProps {
   chatChannel?: ChatChannel;
   shouldCloseOnDMClick: boolean;
   onClose: () => void;
-  onChatChannelCreate: (chatChannel: ChatChannel) => void;
+  onChatChannelCreate: (chatChannel: ChatChannel, dmUser: User) => void;
   onUserClick: (userId: string) => void;
 }
 
