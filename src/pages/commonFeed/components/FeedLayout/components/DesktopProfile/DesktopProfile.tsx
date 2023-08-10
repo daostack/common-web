@@ -14,6 +14,7 @@ interface DesktopProfileProps {
   userId: string;
   commonId?: string;
   chatChannel?: ChatChannel;
+  shouldCloseOnDMClick: boolean;
   withTitle?: boolean;
   onClose: () => void;
   onChatChannelCreate: (chatChannel: ChatChannel) => void;
@@ -26,6 +27,7 @@ const DesktopProfile: FC<DesktopProfileProps> = (props) => {
     userId,
     commonId,
     chatChannel,
+    shouldCloseOnDMClick,
     withTitle,
     onClose,
     onChatChannelCreate,
@@ -64,6 +66,8 @@ const DesktopProfile: FC<DesktopProfileProps> = (props) => {
           className={styles.content}
           userId={userId}
           commonId={commonId}
+          shouldCloseOnDMClick={shouldCloseOnDMClick}
+          onClose={onClose}
           onChatChannelCreate={onChatChannelCreate}
           onChatChannelLoading={setIsChatChannelLoading}
         />

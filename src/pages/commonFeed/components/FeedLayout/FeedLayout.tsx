@@ -583,6 +583,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   userId={userForProfile.userForProfileData.userId}
                   commonId={userForProfile.userForProfileData.commonId}
                   chatChannel={userForProfile.userForProfileData.chatChannel}
+                  shouldCloseOnDMClick={checkIsChatChannelLayoutItem(
+                    selectedFeedItem,
+                  )}
                   withTitle={settings?.withDesktopChatTitle}
                   onClose={userForProfile.resetUserForProfileData}
                   onChatChannelCreate={userForProfile.setChatChannel}
@@ -593,6 +596,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   userId={userForProfile.userForProfileData.userId}
                   commonId={userForProfile.userForProfileData.commonId}
                   chatChannel={userForProfile.userForProfileData.chatChannel}
+                  shouldCloseOnDMClick={checkIsChatChannelLayoutItem(
+                    selectedFeedItem,
+                  )}
                   onClose={userForProfile.resetUserForProfileData}
                   onChatChannelCreate={userForProfile.setChatChannel}
                   onUserClick={handleUserClick}

@@ -24,12 +24,21 @@ interface ProfileContentProps {
   className?: string;
   userId: string;
   commonId?: string;
+  shouldCloseOnDMClick: boolean;
+  onClose: () => void;
   onChatChannelCreate: (chatChannel: ChatChannel) => void;
   onChatChannelLoading?: (isLoading: boolean) => void;
 }
 
 const ProfileContent: FC<ProfileContentProps> = (props) => {
-  const { userId, commonId, onChatChannelCreate, onChatChannelLoading } = props;
+  const {
+    userId,
+    commonId,
+    shouldCloseOnDMClick,
+    onClose,
+    onChatChannelCreate,
+    onChatChannelLoading,
+  } = props;
   const { fetchUser, data: user, fetched: isUserFetched } = useUserById();
   const {
     data: common,
@@ -72,7 +81,11 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
   const country = countryList.find(({ value }) => value === user?.country);
 
   const handleDMButtonClick = () => {
-    fetchDMUserChatChannel(userId);
+    if (shouldCloseOnDMClick) {
+      onClose();
+    } else {
+      fetchDMUserChatChannel(userId);
+    }
   };
 
   useEffect(() => {

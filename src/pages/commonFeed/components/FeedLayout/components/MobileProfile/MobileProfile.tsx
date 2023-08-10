@@ -10,6 +10,7 @@ interface MobileProfileProps {
   userId: string;
   commonId?: string;
   chatChannel?: ChatChannel;
+  shouldCloseOnDMClick: boolean;
   onClose: () => void;
   onChatChannelCreate: (chatChannel: ChatChannel) => void;
   onUserClick: (userId: string) => void;
@@ -20,6 +21,7 @@ const MobileProfile: FC<MobileProfileProps> = (props) => {
     userId,
     commonId,
     chatChannel,
+    shouldCloseOnDMClick,
     onClose,
     onChatChannelCreate,
     onUserClick,
@@ -60,6 +62,8 @@ const MobileProfile: FC<MobileProfileProps> = (props) => {
         className={styles.content}
         userId={userId}
         commonId={commonId}
+        shouldCloseOnDMClick={shouldCloseOnDMClick}
+        onClose={onClose}
         onChatChannelCreate={onChatChannelCreate}
         onChatChannelLoading={setIsChatChannelLoading}
       />
