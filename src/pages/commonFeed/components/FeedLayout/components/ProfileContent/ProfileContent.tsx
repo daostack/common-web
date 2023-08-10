@@ -10,6 +10,7 @@ import {
   useRootCommonMembershipIntro,
   useUserById,
 } from "@/shared/hooks/useCases";
+import { MessageIcon } from "@/shared/icons";
 import { ChatChannel, DateFormat, User } from "@/shared/models";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import {
@@ -152,6 +153,7 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
       <Button
         className={styles.dmButton}
         variant={ButtonVariant.PrimaryBlack}
+        leftIcon={<MessageIcon className={styles.dmButtonIcon} />}
         onClick={handleDMButtonClick}
       >
         Direct message

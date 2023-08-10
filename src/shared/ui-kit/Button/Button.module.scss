@@ -268,15 +268,14 @@
   --btn-icon-margin: 0.75rem;
 }
 
-.icon {
+.icon,
+.leftIcon {
   width: var(--btn-icon-size);
   height: var(--btn-icon-size);
   color: inherit;
 }
 
 .leftIcon {
-  @extend .icon;
-
   margin-right: var(--btn-icon-margin);
 }
 
