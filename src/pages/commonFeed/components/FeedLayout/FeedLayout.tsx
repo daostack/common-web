@@ -384,6 +384,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     });
   };
 
+  const handleProfileClose = () => {
+    userForProfile.resetUserForProfileData(isTabletView);
+  };
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -406,7 +410,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onActiveItemChange?.(activeFeedItemId);
 
     if (activeFeedItemId) {
-      userForProfile.resetUserForProfileData();
+      userForProfile.resetUserForProfileData(true);
     }
   }, [activeFeedItemId]);
 
@@ -598,7 +602,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     selectedFeedItem,
                   )}
                   withTitle={settings?.withDesktopChatTitle}
-                  onClose={userForProfile.resetUserForProfileData}
+                  onClose={handleProfileClose}
                   onChatChannelCreate={handleChatChannelCreate}
                   onUserClick={handleUserClick}
                 />
@@ -610,7 +614,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   shouldCloseOnDMClick={checkIsChatChannelLayoutItem(
                     selectedFeedItem,
                   )}
-                  onClose={userForProfile.resetUserForProfileData}
+                  onClose={handleProfileClose}
                   onChatChannelCreate={handleChatChannelCreate}
                   onUserClick={handleUserClick}
                 />

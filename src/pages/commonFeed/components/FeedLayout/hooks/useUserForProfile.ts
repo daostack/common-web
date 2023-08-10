@@ -7,35 +7,71 @@ export interface UserForProfileData {
   chatChannel?: ChatChannel;
 }
 
+interface PreviousUserForProfileData
+  extends Omit<UserForProfileData, "chatChannel"> {
+  chatChannel: ChatChannel;
+}
+
+interface State {
+  currentData: UserForProfileData | null;
+  previousData: PreviousUserForProfileData | null;
+}
+
 interface Return {
   userForProfileData: UserForProfileData | null;
-  setUserForProfileData: (data: UserForProfileData) => void;
+  setUserForProfileData: (
+    data: Omit<UserForProfileData, "chatChannel">,
+  ) => void;
   setChatChannel: (chatChannel: ChatChannel) => void;
-  resetUserForProfileData: () => void;
+  resetUserForProfileData: (force?: boolean) => void;
 }
 
 export const useUserForProfile = (): Return => {
-  const [currentData, setCurrentData] = useState<UserForProfileData | null>(
-    null,
+  const [state, setState] = useState<State>({
+    currentData: null,
+    previousData: null,
+  });
+
+  const setUserForProfileData = useCallback<Return["setUserForProfileData"]>(
+    (data) => {
+      setState(({ currentData }) => ({
+        currentData: data,
+        previousData: currentData?.chatChannel
+          ? {
+              ...currentData,
+              chatChannel: currentData.chatChannel,
+            }
+          : null,
+      }));
+    },
+    [],
   );
 
   const setChatChannel = useCallback((chatChannel: ChatChannel) => {
-    setCurrentData(
-      (data) =>
-        data && {
-          ...data,
-          chatChannel,
-        },
-    );
+    setState((currentState) => ({
+      ...currentState,
+      currentData: currentState.currentData && {
+        ...currentState.currentData,
+        chatChannel,
+      },
+    }));
   }, []);
 
-  const resetUserForProfileData = useCallback(() => {
-    setCurrentData(null);
+  const resetUserForProfileData = useCallback((force = false) => {
+    setState((currentState) => ({
+      currentData:
+        !force && currentState.previousData
+          ? {
+              ...currentState.previousData,
+            }
+          : null,
+      previousData: null,
+    }));
   }, []);
 
   return {
-    userForProfileData: currentData,
-    setUserForProfileData: setCurrentData,
+    userForProfileData: state.currentData,
+    setUserForProfileData,
     setChatChannel,
     resetUserForProfileData,
   };
