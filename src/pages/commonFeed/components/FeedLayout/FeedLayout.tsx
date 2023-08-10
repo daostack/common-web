@@ -586,6 +586,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   withTitle={settings?.withDesktopChatTitle}
                   onClose={userForProfile.resetUserForProfileData}
                   onChatChannelCreate={userForProfile.setChatChannel}
+                  onUserClick={handleUserClick}
                 />
               ) : (
                 <MobileProfile
@@ -594,6 +595,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   chatChannel={userForProfile.userForProfileData.chatChannel}
                   onClose={userForProfile.resetUserForProfileData}
                   onChatChannelCreate={userForProfile.setChatChannel}
+                  onUserClick={handleUserClick}
                 />
               ))}
           </div>

@@ -12,10 +12,18 @@ interface MobileProfileProps {
   chatChannel?: ChatChannel;
   onClose: () => void;
   onChatChannelCreate: (chatChannel: ChatChannel) => void;
+  onUserClick: (userId: string) => void;
 }
 
 const MobileProfile: FC<MobileProfileProps> = (props) => {
-  const { userId, commonId, chatChannel, onClose, onChatChannelCreate } = props;
+  const {
+    userId,
+    commonId,
+    chatChannel,
+    onClose,
+    onChatChannelCreate,
+    onUserClick,
+  } = props;
   const [isChatChannelLoading, setIsChatChannelLoading] = useState(false);
   const isProfileModalOpen = !chatChannel;
 
@@ -35,6 +43,7 @@ const MobileProfile: FC<MobileProfileProps> = (props) => {
         commonMember={null}
         shouldShowSeeMore={false}
         onClose={onClose}
+        onUserClick={onUserClick}
       />
     );
   }

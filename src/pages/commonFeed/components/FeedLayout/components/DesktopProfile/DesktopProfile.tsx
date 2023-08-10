@@ -17,6 +17,7 @@ interface DesktopProfileProps {
   withTitle?: boolean;
   onClose: () => void;
   onChatChannelCreate: (chatChannel: ChatChannel) => void;
+  onUserClick: (userId: string) => void;
 }
 
 const DesktopProfile: FC<DesktopProfileProps> = (props) => {
@@ -28,6 +29,7 @@ const DesktopProfile: FC<DesktopProfileProps> = (props) => {
     withTitle,
     onClose,
     onChatChannelCreate,
+    onUserClick,
   } = props;
   const [isChatChannelLoading, setIsChatChannelLoading] = useState(false);
 
@@ -45,6 +47,7 @@ const DesktopProfile: FC<DesktopProfileProps> = (props) => {
         commonId={""}
         commonMember={null}
         withTitle={withTitle}
+        onUserClick={onUserClick}
       />
     );
   }
