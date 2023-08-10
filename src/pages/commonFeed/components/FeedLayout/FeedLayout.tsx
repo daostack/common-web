@@ -60,6 +60,7 @@ import {
   FeedItemPreviewModal,
   FollowFeedItemButton,
   MobileChat,
+  MobileProfile,
   SplitView,
 } from "./components";
 import { useUserForProfile } from "./hooks";
@@ -530,17 +531,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   withTitle={settings?.withDesktopChatTitle}
                 />
               ))}
-            {userForProfile.userForProfileData && (
-              <DesktopProfile
-                className={desktopRightPaneClassName}
-                userId={userForProfile.userForProfileData.userId}
-                commonId={userForProfile.userForProfileData.commonId}
-                chatChannel={userForProfile.userForProfileData.chatChannel}
-                withTitle={settings?.withDesktopChatTitle}
-                onClose={userForProfile.resetUserForProfileData}
-                onChatChannelCreate={userForProfile.setChatChannel}
-              />
-            )}
             {isTabletView && (
               <MobileChat
                 chatItem={chatItem}
@@ -574,6 +564,26 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   )}
               </MobileChat>
             )}
+            {userForProfile.userForProfileData &&
+              (!isTabletView ? (
+                <DesktopProfile
+                  className={desktopRightPaneClassName}
+                  userId={userForProfile.userForProfileData.userId}
+                  commonId={userForProfile.userForProfileData.commonId}
+                  chatChannel={userForProfile.userForProfileData.chatChannel}
+                  withTitle={settings?.withDesktopChatTitle}
+                  onClose={userForProfile.resetUserForProfileData}
+                  onChatChannelCreate={userForProfile.setChatChannel}
+                />
+              ) : (
+                <MobileProfile
+                  userId={userForProfile.userForProfileData.userId}
+                  commonId={userForProfile.userForProfileData.commonId}
+                  chatChannel={userForProfile.userForProfileData.chatChannel}
+                  onClose={userForProfile.resetUserForProfileData}
+                  onChatChannelCreate={userForProfile.setChatChannel}
+                />
+              ))}
           </div>
         )}
       </ChatContext.Provider>
