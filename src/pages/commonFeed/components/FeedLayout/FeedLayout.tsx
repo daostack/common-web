@@ -268,12 +268,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [userForProfile.setUserForProfileData],
   );
 
-  const handleUserClick = (userId: string) => {
-    userForProfile.setUserForProfileData({
-      userId,
-      commonId: selectedItemCommonData?.id,
-    });
-  };
+  const handleUserClick = useCallback(
+    (userId: string) => {
+      handleUserWithCommonClick(userId, selectedItemCommonData?.id);
+    },
+    [handleUserWithCommonClick, selectedItemCommonData?.id],
+  );
 
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items

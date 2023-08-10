@@ -13,6 +13,7 @@ interface UserMentionProps {
   mentionTextClassName?: string;
   commonId?: string;
   directParent?: DirectParent | null;
+  onUserClick?: (userId: string) => void;
 }
 
 const UserMention: FC<UserMentionProps> = (props) => {
@@ -23,6 +24,7 @@ const UserMention: FC<UserMentionProps> = (props) => {
     mentionTextClassName,
     commonId,
     directParent,
+    onUserClick,
   } = props;
   const {
     isShowing: isShowingUserProfile,
@@ -35,22 +37,32 @@ const UserMention: FC<UserMentionProps> = (props) => {
     ? `${getUserName(user)}${withSpace ? " " : ""}`
     : displayName;
 
+  const handleUserNameClick = () => {
+    if (onUserClick) {
+      onUserClick(userId);
+    } else {
+      onOpenUserProfile();
+    }
+  };
+
   return (
     <>
       <span
         className={classNames(styles.mentionText, mentionTextClassName)}
-        onClick={onOpenUserProfile}
+        onClick={handleUserNameClick}
       >
         @{userName}
       </span>
-      <UserInfoPopup
-        avatar={user?.photoURL}
-        isShowing={isShowingUserProfile}
-        onClose={onCloseUserProfile}
-        commonId={commonId}
-        userId={user?.uid}
-        directParent={directParent}
-      />
+      {!onUserClick && (
+        <UserInfoPopup
+          avatar={user?.photoURL}
+          isShowing={isShowingUserProfile}
+          onClose={onCloseUserProfile}
+          commonId={commonId}
+          userId={user?.uid}
+          directParent={directParent}
+        />
+      )}
     </>
   );
 };

@@ -236,9 +236,6 @@ const ChatContent: ForwardRefRenderFunction<
               const isMyMessageNext =
                 checkIsUserDiscussionMessage(nextMessage) &&
                 nextMessage.ownerId === userId;
-              const messageUserId = checkIsUserDiscussionMessage(message)
-                ? message.ownerId
-                : null;
               const messageEl = (
                 <ChatMessage
                   key={message.id}
@@ -264,11 +261,7 @@ const ChatContent: ForwardRefRenderFunction<
                   commonMember={commonMember}
                   onMessageDelete={onMessageDelete}
                   directParent={directParent}
-                  onUserClick={
-                    onUserClick && messageUserId
-                      ? () => onUserClick(messageUserId)
-                      : undefined
-                  }
+                  onUserClick={onUserClick}
                 />
               );
 
