@@ -298,6 +298,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           isProject,
           hasFiles: item.data.hasFiles,
           hasImages: item.data.hasImages,
+          ownerId: item.userId,
         })}
         isPreviewMode={isPreviewMode}
         isPinned={isPinned}

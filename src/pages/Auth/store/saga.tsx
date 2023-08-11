@@ -275,7 +275,7 @@ const updateUserData = async (user: User) => {
   const photoURL =
     user.photo &&
     (isRandomUserAvatarURL(user.photo)
-      ? getRandomUserAvatarURL(profileData.displayName?.replaceAll(" ", "+"))
+      ? getRandomUserAvatarURL(profileData.displayName?.replace(/\s/gi, "+"))
       : user.photo);
 
   if (photoURL) {
