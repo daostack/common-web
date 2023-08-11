@@ -166,7 +166,7 @@ const addNewPinnedFeedItems = (
     };
 
     if (itemIndex < 0) {
-      return [finalItem, ...nextData];
+      return [...nextData, finalItem];
     }
 
     nextData[itemIndex] = finalItem;
