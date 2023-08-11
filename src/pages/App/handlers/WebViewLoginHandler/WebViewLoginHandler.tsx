@@ -10,8 +10,9 @@ import { parseJson } from "@/shared/utils/json";
 const WebViewLoginHandler: FC = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    window.addEventListener("message", (event) => {
+  const handleWebviewLogin = React.useCallback((event) => {
+    const user = localStorage.getItem("user");
+    if (!user) {
       const data = parseJson(event.data) as FirebaseCredentials;
       if (!data?.providerId) {
         return;
@@ -38,7 +39,11 @@ const WebViewLoginHandler: FC = () => {
       } catch (err) {
         window.ReactNativeWebView.postMessage(WebviewActions.loginError);
       }
-    });
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("message", handleWebviewLogin);
   }, []);
 
   return null;
