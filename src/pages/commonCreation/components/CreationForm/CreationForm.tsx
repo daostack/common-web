@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { Formik, FormikValues } from "formik";
 import { FormikProps } from "formik/dist/types";
+import { ButtonLink } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
 import { Form } from "@/shared/components/Form/Formik";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
@@ -23,6 +24,7 @@ interface CreationFormProps<T> {
   submitButtonText?: string;
   disabled?: boolean;
   error?: string;
+  isCommonCreation?: boolean;
 }
 
 export interface CreationFormRef {
@@ -38,6 +40,7 @@ const CreationForm = <T extends FormikValues>(
     onSubmit,
     items,
     submitButtonText = "Create",
+    isCommonCreation = false,
     disabled,
     error,
   } = props;
@@ -71,6 +74,21 @@ const CreationForm = <T extends FormikValues>(
             />
           ))}
         </div>
+        {isCommonCreation && (
+          <div className={styles.termsAgreementText}>
+            By continuing and creating this common, you are confirming your
+            agreement to our{" "}
+            <ButtonLink
+              className="connect-wrapper__terms-of-use"
+              href={require("../../../../shared/assets/terms_and_conditions.pdf")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              terms of use
+            </ButtonLink>
+            .
+          </div>
+        )}
         <Button
           variant={ButtonVariant.PrimaryPink}
           className={styles.submitButton}

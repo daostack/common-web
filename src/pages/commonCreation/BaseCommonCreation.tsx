@@ -2,18 +2,19 @@ import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { Common } from "@/shared/models";
 import { checkIsProject } from "@/shared/utils";
-import { ProjectCreation } from "./components";
+import { ProjectCreation, CommonCreation as Creation } from "./components";
 
 interface CommonCreationRouterParams {
   id?: string;
 }
 
-export interface CommonCreationProps {
+export interface CommonCreationPageProps {
   initialCommon?: Common;
+  isCommonCreation?: boolean;
 }
 
-const BaseCommonCreation: FC<CommonCreationProps> = (props) => {
-  const { initialCommon } = props;
+const BaseCommonCreation: FC<CommonCreationPageProps> = (props) => {
+  const { initialCommon, isCommonCreation } = props;
   const { id: commonId } = useParams<CommonCreationRouterParams>();
 
   if (initialCommon) {
@@ -27,6 +28,10 @@ const BaseCommonCreation: FC<CommonCreationProps> = (props) => {
 
   if (commonId) {
     return <ProjectCreation parentCommonId={commonId} />;
+  }
+
+  if (isCommonCreation) {
+    return <Creation></Creation>;
   }
 
   return null;

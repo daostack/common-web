@@ -1,11 +1,4 @@
-import React, {
-  forwardRef,
-  ForwardRefRenderFunction,
-  ReactNode,
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-} from "react";
+import React, { FC, ReactNode, useCallback, useMemo } from "react";
 import { useHistory } from "react-router";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
 import { useRoutesContext } from "@/shared/contexts";
@@ -17,19 +10,13 @@ import { useProjectsData } from "../../hooks";
 import { ProjectsTree } from "../ProjectsTree";
 import styles from "./Projects.module.scss";
 
-export interface ProjectsRef {
-  openCreateCommonModal: () => void;
-}
-
 interface ProjectsProps {
   renderNoItemsInfo?: () => ReactNode;
+  onCommonCreationClick?: () => void;
 }
 
-const Projects: ForwardRefRenderFunction<ProjectsRef, ProjectsProps> = (
-  props,
-  ref,
-) => {
-  const { renderNoItemsInfo } = props;
+const Projects: FC<ProjectsProps> = (props) => {
+  const { renderNoItemsInfo, onCommonCreationClick } = props;
   const history = useHistory();
   const { getCommonPagePath, getProjectCreationPagePath } = useRoutesContext();
   const {
@@ -76,14 +63,6 @@ const Projects: ForwardRefRenderFunction<ProjectsRef, ProjectsProps> = (
     [history.push, getProjectCreationPagePath],
   );
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      openCreateCommonModal: onCreateCommonModalOpen,
-    }),
-    [onCreateCommonModalOpen],
-  );
-
   const createCommonModalEl = (
     <CreateCommonModal
       isShowing={isCreateCommonModalOpen}
@@ -97,10 +76,7 @@ const Projects: ForwardRefRenderFunction<ProjectsRef, ProjectsProps> = (
     return areCommonsLoading ? (
       <Loader className={styles.loader} />
     ) : (
-      <>
-        {renderNoItemsInfo?.() || null}
-        {createCommonModalEl}
-      </>
+      <>{renderNoItemsInfo?.() || null}</>
     );
   }
 
@@ -116,7 +92,7 @@ const Projects: ForwardRefRenderFunction<ProjectsRef, ProjectsProps> = (
         itemIdWithNewProjectCreation={itemIdWithNewProjectCreation}
         currentCommonId={currentCommonId}
         onCommonClick={handleCommonClick}
-        onCommonCreationClick={onCreateCommonModalOpen}
+        onCommonCreationClick={onCommonCreationClick ?? onCreateCommonModalOpen}
         onAddProjectClick={handleAddProjectClick}
         isLoading={areProjectsLoading}
       />
@@ -125,4 +101,4 @@ const Projects: ForwardRefRenderFunction<ProjectsRef, ProjectsProps> = (
   );
 };
 
-export default forwardRef(Projects);
+export default Projects;

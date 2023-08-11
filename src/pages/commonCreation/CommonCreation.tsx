@@ -1,11 +1,13 @@
 import React, { FC } from "react";
 import { MainRoutesProvider } from "@/shared/contexts";
-import BaseCommonCreation, { CommonCreationProps } from "./BaseCommonCreation";
+import BaseCommonCreation, {
+  CommonCreationPageProps,
+} from "./BaseCommonCreation";
 
-const CommonCreation: FC<CommonCreationProps> = (props) => (
+const CommonCreationPage: FC<CommonCreationPageProps> = (props) => (
   <MainRoutesProvider>
     <BaseCommonCreation {...props} />
   </MainRoutesProvider>
 );
 
-export default CommonCreation;
+export default CommonCreationPage;

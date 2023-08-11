@@ -5,17 +5,23 @@ import { TextEditorValue } from "@/shared/ui-kit/TextEditor/types";
 
 export interface CreateCommonPayload {
   name: string;
-  image: string;
+  image: string | File;
+  useTemplate: boolean;
   byline?: string;
   description?: string;
   unstructuredRules?: BaseRule[];
   links?: CommonLink[];
   searchable?: boolean;
-  useTemplate: boolean;
+  memberAdmittanceOptions: MemberAdmittanceLimitations;
+  video?: CommonLink;
+  gallery?: CommonLink[];
 }
 
 export interface CreateSubCommonPayload
-  extends Omit<CreateCommonPayload, "searchable" | "useTemplate"> {
+  extends Omit<
+    CreateCommonPayload,
+    "searchable" | "useTemplate" | "memberAdmittanceOptions"
+  > {
   commonId: string;
   circleId: string;
 }
@@ -23,13 +29,25 @@ export interface CreateSubCommonPayload
 export interface IntermediateCreateCommonPayload
   extends Omit<
     CreateCommonPayload,
-    "image" | "searchable" | "useTemplate" | "unstructuredRules"
+    | "image"
+    | "searchable"
+    | "useTemplate"
+    | "unstructuredRules"
+    | "memberAdmittanceOptions"
   > {
   image: string | File | null;
   agreementAccepted: boolean;
   rules?: CreateCommonPayload["unstructuredRules"];
   circleIdFromParent?: string;
   memberAdmittanceOptions?: MemberAdmittanceLimitations;
+}
+
+export interface IntermediateCreateCommonData
+  extends Pick<CreateCommonPayload, "name" | "byline" | "links"> {
+  image: UploadFile;
+  gallery?: UploadFile[];
+  description?: string | TextEditorValue;
+  videoUrl?: string;
 }
 
 export interface IntermediateUpdateCommonData {
