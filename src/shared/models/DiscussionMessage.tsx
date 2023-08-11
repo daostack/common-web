@@ -94,10 +94,21 @@ export interface CommonEditedSystemMessage extends BaseSystemDiscussionMessage {
   };
 }
 
+export interface CommonFeedItemCreatedSystemMessage
+  extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.FeedItemCreated;
+  systemMessageData: {
+    commonType: SystemMessageCommonType;
+    commonId: string;
+    userId: string;
+  };
+}
+
 export type SystemDiscussionMessage =
   | CommonCreatedSystemMessage
   | CommonMemberAddedSystemMessage
-  | CommonEditedSystemMessage;
+  | CommonEditedSystemMessage
+  | CommonFeedItemCreatedSystemMessage;
 
 export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
 

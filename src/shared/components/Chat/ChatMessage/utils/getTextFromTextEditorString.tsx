@@ -99,7 +99,11 @@ export const getTextFromTextEditorString = async (
   } = data;
 
   if (systemMessage) {
-    return await getTextFromSystemMessage(data);
+    const systemMessageText = await getTextFromSystemMessage(data);
+
+    if (systemMessageText) {
+      return systemMessageText;
+    }
   }
 
   const textEditorValue = parseStringToTextEditorValue(textEditorString);
