@@ -41,6 +41,11 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         },
       },
       {
+        path: ROUTE_PATHS.COMMON_CREATION,
+        exact: true,
+        component: CommonCreationWrapper,
+      },
+      {
         path: ROUTE_PATHS.COMMON,
         exact: true,
         component: CommonFeedPage,
@@ -50,11 +55,6 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         path: ROUTE_PATHS.PROJECT_CREATION,
         exact: true,
         component: CommonCreationPage,
-      },
-      {
-        path: ROUTE_PATHS.COMMON_CREATION,
-        exact: true,
-        component: CommonCreationWrapper,
       },
       {
         path: ROUTE_PATHS.COMMON_EDITING,
