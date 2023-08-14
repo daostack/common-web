@@ -51,6 +51,7 @@ interface ChatContentInterface {
   isLoading: boolean;
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
+  onUserClick?: (userId: string) => void;
 }
 
 const isToday = (someDate: Date) => {
@@ -84,6 +85,7 @@ const ChatContent: ForwardRefRenderFunction<
     isLoading,
     onMessageDelete,
     directParent,
+    onUserClick,
   },
   chatContentRef,
 ) => {
@@ -259,6 +261,7 @@ const ChatContent: ForwardRefRenderFunction<
                   commonMember={commonMember}
                   onMessageDelete={onMessageDelete}
                   directParent={directParent}
+                  onUserClick={onUserClick}
                 />
               );
 

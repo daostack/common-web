@@ -32,9 +32,12 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const dmUserId = chatChannel.participants.filter(
-    (participant) => participant !== userId,
-  )[0];
+  const dmUserId =
+    chatChannel.participants.length === 1
+      ? chatChannel.participants[0]
+      : chatChannel.participants.filter(
+          (participant) => participant !== userId,
+        )[0];
   const dmUserName = getUserName(dmUser);
   const finalTitle = dmUserName;
 

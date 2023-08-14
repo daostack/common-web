@@ -64,7 +64,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonDescription,
     commonGallery,
   } = props;
-  const { onFeedItemUpdate, getLastMessage, getNonAllowedItems } =
+  const { onFeedItemUpdate, getLastMessage, getNonAllowedItems, onUserSelect } =
     useFeedItemContext();
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
@@ -98,6 +98,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isMobileVersion,
     onActiveItemDataChange,
     directParent,
+    onUserSelect,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {

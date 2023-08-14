@@ -1,0 +1,26 @@
+@import "../../../../../../constants";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+}
+
+.contentWrapper {
+  flex: 1;
+  padding: 1.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.content {
+  max-width: 24.875rem;
+}
