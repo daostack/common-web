@@ -26,7 +26,7 @@ interface FeedItemProps {
   isPinned?: boolean;
   item: CommonFeed;
   governanceCircles?: Circles;
-  userCircleIds: string[];
+  userCircleIds?: string[];
   currentUserId?: string;
   isMobileVersion?: boolean;
   isPreviewMode?: boolean;
@@ -34,7 +34,10 @@ interface FeedItemProps {
   isExpanded?: boolean;
   sizeKey?: string;
   shouldCheckItemVisibility?: boolean;
-  onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
+  onActiveItemDataChange?: (
+    data: FeedLayoutItemChangeData,
+    commonId?: string,
+  ) => void;
   directParent?: DirectParent | null;
   commonDescription?: string;
   commonGallery?: CommonLink[];
@@ -51,7 +54,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isPinned = false,
     item,
     governanceCircles,
-    userCircleIds,
+    userCircleIds = [],
     isMobileVersion = false,
     isPreviewMode = false,
     isActive = false,
@@ -80,6 +83,10 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     return null;
   }
 
+  const handleActiveItemDataChange = (data: FeedLayoutItemChangeData) => {
+    onActiveItemDataChange?.(data, commonId);
+  };
+
   const generalProps = {
     item,
     commonId,
@@ -96,7 +103,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonMember,
     getNonAllowedItems,
     isMobileVersion,
-    onActiveItemDataChange,
+    onActiveItemDataChange: handleActiveItemDataChange,
     directParent,
     onUserSelect,
   };

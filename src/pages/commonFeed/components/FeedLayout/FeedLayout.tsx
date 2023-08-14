@@ -344,18 +344,18 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [selectedFeedItem, onMessagesAmountEmptinessToggle],
   );
 
-  const handleActiveFeedItemDataChange = (
-    data: FeedLayoutItemChangeData,
-    commonId?: string,
-  ) => {
-    if (commonId) {
-      onActiveItemDataChange?.({
-        ...data,
-        type: InboxItemType.FeedItemFollow,
-        commonId,
-      });
-    }
-  };
+  const handleActiveFeedItemDataChange = useCallback(
+    (data: FeedLayoutItemChangeData, commonId?: string) => {
+      if (commonId) {
+        onActiveItemDataChange?.({
+          ...data,
+          type: InboxItemType.FeedItemFollow,
+          commonId,
+        });
+      }
+    },
+    [onActiveItemDataChange],
+  );
 
   const handleActiveChatChannelItemDataChange = (
     data: FeedLayoutItemChangeData,
@@ -488,11 +488,16 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     (pinnedItem) =>
                       pinnedItem.feedObjectId === item.feedItem.id,
                   );
+                  const activeItemData = {
+                    commonMember,
+                    userCircleIds,
+                    sizeKey,
+                    governanceCircles: governance?.circles,
+                  };
 
                   return (
                     <FeedItem
                       key={item.feedItem.id}
-                      commonMember={commonMember}
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
@@ -500,23 +505,19 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       isProject={commonData?.isProject}
                       isPinned={isPinned}
                       item={item.feedItem}
-                      governanceCircles={governance?.circles}
                       isMobileVersion={isTabletView}
-                      userCircleIds={userCircleIds}
                       isActive={isActive}
                       isExpanded={item.feedItem.id === expandedFeedItemId}
-                      sizeKey={isActive ? sizeKey : undefined}
                       currentUserId={userId}
                       shouldCheckItemVisibility={
                         !item.feedItemFollowWithMetadata ||
                         item.feedItemFollowWithMetadata.userId !== userId
                       }
-                      onActiveItemDataChange={(...args) =>
-                        handleActiveFeedItemDataChange(...args, commonData?.id)
-                      }
+                      onActiveItemDataChange={handleActiveFeedItemDataChange}
                       directParent={outerCommon?.directParent}
                       commonDescription={outerCommon?.description}
                       commonGallery={outerCommon?.gallery}
+                      {...(isActive ? activeItemData : {})}
                     />
                   );
                 }
