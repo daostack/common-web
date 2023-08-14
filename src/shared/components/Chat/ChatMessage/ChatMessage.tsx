@@ -60,6 +60,7 @@ interface ChatMessageProps {
   commonMember: CommonMember | null;
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
+  onUserClick?: (userId: string) => void;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -87,6 +88,7 @@ export default function ChatMessage({
   commonMember,
   onMessageDelete,
   directParent,
+  onUserClick,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
@@ -97,8 +99,11 @@ export default function ChatMessage({
     checkIsUserDiscussionMessage(discussionMessage);
   const isSystemMessage = checkIsSystemDiscussionMessage(discussionMessage);
   const userId = user?.uid;
+  const discussionMessageUserId = isUserDiscussionMessage
+    ? discussionMessage.ownerId
+    : null;
   const isNotCurrentUserMessage =
-    !isUserDiscussionMessage || userId !== discussionMessage.ownerId;
+    !isUserDiscussionMessage || userId !== discussionMessageUserId;
 
   const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
 
@@ -116,6 +121,14 @@ export default function ChatMessage({
     onClose: onCloseUserProfile,
     onOpen: onOpenUserProfile,
   } = useModal(false);
+
+  const handleUserClick = () => {
+    if (onUserClick && discussionMessageUserId) {
+      onUserClick(discussionMessageUserId);
+    } else {
+      onOpenUserProfile();
+    }
+  };
 
   const handleMessageDropdownOpen =
     onMessageDropdownOpen &&
@@ -150,7 +163,8 @@ export default function ChatMessage({
         systemMessage: isSystemMessage ? discussionMessage : undefined,
         getCommonPagePath,
         getCommonPageAboutTabPath,
-        directParent: directParent,
+        directParent,
+        onUserClick,
       });
 
       setMessageText(parsedText);
@@ -163,6 +177,7 @@ export default function ChatMessage({
     isSystemMessage,
     getCommonPagePath,
     getCommonPageAboutTabPath,
+    onUserClick,
   ]);
 
   useEffect(() => {
@@ -175,7 +190,8 @@ export default function ChatMessage({
         textEditorString: discussionMessage?.parentMessage.text,
         users,
         commonId: discussionMessage.commonId,
-        directParent: directParent,
+        directParent,
+        onUserClick,
       });
 
       setReplyMessageText(parsedText);
@@ -185,6 +201,7 @@ export default function ChatMessage({
     discussionMessage?.parentMessage?.text,
     isNotCurrentUserMessage,
     discussionMessage.commonId,
+    onUserClick,
   ]);
 
   const handleMenuToggle = (isOpen: boolean) => {
@@ -307,7 +324,7 @@ export default function ChatMessage({
         })}
       >
         {isNotCurrentUserMessage && isUserDiscussionMessage && (
-          <div className={styles.iconWrapper} onClick={onOpenUserProfile}>
+          <div className={styles.iconWrapper} onClick={handleUserClick}>
             <UserAvatar
               imageContainerClassName={styles.userAvatarContainer}
               photoURL={discussionMessage.owner?.photoURL}
@@ -341,7 +358,7 @@ export default function ChatMessage({
               onClick={handleMessageClick}
             >
               {isNotCurrentUserMessage && !isSystemMessage && (
-                <div className={styles.messageName} onClick={onOpenUserProfile}>
+                <div className={styles.messageName} onClick={handleUserClick}>
                   {getUserName(discussionMessage.owner)}
                 </div>
               )}

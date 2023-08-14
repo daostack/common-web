@@ -31,7 +31,7 @@ type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
 interface Return extends State {
   fetchCommonMember: (
     commonId: string,
-    options: { governance?: Governance; commonMember?: CommonMember },
+    options?: { governance?: Governance; commonMember?: CommonMember },
     force?: boolean,
   ) => void;
   setCommonMember: (

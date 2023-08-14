@@ -16,6 +16,7 @@ import {
   DirectParent,
 } from "@/shared/models";
 import { getUserName, isRTL } from "@/shared/utils";
+import { DesktopRightPane } from "../DesktopRightPane";
 import { getChatType } from "./utils";
 import styles from "./DesktopChat.module.scss";
 
@@ -29,6 +30,7 @@ interface ChatProps {
   titleRightContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  onUserClick?: (userId: string) => void;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -42,6 +44,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
     titleRightContent,
     onMessagesAmountChange,
     directParent,
+    onUserClick,
   } = props;
   const {
     fetchUser: fetchDMUser,
@@ -73,7 +76,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
   }, [dmUserId]);
 
   return (
-    <div className={classNames(styles.container, className)}>
+    <DesktopRightPane className={className}>
       {withTitle && (
         <div className={styles.titleWrapper}>
           {dmUser?.photoURL && (
@@ -112,8 +115,9 @@ const DesktopChat: FC<ChatProps> = (props) => {
         isAuthorized={Boolean(user)}
         onMessagesAmountChange={onMessagesAmountChange}
         directParent={directParent}
+        onUserClick={onUserClick}
       />
-    </div>
+    </DesktopRightPane>
   );
 };
 

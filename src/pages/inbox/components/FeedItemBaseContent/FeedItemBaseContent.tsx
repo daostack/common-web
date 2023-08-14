@@ -50,7 +50,6 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     [styles.imageNonRounded]: !shouldImageBeRounded,
     [styles.imageRounded]: shouldImageBeRounded,
   });
-  const isHome = discussionPredefinedType === PredefinedTypes.General;
 
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
@@ -135,36 +134,32 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           </p>
         </div>
         <div className={styles.bottomContent}>
-          {!isHome && (
-            <>
-              {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
-                <TextEditor
-                  className={styles.lastMessageContainer}
-                  editorClassName={classNames(styles.text, styles.lastMessage, {
-                    [styles.lastMessageActive]:
-                      isActive || (isExpanded && isMobileView),
-                  })}
-                  value={lastMessage}
-                  elementStyles={{
-                    mention: isActive ? styles.mentionText : "",
-                  }}
-                  readOnly
-                />
-              ) : (
-                <div />
-              )}
-              <div className={styles.bottomContentRight}>
-                <FeedCardTags
-                  unreadMessages={unreadMessages}
-                  type={type}
-                  seenOnce={seenOnce}
-                  ownerId={ownerId}
-                  isActive={isActive}
-                  isPinned={false}
-                />
-              </div>
-            </>
+          {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
+            <TextEditor
+              className={styles.lastMessageContainer}
+              editorClassName={classNames(styles.text, styles.lastMessage, {
+                [styles.lastMessageActive]:
+                  isActive || (isExpanded && isMobileView),
+              })}
+              value={lastMessage}
+              elementStyles={{
+                mention: isActive ? styles.mentionText : "",
+              }}
+              readOnly
+            />
+          ) : (
+            <div />
           )}
+          <div className={styles.bottomContentRight}>
+            <FeedCardTags
+              unreadMessages={unreadMessages}
+              type={type}
+              seenOnce={seenOnce}
+              ownerId={ownerId}
+              isActive={isActive}
+              isPinned={false}
+            />
+          </div>
         </div>
       </div>
       {menuItems && menuItems.length > 0 && (
