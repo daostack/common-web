@@ -66,10 +66,11 @@
 
 .permissionsText {
   font-size: $mobile-title;
-  color: $light-gray-2;
+  color: var(--primary-fill);
   margin-right: 0.3125rem;
   width: 100%;
   text-align: center;
+  cursor: pointer;
 }
 
 .messageInput {

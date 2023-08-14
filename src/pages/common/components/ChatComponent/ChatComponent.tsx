@@ -593,7 +593,7 @@ export default function ChatComponent({
           >
             {!isChatChannel && (!commonMember || !hasAccess || isHidden) ? (
               <span className={styles.permissionsText}>
-                Only members can send messages
+                {directParent ? "Join the space" : "Join the effort"}
               </span>
             ) : (
               <>

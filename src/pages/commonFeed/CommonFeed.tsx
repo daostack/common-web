@@ -158,7 +158,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [sharedFeedItem, sharedFeedItemId, commonPinnedFeedItems]);
   const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
-  const hasAccessToPage = Boolean(commonMember);
+  //const hasAccessToPage = Boolean(commonMember);
 
   const fetchData = () => {
     fetchCommonData({
@@ -192,10 +192,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   );
 
   useEffect(() => {
-    if (!user || (isGlobalDataFetched && !commonMember)) {
+    if (!user) {
       history.push(getCommonPageAboutTabPath(commonId));
     }
-  }, [user, isGlobalDataFetched, commonMember, commonId]);
+  }, [user, isGlobalDataFetched, commonId]);
 
   useEffect(() => {
     dispatch(commonActions.setSharedFeedItemId(sharedFeedItemId));
@@ -344,8 +344,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         commonMember={commonMember}
         topFeedItems={topFeedItems}
         feedItems={commonFeedItems}
-        loading={areCommonFeedItemsLoading || !hasAccessToPage}
-        shouldHideContent={!hasAccessToPage}
+        loading={areCommonFeedItemsLoading}
         onFetchNext={fetchMoreCommonFeedItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         onFeedItemUpdate={handleFeedItemUpdate}
