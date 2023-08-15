@@ -42,6 +42,7 @@ const renderUserMention = (
       mentionTextClassName={data.mentionTextClassName}
       commonId={data.commonId}
       directParent={data.directParent}
+      onUserClick={data.onUserClick}
     />
   ) : (
     defaultName

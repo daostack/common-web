@@ -16,4 +16,5 @@ export interface TextData {
   getCommonPagePath?: GetCommonPagePath;
   getCommonPageAboutTabPath?: GetCommonPageAboutTabPath;
   directParent?: DirectParent | null;
+  onUserClick?: (userId: string) => void;
 }

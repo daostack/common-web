@@ -1,0 +1,11 @@
+@import "../../../../../../constants";
+
+.container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  background-color: $c-shades-white;
+  border-left: 0.0625rem solid $c-light-gray;
+}

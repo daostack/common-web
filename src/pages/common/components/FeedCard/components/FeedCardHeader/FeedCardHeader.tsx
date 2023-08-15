@@ -19,6 +19,7 @@ export interface FeedCardHeaderProps {
   commonId: string;
   userId?: string;
   directParent?: DirectParent | null;
+  onUserSelect?: () => void;
 }
 
 export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
@@ -33,16 +34,18 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
     commonId,
     userId,
     directParent,
+    onUserSelect,
   } = props;
   const {
     isShowing: isShowingUserProfile,
     onClose: onCloseUserProfile,
     onOpen: onOpenUserProfile,
   } = useModal(false);
+  const handleUserClick = onUserSelect || onOpenUserProfile;
 
   return (
     <div className={styles.container}>
-      <div className={styles.content} onClick={onOpenUserProfile}>
+      <div className={styles.content} onClick={handleUserClick}>
         <UserAvatar
           className={styles.avatar}
           photoURL={avatar}

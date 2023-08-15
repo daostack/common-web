@@ -1,0 +1,64 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/typography";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.containerCentered {
+  margin: auto;
+}
+
+.loader {
+  margin: auto;
+}
+
+.errorText {
+  margin: auto;
+  font-size: $moderate-xsmall;
+  color: $c-gray-40;
+}
+
+.userAvatar {
+  flex-shrink: 0;
+  width: 8rem;
+  height: 8rem;
+}
+
+.userName {
+  @include h6;
+
+  margin: 0.625rem 0 0;
+}
+
+.country {
+  margin: 0.25rem 0 0;
+  font-size: $mobile-title;
+  color: $c-gray-40;
+}
+
+.dmButton {
+  margin: 2.25rem 0 0;
+}
+
+.dmButtonIcon {
+  --btn-icon-size: 1rem;
+  --btn-icon-margin: 0.875rem;
+
+  flex-shrink: 0;
+}
+
+.infoTitle {
+  @include h5;
+
+  margin: 2.25rem 0 0;
+}
+
+.infoContent {
+  @include body-sm-regular;
+
+  margin: 0.5rem 0 0;
+  word-break: break-word;
+}

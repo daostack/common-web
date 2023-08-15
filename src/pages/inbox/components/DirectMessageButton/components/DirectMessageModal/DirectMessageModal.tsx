@@ -10,12 +10,13 @@ import React, {
 import { useDispatch } from "react-redux";
 import { Modal } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants";
+import { useDMUserChatChannel } from "@/shared/hooks/useCases";
 import { DMUser } from "@/shared/interfaces";
 import { Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { inboxActions } from "@/store/states";
 import { DirectMessageUserItem, SearchInput } from "./components";
-import { useDMUserChatChannel, useDMUsers } from "./hooks";
+import { useDMUsers } from "./hooks";
 import styles from "./DirectMessageModal.module.scss";
 
 interface DirectMessageModalProps {

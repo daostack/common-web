@@ -32,6 +32,8 @@ import firebase from "@/shared/utils/firebase";
 import { Api, FileService } from ".";
 
 const converter = firestoreDataConverter<Proposal>();
+const memberAdmittanceProposalConverter =
+  firestoreDataConverter<MemberAdmittance>();
 
 class ProposalService {
   private getProposalCollection = () =>
@@ -181,6 +183,19 @@ class ProposalService {
     return !snapshot.empty;
   };
 
+  public getUserMemberAdmittanceProposalByCommonId = async (
+    userId: string,
+    commonId: string,
+  ): Promise<MemberAdmittance | null> => {
+    const snapshot = await this.getProposalCollection()
+      .withConverter(memberAdmittanceProposalConverter)
+      .where("type", "==", ProposalsTypes.MEMBER_ADMITTANCE)
+      .where("data.args.proposerId", "==", userId)
+      .where("data.args.commonId", "==", commonId)
+      .get();
+
+    return snapshot.docs[0]?.data() || null;
+  };
 
   public checkHasUserAssignProjectCircleProposal = async (
     commonId: string,

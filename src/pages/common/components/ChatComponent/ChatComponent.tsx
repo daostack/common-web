@@ -88,6 +88,7 @@ interface ChatComponentInterface {
   directParent?: DirectParent | null;
   onProjectJoinModalOpen: () => void;
   onCommonJoinModalOpen: () => void;
+  onUserClick?: (userId: string) => void;
 }
 
 interface Messages {
@@ -127,6 +128,7 @@ export default function ChatComponent({
   directParent,
   onProjectJoinModalOpen,
   onCommonJoinModalOpen,
+  onUserClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
   useZoomDisabling();
@@ -584,6 +586,7 @@ export default function ChatComponent({
           isLoading={isLoadingDiscussionMessages}
           onMessageDelete={handleMessageDelete}
           directParent={directParent}
+          onUserClick={onUserClick}
         />
       </div>
       {isAuthorized && (

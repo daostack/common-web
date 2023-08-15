@@ -16,6 +16,7 @@ import {
   DirectParent,
 } from "@/shared/models";
 import { getUserName, isRTL } from "@/shared/utils";
+import { DesktopRightPane } from "../DesktopRightPane";
 import { getChatType } from "./utils";
 import styles from "./DesktopChat.module.scss";
 
@@ -31,6 +32,7 @@ interface ChatProps {
   directParent?: DirectParent | null;
   onProjectJoinModalOpen: () => void;
   onCommonJoinModalOpen: () => void;
+  onUserClick?: (userId: string) => void;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -46,6 +48,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
     directParent,
     onProjectJoinModalOpen,
     onCommonJoinModalOpen,
+    onUserClick,
   } = props;
   const {
     fetchUser: fetchDMUser,
@@ -77,7 +80,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
   }, [dmUserId]);
 
   return (
-    <div className={classNames(styles.container, className)}>
+    <DesktopRightPane className={className}>
       {withTitle && (
         <div className={styles.titleWrapper}>
           {dmUser?.photoURL && (
@@ -118,8 +121,9 @@ const DesktopChat: FC<ChatProps> = (props) => {
         directParent={directParent}
         onProjectJoinModalOpen={onProjectJoinModalOpen}
         onCommonJoinModalOpen={onCommonJoinModalOpen}
+        onUserClick={onUserClick}
       />
-    </div>
+    </DesktopRightPane>
   );
 };
 

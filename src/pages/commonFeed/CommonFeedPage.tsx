@@ -23,7 +23,7 @@ import styles from "./CommonFeedPage.module.scss";
 
 export const FEED_LAYOUT_OUTER_STYLES: FeedLayoutOuterStyles = {
   splitView: styles.splitView,
-  desktopChat: styles.desktopChat,
+  desktopRightPane: styles.desktopRightPane,
 };
 
 export const BASE_FEED_LAYOUT_SETTINGS: FeedLayoutSettings = {

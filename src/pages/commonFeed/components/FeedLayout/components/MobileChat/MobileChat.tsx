@@ -35,6 +35,7 @@ interface ChatProps {
   onClose: () => void;
   onProjectJoinModalOpen: () => void;
   onCommonJoinModalOpen: () => void;
+  onUserClick?: (userId: string) => void;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -53,6 +54,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     onProjectJoinModalOpen,
     onCommonJoinModalOpen,
     onClose,
+    onUserClick,
   } = props;
   const { setIsShowFeedItemDetailsModal } = useChatContext();
   const {
@@ -149,6 +151,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             directParent={directParent}
             onProjectJoinModalOpen={onProjectJoinModalOpen}
             onCommonJoinModalOpen={onCommonJoinModalOpen}
+            onUserClick={onUserClick}
           />
         )}
       </ChatMobileModal>

@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { usePreviousDistinct } from "react-use";
+import difference from "lodash/difference";
 import { CommonFeedService } from "@/services";
 import {
   commonActions,
@@ -17,6 +19,7 @@ export const useCommonPinnedFeedItems = (
 ): Return => {
   const dispatch = useDispatch();
   const pinnedFeedItems = useSelector(selectPinnedFeedItems);
+  const previousIdsForListening = usePreviousDistinct(idsForListening);
 
   const fetch = () => {
     dispatch(
@@ -29,6 +32,15 @@ export const useCommonPinnedFeedItems = (
   useEffect(() => {
     if (!idsForListening || idsForListening.length === 0) {
       return;
+    }
+
+    const unpinnedIds =
+      (previousIdsForListening &&
+        difference(previousIdsForListening, idsForListening)) ||
+      [];
+
+    if (unpinnedIds.length > 0) {
+      dispatch(commonActions.unpinFeedItems(unpinnedIds));
     }
 
     const unsubscribe = CommonFeedService.subscribeToNewUpdatedCommonFeedItems(

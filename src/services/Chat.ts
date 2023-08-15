@@ -58,10 +58,33 @@ class ChatService {
     }));
   };
 
+  public getUserOwnChatChannel = async (
+    userId: string,
+  ): Promise<ChatChannel | null> => {
+    const snapshot = await this.getChatChannelCollection()
+      .where("participants", "array-contains", userId)
+      .get();
+    const docSnapshot = snapshot.docs.find((doc) => {
+      const { participants } = doc.data();
+
+      return participants.length === 1;
+    });
+
+    if (!docSnapshot) {
+      return null;
+    }
+
+    return docSnapshot.data();
+  };
+
   public getDMUserChatChannel = async (
     currentUserId: string,
     dmUserId: string,
   ): Promise<ChatChannel | null> => {
+    if (currentUserId === dmUserId) {
+      return this.getUserOwnChatChannel(currentUserId);
+    }
+
     const snapshot = await this.getChatChannelCollection()
       .where("participants", "array-contains", currentUserId)
       .get();
