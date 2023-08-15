@@ -86,6 +86,8 @@ interface ChatComponentInterface {
   isHidden: boolean;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  onProjectJoinModalOpen: () => void;
+  onCommonJoinModalOpen: () => void;
 }
 
 interface Messages {
@@ -123,6 +125,8 @@ export default function ChatComponent({
   isCommonMemberFetched,
   onMessagesAmountChange,
   directParent,
+  onProjectJoinModalOpen,
+  onCommonJoinModalOpen,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
   useZoomDisabling();
@@ -592,7 +596,12 @@ export default function ChatComponent({
             })}
           >
             {!isChatChannel && (!commonMember || !hasAccess || isHidden) ? (
-              <span className={styles.permissionsText}>
+              <span
+                className={styles.permissionsText}
+                onClick={
+                  directParent ? onProjectJoinModalOpen : onCommonJoinModalOpen
+                }
+              >
                 {directParent ? "Join the space" : "Join the effort"}
               </span>
             ) : (

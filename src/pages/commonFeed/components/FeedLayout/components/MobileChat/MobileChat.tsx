@@ -33,6 +33,8 @@ interface ChatProps {
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
   onClose: () => void;
+  onProjectJoinModalOpen: () => void;
+  onCommonJoinModalOpen: () => void;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -48,6 +50,8 @@ const MobileChat: FC<ChatProps> = (props) => {
     rightHeaderContent,
     onMessagesAmountChange,
     directParent,
+    onProjectJoinModalOpen,
+    onCommonJoinModalOpen,
     onClose,
   } = props;
   const { setIsShowFeedItemDetailsModal } = useChatContext();
@@ -143,6 +147,8 @@ const MobileChat: FC<ChatProps> = (props) => {
             lastSeenItem={chatItem.lastSeenItem}
             onMessagesAmountChange={onMessagesAmountChange}
             directParent={directParent}
+            onProjectJoinModalOpen={onProjectJoinModalOpen}
+            onCommonJoinModalOpen={onCommonJoinModalOpen}
           />
         )}
       </ChatMobileModal>

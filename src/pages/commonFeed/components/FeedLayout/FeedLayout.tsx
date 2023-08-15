@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { MembershipRequestModal } from "@/pages/OldCommon/components";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import {
   FeedItem,
@@ -28,8 +29,9 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
+import { JoinProjectModal } from "@/pages/common/components/JoinProjectModal";
 import { InboxItemType, QueryParamKey } from "@/shared/constants";
-import { useQueryParams } from "@/shared/hooks";
+import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -162,6 +164,16 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } = useCommonMember({
     shouldAutoReset: false,
   });
+  const {
+    isModalOpen: isCommonJoinModalOpen,
+    onOpen: onCommonJoinModalOpen,
+    onClose: onCommonJoinModalClose,
+  } = useAuthorizedModal();
+  const {
+    isModalOpen: isProjectJoinModalOpen,
+    onOpen: onProjectJoinModalOpen,
+    onClose: onProjectJoinModalClose,
+  } = useAuthorizedModal();
   const governance = outerGovernance || fetchedGovernance;
   const commonMember = outerCommonMember || fetchedCommonMember;
   const maxChatSize =
@@ -491,6 +503,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   titleRightContent={followFeedItemEl}
                   onMessagesAmountChange={handleMessagesAmountChange}
                   directParent={outerCommon?.directParent}
+                  onProjectJoinModalOpen={onProjectJoinModalOpen}
+                  onCommonJoinModalOpen={onCommonJoinModalOpen}
                 />
               ) : (
                 <DesktopChatPlaceholder
@@ -511,6 +525,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 onMessagesAmountChange={handleMessagesAmountChange}
                 directParent={outerCommon?.directParent}
                 onClose={handleMobileChatClose}
+                onProjectJoinModalOpen={onProjectJoinModalOpen}
+                onCommonJoinModalOpen={onCommonJoinModalOpen}
               >
                 {selectedItemCommonData &&
                   checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
@@ -529,6 +545,23 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     />
                   )}
               </MobileChat>
+            )}
+            {governance && outerCommon && (
+              <>
+                <MembershipRequestModal
+                  isShowing={isCommonJoinModalOpen}
+                  onClose={onCommonJoinModalClose}
+                  common={outerCommon}
+                  governance={governance}
+                />
+                <JoinProjectModal
+                  isShowing={isProjectJoinModalOpen}
+                  onClose={onProjectJoinModalClose}
+                  common={outerCommon}
+                  governance={governance}
+                  onRequestCreated={() => null}
+                />
+              </>
             )}
           </div>
         )}

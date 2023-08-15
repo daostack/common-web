@@ -29,6 +29,8 @@ interface ChatProps {
   titleRightContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  onProjectJoinModalOpen: () => void;
+  onCommonJoinModalOpen: () => void;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -42,6 +44,8 @@ const DesktopChat: FC<ChatProps> = (props) => {
     titleRightContent,
     onMessagesAmountChange,
     directParent,
+    onProjectJoinModalOpen,
+    onCommonJoinModalOpen,
   } = props;
   const {
     fetchUser: fetchDMUser,
@@ -112,6 +116,8 @@ const DesktopChat: FC<ChatProps> = (props) => {
         isAuthorized={Boolean(user)}
         onMessagesAmountChange={onMessagesAmountChange}
         directParent={directParent}
+        onProjectJoinModalOpen={onProjectJoinModalOpen}
+        onCommonJoinModalOpen={onCommonJoinModalOpen}
       />
     </div>
   );
