@@ -1,7 +1,8 @@
-import React, { FC, memo } from "react";
+import React, { FC, memo, useMemo } from "react";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Circles,
+  CirclesPermissions,
   Common,
   CommonFeed,
   CommonFeedType,
@@ -19,14 +20,14 @@ import { useFeedItemContext } from "./context";
 interface FeedItemProps {
   commonId?: string;
   commonName: string;
-  commonMember?: CommonMember | null;
+  commonMember?: (CommonMember & CirclesPermissions) | null;
+  userCircleIds?: string[];
   commonImage: string;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject?: boolean;
   isPinned?: boolean;
   item: CommonFeed;
   governanceCircles?: Circles;
-  userCircleIds?: string[];
   currentUserId?: string;
   isMobileVersion?: boolean;
   isPreviewMode?: boolean;
@@ -54,7 +55,6 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isPinned = false,
     item,
     governanceCircles,
-    userCircleIds = [],
     isMobileVersion = false,
     isPreviewMode = false,
     isActive = false,
@@ -70,6 +70,10 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   const { onFeedItemUpdate, getLastMessage, getNonAllowedItems, onUserSelect } =
     useFeedItemContext();
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
+  const userCircleIds = useMemo(
+    () => props.userCircleIds || Object.values(commonMember?.circles.map ?? {}),
+    [props.userCircleIds, commonMember?.circles.map],
+  );
 
   if (
     shouldCheckItemVisibility &&

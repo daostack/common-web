@@ -1,12 +1,10 @@
-import React, { FC, ReactNode, useCallback, useRef } from "react";
+import React, { FC, ReactNode, useCallback } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { Close2Icon } from "@/shared/icons";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
-import {
-  Projects,
-  ProjectsRef,
-} from "../../../CommonSidenavLayout/components/SidenavContent/components";
+import { Projects } from "../../../CommonSidenavLayout/components/SidenavContent/components";
+import { useGoToCreateCommon } from "../../hooks";
 import styles from "./SidenavContent.module.scss";
 
 interface SidenavContentProps {
@@ -16,7 +14,7 @@ interface SidenavContentProps {
 
 const SidenavContent: FC<SidenavContentProps> = (props) => {
   const { className, onClose } = props;
-  const projectsRef = useRef<ProjectsRef>(null);
+  const goToCreateCommon = useGoToCreateCommon();
 
   const renderNoItemsInfo = useCallback((): ReactNode => {
     return (
@@ -28,7 +26,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         <Button
           className={styles.createCommonButton}
           variant={ButtonVariant.PrimaryPink}
-          onClick={projectsRef.current?.openCreateCommonModal}
+          onClick={goToCreateCommon}
         >
           Create common
         </Button>
@@ -41,7 +39,10 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
       <ButtonIcon className={styles.closeIconWrapper} onClick={onClose}>
         <Close2Icon />
       </ButtonIcon>
-      <Projects ref={projectsRef} renderNoItemsInfo={renderNoItemsInfo} />
+      <Projects
+        renderNoItemsInfo={renderNoItemsInfo}
+        onCommonCreationClick={goToCreateCommon}
+      />
     </div>
   );
 };

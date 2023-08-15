@@ -1,6 +1,9 @@
 import { BillingPage } from "@/pages/billing";
 import { ALL_COMMON_PAGE_TABS, CommonPage } from "@/pages/common";
-import { CommonCreationPage } from "@/pages/commonCreation";
+import {
+  CommonCreationPage,
+  ProjectCreationPage,
+} from "@/pages/commonCreation";
 import { CommonEditingPage } from "@/pages/commonEditing";
 import { CommonFeedPage } from "@/pages/commonFeed";
 import { InboxPage } from "@/pages/inbox";
@@ -38,6 +41,11 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         },
       },
       {
+        path: ROUTE_PATHS.COMMON_CREATION,
+        exact: true,
+        component: CommonCreationPage,
+      },
+      {
         path: ROUTE_PATHS.COMMON,
         exact: true,
         component: CommonFeedPage,
@@ -46,7 +54,7 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
       {
         path: ROUTE_PATHS.PROJECT_CREATION,
         exact: true,
-        component: CommonCreationPage,
+        component: ProjectCreationPage,
       },
       {
         path: ROUTE_PATHS.COMMON_EDITING,

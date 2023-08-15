@@ -1,0 +1,24 @@
+@import "../../../../constants";
+
+.title {
+  margin-bottom: 2.25rem;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: $moderate;
+  --btn-pl: 0;
+  --btn-pr: 0;
+
+  &:hover {
+    --btn-color: black;
+    text-decoration: underline;
+  }
+
+  .backArrowIcon {
+    --btn-icon-margin: 0.75rem;
+    --btn-icon-size: 1rem;
+  }
+}

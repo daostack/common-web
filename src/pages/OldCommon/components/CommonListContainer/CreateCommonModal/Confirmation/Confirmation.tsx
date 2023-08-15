@@ -31,7 +31,7 @@ const Confirmation: FC<ConfirmationProps> = (props) => {
     isCommonCreationLoading,
     data: createdCommonData,
     error: commonCreationError,
-    createCommon,
+    createCommon_DEPRECATED: createCommon,
   } = useCommonCreation();
   const {
     isSubCommonCreationLoading,
