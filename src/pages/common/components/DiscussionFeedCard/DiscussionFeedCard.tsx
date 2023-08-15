@@ -59,8 +59,12 @@ interface DiscussionFeedCardProps {
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const { setChatItem, feedItemIdForAutoChatOpen, setShouldShowSeeMore } =
-    useChatContext();
+  const {
+    setChatItem,
+    feedItemIdForAutoChatOpen,
+    shouldAllowChatAutoOpen,
+    setShouldShowSeeMore,
+  } = useChatContext();
   const { notify } = useNotification();
   const {
     item,
@@ -208,11 +212,16 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       isDiscussionFetched &&
       isFeedItemUserMetadataFetched &&
       item.id === feedItemIdForAutoChatOpen &&
-      !isMobileVersion
+      !isMobileVersion &&
+      shouldAllowChatAutoOpen !== false
     ) {
       handleOpenChat();
     }
-  }, [isDiscussionFetched, isFeedItemUserMetadataFetched]);
+  }, [
+    isDiscussionFetched,
+    isFeedItemUserMetadataFetched,
+    shouldAllowChatAutoOpen,
+  ]);
 
   useEffect(() => {
     if (isActive && cardTitle) {
