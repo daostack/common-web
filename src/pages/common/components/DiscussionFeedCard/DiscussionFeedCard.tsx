@@ -59,12 +59,8 @@ interface DiscussionFeedCardProps {
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const {
-    setChatItem,
-    feedItemIdForAutoChatOpen,
-    shouldAllowChatAutoOpen,
-    setShouldShowSeeMore,
-  } = useChatContext();
+  const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
+    useChatContext();
   const { notify } = useNotification();
   const {
     item,
@@ -161,10 +157,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         lastSeenAt: feedItemUserMetadata?.lastSeenAt,
         seenOnce: feedItemUserMetadata?.seenOnce,
       });
-      setShouldShowSeeMore &&
-        setShouldShowSeeMore(
-          discussion?.predefinedType !== PredefinedTypes.General,
-        );
     }
   }, [
     discussion,
