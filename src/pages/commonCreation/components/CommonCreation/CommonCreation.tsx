@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useHistory } from "react-router-dom";
 import { CommonEvent, CommonEventEmitter } from "@/events";
 import { GovernanceActions } from "@/shared/constants";
-import { useCanGoBack } from "@/shared/hooks";
+import { useGoBack } from "@/shared/hooks";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Governance } from "@/shared/models";
 import { Button, ButtonVariant, Container } from "@/shared/ui-kit";
@@ -13,7 +13,7 @@ import styles from "./CommonCreation.module.scss";
 
 const CommonCreation: FC = () => {
   const history = useHistory();
-  const canGoBack = useCanGoBack();
+  const { canGoBack, goBack } = useGoBack();
 
   const handleCreatedCommon = (createdCommonData: {
     common: Common;
@@ -38,10 +38,6 @@ const CommonCreation: FC = () => {
     history.push(getCommonPagePath(common.id));
   };
 
-  const handleGoBack = (): void => {
-    history.goBack();
-  };
-
   return (
     <Container className={projectCreationStyles.container}>
       <div className={projectCreationStyles.content}>
@@ -50,7 +46,7 @@ const CommonCreation: FC = () => {
             className={styles.backButton}
             variant={ButtonVariant.Transparent}
             leftIcon={<LongLeftArrowIcon className={styles.backArrowIcon} />}
-            onClick={handleGoBack}
+            onClick={goBack}
           >
             Back
           </Button>
@@ -58,7 +54,7 @@ const CommonCreation: FC = () => {
         <h1 className={`${projectCreationStyles.title} ${styles.title}`}>
           Create a new common
         </h1>
-        <CommonForm onFinish={handleCreatedCommon} onCancel={handleGoBack} />
+        <CommonForm onFinish={handleCreatedCommon} onCancel={goBack} />
       </div>
     </Container>
   );

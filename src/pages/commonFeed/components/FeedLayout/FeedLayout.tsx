@@ -160,6 +160,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
     useState(false);
   const [shouldShowSeeMore, setShouldShowSeeMore] = useState(true);
+  const [shouldAllowChatAutoOpen, setShouldAllowChatAutoOpen] = useState<
+    boolean | null
+  >(null);
   const { data: fetchedGovernance, fetchGovernance } =
     useGovernanceByCommonId();
   const {
@@ -216,7 +219,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
-    if (userForProfile.userForProfileData) {
+    if (
+      userForProfile.userForProfileData ||
+      shouldAllowChatAutoOpen === false
+    ) {
       return;
     }
     if (recentStreamId) {
@@ -251,6 +257,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     recentStreamId,
     sharedFeedItemId,
     userForProfile.userForProfileData,
+    shouldAllowChatAutoOpen,
   ]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
@@ -310,6 +317,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const setActiveChatItem = useCallback((nextChatItem: ChatItem | null) => {
+    setShouldAllowChatAutoOpen(false);
     setExpandedFeedItemId((currentExpandedFeedItemId) =>
       currentExpandedFeedItemId === nextChatItem?.feedItemId
         ? currentExpandedFeedItemId
@@ -322,13 +330,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     () => ({
       setChatItem: setActiveChatItem,
       feedItemIdForAutoChatOpen,
+      shouldAllowChatAutoOpen,
       setIsShowFeedItemDetailsModal,
       setShouldShowSeeMore,
     }),
-    [setActiveChatItem, feedItemIdForAutoChatOpen],
+    [setActiveChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen],
   );
 
   const setActiveItem = useCallback((item: ChatItem) => {
+    setShouldAllowChatAutoOpen(false);
     setChatItem(item);
     setExpandedFeedItemId(item.feedItemId);
   }, []);
@@ -379,7 +389,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   };
 
   const handleMobileChatClose = (shouldChangeHistory = true) => {
-    setChatItem(null);
+    setActiveChatItem(null);
     setShouldShowSeeMore(true);
 
     if (isTabletView && chatItemIdFromQueryParam && shouldChangeHistory) {
@@ -425,6 +435,18 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       userForProfile.resetUserForProfileData(true);
     }
   }, [activeFeedItemId]);
+
+  useEffect(() => {
+    if (selectedFeedItem?.itemId) {
+      return;
+    }
+
+    setActiveChatItem(null);
+
+    if (!isTabletView) {
+      setShouldAllowChatAutoOpen(true);
+    }
+  }, [selectedFeedItem?.itemId, isTabletView]);
 
   useEffect(() => {
     if (isTabletView && chatItem?.feedItemId) {
@@ -504,6 +526,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   return (
                     <FeedItem
                       key={item.feedItem.id}
+                      commonMember={commonMember}
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
@@ -511,9 +534,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       isProject={commonData?.isProject}
                       isPinned={isPinned}
                       item={item.feedItem}
+                      governanceCircles={governance?.circles}
                       isMobileVersion={isTabletView}
+                      userCircleIds={userCircleIds}
                       isActive={isActive}
                       isExpanded={item.feedItem.id === expandedFeedItemId}
+                      sizeKey={isActive ? sizeKey : undefined}
                       currentUserId={userId}
                       shouldCheckItemVisibility={
                         !item.feedItemFollowWithMetadata ||
@@ -523,13 +549,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       directParent={outerCommon?.directParent}
                       commonDescription={outerCommon?.description}
                       commonGallery={outerCommon?.gallery}
-                      commonMember={isActive ? commonMember : outerCommonMember}
-                      governanceCircles={
-                        isActive
-                          ? governance?.circles
-                          : outerGovernance?.circles
-                      }
-                      sizeKey={isActive ? sizeKey : undefined}
                     />
                   );
                 }

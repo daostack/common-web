@@ -193,9 +193,9 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
 
   useEffect(() => {
     if (!user) {
-      history.push(getCommonPageAboutTabPath(commonId));
+      history.replace(getCommonPageAboutTabPath(commonId));
     }
-  }, [user, isGlobalDataFetched, commonId]);
+  }, [user, commonId]);
 
   useEffect(() => {
     dispatch(commonActions.setSharedFeedItemId(sharedFeedItemId));

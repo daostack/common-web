@@ -94,7 +94,8 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
+  const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
+    useChatContext();
   const forceUpdate = useForceUpdate();
   const { getCommonPagePath } = useRoutesContext();
   const {
@@ -251,11 +252,17 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       isProposalFetched &&
       isFeedItemUserMetadataFetched &&
       item.id === feedItemIdForAutoChatOpen &&
-      !isMobileVersion
+      !isMobileVersion &&
+      shouldAllowChatAutoOpen !== false
     ) {
       handleOpenChat();
     }
-  }, [isDiscussionFetched, isProposalFetched, isFeedItemUserMetadataFetched]);
+  }, [
+    isDiscussionFetched,
+    isProposalFetched,
+    isFeedItemUserMetadataFetched,
+    shouldAllowChatAutoOpen,
+  ]);
 
   useEffect(() => {
     if (isExpanded) {
@@ -389,7 +396,6 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           isProject,
           hasFiles: item.data.hasFiles,
           hasImages: item.data.hasImages,
-          ownerId: item.userId,
         })}
         canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
         isPreviewMode={isPreviewMode}

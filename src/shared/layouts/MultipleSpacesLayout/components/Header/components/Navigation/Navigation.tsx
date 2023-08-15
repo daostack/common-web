@@ -60,7 +60,7 @@ const Navigation: FC<NavigationProps> = (props) => {
     {
       text: "My spaces",
       route: mySpacesPagePath,
-      icon: <BlocksIcon className={styles.icon} />,
+      icon: <BlocksIcon className={styles.blocksIcon} />,
       isActive: activeTab === CommonSidenavLayoutTab.Spaces,
       onClick: !mySpacesPagePath ? onCreateCommonPromptOpen : undefined,
     },

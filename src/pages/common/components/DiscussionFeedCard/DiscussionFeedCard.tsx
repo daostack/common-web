@@ -59,7 +59,7 @@ interface DiscussionFeedCardProps {
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const { setChatItem, feedItemIdForAutoChatOpen, setShouldShowSeeMore } =
+  const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
     useChatContext();
   const { notify } = useNotification();
   const {
@@ -157,10 +157,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         lastSeenAt: feedItemUserMetadata?.lastSeenAt,
         seenOnce: feedItemUserMetadata?.seenOnce,
       });
-      setShouldShowSeeMore &&
-        setShouldShowSeeMore(
-          discussion?.predefinedType !== PredefinedTypes.General,
-        );
     }
   }, [
     discussion,
@@ -208,11 +204,16 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       isDiscussionFetched &&
       isFeedItemUserMetadataFetched &&
       item.id === feedItemIdForAutoChatOpen &&
-      !isMobileVersion
+      !isMobileVersion &&
+      shouldAllowChatAutoOpen !== false
     ) {
       handleOpenChat();
     }
-  }, [isDiscussionFetched, isFeedItemUserMetadataFetched]);
+  }, [
+    isDiscussionFetched,
+    isFeedItemUserMetadataFetched,
+    shouldAllowChatAutoOpen,
+  ]);
 
   useEffect(() => {
     if (isActive && cardTitle) {
@@ -298,7 +299,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           isProject,
           hasFiles: item.data.hasFiles,
           hasImages: item.data.hasImages,
-          ownerId: item.userId,
         })}
         isPreviewMode={isPreviewMode}
         isPinned={isPinned}
