@@ -27,14 +27,14 @@ interface CommonTopNavigationProps {
 const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
   const { commonMember, circles, isSubCommon, commonId } = props;
   const history = useHistory();
-  const { canGoBack } = useGoBack();
+  const { canGoBack, goBack } = useGoBack();
   const { getCommonPagePath } = useRoutesContext();
   const { isJoinAllowed, isJoinPending, onJoinCommon } = useCommonDataContext();
   const circlesMap = commonMember?.circles.map;
 
   const handleBackButtonClick = () => {
     if (canGoBack) {
-      history.goBack();
+      goBack();
     } else if (commonMember) {
       history.push(getCommonPagePath(commonId));
     }
