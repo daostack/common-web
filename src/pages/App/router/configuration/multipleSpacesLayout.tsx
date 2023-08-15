@@ -15,6 +15,7 @@ import { LayoutConfiguration, RouteType } from "../types";
 export interface MultipleSpacesLayoutRouteOptions {
   withSidenav?: boolean;
   withBreadcrumbs?: boolean;
+  withGoBack?: boolean;
   breadcrumbsItemsWithMenus?: boolean;
 }
 
@@ -24,6 +25,9 @@ const getCommonPageConfiguration =
       path: `${ROUTE_PATHS.COMMON}/${tab}` as ROUTE_PATHS,
       exact: true,
       component: CommonPage,
+      routeOptions: {
+        withGoBack: true,
+      },
     }));
 
 export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleSpacesLayoutRouteOptions> =

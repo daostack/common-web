@@ -1,7 +1,8 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
 import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
+import { ButtonIcon } from "@/shared/components";
+import { useGoBack } from "@/shared/hooks";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
@@ -15,21 +16,21 @@ import { Breadcrumbs, Navigation } from "./components";
 import styles from "./Header.module.scss";
 
 interface HeaderProps {
-  backUrl?: string | null;
   withBreadcrumbs?: boolean;
   breadcrumbsItemsWithMenus?: boolean;
   withMenuButton?: boolean;
+  withGoBack: boolean;
   onMenuClick?: () => void;
 }
 
 const Header: FC<HeaderProps> = (props) => {
   const {
-    backUrl = null,
     withBreadcrumbs = true,
     breadcrumbsItemsWithMenus = true,
     withMenuButton = true,
     onMenuClick,
   } = props;
+  const { canGoBack, goBack } = useGoBack();
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const userInfoContentStyles: ContentStyles = {
@@ -41,6 +42,7 @@ const Header: FC<HeaderProps> = (props) => {
   const menuItemsStyles: MenuItemsStyles = {
     wrapper: styles.menuItemsWrapper,
   };
+  const withGoBack = props.withGoBack && canGoBack;
 
   return (
     <div className={styles.container}>
@@ -51,14 +53,14 @@ const Header: FC<HeaderProps> = (props) => {
             onClick={onMenuClick}
           />
         )}
-        {withBreadcrumbs && !backUrl && (
+        {withBreadcrumbs && !withGoBack && (
           <Breadcrumbs itemsWithMenus={breadcrumbsItemsWithMenus} />
         )}
-        {backUrl && (
-          <NavLink className={styles.backLink} to={backUrl}>
+        {withGoBack && (
+          <ButtonIcon className={styles.backLink} onClick={goBack}>
             <LongLeftArrowIcon className={styles.backIcon} />
             Back
-          </NavLink>
+          </ButtonIcon>
         )}
       </div>
       <div className={styles.rightContent}>
