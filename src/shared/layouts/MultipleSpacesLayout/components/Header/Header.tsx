@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
 import { ButtonIcon } from "@/shared/components";
 import { useGoBack } from "@/shared/hooks";
@@ -16,6 +17,7 @@ import { Breadcrumbs, Navigation } from "./components";
 import styles from "./Header.module.scss";
 
 interface HeaderProps {
+  backUrl?: string | null;
   withBreadcrumbs?: boolean;
   breadcrumbsItemsWithMenus?: boolean;
   withMenuButton?: boolean;
@@ -25,12 +27,14 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = (props) => {
   const {
+    backUrl = null,
     withBreadcrumbs = true,
     breadcrumbsItemsWithMenus = true,
     withMenuButton = true,
     onMenuClick,
   } = props;
   const { canGoBack, goBack } = useGoBack();
+  const history = useHistory();
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const userInfoContentStyles: ContentStyles = {
@@ -42,7 +46,15 @@ const Header: FC<HeaderProps> = (props) => {
   const menuItemsStyles: MenuItemsStyles = {
     wrapper: styles.menuItemsWrapper,
   };
-  const withGoBack = props.withGoBack && canGoBack;
+  const withGoBack = Boolean(props.withGoBack && (backUrl || canGoBack));
+
+  const handleGoBack = () => {
+    if (backUrl) {
+      history.push(backUrl);
+    } else if (canGoBack) {
+      goBack();
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -57,7 +69,7 @@ const Header: FC<HeaderProps> = (props) => {
           <Breadcrumbs itemsWithMenus={breadcrumbsItemsWithMenus} />
         )}
         {withGoBack && (
-          <ButtonIcon className={styles.backLink} onClick={goBack}>
+          <ButtonIcon className={styles.backLink} onClick={handleGoBack}>
             <LongLeftArrowIcon className={styles.backIcon} />
             Back
           </ButtonIcon>

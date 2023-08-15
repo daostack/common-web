@@ -116,6 +116,7 @@ const MultipleSpacesLayout: FC = (props) => {
         <main className={styles.main}>
           {!isTabletView && (
             <Header
+              backUrl={backUrl}
               withBreadcrumbs={routeOptions.withBreadcrumbs}
               breadcrumbsItemsWithMenus={routeOptions.breadcrumbsItemsWithMenus}
               withMenuButton={!isSidenavDisabled && !isSidenavOpen}
