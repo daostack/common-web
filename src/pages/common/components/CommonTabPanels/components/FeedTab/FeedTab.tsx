@@ -137,8 +137,6 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
               feedItemId={chatItem.feedItemId}
               lastSeenItem={chatItem.lastSeenItem}
               directParent={common.directParent}
-              onProjectJoinModalOpen={() => null}
-              onCommonJoinModalOpen={() => null}
             />
           </>
         )}
@@ -173,8 +171,6 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
             directParent={common.directParent}
-            onProjectJoinModalOpen={() => null}
-            onCommonJoinModalOpen={() => null}
           />
         )}
       </ChatMobileModal>

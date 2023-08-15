@@ -30,8 +30,8 @@ interface ChatProps {
   titleRightContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
-  onProjectJoinModalOpen: () => void;
-  onCommonJoinModalOpen: () => void;
+  onProjectJoinModalOpen?: () => void;
+  onCommonJoinModalOpen?: () => void;
   onUserClick?: (userId: string) => void;
 }
 
