@@ -72,6 +72,7 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         routeOptions: {
           withSidenav: false,
           withBreadcrumbs: false,
+          withGoBack: true,
         },
       },
       {
@@ -81,6 +82,7 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         routeOptions: {
           withSidenav: false,
           withBreadcrumbs: false,
+          withGoBack: true,
         },
       },
     ],
