@@ -35,6 +35,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     isFollowing,
     isLoading = false,
     discussionPredefinedType,
+    shouldHideBottomContent = false,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -127,39 +128,45 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
             <TimeAgo milliseconds={lastActivity} />
           </p>
         </div>
-        <div className={styles.bottomContent}>
-          {!isHome && (
-            <>
-              {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
-                <TextEditor
-                  className={styles.lastMessageContainer}
-                  editorClassName={classNames(styles.text, styles.lastMessage, {
-                    [styles.lastMessageActive]:
-                      isActive || (isExpanded && isMobileView),
-                  })}
-                  elementStyles={{
-                    mention: isActive ? styles.mentionText : "",
-                  }}
-                  value={lastMessage}
-                  readOnly
-                />
-              ) : (
-                <div />
-              )}
-              <div className={classNames(styles.bottomContentRight)}>
-                <FeedCardTags
-                  unreadMessages={unreadMessages}
-                  type={type}
-                  seenOnce={seenOnce}
-                  ownerId={ownerId}
-                  isActive={isActive}
-                  isPinned={isPinned}
-                  isFollowing={isFollowing}
-                />
-              </div>
-            </>
-          )}
-        </div>
+        {!shouldHideBottomContent && (
+          <div className={styles.bottomContent}>
+            {!isHome && (
+              <>
+                {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
+                  <TextEditor
+                    className={styles.lastMessageContainer}
+                    editorClassName={classNames(
+                      styles.text,
+                      styles.lastMessage,
+                      {
+                        [styles.lastMessageActive]:
+                          isActive || (isExpanded && isMobileView),
+                      },
+                    )}
+                    elementStyles={{
+                      mention: isActive ? styles.mentionText : "",
+                    }}
+                    value={lastMessage}
+                    readOnly
+                  />
+                ) : (
+                  <div />
+                )}
+                <div className={classNames(styles.bottomContentRight)}>
+                  <FeedCardTags
+                    unreadMessages={unreadMessages}
+                    type={type}
+                    seenOnce={seenOnce}
+                    ownerId={ownerId}
+                    isActive={isActive}
+                    isPinned={isPinned}
+                    isFollowing={isFollowing}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
       {menuItems && menuItems.length > 0 && (
         <ContextMenu
