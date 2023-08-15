@@ -1,6 +1,7 @@
 import React, { FC, ReactNode } from "react";
 import { useHistory } from "react-router-dom";
 import { useRoutesContext } from "@/shared/contexts";
+import { useCanGoBack } from "@/shared/hooks";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import {
@@ -26,12 +27,17 @@ interface CommonTopNavigationProps {
 const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
   const { commonMember, circles, isSubCommon, commonId } = props;
   const history = useHistory();
+  const canGoBack = useCanGoBack();
   const { getCommonPagePath } = useRoutesContext();
   const { isJoinAllowed, isJoinPending, onJoinCommon } = useCommonDataContext();
   const circlesMap = commonMember?.circles.map;
 
   const handleBackButtonClick = () => {
-    history.push(getCommonPagePath(commonId));
+    if (canGoBack) {
+      history.goBack();
+    } else if (commonMember) {
+      history.push(getCommonPagePath(commonId));
+    }
   };
 
   const renderCentralElement = (): ReactNode => {
@@ -78,7 +84,7 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
 
   return (
     <TopNavigation className={styles.container}>
-      {commonMember ? (
+      {canGoBack || commonMember ? (
         <TopNavigationBackButton
           className={styles.backIconButton}
           iconEl={<LongLeftArrowIcon className={styles.backIcon} />}
