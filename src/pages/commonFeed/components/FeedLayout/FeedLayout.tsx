@@ -488,12 +488,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     (pinnedItem) =>
                       pinnedItem.feedObjectId === item.feedItem.id,
                   );
-                  const activeItemData = {
-                    commonMember,
-                    userCircleIds,
-                    sizeKey,
-                    governanceCircles: governance?.circles,
-                  };
 
                   return (
                     <FeedItem
@@ -517,7 +511,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       directParent={outerCommon?.directParent}
                       commonDescription={outerCommon?.description}
                       commonGallery={outerCommon?.gallery}
-                      {...(isActive ? activeItemData : {})}
+                      commonMember={isActive ? commonMember : outerCommonMember}
+                      governanceCircles={
+                        isActive
+                          ? governance?.circles
+                          : outerGovernance?.circles
+                      }
+                      sizeKey={isActive ? sizeKey : undefined}
                     />
                   );
                 }
