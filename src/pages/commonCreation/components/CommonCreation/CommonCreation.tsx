@@ -6,14 +6,14 @@ import { useCanGoBack } from "@/shared/hooks";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Governance } from "@/shared/models";
 import { Button, ButtonVariant, Container } from "@/shared/ui-kit";
-import { getCommonPageAboutTabPath } from "@/shared/utils";
+import { getCommonPagePath } from "@/shared/utils";
 import { styles as projectCreationStyles } from "../ProjectCreation";
 import { CommonForm } from "./components";
 import styles from "./CommonCreation.module.scss";
 
 const CommonCreation: FC = () => {
   const history = useHistory();
-  const canGoBack: boolean = useCanGoBack();
+  const canGoBack = useCanGoBack();
 
   const handleCreatedCommon = (createdCommonData: {
     common: Common;
@@ -35,7 +35,7 @@ const CommonCreation: FC = () => {
     });
     CommonEventEmitter.emit(CommonEvent.CommonCreated, common);
 
-    history.push(getCommonPageAboutTabPath(common.id));
+    history.push(getCommonPagePath(common.id));
   };
 
   const handleGoBack = (): void => {
@@ -49,11 +49,9 @@ const CommonCreation: FC = () => {
           <Button
             className={styles.backButton}
             variant={ButtonVariant.Transparent}
+            leftIcon={<LongLeftArrowIcon className={styles.backArrowIcon} />}
             onClick={handleGoBack}
           >
-            <LongLeftArrowIcon
-              className={projectCreationStyles.backArrowIcon}
-            />
             Back
           </Button>
         )}

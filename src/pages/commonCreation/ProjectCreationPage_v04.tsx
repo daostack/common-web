@@ -4,10 +4,10 @@ import BaseCommonCreation, {
   CommonCreationPageProps,
 } from "./BaseCommonCreation";
 
-const CommonCreationPage_v04: FC<CommonCreationPageProps> = (props) => (
+const ProjectCreationPage_v04: FC<CommonCreationPageProps> = (props) => (
   <RoutesV04Provider>
     <BaseCommonCreation {...props} />
   </RoutesV04Provider>
 );
 
-export default CommonCreationPage_v04;
+export default ProjectCreationPage_v04;

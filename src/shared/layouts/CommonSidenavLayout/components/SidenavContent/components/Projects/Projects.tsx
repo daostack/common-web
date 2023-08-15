@@ -76,7 +76,10 @@ const Projects: FC<ProjectsProps> = (props) => {
     return areCommonsLoading ? (
       <Loader className={styles.loader} />
     ) : (
-      <>{renderNoItemsInfo?.() || null}</>
+      <>
+        {renderNoItemsInfo?.() || null}
+        {createCommonModalEl}
+      </>
     );
   }
 

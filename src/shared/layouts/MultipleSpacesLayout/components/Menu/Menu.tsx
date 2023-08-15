@@ -4,7 +4,7 @@ import { useAllViews } from "@/shared/hooks/viewport";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { checkIsSidenavOpen, closeSidenav } from "@/shared/utils";
 import { Projects } from "../../../CommonSidenavLayout/components/SidenavContent/components";
-import useGoToCreateCommon from "../../hooks";
+import { useGoToCreateCommon } from "../../hooks";
 import { MenuPopUp } from "../MenuPopUp";
 import styles from "./Menu.module.scss";
 

@@ -1,1 +1,1 @@
-export { default } from "./useGoToCreateCommon";
+export * from "./useGoToCreateCommon";

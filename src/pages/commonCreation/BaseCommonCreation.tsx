@@ -10,11 +10,10 @@ interface CommonCreationRouterParams {
 
 export interface CommonCreationPageProps {
   initialCommon?: Common;
-  isCommonCreation?: boolean;
 }
 
 const BaseCommonCreation: FC<CommonCreationPageProps> = (props) => {
-  const { initialCommon, isCommonCreation } = props;
+  const { initialCommon } = props;
   const { id: commonId } = useParams<CommonCreationRouterParams>();
 
   if (initialCommon) {
@@ -30,11 +29,7 @@ const BaseCommonCreation: FC<CommonCreationPageProps> = (props) => {
     return <ProjectCreation parentCommonId={commonId} />;
   }
 
-  if (isCommonCreation) {
-    return <Creation></Creation>;
-  }
-
-  return null;
+  return <Creation />;
 };
 
 export default BaseCommonCreation;

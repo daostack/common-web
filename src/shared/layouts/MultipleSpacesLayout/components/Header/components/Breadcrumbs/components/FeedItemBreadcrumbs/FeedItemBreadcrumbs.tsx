@@ -1,6 +1,6 @@
 import React, { FC, useMemo } from "react";
 import { MultipleSpacesLayoutFeedItemBreadcrumbs } from "@/store/states";
-import useGoToCreateCommon from "../../../../../../hooks";
+import { useGoToCreateCommon } from "../../../../../../hooks";
 import { ActiveBreadcrumbsItem } from "../ActiveBreadcrumbsItem";
 import { BreadcrumbsItem } from "../BreadcrumbsItem";
 import { LoadingBreadcrumbsItem } from "../LoadingBreadcrumbsItem";

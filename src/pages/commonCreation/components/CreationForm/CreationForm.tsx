@@ -79,7 +79,6 @@ const CreationForm = <T extends FormikValues>(
             By continuing and creating this common, you are confirming your
             agreement to our{" "}
             <ButtonLink
-              className="connect-wrapper__terms-of-use"
               href={require("../../../../shared/assets/terms_and_conditions.pdf")}
               target="_blank"
               rel="noopener noreferrer"

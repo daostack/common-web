@@ -4,7 +4,7 @@ import { ButtonIcon } from "@/shared/components";
 import { Close2Icon } from "@/shared/icons";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Projects } from "../../../CommonSidenavLayout/components/SidenavContent/components";
-import useGoToCreateCommon from "../../hooks";
+import { useGoToCreateCommon } from "../../hooks";
 import styles from "./SidenavContent.module.scss";
 
 interface SidenavContentProps {

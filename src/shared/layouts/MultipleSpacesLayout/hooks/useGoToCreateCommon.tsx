@@ -1,13 +1,11 @@
+import { useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { ROUTE_PATHS } from "@/shared/constants";
 
-const useGoToCreateCommon = (): (() => void) => {
+export const useGoToCreateCommon = (): (() => void) => {
   const history = useHistory();
-  const goToCreateCommon = (): void => {
+
+  return useCallback(() => {
     history.push(ROUTE_PATHS.COMMON_CREATION);
-  };
-
-  return goToCreateCommon;
+  }, [history.push]);
 };
-
-export default useGoToCreateCommon;
