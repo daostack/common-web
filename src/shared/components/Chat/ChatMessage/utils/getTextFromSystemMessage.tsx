@@ -7,7 +7,6 @@ import {
   CommonCreatedSystemMessage,
   CommonEditedSystemMessage,
   CommonMemberAddedSystemMessage,
-  DirectParent,
   SystemMessageCommonType,
   User,
 } from "@/shared/models";
