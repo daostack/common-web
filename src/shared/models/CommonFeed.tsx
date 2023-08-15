@@ -20,6 +20,7 @@ export interface CommonFeed extends BaseEntity, SoftDeleteEntity {
     discussionId: string | null;
     lastMessage?: {
       userName: string;
+      ownerId: string;
       content: string;
       ownerType?: DiscussionMessageOwnerType;
     };
