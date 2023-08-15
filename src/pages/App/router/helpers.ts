@@ -20,3 +20,6 @@ export const mapRoutesToPaths = (routes: Route[]): ROUTE_PATHS[] => {
 
   return Array.from(new Set(paths));
 };
+
+export const getPathNestingLevel = (path: string): number =>
+  path.split("/").length;

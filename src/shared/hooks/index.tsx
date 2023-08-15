@@ -24,4 +24,5 @@ export { default as useIntersection } from "./useIntersection";
 export { default as useScreenSize } from "./useScreenSize";
 export { useLanguage } from "./useLanguage";
 export { useIsMounted } from "./useIsMounted";
+export { useCanGoBack } from "./useCanGoBack";
 export * from "./usePreventReload";

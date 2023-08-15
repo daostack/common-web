@@ -1,4 +1,4 @@
-import { mapRoutesToPaths } from "../helpers";
+import { getPathNestingLevel, mapRoutesToPaths } from "../helpers";
 import {
   LayoutConfiguration,
   LayoutConfigurationWithRouteProps,
@@ -36,8 +36,10 @@ const CONFIGURATIONS: LayoutConfiguration<LayoutRouteOptions>[] = [
 export const ROUTES: LayoutConfigurationWithRouteProps<LayoutRouteOptions>[] =
   CONFIGURATIONS.map((configuration) => {
     // Sort paths like: /path/nested/nested2 -> /path/nested -> /path
-    const routes = [...configuration.routes].sort((prevRoute, nextRoute) =>
-      prevRoute < nextRoute ? 1 : -1,
+    const routes = [...configuration.routes].sort(
+      (prevRoute, nextRoute) =>
+        getPathNestingLevel(nextRoute.path) -
+        getPathNestingLevel(prevRoute.path),
     );
 
     return {
