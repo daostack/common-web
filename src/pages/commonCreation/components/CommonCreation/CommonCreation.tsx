@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useHistory } from "react-router-dom";
 import { CommonEvent, CommonEventEmitter } from "@/events";
 import { GovernanceActions } from "@/shared/constants";
-import { useCanGoBack } from "@/shared/hooks";
+import { useGoBack } from "@/shared/hooks";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Governance } from "@/shared/models";
 import { Button, ButtonVariant, Container } from "@/shared/ui-kit";
@@ -13,7 +13,7 @@ import styles from "./CommonCreation.module.scss";
 
 const CommonCreation: FC = () => {
   const history = useHistory();
-  const canGoBack = useCanGoBack();
+  const { canGoBack } = useGoBack();
 
   const handleCreatedCommon = (createdCommonData: {
     common: Common;

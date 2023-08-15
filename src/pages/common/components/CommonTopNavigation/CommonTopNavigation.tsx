@@ -1,7 +1,7 @@
 import React, { FC, ReactNode } from "react";
 import { useHistory } from "react-router-dom";
 import { useRoutesContext } from "@/shared/contexts";
-import { useCanGoBack } from "@/shared/hooks";
+import { useGoBack } from "@/shared/hooks";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import {
@@ -27,7 +27,7 @@ interface CommonTopNavigationProps {
 const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
   const { commonMember, circles, isSubCommon, commonId } = props;
   const history = useHistory();
-  const canGoBack = useCanGoBack();
+  const { canGoBack } = useGoBack();
   const { getCommonPagePath } = useRoutesContext();
   const { isJoinAllowed, isJoinPending, onJoinCommon } = useCommonDataContext();
   const circlesMap = commonMember?.circles.map;
