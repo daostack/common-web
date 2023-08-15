@@ -514,6 +514,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   return (
                     <FeedItem
                       key={item.feedItem.id}
+                      commonMember={commonMember}
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
@@ -521,9 +522,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       isProject={commonData?.isProject}
                       isPinned={isPinned}
                       item={item.feedItem}
+                      governanceCircles={governance?.circles}
                       isMobileVersion={isTabletView}
+                      userCircleIds={userCircleIds}
                       isActive={isActive}
                       isExpanded={item.feedItem.id === expandedFeedItemId}
+                      sizeKey={isActive ? sizeKey : undefined}
                       currentUserId={userId}
                       shouldCheckItemVisibility={
                         !item.feedItemFollowWithMetadata ||
@@ -533,13 +537,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       directParent={outerCommon?.directParent}
                       commonDescription={outerCommon?.description}
                       commonGallery={outerCommon?.gallery}
-                      commonMember={isActive ? commonMember : outerCommonMember}
-                      governanceCircles={
-                        isActive
-                          ? governance?.circles
-                          : outerGovernance?.circles
-                      }
-                      sizeKey={isActive ? sizeKey : undefined}
                     />
                   );
                 }
