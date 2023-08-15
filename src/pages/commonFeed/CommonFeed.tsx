@@ -193,7 +193,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
 
   useEffect(() => {
     if (!user || (isGlobalDataFetched && !commonMember)) {
-      history.push(getCommonPageAboutTabPath(commonId));
+      history.replace(getCommonPageAboutTabPath(commonId));
     }
   }, [user, isGlobalDataFetched, commonMember, commonId]);
 
