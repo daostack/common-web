@@ -60,11 +60,11 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           unreadMessages: 0,
           isMobileView: isMobileVersion,
           title: titleEl,
-          lastMessage: parseStringToTextEditorValue("0 Updated streams"),
           onClick: handleClick,
           seenOnce: true,
           isLoading: !isCommonFetched,
           renderLeftContent,
+          shouldHideBottomContent: true,
         })}
       </>
     ) || null

@@ -40,6 +40,7 @@ export interface FeedItemBaseContentProps {
   hasFiles?: boolean;
   hasImages?: boolean;
   isLoading?: boolean;
+  shouldHideBottomContent?: boolean;
 }
 
 export interface GetLastMessageOptions {
