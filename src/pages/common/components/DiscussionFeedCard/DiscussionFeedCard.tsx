@@ -143,8 +143,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     !isDiscussionCreatorFetched ||
     !isDiscussionFetched ||
     !isFeedItemUserMetadataFetched ||
-    !commonId ||
-    !governanceCircles;
+    !commonId;
   const cardTitle = discussion?.title;
 
   const handleOpenChat = useCallback(() => {
@@ -229,10 +228,9 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       return null;
     }
 
-    const circleVisibility = getVisibilityString(
-      governanceCircles,
-      discussion?.circleVisibility,
-    );
+    const circleVisibility = governanceCircles
+      ? getVisibilityString(governanceCircles, discussion?.circleVisibility)
+      : undefined;
 
     const isHome = discussion?.predefinedType === PredefinedTypes.General;
 
