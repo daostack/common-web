@@ -62,7 +62,13 @@ const DesktopCommonDropdown: FC<DesktopCommonDropdownProps> = (props) => {
   const triggerEl = (
     <ButtonIcon onClick={onClick}>
       {isMobileView ? (
-        <span className={styles.changeLabel}>Change</span>
+        <span
+          className={classNames(styles.changeLabel, {
+            [styles.changeLabelActive]: isActive,
+          })}
+        >
+          Change
+        </span>
       ) : (
         <Menu2Icon
           className={classNames(styles.icon, {
