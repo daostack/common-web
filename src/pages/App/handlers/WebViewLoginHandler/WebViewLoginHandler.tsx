@@ -11,13 +11,12 @@ const WebViewLoginHandler: FC = () => {
   const dispatch = useDispatch();
 
   const handleWebviewLogin = React.useCallback((event) => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      const data = parseJson(event.data) as FirebaseCredentials;
-      if (!data?.providerId) {
-        return;
-      }
+    const data = parseJson(event.data) as FirebaseCredentials;
+    if (!data?.providerId) {
+      return;
+    }
 
+    if (!data?.isLoggedIn) {
       try {
         dispatch(
           webviewLogin.request({
