@@ -11,6 +11,7 @@ const initialState: MultipleSpacesLayoutState = {
   breadcrumbs: null,
   previousBreadcrumbs: null,
   backUrl: null,
+  mainWidth: window.innerWidth,
 };
 
 export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
@@ -61,5 +62,10 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
   .handleAction(actions.setBackUrl, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.backUrl = payload;
+    }),
+  )
+  .handleAction(actions.setMainWidth, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.mainWidth = payload;
     }),
   );

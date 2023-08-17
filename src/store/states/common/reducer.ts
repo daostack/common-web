@@ -93,6 +93,7 @@ const addNewFeedItems = (
       isRemoved: boolean;
     };
   }[],
+  shouldSortNewItems = false,
 ) => {
   let firstDocTimestamp = state.feedItems.firstDocTimestamp;
 
@@ -118,11 +119,23 @@ const addNewFeedItems = (
     };
     firstDocTimestamp = commonFeedItem.updatedAt;
 
-    if (itemIndex < 0) {
+    if (itemIndex >= 0) {
+      nextData[itemIndex] = finalItem;
+      return nextData;
+    }
+    if (!shouldSortNewItems) {
       return [finalItem, ...nextData];
     }
 
-    nextData[itemIndex] = finalItem;
+    const indexForItemPlacement = nextData.findIndex(
+      (item) => finalItem.feedItem.updatedAt > item.feedItem.updatedAt,
+    );
+
+    if (indexForItemPlacement === -1) {
+      return [finalItem, ...nextData];
+    }
+
+    nextData.splice(indexForItemPlacement, 0, finalItem);
 
     return nextData;
   }, state.feedItems.data || []);
@@ -166,7 +179,7 @@ const addNewPinnedFeedItems = (
     };
 
     if (itemIndex < 0) {
-      return [finalItem, ...nextData];
+      return [...nextData, finalItem];
     }
 
     nextData[itemIndex] = finalItem;
@@ -186,9 +199,9 @@ const updatePinnedFeedItemInList = (
     item: Partial<CommonFeed> & { id: string };
     isRemoved?: boolean;
   },
-): void => {
+): FeedItemFollowLayoutItem | null => {
   if (!state.pinnedFeedItems.data) {
-    return;
+    return null;
   }
 
   const { item: updatedItem } = payload;
@@ -198,12 +211,14 @@ const updatePinnedFeedItemInList = (
   );
 
   if (feedItemIndex === -1) {
-    return;
+    return null;
   }
 
   const nextData = [...state.pinnedFeedItems.data];
+  let itemToReturn: FeedItemFollowLayoutItem;
 
   if (isRemoved) {
+    itemToReturn = nextData[feedItemIndex];
     nextData.splice(feedItemIndex, 1);
   } else {
     nextData[feedItemIndex] = {
@@ -213,12 +228,15 @@ const updatePinnedFeedItemInList = (
         ...updatedItem,
       },
     };
+    itemToReturn = nextData[feedItemIndex];
   }
 
   state.pinnedFeedItems = {
     ...state.pinnedFeedItems,
     data: nextData,
   };
+
+  return itemToReturn || null;
 };
 
 const updateSharedFeedItem = (
@@ -447,6 +465,37 @@ export const reducer = createReducer<CommonState, Action>(initialState)
             isRemoved: true,
           },
         })),
+      );
+    }),
+  )
+  .handleAction(actions.unpinFeedItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const removedItems: FeedItemFollowLayoutItem[] = [];
+      payload.forEach((itemId) => {
+        const removedItem = updatePinnedFeedItemInList(nextState, {
+          item: { id: itemId },
+          isRemoved: true,
+        });
+
+        if (removedItem) {
+          removedItems.push(removedItem);
+        }
+      });
+
+      if (removedItems.length === 0) {
+        return;
+      }
+
+      addNewFeedItems(
+        nextState,
+        removedItems.map((item) => ({
+          commonFeedItem: item.feedItem,
+          statuses: {
+            isAdded: true,
+            isRemoved: false,
+          },
+        })),
+        true,
       );
     }),
   )

@@ -1,5 +1,6 @@
 export enum ROUTE_PATHS {
   HOME = "/",
+  MOBILE_LOADER = "/mobile-loader",
   CONTACT_US = "/contact-us",
   MY_ACCOUNT = "/my-account",
   V04_PROFILE = "/profile-v04",
@@ -17,6 +18,7 @@ export enum ROUTE_PATHS {
   V04_COMMON_WALLET_TAB = "/commons-v04/:id/wallet",
   V04_PROJECT_CREATION = "/commons-v04/:id/new-project",
   V04_COMMON_EDITING = "/commons-v04/:id/edit",
+  COMMON_CREATION = "/commons/new",
   COMMON = "/commons/:id",
   COMMON_ABOUT_TAB = "/commons/:id/about",
   COMMON_MEMBERS_TAB = "/commons/:id/members",

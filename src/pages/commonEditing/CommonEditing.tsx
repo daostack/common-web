@@ -5,7 +5,7 @@ import { Loader } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
 import {
   CenterWrapper,
-  CommonCreationPage as DefaultCommonCreationPage,
+  ProjectCreationPage as DefaultProjectCreationPage,
   CommonCreationPageProps,
 } from "../commonCreation";
 import { Editing } from "./components";
@@ -16,11 +16,11 @@ interface CommonEditingRouterParams {
 }
 
 interface CommonEditingProps {
-  CommonCreationPage?: FC<CommonCreationPageProps>;
+  ProjectCreationPage?: FC<CommonCreationPageProps>;
 }
 
 const CommonEditing: FC<CommonEditingProps> = (props) => {
-  const { CommonCreationPage = DefaultCommonCreationPage } = props;
+  const { ProjectCreationPage = DefaultProjectCreationPage } = props;
   const { id: commonId } = useParams<CommonEditingRouterParams>();
   const {
     data: common,
@@ -53,7 +53,7 @@ const CommonEditing: FC<CommonEditingProps> = (props) => {
   }
 
   return checkIsProject(common) ? (
-    <CommonCreationPage initialCommon={common} />
+    <ProjectCreationPage initialCommon={common} />
   ) : (
     <Editing common={common} />
   );

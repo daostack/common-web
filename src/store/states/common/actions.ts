@@ -161,6 +161,10 @@ export const addNewPinnedFeedItems = createStandardAction(
   }[]
 >();
 
+export const unpinFeedItems = createStandardAction(
+  CommonActionType.UNPIN_FEED_ITEMS,
+)<string[]>();
+
 export const updateFeedItem = createStandardAction(
   CommonActionType.UPDATE_FEED_ITEM,
 )<{

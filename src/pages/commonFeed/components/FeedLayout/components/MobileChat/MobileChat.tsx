@@ -15,6 +15,7 @@ import {
   CirclesPermissions,
   CommonMember,
   DirectParent,
+  PredefinedTypes,
 } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import { Header } from "./components";
@@ -31,6 +32,8 @@ interface ChatProps {
   rightHeaderContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  onClose: () => void;
+  onUserClick?: (userId: string) => void;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -46,9 +49,10 @@ const MobileChat: FC<ChatProps> = (props) => {
     rightHeaderContent,
     onMessagesAmountChange,
     directParent,
+    onClose,
+    onUserClick,
   } = props;
-  const { setChatItem, setIsShowFeedItemDetailsModal, setShouldShowSeeMore } =
-    useChatContext();
+  const { setIsShowFeedItemDetailsModal } = useChatContext();
   const {
     fetchUser: fetchDMUser,
     setUser: setDMUser,
@@ -63,17 +67,16 @@ const MobileChat: FC<ChatProps> = (props) => {
   const dmUserId = chatItem?.chatChannel?.participants.filter(
     (participant) => participant !== userId,
   )[0];
-  const title = getUserName(dmUser) || chatItem?.discussion.title || "";
+  const title =
+    getUserName(dmUser) ||
+    (chatItem?.discussion.predefinedType === PredefinedTypes.General
+      ? commonName
+      : chatItem?.discussion.title || "");
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
     [chatItem, userCircleIds],
   );
-
-  const handleClose = () => {
-    setChatItem(null);
-    setShouldShowSeeMore && setShouldShowSeeMore(true);
-  };
 
   const handleOpenFeedItemDetails = () => {
     setIsShowFeedItemDetailsModal && setIsShowFeedItemDetailsModal(true);
@@ -93,7 +96,7 @@ const MobileChat: FC<ChatProps> = (props) => {
       <ChatMobileModal
         isShowing={Boolean(chatItem)}
         hasBackButton
-        onClose={handleClose}
+        onClose={onClose}
         commonName={commonName}
         commonImage={commonImage}
         header={
@@ -102,7 +105,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             title={title}
             userAvatar={dmUser?.photoURL}
             userName={title}
-            onBackClick={handleClose}
+            onBackClick={onClose}
             onTitleWrapperClick={
               shouldShowSeeMore ? handleOpenFeedItemDetails : undefined
             }
@@ -140,9 +143,9 @@ const MobileChat: FC<ChatProps> = (props) => {
             chatChannel={chatItem.chatChannel}
             feedItemId={chatItem.feedItemId}
             lastSeenItem={chatItem.lastSeenItem}
-            seenOnce={chatItem.seenOnce}
             onMessagesAmountChange={onMessagesAmountChange}
             directParent={directParent}
+            onUserClick={onUserClick}
           />
         )}
       </ChatMobileModal>

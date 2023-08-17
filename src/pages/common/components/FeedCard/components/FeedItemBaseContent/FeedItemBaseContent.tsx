@@ -1,8 +1,7 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
-import { ButtonIcon } from "@/shared/components";
-import { RightArrowThinIcon } from "@/shared/icons";
+import { PredefinedTypes } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
   ContextMenu,
@@ -27,7 +26,6 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     title,
     lastMessage,
     onClick,
-    onExpand,
     type,
     menuItems,
     seenOnce,
@@ -36,6 +34,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     isPinned,
     isFollowing,
     isLoading = false,
+    shouldHideBottomContent = false,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -106,15 +105,6 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       onContextMenu={handleContextMenu}
       {...getLongPressProps()}
     >
-      {isMobileView && canBeExpanded && (
-        <ButtonIcon onClick={onExpand}>
-          <RightArrowThinIcon
-            className={classNames(styles.expandIcon, {
-              [styles.expandIconActive]: isExpanded && canBeExpanded,
-            })}
-          />
-        </ButtonIcon>
-      )}
       {renderLeftContent?.()}
       <div className={styles.content}>
         <div className={styles.topContent}>
@@ -136,35 +126,37 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
             <TimeAgo milliseconds={lastActivity} />
           </p>
         </div>
-        <div className={styles.bottomContent}>
-          {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
-            <TextEditor
-              className={styles.lastMessageContainer}
-              editorClassName={classNames(styles.text, styles.lastMessage, {
-                [styles.lastMessageActive]:
-                  isActive || (isExpanded && isMobileView),
-              })}
-              elementStyles={{
-                mention: isActive ? styles.mentionText : "",
-              }}
-              value={lastMessage}
-              readOnly
-            />
-          ) : (
-            <div />
-          )}
-          <div className={classNames(styles.bottomContentRight)}>
-            <FeedCardTags
-              unreadMessages={unreadMessages}
-              type={type}
-              seenOnce={seenOnce}
-              ownerId={ownerId}
-              isActive={isActive}
-              isPinned={isPinned}
-              isFollowing={isFollowing}
-            />
+        {!shouldHideBottomContent && (
+          <div className={styles.bottomContent}>
+            {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
+              <TextEditor
+                className={styles.lastMessageContainer}
+                editorClassName={classNames(styles.text, styles.lastMessage, {
+                  [styles.lastMessageActive]:
+                    isActive || (isExpanded && isMobileView),
+                })}
+                elementStyles={{
+                  mention: isActive ? styles.mentionText : "",
+                }}
+                value={lastMessage}
+                readOnly
+              />
+            ) : (
+              <div />
+            )}
+            <div className={classNames(styles.bottomContentRight)}>
+              <FeedCardTags
+                unreadMessages={unreadMessages}
+                type={type}
+                seenOnce={seenOnce}
+                ownerId={ownerId}
+                isActive={isActive}
+                isPinned={isPinned}
+                isFollowing={isFollowing}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
       {menuItems && menuItems.length > 0 && (
         <ContextMenu

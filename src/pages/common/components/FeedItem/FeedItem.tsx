@@ -2,9 +2,11 @@ import React, { FC, memo } from "react";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Circles,
+  CirclesPermissions,
   Common,
   CommonFeed,
   CommonFeedType,
+  CommonLink,
   CommonMember,
   DirectParent,
 } from "@/shared/models";
@@ -18,7 +20,7 @@ import { useFeedItemContext } from "./context";
 interface FeedItemProps {
   commonId?: string;
   commonName: string;
-  commonMember?: CommonMember | null;
+  commonMember?: (CommonMember & CirclesPermissions) | null;
   commonImage: string;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject?: boolean;
@@ -33,8 +35,13 @@ interface FeedItemProps {
   isExpanded?: boolean;
   sizeKey?: string;
   shouldCheckItemVisibility?: boolean;
-  onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
+  onActiveItemDataChange?: (
+    data: FeedLayoutItemChangeData,
+    commonId?: string,
+  ) => void;
   directParent?: DirectParent | null;
+  commonDescription?: string;
+  commonGallery?: CommonLink[];
 }
 
 const FeedItem: FC<FeedItemProps> = (props) => {
@@ -58,8 +65,10 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     shouldCheckItemVisibility = true,
     onActiveItemDataChange,
     directParent,
+    commonDescription,
+    commonGallery,
   } = props;
-  const { onFeedItemUpdate, getLastMessage, getNonAllowedItems } =
+  const { onFeedItemUpdate, getLastMessage, getNonAllowedItems, onUserSelect } =
     useFeedItemContext();
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
@@ -74,6 +83,10 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   ) {
     return null;
   }
+
+  const handleActiveItemDataChange = (data: FeedLayoutItemChangeData) => {
+    onActiveItemDataChange?.(data, commonId);
+  };
 
   const generalProps = {
     item,
@@ -91,12 +104,19 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     commonMember,
     getNonAllowedItems,
     isMobileVersion,
-    onActiveItemDataChange,
+    onActiveItemDataChange: handleActiveItemDataChange,
     directParent,
+    onUserSelect,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {
-    return <DiscussionFeedCard {...generalProps} />;
+    return (
+      <DiscussionFeedCard
+        {...generalProps}
+        commonDescription={commonDescription}
+        commonGallery={commonGallery}
+      />
+    );
   }
 
   if (item.data.type === CommonFeedType.Proposal) {

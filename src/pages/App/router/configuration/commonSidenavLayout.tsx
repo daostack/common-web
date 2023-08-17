@@ -1,6 +1,6 @@
 import { BillingPage_v04 } from "@/pages/billing";
 import { ALL_COMMON_PAGE_TABS, CommonPage_v04 } from "@/pages/common";
-import { CommonCreationPage_v04 } from "@/pages/commonCreation";
+import { ProjectCreationPage_v04 } from "@/pages/commonCreation";
 import { CommonEditingPage_v04 } from "@/pages/commonEditing";
 import { CommonFeedPage_v04 } from "@/pages/commonFeed";
 import { InboxPage_v04 } from "@/pages/inbox";
@@ -41,7 +41,7 @@ export const COMMON_SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<CommonSide
       {
         path: ROUTE_PATHS.V04_PROJECT_CREATION,
         exact: true,
-        component: CommonCreationPage_v04,
+        component: ProjectCreationPage_v04,
       },
       {
         path: ROUTE_PATHS.V04_COMMON_EDITING,

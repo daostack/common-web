@@ -7,7 +7,6 @@ import {
   CommonCreatedSystemMessage,
   CommonEditedSystemMessage,
   CommonMemberAddedSystemMessage,
-  DirectParent,
   SystemMessageCommonType,
   User,
 } from "@/shared/models";
@@ -43,6 +42,7 @@ const renderUserMention = (
       mentionTextClassName={data.mentionTextClassName}
       commonId={data.commonId}
       directParent={data.directParent}
+      onUserClick={data.onUserClick}
     />
   ) : (
     defaultName
@@ -119,7 +119,7 @@ const getCommonMemberAddedSystemMessageText = async (
 
 export const getTextFromSystemMessage = async (
   data: TextData,
-): Promise<Text[]> => {
+): Promise<Text[] | null> => {
   const { systemMessage } = data;
   let text: Text[] = [];
 
@@ -147,8 +147,7 @@ export const getTextFromSystemMessage = async (
       );
       break;
     default:
-      text = [];
-      break;
+      return null;
   }
 
   return text.map((item, index) => (

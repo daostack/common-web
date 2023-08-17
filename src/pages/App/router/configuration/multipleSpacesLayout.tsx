@@ -1,6 +1,9 @@
 import { BillingPage } from "@/pages/billing";
 import { ALL_COMMON_PAGE_TABS, CommonPage } from "@/pages/common";
-import { CommonCreationPage } from "@/pages/commonCreation";
+import {
+  CommonCreationPage,
+  ProjectCreationPage,
+} from "@/pages/commonCreation";
 import { CommonEditingPage } from "@/pages/commonEditing";
 import { CommonFeedPage } from "@/pages/commonFeed";
 import { InboxPage } from "@/pages/inbox";
@@ -10,7 +13,9 @@ import { MultipleSpacesLayout } from "@/shared/layouts";
 import { LayoutConfiguration, RouteType } from "../types";
 
 export interface MultipleSpacesLayoutRouteOptions {
+  withSidenav?: boolean;
   withBreadcrumbs?: boolean;
+  withGoBack?: boolean;
   breadcrumbsItemsWithMenus?: boolean;
 }
 
@@ -20,6 +25,9 @@ const getCommonPageConfiguration =
       path: `${ROUTE_PATHS.COMMON}/${tab}` as ROUTE_PATHS,
       exact: true,
       component: CommonPage,
+      routeOptions: {
+        withGoBack: true,
+      },
     }));
 
 export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleSpacesLayoutRouteOptions> =
@@ -37,6 +45,11 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         },
       },
       {
+        path: ROUTE_PATHS.COMMON_CREATION,
+        exact: true,
+        component: CommonCreationPage,
+      },
+      {
         path: ROUTE_PATHS.COMMON,
         exact: true,
         component: CommonFeedPage,
@@ -45,7 +58,7 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
       {
         path: ROUTE_PATHS.PROJECT_CREATION,
         exact: true,
-        component: CommonCreationPage,
+        component: ProjectCreationPage,
       },
       {
         path: ROUTE_PATHS.COMMON_EDITING,
@@ -57,7 +70,9 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         exact: true,
         component: ProfilePage,
         routeOptions: {
+          withSidenav: false,
           withBreadcrumbs: false,
+          withGoBack: true,
         },
       },
       {
@@ -65,7 +80,9 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         exact: true,
         component: BillingPage,
         routeOptions: {
+          withSidenav: false,
           withBreadcrumbs: false,
+          withGoBack: true,
         },
       },
     ],

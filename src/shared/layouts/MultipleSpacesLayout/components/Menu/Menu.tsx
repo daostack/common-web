@@ -1,19 +1,17 @@
-import React, { FC, ReactNode, useCallback, useRef } from "react";
+import React, { FC, ReactNode, useCallback } from "react";
 import { useQueryParams } from "@/shared/hooks";
 import { useAllViews } from "@/shared/hooks/viewport";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { checkIsSidenavOpen, closeSidenav } from "@/shared/utils";
-import {
-  Projects,
-  ProjectsRef,
-} from "../../../CommonSidenavLayout/components/SidenavContent/components";
+import { Projects } from "../../../CommonSidenavLayout/components/SidenavContent/components";
+import { useGoToCreateCommon } from "../../hooks";
 import { MenuPopUp } from "../MenuPopUp";
 import styles from "./Menu.module.scss";
 
 const Menu: FC = () => {
-  const projectsRef = useRef<ProjectsRef>(null);
   const queryParams = useQueryParams();
   const viewportStates = useAllViews();
+  const goToCreateCommon = useGoToCreateCommon();
   const isSidenavOpen =
     viewportStates.isTabletView && checkIsSidenavOpen(queryParams);
 
@@ -27,7 +25,7 @@ const Menu: FC = () => {
         <Button
           className={styles.createCommonButton}
           variant={ButtonVariant.PrimaryPink}
-          onClick={projectsRef.current?.openCreateCommonModal}
+          onClick={goToCreateCommon}
         >
           Create common
         </Button>
@@ -41,7 +39,10 @@ const Menu: FC = () => {
       onClose={closeSidenav}
       modalContentClassName={styles.modalContent}
     >
-      <Projects ref={projectsRef} renderNoItemsInfo={renderNoItemsInfo} />
+      <Projects
+        renderNoItemsInfo={renderNoItemsInfo}
+        onCommonCreationClick={goToCreateCommon}
+      />
     </MenuPopUp>
   );
 };

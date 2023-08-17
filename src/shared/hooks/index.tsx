@@ -10,6 +10,7 @@ export { useComponentWillUnmount } from "./useComponentWillUnmount";
 export { default as useCountdown } from "./useCountdown";
 export { useForceUpdate } from "./useForceUpdate";
 export { default as useFullText } from "./useFullText";
+export { useGoBack } from "./useGoBack";
 export { useHeader } from "./useHeader";
 export { useLoadingState } from "./useLoadingState";
 export { default as useLockedBody } from "./useLockedBody";

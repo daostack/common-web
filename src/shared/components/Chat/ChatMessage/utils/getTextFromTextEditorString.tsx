@@ -28,6 +28,7 @@ interface TextFromDescendant {
   emojiTextClassName?: string;
   commonId?: string;
   directParent?: DirectParent | null;
+  onUserClick?: (userId: string) => void;
 }
 
 const getTextFromDescendant = ({
@@ -37,6 +38,7 @@ const getTextFromDescendant = ({
   emojiTextClassName,
   commonId,
   directParent,
+  onUserClick,
 }: TextFromDescendant): Text => {
   if (!Element.isElement(descendant)) {
     return descendant.text || "";
@@ -56,6 +58,7 @@ const getTextFromDescendant = ({
                 emojiTextClassName,
                 commonId,
                 directParent,
+                onUserClick,
               })}
             </React.Fragment>
           ))}
@@ -71,6 +74,7 @@ const getTextFromDescendant = ({
           mentionTextClassName={mentionTextClassName}
           commonId={commonId}
           directParent={directParent}
+          onUserClick={onUserClick}
         />
       );
     case ElementType.Emoji:
@@ -96,10 +100,15 @@ export const getTextFromTextEditorString = async (
     commonId,
     systemMessage,
     directParent,
+    onUserClick,
   } = data;
 
   if (systemMessage) {
-    return await getTextFromSystemMessage(data);
+    const systemMessageText = await getTextFromSystemMessage(data);
+
+    if (systemMessageText) {
+      return systemMessageText;
+    }
   }
 
   const textEditorValue = parseStringToTextEditorValue(textEditorString);
@@ -131,6 +140,7 @@ export const getTextFromTextEditorString = async (
           emojiTextClassName,
           commonId,
           directParent,
+          onUserClick,
         })}
       </React.Fragment>,
     ],

@@ -2,8 +2,6 @@ import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { FeedCardTags, FeedItemBaseContentProps } from "@/pages/common";
-import { ButtonIcon } from "@/shared/components";
-import { RightArrowThinIcon } from "@/shared/icons";
 import { PredefinedTypes } from "@/shared/models";
 import {
   ContextMenu,
@@ -26,7 +24,6 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     title,
     lastMessage,
     onClick,
-    onExpand,
     type,
     menuItems,
     seenOnce,
@@ -45,7 +42,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
   const finalTitle =
     discussionPredefinedType === PredefinedTypes.General && commonName
-      ? `${commonName} (${title})`
+      ? commonName
       : title;
   const shouldImageBeRounded =
     typeof isImageRounded === "boolean" ? isImageRounded : isProject;
@@ -110,15 +107,6 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       onContextMenu={handleContextMenu}
       {...getLongPressProps()}
     >
-      {isMobileView && canBeExpanded && (
-        <ButtonIcon onClick={onExpand}>
-          <RightArrowThinIcon
-            className={classNames(styles.expandIcon, {
-              [styles.expandIconActive]: isExpanded && canBeExpanded,
-            })}
-          />
-        </ButtonIcon>
-      )}
       {renderImage?.(imageClassName) || (
         <CommonAvatar
           name={commonName}

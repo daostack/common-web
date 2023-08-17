@@ -10,35 +10,35 @@ import { parseJson } from "@/shared/utils/json";
 const WebViewLoginHandler: FC = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    window.addEventListener("message", (event) => {
-      const data = parseJson(event.data) as FirebaseCredentials;
-      if (!data?.providerId) {
-        return;
-      }
+  const handleWebviewLogin = React.useCallback((event) => {
+    const data = parseJson(event.data) as FirebaseCredentials;
+    if (!data?.providerId) {
+      return;
+    }
 
-      try {
-        dispatch(
-          webviewLogin.request({
-            payload: data,
-            callback: (isLoggedIn) => {
-              if (isLoggedIn) {
-                window.ReactNativeWebView.postMessage(
-                  WebviewActions.loginSuccess,
-                );
-                history.push(getInboxPagePath_v04());
-              } else {
-                window.ReactNativeWebView.postMessage(
-                  WebviewActions.loginError,
-                );
-              }
-            },
-          }),
-        );
-      } catch (err) {
-        window.ReactNativeWebView.postMessage(WebviewActions.loginError);
-      }
-    });
+    try {
+      dispatch(
+        webviewLogin.request({
+          payload: data,
+          callback: (isLoggedIn) => {
+            if (isLoggedIn) {
+              window.ReactNativeWebView.postMessage(
+                WebviewActions.loginSuccess,
+              );
+              history.push(getInboxPagePath_v04());
+            } else {
+              window.ReactNativeWebView.postMessage(WebviewActions.loginError);
+            }
+          },
+        }),
+      );
+    } catch (err) {
+      window.ReactNativeWebView.postMessage(WebviewActions.loginError);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("message", handleWebviewLogin);
   }, []);
 
   return null;

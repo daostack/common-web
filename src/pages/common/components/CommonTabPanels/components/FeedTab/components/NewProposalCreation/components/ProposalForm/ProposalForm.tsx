@@ -7,6 +7,7 @@ import {
 } from "@/shared/components/Form/Formik";
 import { ProposalTypeSelectOption, ProposalsTypes } from "@/shared/constants";
 import { Circles, Governance } from "@/shared/models";
+import { TextEditorSize } from "@/shared/ui-kit";
 import { MAX_PROPOSAL_TITLE_LENGTH } from "../../constants";
 import { AddRecipient } from "../AddRecipient";
 import { ProposalTypeSelect } from "../ProposalTypeSelect";
@@ -19,6 +20,7 @@ interface ProposalFormProps {
   selectedProposalType: ProposalTypeSelectOption;
   governanceCircles: Circles;
   governance: Governance;
+  commonBalance: number;
 }
 
 const ProposalForm: FC<ProposalFormProps> = (props) => {
@@ -28,11 +30,12 @@ const ProposalForm: FC<ProposalFormProps> = (props) => {
     governanceCircles,
     selectedProposalType,
     governance,
+    commonBalance,
   } = props;
 
   return (
     <div className={classNames(styles.container, className)}>
-      <ProposalTypeSelect />
+      <ProposalTypeSelect commonBalance={commonBalance} />
       <VotingSettings
         governance={governance}
         governanceCircles={governanceCircles}
@@ -58,6 +61,7 @@ const ProposalForm: FC<ProposalFormProps> = (props) => {
         label="Content"
         optional
         disabled={disabled}
+        size={TextEditorSize.Auto}
       />
       <UploadFiles name="images" disabled={disabled} />
       {selectedProposalType.value === ProposalsTypes.FUNDS_ALLOCATION && (

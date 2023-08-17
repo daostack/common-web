@@ -1,10 +1,6 @@
 import React, { FC, useMemo } from "react";
-import { useHistory } from "react-router";
-import { CreateCommonModal } from "@/pages/OldCommon/components";
-import { useRoutesContext } from "@/shared/contexts";
-import { useModal } from "@/shared/hooks";
-import { Common } from "@/shared/models";
 import { MultipleSpacesLayoutFeedItemBreadcrumbs } from "@/store/states";
+import { useGoToCreateCommon } from "../../../../../../hooks";
 import { ActiveBreadcrumbsItem } from "../ActiveBreadcrumbsItem";
 import { BreadcrumbsItem } from "../BreadcrumbsItem";
 import { LoadingBreadcrumbsItem } from "../LoadingBreadcrumbsItem";
@@ -19,22 +15,11 @@ interface FeedItemBreadcrumbsProps {
 
 const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
   const { breadcrumbs, itemsWithMenus } = props;
-  const history = useHistory();
-  const { getCommonPagePath } = useRoutesContext();
-  const {
-    isShowing: isCommonCreationModalOpen,
-    onOpen: onCommonCreationModalOpen,
-    onClose: onCommonCreationModalClose,
-  } = useModal(false);
+  const goToCreateCommon = useGoToCreateCommon();
   const { data, projects, hasPermissionToAddProjectInActiveCommon } = useMemo(
     () => getBreadcrumbsData(breadcrumbs.items, breadcrumbs.activeCommonId),
     [breadcrumbs.items, breadcrumbs.activeCommonId],
   );
-
-  const handleGoToCommon = (common: Common) => {
-    onCommonCreationModalClose();
-    history.push(getCommonPagePath(common.id));
-  };
 
   return (
     <ul className={styles.container}>
@@ -47,9 +32,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
               activeItemId={item.activeCommonId}
               items={item.items}
               commonIdToAddProject={item.commonIdToAddProject}
-              onCommonCreate={
-                index === 0 ? onCommonCreationModalOpen : undefined
-              }
+              onCommonCreate={index === 0 ? goToCreateCommon : undefined}
               withMenu={itemsWithMenus}
             />
           </React.Fragment>
@@ -69,14 +52,6 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
             withMenu={itemsWithMenus}
           />
         </>
-      )}
-      {isCommonCreationModalOpen && (
-        <CreateCommonModal
-          isShowing
-          onClose={onCommonCreationModalClose}
-          isSubCommonCreation={false}
-          onGoToCommon={handleGoToCommon}
-        />
       )}
     </ul>
   );

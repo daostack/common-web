@@ -15,6 +15,7 @@ import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Common,
   CommonFeed,
+  CommonLink,
   CommonMember,
   DirectParent,
   Governance,
@@ -52,10 +53,13 @@ interface DiscussionFeedCardProps {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   directParent?: DirectParent | null;
+  commonDescription?: string;
+  commonGallery?: CommonLink[];
+  onUserSelect?: (userId: string, commonId?: string) => void;
 }
 
 const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
-  const { setChatItem, feedItemIdForAutoChatOpen, setShouldShowSeeMore } =
+  const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
     useChatContext();
   const { notify } = useNotification();
   const {
@@ -76,6 +80,9 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     getNonAllowedItems,
     onActiveItemDataChange,
     directParent,
+    commonDescription,
+    commonGallery,
+    onUserSelect,
   } = props;
   const {
     isShowing: isReportModalOpen,
@@ -136,8 +143,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     !isDiscussionCreatorFetched ||
     !isDiscussionFetched ||
     !isFeedItemUserMetadataFetched ||
-    !commonId ||
-    !governanceCircles;
+    !commonId;
   const cardTitle = discussion?.title;
 
   const handleOpenChat = useCallback(() => {
@@ -147,18 +153,16 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
         discussion,
         circleVisibility: item.circleVisibility,
         lastSeenItem: feedItemUserMetadata?.lastSeen,
+        lastSeenAt: feedItemUserMetadata?.lastSeenAt,
         seenOnce: feedItemUserMetadata?.seenOnce,
       });
-      setShouldShowSeeMore &&
-        setShouldShowSeeMore(
-          discussion?.predefinedType !== PredefinedTypes.General,
-        );
     }
   }, [
     discussion,
     item.id,
     item.circleVisibility,
     feedItemUserMetadata?.lastSeen,
+    feedItemUserMetadata?.lastSeenAt,
     feedItemUserMetadata?.seenOnce,
   ]);
 
@@ -199,11 +203,16 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       isDiscussionFetched &&
       isFeedItemUserMetadataFetched &&
       item.id === feedItemIdForAutoChatOpen &&
-      !isMobileVersion
+      !isMobileVersion &&
+      shouldAllowChatAutoOpen !== false
     ) {
       handleOpenChat();
     }
-  }, [isDiscussionFetched, isFeedItemUserMetadataFetched]);
+  }, [
+    isDiscussionFetched,
+    isFeedItemUserMetadataFetched,
+    shouldAllowChatAutoOpen,
+  ]);
 
   useEffect(() => {
     if (isActive && cardTitle) {
@@ -219,36 +228,42 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       return null;
     }
 
-    const circleVisibility = getVisibilityString(
-      governanceCircles,
-      discussion?.circleVisibility,
-    );
+    const circleVisibility = governanceCircles
+      ? getVisibilityString(governanceCircles, discussion?.circleVisibility)
+      : undefined;
+
+    const isHome = discussion?.predefinedType === PredefinedTypes.General;
 
     return (
       <>
-        <FeedCardHeader
-          avatar={discussionCreator?.photoURL}
-          title={getUserName(discussionCreator)}
-          createdAt={
-            <>
-              Created:{" "}
-              <FeedCountdown
-                isCountdownFinished
-                expirationTimestamp={item.createdAt}
-              />
-            </>
-          }
-          type="Discussion"
-          circleVisibility={circleVisibility}
-          menuItems={menuItems}
-          isMobileVersion={isMobileVersion}
-          commonId={commonId}
-          userId={item.userId}
-          directParent={directParent}
-        />
+        {!isHome && (
+          <FeedCardHeader
+            avatar={discussionCreator?.photoURL}
+            title={getUserName(discussionCreator)}
+            createdAt={
+              <>
+                Created:{" "}
+                <FeedCountdown
+                  isCountdownFinished
+                  expirationTimestamp={item.createdAt}
+                />
+              </>
+            }
+            type="Discussion"
+            circleVisibility={circleVisibility}
+            menuItems={menuItems}
+            isMobileVersion={isMobileVersion}
+            commonId={commonId}
+            userId={item.userId}
+            directParent={directParent}
+            onUserSelect={
+              onUserSelect && (() => onUserSelect(item.userId, commonId))
+            }
+          />
+        )}
         <FeedCardContent
-          description={discussion?.message}
-          images={discussion?.images}
+          description={isHome ? commonDescription : discussion?.message}
+          images={isHome ? commonGallery : discussion?.images}
           onClick={handleOpenChat}
           onMouseEnter={() => {
             onHover(true);
@@ -283,7 +298,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           hasFiles: item.data.hasFiles,
           hasImages: item.data.hasImages,
         })}
-        canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
         isPreviewMode={isPreviewMode}
         isPinned={isPinned}
         commonName={commonName}

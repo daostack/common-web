@@ -17,6 +17,7 @@ import {
   CommonFeed,
   Governance,
   PredefinedTypes,
+  ProposalState,
   ResolutionType,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
@@ -69,6 +70,7 @@ interface ProposalFeedCardProps {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   isMobileVersion?: boolean;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
+  onUserSelect?: (userId: string, commonId?: string) => void;
 }
 
 const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
@@ -88,10 +90,12 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     getNonAllowedItems,
     isMobileVersion,
     onActiveItemDataChange,
+    onUserSelect,
   } = props;
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
+  const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
+    useChatContext();
   const forceUpdate = useForceUpdate();
   const { getCommonPagePath } = useRoutesContext();
   const {
@@ -227,6 +231,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
         proposal,
         circleVisibility: item.circleVisibility,
         lastSeenItem: feedItemUserMetadata?.lastSeen,
+        lastSeenAt: feedItemUserMetadata?.lastSeenAt,
         seenOnce: feedItemUserMetadata?.seenOnce,
       });
     }
@@ -237,6 +242,7 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
     setChatItem,
     item.circleVisibility,
     feedItemUserMetadata?.lastSeen,
+    feedItemUserMetadata?.lastSeenAt,
     feedItemUserMetadata?.seenOnce,
   ]);
 
@@ -246,11 +252,17 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
       isProposalFetched &&
       isFeedItemUserMetadataFetched &&
       item.id === feedItemIdForAutoChatOpen &&
-      !isMobileVersion
+      !isMobileVersion &&
+      shouldAllowChatAutoOpen !== false
     ) {
       handleOpenChat();
     }
-  }, [isDiscussionFetched, isProposalFetched, isFeedItemUserMetadataFetched]);
+  }, [
+    isDiscussionFetched,
+    isProposalFetched,
+    isFeedItemUserMetadataFetched,
+    shouldAllowChatAutoOpen,
+  ]);
 
   useEffect(() => {
     if (isExpanded) {
@@ -300,6 +312,9 @@ const ProposalFeedCard: React.FC<ProposalFeedCardProps> = (props) => {
           commonId={commonId}
           userId={item.userId}
           menuItems={menuItems}
+          onUserSelect={
+            onUserSelect && (() => onUserSelect(item.userId, commonId))
+          }
         />
         <FeedCardContent
           subtitle={getProposalSubtitle(

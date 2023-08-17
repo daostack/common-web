@@ -40,6 +40,7 @@ export interface FeedItemBaseContentProps {
   hasFiles?: boolean;
   hasImages?: boolean;
   isLoading?: boolean;
+  shouldHideBottomContent?: boolean;
 }
 
 export interface GetLastMessageOptions {
@@ -64,6 +65,7 @@ export interface FeedItemContextValue {
   feedCardSettings?: FeedCardSettings;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
+  onUserSelect?: (userId: string, commonId?: string) => void;
 }
 
 export const FeedItemContext = React.createContext<FeedItemContextValue>({

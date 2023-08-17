@@ -31,9 +31,10 @@ export enum ProposalsTypes {
 export interface ProposalTypeSelectOption {
   label: string;
   value: ProposalsTypes;
+  isDisabled?: boolean;
 }
 
-export const PROPOSAL_TYPE_SELECT_OPTIONS = [
+export const PROPOSAL_TYPE_SELECT_OPTIONS: ProposalTypeSelectOption[] = [
   {
     label: "Survey",
     value: ProposalsTypes.SURVEY,

@@ -13,12 +13,14 @@ export interface ChatItem {
   chatChannel?: ChatChannel;
   circleVisibility: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
+  lastSeenAt?: CommonFeedObjectUserUnique["lastSeenAt"];
   seenOnce?: boolean;
 }
 
 export interface ChatContextValue {
   setChatItem: (data: ChatItem | null) => void;
   feedItemIdForAutoChatOpen?: string;
+  shouldAllowChatAutoOpen?: boolean | null;
   setIsShowFeedItemDetailsModal?: (isShowing: boolean) => void;
   setShouldShowSeeMore?: (shouldShow: boolean) => void;
 }

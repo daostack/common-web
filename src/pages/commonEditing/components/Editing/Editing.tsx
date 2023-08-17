@@ -63,7 +63,7 @@ const Editing: FC<EditingProps> = (props) => {
     return <Redirect to={backRoute} />;
   }
 
-  const handleProjectCreationCancel = () => {
+  const handleUpdatedCommonCancel = () => {
     history.push(backRoute);
   };
 
@@ -80,7 +80,7 @@ const Editing: FC<EditingProps> = (props) => {
         <EditingForm
           common={common}
           onFinish={handleUpdatedCommon}
-          onCancel={handleProjectCreationCancel}
+          onCancel={handleUpdatedCommonCancel}
         />
       </div>
     </Container>

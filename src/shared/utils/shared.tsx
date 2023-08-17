@@ -122,8 +122,8 @@ export const getUserInitials = (user: User | undefined) => {
 
 export const getRandomUserAvatarURL = (name?: string | null): string => {
   const isOneWord = words(name ?? "").length === 1;
-  return `https://eu.ui-avatars.com/api/?background=7786ff&color=fff&name=${name?.replaceAll(
-    " ",
+  return `https://eu.ui-avatars.com/api/?background=de189b&color=fff&name=${name?.replace(
+    /\s/gi,
     "+",
   )}&rounded=true&${isOneWord ? "uppercase=false" : ""}`;
 };

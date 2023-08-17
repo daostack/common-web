@@ -51,3 +51,7 @@ export const updateProjectInBreadcrumbs = createStandardAction(
 export const setBackUrl = createStandardAction(
   MultipleSpacesLayoutActionType.SET_BACK_URL,
 )<string | null>();
+
+export const setMainWidth = createStandardAction(
+  MultipleSpacesLayoutActionType.SET_MIN_WIDTH,
+)<number>();

@@ -12,6 +12,7 @@ import styles from "./Button.module.scss";
 
 export enum ButtonVariant {
   Transparent = "transparent",
+  PrimaryBlack = "primary-black",
   PrimaryGray = "primary-gray",
   PrimaryPurple = "primary-purple",
   PrimaryPink = "primary-pink",
@@ -53,6 +54,7 @@ const Button: ForwardRefRenderFunction<HTMLButtonElement, ButtonProps> = (
   const className = classNames(styles.button, props.className, {
     [styles.buttonDisabled]: visuallyDisabled || props.disabled,
     [styles.buttonTransparentVariant]: variant === ButtonVariant.Transparent,
+    [styles.buttonPrimaryBlackVariant]: variant === ButtonVariant.PrimaryBlack,
     [styles.buttonPrimaryGrayVariant]: variant === ButtonVariant.PrimaryGray,
     [styles.buttonPrimaryPurpleVariant]:
       variant === ButtonVariant.PrimaryPurple,
