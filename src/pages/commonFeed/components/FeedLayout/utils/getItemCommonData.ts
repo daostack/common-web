@@ -2,7 +2,7 @@ import { Common, FeedItemFollowWithMetadata } from "@/shared/models";
 import { checkIsProject } from "@/shared/utils";
 
 type Return =
-  | (Pick<Common, "id" | "name" | "image"> & {
+  | (Pick<Common, "id" | "name" | "image" | "description" | "gallery"> & {
       isProject: boolean;
     })
   | null;
@@ -15,6 +15,8 @@ export const getItemCommonData = (
     return {
       id: feedItemFollowWithMetadata.commonId,
       name: feedItemFollowWithMetadata.commonName,
+      description: feedItemFollowWithMetadata.commonDescription ?? "", 
+      gallery: feedItemFollowWithMetadata.commonGallery ?? [],
       image: feedItemFollowWithMetadata.commonAvatar,
       isProject: Boolean(feedItemFollowWithMetadata.parentCommonName),
     };
@@ -27,6 +29,8 @@ export const getItemCommonData = (
     id: common.id,
     name: common.name,
     image: common.image,
+    description: common.description,
+    gallery: common.gallery,
     isProject: checkIsProject(common),
   };
 };

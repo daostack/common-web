@@ -71,6 +71,8 @@ class FeedItemFollowsService {
       ...feedItemFollowData,
       feedItem,
       commonName: itemCommon.name,
+      commonDescription: itemCommon.description,
+      commonGallery: itemCommon.gallery,
       parentCommonName: itemParentCommon?.name,
       commonAvatar: itemCommon.image,
     };

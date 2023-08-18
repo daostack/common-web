@@ -8,7 +8,7 @@ import {
   CloseIconVariant,
   FeedLayoutItemChangeData,
 } from "@/shared/interfaces";
-import { Circles, CommonFeed } from "@/shared/models";
+import { Circles, CommonFeed, CommonLink } from "@/shared/models";
 import styles from "./FeedItemPreviewModal.module.scss";
 
 interface FeedItemPreviewModalProps {
@@ -17,6 +17,8 @@ interface FeedItemPreviewModalProps {
   commonId: string;
   commonName: string;
   commonImage: string;
+  commonDescription: string;
+  commonGallery: CommonLink[];
   isProject: boolean;
   governanceCircles?: Circles;
   isShowFeedItemDetailsModal?: boolean;
@@ -32,6 +34,8 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
     commonId,
     commonName,
     commonImage,
+    commonDescription,
+    commonGallery,
     isProject,
     governanceCircles,
     isShowFeedItemDetailsModal,
@@ -83,6 +87,8 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
             commonId={commonId}
             commonName={commonName}
             commonImage={commonImage}
+            commonDescription={commonDescription}
+            commonGallery={commonGallery}
             isProject={isProject}
             item={selectedFeedItem}
             governanceCircles={governanceCircles}
