@@ -26,6 +26,7 @@ import {
   DiscussionMessage,
   User,
   DirectParent,
+  Circles,
 } from "@/shared/models";
 import {
   FilePreview,
@@ -58,6 +59,7 @@ interface ChatMessageProps {
   users: User[];
   feedItemId: string;
   commonMember: CommonMember | null;
+  governanceCircles?: Circles;
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
@@ -86,6 +88,7 @@ export default function ChatMessage({
   users,
   feedItemId,
   commonMember,
+  governanceCircles,
   onMessageDelete,
   directParent,
   onUserClick,
@@ -394,6 +397,8 @@ export default function ChatMessage({
               </div>
               {!isSystemMessage && (
                 <ElementDropdown
+                  commonMember={commonMember}
+                  governanceCircles={governanceCircles}
                   linkType={getStaticLinkByChatType(chatType)}
                   entityType={
                     [
