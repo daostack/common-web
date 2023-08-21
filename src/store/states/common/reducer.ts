@@ -521,6 +521,11 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       nextState.sharedFeedItemId = payload;
     }),
   )
+  .handleAction(actions.setRecentStreamId, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.recentStreamId = payload;
+    }),
+  )
   .handleAction(actions.setRecentAssignedCircle, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.recentAssignedCircle = payload;
