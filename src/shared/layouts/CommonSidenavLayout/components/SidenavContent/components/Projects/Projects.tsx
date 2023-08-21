@@ -28,6 +28,7 @@ const Projects: FC<ProjectsProps> = (props) => {
     items,
     activeItem,
     itemIdWithNewProjectCreation,
+    parentItemIds,
   } = useProjectsData();
   const {
     isModalOpen: isCreateCommonModalOpen,
@@ -92,6 +93,7 @@ const Projects: FC<ProjectsProps> = (props) => {
         commons={commons}
         items={items}
         activeItem={activeItem}
+        parentItemIds={parentItemIds}
         itemIdWithNewProjectCreation={itemIdWithNewProjectCreation}
         currentCommonId={currentCommonId}
         onCommonClick={handleCommonClick}

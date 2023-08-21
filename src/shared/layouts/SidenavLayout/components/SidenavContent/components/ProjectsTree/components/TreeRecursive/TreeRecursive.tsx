@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { BoldPlusIcon } from "@/shared/icons";
-import { getHasActiveChild } from "../../../Projects/utils";
 import { useTreeContext } from "../../context";
 import { Item } from "../../types";
 import { PlaceholderTreeItem } from "../PlaceholderTreeItem";
@@ -28,6 +27,7 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
   } = props;
   const {
     activeItemId,
+    parentItemIds = [],
     itemIdWithNewProjectCreation,
     isActiveCheckAllowed,
     onAddProjectClick,
@@ -55,7 +55,7 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
     >
       {items.map((item) => {
         const isActive = isActiveCheckAllowed && item.id === activeItemId;
-        const hasActiveChild = getHasActiveChild(item, activeItemId);
+        const hasActiveChild = parentItemIds.includes(item.id);
         const hasPermissionToAddProject =
           item.hasPermissionToAddProject && isActive;
 
