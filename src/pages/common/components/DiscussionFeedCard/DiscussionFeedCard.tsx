@@ -107,17 +107,13 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     data: discussion,
     fetched: isDiscussionFetched,
   } = useDiscussionById();
+  const isHome = discussion?.predefinedType === PredefinedTypes.General;
   const {
     data: feedItemUserMetadata,
     fetched: isFeedItemUserMetadataFetched,
     fetchFeedItemUserMetadata,
   } = useFeedItemUserMetadata();
-  const {
-    data: common,
-    fetched: isCommonFetched,
-    fetchCommon,
-    setCommon,
-  } = useCommon();
+  const { data: common } = useCommon(isHome ? commonId : "");
   const feedItemFollow = useFeedItemFollow(item.id, commonId);
   const menuItems = useMenuItems(
     {
@@ -148,7 +144,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     !isFeedItemUserMetadataFetched ||
     !commonId;
   const cardTitle = discussion?.title;
-  const isHome = discussion?.predefinedType === PredefinedTypes.General;
 
   const handleOpenChat = useCallback(() => {
     if (discussion) {
@@ -201,14 +196,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       });
     }
   }, [userId, commonId, item.id]);
-
-  useEffect(() => {
-    if (commonId && isHome) {
-      fetchCommon(commonId);
-    } else {
-      setCommon(null);
-    }
-  }, [commonId, isHome]);
 
   useEffect(() => {
     if (
