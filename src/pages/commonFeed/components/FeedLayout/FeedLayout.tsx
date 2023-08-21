@@ -9,7 +9,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
@@ -53,7 +53,7 @@ import {
 } from "@/shared/models";
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import { addQueryParam, deleteQueryParam, getUserName } from "@/shared/utils";
-import { selectRecentStreamId } from "@/store/states";
+import { commonActions, selectRecentStreamId } from "@/store/states";
 import { MIN_CHAT_WIDTH } from "../../constants";
 import {
   DesktopChat,
@@ -147,6 +147,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     outerStyles,
     settings,
   } = props;
+  const dispatch = useDispatch();
   const { width: windowWidth } = useWindowSize();
   const history = useHistory();
   const queryParams = useQueryParams();
@@ -461,6 +462,18 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setActiveChatItem(null);
     }
   }, [isTabletView, userForProfile.userForProfileData?.chatChannel || null]);
+
+  useEffect(() => {
+    if (!recentStreamId || !selectedFeedItem) {
+      return;
+    }
+    if (
+      !checkIsFeedItemFollowLayoutItem(selectedFeedItem) ||
+      recentStreamId === selectedFeedItem?.feedItem.data.id
+    ) {
+      dispatch(commonActions.setRecentStreamId(""));
+    }
+  }, [recentStreamId, selectedFeedItem]);
 
   useImperativeHandle(
     ref,
