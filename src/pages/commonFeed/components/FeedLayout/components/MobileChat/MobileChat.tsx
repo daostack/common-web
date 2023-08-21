@@ -73,9 +73,9 @@ const MobileChat: FC<ChatProps> = (props) => {
   )[0];
   const title =
     getUserName(dmUser) ||
-    chatItem?.discussion.predefinedType === PredefinedTypes.General
+    (chatItem?.discussion.predefinedType === PredefinedTypes.General
       ? commonName
-      : chatItem?.discussion.title || "";
+      : chatItem?.discussion.title || "");
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
