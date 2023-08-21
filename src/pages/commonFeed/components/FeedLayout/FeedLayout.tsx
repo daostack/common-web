@@ -183,6 +183,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onOpen: onProjectJoinModalOpen,
     onClose: onProjectJoinModalClose,
   } = useAuthorizedModal();
+  const onJoinModalOpen = outerCommon?.directParent
+    ? onProjectJoinModalOpen
+    : onCommonJoinModalOpen;
   const userForProfile = useUserForProfile();
   const governance = outerGovernance || fetchedGovernance;
   const commonMember = outerCommonMember || fetchedCommonMember;
@@ -593,8 +596,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   titleRightContent={followFeedItemEl}
                   onMessagesAmountChange={handleMessagesAmountChange}
                   directParent={outerCommon?.directParent}
-                  onProjectJoinModalOpen={onProjectJoinModalOpen}
-                  onCommonJoinModalOpen={onCommonJoinModalOpen}
+                  onJoinModalOpen={onJoinModalOpen}
                   onUserClick={handleUserClick}
                 />
               ) : (
@@ -617,8 +619,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 onMessagesAmountChange={handleMessagesAmountChange}
                 directParent={outerCommon?.directParent}
                 onClose={handleMobileChatClose}
-                onProjectJoinModalOpen={onProjectJoinModalOpen}
-                onCommonJoinModalOpen={onCommonJoinModalOpen}
+                onJoinModalOpen={onJoinModalOpen}
                 onUserClick={handleUserClick}
               >
                 {selectedItemCommonData &&

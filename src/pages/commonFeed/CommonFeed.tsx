@@ -158,7 +158,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [sharedFeedItem, sharedFeedItemId, commonPinnedFeedItems]);
   const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
-  //const hasAccessToPage = Boolean(commonMember);
 
   const fetchData = () => {
     fetchCommonData({
