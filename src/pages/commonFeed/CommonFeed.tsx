@@ -240,6 +240,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       checkIsFeedItemFollowLayoutItem(firstItem) &&
       recentStreamId === firstItem.feedItem.data.id
     ) {
+      feedLayoutRef?.setShouldAllowChatAutoOpen(true);
       feedLayoutRef?.setExpandedFeedItemId(firstItem.feedItem.id);
       dispatch(commonActions.setRecentStreamId(""));
     }

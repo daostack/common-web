@@ -467,6 +467,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     () => ({
       setExpandedFeedItemId,
       setActiveItem,
+      setShouldAllowChatAutoOpen,
     }),
     [setActiveItem],
   );
