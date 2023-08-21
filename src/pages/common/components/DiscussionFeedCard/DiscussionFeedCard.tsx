@@ -6,6 +6,7 @@ import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
 import { EntityTypes } from "@/shared/constants";
 import { useModal, useNotification } from "@/shared/hooks";
 import {
+  useCommon,
   useDiscussionById,
   useFeedItemFollow,
   useFeedItemUserMetadata,
@@ -53,8 +54,6 @@ interface DiscussionFeedCardProps {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   directParent?: DirectParent | null;
-  commonDescription?: string;
-  commonGallery?: CommonLink[];
   onUserSelect?: (userId: string, commonId?: string) => void;
 }
 
@@ -80,8 +79,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     getNonAllowedItems,
     onActiveItemDataChange,
     directParent,
-    commonDescription,
-    commonGallery,
     onUserSelect,
   } = props;
   const {
@@ -110,11 +107,13 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     data: discussion,
     fetched: isDiscussionFetched,
   } = useDiscussionById();
+  const isHome = discussion?.predefinedType === PredefinedTypes.General;
   const {
     data: feedItemUserMetadata,
     fetched: isFeedItemUserMetadataFetched,
     fetchFeedItemUserMetadata,
   } = useFeedItemUserMetadata();
+  const { data: common } = useCommon(isHome ? commonId : "");
   const feedItemFollow = useFeedItemFollow(item.id, commonId);
   const menuItems = useMenuItems(
     {
@@ -232,8 +231,6 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
       ? getVisibilityString(governanceCircles, discussion?.circleVisibility)
       : undefined;
 
-    const isHome = discussion?.predefinedType === PredefinedTypes.General;
-
     return (
       <>
         {!isHome && (
@@ -262,8 +259,8 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
           />
         )}
         <FeedCardContent
-          description={isHome ? commonDescription : discussion?.message}
-          images={isHome ? commonGallery : discussion?.images}
+          description={isHome ? common?.description : discussion?.message}
+          images={isHome ? common?.gallery : discussion?.images}
           onClick={handleOpenChat}
           onMouseEnter={() => {
             onHover(true);
