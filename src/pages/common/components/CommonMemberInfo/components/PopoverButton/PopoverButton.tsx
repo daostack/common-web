@@ -22,9 +22,9 @@ export const PopoverButton: FC<PopoverButtonProps> = (props) => {
       <div className={styles.contentWrapper}>
         {!isMobileVersion && <Avatar2Icon className={styles.avatarIcon} />}
         <div className={styles.memberInfo}>
-          <span className={styles.title}>
-            {pendingCircleName ? "Join circle request..." : "You are a member"}
-          </span>
+          {Boolean(pendingCircleName) && (
+            <span className={styles.title}>Join circle request...</span>
+          )}
           <span className={styles.circleNames} title={circleNames}>
             {circleNames} {pendingCircleName ? `-> ${pendingCircleName}` : ""}
           </span>
