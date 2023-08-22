@@ -626,6 +626,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             {userForProfile.userForProfileData &&
               (!isTabletView ? (
                 <DesktopProfile
+                  governanceCircles={governance?.circles}
                   className={desktopRightPaneClassName}
                   userId={userForProfile.userForProfileData.userId}
                   commonId={userForProfile.userForProfileData.commonId}

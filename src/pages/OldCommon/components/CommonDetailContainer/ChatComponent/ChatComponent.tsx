@@ -23,7 +23,11 @@ import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { useIntersection } from "@/shared/hooks";
 import { usePrevious } from "@/shared/hooks";
 import CloseIcon from "@/shared/icons/close.icon";
-import { Common, CommonMember, DiscussionMessage } from "@/shared/models";
+import {
+  Common,
+  CommonMember,
+  DiscussionMessage,
+} from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate } from "@/shared/utils";
 import {
@@ -274,6 +278,7 @@ export default function ChatComponent({
                     <ChatMessage
                       key={message.id}
                       user={user}
+                      commonMember={commonMember}
                       discussionMessage={message}
                       chatType={type}
                       scrollToRepliedMessage={scrollToRepliedMessage}

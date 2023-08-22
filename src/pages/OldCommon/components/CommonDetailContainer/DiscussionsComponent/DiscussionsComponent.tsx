@@ -55,6 +55,7 @@ export default function DiscussionsComponent({
               <DiscussionItemComponent
                 key={d.id}
                 discussion={d}
+                commonMember={commonMember}
                 loadDiscussionDetail={loadDiscussionDetail}
                 governance={governance}
               />
