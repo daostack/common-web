@@ -16,6 +16,7 @@ import {
   getItemById,
   getItemFromProjectsStateItem,
   getItemIdWithNewProjectCreationByPath,
+  getParentItemIds,
   Item,
 } from "../../../../SidenavLayout/components/SidenavContent/components";
 
@@ -28,6 +29,7 @@ interface Return {
   items: Item[];
   activeItem: Item | null;
   itemIdWithNewProjectCreation: string;
+  parentItemIds: string[];
 }
 
 export const useProjectsData = (): Return => {
@@ -75,6 +77,10 @@ export const useProjectsData = (): Return => {
   const activeItem = getItemById(
     activeItemId,
     parentItem ? [parentItem, ...items] : items,
+  );
+  const parentItemIds = getParentItemIds(
+    activeItemId,
+    currentCommon ? projects.concat(currentCommon) : projects,
   );
   const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
     location.pathname,
@@ -131,5 +137,6 @@ export const useProjectsData = (): Return => {
     items,
     activeItem,
     itemIdWithNewProjectCreation,
+    parentItemIds,
   };
 };
