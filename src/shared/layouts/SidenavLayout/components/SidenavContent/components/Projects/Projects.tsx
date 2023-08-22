@@ -22,6 +22,7 @@ import {
   getActiveItemIdByPath,
   getItemById,
   getItemIdWithNewProjectCreationByPath,
+  getParentItemIds,
 } from "./utils";
 import styles from "./Projects.module.scss";
 
@@ -52,6 +53,7 @@ const Projects: FC = () => {
     location.pathname,
   );
   const activeItem = getItemById(activeItemId, items);
+  const parentItemIds = getParentItemIds(activeItemId, projects);
   const isDataReady = areProjectsFetched;
 
   const handleGoToCommon = (createdCommon: Common) => {
@@ -91,6 +93,7 @@ const Projects: FC = () => {
           className={styles.projectsTree}
           items={items}
           activeItem={activeItem}
+          parentItemIds={parentItemIds}
           itemIdWithNewProjectCreation={itemIdWithNewProjectCreation}
         />
         <div className={styles.createCommonButtonWrapper}>

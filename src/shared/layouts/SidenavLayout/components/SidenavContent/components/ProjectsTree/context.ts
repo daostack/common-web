@@ -10,6 +10,7 @@ export interface TreeItemTriggerStyles {
 
 export interface TreeContextValue {
   activeItemId?: string;
+  parentItemIds?: string[];
   itemIdWithNewProjectCreation?: string;
   isActiveCheckAllowed: boolean;
   treeItemTriggerStyles?: TreeItemTriggerStyles;

@@ -13,6 +13,7 @@ export interface ProjectsTreeProps {
   items: Item[];
   activeItem: Item | null;
   itemIdWithNewProjectCreation?: string;
+  parentItemIds: string[];
 }
 
 const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
@@ -21,6 +22,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     treeItemTriggerStyles,
     items,
     activeItem,
+    parentItemIds,
     itemIdWithNewProjectCreation = "",
   } = props;
   const isActiveCheckAllowed = !itemIdWithNewProjectCreation;
@@ -30,12 +32,14 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
       itemIdWithNewProjectCreation,
       isActiveCheckAllowed,
       treeItemTriggerStyles,
+      parentItemIds,
     }),
     [
       activeItem?.id,
       itemIdWithNewProjectCreation,
       isActiveCheckAllowed,
       treeItemTriggerStyles,
+      parentItemIds,
     ],
   );
 
