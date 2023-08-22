@@ -11,7 +11,12 @@ interface FirebaseError extends Error {
 }
 
 firebase.initializeApp(config.firebase);
-firebase.firestore().enablePersistence();
+firebase
+  .firestore()
+  .enablePersistence()
+  .catch((error) => {
+    console.error("Error enabling persistence", error);
+  });
 
 if (REACT_APP_ENV === Environment.Local) {
   firebase.auth().useEmulator(local.firebase.authDomain);
