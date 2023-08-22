@@ -401,12 +401,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   };
 
   const handleChatChannelCreate = (chatChannel: ChatChannel, dmUser: User) => {
-    if (chatChannelItemForProfile) {
-      setActiveChatItem(null);
-      setShouldAllowChatAutoOpen(true);
-      return;
-    }
-
     userForProfile.setChatChannel(chatChannel);
     handleActiveChatChannelItemDataChange({
       itemId: chatChannel.id,
@@ -422,6 +416,22 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const handleProfileClose = () => {
     userForProfile.resetUserForProfileData(isTabletView);
   };
+
+  const handleDMClick = () => {
+    if (checkIsChatChannelLayoutItem(selectedFeedItem)) {
+      handleProfileClose();
+      return;
+    }
+
+    setActiveChatItem(null);
+    setShouldAllowChatAutoOpen(true);
+  };
+
+  const onDMClick =
+    checkIsChatChannelLayoutItem(selectedFeedItem) ||
+    (!isTabletView && chatChannelItemForProfile)
+      ? handleDMClick
+      : undefined;
 
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
@@ -648,9 +658,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   userId={userForProfile.userForProfileData.userId}
                   commonId={userForProfile.userForProfileData.commonId}
                   chatChannel={userForProfile.userForProfileData.chatChannel}
-                  shouldCloseOnDMClick={checkIsChatChannelLayoutItem(
-                    selectedFeedItem,
-                  )}
+                  onDMClick={onDMClick}
                   withTitle={settings?.withDesktopChatTitle}
                   onClose={handleProfileClose}
                   onChatChannelCreate={handleChatChannelCreate}
@@ -661,9 +669,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   userId={userForProfile.userForProfileData.userId}
                   commonId={userForProfile.userForProfileData.commonId}
                   chatChannel={userForProfile.userForProfileData.chatChannel}
-                  shouldCloseOnDMClick={checkIsChatChannelLayoutItem(
-                    selectedFeedItem,
-                  )}
+                  onDMClick={onDMClick}
                   onClose={handleProfileClose}
                   onChatChannelCreate={handleChatChannelCreate}
                   onUserClick={handleUserClick}
