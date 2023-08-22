@@ -79,6 +79,8 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const recentStreamId = useSelector(selectRecentStreamId);
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
@@ -94,8 +96,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     data: commonData,
     fetched: isCommonDataFetched,
     fetchCommonData,
-  } = useCommonData();
+  } = useCommonData(userId);
   const parentCommonId = commonData?.common.directParent?.commonId;
+  const isRootCommon = !parentCommonId;
+  const isRootCommonMember = Boolean(commonData?.rootCommonMember);
   const anotherCommonId =
     userCommonIds[0] === commonId ? userCommonIds[1] : userCommonIds[0];
   const pinnedItemIds = useMemo(
@@ -138,8 +142,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
 
   const sharedFeedItem = useSelector(selectSharedFeedItem);
-  const user = useSelector(selectUser());
-  const userId = user?.uid;
   const topFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
     const filteredPinnedItems =
@@ -158,6 +160,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [sharedFeedItem, sharedFeedItemId, commonPinnedFeedItems]);
   const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
+  const hasPublicItem = true;
 
   const fetchData = () => {
     fetchCommonData({
@@ -191,10 +194,21 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   );
 
   useEffect(() => {
-    if (!user) {
+    if (!isCommonDataFetched || !isGlobalDataFetched || commonMember) {
+      return;
+    }
+    if (!hasPublicItem && !isRootCommon && !isRootCommonMember) {
       history.replace(getCommonPageAboutTabPath(commonId));
     }
-  }, [user, commonId]);
+  }, [
+    isCommonDataFetched,
+    isGlobalDataFetched,
+    commonMember,
+    hasPublicItem,
+    isRootCommon,
+    isRootCommonMember,
+    commonId,
+  ]);
 
   useEffect(() => {
     dispatch(commonActions.setSharedFeedItemId(sharedFeedItemId));
