@@ -1,10 +1,9 @@
 import firebase from "firebase/app";
-import { Environment, REACT_APP_ENV } from "@/shared/constants";
-import { local } from "@/config";
-import "firebase/firestore";
 import "firebase/auth";
+import "firebase/firestore";
 import "firebase/storage";
-
+import { local } from "@/config";
+import { Environment, REACT_APP_ENV } from "@/shared/constants";
 import config from "../../config";
 
 interface FirebaseError extends Error {
@@ -12,6 +11,7 @@ interface FirebaseError extends Error {
 }
 
 firebase.initializeApp(config.firebase);
+firebase.firestore().enablePersistence();
 
 if (REACT_APP_ENV === Environment.Local) {
   firebase.auth().useEmulator(local.firebase.authDomain);
@@ -19,7 +19,7 @@ if (REACT_APP_ENV === Environment.Local) {
     .firestore()
     .useEmulator(
       "localhost",
-      Number(local.firebase.databaseURL.split(/:/g)[2])
+      Number(local.firebase.databaseURL.split(/:/g)[2]),
     );
 }
 
