@@ -181,10 +181,12 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     }
 
     if (
+      governanceCircles &&
+      commonMember &&
       hasPermission({
-        commonMember: commonMember as CommonMember,
+        commonMember: commonMember,
         governance: {
-          circles: governanceCircles as Circles,
+          circles: governanceCircles,
         },
         key: HideContentTypes[entityType],
       }) &&
@@ -198,11 +200,13 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
       });
     }
     if (
+      governanceCircles &&
+      commonMember &&
       (isOwner ||
         hasPermission({
-          commonMember: commonMember as CommonMember,
+          commonMember,
           governance: {
-            circles: governanceCircles as Circles,
+            circles: governanceCircles,
           },
           key: DeleteContentTypes[entityType],
         })) &&
