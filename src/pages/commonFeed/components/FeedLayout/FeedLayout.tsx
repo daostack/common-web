@@ -393,6 +393,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       title: getUserName(dmUser),
       image: dmUser.photoURL,
     });
+
+    if (!isTabletView) {
+      setActiveChatItem(null);
+    }
   };
 
   const handleProfileClose = () => {
@@ -456,12 +460,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId(activeFeedItemId);
     }
   }, [isTabletView, shouldAutoExpandItem, activeFeedItemId]);
-
-  useEffect(() => {
-    if (!isTabletView && userForProfile.userForProfileData?.chatChannel) {
-      setActiveChatItem(null);
-    }
-  }, [isTabletView, userForProfile.userForProfileData?.chatChannel || null]);
 
   useEffect(() => {
     if (!recentStreamId || !selectedFeedItem) {
