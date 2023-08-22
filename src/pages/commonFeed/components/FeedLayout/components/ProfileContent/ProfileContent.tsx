@@ -25,8 +25,7 @@ interface ProfileContentProps {
   className?: string;
   userId: string;
   commonId?: string;
-  shouldCloseOnDMClick: boolean;
-  onClose: () => void;
+  onDMClick?: () => void;
   onChatChannelCreate: (chatChannel: ChatChannel, dmUser: User) => void;
   onChatChannelLoading?: (isLoading: boolean) => void;
 }
@@ -35,8 +34,7 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
   const {
     userId,
     commonId,
-    shouldCloseOnDMClick,
-    onClose,
+    onDMClick,
     onChatChannelCreate,
     onChatChannelLoading,
   } = props;
@@ -82,8 +80,8 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
   const country = countryList.find(({ value }) => value === user?.country);
 
   const handleDMButtonClick = () => {
-    if (shouldCloseOnDMClick) {
-      onClose();
+    if (onDMClick) {
+      onDMClick();
     } else {
       fetchDMUserChatChannel(userId);
     }
