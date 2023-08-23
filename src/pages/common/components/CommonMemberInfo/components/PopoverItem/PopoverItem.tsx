@@ -141,9 +141,8 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
             [styles.disabled]: !isMember,
           })}
         >
-          {circleName}
+          {`${membersCount} ${circleName}${membersCount === 1 ? "" : "s"}`}
         </p>
-        <span className={styles.membersCount}>{membersCount} members</span>
       </div>
       <ActionButton />
     </div>

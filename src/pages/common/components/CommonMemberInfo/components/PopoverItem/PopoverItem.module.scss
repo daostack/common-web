@@ -8,6 +8,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   width: 100%;
   padding: 1.125rem 1.5rem;
   text-decoration: none;
@@ -48,14 +50,6 @@
 
 .disabled {
   color: $light-gray-2;
-}
-
-.membersCount {
-  display: inline-flex;
-  align-items: center;
-  font-size: $xxsmall-2;
-  color: $light-gray-2;
-  margin: 0;
 }
 
 .membersCountLoader {
