@@ -1,6 +1,7 @@
 import React, { FC, ReactNode, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
+import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useFeedItemContext } from "@/pages/common";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon } from "@/shared/hooks/useCases";
@@ -21,7 +22,18 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const { getCommonPagePath } = useRoutesContext();
   const { renderFeedItemBaseContent } = useFeedItemContext();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
+  const {
+    fetched: isCommonMemberFetched,
+    data: commonMember,
+    fetchCommonMember,
+  } = useCommonMember();
   const commonId = item.data.id;
+  const unreadStreamsCount =
+    commonMember?.streamsUnreadCountByProjectStream[item.id] ?? null;
+  const lastMessage =
+    unreadStreamsCount !== null
+      ? parseStringToTextEditorValue(`${unreadStreamsCount} updated streams`)
+      : undefined;
   const isProject = checkIsProject(common);
   const titleEl = (
     <>
@@ -50,6 +62,10 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     fetchCommon(commonId);
   }, [commonId]);
 
+  useEffect(() => {
+    fetchCommonMember(item.commonId);
+  }, [fetchCommonMember, item.commonId]);
+
   return (
     (
       <>
@@ -57,14 +73,16 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           className: styles.container,
           titleWrapperClassName: styles.titleWrapper,
           lastActivity: item.updatedAt.seconds * 1000,
-          unreadMessages: 0,
+          unreadMessages:
+            commonMember?.unreadCountByProjectStream[item.id] ?? 0,
           isMobileView: isMobileVersion,
           title: titleEl,
           onClick: handleClick,
           seenOnce: true,
-          isLoading: !isCommonFetched,
+          isLoading: !isCommonFetched || !isCommonMemberFetched,
+          lastMessage,
           renderLeftContent,
-          shouldHideBottomContent: true,
+          shouldHideBottomContent: !lastMessage,
         })}
       </>
     ) || null
