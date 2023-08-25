@@ -14,6 +14,7 @@ export enum CommonFeedType {
 
 export interface CommonFeed extends BaseEntity, SoftDeleteEntity {
   userId: string;
+  commonId: string;
   data: Record<string, unknown> & {
     type: CommonFeedType;
     id: string;
