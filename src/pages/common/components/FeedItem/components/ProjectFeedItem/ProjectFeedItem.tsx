@@ -30,10 +30,13 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const commonId = item.data.id;
   const unreadStreamsCount =
     commonMember?.streamsUnreadCountByProjectStream[item.id] ?? null;
-  const lastMessage =
+  const lastMessage = parseStringToTextEditorValue(
     unreadStreamsCount !== null
-      ? parseStringToTextEditorValue(`${unreadStreamsCount} updated streams`)
-      : undefined;
+      ? `${unreadStreamsCount} updated stream${
+          unreadStreamsCount === 1 ? "" : "s"
+        }`
+      : undefined,
+  );
   const isProject = checkIsProject(common);
   const titleEl = (
     <>
