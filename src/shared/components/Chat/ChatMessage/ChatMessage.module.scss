@@ -128,6 +128,7 @@
 .systemMessageCommonLink {
   color: $c-pink-mention;
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;
