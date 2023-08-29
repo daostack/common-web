@@ -209,12 +209,13 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
 
     useEffect(() => {
       if (
-        !isActive &&
+        (!isActive ||
+          shouldAllowChatAutoOpen === null ||
+          shouldAllowChatAutoOpen) &&
         isDiscussionFetched &&
         isFeedItemUserMetadataFetched &&
         item.id === feedItemIdForAutoChatOpen &&
-        !isMobileVersion &&
-        shouldAllowChatAutoOpen !== false
+        !isMobileVersion
       ) {
         handleOpenChat();
       }
@@ -225,10 +226,10 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
     ]);
 
     useEffect(() => {
-      if (isActive) {
+      if (isActive && shouldAllowChatAutoOpen !== null) {
         handleOpenChat();
       }
-    }, [isActive, handleOpenChat]);
+    }, [isActive, shouldAllowChatAutoOpen, handleOpenChat]);
 
     useEffect(() => {
       if (isActive && cardTitle) {
