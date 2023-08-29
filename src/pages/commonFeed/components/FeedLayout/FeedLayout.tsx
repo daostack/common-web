@@ -101,7 +101,7 @@ interface FeedLayoutProps {
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;
   shouldHideContent?: boolean;
-  onFetchNext: () => void;
+  onFetchNext: (resourceId?: string) => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
@@ -444,15 +444,24 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [selectedItemCommonData?.id, onFeedItemSelect],
   );
 
-  const handleFeedItemClickInternal = useCallback(
-    (feedItemId: string) => {
-      setActiveChatItem({
-        feedItemId,
-        circleVisibility: [],
+  const handleFeedItemClickInternal = (feedItemId: string) => {
+    setActiveChatItem({
+      feedItemId,
+      circleVisibility: [],
+    });
+
+    const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
+
+    if (itemExists) {
+      // scroll to item
+    } else {
+      onFetchNext(feedItemId);
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
       });
-    },
-    [setActiveChatItem],
-  );
+    }
+  };
 
   const handleFeedItemClick = onFeedItemSelect
     ? handleFeedItemClickExternal

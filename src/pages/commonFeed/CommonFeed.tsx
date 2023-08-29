@@ -168,9 +168,9 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetchUserRelatedData();
   };
 
-  const fetchMoreCommonFeedItems = () => {
+  const fetchMoreCommonFeedItems = (resourceId?: string) => {
     if (hasMoreCommonFeedItems) {
-      fetchCommonFeedItems();
+      fetchCommonFeedItems(resourceId);
     }
   };
 

@@ -116,6 +116,7 @@ export const getFeedItems = createAsyncAction(
 )<
   {
     commonId: string;
+    resourceId?: string;
     limit?: number;
   },
   Omit<FeedItems, "loading">,

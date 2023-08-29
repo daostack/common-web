@@ -4,7 +4,7 @@ import { CommonFeedService } from "@/services";
 import { commonActions, FeedItems, selectFeedItems } from "@/store/states";
 
 interface Return extends Pick<FeedItems, "data" | "loading" | "hasMore"> {
-  fetch: () => void;
+  fetch: (resourceId?: string) => void;
 }
 
 export const useCommonFeedItems = (
@@ -15,10 +15,11 @@ export const useCommonFeedItems = (
   const feedItems = useSelector(selectFeedItems);
   const idsForNotListeningRef = useRef<string[]>(idsForNotListening || []);
 
-  const fetch = () => {
+  const fetch = (resourceId?: string) => {
     dispatch(
       commonActions.getFeedItems.request({
         commonId,
+        resourceId,
         limit: 15,
       }),
     );
