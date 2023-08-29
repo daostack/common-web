@@ -582,7 +582,7 @@ export default function ChatComponent({
           users={users}
           discussionId={discussionId}
           feedItemId={feedItemId}
-          isLoading={isLoadingDiscussionMessages}
+          isLoading={!discussion || isLoadingDiscussionMessages}
           onMessageDelete={handleMessageDelete}
           directParent={directParent}
           onUserClick={onUserClick}

@@ -5,7 +5,7 @@ import { checkIsCountdownState } from "@/shared/utils";
 export const checkShouldAutoOpenPreview = (
   chatItem?: ChatItem | null,
 ): boolean => {
-  if (!chatItem) {
+  if (!chatItem || !chatItem.discussion) {
     return false;
   }
   if (!chatItem.seenOnce || chatItem.proposal?.state === ProposalState.VOTING) {

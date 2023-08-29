@@ -301,19 +301,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [handleUserWithCommonClick, selectedItemCommonData?.id],
   );
 
-  const handleFeedItemClickExternal = useCallback(
-    (feedItemId: string) => {
-      if (selectedItemCommonData?.id) {
-        onFeedItemSelect?.(selectedItemCommonData.id, feedItemId);
-      }
-    },
-    [selectedItemCommonData?.id, onFeedItemSelect],
-  );
-
-  const handleFeedItemClick = onFeedItemSelect
-    ? handleFeedItemClickExternal
-    : undefined;
-
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
   const feedItemContextValue = useMemo<FeedItemContextValue>(
@@ -448,6 +435,29 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       ? handleDMClick
       : undefined;
 
+  const handleFeedItemClickExternal = useCallback(
+    (feedItemId: string) => {
+      if (selectedItemCommonData?.id) {
+        onFeedItemSelect?.(selectedItemCommonData.id, feedItemId);
+      }
+    },
+    [selectedItemCommonData?.id, onFeedItemSelect],
+  );
+
+  const handleFeedItemClickInternal = useCallback(
+    (feedItemId: string) => {
+      setActiveChatItem({
+        feedItemId,
+        circleVisibility: [],
+      });
+    },
+    [setActiveChatItem],
+  );
+
+  const handleFeedItemClick = onFeedItemSelect
+    ? handleFeedItemClickExternal
+    : handleFeedItemClickInternal;
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -475,7 +485,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [activeFeedItemId]);
 
   useEffect(() => {
-    if (selectedFeedItem?.itemId) {
+    if (selectedFeedItem?.itemId || (chatItem && !chatItem.discussion)) {
       return;
     }
 
@@ -630,7 +640,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               ) : (
                 <DesktopChatPlaceholder
                   className={desktopRightPaneClassName}
-                  isItemSelected={Boolean(selectedItemCommonData)}
+                  isItemSelected={Boolean(selectedItemCommonData || chatItem)}
                   withTitle={settings?.withDesktopChatTitle}
                 />
               ))}
