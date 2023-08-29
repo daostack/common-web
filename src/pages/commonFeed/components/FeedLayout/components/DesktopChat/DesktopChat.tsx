@@ -60,7 +60,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
   const dmUserId = chatItem.chatChannel?.participants.filter(
     (participant) => participant !== userId,
   )[0];
-  const title = getUserName(dmUser) || chatItem.discussion.title;
+  const title = getUserName(dmUser) || chatItem.discussion?.title || "";
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),

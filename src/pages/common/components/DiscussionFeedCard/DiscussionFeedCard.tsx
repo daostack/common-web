@@ -199,6 +199,7 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
 
   useEffect(() => {
     if (
+      !isActive &&
       isDiscussionFetched &&
       isFeedItemUserMetadataFetched &&
       item.id === feedItemIdForAutoChatOpen &&
@@ -212,6 +213,12 @@ const DiscussionFeedCard: FC<DiscussionFeedCardProps> = (props) => {
     isFeedItemUserMetadataFetched,
     shouldAllowChatAutoOpen,
   ]);
+
+  useEffect(() => {
+    if (isActive) {
+      handleOpenChat();
+    }
+  }, [isActive, handleOpenChat]);
 
   useEffect(() => {
     if (isActive && cardTitle) {

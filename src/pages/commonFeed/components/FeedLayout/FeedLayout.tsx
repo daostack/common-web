@@ -598,7 +598,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               })}
             </InfiniteScroll>
             {!isTabletView &&
-              (chatItem ? (
+              (chatItem?.discussion ? (
                 <DesktopChat
                   className={desktopRightPaneClassName}
                   chatItem={chatItem}
