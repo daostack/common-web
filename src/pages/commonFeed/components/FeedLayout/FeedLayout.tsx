@@ -30,6 +30,7 @@ import {
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
 import { JoinProjectModal } from "@/pages/common/components/JoinProjectModal";
+import { useJoinProjectAutomatically } from "@/pages/common/hooks";
 import { InboxItemType, QueryParamKey } from "@/shared/constants";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
@@ -54,7 +55,12 @@ import {
   User,
 } from "@/shared/models";
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
-import { addQueryParam, deleteQueryParam, getUserName } from "@/shared/utils";
+import {
+  addQueryParam,
+  checkIsProject,
+  deleteQueryParam,
+  getUserName,
+} from "@/shared/utils";
 import { commonActions, selectRecentStreamId } from "@/store/states";
 import { MIN_CHAT_WIDTH } from "../../constants";
 import {
@@ -96,6 +102,7 @@ interface FeedLayoutProps {
   ) => ReactNode;
   topContent?: ReactNode;
   common?: Common;
+  parentCommon?: Common;
   governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: FeedLayoutItem[] | null;
@@ -131,6 +138,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     common: outerCommon,
     governance: outerGovernance,
     commonMember: outerCommonMember,
+    parentCommon,
     feedItems,
     topFeedItems = [],
     loading,
@@ -183,12 +191,19 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onOpen: onProjectJoinModalOpen,
     onClose: onProjectJoinModalClose,
   } = useAuthorizedModal();
-  const onJoinModalOpen = outerCommon?.directParent
-    ? onProjectJoinModalOpen
+  const commonMember = outerCommonMember || fetchedCommonMember;
+  const {
+    canJoinProjectAutomatically,
+    isJoinPending,
+    onJoinProjectAutomatically,
+  } = useJoinProjectAutomatically(commonMember, outerCommon, parentCommon);
+  const onJoinCommon = checkIsProject(outerCommon)
+    ? canJoinProjectAutomatically
+      ? onJoinProjectAutomatically
+      : onProjectJoinModalOpen
     : onCommonJoinModalOpen;
   const userForProfile = useUserForProfile();
   const governance = outerGovernance || fetchedGovernance;
-  const commonMember = outerCommonMember || fetchedCommonMember;
   const maxChatSize =
     settings?.getSplitViewMaxSize?.(windowWidth) ??
     getSplitViewMaxSize(windowWidth);
@@ -596,7 +611,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   titleRightContent={followFeedItemEl}
                   onMessagesAmountChange={handleMessagesAmountChange}
                   directParent={outerCommon?.directParent}
-                  onJoinModalOpen={onJoinModalOpen}
+                  onJoinCommon={onJoinCommon}
+                  isJoinPending={isJoinPending}
                   onUserClick={handleUserClick}
                 />
               ) : (
@@ -619,7 +635,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 onMessagesAmountChange={handleMessagesAmountChange}
                 directParent={outerCommon?.directParent}
                 onClose={handleMobileChatClose}
-                onJoinModalOpen={onJoinModalOpen}
+                onJoinCommon={onJoinCommon}
+                isJoinPending={isJoinPending}
                 onUserClick={handleUserClick}
               >
                 {selectedItemCommonData &&

@@ -353,6 +353,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
           </>
         }
         common={commonData.common}
+        parentCommon={commonData.parentCommon}
         governance={commonData.governance}
         commonMember={commonMember}
         topFeedItems={topFeedItems}

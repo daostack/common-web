@@ -64,6 +64,13 @@
   align-items: flex-end;
 }
 
+.loaderWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .permissionsText {
   font-size: $mobile-title;
   color: var(--primary-fill);

@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { last } from "lodash";
 import {
   CommonFeedService,
   CommonService,
@@ -84,6 +85,7 @@ export const useCommonData = (userId?: string): Return => {
               commonMembersAmount,
               sharedFeedItem,
               rootCommonMember,
+              parentCommon: last(parentCommons),
             },
           });
         } catch (error) {

@@ -9,6 +9,7 @@ export interface Data {
   commonMembersAmount: number;
   sharedFeedItem: CommonFeed | null;
   rootCommonMember: CommonMember | null;
+  parentCommon?: Common;
 }
 
 export type State = LoadingState<Data | null>;
