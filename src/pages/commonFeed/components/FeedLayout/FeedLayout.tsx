@@ -497,6 +497,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [activeFeedItemId]);
 
   useEffect(() => {
+    if (selectedFeedItem?.itemId && !isTabletView) {
+      refsByItemId.current[selectedFeedItem.itemId]?.scrollToItem();
+    }
     if (selectedFeedItem?.itemId || (chatItem && !chatItem.discussion)) {
       return;
     }
