@@ -141,9 +141,9 @@ const getFeedItemCreatedSystemMessageText = async (
   const titleEl = title ? (
     <>
       {" "}
-      {renderClickableText(title, () => {
-        console.log(123);
-      })}
+      {renderClickableText(title, () =>
+        data.onFeedItemClick?.(systemMessageData.feedItemId),
+      )}
     </>
   ) : (
     ""

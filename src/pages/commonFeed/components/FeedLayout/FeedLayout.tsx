@@ -115,6 +115,7 @@ interface FeedLayoutProps {
     feedItem: FeedLayoutItem,
     becameEmpty: boolean,
   ) => void;
+  onFeedItemSelect?: (commonId: string, feedItemId: string) => void;
   outerStyles?: FeedLayoutOuterStyles;
   settings?: FeedLayoutSettings;
 }
@@ -145,6 +146,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onActiveItemChange,
     onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
+    onFeedItemSelect,
     outerStyles,
     settings,
   } = props;
@@ -298,6 +300,19 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     },
     [handleUserWithCommonClick, selectedItemCommonData?.id],
   );
+
+  const handleFeedItemClickExternal = useCallback(
+    (feedItemId: string) => {
+      if (selectedItemCommonData?.id) {
+        onFeedItemSelect?.(selectedItemCommonData.id, feedItemId);
+      }
+    },
+    [selectedItemCommonData?.id, onFeedItemSelect],
+  );
+
+  const handleFeedItemClick = onFeedItemSelect
+    ? handleFeedItemClickExternal
+    : undefined;
 
   // We should try to set here only the data which rarely can be changed,
   // so we will not have extra re-renders of ALL rendered items
@@ -610,6 +625,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   onMessagesAmountChange={handleMessagesAmountChange}
                   directParent={outerCommon?.directParent}
                   onUserClick={handleUserClick}
+                  onFeedItemClick={handleFeedItemClick}
                 />
               ) : (
                 <DesktopChatPlaceholder
@@ -632,6 +648,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 directParent={outerCommon?.directParent}
                 onClose={handleMobileChatClose}
                 onUserClick={handleUserClick}
+                onFeedItemClick={handleFeedItemClick}
               >
                 {selectedItemCommonData &&
                   checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (

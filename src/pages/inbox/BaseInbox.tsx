@@ -8,6 +8,7 @@ import React, {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { FeedItemBaseContentProps } from "@/pages/common";
 import {
@@ -16,6 +17,7 @@ import {
   FeedLayoutSettings,
 } from "@/pages/commonFeed";
 import { QueryParamKey } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
@@ -60,6 +62,8 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { getCommonPagePath } = useRoutesContext();
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
@@ -156,6 +160,13 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     [dispatch],
   );
 
+  const handleFeedItemSelect = useCallback(
+    (commonId: string, feedItemId: string) => {
+      history.push(getCommonPagePath(commonId, { item: feedItemId }));
+    },
+    [history.push, getCommonPagePath],
+  );
+
   useEffect(() => {
     dispatch(inboxActions.setSharedFeedItemId(sharedFeedItemId));
 
@@ -250,6 +261,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         onActiveItemChange={handleActiveItemChange}
         onActiveItemDataChange={onActiveItemDataChange}
         onMessagesAmountEmptinessToggle={handleMessagesAmountEmptinessToggle}
+        onFeedItemSelect={handleFeedItemSelect}
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
       />

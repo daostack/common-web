@@ -54,6 +54,7 @@ interface ChatContentInterface {
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
 }
 
 const isToday = (someDate: Date) => {
@@ -89,6 +90,7 @@ const ChatContent: ForwardRefRenderFunction<
     onMessageDelete,
     directParent,
     onUserClick,
+    onFeedItemClick,
   },
   chatContentRef,
 ) => {
@@ -266,6 +268,7 @@ const ChatContent: ForwardRefRenderFunction<
                   onMessageDelete={onMessageDelete}
                   directParent={directParent}
                   onUserClick={onUserClick}
+                  onFeedItemClick={onFeedItemClick}
                 />
               );
 

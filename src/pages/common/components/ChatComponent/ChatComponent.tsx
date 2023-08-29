@@ -87,6 +87,7 @@ interface ChatComponentInterface {
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
 }
 
 interface Messages {
@@ -125,6 +126,7 @@ export default function ChatComponent({
   onMessagesAmountChange,
   directParent,
   onUserClick,
+  onFeedItemClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
   useZoomDisabling();
@@ -584,6 +586,7 @@ export default function ChatComponent({
           onMessageDelete={handleMessageDelete}
           directParent={directParent}
           onUserClick={onUserClick}
+          onFeedItemClick={onFeedItemClick}
         />
       </div>
       {isAuthorized && (

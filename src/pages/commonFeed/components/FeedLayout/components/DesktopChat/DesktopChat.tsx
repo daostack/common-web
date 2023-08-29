@@ -31,6 +31,7 @@ interface ChatProps {
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -45,6 +46,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
     onMessagesAmountChange,
     directParent,
     onUserClick,
+    onFeedItemClick,
   } = props;
   const {
     fetchUser: fetchDMUser,
@@ -116,6 +118,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         onMessagesAmountChange={onMessagesAmountChange}
         directParent={directParent}
         onUserClick={onUserClick}
+        onFeedItemClick={onFeedItemClick}
       />
     </DesktopRightPane>
   );

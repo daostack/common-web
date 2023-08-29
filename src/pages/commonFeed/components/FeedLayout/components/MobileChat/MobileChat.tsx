@@ -34,6 +34,7 @@ interface ChatProps {
   directParent?: DirectParent | null;
   onClose: () => void;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -51,6 +52,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     directParent,
     onClose,
     onUserClick,
+    onFeedItemClick,
   } = props;
   const { setIsShowFeedItemDetailsModal } = useChatContext();
   const {
@@ -146,6 +148,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             onMessagesAmountChange={onMessagesAmountChange}
             directParent={directParent}
             onUserClick={onUserClick}
+            onFeedItemClick={onFeedItemClick}
           />
         )}
       </ChatMobileModal>
