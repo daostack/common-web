@@ -54,6 +54,7 @@ export default function ProposalsComponent({
                     key={proposal.id}
                     proposal={proposal}
                     loadProposalDetail={loadProposalDetail}
+                    governanceCircles={governance.circles}
                   />
                 );
               }

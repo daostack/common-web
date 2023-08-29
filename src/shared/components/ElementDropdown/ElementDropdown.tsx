@@ -26,7 +26,7 @@ import {
   Discussion,
   DiscussionMessage,
   CommonMember,
-  Governance,
+  Circles,
 } from "@/shared/models";
 import {
   DesktopStyleMenu,
@@ -39,8 +39,7 @@ import {
   hasPermission,
 } from "@/shared/utils";
 import { chatActions } from "@/store/states";
-import { selectCommonMember, selectGovernance } from "@/store/states";
-import { DeleteModal } from "../DeleteModal";
+import { DeleteModal, DeleteContentTypes } from "../DeleteModal";
 import {
   Dropdown,
   ElementDropdownMenuItems,
@@ -73,6 +72,8 @@ interface ElementDropdownProps {
   isControlledDropdown?: boolean;
   feedItemId: string;
   onDelete?: (elemId: string) => void;
+  commonMember?: CommonMember | null;
+  governanceCircles?: Circles;
 }
 
 const ElementDropdown: FC<ElementDropdownProps> = ({
@@ -95,11 +96,11 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
   isControlledDropdown = true,
   feedItemId,
   onDelete,
+  commonMember,
+  governanceCircles,
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser());
-  const commonMember = useSelector(selectCommonMember) as CommonMember;
-  const governance = useSelector(selectGovernance) as Governance;
   const { notify } = useNotification();
   const [selectedItem, setSelectedItem] = useState<
     ElementDropdownMenuItems | unknown
@@ -180,9 +181,13 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     }
 
     if (
+      governanceCircles &&
+      commonMember &&
       hasPermission({
-        commonMember,
-        governance,
+        commonMember: commonMember,
+        governance: {
+          circles: governanceCircles,
+        },
         key: HideContentTypes[entityType],
       }) &&
       !isOwner &&
@@ -194,8 +199,19 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         value: ElementDropdownMenuItems.Hide,
       });
     }
-
-    if (isOwner && (isDiscussionMessage || isChatMessage)) {
+    if (
+      governanceCircles &&
+      commonMember &&
+      (isOwner ||
+        hasPermission({
+          commonMember,
+          governance: {
+            circles: governanceCircles,
+          },
+          key: DeleteContentTypes[entityType],
+        })) &&
+      (isDiscussionMessage || isChatMessage)
+    ) {
       items.push({
         text: (
           <ElementDropdownItem
@@ -217,7 +233,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     user,
     ownerId,
     commonMember,
-    governance,
+    governanceCircles,
     isHiddenElement,
   ]);
 

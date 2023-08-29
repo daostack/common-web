@@ -274,6 +274,7 @@ export default function ChatComponent({
                     <ChatMessage
                       key={message.id}
                       user={user}
+                      commonMember={commonMember}
                       discussionMessage={message}
                       chatType={type}
                       scrollToRepliedMessage={scrollToRepliedMessage}

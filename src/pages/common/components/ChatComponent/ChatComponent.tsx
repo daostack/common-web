@@ -589,6 +589,7 @@ export default function ChatComponent({
           ref={chatContentRef}
           type={type}
           commonMember={commonMember}
+          governanceCircles={governanceCircles}
           isCommonMemberFetched={isCommonMemberFetched}
           isJoiningPending={false}
           hasAccess={hasAccess}

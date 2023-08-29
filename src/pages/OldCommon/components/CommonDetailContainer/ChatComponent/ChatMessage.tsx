@@ -5,8 +5,10 @@ import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
 import {
   checkIsSystemDiscussionMessage,
   checkIsUserDiscussionMessage,
+  CommonMember,
   DiscussionMessage,
   User,
+  Circles,
 } from "@/shared/models";
 import { StaticLinkType, getUserName } from "@/shared/utils";
 import EditMessageInput from "./EditMessageInput";
@@ -19,6 +21,8 @@ interface ChatMessageProps {
   onMessageDropdownOpen?: (isOpen: boolean) => void;
   user: User | null;
   scrollToRepliedMessage: (messageId: string) => void;
+  commonMember: CommonMember | null;
+  governanceCircles?: Circles;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -38,6 +42,8 @@ export default function ChatMessage({
   onMessageDropdownOpen,
   user,
   scrollToRepliedMessage,
+  commonMember,
+  governanceCircles,
 }: ChatMessageProps) {
   const [isEditMode, setEditMode] = useState(false);
   const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
@@ -122,6 +128,8 @@ export default function ChatMessage({
               </div>
             </div>
             <ElementDropdown
+              commonMember={commonMember}
+              governanceCircles={governanceCircles}
               linkType={getStaticLinkByChatType(chatType)}
               entityType={
                 [ChatType.DiscussionMessages, ChatType.ChatMessages].includes(

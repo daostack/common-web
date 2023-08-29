@@ -144,6 +144,8 @@ export interface CommonMember {
   rulesAccepted?: boolean;
   joinedAt: firebase.firestore.Timestamp;
   circleIds: string[];
+  streamsUnreadCountByProjectStream: Record<string, number>;
+  unreadCountByProjectStream: Record<string, number>;
 }
 
 export interface CirclesPermissions {
