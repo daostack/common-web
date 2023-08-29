@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +21,7 @@ import {
   FeedItemBaseContentProps,
   FeedItemContext,
   FeedItemContextValue,
+  FeedItemRef,
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "@/pages/common";
@@ -151,6 +153,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     settings,
   } = props;
   const dispatch = useDispatch();
+  const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
   const { width: windowWidth } = useWindowSize();
   const history = useHistory();
   const queryParams = useQueryParams();
@@ -453,7 +456,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
 
     if (itemExists) {
-      // scroll to item
+      refsByItemId.current[feedItemId]?.scrollToItem();
     } else {
       onFetchNext(feedItemId);
       window.scrollTo({
@@ -589,6 +592,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
                   return (
                     <FeedItem
+                      ref={(ref) => {
+                        refsByItemId.current[item.itemId] = ref;
+                      }}
                       key={item.feedItem.id}
                       commonMember={commonMember}
                       commonId={commonData?.id}
