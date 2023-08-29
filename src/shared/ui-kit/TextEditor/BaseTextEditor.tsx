@@ -15,6 +15,7 @@ import {
   Range,
   Editor as EditorSlate,
   BaseRange,
+  BasePoint,
 } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
@@ -147,6 +148,9 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   }, [editorRef, editor]);
 
   const [search, setSearch] = useState(INITIAL_SEARCH_VALUE);
+  const [mentionTagAnchor, setMentionTagAnchor] = useState<BasePoint | null>(
+    null,
+  );
 
   const handleSearch = (text: string, value?: BaseRange) => {
     if (!value || !value?.anchor || !text || text === "") {
@@ -162,18 +166,24 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
         ...value.anchor,
         range: value,
       });
+      setMentionTagAnchor(value.anchor);
     } else if (text.match(/^(\s|$)/)) {
       setSearch(INITIAL_SEARCH_VALUE);
       setTarget(null);
       setShouldFocusTarget(false);
+      setMentionTagAnchor(null);
     } else if (
       search.text.includes(MENTION_TAG) &&
       isEqual(search.path, value.anchor.path) &&
-      search.offset + 1 === value.anchor.offset
+      mentionTagAnchor &&
+      editor.selection?.focus
     ) {
       setSearch({
         ...search,
-        text: search.text + text,
+        text: EditorSlate.string(editor, {
+          anchor: mentionTagAnchor,
+          focus: editor.selection.focus,
+        }),
         ...value.anchor,
       });
       setShouldFocusTarget(false);
