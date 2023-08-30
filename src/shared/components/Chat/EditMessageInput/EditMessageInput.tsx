@@ -114,7 +114,7 @@ export default function EditMessageInput({
         className={styles.input}
         emojiPickerContainerClassName={styles.pickerContainer}
         emojiContainerClassName={styles.emojiContainer}
-        value={parseStringToTextEditorValue(discussionMessage.text)}
+        value={message}
         onChange={setMessage}
         users={users}
         shouldReinitializeEditor={false}

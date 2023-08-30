@@ -230,7 +230,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     <div ref={inputContainerRef} className={styles.container}>
       <Slate
         editor={editor}
-        initialValue={value}
+        value={value}
         onChange={(val) => {
           onChange && onChange(val);
           const { selection } = editor;
@@ -242,7 +242,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
               before && EditorSlate.range(editor, before, start);
             const beforeText =
               beforeRange && EditorSlate.string(editor, beforeRange);
-
             handleSearch(beforeText ?? "", beforeRange);
           }
         }}

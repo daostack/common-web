@@ -633,7 +633,7 @@ export default function ChatComponent({
                       [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
                     }),
                   }}
-                  value={parseStringToTextEditorValue()}
+                  value={message}
                   onChange={setMessage}
                   placeholder="What do you think?"
                   onKeyDown={onEnterKeyDown}
