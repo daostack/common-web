@@ -16,7 +16,7 @@ export const getVisibilityString = (
     circleVisibility,
   );
   const circleNames = getCirclesWithLowestTier(filteredByIdCircles)
-    .map(({ name }) => name)
+    .map(({ name }) => `${name}s`)
     .join(", ");
 
   const memberSpecific =
@@ -25,7 +25,7 @@ export const getVisibilityString = (
   /**
    * Temporary hide memberSpecific. See https://github.com/daostack/common-web/issues/1529
    */
-  //return circleNames ? `Private, ${circleNames} ${memberSpecific}` : "Public";
+  //return circleNames ? `${circleNames} ${memberSpecific}` : "Public";
 
-  return circleNames ? `Private, ${circleNames}` : "Public";
+  return circleNames ? circleNames : "Public";
 };
