@@ -1,3 +1,4 @@
+import "@/shared/utils/firebaseDebug";
 import "@/shared/utils/yup";
 import "./analytics";
 import "./i18n";
