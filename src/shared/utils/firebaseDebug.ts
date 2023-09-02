@@ -1,7 +1,10 @@
 import firebase from "./firebase";
 import { stringifyQuery } from "./stringifyQuery";
 
-if (typeof window !== "undefined") {
+if (
+  typeof window !== "undefined" &&
+  process.env.REACT_APP_DEBUG_FIREBASE === "true"
+) {
   const debugQuery = firebase
     .firestore()
     .collection("DEBUG")
