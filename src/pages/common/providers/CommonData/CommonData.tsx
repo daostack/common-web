@@ -17,7 +17,7 @@ import {
   Governance,
   SupportersData,
 } from "@/shared/models";
-import { getProjectCreationPagePath } from "@/shared/utils";
+import { checkIsProject, getProjectCreationPagePath } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { getDefaultGovDocUrl } from "../../components/CommonTabPanels/components/AboutTab/utils";
 import { JoinProjectModal } from "../../components/JoinProjectModal";
@@ -112,15 +112,15 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onOpen: onProjectJoinModalOpen,
     onClose: onProjectJoinModalClose,
   } = useAuthorizedModal();
-  const isProject = Boolean(common.directParent);
+  const isProject = checkIsProject(common);
 
   const isJoinPending =
     isGlobalDataFetched && !commonMember && props.isJoinPending;
   const isJoinAllowed = Boolean(
     isGlobalDataFetched &&
+      !isJoinPending &&
       ((!isProject && !commonMember) ||
-        (isProject && parentCommonMember && !commonMember)) &&
-      !isJoinPending,
+        (isProject && parentCommonMember && !commonMember)),
   );
 
   const handleMenuItemSelect = useCallback(
@@ -215,6 +215,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onMenuItemSelect: handleMenuItemSelect,
       onProjectCreate: handleProjectCreate,
       common,
+      commonMember,
       governance,
       parentCommons,
       subCommons,
@@ -232,6 +233,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       handleMenuItemSelect,
       handleProjectCreate,
       common,
+      commonMember,
       governance,
       parentCommons,
       subCommons,

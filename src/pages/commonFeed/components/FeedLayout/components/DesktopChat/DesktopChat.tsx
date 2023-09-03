@@ -30,6 +30,8 @@ interface ChatProps {
   titleRightContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  isJoinPending?: boolean;
+  onJoinCommon?: () => void;
   onUserClick?: (userId: string) => void;
 }
 
@@ -44,6 +46,8 @@ const DesktopChat: FC<ChatProps> = (props) => {
     titleRightContent,
     onMessagesAmountChange,
     directParent,
+    isJoinPending,
+    onJoinCommon,
     onUserClick,
   } = props;
   const {
@@ -115,6 +119,8 @@ const DesktopChat: FC<ChatProps> = (props) => {
         isAuthorized={Boolean(user)}
         onMessagesAmountChange={onMessagesAmountChange}
         directParent={directParent}
+        isJoinPending={isJoinPending}
+        onJoinCommon={onJoinCommon}
         onUserClick={onUserClick}
       />
     </DesktopRightPane>

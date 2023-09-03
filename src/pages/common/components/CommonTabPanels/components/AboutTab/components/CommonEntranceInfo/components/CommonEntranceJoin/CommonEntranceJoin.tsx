@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useJoinProjectAutomatically } from "@/pages/common/hooks";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { Common } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
@@ -12,7 +13,15 @@ interface CommonEntranceJoinProps {
 
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const { withJoinRequest = false, common, isProject } = props;
-  const { parentCommon, isJoinAllowed, onJoinCommon } = useCommonDataContext();
+  const { parentCommon, commonMember, isJoinAllowed, onJoinCommon } =
+    useCommonDataContext();
+  const {
+    canJoinProjectAutomatically,
+    isJoinPending,
+    onJoinProjectAutomatically,
+  } = useJoinProjectAutomatically(commonMember, common, parentCommon, {
+    shouldRedirectToFeed: true,
+  });
 
   return (
     <>
@@ -23,12 +32,17 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
           join the space.
         </p>
       )}
-      {withJoinRequest && isJoinAllowed && (
+      {withJoinRequest && (isJoinAllowed || isJoinPending) && (
         <Button
           className={styles.joinButton}
           variant={ButtonVariant.OutlineDarkPink}
           size={ButtonSize.Medium}
-          onClick={onJoinCommon}
+          loading={isJoinPending}
+          onClick={
+            canJoinProjectAutomatically
+              ? onJoinProjectAutomatically
+              : onJoinCommon
+          }
         >
           Join the {isProject ? "space" : "effort"}
         </Button>

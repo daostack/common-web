@@ -36,7 +36,7 @@ export const useProjectsData = (): Return => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = history.location;
-  const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
+  const { getCommonPagePath } = useRoutesContext();
   const isAuthenticated = useSelector(authentificated());
   const currentCommonId = useSelector(selectCommonLayoutCommonId);
   const { commons, areCommonsLoading, areCommonsFetched } = useSelector(
@@ -50,10 +50,8 @@ export const useProjectsData = (): Return => {
   );
   const generateItemCommonPagePath = useCallback(
     (projectsStateItem: ProjectsStateItem): string =>
-      projectsStateItem.hasMembership
-        ? getCommonPagePath(projectsStateItem.commonId)
-        : getCommonPageAboutTabPath(projectsStateItem.commonId),
-    [getCommonPagePath, getCommonPageAboutTabPath],
+      getCommonPagePath(projectsStateItem.commonId),
+    [getCommonPagePath],
   );
   const parentItem = useMemo(
     () =>
