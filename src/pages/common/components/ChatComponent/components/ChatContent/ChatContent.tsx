@@ -23,6 +23,7 @@ import {
   DirectParent,
   DiscussionMessage,
   User,
+  Circles,
 } from "@/shared/models";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
@@ -36,6 +37,7 @@ export interface ChatContentRef {
 interface ChatContentInterface {
   type: ChatType;
   commonMember: CommonMember | null;
+  governanceCircles?: Circles;
   isCommonMemberFetched: boolean;
   isJoiningPending?: boolean;
   hasAccess: boolean;
@@ -70,6 +72,7 @@ const ChatContent: ForwardRefRenderFunction<
   {
     type,
     commonMember,
+    governanceCircles,
     isCommonMemberFetched,
     isJoiningPending,
     hasAccess,
@@ -259,6 +262,7 @@ const ChatContent: ForwardRefRenderFunction<
                   users={users}
                   feedItemId={feedItemId}
                   commonMember={commonMember}
+                  governanceCircles={governanceCircles}
                   onMessageDelete={onMessageDelete}
                   directParent={directParent}
                   onUserClick={onUserClick}

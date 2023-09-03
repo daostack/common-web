@@ -9,6 +9,7 @@ import {
 export interface FeedLayoutRef {
   setExpandedFeedItemId: (feedItemId: string | null) => void;
   setActiveItem: (item: ChatItem) => void;
+  setShouldAllowChatAutoOpen: (shouldAllow: boolean | null) => void;
 }
 
 interface BaseLayoutItem {

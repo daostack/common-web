@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { Close2Icon } from "@/shared/icons";
-import { ChatChannel, User } from "@/shared/models";
+import { ChatChannel, Circles, User } from "@/shared/models";
 import { DesktopChat } from "../DesktopChat";
 import { DesktopRightPane } from "../DesktopRightPane";
 import { ProfileContent } from "../ProfileContent";
@@ -13,8 +13,9 @@ interface DesktopProfileProps {
   className?: string;
   userId: string;
   commonId?: string;
+  governanceCircles?: Circles;
   chatChannel?: ChatChannel;
-  shouldCloseOnDMClick: boolean;
+  onDMClick?: () => void;
   withTitle?: boolean;
   onClose: () => void;
   onChatChannelCreate: (chatChannel: ChatChannel, dmUser: User) => void;
@@ -27,8 +28,9 @@ const DesktopProfile: FC<DesktopProfileProps> = (props) => {
     userId,
     commonId,
     chatChannel,
-    shouldCloseOnDMClick,
+    onDMClick,
     withTitle,
+    governanceCircles,
     onClose,
     onChatChannelCreate,
     onUserClick,
@@ -46,6 +48,7 @@ const DesktopProfile: FC<DesktopProfileProps> = (props) => {
             ChatChannelToDiscussionConverter.toTargetEntity(chatChannel),
           circleVisibility: [],
         }}
+        governanceCircles={governanceCircles}
         commonId={""}
         commonMember={null}
         withTitle={withTitle}
@@ -66,8 +69,7 @@ const DesktopProfile: FC<DesktopProfileProps> = (props) => {
           className={styles.content}
           userId={userId}
           commonId={commonId}
-          shouldCloseOnDMClick={shouldCloseOnDMClick}
-          onClose={onClose}
+          onDMClick={onDMClick}
           onChatChannelCreate={onChatChannelCreate}
           onChatChannelLoading={setIsChatChannelLoading}
         />

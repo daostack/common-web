@@ -5,6 +5,7 @@ import React, {
   useCallback,
   ChangeEvent,
   useRef,
+  ReactNode,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce, useMeasure } from "react-use";
@@ -47,6 +48,7 @@ import {
   TextEditorSize,
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
+  Loader,
 } from "@/shared/ui-kit";
 import { getUserName, hasPermission, isMobile } from "@/shared/utils";
 import {
@@ -86,6 +88,8 @@ interface ChatComponentInterface {
   isHidden: boolean;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  isJoinPending?: boolean;
+  onJoinCommon?: () => void;
   onUserClick?: (userId: string) => void;
 }
 
@@ -124,6 +128,8 @@ export default function ChatComponent({
   isCommonMemberFetched,
   onMessagesAmountChange,
   directParent,
+  isJoinPending = false,
+  onJoinCommon,
   onUserClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
@@ -555,6 +561,22 @@ export default function ChatComponent({
     }
   }, [discussionMessages.length]);
 
+  const renderJoinCommonContent = (): ReactNode => {
+    if (isJoinPending) {
+      return (
+        <div className={styles.loaderWrapper}>
+          <Loader />
+        </div>
+      );
+    }
+
+    return (
+      <span className={styles.permissionsText} onClick={onJoinCommon}>
+        {directParent ? "Join the space" : "Join the effort"}
+      </span>
+    );
+  };
+
   return (
     <div className={styles.chatWrapper}>
       <div
@@ -567,6 +589,7 @@ export default function ChatComponent({
           ref={chatContentRef}
           type={type}
           commonMember={commonMember}
+          governanceCircles={governanceCircles}
           isCommonMemberFetched={isCommonMemberFetched}
           isJoiningPending={false}
           hasAccess={hasAccess}
@@ -595,9 +618,7 @@ export default function ChatComponent({
             })}
           >
             {!isChatChannel && (!commonMember || !hasAccess || isHidden) ? (
-              <span className={styles.permissionsText}>
-                Only members can send messages
-              </span>
+              renderJoinCommonContent()
             ) : (
               <>
                 <ButtonIcon

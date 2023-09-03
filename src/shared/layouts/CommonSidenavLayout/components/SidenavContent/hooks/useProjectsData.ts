@@ -16,6 +16,7 @@ import {
   getItemById,
   getItemFromProjectsStateItem,
   getItemIdWithNewProjectCreationByPath,
+  getParentItemIds,
   Item,
 } from "../../../../SidenavLayout/components/SidenavContent/components";
 
@@ -28,13 +29,14 @@ interface Return {
   items: Item[];
   activeItem: Item | null;
   itemIdWithNewProjectCreation: string;
+  parentItemIds: string[];
 }
 
 export const useProjectsData = (): Return => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = history.location;
-  const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
+  const { getCommonPagePath } = useRoutesContext();
   const isAuthenticated = useSelector(authentificated());
   const currentCommonId = useSelector(selectCommonLayoutCommonId);
   const { commons, areCommonsLoading, areCommonsFetched } = useSelector(
@@ -48,10 +50,8 @@ export const useProjectsData = (): Return => {
   );
   const generateItemCommonPagePath = useCallback(
     (projectsStateItem: ProjectsStateItem): string =>
-      projectsStateItem.hasMembership
-        ? getCommonPagePath(projectsStateItem.commonId)
-        : getCommonPageAboutTabPath(projectsStateItem.commonId),
-    [getCommonPagePath, getCommonPageAboutTabPath],
+      getCommonPagePath(projectsStateItem.commonId),
+    [getCommonPagePath],
   );
   const parentItem = useMemo(
     () =>
@@ -75,6 +75,10 @@ export const useProjectsData = (): Return => {
   const activeItem = getItemById(
     activeItemId,
     parentItem ? [parentItem, ...items] : items,
+  );
+  const parentItemIds = getParentItemIds(
+    activeItemId,
+    currentCommon ? projects.concat(currentCommon) : projects,
   );
   const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
     location.pathname,
@@ -131,5 +135,6 @@ export const useProjectsData = (): Return => {
     items,
     activeItem,
     itemIdWithNewProjectCreation,
+    parentItemIds,
   };
 };

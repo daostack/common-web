@@ -4,7 +4,7 @@ import { getCommonGovernanceCircles } from "@/pages/OldCommon/store/api";
 import { ElementDropdown } from "@/shared/components";
 import { EntityTypes } from "@/shared/constants";
 import { useFullText } from "@/shared/hooks";
-import { Discussion, Governance } from "@/shared/models";
+import { CommonMember, Discussion, Governance } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
   parseStringToTextEditorValue,
@@ -23,12 +23,14 @@ interface DiscussionItemComponentProps {
   discussion: Discussion;
   loadDiscussionDetail: (payload: { discussion: Discussion }) => void;
   governance: Governance;
+  commonMember: CommonMember | null;
 }
 
 export default function DiscussionItemComponent({
   discussion,
   loadDiscussionDetail,
   governance,
+  commonMember,
 }: DiscussionItemComponentProps) {
   const [imageError, setImageError] = useState(false);
   const [circleNames, setCircleNames] = useState("");
@@ -91,6 +93,8 @@ export default function DiscussionItemComponent({
           </div>
         </div>
         <ElementDropdown
+          commonMember={commonMember}
+          governanceCircles={governance.circles}
           entityType={EntityTypes.Discussion}
           linkType={StaticLinkType.Discussion}
           elem={discussion}

@@ -64,12 +64,20 @@
   align-items: flex-end;
 }
 
+.loaderWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .permissionsText {
   font-size: $mobile-title;
-  color: $light-gray-2;
+  color: var(--primary-fill);
   margin-right: 0.3125rem;
   width: 100%;
   text-align: center;
+  cursor: pointer;
 }
 
 .messageInput {
@@ -92,11 +100,8 @@
 }
 
 .messageInputEmpty {
-  line-height: 2.625rem;
+  line-height: 2.25rem;
   padding-left: 0;
-  @include tablet {
-    line-height: 0;
-  }
 }
 
 .addFilesIcon {

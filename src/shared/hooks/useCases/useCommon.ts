@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCommonState,
@@ -21,12 +21,13 @@ const DEFAULT_STATE: State = {
   data: null,
 };
 
-export const useCommon = (): Return => {
+export const useCommon = (outerCommonId?: string): Return => {
   const dispatch = useDispatch();
   const [currentCommonId, setCurrentCommonId] = useState("");
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const state =
-    useSelector(selectCommonStateById(currentCommonId)) || defaultState;
+    useSelector(selectCommonStateById(outerCommonId ?? currentCommonId)) ||
+    defaultState;
 
   const fetchCommon = useCallback(
     (commonId: string) => {
@@ -63,6 +64,17 @@ export const useCommon = (): Return => {
     },
     [dispatch],
   );
+
+  useEffect(() => {
+    if (typeof outerCommonId === "undefined") {
+      return;
+    }
+    if (outerCommonId) {
+      fetchCommon(outerCommonId);
+    } else {
+      setCommon(null);
+    }
+  }, [outerCommonId]);
 
   return {
     ...state,

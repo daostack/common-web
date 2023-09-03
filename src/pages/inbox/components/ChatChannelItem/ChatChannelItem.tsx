@@ -29,7 +29,8 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     fetched: isChatChannelUserStatusFetched,
     fetchChatChannelUserStatus,
   } = useChatChannelUserStatus();
-  const { setChatItem, feedItemIdForAutoChatOpen } = useChatContext();
+  const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
+    useChatContext();
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const dmUserId =
@@ -99,11 +100,12 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     if (
       isChatChannelUserStatusFetched &&
       chatChannel.id === feedItemIdForAutoChatOpen &&
-      !isTabletView
+      !isTabletView &&
+      shouldAllowChatAutoOpen !== false
     ) {
       handleOpenChat();
     }
-  }, [isChatChannelUserStatusFetched]);
+  }, [isChatChannelUserStatusFetched, shouldAllowChatAutoOpen]);
 
   useEffect(() => {
     if (isActive && finalTitle) {

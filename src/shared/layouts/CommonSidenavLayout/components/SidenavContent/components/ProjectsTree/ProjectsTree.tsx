@@ -33,6 +33,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     commons,
     items,
     activeItem,
+    parentItemIds,
     currentCommonId,
     itemIdWithNewProjectCreation = "",
     onCommonClick,
@@ -54,6 +55,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
       itemIdWithNewProjectCreation,
       isActiveCheckAllowed,
       treeItemTriggerStyles,
+      parentItemIds,
       onAddProjectClick,
     }),
     [
@@ -61,6 +63,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
       itemIdWithNewProjectCreation,
       isActiveCheckAllowed,
       treeItemTriggerStyles,
+      parentItemIds,
       onAddProjectClick,
     ],
   );

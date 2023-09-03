@@ -220,7 +220,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     <div ref={inputContainerRef} className={styles.container}>
       <Slate
         editor={editor}
-        value={value}
+        initialValue={value}
         onChange={(val) => {
           onChange && onChange(val);
           const { selection } = editor;

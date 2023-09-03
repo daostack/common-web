@@ -40,8 +40,6 @@ interface FeedItemProps {
     commonId?: string,
   ) => void;
   directParent?: DirectParent | null;
-  commonDescription?: string;
-  commonGallery?: CommonLink[];
 }
 
 const FeedItem: FC<FeedItemProps> = (props) => {
@@ -65,8 +63,6 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     shouldCheckItemVisibility = true,
     onActiveItemDataChange,
     directParent,
-    commonDescription,
-    commonGallery,
   } = props;
   const { onFeedItemUpdate, getLastMessage, getNonAllowedItems, onUserSelect } =
     useFeedItemContext();
@@ -110,13 +106,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   };
 
   if (item.data.type === CommonFeedType.Discussion) {
-    return (
-      <DiscussionFeedCard
-        {...generalProps}
-        commonDescription={commonDescription}
-        commonGallery={commonGallery}
-      />
-    );
+    return <DiscussionFeedCard {...generalProps} />;
   }
 
   if (item.data.type === CommonFeedType.Proposal) {
