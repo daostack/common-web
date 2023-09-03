@@ -194,7 +194,10 @@ class CommonFeedService {
 
     return query.onSnapshot((snapshot) => {
       const data = snapshot.docChanges().map((docChange) => ({
-        commonFeedItem: docChange.doc.data(),
+        commonFeedItem: {
+          ...docChange.doc.data(),
+          commonId,
+        },
         statuses: {
           isAdded: docChange.type === "added",
           isRemoved: docChange.type === "removed",
