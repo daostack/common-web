@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import {
-  Linkify,
   ElementDropdown,
   UserAvatar,
   UserInfoPopup,
@@ -40,7 +39,7 @@ import { StaticLinkType, isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { Time } from "./components/Time";
+import { ChatMessageLinkify, Time } from "./components";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
 
@@ -295,7 +294,9 @@ export default function ChatMessage({
                 )}
               </>
             ) : (
-              <Linkify>{replyMessageText.map((text) => text)}</Linkify>
+              <ChatMessageLinkify>
+                {replyMessageText.map((text) => text)}
+              </ChatMessageLinkify>
             )}
           </div>
         </div>
@@ -385,7 +386,9 @@ export default function ChatMessage({
                   />
                 )}
                 <ChatImageGallery gallery={discussionMessage.images ?? []} />
-                <Linkify>{messageText.map((text) => text)}</Linkify>
+                <ChatMessageLinkify>
+                  {messageText.map((text) => text)}
+                </ChatMessageLinkify>
                 {!isSystemMessage && (
                   <Time
                     createdAtDate={createdAtDate}

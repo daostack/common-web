@@ -1,0 +1,9 @@
+@import "../../../../../../constants";
+
+.link {
+  color: $c-pink-mention-2;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
