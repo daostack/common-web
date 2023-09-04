@@ -12,7 +12,12 @@ import {
   UserAvatar,
   UserInfoPopup,
 } from "@/shared/components";
-import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
+import {
+  Orientation,
+  ChatType,
+  EntityTypes,
+  QueryParamKey,
+} from "@/shared/constants";
 import { Colors } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useModal } from "@/shared/hooks";
@@ -39,7 +44,7 @@ import { StaticLinkType, isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { ChatMessageLinkify, Time } from "./components";
+import { ChatMessageLinkify, InternalLinkData, Time } from "./components";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
 
@@ -227,6 +232,20 @@ export default function ChatMessage({
     }
   };
 
+  const handleInternalLinkClick = useCallback(
+    (data: InternalLinkData) => {
+      const messageId = data.params[QueryParamKey.Message];
+
+      if (
+        data.params[QueryParamKey.Item] === feedItemId &&
+        typeof messageId === "string"
+      ) {
+        scrollToRepliedMessage(messageId);
+      }
+    },
+    [feedItemId, scrollToRepliedMessage],
+  );
+
   const ReplyMessage = useCallback(() => {
     if (
       !discussionMessage.parentMessage?.id ||
@@ -386,7 +405,9 @@ export default function ChatMessage({
                   />
                 )}
                 <ChatImageGallery gallery={discussionMessage.images ?? []} />
-                <ChatMessageLinkify>
+                <ChatMessageLinkify
+                  onInternalLinkClick={handleInternalLinkClick}
+                >
                   {messageText.map((text) => text)}
                 </ChatMessageLinkify>
                 {!isSystemMessage && (

@@ -4,28 +4,47 @@ import {
   Props as ReactLinkifyProps,
 } from "react-linkify";
 import classNames from "classnames";
+import { parseMessageLink, ParseMessageLinkData } from "./utils";
 import styles from "./ChatMessageLinkify.module.scss";
 
 interface ChatMessageLinkifyProps {
   className?: string;
+  onInternalLinkClick?: (data: ParseMessageLinkData) => void;
 }
 
 const ChatMessageLinkify: FC<ChatMessageLinkifyProps> = (props) => {
-  const { className, children } = props;
+  const { className, onInternalLinkClick, children } = props;
   const componentDecorator: ReactLinkifyProps["componentDecorator"] =
     useCallback(
-      (decoratedHref, decoratedText, key) => (
-        <a
-          className={classNames(styles.link, className)}
-          href={decoratedHref}
-          key={key}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {decoratedText}
-        </a>
-      ),
-      [className],
+      (decoratedHref, decoratedText, key) => {
+        const linkClassName = classNames(styles.link, className);
+        const parsedLinkData = parseMessageLink(decoratedHref);
+
+        if (parsedLinkData && onInternalLinkClick) {
+          return (
+            <a
+              key={key}
+              className={linkClassName}
+              onClick={() => onInternalLinkClick(parsedLinkData)}
+            >
+              {decoratedText}
+            </a>
+          );
+        }
+
+        return (
+          <a
+            key={key}
+            className={linkClassName}
+            href={decoratedHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {decoratedText}
+          </a>
+        );
+      },
+      [className, onInternalLinkClick],
     );
 
   return (
