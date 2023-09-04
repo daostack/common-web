@@ -2,13 +2,12 @@ import React from "react";
 import { Button } from "@/shared/components";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
+import { shouldShowPaymentStep } from "./helpers";
 import "./index.scss";
 
 export default function MembershipRequestRules(props: IStageProps) {
   const { userData, setUserData, governance, isAutomaticAcceptance } = props;
-  const rules = governance?.unstructuredRules || [];
-  const paymentMustGoThrough =
-    governance?.proposals?.MEMBER_ADMITTANCE?.limitations.paymentMustGoThrough;
+  const rules = governance.unstructuredRules || [];
 
   return (
     <div className="membership-request-content membership-request-rules">
@@ -42,7 +41,7 @@ export default function MembershipRequestRules(props: IStageProps) {
         onClick={() =>
           setUserData({
             ...userData,
-            stage: paymentMustGoThrough
+            stage: shouldShowPaymentStep(governance)
               ? MembershipRequestStage.Payment
               : MembershipRequestStage.Creating,
           })

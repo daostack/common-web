@@ -8,34 +8,17 @@ import "./index.scss";
 
 interface IProps {
   currentStage: MembershipRequestStage;
+  steps: StepProgressItem[];
 }
 
-const STEPS: StepProgressItem[] = [
-  {
-    title: "Introduce",
-    activeImageSource: "/icons/membership-request/introduce-current.svg",
-    inactiveImageSource: "/icons/membership-request/introduce-current.svg",
-  },
-  {
-    title: "Rules",
-    activeImageSource: "/icons/membership-request/rules-current.svg",
-    inactiveImageSource: "/icons/membership-request/rules-gray.svg",
-  },
-  {
-    title: "Payment",
-    activeImageSource: "/icons/membership-request/payment-current.svg",
-    inactiveImageSource: "/icons/membership-request/payment-gray.svg",
-  },
-];
-
 export default function MembershipRequestProgressBar(props: IProps) {
-  const { currentStage } = props;
+  const { currentStage, steps } = props;
 
   return (
     <StepProgress
       className="membership-request-progress-bar"
       currentStep={currentStage}
-      items={STEPS}
+      items={steps}
     />
   );
 }
