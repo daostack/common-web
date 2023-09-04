@@ -175,13 +175,12 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     } else if (
       search.text.includes(MENTION_TAG) &&
       isEqual(search.path, value.anchor.path) &&
-      mentionTagAnchor &&
       editor.selection?.focus
     ) {
       setSearch({
         ...search,
         text: EditorSlate.string(editor, {
-          anchor: mentionTagAnchor,
+          anchor: mentionTagAnchor || value.anchor,
           focus: editor.selection.focus,
         }),
         ...value.anchor,
