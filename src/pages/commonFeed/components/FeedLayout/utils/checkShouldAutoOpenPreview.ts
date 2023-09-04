@@ -8,7 +8,13 @@ export const checkShouldAutoOpenPreview = (
   if (!chatItem || !chatItem.discussion) {
     return false;
   }
-  if (!chatItem.seenOnce || chatItem.proposal?.state === ProposalState.VOTING) {
+  if (
+    chatItem.proposal &&
+    (!chatItem.seenOnce || chatItem.proposal.state === ProposalState.VOTING)
+  ) {
+    return true;
+  }
+  if (chatItem.discussion && !chatItem.seenOnce) {
     return true;
   }
   const expirationTimestamp =
