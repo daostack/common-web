@@ -78,6 +78,7 @@ class CommonFeedService {
     commonId: string,
     options: {
       startAfter?: Timestamp | null;
+      feedItemId?: string;
       limit?: number;
     } = {},
   ): Promise<{
@@ -86,12 +87,13 @@ class CommonFeedService {
     lastDocTimestamp: Timestamp | null;
     hasMore: boolean;
   }> => {
-    const { startAfter, limit = 10 } = options;
+    const { startAfter, feedItemId, limit = 10 } = options;
     const endpoint = ApiEndpoint.GetCommonFeedItems.replace(
       ":commonId",
       commonId,
     );
     const queryParams: Record<string, unknown> = {
+      feedItemId,
       limit,
     };
 
