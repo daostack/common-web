@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
-import { useCommonData } from "@/pages/commonFeed/hooks";
+import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 
 interface Return {
   unreadStreamsCount?: number;
@@ -11,11 +11,11 @@ export const useFeedItemCounters = (
   feedItemId: string,
   commonId?: string,
 ): Return => {
-  const { data: commonData, fetchCommonData } = useCommonData();
+  const { data: governance, fetchGovernance } = useGovernanceByCommonId();
   const { data: commonMember } = useCommonMember({
     shouldAutoReset: false,
     withSubscription: true,
-    governanceCircles: commonData?.governance.circles,
+    governanceCircles: governance?.circles,
     commonId,
   });
   const { streamsUnreadCountByProjectStream, unreadCountByProjectStream } =
@@ -23,9 +23,9 @@ export const useFeedItemCounters = (
 
   useEffect(() => {
     if (commonId) {
-      fetchCommonData({ commonId });
+      fetchGovernance(commonId);
     }
-  }, [fetchCommonData, commonId]);
+  }, [fetchGovernance, commonId]);
 
   return {
     unreadStreamsCount: streamsUnreadCountByProjectStream?.[feedItemId],
