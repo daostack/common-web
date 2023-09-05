@@ -99,15 +99,11 @@ const ChatContent: ForwardRefRenderFunction<
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const queryParams = useQueryParams();
+  const messageIdParam = queryParams[QueryParamKey.Message];
 
-  const [highlightedMessageId, setHighlightedMessageId] = useState(() => {
-    const sharedMessageIdQueryParam = queryParams[QueryParamKey.Message];
-    return (
-      (typeof sharedMessageIdQueryParam === "string" &&
-        sharedMessageIdQueryParam) ||
-      null
-    );
-  });
+  const [highlightedMessageId, setHighlightedMessageId] = useState(
+    () => (typeof messageIdParam === "string" && messageIdParam) || null,
+  );
 
   const [scrolledToMessage, setScrolledToMessage] = useState(false);
 
@@ -178,6 +174,12 @@ const ChatContent: ForwardRefRenderFunction<
     });
     setHighlightedMessageId(messageId);
   }
+
+  useEffect(() => {
+    if (typeof messageIdParam === "string") {
+      setHighlightedMessageId(messageIdParam);
+    }
+  }, [messageIdParam]);
 
   useImperativeHandle(
     chatContentRef,

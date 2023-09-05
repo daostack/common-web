@@ -524,6 +524,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
         });
       }, 50);
     }
+
+    if (messageId) {
+      addQueryParam(QueryParamKey.Message, messageId);
+    }
   };
 
   const handleFeedItemClick = onFeedItemSelect
