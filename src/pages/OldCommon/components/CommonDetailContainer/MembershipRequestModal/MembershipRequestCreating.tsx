@@ -9,7 +9,8 @@ import { createMemberAdmittanceProposal } from "../../../store/actions";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
 
-interface MembershipRequestCreatingProps extends IStageProps {
+interface MembershipRequestCreatingProps
+  extends Omit<IStageProps, "governance"> {
   shouldSkipCreation?: boolean;
 }
 

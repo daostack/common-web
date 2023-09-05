@@ -11,7 +11,7 @@ export function* getFeedItems(
   action: ReturnType<typeof actions.getFeedItems.request>,
 ) {
   const {
-    payload: { commonId, limit },
+    payload: { commonId, feedItemId, limit },
   } = action;
 
   try {
@@ -22,6 +22,7 @@ export function* getFeedItems(
       commonId,
       {
         startAfter: currentFeedItems.lastDocTimestamp,
+        feedItemId,
         limit,
       },
     )) as Awaited<

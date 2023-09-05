@@ -80,7 +80,7 @@ interface ChatComponentInterface {
   governanceCircles?: Circles;
   commonMember: CommonMember | null;
   hasAccess?: boolean;
-  discussion: Discussion;
+  discussion?: Discussion;
   chatChannel?: ChatChannel;
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   feedItemId: string;
@@ -91,6 +91,7 @@ interface ChatComponentInterface {
   isJoinPending?: boolean;
   onJoinCommon?: () => void;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
 }
 
 interface Messages {
@@ -131,6 +132,7 @@ export default function ChatComponent({
   isJoinPending = false,
   onJoinCommon,
   onUserClick,
+  onFeedItemClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
   useZoomDisabling();
@@ -142,7 +144,7 @@ export default function ChatComponent({
   );
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const discussionId = discussion.id;
+  const discussionId = discussion?.id || "";
   const isChatChannel = Boolean(chatChannel);
 
   const hasPermissionToHide =
@@ -204,9 +206,9 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (commonId && !isChatChannel) {
-      fetchDiscussionUsers(commonId, discussion.circleVisibility);
+      fetchDiscussionUsers(commonId, discussion?.circleVisibility);
     }
-  }, [commonId, discussion.circleVisibility]);
+  }, [commonId, discussion?.circleVisibility]);
 
   useEffect(() => {
     if (chatChannel?.id) {
@@ -602,10 +604,11 @@ export default function ChatComponent({
           users={users}
           discussionId={discussionId}
           feedItemId={feedItemId}
-          isLoading={isLoadingDiscussionMessages}
+          isLoading={!discussion || isLoadingDiscussionMessages}
           onMessageDelete={handleMessageDelete}
           directParent={directParent}
           onUserClick={onUserClick}
+          onFeedItemClick={onFeedItemClick}
         />
       </div>
       {isAuthorized && (

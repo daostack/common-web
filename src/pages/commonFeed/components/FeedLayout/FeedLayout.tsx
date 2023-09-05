@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +22,7 @@ import {
   FeedItemBaseContentProps,
   FeedItemContext,
   FeedItemContextValue,
+  FeedItemRef,
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "@/pages/common";
@@ -110,7 +112,7 @@ interface FeedLayoutProps {
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;
   shouldHideContent?: boolean;
-  onFetchNext: () => void;
+  onFetchNext: (feedItemId?: string) => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
@@ -124,6 +126,7 @@ interface FeedLayoutProps {
     feedItem: FeedLayoutItem,
     becameEmpty: boolean,
   ) => void;
+  onFeedItemSelect?: (commonId: string, feedItemId: string) => void;
   outerStyles?: FeedLayoutOuterStyles;
   settings?: FeedLayoutSettings;
 }
@@ -155,10 +158,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onActiveItemChange,
     onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
+    onFeedItemSelect,
     outerStyles,
     settings,
   } = props;
   const dispatch = useDispatch();
+  const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
   const { width: windowWidth } = useWindowSize();
   const history = useHistory();
   const queryParams = useQueryParams();
@@ -463,6 +468,40 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       ? handleDMClick
       : undefined;
 
+  const handleFeedItemClickExternal = useCallback(
+    (feedItemId: string) => {
+      if (selectedItemCommonData?.id) {
+        onFeedItemSelect?.(selectedItemCommonData.id, feedItemId);
+      }
+    },
+    [selectedItemCommonData?.id, onFeedItemSelect],
+  );
+
+  const handleFeedItemClickInternal = (feedItemId: string) => {
+    setActiveChatItem({
+      feedItemId,
+      circleVisibility: [],
+    });
+
+    const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
+
+    if (itemExists) {
+      refsByItemId.current[feedItemId]?.scrollToItem();
+    } else {
+      onFetchNext(feedItemId);
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 50);
+    }
+  };
+
+  const handleFeedItemClick = onFeedItemSelect
+    ? handleFeedItemClickExternal
+    : handleFeedItemClickInternal;
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -490,7 +529,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [activeFeedItemId]);
 
   useEffect(() => {
-    if (selectedFeedItem?.itemId) {
+    if (selectedFeedItem?.itemId && !isTabletView) {
+      refsByItemId.current[selectedFeedItem.itemId]?.scrollToItem();
+    }
+    if (selectedFeedItem?.itemId || (chatItem && !chatItem.discussion)) {
       return;
     }
 
@@ -585,6 +627,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
                   return (
                     <FeedItem
+                      ref={(ref) => {
+                        refsByItemId.current[item.itemId] = ref;
+                      }}
                       key={item.feedItem.id}
                       commonMember={commonMember}
                       commonId={commonData?.id}
@@ -628,7 +673,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               })}
             </InfiniteScroll>
             {!isTabletView &&
-              (chatItem ? (
+              (chatItem?.discussion ? (
                 <DesktopChat
                   className={desktopRightPaneClassName}
                   chatItem={chatItem}
@@ -642,11 +687,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   onJoinCommon={onJoinCommon}
                   isJoinPending={isJoinPending}
                   onUserClick={handleUserClick}
+                  onFeedItemClick={handleFeedItemClick}
                 />
               ) : (
                 <DesktopChatPlaceholder
                   className={desktopRightPaneClassName}
-                  isItemSelected={Boolean(selectedItemCommonData)}
+                  isItemSelected={Boolean(selectedItemCommonData || chatItem)}
                   withTitle={settings?.withDesktopChatTitle}
                 />
               ))}
@@ -666,6 +712,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 onJoinCommon={onJoinCommon}
                 isJoinPending={isJoinPending}
                 onUserClick={handleUserClick}
+                onFeedItemClick={handleFeedItemClick}
               >
                 {selectedItemCommonData &&
                   checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
