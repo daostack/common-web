@@ -36,7 +36,7 @@ export default function MembershipRequestPayment(
     !changePaymentMethodState.isPaymentLoading;
 
   const contributionInfo = useMemo(() => {
-    const limitations = governance?.proposals?.MEMBER_ADMITTANCE?.limitations;
+    const limitations = governance.proposals?.MEMBER_ADMITTANCE?.limitations;
 
     if (limitations?.minFeeMonthly) {
       return {

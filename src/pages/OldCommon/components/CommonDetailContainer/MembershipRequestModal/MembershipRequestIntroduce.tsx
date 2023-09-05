@@ -9,6 +9,7 @@ import { getScreenSize } from "@/shared/store/selectors";
 import { parseLinksForSubmission } from "@/shared/utils";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
+import { shouldShowPaymentStep, shouldShowRulesStep } from "./helpers";
 import { introduceStageSchema } from "./validationSchemas";
 import "./index.scss";
 
@@ -29,12 +30,16 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
 
   const handleSubmit = useCallback<FormikConfig<FormValues>["onSubmit"]>(
     (values) => {
-      const areRulesSpecified =
-        governance && governance.unstructuredRules.length > 0;
-      const nextStage = areRulesSpecified
-        ? MembershipRequestStage.Rules
-        : MembershipRequestStage.Payment;
       const links = parseLinksForSubmission(values.links);
+      let nextStage: MembershipRequestStage;
+
+      if (shouldShowRulesStep(governance)) {
+        nextStage = MembershipRequestStage.Rules;
+      } else {
+        nextStage = shouldShowPaymentStep(governance)
+          ? MembershipRequestStage.Payment
+          : MembershipRequestStage.Creating;
+      }
 
       setUserData((nextUserData) => ({
         ...nextUserData,

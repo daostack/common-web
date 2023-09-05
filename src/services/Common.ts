@@ -162,7 +162,7 @@ class CommonService {
     return finalCommons;
   };
 
-  // Fetch all parent commons. Order: from main parent common to lowest ones
+  // Fetch all parent commons. Order: from root parent common to lowest ones
   public getAllParentCommonsForCommon = async (
     commonToCheck: Pick<Common, "directParent"> | string,
   ): Promise<Common[]> => {
