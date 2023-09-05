@@ -114,11 +114,11 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
             <p
               className={classNames(styles.chatDiscussionTitle, {
                 [styles.chatDiscussionTitleRTL]: isRTL(
-                  chatItem.discussion.title,
+                  chatItem.discussion?.title,
                 ),
               })}
             >
-              {chatItem.discussion.title}
+              {chatItem.discussion?.title}
             </p>
             <ChatComponent
               governanceCircles={governance.circles}
@@ -155,7 +155,7 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
         }}
         commonName={common.name}
         commonImage={common.image}
-        title={chatItem?.discussion.title}
+        title={chatItem?.discussion?.title}
       >
         {chatItem && (
           <ChatComponent
@@ -191,9 +191,9 @@ export const FeedTab: FC<FeedTabProps> = (props) => {
   const contextValue = useMemo(
     () => ({
       setChatItem,
-      activeItemDiscussionId: chatItem?.discussion.id,
+      activeItemDiscussionId: chatItem?.discussion?.id,
     }),
-    [setChatItem, chatItem?.discussion.id],
+    [setChatItem, chatItem?.discussion?.id],
   );
 
   return (

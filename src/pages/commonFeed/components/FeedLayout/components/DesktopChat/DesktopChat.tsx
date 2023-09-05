@@ -33,6 +33,7 @@ interface ChatProps {
   isJoinPending?: boolean;
   onJoinCommon?: () => void;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -49,6 +50,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
     isJoinPending,
     onJoinCommon,
     onUserClick,
+    onFeedItemClick,
   } = props;
   const {
     fetchUser: fetchDMUser,
@@ -64,7 +66,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
   const dmUserId = chatItem.chatChannel?.participants.filter(
     (participant) => participant !== userId,
   )[0];
-  const title = getUserName(dmUser) || chatItem.discussion.title;
+  const title = getUserName(dmUser) || chatItem.discussion?.title || "";
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
@@ -122,6 +124,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         isJoinPending={isJoinPending}
         onJoinCommon={onJoinCommon}
         onUserClick={onUserClick}
+        onFeedItemClick={onFeedItemClick}
       />
     </DesktopRightPane>
   );

@@ -5,6 +5,7 @@ import {
 } from "@/shared/constants";
 import { Moderation } from "@/shared/interfaces/Moderation";
 import { BaseEntity } from "./BaseEntity";
+import { CommonFeedType } from "./CommonFeed";
 import { Link } from "./Link";
 import { User } from "./User";
 
@@ -98,9 +99,11 @@ export interface CommonFeedItemCreatedSystemMessage
   extends BaseSystemDiscussionMessage {
   systemMessageType: SystemDiscussionMessageType.FeedItemCreated;
   systemMessageData: {
-    commonType: SystemMessageCommonType;
-    commonId: string;
     userId: string;
+    commonId: string;
+    feedItemId: string;
+    feedItemType: CommonFeedType;
+    feedItemDataId: string;
   };
 }
 

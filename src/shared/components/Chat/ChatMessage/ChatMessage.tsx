@@ -63,6 +63,7 @@ interface ChatMessageProps {
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -92,6 +93,7 @@ export default function ChatMessage({
   onMessageDelete,
   directParent,
   onUserClick,
+  onFeedItemClick,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
@@ -168,6 +170,7 @@ export default function ChatMessage({
         getCommonPageAboutTabPath,
         directParent,
         onUserClick,
+        onFeedItemClick,
       });
 
       setMessageText(parsedText);
@@ -195,6 +198,7 @@ export default function ChatMessage({
         commonId: discussionMessage.commonId,
         directParent,
         onUserClick,
+        onFeedItemClick,
       });
 
       setReplyMessageText(parsedText);

@@ -6,6 +6,8 @@ import {
   Common,
   CommonCreatedSystemMessage,
   CommonEditedSystemMessage,
+  CommonFeedItemCreatedSystemMessage,
+  CommonFeedType,
   CommonMemberAddedSystemMessage,
   SystemMessageCommonType,
   User,
@@ -17,6 +19,7 @@ import {
 } from "@/shared/utils";
 import { UserMention } from "../components";
 import { Text, TextData } from "../types";
+import { getFeedItemTitleByDataIdAndType } from "./getFeedItemTitleByDataIdAndType";
 import styles from "../ChatMessage.module.scss";
 
 const getUser = async (userId: string, users: User[]): Promise<User | null> =>
@@ -52,6 +55,12 @@ const renderLink = (to: string, name: string): Text => (
   <NavLink className={styles.systemMessageCommonLink} to={to}>
     {name}
   </NavLink>
+);
+
+const renderClickableText = (text: string, onClick: () => void): Text => (
+  <a className={styles.systemMessageCommonLink} onClick={onClick}>
+    {text}
+  </a>
 );
 
 const getCommonCreatedSystemMessageText = async (
@@ -117,6 +126,40 @@ const getCommonMemberAddedSystemMessageText = async (
   ];
 };
 
+const getFeedItemCreatedSystemMessageText = async (
+  systemMessageData: CommonFeedItemCreatedSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, title] = await Promise.all([
+    getUser(systemMessageData.userId, data.users),
+    getFeedItemTitleByDataIdAndType(
+      systemMessageData.feedItemDataId,
+      systemMessageData.feedItemType,
+    ),
+  ]);
+  const userEl = renderUserMention(user, data);
+  const titleEl = title ? (
+    <>
+      {" "}
+      {renderClickableText(title, () =>
+        data.onFeedItemClick?.(systemMessageData.feedItemId),
+      )}
+    </>
+  ) : (
+    ""
+  );
+
+  return [
+    userEl,
+    ` created the ${
+      systemMessageData.feedItemType === CommonFeedType.Discussion
+        ? "discussion"
+        : "proposal"
+    }`,
+    titleEl,
+  ].filter(Boolean);
+};
+
 export const getTextFromSystemMessage = async (
   data: TextData,
 ): Promise<Text[] | null> => {
@@ -142,6 +185,12 @@ export const getTextFromSystemMessage = async (
       break;
     case SystemDiscussionMessageType.CommonMemberAdded:
       text = await getCommonMemberAddedSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.FeedItemCreated:
+      text = await getFeedItemCreatedSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );

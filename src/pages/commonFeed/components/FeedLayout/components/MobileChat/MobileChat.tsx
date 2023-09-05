@@ -36,6 +36,7 @@ interface ChatProps {
   onClose: () => void;
   onJoinCommon?: () => void;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -55,6 +56,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     onJoinCommon,
     onClose,
     onUserClick,
+    onFeedItemClick,
   } = props;
   const { setIsShowFeedItemDetailsModal } = useChatContext();
   const {
@@ -73,9 +75,9 @@ const MobileChat: FC<ChatProps> = (props) => {
   )[0];
   const title =
     getUserName(dmUser) ||
-    (chatItem?.discussion.predefinedType === PredefinedTypes.General
+    (chatItem?.discussion?.predefinedType === PredefinedTypes.General
       ? commonName
-      : chatItem?.discussion.title || "");
+      : chatItem?.discussion?.title || "");
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
@@ -152,6 +154,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             isJoinPending={isJoinPending}
             onJoinCommon={onJoinCommon}
             onUserClick={onUserClick}
+            onFeedItemClick={onFeedItemClick}
           />
         )}
       </ChatMobileModal>

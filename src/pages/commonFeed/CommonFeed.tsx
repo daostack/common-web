@@ -170,9 +170,9 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetchUserRelatedData();
   };
 
-  const fetchMoreCommonFeedItems = () => {
+  const fetchMoreCommonFeedItems = (feedItemId?: string) => {
     if (hasMoreCommonFeedItems) {
-      fetchCommonFeedItems();
+      fetchCommonFeedItems(feedItemId);
     }
   };
 

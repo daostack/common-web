@@ -9,12 +9,10 @@ export interface TextData {
   mentionTextClassName?: string;
   emojiTextClassName?: string;
   commonId?: string;
-  systemMessage?: Pick<
-    SystemDiscussionMessage,
-    "systemMessageType" | "systemMessageData"
-  >;
+  systemMessage?: SystemDiscussionMessage;
   getCommonPagePath?: GetCommonPagePath;
   getCommonPageAboutTabPath?: GetCommonPageAboutTabPath;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
 }

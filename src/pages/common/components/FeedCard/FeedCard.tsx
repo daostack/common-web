@@ -1,4 +1,11 @@
-import React, { FC, useEffect, useRef, MouseEventHandler } from "react";
+import React, {
+  useEffect,
+  useRef,
+  MouseEventHandler,
+  forwardRef,
+  useImperativeHandle,
+  PropsWithChildren,
+} from "react";
 import { useCollapse } from "react-collapsed";
 import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
@@ -7,9 +14,10 @@ import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonFeedType, PredefinedTypes } from "@/shared/models";
 import { Loader, TextEditorValue } from "@/shared/ui-kit";
 import { CommonCard } from "../CommonCard";
+import { FeedCardRef } from "./types";
 import styles from "./FeedCard.module.scss";
 
-interface FeedCardProps {
+type FeedCardProps = PropsWithChildren<{
   className?: string;
   feedItemId: string;
   isHovering?: boolean;
@@ -36,7 +44,7 @@ interface FeedCardProps {
   discussionPredefinedType?: PredefinedTypes;
   hasFiles?: boolean;
   hasImages?: boolean;
-}
+}>;
 
 const MOBILE_HEADER_HEIGHT = 52;
 const DESKTOP_HEADER_HEIGHT = 72;
@@ -45,7 +53,7 @@ const COLLAPSE_DURATION = 300;
 const OFFSET_FROM_BOTTOM_FOR_SCROLLING = 10;
 const EXTRA_WAITING_TIME_FOR_TIMEOUT = 10;
 
-export const FeedCard: FC<FeedCardProps> = (props) => {
+export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
   const {
     className,
     feedItemId,
@@ -161,6 +169,10 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     toggleExpanding();
   };
 
+  useImperativeHandle(ref, () => ({
+    scrollToItem: scrollToTargetAdjusted,
+  }));
+
   return (
     <div ref={containerRef}>
       {!isPreviewMode && (
@@ -210,4 +222,4 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
       </div>
     </div>
   );
-};
+});
