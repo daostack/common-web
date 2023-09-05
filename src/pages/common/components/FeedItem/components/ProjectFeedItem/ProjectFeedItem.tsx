@@ -22,7 +22,10 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const { getCommonPagePath } = useRoutesContext();
   const { renderFeedItemBaseContent } = useFeedItemContext();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
-  const { unreadStreamsCount, unreadMessages } = useFeedItemCounters(item);
+  const { unreadStreamsCount, unreadMessages } = useFeedItemCounters(
+    item.id,
+    common?.directParent?.commonId,
+  );
   const commonId = item.data.id;
   const lastMessage = parseStringToTextEditorValue(
     Number.isInteger(unreadStreamsCount)
