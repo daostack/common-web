@@ -181,6 +181,9 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
     }
 
     if (
+      ![EntityTypes.DiscussionMessage, EntityTypes.ProposalMessage].includes(
+        entityType,
+      ) &&
       governanceCircles &&
       commonMember &&
       hasPermission({
