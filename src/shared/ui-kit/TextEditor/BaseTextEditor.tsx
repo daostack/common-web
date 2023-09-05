@@ -8,15 +8,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { isEqual } from "lodash";
-import {
-  createEditor,
-  Transforms,
-  Range,
-  Editor as EditorSlate,
-  BaseRange,
-  BasePoint,
-} from "slate";
+import { createEditor, Transforms, Range, Editor as EditorSlate } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
@@ -61,16 +53,6 @@ export interface TextEditorProps {
   onClearFinished: () => void;
   elementStyles?: EditorElementStyles;
 }
-
-const INITIAL_SEARCH_VALUE = {
-  path: [0, 0],
-  offset: 0,
-  text: "",
-  range: {
-    anchor: { path: [0, 0], offset: 0 },
-    focus: { path: [0, 0], offset: 0 },
-  },
-};
 
 const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const {
@@ -147,65 +129,15 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   }, [editorRef, editor]);
 
-  const [search, setSearch] = useState(INITIAL_SEARCH_VALUE);
-  const [mentionTagAnchor, setMentionTagAnchor] = useState<BasePoint | null>(
-    null,
-  );
-
-  const handleSearch = (text: string, value?: BaseRange) => {
-    if (!value || !value?.anchor || !text || text === "") {
-      setSearch(INITIAL_SEARCH_VALUE);
-      setTarget(null);
-      setShouldFocusTarget(false);
-      return;
-    }
-
-    if (text === MENTION_TAG) {
-      setSearch({
-        text,
-        ...value.anchor,
-        range: value,
-      });
-      setMentionTagAnchor(value.anchor);
-    } else if (text.match(/^(\s|$)/)) {
-      setSearch(INITIAL_SEARCH_VALUE);
-      setTarget(null);
-      setShouldFocusTarget(false);
-      setMentionTagAnchor(null);
-    } else if (
-      search.text.includes(MENTION_TAG) &&
-      isEqual(search.path, value.anchor.path) &&
-      editor.selection?.focus
-    ) {
-      setSearch({
-        ...search,
-        text: EditorSlate.string(editor, {
-          anchor: mentionTagAnchor || value.anchor,
-          focus: editor.selection.focus,
-        }),
-        ...value.anchor,
-      });
-      setShouldFocusTarget(false);
-    }
-  };
+  const [search, setSearch] = useState("");
 
   const chars = (users ?? []).filter((user) => {
-    return getUserName(user)
-      ?.toLowerCase()
-      .startsWith(search.text.substring(1).toLowerCase());
-  });
-
-  useEffect(() => {
-    if (search && search.text) {
-      setTarget({
-        ...search.range,
-        focus: {
-          ...search.range.focus,
-          offset: search.range.focus.offset + search.text.length - 1,
-        },
-      });
+    if (!search) {
+      return getUserName(user);
     }
-  }, [search]);
+
+    return getUserName(user)?.toLowerCase().startsWith(search.toLowerCase());
+  });
 
   const [isMessageSent, setIsMessageSent] = useState(false);
 
@@ -225,26 +157,56 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
+  const onChangeSlate = (value) => {
+    onChange && onChange(value);
+    const { selection } = editor;
+
+    if (selection && Range.isCollapsed(selection)) {
+      const [start] = Range.edges(selection);
+      const wordBefore = EditorSlate.before(editor, start, {
+        unit: "word",
+      });
+
+      const lastCharacterRange =
+        start &&
+        EditorSlate.range(
+          editor,
+          { ...start, offset: start.offset - 1 },
+          start,
+        );
+
+      const lastCharacter = EditorSlate.string(editor, lastCharacterRange);
+
+      const before = wordBefore && EditorSlate.before(editor, wordBefore);
+      const beforeRange = before && EditorSlate.range(editor, before, start);
+
+      const beforeText = beforeRange && EditorSlate.string(editor, beforeRange);
+      const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/);
+
+      const after = EditorSlate.after(editor, start);
+      const afterRange = EditorSlate.range(editor, start, after);
+      const afterText = EditorSlate.string(editor, afterRange);
+      const afterMatch = afterText.match(/^(\s|$)/);
+
+      if (beforeMatch && afterMatch) {
+        setTarget(beforeRange);
+        setSearch(beforeMatch[1]);
+        return;
+      }
+
+      if (lastCharacter === MENTION_TAG && lastCharacterRange) {
+        setTarget(lastCharacterRange);
+        setSearch("");
+        return;
+      }
+    }
+
+    setTarget(null);
+  };
+
   return (
     <div ref={inputContainerRef} className={styles.container}>
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(val) => {
-          onChange && onChange(val);
-          const { selection } = editor;
-
-          if (selection && Range.isCollapsed(selection)) {
-            const [start] = Range.edges(selection);
-            const before = EditorSlate.before(editor, start);
-            const beforeRange =
-              before && EditorSlate.range(editor, before, start);
-            const beforeText =
-              beforeRange && EditorSlate.string(editor, beforeRange);
-            handleSearch(beforeText ?? "", beforeRange);
-          }
-        }}
-      >
+      <Slate editor={editor} value={value} onChange={onChangeSlate}>
         <Editor
           className={className}
           id={id}
