@@ -8,7 +8,9 @@ import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
 import "./index.scss";
 
-export default function MembershipRequestWelcome(props: IStageProps) {
+export default function MembershipRequestWelcome(
+  props: Omit<IStageProps, "governance">,
+) {
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
   const { userData, setUserData } = props;

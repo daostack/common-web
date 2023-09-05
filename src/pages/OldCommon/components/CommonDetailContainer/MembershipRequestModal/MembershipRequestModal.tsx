@@ -24,13 +24,14 @@ import MembershipRequestProgressBar from "./MembershipRequestProgressBar";
 import MembershipRequestRules from "./MembershipRequestRules";
 import MembershipRequestWelcome from "./MembershipRequestWelcome";
 import { MembershipRequestStage } from "./constants";
+import { getSteps } from "./helpers";
 import "./index.scss";
 
 export interface IStageProps {
   setUserData: Dispatch<SetStateAction<IMembershipRequestData>>;
   userData: IMembershipRequestData;
   common?: Common;
-  governance?: Governance;
+  governance: Governance;
   isAutomaticAcceptance?: boolean;
 }
 
@@ -81,14 +82,20 @@ export function MembershipRequestModal(props: IProps) {
   } = useMemberInAnyCommon();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const shouldDisplayProgressBar =
-    stage > MembershipRequestStage.Welcome &&
-    stage < MembershipRequestStage.Creating;
   const shouldDisplayGoBack =
     (stage > MembershipRequestStage.Introduce &&
       stage < MembershipRequestStage.Creating) ||
     (stage === MembershipRequestStage.Introduce && !isMember);
   const isAutomaticAcceptance = checkIsAutomaticJoin(governance);
+
+  const steps = useMemo(() => {
+    return getSteps(governance);
+  }, [governance]);
+
+  const shouldDisplayProgressBar =
+    stage > MembershipRequestStage.Welcome &&
+    stage < MembershipRequestStage.Creating &&
+    steps.length > 1;
 
   useEffect(() => {
     if (isShowing) {
@@ -258,7 +265,7 @@ export function MembershipRequestModal(props: IProps) {
     >
       <div className="membership-request-wrapper">
         {shouldDisplayProgressBar && (
-          <MembershipRequestProgressBar currentStage={stage} />
+          <MembershipRequestProgressBar currentStage={stage} steps={steps} />
         )}
         {renderCurrentStage(stage)}
       </div>
