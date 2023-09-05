@@ -161,8 +161,13 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   );
 
   const handleFeedItemSelect = useCallback(
-    (commonId: string, feedItemId: string) => {
-      history.push(getCommonPagePath(commonId, { item: feedItemId }));
+    (commonId: string, feedItemId: string, messageId?: string) => {
+      history.push(
+        getCommonPagePath(commonId, {
+          item: feedItemId,
+          message: messageId,
+        }),
+      );
     },
     [history.push, getCommonPagePath],
   );

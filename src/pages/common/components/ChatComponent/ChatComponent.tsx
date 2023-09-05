@@ -15,6 +15,7 @@ import { delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";
+import { InternalLinkData } from "@/shared/components";
 import {
   ChatType,
   DiscussionMessageOwnerType,
@@ -92,6 +93,7 @@ interface ChatComponentInterface {
   onJoinCommon?: () => void;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 interface Messages {
@@ -133,6 +135,7 @@ export default function ChatComponent({
   onJoinCommon,
   onUserClick,
   onFeedItemClick,
+  onInternalLinkClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
   useZoomDisabling();
@@ -609,6 +612,7 @@ export default function ChatComponent({
           directParent={directParent}
           onUserClick={onUserClick}
           onFeedItemClick={onFeedItemClick}
+          onInternalLinkClick={onInternalLinkClick}
         />
       </div>
       {isAuthorized && (

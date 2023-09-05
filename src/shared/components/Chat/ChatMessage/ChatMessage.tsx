@@ -68,6 +68,7 @@ interface ChatMessageProps {
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -98,6 +99,7 @@ export default function ChatMessage({
   directParent,
   onUserClick,
   onFeedItemClick,
+  onInternalLinkClick,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
@@ -245,9 +247,11 @@ export default function ChatMessage({
         typeof messageId === "string"
       ) {
         scrollToRepliedMessage(messageId);
+      } else {
+        onInternalLinkClick?.(data);
       }
     },
-    [feedItemId, scrollToRepliedMessage],
+    [feedItemId, scrollToRepliedMessage, onInternalLinkClick],
   );
 
   const ReplyMessage = useCallback(() => {

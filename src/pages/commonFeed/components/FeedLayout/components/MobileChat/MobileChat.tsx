@@ -8,6 +8,7 @@ import {
   useChatContext,
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
+import { InternalLinkData } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
 import { useUserById } from "@/shared/hooks/useCases";
 import {
@@ -37,6 +38,7 @@ interface ChatProps {
   onJoinCommon?: () => void;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -57,6 +59,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     onClose,
     onUserClick,
     onFeedItemClick,
+    onInternalLinkClick,
   } = props;
   const { setIsShowFeedItemDetailsModal } = useChatContext();
   const {
@@ -155,6 +158,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             onJoinCommon={onJoinCommon}
             onUserClick={onUserClick}
             onFeedItemClick={onFeedItemClick}
+            onInternalLinkClick={onInternalLinkClick}
           />
         )}
       </ChatMobileModal>
