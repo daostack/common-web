@@ -567,6 +567,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   useEffect(() => {
+    if (commonMember && isCommonJoinModalOpen) {
+      onCommonJoinModalClose();
+    }
+  }, [commonMember?.id]);
+
+  useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
     }
@@ -805,6 +811,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   onClose={onCommonJoinModalClose}
                   common={outerCommon}
                   governance={governance}
+                  showLoadingAfterSuccessfulCreation
                 />
                 <JoinProjectModal
                   isShowing={isProjectJoinModalOpen}
