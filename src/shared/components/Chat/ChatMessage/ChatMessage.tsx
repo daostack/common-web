@@ -8,12 +8,16 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import {
-  Linkify,
   ElementDropdown,
   UserAvatar,
   UserInfoPopup,
 } from "@/shared/components";
-import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
+import {
+  Orientation,
+  ChatType,
+  EntityTypes,
+  QueryParamKey,
+} from "@/shared/constants";
 import { Colors } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useModal } from "@/shared/hooks";
@@ -40,7 +44,7 @@ import { StaticLinkType, isRTL } from "@/shared/utils";
 import { getUserName } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { Time } from "./components/Time";
+import { ChatMessageLinkify, InternalLinkData, Time } from "./components";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
 
@@ -64,6 +68,7 @@ interface ChatMessageProps {
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -94,6 +99,7 @@ export default function ChatMessage({
   directParent,
   onUserClick,
   onFeedItemClick,
+  onInternalLinkClick,
 }: ChatMessageProps) {
   const messageRef = useRef<HTMLDivElement>(null);
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
@@ -232,6 +238,22 @@ export default function ChatMessage({
     }
   };
 
+  const handleInternalLinkClick = useCallback(
+    (data: InternalLinkData) => {
+      const messageId = data.params[QueryParamKey.Message];
+
+      if (
+        data.params[QueryParamKey.Item] === feedItemId &&
+        typeof messageId === "string"
+      ) {
+        scrollToRepliedMessage(messageId);
+      } else {
+        onInternalLinkClick?.(data);
+      }
+    },
+    [feedItemId, scrollToRepliedMessage, onInternalLinkClick],
+  );
+
   const ReplyMessage = useCallback(() => {
     if (
       !discussionMessage.parentMessage?.id ||
@@ -299,7 +321,9 @@ export default function ChatMessage({
                 )}
               </>
             ) : (
-              <Linkify>{replyMessageText.map((text) => text)}</Linkify>
+              <ChatMessageLinkify>
+                {replyMessageText.map((text) => text)}
+              </ChatMessageLinkify>
             )}
           </div>
         </div>
@@ -389,7 +413,11 @@ export default function ChatMessage({
                   />
                 )}
                 <ChatImageGallery gallery={discussionMessage.images ?? []} />
-                <Linkify>{messageText.map((text) => text)}</Linkify>
+                <ChatMessageLinkify
+                  onInternalLinkClick={handleInternalLinkClick}
+                >
+                  {messageText.map((text) => text)}
+                </ChatMessageLinkify>
                 {!isSystemMessage && (
                   <Time
                     createdAtDate={createdAtDate}

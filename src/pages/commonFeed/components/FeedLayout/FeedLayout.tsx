@@ -33,7 +33,9 @@ import {
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
 import { JoinProjectModal } from "@/pages/common/components/JoinProjectModal";
 import { useJoinProjectAutomatically } from "@/pages/common/hooks";
-import { InboxItemType, QueryParamKey } from "@/shared/constants";
+import { InternalLinkData } from "@/shared/components";
+import { InboxItemType, QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -61,6 +63,7 @@ import {
   addQueryParam,
   checkIsProject,
   deleteQueryParam,
+  getParamsFromOneOfRoutes,
   getUserName,
 } from "@/shared/utils";
 import { commonActions, selectRecentStreamId } from "@/store/states";
@@ -126,7 +129,11 @@ interface FeedLayoutProps {
     feedItem: FeedLayoutItem,
     becameEmpty: boolean,
   ) => void;
-  onFeedItemSelect?: (commonId: string, feedItemId: string) => void;
+  onFeedItemSelect?: (
+    commonId: string,
+    feedItemId: string,
+    messageId?: string,
+  ) => void;
   outerStyles?: FeedLayoutOuterStyles;
   settings?: FeedLayoutSettings;
 }
@@ -163,6 +170,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     settings,
   } = props;
   const dispatch = useDispatch();
+  const { getCommonPagePath } = useRoutesContext();
   const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
   const { width: windowWidth } = useWindowSize();
   const history = useHistory();
@@ -469,15 +477,35 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       : undefined;
 
   const handleFeedItemClickExternal = useCallback(
-    (feedItemId: string) => {
-      if (selectedItemCommonData?.id) {
-        onFeedItemSelect?.(selectedItemCommonData.id, feedItemId);
+    (
+      feedItemId: string,
+      options: { commonId?: string; messageId?: string } = {},
+    ) => {
+      const { commonId = selectedItemCommonData?.id, messageId } = options;
+
+      if (commonId) {
+        onFeedItemSelect?.(commonId, feedItemId, messageId);
       }
     },
     [selectedItemCommonData?.id, onFeedItemSelect],
   );
 
-  const handleFeedItemClickInternal = (feedItemId: string) => {
+  const handleFeedItemClickInternal = (
+    feedItemId: string,
+    options: { commonId?: string; messageId?: string } = {},
+  ) => {
+    const { commonId, messageId } = options;
+
+    if (commonId && commonId !== outerCommon?.id) {
+      history.push(
+        getCommonPagePath(commonId, {
+          item: feedItemId,
+          message: messageId,
+        }),
+      );
+      return;
+    }
+
     setActiveChatItem({
       feedItemId,
       circleVisibility: [],
@@ -496,11 +524,47 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
         });
       }, 50);
     }
+
+    if (messageId) {
+      addQueryParam(QueryParamKey.Message, messageId);
+    }
   };
 
   const handleFeedItemClick = onFeedItemSelect
     ? handleFeedItemClickExternal
     : handleFeedItemClickInternal;
+
+  const handleInternalLinkClick = useCallback(
+    (data: InternalLinkData) => {
+      const feedPageParams = getParamsFromOneOfRoutes<{ id: string }>(
+        data.pathname,
+        [ROUTE_PATHS.COMMON, ROUTE_PATHS.V04_COMMON],
+      );
+
+      if (!feedPageParams) {
+        return;
+      }
+
+      const itemId = data.params[QueryParamKey.Item];
+      const messageId = data.params[QueryParamKey.Message];
+
+      if (itemId) {
+        handleFeedItemClick(itemId, {
+          commonId: feedPageParams.id,
+          messageId,
+        });
+        return;
+      }
+
+      history.push(
+        getCommonPagePath(feedPageParams.id, {
+          item: itemId,
+          message: messageId,
+        }),
+      );
+    },
+    [getCommonPagePath, handleFeedItemClick],
+  );
 
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
@@ -688,6 +752,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   isJoinPending={isJoinPending}
                   onUserClick={handleUserClick}
                   onFeedItemClick={handleFeedItemClick}
+                  onInternalLinkClick={handleInternalLinkClick}
                 />
               ) : (
                 <DesktopChatPlaceholder
@@ -713,6 +778,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 isJoinPending={isJoinPending}
                 onUserClick={handleUserClick}
                 onFeedItemClick={handleFeedItemClick}
+                onInternalLinkClick={handleInternalLinkClick}
               >
                 {selectedItemCommonData &&
                   checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
