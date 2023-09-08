@@ -9,7 +9,7 @@ import {
 export interface ChatItem {
   feedItemId: string;
   proposal?: Proposal;
-  discussion: Discussion;
+  discussion?: Discussion;
   chatChannel?: ChatChannel;
   circleVisibility: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];

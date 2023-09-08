@@ -318,11 +318,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
         onClose={handleCommonJoinModalClose}
         common={common}
         governance={governance}
-        shouldShowLoadingAfterSuccessfulCreation={
-          governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE]?.global
-            .votingDuration === 0
-        }
         onRequestCreated={handleCommonJoinRequestCreated}
+        showLoadingAfterSuccessfulCreation
       />
       <JoinProjectModal
         isShowing={

@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
 import { Loader } from "@/shared/components";
-import { ChatMessage } from "@/shared/components";
+import { ChatMessage, InternalLinkData } from "@/shared/components";
 import { ChatType, QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import {
@@ -54,6 +54,8 @@ interface ChatContentInterface {
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const isToday = (someDate: Date) => {
@@ -89,21 +91,19 @@ const ChatContent: ForwardRefRenderFunction<
     onMessageDelete,
     directParent,
     onUserClick,
+    onFeedItemClick,
+    onInternalLinkClick,
   },
   chatContentRef,
 ) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const queryParams = useQueryParams();
+  const messageIdParam = queryParams[QueryParamKey.Message];
 
-  const [highlightedMessageId, setHighlightedMessageId] = useState(() => {
-    const sharedMessageIdQueryParam = queryParams[QueryParamKey.Message];
-    return (
-      (typeof sharedMessageIdQueryParam === "string" &&
-        sharedMessageIdQueryParam) ||
-      null
-    );
-  });
+  const [highlightedMessageId, setHighlightedMessageId] = useState(
+    () => (typeof messageIdParam === "string" && messageIdParam) || null,
+  );
 
   const [scrolledToMessage, setScrolledToMessage] = useState(false);
 
@@ -174,6 +174,12 @@ const ChatContent: ForwardRefRenderFunction<
     });
     setHighlightedMessageId(messageId);
   }
+
+  useEffect(() => {
+    if (typeof messageIdParam === "string") {
+      setHighlightedMessageId(messageIdParam);
+    }
+  }, [messageIdParam]);
 
   useImperativeHandle(
     chatContentRef,
@@ -266,6 +272,8 @@ const ChatContent: ForwardRefRenderFunction<
                   onMessageDelete={onMessageDelete}
                   directParent={directParent}
                   onUserClick={onUserClick}
+                  onFeedItemClick={onFeedItemClick}
+                  onInternalLinkClick={onInternalLinkClick}
                 />
               );
 

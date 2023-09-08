@@ -108,6 +108,7 @@
   white-space: pre-line;
   margin-right: 1rem;
   margin-left: 1rem;
+  word-break: break-word;
 }
 
 .messageContentCurrentUser {
@@ -128,6 +129,7 @@
 .systemMessageCommonLink {
   color: $c-pink-mention;
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;

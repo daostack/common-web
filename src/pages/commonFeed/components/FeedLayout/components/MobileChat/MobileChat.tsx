@@ -8,6 +8,7 @@ import {
   useChatContext,
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
+import { InternalLinkData } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
 import { useUserById } from "@/shared/hooks/useCases";
 import {
@@ -36,6 +37,8 @@ interface ChatProps {
   onClose: () => void;
   onJoinCommon?: () => void;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const MobileChat: FC<ChatProps> = (props) => {
@@ -55,6 +58,8 @@ const MobileChat: FC<ChatProps> = (props) => {
     onJoinCommon,
     onClose,
     onUserClick,
+    onFeedItemClick,
+    onInternalLinkClick,
   } = props;
   const { setIsShowFeedItemDetailsModal } = useChatContext();
   const {
@@ -73,9 +78,9 @@ const MobileChat: FC<ChatProps> = (props) => {
   )[0];
   const title =
     getUserName(dmUser) ||
-    (chatItem?.discussion.predefinedType === PredefinedTypes.General
+    (chatItem?.discussion?.predefinedType === PredefinedTypes.General
       ? commonName
-      : chatItem?.discussion.title || "");
+      : chatItem?.discussion?.title || "");
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
@@ -152,6 +157,8 @@ const MobileChat: FC<ChatProps> = (props) => {
             isJoinPending={isJoinPending}
             onJoinCommon={onJoinCommon}
             onUserClick={onUserClick}
+            onFeedItemClick={onFeedItemClick}
+            onInternalLinkClick={onInternalLinkClick}
           />
         )}
       </ChatMobileModal>

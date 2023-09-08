@@ -28,3 +28,7 @@ export interface GetAllowedItemsOptions {
 }
 
 export type MenuItemOptions = Omit<GetAllowedItemsOptions, "feedItemFollow">;
+
+export interface FeedItemRef {
+  scrollToItem: () => void;
+}

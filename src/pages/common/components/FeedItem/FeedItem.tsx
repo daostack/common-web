@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React, { forwardRef, memo } from "react";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Circles,
@@ -6,7 +6,6 @@ import {
   Common,
   CommonFeed,
   CommonFeedType,
-  CommonLink,
   CommonMember,
   DirectParent,
 } from "@/shared/models";
@@ -16,6 +15,7 @@ import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
 import { ProjectFeedItem } from "./components";
 import { useFeedItemContext } from "./context";
+import { FeedItemRef } from "./types";
 
 interface FeedItemProps {
   commonId?: string;
@@ -42,7 +42,7 @@ interface FeedItemProps {
   directParent?: DirectParent | null;
 }
 
-const FeedItem: FC<FeedItemProps> = (props) => {
+const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   const {
     commonId,
     commonName,
@@ -85,6 +85,7 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   };
 
   const generalProps = {
+    ref,
     item,
     commonId,
     commonName,
@@ -118,6 +119,6 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   }
 
   return null;
-};
+});
 
 export default memo(FeedItem);

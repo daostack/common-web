@@ -7,7 +7,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
-import { UserAvatar } from "@/shared/components";
+import { InternalLinkData, UserAvatar } from "@/shared/components";
 import { useUserById } from "@/shared/hooks/useCases";
 import {
   Circles,
@@ -33,6 +33,8 @@ interface ChatProps {
   isJoinPending?: boolean;
   onJoinCommon?: () => void;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -49,6 +51,8 @@ const DesktopChat: FC<ChatProps> = (props) => {
     isJoinPending,
     onJoinCommon,
     onUserClick,
+    onFeedItemClick,
+    onInternalLinkClick,
   } = props;
   const {
     fetchUser: fetchDMUser,
@@ -64,7 +68,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
   const dmUserId = chatItem.chatChannel?.participants.filter(
     (participant) => participant !== userId,
   )[0];
-  const title = getUserName(dmUser) || chatItem.discussion.title;
+  const title = getUserName(dmUser) || chatItem.discussion?.title || "";
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
@@ -122,6 +126,8 @@ const DesktopChat: FC<ChatProps> = (props) => {
         isJoinPending={isJoinPending}
         onJoinCommon={onJoinCommon}
         onUserClick={onUserClick}
+        onFeedItemClick={onFeedItemClick}
+        onInternalLinkClick={onInternalLinkClick}
       />
     </DesktopRightPane>
   );

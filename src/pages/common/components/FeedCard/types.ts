@@ -3,3 +3,7 @@ export interface FeedCardSettings {
   shouldHideCardStyles?: boolean;
   withHovering?: boolean;
 }
+
+export interface FeedCardRef {
+  scrollToItem: () => void;
+}

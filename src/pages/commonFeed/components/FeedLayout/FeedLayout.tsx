@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +22,7 @@ import {
   FeedItemBaseContentProps,
   FeedItemContext,
   FeedItemContextValue,
+  FeedItemRef,
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "@/pages/common";
@@ -31,7 +33,9 @@ import {
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
 import { JoinProjectModal } from "@/pages/common/components/JoinProjectModal";
 import { useJoinProjectAutomatically } from "@/pages/common/hooks";
-import { InboxItemType, QueryParamKey } from "@/shared/constants";
+import { InternalLinkData } from "@/shared/components";
+import { InboxItemType, QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -59,6 +63,7 @@ import {
   addQueryParam,
   checkIsProject,
   deleteQueryParam,
+  getParamsFromOneOfRoutes,
   getUserName,
 } from "@/shared/utils";
 import { commonActions, selectRecentStreamId } from "@/store/states";
@@ -110,7 +115,7 @@ interface FeedLayoutProps {
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;
   shouldHideContent?: boolean;
-  onFetchNext: () => void;
+  onFetchNext: (feedItemId?: string) => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
@@ -123,6 +128,11 @@ interface FeedLayoutProps {
   onMessagesAmountEmptinessToggle?: (
     feedItem: FeedLayoutItem,
     becameEmpty: boolean,
+  ) => void;
+  onFeedItemSelect?: (
+    commonId: string,
+    feedItemId: string,
+    messageId?: string,
   ) => void;
   outerStyles?: FeedLayoutOuterStyles;
   settings?: FeedLayoutSettings;
@@ -155,10 +165,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onActiveItemChange,
     onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
+    onFeedItemSelect,
     outerStyles,
     settings,
   } = props;
   const dispatch = useDispatch();
+  const { getCommonPagePath } = useRoutesContext();
+  const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
   const { width: windowWidth } = useWindowSize();
   const history = useHistory();
   const queryParams = useQueryParams();
@@ -463,6 +476,102 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       ? handleDMClick
       : undefined;
 
+  const handleFeedItemClickExternal = useCallback(
+    (
+      feedItemId: string,
+      options: { commonId?: string; messageId?: string } = {},
+    ) => {
+      const { commonId = selectedItemCommonData?.id, messageId } = options;
+
+      if (commonId) {
+        onFeedItemSelect?.(commonId, feedItemId, messageId);
+      }
+    },
+    [selectedItemCommonData?.id, onFeedItemSelect],
+  );
+
+  const handleFeedItemClickInternal = (
+    feedItemId: string,
+    options: { commonId?: string; messageId?: string } = {},
+  ) => {
+    const { commonId, messageId } = options;
+
+    if (commonId && commonId !== outerCommon?.id) {
+      history.push(
+        getCommonPagePath(commonId, {
+          item: feedItemId,
+          message: messageId,
+        }),
+      );
+      return;
+    }
+
+    setActiveChatItem({
+      feedItemId,
+      circleVisibility: [],
+    });
+
+    const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
+
+    if (itemExists) {
+      refsByItemId.current[feedItemId]?.scrollToItem();
+    } else {
+      onFetchNext(feedItemId);
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 50);
+    }
+
+    if (messageId) {
+      addQueryParam(QueryParamKey.Message, messageId);
+    }
+  };
+
+  const handleFeedItemClick = onFeedItemSelect
+    ? handleFeedItemClickExternal
+    : handleFeedItemClickInternal;
+
+  const handleInternalLinkClick = useCallback(
+    (data: InternalLinkData) => {
+      const feedPageParams = getParamsFromOneOfRoutes<{ id: string }>(
+        data.pathname,
+        [ROUTE_PATHS.COMMON, ROUTE_PATHS.V04_COMMON],
+      );
+
+      if (!feedPageParams) {
+        return;
+      }
+
+      const itemId = data.params[QueryParamKey.Item];
+      const messageId = data.params[QueryParamKey.Message];
+
+      if (itemId) {
+        handleFeedItemClick(itemId, {
+          commonId: feedPageParams.id,
+          messageId,
+        });
+        return;
+      }
+
+      history.push(
+        getCommonPagePath(feedPageParams.id, {
+          item: itemId,
+          message: messageId,
+        }),
+      );
+    },
+    [getCommonPagePath, handleFeedItemClick],
+  );
+
+  useEffect(() => {
+    if (commonMember && isCommonJoinModalOpen) {
+      onCommonJoinModalClose();
+    }
+  }, [commonMember?.id]);
+
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
       fetchGovernance(selectedItemCommonData.id);
@@ -490,7 +599,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [activeFeedItemId]);
 
   useEffect(() => {
-    if (selectedFeedItem?.itemId) {
+    if (selectedFeedItem?.itemId && !isTabletView) {
+      refsByItemId.current[selectedFeedItem.itemId]?.scrollToItem();
+    }
+    if (selectedFeedItem?.itemId || (chatItem && !chatItem.discussion)) {
       return;
     }
 
@@ -585,6 +697,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
                   return (
                     <FeedItem
+                      ref={(ref) => {
+                        refsByItemId.current[item.itemId] = ref;
+                      }}
                       key={item.feedItem.id}
                       commonMember={commonMember}
                       commonId={commonData?.id}
@@ -628,7 +743,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               })}
             </InfiniteScroll>
             {!isTabletView &&
-              (chatItem ? (
+              (chatItem?.discussion ? (
                 <DesktopChat
                   className={desktopRightPaneClassName}
                   chatItem={chatItem}
@@ -642,11 +757,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   onJoinCommon={onJoinCommon}
                   isJoinPending={isJoinPending}
                   onUserClick={handleUserClick}
+                  onFeedItemClick={handleFeedItemClick}
+                  onInternalLinkClick={handleInternalLinkClick}
                 />
               ) : (
                 <DesktopChatPlaceholder
                   className={desktopRightPaneClassName}
-                  isItemSelected={Boolean(selectedItemCommonData)}
+                  isItemSelected={Boolean(selectedItemCommonData || chatItem)}
                   withTitle={settings?.withDesktopChatTitle}
                 />
               ))}
@@ -666,6 +783,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 onJoinCommon={onJoinCommon}
                 isJoinPending={isJoinPending}
                 onUserClick={handleUserClick}
+                onFeedItemClick={handleFeedItemClick}
+                onInternalLinkClick={handleInternalLinkClick}
               >
                 {selectedItemCommonData &&
                   checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
@@ -692,6 +811,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   onClose={onCommonJoinModalClose}
                   common={outerCommon}
                   governance={governance}
+                  showLoadingAfterSuccessfulCreation
                 />
                 <JoinProjectModal
                   isShowing={isProjectJoinModalOpen}
