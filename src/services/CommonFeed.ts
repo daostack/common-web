@@ -220,6 +220,16 @@ class CommonFeedService {
     return convertObjectDatesToFirestoreTimestamps(data);
   };
 
+  public markCommonFeedItemAsUnseen = (
+    commonId: string,
+    feedObjectId: string,
+  ) => {
+    return Api.post(ApiEndpoint.MarkFeedObjectUnseenForUser, {
+      commonId,
+      feedObjectId,
+    });
+  };
+
   public subscribeToCommonFeedItem = (
     commonId: string,
     feedItemId: string,

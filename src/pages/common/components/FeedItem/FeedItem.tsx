@@ -15,6 +15,7 @@ import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
 import { ProjectFeedItem } from "./components";
 import { useFeedItemContext } from "./context";
+import { useFeedItemCounters } from "./hooks";
 import { FeedItemRef } from "./types";
 
 interface FeedItemProps {
@@ -67,6 +68,8 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   const { onFeedItemUpdate, getLastMessage, getNonAllowedItems, onUserSelect } =
     useFeedItemContext();
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
+  const { projectUnreadStreamsCount, projectUnreadMessages } =
+    useFeedItemCounters(item.id, commonId);
 
   if (
     shouldCheckItemVisibility &&
@@ -115,7 +118,14 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   }
 
   if (item.data.type === CommonFeedType.Project) {
-    return <ProjectFeedItem item={item} isMobileVersion={isMobileVersion} />;
+    return (
+      <ProjectFeedItem
+        item={item}
+        isMobileVersion={isMobileVersion}
+        unreadStreamsCount={projectUnreadStreamsCount}
+        unreadMessages={projectUnreadMessages}
+      />
+    );
   }
 
   return null;

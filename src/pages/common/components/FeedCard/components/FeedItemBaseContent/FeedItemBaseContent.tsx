@@ -1,7 +1,6 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
-import { PredefinedTypes } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
   ContextMenu,
@@ -29,6 +28,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     type,
     menuItems,
     seenOnce,
+    seen,
     ownerId,
     renderLeftContent,
     isPinned,
@@ -149,6 +149,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
                 unreadMessages={unreadMessages}
                 type={type}
                 seenOnce={seenOnce}
+                seen={seen}
                 ownerId={ownerId}
                 isActive={isActive}
                 isPinned={isPinned}

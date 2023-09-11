@@ -44,6 +44,7 @@ export { default as UploadIcon } from "./upload.icon";
 export { default as WalletIcon } from "./wallet.icon";
 export { default as MessageIcon } from "./message.icon";
 export { default as Message2Icon } from "./message2.icon";
+export { default as Message3Icon } from "./message3.icon";
 export { default as Trash2Icon } from "./trash2.icon";
 export { UnfollowIcon } from "./unfollow.icon";
 export { UnpinIcon } from "./unpin.icon";

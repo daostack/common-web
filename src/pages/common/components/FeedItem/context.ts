@@ -26,6 +26,7 @@ export interface FeedItemBaseContentProps {
   menuItems?: ContextMenuItem[];
   type?: CommonFeedType;
   seenOnce?: boolean;
+  seen?: boolean;
   ownerId?: string;
   commonName?: string;
   renderImage?: (className?: string) => ReactNode;

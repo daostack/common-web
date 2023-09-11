@@ -7,6 +7,7 @@ import {
   Discussion,
   Proposal,
   CommonFeedType,
+  CommonFeedObjectUserUnique,
 } from "@/shared/models";
 import { FeedItemMenuItem } from "./constants";
 
@@ -25,6 +26,7 @@ export interface GetAllowedItemsOptions {
   commonMember?: CommonMember | null;
   feedItemFollow: FeedItemFollowState;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
+  feedItemUserMetadata: CommonFeedObjectUserUnique | null;
 }
 
 export type MenuItemOptions = Omit<GetAllowedItemsOptions, "feedItemFollow">;
