@@ -4,12 +4,14 @@ import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { PinIcon, StarIcon } from "@/shared/icons";
 import { CommonFeedType } from "@/shared/models";
+import { notEmpty } from "@/shared/utils/notEmpty";
 import styles from "./FeedCardTags.module.scss";
 
 interface FeedCardTagsProps {
   unreadMessages?: number;
   type?: CommonFeedType;
   seenOnce?: boolean;
+  seen?: boolean;
   ownerId?: string;
   isActive: boolean;
   isPinned?: boolean;
@@ -21,6 +23,7 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
     unreadMessages,
     type,
     seenOnce,
+    seen,
     ownerId,
     isActive,
     isPinned,
@@ -68,6 +71,9 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
         >
           {unreadMessages}
         </div>
+      )}
+      {!unreadMessages && notEmpty(seen) && !seen && (
+        <div className={classNames(styles.tag, styles.unseen)}></div>
       )}
     </>
   );

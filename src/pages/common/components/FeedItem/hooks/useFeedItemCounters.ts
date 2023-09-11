@@ -3,8 +3,8 @@ import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 
 interface Return {
-  unreadStreamsCount?: number;
-  unreadMessages?: number;
+  projectUnreadStreamsCount?: number;
+  projectUnreadMessages?: number;
 }
 
 export const useFeedItemCounters = (
@@ -28,7 +28,7 @@ export const useFeedItemCounters = (
   }, [fetchGovernance, commonId]);
 
   return {
-    unreadStreamsCount: streamsUnreadCountByProjectStream?.[feedItemId],
-    unreadMessages: unreadCountByProjectStream?.[feedItemId],
+    projectUnreadStreamsCount: streamsUnreadCountByProjectStream?.[feedItemId],
+    projectUnreadMessages: unreadCountByProjectStream?.[feedItemId],
   };
 };

@@ -27,6 +27,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     type,
     menuItems,
     seenOnce,
+    seen,
     ownerId,
     commonName,
     renderImage,
@@ -155,6 +156,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               unreadMessages={unreadMessages}
               type={type}
               seenOnce={seenOnce}
+              seen={seen}
               ownerId={ownerId}
               isActive={isActive}
               isPinned={false}

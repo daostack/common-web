@@ -8,24 +8,21 @@ import { OpenIcon } from "@/shared/icons";
 import { CommonFeed } from "@/shared/models";
 import { CommonAvatar, parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
-import { useFeedItemCounters } from "../../hooks";
 import styles from "./ProjectFeedItem.module.scss";
 
 interface ProjectFeedItemProps {
   item: CommonFeed;
   isMobileVersion: boolean;
+  unreadStreamsCount?: number;
+  unreadMessages?: number;
 }
 
 export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
-  const { item, isMobileVersion } = props;
+  const { item, isMobileVersion, unreadStreamsCount, unreadMessages } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
   const { renderFeedItemBaseContent } = useFeedItemContext();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
-  const { unreadStreamsCount, unreadMessages } = useFeedItemCounters(
-    item.id,
-    common?.directParent?.commonId,
-  );
   const commonId = item.data.id;
   const lastMessage = parseStringToTextEditorValue(
     Number.isInteger(unreadStreamsCount)
