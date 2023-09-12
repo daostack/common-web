@@ -247,7 +247,10 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       }
 
       const circleVisibility = governanceCircles
-        ? getVisibilityString(governanceCircles, discussion?.circleVisibility)
+        ? getVisibilityString(
+            governanceCircles,
+            discussion?.circleVisibilityByCommon?.[commonId],
+          )
         : undefined;
 
       return (

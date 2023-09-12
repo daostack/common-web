@@ -17,33 +17,57 @@ interface CreateFundsAllocation {
 
 interface CreateMemberAdmittance {
   type: ProposalsTypes.MEMBER_ADMITTANCE;
-  args: Omit<MemberAdmittance["data"]["args"], "proposerId"> & {
+  args: Omit<
+    MemberAdmittance["data"]["args"],
+    "proposerId" | "circleVisibilityByCommon"
+  > & {
     contributionSourceType?: ContributionSourceType;
     feeMonthly: PaymentAmount | null;
     feeOneTime: PaymentAmount | null;
     fromSupportersFlow?: boolean;
     receiveEmails?: boolean;
     userWhatsapp?: boolean;
+    circleVisibility?: string[] | null;
   };
 }
 
 interface CreateAssignCircle {
   type: ProposalsTypes.ASSIGN_CIRCLE;
-  args: Omit<AssignCircle["data"]["args"], "proposerId">;
+  args: Omit<
+    AssignCircle["data"]["args"],
+    "proposerId" | "circleVisibilityByCommon"
+  > & {
+    circleVisibility?: string[] | null;
+  };
 }
 interface CreateRemoveCircle {
   type: ProposalsTypes.REMOVE_CIRCLE;
-  args: Omit<RemoveCircle["data"]["args"], "proposerId">;
+  args: Omit<
+    RemoveCircle["data"]["args"],
+    "proposerId" | "circleVisibilityByCommon"
+  > & {
+    circleVisibility?: string[] | null;
+  };
 }
 
 interface CreateSurvey {
   type: ProposalsTypes.SURVEY;
-  args: Omit<Survey["data"]["args"], "proposerId">;
+  args: Omit<
+    Survey["data"]["args"],
+    "proposerId" | "circleVisibilityByCommon"
+  > & {
+    circleVisibility?: string[] | null;
+  };
 }
 
 interface CreateDeleteCommon {
   type: ProposalsTypes.DELETE_COMMON;
-  args: Omit<DeleteCommon["data"]["args"], "proposerId">;
+  args: Omit<
+    DeleteCommon["data"]["args"],
+    "proposerId" | "circleVisibilityByCommon"
+  > & {
+    circleVisibility?: string[] | null;
+  };
 }
 
 interface Request<P, R> {

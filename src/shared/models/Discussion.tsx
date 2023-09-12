@@ -33,7 +33,7 @@ export interface Discussion extends BaseEntity {
    * If array is empty, everyone in common can view.
    * If discussion is attached to a proposal, this field will be not exist.
    */
-  circleVisibility?: string[];
+  circleVisibilityByCommon?: Record<string, string[]>;
 }
 
 export interface DiscussionWithOwnerInfo extends Discussion {
