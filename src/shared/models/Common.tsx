@@ -115,6 +115,8 @@ export interface Common extends BaseEntity {
   messages?: DiscussionMessage[];
 
   pinnedFeedItems: FeedItem[];
+
+  rootCommonId?: string;
 }
 
 export interface Project extends Common {
