@@ -1,2 +1,2 @@
-export * from "./getFeedItemTitleByDataIdAndType";
+export * from "./getFeedItemDisplayingData";
 export * from "./getTextFromTextEditorString";
