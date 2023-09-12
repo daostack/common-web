@@ -49,7 +49,7 @@ const CommonHandler: FC = () => {
           projectsStateItem,
         ),
       );
-      dispatch(commonLayoutActions.addProject(projectsStateItem));
+      dispatch(commonLayoutActions.addOrUpdateProject(projectsStateItem));
       dispatch(projectsActions.addProject(projectsStateItem));
     };
 
