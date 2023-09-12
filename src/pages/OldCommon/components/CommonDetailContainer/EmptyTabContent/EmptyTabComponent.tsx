@@ -93,7 +93,7 @@ export default function EmptyTabComponent({
                 className="button-blue empty-tab-content-wrapper__button"
                 onClick={handleModalOpen}
               >
-                Join the effort
+                Join
               </button>
             )}
           </div>
