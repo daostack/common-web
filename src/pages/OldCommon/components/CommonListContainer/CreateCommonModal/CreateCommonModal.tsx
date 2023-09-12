@@ -289,7 +289,10 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       notificationsAmount: 0,
     };
 
-    CommonEventEmitter.emit(CommonEvent.ProjectCreated, projectsStateItem);
+    CommonEventEmitter.emit(
+      CommonEvent.ProjectCreatedOrUpdated,
+      projectsStateItem,
+    );
     CommonEventEmitter.emit(
       CommonEvent.CommonCreated,
       createdCommonData.common,

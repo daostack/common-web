@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { CommonEvent, CommonEventEmitter } from "@/events";
 import { authentificated } from "@/pages/Auth/store/selectors";
+import { CommonService } from "@/services";
 import { useRoutesContext } from "@/shared/contexts";
 import {
   commonLayoutActions,
@@ -125,6 +127,36 @@ export const useProjectsData = (): Return => {
     dispatch(commonLayoutActions.setCurrentCommonId(activeItemId));
     dispatch(commonLayoutActions.clearProjects());
   }, [activeItemId]);
+
+  useEffect(() => {
+    if (!areProjectsFetched) {
+      return;
+    }
+
+    const unsubscribe = CommonService.subscribeToSubCommons(
+      activeItemId,
+      (data) => {
+        data.forEach(({ common, isRemoved }) => {
+          if (isRemoved) {
+            return;
+          }
+
+          CommonEventEmitter.emit(CommonEvent.CommonUpdated, common);
+          CommonEventEmitter.emit(CommonEvent.ProjectCreatedOrUpdated, {
+            commonId: common.id,
+            image: common.image,
+            name: common.name,
+            directParent: common.directParent,
+            hasMembership: true,
+            hasPermissionToAddProject: true,
+            notificationsAmount: 0,
+          });
+        });
+      },
+    );
+
+    return unsubscribe;
+  }, [areProjectsFetched, activeItemId]);
 
   return {
     currentCommonId,

@@ -69,7 +69,10 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
       };
 
       dispatch(commonActions.setIsNewProjectCreated(true));
-      CommonEventEmitter.emit(CommonEvent.ProjectCreated, projectsStateItem);
+      CommonEventEmitter.emit(
+        CommonEvent.ProjectCreatedOrUpdated,
+        projectsStateItem,
+      );
     }
     CommonEventEmitter.emit(CommonEvent.CommonUpdated, createdProject);
     history.push(getCommonPagePath(createdProject.id));
