@@ -31,7 +31,7 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
     () =>
       notMemberCircles.map((circle) => ({
         id: circle.id,
-        text: `Add to ${circle.name}`,
+        text: `Add to ${circle.name}s`,
         onClick: () => {
           setSelectedCircle(circle);
           onOpen();

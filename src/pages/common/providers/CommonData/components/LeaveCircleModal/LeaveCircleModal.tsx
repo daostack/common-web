@@ -61,7 +61,7 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
           aria-hidden
         />
         <h2 className={styles.title}>
-          Are you sure you want to leave {circle.name}?
+          Are you sure you want to leave {circle.name}s?
         </h2>
         <p className={styles.description}>
           If you leave this circle, you might lose permissions associated with

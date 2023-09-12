@@ -62,7 +62,7 @@ export default function AssignCircleModal({
       onClose={handleClose}
       hideCloseButton={isAdding}
       className={styles.modal}
-      title={`Add ${memberName} to ${selectedCircle?.name}?`}
+      title={`Add ${memberName} to ${selectedCircle?.name}s?`}
     >
       <div className={styles.content}>
         <div className={styles.text}>
