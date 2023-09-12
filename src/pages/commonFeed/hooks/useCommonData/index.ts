@@ -64,13 +64,15 @@ export const useCommonData = (userId?: string): Return => {
             );
           }
 
-          const rootCommonId = common.directParent?.commonId;
           const [parentCommons, subCommons, rootCommonMember] =
             await Promise.all([
               CommonService.getAllParentCommonsForCommon(common),
               CommonService.getCommonsByDirectParentIds([common.id]),
-              rootCommonId && userId
-                ? CommonService.getCommonMemberByUserId(rootCommonId, userId)
+              common.rootCommonId && userId
+                ? CommonService.getCommonMemberByUserId(
+                    common.rootCommonId,
+                    userId,
+                  )
                 : null,
             ]);
 
