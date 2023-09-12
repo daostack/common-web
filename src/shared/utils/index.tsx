@@ -34,3 +34,4 @@ export * from "./hasPermission";
 export * from "./getProjectCircleDefinition";
 export * from "./generateStaticShareLink";
 export * from "./getTheme";
+export * from "./pluralizeWord";
