@@ -492,10 +492,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
-    setActiveChatItem({
-      feedItemId,
-      circleVisibility: [],
-    });
+    setActiveChatItem({ feedItemId });
 
     const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
 

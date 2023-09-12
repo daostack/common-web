@@ -11,7 +11,7 @@ export interface ChatItem {
   proposal?: Proposal;
   discussion?: Discussion;
   chatChannel?: ChatChannel;
-  circleVisibility: string[];
+  circleVisibility?: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   lastSeenAt?: CommonFeedObjectUserUnique["lastSeenAt"];
   seenOnce?: boolean;

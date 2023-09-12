@@ -255,7 +255,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     ) {
       feedLayoutRef?.setActiveItem({
         feedItemId: firstItem.feedItem.id,
-        circleVisibility: [],
       });
       dispatch(commonActions.setRecentStreamId(""));
     }
