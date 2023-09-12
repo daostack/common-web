@@ -2,7 +2,7 @@ import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import * as actions from "./actions";
-import { ProjectsState } from "./types";
+import { ProjectsState, ProjectsStateItem } from "./types";
 import { getAllNestedItems, getRelatedToIdItems } from "./utils";
 
 type Action = ActionType<typeof actions>;
@@ -18,6 +18,25 @@ const clearProjects = (state: WritableDraft<ProjectsState>): void => {
   state.data = [];
   state.isDataLoading = false;
   state.isDataFetched = false;
+};
+
+const updateProject = (
+  state: WritableDraft<ProjectsState>,
+  payload: { commonId: string } & Partial<Omit<ProjectsStateItem, "commonId">>,
+): boolean => {
+  const itemIndex = state.data.findIndex(
+    (item) => item.commonId === payload.commonId,
+  );
+
+  if (itemIndex > -1) {
+    state.data[itemIndex] = {
+      ...state.data[itemIndex],
+      ...payload,
+    };
+    return true;
+  }
+
+  return false;
 };
 
 export const reducer = createReducer<ProjectsState, Action>(initialState)
@@ -40,23 +59,18 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
       nextState.isDataFetched = true;
     }),
   )
-  .handleAction(actions.addProject, (state, { payload }) =>
+  .handleAction(actions.addOrUpdateProject, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.data.push(payload);
+      const isUpdated = updateProject(nextState, payload);
+
+      if (!isUpdated) {
+        nextState.data.push(payload);
+      }
     }),
   )
   .handleAction(actions.updateProject, (state, { payload }) =>
     produce(state, (nextState) => {
-      const itemIndex = nextState.data.findIndex(
-        (item) => item.commonId === payload.commonId,
-      );
-
-      if (itemIndex > -1) {
-        nextState.data[itemIndex] = {
-          ...nextState.data[itemIndex],
-          ...payload,
-        };
-      }
+      updateProject(nextState, payload);
     }),
   )
   .handleAction(actions.clearProjects, (state) =>

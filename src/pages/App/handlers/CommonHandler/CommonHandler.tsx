@@ -50,7 +50,7 @@ const CommonHandler: FC = () => {
         ),
       );
       dispatch(commonLayoutActions.addOrUpdateProject(projectsStateItem));
-      dispatch(projectsActions.addProject(projectsStateItem));
+      dispatch(projectsActions.addOrUpdateProject(projectsStateItem));
     };
 
     CommonEventEmitter.on(CommonEvent.ProjectCreated, handler);
