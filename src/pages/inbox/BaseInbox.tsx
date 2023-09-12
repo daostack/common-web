@@ -199,7 +199,6 @@ const InboxPage: FC<InboxPageProps> = (props) => {
       discussion: ChatChannelToDiscussionConverter.toTargetEntity(
         chatChannelItem.chatChannel,
       ),
-      circleVisibility: [],
     });
   }, [nextChatChannelItemId, feedLayoutRef]);
 
