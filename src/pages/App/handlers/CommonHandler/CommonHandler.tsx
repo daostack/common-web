@@ -45,7 +45,9 @@ const CommonHandler: FC = () => {
       projectsStateItem,
     ) => {
       dispatch(
-        multipleSpacesLayoutActions.addProjectToBreadcrumbs(projectsStateItem),
+        multipleSpacesLayoutActions.addOrUpdateProjectInBreadcrumbs(
+          projectsStateItem,
+        ),
       );
       dispatch(commonLayoutActions.addProject(projectsStateItem));
       dispatch(projectsActions.addProject(projectsStateItem));
