@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { CommonEvent, CommonEventEmitter } from "@/events";
-import { authentificated } from "@/pages/Auth/store/selectors";
-import { CommonService } from "@/services";
+import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
+import { CommonService, GovernanceService, Logger } from "@/services";
+import { GovernanceActions } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
+import { Common } from "@/shared/models";
+import { generateCirclesDataForCommonMember } from "@/shared/utils";
 import {
   commonLayoutActions,
   ProjectsStateItem,
@@ -34,6 +37,55 @@ interface Return {
   parentItemIds: string[];
 }
 
+const getProjectItemFromCommon = async (
+  common: Common,
+  userId?: string,
+  initialItem?: ProjectsStateItem,
+): Promise<ProjectsStateItem> => {
+  const baseItem: Omit<
+    ProjectsStateItem,
+    "hasMembership" | "hasPermissionToAddProject"
+  > = {
+    commonId: common.id,
+    image: common.image,
+    name: common.name,
+    directParent: common.directParent,
+  };
+
+  if (initialItem) {
+    return {
+      ...baseItem,
+      hasMembership: initialItem.hasMembership,
+      hasPermissionToAddProject: initialItem.hasPermissionToAddProject,
+    };
+  }
+  if (!userId) {
+    return {
+      ...baseItem,
+      hasMembership: false,
+      hasPermissionToAddProject: false,
+    };
+  }
+
+  const [governance, commonMember] = await Promise.all([
+    GovernanceService.getGovernanceByCommonId(common.id),
+    CommonService.getCommonMemberByUserId(common.id, userId),
+  ]);
+
+  return {
+    ...baseItem,
+    hasMembership: Boolean(commonMember),
+    hasPermissionToAddProject: Boolean(
+      governance &&
+        commonMember &&
+        generateCirclesDataForCommonMember(
+          governance.circles,
+          commonMember.circleIds,
+        ).allowedActions[GovernanceActions.CREATE_PROJECT],
+    ),
+  };
+};
+
 export const useProjectsData = (): Return => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -47,6 +99,10 @@ export const useProjectsData = (): Return => {
   const { projects, areProjectsLoading, areProjectsFetched } = useSelector(
     selectCommonLayoutProjectsState,
   );
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+  const [updatedItemsQueue, setUpdatedItemsQueue] = useState<Common[][]>([]);
+  const nextUpdatedItems = updatedItemsQueue[0];
   const currentCommon = commons.find(
     ({ commonId }) => commonId === currentCommonId,
   );
@@ -136,27 +192,61 @@ export const useProjectsData = (): Return => {
     const unsubscribe = CommonService.subscribeToSubCommons(
       activeItemId,
       (data) => {
-        data.forEach(({ common, isRemoved }) => {
-          if (isRemoved) {
-            return;
+        const commons = data.reduce<Common[]>((acc, { common, isRemoved }) => {
+          if (!isRemoved) {
+            CommonEventEmitter.emit(CommonEvent.CommonUpdated, common);
+            return acc.concat(common);
           }
 
-          CommonEventEmitter.emit(CommonEvent.CommonUpdated, common);
-          CommonEventEmitter.emit(CommonEvent.ProjectCreatedOrUpdated, {
-            commonId: common.id,
-            image: common.image,
-            name: common.name,
-            directParent: common.directParent,
-            hasMembership: true,
-            hasPermissionToAddProject: true,
-            notificationsAmount: 0,
-          });
-        });
+          return acc;
+        }, []);
+
+        if (commons.length !== 0) {
+          setUpdatedItemsQueue((currentItems) =>
+            currentItems.concat([commons]),
+          );
+        }
       },
     );
 
     return unsubscribe;
   }, [areProjectsFetched, activeItemId]);
+
+  useEffect(() => {
+    if (!nextUpdatedItems) {
+      return;
+    }
+    if (nextUpdatedItems.length === 0) {
+      setUpdatedItemsQueue((currentItems) => currentItems.slice(1));
+      return;
+    }
+
+    (async () => {
+      try {
+        const items = await Promise.all(
+          nextUpdatedItems.map(async (nextUpdatedItem) => {
+            const existingItem =
+              commons.find((item) => item.commonId === nextUpdatedItem.id) ||
+              projects.find((item) => item.commonId === nextUpdatedItem.id);
+
+            return await getProjectItemFromCommon(
+              nextUpdatedItem,
+              userId,
+              existingItem,
+            );
+          }),
+        );
+
+        items.forEach((item) => {
+          CommonEventEmitter.emit(CommonEvent.ProjectCreatedOrUpdated, item);
+        });
+      } catch (error) {
+        Logger.error(error);
+      } finally {
+        setUpdatedItemsQueue((currentItems) => currentItems.slice(1));
+      }
+    })();
+  }, [nextUpdatedItems]);
 
   return {
     currentCommonId,
