@@ -6,6 +6,7 @@ import { Image, Modal } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
 import { Circle } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
+import { pluralizeWord } from "@/shared/utils";
 import { emptyFunction } from "@/shared/utils";
 import styles from "./LeaveCircleModal.module.scss";
 
@@ -61,7 +62,7 @@ const LeaveCircleModal: FC<LeaveCircleModalProps> = (props) => {
           aria-hidden
         />
         <h2 className={styles.title}>
-          Are you sure you want to leave {circle.name}s?
+          Are you sure you want to leave {pluralizeWord(circle.name)}?
         </h2>
         <p className={styles.description}>
           If you leave this circle, you might lose permissions associated with
