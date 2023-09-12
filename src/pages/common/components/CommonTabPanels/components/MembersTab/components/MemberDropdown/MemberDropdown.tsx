@@ -3,6 +3,7 @@ import { useModal } from "@/shared/hooks";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { Circle } from "@/shared/models";
 import { ContextMenu, ContextMenuRef } from "@/shared/ui-kit";
+import { pluralizeWord } from "@/shared/utils";
 import AssignCircleModal from "./AssignCircleModal";
 import elementDropdownStyles from "./MemberDropdown.module.scss";
 
@@ -31,7 +32,7 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
     () =>
       notMemberCircles.map((circle) => ({
         id: circle.id,
-        text: `Add to ${circle.name}`,
+        text: `Add to ${pluralizeWord(circle.name)}`,
         onClick: () => {
           setSelectedCircle(circle);
           onOpen();
