@@ -577,7 +577,7 @@ export default function ChatComponent({
 
     return (
       <span className={styles.permissionsText} onClick={onJoinCommon}>
-        {directParent ? "Join the space" : "Join the effort"}
+        Join
       </span>
     );
   };

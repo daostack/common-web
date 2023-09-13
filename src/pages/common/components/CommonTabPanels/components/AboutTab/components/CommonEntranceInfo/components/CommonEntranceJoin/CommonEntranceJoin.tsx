@@ -44,7 +44,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
               : onJoinCommon
           }
         >
-          Join the {isProject ? "space" : "effort"}
+          Join
         </Button>
       )}
     </>
