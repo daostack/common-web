@@ -2,8 +2,11 @@ import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCommonUpdate } from "@/pages/OldCommon/components/CommonListContainer/EditCommonModal/useCases";
 import { usePreventReload } from "@/shared/hooks";
-import { useProjectCreation } from "@/shared/hooks/useCases";
-import { Circles, Common, Project } from "@/shared/models";
+import {
+  useGovernanceByCommonId,
+  useProjectCreation,
+} from "@/shared/hooks/useCases";
+import { Circles, Common, Governance, Project } from "@/shared/models";
 import {
   Loader,
   LoaderVariant,
@@ -27,7 +30,7 @@ interface ProjectCreationFormProps {
   governanceCircles: Circles;
   initialCommon?: Project;
   isEditing: boolean;
-  onFinish: (createdProject: Common) => void;
+  onFinish: (data: { project: Common; governance: Governance }) => void;
   onCancel: () => void;
 }
 
@@ -75,8 +78,8 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   } = props;
   const dispatch = useDispatch();
   const projects = useSelector(selectCommonLayoutProjects);
-
   const formRef = useRef<CreationFormRef>(null);
+  const { data: governance, fetchGovernance } = useGovernanceByCommonId();
   const {
     isProjectCreationLoading,
     project,
@@ -95,6 +98,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     () => getInitialValues(governanceCircles, initialCommon),
     [governanceCircles],
   );
+  const projectId = initialCommon?.id || project?.id;
 
   const existingProjectsNames = projects
     .map((project) => project?.name)
@@ -135,12 +139,21 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, []);
 
   useEffect(() => {
+    if (projectId) {
+      fetchGovernance(projectId);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
     const finalProject = project || updatedProject;
 
-    if (finalProject) {
-      onFinish(finalProject);
+    if (finalProject && governance) {
+      onFinish({
+        project: finalProject,
+        governance,
+      });
     }
-  }, [project, updatedProject]);
+  }, [project, updatedProject, governance]);
 
   return (
     <>
