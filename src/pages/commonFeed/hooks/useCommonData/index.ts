@@ -65,14 +65,24 @@ export const useCommonData = (userId?: string): Return => {
           }
 
           const rootCommonId = common.directParent?.commonId;
-          const [parentCommons, subCommons, rootCommonMember] =
-            await Promise.all([
-              CommonService.getAllParentCommonsForCommon(common),
-              CommonService.getCommonsByDirectParentIds([common.id]),
-              rootCommonId && userId
-                ? CommonService.getCommonMemberByUserId(rootCommonId, userId)
-                : null,
-            ]);
+          const [
+            parentCommons,
+            subCommons,
+            rootCommonMember,
+            parentCommonMember,
+          ] = await Promise.all([
+            CommonService.getAllParentCommonsForCommon(common),
+            CommonService.getCommonsByDirectParentIds([common.id]),
+            rootCommonId && userId
+              ? CommonService.getCommonMemberByUserId(rootCommonId, userId)
+              : null,
+            common.directParent?.commonId && userId
+              ? CommonService.getCommonMemberByUserId(
+                  common.directParent.commonId,
+                  userId,
+                )
+              : null,
+          ]);
 
           setState({
             loading: false,
@@ -85,6 +95,7 @@ export const useCommonData = (userId?: string): Return => {
               commonMembersAmount,
               sharedFeedItem,
               rootCommonMember,
+              parentCommonMember,
               parentCommon: last(parentCommons),
             },
           });

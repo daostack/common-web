@@ -8,7 +8,7 @@ import { GovernanceActions } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
-import { Common, Project } from "@/shared/models";
+import { Common, Governance, Project } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
 import { commonActions, ProjectsStateItem } from "@/store/states";
 import { CenterWrapper } from "../CenterWrapper";
@@ -51,7 +51,12 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     </CenterWrapper>
   );
 
-  const handleCreatedProject = (createdProject: Common) => {
+  const handleCreatedProject = (data: {
+    project: Common;
+    governance: Governance;
+  }) => {
+    const { project: createdProject, governance } = data;
+
     if (isEditing) {
       CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
         commonId: createdProject.id,
@@ -65,11 +70,17 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         name: createdProject.name,
         directParent: createdProject.directParent,
         hasMembership: true,
+        hasPermissionToAddProject: Object.values(governance.circles).some(
+          (circle) => circle.allowedActions[GovernanceActions.CREATE_PROJECT],
+        ),
         notificationsAmount: 0,
       };
 
       dispatch(commonActions.setIsNewProjectCreated(true));
-      CommonEventEmitter.emit(CommonEvent.ProjectCreated, projectsStateItem);
+      CommonEventEmitter.emit(
+        CommonEvent.ProjectCreatedOrUpdated,
+        projectsStateItem,
+      );
     }
     CommonEventEmitter.emit(CommonEvent.CommonUpdated, createdProject);
     history.push(getCommonPagePath(createdProject.id));

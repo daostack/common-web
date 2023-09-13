@@ -8,8 +8,8 @@ export const getProjects = createAsyncAction(
   ProjectsActionType.GET_PROJECTS_FAILURE,
 )<string | void, ProjectsStateItem[], Error>();
 
-export const addProject = createStandardAction(
-  ProjectsActionType.ADD_PROJECT,
+export const addOrUpdateProject = createStandardAction(
+  ProjectsActionType.ADD_OR_UPDATE_PROJECT,
 )<ProjectsStateItem>();
 
 export const updateProject = createStandardAction(

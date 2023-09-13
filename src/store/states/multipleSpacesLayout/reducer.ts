@@ -1,9 +1,10 @@
 import produce from "immer";
+import { WritableDraft } from "immer/dist/types/types-external";
 import { cloneDeep } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType } from "@/shared/constants";
 import * as actions from "./actions";
-import { MultipleSpacesLayoutState } from "./types";
+import { MultipleSpacesLayoutState, ProjectsStateItem } from "./types";
 
 type Action = ActionType<typeof actions>;
 
@@ -12,6 +13,26 @@ const initialState: MultipleSpacesLayoutState = {
   previousBreadcrumbs: null,
   backUrl: null,
   mainWidth: window.innerWidth,
+};
+
+const updateProjectInBreadcrumbs = (
+  state: WritableDraft<MultipleSpacesLayoutState>,
+  payload: { commonId: string } & Partial<Omit<ProjectsStateItem, "commonId">>,
+): void => {
+  if (state.breadcrumbs?.type !== InboxItemType.FeedItemFollow) {
+    return;
+  }
+
+  const itemIndex = state.breadcrumbs.items.findIndex(
+    (item) => item.commonId === payload.commonId,
+  );
+
+  if (itemIndex > -1) {
+    state.breadcrumbs.items[itemIndex] = {
+      ...state.breadcrumbs.items[itemIndex],
+      ...payload,
+    };
+  }
 };
 
 export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
@@ -33,9 +54,19 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
       nextState.breadcrumbs = null;
     }),
   )
-  .handleAction(actions.addProjectToBreadcrumbs, (state, { payload }) =>
+  .handleAction(actions.addOrUpdateProjectInBreadcrumbs, (state, { payload }) =>
     produce(state, (nextState) => {
-      if (nextState.breadcrumbs?.type === InboxItemType.FeedItemFollow) {
+      if (nextState.breadcrumbs?.type !== InboxItemType.FeedItemFollow) {
+        return;
+      }
+
+      const isItemFound = nextState.breadcrumbs.items.some(
+        (item) => item.commonId === payload.commonId,
+      );
+
+      if (isItemFound) {
+        updateProjectInBreadcrumbs(nextState, payload);
+      } else {
         nextState.breadcrumbs.items =
           nextState.breadcrumbs.items.concat(payload);
       }
@@ -43,20 +74,7 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
   )
   .handleAction(actions.updateProjectInBreadcrumbs, (state, { payload }) =>
     produce(state, (nextState) => {
-      if (nextState.breadcrumbs?.type !== InboxItemType.FeedItemFollow) {
-        return;
-      }
-
-      const itemIndex = nextState.breadcrumbs.items.findIndex(
-        (item) => item.commonId === payload.commonId,
-      );
-
-      if (itemIndex > -1) {
-        nextState.breadcrumbs.items[itemIndex] = {
-          ...nextState.breadcrumbs.items[itemIndex],
-          ...payload,
-        };
-      }
+      updateProjectInBreadcrumbs(nextState, payload);
     }),
   )
   .handleAction(actions.setBackUrl, (state, { payload }) =>

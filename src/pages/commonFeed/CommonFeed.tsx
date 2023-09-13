@@ -98,6 +98,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetchCommonData,
   } = useCommonData(userId);
   const parentCommonId = commonData?.common.directParent?.commonId;
+  const parentCommonMember = commonData?.parentCommonMember;
   const isRootCommon = !parentCommonId;
   const isRootCommonMember = Boolean(commonData?.rootCommonMember);
   const anotherCommonId =
@@ -194,6 +195,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   );
 
   useEffect(() => {
+    if (isCommonDataFetched && parentCommonId && !parentCommonMember) {
+      history.replace(getCommonPageAboutTabPath(commonId));
+    }
+  }, [isCommonDataFetched, parentCommonMember?.id, commonId]);
+
+  useEffect(() => {
     if (!isCommonDataFetched || !isGlobalDataFetched || commonMember) {
       return;
     }
@@ -253,8 +260,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       checkIsFeedItemFollowLayoutItem(firstItem) &&
       recentStreamId === firstItem.feedItem.data.id
     ) {
-      feedLayoutRef?.setShouldAllowChatAutoOpen(true);
-      feedLayoutRef?.setExpandedFeedItemId(firstItem.feedItem.id);
+      feedLayoutRef?.setActiveItem({
+        feedItemId: firstItem.feedItem.id,
+      });
+      dispatch(commonActions.setRecentStreamId(""));
     }
   }, [feedLayoutRef, recentStreamId, firstItem]);
 

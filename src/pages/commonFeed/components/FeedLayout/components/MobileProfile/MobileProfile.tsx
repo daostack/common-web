@@ -37,7 +37,6 @@ const MobileProfile: FC<MobileProfileProps> = (props) => {
           chatChannel: chatChannel,
           discussion:
             ChatChannelToDiscussionConverter.toTargetEntity(chatChannel),
-          circleVisibility: [],
         }}
         commonId={""}
         commonName={""}

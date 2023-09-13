@@ -40,9 +40,15 @@ class CommonFeedObjectUserUniqueService {
     feedObjectId: string,
     callback: (data: CommonFeedObjectUserUnique) => void,
   ): UnsubscribeFunction => {
-    const query = this.getCommonFeedObjectUserUniqueSubCollection(commonId)
-      .where("feedObjectId", "==", feedObjectId)
-      .where("userId", "==", userId);
+    let query = this.getCommonFeedObjectUserUniqueSubCollection(commonId).where(
+      "feedObjectId",
+      "==",
+      feedObjectId,
+    );
+
+    if (userId) {
+      query = query.where("userId", "==", userId);
+    }
 
     return query.onSnapshot((snapshot) => {
       const data = snapshot.docChanges()[0]?.doc.data();

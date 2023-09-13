@@ -40,8 +40,8 @@ export const moveBreadcrumbsToPrevious = createStandardAction(
   MultipleSpacesLayoutActionType.MOVE_BREADCRUMBS_TO_PREVIOUS,
 )();
 
-export const addProjectToBreadcrumbs = createStandardAction(
-  MultipleSpacesLayoutActionType.ADD_PROJECT_TO_BREADCRUMBS,
+export const addOrUpdateProjectInBreadcrumbs = createStandardAction(
+  MultipleSpacesLayoutActionType.ADD_OR_UPDATE_PROJECT_IN_BREADCRUMBS,
 )<ProjectsStateItem>();
 
 export const updateProjectInBreadcrumbs = createStandardAction(

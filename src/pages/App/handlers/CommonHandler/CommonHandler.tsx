@@ -41,20 +41,21 @@ const CommonHandler: FC = () => {
   }, []);
 
   useEffect(() => {
-    const handler: CommonEventToListener[CommonEvent.ProjectCreated] = (
-      projectsStateItem,
-    ) => {
-      dispatch(
-        multipleSpacesLayoutActions.addProjectToBreadcrumbs(projectsStateItem),
-      );
-      dispatch(commonLayoutActions.addProject(projectsStateItem));
-      dispatch(projectsActions.addProject(projectsStateItem));
-    };
+    const handler: CommonEventToListener[CommonEvent.ProjectCreatedOrUpdated] =
+      (projectsStateItem) => {
+        dispatch(
+          multipleSpacesLayoutActions.addOrUpdateProjectInBreadcrumbs(
+            projectsStateItem,
+          ),
+        );
+        dispatch(commonLayoutActions.addOrUpdateProject(projectsStateItem));
+        dispatch(projectsActions.addOrUpdateProject(projectsStateItem));
+      };
 
-    CommonEventEmitter.on(CommonEvent.ProjectCreated, handler);
+    CommonEventEmitter.on(CommonEvent.ProjectCreatedOrUpdated, handler);
 
     return () => {
-      CommonEventEmitter.off(CommonEvent.ProjectCreated, handler);
+      CommonEventEmitter.off(CommonEvent.ProjectCreatedOrUpdated, handler);
     };
   }, []);
 

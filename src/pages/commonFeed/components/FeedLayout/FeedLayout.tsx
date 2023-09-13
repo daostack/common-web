@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
@@ -66,7 +66,6 @@ import {
   getParamsFromOneOfRoutes,
   getUserName,
 } from "@/shared/utils";
-import { commonActions, selectRecentStreamId } from "@/store/states";
 import { MIN_CHAT_WIDTH } from "../../constants";
 import {
   DesktopChat,
@@ -169,7 +168,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     outerStyles,
     settings,
   } = props;
-  const dispatch = useDispatch();
   const { getCommonPagePath } = useRoutesContext();
   const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
   const { width: windowWidth } = useWindowSize();
@@ -177,7 +175,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   const queryParams = useQueryParams();
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
-  const recentStreamId = useSelector(selectRecentStreamId);
   const userId = user?.uid;
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
@@ -270,19 +267,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     ) {
       return;
     }
-    if (recentStreamId) {
-      const foundItem = allFeedItems.find(
-        (item) =>
-          checkIsFeedItemFollowLayoutItem(item) &&
-          item.feedItem.data.id === recentStreamId,
-      );
-      return foundItem?.itemId;
-    }
-
     if (sharedFeedItemId) {
       return sharedFeedItemId;
     }
-
     if (chatItem?.feedItemId) {
       return;
     }
@@ -300,7 +287,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     chatChannelItemForProfile?.itemId,
     allFeedItems,
     chatItem?.feedItemId,
-    recentStreamId,
     sharedFeedItemId,
     userForProfile.userForProfileData,
     shouldAllowChatAutoOpen,
@@ -506,10 +492,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
-    setActiveChatItem({
-      feedItemId,
-      circleVisibility: [],
-    });
+    setActiveChatItem({ feedItemId });
 
     const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
 
@@ -632,18 +615,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId(activeFeedItemId);
     }
   }, [isTabletView, shouldAutoExpandItem, activeFeedItemId]);
-
-  useEffect(() => {
-    if (!recentStreamId || !selectedFeedItem) {
-      return;
-    }
-    if (
-      !checkIsFeedItemFollowLayoutItem(selectedFeedItem) ||
-      recentStreamId === selectedFeedItem?.feedItem.data.id
-    ) {
-      dispatch(commonActions.setRecentStreamId(""));
-    }
-  }, [recentStreamId, selectedFeedItem]);
 
   useImperativeHandle(
     ref,
