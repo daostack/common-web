@@ -34,7 +34,7 @@ export interface Discussion extends BaseEntity, SoftDeleteEntity {
    * If array is empty, everyone in common can view.
    * If discussion is attached to a proposal, this field will be not exist.
    */
-  circleVisibilityByCommon?: Record<string, string[]>;
+  circleVisibility?: string[];
 }
 
 export interface DiscussionWithOwnerInfo extends Discussion {
