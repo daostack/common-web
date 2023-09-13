@@ -3,7 +3,7 @@ import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import { getAllNestedItems } from "../projects/utils";
 import * as actions from "./actions";
-import { CommonLayoutState } from "./types";
+import { CommonLayoutState, ProjectsStateItem } from "./types";
 
 type Action = ActionType<typeof actions>;
 
@@ -24,6 +24,37 @@ const clearData = (state: WritableDraft<CommonLayoutState>): void => {
   state.projects = [];
   state.areProjectsLoading = false;
   state.areProjectsFetched = false;
+};
+
+const updateCommonOrProject = (
+  state: WritableDraft<CommonLayoutState>,
+  payload: { commonId: string } & Partial<Omit<ProjectsStateItem, "commonId">>,
+): boolean => {
+  const commonItemIndex = state.commons.findIndex(
+    (item) => item.commonId === payload.commonId,
+  );
+
+  if (commonItemIndex > -1) {
+    state.commons[commonItemIndex] = {
+      ...state.commons[commonItemIndex],
+      ...payload,
+    };
+    return true;
+  }
+
+  const projectItemIndex = state.projects.findIndex(
+    (item) => item.commonId === payload.commonId,
+  );
+
+  if (projectItemIndex > -1) {
+    state.projects[projectItemIndex] = {
+      ...state.projects[projectItemIndex],
+      ...payload,
+    };
+    return true;
+  }
+
+  return false;
 };
 
 export const reducer = createReducer<CommonLayoutState, Action>(initialState)
@@ -67,8 +98,14 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
       nextState.areProjectsFetched = true;
     }),
   )
-  .handleAction(actions.addProject, (state, { payload }) =>
+  .handleAction(actions.addOrUpdateProject, (state, { payload }) =>
     produce(state, (nextState) => {
+      const isUpdated = updateCommonOrProject(nextState, payload);
+
+      if (isUpdated) {
+        return;
+      }
+
       if (!payload.directParent) {
         nextState.commons.push(payload);
       } else {
@@ -78,28 +115,7 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
   )
   .handleAction(actions.updateCommonOrProject, (state, { payload }) =>
     produce(state, (nextState) => {
-      const commonItemIndex = nextState.commons.findIndex(
-        (item) => item.commonId === payload.commonId,
-      );
-
-      if (commonItemIndex > -1) {
-        nextState.commons[commonItemIndex] = {
-          ...nextState.commons[commonItemIndex],
-          ...payload,
-        };
-        return;
-      }
-
-      const projectItemIndex = nextState.projects.findIndex(
-        (item) => item.commonId === payload.commonId,
-      );
-
-      if (projectItemIndex > -1) {
-        nextState.projects[projectItemIndex] = {
-          ...nextState.projects[projectItemIndex],
-          ...payload,
-        };
-      }
+      updateCommonOrProject(nextState, payload);
     }),
   )
   .handleAction(actions.setCurrentCommonId, (state, { payload }) =>

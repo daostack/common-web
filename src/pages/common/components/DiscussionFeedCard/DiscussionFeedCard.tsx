@@ -135,6 +135,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         commonMember,
         feedItemFollow,
         getNonAllowedItems,
+        feedItemUserMetadata,
       },
       {
         report: onReportModalOpen,
@@ -246,7 +247,10 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       }
 
       const circleVisibility = governanceCircles
-        ? getVisibilityString(governanceCircles, discussion?.circleVisibility)
+        ? getVisibilityString(
+            governanceCircles,
+            discussion?.circleVisibilityByCommon?.[commonId],
+          )
         : undefined;
 
       return (
@@ -324,6 +328,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           isLoading={isLoading}
           menuItems={menuItems}
           seenOnce={feedItemUserMetadata?.seenOnce}
+          seen={feedItemUserMetadata?.seen}
           ownerId={item.userId}
           discussionPredefinedType={discussion?.predefinedType}
         >

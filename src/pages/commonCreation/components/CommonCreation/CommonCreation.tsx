@@ -24,7 +24,7 @@ const CommonCreation: FC = () => {
       (circle) => circle.allowedActions[GovernanceActions.CREATE_PROJECT],
     );
 
-    CommonEventEmitter.emit(CommonEvent.ProjectCreated, {
+    CommonEventEmitter.emit(CommonEvent.ProjectCreatedOrUpdated, {
       commonId: common.id,
       image: common.image,
       name: common.name,

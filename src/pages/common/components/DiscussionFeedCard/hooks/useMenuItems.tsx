@@ -12,6 +12,7 @@ import {
   Trash2Icon,
   UnfollowIcon,
   UnpinIcon,
+  Message3Icon,
 } from "@/shared/icons";
 import { ContextMenuItem as Item, UploadFile } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
@@ -31,7 +32,13 @@ export const useMenuItems = (
   actions: Actions,
 ): Item[] => {
   const dispatch = useDispatch();
-  const { discussion, commonId, feedItem, feedItemFollow } = options;
+  const {
+    discussion,
+    commonId,
+    feedItem,
+    feedItemFollow,
+    feedItemUserMetadata,
+  } = options;
   const { report, share, remove } = actions;
   const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
   const items: Item[] = [
@@ -58,6 +65,38 @@ export const useMenuItems = (
       text: "Share",
       onClick: share,
       icon: <Share3Icon />,
+    },
+    {
+      id: FeedItemMenuItem.MarkUnread,
+      text: "Mark as unread",
+      onClick: async () => {
+        if (!commonId || !feedItem) {
+          return;
+        }
+
+        await CommonFeedService.markCommonFeedItemAsUnseen(
+          commonId,
+          feedItem.id,
+        );
+      },
+      icon: <Message3Icon />,
+    },
+    {
+      id: FeedItemMenuItem.MarkRead,
+      text: "Mark as read",
+      onClick: async () => {
+        if (!commonId || !feedItem) {
+          return;
+        }
+
+        await CommonFeedService.markCommonFeedItemAsSeen({
+          commonId,
+          feedObjectId: feedItem.id,
+          lastSeenId: feedItemUserMetadata?.lastSeen?.id,
+          type: feedItemUserMetadata?.lastSeen?.type,
+        });
+      },
+      icon: <Message3Icon />,
     },
     {
       id: FeedItemMenuItem.Report,

@@ -52,14 +52,14 @@ export default function DiscussionItemComponent({
   const date = new Date();
 
   useEffect(() => {
-    if (discussion.circleVisibility) {
+    if (discussion.circleVisibilityByCommon) {
       (async () => {
         const governanceCircles = await getCommonGovernanceCircles(
           governance.id,
         );
         const filteredByIdCircles = getFilteredByIdCircles(
           governanceCircles ? Object.values(governanceCircles) : null,
-          discussion.circleVisibility,
+          discussion.circleVisibilityByCommon?.[governance.commonId],
         );
         const names = getCirclesWithLowestTier(filteredByIdCircles)
           .map(({ name }) => name)
@@ -67,7 +67,7 @@ export default function DiscussionItemComponent({
         setCircleNames(names);
       })();
     }
-  }, [governance.id, discussion.circleVisibility]);
+  }, [governance.id, governance.commonId, discussion.circleVisibilityByCommon]);
 
   return (
     <div className="discussion-item-wrapper">

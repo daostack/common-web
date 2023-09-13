@@ -47,7 +47,6 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       feedItemId: chatChannel.id,
       discussion: ChatChannelToDiscussionConverter.toTargetEntity(chatChannel),
       chatChannel,
-      circleVisibility: [],
       lastSeenItem: chatChannelUserStatus?.lastSeenChatMessageId
         ? {
             type: LastSeenEntity.DiscussionMessage,

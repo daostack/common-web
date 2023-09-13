@@ -19,6 +19,7 @@ import {
   getParentItemIds,
   Item,
 } from "../../../../SidenavLayout/components/SidenavContent/components";
+import { useProjectsSubscription } from "./useProjectsSubscription";
 
 interface Return {
   currentCommonId: string | null;
@@ -83,6 +84,12 @@ export const useProjectsData = (): Return => {
   const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
     location.pathname,
   );
+  useProjectsSubscription({
+    activeItemId,
+    areProjectsFetched,
+    commons,
+    projects,
+  });
 
   useEffect(() => {
     if (isAuthenticated) {

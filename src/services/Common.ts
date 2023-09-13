@@ -17,6 +17,7 @@ import {
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
+  emptyFunction,
   firestoreDataConverter,
   transformFirebaseDataList,
 } from "@/shared/utils";
@@ -296,6 +297,10 @@ class CommonService {
     parentCommonId: string,
     callback: (data: { common: Common; isRemoved: boolean }[]) => void,
   ): UnsubscribeFunction => {
+    if (!parentCommonId) {
+      return emptyFunction;
+    }
+
     const query = firebase
       .firestore()
       .collection(Collection.Daos)

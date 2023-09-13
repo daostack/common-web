@@ -46,7 +46,6 @@ const DesktopProfile: FC<DesktopProfileProps> = (props) => {
           chatChannel: chatChannel,
           discussion:
             ChatChannelToDiscussionConverter.toTargetEntity(chatChannel),
-          circleVisibility: [],
         }}
         governanceCircles={governanceCircles}
         commonId={""}

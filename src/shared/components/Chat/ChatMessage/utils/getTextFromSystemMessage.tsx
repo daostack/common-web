@@ -19,7 +19,7 @@ import {
 } from "@/shared/utils";
 import { UserMention } from "../components";
 import { Text, TextData } from "../types";
-import { getFeedItemTitleByDataIdAndType } from "./getFeedItemTitleByDataIdAndType";
+import { getFeedItemDisplayingData } from "./getFeedItemDisplayingData";
 import styles from "../ChatMessage.module.scss";
 
 const getUser = async (userId: string, users: User[]): Promise<User | null> =>
@@ -130,20 +130,27 @@ const getFeedItemCreatedSystemMessageText = async (
   systemMessageData: CommonFeedItemCreatedSystemMessage["systemMessageData"],
   data: TextData,
 ): Promise<Text[]> => {
-  const [user, title] = await Promise.all([
+  const [user, feedItemDisplayingData] = await Promise.all([
     getUser(systemMessageData.userId, data.users),
-    getFeedItemTitleByDataIdAndType(
+    getFeedItemDisplayingData(
       systemMessageData.feedItemDataId,
       systemMessageData.feedItemType,
     ),
   ]);
   const userEl = renderUserMention(user, data);
+  const title =
+    feedItemDisplayingData.title &&
+    `${feedItemDisplayingData.title}${
+      feedItemDisplayingData.isDeleted ? " (deleted)" : ""
+    }`;
   const titleEl = title ? (
     <>
       {" "}
-      {renderClickableText(title, () =>
-        data.onFeedItemClick?.(systemMessageData.feedItemId),
-      )}
+      {feedItemDisplayingData.isDeleted
+        ? title
+        : renderClickableText(title, () =>
+            data.onFeedItemClick?.(systemMessageData.feedItemId),
+          )}
     </>
   ) : (
     ""

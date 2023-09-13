@@ -4,7 +4,7 @@ import { Timestamp } from "./Timestamp";
 
 export interface CommonFeedObjectUserUnique extends BaseEntity {
   userId: string;
-  lastSeen: {
+  lastSeen?: {
     type: LastSeenEntity;
     id: string;
   };
@@ -13,4 +13,5 @@ export interface CommonFeedObjectUserUnique extends BaseEntity {
   feedObjectId: string;
   commonId: string;
   seenOnce?: boolean;
+  seen?: boolean;
 }

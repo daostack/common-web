@@ -6,7 +6,7 @@ export enum CommonEvent {
   CommonCreated = "common-created",
   CommonUpdated = "common-updated",
   CommonDeleted = "common-deleted",
-  ProjectCreated = "project-created",
+  ProjectCreatedOrUpdated = "project-created-or-updated",
   ProjectUpdated = "project-updated",
 }
 
@@ -14,7 +14,9 @@ export interface CommonEventToListener {
   [CommonEvent.CommonCreated]: (common: Common) => void;
   [CommonEvent.CommonUpdated]: (common: Common) => void;
   [CommonEvent.CommonDeleted]: (deletedCommonId: string) => void;
-  [CommonEvent.ProjectCreated]: (projectsStateItem: ProjectsStateItem) => void;
+  [CommonEvent.ProjectCreatedOrUpdated]: (
+    projectsStateItem: ProjectsStateItem,
+  ) => void;
   [CommonEvent.ProjectUpdated]: (
     projectsStateItem: { commonId: string } & Partial<
       Omit<ProjectsStateItem, "commonId">

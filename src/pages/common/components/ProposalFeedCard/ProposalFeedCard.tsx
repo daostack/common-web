@@ -176,6 +176,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         commonMember,
         feedItemFollow,
         getNonAllowedItems,
+        feedItemUserMetadata,
       },
       {
         report: () => {},
@@ -426,6 +427,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           isLoading={isLoading}
           type={item.data.type}
           seenOnce={feedItemUserMetadata?.seenOnce}
+          seen={feedItemUserMetadata?.seen}
           menuItems={menuItems}
           ownerId={item.userId}
         >

@@ -40,6 +40,7 @@ type FeedCardProps = PropsWithChildren<{
   type?: CommonFeedType;
   menuItems?: ContextMenuItem[];
   seenOnce?: boolean;
+  seen?: boolean;
   ownerId?: string;
   discussionPredefinedType?: PredefinedTypes;
   hasFiles?: boolean;
@@ -77,6 +78,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     type,
     menuItems,
     seenOnce,
+    seen,
     ownerId,
     discussionPredefinedType,
     hasImages,
@@ -197,6 +199,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
             isFollowing,
             type,
             seenOnce,
+            seen,
             ownerId,
             discussionPredefinedType,
             hasFiles,
