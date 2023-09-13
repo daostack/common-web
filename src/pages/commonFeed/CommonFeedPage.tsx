@@ -28,7 +28,6 @@ export const FEED_LAYOUT_OUTER_STYLES: FeedLayoutOuterStyles = {
 
 export const BASE_FEED_LAYOUT_SETTINGS: FeedLayoutSettings = {
   withDesktopChatTitle: false,
-  sidenavWidth: 0,
 };
 
 const renderContentWrapper: RenderCommonFeedContentWrapper = ({
