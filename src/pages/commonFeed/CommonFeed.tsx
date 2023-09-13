@@ -98,6 +98,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetchCommonData,
   } = useCommonData(userId);
   const parentCommonId = commonData?.common.directParent?.commonId;
+  const parentCommonMember = commonData?.parentCommonMember;
   const isRootCommon = !parentCommonId;
   const isRootCommonMember = Boolean(commonData?.rootCommonMember);
   const anotherCommonId =
@@ -192,6 +193,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     },
     [dispatch],
   );
+
+  useEffect(() => {
+    if (isCommonDataFetched && parentCommonId && !parentCommonMember) {
+      history.replace(getCommonPageAboutTabPath(commonId));
+    }
+  }, [isCommonDataFetched, parentCommonMember?.id, commonId]);
 
   useEffect(() => {
     if (!isCommonDataFetched || !isGlobalDataFetched || commonMember) {
