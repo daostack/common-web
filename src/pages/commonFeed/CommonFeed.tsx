@@ -38,7 +38,6 @@ import {
   selectRecentStreamId,
   selectSharedFeedItem,
 } from "@/store/states";
-import { useCommonMember } from "../OldCommon/hooks";
 import {
   NewDiscussionCreation,
   NewProposalCreation,
@@ -99,6 +98,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetchCommonData,
   } = useCommonData(userId);
   const parentCommonId = commonData?.common.directParent?.commonId;
+  const parentCommonMember = commonData?.parentCommonMember;
   const isRootCommon = !parentCommonId;
   const isRootCommonMember = Boolean(commonData?.rootCommonMember);
   const anotherCommonId =
@@ -121,11 +121,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     loading: areCommonPinnedFeedItemsLoading,
     fetch: fetchCommonPinnedFeedItems,
   } = useCommonPinnedFeedItems(commonId, pinnedItemIds);
-  const {
-    data: parentCommonMember,
-    fetched: isParentCommonMemberFetched,
-    fetchCommonMember: fetchParentCommonMember,
-  } = useCommonMember();
 
   const commonFeedItemIdsForNotListening = useMemo(() => {
     const items: string[] = [];
@@ -165,9 +160,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     return items;
   }, [sharedFeedItem, sharedFeedItemId, commonPinnedFeedItems]);
   const firstItem = commonFeedItems?.[0];
-  const isDataFetched =
-    isCommonDataFetched &&
-    (parentCommonId ? isParentCommonMemberFetched : true);
+  const isDataFetched = isCommonDataFetched;
   const hasPublicItem = true;
 
   const fetchData = () => {
@@ -202,16 +195,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   );
 
   useEffect(() => {
-    if (parentCommonId) {
-      fetchParentCommonMember(parentCommonId, {}, true);
-    }
-  }, [parentCommonId]);
-
-  useEffect(() => {
-    if (isParentCommonMemberFetched && !parentCommonMember) {
+    if (isCommonDataFetched && parentCommonId && !parentCommonMember) {
       history.replace(getCommonPageAboutTabPath(commonId));
     }
-  }, [parentCommonMember?.id, isParentCommonMemberFetched, commonId]);
+  }, [isCommonDataFetched, parentCommonMember?.id, commonId]);
 
   useEffect(() => {
     if (!isCommonDataFetched || !isGlobalDataFetched || commonMember) {
