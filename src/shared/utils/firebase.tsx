@@ -11,12 +11,6 @@ interface FirebaseError extends Error {
 }
 
 firebase.initializeApp(config.firebase);
-firebase
-  .firestore()
-  .enablePersistence()
-  .catch((error) => {
-    console.error("Error enabling persistence", error);
-  });
 
 if (REACT_APP_ENV === Environment.Local) {
   firebase.auth().useEmulator(local.firebase.authDomain);
@@ -26,6 +20,13 @@ if (REACT_APP_ENV === Environment.Local) {
       "localhost",
       Number(local.firebase.databaseURL.split(/:/g)[2]),
     );
+} else {
+  firebase
+    .firestore()
+    .enablePersistence()
+    .catch((error) => {
+      console.error("Error enabling persistence", error);
+    });
 }
 
 export const isFirebaseError = (error: any): error is FirebaseError => {

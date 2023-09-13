@@ -209,9 +209,12 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (commonId && !isChatChannel) {
-      fetchDiscussionUsers(commonId, discussion?.circleVisibility);
+      fetchDiscussionUsers(
+        commonId,
+        discussion?.circleVisibilityByCommon?.[commonId],
+      );
     }
-  }, [commonId, discussion?.circleVisibility]);
+  }, [commonId, discussion?.circleVisibilityByCommon]);
 
   useEffect(() => {
     if (chatChannel?.id) {

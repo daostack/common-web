@@ -83,14 +83,14 @@ export default function DiscussionDetailModal({
   );
 
   useEffect(() => {
-    if (discussion?.circleVisibility) {
+    if (discussion?.circleVisibilityByCommon?.[governance.commonId]) {
       (async () => {
         const governanceCircles = await getCommonGovernanceCircles(
           governance.id,
         );
         const filteredByIdCircles = getFilteredByIdCircles(
           governanceCircles ? Object.values(governanceCircles) : null,
-          discussion?.circleVisibility,
+          discussion?.circleVisibilityByCommon?.[governance.commonId],
         );
         const names = getCirclesWithLowestTier(filteredByIdCircles)
           .map(({ name }) => name)
@@ -102,7 +102,7 @@ export default function DiscussionDetailModal({
     return () => {
       dispatch(chatActions.clearCurrentDiscussionMessageReply());
     };
-  }, [governance.id, discussion]);
+  }, [governance.id, governance.commonId, discussion]);
 
   const sendMessage = useCallback(
     (message: string) => {
