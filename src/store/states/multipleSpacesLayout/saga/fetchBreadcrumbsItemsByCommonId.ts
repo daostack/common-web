@@ -21,7 +21,9 @@ const fetchProjectsInfoByActiveCommonId = async (
 
   const finalCommons: Common[] = [];
   let commonForSiblings: Common | null = activeCommon;
-  let lastParentCommon: Common | null = null;
+  let lastParentCommon: Common | null = !commonForSiblings.directParent
+    ? commonForSiblings
+    : null;
 
   while (commonForSiblings?.directParent?.commonId) {
     const commonIdForProjects = commonForSiblings.directParent.commonId;
