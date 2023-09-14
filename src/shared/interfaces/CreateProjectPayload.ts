@@ -23,5 +23,6 @@ export interface IntermediateCreateProjectPayload {
   videoUrl: string;
   gallery: UploadFile[];
   links?: CommonLink[];
+  roles?: string[];
   highestCircleId: string;
 }

@@ -9,11 +9,12 @@ import styles from "./ProjectCreationForm.module.scss";
 
 export const getConfiguration = (
   isProject = true,
+  roles?: string[],
   shouldBeUnique?: { existingNames: string[] },
 ): CreationFormItem[] => {
   const type = isProject ? "Space" : "Common";
 
-  return [
+  const items: CreationFormItem[] = [
     {
       type: CreationFormItemType.UploadFiles,
       className: styles.projectImages,
@@ -105,4 +106,18 @@ export const getConfiguration = (
       },
     },
   ];
+
+  if (roles) {
+    items.push({
+      type: CreationFormItemType.TextFieldArray,
+      props: {
+        id: "roles",
+        name: "roles",
+        label: "Roles",
+      },
+      values: roles,
+    });
+  }
+
+  return items;
 };

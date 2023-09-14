@@ -167,7 +167,9 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         ref={formRef}
         initialValues={initialValues}
         onSubmit={isEditing ? handleProjectUpdate : handleProjectCreate}
-        items={getConfiguration(true, { existingNames: existingProjectsNames })}
+        items={getConfiguration(true, [], {
+          existingNames: existingProjectsNames,
+        })}
         submitButtonText={isEditing ? "Save changes" : "Create Space"}
         disabled={isLoading}
         error={error}

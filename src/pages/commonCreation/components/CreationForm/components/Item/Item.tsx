@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { FieldArray } from "formik";
 import {
   LinksArrayWrapper,
   TextEditor,
@@ -65,6 +66,27 @@ const Item: FC<ItemProps> = (props) => {
           hint={item.props.hint ?? ""}
           disabled={disabled ?? item.props.disabled}
         />
+      );
+    case CreationFormItemType.TextFieldArray:
+      console.log(item);
+
+      return (
+        <>
+          <FieldArray
+            name="roles"
+            render={() =>
+              item.values.map((role, index) => (
+                <TextField
+                  key={`${role}_${index}`}
+                  id={`${role}_${index}`}
+                  name={`${role}_${index}`}
+                  value={role}
+                  className={classNames(styles.textField, className)}
+                />
+              ))
+            }
+          />
+        </>
       );
     default:
       return null;

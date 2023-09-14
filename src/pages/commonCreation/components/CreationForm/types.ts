@@ -55,8 +55,14 @@ export interface LinksFormItem extends BaseFormItem<LinksArrayWrapperProps> {
   validation?: Pick<ItemValidation, "links">;
 }
 
+export interface TextFieldFormItems extends BaseFormItem<TextFieldProps> {
+  type: CreationFormItemType.TextFieldArray;
+  values: string[];
+}
+
 export type CreationFormItem =
   | TextFieldFormItem
   | TextEditorFormItem
   | UploadFilesFormItem
-  | LinksFormItem;
+  | LinksFormItem
+  | TextFieldFormItems;

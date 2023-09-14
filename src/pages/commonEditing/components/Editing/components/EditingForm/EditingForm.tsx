@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { useCommonUpdate } from "@/pages/OldCommon/components/CommonListContainer/EditCommonModal/useCases";
 import {
   generateCreationForm,
@@ -9,8 +9,10 @@ import { CommonFormValues } from "@/pages/commonCreation/components/CommonCreati
 import { styles } from "@/pages/commonCreation/components/ProjectCreation/components/ProjectCreationForm";
 import { useCommonForm } from "@/pages/commonCreation/hooks";
 import { usePreventReload } from "@/shared/hooks";
+import { useGovernance } from "@/shared/hooks/useCases";
 import { Common } from "@/shared/models";
 import { Loader, LoaderVariant } from "@/shared/ui-kit";
+import { removeProjectCircles } from "@/shared/utils";
 
 const CreationForm = generateCreationForm<CommonFormValues>();
 
@@ -24,6 +26,15 @@ const EditingForm: FC<EditingFormProps> = (props) => {
   const { common, onFinish, onCancel } = props;
   const formRef = useRef<CreationFormRef>(null);
   const {
+    data: governance,
+    fetched: isGovernanceFetched,
+    fetchGovernance,
+  } = useGovernance();
+  const governanceCircles = useMemo(
+    () => removeProjectCircles(Object.values(governance?.circles || {})),
+    [governance?.circles],
+  );
+  const {
     isCommonUpdateLoading: isLoading,
     common: updatedCommon,
     error,
@@ -32,7 +43,14 @@ const EditingForm: FC<EditingFormProps> = (props) => {
   const { initialValues, formItems, onSubmit } = useCommonForm(
     updateCommon,
     common,
+    governanceCircles.map((circle) => circle.name),
   );
+
+  useEffect(() => {
+    if (common.governanceId) {
+      fetchGovernance(common.governanceId);
+    }
+  }, [common.governanceId]);
 
   const shouldPreventReload = useCallback(
     () => (!updatedCommon && formRef.current?.isDirty()) ?? true,
