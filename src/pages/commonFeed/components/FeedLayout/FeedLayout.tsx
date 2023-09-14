@@ -481,6 +481,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   ) => {
     const { commonId, messageId } = options;
 
+    if (chatItem?.feedItemId === feedItemId && !messageId) {
+      return;
+    }
+
     if (commonId && commonId !== outerCommon?.id) {
       history.push(
         getCommonPagePath(commonId, {
