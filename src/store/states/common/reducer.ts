@@ -418,6 +418,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       nextState.feedItems = {
         ...nextState.feedItems,
+        data: nextState.feedItems.data || [],
         loading: false,
         hasMore: false,
         lastDocTimestamp: null,
@@ -444,6 +445,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       nextState.pinnedFeedItems = {
         ...nextState.pinnedFeedItems,
+        data: nextState.pinnedFeedItems.data || [],
         loading: false,
       };
     }),
