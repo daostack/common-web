@@ -107,15 +107,16 @@ export const getConfiguration = (
     },
   ];
 
+  console.log(roles);
+
   if (roles) {
     items.push({
-      type: CreationFormItemType.TextFieldArray,
+      type: CreationFormItemType.Roles,
       props: {
-        id: "roles",
         name: "roles",
-        label: "Roles",
+        title: "Roles",
+        maxTitleLength: MAX_LINK_TITLE_LENGTH,
       },
-      values: roles,
     });
   }
 

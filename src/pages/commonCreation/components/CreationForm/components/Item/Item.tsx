@@ -1,11 +1,11 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { FieldArray } from "formik";
 import {
   LinksArrayWrapper,
   TextEditor,
   TextField,
   UploadFiles,
+  RolesArrayWrapper,
 } from "@/shared/components/Form/Formik";
 import { CreationFormItemType } from "../../constants";
 import { CreationFormItem } from "../../types";
@@ -67,26 +67,16 @@ const Item: FC<ItemProps> = (props) => {
           disabled={disabled ?? item.props.disabled}
         />
       );
-    case CreationFormItemType.TextFieldArray:
-      console.log(item);
-
+    case CreationFormItemType.Roles:
       return (
-        <>
-          <FieldArray
-            name="roles"
-            render={() =>
-              item.values.map((role, index) => (
-                <TextField
-                  key={`${role}_${index}`}
-                  id={`${role}_${index}`}
-                  name={`${role}_${index}`}
-                  value={role}
-                  className={classNames(styles.textField, className)}
-                />
-              ))
-            }
-          />
-        </>
+        <RolesArrayWrapper
+          {...item.props}
+          className={className}
+          labelClassName={classNames(
+            styles.linksArrayWrapperLabel,
+            item.props.labelClassName,
+          )}
+        />
       );
     default:
       return null;

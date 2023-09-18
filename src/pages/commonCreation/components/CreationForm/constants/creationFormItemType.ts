@@ -3,5 +3,5 @@ export enum CreationFormItemType {
   TextEditor = "TextEditor",
   UploadFiles = "UploadFiles",
   Links = "Links",
-  TextFieldArray = "TextFieldArray",
+  Roles = "Roles",
 }

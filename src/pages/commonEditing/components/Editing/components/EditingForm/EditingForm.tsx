@@ -46,6 +46,8 @@ const EditingForm: FC<EditingFormProps> = (props) => {
     governanceCircles.map((circle) => circle.name),
   );
 
+  console.log(initialValues);
+
   useEffect(() => {
     if (common.governanceId) {
       fetchGovernance(common.governanceId);
