@@ -31,7 +31,10 @@ import {
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
-import { getCommonPageAboutTabPath } from "@/shared/utils";
+import {
+  checkIsAutomaticJoin,
+  getCommonPageAboutTabPath,
+} from "@/shared/utils";
 import {
   commonActions,
   selectCommonAction,
@@ -98,9 +101,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetchCommonData,
   } = useCommonData(userId);
   const parentCommonId = commonData?.common.directParent?.commonId;
-  const parentCommonMember = commonData?.parentCommonMember;
   const isRootCommon = !parentCommonId;
   const isRootCommonMember = Boolean(commonData?.rootCommonMember);
+  const isAutomaticAcceptance = checkIsAutomaticJoin(commonData?.governance);
+  const isRootCommonAutomaticAcceptance = checkIsAutomaticJoin(
+    commonData?.rootCommonGovernance,
+  );
   const anotherCommonId =
     userCommonIds[0] === commonId ? userCommonIds[1] : userCommonIds[0];
   const pinnedItemIds = useMemo(
@@ -195,26 +201,32 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   );
 
   useEffect(() => {
-    if (isCommonDataFetched && parentCommonId && !parentCommonMember) {
-      history.replace(getCommonPageAboutTabPath(commonId));
-    }
-  }, [isCommonDataFetched, parentCommonMember?.id, commonId]);
-
-  useEffect(() => {
-    if (!isCommonDataFetched || !isGlobalDataFetched || commonMember) {
+    if (
+      !isCommonDataFetched ||
+      !isGlobalDataFetched ||
+      commonMember ||
+      isRootCommon ||
+      isRootCommonMember
+    ) {
       return;
     }
-    if (!hasPublicItem && !isRootCommon && !isRootCommonMember) {
+    if (
+      !isAutomaticAcceptance ||
+      !isRootCommonAutomaticAcceptance ||
+      !hasPublicItem
+    ) {
       history.replace(getCommonPageAboutTabPath(commonId));
     }
   }, [
     isCommonDataFetched,
     isGlobalDataFetched,
     commonMember,
-    hasPublicItem,
     isRootCommon,
     isRootCommonMember,
     commonId,
+    isAutomaticAcceptance,
+    isRootCommonAutomaticAcceptance,
+    hasPublicItem,
   ]);
 
   useEffect(() => {

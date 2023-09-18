@@ -9,7 +9,7 @@ export interface Data {
   commonMembersAmount: number;
   sharedFeedItem: CommonFeed | null;
   rootCommonMember: CommonMember | null;
-  parentCommonMember: CommonMember | null;
+  rootCommonGovernance: Governance | null;
   parentCommon?: Common;
 }
 
