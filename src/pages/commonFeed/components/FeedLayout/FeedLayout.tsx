@@ -273,13 +273,20 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
-    const foundItem = allFeedItems?.find(
-      (item) =>
-        !checkIsFeedItemFollowLayoutItem(item) ||
-        [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
+    const foundItem = allFeedItems?.find((item) => {
+      if (!checkIsFeedItemFollowLayoutItem(item)) {
+        return true;
+      }
+      if (
+        ![CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
           item.feedItem.data.type,
-        ),
-    );
+        )
+      ) {
+        return false;
+      }
+
+      return Boolean(userId) || item.feedItem.circleVisibility.length === 0;
+    });
 
     return foundItem?.itemId;
   }, [
@@ -289,6 +296,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     sharedFeedItemId,
     userForProfile.userForProfileData,
     shouldAllowChatAutoOpen,
+    userId,
   ]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
