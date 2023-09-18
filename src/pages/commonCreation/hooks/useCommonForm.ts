@@ -51,10 +51,8 @@ export const useCommonForm = (
   const dispatch = useDispatch();
   const initialValues: CommonFormValues = useMemo(
     () => getInitialValues(common, roles),
-    [],
+    [common, roles],
   );
-
-  console.log(initialValues);
 
   useEffect(() => {
     dispatch(projectsActions.setIsCommonCreationDisabled(true));

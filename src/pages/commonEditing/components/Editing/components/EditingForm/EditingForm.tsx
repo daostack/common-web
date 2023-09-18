@@ -46,8 +46,6 @@ const EditingForm: FC<EditingFormProps> = (props) => {
     governanceCircles.map((circle) => circle.name),
   );
 
-  console.log(initialValues);
-
   useEffect(() => {
     if (common.governanceId) {
       fetchGovernance(common.governanceId);
@@ -78,7 +76,7 @@ const EditingForm: FC<EditingFormProps> = (props) => {
 
   return (
     <>
-      {isLoading && (
+      {(isLoading || !isGovernanceFetched) && (
         <Loader
           overlayClassName={styles.globalLoader}
           variant={LoaderVariant.Global}

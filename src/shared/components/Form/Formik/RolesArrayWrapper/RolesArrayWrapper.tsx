@@ -12,10 +12,14 @@ const RolesArrayWrapper: FC<RolesArrayWrapperProps> = (props) => {
   const [{ value }, { error }] = useField<string[]>(props.name);
   const formik = useFormikContext();
 
-  console.log(props);
-  console.log(value);
-
-  return <RolesArray {...props} values={value} errors={error} />;
+  return (
+    <RolesArray
+      {...props}
+      values={value}
+      errors={error}
+      touched={formik.touched[props.name] as FormikTouched<string>[]}
+    />
+  );
 };
 
 export default RolesArrayWrapper;

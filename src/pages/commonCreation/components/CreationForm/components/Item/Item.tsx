@@ -76,6 +76,7 @@ const Item: FC<ItemProps> = (props) => {
             styles.linksArrayWrapperLabel,
             item.props.labelClassName,
           )}
+          disabled={disabled ?? item.props.disabled}
         />
       );
     default:

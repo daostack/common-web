@@ -4,6 +4,7 @@ import {
   MAX_LINK_TITLE_LENGTH,
   MAX_PROJECT_NAME_LENGTH,
   MAX_PROJECT_TAGLINE_LENGTH,
+  MAX_ROLE_TITLE_LENGTH,
 } from "../../constants";
 import styles from "./ProjectCreationForm.module.scss";
 
@@ -107,15 +108,23 @@ export const getConfiguration = (
     },
   ];
 
-  console.log(roles);
-
   if (roles) {
     items.push({
       type: CreationFormItemType.Roles,
       props: {
         name: "roles",
         title: "Roles",
-        maxTitleLength: MAX_LINK_TITLE_LENGTH,
+        maxTitleLength: MAX_ROLE_TITLE_LENGTH,
+      },
+      validation: {
+        required: {
+          value: true,
+          message: "Role title required",
+        },
+        max: {
+          value: MAX_ROLE_TITLE_LENGTH,
+          message: "Role title is too long",
+        },
       },
     });
   }

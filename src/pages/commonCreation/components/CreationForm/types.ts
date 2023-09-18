@@ -56,8 +56,9 @@ export interface LinksFormItem extends BaseFormItem<LinksArrayWrapperProps> {
   validation?: Pick<ItemValidation, "links">;
 }
 
-export interface RolesFormItems extends BaseFormItem<RolesArrayWrapperProps> {
+export interface RolesFormItem extends BaseFormItem<RolesArrayWrapperProps> {
   type: CreationFormItemType.Roles;
+  validation?: Pick<ItemValidation, "required" | "max">;
 }
 
 export type CreationFormItem =
@@ -65,4 +66,4 @@ export type CreationFormItem =
   | TextEditorFormItem
   | UploadFilesFormItem
   | LinksFormItem
-  | RolesFormItems;
+  | RolesFormItem;
