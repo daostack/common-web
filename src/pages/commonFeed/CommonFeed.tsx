@@ -167,7 +167,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [sharedFeedItem, sharedFeedItemId, commonPinnedFeedItems]);
   const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
-  const hasPublicItem = true;
+  const hasPublicItems = commonData?.common.hasPublicItems ?? false;
 
   const fetchData = () => {
     fetchCommonData({
@@ -213,7 +213,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     if (
       !isAutomaticAcceptance ||
       !isRootCommonAutomaticAcceptance ||
-      !hasPublicItem
+      !hasPublicItems
     ) {
       history.replace(getCommonPageAboutTabPath(commonId));
     }
@@ -226,7 +226,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     commonId,
     isAutomaticAcceptance,
     isRootCommonAutomaticAcceptance,
-    hasPublicItem,
+    hasPublicItems,
   ]);
 
   useEffect(() => {
