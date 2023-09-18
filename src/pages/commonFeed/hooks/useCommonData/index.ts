@@ -64,7 +64,7 @@ export const useCommonData = (userId?: string): Return => {
             );
           }
 
-          const rootCommonId = common.directParent?.commonId;
+          const { rootCommonId } = common;
           const [
             parentCommons,
             subCommons,
