@@ -1,6 +1,8 @@
 import React, { FC } from "react";
+import { NavLink } from "react-router-dom";
 import { useJoinProjectAutomatically } from "@/pages/common/hooks";
 import { useCommonDataContext } from "@/pages/common/providers";
+import { useRoutesContext } from "@/shared/contexts";
 import { Common } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./CommonEntranceJoin.module.scss";
@@ -15,6 +17,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const { withJoinRequest = false, common, isProject } = props;
   const { parentCommon, commonMember, isJoinAllowed, onJoinCommon } =
     useCommonDataContext();
+  const { getCommonPagePath } = useRoutesContext();
   const {
     canJoinProjectAutomatically,
     isJoinPending,
@@ -28,8 +31,12 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
       {isProject && parentCommon?.name && (
         <p className={styles.joinHint}>
           <strong>{common.name}</strong> is a space in the{" "}
-          <strong>{parentCommon.name}</strong> common. Only common members can
-          join the space.
+          <strong>
+            <NavLink to={getCommonPagePath(parentCommon.id)}>
+              {parentCommon.name}
+            </NavLink>
+          </strong>{" "}
+          common. Only common members can join the space.
         </p>
       )}
       {withJoinRequest && (isJoinAllowed || isJoinPending) && (
