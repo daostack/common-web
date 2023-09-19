@@ -580,6 +580,9 @@ export default function ChatComponent({
         return chatInputEl;
       }
     }
+    if (!isAuthorized) {
+      return null;
+    }
 
     return (
       <>
@@ -667,19 +670,17 @@ export default function ChatComponent({
           onInternalLinkClick={onInternalLinkClick}
         />
       </div>
-      {isAuthorized && (
-        <div className={styles.bottomChatContainer}>
-          <MessageReply users={users} />
-          <ChatFilePreview />
-          <div
-            className={classNames(styles.chatInputWrapper, {
-              [styles.chatInputWrapperMultiLine]: isMultiLineInput,
-            })}
-          >
-            {renderChatInput()}
-          </div>
+      <div className={styles.bottomChatContainer}>
+        <MessageReply users={users} />
+        <ChatFilePreview />
+        <div
+          className={classNames(styles.chatInputWrapper, {
+            [styles.chatInputWrapperMultiLine]: isMultiLineInput,
+          })}
+        >
+          {renderChatInput()}
         </div>
-      )}
+      </div>
     </div>
   );
 }
