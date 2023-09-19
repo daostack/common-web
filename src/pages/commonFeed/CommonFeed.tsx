@@ -108,7 +108,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const parentCommonId = commonData?.common.directParent?.commonId;
   const isRootCommon = !parentCommonId;
   const isRootCommonMember = Boolean(commonData?.rootCommonMember);
-  const isAutomaticAcceptance = checkIsAutomaticJoin(commonData?.governance);
   const isRootCommonAutomaticAcceptance = checkIsAutomaticJoin(
     commonData?.rootCommonGovernance,
   );
@@ -292,11 +291,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     ) {
       return;
     }
-    if (
-      !isAutomaticAcceptance ||
-      !isRootCommonAutomaticAcceptance ||
-      !hasPublicItems
-    ) {
+    if (!isRootCommonAutomaticAcceptance || !hasPublicItems) {
       history.replace(getCommonPageAboutTabPath(commonId));
     }
   }, [
@@ -306,7 +301,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     isRootCommon,
     isRootCommonMember,
     commonId,
-    isAutomaticAcceptance,
     isRootCommonAutomaticAcceptance,
     hasPublicItems,
   ]);
