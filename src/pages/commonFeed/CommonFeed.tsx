@@ -122,6 +122,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     rootCommonId: commonData?.common.rootCommonId,
     parentCommonId,
     governanceCircles: commonData?.governance.circles,
+    rootCommonGovernanceCircles: commonData?.rootCommonGovernance?.circles,
   });
   const {
     data: commonPinnedFeedItems,
@@ -479,14 +480,14 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       {commonData.common && commonData.governance && (
         <>
           <MembershipRequestModal
-            isShowing={isCommonJoinModalOpen}
+            isShowing={isGlobalDataFetched && isCommonJoinModalOpen}
             onClose={onCommonJoinModalClose}
             common={commonData.common}
             governance={commonData.governance}
             showLoadingAfterSuccessfulCreation
           />
           <JoinProjectModal
-            isShowing={isProjectJoinModalOpen}
+            isShowing={isGlobalDataFetched && isProjectJoinModalOpen}
             onClose={onProjectJoinModalClose}
             common={commonData.common}
             governance={commonData.governance}
@@ -496,7 +497,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       )}
       {commonData.rootCommon && commonData.rootCommonGovernance && (
         <MembershipRequestModal
-          isShowing={isRootCommonJoinModalOpen}
+          isShowing={isGlobalDataFetched && isRootCommonJoinModalOpen}
           onClose={onRootCommonJoinModalClose}
           common={commonData.rootCommon}
           governance={commonData.rootCommonGovernance}

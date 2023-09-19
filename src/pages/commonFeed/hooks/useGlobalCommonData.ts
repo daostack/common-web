@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { LoadingState } from "@/shared/interfaces";
 import { Circles, CirclesPermissions, CommonMember } from "@/shared/models";
@@ -8,6 +8,7 @@ interface UseGlobalCommonDataArguments {
   rootCommonId?: string;
   parentCommonId?: string;
   governanceCircles?: Circles;
+  rootCommonGovernanceCircles?: Circles;
 }
 
 type State = LoadingState<{
@@ -23,7 +24,13 @@ interface Return extends State {
 export const useGlobalCommonData = (
   data: UseGlobalCommonDataArguments,
 ): Return => {
-  const { commonId, rootCommonId, parentCommonId, governanceCircles } = data;
+  const {
+    commonId,
+    rootCommonId,
+    parentCommonId,
+    governanceCircles,
+    rootCommonGovernanceCircles,
+  } = data;
   const {
     loading: isCommonMemberLoading,
     fetched: isCommonMemberFetched,
@@ -43,6 +50,9 @@ export const useGlobalCommonData = (
     setCommonMember: setRootCommonMember,
   } = useCommonMember({
     shouldAutoReset: false,
+    withSubscription: true,
+    commonId: rootCommonId,
+    governanceCircles: rootCommonGovernanceCircles,
   });
   const {
     loading: isParentCommonMemberLoading,
@@ -71,12 +81,20 @@ export const useGlobalCommonData = (
   }, [rootCommonId, fetchRootCommonMember, setRootCommonMember]);
 
   const fetchParentCommonMemberData = useCallback(() => {
+    if (parentCommonId && rootCommonId === parentCommonId) {
+      return;
+    }
     if (parentCommonId) {
       fetchParentCommonMember(parentCommonId, {}, true);
     } else {
       setParentCommonMember(null);
     }
-  }, [parentCommonId, fetchParentCommonMember, setParentCommonMember]);
+  }, [
+    rootCommonId,
+    parentCommonId,
+    fetchParentCommonMember,
+    setParentCommonMember,
+  ]);
 
   const fetchUserRelatedData = useCallback(() => {
     fetchCommonMember(commonId, {}, true);
@@ -88,6 +106,12 @@ export const useGlobalCommonData = (
     fetchRootCommonMemberData,
     fetchParentCommonMemberData,
   ]);
+
+  useEffect(() => {
+    if (rootCommonId === parentCommonId) {
+      setParentCommonMember(rootCommonMember);
+    }
+  }, [rootCommonMember]);
 
   return {
     loading: isGlobalDataLoading,
