@@ -386,10 +386,13 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     if (commonMember && isCommonJoinModalOpen) {
       onCommonJoinModalClose();
     }
-    if (commonMember && isRootCommonJoinModalOpen) {
+  }, [commonMember?.id]);
+
+  useEffect(() => {
+    if (commonData?.rootCommonMember && isRootCommonJoinModalOpen) {
       onRootCommonJoinModalClose();
     }
-  }, [commonMember?.id]);
+  }, [commonData?.rootCommonMember?.id]);
 
   if (!isDataFetched) {
     return (
