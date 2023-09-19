@@ -15,10 +15,13 @@ import {
   CommonEventToListener,
 } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { MembershipRequestModal } from "@/pages/OldCommon/components";
 import { FeedItemBaseContent, FeedItemBaseContentProps } from "@/pages/common";
+import { JoinProjectModal } from "@/pages/common/components/JoinProjectModal";
+import { useJoinProjectAutomatically } from "@/pages/common/hooks";
 import { CommonAction, QueryParamKey } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { useQueryParams } from "@/shared/hooks";
+import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems, useUserCommonIds } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
 import { RightArrowThinIcon } from "@/shared/icons";
@@ -33,6 +36,7 @@ import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
   checkIsAutomaticJoin,
+  checkIsProject,
   getCommonPageAboutTabPath,
 } from "@/shared/utils";
 import {
@@ -148,6 +152,31 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
 
+  const {
+    isModalOpen: isCommonJoinModalOpen,
+    onOpen: onCommonJoinModalOpen,
+    onClose: onCommonJoinModalClose,
+  } = useAuthorizedModal();
+  const {
+    isModalOpen: isProjectJoinModalOpen,
+    onOpen: onProjectJoinModalOpen,
+    onClose: onProjectJoinModalClose,
+  } = useAuthorizedModal();
+  const {
+    canJoinProjectAutomatically,
+    isJoinPending,
+    onJoinProjectAutomatically,
+  } = useJoinProjectAutomatically(
+    commonMember,
+    commonData?.common,
+    commonData?.parentCommon,
+  );
+  const onJoinCommon = checkIsProject(commonData?.common)
+    ? canJoinProjectAutomatically
+      ? onJoinProjectAutomatically
+      : onProjectJoinModalOpen
+    : onCommonJoinModalOpen;
+
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const topFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
@@ -199,6 +228,31 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     },
     [dispatch],
   );
+
+  const renderChatInput = (): ReactNode => {
+    if (commonMember) {
+      return;
+    }
+    if (isJoinPending) {
+      return (
+        <div className={styles.chatInputLoaderWrapper}>
+          <Loader />
+        </div>
+      );
+    }
+
+    let joinButtonText = "Join";
+
+    if (commonData?.rootCommon && !isRootCommonMember) {
+      joinButtonText = `Join ${commonData?.rootCommon.name}`;
+    }
+
+    return (
+      <span className={styles.chatInputText} onClick={() => onJoinCommon()}>
+        {joinButtonText}
+      </span>
+    );
+  };
 
   useEffect(() => {
     if (
@@ -306,6 +360,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     getProfilePagePath,
   ]);
 
+  useEffect(() => {
+    if (commonMember && isCommonJoinModalOpen) {
+      onCommonJoinModalClose();
+    }
+  }, [commonMember?.id]);
+
   if (!isDataFetched) {
     return (
       <div className={styles.centerWrapper}>
@@ -374,7 +434,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
           </>
         }
         common={commonData.common}
-        parentCommon={commonData.parentCommon}
         governance={commonData.governance}
         commonMember={commonMember}
         topFeedItems={topFeedItems}
@@ -388,8 +447,27 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         onActiveItemDataChange={onActiveItemDataChange}
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
+        renderChatInput={renderChatInput}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
+      {commonData.common && commonData.governance && (
+        <>
+          <MembershipRequestModal
+            isShowing={isCommonJoinModalOpen}
+            onClose={onCommonJoinModalClose}
+            common={commonData.common}
+            governance={commonData.governance}
+            showLoadingAfterSuccessfulCreation
+          />
+          <JoinProjectModal
+            isShowing={isProjectJoinModalOpen}
+            onClose={onProjectJoinModalClose}
+            common={commonData.common}
+            governance={commonData.governance}
+            onRequestCreated={() => null}
+          />
+        </>
+      )}
     </>
   );
 };

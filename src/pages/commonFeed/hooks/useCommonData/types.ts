@@ -8,6 +8,7 @@ export interface Data {
   subCommons: Common[];
   commonMembersAmount: number;
   sharedFeedItem: CommonFeed | null;
+  rootCommon?: Common | null;
   rootCommonMember: CommonMember | null;
   rootCommonGovernance: Governance | null;
   parentCommon?: Common;

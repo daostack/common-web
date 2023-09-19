@@ -68,11 +68,13 @@ export const useCommonData = (userId?: string): Return => {
           const [
             parentCommons,
             subCommons,
+            rootCommon,
             rootCommonMember,
             rootCommonGovernance,
           ] = await Promise.all([
             CommonService.getAllParentCommonsForCommon(common),
             CommonService.getCommonsByDirectParentIds([common.id]),
+            rootCommonId ? CommonService.getCommonById(rootCommonId) : null,
             rootCommonId && userId
               ? CommonService.getCommonMemberByUserId(rootCommonId, userId)
               : null,
@@ -91,6 +93,7 @@ export const useCommonData = (userId?: string): Return => {
               subCommons,
               commonMembersAmount,
               sharedFeedItem,
+              rootCommon,
               rootCommonMember,
               rootCommonGovernance,
               parentCommon: last(parentCommons),
