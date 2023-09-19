@@ -106,11 +106,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetchCommonData,
   } = useCommonData(userId);
   const parentCommonId = commonData?.common.directParent?.commonId;
-  const isRootCommon = !parentCommonId;
-  const isRootCommonMember = Boolean(commonData?.rootCommonMember);
-  const isRootCommonAutomaticAcceptance = checkIsAutomaticJoin(
-    commonData?.rootCommonGovernance,
-  );
   const anotherCommonId =
     userCommonIds[0] === commonId ? userCommonIds[1] : userCommonIds[0];
   const pinnedItemIds = useMemo(
@@ -121,9 +116,11 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const {
     fetched: isGlobalDataFetched,
     fetchUserRelatedData,
-    data: { commonMember },
+    data: { commonMember, rootCommonMember, parentCommonMember },
   } = useGlobalCommonData({
     commonId,
+    rootCommonId: commonData?.common.rootCommonId,
+    parentCommonId,
     governanceCircles: commonData?.governance.circles,
   });
   const {
@@ -131,6 +128,11 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     loading: areCommonPinnedFeedItemsLoading,
     fetch: fetchCommonPinnedFeedItems,
   } = useCommonPinnedFeedItems(commonId, pinnedItemIds);
+  const isRootCommon = !parentCommonId;
+  const isRootCommonMember = Boolean(rootCommonMember);
+  const isRootCommonAutomaticAcceptance = checkIsAutomaticJoin(
+    commonData?.rootCommonGovernance,
+  );
 
   const commonFeedItemIdsForNotListening = useMemo(() => {
     const items: string[] = [];
@@ -253,11 +255,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       );
     }
 
-    if (
-      isRootCommonMember &&
-      commonData?.parentCommon &&
-      !commonData?.parentCommonMember
-    ) {
+    if (isRootCommonMember && commonData?.parentCommon && !parentCommonMember) {
       return (
         <span className={styles.chatInputText}>
           To join this space you should first join{" "}
@@ -389,10 +387,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [commonMember?.id]);
 
   useEffect(() => {
-    if (commonData?.rootCommonMember && isRootCommonJoinModalOpen) {
+    if (rootCommonMember && isRootCommonJoinModalOpen) {
       onRootCommonJoinModalClose();
     }
-  }, [commonData?.rootCommonMember?.id]);
+  }, [rootCommonMember?.id]);
 
   if (!isDataFetched) {
     return (

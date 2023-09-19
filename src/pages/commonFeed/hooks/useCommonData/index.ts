@@ -6,7 +6,7 @@ import {
   GovernanceService,
 } from "@/services";
 import { useCommonSubscription } from "@/shared/hooks/useCases/useFullCommonData/useCommonSubscription";
-import { Common, CommonMember } from "@/shared/models";
+import { Common } from "@/shared/models";
 import { State, CombinedState } from "./types";
 import { useGovernanceSubscription } from "./useGovernanceSubscription";
 
@@ -29,21 +29,6 @@ const getRootCommon = async (
   }
 
   return rootCommonId ? CommonService.getCommonById(rootCommonId) : null;
-};
-
-const getRootCommonMember = async (
-  parentCommonMember?: CommonMember | null,
-  parentCommonId?: string,
-  rootCommonId?: string,
-  userId?: string,
-): Promise<CommonMember | null> => {
-  if (parentCommonMember && parentCommonId === rootCommonId) {
-    return parentCommonMember;
-  }
-
-  return rootCommonId && userId
-    ? CommonService.getCommonMemberByUserId(rootCommonId, userId)
-    : null;
 };
 
 export const useCommonData = (userId?: string): Return => {
@@ -92,32 +77,16 @@ export const useCommonData = (userId?: string): Return => {
           }
 
           const { rootCommonId } = common;
-          const parentCommonId = common.directParent?.commonId;
-          const [
-            parentCommons,
-            subCommons,
-            parentCommonMember,
-            rootCommonGovernance,
-          ] = await Promise.all([
-            CommonService.getAllParentCommonsForCommon(common),
-            CommonService.getCommonsByDirectParentIds([common.id]),
-            parentCommonId && userId
-              ? CommonService.getCommonMemberByUserId(parentCommonId, userId)
-              : null,
-            rootCommonId
-              ? GovernanceService.getGovernanceByCommonId(rootCommonId)
-              : null,
-          ]);
+          const [parentCommons, subCommons, rootCommonGovernance] =
+            await Promise.all([
+              CommonService.getAllParentCommonsForCommon(common),
+              CommonService.getCommonsByDirectParentIds([common.id]),
+              rootCommonId
+                ? GovernanceService.getGovernanceByCommonId(rootCommonId)
+                : null,
+            ]);
           const parentCommon = last(parentCommons);
-          const [rootCommon, rootCommonMember] = await Promise.all([
-            getRootCommon(parentCommon, rootCommonId),
-            getRootCommonMember(
-              parentCommonMember,
-              parentCommonId,
-              rootCommonId,
-              userId,
-            ),
-          ]);
+          const rootCommon = await getRootCommon(parentCommon, rootCommonId);
 
           setState({
             loading: false,
@@ -130,10 +99,8 @@ export const useCommonData = (userId?: string): Return => {
               commonMembersAmount,
               sharedFeedItem,
               rootCommon,
-              rootCommonMember,
               rootCommonGovernance,
               parentCommon,
-              parentCommonMember,
             },
           });
         } catch (error) {

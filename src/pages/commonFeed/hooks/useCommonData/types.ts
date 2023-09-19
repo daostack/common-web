@@ -1,5 +1,5 @@
 import { LoadingState } from "@/shared/interfaces";
-import { Common, CommonFeed, CommonMember, Governance } from "@/shared/models";
+import { Common, CommonFeed, Governance } from "@/shared/models";
 
 export interface Data {
   common: Common;
@@ -9,10 +9,8 @@ export interface Data {
   commonMembersAmount: number;
   sharedFeedItem: CommonFeed | null;
   rootCommon?: Common | null;
-  rootCommonMember: CommonMember | null;
   rootCommonGovernance: Governance | null;
   parentCommon?: Common;
-  parentCommonMember: CommonMember | null;
 }
 
 export type State = LoadingState<Data | null>;
