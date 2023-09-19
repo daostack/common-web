@@ -12,6 +12,7 @@ export interface Data {
   rootCommonMember: CommonMember | null;
   rootCommonGovernance: Governance | null;
   parentCommon?: Common;
+  parentCommonMember: CommonMember | null;
 }
 
 export type State = LoadingState<Data | null>;
