@@ -15,9 +15,16 @@ interface CommonEntranceJoinProps {
 
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const { withJoinRequest = false, common, isProject } = props;
-  const { parentCommon, commonMember, isJoinAllowed, onJoinCommon } =
-    useCommonDataContext();
-  const { getCommonPagePath } = useRoutesContext();
+  const {
+    parentCommon,
+    parentCommonMember,
+    commonMember,
+    rootCommon,
+    rootCommonMember,
+    isJoinAllowed,
+    onJoinCommon,
+  } = useCommonDataContext();
+  const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const {
     canJoinProjectAutomatically,
     isJoinPending,
@@ -39,6 +46,27 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
           common. Only common members can join the space.
         </p>
       )}
+      {!commonMember && rootCommon && !rootCommonMember && (
+        <p className={styles.joinHint}>
+          Join via{" "}
+          <NavLink to={getCommonPageAboutTabPath(rootCommon.id)}>
+            common
+          </NavLink>{" "}
+          page
+        </p>
+      )}
+      {!commonMember &&
+        rootCommonMember &&
+        parentCommon &&
+        !parentCommonMember && (
+          <p className={styles.joinHint}>
+            Join via{" "}
+            <NavLink to={getCommonPageAboutTabPath(parentCommon.id)}>
+              common
+            </NavLink>{" "}
+            page
+          </p>
+        )}
       {withJoinRequest && (isJoinAllowed || isJoinPending) && (
         <Button
           className={styles.joinButton}

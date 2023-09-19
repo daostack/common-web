@@ -122,6 +122,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
     isGlobalDataFetched && !commonMember && props.isJoinPending;
   const isJoinAllowed = Boolean(
     isGlobalDataFetched &&
+      rootCommonMember &&
+      parentCommonMember &&
       !isJoinPending &&
       ((!isProject && !commonMember) ||
         (isProject && parentCommonMember && !commonMember)),
