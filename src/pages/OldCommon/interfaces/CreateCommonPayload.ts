@@ -1,5 +1,5 @@
 import { UploadFile } from "@/shared/interfaces";
-import { BaseRule, CommonLink } from "@/shared/models";
+import { BaseRule, CommonLink, Roles } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { TextEditorValue } from "@/shared/ui-kit/TextEditor/types";
 
@@ -58,6 +58,7 @@ export interface IntermediateUpdateCommonData {
   videoUrl?: string;
   gallery?: UploadFile[];
   links?: CommonLink[];
+  roles?: Roles;
 }
 
 export interface UpdateCommonData {

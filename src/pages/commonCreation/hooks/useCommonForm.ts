@@ -4,7 +4,7 @@ import {
   IntermediateCreateCommonData,
   IntermediateUpdateCommonData,
 } from "@/pages/OldCommon/interfaces";
-import { Common } from "@/shared/models";
+import { Common, Roles } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { convertLinksToUploadFiles } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
@@ -17,10 +17,7 @@ interface Return {
   onSubmit: (values: CommonFormValues) => void;
 }
 
-const getInitialValues = (
-  common?: Common,
-  roles?: string[],
-): CommonFormValues => {
+const getInitialValues = (common?: Common, roles?: Roles): CommonFormValues => {
   return {
     projectImages: common?.image
       ? [
@@ -46,7 +43,7 @@ export const useCommonForm = (
     commonData: IntermediateUpdateCommonData | IntermediateCreateCommonData,
   ) => Promise<void>,
   common?: Common,
-  roles?: string[],
+  roles?: Roles,
 ): Return => {
   const dispatch = useDispatch();
   const initialValues: CommonFormValues = useMemo(

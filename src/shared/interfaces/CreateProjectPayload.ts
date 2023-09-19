@@ -1,4 +1,4 @@
-import { BaseRule, CommonLink } from "@/shared/models";
+import { BaseRule, CommonLink, Roles } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
 import { UploadFile } from "./UploadFile";
 
@@ -23,6 +23,6 @@ export interface IntermediateCreateProjectPayload {
   videoUrl: string;
   gallery: UploadFile[];
   links?: CommonLink[];
-  roles?: string[];
+  roles?: Roles;
   highestCircleId: string;
 }

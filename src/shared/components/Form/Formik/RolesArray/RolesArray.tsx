@@ -5,6 +5,7 @@ import {
   FormikErrors,
   FormikTouched,
 } from "formik";
+import { Roles } from "@/shared/models";
 import { ErrorText } from "../../ErrorText";
 import { TextField } from "../TextField";
 import styles from "./RolesArray.module.scss";
@@ -13,7 +14,7 @@ type Errors = string | string[] | FormikErrors<string[]> | undefined;
 type Touched = FormikTouched<string>[] | undefined;
 
 export interface RolesArrayProps extends FieldArrayConfig {
-  values: string[];
+  values: Roles;
   errors: Errors;
   touched: Touched;
   title?: string;
@@ -43,18 +44,18 @@ const RolesArray: FC<RolesArrayProps> = (props) => {
       render={() => {
         return (
           <div>
-            {values?.map((value, index) => {
+            {values?.map((role, index) => {
               return (
                 <div className={styles.roleField}>
                   <TextField
                     key={index}
-                    id={`${restProps.name}.${index}`}
-                    name={`${restProps.name}.${index}`}
+                    id={`${restProps.name}.${index}.circleName`}
+                    name={`${restProps.name}.${index}.circleName`}
                     label={index === 0 ? title : ""}
-                    value={value}
+                    value={role.circleName}
                     placeholder="Role title"
                   />
-                  {!value && <ErrorText>Error</ErrorText>}
+                  {!role && <ErrorText>Error</ErrorText>}
                 </div>
               );
             })}

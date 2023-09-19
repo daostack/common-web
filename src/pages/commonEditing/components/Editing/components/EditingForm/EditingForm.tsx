@@ -10,7 +10,7 @@ import { styles } from "@/pages/commonCreation/components/ProjectCreation/compon
 import { useCommonForm } from "@/pages/commonCreation/hooks";
 import { usePreventReload } from "@/shared/hooks";
 import { useGovernance } from "@/shared/hooks/useCases";
-import { Common } from "@/shared/models";
+import { Common, Roles } from "@/shared/models";
 import { Loader, LoaderVariant } from "@/shared/ui-kit";
 import { removeProjectCircles } from "@/shared/utils";
 
@@ -40,10 +40,14 @@ const EditingForm: FC<EditingFormProps> = (props) => {
     error,
     updateCommon,
   } = useCommonUpdate(common.id);
+  const roles: Roles = governanceCircles.map((circle) => ({
+    circleId: circle.id,
+    circleName: circle.name,
+  }));
   const { initialValues, formItems, onSubmit } = useCommonForm(
     updateCommon,
     common,
-    governanceCircles.map((circle) => circle.name),
+    roles,
   );
 
   useEffect(() => {

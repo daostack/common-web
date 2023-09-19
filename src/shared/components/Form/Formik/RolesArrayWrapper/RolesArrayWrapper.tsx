@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { useField, useFormikContext } from "formik";
 import { FormikTouched } from "formik/dist/types";
+import { Roles } from "@/shared/models";
 import { RolesArray, RolesArrayProps } from "../RolesArray";
 
 export type RolesArrayWrapperProps = Omit<
@@ -9,7 +10,7 @@ export type RolesArrayWrapperProps = Omit<
 >;
 
 const RolesArrayWrapper: FC<RolesArrayWrapperProps> = (props) => {
-  const [{ value }, { error }] = useField<string[]>(props.name);
+  const [{ value }, { error }] = useField<Roles>(props.name);
   const formik = useFormikContext();
 
   return (

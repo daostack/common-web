@@ -61,6 +61,8 @@ const useCommonUpdate = (commonId?: string): Return => {
         return;
       }
 
+      console.log(updatedData);
+
       setIsCommonUpdateLoading(true);
 
       try {

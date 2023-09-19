@@ -1,3 +1,4 @@
+import { Roles } from "@/shared/models";
 import { TextEditorSize } from "@/shared/ui-kit";
 import { CreationFormItem, CreationFormItemType } from "../../../CreationForm";
 import {
@@ -10,7 +11,7 @@ import styles from "./ProjectCreationForm.module.scss";
 
 export const getConfiguration = (
   isProject = true,
-  roles?: string[],
+  roles?: Roles,
   shouldBeUnique?: { existingNames: string[] },
 ): CreationFormItem[] => {
   const type = isProject ? "Space" : "Common";
