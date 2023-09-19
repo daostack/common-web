@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { NavLink } from "react-router-dom";
 import {
   CommonEvent,
   CommonEventEmitter,
@@ -233,6 +234,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     if (commonMember) {
       return;
     }
+
     if (isJoinPending) {
       return (
         <div className={styles.chatInputLoaderWrapper}>
@@ -248,6 +250,21 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
           onClick={() => onRootCommonJoinModalOpen()}
         >
           Join {commonData.rootCommon.name}
+        </span>
+      );
+    }
+
+    if (
+      isRootCommonMember &&
+      commonData?.parentCommon &&
+      !commonData?.parentCommonMember
+    ) {
+      return (
+        <span className={styles.chatInputText}>
+          To join this space you should first join{" "}
+          <NavLink to={getCommonPagePath(commonData.parentCommon.id)}>
+            {commonData.parentCommon.name}
+          </NavLink>
         </span>
       );
     }
