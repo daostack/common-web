@@ -50,7 +50,7 @@ const BaseCommon: FC<CommonProps> = (props) => {
     fetchUserRelatedData,
     fetchRootCommonMemberData,
     fetchParentCommonMemberData,
-    data: { commonMember, parentCommonMember, isJoinPending },
+    data: { commonMember, rootCommonMember, parentCommonMember, isJoinPending },
     setIsJoinPending,
   } = useGlobalCommonData({
     commonId,
@@ -129,6 +129,7 @@ const BaseCommon: FC<CommonProps> = (props) => {
       supportersData={commonData.supportersData}
       isGlobalDataFetched={isGlobalDataFetched}
       commonMember={commonMember}
+      rootCommonMember={rootCommonMember}
       parentCommonMember={parentCommonMember}
       isJoinPending={isJoinPending}
       setIsJoinPending={setIsJoinPending}

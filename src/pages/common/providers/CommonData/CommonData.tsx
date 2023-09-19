@@ -37,6 +37,7 @@ interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  rootCommonMember: CommonMember | null;
   parentCommonMember: CommonMember | null;
   isGlobalDataFetched: boolean;
   parentCommons: Common[];
@@ -55,6 +56,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     common,
     governance,
     commonMember,
+    rootCommonMember,
     parentCommonMember,
     isGlobalDataFetched,
     parentCommons,
@@ -222,7 +224,9 @@ const CommonData: FC<CommonDataProps> = (props) => {
       parentCommons,
       subCommons,
       rootCommon,
+      rootCommonMember,
       parentCommon,
+      parentCommonMember,
       parentCommonSubCommons,
       supportersData,
       isJoinAllowed,
@@ -241,7 +245,9 @@ const CommonData: FC<CommonDataProps> = (props) => {
       parentCommons,
       subCommons,
       rootCommon,
+      rootCommonMember,
       parentCommon,
+      parentCommonMember,
       parentCommonSubCommons,
       supportersData,
       isJoinAllowed,

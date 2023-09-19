@@ -22,7 +22,9 @@ interface Data {
   parentCommons: Common[];
   subCommons: Common[];
   rootCommon: Common | null;
+  rootCommonMember: CommonMember | null;
   parentCommon?: Common;
+  parentCommonMember: CommonMember | null;
   parentCommonSubCommons: Common[];
   supportersData: SupportersData | null;
   isJoinAllowed: boolean;
