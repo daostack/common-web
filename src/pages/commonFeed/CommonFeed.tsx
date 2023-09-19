@@ -158,6 +158,11 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     onClose: onCommonJoinModalClose,
   } = useAuthorizedModal();
   const {
+    isModalOpen: isRootCommonJoinModalOpen,
+    onOpen: onRootCommonJoinModalOpen,
+    onClose: onRootCommonJoinModalClose,
+  } = useAuthorizedModal();
+  const {
     isModalOpen: isProjectJoinModalOpen,
     onOpen: onProjectJoinModalOpen,
     onClose: onProjectJoinModalClose,
@@ -171,11 +176,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     commonData?.common,
     commonData?.parentCommon,
   );
-  const onJoinCommon = checkIsProject(commonData?.common)
-    ? canJoinProjectAutomatically
-      ? onJoinProjectAutomatically
-      : onProjectJoinModalOpen
-    : onCommonJoinModalOpen;
 
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const topFeedItems = useMemo(() => {
@@ -241,15 +241,26 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       );
     }
 
-    let joinButtonText = "Join";
-
     if (commonData?.rootCommon && !isRootCommonMember) {
-      joinButtonText = `Join ${commonData?.rootCommon.name}`;
+      return (
+        <span
+          className={styles.chatInputText}
+          onClick={() => onRootCommonJoinModalOpen()}
+        >
+          Join {commonData.rootCommon.name}
+        </span>
+      );
     }
+
+    const onJoinCommon = checkIsProject(commonData?.common)
+      ? canJoinProjectAutomatically
+        ? onJoinProjectAutomatically
+        : onProjectJoinModalOpen
+      : onCommonJoinModalOpen;
 
     return (
       <span className={styles.chatInputText} onClick={() => onJoinCommon()}>
-        {joinButtonText}
+        Join
       </span>
     );
   };
@@ -364,6 +375,9 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     if (commonMember && isCommonJoinModalOpen) {
       onCommonJoinModalClose();
     }
+    if (commonMember && isRootCommonJoinModalOpen) {
+      onRootCommonJoinModalClose();
+    }
   }, [commonMember?.id]);
 
   if (!isDataFetched) {
@@ -467,6 +481,15 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
             onRequestCreated={() => null}
           />
         </>
+      )}
+      {commonData.rootCommon && commonData.rootCommonGovernance && (
+        <MembershipRequestModal
+          isShowing={isRootCommonJoinModalOpen}
+          onClose={onRootCommonJoinModalClose}
+          common={commonData.rootCommon}
+          governance={commonData.rootCommonGovernance}
+          showLoadingAfterSuccessfulCreation
+        />
       )}
     </>
   );
