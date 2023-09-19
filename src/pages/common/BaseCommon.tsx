@@ -120,6 +120,7 @@ const BaseCommon: FC<CommonProps> = (props) => {
       settings={settings}
       defaultTab={defaultTab}
       common={commonData.common}
+      rootCommon={commonData.rootCommon}
       parentCommon={commonData.parentCommon}
       governance={commonData.governance}
       parentCommons={commonData.parentCommons}

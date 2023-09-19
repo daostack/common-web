@@ -41,6 +41,7 @@ interface CommonDataProps {
   isGlobalDataFetched: boolean;
   parentCommons: Common[];
   subCommons: Common[];
+  rootCommon: Common | null;
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
   supportersData: SupportersData | null;
@@ -58,6 +59,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     isGlobalDataFetched,
     parentCommons,
     subCommons,
+    rootCommon,
     parentCommon,
     parentCommonSubCommons,
     supportersData,
@@ -219,6 +221,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       governance,
       parentCommons,
       subCommons,
+      rootCommon,
       parentCommon,
       parentCommonSubCommons,
       supportersData,
@@ -237,6 +240,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
       governance,
       parentCommons,
       subCommons,
+      rootCommon,
       parentCommon,
       parentCommonSubCommons,
       supportersData,

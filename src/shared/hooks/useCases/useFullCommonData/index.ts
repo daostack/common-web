@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { last } from "lodash";
 import { CommonService, GovernanceService } from "@/services";
 import { useSupportersData } from "@/shared/hooks/useCases";
+import { Common } from "@/shared/models";
 import { State, CombinedState } from "./types";
 import { useCommonSubscription } from "./useCommonSubscription";
 import { useGovernanceSubscription } from "./useGovernanceSubscription";
@@ -13,6 +14,17 @@ interface Return extends CombinedState {
   fetchCommonData: (commonId: string) => void;
   resetCommonData: () => void;
 }
+
+const getRootCommon = async (
+  parentCommon?: Common | null,
+  rootCommonId?: string,
+): Promise<Common | null> => {
+  if (parentCommon && parentCommon.id === rootCommonId) {
+    return parentCommon;
+  }
+
+  return rootCommonId ? CommonService.getCommonById(rootCommonId) : null;
+};
 
 export const useFullCommonData = (): Return => {
   const [state, setState] = useState<State>({
@@ -62,6 +74,11 @@ export const useFullCommonData = (): Return => {
                 ])
               : [],
           ]);
+        const parentCommon = last(parentCommons);
+        const rootCommon = await getRootCommon(
+          parentCommon,
+          common.rootCommonId,
+        );
 
         setState({
           loading: false,
@@ -71,7 +88,8 @@ export const useFullCommonData = (): Return => {
             governance,
             parentCommons,
             subCommons,
-            parentCommon: last(parentCommons),
+            rootCommon,
+            parentCommon,
             parentCommonSubCommons,
           },
         });

@@ -28,6 +28,7 @@ interface CommonContentProps {
   settings: CommonPageSettings;
   defaultTab: string;
   common: Common;
+  rootCommon: Common | null;
   parentCommon?: Common;
   governance: Governance;
   parentCommons: Common[];
@@ -51,6 +52,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     subCommons,
     isGlobalDataFetched,
     commonMember,
+    rootCommon,
     parentCommonMember,
     parentCommon,
     parentCommonSubCommons,
@@ -99,6 +101,7 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     <CommonDataProvider
       settings={settings}
       common={common}
+      rootCommon={rootCommon}
       parentCommon={parentCommon}
       governance={governance}
       commonMember={commonMember}

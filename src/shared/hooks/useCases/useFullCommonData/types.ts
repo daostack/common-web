@@ -6,6 +6,7 @@ export interface Data {
   governance: Governance;
   parentCommons: Common[];
   subCommons: Common[];
+  rootCommon: Common | null;
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
 }
