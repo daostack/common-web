@@ -89,8 +89,7 @@ interface ChatComponentInterface {
   isHidden: boolean;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
-  isJoinPending?: boolean;
-  onJoinCommon?: () => void;
+  renderChatInput?: () => ReactNode;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
@@ -131,8 +130,7 @@ export default function ChatComponent({
   isCommonMemberFetched,
   onMessagesAmountChange,
   directParent,
-  isJoinPending = false,
-  onJoinCommon,
+  renderChatInput: renderChatInputOuter,
   onUserClick,
   onFeedItemClick,
   onInternalLinkClick,
@@ -569,19 +567,70 @@ export default function ChatComponent({
     }
   }, [discussionMessages.length]);
 
-  const renderJoinCommonContent = (): ReactNode => {
-    if (isJoinPending) {
-      return (
-        <div className={styles.loaderWrapper}>
-          <Loader />
-        </div>
-      );
+  const renderChatInput = (): ReactNode => {
+    const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
+
+    if (shouldHideChatInput) {
+      return null;
+    }
+    if (!isChatChannel) {
+      const chatInputEl = renderChatInputOuter?.();
+
+      if (chatInputEl || chatInputEl === null) {
+        return chatInputEl;
+      }
     }
 
     return (
-      <span className={styles.permissionsText} onClick={onJoinCommon}>
-        Join
-      </span>
+      <>
+        <ButtonIcon
+          className={styles.addFilesIcon}
+          onClick={() => {
+            document.getElementById("file")?.click();
+          }}
+        >
+          <PlusIcon />
+        </ButtonIcon>
+        <input
+          id="file"
+          type="file"
+          onChange={uploadFiles}
+          style={{ display: "none" }}
+          multiple
+          accept={ACCEPTED_EXTENSIONS}
+        />
+        <BaseTextEditor
+          inputContainerRef={inputContainerRef}
+          emojiContainerClassName={classNames({
+            [styles.emojiContainer]: isMultiLineInput,
+          })}
+          size={TextEditorSize.Auto}
+          editorRef={editorRef}
+          className={classNames(styles.messageInput, {
+            [styles.messageInputEmpty]: checkIsTextEditorValueEmpty(message),
+          })}
+          elementStyles={{
+            emoji: classNames({
+              [styles.singleEmojiText]: emojiCount.isSingleEmoji,
+              [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+            }),
+          }}
+          value={message}
+          onChange={setMessage}
+          placeholder="What do you think?"
+          onKeyDown={onEnterKeyDown}
+          users={users}
+          shouldReinitializeEditor={shouldReinitializeEditor}
+          onClearFinished={onClearFinished}
+        />
+        <button
+          className={styles.sendIcon}
+          onClick={sendChatMessage}
+          disabled={!canSendMessage}
+        >
+          <SendIcon />
+        </button>
+      </>
     );
   };
 
@@ -627,60 +676,7 @@ export default function ChatComponent({
               [styles.chatInputWrapperMultiLine]: isMultiLineInput,
             })}
           >
-            {!isChatChannel && (!commonMember || !hasAccess || isHidden) ? (
-              renderJoinCommonContent()
-            ) : (
-              <>
-                <ButtonIcon
-                  className={styles.addFilesIcon}
-                  onClick={() => {
-                    document.getElementById("file")?.click();
-                  }}
-                >
-                  <PlusIcon />
-                </ButtonIcon>
-                <input
-                  id="file"
-                  type="file"
-                  onChange={uploadFiles}
-                  style={{ display: "none" }}
-                  multiple
-                  accept={ACCEPTED_EXTENSIONS}
-                />
-                <BaseTextEditor
-                  inputContainerRef={inputContainerRef}
-                  emojiContainerClassName={classNames({
-                    [styles.emojiContainer]: isMultiLineInput,
-                  })}
-                  size={TextEditorSize.Auto}
-                  editorRef={editorRef}
-                  className={classNames(styles.messageInput, {
-                    [styles.messageInputEmpty]:
-                      checkIsTextEditorValueEmpty(message),
-                  })}
-                  elementStyles={{
-                    emoji: classNames({
-                      [styles.singleEmojiText]: emojiCount.isSingleEmoji,
-                      [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-                    }),
-                  }}
-                  value={message}
-                  onChange={setMessage}
-                  placeholder="What do you think?"
-                  onKeyDown={onEnterKeyDown}
-                  users={users}
-                  shouldReinitializeEditor={shouldReinitializeEditor}
-                  onClearFinished={onClearFinished}
-                />
-                <button
-                  className={styles.sendIcon}
-                  onClick={sendChatMessage}
-                  disabled={!canSendMessage}
-                >
-                  <SendIcon />
-                </button>
-              </>
-            )}
+            {renderChatInput()}
           </div>
         </div>
       )}
