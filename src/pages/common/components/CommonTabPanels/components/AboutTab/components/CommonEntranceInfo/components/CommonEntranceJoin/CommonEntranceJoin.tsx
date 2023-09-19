@@ -50,7 +50,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
         <p className={styles.joinHint}>
           Join via{" "}
           <NavLink to={getCommonPageAboutTabPath(rootCommon.id)}>
-            common
+            {rootCommon.name}
           </NavLink>{" "}
           page
         </p>
@@ -62,7 +62,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
           <p className={styles.joinHint}>
             Join via{" "}
             <NavLink to={getCommonPageAboutTabPath(parentCommon.id)}>
-              common
+              {parentCommon.name}
             </NavLink>{" "}
             page
           </p>
