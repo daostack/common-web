@@ -8,7 +8,7 @@ export type TextFieldProps = InputProps & {
 };
 
 const TextField: FC<TextFieldProps> = (props) => {
-  const { isRequired, value, ...restProps } = props;
+  const { isRequired, ...restProps } = props;
   const [field, { touched, error }] = useField(restProps);
   const hintToShow = restProps.hint || (isRequired ? "Required" : "");
 
@@ -18,7 +18,6 @@ const TextField: FC<TextFieldProps> = (props) => {
       {...field}
       hint={hintToShow}
       error={touched ? error : ""}
-      value={value}
     />
   );
 };
