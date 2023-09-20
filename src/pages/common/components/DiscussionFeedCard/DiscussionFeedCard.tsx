@@ -327,8 +327,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           isFollowing={feedItemFollow.isFollowing}
           isLoading={isLoading}
           menuItems={menuItems}
-          seenOnce={feedItemUserMetadata?.seenOnce}
-          seen={feedItemUserMetadata?.seen}
+          seenOnce={feedItemUserMetadata?.seenOnce ?? true}
+          seen={feedItemUserMetadata?.seen ?? true}
           ownerId={item.userId}
           discussionPredefinedType={discussion?.predefinedType}
         >
