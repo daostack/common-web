@@ -120,11 +120,7 @@ export const getConfiguration = (
       validation: {
         required: {
           value: true,
-          message: "Role title required",
-        },
-        max: {
-          value: MAX_ROLE_TITLE_LENGTH,
-          message: "Role title is too long",
+          message: "Role name is required",
         },
       },
     });

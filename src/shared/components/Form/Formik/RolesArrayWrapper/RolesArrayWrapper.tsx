@@ -18,7 +18,7 @@ const RolesArrayWrapper: FC<RolesArrayWrapperProps> = (props) => {
       {...props}
       values={value}
       errors={error}
-      touched={formik.touched[props.name] as FormikTouched<string>[]}
+      touched={formik.touched[props.name] as FormikTouched<Roles>[]}
     />
   );
 };

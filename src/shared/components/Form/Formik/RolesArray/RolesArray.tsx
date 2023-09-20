@@ -5,13 +5,13 @@ import {
   FormikErrors,
   FormikTouched,
 } from "formik";
-import { Roles } from "@/shared/models";
+import { Role, Roles } from "@/shared/models";
 import { ErrorText } from "../../ErrorText";
 import { TextField } from "../TextField";
 import styles from "./RolesArray.module.scss";
 
 type Errors = string | string[] | FormikErrors<string[]> | undefined;
-type Touched = FormikTouched<string>[] | undefined;
+type Touched = FormikTouched<Roles>[] | undefined;
 
 export interface RolesArrayProps extends FieldArrayConfig {
   values: Roles;
@@ -55,7 +55,7 @@ const RolesArray: FC<RolesArrayProps> = (props) => {
                     value={role.circleName}
                     placeholder="Role title"
                   />
-                  {!role && <ErrorText>Error</ErrorText>}
+                  {/* {errors && <ErrorText>{errors}</ErrorText>} */}
                 </div>
               );
             })}

@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "@/pages/Auth/store/selectors";
+import { UpdateGovernanceCircleNamePayload } from "@/pages/OldCommon/interfaces/UpdateGovernanceCircleName";
 import { FileService, Logger } from "@/services";
 import { isRequestError } from "@/services/Api";
 import { ErrorCode } from "@/shared/constants";
@@ -11,7 +13,10 @@ import {
   UpdateCommonData,
   UpdateCommonPayload,
 } from "../../../../interfaces";
-import { updateCommon as updateCommonAction } from "../../../../store/actions";
+import {
+  updateCommon as updateCommonAction,
+  updateGovernanceCircleName,
+} from "../../../../store/actions";
 
 interface Return {
   isCommonUpdateLoading: boolean;
@@ -54,14 +59,13 @@ const useCommonUpdate = (commonId?: string): Return => {
   const [common, setCommon] = useState<Common | null>(null);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
+  const user = useSelector(selectUser());
 
   const updateCommon = useCallback(
     async (updatedData: IntermediateUpdateCommonData) => {
       if (isCommonUpdateLoading || !commonId) {
         return;
       }
-
-      console.log(updatedData);
 
       setIsCommonUpdateLoading(true);
 
@@ -112,6 +116,27 @@ const useCommonUpdate = (commonId?: string): Return => {
             },
           }),
         );
+
+        if (user?.uid && updatedData.roles) {
+          const circles = updatedData.roles.map((role) => ({
+            circleId: role.circleId,
+            newName: role.circleName,
+          }));
+          const payload: UpdateGovernanceCircleNamePayload = {
+            commonId,
+            userId: user.uid,
+            changes: circles,
+          };
+
+          dispatch(
+            updateGovernanceCircleName.request({
+              payload,
+              callback: (error, updatedGovernance) => {
+                console.log(updatedGovernance);
+              },
+            }),
+          );
+        }
       } catch (err) {
         Logger.error(error);
         setError(getErrorMessage(err, updatedData.name));

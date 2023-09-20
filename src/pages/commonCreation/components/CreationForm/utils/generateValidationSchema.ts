@@ -6,6 +6,7 @@ import {
   LinksFormItem,
   TextFieldFormItem,
   UploadFilesFormItem,
+  RolesFormItem,
 } from "../types";
 
 type Schema = Yup.Schema<unknown>;
@@ -97,6 +98,9 @@ export const generateValidationSchema = (
     if (item.type === CreationFormItemType.Links) {
       schema = getValidationSchemaForLinksItem(item);
     }
+    // if (item.type === CreationFormItemType.Roles) {
+    //   schema = getValidationSchemaForTextFieldItem(item);
+    // }
 
     return schema
       ? {

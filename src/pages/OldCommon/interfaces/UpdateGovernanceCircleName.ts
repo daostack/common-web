@@ -1,6 +1,10 @@
+interface NewCircle {
+  circleId: string;
+  newName: string;
+}
+
 export interface UpdateGovernanceCircleNamePayload {
   commonId: string;
-  circleId: string;
   userId: string;
-  newName: string;
+  changes: NewCircle[];
 }
