@@ -658,6 +658,7 @@ export default function ChatComponent({
                     [styles.messageInputEmpty]:
                       checkIsTextEditorValueEmpty(message),
                   })}
+                  classNameRtl={styles.messageInputRtl}
                   elementStyles={{
                     emoji: classNames({
                       [styles.singleEmojiText]: emojiCount.isSingleEmoji,
