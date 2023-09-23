@@ -6,7 +6,7 @@ import {
   useGovernanceByCommonId,
   useProjectCreation,
 } from "@/shared/hooks/useCases";
-import { Circles, Common, Governance, Project } from "@/shared/models";
+import { Circles, Common, Governance, Project, Roles } from "@/shared/models";
 import {
   Loader,
   LoaderVariant,
@@ -15,6 +15,7 @@ import {
 import {
   convertLinksToUploadFiles,
   getCirclesWithHighestTier,
+  removeProjectCircles,
 } from "@/shared/utils";
 import { projectsActions, selectCommonLayoutProjects } from "@/store/states";
 import { generateCreationForm, CreationFormRef } from "../../../CreationForm";
@@ -37,6 +38,7 @@ interface ProjectCreationFormProps {
 const getInitialValues = (
   governanceCircles: Circles,
   initialCommon?: Project,
+  roles?: Roles,
 ): ProjectCreationFormValues => {
   const circlesWithHighestTier = getCirclesWithHighestTier(
     Object.values(governanceCircles),
@@ -64,6 +66,7 @@ const getInitialValues = (
       initialCommon?.directParent.circleId ||
       circlesWithHighestTier[0]?.id ||
       "",
+    roles: roles || [],
   };
 };
 
@@ -92,11 +95,20 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     error: updateProjectError,
     updateCommon: updateProject,
   } = useCommonUpdate(initialCommon?.id);
-  const isLoading = isProjectCreationLoading || isCommonUpdateLoading;
+  const isLoading =
+    isProjectCreationLoading || isCommonUpdateLoading || !governance;
   const error = createProjectError || updateProjectError;
+  const nonProjectCircles = useMemo(
+    () => removeProjectCircles(Object.values(governance?.circles || {})),
+    [governance?.circles],
+  );
+  const roles: Roles = nonProjectCircles.map((circle) => ({
+    circleId: circle.id,
+    circleName: circle.name,
+  }));
   const initialValues = useMemo(
-    () => getInitialValues(governanceCircles, initialCommon),
-    [governanceCircles],
+    () => getInitialValues(governanceCircles, initialCommon, roles),
+    [governanceCircles, nonProjectCircles],
   );
   const projectId = initialCommon?.id || project?.id;
 
@@ -167,7 +179,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         ref={formRef}
         initialValues={initialValues}
         onSubmit={isEditing ? handleProjectUpdate : handleProjectCreate}
-        items={getConfiguration(true, [], {
+        items={getConfiguration(true, roles, {
           existingNames: existingProjectsNames,
         })}
         submitButtonText={isEditing ? "Save changes" : "Create Space"}

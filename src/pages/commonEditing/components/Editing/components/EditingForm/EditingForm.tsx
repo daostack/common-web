@@ -35,7 +35,7 @@ const EditingForm: FC<EditingFormProps> = (props) => {
     [governance?.circles],
   );
   const {
-    isCommonUpdateLoading: isLoading,
+    isCommonUpdateLoading,
     common: updatedCommon,
     error,
     updateCommon,
@@ -49,6 +49,7 @@ const EditingForm: FC<EditingFormProps> = (props) => {
     common,
     roles,
   );
+  const isLoading = isCommonUpdateLoading || !isGovernanceFetched;
 
   useEffect(() => {
     if (common.governanceId) {
@@ -80,7 +81,7 @@ const EditingForm: FC<EditingFormProps> = (props) => {
 
   return (
     <>
-      {(isLoading || !isGovernanceFetched) && (
+      {isLoading && (
         <Loader
           overlayClassName={styles.globalLoader}
           variant={LoaderVariant.Global}
