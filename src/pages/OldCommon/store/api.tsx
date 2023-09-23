@@ -68,7 +68,10 @@ import firebase from "@/shared/utils/firebase";
 import { generateCirclesDataForCommonMember } from "../../../shared/utils/generateCircleDataForCommonMember";
 import { ChangeVisibilityDto } from "../interfaces/ChangeVisibilityDto";
 import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
-import { UpdateGovernanceCircleNamePayload } from "../interfaces/UpdateGovernanceCircleName";
+import {
+  UpdateGovernanceCirclesNamesPayload,
+  UpdateGovernanceCirclesNamesResponse,
+} from "../interfaces/UpdateGovernanceCircleName";
 
 export async function createGovernance(
   requestData: CreateGovernancePayload,
@@ -1206,10 +1209,9 @@ export async function updateGovernanceRules(
   return convertObjectDatesToFirestoreTimestamps(data);
 }
 
-export async function updateGovernanceCircleName(
-  payload: UpdateGovernanceCircleNamePayload,
-): Promise<any> {
-  // UpdateGovernanceCircleNameResponse
+export async function updateGovernanceCirclesNames(
+  payload: UpdateGovernanceCirclesNamesPayload,
+): Promise<UpdateGovernanceCirclesNamesResponse> {
   const { data } = await Api.put<Governance>(
     ApiEndpoint.GovernanceUpdateCircleName,
     payload,

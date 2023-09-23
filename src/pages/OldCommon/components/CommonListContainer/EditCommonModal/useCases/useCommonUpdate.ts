@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { UpdateGovernanceCircleNamePayload } from "@/pages/OldCommon/interfaces/UpdateGovernanceCircleName";
+import { UpdateGovernanceCirclesNamesPayload } from "@/pages/OldCommon/interfaces/UpdateGovernanceCircleName";
 import { FileService, Logger } from "@/services";
 import { isRequestError } from "@/services/Api";
 import { ErrorCode } from "@/shared/constants";
@@ -122,7 +122,7 @@ const useCommonUpdate = (commonId?: string): Return => {
             circleId: role.circleId,
             newName: role.circleName,
           }));
-          const payload: UpdateGovernanceCircleNamePayload = {
+          const payload: UpdateGovernanceCirclesNamesPayload = {
             commonId,
             userId: user.uid,
             changes: circles,
@@ -131,8 +131,11 @@ const useCommonUpdate = (commonId?: string): Return => {
           dispatch(
             updateGovernanceCircleName.request({
               payload,
-              callback: (error, updatedGovernance) => {
-                console.log(updatedGovernance);
+              callback: (error, updatedCircles) => {
+                if (error) {
+                  Logger.error(error);
+                }
+                setIsCommonUpdateLoading(false);
               },
             }),
           );

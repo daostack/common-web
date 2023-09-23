@@ -42,7 +42,7 @@ import {
   createCommon as createCommonApi,
   updateCommon as updateCommonApi,
   updateGovernanceRules as updateGovernanceRulesApi,
-  updateGovernanceCircleName as updateGovernanceCircleNameApi,
+  updateGovernanceCirclesNames as updateGovernanceCircleNameApi,
   createProposal as createProposalApi,
   fetchCommonList,
   fetchCommonDetail,
@@ -1702,14 +1702,8 @@ export function* updateGovernanceCircleName(
       action.payload.payload,
     )) as Awaited<ReturnType<typeof updateGovernanceCircleNameApi>>;
 
-    console.log(updatedCircles);
-    // const updatedGovernance = {
-    //   ...action.payload.governance,
-    //   unstructuredRules: updatedRules.unstructuredRules,
-    // } as Governance;
-
-    // yield put(actions.getGovernance.success(updatedGovernance));
-    // action.payload.callback(null, updatedGovernance);
+    yield put(actions.updateGovernanceCircleName.success(updatedCircles));
+    action.payload.callback(null, updatedCircles);
   } catch (error) {
     if (isError(error)) {
       action.payload.callback(error);
