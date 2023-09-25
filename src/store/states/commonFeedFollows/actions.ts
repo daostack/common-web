@@ -1,6 +1,7 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { FollowFeedItemPayload } from "@/shared/interfaces/api";
 import { CommonFeedFollowsActionType } from "./constants";
+import { FollowFeedItemMutationState } from "./types";
 
 export const followFeedItem = createAsyncAction(
   CommonFeedFollowsActionType.FOLLOW_FEED_ITEM,
@@ -16,8 +17,12 @@ export const followFeedItem = createAsyncAction(
 
 export const setFeedItemFollow = createStandardAction(
   CommonFeedFollowsActionType.SET_FEED_ITEM_FOLLOW,
+)<FollowFeedItemPayload>();
+
+export const setFeedItemsFollowStateByCommon = createStandardAction(
+  CommonFeedFollowsActionType.SET_FEED_ITEMS_FOLLOW_STATE_BY_COMMON,
 )<{
-  itemId: string;
   commonId: string;
   isFollowing: boolean;
+  mutationState: FollowFeedItemMutationState;
 }>();

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { FeedItemFollowsService } from "@/services";
 import { useIsMounted, useLoadingState } from "@/shared/hooks";
 import { LoadingState } from "@/shared/interfaces";
@@ -6,12 +6,26 @@ import { FeedItemFollow } from "@/shared/models";
 
 type State = LoadingState<FeedItemFollow | null>;
 
+interface Data {
+  userId?: string;
+  feedItemId?: string;
+}
+
+interface Options {
+  withSubscription?: boolean;
+}
+
 interface Return extends State {
   fetchUserFeedItemFollowData: (userId: string, feedItemId: string) => void;
   setUserFeedItemFollowData: (data: FeedItemFollow | null) => void;
 }
 
-export const useUserFeedItemFollowData = (): Return => {
+export const useUserFeedItemFollowData = (
+  data: Data,
+  options: Options = {},
+): Return => {
+  const { feedItemId, userId } = data;
+  const { withSubscription = false } = options;
   const isMounted = useIsMounted();
   const [state, setState] = useLoadingState<FeedItemFollow | null>(null);
 
@@ -55,6 +69,33 @@ export const useUserFeedItemFollowData = (): Return => {
     },
     [],
   );
+
+  useEffect(() => {
+    if (!withSubscription || !feedItemId || !userId) {
+      return;
+    }
+
+    const unsubscribe =
+      FeedItemFollowsService.subscribeToUserFeedItemFollowData(
+        userId,
+        feedItemId,
+        (userFeedItemFollowData, { isAdded, isModified }) => {
+          let data: State["data"] = null;
+
+          if (isAdded || isModified) {
+            data = userFeedItemFollowData;
+          }
+
+          setState({
+            loading: false,
+            fetched: true,
+            data,
+          });
+        },
+      );
+
+    return unsubscribe;
+  }, [withSubscription, feedItemId, userId]);
 
   return {
     ...state,

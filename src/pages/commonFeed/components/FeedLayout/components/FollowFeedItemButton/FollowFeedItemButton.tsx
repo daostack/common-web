@@ -12,10 +12,10 @@ interface FollowFeedItemButtonProps {
 
 const FollowFeedItemButton: FC<FollowFeedItemButtonProps> = (props) => {
   const { feedItemId, commonId } = props;
-  const { isDisabled, isFollowing, onFollowToggle } = useFeedItemFollow(
+  const { isDisabled, isFollowing, onFollowToggle } = useFeedItemFollow({
     feedItemId,
     commonId,
-  );
+  });
 
   return (
     <ButtonIcon
