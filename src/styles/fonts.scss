@@ -1,4 +1,3 @@
-$nunitoSansFontName: "NunitoSans";
 $notoSerifSCFontName: "NotoSerifSC";
 $assistantFontName: "Assistant";
 $heeboFontName: "Heebo";
@@ -8,65 +7,11 @@ $poppinsSansFontName: "PoppinsSans";
 $trueTypeFontFormat: "truetype";
 $openTypeFontFormat: "opentype";
 
-// NunitoSans
-@font-face {
-  font-family: $nunitoSansFontName;
-  src: local($nunitoSansFontName),
-    url("/shared/assets/fonts/NunitoSans-Light.ttf") format($trueTypeFontFormat);
-  font-weight: 300;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: $nunitoSansFontName;
-  src: local($nunitoSansFontName),
-    url("/shared/assets/fonts/NunitoSans-Regular.ttf")
-      format($trueTypeFontFormat);
-  font-weight: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: $nunitoSansFontName;
-  src: local($nunitoSansFontName),
-    url("/shared/assets/fonts/NunitoSans-Italic.ttf")
-      format($trueTypeFontFormat);
-  font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: $nunitoSansFontName;
-  src: local($nunitoSansFontName),
-    url("/shared/assets/fonts/NunitoSans-SemiBold.ttf")
-      format($trueTypeFontFormat);
-  font-weight: 600;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: $nunitoSansFontName;
-  src: local($nunitoSansFontName),
-    url("/shared/assets/fonts/NunitoSans-Bold.ttf") format($trueTypeFontFormat);
-  font-weight: bold;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: $nunitoSansFontName;
-  src: local($nunitoSansFontName),
-    url("/shared/assets/fonts/NunitoSans-ExtraBold.ttf")
-      format($trueTypeFontFormat);
-  font-weight: 800;
-  font-display: swap;
-}
-
 // NotoSerifSC
 @font-face {
   font-family: $notoSerifSCFontName;
   src: local($notoSerifSCFontName),
-    url("/shared/assets/fonts/NotoSerifSC-SemiBold.otf")
+    url("/shared/assets/fonts/NotoSerifSC-SemiBold.woff2")
       format($openTypeFontFormat);
   font-weight: 600;
   font-display: swap;
@@ -75,7 +20,8 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $notoSerifSCFontName;
   src: local($notoSerifSCFontName),
-    url("/shared/assets/fonts/NotoSerifSC-Bold.otf") format($openTypeFontFormat);
+    url("/shared/assets/fonts/NotoSerifSC-Bold.woff2")
+      format($openTypeFontFormat);
   font-weight: bold;
   font-display: swap;
 }
@@ -83,7 +29,7 @@ $openTypeFontFormat: "opentype";
 @font-face {
   font-family: $notoSerifSCFontName;
   src: local($notoSerifSCFontName),
-    url("/shared/assets/fonts/NotoSerifSC-Black.otf")
+    url("/shared/assets/fonts/NotoSerifSC-Black.woff2")
       format($openTypeFontFormat);
   font-weight: 900;
   font-display: swap;
