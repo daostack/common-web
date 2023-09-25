@@ -10,6 +10,10 @@ $phone-breakpoint: 415px;
   transform: translateY(50%);
 }
 
+.containerRtl {
+  left: 0.5625rem;
+}
+
 .pickerContainer {
   position: absolute;
   bottom: 3.25rem;
@@ -22,4 +26,8 @@ $phone-breakpoint: 415px;
   @media only screen and (max-width: $phone-breakpoint) {
     right: -4.5rem; // Picker would be at the right corner of send button icon
   }
+}
+
+.pickerContainerRtl {
+  left: 0.5625rem;
 }

@@ -111,6 +111,11 @@
   word-break: break-word;
 }
 
+.messageContentRtl {
+  direction: rtl;
+  text-align: right;
+}
+
 .messageContentCurrentUser {
   color: $white;
   margin-right: 2.5rem;
