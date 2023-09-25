@@ -14,6 +14,7 @@ $openTypeFontFormat: "opentype";
   src: local($nunitoSansFontName),
     url("/shared/assets/fonts/NunitoSans-Light.ttf") format($trueTypeFontFormat);
   font-weight: 300;
+  font-display: swap;
 }
 
 @font-face {
@@ -22,6 +23,7 @@ $openTypeFontFormat: "opentype";
     url("/shared/assets/fonts/NunitoSans-Regular.ttf")
       format($trueTypeFontFormat);
   font-weight: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -31,6 +33,7 @@ $openTypeFontFormat: "opentype";
       format($trueTypeFontFormat);
   font-weight: normal;
   font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
@@ -39,6 +42,7 @@ $openTypeFontFormat: "opentype";
     url("/shared/assets/fonts/NunitoSans-SemiBold.ttf")
       format($trueTypeFontFormat);
   font-weight: 600;
+  font-display: swap;
 }
 
 @font-face {
@@ -46,6 +50,7 @@ $openTypeFontFormat: "opentype";
   src: local($nunitoSansFontName),
     url("/shared/assets/fonts/NunitoSans-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
+  font-display: swap;
 }
 
 @font-face {
@@ -54,6 +59,7 @@ $openTypeFontFormat: "opentype";
     url("/shared/assets/fonts/NunitoSans-ExtraBold.ttf")
       format($trueTypeFontFormat);
   font-weight: 800;
+  font-display: swap;
 }
 
 // NotoSerifSC
@@ -63,6 +69,7 @@ $openTypeFontFormat: "opentype";
     url("/shared/assets/fonts/NotoSerifSC-SemiBold.otf")
       format($openTypeFontFormat);
   font-weight: 600;
+  font-display: swap;
 }
 
 @font-face {
@@ -70,6 +77,7 @@ $openTypeFontFormat: "opentype";
   src: local($notoSerifSCFontName),
     url("/shared/assets/fonts/NotoSerifSC-Bold.otf") format($openTypeFontFormat);
   font-weight: bold;
+  font-display: swap;
 }
 
 @font-face {
@@ -78,6 +86,7 @@ $openTypeFontFormat: "opentype";
     url("/shared/assets/fonts/NotoSerifSC-Black.otf")
       format($openTypeFontFormat);
   font-weight: 900;
+  font-display: swap;
 }
 
 // Assistant
@@ -86,6 +95,7 @@ $openTypeFontFormat: "opentype";
   src: local($assistantFontName),
     url("/shared/assets/fonts/Assistant-Light.ttf") format($trueTypeFontFormat);
   font-weight: 300;
+  font-display: swap;
 }
 
 @font-face {
@@ -93,6 +103,7 @@ $openTypeFontFormat: "opentype";
   src: local($assistantFontName),
     url("/shared/assets/fonts/Assistant-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
+  font-display: swap;
 }
 
 // Heebo
@@ -101,6 +112,7 @@ $openTypeFontFormat: "opentype";
   src: local($heeboFontName),
     url("/shared/assets/fonts/Heebo-Regular.ttf") format($trueTypeFontFormat);
   font-weight: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -108,6 +120,7 @@ $openTypeFontFormat: "opentype";
   src: local($heeboFontName),
     url("/shared/assets/fonts/Heebo-Medium.ttf") format($trueTypeFontFormat);
   font-weight: 500;
+  font-display: swap;
 }
 
 @font-face {
@@ -115,6 +128,7 @@ $openTypeFontFormat: "opentype";
   src: local($heeboFontName),
     url("/shared/assets/fonts/Heebo-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
+  font-display: swap;
 }
 
 // Lexend
@@ -123,6 +137,7 @@ $openTypeFontFormat: "opentype";
   src: local($lexendFontName),
     url("/shared/assets/fonts/Lexend-Light.ttf") format($trueTypeFontFormat);
   font-weight: 300;
+  font-display: swap;
 }
 
 @font-face {
@@ -130,6 +145,7 @@ $openTypeFontFormat: "opentype";
   src: local($lexendFontName),
     url("/shared/assets/fonts/Lexend-Regular.ttf") format($trueTypeFontFormat);
   font-weight: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -137,6 +153,7 @@ $openTypeFontFormat: "opentype";
   src: local($lexendFontName),
     url("/shared/assets/fonts/Lexend-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
+  font-display: swap;
 }
 
 // Poppins
@@ -145,6 +162,7 @@ $openTypeFontFormat: "opentype";
   src: local($poppinsSansFontName),
     url("/shared/assets/fonts/Poppins-Regular.ttf") format($trueTypeFontFormat);
   font-weight: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -153,6 +171,7 @@ $openTypeFontFormat: "opentype";
     url("/shared/assets/fonts/Poppins-Italic.ttf") format($trueTypeFontFormat);
   font-weight: normal;
   font-style: italic;
+  font-display: swap;
 }
 
 @font-face {
@@ -160,6 +179,7 @@ $openTypeFontFormat: "opentype";
   src: local($poppinsSansFontName),
     url("/shared/assets/fonts/Poppins-Medium.ttf") format($trueTypeFontFormat);
   font-weight: 500;
+  font-display: swap;
 }
 
 @font-face {
@@ -167,6 +187,7 @@ $openTypeFontFormat: "opentype";
   src: local($poppinsSansFontName),
     url("/shared/assets/fonts/Poppins-SemiBold.ttf") format($trueTypeFontFormat);
   font-weight: 600;
+  font-display: swap;
 }
 
 @font-face {
@@ -174,6 +195,7 @@ $openTypeFontFormat: "opentype";
   src: local($poppinsSansFontName),
     url("/shared/assets/fonts/Poppins-Bold.ttf") format($trueTypeFontFormat);
   font-weight: bold;
+  font-display: swap;
 }
 
 @font-face {
@@ -182,4 +204,5 @@ $openTypeFontFormat: "opentype";
     url("/shared/assets/fonts/Poppins-ExtraBold.ttf")
       format($trueTypeFontFormat);
   font-weight: 800;
+  font-display: swap;
 }
