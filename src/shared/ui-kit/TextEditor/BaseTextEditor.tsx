@@ -255,6 +255,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           containerClassName={emojiContainerClassName}
           pickerContainerClassName={emojiPickerContainerClassName}
           onEmojiSelect={(emoji) => {
+            Transforms.select(editor, EditorSlate.end(editor, []));
             insertEmoji(editor, emoji.native);
           }}
         />
