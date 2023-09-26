@@ -5,11 +5,12 @@ import styles from "./InfiniteScroll.module.scss";
 
 interface InfiniteScrollProps {
   isLoading: boolean;
+  loaderDelay?: number;
   onFetchNext: () => void;
 }
 
 const InfiniteScroll: FC<InfiniteScrollProps> = (props) => {
-  const { isLoading, onFetchNext, children } = props;
+  const { isLoading, loaderDelay, onFetchNext, children } = props;
   const [isInnerLoading, setIsInnerLoading] = useState(isLoading);
   const markerRef = useRef<HTMLDivElement>(null);
   const isMarkerOnScreen = useIntersectionObserver(markerRef.current);
@@ -41,7 +42,7 @@ const InfiniteScroll: FC<InfiniteScrollProps> = (props) => {
       <div ref={markerRef} />
       {isLoading && (
         <div className={styles.loaderWrapper}>
-          <Loader />
+          <Loader delay={loaderDelay} />
         </div>
       )}
     </>

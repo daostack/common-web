@@ -15,7 +15,6 @@ import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { MembershipRequestModal } from "@/pages/OldCommon/components";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import {
   FeedItem,
@@ -31,12 +30,15 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
-import { JoinProjectModal } from "@/pages/common/components/JoinProjectModal";
-import { useJoinProjectAutomatically } from "@/pages/common/hooks";
 import { InternalLinkData } from "@/shared/components";
-import { InboxItemType, QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
+import {
+  InboxItemType,
+  LOADER_APPEARANCE_DELAY,
+  QueryParamKey,
+  ROUTE_PATHS,
+} from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
+import { useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -637,7 +639,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
           >
             {topContent}
             {isContentEmpty && <p className={styles.emptyText}>{emptyText}</p>}
-            <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
+            <InfiniteScroll
+              onFetchNext={onFetchNext}
+              isLoading={loading}
+              loaderDelay={LOADER_APPEARANCE_DELAY}
+            >
               {allFeedItems?.map((item) => {
                 const isActive = item.itemId === activeFeedItemId;
 
