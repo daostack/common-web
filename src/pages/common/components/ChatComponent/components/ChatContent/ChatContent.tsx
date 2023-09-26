@@ -12,9 +12,12 @@ import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
-import { Loader } from "@/shared/components";
 import { ChatMessage, InternalLinkData } from "@/shared/components";
-import { ChatType, QueryParamKey } from "@/shared/constants";
+import {
+  ChatType,
+  LOADER_APPEARANCE_DELAY,
+  QueryParamKey,
+} from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import {
   checkIsUserDiscussionMessage,
@@ -25,6 +28,7 @@ import {
   User,
   Circles,
 } from "@/shared/models";
+import { Loader } from "@/shared/ui-kit";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
 import { checkIsLastSeenInPreviousDay } from "./utils";
@@ -209,7 +213,7 @@ const ChatContent: ForwardRefRenderFunction<
   if (isLoading) {
     return (
       <div className={styles.loaderContainer}>
-        <Loader />
+        <Loader delay={LOADER_APPEARANCE_DELAY} />
       </div>
     );
   }

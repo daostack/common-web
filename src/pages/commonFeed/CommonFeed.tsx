@@ -20,7 +20,11 @@ import { MembershipRequestModal } from "@/pages/OldCommon/components";
 import { FeedItemBaseContent, FeedItemBaseContentProps } from "@/pages/common";
 import { JoinProjectModal } from "@/pages/common/components/JoinProjectModal";
 import { useJoinProjectAutomatically } from "@/pages/common/hooks";
-import { CommonAction, QueryParamKey } from "@/shared/constants";
+import {
+  CommonAction,
+  LOADER_APPEARANCE_DELAY,
+  QueryParamKey,
+} from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems, useUserCommonIds } from "@/shared/hooks/useCases";
@@ -396,7 +400,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   if (!isDataFetched) {
     return (
       <div className={styles.centerWrapper}>
-        <Loader />
+        <Loader delay={LOADER_APPEARANCE_DELAY} />
       </div>
     );
   }
