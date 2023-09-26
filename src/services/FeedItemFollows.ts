@@ -1,4 +1,5 @@
 import { ApiEndpoint } from "@/shared/constants";
+import { DocChange } from "@/shared/constants/docChange";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { FollowFeedItemPayload } from "@/shared/interfaces/api";
 import {
@@ -34,6 +35,37 @@ class FeedItemFollowsService {
       .get();
 
     return snapshot.docs[0]?.data() || null;
+  };
+
+  public subscribeToUserFeedItemFollowData = (
+    userId: string,
+    feedItemId: string,
+    callback: (
+      userFeedItemFollowData: FeedItemFollow | null,
+      statuses: {
+        isAdded: boolean;
+        isRemoved: boolean;
+        isModified: boolean;
+      },
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getFeedItemFollowsSubCollection(userId).where(
+      "feedItemId",
+      "==",
+      feedItemId,
+    );
+
+    return query.onSnapshot((snapshot) => {
+      const docChange = snapshot.docChanges()[0];
+
+      if (docChange) {
+        callback(docChange.doc.data(), {
+          isAdded: docChange.type === DocChange.Added,
+          isRemoved: docChange.type === DocChange.Removed,
+          isModified: docChange.type === DocChange.Modified,
+        });
+      }
+    });
   };
 
   public getUserFeedItemFollowDataWithMetadata = async (

@@ -148,6 +148,7 @@ export interface CommonMember {
   rulesAccepted?: boolean;
   joinedAt: firebase.firestore.Timestamp;
   circleIds: string[];
+  isFollowing: boolean;
   streamsUnreadCountByProjectStream?: Record<string, number>;
   unreadCountByProjectStream?: Record<string, number>;
 }
