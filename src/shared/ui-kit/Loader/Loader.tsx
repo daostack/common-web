@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import loaderDefault from "@/shared/assets/icons/loader-pink.svg";
 import loaderWhite from "@/shared/assets/icons/loader-white.svg";
@@ -20,6 +20,7 @@ interface LoaderProps {
   overlayClassName?: string;
   variant?: LoaderVariant;
   color?: LoaderColor;
+  delay?: number;
 }
 
 const Loader: FC<LoaderProps> = (props) => {
@@ -28,7 +29,10 @@ const Loader: FC<LoaderProps> = (props) => {
     overlayClassName,
     variant = LoaderVariant.Default,
     color = LoaderColor.Default,
+    delay,
   } = props;
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isShowing, setIsShowing] = useState(!delay);
   const loaderEl = (
     <img
       className={classNames(styles.loader, className)}
@@ -36,6 +40,22 @@ const Loader: FC<LoaderProps> = (props) => {
       alt="Loader"
     />
   );
+
+  useEffect(() => {
+    if (!delay) {
+      return;
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      setIsShowing(true);
+    }, delay);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [delay]);
 
   if (variant === LoaderVariant.Global) {
     return (
@@ -49,7 +69,7 @@ const Loader: FC<LoaderProps> = (props) => {
     );
   }
 
-  return loaderEl;
+  return isShowing ? loaderEl : null;
 };
 
 export default Loader;
