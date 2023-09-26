@@ -5,6 +5,8 @@ interface Return {
   unlockBodyScroll: () => void;
 }
 
+const PAGE_EXTRA_PR_NAME = "--page-extra-pr";
+
 const useLockedBody = (initialLocked = false, rootId = "root"): Return => {
   const [locked, setLocked] = useState(initialLocked);
 
@@ -41,6 +43,10 @@ const useLockedBody = (initialLocked = false, rootId = "root"): Return => {
       document.body.style.paddingRight = `${
         originalPaddingRight + scrollBarWidth
       }px`;
+      document.documentElement.style.setProperty(
+        PAGE_EXTRA_PR_NAME,
+        `${scrollBarWidth}px`,
+      );
     }
 
     return () => {
@@ -48,6 +54,7 @@ const useLockedBody = (initialLocked = false, rootId = "root"): Return => {
 
       if (scrollBarWidth) {
         document.body.style.paddingRight = `${originalPaddingRight}px`;
+        document.documentElement.style.setProperty(PAGE_EXTRA_PR_NAME, "0px");
       }
     };
   }, [locked]);

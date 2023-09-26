@@ -4,7 +4,7 @@
 .container {
   position: fixed;
   top: 0;
-  right: var(--sb-h-indent);
+  right: calc(var(--page-extra-pr) + var(--sb-h-indent));
   left: var(--sb-h-indent);
   z-index: 3;
   height: var(--header-h);

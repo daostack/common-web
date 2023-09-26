@@ -29,7 +29,7 @@
 .header {
   position: fixed;
   top: var(--header-h);
-  right: var(--sb-h-indent);
+  right: calc(var(--page-extra-pr) + var(--sb-h-indent));
   left: var(--main-pl);
   z-index: 2;
   height: var(--page-content-header);
