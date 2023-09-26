@@ -11,8 +11,6 @@ export type RolesArrayWrapperProps = Omit<
 
 const RolesArrayWrapper: FC<RolesArrayWrapperProps> = (props) => {
   const [{ value }, { error }] = useField<Roles>(props.name);
-  console.log(value);
-  console.log(error);
   const formik = useFormikContext();
 
   return (
