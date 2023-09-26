@@ -31,6 +31,10 @@
   font-display: swap;
 }
 
+:root {
+  --page-extra-pr: 0px;
+}
+
 body {
   --safe-area-inset-bottom: 0;
 
