@@ -42,16 +42,19 @@ const BaseCommon: FC<CommonProps> = (props) => {
     fetched: isCommonDataFetched,
     fetchCommonData,
   } = useFullCommonData();
+  const rootCommonId = commonData?.common.rootCommonId;
   const parentCommonId = commonData?.common.directParent?.commonId;
   const parentCircleId = commonData?.common.directParent?.circleId;
   const {
     fetched: isGlobalDataFetched,
     fetchUserRelatedData,
+    fetchRootCommonMemberData,
     fetchParentCommonMemberData,
-    data: { commonMember, parentCommonMember, isJoinPending },
+    data: { commonMember, rootCommonMember, parentCommonMember, isJoinPending },
     setIsJoinPending,
   } = useGlobalCommonData({
     commonId,
+    rootCommonId,
     parentCommonId,
     parentCircleId,
     governanceCircles: commonData?.governance.circles,
@@ -86,6 +89,7 @@ const BaseCommon: FC<CommonProps> = (props) => {
 
   useEffect(() => {
     if (isCommonDataFetched) {
+      fetchRootCommonMemberData();
       fetchParentCommonMemberData();
     }
   }, [userId, parentCommonId, parentCircleId, isCommonDataFetched]);
@@ -116,6 +120,7 @@ const BaseCommon: FC<CommonProps> = (props) => {
       settings={settings}
       defaultTab={defaultTab}
       common={commonData.common}
+      rootCommon={commonData.rootCommon}
       parentCommon={commonData.parentCommon}
       governance={commonData.governance}
       parentCommons={commonData.parentCommons}
@@ -124,6 +129,7 @@ const BaseCommon: FC<CommonProps> = (props) => {
       supportersData={commonData.supportersData}
       isGlobalDataFetched={isGlobalDataFetched}
       commonMember={commonMember}
+      rootCommonMember={rootCommonMember}
       parentCommonMember={parentCommonMember}
       isJoinPending={isJoinPending}
       setIsJoinPending={setIsJoinPending}

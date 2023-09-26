@@ -115,6 +115,10 @@ export interface Common extends BaseEntity {
   messages?: DiscussionMessage[];
 
   pinnedFeedItems: FeedItem[];
+
+  hasPublicItems: boolean;
+
+  rootCommonId?: string;
 }
 
 export interface Project extends Common {
