@@ -84,7 +84,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     hasImages,
     hasFiles,
   } = props;
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTabletView = useIsTabletView();
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
