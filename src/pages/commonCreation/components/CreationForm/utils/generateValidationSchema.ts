@@ -86,21 +86,17 @@ const getValidationSchemaForLinksItem = ({
 const getValidationSchemaForRolesItem = ({
   validation,
 }: Pick<RolesFormItem, "validation">): Schema => {
-  const schema = Yup.object().shape({
-    roles: Yup.array().of(
-      Yup.object().shape({
-        circleName: Yup.string().required("Role name is required"),
-      }),
-    ),
-  });
-
-  console.log(schema);
-
   if (!validation) {
-    return schema;
+    return Yup.array();
   }
 
-  return schema;
+  return Yup.array().of(
+    Yup.object().shape({
+      circleName: Yup.string().required(
+        validation.required?.message || "Role name is required",
+      ),
+    }),
+  );
 };
 
 export const generateValidationSchema = (
