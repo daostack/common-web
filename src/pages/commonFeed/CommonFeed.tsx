@@ -188,11 +188,11 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         (item) => item.itemId !== sharedFeedItemId,
       ) || [];
 
-    if (sharedFeedItem) {
-      items.push(sharedFeedItem);
-    }
     if (filteredPinnedItems.length > 0) {
       items.push(...filteredPinnedItems);
+    }
+    if (sharedFeedItem) {
+      items.push(sharedFeedItem);
     }
 
     return items;
