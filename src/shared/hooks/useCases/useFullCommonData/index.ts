@@ -15,10 +15,13 @@ interface Return extends CombinedState {
   resetCommonData: () => void;
 }
 
-const getRootCommon = async (
+export const getRootCommon = async (
   parentCommon?: Common | null,
   rootCommonId?: string,
 ): Promise<Common | null> => {
+  if (!rootCommonId) {
+    return null;
+  }
   if (parentCommon && parentCommon.id === rootCommonId) {
     return parentCommon;
   }

@@ -5,8 +5,8 @@ import {
   CommonService,
   GovernanceService,
 } from "@/services";
+import { getRootCommon } from "@/shared/hooks/useCases/useFullCommonData";
 import { useCommonSubscription } from "@/shared/hooks/useCases/useFullCommonData/useCommonSubscription";
-import { Common } from "@/shared/models";
 import { State, CombinedState } from "./types";
 import { useGovernanceSubscription } from "./useGovernanceSubscription";
 
@@ -19,17 +19,6 @@ interface Return extends CombinedState {
   fetchCommonData: (options: FetchCommonDataOptions) => void;
   resetCommonData: () => void;
 }
-
-const getRootCommon = async (
-  parentCommon?: Common | null,
-  rootCommonId?: string,
-): Promise<Common | null> => {
-  if (parentCommon && parentCommon.id === rootCommonId) {
-    return parentCommon;
-  }
-
-  return rootCommonId ? CommonService.getCommonById(rootCommonId) : null;
-};
 
 export const useCommonData = (userId?: string): Return => {
   const [state, setState] = useState<State>({
