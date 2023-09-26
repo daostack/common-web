@@ -11,7 +11,7 @@ import { TextField } from "../TextField";
 import styles from "./RolesArray.module.scss";
 
 type Errors = string | string[] | FormikErrors<string[]> | undefined;
-type Touched = FormikTouched<Roles>[] | undefined;
+type Touched = FormikTouched<Role>[] | undefined;
 
 export interface RolesArrayProps extends FieldArrayConfig {
   values: Roles;

@@ -83,6 +83,26 @@ const getValidationSchemaForLinksItem = ({
   );
 };
 
+const getValidationSchemaForRolesItem = ({
+  validation,
+}: Pick<RolesFormItem, "validation">): Schema => {
+  const schema = Yup.object().shape({
+    roles: Yup.array().of(
+      Yup.object().shape({
+        circleName: Yup.string().required("Role name is required"),
+      }),
+    ),
+  });
+
+  console.log(schema);
+
+  if (!validation) {
+    return schema;
+  }
+
+  return schema;
+};
+
 export const generateValidationSchema = (
   items: CreationFormItem[],
 ): Yup.ObjectSchema => {
@@ -98,9 +118,9 @@ export const generateValidationSchema = (
     if (item.type === CreationFormItemType.Links) {
       schema = getValidationSchemaForLinksItem(item);
     }
-    // if (item.type === CreationFormItemType.Roles) {
-    //   schema = getValidationSchemaForTextFieldItem(item);
-    // }
+    if (item.type === CreationFormItemType.Roles) {
+      schema = getValidationSchemaForRolesItem(item);
+    }
 
     return schema
       ? {
