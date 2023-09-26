@@ -74,8 +74,10 @@ export const useCommonData = (userId?: string): Return => {
                 ? GovernanceService.getGovernanceByCommonId(rootCommonId)
                 : null,
             ]);
-          const parentCommon = last(parentCommons);
-          const rootCommon = await getRootCommon(parentCommon, rootCommonId);
+          const rootCommon = await getRootCommon(
+            rootCommonId,
+            parentCommons[0],
+          );
 
           setState({
             loading: false,
@@ -89,7 +91,7 @@ export const useCommonData = (userId?: string): Return => {
               sharedFeedItem,
               rootCommon,
               rootCommonGovernance,
-              parentCommon,
+              parentCommon: last(parentCommons),
             },
           });
         } catch (error) {

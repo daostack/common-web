@@ -16,17 +16,17 @@ interface Return extends CombinedState {
 }
 
 export const getRootCommon = async (
-  parentCommon?: Common | null,
   rootCommonId?: string,
+  initialRootCommon?: Common | null,
 ): Promise<Common | null> => {
   if (!rootCommonId) {
     return null;
   }
-  if (parentCommon && parentCommon.id === rootCommonId) {
-    return parentCommon;
+  if (initialRootCommon && initialRootCommon.id === rootCommonId) {
+    return initialRootCommon;
   }
 
-  return rootCommonId ? CommonService.getCommonById(rootCommonId) : null;
+  return CommonService.getCommonById(rootCommonId);
 };
 
 export const useFullCommonData = (): Return => {
@@ -77,10 +77,9 @@ export const useFullCommonData = (): Return => {
                 ])
               : [],
           ]);
-        const parentCommon = last(parentCommons);
         const rootCommon = await getRootCommon(
-          parentCommon,
           common.rootCommonId,
+          parentCommons[0],
         );
 
         setState({
@@ -92,7 +91,7 @@ export const useFullCommonData = (): Return => {
             parentCommons,
             subCommons,
             rootCommon,
-            parentCommon,
+            parentCommon: last(parentCommons),
             parentCommonSubCommons,
           },
         });
