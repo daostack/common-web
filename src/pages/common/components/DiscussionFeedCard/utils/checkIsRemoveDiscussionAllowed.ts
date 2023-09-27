@@ -1,6 +1,6 @@
 import { GovernanceActions } from "@/shared/constants";
 import { PredefinedTypes } from "@/shared/models";
-import { checkIsCountdownState, hasPermission } from "@/shared/utils";
+import { hasPermission } from "@/shared/utils";
 import { GetAllowedItemsOptions } from "../../FeedItem";
 
 export function checkIsRemoveDiscussionAllowed(
@@ -27,17 +27,11 @@ export function checkIsRemoveDiscussionAllowed(
     return hasPermissionToRemoveDiscussion;
   }
 
-  const { proposalState } = options;
-  const hasPermissionToRemoveProposal =
+  return (
     hasPermission({
       commonMember: options.commonMember,
       governance: { circles },
       key: GovernanceActions.HIDE_OR_UNHIDE_PROPOSAL,
-    }) || isDiscussionOwner;
-
-  return Boolean(
-    proposalState &&
-      checkIsCountdownState({ state: proposalState }) &&
-      hasPermissionToRemoveProposal,
+    }) || isDiscussionOwner
   );
 }

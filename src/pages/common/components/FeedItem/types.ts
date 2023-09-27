@@ -7,7 +7,6 @@ import {
   Discussion,
   CommonFeedType,
   CommonFeedObjectUserUnique,
-  ProposalState,
 } from "@/shared/models";
 import { FeedItemMenuItem } from "./constants";
 
@@ -22,7 +21,6 @@ export interface GetAllowedItemsOptions {
   discussion?: Discussion | null;
   governanceCircles?: Circles;
   feedItem?: CommonFeed;
-  proposalState?: ProposalState;
   commonMember?: CommonMember | null;
   feedItemFollow: FeedItemFollowState;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
