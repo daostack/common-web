@@ -55,7 +55,6 @@ const RolesArray: FC<RolesArrayProps> = (props) => {
                     value={role.circleName}
                     placeholder="Role title"
                   />
-                  {/* {errors && <ErrorText>{errors}</ErrorText>} */}
                 </div>
               );
             })}

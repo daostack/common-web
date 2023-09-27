@@ -2,6 +2,10 @@ import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { UpdateGovernanceCirclesNamesPayload } from "@/pages/OldCommon/interfaces/UpdateGovernanceCircleName";
+import {
+  updateCommon as updateCommonAction,
+  updateGovernanceCircleName,
+} from "@/pages/OldCommon/store/actions";
 import { FileService, Logger } from "@/services";
 import { isRequestError } from "@/services/Api";
 import { ErrorCode } from "@/shared/constants";
@@ -13,10 +17,6 @@ import {
   UpdateCommonData,
   UpdateCommonPayload,
 } from "../../../../interfaces";
-import {
-  updateCommon as updateCommonAction,
-  updateGovernanceCircleName,
-} from "../../../../store/actions";
 
 interface Return {
   isCommonUpdateLoading: boolean;
