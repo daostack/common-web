@@ -36,7 +36,6 @@ export * from "./StepProgress";
 export * from "./ChartCanvas";
 export * from "./DeletePrompt";
 export * from "./ProgressBar";
-export * from "./TutorialModal";
 export * from "./SupportShare";
 export * from "./BackgroundNotificationModal";
 export * from "./Chat";
