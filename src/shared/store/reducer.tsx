@@ -23,9 +23,6 @@ const initialState: SharedStateType = {
     shouldShowDownloadLinks: null,
     shouldShowAuth: null,
   },
-  tutorialModalState: {
-    isShowing: false,
-  },
   language: Language.English,
   isRtlLanguage: false,
   theme: getTheme(),
@@ -101,11 +98,6 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
         ...nextState.header,
         ...action.payload,
       };
-    }),
-  )
-  .handleAction(actions.setTutorialModalState, (state, action) =>
-    produce(state, (nextState) => {
-      nextState.tutorialModalState = action.payload;
     }),
   )
   .handleAction(actions.changeLanguage, (state, action) =>

@@ -1,16 +1,12 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Router as ReactRouter } from "react-router";
 import { LoginContainer } from "@/pages/Login/containers/LoginContainer";
 import { history } from "@/shared/appConfig";
-import {
-  BackgroundNotificationModal,
-  TutorialModal,
-} from "@/shared/components";
+import { BackgroundNotificationModal } from "@/shared/components";
 import { SMALL_SCREEN_BREAKPOINT, ScreenSize } from "@/shared/constants";
 import { useScreenSize } from "@/shared/hooks";
 import { changeScreenSize } from "@/shared/store/actions";
-import { selectTutorialModalState } from "@/shared/store/selectors";
 import {
   CommonHandler,
   TextDirectionHandler,
@@ -22,7 +18,6 @@ import { Router } from "./router";
 
 const App = () => {
   const dispatch = useDispatch();
-  const tutorialModalState = useSelector(selectTutorialModalState());
   const isDesktop = useScreenSize(`min-width: ${SMALL_SCREEN_BREAKPOINT}`);
 
   useEffect(() => {
@@ -34,7 +29,6 @@ const App = () => {
   return (
     <ReactRouter history={history}>
       <BackgroundNotificationModal />
-      <TutorialModal isShowing={tutorialModalState.isShowing} />
       <CommonHandler />
       <TextDirectionHandler />
       <ThemeHandler />

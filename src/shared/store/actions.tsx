@@ -4,7 +4,6 @@ import {
   NotificationData,
   PayloadWithOptionalCallback,
   SharedHeaderState,
-  SharedModalState,
 } from "../interfaces";
 import { DynamicLinkInfo } from "../interfaces/api/dynamicLink";
 import { SharedActionTypes } from "./constants";
@@ -45,10 +44,6 @@ export const resetHeaderState = createStandardAction(
 export const updateHeaderState = createStandardAction(
   SharedActionTypes.UPDATE_HEADER_STATE,
 )<Partial<SharedHeaderState>>();
-
-export const setTutorialModalState = createStandardAction(
-  SharedActionTypes.SET_TUTORIAL_MODAL_STATE,
-)<SharedModalState>();
 
 export const changeLanguage = createStandardAction(
   SharedActionTypes.CHANGE_LANGUAGE,
