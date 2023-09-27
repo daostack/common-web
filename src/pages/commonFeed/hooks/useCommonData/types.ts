@@ -6,7 +6,6 @@ export interface Data {
   governance: Governance;
   parentCommons: Common[];
   subCommons: Common[];
-  commonMembersAmount: number;
   sharedFeedItem: CommonFeed | null;
   rootCommon?: Common | null;
   rootCommonGovernance: Governance | null;

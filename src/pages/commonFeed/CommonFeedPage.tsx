@@ -41,7 +41,6 @@ const renderContentWrapper: RenderCommonFeedContentWrapper = ({
     headerContent={
       <HeaderContent
         common={commonData.common}
-        commonMembersAmount={commonData.commonMembersAmount}
         commonMember={commonMember}
         governance={commonData.governance}
       />
