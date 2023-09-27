@@ -5,35 +5,39 @@ import { GetAllowedItemsOptions } from "../../FeedItem";
 
 export function checkIsRemoveDiscussionAllowed(
   options: GetAllowedItemsOptions,
-) {
-  if (!options.commonMember) return false;
-  if (options.discussion?.predefinedType === PredefinedTypes.General)
+): boolean {
+  if (
+    !options.commonMember ||
+    options.discussion?.predefinedType === PredefinedTypes.General
+  ) {
     return false;
+  }
 
+  const circles = options.governanceCircles || {};
+  const isDiscussionOwner =
+    options.commonMember.userId === options.discussion?.ownerId;
   const hasPermissionToRemoveDiscussion =
     hasPermission({
       commonMember: options.commonMember,
-      governance: {
-        circles: options.governanceCircles || {},
-      },
+      governance: { circles },
       key: GovernanceActions.HIDE_OR_UNHIDE_DISCUSSION,
-    }) || options.commonMember.userId === options.discussion?.ownerId;
+    }) || isDiscussionOwner;
 
-  let isAllowed = hasPermissionToRemoveDiscussion;
-  if (options.discussion?.proposalId && isAllowed) {
-    const { proposal } = options;
-    const hasPermissionToRemoveProposal =
-      hasPermission({
-        commonMember: options.commonMember,
-        governance: {
-          circles: options.governanceCircles || {},
-        },
-        key: GovernanceActions.HIDE_OR_UNHIDE_PROPOSAL,
-      }) || options.commonMember.userId === options.discussion?.ownerId;
-    isAllowed =
-      !!proposal &&
-      checkIsCountdownState({ state: proposal.state }) &&
-      hasPermissionToRemoveProposal;
+  if (!options.discussion?.proposalId) {
+    return hasPermissionToRemoveDiscussion;
   }
-  return isAllowed;
+
+  const { proposalState } = options;
+  const hasPermissionToRemoveProposal =
+    hasPermission({
+      commonMember: options.commonMember,
+      governance: { circles },
+      key: GovernanceActions.HIDE_OR_UNHIDE_PROPOSAL,
+    }) || isDiscussionOwner;
+
+  return Boolean(
+    proposalState &&
+      checkIsCountdownState({ state: proposalState }) &&
+      hasPermissionToRemoveProposal,
+  );
 }

@@ -186,6 +186,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         feedItem: item,
         discussion,
         governanceCircles,
+        proposalState: proposal?.state,
         commonMember,
         feedItemFollow,
         getNonAllowedItems,
