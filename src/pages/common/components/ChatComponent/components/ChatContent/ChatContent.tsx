@@ -185,13 +185,13 @@ const ChatContent: ForwardRefRenderFunction<
     }
   }, [messageIdParam]);
 
-  // useImperativeHandle(
-  //   chatContentRef,
-  //   () => ({
-  //     scrollToContainerBottom,
-  //   }),
-  //   [scrollToContainerBottom],
-  // );
+  useImperativeHandle(
+    chatContentRef,
+    () => ({
+      scrollToContainerBottom,
+    }),
+    [scrollToContainerBottom],
+  );
 
   if (!hasAccess || isHidden) {
     return (
