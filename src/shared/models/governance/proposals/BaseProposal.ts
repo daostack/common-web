@@ -76,4 +76,6 @@ export interface BaseProposal extends BaseEntity {
   moderation: Moderation;
 
   resolutionType: ResolutionType;
+
+  deleted?: boolean;
 }
