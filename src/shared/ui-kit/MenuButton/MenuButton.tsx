@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { forwardRef, ForwardRefRenderFunction } from "react";
 import { Orientation } from "@/shared/constants";
 import { MenuIcon } from "@/shared/icons";
 import { ButtonVariant } from "../Button";
@@ -10,15 +10,17 @@ interface MenuButtonProps {
   variant?: ButtonVariant;
 }
 
-const MenuButton: FC<MenuButtonProps> = ({
-  onClick,
-  variant = ButtonVariant.PrimaryGray,
-}) => {
+const MenuButton: ForwardRefRenderFunction<
+  HTMLButtonElement,
+  MenuButtonProps
+> = (props, ref) => {
+  const { onClick, variant = ButtonVariant.PrimaryGray } = props;
+
   return (
-    <ButtonIcon variant={variant} onClick={onClick}>
+    <ButtonIcon ref={ref} variant={variant} onClick={onClick}>
       <MenuIcon className={styles.icon} variant={Orientation.Vertical} />
     </ButtonIcon>
   );
 };
 
-export default MenuButton;
+export default forwardRef(MenuButton);
