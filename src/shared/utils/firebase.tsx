@@ -23,7 +23,10 @@ if (REACT_APP_ENV === Environment.Local) {
 } else {
   firebase
     .firestore()
-    .enablePersistence()
+    .enablePersistence({
+      synchronizeTabs: true,
+      experimentalForceOwningTab: false,
+    })
     .catch((error) => {
       console.error("Error enabling persistence", error);
     });
