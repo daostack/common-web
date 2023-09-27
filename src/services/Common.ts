@@ -345,12 +345,6 @@ class CommonService {
     });
   };
 
-  public getCommonMembersAmount = async (commonId: string): Promise<number> => {
-    const snapshot = await commonMembersSubCollection(commonId).get();
-
-    return snapshot.size;
-  };
-
   public leaveCircle = async (
     commonId: string,
     circleId: string,

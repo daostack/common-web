@@ -19,14 +19,12 @@ import styles from "./HeaderContent.module.scss";
 interface HeaderContentProps {
   className?: string;
   common: Common;
-  commonMembersAmount: number;
   commonMember: (CommonMember & CirclesPermissions) | null;
   governance: Governance;
 }
 
 const HeaderContent: FC<HeaderContentProps> = (props) => {
-  const { className, common, commonMembersAmount, commonMember, governance } =
-    props;
+  const { className, common, commonMember, governance } = props;
   const { getCommonPageAboutTabPath } = useRoutesContext();
   const isMobileVersion = useIsTabletView();
   const commonFollow = useCommonFollow(common.id, commonMember);
@@ -61,7 +59,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
               {showFollowIcon && <StarIcon stroke="currentColor" />}
             </div>
             <p className={styles.commonMembersAmount}>
-              {commonMembersAmount} member{getPluralEnding(commonMembersAmount)}
+              {common.memberCount} member{getPluralEnding(common.memberCount)}
             </p>
           </div>
         </NavLink>

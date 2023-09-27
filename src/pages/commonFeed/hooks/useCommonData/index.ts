@@ -43,18 +43,16 @@ export const useCommonData = (userId?: string): Return => {
 
       (async () => {
         try {
-          const [common, governance, commonMembersAmount, sharedFeedItem] =
-            await Promise.all([
-              CommonService.getCommonById(commonId),
-              GovernanceService.getGovernanceByCommonId(commonId),
-              CommonService.getCommonMembersAmount(commonId),
-              sharedFeedItemId
-                ? CommonFeedService.getCommonFeedItemById(
-                    commonId,
-                    sharedFeedItemId,
-                  )
-                : null,
-            ]);
+          const [common, governance, sharedFeedItem] = await Promise.all([
+            CommonService.getCommonById(commonId),
+            GovernanceService.getGovernanceByCommonId(commonId),
+            sharedFeedItemId
+              ? CommonFeedService.getCommonFeedItemById(
+                  commonId,
+                  sharedFeedItemId,
+                )
+              : null,
+          ]);
 
           if (!common) {
             throw new Error(`Couldn't find common by id = ${commonId}`);
@@ -87,7 +85,6 @@ export const useCommonData = (userId?: string): Return => {
               governance,
               parentCommons,
               subCommons,
-              commonMembersAmount,
               sharedFeedItem,
               rootCommon,
               rootCommonGovernance,
