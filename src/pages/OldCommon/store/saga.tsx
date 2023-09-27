@@ -42,6 +42,7 @@ import {
   createCommon as createCommonApi,
   updateCommon as updateCommonApi,
   updateGovernanceRules as updateGovernanceRulesApi,
+  updateGovernanceCirclesNames as updateGovernanceCircleNameApi,
   createProposal as createProposalApi,
   fetchCommonList,
   fetchCommonDetail,
@@ -1692,12 +1693,34 @@ export function* updateGovernanceRules(
   }
 }
 
+export function* updateGovernanceCircleName(
+  action: ReturnType<typeof actions.updateGovernanceCircleName.request>,
+): Generator {
+  try {
+    const updatedCircles = (yield call(
+      updateGovernanceCircleNameApi,
+      action.payload.payload,
+    )) as Awaited<ReturnType<typeof updateGovernanceCircleNameApi>>;
+
+    yield put(actions.updateGovernanceCircleName.success(updatedCircles));
+    action.payload.callback(null, updatedCircles);
+  } catch (error) {
+    if (isError(error)) {
+      action.payload.callback(error);
+    }
+  }
+}
+
 export function* commonsSaga() {
   yield takeLatest(actions.createGovernance.request, createGovernance);
   yield takeLatest(actions.getCommonsList.request, getCommonsList);
   yield takeLatest(
     actions.updateGovernanceRules.request,
     updateGovernanceRules,
+  );
+  yield takeLatest(
+    actions.updateGovernanceCircleName.request,
+    updateGovernanceCircleName,
   );
   yield takeLatest(actions.getCommonsListByIds.request, getCommonsListByIds);
   yield takeLatest(actions.getCommonDetail.request, getCommonDetail);

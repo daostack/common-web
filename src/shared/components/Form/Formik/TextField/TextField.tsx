@@ -4,6 +4,7 @@ import { Input, InputProps } from "../../Input";
 
 export type TextFieldProps = InputProps & {
   isRequired?: boolean;
+  value?: string;
 };
 
 const TextField: FC<TextFieldProps> = (props) => {
