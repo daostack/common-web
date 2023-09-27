@@ -26,6 +26,8 @@ export const ApiEndpoint = {
   CreateReport: "/moderation/report",
   HideContent: "/moderation/hide",
   ShowContent: "/moderation/show",
+  FollowCommon: "/commons/follow",
+  MuteCommon: "/commons/mute",
   LeaveCommon: "/commons/leave",
   CreateSubscription: "/commons/immediate-contribution",
   UpdateSubscription: "/subscriptions/update",

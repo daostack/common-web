@@ -28,6 +28,7 @@ interface CommonContentProps {
   settings: CommonPageSettings;
   defaultTab: string;
   common: Common;
+  rootCommon: Common | null;
   parentCommon?: Common;
   governance: Governance;
   parentCommons: Common[];
@@ -36,6 +37,7 @@ interface CommonContentProps {
   supportersData: SupportersData | null;
   isGlobalDataFetched: boolean;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  rootCommonMember: CommonMember | null;
   parentCommonMember: CommonMember | null;
   isJoinPending: boolean;
   setIsJoinPending: (isJoinPending: boolean) => void;
@@ -51,6 +53,8 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     subCommons,
     isGlobalDataFetched,
     commonMember,
+    rootCommon,
+    rootCommonMember,
     parentCommonMember,
     parentCommon,
     parentCommonSubCommons,
@@ -99,9 +103,11 @@ const CommonContent: FC<CommonContentProps> = (props) => {
     <CommonDataProvider
       settings={settings}
       common={common}
+      rootCommon={rootCommon}
       parentCommon={parentCommon}
       governance={governance}
       commonMember={commonMember}
+      rootCommonMember={rootCommonMember}
       parentCommonMember={parentCommonMember}
       isGlobalDataFetched={isGlobalDataFetched}
       parentCommons={parentCommons}

@@ -165,7 +165,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       onOpen: onShareModalOpen,
       onClose: onShareModalClose,
     } = useModal(false);
-    const feedItemFollow = useFeedItemFollow(item.id, commonId);
+    const feedItemFollow = useFeedItemFollow(
+      { feedItemId: item.id, commonId },
+      { withSubscription: true },
+    );
     const menuItems = useMenuItems(
       {
         commonId,

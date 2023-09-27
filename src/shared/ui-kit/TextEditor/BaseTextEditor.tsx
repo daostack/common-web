@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import classNames from "classnames";
 import { isEqual } from "lodash";
 import {
   createEditor,
@@ -20,7 +21,7 @@ import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { User } from "@/shared/models";
-import { getUserName, isMobile } from "@/shared/utils";
+import { getUserName, isMobile, isRtlText } from "@/shared/utils";
 import {
   Editor,
   MentionDropdown,
@@ -39,6 +40,7 @@ import styles from "./BaseTextEditor.module.scss";
 
 export interface TextEditorProps {
   className?: string;
+  classNameRtl?: string;
   emojiContainerClassName?: string;
   emojiPickerContainerClassName?: string;
   inputContainerRef?:
@@ -74,6 +76,7 @@ const INITIAL_SEARCH_VALUE = {
 const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const {
     className,
+    classNameRtl,
     emojiContainerClassName,
     emojiPickerContainerClassName,
     editorRef,
@@ -106,6 +109,8 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
   const [target, setTarget] = useState<Range | null>();
   const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
+
+  const [isRtlLanguage, setIsRtlLanguage] = useState(false);
   useEffect(() => {
     if (!shouldReinitializeEditor) {
       return;
@@ -235,10 +240,17 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
             handleSearch(beforeText ?? "", beforeRange);
           }
+
+          setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
         }}
       >
         <Editor
-          className={className}
+          className={classNames(
+            className,
+            classNameRtl && {
+              [classNameRtl]: isRtlLanguage,
+            },
+          )}
           id={id}
           name={name}
           size={size}
@@ -250,12 +262,12 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           elementStyles={elementStyles}
         />
         <EmojiPicker
+          isRtl={isRtlLanguage}
           isMessageSent={isMessageSent}
           onToggleIsMessageSent={onToggleIsMessageSent}
           containerClassName={emojiContainerClassName}
           pickerContainerClassName={emojiPickerContainerClassName}
           onEmojiSelect={(emoji) => {
-            Transforms.select(editor, EditorSlate.end(editor, []));
             insertEmoji(editor, emoji.native);
           }}
         />

@@ -5,8 +5,8 @@ import { CommonLink } from "@/shared/models";
 import {
   checkIsTextEditorValueEmpty,
   parseStringToTextEditorValue,
-  TextEditor,
   ImageGallery,
+  TextEditorWithReinitialization,
 } from "@/shared/ui-kit";
 import styles from "./FeedGeneralInfo.module.scss";
 
@@ -43,7 +43,7 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
         <p className={classNames(styles.text, styles.subtitle)}>{subtitle}</p>
       )}
       {!isDescriptionEmpty && (
-        <TextEditor
+        <TextEditorWithReinitialization
           editorRef={setDescriptionRef}
           editorClassName={classNames(styles.description, {
             [styles.descriptionShortened]: !shouldShowFullContent,

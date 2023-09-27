@@ -1,6 +1,7 @@
 import React, { FC, ReactNode, useCallback, useMemo } from "react";
 import { useHistory } from "react-router";
 import { CreateCommonModal } from "@/pages/OldCommon/components";
+import { LOADER_APPEARANCE_DELAY } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal } from "@/shared/hooks";
 import { Common } from "@/shared/models";
@@ -75,7 +76,7 @@ const Projects: FC<ProjectsProps> = (props) => {
 
   if (!parentItem) {
     return areCommonsLoading ? (
-      <Loader className={styles.loader} />
+      <Loader className={styles.loader} delay={LOADER_APPEARANCE_DELAY} />
     ) : (
       <>
         {renderNoItemsInfo?.() || null}

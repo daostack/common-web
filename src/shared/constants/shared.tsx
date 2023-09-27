@@ -109,3 +109,5 @@ export const ANONYMOUS_USER_FIRST_NAME = "Anonymous";
 export const ANONYMOUS_USER_LAST_NAME = "User";
 
 export const GA_MEASUREMENT_ID = "G-1W2BNV5QZ9";
+
+export const LOADER_APPEARANCE_DELAY = 2000;

@@ -5,6 +5,7 @@ import {
   CommonService,
   GovernanceService,
 } from "@/services";
+import { getRootCommon } from "@/shared/hooks/useCases/useFullCommonData";
 import { useCommonSubscription } from "@/shared/hooks/useCases/useFullCommonData/useCommonSubscription";
 import { State, CombinedState } from "./types";
 import { useGovernanceSubscription } from "./useGovernanceSubscription";
@@ -64,25 +65,19 @@ export const useCommonData = (userId?: string): Return => {
             );
           }
 
-          const rootCommonId = common.directParent?.commonId;
-          const [
-            parentCommons,
-            subCommons,
-            rootCommonMember,
-            parentCommonMember,
-          ] = await Promise.all([
-            CommonService.getAllParentCommonsForCommon(common),
-            CommonService.getCommonsByDirectParentIds([common.id]),
-            rootCommonId && userId
-              ? CommonService.getCommonMemberByUserId(rootCommonId, userId)
-              : null,
-            common.directParent?.commonId && userId
-              ? CommonService.getCommonMemberByUserId(
-                  common.directParent.commonId,
-                  userId,
-                )
-              : null,
-          ]);
+          const { rootCommonId } = common;
+          const [parentCommons, subCommons, rootCommonGovernance] =
+            await Promise.all([
+              CommonService.getAllParentCommonsForCommon(common),
+              CommonService.getCommonsByDirectParentIds([common.id]),
+              rootCommonId
+                ? GovernanceService.getGovernanceByCommonId(rootCommonId)
+                : null,
+            ]);
+          const rootCommon = await getRootCommon(
+            rootCommonId,
+            parentCommons[0],
+          );
 
           setState({
             loading: false,
@@ -94,8 +89,8 @@ export const useCommonData = (userId?: string): Return => {
               subCommons,
               commonMembersAmount,
               sharedFeedItem,
-              rootCommonMember,
-              parentCommonMember,
+              rootCommon,
+              rootCommonGovernance,
               parentCommon: last(parentCommons),
             },
           });

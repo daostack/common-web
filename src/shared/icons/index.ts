@@ -27,6 +27,7 @@ export { default as Link3Icon } from "./link3.icon";
 export { default as ListMarkIcon } from "./listMark.icon";
 export { default as LongLeftArrowIcon } from "./longLeftArrow.icon";
 export { default as LTRDirectionMarkIcon } from "./ltrDirection.icon";
+export { default as MenuIcon } from "./menu.icon";
 export { default as Menu2Icon } from "./menu2.icon";
 export { default as MoreIcon } from "./more.icon";
 export { OpenIcon } from "./open.icon";

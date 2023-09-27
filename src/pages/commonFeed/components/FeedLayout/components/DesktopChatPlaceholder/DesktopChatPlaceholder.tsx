@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { LOADER_APPEARANCE_DELAY } from "@/shared/constants";
 import { Loader } from "@/shared/ui-kit";
 import { DesktopRightPane } from "../DesktopRightPane";
 import desktopChatStyles from "../DesktopChat/DesktopChat.module.scss";
@@ -17,7 +18,9 @@ const DesktopChatPlaceholder: FC<DesktopChatPlaceholderProps> = (props) => {
   return (
     <DesktopRightPane className={classNames(styles.container, className)}>
       {withTitle && <div className={desktopChatStyles.titleWrapper} />}
-      <div className={styles.loaderWrapper}>{isItemSelected && <Loader />}</div>
+      <div className={styles.loaderWrapper}>
+        {isItemSelected && <Loader delay={LOADER_APPEARANCE_DELAY} />}
+      </div>
     </DesktopRightPane>
   );
 };

@@ -30,8 +30,7 @@ interface ChatProps {
   titleRightContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
-  isJoinPending?: boolean;
-  onJoinCommon?: () => void;
+  renderChatInput?: () => ReactNode;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
@@ -48,8 +47,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
     titleRightContent,
     onMessagesAmountChange,
     directParent,
-    isJoinPending,
-    onJoinCommon,
+    renderChatInput,
     onUserClick,
     onFeedItemClick,
     onInternalLinkClick,
@@ -123,8 +121,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         isAuthorized={Boolean(user)}
         onMessagesAmountChange={onMessagesAmountChange}
         directParent={directParent}
-        isJoinPending={isJoinPending}
-        onJoinCommon={onJoinCommon}
+        renderChatInput={renderChatInput}
         onUserClick={onUserClick}
         onFeedItemClick={onFeedItemClick}
         onInternalLinkClick={onInternalLinkClick}

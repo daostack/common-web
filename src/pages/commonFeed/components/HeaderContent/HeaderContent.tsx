@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { InviteFriendsButton } from "@/pages/common/components";
 import { useRoutesContext } from "@/shared/contexts";
+import { useCommonFollow } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { RightArrowThinIcon } from "@/shared/icons";
+import { RightArrowThinIcon, StarIcon } from "@/shared/icons";
 import {
   CirclesPermissions,
   Common,
@@ -13,7 +13,7 @@ import {
 } from "@/shared/models";
 import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { checkIsProject, getPluralEnding } from "@/shared/utils";
-import { NewStreamButton, ShareButton } from "./components";
+import { ActionsButton, NewStreamButton } from "./components";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
@@ -29,7 +29,11 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
     props;
   const { getCommonPageAboutTabPath } = useRoutesContext();
   const isMobileVersion = useIsTabletView();
+  const commonFollow = useCommonFollow(common.id, commonMember);
   const isProject = checkIsProject(common);
+  const showFollowIcon = commonFollow.isFollowInProgress
+    ? !commonMember?.isFollowing
+    : commonMember?.isFollowing;
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -52,7 +56,10 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           />
 
           <div className={styles.commonInfoWrapper}>
-            <h1 className={styles.commonName}>{common.name}</h1>
+            <div className={styles.commonMainInfoWrapper}>
+              <h1 className={styles.commonName}>{common.name}</h1>
+              {showFollowIcon && <StarIcon stroke="currentColor" />}
+            </div>
             <p className={styles.commonMembersAmount}>
               {commonMembersAmount} member{getPluralEnding(commonMembersAmount)}
             </p>
@@ -66,13 +73,12 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           governance={governance}
           isMobileVersion={isMobileVersion}
         />
-        {!isMobileVersion && (
-          <InviteFriendsButton
-            isMobileVersion={isMobileVersion}
-            common={common}
-            TriggerComponent={ShareButton}
-          />
-        )}
+        <ActionsButton
+          common={common}
+          commonMember={commonMember}
+          commonFollow={commonFollow}
+          isMobileVersion={isMobileVersion}
+        />
       </div>
     </div>
   );

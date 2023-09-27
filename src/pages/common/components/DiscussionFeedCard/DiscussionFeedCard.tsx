@@ -124,7 +124,10 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
     const { data: common } = useCommon(isHome ? commonId : "");
-    const feedItemFollow = useFeedItemFollow(item.id, commonId);
+    const feedItemFollow = useFeedItemFollow(
+      { feedItemId: item.id, commonId },
+      { withSubscription: true },
+    );
     const menuItems = useMenuItems(
       {
         commonId,
