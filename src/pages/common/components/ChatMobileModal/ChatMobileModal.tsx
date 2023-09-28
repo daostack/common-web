@@ -56,44 +56,42 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
       isHeaderSticky={Boolean(header)}
       mobileFullScreen
     >
-      <div className={styles.content}>
-        {!header && (
-          <div className={styles.header}>
-            <div className={styles.headerContent}>
-              {hasBackButton && (
-                <ButtonIcon onClick={onClose}>
-                  <LongLeftArrowIcon className={styles.backButtonIcon} />
-                </ButtonIcon>
-              )}
-              <Image
-                className={styles.image}
-                src={commonImage}
-                alt={`${commonName}'s image`}
-                placeholderElement={null}
-                aria-hidden
-              />
-              <p className={styles.commonName}>{commonName}</p>
-            </div>
-            {hasCloseIcon && (
-              <CloseIcon
-                width={closeIconSize}
-                height={closeIconSize}
-                fill={Colors.secondaryBlue}
-              />
+      {!header && (
+        <div className={styles.header}>
+          <div className={styles.headerContent}>
+            {hasBackButton && (
+              <ButtonIcon onClick={onClose}>
+                <LongLeftArrowIcon className={styles.backButtonIcon} />
+              </ButtonIcon>
             )}
+            <Image
+              className={styles.image}
+              src={commonImage}
+              alt={`${commonName}'s image`}
+              placeholderElement={null}
+              aria-hidden
+            />
+            <p className={styles.commonName}>{commonName}</p>
           </div>
-        )}
-        {title && (
-          <p
-            className={classNames(styles.title, {
-              [styles.titleRTL]: isRTL(title),
-            })}
-          >
-            {title}
-          </p>
-        )}
-        <div className={styles.modalChildren}>{children}</div>
-      </div>
+          {hasCloseIcon && (
+            <CloseIcon
+              width={closeIconSize}
+              height={closeIconSize}
+              fill={Colors.secondaryBlue}
+            />
+          )}
+        </div>
+      )}
+      {title && (
+        <p
+          className={classNames(styles.title, {
+            [styles.titleRTL]: isRTL(title),
+          })}
+        >
+          {title}
+        </p>
+      )}
+      {children}
     </Modal>
   );
 };
