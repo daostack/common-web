@@ -143,12 +143,11 @@ const ChatContent: ForwardRefRenderFunction<
 
   const dateListReverse = useMemo(() => [...dateList].reverse(), [dateList]);
 
-  // useEffect(() => {
-  //   if (!highlightedMessageId) {
-  //     console.log("scroll down 148")
-  //     scrollToContainerBottom();
-  //   }
-  // }, [highlightedMessageId, scrollToContainerBottom, discussionId]);
+  useEffect(() => {
+    if (!highlightedMessageId) {
+      scrollToContainerBottom();
+    }
+  }, [highlightedMessageId, scrollToContainerBottom, discussionId]);
 
   useEffect(() => {
     if (!highlightedMessageId || dateList.length === 0 || scrolledToMessage)
@@ -186,13 +185,13 @@ const ChatContent: ForwardRefRenderFunction<
     }
   }, [messageIdParam]);
 
-  // useImperativeHandle(
-  //   chatContentRef,
-  //   () => {console.log("scroll down useImperativeHandle"); return {scrollToContainerBottom}}
-
-  //   ,
-  //   [scrollToContainerBottom],
-  // );
+  useImperativeHandle(
+    chatContentRef,
+    () => ({
+      scrollToContainerBottom,
+    }),
+    [scrollToContainerBottom],
+  );
 
   if (!hasAccess || isHidden) {
     return (
