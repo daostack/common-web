@@ -95,8 +95,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     error: updateProjectError,
     updateCommon: updateProject,
   } = useCommonUpdate(initialCommon?.id);
-  const isLoading =
-    isProjectCreationLoading || isCommonUpdateLoading || !governance;
+  const isLoading = isProjectCreationLoading || isCommonUpdateLoading;
   const error = createProjectError || updateProjectError;
   const nonProjectCircles = useMemo(
     () => removeProjectCircles(Object.values(governance?.circles || {})),
