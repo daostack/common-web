@@ -20,7 +20,7 @@
 .messages {
   height: 100%;
   overflow: auto;
-  overscroll-behavior: contain;
+  //overscroll-behavior: contain;
   display: flex;
   flex-direction: column-reverse;
   padding: 0.5rem 2rem 0;
