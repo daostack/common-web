@@ -644,7 +644,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               isLoading={loading}
               loaderDelay={LOADER_APPEARANCE_DELAY}
             >
-              {allFeedItems?.map((item) => {
+              {allFeedItems?.map((item, index) => {
                 const isActive = item.itemId === activeFeedItemId;
 
                 if (checkIsFeedItemFollowLayoutItem(item)) {
@@ -662,7 +662,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       ref={(ref) => {
                         refsByItemId.current[item.itemId] = ref;
                       }}
-                      key={item.feedItem.id}
+                      key={item.feedItem.id + index}
                       commonMember={commonMember}
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
