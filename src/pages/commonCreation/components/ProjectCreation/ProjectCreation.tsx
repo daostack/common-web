@@ -1,11 +1,13 @@
 import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, Redirect, useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { CommonEvent, CommonEventEmitter } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
+import { ButtonLink } from "@/shared/components";
 import { GovernanceActions } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
+import { useGoBack } from "@/shared/hooks";
 import { useCommon, useGovernance } from "@/shared/hooks/useCases";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common, Governance, Project } from "@/shared/models";
@@ -23,6 +25,7 @@ interface ProjectCreationProps {
 const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   const { parentCommonId, initialCommon } = props;
   const history = useHistory();
+  const { canGoBack, goBack } = useGoBack();
   const dispatch = useDispatch();
   const { getCommonPagePath } = useRoutesContext();
   const {
@@ -84,6 +87,14 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
     }
     CommonEventEmitter.emit(CommonEvent.CommonUpdated, createdProject);
     history.push(getCommonPagePath(createdProject.id));
+  };
+
+  const handleBackButtonClick = () => {
+    if (canGoBack) {
+      goBack();
+    } else {
+      history.push(backRoute);
+    }
   };
 
   useEffect(() => {
@@ -149,10 +160,10 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
   return (
     <Container className={styles.container}>
       <div className={styles.content}>
-        <NavLink className={styles.backLink} to={backRoute}>
+        <ButtonLink className={styles.backLink} onClick={handleBackButtonClick}>
           <LongLeftArrowIcon className={styles.backArrowIcon} />
           Back
-        </NavLink>
+        </ButtonLink>
         <h1 className={styles.title}>
           {isEditing
             ? `Edit space ${initialCommon?.name}`
