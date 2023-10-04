@@ -6,6 +6,7 @@ import {
   LinksFormItem,
   TextFieldFormItem,
   UploadFilesFormItem,
+  RolesFormItem,
 } from "../types";
 
 type Schema = Yup.Schema<unknown>;
@@ -82,6 +83,22 @@ const getValidationSchemaForLinksItem = ({
   );
 };
 
+const getValidationSchemaForRolesItem = ({
+  validation,
+}: Pick<RolesFormItem, "validation">): Schema => {
+  if (!validation) {
+    return Yup.array();
+  }
+
+  return Yup.array().of(
+    Yup.object().shape({
+      circleName: Yup.string().required(
+        validation.required?.message || "Role name is required",
+      ),
+    }),
+  );
+};
+
 export const generateValidationSchema = (
   items: CreationFormItem[],
 ): Yup.ObjectSchema => {
@@ -96,6 +113,9 @@ export const generateValidationSchema = (
     }
     if (item.type === CreationFormItemType.Links) {
       schema = getValidationSchemaForLinksItem(item);
+    }
+    if (item.type === CreationFormItemType.Roles) {
+      schema = getValidationSchemaForRolesItem(item);
     }
 
     return schema

@@ -19,7 +19,6 @@ import {
 } from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
-import { setTutorialModalState } from "@/shared/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import {
   emptyFunction,
@@ -85,11 +84,7 @@ const LoginContainer: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
-    if (stage === AuthStage.CompleteAccountDetails) {
-      dispatch(setTutorialModalState({ isShowing: true }));
-      return;
-    }
-  }, [dispatch, stage, location.pathname]);
+  }, [dispatch, location.pathname]);
 
   const handleError = useCallback((errorText?: string) => {
     setErrorText(errorText || DEFAULT_AUTH_ERROR_TEXT);

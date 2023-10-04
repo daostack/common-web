@@ -3,6 +3,7 @@ import {
   TextFieldProps,
   TextEditorProps,
   UploadFilesProps,
+  RolesArrayWrapperProps,
 } from "@/shared/components/Form/Formik";
 import { CreationFormItemType } from "./constants";
 
@@ -55,8 +56,14 @@ export interface LinksFormItem extends BaseFormItem<LinksArrayWrapperProps> {
   validation?: Pick<ItemValidation, "links">;
 }
 
+export interface RolesFormItem extends BaseFormItem<RolesArrayWrapperProps> {
+  type: CreationFormItemType.Roles;
+  validation?: Pick<ItemValidation, "required">;
+}
+
 export type CreationFormItem =
   | TextFieldFormItem
   | TextEditorFormItem
   | UploadFilesFormItem
-  | LinksFormItem;
+  | LinksFormItem
+  | RolesFormItem;

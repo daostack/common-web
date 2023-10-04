@@ -4,7 +4,7 @@ import {
   IntermediateCreateCommonData,
   IntermediateUpdateCommonData,
 } from "@/pages/OldCommon/interfaces";
-import { Common } from "@/shared/models";
+import { Common, Roles } from "@/shared/models";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { convertLinksToUploadFiles } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
@@ -17,8 +17,7 @@ interface Return {
   onSubmit: (values: CommonFormValues) => void;
 }
 
-const CONFIGURATION: CreationFormItem[] = getConfiguration(false);
-const getInitialValues = (common?: Common): CommonFormValues => {
+const getInitialValues = (common?: Common, roles?: Roles): CommonFormValues => {
   return {
     projectImages: common?.image
       ? [
@@ -35,6 +34,7 @@ const getInitialValues = (common?: Common): CommonFormValues => {
     videoUrl: common?.video?.value || "",
     gallery: common?.gallery ? convertLinksToUploadFiles(common.gallery) : [],
     links: common?.links || [],
+    roles: roles || [],
   };
 };
 
@@ -43,11 +43,12 @@ export const useCommonForm = (
     commonData: IntermediateUpdateCommonData | IntermediateCreateCommonData,
   ) => Promise<void>,
   common?: Common,
+  roles?: Roles,
 ): Return => {
   const dispatch = useDispatch();
   const initialValues: CommonFormValues = useMemo(
-    () => getInitialValues(common),
-    [],
+    () => getInitialValues(common, roles),
+    [common, roles],
   );
 
   useEffect(() => {
@@ -75,6 +76,6 @@ export const useCommonForm = (
   return {
     initialValues,
     onSubmit,
-    formItems: CONFIGURATION,
+    formItems: getConfiguration(false, roles),
   };
 };

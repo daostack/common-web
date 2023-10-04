@@ -1,10 +1,7 @@
 import React, { FC, ReactNode, useCallback, useMemo } from "react";
 import { useHistory } from "react-router";
-import { CreateCommonModal } from "@/pages/OldCommon/components";
 import { LOADER_APPEARANCE_DELAY } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { useAuthorizedModal } from "@/shared/hooks";
-import { Common } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { TreeItemTriggerStyles } from "../../../../../SidenavLayout/components/SidenavContent/components/ProjectsTree";
 import { useProjectsData } from "../../hooks";
@@ -13,7 +10,7 @@ import styles from "./Projects.module.scss";
 
 interface ProjectsProps {
   renderNoItemsInfo?: () => ReactNode;
-  onCommonCreationClick?: () => void;
+  onCommonCreationClick: () => void;
 }
 
 const Projects: FC<ProjectsProps> = (props) => {
@@ -31,11 +28,6 @@ const Projects: FC<ProjectsProps> = (props) => {
     itemIdWithNewProjectCreation,
     parentItemIds,
   } = useProjectsData();
-  const {
-    isModalOpen: isCreateCommonModalOpen,
-    onOpen: onCreateCommonModalOpen,
-    onClose: onCreateCommonModalClose,
-  } = useAuthorizedModal();
   const treeItemTriggerStyles = useMemo<TreeItemTriggerStyles>(
     () => ({
       container: styles.projectsTreeItemTriggerClassName,
@@ -46,11 +38,6 @@ const Projects: FC<ProjectsProps> = (props) => {
     }),
     [],
   );
-
-  const handleGoToCommon = (createdCommon: Common) => {
-    onCreateCommonModalClose();
-    history.push(getCommonPagePath(createdCommon.id));
-  };
 
   const handleCommonClick = (commonId: string) => {
     if (currentCommonId !== commonId) {
@@ -65,45 +52,30 @@ const Projects: FC<ProjectsProps> = (props) => {
     [history.push, getProjectCreationPagePath],
   );
 
-  const createCommonModalEl = (
-    <CreateCommonModal
-      isShowing={isCreateCommonModalOpen}
-      onClose={onCreateCommonModalClose}
-      isSubCommonCreation={false}
-      onGoToCommon={handleGoToCommon}
-    />
-  );
-
   if (!parentItem) {
     return areCommonsLoading ? (
       <Loader className={styles.loader} delay={LOADER_APPEARANCE_DELAY} />
     ) : (
-      <>
-        {renderNoItemsInfo?.() || null}
-        {createCommonModalEl}
-      </>
+      <>{renderNoItemsInfo?.() || null}</>
     );
   }
 
   return (
-    <>
-      <ProjectsTree
-        className={styles.projectsTree}
-        treeItemTriggerStyles={treeItemTriggerStyles}
-        parentItem={parentItem}
-        commons={commons}
-        items={items}
-        activeItem={activeItem}
-        parentItemIds={parentItemIds}
-        itemIdWithNewProjectCreation={itemIdWithNewProjectCreation}
-        currentCommonId={currentCommonId}
-        onCommonClick={handleCommonClick}
-        onCommonCreationClick={onCommonCreationClick ?? onCreateCommonModalOpen}
-        onAddProjectClick={handleAddProjectClick}
-        isLoading={areProjectsLoading}
-      />
-      {createCommonModalEl}
-    </>
+    <ProjectsTree
+      className={styles.projectsTree}
+      treeItemTriggerStyles={treeItemTriggerStyles}
+      parentItem={parentItem}
+      commons={commons}
+      items={items}
+      activeItem={activeItem}
+      parentItemIds={parentItemIds}
+      itemIdWithNewProjectCreation={itemIdWithNewProjectCreation}
+      currentCommonId={currentCommonId}
+      onCommonClick={handleCommonClick}
+      onCommonCreationClick={onCommonCreationClick}
+      onAddProjectClick={handleAddProjectClick}
+      isLoading={areProjectsLoading}
+    />
   );
 };
 
