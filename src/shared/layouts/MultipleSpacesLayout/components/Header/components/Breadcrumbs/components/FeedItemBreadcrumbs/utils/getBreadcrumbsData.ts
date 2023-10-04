@@ -10,6 +10,12 @@ interface Return {
   hasPermissionToAddProjectInActiveCommon?: boolean;
 }
 
+const getSortFn = (
+  activeCommonId: string,
+): ((item: ProjectsStateItem) => number) => {
+  return (item) => (item.commonId === activeCommonId ? -1 : 1);
+};
+
 export const getBreadcrumbsData = (
   items: ProjectsStateItem[],
   activeCommonId: string,
@@ -24,7 +30,9 @@ export const getBreadcrumbsData = (
     };
   }
 
-  const mainLevelCommons = items.filter((item) => !item.directParent);
+  const mainLevelCommons = items
+    .filter((item) => !item.directParent)
+    .sort(getSortFn(activeCommonId));
   const activeCommonProjects = items.filter(
     (item) => item.directParent?.commonId === activeCommonId,
   );
@@ -59,9 +67,10 @@ export const getBreadcrumbsData = (
   let activeCommonIdInParentCommonProjects = activeCommonId;
 
   while (parentCommon) {
-    const parentCommonProjects = items.filter(
-      (item) => item.directParent?.commonId === parentCommon?.commonId,
-    );
+    const parentCommonProjects = items
+      .filter((item) => item.directParent?.commonId === parentCommon?.commonId)
+      .sort(getSortFn(activeCommonIdInParentCommonProjects));
+
     data.unshift({
       activeCommonId: activeCommonIdInParentCommonProjects,
       items: parentCommonProjects,

@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useField } from "formik";
+import { useZoomDisabling } from "@/shared/hooks";
 import {
   TextEditor as BaseTextEditor,
   TextEditorProps as BaseTextEditorProps,
@@ -14,6 +15,7 @@ export interface TextEditorProps
 const TextEditor: FC<TextEditorProps> = (props) => {
   const { name, isRequired, ...restProps } = props;
   const [{ value }, { touched, error }, { setValue }] = useField(name);
+  useZoomDisabling();
   const hintToShow = restProps.hint || (isRequired ? "Required" : "");
 
   return (

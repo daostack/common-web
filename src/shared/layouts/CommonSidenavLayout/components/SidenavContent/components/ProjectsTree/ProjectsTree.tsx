@@ -44,6 +44,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
   } = props;
   const menuItems = useMenuItems({
     stateItems: commons,
+    activeStateItemId: currentCommonId,
     onCommonClick,
     onCommonCreationClick,
   });

@@ -91,7 +91,7 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
           {title}
         </p>
       )}
-      {children}
+      <div className={styles.modalChildren}>{children}</div>
     </Modal>
   );
 };

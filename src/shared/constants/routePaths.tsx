@@ -18,6 +18,7 @@ export enum ROUTE_PATHS {
   V04_COMMON_WALLET_TAB = "/commons-v04/:id/wallet",
   V04_PROJECT_CREATION = "/commons-v04/:id/new-project",
   V04_COMMON_EDITING = "/commons-v04/:id/edit",
+  V04_COMMON_CREATION = "/commons-v04/new",
   COMMON_CREATION = "/commons/new",
   COMMON = "/commons/:id",
   COMMON_ABOUT_TAB = "/commons/:id/about",

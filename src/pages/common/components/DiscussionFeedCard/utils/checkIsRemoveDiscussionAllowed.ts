@@ -1,39 +1,38 @@
 import { GovernanceActions } from "@/shared/constants";
 import { PredefinedTypes } from "@/shared/models";
-import { checkIsCountdownState, hasPermission } from "@/shared/utils";
+import { getCirclesWithHighestTier, hasPermission } from "@/shared/utils";
 import { GetAllowedItemsOptions } from "../../FeedItem";
 
 export function checkIsRemoveDiscussionAllowed(
   options: GetAllowedItemsOptions,
-) {
-  if (!options.commonMember) return false;
-  if (options.discussion?.predefinedType === PredefinedTypes.General)
-    return false;
+): boolean {
+  const { commonMember } = options;
 
+  if (
+    !commonMember ||
+    options.discussion?.predefinedType === PredefinedTypes.General
+  ) {
+    return false;
+  }
+
+  const circles = options.governanceCircles || {};
+  const isDiscussionOwner = commonMember.userId === options.discussion?.ownerId;
   const hasPermissionToRemoveDiscussion =
     hasPermission({
-      commonMember: options.commonMember,
-      governance: {
-        circles: options.governanceCircles || {},
-      },
+      commonMember,
+      governance: { circles },
       key: GovernanceActions.HIDE_OR_UNHIDE_DISCUSSION,
-    }) || options.commonMember.userId === options.discussion?.ownerId;
+    }) || isDiscussionOwner;
 
-  let isAllowed = hasPermissionToRemoveDiscussion;
-  if (options.discussion?.proposalId && isAllowed) {
-    const { proposal } = options;
-    const hasPermissionToRemoveProposal =
-      hasPermission({
-        commonMember: options.commonMember,
-        governance: {
-          circles: options.governanceCircles || {},
-        },
-        key: GovernanceActions.HIDE_OR_UNHIDE_PROPOSAL,
-      }) || options.commonMember.userId === options.discussion?.ownerId;
-    isAllowed =
-      !!proposal &&
-      checkIsCountdownState({ state: proposal.state }) &&
-      hasPermissionToRemoveProposal;
+  if (!options.discussion?.proposalId) {
+    return hasPermissionToRemoveDiscussion;
   }
-  return isAllowed;
+
+  const circlesWithHighestTier = getCirclesWithHighestTier(
+    Object.values(circles),
+  );
+
+  return circlesWithHighestTier.some((circle) =>
+    commonMember.circleIds.includes(circle.id),
+  );
 }

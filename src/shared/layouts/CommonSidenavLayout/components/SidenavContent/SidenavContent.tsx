@@ -12,6 +12,7 @@ import {
   MenuItemsPlacement,
   UserInfo,
 } from "../../../SidenavLayout/components/SidenavContent";
+import { useGoToCreateCommon } from "../../hooks";
 import { LayoutTabs } from "../LayoutTabs";
 import { Footer, Navigation, Projects } from "./components";
 import styles from "./SidenavContent.module.scss";
@@ -25,6 +26,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
+  const goToCreateCommon = useGoToCreateCommon();
   const separatorEl = <div className={styles.separator} />;
   const userInfoContentStyles: ContentStyles = {
     container: styles.userInfoContentButton,
@@ -46,7 +48,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
           {separatorEl}
         </>
       )}
-      <Projects />
+      <Projects onCommonCreationClick={goToCreateCommon} />
       {isTabletView && (
         <LayoutTabs
           className={styles.layoutTabs}

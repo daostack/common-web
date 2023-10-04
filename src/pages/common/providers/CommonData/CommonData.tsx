@@ -274,24 +274,23 @@ const CommonData: FC<CommonDataProps> = (props) => {
       {children}
       {commonMember && (
         <LeaveCommonModal
-          isShowing={selectedMenuItem === CommonMenuItem.LeaveCommon}
+          isShowing={Boolean(
+            selectedMenuItem &&
+              [
+                CommonMenuItem.LeaveCommon,
+                CommonMenuItem.LeaveProject,
+              ].includes(selectedMenuItem),
+          )}
           onClose={handleMenuClose}
           commonId={common.id}
           memberCount={common.memberCount}
           memberCircleIds={Object.values(commonMember.circles.map)}
-          onSuccessfulLeave={handleSuccessfulLeave}
-        />
-      )}
-      {commonMember && common.directParent && (
-        <LeaveCommonModal
-          isShowing={selectedMenuItem === CommonMenuItem.LeaveProject}
-          onClose={handleMenuClose}
-          commonId={common.directParent.commonId}
-          memberCount={common.memberCount}
-          memberCircleIds={[common.directParent.circleId]}
-          onSuccessfulLeave={handleSuccessfulProjectLeave}
-          subCommonId={common.id}
-          isSubCommon
+          onSuccessfulLeave={
+            selectedMenuItem === CommonMenuItem.LeaveProject
+              ? handleSuccessfulProjectLeave
+              : handleSuccessfulLeave
+          }
+          isSubCommon={selectedMenuItem === CommonMenuItem.LeaveProject}
         />
       )}
       {isProposalCreationModalOpen && commonMember && (
