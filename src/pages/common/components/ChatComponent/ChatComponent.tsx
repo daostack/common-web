@@ -626,6 +626,7 @@ export default function ChatComponent({
           users={users}
           shouldReinitializeEditor={shouldReinitializeEditor}
           onClearFinished={onClearFinished}
+          data-lpignore
         />
         <button
           className={styles.sendIcon}
