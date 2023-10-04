@@ -243,6 +243,10 @@ class ProposalService {
 
     return extendedVoters;
   };
+
+  public deleteProposal = async (proposalId: string): Promise<void> => {
+    await Api.delete(ApiEndpoint.DeleteProposal(proposalId));
+  };
 }
 
 export default new ProposalService();
