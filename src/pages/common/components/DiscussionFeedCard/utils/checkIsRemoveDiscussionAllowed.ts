@@ -32,10 +32,7 @@ export function checkIsRemoveDiscussionAllowed(
     Object.values(circles),
   );
 
-  return (
-    isDiscussionOwner ||
-    circlesWithHighestTier.some((circle) =>
-      commonMember.circleIds.includes(circle.id),
-    )
+  return circlesWithHighestTier.some((circle) =>
+    commonMember.circleIds.includes(circle.id),
   );
 }
