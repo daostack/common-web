@@ -7,6 +7,7 @@ import {
   ProposalState,
   VoteOutcome,
   ResolutionType,
+  SoftDeleteEntity,
 } from "@/shared/models";
 
 export interface VoteTracker {
@@ -51,7 +52,7 @@ export interface GlobalDefinition {
   maxReject: number; // weight based percentage
 }
 
-export interface BaseProposal extends BaseEntity {
+export interface BaseProposal extends BaseEntity, SoftDeleteEntity {
   global: GlobalDefinition;
 
   local: Record<string, unknown>;
@@ -76,6 +77,4 @@ export interface BaseProposal extends BaseEntity {
   moderation: Moderation;
 
   resolutionType: ResolutionType;
-
-  deleted?: boolean;
 }
