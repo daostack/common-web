@@ -10,11 +10,6 @@
   background-color: $white;
   box-sizing: border-box;
   --chat-input-wrapper-height: 3.125rem;
-
-  @include tablet {
-    height: 100%;
-    margin-top: 0;
-  }
 }
 
 .messages {
@@ -24,7 +19,7 @@
   display: flex;
   flex-direction: column-reverse;
   padding: 0.5rem 2rem 0;
-  padding-bottom: calc(var(--chat-input-wrapper-height) + 7rem);
+  padding-bottom: var(--chat-input-wrapper-height);
 }
 
 .emptyChat {

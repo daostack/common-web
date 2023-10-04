@@ -15,6 +15,7 @@ export const ApiEndpoint = {
   CreateProposal: "/proposals/create",
   VoteProposal: "/proposals/vote",
   UpdateVote: "/proposals/vote",
+  DeleteProposal: (id: string) => `/proposals/${id}`,
   MakeImmediateContribution: "/commons/immediate-contribution",
   AddBankAccount: "/payments/bank-account-details/add",
   UpdateBankAccount: "/payments/bank-account-details/update",
