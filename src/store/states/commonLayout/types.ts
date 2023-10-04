@@ -2,6 +2,7 @@ import { ProjectsStateItem } from "../projects";
 
 export interface CommonLayoutState {
   currentCommonId: string | null;
+  lastCommonIdFromFeed: string | null;
   commons: ProjectsStateItem[];
   areCommonsLoading: boolean;
   areCommonsFetched: boolean;

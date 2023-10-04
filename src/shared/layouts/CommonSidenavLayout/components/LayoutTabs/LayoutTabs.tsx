@@ -1,5 +1,6 @@
-import React, { CSSProperties, FC, ReactNode } from "react";
-import { useSelector } from "react-redux";
+import React, { CSSProperties, FC, ReactNode, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import {
@@ -7,9 +8,12 @@ import {
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
 import { Tab, Tabs } from "@/shared/components";
+import { ROUTE_PATHS } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { Avatar2Icon, BlocksIcon, InboxIcon } from "@/shared/icons";
-import { openSidenav } from "@/shared/utils";
+import { matchOneOfRoutes, openSidenav } from "@/shared/utils";
+import { selectCommonLayoutLastCommonIdFromFeed } from "@/store/states";
+import { setLastCommonIdFromFeed } from "@/store/states/commonLayout/actions";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
 import styles from "./LayoutTabs.module.scss";
@@ -29,7 +33,13 @@ interface TabConfiguration {
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
   const history = useHistory();
-  const { getInboxPagePath, getProfilePagePath } = useRoutesContext();
+  const { id: commonIdFromUrl } = useParams<{ id: string }>();
+  const { getCommonPagePath, getInboxPagePath, getProfilePagePath } =
+    useRoutesContext();
+  const dispatch = useDispatch();
+  const lastCommonIdFromFeed = useSelector(
+    selectCommonLayoutLastCommonIdFromFeed,
+  );
   const isAuthenticated = useSelector(authentificated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
@@ -67,6 +77,14 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
     "--items-amount": tabs.length,
   } as CSSProperties;
 
+  const handleSpacesClick = () => {
+    if (lastCommonIdFromFeed) {
+      history.push(getCommonPagePath(lastCommonIdFromFeed));
+    } else {
+      openSidenav();
+    }
+  };
+
   const handleTabChange = (value: unknown) => {
     if (activeTab === value) {
       return;
@@ -74,7 +92,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
 
     switch (value) {
       case LayoutTab.Spaces:
-        openSidenav();
+        handleSpacesClick();
         break;
       case LayoutTab.Inbox:
         history.push(getInboxPagePath());
@@ -86,6 +104,18 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
         break;
     }
   };
+
+  useEffect(() => {
+    if (
+      matchOneOfRoutes(
+        history.location.pathname,
+        [ROUTE_PATHS.COMMON, ROUTE_PATHS.V04_COMMON],
+        { exact: false },
+      )
+    ) {
+      dispatch(setLastCommonIdFromFeed(commonIdFromUrl));
+    }
+  }, [commonIdFromUrl]);
 
   return (
     <Tabs

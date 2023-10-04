@@ -9,6 +9,7 @@ type Action = ActionType<typeof actions>;
 
 const initialState: CommonLayoutState = {
   currentCommonId: null,
+  lastCommonIdFromFeed: null,
   commons: [],
   areCommonsLoading: false,
   areCommonsFetched: false,
@@ -121,6 +122,11 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
   .handleAction(actions.setCurrentCommonId, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.currentCommonId = payload;
+    }),
+  )
+  .handleAction(actions.setLastCommonIdFromFeed, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.lastCommonIdFromFeed = payload;
     }),
   )
   .handleAction(actions.clearData, (state) =>

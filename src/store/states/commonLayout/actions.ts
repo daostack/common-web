@@ -33,6 +33,10 @@ export const setCurrentCommonId = createStandardAction(
   CommonLayoutActionType.SET_CURRENT_COMMON_ID,
 )<string>();
 
+export const setLastCommonIdFromFeed = createStandardAction(
+  CommonLayoutActionType.SET_LAST_COMMON_ID_FROM_FEED,
+)<string>();
+
 export const clearData = createStandardAction(
   CommonLayoutActionType.CLEAR_DATA,
 )();
