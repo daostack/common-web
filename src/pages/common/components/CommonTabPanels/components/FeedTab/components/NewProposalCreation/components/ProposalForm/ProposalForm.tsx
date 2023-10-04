@@ -54,6 +54,8 @@ const ProposalForm: FC<ProposalFormProps> = (props) => {
           labelWrapper: styles.textFieldLabelWrapper,
           hint: styles.textFieldHint,
         }}
+        isTextarea
+        rows={3}
       />
       <TextEditor
         className={styles.field}
