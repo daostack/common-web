@@ -47,6 +47,7 @@ import {
 } from "@/shared/utils";
 import {
   commonActions,
+  commonLayoutActions,
   selectCommonAction,
   selectRecentStreamId,
   selectSharedFeedItem,
@@ -108,6 +109,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const commonAction = useSelector(selectCommonAction);
   const {
     data: commonData,
+    stateRef,
     fetched: isCommonDataFetched,
     fetchCommonData,
   } = useCommonData(userId);
@@ -399,20 +401,51 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     }
   }, [rootCommonMember?.id]);
 
-  if (!isDataFetched || !commonData) {
-    const content = isDataFetched ? (
-      <NotFound />
-    ) : (
-      <Loader delay={isTabletView ? 0 : LOADER_APPEARANCE_DELAY} />
-    );
+  useEffect(() => {
+    return () => {
+      const common = stateRef.current?.data?.common;
 
+      dispatch(
+        commonLayoutActions.setLastCommonFromFeed({
+          id: commonId,
+          data: common
+            ? {
+                name: common.name,
+                image: common.image,
+                isProject: checkIsProject(common),
+                memberCount: common.memberCount,
+              }
+            : null,
+        }),
+      );
+    };
+  }, [commonId]);
+
+  if (!isDataFetched) {
     return (
       <>
         <PureCommonTopNavigation
           className={styles.pureCommonTopNavigation}
           iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
         />
-        <div className={styles.centerWrapper}>{content}</div>
+        <div className={styles.centerWrapper}>
+          <Loader delay={isTabletView ? 0 : LOADER_APPEARANCE_DELAY} />
+        </div>
+        <CommonSidenavLayoutTabs className={styles.tabs} />
+      </>
+    );
+  }
+
+  if (!commonData) {
+    return (
+      <>
+        <PureCommonTopNavigation
+          className={styles.pureCommonTopNavigation}
+          iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+        />
+        <div className={styles.centerWrapper}>
+          <NotFound />
+        </div>
         <CommonSidenavLayoutTabs className={styles.tabs} />
       </>
     );
