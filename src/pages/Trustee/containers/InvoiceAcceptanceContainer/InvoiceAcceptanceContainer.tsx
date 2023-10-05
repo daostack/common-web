@@ -216,6 +216,7 @@ const InvoiceAcceptanceContainer: FC = () => {
           isOpen={isApprovePromptOpen}
           isLoading={submissionState.loading}
           isFinished={submissionState.finished}
+          isReapproval={isPendingReapprovalProposal}
           onApprove={handleSubmit}
           onClose={handleApprovePromptClose}
         />
