@@ -13,7 +13,7 @@ import {
 } from "@/shared/models";
 import { BaseTextEditor, Button, ButtonVariant } from "@/shared/ui-kit";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
-import { emptyFunction, getUserName } from "@/shared/utils";
+import { emptyFunction } from "@/shared/utils";
 import styles from "./EditMessageInput.module.scss";
 
 interface Props {
@@ -104,12 +104,6 @@ export default function EditMessageInput({
 
   return (
     <div className={styles.container}>
-      <div className={styles.ownerName}>
-        {checkIsUserDiscussionMessage(discussionMessage)
-          ? getUserName(discussionMessage.owner)
-          : "System"}
-      </div>
-
       <BaseTextEditor
         className={styles.input}
         emojiPickerContainerClassName={styles.pickerContainer}
