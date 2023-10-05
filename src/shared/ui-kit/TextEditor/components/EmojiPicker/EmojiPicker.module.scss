@@ -4,6 +4,9 @@ $big-phone-breakpoint: 460px;
 $phone-breakpoint: 415px;
 
 .container {
+  position: absolute;
+  bottom: 50%;
+  right: 0.5625rem;
   transform: translateY(50%);
 }
 
