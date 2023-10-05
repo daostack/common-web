@@ -11,7 +11,6 @@ import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
 import { ChatMessage, InternalLinkData } from "@/shared/components";
 import {
   ChatType,
@@ -42,10 +41,6 @@ interface ChatContentInterface {
   type: ChatType;
   commonMember: CommonMember | null;
   governanceCircles?: Circles;
-  isCommonMemberFetched: boolean;
-  isJoiningPending?: boolean;
-  hasAccess: boolean;
-  isHidden: boolean;
   chatWrapperId: string;
   messages: Record<number, DiscussionMessage[]>;
   dateList: string[];
@@ -60,7 +55,7 @@ interface ChatContentInterface {
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
-  messageCount?: number;
+  isEmpty?: boolean;
 }
 
 const isToday = (someDate: Date) => {
@@ -80,10 +75,6 @@ const ChatContent: ForwardRefRenderFunction<
     type,
     commonMember,
     governanceCircles,
-    isCommonMemberFetched,
-    isJoiningPending,
-    hasAccess,
-    isHidden,
     chatWrapperId,
     messages,
     dateList,
@@ -98,7 +89,7 @@ const ChatContent: ForwardRefRenderFunction<
     onUserClick,
     onFeedItemClick,
     onInternalLinkClick,
-    messageCount,
+    isEmpty,
   },
   chatContentRef,
 ) => {
@@ -195,23 +186,6 @@ const ChatContent: ForwardRefRenderFunction<
     [scrollToContainerBottom],
   );
 
-  if (!hasAccess || isHidden) {
-    return (
-      <EmptyTabComponent
-        currentTab="messages"
-        message={
-          isHidden
-            ? "This discussion was hidden due to inappropriate content"
-            : "This content is private and visible only to members of the common in specific circles."
-        }
-        title=""
-        isCommonMember={Boolean(commonMember)}
-        isCommonMemberFetched={isCommonMemberFetched}
-        isJoiningPending={isJoiningPending}
-      />
-    );
-  }
-
   if (isLoading) {
     return (
       <div className={styles.loaderContainer}>
@@ -301,7 +275,7 @@ const ChatContent: ForwardRefRenderFunction<
           </ul>
         );
       })}
-      {!isLoading && messageCount === 0 && (
+      {!isLoading && isEmpty && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />

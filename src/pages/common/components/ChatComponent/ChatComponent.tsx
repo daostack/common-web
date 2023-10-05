@@ -49,7 +49,6 @@ import {
   TextEditorSize,
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
-  Loader,
 } from "@/shared/ui-kit";
 import { getUserName, hasPermission, isMobile } from "@/shared/utils";
 import {
@@ -651,10 +650,6 @@ export default function ChatComponent({
           type={type}
           commonMember={commonMember}
           governanceCircles={governanceCircles}
-          isCommonMemberFetched={isCommonMemberFetched}
-          isJoiningPending={false}
-          hasAccess={hasAccess}
-          isHidden={false}
           chatWrapperId={chatWrapperId}
           messages={messages}
           dateList={dateList}
@@ -669,7 +664,10 @@ export default function ChatComponent({
           onUserClick={onUserClick}
           onFeedItemClick={onFeedItemClick}
           onInternalLinkClick={onInternalLinkClick}
-          messageCount={discussion?.messageCount}
+          isEmpty={
+            discussionMessagesData.fetched &&
+            !discussionMessagesData.data?.length
+          } // not using messageCount because it includes the deleted messages as well.
         />
       </div>
       <div className={styles.bottomChatContainer}>
