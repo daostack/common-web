@@ -126,7 +126,13 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
   )
   .handleAction(actions.setLastCommonFromFeed, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.lastCommonFromFeed = payload;
+      nextState.lastCommonFromFeed = payload && {
+        ...payload,
+        data:
+          nextState.lastCommonFromFeed?.id === payload.id && !payload.data
+            ? nextState.lastCommonFromFeed?.data
+            : payload.data,
+      };
     }),
   )
   .handleAction(actions.clearData, (state) =>
