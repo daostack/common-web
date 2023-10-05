@@ -76,6 +76,7 @@ export type RenderCommonFeedContentWrapper = (data: {
 export interface CommonFeedProps {
   commonId: string;
   renderContentWrapper: RenderCommonFeedContentWrapper;
+  renderLoadingHeader?: (() => ReactNode) | null;
   feedLayoutOuterStyles?: FeedLayoutOuterStyles;
   feedLayoutSettings?: FeedLayoutSettings;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
@@ -85,6 +86,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const {
     commonId,
     renderContentWrapper: outerContentWrapperRenderer,
+    renderLoadingHeader,
     feedLayoutOuterStyles,
     feedLayoutSettings,
     onActiveItemDataChange,
@@ -422,12 +424,18 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [commonId]);
 
   if (!isDataFetched) {
+    const headerEl = renderLoadingHeader ? (
+      renderLoadingHeader()
+    ) : (
+      <PureCommonTopNavigation
+        className={styles.pureCommonTopNavigation}
+        iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+      />
+    );
+
     return (
       <>
-        <PureCommonTopNavigation
-          className={styles.pureCommonTopNavigation}
-          iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
-        />
+        {headerEl}
         <div className={styles.centerWrapper}>
           <Loader delay={isTabletView ? 0 : LOADER_APPEARANCE_DELAY} />
         </div>
