@@ -29,6 +29,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems, useUserCommonIds } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import {
   checkIsFeedItemFollowLayoutItem,
@@ -46,6 +47,7 @@ import {
 } from "@/shared/utils";
 import {
   commonActions,
+  commonLayoutActions,
   selectCommonAction,
   selectRecentStreamId,
   selectSharedFeedItem,
@@ -74,6 +76,7 @@ export type RenderCommonFeedContentWrapper = (data: {
 export interface CommonFeedProps {
   commonId: string;
   renderContentWrapper: RenderCommonFeedContentWrapper;
+  renderLoadingHeader?: (() => ReactNode) | null;
   feedLayoutOuterStyles?: FeedLayoutOuterStyles;
   feedLayoutSettings?: FeedLayoutSettings;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
@@ -83,11 +86,13 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const {
     commonId,
     renderContentWrapper: outerContentWrapperRenderer,
+    renderLoadingHeader,
     feedLayoutOuterStyles,
     feedLayoutSettings,
     onActiveItemDataChange,
   } = props;
   const { getCommonPagePath, getProfilePagePath } = useRoutesContext();
+  const isTabletView = useIsTabletView();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -106,6 +111,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const commonAction = useSelector(selectCommonAction);
   const {
     data: commonData,
+    stateRef,
     fetched: isCommonDataFetched,
     fetchCommonData,
   } = useCommonData(userId);
@@ -397,13 +403,47 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     }
   }, [rootCommonMember?.id]);
 
+  useEffect(() => {
+    return () => {
+      const common = stateRef.current?.data?.common;
+
+      dispatch(
+        commonLayoutActions.setLastCommonFromFeed({
+          id: commonId,
+          data: common
+            ? {
+                name: common.name,
+                image: common.image,
+                isProject: checkIsProject(common),
+                memberCount: common.memberCount,
+              }
+            : null,
+        }),
+      );
+    };
+  }, [commonId]);
+
   if (!isDataFetched) {
+    const headerEl = renderLoadingHeader ? (
+      renderLoadingHeader()
+    ) : (
+      <PureCommonTopNavigation
+        className={styles.pureCommonTopNavigation}
+        iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+      />
+    );
+
     return (
-      <div className={styles.centerWrapper}>
-        <Loader delay={LOADER_APPEARANCE_DELAY} />
-      </div>
+      <>
+        {headerEl}
+        <div className={styles.centerWrapper}>
+          <Loader delay={isTabletView ? 0 : LOADER_APPEARANCE_DELAY} />
+        </div>
+        <CommonSidenavLayoutTabs className={styles.tabs} />
+      </>
     );
   }
+
   if (!commonData) {
     return (
       <>

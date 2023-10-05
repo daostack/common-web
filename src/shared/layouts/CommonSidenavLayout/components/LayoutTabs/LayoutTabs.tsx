@@ -10,6 +10,7 @@ import { Tab, Tabs } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { Avatar2Icon, BlocksIcon, InboxIcon } from "@/shared/icons";
 import { openSidenav } from "@/shared/utils";
+import { selectCommonLayoutLastCommonFromFeed } from "@/store/states";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
 import styles from "./LayoutTabs.module.scss";
@@ -29,7 +30,11 @@ interface TabConfiguration {
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
   const history = useHistory();
-  const { getInboxPagePath, getProfilePagePath } = useRoutesContext();
+  const { getCommonPagePath, getInboxPagePath, getProfilePagePath } =
+    useRoutesContext();
+  const lastCommonIdFromFeed = useSelector(
+    selectCommonLayoutLastCommonFromFeed,
+  );
   const isAuthenticated = useSelector(authentificated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
@@ -67,6 +72,14 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
     "--items-amount": tabs.length,
   } as CSSProperties;
 
+  const handleSpacesClick = () => {
+    if (lastCommonIdFromFeed) {
+      history.push(getCommonPagePath(lastCommonIdFromFeed.id));
+    } else {
+      openSidenav();
+    }
+  };
+
   const handleTabChange = (value: unknown) => {
     if (activeTab === value) {
       return;
@@ -74,7 +87,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
 
     switch (value) {
       case LayoutTab.Spaces:
-        openSidenav();
+        handleSpacesClick();
         break;
       case LayoutTab.Inbox:
         history.push(getInboxPagePath());
