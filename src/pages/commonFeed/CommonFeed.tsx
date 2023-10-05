@@ -29,6 +29,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems, useUserCommonIds } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import {
   checkIsFeedItemFollowLayoutItem,
@@ -88,6 +89,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     onActiveItemDataChange,
   } = props;
   const { getCommonPagePath, getProfilePagePath } = useRoutesContext();
+  const isTabletView = useIsTabletView();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -397,23 +399,20 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     }
   }, [rootCommonMember?.id]);
 
-  if (!isDataFetched) {
-    return (
-      <div className={styles.centerWrapper}>
-        <Loader delay={LOADER_APPEARANCE_DELAY} />
-      </div>
+  if (!isDataFetched || !commonData) {
+    const content = isDataFetched ? (
+      <NotFound />
+    ) : (
+      <Loader delay={isTabletView ? 0 : LOADER_APPEARANCE_DELAY} />
     );
-  }
-  if (!commonData) {
+
     return (
       <>
         <PureCommonTopNavigation
           className={styles.pureCommonTopNavigation}
           iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
         />
-        <div className={styles.centerWrapper}>
-          <NotFound />
-        </div>
+        <div className={styles.centerWrapper}>{content}</div>
         <CommonSidenavLayoutTabs className={styles.tabs} />
       </>
     );
