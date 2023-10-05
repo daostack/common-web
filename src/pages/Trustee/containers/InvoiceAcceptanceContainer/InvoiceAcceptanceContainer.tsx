@@ -19,6 +19,7 @@ import { StickyInfo } from "../../components/StickyInfo";
 import {
   checkDeclinedProposal,
   checkPendingApprovalProposal,
+  checkPendingReapprovalProposal,
 } from "../../helpers";
 import {
   approveOrDeclineProposal,
@@ -59,6 +60,9 @@ const InvoiceAcceptanceContainer: FC = () => {
   const payoutDocs = proposalForApproval?.data.legal.payoutDocs || [];
   const isPendingApprovalProposal = Boolean(
     proposalForApproval && checkPendingApprovalProposal(proposalForApproval),
+  );
+  const isPendingReapprovalProposal = Boolean(
+    proposalForApproval && checkPendingReapprovalProposal(proposalForApproval),
   );
   const isApprovedProposal = Boolean(
     proposalForApproval &&
@@ -181,20 +185,22 @@ const InvoiceAcceptanceContainer: FC = () => {
               payoutDocs={payoutDocs}
               onDocClick={handleInvoiceTileClick}
             />
-            {isPendingApprovalProposal && (
+            {(isPendingApprovalProposal || isPendingReapprovalProposal) && (
               <div className="invoice-acceptance-container__actions-wrapper">
                 <button
                   className="button-blue invoice-acceptance-container__approve-button"
                   onClick={handleApproveClick}
                 >
-                  Approve All
+                  {isPendingReapprovalProposal ? "Reapprove" : "Approve All"}
                 </button>
-                <button
-                  className="button-blue invoice-acceptance-container__decline-button"
-                  onClick={handleDeclineClick}
-                >
-                  Decline
-                </button>
+                {!isPendingReapprovalProposal && (
+                  <button
+                    className="button-blue invoice-acceptance-container__decline-button"
+                    onClick={handleDeclineClick}
+                  >
+                    Decline
+                  </button>
+                )}
               </div>
             )}
           </>
