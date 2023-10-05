@@ -20,6 +20,8 @@
     padding: 0 1rem;
     display: flex;
     align-items: center;
+    border-bottom: 0.0625rem solid $c-light-gray;
     overflow: hidden;
+    box-sizing: border-box;
   }
 }
