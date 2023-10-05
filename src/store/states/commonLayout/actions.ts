@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { CommonLayoutActionType } from "./constants";
-import { ProjectsStateItem } from "./types";
+import { CommonLayoutState, ProjectsStateItem } from "./types";
 
 export const getCommons = createAsyncAction(
   CommonLayoutActionType.GET_COMMONS,
@@ -33,9 +33,9 @@ export const setCurrentCommonId = createStandardAction(
   CommonLayoutActionType.SET_CURRENT_COMMON_ID,
 )<string>();
 
-export const setLastCommonIdFromFeed = createStandardAction(
-  CommonLayoutActionType.SET_LAST_COMMON_ID_FROM_FEED,
-)<string>();
+export const setLastCommonFromFeed = createStandardAction(
+  CommonLayoutActionType.SET_LAST_COMMON_FROM_FEED,
+)<CommonLayoutState["lastCommonFromFeed"]>();
 
 export const clearData = createStandardAction(
   CommonLayoutActionType.CLEAR_DATA,

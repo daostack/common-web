@@ -1,6 +1,5 @@
-import React, { CSSProperties, FC, ReactNode, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import React, { CSSProperties, FC, ReactNode } from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import {
@@ -8,12 +7,10 @@ import {
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
 import { Tab, Tabs } from "@/shared/components";
-import { ROUTE_PATHS } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { Avatar2Icon, BlocksIcon, InboxIcon } from "@/shared/icons";
-import { matchOneOfRoutes, openSidenav } from "@/shared/utils";
-import { selectCommonLayoutLastCommonIdFromFeed } from "@/store/states";
-import { setLastCommonIdFromFeed } from "@/store/states/commonLayout/actions";
+import { openSidenav } from "@/shared/utils";
+import { selectCommonLayoutLastCommonFromFeed } from "@/store/states";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
 import styles from "./LayoutTabs.module.scss";
@@ -33,12 +30,10 @@ interface TabConfiguration {
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
   const history = useHistory();
-  const { id: commonIdFromUrl } = useParams<{ id: string }>();
   const { getCommonPagePath, getInboxPagePath, getProfilePagePath } =
     useRoutesContext();
-  const dispatch = useDispatch();
   const lastCommonIdFromFeed = useSelector(
-    selectCommonLayoutLastCommonIdFromFeed,
+    selectCommonLayoutLastCommonFromFeed,
   );
   const isAuthenticated = useSelector(authentificated());
   const userStreamsWithNotificationsAmount = useSelector(
@@ -79,7 +74,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
 
   const handleSpacesClick = () => {
     if (lastCommonIdFromFeed) {
-      history.push(getCommonPagePath(lastCommonIdFromFeed));
+      history.push(getCommonPagePath(lastCommonIdFromFeed.id));
     } else {
       openSidenav();
     }
@@ -104,18 +99,6 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
         break;
     }
   };
-
-  useEffect(() => {
-    if (
-      matchOneOfRoutes(
-        history.location.pathname,
-        [ROUTE_PATHS.COMMON, ROUTE_PATHS.V04_COMMON],
-        { exact: false },
-      )
-    ) {
-      dispatch(setLastCommonIdFromFeed(commonIdFromUrl));
-    }
-  }, [commonIdFromUrl]);
 
   return (
     <Tabs
