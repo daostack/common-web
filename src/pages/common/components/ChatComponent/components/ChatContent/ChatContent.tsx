@@ -60,6 +60,7 @@ interface ChatContentInterface {
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
+  messageCount?: number;
 }
 
 const isToday = (someDate: Date) => {
@@ -97,6 +98,7 @@ const ChatContent: ForwardRefRenderFunction<
     onUserClick,
     onFeedItemClick,
     onInternalLinkClick,
+    messageCount,
   },
   chatContentRef,
 ) => {
@@ -299,7 +301,7 @@ const ChatContent: ForwardRefRenderFunction<
           </ul>
         );
       })}
-      {!dateList.length && !isLoading && (
+      {!isLoading && messageCount === 0 && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />

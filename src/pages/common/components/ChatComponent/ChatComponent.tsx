@@ -669,6 +669,7 @@ export default function ChatComponent({
           onUserClick={onUserClick}
           onFeedItemClick={onFeedItemClick}
           onInternalLinkClick={onInternalLinkClick}
+          messageCount={discussion?.messageCount}
         />
       </div>
       <div className={styles.bottomChatContainer}>
