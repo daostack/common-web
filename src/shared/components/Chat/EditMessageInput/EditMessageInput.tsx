@@ -11,7 +11,12 @@ import {
   checkIsUserDiscussionMessage,
   DiscussionMessage,
 } from "@/shared/models";
-import { BaseTextEditor, Button, ButtonVariant } from "@/shared/ui-kit";
+import {
+  BaseTextEditor,
+  Button,
+  ButtonVariant,
+  TextEditorSize,
+} from "@/shared/ui-kit";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import { emptyFunction } from "@/shared/utils";
 import styles from "./EditMessageInput.module.scss";
@@ -113,6 +118,7 @@ export default function EditMessageInput({
         users={users}
         shouldReinitializeEditor={false}
         onClearFinished={emptyFunction}
+        size={TextEditorSize.Auto}
       />
 
       <div className={styles.buttonContainer}>
