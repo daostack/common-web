@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import classNames from "classnames";
 import { useCommonFollow } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -12,6 +11,7 @@ import { checkIsProject } from "@/shared/utils";
 import {
   ActionsButton,
   HeaderCommonContent,
+  HeaderContentWrapper,
   NewStreamButton,
 } from "./components";
 import styles from "./HeaderContent.module.scss";
@@ -32,7 +32,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
     : commonMember?.isFollowing;
 
   return (
-    <div className={classNames(styles.container, className)}>
+    <HeaderContentWrapper className={className}>
       <HeaderCommonContent
         commonId={common.id}
         commonName={common.name}
@@ -55,7 +55,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           isMobileVersion={isMobileVersion}
         />
       </div>
-    </div>
+    </HeaderContentWrapper>
   );
 };
 
