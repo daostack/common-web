@@ -59,6 +59,9 @@ export const getProfilePagePath: GetGeneralPagePath = () => ROUTE_PATHS.PROFILE;
 
 export const getBillingPagePath: GetGeneralPagePath = () => ROUTE_PATHS.BILLING;
 
+export const getSettingsPagePath: GetGeneralPagePath = () =>
+  ROUTE_PATHS.SETTINGS;
+
 // v03
 export const getCommonPagePath_v03: GetCommonPagePath = (...args) =>
   buildCommonPagePath(ROUTE_PATHS.V03_COMMON, ...args);
@@ -86,3 +89,6 @@ export const getProfilePagePath_v04: GetGeneralPagePath = () =>
 
 export const getBillingPagePath_v04: GetGeneralPagePath = () =>
   ROUTE_PATHS.V04_BILLING;
+
+export const getSettingsPagePath_v04: GetGeneralPagePath = () =>
+  ROUTE_PATHS.V04_SETTINGS;
