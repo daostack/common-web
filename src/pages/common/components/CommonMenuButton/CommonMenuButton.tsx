@@ -3,6 +3,8 @@ import { ButtonIcon } from "@/shared/components/ButtonIcon";
 import { MoreIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { DesktopMenu, MobileMenu } from "@/shared/ui-kit";
+import { useJoinProjectAutomatically } from "../../hooks";
+import { useCommonDataContext } from "../../providers";
 import { useMenuItems } from "./hooks";
 import styles from "./CommonMenuButton.module.scss";
 
@@ -28,10 +30,20 @@ const CommonMenuButton: FC<CommonMenuButtonProps> = (props) => {
     isMobileVersion = false,
     styles: outerStyles,
   } = props;
+
+  const { parentCommon, common } = useCommonDataContext();
+
+  const { canJoinProjectAutomatically } = useJoinProjectAutomatically(
+    commonMember,
+    common,
+    parentCommon,
+  );
+
   const items = useMenuItems({
     commonMember,
     isSubCommon,
     governance: { circles },
+    canLeaveSpace: !canJoinProjectAutomatically,
   });
 
   if (items.length === 0) {
