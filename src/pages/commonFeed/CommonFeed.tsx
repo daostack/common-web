@@ -9,18 +9,27 @@ import React, {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { NavLink } from "react-router-dom";
 import {
   CommonEvent,
   CommonEventEmitter,
   CommonEventToListener,
 } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { MembershipRequestModal } from "@/pages/OldCommon/components";
 import { FeedItemBaseContent, FeedItemBaseContentProps } from "@/pages/common";
-import { CommonAction, QueryParamKey } from "@/shared/constants";
+import { JoinProjectModal } from "@/pages/common/components/JoinProjectModal";
+import { useJoinProjectAutomatically } from "@/pages/common/hooks";
+import {
+  CommonAction,
+  LOADER_APPEARANCE_DELAY,
+  QueryParamKey,
+} from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { useQueryParams } from "@/shared/hooks";
+import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems, useUserCommonIds } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import {
   checkIsFeedItemFollowLayoutItem,
@@ -31,9 +40,14 @@ import {
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
 import { CirclesPermissions, CommonFeed, CommonMember } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
-import { getCommonPageAboutTabPath } from "@/shared/utils";
+import {
+  checkIsAutomaticJoin,
+  checkIsProject,
+  getCommonPageAboutTabPath,
+} from "@/shared/utils";
 import {
   commonActions,
+  commonLayoutActions,
   selectCommonAction,
   selectRecentStreamId,
   selectSharedFeedItem,
@@ -62,6 +76,7 @@ export type RenderCommonFeedContentWrapper = (data: {
 export interface CommonFeedProps {
   commonId: string;
   renderContentWrapper: RenderCommonFeedContentWrapper;
+  renderLoadingHeader?: (() => ReactNode) | null;
   feedLayoutOuterStyles?: FeedLayoutOuterStyles;
   feedLayoutSettings?: FeedLayoutSettings;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeDataWithType) => void;
@@ -71,11 +86,13 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const {
     commonId,
     renderContentWrapper: outerContentWrapperRenderer,
+    renderLoadingHeader,
     feedLayoutOuterStyles,
     feedLayoutSettings,
     onActiveItemDataChange,
   } = props;
   const { getCommonPagePath, getProfilePagePath } = useRoutesContext();
+  const isTabletView = useIsTabletView();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -94,13 +111,11 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const commonAction = useSelector(selectCommonAction);
   const {
     data: commonData,
+    stateRef,
     fetched: isCommonDataFetched,
     fetchCommonData,
   } = useCommonData(userId);
   const parentCommonId = commonData?.common.directParent?.commonId;
-  const parentCommonMember = commonData?.parentCommonMember;
-  const isRootCommon = !parentCommonId;
-  const isRootCommonMember = Boolean(commonData?.rootCommonMember);
   const anotherCommonId =
     userCommonIds[0] === commonId ? userCommonIds[1] : userCommonIds[0];
   const pinnedItemIds = useMemo(
@@ -111,16 +126,24 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const {
     fetched: isGlobalDataFetched,
     fetchUserRelatedData,
-    data: { commonMember },
+    data: { commonMember, rootCommonMember, parentCommonMember },
   } = useGlobalCommonData({
     commonId,
+    rootCommonId: commonData?.common.rootCommonId,
+    parentCommonId,
     governanceCircles: commonData?.governance.circles,
+    rootCommonGovernanceCircles: commonData?.rootCommonGovernance?.circles,
   });
   const {
     data: commonPinnedFeedItems,
     loading: areCommonPinnedFeedItemsLoading,
     fetch: fetchCommonPinnedFeedItems,
   } = useCommonPinnedFeedItems(commonId, pinnedItemIds);
+  const isRootCommon = !parentCommonId;
+  const isRootCommonMember = Boolean(rootCommonMember);
+  const isRootCommonAutomaticAcceptance = checkIsAutomaticJoin(
+    commonData?.rootCommonGovernance,
+  );
 
   const commonFeedItemIdsForNotListening = useMemo(() => {
     const items: string[] = [];
@@ -142,6 +165,31 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetch: fetchCommonFeedItems,
   } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
 
+  const {
+    isModalOpen: isCommonJoinModalOpen,
+    onOpen: onCommonJoinModalOpen,
+    onClose: onCommonJoinModalClose,
+  } = useAuthorizedModal();
+  const {
+    isModalOpen: isRootCommonJoinModalOpen,
+    onOpen: onRootCommonJoinModalOpen,
+    onClose: onRootCommonJoinModalClose,
+  } = useAuthorizedModal();
+  const {
+    isModalOpen: isProjectJoinModalOpen,
+    onOpen: onProjectJoinModalOpen,
+    onClose: onProjectJoinModalClose,
+  } = useAuthorizedModal();
+  const {
+    canJoinProjectAutomatically,
+    isJoinPending,
+    onJoinProjectAutomatically,
+  } = useJoinProjectAutomatically(
+    commonMember,
+    commonData?.common,
+    commonData?.parentCommon,
+  );
+
   const sharedFeedItem = useSelector(selectSharedFeedItem);
   const topFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
@@ -150,18 +198,18 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         (item) => item.itemId !== sharedFeedItemId,
       ) || [];
 
-    if (sharedFeedItem) {
-      items.push(sharedFeedItem);
-    }
     if (filteredPinnedItems.length > 0) {
       items.push(...filteredPinnedItems);
+    }
+    if (sharedFeedItem) {
+      items.push(sharedFeedItem);
     }
 
     return items;
   }, [sharedFeedItem, sharedFeedItemId, commonPinnedFeedItems]);
   const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
-  const hasPublicItem = true;
+  const hasPublicItems = commonData?.common.hasPublicItems ?? false;
 
   const fetchData = () => {
     fetchCommonData({
@@ -194,27 +242,76 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     [dispatch],
   );
 
-  useEffect(() => {
-    if (isCommonDataFetched && parentCommonId && !parentCommonMember) {
-      history.replace(getCommonPageAboutTabPath(commonId));
-    }
-  }, [isCommonDataFetched, parentCommonMember?.id, commonId]);
-
-  useEffect(() => {
-    if (!isCommonDataFetched || !isGlobalDataFetched || commonMember) {
+  const renderChatInput = (): ReactNode => {
+    if (commonMember) {
       return;
     }
-    if (!hasPublicItem && !isRootCommon && !isRootCommonMember) {
+
+    if (isJoinPending) {
+      return (
+        <div className={styles.chatInputLoaderWrapper}>
+          <Loader />
+        </div>
+      );
+    }
+
+    if (commonData?.rootCommon && !isRootCommonMember) {
+      return (
+        <span
+          className={styles.chatInputText}
+          onClick={() => onRootCommonJoinModalOpen()}
+        >
+          Join {commonData.rootCommon.name}
+        </span>
+      );
+    }
+
+    if (isRootCommonMember && commonData?.parentCommon && !parentCommonMember) {
+      return (
+        <span className={styles.chatInputText}>
+          To join this space you should first join{" "}
+          <NavLink to={getCommonPagePath(commonData.parentCommon.id)}>
+            {commonData.parentCommon.name}
+          </NavLink>
+        </span>
+      );
+    }
+
+    const onJoinCommon = checkIsProject(commonData?.common)
+      ? canJoinProjectAutomatically
+        ? onJoinProjectAutomatically
+        : onProjectJoinModalOpen
+      : onCommonJoinModalOpen;
+
+    return (
+      <span className={styles.chatInputText} onClick={() => onJoinCommon()}>
+        Join
+      </span>
+    );
+  };
+
+  useEffect(() => {
+    if (
+      !isCommonDataFetched ||
+      !isGlobalDataFetched ||
+      commonMember ||
+      isRootCommon ||
+      isRootCommonMember
+    ) {
+      return;
+    }
+    if (!isRootCommonAutomaticAcceptance || !hasPublicItems) {
       history.replace(getCommonPageAboutTabPath(commonId));
     }
   }, [
     isCommonDataFetched,
     isGlobalDataFetched,
     commonMember,
-    hasPublicItem,
     isRootCommon,
     isRootCommonMember,
     commonId,
+    isRootCommonAutomaticAcceptance,
+    hasPublicItems,
   ]);
 
   useEffect(() => {
@@ -294,13 +391,59 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     getProfilePagePath,
   ]);
 
+  useEffect(() => {
+    if (commonMember && isCommonJoinModalOpen) {
+      onCommonJoinModalClose();
+    }
+  }, [commonMember?.id]);
+
+  useEffect(() => {
+    if (rootCommonMember && isRootCommonJoinModalOpen) {
+      onRootCommonJoinModalClose();
+    }
+  }, [rootCommonMember?.id]);
+
+  useEffect(() => {
+    return () => {
+      const common = stateRef.current?.data?.common;
+
+      dispatch(
+        commonLayoutActions.setLastCommonFromFeed({
+          id: commonId,
+          data: common
+            ? {
+                name: common.name,
+                image: common.image,
+                isProject: checkIsProject(common),
+                memberCount: common.memberCount,
+              }
+            : null,
+        }),
+      );
+    };
+  }, [commonId]);
+
   if (!isDataFetched) {
+    const headerEl = renderLoadingHeader ? (
+      renderLoadingHeader()
+    ) : (
+      <PureCommonTopNavigation
+        className={styles.pureCommonTopNavigation}
+        iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+      />
+    );
+
     return (
-      <div className={styles.centerWrapper}>
-        <Loader />
-      </div>
+      <>
+        {headerEl}
+        <div className={styles.centerWrapper}>
+          <Loader delay={isTabletView ? 0 : LOADER_APPEARANCE_DELAY} />
+        </div>
+        <CommonSidenavLayoutTabs className={styles.tabs} />
+      </>
     );
   }
+
   if (!commonData) {
     return (
       <>
@@ -362,7 +505,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
           </>
         }
         common={commonData.common}
-        parentCommon={commonData.parentCommon}
         governance={commonData.governance}
         commonMember={commonMember}
         topFeedItems={topFeedItems}
@@ -376,8 +518,36 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         onActiveItemDataChange={onActiveItemDataChange}
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
+        renderChatInput={renderChatInput}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
+      {commonData.common && commonData.governance && (
+        <>
+          <MembershipRequestModal
+            isShowing={isGlobalDataFetched && isCommonJoinModalOpen}
+            onClose={onCommonJoinModalClose}
+            common={commonData.common}
+            governance={commonData.governance}
+            showLoadingAfterSuccessfulCreation
+          />
+          <JoinProjectModal
+            isShowing={isGlobalDataFetched && isProjectJoinModalOpen}
+            onClose={onProjectJoinModalClose}
+            common={commonData.common}
+            governance={commonData.governance}
+            onRequestCreated={() => null}
+          />
+        </>
+      )}
+      {commonData.rootCommon && commonData.rootCommonGovernance && (
+        <MembershipRequestModal
+          isShowing={isGlobalDataFetched && isRootCommonJoinModalOpen}
+          onClose={onRootCommonJoinModalClose}
+          common={commonData.rootCommon}
+          governance={commonData.rootCommonGovernance}
+          showLoadingAfterSuccessfulCreation
+        />
+      )}
     </>
   );
 };

@@ -1,4 +1,5 @@
 import React, { FC, useMemo } from "react";
+import { LOADER_APPEARANCE_DELAY } from "@/shared/constants";
 import { Loader } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
 import { Scrollbar } from "../../../../../SidenavLayout/components/SidenavContent";
@@ -43,6 +44,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
   } = props;
   const menuItems = useMenuItems({
     stateItems: commons,
+    activeStateItemId: currentCommonId,
     onCommonClick,
     onCommonCreationClick,
   });
@@ -96,7 +98,9 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
           }
           level={INITIAL_TREE_ITEMS_LEVEL}
         />
-        {isLoading && <Loader className={styles.loader} />}
+        {isLoading && (
+          <Loader className={styles.loader} delay={LOADER_APPEARANCE_DELAY} />
+        )}
       </Scrollbar>
     </TreeContext.Provider>
   );

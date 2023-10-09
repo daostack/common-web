@@ -1,64 +1,46 @@
 import React, { FC } from "react";
-import { NavLink } from "react-router-dom";
-import classNames from "classnames";
-import { InviteFriendsButton } from "@/pages/common/components";
-import { useRoutesContext } from "@/shared/contexts";
+import { useCommonFollow } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { RightArrowThinIcon } from "@/shared/icons";
 import {
   CirclesPermissions,
   Common,
   CommonMember,
   Governance,
 } from "@/shared/models";
-import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
-import { checkIsProject, getPluralEnding } from "@/shared/utils";
-import { NewStreamButton, ShareButton } from "./components";
+import { checkIsProject } from "@/shared/utils";
+import {
+  ActionsButton,
+  HeaderCommonContent,
+  HeaderContentWrapper,
+  NewStreamButton,
+} from "./components";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
   className?: string;
   common: Common;
-  commonMembersAmount: number;
   commonMember: (CommonMember & CirclesPermissions) | null;
   governance: Governance;
 }
 
 const HeaderContent: FC<HeaderContentProps> = (props) => {
-  const { className, common, commonMembersAmount, commonMember, governance } =
-    props;
-  const { getCommonPageAboutTabPath } = useRoutesContext();
+  const { className, common, commonMember, governance } = props;
   const isMobileVersion = useIsTabletView();
-  const isProject = checkIsProject(common);
+  const commonFollow = useCommonFollow(common.id, commonMember);
+  const showFollowIcon = commonFollow.isFollowInProgress
+    ? !commonMember?.isFollowing
+    : commonMember?.isFollowing;
 
   return (
-    <div className={classNames(styles.container, className)}>
-      <div className={styles.commonContent}>
-        <TopNavigationOpenSidenavButton
-          className={styles.openSidenavButton}
-          iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
-        />
-        <NavLink
-          className={styles.commonLink}
-          to={getCommonPageAboutTabPath(common.id)}
-        >
-          <CommonAvatar
-            name={common.name}
-            src={common.image}
-            className={classNames(styles.image, {
-              [styles.imageNonRounded]: !isProject,
-              [styles.imageRounded]: isProject,
-            })}
-          />
-
-          <div className={styles.commonInfoWrapper}>
-            <h1 className={styles.commonName}>{common.name}</h1>
-            <p className={styles.commonMembersAmount}>
-              {commonMembersAmount} member{getPluralEnding(commonMembersAmount)}
-            </p>
-          </div>
-        </NavLink>
-      </div>
+    <HeaderContentWrapper className={className}>
+      <HeaderCommonContent
+        commonId={common.id}
+        commonName={common.name}
+        commonImage={common.image}
+        isProject={checkIsProject(common)}
+        memberCount={common.memberCount}
+        showFollowIcon={showFollowIcon}
+      />
       <div className={styles.actionButtonsWrapper}>
         <NewStreamButton
           commonId={common.id}
@@ -66,15 +48,14 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           governance={governance}
           isMobileVersion={isMobileVersion}
         />
-        {!isMobileVersion && (
-          <InviteFriendsButton
-            isMobileVersion={isMobileVersion}
-            common={common}
-            TriggerComponent={ShareButton}
-          />
-        )}
+        <ActionsButton
+          common={common}
+          commonMember={commonMember}
+          commonFollow={commonFollow}
+          isMobileVersion={isMobileVersion}
+        />
       </div>
-    </div>
+    </HeaderContentWrapper>
   );
 };
 

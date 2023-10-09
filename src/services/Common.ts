@@ -4,6 +4,7 @@ import { commonMembersSubCollection } from "@/pages/OldCommon/store/api";
 import { store } from "@/shared/appConfig";
 import {
   ApiEndpoint,
+  DocChange,
   GovernanceActions,
   ProposalsTypes,
 } from "@/shared/constants";
@@ -337,17 +338,11 @@ class CommonService {
 
       if (docChange) {
         callback(docChange.doc.data(), {
-          isAdded: docChange.type === "added",
-          isRemoved: docChange.type === "removed",
+          isAdded: docChange.type === DocChange.Added,
+          isRemoved: docChange.type === DocChange.Removed,
         });
       }
     });
-  };
-
-  public getCommonMembersAmount = async (commonId: string): Promise<number> => {
-    const snapshot = await commonMembersSubCollection(commonId).get();
-
-    return snapshot.size;
   };
 
   public leaveCircle = async (
@@ -380,6 +375,14 @@ class CommonService {
       type: ProposalsTypes.ASSIGN_CIRCLE,
       args: { circleId, commonId, userId },
     });
+  };
+
+  public followCommon = async (commonId: string): Promise<void> => {
+    await Api.post(ApiEndpoint.FollowCommon, { commonId });
+  };
+
+  public muteCommon = async (commonId: string): Promise<void> => {
+    await Api.post(ApiEndpoint.MuteCommon, { commonId });
   };
 }
 

@@ -10,11 +10,6 @@
   background-color: $white;
   box-sizing: border-box;
   --chat-input-wrapper-height: 3.125rem;
-
-  @include tablet {
-    height: 100%;
-    margin-top: 0;
-  }
 }
 
 .messages {
@@ -64,22 +59,6 @@
   align-items: flex-end;
 }
 
-.loaderWrapper {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.permissionsText {
-  font-size: $mobile-title;
-  color: var(--primary-fill);
-  margin-right: 0.3125rem;
-  width: 100%;
-  text-align: center;
-  cursor: pointer;
-}
-
 .messageInput {
   width: 100%;
   min-height: 2.625rem;
@@ -96,8 +75,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0.125rem 1.5rem 0.125rem 0.25rem;
   word-break: break-word;
+  padding: 0.125rem 1.75rem 0.125rem 0.25rem;
+}
+
+.messageInputRtl {
+  padding: 0.125rem 0.25rem 0.125rem 1.75rem;
 }
 
 .messageInputEmpty {

@@ -8,8 +8,10 @@ import React, {
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
+import { ProposalService } from "@/services";
+import { DeletePrompt, GlobalOverlay } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
-import { useForceUpdate, useModal } from "@/shared/hooks";
+import { useForceUpdate, useModal, useNotification } from "@/shared/hooks";
 import {
   useDiscussionById,
   useFeedItemFollow,
@@ -106,6 +108,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
     const userId = user?.uid;
     const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
       useChatContext();
+    const { notify } = useNotification();
     const forceUpdate = useForceUpdate();
     const { getCommonPagePath } = useRoutesContext();
     const {
@@ -144,6 +147,13 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
+    const {
+      isShowing: isProposalDeleteModalOpen,
+      onOpen: onProposalDeleteModalOpen,
+      onClose: onProposalDeleteModalClose,
+    } = useModal(false);
+    const [isProposalDeletingInProgress, setProposalDeletingInProgress] =
+      useState(false);
     const isLoading =
       !isFeedItemUserFetched ||
       !isDiscussionFetched ||
@@ -165,7 +175,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       onOpen: onShareModalOpen,
       onClose: onShareModalClose,
     } = useModal(false);
-    const feedItemFollow = useFeedItemFollow(item.id, commonId);
+    const feedItemFollow = useFeedItemFollow(
+      { feedItemId: item.id, commonId },
+      { withSubscription: true },
+    );
     const menuItems = useMenuItems(
       {
         commonId,
@@ -181,9 +194,22 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       {
         report: () => {},
         share: () => onShareModalOpen(),
+        remove: onProposalDeleteModalOpen,
       },
     );
     const cardTitle = discussion?.title;
+
+    const onProposalDelete = useCallback(async () => {
+      try {
+        setProposalDeletingInProgress(true);
+        await ProposalService.deleteProposal(proposalId);
+        onProposalDeleteModalClose();
+      } catch {
+        notify("Something went wrong");
+      } finally {
+        setProposalDeletingInProgress(false);
+      }
+    }, [proposalId]);
 
     useEffect(() => {
       fetchFeedItemUser(item.userId);
@@ -426,8 +452,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           isFollowing={feedItemFollow.isFollowing}
           isLoading={isLoading}
           type={item.data.type}
-          seenOnce={feedItemUserMetadata?.seenOnce}
-          seen={feedItemUserMetadata?.seen}
+          seenOnce={feedItemUserMetadata?.seenOnce ?? true}
+          seen={feedItemUserMetadata?.seen ?? true}
           menuItems={menuItems}
           ownerId={item.userId}
         >
@@ -441,6 +467,17 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
             element={discussion}
             feedItemId={item.id}
           />
+        )}
+        {isProposalDeleteModalOpen && (
+          <GlobalOverlay>
+            <DeletePrompt
+              title="Are you sure you want to delete this proposal?"
+              description="Note that this action could not be undone."
+              onCancel={onProposalDeleteModalClose}
+              onDelete={onProposalDelete}
+              isDeletingInProgress={isProposalDeletingInProgress}
+            />
+          </GlobalOverlay>
         )}
       </>
     );

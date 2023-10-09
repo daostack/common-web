@@ -15,7 +15,6 @@ import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { MembershipRequestModal } from "@/pages/OldCommon/components";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import {
   FeedItem,
@@ -31,12 +30,15 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
-import { JoinProjectModal } from "@/pages/common/components/JoinProjectModal";
-import { useJoinProjectAutomatically } from "@/pages/common/hooks";
 import { InternalLinkData } from "@/shared/components";
-import { InboxItemType, QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
+import {
+  InboxItemType,
+  LOADER_APPEARANCE_DELAY,
+  QueryParamKey,
+  ROUTE_PATHS,
+} from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
+import { useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -95,7 +97,6 @@ export interface FeedLayoutOuterStyles {
 
 export interface FeedLayoutSettings {
   withDesktopChatTitle?: boolean;
-  sidenavWidth?: number;
   getSplitViewMaxSize?: (width: number) => number;
 }
 
@@ -107,7 +108,6 @@ interface FeedLayoutProps {
   ) => ReactNode;
   topContent?: ReactNode;
   common?: Common;
-  parentCommon?: Common;
   governance?: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
   feedItems: FeedLayoutItem[] | null;
@@ -135,6 +135,7 @@ interface FeedLayoutProps {
   ) => void;
   outerStyles?: FeedLayoutOuterStyles;
   settings?: FeedLayoutSettings;
+  renderChatInput?: () => ReactNode;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -148,7 +149,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     common: outerCommon,
     governance: outerGovernance,
     commonMember: outerCommonMember,
-    parentCommon,
     feedItems,
     topFeedItems = [],
     loading,
@@ -167,6 +167,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onFeedItemSelect,
     outerStyles,
     settings,
+    renderChatInput,
   } = props;
   const { getCommonPagePath } = useRoutesContext();
   const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
@@ -192,34 +193,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } = useCommonMember({
     shouldAutoReset: false,
   });
-  const {
-    isModalOpen: isCommonJoinModalOpen,
-    onOpen: onCommonJoinModalOpen,
-    onClose: onCommonJoinModalClose,
-  } = useAuthorizedModal();
-  const {
-    isModalOpen: isProjectJoinModalOpen,
-    onOpen: onProjectJoinModalOpen,
-    onClose: onProjectJoinModalClose,
-  } = useAuthorizedModal();
   const commonMember = outerCommonMember || fetchedCommonMember;
-  const {
-    canJoinProjectAutomatically,
-    isJoinPending,
-    onJoinProjectAutomatically,
-  } = useJoinProjectAutomatically(commonMember, outerCommon, parentCommon);
-  const onJoinCommon = checkIsProject(outerCommon)
-    ? canJoinProjectAutomatically
-      ? onJoinProjectAutomatically
-      : onProjectJoinModalOpen
-    : onCommonJoinModalOpen;
   const userForProfile = useUserForProfile();
   const governance = outerGovernance || fetchedGovernance;
   const maxChatSize =
     settings?.getSplitViewMaxSize?.(windowWidth) ??
     getSplitViewMaxSize(windowWidth);
   const [realChatWidth, setRealChatWidth] = useState(() =>
-    getDefaultSize(windowWidth, maxChatSize, settings?.sidenavWidth),
+    getDefaultSize(windowWidth, maxChatSize),
   );
   const chatWidth = Math.min(realChatWidth, maxChatSize);
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
@@ -274,13 +255,20 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       return;
     }
 
-    const foundItem = allFeedItems?.find(
-      (item) =>
-        !checkIsFeedItemFollowLayoutItem(item) ||
-        [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
+    const foundItem = allFeedItems?.find((item) => {
+      if (!checkIsFeedItemFollowLayoutItem(item)) {
+        return true;
+      }
+      if (
+        ![CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
           item.feedItem.data.type,
-        ),
-    );
+        )
+      ) {
+        return false;
+      }
+
+      return Boolean(userId) || item.feedItem.circleVisibility.length === 0;
+    });
 
     return foundItem?.itemId;
   }, [
@@ -290,6 +278,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     sharedFeedItemId,
     userForProfile.userForProfileData,
     shouldAllowChatAutoOpen,
+    userId,
   ]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
@@ -482,6 +471,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   ) => {
     const { commonId, messageId } = options;
 
+    if (chatItem?.feedItemId === feedItemId && !messageId) {
+      return;
+    }
+
     if (commonId && commonId !== outerCommon?.id) {
       history.push(
         getCommonPagePath(commonId, {
@@ -548,12 +541,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     },
     [getCommonPagePath, handleFeedItemClick],
   );
-
-  useEffect(() => {
-    if (commonMember && isCommonJoinModalOpen) {
-      onCommonJoinModalClose();
-    }
-  }, [commonMember?.id]);
 
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
@@ -652,7 +639,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
           >
             {topContent}
             {isContentEmpty && <p className={styles.emptyText}>{emptyText}</p>}
-            <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
+            <InfiniteScroll
+              onFetchNext={onFetchNext}
+              isLoading={loading}
+              loaderDelay={LOADER_APPEARANCE_DELAY}
+            >
               {allFeedItems?.map((item) => {
                 const isActive = item.itemId === activeFeedItemId;
 
@@ -725,8 +716,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   titleRightContent={followFeedItemEl}
                   onMessagesAmountChange={handleMessagesAmountChange}
                   directParent={outerCommon?.directParent}
-                  onJoinCommon={onJoinCommon}
-                  isJoinPending={isJoinPending}
+                  renderChatInput={renderChatInput}
                   onUserClick={handleUserClick}
                   onFeedItemClick={handleFeedItemClick}
                   onInternalLinkClick={handleInternalLinkClick}
@@ -751,8 +741,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 onMessagesAmountChange={handleMessagesAmountChange}
                 directParent={outerCommon?.directParent}
                 onClose={handleMobileChatClose}
-                onJoinCommon={onJoinCommon}
-                isJoinPending={isJoinPending}
+                renderChatInput={renderChatInput}
                 onUserClick={handleUserClick}
                 onFeedItemClick={handleFeedItemClick}
                 onInternalLinkClick={handleInternalLinkClick}
@@ -774,24 +763,6 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                     />
                   )}
               </MobileChat>
-            )}
-            {governance && outerCommon && (
-              <>
-                <MembershipRequestModal
-                  isShowing={isCommonJoinModalOpen}
-                  onClose={onCommonJoinModalClose}
-                  common={outerCommon}
-                  governance={governance}
-                  showLoadingAfterSuccessfulCreation
-                />
-                <JoinProjectModal
-                  isShowing={isProjectJoinModalOpen}
-                  onClose={onProjectJoinModalClose}
-                  common={outerCommon}
-                  governance={governance}
-                  onRequestCreated={() => null}
-                />
-              </>
             )}
             {userForProfile.userForProfileData &&
               (!isTabletView ? (

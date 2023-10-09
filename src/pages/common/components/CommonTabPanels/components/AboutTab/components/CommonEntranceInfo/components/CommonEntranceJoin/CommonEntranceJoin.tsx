@@ -1,6 +1,8 @@
 import React, { FC } from "react";
+import { NavLink } from "react-router-dom";
 import { useJoinProjectAutomatically } from "@/pages/common/hooks";
 import { useCommonDataContext } from "@/pages/common/providers";
+import { useRoutesContext } from "@/shared/contexts";
 import { Common } from "@/shared/models";
 import { Button, ButtonSize, ButtonVariant } from "@/shared/ui-kit";
 import styles from "./CommonEntranceJoin.module.scss";
@@ -13,8 +15,16 @@ interface CommonEntranceJoinProps {
 
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
   const { withJoinRequest = false, common, isProject } = props;
-  const { parentCommon, commonMember, isJoinAllowed, onJoinCommon } =
-    useCommonDataContext();
+  const {
+    parentCommon,
+    parentCommonMember,
+    commonMember,
+    rootCommon,
+    rootCommonMember,
+    isJoinAllowed,
+    onJoinCommon,
+  } = useCommonDataContext();
+  const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const {
     canJoinProjectAutomatically,
     isJoinPending,
@@ -28,10 +38,35 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
       {isProject && parentCommon?.name && (
         <p className={styles.joinHint}>
           <strong>{common.name}</strong> is a space in the{" "}
-          <strong>{parentCommon.name}</strong> common. Only common members can
-          join the space.
+          <strong>
+            <NavLink to={getCommonPagePath(parentCommon.id)}>
+              {parentCommon.name}
+            </NavLink>
+          </strong>{" "}
+          common. Only common members can join the space.
         </p>
       )}
+      {!commonMember && rootCommon && !rootCommonMember && (
+        <p className={styles.joinHint}>
+          Join via{" "}
+          <NavLink to={getCommonPageAboutTabPath(rootCommon.id)}>
+            {rootCommon.name}
+          </NavLink>{" "}
+          page
+        </p>
+      )}
+      {!commonMember &&
+        rootCommonMember &&
+        parentCommon &&
+        !parentCommonMember && (
+          <p className={styles.joinHint}>
+            Join via{" "}
+            <NavLink to={getCommonPageAboutTabPath(parentCommon.id)}>
+              {parentCommon.name}
+            </NavLink>{" "}
+            page
+          </p>
+        )}
       {withJoinRequest && (isJoinAllowed || isJoinPending) && (
         <Button
           className={styles.joinButton}

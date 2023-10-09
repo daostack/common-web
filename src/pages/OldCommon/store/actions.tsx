@@ -44,6 +44,10 @@ import {
   ImmediateContributionResponse,
 } from "../interfaces";
 import { UpdateDiscussionMessageDto } from "../interfaces/UpdateDiscussionMessageDto";
+import {
+  UpdateGovernanceCirclesNamesPayload,
+  UpdateGovernanceCirclesNamesResponse,
+} from "../interfaces/UpdateGovernanceCircleName";
 import { CommonsActionTypes } from "./constants";
 
 export const createGovernance = createAsyncAction(
@@ -366,6 +370,22 @@ export const updateGovernanceRules = createAsyncAction(
     callback: (error: Error | null, governance?: Governance) => void;
   },
   Common,
+  Error
+>();
+
+export const updateGovernanceCircleName = createAsyncAction(
+  CommonsActionTypes.UPDATE_GOVERNANCE_CIRCLE_NAME,
+  CommonsActionTypes.UPDATE_GOVERNANCE_CIRCLE_NAME_SUCCESS,
+  CommonsActionTypes.UPDATE_GOVERNANCE_CIRCLE_NAME_FAILURE,
+)<
+  {
+    payload: UpdateGovernanceCirclesNamesPayload;
+    callback: (
+      error: Error | null,
+      updatedCircles?: UpdateGovernanceCirclesNamesResponse,
+    ) => void;
+  },
+  UpdateGovernanceCirclesNamesResponse,
   Error
 >();
 

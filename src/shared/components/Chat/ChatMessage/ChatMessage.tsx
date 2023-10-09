@@ -40,8 +40,7 @@ import {
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
-import { StaticLinkType, isRTL } from "@/shared/utils";
-import { getUserName } from "@/shared/utils";
+import { StaticLinkType, isRtlText, getUserName } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
 import { ChatMessageLinkify, InternalLinkData, Time } from "./components";
@@ -302,12 +301,14 @@ export default function ChatMessage({
             className={classNames(
               styles.messageContent,
               styles.replyMessageContent,
-
               {
                 [styles.replyMessageContentCurrentUser]:
                   !isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
                 [styles.replyMessageContentWithFile]: file,
+                [styles.messageContentRtl]: isRtlText(
+                  discussionMessage?.parentMessage?.text,
+                ),
               },
             )}
           >
@@ -378,7 +379,7 @@ export default function ChatMessage({
               ref={messageRef}
               className={classNames(styles.messageText, {
                 [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
-                [styles.messageTextRtl]: isRTL(discussionMessage.text),
+                [styles.messageTextRtl]: isRtlText(discussionMessage.text),
                 [styles.messageTextWithReply]:
                   !!discussionMessage.parentMessage?.id,
                 [styles.systemMessage]: isSystemMessage,
@@ -398,6 +399,7 @@ export default function ChatMessage({
               <div
                 className={classNames(styles.messageContent, {
                   [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
+                  [styles.messageContentRtl]: isRtlText(discussionMessage.text),
                 })}
               >
                 {filePreview && (

@@ -15,15 +15,16 @@ import {
   ErrorCode,
   ScreenSize,
   QueryParamKey,
+  ROUTE_PATHS,
 } from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
-import { setTutorialModalState } from "@/shared/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import {
   emptyFunction,
   getInboxPagePath,
   isGeneralError,
+  matchOneOfRoutes,
 } from "@/shared/utils";
 import { isFirebaseError } from "@/shared/utils/firebase";
 import { LoginModalType } from "../../../Auth/interface";
@@ -83,11 +84,7 @@ const LoginContainer: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
-    if (stage === AuthStage.CompleteAccountDetails) {
-      dispatch(setTutorialModalState({ isShowing: true }));
-      return;
-    }
-  }, [dispatch, stage, location.pathname]);
+  }, [dispatch, location.pathname]);
 
   const handleError = useCallback((errorText?: string) => {
     setErrorText(errorText || DEFAULT_AUTH_ERROR_TEXT);
@@ -104,9 +101,24 @@ const LoginContainer: FC = () => {
       } else {
         handleClose();
       }
-      history.push(getInboxPagePath());
+      if (
+        !matchOneOfRoutes(
+          history.location.pathname,
+          [ROUTE_PATHS.COMMON, ROUTE_PATHS.V04_COMMON],
+          {
+            exact: false,
+          },
+        )
+      ) {
+        history.push(getInboxPagePath());
+      }
     },
-    [removeQueryParams, handleClose, shouldShowUserDetailsAfterSignUp],
+    [
+      removeQueryParams,
+      handleClose,
+      shouldShowUserDetailsAfterSignUp,
+      history.location.pathname,
+    ],
   );
 
   const handleAuthButtonClick = useCallback(
