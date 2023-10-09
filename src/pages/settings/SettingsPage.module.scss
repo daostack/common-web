@@ -4,7 +4,7 @@
 .container {
   flex: 1;
   max-width: 49.5rem;
-  padding-top: var(--header-h);
+  padding-top: calc(var(--header-h) + 3.375rem);
   padding-bottom: 3rem;
   border-left: 0.0625rem solid $c-gray-10;
   border-right: 0.0625rem solid $c-gray-10;

@@ -1,0 +1,20 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include tablet {
+    margin-bottom: 0;
+  }
+}
+
+.title {
+  margin: 0;
+  font-family: Lexend, sans-serif;
+  font-weight: normal;
+  font-size: 2.25rem;
+  line-height: 3rem;
+}
