@@ -1,0 +1,24 @@
+@import "../../constants";
+@import "../../styles/sizes";
+
+.container {
+  flex: 1;
+  max-width: 49.5rem;
+  padding-top: var(--header-h);
+  padding-bottom: 3rem;
+  border-left: 0.0625rem solid $c-gray-10;
+  border-right: 0.0625rem solid $c-gray-10;
+
+  @include tablet {
+    padding-top: 1rem;
+    padding-bottom: calc(var(--layout-tabs-height) + 1rem);
+  }
+}
+
+.tabs {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: var(--safe-area-inset-bottom);
+}
