@@ -21,4 +21,5 @@ export interface User {
   roles?: UserRole[];
   deleted?: true;
   inboxCounter?: number;
+  fcmTokens?: string[];
 }

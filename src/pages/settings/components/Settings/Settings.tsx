@@ -71,7 +71,15 @@ export default function Settings() {
     <div className={styles.container}>
       <Header className={styles.header} />
       {!user && <Loader />}
-      {user && <SettingsForm onSave={handleGoBack} onCancel={handleGoBack} />}
+      {user && (
+        <SettingsForm
+          withoutPushNotifications={
+            !user.fcmTokens || user.fcmTokens.length === 0
+          }
+          onSave={handleGoBack}
+          onCancel={handleGoBack}
+        />
+      )}
       {/*<DeleteUserModal*/}
       {/*  isShowing={isDeleteAccountModalShowing}*/}
       {/*  onClose={onDeleteAccountModalClose}*/}

@@ -8,6 +8,7 @@ import { EMAILS_OPTIONS, PUSH_NOTIFICATIONS_OPTIONS } from "./constants";
 import styles from "./SettingsForm.module.scss";
 
 interface SettingsFormProps {
+  withoutPushNotifications: boolean;
   onCancel: () => void;
   onSave: () => void;
 }
@@ -23,7 +24,7 @@ const getInitialValues = (): FormValues => ({
 });
 
 const SettingsForm: FC<SettingsFormProps> = (props) => {
-  const { onCancel, onSave } = props;
+  const { withoutPushNotifications, onCancel, onSave } = props;
   const formRef = useRef<FormikProps<FormValues>>(null);
 
   const handleSubmit = () => {
@@ -46,6 +47,7 @@ const SettingsForm: FC<SettingsFormProps> = (props) => {
           label="Push notifications"
           options={PUSH_NOTIFICATIONS_OPTIONS}
           shouldBeFixed={false}
+          disabled={withoutPushNotifications}
         />
         <Dropdown
           className={styles.formItem}
