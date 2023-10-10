@@ -14,10 +14,11 @@ import styles from "./Header.module.scss";
 interface HeaderProps {
   className?: string;
   isMobileVersion?: boolean;
+  onAccountDelete: () => void;
 }
 
 const Header: FC<HeaderProps> = (props) => {
-  const { className, isMobileVersion = false } = props;
+  const { className, isMobileVersion = false, onAccountDelete } = props;
   const history = useHistory();
   const { canGoBack, goBack } = useGoBack();
   const { getProfilePagePath } = useRoutesContext();
@@ -48,7 +49,9 @@ const Header: FC<HeaderProps> = (props) => {
         />
       }
       centralElement={<h2 className={styles.mobileTitle}>Settings</h2>}
-      rightElement={<SettingsMenuButton isMobileVersion />}
+      rightElement={
+        <SettingsMenuButton isMobileVersion onAccountDelete={onAccountDelete} />
+      }
     />
   );
 };

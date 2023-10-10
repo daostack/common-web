@@ -14,15 +14,16 @@ interface Styles {
 interface SettingsMenuButtonProps {
   isMobileVersion?: boolean;
   styles?: Styles;
+  onAccountDelete: () => void;
 }
 
 const SettingsMenuButton: FC<SettingsMenuButtonProps> = (props) => {
-  const { isMobileVersion = false, styles: outerStyles } = props;
-  const items = useMenuItems({
-    onAccountDelete: () => {
-      console.log("delete account");
-    },
-  });
+  const {
+    isMobileVersion = false,
+    styles: outerStyles,
+    onAccountDelete,
+  } = props;
+  const items = useMenuItems({ onAccountDelete });
 
   if (items.length === 0) {
     return null;

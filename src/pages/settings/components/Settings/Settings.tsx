@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { DeleteUserModal } from "@/pages/MyAccount/components/Profile";
 import { Loader } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useGoBack, useModal } from "@/shared/hooks";
@@ -71,10 +72,15 @@ export default function Settings() {
         <SettingsMenuButton
           styles={{ container: styles.settingsMenuButton }}
           isMobileVersion={false}
+          onAccountDelete={onDeleteAccountModalOpen}
         />
       )}
       <div className={styles.content}>
-        <Header className={styles.header} isMobileVersion={isMobileVersion} />
+        <Header
+          className={styles.header}
+          isMobileVersion={isMobileVersion}
+          onAccountDelete={onDeleteAccountModalOpen}
+        />
         {!user && <Loader />}
         {user && (
           <SettingsForm
@@ -86,10 +92,10 @@ export default function Settings() {
             onCancel={handleGoBack}
           />
         )}
-        {/*<DeleteUserModal*/}
-        {/*  isShowing={isDeleteAccountModalShowing}*/}
-        {/*  onClose={onDeleteAccountModalClose}*/}
-        {/*/>*/}
+        <DeleteUserModal
+          isShowing={isDeleteAccountModalShowing}
+          onClose={onDeleteAccountModalClose}
+        />
       </div>
     </div>
   );
