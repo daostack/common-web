@@ -1,26 +1,23 @@
-import React, { FC } from "react";
-import { useHistory } from "react-router-dom";
+import React, { FC, ReactNode } from "react";
 import classNames from "classnames";
-import { useRoutesContext } from "@/shared/contexts";
+import styles from "@/pages/settings/components/Settings/components/Header/Header.module.scss";
 import { useGoBack } from "@/shared/hooks";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import {
   TopNavigationBackButton,
   TopNavigationWithBlocks,
 } from "@/shared/ui-kit";
-import styles from "./Header.module.scss";
 
 interface HeaderProps {
   className?: string;
   isEditing: boolean;
   isMobileVersion?: boolean;
+  editButtonEl: ReactNode;
 }
 
 const Header: FC<HeaderProps> = (props) => {
-  const { className, isEditing, isMobileVersion = false } = props;
-  const history = useHistory();
+  const { className, isEditing, isMobileVersion = false, editButtonEl } = props;
   const { canGoBack, goBack } = useGoBack();
-  const { getProfilePagePath } = useRoutesContext();
 
   if (!isMobileVersion) {
     return (
@@ -32,24 +29,23 @@ const Header: FC<HeaderProps> = (props) => {
     );
   }
 
-  const handleBackButtonClick = () => {
-    if (canGoBack) {
-      goBack();
-    } else {
-      history.push(getProfilePagePath());
-    }
-  };
-
   return (
     <TopNavigationWithBlocks
       className={styles.topNavigationWithBlocks}
       leftElement={
-        <TopNavigationBackButton
-          iconEl={<LongLeftArrowIcon className={styles.backIcon} />}
-          onClick={handleBackButtonClick}
-        />
+        canGoBack ? (
+          <TopNavigationBackButton
+            iconEl={<LongLeftArrowIcon className={styles.backIcon} />}
+            onClick={goBack}
+          />
+        ) : null
       }
-      centralElement={<h2 className={styles.mobileTitle}>Settings</h2>}
+      centralElement={
+        <h2 className={styles.mobileTitle}>
+          {isEditing ? "Edit profile" : "Profile"}
+        </h2>
+      }
+      rightElement={editButtonEl}
     />
   );
 };
