@@ -57,6 +57,8 @@ export const ApiEndpoint = {
     `/chat/message/${chatMessageId}`,
   MarkChatChannelAsSeen: (channelId: string) =>
     `/chat/channel/${channelId}/seen`,
+  MarkChatChannelAsUnseen: (channelId: string) =>
+    `/chat/channel/${channelId}/unseen`,
   MarkChatMessageAsSeen: (chatMessageId: string) =>
     `/chat/message/${chatMessageId}/seen`,
 };
