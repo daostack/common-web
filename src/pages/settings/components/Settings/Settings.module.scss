@@ -14,3 +14,10 @@
     margin-bottom: 0;
   }
 }
+
+.settingsForm {
+  @include tablet {
+    margin-top: 4rem;
+    padding: 0 1rem;
+  }
+}

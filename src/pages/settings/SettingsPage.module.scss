@@ -10,7 +10,8 @@
   border-right: 0.0625rem solid $c-gray-10;
 
   @include tablet {
-    padding-top: 1rem;
+    padding-top: 0;
     padding-bottom: 1rem;
+    border: 0;
   }
 }

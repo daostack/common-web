@@ -73,6 +73,7 @@ export default function Settings() {
       {!user && <Loader />}
       {user && (
         <SettingsForm
+          className={styles.settingsForm}
           withoutPushNotifications={
             !user.fcmTokens || user.fcmTokens.length === 0
           }
