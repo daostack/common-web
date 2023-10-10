@@ -33,7 +33,7 @@ const Header: FC<HeaderProps> = (props) => {
     <TopNavigationWithBlocks
       className={styles.topNavigationWithBlocks}
       leftElement={
-        canGoBack ? (
+        canGoBack && !isEditing ? (
           <TopNavigationBackButton
             iconEl={<LongLeftArrowIcon className={styles.backIcon} />}
             onClick={goBack}
@@ -45,7 +45,7 @@ const Header: FC<HeaderProps> = (props) => {
           {isEditing ? "Edit profile" : "Profile"}
         </h2>
       }
-      rightElement={editButtonEl}
+      rightElement={isEditing ? null : editButtonEl}
     />
   );
 };

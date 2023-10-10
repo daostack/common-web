@@ -36,3 +36,15 @@
     padding: 0 1rem;
   }
 }
+
+.menuButtonsWrapper {
+  border-top: 0.0625rem solid $c-gray-20;
+}
+
+.menuButton {
+  border-bottom: 0.0625rem solid $c-gray-20;
+}
+
+.logoutMenuButton {
+  color: $c-pink-mention;
+}
