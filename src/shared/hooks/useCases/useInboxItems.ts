@@ -110,6 +110,7 @@ const addMetadataToItemsBatch = async (
 
 export const useInboxItems = (
   feedItemIdsForNotListening?: string[],
+  options?: { unread?: boolean },
 ): Return => {
   const dispatch = useDispatch();
   const [newItemsBatches, setNewItemsBatches] = useState<ItemsBatch[]>([]);
@@ -122,6 +123,7 @@ export const useInboxItems = (
     dispatch(
       inboxActions.getInboxItems.request({
         limit: 15,
+        unread: options?.unread,
       }),
     );
   };
