@@ -603,9 +603,6 @@ export default function ChatComponent({
         />
         <BaseTextEditor
           inputContainerRef={inputContainerRef}
-          emojiContainerClassName={classNames({
-            [styles.emojiContainer]: isMultiLineInput,
-          })}
           size={TextEditorSize.Auto}
           editorRef={editorRef}
           className={classNames(styles.messageInput, {
