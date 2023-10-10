@@ -89,7 +89,7 @@
 }
 
 .addFilesIcon {
-  margin-right: 0.9375rem;
+  margin: auto 0.9rem auto auto;
   height: 1.5rem;
 }
 
@@ -97,7 +97,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 1rem;
+  margin: auto auto auto 1rem;
   border: none;
   outline: none;
   background: $c-input-100;
