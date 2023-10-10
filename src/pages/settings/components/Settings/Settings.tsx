@@ -1,20 +1,20 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { Loader } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useGoBack, useModal } from "@/shared/hooks";
-import { getScreenSize } from "@/shared/store/selectors";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
-import { Header, SettingsForm } from "./components";
+import { Header, SettingsForm, SettingsMenuButton } from "./components";
 import styles from "./Settings.module.scss";
 
 export default function Settings() {
   const history = useHistory();
   const { canGoBack, goBack } = useGoBack();
   const { getProfilePagePath } = useRoutesContext();
+  const isMobileVersion = useIsTabletView();
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
@@ -23,8 +23,6 @@ export default function Settings() {
     onClose: onDeleteAccountModalClose,
   } = useModal(false);
   const user = useSelector(selectUser());
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -69,22 +67,30 @@ export default function Settings() {
 
   return (
     <div className={styles.container}>
-      <Header className={styles.header} />
-      {!user && <Loader />}
-      {user && (
-        <SettingsForm
-          className={styles.settingsForm}
-          withoutPushNotifications={
-            !user.fcmTokens || user.fcmTokens.length === 0
-          }
-          onSave={handleGoBack}
-          onCancel={handleGoBack}
+      {!isMobileVersion && (
+        <SettingsMenuButton
+          styles={{ container: styles.settingsMenuButton }}
+          isMobileVersion={false}
         />
       )}
-      {/*<DeleteUserModal*/}
-      {/*  isShowing={isDeleteAccountModalShowing}*/}
-      {/*  onClose={onDeleteAccountModalClose}*/}
-      {/*/>*/}
+      <div className={styles.content}>
+        <Header className={styles.header} isMobileVersion={isMobileVersion} />
+        {!user && <Loader />}
+        {user && (
+          <SettingsForm
+            className={styles.settingsForm}
+            withoutPushNotifications={
+              !user.fcmTokens || user.fcmTokens.length === 0
+            }
+            onSave={handleGoBack}
+            onCancel={handleGoBack}
+          />
+        )}
+        {/*<DeleteUserModal*/}
+        {/*  isShowing={isDeleteAccountModalShowing}*/}
+        {/*  onClose={onDeleteAccountModalClose}*/}
+        {/*/>*/}
+      </div>
     </div>
   );
 }

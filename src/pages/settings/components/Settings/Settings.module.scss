@@ -2,9 +2,25 @@
 @import "../../../../styles/sizes";
 
 .container {
+  position: relative;
+  width: 100%;
+}
+
+.content {
   max-width: 36.25rem;
   width: 100%;
   margin: 0 auto;
+  padding-top: 3.375rem;
+
+  @include tablet {
+    padding-top: 0;
+  }
+}
+
+.settingsMenuButton {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
 }
 
 .header {
