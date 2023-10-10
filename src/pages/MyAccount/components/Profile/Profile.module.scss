@@ -1,0 +1,10 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.header {
+  margin-bottom: 2.25rem;
+
+  @include tablet {
+    margin-bottom: 0;
+  }
+}

@@ -15,7 +15,7 @@ export default function Settings() {
   const { canGoBack, goBack } = useGoBack();
   const { getProfilePagePath } = useRoutesContext();
   const { notify } = useNotification();
-  const isMobileVersion = useIsTabletView();
+  const isMobileView = useIsTabletView();
   const {
     isShowing: isDeleteAccountModalShowing,
     onOpen: onDeleteAccountModalOpen,
@@ -40,7 +40,7 @@ export default function Settings() {
 
   return (
     <div className={styles.container}>
-      {!isMobileVersion && (
+      {!isMobileView && (
         <SettingsMenuButton
           styles={{ container: styles.settingsMenuButton }}
           isMobileVersion={false}
@@ -50,7 +50,7 @@ export default function Settings() {
       <div className={styles.content}>
         <Header
           className={styles.header}
-          isMobileVersion={isMobileVersion}
+          isMobileVersion={isMobileView}
           onAccountDelete={onDeleteAccountModalOpen}
         />
         {!user && <Loader />}

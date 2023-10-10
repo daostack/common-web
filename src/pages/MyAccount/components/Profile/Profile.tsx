@@ -5,11 +5,11 @@ import {
   UserDetails,
   UserDetailsRef,
 } from "@/pages/Login/components/LoginContainer/UserDetails";
-import { ButtonIcon, Loader } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
-import EditIcon from "@/shared/icons/edit.icon";
-import { getScreenSize } from "@/shared/store/selectors";
+import { Loader } from "@/shared/components";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { Header } from "./components";
+import styles from "./Profile.module.scss";
 import "./index.scss";
 
 export default function Profile() {
@@ -17,8 +17,7 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const user = useSelector(selectUser());
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
+  const isMobileView = useIsTabletView();
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -63,15 +62,11 @@ export default function Profile() {
 
   return (
     <div className="route-content profile-wrapper">
-      <header className="profile-wrapper__header">
-        <h2 className="route-title">Profile</h2>
-        {isEditing && !isMobileView && buttonsWrapperEl}
-        {!isEditing && (
-          <ButtonIcon onClick={handleEditClick}>
-            <EditIcon />
-          </ButtonIcon>
-        )}
-      </header>
+      <Header
+        className={styles.header}
+        isEditing={isEditing}
+        isMobileVersion={isMobileView}
+      />
       {!user ? (
         <Loader />
       ) : (
