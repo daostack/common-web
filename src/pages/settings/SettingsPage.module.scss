@@ -11,14 +11,6 @@
 
   @include tablet {
     padding-top: 1rem;
-    padding-bottom: calc(var(--layout-tabs-height) + 1rem);
+    padding-bottom: 1rem;
   }
-}
-
-.tabs {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding-bottom: var(--safe-area-inset-bottom);
 }
