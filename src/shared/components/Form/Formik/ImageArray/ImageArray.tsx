@@ -1,13 +1,14 @@
 import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
 import { useFormikContext } from "formik";
+import { ButtonIcon, ButtonLink, Loader } from "@/shared/components";
+import { useImageSizeCheck } from "@/shared/hooks";
+import DeleteIcon from "@/shared/icons/delete.icon";
+import { ProposalImage } from "@/shared/models/governance/proposals";
 import {
   getFileNameForUploading,
   uploadFile,
 } from "@/shared/utils/firebaseUploadFile";
-import { ProposalImage } from "@/shared/models/governance/proposals";
-import DeleteIcon from "@/shared/icons/delete.icon";
-import { ButtonIcon, ButtonLink, Loader } from "@/shared/components";
 import "./index.scss";
 
 const ACCEPTED_EXTENSIONS = ".jpg, jpeg, .png";
@@ -29,6 +30,7 @@ const ImageArray: FC<ImageArrayProps> = (props) => {
     title = "Add images",
   } = props;
   const { setFieldValue } = useFormikContext();
+  const { checkImageSize } = useImageSizeCheck();
 
   const handleAddImageClick = () => {
     if (!areImagesLoading) {
@@ -51,22 +53,28 @@ const ImageArray: FC<ImageArrayProps> = (props) => {
       return;
     }
 
-    setLoadingState(true);
+        setLoadingState(true);
 
     try {
       const uploadedFiles = await Promise.all(
-        Array.from(files).map(async (file): Promise<ProposalImage> => {
-          const fileName = getFileNameForUploading(file.name);
-          const downloadURL = await uploadFile(fileName, "public_img", file);
+        Array.from(files)
+          .map(async (file): Promise<ProposalImage | null> => {
+            if (!checkImageSize(file.name, file.size)) {
+              return null;
+            }
 
-          return {
-            title: fileName,
-            value: downloadURL,
-          };
-        })
+            const fileName = getFileNameForUploading(file.name);
+            const downloadURL = await uploadFile(fileName, "public_img", file);
+
+            return {
+              title: fileName,
+              value: downloadURL,
+            };
+          })
+          .filter(Boolean),
       );
 
-      updateUploadedFiles(values.concat(uploadedFiles));
+      updateUploadedFiles(values.concat(uploadedFiles as ProposalImage[]));
       setLoadingState(false);
     } catch (error) {
       setLoadingState(false);

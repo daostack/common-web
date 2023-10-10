@@ -1,6 +1,7 @@
 import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
+import { useImageSizeCheck } from "@/shared/hooks";
 import GalleryIcon from "@/shared/icons/gallery.icon";
 import TrashIcon from "@/shared/icons/trash.icon";
 import "./index.scss";
@@ -16,6 +17,7 @@ interface GalleryButtonProps {
 
 const GalleryButton: FC<GalleryButtonProps> = (props) => {
   const { onImageSelect, ariaLabel, shouldDeleteFile = false } = props;
+  const { checkImageSize } = useImageSizeCheck();
   const className = classNames(
     "create-common-review-gallery-button",
     props.className,
@@ -24,8 +26,9 @@ const GalleryButton: FC<GalleryButtonProps> = (props) => {
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const { files } = event.target;
 
-    if (files && files[0]) {
-      onImageSelect(files[0]);
+    const file = files?.[0];
+    if (file && checkImageSize(file.name, file.size)) {
+      onImageSelect(file);
     }
   };
 

@@ -22,9 +22,10 @@ import {
   GovernanceActions,
   LastSeenEntity,
 } from "@/shared/constants";
+import { FILES_ACCEPTED_EXTENSIONS } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
-import { useZoomDisabling } from "@/shared/hooks";
+import { useZoomDisabling, useImageSizeCheck } from "@/shared/hooks";
 import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
@@ -67,9 +68,6 @@ import {
 import { useChatChannelChatAdapter, useDiscussionChatAdapter } from "./hooks";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
-
-const ACCEPTED_EXTENSIONS =
-  ".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .pages, .numbers, .key, .jpg, .jpeg, .png, .gif, .tiff, .bmp, .webp, .mp4, .avi, .mov, .mkv, .mpeg, .mp3, .aac, .flac, .wav, .ogg, .zip, .rar, .7z, .tar, .gz, .apk, .epub, .vcf, .xml, .csv, .json, .docm, .dot, .dotm, .dotx, .fdf, .fodp, .fods, .fodt, .pot, .potm, .potx, .ppa, .ppam, .pps, .ppsm, .ppsx, .pptm, .sldx, .xlm, .xlsb, .xlsm, .xlt, .xltm, .xltx, .xps, .mobi, .azw, .azw3, .prc, .svg, .ico, .jp2, .3gp, .3g2, .flv, .m4v, .mk3d, .mks, .mpg, .mpeg2, .mpeg4, .mts, .vob, .wmv, .m4a, .opus, .wma, .cbr, .cbz, .tgz, .apng, .m4b, .m4p, .m4r, .webm, .sh, .py, .java, .cpp, .cs, .js, .html, .css, .php, .rb, .pl, .sql";
 
 const BASE_CHAT_INPUT_HEIGHT = 48;
 
@@ -126,7 +124,6 @@ export default function ChatComponent({
   feedItemId,
   isAuthorized,
   isHidden = false,
-  isCommonMemberFetched,
   onMessagesAmountChange,
   directParent,
   renderChatInput: renderChatInputOuter,
@@ -135,6 +132,7 @@ export default function ChatComponent({
   onInternalLinkClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
+  const { checkImageSize } = useImageSizeCheck();
   useZoomDisabling();
   const editorRef = useRef<HTMLElement>(null);
   const [inputContainerRef, { height: chatInputHeight }] =
@@ -323,14 +321,21 @@ export default function ChatComponent({
   );
 
   const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
-    const newFilesPreview = Array.from(event.target.files || []).map((file) => {
-      return {
-        info: file,
-        src: URL.createObjectURL(file),
-        size: file.size,
-        name: file.name,
-      };
-    });
+    const newFilesPreview = Array.from(event.target.files || [])
+      .map((file) => {
+        if (!checkImageSize(file.name, file.size)) {
+          return null;
+        }
+
+        return {
+          info: file,
+          src: URL.createObjectURL(file),
+          size: file.size,
+          name: file.name,
+        };
+      })
+      .filter(Boolean) as FileInfo[];
+
     dispatch(
       chatActions.setFilesPreview(
         [...(currentFilesPreview ?? []), ...newFilesPreview].slice(0, 10),
@@ -599,7 +604,7 @@ export default function ChatComponent({
           onChange={uploadFiles}
           style={{ display: "none" }}
           multiple
-          accept={ACCEPTED_EXTENSIONS}
+          accept={FILES_ACCEPTED_EXTENSIONS}
         />
         <BaseTextEditor
           inputContainerRef={inputContainerRef}
