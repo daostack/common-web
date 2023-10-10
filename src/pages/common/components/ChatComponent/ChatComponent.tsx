@@ -182,7 +182,7 @@ export default function ChatComponent({
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
-  const chatInputWrapperRef = useRef<HTMLElement>(null);
+  const chatInputWrapperRef = useRef<HTMLDivElement>(null);
 
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
@@ -323,15 +323,17 @@ export default function ChatComponent({
     [newMessages, discussionId, dispatch],
   );
 
-  const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
-    let clipboardfiles: FileList | undefined;
-    if ((event as any).clipboardData.files.length) {
-      clipboardfiles = (event as any).clipboardData.files;
+  const uploadFiles = (
+    event: ChangeEvent<HTMLInputElement> | ClipboardEvent,
+  ) => {
+    let files: FileList | undefined | null;
+    if (event instanceof ClipboardEvent) {
+      files = event.clipboardData?.files;
+    } else {
+      files = event.target.files;
     }
 
-    const newFilesPreview = Array.from(
-      event.target.files || clipboardfiles || [],
-    ).map((file) => {
+    const newFilesPreview = Array.from(files || []).map((file) => {
       return {
         info: file,
         src: URL.createObjectURL(file),
@@ -696,7 +698,7 @@ export default function ChatComponent({
         <MessageReply users={users} />
         <ChatFilePreview />
         <div
-          ref={chatInputWrapperRef as any}
+          ref={chatInputWrapperRef}
           className={classNames(styles.chatInputWrapper, {
             [styles.chatInputWrapperMultiLine]: isMultiLineInput,
           })}
