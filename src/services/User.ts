@@ -18,7 +18,7 @@ import {
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
-import { cacheActions } from "@/store/states";
+import * as cacheActions from "@/store/states/cache/actions";
 import Api from "./Api";
 import { waitForUserToBeLoaded } from "./utils";
 

@@ -493,7 +493,7 @@ function* updateUserDetails({
       }),
     );
     tokenHandler.setUser(user);
-    yield payload.callback(null);
+    yield payload.callback(null, user);
   } catch (error) {
     if (isError(error)) {
       yield put(actions.updateUserDetails.failure(error));

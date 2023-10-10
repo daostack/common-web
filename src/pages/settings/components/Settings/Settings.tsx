@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DeleteUserModal } from "@/pages/MyAccount/components/Profile";
 import { Loader } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
-import { useGoBack, useModal } from "@/shared/hooks";
+import { useGoBack, useModal, useNotification } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Header, SettingsForm, SettingsMenuButton } from "./components";
 import styles from "./Settings.module.scss";
 
@@ -15,23 +14,14 @@ export default function Settings() {
   const history = useHistory();
   const { canGoBack, goBack } = useGoBack();
   const { getProfilePagePath } = useRoutesContext();
+  const { notify } = useNotification();
   const isMobileVersion = useIsTabletView();
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     isShowing: isDeleteAccountModalShowing,
     onOpen: onDeleteAccountModalOpen,
     onClose: onDeleteAccountModalClose,
   } = useModal(false);
   const user = useSelector(selectUser());
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleCancelClick = () => {
-    setIsEditing(false);
-  };
 
   const handleGoBack = () => {
     if (canGoBack) {
@@ -41,30 +31,10 @@ export default function Settings() {
     }
   };
 
-  const handleSubmit = () => {
-    // userDetailsRef.current?.submit();
+  const handleSave = () => {
+    notify("Settings were successfully updated");
+    handleGoBack();
   };
-
-  const buttonsWrapperEl = (
-    <div className="profile-wrapper__buttons-wrapper">
-      <Button
-        className="profile-wrapper__button"
-        variant={ButtonVariant.OutlineDarkPink}
-        onClick={handleCancelClick}
-        disabled={isSubmitting}
-      >
-        Cancel
-      </Button>
-      <Button
-        variant={ButtonVariant.PrimaryPink}
-        className="profile-wrapper__button"
-        onClick={handleSubmit}
-        disabled={isSubmitting}
-      >
-        Save
-      </Button>
-    </div>
-  );
 
   return (
     <div className={styles.container}>
@@ -88,7 +58,7 @@ export default function Settings() {
             withoutPushNotifications={
               !user.fcmTokens || user.fcmTokens.length === 0
             }
-            onSave={handleGoBack}
+            onSave={handleSave}
             onCancel={handleGoBack}
           />
         )}
