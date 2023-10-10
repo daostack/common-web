@@ -91,6 +91,7 @@
 
 .addFilesIcon {
   margin-bottom: 0.8rem;
+  margin-right: 0.5rem;
   height: 1.5rem;
 }
 
@@ -117,10 +118,6 @@ $phone-breakpoint: 415px;
   transform: translateY(50%);
   z-index: 10000;
 }
-
-// .emojiContainer {
-//   margin-top: auto;
-// }
 
 .singleEmojiText {
   font-size: $xlarge;
