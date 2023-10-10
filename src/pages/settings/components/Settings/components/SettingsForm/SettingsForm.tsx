@@ -3,6 +3,10 @@ import classNames from "classnames";
 import { Formik } from "formik";
 import { FormikProps } from "formik/dist/types";
 import { Dropdown, Form } from "@/shared/components/Form/Formik";
+import {
+  UserEmailNotificationPreference,
+  UserPushNotificationPreference,
+} from "@/shared/models";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { EMAILS_OPTIONS, PUSH_NOTIFICATIONS_OPTIONS } from "./constants";
 import styles from "./SettingsForm.module.scss";
@@ -15,13 +19,13 @@ interface SettingsFormProps {
 }
 
 interface FormValues {
-  pushNotifications: string;
-  emails: string;
+  pushNotifications: UserPushNotificationPreference;
+  emails: UserEmailNotificationPreference;
 }
 
 const getInitialValues = (): FormValues => ({
-  pushNotifications: "none",
-  emails: "none",
+  pushNotifications: UserPushNotificationPreference.None,
+  emails: UserEmailNotificationPreference.None,
 });
 
 const SettingsForm: FC<SettingsFormProps> = (props) => {
