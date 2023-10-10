@@ -31,8 +31,10 @@ export default function Settings() {
     }
   };
 
-  const handleSave = () => {
-    notify("Settings were successfully updated");
+  const handleSave = (withoutCall?: boolean) => {
+    if (!withoutCall) {
+      notify("Settings were successfully updated");
+    }
     handleGoBack();
   };
 

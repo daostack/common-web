@@ -20,7 +20,7 @@ interface SettingsFormProps {
   className?: string;
   withoutPushNotifications: boolean;
   onCancel: () => void;
-  onSave: () => void;
+  onSave: (withoutCall?: boolean) => void;
 }
 
 interface State {
@@ -59,6 +59,13 @@ const SettingsForm: FC<SettingsFormProps> = (props) => {
 
   const handleSubmit = (values: FormValues) => {
     if (!user) {
+      return;
+    }
+    if (
+      user.pushNotificationPreference === values.pushNotificationPreference &&
+      user.emailNotificationPreference === values.emailNotificationPreference
+    ) {
+      onSave(true);
       return;
     }
 
