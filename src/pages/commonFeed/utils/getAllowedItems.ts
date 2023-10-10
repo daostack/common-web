@@ -6,14 +6,13 @@ export interface Options {
   common: Common;
   commonMember: (CommonMember & CirclesPermissions) | null;
   isFollowInProgress: boolean;
-  isMobileVersion: boolean;
 }
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   CommonFeedMenuItem,
   (options: Options) => boolean
 > = {
-  [CommonFeedMenuItem.Share]: ({ isMobileVersion }) => !isMobileVersion,
+  [CommonFeedMenuItem.Share]: () => true,
   [CommonFeedMenuItem.Follow]: ({ commonMember, isFollowInProgress }) =>
     !isFollowInProgress && Boolean(commonMember && !commonMember.isFollowing),
   [CommonFeedMenuItem.Mute]: ({ commonMember, isFollowInProgress }) =>

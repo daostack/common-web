@@ -11,11 +11,10 @@ interface ActionsButtonProps {
   common: Common;
   commonMember: (CommonMember & CirclesPermissions) | null;
   commonFollow: CommonFollowState;
-  isMobileVersion: boolean;
 }
 
 const ActionsButton: FC<ActionsButtonProps> = (props) => {
-  const { common, commonMember, commonFollow, isMobileVersion } = props;
+  const { common, commonMember, commonFollow } = props;
   const {
     isShowing: isShareModalOpen,
     onOpen: onShareModalOpen,
@@ -25,7 +24,6 @@ const ActionsButton: FC<ActionsButtonProps> = (props) => {
     {
       common,
       commonMember,
-      isMobileVersion,
       isFollowInProgress: commonFollow.isFollowInProgress,
     },
     {
