@@ -182,6 +182,7 @@ export default function ChatComponent({
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
+  const chatInputWrapperRef = useRef<HTMLDivElement>(null);
 
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
@@ -322,8 +323,17 @@ export default function ChatComponent({
     [newMessages, discussionId, dispatch],
   );
 
-  const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
-    const newFilesPreview = Array.from(event.target.files || []).map((file) => {
+  const uploadFiles = (
+    event: ChangeEvent<HTMLInputElement> | ClipboardEvent,
+  ) => {
+    let files: FileList | undefined | null;
+    if (event instanceof ClipboardEvent) {
+      files = event.clipboardData?.files;
+    } else {
+      files = event.target.files;
+    }
+
+    const newFilesPreview = Array.from(files || []).map((file) => {
       return {
         info: file,
         src: URL.createObjectURL(file),
@@ -583,6 +593,20 @@ export default function ChatComponent({
       return null;
     }
 
+    useEffect(() => {
+      const handlePaste = (event) => {
+        if (event.clipboardData.files.length) {
+          uploadFiles(event);
+        }
+      };
+
+      chatInputWrapperRef.current?.addEventListener("paste", handlePaste);
+
+      return () => {
+        chatInputWrapperRef.current?.removeEventListener("paste", handlePaste);
+      };
+    }, []);
+
     return (
       <>
         <ButtonIcon
@@ -671,6 +695,7 @@ export default function ChatComponent({
         <MessageReply users={users} />
         <ChatFilePreview />
         <div
+          ref={chatInputWrapperRef}
           className={classNames(styles.chatInputWrapper, {
             [styles.chatInputWrapperMultiLine]: isMultiLineInput,
           })}
