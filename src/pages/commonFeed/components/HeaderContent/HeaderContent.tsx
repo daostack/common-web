@@ -54,7 +54,6 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           common={common}
           commonMember={commonMember}
           commonFollow={commonFollow}
-          isMobileVersion={isMobileVersion}
         />
       </div>
     </HeaderContentWrapper>
