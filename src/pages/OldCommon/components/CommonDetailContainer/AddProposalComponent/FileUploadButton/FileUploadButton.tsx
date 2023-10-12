@@ -1,5 +1,6 @@
 import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
+import { useImageSizeCheck } from "@/shared/hooks";
 import { DocInfo } from "@/shared/models";
 import { FileInfo } from "../FileInfo";
 import "./index.scss";
@@ -32,11 +33,12 @@ const FileUploadButton: FC<FileInfoProps> = (props) => {
     onDelete,
     onUploadedFileClick,
   } = props;
+  const { checkImageSize } = useImageSizeCheck();
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const file = event.target.files ? event.target.files[0] : null;
 
-    if (file) {
+    if (file && checkImageSize(file.name, file.size)) {
       onUpload(file);
     }
   };
