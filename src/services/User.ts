@@ -92,6 +92,7 @@ class UserService {
     options: {
       startAfter?: Timestamp | null;
       limit?: number;
+      unread?: boolean;
     } = {},
   ): Promise<{
     data: GetInboxResponse["data"]["inboxWithMetadata"];
@@ -106,6 +107,10 @@ class UserService {
 
     if (startAfter) {
       queryParams.startAfter = startAfter.toDate().toISOString();
+    }
+
+    if (options.unread) {
+      queryParams.unread = true;
     }
 
     const {

@@ -14,6 +14,7 @@ export const getInboxItems = createAsyncAction(
 )<
   {
     limit?: number;
+    unread?: boolean;
   },
   Omit<InboxItems, "loading">,
   Error,
