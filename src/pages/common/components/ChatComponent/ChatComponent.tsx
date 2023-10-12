@@ -688,7 +688,7 @@ export default function ChatComponent({
           isEmpty={
             discussionMessagesData.fetched &&
             !discussionMessagesData.data?.length && // for non direct messages chats. not using messageCount because it includes the deleted messages as well.
-            Object.keys(messages).length === 0 // for direct messages chats
+            Object.keys(discussionMessages).length === 0 // for direct messages chats
           }
         />
       </div>
