@@ -34,6 +34,7 @@ export const ApiEndpoint = {
   UpdateSubscription: "/subscriptions/update",
   CancelSubscription: "/subscriptions/cancel",
   CreateUser: "/users/create",
+  UpdateUser: "/users/update",
   DeleteUser: "/users/delete",
   FollowFeedItem: "/users/follow-feed-item",
   GetInbox: "/users/inbox",

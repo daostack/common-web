@@ -1,0 +1,20 @@
+@import "../../../../../styles/sizes";
+
+.container {
+  display: none;
+
+  @include tablet {
+    z-index: 1;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    background-color: $c-shades-white;
+  }
+}
+
+.emptyBlock {
+  flex-shrink: 0;
+  width: 1.75rem;
+}

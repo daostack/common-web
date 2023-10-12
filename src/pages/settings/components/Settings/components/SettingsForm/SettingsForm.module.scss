@@ -1,0 +1,28 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/mixins";
+
+.form {
+  max-width: 27.125rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.formItem {
+  margin-bottom: 2.25rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.pushNotificationsDropdown {
+  z-index: 9;
+}
+
+.errorText {
+  font-size: 0.875rem;
+}
+
+.buttonsWrapper {
+  @include flex-list-with-gap(1rem);
+}

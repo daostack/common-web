@@ -2,7 +2,7 @@ import { stringify } from "query-string";
 import { store } from "@/shared/appConfig";
 import { ApiEndpoint } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
-import { GetInboxResponse } from "@/shared/interfaces/api";
+import { GetInboxResponse, UpdateUserDto } from "@/shared/interfaces/api";
 import {
   ChatChannel,
   Collection,
@@ -18,7 +18,7 @@ import {
   transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
-import { cacheActions } from "@/store/states";
+import * as cacheActions from "@/store/states/cache/actions";
 import Api from "./Api";
 import { waitForUserToBeLoaded } from "./utils";
 
@@ -27,6 +27,29 @@ const converter = firestoreDataConverter<User>();
 class UserService {
   private getUsersCollection = () =>
     firebase.firestore().collection(Collection.Users).withConverter(converter);
+
+  public updateUser = async (user: User): Promise<User> => {
+    const body: UpdateUserDto = {
+      userId: user.uid,
+      changes: {
+        email: user.email,
+        photoURL: user.photoURL,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        displayName: user.displayName,
+        pushNotificationPreference: user.pushNotificationPreference,
+        emailNotificationPreference: user.emailNotificationPreference,
+      },
+    };
+    const response = await Api.put<
+      UpdateUserDto["changes"] | Pick<User, "uid" | "updatedAt">
+    >(ApiEndpoint.UpdateUser, body);
+
+    return {
+      ...user,
+      ...response.data,
+    };
+  };
 
   public getUserById = async (userId: string): Promise<User | null> => {
     const userSnapshot = await this.getUsersCollection()

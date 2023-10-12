@@ -35,6 +35,10 @@
     cursor: pointer;
   }
 }
+.custom-dropdown-wrapper__menu-button--disabled {
+  color: $c-gray-30;
+  border-color: $c-gray-20;
+}
 
 .custom-dropdown-wrapper__value {
   flex: 1;

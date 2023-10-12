@@ -25,12 +25,18 @@ interface MenuItemsProps {
 const MenuItems: FC<MenuItemsProps> = (props) => {
   const { placement = MenuItemsPlacement.Bottom, styles: outerStyles } = props;
   const dispatch = useDispatch();
-  const { getProfilePagePath, getBillingPagePath } = useRoutesContext();
+  const { getProfilePagePath, getBillingPagePath, getSettingsPagePath } =
+    useRoutesContext();
   const items: Item[] = [
     {
       key: "my-profile",
       text: "My profile",
       to: getProfilePagePath(),
+    },
+    {
+      key: "settings",
+      text: "Settings",
+      to: getSettingsPagePath(),
     },
     {
       key: "billing",

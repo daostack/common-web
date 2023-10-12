@@ -13,6 +13,7 @@ interface Data {
   getProjectCreationPagePath: GetGeneralPageWithCommonIdPath;
   getProfilePagePath: GetGeneralPagePath;
   getBillingPagePath: GetGeneralPagePath;
+  getSettingsPagePath: GetGeneralPagePath;
 }
 
 export type RoutesContextValue = Data | null;

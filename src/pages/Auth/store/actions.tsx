@@ -79,7 +79,11 @@ export const updateUserDetails = createAsyncAction(
   AuthActionTypes.UPDATE_USER_DATA,
   AuthActionTypes.UPDATE_USER_DATA_SUCCESS,
   AuthActionTypes.UPDATE_USER_DATA_FAILURE,
-)<{ user: User; callback: (error: Error | null) => void }, User, Error>();
+)<
+  { user: User; callback: (error: Error | null, user?: User) => void },
+  User,
+  Error
+>();
 
 export const setLoginModalState = createStandardAction(
   AuthActionTypes.SET_LOGIN_MODAL_STATE,
