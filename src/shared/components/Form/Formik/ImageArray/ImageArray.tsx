@@ -53,7 +53,7 @@ const ImageArray: FC<ImageArrayProps> = (props) => {
       return;
     }
 
-        setLoadingState(true);
+    setLoadingState(true);
 
     try {
       const uploadedFiles = await Promise.all(

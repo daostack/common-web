@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { useNotification } from '@/shared/hooks';
+import { useCallback } from "react";
+import { useNotification } from "@/shared/hooks";
 import { isImageFile, MAX_IMAGE_UPLOAD_SIZE, MAX_IMAGE_UPLOAD_SIZE_ERROR } from "@/shared/constants";
 
 interface Return {
