@@ -691,8 +691,9 @@ export default function ChatComponent({
           onInternalLinkClick={onInternalLinkClick}
           isEmpty={
             discussionMessagesData.fetched &&
-            !discussionMessagesData.data?.length
-          } // not using messageCount because it includes the deleted messages as well.
+            !discussionMessagesData.data?.length && // for non direct messages chats. not using messageCount because it includes the deleted messages as well.
+            Object.keys(discussionMessages).length === 0 // for direct messages chats
+          }
         />
       </div>
       <div className={styles.bottomChatContainer}>
