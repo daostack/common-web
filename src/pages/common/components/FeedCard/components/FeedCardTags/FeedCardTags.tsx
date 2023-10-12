@@ -31,6 +31,10 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
   } = props;
   const user = useSelector(selectUser());
   const isOwner = ownerId === user?.uid;
+  const isNewTagVisible =
+    notEmpty(seenOnce) && notEmpty(isOwner) && !seenOnce && !isOwner;
+  const isUnseenTagVisible =
+    !isNewTagVisible && !unreadMessages && notEmpty(seen) && !seen;
 
   return (
     <>
@@ -53,7 +57,7 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
       {isFollowing && (
         <StarIcon className={styles.starIcon} stroke="currentColor" />
       )}
-      {!seenOnce && !isOwner && (
+      {isNewTagVisible && (
         <div
           className={classNames(styles.tag, styles.new, {
             [styles.tagActive]: isActive,
@@ -72,7 +76,7 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
           {unreadMessages}
         </div>
       )}
-      {!unreadMessages && notEmpty(seen) && !seen && (
+      {isUnseenTagVisible && (
         <div className={classNames(styles.tag, styles.unseen)}></div>
       )}
     </>
