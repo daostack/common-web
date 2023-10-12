@@ -4,6 +4,19 @@ export enum UserRole {
   Trustee = "trustee",
 }
 
+export enum UserPushNotificationPreference {
+  All = "all",
+  None = "none",
+  Important = "important",
+}
+
+export enum UserEmailNotificationPreference {
+  All = "all",
+  None = "none",
+  Important = "important",
+  AllInbox = "allInbox",
+}
+
 export interface User {
   displayName?: string;
   country: string;
@@ -21,4 +34,7 @@ export interface User {
   roles?: UserRole[];
   deleted?: true;
   inboxCounter?: number;
+  fcmTokens?: string[];
+  pushNotificationPreference?: UserPushNotificationPreference;
+  emailNotificationPreference?: UserEmailNotificationPreference;
 }

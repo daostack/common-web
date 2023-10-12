@@ -180,6 +180,7 @@ export default function ChatComponent({
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
+  const chatInputWrapperRef = useRef<HTMLDivElement>(null);
 
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
@@ -320,22 +321,28 @@ export default function ChatComponent({
     [newMessages, discussionId, dispatch],
   );
 
-  const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
-    const newFilesPreview = Array.from(event.target.files || [])
-      .map((file) => {
+  const uploadFiles = (
+    event: ChangeEvent<HTMLInputElement> | ClipboardEvent,
+  ) => {
+    let files: FileList | undefined | null;
+    if (event instanceof ClipboardEvent) {
+      files = event.clipboardData?.files;
+    } else {
+      files = event.target.files;
+    }
+
+    const newFilesPreview = Array.from(files || []).map((file) => {
         if (!checkImageSize(file.name, file.size)) {
           return null;
         }
-
-        return {
-          info: file,
-          src: URL.createObjectURL(file),
-          size: file.size,
-          name: file.name,
-        };
-      })
-      .filter(Boolean) as FileInfo[];
-
+      
+      return {
+        info: file,
+        src: URL.createObjectURL(file),
+        size: file.size,
+        name: file.name,
+      };
+    }).filter(Boolean) as FileInfo[];
     dispatch(
       chatActions.setFilesPreview(
         [...(currentFilesPreview ?? []), ...newFilesPreview].slice(0, 10),
@@ -571,6 +578,20 @@ export default function ChatComponent({
     }
   }, [discussionMessages.length]);
 
+  useEffect(() => {
+    const handlePaste = (event) => {
+      if (event.clipboardData.files.length) {
+        uploadFiles(event);
+      }
+    };
+
+    chatInputWrapperRef.current?.addEventListener("paste", handlePaste);
+
+    return () => {
+      chatInputWrapperRef.current?.removeEventListener("paste", handlePaste);
+    };
+  }, []);
+
   const renderChatInput = (): ReactNode => {
     const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
 
@@ -608,9 +629,6 @@ export default function ChatComponent({
         />
         <BaseTextEditor
           inputContainerRef={inputContainerRef}
-          emojiContainerClassName={classNames({
-            [styles.emojiContainer]: isMultiLineInput,
-          })}
           size={TextEditorSize.Auto}
           editorRef={editorRef}
           className={classNames(styles.messageInput, {
@@ -679,6 +697,7 @@ export default function ChatComponent({
         <MessageReply users={users} />
         <ChatFilePreview />
         <div
+          ref={chatInputWrapperRef}
           className={classNames(styles.chatInputWrapper, {
             [styles.chatInputWrapperMultiLine]: isMultiLineInput,
           })}

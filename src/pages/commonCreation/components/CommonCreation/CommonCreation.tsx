@@ -20,7 +20,7 @@ const CommonCreation: FC = () => {
   const history = useHistory();
   const { canGoBack, goBack } = useGoBack();
   const isV04Version = matchRoute(
-    location.pathname,
+    history.location.pathname,
     ROUTE_PATHS.V04_COMMON_CREATION,
     { exact: true },
   );

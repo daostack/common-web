@@ -27,9 +27,11 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
   const { className, common, commonMember, governance } = props;
   const isMobileVersion = useIsTabletView();
   const commonFollow = useCommonFollow(common.id, commonMember);
-  const showFollowIcon = commonFollow.isFollowInProgress
-    ? !commonMember?.isFollowing
-    : commonMember?.isFollowing;
+  const showFollowIcon =
+    !isMobileVersion &&
+    (commonFollow.isFollowInProgress
+      ? !commonMember?.isFollowing
+      : commonMember?.isFollowing);
 
   return (
     <HeaderContentWrapper className={className}>
@@ -52,7 +54,6 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           common={common}
           commonMember={commonMember}
           commonFollow={commonFollow}
-          isMobileVersion={isMobileVersion}
         />
       </div>
     </HeaderContentWrapper>

@@ -75,6 +75,7 @@ export interface DropdownProps {
   isLoading?: boolean;
   menuInlineStyle?: CSSProperties;
   isOpen?: boolean;
+  disabled?: boolean;
 }
 
 const getFixedMenuStyles = (
@@ -144,6 +145,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     isLoading = false,
     menuInlineStyle,
     isOpen: isMenuOpen,
+    disabled = false,
   } = props;
   const menuButtonRef = useRef<HTMLElement>(null);
   const [menuRef, setMenuRef] = useState<HTMLUListElement | null>(null);
@@ -209,7 +211,12 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
         )}
         {fullMenuButtonChange && (
           <>
-            <MenuButton />
+            <MenuButton
+              className={classNames({
+                "custom-dropdown-wrapper__menu-button--disabled": disabled,
+              })}
+              disabled={disabled}
+            />
             <div>{menuButton}</div>
           </>
         )}
@@ -217,7 +224,9 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
           <MenuButton
             className={classNames(styles?.menuButton, {
               "custom-dropdown-wrapper__menu-button": !menuButton,
+              "custom-dropdown-wrapper__menu-button--disabled": disabled,
             })}
+            disabled={disabled}
             ref={menuButtonRef}
           >
             {menuButton || (
