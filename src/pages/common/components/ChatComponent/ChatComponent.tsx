@@ -331,18 +331,20 @@ export default function ChatComponent({
       files = event.target.files;
     }
 
-    const newFilesPreview = Array.from(files || []).map((file) => {
+    const newFilesPreview = Array.from(files || [])
+      .map((file) => {
         if (!checkImageSize(file.name, file.size)) {
           return null;
         }
-      
-      return {
-        info: file,
-        src: URL.createObjectURL(file),
-        size: file.size,
-        name: file.name,
-      };
-    }).filter(Boolean) as FileInfo[];
+
+        return {
+          info: file,
+          src: URL.createObjectURL(file),
+          size: file.size,
+          name: file.name,
+        };
+      })
+      .filter(Boolean) as FileInfo[];
     dispatch(
       chatActions.setFilesPreview(
         [...(currentFilesPreview ?? []), ...newFilesPreview].slice(0, 10),
