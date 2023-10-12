@@ -29,7 +29,7 @@ export function* getInboxItems(
   action: ReturnType<typeof actions.getInboxItems.request>,
 ) {
   const {
-    payload: { limit },
+    payload: { limit, unread },
   } = action;
 
   try {
@@ -40,6 +40,7 @@ export function* getInboxItems(
       {
         startAfter: currentItems.lastDocTimestamp,
         limit,
+        unread,
       },
     )) as Awaited<ReturnType<typeof UserService.getInboxItems>>;
     const chatChannelItems = data.chatChannels

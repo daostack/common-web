@@ -22,9 +22,10 @@ import {
   GovernanceActions,
   LastSeenEntity,
 } from "@/shared/constants";
+import { FILES_ACCEPTED_EXTENSIONS } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
-import { useZoomDisabling } from "@/shared/hooks";
+import { useZoomDisabling, useImageSizeCheck } from "@/shared/hooks";
 import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
@@ -67,9 +68,6 @@ import {
 import { useChatChannelChatAdapter, useDiscussionChatAdapter } from "./hooks";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
-
-const ACCEPTED_EXTENSIONS =
-  ".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .pages, .numbers, .key, .jpg, .jpeg, .png, .gif, .tiff, .bmp, .webp, .mp4, .avi, .mov, .mkv, .mpeg, .mp3, .aac, .flac, .wav, .ogg, .zip, .rar, .7z, .tar, .gz, .apk, .epub, .vcf, .xml, .csv, .json, .docm, .dot, .dotm, .dotx, .fdf, .fodp, .fods, .fodt, .pot, .potm, .potx, .ppa, .ppam, .pps, .ppsm, .ppsx, .pptm, .sldx, .xlm, .xlsb, .xlsm, .xlt, .xltm, .xltx, .xps, .mobi, .azw, .azw3, .prc, .svg, .ico, .jp2, .3gp, .3g2, .flv, .m4v, .mk3d, .mks, .mpg, .mpeg2, .mpeg4, .mts, .vob, .wmv, .m4a, .opus, .wma, .cbr, .cbz, .tgz, .apng, .m4b, .m4p, .m4r, .webm, .sh, .py, .java, .cpp, .cs, .js, .html, .css, .php, .rb, .pl, .sql";
 
 const BASE_CHAT_INPUT_HEIGHT = 48;
 
@@ -126,7 +124,6 @@ export default function ChatComponent({
   feedItemId,
   isAuthorized,
   isHidden = false,
-  isCommonMemberFetched,
   onMessagesAmountChange,
   directParent,
   renderChatInput: renderChatInputOuter,
@@ -135,6 +132,7 @@ export default function ChatComponent({
   onInternalLinkClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
+  const { checkImageSize } = useImageSizeCheck();
   useZoomDisabling();
   const editorRef = useRef<HTMLElement>(null);
   const [inputContainerRef, { height: chatInputHeight }] =
@@ -182,6 +180,7 @@ export default function ChatComponent({
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
+  const chatInputWrapperRef = useRef<HTMLDivElement>(null);
 
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
@@ -322,15 +321,30 @@ export default function ChatComponent({
     [newMessages, discussionId, dispatch],
   );
 
-  const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
-    const newFilesPreview = Array.from(event.target.files || []).map((file) => {
-      return {
-        info: file,
-        src: URL.createObjectURL(file),
-        size: file.size,
-        name: file.name,
-      };
-    });
+  const uploadFiles = (
+    event: ChangeEvent<HTMLInputElement> | ClipboardEvent,
+  ) => {
+    let files: FileList | undefined | null;
+    if (event instanceof ClipboardEvent) {
+      files = event.clipboardData?.files;
+    } else {
+      files = event.target.files;
+    }
+
+    const newFilesPreview = Array.from(files || [])
+      .map((file) => {
+        if (!checkImageSize(file.name, file.size)) {
+          return null;
+        }
+
+        return {
+          info: file,
+          src: URL.createObjectURL(file),
+          size: file.size,
+          name: file.name,
+        };
+      })
+      .filter(Boolean) as FileInfo[];
     dispatch(
       chatActions.setFilesPreview(
         [...(currentFilesPreview ?? []), ...newFilesPreview].slice(0, 10),
@@ -566,6 +580,20 @@ export default function ChatComponent({
     }
   }, [discussionMessages.length]);
 
+  useEffect(() => {
+    const handlePaste = (event) => {
+      if (event.clipboardData.files.length) {
+        uploadFiles(event);
+      }
+    };
+
+    chatInputWrapperRef.current?.addEventListener("paste", handlePaste);
+
+    return () => {
+      chatInputWrapperRef.current?.removeEventListener("paste", handlePaste);
+    };
+  }, []);
+
   const renderChatInput = (): ReactNode => {
     const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
 
@@ -599,13 +627,10 @@ export default function ChatComponent({
           onChange={uploadFiles}
           style={{ display: "none" }}
           multiple
-          accept={ACCEPTED_EXTENSIONS}
+          accept={FILES_ACCEPTED_EXTENSIONS}
         />
         <BaseTextEditor
           inputContainerRef={inputContainerRef}
-          emojiContainerClassName={classNames({
-            [styles.emojiContainer]: isMultiLineInput,
-          })}
           size={TextEditorSize.Auto}
           editorRef={editorRef}
           className={classNames(styles.messageInput, {
@@ -674,6 +699,7 @@ export default function ChatComponent({
         <MessageReply users={users} />
         <ChatFilePreview />
         <div
+          ref={chatInputWrapperRef}
           className={classNames(styles.chatInputWrapper, {
             [styles.chatInputWrapperMultiLine]: isMultiLineInput,
           })}

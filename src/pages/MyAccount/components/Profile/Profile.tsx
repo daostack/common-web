@@ -1,43 +1,51 @@
-import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { FC, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
   UserDetails,
   UserDetailsRef,
 } from "@/pages/Login/components/LoginContainer/UserDetails";
 import { ButtonIcon, Loader } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
-import { useModal } from "@/shared/hooks";
+import { useRoutesContext } from "@/shared/contexts";
+import { useIsTabletView } from "@/shared/hooks/viewport";
+import { LogoutIcon } from "@/shared/icons";
 import EditIcon from "@/shared/icons/edit.icon";
-import { getScreenSize } from "@/shared/store/selectors";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
-import { DeleteUserModal } from "../../components/Profile";
+import { Header, MenuButton } from "./components";
+import styles from "./Profile.module.scss";
 import "./index.scss";
 
-export default function Profile() {
+interface ProfileProps {
+  onEditingChange?: (isEditing: boolean) => void;
+}
+
+const Profile: FC<ProfileProps> = (props) => {
+  const { onEditingChange } = props;
+  const dispatch = useDispatch();
+  const { getBillingPagePath, getSettingsPagePath } = useRoutesContext();
   const userDetailsRef = useRef<UserDetailsRef>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const {
-    isShowing: isDeleteAccountModalShowing,
-    onOpen: onDeleteAccountModalOpen,
-    onClose: onDeleteAccountModalClose,
-  } = useModal(false);
   const user = useSelector(selectUser());
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
+  const isMobileView = useIsTabletView();
+
+  const handleEditingChange = (isEditing: boolean) => {
+    setIsEditing(isEditing);
+    onEditingChange?.(isEditing);
+  };
 
   const handleEditClick = () => {
-    setIsEditing(true);
+    handleEditingChange(true);
   };
 
   const handleCancelClick = () => {
-    setIsEditing(false);
+    handleEditingChange(false);
   };
 
   const handleSubmittingChange = (isSubmitting: boolean) => {
     if (!isSubmitting) {
-      setIsEditing(false);
+      handleEditingChange(false);
     }
 
     setIsSubmitting(isSubmitting);
@@ -47,10 +55,13 @@ export default function Profile() {
     userDetailsRef.current?.submit();
   };
 
+  const handleLogout = () => {
+    dispatch(logOut());
+  };
+
   const buttonsWrapperEl = (
     <div className="profile-wrapper__buttons-wrapper">
       <Button
-        className="profile-wrapper__button"
         variant={ButtonVariant.OutlineDarkPink}
         onClick={handleCancelClick}
         disabled={isSubmitting}
@@ -59,7 +70,6 @@ export default function Profile() {
       </Button>
       <Button
         variant={ButtonVariant.PrimaryPink}
-        className="profile-wrapper__button"
         onClick={handleSubmit}
         disabled={isSubmitting}
       >
@@ -67,57 +77,73 @@ export default function Profile() {
       </Button>
     </div>
   );
+  const editButtonEl = (
+    <ButtonIcon className={styles.editButton} onClick={handleEditClick}>
+      <EditIcon />
+    </ButtonIcon>
+  );
 
   return (
-    <div className="route-content profile-wrapper">
-      <header className="profile-wrapper__header">
-        <h2 className="route-title">Profile</h2>
-        {isEditing && !isMobileView && buttonsWrapperEl}
-        {!isEditing && (
-          <ButtonIcon onClick={handleEditClick}>
-            <EditIcon />
-          </ButtonIcon>
+    <div className={styles.container}>
+      {!isMobileView && !isEditing && editButtonEl}
+      <div className="profile-wrapper">
+        <Header
+          className={styles.header}
+          isEditing={isEditing}
+          isMobileVersion={isMobileView}
+          editButtonEl={editButtonEl}
+        />
+        {!user && <Loader />}
+        {user && (
+          <>
+            <div className={styles.formWrapper}>
+              <UserDetails
+                ref={userDetailsRef}
+                className="profile-wrapper__user-details"
+                user={user}
+                showAuthProvider={false}
+                customSaveButton
+                isCountryDropdownFixed={false}
+                isEditing={isEditing}
+                onLoading={setIsSubmitting}
+                onSubmitting={handleSubmittingChange}
+                styles={{
+                  avatarWrapper: "profile-wrapper__avatar-wrapper",
+                  avatar: "profile-wrapper__avatar",
+                  userAvatar: "profile-wrapper__user-avatar",
+                  editAvatar: "profile-wrapper__edit-avatar",
+                  fieldContainer: "profile-wrapper__field-container",
+                  introInputWrapper:
+                    "profile-wrapper__form-intro-input-wrapper",
+                }}
+              />
+              {isEditing && buttonsWrapperEl}
+            </div>
+            {isMobileView && !isEditing && (
+              <div className={styles.menuButtonsWrapper}>
+                <MenuButton
+                  className={styles.menuButton}
+                  text="Settings"
+                  to={getSettingsPagePath()}
+                />
+                <MenuButton
+                  className={styles.menuButton}
+                  text="Billing"
+                  to={getBillingPagePath()}
+                />
+                <MenuButton
+                  className={`${styles.menuButton} ${styles.logoutMenuButton}`}
+                  text="Logout"
+                  onClick={handleLogout}
+                  iconEl={<LogoutIcon />}
+                />
+              </div>
+            )}
+          </>
         )}
-      </header>
-      {!user ? (
-        <Loader />
-      ) : (
-        <>
-          <UserDetails
-            ref={userDetailsRef}
-            className="profile-wrapper__user-details"
-            user={user}
-            showAuthProvider={false}
-            customSaveButton
-            isCountryDropdownFixed={false}
-            isEditing={isEditing}
-            onLoading={setIsSubmitting}
-            onSubmitting={handleSubmittingChange}
-            styles={{
-              avatarWrapper: "profile-wrapper__avatar-wrapper",
-              avatar: "profile-wrapper__avatar",
-              userAvatar: "profile-wrapper__user-avatar",
-              editAvatar: "profile-wrapper__edit-avatar",
-              fieldContainer: "profile-wrapper__field-container",
-              introInputWrapper: "profile-wrapper__form-intro-input-wrapper",
-            }}
-          />
-          {isEditing && isMobileView && buttonsWrapperEl}
-          {!isEditing && (
-            <Button
-              variant={ButtonVariant.Warning}
-              className="profile-wrapper__delete-account-button"
-              onClick={onDeleteAccountModalOpen}
-            >
-              Delete My Account
-            </Button>
-          )}
-        </>
-      )}
-      <DeleteUserModal
-        isShowing={isDeleteAccountModalShowing}
-        onClose={onDeleteAccountModalClose}
-      />
+      </div>
     </div>
   );
-}
+};
+
+export default Profile;

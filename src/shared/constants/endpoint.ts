@@ -34,6 +34,7 @@ export const ApiEndpoint = {
   UpdateSubscription: "/subscriptions/update",
   CancelSubscription: "/subscriptions/cancel",
   CreateUser: "/users/create",
+  UpdateUser: "/users/update",
   DeleteUser: "/users/delete",
   FollowFeedItem: "/users/follow-feed-item",
   GetInbox: "/users/inbox",
@@ -57,6 +58,8 @@ export const ApiEndpoint = {
     `/chat/message/${chatMessageId}`,
   MarkChatChannelAsSeen: (channelId: string) =>
     `/chat/channel/${channelId}/seen`,
+  MarkChatChannelAsUnseen: (channelId: string) =>
+    `/chat/channel/${channelId}/unseen`,
   MarkChatMessageAsSeen: (chatMessageId: string) =>
     `/chat/message/${chatMessageId}/seen`,
 };

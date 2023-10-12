@@ -8,6 +8,7 @@ import { CommonEditingPage_v04 } from "@/pages/commonEditing";
 import { CommonFeedPage_v04 } from "@/pages/commonFeed";
 import { InboxPage_v04 } from "@/pages/inbox";
 import { ProfilePage_v04 } from "@/pages/profile";
+import { SettingsPage_v04 } from "@/pages/settings";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { CommonSidenavLayout } from "@/shared/layouts";
 import { LayoutConfiguration, RouteType } from "../types";
@@ -65,6 +66,11 @@ export const COMMON_SIDENAV_LAYOUT_CONFIGURATION: LayoutConfiguration<CommonSide
         path: ROUTE_PATHS.V04_BILLING,
         exact: true,
         component: BillingPage_v04,
+      },
+      {
+        path: ROUTE_PATHS.V04_SETTINGS,
+        exact: true,
+        component: SettingsPage_v04,
       },
     ],
   };

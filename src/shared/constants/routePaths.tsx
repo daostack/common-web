@@ -7,6 +7,8 @@ export enum ROUTE_PATHS {
   PROFILE = "/profile",
   V04_BILLING = "/billing-v04",
   BILLING = "/billing",
+  V04_SETTINGS = "/settings-v04",
+  SETTINGS = "/settings",
   MY_ACCOUNT_ACTIVITIES = "/my-account/activities",
   MY_ACCOUNT_ACTIVITIES_PROPOSALS = "/my-account/activities/proposals/:proposalType",
   MY_ACCOUNT_ACTIVITIES_COMMONS = "/my-account/activities/commons",

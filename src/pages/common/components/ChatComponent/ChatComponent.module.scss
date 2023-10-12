@@ -43,7 +43,7 @@
 .chatInputWrapper {
   display: flex;
   flex-shrink: 0;
-  padding: 1rem 1.125rem 1rem 1.125rem;
+  padding: 0 1.125rem;
   background-color: $c-input-100;
   border: 0.0625rem solid $c-neutrals-100;
   border-left-width: 0;
@@ -77,6 +77,7 @@
   justify-content: center;
   word-break: break-word;
   padding: 0.125rem 1.75rem 0.125rem 0.25rem;
+  margin: 0.3rem 0;
 }
 
 .messageInputRtl {
@@ -89,7 +90,8 @@
 }
 
 .addFilesIcon {
-  margin-right: 0.9375rem;
+  margin-bottom: 0.8rem;
+  margin-right: 0.5rem;
   height: 1.5rem;
 }
 
@@ -97,7 +99,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 1rem;
+  margin-bottom: 0.8rem;
   border: none;
   outline: none;
   background: $c-input-100;
@@ -115,11 +117,6 @@ $phone-breakpoint: 415px;
   right: 0.5625rem;
   transform: translateY(50%);
   z-index: 10000;
-}
-
-.emojiContainer {
-  bottom: 8px;
-  transform: none;
 }
 
 .singleEmojiText {
