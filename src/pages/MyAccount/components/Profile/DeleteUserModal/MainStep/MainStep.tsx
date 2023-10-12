@@ -2,8 +2,7 @@ import React, { ChangeEventHandler, FC, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { UserMembershipInfo } from "@/pages/OldCommon/interfaces";
-import { Checkbox, ErrorText } from "@/shared/components/Form";
-import { TextField } from "@/shared/components/Form/Formik";
+import { Checkbox, ErrorText, Input } from "@/shared/components/Form";
 import { ErrorCode } from "@/shared/constants";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
@@ -71,7 +70,7 @@ const MainStep: FC<MainStepProps> = (props) => {
 
   return (
     <div className="delete-user-main-step">
-      <TextField
+      <Input
         className="delete-user-main-step__user-name-input"
         id="userName"
         name="userName"
