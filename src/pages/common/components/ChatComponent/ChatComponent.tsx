@@ -576,6 +576,20 @@ export default function ChatComponent({
     }
   }, [discussionMessages.length]);
 
+  useEffect(() => {
+    const handlePaste = (event) => {
+      if (event.clipboardData.files.length) {
+        uploadFiles(event);
+      }
+    };
+
+    chatInputWrapperRef.current?.addEventListener("paste", handlePaste);
+
+    return () => {
+      chatInputWrapperRef.current?.removeEventListener("paste", handlePaste);
+    };
+  }, []);
+
   const renderChatInput = (): ReactNode => {
     const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
 
@@ -592,20 +606,6 @@ export default function ChatComponent({
     if (!isAuthorized) {
       return null;
     }
-
-    useEffect(() => {
-      const handlePaste = (event) => {
-        if (event.clipboardData.files.length) {
-          uploadFiles(event);
-        }
-      };
-
-      chatInputWrapperRef.current?.addEventListener("paste", handlePaste);
-
-      return () => {
-        chatInputWrapperRef.current?.removeEventListener("paste", handlePaste);
-      };
-    }, []);
 
     return (
       <>
