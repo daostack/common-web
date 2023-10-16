@@ -1,0 +1,47 @@
+@import "../../../../../../../../constants";
+@import "../../../../../../../../styles/sizes";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.name {
+  margin: 0 0 0.5rem;
+  height: 1.5rem;
+  font-size: $moderate-small;
+  font-weight: bold;
+}
+
+.info {
+  margin: 0 0 0.5rem;
+  font-size: $xsmall;
+  color: $light-gray-2;
+  word-break: break-word;
+
+  &:last-child {
+    margin: 0;
+  }
+}
+
+.introWrapper {
+  max-width: 20.5rem;
+  margin-top: 2.5rem;
+
+  @include tablet {
+    max-width: unset;
+    margin-top: 1.5rem;
+  }
+}
+
+.introTitle {
+  margin: 0 0 0.5rem;
+  font-size: $moderate;
+}
+
+.introContent {
+  margin: 0;
+  font-size: $xsmall;
+  white-space: pre-line;
+}

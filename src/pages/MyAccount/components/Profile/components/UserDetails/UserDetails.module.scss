@@ -1,0 +1,127 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+
+.container {
+  width: 100%;
+  max-width: 36.5rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: $secondary-blue;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.avatarWrapper {
+  position: relative;
+}
+
+.avatar {
+  position: relative;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.avatarInputFile {
+  display: none;
+}
+
+.userPhoto {
+  width: 4.125rem;
+  height: 4.125rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.editAvatarButton {
+  width: 1.75rem;
+  height: 1.75rem;
+  background-color: $purple;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 38px;
+  left: 52%;
+  cursor: pointer;
+}
+
+.editAvatarImage {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.textFieldContainer {
+  max-width: 100%;
+  display: grid;
+  gap: 0.5rem 1.75rem;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "firstName lastName"
+    "email country"
+    "intro intro";
+
+  @include tablet {
+    gap: 1.5rem 0;
+    grid-template-areas:
+      "firstName"
+      "lastName"
+      "email"
+      "country"
+      "intro";
+  }
+}
+
+.textField {
+  width: 100%;
+  text-align: left;
+  z-index: 1;
+}
+
+.textFieldLabelWrapper {
+  font-size: $xsmall;
+}
+
+.textFieldInput {
+  padding-left: 0.75rem;
+  padding-right: 0.875rem;
+}
+
+.firstNameTextField {
+  grid-area: firstName;
+}
+
+.lastNameTextField {
+  grid-area: lastName;
+}
+
+.emailTextField {
+  grid-area: email;
+}
+
+.countryTextField {
+  grid-area: country;
+}
+
+.textareaTextField {
+  grid-area: intro;
+  width: 100%;
+}
+
+.saveButton {
+  max-width: 20.5rem;
+  width: 100%;
+  margin: 2.5rem auto 0;
+
+  @include tablet {
+    max-width: unset;
+    margin-top: 3.5rem;
+  }
+}

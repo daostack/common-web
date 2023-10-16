@@ -2,16 +2,12 @@ import React, { FC, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import {
-  UserDetails,
-  UserDetailsRef,
-} from "@/pages/Login/components/LoginContainer/UserDetails";
 import { ButtonIcon, Loader } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Edit3Icon as EditIcon, LogoutIcon } from "@/shared/icons";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
-import { Header, MenuButton } from "./components";
+import { Header, MenuButton, UserDetails, UserDetailsRef } from "./components";
 import styles from "./Profile.module.scss";
 import "./index.scss";
 
@@ -100,7 +96,6 @@ const Profile: FC<ProfileProps> = (props) => {
                 ref={userDetailsRef}
                 className="profile-wrapper__user-details"
                 user={user}
-                showAuthProvider={false}
                 customSaveButton
                 isCountryDropdownFixed={false}
                 isEditing={isEditing}
