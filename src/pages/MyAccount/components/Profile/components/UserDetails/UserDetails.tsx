@@ -30,7 +30,7 @@ import { validationSchema } from "./validationSchema";
 import styles from "./UserDetails.module.scss";
 
 interface Styles {
-  avatarWrapper?: string;
+  previewWrapper?: string;
   avatar?: string;
   userAvatar?: string;
   editAvatar?: string;
@@ -215,8 +215,8 @@ const UserDetails: ForwardRefRenderFunction<
             <Form className={styles.form}>
               <div
                 className={classNames(
-                  styles.avatarWrapper,
-                  outerStyles?.avatarWrapper,
+                  styles.previewWrapper,
+                  outerStyles?.previewWrapper,
                 )}
               >
                 <div className={classNames(styles.avatar, outerStyles?.avatar)}>
@@ -264,8 +264,19 @@ const UserDetails: ForwardRefRenderFunction<
                     }
                   />
                 </div>
+                {!isEditing && (
+                  <UserDetailsPreview
+                    className={styles.userDetailsPreview}
+                    user={user}
+                  />
+                )}
               </div>
-              {!isEditing && <UserDetailsPreview user={user} />}
+              {!isEditing && user.intro && (
+                <div className={styles.introWrapper}>
+                  <h3 className={styles.introTitle}>About</h3>
+                  <p className={styles.introDescription}>{user.intro}</p>
+                </div>
+              )}
               {isEditing && (
                 <div
                   className={classNames(

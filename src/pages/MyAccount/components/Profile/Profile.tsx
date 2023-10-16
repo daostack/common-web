@@ -102,7 +102,6 @@ const Profile: FC<ProfileProps> = (props) => {
                 onLoading={setIsSubmitting}
                 onSubmitting={handleSubmittingChange}
                 styles={{
-                  avatarWrapper: "profile-wrapper__avatar-wrapper",
                   avatar: "profile-wrapper__avatar",
                   userAvatar: "profile-wrapper__user-avatar",
                   editAvatar: "profile-wrapper__edit-avatar",

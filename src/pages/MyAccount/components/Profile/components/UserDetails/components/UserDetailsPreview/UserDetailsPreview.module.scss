@@ -1,47 +1,30 @@
 @import "../../../../../../../../constants";
 @import "../../../../../../../../styles/sizes";
+@import "../../../../../../../../styles/typography";
 
 .container {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   text-align: left;
+  word-break: break-word;
 }
 
 .name {
-  margin: 0 0 0.5rem;
-  height: 1.5rem;
-  font-size: $moderate-small;
-  font-weight: bold;
+  @include h6;
+
+  margin: 0 0 0.25rem;
+  text-align: left;
 }
 
 .info {
-  margin: 0 0 0.5rem;
-  font-size: $xsmall;
-  color: $light-gray-2;
-  word-break: break-word;
+  @include body-sm-regular;
+
+  margin: 0 0 0.25rem;
+  text-align: left;
+  color: $c-gray-40;
 
   &:last-child {
     margin: 0;
   }
-}
-
-.introWrapper {
-  max-width: 20.5rem;
-  margin-top: 2.5rem;
-
-  @include tablet {
-    max-width: unset;
-    margin-top: 1.5rem;
-  }
-}
-
-.introTitle {
-  margin: 0 0 0.5rem;
-  font-size: $moderate;
-}
-
-.introContent {
-  margin: 0;
-  font-size: $xsmall;
-  white-space: pre-line;
 }

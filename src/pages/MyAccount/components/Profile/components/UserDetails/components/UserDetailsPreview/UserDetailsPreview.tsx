@@ -1,30 +1,33 @@
 import React, { FC } from "react";
+import classNames from "classnames";
 import { countryList } from "@/shared/assets/countries";
-import { User } from "@/shared/models";
-import { getUserName } from "@/shared/utils";
+import { DateFormat, User } from "@/shared/models";
+import { formatDate, getUserName } from "@/shared/utils";
 import styles from "./UserDetailsPreview.module.scss";
 
 interface UserDetailsPreviewProps {
+  className?: string;
   user: User;
 }
 
 const UserDetailsPreview: FC<UserDetailsPreviewProps> = (props) => {
-  const { user } = props;
+  const { className, user } = props;
   const country = countryList.find((item) => item.value === user.country);
+  const countryName =
+    country && country.name.slice(0, country.name.lastIndexOf(" "));
 
   return (
-    <div className={styles.container}>
-      <div>
-        <p className={styles.name}>{getUserName(user)}</p>
-        {user.email && <p className={styles.info}>{user.email}</p>}
-        {country && <p className={styles.info}>{country.name}</p>}
-      </div>
-      {user.intro && (
-        <div className={styles.introWrapper}>
-          <h4 className={styles.introTitle}>Intro</h4>
-          <p className={styles.introContent}>{user.intro}</p>
-        </div>
-      )}
+    <div className={classNames(styles.container, className)}>
+      <p className={styles.name}>{getUserName(user)}</p>
+      {user.email && <p className={styles.info}>{user.email}</p>}
+      <p className={styles.info}>
+        Join at{" "}
+        {formatDate(
+          new Date(user.createdAt.seconds * 1000),
+          DateFormat.SuperShortSecondary,
+        )}
+      </p>
+      {countryName && <p className={styles.info}>{countryName}</p>}
     </div>
   );
 };

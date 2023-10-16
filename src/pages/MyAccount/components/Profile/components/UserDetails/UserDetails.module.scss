@@ -1,5 +1,6 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
+@import "../../../../../../styles/typography";
 
 .container {
   width: 100%;
@@ -18,8 +19,29 @@
   flex-direction: column;
 }
 
-.avatarWrapper {
-  position: relative;
+.previewWrapper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.introWrapper {
+  margin-top: 2.25rem;
+}
+
+.introTitle {
+  @include h5;
+
+  margin: 0 0 0.5rem;
+  text-align: left;
+}
+
+.introDescription {
+  @include body-sm-regular;
+
+  max-width: 24.875rem;
+  margin: 0;
+  text-align: left;
+  word-break: break-word;
 }
 
 .avatar {
@@ -30,6 +52,10 @@
 
 .avatarInputFile {
   display: none;
+}
+
+.userDetailsPreview {
+  margin-left: 1rem;
 }
 
 .userPhoto {
