@@ -87,7 +87,9 @@ export const getBreadcrumbsData = (
 
   data.unshift({
     activeCommonId: activeCommonIdInParentCommonProjects,
-    items: mainLevelCommons,
+    items: mainLevelCommons.sort(
+      getSortFn(activeCommonIdInParentCommonProjects),
+    ),
   });
 
   return {

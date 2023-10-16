@@ -7,6 +7,7 @@ import React, {
   useRef,
 } from "react";
 import classNames from "classnames";
+import { useZoomDisabling } from "@/shared/hooks";
 import { ErrorText } from "../ErrorText";
 import "./index.scss";
 
@@ -81,6 +82,7 @@ const Input: ForwardRefRenderFunction<InputRef, FullInputProps> = (
   const [inputLengthRef, setInputLengthRef] = useState<HTMLSpanElement | null>(
     null,
   );
+  useZoomDisabling();
   const id = restProps.id || restProps.name;
   const currentLength =
     typeof restProps.value === "string" ? restProps.value.length : 0;
