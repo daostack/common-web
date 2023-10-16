@@ -8,6 +8,7 @@ import { CommonEditingPage } from "@/pages/commonEditing";
 import { CommonFeedPage } from "@/pages/commonFeed";
 import { InboxPage } from "@/pages/inbox";
 import { ProfilePage } from "@/pages/profile";
+import { SettingsPage } from "@/pages/settings";
 import { ROUTE_PATHS } from "@/shared/constants";
 import { MultipleSpacesLayout } from "@/shared/layouts";
 import { LayoutConfiguration, RouteType } from "../types";
@@ -79,6 +80,16 @@ export const MULTIPLE_SPACES_LAYOUT_CONFIGURATION: LayoutConfiguration<MultipleS
         path: ROUTE_PATHS.BILLING,
         exact: true,
         component: BillingPage,
+        routeOptions: {
+          withSidenav: false,
+          withBreadcrumbs: false,
+          withGoBack: true,
+        },
+      },
+      {
+        path: ROUTE_PATHS.SETTINGS,
+        exact: true,
+        component: SettingsPage,
         routeOptions: {
           withSidenav: false,
           withBreadcrumbs: false,

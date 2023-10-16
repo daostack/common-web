@@ -22,7 +22,6 @@ import MembershipRequestIntroduce from "./MembershipRequestIntroduce";
 import MembershipRequestPayment from "./MembershipRequestPayment";
 import MembershipRequestProgressBar from "./MembershipRequestProgressBar";
 import MembershipRequestRules from "./MembershipRequestRules";
-import MembershipRequestWelcome from "./MembershipRequestWelcome";
 import { MembershipRequestStage } from "./constants";
 import { getSteps } from "./helpers";
 import "./index.scss";
@@ -131,9 +130,7 @@ export function MembershipRequestModal(props: IProps) {
 
     const payload: IMembershipRequestData = {
       ...INIT_DATA,
-      stage: isMember
-        ? MembershipRequestStage.Introduce
-        : MembershipRequestStage.Welcome,
+      stage: MembershipRequestStage.Introduce,
     };
 
     setUserData(payload);
@@ -145,13 +142,6 @@ export function MembershipRequestModal(props: IProps) {
 
   const renderCurrentStage = (stage: number) => {
     switch (stage) {
-      case MembershipRequestStage.Welcome:
-        return (
-          <MembershipRequestWelcome
-            userData={userData}
-            setUserData={setUserData}
-          />
-        );
       case MembershipRequestStage.Introduce:
         return (
           <MembershipRequestIntroduce

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ProposalService } from "@/services";
-import { ProposalsTypes } from "@/shared/constants";
+import { ProposalsTypes, SUPPORT_EMAIL } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
 import { useGovernance } from "@/shared/hooks/useCases";
 import { Common, CommonMember } from "@/shared/models";
@@ -94,7 +94,7 @@ export const useJoinProjectAutomatically = (
     } catch (err) {
       setIsJoinPending(false);
       notify(
-        "Something went wrong. Please try again later or contact us at: support@common.io",
+        `Something went wrong. Please try again later or contact us at: ${SUPPORT_EMAIL}`,
       );
     }
   }, [user?.uid, parentCommon?.id, parentGovernance?.id, circleId]);

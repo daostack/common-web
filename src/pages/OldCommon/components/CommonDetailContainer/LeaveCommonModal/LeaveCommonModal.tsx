@@ -1,13 +1,12 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { leaveCommon } from "@/pages/OldCommon/store/actions";
 import { isRequestError } from "@/services/Api";
 import { Loader, Modal } from "@/shared/components";
-import { ROUTE_PATHS } from "@/shared/constants";
+import { ErrorCode, ROUTE_PATHS } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
-import { useCommonMembersWithCircleIdsAmount } from "@/shared/hooks/useCases";
 import { ModalProps } from "@/shared/interfaces";
 import { emptyFunction } from "@/shared/utils";
 import { DeleteCommonRequest } from "./DeleteCommonRequest";
@@ -19,10 +18,8 @@ interface LeaveCommonModalProps
   extends Pick<ModalProps, "isShowing" | "onClose"> {
   commonId: string;
   memberCount: number;
-  memberCircleIds: string[];
   onSuccessfulLeave?: () => void;
   isSubCommon?: boolean;
-  subCommonId?: string;
 }
 
 const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
@@ -31,32 +28,18 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     onClose,
     commonId,
     memberCount,
-    memberCircleIds = [],
     onSuccessfulLeave,
     isSubCommon = false,
-    subCommonId,
   } = props;
-  const {
-    loading: areMemberAmountsLoading,
-    fetched: areMemberAmountsFetched,
-    data: memberAmountsWithCircleId,
-    fetchCommonMembersWithCircleIdAmount,
-  } = useCommonMembersWithCircleIdsAmount();
   const dispatch = useDispatch();
   const { notify } = useNotification();
   const history = useHistory();
   const [isLeaving, setIsLeaving] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [isLastMemberInCircle, setIsLastMemberInCircle] = useState(false);
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const isDeleteCommonRequest = memberCount === 1;
-  const isLoading = !isDeleteCommonRequest && !areMemberAmountsFetched;
-  const isLastMemberInCircle = useMemo(
-    () =>
-      areMemberAmountsFetched &&
-      memberAmountsWithCircleId.some(({ amount }) => amount <= 1),
-    [areMemberAmountsFetched, memberAmountsWithCircleId],
-  );
   const commonWord = isSubCommon ? "space" : "common";
 
   const handleLeave = useCallback(() => {
@@ -70,7 +53,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
     dispatch(
       leaveCommon.request({
         payload: {
-          commonId: isSubCommon && subCommonId ? subCommonId : commonId,
+          commonId,
           userId,
         },
         callback: (error) => {
@@ -81,6 +64,14 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
             : "";
 
           setIsLeaving(false);
+          setIsLastMemberInCircle(
+            Boolean(
+              isRequestError(error) &&
+                error.response?.data?.error?.includes(
+                  ErrorCode.LastInCriticalCircle,
+                ),
+            ),
+          );
           setErrorText(errorText);
 
           if (!isFinishedSuccessfully) {
@@ -96,26 +87,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
         },
       }),
     );
-  }, [dispatch, notify, history, commonId, userId, subCommonId, isSubCommon]);
-
-  useEffect(() => {
-    if (
-      isDeleteCommonRequest ||
-      areMemberAmountsLoading ||
-      areMemberAmountsFetched
-    ) {
-      return;
-    }
-
-    fetchCommonMembersWithCircleIdAmount(commonId, memberCircleIds);
-  }, [
-    isDeleteCommonRequest,
-    areMemberAmountsLoading,
-    areMemberAmountsFetched,
-    fetchCommonMembersWithCircleIdAmount,
-    commonId,
-    memberCircleIds,
-  ]);
+  }, [dispatch, notify, history, commonId, userId]);
 
   const renderStep = () => {
     if (isDeleteCommonRequest) {
@@ -148,7 +120,7 @@ const LeaveCommonModal: FC<LeaveCommonModalProps> = (props) => {
       title={`Leave ${commonWord}`}
       className="leave-common-modal"
     >
-      {isLoading ? <Loader /> : renderStep()}
+      {renderStep()}
     </Modal>
   );
 };

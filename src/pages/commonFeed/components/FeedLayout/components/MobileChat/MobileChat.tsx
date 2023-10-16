@@ -33,9 +33,8 @@ interface ChatProps {
   rightHeaderContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
-  isJoinPending?: boolean;
+  renderChatInput?: () => ReactNode;
   onClose: () => void;
-  onJoinCommon?: () => void;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
@@ -54,8 +53,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     rightHeaderContent,
     onMessagesAmountChange,
     directParent,
-    isJoinPending,
-    onJoinCommon,
+    renderChatInput,
     onClose,
     onUserClick,
     onFeedItemClick,
@@ -154,8 +152,7 @@ const MobileChat: FC<ChatProps> = (props) => {
             lastSeenItem={chatItem.lastSeenItem}
             onMessagesAmountChange={onMessagesAmountChange}
             directParent={directParent}
-            isJoinPending={isJoinPending}
-            onJoinCommon={onJoinCommon}
+            renderChatInput={renderChatInput}
             onUserClick={onUserClick}
             onFeedItemClick={onFeedItemClick}
             onInternalLinkClick={onInternalLinkClick}

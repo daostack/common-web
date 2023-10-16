@@ -58,6 +58,7 @@ export const useCommonMemberWithUserInfo = (
         joinedAt: new Timestamp(0, 0),
         circleIds: [],
         user: user,
+        isFollowing: false,
         streamsUnreadCountByProjectStream: {},
         unreadCountByProjectStream: {},
       },
@@ -74,6 +75,7 @@ export const useCommonMemberWithUserInfo = (
           joinedAt: commonMember.joinedAt,
           circleIds: [circlesString],
           user: user,
+          isFollowing: commonMember.isFollowing,
           streamsUnreadCountByProjectStream:
             commonMember.streamsUnreadCountByProjectStream,
           unreadCountByProjectStream: commonMember.unreadCountByProjectStream,

@@ -13,6 +13,7 @@ export interface EmojiPickerProps {
   onEmojiSelect: (emoji: Skin) => void;
   isMessageSent?: boolean;
   onToggleIsMessageSent?: () => void;
+  isRtl: boolean;
 }
 
 const EmojiPicker: FC<EmojiPickerProps> = (props) => {
@@ -22,6 +23,7 @@ const EmojiPicker: FC<EmojiPickerProps> = (props) => {
     onEmojiSelect,
     isMessageSent,
     onToggleIsMessageSent,
+    isRtl,
   } = props;
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
@@ -48,14 +50,23 @@ const EmojiPicker: FC<EmojiPickerProps> = (props) => {
   return (
     <div
       ref={wrapperRef}
-      className={classNames(styles.container, containerClassName)}
+      className={classNames(styles.container, containerClassName, {
+        [styles.containerRtl]: isRtl,
+      })}
     >
       <ButtonIcon onClick={handleOpenPicker}>
         <EmojiIcon />
       </ButtonIcon>
 
       {isOpen && (
-        <div className={pickerContainerClassName || styles.pickerContainer}>
+        <div
+          className={classNames(
+            pickerContainerClassName || styles.pickerContainer,
+            {
+              [styles.pickerContainerRtl]: isRtl,
+            },
+          )}
+        >
           <Picker data={data} onEmojiSelect={onEmojiSelect} />
         </div>
       )}

@@ -7,6 +7,7 @@ export interface GetAllowedItemsOptions {
   commonMember: (CommonMember & CirclesPermissions) | null;
   governance: Pick<Governance, "circles">;
   isSubCommon: boolean;
+  canLeaveSpace: boolean;
 }
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
@@ -16,8 +17,11 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   [CommonMenuItem.Governance]: () => true,
   [CommonMenuItem.LeaveCommon]: ({ commonMember, isSubCommon }) =>
     Boolean(commonMember && !isSubCommon),
-  [CommonMenuItem.LeaveProject]: ({ commonMember, isSubCommon }) =>
-    Boolean(commonMember && isSubCommon),
+  [CommonMenuItem.LeaveProject]: ({
+    commonMember,
+    isSubCommon,
+    canLeaveSpace,
+  }) => Boolean(commonMember && isSubCommon && canLeaveSpace),
   [CommonMenuItem.DeleteCommon]: ({ commonMember, governance }) =>
     Boolean(
       commonMember &&

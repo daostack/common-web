@@ -6,6 +6,7 @@ import { MainRoutesProvider } from "@/shared/contexts";
 import { MultipleSpacesLayoutPageContent } from "@/shared/layouts";
 import {
   multipleSpacesLayoutActions,
+  selectCommonLayoutLastCommonFromFeed,
   selectMultipleSpacesLayoutMainWidth,
 } from "@/store/states";
 import BaseCommonFeedPage, {
@@ -16,6 +17,8 @@ import {
   FeedLayoutOuterStyles,
   FeedLayoutSettings,
   HeaderContent,
+  HeaderCommonContent,
+  HeaderContentWrapper,
 } from "./components";
 import { useActiveItemDataChange } from "./hooks";
 import { generateSplitViewMaxSizeGetter } from "./utils";
@@ -28,7 +31,6 @@ export const FEED_LAYOUT_OUTER_STYLES: FeedLayoutOuterStyles = {
 
 export const BASE_FEED_LAYOUT_SETTINGS: FeedLayoutSettings = {
   withDesktopChatTitle: false,
-  sidenavWidth: 0,
 };
 
 const renderContentWrapper: RenderCommonFeedContentWrapper = ({
@@ -42,7 +44,6 @@ const renderContentWrapper: RenderCommonFeedContentWrapper = ({
     headerContent={
       <HeaderContent
         common={commonData.common}
-        commonMembersAmount={commonData.commonMembersAmount}
         commonMember={commonMember}
         governance={commonData.governance}
       />
@@ -58,6 +59,7 @@ const CommonFeedPage: FC = () => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
   const dispatch = useDispatch();
   const layoutMainWidth = useSelector(selectMultipleSpacesLayoutMainWidth);
+  const lastCommonFromFeed = useSelector(selectCommonLayoutLastCommonFromFeed);
   const onActiveItemDataChange = useActiveItemDataChange();
   const feedLayoutSettings = useMemo<FeedLayoutSettings>(
     () => ({
@@ -66,6 +68,21 @@ const CommonFeedPage: FC = () => {
     }),
     [layoutMainWidth],
   );
+  const lastCommonFromFeedData = lastCommonFromFeed?.data;
+
+  const renderLoadingHeader = lastCommonFromFeedData
+    ? () => (
+        <HeaderContentWrapper className={styles.headerContentWrapper}>
+          <HeaderCommonContent
+            commonId={lastCommonFromFeed.id}
+            commonName={lastCommonFromFeedData.name}
+            commonImage={lastCommonFromFeedData.image}
+            isProject={lastCommonFromFeedData.isProject}
+            memberCount={lastCommonFromFeedData.memberCount}
+          />
+        </HeaderContentWrapper>
+      )
+    : null;
 
   useEffect(() => {
     dispatch(
@@ -86,6 +103,7 @@ const CommonFeedPage: FC = () => {
     <MainRoutesProvider>
       <BaseCommonFeedPage
         renderContentWrapper={renderContentWrapper}
+        renderLoadingHeader={renderLoadingHeader}
         onActiveItemDataChange={onActiveItemDataChange}
         feedLayoutOuterStyles={FEED_LAYOUT_OUTER_STYLES}
         feedLayoutSettings={feedLayoutSettings}

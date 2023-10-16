@@ -22,9 +22,10 @@ import {
   GovernanceActions,
   LastSeenEntity,
 } from "@/shared/constants";
+import { FILES_ACCEPTED_EXTENSIONS } from "@/shared/constants";
 import { HotKeys } from "@/shared/constants/keyboardKeys";
 import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters";
-import { useZoomDisabling } from "@/shared/hooks";
+import { useZoomDisabling, useImageSizeCheck } from "@/shared/hooks";
 import { PlusIcon, SendIcon } from "@/shared/icons";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
@@ -49,7 +50,6 @@ import {
   TextEditorSize,
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
-  Loader,
 } from "@/shared/ui-kit";
 import { getUserName, hasPermission, isMobile } from "@/shared/utils";
 import {
@@ -69,9 +69,6 @@ import { useChatChannelChatAdapter, useDiscussionChatAdapter } from "./hooks";
 import { getLastNonUserMessage } from "./utils";
 import styles from "./ChatComponent.module.scss";
 
-const ACCEPTED_EXTENSIONS =
-  ".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .rtf, .odt, .ods, .odp, .pages, .numbers, .key, .jpg, .jpeg, .png, .gif, .tiff, .bmp, .webp, .mp4, .avi, .mov, .mkv, .mpeg, .mp3, .aac, .flac, .wav, .ogg, .zip, .rar, .7z, .tar, .gz, .apk, .epub, .vcf, .xml, .csv, .json, .docm, .dot, .dotm, .dotx, .fdf, .fodp, .fods, .fodt, .pot, .potm, .potx, .ppa, .ppam, .pps, .ppsm, .ppsx, .pptm, .sldx, .xlm, .xlsb, .xlsm, .xlt, .xltm, .xltx, .xps, .mobi, .azw, .azw3, .prc, .svg, .ico, .jp2, .3gp, .3g2, .flv, .m4v, .mk3d, .mks, .mpg, .mpeg2, .mpeg4, .mts, .vob, .wmv, .m4a, .opus, .wma, .cbr, .cbz, .tgz, .apng, .m4b, .m4p, .m4r, .webm, .sh, .py, .java, .cpp, .cs, .js, .html, .css, .php, .rb, .pl, .sql";
-
 const BASE_CHAT_INPUT_HEIGHT = 48;
 
 interface ChatComponentInterface {
@@ -89,8 +86,7 @@ interface ChatComponentInterface {
   isHidden: boolean;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
-  isJoinPending?: boolean;
-  onJoinCommon?: () => void;
+  renderChatInput?: () => ReactNode;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
@@ -128,16 +124,15 @@ export default function ChatComponent({
   feedItemId,
   isAuthorized,
   isHidden = false,
-  isCommonMemberFetched,
   onMessagesAmountChange,
   directParent,
-  isJoinPending = false,
-  onJoinCommon,
+  renderChatInput: renderChatInputOuter,
   onUserClick,
   onFeedItemClick,
   onInternalLinkClick,
 }: ChatComponentInterface) {
   const dispatch = useDispatch();
+  const { checkImageSize } = useImageSizeCheck();
   useZoomDisabling();
   const editorRef = useRef<HTMLElement>(null);
   const [inputContainerRef, { height: chatInputHeight }] =
@@ -185,6 +180,7 @@ export default function ChatComponent({
   const currentFilesPreview = useSelector(selectFilesPreview());
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
+  const chatInputWrapperRef = useRef<HTMLDivElement>(null);
 
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
@@ -322,15 +318,30 @@ export default function ChatComponent({
     [newMessages, discussionId, dispatch],
   );
 
-  const uploadFiles = (event: ChangeEvent<HTMLInputElement>) => {
-    const newFilesPreview = Array.from(event.target.files || []).map((file) => {
-      return {
-        info: file,
-        src: URL.createObjectURL(file),
-        size: file.size,
-        name: file.name,
-      };
-    });
+  const uploadFiles = (
+    event: ChangeEvent<HTMLInputElement> | ClipboardEvent,
+  ) => {
+    let files: FileList | undefined | null;
+    if (event instanceof ClipboardEvent) {
+      files = event.clipboardData?.files;
+    } else {
+      files = event.target.files;
+    }
+
+    const newFilesPreview = Array.from(files || [])
+      .map((file) => {
+        if (!checkImageSize(file.name, file.size)) {
+          return null;
+        }
+
+        return {
+          info: file,
+          src: URL.createObjectURL(file),
+          size: file.size,
+          name: file.name,
+        };
+      })
+      .filter(Boolean) as FileInfo[];
     dispatch(
       chatActions.setFilesPreview(
         [...(currentFilesPreview ?? []), ...newFilesPreview].slice(0, 10),
@@ -566,19 +577,85 @@ export default function ChatComponent({
     }
   }, [discussionMessages.length]);
 
-  const renderJoinCommonContent = (): ReactNode => {
-    if (isJoinPending) {
-      return (
-        <div className={styles.loaderWrapper}>
-          <Loader />
-        </div>
-      );
+  useEffect(() => {
+    const handlePaste = (event) => {
+      if (event.clipboardData.files.length) {
+        uploadFiles(event);
+      }
+    };
+
+    chatInputWrapperRef.current?.addEventListener("paste", handlePaste);
+
+    return () => {
+      chatInputWrapperRef.current?.removeEventListener("paste", handlePaste);
+    };
+  }, []);
+
+  const renderChatInput = (): ReactNode => {
+    const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
+
+    if (shouldHideChatInput) {
+      return null;
+    }
+    if (!isChatChannel) {
+      const chatInputEl = renderChatInputOuter?.();
+
+      if (chatInputEl || chatInputEl === null) {
+        return chatInputEl;
+      }
+    }
+    if (!isAuthorized) {
+      return null;
     }
 
     return (
-      <span className={styles.permissionsText} onClick={onJoinCommon}>
-        Join
-      </span>
+      <>
+        <ButtonIcon
+          className={styles.addFilesIcon}
+          onClick={() => {
+            document.getElementById("file")?.click();
+          }}
+        >
+          <PlusIcon />
+        </ButtonIcon>
+        <input
+          id="file"
+          type="file"
+          onChange={uploadFiles}
+          style={{ display: "none" }}
+          multiple
+          accept={FILES_ACCEPTED_EXTENSIONS}
+        />
+        <BaseTextEditor
+          inputContainerRef={inputContainerRef}
+          size={TextEditorSize.Auto}
+          editorRef={editorRef}
+          className={classNames(styles.messageInput, {
+            [styles.messageInputEmpty]: checkIsTextEditorValueEmpty(message),
+          })}
+          classNameRtl={styles.messageInputRtl}
+          elementStyles={{
+            emoji: classNames({
+              [styles.singleEmojiText]: emojiCount.isSingleEmoji,
+              [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+            }),
+          }}
+          value={message}
+          onChange={setMessage}
+          placeholder="What do you think?"
+          onKeyDown={onEnterKeyDown}
+          users={users}
+          shouldReinitializeEditor={shouldReinitializeEditor}
+          onClearFinished={onClearFinished}
+        />
+        <button
+          className={styles.sendIcon}
+          onClick={sendChatMessage}
+          disabled={!canSendMessage}
+        >
+          <SendIcon />
+        </button>
+      </>
     );
   };
 
@@ -595,10 +672,6 @@ export default function ChatComponent({
           type={type}
           commonMember={commonMember}
           governanceCircles={governanceCircles}
-          isCommonMemberFetched={isCommonMemberFetched}
-          isJoiningPending={false}
-          hasAccess={hasAccess}
-          isHidden={false}
           chatWrapperId={chatWrapperId}
           messages={messages}
           dateList={dateList}
@@ -613,74 +686,25 @@ export default function ChatComponent({
           onUserClick={onUserClick}
           onFeedItemClick={onFeedItemClick}
           onInternalLinkClick={onInternalLinkClick}
+          isEmpty={
+            discussionMessagesData.fetched &&
+            !discussionMessagesData.data?.length && // for non direct messages chats. not using messageCount because it includes the deleted messages as well.
+            Object.keys(discussionMessages).length === 0 // for direct messages chats
+          }
         />
       </div>
-      {isAuthorized && (
-        <div className={styles.bottomChatContainer}>
-          <MessageReply users={users} />
-          <ChatFilePreview />
-          <div
-            className={classNames(styles.chatInputWrapper, {
-              [styles.chatInputWrapperMultiLine]: isMultiLineInput,
-            })}
-          >
-            {!isChatChannel && (!commonMember || !hasAccess || isHidden) ? (
-              renderJoinCommonContent()
-            ) : (
-              <>
-                <ButtonIcon
-                  className={styles.addFilesIcon}
-                  onClick={() => {
-                    document.getElementById("file")?.click();
-                  }}
-                >
-                  <PlusIcon />
-                </ButtonIcon>
-                <input
-                  id="file"
-                  type="file"
-                  onChange={uploadFiles}
-                  style={{ display: "none" }}
-                  multiple
-                  accept={ACCEPTED_EXTENSIONS}
-                />
-                <BaseTextEditor
-                  inputContainerRef={inputContainerRef}
-                  emojiContainerClassName={classNames({
-                    [styles.emojiContainer]: isMultiLineInput,
-                  })}
-                  size={TextEditorSize.Auto}
-                  editorRef={editorRef}
-                  className={classNames(styles.messageInput, {
-                    [styles.messageInputEmpty]:
-                      checkIsTextEditorValueEmpty(message),
-                  })}
-                  elementStyles={{
-                    emoji: classNames({
-                      [styles.singleEmojiText]: emojiCount.isSingleEmoji,
-                      [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-                    }),
-                  }}
-                  value={message}
-                  onChange={setMessage}
-                  placeholder="What do you think?"
-                  onKeyDown={onEnterKeyDown}
-                  users={users}
-                  shouldReinitializeEditor={shouldReinitializeEditor}
-                  onClearFinished={onClearFinished}
-                />
-                <button
-                  className={styles.sendIcon}
-                  onClick={sendChatMessage}
-                  disabled={!canSendMessage}
-                >
-                  <SendIcon />
-                </button>
-              </>
-            )}
-          </div>
+      <div className={styles.bottomChatContainer}>
+        <MessageReply users={users} />
+        <ChatFilePreview />
+        <div
+          ref={chatInputWrapperRef}
+          className={classNames(styles.chatInputWrapper, {
+            [styles.chatInputWrapperMultiLine]: isMultiLineInput,
+          })}
+        >
+          {renderChatInput()}
         </div>
-      )}
+      </div>
     </div>
   );
 }

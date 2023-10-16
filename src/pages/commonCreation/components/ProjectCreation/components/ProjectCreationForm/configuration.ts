@@ -1,19 +1,22 @@
+import { Roles } from "@/shared/models";
 import { TextEditorSize } from "@/shared/ui-kit";
 import { CreationFormItem, CreationFormItemType } from "../../../CreationForm";
 import {
   MAX_LINK_TITLE_LENGTH,
   MAX_PROJECT_NAME_LENGTH,
   MAX_PROJECT_TAGLINE_LENGTH,
+  MAX_ROLE_TITLE_LENGTH,
 } from "../../constants";
 import styles from "./ProjectCreationForm.module.scss";
 
 export const getConfiguration = (
   isProject = true,
+  roles?: Roles,
   shouldBeUnique?: { existingNames: string[] },
 ): CreationFormItem[] => {
   const type = isProject ? "Space" : "Common";
 
-  return [
+  const items: CreationFormItem[] = [
     {
       type: CreationFormItemType.UploadFiles,
       className: styles.projectImages,
@@ -105,4 +108,23 @@ export const getConfiguration = (
       },
     },
   ];
+
+  if (roles) {
+    items.push({
+      type: CreationFormItemType.Roles,
+      props: {
+        name: "roles",
+        title: "Roles",
+        maxTitleLength: MAX_ROLE_TITLE_LENGTH,
+      },
+      validation: {
+        required: {
+          value: true,
+          message: "Role name is required",
+        },
+      },
+    });
+  }
+
+  return items;
 };

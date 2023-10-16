@@ -16,7 +16,7 @@ import {
   FeedLayoutOuterStyles,
   FeedLayoutSettings,
 } from "@/pages/commonFeed";
-import { QueryParamKey } from "@/shared/constants";
+import { LOADER_APPEARANCE_DELAY, QueryParamKey } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useQueryParams } from "@/shared/hooks";
@@ -88,7 +88,9 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     loading: areInboxItemsLoading,
     hasMore: hasMoreInboxItems,
     fetch: fetchInboxItems,
-  } = useInboxItems(feedItemIdsForNotListening);
+  } = useInboxItems(feedItemIdsForNotListening, {
+    unread: queryParams.unread === "true",
+  });
   const sharedInboxItem = useSelector(selectSharedInboxItem);
   const chatChannelItems = useSelector(selectChatChannelItems);
   const nextChatChannelItemId = useSelector(selectNextChatChannelItemId);
@@ -225,7 +227,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   if (!isDataFetched) {
     return (
       <div className={styles.centerWrapper}>
-        <Loader />
+        <Loader delay={LOADER_APPEARANCE_DELAY} />
       </div>
     );
   }

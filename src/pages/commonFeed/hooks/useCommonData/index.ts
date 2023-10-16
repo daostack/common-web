@@ -1,10 +1,11 @@
-import { useCallback, useState } from "react";
+import { RefObject, useCallback, useRef, useState } from "react";
 import { last } from "lodash";
 import {
   CommonFeedService,
   CommonService,
   GovernanceService,
 } from "@/services";
+import { getRootCommon } from "@/shared/hooks/useCases/useFullCommonData";
 import { useCommonSubscription } from "@/shared/hooks/useCases/useFullCommonData/useCommonSubscription";
 import { State, CombinedState } from "./types";
 import { useGovernanceSubscription } from "./useGovernanceSubscription";
@@ -15,6 +16,7 @@ interface FetchCommonDataOptions {
 }
 
 interface Return extends CombinedState {
+  stateRef: RefObject<State>;
   fetchCommonData: (options: FetchCommonDataOptions) => void;
   resetCommonData: () => void;
 }
@@ -25,6 +27,8 @@ export const useCommonData = (userId?: string): Return => {
     fetched: false,
     data: null,
   });
+  const stateRef = useRef<State>(state);
+  stateRef.current = state;
   const isLoading = state.loading;
   const isFetched = state.fetched;
   const currentCommonId = state.data?.common.id;
@@ -42,18 +46,16 @@ export const useCommonData = (userId?: string): Return => {
 
       (async () => {
         try {
-          const [common, governance, commonMembersAmount, sharedFeedItem] =
-            await Promise.all([
-              CommonService.getCommonById(commonId),
-              GovernanceService.getGovernanceByCommonId(commonId),
-              CommonService.getCommonMembersAmount(commonId),
-              sharedFeedItemId
-                ? CommonFeedService.getCommonFeedItemById(
-                    commonId,
-                    sharedFeedItemId,
-                  )
-                : null,
-            ]);
+          const [common, governance, sharedFeedItem] = await Promise.all([
+            CommonService.getCommonById(commonId),
+            GovernanceService.getGovernanceByCommonId(commonId),
+            sharedFeedItemId
+              ? CommonFeedService.getCommonFeedItemById(
+                  commonId,
+                  sharedFeedItemId,
+                )
+              : null,
+          ]);
 
           if (!common) {
             throw new Error(`Couldn't find common by id = ${commonId}`);
@@ -64,25 +66,19 @@ export const useCommonData = (userId?: string): Return => {
             );
           }
 
-          const rootCommonId = common.directParent?.commonId;
-          const [
-            parentCommons,
-            subCommons,
-            rootCommonMember,
-            parentCommonMember,
-          ] = await Promise.all([
-            CommonService.getAllParentCommonsForCommon(common),
-            CommonService.getCommonsByDirectParentIds([common.id]),
-            rootCommonId && userId
-              ? CommonService.getCommonMemberByUserId(rootCommonId, userId)
-              : null,
-            common.directParent?.commonId && userId
-              ? CommonService.getCommonMemberByUserId(
-                  common.directParent.commonId,
-                  userId,
-                )
-              : null,
-          ]);
+          const { rootCommonId } = common;
+          const [parentCommons, subCommons, rootCommonGovernance] =
+            await Promise.all([
+              CommonService.getAllParentCommonsForCommon(common),
+              CommonService.getCommonsByDirectParentIds([common.id]),
+              rootCommonId
+                ? GovernanceService.getGovernanceByCommonId(rootCommonId)
+                : null,
+            ]);
+          const rootCommon = await getRootCommon(
+            rootCommonId,
+            parentCommons[0],
+          );
 
           setState({
             loading: false,
@@ -92,10 +88,9 @@ export const useCommonData = (userId?: string): Return => {
               governance,
               parentCommons,
               subCommons,
-              commonMembersAmount,
               sharedFeedItem,
-              rootCommonMember,
-              parentCommonMember,
+              rootCommon,
+              rootCommonGovernance,
               parentCommon: last(parentCommons),
             },
           });
@@ -123,6 +118,7 @@ export const useCommonData = (userId?: string): Return => {
     loading: isLoading,
     fetched: isFetched,
     data: state.data,
+    stateRef,
     fetchCommonData,
     resetCommonData,
   };

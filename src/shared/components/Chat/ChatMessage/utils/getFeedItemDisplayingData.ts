@@ -21,7 +21,7 @@ export const getFeedItemDisplayingData = async (
     const proposal = await ProposalService.getProposalById(feedItemDataId);
     return {
       title: proposal?.data.args.title || "",
-      isDeleted: false,
+      isDeleted: proposal?.isDeleted ?? true,
     };
   }
 

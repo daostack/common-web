@@ -37,7 +37,7 @@ const waitForAuthenticationToBeReady = async (): Promise<void> =>
 class Api {
   private createApiEngine = () => {
     const apiEngine = axios.create({
-      baseURL: config.cloudFunctionUrl,
+      baseURL: `${config.cloudFunctionUrl}/api`,
       timeout: AXIOS_TIMEOUT,
     });
 

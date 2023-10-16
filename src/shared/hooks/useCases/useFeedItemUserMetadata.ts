@@ -37,19 +37,25 @@ export const useFeedItemUserMetadata = (): Return => {
 
   const fetchFeedItemUserMetadata = useCallback(
     (info: IdentificationInfo) => {
-      setDefaultState({ ...DEFAULT_STATE });
+      setDefaultState({
+        ...DEFAULT_STATE,
+        fetched: !info.userId,
+      });
       setIdentificationInfo(info);
-      dispatch(
-        cacheActions.getFeedItemUserMetadata.request({
-          payload: info,
-        }),
-      );
+
+      if (info.userId) {
+        dispatch(
+          cacheActions.getFeedItemUserMetadata.request({
+            payload: info,
+          }),
+        );
+      }
     },
     [dispatch],
   );
 
   useEffect(() => {
-    if (!identificationInfo) {
+    if (!identificationInfo || !identificationInfo.userId) {
       return;
     }
 

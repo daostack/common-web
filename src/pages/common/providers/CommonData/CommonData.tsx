@@ -37,10 +37,12 @@ interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  rootCommonMember: CommonMember | null;
   parentCommonMember: CommonMember | null;
   isGlobalDataFetched: boolean;
   parentCommons: Common[];
   subCommons: Common[];
+  rootCommon: Common | null;
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
   supportersData: SupportersData | null;
@@ -54,10 +56,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
     common,
     governance,
     commonMember,
+    rootCommonMember,
     parentCommonMember,
     isGlobalDataFetched,
     parentCommons,
     subCommons,
+    rootCommon,
     parentCommon,
     parentCommonSubCommons,
     supportersData,
@@ -118,6 +122,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
     isGlobalDataFetched && !commonMember && props.isJoinPending;
   const isJoinAllowed = Boolean(
     isGlobalDataFetched &&
+      rootCommonMember &&
+      parentCommonMember &&
       !isJoinPending &&
       ((!isProject && !commonMember) ||
         (isProject && parentCommonMember && !commonMember)),
@@ -219,7 +225,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
       governance,
       parentCommons,
       subCommons,
+      rootCommon,
+      rootCommonMember,
       parentCommon,
+      parentCommonMember,
       parentCommonSubCommons,
       supportersData,
       isJoinAllowed,
@@ -237,7 +246,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
       governance,
       parentCommons,
       subCommons,
+      rootCommon,
+      rootCommonMember,
       parentCommon,
+      parentCommonMember,
       parentCommonSubCommons,
       supportersData,
       isJoinAllowed,
@@ -262,24 +274,22 @@ const CommonData: FC<CommonDataProps> = (props) => {
       {children}
       {commonMember && (
         <LeaveCommonModal
-          isShowing={selectedMenuItem === CommonMenuItem.LeaveCommon}
+          isShowing={Boolean(
+            selectedMenuItem &&
+              [
+                CommonMenuItem.LeaveCommon,
+                CommonMenuItem.LeaveProject,
+              ].includes(selectedMenuItem),
+          )}
           onClose={handleMenuClose}
           commonId={common.id}
           memberCount={common.memberCount}
-          memberCircleIds={Object.values(commonMember.circles.map)}
-          onSuccessfulLeave={handleSuccessfulLeave}
-        />
-      )}
-      {commonMember && common.directParent && (
-        <LeaveCommonModal
-          isShowing={selectedMenuItem === CommonMenuItem.LeaveProject}
-          onClose={handleMenuClose}
-          commonId={common.directParent.commonId}
-          memberCount={common.memberCount}
-          memberCircleIds={[common.directParent.circleId]}
-          onSuccessfulLeave={handleSuccessfulProjectLeave}
-          subCommonId={common.id}
-          isSubCommon
+          onSuccessfulLeave={
+            selectedMenuItem === CommonMenuItem.LeaveProject
+              ? handleSuccessfulProjectLeave
+              : handleSuccessfulLeave
+          }
+          isSubCommon={selectedMenuItem === CommonMenuItem.LeaveProject}
         />
       )}
       {isProposalCreationModalOpen && commonMember && (

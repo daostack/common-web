@@ -10,6 +10,7 @@ const BaseCommonFeedPage: FC<
   Pick<
     CommonFeedProps,
     | "renderContentWrapper"
+    | "renderLoadingHeader"
     | "onActiveItemDataChange"
     | "feedLayoutOuterStyles"
     | "feedLayoutSettings"

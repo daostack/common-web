@@ -4,7 +4,9 @@ import {
   seenNotification,
   subscribeToNotification,
 } from "@/pages/OldCommon/store/api";
+import { UserService } from "@/services";
 import { store } from "@/shared/appConfig";
+import { Awaited } from "@/shared/interfaces";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
@@ -12,6 +14,7 @@ import { showNotification } from "@/shared/store/actions";
 import { getProvider } from "@/shared/utils/authProvider";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
 import {
+  cacheActions,
   commonLayoutActions,
   multipleSpacesLayoutActions,
 } from "@/store/states";
@@ -264,7 +267,7 @@ const confirmVerificationCode = async (
   return verifyLoggedInUser(user, true, authCode);
 };
 
-const updateUserData = async (user: User) => {
+const updateUserData = async (user: User): Promise<User> => {
   const currentUser = await firebase.auth().currentUser;
   const profileData: {
     displayName?: string | null;
@@ -283,40 +286,19 @@ const updateUserData = async (user: User) => {
   }
 
   await currentUser?.updateProfile(profileData);
-
   const updatedCurrentUser = await firebase.auth().currentUser;
 
-  if (updatedCurrentUser) {
-    await firebase
-      .firestore()
-      .collection(Collection.Users)
-      .doc(updatedCurrentUser?.uid)
-      .update({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        photoURL: updatedCurrentUser.photoURL || user.photo || "",
-        intro: user.intro,
-        displayName: `${user.firstName} ${user.lastName}`,
-        country: user.country,
-        phoneNumber: user.phoneNumber || "",
-      })
-      .then(async () => {
-        const updatedCurrentUser = await firebase.auth().currentUser;
-
-        if (updatedCurrentUser) {
-          const databaseUser = await getUserData(updatedCurrentUser?.uid ?? "");
-          if (databaseUser) {
-            store.dispatch(actions.socialLogin.success(databaseUser));
-          }
-        }
-
-        return updatedCurrentUser;
-      })
-      .catch((err) => console.error(err));
-  }
-
-  return getUserData(updatedCurrentUser?.uid ?? "");
+  return await UserService.updateUser({
+    ...user,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    photoURL: updatedCurrentUser?.photoURL || user.photo || "",
+    intro: user.intro,
+    displayName: `${user.firstName} ${user.lastName}`,
+    country: user.country,
+    phoneNumber: user.phoneNumber || "",
+  });
 };
 
 function* socialLoginSaga({
@@ -494,11 +476,24 @@ function* updateUserDetails({
 }: ReturnType<typeof actions.updateUserDetails.request>) {
   try {
     yield put(actions.startAuthLoading());
-    const user: User = yield call(updateUserData, payload.user);
+    const user = (yield call(updateUserData, payload.user)) as Awaited<
+      ReturnType<typeof updateUserData>
+    >;
 
     yield put(actions.updateUserDetails.success(user));
+    yield put(actions.socialLogin.success(user));
+    yield put(
+      cacheActions.updateUserStateById({
+        userId: user.uid,
+        state: {
+          loading: false,
+          fetched: true,
+          data: user,
+        },
+      }),
+    );
     tokenHandler.setUser(user);
-    yield payload.callback(null);
+    yield payload.callback(null, user);
   } catch (error) {
     if (isError(error)) {
       yield put(actions.updateUserDetails.failure(error));

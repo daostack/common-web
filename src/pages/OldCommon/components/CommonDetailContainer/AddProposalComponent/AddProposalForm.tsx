@@ -15,6 +15,7 @@ import {
   MAX_LINK_TITLE_LENGTH,
   AllocateFundsTo,
 } from "@/shared/constants";
+import { useImageSizeCheck } from "@/shared/hooks";
 import DeleteIcon from "@/shared/icons/delete.icon";
 import { Common, Currency } from "@/shared/models";
 import { formatPrice } from "@/shared/utils";
@@ -69,6 +70,7 @@ export const AddProposalForm = ({
   hidden = false,
 }: AddProposalFormInterface) => {
   const dispatch = useDispatch();
+  const { checkImageSize } = useImageSizeCheck();
   const [isAmountAdded, addAmountToValidation] = useState(false);
   const [showFileLoader, setShowFileLoader] = useState(false);
   const [schema, setSchema] = useState(validationSchema);
@@ -127,6 +129,10 @@ export const AddProposalForm = ({
     const file = event.target.files ? event.target.files[0] : null;
 
     if (!file) {
+      return;
+    }
+
+    if (!checkImageSize(file.name, file.size)) {
       return;
     }
 

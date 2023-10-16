@@ -115,6 +115,10 @@ export interface Common extends BaseEntity {
   messages?: DiscussionMessage[];
 
   pinnedFeedItems: FeedItem[];
+
+  hasPublicItems: boolean;
+
+  rootCommonId?: string;
 }
 
 export interface Project extends Common {
@@ -144,6 +148,7 @@ export interface CommonMember {
   rulesAccepted?: boolean;
   joinedAt: firebase.firestore.Timestamp;
   circleIds: string[];
+  isFollowing: boolean;
   streamsUnreadCountByProjectStream?: Record<string, number>;
   unreadCountByProjectStream?: Record<string, number>;
 }
