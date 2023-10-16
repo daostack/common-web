@@ -1,7 +1,10 @@
 import React, {
+  cloneElement,
   forwardRef,
   ForwardRefRenderFunction,
+  isValidElement,
   MouseEventHandler,
+  ReactNode,
   RefObject,
 } from "react";
 import { NavLink } from "react-router-dom";
@@ -20,10 +23,24 @@ const MenuItem: ForwardRefRenderFunction<unknown, MenuItemProps> = (
   ref,
 ) => {
   const { item, active, ...restProps } = props;
-  const content = item.text;
+  let iconEl: ReactNode | null = null;
+
+  if (isValidElement(item.icon)) {
+    iconEl = cloneElement(item.icon, {
+      ...item.icon.props,
+      className: classNames(styles.icon, item.icon.props.className),
+    });
+  }
+
   const className = classNames(styles.item, item.className, {
     [styles.itemActive]: active,
   });
+  const content = (
+    <>
+      {iconEl}
+      {item.text}
+    </>
+  );
 
   switch (item.type) {
     case ItemType.Button:

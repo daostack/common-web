@@ -10,6 +10,7 @@ interface GeneralItem {
   key: string;
   className?: string;
   text: ReactNode;
+  icon?: ReactNode;
 }
 
 interface LinkItem extends GeneralItem {
