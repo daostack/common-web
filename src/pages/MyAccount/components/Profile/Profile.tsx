@@ -9,8 +9,7 @@ import {
 import { ButtonIcon, Loader } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { LogoutIcon } from "@/shared/icons";
-import EditIcon from "@/shared/icons/edit.icon";
+import { Edit3Icon as EditIcon, LogoutIcon } from "@/shared/icons";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Header, MenuButton } from "./components";
 import styles from "./Profile.module.scss";
