@@ -9,7 +9,6 @@ import { Edit3Icon as EditIcon, LogoutIcon } from "@/shared/icons";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Header, MenuButton, UserDetails, UserDetailsRef } from "./components";
 import styles from "./Profile.module.scss";
-import "./index.scss";
 
 interface ProfileProps {
   onEditingChange?: (isEditing: boolean) => void;
@@ -55,7 +54,7 @@ const Profile: FC<ProfileProps> = (props) => {
   };
 
   const buttonsWrapperEl = (
-    <div className="profile-wrapper__buttons-wrapper">
+    <div className={styles.buttonsWrapper}>
       <Button
         variant={ButtonVariant.OutlineDarkPink}
         onClick={handleCancelClick}
@@ -68,7 +67,7 @@ const Profile: FC<ProfileProps> = (props) => {
         onClick={handleSubmit}
         disabled={isSubmitting}
       >
-        Save
+        {isMobileView ? "Save changes" : "Save"}
       </Button>
     </div>
   );
@@ -81,7 +80,7 @@ const Profile: FC<ProfileProps> = (props) => {
   return (
     <div className={styles.container}>
       {!isMobileView && !isEditing && editButtonEl}
-      <div className="profile-wrapper">
+      <div className={styles.content}>
         <Header
           className={styles.header}
           isEditing={isEditing}
@@ -94,9 +93,8 @@ const Profile: FC<ProfileProps> = (props) => {
             <div className={styles.formWrapper}>
               <UserDetails
                 ref={userDetailsRef}
-                className="profile-wrapper__user-details"
+                className={styles.userDetails}
                 user={user}
-                customSaveButton
                 isCountryDropdownFixed={false}
                 isEditing={isEditing}
                 isMobileView={isMobileView}

@@ -54,7 +54,6 @@ interface UserDetailsProps {
   user: User;
   isNewUser?: boolean;
   closeModal?: () => void;
-  customSaveButton?: boolean;
   isCountryDropdownFixed?: boolean;
   isEditing?: boolean;
   isMobileView?: boolean;
@@ -99,7 +98,6 @@ const UserDetails: ForwardRefRenderFunction<
     user,
     isNewUser = false,
     closeModal,
-    customSaveButton = false,
     isCountryDropdownFixed = true,
     isEditing = true,
     isMobileView = false,
@@ -188,6 +186,12 @@ const UserDetails: ForwardRefRenderFunction<
     [closeModal, dispatch, user, onSubmitting],
   );
 
+  const handleAvatarEdit = () => {
+    if (!loading) {
+      inputFile?.current?.click();
+    }
+  };
+
   useImperativeHandle(
     userDetailsRef,
     () => ({
@@ -241,15 +245,13 @@ const UserDetails: ForwardRefRenderFunction<
                     nameForRandomAvatar={values.email}
                     userName={getUserName(values)}
                   />
-                  {isEditing && !isSubmitting ? (
+                  {isEditing && !isSubmitting && !isMobileView && (
                     <ButtonIcon
                       className={classNames(
                         styles.editAvatarButton,
                         outerStyles?.editAvatar,
                       )}
-                      onClick={
-                        !loading ? () => inputFile?.current?.click() : undefined
-                      }
+                      onClick={handleAvatarEdit}
                     >
                       {loading ? (
                         <Loader
@@ -260,7 +262,22 @@ const UserDetails: ForwardRefRenderFunction<
                         <EditIcon className={styles.editAvatarImage} />
                       )}
                     </ButtonIcon>
-                  ) : null}
+                  )}
+                  {isEditing &&
+                    !isSubmitting &&
+                    isMobileView &&
+                    (!loading ? (
+                      <Button
+                        className={styles.editAvatarButtonMobile}
+                        variant={ButtonVariant.LightPink}
+                        size={ButtonSize.Xsmall}
+                        onClick={handleAvatarEdit}
+                      >
+                        Edit picture
+                      </Button>
+                    ) : (
+                      <Loader />
+                    ))}
                   <input
                     className={styles.avatarInputFile}
                     type="file"
@@ -350,15 +367,6 @@ const UserDetails: ForwardRefRenderFunction<
                     rows={1}
                   />
                 </div>
-              )}
-              {!customSaveButton && (
-                <Button
-                  className={styles.saveButton}
-                  type="submit"
-                  disabled={!isValid || loading || isSubmitting}
-                >
-                  Save
-                </Button>
               )}
             </Form>
           </>
