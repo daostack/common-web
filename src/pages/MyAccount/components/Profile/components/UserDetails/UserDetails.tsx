@@ -15,15 +15,21 @@ import { FormikProps } from "formik/dist/types";
 import { updateUserDetails } from "@/pages/Auth/store/actions";
 import { uploadImage } from "@/pages/Auth/store/saga";
 import { countryList } from "@/shared/assets/countries";
-import { Button, DropdownOption, UserAvatar } from "@/shared/components";
+import {
+  Button,
+  ButtonIcon,
+  DropdownOption,
+  UserAvatar,
+} from "@/shared/components";
 import { Form, Dropdown, TextField } from "@/shared/components/Form/Formik";
 import {
   ANONYMOUS_USER_FIRST_NAME,
   ANONYMOUS_USER_LAST_NAME,
 } from "@/shared/constants";
 import { useImageSizeCheck } from "@/shared/hooks";
+import { Edit3Icon as EditIcon } from "@/shared/icons";
 import { User } from "@/shared/models";
-import { Loader } from "@/shared/ui-kit";
+import { Loader, LoaderColor } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { UserDetailsPreview } from "./components";
 import { validationSchema } from "./validationSchema";
@@ -231,28 +237,24 @@ const UserDetails: ForwardRefRenderFunction<
                     userName={getUserName(values)}
                   />
                   {isEditing && !isSubmitting ? (
-                    <div
+                    <ButtonIcon
                       className={classNames(
                         styles.editAvatarButton,
                         outerStyles?.editAvatar,
                       )}
                       onClick={
-                        !loading
-                          ? () =>
-                              inputFile?.current && inputFile?.current?.click()
-                          : undefined
+                        !loading ? () => inputFile?.current?.click() : undefined
                       }
                     >
                       {loading ? (
-                        <Loader />
-                      ) : (
-                        <img
-                          className={styles.editAvatarImage}
-                          src="/icons/edit-avatar.svg"
-                          alt="edit-avatar"
+                        <Loader
+                          className={styles.editAvatarLoader}
+                          color={LoaderColor.White}
                         />
+                      ) : (
+                        <EditIcon className={styles.editAvatarImage} />
                       )}
-                    </div>
+                    </ButtonIcon>
                   ) : null}
                   <input
                     className={styles.avatarInputFile}
