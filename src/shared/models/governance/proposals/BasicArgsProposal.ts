@@ -15,7 +15,7 @@ export interface BasicArgsProposal {
 
   links: CommonLink[];
 
-  circleVisibilityByCommon?: Record<string, string[]> | null;
+  circleVisibility?: string[] | null;
 }
 
 export interface ProposalImage {

@@ -189,12 +189,11 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     const circleIds = new Set(
       commonMember ? Object.values(commonMember.circles.map) : [],
     );
-    return discussions.filter(({ circleVisibilityByCommon, moderation }) => {
+    return discussions.filter(({ circleVisibility, moderation }) => {
       if (moderation?.flag === ModerationFlags.Hidden) {
         return false;
       }
 
-      const circleVisibility = circleVisibilityByCommon?.[id];
       if (!circleVisibility?.length) {
         return true;
       }
@@ -202,7 +201,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
         circleIds.has(discussionCircleId),
       );
     });
-  }, [discussions, commonMember, id]);
+  }, [discussions, commonMember]);
 
   const activeProposals = useMemo(
     () => proposals.filter((d) => checkIsCountdownState(d)),

@@ -130,7 +130,7 @@ export function MembershipRequestModal(props: IProps) {
 
     const payload: IMembershipRequestData = {
       ...INIT_DATA,
-      stage: MembershipRequestStage.Introduce
+      stage: MembershipRequestStage.Introduce,
     };
 
     setUserData(payload);
