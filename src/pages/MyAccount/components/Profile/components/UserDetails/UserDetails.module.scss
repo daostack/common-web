@@ -22,6 +22,11 @@
 .previewWrapper {
   display: flex;
   align-items: flex-start;
+
+  @include tablet {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .introWrapper {
@@ -47,7 +52,10 @@
 .avatar {
   position: relative;
   text-align: center;
-  margin-top: 1.5rem;
+
+  @include tablet {
+    margin-bottom: 0.625rem;
+  }
 }
 
 .avatarInputFile {
@@ -56,26 +64,31 @@
 
 .userDetailsPreview {
   margin-left: 1rem;
+
+  @include tablet {
+    margin-left: 0;
+  }
 }
 
 .userPhoto {
-  width: 4.125rem;
-  height: 4.125rem;
+  width: 6.25rem;
+  height: 6.25rem;
   border-radius: 50%;
   object-fit: cover;
 }
 
 .editAvatarButton {
-  width: 1.75rem;
-  height: 1.75rem;
-  background-color: $c-pink-mention;
-  border-radius: 50%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 38px;
-  left: 52%;
+  background-color: $c-pink-mention;
+  border: 0.125rem solid $white;
+  border-radius: 50%;
   cursor: pointer;
 }
 
@@ -92,8 +105,9 @@
 
 .textFieldContainer {
   max-width: 100%;
+  margin-top: 2.25rem;
   display: grid;
-  gap: 0.5rem 1.75rem;
+  gap: 2rem 2.5rem;
   grid-auto-columns: minmax(0, 1fr);
   grid-template-areas:
     "firstName lastName"
@@ -101,7 +115,6 @@
     "intro intro";
 
   @include tablet {
-    gap: 1.5rem 0;
     grid-template-areas:
       "firstName"
       "lastName"
@@ -111,19 +124,30 @@
   }
 }
 
-.textField {
+.textField,
+.textareaTextField {
   width: 100%;
   text-align: left;
   z-index: 1;
-}
 
-.textFieldLabelWrapper {
-  font-size: $xsmall;
-}
+  .textFieldLabelWrapper {
+    @include body-sm-regular;
 
-.textFieldInput {
-  padding-left: 0.75rem;
-  padding-right: 0.875rem;
+    color: $c-gray-80;
+  }
+
+  .textFieldInput {
+    padding-left: 0.75rem;
+    padding-right: 0.875rem;
+  }
+
+  .introInputWrapper {
+    height: 100%;
+
+    @include tablet {
+      height: 9rem;
+    }
+  }
 }
 
 .firstNameTextField {
@@ -139,6 +163,7 @@
 }
 
 .countryTextField {
+  z-index: 2;
   grid-area: country;
 }
 

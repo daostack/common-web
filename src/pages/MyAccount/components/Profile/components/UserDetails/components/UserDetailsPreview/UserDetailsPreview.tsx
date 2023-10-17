@@ -8,10 +8,11 @@ import styles from "./UserDetailsPreview.module.scss";
 interface UserDetailsPreviewProps {
   className?: string;
   user: User;
+  isMobileView?: boolean;
 }
 
 const UserDetailsPreview: FC<UserDetailsPreviewProps> = (props) => {
-  const { className, user } = props;
+  const { className, user, isMobileView = false } = props;
   const country = countryList.find((item) => item.value === user.country);
   const countryName =
     country && country.name.slice(0, country.name.lastIndexOf(" "));
@@ -20,14 +21,18 @@ const UserDetailsPreview: FC<UserDetailsPreviewProps> = (props) => {
     <div className={classNames(styles.container, className)}>
       <p className={styles.name}>{getUserName(user)}</p>
       {user.email && <p className={styles.info}>{user.email}</p>}
-      <p className={styles.info}>
-        Join at{" "}
-        {formatDate(
-          new Date(user.createdAt.seconds * 1000),
-          DateFormat.SuperShortSecondary,
-        )}
-      </p>
-      {countryName && <p className={styles.info}>{countryName}</p>}
+      {!isMobileView && (
+        <>
+          <p className={styles.info}>
+            Join at{" "}
+            {formatDate(
+              new Date(user.createdAt.seconds * 1000),
+              DateFormat.SuperShortSecondary,
+            )}
+          </p>
+          {countryName && <p className={styles.info}>{countryName}</p>}
+        </>
+      )}
     </div>
   );
 };

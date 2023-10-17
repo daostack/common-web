@@ -8,6 +8,10 @@
   align-items: flex-start;
   text-align: left;
   word-break: break-word;
+
+  @include tablet {
+    align-items: center;
+  }
 }
 
 .name {
@@ -26,5 +30,9 @@
 
   &:last-child {
     margin: 0;
+  }
+
+  @include tablet {
+    text-align: center;
   }
 }

@@ -56,6 +56,7 @@ interface UserDetailsProps {
   customSaveButton?: boolean;
   isCountryDropdownFixed?: boolean;
   isEditing?: boolean;
+  isMobileView?: boolean;
   onLoading?: (isLoading: boolean) => void;
   onSubmitting?: (isSubmitting: boolean) => void;
   styles?: Styles;
@@ -99,6 +100,7 @@ const UserDetails: ForwardRefRenderFunction<
     customSaveButton = false,
     isCountryDropdownFixed = true,
     isEditing = true,
+    isMobileView = false,
     styles: outerStyles,
     onLoading,
     onSubmitting,
@@ -270,6 +272,7 @@ const UserDetails: ForwardRefRenderFunction<
                   <UserDetailsPreview
                     className={styles.userDetailsPreview}
                     user={user}
+                    isMobileView={isMobileView}
                   />
                 )}
               </div>
@@ -291,7 +294,6 @@ const UserDetails: ForwardRefRenderFunction<
                     id="firstName"
                     name="firstName"
                     label="First name"
-                    isRequired
                     styles={fieldStyles}
                   />
                   <TextField
@@ -299,7 +301,6 @@ const UserDetails: ForwardRefRenderFunction<
                     id="lastName"
                     name="lastName"
                     label="Last name"
-                    isRequired
                     styles={fieldStyles}
                   />
                   <TextField
@@ -307,7 +308,6 @@ const UserDetails: ForwardRefRenderFunction<
                     id="email"
                     name="email"
                     label="Email"
-                    isRequired
                     styles={fieldStyles}
                   />
                   <Dropdown
@@ -317,6 +317,9 @@ const UserDetails: ForwardRefRenderFunction<
                     placeholder="---Select country---"
                     options={options}
                     shouldBeFixed={isCountryDropdownFixed}
+                    styles={{
+                      labelWrapper: fieldStyles.labelWrapper,
+                    }}
                   />
                   <TextField
                     className={styles.textareaTextField}
@@ -326,7 +329,7 @@ const UserDetails: ForwardRefRenderFunction<
                     placeholder="What are you most passionate about, really good at, or love"
                     styles={{
                       ...fieldStyles,
-                      inputWrapper: outerStyles?.introInputWrapper,
+                      inputWrapper: styles.introInputWrapper,
                     }}
                     isTextarea
                     rows={1}

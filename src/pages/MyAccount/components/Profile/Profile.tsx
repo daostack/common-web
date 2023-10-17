@@ -99,16 +99,9 @@ const Profile: FC<ProfileProps> = (props) => {
                 customSaveButton
                 isCountryDropdownFixed={false}
                 isEditing={isEditing}
+                isMobileView={isMobileView}
                 onLoading={setIsSubmitting}
                 onSubmitting={handleSubmittingChange}
-                styles={{
-                  avatar: "profile-wrapper__avatar",
-                  userAvatar: "profile-wrapper__user-avatar",
-                  editAvatar: "profile-wrapper__edit-avatar",
-                  fieldContainer: "profile-wrapper__field-container",
-                  introInputWrapper:
-                    "profile-wrapper__form-intro-input-wrapper",
-                }}
               />
               {isEditing && buttonsWrapperEl}
             </div>
