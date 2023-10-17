@@ -8,6 +8,7 @@ import React, {
   ReactEventHandler,
 } from "react";
 import classNames from "classnames";
+import { ImageWithZoom } from "../ImageWithZoom";
 import styles from "./Image.module.scss";
 
 interface CustomImageProps extends ImgHTMLAttributes<HTMLImageElement> {
@@ -16,6 +17,7 @@ interface CustomImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   placeholderElement?: ReactNode;
   imageOverlayClassName?: string;
   imageContainerClassName?: string;
+  hasZoom?: boolean;
 }
 
 const CustomImage: FC<CustomImageProps> = (props) => {
@@ -28,6 +30,7 @@ const CustomImage: FC<CustomImageProps> = (props) => {
     imageOverlayClassName,
     imageContainerClassName,
     onClick,
+    hasZoom = false,
     ...restProps
   } = props;
   const [isLoaded, setIsLoaded] = useState(false);
@@ -70,13 +73,24 @@ const CustomImage: FC<CustomImageProps> = (props) => {
   return hasError && (placeholderElement || placeholderElement === null) ? (
     <>{placeholderElement}</>
   ) : (
-    <div
-      onClick={onClick}
-      className={classNames(styles.imageContainer, imageContainerClassName)}
-    >
-      <img {...restProps} src={imageSrc} alt={alt} onError={handleError} />
-      <div className={imageOverlayClassName} />
-    </div>
+    <>
+      {hasZoom ? (
+        <ImageWithZoom
+          {...restProps}
+          src={imageSrc}
+          alt={alt}
+          onError={handleError}
+        />
+      ) : (
+        <div
+          onClick={onClick}
+          className={classNames(styles.imageContainer, imageContainerClassName)}
+        >
+          <img {...restProps} src={imageSrc} alt={alt} onError={handleError} />
+          <div className={imageOverlayClassName} />
+        </div>
+      )}
+    </>
   );
 };
 
