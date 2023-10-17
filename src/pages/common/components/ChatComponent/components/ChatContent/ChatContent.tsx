@@ -101,15 +101,9 @@ const ChatContent: ForwardRefRenderFunction<
 
   useEffect(() => {
     if (messages) {
-      console.log(messages);
       forceUpdate();
     }
-
-    if (dateList) {
-      console.log(dateList);
-      forceUpdate();
-    }
-  }, [messages, dateList]);
+  }, [messages]);
 
   const [highlightedMessageId, setHighlightedMessageId] = useState(
     () => (typeof messageIdParam === "string" && messageIdParam) || null,
