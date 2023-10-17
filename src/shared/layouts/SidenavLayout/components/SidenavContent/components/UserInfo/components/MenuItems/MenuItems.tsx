@@ -4,6 +4,12 @@ import classNames from "classnames";
 import { Menu } from "@headlessui/react";
 import { logOut } from "@/pages/Auth/store/actions";
 import { useRoutesContext } from "@/shared/contexts";
+import {
+  Avatar3Icon,
+  BillingIcon,
+  LogoutIcon,
+  SettingsIcon,
+} from "@/shared/icons";
 import { MenuItem } from "./components";
 import { Item, ItemType } from "./types";
 import styles from "./MenuItems.module.scss";
@@ -31,23 +37,26 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
     {
       key: "my-profile",
       text: "My profile",
+      icon: <Avatar3Icon />,
       to: getProfilePagePath(),
     },
     {
       key: "settings",
       text: "Settings",
+      icon: <SettingsIcon />,
       to: getSettingsPagePath(),
     },
     {
       key: "billing",
       text: "Billing",
+      icon: <BillingIcon />,
       to: getBillingPagePath(),
     },
     {
       key: "log-out",
-      className: styles.logoutItem,
       type: ItemType.Button,
       text: "Log out",
+      icon: <LogoutIcon />,
       onClick: () => {
         dispatch(logOut());
       },

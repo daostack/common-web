@@ -161,6 +161,25 @@
   }
 }
 
+.buttonLightPinkVariant {
+  --btn-color: #{$c-pink-mention};
+  --btn-bg-color: #{$c-pink-active-feed-cards-light};
+  --btn-border-color: none;
+  --btn-border: 0;
+
+  &:hover {
+    --btn-bg-color: #{$c-pink-hover-feed-cards};
+  }
+
+  &:active {
+    --btn-bg-color: #{$c-pink-active-btn};
+  }
+
+  &.buttonDisabled {
+    --btn-bg-color: #{$c-gray-10};
+  }
+}
+
 .buttonOutlineBlueVariant {
   --btn-color: #{$c-primary-400};
   --btn-bg-color: #{$c-primary-100};

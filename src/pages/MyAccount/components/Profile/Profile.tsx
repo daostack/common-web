@@ -2,19 +2,13 @@ import React, { FC, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import {
-  UserDetails,
-  UserDetailsRef,
-} from "@/pages/Login/components/LoginContainer/UserDetails";
 import { ButtonIcon, Loader } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { LogoutIcon } from "@/shared/icons";
-import EditIcon from "@/shared/icons/edit.icon";
+import { Edit3Icon as EditIcon, LogoutIcon } from "@/shared/icons";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
-import { Header, MenuButton } from "./components";
+import { Header, MenuButton, UserDetails, UserDetailsRef } from "./components";
 import styles from "./Profile.module.scss";
-import "./index.scss";
 
 interface ProfileProps {
   onEditingChange?: (isEditing: boolean) => void;
@@ -60,7 +54,7 @@ const Profile: FC<ProfileProps> = (props) => {
   };
 
   const buttonsWrapperEl = (
-    <div className="profile-wrapper__buttons-wrapper">
+    <div className={styles.buttonsWrapper}>
       <Button
         variant={ButtonVariant.OutlineDarkPink}
         onClick={handleCancelClick}
@@ -73,7 +67,7 @@ const Profile: FC<ProfileProps> = (props) => {
         onClick={handleSubmit}
         disabled={isSubmitting}
       >
-        Save
+        {isMobileView ? "Save changes" : "Save"}
       </Button>
     </div>
   );
@@ -86,7 +80,7 @@ const Profile: FC<ProfileProps> = (props) => {
   return (
     <div className={styles.container}>
       {!isMobileView && !isEditing && editButtonEl}
-      <div className="profile-wrapper">
+      <div className={styles.content}>
         <Header
           className={styles.header}
           isEditing={isEditing}
@@ -99,23 +93,14 @@ const Profile: FC<ProfileProps> = (props) => {
             <div className={styles.formWrapper}>
               <UserDetails
                 ref={userDetailsRef}
-                className="profile-wrapper__user-details"
+                className={styles.userDetails}
                 user={user}
-                showAuthProvider={false}
-                customSaveButton
                 isCountryDropdownFixed={false}
                 isEditing={isEditing}
+                isMobileView={isMobileView}
+                onEdit={handleEditClick}
                 onLoading={setIsSubmitting}
                 onSubmitting={handleSubmittingChange}
-                styles={{
-                  avatarWrapper: "profile-wrapper__avatar-wrapper",
-                  avatar: "profile-wrapper__avatar",
-                  userAvatar: "profile-wrapper__user-avatar",
-                  editAvatar: "profile-wrapper__edit-avatar",
-                  fieldContainer: "profile-wrapper__field-container",
-                  introInputWrapper:
-                    "profile-wrapper__form-intro-input-wrapper",
-                }}
               />
               {isEditing && buttonsWrapperEl}
             </div>
