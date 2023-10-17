@@ -3,6 +3,7 @@ import { WritableDraft } from "immer/dist/types/types-external";
 import { cloneDeep } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType } from "@/shared/constants";
+import { sortProjectsStateItemsByName } from "@/shared/utils";
 import * as actions from "./actions";
 import { MultipleSpacesLayoutState, ProjectsStateItem } from "./types";
 
@@ -35,6 +36,16 @@ const updateProjectInBreadcrumbs = (
   }
 };
 
+const sortBreadcrumbsItems = (
+  state: WritableDraft<MultipleSpacesLayoutState>,
+) => {
+  if (state.breadcrumbs?.type === InboxItemType.FeedItemFollow) {
+    state.breadcrumbs.items = sortProjectsStateItemsByName(
+      state.breadcrumbs.items,
+    );
+  }
+};
+
 export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
   initialState,
 )
@@ -44,6 +55,7 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
   .handleAction(actions.setBreadcrumbsData, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.breadcrumbs = payload && { ...payload };
+      sortBreadcrumbsItems(nextState);
     }),
   )
   .handleAction(actions.moveBreadcrumbsToPrevious, (state) =>
@@ -70,11 +82,15 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
         nextState.breadcrumbs.items =
           nextState.breadcrumbs.items.concat(payload);
       }
+
+      sortBreadcrumbsItems(nextState);
     }),
   )
   .handleAction(actions.updateProjectInBreadcrumbs, (state, { payload }) =>
     produce(state, (nextState) => {
       updateProjectInBreadcrumbs(nextState, payload);
+
+      sortBreadcrumbsItems(nextState);
     }),
   )
   .handleAction(actions.setBackUrl, (state, { payload }) =>

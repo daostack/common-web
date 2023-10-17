@@ -29,6 +29,7 @@ export * from "./circles";
 export * from "./notifications";
 export * from "./getFirebaseToken";
 export * from "./sidenav";
+export * from "./sortProjectsStateItemsByName";
 export * from "./text";
 export * from "./hasPermission";
 export * from "./getProjectCircleDefinition";
