@@ -6,6 +6,9 @@ const selectCommonLayout = (state: AppState) => state.commonLayout;
 export const selectCommonLayoutCommonId = (state: AppState) =>
   state.commonLayout.currentCommonId;
 
+export const selectCommonLayoutLastCommonFromFeed = (state: AppState) =>
+  state.commonLayout.lastCommonFromFeed;
+
 export const selectCommonLayoutCommons = (state: AppState) =>
   state.commonLayout.commons;
 

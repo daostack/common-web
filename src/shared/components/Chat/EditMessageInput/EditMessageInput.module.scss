@@ -15,18 +15,12 @@ $phone-breakpoint: 415px;
   padding: 0.5rem 1rem;
 }
 
-.ownerName {
-  font-size: $xsmall;
-  font-weight: 600;
-  color: $secondary-blue;
-  margin-bottom: 0.5rem;
-}
-
 .input {
   resize: none;
   width: 100%;
   border-width: 0;
   outline: 0;
+  padding-right: 1.75rem;
 }
 
 .buttonContainer {

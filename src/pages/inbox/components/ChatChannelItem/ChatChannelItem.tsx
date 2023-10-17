@@ -12,23 +12,20 @@ import { ChatChannel } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
 import { inboxActions } from "@/store/states";
 import { FeedItemBaseContent } from "../FeedItemBaseContent";
-import { useChatChannelSubscription } from "./hooks";
+import { useChatChannelSubscription, useMenuItems } from "./hooks";
 import { getLastMessage } from "./utils";
 
 export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const { chatChannel, isActive, onActiveItemDataChange } = props;
   const dispatch = useDispatch();
   const isTabletView = useIsTabletView();
-  const {
-    fetchUser: fetchDMUser,
-    data: dmUser,
-    fetched: isDMUserFetched,
-  } = useUserById();
+  const { fetchUser: fetchDMUser, data: dmUser } = useUserById();
   const {
     data: chatChannelUserStatus,
     fetched: isChatChannelUserStatusFetched,
     fetchChatChannelUserStatus,
   } = useChatChannelUserStatus();
+  const menuItems = useMenuItems({ chatChannelUserStatus });
   const { setChatItem, feedItemIdForAutoChatOpen, shouldAllowChatAutoOpen } =
     useChatContext();
   const user = useSelector(selectUser());
@@ -126,7 +123,8 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       lastMessage={getLastMessage(chatChannel.lastMessage)}
       canBeExpanded={false}
       onClick={handleOpenChat}
-      menuItems={[]}
+      menuItems={menuItems}
+      seen={chatChannelUserStatus?.seen}
       seenOnce={chatChannelUserStatus?.seenOnce}
       ownerId={userId}
       renderImage={renderImage}

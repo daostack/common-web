@@ -284,7 +284,6 @@ const CommonData: FC<CommonDataProps> = (props) => {
           onClose={handleMenuClose}
           commonId={common.id}
           memberCount={common.memberCount}
-          memberCircleIds={Object.values(commonMember.circles.map)}
           onSuccessfulLeave={
             selectedMenuItem === CommonMenuItem.LeaveProject
               ? handleSuccessfulProjectLeave

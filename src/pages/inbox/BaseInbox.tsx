@@ -88,7 +88,9 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     loading: areInboxItemsLoading,
     hasMore: hasMoreInboxItems,
     fetch: fetchInboxItems,
-  } = useInboxItems(feedItemIdsForNotListening);
+  } = useInboxItems(feedItemIdsForNotListening, {
+    unread: queryParams.unread === "true",
+  });
   const sharedInboxItem = useSelector(selectSharedInboxItem);
   const chatChannelItems = useSelector(selectChatChannelItems);
   const nextChatChannelItemId = useSelector(selectNextChatChannelItemId);

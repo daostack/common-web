@@ -1,0 +1,12 @@
+@import "../../../../../../styles/sizes";
+
+.container {
+  padding-right: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+
+  @include tablet {
+    padding-left: 1rem;
+    padding-right: 1.375rem;
+  }
+}

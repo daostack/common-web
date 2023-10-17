@@ -192,6 +192,18 @@ class ChatService {
     );
   };
 
+  public markChatChannelAsUnseen = async (
+    chatChannelId: string,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<void> => {
+    const { cancelToken } = options;
+    await Api.post(
+      ApiEndpoint.MarkChatChannelAsUnseen(chatChannelId),
+      undefined,
+      { cancelToken },
+    );
+  };
+
   public markChatMessageAsSeen = async (
     chatMessageId: string,
     options: { cancelToken?: CancelToken } = {},

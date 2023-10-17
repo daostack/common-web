@@ -8,12 +8,20 @@ interface ApproveInvoicesPromptProps {
   isOpen: boolean;
   isLoading: boolean;
   isFinished: boolean;
+  isReapproval?: boolean;
   onApprove: () => void;
   onClose: () => void;
 }
 
 const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
-  const { isOpen, isFinished, isLoading, onApprove, onClose } = props;
+  const {
+    isOpen,
+    isFinished,
+    isLoading,
+    isReapproval = false,
+    onApprove,
+    onClose,
+  } = props;
 
   const handleApprove = () => {
     onApprove();
@@ -45,7 +53,9 @@ const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
         <>
           <ConfirmationIcon className="approve-invoices-prompt-wrapper__confirmation-icon" />
           <h3 className="approve-invoices-prompt-wrapper__title">
-            Are you sure you want to approve all invoices
+            {isReapproval
+              ? "Are you sure you want to reapprove this card?"
+              : "Are you sure you want to approve all invoices?"}
           </h3>
           <div className="approve-invoices-prompt-wrapper__actions-wrapper">
             <button
@@ -58,7 +68,7 @@ const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
               className="button-blue approve-invoices-prompt-wrapper__approve-button"
               onClick={handleApprove}
             >
-              Approve all
+              {isReapproval ? "Reapprove" : "Approve all"}
             </button>
           </div>
         </>
@@ -67,7 +77,7 @@ const ApproveInvoicesPrompt: FC<ApproveInvoicesPromptProps> = (props) => {
         <>
           <CheckIcon className="approve-invoices-prompt-wrapper__check-icon" />
           <h3 className="approve-invoices-prompt-wrapper__title">
-            Invoices are successfully approved!
+            Invoices are successfully {isReapproval ? "re" : ""}approved!
           </h3>
           <button
             className="button-blue approve-invoices-prompt-wrapper__done-button"

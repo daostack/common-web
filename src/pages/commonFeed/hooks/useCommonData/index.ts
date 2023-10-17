@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { RefObject, useCallback, useRef, useState } from "react";
 import { last } from "lodash";
 import {
   CommonFeedService,
@@ -16,6 +16,7 @@ interface FetchCommonDataOptions {
 }
 
 interface Return extends CombinedState {
+  stateRef: RefObject<State>;
   fetchCommonData: (options: FetchCommonDataOptions) => void;
   resetCommonData: () => void;
 }
@@ -26,6 +27,8 @@ export const useCommonData = (userId?: string): Return => {
     fetched: false,
     data: null,
   });
+  const stateRef = useRef<State>(state);
+  stateRef.current = state;
   const isLoading = state.loading;
   const isFetched = state.fetched;
   const currentCommonId = state.data?.common.id;
@@ -115,6 +118,7 @@ export const useCommonData = (userId?: string): Return => {
     loading: isLoading,
     fetched: isFetched,
     data: state.data,
+    stateRef,
     fetchCommonData,
     resetCommonData,
   };

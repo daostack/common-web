@@ -6,6 +6,7 @@ import {
   getProfilePagePath_v04,
   getBillingPagePath_v04,
   getProjectCreationPagePath_v04,
+  getSettingsPagePath_v04,
 } from "@/shared/utils";
 import { RoutesContext, RoutesContextValue } from "../routesContext";
 
@@ -19,6 +20,7 @@ export const RoutesV04Provider: FC = (props) => {
       getProjectCreationPagePath: getProjectCreationPagePath_v04,
       getProfilePagePath: getProfilePagePath_v04,
       getBillingPagePath: getBillingPagePath_v04,
+      getSettingsPagePath: getSettingsPagePath_v04,
     }),
     [],
   );
