@@ -102,16 +102,28 @@ export function* fetchBreadcrumbsItemsByCommonId(
       commonId,
       user?.uid,
     )) as Awaited<ReturnType<typeof fetchProjectsInfoByActiveCommonId>>;
-    const projectsData: ProjectsStateItem[] = projectsInfo.map(
-      ({ common, hasMembership, hasPermissionToAddProject }) => ({
+    const projectsData: ProjectsStateItem[] = [...projectsInfo]
+      .sort((prevItem, nextItem) => {
+        if (!nextItem.common.lastActivity) {
+          return -1;
+        }
+        if (!prevItem.common.lastActivity) {
+          return 1;
+        }
+
+        return (
+          nextItem.common.lastActivity.seconds -
+          prevItem.common.lastActivity.seconds
+        );
+      })
+      .map(({ common, hasMembership, hasPermissionToAddProject }) => ({
         commonId: common.id,
         image: common.image,
         name: common.name,
         directParent: common.directParent,
         hasMembership,
         hasPermissionToAddProject,
-      }),
-    );
+      }));
 
     const currentBreadcrumbs = (yield select(
       selectMultipleSpacesLayoutBreadcrumbs,
