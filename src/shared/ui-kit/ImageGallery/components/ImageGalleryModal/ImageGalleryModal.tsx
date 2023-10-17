@@ -50,6 +50,7 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
           loop={true}
           pagination
           initialSlide={initialSlide}
+          allowTouchMove={false}
         >
           {videoSrc && (
             <SwiperSlide key={videoSrc} className="slider-wrapper">
@@ -61,6 +62,7 @@ const ImageGalleryModal: FC<ImageGalleryProps> = (props) => {
           {images.map((imageURL, index) => (
             <SwiperSlide key={imageURL} className="slider-wrapper">
               <Image
+                hasZoom
                 className="slide-img"
                 src={imageURL}
                 alt={`Common gallery image #${index + 1}`}
