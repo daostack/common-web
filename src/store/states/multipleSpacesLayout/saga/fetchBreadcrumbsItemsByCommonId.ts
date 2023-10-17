@@ -4,6 +4,7 @@ import { CommonService, GovernanceService, ProjectService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
 import { Awaited } from "@/shared/interfaces";
 import { Common, User } from "@/shared/models";
+import { compareCommonsByLastActivity } from "@/shared/utils";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "../../commonLayout/saga/utils";
 import * as actions from "../actions";
 import { selectMultipleSpacesLayoutBreadcrumbs } from "../selectors";
@@ -103,19 +104,9 @@ export function* fetchBreadcrumbsItemsByCommonId(
       user?.uid,
     )) as Awaited<ReturnType<typeof fetchProjectsInfoByActiveCommonId>>;
     const projectsData: ProjectsStateItem[] = [...projectsInfo]
-      .sort((prevItem, nextItem) => {
-        if (!nextItem.common.lastActivity) {
-          return -1;
-        }
-        if (!prevItem.common.lastActivity) {
-          return 1;
-        }
-
-        return (
-          nextItem.common.lastActivity.seconds -
-          prevItem.common.lastActivity.seconds
-        );
-      })
+      .sort((prevItem, nextItem) =>
+        compareCommonsByLastActivity(prevItem.common, nextItem.common),
+      )
       .map(({ common, hasMembership, hasPermissionToAddProject }) => ({
         commonId: common.id,
         image: common.image,
