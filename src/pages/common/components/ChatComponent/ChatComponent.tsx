@@ -645,7 +645,7 @@ export default function ChatComponent({
           }}
           value={message}
           onChange={setMessage}
-          placeholder="What do you think?"
+          placeholder="Message"
           onKeyDown={onEnterKeyDown}
           users={users}
           shouldReinitializeEditor={shouldReinitializeEditor}
