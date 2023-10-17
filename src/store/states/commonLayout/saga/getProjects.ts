@@ -3,7 +3,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonService, GovernanceService, ProjectService } from "@/services";
 import { Awaited } from "@/shared/interfaces";
 import { User } from "@/shared/models";
-import { compareCommonsByLastActivity, isError } from "@/shared/utils";
+import { isError } from "@/shared/utils";
 import { ProjectsStateItem } from "../../projects";
 import * as actions from "../actions";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "./utils";
@@ -48,11 +48,8 @@ export function* getProjects(
       userCommonIds,
       permissionsData,
     );
-    const projectsData: ProjectsStateItem[] = data
-      .sort((prevItem, nextItem) =>
-        compareCommonsByLastActivity(prevItem.common, nextItem.common),
-      )
-      .map(({ common, hasMembership, hasPermissionToAddProject }) => ({
+    const projectsData: ProjectsStateItem[] = data.map(
+      ({ common, hasMembership, hasPermissionToAddProject }) => ({
         commonId: common.id,
         image: common.image,
         name: common.name,
@@ -60,7 +57,8 @@ export function* getProjects(
         hasMembership,
         hasPermissionToAddProject,
         notificationsAmount: 0,
-      }));
+      }),
+    );
 
     yield put(actions.getProjects.success(projectsData));
   } catch (error) {
