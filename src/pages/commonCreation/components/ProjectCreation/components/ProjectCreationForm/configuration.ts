@@ -34,6 +34,14 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
         label: `${type} picture${isImageRequired ? " (required)" : ""}`,
         maxImagesAmount: 1,
       },
+      validation: isImageRequired
+        ? {
+            min: {
+              value: 1,
+              message: `${type} picture is required`,
+            },
+          }
+        : undefined,
     },
     {
       type: CreationFormItemType.TextField,
