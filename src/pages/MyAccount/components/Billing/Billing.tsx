@@ -1,20 +1,22 @@
 import React, { useEffect, useState, FC } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getBankDetails, loadUserCards } from "@/pages/OldCommon/store/actions";
-import { ScreenSize } from "@/shared/constants";
 import {
   usePaymentMethodChange,
   useUserContributions,
 } from "@/shared/hooks/useCases";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { BankAccountDetails, Payment, Subscription } from "@/shared/models";
-import { getScreenSize } from "@/shared/store/selectors";
 import { DesktopBilling } from "./DesktopBilling";
 import { MobileBilling } from "./MobileBilling";
+import { Header } from "./components";
 import { BankAccountState, BillingProps, CardsState } from "./types";
+import styles from "./Billing.module.scss";
 import "./index.scss";
 
 const Billing: FC = () => {
   const dispatch = useDispatch();
+  const isMobileView = useIsTabletView();
   const [cardsState, setCardsState] = useState<CardsState>({
     loading: false,
     fetched: false,
@@ -28,8 +30,6 @@ const Billing: FC = () => {
   const [activeContribution, setActiveContribution] = useState<
     Payment | Subscription | null
   >(null);
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
   const {
     changePaymentMethodState,
     onPaymentMethodChange,
@@ -138,13 +138,11 @@ const Billing: FC = () => {
   };
 
   return (
-    <div className="route-content my-account-billing">
-      {(!isMobileView || !activeContribution) && (
-        <header className="my-account-billing__header">
-          <h2 className="route-title">Billing</h2>
-        </header>
-      )}
-      <Component {...billingProps} />
+    <div className={styles.container}>
+      <div className="route-content my-account-billing">
+        <Header className={styles.header} isMobileVersion={isMobileView} />
+        <Component {...billingProps} />
+      </div>
     </div>
   );
 };

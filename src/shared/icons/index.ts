@@ -1,6 +1,8 @@
 export * from "./socials";
 export { default as AttachIcon } from "./attach.icon";
 export { default as Avatar2Icon } from "./avatar2.icon";
+export { default as Avatar3Icon } from "./avatar3.icon";
+export { default as BillingIcon } from "./billing.icon";
 export { default as BlocksIcon } from "./blocks.icon";
 export { default as BoldMarkIcon } from "./boldMark.icon";
 export { default as BoldPlusIcon } from "./boldPlus.icon";
@@ -58,6 +60,7 @@ export { default as ShareIcon } from "./share.icon";
 export { default as Share2Icon } from "./share2.icon";
 export { default as Share3Icon } from "./share3.icon";
 export { default as SendIcon } from "./send.icon";
+export { default as SettingsIcon } from "./settings.icon";
 export { default as MinusIcon } from "./minus.icon";
 export { default as FileIcon } from "./file.icon";
 export { default as EmojiIcon } from "./emoji.icon";

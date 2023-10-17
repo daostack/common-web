@@ -5,13 +5,16 @@
   --item-border: 0.0625rem solid #{$c-neutrals-100};
 
   padding: 1.125rem 1.5rem;
+  display: flex;
+  align-items: center;
   text-decoration: none;
   color: inherit;
   background-color: var(--item-bg-color);
   border: var(--item-border);
   border-bottom: 0;
   font-family: PoppinsSans, sans-serif;
-  font-size: $small;
+  font-size: 1rem;
+  font-weight: 500;
   text-align: left;
   cursor: pointer;
   box-sizing: border-box;
@@ -29,4 +32,11 @@
 }
 .itemActive {
   --item-bg-color: var(--hover-fill);
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 1rem;
+  color: inherit;
 }
