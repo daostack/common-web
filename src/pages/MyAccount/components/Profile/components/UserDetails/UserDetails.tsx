@@ -15,12 +15,7 @@ import { FormikProps } from "formik/dist/types";
 import { updateUserDetails } from "@/pages/Auth/store/actions";
 import { uploadImage } from "@/pages/Auth/store/saga";
 import { countryList } from "@/shared/assets/countries";
-import {
-  Button,
-  ButtonIcon,
-  DropdownOption,
-  UserAvatar,
-} from "@/shared/components";
+import { ButtonIcon, DropdownOption, UserAvatar } from "@/shared/components";
 import { Form, Dropdown, TextField } from "@/shared/components/Form/Formik";
 import {
   ANONYMOUS_USER_FIRST_NAME,
@@ -29,7 +24,13 @@ import {
 import { useImageSizeCheck } from "@/shared/hooks";
 import { Edit3Icon as EditIcon } from "@/shared/icons";
 import { User } from "@/shared/models";
-import { Loader, LoaderColor } from "@/shared/ui-kit";
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  Loader,
+  LoaderColor,
+} from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import { UserDetailsPreview } from "./components";
 import { validationSchema } from "./validationSchema";
@@ -57,6 +58,7 @@ interface UserDetailsProps {
   isCountryDropdownFixed?: boolean;
   isEditing?: boolean;
   isMobileView?: boolean;
+  onEdit: () => void;
   onLoading?: (isLoading: boolean) => void;
   onSubmitting?: (isSubmitting: boolean) => void;
   styles?: Styles;
@@ -102,6 +104,7 @@ const UserDetails: ForwardRefRenderFunction<
     isEditing = true,
     isMobileView = false,
     styles: outerStyles,
+    onEdit,
     onLoading,
     onSubmitting,
   } = props;
@@ -269,11 +272,23 @@ const UserDetails: ForwardRefRenderFunction<
                   />
                 </div>
                 {!isEditing && (
-                  <UserDetailsPreview
-                    className={styles.userDetailsPreview}
-                    user={user}
-                    isMobileView={isMobileView}
-                  />
+                  <>
+                    <UserDetailsPreview
+                      className={styles.userDetailsPreview}
+                      user={user}
+                      isMobileView={isMobileView}
+                    />
+                    {isMobileView && (
+                      <Button
+                        className={styles.editProfileButton}
+                        variant={ButtonVariant.LightPink}
+                        size={ButtonSize.Xsmall}
+                        onClick={onEdit}
+                      >
+                        Edit profile
+                      </Button>
+                    )}
+                  </>
                 )}
               </div>
               {!isEditing && user.intro && (

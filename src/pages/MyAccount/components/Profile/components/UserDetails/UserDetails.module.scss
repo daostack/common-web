@@ -70,6 +70,15 @@
   }
 }
 
+.editProfileButton {
+  --btn-h: 1.5rem;
+  --btn-pl: 0.25rem;
+  --btn-pr: 0.25rem;
+
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
 .userPhoto {
   width: 6.25rem;
   height: 6.25rem;

@@ -100,6 +100,7 @@ const Profile: FC<ProfileProps> = (props) => {
                 isCountryDropdownFixed={false}
                 isEditing={isEditing}
                 isMobileView={isMobileView}
+                onEdit={handleEditClick}
                 onLoading={setIsSubmitting}
                 onSubmitting={handleSubmittingChange}
               />
