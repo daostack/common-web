@@ -9,11 +9,20 @@ import {
 } from "../../constants";
 import styles from "./ProjectCreationForm.module.scss";
 
-export const getConfiguration = (
-  isProject = true,
-  roles?: Roles,
-  shouldBeUnique?: { existingNames: string[] },
-): CreationFormItem[] => {
+interface Options {
+  isProject: boolean;
+  roles?: Roles;
+  shouldBeUnique?: { existingNames: string[] };
+  isImageRequired?: boolean;
+}
+
+export const getConfiguration = (options: Options): CreationFormItem[] => {
+  const {
+    isProject = true,
+    roles,
+    shouldBeUnique,
+    isImageRequired = false,
+  } = options;
   const type = isProject ? "Space" : "Common";
 
   const items: CreationFormItem[] = [
@@ -22,9 +31,17 @@ export const getConfiguration = (
       className: styles.projectImages,
       props: {
         name: "projectImages",
-        label: `${type} picture`,
+        label: `${type} picture${isImageRequired ? " (required)" : ""}`,
         maxImagesAmount: 1,
       },
+      validation: isImageRequired
+        ? {
+            min: {
+              value: 1,
+              message: `${type} picture is required`,
+            },
+          }
+        : undefined,
     },
     {
       type: CreationFormItemType.TextField,
