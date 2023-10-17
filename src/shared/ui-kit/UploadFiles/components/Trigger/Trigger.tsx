@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler, FC } from "react";
-import { UploadIcon } from "@/shared/icons";
 import { useImageSizeCheck } from "@/shared/hooks";
+import { UploadIcon } from "@/shared/icons";
 import styles from "./Trigger.module.scss";
 
 const ACCEPTED_EXTENSIONS = "image/*";

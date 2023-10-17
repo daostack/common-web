@@ -10,8 +10,6 @@ import {
   Survey,
 } from "@/shared/models/governance/proposals";
 
-type CircleVisibility = string[] | null;
-
 interface CreateFundsAllocation {
   type: ProposalsTypes.FUNDS_ALLOCATION;
   args: Omit<FundsAllocation["data"]["args"], "proposerId">;
@@ -19,57 +17,33 @@ interface CreateFundsAllocation {
 
 interface CreateMemberAdmittance {
   type: ProposalsTypes.MEMBER_ADMITTANCE;
-  args: Omit<
-    MemberAdmittance["data"]["args"],
-    "proposerId" | "circleVisibilityByCommon"
-  > & {
+  args: Omit<MemberAdmittance["data"]["args"], "proposerId"> & {
     contributionSourceType?: ContributionSourceType;
     feeMonthly: PaymentAmount | null;
     feeOneTime: PaymentAmount | null;
     fromSupportersFlow?: boolean;
     receiveEmails?: boolean;
     userWhatsapp?: boolean;
-    circleVisibility?: CircleVisibility;
   };
 }
 
 interface CreateAssignCircle {
   type: ProposalsTypes.ASSIGN_CIRCLE;
-  args: Omit<
-    AssignCircle["data"]["args"],
-    "proposerId" | "circleVisibilityByCommon"
-  > & {
-    circleVisibility?: CircleVisibility;
-  };
+  args: Omit<AssignCircle["data"]["args"], "proposerId">;
 }
 interface CreateRemoveCircle {
   type: ProposalsTypes.REMOVE_CIRCLE;
-  args: Omit<
-    RemoveCircle["data"]["args"],
-    "proposerId" | "circleVisibilityByCommon"
-  > & {
-    circleVisibility?: CircleVisibility;
-  };
+  args: Omit<RemoveCircle["data"]["args"], "proposerId">;
 }
 
 interface CreateSurvey {
   type: ProposalsTypes.SURVEY;
-  args: Omit<
-    Survey["data"]["args"],
-    "proposerId" | "circleVisibilityByCommon"
-  > & {
-    circleVisibility?: CircleVisibility;
-  };
+  args: Omit<Survey["data"]["args"], "proposerId">;
 }
 
 interface CreateDeleteCommon {
   type: ProposalsTypes.DELETE_COMMON;
-  args: Omit<
-    DeleteCommon["data"]["args"],
-    "proposerId" | "circleVisibilityByCommon"
-  > & {
-    circleVisibility?: CircleVisibility;
-  };
+  args: Omit<DeleteCommon["data"]["args"], "proposerId">;
 }
 
 interface Request<P, R> {
