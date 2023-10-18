@@ -7,6 +7,7 @@ import React, {
   useMemo,
 } from "react";
 import classNames from "classnames";
+import { useLongPress } from "use-long-press";
 import {
   ElementDropdown,
   UserAvatar,
@@ -224,11 +225,17 @@ export default function ChatMessage({
     }
   };
 
-  const handleMessageClick: MouseEventHandler<HTMLDivElement> = () => {
-    if (isTabletView) {
-      setIsMenuOpen(true);
-    }
+  const handleLongPress = () => {
+    setIsMenuOpen(true);
   };
+
+  const getLongPressProps = useLongPress(
+    isTabletView ? handleLongPress : null,
+    {
+      threshold: 400,
+      cancelOnMovement: true,
+    },
+  );
 
   const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
     if (!isTabletView) {
@@ -387,7 +394,7 @@ export default function ChatMessage({
                 [styles.highlightedOwn]:
                   highlighted && !isNotCurrentUserMessage,
               })}
-              onClick={handleMessageClick}
+              {...getLongPressProps()}
             >
               {isNotCurrentUserMessage && !isSystemMessage && (
                 <div className={styles.messageName} onClick={handleUserClick}>
