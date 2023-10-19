@@ -7,7 +7,6 @@ import {
   LeaveCommonModal,
   MembershipRequestModal,
 } from "@/pages/OldCommon/components";
-import { ProposalsTypes } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useNotification } from "@/shared/hooks";
 import {
@@ -122,8 +121,6 @@ const CommonData: FC<CommonDataProps> = (props) => {
     isGlobalDataFetched && !commonMember && props.isJoinPending;
   const isJoinAllowed = Boolean(
     isGlobalDataFetched &&
-      rootCommonMember &&
-      parentCommonMember &&
       !isJoinPending &&
       ((!isProject && !commonMember) ||
         (isProject && parentCommonMember && !commonMember)),

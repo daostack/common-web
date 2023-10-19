@@ -67,7 +67,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
             page
           </p>
         )}
-      {withJoinRequest && (isJoinAllowed || isJoinPending) && (
+      {!isProject && (isJoinAllowed || isJoinPending) && (
         <Button
           className={styles.joinButton}
           variant={ButtonVariant.OutlineDarkPink}

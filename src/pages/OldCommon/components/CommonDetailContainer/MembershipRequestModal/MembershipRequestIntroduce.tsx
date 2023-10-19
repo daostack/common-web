@@ -1,11 +1,11 @@
 import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Formik, FormikConfig } from "formik";
-import { Button } from "@/shared/components";
 import { Form, TextField, LinksArray } from "@/shared/components/Form/Formik";
 import { ScreenSize, MAX_LINK_TITLE_LENGTH } from "@/shared/constants";
 import { CommonLink } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { parseLinksForSubmission } from "@/shared/utils";
 import { IStageProps } from "./MembershipRequestModal";
 import { MembershipRequestStage } from "./constants";
@@ -95,7 +95,7 @@ export default function MembershipRequestIntroduce(props: IStageProps) {
                 className="membership-request-introduce__submit-button"
                 type="submit"
                 disabled={!isValid}
-                shouldUseFullWidth={isMobileView}
+                variant={ButtonVariant.PrimaryPink}
               >
                 Continue
               </Button>
