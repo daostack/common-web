@@ -4,6 +4,7 @@ import { Discussion } from "./Discussion";
 import { DiscussionMessage } from "./DiscussionMessage";
 import { PaymentAmount } from "./Payment";
 import { Proposal } from "./Proposals";
+import { Timestamp } from "./Timestamp";
 import { User } from "./User";
 import {
   AllowedActions,
@@ -119,6 +120,8 @@ export interface Common extends BaseEntity {
   hasPublicItems: boolean;
 
   rootCommonId?: string;
+
+  lastActivity?: Timestamp;
 }
 
 export interface Project extends Common {
