@@ -17,7 +17,7 @@ import {
   LOADER_APPEARANCE_DELAY,
   QueryParamKey,
 } from "@/shared/constants";
-import { useQueryParams } from "@/shared/hooks";
+import { useForceUpdate, useQueryParams } from "@/shared/hooks";
 import {
   checkIsUserDiscussionMessage,
   CommonFeedObjectUserUnique,
@@ -97,6 +97,13 @@ const ChatContent: ForwardRefRenderFunction<
   const userId = user?.uid;
   const queryParams = useQueryParams();
   const messageIdParam = queryParams[QueryParamKey.Message];
+  const forceUpdate = useForceUpdate();
+
+  useEffect(() => {
+    if (messages) {
+      forceUpdate();
+    }
+  }, [messages]);
 
   const [highlightedMessageId, setHighlightedMessageId] = useState(
     () => (typeof messageIdParam === "string" && messageIdParam) || null,

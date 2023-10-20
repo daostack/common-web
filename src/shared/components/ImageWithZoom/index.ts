@@ -1,0 +1,1 @@
+export { default as ImageWithZoom } from "./ImageWithZoom";

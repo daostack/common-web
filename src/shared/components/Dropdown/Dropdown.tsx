@@ -27,6 +27,7 @@ import { GlobalOverlay } from "../GlobalOverlay";
 import "./index.scss";
 
 export interface Styles {
+  labelWrapper?: string;
   menuButton?: string;
   value?: string;
   placeholder?: string;
@@ -205,7 +206,12 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
         onMenuToggle={handleMenuToggle}
       >
         {label && (
-          <div className="custom-dropdown-wrapper__label-wrapper">
+          <div
+            className={classNames(
+              "custom-dropdown-wrapper__label-wrapper",
+              styles?.labelWrapper,
+            )}
+          >
             <span className="custom-dropdown-wrapper__label">{label}</span>
           </div>
         )}

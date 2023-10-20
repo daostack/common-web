@@ -1,4 +1,5 @@
-import { Proposal } from ".";
+import { BaseEntity } from "./BaseEntity";
+import { Proposal } from "./Proposals";
 
 export enum UserRole {
   Trustee = "trustee",
@@ -17,7 +18,7 @@ export enum UserEmailNotificationPreference {
   AllInbox = "allInbox",
 }
 
-export interface User {
+export interface User extends Omit<BaseEntity, "id"> {
   displayName?: string;
   country: string;
   firstName: string;
@@ -27,8 +28,6 @@ export interface User {
   photo?: string;
   photoURL?: string;
   intro?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
   proposals?: Proposal[];
   uid: string;
   roles?: UserRole[];

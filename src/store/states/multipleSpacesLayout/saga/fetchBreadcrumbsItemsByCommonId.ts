@@ -4,6 +4,7 @@ import { CommonService, GovernanceService, ProjectService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
 import { Awaited } from "@/shared/interfaces";
 import { Common, User } from "@/shared/models";
+import { compareCommonsByLastActivity } from "@/shared/utils";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "../../commonLayout/saga/utils";
 import * as actions from "../actions";
 import { selectMultipleSpacesLayoutBreadcrumbs } from "../selectors";
@@ -102,16 +103,18 @@ export function* fetchBreadcrumbsItemsByCommonId(
       commonId,
       user?.uid,
     )) as Awaited<ReturnType<typeof fetchProjectsInfoByActiveCommonId>>;
-    const projectsData: ProjectsStateItem[] = projectsInfo.map(
-      ({ common, hasMembership, hasPermissionToAddProject }) => ({
+    const projectsData: ProjectsStateItem[] = [...projectsInfo]
+      .sort((prevItem, nextItem) =>
+        compareCommonsByLastActivity(prevItem.common, nextItem.common),
+      )
+      .map(({ common, hasMembership, hasPermissionToAddProject }) => ({
         commonId: common.id,
         image: common.image,
         name: common.name,
         directParent: common.directParent,
         hasMembership,
         hasPermissionToAddProject,
-      }),
-    );
+      }));
 
     const currentBreadcrumbs = (yield select(
       selectMultipleSpacesLayoutBreadcrumbs,

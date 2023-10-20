@@ -15,6 +15,7 @@ export * from "./parseLinksForSubmission";
 export * from "./proposals";
 export * from "./queryParams";
 export { default as request } from "./request";
+export * from "./compareCommonsByLastActivity";
 export * from "./convertDatesToFirestoreTimestamps";
 export * from "./convertLinkToUploadFile";
 export * from "./timeAgo";
