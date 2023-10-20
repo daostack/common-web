@@ -3,37 +3,36 @@ import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { NewStreamButton } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
 import { useRoutesContext } from "@/shared/contexts";
+import { useCommonFollow } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { RightArrowThinIcon } from "@/shared/icons";
-import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
+import { RightArrowThinIcon, StarIcon } from "@/shared/icons";
+import {
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+} from "@/shared/models";
 import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
-import { getPluralEnding } from "@/shared/utils";
+import { checkIsProject, getPluralEnding } from "@/shared/utils";
+import { ActionsButton } from "../HeaderContent/components";
 import styles from "./HeaderContent_v04.module.scss";
 
 interface HeaderContentProps {
   className?: string;
-  commonId: string;
-  commonName: string;
-  commonImage: string;
-  commonMembersAmount: number;
-  isProject?: boolean;
+  common: Common;
   commonMember: (CommonMember & CirclesPermissions) | null;
   governance: Governance;
 }
 
 const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
-  const {
-    className,
-    commonId,
-    commonName,
-    commonImage,
-    commonMembersAmount,
-    isProject = false,
-    commonMember,
-    governance,
-  } = props;
+  const { className, common, commonMember, governance } = props;
   const { getCommonPageAboutTabPath } = useRoutesContext();
   const isMobileVersion = useIsTabletView();
+  const isProject = checkIsProject(common);
+  const commonFollow = useCommonFollow(common.id, commonMember);
+  const showFollowIcon = commonFollow.isFollowInProgress
+    ? !commonMember?.isFollowing
+    : commonMember?.isFollowing;
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -44,11 +43,11 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
         />
         <NavLink
           className={styles.commonLink}
-          to={getCommonPageAboutTabPath(commonId)}
+          to={getCommonPageAboutTabPath(common.id)}
         >
           <CommonAvatar
-            name={commonName}
-            src={commonImage}
+            name={common.name}
+            src={common.image}
             className={classNames(styles.image, {
               [styles.imageNonRounded]: !isProject,
               [styles.imageRounded]: isProject,
@@ -56,19 +55,29 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
           />
 
           <div className={styles.commonInfoWrapper}>
-            <h1 className={styles.commonName}>{commonName}</h1>
+            <div className={styles.commonMainInfoWrapper}>
+              <h1 className={styles.commonName}>{common.name}</h1>
+              {showFollowIcon && <StarIcon stroke="currentColor" />}
+            </div>
             <p className={styles.commonMembersAmount}>
-              {commonMembersAmount} member{getPluralEnding(commonMembersAmount)}
+              {common.memberCount} member{getPluralEnding(common.memberCount)}
             </p>
           </div>
         </NavLink>
       </div>
-      <NewStreamButton
-        className={styles.newStreamButton}
-        commonMember={commonMember}
-        governance={governance}
-        isMobileVersion={isMobileVersion}
-      />
+      <div className={styles.actionsContainer}>
+        <NewStreamButton
+          className={styles.newStreamButton}
+          commonMember={commonMember}
+          governance={governance}
+          isMobileVersion={isMobileVersion}
+        />
+        <ActionsButton
+          common={common}
+          commonMember={commonMember}
+          commonFollow={commonFollow}
+        />
+      </div>
     </div>
   );
 };
