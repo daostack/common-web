@@ -194,11 +194,15 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
     }, [discussion]);
 
     useEffect(() => {
-      fetchDiscussionCreator(item.userId);
+      if(item.userId) {
+        fetchDiscussionCreator(item.userId);
+      }
     }, [item.userId]);
 
     useEffect(() => {
-      fetchDiscussion(item.data.id);
+      if(item.data.id) {
+        fetchDiscussion(item.data.id);
+      }
     }, [item.data.id]);
 
     useEffect(() => {
