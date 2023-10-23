@@ -14,7 +14,7 @@ interface CommonEntranceJoinProps {
 }
 
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
-  const { common, isProject } = props;
+  const { withJoinRequest, common, isProject } = props;
   const history = useHistory();
   const {
     parentCommon,
@@ -68,7 +68,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
             page
           </p>
         )}
-      {!isProject && (isJoinAllowed || isJoinPending) && (
+      {withJoinRequest && !isProject && (isJoinAllowed || isJoinPending) && (
         <Button
           className={styles.joinButton}
           variant={ButtonVariant.OutlineDarkPink}
