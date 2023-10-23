@@ -5,6 +5,7 @@
   padding: 0 1.5rem;
   display: flex;
   flex-direction: column;
+  overflow-anchor: none;
 
   & > * {
     margin-bottom: 0;
