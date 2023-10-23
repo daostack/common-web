@@ -14,7 +14,7 @@ interface CommonEntranceJoinProps {
 }
 
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
-  const { withJoinRequest = false, common, isProject } = props;
+  const { common, isProject } = props;
   const history = useHistory();
   const {
     parentCommon,

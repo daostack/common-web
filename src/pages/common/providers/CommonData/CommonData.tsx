@@ -123,7 +123,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
     isGlobalDataFetched &&
       !isJoinPending &&
       ((!isProject && !commonMember) ||
-        (isProject && parentCommonMember && !commonMember)),
+        (isProject && rootCommonMember && parentCommonMember && !commonMember)),
   );
 
   const handleMenuItemSelect = useCallback(
