@@ -289,23 +289,11 @@ const UserDetails: ForwardRefRenderFunction<
                   />
                 </div>
                 {!isEditing && (
-                  <>
-                    <UserDetailsPreview
-                      className={styles.userDetailsPreview}
-                      user={user}
-                      isMobileView={isMobileView}
-                    />
-                    {isMobileView && (
-                      <Button
-                        className={styles.editProfileButton}
-                        variant={ButtonVariant.LightPink}
-                        size={ButtonSize.Xsmall}
-                        onClick={onEdit}
-                      >
-                        Edit profile
-                      </Button>
-                    )}
-                  </>
+                  <UserDetailsPreview
+                    className={styles.userDetailsPreview}
+                    user={user}
+                    isMobileView={isMobileView}
+                  />
                 )}
               </div>
               {!isEditing && user.intro && (
