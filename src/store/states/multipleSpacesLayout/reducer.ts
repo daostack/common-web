@@ -24,7 +24,7 @@ const updateProjectInBreadcrumbs = (
   }
 
   const itemIndex = state.breadcrumbs.items.findIndex(
-    (item) => item.id === payload.commonId,
+    (item) => item.commonId === payload.commonId,
   );
 
   if (itemIndex > -1) {

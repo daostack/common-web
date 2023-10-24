@@ -2,14 +2,13 @@ import { call, put, select } from "redux-saga/effects";
 import { CommonService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
 import { Awaited } from "@/shared/interfaces";
-import { Common } from "@/shared/models";
 import * as actions from "../actions";
 import { selectMultipleSpacesLayoutBreadcrumbs } from "../selectors";
-import { MultipleSpacesLayoutState } from "../types";
+import { MultipleSpacesLayoutState, ProjectsStateItem } from "../types";
 
 const fetchProjectsInfoByActiveCommonId = async (
   commonId: string,
-): Promise<Common[]> => {
+): Promise<ProjectsStateItem[]> => {
   const activeCommon = await CommonService.getCommonById(commonId);
 
   if (!activeCommon) {
@@ -20,7 +19,12 @@ const fetchProjectsInfoByActiveCommonId = async (
     activeCommon,
   );
 
-  return [...commons, activeCommon];
+  return [...commons, activeCommon].map((common) => ({
+    commonId: common.id,
+    image: common.image,
+    name: common.name,
+    directParent: common.directParent,
+  }));
 };
 
 export function* fetchBreadcrumbsItemsByCommonId(
@@ -40,6 +44,14 @@ export function* fetchBreadcrumbsItemsByCommonId(
     return;
   }
 
+  const commonIndex = currentBreadcrumbs.items.findIndex(
+    (item) => item.commonId === commonId,
+  );
+
+  if (commonIndex > -1) {
+    return;
+  }
+
   yield put(
     actions.setBreadcrumbsData({
       ...currentBreadcrumbs,
@@ -49,7 +61,7 @@ export function* fetchBreadcrumbsItemsByCommonId(
   );
 
   try {
-    const commons = (yield call(
+    const projectsStateItems = (yield call(
       fetchProjectsInfoByActiveCommonId,
       commonId,
     )) as Awaited<ReturnType<typeof fetchProjectsInfoByActiveCommonId>>;
@@ -61,7 +73,7 @@ export function* fetchBreadcrumbsItemsByCommonId(
       yield put(
         actions.setBreadcrumbsData({
           ...currentBreadcrumbs,
-          items: commons,
+          items: projectsStateItems,
           areItemsLoading: false,
           areItemsFetched: true,
         }),

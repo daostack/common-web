@@ -1,5 +1,4 @@
 import { InboxItemType } from "@/shared/constants";
-import { Common } from "@/shared/models";
 import { ProjectsStateItem } from "../projects";
 
 export interface MultipleSpacesLayoutActiveItem {
@@ -17,7 +16,7 @@ export interface MultipleSpacesLayoutFeedItemBreadcrumbs {
   type: InboxItemType.FeedItemFollow;
   activeItem: MultipleSpacesLayoutActiveItem | null;
   activeCommonId: string;
-  items: Common[];
+  items: ProjectsStateItem[];
   areItemsLoading: boolean;
   areItemsFetched: boolean;
 }

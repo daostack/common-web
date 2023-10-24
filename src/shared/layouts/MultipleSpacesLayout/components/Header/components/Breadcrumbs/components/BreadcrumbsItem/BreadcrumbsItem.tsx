@@ -1,14 +1,13 @@
 import React, { FC, useRef } from "react";
 import { useHistory } from "react-router";
 import { useRoutesContext } from "@/shared/contexts";
-import { Common } from "@/shared/models";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
 import styles from "./BreadcrumbsItem.module.scss";
 
 export interface BreadcrumbsItemProps {
-  activeItem: Common;
+  activeItem: ProjectsStateItem;
   items: ProjectsStateItem[];
   commonIdToAddProject?: string | null;
   onCommonCreate?: () => void;
@@ -32,7 +31,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
 
   const handleButtonClick = () => {
     if (!withMenu) {
-      history.push(getCommonPagePath(activeItem.id));
+      history.push(getCommonPagePath(activeItem.commonId));
       return;
     }
     if (containerRef.current) {
@@ -50,7 +49,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
         <BreadcrumbsMenu
           ref={contextMenuRef}
           items={items}
-          activeItemId={activeItem.id}
+          activeItemId={activeItem.commonId}
           commonIdToAddProject={commonIdToAddProject}
           isLoading={isLoading}
           onCommonCreate={onCommonCreate}

@@ -1,10 +1,5 @@
-import React, { FC, useMemo } from "react";
-import {
-  useAllUserCommonMemberInfo,
-  useGovernanceListByCommonIds,
-} from "@/shared/hooks/useCases";
+import React, { FC } from "react";
 import { MultipleSpacesLayoutFeedItemBreadcrumbs } from "@/store/states";
-import { getPermissionsDataByAllUserCommonMemberInfo } from "@/store/states/commonLayout/saga/utils";
 import { useGoToCreateCommon } from "../../../../../../hooks";
 import { LoadingBreadcrumbsItem } from "../LoadingBreadcrumbsItem";
 import { Separator } from "../Separator";
@@ -19,34 +14,13 @@ interface FeedItemBreadcrumbsProps {
 const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
   const { breadcrumbs, itemsWithMenus } = props;
   const goToCreateCommon = useGoToCreateCommon();
-  const commonIds = useMemo(
-    () => breadcrumbs.items.map((item) => item.id),
-    [breadcrumbs.items],
-  );
-  const { data: allUserCommonMemberInfo } = useAllUserCommonMemberInfo();
-  const { data: governanceList } = useGovernanceListByCommonIds(commonIds);
-  const userCommonIds = useMemo(
-    () => allUserCommonMemberInfo?.map((item) => item.commonId) || [],
-    [allUserCommonMemberInfo],
-  );
-  const permissionsData = useMemo(
-    () =>
-      allUserCommonMemberInfo && governanceList
-        ? getPermissionsDataByAllUserCommonMemberInfo(
-            allUserCommonMemberInfo,
-            governanceList,
-          )
-        : [],
-    [allUserCommonMemberInfo, governanceList],
-  );
-  const rootItem = breadcrumbs.items.find((item) => !item.directParent);
 
   return (
     <ul className={styles.container}>
       {breadcrumbs.areItemsLoading && <LoadingBreadcrumbsItem />}
       {!breadcrumbs.areItemsLoading &&
         breadcrumbs.items.map((item, index) => (
-          <React.Fragment key={item.id}>
+          <React.Fragment key={item.commonId}>
             {index > 0 && <Separator />}
             <FeedBreadcrumbsItem
               activeItem={item}
