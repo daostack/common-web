@@ -1,3 +1,4 @@
+export { useAllUserCommonMemberInfo } from "./useAllUserCommonMemberInfo";
 export { useChatChannelUserStatus } from "./useChatChannelUserStatus";
 export { useChatMessages } from "./useChatMessages";
 export { useCommon } from "./useCommon";

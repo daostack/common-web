@@ -144,6 +144,39 @@ class CommonService {
     }));
   };
 
+  public subscribeToAllUserCommonMemberInfo = (
+    userId: string,
+    callback: (
+      data: {
+        commonId: string;
+        commonMember: CommonMember;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collectionGroup(SubCollections.Members)
+      .where("userId", "==", userId)
+      .withConverter(commonMemberConverter);
+
+    return query.onSnapshot((snapshot) => {
+      callback(
+        snapshot.docChanges().map((docChange) => ({
+          commonId: docChange.doc.ref.path.split("/")[1],
+          commonMember: docChange.doc.data(),
+          statuses: {
+            isAdded: docChange.type === DocChange.Added,
+            isRemoved: docChange.type === DocChange.Removed,
+          },
+        })),
+      );
+    });
+  };
+
   public getCommonsWithSubCommons = async (
     commonIds: string[],
   ): Promise<Common[]> => {
