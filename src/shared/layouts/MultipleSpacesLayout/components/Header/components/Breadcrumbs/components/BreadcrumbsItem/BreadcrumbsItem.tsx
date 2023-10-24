@@ -13,6 +13,7 @@ export interface BreadcrumbsItemProps {
   commonIdToAddProject?: string | null;
   onCommonCreate?: () => void;
   withMenu?: boolean;
+  isLoading?: boolean;
 }
 
 const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
@@ -22,6 +23,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
     commonIdToAddProject,
     onCommonCreate,
     withMenu = true,
+    isLoading = false,
   } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
@@ -50,6 +52,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
           items={items}
           activeItemId={activeItem.id}
           commonIdToAddProject={commonIdToAddProject}
+          isLoading={isLoading}
           onCommonCreate={onCommonCreate}
         />
       )}

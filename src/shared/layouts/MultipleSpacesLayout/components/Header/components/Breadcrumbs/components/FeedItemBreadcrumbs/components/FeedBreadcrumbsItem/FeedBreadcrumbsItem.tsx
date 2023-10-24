@@ -72,6 +72,7 @@ const FeedBreadcrumbsItem: FC<FeedBreadcrumbsItemProps> = (props) => {
       commonIdToAddProject={
         hasParentPermissionToAddProject ? parentCommonId : null
       }
+      isLoading={areItemsLoading}
       {...restProps}
     />
   );
