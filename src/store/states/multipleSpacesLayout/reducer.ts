@@ -59,6 +59,7 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
   )
   .handleAction(actions.addOrUpdateProjectInBreadcrumbs, (state, { payload }) =>
     produce(state, (nextState) => {
+      // Intentionally removed adding logic, because now we do not need any new items in the list
       updateProjectInBreadcrumbs(nextState, payload);
     }),
   )
