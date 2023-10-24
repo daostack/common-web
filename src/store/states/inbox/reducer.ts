@@ -7,7 +7,7 @@ import {
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
-import { ChatChannel, CommonFeed } from "@/shared/models";
+import { ChatChannel, CommonFeed, Timestamp } from "@/shared/models";
 import * as actions from "./actions";
 import { InboxItems, InboxState } from "./types";
 import { getFeedLayoutItemDateForSorting } from "./utils";
@@ -29,6 +29,26 @@ const initialState: InboxState = {
   chatChannelItems: [],
   nextChatChannelItemId: null,
 };
+
+const sortInboxItems = (data: FeedLayoutItemWithFollowData[]): void => {
+  data.sort(
+    (prevItem, nextItem) =>
+      getFeedLayoutItemDateForSorting(nextItem).toMillis() -
+      getFeedLayoutItemDateForSorting(prevItem).toMillis(),
+  );
+};
+
+const getDocTimestamps = (
+  data: FeedLayoutItemWithFollowData[],
+): {
+  firstDocTimestamp: Timestamp | null;
+  lastDocTimestamp: Timestamp | null;
+} => ({
+  firstDocTimestamp: data[0] ? getFeedLayoutItemDateForSorting(data[0]) : null,
+  lastDocTimestamp: data[data.length - 1]
+    ? getFeedLayoutItemDateForSorting(data[data.length - 1])
+    : null,
+});
 
 const updateInboxItemInList = (
   state: WritableDraft<InboxState>,
@@ -64,10 +84,14 @@ const updateInboxItemInList = (
       ...nextData[itemIndex],
       ...updatedItem,
     };
+    sortInboxItems(nextData);
   }
+  const { firstDocTimestamp, lastDocTimestamp } = getDocTimestamps(nextData);
 
   state.items = {
     ...state.items,
+    firstDocTimestamp,
+    lastDocTimestamp,
     data: nextData,
   };
 };
@@ -162,9 +186,13 @@ const updateFeedItemInInboxItem = (
       feedItem: { ...newFeedItem },
     },
   };
+  sortInboxItems(nextData);
+  const { firstDocTimestamp, lastDocTimestamp } = getDocTimestamps(nextData);
 
   state.items = {
     ...state.items,
+    firstDocTimestamp,
+    lastDocTimestamp,
     data: nextData,
   };
 };
@@ -285,9 +313,13 @@ const updateChatChannelItemInInboxItem = (
       lastMessage: updatedChatChannelItem.lastMessage || undefined,
     },
   };
+  sortInboxItems(nextData);
+  const { firstDocTimestamp, lastDocTimestamp } = getDocTimestamps(nextData);
 
   state.items = {
     ...state.items,
+    firstDocTimestamp,
+    lastDocTimestamp,
     data: nextData,
   };
 };
@@ -421,8 +453,6 @@ export const reducer = createReducer<InboxState, Action>(initialState)
             (chatChannelItem) => chatChannelItem.itemId === item.item.itemId,
           ),
       );
-      let firstDocTimestamp = nextState.items.firstDocTimestamp;
-
       const data = payload.reduceRight((acc, { item, statuses }) => {
         const nextData = [...acc];
         const itemIndex = nextData.findIndex(
@@ -443,7 +473,6 @@ export const reducer = createReducer<InboxState, Action>(initialState)
         }
 
         const finalItem: FeedLayoutItemWithFollowData = { ...item };
-        firstDocTimestamp = getFeedLayoutItemDateForSorting(item);
 
         if (itemIndex < 0) {
           return [finalItem, ...nextData];
@@ -453,11 +482,14 @@ export const reducer = createReducer<InboxState, Action>(initialState)
 
         return nextData;
       }, nextState.items.data || []);
+      sortInboxItems(data);
+      const { firstDocTimestamp, lastDocTimestamp } = getDocTimestamps(data);
 
       nextState.items = {
         ...nextState.items,
         data,
         firstDocTimestamp,
+        lastDocTimestamp,
       };
     }),
   )
