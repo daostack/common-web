@@ -51,17 +51,9 @@ const FeedBreadcrumbsItem: FC<FeedBreadcrumbsItemProps> = (props) => {
   const items = useMemo(
     () =>
       baseItems.length === 0
-        ? [
-            {
-              commonId: activeItem.id,
-              image: activeItem.image,
-              name: activeItem.name,
-              directParent: activeItem.directParent,
-              hasMembership: true,
-            },
-          ]
+        ? [activeItem]
         : [...baseItems].sort((prevItem) =>
-            prevItem.commonId === activeItem.id ? -1 : 1,
+            prevItem.commonId === activeItem.commonId ? -1 : 1,
           ),
     [baseItems, activeItem],
   );

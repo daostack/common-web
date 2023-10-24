@@ -56,7 +56,9 @@ export function* configureBreadcrumbsData(
 
   if (
     currentBreadcrumbs?.activeCommonId !== payload.activeCommonId ||
-    !currentBreadcrumbs.items.some((item) => item.id === payload.activeCommonId)
+    !currentBreadcrumbs.items.some(
+      (item) => item.commonId === payload.activeCommonId,
+    )
   ) {
     yield put(
       actions.fetchBreadcrumbsItemsByCommonId.request(payload.activeCommonId),
