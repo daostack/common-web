@@ -6,10 +6,9 @@ import {
 import { MultipleSpacesLayoutFeedItemBreadcrumbs } from "@/store/states";
 import { getPermissionsDataByAllUserCommonMemberInfo } from "@/store/states/commonLayout/saga/utils";
 import { useGoToCreateCommon } from "../../../../../../hooks";
-import { ActiveBreadcrumbsItem } from "../ActiveBreadcrumbsItem";
 import { LoadingBreadcrumbsItem } from "../LoadingBreadcrumbsItem";
 import { Separator } from "../Separator";
-import { FeedBreadcrumbsItem } from "./components";
+import { ActiveFeedBreadcrumbsItem, FeedBreadcrumbsItem } from "./components";
 import styles from "./FeedItemBreadcrumbs.module.scss";
 
 interface FeedItemBreadcrumbsProps {
@@ -61,11 +60,10 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
           {(breadcrumbs.areItemsLoading || breadcrumbs.items.length > 0) && (
             <Separator />
           )}
-          <ActiveBreadcrumbsItem
+          <ActiveFeedBreadcrumbsItem
+            activeItemId={breadcrumbs.activeItem.id}
             name={breadcrumbs.activeItem.name}
             image={breadcrumbs.activeItem.image}
-            items={[]}
-            commonIdToAddProject={breadcrumbs.activeCommonId}
             withMenu={itemsWithMenus}
           />
         </>

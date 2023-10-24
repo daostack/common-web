@@ -1,6 +1,5 @@
 import React, { FC, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { CommonMember, Governance } from "@/shared/models";
 import {
   ProjectsStateItem,
   selectCommonLayoutCommonsState,
@@ -31,9 +30,11 @@ const FeedBreadcrumbsItem: FC<FeedBreadcrumbsItemProps> = (props) => {
     selectCommonLayoutProjectsState,
   );
   const parentCommonId = activeItem.directParent?.commonId;
-  const baseItems = parentCommonId
-    ? getItemsByParentId(parentCommonId, projects)
-    : commons;
+  const baseItems = useMemo(
+    () =>
+      parentCommonId ? getItemsByParentId(parentCommonId, projects) : commons,
+    [parentCommonId, projects, commons],
+  );
   const areItemsLoading = parentCommonId
     ? !areProjectsFetched
     : !areCommonsFetched;
