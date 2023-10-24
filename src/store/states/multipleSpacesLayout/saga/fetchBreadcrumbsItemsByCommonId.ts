@@ -103,6 +103,8 @@ export function* fetchBreadcrumbsItemsByCommonId(
       commonId,
       user?.uid,
     )) as Awaited<ReturnType<typeof fetchProjectsInfoByActiveCommonId>>;
+    console.log(projectsInfo.map((c) => c));
+    console.log(projectsInfo.map((c) => c.common.updatedAt));
     const projectsData: ProjectsStateItem[] = [...projectsInfo]
       .sort((prevItem, nextItem) =>
         compareCommonsByLastActivity(prevItem.common, nextItem.common),
