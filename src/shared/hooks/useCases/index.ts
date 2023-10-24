@@ -29,6 +29,7 @@ export { useUserFeedItemFollowData } from "./useUserFeedItemFollowData";
 export { useFeedItemFollow } from "./useFeedItemFollow";
 export type { FeedItemFollowState } from "./useFeedItemFollow";
 export { useGovernance } from "./useGovernance";
+export { useGovernanceListByCommonIds } from "./useGovernanceListByCommonIds";
 export { useGovernanceByCommonId } from "./useGovernanceByCommonId";
 export { useUserInfoAboutMemberships } from "./useUserInfoAboutMemberships";
 export { useBankAccountDetails } from "./useBankAccountDetails";
