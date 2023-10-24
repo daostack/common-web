@@ -5,6 +5,7 @@ export { useCommon } from "./useCommon";
 export { useCommonFeedItems } from "./useCommonFeedItems";
 export { useCommonMembersWithCircleIdsAmount } from "./useCommonMembersWithCircleIdsAmount";
 export { useCommonRulesAcceptance } from "./useCommonRulesAcceptance";
+export { useCommonsByDirectParentId } from "./useCommonsByDirectParentId";
 export { useDiscussionById } from "./useDiscussionById";
 export { useDMUserChatChannel } from "./useDMUserChatChannel";
 export { useFeedItemUserMetadata } from "./useFeedItemUserMetadata";
