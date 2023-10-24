@@ -1,11 +1,10 @@
-import React, { FC, useMemo } from "react";
+import React, { FC } from "react";
 import { MultipleSpacesLayoutFeedItemBreadcrumbs } from "@/store/states";
 import { useGoToCreateCommon } from "../../../../../../hooks";
 import { ActiveBreadcrumbsItem } from "../ActiveBreadcrumbsItem";
 import { BreadcrumbsItem } from "../BreadcrumbsItem";
 import { LoadingBreadcrumbsItem } from "../LoadingBreadcrumbsItem";
 import { Separator } from "../Separator";
-import { getBreadcrumbsData } from "./utils";
 import styles from "./FeedItemBreadcrumbs.module.scss";
 
 interface FeedItemBreadcrumbsProps {
@@ -16,22 +15,18 @@ interface FeedItemBreadcrumbsProps {
 const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
   const { breadcrumbs, itemsWithMenus } = props;
   const goToCreateCommon = useGoToCreateCommon();
-  const { data, projects, hasPermissionToAddProjectInActiveCommon } = useMemo(
-    () => getBreadcrumbsData(breadcrumbs.items, breadcrumbs.activeCommonId),
-    [breadcrumbs.items, breadcrumbs.activeCommonId],
-  );
 
   return (
     <ul className={styles.container}>
       {breadcrumbs.areItemsLoading && <LoadingBreadcrumbsItem />}
       {!breadcrumbs.areItemsLoading &&
-        data.map((item, index) => (
-          <React.Fragment key={item.activeCommonId}>
+        breadcrumbs.items.map((item, index) => (
+          <React.Fragment key={item.id}>
             {index > 0 && <Separator />}
             <BreadcrumbsItem
-              activeItemId={item.activeCommonId}
-              items={item.items}
-              commonIdToAddProject={item.commonIdToAddProject}
+              activeItem={item}
+              items={[]}
+              commonIdToAddProject={item.directParent?.commonId}
               onCommonCreate={index === 0 ? goToCreateCommon : undefined}
               withMenu={itemsWithMenus}
             />
@@ -39,16 +34,14 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
         ))}
       {breadcrumbs.activeItem && (
         <>
-          {(breadcrumbs.areItemsLoading || data.length > 0) && <Separator />}
+          {(breadcrumbs.areItemsLoading || breadcrumbs.items.length > 0) && (
+            <Separator />
+          )}
           <ActiveBreadcrumbsItem
             name={breadcrumbs.activeItem.name}
             image={breadcrumbs.activeItem.image}
-            items={projects}
-            commonIdToAddProject={
-              hasPermissionToAddProjectInActiveCommon
-                ? breadcrumbs.activeCommonId
-                : null
-            }
+            items={[]}
+            commonIdToAddProject={breadcrumbs.activeCommonId}
             withMenu={itemsWithMenus}
           />
         </>

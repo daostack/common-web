@@ -1,13 +1,14 @@
 import React, { FC, useRef } from "react";
 import { useHistory } from "react-router";
 import { useRoutesContext } from "@/shared/contexts";
+import { Common } from "@/shared/models";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
 import styles from "./BreadcrumbsItem.module.scss";
 
 interface BreadcrumbsItemProps {
-  activeItemId: string;
+  activeItem: Common;
   items: ProjectsStateItem[];
   commonIdToAddProject?: string | null;
   onCommonCreate?: () => void;
@@ -16,7 +17,7 @@ interface BreadcrumbsItemProps {
 
 const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   const {
-    activeItemId,
+    activeItem,
     items,
     commonIdToAddProject,
     onCommonCreate,
@@ -26,15 +27,10 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   const { getCommonPagePath } = useRoutesContext();
   const containerRef = useRef<HTMLLIElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
-  const activeItem = items.find((item) => item.commonId === activeItemId);
-
-  if (!activeItem) {
-    return null;
-  }
 
   const handleButtonClick = () => {
     if (!withMenu) {
-      history.push(getCommonPagePath(activeItemId));
+      history.push(getCommonPagePath(activeItem.id));
       return;
     }
     if (containerRef.current) {
@@ -52,7 +48,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
         <BreadcrumbsMenu
           ref={contextMenuRef}
           items={items}
-          activeItemId={activeItemId}
+          activeItemId={activeItem.id}
           commonIdToAddProject={commonIdToAddProject}
           onCommonCreate={onCommonCreate}
         />
