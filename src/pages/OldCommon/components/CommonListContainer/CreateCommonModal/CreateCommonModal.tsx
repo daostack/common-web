@@ -284,6 +284,7 @@ export default function CreateCommonModal(props: CreateCommonModalProps) {
       image: createdCommonData.common.image,
       name: createdCommonData.common.name,
       directParent: createdCommonData.common.directParent,
+      rootCommonId: createdCommonData.common.rootCommonId,
       hasMembership: true,
       hasPermissionToAddProject,
       notificationsAmount: 0,

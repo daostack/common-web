@@ -13,6 +13,7 @@ export interface BreadcrumbsItemProps {
   onCommonCreate?: () => void;
   withMenu?: boolean;
   isLoading?: boolean;
+  onClick?: () => void;
 }
 
 const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
@@ -23,6 +24,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
     onCommonCreate,
     withMenu = true,
     isLoading = false,
+    onClick,
   } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
@@ -32,6 +34,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   const handleButtonClick = () => {
     if (!withMenu) {
       history.push(getCommonPagePath(activeItem.commonId));
+      onClick?.();
       return;
     }
     if (containerRef.current) {

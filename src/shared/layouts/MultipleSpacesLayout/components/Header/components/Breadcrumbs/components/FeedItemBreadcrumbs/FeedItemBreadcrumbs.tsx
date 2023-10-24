@@ -1,5 +1,11 @@
 import React, { FC } from "react";
-import { MultipleSpacesLayoutFeedItemBreadcrumbs } from "@/store/states";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  commonLayoutActions,
+  MultipleSpacesLayoutFeedItemBreadcrumbs,
+  ProjectsStateItem,
+  selectCommonLayoutCommonId,
+} from "@/store/states";
 import { useGoToCreateCommon } from "../../../../../../hooks";
 import { LoadingBreadcrumbsItem } from "../LoadingBreadcrumbsItem";
 import { Separator } from "../Separator";
@@ -13,7 +19,20 @@ interface FeedItemBreadcrumbsProps {
 
 const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
   const { breadcrumbs, itemsWithMenus } = props;
+  const dispatch = useDispatch();
+  const currentLayoutCommonId = useSelector(selectCommonLayoutCommonId);
   const goToCreateCommon = useGoToCreateCommon();
+
+  const handleItemClick = (item: ProjectsStateItem) => {
+    if (
+      currentLayoutCommonId &&
+      item.rootCommonId &&
+      item.rootCommonId !== currentLayoutCommonId
+    ) {
+      dispatch(commonLayoutActions.setCurrentCommonId(item.rootCommonId));
+      dispatch(commonLayoutActions.clearProjects());
+    }
+  };
 
   return (
     <ul className={styles.container}>
@@ -26,6 +45,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
               activeItem={item}
               onCommonCreate={index === 0 ? goToCreateCommon : undefined}
               withMenu={itemsWithMenus}
+              onClick={() => handleItemClick(item)}
             />
           </React.Fragment>
         ))}
