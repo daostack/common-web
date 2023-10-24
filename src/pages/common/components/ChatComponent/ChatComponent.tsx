@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useDebounce, useMeasure } from "react-use";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
-import { delay, omit } from "lodash";
+import { debounce, delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";
@@ -59,6 +59,7 @@ import {
   selectFilesPreview,
   FileInfo,
 } from "@/store/states";
+import { ChatContentContext, ChatContentData } from "../CommonContent/context";
 import {
   ChatContent,
   ChatContentRef,
@@ -181,6 +182,15 @@ export default function ChatComponent({
   const chatContentRef = useRef<ChatContentRef>(null);
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const chatInputWrapperRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [isScrolling, setScrolling] = useState(false);
+  const chatContentContextValue: ChatContentData = useMemo(
+    () => ({
+      isScrolling,
+      chatContentRect: chatContainerRef.current?.getBoundingClientRect(),
+    }),
+    [isScrolling],
+  );
 
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
@@ -591,6 +601,23 @@ export default function ChatComponent({
     };
   }, []);
 
+  useEffect(() => {
+    const deactivateScrollingFlag = debounce(() => {
+      setScrolling(false);
+    }, 300);
+
+    function handleScroll() {
+      setScrolling(true);
+      deactivateScrollingFlag();
+    }
+
+    chatContainerRef.current?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      chatContainerRef.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const renderChatInput = (): ReactNode => {
     const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
 
@@ -666,32 +693,35 @@ export default function ChatComponent({
           [styles.emptyChat]: !dateList.length,
         })}
         id={chatWrapperId}
+        ref={chatContainerRef}
       >
-        <ChatContent
-          ref={chatContentRef}
-          type={type}
-          commonMember={commonMember}
-          governanceCircles={governanceCircles}
-          chatWrapperId={chatWrapperId}
-          messages={messages}
-          dateList={dateList}
-          lastSeenItem={lastSeenItem}
-          hasPermissionToHide={hasPermissionToHide}
-          users={users}
-          discussionId={discussionId}
-          feedItemId={feedItemId}
-          isLoading={!discussion || isLoadingDiscussionMessages}
-          onMessageDelete={handleMessageDelete}
-          directParent={directParent}
-          onUserClick={onUserClick}
-          onFeedItemClick={onFeedItemClick}
-          onInternalLinkClick={onInternalLinkClick}
-          isEmpty={
-            discussionMessagesData.fetched &&
-            !discussionMessagesData.data?.length && // for non direct messages chats. not using messageCount because it includes the deleted messages as well.
-            Object.keys(discussionMessages).length === 0 // for direct messages chats
-          }
-        />
+        <ChatContentContext.Provider value={chatContentContextValue}>
+          <ChatContent
+            ref={chatContentRef}
+            type={type}
+            commonMember={commonMember}
+            governanceCircles={governanceCircles}
+            chatWrapperId={chatWrapperId}
+            messages={messages}
+            dateList={dateList}
+            lastSeenItem={lastSeenItem}
+            hasPermissionToHide={hasPermissionToHide}
+            users={users}
+            discussionId={discussionId}
+            feedItemId={feedItemId}
+            isLoading={!discussion || isLoadingDiscussionMessages}
+            onMessageDelete={handleMessageDelete}
+            directParent={directParent}
+            onUserClick={onUserClick}
+            onFeedItemClick={onFeedItemClick}
+            onInternalLinkClick={onInternalLinkClick}
+            isEmpty={
+              discussionMessagesData.fetched &&
+              !discussionMessagesData.data?.length && // for non direct messages chats. not using messageCount because it includes the deleted messages as well.
+              Object.keys(discussionMessages).length === 0 // for direct messages chats
+            }
+          />
+        </ChatContentContext.Provider>
       </div>
       <div className={styles.bottomChatContainer}>
         <MessageReply users={users} />

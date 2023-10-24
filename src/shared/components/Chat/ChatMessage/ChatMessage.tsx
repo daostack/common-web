@@ -3,7 +3,6 @@ import React, {
   useCallback,
   useEffect,
   useState,
-  useRef,
   useMemo,
 } from "react";
 import classNames from "classnames";
@@ -53,10 +52,6 @@ interface ChatMessageProps {
   chatType: ChatType;
   highlighted?: boolean;
   className?: string;
-  onMessageDropdownOpen?: (
-    isOpen: boolean,
-    messageTopPosition?: number,
-  ) => void;
   user: User | null;
   scrollToRepliedMessage: (messageId: string) => void;
   hasPermissionToHide: boolean;
@@ -87,7 +82,6 @@ export default function ChatMessage({
   chatType,
   highlighted = false,
   className,
-  onMessageDropdownOpen,
   user,
   scrollToRepliedMessage,
   hasPermissionToHide,
@@ -101,7 +95,6 @@ export default function ChatMessage({
   onFeedItemClick,
   onInternalLinkClick,
 }: ChatMessageProps) {
-  const messageRef = useRef<HTMLDivElement>(null);
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -140,15 +133,6 @@ export default function ChatMessage({
       onOpenUserProfile();
     }
   };
-
-  const handleMessageDropdownOpen =
-    onMessageDropdownOpen &&
-    ((isOpen: boolean) => {
-      onMessageDropdownOpen(
-        isOpen,
-        messageRef.current?.getBoundingClientRect().top,
-      );
-    });
 
   useEffect(() => {
     (async () => {
@@ -216,14 +200,6 @@ export default function ChatMessage({
     discussionMessage.commonId,
     onUserClick,
   ]);
-
-  const handleMenuToggle = (isOpen: boolean) => {
-    setIsMenuOpen(isOpen);
-
-    if (handleMessageDropdownOpen) {
-      handleMessageDropdownOpen(isOpen);
-    }
-  };
 
   const handleLongPress = () => {
     setIsMenuOpen(true);
@@ -383,7 +359,6 @@ export default function ChatMessage({
         ) : (
           <>
             <div
-              ref={messageRef}
               className={classNames(styles.messageText, {
                 [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
                 [styles.messageTextRtl]: isRtlText(discussionMessage.text),
@@ -452,7 +427,7 @@ export default function ChatMessage({
                   elem={discussionMessage}
                   className={styles.dropdownMenu}
                   variant={Orientation.Arrow}
-                  onMenuToggle={handleMenuToggle}
+                  onMenuToggle={setIsMenuOpen}
                   transparent
                   isDiscussionMessage
                   isChatMessage={chatType === ChatType.ChatMessages}
