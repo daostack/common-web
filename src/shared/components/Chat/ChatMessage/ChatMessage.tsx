@@ -475,14 +475,6 @@ export default function ChatMessage({
                 />
               )}
             </div>
-            {isSystemMessage && (
-              <Time
-                createdAtDate={createdAtDate}
-                editedAtDate={editedAtDate}
-                moderation={discussionMessage.moderation}
-                isNotCurrentUserMessage={isNotCurrentUserMessage}
-              />
-            )}
           </>
         )}
       </div>
