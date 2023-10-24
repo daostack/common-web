@@ -51,8 +51,6 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
             {index > 0 && <Separator />}
             <FeedBreadcrumbsItem
               activeItem={item}
-              userCommonIds={userCommonIds}
-              permissionsData={permissionsData}
               onCommonCreate={index === 0 ? goToCreateCommon : undefined}
               withMenu={itemsWithMenus}
             />
