@@ -7,7 +7,7 @@ import { ProjectsStateItem } from "@/store/states";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
 import styles from "./BreadcrumbsItem.module.scss";
 
-interface BreadcrumbsItemProps {
+export interface BreadcrumbsItemProps {
   activeItem: Common;
   items: ProjectsStateItem[];
   commonIdToAddProject?: string | null;
