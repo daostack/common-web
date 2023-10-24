@@ -61,7 +61,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
             <Separator />
           )}
           <ActiveFeedBreadcrumbsItem
-            activeItemId={breadcrumbs.activeItem.id}
+            activeItemId={breadcrumbs.activeCommonId}
             name={breadcrumbs.activeItem.name}
             image={breadcrumbs.activeItem.image}
             withMenu={itemsWithMenus}
