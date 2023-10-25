@@ -70,7 +70,7 @@ const CommonTopNavigation: FC<CommonTopNavigationProps> = (props) => {
     if (isJoinAllowed) {
       return (
         <Button
-          variant={ButtonVariant.OutlineBlue}
+          variant={ButtonVariant.OutlineDarkPink}
           size={ButtonSize.Xsmall}
           onClick={onJoinCommon}
         >

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { useJoinProjectAutomatically } from "@/pages/common/hooks";
 import { useCommonDataContext } from "@/pages/common/providers";
 import { useRoutesContext } from "@/shared/contexts";
@@ -14,7 +14,8 @@ interface CommonEntranceJoinProps {
 }
 
 const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
-  const { withJoinRequest = false, common, isProject } = props;
+  const { withJoinRequest, common, isProject } = props;
+  const history = useHistory();
   const {
     parentCommon,
     parentCommonMember,
@@ -47,13 +48,13 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
         </p>
       )}
       {!commonMember && rootCommon && !rootCommonMember && (
-        <p className={styles.joinHint}>
-          Join via{" "}
-          <NavLink to={getCommonPageAboutTabPath(rootCommon.id)}>
-            {rootCommon.name}
-          </NavLink>{" "}
-          page
-        </p>
+        <Button
+          className={styles.joinButton}
+          variant={ButtonVariant.OutlineDarkPink}
+          onClick={() => history.push(getCommonPageAboutTabPath(rootCommon.id))}
+        >
+          Join via {rootCommon.name} page
+        </Button>
       )}
       {!commonMember &&
         rootCommonMember &&
@@ -67,7 +68,7 @@ const CommonEntranceJoin: FC<CommonEntranceJoinProps> = (props) => {
             page
           </p>
         )}
-      {withJoinRequest && (isJoinAllowed || isJoinPending) && (
+      {withJoinRequest && !isProject && (isJoinAllowed || isJoinPending) && (
         <Button
           className={styles.joinButton}
           variant={ButtonVariant.OutlineDarkPink}
