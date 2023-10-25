@@ -45,7 +45,6 @@ import { StaticLinkType, isRtlText, getUserName } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
 import { ChatMessageLinkify, InternalLinkData, Time } from "./components";
-import { LoadingMessage } from "./components/LoadingMessage";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
 
@@ -351,9 +350,7 @@ export default function ChatMessage({
     [discussionMessage.files],
   );
 
-  return !messageText.length ? (
-    <LoadingMessage backgroundColor={isSystemMessage ? "#f3d4eb" : "#a75a93"} />
-  ) : (
+  return (
     <li
       id={discussionMessage.id}
       className={classNames(styles.container, className)}
@@ -428,7 +425,11 @@ export default function ChatMessage({
                 <ChatMessageLinkify
                   onInternalLinkClick={handleInternalLinkClick}
                 >
-                  {messageText.map((text) => text)}
+                  {!messageText.length ? (
+                    <i>Loading...</i>
+                  ) : (
+                    messageText.map((text) => text)
+                  )}
                 </ChatMessageLinkify>
                 {!isSystemMessage && (
                   <Time
