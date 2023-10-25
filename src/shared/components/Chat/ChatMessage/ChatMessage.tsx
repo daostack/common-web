@@ -400,7 +400,11 @@ export default function ChatMessage({
                 <ChatMessageLinkify
                   onInternalLinkClick={handleInternalLinkClick}
                 >
-                  {messageText.map((text) => text)}
+                  {!messageText.length ? (
+                    <i>Loading...</i>
+                  ) : (
+                    messageText.map((text) => text)
+                  )}
                 </ChatMessageLinkify>
                 {!isSystemMessage && (
                   <Time
