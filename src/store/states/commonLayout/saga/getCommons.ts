@@ -89,6 +89,7 @@ export function* getCommons(
         image: common.image,
         name: common.name,
         directParent: common.directParent,
+        rootCommonId: common.rootCommonId,
         hasMembership,
         hasPermissionToAddProject,
         notificationsAmount: 0,

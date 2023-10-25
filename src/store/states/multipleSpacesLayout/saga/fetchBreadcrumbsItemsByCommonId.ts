@@ -1,74 +1,32 @@
 import { call, put, select } from "redux-saga/effects";
-import { selectUser } from "@/pages/Auth/store/selectors";
-import { CommonService, GovernanceService, ProjectService } from "@/services";
+import { CommonService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
 import { Awaited } from "@/shared/interfaces";
-import { Common, User } from "@/shared/models";
-import { compareCommonsByLastActivity } from "@/shared/utils";
-import { getPermissionsDataByAllUserCommonMemberInfo } from "../../commonLayout/saga/utils";
 import * as actions from "../actions";
 import { selectMultipleSpacesLayoutBreadcrumbs } from "../selectors";
 import { MultipleSpacesLayoutState, ProjectsStateItem } from "../types";
 
 const fetchProjectsInfoByActiveCommonId = async (
   commonId: string,
-  userId?: string,
-): Promise<ReturnType<typeof ProjectService.parseDataToProjectsInfo>> => {
+): Promise<ProjectsStateItem[]> => {
   const activeCommon = await CommonService.getCommonById(commonId);
 
   if (!activeCommon) {
     return [];
   }
 
-  const finalCommons: Common[] = [];
-  let commonForSiblings: Common | null = activeCommon;
-  let lastParentCommon: Common | null = !commonForSiblings.directParent
-    ? commonForSiblings
-    : null;
-
-  while (commonForSiblings?.directParent?.commonId) {
-    const commonIdForProjects = commonForSiblings.directParent.commonId;
-    const commonProjects = await CommonService.getCommonsByDirectParentIds([
-      commonIdForProjects,
-    ]);
-    commonForSiblings = await CommonService.getCommonById(commonIdForProjects);
-    finalCommons.push(...commonProjects);
-
-    if (!commonForSiblings?.directParent) {
-      lastParentCommon = commonForSiblings;
-    }
-  }
-
-  const allUserCommonMemberInfo = userId
-    ? await CommonService.getAllUserCommonMemberInfo(userId)
-    : [];
-  const userCommonIds = allUserCommonMemberInfo.map((item) => item.commonId);
-  const [userCommons, activeCommonProjects, governanceList] = await Promise.all(
-    [
-      CommonService.getParentCommonsByIds(userCommonIds),
-      CommonService.getCommonsByDirectParentIds([commonId]),
-      GovernanceService.getGovernanceListByCommonIds(userCommonIds),
-    ],
-  );
-  const permissionsData = getPermissionsDataByAllUserCommonMemberInfo(
-    allUserCommonMemberInfo,
-    governanceList,
+  const commons = await CommonService.getAllParentCommonsForCommon(
+    activeCommon,
   );
 
-  if (
-    lastParentCommon &&
-    !userCommons.some((common) => common.id === lastParentCommon?.id)
-  ) {
-    userCommons.push(lastParentCommon);
-  }
-
-  finalCommons.push(...userCommons, ...activeCommonProjects);
-
-  return ProjectService.parseDataToProjectsInfo(
-    finalCommons,
-    userCommonIds,
-    permissionsData,
-  );
+  return [...commons, activeCommon].map((common) => ({
+    commonId: common.id,
+    image: common.image,
+    name: common.name,
+    directParent: common.directParent,
+    rootCommonId: common.rootCommonId,
+    hasMembership: true,
+  }));
 };
 
 export function* fetchBreadcrumbsItemsByCommonId(
@@ -88,6 +46,14 @@ export function* fetchBreadcrumbsItemsByCommonId(
     return;
   }
 
+  const commonIndex = currentBreadcrumbs.items.findIndex(
+    (item) => item.commonId === commonId,
+  );
+
+  if (commonIndex > -1) {
+    return;
+  }
+
   yield put(
     actions.setBreadcrumbsData({
       ...currentBreadcrumbs,
@@ -97,27 +63,10 @@ export function* fetchBreadcrumbsItemsByCommonId(
   );
 
   try {
-    const user = (yield select(selectUser())) as User | null;
-    const projectsInfo = (yield call(
+    const projectsStateItems = (yield call(
       fetchProjectsInfoByActiveCommonId,
       commonId,
-      user?.uid,
     )) as Awaited<ReturnType<typeof fetchProjectsInfoByActiveCommonId>>;
-    console.log(projectsInfo.map((c) => c));
-    console.log(projectsInfo.map((c) => c.common.updatedAt));
-    const projectsData: ProjectsStateItem[] = [...projectsInfo]
-      .sort((prevItem, nextItem) =>
-        compareCommonsByLastActivity(prevItem.common, nextItem.common),
-      )
-      .map(({ common, hasMembership, hasPermissionToAddProject }) => ({
-        commonId: common.id,
-        image: common.image,
-        name: common.name,
-        directParent: common.directParent,
-        hasMembership,
-        hasPermissionToAddProject,
-      }));
-
     const currentBreadcrumbs = (yield select(
       selectMultipleSpacesLayoutBreadcrumbs,
     )) as MultipleSpacesLayoutState["breadcrumbs"];
@@ -126,7 +75,7 @@ export function* fetchBreadcrumbsItemsByCommonId(
       yield put(
         actions.setBreadcrumbsData({
           ...currentBreadcrumbs,
-          items: projectsData,
+          items: projectsStateItems,
           areItemsLoading: false,
           areItemsFetched: true,
         }),

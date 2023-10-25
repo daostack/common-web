@@ -5,6 +5,7 @@ export interface ProjectsStateItem {
   image: string;
   name: string;
   directParent: Common["directParent"];
+  rootCommonId?: string;
   hasMembership?: boolean;
   hasPermissionToAddProject?: boolean;
   notificationsAmount?: number;

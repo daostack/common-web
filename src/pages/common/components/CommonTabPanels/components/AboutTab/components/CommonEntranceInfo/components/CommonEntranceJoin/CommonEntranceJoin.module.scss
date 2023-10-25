@@ -2,9 +2,9 @@
 @import "../../../../../../../../../../styles/sizes";
 
 .joinButton {
-  max-width: 8.5rem;
   margin-top: 1.75rem;
   padding: 0 0.875rem;
+  width: 100%;
 
   @include tablet {
     margin-top: 1.625rem;

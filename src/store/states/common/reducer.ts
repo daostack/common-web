@@ -43,6 +43,14 @@ const initialState: CommonState = {
   recentAssignedCircle: null,
 };
 
+const sortFeedItems = (data: FeedItemFollowLayoutItem[]): void => {
+  data.sort(
+    (prevItem, nextItem) =>
+      nextItem.feedItem.updatedAt.toMillis() -
+      prevItem.feedItem.updatedAt.toMillis(),
+  );
+};
+
 const updateFeedItemInList = (
   state: WritableDraft<CommonState>,
   payload: {
@@ -76,10 +84,17 @@ const updateFeedItemInList = (
         ...updatedItem,
       },
     };
+    sortFeedItems(nextData);
   }
+
+  const firstDocTimestamp = nextData[0]?.feedItem.updatedAt || null;
+  const lastDocTimestamp =
+    nextData[nextData.length - 1]?.feedItem.updatedAt || null;
 
   state.feedItems = {
     ...state.feedItems,
+    firstDocTimestamp,
+    lastDocTimestamp,
     data: nextData,
   };
 };
@@ -95,8 +110,6 @@ const addNewFeedItems = (
   }[],
   shouldSortNewItems = false,
 ) => {
-  let firstDocTimestamp = state.feedItems.firstDocTimestamp;
-
   const data = payload.reduceRight((acc, { commonFeedItem, statuses }) => {
     const nextData = [...acc];
     const itemIndex = nextData.findIndex(
@@ -117,7 +130,6 @@ const addNewFeedItems = (
       itemId: commonFeedItem.id,
       feedItem: commonFeedItem,
     };
-    firstDocTimestamp = commonFeedItem.updatedAt;
 
     if (itemIndex >= 0) {
       nextData[itemIndex] = finalItem;
@@ -139,11 +151,16 @@ const addNewFeedItems = (
 
     return nextData;
   }, state.feedItems.data || []);
+  sortFeedItems(data);
+
+  const firstDocTimestamp = data[0]?.feedItem.updatedAt || null;
+  const lastDocTimestamp = data[data.length - 1]?.feedItem.updatedAt || null;
 
   state.feedItems = {
     ...state.feedItems,
     data,
     firstDocTimestamp,
+    lastDocTimestamp,
   };
 };
 

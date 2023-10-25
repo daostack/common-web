@@ -119,6 +119,38 @@ class CommonService {
       .reduce((acc, items) => [...acc, ...items], []);
   };
 
+  public subscribeToCommonsByDirectParentId = (
+    parentCommonId: string,
+    callback: (
+      data: {
+        common: Common;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE)
+      .where("directParent.commonId", "==", parentCommonId)
+      .withConverter(converter);
+
+    return query.onSnapshot((snapshot) => {
+      callback(
+        snapshot.docChanges().map((docChange) => ({
+          common: docChange.doc.data(),
+          statuses: {
+            isAdded: docChange.type === DocChange.Added,
+            isRemoved: docChange.type === DocChange.Removed,
+          },
+        })),
+      );
+    });
+  };
+
   public getUserCommonIds = async (userId: string): Promise<string[]> =>
     (
       await firebase
@@ -142,6 +174,39 @@ class CommonService {
       ...doc.data(),
       commonId: doc.ref.path.split("/")[1],
     }));
+  };
+
+  public subscribeToAllUserCommonMemberInfo = (
+    userId: string,
+    callback: (
+      data: {
+        commonId: string;
+        commonMember: CommonMember;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collectionGroup(SubCollections.Members)
+      .where("userId", "==", userId)
+      .withConverter(commonMemberConverter);
+
+    return query.onSnapshot((snapshot) => {
+      callback(
+        snapshot.docChanges().map((docChange) => ({
+          commonId: docChange.doc.ref.path.split("/")[1],
+          commonMember: docChange.doc.data(),
+          statuses: {
+            isAdded: docChange.type === DocChange.Added,
+            isRemoved: docChange.type === DocChange.Removed,
+          },
+        })),
+      );
+    });
   };
 
   public getCommonsWithSubCommons = async (
