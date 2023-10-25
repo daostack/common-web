@@ -1,9 +1,8 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import landingMobilePosterSec from "@/shared/assets/images/landing-mobile-poster.jpg";
 import landingVideoPosterSrc from "@/shared/assets/images/landing-video-poster.jpg";
 import landingVideoSrc from "@/shared/assets/videos/landing-video.mp4";
-import { useIsPhoneView } from "@/shared/hooks/viewport";
+import { useIsBigPhoneView } from "@/shared/hooks/viewport";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
@@ -15,12 +14,12 @@ const VideoSection: FC<VideoSectionProps> = ({ onLaunchClick }) => {
   const { t } = useTranslation("translation", {
     keyPrefix: "landing",
   });
-  const isPhoneView = useIsPhoneView();
+  const isBigPhoneView = useIsBigPhoneView();
 
   return (
     <section className="landing-video-section">
       <div className="landing-video-section__video-wrapper">
-        {!isPhoneView && (
+        {!isBigPhoneView && (
           <video
             className="landing-video-section__video"
             autoPlay
