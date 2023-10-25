@@ -8,12 +8,19 @@ interface BreadcrumbsMenuProps {
   items: ProjectsStateItem[];
   activeItemId?: string;
   commonIdToAddProject?: string | null;
+  isLoading?: boolean;
   onCommonCreate?: () => void;
 }
 
 const BreadcrumbsMenu = forwardRef<ContextMenuRef, BreadcrumbsMenuProps>(
   (props, ref) => {
-    const { items, activeItemId, commonIdToAddProject, onCommonCreate } = props;
+    const {
+      items,
+      activeItemId,
+      commonIdToAddProject,
+      isLoading = false,
+      onCommonCreate,
+    } = props;
     const menuItems = useMenuItems({
       items,
       activeItemId,
@@ -21,7 +28,7 @@ const BreadcrumbsMenu = forwardRef<ContextMenuRef, BreadcrumbsMenuProps>(
       onCommonCreate,
     });
 
-    if (menuItems.length === 0) {
+    if (menuItems.length === 0 && !isLoading) {
       return null;
     }
 
@@ -30,6 +37,7 @@ const BreadcrumbsMenu = forwardRef<ContextMenuRef, BreadcrumbsMenuProps>(
         ref={ref}
         menuItems={menuItems}
         listClassName={styles.contextMenuList}
+        isLoading={isLoading}
       />
     );
   },

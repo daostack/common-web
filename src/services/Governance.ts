@@ -1,4 +1,5 @@
 import { governanceCollection } from "@/pages/OldCommon/store/api";
+import { DocChange } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { Collection, Governance } from "@/shared/models";
 import {
@@ -62,6 +63,37 @@ class GovernanceService {
       if (docChange && docChange.type !== "added") {
         callback(docChange.doc.data(), docChange.type === "removed");
       }
+    });
+  };
+
+  public subscribeToGovernanceListByCommonIds = (
+    commonIds: string[],
+    callback: (
+      data: {
+        governance: Governance;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collection(Collection.Governance)
+      .where("commonId", "in", commonIds)
+      .withConverter(converter);
+
+    return query.onSnapshot((snapshot) => {
+      callback(
+        snapshot.docChanges().map((docChange) => ({
+          governance: docChange.doc.data(),
+          statuses: {
+            isAdded: docChange.type === DocChange.Added,
+            isRemoved: docChange.type === DocChange.Removed,
+          },
+        })),
+      );
     });
   };
 }

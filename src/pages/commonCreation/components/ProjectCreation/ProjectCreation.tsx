@@ -72,6 +72,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         image: createdProject.image,
         name: createdProject.name,
         directParent: createdProject.directParent,
+        rootCommonId: createdProject.rootCommonId,
         hasMembership: true,
         hasPermissionToAddProject: Object.values(governance.circles).some(
           (circle) => circle.allowedActions[GovernanceActions.CREATE_PROJECT],

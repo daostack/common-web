@@ -25,6 +25,7 @@ function* getProjects(action: ReturnType<typeof actions.getProjects.request>) {
         image: common.image,
         name: common.name,
         directParent: common.directParent,
+        rootCommonId: common.rootCommonId,
         hasMembership,
         notificationsAmount: 0,
       }),
