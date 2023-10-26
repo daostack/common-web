@@ -452,8 +452,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           isFollowing={feedItemFollow.isFollowing}
           isLoading={isLoading}
           type={item.data.type}
-          seenOnce={feedItemUserMetadata?.seenOnce ?? true}
-          seen={feedItemUserMetadata?.seen ?? true}
+          seenOnce={
+            feedItemUserMetadata?.seenOnce ?? !isFeedItemUserMetadataFetched
+          }
+          seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
           menuItems={menuItems}
           ownerId={item.userId}
         >
