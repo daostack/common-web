@@ -17,8 +17,7 @@ import {
   selectMultipleSpacesLayoutBackUrl,
 } from "@/store/states";
 import { getSidenavLeft } from "../CommonSidenavLayout/utils";
-import { Header, /* SidenavContent */ } from "./components";
-import { SidenavContent as SidenavContentV04 } from "../CommonSidenavLayout/components";
+import { Header, SidenavContent } from "./components";
 import styles from "./MultipleSpacesLayout.module.scss";
 
 const MULTIPLE_SPACES_LAYOUT_SIDENAV_OPEN_STATE = "open";
@@ -109,9 +108,9 @@ const MultipleSpacesLayout: FC = (props) => {
           shouldCheckViewportForOpenState={false}
           withAnimation
         >
-          <SidenavContentV04
+          <SidenavContent
             className={styles.sidenavContent}
-            // onClose={handleSidenavClose}
+            onClose={handleSidenavClose}
           />
         </Sidenav>
         <main className={styles.main}>
