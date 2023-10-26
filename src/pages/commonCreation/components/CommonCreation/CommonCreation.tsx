@@ -39,6 +39,7 @@ const CommonCreation: FC = () => {
       image: common.image,
       name: common.name,
       directParent: common.directParent,
+      rootCommonId: common.rootCommonId,
       hasMembership: true,
       hasPermissionToAddProject,
       notificationsAmount: 0,

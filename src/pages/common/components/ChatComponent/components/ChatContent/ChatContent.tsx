@@ -17,7 +17,7 @@ import {
   LOADER_APPEARANCE_DELAY,
   QueryParamKey,
 } from "@/shared/constants";
-import { useQueryParams } from "@/shared/hooks";
+import { useForceUpdate, useQueryParams } from "@/shared/hooks";
 import {
   checkIsUserDiscussionMessage,
   CommonFeedObjectUserUnique,
@@ -97,6 +97,13 @@ const ChatContent: ForwardRefRenderFunction<
   const userId = user?.uid;
   const queryParams = useQueryParams();
   const messageIdParam = queryParams[QueryParamKey.Message];
+  const forceUpdate = useForceUpdate();
+
+  useEffect(() => {
+    if (messages) {
+      forceUpdate();
+    }
+  }, [messages]);
 
   const [highlightedMessageId, setHighlightedMessageId] = useState(
     () => (typeof messageIdParam === "string" && messageIdParam) || null,
@@ -111,20 +118,6 @@ const ChatContent: ForwardRefRenderFunction<
       setTimeout(
         () =>
           animateScroll.scrollToBottom({
-            containerId: chatWrapperId,
-            smooth: true,
-            delay: 0,
-          }),
-        0,
-      ),
-    [chatWrapperId],
-  );
-
-  const scrollMore = useCallback(
-    (toY: number) =>
-      setTimeout(
-        () =>
-          animateScroll.scrollMore(toY, {
             containerId: chatWrapperId,
             smooth: true,
             delay: 0,
@@ -234,17 +227,6 @@ const ChatContent: ForwardRefRenderFunction<
                   scrollToRepliedMessage={scrollToRepliedMessage}
                   highlighted={message.id === highlightedMessageId}
                   hasPermissionToHide={hasPermissionToHide}
-                  onMessageDropdownOpen={(isOpen, messageTopPosition = 0) => {
-                    const dropdownHeight = 240;
-                    const visibleDropdownHeight =
-                      window.innerHeight - messageTopPosition;
-                    const hasEnoughSpaceForMenu =
-                      visibleDropdownHeight >= dropdownHeight;
-
-                    if (isOpen && !hasEnoughSpaceForMenu) {
-                      scrollMore(dropdownHeight - visibleDropdownHeight + 20);
-                    }
-                  }}
                   users={users}
                   feedItemId={feedItemId}
                   commonMember={commonMember}

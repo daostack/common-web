@@ -1,9 +1,21 @@
 @import "../../../../constants";
+@import "../../../../styles/mixins";
 @import "../../../../styles/sizes";
 
 .container {
   position: relative;
   width: 100%;
+}
+
+.content {
+  max-width: 36.25rem;
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 3.375rem;
+
+  @include tablet {
+    padding-top: 0;
+  }
 }
 
 .header {
@@ -37,6 +49,14 @@
   }
 }
 
+.userDetails {
+  margin-bottom: 2.25rem;
+
+  @include tablet {
+    margin-bottom: 0;
+  }
+}
+
 .menuButtonsWrapper {
   border-top: 0.0625rem solid $c-gray-20;
 }
@@ -47,4 +67,19 @@
 
 .logoutMenuButton {
   color: $c-pink-mention;
+}
+
+.buttonsWrapper {
+  @include flex-list-with-gap(1rem);
+
+  @include tablet {
+    width: 100%;
+    margin: 1.5rem 0 0;
+    flex-direction: column-reverse;
+    box-sizing: border-box;
+
+    & > * {
+      margin: 0 0 1rem;
+    }
+  }
 }

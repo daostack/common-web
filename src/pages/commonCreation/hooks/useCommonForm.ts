@@ -76,6 +76,10 @@ export const useCommonForm = (
   return {
     initialValues,
     onSubmit,
-    formItems: getConfiguration(false, roles),
+    formItems: getConfiguration({
+      isProject: false,
+      roles,
+      isImageRequired: true,
+    }),
   };
 };

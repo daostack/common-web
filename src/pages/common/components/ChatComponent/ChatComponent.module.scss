@@ -76,7 +76,7 @@
   flex-direction: column;
   justify-content: center;
   word-break: break-word;
-  padding: 0.125rem 1.75rem 0.125rem 0.25rem;
+  padding: 0.125rem 1.75rem 0.125rem 0.75rem;
   margin: 0.3rem 0;
 }
 
@@ -86,7 +86,8 @@
 
 .messageInputEmpty {
   line-height: 2.25rem;
-  padding-left: 0;
+  padding-left: 0.75rem;
+  overflow-x: hidden;
 }
 
 .addFilesIcon {

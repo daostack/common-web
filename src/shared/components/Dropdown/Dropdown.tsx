@@ -7,7 +7,6 @@ import React, {
   CSSProperties,
   ForwardRefRenderFunction,
   ReactNode,
-  RefObject,
   useEffect,
 } from "react";
 import {
@@ -21,12 +20,15 @@ import {
 } from "react-aria-menubutton";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
+import { useChatContentContext } from "@/pages/common/components/CommonContent/context";
 import { Loader } from "@/shared/components";
 import RightArrowIcon from "../../icons/rightArrow.icon";
 import { GlobalOverlay } from "../GlobalOverlay";
+import { getMenuStyles } from "./helpers";
 import "./index.scss";
 
 export interface Styles {
+  labelWrapper?: string;
   menuButton?: string;
   value?: string;
   placeholder?: string;
@@ -78,53 +80,6 @@ export interface DropdownProps {
   disabled?: boolean;
 }
 
-const getFixedMenuStyles = (
-  ref: RefObject<HTMLElement>,
-  menuRef: HTMLUListElement | null,
-): CSSProperties | undefined => {
-  if (!ref.current || !menuRef) {
-    return;
-  }
-
-  const { top, left, height } = ref.current.getBoundingClientRect();
-  const menuRect = menuRef.getBoundingClientRect();
-  const bottom = top + height + menuRect.height;
-  const styles: CSSProperties = {
-    left,
-    top: top + height,
-  };
-
-  if (window.innerHeight < bottom) {
-    styles.top = top - menuRect.height;
-  }
-  if (styles.top && styles.top < 0) {
-    styles.top = 0;
-    styles.bottom = 0;
-    styles.maxHeight = "100%";
-  }
-
-  return styles;
-};
-
-const getMenuStyles = (
-  ref: RefObject<HTMLElement>,
-  menuRef: HTMLUListElement | null,
-  shouldBeFixed?: boolean,
-): CSSProperties | undefined => {
-  if (!menuRef) {
-    return;
-  }
-  if (shouldBeFixed) {
-    return getFixedMenuStyles(ref, menuRef);
-  }
-
-  const { right } = menuRef.getBoundingClientRect();
-
-  if (window.innerWidth < right) {
-    return { right: 0 };
-  }
-};
-
 const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
   props,
   dropdownRef,
@@ -152,6 +107,8 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
   const [isOpen, setIsOpen] = useState(false);
   const selectedOption = options.find((option) => option.value === value);
   const dropdownId = useMemo(() => `dropdown-${uuidv4()}`, []);
+  const { isScrolling: isChatScrolling, chatContentRect } =
+    useChatContentContext();
 
   const handleSelection: MenuWrapperProps<HTMLElement>["onSelection"] = (
     value,
@@ -178,9 +135,16 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     }
   };
 
+  useEffect(() => {
+    if (isMenuOpen && isChatScrolling) {
+      handleMenuToggle({ isOpen: false });
+      closeMenu(dropdownId);
+    }
+  }, [isMenuOpen, isChatScrolling]);
+
   const menuStyles = useMemo(
-    () => getMenuStyles(menuButtonRef, menuRef, shouldBeFixed),
-    [menuRef, shouldBeFixed],
+    () => getMenuStyles(menuButtonRef, menuRef, chatContentRect, shouldBeFixed),
+    [menuRef, shouldBeFixed, chatContentRect],
   );
 
   useImperativeHandle(
@@ -205,7 +169,12 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
         onMenuToggle={handleMenuToggle}
       >
         {label && (
-          <div className="custom-dropdown-wrapper__label-wrapper">
+          <div
+            className={classNames(
+              "custom-dropdown-wrapper__label-wrapper",
+              styles?.labelWrapper,
+            )}
+          >
             <span className="custom-dropdown-wrapper__label">{label}</span>
           </div>
         )}

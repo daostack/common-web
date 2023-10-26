@@ -43,16 +43,8 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   }
 
   const triggerEl = (
-    <ButtonIcon
-      variant={
-        isMobileVersion ? ButtonVariant.Transparent : ButtonVariant.PrimaryGray
-      }
-    >
-      {isMobileVersion ? (
-        <PlusIcon className={styles.icon} />
-      ) : (
-        <BoldPlusIcon className={styles.icon} />
-      )}
+    <ButtonIcon className={styles.buttonIcon}>
+      <PlusIcon className={styles.icon} />
     </ButtonIcon>
   );
   const menuProps = {

@@ -3,7 +3,7 @@
 @mixin h5 {
   font-family: PoppinsSans, sans-serif;
   font-weight: normal;
-  font-size: $moderate-small-2;
+  font-size: 1.125rem;
   line-height: 1.25rem;
   color: $c-gray-90;
   text-align: center;
@@ -12,7 +12,7 @@
 @mixin h6 {
   font-family: PoppinsSans, sans-serif;
   font-weight: 500;
-  font-size: $moderate-xsmall;
+  font-size: 1rem;
   line-height: 1.5rem;
   color: $c-gray-100;
   text-align: center;
@@ -21,7 +21,7 @@
 @mixin body-sm-regular {
   font-family: PoppinsSans, sans-serif;
   font-weight: normal;
-  font-size: $mobile-title;
+  font-size: 0.875rem;
   line-height: 1.25rem;
   color: $c-gray-50;
   text-align: center;

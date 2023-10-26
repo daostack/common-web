@@ -29,7 +29,6 @@ import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems, useUserCommonIds } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import {
   checkIsFeedItemFollowLayoutItem,
@@ -92,7 +91,6 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     onActiveItemDataChange,
   } = props;
   const { getCommonPagePath, getProfilePagePath } = useRoutesContext();
-  const isTabletView = useIsTabletView();
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -437,7 +435,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       <>
         {headerEl}
         <div className={styles.centerWrapper}>
-          <Loader delay={isTabletView ? 0 : LOADER_APPEARANCE_DELAY} />
+          <Loader delay={LOADER_APPEARANCE_DELAY} />
         </div>
         <CommonSidenavLayoutTabs className={styles.tabs} />
       </>

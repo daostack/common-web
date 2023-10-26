@@ -6,12 +6,13 @@ import { ProjectsStateItem } from "@/store/states";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
 import styles from "./ActiveBreadcrumbsItem.module.scss";
 
-interface ActiveBreadcrumbsItemProps {
+export interface ActiveBreadcrumbsItemProps {
   name: string;
   image?: string;
   items?: ProjectsStateItem[];
   commonIdToAddProject?: string | null;
   withMenu?: boolean;
+  isLoading?: boolean;
 }
 
 const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
@@ -21,6 +22,7 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
     items = [],
     commonIdToAddProject,
     withMenu = true,
+    isLoading = false,
   } = props;
   const itemsButtonRef = useRef<HTMLButtonElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
@@ -57,6 +59,7 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
           ref={contextMenuRef}
           items={items}
           commonIdToAddProject={commonIdToAddProject}
+          isLoading={isLoading}
         />
       )}
     </li>

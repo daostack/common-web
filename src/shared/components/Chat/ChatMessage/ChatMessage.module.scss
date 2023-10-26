@@ -58,6 +58,8 @@
   box-sizing: border-box;
   position: relative;
   text-align: start;
+  font-size: $small;
+  color: $secondary-blue;
 
   &:hover {
     .menuArrowButton {
@@ -85,10 +87,10 @@
 }
 
 .systemMessage {
-  width: 100%;
-  max-width: unset;
-  min-width: unset;
-  background-color: $c-pink-light;
+  width: fit-content;
+  text-align: center;
+  font-size: $xxsmall-2;
+  color: $c-gray-60;
 }
 
 .messageName {
@@ -102,8 +104,6 @@
 }
 
 .messageContent {
-  font-size: $small;
-  color: $secondary-blue;
   word-wrap: break-word;
   white-space: pre-line;
   margin-right: 1rem;

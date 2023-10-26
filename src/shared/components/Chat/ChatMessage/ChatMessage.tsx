@@ -3,10 +3,10 @@ import React, {
   useCallback,
   useEffect,
   useState,
-  useRef,
   useMemo,
 } from "react";
 import classNames from "classnames";
+import { useLongPress } from "use-long-press";
 import {
   ElementDropdown,
   UserAvatar,
@@ -52,10 +52,6 @@ interface ChatMessageProps {
   chatType: ChatType;
   highlighted?: boolean;
   className?: string;
-  onMessageDropdownOpen?: (
-    isOpen: boolean,
-    messageTopPosition?: number,
-  ) => void;
   user: User | null;
   scrollToRepliedMessage: (messageId: string) => void;
   hasPermissionToHide: boolean;
@@ -86,7 +82,6 @@ export default function ChatMessage({
   chatType,
   highlighted = false,
   className,
-  onMessageDropdownOpen,
   user,
   scrollToRepliedMessage,
   hasPermissionToHide,
@@ -100,7 +95,6 @@ export default function ChatMessage({
   onFeedItemClick,
   onInternalLinkClick,
 }: ChatMessageProps) {
-  const messageRef = useRef<HTMLDivElement>(null);
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -139,15 +133,6 @@ export default function ChatMessage({
       onOpenUserProfile();
     }
   };
-
-  const handleMessageDropdownOpen =
-    onMessageDropdownOpen &&
-    ((isOpen: boolean) => {
-      onMessageDropdownOpen(
-        isOpen,
-        messageRef.current?.getBoundingClientRect().top,
-      );
-    });
 
   useEffect(() => {
     (async () => {
@@ -216,19 +201,17 @@ export default function ChatMessage({
     onUserClick,
   ]);
 
-  const handleMenuToggle = (isOpen: boolean) => {
-    setIsMenuOpen(isOpen);
-
-    if (handleMessageDropdownOpen) {
-      handleMessageDropdownOpen(isOpen);
-    }
+  const handleLongPress = () => {
+    setIsMenuOpen(true);
   };
 
-  const handleMessageClick: MouseEventHandler<HTMLDivElement> = () => {
-    if (isTabletView) {
-      setIsMenuOpen(true);
-    }
-  };
+  const getLongPressProps = useLongPress(
+    isTabletView ? handleLongPress : null,
+    {
+      threshold: 400,
+      cancelOnMovement: true,
+    },
+  );
 
   const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
     if (!isTabletView) {
@@ -376,7 +359,6 @@ export default function ChatMessage({
         ) : (
           <>
             <div
-              ref={messageRef}
               className={classNames(styles.messageText, {
                 [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
                 [styles.messageTextRtl]: isRtlText(discussionMessage.text),
@@ -387,7 +369,7 @@ export default function ChatMessage({
                 [styles.highlightedOwn]:
                   highlighted && !isNotCurrentUserMessage,
               })}
-              onClick={handleMessageClick}
+              {...getLongPressProps()}
             >
               {isNotCurrentUserMessage && !isSystemMessage && (
                 <div className={styles.messageName} onClick={handleUserClick}>
@@ -418,7 +400,11 @@ export default function ChatMessage({
                 <ChatMessageLinkify
                   onInternalLinkClick={handleInternalLinkClick}
                 >
-                  {messageText.map((text) => text)}
+                  {!messageText.length ? (
+                    <i>Loading...</i>
+                  ) : (
+                    messageText.map((text) => text)
+                  )}
                 </ChatMessageLinkify>
                 {!isSystemMessage && (
                   <Time
@@ -445,7 +431,7 @@ export default function ChatMessage({
                   elem={discussionMessage}
                   className={styles.dropdownMenu}
                   variant={Orientation.Arrow}
-                  onMenuToggle={handleMenuToggle}
+                  onMenuToggle={setIsMenuOpen}
                   transparent
                   isDiscussionMessage
                   isChatMessage={chatType === ChatType.ChatMessages}
@@ -468,14 +454,6 @@ export default function ChatMessage({
                 />
               )}
             </div>
-            {isSystemMessage && (
-              <Time
-                createdAtDate={createdAtDate}
-                editedAtDate={editedAtDate}
-                moderation={discussionMessage.moderation}
-                isNotCurrentUserMessage={isNotCurrentUserMessage}
-              />
-            )}
           </>
         )}
       </div>

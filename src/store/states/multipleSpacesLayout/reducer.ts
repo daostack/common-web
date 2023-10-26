@@ -28,9 +28,12 @@ const updateProjectInBreadcrumbs = (
   );
 
   if (itemIndex > -1) {
+    const item = state.breadcrumbs.items[itemIndex];
+
     state.breadcrumbs.items[itemIndex] = {
-      ...state.breadcrumbs.items[itemIndex],
-      ...payload,
+      ...item,
+      name: payload.name ?? item.name,
+      image: payload.image ?? item.image,
     };
   }
 };
@@ -56,20 +59,8 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
   )
   .handleAction(actions.addOrUpdateProjectInBreadcrumbs, (state, { payload }) =>
     produce(state, (nextState) => {
-      if (nextState.breadcrumbs?.type !== InboxItemType.FeedItemFollow) {
-        return;
-      }
-
-      const isItemFound = nextState.breadcrumbs.items.some(
-        (item) => item.commonId === payload.commonId,
-      );
-
-      if (isItemFound) {
-        updateProjectInBreadcrumbs(nextState, payload);
-      } else {
-        nextState.breadcrumbs.items =
-          nextState.breadcrumbs.items.concat(payload);
-      }
+      // Intentionally removed adding logic, because now we do not need any new items in the list
+      updateProjectInBreadcrumbs(nextState, payload);
     }),
   )
   .handleAction(actions.updateProjectInBreadcrumbs, (state, { payload }) =>

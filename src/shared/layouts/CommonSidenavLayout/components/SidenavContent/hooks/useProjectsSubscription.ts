@@ -28,6 +28,7 @@ const getProjectItemFromCommon = async (
     image: common.image,
     name: common.name,
     directParent: common.directParent,
+    rootCommonId: common.rootCommonId,
   };
 
   if (initialItem) {
