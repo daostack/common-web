@@ -15,6 +15,7 @@ import { inboxActions, InboxItems, selectInboxItems } from "@/store/states";
 
 interface Return extends Pick<InboxItems, "data" | "loading" | "hasMore"> {
   fetch: () => void;
+  refetch: () => void;
 }
 
 interface ItemBatch<T = FeedItemFollow> {
@@ -128,6 +129,16 @@ export const useInboxItems = (
     );
   };
 
+  const refetch = () => {
+    dispatch(inboxActions.resetInboxItems());
+    dispatch(
+      inboxActions.getInboxItems.request({
+        limit: 15,
+        unread: options?.unread,
+      }),
+    );
+  }
+
   useEffect(() => {
     if (!inboxItems.firstDocTimestamp || !userId) {
       return;
@@ -219,5 +230,6 @@ export const useInboxItems = (
   return {
     ...inboxItems,
     fetch,
+    refetch,
   };
 };
