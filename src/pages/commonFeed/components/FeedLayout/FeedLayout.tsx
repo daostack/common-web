@@ -653,6 +653,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             {topContent}
             {isContentEmpty && <p className={styles.emptyText}>{emptyText}</p>}
             <InfiniteScroll
+              markerClassName={
+                allFeedItems && allFeedItems.length > 7
+                  ? styles.infiniteScrollMarker
+                  : ""
+              }
               onFetchNext={onFetchNext}
               isLoading={loading}
               loaderDelay={LOADER_APPEARANCE_DELAY}
