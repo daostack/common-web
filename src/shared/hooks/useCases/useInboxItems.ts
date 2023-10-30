@@ -13,7 +13,8 @@ import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { FeedItemFollow, FeedItemFollowWithMetadata } from "@/shared/models";
 import { inboxActions, InboxItems, selectInboxItems } from "@/store/states";
 
-interface Return extends Pick<InboxItems, "data" | "loading" | "hasMore"> {
+interface Return
+  extends Pick<InboxItems, "data" | "loading" | "hasMore" | "batchNumber"> {
   fetch: () => void;
 }
 
