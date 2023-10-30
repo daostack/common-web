@@ -1,30 +1,23 @@
 import React, { FC } from "react";
-import { BoldPlusIcon, PlusIcon } from "@/shared/icons";
-import { ButtonIcon, ButtonVariant } from "@/shared/ui-kit";
+import classnames from "classnames";
+import { PlusIcon } from "@/shared/icons";
+import { ButtonIcon } from "@/shared/ui-kit";
 import styles from "./PlusButton.module.scss";
 
 interface PlusButtonProps {
   className?: string;
-  isMobileVersion?: boolean;
   onClick?: () => void;
 }
 
 const PlusButton: FC<PlusButtonProps> = (props) => {
-  const { className, isMobileVersion, onClick } = props;
+  const { className, onClick } = props;
 
   return (
     <ButtonIcon
-      className={className}
-      variant={
-        isMobileVersion ? ButtonVariant.Transparent : ButtonVariant.PrimaryGray
-      }
+      className={classnames(styles.buttonIcon, className)}
       onClick={onClick}
     >
-      {isMobileVersion ? (
-        <PlusIcon className={styles.icon} />
-      ) : (
-        <BoldPlusIcon className={styles.icon} />
-      )}
+      <PlusIcon className={styles.icon} />
     </ButtonIcon>
   );
 };

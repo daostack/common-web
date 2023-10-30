@@ -1,9 +1,17 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
+.buttonIcon {
+  background-color: transparent;
+
+  &:hover {
+    background-color: $light-gray-1;
+  }
+}
+
 .icon {
-  width: 0.625rem;
-  height: 0.625rem;
+  width: 1rem;
+  height: 1rem;
   color: $c-gray-800;
 
   @include tablet {
