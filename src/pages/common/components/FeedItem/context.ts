@@ -29,6 +29,7 @@ export interface FeedItemBaseContentProps {
   seen?: boolean;
   ownerId?: string;
   commonName?: string;
+  commonId?: string;
   renderImage?: (className?: string) => ReactNode;
   renderLeftContent?: () => ReactNode;
   image?: string;

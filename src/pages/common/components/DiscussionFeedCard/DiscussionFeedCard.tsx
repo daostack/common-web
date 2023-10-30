@@ -321,6 +321,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           isPreviewMode={isPreviewMode}
           isPinned={isPinned}
           commonName={commonName}
+          commonId={commonId}
           image={commonImage}
           imageAlt={`${commonName}'s image`}
           isProject={isProject}
