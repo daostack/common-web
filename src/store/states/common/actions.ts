@@ -119,7 +119,7 @@ export const getFeedItems = createAsyncAction(
     feedItemId?: string;
     limit?: number;
   },
-  Omit<FeedItems, "loading">,
+  Omit<FeedItems, "loading" | "batchNumber">,
   Error,
   string
 >();

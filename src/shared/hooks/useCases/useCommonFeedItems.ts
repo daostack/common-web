@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { CommonFeedService } from "@/services";
 import { commonActions, FeedItems, selectFeedItems } from "@/store/states";
 
-interface Return extends Pick<FeedItems, "data" | "loading" | "hasMore"> {
+interface Return
+  extends Pick<FeedItems, "data" | "loading" | "hasMore" | "batchNumber"> {
   fetch: (feedItemId?: string) => void;
 }
 

@@ -88,6 +88,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     loading: areInboxItemsLoading,
     hasMore: hasMoreInboxItems,
     fetch: fetchInboxItems,
+    batchNumber,
   } = useInboxItems(feedItemIdsForNotListening, {
     unread: queryParams.unread === "true",
   });
@@ -257,6 +258,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         feedItems={inboxItems}
         loading={areInboxItemsLoading || !user}
         shouldHideContent={!user}
+        batchNumber={batchNumber}
         onFetchNext={fetchMoreInboxItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         renderChatChannelItem={renderChatChannelItem}

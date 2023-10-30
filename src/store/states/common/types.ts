@@ -18,6 +18,7 @@ export interface FeedItems {
   hasMore: boolean;
   firstDocTimestamp: Timestamp | null;
   lastDocTimestamp: Timestamp | null;
+  batchNumber: number;
 }
 
 export interface PinnedFeedItems {

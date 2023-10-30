@@ -1,6 +1,7 @@
 @import "../../../../styles/sizes";
 
 .content {
+  position: relative;
   flex: 1;
   padding: 0 1.5rem;
   display: flex;
@@ -15,6 +16,11 @@
 .contentCentered {
   align-items: center;
   justify-content: center;
+}
+
+.infiniteScrollMarker {
+  position: absolute;
+  bottom: 50rem;
 }
 
 .emptyText {
