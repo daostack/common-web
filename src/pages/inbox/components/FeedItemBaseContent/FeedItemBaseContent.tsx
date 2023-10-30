@@ -1,7 +1,11 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
-import { FeedCardTags, FeedItemBaseContentProps } from "@/pages/common";
+import {
+  FeedCardTags,
+  FeedItemBaseContentProps,
+  useFeedItemContext,
+} from "@/pages/common";
 import { PredefinedTypes } from "@/shared/models";
 import {
   ContextMenu,
@@ -36,10 +40,12 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     isImageRounded,
     isProject,
     discussionPredefinedType,
+    dmUserId,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isLongPressed, setIsLongPressed] = useState(false);
+  const { onUserSelect } = useFeedItemContext();
   const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
   const finalTitle =
     discussionPredefinedType === PredefinedTypes.General && commonName
@@ -97,6 +103,12 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     }
   };
 
+  const handleAvatarClick = () => {
+    if (onUserSelect && dmUserId) {
+      onUserSelect(dmUserId);
+    }
+  };
+
   return (
     <div
       className={classNames(styles.container, {
@@ -108,14 +120,16 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       onContextMenu={handleContextMenu}
       {...getLongPressProps()}
     >
-      {renderImage?.(imageClassName) || (
-        <CommonAvatar
-          name={commonName}
-          src={image}
-          className={imageClassName}
-          alt={imageAlt}
-        />
-      )}
+      <div onClick={handleAvatarClick}>
+        {renderImage?.(imageClassName) || (
+          <CommonAvatar
+            name={commonName}
+            src={image}
+            className={imageClassName}
+            alt={imageAlt}
+          />
+        )}
+      </div>
       <div className={styles.content}>
         <div className={styles.topContent}>
           <p
