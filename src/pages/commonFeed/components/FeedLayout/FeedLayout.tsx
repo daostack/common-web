@@ -79,6 +79,7 @@ import {
   MobileProfile,
   SplitView,
 } from "./components";
+import { BATCHES_AMOUNT_TO_PRELOAD } from "./constants";
 import { useUserForProfile } from "./hooks";
 import {
   checkShouldAutoOpenPreview,
@@ -114,6 +115,7 @@ interface FeedLayoutProps {
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;
   shouldHideContent?: boolean;
+  batchNumber?: number;
   onFetchNext: (feedItemId?: string) => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
@@ -153,6 +155,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     topFeedItems = [],
     loading,
     shouldHideContent = false,
+    batchNumber,
     onFetchNext,
     renderFeedItemBaseContent,
     renderChatChannelItem,
@@ -602,6 +605,16 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId(activeFeedItemId);
     }
   }, [isTabletView, shouldAutoExpandItem, activeFeedItemId]);
+
+  useEffect(() => {
+    if (
+      batchNumber &&
+      batchNumber >= 1 &&
+      batchNumber <= BATCHES_AMOUNT_TO_PRELOAD
+    ) {
+      onFetchNext();
+    }
+  }, [batchNumber]);
 
   useImperativeHandle(
     ref,
