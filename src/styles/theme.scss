@@ -1,4 +1,7 @@
 :root[data-theme="light"] {
+  --tertiary-background: #fff9fd;
+  --primary-color: #131b23;
+
   --primary-fill: #c32ea3;
   --secondary-fill: #a75a93;
   --gentle-fill: #f3d4eb;
@@ -13,4 +16,20 @@
 }
 
 :root[data-theme="dark"] {
+  --primary-background: #1f2535;
+  --secondary-background: #131b23;
+  --tertiary-background: #2e3452;
+  --primary-color: #ffffff;
+
+  --primary-fill: #c32ea3;
+  --secondary-fill: #a75a93;
+  --gentle-fill: #f3d4eb;
+  --hover-fill: #fff3fc;
+  --gentle-gray: #f4f5f5;
+  --medium-gray: #dcdee7;
+  --strong-gray: #7a819c;
+  --gray-60: #6b718e;
+  --red: #ff603e;
+
+  --white-text: #ffffff;
 }
