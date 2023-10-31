@@ -448,6 +448,7 @@ export default function ChatMessage({
                   isControlledDropdown={false}
                   isOpen={isMenuOpen}
                   styles={{
+                    menu: styles.elementDropdownMenu,
                     menuButton: classNames(styles.menuArrowButton, {
                       [styles.menuArrowButtonVisible]: isMenuOpen,
                     }),
