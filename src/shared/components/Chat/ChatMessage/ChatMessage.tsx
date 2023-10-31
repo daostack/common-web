@@ -448,7 +448,10 @@ export default function ChatMessage({
                   isControlledDropdown={false}
                   isOpen={isMenuOpen}
                   styles={{
-                    menuButton: styles.menuArrowButton,
+                    menu: styles.elementDropdownMenu,
+                    menuButton: classNames(styles.menuArrowButton, {
+                      [styles.menuArrowButtonVisible]: isMenuOpen,
+                    }),
                   }}
                   feedItemId={feedItemId}
                   onDelete={onMessageDelete}
