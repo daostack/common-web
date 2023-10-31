@@ -131,12 +131,7 @@ export const useInboxItems = (
 
   const refetch = () => {
     dispatch(inboxActions.resetInboxItems());
-    dispatch(
-      inboxActions.getInboxItems.request({
-        limit: 15,
-        unread: options?.unread,
-      }),
-    );
+    fetch();
   }
 
   useEffect(() => {
