@@ -20,6 +20,7 @@ const initialInboxItems: InboxItems = {
   hasMore: false,
   firstDocTimestamp: null,
   lastDocTimestamp: null,
+  batchNumber: 0,
 };
 
 const initialState: InboxState = {
@@ -432,6 +433,7 @@ export const reducer = createReducer<InboxState, Action>(initialState)
         ...payload,
         data: payloadData && (nextState.items.data || []).concat(payloadData),
         loading: false,
+        batchNumber: nextState.items.batchNumber + 1,
       };
     }),
   )

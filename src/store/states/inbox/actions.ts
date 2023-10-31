@@ -16,7 +16,7 @@ export const getInboxItems = createAsyncAction(
     limit?: number;
     unread?: boolean;
   },
-  Omit<InboxItems, "loading">,
+  Omit<InboxItems, "loading" | "batchNumber">,
   Error,
   string
 >();

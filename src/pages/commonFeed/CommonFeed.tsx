@@ -161,6 +161,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     loading: areCommonFeedItemsLoading,
     hasMore: hasMoreCommonFeedItems,
     fetch: fetchCommonFeedItems,
+    batchNumber,
   } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
 
   const {
@@ -508,6 +509,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         topFeedItems={topFeedItems}
         feedItems={commonFeedItems}
         loading={areCommonFeedItemsLoading}
+        batchNumber={batchNumber}
         onFetchNext={fetchMoreCommonFeedItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         onFeedItemUpdate={handleFeedItemUpdate}

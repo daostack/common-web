@@ -381,7 +381,8 @@ export default function ChatMessage({
               <div
                 className={classNames(styles.messageContent, {
                   [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
-                  [styles.messageContentRtl]: isRtlText(discussionMessage.text),
+                  [styles.messageContentRtl]:
+                    !isSystemMessage && isRtlText(discussionMessage.text),
                 })}
               >
                 {filePreview && (

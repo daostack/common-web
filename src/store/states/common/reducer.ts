@@ -15,6 +15,7 @@ const initialFeedItems: FeedItems = {
   hasMore: false,
   firstDocTimestamp: null,
   lastDocTimestamp: null,
+  batchNumber: 0,
 };
 
 const initialPinnedFeedItems: PinnedFeedItems = {
@@ -428,6 +429,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
         data:
           payloadData && (nextState.feedItems.data || []).concat(payloadData),
         loading: false,
+        batchNumber: nextState.feedItems.batchNumber + 1,
       };
     }),
   )

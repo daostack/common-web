@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import landingVideoPosterSrc from "@/shared/assets/images/landing-video-poster.jpg";
+import landingVideoPosterSrc from "@/shared/assets/images/landing-video-poster.jpeg";
 import landingVideoSrc from "@/shared/assets/videos/landing-video.mp4";
 import { useIsBigPhoneView } from "@/shared/hooks/viewport";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
