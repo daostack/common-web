@@ -16,20 +16,22 @@ const InboxFilterButton: FC<InboxFilterButtonProps> = (props) => {
   const history = useHistory();
   const queryParams = useQueryParams();
   const { removeQueryParams } = useRemoveQueryParams();
-  const isActiveUnreadInboxItemsQueryParam = queryParams.unread === "true";
+  const isActiveUnreadInboxItemsQueryParam = queryParams[QueryParamKey.Unread] === "true";
+
+  const handleFilterIconClick = (): void => {
+    if (isActiveUnreadInboxItemsQueryParam) {
+      removeQueryParams(QueryParamKey.Unread);
+    } else {
+      history.push(`${ROUTE_PATHS.INBOX}?${QueryParamKey.Unread}=true`);
+    }
+  }
 
   return (
     <ButtonIcon
       className={classnames(styles.buttonIcon, className, {
         [styles.unreadFilterActive]: isActiveUnreadInboxItemsQueryParam,
       })}
-      onClick={() => {
-        if (isActiveUnreadInboxItemsQueryParam) {
-          removeQueryParams(QueryParamKey.Unread);
-        } else {
-          history.push(`${ROUTE_PATHS.INBOX}?${QueryParamKey.Unread}=true`);
-        }
-      }}
+      onClick={handleFilterIconClick}
     >
       <InboxFilterIcon
         className={classnames(styles.icon, {

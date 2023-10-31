@@ -4,7 +4,7 @@
 .buttonIcon {
   background-color: transparent;
 
-  @media only screen and (min-width: #{$laptop-breakpoint + 1}) {
+  @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: $light-gray-1;
     }
@@ -15,9 +15,9 @@
   background-color: $c-pink-next-dark;
   color: $white;
 
-  @media only screen and (min-width: #{$laptop-breakpoint + 1}) {
+  @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: $c-gray-800;
+      background-color: $c-pink-mention-2;
     }
   }
 }

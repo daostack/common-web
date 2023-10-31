@@ -68,7 +68,8 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
-  const isActiveUnreadInboxItemsQueryParam = queryParams.unread === "true";
+  const isActiveUnreadInboxItemsQueryParam =
+    queryParams[QueryParamKey.Unread] === "true";
   const sharedFeedItemIdQueryParam = queryParams[QueryParamKey.Item];
   const sharedFeedItemId =
     (typeof sharedFeedItemIdQueryParam === "string" &&
