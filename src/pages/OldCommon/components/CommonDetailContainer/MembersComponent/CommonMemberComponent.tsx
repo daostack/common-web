@@ -79,7 +79,7 @@ const CommonMember: FC<CommonMemberProps> = ({
     circlesWithHighestTier[circlesWithHighestTier.length - 1];
 
   governanceCircles.forEach((circle) => {
-    if (!highestMemberCircle.hierarchy) {
+    if (!highestMemberCircle?.hierarchy) {
       return;
     }
     if (!circle.hierarchy) {
