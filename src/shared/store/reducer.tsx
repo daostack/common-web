@@ -1,6 +1,11 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
-import { Language, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
+import {
+  Language,
+  ScreenSize,
+  SMALL_SCREEN_BREAKPOINT,
+  Theme as Themes,
+} from "../constants";
 import { SharedStateType } from "../interfaces";
 import { getTheme } from "../utils/getTheme";
 import * as actions from "./actions";
@@ -109,6 +114,12 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
   .handleAction(actions.changeTheme, (state, action) =>
     produce(state, (nextState) => {
       nextState.theme = action.payload;
+    }),
+  )
+  .handleAction(actions.toggleTheme, (state) =>
+    produce(state, (nextState) => {
+      nextState.theme =
+        nextState.theme === Themes.Dark ? Themes.Light : Themes.Dark;
     }),
   );
 

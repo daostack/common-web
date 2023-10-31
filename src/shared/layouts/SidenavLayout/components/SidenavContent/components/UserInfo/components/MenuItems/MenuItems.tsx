@@ -1,8 +1,9 @@
 import React, { FC } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { Menu } from "@headlessui/react";
 import { logOut } from "@/pages/Auth/store/actions";
+import { Theme } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import {
   Avatar3Icon,
@@ -10,6 +11,8 @@ import {
   LogoutIcon,
   SettingsIcon,
 } from "@/shared/icons";
+import { toggleTheme } from "@/shared/store/actions";
+import { selectTheme } from "@/shared/store/selectors";
 import { MenuItem } from "./components";
 import { Item, ItemType } from "./types";
 import styles from "./MenuItems.module.scss";
@@ -33,6 +36,7 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
   const dispatch = useDispatch();
   const { getProfilePagePath, getBillingPagePath, getSettingsPagePath } =
     useRoutesContext();
+  const theme = useSelector(selectTheme);
   const items: Item[] = [
     {
       key: "my-profile",
@@ -51,6 +55,15 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
       text: "Billing",
       icon: <BillingIcon />,
       to: getBillingPagePath(),
+    },
+    {
+      key: "theme",
+      type: ItemType.Button,
+      text: `Change theme to ${theme === Theme.Dark ? "light" : "dark"}`,
+      icon: <BillingIcon />,
+      onClick: () => {
+        dispatch(toggleTheme());
+      },
     },
     {
       key: "log-out",

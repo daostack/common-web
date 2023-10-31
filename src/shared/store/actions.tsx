@@ -52,3 +52,7 @@ export const changeLanguage = createStandardAction(
 export const changeTheme = createStandardAction(
   SharedActionTypes.CHANGE_THEME,
 )<Theme>();
+
+export const toggleTheme = createStandardAction(
+  SharedActionTypes.TOGGLE_THEME,
+)();
