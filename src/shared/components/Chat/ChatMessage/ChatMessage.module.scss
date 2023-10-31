@@ -68,6 +68,13 @@
   }
 }
 
+.menuArrowButton {
+  display: none;
+}
+.menuArrowButtonVisible {
+  display: block;
+}
+
 .messageTextWithReply {
   padding: 0.25rem 0rem 0.5rem;
 }
@@ -218,10 +225,6 @@
   .custom-dropdown-wrapper__menu {
     z-index: $dropdown-z-index;
   }
-}
-
-.menuArrowButton {
-  display: none;
 }
 
 .highlighted {
