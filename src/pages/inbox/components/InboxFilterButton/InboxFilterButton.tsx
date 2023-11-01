@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import classnames from "classnames";
-import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
+import { QueryParamKey } from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { InboxFilterIcon } from "@/shared/icons";
 import { ButtonIcon } from "@/shared/ui-kit";
@@ -14,17 +14,19 @@ interface InboxFilterButtonProps {
 const InboxFilterButton: FC<InboxFilterButtonProps> = (props) => {
   const { className } = props;
   const history = useHistory();
+  const location = useLocation();
   const queryParams = useQueryParams();
   const { removeQueryParams } = useRemoveQueryParams();
-  const isActiveUnreadInboxItemsQueryParam = queryParams[QueryParamKey.Unread] === "true";
+  const isActiveUnreadInboxItemsQueryParam =
+    queryParams[QueryParamKey.Unread] === "true";
 
   const handleFilterIconClick = (): void => {
     if (isActiveUnreadInboxItemsQueryParam) {
       removeQueryParams(QueryParamKey.Unread);
     } else {
-      history.push(`${ROUTE_PATHS.INBOX}?${QueryParamKey.Unread}=true`);
+      history.push(`${location.pathname}?${QueryParamKey.Unread}=true`);
     }
-  }
+  };
 
   return (
     <ButtonIcon
