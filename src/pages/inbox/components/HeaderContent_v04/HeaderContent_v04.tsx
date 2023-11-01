@@ -4,6 +4,7 @@ import { useIsTabletView } from "@/shared/hooks/viewport";
 import { InboxIcon } from "@/shared/icons";
 import { getPluralEnding } from "@/shared/utils";
 import { DirectMessageButton } from "../DirectMessageButton";
+import { PlusButton } from "../HeaderContent/components";
 import styles from "./HeaderContent_v04.module.scss";
 
 interface HeaderContentProps {
@@ -32,6 +33,7 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
       <DirectMessageButton
         className={styles.directMessageButton}
         isMobileVersion={isMobileVersion}
+        ButtonComponent={PlusButton}
       />
     </div>
   );
