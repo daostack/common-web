@@ -18,14 +18,14 @@
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column-reverse;
-  padding: 0.5rem 2rem 0;
+  padding: 0.5rem 1.375rem 0;
   padding-bottom: calc(var(--chat-input-wrapper-height) + 7rem);
 }
 
 .emptyChat {
   display: flex;
   justify-content: center;
-  padding: 0.5rem 2rem 0;
+  padding: 0.5rem 1.375rem 0;
   padding-bottom: calc(var(--chat-input-wrapper-height) + 7rem);
 }
 
