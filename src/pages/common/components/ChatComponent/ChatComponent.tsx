@@ -189,7 +189,7 @@ export default function ChatComponent({
       isScrolling,
       chatContentRect: chatContainerRef.current?.getBoundingClientRect(),
     }),
-    [isScrolling],
+    [isScrolling, chatContainerRef.current],
   );
 
   const [message, setMessage] = useState<TextEditorValue>(
