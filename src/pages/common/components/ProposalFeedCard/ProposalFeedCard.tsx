@@ -270,6 +270,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           lastSeenItem: feedItemUserMetadata?.lastSeen,
           lastSeenAt: feedItemUserMetadata?.lastSeenAt,
           seenOnce: feedItemUserMetadata?.seenOnce,
+          hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
         });
       }
     }, [
@@ -281,6 +282,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       feedItemUserMetadata?.lastSeen,
       feedItemUserMetadata?.lastSeenAt,
       feedItemUserMetadata?.seenOnce,
+      feedItemUserMetadata?.hasUnseenMention,
     ]);
 
     useEffect(() => {
@@ -458,6 +460,9 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
           menuItems={menuItems}
           ownerId={item.userId}
+          hasUnseenMention={
+            feedItemUserMetadata?.hasUnseenMention ?? !isFeedItemUserFetched
+          }
         >
           {renderContent()}
         </FeedCard>

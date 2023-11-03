@@ -168,6 +168,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           lastSeenItem: feedItemUserMetadata?.lastSeen,
           lastSeenAt: feedItemUserMetadata?.lastSeenAt,
           seenOnce: feedItemUserMetadata?.seenOnce,
+          hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
         });
       }
     }, [
@@ -177,6 +178,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       feedItemUserMetadata?.lastSeen,
       feedItemUserMetadata?.lastSeenAt,
       feedItemUserMetadata?.seenOnce,
+      feedItemUserMetadata?.hasUnseenMention,
     ]);
 
     const onDiscussionDelete = useCallback(async () => {
@@ -333,6 +335,10 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
           ownerId={item.userId}
           discussionPredefinedType={discussion?.predefinedType}
+          hasUnseenMention={
+            feedItemUserMetadata?.hasUnseenMention ??
+            !isFeedItemUserMetadataFetched
+          }
         >
           {renderContent()}
         </FeedCard>
