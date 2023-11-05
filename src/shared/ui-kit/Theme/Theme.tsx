@@ -12,10 +12,7 @@ const Theme = () => {
     dispatch(changeTheme(theme === Themes.Dark ? Themes.Light : Themes.Dark));
   };
 
-  /**
-   * Need design. For now 'Light' theme is the default.
-   */
-  return <div onClick={handleChange}>Toggle Theme</div>;
+  return <div onClick={handleChange}>Light/Dark mode</div>;
 };
 
 export default Theme;

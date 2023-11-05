@@ -10,6 +10,8 @@ import {
   LogoutIcon,
   SettingsIcon,
 } from "@/shared/icons";
+import ThemeIcon from "@/shared/icons/theme.icon";
+import { Theme } from "@/shared/ui-kit/Theme";
 import { MenuItem } from "./components";
 import { Item, ItemType } from "./types";
 import styles from "./MenuItems.module.scss";
@@ -51,6 +53,13 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
       text: "Billing",
       icon: <BillingIcon />,
       to: getBillingPagePath(),
+    },
+    {
+      key: "theme",
+      type: ItemType.Button,
+      text: <Theme />,
+      icon: <ThemeIcon />,
+      onClick: () => {},
     },
     {
       key: "log-out",

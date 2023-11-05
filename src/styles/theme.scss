@@ -1,4 +1,6 @@
 :root[data-theme="light"] {
+  --primary-background: #ffffff;
+  --secondary-background: #f8f8f5;
   --primary-fill: #c32ea3;
   --secondary-fill: #a75a93;
   --gentle-fill: #f3d4eb;
@@ -13,4 +15,6 @@
 }
 
 :root[data-theme="dark"] {
+  --primary-background: #1f2535;
+  --secondary-background: #2e3452;
 }
