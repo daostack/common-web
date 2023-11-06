@@ -461,7 +461,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           menuItems={menuItems}
           ownerId={item.userId}
           hasUnseenMention={
-            feedItemUserMetadata?.hasUnseenMention ?? !isFeedItemUserFetched
+            feedItemUserMetadata?.hasUnseenMention ??
+            !isFeedItemUserMetadataFetched
           }
         >
           {renderContent()}
