@@ -1,8 +1,8 @@
 @import "../../../../../../../constants";
 
 .item {
-  --item-color: #{$c-neutrals-600};
-  --item-bg-color: #{$c-shades-white};
+  --item-color: var(--primary-text);
+  --item-bg-color: var(--primary-background);
   --item-border: 0.0625rem solid #{$c-neutrals-100};
 
   margin: 0;
@@ -34,7 +34,7 @@
   }
 }
 .itemActive {
-  --item-bg-color: #{$c-pink-hover-feed-cards};
+  --item-bg-color: var(--hover-fill);
 }
 
 .itemWithWarning {

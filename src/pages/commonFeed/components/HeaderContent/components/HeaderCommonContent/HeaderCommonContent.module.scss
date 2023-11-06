@@ -83,6 +83,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  color: var(--primary-text);
 
   @include tablet {
     font-size: $moderate-xsmall;

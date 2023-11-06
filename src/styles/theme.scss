@@ -10,11 +10,14 @@
   --strong-gray: #7a819c;
   --gray-60: #6b718e;
   --red: #ff603e;
-
+  --hover-fill: #fff9fd;
   --white-text: #ffffff;
+  --primary-text: #001a36;
 }
 
 :root[data-theme="dark"] {
   --primary-background: #1f2535;
   --secondary-background: #2e3452;
+  --hover-fill: #131b23;
+  --primary-text: #ffffff;
 }

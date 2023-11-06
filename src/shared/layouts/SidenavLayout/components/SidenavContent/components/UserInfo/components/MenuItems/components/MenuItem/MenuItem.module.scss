@@ -1,14 +1,14 @@
 @import "../../../../../../../../../../../constants";
 
 .item {
-  --item-bg-color: #{$c-shades-white};
+  --item-bg-color: var(--primary-background);
   --item-border: 0.0625rem solid #{$c-neutrals-100};
 
   padding: 1.125rem 1.5rem;
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: inherit;
+  color: var(--primary-text);
   background-color: var(--item-bg-color);
   border: var(--item-border);
   border-bottom: 0;

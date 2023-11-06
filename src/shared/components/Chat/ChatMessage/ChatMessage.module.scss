@@ -53,13 +53,13 @@
 .messageText {
   padding: 0.5rem 0rem;
   border-radius: 0.875rem;
-  background-color: $c-light-gray;
+  background-color: var(--secondary-background);
   flex-direction: row;
   box-sizing: border-box;
   position: relative;
   text-align: start;
   font-size: $small;
-  color: $secondary-blue;
+  color: var(--primary-text);
 
   &:hover {
     .menuArrowButton {
@@ -108,7 +108,7 @@
 .messageName {
   font-size: $xsmall;
   font-weight: 600;
-  color: $secondary-blue;
+  color: var(--primary-text);
   margin-right: 2.5rem;
   margin-left: 1rem;
   margin-bottom: 0.5rem;

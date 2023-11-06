@@ -8,7 +8,7 @@
   padding-right: 1.5rem;
   display: flex;
   align-items: center;
-  background-color: $c-shades-white;
+  background-color: var(--primary-background);
   border-bottom: 0.0625rem solid $c-light-gray;
   box-sizing: border-box;
 }

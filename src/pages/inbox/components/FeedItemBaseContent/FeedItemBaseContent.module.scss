@@ -12,9 +12,9 @@
   user-select: none;
 
   &:hover {
-    background-color: $c-pink-hover-feed-cards;
+    background-color: var(--hover-fill);
     .lastMessage {
-      background-color: $c-pink-hover-feed-cards;
+      background-color: var(--hover-fill);
     }
     .lastMessageActive {
       background-color: $c-pink-active-feed-cards;

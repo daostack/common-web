@@ -1,11 +1,11 @@
 @import "../../../../../../../../../constants";
 
 .item {
-  --bg-color: #{$c-shades-white};
+  --bg-color: --var(--primary-background);
   --item-pl-per-level: 1.125rem;
   --item-arrow-pl: var(--item-pl-per-level);
   --item-image-mr: 0.5rem;
-  --item-text-color: #{$c-neutrals-600};
+  --item-text-color: var(--primary-text);
 
   height: 2.75rem;
   padding-left: calc(var(--item-pl-per-level) * (var(--tree-level, 1) - 1));
@@ -20,7 +20,7 @@
   overflow: hidden;
 
   &:hover {
-    --bg-color: #{$c-primary-100};
+    --bg-color: var(--hover-fill);
   }
 }
 .itemActive {

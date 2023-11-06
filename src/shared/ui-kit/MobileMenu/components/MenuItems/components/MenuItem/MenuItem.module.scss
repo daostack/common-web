@@ -1,8 +1,8 @@
 @import "../../../../../../../constants";
 
 .item {
-  --item-color: #{$c-neutrals-600};
-  --item-bg-color: rgba(242, 242, 242, 0.8);
+  --item-color: var(--primary-text);
+  --item-bg-color: var(--primary-background);
 
   margin: 0;
   padding: 1.125rem 1.5rem;

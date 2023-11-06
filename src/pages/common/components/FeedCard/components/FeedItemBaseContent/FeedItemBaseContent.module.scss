@@ -2,7 +2,7 @@
 @import "../../../../../../styles/sizes";
 
 .container {
-  --title-color: #{$secondary-blue};
+  --title-color: var(--primary-text);
 
   min-height: 3.0625rem;
   max-height: 5rem;
@@ -14,9 +14,9 @@
   user-select: none;
 
   &:hover {
-    background-color: $c-pink-hover-feed-cards;
+    background-color: var(--hover-fill);
     .lastMessage {
-      background-color: $c-pink-hover-feed-cards;
+      background-color: var(--hover-fill);
     }
     .lastMessageActive {
       background-color: $c-pink-active-feed-cards;
