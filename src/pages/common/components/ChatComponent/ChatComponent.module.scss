@@ -18,7 +18,12 @@
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column-reverse;
-  padding: 0.5rem 2rem var(--chat-input-wrapper-height) 2rem;
+  padding: 0.5rem 2rem 0 2rem;
+  margin-bottom: var(--chat-input-wrapper-height);
+
+  @include big-phone {
+    margin-bottom: 0;
+  }
 }
 
 .emptyChat {
