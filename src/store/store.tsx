@@ -11,6 +11,7 @@ import {
 import { composeWithDevTools } from "redux-devtools-extension";
 import freeze from "redux-freeze";
 import { persistStore, persistReducer, PersistConfig } from "redux-persist";
+import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import storage from "redux-persist/lib/storage";
 import createSagaMiddleware from "redux-saga";
 import { AppState } from "@/shared/interfaces";
@@ -29,6 +30,7 @@ const persistConfig: PersistConfig<AppState> = {
     "inbox",
     "multipleSpacesLayout",
   ],
+  stateReconciler: autoMergeLevel2,
 };
 
 const sagaMiddleware = createSagaMiddleware();
