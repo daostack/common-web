@@ -105,6 +105,11 @@ export const reducer = createReducer<CacheState, Action>(initialState)
       nextState.feedByCommonIdStates[commonId] = { ...state };
     }),
   )
+  .handleAction(actions.resetFeedStates, (state) =>
+    produce(state, (nextState) => {
+      nextState.feedByCommonIdStates = {};
+    }),
+  )
   .handleAction(actions.updateFeedItemUserMetadata, (state, { payload }) =>
     produce(state, (nextState) => {
       const { commonId, userId, feedObjectId, state } = payload;

@@ -143,6 +143,10 @@ export const updateFeedStateByCommonId = createStandardAction(
   state: FeedState;
 }>();
 
+export const resetFeedStates = createStandardAction(
+  CacheActionType.RESET_FEED_STATES,
+)();
+
 export const getFeedItemUserMetadata = createAsyncAction(
   CacheActionType.GET_FEED_ITEM_USER_METADATA,
   CacheActionType.GET_FEED_ITEM_USER_METADATA_SUCCESS,
