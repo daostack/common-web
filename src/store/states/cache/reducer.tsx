@@ -13,6 +13,7 @@ const initialState: CacheState = {
   discussionStates: {},
   discussionMessagesStates: {},
   proposalStates: {},
+  feedByCommonIdStates: {},
   feedItemUserMetadataStates: {},
   chatChannelUserStatusStates: {},
 };
@@ -95,6 +96,13 @@ export const reducer = createReducer<CacheState, Action>(initialState)
       const { proposalId, state } = payload;
 
       nextState.proposalStates[proposalId] = { ...state };
+    }),
+  )
+  .handleAction(actions.updateFeedStateByCommonId, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId, state } = payload;
+
+      nextState.feedByCommonIdStates[commonId] = { ...state };
     }),
   )
   .handleAction(actions.updateFeedItemUserMetadata, (state, { payload }) =>
