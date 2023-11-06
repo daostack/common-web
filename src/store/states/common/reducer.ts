@@ -468,6 +468,46 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       };
     }),
   )
+  .handleAction(actions.setFeedState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const {
+        data: { feedItems, pinnedFeedItems, sharedFeedItem },
+        sharedFeedItemId,
+      } = payload;
+      nextState.feedItems = {
+        ...feedItems,
+        hasMore: true,
+      };
+      nextState.pinnedFeedItems = { ...pinnedFeedItems };
+
+      if (sharedFeedItem && sharedFeedItem.itemId === sharedFeedItemId) {
+        return;
+      }
+      if (
+        sharedFeedItem &&
+        !pinnedFeedItems.data?.some(
+          (item) => item.itemId === sharedFeedItem.itemId,
+        ) &&
+        !feedItems.data?.some((item) => item.itemId === sharedFeedItem.itemId)
+      ) {
+        const data = [sharedFeedItem, ...(feedItems.data || [])];
+        sortFeedItems(data);
+        nextState.feedItems.data = data;
+      }
+      if (sharedFeedItemId) {
+        nextState.feedItems.data =
+          nextState.feedItems.data &&
+          nextState.feedItems.data.filter(
+            (item) => item.itemId !== sharedFeedItemId,
+          );
+        nextState.pinnedFeedItems.data =
+          nextState.pinnedFeedItems.data &&
+          nextState.pinnedFeedItems.data.filter(
+            (item) => item.itemId !== sharedFeedItemId,
+          );
+      }
+    }),
+  )
   .handleAction(actions.addNewFeedItems, (state, { payload }) =>
     produce(state, (nextState) => {
       addNewFeedItems(nextState, payload);
