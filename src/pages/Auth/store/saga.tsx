@@ -16,6 +16,7 @@ import { getFundingRequestNotification } from "@/shared/utils/notifications";
 import {
   cacheActions,
   commonLayoutActions,
+  inboxActions,
   multipleSpacesLayoutActions,
 } from "@/store/states";
 import {
@@ -467,6 +468,7 @@ function* logOut() {
 
   yield put(multipleSpacesLayoutActions.resetMultipleSpacesLayout());
   yield put(commonLayoutActions.clearData());
+  yield put(inboxActions.resetInbox());
   history.push(ROUTE_PATHS.HOME);
   yield true;
 }
