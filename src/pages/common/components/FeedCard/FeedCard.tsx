@@ -46,6 +46,7 @@ type FeedCardProps = PropsWithChildren<{
   discussionPredefinedType?: PredefinedTypes;
   hasFiles?: boolean;
   hasImages?: boolean;
+  hasUnseenMention?: boolean;
 }>;
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -81,6 +82,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     menuItems,
     seenOnce,
     seen,
+    hasUnseenMention,
     ownerId,
     discussionPredefinedType,
     hasImages,
@@ -207,6 +209,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
             discussionPredefinedType,
             hasFiles,
             hasImages,
+            hasUnseenMention,
           })}
         </div>
       )}

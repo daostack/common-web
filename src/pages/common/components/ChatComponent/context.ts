@@ -15,6 +15,7 @@ export interface ChatItem {
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   lastSeenAt?: CommonFeedObjectUserUnique["lastSeenAt"];
   seenOnce?: boolean;
+  hasUnseenMention?: CommonFeedObjectUserUnique["hasUnseenMention"];
 }
 
 export interface ChatContextValue {

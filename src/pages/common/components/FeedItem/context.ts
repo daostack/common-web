@@ -44,6 +44,7 @@ export interface FeedItemBaseContentProps {
   isLoading?: boolean;
   shouldHideBottomContent?: boolean;
   dmUserId?: string;
+  hasUnseenMention?: boolean;
 }
 
 export interface GetLastMessageOptions {

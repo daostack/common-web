@@ -44,6 +44,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     discussionPredefinedType,
     dmUserId,
     commonId,
+    hasUnseenMention,
   } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
@@ -181,6 +182,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               ownerId={ownerId}
               isActive={isActive}
               isPinned={false}
+              hasUnseenMention={hasUnseenMention}
             />
           </div>
         </div>
