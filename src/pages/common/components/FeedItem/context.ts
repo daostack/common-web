@@ -42,6 +42,7 @@ export interface FeedItemBaseContentProps {
   hasImages?: boolean;
   isLoading?: boolean;
   shouldHideBottomContent?: boolean;
+  hasUnseenMention?: boolean;
 }
 
 export interface GetLastMessageOptions {

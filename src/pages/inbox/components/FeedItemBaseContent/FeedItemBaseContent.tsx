@@ -36,6 +36,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     isImageRounded,
     isProject,
     discussionPredefinedType,
+    hasUnseenMention,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -160,6 +161,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               ownerId={ownerId}
               isActive={isActive}
               isPinned={false}
+              hasUnseenMention={hasUnseenMention}
             />
           </div>
         </div>

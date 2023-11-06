@@ -1,0 +1,29 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.buttonIcon {
+  background-color: transparent;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: $light-gray-1;
+    }
+  }
+}
+
+.unreadFilterActive {
+  background-color: $c-pink-next-dark;
+  color: $white;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: $c-pink-mention-2;
+    }
+  }
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: inherit;
+}
