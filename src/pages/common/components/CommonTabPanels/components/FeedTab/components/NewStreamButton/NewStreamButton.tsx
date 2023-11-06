@@ -1,9 +1,9 @@
 import React, { FC } from "react";
-import { BoldPlusIcon } from "@/shared/icons";
+import { PlusButton } from "@/pages/inbox/components/HeaderContent/components";
+import { PlusIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import {
   Button,
-  ButtonIcon,
   ButtonSize,
   ButtonVariant,
   DesktopMenu,
@@ -28,7 +28,7 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   } = props;
   const items = useMenuItems({ commonMember, governance });
   const buttonVariant = ButtonVariant.OutlineDarkPink;
-  const iconEl = <BoldPlusIcon className={styles.icon} />;
+  const iconEl = <PlusIcon className={styles.icon} />;
 
   if (items.length === 0) {
     return null;
@@ -55,7 +55,7 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   return (
     <MobileMenu
       className={className}
-      triggerEl={<ButtonIcon variant={buttonVariant}>{iconEl}</ButtonIcon>}
+      triggerEl={<PlusButton />}
       items={items}
     />
   );
