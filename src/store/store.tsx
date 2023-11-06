@@ -20,6 +20,15 @@ import appSagas from "./saga";
 const persistConfig: PersistConfig<AppState> = {
   key: "root",
   storage,
+  whitelist: [
+    "projects",
+    "commonLayout",
+    "commonFeedFollows",
+    "cache",
+    "chat",
+    "inbox",
+    "multipleSpacesLayout",
+  ],
 };
 
 const sagaMiddleware = createSagaMiddleware();
