@@ -67,3 +67,4 @@ export { default as EmojiIcon } from "./emoji.icon";
 export { default as ReplyIcon } from "./reply.icon";
 export { default as CopyIcon } from "./copy.icon";
 export { default as HideIcon } from "./hide.icon";
+export { default as InboxFilterIcon } from "./inboxFilter.icon";
