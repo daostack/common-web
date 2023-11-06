@@ -47,8 +47,7 @@ const initialState: CommonState = {
 const sortFeedItems = (data: FeedItemFollowLayoutItem[]): void => {
   data.sort(
     (prevItem, nextItem) =>
-      nextItem.feedItem.updatedAt.toMillis() -
-      prevItem.feedItem.updatedAt.toMillis(),
+      nextItem.feedItem.updatedAt.seconds - prevItem.feedItem.updatedAt.seconds,
   );
 };
 
