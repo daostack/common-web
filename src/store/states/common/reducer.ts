@@ -2,12 +2,12 @@ import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType } from "@/shared/constants";
-import { FeedItemFollowLayoutItem } from "@/shared/interfaces";
-import { CommonFeed, FeedItemFollowWithMetadata } from "@/shared/models";
 import {
-  convertObjectDatesToFirestoreTimestamps,
-  convertToTimestamp,
-} from "@/shared/utils";
+  deserializeFeedItemFollowLayoutItem,
+  FeedItemFollowLayoutItem,
+} from "@/shared/interfaces";
+import { CommonFeed } from "@/shared/models";
+import { convertToTimestamp } from "@/shared/utils";
 import * as actions from "./actions";
 import { CommonState, FeedItems, PinnedFeedItems } from "./types";
 
@@ -287,22 +287,6 @@ const updateSharedFeedItem = (
     };
   }
 };
-
-const deserializeFeedItemFollowLayoutItem = (
-  item: FeedItemFollowLayoutItem,
-): FeedItemFollowLayoutItem => ({
-  ...item,
-  feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(item.feedItem),
-  feedItemFollowWithMetadata: item.feedItemFollowWithMetadata && {
-    ...convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>(
-      item.feedItemFollowWithMetadata,
-      ["lastSeen", "lastActivity"],
-    ),
-    feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
-      item.feedItemFollowWithMetadata.feedItem,
-    ),
-  },
-});
 
 export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.resetCommon, () => ({ ...initialState }))
