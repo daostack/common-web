@@ -234,6 +234,28 @@ class ChatService {
     });
   };
 
+  public getChatChannels = async (options: {
+    participantId: string;
+    startAfter?: Timestamp;
+    endBefore?: Timestamp;
+  }): Promise<ChatChannel[]> => {
+    const { participantId, startAfter, endBefore } = options;
+    let query = this.getChatChannelCollection()
+      .where("participants", "array-contains", participantId)
+      .orderBy("updatedAt", "desc");
+
+    if (startAfter) {
+      query = query.startAfter(startAfter);
+    }
+    if (endBefore) {
+      query = query.endBefore(endBefore);
+    }
+
+    const snapshot = await query.get();
+
+    return snapshot.docs.map((doc) => doc.data());
+  };
+
   public subscribeToNewUpdatedChatChannels = (
     participantId: string,
     endBefore: Timestamp,
