@@ -1,6 +1,7 @@
 import { get, set } from "lodash";
-import { checkIsSynchronizedDate, SynchronizedDate } from "@/shared/interfaces";
+import { SynchronizedDate } from "@/shared/interfaces";
 import { Timestamp } from "@/shared/models";
+import { checkIsSynchronizedDate } from "@/shared/utils";
 
 export const convertToTimestamp = (
   date: SynchronizedDate | Timestamp,

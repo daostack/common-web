@@ -25,6 +25,7 @@ export * from "./routes";
 export * from "./checkIsAutomaticJoin";
 export * from "./checkIsIFrame";
 export * from "./checkIsProject";
+export * from "./checkIsSynchronizedDate";
 export * from "./checkIsURL";
 export * from "./circles";
 export * from "./notifications";
