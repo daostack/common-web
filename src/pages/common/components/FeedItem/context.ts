@@ -29,6 +29,7 @@ export interface FeedItemBaseContentProps {
   seen?: boolean;
   ownerId?: string;
   commonName?: string;
+  commonId?: string;
   renderImage?: (className?: string) => ReactNode;
   renderLeftContent?: () => ReactNode;
   image?: string;
@@ -42,6 +43,7 @@ export interface FeedItemBaseContentProps {
   hasImages?: boolean;
   isLoading?: boolean;
   shouldHideBottomContent?: boolean;
+  dmUserId?: string;
   hasUnseenMention?: boolean;
 }
 
