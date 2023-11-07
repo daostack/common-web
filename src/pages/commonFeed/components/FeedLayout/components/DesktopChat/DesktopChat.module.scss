@@ -1,7 +1,11 @@
 @import "../../../../../../constants";
 
+.rightPaneContainerWithHeader {
+  --chat-header-height: #{$container-desktop-header-height};
+}
+
 .titleWrapper {
-  height: $container-desktop-header-height;
+  height: var(--chat-header-height);
   padding: 0 1.25rem;
   display: flex;
   align-items: center;
@@ -9,6 +13,7 @@
   border-bottom: 0.0625rem solid $c-light-gray;
   box-sizing: border-box;
 }
+
 .title {
   margin: 0;
   display: -webkit-box;
@@ -22,6 +27,7 @@
   overflow-wrap: break-word;
   text-overflow: ellipsis;
 }
+
 .titleRTL {
   text-align: right;
   direction: rtl;
