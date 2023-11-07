@@ -133,7 +133,7 @@ export const useInboxItems = (
   const refetch = () => {
     dispatch(inboxActions.resetInboxItems());
     fetch();
-  }
+  };
 
   useEffect(() => {
     if (!inboxItems.firstDocTimestamp || !userId) {
