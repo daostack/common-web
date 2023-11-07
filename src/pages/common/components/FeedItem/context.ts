@@ -63,6 +63,7 @@ export interface FeedItemContextValue {
   setExpandedFeedItemId?: (feedItemId: string | null) => void;
   renderFeedItemBaseContent?: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
+  onFeedItemUnfollowed?: (itemId: string) => void;
   feedCardSettings?: FeedCardSettings;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;

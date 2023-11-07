@@ -1,4 +1,5 @@
-import React, { forwardRef, memo } from "react";
+import React, { forwardRef, memo, useEffect } from "react";
+import { useFeedItemFollow } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Circles,
@@ -64,8 +65,17 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     onActiveItemDataChange,
     directParent,
   } = props;
-  const { onFeedItemUpdate, getLastMessage, getNonAllowedItems, onUserSelect } =
-    useFeedItemContext();
+  const {
+    onFeedItemUpdate,
+    onFeedItemUnfollowed,
+    getLastMessage,
+    getNonAllowedItems,
+    onUserSelect,
+  } = useFeedItemContext();
+  const feedItemFollow = useFeedItemFollow(
+    { feedItemId: item.id, commonId },
+    { withSubscription: true },
+  );
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
   if (
@@ -103,8 +113,21 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     isMobileVersion,
     onActiveItemDataChange: handleActiveItemDataChange,
     directParent,
+    feedItemFollow,
     onUserSelect,
   };
+
+  useEffect(() => {
+    if (
+      feedItemFollow.isUserFeedItemFollowDataFetched &&
+      !feedItemFollow.userFeedItemFollowData
+    ) {
+      onFeedItemUnfollowed?.(item.id);
+    }
+  }, [
+    feedItemFollow.isUserFeedItemFollowDataFetched,
+    feedItemFollow.userFeedItemFollowData,
+  ]);
 
   if (item.data.type === CommonFeedType.Discussion) {
     return <DiscussionFeedCard {...generalProps} />;

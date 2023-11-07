@@ -150,6 +150,18 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     [dispatch],
   );
 
+  const handleFeedItemUnfollowed = useCallback(
+    (itemId: string) => {
+      dispatch(
+        inboxActions.updateFeedItem({
+          item: { id: itemId },
+          isRemoved: true,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
   const handleActiveItemChange = useCallback(
     (activeItemId?: string) => {
       dispatch(inboxActions.removeEmptyChatChannelItems(activeItemId));
@@ -267,6 +279,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         renderChatChannelItem={renderChatChannelItem}
         onFeedItemUpdate={handleFeedItemUpdate}
+        onFeedItemUnfollowed={handleFeedItemUnfollowed}
         getLastMessage={getLastMessage}
         emptyText={
           isActiveUnreadInboxItemsQueryParam
