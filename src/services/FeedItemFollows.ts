@@ -118,20 +118,20 @@ class FeedItemFollowsService {
 
   public getFollowFeedItems = async (options: {
     userId: string;
-    startAfter?: Timestamp;
-    endBefore?: Timestamp;
+    startAt?: Timestamp;
+    endAt?: Timestamp;
   }): Promise<FeedItemFollow[]> => {
-    const { userId, startAfter, endBefore } = options;
+    const { userId, startAt, endAt } = options;
     let query = this.getFeedItemFollowsSubCollection(userId).orderBy(
       "lastActivity",
       "desc",
     );
 
-    if (startAfter) {
-      query = query.startAfter(startAfter);
+    if (startAt) {
+      query = query.startAt(startAt);
     }
-    if (endBefore) {
-      query = query.endBefore(endBefore);
+    if (endAt) {
+      query = query.endAt(endAt);
     }
 
     const snapshot = await query.get();

@@ -236,19 +236,19 @@ class ChatService {
 
   public getChatChannels = async (options: {
     participantId: string;
-    startAfter?: Timestamp;
-    endBefore?: Timestamp;
+    startAt?: Timestamp;
+    endAt?: Timestamp;
   }): Promise<ChatChannel[]> => {
-    const { participantId, startAfter, endBefore } = options;
+    const { participantId, startAt, endAt } = options;
     let query = this.getChatChannelCollection()
       .where("participants", "array-contains", participantId)
       .orderBy("updatedAt", "desc");
 
-    if (startAfter) {
-      query = query.startAfter(startAfter);
+    if (startAt) {
+      query = query.startAt(startAt);
     }
-    if (endBefore) {
-      query = query.endBefore(endBefore);
+    if (endAt) {
+      query = query.endAt(endAt);
     }
 
     const snapshot = await query.get();

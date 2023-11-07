@@ -201,23 +201,23 @@ export const useInboxItems = (
   useEffect(() => {
     (async () => {
       try {
-        const { firstDocTimestamp: startAfter, lastDocTimestamp: endBefore } =
+        const { firstDocTimestamp: startAt, lastDocTimestamp: endAt } =
           inboxItems;
 
-        if (!userId || !startAfter || !endBefore) {
+        if (!userId || !startAt || !endAt) {
           return;
         }
 
         const [chatChannels, feedItemFollows] = await Promise.all([
           ChatService.getChatChannels({
             participantId: userId,
-            startAfter,
-            endBefore,
+            startAt,
+            endAt,
           }),
           FeedItemFollowsService.getFollowFeedItems({
             userId,
-            startAfter,
-            endBefore,
+            startAt,
+            endAt,
           }),
         ]);
 
