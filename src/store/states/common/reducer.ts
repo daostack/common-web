@@ -3,7 +3,11 @@ import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType } from "@/shared/constants";
 import { FeedItemFollowLayoutItem } from "@/shared/interfaces";
-import { CommonFeed } from "@/shared/models";
+import { CommonFeed, FeedItemFollowWithMetadata } from "@/shared/models";
+import {
+  convertObjectDatesToFirestoreTimestamps,
+  convertToTimestamp,
+} from "@/shared/utils";
 import * as actions from "./actions";
 import { CommonState, FeedItems, PinnedFeedItems } from "./types";
 
@@ -284,6 +288,22 @@ const updateSharedFeedItem = (
   }
 };
 
+const deserializeFeedItemFollowLayoutItem = (
+  item: FeedItemFollowLayoutItem,
+): FeedItemFollowLayoutItem => ({
+  ...item,
+  feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(item.feedItem),
+  feedItemFollowWithMetadata: item.feedItemFollowWithMetadata && {
+    ...convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>(
+      item.feedItemFollowWithMetadata,
+      ["lastSeen", "lastActivity"],
+    ),
+    feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
+      item.feedItemFollowWithMetadata.feedItem,
+    ),
+  },
+});
+
 export const reducer = createReducer<CommonState, Action>(initialState)
   .handleAction(actions.resetCommon, () => ({ ...initialState }))
   .handleAction(actions.setCommonAction, (state, { payload }) =>
@@ -476,9 +496,25 @@ export const reducer = createReducer<CommonState, Action>(initialState)
       } = payload;
       nextState.feedItems = {
         ...feedItems,
+        data:
+          feedItems.data &&
+          feedItems.data.map(deserializeFeedItemFollowLayoutItem),
+        firstDocTimestamp:
+          (feedItems.firstDocTimestamp &&
+            convertToTimestamp(feedItems.firstDocTimestamp)) ||
+          null,
+        lastDocTimestamp:
+          (feedItems.lastDocTimestamp &&
+            convertToTimestamp(feedItems.lastDocTimestamp)) ||
+          null,
         hasMore: true,
       };
-      nextState.pinnedFeedItems = { ...pinnedFeedItems };
+      nextState.pinnedFeedItems = {
+        ...pinnedFeedItems,
+        data:
+          pinnedFeedItems.data &&
+          pinnedFeedItems.data.map(deserializeFeedItemFollowLayoutItem),
+      };
 
       if (sharedFeedItem && sharedFeedItem.itemId === sharedFeedItemId) {
         return;

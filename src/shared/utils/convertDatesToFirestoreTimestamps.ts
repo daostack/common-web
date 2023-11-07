@@ -1,11 +1,13 @@
-import firebase from "firebase";
 import { get, set } from "lodash";
-import { SynchronizedDate } from "@/shared/interfaces";
+import { checkIsSynchronizedDate, SynchronizedDate } from "@/shared/interfaces";
+import { Timestamp } from "@/shared/models";
 
 export const convertToTimestamp = (
-  date: SynchronizedDate,
-): firebase.firestore.Timestamp =>
-  new firebase.firestore.Timestamp(date._seconds, date._nanoseconds);
+  date: SynchronizedDate | Timestamp,
+): Timestamp =>
+  checkIsSynchronizedDate(date)
+    ? new Timestamp(date._seconds, date._nanoseconds)
+    : new Timestamp(date.seconds, date.nanoseconds);
 
 const convertDateInObject = (
   data: Record<string, unknown>,
