@@ -69,7 +69,6 @@ export const useCommonFeedItems = (
       dispatch(
         commonActions.getFeedItems.cancel("Cancel feed items fetch on unmount"),
       );
-      dispatch(commonActions.resetFeedItems());
     };
   }, []);
 
