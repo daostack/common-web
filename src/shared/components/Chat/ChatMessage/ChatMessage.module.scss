@@ -60,6 +60,8 @@
   text-align: start;
   font-size: $small;
   color: var(--primary-text);
+  max-width: 33.563rem;
+  margin-right: 2.8rem;
 
   &:hover {
     .menuArrowButton {
@@ -90,6 +92,8 @@
 
 .messageTextCurrentUser {
   background-color: $c-pink-active-feed-cards;
+  margin-left: 2.8rem;
+  margin-right: unset;
 }
 
 .systemMessageContainer {
@@ -103,6 +107,7 @@
   font-size: $xxsmall-2;
   color: $c-gray-60;
   direction: ltr;
+  margin: 0 4.25rem;
 }
 
 .messageName {

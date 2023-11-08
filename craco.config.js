@@ -22,5 +22,17 @@ module.exports = {
         tsConfigPath: "./tsconfig.paths.json",
       },
     },
+    {
+      plugin: {
+        overrideWebpackConfig: ({ webpackConfig }) => {
+          webpackConfig.devtool =
+            process.env.REACT_APP_ENV === "dev"
+              ? "source-map"
+              : "eval-cheap-module-source-map";
+
+          return webpackConfig;
+        },
+      },
+    },
   ],
 };
