@@ -15,8 +15,8 @@
   &:global(.vertical) {
     width: 0.6875rem;
     margin: 0 -0.3125rem;
-    border-left: 0.3125rem solid #{$split-view-resizer-border-color};
-    border-right: 0.3125rem solid #{$split-view-resizer-border-color};
+    border-left: 0.3125rem solid var(--gentle-stroke);
+    border-right: 0.3125rem solid var(--gentle-stroke);
     cursor: col-resize;
 
     &:hover {

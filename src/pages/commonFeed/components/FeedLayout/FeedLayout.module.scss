@@ -34,7 +34,7 @@
 .desktopRightPane {
   right: calc(var(--page-extra-pr) + var(--sb-h-indent));
   width: var(--chat-w, 22rem);
-  border-right: 0.0625rem solid $c-light-gray;
+  border-right: 0.0625rem solid var(--gentle-stroke);
 }
 
 .feedItemDetailsModal {
