@@ -615,6 +615,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
   }, [batchNumber]);
 
+  useEffect(() => {
+    if (sharedFeedItemId && isTabletView && allFeedItems) {
+      setActiveChatItem({ feedItemId: sharedFeedItemId });
+    }
+  }, [sharedFeedItemId, isTabletView, allFeedItems]);
+
   useImperativeHandle(
     ref,
     () => ({
