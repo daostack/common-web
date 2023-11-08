@@ -31,6 +31,7 @@ type FeedCardProps = PropsWithChildren<{
   lastMessage?: TextEditorValue;
   isPreviewMode?: boolean;
   commonName?: string;
+  commonId?: string;
   image?: string;
   imageAlt?: string;
   isProject?: boolean;
@@ -70,6 +71,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     lastMessage,
     isPreviewMode = true,
     commonName,
+    commonId,
     image,
     imageAlt,
     isProject,
@@ -194,6 +196,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
             lastMessage: !isLoading ? lastMessage : undefined,
             menuItems,
             commonName,
+            commonId,
             image,
             imageAlt,
             isProject,

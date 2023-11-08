@@ -183,13 +183,13 @@ export default function ChatComponent({
   const chatWrapperId = useMemo(() => `chat-wrapper-${uuidv4()}`, []);
   const chatInputWrapperRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [isScrolling, setScrolling] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const chatContentContextValue: ChatContentData = useMemo(
     () => ({
       isScrolling,
       chatContentRect: chatContainerRef.current?.getBoundingClientRect(),
     }),
-    [isScrolling],
+    [isScrolling, chatContainerRef.current],
   );
 
   const [message, setMessage] = useState<TextEditorValue>(
@@ -603,11 +603,11 @@ export default function ChatComponent({
 
   useEffect(() => {
     const deactivateScrollingFlag = debounce(() => {
-      setScrolling(false);
+      setIsScrolling(false);
     }, 300);
 
     function handleScroll() {
-      setScrolling(true);
+      setIsScrolling(true);
       deactivateScrollingFlag();
     }
 

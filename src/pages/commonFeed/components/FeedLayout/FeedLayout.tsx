@@ -63,7 +63,6 @@ import {
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import {
   addQueryParam,
-  checkIsProject,
   deleteQueryParam,
   getParamsFromOneOfRoutes,
   getUserName,
