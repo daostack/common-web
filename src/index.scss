@@ -230,10 +230,10 @@ code {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--medium-gray);
+  background-color: $c-gray-20;
   border-radius: 0.5rem;
   &:hover {
-    background-color: var(--strong-gray);
+    background-color: $c-gray-50;
     cursor: pointer;
   }
 }

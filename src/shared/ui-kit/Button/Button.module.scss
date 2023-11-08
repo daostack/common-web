@@ -24,6 +24,7 @@
   color: var(--btn-color);
   text-align: center;
   line-height: 125%;
+  background-color: var(--btn-bg-color);
   border: var(--btn-border);
   border-radius: var(--btn-border-radius);
   overflow: hidden;
@@ -32,6 +33,7 @@
   user-select: none;
   transition: all 0.2s;
   box-sizing: border-box;
+  color: var(--primary-text);
 
   &.buttonDisabled {
     cursor: not-allowed;

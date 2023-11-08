@@ -1,7 +1,7 @@
 @import "../../../../../constants";
 
 .container {
-  --upload-trigger-color: var(--gentle-fill);
+  --upload-trigger-color: $c-pink-light;
   --upload-trigger-border-color: #{$c-neutrals-100};
   --upload-trigger-border: 0.0625rem solid var(--upload-trigger-border-color);
 

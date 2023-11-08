@@ -1,8 +1,9 @@
 import React, { FC } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { Menu } from "@headlessui/react";
 import { logOut } from "@/pages/Auth/store/actions";
+import { Theme } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import {
   Avatar3Icon,
@@ -11,7 +12,8 @@ import {
   SettingsIcon,
 } from "@/shared/icons";
 import ThemeIcon from "@/shared/icons/theme.icon";
-import { Theme } from "@/shared/ui-kit/Theme";
+import { changeTheme } from "@/shared/store/actions";
+import { selectTheme } from "@/shared/store/selectors";
 import { MenuItem } from "./components";
 import { Item, ItemType } from "./types";
 import styles from "./MenuItems.module.scss";
@@ -35,6 +37,8 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
   const dispatch = useDispatch();
   const { getProfilePagePath, getBillingPagePath, getSettingsPagePath } =
     useRoutesContext();
+  const theme = useSelector(selectTheme);
+
   const items: Item[] = [
     {
       key: "my-profile",
@@ -57,9 +61,11 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
     {
       key: "theme",
       type: ItemType.Button,
-      text: <Theme />,
+      text: "Light/Dark mode",
       icon: <ThemeIcon />,
-      onClick: () => {},
+      onClick: () => {
+        dispatch(changeTheme(theme === Theme.Dark ? Theme.Light : Theme.Dark));
+      },
     },
     {
       key: "log-out",

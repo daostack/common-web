@@ -7,12 +7,7 @@
   --warning: #ff603e;
   --primary-fill: #c32ea3;
   --secondary-fill: #a75a93;
-
-  --gentle-fill: #f3d4eb;
-  --gentle-gray: #f4f5f5;
-  --medium-gray: #dcdee7;
-  --strong-gray: #7a819c;
-  --gray-60: #6b718e;
+  --drop-shadow: rgba(0, 0, 0, 0.15259);
 }
 
 :root[data-theme="dark"] {
@@ -24,4 +19,5 @@
   --warning: #ff603e;
   --primary-fill: #c32ea3;
   --secondary-fill: #a75a93;
+  --drop-shadow: rgba(248, 245, 245, 0.153);
 }
