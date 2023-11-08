@@ -10,7 +10,7 @@
   color: var(--item-color);
   background-color: var(--item-bg-color);
   border: 0;
-  border-bottom: 0.0625rem solid #{$c-separator-light-non-opaque};
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
   font-family: PoppinsSans, sans-serif;
   font-weight: 600;
   font-size: $small;

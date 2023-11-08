@@ -46,7 +46,7 @@
 }
 
 .menuItemActive {
-  --item-bg-color: #{$c-pink-hover-feed-cards};
+  --item-bg-color: var(--hover-fill);
 }
 
 .menuItemText {

@@ -36,6 +36,7 @@
   background-color: var(--primary-background);
   border-bottom: 0.0625rem solid $c-light-gray;
   box-sizing: border-box;
+  color: var(--primary-text);
 
   @include tablet {
     top: 0;

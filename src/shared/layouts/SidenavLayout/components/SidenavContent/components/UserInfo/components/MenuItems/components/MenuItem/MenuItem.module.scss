@@ -2,7 +2,7 @@
 
 .item {
   --item-bg-color: var(--primary-background);
-  --item-border: 0.0625rem solid #{$c-neutrals-100};
+  --item-border: 0.0625rem solid var(--gentle-stroke);
 
   padding: 1.125rem 1.5rem;
   display: flex;
