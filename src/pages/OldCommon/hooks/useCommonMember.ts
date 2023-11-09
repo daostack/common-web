@@ -184,43 +184,38 @@ export const useCommonMember = (options: Options = {}): Return => {
       return;
     }
 
-    try {
-      console.log({ commonId, userId });
-      const unsubscribe =
-        CommonService.subscribeToCommonMemberByCommonIdAndUserId(
-          commonId,
-          userId,
-          (commonMember, { isAdded, isRemoved }) => {
-            let data: State["data"] = null;
+    const unsubscribe =
+      CommonService.subscribeToCommonMemberByCommonIdAndUserId(
+        commonId,
+        userId,
+        (commonMember, { isAdded, isRemoved }) => {
+          let data: State["data"] = null;
 
-            if (isAdded) {
-              CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
-                commonId,
-                hasMembership: true,
-              });
-            }
-            if (!isRemoved) {
-              data = {
-                ...commonMember,
-                ...generateCirclesDataForCommonMember(
-                  governanceCircles,
-                  commonMember.circleIds,
-                ),
-              };
-            }
-
-            setState({
-              loading: false,
-              fetched: true,
-              data,
+          if (isAdded) {
+            CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
+              commonId,
+              hasMembership: true,
             });
-          },
-        );
+          }
+          if (!isRemoved) {
+            data = {
+              ...commonMember,
+              ...generateCirclesDataForCommonMember(
+                governanceCircles,
+                commonMember.circleIds,
+              ),
+            };
+          }
 
-      return unsubscribe;
-    } catch (error) {
-      console.error(error);
-    }
+          setState({
+            loading: false,
+            fetched: true,
+            data,
+          });
+        },
+      );
+
+    return unsubscribe;
   }, [withSubscription, commonId, userId, governanceCircles]);
 
   return {
