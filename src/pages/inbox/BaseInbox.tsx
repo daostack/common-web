@@ -281,6 +281,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         onFeedItemUpdate={handleFeedItemUpdate}
         onFeedItemUnfollowed={handleFeedItemUnfollowed}
         getLastMessage={getLastMessage}
+        sharedFeedItemId={sharedFeedItemId}
         emptyText={
           isActiveUnreadInboxItemsQueryParam
             ? "Hurry! No unread items in your inbox :-)"
