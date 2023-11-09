@@ -1,9 +1,9 @@
 @import "../../../../../../constants";
 
 .item {
-  --item-color: #{$c-neutrals-600};
-  --item-bg-color: #{$c-shades-white};
-  --item-border: 0.0625rem solid #{$c-neutrals-100};
+  --item-color: var(--primary-text);
+  --item-bg-color: var(--primary-background);
+  --item-border: 0.0625rem solid var(--gentle-stroke);
 
   display: flex;
   justify-content: space-between;
@@ -67,7 +67,7 @@
 .pendingStatus {
   font-size: $small;
   line-height: 1.25rem;
-  color: $light-gray-2;
+  color: var(--primary-text);
   margin: 0;
 }
 

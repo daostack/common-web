@@ -1,9 +1,9 @@
 @import "../../../../../constants";
 
 .container {
-  --upload-trigger-color: $c-pink-light;
-  --upload-trigger-border-color: #{$c-neutrals-100};
-  --upload-trigger-border: 0.0625rem solid var(--upload-trigger-border-color);
+  --upload-trigger-color: var(--primary-text);
+  --upload-trigger-border-color: var(--gentle-stroke);
+  --upload-trigger-border: 0.0625rem solid var(--gentle-stroke);
 
   position: relative;
   width: 6.25rem;
@@ -14,7 +14,7 @@
   justify-content: center;
   align-items: center;
   color: var(--upload-trigger-color);
-  background-color: $c-shades-white;
+  background-color: var(--primary-background);
   border: var(--upload-trigger-border);
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;

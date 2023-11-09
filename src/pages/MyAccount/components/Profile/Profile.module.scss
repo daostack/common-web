@@ -5,6 +5,7 @@
 .container {
   position: relative;
   width: 100%;
+  color: var(--primary-text);
 }
 
 .content {
@@ -30,6 +31,7 @@
   position: absolute;
   top: 1.5rem;
   right: 0;
+  color: var(--primary-text);
 
   @include tablet {
     position: static;

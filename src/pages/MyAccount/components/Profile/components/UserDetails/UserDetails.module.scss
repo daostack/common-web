@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  color: $secondary-blue;
+  color: var(--primary-text);
 }
 
 .form {
@@ -153,8 +153,6 @@
 
   .textFieldLabelWrapper {
     @include body-sm-regular;
-
-    color: $c-gray-80;
   }
 
   .textFieldInput {

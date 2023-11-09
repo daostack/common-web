@@ -47,7 +47,7 @@
 }
 
 .containerExpanded {
-  border: 0.0625rem solid $c-neutrals-200;
+  border: 0.0625rem solid var(--gentle-stroke);
   border-bottom: none;
 }
 

@@ -8,7 +8,7 @@
   flex-wrap: wrap;
   align-items: center;
   border-radius: 0.875rem;
-  background-color: $light-gray-4;
+  background-color: var(--secondary-background);
   box-sizing: border-box;
   justify-content: space-around;
 }
@@ -30,6 +30,7 @@
   font-size: $xsmall;
   text-align: center;
   white-space: pre-line;
+  color: var(--primary-text);
 }
 
 .billing-adding-card__content__button {

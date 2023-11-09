@@ -29,6 +29,7 @@ $modal-mobile-padding: 1.5rem;
   outline: 0;
   box-sizing: border-box;
   backdrop-filter: blur(2px);
+  color: var(--primary-text);
 
   @include big-phone {
     display: flex;

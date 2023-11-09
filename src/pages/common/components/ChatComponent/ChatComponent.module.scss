@@ -68,7 +68,7 @@
   line-height: 1.5rem;
   border-radius: 1.25rem;
   background-color: var(--secondary-background);
-  border: 0.0625rem solid $c-neutrals-200;
+  border: 0.0625rem solid var(--gentle-stroke);
   outline: none;
   resize: none;
   font-size: 0.875rem;
@@ -106,7 +106,7 @@
   margin-bottom: 0.8rem;
   border: none;
   outline: none;
-  background: $c-input-100;
+  background: transparent;
 
   &:disabled {
     cursor: not-allowed;
