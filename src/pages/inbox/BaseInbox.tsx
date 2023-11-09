@@ -272,6 +272,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         renderChatChannelItem={renderChatChannelItem}
         onFeedItemUpdate={handleFeedItemUpdate}
         getLastMessage={getLastMessage}
+        sharedFeedItemId={sharedFeedItemId}
         emptyText={
           isActiveUnreadInboxItemsQueryParam
             ? "Hurry! No unread items in your inbox :-)"
