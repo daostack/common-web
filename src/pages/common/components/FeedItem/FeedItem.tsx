@@ -78,6 +78,18 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   );
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
 
+  useEffect(() => {
+    if (
+      feedItemFollow.isUserFeedItemFollowDataFetched &&
+      !feedItemFollow.userFeedItemFollowData
+    ) {
+      onFeedItemUnfollowed?.(item.id);
+    }
+  }, [
+    feedItemFollow.isUserFeedItemFollowDataFetched,
+    feedItemFollow.userFeedItemFollowData,
+  ]);
+
   if (
     shouldCheckItemVisibility &&
     !checkIsItemVisibleForUser(
@@ -116,18 +128,6 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     feedItemFollow,
     onUserSelect,
   };
-
-  useEffect(() => {
-    if (
-      feedItemFollow.isUserFeedItemFollowDataFetched &&
-      !feedItemFollow.userFeedItemFollowData
-    ) {
-      onFeedItemUnfollowed?.(item.id);
-    }
-  }, [
-    feedItemFollow.isUserFeedItemFollowDataFetched,
-    feedItemFollow.userFeedItemFollowData,
-  ]);
 
   if (item.data.type === CommonFeedType.Discussion) {
     return <DiscussionFeedCard {...generalProps} />;
