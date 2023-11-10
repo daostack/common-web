@@ -3,9 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ButtonIcon, Loader } from "@/shared/components";
+import { Theme } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Edit3Icon as EditIcon, LogoutIcon } from "@/shared/icons";
+import ThemeIcon from "@/shared/icons/theme.icon";
+import { changeTheme } from "@/shared/store/actions";
+import { selectTheme } from "@/shared/store/selectors";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Header, MenuButton, UserDetails, UserDetailsRef } from "./components";
 import styles from "./Profile.module.scss";
@@ -23,6 +27,7 @@ const Profile: FC<ProfileProps> = (props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const user = useSelector(selectUser());
   const isMobileView = useIsTabletView();
+  const theme = useSelector(selectTheme);
 
   const handleEditingChange = (isEditing: boolean) => {
     setIsEditing(isEditing);
@@ -47,6 +52,10 @@ const Profile: FC<ProfileProps> = (props) => {
 
   const handleSubmit = () => {
     userDetailsRef.current?.submit();
+  };
+
+  const handleThemeToggle = () => {
+    dispatch(changeTheme(theme === Theme.Dark ? Theme.Light : Theme.Dark));
   };
 
   const handleLogout = () => {
@@ -115,6 +124,12 @@ const Profile: FC<ProfileProps> = (props) => {
                   className={styles.menuButton}
                   text="Billing"
                   to={getBillingPagePath()}
+                />
+                <MenuButton
+                  className={styles.menuButton}
+                  text="Light/Dark mode"
+                  onClick={handleThemeToggle}
+                  iconEl={<ThemeIcon />}
                 />
                 <MenuButton
                   className={`${styles.menuButton} ${styles.logoutMenuButton}`}

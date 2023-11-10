@@ -30,7 +30,8 @@
   font-size: $xsmall;
   line-height: 143%;
   text-align: left;
-  background-color: $c-light-gray;
+  background-color: var(--secondary-background);
+  color: var(--primary-text);
   border-radius: 0.9375rem;
   box-sizing: border-box;
 }

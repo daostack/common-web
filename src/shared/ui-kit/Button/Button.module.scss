@@ -33,7 +33,6 @@
   user-select: none;
   transition: all 0.2s;
   box-sizing: border-box;
-  color: var(--primary-text);
 
   &.buttonDisabled {
     cursor: not-allowed;
@@ -227,12 +226,12 @@
 
 .buttonOutlineDarkPinkVariant {
   --btn-color: #{$c-pink-next-dark};
-  --btn-bg-color: #{$c-shades-white};
+  --btn-bg-color: var(--primary-background);
   --btn-border-color: #{$c-pink-next-dark};
   --btn-border: 0.0625rem solid var(--btn-border-color);
 
   &:hover {
-    --btn-bg-color: #{$c-pink-hover-feed-cards};
+    --btn-bg-color: var(--hover-fill);
   }
 
   &:active {
