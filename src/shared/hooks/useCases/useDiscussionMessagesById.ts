@@ -1,25 +1,44 @@
-import { useCallback, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import classNames from 'classnames';
 import { isEqual, xor } from "lodash";
 import { fetchOwners } from "@/pages/OldCommon/store/api";
 import { DiscussionMessageService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
+  checkIsSystemDiscussionMessage,
   checkIsUserDiscussionMessage,
+  DirectParent,
   DiscussionMessage,
+  DiscussionMessageWithParsedText,
   User,
 } from "@/shared/models";
 import {
   cacheActions,
   selectDiscussionMessagesStateByDiscussionId,
 } from "@/store/states";
+import { countTextEditorEmojiElements, parseStringToTextEditorValue } from "@/shared/ui-kit";
+import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
+import { useRoutesContext } from "@/shared/contexts";
+
+export type TextStyles = {
+  mentionTextCurrentUser: string;
+  singleEmojiText: string;
+  multipleEmojiText: string;
+}
 
 interface Options {
   hasPermissionToHide: boolean;
+  userId?: string;
+  directParent?: DirectParent | null;
+  onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
+  users: User[];
+  textStyles: TextStyles;
 }
 
-type State = LoadingState<DiscussionMessage[] | null>;
+type State = LoadingState<DiscussionMessageWithParsedText[] | null>;
 
 interface Return extends State {
   fetchDiscussionMessages: (discussionId: string) => void;
@@ -27,6 +46,7 @@ interface Return extends State {
     discussionId: string,
     discussionMessage: DiscussionMessage,
   ) => void;
+  isEndOfList: boolean;
 }
 
 const DEFAULT_STATE: State = {
@@ -37,13 +57,22 @@ const DEFAULT_STATE: State = {
 
 export const useDiscussionMessagesById = ({
   hasPermissionToHide,
+  userId,
+  directParent,
+  onUserClick,
+  onFeedItemClick,
+  users,
+  textStyles
 }: Options): Return => {
   const dispatch = useDispatch();
+  const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const [currentDiscussionId, setCurrentDiscussionId] = useState("");
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const [messageOwners, setMessageOwners] = useState<User[]>([]);
   const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [lastVisible, setLastVisible] = useState(null);
+  const [isEndOfList, setIsEndOfList] = useState(false);
   const state =
     useSelector(
       selectDiscussionMessagesStateByDiscussionId(currentDiscussionId),
@@ -51,30 +80,132 @@ export const useDiscussionMessagesById = ({
   const [discussionMessagesWithOwners, setDiscussionMessagesWithOwners] =
     useState<any>();
 
-  const addDiscussionMessage = (
+  const addDiscussionMessage = async (
     discussionId: string,
     discussionMessage: DiscussionMessage,
-  ): void => {
+  ): Promise<void> => {
+
+    const emojiCount = countTextEditorEmojiElements(
+      parseStringToTextEditorValue(discussionMessage.text),
+    );
+    const parsedText = await getTextFromTextEditorString({
+      textEditorString: discussionMessage.text,
+      users,
+      mentionTextClassName: textStyles.mentionTextCurrentUser,
+      emojiTextClassName: classNames({
+        [textStyles.singleEmojiText]: emojiCount.isSingleEmoji,
+        [textStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+      }),
+      commonId: discussionMessage.commonId,
+      getCommonPagePath,
+      getCommonPageAboutTabPath,
+      directParent,
+      onUserClick,
+      onFeedItemClick,
+    });
+
+    const parsedReply = discussionMessage.parentMessage?.text ? await getTextFromTextEditorString({
+      textEditorString: discussionMessage.parentMessage.text,
+      users,
+      commonId: discussionMessage.commonId,
+      directParent,
+      onUserClick,
+      onFeedItemClick,
+    }) : null;
+
+
     dispatch(
       cacheActions.addDiscussionMessageByDiscussionId({
         discussionId,
-        discussionMessage,
+        discussionMessage: {
+          ...discussionMessage,
+          parsedText,
+          parsedReply
+        },
       }),
     );
   };
 
-  const fetchDiscussionMessages = useCallback(
-    (discussionId: string) => {
+  const fetchDiscussionMessages = (discussionId: string) => {
+    setCurrentDiscussionId(discussionId);
+    if (
+      !discussionId ||
+      isLoading ||
+      isEndOfList
+    ) {
+      return null;
+    }
+
+    if(state.data?.length === 0) {
       setDefaultState({ ...DEFAULT_STATE });
-      setCurrentDiscussionId(discussionId);
-      dispatch(
-        cacheActions.getDiscussionMessageStateByDiscussionId.request({
-          payload: { discussionId },
-        }),
-      );
-    },
-    [dispatch],
-  );
+    }
+
+    DiscussionMessageService.getDiscussionMessagesByDiscussionId(
+      discussionId,
+      lastVisible,
+      async (snapshot, updatedDiscussionMessages) => {
+          const lastVisibleDocument =
+            snapshot.docs[updatedDiscussionMessages.length - 1];
+
+          setLastVisible(lastVisibleDocument);
+
+          const hasLastVisibleDocument = !!lastVisibleDocument?.data();
+          
+          const discussionsWithText = await Promise.all((updatedDiscussionMessages.map(async (discussionMessage) => {
+            const emojiCount = countTextEditorEmojiElements(
+              parseStringToTextEditorValue(discussionMessage.text),
+            );
+
+            const isUserDiscussionMessage =
+            checkIsUserDiscussionMessage(discussionMessage);
+            const isSystemMessage = checkIsSystemDiscussionMessage(discussionMessage);
+
+            const isNotCurrentUserMessage =
+            !isUserDiscussionMessage || userId !== discussionMessage.ownerId;
+           const parsedText = await getTextFromTextEditorString({
+                textEditorString: discussionMessage.text,
+                users,
+                mentionTextClassName: !isNotCurrentUserMessage
+                  ? textStyles.mentionTextCurrentUser
+                  : "",
+                emojiTextClassName: classNames({
+                  [textStyles.singleEmojiText]: emojiCount.isSingleEmoji,
+                  [textStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+                }),
+                commonId: discussionMessage.commonId,
+                systemMessage: isSystemMessage ? discussionMessage : undefined,
+                getCommonPagePath,
+                getCommonPageAboutTabPath,
+                directParent,
+                onUserClick,
+                onFeedItemClick,
+              });
+
+              return {
+                ...discussionMessage,
+                parsedText,
+              }
+          })))
+          dispatch(
+            cacheActions.updateDiscussionMessagesStateByDiscussionId({
+              discussionId,
+              state: {
+                loading: false,
+                fetched: true,
+                data: discussionsWithText as any,
+              },
+            }),
+            )
+            
+            if (
+              discussionsWithText.length < 15 &&
+              !hasLastVisibleDocument
+            ) {
+              setIsEndOfList(true);
+            }
+      },
+    );
+    };
 
   const fetchMessageOwners = async (ids: string[]): Promise<User[]> => {
     if (isEqual(messageOwnersIds, ids)) {
@@ -104,7 +235,7 @@ export const useDiscussionMessagesById = ({
       ) as string[];
       const owners = await fetchMessageOwners(ownerIds);
 
-      const loadedDiscussionMessages = filteredMessages.map((d) => {
+      const loadedDiscussionMessages = await Promise.all(filteredMessages.map(async (d) => {
         const newDiscussionMessage = { ...d };
         const parentMessage = filteredMessages.find(
           ({ id }) => id === d.parentId,
@@ -129,41 +260,18 @@ export const useDiscussionMessagesById = ({
             }
           : null;
         return newDiscussionMessage;
-      });
+      }));
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
       setIsLoading(false);
     })();
   }, [state.data, messageOwnersIds, messageOwners, hasPermissionToHide]);
 
-  useEffect(() => {
-    if (!currentDiscussionId) {
-      return;
-    }
-
-    const unsubscribe = DiscussionMessageService.subscribeToDiscussionMessages(
-      currentDiscussionId,
-      (updatedDiscussionMessages) => {
-        dispatch(
-          cacheActions.updateDiscussionMessagesStateByDiscussionId({
-            discussionId: currentDiscussionId,
-            state: {
-              loading: false,
-              fetched: true,
-              data: updatedDiscussionMessages,
-            },
-          }),
-        );
-      },
-    );
-
-    return unsubscribe;
-  }, [currentDiscussionId]);
-
   return {
     ...state,
     loading: state.loading || isLoading,
     data: discussionMessagesWithOwners,
+    isEndOfList,
     fetchDiscussionMessages,
     addDiscussionMessage,
   };

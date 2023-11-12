@@ -1,4 +1,5 @@
 import produce from "immer";
+import { unionBy } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
 import { getChatChannelUserStatusKey } from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
@@ -38,35 +39,6 @@ export const reducer = createReducer<CacheState, Action>(initialState)
 
       nextState.discussionStates[discussionId] = { ...state };
     }),
-  )
-  .handleAction(
-    actions.updateDiscussionMessagesStateByDiscussionId,
-    (state, { payload }) =>
-      produce(state, (nextState) => {
-        const { discussionId } = payload;
-
-        nextState.discussionMessagesStates[discussionId] = {
-          ...payload.state,
-          data: payload.state.data,
-        };
-      }),
-  )
-  .handleAction(
-    actions.addDiscussionMessageByDiscussionId,
-    (state, { payload }) =>
-      produce(state, (nextState) => {
-        const { discussionId, discussionMessage } = payload;
-
-        const updatedDiscussionMessages = [
-          ...(state.discussionMessagesStates[discussionId]?.data ?? []),
-          discussionMessage,
-        ];
-
-        nextState.discussionMessagesStates[discussionId] = {
-          ...state.discussionMessagesStates[discussionId],
-          data: updatedDiscussionMessages,
-        };
-      }),
   )
   .handleAction(
     actions.updateDiscussionMessageWithActualId,
@@ -121,4 +93,44 @@ export const reducer = createReducer<CacheState, Action>(initialState)
         })
       ] = { ...state };
     }),
+  )
+  .handleAction(
+    actions.updateDiscussionMessagesStateByDiscussionId,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { discussionId } = payload;
+
+        const uniq = unionBy(
+          payload.state?.data ?? [],
+          state.discussionMessagesStates[discussionId]?.data ??
+            [],
+          "id",
+        ).sort(
+          (a, b) =>
+            a.createdAt.toDate().getTime() - b.createdAt.toDate().getTime(),
+        );
+
+        nextState.discussionMessagesStates[discussionId] = {
+          ...payload.state,
+          data: uniq,
+        };
+      }),
+  )
+  .handleAction(
+    actions.addDiscussionMessageByDiscussionId,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { discussionId, discussionMessage } = payload;
+
+        const updatedDiscussionMessages = [
+          ...(state.discussionMessagesStates[discussionId]
+            ?.data ?? []),
+          discussionMessage,
+        ];
+
+        nextState.discussionMessagesStates[discussionId] = {
+          ...state.discussionMessagesStates[discussionId],
+          data: updatedDiscussionMessages,
+        };
+      }),
   );

@@ -115,6 +115,13 @@ export type SystemDiscussionMessage =
 
 export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
 
+export type Text = string | JSX.Element;
+
+export type DiscussionMessageWithParsedText = DiscussionMessage & {
+  parsedText: Text[];
+  parsedReply: Text[] | null;
+};
+
 export enum PendingMessageStatus {
   Sending,
   Failed,

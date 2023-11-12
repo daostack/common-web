@@ -17,15 +17,15 @@ import {
   LOADER_APPEARANCE_DELAY,
   QueryParamKey,
 } from "@/shared/constants";
-import { useForceUpdate, useQueryParams } from "@/shared/hooks";
+import { useQueryParams } from "@/shared/hooks";
 import {
   checkIsUserDiscussionMessage,
   CommonFeedObjectUserUnique,
   CommonMember,
   DirectParent,
-  DiscussionMessage,
   User,
   Circles,
+  DiscussionMessageWithParsedText,
 } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { formatDate } from "@/shared/utils";
@@ -42,7 +42,7 @@ interface ChatContentInterface {
   commonMember: CommonMember | null;
   governanceCircles?: Circles;
   chatWrapperId: string;
-  messages: Record<number, DiscussionMessage[]>;
+  messages: Record<number, DiscussionMessageWithParsedText[]>;
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
@@ -76,7 +76,6 @@ const ChatContent: ForwardRefRenderFunction<
     commonMember,
     governanceCircles,
     chatWrapperId,
-    messages,
     dateList,
     lastSeenItem,
     hasPermissionToHide,
@@ -90,6 +89,7 @@ const ChatContent: ForwardRefRenderFunction<
     onFeedItemClick,
     onInternalLinkClick,
     isEmpty,
+    messages,
   },
   chatContentRef,
 ) => {
@@ -97,13 +97,6 @@ const ChatContent: ForwardRefRenderFunction<
   const userId = user?.uid;
   const queryParams = useQueryParams();
   const messageIdParam = queryParams[QueryParamKey.Message];
-  const forceUpdate = useForceUpdate();
-
-  useEffect(() => {
-    if (messages) {
-      forceUpdate();
-    }
-  }, [messages]);
 
   const [highlightedMessageId, setHighlightedMessageId] = useState(
     () => (typeof messageIdParam === "string" && messageIdParam) || null,

@@ -5,6 +5,7 @@ import {
   CommonFeedObjectUserUnique,
   Discussion,
   DiscussionMessage,
+  DiscussionMessageWithParsedText,
   Governance,
   Proposal,
   User,
@@ -88,26 +89,26 @@ export const updateDiscussionStateById = createStandardAction(
   state: LoadingState<Discussion | null>;
 }>();
 
-export const updateDiscussionMessagesStateByDiscussionId = createStandardAction(
-  CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_ID,
-)<{
-  discussionId: string;
-  state: LoadingState<DiscussionMessage[] | null>;
-}>();
-
-export const addDiscussionMessageByDiscussionId = createStandardAction(
-  CacheActionType.ADD_DISCUSSION_MESSAGE_BY_DISCUSSION_ID,
-)<{
-  discussionId: string;
-  discussionMessage: DiscussionMessage;
-}>();
-
 export const updateDiscussionMessageWithActualId = createStandardAction(
   CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_MESSAGES_ACTUAL_ID,
 )<{
   discussionId: string;
   pendingMessageId: string;
   actualId: string;
+}>();
+
+export const updateDiscussionMessagesStateByDiscussionId = createStandardAction(
+  CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_ID,
+)<{
+  discussionId: string;
+  state: LoadingState<DiscussionMessageWithParsedText[] | null>;
+}>();
+
+export const addDiscussionMessageByDiscussionId = createStandardAction(
+  CacheActionType.ADD_DISCUSSION_MESSAGE_BY_DISCUSSION_ID,
+)<{
+  discussionId: string;
+  discussionMessage: DiscussionMessageWithParsedText;
 }>();
 
 export const getProposalStateById = createAsyncAction(

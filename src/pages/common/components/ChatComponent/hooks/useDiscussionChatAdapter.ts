@@ -6,10 +6,15 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { User } from "@/shared/models";
+import { DirectParent, User } from "@/shared/models";
+import { TextStyles } from "@/shared/hooks/useCases/useDiscussionMessagesById";
 
 interface Options {
   hasPermissionToHide: boolean;
+  onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
+  directParent?: DirectParent | null;
+  textStyles: TextStyles;
 }
 
 interface Return {
@@ -22,22 +27,24 @@ interface Return {
 }
 
 export const useDiscussionChatAdapter = (options: Options): Return => {
-  const { hasPermissionToHide } = options;
-  const discussionMessagesData = useDiscussionMessagesById({
-    hasPermissionToHide,
-  });
-  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
-  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+  const { hasPermissionToHide, textStyles} = options;
+  
   const user = useSelector(selectUser());
   const userId = user?.uid;
-
-  const users = useMemo(
-    () =>
-      commonMembers
-        .filter((member) => member.userId !== userId)
-        .map(({ user }) => user),
-    [userId, commonMembers],
-  );
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+    const users = useMemo(
+      () =>
+        commonMembers
+          .filter((member) => member.userId !== userId)
+          .map(({ user }) => user),
+      [userId, commonMembers],
+    );
+  const discussionMessagesData = useDiscussionMessagesById({
+    hasPermissionToHide,
+    users,
+    textStyles
+  });
+  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
   const fetchDiscussionUsers = useCallback(
     (commonId: string, circleVisibility?: string[]) => {
