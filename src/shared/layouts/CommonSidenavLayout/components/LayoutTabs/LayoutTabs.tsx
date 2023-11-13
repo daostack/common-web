@@ -60,7 +60,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   ];
 
   if (isAuthenticated) {
-    tabs.splice(1, 0, {
+    tabs.unshift({
       label: getLayoutTabName(LayoutTab.Inbox),
       value: LayoutTab.Inbox,
       icon: <InboxIcon />,
