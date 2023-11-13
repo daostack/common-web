@@ -24,12 +24,22 @@ export const useMenuItems = (options: Options): MenuItem[] => {
         onCommonClick(stateItem.commonId);
       },
     }))
-    .sort((item) => (item.id === activeStateItemId ? -1 : 1))
+    .sort((prevItem, nextItem) => {
+      if (prevItem.id === activeStateItemId) {
+        return -1;
+      }
+      if (nextItem.id === activeStateItemId) {
+        return 1;
+      }
+
+      return 0;
+    })
     .concat({
       id: CREATE_COMMON_ITEM_ID,
       text: "Create a common",
       onClick: onCommonCreationClick,
     });
+  console.log(items.map((item) => item.text));
 
   return items;
 };
