@@ -119,7 +119,6 @@ export type Text = string | JSX.Element;
 
 export type DiscussionMessageWithParsedText = DiscussionMessage & {
   parsedText: Text[];
-  parsedReply: Text[] | null;
 };
 
 export enum PendingMessageStatus {

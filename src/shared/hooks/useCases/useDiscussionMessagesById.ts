@@ -104,23 +104,12 @@ export const useDiscussionMessagesById = ({
       onFeedItemClick,
     });
 
-    const parsedReply = discussionMessage.parentMessage?.text ? await getTextFromTextEditorString({
-      textEditorString: discussionMessage.parentMessage.text,
-      users,
-      commonId: discussionMessage.commonId,
-      directParent,
-      onUserClick,
-      onFeedItemClick,
-    }) : null;
-
-
     dispatch(
       cacheActions.addDiscussionMessageByDiscussionId({
         discussionId,
         discussionMessage: {
           ...discussionMessage,
           parsedText,
-          parsedReply
         },
       }),
     );
