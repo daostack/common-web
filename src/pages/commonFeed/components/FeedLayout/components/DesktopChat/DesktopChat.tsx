@@ -82,7 +82,11 @@ const DesktopChat: FC<ChatProps> = (props) => {
   }, [dmUserId]);
 
   return (
-    <DesktopRightPane className={className}>
+    <DesktopRightPane
+      className={classNames(className, {
+        [styles.rightPaneContainerWithHeader]: withTitle,
+      })}
+    >
       {withTitle && (
         <div className={styles.titleWrapper}>
           {dmUser?.photoURL && (
