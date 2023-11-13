@@ -734,6 +734,7 @@ export default function ChatComponent({
         <ChatContentContext.Provider value={chatContentContextValue}>
           <ChatContent
             ref={chatContentRef}
+            isChatChannel={isChatChannel}
             discussionId={discussionId}
             type={type}
             commonMember={commonMember}

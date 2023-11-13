@@ -11,7 +11,11 @@ import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { ChatMessage, InternalLinkData } from "@/shared/components";
+import {
+  ChatMessage,
+  InternalLinkData,
+  DMChatMessage,
+} from "@/shared/components";
 import {
   ChatType,
   LOADER_APPEARANCE_DELAY,
@@ -56,6 +60,7 @@ interface ChatContentInterface {
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
   isEmpty?: boolean;
+  isChatChannel: boolean;
 }
 
 const isToday = (someDate: Date) => {
@@ -90,6 +95,7 @@ const ChatContent: ForwardRefRenderFunction<
     onInternalLinkClick,
     isEmpty,
     messages,
+    isChatChannel,
   },
   chatContentRef,
 ) => {
@@ -148,6 +154,7 @@ const ChatContent: ForwardRefRenderFunction<
   }, [chatWrapperId, highlightedMessageId, dateList.length, scrolledToMessage]);
 
   function scrollToRepliedMessage(messageId: string) {
+    console.log("---messageId", messageId);
     scroller.scrollTo(messageId, {
       containerId: chatWrapperId,
       delay: 0,
@@ -211,7 +218,26 @@ const ChatContent: ForwardRefRenderFunction<
               const isMyMessageNext =
                 checkIsUserDiscussionMessage(nextMessage) &&
                 nextMessage.ownerId === userId;
-              const messageEl = (
+              const messageEl = isChatChannel ? (
+                <DMChatMessage
+                  key={message.id}
+                  user={user}
+                  discussionMessage={message}
+                  chatType={type}
+                  scrollToRepliedMessage={scrollToRepliedMessage}
+                  highlighted={message.id === highlightedMessageId}
+                  hasPermissionToHide={hasPermissionToHide}
+                  users={users}
+                  feedItemId={feedItemId}
+                  commonMember={commonMember}
+                  governanceCircles={governanceCircles}
+                  onMessageDelete={onMessageDelete}
+                  directParent={directParent}
+                  onUserClick={onUserClick}
+                  onFeedItemClick={onFeedItemClick}
+                  onInternalLinkClick={onInternalLinkClick}
+                />
+              ) : (
                 <ChatMessage
                   key={message.id}
                   user={user}
