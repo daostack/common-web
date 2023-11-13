@@ -71,10 +71,10 @@ const Sidenav: FC<SidenavProps> = (props) => {
       </div>
       <a
         href="#"
-        id="sidenav-close"
         className={styles.closeLink}
         title="Close Menu"
         aria-label="Close Menu"
+        onClick={closeSidenav}
       />
     </aside>
   );
