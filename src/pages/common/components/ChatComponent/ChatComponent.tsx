@@ -712,13 +712,13 @@ export default function ChatComponent({
   useEffect(() => {
     if (discussionId) {
       discussionMessagesData.fetchDiscussionMessages(discussionId);
+      dispatch(chatActions.clearCurrentDiscussionMessageReply());
     }
-  }, [isTopReached, discussionId]);
+  }, [discussionId]);
 
   useEffect(() => {
-    if (isTopReached && discussionId && !discussionMessagesData.isEndOfList) {
+    if (isTopReached && discussionId ) {
       discussionMessagesData.fetchDiscussionMessages(discussionId);
-      dispatch(chatActions.clearCurrentDiscussionMessageReply());
     }
   }, [isTopReached, discussionId, dispatch]);
 
