@@ -4,6 +4,7 @@ export { default as Avatar2Icon } from "./avatar2.icon";
 export { default as Avatar3Icon } from "./avatar3.icon";
 export { default as BillingIcon } from "./billing.icon";
 export { default as BlocksIcon } from "./blocks.icon";
+export { default as Blocks2Icon } from "./blocks2.icon";
 export { default as BoldMarkIcon } from "./boldMark.icon";
 export { default as BoldPlusIcon } from "./boldPlus.icon";
 export { default as CaretIcon } from "./caret.icon";

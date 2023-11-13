@@ -8,7 +8,7 @@ import {
 } from "@/pages/Auth/store/selectors";
 import { Tab, Tabs } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
-import { Avatar2Icon, BlocksIcon, InboxIcon } from "@/shared/icons";
+import { Avatar2Icon, Blocks2Icon, InboxIcon } from "@/shared/icons";
 import { openSidenav } from "@/shared/utils";
 import { selectCommonLayoutLastCommonFromFeed } from "@/store/states";
 import { LayoutTab } from "../../constants";
@@ -50,7 +50,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
     {
       label: getLayoutTabName(LayoutTab.Spaces),
       value: LayoutTab.Spaces,
-      icon: <BlocksIcon />,
+      icon: <Blocks2Icon />,
     },
     {
       label: getLayoutTabName(LayoutTab.Profile),
