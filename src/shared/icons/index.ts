@@ -60,6 +60,7 @@ export { default as InviteFriendsIcon } from "./inviteFriends.icon";
 export { default as ShareIcon } from "./share.icon";
 export { default as Share2Icon } from "./share2.icon";
 export { default as Share3Icon } from "./share3.icon";
+export { default as SidebarIcon } from "./sidebar.icon";
 export { default as SendIcon } from "./send.icon";
 export { default as SettingsIcon } from "./settings.icon";
 export { default as MinusIcon } from "./minus.icon";

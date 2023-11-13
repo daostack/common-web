@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { RightArrowThinIcon, StarIcon } from "@/shared/icons";
+import { SidebarIcon, StarIcon } from "@/shared/icons";
 import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getPluralEnding } from "@/shared/utils";
 import styles from "./HeaderCommonContent.module.scss";
@@ -45,7 +45,7 @@ const HeaderCommonContent: FC<HeaderCommonContentProps> = (props) => {
     <div className={styles.container}>
       <TopNavigationOpenSidenavButton
         className={styles.openSidenavButton}
-        iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+        iconEl={<SidebarIcon className={styles.openSidenavIcon} />}
       />
       <ContentWrapper>
         <CommonAvatar
