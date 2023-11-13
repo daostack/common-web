@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { useRoutesContext } from "@/shared/contexts";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon, StarIcon } from "@/shared/icons";
 import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getPluralEnding } from "@/shared/utils";
@@ -26,6 +27,19 @@ const HeaderCommonContent: FC<HeaderCommonContentProps> = (props) => {
     showFollowIcon = false,
   } = props;
   const { getCommonPageAboutTabPath } = useRoutesContext();
+  const isTabletView = useIsTabletView();
+
+  const ContentWrapper: FC = ({ children }) =>
+    isTabletView ? (
+      <div className={styles.commonLink}>{children}</div>
+    ) : (
+      <NavLink
+        className={styles.commonLink}
+        to={getCommonPageAboutTabPath(commonId)}
+      >
+        {children}
+      </NavLink>
+    );
 
   return (
     <div className={styles.container}>
@@ -33,10 +47,7 @@ const HeaderCommonContent: FC<HeaderCommonContentProps> = (props) => {
         className={styles.openSidenavButton}
         iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
       />
-      <NavLink
-        className={styles.commonLink}
-        to={getCommonPageAboutTabPath(commonId)}
-      >
+      <ContentWrapper>
         <CommonAvatar
           name={commonName}
           src={commonImage}
@@ -55,7 +66,7 @@ const HeaderCommonContent: FC<HeaderCommonContentProps> = (props) => {
             {memberCount} member{getPluralEnding(memberCount)}
           </p>
         </div>
-      </NavLink>
+      </ContentWrapper>
     </div>
   );
 };
