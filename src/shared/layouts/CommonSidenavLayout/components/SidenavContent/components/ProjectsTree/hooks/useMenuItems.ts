@@ -39,7 +39,6 @@ export const useMenuItems = (options: Options): MenuItem[] => {
       text: "Create a common",
       onClick: onCommonCreationClick,
     });
-  console.log(items.map((item) => item.text));
 
   return items;
 };
