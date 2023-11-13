@@ -1,4 +1,5 @@
 @import "../../../../../constants";
+@import "../../../../../constants";
 @import "../../../../../styles/sizes";
 
 .billing-bank-account-info {
@@ -19,10 +20,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: $white;
-  border: 1px solid $light-gray-1;
+  background-color: var(--secondary-background);
+  border: 1px solid var(--gentle-stroke);
   border-radius: 0.5rem;
   box-sizing: border-box;
+  color: var(--primary-text);
 
   @include big-phone {
     padding: 2.25rem 1.5rem;
@@ -78,25 +80,6 @@
   @include big-phone {
     flex-direction: column;
     width: 100%;
-  }
-
-  .billing-bank-account-info__details-button {
-    max-width: 9rem;
-    border-radius: 0.5rem;
-
-    &.edit-details {
-      color: $purple;
-    }
-
-    &.delete-details {
-      color: $red;
-    }
-
-    @include big-phone {
-      max-width: unset;
-      margin-bottom: 0.5rem;
-      border-radius: 6.25rem;
-    }
   }
 }
 

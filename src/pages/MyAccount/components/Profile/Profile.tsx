@@ -126,7 +126,7 @@ const Profile: FC<ProfileProps> = (props) => {
                   to={getBillingPagePath()}
                 />
                 <MenuButton
-                  className={styles.menuButton}
+                  className={`${styles.menuButton} ${styles.themeMenuButton}`}
                   text="Light/Dark mode"
                   onClick={handleThemeToggle}
                   iconEl={<ThemeIcon />}

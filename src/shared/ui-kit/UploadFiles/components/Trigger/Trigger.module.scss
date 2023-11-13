@@ -22,7 +22,7 @@
   box-sizing: border-box;
 
   &:hover {
-    --upload-trigger-color: var(--hover-fill);
+    --upload-trigger-color: var(--primary-text);
     --upload-trigger-border-color: #{$c-primary-200};
   }
 

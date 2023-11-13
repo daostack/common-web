@@ -67,6 +67,10 @@
   border-bottom: 0.0625rem solid $c-gray-20;
 }
 
+.themeMenuButton {
+  color: var(--primary-text);
+}
+
 .logoutMenuButton {
   color: $c-pink-mention;
 }
