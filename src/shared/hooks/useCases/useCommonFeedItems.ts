@@ -11,6 +11,7 @@ interface Return
 export const useCommonFeedItems = (
   commonId: string,
   idsForNotListening?: string[],
+  sharedFeedItemId?: string | null,
 ): Return => {
   const dispatch = useDispatch();
   const feedItems = useSelector(selectFeedItems);
@@ -20,6 +21,7 @@ export const useCommonFeedItems = (
     dispatch(
       commonActions.getFeedItems.request({
         commonId,
+        sharedFeedItemId,
         feedItemId,
         limit: 15,
       }),
@@ -67,7 +69,6 @@ export const useCommonFeedItems = (
       dispatch(
         commonActions.getFeedItems.cancel("Cancel feed items fetch on unmount"),
       );
-      dispatch(commonActions.resetFeedItems());
     };
   }, []);
 

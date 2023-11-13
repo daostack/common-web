@@ -8,6 +8,12 @@ import {
   Proposal,
   User,
 } from "@/shared/models";
+import { CommonState } from "../common";
+
+export type FeedState = Pick<
+  CommonState,
+  "feedItems" | "pinnedFeedItems" | "sharedFeedItem"
+>;
 
 export interface CacheState {
   userStates: Record<string, LoadingState<User | null>>;
@@ -18,6 +24,7 @@ export interface CacheState {
     string,
     LoadingState<DiscussionMessage[] | null>
   >;
+  feedByCommonIdStates: Record<string, FeedState>;
   // key: {commonId}_{userId}_{feedObjectId}
   feedItemUserMetadataStates: Record<
     string,

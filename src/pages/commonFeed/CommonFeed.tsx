@@ -45,6 +45,7 @@ import {
   getCommonPageAboutTabPath,
 } from "@/shared/utils";
 import {
+  cacheActions,
   commonActions,
   commonLayoutActions,
   selectCommonAction,
@@ -162,7 +163,11 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     hasMore: hasMoreCommonFeedItems,
     fetch: fetchCommonFeedItems,
     batchNumber,
-  } = useCommonFeedItems(commonId, commonFeedItemIdsForNotListening);
+  } = useCommonFeedItems(
+    commonId,
+    commonFeedItemIdsForNotListening,
+    sharedFeedItemId,
+  );
 
   const {
     isModalOpen: isCommonJoinModalOpen,
@@ -330,7 +335,13 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   useEffect(() => {
     fetchData();
 
+    const interval = setInterval(() => {
+      dispatch(cacheActions.copyFeedStateByCommonId(commonId));
+    }, 5000);
+
     return () => {
+      clearInterval(interval);
+      dispatch(cacheActions.copyFeedStateByCommonId(commonId));
       dispatch(commonActions.resetCommon());
     };
   }, [commonId]);

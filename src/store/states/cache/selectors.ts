@@ -21,6 +21,10 @@ export const selectDiscussionMessagesStateByDiscussionId =
   (discussionId: string) => (state: AppState) =>
     state.cache.discussionMessagesStates[discussionId] || null;
 
+export const selectFeedStateByCommonId =
+  (commonId: string) => (state: AppState) =>
+    state.cache.feedByCommonIdStates[commonId] || null;
+
 export const selectFeedItemUserMetadata =
   (info: { commonId: string; userId: string; feedObjectId: string }) =>
   (state: AppState) =>

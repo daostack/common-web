@@ -20,7 +20,7 @@ import {
   Proposal,
 } from "@/shared/models";
 import { CommonActionType } from "./constants";
-import { FeedItems, PinnedFeedItems } from "./types";
+import { CommonState, FeedItems, PinnedFeedItems } from "./types";
 
 export const resetCommon = createStandardAction(
   CommonActionType.RESET_COMMON,
@@ -116,6 +116,7 @@ export const getFeedItems = createAsyncAction(
 )<
   {
     commonId: string;
+    sharedFeedItemId?: string | null;
     feedItemId?: string;
     limit?: number;
   },
@@ -137,6 +138,13 @@ export const getPinnedFeedItems = createAsyncAction(
   Error,
   string
 >();
+
+export const setFeedState = createStandardAction(
+  CommonActionType.SET_FEED_STATE,
+)<{
+  data: Pick<CommonState, "feedItems" | "pinnedFeedItems" | "sharedFeedItem">;
+  sharedFeedItemId?: string | null;
+}>();
 
 export const addNewFeedItems = createStandardAction(
   CommonActionType.ADD_NEW_FEED_ITEMS,

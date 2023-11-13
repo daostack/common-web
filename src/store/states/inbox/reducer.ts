@@ -34,8 +34,8 @@ const initialState: InboxState = {
 const sortInboxItems = (data: FeedLayoutItemWithFollowData[]): void => {
   data.sort(
     (prevItem, nextItem) =>
-      getFeedLayoutItemDateForSorting(nextItem).toMillis() -
-      getFeedLayoutItemDateForSorting(prevItem).toMillis(),
+      getFeedLayoutItemDateForSorting(nextItem).seconds -
+      getFeedLayoutItemDateForSorting(prevItem).seconds,
   );
 };
 

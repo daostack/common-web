@@ -1,5 +1,7 @@
 import { AppState } from "@/shared/interfaces";
 
+export const selectCommonState = (state: AppState) => state.common;
+
 export const selectCommonAction = (state: AppState) =>
   state.common.commonAction;
 
