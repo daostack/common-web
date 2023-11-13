@@ -116,6 +116,29 @@ class FeedItemFollowsService {
     await Api.post(ApiEndpoint.FollowFeedItem, data, { cancelToken });
   };
 
+  public getFollowFeedItems = async (options: {
+    userId: string;
+    startAt?: Timestamp;
+    endAt?: Timestamp;
+  }): Promise<FeedItemFollow[]> => {
+    const { userId, startAt, endAt } = options;
+    let query = this.getFeedItemFollowsSubCollection(userId).orderBy(
+      "lastActivity",
+      "desc",
+    );
+
+    if (startAt) {
+      query = query.startAt(startAt);
+    }
+    if (endAt) {
+      query = query.endAt(endAt);
+    }
+
+    const snapshot = await query.get();
+
+    return snapshot.docs.map((doc) => doc.data());
+  };
+
   public subscribeToNewUpdatedFollowFeedItem = (
     userId: string,
     endBefore: Timestamp,

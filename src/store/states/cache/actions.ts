@@ -10,6 +10,7 @@ import {
   User,
 } from "@/shared/models";
 import { CacheActionType } from "./constants";
+import { FeedState } from "./types";
 
 export const getUserStateById = createAsyncAction(
   CacheActionType.GET_USER_STATE_BY_ID,
@@ -130,6 +131,21 @@ export const updateProposalStateById = createStandardAction(
   proposalId: string;
   state: LoadingState<Proposal | null>;
 }>();
+
+export const copyFeedStateByCommonId = createStandardAction(
+  CacheActionType.COPY_FEED_STATE_BY_COMMON_ID,
+)<string>();
+
+export const updateFeedStateByCommonId = createStandardAction(
+  CacheActionType.UPDATE_FEED_STATE_BY_COMMON_ID,
+)<{
+  commonId: string;
+  state: FeedState;
+}>();
+
+export const resetFeedStates = createStandardAction(
+  CacheActionType.RESET_FEED_STATES,
+)();
 
 export const getFeedItemUserMetadata = createAsyncAction(
   CacheActionType.GET_FEED_ITEM_USER_METADATA,

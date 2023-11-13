@@ -12,9 +12,9 @@ import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
 import { EntityTypes } from "@/shared/constants";
 import { useModal, useNotification } from "@/shared/hooks";
 import {
+  FeedItemFollowState,
   useCommon,
   useDiscussionById,
-  useFeedItemFollow,
   useFeedItemUserMetadata,
   useUserById,
 } from "@/shared/hooks/useCases";
@@ -63,6 +63,7 @@ interface DiscussionFeedCardProps {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   directParent?: DirectParent | null;
+  feedItemFollow: FeedItemFollowState;
   onUserSelect?: (userId: string, commonId?: string) => void;
 }
 
@@ -89,6 +90,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       getNonAllowedItems,
       onActiveItemDataChange,
       directParent,
+      feedItemFollow,
       onUserSelect,
     } = props;
     const {
@@ -124,10 +126,6 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
     const { data: common } = useCommon(isHome ? commonId : "");
-    const feedItemFollow = useFeedItemFollow(
-      { feedItemId: item.id, commonId },
-      { withSubscription: true },
-    );
     const menuItems = useMenuItems(
       {
         commonId,
