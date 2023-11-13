@@ -5,7 +5,7 @@
   background-color: transparent;
 
   &:hover {
-    background-color: $light-gray-1;
+    background-color: var(--hover-fill);
   }
 }
 

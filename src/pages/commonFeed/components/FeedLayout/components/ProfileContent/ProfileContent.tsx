@@ -150,7 +150,7 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
       {country && <p className={styles.country}>{country.name}</p>}
       <Button
         className={styles.dmButton}
-        variant={ButtonVariant.PrimaryBlack}
+        variant={ButtonVariant.OutlineDarkPink}
         leftIcon={<MessageIcon className={styles.dmButtonIcon} />}
         onClick={handleDMButtonClick}
       >

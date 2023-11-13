@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { createReport } from "@/pages/OldCommon/store/actions";
 import { subscribeToMessageRefresh } from "@/pages/OldCommon/store/saga";
 import { Loader } from "@/shared/components";
-import { Colors, EntityTypes } from "@/shared/constants";
+import { EntityTypes } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
 import {
   Discussion,
@@ -133,8 +133,6 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
       onClose={isLoading ? emptyFunction : onClose}
       hideCloseButton={isLoading}
       title="Report"
-      closeColor={Colors.black}
-      closeIconSize={20}
       styles={{
         header: "report-modal__header",
         content: "report-modal__content",
