@@ -38,10 +38,6 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
           isMobileVersion={isMobileVersion}
           ButtonComponent={PlusButton}
         />
-        <DirectMessageButton
-          className={styles.directMessageButton}
-          isMobileVersion={isMobileVersion}
-        />
       </div>
     </div>
   );

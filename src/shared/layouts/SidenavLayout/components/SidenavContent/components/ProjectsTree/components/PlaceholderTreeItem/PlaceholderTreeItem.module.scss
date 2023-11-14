@@ -3,7 +3,7 @@
 // based on TreeItemTrigger arrow icon button
 .gap {
   // {item-arrow-pl} + {arrow-icon-button-pr} + {arrow-icon-button-width}
-  width: calc(var(--item-arrow-pl) + 0.625rem + 0.375rem);
+  width: calc(var(--item-arrow-pl) + 1.25rem + 0.5rem);
 }
 
 .image {

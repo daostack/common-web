@@ -17,7 +17,7 @@ import createSagaMiddleware from "redux-saga";
 import { AppState } from "@/shared/interfaces";
 import rootReducer from "./reducer";
 import appSagas from "./saga";
-import { inboxTransform } from "./transforms";
+import { inboxTransform, lastCommonFromFeedTransform } from "./transforms";
 
 const persistConfig: PersistConfig<AppState> = {
   key: "root",
@@ -32,7 +32,7 @@ const persistConfig: PersistConfig<AppState> = {
     "multipleSpacesLayout",
   ],
   stateReconciler: autoMergeLevel2,
-  transforms: [inboxTransform],
+  transforms: [inboxTransform, lastCommonFromFeedTransform],
 };
 
 const sagaMiddleware = createSagaMiddleware();
