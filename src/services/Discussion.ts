@@ -64,7 +64,11 @@ class DiscussionService {
     const query = this.getDiscussionCollection().doc(discussionId);
 
     return query.onSnapshot((snapshot) => {
-      callback(transformFirebaseDataSingle<Discussion>(snapshot));
+      const discussion = snapshot.data();
+
+      if (discussion) {
+        callback(discussion);
+      }
     });
   };
 
