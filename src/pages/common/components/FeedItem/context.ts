@@ -29,6 +29,7 @@ export interface FeedItemBaseContentProps {
   seen?: boolean;
   ownerId?: string;
   commonName?: string;
+  commonId?: string;
   renderImage?: (className?: string) => ReactNode;
   renderLeftContent?: () => ReactNode;
   image?: string;
@@ -42,6 +43,8 @@ export interface FeedItemBaseContentProps {
   hasImages?: boolean;
   isLoading?: boolean;
   shouldHideBottomContent?: boolean;
+  dmUserId?: string;
+  hasUnseenMention?: boolean;
 }
 
 export interface GetLastMessageOptions {
@@ -63,6 +66,7 @@ export interface FeedItemContextValue {
   setExpandedFeedItemId?: (feedItemId: string | null) => void;
   renderFeedItemBaseContent?: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
+  onFeedItemUnfollowed?: (itemId: string) => void;
   feedCardSettings?: FeedCardSettings;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;

@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
+import { Logger } from "@/services";
 import {
   ElementDropdown,
   UserAvatar,
@@ -110,6 +111,7 @@ export default function ChatMessage({
     !isUserDiscussionMessage || userId !== discussionMessageUserId;
 
   const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
+  const [isMessageDataFetching, setIsMessageDataFetching] = useState(false);
 
   const [replyMessageText, setReplyMessageText] = useState<
     (string | JSX.Element)[]
@@ -144,26 +146,35 @@ export default function ChatMessage({
       const emojiCount = countTextEditorEmojiElements(
         parseStringToTextEditorValue(discussionMessage.text),
       );
-      const parsedText = await getTextFromTextEditorString({
-        textEditorString: discussionMessage.text,
-        users,
-        mentionTextClassName: !isNotCurrentUserMessage
-          ? styles.mentionTextCurrentUser
-          : "",
-        emojiTextClassName: classNames({
-          [styles.singleEmojiText]: emojiCount.isSingleEmoji,
-          [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-        }),
-        commonId: discussionMessage.commonId,
-        systemMessage: isSystemMessage ? discussionMessage : undefined,
-        getCommonPagePath,
-        getCommonPageAboutTabPath,
-        directParent,
-        onUserClick,
-        onFeedItemClick,
-      });
 
-      setMessageText(parsedText);
+      setIsMessageDataFetching(true);
+
+      try {
+        const parsedText = await getTextFromTextEditorString({
+          textEditorString: discussionMessage.text,
+          users,
+          mentionTextClassName: !isNotCurrentUserMessage
+            ? styles.mentionTextCurrentUser
+            : "",
+          emojiTextClassName: classNames({
+            [styles.singleEmojiText]: emojiCount.isSingleEmoji,
+            [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+          }),
+          commonId: discussionMessage.commonId,
+          systemMessage: isSystemMessage ? discussionMessage : undefined,
+          getCommonPagePath,
+          getCommonPageAboutTabPath,
+          directParent,
+          onUserClick,
+          onFeedItemClick,
+        });
+
+        setMessageText(parsedText);
+      } catch (error) {
+        Logger.error(error);
+      } finally {
+        setIsMessageDataFetching(false);
+      }
     })();
   }, [
     users,
@@ -213,7 +224,7 @@ export default function ChatMessage({
     },
   );
 
-  const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
+  const handleContextMenu: MouseEventHandler<HTMLDivElement> = (event) => {
     if (!isTabletView) {
       event.preventDefault();
       setIsMenuOpen(true);
@@ -330,7 +341,6 @@ export default function ChatMessage({
     <li
       id={discussionMessage.id}
       className={classNames(styles.container, className)}
-      onContextMenu={handleContextMenu}
     >
       <div
         className={classNames(styles.message, {
@@ -359,6 +369,7 @@ export default function ChatMessage({
         ) : (
           <>
             <div
+              onContextMenu={handleContextMenu}
               className={classNames(styles.messageText, {
                 [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
                 [styles.messageTextRtl]: isRtlText(discussionMessage.text),
@@ -401,7 +412,7 @@ export default function ChatMessage({
                 <ChatMessageLinkify
                   onInternalLinkClick={handleInternalLinkClick}
                 >
-                  {!messageText.length ? (
+                  {!messageText.length && isMessageDataFetching ? (
                     <i>Loading...</i>
                   ) : (
                     messageText.map((text) => text)

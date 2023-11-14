@@ -104,22 +104,16 @@ export const useProjectsData = (): Return => {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (areCommonsLoading) {
-      return;
-    }
     if (!areCommonsFetched) {
       dispatch(commonLayoutActions.getCommons.request(activeItemId));
     }
-  }, [areCommonsLoading, areCommonsFetched]);
+  }, [areCommonsFetched]);
 
   useEffect(() => {
-    if (areProjectsLoading || !currentCommonId) {
-      return;
-    }
-    if (!areProjectsFetched) {
+    if (currentCommonId && !areProjectsFetched) {
       dispatch(commonLayoutActions.getProjects.request(currentCommonId));
     }
-  }, [areProjectsLoading, areProjectsFetched, currentCommonId]);
+  }, [areProjectsFetched, currentCommonId]);
 
   useEffect(() => {
     if (

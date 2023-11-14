@@ -63,7 +63,6 @@ import {
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import {
   addQueryParam,
-  checkIsProject,
   deleteQueryParam,
   getParamsFromOneOfRoutes,
   getUserName,
@@ -120,6 +119,7 @@ interface FeedLayoutProps {
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
+  onFeedItemUnfollowed?: (itemId: string) => void;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   sharedFeedItemId?: string | null;
   emptyText?: string;
@@ -160,6 +160,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     renderFeedItemBaseContent,
     renderChatChannelItem,
     onFeedItemUpdate,
+    onFeedItemUnfollowed,
     getLastMessage,
     sharedFeedItemId,
     emptyText,
@@ -327,6 +328,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId,
       renderFeedItemBaseContent,
       onFeedItemUpdate,
+      onFeedItemUnfollowed,
       getLastMessage,
       getNonAllowedItems,
       onUserSelect: handleUserWithCommonClick,
@@ -334,6 +336,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [
       renderFeedItemBaseContent,
       onFeedItemUpdate,
+      onFeedItemUnfollowed,
       getLastMessage,
       getNonAllowedItems,
       handleUserWithCommonClick,
@@ -615,6 +618,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       onFetchNext();
     }
   }, [batchNumber]);
+
+  useEffect(() => {
+    if (sharedFeedItemId && isTabletView && allFeedItems) {
+      setActiveChatItem({ feedItemId: sharedFeedItemId });
+    }
+  }, [sharedFeedItemId, isTabletView, allFeedItems]);
 
   useImperativeHandle(
     ref,

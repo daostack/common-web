@@ -13,8 +13,8 @@ import { DeletePrompt, GlobalOverlay } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useForceUpdate, useModal, useNotification } from "@/shared/hooks";
 import {
+  FeedItemFollowState,
   useDiscussionById,
-  useFeedItemFollow,
   useFeedItemUserMetadata,
   useProposalById,
   useUserById,
@@ -80,6 +80,7 @@ interface ProposalFeedCardProps {
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   isMobileVersion?: boolean;
+  feedItemFollow: FeedItemFollowState;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   onUserSelect?: (userId: string, commonId?: string) => void;
 }
@@ -101,6 +102,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       getLastMessage,
       getNonAllowedItems,
       isMobileVersion,
+      feedItemFollow,
       onActiveItemDataChange,
       onUserSelect,
     } = props;
@@ -175,10 +177,6 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       onOpen: onShareModalOpen,
       onClose: onShareModalClose,
     } = useModal(false);
-    const feedItemFollow = useFeedItemFollow(
-      { feedItemId: item.id, commonId },
-      { withSubscription: true },
-    );
     const menuItems = useMenuItems(
       {
         commonId,
@@ -270,6 +268,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           lastSeenItem: feedItemUserMetadata?.lastSeen,
           lastSeenAt: feedItemUserMetadata?.lastSeenAt,
           seenOnce: feedItemUserMetadata?.seenOnce,
+          hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
         });
       }
     }, [
@@ -281,6 +280,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       feedItemUserMetadata?.lastSeen,
       feedItemUserMetadata?.lastSeenAt,
       feedItemUserMetadata?.seenOnce,
+      feedItemUserMetadata?.hasUnseenMention,
     ]);
 
     useEffect(() => {
@@ -458,6 +458,11 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
           menuItems={menuItems}
           ownerId={item.userId}
+          commonId={commonId}
+          hasUnseenMention={
+            feedItemUserMetadata?.hasUnseenMention ??
+            !isFeedItemUserMetadataFetched
+          }
         >
           {renderContent()}
         </FeedCard>

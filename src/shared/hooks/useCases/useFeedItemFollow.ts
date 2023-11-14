@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { FollowFeedItemAction } from "@/shared/constants";
+import { FeedItemFollow } from "@/shared/models";
 import {
   selectCommonFeedFollows,
   selectFollowFeedItemMutationState,
@@ -15,6 +16,8 @@ export interface FeedItemFollowState {
   isFollowing: boolean;
   isDisabled: boolean;
   onFollowToggle: (action?: FollowFeedItemAction) => void;
+  isUserFeedItemFollowDataFetched: boolean;
+  userFeedItemFollowData: FeedItemFollow | null;
 }
 
 interface Data {
@@ -105,5 +108,7 @@ export function useFeedItemFollow(
     isFollowing,
     isDisabled,
     onFollowToggle,
+    isUserFeedItemFollowDataFetched,
+    userFeedItemFollowData,
   };
 }
