@@ -199,6 +199,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetchDiscussionCreator(item.userId);
     }, [item.userId]);
 
+    console.log(item);
     useEffect(() => {
       fetchDiscussion(item.data.id);
     }, [item.data.id]);
