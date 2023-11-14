@@ -6,6 +6,11 @@ export enum ModalType {
   MobilePopUp,
 }
 
+export enum ModalTransition {
+  BottomToTop,
+  RightToLeft,
+}
+
 export enum CloseIconVariant {
   Regular = "regular",
   Thin = "thin",
@@ -14,6 +19,7 @@ export enum CloseIconVariant {
 export interface ModalProps {
   isShowing: boolean;
   type?: ModalType;
+  transition?: ModalTransition;
   onGoBack?: () => void;
   onClose: () => void;
   children: React.ReactNode;

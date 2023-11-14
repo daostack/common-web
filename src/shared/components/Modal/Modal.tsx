@@ -15,7 +15,7 @@ import ReactDOM from "react-dom";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
 import { Colors } from "../../constants";
-import { useComponentWillUnmount } from "../../hooks";
+import { useComponentWillUnmount, useMount } from "../../hooks";
 import Close2Icon from "../../icons/close2.icon";
 import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
@@ -25,7 +25,7 @@ import {
   ModalRef,
   ModalType,
 } from "../../interfaces";
-import { ClosePrompt } from "./components/ClosePrompt";
+import { ClosePrompt, Transition } from "./components";
 import { ModalContext, FooterOptions, ModalContextValue } from "./context";
 import "./index.scss";
 
@@ -34,7 +34,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   modalRef,
 ) => {
   const {
-    isShowing,
+    isShowing: isOpen,
     onGoBack,
     onClose,
     children,
@@ -44,6 +44,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     onHeaderScrolledToTop,
     styles,
     type = ModalType.Default,
+    transition,
     hideCloseButton = false,
     closeIconSize = 24,
     isHeaderSticky = false,
@@ -55,6 +56,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     closeIconVariant = CloseIconVariant.Regular,
   } = props;
   const contentRef = useRef<HTMLDivElement>(null);
+  const isMounted = useMount({ isOpen, delay: 300 });
   const [footer, setFooter] = useState<ReactNode>(null);
   const [footerOptions, setFooterOptions] = useState<FooterOptions>({});
   const [headerContent, setHeaderContent] = useState<ReactNode>(null);
@@ -63,6 +65,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   const { sticky: isFooterSticky = false } = footerOptions;
   const [showClosePrompt, setShowClosePrompt] = useState(false);
   const modalId = useMemo(() => `modal-${uuidv4()}`, []);
+  const isShowing = transition ? isMounted : isOpen;
 
   const handleModalContainerClick: MouseEventHandler = (event) => {
     event.stopPropagation();
@@ -250,29 +253,34 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     ? ReactDOM.createPortal(
         <div id={modalId}>
           <div className={modalOverlayClassName} />
-          <div className={modalWrapperClassName} onClick={handleClose}>
-            <div className={modalClassName} onClick={handleModalContainerClick}>
-              {isHeaderSticky && !withoutHeader && headerEl}
-              <ModalContext.Provider value={contextValue}>
-                <div
-                  ref={contentRef}
-                  className={modalContentClassName}
-                  onScroll={handleScroll}
-                >
-                  {!isHeaderSticky && !withoutHeader && headerEl}
-                  {children}
-                  {!isFooterSticky && footerEl}
-                </div>
-              </ModalContext.Provider>
-              {isFooterSticky && footerEl}
-              {showClosePrompt && (
-                <ClosePrompt
-                  onClose={handleClosePromptClose}
-                  onContinue={handleClosePromptContinue}
-                />
-              )}
+          <Transition show={isOpen} transition={transition}>
+            <div className={modalWrapperClassName} onClick={handleClose}>
+              <div
+                className={modalClassName}
+                onClick={handleModalContainerClick}
+              >
+                {isHeaderSticky && !withoutHeader && headerEl}
+                <ModalContext.Provider value={contextValue}>
+                  <div
+                    ref={contentRef}
+                    className={modalContentClassName}
+                    onScroll={handleScroll}
+                  >
+                    {!isHeaderSticky && !withoutHeader && headerEl}
+                    {children}
+                    {!isFooterSticky && footerEl}
+                  </div>
+                </ModalContext.Provider>
+                {isFooterSticky && footerEl}
+                {showClosePrompt && (
+                  <ClosePrompt
+                    onClose={handleClosePromptClose}
+                    onContinue={handleClosePromptContinue}
+                  />
+                )}
+              </div>
             </div>
-          </div>
+          </Transition>
         </div>,
         document.body,
       )

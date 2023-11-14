@@ -1,0 +1,32 @@
+.container {
+  --transition-duration: 300ms;
+  --easing: cubic-bezier(0.16, 1, 0.3, 1);
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.rightToLeftTransitionEnter {
+  will-change: transform;
+  transform: translateX(110vw);
+  transition: transform var(--transition-duration) var(--easing),
+    visibility 0s linear var(--transition-duration);
+}
+.rightToLeftTransitionEnterActive {
+  transform: translateX(0);
+  transition: transform var(--transition-duration) var(--easing);
+}
+.rightToLeftTransitionExit {
+  transform: translateX(0);
+  transition: transform var(--transition-duration) var(--easing);
+}
+.rightToLeftTransitionExitActive {
+  will-change: transform;
+  transform: translateX(110vw);
+  transition: transform var(--transition-duration) var(--easing),
+    visibility 0s linear var(--transition-duration);
+}
