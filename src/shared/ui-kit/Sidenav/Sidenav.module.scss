@@ -15,7 +15,7 @@ $zIndex: 3;
     left: 0;
     z-index: $zIndex;
     display: block;
-    background-color: $c-gray-5;
+    background-color: $c-shades-white;
     opacity: 0.5;
     animation: fade var(--sb-transition-duration);
   }
@@ -42,6 +42,7 @@ $zIndex: 3;
 
   @include tablet {
     right: 0;
+    backdrop-filter: blur(0.125rem);
   }
 
   @media (prefers-reduced-motion: reduce) {
