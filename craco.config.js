@@ -25,9 +25,10 @@ module.exports = {
     {
       plugin: {
         overrideWebpackConfig: ({ webpackConfig }) => {
-          if (process.env.REACT_APP_ENV === "stage") {
-            delete webpackConfig.devtool;
-          }
+          webpackConfig.devtool =
+            process.env.REACT_APP_ENV === "dev"
+              ? "source-map"
+              : "eval-cheap-module-source-map";
 
           return webpackConfig;
         },
