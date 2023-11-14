@@ -3,7 +3,9 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
 import commonLogoSrc from "@/shared/assets/images/logo-sidenav-2.svg";
+import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { Close2Icon } from "@/shared/icons";
 import { CommonLogo } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import {
@@ -17,10 +19,11 @@ import styles from "./SidenavContent.module.scss";
 
 interface SidenavContentProps {
   className?: string;
+  onClose?: () => void;
 }
 
 const SidenavContent: FC<SidenavContentProps> = (props) => {
-  const { className } = props;
+  const { className, onClose } = props;
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
@@ -39,6 +42,11 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         logoClassName={styles.commonLogo}
         logoSrc={commonLogoSrc}
       />
+      {isTabletView && (
+        <ButtonIcon className={styles.closeIconWrapper} onClick={onClose}>
+          <Close2Icon />
+        </ButtonIcon>
+      )}
       {!isTabletView && (
         <>
           {separatorEl}
