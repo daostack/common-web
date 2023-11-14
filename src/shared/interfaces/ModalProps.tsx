@@ -9,6 +9,7 @@ export enum ModalType {
 export enum ModalTransition {
   BottomToTop,
   RightToLeft,
+  FadeIn,
 }
 
 export enum CloseIconVariant {

@@ -30,3 +30,18 @@
   transition: transform var(--transition-duration) var(--easing),
     visibility 0s linear var(--transition-duration);
 }
+
+.fadeInTransitionEnter {
+  opacity: 0;
+}
+.fadeInTransitionEnterActive {
+  opacity: 1;
+  transition: opacity var(--transition-duration);
+}
+.fadeInTransitionExit {
+  opacity: 1;
+}
+.fadeInTransitionExitActive {
+  opacity: 0;
+  transition: opacity var(--transition-duration);
+}

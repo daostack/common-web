@@ -10,7 +10,7 @@ import styles from "./Transition.module.scss";
 interface TransitionProps {
   className?: string;
   show: boolean;
-  transition?: ModalTransition;
+  transition?: ModalTransition | null;
 }
 
 const rightToLeftTransitionClasses: TransitionClasses = {
@@ -20,9 +20,17 @@ const rightToLeftTransitionClasses: TransitionClasses = {
   leaveTo: styles.rightToLeftTransitionExitActive,
 };
 
+const fadeInTransitionClasses: TransitionClasses = {
+  enter: styles.fadeInTransitionEnter,
+  enterTo: styles.fadeInTransitionEnterActive,
+  leave: styles.fadeInTransitionExit,
+  leaveTo: styles.fadeInTransitionExitActive,
+};
+
 const MAP_TRANSITION_TO_CLASSES: Record<ModalTransition, TransitionClasses> = {
   [ModalTransition.BottomToTop]: {},
   [ModalTransition.RightToLeft]: rightToLeftTransitionClasses,
+  [ModalTransition.FadeIn]: fadeInTransitionClasses,
 };
 
 const Transition: FC<TransitionProps> = (props) => {

@@ -1,4 +1,8 @@
 import React, {
+  forwardRef,
+  ForwardRefRenderFunction,
+  MouseEventHandler,
+  ReactNode,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -6,10 +10,6 @@ import React, {
   useMemo,
   useRef,
   useState,
-  forwardRef,
-  ForwardRefRenderFunction,
-  MouseEventHandler,
-  ReactNode,
 } from "react";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
@@ -23,10 +23,11 @@ import {
   CloseIconVariant,
   ModalProps,
   ModalRef,
+  ModalTransition,
   ModalType,
 } from "../../interfaces";
 import { ClosePrompt, Transition } from "./components";
-import { ModalContext, FooterOptions, ModalContextValue } from "./context";
+import { FooterOptions, ModalContext, ModalContextValue } from "./context";
 import "./index.scss";
 
 const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
@@ -252,7 +253,12 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   return isShowing
     ? ReactDOM.createPortal(
         <div id={modalId}>
-          <div className={modalOverlayClassName} />
+          <Transition
+            show={isOpen}
+            transition={transition ? ModalTransition.FadeIn : null}
+          >
+            <div className={modalOverlayClassName} />
+          </Transition>
           <Transition show={isOpen} transition={transition}>
             <div className={modalWrapperClassName} onClick={handleClose}>
               <div
