@@ -55,6 +55,7 @@ export function* getDiscussionStateById({
       payload.callback(null, data);
     }
   } catch (error) {
+    console.log(error);
     yield put(
       updateStateAction({
         discussionId,
