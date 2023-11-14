@@ -416,6 +416,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   useEffect(() => {
     return () => {
       const common = stateRef.current?.data?.common;
+      const rootCommon = stateRef.current?.data?.rootCommon;
 
       dispatch(
         commonLayoutActions.setLastCommonFromFeed({
@@ -426,6 +427,19 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
                 image: common.image,
                 isProject: checkIsProject(common),
                 memberCount: common.memberCount,
+                rootCommon: common.rootCommonId
+                  ? {
+                      id: common.rootCommonId,
+                      data: rootCommon
+                        ? {
+                            name: rootCommon.name,
+                            image: rootCommon.image,
+                            isProject: false,
+                            memberCount: rootCommon.memberCount,
+                          }
+                        : null,
+                    }
+                  : null,
               }
             : null,
         }),
