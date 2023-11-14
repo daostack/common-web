@@ -9,15 +9,11 @@
   --item-pl-per-level: 1.25rem;
   --item-arrow-pl: 0.5rem;
 
-  height: 3.375rem;
+  height: 3rem;
   border-radius: 0;
 
   &:hover {
     --bg-color: #{$c-pink-hover-feed-cards};
-  }
-
-  @include tablet {
-    height: 4rem;
   }
 }
 .projectsTreeItemTriggerActiveClassName {

@@ -1,3 +1,5 @@
+@import "../../../../../../../../../../../styles/sizes";
+
 .modal {
   max-width: 26rem;
 }
@@ -10,4 +12,8 @@
 
 .createCommonButton {
   margin-left: auto;
+
+  @include tablet {
+    margin-right: auto;
+  }
 }

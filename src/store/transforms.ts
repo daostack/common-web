@@ -2,6 +2,7 @@ import { createTransform } from "redux-persist";
 import { deserializeFeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { convertObjectDatesToFirestoreTimestamps } from "@/shared/utils";
 import { getFeedLayoutItemDateForSorting } from "@/store/states/inbox/utils";
+import { CommonLayoutState } from "./states/commonLayout";
 import { InboxItems, InboxState } from "./states/inbox";
 
 export const inboxTransform = createTransform(
@@ -42,4 +43,25 @@ export const inboxTransform = createTransform(
     },
   }),
   { whitelist: ["inbox"] },
+);
+
+export const lastCommonFromFeedTransform = createTransform(
+  (inboundState: CommonLayoutState) => {
+    const rootCommon = inboundState.lastCommonFromFeed?.data?.rootCommon;
+
+    return {
+      ...inboundState,
+      lastCommonFromFeed: rootCommon
+        ? {
+            id: rootCommon.id,
+            data: rootCommon.data && {
+              ...rootCommon.data,
+              rootCommon: null,
+            },
+          }
+        : inboundState.lastCommonFromFeed,
+    };
+  },
+  (outboundState: CommonLayoutState) => outboundState,
+  { whitelist: ["commonLayout"] },
 );

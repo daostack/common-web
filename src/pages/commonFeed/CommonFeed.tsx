@@ -29,7 +29,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import { useCommonFeedItems, useUserCommonIds } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
-import { RightArrowThinIcon } from "@/shared/icons";
+import { SidebarIcon } from "@/shared/icons";
 import {
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItem,
@@ -416,6 +416,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   useEffect(() => {
     return () => {
       const common = stateRef.current?.data?.common;
+      const rootCommon = stateRef.current?.data?.rootCommon;
 
       dispatch(
         commonLayoutActions.setLastCommonFromFeed({
@@ -426,6 +427,19 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
                 image: common.image,
                 isProject: checkIsProject(common),
                 memberCount: common.memberCount,
+                rootCommon: common.rootCommonId
+                  ? {
+                      id: common.rootCommonId,
+                      data: rootCommon
+                        ? {
+                            name: rootCommon.name,
+                            image: rootCommon.image,
+                            isProject: false,
+                            memberCount: rootCommon.memberCount,
+                          }
+                        : null,
+                    }
+                  : null,
               }
             : null,
         }),
@@ -439,7 +453,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     ) : (
       <PureCommonTopNavigation
         className={styles.pureCommonTopNavigation}
-        iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+        iconEl={<SidebarIcon className={styles.openSidenavIcon} />}
       />
     );
 
@@ -459,7 +473,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       <>
         <PureCommonTopNavigation
           className={styles.pureCommonTopNavigation}
-          iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+          iconEl={<SidebarIcon className={styles.openSidenavIcon} />}
         />
         <div className={styles.centerWrapper}>
           <NotFound />
