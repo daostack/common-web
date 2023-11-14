@@ -4,7 +4,6 @@ import classNames from "classnames";
 import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
 import commonLogoSrc from "@/shared/assets/images/logo-sidenav-2.svg";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { CommonSidenavLayoutTab } from "@/shared/layouts";
 import { CommonLogo } from "@/shared/ui-kit";
 import { getUserName } from "@/shared/utils";
 import {
@@ -13,7 +12,6 @@ import {
   UserInfo,
 } from "../../../SidenavLayout/components/SidenavContent";
 import { useGoToCreateCommon } from "../../hooks";
-import { LayoutTabs } from "../LayoutTabs";
 import { Footer, Navigation, Projects } from "./components";
 import styles from "./SidenavContent.module.scss";
 
@@ -49,12 +47,6 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         </>
       )}
       <Projects onCommonCreationClick={goToCreateCommon} />
-      {isTabletView && (
-        <LayoutTabs
-          className={styles.layoutTabs}
-          activeTab={CommonSidenavLayoutTab.Spaces}
-        />
-      )}
       {!isTabletView && (
         <>
           <div className={styles.userInfoSeparator} />
