@@ -160,6 +160,23 @@ class CommonService {
         .get()
     ).docs.map((ref) => ref.ref.path.split("/")[1]);
 
+  public subscribeToUserCommonIds = (
+    userId: string,
+    callback: (data: string[]) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collectionGroup(SubCollections.Members)
+      .where("userId", "==", userId);
+
+    return query.onSnapshot((snapshot) => {
+      const userCommonIds = snapshot.docs.map(
+        (ref) => ref.ref.path.split("/")[1],
+      );
+      callback(userCommonIds);
+    });
+  };
+
   public getAllUserCommonMemberInfo = async (
     userId: string,
   ): Promise<(CommonMember & { commonId: string })[]> => {
