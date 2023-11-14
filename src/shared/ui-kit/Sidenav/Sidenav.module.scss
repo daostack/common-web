@@ -44,10 +44,6 @@ $zIndex: 3;
     right: 0;
     backdrop-filter: blur(0.125rem);
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    --sb-transition-duration: 1ms;
-  }
 }
 .sidenavWithAnimation {
   display: flex;
