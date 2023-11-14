@@ -8,8 +8,10 @@ import {
 } from "@/pages/Auth/store/selectors";
 import { Tab, Tabs } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
+import { useModal } from "@/shared/hooks";
+import { useUserCommonIds } from "@/shared/hooks/useCases";
 import { Avatar2Icon, Blocks2Icon, InboxIcon } from "@/shared/icons";
-import { openSidenav } from "@/shared/utils";
+import { CreateCommonPrompt } from "@/shared/layouts/MultipleSpacesLayout/components/Header/components/Navigation/components";
 import { selectCommonLayoutLastCommonFromFeed } from "@/store/states";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
@@ -39,6 +41,12 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
   );
+  const { data: userCommonIds } = useUserCommonIds();
+  const {
+    isShowing: isCreateCommonPromptOpen,
+    onOpen: onCreateCommonPromptOpen,
+    onClose: onCreateCommonPromptClose,
+  } = useModal(false);
   const finalUserStreamsWithNotificationsAmount =
     userStreamsWithNotificationsAmount &&
     userStreamsWithNotificationsAmount > 99
@@ -73,10 +81,12 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   } as CSSProperties;
 
   const handleSpacesClick = () => {
-    if (lastCommonIdFromFeed) {
-      history.push(getCommonPagePath(lastCommonIdFromFeed.id));
+    const commonForRedirectId = lastCommonIdFromFeed?.id || userCommonIds[0];
+
+    if (commonForRedirectId) {
+      history.push(getCommonPagePath(commonForRedirectId));
     } else {
-      openSidenav();
+      onCreateCommonPromptOpen();
     }
   };
 
@@ -101,33 +111,38 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   };
 
   return (
-    <Tabs
-      className={classNames(styles.tabs, className)}
-      style={itemStyles}
-      value={activeTab}
-      withIcons
-      onChange={handleTabChange}
-    >
-      {tabs.map((tab) => (
-        <Tab
-          key={tab.value}
-          className={styles.tab}
-          label={tab.label}
-          value={tab.value}
-          icon={
-            <div className={styles.iconWrapper}>
-              {tab.icon}
-              {typeof tab.notificationsAmount === "number" && (
-                <span className={styles.iconBadge}>
-                  {tab.notificationsAmount}
-                </span>
-              )}
-            </div>
-          }
-          includeDefaultMobileStyles={false}
-        />
-      ))}
-    </Tabs>
+    <>
+      <Tabs
+        className={classNames(styles.tabs, className)}
+        style={itemStyles}
+        value={activeTab}
+        withIcons
+        onChange={handleTabChange}
+      >
+        {tabs.map((tab) => (
+          <Tab
+            key={tab.value}
+            className={styles.tab}
+            label={tab.label}
+            value={tab.value}
+            icon={
+              <div className={styles.iconWrapper}>
+                {tab.icon}
+                {typeof tab.notificationsAmount === "number" && (
+                  <span className={styles.iconBadge}>
+                    {tab.notificationsAmount}
+                  </span>
+                )}
+              </div>
+            }
+            includeDefaultMobileStyles={false}
+          />
+        ))}
+      </Tabs>
+      {isCreateCommonPromptOpen && (
+        <CreateCommonPrompt isOpen onClose={onCreateCommonPromptClose} />
+      )}
+    </>
   );
 };
 
