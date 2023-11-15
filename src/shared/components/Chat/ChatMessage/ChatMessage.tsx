@@ -172,7 +172,7 @@ export default function ChatMessage({
     },
   );
 
-  const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
+  const handleContextMenu: MouseEventHandler<HTMLDivElement> = (event) => {
     if (!isTabletView) {
       event.preventDefault();
       setIsMenuOpen(true);
@@ -288,7 +288,6 @@ export default function ChatMessage({
     <li
       id={discussionMessage.id}
       className={classNames(styles.container, className)}
-      onContextMenu={handleContextMenu}
     >
       <div
         className={classNames(styles.message, {
@@ -319,6 +318,7 @@ export default function ChatMessage({
         ) : (
           <>
             <div
+              onContextMenu={handleContextMenu}
               className={classNames(styles.messageText, {
                 [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
                 [styles.messageTextRtl]: isRtlText(discussionMessage.text),

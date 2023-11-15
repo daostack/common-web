@@ -35,6 +35,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     isFollowing,
     isLoading = false,
     shouldHideBottomContent = false,
+    hasUnseenMention,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -154,6 +155,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
                 isActive={isActive}
                 isPinned={isPinned}
                 isFollowing={isFollowing}
+                hasUnseenMention={hasUnseenMention}
               />
             </div>
           </div>

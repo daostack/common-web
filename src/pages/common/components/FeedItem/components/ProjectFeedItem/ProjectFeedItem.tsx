@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useRoutesContext } from "@/shared/contexts";
-import { useCommon } from "@/shared/hooks/useCases";
+import { useCommon, useFeedItemFollow } from "@/shared/hooks/useCases";
 import { OpenIcon } from "@/shared/icons";
 import { CommonFeed } from "@/shared/models";
 import { CommonAvatar, parseStringToTextEditorValue } from "@/shared/ui-kit";
@@ -22,6 +22,10 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   const { getCommonPagePath } = useRoutesContext();
   const { renderFeedItemBaseContent } = useFeedItemContext();
   const { data: common, fetched: isCommonFetched, fetchCommon } = useCommon();
+  const feedItemFollow = useFeedItemFollow(
+    { feedItemId: item.id, commonId: item.data.id },
+    { withSubscription: true },
+  );
   const {
     projectUnreadStreamsCount: unreadStreamsCount,
     projectUnreadMessages: unreadMessages,
@@ -76,6 +80,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           lastMessage,
           renderLeftContent,
           shouldHideBottomContent: !lastMessage,
+          isFollowing: feedItemFollow.isFollowing,
         })}
       </>
     ) || null

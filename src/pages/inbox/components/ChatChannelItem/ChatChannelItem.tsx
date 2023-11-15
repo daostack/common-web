@@ -129,6 +129,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       ownerId={userId}
       renderImage={renderImage}
       isImageRounded
+      dmUserId={dmUserId}
     />
   );
 };

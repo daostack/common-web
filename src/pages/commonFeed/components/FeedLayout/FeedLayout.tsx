@@ -63,7 +63,6 @@ import {
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import {
   addQueryParam,
-  checkIsProject,
   deleteQueryParam,
   getParamsFromOneOfRoutes,
   getUserName,
@@ -615,6 +614,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       onFetchNext();
     }
   }, [batchNumber]);
+
+  useEffect(() => {
+    if (sharedFeedItemId && isTabletView && allFeedItems) {
+      setActiveChatItem({ feedItemId: sharedFeedItemId });
+    }
+  }, [sharedFeedItemId, isTabletView, allFeedItems]);
 
   useImperativeHandle(
     ref,
