@@ -26,7 +26,25 @@ class DiscussionMessageService {
     return transformFirebaseDataSingle<DiscussionMessage>(discussionMessage);
   }
 
-  public getDiscussionMessagesByDiscussionId = (discussionId: string,  lastVisible: DiscussionMessage | null, callback: (snapshot: any, discussion: DiscussionMessage[]) => void,): UnsubscribeFunction => {
+  public getDiscussionMessagesByEndDate = async (discussionId: string,lastVisible: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage> | null, endDate: Date): Promise<{data: DiscussionMessage[], lastVisibleSnapshot: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>}> => {
+    const snapshot = await this.getDiscussionMessageCollection().where(
+      "discussionId",
+      "==",
+      discussionId,
+    ).where("createdAt", ">=", endDate).orderBy('createdAt', 'desc').startAfter(lastVisible).get();
+
+    const data = transformFirebaseDataList<DiscussionMessage>(snapshot);
+    const snapshotOfItemsAfterEndDate = await this.getDiscussionMessageCollection().where(
+      "discussionId",
+      "==",
+      discussionId,
+    ).orderBy('createdAt', 'desc').startAfter(snapshot.docs[data.length - 1]).limit(5).get();
+    const dataAfterEndDate = transformFirebaseDataList<DiscussionMessage>(snapshotOfItemsAfterEndDate);
+
+    return {data: [...data, ...dataAfterEndDate], lastVisibleSnapshot: snapshotOfItemsAfterEndDate.docs[dataAfterEndDate.length - 1]};
+  }
+
+  public getDiscussionMessagesByDiscussionId = (discussionId: string,  lastVisible: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage> | null, callback: (snapshot: firebase.firestore.QuerySnapshot<DiscussionMessage>, discussion: DiscussionMessage[]) => void,): UnsubscribeFunction => {
     let query = this.getDiscussionMessageCollection().where(
       "discussionId",
       "==",

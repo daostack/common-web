@@ -33,11 +33,7 @@ import {
   DiscussionMessageWithParsedText,
   ParentDiscussionMessage,
 } from "@/shared/models";
-import {
-  FilePreview,
-  FilePreviewVariant,
-  getFileName,
-} from "@/shared/ui-kit";
+import { FilePreview, FilePreviewVariant, getFileName } from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
 import { StaticLinkType, isRtlText, getUserName } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
@@ -52,7 +48,7 @@ interface ChatMessageProps {
   highlighted?: boolean;
   className?: string;
   user: User | null;
-  scrollToRepliedMessage: (messageId: string) => void;
+  scrollToRepliedMessage: (messageId: string, messageDate: Date) => void;
   hasPermissionToHide: boolean;
   users: User[];
   feedItemId: string;
@@ -191,13 +187,23 @@ export default function ChatMessage({
         data.params[QueryParamKey.Item] === feedItemId &&
         typeof messageId === "string"
       ) {
-        scrollToRepliedMessage(messageId);
+        parentMessage &&
+          scrollToRepliedMessage(messageId, parentMessage.createdAt.toDate());
       } else {
         onInternalLinkClick?.(data);
       }
     },
     [feedItemId, scrollToRepliedMessage, onInternalLinkClick],
   );
+
+  const scrollToReplied = (): void => {
+    if (parentMessage) {
+      scrollToRepliedMessage(
+        parentMessage?.id as string,
+        parentMessage.createdAt.toDate(),
+      );
+    }
+  }
 
   const ReplyMessage = useCallback(() => {
     if (
@@ -213,9 +219,7 @@ export default function ChatMessage({
 
     return (
       <div
-        onClick={() => {
-          scrollToRepliedMessage(parentMessage?.id as string);
-        }}
+        onClick={scrollToReplied}
         className={classNames(styles.replyMessageContainer, {
           [styles.replyMessageContainerCurrentUser]: !isNotCurrentUserMessage,
         })}

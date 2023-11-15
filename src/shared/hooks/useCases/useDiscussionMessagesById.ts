@@ -2,6 +2,7 @@ import {  useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from 'classnames';
 import { isEqual, xor } from "lodash";
+import firebase from "@/shared/utils/firebase";
 import { fetchOwners } from "@/pages/OldCommon/store/api";
 import { DiscussionMessageService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
@@ -42,6 +43,7 @@ type State = LoadingState<DiscussionMessageWithParsedText[] | null>;
 
 interface Return extends State {
   fetchDiscussionMessages: (discussionId: string) => void;
+  fetchRepliedMessages: (discussionId: string, messageId: string, endDate: Date) => Promise<void>;
   addDiscussionMessage: (
     discussionId: string,
     discussionMessage: DiscussionMessage,
@@ -71,7 +73,7 @@ export const useDiscussionMessagesById = ({
   const [messageOwners, setMessageOwners] = useState<User[]>([]);
   const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [lastVisible, setLastVisible] = useState(null);
+  const [lastVisible, setLastVisible] = useState<firebase.firestore.QueryDocumentSnapshot<DiscussionMessage> | null>(null);
   const [isEndOfList, setIsEndOfList] = useState(false);
   const state =
     useSelector(
@@ -114,6 +116,61 @@ export const useDiscussionMessagesById = ({
       }),
     );
   };
+
+  const fetchRepliedMessages = async (discussionId: string,messageId: string,  endDate: Date): Promise<void> => {
+    if(state.data?.find((item) => item.id === discussionId)) {
+      return Promise.resolve();
+    }
+
+    const {data: updatedDiscussionMessages, lastVisibleSnapshot} = await DiscussionMessageService.getDiscussionMessagesByEndDate(discussionId, lastVisible, endDate);
+
+    setLastVisible(lastVisibleSnapshot);
+    const discussionsWithText = await Promise.all((updatedDiscussionMessages.map(async (discussionMessage) => {
+      const emojiCount = countTextEditorEmojiElements(
+        parseStringToTextEditorValue(discussionMessage.text),
+      );
+
+      const isUserDiscussionMessage =
+      checkIsUserDiscussionMessage(discussionMessage);
+      const isSystemMessage = checkIsSystemDiscussionMessage(discussionMessage);
+
+      const isNotCurrentUserMessage =
+      !isUserDiscussionMessage || userId !== discussionMessage.ownerId;
+     const parsedText = await getTextFromTextEditorString({
+          textEditorString: discussionMessage.text,
+          users,
+          mentionTextClassName: !isNotCurrentUserMessage
+            ? textStyles.mentionTextCurrentUser
+            : "",
+          emojiTextClassName: classNames({
+            [textStyles.singleEmojiText]: emojiCount.isSingleEmoji,
+            [textStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+          }),
+          commonId: discussionMessage.commonId,
+          systemMessage: isSystemMessage ? discussionMessage : undefined,
+          getCommonPagePath,
+          getCommonPageAboutTabPath,
+          directParent,
+          onUserClick,
+          onFeedItemClick,
+        });
+
+        return {
+          ...discussionMessage,
+          parsedText,
+        }
+    })))
+    dispatch(
+      cacheActions.updateDiscussionMessagesStateByDiscussionId({
+        discussionId,
+        state: {
+          loading: false,
+          fetched: true,
+          data: discussionsWithText as any,
+        },
+      }),
+      )
+  }
 
   const fetchDiscussionMessages = (discussionId: string) => {
     setCurrentDiscussionId(discussionId);
@@ -246,6 +303,7 @@ export const useDiscussionMessagesById = ({
               moderation: parentMessage?.moderation,
               images: parentMessage?.images,
               files: parentMessage?.files,
+              createdAt: parentMessage.createdAt
             }
           : null;
         return newDiscussionMessage;
@@ -262,6 +320,7 @@ export const useDiscussionMessagesById = ({
     data: discussionMessagesWithOwners,
     isEndOfList,
     fetchDiscussionMessages,
+    fetchRepliedMessages,
     addDiscussionMessage,
   };
 };

@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { DiscussionMessageService } from "@/services";
 import {
   ChatMessage,
   InternalLinkData,
@@ -18,7 +19,6 @@ import {
 } from "@/shared/components";
 import {
   ChatType,
-  LOADER_APPEARANCE_DELAY,
   QueryParamKey,
 } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
@@ -31,7 +31,6 @@ import {
   Circles,
   DiscussionMessageWithParsedText,
 } from "@/shared/models";
-import { Loader } from "@/shared/ui-kit";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
 import { checkIsLastSeenInPreviousDay } from "./utils";
@@ -47,6 +46,7 @@ interface ChatContentInterface {
   governanceCircles?: Circles;
   chatWrapperId: string;
   messages: Record<number, DiscussionMessageWithParsedText[]>;
+  discussionMessages: DiscussionMessageWithParsedText[] | null;
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
@@ -61,6 +61,11 @@ interface ChatContentInterface {
   onInternalLinkClick?: (data: InternalLinkData) => void;
   isEmpty?: boolean;
   isChatChannel: boolean;
+  fetchReplied: (
+    discussionId: string,
+    messageId: string,
+    endDate: Date,
+  ) => Promise<void>;
 }
 
 const isToday = (someDate: Date) => {
@@ -96,6 +101,8 @@ const ChatContent: ForwardRefRenderFunction<
     isEmpty,
     messages,
     isChatChannel,
+    fetchReplied,
+    discussionMessages,
   },
   chatContentRef,
 ) => {
@@ -153,8 +160,26 @@ const ChatContent: ForwardRefRenderFunction<
     setScrolledToMessage(true);
   }, [chatWrapperId, highlightedMessageId, dateList.length, scrolledToMessage]);
 
-  function scrollToRepliedMessage(messageId: string) {
-    console.log("---messageId", messageId);
+  const [shouldScrollToElementId, setShouldScrollToElementId] =
+    useState<string>();
+
+  useEffect(() => {
+    if (shouldScrollToElementId) {
+      if (
+        discussionMessages?.find((item) => item.id === shouldScrollToElementId)
+      ) {
+        setHighlightedMessageId(shouldScrollToElementId);
+        setShouldScrollToElementId("");
+      }
+    }
+  }, [shouldScrollToElementId, discussionMessages]);
+
+  async function scrollToRepliedMessage(messageId: string, endDate: Date) {
+    await fetchReplied(discussionId, messageId, endDate);
+    setShouldScrollToElementId(messageId);
+  }
+
+  function scrollToRepliedMessageDMChat(messageId: string) {
     scroller.scrollTo(messageId, {
       containerId: chatWrapperId,
       delay: 0,
@@ -167,7 +192,20 @@ const ChatContent: ForwardRefRenderFunction<
 
   useEffect(() => {
     if (typeof messageIdParam === "string") {
-      setHighlightedMessageId(messageIdParam);
+      (async () => {
+        try {
+          const messageData =
+            await DiscussionMessageService.getDiscussionMessageById(
+              messageIdParam,
+            );
+          scrollToRepliedMessage(
+            messageData.id,
+            messageData.createdAt.toDate(),
+          );
+        } catch (err) {
+          setShouldScrollToElementId("");
+        }
+      })();
     }
   }, [messageIdParam]);
 
@@ -179,13 +217,6 @@ const ChatContent: ForwardRefRenderFunction<
     [scrollToContainerBottom],
   );
 
-  if (isLoading) {
-    return (
-      <div className={styles.loaderContainer}>
-        <Loader delay={LOADER_APPEARANCE_DELAY} />
-      </div>
-    );
-  }
 
   return (
     <>
@@ -224,7 +255,7 @@ const ChatContent: ForwardRefRenderFunction<
                   user={user}
                   discussionMessage={message}
                   chatType={type}
-                  scrollToRepliedMessage={scrollToRepliedMessage}
+                  scrollToRepliedMessage={scrollToRepliedMessageDMChat}
                   highlighted={message.id === highlightedMessageId}
                   hasPermissionToHide={hasPermissionToHide}
                   users={users}

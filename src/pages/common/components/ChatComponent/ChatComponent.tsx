@@ -458,6 +458,7 @@ export default function ChatComponent({
                   text: discussionMessageReply.text,
                   files: discussionMessageReply.files,
                   images: discussionMessageReply.images,
+                  createdAt: discussionMessageReply.createdAt,
                 }
               : null,
             images: imagesPreview?.map((file) =>
@@ -717,7 +718,7 @@ export default function ChatComponent({
   }, [discussionId]);
 
   useEffect(() => {
-    if (isTopReached && discussionId ) {
+    if (isTopReached && discussionId) {
       discussionMessagesData.fetchDiscussionMessages(discussionId);
     }
   }, [isTopReached, discussionId, dispatch]);
@@ -734,6 +735,8 @@ export default function ChatComponent({
         <ChatContentContext.Provider value={chatContentContextValue}>
           <ChatContent
             ref={chatContentRef}
+            discussionMessages={discussionMessagesData.data}
+            fetchReplied={discussionMessagesData.fetchRepliedMessages}
             isChatChannel={isChatChannel}
             discussionId={discussionId}
             type={type}

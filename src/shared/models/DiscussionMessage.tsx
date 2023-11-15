@@ -36,6 +36,7 @@ export interface ParentDiscussionMessage {
   moderation?: Moderation;
   images?: Link[];
   files?: Link[];
+  createdAt: firebase.firestore.Timestamp;
 }
 
 interface BaseDiscussionMessage extends BaseEntity {
