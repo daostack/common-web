@@ -107,7 +107,7 @@
   font-size: $xxsmall-2;
   color: $c-gray-60;
   direction: ltr;
-  margin: 0 4.25rem;
+  margin: 0 1.25rem;
 }
 
 .messageName {
@@ -135,7 +135,8 @@
 
 .messageContentCurrentUser {
   color: $white;
-  margin-right: 2.5rem;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .mentionText {
