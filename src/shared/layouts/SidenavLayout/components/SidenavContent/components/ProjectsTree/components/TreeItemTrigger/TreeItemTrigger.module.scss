@@ -36,13 +36,15 @@
 }
 
 .arrowIconButton {
-  padding: 0.75rem 0.625rem 0.75rem var(--item-arrow-pl);
+  padding: 0.75rem 1.25rem 0.75rem var(--item-arrow-pl);
 }
 .arrowIconButtonHidden {
   visibility: hidden;
 }
 
 .arrowIcon {
+  width: 0.5rem;
+  height: 0.625rem;
   color: $c-neutrals-600;
   transition: transform 0.2s;
 }

@@ -15,7 +15,9 @@ import { getProvider } from "@/shared/utils/authProvider";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
 import {
   cacheActions,
+  commonActions,
   commonLayoutActions,
+  inboxActions,
   multipleSpacesLayoutActions,
 } from "@/store/states";
 import {
@@ -301,6 +303,16 @@ const updateUserData = async (user: User): Promise<User> => {
   });
 };
 
+const resetGlobalData = (fullReset: boolean) => {
+  if (fullReset) {
+    store.dispatch(multipleSpacesLayoutActions.resetMultipleSpacesLayout());
+    store.dispatch(commonLayoutActions.clearData());
+  }
+  store.dispatch(inboxActions.resetInbox());
+  store.dispatch(cacheActions.resetFeedStates());
+  store.dispatch(commonActions.resetCommon());
+};
+
 function* socialLoginSaga({
   payload,
 }: ReturnType<typeof actions.socialLogin.request>) {
@@ -465,8 +477,6 @@ function* logOut() {
     window.ReactNativeWebView.postMessage(WebviewActions.logout);
   }
 
-  yield put(multipleSpacesLayoutActions.resetMultipleSpacesLayout());
-  yield put(commonLayoutActions.clearData());
   history.push(ROUTE_PATHS.HOME);
   yield true;
 }
@@ -567,6 +577,12 @@ function* authSagas() {
 
   firebase.auth().onAuthStateChanged(async (res) => {
     try {
+      const { user: userInStore } = store.getState().auth;
+
+      if (userInStore?.uid !== res?.uid) {
+        resetGlobalData(!res);
+      }
+
       store.dispatch(
         actions.setAuthProvider(
           getAuthProviderFromProviderData(res?.providerData),
