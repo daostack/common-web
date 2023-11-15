@@ -169,7 +169,7 @@
 }
 
 .replyMessageContainerCurrentUser {
-  background-color: $c-pink-light;
+  background-color: var(--secondary-fill);
 }
 
 .replyMessageImage {
@@ -185,14 +185,14 @@
 
 .replyMessageName {
   font-size: $xxsmall;
-  color: $c-neutrals-600;
+  color: $black;
   font-weight: 600;
   line-height: 1.25rem;
   margin-bottom: 0.125rem;
 }
 
 .replyMessageNameCurrentUser {
-  color: $black;
+  color: var(--primary-text);
 }
 
 .replyMessageNameWithImage {
@@ -205,7 +205,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: $c-neutrals-600;
+  color: $black;
   font-size: $xxsmall;
   margin-bottom: 0.4rem;
   line-height: 0.8rem;
@@ -213,7 +213,7 @@
 }
 
 .replyMessageContentCurrentUser {
-  color: $black;
+  color: var(--primary-text);
 }
 
 .replyMessageContentWithImage {

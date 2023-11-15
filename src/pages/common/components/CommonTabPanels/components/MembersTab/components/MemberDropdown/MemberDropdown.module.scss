@@ -2,6 +2,6 @@
 
 .dropdownItem {
   &:hover {
-    background-color: $c-primary-200;
+    background-color: var(--hover-fill);
   }
 }

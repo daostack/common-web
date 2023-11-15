@@ -18,7 +18,8 @@
   flex-direction: row;
   align-items: flex-start;
   width: 100%;
-  background-color: $c-pink-light;
+  background-color: var(--secondary-fill);
+  color: var(--primary-text);
   border-radius: 0.875rem;
   padding: 0.5rem 0.75rem;
 }
