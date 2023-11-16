@@ -38,7 +38,6 @@
   font-size: $small;
   font-weight: 600;
   letter-spacing: 0.16px;
-  color: $secondary-blue;
 }
 
 .verification__phone-wrapper-edit {
@@ -66,13 +65,7 @@
 }
 
 .verification__submit-button {
-  max-width: 20.5rem;
   margin-top: 3rem;
-
-  @include big-phone {
-    max-width: unset;
-    margin-top: 0;
-  }
 }
 
 .verification__code-wrapper {

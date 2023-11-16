@@ -27,7 +27,7 @@ const UnauthenticatedContent: FC<UnauthenticatedContentProps> = (props) => {
       leftSideEl={
         <Button
           className={classNames(styles.loginButton, contentStyles?.loginButton)}
-          variant={ButtonVariant.OutlineBlue}
+          variant={ButtonVariant.OutlineDarkPink}
           size={ButtonSize.Xsmall}
           onClick={handleLogin}
         >

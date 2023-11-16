@@ -6,7 +6,7 @@
   left: 2.875rem;
   width: 20.125rem;
   max-height: 22.75rem;
-  background: var(--primary-background);
+  background: var(--tertiary-fill);
   color: var(--primary-text);
   border-radius: 0.25rem;
   box-shadow: 0 0.0625rem 0.3125rem var(--drop-shadow);
@@ -26,11 +26,11 @@
 
   &:hover {
     cursor: pointer;
-    background-color: var(--hover-fill);
+    background-color: var(--secondary-hover-fill);
   }
 
   &:focus {
-    background-color: var(--hover-fill);
+    background-color: var(--secondary-hover-fill);
     outline: none;
   }
 }

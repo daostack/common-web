@@ -1,6 +1,5 @@
 import React, { FC, ReactNode } from "react";
 import { useSelector } from "react-redux";
-import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import avatarPlaceholderSrc from "@/shared/assets/images/avatar-placeholder.svg";
 import { UserAvatar } from "@/shared/components";
@@ -30,11 +29,6 @@ const VOTE_OUTCOME_TO_ICON_MAP: Record<VoteOutcome, ReactNode> = {
 export const UserVoteInfo: FC<UserVoteInfoProps> = (props) => {
   const { userVote, userHasPermissionsToVote, isCountdownState } = props;
   const user = useSelector(selectUser());
-  const className = classNames(styles.container, {
-    [styles.containerApprove]: userVote?.outcome === VoteOutcome.Approved,
-    [styles.containerAbstain]: userVote?.outcome === VoteOutcome.Abstained,
-    [styles.containerReject]: userVote?.outcome === VoteOutcome.Rejected,
-  });
 
   if (!userVote?.outcome) {
     return userHasPermissionsToVote && !isCountdownState ? (
@@ -43,7 +37,7 @@ export const UserVoteInfo: FC<UserVoteInfoProps> = (props) => {
   }
 
   return (
-    <div className={className}>
+    <div className={styles.container}>
       <UserAvatar
         className={styles.avatar}
         photoURL={user?.photoURL}

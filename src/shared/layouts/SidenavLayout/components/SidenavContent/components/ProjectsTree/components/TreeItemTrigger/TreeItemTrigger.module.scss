@@ -20,7 +20,7 @@
   overflow: hidden;
 
   &:hover {
-    --bg-color: var(--hover-fill);
+    --bg-color: var(--secondary-hover-fill);
   }
 }
 .itemActive {
@@ -28,7 +28,7 @@
   --item-text-color: #{$white};
 
   &:hover {
-    --bg-color: var(--hover-fill);
+    --bg-color: var(--secondary-hover-fill);
   }
 }
 .itemWithoutMembership {

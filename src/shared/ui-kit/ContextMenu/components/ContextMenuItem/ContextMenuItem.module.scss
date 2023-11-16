@@ -2,7 +2,7 @@
 
 .item {
   --item-color: var(--primary-text);
-  --item-bg-color: var(--primary-background);
+  --item-bg-color: var(--tertiary-fill);
   --item-border: 0.0625rem solid var(--gentle-stroke);
 
   margin: 0;
@@ -34,7 +34,7 @@
   }
 
   &:hover {
-    --item-bg-color: var(--hover-fill);
+    --item-bg-color: var(--secondary-hover-fill);
   }
 }
 

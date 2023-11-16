@@ -25,7 +25,7 @@
   --item-bg-color: #{$c-pink-active-feed-cards};
 
   &:hover {
-    --item-bg-color: var(--hover-fill);
+    --item-bg-color: var(--secondary-hover-fill);
   }
 }
 .itemDisabled {

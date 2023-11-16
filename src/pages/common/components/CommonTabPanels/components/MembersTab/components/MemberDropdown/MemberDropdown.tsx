@@ -5,7 +5,6 @@ import { Circle } from "@/shared/models";
 import { ContextMenu, ContextMenuRef } from "@/shared/ui-kit";
 import { pluralizeWord } from "@/shared/utils";
 import AssignCircleModal from "./AssignCircleModal";
-import elementDropdownStyles from "./MemberDropdown.module.scss";
 
 interface MemberDropdownProps {
   notMemberCircles: Circle[];
@@ -37,7 +36,6 @@ const MemberDropdown: FC<MemberDropdownProps> = (props) => {
           setSelectedCircle(circle);
           onOpen();
         },
-        className: elementDropdownStyles.dropdownItem,
       })),
     [notMemberCircles, setSelectedCircle, onOpen],
   );
