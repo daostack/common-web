@@ -17,10 +17,7 @@ import {
   InternalLinkData,
   DMChatMessage,
 } from "@/shared/components";
-import {
-  ChatType,
-  QueryParamKey,
-} from "@/shared/constants";
+import { ChatType, QueryParamKey } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import {
   checkIsUserDiscussionMessage,
@@ -216,7 +213,6 @@ const ChatContent: ForwardRefRenderFunction<
     }),
     [scrollToContainerBottom],
   );
-
 
   return (
     <>

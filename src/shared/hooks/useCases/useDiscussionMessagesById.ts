@@ -266,7 +266,6 @@ export const useDiscussionMessagesById = ({
 
   useEffect(() => {
     (async () => {
-      setIsLoading(true);
       const discussionMessages = [...(state.data || [])];
       const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
@@ -310,13 +309,12 @@ export const useDiscussionMessagesById = ({
       }));
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
-      setIsLoading(false);
     })();
   }, [state.data, messageOwnersIds, messageOwners, hasPermissionToHide]);
 
   return {
     ...state,
-    loading: state.loading || isLoading,
+    loading: state.loading,
     data: discussionMessagesWithOwners,
     isEndOfList,
     fetchDiscussionMessages,
