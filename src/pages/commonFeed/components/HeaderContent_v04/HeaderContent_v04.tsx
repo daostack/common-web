@@ -5,7 +5,7 @@ import { NewStreamButton } from "@/pages/common/components/CommonTabPanels/compo
 import { useRoutesContext } from "@/shared/contexts";
 import { useCommonFollow } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { RightArrowThinIcon, StarIcon } from "@/shared/icons";
+import { SidebarIcon, StarIcon } from "@/shared/icons";
 import {
   CirclesPermissions,
   Common,
@@ -39,7 +39,7 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
       <div className={styles.commonContent}>
         <TopNavigationOpenSidenavButton
           className={styles.openSidenavButton}
-          iconEl={<RightArrowThinIcon className={styles.openSidenavIcon} />}
+          iconEl={<SidebarIcon className={styles.openSidenavIcon} />}
         />
         <NavLink
           className={styles.commonLink}

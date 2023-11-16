@@ -5,6 +5,7 @@ import {
   CommonFeed,
   FeedItemFollowWithMetadata,
 } from "@/shared/models";
+import { convertObjectDatesToFirestoreTimestamps } from "@/shared/utils";
 
 export interface FeedLayoutRef {
   setExpandedFeedItemId: (feedItemId: string | null) => void;
@@ -67,3 +68,45 @@ export type FeedLayoutItemChangeDataWithType = FeedLayoutItemChangeData &
         commonId: string;
       }
   );
+
+export const deserializeFeedItemFollowLayoutItem = <
+  T extends FeedItemFollowLayoutItem | FeedItemFollowLayoutItemWithFollowData,
+>(
+  item: T,
+): T => ({
+  ...item,
+  feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(item.feedItem),
+  feedItemFollowWithMetadata: item.feedItemFollowWithMetadata && {
+    ...convertObjectDatesToFirestoreTimestamps<FeedItemFollowWithMetadata>(
+      item.feedItemFollowWithMetadata,
+      ["lastSeen", "lastActivity"],
+    ),
+    feedItem: convertObjectDatesToFirestoreTimestamps<CommonFeed>(
+      item.feedItemFollowWithMetadata.feedItem,
+    ),
+  },
+});
+
+export const deserializeChatChannelLayoutItem = (
+  item: ChatChannelLayoutItem,
+): ChatChannelLayoutItem => ({
+  ...item,
+  chatChannel: convertObjectDatesToFirestoreTimestamps<ChatChannel>(
+    item.chatChannel,
+    ["lastMessage.createdAt"],
+  ),
+});
+
+export const deserializeFeedLayoutItem = (
+  item: FeedLayoutItem,
+): FeedLayoutItem =>
+  checkIsChatChannelLayoutItem(item)
+    ? deserializeChatChannelLayoutItem(item)
+    : deserializeFeedItemFollowLayoutItem(item);
+
+export const deserializeFeedLayoutItemWithFollowData = (
+  item: FeedLayoutItemWithFollowData,
+): FeedLayoutItemWithFollowData =>
+  checkIsChatChannelLayoutItem(item)
+    ? deserializeChatChannelLayoutItem(item)
+    : deserializeFeedItemFollowLayoutItem(item);
