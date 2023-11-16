@@ -19,13 +19,22 @@ export const selectorStyles = (hasError: boolean, isDarkMode: boolean) => ({
       boxShadow: "rgba(255, 255, 255, 0)",
     },
   }),
-  option: (provided) => ({
+  option: (provided, data) => ({
     ...provided,
-    backgroundColor: isDarkMode ? "#131b23" : "#ffffff",
+    backgroundColor: data.isDisabled
+      ? "transparent"
+      : isDarkMode
+      ? "#131b23"
+      : "#ffffff",
     color: isDarkMode ? "#ffffff" : "#001a36",
     "&:hover": {
-      backgroundColor: isDarkMode ? "#2e3452" : "#fff9fd",
+      backgroundColor: data.isDisabled
+        ? ""
+        : isDarkMode
+        ? "#2e3452"
+        : "#fff9fd",
     },
+    cursor: data.isDisabled ? "not-allowed" : "default",
   }),
   indicatorSeparator: () => ({ display: "none" }),
   indicatorsContainer: (provided) => ({
