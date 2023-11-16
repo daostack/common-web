@@ -107,7 +107,7 @@
   font-size: $xxsmall-2;
   color: $c-gray-60;
   direction: ltr;
-  margin: 0 4.25rem;
+  margin: 0 1.25rem;
 }
 
 .messageName {
@@ -115,7 +115,7 @@
   font-weight: 600;
   color: $secondary-blue;
   margin-right: 2.5rem;
-  margin-left: 1rem;
+  margin-left: 0.75rem;
   margin-bottom: 0.5rem;
   cursor: pointer;
 }
@@ -123,8 +123,8 @@
 .messageContent {
   word-wrap: break-word;
   white-space: pre-line;
-  margin-right: 1rem;
-  margin-left: 1rem;
+  margin-right: 0.75rem;
+  margin-left: 0.75rem;
   word-break: break-word;
 }
 
@@ -135,7 +135,8 @@
 
 .messageContentCurrentUser {
   color: $white;
-  margin-right: 2.5rem;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .mentionText {
