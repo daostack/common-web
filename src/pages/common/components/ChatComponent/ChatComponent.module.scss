@@ -22,7 +22,7 @@
   margin-bottom: var(--chat-input-wrapper-height);
 
   @include big-phone {
-    margin-bottom: 0;
+    --chat-input-wrapper-height: 2.5rem;
     padding: 0.5rem 0.75rem 0 0.5rem;
   }
 }
