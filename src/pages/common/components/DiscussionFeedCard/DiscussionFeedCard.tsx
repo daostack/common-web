@@ -335,8 +335,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           ownerId={item.userId}
           discussionPredefinedType={discussion?.predefinedType}
           hasUnseenMention={
-            feedItemUserMetadata?.hasUnseenMention ??
-            !isFeedItemUserMetadataFetched
+            isFeedItemUserMetadataFetched &&
+            feedItemUserMetadata?.hasUnseenMention
           }
         >
           {renderContent()}
