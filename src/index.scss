@@ -259,3 +259,8 @@ code {
     cursor: pointer;
   }
 }
+
+a:visited {
+  background-color: transparent;
+  text-decoration: none;
+}
