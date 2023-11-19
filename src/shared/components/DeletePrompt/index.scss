@@ -12,9 +12,10 @@
   background-color: var(--primary-background);
   align-items: center;
   color: var(--primary-text);
-  box-shadow: 0 0.25rem 0.9375rem var(--drop-shadow);
   border-radius: 30px;
   padding: 45px;
+  filter: drop-shadow(0 0.6rem 1.3rem rgba(0, 0, 0, 0.25));
+  box-shadow: 0 0.25rem 1rem 0 var(--drop-shadow);
 
   .delete-prompt__buttons-wrapper {
     display: flex;

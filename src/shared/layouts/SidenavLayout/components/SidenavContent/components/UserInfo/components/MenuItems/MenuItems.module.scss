@@ -12,7 +12,6 @@
   display: flex;
   flex-direction: column;
   list-style-type: none;
-  background-color: $c-shades-white;
   border-radius: var(--items-br);
   filter: drop-shadow(0 0.25rem 0.9375rem var(--drop-shadow));
 }
