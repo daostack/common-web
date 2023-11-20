@@ -29,6 +29,13 @@ class DiscussionService {
       const discussion = await this.getDiscussionCollection()
         .doc(discussionId)
         .get();
+      if (discussionId === "7e9b9176-b091-4c94-b1f9-770c59a90556") {
+        console.log(
+          "getDiscussionById",
+          (discussion && transformFirebaseDataSingle<Discussion>(discussion)) ||
+            null,
+        );
+      }
 
       return (
         (discussion && transformFirebaseDataSingle<Discussion>(discussion)) ||
@@ -36,7 +43,7 @@ class DiscussionService {
       );
     } catch (error) {
       if (discussionId === "7e9b9176-b091-4c94-b1f9-770c59a90556") {
-        console.log("getDiscussionById error", error);
+        console.error("getDiscussionById error", error);
       }
       throw error;
     }

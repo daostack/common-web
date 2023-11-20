@@ -69,23 +69,32 @@ export const useDiscussionById = (): Return => {
       return;
     }
 
-    const unsubscribe = DiscussionService.subscribeToDiscussion(
-      currentDiscussionId,
-      (updatedDiscussion) => {
-        dispatch(
-          cacheActions.updateDiscussionStateById({
-            discussionId: updatedDiscussion.id,
-            state: {
-              loading: false,
-              fetched: true,
-              data: updatedDiscussion,
-            },
-          }),
-        );
-      },
-    );
+    try {
+      const unsubscribe = DiscussionService.subscribeToDiscussion(
+        currentDiscussionId,
+        (updatedDiscussion) => {
+          if (currentDiscussionId === "7e9b9176-b091-4c94-b1f9-770c59a90556") {
+            console.log("updatedDiscussion", updatedDiscussion);
+          }
+          dispatch(
+            cacheActions.updateDiscussionStateById({
+              discussionId: updatedDiscussion.id,
+              state: {
+                loading: false,
+                fetched: true,
+                data: updatedDiscussion,
+              },
+            }),
+          );
+        },
+      );
 
-    return unsubscribe;
+      return unsubscribe;
+    } catch (error) {
+      if (currentDiscussionId === "7e9b9176-b091-4c94-b1f9-770c59a90556") {
+        console.error("subscribeToDiscussion", error);
+      }
+    }
   }, [currentDiscussionId]);
 
   return {
