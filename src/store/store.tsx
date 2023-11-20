@@ -12,6 +12,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import freeze from "redux-freeze";
 import createSagaMiddleware from "redux-saga";
 import { AppState } from "@/shared/interfaces";
+import { Environment, REACT_APP_ENV } from "../shared/constants";
 import rootReducer from "./reducer";
 import appSagas from "./saga";
 
@@ -20,13 +21,13 @@ let middleware: Array<Middleware>;
 // eslint-disable-next-line @typescript-eslint/ban-types
 let composer: Function;
 
-if (process.env.REACT_APP_ENV === "dev") {
+if (REACT_APP_ENV === Environment.Dev) {
   middleware = [freeze, sagaMiddleware];
   composer = composeWithDevTools({ trace: true, traceLimit: 25 });
 } else {
   middleware = [sagaMiddleware];
   composer =
-    process.env.REACT_APP_ENV === "production"
+    REACT_APP_ENV === Environment.Production
       ? compose
       : composeWithDevTools({ trace: true, traceLimit: 25 });
 }
