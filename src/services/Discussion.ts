@@ -25,28 +25,14 @@ class DiscussionService {
   public getDiscussionById = async (
     discussionId: string,
   ): Promise<Discussion | null> => {
-    try {
-      const discussion = await this.getDiscussionCollection()
-        .doc(discussionId)
-        .get({ source: "server" });
-      if (discussionId === "7e9b9176-b091-4c94-b1f9-770c59a90556") {
-        console.log(
-          "getDiscussionById",
-          (discussion && transformFirebaseDataSingle<Discussion>(discussion)) ||
-            null,
-        );
-      }
+    const discussion = await this.getDiscussionCollection()
+      .doc(discussionId)
+      .get();
 
-      return (
-        (discussion && transformFirebaseDataSingle<Discussion>(discussion)) ||
-        null
-      );
-    } catch (error) {
-      if (discussionId === "7e9b9176-b091-4c94-b1f9-770c59a90556") {
-        console.error("getDiscussionById error", error);
-      }
-      throw error;
-    }
+    return (
+      (discussion && transformFirebaseDataSingle<Discussion>(discussion)) ||
+      null
+    );
   };
 
   public createDiscussion = async (
