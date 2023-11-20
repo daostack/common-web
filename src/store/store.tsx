@@ -1,3 +1,5 @@
+import { routerMiddleware } from "connected-react-router";
+import { History } from "history";
 import {
   createStore,
   applyMiddleware,
@@ -6,53 +8,62 @@ import {
   Dispatch,
   Store,
 } from "redux";
-import { History } from "history";
-import { routerMiddleware } from "connected-react-router";
 import { composeWithDevTools } from "redux-devtools-extension";
 import freeze from "redux-freeze";
 import createSagaMiddleware from "redux-saga";
-import { AppState } from '@/shared/interfaces';
-import appSagas from "./saga";
+import { AppState } from "@/shared/interfaces";
 import rootReducer from "./reducer";
+import appSagas from "./saga";
 
 const sagaMiddleware = createSagaMiddleware();
 let middleware: Array<Middleware>;
 // eslint-disable-next-line @typescript-eslint/ban-types
 let composer: Function;
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.REACT_APP_ENV === "dev") {
   middleware = [freeze, sagaMiddleware];
   composer = composeWithDevTools({ trace: true, traceLimit: 25 });
 } else {
   middleware = [sagaMiddleware];
-  composer = compose;
+  composer =
+    process.env.REACT_APP_ENV === "production"
+      ? compose
+      : composeWithDevTools({ trace: true, traceLimit: 25 });
 }
 
-const errorHandlerMiddleware: Middleware = () => (next: Dispatch) => (action) => {
-  if (action.type.includes("FAILURE")) {
-    // next(
-    //   showNotification({
-    //     message: action.payload.error || action.payload.message,
-    //     appearance: "error",
-    //   }),
-    // );
+const errorHandlerMiddleware: Middleware =
+  () => (next: Dispatch) => (action) => {
+    if (action.type.includes("FAILURE")) {
+      // next(
+      //   showNotification({
+      //     message: action.payload.error || action.payload.message,
+      //     appearance: "error",
+      //   }),
+      // );
 
-    if (action.payload && (action.payload.code === 401 || action.payload.code === 403)) {
-      localStorage.clear();
+      if (
+        action.payload &&
+        (action.payload.code === 401 || action.payload.code === 403)
+      ) {
+        localStorage.clear();
+      }
     }
-  }
 
-  if (action.type.includes("SUCCESS") && action.payload && action.payload.message) {
-    // next(
-    //   showNotification({
-    //     message: action.payload.message,
-    //     appearance: "success",
-    //   }),
-    // );
-  }
+    if (
+      action.type.includes("SUCCESS") &&
+      action.payload &&
+      action.payload.message
+    ) {
+      // next(
+      //   showNotification({
+      //     message: action.payload.message,
+      //     appearance: "success",
+      //   }),
+      // );
+    }
 
-  return next(action);
-};
+    return next(action);
+  };
 
 export default function configureStore(history: History) {
   const store: Store<AppState> = createStore(
@@ -62,9 +73,9 @@ export default function configureStore(history: History) {
       applyMiddleware(
         ...middleware,
         routerMiddleware(history),
-        errorHandlerMiddleware
-      )
-    )
+        errorHandlerMiddleware,
+      ),
+    ),
   );
 
   sagaMiddleware.run(appSagas);
@@ -72,7 +83,9 @@ export default function configureStore(history: History) {
   // eslint-disable-next-line
   if ((module as any).hot) {
     // eslint-disable-next-line
-    (module as any).hot.accept(() => store.replaceReducer(rootReducer(history)));
+    (module as any).hot.accept(() =>
+      store.replaceReducer(rootReducer(history)),
+    );
   }
 
   return { store };
