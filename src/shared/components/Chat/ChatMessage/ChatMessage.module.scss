@@ -162,7 +162,8 @@
 .replyMessageContainer {
   display: flex;
   cursor: pointer;
-  background-color: $c-neutrals-200;
+  background-color: var(--quaternary-fill);
+  color: var(--primary-text);
   border-radius: 0.625rem;
   padding: 0.5rem 0 0.625rem;
   margin: 0.25rem;
@@ -186,7 +187,6 @@
 
 .replyMessageName {
   font-size: $xxsmall;
-  color: $black;
   font-weight: 600;
   line-height: 1.25rem;
   margin-bottom: 0.125rem;
@@ -206,7 +206,6 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: $black;
   font-size: $xxsmall;
   margin-bottom: 0.4rem;
   line-height: 0.8rem;

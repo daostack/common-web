@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
 import classNames from "classnames";
 import { Menu } from "@headlessui/react";
 import { logOut } from "@/pages/Auth/store/actions";
@@ -32,12 +33,28 @@ interface MenuItemsProps {
   styles?: MenuItemsStyles;
 }
 
+const insertIf = (condition: boolean, ...elements: any) => {
+  return condition ? elements : [];
+};
+
 const MenuItems: FC<MenuItemsProps> = (props) => {
   const { placement = MenuItemsPlacement.Bottom, styles: outerStyles } = props;
   const dispatch = useDispatch();
   const { getProfilePagePath, getBillingPagePath, getSettingsPagePath } =
     useRoutesContext();
   const theme = useSelector(selectTheme);
+  const { pathname } = useLocation();
+  const isV04 = pathname.includes("-v04");
+
+  const toggleTheme = {
+    key: "theme",
+    type: ItemType.Button,
+    text: "Light/Dark mode",
+    icon: <ThemeIcon />,
+    onClick: () => {
+      dispatch(changeTheme(theme === Theme.Dark ? Theme.Light : Theme.Dark));
+    },
+  };
 
   const items: Item[] = [
     {
@@ -58,15 +75,7 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
       icon: <BillingIcon />,
       to: getBillingPagePath(),
     },
-    {
-      key: "theme",
-      type: ItemType.Button,
-      text: "Light/Dark mode",
-      icon: <ThemeIcon />,
-      onClick: () => {
-        dispatch(changeTheme(theme === Theme.Dark ? Theme.Light : Theme.Dark));
-      },
-    },
+    ...insertIf(!isV04, toggleTheme),
     {
       key: "log-out",
       type: ItemType.Button,

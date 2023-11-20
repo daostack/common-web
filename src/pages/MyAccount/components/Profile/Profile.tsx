@@ -1,9 +1,10 @@
 import React, { FC, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { matchPath, useLocation } from "react-router";
 import { logOut } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ButtonIcon, Loader } from "@/shared/components";
-import { Theme } from "@/shared/constants";
+import { ROUTE_PATHS, Theme } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Edit3Icon as EditIcon, LogoutIcon } from "@/shared/icons";
@@ -28,6 +29,8 @@ const Profile: FC<ProfileProps> = (props) => {
   const user = useSelector(selectUser());
   const isMobileView = useIsTabletView();
   const theme = useSelector(selectTheme);
+  const { pathname } = useLocation();
+  const isV04 = matchPath(ROUTE_PATHS.V04_PROFILE, pathname);
 
   const handleEditingChange = (isEditing: boolean) => {
     setIsEditing(isEditing);
@@ -125,12 +128,14 @@ const Profile: FC<ProfileProps> = (props) => {
                   text="Billing"
                   to={getBillingPagePath()}
                 />
-                <MenuButton
-                  className={`${styles.menuButton} ${styles.themeMenuButton}`}
-                  text="Light/Dark mode"
-                  onClick={handleThemeToggle}
-                  iconEl={<ThemeIcon />}
-                />
+                {!isV04 && (
+                  <MenuButton
+                    className={`${styles.menuButton} ${styles.themeMenuButton}`}
+                    text="Light/Dark mode"
+                    onClick={handleThemeToggle}
+                    iconEl={<ThemeIcon />}
+                  />
+                )}
                 <MenuButton
                   className={`${styles.menuButton} ${styles.logoutMenuButton}`}
                   text="Logout"

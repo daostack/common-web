@@ -25,6 +25,7 @@ import {
   useModal,
   useQueryParams,
   useIntersectionObserver,
+  useLightThemeOnly,
 } from "@/shared/hooks";
 import { useCommon, useSubCommons } from "@/shared/hooks/useCases";
 import PurpleCheckIcon from "@/shared/icons/purpleCheck.icon";
@@ -150,6 +151,7 @@ export default function CommonDetail(props: CommonDetailProps = {}) {
     fetchSubCommons,
     addSubCommon,
   } = useSubCommons();
+  useLightThemeOnly();
 
   const [joinEffortRef, setJoinEffortRef] = useState<HTMLDivElement | null>(
     null,
