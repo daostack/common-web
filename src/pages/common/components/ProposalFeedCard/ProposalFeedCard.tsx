@@ -460,8 +460,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           ownerId={item.userId}
           commonId={commonId}
           hasUnseenMention={
-            feedItemUserMetadata?.hasUnseenMention ??
-            !isFeedItemUserMetadataFetched
+            isFeedItemUserMetadataFetched &&
+            feedItemUserMetadata?.hasUnseenMention
           }
         >
           {renderContent()}
