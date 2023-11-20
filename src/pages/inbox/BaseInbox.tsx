@@ -17,6 +17,7 @@ import {
   FeedLayoutOuterStyles,
   FeedLayoutSettings,
 } from "@/pages/commonFeed";
+import { DiscussionService } from "@/services";
 import { LOADER_APPEARANCE_DELAY, QueryParamKey } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
@@ -127,6 +128,18 @@ const InboxPage: FC<InboxPageProps> = (props) => {
       fetchInboxItems();
     }
   };
+  useEffect(() => {
+    (async () => {
+      try {
+        const discussion = await DiscussionService.getDiscussionById(
+          "7e9b9176-b091-4c94-b1f9-770c59a90556",
+        );
+        console.log(discussion);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
 
   const renderFeedItemBaseContent = useCallback(
     (props: FeedItemBaseContentProps) => <FeedItemBaseContent {...props} />,
