@@ -202,6 +202,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
     if (item.id === "d8ffdd80-669e-4cd3-bd3e-11339375dedf") {
       console.log("item", item);
       console.log({
+        discussion,
+        isLoading,
         isDiscussionCreatorFetched,
         isDiscussionFetched,
         isFeedItemUserMetadataFetched,

@@ -24,6 +24,9 @@ export const useDiscussionById = (): Return => {
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const state =
     useSelector(selectDiscussionStateById(currentDiscussionId)) || defaultState;
+  if (currentDiscussionId === "7e9b9176-b091-4c94-b1f9-770c59a90556") {
+    console.log("useDiscussionById", { state, currentDiscussionId });
+  }
 
   const fetchDiscussion = useCallback(
     (discussionId: string) => {
