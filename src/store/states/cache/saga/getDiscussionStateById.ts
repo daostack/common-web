@@ -20,6 +20,9 @@ export function* getDiscussionStateById({
 
   try {
     const state = ((yield select(selectState(discussionId))) as State) || null;
+    if (discussionId === "7e9b9176-b091-4c94-b1f9-770c59a90556") {
+      console.log("discussion state", state);
+    }
 
     if (state?.fetched || state?.loading) {
       return;

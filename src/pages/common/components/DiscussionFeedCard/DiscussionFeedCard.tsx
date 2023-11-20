@@ -199,8 +199,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetchDiscussionCreator(item.userId);
     }, [item.userId]);
 
-    if (item.id === "b473b64e-92ec-4d60-a6d0-372d2576abe9") {
-      console.log(item);
+    if (item.id === "d8ffdd80-669e-4cd3-bd3e-11339375dedf") {
+      console.log("item", item);
     }
     useEffect(() => {
       fetchDiscussion(item.data.id);
