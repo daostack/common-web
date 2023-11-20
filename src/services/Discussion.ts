@@ -28,7 +28,7 @@ class DiscussionService {
     try {
       const discussion = await this.getDiscussionCollection()
         .doc(discussionId)
-        .get();
+        .get({ source: "server" });
       if (discussionId === "7e9b9176-b091-4c94-b1f9-770c59a90556") {
         console.log(
           "getDiscussionById",
