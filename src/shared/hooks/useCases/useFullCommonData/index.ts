@@ -26,7 +26,7 @@ export const getRootCommon = async (
     return initialRootCommon;
   }
 
-  return CommonService.getCommonById(rootCommonId);
+  return CommonService.getCommonById(rootCommonId, true);
 };
 
 export const useFullCommonData = (): Return => {

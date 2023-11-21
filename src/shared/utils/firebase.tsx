@@ -32,8 +32,11 @@ if (REACT_APP_ENV === Environment.Local) {
     });
 }
 
-export const isFirebaseError = (error: any): error is FirebaseError => {
-  return error && error.code && error.code.startsWith("auth/");
-};
+export const isFirebaseError = (error: any): error is FirebaseError =>
+  (error && error.code && error.code.startsWith("auth/")) ||
+  error.name === "FirebaseError";
+
+export const isFirestoreCacheError = (error: any): boolean =>
+  isFirebaseError(error) && error.code === "unavailable";
 
 export default firebase;

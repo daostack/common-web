@@ -47,12 +47,13 @@ export const useCommonData = (userId?: string): Return => {
       (async () => {
         try {
           const [common, governance, sharedFeedItem] = await Promise.all([
-            CommonService.getCommonById(commonId),
-            GovernanceService.getGovernanceByCommonId(commonId),
+            CommonService.getCommonById(commonId, true),
+            GovernanceService.getGovernanceByCommonId(commonId, true),
             sharedFeedItemId
               ? CommonFeedService.getCommonFeedItemById(
                   commonId,
                   sharedFeedItemId,
+                  true,
                 )
               : null,
           ]);
@@ -69,10 +70,10 @@ export const useCommonData = (userId?: string): Return => {
           const { rootCommonId } = common;
           const [parentCommons, subCommons, rootCommonGovernance] =
             await Promise.all([
-              CommonService.getAllParentCommonsForCommon(common),
-              CommonService.getCommonsByDirectParentIds([common.id]),
+              CommonService.getAllParentCommonsForCommon(common, true),
+              CommonService.getCommonsByDirectParentId(common.id, true),
               rootCommonId
-                ? GovernanceService.getGovernanceByCommonId(rootCommonId)
+                ? GovernanceService.getGovernanceByCommonId(rootCommonId, true)
                 : null,
             ]);
           const rootCommon = await getRootCommon(
