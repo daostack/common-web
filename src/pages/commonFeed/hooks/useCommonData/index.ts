@@ -73,7 +73,7 @@ export const useCommonData = (userId?: string): Return => {
               CommonService.getAllParentCommonsForCommon(common, true),
               CommonService.getCommonsByDirectParentIds([common.id]),
               rootCommonId
-                ? GovernanceService.getGovernanceByCommonId(rootCommonId)
+                ? GovernanceService.getGovernanceByCommonId(rootCommonId, true)
                 : null,
             ]);
           const rootCommon = await getRootCommon(
