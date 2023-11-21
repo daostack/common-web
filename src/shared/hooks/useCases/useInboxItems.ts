@@ -214,6 +214,7 @@ export const useInboxItems = (
             participantId: userId,
             startAt,
             endAt,
+            onlyWithMessages: true,
           }),
           FeedItemFollowsService.getFollowFeedItems({
             userId,

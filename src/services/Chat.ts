@@ -238,12 +238,16 @@ class ChatService {
     participantId: string;
     startAt?: Timestamp;
     endAt?: Timestamp;
+    onlyWithMessages?: boolean;
   }): Promise<ChatChannel[]> => {
-    const { participantId, startAt, endAt } = options;
+    const { participantId, startAt, endAt, onlyWithMessages = false } = options;
     let query = this.getChatChannelCollection()
       .where("participants", "array-contains", participantId)
       .orderBy("updatedAt", "desc");
 
+    if (onlyWithMessages) {
+      query = query.where("messageCount", ">", 0);
+    }
     if (startAt) {
       query = query.startAt(startAt);
     }
