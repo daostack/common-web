@@ -53,6 +53,7 @@ export const useCommonData = (userId?: string): Return => {
               ? CommonFeedService.getCommonFeedItemById(
                   commonId,
                   sharedFeedItemId,
+                  true,
                 )
               : null,
           ]);
