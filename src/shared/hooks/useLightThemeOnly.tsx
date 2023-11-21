@@ -12,7 +12,7 @@ const useLightThemeOnly = () => {
     if (theme === Theme.Dark) {
       dispatch(changeTheme(Theme.Light));
     }
-  }, [theme, dispatch, changeTheme]);
+  }, [theme, dispatch]);
 };
 
 export default useLightThemeOnly;
