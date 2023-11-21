@@ -15,7 +15,7 @@ import { getFeedLayoutItemDateForSorting } from "./utils";
 
 type Action = ActionType<typeof actions>;
 
-const initialInboxItems: InboxItems = {
+export const INITIAL_INBOX_ITEMS: InboxItems = {
   data: null,
   loading: false,
   hasMore: false,
@@ -25,8 +25,8 @@ const initialInboxItems: InboxItems = {
   unread: getQueryParam(QueryParamKey.Unread) === "true",
 };
 
-const initialState: InboxState = {
-  items: { ...initialInboxItems },
+export const INITIAL_INBOX_STATE: InboxState = {
+  items: { ...INITIAL_INBOX_ITEMS },
   sharedFeedItemId: null,
   sharedItem: null,
   chatChannelItems: [],
@@ -412,8 +412,8 @@ const updateChatChannelItem = (
   updateChatChannelItemInSharedInboxItem(state, payload);
 };
 
-export const reducer = createReducer<InboxState, Action>(initialState)
-  .handleAction(actions.resetInbox, () => ({ ...initialState }))
+export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
+  .handleAction(actions.resetInbox, () => ({ ...INITIAL_INBOX_STATE }))
   .handleAction(actions.getInboxItems.request, (state) =>
     produce(state, (nextState) => {
       nextState.items = {
@@ -544,7 +544,7 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   )
   .handleAction(actions.resetInboxItems, (state) =>
     produce(state, (nextState) => {
-      nextState.items = { ...initialInboxItems };
+      nextState.items = { ...INITIAL_INBOX_ITEMS };
       nextState.sharedFeedItemId = null;
       nextState.sharedItem = null;
       nextState.chatChannelItems = [];
