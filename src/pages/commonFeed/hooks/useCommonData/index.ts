@@ -71,7 +71,7 @@ export const useCommonData = (userId?: string): Return => {
           const [parentCommons, subCommons, rootCommonGovernance] =
             await Promise.all([
               CommonService.getAllParentCommonsForCommon(common, true),
-              CommonService.getCommonsByDirectParentIds([common.id]),
+              CommonService.getCommonsByDirectParentId(common.id, true),
               rootCommonId
                 ? GovernanceService.getGovernanceByCommonId(rootCommonId, true)
                 : null,

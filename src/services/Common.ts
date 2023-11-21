@@ -101,6 +101,26 @@ class CommonService {
       .reduce((acc, items) => [...acc, ...items], []);
   };
 
+  public getCommonsByDirectParentId = async (
+    parentCommonId: string,
+    cached = false,
+  ): Promise<Common[]> => {
+    const snapshot = await firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE)
+      .where("directParent.commonId", "==", parentCommonId)
+      .withConverter(converter)
+      .get({ source: cached ? "cache" : "default" });
+    const commons = snapshot.docs.map((doc) => doc.data());
+
+    if (cached && commons.length === 0) {
+      return this.getCommonsByDirectParentId(parentCommonId);
+    }
+
+    return commons;
+  };
+
   public getCommonsByDirectParentIds = async (
     ids: string[],
   ): Promise<Common[]> => {
