@@ -1,13 +1,14 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
-import { InboxItemType } from "@/shared/constants";
+import { InboxItemType, QueryParamKey } from "@/shared/constants";
 import {
   checkIsChatChannelLayoutItem,
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
 import { ChatChannel, CommonFeed, Timestamp } from "@/shared/models";
+import { getQueryParam } from "@/shared/utils";
 import * as actions from "./actions";
 import { InboxItems, InboxState } from "./types";
 import { getFeedLayoutItemDateForSorting } from "./utils";
@@ -21,6 +22,7 @@ const initialInboxItems: InboxItems = {
   firstDocTimestamp: null,
   lastDocTimestamp: null,
   batchNumber: 0,
+  unread: getQueryParam(QueryParamKey.Unread) === "true",
 };
 
 const initialState: InboxState = {
