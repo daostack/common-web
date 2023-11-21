@@ -17,7 +17,6 @@ import {
   SubCollections,
 } from "@/shared/models";
 import {
-  convertObjectDatesToFirestoreTimestamps,
   emptyFunction,
   firestoreDataConverter,
   transformFirebaseDataList,
@@ -258,10 +257,11 @@ class CommonService {
   // Fetch all parent commons. Order: from root parent common to lowest ones
   public getAllParentCommonsForCommon = async (
     commonToCheck: Pick<Common, "directParent"> | string,
+    cached = false,
   ): Promise<Common[]> => {
     const common =
       typeof commonToCheck === "string"
-        ? await this.getCommonById(commonToCheck)
+        ? await this.getCommonById(commonToCheck, cached)
         : commonToCheck;
 
     if (!common || common.directParent === null) {
@@ -272,7 +272,7 @@ class CommonService {
     let nextCommonId = common.directParent.commonId;
 
     while (nextCommonId) {
-      const common = await this.getCommonById(nextCommonId);
+      const common = await this.getCommonById(nextCommonId, cached);
 
       if (common) {
         finalCommons = [common, ...finalCommons];
