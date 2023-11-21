@@ -245,9 +245,6 @@ class ChatService {
       .where("participants", "array-contains", participantId)
       .orderBy("updatedAt", "desc");
 
-    if (onlyWithMessages) {
-      query = query.where("messageCount", ">", 0);
-    }
     if (startAt) {
       query = query.startAt(startAt);
     }
@@ -256,8 +253,13 @@ class ChatService {
     }
 
     const snapshot = await query.get();
+    const chatChannels = snapshot.docs.map((doc) => doc.data());
 
-    return snapshot.docs.map((doc) => doc.data());
+    if (!onlyWithMessages) {
+      return chatChannels;
+    }
+
+    return chatChannels.filter((chatChannel) => chatChannel.messageCount > 0);
   };
 
   public subscribeToNewUpdatedChatChannels = (
