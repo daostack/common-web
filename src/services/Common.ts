@@ -30,16 +30,25 @@ const converter = firestoreDataConverter<Common>();
 const commonMemberConverter = firestoreDataConverter<CommonMember>();
 
 class CommonService {
-  public getCommonById = async (commonId: string): Promise<Common | null> => {
-    const common = await firebase
+  public getCommonById = async (
+    commonId: string,
+    cached = false,
+  ): Promise<Common | null> => {
+    const snapshot = await firebase
       .firestore()
       .collection(Collection.Daos)
       .where("id", "==", commonId)
       .where("state", "==", CommonState.ACTIVE)
-      .get();
-    const data = transformFirebaseDataList<Common>(common);
+      .withConverter(converter)
+      .get({ source: cached ? "cache" : "default" });
+    const commons = snapshot.docs.map((doc) => doc.data());
+    const common = commons[0] || null;
 
-    return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
+    if (cached && !common) {
+      return this.getCommonById(commonId);
+    }
+
+    return common;
   };
 
   public getCachedCommonById = async (

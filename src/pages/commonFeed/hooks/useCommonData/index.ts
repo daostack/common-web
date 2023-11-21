@@ -47,7 +47,7 @@ export const useCommonData = (userId?: string): Return => {
       (async () => {
         try {
           const [common, governance, sharedFeedItem] = await Promise.all([
-            CommonService.getCommonById(commonId),
+            CommonService.getCommonById(commonId, true),
             GovernanceService.getGovernanceByCommonId(commonId),
             sharedFeedItemId
               ? CommonFeedService.getCommonFeedItemById(
