@@ -713,13 +713,13 @@ export default function ChatComponent({
       discussionMessagesData.fetchDiscussionMessages();
       dispatch(chatActions.clearCurrentDiscussionMessageReply());
     }
-  }, [discussionId]);
+  }, [discussionId, dispatch]);
 
   useEffect(() => {
     if (isTopReached && discussionId) {
       discussionMessagesData.fetchDiscussionMessages();
     }
-  }, [isTopReached, discussionId, dispatch]);
+  }, [isTopReached, discussionId]);
 
   return (
     <div className={styles.chatWrapper}>

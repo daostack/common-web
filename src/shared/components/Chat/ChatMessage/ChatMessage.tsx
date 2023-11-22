@@ -310,9 +310,7 @@ export default function ChatMessage({
             isProposalMessage={chatType === ChatType.ProposalComments}
             isChatMessage={chatType === ChatType.ChatMessages}
             discussionMessage={discussionMessage}
-            onClose={() => {
-              setEditMode(false);
-            }}
+            onClose={() => setEditMode(false)}
             commonMember={commonMember}
           />
         ) : (
@@ -399,9 +397,7 @@ export default function ChatMessage({
                   }
                   userId={userId}
                   commonId={discussionMessage.commonId}
-                  onEdit={() => {
-                    setEditMode(true);
-                  }}
+                  onEdit={() => setEditMode(true)}
                   isControlledDropdown={false}
                   isOpen={isMenuOpen}
                   styles={{

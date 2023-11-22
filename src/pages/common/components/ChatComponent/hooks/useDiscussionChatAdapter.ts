@@ -28,18 +28,18 @@ interface Return {
 }
 
 export const useDiscussionChatAdapter = (options: Options): Return => {
-  const { hasPermissionToHide, textStyles, discussionId} = options;
-  
+  const { hasPermissionToHide, textStyles, discussionId } = options;
+
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
-    const users = useMemo(
-      () =>
-        commonMembers
-          .filter((member) => member.userId !== userId)
-          .map(({ user }) => user),
-      [userId, commonMembers],
-    );
+  const users = useMemo(
+    () =>
+      commonMembers
+        .filter((member) => member.userId !== userId)
+        .map(({ user }) => user),
+    [userId, commonMembers],
+  );
   const discussionMessagesData = useDiscussionMessagesById({
     discussionId,
     hasPermissionToHide,

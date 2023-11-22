@@ -58,10 +58,7 @@ interface ChatContentInterface {
   onInternalLinkClick?: (data: InternalLinkData) => void;
   isEmpty?: boolean;
   isChatChannel: boolean;
-  fetchReplied: (
-    messageId: string,
-    endDate: Date,
-  ) => Promise<void>;
+  fetchReplied: (messageId: string, endDate: Date) => Promise<void>;
 }
 
 const isToday = (someDate: Date) => {
@@ -160,13 +157,12 @@ const ChatContent: ForwardRefRenderFunction<
     useState<string>();
 
   useEffect(() => {
-    if (shouldScrollToElementId) {
-      if (
-        discussionMessages?.find((item) => item.id === shouldScrollToElementId)
-      ) {
-        setHighlightedMessageId(shouldScrollToElementId);
-        setShouldScrollToElementId("");
-      }
+    if (
+      shouldScrollToElementId &&
+      discussionMessages?.find((item) => item.id === shouldScrollToElementId)
+    ) {
+      setHighlightedMessageId(shouldScrollToElementId);
+      setShouldScrollToElementId("");
     }
   }, [shouldScrollToElementId, discussionMessages]);
 
