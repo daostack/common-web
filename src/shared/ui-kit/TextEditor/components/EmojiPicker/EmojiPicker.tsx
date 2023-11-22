@@ -1,10 +1,13 @@
 import React, { FC, useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import classNames from "classnames";
 import data, { Skin } from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { ButtonIcon } from "@/shared/components";
+import { Theme } from "@/shared/constants";
 import { useOutsideClick } from "@/shared/hooks";
 import { EmojiIcon } from "@/shared/icons";
+import { selectTheme } from "@/shared/store/selectors";
 import styles from "./EmojiPicker.module.scss";
 
 export interface EmojiPickerProps {
@@ -28,6 +31,7 @@ const EmojiPicker: FC<EmojiPickerProps> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
   const { isOutside, setOutsideValue } = useOutsideClick(wrapperRef);
+  const theme = useSelector(selectTheme);
 
   useEffect(() => {
     if (isOutside) {
@@ -67,7 +71,11 @@ const EmojiPicker: FC<EmojiPickerProps> = (props) => {
             },
           )}
         >
-          <Picker data={data} onEmojiSelect={onEmojiSelect} />
+          <Picker
+            data={data}
+            onEmojiSelect={onEmojiSelect}
+            theme={theme === Theme.Dark ? Theme.Dark : Theme.Light}
+          />
         </div>
       )}
     </div>

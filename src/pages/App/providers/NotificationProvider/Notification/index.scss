@@ -2,17 +2,19 @@
 @import "../../../../../styles/sizes";
 
 .notification-wrapper {
-  background-color: $purple;
+  background-color: var(--primary-background);
   padding: 0.5rem;
   margin: 0.5rem 0;
   display: flex;
   justify-content: space-between;
   border-radius: 0.25rem;
+  box-shadow: 0 0.25rem 0.9375rem var(--drop-shadow);
+  color: var(--primary-text);
 
   .dismiss-btn {
     background: none;
     border: none;
-    color: $white;
+    color: inherit;
     font-weight: bold;
     cursor: pointer;
     &:hover {

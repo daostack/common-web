@@ -2,6 +2,7 @@
 
 .container {
   display: none;
+  background-color: var(--secondary-background);
 
   @include tablet {
     z-index: 2;

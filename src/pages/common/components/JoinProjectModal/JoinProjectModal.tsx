@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { GovernanceService, ProposalService } from "@/services";
 import { Modal } from "@/shared/components";
-import { Colors, ProposalsTypes } from "@/shared/constants";
+import { ProposalsTypes } from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common, Governance } from "@/shared/models";
 import { emptyFunction, getUserName } from "@/shared/utils";
@@ -170,8 +170,6 @@ const JoinProjectModal: FC<PropsWithChildren<JoinProjectModalProps>> = (
       onClose={state.isLoading ? emptyFunction : handleClose}
       hideCloseButton={state.isLoading || (isTabletView && !state.errorText)}
       title={state.step === JoinProjectSteps.FORM ? modalTitle : ""}
-      closeColor={Colors.black}
-      closeIconSize={24}
       mobileFullScreen
       styles={{
         headerWrapper: styles.modalHeaderWrapper,

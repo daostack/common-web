@@ -18,11 +18,12 @@
   align-items: center;
   text-decoration: none;
   font-size: $moderate;
+  color: var(--primary-text);
   --btn-pl: 0;
   --btn-pr: 0;
 
   &:hover {
-    --btn-color: black;
+    --btn-color: #{var(hover-fill)};
     text-decoration: underline;
   }
 

@@ -9,12 +9,8 @@ import React, {
 import { formatPhoneNumberIntl } from "react-phone-number-input";
 import PinInput from "react-pin-input";
 import { useSelector } from "react-redux";
-import {
-  Button,
-  ButtonIcon,
-  ButtonVariant,
-  ModalFooter,
-} from "../../../../../shared/components";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { ButtonIcon, ModalFooter } from "../../../../../shared/components";
 import {
   ErrorText,
   PhoneInputValue,
@@ -76,7 +72,7 @@ const Verification: FC<VerificationProps> = (props) => {
       return {
         text: "Resend code",
         handler: onCodeResend,
-        variant: ButtonVariant.Secondary,
+        variant: ButtonVariant.PrimaryPink,
         disabled: false,
       };
     }
@@ -84,14 +80,14 @@ const Verification: FC<VerificationProps> = (props) => {
       return {
         text: "Submit",
         handler: handleFinish,
-        variant: ButtonVariant.Primary,
+        variant: ButtonVariant.PrimaryPink,
         disabled: false,
       };
     }
 
     return {
       text: `${formatCountdownValue(minutes)}:${formatCountdownValue(seconds)}`,
-      variant: ButtonVariant.Primary,
+      variant: ButtonVariant.PrimaryPink,
       disabled: true,
     };
   }, [
@@ -123,7 +119,6 @@ const Verification: FC<VerificationProps> = (props) => {
       onClick={submitButtonState.handler}
       disabled={submitButtonState.disabled}
       variant={submitButtonState.variant}
-      shouldUseFullWidth
     >
       {submitButtonState.text}
     </Button>

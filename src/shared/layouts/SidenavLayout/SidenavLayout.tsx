@@ -5,7 +5,7 @@ import {
   useLayoutRouteContext,
 } from "@/pages/App/router";
 import { RoutesV03Provider } from "@/shared/contexts";
-import { useLockedBody } from "@/shared/hooks";
+import { useLightThemeOnly, useLockedBody } from "@/shared/hooks";
 import { Sidenav } from "@/shared/ui-kit";
 import { SidenavContent } from "./components";
 import { checkSidenavVisibility } from "./utils";
@@ -17,6 +17,7 @@ const SidenavLayout: FC = (props) => {
     useLayoutRouteContext<SidenavLayoutRouteOptions>();
   const isSidenavVisible = checkSidenavVisibility(routeOptions.sidenav);
   const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
+  useLightThemeOnly();
 
   const handleSidenavOpenToggle = useCallback(
     (isOpen: boolean) => {

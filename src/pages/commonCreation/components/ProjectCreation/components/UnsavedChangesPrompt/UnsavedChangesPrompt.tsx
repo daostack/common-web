@@ -48,7 +48,7 @@ const UnsavedChangesPrompt: FC<UnsavedChangesPromptProps> = (props) => {
               <Button
                 className={`${styles.button} ${styles.confirmNavigationButton}`}
                 onClick={confirmNavigation}
-                variant={ButtonVariant.Warning}
+                variant={ButtonVariant.OutlineDarkPink}
               >
                 Leave without saving
               </Button>

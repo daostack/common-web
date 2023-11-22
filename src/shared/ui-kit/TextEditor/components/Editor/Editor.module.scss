@@ -9,7 +9,7 @@
   font-weight: normal;
   font-size: var(--text-editor-elements-fs);
   line-height: 120%;
-  color: $secondary-blue;
+  color: var(--primary-text);
   overflow-y: auto;
   border: var(--text-editor-border);
   box-sizing: border-box;
@@ -21,7 +21,7 @@
   }
 
   &:focus {
-    border-color: $c-pink-active-feed-cards;
+    outline: $transparent;
   }
 }
 
@@ -37,6 +37,7 @@
   --text-editor-h: auto;
   max-height: 50vh;
   min-height: 4.5rem;
+  background-color: var(--secondary-background);
 }
 
 .editorReadOnly {

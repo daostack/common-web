@@ -26,9 +26,9 @@
   font-size: $moderate-xsmall;
   font-weight: normal;
   line-height: 127%;
-  color: $c-neutrals-600;
-  background-color: $c-shades-white;
-  border: 0.0625rem solid $c-neutrals-200;
+  color: var(--primary-text);
+  background-color: var(--secondary-background);
+  border: 0.0625rem solid var(--gentle-stroke);
   border-radius: 0.25rem;
   outline: none;
   box-sizing: border-box;

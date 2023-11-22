@@ -29,6 +29,7 @@ $modal-mobile-padding: 1.5rem;
   outline: 0;
   box-sizing: border-box;
   backdrop-filter: blur(2px);
+  color: var(--primary-text);
 
   @include big-phone {
     display: flex;
@@ -40,7 +41,7 @@ $modal-mobile-padding: 1.5rem;
 .modal {
   display: flex;
   flex-direction: column;
-  background-color: $white;
+  background-color: var(--primary-background);
   z-index: 100;
   position: relative;
   max-width: 900px;
@@ -110,7 +111,7 @@ $modal-mobile-padding: 1.5rem;
     font-weight: bold;
     line-height: 1;
     text-align: center;
-    color: $secondary-blue;
+    color: var(--primary-text);
   }
 
   .modal__action-wrapper {

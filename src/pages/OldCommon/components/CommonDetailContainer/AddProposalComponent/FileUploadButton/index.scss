@@ -9,12 +9,13 @@
   color: $secondary-blue;
   text-align: center;
   border-radius: 0.75rem;
-  background-color: $light-gray-4;
+  background-color: var(--secondary-background);
+  color: var(--primary-text);
   box-sizing: border-box;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: $light-gray-9;
+    background-color: var(--hover-fill);
   }
 
   @include big-phone {
@@ -60,6 +61,5 @@
   text-align: left;
   .bank-account-file-info-upload__button-hint {
     margin-top: 0.25rem;
-    color: $purple;
   }
 }

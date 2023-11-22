@@ -6,4 +6,8 @@
   &:hover {
     opacity: 0.9;
   }
+
+  &:visited {
+    color: $c-pink-mention-2;
+  }
 }
