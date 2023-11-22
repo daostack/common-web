@@ -1,6 +1,8 @@
 import React, { FC, useRef } from "react";
 import { useHistory } from "react-router";
+import { truncate } from "lodash";
 import { useRoutesContext } from "@/shared/contexts";
+import { useIsPhoneView } from "@/shared/hooks/viewport";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
@@ -16,6 +18,8 @@ export interface BreadcrumbsItemProps {
   onClick?: () => void;
 }
 
+const MOBILE_MAXIMUM_ITEM_LENGTH = 13;
+
 const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   const {
     activeItem,
@@ -30,6 +34,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   const { getCommonPagePath } = useRoutesContext();
   const containerRef = useRef<HTMLLIElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
+  const isPhoneView = useIsPhoneView();
 
   const handleButtonClick = () => {
     if (!withMenu) {
@@ -46,7 +51,12 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   return (
     <li ref={containerRef}>
       <button className={styles.button} onClick={handleButtonClick}>
-        {activeItem.name}
+        {isPhoneView
+          ? truncate(activeItem.name, {
+              length: MOBILE_MAXIMUM_ITEM_LENGTH,
+              omission: "...",
+            })
+          : activeItem.name}
       </button>
       {withMenu && (
         <BreadcrumbsMenu

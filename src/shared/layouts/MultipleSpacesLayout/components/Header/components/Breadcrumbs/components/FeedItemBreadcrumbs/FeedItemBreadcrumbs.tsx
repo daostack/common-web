@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useIsPhoneView } from "@/shared/hooks/viewport";
 import {
   commonLayoutActions,
   MultipleSpacesLayoutFeedItemBreadcrumbs,
@@ -22,6 +23,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
   const dispatch = useDispatch();
   const currentLayoutCommonId = useSelector(selectCommonLayoutCommonId);
   const goToCreateCommon = useGoToCreateCommon();
+  const isPhoneView = useIsPhoneView();
 
   const handleItemClick = (item: ProjectsStateItem) => {
     if (
@@ -34,11 +36,15 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
     }
   };
 
+  const breadcrumbsItems = isPhoneView
+    ? [breadcrumbs.items[0]]
+    : breadcrumbs.items;
+
   return (
     <ul className={styles.container}>
       {breadcrumbs.areItemsLoading && <LoadingBreadcrumbsItem />}
       {!breadcrumbs.areItemsLoading &&
-        breadcrumbs.items.map((item, index) => (
+        breadcrumbsItems.map((item, index) => (
           <React.Fragment key={item.commonId}>
             {index > 0 && <Separator />}
             <FeedBreadcrumbsItem
@@ -49,6 +55,12 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
             />
           </React.Fragment>
         ))}
+      {isPhoneView && breadcrumbsItems.length < breadcrumbs.items.length && (
+        <>
+          <Separator />
+          ...
+        </>
+      )}
       {breadcrumbs.activeItem && (
         <>
           {(breadcrumbs.areItemsLoading || breadcrumbs.items.length > 0) && (
