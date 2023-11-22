@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Theme } from "../constants";
-import { changeTheme } from "../store/actions";
+import { toggleTheme } from "../store/actions";
 import { selectTheme } from "../store/selectors";
 
 const useLightThemeOnly = () => {
@@ -10,7 +10,7 @@ const useLightThemeOnly = () => {
 
   useEffect(() => {
     if (theme === Theme.Dark) {
-      dispatch(changeTheme(Theme.Light));
+      dispatch(toggleTheme(Theme.Light));
     }
   }, [theme, dispatch]);
 };

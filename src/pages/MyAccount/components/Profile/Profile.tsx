@@ -4,13 +4,12 @@ import { matchPath, useLocation } from "react-router";
 import { logOut } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ButtonIcon, Loader } from "@/shared/components";
-import { ROUTE_PATHS, Theme } from "@/shared/constants";
+import { ROUTE_PATHS } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Edit3Icon as EditIcon, LogoutIcon } from "@/shared/icons";
 import ThemeIcon from "@/shared/icons/theme.icon";
-import { changeTheme } from "@/shared/store/actions";
-import { selectTheme } from "@/shared/store/selectors";
+import { toggleTheme } from "@/shared/store/actions";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Header, MenuButton, UserDetails, UserDetailsRef } from "./components";
 import styles from "./Profile.module.scss";
@@ -28,7 +27,6 @@ const Profile: FC<ProfileProps> = (props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const user = useSelector(selectUser());
   const isMobileView = useIsTabletView();
-  const theme = useSelector(selectTheme);
   const { pathname } = useLocation();
   const isV04 = matchPath(ROUTE_PATHS.V04_PROFILE, pathname);
 
@@ -58,7 +56,7 @@ const Profile: FC<ProfileProps> = (props) => {
   };
 
   const handleThemeToggle = () => {
-    dispatch(changeTheme(theme === Theme.Dark ? Theme.Light : Theme.Dark));
+    dispatch(toggleTheme(null));
   };
 
   const handleLogout = () => {

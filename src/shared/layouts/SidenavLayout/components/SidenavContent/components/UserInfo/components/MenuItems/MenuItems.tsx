@@ -1,10 +1,9 @@
 import React, { FC } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useLocation } from "react-router";
 import classNames from "classnames";
 import { Menu } from "@headlessui/react";
 import { logOut } from "@/pages/Auth/store/actions";
-import { Theme } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import {
   Avatar3Icon,
@@ -13,8 +12,7 @@ import {
   SettingsIcon,
 } from "@/shared/icons";
 import ThemeIcon from "@/shared/icons/theme.icon";
-import { changeTheme } from "@/shared/store/actions";
-import { selectTheme } from "@/shared/store/selectors";
+import { toggleTheme } from "@/shared/store/actions";
 import { MenuItem } from "./components";
 import { Item, ItemType } from "./types";
 import styles from "./MenuItems.module.scss";
@@ -42,17 +40,16 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
   const dispatch = useDispatch();
   const { getProfilePagePath, getBillingPagePath, getSettingsPagePath } =
     useRoutesContext();
-  const theme = useSelector(selectTheme);
   const { pathname } = useLocation();
   const isV04 = pathname.includes("-v04");
 
-  const toggleTheme = {
+  const toggleThemeMenuItem = {
     key: "theme",
     type: ItemType.Button,
     text: "Light/Dark mode",
     icon: <ThemeIcon />,
     onClick: () => {
-      dispatch(changeTheme(theme === Theme.Dark ? Theme.Light : Theme.Dark));
+      dispatch(toggleTheme(null));
     },
   };
 
@@ -75,7 +72,7 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
       icon: <BillingIcon />,
       to: getBillingPagePath(),
     },
-    ...insertIf(!isV04, toggleTheme),
+    ...insertIf(!isV04, toggleThemeMenuItem),
     {
       key: "log-out",
       type: ItemType.Button,
