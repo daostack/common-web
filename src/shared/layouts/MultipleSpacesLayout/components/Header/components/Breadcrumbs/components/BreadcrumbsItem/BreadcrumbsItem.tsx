@@ -1,10 +1,10 @@
 import React, { FC, useRef } from "react";
 import { useHistory } from "react-router";
-import { truncate } from "lodash";
 import { useRoutesContext } from "@/shared/contexts";
 import { useIsPhoneView } from "@/shared/hooks/viewport";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
+import { truncateBreadcrumbName } from "../../utils";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
 import styles from "./BreadcrumbsItem.module.scss";
 
@@ -17,8 +17,6 @@ export interface BreadcrumbsItemProps {
   isLoading?: boolean;
   onClick?: () => void;
 }
-
-const MOBILE_MAXIMUM_ITEM_LENGTH = 13;
 
 const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   const {
@@ -52,10 +50,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
     <li ref={containerRef}>
       <button className={styles.button} onClick={handleButtonClick}>
         {isPhoneView
-          ? truncate(activeItem.name, {
-              length: MOBILE_MAXIMUM_ITEM_LENGTH,
-              omission: "...",
-            })
+          ? truncateBreadcrumbName(activeItem.name)
           : activeItem.name}
       </button>
       {withMenu && (

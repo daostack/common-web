@@ -1,8 +1,10 @@
 import React, { FC, useRef } from "react";
 import { ButtonIcon, UserAvatar } from "@/shared/components";
+import { useIsPhoneView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
+import { truncateBreadcrumbName } from "../../utils";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
 import styles from "./ActiveBreadcrumbsItem.module.scss";
 
@@ -26,6 +28,7 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
   } = props;
   const itemsButtonRef = useRef<HTMLButtonElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
+  const isPhoneView = useIsPhoneView();
 
   const handleButtonClick = () => {
     if (itemsButtonRef.current) {
@@ -44,7 +47,9 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
           userName={name}
         />
       )}
-      <span className={styles.name}>{name}</span>
+      <span className={styles.name}>
+        {isPhoneView ? truncateBreadcrumbName(name) : name}
+      </span>
       {(items.length > 0 || commonIdToAddProject) && withMenu && (
         <ButtonIcon
           ref={itemsButtonRef}
