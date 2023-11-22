@@ -1,12 +1,9 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import Select, { components, DropdownIndicatorProps } from "react-select";
 import { useFormikContext } from "formik";
 import { ProposalsTypes } from "@/shared/constants";
-import { Theme } from "@/shared/constants";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
-import { selectTheme } from "@/shared/store/selectors";
 import { selectorStyles } from "./selectorStyles";
 import styles from "./ProposalTypeSelect.module.scss";
 
@@ -42,7 +39,6 @@ const ProposalTypeSelect = ({ commonBalance }: ProposalTypeSelectProps) => {
   const { values, setFieldValue, handleBlur, touched, errors } =
     useFormikContext<NewProposalCreationFormValues>();
   const hasError = Boolean(touched.proposalType && errors.proposalType);
-  const theme = useSelector(selectTheme);
 
   return (
     <div className={styles.container}>
@@ -56,7 +52,7 @@ const ProposalTypeSelect = ({ commonBalance }: ProposalTypeSelectProps) => {
         }}
         onBlur={handleBlur("proposalType")}
         hideSelectedOptions={false}
-        styles={selectorStyles(hasError, theme === Theme.Dark)}
+        styles={selectorStyles(hasError)}
         components={{
           DropdownIndicator,
         }}
