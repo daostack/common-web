@@ -24,6 +24,7 @@ export interface Discussion extends BaseEntity, SoftDeleteEntity {
   messageCount: number;
   discussionMessages: DiscussionMessage[];
   predefinedType?: PredefinedTypes;
+  notion?: DiscussionNotion;
 
   /**
    * A discussion can be linked to a proposal, if it does - proposalId will exist.
@@ -43,6 +44,10 @@ export interface DiscussionWithOwnerInfo extends Discussion {
 
 export interface DiscussionWithHighlightedMessage extends Discussion {
   highlightedMessageId: string;
+}
+
+export interface DiscussionNotion {
+  pageId: string;
 }
 
 export const isDiscussionWithHighlightedMessage = (

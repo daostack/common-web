@@ -110,3 +110,14 @@
     font-size: $xxsmall-2;
   }
 }
+
+.tooltipTriggerContainer {
+  display: inline-flex;
+}
+
+.tooltipContent {
+  display: flex;
+  flex-direction: column;
+  max-width: 20rem;
+  z-index: 3;
+}
