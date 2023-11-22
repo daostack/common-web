@@ -8,19 +8,10 @@
   align-items: center;
   font-weight: bold;
   font-size: $small;
-  color: $c-neutrals-600;
-  background-color: $c-neutrals-100;
+  color: var(--primary-text);
+  background-color: var(--secondary-background);
   border-radius: 0.25rem;
   box-sizing: border-box;
-}
-.containerApprove {
-  background-color: $success-100;
-}
-.containerAbstain {
-  background-color: $c-neutrals-100;
-}
-.containerReject {
-  background-color: $c-error-100;
 }
 
 .avatar {

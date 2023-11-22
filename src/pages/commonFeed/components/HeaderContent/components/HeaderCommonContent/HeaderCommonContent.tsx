@@ -1,11 +1,9 @@
 import React, { FC } from "react";
-import { NavLink } from "react-router-dom";
 import classNames from "classnames";
-import { useRoutesContext } from "@/shared/contexts";
-import { useIsTabletView } from "@/shared/hooks/viewport";
 import { SidebarIcon, StarIcon } from "@/shared/icons";
 import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { getPluralEnding } from "@/shared/utils";
+import { ContentWrapper } from "./components";
 import styles from "./HeaderCommonContent.module.scss";
 
 interface HeaderCommonContentProps {
@@ -26,20 +24,6 @@ const HeaderCommonContent: FC<HeaderCommonContentProps> = (props) => {
     memberCount,
     showFollowIcon = false,
   } = props;
-  const { getCommonPageAboutTabPath } = useRoutesContext();
-  const isTabletView = useIsTabletView();
-
-  const ContentWrapper: FC = ({ children }) =>
-    isTabletView ? (
-      <div className={styles.commonLink}>{children}</div>
-    ) : (
-      <NavLink
-        className={styles.commonLink}
-        to={getCommonPageAboutTabPath(commonId)}
-      >
-        {children}
-      </NavLink>
-    );
 
   return (
     <div className={styles.container}>
@@ -47,7 +31,7 @@ const HeaderCommonContent: FC<HeaderCommonContentProps> = (props) => {
         className={styles.openSidenavButton}
         iconEl={<SidebarIcon className={styles.openSidenavIcon} />}
       />
-      <ContentWrapper>
+      <ContentWrapper className={styles.commonLink} commonId={commonId}>
         <CommonAvatar
           name={commonName}
           src={commonImage}

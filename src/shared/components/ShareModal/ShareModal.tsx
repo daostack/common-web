@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import copyToClipboard from "copy-to-clipboard";
 import { ButtonIcon, SocialLinks, Loader } from "@/shared/components";
-import { Colors, ShareViewType } from "@/shared/constants";
+import { ShareViewType } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CopyLinkChainIcon } from "@/shared/icons";
@@ -48,8 +48,6 @@ const ShareModal: FC<PropsWithChildren<ShareModalProps>> = (props) => {
       isShowing={isShowing}
       onClose={onClose}
       title={isTabletView && title}
-      closeColor={Colors.black}
-      closeIconSize={isTabletView ? 16 : 20}
       styles={{
         header: "share-modal__wrapper-header",
         content: isTabletView ? "share-modal__wrapper-content-mobile" : "",

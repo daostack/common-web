@@ -30,8 +30,8 @@
 }
 
 .abstainButton {
-  color: var(--strong-gray);
-  border-color: var(--strong-gray);
+  color: $c-gray-50;
+  border-color: $c-gray-50;
 }
 
 .abstainButton:hover {
@@ -41,8 +41,8 @@
 }
 
 .rejectButton {
-  color: var(--red);
-  border-color: var(--red);
+  color: var(--warning);
+  border-color: var(--warning);
 }
 
 .rejectButton:hover {

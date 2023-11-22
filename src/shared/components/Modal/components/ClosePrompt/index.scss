@@ -14,10 +14,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: $white;
+    background-color: var(--primary-background);
     margin: auto;
     border-radius: 12px;
-    box-shadow: 0 4px 15px 0 $shadow;
+    box-shadow: 0 4px 15px 0 var(--drop-shadow);
     padding: 50px;
     text-align: center;
   }

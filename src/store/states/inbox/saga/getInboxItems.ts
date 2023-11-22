@@ -29,7 +29,7 @@ export function* getInboxItems(
   action: ReturnType<typeof actions.getInboxItems.request>,
 ) {
   const {
-    payload: { limit, unread },
+    payload: { limit, unread = false },
   } = action;
 
   try {
@@ -72,6 +72,7 @@ export function* getInboxItems(
         firstDocTimestamp: isFirstRequest
           ? firstDocTimestamp
           : currentItems.firstDocTimestamp,
+        unread,
       }),
     );
   } catch (error) {

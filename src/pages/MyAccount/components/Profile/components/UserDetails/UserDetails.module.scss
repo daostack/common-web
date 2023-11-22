@@ -10,7 +10,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  color: $secondary-blue;
+  color: var(--primary-text);
 }
 
 .form {
@@ -100,7 +100,6 @@
   align-items: center;
   justify-content: center;
   background-color: $c-pink-mention;
-  border: 0.125rem solid $white;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -112,6 +111,7 @@
 
   margin-top: 0.625rem;
   font-weight: 500;
+  background-color: transparent;
 }
 
 .editAvatarImage {
@@ -153,8 +153,6 @@
 
   .textFieldLabelWrapper {
     @include body-sm-regular;
-
-    color: $c-gray-80;
   }
 
   .textFieldInput {

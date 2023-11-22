@@ -25,7 +25,7 @@ import {
   convertToTimestamp,
   firestoreDataConverter,
 } from "@/shared/utils";
-import firebase from "@/shared/utils/firebase";
+import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
 
 const converter = firestoreDataConverter<CommonFeed>();
@@ -42,12 +42,21 @@ class CommonFeedService {
   public getCommonFeedItemById = async (
     commonId: string,
     commonFeedId: string,
+    cached = false,
   ): Promise<CommonFeed | null> => {
-    const snapshot = await this.getCommonFeedSubCollection(commonId)
-      .doc(commonFeedId)
-      .get();
+    try {
+      const snapshot = await this.getCommonFeedSubCollection(commonId)
+        .doc(commonFeedId)
+        .get({ source: cached ? "cache" : "default" });
 
-    return snapshot?.data() || null;
+      return snapshot?.data() || null;
+    } catch (error) {
+      if (cached && isFirestoreCacheError(error)) {
+        return this.getCommonFeedItemById(commonId, commonFeedId);
+      } else {
+        throw error;
+      }
+    }
   };
 
   public getCommonFeedItemWithSnapshot = async (

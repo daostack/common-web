@@ -10,7 +10,7 @@
   align-items: center;
 
   &:hover {
-    background-color: $light-gray-11;
+    background-color: var(--hover-fill);
   }
 
   @include tablet {
@@ -44,7 +44,7 @@
   font-weight: bold;
   font-size: $xxsmall-2;
   line-height: 120%;
-  color: $c-neutrals-300;
+  color: var(--primary-text);
 }
 
 .circleNames {
@@ -65,7 +65,7 @@
   height: 1.5rem;
   transform: rotate(90deg);
   transition: all 0.2s;
-  color: $light-gray-2;
+  color: var(--primary-text);
   margin-left: 1rem;
 
   @include tablet {

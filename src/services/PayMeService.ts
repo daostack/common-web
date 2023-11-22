@@ -10,7 +10,7 @@ const axiosClient = axios.create({
 });
 
 const endpoints = {
-  createBuyerTokenPage: `${config.cloudFunctionUrl}/payments/payme/payin/create-buyer-token-page`,
+  createBuyerTokenPage: `${config.cloudFunctionUrl}/api/payments/payme/payin/create-buyer-token-page`,
 };
 
 const createBuyerTokenPage = async (

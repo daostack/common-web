@@ -238,8 +238,9 @@ class ChatService {
     participantId: string;
     startAt?: Timestamp;
     endAt?: Timestamp;
+    onlyWithMessages?: boolean;
   }): Promise<ChatChannel[]> => {
-    const { participantId, startAt, endAt } = options;
+    const { participantId, startAt, endAt, onlyWithMessages = false } = options;
     let query = this.getChatChannelCollection()
       .where("participants", "array-contains", participantId)
       .orderBy("updatedAt", "desc");
@@ -252,8 +253,13 @@ class ChatService {
     }
 
     const snapshot = await query.get();
+    const chatChannels = snapshot.docs.map((doc) => doc.data());
 
-    return snapshot.docs.map((doc) => doc.data());
+    if (!onlyWithMessages) {
+      return chatChannels;
+    }
+
+    return chatChannels.filter((chatChannel) => chatChannel.messageCount > 0);
   };
 
   public subscribeToNewUpdatedChatChannels = (

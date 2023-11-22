@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import moment from "moment";
 import { ERROR_TEXT_FOR_NON_EXISTENT_USER } from "@/pages/Login/constants";
-import { Button, Loader, ModalFooter } from "@/shared/components";
+import { Loader, ModalFooter } from "@/shared/components";
 import {
   PhoneInput,
   PhoneInputCountryCode,
@@ -16,6 +16,7 @@ import {
   RECAPTCHA_CONTAINER_ID,
 } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { isGeneralError } from "@/shared/utils";
 import firebase, { isFirebaseError } from "@/shared/utils/firebase";
 import {
@@ -150,10 +151,10 @@ const PhoneAuth: FC<PhoneAuthProps> = ({ authCode, onFinish, onError }) => {
       case PhoneAuthStep.PhoneInput: {
         const buttonEl = (
           <Button
-            className="phone-auth__submit-button"
+            //className="phone-auth__submit-button"
             onClick={onPhoneNumberSubmit}
             disabled={!phoneNumber || !isValidPhoneNumber(phoneNumber)}
-            shouldUseFullWidth
+            variant={ButtonVariant.PrimaryPink}
           >
             Send Code
           </Button>

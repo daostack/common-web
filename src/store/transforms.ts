@@ -3,11 +3,23 @@ import { deserializeFeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { convertObjectDatesToFirestoreTimestamps } from "@/shared/utils";
 import { getFeedLayoutItemDateForSorting } from "@/store/states/inbox/utils";
 import { CommonLayoutState } from "./states/commonLayout";
-import { InboxItems, InboxState } from "./states/inbox";
 import { CacheState } from "./states/cache";
+import {
+  InboxItems,
+  InboxState,
+  INITIAL_INBOX_ITEMS,
+  INITIAL_INBOX_STATE,
+} from "./states/inbox";
 
 export const inboxTransform = createTransform(
   (inboundState: InboxState) => {
+    if (inboundState.items.unread) {
+      return {
+        ...inboundState,
+        items: { ...INITIAL_INBOX_ITEMS },
+      };
+    }
+
     const data =
       inboundState.items.data && inboundState.items.data.slice(0, 30);
 
@@ -27,22 +39,28 @@ export const inboxTransform = createTransform(
       },
     };
   },
-  (outboundState: InboxState) => ({
-    ...outboundState,
-    sharedItem:
-      outboundState.sharedItem &&
-      deserializeFeedLayoutItemWithFollowData(outboundState.sharedItem),
-    chatChannelItems: [],
-    items: {
-      ...convertObjectDatesToFirestoreTimestamps<InboxItems>(
-        outboundState.items,
-        ["firstDocTimestamp", "lastDocTimestamp"],
-      ),
-      data:
-        outboundState.items.data &&
-        outboundState.items.data.map(deserializeFeedLayoutItemWithFollowData),
-    },
-  }),
+  (outboundState: InboxState) => {
+    if (outboundState.items.unread !== INITIAL_INBOX_ITEMS.unread) {
+      return { ...INITIAL_INBOX_STATE };
+    }
+
+    return {
+      ...outboundState,
+      sharedItem:
+        outboundState.sharedItem &&
+        deserializeFeedLayoutItemWithFollowData(outboundState.sharedItem),
+      chatChannelItems: [],
+      items: {
+        ...convertObjectDatesToFirestoreTimestamps<InboxItems>(
+          outboundState.items,
+          ["firstDocTimestamp", "lastDocTimestamp"],
+        ),
+        data:
+          outboundState.items.data &&
+          outboundState.items.data.map(deserializeFeedLayoutItemWithFollowData),
+      },
+    };
+  },
   { whitelist: ["inbox"] },
 );
 

@@ -33,9 +33,10 @@
   left: var(--main-pl);
   z-index: 2;
   height: var(--page-content-header);
-  background-color: $c-shades-white;
-  border-bottom: 0.0625rem solid $c-light-gray;
+  background-color: var(--primary-background);
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
   box-sizing: border-box;
+  color: var(--primary-text);
 
   @include tablet {
     top: 0;

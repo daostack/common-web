@@ -122,7 +122,7 @@
 }
 
 .buttonPrimaryPinkVariant {
-  --btn-color: var(--white-text);
+  --btn-color: #ffffff;
   --btn-bg-color: var(--primary-fill);
   --btn-border-color: none;
   --btn-border: 0;
@@ -226,12 +226,11 @@
 
 .buttonOutlineDarkPinkVariant {
   --btn-color: #{$c-pink-next-dark};
-  --btn-bg-color: #{$c-shades-white};
   --btn-border-color: #{$c-pink-next-dark};
   --btn-border: 0.0625rem solid var(--btn-border-color);
 
   &:hover {
-    --btn-bg-color: #{$c-pink-hover-feed-cards};
+    --btn-bg-color: var(--secondary-hover-fill);
   }
 
   &:active {

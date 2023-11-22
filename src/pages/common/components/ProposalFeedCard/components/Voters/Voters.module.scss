@@ -7,6 +7,6 @@
   max-height: 22.75rem;
   display: flex;
   justify-content: center;
-  background-color: $c-shades-white;
+  background-color: var(--primary-background);
   overflow-y: auto;
 }

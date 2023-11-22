@@ -1,9 +1,9 @@
 @import "../../../../../../constants";
 
 .item {
-  --item-color: #{$c-neutrals-600};
-  --item-bg-color: #{$c-shades-white};
-  --item-border: 0.0625rem solid #{$c-neutrals-100};
+  --item-color: var(--primary-text);
+  --item-bg-color: var(--primary-background);
+  --item-border: 0.0625rem solid var(--gentle-stroke);
 
   display: flex;
   justify-content: space-between;
@@ -14,7 +14,7 @@
   padding: 1.125rem 1.5rem;
   text-decoration: none;
   color: var(--item-color);
-  background-color: var(--item-bg-color);
+  background-color: var(--tertiary-fill);
   border: var(--item-border);
   border-bottom: 0;
   font-family: PoppinsSans, sans-serif;
@@ -67,7 +67,7 @@
 .pendingStatus {
   font-size: $small;
   line-height: 1.25rem;
-  color: $light-gray-2;
+  color: var(--primary-text);
   margin: 0;
 }
 
@@ -75,4 +75,5 @@
   margin-top: 1.125rem;
   max-width: 20.9375rem;
   z-index: 1;
+  background-color: var(--primary-background);
 }

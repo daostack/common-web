@@ -27,3 +27,4 @@ export { useLanguage } from "./useLanguage";
 export { useIsMounted } from "./useIsMounted";
 export * from "./usePreventReload";
 export { default as useImageSizeCheck } from "./useImageSizeCheck";
+export { default as useLightThemeOnly } from "./useLightThemeOnly";
