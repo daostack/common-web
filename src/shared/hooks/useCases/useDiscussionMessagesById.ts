@@ -32,6 +32,7 @@ export type TextStyles = {
 interface Options {
   hasPermissionToHide: boolean;
   userId?: string;
+  discussionId: string;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
@@ -42,13 +43,10 @@ interface Options {
 type State = LoadingState<DiscussionMessageWithParsedText[] | null>;
 
 interface Return extends State {
-  fetchDiscussionMessages: (discussionId: string) => void;
-  fetchRepliedMessages: (discussionId: string, messageId: string, endDate: Date) => Promise<void>;
-  addDiscussionMessage: (
-    discussionId: string,
-    discussionMessage: DiscussionMessage,
-  ) => void;
-  isEndOfList: boolean;
+  fetchDiscussionMessages: () => void;
+  fetchRepliedMessages: (messageId: string, endDate: Date) => Promise<void>;
+  addDiscussionMessage: (discussionMessage: DiscussionMessage) => void;
+  isEndOfList: Record<string, boolean> | null;
 }
 
 const DEFAULT_STATE: State = {
@@ -60,6 +58,7 @@ const DEFAULT_STATE: State = {
 export const useDiscussionMessagesById = ({
   hasPermissionToHide,
   userId,
+  discussionId,
   directParent,
   onUserClick,
   onFeedItemClick,
@@ -68,22 +67,19 @@ export const useDiscussionMessagesById = ({
 }: Options): Return => {
   const dispatch = useDispatch();
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
-  const [currentDiscussionId, setCurrentDiscussionId] = useState("");
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const [messageOwners, setMessageOwners] = useState<User[]>([]);
   const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [lastVisible, setLastVisible] = useState<firebase.firestore.QueryDocumentSnapshot<DiscussionMessage> | null>(null);
-  const [isEndOfList, setIsEndOfList] = useState(false);
+  const [lastVisible, setLastVisible] = useState<Record<string, firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>>>({});
+  const [isEndOfList, setIsEndOfList] = useState<Record<string, boolean>>({});
   const state =
     useSelector(
-      selectDiscussionMessagesStateByDiscussionId(currentDiscussionId),
+      selectDiscussionMessagesStateByDiscussionId(discussionId),
     ) || defaultState;
   const [discussionMessagesWithOwners, setDiscussionMessagesWithOwners] =
     useState<any>();
 
   const addDiscussionMessage = async (
-    discussionId: string,
     discussionMessage: DiscussionMessage,
   ): Promise<void> => {
 
@@ -117,14 +113,14 @@ export const useDiscussionMessagesById = ({
     );
   };
 
-  const fetchRepliedMessages = async (discussionId: string,messageId: string,  endDate: Date): Promise<void> => {
+  const fetchRepliedMessages = async (messageId: string,  endDate: Date): Promise<void> => {
     if(state.data?.find((item) => item.id === discussionId)) {
       return Promise.resolve();
     }
 
-    const {data: updatedDiscussionMessages, lastVisibleSnapshot} = await DiscussionMessageService.getDiscussionMessagesByEndDate(discussionId, lastVisible, endDate);
+    const {data: updatedDiscussionMessages, lastVisibleSnapshot} = await DiscussionMessageService.getDiscussionMessagesByEndDate(discussionId, lastVisible && lastVisible[discussionId], endDate);
 
-    setLastVisible(lastVisibleSnapshot);
+    setLastVisible((prevVisible) => ({...prevVisible, [discussionId]: lastVisibleSnapshot}));
     const discussionsWithText = await Promise.all((updatedDiscussionMessages.map(async (discussionMessage) => {
       const emojiCount = countTextEditorEmojiElements(
         parseStringToTextEditorValue(discussionMessage.text),
@@ -172,28 +168,26 @@ export const useDiscussionMessagesById = ({
       )
   }
 
-  const fetchDiscussionMessages = (discussionId: string) => {
-    setCurrentDiscussionId(discussionId);
+  const fetchDiscussionMessages = () => {
     if (
       !discussionId ||
-      isLoading ||
-      isEndOfList
+      isEndOfList[discussionId]
     ) {
       return null;
     }
 
-    if(state.data?.length === 0) {
+    if(!state.data?.length) {
       setDefaultState({ ...DEFAULT_STATE });
     }
 
     DiscussionMessageService.getDiscussionMessagesByDiscussionId(
       discussionId,
-      lastVisible,
+      lastVisible && lastVisible[discussionId],
       async (snapshot, updatedDiscussionMessages) => {
           const lastVisibleDocument =
             snapshot.docs[updatedDiscussionMessages.length - 1];
 
-          setLastVisible(lastVisibleDocument);
+          setLastVisible((prevVisible) => ({...prevVisible, [discussionId]: lastVisibleDocument}));
 
           const hasLastVisibleDocument = !!lastVisibleDocument?.data();
           
@@ -247,7 +241,7 @@ export const useDiscussionMessagesById = ({
               discussionsWithText.length < 15 &&
               !hasLastVisibleDocument
             ) {
-              setIsEndOfList(true);
+              setIsEndOfList((prevIsEndOfList) => ({...prevIsEndOfList, [discussionId]: true}));
             }
       },
     );

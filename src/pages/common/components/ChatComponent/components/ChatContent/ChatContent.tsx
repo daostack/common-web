@@ -59,7 +59,6 @@ interface ChatContentInterface {
   isEmpty?: boolean;
   isChatChannel: boolean;
   fetchReplied: (
-    discussionId: string,
     messageId: string,
     endDate: Date,
   ) => Promise<void>;
@@ -172,7 +171,7 @@ const ChatContent: ForwardRefRenderFunction<
   }, [shouldScrollToElementId, discussionMessages]);
 
   async function scrollToRepliedMessage(messageId: string, endDate: Date) {
-    await fetchReplied(discussionId, messageId, endDate);
+    await fetchReplied(messageId, endDate);
     setShouldScrollToElementId(messageId);
   }
 

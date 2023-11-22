@@ -15,6 +15,7 @@ interface Options {
   onFeedItemClick?: (feedItemId: string) => void;
   directParent?: DirectParent | null;
   textStyles: TextStyles;
+  discussionId: string;
 }
 
 interface Return {
@@ -27,7 +28,7 @@ interface Return {
 }
 
 export const useDiscussionChatAdapter = (options: Options): Return => {
-  const { hasPermissionToHide, textStyles} = options;
+  const { hasPermissionToHide, textStyles, discussionId} = options;
   
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -40,6 +41,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
       [userId, commonMembers],
     );
   const discussionMessagesData = useDiscussionMessagesById({
+    discussionId,
     hasPermissionToHide,
     users,
     textStyles

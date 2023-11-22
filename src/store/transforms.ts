@@ -4,6 +4,7 @@ import { convertObjectDatesToFirestoreTimestamps } from "@/shared/utils";
 import { getFeedLayoutItemDateForSorting } from "@/store/states/inbox/utils";
 import { CommonLayoutState } from "./states/commonLayout";
 import { InboxItems, InboxState } from "./states/inbox";
+import { CacheState } from "./states/cache";
 
 export const inboxTransform = createTransform(
   (inboundState: InboxState) => {
@@ -64,4 +65,13 @@ export const lastCommonFromFeedTransform = createTransform(
   },
   (outboundState: CommonLayoutState) => outboundState,
   { whitelist: ["commonLayout"] },
+);
+
+export const cacheTransform = createTransform(
+  (inboundState: CacheState) => inboundState,
+  (outboundState: CacheState) => ({
+    ...outboundState,
+    discussionMessagesStates: {}
+  }),
+  { whitelist: ["cache"] },
 );

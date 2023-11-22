@@ -167,6 +167,7 @@ export default function ChatComponent({
     discussionUsers,
     fetchDiscussionUsers,
   } = useDiscussionChatAdapter({
+    discussionId,
     hasPermissionToHide,
     textStyles: {
       mentionTextCurrentUser: styles.mentionTextCurrentUser,
@@ -486,10 +487,7 @@ export default function ChatComponent({
           });
         } else {
           pendingMessages.forEach((pendingMessage) => {
-            discussionMessagesData.addDiscussionMessage(
-              discussionId,
-              pendingMessage,
-            );
+            discussionMessagesData.addDiscussionMessage(pendingMessage);
           });
         }
 
@@ -712,14 +710,14 @@ export default function ChatComponent({
 
   useEffect(() => {
     if (discussionId) {
-      discussionMessagesData.fetchDiscussionMessages(discussionId);
+      discussionMessagesData.fetchDiscussionMessages();
       dispatch(chatActions.clearCurrentDiscussionMessageReply());
     }
   }, [discussionId]);
 
   useEffect(() => {
     if (isTopReached && discussionId) {
-      discussionMessagesData.fetchDiscussionMessages(discussionId);
+      discussionMessagesData.fetchDiscussionMessages();
     }
   }, [isTopReached, discussionId, dispatch]);
 

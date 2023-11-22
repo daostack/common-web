@@ -203,7 +203,7 @@ export default function ChatMessage({
         parentMessage.createdAt.toDate(),
       );
     }
-  }
+  };
 
   const ReplyMessage = useCallback(() => {
     if (
