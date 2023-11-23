@@ -1,7 +1,9 @@
 import React, { FC, useRef } from "react";
+import { useSelector } from "react-redux";
 import { ButtonIcon, UserAvatar } from "@/shared/components";
-import { useIsPhoneView } from "@/shared/hooks/viewport";
+import { ScreenSize } from "@/shared/constants";
 import { RightArrowThinIcon } from "@/shared/icons";
+import { getScreenSize } from "@/shared/store/selectors";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
 import { truncateBreadcrumbName } from "../../utils";
@@ -28,7 +30,8 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
   } = props;
   const itemsButtonRef = useRef<HTMLButtonElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
-  const isPhoneView = useIsPhoneView();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleButtonClick = () => {
     if (itemsButtonRef.current) {
@@ -48,7 +51,7 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
         />
       )}
       <span className={styles.name}>
-        {isPhoneView ? truncateBreadcrumbName(name) : name}
+        {isMobileView ? truncateBreadcrumbName(name) : name}
       </span>
       {(items.length > 0 || commonIdToAddProject) && withMenu && (
         <ButtonIcon
