@@ -1,16 +1,12 @@
 import React, { FC } from "react";
 import ContentLoader from "react-content-loader";
-import { useSelector } from "react-redux";
-import { Theme } from "@/shared/constants";
-import { selectTheme } from "@/shared/store/selectors";
+import { ThemeColors } from "@/shared/constants";
+import useThemeColor from "@/shared/hooks/useThemeColor";
 import { Separator } from "../Separator";
 import styles from "./LoadingBreadcrumbsItem.module.scss";
 
 const LoadingBreadcrumbsItem: FC = (props) => {
-  const theme = useSelector(selectTheme);
-
-  const backgroundColor = theme === Theme.Light ? "#f3f3f3" : "#1f2535";
-  const foregroundColor = theme === Theme.Light ? "#ecebeb" : "#2e3452";
+  const { getThemeColor } = useThemeColor();
 
   return (
     <li className={styles.container}>
@@ -19,8 +15,8 @@ const LoadingBreadcrumbsItem: FC = (props) => {
         width={296}
         height={22}
         viewBox="0 0 296 22"
-        backgroundColor={backgroundColor}
-        foregroundColor={foregroundColor}
+        backgroundColor={getThemeColor(ThemeColors.primaryBackground)}
+        foregroundColor={getThemeColor(ThemeColors.secondaryBackground)}
         {...props}
       >
         <rect x="0" y="0" rx="4" ry="4" width="120" height="22" />
