@@ -24,6 +24,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: $c-shades-white;
+  background-color: var(--secondary-background);
   border-radius: 1rem;
 }

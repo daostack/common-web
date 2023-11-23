@@ -2,8 +2,8 @@
 @import "../../../../../styles/sizes";
 
 .billing-payment-information__payment-method-card {
-  background-color: $white;
-  border: 1px solid $light-gray-1;
+  background-color: var(--secondary-background);
+  border: 1px solid var(--gentle-stroke);
   border-radius: 0.5rem;
   box-sizing: border-box;
 

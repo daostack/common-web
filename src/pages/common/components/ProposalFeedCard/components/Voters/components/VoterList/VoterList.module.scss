@@ -10,7 +10,7 @@
 }
 
 .voterItem {
-  border-bottom: 0.0625rem solid $c-neutrals-200;
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
 
   &:last-child {
     border-bottom: 0;

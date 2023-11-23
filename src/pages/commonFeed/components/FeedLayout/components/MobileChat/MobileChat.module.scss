@@ -1,4 +1,5 @@
 @import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
 
 .modal {
   height: 90vh;
@@ -9,6 +10,10 @@
     .modalHeader {
       padding: 0;
     }
+  }
+
+  @include big-phone {
+    height: 100vh;
   }
 }
 

@@ -13,10 +13,10 @@
     font-size: $small;
     font-weight: 600;
     color: $secondary-blue;
-    border: 1px solid $light-gray-3;
+    border: 1px solid var(--gentle-stroke);
     border-radius: 1.75rem;
     background-color: $white;
-    box-shadow: 0 3px 8px 0 $invoice-description-card-shadow;
+    box-shadow: 0 3px 8px 0 var(--drop-shadow);
     box-sizing: border-box;
   }
 
@@ -33,7 +33,7 @@
     font-weight: inherit;
     color: inherit;
     border: 0;
-    border-left: 1px solid $light-gray-3;
+    border-left: 1px solid var(--gentle-stroke);
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-top-right-radius: inherit;

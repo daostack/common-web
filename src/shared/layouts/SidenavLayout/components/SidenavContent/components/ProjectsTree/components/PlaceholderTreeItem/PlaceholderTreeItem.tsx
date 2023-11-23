@@ -79,6 +79,7 @@ const PlaceholderTreeItem: FC<PlaceholderTreeItemProps> = (props) => {
         className={classNames(
           treeItemTriggerStyles.name,
           treeItemTriggerStylesFromContext?.name,
+          styles.text,
         )}
         title={name}
       >

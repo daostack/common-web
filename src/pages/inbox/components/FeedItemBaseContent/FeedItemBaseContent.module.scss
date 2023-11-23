@@ -7,14 +7,14 @@
   margin: 0 -1.5rem;
   padding: 0.875rem 0.875rem 1.0625rem 1.5rem;
   display: flex;
-  border-bottom: 0.0625rem solid $c-light-gray;
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
   cursor: pointer;
   user-select: none;
 
   &:hover {
-    background-color: $c-pink-hover-feed-cards;
+    background-color: var(--hover-fill);
     .lastMessage {
-      background-color: $c-pink-hover-feed-cards;
+      background-color: var(--hover-fill);
     }
     .lastMessageActive {
       background-color: $c-pink-active-feed-cards;
@@ -44,7 +44,7 @@
 }
 
 .containerExpanded {
-  border: 0.0625rem solid $c-neutrals-200;
+  border: 0.0625rem solid var(--gentle-stroke);
   border-bottom: none;
 }
 
@@ -106,7 +106,7 @@
 }
 
 .title {
-  color: $secondary-blue;
+  color: var(--primary-text);
   font-size: $moderate-xsmall;
   line-height: 1.5rem;
   text-overflow: ellipsis;

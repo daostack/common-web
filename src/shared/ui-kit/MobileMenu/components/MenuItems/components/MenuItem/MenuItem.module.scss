@@ -1,8 +1,8 @@
 @import "../../../../../../../constants";
 
 .item {
-  --item-color: #{$c-neutrals-600};
-  --item-bg-color: rgba(242, 242, 242, 0.8);
+  --item-color: var(--primary-text);
+  --item-bg-color: var(--tertiary-fill);
 
   margin: 0;
   padding: 1.125rem 1.5rem;
@@ -10,7 +10,7 @@
   color: var(--item-color);
   background-color: var(--item-bg-color);
   border: 0;
-  border-bottom: 0.0625rem solid #{$c-separator-light-non-opaque};
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
   font-family: PoppinsSans, sans-serif;
   font-weight: 600;
   font-size: $small;
@@ -31,7 +31,7 @@
   }
 }
 .itemActive {
-  --item-bg-color: #{$c-neutrals-200}99;
+  --item-bg-color: #{var(--secondary-hover-fill)};
 }
 
 .itemWithWarning {

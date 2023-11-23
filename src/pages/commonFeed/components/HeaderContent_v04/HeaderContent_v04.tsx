@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { NewStreamButton } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components";
 import { useRoutesContext } from "@/shared/contexts";
@@ -15,6 +14,7 @@ import {
 import { CommonAvatar, TopNavigationOpenSidenavButton } from "@/shared/ui-kit";
 import { checkIsProject, getPluralEnding } from "@/shared/utils";
 import { ActionsButton } from "../HeaderContent/components";
+import { ContentWrapper } from "../HeaderContent/components/HeaderCommonContent/components";
 import styles from "./HeaderContent_v04.module.scss";
 
 interface HeaderContentProps {
@@ -41,10 +41,7 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
           className={styles.openSidenavButton}
           iconEl={<SidebarIcon className={styles.openSidenavIcon} />}
         />
-        <NavLink
-          className={styles.commonLink}
-          to={getCommonPageAboutTabPath(common.id)}
-        >
+        <ContentWrapper className={styles.commonLink} commonId={common.id}>
           <CommonAvatar
             name={common.name}
             src={common.image}
@@ -63,7 +60,7 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
               {common.memberCount} member{getPluralEnding(common.memberCount)}
             </p>
           </div>
-        </NavLink>
+        </ContentWrapper>
       </div>
       <div className={styles.actionsContainer}>
         <NewStreamButton

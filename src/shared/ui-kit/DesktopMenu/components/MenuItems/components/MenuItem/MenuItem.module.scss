@@ -1,9 +1,9 @@
 @import "../../../../../../../constants";
 
 .item {
-  --item-color: #{$c-neutrals-600};
-  --item-bg-color: #{$c-shades-white};
-  --item-border: 0.0625rem solid #{$c-neutrals-100};
+  --item-color: var(--primary-text);
+  --item-bg-color: var(--tertiary-fill);
+  --item-border: 0.0625rem solid var(--gentle-stroke);
 
   margin: 0;
   padding: 1.125rem 1.5rem;
@@ -34,7 +34,7 @@
   }
 }
 .itemActive {
-  --item-bg-color: #{$c-pink-hover-feed-cards};
+  --item-bg-color: var(--secondary-hover-fill);
 }
 
 .itemWithWarning {

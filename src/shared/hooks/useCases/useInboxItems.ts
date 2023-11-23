@@ -125,13 +125,14 @@ export const useInboxItems = (
   const inboxItems = useSelector(selectInboxItems);
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const unread = options?.unread;
   const lastBatch = newItemsBatches[0];
 
   const fetch = () => {
     dispatch(
       inboxActions.getInboxItems.request({
         limit: 15,
-        unread: options?.unread,
+        unread,
       }),
     );
   };
@@ -213,6 +214,7 @@ export const useInboxItems = (
             participantId: userId,
             startAt,
             endAt,
+            onlyWithMessages: true,
           }),
           FeedItemFollowsService.getFollowFeedItems({
             userId,
@@ -250,7 +252,7 @@ export const useInboxItems = (
   }, []);
 
   useEffect(() => {
-    if (!inboxItems.firstDocTimestamp || !userId) {
+    if (!inboxItems.firstDocTimestamp || !userId || unread) {
       return;
     }
 
@@ -263,10 +265,15 @@ export const useInboxItems = (
     );
 
     return unsubscribe;
-  }, [inboxItems.firstDocTimestamp, userId, feedItemIdsForNotListening]);
+  }, [
+    inboxItems.firstDocTimestamp,
+    userId,
+    feedItemIdsForNotListening,
+    unread,
+  ]);
 
   useEffect(() => {
-    if (!inboxItems.firstDocTimestamp || !userId) {
+    if (!inboxItems.firstDocTimestamp || !userId || unread) {
       return;
     }
 
@@ -280,7 +287,12 @@ export const useInboxItems = (
       );
 
     return unsubscribe;
-  }, [inboxItems.firstDocTimestamp, userId, feedItemIdsForNotListening]);
+  }, [
+    inboxItems.firstDocTimestamp,
+    userId,
+    feedItemIdsForNotListening,
+    unread,
+  ]);
 
   useEffect(() => {
     if (!lastBatch) {

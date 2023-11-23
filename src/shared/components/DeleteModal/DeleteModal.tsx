@@ -8,8 +8,8 @@ import React, {
 import { useDispatch } from "react-redux";
 import { deleteDiscussionMessage } from "@/pages/OldCommon/store/actions";
 import { ChatService } from "@/services";
-import { Loader, Button } from "@/shared/components";
-import { Colors, EntityTypes } from "@/shared/constants";
+import { Loader } from "@/shared/components";
+import { EntityTypes } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
 import {
   Common,
@@ -17,6 +17,7 @@ import {
   DiscussionMessage,
   Proposal,
 } from "@/shared/models";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Modal } from "../Modal";
 import "./index.scss";
 
@@ -128,8 +129,6 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
       isShowing={isShowing}
       onClose={onClose}
       title="Are you sure?"
-      closeColor={Colors.black}
-      closeIconSize={20}
       styles={{
         header: "delete-modal__header",
         content: "delete-modal__content",
@@ -141,6 +140,7 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
           disabled={isLoading}
           className="delete-modal__button-container__button delete-modal__button-container__cancel"
           onClick={onClose}
+          variant={ButtonVariant.OutlineDarkPink}
         >
           Cancel
         </Button>
@@ -148,6 +148,7 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
           disabled={isLoading}
           className="delete-modal__button-container__button delete-modal__button-container__send"
           onClick={onDelete}
+          variant={ButtonVariant.PrimaryPink}
         >
           {isLoading ? (
             <Loader className="delete-modal__button-container__send__loader" />

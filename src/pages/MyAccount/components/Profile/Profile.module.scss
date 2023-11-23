@@ -5,6 +5,7 @@
 .container {
   position: relative;
   width: 100%;
+  color: var(--primary-text);
 }
 
 .content {
@@ -30,6 +31,7 @@
   position: absolute;
   top: 1.5rem;
   right: 0;
+  color: var(--primary-text);
 
   @include tablet {
     position: static;
@@ -58,11 +60,16 @@
 }
 
 .menuButtonsWrapper {
-  border-top: 0.0625rem solid $c-gray-20;
+  border-top: 0.0625rem solid var(--gentle-stroke);
 }
 
 .menuButton {
-  border-bottom: 0.0625rem solid $c-gray-20;
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
+  color: var(--primary-text);
+}
+
+.themeMenuButton {
+  color: var(--primary-text);
 }
 
 .logoutMenuButton {

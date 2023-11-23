@@ -53,7 +53,7 @@
     font-family: PoppinsSans, sans-serif;
     font-size: $xsmall;
     line-height: 1.42;
-    color: $secondary-blue;
+    color: var(--primary-text);
     cursor: pointer;
     user-select: none;
   }

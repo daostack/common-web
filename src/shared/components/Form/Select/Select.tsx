@@ -1,9 +1,12 @@
 import React, { FC } from "react";
+import { useSelector } from "react-redux";
 import Select, { components, DropdownIndicatorProps } from "react-select";
 import classNames from "classnames";
 import { useFormikContext } from "formik";
+import { Theme } from "@/shared/constants/theme";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { SelectOptionType } from "@/shared/interfaces/Select";
+import { selectTheme } from "@/shared/store/selectors";
 import { selectorStyles } from "./selectorStyles";
 import styles from "./Select.module.scss";
 
@@ -39,6 +42,7 @@ const FormSelect: FC<FormSelectProps> = ({
   const { values, setFieldValue, handleBlur, touched, errors } =
     useFormikContext<Record<string, unknown>>();
   const hasError = Boolean(touched[formName] && errors[formName]);
+  const theme = useSelector(selectTheme);
 
   return (
     <div className={classNames(styles.container, containerClassName)}>
@@ -54,7 +58,7 @@ const FormSelect: FC<FormSelectProps> = ({
         }}
         onBlur={handleBlur(formName)}
         hideSelectedOptions={false}
-        styles={selectorStyles(hasError)}
+        styles={selectorStyles(hasError, theme === Theme.Dark)}
         components={{
           DropdownIndicator,
         }}
