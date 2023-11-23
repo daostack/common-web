@@ -1,49 +1,50 @@
-import { Colors } from "@/shared/constants";
+import { ThemeColors } from "@/shared/constants";
+import useThemeColor from "@/shared/hooks/useThemeColor";
 
-export const selectorStyles = (hasError: boolean, isDarkMode: boolean) => ({
-  menu: (provided) => ({ ...provided, zIndex: 10000 }),
-  menuPortal: (provided) => ({ ...provided, zIndex: 10000 }),
-  menuList: (provided) => ({
-    ...provided,
-    backgroundColor: isDarkMode ? "#131b23" : "#ffffff",
-  }),
-  control: (provided) => ({
-    ...provided,
-    height: "3rem",
-    ...(hasError && { borderColor: Colors.error }),
-    backgroundColor: isDarkMode ? "#2e3452" : "#f8f8f5",
-    color: isDarkMode ? "#ffffff" : "#001a36",
-    borderColor: "rgba(255, 255, 255, 0)",
-    boxShadow: "rgba(255, 255, 255, 0)",
-    "&:hover": {
+export const selectorStyles = (hasError: boolean) => {
+  const { getThemeColor } = useThemeColor();
+
+  return {
+    menu: (provided) => ({ ...provided, zIndex: 10000 }),
+    menuPortal: (provided) => ({ ...provided, zIndex: 10000 }),
+    menuList: (provided) => ({
+      ...provided,
+      backgroundColor: getThemeColor(ThemeColors.tertiaryFill),
+    }),
+    control: (provided) => ({
+      ...provided,
+      height: "3rem",
+      ...(hasError && { borderColor: getThemeColor(ThemeColors.warning) }),
+      backgroundColor: getThemeColor(ThemeColors.secondaryBackground),
+      color: getThemeColor(ThemeColors.primaryText),
+      borderColor: "rgba(255, 255, 255, 0)",
       boxShadow: "rgba(255, 255, 255, 0)",
-    },
-  }),
-  option: (provided, data) => ({
-    ...provided,
-    backgroundColor: data.isDisabled
-      ? "transparent"
-      : isDarkMode
-      ? "#131b23"
-      : "#ffffff",
-    color: isDarkMode ? "#ffffff" : "#001a36",
-    "&:hover": {
+      "&:hover": {
+        boxShadow: "rgba(255, 255, 255, 0)",
+      },
+    }),
+    option: (provided, data) => ({
+      ...provided,
       backgroundColor: data.isDisabled
-        ? ""
-        : isDarkMode
-        ? "#2e3452"
-        : "#fff9fd",
-    },
-    cursor: data.isDisabled ? "not-allowed" : "default",
-  }),
-  indicatorSeparator: () => ({ display: "none" }),
-  indicatorsContainer: (provided) => ({
-    ...provided,
-    color: isDarkMode ? "#ffffff" : "#001a36",
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    backgroundColor: isDarkMode ? "#2e3452" : "#f8f8f5",
-    color: isDarkMode ? "#ffffff" : "#001a36",
-  }),
-});
+        ? "transparent"
+        : getThemeColor(ThemeColors.tertiaryFill),
+      color: getThemeColor(ThemeColors.primaryText),
+      "&:hover": {
+        backgroundColor: data.isDisabled
+          ? ""
+          : getThemeColor(ThemeColors.secondaryBackground),
+      },
+      cursor: data.isDisabled ? "not-allowed" : "default",
+    }),
+    indicatorSeparator: () => ({ display: "none" }),
+    indicatorsContainer: (provided) => ({
+      ...provided,
+      color: getThemeColor(ThemeColors.primaryText),
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      backgroundColor: getThemeColor(ThemeColors.secondaryBackground),
+      color: getThemeColor(ThemeColors.primaryText),
+    }),
+  };
+};
