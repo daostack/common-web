@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useIsPhoneView } from "@/shared/hooks/viewport";
+import { ScreenSize } from "@/shared/constants";
+import { getScreenSize } from "@/shared/store/selectors";
 import {
   commonLayoutActions,
   MultipleSpacesLayoutFeedItemBreadcrumbs,
@@ -23,7 +24,8 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
   const dispatch = useDispatch();
   const currentLayoutCommonId = useSelector(selectCommonLayoutCommonId);
   const goToCreateCommon = useGoToCreateCommon();
-  const isPhoneView = useIsPhoneView();
+  const screenSize = useSelector(getScreenSize());
+  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleItemClick = (item: ProjectsStateItem) => {
     if (
@@ -36,7 +38,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
     }
   };
 
-  const breadcrumbsItems = isPhoneView
+  const breadcrumbsItems = isMobileView
     ? [breadcrumbs.items[0]]
     : breadcrumbs.items;
 
@@ -55,7 +57,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
             />
           </React.Fragment>
         ))}
-      {isPhoneView && breadcrumbsItems.length < breadcrumbs.items.length && (
+      {isMobileView && breadcrumbsItems.length < breadcrumbs.items.length && (
         <>
           <Separator />
           ...
