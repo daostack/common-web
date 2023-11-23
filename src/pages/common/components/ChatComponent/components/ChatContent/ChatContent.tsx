@@ -17,7 +17,11 @@ import {
   InternalLinkData,
   DMChatMessage,
 } from "@/shared/components";
-import { ChatType, QueryParamKey } from "@/shared/constants";
+import {
+  ChatType,
+  QueryParamKey,
+  LOADER_APPEARANCE_DELAY,
+} from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import {
   checkIsUserDiscussionMessage,
@@ -28,6 +32,7 @@ import {
   Circles,
   DiscussionMessageWithParsedText,
 } from "@/shared/models";
+import { Loader } from "@/shared/ui-kit";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
 import { checkIsLastSeenInPreviousDay } from "./utils";
@@ -208,6 +213,14 @@ const ChatContent: ForwardRefRenderFunction<
     }),
     [scrollToContainerBottom],
   );
+
+  if (isLoading) {
+    return (
+      <div className={styles.loaderContainer}>
+        <Loader delay={LOADER_APPEARANCE_DELAY} />
+      </div>
+    );
+  }
 
   return (
     <>

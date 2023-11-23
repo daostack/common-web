@@ -22,6 +22,7 @@ import {
 import { countTextEditorEmojiElements, parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
 import { useRoutesContext } from "@/shared/contexts";
+import { useUpdateEffect } from "react-use";
 
 export type TextStyles = {
   mentionTextCurrentUser: string;
@@ -47,6 +48,7 @@ interface Return extends State {
   fetchRepliedMessages: (messageId: string, endDate: Date) => Promise<void>;
   addDiscussionMessage: (discussionMessage: DiscussionMessage) => void;
   isEndOfList: Record<string, boolean> | null;
+  rawData: DiscussionMessage[] | null;
 }
 
 const DEFAULT_STATE: State = {
@@ -72,12 +74,20 @@ export const useDiscussionMessagesById = ({
   const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
   const [lastVisible, setLastVisible] = useState<Record<string, firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>>>({});
   const [isEndOfList, setIsEndOfList] = useState<Record<string, boolean>>({});
+  const [isLoading, setIsLoading] = useState(true);
   const state =
     useSelector(
       selectDiscussionMessagesStateByDiscussionId(discussionId),
     ) || defaultState;
   const [discussionMessagesWithOwners, setDiscussionMessagesWithOwners] =
     useState<any>();
+
+  useUpdateEffect(() => {
+    if (discussionId) {
+      setDiscussionMessagesWithOwners([]);
+    }
+
+  }, [discussionId])
 
   const addDiscussionMessage = async (
     discussionMessage: DiscussionMessage,
@@ -258,6 +268,7 @@ export const useDiscussionMessagesById = ({
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       const discussionMessages = [...(state.data || [])];
       const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
@@ -301,13 +312,15 @@ export const useDiscussionMessagesById = ({
       }));
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
+      setIsLoading(false);
     })();
   }, [state.data, messageOwnersIds, messageOwners, hasPermissionToHide]);
 
   return {
     ...state,
-    loading: state.loading,
+    loading: isLoading || state.loading,
     data: discussionMessagesWithOwners,
+    rawData: state.data,
     isEndOfList,
     fetchDiscussionMessages,
     fetchRepliedMessages,
