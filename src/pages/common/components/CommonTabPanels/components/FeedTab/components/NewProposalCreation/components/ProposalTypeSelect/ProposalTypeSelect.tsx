@@ -4,7 +4,7 @@ import { useFormikContext } from "formik";
 import { ProposalsTypes } from "@/shared/constants";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
-import { selectorStyles } from "./selectorStyles";
+import { SelectorStyles } from "./selectorStyles";
 import styles from "./ProposalTypeSelect.module.scss";
 
 interface ProposalTypeSelectProps {
@@ -52,7 +52,7 @@ const ProposalTypeSelect = ({ commonBalance }: ProposalTypeSelectProps) => {
         }}
         onBlur={handleBlur("proposalType")}
         hideSelectedOptions={false}
-        styles={selectorStyles(hasError)}
+        styles={SelectorStyles(hasError)}
         components={{
           DropdownIndicator,
         }}

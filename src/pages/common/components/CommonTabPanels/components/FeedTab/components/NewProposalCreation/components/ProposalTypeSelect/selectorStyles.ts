@@ -1,7 +1,7 @@
 import { ThemeColors } from "@/shared/constants";
 import useThemeColor from "@/shared/hooks/useThemeColor";
 
-export const selectorStyles = (hasError: boolean) => {
+export const SelectorStyles = (hasError: boolean) => {
   const { getThemeColor } = useThemeColor();
 
   return {

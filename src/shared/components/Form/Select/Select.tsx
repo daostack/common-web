@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { useFormikContext } from "formik";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { SelectOptionType } from "@/shared/interfaces/Select";
-import { selectorStyles } from "./selectorStyles";
+import { SelectorStyles } from "./selectorStyles";
 import styles from "./Select.module.scss";
 
 interface FormSelectProps {
@@ -54,7 +54,7 @@ const FormSelect: FC<FormSelectProps> = ({
         }}
         onBlur={handleBlur(formName)}
         hideSelectedOptions={false}
-        styles={selectorStyles(hasError)}
+        styles={SelectorStyles(hasError)}
         components={{
           DropdownIndicator,
         }}
