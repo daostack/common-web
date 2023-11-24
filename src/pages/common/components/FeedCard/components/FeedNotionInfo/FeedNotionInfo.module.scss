@@ -1,0 +1,13 @@
+.notionInfo {
+  display: flex;
+  gap: 10px;
+}
+
+.link {
+  color: var(--primary-fill);
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}

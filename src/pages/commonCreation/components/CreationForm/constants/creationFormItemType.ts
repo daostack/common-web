@@ -4,4 +4,5 @@ export enum CreationFormItemType {
   UploadFiles = "UploadFiles",
   Links = "Links",
   Roles = "Roles",
+  NotionIntegration = "NotionIntegration",
 }

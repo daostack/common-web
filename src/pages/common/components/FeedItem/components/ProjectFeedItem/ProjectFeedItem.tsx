@@ -81,6 +81,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           renderLeftContent,
           shouldHideBottomContent: !lastMessage,
           isFollowing: feedItemFollow.isFollowing,
+          notion: common?.notion,
         })}
       </>
     ) || null

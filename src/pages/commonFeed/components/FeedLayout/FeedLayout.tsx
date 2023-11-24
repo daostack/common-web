@@ -694,6 +694,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
+                      commonNotion={outerCommon?.notion}
                       pinnedFeedItems={outerCommon?.pinnedFeedItems}
                       isProject={commonData?.isProject}
                       isPinned={isPinned}

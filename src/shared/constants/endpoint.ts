@@ -31,6 +31,8 @@ export const ApiEndpoint = {
   MuteCommon: "/commons/mute",
   LeaveCommon: "/commons/leave",
   CreateSubscription: "/commons/immediate-contribution",
+  AddNotionIntegration: "commons/notion/setup",
+  RemoveNotionIntegration: "commons/notion/remove",
   UpdateSubscription: "/subscriptions/update",
   CancelSubscription: "/subscriptions/cancel",
   CreateUser: "/users/create",

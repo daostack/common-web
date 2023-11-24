@@ -15,6 +15,7 @@ export { useImmediateContribution } from "./useImmediateContribution";
 export { useInboxItems } from "./useInboxItems";
 export { useMarkChatMessageAsSeen } from "./useMarkChatMessageAsSeen";
 export { useMarkFeedItemAsSeen } from "./useMarkFeedItemAsSeen";
+export { useNotionIntegration } from "./useNotionIntegration";
 export { default as usePaymentMethodChange } from "./usePaymentMethodChange";
 export type { ChangePaymentMethodState } from "./usePaymentMethodChange";
 export { useProjectCreation } from "./useProjectCreation";

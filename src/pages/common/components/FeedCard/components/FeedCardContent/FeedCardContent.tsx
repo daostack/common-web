@@ -1,12 +1,14 @@
 import React, { ReactNode } from "react";
-import { CommonLink } from "@/shared/models";
+import { CommonLink, DiscussionNotion } from "@/shared/models";
 import { FeedGeneralInfo } from "../FeedGeneralInfo";
+import { FeedNotionInfo } from "../FeedNotionInfo";
 import styles from "./FeedCardContent.module.scss";
 
 export type FeedCardContentProps = JSX.IntrinsicElements["div"] & {
   subtitle?: ReactNode;
   description?: string;
   images?: CommonLink[];
+  notion?: DiscussionNotion;
   onClick: () => void;
 };
 
@@ -16,6 +18,7 @@ export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {
     description,
     subtitle,
     images,
+    notion,
     onClick,
     onMouseEnter,
     onMouseLeave,
@@ -28,6 +31,7 @@ export const FeedCardContent: React.FC<FeedCardContentProps> = (props) => {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
+      {!!notion && <FeedNotionInfo notion={notion} />}
       <FeedGeneralInfo
         description={description}
         subtitle={subtitle}

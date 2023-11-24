@@ -4,6 +4,7 @@ export * from "./ButtonIcon";
 export * from "./ButtonLink";
 export * from "./Common";
 export * from "./CommonShare";
+export * from "./ConfirmationModal";
 export { default as Content } from "./Content";
 export * from "./ContributionAmountSelection";
 export * from "./DatePicker";
