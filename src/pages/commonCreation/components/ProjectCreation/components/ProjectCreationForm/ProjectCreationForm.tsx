@@ -26,6 +26,8 @@ import { getConfiguration } from "./configuration";
 import { ProjectCreationFormValues } from "./types";
 import styles from "./ProjectCreationForm.module.scss";
 
+const NOTION_INTEGRATION_TOKEN_MASK = "************";
+
 const CreationForm = generateCreationForm<ProjectCreationFormValues>();
 
 interface ProjectCreationFormProps {
@@ -73,7 +75,7 @@ const getInitialValues = (
     notion: {
       isEnabled: isNotionIntegrationEnabled,
       databaseId: initialCommon?.notion?.databaseId || "",
-      token: isNotionIntegrationEnabled ? "************" : "",
+      token: isNotionIntegrationEnabled ? NOTION_INTEGRATION_TOKEN_MASK : "",
     },
   };
 };

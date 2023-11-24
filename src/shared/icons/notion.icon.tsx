@@ -7,8 +7,19 @@ interface NotionIconProps {
   height?: number;
 }
 
+const DEFAULT_PROPS = {
+  fill: "#B7BCD2",
+  width: 13,
+  height: 13,
+};
+
 const NotionIcon: FC<NotionIconProps> = (props) => {
-  const { className, fill = "#B7BCD2", width = 13, height = 13 } = props;
+  const {
+    className,
+    fill = DEFAULT_PROPS.fill,
+    width = DEFAULT_PROPS.width,
+    height = DEFAULT_PROPS.height,
+  } = props;
 
   return (
     <svg
