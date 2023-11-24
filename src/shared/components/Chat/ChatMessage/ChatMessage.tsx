@@ -309,7 +309,7 @@ export default function ChatMessage({
             {file ? (
               <>
                 <p className={styles.fileTitle}>
-                  {getFileName(file.title, FILE_NAME_LIMIT)}
+                  {getFileName(file.name ?? file.title, FILE_NAME_LIMIT)}
                 </p>
                 {file.size && (
                   <p className={styles.fileSize}>{convertBytes(file.size)}</p>

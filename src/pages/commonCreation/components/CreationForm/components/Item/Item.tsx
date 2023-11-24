@@ -6,6 +6,7 @@ import {
   TextField,
   UploadFiles,
   RolesArrayWrapper,
+  NotionIntegration,
 } from "@/shared/components/Form/Formik";
 import { CreationFormItemType } from "../../constants";
 import { CreationFormItem } from "../../types";
@@ -79,6 +80,8 @@ const Item: FC<ItemProps> = (props) => {
           disabled={disabled ?? item.props.disabled}
         />
       );
+    case CreationFormItemType.NotionIntegration:
+      return <NotionIntegration {...item.props} className={className} />;
     default:
       return null;
   }

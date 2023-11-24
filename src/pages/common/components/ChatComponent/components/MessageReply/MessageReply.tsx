@@ -62,7 +62,7 @@ const MessageReply: React.FC<MessageReplyProps> = ({ users }) => {
             {file && (
               <FilePreview
                 containerClassName={styles.fileContainer}
-                name={file.title}
+                name={file.name ?? file.title}
                 src={file.value}
                 isPreview
                 size={24}
@@ -77,7 +77,7 @@ const MessageReply: React.FC<MessageReplyProps> = ({ users }) => {
               {file ? (
                 <>
                   <p className={styles.text}>
-                    {getFileName(file.title, FILE_NAME_LIMIT)}
+                    {getFileName(file.name ?? file.title, FILE_NAME_LIMIT)}
                   </p>
                   {file.size && (
                     <p className={styles.fileSize}>{convertBytes(file.size)}</p>

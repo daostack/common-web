@@ -23,6 +23,7 @@ import {
   Common,
   CommonFeed,
   CommonMember,
+  CommonNotion,
   DirectParent,
   Governance,
   PredefinedTypes,
@@ -52,6 +53,7 @@ interface DiscussionFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  commonNotion?: CommonNotion;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   commonMember?: CommonMember | null;
   isProject: boolean;
@@ -79,6 +81,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       commonId,
       commonName,
       commonImage,
+      commonNotion,
       pinnedFeedItems,
       commonMember,
       isProject,
@@ -283,6 +286,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           <FeedCardContent
             description={isHome ? common?.description : discussion?.message}
             images={isHome ? common?.gallery : discussion?.images}
+            notion={discussion?.notion}
             onClick={handleOpenChat}
             onMouseEnter={() => {
               onHover(true);
@@ -334,6 +338,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
           ownerId={item.userId}
           discussionPredefinedType={discussion?.predefinedType}
+          notion={discussion?.notion && commonNotion}
           hasUnseenMention={
             isFeedItemUserMetadataFetched &&
             feedItemUserMetadata?.hasUnseenMention

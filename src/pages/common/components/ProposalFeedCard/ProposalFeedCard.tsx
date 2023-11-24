@@ -23,6 +23,7 @@ import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Common,
   CommonFeed,
+  CommonNotion,
   Governance,
   PredefinedTypes,
   ResolutionType,
@@ -68,6 +69,7 @@ interface ProposalFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  commonNotion?: CommonNotion;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject: boolean;
   isPinned: boolean;
@@ -91,6 +93,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       commonId,
       commonName,
       commonImage,
+      commonNotion,
       pinnedFeedItems,
       isProject,
       isPinned,
@@ -371,6 +374,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
               proposal.data.args.description,
               proposal.type,
             )}
+            notion={discussion?.notion}
             images={discussion?.images}
             onClick={handleOpenChat}
             onMouseEnter={() => {
@@ -459,6 +463,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           menuItems={menuItems}
           ownerId={item.userId}
           commonId={commonId}
+          notion={discussion?.notion && commonNotion}
           hasUnseenMention={
             isFeedItemUserMetadataFetched &&
             feedItemUserMetadata?.hasUnseenMention

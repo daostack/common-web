@@ -143,5 +143,26 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     });
   }
 
+  if (isProject) {
+    items.push({
+      type: CreationFormItemType.NotionIntegration,
+      props: {
+        name: "notion",
+        isEnabled: {
+          name: "notion.isEnabled",
+          label: "Notion database integration",
+        },
+        token: {
+          name: "notion.token",
+          label: "Notion's Internal Integration Secret",
+        },
+        databaseId: {
+          name: "notion.databaseId",
+          label: "Notion database ID",
+        },
+      },
+    });
+  }
+
   return items;
 };
