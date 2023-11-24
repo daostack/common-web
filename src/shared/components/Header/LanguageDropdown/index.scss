@@ -4,6 +4,7 @@
 .language-dropdown__menu-button {
   background-color: transparent;
   border: 0;
+  color: $black;
 
   @include big-phone {
     height: 4.125rem;
