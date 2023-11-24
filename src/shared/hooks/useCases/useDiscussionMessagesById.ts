@@ -268,7 +268,9 @@ export const useDiscussionMessagesById = ({
 
   useEffect(() => {
     (async () => {
-      setIsLoading(true);
+      if(discussionMessagesWithOwners?.length === 0) {
+        setIsLoading(true);
+      }
       const discussionMessages = [...(state.data || [])];
       const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
