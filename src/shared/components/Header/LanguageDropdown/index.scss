@@ -4,6 +4,7 @@
 .language-dropdown__menu-button {
   background-color: transparent;
   border: 0;
+  background-color: $white;
   color: $black;
 
   @include big-phone {
@@ -12,18 +13,29 @@
   }
 }
 
+.language-dropdown__menu {
+  border-color: $c-gray-5;
+}
+
 .language-dropdown__item--rtl {
   text-align: right;
   direction: rtl;
 }
 
 .language-dropdown__menu-item {
+  background-color: $white;
+  color: $black;
+  &:hover {
+    background-color: $c-pink-hover-feed-cards;
+  }
   @include big-phone {
     text-align: center;
   }
 }
 
 .language-dropdown__value {
+  background-color: $white;
+  color: $black;
   @include big-phone {
     flex: unset;
     font-size: $moderate;
