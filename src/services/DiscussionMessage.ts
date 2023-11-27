@@ -30,7 +30,10 @@ class DiscussionMessageService {
     discussionId: string,
     lastVisible: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage> | null,
     endDate: Date
-  ): Promise<{ data: DiscussionMessage[], lastVisibleSnapshot: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage> }> => {
+  ): Promise<{
+    data: DiscussionMessage[],
+    lastVisibleSnapshot: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>
+  }> => {
     const snapshot = await this.getDiscussionMessageCollection().where(
       "discussionId",
       "==",
@@ -51,7 +54,10 @@ class DiscussionMessageService {
       .get();
     const dataAfterEndDate = transformFirebaseDataList<DiscussionMessage>(snapshotOfItemsAfterEndDate);
 
-    return { data: [...data, ...dataAfterEndDate], lastVisibleSnapshot: snapshotOfItemsAfterEndDate.docs[dataAfterEndDate.length - 1] };
+    return {
+      data: [...data, ...dataAfterEndDate],
+      lastVisibleSnapshot: snapshotOfItemsAfterEndDate.docs[dataAfterEndDate.length - 1]
+    };
   }
 
   public getDiscussionMessagesByDiscussionId = (discussionId: string,

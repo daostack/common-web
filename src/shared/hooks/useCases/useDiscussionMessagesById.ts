@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useUpdateEffect } from "react-use";
 import classNames from 'classnames';
 import { isEqual, xor } from "lodash";
 import firebase from "@/shared/utils/firebase";
@@ -22,7 +23,6 @@ import {
 import { countTextEditorEmojiElements, parseStringToTextEditorValue } from "@/shared/ui-kit";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
 import { useRoutesContext } from "@/shared/contexts";
-import { useUpdateEffect } from "react-use";
 
 export type TextStyles = {
   mentionTextCurrentUser: string;
