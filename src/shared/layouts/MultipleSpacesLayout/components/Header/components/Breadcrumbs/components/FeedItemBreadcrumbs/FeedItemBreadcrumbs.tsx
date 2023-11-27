@@ -68,12 +68,14 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
           {(breadcrumbs.areItemsLoading || breadcrumbs.items.length > 0) && (
             <Separator />
           )}
-          <ActiveFeedBreadcrumbsItem
-            activeItemId={breadcrumbs.activeCommonId}
-            name={breadcrumbs.activeItem.name}
-            image={breadcrumbs.activeItem.image}
-            withMenu={itemsWithMenus}
-          />
+          {!isMobileView && (
+            <ActiveFeedBreadcrumbsItem
+              activeItemId={breadcrumbs.activeCommonId}
+              name={breadcrumbs.activeItem.name}
+              image={breadcrumbs.activeItem.image}
+              withMenu={itemsWithMenus}
+            />
+          )}
         </>
       )}
     </ul>

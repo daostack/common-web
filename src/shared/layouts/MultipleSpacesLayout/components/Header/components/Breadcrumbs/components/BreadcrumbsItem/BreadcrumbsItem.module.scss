@@ -1,4 +1,5 @@
 @import "../../../../../../../../../constants";
+@import "../../../../../../../../..//styles/sizes.scss";
 
 .button {
   --breadcrumbs-color: #{$c-gray-40};
@@ -25,5 +26,15 @@
   &:hover {
     --breadcrumbs-color: #{var(--primary-text)};
     --breadcrumbs-bg-color: #{$c-gray-20};
+  }
+}
+
+@include big-phone {
+  li {
+    &:first-child {
+      button {
+        padding-left: 0;
+      }
+    }
   }
 }
