@@ -3,6 +3,7 @@ import { deserializeFeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { convertObjectDatesToFirestoreTimestamps } from "@/shared/utils";
 import { getFeedLayoutItemDateForSorting } from "@/store/states/inbox/utils";
 import { CommonLayoutState } from "./states/commonLayout";
+import { CacheState } from "./states/cache";
 import {
   InboxItems,
   InboxState,
@@ -82,4 +83,13 @@ export const lastCommonFromFeedTransform = createTransform(
   },
   (outboundState: CommonLayoutState) => outboundState,
   { whitelist: ["commonLayout"] },
+);
+
+export const cacheTransform = createTransform(
+  (inboundState: CacheState) => inboundState,
+  (outboundState: CacheState) => ({
+    ...outboundState,
+    discussionMessagesStates: {}
+  }),
+  { whitelist: ["cache"] },
 );
