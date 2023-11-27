@@ -4,7 +4,8 @@ import { useFormikContext } from "formik";
 import { ProposalsTypes } from "@/shared/constants";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
-import { SelectorStyles } from "./selectorStyles";
+import useThemeColor from "@/shared/hooks/useThemeColor";
+import { selectorStyles } from "./selectorStyles";
 import styles from "./ProposalTypeSelect.module.scss";
 
 interface ProposalTypeSelectProps {
@@ -37,7 +38,9 @@ const getProposalOptions = (commonBalance: number) => {
 
 const ProposalTypeSelect = ({ commonBalance }: ProposalTypeSelectProps) => {
   const { values, setFieldValue, handleBlur, touched, errors } =
-    useFormikContext<NewProposalCreationFormValues>();
+  useFormikContext<NewProposalCreationFormValues>();
+  
+  const { getThemeColor } = useThemeColor();
   const hasError = Boolean(touched.proposalType && errors.proposalType);
 
   return (
@@ -52,7 +55,7 @@ const ProposalTypeSelect = ({ commonBalance }: ProposalTypeSelectProps) => {
         }}
         onBlur={handleBlur("proposalType")}
         hideSelectedOptions={false}
-        styles={SelectorStyles(hasError)}
+        styles={selectorStyles(hasError, getThemeColor)}
         components={{
           DropdownIndicator,
         }}
