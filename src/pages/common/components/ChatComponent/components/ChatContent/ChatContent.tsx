@@ -11,21 +11,26 @@ import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { ChatMessage, InternalLinkData } from "@/shared/components";
+import { DiscussionMessageService } from "@/services";
+import {
+  ChatMessage,
+  InternalLinkData,
+  DMChatMessage,
+} from "@/shared/components";
 import {
   ChatType,
-  LOADER_APPEARANCE_DELAY,
   QueryParamKey,
+  LOADER_APPEARANCE_DELAY,
 } from "@/shared/constants";
-import { useForceUpdate, useQueryParams } from "@/shared/hooks";
+import { useQueryParams } from "@/shared/hooks";
 import {
   checkIsUserDiscussionMessage,
   CommonFeedObjectUserUnique,
   CommonMember,
   DirectParent,
-  DiscussionMessage,
   User,
   Circles,
+  DiscussionMessageWithParsedText,
 } from "@/shared/models";
 import { Loader } from "@/shared/ui-kit";
 import { formatDate } from "@/shared/utils";
@@ -42,7 +47,8 @@ interface ChatContentInterface {
   commonMember: CommonMember | null;
   governanceCircles?: Circles;
   chatWrapperId: string;
-  messages: Record<number, DiscussionMessage[]>;
+  messages: Record<number, DiscussionMessageWithParsedText[]>;
+  discussionMessages: DiscussionMessageWithParsedText[] | null;
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
@@ -56,6 +62,8 @@ interface ChatContentInterface {
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
   isEmpty?: boolean;
+  isChatChannel: boolean;
+  fetchReplied: (messageId: string, endDate: Date) => Promise<void>;
 }
 
 const isToday = (someDate: Date) => {
@@ -76,7 +84,6 @@ const ChatContent: ForwardRefRenderFunction<
     commonMember,
     governanceCircles,
     chatWrapperId,
-    messages,
     dateList,
     lastSeenItem,
     hasPermissionToHide,
@@ -90,6 +97,10 @@ const ChatContent: ForwardRefRenderFunction<
     onFeedItemClick,
     onInternalLinkClick,
     isEmpty,
+    messages,
+    isChatChannel,
+    fetchReplied,
+    discussionMessages,
   },
   chatContentRef,
 ) => {
@@ -97,13 +108,6 @@ const ChatContent: ForwardRefRenderFunction<
   const userId = user?.uid;
   const queryParams = useQueryParams();
   const messageIdParam = queryParams[QueryParamKey.Message];
-  const forceUpdate = useForceUpdate();
-
-  useEffect(() => {
-    if (messages) {
-      forceUpdate();
-    }
-  }, [messages]);
 
   const [highlightedMessageId, setHighlightedMessageId] = useState(
     () => (typeof messageIdParam === "string" && messageIdParam) || null,
@@ -154,7 +158,25 @@ const ChatContent: ForwardRefRenderFunction<
     setScrolledToMessage(true);
   }, [chatWrapperId, highlightedMessageId, dateList.length, scrolledToMessage]);
 
-  function scrollToRepliedMessage(messageId: string) {
+  const [shouldScrollToElementId, setShouldScrollToElementId] =
+    useState<string>();
+
+  useEffect(() => {
+    if (
+      shouldScrollToElementId &&
+      discussionMessages?.find((item) => item.id === shouldScrollToElementId)
+    ) {
+      setHighlightedMessageId(shouldScrollToElementId);
+      setShouldScrollToElementId("");
+    }
+  }, [shouldScrollToElementId, discussionMessages]);
+
+  async function scrollToRepliedMessage(messageId: string, endDate: Date) {
+    await fetchReplied(messageId, endDate);
+    setShouldScrollToElementId(messageId);
+  }
+
+  function scrollToRepliedMessageDMChat(messageId: string) {
     scroller.scrollTo(messageId, {
       containerId: chatWrapperId,
       delay: 0,
@@ -167,7 +189,20 @@ const ChatContent: ForwardRefRenderFunction<
 
   useEffect(() => {
     if (typeof messageIdParam === "string") {
-      setHighlightedMessageId(messageIdParam);
+      (async () => {
+        try {
+          const messageData =
+            await DiscussionMessageService.getDiscussionMessageById(
+              messageIdParam,
+            );
+          scrollToRepliedMessage(
+            messageData.id,
+            messageData.createdAt.toDate(),
+          );
+        } catch (err) {
+          setShouldScrollToElementId("");
+        }
+      })();
     }
   }, [messageIdParam]);
 
@@ -218,7 +253,26 @@ const ChatContent: ForwardRefRenderFunction<
               const isMyMessageNext =
                 checkIsUserDiscussionMessage(nextMessage) &&
                 nextMessage.ownerId === userId;
-              const messageEl = (
+              const messageEl = isChatChannel ? (
+                <DMChatMessage
+                  key={message.id}
+                  user={user}
+                  discussionMessage={message}
+                  chatType={type}
+                  scrollToRepliedMessage={scrollToRepliedMessageDMChat}
+                  highlighted={message.id === highlightedMessageId}
+                  hasPermissionToHide={hasPermissionToHide}
+                  users={users}
+                  feedItemId={feedItemId}
+                  commonMember={commonMember}
+                  governanceCircles={governanceCircles}
+                  onMessageDelete={onMessageDelete}
+                  directParent={directParent}
+                  onUserClick={onUserClick}
+                  onFeedItemClick={onFeedItemClick}
+                  onInternalLinkClick={onInternalLinkClick}
+                />
+              ) : (
                 <ChatMessage
                   key={message.id}
                   user={user}

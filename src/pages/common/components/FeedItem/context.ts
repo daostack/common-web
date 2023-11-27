@@ -3,6 +3,7 @@ import { ContextMenuItem } from "@/shared/interfaces";
 import {
   CommonFeed,
   CommonFeedType,
+  CommonNotion,
   Discussion,
   PredefinedTypes,
 } from "@/shared/models";
@@ -45,6 +46,7 @@ export interface FeedItemBaseContentProps {
   shouldHideBottomContent?: boolean;
   dmUserId?: string;
   hasUnseenMention?: boolean;
+  notion?: CommonNotion;
 }
 
 export interface GetLastMessageOptions {

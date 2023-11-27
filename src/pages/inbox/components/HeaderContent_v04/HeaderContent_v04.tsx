@@ -32,7 +32,7 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
         </div>
       </div>
       <div className={styles.actionButtonsWrapper}>
-        <InboxFilterButton />
+        {/* <InboxFilterButton /> */}
         <DirectMessageButton
           className={styles.directMessageButton}
           isMobileVersion={isMobileVersion}

@@ -41,6 +41,7 @@ const LanguageDropdown: FC<LanguageDropdownProps> = (props) => {
         menuButton: "language-dropdown__menu-button",
         menuItem: "language-dropdown__menu-item",
         value: "language-dropdown__value",
+        menu: "language-dropdown__menu",
       }}
     />
   );
