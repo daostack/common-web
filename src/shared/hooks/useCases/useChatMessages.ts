@@ -52,6 +52,7 @@ const addParentMessageToMessages = (
         text: parentMessage.text,
         images: parentMessage.images,
         files: parentMessage.files,
+        createdAt: parentMessage.createdAt
       },
     };
   });
