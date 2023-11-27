@@ -8,7 +8,6 @@
   align-items: center;
   text-align: center;
   font-family: PoppinsSans, sans-serif;
-  color: $secondary-blue;
 
   .phone-auth__recaptcha-container {
     display: none;
@@ -78,10 +77,10 @@
   padding: 2rem 0;
 }
 
-.phone-auth__submit-button {
-  max-width: 20.5rem;
+// .phone-auth__submit-button {
+//   max-width: 20.5rem;
 
-  @include big-phone {
-    max-width: unset;
-  }
-}
+//   @include big-phone {
+//     max-width: unset;
+//   }
+// }

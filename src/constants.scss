@@ -107,6 +107,7 @@ $sticky-info-shadow: rgba(0, 0, 0, 0.02);
 $carousel-overlay-shadow: rgba(0, 26, 54, 0.4);
 $shadow-1: rgba(79, 92, 105, 0.1);
 $date-picker-arrow-color: #aeaeae;
+$transparent: rgba(255, 255, 255, 0);
 
 /* colors v2 */
 $c-primary-100: #f4f6ff;
@@ -119,7 +120,7 @@ $c-neutrals-100-hover: #e1e1e1;
 $c-neutrals-100-shadow: 4px 4px 0px #e2e2e2;
 $c-neutrals-200: #d5d5e4;
 $c-neutrals-300: #979bba;
-$c-neutrals-600: #001a36;
+$c-neutrals-600: var(--primary-text);
 $c-notification-100: #f9faff;
 $c-shades-white: #ffffff;
 $c-shades-black: #000000;
@@ -143,8 +144,8 @@ $c-pink-active-feed-cards-light: #fcf4ff;
 $c-pink-active-feed-cards: #a75a93;
 $c-pink-hover-feed-cards: #fff9fd;
 $c-gray-5: #f4f5f5;
-$c-gray-10: #eef0f4;
-$c-gray-20: #dcdee7;
+$c-gray-10: var(--gentle-stroke);
+$c-gray-20: var(--gentle-stroke);
 $c-gray-30: #b7bcd2;
 $c-gray-40: #8d91a9;
 $c-gray-50: #7a819c;

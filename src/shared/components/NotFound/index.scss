@@ -7,7 +7,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: $secondary-blue;
+  color: var(--primary-text);
 
   .page-not-found__message {
     margin: 0 0 0 1.5rem;

@@ -41,7 +41,7 @@
   position: absolute;
   bottom: 2.125rem;
   z-index: 2;
-  color: $black;
+  color: var(--primary-text);
 
   &:disabled {
     color: $gray;

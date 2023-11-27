@@ -5,11 +5,13 @@ import {
   CommonFeedObjectUserUnique,
   Discussion,
   DiscussionMessage,
+  DiscussionMessageWithParsedText,
   Governance,
   Proposal,
   User,
 } from "@/shared/models";
 import { CacheActionType } from "./constants";
+import { FeedState } from "./types";
 
 export const getUserStateById = createAsyncAction(
   CacheActionType.GET_USER_STATE_BY_ID,
@@ -88,26 +90,26 @@ export const updateDiscussionStateById = createStandardAction(
   state: LoadingState<Discussion | null>;
 }>();
 
-export const updateDiscussionMessagesStateByDiscussionId = createStandardAction(
-  CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_ID,
-)<{
-  discussionId: string;
-  state: LoadingState<DiscussionMessage[] | null>;
-}>();
-
-export const addDiscussionMessageByDiscussionId = createStandardAction(
-  CacheActionType.ADD_DISCUSSION_MESSAGE_BY_DISCUSSION_ID,
-)<{
-  discussionId: string;
-  discussionMessage: DiscussionMessage;
-}>();
-
 export const updateDiscussionMessageWithActualId = createStandardAction(
   CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_MESSAGES_ACTUAL_ID,
 )<{
   discussionId: string;
   pendingMessageId: string;
   actualId: string;
+}>();
+
+export const updateDiscussionMessagesStateByDiscussionId = createStandardAction(
+  CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_ID,
+)<{
+  discussionId: string;
+  state: LoadingState<DiscussionMessageWithParsedText[] | null>;
+}>();
+
+export const addDiscussionMessageByDiscussionId = createStandardAction(
+  CacheActionType.ADD_DISCUSSION_MESSAGE_BY_DISCUSSION_ID,
+)<{
+  discussionId: string;
+  discussionMessage: DiscussionMessageWithParsedText;
 }>();
 
 export const getProposalStateById = createAsyncAction(
@@ -130,6 +132,21 @@ export const updateProposalStateById = createStandardAction(
   proposalId: string;
   state: LoadingState<Proposal | null>;
 }>();
+
+export const copyFeedStateByCommonId = createStandardAction(
+  CacheActionType.COPY_FEED_STATE_BY_COMMON_ID,
+)<string>();
+
+export const updateFeedStateByCommonId = createStandardAction(
+  CacheActionType.UPDATE_FEED_STATE_BY_COMMON_ID,
+)<{
+  commonId: string;
+  state: FeedState;
+}>();
+
+export const resetFeedStates = createStandardAction(
+  CacheActionType.RESET_FEED_STATES,
+)();
 
 export const getFeedItemUserMetadata = createAsyncAction(
   CacheActionType.GET_FEED_ITEM_USER_METADATA,

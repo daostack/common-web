@@ -14,7 +14,7 @@
 .dateTitle {
   padding: 0.0625rem 0.1875rem;
   border-radius: 0.25rem;
-  background-color: $c-pink-hover-feed-cards;
+  background-color: var(--secondary-background);
   font-size: $xxsmall;
   text-align: center;
   color: $c-pink-primary;
@@ -26,12 +26,12 @@
 .noMessagesText {
   align-self: flex-start;
   max-width: 17.5rem;
-  margin: 3.375rem 0 0;
   padding: 0.5rem 1rem;
   font-size: $xsmall;
   line-height: 143%;
   text-align: left;
-  background-color: $c-light-gray;
+  background-color: var(--secondary-background);
+  color: var(--primary-text);
   border-radius: 0.9375rem;
   box-sizing: border-box;
 }

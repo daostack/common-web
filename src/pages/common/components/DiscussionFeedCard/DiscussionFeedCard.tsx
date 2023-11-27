@@ -12,9 +12,9 @@ import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
 import { EntityTypes } from "@/shared/constants";
 import { useModal, useNotification } from "@/shared/hooks";
 import {
+  FeedItemFollowState,
   useCommon,
   useDiscussionById,
-  useFeedItemFollow,
   useFeedItemUserMetadata,
   useUserById,
 } from "@/shared/hooks/useCases";
@@ -23,6 +23,7 @@ import {
   Common,
   CommonFeed,
   CommonMember,
+  CommonNotion,
   DirectParent,
   Governance,
   PredefinedTypes,
@@ -52,6 +53,7 @@ interface DiscussionFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  commonNotion?: CommonNotion;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   commonMember?: CommonMember | null;
   isProject: boolean;
@@ -63,6 +65,7 @@ interface DiscussionFeedCardProps {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   directParent?: DirectParent | null;
+  feedItemFollow: FeedItemFollowState;
   onUserSelect?: (userId: string, commonId?: string) => void;
 }
 
@@ -78,6 +81,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       commonId,
       commonName,
       commonImage,
+      commonNotion,
       pinnedFeedItems,
       commonMember,
       isProject,
@@ -89,6 +93,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       getNonAllowedItems,
       onActiveItemDataChange,
       directParent,
+      feedItemFollow,
       onUserSelect,
     } = props;
     const {
@@ -124,10 +129,6 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
     const { data: common } = useCommon(isHome ? commonId : "");
-    const feedItemFollow = useFeedItemFollow(
-      { feedItemId: item.id, commonId },
-      { withSubscription: true },
-    );
     const menuItems = useMenuItems(
       {
         commonId,
@@ -168,6 +169,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           lastSeenItem: feedItemUserMetadata?.lastSeen,
           lastSeenAt: feedItemUserMetadata?.lastSeenAt,
           seenOnce: feedItemUserMetadata?.seenOnce,
+          hasUnseenMention: feedItemUserMetadata?.hasUnseenMention,
         });
       }
     }, [
@@ -177,6 +179,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       feedItemUserMetadata?.lastSeen,
       feedItemUserMetadata?.lastSeenAt,
       feedItemUserMetadata?.seenOnce,
+      feedItemUserMetadata?.hasUnseenMention,
     ]);
 
     const onDiscussionDelete = useCallback(async () => {
@@ -250,7 +253,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       }
 
       const circleVisibility = governanceCircles
-        ? getVisibilityString(governanceCircles, discussion?.circleVisibility)
+        ? getVisibilityString(governanceCircles, item?.circleVisibility)
         : undefined;
 
       return (
@@ -283,6 +286,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           <FeedCardContent
             description={isHome ? common?.description : discussion?.message}
             images={isHome ? common?.gallery : discussion?.images}
+            notion={discussion?.notion}
             onClick={handleOpenChat}
             onMouseEnter={() => {
               onHover(true);
@@ -321,6 +325,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           isPreviewMode={isPreviewMode}
           isPinned={isPinned}
           commonName={commonName}
+          commonId={commonId}
           image={commonImage}
           imageAlt={`${commonName}'s image`}
           isProject={isProject}
@@ -333,6 +338,11 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
           ownerId={item.userId}
           discussionPredefinedType={discussion?.predefinedType}
+          notion={discussion?.notion && commonNotion}
+          hasUnseenMention={
+            isFeedItemUserMetadataFetched &&
+            feedItemUserMetadata?.hasUnseenMention
+          }
         >
           {renderContent()}
         </FeedCard>

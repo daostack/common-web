@@ -20,7 +20,7 @@ export default function ClosePrompt({ onClose, onContinue }: IProps) {
           <Button onClick={onContinue} variant={ButtonVariant.PrimaryPink}>
             Continue editing
           </Button>
-          <Button onClick={onClose} variant={ButtonVariant.Warning}>
+          <Button onClick={onClose} variant={ButtonVariant.OutlineDarkPink}>
             Leave without saving
           </Button>
         </div>

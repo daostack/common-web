@@ -17,7 +17,6 @@ import {
   SubCollections,
 } from "@/shared/models";
 import {
-  convertObjectDatesToFirestoreTimestamps,
   emptyFunction,
   firestoreDataConverter,
   transformFirebaseDataList,
@@ -30,16 +29,25 @@ const converter = firestoreDataConverter<Common>();
 const commonMemberConverter = firestoreDataConverter<CommonMember>();
 
 class CommonService {
-  public getCommonById = async (commonId: string): Promise<Common | null> => {
-    const common = await firebase
+  public getCommonById = async (
+    commonId: string,
+    cached = false,
+  ): Promise<Common | null> => {
+    const snapshot = await firebase
       .firestore()
       .collection(Collection.Daos)
       .where("id", "==", commonId)
       .where("state", "==", CommonState.ACTIVE)
-      .get();
-    const data = transformFirebaseDataList<Common>(common);
+      .withConverter(converter)
+      .get({ source: cached ? "cache" : "default" });
+    const commons = snapshot.docs.map((doc) => doc.data());
+    const common = commons[0] || null;
 
-    return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
+    if (cached && !common) {
+      return this.getCommonById(commonId);
+    }
+
+    return common;
   };
 
   public getCachedCommonById = async (
@@ -91,6 +99,26 @@ class CommonService {
     return results
       .map((result) => transformFirebaseDataList<Common>(result))
       .reduce((acc, items) => [...acc, ...items], []);
+  };
+
+  public getCommonsByDirectParentId = async (
+    parentCommonId: string,
+    cached = false,
+  ): Promise<Common[]> => {
+    const snapshot = await firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE)
+      .where("directParent.commonId", "==", parentCommonId)
+      .withConverter(converter)
+      .get({ source: cached ? "cache" : "default" });
+    const commons = snapshot.docs.map((doc) => doc.data());
+
+    if (cached && commons.length === 0) {
+      return this.getCommonsByDirectParentId(parentCommonId);
+    }
+
+    return commons;
   };
 
   public getCommonsByDirectParentIds = async (
@@ -159,6 +187,23 @@ class CommonService {
         .where("userId", "==", userId)
         .get()
     ).docs.map((ref) => ref.ref.path.split("/")[1]);
+
+  public subscribeToUserCommonIds = (
+    userId: string,
+    callback: (data: string[]) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collectionGroup(SubCollections.Members)
+      .where("userId", "==", userId);
+
+    return query.onSnapshot((snapshot) => {
+      const userCommonIds = snapshot.docs.map(
+        (ref) => ref.ref.path.split("/")[1],
+      );
+      callback(userCommonIds);
+    });
+  };
 
   public getAllUserCommonMemberInfo = async (
     userId: string,
@@ -232,10 +277,11 @@ class CommonService {
   // Fetch all parent commons. Order: from root parent common to lowest ones
   public getAllParentCommonsForCommon = async (
     commonToCheck: Pick<Common, "directParent"> | string,
+    cached = false,
   ): Promise<Common[]> => {
     const common =
       typeof commonToCheck === "string"
-        ? await this.getCommonById(commonToCheck)
+        ? await this.getCommonById(commonToCheck, cached)
         : commonToCheck;
 
     if (!common || common.directParent === null) {
@@ -246,7 +292,7 @@ class CommonService {
     let nextCommonId = common.directParent.commonId;
 
     while (nextCommonId) {
-      const common = await this.getCommonById(nextCommonId);
+      const common = await this.getCommonById(nextCommonId, cached);
 
       if (common) {
         finalCommons = [common, ...finalCommons];

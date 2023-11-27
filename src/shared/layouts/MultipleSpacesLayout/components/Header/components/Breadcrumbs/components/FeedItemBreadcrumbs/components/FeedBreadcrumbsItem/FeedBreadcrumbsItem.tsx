@@ -52,9 +52,16 @@ const FeedBreadcrumbsItem: FC<FeedBreadcrumbsItemProps> = (props) => {
     () =>
       baseItems.length === 0
         ? [activeItem]
-        : [...baseItems].sort((prevItem) =>
-            prevItem.commonId === activeItem.commonId ? -1 : 1,
-          ),
+        : [...baseItems].sort((prevItem, nextItem) => {
+            if (prevItem.commonId === activeItem.commonId) {
+              return -1;
+            }
+            if (nextItem.commonId === activeItem.commonId) {
+              return 1;
+            }
+
+            return 0;
+          }),
     [baseItems, activeItem],
   );
 

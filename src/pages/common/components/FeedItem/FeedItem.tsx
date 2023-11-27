@@ -1,4 +1,5 @@
-import React, { forwardRef, memo } from "react";
+import React, { forwardRef, memo, useEffect } from "react";
+import { useFeedItemFollow } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Circles,
@@ -7,6 +8,7 @@ import {
   CommonFeed,
   CommonFeedType,
   CommonMember,
+  CommonNotion,
   DirectParent,
 } from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
@@ -22,6 +24,7 @@ interface FeedItemProps {
   commonName: string;
   commonMember?: (CommonMember & CirclesPermissions) | null;
   commonImage: string;
+  commonNotion?: CommonNotion;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject?: boolean;
   isPinned?: boolean;
@@ -47,6 +50,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     commonId,
     commonName,
     commonImage,
+    commonNotion,
     pinnedFeedItems,
     commonMember,
     isProject = false,
@@ -64,9 +68,30 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     onActiveItemDataChange,
     directParent,
   } = props;
-  const { onFeedItemUpdate, getLastMessage, getNonAllowedItems, onUserSelect } =
-    useFeedItemContext();
+  const {
+    onFeedItemUpdate,
+    onFeedItemUnfollowed,
+    getLastMessage,
+    getNonAllowedItems,
+    onUserSelect,
+  } = useFeedItemContext();
+  const feedItemFollow = useFeedItemFollow(
+    { feedItemId: item.id, commonId },
+    { withSubscription: true },
+  );
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
+
+  useEffect(() => {
+    if (
+      feedItemFollow.isUserFeedItemFollowDataFetched &&
+      !feedItemFollow.userFeedItemFollowData
+    ) {
+      onFeedItemUnfollowed?.(item.id);
+    }
+  }, [
+    feedItemFollow.isUserFeedItemFollowDataFetched,
+    feedItemFollow.userFeedItemFollowData,
+  ]);
 
   if (
     shouldCheckItemVisibility &&
@@ -90,6 +115,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     commonId,
     commonName,
     commonImage,
+    commonNotion,
     pinnedFeedItems,
     isActive,
     isExpanded,
@@ -103,6 +129,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     isMobileVersion,
     onActiveItemDataChange: handleActiveItemDataChange,
     directParent,
+    feedItemFollow,
     onUserSelect,
   };
 

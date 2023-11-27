@@ -14,10 +14,10 @@ const MenuButton: ForwardRefRenderFunction<
   HTMLButtonElement,
   MenuButtonProps
 > = (props, ref) => {
-  const { onClick, variant = ButtonVariant.PrimaryGray } = props;
+  const { onClick } = props;
 
   return (
-    <ButtonIcon ref={ref} variant={variant} onClick={onClick}>
+    <ButtonIcon ref={ref} onClick={onClick} className={styles.buttonIcon}>
       <MenuIcon className={styles.icon} variant={Orientation.Vertical} />
     </ButtonIcon>
   );

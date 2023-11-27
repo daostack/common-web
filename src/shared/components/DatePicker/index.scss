@@ -9,7 +9,7 @@ $custom-dropdown-vertical-padding: 0.875rem;
   flex-direction: column;
   font-family: PoppinsSans, sans-serif;
   font-weight: normal;
-  color: $secondary-blue;
+  color: var(--primary-text);
 
   .custom-date-picker__label {
     margin-bottom: 0.625rem;
@@ -70,8 +70,9 @@ $custom-dropdown-vertical-padding: 0.875rem;
     padding: $custom-dropdown-vertical-padding 1.875rem
       $custom-dropdown-vertical-padding 0.75rem;
     border-radius: 3px;
-    border: 1px solid $light-gray-1;
-    background-color: $white;
+    border: 1px solid var(--gentle-stroke);
+    background-color: var(--secondary-background);
+    color: var(--primary-text);
     font-family: inherit;
     font-size: $xsmall;
     line-height: 1.42;
@@ -88,5 +89,6 @@ $custom-dropdown-vertical-padding: 0.875rem;
     position: absolute;
     top: 1rem;
     right: 0.75rem;
+    color: var(--primary-text);
   }
 }

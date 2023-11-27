@@ -2,11 +2,10 @@ import React, { FC } from "react";
 import { useHistory } from "react-router";
 import { useMenuItems } from "@/pages/common/components/CommonTabPanels/components/FeedTab/components/NewStreamButton";
 import { useRoutesContext } from "@/shared/contexts";
-import { BoldPlusIcon, PlusIcon } from "@/shared/icons";
+import { PlusIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import {
   ButtonIcon,
-  ButtonVariant,
   DesktopMenu,
   MobileMenu,
 } from "@/shared/ui-kit";

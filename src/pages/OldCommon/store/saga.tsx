@@ -353,6 +353,7 @@ export function* loadDiscussionDetail(
               ...(checkIsUserDiscussionMessage(parentMessage) && {
                 ownerId: parentMessage.ownerId,
               }),
+              createdAt: parentMessage.createdAt,
             }
           : null;
         return newDiscussionMessage;
@@ -472,6 +473,7 @@ export function* loadProposalDetail(
             ...(checkIsUserDiscussionMessage(parentMessage) && {
               ownerId: parentMessage.ownerId,
             }),
+            createdAt: parentMessage.createdAt,
           }
         : null;
       return newDiscussionMessage;

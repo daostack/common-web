@@ -11,7 +11,7 @@ import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
-import { CommonFeedType, PredefinedTypes } from "@/shared/models";
+import { CommonFeedType, CommonNotion, PredefinedTypes } from "@/shared/models";
 import { Loader, TextEditorValue } from "@/shared/ui-kit";
 import { CommonCard } from "../CommonCard";
 import { FeedCardRef } from "./types";
@@ -31,6 +31,7 @@ type FeedCardProps = PropsWithChildren<{
   lastMessage?: TextEditorValue;
   isPreviewMode?: boolean;
   commonName?: string;
+  commonId?: string;
   image?: string;
   imageAlt?: string;
   isProject?: boolean;
@@ -45,6 +46,8 @@ type FeedCardProps = PropsWithChildren<{
   discussionPredefinedType?: PredefinedTypes;
   hasFiles?: boolean;
   hasImages?: boolean;
+  hasUnseenMention?: boolean;
+  notion?: CommonNotion;
 }>;
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -69,6 +72,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     lastMessage,
     isPreviewMode = true,
     commonName,
+    commonId,
     image,
     imageAlt,
     isProject,
@@ -79,10 +83,12 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     menuItems,
     seenOnce,
     seen,
+    hasUnseenMention,
     ownerId,
     discussionPredefinedType,
     hasImages,
     hasFiles,
+    notion,
   } = props;
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTabletView = useIsTabletView();
@@ -192,6 +198,7 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
             lastMessage: !isLoading ? lastMessage : undefined,
             menuItems,
             commonName,
+            commonId,
             image,
             imageAlt,
             isProject,
@@ -204,6 +211,8 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
             discussionPredefinedType,
             hasFiles,
             hasImages,
+            hasUnseenMention,
+            notion,
           })}
         </div>
       )}

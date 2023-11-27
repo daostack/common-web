@@ -12,8 +12,6 @@ import { isRequestError } from "@/services/Api";
 import { BANKS_OPTIONS } from "@/shared/assets/banks";
 import { countryList } from "@/shared/assets/countries";
 import {
-  Button,
-  ButtonVariant,
   DatePicker,
   DropdownOption,
   FilePreview,
@@ -33,6 +31,7 @@ import {
 } from "@/shared/interfaces/api/payMe";
 import { BankAccountDetails, DateFormat, User } from "@/shared/models";
 import { Gender, GENDER_OPTIONS } from "@/shared/models/Gender";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { formatDate } from "@/shared/utils";
 import {
   getFileNameForUploading,
@@ -593,6 +592,7 @@ export const AddBankDetails = (props: IProps) => {
                     onClick={handleSubmitForm}
                     disabled={isSubmitButtonDisabled}
                     className="save-button"
+                    variant={ButtonVariant.PrimaryPink}
                   >
                     Save
                   </Button>
@@ -600,7 +600,7 @@ export const AddBankDetails = (props: IProps) => {
                     <Button
                       onClick={onCancel}
                       disabled={isSubmitButtonDisabled}
-                      variant={ButtonVariant.Secondary}
+                      variant={ButtonVariant.OutlineDarkPink}
                     >
                       Cancel
                     </Button>

@@ -39,6 +39,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
         commonId={common.id}
         commonName={common.name}
         commonImage={common.image}
+        notion={common.notion}
         isProject={checkIsProject(common)}
         memberCount={common.memberCount}
         showFollowIcon={showFollowIcon}

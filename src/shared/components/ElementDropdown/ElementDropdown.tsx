@@ -340,7 +340,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
             menuButton: classNames(styles?.menuButton, {
               "element-dropdown__menu-button--transparent": transparent,
             }),
-            menu: "element-dropdown__menu",
+            menu: classNames("element-dropdown__menu", styles?.menu),
             menuItem: "element-dropdown__menu-item",
           }}
         />

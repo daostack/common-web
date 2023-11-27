@@ -1,12 +1,16 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
+import { NotionIcon } from "@/shared/icons";
 import {
   checkIsTextEditorValueEmpty,
   ContextMenu,
   ContextMenuRef,
   TextEditorWithReinitialization as TextEditor,
   TimeAgo,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@/shared/ui-kit";
 import { FeedItemBaseContentProps } from "../../../FeedItem";
 import { FeedCardTags } from "../FeedCardTags";
@@ -35,6 +39,8 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     isFollowing,
     isLoading = false,
     shouldHideBottomContent = false,
+    hasUnseenMention,
+    notion,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -108,15 +114,28 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       {renderLeftContent?.()}
       <div className={styles.content}>
         <div className={styles.topContent}>
-          <p
+          <div
             className={classNames(
               styles.text,
               styles.title,
               titleWrapperClassName,
             )}
           >
-            {isLoading || !title ? "Loading..." : title}
-          </p>
+            <span>{isLoading || !title ? "Loading..." : title}</span>
+            {Boolean(notion) && (
+              <Tooltip placement="top-start">
+                <TooltipTrigger asChild>
+                  <div className={styles.tooltipTriggerContainer}>
+                    <NotionIcon />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className={styles.tooltipContent}>
+                  <span>Notion sync</span>
+                  <span>Database: {notion?.title}</span>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
           <p
             className={classNames(styles.text, styles.lastActivity, {
               [styles.lastActivityActive]:
@@ -154,6 +173,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
                 isActive={isActive}
                 isPinned={isPinned}
                 isFollowing={isFollowing}
+                hasUnseenMention={hasUnseenMention}
               />
             </div>
           </div>

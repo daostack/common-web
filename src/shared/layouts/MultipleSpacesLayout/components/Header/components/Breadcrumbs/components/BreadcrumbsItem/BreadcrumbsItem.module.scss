@@ -23,7 +23,7 @@
   box-sizing: border-box;
 
   &:hover {
-    --breadcrumbs-color: #{$c-shades-black};
+    --breadcrumbs-color: #{var(--primary-text)};
     --breadcrumbs-bg-color: #{$c-gray-20};
   }
 }

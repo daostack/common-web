@@ -36,6 +36,7 @@ export interface ParentDiscussionMessage {
   moderation?: Moderation;
   images?: Link[];
   files?: Link[];
+  createdAt: firebase.firestore.Timestamp;
 }
 
 interface BaseDiscussionMessage extends BaseEntity {
@@ -114,6 +115,12 @@ export type SystemDiscussionMessage =
   | CommonFeedItemCreatedSystemMessage;
 
 export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
+
+export type Text = string | JSX.Element;
+
+export type DiscussionMessageWithParsedText = DiscussionMessage & {
+  parsedText: Text[];
+};
 
 export enum PendingMessageStatus {
   Sending,

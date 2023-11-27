@@ -63,7 +63,6 @@ import {
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
 import {
   addQueryParam,
-  checkIsProject,
   deleteQueryParam,
   getParamsFromOneOfRoutes,
   getUserName,
@@ -79,6 +78,7 @@ import {
   MobileProfile,
   SplitView,
 } from "./components";
+import { BATCHES_AMOUNT_TO_PRELOAD } from "./constants";
 import { useUserForProfile } from "./hooks";
 import {
   checkShouldAutoOpenPreview,
@@ -114,10 +114,12 @@ interface FeedLayoutProps {
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;
   shouldHideContent?: boolean;
+  batchNumber?: number;
   onFetchNext: (feedItemId?: string) => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
+  onFeedItemUnfollowed?: (itemId: string) => void;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   sharedFeedItemId?: string | null;
   emptyText?: string;
@@ -153,10 +155,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     topFeedItems = [],
     loading,
     shouldHideContent = false,
+    batchNumber,
     onFetchNext,
     renderFeedItemBaseContent,
     renderChatChannelItem,
     onFeedItemUpdate,
+    onFeedItemUnfollowed,
     getLastMessage,
     sharedFeedItemId,
     emptyText,
@@ -324,6 +328,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId,
       renderFeedItemBaseContent,
       onFeedItemUpdate,
+      onFeedItemUnfollowed,
       getLastMessage,
       getNonAllowedItems,
       onUserSelect: handleUserWithCommonClick,
@@ -331,6 +336,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [
       renderFeedItemBaseContent,
       onFeedItemUpdate,
+      onFeedItemUnfollowed,
       getLastMessage,
       getNonAllowedItems,
       handleUserWithCommonClick,
@@ -603,6 +609,22 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     }
   }, [isTabletView, shouldAutoExpandItem, activeFeedItemId]);
 
+  useEffect(() => {
+    if (
+      batchNumber &&
+      batchNumber >= 1 &&
+      batchNumber <= BATCHES_AMOUNT_TO_PRELOAD
+    ) {
+      onFetchNext();
+    }
+  }, [batchNumber]);
+
+  useEffect(() => {
+    if (sharedFeedItemId && isTabletView && allFeedItems) {
+      setActiveChatItem({ feedItemId: sharedFeedItemId });
+    }
+  }, [sharedFeedItemId, isTabletView, allFeedItems]);
+
   useImperativeHandle(
     ref,
     () => ({
@@ -640,6 +662,11 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             {topContent}
             {isContentEmpty && <p className={styles.emptyText}>{emptyText}</p>}
             <InfiniteScroll
+              markerClassName={
+                allFeedItems && allFeedItems.length > 7
+                  ? styles.infiniteScrollMarker
+                  : ""
+              }
               onFetchNext={onFetchNext}
               isLoading={loading}
               loaderDelay={LOADER_APPEARANCE_DELAY}
@@ -667,6 +694,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
+                      commonNotion={outerCommon?.notion}
                       pinnedFeedItems={outerCommon?.pinnedFeedItems}
                       isProject={commonData?.isProject}
                       isPinned={isPinned}

@@ -9,9 +9,9 @@ $phone-breakpoint: 415px;
   flex-direction: column;
   box-sizing: border-box;
   border-radius: 0.875rem;
-  border: 0.0625rem $light-gray-2 solid;
+  border: 0.0625rem var(--gentle-stroke) solid;
   width: 85%;
-  background-color: $white;
+  background-color: var(--secondary-background);
   padding: 0.5rem 1rem;
 }
 

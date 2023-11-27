@@ -16,6 +16,7 @@ interface FeedCardTagsProps {
   isActive: boolean;
   isPinned?: boolean;
   isFollowing?: boolean;
+  hasUnseenMention?: boolean;
 }
 
 export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
@@ -28,6 +29,7 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
     isActive,
     isPinned,
     isFollowing,
+    hasUnseenMention,
   } = props;
   const user = useSelector(selectUser());
   const isOwner = ownerId === user?.uid;
@@ -54,8 +56,14 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
           })}
         />
       )}
+      {hasUnseenMention && <div className={styles.hasUnseenMention}>@</div>}
       {isFollowing && (
-        <StarIcon className={styles.starIcon} stroke="currentColor" />
+        <StarIcon
+          className={classNames(styles.starIcon, {
+            [styles.starActive]: isActive,
+          })}
+          stroke="currentColor"
+        />
       )}
       {isNewTagVisible && (
         <div

@@ -45,13 +45,13 @@
   }
 }
 .custom-tab--active {
-  --tab-bb-color: var(--tab-active-color);
-  --tab-color: var(--tab-active-color);
+  --tab-bb-color: var(--secondary-text);
+  --tab-color: var(--secondary-text);
 
   &:active,
   &:hover {
-    --tab-bb-color: var(--tab-active-color);
-    --tab-color: var(--tab-active-color);
+    --tab-bb-color: var(--secondary-text);
+    --tab-color: var(--secondary-text);
   }
 }
 .custom-tab--with-icon {

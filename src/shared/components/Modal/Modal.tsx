@@ -14,17 +14,10 @@ import React, {
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
-import { Colors } from "../../constants";
 import { useComponentWillUnmount } from "../../hooks";
 import Close2Icon from "../../icons/close2.icon";
-import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
-import {
-  CloseIconVariant,
-  ModalProps,
-  ModalRef,
-  ModalType,
-} from "../../interfaces";
+import { ModalProps, ModalRef, ModalType } from "../../interfaces";
 import { ClosePrompt } from "./components/ClosePrompt";
 import { ModalContext, FooterOptions, ModalContextValue } from "./context";
 import "./index.scss";
@@ -38,21 +31,19 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     onGoBack,
     onClose,
     children,
-    closeColor,
     mobileFullScreen,
     title,
     onHeaderScrolledToTop,
     styles,
     type = ModalType.Default,
     hideCloseButton = false,
-    closeIconSize = 24,
+    closeIconSize = 14,
     isHeaderSticky = false,
     shouldShowHeaderShadow = true,
     closePrompt = false,
     withoutHorizontalPadding = false,
     withoutHeader = false,
     fullHeight = false,
-    closeIconVariant = CloseIconVariant.Regular,
   } = props;
   const contentRef = useRef<HTMLDivElement>(null);
   const [footer, setFooter] = useState<ReactNode>(null);
@@ -200,15 +191,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
             )}
             onClick={handleClose}
           >
-            {closeIconVariant === CloseIconVariant.Regular ? (
-              <CloseIcon
-                width={closeIconSize}
-                height={closeIconSize}
-                fill={closeColor ?? Colors.black}
-              />
-            ) : (
-              <Close2Icon width={closeIconSize} height={closeIconSize} />
-            )}
+            <Close2Icon width={closeIconSize} height={closeIconSize} />
           </div>
         )}
       </div>

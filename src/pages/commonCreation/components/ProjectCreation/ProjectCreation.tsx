@@ -171,8 +171,8 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
             : `Create a new space in ${parentCommon.name}`}
         </h1>
         <p className={styles.subtitle}>
-          Space serves a certain group in the common to organize together and
-          achieve more focused goals.
+          Spaces are specific areas of collaboration which contain more focused
+          subspaces and single-topic streams.
         </p>
         <ProjectCreationForm
           parentCommonId={parentCommon.id}

@@ -2,7 +2,7 @@
 
 .parentItem {
   flex-shrink: 0;
-  border-bottom: 0.06rem solid $c-light-gray;
+  border-bottom: 0.06rem solid var(--gentle-stroke);
 }
 
 .parentItemTrigger {

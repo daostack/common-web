@@ -11,7 +11,7 @@
   color: $c-neutrals-600;
 }
 .containerActive {
-  border: 0.0625rem solid $c-neutrals-200;
+  border: 0.0625rem solid var(--gentle-stroke);
   border-bottom-width: 0.125rem;
   border-top: none;
   margin: 0 -1.4375rem 0 -1.5rem;

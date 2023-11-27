@@ -7,7 +7,6 @@ import {
   CommonCreatedSystemMessage,
   CommonEditedSystemMessage,
   CommonFeedItemCreatedSystemMessage,
-  CommonFeedType,
   CommonMemberAddedSystemMessage,
   SystemMessageCommonType,
   User,
@@ -73,8 +72,8 @@ const getCommonCreatedSystemMessageText = async (
 
   if (isThisCommonCreated) {
     return [
+      `This ${getCommonTypeText(systemMessageData.commonType)} was created by `,
       userEl,
-      ` created this ${getCommonTypeText(systemMessageData.commonType)}`,
     ];
   }
 
@@ -91,7 +90,7 @@ const getCommonCreatedSystemMessageText = async (
     ""
   );
 
-  return [userEl, " created the space", commonEl].filter(Boolean);
+  return ["The ", commonEl, " space was created by ", userEl].filter(Boolean);
 };
 
 const getCommonEditedSystemMessageText = async (
@@ -102,14 +101,15 @@ const getCommonEditedSystemMessageText = async (
   const userEl = renderUserMention(user, data);
 
   return [
-    userEl,
-    ` edited this ${getCommonTypeText(systemMessageData.commonType)}’s `,
+    `This ${getCommonTypeText(systemMessageData.commonType)}’s `,
     renderLink(
       (data.getCommonPageAboutTabPath || getCommonPageAboutTabPath)(
         systemMessageData.commonId,
       ),
       "info",
     ),
+    " was edited by ",
+    userEl,
   ];
 };
 
@@ -156,15 +156,7 @@ const getFeedItemCreatedSystemMessageText = async (
     ""
   );
 
-  return [
-    userEl,
-    ` created the ${
-      systemMessageData.feedItemType === CommonFeedType.Discussion
-        ? "discussion"
-        : "proposal"
-    }`,
-    titleEl,
-  ].filter(Boolean);
+  return [titleEl, " was created by ", userEl].filter(Boolean);
 };
 
 export const getTextFromSystemMessage = async (

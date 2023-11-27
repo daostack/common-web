@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { CommonFeedService } from "@/services";
 import { commonActions, FeedItems, selectFeedItems } from "@/store/states";
 
-interface Return extends Pick<FeedItems, "data" | "loading" | "hasMore"> {
+interface Return
+  extends Pick<FeedItems, "data" | "loading" | "hasMore" | "batchNumber"> {
   fetch: (feedItemId?: string) => void;
 }
 
 export const useCommonFeedItems = (
   commonId: string,
   idsForNotListening?: string[],
+  sharedFeedItemId?: string | null,
 ): Return => {
   const dispatch = useDispatch();
   const feedItems = useSelector(selectFeedItems);
@@ -19,6 +21,7 @@ export const useCommonFeedItems = (
     dispatch(
       commonActions.getFeedItems.request({
         commonId,
+        sharedFeedItemId,
         feedItemId,
         limit: 15,
       }),
@@ -66,7 +69,6 @@ export const useCommonFeedItems = (
       dispatch(
         commonActions.getFeedItems.cancel("Cancel feed items fetch on unmount"),
       );
-      dispatch(commonActions.resetFeedItems());
     };
   }, []);
 

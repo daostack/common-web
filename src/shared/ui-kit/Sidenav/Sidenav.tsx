@@ -49,34 +49,41 @@ const Sidenav: FC<SidenavProps> = (props) => {
   }, [isSidenavOpen]);
 
   return (
-    <aside
-      id={SIDENAV_KEY}
-      className={classNames(
-        styles.sidenav,
-        {
-          [styles.sidenavWithAnimation]: isSidenavWithAnimation,
-          [styles.sidenavWithAnimationOpen]:
-            isSidenavWithAnimation && isSidenavOpen,
-        },
-        className,
-      )}
-      style={style}
-      onKeyUp={onSidebarKeyUp}
-      tabIndex={0}
-    >
+    <>
       <div
-        className={classNames(styles.contentWrapper, contentWrapperClassName)}
-      >
-        {children}
-      </div>
-      <a
-        href="#"
-        id="sidenav-close"
-        className={styles.closeLink}
-        title="Close Menu"
-        aria-label="Close Menu"
+        className={classNames(styles.sidenavBackground, {
+          [styles.sidenavBackgroundOpen]: isSidenavOpen,
+        })}
       />
-    </aside>
+      <aside
+        id={SIDENAV_KEY}
+        className={classNames(
+          styles.sidenav,
+          {
+            [styles.sidenavWithAnimation]: isSidenavWithAnimation,
+            [styles.sidenavWithAnimationOpen]:
+              isSidenavWithAnimation && isSidenavOpen,
+          },
+          className,
+        )}
+        style={style}
+        onKeyUp={onSidebarKeyUp}
+        tabIndex={0}
+      >
+        <div
+          className={classNames(styles.contentWrapper, contentWrapperClassName)}
+        >
+          {children}
+        </div>
+        <a
+          href="#"
+          className={styles.closeLink}
+          title="Close Menu"
+          aria-label="Close Menu"
+          onClick={closeSidenav}
+        />
+      </aside>
+    </>
   );
 };
 

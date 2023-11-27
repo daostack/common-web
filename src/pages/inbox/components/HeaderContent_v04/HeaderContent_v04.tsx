@@ -4,6 +4,8 @@ import { useIsTabletView } from "@/shared/hooks/viewport";
 import { InboxIcon } from "@/shared/icons";
 import { getPluralEnding } from "@/shared/utils";
 import { DirectMessageButton } from "../DirectMessageButton";
+import { PlusButton } from "../HeaderContent/components";
+import { InboxFilterButton } from "../InboxFilterButton";
 import styles from "./HeaderContent_v04.module.scss";
 
 interface HeaderContentProps {
@@ -29,10 +31,14 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
           </div>
         </div>
       </div>
-      <DirectMessageButton
-        className={styles.directMessageButton}
-        isMobileVersion={isMobileVersion}
-      />
+      <div className={styles.actionButtonsWrapper}>
+        {/* <InboxFilterButton /> */}
+        <DirectMessageButton
+          className={styles.directMessageButton}
+          isMobileVersion={isMobileVersion}
+          ButtonComponent={PlusButton}
+        />
+      </div>
     </div>
   );
 };

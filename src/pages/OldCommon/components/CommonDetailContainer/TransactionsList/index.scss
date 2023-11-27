@@ -25,7 +25,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  background-color: $white;
+  background-color: var(--secondary-background);
   border-radius: 1rem;
   box-shadow: 0 0.188rem 0.625rem rgba(0, 0, 0, 0.05);
 
@@ -57,7 +57,7 @@
 
       .transaction__time {
         font-size: $xxsmall;
-        color: $secondary-blue;
+        color: var(--primary-text);
       }
     }
 

@@ -3,17 +3,17 @@ import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { authentificated, selectUser } from "@/pages/Auth/store/selectors";
 import commonLogoSrc from "@/shared/assets/images/logo-sidenav-2.svg";
+import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { CommonSidenavLayoutTab } from "@/shared/layouts";
+import { Close2Icon } from "@/shared/icons";
 import { CommonLogo } from "@/shared/ui-kit";
-import { getUserName } from "@/shared/utils";
+import { closeSidenav, getUserName } from "@/shared/utils";
 import {
   ContentStyles,
   MenuItemsPlacement,
   UserInfo,
 } from "../../../SidenavLayout/components/SidenavContent";
 import { useGoToCreateCommon } from "../../hooks";
-import { LayoutTabs } from "../LayoutTabs";
 import { Footer, Navigation, Projects } from "./components";
 import styles from "./SidenavContent.module.scss";
 
@@ -41,20 +41,19 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         logoClassName={styles.commonLogo}
         logoSrc={commonLogoSrc}
       />
-      {separatorEl}
+      {isTabletView && (
+        <ButtonIcon className={styles.closeIconWrapper} onClick={closeSidenav}>
+          <Close2Icon />
+        </ButtonIcon>
+      )}
       {!isTabletView && (
         <>
+          {separatorEl}
           <Navigation />
           {separatorEl}
         </>
       )}
       <Projects onCommonCreationClick={goToCreateCommon} />
-      {isTabletView && (
-        <LayoutTabs
-          className={styles.layoutTabs}
-          activeTab={CommonSidenavLayoutTab.Spaces}
-        />
-      )}
       {!isTabletView && (
         <>
           <div className={styles.userInfoSeparator} />

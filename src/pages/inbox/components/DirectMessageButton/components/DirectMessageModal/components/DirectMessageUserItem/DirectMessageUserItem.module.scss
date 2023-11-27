@@ -3,10 +3,10 @@
 .container {
   display: flex;
   justify-content: space-between;
-  background-color: $c-shades-white;
+  background-color: var(--primary-background);
 
   &:hover {
-    background-color: $c-pink-active-btn;
+    background-color: var(--hover-fill);
     cursor: pointer;
   }
 }
@@ -32,7 +32,7 @@
 .name {
   font-weight: 500;
   font-size: $mobile-title;
-  color: $c-gray-100;
+  color: var(--primary-text);
 }
 
 .lastActivity {

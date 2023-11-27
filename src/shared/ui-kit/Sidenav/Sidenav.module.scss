@@ -1,21 +1,48 @@
 @import "../../../constants";
 @import "../../../styles/sizes";
 
+$zIndex: 3;
+
+.sidenavBackground {
+  display: none;
+}
+.sidenavBackgroundOpen {
+  @include tablet {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: $zIndex;
+    display: block;
+    background-color: $c-gray-5;
+    opacity: 0.5;
+    animation: fade var(--sb-transition-duration);
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
 .sidenav {
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
-  z-index: 3;
+  z-index: $zIndex;
   max-width: var(--sb-max-width);
   width: var(--sb-width);
 
   @include tablet {
     right: 0;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    --sb-transition-duration: 1ms;
+    backdrop-filter: blur(0.125rem);
   }
 }
 .sidenavWithAnimation {
@@ -42,7 +69,7 @@
   padding-bottom: var(--sb-content-pb);
   display: flex;
   flex-direction: column;
-  background-color: var(--sb-bg-color);
+  background-color: var(--primary-background);
   box-shadow: var(--sb-shadow);
   overflow: hidden;
   box-sizing: border-box;

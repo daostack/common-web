@@ -6,8 +6,8 @@
   flex-direction: column;
   flex: 1;
   width: inherit;
-  height: calc(100% - #{$container-desktop-header-height});
-  background-color: $white;
+  height: calc(100% - var(--chat-header-height, 0rem));
+  background-color: var(--primary-background);
   box-sizing: border-box;
   --chat-input-wrapper-height: 3.125rem;
 }
@@ -18,15 +18,19 @@
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column-reverse;
-  padding: 0.5rem 2rem 0;
-  padding-bottom: calc(var(--chat-input-wrapper-height) + 7rem);
+  padding: 0.5rem 2rem 0 2rem;
+  margin-bottom: var(--chat-input-wrapper-height);
+
+  @include big-phone {
+    --chat-input-wrapper-height: 2.5rem;
+    padding: 0.5rem 0.75rem 0 0.5rem;
+  }
 }
 
 .emptyChat {
   display: flex;
   justify-content: center;
-  padding: 0.5rem 2rem 0;
-  padding-bottom: calc(var(--chat-input-wrapper-height) + 7rem);
+  align-self: center;
 }
 
 .bottomChatContainer {
@@ -44,8 +48,8 @@
   display: flex;
   flex-shrink: 0;
   padding: 0 1.125rem;
-  background-color: $c-input-100;
-  border: 0.0625rem solid $c-neutrals-100;
+  background-color: var(--primary-background);
+  border: 0.0625rem solid var(--gentle-stroke);
   border-left-width: 0;
   border-right-width: 0;
   box-shadow: none;
@@ -64,12 +68,12 @@
   min-height: 2.625rem;
   line-height: 1.5rem;
   border-radius: 1.25rem;
-  background-color: $light-gray-1;
-  border: 0.0625rem solid $c-neutrals-200;
+  background-color: var(--secondary-background);
+  border: 0.0625rem solid var(--gentle-stroke);
   outline: none;
   resize: none;
   font-size: 0.875rem;
-  color: $c-neutrals-600;
+  color: var(--primary-text);
   box-sizing: border-box;
   text-align: left;
   display: flex;
@@ -94,6 +98,7 @@
   margin-bottom: 0.8rem;
   margin-right: 0.5rem;
   height: 1.5rem;
+  color: var(--primary-text);
 }
 
 .sendIcon {
@@ -103,7 +108,7 @@
   margin-bottom: 0.8rem;
   border: none;
   outline: none;
-  background: $c-input-100;
+  background: transparent;
 
   &:disabled {
     cursor: not-allowed;
@@ -128,4 +133,17 @@ $phone-breakpoint: 415px;
 .multipleEmojiText {
   font-size: $large;
   line-height: 2.125rem;
+}
+
+.mentionTextCurrentUser {
+  color: $c-pink-mention-2;
+  font-weight: 600;
+}
+
+.singleEmojiText {
+  font-size: $xlarge;
+}
+
+.multipleEmojiText {
+  font-size: $large;
 }

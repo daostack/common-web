@@ -20,7 +20,8 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  
+  overflow: hidden;
+
   @media screen and (min-width: $mobile-breakpoint) {
     padding: 2rem 3rem !important;
   }
@@ -28,7 +29,6 @@
 
 .report-modal__title {
   font-size: $xsmall;
-  color: $secondary-blue;
 }
 
 .report-modal__input {
@@ -36,8 +36,10 @@
   width: 100%;
   border-width: 0;
   outline: 0;
-  border: 0.0625rem $light-gray-3 solid;
+  border: 0.0625rem var(--gentle-stroke) solid;
   height: 100%;
+  background-color: var(--secondary-background);
+  color: var(--primary-text);
 }
 
 .report-modal__button-container {
@@ -54,8 +56,6 @@
 }
 
 .report-modal__button-container__cancel {
-  background-color: $light-gray-1;
-  color: $light-gray-2;
   margin-right: 0.75rem;
 }
 
@@ -64,8 +64,6 @@
 }
 
 .report-modal__button-container__send {
-  background-color: $purple;
-  color: $white;
   margin-left: 0.75rem;
 }
 
