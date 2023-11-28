@@ -38,8 +38,10 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
     }
   };
 
-  const breadcrumbsItems = isMobileView
-    ? [breadcrumbs.items[0]]
+  const shouldTruncateBreadcrumb =
+    isMobileView && breadcrumbs.items.length >= 3;
+  const breadcrumbsItems = shouldTruncateBreadcrumb
+    ? [breadcrumbs.items[0], breadcrumbs.items[breadcrumbs.items.length - 1]]
     : breadcrumbs.items;
 
   return (
@@ -49,6 +51,12 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
         breadcrumbsItems.map((item, index) => (
           <React.Fragment key={item.commonId}>
             {index > 0 && <Separator />}
+            {shouldTruncateBreadcrumb && index === 1 && (
+              <>
+                ...
+                <Separator />
+              </>
+            )}
             <FeedBreadcrumbsItem
               activeItem={item}
               onCommonCreate={index === 0 ? goToCreateCommon : undefined}
@@ -57,12 +65,6 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
             />
           </React.Fragment>
         ))}
-      {isMobileView && breadcrumbsItems.length < breadcrumbs.items.length && (
-        <>
-          <Separator />
-          ...
-        </>
-      )}
       {breadcrumbs.activeItem && (
         <>
           {(breadcrumbs.areItemsLoading || breadcrumbs.items.length > 0) && (
