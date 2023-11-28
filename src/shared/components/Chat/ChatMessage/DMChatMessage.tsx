@@ -19,7 +19,6 @@ import {
   EntityTypes,
   QueryParamKey,
 } from "@/shared/constants";
-import { Colors } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -402,9 +401,6 @@ export default function DMChatMessage({
                     name={filePreview.name || filePreview.title}
                     fileSize={filePreview.size}
                     variant={FilePreviewVariant.medium}
-                    iconColor={
-                      isNotCurrentUserMessage ? Colors.black : Colors.lightPink
-                    }
                     isCurrentUser={!isNotCurrentUserMessage}
                   />
                 )}

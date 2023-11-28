@@ -19,7 +19,6 @@ import {
   EntityTypes,
   QueryParamKey,
 } from "@/shared/constants";
-import { Colors } from "@/shared/constants";
 import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
@@ -348,9 +347,6 @@ export default function ChatMessage({
                     name={filePreview.name || filePreview.title}
                     fileSize={filePreview.size}
                     variant={FilePreviewVariant.medium}
-                    iconColor={
-                      isNotCurrentUserMessage ? Colors.black : Colors.lightPink
-                    }
                     isCurrentUser={!isNotCurrentUserMessage}
                   />
                 )}

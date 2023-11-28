@@ -1,21 +1,21 @@
 import React, { ReactElement } from "react";
-import { Colors } from "@/shared/constants";
 
 const BASE_WIDTH = 66;
 const BASE_HEIGHT = 78;
 const HEIGHT_COEFFICIENT = BASE_HEIGHT / BASE_WIDTH;
 
 interface GalleryIconProps {
-  color?: string;
+  iconColor?: string;
   className?: string;
   size?: number;
 }
 
 export default function FileIcon({
-  color = Colors.darkBlue,
+  iconColor,
   size = BASE_WIDTH,
   className,
 }: GalleryIconProps): ReactElement {
+  const color = iconColor ?? "currentColor";
   return (
     <svg
       className={className}
