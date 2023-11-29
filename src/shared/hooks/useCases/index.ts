@@ -23,7 +23,7 @@ export { useProposalById } from "./useProposalById";
 export { useRootCommonMembershipIntro } from "./useRootCommonMembershipIntro";
 export { useSubCommons } from "./useSubCommons";
 export { useSupportersData } from "./useSupportersData";
-export { useUserActivity } from "./useUserActivity";
+export { useLastVisitedCommon } from "./useLastVisitedCommon";
 export { useUserById } from "./useUserById";
 export { default as useUserCards } from "./useUserCards";
 export { useUserCommonIds } from "./useUserCommonIds";

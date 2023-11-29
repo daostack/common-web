@@ -1,12 +1,13 @@
 import React, { FC, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { InboxItemType } from "@/shared/constants";
 import { MainRoutesProvider } from "@/shared/contexts";
+import { useLastVisitedCommon } from "@/shared/hooks/useCases";
 import { MultipleSpacesLayoutPageContent } from "@/shared/layouts";
 import {
   multipleSpacesLayoutActions,
-  selectCommonLayoutLastCommonFromFeed,
   selectMultipleSpacesLayoutMainWidth,
 } from "@/store/states";
 import BaseCommonFeedPage, {
@@ -59,7 +60,9 @@ const CommonFeedPage: FC = () => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
   const dispatch = useDispatch();
   const layoutMainWidth = useSelector(selectMultipleSpacesLayoutMainWidth);
-  const lastCommonFromFeed = useSelector(selectCommonLayoutLastCommonFromFeed);
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+  const { lastVisitedCommon } = useLastVisitedCommon(userId);
   const onActiveItemDataChange = useActiveItemDataChange();
   const feedLayoutSettings = useMemo<FeedLayoutSettings>(
     () => ({
@@ -68,13 +71,13 @@ const CommonFeedPage: FC = () => {
     }),
     [layoutMainWidth],
   );
-  const lastCommonFromFeedData = lastCommonFromFeed?.data;
+  const lastCommonFromFeedData = lastVisitedCommon?.data;
 
   const renderLoadingHeader = lastCommonFromFeedData
     ? () => (
         <HeaderContentWrapper className={styles.headerContentWrapper}>
           <HeaderCommonContent
-            commonId={lastCommonFromFeed.id}
+            commonId={lastVisitedCommon.id}
             commonName={lastCommonFromFeedData.name}
             commonImage={lastCommonFromFeedData.image}
             isProject={lastCommonFromFeedData.isProject}

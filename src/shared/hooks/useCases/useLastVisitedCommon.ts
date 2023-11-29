@@ -1,37 +1,37 @@
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Logger, UserActivityService } from "@/services";
-import { UserActivity } from "@/shared/models";
 import {
   commonLayoutActions,
+  CommonLayoutState,
   selectCommonLayoutLastCommonFromFeed,
 } from "@/store/states";
 
 interface Return {
-  lastVisitedCommon?: string;
-  updateUserActivity: (data: Partial<UserActivity>) => void;
+  lastVisitedCommon: CommonLayoutState["lastCommonFromFeed"];
+  updateLastVisitedCommon: (
+    data: CommonLayoutState["lastCommonFromFeed"],
+  ) => void;
 }
 
-export const useUserActivity = (userId?: string): Return => {
+export const useLastVisitedCommon = (userId?: string): Return => {
   const dispatch = useDispatch();
-  const lastCommonFromFeed = useSelector(selectCommonLayoutLastCommonFromFeed);
+  const lastVisitedCommon = useSelector(selectCommonLayoutLastCommonFromFeed);
 
-  const updateUserActivity = useCallback(
-    async (data: Partial<UserActivity>) => {
-      if (data.lastVisitedCommon) {
-        dispatch(
-          commonLayoutActions.setLastCommonFromFeed({
-            id: data.lastVisitedCommon,
-            data: null,
-          }),
-        );
-      }
-      if (!userId) {
+  const updateLastVisitedCommon = useCallback<
+    Return["updateLastVisitedCommon"]
+  >(
+    async (data) => {
+      dispatch(commonLayoutActions.setLastCommonFromFeed(data));
+
+      if (!userId || !data?.id) {
         return;
       }
 
       try {
-        await UserActivityService.updateUserActivity(userId, data);
+        await UserActivityService.updateUserActivity(userId, {
+          lastVisitedCommon: data.id,
+        });
       } catch (error) {
         Logger.error(error);
       }
@@ -62,7 +62,7 @@ export const useUserActivity = (userId?: string): Return => {
   }, [userId]);
 
   return {
-    lastVisitedCommon: lastCommonFromFeed?.id,
-    updateUserActivity,
+    lastVisitedCommon,
+    updateLastVisitedCommon,
   };
 };

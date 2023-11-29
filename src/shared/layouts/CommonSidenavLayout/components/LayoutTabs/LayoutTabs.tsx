@@ -10,7 +10,10 @@ import {
 import { Tab, Tabs } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useModal } from "@/shared/hooks";
-import { useUserActivity, useUserCommonIds } from "@/shared/hooks/useCases";
+import {
+  useLastVisitedCommon,
+  useUserCommonIds,
+} from "@/shared/hooks/useCases";
 import { Avatar2Icon, Blocks2Icon, InboxIcon } from "@/shared/icons";
 import { CreateCommonPrompt } from "@/shared/layouts/MultipleSpacesLayout/components/Header/components/Navigation/components";
 import { LayoutTab } from "../../constants";
@@ -41,7 +44,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { data: userCommonIds } = useUserCommonIds();
-  const { lastVisitedCommon } = useUserActivity(userId);
+  const { lastVisitedCommon } = useLastVisitedCommon(userId);
   const {
     isShowing: isCreateCommonPromptOpen,
     onOpen: onCreateCommonPromptOpen,
@@ -81,7 +84,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   } as CSSProperties;
 
   const handleSpacesClick = () => {
-    const commonForRedirectId = lastVisitedCommon || userCommonIds[0];
+    const commonForRedirectId = lastVisitedCommon?.id || userCommonIds[0];
 
     if (commonForRedirectId) {
       history.push(getCommonPagePath(commonForRedirectId));
