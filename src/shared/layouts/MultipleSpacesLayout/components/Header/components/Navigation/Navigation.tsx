@@ -4,12 +4,13 @@ import { useLocation } from "react-router";
 import classNames from "classnames";
 import {
   authentificated,
+  selectUser,
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
 import { InboxItemType, ROUTE_PATHS } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useModal } from "@/shared/hooks";
-import { useUserCommonIds } from "@/shared/hooks/useCases";
+import { useUserActivity, useUserCommonIds } from "@/shared/hooks/useCases";
 import { BlocksIcon, InboxIcon } from "@/shared/icons";
 import {
   CommonSidenavLayoutTab,
@@ -44,13 +45,20 @@ const Navigation: FC<NavigationProps> = (props) => {
   const previousBreadcrumbs = useSelector(
     selectMultipleSpacesLayoutPreviousBreadcrumbs,
   );
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const { data: userCommonIds } = useUserCommonIds();
+  const { data: userActivity } = useUserActivity(userId);
   const breadcrumbs = previousBreadcrumbs || currentBreadcrumbs;
   const breadcrumbsCommonId =
     breadcrumbs?.type === InboxItemType.FeedItemFollow
       ? breadcrumbs.activeCommonId
       : "";
-  const mySpacesCommonId = breadcrumbsCommonId || userCommonIds[0] || "";
+  const mySpacesCommonId =
+    breadcrumbsCommonId ||
+    userActivity?.lastVisitedCommon ||
+    userCommonIds[0] ||
+    "";
   const mySpacesPagePath = (
     mySpacesCommonId ? getCommonPagePath(mySpacesCommonId) : ""
   ) as ROUTE_PATHS;
