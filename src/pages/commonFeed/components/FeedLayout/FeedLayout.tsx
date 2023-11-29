@@ -620,7 +620,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [batchNumber]);
 
   useEffect(() => {
-    if (sharedFeedItemId && isTabletView && allFeedItems) {
+    if (
+      isTabletView &&
+      sharedFeedItemId &&
+      allFeedItems.length > 0 &&
+      allFeedItems.some((item) => item.itemId === sharedFeedItemId)
+    ) {
+      deleteQueryParam(QueryParamKey.Item, true);
       setActiveChatItem({ feedItemId: sharedFeedItemId });
     }
   }, [sharedFeedItemId, isTabletView, allFeedItems]);
