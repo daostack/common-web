@@ -1,5 +1,5 @@
 import React, { CSSProperties, FC, ReactNode } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import {
@@ -13,7 +13,10 @@ import { useModal } from "@/shared/hooks";
 import { useUserActivity, useUserCommonIds } from "@/shared/hooks/useCases";
 import { Avatar2Icon, Blocks2Icon, InboxIcon } from "@/shared/icons";
 import { CreateCommonPrompt } from "@/shared/layouts/MultipleSpacesLayout/components/Header/components/Navigation/components";
-import { selectCommonLayoutLastCommonFromFeed } from "@/store/states";
+import {
+  commonLayoutActions,
+  selectCommonLayoutLastCommonFromFeed,
+} from "@/store/states";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
 import styles from "./LayoutTabs.module.scss";
@@ -32,6 +35,7 @@ interface TabConfiguration {
 
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
+  const dispatch = useDispatch();
   const history = useHistory();
   const { getCommonPagePath, getInboxPagePath, getProfilePagePath } =
     useRoutesContext();
@@ -85,10 +89,15 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   } as CSSProperties;
 
   const handleSpacesClick = () => {
+    if (
+      lastCommonIdFromFeed &&
+      lastCommonIdFromFeed.id !== userActivity?.lastVisitedCommon
+    ) {
+      dispatch(commonLayoutActions.setLastCommonFromFeed(null));
+    }
+
     const commonForRedirectId =
-      lastCommonIdFromFeed?.id ||
-      userActivity?.lastVisitedCommon ||
-      userCommonIds[0];
+      userActivity?.lastVisitedCommon || userCommonIds[0];
 
     if (commonForRedirectId) {
       history.push(getCommonPagePath(commonForRedirectId));
