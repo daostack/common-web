@@ -29,7 +29,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
 import {
   useCommonFeedItems,
-  useUserActivityUpdate,
+  useUserActivity,
   useUserCommonIds,
 } from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
@@ -118,7 +118,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetched: isCommonDataFetched,
     fetchCommonData,
   } = useCommonData(userId);
-  const { updateUserActivity } = useUserActivityUpdate();
+  const { updateUserActivity } = useUserActivity(userId);
   const parentCommonId = commonData?.common.directParent?.commonId;
   const anotherCommonId =
     userCommonIds[0] === commonId ? userCommonIds[1] : userCommonIds[0];
@@ -453,14 +453,10 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [commonId]);
 
   useEffect(() => {
-    if (!userId) {
-      return;
-    }
-
-    updateUserActivity(userId, {
+    updateUserActivity({
       lastVisitedCommon: commonId,
     });
-  }, [userId, commonId]);
+  }, [updateUserActivity, commonId]);
 
   if (!isDataFetched) {
     const headerEl = renderLoadingHeader ? (
