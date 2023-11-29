@@ -40,9 +40,8 @@ const Navigation: FC<NavigationProps> = (props) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { data: userCommonIds } = useUserCommonIds();
-  const { data: userActivity } = useUserActivity(userId);
-  const mySpacesCommonId =
-    userActivity?.lastVisitedCommon || userCommonIds[0] || "";
+  const { lastVisitedCommon } = useUserActivity(userId);
+  const mySpacesCommonId = lastVisitedCommon || userCommonIds[0] || "";
   const mySpacesPagePath = (
     mySpacesCommonId ? getCommonPagePath(mySpacesCommonId) : ""
   ) as ROUTE_PATHS;

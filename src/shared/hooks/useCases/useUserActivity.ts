@@ -1,19 +1,31 @@
 import { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Logger, UserActivityService } from "@/services";
-import { useLoadingState } from "@/shared/hooks";
-import { LoadingState } from "@/shared/interfaces";
 import { UserActivity } from "@/shared/models";
+import {
+  commonLayoutActions,
+  selectCommonLayoutLastCommonFromFeed,
+} from "@/store/states";
 
-interface Return extends LoadingState<UserActivity | null> {
+interface Return {
+  lastVisitedCommon?: string;
   updateUserActivity: (data: Partial<UserActivity>) => void;
 }
 
 export const useUserActivity = (userId?: string): Return => {
-  const [userActivityState, setUserActivityState] =
-    useLoadingState<UserActivity | null>(null, { loading: true });
+  const dispatch = useDispatch();
+  const lastCommonFromFeed = useSelector(selectCommonLayoutLastCommonFromFeed);
 
   const updateUserActivity = useCallback(
     async (data: Partial<UserActivity>) => {
+      if (data.lastVisitedCommon) {
+        dispatch(
+          commonLayoutActions.setLastCommonFromFeed({
+            id: data.lastVisitedCommon,
+            data: null,
+          }),
+        );
+      }
       if (!userId) {
         return;
       }
@@ -35,11 +47,14 @@ export const useUserActivity = (userId?: string): Return => {
     const unsubscribe = UserActivityService.subscribeToUserActivity(
       userId,
       (updatedUserActivity) => {
-        setUserActivityState({
-          loading: false,
-          fetched: true,
-          data: updatedUserActivity,
-        });
+        if (updatedUserActivity.lastVisitedCommon) {
+          dispatch(
+            commonLayoutActions.setLastCommonFromFeed({
+              id: updatedUserActivity.lastVisitedCommon,
+              data: null,
+            }),
+          );
+        }
       },
     );
 
@@ -47,7 +62,7 @@ export const useUserActivity = (userId?: string): Return => {
   }, [userId]);
 
   return {
-    ...userActivityState,
+    lastVisitedCommon: lastCommonFromFeed?.id,
     updateUserActivity,
   };
 };

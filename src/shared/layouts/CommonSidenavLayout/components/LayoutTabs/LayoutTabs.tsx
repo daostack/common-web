@@ -1,5 +1,5 @@
 import React, { CSSProperties, FC, ReactNode } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import {
@@ -13,10 +13,6 @@ import { useModal } from "@/shared/hooks";
 import { useUserActivity, useUserCommonIds } from "@/shared/hooks/useCases";
 import { Avatar2Icon, Blocks2Icon, InboxIcon } from "@/shared/icons";
 import { CreateCommonPrompt } from "@/shared/layouts/MultipleSpacesLayout/components/Header/components/Navigation/components";
-import {
-  commonLayoutActions,
-  selectCommonLayoutLastCommonFromFeed,
-} from "@/store/states";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
 import styles from "./LayoutTabs.module.scss";
@@ -35,13 +31,9 @@ interface TabConfiguration {
 
 const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const { className } = props;
-  const dispatch = useDispatch();
   const history = useHistory();
   const { getCommonPagePath, getInboxPagePath, getProfilePagePath } =
     useRoutesContext();
-  const lastCommonIdFromFeed = useSelector(
-    selectCommonLayoutLastCommonFromFeed,
-  );
   const isAuthenticated = useSelector(authentificated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
@@ -49,7 +41,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { data: userCommonIds } = useUserCommonIds();
-  const { data: userActivity } = useUserActivity(userId);
+  const { lastVisitedCommon } = useUserActivity(userId);
   const {
     isShowing: isCreateCommonPromptOpen,
     onOpen: onCreateCommonPromptOpen,
@@ -89,15 +81,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   } as CSSProperties;
 
   const handleSpacesClick = () => {
-    if (
-      lastCommonIdFromFeed &&
-      lastCommonIdFromFeed.id !== userActivity?.lastVisitedCommon
-    ) {
-      dispatch(commonLayoutActions.setLastCommonFromFeed(null));
-    }
-
-    const commonForRedirectId =
-      userActivity?.lastVisitedCommon || userCommonIds[0];
+    const commonForRedirectId = lastVisitedCommon || userCommonIds[0];
 
     if (commonForRedirectId) {
       history.push(getCommonPagePath(commonForRedirectId));
