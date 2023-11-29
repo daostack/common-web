@@ -99,7 +99,6 @@ export const multipleSpacesLayoutTransform = createTransform(
   (inboundState: MultipleSpacesLayoutState) => ({
     ...inboundState,
     breadcrumbs: null,
-    previousBreadcrumbs: null,
     backUrl: null,
   }),
   (outboundState: MultipleSpacesLayoutState) => outboundState,

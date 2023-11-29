@@ -16,10 +16,6 @@ import {
   CommonSidenavLayoutTab,
   getActiveLayoutTab,
 } from "@/shared/layouts/CommonSidenavLayout";
-import {
-  selectMultipleSpacesLayoutBreadcrumbs,
-  selectMultipleSpacesLayoutPreviousBreadcrumbs,
-} from "@/store/states";
 import { CreateCommonPrompt, NavigationItem } from "./components";
 import { NavigationItemOptions } from "./types";
 import styles from "./Navigation.module.scss";
@@ -41,24 +37,12 @@ const Navigation: FC<NavigationProps> = (props) => {
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
   );
-  const currentBreadcrumbs = useSelector(selectMultipleSpacesLayoutBreadcrumbs);
-  const previousBreadcrumbs = useSelector(
-    selectMultipleSpacesLayoutPreviousBreadcrumbs,
-  );
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { data: userCommonIds } = useUserCommonIds();
   const { data: userActivity } = useUserActivity(userId);
-  const breadcrumbs = previousBreadcrumbs || currentBreadcrumbs;
-  const breadcrumbsCommonId =
-    breadcrumbs?.type === InboxItemType.FeedItemFollow
-      ? breadcrumbs.activeCommonId
-      : "";
   const mySpacesCommonId =
-    breadcrumbsCommonId ||
-    userActivity?.lastVisitedCommon ||
-    userCommonIds[0] ||
-    "";
+    userActivity?.lastVisitedCommon || userCommonIds[0] || "";
   const mySpacesPagePath = (
     mySpacesCommonId ? getCommonPagePath(mySpacesCommonId) : ""
   ) as ROUTE_PATHS;

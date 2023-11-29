@@ -95,7 +95,7 @@ const CommonFeedPage: FC = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(multipleSpacesLayoutActions.moveBreadcrumbsToPrevious());
+      dispatch(multipleSpacesLayoutActions.clearBreadcrumbs());
     };
   }, []);
 
