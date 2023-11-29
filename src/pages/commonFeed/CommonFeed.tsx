@@ -27,7 +27,11 @@ import {
 } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
-import { useCommonFeedItems, useUserCommonIds } from "@/shared/hooks/useCases";
+import {
+  useCommonFeedItems,
+  useUserActivityUpdate,
+  useUserCommonIds,
+} from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
 import { SidebarIcon } from "@/shared/icons";
 import {
@@ -114,6 +118,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetched: isCommonDataFetched,
     fetchCommonData,
   } = useCommonData(userId);
+  const { updateUserActivity } = useUserActivityUpdate();
   const parentCommonId = commonData?.common.directParent?.commonId;
   const anotherCommonId =
     userCommonIds[0] === commonId ? userCommonIds[1] : userCommonIds[0];
@@ -446,6 +451,16 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
       );
     };
   }, [commonId]);
+
+  useEffect(() => {
+    if (!userId) {
+      return;
+    }
+
+    updateUserActivity(userId, {
+      lastVisitedCommon: commonId,
+    });
+  }, [userId, commonId]);
 
   if (!isDataFetched) {
     const headerEl = renderLoadingHeader ? (
