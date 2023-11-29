@@ -34,7 +34,9 @@ class UserActivityService {
     userId: string,
     data: Partial<UserActivity>,
   ): Promise<void> => {
-    await this.getUsersActivityCollection().doc(userId).update(data);
+    await this.getUsersActivityCollection()
+      .doc(userId)
+      .set(data, { merge: true });
   };
 }
 
