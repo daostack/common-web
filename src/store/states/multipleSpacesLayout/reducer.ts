@@ -10,7 +10,6 @@ type Action = ActionType<typeof actions>;
 
 const initialState: MultipleSpacesLayoutState = {
   breadcrumbs: null,
-  previousBreadcrumbs: null,
   backUrl: null,
   mainWidth: window.innerWidth,
 };
@@ -49,11 +48,8 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
       nextState.breadcrumbs = payload && { ...payload };
     }),
   )
-  .handleAction(actions.moveBreadcrumbsToPrevious, (state) =>
+  .handleAction(actions.clearBreadcrumbs, (state) =>
     produce(state, (nextState) => {
-      nextState.previousBreadcrumbs = nextState.breadcrumbs && {
-        ...nextState.breadcrumbs,
-      };
       nextState.breadcrumbs = null;
     }),
   )

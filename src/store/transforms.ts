@@ -1,8 +1,8 @@
 import { createTransform } from "redux-persist";
 import { deserializeFeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { convertObjectDatesToFirestoreTimestamps } from "@/shared/utils";
+import { MultipleSpacesLayoutState } from "@/store/states";
 import { getFeedLayoutItemDateForSorting } from "@/store/states/inbox/utils";
-import { CommonLayoutState } from "./states/commonLayout";
 import { CacheState } from "./states/cache";
 import {
   InboxItems,
@@ -64,32 +64,21 @@ export const inboxTransform = createTransform(
   { whitelist: ["inbox"] },
 );
 
-export const lastCommonFromFeedTransform = createTransform(
-  (inboundState: CommonLayoutState) => {
-    const rootCommon = inboundState.lastCommonFromFeed?.data?.rootCommon;
-
-    return {
-      ...inboundState,
-      lastCommonFromFeed: rootCommon
-        ? {
-            id: rootCommon.id,
-            data: rootCommon.data && {
-              ...rootCommon.data,
-              rootCommon: null,
-            },
-          }
-        : inboundState.lastCommonFromFeed,
-    };
-  },
-  (outboundState: CommonLayoutState) => outboundState,
-  { whitelist: ["commonLayout"] },
-);
-
 export const cacheTransform = createTransform(
   (inboundState: CacheState) => inboundState,
   (outboundState: CacheState) => ({
     ...outboundState,
-    discussionMessagesStates: {}
+    discussionMessagesStates: {},
   }),
   { whitelist: ["cache"] },
+);
+
+export const multipleSpacesLayoutTransform = createTransform(
+  (inboundState: MultipleSpacesLayoutState) => ({
+    ...inboundState,
+    breadcrumbs: null,
+    backUrl: null,
+  }),
+  (outboundState: MultipleSpacesLayoutState) => outboundState,
+  { whitelist: ["multipleSpacesLayout"] },
 );

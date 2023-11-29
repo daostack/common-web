@@ -4,15 +4,18 @@ import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import {
   authentificated,
+  selectUser,
   selectUserStreamsWithNotificationsAmount,
 } from "@/pages/Auth/store/selectors";
 import { Tab, Tabs } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
 import { useModal } from "@/shared/hooks";
-import { useUserCommonIds } from "@/shared/hooks/useCases";
+import {
+  useLastVisitedCommon,
+  useUserCommonIds,
+} from "@/shared/hooks/useCases";
 import { Avatar2Icon, Blocks2Icon, InboxIcon } from "@/shared/icons";
 import { CreateCommonPrompt } from "@/shared/layouts/MultipleSpacesLayout/components/Header/components/Navigation/components";
-import { selectCommonLayoutLastCommonFromFeed } from "@/store/states";
 import { LayoutTab } from "../../constants";
 import { getActiveLayoutTab, getLayoutTabName } from "./utils";
 import styles from "./LayoutTabs.module.scss";
@@ -34,14 +37,14 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const history = useHistory();
   const { getCommonPagePath, getInboxPagePath, getProfilePagePath } =
     useRoutesContext();
-  const lastCommonIdFromFeed = useSelector(
-    selectCommonLayoutLastCommonFromFeed,
-  );
   const isAuthenticated = useSelector(authentificated());
   const userStreamsWithNotificationsAmount = useSelector(
     selectUserStreamsWithNotificationsAmount(),
   );
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const { data: userCommonIds } = useUserCommonIds();
+  const { lastVisitedCommon } = useLastVisitedCommon(userId);
   const {
     isShowing: isCreateCommonPromptOpen,
     onOpen: onCreateCommonPromptOpen,
@@ -81,7 +84,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   } as CSSProperties;
 
   const handleSpacesClick = () => {
-    const commonForRedirectId = lastCommonIdFromFeed?.id || userCommonIds[0];
+    const commonForRedirectId = lastVisitedCommon?.id || userCommonIds[0];
 
     if (commonForRedirectId) {
       history.push(getCommonPagePath(commonForRedirectId));
