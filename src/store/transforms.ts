@@ -1,9 +1,10 @@
 import { createTransform } from "redux-persist";
 import { deserializeFeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { convertObjectDatesToFirestoreTimestamps } from "@/shared/utils";
+import { MultipleSpacesLayoutState } from "@/store/states";
 import { getFeedLayoutItemDateForSorting } from "@/store/states/inbox/utils";
-import { CommonLayoutState } from "./states/commonLayout";
 import { CacheState } from "./states/cache";
+import { CommonLayoutState } from "./states/commonLayout";
 import {
   InboxItems,
   InboxState,
@@ -89,7 +90,18 @@ export const cacheTransform = createTransform(
   (inboundState: CacheState) => inboundState,
   (outboundState: CacheState) => ({
     ...outboundState,
-    discussionMessagesStates: {}
+    discussionMessagesStates: {},
   }),
   { whitelist: ["cache"] },
+);
+
+export const multipleSpacesLayoutTransform = createTransform(
+  (inboundState: MultipleSpacesLayoutState) => ({
+    ...inboundState,
+    breadcrumbs: null,
+    previousBreadcrumbs: null,
+    backUrl: null,
+  }),
+  (outboundState: MultipleSpacesLayoutState) => outboundState,
+  { whitelist: ["multipleSpacesLayout"] },
 );

@@ -22,6 +22,7 @@ import {
   inboxTransform,
   lastCommonFromFeedTransform,
   cacheTransform,
+  multipleSpacesLayoutTransform,
 } from "./transforms";
 
 const persistConfig: PersistConfig<AppState> = {
@@ -37,7 +38,12 @@ const persistConfig: PersistConfig<AppState> = {
     "multipleSpacesLayout",
   ],
   stateReconciler: autoMergeLevel2,
-  transforms: [inboxTransform, lastCommonFromFeedTransform, cacheTransform],
+  transforms: [
+    inboxTransform,
+    lastCommonFromFeedTransform,
+    cacheTransform,
+    multipleSpacesLayoutTransform,
+  ],
 };
 
 const sagaMiddleware = createSagaMiddleware();
