@@ -32,7 +32,6 @@ const persistConfig: PersistConfig<AppState> = {
     "commonLayout",
     "commonFeedFollows",
     "cache",
-    "chat",
     "inbox",
     "multipleSpacesLayout",
   ],
