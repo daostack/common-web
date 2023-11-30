@@ -1,5 +1,6 @@
 import React, { useCallback, FC, ReactNode } from "react";
 import classNames from "classnames";
+import { useLongPress } from "use-long-press";
 import { useTabContext } from "../context";
 import { getPanelId, getLabelId } from "../helpers";
 import "./index.scss";
@@ -30,6 +31,8 @@ const Tab: FC<TabProps> = (props) => {
   const panelId = getPanelId(value, panelIdTemplate);
   const labelId = getLabelId(panelId);
 
+  const getLongPressProps = useLongPress(null);
+
   const handleChange = useCallback(() => {
     onChange(value, labelId);
   }, [onChange, value, labelId]);
@@ -53,6 +56,8 @@ const Tab: FC<TabProps> = (props) => {
       aria-selected={isActive}
       aria-controls={panelId}
       onClick={handleChange}
+      onContextMenu={(e) => e.preventDefault()}
+      {...getLongPressProps()}
     >
       {withIcons && icon}
       {label}
