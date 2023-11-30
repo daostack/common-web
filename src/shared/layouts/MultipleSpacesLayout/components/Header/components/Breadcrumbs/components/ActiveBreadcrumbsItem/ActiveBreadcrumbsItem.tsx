@@ -1,9 +1,6 @@
 import React, { FC, useRef } from "react";
-import { useSelector } from "react-redux";
 import { ButtonIcon, UserAvatar } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
 import { RightArrowThinIcon } from "@/shared/icons";
-import { getScreenSize } from "@/shared/store/selectors";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
 import { truncateBreadcrumbName } from "../../utils";
@@ -17,6 +14,7 @@ export interface ActiveBreadcrumbsItemProps {
   commonIdToAddProject?: string | null;
   withMenu?: boolean;
   isLoading?: boolean;
+  truncate?: boolean;
 }
 
 const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
@@ -27,11 +25,10 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
     commonIdToAddProject,
     withMenu = true,
     isLoading = false,
+    truncate = false,
   } = props;
   const itemsButtonRef = useRef<HTMLButtonElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleButtonClick = () => {
     if (itemsButtonRef.current) {
@@ -51,7 +48,7 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
         />
       )}
       <span className={styles.name}>
-        {isMobileView ? truncateBreadcrumbName(name) : name}
+        {truncate ? truncateBreadcrumbName(name) : name}
       </span>
       {(items.length > 0 || commonIdToAddProject) && withMenu && (
         <ButtonIcon

@@ -1,9 +1,6 @@
 import React, { FC, useRef } from "react";
-import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { ScreenSize } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { getScreenSize } from "@/shared/store/selectors";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
 import { truncateBreadcrumbName } from "../../utils";
@@ -17,6 +14,7 @@ export interface BreadcrumbsItemProps {
   onCommonCreate?: () => void;
   withMenu?: boolean;
   isLoading?: boolean;
+  truncate?: boolean;
   onClick?: () => void;
 }
 
@@ -28,14 +26,13 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
     onCommonCreate,
     withMenu = true,
     isLoading = false,
+    truncate = false,
     onClick,
   } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
   const containerRef = useRef<HTMLLIElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
 
   const handleButtonClick = () => {
     if (!withMenu) {
@@ -52,9 +49,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   return (
     <li ref={containerRef}>
       <button className={styles.button} onClick={handleButtonClick}>
-        {isMobileView
-          ? truncateBreadcrumbName(activeItem.name)
-          : activeItem.name}
+        {truncate ? truncateBreadcrumbName(activeItem.name) : activeItem.name}
       </button>
       {withMenu && (
         <BreadcrumbsMenu

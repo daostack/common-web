@@ -2,8 +2,7 @@ import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CommonEvent, CommonEventEmitter } from "@/events";
 import { CommonService } from "@/services";
-import { ScreenSize } from "@/shared/constants";
-import { getScreenSize } from "@/shared/store/selectors";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   commonLayoutActions,
   MultipleSpacesLayoutFeedItemBreadcrumbs,
@@ -25,8 +24,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
   const dispatch = useDispatch();
   const currentLayoutCommonId = useSelector(selectCommonLayoutCommonId);
   const goToCreateCommon = useGoToCreateCommon();
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
+  const isMobileView = useIsTabletView();
   const shouldTruncateBreadcrumb =
     isMobileView && breadcrumbs.items.length >= 3;
   const breadcrumbsItems = shouldTruncateBreadcrumb
@@ -82,6 +80,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
               activeItem={item}
               onCommonCreate={index === 0 ? goToCreateCommon : undefined}
               withMenu={itemsWithMenus}
+              truncate={isMobileView}
               onClick={() => handleItemClick(item)}
             />
           </React.Fragment>
@@ -97,6 +96,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
               name={breadcrumbs.activeItem.name}
               image={breadcrumbs.activeItem.image}
               withMenu={itemsWithMenus}
+              truncate={isMobileView}
             />
           )}
         </>
