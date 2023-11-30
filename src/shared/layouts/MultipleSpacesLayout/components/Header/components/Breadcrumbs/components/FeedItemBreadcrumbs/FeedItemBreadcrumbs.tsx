@@ -17,17 +17,16 @@ import styles from "./FeedItemBreadcrumbs.module.scss";
 interface FeedItemBreadcrumbsProps {
   breadcrumbs: MultipleSpacesLayoutFeedItemBreadcrumbs;
   itemsWithMenus: boolean;
+  truncate: boolean;
 }
 
 const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
-  const { breadcrumbs, itemsWithMenus } = props;
+  const { breadcrumbs, itemsWithMenus, truncate } = props;
   const dispatch = useDispatch();
   const currentLayoutCommonId = useSelector(selectCommonLayoutCommonId);
   const goToCreateCommon = useGoToCreateCommon();
   const isMobileView = useIsTabletView();
-  const shouldTruncateBreadcrumb =
-    isMobileView && breadcrumbs.items.length >= 3;
-  const breadcrumbsItems = shouldTruncateBreadcrumb
+  const breadcrumbsItems = truncate
     ? [breadcrumbs.items[0], breadcrumbs.items[breadcrumbs.items.length - 1]]
     : breadcrumbs.items;
 
@@ -70,7 +69,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
         breadcrumbsItems.map((item, index) => (
           <React.Fragment key={item.commonId}>
             {index > 0 && <Separator />}
-            {shouldTruncateBreadcrumb && index === 1 && (
+            {truncate && index === 1 && (
               <>
                 ...
                 <Separator />

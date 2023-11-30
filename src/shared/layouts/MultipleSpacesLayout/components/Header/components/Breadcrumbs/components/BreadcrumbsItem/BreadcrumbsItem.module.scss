@@ -30,9 +30,9 @@
 }
 
 @include tablet {
-  li {
+  .li {
     &:first-child {
-      button {
+      .button {
         padding-left: 0;
       }
     }

@@ -47,7 +47,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   };
 
   return (
-    <li ref={containerRef}>
+    <li ref={containerRef} className={styles.li}>
       <button className={styles.button} onClick={handleButtonClick}>
         {truncate ? truncateBreadcrumbName(activeItem.name) : activeItem.name}
       </button>
