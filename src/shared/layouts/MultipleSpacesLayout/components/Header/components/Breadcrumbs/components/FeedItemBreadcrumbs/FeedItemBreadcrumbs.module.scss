@@ -1,4 +1,5 @@
 @import "../../../../../../../../../constants";
+@import "../../../../../../../../../styles/sizes";
 
 .container {
   margin: 0;
@@ -9,4 +10,10 @@
   list-style-type: none;
   overflow-x: auto;
   overflow-y: hidden;
+}
+
+@include tablet {
+  .container {
+    overflow: hidden;
+  }
 }
