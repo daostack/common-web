@@ -10,7 +10,10 @@ import {
 } from "../../../ActiveBreadcrumbsItem";
 
 interface ActiveFeedBreadcrumbsItemProps
-  extends Pick<ActiveBreadcrumbsItemProps, "name" | "image" | "withMenu"> {
+  extends Pick<
+    ActiveBreadcrumbsItemProps,
+    "name" | "image" | "withMenu" | "truncate"
+  > {
   activeItemId: string;
 }
 

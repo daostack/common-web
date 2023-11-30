@@ -3,6 +3,7 @@ import { useHistory } from "react-router";
 import { useRoutesContext } from "@/shared/contexts";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
+import { truncateBreadcrumbName } from "../../utils";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
 import styles from "./BreadcrumbsItem.module.scss";
 
@@ -13,6 +14,7 @@ export interface BreadcrumbsItemProps {
   onCommonCreate?: () => void;
   withMenu?: boolean;
   isLoading?: boolean;
+  truncate?: boolean;
   onClick?: () => void;
 }
 
@@ -24,6 +26,7 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
     onCommonCreate,
     withMenu = true,
     isLoading = false,
+    truncate = false,
     onClick,
   } = props;
   const history = useHistory();
@@ -44,9 +47,9 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   };
 
   return (
-    <li ref={containerRef}>
+    <li ref={containerRef} className={styles.li}>
       <button className={styles.button} onClick={handleButtonClick}>
-        {activeItem.name}
+        {truncate ? truncateBreadcrumbName(activeItem.name) : activeItem.name}
       </button>
       {withMenu && (
         <BreadcrumbsMenu
