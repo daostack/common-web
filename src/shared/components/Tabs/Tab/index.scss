@@ -25,6 +25,7 @@
   cursor: pointer;
   transition: color 0.2s, border-bottom-color 0.2s;
   user-select: none;
+  -webkit-user-select: none;
 
   &:active {
     --tab-bb-color: var(--tab-inactive-hover-color);
