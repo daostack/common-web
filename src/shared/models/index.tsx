@@ -24,4 +24,5 @@ export * from "./BankAccountDetails";
 export * from "./Currency";
 export * from "./SupportersData";
 export * from "./Timestamp";
+export * from "./UserActivity";
 export * from "./NotionIntegration";

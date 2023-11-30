@@ -1,22 +1,13 @@
 import { ProjectsStateItem } from "../projects";
 
-interface LastCommonFromFeedData {
-  name: string;
-  image: string;
-  isProject: boolean;
-  memberCount: number;
-}
-
 interface LastCommonFromFeed {
   id: string;
-  data:
-    | (LastCommonFromFeedData & {
-        rootCommon: {
-          id: string;
-          data: LastCommonFromFeedData | null;
-        } | null;
-      })
-    | null;
+  data: {
+    name: string;
+    image: string;
+    isProject: boolean;
+    memberCount: number;
+  } | null;
 }
 
 export interface CommonLayoutState {

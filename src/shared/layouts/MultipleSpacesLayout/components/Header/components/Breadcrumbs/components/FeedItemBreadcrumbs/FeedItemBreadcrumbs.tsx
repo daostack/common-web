@@ -1,5 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CommonEvent, CommonEventEmitter } from "@/events";
+import { CommonService } from "@/services";
 import { ScreenSize } from "@/shared/constants";
 import { getScreenSize } from "@/shared/store/selectors";
 import {
@@ -9,7 +11,6 @@ import {
   selectCommonLayoutCommonId,
 } from "@/store/states";
 import { useGoToCreateCommon } from "../../../../../../hooks";
-import { LoadingBreadcrumbsItem } from "../LoadingBreadcrumbsItem";
 import { Separator } from "../Separator";
 import { ActiveFeedBreadcrumbsItem, FeedBreadcrumbsItem } from "./components";
 import styles from "./FeedItemBreadcrumbs.module.scss";
@@ -26,6 +27,11 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
   const goToCreateCommon = useGoToCreateCommon();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
+  const shouldTruncateBreadcrumb =
+    isMobileView && breadcrumbs.items.length >= 3;
+  const breadcrumbsItems = shouldTruncateBreadcrumb
+    ? [breadcrumbs.items[0], breadcrumbs.items[breadcrumbs.items.length - 1]]
+    : breadcrumbs.items;
 
   const handleItemClick = (item: ProjectsStateItem) => {
     if (
@@ -38,15 +44,30 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
     }
   };
 
-  const shouldTruncateBreadcrumb =
-    isMobileView && breadcrumbs.items.length >= 3;
-  const breadcrumbsItems = shouldTruncateBreadcrumb
-    ? [breadcrumbs.items[0], breadcrumbs.items[breadcrumbs.items.length - 1]]
-    : breadcrumbs.items;
+  useEffect(() => {
+    const commonIds = breadcrumbs.items.map((item) => item.commonId);
+
+    if (commonIds.length === 0) {
+      return;
+    }
+
+    const unsubscribe = CommonService.subscribeToCommons(commonIds, (data) => {
+      data.forEach(({ common }) => {
+        CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
+          commonId: common.id,
+          image: common.image,
+          name: common.name,
+          directParent: common.directParent,
+          rootCommonId: common.rootCommonId,
+        });
+      });
+    });
+
+    return unsubscribe;
+  }, [breadcrumbs.activeItem?.id]);
 
   return (
     <ul className={styles.container}>
-      {breadcrumbs.areItemsLoading && <LoadingBreadcrumbsItem />}
       {!breadcrumbs.areItemsLoading &&
         breadcrumbsItems.map((item, index) => (
           <React.Fragment key={item.commonId}>
@@ -67,7 +88,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
         ))}
       {breadcrumbs.activeItem && (
         <>
-          {(breadcrumbs.areItemsLoading || breadcrumbs.items.length > 0) && (
+          {!breadcrumbs.areItemsLoading && breadcrumbs.items.length > 0 && (
             <Separator />
           )}
           {!isMobileView && (
