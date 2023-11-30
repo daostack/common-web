@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
 import { Language } from "@/shared/constants";
-import { useModal } from "@/shared/hooks";
+import { useLightThemeOnly, useModal } from "@/shared/hooks";
 import { selectLanguage } from "@/shared/store/selectors";
 import { JoinWaitlistModal } from "../../components/JoinWaitlistModal";
 import {
@@ -21,6 +21,7 @@ const LandingContainer = () => {
     onOpen: onWaitlistModalOpen,
     onClose: onWaitlistModalClose,
   } = useModal(false);
+  useLightThemeOnly();
 
   return (
     <div

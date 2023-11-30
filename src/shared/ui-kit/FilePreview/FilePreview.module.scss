@@ -7,11 +7,13 @@
   width: fit-content;
   cursor: pointer;
   margin-left: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .linkWrapper {
   display: flex;
   width: fit-content;
+  color: var(--primary-text);
 }
 
 .fileExtension {

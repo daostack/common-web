@@ -94,6 +94,10 @@
   background-color: $c-pink-active-feed-cards;
   margin-left: 2.8rem;
   margin-right: unset;
+
+  .mentionText {
+    color: $c-pink-mention-2;
+  }
 }
 
 .systemMessageContainer {
@@ -270,7 +274,6 @@
 
 .fileTitle {
   font-size: $xxsmall;
-  color: $c-gray-100;
   font-weight: 600;
   line-height: 1.25rem;
   margin: 0;
@@ -278,7 +281,6 @@
 }
 
 .fileSize {
-  color: $c-gray-100;
   font-size: $xxsmall-3;
   font-weight: 400;
   margin: 0;
