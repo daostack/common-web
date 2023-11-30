@@ -8,11 +8,7 @@ import React, {
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { DiscussionMessageService } from "@/services";
-import {
-  ElementDropdown,
-  UserAvatar,
-  UserInfoPopup,
-} from "@/shared/components";
+import { ElementDropdown, UserAvatar } from "@/shared/components";
 import {
   Orientation,
   ChatType,
@@ -145,17 +141,9 @@ export default function ChatMessage({
     (discussionMessage.editedAt?.seconds ?? 0) * 1000,
   );
 
-  const {
-    isShowing: isShowingUserProfile,
-    onClose: onCloseUserProfile,
-    onOpen: onOpenUserProfile,
-  } = useModal(false);
-
   const handleUserClick = () => {
     if (onUserClick && discussionMessageUserId) {
       onUserClick(discussionMessageUserId);
-    } else {
-      onOpenUserProfile();
     }
   };
 
@@ -410,16 +398,6 @@ export default function ChatMessage({
           </>
         )}
       </div>
-      {isShowingUserProfile && isUserDiscussionMessage && (
-        <UserInfoPopup
-          commonId={discussionMessage.commonId}
-          userId={discussionMessage.ownerId}
-          avatar={discussionMessage.ownerAvatar}
-          isShowing={isShowingUserProfile}
-          onClose={onCloseUserProfile}
-          directParent={directParent}
-        />
-      )}
     </li>
   );
 }

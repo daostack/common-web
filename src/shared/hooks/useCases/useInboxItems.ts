@@ -13,6 +13,7 @@ import { useIsMounted } from "@/shared/hooks";
 import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import {
   ChatChannel,
+  CommonFeedType,
   FeedItemFollow,
   FeedItemFollowWithMetadata,
 } from "@/shared/models";
@@ -189,13 +190,16 @@ export const useInboxItems = (
       return;
     }
 
+    const filteredData = data.filter(({ item }) =>
+      [CommonFeedType.Discussion, CommonFeedType.Proposal].includes(item.type),
+    );
     const finalData =
       feedItemIdsForNotListening && feedItemIdsForNotListening.length > 0
-        ? data.filter(
+        ? filteredData.filter(
             (item) =>
               !feedItemIdsForNotListening.includes(item.item.feedItemId),
           )
-        : data;
+        : filteredData;
     setNewItemsBatches((currentItems) => [...currentItems, finalData]);
   };
 

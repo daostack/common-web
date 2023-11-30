@@ -72,8 +72,6 @@ const getTextFromDescendant = ({
           userId={descendant.userId}
           displayName={descendant.displayName}
           mentionTextClassName={mentionTextClassName}
-          commonId={commonId}
-          directParent={directParent}
           onUserClick={onUserClick}
         />
       );

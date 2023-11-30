@@ -20,8 +20,8 @@ import rootReducer from "./reducer";
 import appSagas from "./saga";
 import {
   inboxTransform,
-  lastCommonFromFeedTransform,
   cacheTransform,
+  multipleSpacesLayoutTransform,
 } from "./transforms";
 
 const persistConfig: PersistConfig<AppState> = {
@@ -32,12 +32,11 @@ const persistConfig: PersistConfig<AppState> = {
     "commonLayout",
     "commonFeedFollows",
     "cache",
-    "chat",
     "inbox",
     "multipleSpacesLayout",
   ],
   stateReconciler: autoMergeLevel2,
-  transforms: [inboxTransform, lastCommonFromFeedTransform, cacheTransform],
+  transforms: [inboxTransform, cacheTransform, multipleSpacesLayoutTransform],
 };
 
 const sagaMiddleware = createSagaMiddleware();
