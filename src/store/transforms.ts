@@ -6,7 +6,7 @@ import {
 import { convertObjectDatesToFirestoreTimestamps } from "@/shared/utils";
 import { MultipleSpacesLayoutState } from "@/store/states";
 import { getFeedLayoutItemDateForSorting } from "@/store/states/inbox/utils";
-import { CacheState } from "./states/cache";
+import { CacheState, INITIAL_CACHE_STATE } from "./states/cache";
 import {
   InboxItems,
   InboxState,
@@ -82,12 +82,11 @@ export const inboxTransform = createTransform(
 );
 
 export const cacheTransform = createTransform(
-  (inboundState: CacheState) => inboundState,
-  (outboundState: CacheState) => ({
-    ...outboundState,
-    userStates: clearNonFinishedStates(outboundState.userStates),
-    discussionMessagesStates: {},
+  (inboundState: CacheState) => ({
+    ...INITIAL_CACHE_STATE,
+    userStates: clearNonFinishedStates(inboundState.userStates),
   }),
+  (outboundState: CacheState) => outboundState,
   { whitelist: ["cache"] },
 );
 
