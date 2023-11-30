@@ -5,17 +5,16 @@ const BASE_HEIGHT = 78;
 const HEIGHT_COEFFICIENT = BASE_HEIGHT / BASE_WIDTH;
 
 interface GalleryIconProps {
-  iconColor?: string;
+  color?: string;
   className?: string;
   size?: number;
 }
 
 export default function FileIcon({
-  iconColor,
+  color = "currentColor",
   size = BASE_WIDTH,
   className,
 }: GalleryIconProps): ReactElement {
-  const color = iconColor ?? "currentColor";
   return (
     <svg
       className={className}
