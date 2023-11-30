@@ -8,11 +8,7 @@ import React, {
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { DiscussionMessageService } from "@/services";
-import {
-  ElementDropdown,
-  UserAvatar,
-  UserInfoPopup,
-} from "@/shared/components";
+import { ElementDropdown, UserAvatar } from "@/shared/components";
 import {
   Orientation,
   ChatType,
@@ -20,7 +16,7 @@ import {
   QueryParamKey,
 } from "@/shared/constants";
 import { Colors } from "@/shared/constants";
-import { useModal } from "@/shared/hooks";
+//import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -146,17 +142,9 @@ export default function ChatMessage({
     (discussionMessage.editedAt?.seconds ?? 0) * 1000,
   );
 
-  const {
-    isShowing: isShowingUserProfile,
-    onClose: onCloseUserProfile,
-    onOpen: onOpenUserProfile,
-  } = useModal(false);
-
   const handleUserClick = () => {
     if (onUserClick && discussionMessageUserId) {
       onUserClick(discussionMessageUserId);
-    } else {
-      onOpenUserProfile();
     }
   };
 
@@ -414,7 +402,7 @@ export default function ChatMessage({
           </>
         )}
       </div>
-      {isShowingUserProfile && isUserDiscussionMessage && (
+      {/* {isShowingUserProfile && isUserDiscussionMessage && (
         <UserInfoPopup
           commonId={discussionMessage.commonId}
           userId={discussionMessage.ownerId}
@@ -423,7 +411,7 @@ export default function ChatMessage({
           onClose={onCloseUserProfile}
           directParent={directParent}
         />
-      )}
+      )} */}
     </li>
   );
 }
