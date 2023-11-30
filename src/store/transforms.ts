@@ -85,6 +85,7 @@ export const cacheTransform = createTransform(
   (inboundState: CacheState) => ({
     ...INITIAL_CACHE_STATE,
     userStates: clearNonFinishedStates(inboundState.userStates),
+    feedByCommonIdStates: inboundState.feedByCommonIdStates,
   }),
   (outboundState: CacheState) => outboundState,
   { whitelist: ["cache"] },
