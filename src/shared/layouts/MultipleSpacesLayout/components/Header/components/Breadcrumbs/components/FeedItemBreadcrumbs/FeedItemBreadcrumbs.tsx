@@ -9,7 +9,6 @@ import {
   selectCommonLayoutCommonId,
 } from "@/store/states";
 import { useGoToCreateCommon } from "../../../../../../hooks";
-import { LoadingBreadcrumbsItem } from "../LoadingBreadcrumbsItem";
 import { Separator } from "../Separator";
 import { ActiveFeedBreadcrumbsItem, FeedBreadcrumbsItem } from "./components";
 import styles from "./FeedItemBreadcrumbs.module.scss";
@@ -60,7 +59,6 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
 
   return (
     <ul className={styles.container}>
-      {breadcrumbs.areItemsLoading && <LoadingBreadcrumbsItem />}
       {!breadcrumbs.areItemsLoading &&
         breadcrumbs.items.map((item, index) => (
           <React.Fragment key={item.commonId}>
@@ -75,7 +73,7 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
         ))}
       {breadcrumbs.activeItem && (
         <>
-          {(breadcrumbs.areItemsLoading || breadcrumbs.items.length > 0) && (
+          {!breadcrumbs.areItemsLoading && breadcrumbs.items.length > 0 && (
             <Separator />
           )}
           <ActiveFeedBreadcrumbsItem
