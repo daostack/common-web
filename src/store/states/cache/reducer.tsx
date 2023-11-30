@@ -8,7 +8,7 @@ import { CacheState } from "./types";
 
 type Action = ActionType<typeof actions>;
 
-const initialState: CacheState = {
+export const INITIAL_CACHE_STATE: CacheState = {
   userStates: {},
   governanceByCommonIdStates: {},
   discussionStates: {},
@@ -19,7 +19,7 @@ const initialState: CacheState = {
   chatChannelUserStatusStates: {},
 };
 
-export const reducer = createReducer<CacheState, Action>(initialState)
+export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
   .handleAction(actions.updateUserStateById, (state, { payload }) =>
     produce(state, (nextState) => {
       const { userId, state } = payload;
@@ -115,8 +115,7 @@ export const reducer = createReducer<CacheState, Action>(initialState)
 
         const uniq = unionBy(
           payload.state?.data ?? [],
-          state.discussionMessagesStates[discussionId]?.data ??
-            [],
+          state.discussionMessagesStates[discussionId]?.data ?? [],
           "id",
         ).sort(
           (a, b) =>
@@ -136,8 +135,7 @@ export const reducer = createReducer<CacheState, Action>(initialState)
         const { discussionId, discussionMessage } = payload;
 
         const updatedDiscussionMessages = [
-          ...(state.discussionMessagesStates[discussionId]
-            ?.data ?? []),
+          ...(state.discussionMessagesStates[discussionId]?.data ?? []),
           discussionMessage,
         ];
 
