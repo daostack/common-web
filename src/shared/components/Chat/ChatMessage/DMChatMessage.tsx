@@ -459,16 +459,6 @@ export default function DMChatMessage({
           </>
         )}
       </div>
-      {/* {isShowingUserProfile && isUserDiscussionMessage && (
-        <UserInfoPopup
-          commonId={discussionMessage.commonId}
-          userId={discussionMessage.ownerId}
-          avatar={discussionMessage.ownerAvatar}
-          isShowing={isShowingUserProfile}
-          onClose={onCloseUserProfile}
-          directParent={directParent}
-        />
-      )} */}
     </li>
   );
 }

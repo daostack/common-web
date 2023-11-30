@@ -16,7 +16,6 @@ import {
   QueryParamKey,
 } from "@/shared/constants";
 import { Colors } from "@/shared/constants";
-//import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -402,16 +401,6 @@ export default function ChatMessage({
           </>
         )}
       </div>
-      {/* {isShowingUserProfile && isUserDiscussionMessage && (
-        <UserInfoPopup
-          commonId={discussionMessage.commonId}
-          userId={discussionMessage.ownerId}
-          avatar={discussionMessage.ownerAvatar}
-          isShowing={isShowingUserProfile}
-          onClose={onCloseUserProfile}
-          directParent={directParent}
-        />
-      )} */}
     </li>
   );
 }
