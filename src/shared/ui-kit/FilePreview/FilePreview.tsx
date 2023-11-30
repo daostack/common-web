@@ -20,7 +20,6 @@ interface FilePreviewProps {
   variant?: FilePreviewVariant;
   iconContainerClassName?: string;
   containerClassName?: string;
-  iconColor?: string;
   isCurrentUser?: boolean;
   isPreview?: boolean;
 }
@@ -32,7 +31,6 @@ export default function FilePreview(props: FilePreviewProps) {
     variant = FilePreviewVariant.small,
     iconContainerClassName,
     containerClassName,
-    iconColor,
     size,
     fileSize,
     isCurrentUser,
@@ -51,11 +49,7 @@ export default function FilePreview(props: FilePreviewProps) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <FileIcon
-            className={iconContainerClassName}
-            color={iconColor}
-            size={size}
-          />
+          <FileIcon className={iconContainerClassName} size={size} />
           <div
             className={classNames(styles.fileExtension, {
               [styles.fileExtensionExtraSmall]:
