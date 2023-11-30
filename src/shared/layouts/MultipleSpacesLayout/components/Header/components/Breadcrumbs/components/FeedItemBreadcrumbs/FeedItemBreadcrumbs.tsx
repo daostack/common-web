@@ -1,5 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CommonEvent, CommonEventEmitter } from "@/events";
+import { CommonService } from "@/services";
 import {
   commonLayoutActions,
   MultipleSpacesLayoutFeedItemBreadcrumbs,
@@ -33,6 +35,28 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
       dispatch(commonLayoutActions.clearProjects());
     }
   };
+
+  useEffect(() => {
+    const commonIds = breadcrumbs.items.map((item) => item.commonId);
+
+    if (commonIds.length === 0) {
+      return;
+    }
+
+    const unsubscribe = CommonService.subscribeToCommons(commonIds, (data) => {
+      data.forEach(({ common }) => {
+        CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
+          commonId: common.id,
+          image: common.image,
+          name: common.name,
+          directParent: common.directParent,
+          rootCommonId: common.rootCommonId,
+        });
+      });
+    });
+
+    return unsubscribe;
+  }, [breadcrumbs.activeItem?.id]);
 
   return (
     <ul className={styles.container}>
