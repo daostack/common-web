@@ -6,13 +6,13 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  color: $secondary-blue;
+  color: var(--primary-text);
   text-align: left;
   list-style-type: none;
   box-sizing: border-box;
 
   .login-help-buttons__item {
-    border-bottom: 1px solid $light-gray-1;
+    border-bottom: 1px solid var(--gentle-stroke);
 
     &:last-child {
       border-bottom: 0;

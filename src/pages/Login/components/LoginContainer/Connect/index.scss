@@ -107,6 +107,7 @@
   .connect-wrapper__terms-of-use {
     font-weight: 600;
     text-decoration: underline;
+    color: var(--primary-fill);
   }
 
   @include big-phone {

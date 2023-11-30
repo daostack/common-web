@@ -9,7 +9,7 @@ import { MultipleSpacesLayoutState, ProjectsStateItem } from "../types";
 const fetchProjectsInfoByActiveCommonId = async (
   commonId: string,
 ): Promise<ProjectsStateItem[]> => {
-  const activeCommon = await CommonService.getCommonById(commonId);
+  const activeCommon = await CommonService.getCommonById(commonId, true);
 
   if (!activeCommon) {
     return [];
@@ -17,6 +17,7 @@ const fetchProjectsInfoByActiveCommonId = async (
 
   const commons = await CommonService.getAllParentCommonsForCommon(
     activeCommon,
+    true,
   );
 
   return [...commons, activeCommon].map((common) => ({
