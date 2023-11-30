@@ -1,15 +1,32 @@
 import { createTransform } from "redux-persist";
-import { deserializeFeedLayoutItemWithFollowData } from "@/shared/interfaces";
+import {
+  deserializeFeedLayoutItemWithFollowData,
+  LoadingState,
+} from "@/shared/interfaces";
 import { convertObjectDatesToFirestoreTimestamps } from "@/shared/utils";
 import { MultipleSpacesLayoutState } from "@/store/states";
 import { getFeedLayoutItemDateForSorting } from "@/store/states/inbox/utils";
-import { CacheState } from "./states/cache";
+import { CacheState, INITIAL_CACHE_STATE } from "./states/cache";
 import {
   InboxItems,
   InboxState,
   INITIAL_INBOX_ITEMS,
   INITIAL_INBOX_STATE,
 } from "./states/inbox";
+
+const clearNonFinishedStates = <T extends unknown>(
+  states: Record<string, LoadingState<T>>,
+): Record<string, LoadingState<T>> =>
+  Object.entries(states).reduce((acc, [key, value]) => {
+    if (value.loading || !value.fetched) {
+      return acc;
+    }
+
+    return {
+      ...acc,
+      [key]: value,
+    };
+  }, {});
 
 export const inboxTransform = createTransform(
   (inboundState: InboxState) => {
@@ -65,11 +82,12 @@ export const inboxTransform = createTransform(
 );
 
 export const cacheTransform = createTransform(
-  (inboundState: CacheState) => inboundState,
-  (outboundState: CacheState) => ({
-    ...outboundState,
-    discussionMessagesStates: {},
+  (inboundState: CacheState) => ({
+    ...INITIAL_CACHE_STATE,
+    userStates: clearNonFinishedStates(inboundState.userStates),
+    feedByCommonIdStates: inboundState.feedByCommonIdStates,
   }),
+  (outboundState: CacheState) => outboundState,
   { whitelist: ["cache"] },
 );
 

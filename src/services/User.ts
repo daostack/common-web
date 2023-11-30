@@ -15,7 +15,6 @@ import {
   convertObjectDatesToFirestoreTimestamps,
   convertToTimestamp,
   firestoreDataConverter,
-  transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import * as cacheActions from "@/store/states/cache/actions";
@@ -51,31 +50,56 @@ class UserService {
     };
   };
 
-  public getUserById = async (userId: string): Promise<User | null> => {
-    const userSnapshot = await this.getUsersCollection()
+  public getUserById = async (
+    userId: string,
+    cached = false,
+  ): Promise<User | null> => {
+    const snapshot = await this.getUsersCollection()
       .where("uid", "==", userId)
-      .get();
+      .get({ source: cached ? "cache" : "default" });
+    const users = snapshot.docs.map((doc) => doc.data());
+    const user = users[0] || null;
 
-    return transformFirebaseDataList<User>(userSnapshot)[0] || null;
+    if (cached && !user) {
+      return this.getUserById(userId);
+    }
+
+    return user;
   };
 
   public getCachedUserById = async (userId: string): Promise<User | null> => {
-    const userState = store.getState().cache.userStates[userId];
+    try {
+      const userState = store.getState().cache.userStates[userId];
 
-    if (userState?.fetched) {
-      return userState.data;
-    }
-    if (userState?.loading) {
+      if (userState?.fetched) {
+        return userState.data;
+      }
+      if (userState?.loading) {
+        return await waitForUserToBeLoaded(userId);
+      }
+
+      store.dispatch(
+        cacheActions.getUserStateById.request({
+          payload: { userId },
+        }),
+      );
+
       return await waitForUserToBeLoaded(userId);
+    } catch (err) {
+      const user = await this.getUserById(userId, true);
+      store.dispatch(
+        cacheActions.updateUserStateById({
+          userId,
+          state: {
+            loading: false,
+            fetched: true,
+            data: user,
+          },
+        }),
+      );
+
+      return user;
     }
-
-    store.dispatch(
-      cacheActions.getUserStateById.request({
-        payload: { userId },
-      }),
-    );
-
-    return await waitForUserToBeLoaded(userId);
   };
 
   public getCachedUsersById = async (userIds: string[]): Promise<User[]> =>

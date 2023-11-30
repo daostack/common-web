@@ -12,7 +12,7 @@ import {
 
 type FeedBreadcrumbsItemProps = Pick<
   BreadcrumbsItemProps,
-  "activeItem" | "onCommonCreate" | "withMenu" | "onClick"
+  "activeItem" | "onCommonCreate" | "withMenu" | "onClick" | "truncate"
 >;
 
 const getItemsByParentId = (

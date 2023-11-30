@@ -1,5 +1,4 @@
 import React, { ReactElement } from "react";
-import { Colors } from "@/shared/constants";
 
 const BASE_WIDTH = 66;
 const BASE_HEIGHT = 78;
@@ -12,7 +11,7 @@ interface GalleryIconProps {
 }
 
 export default function FileIcon({
-  color = Colors.darkBlue,
+  color = "currentColor",
   size = BASE_WIDTH,
   className,
 }: GalleryIconProps): ReactElement {

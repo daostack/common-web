@@ -42,8 +42,6 @@ const renderUserMention = (
       userId={user.uid}
       displayName={getUserName(user)}
       mentionTextClassName={data.mentionTextClassName}
-      commonId={data.commonId}
-      directParent={data.directParent}
       onUserClick={data.onUserClick}
     />
   ) : (

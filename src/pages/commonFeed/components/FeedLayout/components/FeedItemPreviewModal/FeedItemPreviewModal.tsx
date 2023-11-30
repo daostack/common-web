@@ -4,6 +4,7 @@ import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { Modal } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModalType, FeedLayoutItemChangeData } from "@/shared/interfaces";
+import { Breadcrumbs } from "@/shared/layouts/MultipleSpacesLayout/components/Header/components";
 import { Circles, CommonFeed } from "@/shared/models";
 import styles from "./FeedItemPreviewModal.module.scss";
 
@@ -72,6 +73,7 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
     >
       {selectedFeedItem && (
         <>
+          <Breadcrumbs itemsWithMenus={false} />
           {title && <h3 className={styles.itemTitle}>{title}</h3>}
           <FeedItem
             commonId={commonId}

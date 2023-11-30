@@ -8,20 +8,14 @@ import React, {
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
 import { Logger } from "@/services";
-import {
-  ElementDropdown,
-  UserAvatar,
-  UserInfoPopup,
-} from "@/shared/components";
+import { ElementDropdown, UserAvatar } from "@/shared/components";
 import {
   Orientation,
   ChatType,
   EntityTypes,
   QueryParamKey,
 } from "@/shared/constants";
-import { Colors } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
-import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -122,17 +116,9 @@ export default function DMChatMessage({
     (discussionMessage.editedAt?.seconds ?? 0) * 1000,
   );
 
-  const {
-    isShowing: isShowingUserProfile,
-    onClose: onCloseUserProfile,
-    onOpen: onOpenUserProfile,
-  } = useModal(false);
-
   const handleUserClick = () => {
     if (onUserClick && discussionMessageUserId) {
       onUserClick(discussionMessageUserId);
-    } else {
-      onOpenUserProfile();
     }
   };
 
@@ -402,9 +388,6 @@ export default function DMChatMessage({
                     name={filePreview.name || filePreview.title}
                     fileSize={filePreview.size}
                     variant={FilePreviewVariant.medium}
-                    iconColor={
-                      isNotCurrentUserMessage ? Colors.black : Colors.lightPink
-                    }
                     isCurrentUser={!isNotCurrentUserMessage}
                   />
                 )}
@@ -472,16 +455,6 @@ export default function DMChatMessage({
           </>
         )}
       </div>
-      {isShowingUserProfile && isUserDiscussionMessage && (
-        <UserInfoPopup
-          commonId={discussionMessage.commonId}
-          userId={discussionMessage.ownerId}
-          avatar={discussionMessage.ownerAvatar}
-          isShowing={isShowingUserProfile}
-          onClose={onCloseUserProfile}
-          directParent={directParent}
-        />
-      )}
     </li>
   );
 }

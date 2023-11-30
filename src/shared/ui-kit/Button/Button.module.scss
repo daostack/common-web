@@ -236,10 +236,6 @@
   &:active {
     --btn-bg-color: #{$c-pink-active-btn};
   }
-
-  &.buttonDisabled {
-    --btn-bg-color: #{$c-neutrals-100};
-  }
 }
 
 .buttonWarningVariant {
