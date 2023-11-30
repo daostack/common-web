@@ -28,8 +28,13 @@ interface Return {
 }
 
 export const useDiscussionChatAdapter = (options: Options): Return => {
-  const { hasPermissionToHide, textStyles, discussionId, onFeedItemClick } =
-    options;
+  const {
+    hasPermissionToHide,
+    textStyles,
+    discussionId,
+    onFeedItemClick,
+    onUserClick,
+  } = options;
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
@@ -46,6 +51,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     users,
     textStyles,
     onFeedItemClick,
+    onUserClick,
   });
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
