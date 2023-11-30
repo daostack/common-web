@@ -1,5 +1,5 @@
 @import "../../../../../../../../../constants";
-@import "../../../../../../../../..//styles/sizes.scss";
+@import "../../../../../../../../../styles/sizes";
 
 .button {
   --breadcrumbs-color: #{$c-gray-40};
@@ -29,7 +29,7 @@
   }
 }
 
-@include big-phone {
+@include tablet {
   li {
     &:first-child {
       button {
