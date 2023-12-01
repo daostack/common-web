@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { InboxItemType } from "@/shared/constants";
 import { MainRoutesProvider } from "@/shared/contexts";
-import { useLockedBody } from "@/shared/hooks";
 import { useLastVisitedCommon } from "@/shared/hooks/useCases";
 import { MultipleSpacesLayoutPageContent } from "@/shared/layouts";
 import {
@@ -59,7 +58,6 @@ const renderContentWrapper: RenderCommonFeedContentWrapper = ({
 
 const CommonFeedPage: FC = () => {
   const { id: commonId } = useParams<CommonFeedPageRouterParams>();
-  const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
   const dispatch = useDispatch();
   const layoutMainWidth = useSelector(selectMultipleSpacesLayoutMainWidth);
   const user = useSelector(selectUser());
@@ -99,9 +97,7 @@ const CommonFeedPage: FC = () => {
   }, [commonId]);
 
   useEffect(() => {
-    lockBodyScroll();
     return () => {
-      unlockBodyScroll();
       dispatch(multipleSpacesLayoutActions.clearBreadcrumbs());
     };
   }, []);

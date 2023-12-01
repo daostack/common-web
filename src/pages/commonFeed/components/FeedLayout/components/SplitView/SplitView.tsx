@@ -1,5 +1,6 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import SplitPane from "react-split-pane";
+import { useLockedBody } from "@/shared/hooks";
 import styles from "./SplitView.module.scss";
 
 interface SplitViewProps {
@@ -14,6 +15,14 @@ interface SplitViewProps {
 const SplitView: FC<SplitViewProps> = (props) => {
   const { className, size, minSize, maxSize, defaultSize, onChange, children } =
     props;
+  const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
+
+  useEffect(() => {
+    lockBodyScroll();
+    return () => {
+      unlockBodyScroll();
+    };
+  }, []);
 
   return (
     <SplitPane
