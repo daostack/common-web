@@ -14,7 +14,7 @@ import React, {
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
-import { useComponentWillUnmount } from "../../hooks";
+import { useComponentWillUnmount, useLockedBody } from "../../hooks";
 import Close2Icon from "../../icons/close2.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
 import { ModalProps, ModalRef, ModalType } from "../../interfaces";
@@ -54,6 +54,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   const { sticky: isFooterSticky = false } = footerOptions;
   const [showClosePrompt, setShowClosePrompt] = useState(false);
   const modalId = useMemo(() => `modal-${uuidv4()}`, []);
+  const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
 
   const handleModalContainerClick: MouseEventHandler = (event) => {
     event.stopPropagation();
@@ -87,7 +88,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     }
 
     const modalRoot = document.getElementById(modalId);
-    document.body.style.overflow = "initial";
+    unlockBodyScroll();
 
     if (modalRoot) {
       document.body.removeChild(modalRoot);
@@ -97,12 +98,12 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   useEffect(() => {
     if (!isShowing) {
       const modalRoot = document.getElementById(modalId);
-      document.body.style.overflow = "initial";
+      unlockBodyScroll();
       if (modalRoot) {
         document.body.removeChild(modalRoot);
       }
     } else {
-      document.body.style.overflow = "hidden";
+      lockBodyScroll();
     }
   }, [isShowing, modalId]);
 
