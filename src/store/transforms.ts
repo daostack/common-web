@@ -85,7 +85,18 @@ export const cacheTransform = createTransform(
   (inboundState: CacheState) => ({
     ...INITIAL_CACHE_STATE,
     userStates: clearNonFinishedStates(inboundState.userStates),
+    governanceByCommonIdStates: clearNonFinishedStates(
+      inboundState.governanceByCommonIdStates,
+    ),
+    discussionStates: clearNonFinishedStates(inboundState.discussionStates),
+    proposalStates: clearNonFinishedStates(inboundState.proposalStates),
     feedByCommonIdStates: inboundState.feedByCommonIdStates,
+    feedItemUserMetadataStates: clearNonFinishedStates(
+      inboundState.feedItemUserMetadataStates,
+    ),
+    chatChannelUserStatusStates: clearNonFinishedStates(
+      inboundState.chatChannelUserStatusStates,
+    ),
   }),
   (outboundState: CacheState) => outboundState,
   { whitelist: ["cache"] },
