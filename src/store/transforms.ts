@@ -82,23 +82,23 @@ export const inboxTransform = createTransform(
 );
 
 export const cacheTransform = createTransform(
-  (inboundState: CacheState) => ({
+  (inboundState: CacheState) => inboundState,
+  (outboundState: CacheState) => ({
     ...INITIAL_CACHE_STATE,
-    userStates: clearNonFinishedStates(inboundState.userStates),
+    userStates: clearNonFinishedStates(outboundState.userStates),
     governanceByCommonIdStates: clearNonFinishedStates(
-      inboundState.governanceByCommonIdStates,
+      outboundState.governanceByCommonIdStates,
     ),
-    discussionStates: clearNonFinishedStates(inboundState.discussionStates),
-    proposalStates: clearNonFinishedStates(inboundState.proposalStates),
-    feedByCommonIdStates: inboundState.feedByCommonIdStates,
+    discussionStates: clearNonFinishedStates(outboundState.discussionStates),
+    proposalStates: clearNonFinishedStates(outboundState.proposalStates),
+    feedByCommonIdStates: outboundState.feedByCommonIdStates,
     feedItemUserMetadataStates: clearNonFinishedStates(
-      inboundState.feedItemUserMetadataStates,
+      outboundState.feedItemUserMetadataStates,
     ),
     chatChannelUserStatusStates: clearNonFinishedStates(
-      inboundState.chatChannelUserStatusStates,
+      outboundState.chatChannelUserStatusStates,
     ),
   }),
-  (outboundState: CacheState) => outboundState,
   { whitelist: ["cache"] },
 );
 
