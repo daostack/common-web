@@ -68,6 +68,8 @@ class DiscussionService {
 
       if (discussion) {
         callback(discussion);
+      } else {
+        console.log("discussion was not found", discussionId);
       }
     });
   };

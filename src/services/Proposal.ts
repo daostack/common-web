@@ -99,6 +99,8 @@ class ProposalService {
 
       if (proposal) {
         callback(proposal);
+      } else {
+        console.log("proposal was not found", proposalId);
       }
     });
   };
