@@ -2,15 +2,14 @@ import {
   CreateDiscussionDto,
   EditDiscussionDto,
 } from "@/pages/OldCommon/interfaces";
-import { ApiEndpoint } from "@/shared/constants";
+import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { Collection, Discussion } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
-  transformFirebaseDataSingle,
 } from "@/shared/utils";
-import firebase from "@/shared/utils/firebase";
+import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api from "./Api";
 
 const converter = firestoreDataConverter<Discussion>();
@@ -24,15 +23,30 @@ class DiscussionService {
 
   public getDiscussionById = async (
     discussionId: string,
+    source = FirestoreDataSource.Default,
   ): Promise<Discussion | null> => {
-    const discussion = await this.getDiscussionCollection()
-      .doc(discussionId)
-      .get();
+    try {
+      const snapshot = await this.getDiscussionCollection()
+        .doc(discussionId)
+        .get({ source });
+      const fromCache = snapshot.metadata.fromCache ? "local cache" : "server";
+      console.log(
+        `getDiscussionById [${fromCache}]`,
+        discussionId,
+        snapshot?.data() || null,
+      );
 
-    return (
-      (discussion && transformFirebaseDataSingle<Discussion>(discussion)) ||
-      null
-    );
+      return snapshot?.data() || null;
+    } catch (error) {
+      if (
+        source === FirestoreDataSource.Cache &&
+        isFirestoreCacheError(error)
+      ) {
+        return this.getDiscussionById(discussionId, FirestoreDataSource.Server);
+      } else {
+        throw error;
+      }
+    }
   };
 
   public createDiscussion = async (
