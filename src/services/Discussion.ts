@@ -65,12 +65,13 @@ class DiscussionService {
 
     return query.onSnapshot((snapshot) => {
       const discussion = snapshot.data();
+      const source = snapshot.metadata.fromCache ? "local cache" : "server";
 
       if (discussion) {
-        console.log("discussion found!", discussionId);
+        console.log(`discussion found! [${source}]`, discussionId);
         callback(discussion);
       } else {
-        console.log("discussion was not found", discussionId);
+        console.log(`discussion was not found [${source}]`, discussionId);
       }
     });
   };
