@@ -67,6 +67,7 @@ class DiscussionService {
       const discussion = snapshot.data();
 
       if (discussion) {
+        console.log("discussion found!", discussionId);
         callback(discussion);
       } else {
         console.log("discussion was not found", discussionId);
