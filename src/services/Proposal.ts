@@ -95,7 +95,14 @@ class ProposalService {
     const query = this.getProposalCollection().doc(proposalId);
 
     return query.onSnapshot((snapshot) => {
-      callback(transformFirebaseDataSingle<Proposal>(snapshot));
+      const proposal = snapshot.data();
+
+      if (proposal) {
+        console.log("proposal found!", proposalId);
+        callback(proposal);
+      } else {
+        console.log("proposal was not found", proposalId);
+      }
     });
   };
 
