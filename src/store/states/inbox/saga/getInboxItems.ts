@@ -36,13 +36,13 @@ export function* getInboxItems(
     const currentItems = (yield select(selectInboxItems)) as InboxItems;
     const isFirstRequest = !currentItems.lastDocTimestamp;
     const { data, firstDocTimestamp, lastDocTimestamp, hasMore } = (yield call(
-      UserService.getInboxItems,
+      UserService.getInboxItemsWithMetadata,
       {
         startAfter: currentItems.lastDocTimestamp,
         limit,
         unread,
       },
-    )) as Awaited<ReturnType<typeof UserService.getInboxItems>>;
+    )) as Awaited<ReturnType<typeof UserService.getInboxItemsWithMetadata>>;
     const chatChannelItems = data.chatChannels
       .map<ChatChannelLayoutItem>((chatChannel) => ({
         type: InboxItemType.ChatChannel,

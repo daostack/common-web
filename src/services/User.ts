@@ -144,7 +144,7 @@ class UserService {
     });
   };
 
-  public getInboxItems = async (
+  public getInboxItemsWithMetadata = async (
     options: {
       startAfter?: Timestamp | null;
       limit?: number;
@@ -205,6 +205,26 @@ class UserService {
       lastDocTimestamp,
       hasMore: data.hasMore,
     };
+  };
+
+  public getInboxItems = async (options: {
+    userId: string;
+    startAt?: Timestamp;
+    endAt?: Timestamp;
+  }): Promise<InboxItem[]> => {
+    const { userId, startAt, endAt } = options;
+    let query = this.getInboxSubCollection(userId).orderBy("updatedAt", "desc");
+
+    if (startAt) {
+      query = query.startAt(startAt);
+    }
+    if (endAt) {
+      query = query.endAt(endAt);
+    }
+
+    const snapshot = await query.get();
+
+    return snapshot.docs.map((doc) => doc.data());
   };
 
   public subscribeToNewInboxItems = (
