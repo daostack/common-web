@@ -18,7 +18,7 @@ const clearNonFinishedStates = <T extends unknown>(
   states: Record<string, LoadingState<T>>,
 ): Record<string, LoadingState<T>> =>
   Object.entries(states).reduce((acc, [key, value]) => {
-    if (value.loading || !value.fetched || !value) {
+    if (value.loading || !value.fetched || !value.data) {
       return acc;
     }
 
