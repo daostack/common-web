@@ -32,8 +32,10 @@
     --tab-color: var(--tab-inactive-hover-color);
   }
 
-  &:hover {
-    --tab-color: var(--tab-inactive-hover-color);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      --tab-color: var(--tab-inactive-hover-color);
+    }
   }
 
   &:first-child {
@@ -50,11 +52,21 @@
   --tab-bb-color: var(--secondary-text);
   --tab-color: var(--secondary-text);
 
-  &:active,
-  &:hover {
+  &:active {
     --tab-bb-color: var(--secondary-text);
     --tab-color: var(--secondary-text);
   }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      --tab-bb-color: var(--secondary-text);
+      --tab-color: var(--secondary-text);
+    }
+  }
+  // &:hover {
+  //   --tab-bb-color: var(--secondary-text);
+  //   --tab-color: var(--secondary-text);
+  // }
 }
 .custom-tab--with-icon {
   --tab-pb: 0;
