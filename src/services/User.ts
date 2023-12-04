@@ -8,6 +8,8 @@ import {
   Collection,
   CommonFeed,
   FeedItemFollowWithMetadata,
+  InboxItem,
+  SubCollections,
   Timestamp,
   User,
 } from "@/shared/models";
@@ -22,10 +24,17 @@ import Api from "./Api";
 import { waitForUserToBeLoaded } from "./utils";
 
 const converter = firestoreDataConverter<User>();
+const inboxConverter = firestoreDataConverter<InboxItem>();
 
 class UserService {
   private getUsersCollection = () =>
     firebase.firestore().collection(Collection.Users).withConverter(converter);
+
+  private getInboxSubCollection = (userId: string) =>
+    this.getUsersCollection()
+      .doc(userId)
+      .collection(SubCollections.Inbox)
+      .withConverter(inboxConverter);
 
   public updateUser = async (user: User): Promise<User> => {
     const body: UpdateUserDto = {
@@ -196,6 +205,35 @@ class UserService {
       lastDocTimestamp,
       hasMore: data.hasMore,
     };
+  };
+
+  public subscribeToNewInboxItems = (
+    userId: string,
+    endBefore: Timestamp,
+    callback: (
+      data: {
+        item: InboxItem;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getInboxSubCollection(userId)
+      .orderBy("updatedAt", "desc")
+      .endBefore(endBefore);
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        item: docChange.doc.data(),
+        statuses: {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        },
+      }));
+      callback(data);
+    });
   };
 }
 

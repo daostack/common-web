@@ -15,6 +15,7 @@ export * from "./DiscussionMessage";
 export * from "./Discussion";
 export * from "./FeedItemFollow";
 export * from "./Gender";
+export * from "./InboxItem";
 export * from "./Invoices";
 export * from "./Link";
 export * from "./Payment";
