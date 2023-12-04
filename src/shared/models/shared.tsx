@@ -33,6 +33,7 @@ export enum Collection {
   Supporters = "supporters",
   Notifications = "notification",
   BankAccountDetails = "bankAccountDetails",
+  UsersActivity = "usersActivity",
 }
 
 export enum SubCollections {

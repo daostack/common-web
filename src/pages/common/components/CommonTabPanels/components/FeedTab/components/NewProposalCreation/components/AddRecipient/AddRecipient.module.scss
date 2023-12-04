@@ -22,6 +22,7 @@
   padding: 0 1rem;
   background-color: var(--tertiary-fill);
   width: 100%;
+  color: var(--primary-text);
 }
 
 .tableHeader {
@@ -82,8 +83,4 @@
 
 .clickableRow {
   cursor: pointer;
-
-  &:hover {
-    background-color: $c-primary-100;
-  }
 }

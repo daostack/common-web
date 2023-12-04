@@ -174,6 +174,8 @@ export default function ChatComponent({
       singleEmojiText: styles.singleEmojiText,
       multipleEmojiText: styles.multipleEmojiText,
     },
+    onFeedItemClick,
+    onUserClick,
   });
   const {
     chatMessagesData,

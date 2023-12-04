@@ -27,7 +27,11 @@ import {
 } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useQueryParams } from "@/shared/hooks";
-import { useCommonFeedItems, useUserCommonIds } from "@/shared/hooks/useCases";
+import {
+  useCommonFeedItems,
+  useLastVisitedCommon,
+  useUserCommonIds,
+} from "@/shared/hooks/useCases";
 import { useCommonPinnedFeedItems } from "@/shared/hooks/useCases/useCommonPinnedFeedItems";
 import { SidebarIcon } from "@/shared/icons";
 import {
@@ -47,7 +51,6 @@ import {
 import {
   cacheActions,
   commonActions,
-  commonLayoutActions,
   selectCommonAction,
   selectRecentStreamId,
   selectSharedFeedItem,
@@ -114,6 +117,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     fetched: isCommonDataFetched,
     fetchCommonData,
   } = useCommonData(userId);
+  const { updateLastVisitedCommon } = useLastVisitedCommon(userId);
   const parentCommonId = commonData?.common.directParent?.commonId;
   const anotherCommonId =
     userCommonIds[0] === commonId ? userCommonIds[1] : userCommonIds[0];
@@ -414,38 +418,28 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }, [rootCommonMember?.id]);
 
   useEffect(() => {
-    return () => {
+    const updateLastVisited = () => {
       const common = stateRef.current?.data?.common;
-      const rootCommon = stateRef.current?.data?.rootCommon;
 
-      dispatch(
-        commonLayoutActions.setLastCommonFromFeed({
-          id: commonId,
-          data: common
-            ? {
-                name: common.name,
-                image: common.image,
-                isProject: checkIsProject(common),
-                memberCount: common.memberCount,
-                rootCommon: common.rootCommonId
-                  ? {
-                      id: common.rootCommonId,
-                      data: rootCommon
-                        ? {
-                            name: rootCommon.name,
-                            image: rootCommon.image,
-                            isProject: false,
-                            memberCount: rootCommon.memberCount,
-                          }
-                        : null,
-                    }
-                  : null,
-              }
-            : null,
-        }),
-      );
+      updateLastVisitedCommon({
+        id: commonId,
+        data: common
+          ? {
+              name: common.name,
+              image: common.image,
+              isProject: checkIsProject(common),
+              memberCount: common.memberCount,
+            }
+          : null,
+      });
     };
-  }, [commonId]);
+
+    updateLastVisited();
+
+    return () => {
+      updateLastVisited();
+    };
+  }, [updateLastVisitedCommon, commonId]);
 
   if (!isDataFetched) {
     const headerEl = renderLoadingHeader ? (

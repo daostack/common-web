@@ -6,8 +6,8 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { DirectParent, User } from "@/shared/models";
 import { TextStyles } from "@/shared/hooks/useCases/useDiscussionMessagesById";
+import { DirectParent, User } from "@/shared/models";
 
 interface Options {
   hasPermissionToHide: boolean;
@@ -28,8 +28,13 @@ interface Return {
 }
 
 export const useDiscussionChatAdapter = (options: Options): Return => {
-  const { hasPermissionToHide, textStyles, discussionId } = options;
-
+  const {
+    hasPermissionToHide,
+    textStyles,
+    discussionId,
+    onFeedItemClick,
+    onUserClick,
+  } = options;
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
@@ -44,7 +49,9 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     discussionId,
     hasPermissionToHide,
     users,
-    textStyles
+    textStyles,
+    onFeedItemClick,
+    onUserClick,
   });
   const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 

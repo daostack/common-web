@@ -27,7 +27,6 @@ export type MultipleSpacesLayoutBreadcrumbs =
 
 export interface MultipleSpacesLayoutState {
   breadcrumbs: MultipleSpacesLayoutBreadcrumbs | null;
-  previousBreadcrumbs: MultipleSpacesLayoutBreadcrumbs | null;
   backUrl: string | null;
   mainWidth: number;
 }

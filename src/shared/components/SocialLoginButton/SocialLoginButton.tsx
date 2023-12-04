@@ -1,7 +1,10 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { ButtonIcon } from "../ButtonIcon";
+import AppleIcon from "@/shared/icons/auth/apple.icon";
+import GoogleIcon from "@/shared/icons/auth/google.icon";
+import PhoneIcon from "@/shared/icons/auth/phone.icon";
 import { AuthProvider } from "../../constants";
+import { ButtonIcon } from "../ButtonIcon";
 import "./index.scss";
 
 interface SocialLoginButtonProps {
@@ -24,11 +27,9 @@ const SocialLoginButton: FC<SocialLoginButtonProps> = ({
       className={classNames("social-login-button", className)}
       onClick={handleClick}
     >
-      <img
-        className="social-login-button__img"
-        src={`/icons/social-login/${provider}.svg`}
-        alt={`Sign in using ${provider}`}
-      />
+      {provider === AuthProvider.Apple && <AppleIcon />}
+      {provider === AuthProvider.Google && <GoogleIcon />}
+      {provider === AuthProvider.Phone && <PhoneIcon />}
     </ButtonIcon>
   );
 };
