@@ -226,8 +226,11 @@ export const useInboxItems = (
   useEffect(() => {
     (async () => {
       try {
-        const { firstDocTimestamp: startAt, lastDocTimestamp: endAt } =
-          inboxItems;
+        const {
+          data,
+          firstDocTimestamp: startAt,
+          lastDocTimestamp: endAt,
+        } = inboxItems;
 
         if (!userId || !startAt || !endAt) {
           return;
@@ -243,8 +246,14 @@ export const useInboxItems = (
           return;
         }
 
+        const filteredInboxItems = data
+          ? fetchedInboxItems.filter((fetchedItem) =>
+              data.every((item) => item.itemId !== fetchedItem.itemId),
+            )
+          : fetchedInboxItems;
+
         addNewInboxItems(
-          fetchedInboxItems.map((item) => ({
+          filteredInboxItems.map((item) => ({
             item,
             statuses: {
               isAdded: false,
