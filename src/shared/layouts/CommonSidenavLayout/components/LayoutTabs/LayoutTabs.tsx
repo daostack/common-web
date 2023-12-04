@@ -95,7 +95,6 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
 
   const handleTabChange = (value: unknown) => {
     if (activeTab === value) {
-      console.log("SAME TAB. DO NOTHING");
       return;
     }
 
