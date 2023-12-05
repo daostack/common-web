@@ -1,12 +1,10 @@
 import { call, put, select } from "redux-saga/effects";
 import { Logger, UserService } from "@/services";
-import { InboxItemType } from "@/shared/constants";
-import { FeedItemFollowToLayoutItemWithFollowDataConverter } from "@/shared/converters";
 import {
-  Awaited,
-  ChatChannelLayoutItem,
-  FeedLayoutItemWithFollowData,
-} from "@/shared/interfaces";
+  ChatChannelToLayoutItemConverter,
+  FeedItemFollowToLayoutItemWithFollowDataConverter,
+} from "@/shared/converters";
+import { Awaited, FeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { Timestamp } from "@/shared/models";
 import * as actions from "../actions";
 import { selectInboxItems } from "../selectors";
@@ -50,11 +48,7 @@ export function* refreshUnreadInboxItems(
                 (item) => item.itemId !== chatChannel.id,
               )),
         )
-        .map<ChatChannelLayoutItem>((chatChannel) => ({
-          type: InboxItemType.ChatChannel,
-          itemId: chatChannel.id,
-          chatChannel,
-        }));
+        .map((item) => ChatChannelToLayoutItemConverter.toTargetEntity(item));
       const feedItemFollowItems = data.feedItemFollows
         .filter(
           (feedItemFollow) =>
