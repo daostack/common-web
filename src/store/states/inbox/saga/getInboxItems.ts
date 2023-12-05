@@ -1,12 +1,10 @@
 import { call, put, select } from "redux-saga/effects";
 import { UserService } from "@/services";
-import { InboxItemType } from "@/shared/constants";
 import {
-  Awaited,
-  ChatChannelLayoutItem,
-  FeedItemFollowLayoutItemWithFollowData,
-  FeedLayoutItemWithFollowData,
-} from "@/shared/interfaces";
+  ChatChannelToLayoutItemConverter,
+  FeedItemFollowToLayoutItemWithFollowDataConverter,
+} from "@/shared/converters";
+import { Awaited, FeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
 import * as actions from "../actions";
 import { selectInboxItems } from "../selectors";
@@ -44,21 +42,11 @@ export function* getInboxItems(
       },
     )) as Awaited<ReturnType<typeof UserService.getInboxItems>>;
     const chatChannelItems = data.chatChannels
-      .map<ChatChannelLayoutItem>((chatChannel) => ({
-        type: InboxItemType.ChatChannel,
-        itemId: chatChannel.id,
-        chatChannel,
-      }))
+      .map((item) => ChatChannelToLayoutItemConverter.toTargetEntity(item))
       .filter((item) => item.chatChannel.messageCount > 0);
-    const feedItemFollowItems =
-      data.feedItemFollows.map<FeedItemFollowLayoutItemWithFollowData>(
-        (feedItemFollowWithMetadata) => ({
-          type: InboxItemType.FeedItemFollow,
-          itemId: feedItemFollowWithMetadata.feedItemId,
-          feedItem: feedItemFollowWithMetadata.feedItem,
-          feedItemFollowWithMetadata: feedItemFollowWithMetadata,
-        }),
-      );
+    const feedItemFollowItems = data.feedItemFollows.map((item) =>
+      FeedItemFollowToLayoutItemWithFollowDataConverter.toTargetEntity(item),
+    );
     const convertedData = sortItems([
       ...chatChannelItems,
       ...feedItemFollowItems,

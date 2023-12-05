@@ -413,7 +413,13 @@ const updateChatChannelItem = (
 };
 
 export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
-  .handleAction(actions.resetInbox, () => ({ ...INITIAL_INBOX_STATE }))
+  .handleAction(actions.resetInbox, (state, { payload }) => {
+    if (payload?.onlyIfUnread && !state.items.unread) {
+      return state;
+    }
+
+    return { ...INITIAL_INBOX_STATE };
+  })
   .handleAction(actions.getInboxItems.request, (state) =>
     produce(state, (nextState) => {
       nextState.items = {
