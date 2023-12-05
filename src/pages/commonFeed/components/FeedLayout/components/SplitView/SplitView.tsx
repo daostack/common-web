@@ -44,7 +44,7 @@ const SplitView: FC<SplitViewProps> = (props) => {
         flexDirection: "column",
       }}
       pane1Style={{
-        overflow: "scroll",
+        overflow: "auto",
         height: "calc(100vh - var(--split-view-top))",
       }}
     >
