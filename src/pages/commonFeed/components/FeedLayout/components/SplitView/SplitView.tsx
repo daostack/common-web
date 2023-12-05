@@ -45,7 +45,7 @@ const SplitView: FC<SplitViewProps> = (props) => {
       }}
       pane1Style={{
         overflow: "scroll",
-        height: "100vh",
+        height: "calc(100vh - var(--split-view-top))",
       }}
     >
       {children}
