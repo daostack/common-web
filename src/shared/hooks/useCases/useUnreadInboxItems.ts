@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { usePreviousDistinct, useUpdateEffect } from "react-use";
 import { selectUserStreamsWithNotificationsAmount } from "@/pages/Auth/store/selectors";
@@ -22,4 +23,14 @@ export const useUnreadInboxItems = (unread?: boolean): void => {
 
     dispatch(inboxActions.refreshUnreadInboxItems.request());
   }, [notificationsAmount]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(
+        inboxActions.refreshUnreadInboxItems.cancel(
+          "Cancel unread inbox items refresh on unmount",
+        ),
+      );
+    };
+  }, []);
 };
