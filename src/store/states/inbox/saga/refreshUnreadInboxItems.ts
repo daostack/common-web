@@ -10,24 +10,9 @@ import * as actions from "../actions";
 import { selectInboxItems } from "../selectors";
 import { InboxItems } from "../types";
 
-const checkCanKeepFetchingByDate = (
-  firstDocTimestamp: Timestamp | null,
-  lastDocTimestamp: Timestamp | null,
-): boolean => {
-  if (!firstDocTimestamp) {
-    return true;
-  }
-  if (!lastDocTimestamp) {
-    return false;
-  }
-
-  return lastDocTimestamp.seconds >= firstDocTimestamp.seconds;
-};
-
 export function* refreshUnreadInboxItems() {
   try {
     const currentItems = (yield select(selectInboxItems)) as InboxItems;
-    const { firstDocTimestamp } = currentItems;
     const newInboxItems: FeedLayoutItemWithFollowData[] = [];
     let startAfter: Timestamp | null = null;
     let keepItemsFetching = true;
@@ -65,9 +50,7 @@ export function* refreshUnreadInboxItems() {
           ),
         );
       newInboxItems.push(...chatChannelItems, ...feedItemFollowItems);
-      keepItemsFetching =
-        hasMore &&
-        checkCanKeepFetchingByDate(firstDocTimestamp, lastDocTimestamp);
+      keepItemsFetching = hasMore;
       startAfter = lastDocTimestamp;
     }
 
