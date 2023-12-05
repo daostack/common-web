@@ -20,10 +20,6 @@ export const useUnreadInboxItems = (unread?: boolean): void => {
       return;
     }
 
-    dispatch(
-      inboxActions.refreshUnreadInboxItems.request({
-        newItemsAmount: notificationsAmount,
-      }),
-    );
+    dispatch(inboxActions.refreshUnreadInboxItems.request());
   }, [notificationsAmount]);
 };
