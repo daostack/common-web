@@ -1,10 +1,10 @@
 import { call, put, select } from "redux-saga/effects";
 import { Logger, UserService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
+import { FeedItemFollowToLayoutItemWithFollowDataConverter } from "@/shared/converters";
 import {
   Awaited,
   ChatChannelLayoutItem,
-  FeedItemFollowLayoutItemWithFollowData,
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
 import { Timestamp } from "@/shared/models";
@@ -63,13 +63,10 @@ export function* refreshUnreadInboxItems(
               (item) => item.itemId !== feedItemFollow.id,
             ),
         )
-        .map<FeedItemFollowLayoutItemWithFollowData>(
-          (feedItemFollowWithMetadata) => ({
-            type: InboxItemType.FeedItemFollow,
-            itemId: feedItemFollowWithMetadata.feedItemId,
-            feedItem: feedItemFollowWithMetadata.feedItem,
-            feedItemFollowWithMetadata: feedItemFollowWithMetadata,
-          }),
+        .map((item) =>
+          FeedItemFollowToLayoutItemWithFollowDataConverter.toTargetEntity(
+            item,
+          ),
         );
       newInboxItems.push(...chatChannelItems, ...feedItemFollowItems);
       keepItemsFetching =

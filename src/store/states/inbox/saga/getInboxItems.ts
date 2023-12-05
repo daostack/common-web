@@ -1,10 +1,10 @@
 import { call, put, select } from "redux-saga/effects";
 import { UserService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
+import { FeedItemFollowToLayoutItemWithFollowDataConverter } from "@/shared/converters";
 import {
   Awaited,
   ChatChannelLayoutItem,
-  FeedItemFollowLayoutItemWithFollowData,
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
@@ -50,15 +50,9 @@ export function* getInboxItems(
         chatChannel,
       }))
       .filter((item) => item.chatChannel.messageCount > 0);
-    const feedItemFollowItems =
-      data.feedItemFollows.map<FeedItemFollowLayoutItemWithFollowData>(
-        (feedItemFollowWithMetadata) => ({
-          type: InboxItemType.FeedItemFollow,
-          itemId: feedItemFollowWithMetadata.feedItemId,
-          feedItem: feedItemFollowWithMetadata.feedItem,
-          feedItemFollowWithMetadata: feedItemFollowWithMetadata,
-        }),
-      );
+    const feedItemFollowItems = data.feedItemFollows.map((item) =>
+      FeedItemFollowToLayoutItemWithFollowDataConverter.toTargetEntity(item),
+    );
     const convertedData = sortItems([
       ...chatChannelItems,
       ...feedItemFollowItems,
