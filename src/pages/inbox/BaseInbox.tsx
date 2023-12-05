@@ -233,6 +233,10 @@ const InboxPage: FC<InboxPageProps> = (props) => {
 
   useEffect(() => {
     fetchData();
+
+    return () => {
+      dispatch(inboxActions.resetInbox({ onlyIfUnread: true }));
+    };
   }, [userId]);
 
   useEffect(() => {
