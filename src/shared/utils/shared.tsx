@@ -8,6 +8,7 @@ import { BaseProposal } from "@/shared/models/governance/proposals";
 import { transformFirebaseDataList } from "@/shared/utils/transformFirebaseDataToModel";
 import { BASE_URL } from "../constants";
 import { Common, DateFormat, Time, User } from "../models";
+import { ElementType } from "../ui-kit/TextEditor/constants";
 
 export const getPrefix = (currency: Currency): string => {
   switch (currency) {
@@ -201,8 +202,13 @@ export const isRTL = (text = ""): boolean => {
 };
 
 export const isRtlText = (text = ""): boolean => {
-  for (let i = 0; i < text.length; i++) {
-    const charCode = text.charCodeAt(i);
+  const parsedText = JSON.parse(text);
+  const textWithNoMentions = JSON.stringify(
+    parsedText[0].children?.filter((item) => item.type !== ElementType.Mention),
+  );
+
+  for (let i = 0; i < textWithNoMentions.length; i++) {
+    const charCode = textWithNoMentions.charCodeAt(i);
 
     // Hebrew Block
     if (charCode >= 0x0590 && charCode <= 0x05ff) return true;
