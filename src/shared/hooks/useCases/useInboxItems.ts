@@ -18,6 +18,7 @@ import {
   FeedItemFollowWithMetadata,
 } from "@/shared/models";
 import { inboxActions, InboxItems, selectInboxItems } from "@/store/states";
+import { useUnreadInboxItems } from "./useUnreadInboxItems";
 
 interface Return
   extends Pick<InboxItems, "data" | "loading" | "hasMore" | "batchNumber"> {
@@ -128,6 +129,7 @@ export const useInboxItems = (
   const userId = user?.uid;
   const unread = options?.unread;
   const lastBatch = newItemsBatches[0];
+  useUnreadInboxItems(options?.unread);
 
   const fetch = () => {
     dispatch(
