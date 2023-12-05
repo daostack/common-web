@@ -202,27 +202,34 @@ export const isRTL = (text = ""): boolean => {
 };
 
 export const isRtlText = (text = ""): boolean => {
-  const parsedText = JSON.parse(text);
-  const textWithNoMentions = JSON.stringify(
-    parsedText[0].children?.filter((item) => item.type !== ElementType.Mention),
-  );
+  try {
+    const parsedText = JSON.parse(text);
+    const textWithNoMentions = JSON.stringify(
+      parsedText[0].children?.filter(
+        (item) => item.type !== ElementType.Mention,
+      ),
+    );
 
-  for (let i = 0; i < textWithNoMentions.length; i++) {
-    const charCode = textWithNoMentions.charCodeAt(i);
+    for (let i = 0; i < textWithNoMentions.length; i++) {
+      const charCode = textWithNoMentions.charCodeAt(i);
 
-    // Hebrew Block
-    if (charCode >= 0x0590 && charCode <= 0x05ff) return true;
+      // Hebrew Block
+      if (charCode >= 0x0590 && charCode <= 0x05ff) return true;
 
-    // Arabic Block
-    if (charCode >= 0x0600 && charCode <= 0x06ff) return true;
+      // Arabic Block
+      if (charCode >= 0x0600 && charCode <= 0x06ff) return true;
 
-    // Arabic Supplement Block
-    if (charCode >= 0x0750 && charCode <= 0x077f) return true;
+      // Arabic Supplement Block
+      if (charCode >= 0x0750 && charCode <= 0x077f) return true;
 
-    // Arabic Extended-A Block
-    if (charCode >= 0x08a0 && charCode <= 0x08ff) return true;
+      // Arabic Extended-A Block
+      if (charCode >= 0x08a0 && charCode <= 0x08ff) return true;
+    }
+    return false;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
-  return false;
 };
 
 /**
