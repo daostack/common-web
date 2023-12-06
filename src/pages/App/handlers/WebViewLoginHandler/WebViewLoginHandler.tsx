@@ -12,6 +12,10 @@ const WebViewLoginHandler: FC = () => {
 
   const handleWebviewLogin = React.useCallback((event) => {
     const data = parseJson(event.data) as FirebaseCredentials;
+
+    if (data?.redirectUrl) {
+      history.push(data?.redirectUrl);
+    }
     if (!data?.providerId) {
       return;
     }
