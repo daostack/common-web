@@ -15,3 +15,9 @@
 .underline {
   text-decoration: underline;
 }
+
+.internalLink {
+  cursor: pointer;
+  text-decoration: underline;
+  color: var(--primary-fill);
+}
