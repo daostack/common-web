@@ -22,15 +22,6 @@ const useOnInternalLinkClick = () => {
     const itemId = data.params[QueryParamKey.Item];
     const messageId = data.params[QueryParamKey.Message];
 
-    // if (itemId) {
-    //   console.log("ITEM ID!")
-    //   // handleFeedItemClick(itemId, {
-    //   //   commonId: feedPageParams.id,
-    //   //   messageId,
-    //   // });
-    //   // return;
-    // }
-
     history.push(
       getCommonPagePath(feedPageParams.id, {
         item: itemId,
