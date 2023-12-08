@@ -8,10 +8,11 @@ interface SearchInputProps {
   value: string;
   onChange: (text: string) => void;
   autoFocus?: boolean;
+  multiple?: boolean;
 }
 
 const SearchInput: FC<SearchInputProps> = (props) => {
-  const { className, value, onChange, autoFocus } = props;
+  const { className, value, onChange, autoFocus, multiple } = props;
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onChange(event.target.value);
@@ -27,6 +28,7 @@ const SearchInput: FC<SearchInputProps> = (props) => {
           onChange={handleInputChange}
           placeholder="Search"
           autoFocus={autoFocus}
+          multiple={multiple}
         />
       </div>
     </div>

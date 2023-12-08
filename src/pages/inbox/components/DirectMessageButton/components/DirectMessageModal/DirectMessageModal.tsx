@@ -23,10 +23,16 @@ interface DirectMessageModalProps {
   isOpen: boolean;
   onClose: () => void;
   isMobileVersion?: boolean;
+  groupMessage?: boolean;
 }
 
 const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
-  const { isOpen, onClose, isMobileVersion = false } = props;
+  const {
+    isOpen,
+    onClose,
+    isMobileVersion = false,
+    groupMessage = false,
+  } = props;
   const dispatch = useDispatch();
   const listRef = useRef<HTMLUListElement>(null);
   const [searchText, setSearchText] = useState("");
@@ -235,6 +241,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
               value={searchText}
               onChange={setSearchText}
               autoFocus
+              multiple={groupMessage}
             />
           )}
         </div>

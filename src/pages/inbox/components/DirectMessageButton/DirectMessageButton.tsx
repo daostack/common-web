@@ -15,6 +15,10 @@ interface DirectMessageButtonProps {
   }>;
 }
 
+/**
+ * CHECK IF NEED TO DELETE
+ */
+
 const DirectMessageButton: FC<DirectMessageButtonProps> = (props) => {
   const { className, isMobileVersion = false, ButtonComponent } = props;
   const {
