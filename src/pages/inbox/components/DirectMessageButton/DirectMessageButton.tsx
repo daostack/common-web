@@ -16,7 +16,7 @@ interface DirectMessageButtonProps {
 }
 
 /**
- * CHECK IF NEED TO DELETE
+ * CHECK IF NEED TO DELETE THIS FILE.
  */
 
 const DirectMessageButton: FC<DirectMessageButtonProps> = (props) => {

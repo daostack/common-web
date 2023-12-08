@@ -8,14 +8,18 @@ import React, {
   useState,
 } from "react";
 import { useDispatch } from "react-redux";
-import { Modal } from "@/shared/components";
+import Select from "react-select";
+import { Modal, UserAvatar } from "@/shared/components";
 import { KeyboardKeys } from "@/shared/constants";
 import { useDMUserChatChannel } from "@/shared/hooks/useCases";
+import useThemeColor from "@/shared/hooks/useThemeColor";
+import { SearchIcon } from "@/shared/icons";
 import { DMUser } from "@/shared/interfaces";
-import { Loader } from "@/shared/ui-kit";
+import { Button, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { inboxActions } from "@/store/states";
 import { DirectMessageUserItem, SearchInput } from "./components";
+import { selectorStyles } from "./components/selectorStyles";
 import { useDMUsers } from "./hooks";
 import styles from "./DirectMessageModal.module.scss";
 
@@ -34,8 +38,9 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     groupMessage = false,
   } = props;
   const dispatch = useDispatch();
+  const { getThemeColor } = useThemeColor();
   const listRef = useRef<HTMLUListElement>(null);
-  const [searchText, setSearchText] = useState("");
+  //const [searchText, setSearchText] = useState("");
   const [activeItemIndex, setActiveItemIndex] = useState<number | null>(null);
   const {
     loading: areDMUsersLoading,
@@ -50,48 +55,50 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     resetDMUserChatChannel,
     error: isChannelLoadedWithError,
   } = useDMUserChatChannel();
-  const filteredDMUsers = useMemo(() => {
-    if (!searchText) {
-      return dmUsers;
-    }
 
-    const lowerCasedSearchText = searchText.toLowerCase();
+  // const filteredDMUsers = useMemo(() => {
+  //   if (!searchText) {
+  //     return dmUsers;
+  //   }
 
-    return dmUsers.filter((item) =>
-      item.userName.toLowerCase().startsWith(lowerCasedSearchText),
-    );
-  }, [dmUsers, searchText]);
-  const totalUsersAmount = filteredDMUsers.length;
+  //   const lowerCasedSearchText = searchText.toLowerCase();
 
-  const handleArrowUp = useCallback(() => {
-    setActiveItemIndex((currentIndex) => {
-      if (totalUsersAmount === 0) {
-        return null;
-      }
-      if (currentIndex === null) {
-        return totalUsersAmount - 1;
-      }
+  //   return dmUsers.filter((item) =>
+  //     item.userName.toLowerCase().startsWith(lowerCasedSearchText),
+  //   );
+  // }, [dmUsers, searchText]);
 
-      const nextIndex = currentIndex - 1;
+  //const totalUsersAmount = filteredDMUsers.length;
 
-      return nextIndex < 0 ? totalUsersAmount - 1 : nextIndex;
-    });
-  }, [totalUsersAmount]);
+  // const handleArrowUp = useCallback(() => {
+  //   setActiveItemIndex((currentIndex) => {
+  //     if (totalUsersAmount === 0) {
+  //       return null;
+  //     }
+  //     if (currentIndex === null) {
+  //       return totalUsersAmount - 1;
+  //     }
 
-  const handleArrowDown = useCallback(() => {
-    setActiveItemIndex((currentIndex) => {
-      if (totalUsersAmount === 0) {
-        return null;
-      }
-      if (currentIndex === null) {
-        return 0;
-      }
+  //     const nextIndex = currentIndex - 1;
 
-      const nextIndex = currentIndex + 1;
+  //     return nextIndex < 0 ? totalUsersAmount - 1 : nextIndex;
+  //   });
+  // }, [totalUsersAmount]);
 
-      return nextIndex >= totalUsersAmount ? 0 : nextIndex;
-    });
-  }, [totalUsersAmount]);
+  // const handleArrowDown = useCallback(() => {
+  //   setActiveItemIndex((currentIndex) => {
+  //     if (totalUsersAmount === 0) {
+  //       return null;
+  //     }
+  //     if (currentIndex === null) {
+  //       return 0;
+  //     }
+
+  //     const nextIndex = currentIndex + 1;
+
+  //     return nextIndex >= totalUsersAmount ? 0 : nextIndex;
+  //   });
+  // }, [totalUsersAmount]);
 
   const handleUserItemClick = (item: DMUser) => {
     fetchDMUserChatChannel(item.uid);
@@ -104,13 +111,13 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     }
 
     setActiveItemIndex(null);
-    setSearchText("");
+    //setSearchText("");
     resetDMUserChatChannel();
   }, [isOpen]);
 
-  useEffect(() => {
-    setActiveItemIndex(null);
-  }, [searchText]);
+  // useEffect(() => {
+  //   setActiveItemIndex(null);
+  // }, [searchText]);
 
   useEffect(() => {
     if (activeItemIndex !== null) {
@@ -119,60 +126,60 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     }
   }, [activeItemIndex]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!isOpen) {
+  //     return;
+  //   }
 
-    const handler = (event: KeyboardEvent) => {
-      const key = event.key as KeyboardKeys;
+  //   const handler = (event: KeyboardEvent) => {
+  //     const key = event.key as KeyboardKeys;
 
-      switch (key) {
-        case KeyboardKeys.ArrowUp:
-          handleArrowUp();
-          break;
-        case KeyboardKeys.ArrowDown:
-          handleArrowDown();
-          break;
-        default:
-          break;
-      }
-    };
+  //     switch (key) {
+  //       case KeyboardKeys.ArrowUp:
+  //         handleArrowUp();
+  //         break;
+  //       case KeyboardKeys.ArrowDown:
+  //         handleArrowDown();
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   };
 
-    window.addEventListener("keyup", handler);
+  //   window.addEventListener("keyup", handler);
 
-    return () => {
-      window.removeEventListener("keyup", handler);
-    };
-  }, [isOpen, handleArrowUp, handleArrowDown]);
+  //   return () => {
+  //     window.removeEventListener("keyup", handler);
+  //   };
+  // }, [isOpen, handleArrowUp, handleArrowDown]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!isOpen) {
+  //     return;
+  //   }
 
-    const handler = (event: KeyboardEvent) => {
-      const key = event.key as KeyboardKeys;
+  //   const handler = (event: KeyboardEvent) => {
+  //     const key = event.key as KeyboardKeys;
 
-      if (key !== KeyboardKeys.Enter) {
-        return;
-      }
+  //     if (key !== KeyboardKeys.Enter) {
+  //       return;
+  //     }
 
-      const item = filteredDMUsers.find(
-        (dmUser, index) => index === activeItemIndex,
-      );
+  //     const item = filteredDMUsers.find(
+  //       (dmUser, index) => index === activeItemIndex,
+  //     );
 
-      if (item) {
-        handleUserItemClick(item);
-      }
-    };
+  //     if (item) {
+  //       handleUserItemClick(item);
+  //     }
+  //   };
 
-    window.addEventListener("keyup", handler);
+  //   window.addEventListener("keyup", handler);
 
-    return () => {
-      window.removeEventListener("keyup", handler);
-    };
-  }, [isOpen, activeItemIndex, filteredDMUsers]);
+  //   return () => {
+  //     window.removeEventListener("keyup", handler);
+  //   };
+  // }, [isOpen, activeItemIndex, filteredDMUsers]);
 
   useEffect(() => {
     if (dmUserChatChannel) {
@@ -195,37 +202,75 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
       );
     }
 
-    if (totalUsersAmount === 0) {
+    if (dmUsers.length === 0) {
       return <p className={styles.infoText}>No users found</p>;
     }
 
-    return (
-      <ul ref={listRef} className={styles.itemList}>
-        {filteredDMUsers.map((item, index) => {
-          const isActive = index === activeItemIndex;
+    const options = dmUsers.map((user) => ({
+      value: user.userName,
+      user: user,
+      label: (
+        <div className={styles.optionWrapper}>
+          <UserAvatar
+            className={styles.userAvatar}
+            photoURL={user.photoURL}
+            nameForRandomAvatar={user.userName}
+            userName={user.userName}
+          />
+          <span>{user.userName}</span>
+        </div>
+      ),
+    }));
 
-          return (
-            <li
-              key={item.uid}
-              className={styles.item}
-              tabIndex={0}
-              role="button"
-              aria-pressed={isActive}
-              onFocus={() => setActiveItemIndex(index)}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => handleUserItemClick(item)}
-            >
-              <DirectMessageUserItem
-                className={styles.userItem}
-                image={item.photoURL}
-                name={item.userName}
-                isActive={isActive}
-              />
-            </li>
-          );
-        })}
-      </ul>
+    return (
+      <>
+        <Select
+          onChange={(item) =>
+            !groupMessage && item && handleUserItemClick((item as any).user)
+          }
+          isMulti={groupMessage}
+          options={options}
+          placeholder="Search"
+          autoFocus
+          menuIsOpen
+          isSearchable
+          styles={selectorStyles(getThemeColor)}
+          components={{
+            DropdownIndicator: () => <SearchIcon />,
+            IndicatorSeparator: () => null,
+          }}
+        />
+        {groupMessage && <Button>Create</Button>}
+      </>
     );
+
+    // return (
+    //   <ul ref={listRef} className={styles.itemList}>
+    //     {filteredDMUsers.map((item, index) => {
+    //       const isActive = index === activeItemIndex;
+
+    //       return (
+    //         <li
+    //           key={item.uid}
+    //           className={styles.item}
+    //           tabIndex={0}
+    //           role="button"
+    //           aria-pressed={isActive}
+    //           onFocus={() => setActiveItemIndex(index)}
+    //           onMouseDown={(event) => event.preventDefault()}
+    //           onClick={() => handleUserItemClick(item)}
+    //         >
+    //           <DirectMessageUserItem
+    //             className={styles.userItem}
+    //             image={item.photoURL}
+    //             name={item.userName}
+    //             isActive={isActive}
+    //           />
+    //         </li>
+    //       );
+    //     })}
+    //   </ul>
+    // );
   };
 
   return (
@@ -235,15 +280,16 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
       onClose={isChannelLoading ? emptyFunction : onClose}
       title={
         <div className={styles.modalTitleWrapper}>
-          <h3 className={styles.modalTitle}>Direct message</h3>
-          {!isChannelLoading && (
+          <h3 className={styles.modalTitle}>
+            {groupMessage ? "Group message" : "Direct message"}
+          </h3>
+          {/* {!isChannelLoading && (
             <SearchInput
               value={searchText}
               onChange={setSearchText}
               autoFocus
-              multiple={groupMessage}
             />
-          )}
+          )} */}
         </div>
       }
       isHeaderSticky

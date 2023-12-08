@@ -7,6 +7,7 @@
   max-height: 29.25rem;
   border-radius: 0;
   box-shadow: 0 0.25rem 0.9375rem var(--drop-shadow);
+  height: 37rem;
 
   :global(.modal__header-wrapper--with-modal-padding) {
     .modalHeader {
@@ -20,7 +21,7 @@
   }
 
   .modalContent {
-    padding: 0;
+    //padding: 0;
   }
 
   .modalCloseWrapper {
@@ -31,6 +32,7 @@
   @include tablet {
     max-width: unset;
     max-height: unset;
+    height: 100%;
   }
 }
 
@@ -55,6 +57,28 @@
   flex-direction: column;
   align-items: center;
 }
+
+// .control {
+//   background-color: var(--secondaryBackground);
+//   color: var(--primaryText);
+// }
+
+// .menuList {
+//   background-color: var(--tertiaryFill);
+// }
+
+// .option {
+//   color: var(--primaryText);
+// }
+
+// .indicatorsContainer {
+//   display: none;
+// }
+
+// .singleValue {
+//   background-color: var(--secondaryBackground);
+//   color: var(--primaryText);
+// }
 
 .infoText {
   margin: 1rem 0;
@@ -81,4 +105,13 @@
 
 .userItem {
   padding: 0.375rem 1.75rem;
+}
+
+.optionWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.userAvatar {
+  margin-right: 0.75rem;
 }
