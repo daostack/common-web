@@ -10,15 +10,16 @@ export const selectorStyles = (
       zIndex: 10000,
       boxShadow: "none",
       marginTop: 0,
+      backgroundColor: "transparent",
     }),
     menuPortal: (provided) => ({ ...provided, zIndex: 10000 }),
     menuList: (provided) => ({
       ...provided,
-      backgroundColor: getThemeColor(ThemeColors.tertiaryFill),
+      maxHeight: "unset",
     }),
     control: (provided) => ({
       ...provided,
-      height: "3rem",
+      minHeight: "3rem",
       width: "100%",
       backgroundColor: getThemeColor(ThemeColors.secondaryBackground),
       color: getThemeColor(ThemeColors.primaryText),
@@ -30,14 +31,9 @@ export const selectorStyles = (
     }),
     option: (provided, data) => ({
       ...provided,
-      backgroundColor: data.isDisabled
-        ? "transparent"
-        : getThemeColor(ThemeColors.tertiaryFill),
       color: getThemeColor(ThemeColors.primaryText),
       "&:hover": {
-        backgroundColor: data.isDisabled
-          ? ""
-          : getThemeColor(ThemeColors.secondaryBackground),
+        backgroundColor: getThemeColor(ThemeColors.secondaryBackground),
       },
       cursor: data.isDisabled ? "not-allowed" : "default",
     }),
@@ -49,6 +45,22 @@ export const selectorStyles = (
       ...provided,
       backgroundColor: getThemeColor(ThemeColors.secondaryBackground),
       color: getThemeColor(ThemeColors.primaryText),
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: getThemeColor(ThemeColors.quaternaryFill),
+      color: getThemeColor(ThemeColors.primaryText),
+    }),
+    multiValueGeneric: (provided) => ({
+      ...provided,
+      color: "unset",
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: getThemeColor(ThemeColors.hoverFill),
+      },
     }),
   };
 };

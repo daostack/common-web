@@ -236,7 +236,9 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
           isSearchable
           styles={selectorStyles(getThemeColor)}
           components={{
-            DropdownIndicator: () => <SearchIcon />,
+            DropdownIndicator: () => (
+              <SearchIcon className={styles.searchIcon} />
+            ),
             IndicatorSeparator: () => null,
           }}
         />
