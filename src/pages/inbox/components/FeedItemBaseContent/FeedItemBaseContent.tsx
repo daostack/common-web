@@ -158,7 +158,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           </p>
         </div>
         <div className={styles.bottomContent}>
-          {/* {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
+          {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
             <TextEditor
               className={styles.lastMessageContainer}
               editorClassName={classNames(styles.text, styles.lastMessage, {
@@ -173,7 +173,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
             />
           ) : (
             <div />
-          )} */}
+          )}
           <div className={styles.bottomContentRight}>
             <FeedCardTags
               unreadMessages={unreadMessages}
