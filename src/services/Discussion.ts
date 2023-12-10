@@ -26,16 +26,9 @@ class DiscussionService {
     source = FirestoreDataSource.Default,
   ): Promise<Discussion | null> => {
     try {
-      console.log("getDiscussionById started", discussionId);
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      console.log(
-        "getDiscussionById delay finished",
-        navigator.onLine ? "online" : "offline",
-        discussionId,
-      );
       const snapshot = await this.getDiscussionCollection()
         .doc(discussionId)
-        .get({ source: "server" });
+        .get({ source });
       const fromCache = snapshot.metadata.fromCache ? "local cache" : "server";
       const discussion = snapshot?.data() || null;
 
@@ -44,13 +37,12 @@ class DiscussionService {
         discussionId,
         snapshot?.data() || null,
       );
-      // if (!discussion && source === FirestoreDataSource.Cache) {
-      //   return this.getDiscussionById(discussionId, FirestoreDataSource.Server);
-      // }
+      if (!discussion && source === FirestoreDataSource.Cache) {
+        return this.getDiscussionById(discussionId, FirestoreDataSource.Server);
+      }
 
       return discussion;
     } catch (error) {
-      console.log("getDiscussionById failed", discussionId, error);
       if (
         source === FirestoreDataSource.Cache &&
         isFirestoreCacheError(error)
