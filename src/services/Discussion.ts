@@ -27,6 +27,7 @@ class DiscussionService {
   ): Promise<Discussion | null> => {
     try {
       console.log("getDiscussionById started");
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       const snapshot = await this.getDiscussionCollection()
         .doc(discussionId)
         .get({ source: "server" });
