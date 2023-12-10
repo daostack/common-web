@@ -1,12 +1,11 @@
-import React, { FC, ReactElement, useEffect } from "react";
+import React, { FC, ReactElement, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Select from "react-select";
 import { Modal, UserAvatar } from "@/shared/components";
 import { useDMUserChatChannel } from "@/shared/hooks/useCases";
 import useThemeColor from "@/shared/hooks/useThemeColor";
 import { SearchIcon } from "@/shared/icons";
-import { DMUser } from "@/shared/interfaces";
-import { Button, Loader } from "@/shared/ui-kit";
+import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { inboxActions } from "@/store/states";
 import { selectorStyles } from "./components/selectorStyles";
@@ -22,8 +21,8 @@ interface DirectMessageModalProps {
 
 interface SelectOption {
   value: string;
-  user: DMUser;
   label: JSX.Element;
+  uid: string;
 }
 
 const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
@@ -48,9 +47,10 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     resetDMUserChatChannel,
     error: isChannelLoadedWithError,
   } = useDMUserChatChannel();
+  const [groupUids, setGroupUids] = useState<string[]>([]);
 
-  const handleUserItemClick = (item: DMUser) => {
-    fetchDMUserChatChannel(item.uid);
+  const handleChatCreate = (uid: string[]) => {
+    fetchDMUserChatChannel(uid);
   };
 
   useEffect(() => {
@@ -89,7 +89,6 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
 
     const options: SelectOption[] = dmUsers.map((user) => ({
       value: user.userName,
-      user: user,
       label: (
         <div className={styles.optionWrapper}>
           <UserAvatar
@@ -101,20 +100,31 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
           <span>{user.userName}</span>
         </div>
       ),
+      uid: user.uid,
     }));
 
-    const handleClick = (item: SelectOption) => {
+    const handleItemClick = (selectedItems) => {
       if (!groupMessage) {
-        handleUserItemClick(item.user);
+        handleChatCreate([selectedItems.uid]);
       } else {
-        console.log("HANDLE GROUP MESSAGE");
+        const uids = selectedItems.map((item) => item.uid);
+        setGroupUids(uids);
       }
     };
 
     return (
       <>
+        {groupMessage && (
+          <Button
+            onClick={() => handleChatCreate(groupUids)}
+            variant={ButtonVariant.PrimaryPink}
+            disabled={!groupUids.length}
+          >
+            Create
+          </Button>
+        )}
         <Select
-          onChange={(item) => handleClick(item as SelectOption)}
+          onChange={(selectedItems) => handleItemClick(selectedItems)}
           isMulti={groupMessage}
           options={options}
           placeholder="Search"
@@ -129,7 +139,6 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
             IndicatorSeparator: () => null,
           }}
         />
-        {groupMessage && <Button>Create</Button>}
       </>
     );
   };

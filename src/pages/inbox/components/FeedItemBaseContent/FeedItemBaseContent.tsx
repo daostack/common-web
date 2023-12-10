@@ -42,7 +42,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     isImageRounded,
     isProject,
     discussionPredefinedType,
-    dmUserId,
+    dmUserIds,
     commonId,
     hasUnseenMention,
   } = props;
@@ -63,6 +63,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     [styles.imageNonRounded]: !shouldImageBeRounded,
     [styles.imageRounded]: shouldImageBeRounded,
   });
+  //const groupMessage = dmUserIds && dmUserIds?.length > 1;
 
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
@@ -110,8 +111,8 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   };
 
   const handleAvatarClick = () => {
-    if (onUserSelect && dmUserId) {
-      onUserSelect(dmUserId);
+    if (onUserSelect && dmUserIds) {
+      onUserSelect(dmUserIds[0]);
     } else if (commonId) {
       history.push(getCommonPagePath(commonId));
     }
@@ -157,7 +158,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           </p>
         </div>
         <div className={styles.bottomContent}>
-          {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
+          {/* {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
             <TextEditor
               className={styles.lastMessageContainer}
               editorClassName={classNames(styles.text, styles.lastMessage, {
@@ -172,7 +173,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
             />
           ) : (
             <div />
-          )}
+          )} */}
           <div className={styles.bottomContentRight}>
             <FeedCardTags
               unreadMessages={unreadMessages}

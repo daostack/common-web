@@ -30,14 +30,14 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     useChatContext();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const dmUserId =
+  const dmUserIds =
     chatChannel.participants.length === 1
       ? chatChannel.participants[0]
       : chatChannel.participants.filter(
           (participant) => participant !== userId,
         )[0];
   const dmUserName = getUserName(dmUser);
-  const finalTitle = dmUserName;
+  const finalTitle = chatChannel.participants.length > 1 ? "Group" : dmUserName;
 
   const handleOpenChat = useCallback(() => {
     setChatItem({
@@ -82,8 +82,8 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   useChatChannelSubscription(chatChannel.id, userId, handleChatChannelUpdate);
 
   useEffect(() => {
-    fetchDMUser(dmUserId);
-  }, [dmUserId]);
+    fetchDMUser(dmUserIds);
+  }, [dmUserIds]);
 
   useEffect(() => {
     fetchChatChannelUserStatus({
@@ -129,7 +129,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       ownerId={userId}
       renderImage={renderImage}
       isImageRounded
-      dmUserId={dmUserId}
+      dmUserIds={[dmUserIds]}
     />
   );
 };
