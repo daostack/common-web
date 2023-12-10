@@ -11,9 +11,6 @@ interface FirebaseError extends Error {
 }
 
 firebase.initializeApp(config.firebase);
-firebase.firestore().settings({
-  cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
-});
 
 if (REACT_APP_ENV === Environment.Local) {
   firebase.auth().useEmulator(local.firebase.authDomain);
