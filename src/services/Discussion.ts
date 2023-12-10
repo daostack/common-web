@@ -26,6 +26,7 @@ class DiscussionService {
     source = FirestoreDataSource.Default,
   ): Promise<Discussion | null> => {
     try {
+      console.log("getDiscussionById started");
       const snapshot = await this.getDiscussionCollection()
         .doc(discussionId)
         .get({ source: "server" });
@@ -43,6 +44,7 @@ class DiscussionService {
 
       return discussion;
     } catch (error) {
+      console.log("getDiscussionById failed", error);
       if (
         source === FirestoreDataSource.Cache &&
         isFirestoreCacheError(error)
