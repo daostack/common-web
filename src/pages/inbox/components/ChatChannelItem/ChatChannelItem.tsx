@@ -37,7 +37,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
           (participant) => participant !== userId,
         )[0];
   const dmUserName = getUserName(dmUser);
-  const finalTitle = chatChannel.participants.length > 1 ? "Group" : dmUserName;
+  const finalTitle = chatChannel.participants.length > 2 ? "Group" : dmUserName;
 
   const handleOpenChat = useCallback(() => {
     setChatItem({

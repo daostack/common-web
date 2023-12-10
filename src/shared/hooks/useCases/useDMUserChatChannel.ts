@@ -35,6 +35,7 @@ export const useDMUserChatChannel = (): Return => {
       let dmUserChatChannel: ChatChannel | null = null;
 
       try {
+        // TODO: NEED TO HANDLE ARRAY OF UIDS IN getDMUserChatChannel
         dmUserChatChannel = await ChatService.getDMUserChatChannel(
           userId,
           dmUserId[0],

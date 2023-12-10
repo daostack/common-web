@@ -2,20 +2,21 @@ import { ThemeColors } from "@/shared/constants";
 
 export const selectorStyles = (
   getThemeColor: (color: ThemeColors) => string,
+  isTabletView: boolean,
 ) => {
   return {
     container: (provided) => ({ ...provided, width: "100%" }),
     menu: (provided) => ({
       ...provided,
-      zIndex: 10000,
       boxShadow: "none",
       marginTop: 0,
       backgroundColor: "transparent",
+      position: "relative",
     }),
     menuPortal: (provided) => ({ ...provided, zIndex: 10000 }),
     menuList: (provided) => ({
       ...provided,
-      maxHeight: "unset",
+      maxHeight: isTabletView ? "calc(100vh - 15rem)" : "15rem", // TODO: temporary - need to handle the height better.
     }),
     control: (provided) => ({
       ...provided,

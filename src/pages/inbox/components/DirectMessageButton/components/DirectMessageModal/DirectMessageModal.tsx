@@ -4,12 +4,13 @@ import Select from "react-select";
 import { Modal, UserAvatar } from "@/shared/components";
 import { useDMUserChatChannel } from "@/shared/hooks/useCases";
 import useThemeColor from "@/shared/hooks/useThemeColor";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { SearchIcon } from "@/shared/icons";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { inboxActions } from "@/store/states";
-import { selectorStyles } from "./components/selectorStyles";
 import { useDMUsers } from "./hooks";
+import { selectorStyles } from "./selectorStyles";
 import styles from "./DirectMessageModal.module.scss";
 
 interface DirectMessageModalProps {
@@ -34,6 +35,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   } = props;
   const dispatch = useDispatch();
   const { getThemeColor } = useThemeColor();
+  const isTabletView = useIsTabletView();
   const {
     loading: areDMUsersLoading,
     dmUsers,
@@ -114,15 +116,6 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
 
     return (
       <>
-        {groupMessage && (
-          <Button
-            onClick={() => handleChatCreate(groupUids)}
-            variant={ButtonVariant.PrimaryPink}
-            disabled={!groupUids.length}
-          >
-            Create
-          </Button>
-        )}
         <Select
           onChange={(selectedItems) => handleItemClick(selectedItems)}
           isMulti={groupMessage}
@@ -131,7 +124,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
           autoFocus
           menuIsOpen
           isSearchable
-          styles={selectorStyles(getThemeColor)}
+          styles={selectorStyles(getThemeColor, isTabletView)}
           components={{
             DropdownIndicator: () => (
               <SearchIcon className={styles.searchIcon} />
@@ -139,6 +132,16 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
             IndicatorSeparator: () => null,
           }}
         />
+        {groupMessage && (
+          <Button
+            onClick={() => handleChatCreate(groupUids)}
+            variant={ButtonVariant.PrimaryPink}
+            disabled={!groupUids.length}
+            className={styles.createGroupChatButton}
+          >
+            Create
+          </Button>
+        )}
       </>
     );
   };
