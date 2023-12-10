@@ -28,18 +28,18 @@ class DiscussionService {
     try {
       const snapshot = await this.getDiscussionCollection()
         .doc(discussionId)
-        .get({ source });
+        .get({ source: "server" });
       const fromCache = snapshot.metadata.fromCache ? "local cache" : "server";
       const discussion = snapshot?.data() || null;
 
-      // console.log(
-      //   `getDiscussionById [${fromCache}]`,
-      //   discussionId,
-      //   snapshot?.data() || null,
-      // );
-      if (!discussion && source === FirestoreDataSource.Cache) {
-        return this.getDiscussionById(discussionId, FirestoreDataSource.Server);
-      }
+      console.log(
+        `getDiscussionById [${fromCache}]`,
+        discussionId,
+        snapshot?.data() || null,
+      );
+      // if (!discussion && source === FirestoreDataSource.Cache) {
+      //   return this.getDiscussionById(discussionId, FirestoreDataSource.Server);
+      // }
 
       return discussion;
     } catch (error) {
