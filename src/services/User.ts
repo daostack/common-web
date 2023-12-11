@@ -213,7 +213,10 @@ class UserService {
     endAt?: Timestamp;
   }): Promise<InboxItem[]> => {
     const { userId, startAt, endAt } = options;
-    let query = this.getInboxSubCollection(userId).orderBy("updatedAt", "desc");
+    let query = this.getInboxSubCollection(userId).orderBy(
+      "itemUpdatedAt",
+      "desc",
+    );
 
     if (startAt) {
       query = query.startAt(startAt);
@@ -241,7 +244,7 @@ class UserService {
     ) => void,
   ): UnsubscribeFunction => {
     const query = this.getInboxSubCollection(userId)
-      .orderBy("updatedAt", "desc")
+      .orderBy("itemUpdatedAt", "desc")
       .endBefore(endBefore);
 
     return query.onSnapshot((snapshot) => {

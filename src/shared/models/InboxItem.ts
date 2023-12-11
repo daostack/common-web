@@ -22,6 +22,8 @@ export type InboxItemFeedItemData =
 export type InboxItem = {
   itemId: string; // id of feedItemFollow or ChatChannel
   updatedAt: Timestamp;
+  itemUpdatedAt: Timestamp;
+  unread: boolean;
 } & (
   | ({
       type: InboxItemType.FeedItemFollow;
