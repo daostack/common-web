@@ -17,13 +17,11 @@ import {
 } from "@/shared/interfaces";
 import {
   ChatChannel,
-  CommonFeedType,
   FeedItemFollow,
   FeedItemFollowWithMetadata,
   InboxItem,
 } from "@/shared/models";
 import { inboxActions, InboxItems, selectInboxItems } from "@/store/states";
-import { useUnreadInboxItems } from "./useUnreadInboxItems";
 
 interface Return
   extends Pick<InboxItems, "data" | "loading" | "hasMore" | "batchNumber"> {
@@ -193,7 +191,6 @@ export const useInboxItems = (
   const userId = user?.uid;
   const unread = options?.unread;
   const lastBatch = newItemsBatches[0];
-  useUnreadInboxItems(options?.unread);
 
   const fetch = () => {
     dispatch(
@@ -270,13 +267,16 @@ export const useInboxItems = (
   }, []);
 
   useEffect(() => {
-    if (!inboxItems.firstDocTimestamp || !userId || unread) {
+    if (!inboxItems.firstDocTimestamp || !userId) {
       return;
     }
 
     const unsubscribe = UserService.subscribeToNewInboxItems(
-      userId,
-      inboxItems.firstDocTimestamp,
+      {
+        userId,
+        endBefore: inboxItems.firstDocTimestamp,
+        unread,
+      },
       (data) => {
         addNewInboxItems(data);
       },

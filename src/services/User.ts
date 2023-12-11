@@ -231,8 +231,11 @@ class UserService {
   };
 
   public subscribeToNewInboxItems = (
-    userId: string,
-    endBefore: Timestamp,
+    options: {
+      userId: string;
+      endBefore: Timestamp;
+      unread?: boolean;
+    },
     callback: (
       data: {
         item: InboxItem;
@@ -243,9 +246,14 @@ class UserService {
       }[],
     ) => void,
   ): UnsubscribeFunction => {
-    const query = this.getInboxSubCollection(userId)
+    const { userId, endBefore, unread } = options;
+    let query = this.getInboxSubCollection(userId)
       .orderBy("itemUpdatedAt", "desc")
       .endBefore(endBefore);
+
+    if (unread) {
+      query = query.where("unread", "==", true);
+    }
 
     return query.onSnapshot((snapshot) => {
       const data = snapshot.docChanges().map((docChange) => ({
