@@ -1,17 +1,29 @@
 import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
-import { SearchIcon } from "@/shared/icons";
+import { Close2Icon, SearchIcon } from "@/shared/icons";
+import { ButtonIcon } from "../ButtonIcon";
 import styles from "./SearchInput.module.scss";
 
 interface SearchInputProps {
-  className?: string;
   value: string;
-  onChange: (text: string) => void;
+  className?: string;
   autoFocus?: boolean;
+  placeholder?: string;
+  onChange: (text: string) => void;
+  onClose?: () => void;
 }
 
+const DEFAULT_PLACEHOLDER = "Search";
+
 const SearchInput: FC<SearchInputProps> = (props) => {
-  const { className, value, onChange, autoFocus } = props;
+  const {
+    className,
+    value,
+    autoFocus,
+    placeholder = DEFAULT_PLACEHOLDER,
+    onChange,
+    onClose,
+  } = props;
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onChange(event.target.value);
@@ -25,9 +37,14 @@ const SearchInput: FC<SearchInputProps> = (props) => {
           className={styles.input}
           value={value}
           onChange={handleInputChange}
-          placeholder="Search"
+          placeholder={placeholder}
           autoFocus={autoFocus}
         />
+        {onClose && (
+          <ButtonIcon className={styles.closeIconButton} onClick={onClose}>
+            <Close2Icon />
+          </ButtonIcon>
+        )}
       </div>
     </div>
   );
