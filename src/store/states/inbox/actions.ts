@@ -23,13 +23,6 @@ export const getInboxItems = createAsyncAction(
   string
 >();
 
-export const refreshUnreadInboxItems = createAsyncAction(
-  InboxActionType.REFRESH_UNREAD_INBOX_ITEMS,
-  InboxActionType.REFRESH_UNREAD_INBOX_ITEMS_SUCCESS,
-  InboxActionType.REFRESH_UNREAD_INBOX_ITEMS_FAILURE,
-  InboxActionType.REFRESH_UNREAD_INBOX_ITEMS_CANCEL,
-)<void, void, void, string>();
-
 export const addNewInboxItems = createStandardAction(
   InboxActionType.ADD_NEW_INBOX_ITEMS,
 )<
