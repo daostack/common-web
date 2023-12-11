@@ -28,6 +28,7 @@ export interface ModalProps {
     modalOverlay?: string;
     headerWrapper?: string;
     header?: string;
+    title?: string;
     closeWrapper?: string;
     content?: string;
   };

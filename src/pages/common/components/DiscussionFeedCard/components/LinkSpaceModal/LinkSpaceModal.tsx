@@ -199,17 +199,13 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
       className={styles.modal}
       isShowing={isOpen}
       onClose={isChannelLoading ? emptyFunction : onClose}
-      title={
-        <div className={styles.modalTitleWrapper}>
-          <h3 className={styles.modalTitle}>Link “{title}”</h3>
-        </div>
-      }
+      title={`Link ${title}`}
       isHeaderSticky
       hideCloseButton={isChannelLoading}
       mobileFullScreen
       styles={{
-        headerWrapper: styles.modalHeaderWrapper,
         header: styles.modalHeader,
+        title: styles.modalTitle,
         content: styles.modalContent,
         closeWrapper: styles.modalCloseWrapper,
       }}

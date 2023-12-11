@@ -180,7 +180,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
           </div>
         )}
         {typeof title === "string" ? (
-          <h3 className="modal__title">{title}</h3>
+          <h3 className={classNames("modal__title", styles?.title)}>{title}</h3>
         ) : (
           title
         )}
