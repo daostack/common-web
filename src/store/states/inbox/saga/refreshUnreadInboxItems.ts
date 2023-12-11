@@ -19,13 +19,13 @@ export function* refreshUnreadInboxItems() {
 
     while (keepItemsFetching) {
       const { data, lastDocTimestamp, hasMore } = (yield call(
-        UserService.getInboxItems,
+        UserService.getInboxItemsWithMetadata,
         {
           startAfter,
           limit: 5,
           unread: true,
         },
-      )) as Awaited<ReturnType<typeof UserService.getInboxItems>>;
+      )) as Awaited<ReturnType<typeof UserService.getInboxItemsWithMetadata>>;
       const chatChannelItems = data.chatChannels
         .filter(
           (chatChannel) =>
