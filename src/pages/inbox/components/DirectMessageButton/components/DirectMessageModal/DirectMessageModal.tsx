@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import Select from "react-select";
+import Select, { components } from "react-select";
 import { Modal, UserAvatar } from "@/shared/components";
 import { useDMUserChatChannel } from "@/shared/hooks/useCases";
 import useThemeColor from "@/shared/hooks/useThemeColor";
@@ -23,6 +23,7 @@ interface DirectMessageModalProps {
 interface SelectOption {
   value: string;
   label: JSX.Element;
+  shortLabel: string;
   uid: string;
 }
 
@@ -102,6 +103,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
           <span>{user.userName}</span>
         </div>
       ),
+      shortLabel: user.userName,
       uid: user.uid,
     }));
 
@@ -130,6 +132,11 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
               <SearchIcon className={styles.searchIcon} />
             ),
             IndicatorSeparator: () => null,
+            MultiValue: (props) => (
+              <components.MultiValue {...props}>
+                {props.data.shortLabel}
+              </components.MultiValue>
+            ),
           }}
         />
         {groupMessage && (
