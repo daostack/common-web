@@ -21,7 +21,7 @@ export const useDMUserChatChannel = (): Return => {
   const userId = user?.uid;
 
   const fetchDMUserChatChannel = useCallback(
-    async (dmUserId: string[]) => {
+    async (dmUserIds: string[]) => {
       if (!userId) {
         return;
       }
@@ -35,16 +35,15 @@ export const useDMUserChatChannel = (): Return => {
       let dmUserChatChannel: ChatChannel | null = null;
 
       try {
-        // TODO: NEED TO HANDLE ARRAY OF UIDS IN getDMUserChatChannel
         dmUserChatChannel = await ChatService.getDMUserChatChannel(
           userId,
-          dmUserId[0],
+          dmUserIds,
         );
 
         if (!dmUserChatChannel) {
           dmUserChatChannel = await ChatService.createChatChannel([
             userId,
-            ...dmUserId,
+            ...dmUserIds,
           ]);
         }
       } catch (error) {

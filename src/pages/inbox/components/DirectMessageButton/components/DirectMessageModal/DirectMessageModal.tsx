@@ -52,8 +52,8 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
   } = useDMUserChatChannel();
   const [groupUids, setGroupUids] = useState<string[]>([]);
 
-  const handleChatCreate = (uid: string[]) => {
-    fetchDMUserChatChannel(uid);
+  const handleChatCreate = (uids: string[]) => {
+    fetchDMUserChatChannel(uids);
   };
 
   useEffect(() => {
