@@ -27,6 +27,11 @@ export interface Discussion extends BaseEntity, SoftDeleteEntity {
   notion?: DiscussionNotion;
 
   /**
+   * List of common IDs that are have linked this discussion
+   */
+  linkedCommonIds: string[];
+
+  /**
    * A discussion can be linked to a proposal, if it does - proposalId will exist.
    */
   proposalId?: string;

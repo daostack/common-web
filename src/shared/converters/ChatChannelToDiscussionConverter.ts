@@ -17,6 +17,7 @@ class ChatChannelToDiscussionConverter extends Converter<
     followers: [],
     messageCount: chatChannel.messageCount,
     discussionMessages: [],
+    linkedCommonIds: [],
     isDeleted: false,
     createdAt: chatChannel.createdAt,
     updatedAt: chatChannel.updatedAt,
