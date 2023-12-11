@@ -12,10 +12,12 @@ import {
   Trash2Icon,
   UnfollowIcon,
   UnpinIcon,
+  Link4Icon as LinkIcon,
   Message3Icon,
 } from "@/shared/icons";
 import { ContextMenuItem as Item, UploadFile } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
+import { emptyFunction } from "@/shared/utils";
 import { notEmpty } from "@/shared/utils/notEmpty";
 import { commonActions } from "@/store/states";
 import { FeedItemMenuItem, GetAllowedItemsOptions } from "../../FeedItem";
@@ -144,6 +146,12 @@ export const useMenuItems = (
       onClick: () =>
         feedItemFollow.onFollowToggle(FollowFeedItemAction.Unfollow),
       icon: <UnfollowIcon />,
+    },
+    {
+      id: FeedItemMenuItem.LinkTo,
+      text: "Link to...",
+      onClick: () => emptyFunction,
+      icon: <LinkIcon />,
     },
     remove
       ? {

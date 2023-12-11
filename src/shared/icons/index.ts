@@ -27,6 +27,7 @@ export { default as InfoIcon } from "./info.icon";
 export { default as LeftArrowIcon } from "./leftArrow.icon";
 export { default as Link2Icon } from "./link2.icon";
 export { default as Link3Icon } from "./link3.icon";
+export { default as Link4Icon } from "./link4.icon";
 export { default as ListMarkIcon } from "./listMark.icon";
 export { default as LogoutIcon } from "./logout.icon";
 export { default as LongLeftArrowIcon } from "./longLeftArrow.icon";

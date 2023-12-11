@@ -38,6 +38,9 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
 
     return Boolean(count) || !seen;
   },
+  [FeedItemMenuItem.LinkTo]: ({ feedItemUserMetadata }) => {
+    return true;
+  },
 };
 
 export const getAllowedItems = (
@@ -53,6 +56,7 @@ export const getAllowedItems = (
     FeedItemMenuItem.MarkRead,
     FeedItemMenuItem.Report,
     FeedItemMenuItem.Edit,
+    FeedItemMenuItem.LinkTo,
     FeedItemMenuItem.Remove,
   ];
   const nonAllowedItems =
