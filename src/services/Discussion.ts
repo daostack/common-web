@@ -87,10 +87,10 @@ class DiscussionService {
       const source = snapshot.metadata.fromCache ? "local cache" : "server";
 
       if (discussion) {
-        console.log(`discussion found! [${source}]`, discussionId);
+        // console.log(`discussion found! [${source}]`, discussionId);
         callback(discussion);
       } else {
-        console.log(`discussion was not found [${source}]`, discussionId);
+        // console.log(`discussion was not found [${source}]`, discussionId);
       }
     });
   };

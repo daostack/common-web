@@ -32,6 +32,8 @@ if (REACT_APP_ENV === Environment.Local) {
     });
 }
 
+// firebase.firestore.setLogLevel("debug");
+
 export const isFirebaseError = (error: any): error is FirebaseError =>
   (error && error.code && error.code.startsWith("auth/")) ||
   error.name === "FirebaseError";
