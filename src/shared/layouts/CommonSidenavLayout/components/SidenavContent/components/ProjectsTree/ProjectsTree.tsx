@@ -22,7 +22,7 @@ interface ProjectsTreeProps extends BaseProjectsTreeProps {
   currentCommonId?: string | null;
   onCommonClick: (commonId: string) => void;
   onCommonCreationClick: () => void;
-  onAddProjectClick: (commonId: string) => void;
+  onAddProjectClick?: (commonId: string) => void;
   isLoading?: boolean;
 }
 

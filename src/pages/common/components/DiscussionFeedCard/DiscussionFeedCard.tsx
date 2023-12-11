@@ -66,6 +66,7 @@ interface DiscussionFeedCardProps {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   directParent?: DirectParent | null;
+  rootCommonId?: string;
   feedItemFollow: FeedItemFollowState;
   onUserSelect?: (userId: string, commonId?: string) => void;
 }
@@ -94,6 +95,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       getNonAllowedItems,
       onActiveItemDataChange,
       directParent,
+      rootCommonId,
       feedItemFollow,
       onUserSelect,
     } = props;
@@ -382,11 +384,15 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
             />
           </GlobalOverlay>
         )}
-        <LinkSpaceModal
-          isOpen={isLinkSpaceModalOpen}
-          onClose={onLinkSpaceModalClose}
-          title={cardTitle || ""}
-        />
+        {commonId && (
+          <LinkSpaceModal
+            isOpen={isLinkSpaceModalOpen}
+            onClose={onLinkSpaceModalClose}
+            title={cardTitle || ""}
+            rootCommonId={rootCommonId || commonId}
+            commonId={commonId}
+          />
+        )}
       </>
     );
   },

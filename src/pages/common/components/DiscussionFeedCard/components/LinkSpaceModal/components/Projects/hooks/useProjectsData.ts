@@ -1,0 +1,126 @@
+import { useEffect, useMemo, useRef } from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/pages/Auth/store/selectors";
+import { useLoadingState } from "@/shared/hooks";
+import {
+  generateProjectsTreeItems,
+  getItemById,
+  getItemFromProjectsStateItem,
+  getParentItemIds,
+  Item,
+} from "@/shared/layouts/SidenavLayout/components/SidenavContent/components";
+import {
+  ProjectsStateItem,
+  selectCommonLayoutCommonsState,
+} from "@/store/states";
+import { getProjects as getProjectsUtil } from "@/store/states/commonLayout/saga/utils";
+
+interface ProjectsInfo {
+  currentCommonId: string;
+  activeItemId: string;
+}
+
+interface Return {
+  parentItem: Item | null;
+  areCommonsLoading: boolean;
+  areProjectsLoading: boolean;
+  commons: ProjectsStateItem[];
+  items: Item[];
+  activeItem: Item | null;
+  parentItemIds: string[];
+}
+
+const generateItemCommonPagePath = () => "";
+
+export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
+  const { currentCommonId, activeItemId } = projectsInfo;
+  const currentCommonIdRef = useRef(currentCommonId);
+  currentCommonIdRef.current = currentCommonId;
+  const { commons, areCommonsLoading } = useSelector(
+    selectCommonLayoutCommonsState,
+  );
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+  const [
+    {
+      data: projects,
+      loading: areProjectsLoading,
+      fetched: areProjectsFetched,
+    },
+    setProjectsState,
+  ] = useLoadingState<ProjectsStateItem[]>([]);
+  const currentCommon = commons.find(
+    ({ commonId }) => commonId === currentCommonId,
+  );
+  const parentItem = useMemo(
+    () =>
+      currentCommon
+        ? getItemFromProjectsStateItem(
+            currentCommon,
+            generateItemCommonPagePath,
+          )
+        : null,
+    [currentCommon, generateItemCommonPagePath],
+  );
+  const items = useMemo(() => {
+    const [item] = generateProjectsTreeItems(
+      currentCommon ? projects.concat(currentCommon) : projects,
+      generateItemCommonPagePath,
+    );
+
+    return item?.items || [];
+  }, [currentCommon, projects, generateItemCommonPagePath]);
+  const activeItem = getItemById(
+    activeItemId,
+    parentItem ? [parentItem, ...items] : items,
+  );
+  const parentItemIds = getParentItemIds(
+    activeItemId,
+    currentCommon ? projects.concat(currentCommon) : projects,
+  );
+
+  useEffect(() => {
+    let isRelevantLoading = true;
+
+    (async () => {
+      try {
+        setProjectsState({
+          data: [],
+          loading: true,
+          fetched: false,
+        });
+        const projectsData = await getProjectsUtil(currentCommonId, userId);
+
+        if (isRelevantLoading) {
+          setProjectsState({
+            data: projectsData,
+            loading: false,
+            fetched: true,
+          });
+        }
+      } catch (err) {
+        if (isRelevantLoading) {
+          setProjectsState({
+            data: [],
+            loading: false,
+            fetched: true,
+          });
+        }
+      }
+    })();
+
+    return () => {
+      isRelevantLoading = false;
+    };
+  }, [currentCommonId]);
+
+  return {
+    parentItem,
+    areCommonsLoading,
+    areProjectsLoading,
+    commons,
+    items,
+    activeItem,
+    parentItemIds,
+  };
+};

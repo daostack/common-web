@@ -718,6 +718,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       }
                       onActiveItemDataChange={handleActiveFeedItemDataChange}
                       directParent={outerCommon?.directParent}
+                      rootCommonId={outerCommon?.rootCommonId}
                     />
                   );
                 }
