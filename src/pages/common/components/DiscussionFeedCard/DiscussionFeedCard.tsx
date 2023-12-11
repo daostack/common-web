@@ -29,7 +29,7 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { StaticLinkType, getUserName } from "@/shared/utils";
+import { StaticLinkType, getUserName, emptyFunction } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
@@ -145,6 +145,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         report: onReportModalOpen,
         share: () => onShareModalOpen(),
         remove: onDeleteModalOpen,
+        linkTo: emptyFunction,
       },
     );
     const user = useSelector(selectUser());

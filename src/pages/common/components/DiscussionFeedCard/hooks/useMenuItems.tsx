@@ -27,6 +27,7 @@ interface Actions {
   report: () => void;
   share: () => void;
   remove?: () => void;
+  linkTo?: () => void;
 }
 
 export const useMenuItems = (
@@ -41,7 +42,7 @@ export const useMenuItems = (
     feedItemFollow,
     feedItemUserMetadata,
   } = options;
-  const { report, share, remove } = actions;
+  const { report, share, remove, linkTo } = actions;
   const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
   const items: Item[] = [
     {
@@ -147,12 +148,14 @@ export const useMenuItems = (
         feedItemFollow.onFollowToggle(FollowFeedItemAction.Unfollow),
       icon: <UnfollowIcon />,
     },
-    {
-      id: FeedItemMenuItem.LinkTo,
-      text: "Link to...",
-      onClick: () => emptyFunction,
-      icon: <LinkIcon />,
-    },
+    linkTo
+      ? {
+          id: FeedItemMenuItem.LinkTo,
+          text: "Link to...",
+          onClick: () => emptyFunction,
+          icon: <LinkIcon />,
+        }
+      : undefined,
     remove
       ? {
           id: FeedItemMenuItem.Remove,
