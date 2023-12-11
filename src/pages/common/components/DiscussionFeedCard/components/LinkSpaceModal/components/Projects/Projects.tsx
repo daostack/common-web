@@ -3,7 +3,6 @@ import { LOADER_APPEARANCE_DELAY } from "@/shared/constants";
 import { TreeItemTriggerStyles } from "@/shared/layouts";
 import { ProjectsTree } from "@/shared/layouts/CommonSidenavLayout/components/SidenavContent/components/ProjectsTree";
 import { Loader } from "@/shared/ui-kit";
-import { emptyFunction } from "@/shared/utils";
 import { useProjectsData } from "./hooks";
 import styles from "./Projects.module.scss";
 
@@ -56,7 +55,6 @@ const Projects: FC<ProjectsProps> = (props) => {
       parentItemIds={parentItemIds}
       currentCommonId={currentCommonId}
       onCommonClick={setCurrentCommonId}
-      onCommonCreationClick={emptyFunction}
       isLoading={areProjectsLoading}
     />
   );

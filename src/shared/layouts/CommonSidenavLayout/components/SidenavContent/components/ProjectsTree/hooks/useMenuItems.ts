@@ -6,7 +6,7 @@ interface Options {
   stateItems: ProjectsStateItem[];
   activeStateItemId?: string | null;
   onCommonClick: (commonId: string) => void;
-  onCommonCreationClick: () => void;
+  onCommonCreationClick?: () => void;
 }
 
 export const useMenuItems = (options: Options): MenuItem[] => {
@@ -33,12 +33,13 @@ export const useMenuItems = (options: Options): MenuItem[] => {
       }
 
       return 0;
-    })
-    .concat({
-      id: CREATE_COMMON_ITEM_ID,
-      text: "Create a common",
-      onClick: onCommonCreationClick,
     });
 
-  return items;
+  return onCommonCreationClick
+    ? items.concat({
+        id: CREATE_COMMON_ITEM_ID,
+        text: "Create a common",
+        onClick: onCommonCreationClick,
+      })
+    : items;
 };
