@@ -235,6 +235,7 @@ class UserService {
       userId: string;
       endBefore: Timestamp;
       unread?: boolean;
+      orderBy?: "itemUpdatedAt" | "updatedAt";
     },
     callback: (
       data: {
@@ -246,9 +247,9 @@ class UserService {
       }[],
     ) => void,
   ): UnsubscribeFunction => {
-    const { userId, endBefore, unread } = options;
+    const { userId, endBefore, unread, orderBy = "itemUpdatedAt" } = options;
     let query = this.getInboxSubCollection(userId)
-      .orderBy("itemUpdatedAt", "desc")
+      .orderBy(orderBy, "desc")
       .endBefore(endBefore);
 
     if (unread) {

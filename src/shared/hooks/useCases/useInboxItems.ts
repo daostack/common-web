@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
@@ -188,9 +188,11 @@ export const useInboxItems = (
   const [newItemsBatches, setNewItemsBatches] = useState<ItemsBatch[]>([]);
   const inboxItems = useSelector(selectInboxItems);
   const user = useSelector(selectUser());
+  const inboxItemsRef = useRef(inboxItems);
   const userId = user?.uid;
   const unread = options?.unread;
   const lastBatch = newItemsBatches[0];
+  inboxItemsRef.current = inboxItems;
 
   const fetch = () => {
     dispatch(
@@ -281,8 +283,41 @@ export const useInboxItems = (
         addNewInboxItems(data);
       },
     );
+    const unsubscribeFromUpdateAtSubscription =
+      UserService.subscribeToNewInboxItems(
+        {
+          userId,
+          endBefore: inboxItems.firstDocTimestamp,
+          unread,
+          orderBy: "updatedAt",
+        },
+        (data) => {
+          const lastDocTimestampSeconds =
+            inboxItemsRef.current?.lastDocTimestamp?.seconds;
+          const currentInboxData = inboxItemsRef.current?.data;
+          const filteredData =
+            lastDocTimestampSeconds && currentInboxData
+              ? data.filter(
+                  ({ item }) =>
+                    item.itemUpdatedAt.seconds >= lastDocTimestampSeconds &&
+                    !currentInboxData.some(
+                      (currentItem) => currentItem.itemId === item.itemId,
+                    ),
+                )
+              : [];
 
-    return unsubscribe;
+          addNewInboxItems(filteredData);
+
+          if (filteredData.length !== data.length) {
+            dispatch(inboxActions.setHasMoreInboxItems(true));
+          }
+        },
+      );
+
+    return () => {
+      unsubscribe();
+      unsubscribeFromUpdateAtSubscription();
+    };
   }, [
     inboxItems.firstDocTimestamp,
     userId,

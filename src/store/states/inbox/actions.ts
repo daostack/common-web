@@ -67,6 +67,10 @@ export const resetInboxItems = createStandardAction(
   InboxActionType.RESET_INBOX_ITEMS,
 )();
 
+export const setHasMoreInboxItems = createStandardAction(
+  InboxActionType.SET_HAS_MORE_INBOX_ITEMS,
+)<boolean>();
+
 export const setSharedFeedItemId = createStandardAction(
   InboxActionType.SET_SHARED_FEED_ITEM_ID,
 )<string | null>();
