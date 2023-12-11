@@ -29,7 +29,7 @@ import {
   PredefinedTypes,
 } from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
-import { StaticLinkType, getUserName, emptyFunction } from "@/shared/utils";
+import { StaticLinkType, getUserName } from "@/shared/utils";
 import { useChatContext } from "../ChatComponent";
 import {
   FeedCard,
@@ -44,6 +44,7 @@ import {
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "../FeedItem";
+import { LinkSpaceModal } from "./components";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -111,6 +112,11 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       onOpen: onDeleteModalOpen,
       onClose: onDeleteModalClose,
     } = useModal(false);
+    const {
+      isShowing: isLinkSpaceModalOpen,
+      onOpen: onLinkSpaceModalOpen,
+      onClose: onLinkSpaceModalClose,
+    } = useModal(false);
     const [isDeletingInProgress, setDeletingInProgress] = useState(false);
     const {
       fetchUser: fetchDiscussionCreator,
@@ -145,7 +151,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         report: onReportModalOpen,
         share: () => onShareModalOpen(),
         remove: onDeleteModalOpen,
-        linkTo: emptyFunction,
+        linkSpace: onLinkSpaceModalOpen,
       },
     );
     const user = useSelector(selectUser());
@@ -376,6 +382,11 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
             />
           </GlobalOverlay>
         )}
+        <LinkSpaceModal
+          isOpen={isLinkSpaceModalOpen}
+          onClose={onLinkSpaceModalClose}
+          title={cardTitle || ""}
+        />
       </>
     );
   },
