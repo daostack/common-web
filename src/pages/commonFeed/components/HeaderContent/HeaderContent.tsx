@@ -70,6 +70,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
           commonMember={commonMember}
           governance={governance}
           isMobileVersion={isMobileVersion}
+          onClick={onCloseSearch}
         />
         <ActionsButton
           common={common}
