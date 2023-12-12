@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 export interface TreeItemTriggerStyles {
   container?: string;
   containerActive?: string;
+  containerDisabled?: string;
   name?: string;
   image?: string;
   imageNonRounded?: string;

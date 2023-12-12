@@ -32,6 +32,12 @@ interface Return {
 
 const generateItemCommonPagePath = () => "";
 
+const getAdditionalItemData = (
+  projectsStateItem: ProjectsStateItem,
+): Partial<Item> => ({
+  disabled: !projectsStateItem.hasPermissionToLinkToHere,
+});
+
 export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
   const { currentCommonId, activeItemId } = projectsInfo;
   const currentCommonIdRef = useRef(currentCommonId);
@@ -58,18 +64,21 @@ export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
         ? getItemFromProjectsStateItem(
             currentCommon,
             generateItemCommonPagePath,
+            undefined,
+            getAdditionalItemData,
           )
         : null,
-    [currentCommon, generateItemCommonPagePath],
+    [currentCommon],
   );
   const items = useMemo(() => {
     const [item] = generateProjectsTreeItems(
       currentCommon ? projects.concat(currentCommon) : projects,
       generateItemCommonPagePath,
+      getAdditionalItemData,
     );
 
     return item?.items || [];
-  }, [currentCommon, projects, generateItemCommonPagePath]);
+  }, [currentCommon, projects]);
   const activeItem = getItemById(
     activeItemId,
     parentItem ? [parentItem, ...items] : items,

@@ -31,7 +31,9 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
   };
 
   const handleItemClick: MouseEventHandler<HTMLDivElement> = () => {
-    onItemClick?.(item.id);
+    if (!item.disabled) {
+      onItemClick?.(item.id);
+    }
   };
 
   const wrapperClassName = classNames(
@@ -40,6 +42,10 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
       [classNames(styles.itemActive, treeItemTriggerStyles?.containerActive)]:
         isActive,
       [styles.itemWithoutMembership]: !hasMembership,
+      [classNames(
+        styles.itemDisabled,
+        treeItemTriggerStyles?.containerDisabled,
+      )]: item.disabled,
     },
     className,
     treeItemTriggerStyles?.container,
@@ -89,12 +95,13 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
     </>
   );
 
-  if (onItemClick) {
+  if (onItemClick || item.disabled) {
     return (
       <div
         className={wrapperClassName}
         title={item.name}
         aria-label={`Select ${item.name}`}
+        aria-disabled={item.disabled}
         tabIndex={0}
         onClick={handleItemClick}
       >

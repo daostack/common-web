@@ -10,4 +10,5 @@ export interface Item {
   notificationsAmount?: number;
   rightContent?: ReactNode;
   items?: Item[];
+  disabled?: boolean;
 }

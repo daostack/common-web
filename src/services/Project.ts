@@ -20,6 +20,7 @@ class ProjectService {
     common: Common;
     hasMembership: boolean;
     hasPermissionToAddProject?: boolean;
+    hasPermissionToLinkToHere?: boolean;
   }[] =>
     commons
       .filter((common) => common.state === CommonState.ACTIVE)
@@ -39,6 +40,12 @@ class ProjectService {
               permissionsItem.governance.circles,
               permissionsItem.commonMemberCircleIds,
             ).allowedActions[GovernanceActions.CREATE_PROJECT],
+          hasPermissionToLinkToHere:
+            permissionsItem &&
+            generateCirclesDataForCommonMember(
+              permissionsItem.governance.circles,
+              permissionsItem.commonMemberCircleIds,
+            ).allowedActions[GovernanceActions.LINK_TO_HERE],
         };
       });
 

@@ -29,14 +29,22 @@ export const getProjects = async (
     permissionsData,
   );
 
-  return data.map(({ common, hasMembership, hasPermissionToAddProject }) => ({
-    commonId: common.id,
-    image: common.image,
-    name: common.name,
-    directParent: common.directParent,
-    rootCommonId: common.rootCommonId,
-    hasMembership,
-    hasPermissionToAddProject,
-    notificationsAmount: 0,
-  }));
+  return data.map(
+    ({
+      common,
+      hasMembership,
+      hasPermissionToAddProject,
+      hasPermissionToLinkToHere,
+    }) => ({
+      commonId: common.id,
+      image: common.image,
+      name: common.name,
+      directParent: common.directParent,
+      rootCommonId: common.rootCommonId,
+      hasMembership,
+      hasPermissionToAddProject,
+      hasPermissionToLinkToHere,
+      notificationsAmount: 0,
+    }),
+  );
 };
