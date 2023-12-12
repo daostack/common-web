@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from "react";
 import { Modal } from "@/shared/components";
-import { Loader } from "@/shared/ui-kit";
+import { Button, ButtonSize, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { Projects } from "./components";
 import styles from "./LinkSpaceModal.module.scss";
@@ -22,7 +22,18 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
       return <Loader />;
     }
 
-    return <Projects rootCommonId={rootCommonId} commonId={commonId} />;
+    return (
+      <>
+        <Projects rootCommonId={rootCommonId} commonId={commonId} />
+        <Button
+          className={styles.submitButton}
+          variant={ButtonVariant.PrimaryPink}
+          size={ButtonSize.Large}
+        >
+          Apply
+        </Button>
+      </>
+    );
   };
 
   return (
