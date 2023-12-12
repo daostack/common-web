@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useMemo, useState } from "react";
+import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { LOADER_APPEARANCE_DELAY } from "@/shared/constants";
 import { TreeItemTriggerStyles } from "@/shared/layouts";
 import { ProjectsTree } from "@/shared/layouts/CommonSidenavLayout/components/SidenavContent/components/ProjectsTree";
@@ -35,6 +35,10 @@ const Projects: FC<ProjectsProps> = (props) => {
     }),
     [],
   );
+
+  useEffect(() => {
+    setActiveItemId("");
+  }, [currentCommonId]);
 
   if (!parentItem) {
     return areCommonsLoading ? (
