@@ -41,7 +41,7 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
         closeWrapper: styles.modalCloseWrapper,
       }}
     >
-      <div className={styles.content}>{renderContent()}</div>
+      {renderContent()}
     </Modal>
   );
 };
