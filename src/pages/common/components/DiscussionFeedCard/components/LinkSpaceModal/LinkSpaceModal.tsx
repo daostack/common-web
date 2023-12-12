@@ -41,7 +41,7 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
       className={styles.modal}
       isShowing={isOpen}
       onClose={isSpaceLinkingLoading ? emptyFunction : onClose}
-      title={`Link ${title}`}
+      title={`Link “${title}“`}
       isHeaderSticky
       hideCloseButton={isSpaceLinkingLoading}
       mobileFullScreen
