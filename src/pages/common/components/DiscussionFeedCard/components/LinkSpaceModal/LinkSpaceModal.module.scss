@@ -36,6 +36,10 @@
   .modalCloseWrapper {
     top: 1.7rem;
     margin: 0;
+
+    @include tablet {
+      top: 1.1rem;
+    }
   }
 
   @include tablet {
@@ -50,4 +54,9 @@
   max-width: 9.75rem;
   margin-top: auto;
   align-self: flex-end;
+
+  @include tablet {
+    max-width: 100%;
+    align-self: unset;
+  }
 }
