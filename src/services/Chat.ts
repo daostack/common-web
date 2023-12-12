@@ -81,6 +81,7 @@ class ChatService {
     currentUserId: string,
     dmUserIds: string[],
   ): Promise<ChatChannel | null> => {
+    // What is it? Looks like this condition is never fulfilled because dmUserIds never includes the currrent user.
     if (currentUserId === dmUserIds[0]) {
       return this.getUserOwnChatChannel(currentUserId);
     }
@@ -91,8 +92,8 @@ class ChatService {
     const docSnapshot = snapshot.docs.find((doc) => {
       const { participants } = doc.data();
 
-      // dmUserIds - never includes me.
-      // participants - includes me.
+      // dmUserIds - never includes the currrent user.
+      // participants - includes the currrent user.
 
       if (dmUserIds.length === 1) {
         // Regular 1 on 1 chat

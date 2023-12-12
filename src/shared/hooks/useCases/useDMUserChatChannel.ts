@@ -8,7 +8,7 @@ import { ChatChannel } from "@/shared/models";
 interface Return {
   loading: boolean;
   dmUserChatChannel: ChatChannel | null;
-  fetchDMUserChatChannel: (dmUserId: string[]) => void;
+  fetchDMUserChatChannel: (dmUserIds: string[]) => void;
   resetDMUserChatChannel: () => void;
   error?: boolean;
 }

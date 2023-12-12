@@ -45,6 +45,8 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     dmUserIds,
     commonId,
     hasUnseenMention,
+    groupMessage,
+    createdBy,
   } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
@@ -63,7 +65,6 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     [styles.imageNonRounded]: !shouldImageBeRounded,
     [styles.imageRounded]: shouldImageBeRounded,
   });
-  //const groupMessage = dmUserIds && dmUserIds?.length > 1;
 
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
@@ -111,12 +112,16 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   };
 
   const handleAvatarClick = () => {
-    if (onUserSelect && dmUserIds) {
+    if (onUserSelect && dmUserIds && !groupMessage) {
       onUserSelect(dmUserIds[0]);
     } else if (commonId) {
       history.push(getCommonPagePath(commonId));
     }
   };
+
+  const lastMessageClassName = classNames(styles.text, styles.lastMessage, {
+    [styles.lastMessageActive]: isActive || (isExpanded && isMobileView),
+  });
 
   return (
     <div
@@ -161,10 +166,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
             <TextEditor
               className={styles.lastMessageContainer}
-              editorClassName={classNames(styles.text, styles.lastMessage, {
-                [styles.lastMessageActive]:
-                  isActive || (isExpanded && isMobileView),
-              })}
+              editorClassName={lastMessageClassName}
               value={lastMessage}
               elementStyles={{
                 mention: isActive ? styles.mentionText : "",
@@ -172,7 +174,12 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               readOnly
             />
           ) : (
-            <div />
+            groupMessage &&
+            createdBy && (
+              <span className={lastMessageClassName}>
+                {`${createdBy} created this group chat`}
+              </span>
+            )
           )}
           <div className={styles.bottomContentRight}>
             <FeedCardTags

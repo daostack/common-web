@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
@@ -7,6 +7,7 @@ import { LastSeenEntity } from "@/shared/constants";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useChatChannelUserStatus, useUserById } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { GroupChatIcon } from "@/shared/icons";
 import { ChatChannelFeedLayoutItemProps } from "@/shared/interfaces";
 import { ChatChannel } from "@/shared/models";
 import { getUserName } from "@/shared/utils";
@@ -30,14 +31,18 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     useChatContext();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const dmUserIds =
-    chatChannel.participants.length === 1
-      ? chatChannel.participants[0]
-      : chatChannel.participants.filter(
-          (participant) => participant !== userId,
-        )[0];
+
+  const groupMessage = chatChannel.participants.length > 2;
+  const dmUserIds = useMemo(
+    () =>
+      chatChannel.participants.filter((participant) => participant !== userId),
+    [],
+  );
+
   const dmUserName = getUserName(dmUser);
-  const finalTitle = chatChannel.participants.length > 2 ? "Group" : dmUserName;
+
+  // TODO: need to find a way to fetch multiple users info by ids.
+  const finalTitle = groupMessage ? "Group" : dmUserName;
 
   const handleOpenChat = useCallback(() => {
     setChatItem({
@@ -70,19 +75,22 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     [dispatch],
   );
 
-  const renderImage = (className?: string) => (
-    <UserAvatar
-      className={className}
-      photoURL={dmUser?.photoURL}
-      nameForRandomAvatar={dmUserName}
-      userName={dmUserName}
-    />
-  );
+  const renderImage = (className?: string) =>
+    groupMessage ? (
+      <GroupChatIcon className={className} />
+    ) : (
+      <UserAvatar
+        className={className}
+        photoURL={dmUser?.photoURL}
+        nameForRandomAvatar={dmUserName}
+        userName={dmUserName}
+      />
+    );
 
   useChatChannelSubscription(chatChannel.id, userId, handleChatChannelUpdate);
 
   useEffect(() => {
-    fetchDMUser(dmUserIds);
+    fetchDMUser(dmUserIds[0]);
   }, [dmUserIds]);
 
   useEffect(() => {
@@ -129,7 +137,9 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       ownerId={userId}
       renderImage={renderImage}
       isImageRounded
-      dmUserIds={[dmUserIds]}
+      dmUserIds={dmUserIds}
+      groupMessage={groupMessage}
+      createdBy={chatChannel.createdBy} // TODO: need to fetch createdBy user name. Check first if it's the current user since we have info already.
     />
   );
 };
