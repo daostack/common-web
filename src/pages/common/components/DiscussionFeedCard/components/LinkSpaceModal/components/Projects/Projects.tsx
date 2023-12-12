@@ -56,6 +56,8 @@ const Projects: FC<ProjectsProps> = (props) => {
       currentCommonId={currentCommonId}
       onCommonClick={setCurrentCommonId}
       isLoading={areProjectsLoading}
+      withScrollbar={false}
+      commonsMenuClassName={styles.commonsMenuClassName}
     />
   );
 };

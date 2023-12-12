@@ -24,6 +24,8 @@ interface ProjectsTreeProps extends BaseProjectsTreeProps {
   onCommonCreationClick?: () => void;
   onAddProjectClick?: (commonId: string) => void;
   isLoading?: boolean;
+  withScrollbar?: boolean;
+  commonsMenuClassName?: string;
 }
 
 const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
@@ -41,6 +43,8 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     onCommonCreationClick,
     onAddProjectClick,
     isLoading = false,
+    withScrollbar = true,
+    commonsMenuClassName,
   } = props;
   const menuItems = useMenuItems({
     stateItems: commons,
@@ -70,6 +74,24 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     ],
   );
 
+  const itemsEl = (
+    <>
+      <TreeRecursive
+        className={className}
+        parentId={parentItem.id}
+        parentName={parentItem.name}
+        items={items}
+        hasPermissionToAddProject={
+          parentItem.hasPermissionToAddProject && isParentItemActive
+        }
+        level={INITIAL_TREE_ITEMS_LEVEL}
+      />
+      {isLoading && (
+        <Loader className={styles.loader} delay={LOADER_APPEARANCE_DELAY} />
+      )}
+    </>
+  );
+
   return (
     <TreeContext.Provider value={contextValue}>
       <TreeItem
@@ -82,26 +104,13 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
               items={menuItems}
               activeItemId={currentCommonId}
               isActive={isParentItemActive}
+              menuItemsClassName={commonsMenuClassName}
             />
           ),
         }}
         isActive={isParentItemActive}
       />
-      <Scrollbar>
-        <TreeRecursive
-          className={className}
-          parentId={parentItem.id}
-          parentName={parentItem.name}
-          items={items}
-          hasPermissionToAddProject={
-            parentItem.hasPermissionToAddProject && isParentItemActive
-          }
-          level={INITIAL_TREE_ITEMS_LEVEL}
-        />
-        {isLoading && (
-          <Loader className={styles.loader} delay={LOADER_APPEARANCE_DELAY} />
-        )}
-      </Scrollbar>
+      {withScrollbar ? <Scrollbar>{itemsEl}</Scrollbar> : itemsEl}
     </TreeContext.Provider>
   );
 };

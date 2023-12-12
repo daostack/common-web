@@ -11,13 +11,14 @@ import { CREATE_COMMON_ITEM_ID } from "../../../ProjectsTree";
 import styles from "./DesktopCommonDropdown.module.scss";
 
 interface DesktopCommonDropdownProps {
+  menuItemsClassName?: string;
   items: MenuItem[];
   activeItemId?: string | null;
   isActive: boolean;
 }
 
 const DesktopCommonDropdown: FC<DesktopCommonDropdownProps> = (props) => {
-  const { items, activeItemId, isActive } = props;
+  const { menuItemsClassName, items, activeItemId, isActive } = props;
   const [menuRerenderHack, setMenuRerenderHack] = useState(false);
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
@@ -77,7 +78,7 @@ const DesktopCommonDropdown: FC<DesktopCommonDropdownProps> = (props) => {
     <div className={styles.container}>
       <DesktopMenu
         key={String(menuRerenderHack)}
-        menuItemsClassName={styles.menuItems}
+        menuItemsClassName={classNames(styles.menuItems, menuItemsClassName)}
         triggerEl={triggerEl}
         items={finalItems}
         shouldPreventDefaultOnClose
