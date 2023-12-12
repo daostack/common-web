@@ -58,6 +58,7 @@ const Projects: FC<ProjectsProps> = (props) => {
       isLoading={areProjectsLoading}
       withScrollbar={false}
       commonsMenuClassName={styles.commonsMenuClassName}
+      loaderDelay={0}
     />
   );
 };

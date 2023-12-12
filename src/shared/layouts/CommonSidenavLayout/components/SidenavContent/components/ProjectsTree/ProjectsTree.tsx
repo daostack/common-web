@@ -26,6 +26,7 @@ interface ProjectsTreeProps extends BaseProjectsTreeProps {
   isLoading?: boolean;
   withScrollbar?: boolean;
   commonsMenuClassName?: string;
+  loaderDelay?: number;
 }
 
 const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
@@ -45,6 +46,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     isLoading = false,
     withScrollbar = true,
     commonsMenuClassName,
+    loaderDelay = LOADER_APPEARANCE_DELAY,
   } = props;
   const menuItems = useMenuItems({
     stateItems: commons,
@@ -86,9 +88,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
         }
         level={INITIAL_TREE_ITEMS_LEVEL}
       />
-      {isLoading && (
-        <Loader className={styles.loader} delay={LOADER_APPEARANCE_DELAY} />
-      )}
+      {isLoading && <Loader className={styles.loader} delay={loaderDelay} />}
     </>
   );
 
