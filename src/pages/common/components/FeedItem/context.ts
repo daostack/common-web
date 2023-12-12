@@ -47,6 +47,7 @@ export interface FeedItemBaseContentProps {
   dmUserId?: string;
   hasUnseenMention?: boolean;
   notion?: CommonNotion;
+  isLinked?: boolean;
 }
 
 export interface GetLastMessageOptions {

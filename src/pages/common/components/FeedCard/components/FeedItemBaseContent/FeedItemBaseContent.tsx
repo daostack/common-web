@@ -1,7 +1,7 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
-import { NotionIcon } from "@/shared/icons";
+import { Link4Icon, NotionIcon } from "@/shared/icons";
 import {
   checkIsTextEditorValueEmpty,
   ContextMenu,
@@ -41,6 +41,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     shouldHideBottomContent = false,
     hasUnseenMention,
     notion,
+    isLinked,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
@@ -135,6 +136,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
                 </TooltipContent>
               </Tooltip>
             )}
+            {isLinked && <Link4Icon className={styles.linkIcon} />}
           </div>
           <p
             className={classNames(styles.text, styles.lastActivity, {
