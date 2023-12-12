@@ -9,13 +9,14 @@ import styles from "./Projects.module.scss";
 interface ProjectsProps {
   rootCommonId: string;
   commonId: string;
+  activeItemId: string;
+  onActiveItemId: (activeItemId: string) => void;
   renderNoItemsInfo?: () => ReactNode;
 }
 
 const Projects: FC<ProjectsProps> = (props) => {
-  const { renderNoItemsInfo } = props;
+  const { activeItemId, onActiveItemId, renderNoItemsInfo } = props;
   const [currentCommonId, setCurrentCommonId] = useState(props.rootCommonId);
-  const [activeItemId, setActiveItemId] = useState("");
   const {
     parentItem,
     areCommonsLoading,
@@ -37,7 +38,7 @@ const Projects: FC<ProjectsProps> = (props) => {
   );
 
   useEffect(() => {
-    setActiveItemId("");
+    onActiveItemId("");
   }, [currentCommonId]);
 
   if (!parentItem) {
@@ -63,7 +64,7 @@ const Projects: FC<ProjectsProps> = (props) => {
       withScrollbar={false}
       commonsMenuClassName={styles.commonsMenuClassName}
       loaderDelay={0}
-      onItemClick={setActiveItemId}
+      onItemClick={onActiveItemId}
     />
   );
 };

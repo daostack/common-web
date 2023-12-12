@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from "react";
+import React, { FC, ReactElement, useState } from "react";
 import { Modal } from "@/shared/components";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
@@ -15,6 +15,7 @@ interface DirectMessageModalProps {
 
 const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
   const { isOpen, onClose, title, rootCommonId, commonId } = props;
+  const [activeItemId, setActiveItemId] = useState("");
   const isSpaceLinkingLoading = false;
 
   const renderContent = (): ReactElement => {
@@ -24,10 +25,16 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
 
     return (
       <>
-        <Projects rootCommonId={rootCommonId} commonId={commonId} />
+        <Projects
+          rootCommonId={rootCommonId}
+          commonId={commonId}
+          activeItemId={activeItemId}
+          onActiveItemId={setActiveItemId}
+        />
         <Button
           className={styles.submitButton}
           variant={ButtonVariant.PrimaryPink}
+          disabled={!activeItemId}
         >
           Apply
         </Button>
