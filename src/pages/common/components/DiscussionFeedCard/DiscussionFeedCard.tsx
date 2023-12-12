@@ -400,6 +400,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
             title={cardTitle || ""}
             rootCommonId={rootCommonId || commonId}
             commonId={commonId}
+            originalCommonId={discussion?.commonId || ""}
+            linkedCommonIds={discussion?.linkedCommonIds}
           />
         )}
       </>

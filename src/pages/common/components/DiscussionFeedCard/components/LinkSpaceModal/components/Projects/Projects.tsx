@@ -11,11 +11,19 @@ interface ProjectsProps {
   commonId: string;
   activeItemId: string;
   onActiveItemId: (activeItemId: string) => void;
+  originalCommonId: string;
+  linkedCommonIds: string[];
   renderNoItemsInfo?: () => ReactNode;
 }
 
 const Projects: FC<ProjectsProps> = (props) => {
-  const { activeItemId, onActiveItemId, renderNoItemsInfo } = props;
+  const {
+    activeItemId,
+    onActiveItemId,
+    renderNoItemsInfo,
+    originalCommonId,
+    linkedCommonIds,
+  } = props;
   const [currentCommonId, setCurrentCommonId] = useState(props.rootCommonId);
   const {
     parentItem,
@@ -25,7 +33,12 @@ const Projects: FC<ProjectsProps> = (props) => {
     items,
     activeItem,
     parentItemIds,
-  } = useProjectsData({ currentCommonId, activeItemId });
+  } = useProjectsData({
+    currentCommonId,
+    activeItemId,
+    originalCommonId,
+    linkedCommonIds,
+  });
   const treeItemTriggerStyles = useMemo<TreeItemTriggerStyles>(
     () => ({
       container: styles.projectsTreeItemTriggerClassName,

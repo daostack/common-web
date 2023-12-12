@@ -16,10 +16,21 @@ interface DirectMessageModalProps {
   title: string;
   rootCommonId: string;
   commonId: string;
+  originalCommonId: string;
+  linkedCommonIds?: string[];
 }
 
 const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
-  const { isOpen, onClose, feedItemId, title, rootCommonId, commonId } = props;
+  const {
+    isOpen,
+    onClose,
+    feedItemId,
+    title,
+    rootCommonId,
+    commonId,
+    originalCommonId,
+    linkedCommonIds = [],
+  } = props;
   const { notify } = useNotification();
   const { isStreamLinking, isStreamLinked, linkStream } = useStreamLinking();
   const [activeItemId, setActiveItemId] = useState("");
@@ -51,6 +62,8 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
           commonId={commonId}
           activeItemId={activeItemId}
           onActiveItemId={setActiveItemId}
+          originalCommonId={originalCommonId}
+          linkedCommonIds={linkedCommonIds}
         />
         <Button
           className={styles.submitButton}

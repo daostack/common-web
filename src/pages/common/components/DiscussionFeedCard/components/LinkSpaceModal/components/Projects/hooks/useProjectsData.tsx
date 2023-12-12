@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useLoadingState } from "@/shared/hooks";
@@ -14,10 +14,13 @@ import {
   selectCommonLayoutCommonsState,
 } from "@/store/states";
 import { getProjects as getProjectsUtil } from "@/store/states/commonLayout/saga/utils";
+import { NameRightContent } from "./components";
 
 interface ProjectsInfo {
   currentCommonId: string;
   activeItemId: string;
+  originalCommonId: string;
+  linkedCommonIds: string[];
 }
 
 interface Return {
@@ -32,14 +35,9 @@ interface Return {
 
 const generateItemCommonPagePath = () => "";
 
-const getAdditionalItemData = (
-  projectsStateItem: ProjectsStateItem,
-): Partial<Item> => ({
-  disabled: !projectsStateItem.hasPermissionToLinkToHere,
-});
-
 export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
-  const { currentCommonId, activeItemId } = projectsInfo;
+  const { currentCommonId, activeItemId, originalCommonId, linkedCommonIds } =
+    projectsInfo;
   const currentCommonIdRef = useRef(currentCommonId);
   currentCommonIdRef.current = currentCommonId;
   const { commons, areCommonsLoading } = useSelector(
@@ -47,17 +45,29 @@ export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
   );
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const [
-    {
-      data: projects,
-      loading: areProjectsLoading,
-      fetched: areProjectsFetched,
-    },
-    setProjectsState,
-  ] = useLoadingState<ProjectsStateItem[]>([]);
+  const [{ data: projects, loading: areProjectsLoading }, setProjectsState] =
+    useLoadingState<ProjectsStateItem[]>([]);
   const currentCommon = commons.find(
     ({ commonId }) => commonId === currentCommonId,
   );
+
+  const getAdditionalItemData = useCallback(
+    (projectsStateItem: ProjectsStateItem): Partial<Item> => ({
+      disabled:
+        !projectsStateItem.hasPermissionToLinkToHere ||
+        projectsStateItem.commonId === originalCommonId ||
+        linkedCommonIds.includes(projectsStateItem.commonId),
+      nameRightContent: (
+        <NameRightContent
+          projectsStateItem={projectsStateItem}
+          originalCommonId={originalCommonId}
+          linkedCommonIds={linkedCommonIds}
+        />
+      ),
+    }),
+    [originalCommonId, linkedCommonIds],
+  );
+
   const parentItem = useMemo(
     () =>
       currentCommon
@@ -68,7 +78,7 @@ export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
             getAdditionalItemData,
           )
         : null,
-    [currentCommon],
+    [currentCommon, getAdditionalItemData],
   );
   const items = useMemo(() => {
     const [item] = generateProjectsTreeItems(
@@ -78,7 +88,7 @@ export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
     );
 
     return item?.items || [];
-  }, [currentCommon, projects]);
+  }, [currentCommon, projects, getAdditionalItemData]);
   const activeItem = getItemById(
     activeItemId,
     parentItem ? [parentItem, ...items] : items,
