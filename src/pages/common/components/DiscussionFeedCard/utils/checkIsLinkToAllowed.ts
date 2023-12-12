@@ -17,9 +17,10 @@ export const checkIsLinkToAllowed = (
     [];
 
   return (
-    discussionCircleVisibility.some((circleId) =>
-      circlesWithLowestTier.some((circle) => circle.id === circleId),
-    ) &&
+    (discussionCircleVisibility.length === 0 ||
+      discussionCircleVisibility.some((circleId) =>
+        circlesWithLowestTier.some((circle) => circle.id === circleId),
+      )) &&
     hasPermission({
       commonMember: options.commonMember,
       governance: {
