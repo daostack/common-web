@@ -18,8 +18,8 @@ interface HeaderContentProps {
 const HeaderContent: FC<HeaderContentProps> = (props) => {
   const { className, streamsWithNotificationsAmount } = props;
   const isMobileVersion = useIsTabletView();
-  const { searchValue, searchInputToggle, onChangeSearchValue, onCloseSearch } =
-    useSearchFeedItems();
+  // const { searchValue, searchInputToggle, onChangeSearchValue, onCloseSearch } =
+  //   useSearchFeedItems();
 
   if (isMobileVersion) {
     return (
@@ -37,7 +37,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
         <h1 className={styles.title}>Inbox</h1>
       </div>
       <div className={styles.actionButtonsWrapper}>
-        {searchInputToggle.isToggledOn && (
+        {/* {searchInputToggle.isToggledOn && (
           <SearchInput
             value={searchValue}
             placeholder="Search spaces"
@@ -45,11 +45,11 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
             onClose={onCloseSearch}
             autoFocus
           />
-        )}
+        )} */}
         {/* <InboxFilterButton /> */}
-        {!searchInputToggle.isToggledOn && (
+        {/* {!searchInputToggle.isToggledOn && (
           <SearchButton onClick={searchInputToggle.setToggleOn} />
-        )}
+        )} */}
         <DirectMessageButton
           isMobileVersion={isMobileVersion}
           ButtonComponent={PlusButton}
