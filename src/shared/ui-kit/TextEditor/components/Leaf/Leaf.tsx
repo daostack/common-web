@@ -22,7 +22,7 @@ const Leaf: FC<RenderLeafProps> = (props) => {
         onClick={() => onInternalLinkClick(internalLink)}
         className={styles.internalLink}
       >
-        {leaf.text}
+        {children}
       </span>
     );
   }
