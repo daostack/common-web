@@ -15,7 +15,7 @@ interface ProjectsProps {
 const Projects: FC<ProjectsProps> = (props) => {
   const { renderNoItemsInfo } = props;
   const [currentCommonId, setCurrentCommonId] = useState(props.rootCommonId);
-  const [activeItemId, setActiveItemId] = useState(props.commonId);
+  const [activeItemId, setActiveItemId] = useState("");
   const {
     parentItem,
     areCommonsLoading,
@@ -59,6 +59,7 @@ const Projects: FC<ProjectsProps> = (props) => {
       withScrollbar={false}
       commonsMenuClassName={styles.commonsMenuClassName}
       loaderDelay={0}
+      onItemClick={setActiveItemId}
     />
   );
 };

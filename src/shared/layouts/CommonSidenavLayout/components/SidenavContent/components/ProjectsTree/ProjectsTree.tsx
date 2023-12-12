@@ -23,6 +23,7 @@ interface ProjectsTreeProps extends BaseProjectsTreeProps {
   onCommonClick: (commonId: string) => void;
   onCommonCreationClick?: () => void;
   onAddProjectClick?: (commonId: string) => void;
+  onItemClick?: (itemId: string) => void;
   isLoading?: boolean;
   withScrollbar?: boolean;
   commonsMenuClassName?: string;
@@ -43,6 +44,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     onCommonClick,
     onCommonCreationClick,
     onAddProjectClick,
+    onItemClick,
     isLoading = false,
     withScrollbar = true,
     commonsMenuClassName,
@@ -65,6 +67,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
       treeItemTriggerStyles,
       parentItemIds,
       onAddProjectClick,
+      onItemClick,
     }),
     [
       activeItem?.id,
@@ -73,6 +76,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
       treeItemTriggerStyles,
       parentItemIds,
       onAddProjectClick,
+      onItemClick,
     ],
   );
 

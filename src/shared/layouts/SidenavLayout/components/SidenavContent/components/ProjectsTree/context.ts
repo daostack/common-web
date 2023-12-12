@@ -15,6 +15,7 @@ export interface TreeContextValue {
   isActiveCheckAllowed: boolean;
   treeItemTriggerStyles?: TreeItemTriggerStyles;
   onAddProjectClick?: (commonId: string) => void;
+  onItemClick?: (itemId: string) => void;
 }
 
 export const TreeContext = React.createContext<TreeContextValue>({
