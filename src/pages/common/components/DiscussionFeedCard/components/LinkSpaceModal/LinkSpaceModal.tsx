@@ -52,7 +52,7 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
 
   const renderContent = (): ReactElement => {
     if (isStreamLinking) {
-      return <Loader />;
+      return <Loader className={styles.loader} />;
     }
 
     return (
