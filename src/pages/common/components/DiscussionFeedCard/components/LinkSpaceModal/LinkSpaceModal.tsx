@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from "react";
 import { Modal } from "@/shared/components";
-import { Button, ButtonSize, ButtonVariant, Loader } from "@/shared/ui-kit";
+import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { Projects } from "./components";
 import styles from "./LinkSpaceModal.module.scss";
@@ -28,7 +28,6 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
         <Button
           className={styles.submitButton}
           variant={ButtonVariant.PrimaryPink}
-          size={ButtonSize.Large}
         >
           Apply
         </Button>
