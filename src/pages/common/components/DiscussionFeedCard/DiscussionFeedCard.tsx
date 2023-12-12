@@ -388,6 +388,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           <LinkSpaceModal
             isOpen={isLinkSpaceModalOpen}
             onClose={onLinkSpaceModalClose}
+            feedItemId={item.id}
             title={cardTitle || ""}
             rootCommonId={rootCommonId || commonId}
             commonId={commonId}

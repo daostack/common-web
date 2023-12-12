@@ -21,6 +21,7 @@ export type { ChangePaymentMethodState } from "./usePaymentMethodChange";
 export { useProjectCreation } from "./useProjectCreation";
 export { useProposalById } from "./useProposalById";
 export { useRootCommonMembershipIntro } from "./useRootCommonMembershipIntro";
+export { useStreamLinking } from "./useStreamLinking";
 export { useSubCommons } from "./useSubCommons";
 export { useSupportersData } from "./useSupportersData";
 export { useLastVisitedCommon } from "./useLastVisitedCommon";

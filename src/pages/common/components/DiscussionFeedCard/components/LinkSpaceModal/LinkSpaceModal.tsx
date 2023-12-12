@@ -1,5 +1,9 @@
-import React, { FC, ReactElement, useState } from "react";
+import React, { FC, ReactElement, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { Modal } from "@/shared/components";
+import { useNotification } from "@/shared/hooks";
+import { useStreamLinking } from "@/shared/hooks/useCases";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { Projects } from "./components";
@@ -8,18 +12,35 @@ import styles from "./LinkSpaceModal.module.scss";
 interface DirectMessageModalProps {
   isOpen: boolean;
   onClose: () => void;
+  feedItemId: string;
   title: string;
   rootCommonId: string;
   commonId: string;
 }
 
 const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
-  const { isOpen, onClose, title, rootCommonId, commonId } = props;
+  const { isOpen, onClose, feedItemId, title, rootCommonId, commonId } = props;
+  const { notify } = useNotification();
+  const { isStreamLinking, isStreamLinked, linkStream } = useStreamLinking();
   const [activeItemId, setActiveItemId] = useState("");
-  const isSpaceLinkingLoading = false;
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
+
+  const handleSubmit = () => {
+    if (!userId) {
+      return;
+    }
+
+    linkStream({
+      userId,
+      feedObjectId: feedItemId,
+      sourceCommonId: commonId,
+      targetCommonId: activeItemId,
+    });
+  };
 
   const renderContent = (): ReactElement => {
-    if (isSpaceLinkingLoading) {
+    if (isStreamLinking) {
       return <Loader />;
     }
 
@@ -35,6 +56,7 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
           className={styles.submitButton}
           variant={ButtonVariant.PrimaryPink}
           disabled={!activeItemId}
+          onClick={handleSubmit}
         >
           Apply
         </Button>
@@ -42,14 +64,21 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
     );
   };
 
+  useEffect(() => {
+    if (isStreamLinked) {
+      notify("Stream is successfully linked");
+      onClose();
+    }
+  }, [isStreamLinking, isStreamLinked]);
+
   return (
     <Modal
       className={styles.modal}
       isShowing={isOpen}
-      onClose={isSpaceLinkingLoading ? emptyFunction : onClose}
+      onClose={isStreamLinking ? emptyFunction : onClose}
       title={`Link “${title}“`}
       isHeaderSticky
-      hideCloseButton={isSpaceLinkingLoading}
+      hideCloseButton={isStreamLinking}
       mobileFullScreen
       styles={{
         header: styles.modalHeader,
