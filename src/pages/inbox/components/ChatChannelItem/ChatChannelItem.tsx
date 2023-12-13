@@ -24,10 +24,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const { chatChannel, isActive, onActiveItemDataChange } = props;
   const dispatch = useDispatch();
   const isTabletView = useIsTabletView();
-  const {
-    fetchUsers: fetchDMUsers,
-    data: dmUsers, // dm users not including the current user.
-  } = useUsersByIds();
+  const { fetchUsers: fetchDMUsers, data: dmUsers } = useUsersByIds();
   const {
     data: chatChannelUserStatus,
     fetched: isChatChannelUserStatusFetched,
@@ -47,6 +44,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   );
 
   const dmUsersNames = dmUsers?.map((user) => getUserName(user));
+  // TODO: need to decide for the maximum amount of users to display. Also decide about the format.
   const finalTitle = join(dmUsersNames, " & ");
   const groupChatCreatorName = getUserName(
     chatChannel.createdBy === user?.uid
@@ -100,7 +98,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   useChatChannelSubscription(chatChannel.id, userId, handleChatChannelUpdate);
 
   useEffect(() => {
-    fetchDMUsers(dmUserIds);
+    fetchDMUsers(dmUserIds); // dm users not including the current user.
   }, [dmUserIds]);
 
   useEffect(() => {
