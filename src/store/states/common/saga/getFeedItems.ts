@@ -1,132 +1,13 @@
 import { call, put, select } from "redux-saga/effects";
-import { selectCommonStateById } from "@/pages/OldCommon/store/selectors";
-import {
-  CommonFeedService,
-  DiscussionService,
-  Logger,
-  ProposalService,
-} from "@/services";
+import { CommonFeedService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
-import {
-  Awaited,
-  FeedItemFollowLayoutItem,
-  LoadingState,
-} from "@/shared/interfaces";
-import { Common, CommonFeedType, Discussion, Proposal } from "@/shared/models";
+import { Awaited, FeedItemFollowLayoutItem } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
-import {
-  cacheActions,
-  selectDiscussionStateById,
-  selectFeedStateByCommonId,
-} from "@/store/states";
+import { selectFeedStateByCommonId } from "@/store/states";
 import * as actions from "../actions";
-import { selectFeedItems, selectSearchValue } from "../selectors";
+import { selectFeedItems } from "../selectors";
 import { FeedItems } from "../types";
-
-function* filterFeedItems(feedItems: FeedItemFollowLayoutItem[]) {
-  const searchValue = (yield select(selectSearchValue)).toLowerCase();
-
-  if (!searchValue) {
-    return;
-  }
-
-  yield put(actions.setIsSearchingFeedItems(true));
-
-  const resultFeedItemIds: string[] = [];
-  const discussionIdsToFetch: string[] = [];
-  const proposalIdsToFetch: string[] = [];
-
-  for (const item of feedItems) {
-    if (item.feedItem.data.type === CommonFeedType.Discussion) {
-      const discussionId = item.feedItem.data.id;
-      const discussionState = (yield select(
-        selectDiscussionStateById(discussionId),
-      )) as LoadingState<Discussion | null>;
-
-      if (discussionState?.data?.title.toLowerCase().includes(searchValue)) {
-        resultFeedItemIds.push(discussionId);
-      } else {
-        discussionIdsToFetch.push(discussionId);
-      }
-    }
-
-    if (item.feedItem.data.type === CommonFeedType.Proposal) {
-      const proposalId = item.feedItem.data.id;
-      const proposalState = (yield select(
-        selectDiscussionStateById(proposalId),
-      )) as LoadingState<Proposal | null>;
-
-      if (proposalState && proposalState.data) {
-        const discussionState = (yield select(
-          selectDiscussionStateById(proposalState.data.discussionId),
-        )) as LoadingState<Discussion | null>;
-
-        if (discussionState?.data?.title.toLowerCase().includes(searchValue)) {
-          resultFeedItemIds.push(proposalId);
-        } else {
-          proposalIdsToFetch.push(proposalId);
-        }
-      } else {
-        proposalIdsToFetch.push(proposalId);
-      }
-    }
-
-    if (item.feedItem.data.type === CommonFeedType.Project) {
-      const projectId = item.feedItem.data.id;
-      const projectState = (yield select(
-        selectCommonStateById(projectId),
-      )) as LoadingState<Common | null>;
-
-      if (projectState?.data?.name.toLowerCase().includes(searchValue)) {
-        resultFeedItemIds.push(projectId);
-      }
-    }
-  }
-
-  try {
-    let proposals: Array<Proposal | null> = [];
-    let discussions: Array<Discussion | null> = [];
-
-    if (proposalIdsToFetch.length) {
-      proposals = yield call(
-        ProposalService.getProposalsByIds,
-        proposalIdsToFetch,
-      );
-      yield put(cacheActions.updateProposalStates(proposals));
-    }
-
-    const proposalDiscussionIds = proposals
-      .filter(Boolean)
-      .map((proposal) => proposal!.discussionId);
-    discussionIdsToFetch.push(...proposalDiscussionIds);
-
-    if (discussionIdsToFetch.length) {
-      discussions = yield call(
-        DiscussionService.getDiscussionsByIds,
-        discussionIdsToFetch,
-      );
-      yield put(cacheActions.updateDiscussionStates(discussions));
-    }
-
-    const resultFeedDiscussionIds = discussions
-      .filter(
-        (discussion) =>
-          discussion && discussion.title.toLowerCase().includes(searchValue),
-      )
-      .map((discussion) => discussion!.id);
-
-    yield put(
-      actions.updateSearchFeedItems([
-        ...resultFeedItemIds,
-        ...resultFeedDiscussionIds,
-      ]),
-    );
-  } catch (error) {
-    Logger.error(error);
-  } finally {
-    yield put(actions.setIsSearchingFeedItems(false));
-  }
-}
+import { searchFetchedFeedItems } from "./searchFetchedFeedItems";
 
 export function* getFeedItems(
   action: ReturnType<typeof actions.getFeedItems.request>,
@@ -179,7 +60,7 @@ export function* getFeedItems(
     );
 
     if (!isFirstRequest) {
-      yield filterFeedItems(convertedData);
+      yield searchFetchedFeedItems(convertedData);
     }
   } catch (error) {
     if (isError(error)) {
