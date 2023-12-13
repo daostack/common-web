@@ -26,9 +26,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const isTabletView = useIsTabletView();
   const {
     fetchUsers: fetchDMUsers,
-    data: dmUsers,
-    loading,
-    fetched,
+    data: dmUsers, // dm users not including the current user.
   } = useUsersByIds();
   const {
     data: chatChannelUserStatus,
@@ -50,6 +48,11 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
 
   const dmUsersNames = dmUsers?.map((user) => getUserName(user));
   const finalTitle = join(dmUsersNames, " & ");
+  const groupChatCreatorName = getUserName(
+    chatChannel.createdBy === user?.uid
+      ? user
+      : dmUsers?.find((user) => user.uid === chatChannel.createdBy),
+  );
 
   const handleOpenChat = useCallback(() => {
     setChatItem({
@@ -146,7 +149,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       isImageRounded
       dmUserIds={dmUserIds}
       groupMessage={groupMessage}
-      createdBy={chatChannel.createdBy} // TODO: need to fetch createdBy user name. Check first if it's the current user since we have info already.
+      createdBy={groupChatCreatorName}
     />
   );
 };
