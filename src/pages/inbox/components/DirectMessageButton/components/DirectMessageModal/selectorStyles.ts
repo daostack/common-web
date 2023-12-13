@@ -33,6 +33,7 @@ export const selectorStyles = (
     option: (provided, data) => ({
       ...provided,
       color: getThemeColor(ThemeColors.primaryText),
+      backgroundColor: ThemeColors.primaryBackground,
       "&:hover": {
         backgroundColor: getThemeColor(ThemeColors.secondaryBackground),
       },
