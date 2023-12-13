@@ -1,11 +1,15 @@
 import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { join } from "lodash";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { UserAvatar } from "@/shared/components";
 import { LastSeenEntity } from "@/shared/constants";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
-import { useChatChannelUserStatus, useUserById } from "@/shared/hooks/useCases";
+import {
+  useChatChannelUserStatus,
+  useUsersByIds,
+} from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { GroupChatIcon } from "@/shared/icons";
 import { ChatChannelFeedLayoutItemProps } from "@/shared/interfaces";
@@ -20,7 +24,12 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const { chatChannel, isActive, onActiveItemDataChange } = props;
   const dispatch = useDispatch();
   const isTabletView = useIsTabletView();
-  const { fetchUser: fetchDMUser, data: dmUser } = useUserById();
+  const {
+    fetchUsers: fetchDMUsers,
+    data: dmUsers,
+    loading,
+    fetched,
+  } = useUsersByIds();
   const {
     data: chatChannelUserStatus,
     fetched: isChatChannelUserStatusFetched,
@@ -39,10 +48,8 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     [],
   );
 
-  const dmUserName = getUserName(dmUser);
-
-  // TODO: need to find a way to fetch multiple users info by ids.
-  const finalTitle = groupMessage ? "Group" : dmUserName;
+  const dmUsersNames = dmUsers?.map((user) => getUserName(user));
+  const finalTitle = join(dmUsersNames, " & ");
 
   const handleOpenChat = useCallback(() => {
     setChatItem({
@@ -81,16 +88,16 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     ) : (
       <UserAvatar
         className={className}
-        photoURL={dmUser?.photoURL}
-        nameForRandomAvatar={dmUserName}
-        userName={dmUserName}
+        photoURL={dmUsers?.[0].photoURL}
+        nameForRandomAvatar={dmUsersNames?.[0]}
+        userName={dmUsersNames?.[0]}
       />
     );
 
   useChatChannelSubscription(chatChannel.id, userId, handleChatChannelUpdate);
 
   useEffect(() => {
-    fetchDMUser(dmUserIds[0]);
+    fetchDMUsers(dmUserIds);
   }, [dmUserIds]);
 
   useEffect(() => {
@@ -112,14 +119,14 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   }, [isChatChannelUserStatusFetched, shouldAllowChatAutoOpen]);
 
   useEffect(() => {
-    if (isActive && finalTitle) {
+    if (isActive && finalTitle && dmUsersNames) {
       onActiveItemDataChange?.({
         itemId: chatChannel.id,
-        title: finalTitle,
-        image: dmUser?.photoURL,
+        title: dmUsersNames?.[0],
+        image: dmUsers?.[0].photoURL,
       });
     }
-  }, [isActive, finalTitle, dmUser?.photoURL]);
+  }, [isActive, finalTitle, dmUsers?.[0].photoURL, dmUsersNames?.[0]]);
 
   return (
     <FeedItemBaseContent
