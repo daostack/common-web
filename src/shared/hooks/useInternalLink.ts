@@ -5,7 +5,7 @@ import { QueryParamKey, ROUTE_PATHS } from "../constants";
 import { useRoutesContext } from "../contexts";
 import { getParamsFromOneOfRoutes } from "../utils";
 
-const useOnInternalLinkClick = () => {
+const useInternalLink = () => {
   const { getCommonPagePath } = useRoutesContext();
   const history = useHistory();
 
@@ -33,4 +33,4 @@ const useOnInternalLinkClick = () => {
   return { onInternalLinkClick };
 };
 
-export default useOnInternalLinkClick;
+export default useInternalLink;

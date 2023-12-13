@@ -2,12 +2,12 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import { RenderLeafProps } from "slate-react";
 import { parseMessageLink } from "@/shared/components/Chat/ChatMessage/components/ChatMessageLinkify/utils";
-import useOnInternalLinkClick from "@/shared/hooks/useOnInternalLinkClick";
+import useInternalLink from "@/shared/hooks/useInternalLink";
 import styles from "./Leaf.module.scss";
 
 const Leaf: FC<RenderLeafProps> = (props) => {
   const { attributes, leaf, children } = props;
-  const { onInternalLinkClick } = useOnInternalLinkClick();
+  const { onInternalLinkClick } = useInternalLink();
   const className = classNames(styles.leaf, {
     [styles.bold]: leaf.bold,
     [styles.italic]: leaf.italic,
