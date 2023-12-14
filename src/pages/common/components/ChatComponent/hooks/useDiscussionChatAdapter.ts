@@ -38,17 +38,17 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
-  const users = useMemo(
-    () =>
-      commonMembers
-        .filter((member) => member.userId !== userId)
-        .map(({ user }) => user),
-    [userId, commonMembers],
+
+  const allUsers = useMemo(() => commonMembers.map(({user}) => user),[commonMembers]);
+
+  const discussionUsers = useMemo(
+    () => allUsers.filter((user) => user.uid !== userId),
+    [userId, allUsers],
   );
   const discussionMessagesData = useDiscussionMessagesById({
     discussionId,
     hasPermissionToHide,
-    users,
+    users: allUsers,
     textStyles,
     onFeedItemClick,
     onUserClick,
@@ -65,7 +65,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
   return {
     discussionMessagesData,
     markDiscussionMessageItemAsSeen: markFeedItemAsSeen,
-    discussionUsers: users,
+    discussionUsers,
     fetchDiscussionUsers,
   };
 };
