@@ -41,9 +41,7 @@ const Header: FC<HeaderProps> = (props) => {
         ) : null
       }
       centralElement={
-        <h2 className={styles.mobileTitle}>
-          {isEditing ? "Edit profile" : "Profile"}
-        </h2>
+        isEditing && <h2 className={styles.mobileTitle}>Edit profile</h2>
       }
       rightElement={isEditing ? null : editButtonEl}
     />

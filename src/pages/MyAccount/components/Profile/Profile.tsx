@@ -118,7 +118,7 @@ const Profile: FC<ProfileProps> = (props) => {
               <div className={styles.menuButtonsWrapper}>
                 <MenuButton
                   className={styles.menuButton}
-                  text="Settings"
+                  text="Notifications"
                   to={getSettingsPagePath()}
                 />
                 <MenuButton

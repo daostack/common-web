@@ -9,7 +9,7 @@ import {
   Avatar3Icon,
   BillingIcon,
   LogoutIcon,
-  SettingsIcon,
+  NotificationsIcon,
 } from "@/shared/icons";
 import ThemeIcon from "@/shared/icons/theme.icon";
 import { toggleTheme } from "@/shared/store/actions";
@@ -62,8 +62,8 @@ const MenuItems: FC<MenuItemsProps> = (props) => {
     },
     {
       key: "settings",
-      text: "Settings",
-      icon: <SettingsIcon />,
+      text: "Notifications",
+      icon: <NotificationsIcon />,
       to: getSettingsPagePath(),
     },
     {

@@ -26,7 +26,7 @@ const Header: FC<HeaderProps> = (props) => {
   if (!isMobileVersion) {
     return (
       <header className={classNames(styles.desktopContainer, className)}>
-        <h1 className={styles.desktopTitle}>Settings</h1>
+        <h1 className={styles.desktopTitle}>Notifications</h1>
       </header>
     );
   }
@@ -48,7 +48,7 @@ const Header: FC<HeaderProps> = (props) => {
           onClick={handleBackButtonClick}
         />
       }
-      centralElement={<h2 className={styles.mobileTitle}>Settings</h2>}
+      centralElement={<h2 className={styles.mobileTitle}>Notifications</h2>}
       rightElement={
         <SettingsMenuButton isMobileVersion onAccountDelete={onAccountDelete} />
       }
