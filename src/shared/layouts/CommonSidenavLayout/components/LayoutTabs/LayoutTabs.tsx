@@ -60,18 +60,24 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
   const tabs: TabConfiguration[] = [
     {
       value: LayoutTab.Spaces,
-      icon: <Blocks2Icon />,
+      icon: <Blocks2Icon active={activeTab === LayoutTab.Spaces} />,
     },
     {
       value: LayoutTab.Profile,
-      icon: <Avatar2Icon className={styles.avatarIcon} color="currentColor" />,
+      icon: (
+        <Avatar2Icon
+          className={styles.avatarIcon}
+          color="currentColor"
+          active={activeTab === LayoutTab.Profile}
+        />
+      ),
     },
   ];
 
   if (isAuthenticated) {
     tabs.unshift({
       value: LayoutTab.Inbox,
-      icon: <InboxIcon />,
+      icon: <InboxIcon active={activeTab === LayoutTab.Inbox} />,
       notificationsAmount: finalUserStreamsWithNotificationsAmount || null,
     });
   }
