@@ -21,9 +21,23 @@ export interface FeedItems {
   batchNumber: number;
 }
 
+export interface FeedItemsPayload {
+  commonId: string;
+  sharedFeedItemId?: string | null;
+  feedItemId?: string;
+  limit?: number;
+}
+
 export interface PinnedFeedItems {
   data: FeedItemFollowLayoutItem[] | null;
   loading: boolean;
+}
+
+export interface CommonSearchState {
+  isSearching: boolean;
+  searchValue: string;
+  feedItems: FeedItemFollowLayoutItem[] | null;
+  pinnedFeedItems: FeedItemFollowLayoutItem[] | null;
 }
 
 export interface CommonState {
@@ -39,4 +53,5 @@ export interface CommonState {
   governance: Governance | null;
   recentStreamId: string;
   recentAssignedCircle: RecentAssignedCircle | null;
+  searchState: CommonSearchState;
 }
