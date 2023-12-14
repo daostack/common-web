@@ -43,7 +43,9 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     [],
   );
 
-  const dmUsersNames = dmUsers?.map((user) => getUserName(user));
+  const dmUsersNames = dmUsers?.map((user) =>
+    groupMessage ? user.firstName : getUserName(user),
+  );
   // TODO: need to decide for the maximum amount of users to display. Also decide about the format.
   const finalTitle = join(dmUsersNames, " & ");
   const groupChatCreatorName = getUserName(

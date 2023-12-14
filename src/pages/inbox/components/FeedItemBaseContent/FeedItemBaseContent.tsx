@@ -147,6 +147,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       <div className={styles.content}>
         <div className={styles.topContent}>
           <p
+            title={typeof finalTitle === "string" ? finalTitle : undefined}
             className={classNames(styles.text, styles.title, {
               [styles.titleActive]: isActive,
             })}
