@@ -44,9 +44,9 @@ const InboxIcon: FC<InboxIconProps> = ({ className, active }) => {
           id="Vector"
           d="M2.2 1H19.8C20.4577 1 21 1.54228 21 2.2V15.4C21 16.0577 20.4577 16.6 19.8 16.6H2.2C1.54228 16.6 1 16.0577 1 15.4V2.2C1 1.54228 1.54228 1 2.2 1Z"
           stroke={color}
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <g id="Vector_2">
           <mask id="path-2-inside-1_11479_76904" fill="white">

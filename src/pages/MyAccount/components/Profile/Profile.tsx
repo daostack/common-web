@@ -89,7 +89,7 @@ const Profile: FC<ProfileProps> = (props) => {
 
   return (
     <div className={styles.container}>
-      {!isMobileView && !isEditing && editButtonEl}
+      {/* {!isMobileView && !isEditing && editButtonEl} */}
       <div className={styles.content}>
         <Header
           className={styles.header}
