@@ -13,10 +13,17 @@ interface HeaderProps {
   isEditing: boolean;
   isMobileVersion?: boolean;
   editButtonEl: ReactNode;
+  profileMenuButton: ReactNode;
 }
 
 const Header: FC<HeaderProps> = (props) => {
-  const { className, isEditing, isMobileVersion = false, editButtonEl } = props;
+  const {
+    className,
+    isEditing,
+    isMobileVersion = false,
+    editButtonEl,
+    profileMenuButton,
+  } = props;
   const { canGoBack, goBack } = useGoBack();
 
   if (!isMobileVersion) {
@@ -25,7 +32,7 @@ const Header: FC<HeaderProps> = (props) => {
         <h1 className={styles.desktopTitle}>
           {isEditing ? "Edit Profile" : "My Profile"}
         </h1>
-        {!isEditing && editButtonEl}
+        {isEditing ? profileMenuButton : editButtonEl}
       </header>
     );
   }
@@ -44,7 +51,7 @@ const Header: FC<HeaderProps> = (props) => {
       centralElement={
         isEditing && <h2 className={styles.mobileTitle}>Edit profile</h2>
       }
-      rightElement={!isEditing && editButtonEl}
+      rightElement={isEditing ? profileMenuButton : editButtonEl}
     />
   );
 };

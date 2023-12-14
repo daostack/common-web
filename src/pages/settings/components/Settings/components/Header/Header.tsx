@@ -8,17 +8,15 @@ import {
   TopNavigationBackButton,
   TopNavigationWithBlocks,
 } from "@/shared/ui-kit";
-import { SettingsMenuButton } from "../SettingsMenuButton";
 import styles from "./Header.module.scss";
 
 interface HeaderProps {
   className?: string;
   isMobileVersion?: boolean;
-  onAccountDelete: () => void;
 }
 
 const Header: FC<HeaderProps> = (props) => {
-  const { className, isMobileVersion = false, onAccountDelete } = props;
+  const { className, isMobileVersion = false } = props;
   const history = useHistory();
   const { canGoBack, goBack } = useGoBack();
   const { getProfilePagePath } = useRoutesContext();
@@ -49,9 +47,7 @@ const Header: FC<HeaderProps> = (props) => {
         />
       }
       centralElement={<h2 className={styles.mobileTitle}>Notifications</h2>}
-      rightElement={
-        <SettingsMenuButton isMobileVersion onAccountDelete={onAccountDelete} />
-      }
+      rightElement={null}
     />
   );
 };
