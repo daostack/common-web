@@ -6,6 +6,7 @@ import { CommonFeedService } from "@/services";
 import {
   commonActions,
   PinnedFeedItems,
+  selectFilteredPinnedFeedItems,
   selectPinnedFeedItems,
 } from "@/store/states";
 
@@ -19,6 +20,7 @@ export const useCommonPinnedFeedItems = (
 ): Return => {
   const dispatch = useDispatch();
   const pinnedFeedItems = useSelector(selectPinnedFeedItems);
+  const filteredPinnedFeedItems = useSelector(selectFilteredPinnedFeedItems);
   const previousIdsForListening = usePreviousDistinct(idsForListening);
 
   const fetch = () => {
@@ -57,6 +59,7 @@ export const useCommonPinnedFeedItems = (
 
   return {
     ...pinnedFeedItems,
+    data: filteredPinnedFeedItems || pinnedFeedItems.data,
     fetch,
   };
 };

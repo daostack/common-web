@@ -41,6 +41,21 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
       nextState.discussionStates[discussionId] = { ...state };
     }),
   )
+  .handleAction(actions.updateDiscussionStates, (state, { payload }) =>
+    produce(state, (nextState) => {
+      payload.forEach((discussion) => {
+        if (!discussion) {
+          return;
+        }
+
+        nextState.discussionStates[discussion.id] = {
+          data: discussion,
+          loading: false,
+          fetched: true,
+        };
+      });
+    }),
+  )
   .handleAction(
     actions.updateDiscussionMessageWithActualId,
     (state, { payload }) =>
@@ -62,6 +77,21 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
           fetched: true,
         };
       }),
+  )
+  .handleAction(actions.updateProposalStates, (state, { payload }) =>
+    produce(state, (nextState) => {
+      payload.forEach((proposal) => {
+        if (!proposal) {
+          return;
+        }
+
+        nextState.proposalStates[proposal.id] = {
+          data: proposal,
+          loading: false,
+          fetched: true,
+        };
+      });
+    }),
   )
   .handleAction(actions.updateProposalStateById, (state, { payload }) =>
     produce(state, (nextState) => {
