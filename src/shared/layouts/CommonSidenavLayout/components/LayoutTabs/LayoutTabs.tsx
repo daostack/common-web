@@ -64,13 +64,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
     },
     {
       value: LayoutTab.Profile,
-      icon: (
-        <Avatar2Icon
-          className={styles.avatarIcon}
-          color="currentColor"
-          active={activeTab === LayoutTab.Profile}
-        />
-      ),
+      icon: <Avatar2Icon active={activeTab === LayoutTab.Profile} />,
     },
   ];
 
