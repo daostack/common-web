@@ -126,10 +126,10 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       onActiveItemDataChange?.({
         itemId: chatChannel.id,
         title: dmUsersNames?.[0],
-        image: dmUsers?.[0].photoURL,
+        image: dmUsers?.[0]?.photoURL,
       });
     }
-  }, [isActive, finalTitle, dmUsers?.[0].photoURL, dmUsersNames?.[0]]);
+  }, [isActive, finalTitle, dmUsers?.[0]?.photoURL, dmUsersNames?.[0]]);
 
   return (
     <FeedItemBaseContent
