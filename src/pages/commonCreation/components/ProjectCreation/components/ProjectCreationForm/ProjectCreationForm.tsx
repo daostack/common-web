@@ -106,16 +106,29 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     updateCommon: updateProject,
   } = useCommonUpdate(initialCommon?.id);
   const {
+    data: notionIntegration,
+    loading: isNotionIntegrationLoading,
     isNotionIntegrationUpdated,
     notionIntegrationErrorModalState,
     disconnectNotionModalState,
+    fetchNotionIntegration,
     setNotionIntegrationFormData,
   } = useNotionIntegration({
     projectId: project?.id || updatedProject?.id,
     isNotionIntegrationEnabled: Boolean(initialCommon?.notion),
   });
-  const isLoading = isProjectCreationLoading || isCommonUpdateLoading;
+  const isLoading =
+    isProjectCreationLoading ||
+    isCommonUpdateLoading ||
+    isNotionIntegrationLoading;
   const error = createProjectError || updateProjectError;
+
+  useEffect(() => {
+    if (initialCommon?.id) {
+      fetchNotionIntegration(initialCommon.id);
+    }
+  }, [initialCommon?.id]);
+
   const nonProjectCircles = useMemo(
     () => removeProjectCircles(Object.values(governance?.circles || {})),
     [governance?.circles],
@@ -202,6 +215,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         items={getConfiguration({
           isProject: true,
           roles,
+          notionIntegration,
           shouldBeUnique: {
             existingNames: existingProjectsNames,
           },

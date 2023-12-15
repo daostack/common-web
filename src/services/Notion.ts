@@ -1,11 +1,38 @@
+import firebase from "firebase";
 import { ApiEndpoint } from "@/shared/constants";
-import { NotionIntegration } from "@/shared/models";
+import {
+  Collection,
+  NotionIntegration,
+  NotionIntegrationPayload,
+} from "@/shared/models";
+import {
+  firestoreDataConverter,
+  transformFirebaseDataSingle,
+} from "@/shared/utils";
 import Api from "./Api";
 
+const converter = firestoreDataConverter<NotionIntegration>();
+
 class NotionService {
+  private getNotionIntegrationCollection = () =>
+    firebase
+      .firestore()
+      .collection(Collection.NotionIntegration)
+      .withConverter(converter);
+
+  public getNotionIntegrationByCommonId = async (
+    commonId: string,
+  ): Promise<NotionIntegration> => {
+    const notionIntegration = await this.getNotionIntegrationCollection()
+      .doc(commonId)
+      .get();
+
+    return transformFirebaseDataSingle<NotionIntegration>(notionIntegration);
+  };
+
   public setupIntegration = async (
     commonId: string,
-    notion: NotionIntegration,
+    notion: NotionIntegrationPayload,
   ): Promise<void> => {
     await Api.post(ApiEndpoint.AddNotionIntegration, {
       ...notion,
