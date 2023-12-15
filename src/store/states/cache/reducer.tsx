@@ -174,4 +174,18 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
           data: updatedDiscussionMessages,
         };
       }),
+  )
+  .handleAction(actions.deleteDiscussionMessageById, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { discussionMessageId, discussionId } = payload;
+
+      const updatedDiscussionMessages = (
+        state.discussionMessagesStates[discussionId]?.data ?? []
+      ).filter((message) => message.id !== discussionMessageId);
+
+      nextState.discussionMessagesStates[discussionId] = {
+        ...state.discussionMessagesStates[discussionId],
+        data: updatedDiscussionMessages,
+      };
+    }),
   );

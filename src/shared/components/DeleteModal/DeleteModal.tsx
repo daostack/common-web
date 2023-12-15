@@ -77,6 +77,7 @@ const DeleteModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
               return;
             }
 
+            onDeleteOutside?.(entity.id);
             setLoading(false);
             notify("The message has deleted!");
             onClose();

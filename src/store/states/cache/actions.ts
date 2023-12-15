@@ -116,6 +116,13 @@ export const addDiscussionMessageByDiscussionId = createStandardAction(
   discussionMessage: DiscussionMessageWithParsedText;
 }>();
 
+export const deleteDiscussionMessageById = createStandardAction(
+  CacheActionType.DELETE_DISCUSSION_MESSAGE_BY_ID,
+)<{
+  discussionId: string;
+  discussionMessageId: string;
+}>();
+
 export const getProposalStateById = createAsyncAction(
   CacheActionType.GET_PROPOSAL_STATE_BY_ID,
   CacheActionType.GET_PROPOSAL_STATE_BY_ID_SUCCESS,
