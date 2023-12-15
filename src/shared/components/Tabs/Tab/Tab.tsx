@@ -6,7 +6,7 @@ import "./index.scss";
 
 interface TabProps {
   className?: string;
-  label: string;
+  label?: string;
   value: unknown;
   icon?: ReactNode;
   includeDefaultMobileStyles?: boolean;
