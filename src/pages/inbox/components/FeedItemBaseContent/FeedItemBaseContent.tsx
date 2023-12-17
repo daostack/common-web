@@ -47,6 +47,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     hasUnseenMention,
     groupMessage,
     createdBy,
+    hoverTitle,
   } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
@@ -147,7 +148,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       <div className={styles.content}>
         <div className={styles.topContent}>
           <p
-            title={typeof finalTitle === "string" ? finalTitle : undefined}
+            title={typeof hoverTitle === "string" ? hoverTitle : undefined}
             className={classNames(styles.text, styles.title, {
               [styles.titleActive]: isActive,
             })}

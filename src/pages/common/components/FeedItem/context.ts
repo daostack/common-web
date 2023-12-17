@@ -49,6 +49,7 @@ export interface FeedItemBaseContentProps {
   notion?: CommonNotion;
   groupMessage?: boolean;
   createdBy?: string;
+  hoverTitle?: string;
 }
 
 export interface GetLastMessageOptions {

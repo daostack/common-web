@@ -1,6 +1,5 @@
 import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { join } from "lodash";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { UserAvatar } from "@/shared/components";
@@ -14,7 +13,7 @@ import { useIsTabletView } from "@/shared/hooks/viewport";
 import { GroupChatIcon } from "@/shared/icons";
 import { ChatChannelFeedLayoutItemProps } from "@/shared/interfaces";
 import { ChatChannel } from "@/shared/models";
-import { getUserName } from "@/shared/utils";
+import { getUserName, joinWithLast } from "@/shared/utils";
 import { inboxActions } from "@/store/states";
 import { FeedItemBaseContent } from "../FeedItemBaseContent";
 import { useChatChannelSubscription, useMenuItems } from "./hooks";
@@ -43,11 +42,10 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     [],
   );
 
-  const dmUsersNames = dmUsers?.map((user) =>
-    groupMessage ? user.firstName : getUserName(user),
-  );
-  // TODO: need to decide for the maximum amount of users to display. Also decide about the format.
-  const finalTitle = join(dmUsersNames, " & ");
+  const dmUsersNames = dmUsers?.map((user) => getUserName(user));
+  const dmFirstNames = dmUsers?.map((user) => user.firstName);
+  const finalTitle = joinWithLast(groupMessage ? dmFirstNames : dmUsersNames);
+  const hoverTitle = groupMessage ? joinWithLast(dmUsersNames) : finalTitle;
   const groupChatCreatorName = getUserName(
     chatChannel.createdBy === user?.uid
       ? user
@@ -150,6 +148,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       dmUserIds={dmUserIds}
       groupMessage={groupMessage}
       createdBy={groupChatCreatorName}
+      hoverTitle={hoverTitle}
     />
   );
 };
