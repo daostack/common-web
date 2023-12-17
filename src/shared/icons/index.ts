@@ -72,3 +72,4 @@ export { default as CopyIcon } from "./copy.icon";
 export { default as HideIcon } from "./hide.icon";
 export { default as InboxFilterIcon } from "./inboxFilter.icon";
 export { default as GroupChatIcon } from "./group-chat.icon";
+export { default as NotificationsIcon } from "./notifications.icon";
