@@ -89,7 +89,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     ) : (
       <UserAvatar
         className={className}
-        photoURL={dmUsers?.[0].photoURL}
+        photoURL={dmUsers?.[0]?.photoURL}
         nameForRandomAvatar={dmUsersNames?.[0]}
         userName={dmUsersNames?.[0]}
       />
