@@ -1,0 +1,10 @@
+@import "../../../../../../constants";
+
+.linkIcon {
+  width: 1rem;
+  height: 1rem;
+
+  &:hover {
+    color: $c-pink-next-dark;
+  }
+}

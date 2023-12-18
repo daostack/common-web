@@ -1,7 +1,7 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
-import { Link4Icon, NotionIcon } from "@/shared/icons";
+import { NotionIcon } from "@/shared/icons";
 import {
   checkIsTextEditorValueEmpty,
   ContextMenu,
@@ -14,6 +14,7 @@ import {
 } from "@/shared/ui-kit";
 import { FeedItemBaseContentProps } from "../../../FeedItem";
 import { FeedCardTags } from "../FeedCardTags";
+import { LinkedItemMark } from "../LinkedItemMark";
 import styles from "./FeedItemBaseContent.module.scss";
 
 export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
@@ -136,7 +137,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
                 </TooltipContent>
               </Tooltip>
             )}
-            {isLinked && <Link4Icon className={styles.linkIcon} />}
+            {isLinked && <LinkedItemMark />}
           </div>
           <p
             className={classNames(styles.text, styles.lastActivity, {
