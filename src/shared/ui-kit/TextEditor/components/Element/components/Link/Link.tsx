@@ -1,5 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { parseMessageLink } from "@/shared/components/Chat/ChatMessage/components/ChatMessageLinkify/utils";
+import useInternalLink from "@/shared/hooks/useInternalLink";
 import { LinkElement } from "../../../../types";
 import { ElementAttributes } from "../../types";
 import { InlineChromiumBugfix } from "../InlineChromiumBugfix";
@@ -12,6 +14,26 @@ interface LinkProps {
 
 const Link: FC<LinkProps> = (props) => {
   const { attributes, element, children } = props;
+  const { onInternalLinkClick } = useInternalLink();
+
+  console.log(element);
+  const internalLink = parseMessageLink(element.url);
+
+  console.log(element);
+  if (internalLink) {
+    console.log("internalLink");
+    return (
+      <a
+        {...attributes}
+        className={classNames(styles.link, attributes.className)}
+        onClick={() => onInternalLinkClick(internalLink)}
+      >
+        <InlineChromiumBugfix />
+        {children}
+        <InlineChromiumBugfix />
+      </a>
+    );
+  }
 
   return (
     <a
