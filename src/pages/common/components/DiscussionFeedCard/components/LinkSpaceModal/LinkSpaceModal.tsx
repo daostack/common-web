@@ -65,14 +65,16 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
           originalCommonId={originalCommonId}
           linkedCommonIds={linkedCommonIds}
         />
-        <Button
-          className={styles.submitButton}
-          variant={ButtonVariant.PrimaryPink}
-          disabled={!activeItemId}
-          onClick={handleSubmit}
-        >
-          Apply
-        </Button>
+        <div className={styles.submitButtonWrapper}>
+          <Button
+            className={styles.submitButton}
+            variant={ButtonVariant.PrimaryPink}
+            disabled={!activeItemId}
+            onClick={handleSubmit}
+          >
+            Apply
+          </Button>
+        </div>
       </>
     );
   };

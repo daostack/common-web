@@ -48,16 +48,20 @@
   }
 }
 
+.submitButtonWrapper {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .submitButton {
   --btn-w: 100%;
 
   max-width: 9.75rem;
-  margin-top: auto;
-  align-self: flex-end;
 
   @include tablet {
     max-width: 100%;
-    align-self: unset;
   }
 }
 
