@@ -4,11 +4,7 @@ import { useMenuItems } from "@/pages/common/components/CommonTabPanels/componen
 import { useRoutesContext } from "@/shared/contexts";
 import { PlusIcon } from "@/shared/icons";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
-import {
-  ButtonIcon,
-  DesktopMenu,
-  MobileMenu,
-} from "@/shared/ui-kit";
+import { ButtonIcon, DesktopMenu, MobileMenu } from "@/shared/ui-kit";
 import styles from "./NewStreamButton.module.scss";
 
 interface NewStreamButtonProps {
@@ -17,6 +13,7 @@ interface NewStreamButtonProps {
   commonId: string;
   commonMember: (CommonMember & CirclesPermissions) | null;
   governance: Pick<Governance, "circles">;
+  onClick?: () => void;
 }
 
 const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
@@ -26,6 +23,7 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
     commonId,
     commonMember,
     governance,
+    onClick,
   } = props;
   const history = useHistory();
   const { getProjectCreationPagePath } = useRoutesContext();
@@ -42,7 +40,7 @@ const NewStreamButton: FC<NewStreamButtonProps> = (props) => {
   }
 
   const triggerEl = (
-    <ButtonIcon className={styles.buttonIcon}>
+    <ButtonIcon className={styles.buttonIcon} onClick={onClick}>
       <PlusIcon className={styles.icon} />
     </ButtonIcon>
   );
