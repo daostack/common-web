@@ -17,7 +17,7 @@ import {
 import { Avatar2Icon, Blocks2Icon, InboxIcon } from "@/shared/icons";
 import { CreateCommonPrompt } from "@/shared/layouts/MultipleSpacesLayout/components/Header/components/Navigation/components";
 import { LayoutTab } from "../../constants";
-import { getActiveLayoutTab, getLayoutTabName } from "./utils";
+import { getActiveLayoutTab } from "./utils";
 import styles from "./LayoutTabs.module.scss";
 
 interface LayoutTabsProps {
@@ -26,7 +26,7 @@ interface LayoutTabsProps {
 }
 
 interface TabConfiguration {
-  label: string;
+  label?: string;
   value: LayoutTab;
   icon: ReactNode;
   notificationsAmount?: number | null;
@@ -59,22 +59,19 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
     props.activeTab || getActiveLayoutTab(history.location.pathname);
   const tabs: TabConfiguration[] = [
     {
-      label: getLayoutTabName(LayoutTab.Spaces),
       value: LayoutTab.Spaces,
-      icon: <Blocks2Icon />,
+      icon: <Blocks2Icon active={activeTab === LayoutTab.Spaces} />,
     },
     {
-      label: getLayoutTabName(LayoutTab.Profile),
       value: LayoutTab.Profile,
-      icon: <Avatar2Icon className={styles.avatarIcon} color="currentColor" />,
+      icon: <Avatar2Icon active={activeTab === LayoutTab.Profile} />,
     },
   ];
 
   if (isAuthenticated) {
     tabs.unshift({
-      label: getLayoutTabName(LayoutTab.Inbox),
       value: LayoutTab.Inbox,
-      icon: <InboxIcon />,
+      icon: <InboxIcon active={activeTab === LayoutTab.Inbox} />,
       notificationsAmount: finalUserStreamsWithNotificationsAmount || null,
     });
   }
@@ -126,7 +123,7 @@ const LayoutTabs: FC<LayoutTabsProps> = (props) => {
           <Tab
             key={tab.value}
             className={styles.tab}
-            label={tab.label}
+            label={tab?.label}
             value={tab.value}
             icon={
               <div className={styles.iconWrapper}>

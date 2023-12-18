@@ -97,6 +97,7 @@ const DeleteUserModal: FC<DeleteUserModalProps> = (props) => {
       hideCloseButton={isDeleting}
       title="Delete User"
       className="delete-user-modal"
+      mobileFullScreen
     >
       {isLoading ? (
         <Loader />
