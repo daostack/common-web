@@ -27,6 +27,18 @@ export const selectFeedItems = (state: AppState) => state.common.feedItems;
 export const selectPinnedFeedItems = (state: AppState) =>
   state.common.pinnedFeedItems;
 
+export const selectFilteredFeedItems = (state: AppState) =>
+  state.common.searchState.feedItems;
+
+export const selectFilteredPinnedFeedItems = (state: AppState) =>
+  state.common.searchState.pinnedFeedItems;
+
+export const selectSearchValue = (state: AppState) =>
+  state.common.searchState.searchValue;
+
+export const selectIsSearchingFeedItems = (state: AppState) =>
+  state.common.searchState.isSearching;
+
 export const selectIsNewProjectCreated = (state: AppState) =>
   state.common.isNewProjectCreated;
 

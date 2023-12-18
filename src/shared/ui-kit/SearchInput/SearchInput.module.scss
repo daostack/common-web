@@ -1,4 +1,4 @@
-@import "../../../../../../../../constants";
+@import "../../../constants.scss";
 
 .container {
   width: 100%;
@@ -47,4 +47,16 @@
   height: 1.25rem;
   color: inherit;
   transform: translateY(-50%);
+}
+
+.closeIconButton {
+  position: absolute;
+  right: 0rem;
+  --btn-w: 2rem;
+  --btn-h: 2rem;
+  --btn-icon-size: 12px;
+
+  &:hover {
+    background-color: var(--quaternary-fill);
+  }
 }

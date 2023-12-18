@@ -71,3 +71,4 @@ export { default as ReplyIcon } from "./reply.icon";
 export { default as CopyIcon } from "./copy.icon";
 export { default as HideIcon } from "./hide.icon";
 export { default as InboxFilterIcon } from "./inboxFilter.icon";
+export { default as NotificationsIcon } from "./notifications.icon";

@@ -8,6 +8,7 @@ import { Collection, Discussion } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
+  transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api from "./Api";
@@ -52,6 +53,25 @@ class DiscussionService {
         throw error;
       }
     }
+  };
+
+  public getDiscussionsByIds = async (
+    ids: string[],
+  ): Promise<Array<Discussion | null>> => {
+    const queries: firebase.firestore.Query[] = [];
+
+    // Firebase allows to use at most 10 items per query for `in` option
+    for (let i = 0; i < ids.length; i += 10) {
+      queries.push(
+        this.getDiscussionCollection().where("id", "in", ids.slice(i, i + 10)),
+      );
+    }
+
+    const results = await Promise.all(queries.map((query) => query.get()));
+
+    return results
+      .map((result) => transformFirebaseDataList<Discussion | null>(result))
+      .reduce((acc, items) => [...acc, ...items], []);
   };
 
   public createDiscussion = async (

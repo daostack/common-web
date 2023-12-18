@@ -90,6 +90,10 @@ export const updateDiscussionStateById = createStandardAction(
   state: LoadingState<Discussion | null>;
 }>();
 
+export const updateDiscussionStates = createStandardAction(
+  CacheActionType.UPDATE_DISCUSSION_STATES,
+)<Array<Discussion | null>>();
+
 export const updateDiscussionMessageWithActualId = createStandardAction(
   CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_MESSAGES_ACTUAL_ID,
 )<{
@@ -125,6 +129,10 @@ export const getProposalStateById = createAsyncAction(
   Proposal | null,
   Error
 >();
+
+export const updateProposalStates = createStandardAction(
+  CacheActionType.UPDATE_PROPOSAL_STATES,
+)<Array<Proposal | null>>();
 
 export const updateProposalStateById = createStandardAction(
   CacheActionType.UPDATE_PROPOSAL_STATE_BY_ID,
