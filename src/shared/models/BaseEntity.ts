@@ -1,9 +1,9 @@
-import firebase from "firebase/app";
+import { Timestamp } from "./Timestamp";
 
 export interface BaseEntity {
   id: string;
 
-  createdAt: firebase.firestore.Timestamp;
+  createdAt: Timestamp;
 
-  updatedAt: firebase.firestore.Timestamp;
+  updatedAt: Timestamp;
 }

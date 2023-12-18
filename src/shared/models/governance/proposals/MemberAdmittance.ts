@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
 import { ProposalsTypes } from "@/shared/constants";
 import { PaymentAmount } from "@/shared/models/Payment";
+import { Timestamp } from "../../Timestamp";
 import { BaseProposal } from "./BaseProposal";
 import { BasicArgsProposal } from "./BasicArgsProposal";
 
@@ -16,8 +16,8 @@ export type MemberAdmittanceLimitations = {
 
 export interface MemberAdmittance extends BaseProposal {
   data: {
-    votingExpiresOn: firebase.firestore.Timestamp | null;
-    discussionExpiresOn: firebase.firestore.Timestamp | null;
+    votingExpiresOn: Timestamp | null;
+    discussionExpiresOn: Timestamp | null;
     args: MemberAdmittanceArgs;
   };
   type: ProposalsTypes.MEMBER_ADMITTANCE;
