@@ -43,7 +43,7 @@ export enum SubCollections {
   ChatChannelUserUnique = "chatChannelUserUnique",
   CommonFeed = "commonFeed",
   CommonFeedObjectUserUnique = "commonFeedObjectUserUnique",
-  Inbox = "Inbox",
+  Inbox = "inbox",
   FeedItemFollows = "feedItemFollows",
 }
 
