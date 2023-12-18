@@ -20,6 +20,7 @@ import {
   FeedItemFollow,
   FeedItemFollowWithMetadata,
   InboxItem,
+  Timestamp,
 } from "@/shared/models";
 import { inboxActions, InboxItems, selectInboxItems } from "@/store/states";
 
@@ -186,6 +187,7 @@ export const useInboxItems = (
   const dispatch = useDispatch();
   const isMounted = useIsMounted();
   const [newItemsBatches, setNewItemsBatches] = useState<ItemsBatch[]>([]);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<Timestamp | null>(null);
   const inboxItems = useSelector(selectInboxItems);
   const user = useSelector(selectUser());
   const inboxItemsRef = useRef(inboxItems);
@@ -279,47 +281,62 @@ export const useInboxItems = (
         endBefore: inboxItems.firstDocTimestamp,
         unread,
       },
-      (data) => {
-        addNewInboxItems(data);
-      },
+      addNewInboxItems,
     );
-    const unsubscribeFromUpdateAtSubscription =
-      UserService.subscribeToNewInboxItems(
-        {
-          userId,
-          endBefore: inboxItems.firstDocTimestamp,
-          unread,
-          orderBy: "updatedAt",
-        },
-        (data) => {
-          const lastDocTimestampSeconds =
-            inboxItemsRef.current?.lastDocTimestamp?.seconds;
-          const currentInboxData = inboxItemsRef.current?.data;
-          const filteredData =
-            lastDocTimestampSeconds && currentInboxData
-              ? data.filter(
-                  ({ item }) =>
-                    item.itemUpdatedAt.seconds >= lastDocTimestampSeconds &&
-                    !currentInboxData.some(
-                      (currentItem) => currentItem.itemId === item.itemId,
-                    ),
-                )
-              : [];
 
-          addNewInboxItems(filteredData);
-
-          if (filteredData.length !== data.length) {
-            dispatch(inboxActions.setHasMoreInboxItems(true));
-          }
-        },
-      );
-
-    return () => {
-      unsubscribe();
-      unsubscribeFromUpdateAtSubscription();
-    };
+    return unsubscribe;
   }, [
     inboxItems.firstDocTimestamp,
+    userId,
+    feedItemIdsForNotListening,
+    unread,
+  ]);
+
+  useEffect(() => {
+    const endBefore = lastUpdatedAt || inboxItems.firstDocTimestamp;
+
+    if (!endBefore || !userId) {
+      return;
+    }
+
+    const unsubscribe = UserService.subscribeToNewInboxItems(
+      {
+        userId,
+        endBefore,
+        unread,
+        orderBy: "updatedAt",
+      },
+      (data) => {
+        const lastDocTimestampSeconds =
+          inboxItemsRef.current?.lastDocTimestamp?.seconds;
+        const currentInboxData = inboxItemsRef.current?.data;
+        const filteredData =
+          lastDocTimestampSeconds && currentInboxData
+            ? data.filter(
+                ({ item }) =>
+                  item.itemUpdatedAt.seconds >= lastDocTimestampSeconds &&
+                  !currentInboxData.some(
+                    (currentItem) => currentItem.itemId === item.itemId,
+                  ),
+              )
+            : [];
+
+        if (data[0]) {
+          setLastUpdatedAt(data[0].item.updatedAt);
+        }
+
+        addNewInboxItems(filteredData);
+
+        if (filteredData.length !== data.length) {
+          dispatch(inboxActions.setHasMoreInboxItems(true));
+        }
+      },
+    );
+
+    return unsubscribe;
+  }, [
+    inboxItems.firstDocTimestamp,
+    lastUpdatedAt,
     userId,
     feedItemIdsForNotListening,
     unread,
