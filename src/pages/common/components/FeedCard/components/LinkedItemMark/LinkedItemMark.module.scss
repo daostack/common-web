@@ -8,3 +8,15 @@
     color: $c-pink-next-dark;
   }
 }
+
+.tooltipContent {
+  max-width: 20rem;
+  z-index: 3;
+}
+
+.contentTitle {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  color: $c-gray-40;
+}
