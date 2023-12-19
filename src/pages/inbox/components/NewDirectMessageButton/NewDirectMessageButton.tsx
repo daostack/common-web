@@ -18,7 +18,7 @@ const NewDirectMessageButton: FC<NewDirectMessageButton> = (props) => {
     onOpen: onDirectMessageModalOpen,
     onClose: onDirectMessageModalClose,
   } = useModal(false);
-  const [groupMessage, setGroupMessage] = useState(false);
+  const [isGroupMessage, setIsGroupMessage] = useState(false);
 
   const items: Item[] = useMemo(
     () => [
@@ -26,7 +26,7 @@ const NewDirectMessageButton: FC<NewDirectMessageButton> = (props) => {
         id: InboxAction.NewDirectMessage,
         text: "Direct message",
         onClick: () => {
-          setGroupMessage(false);
+          setIsGroupMessage(false);
           onDirectMessageModalOpen();
         },
       },
@@ -34,12 +34,12 @@ const NewDirectMessageButton: FC<NewDirectMessageButton> = (props) => {
         id: InboxAction.NewGroupMessage,
         text: "Group message",
         onClick: () => {
-          setGroupMessage(true);
+          setIsGroupMessage(true);
           onDirectMessageModalOpen();
         },
       },
     ],
-    [groupMessage],
+    [isGroupMessage],
   );
 
   const triggerEl = <PlusButton />;
@@ -57,7 +57,7 @@ const NewDirectMessageButton: FC<NewDirectMessageButton> = (props) => {
         isOpen={isDirectMessageModalOpen}
         onClose={onDirectMessageModalClose}
         isMobileVersion={isMobileVersion}
-        groupMessage={groupMessage}
+        isGroupMessage={isGroupMessage}
       />
     </>
   );

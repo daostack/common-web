@@ -49,7 +49,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     dmUserIds,
     commonId,
     hasUnseenMention,
-    groupMessage,
+    isGroupMessage,
     createdBy,
     hoverTitle,
     notion,
@@ -118,7 +118,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   };
 
   const handleAvatarClick = () => {
-    if (onUserSelect && dmUserIds && !groupMessage) {
+    if (onUserSelect && dmUserIds && !isGroupMessage) {
       onUserSelect(dmUserIds[0]);
     } else if (commonId) {
       history.push(getCommonPagePath(commonId));
@@ -197,7 +197,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               readOnly
             />
           ) : (
-            groupMessage &&
+            isGroupMessage &&
             createdBy && (
               <span className={lastMessageClassName}>
                 {`${createdBy} created this group chat`}

@@ -117,10 +117,10 @@ class ProposalService {
       const proposal = snapshot.data();
 
       if (proposal) {
-        //console.log("proposal found!", proposalId);
+        console.log("proposal found!", proposalId);
         callback(proposal);
       } else {
-        //console.log("proposal was not found", proposalId);
+        console.log("proposal was not found", proposalId);
       }
     });
   };

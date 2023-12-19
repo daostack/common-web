@@ -17,7 +17,7 @@ interface DirectMessageModalProps {
   isOpen: boolean;
   onClose: () => void;
   isMobileVersion?: boolean;
-  groupMessage?: boolean;
+  isGroupMessage?: boolean;
 }
 
 interface SelectOption {
@@ -32,7 +32,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     isOpen,
     onClose,
     isMobileVersion = false,
-    groupMessage = false,
+    isGroupMessage = false,
   } = props;
   const dispatch = useDispatch();
   const { getThemeColor } = useThemeColor();
@@ -108,7 +108,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     }));
 
     const handleItemClick = (selectedItems) => {
-      if (!groupMessage) {
+      if (!isGroupMessage) {
         handleChatCreate([selectedItems.uid]);
       } else {
         const uids = selectedItems.map((item) => item.uid);
@@ -119,8 +119,8 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
     return (
       <>
         <Select
-          onChange={(selectedItems) => handleItemClick(selectedItems)}
-          isMulti={groupMessage}
+          onChange={handleItemClick}
+          isMulti={isGroupMessage}
           options={options}
           placeholder="Search"
           autoFocus
@@ -139,7 +139,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
             ),
           }}
         />
-        {groupMessage && (
+        {isGroupMessage && (
           <Button
             onClick={() => handleChatCreate(groupUids)}
             variant={ButtonVariant.PrimaryPink}
@@ -161,7 +161,7 @@ const DirectMessageModal: FC<DirectMessageModalProps> = (props) => {
       title={
         <div className={styles.modalTitleWrapper}>
           <h3 className={styles.modalTitle}>
-            {groupMessage ? "Group message" : "Direct message"}
+            {isGroupMessage ? "Group message" : "Direct message"}
           </h3>
         </div>
       }

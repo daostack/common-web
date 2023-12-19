@@ -35,7 +35,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
 
-  const groupMessage = chatChannel.participants.length > 2;
+  const isGroupMessage = chatChannel.participants.length > 2;
   const dmUserIds = useMemo(
     () =>
       chatChannel.participants.filter((participant) => participant !== userId),
@@ -44,8 +44,8 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
 
   const dmUsersNames = dmUsers?.map((user) => getUserName(user));
   const dmFirstNames = dmUsers?.map((user) => user.firstName);
-  const finalTitle = joinWithLast(groupMessage ? dmFirstNames : dmUsersNames);
-  const hoverTitle = groupMessage ? joinWithLast(dmUsersNames) : finalTitle;
+  const finalTitle = joinWithLast(isGroupMessage ? dmFirstNames : dmUsersNames);
+  const hoverTitle = isGroupMessage ? joinWithLast(dmUsersNames) : finalTitle;
   const groupChatCreatorName = getUserName(
     chatChannel.createdBy === user?.uid
       ? user
@@ -84,7 +84,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   );
 
   const renderImage = (className?: string) =>
-    groupMessage ? (
+    isGroupMessage ? (
       <GroupChatIcon className={className} />
     ) : (
       <UserAvatar
@@ -146,7 +146,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       renderImage={renderImage}
       isImageRounded
       dmUserIds={dmUserIds}
-      groupMessage={groupMessage}
+      isGroupMessage={isGroupMessage}
       createdBy={groupChatCreatorName}
       hoverTitle={hoverTitle}
     />
