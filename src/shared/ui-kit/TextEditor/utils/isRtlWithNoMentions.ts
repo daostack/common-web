@@ -14,7 +14,6 @@ export const isRtlWithNoMentions = (text = ""): boolean => {
     );
     return isRtlText(textWithNoMentions);
   } catch (error) {
-    console.error(error);
     return false;
   }
 };
