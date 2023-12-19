@@ -68,8 +68,8 @@ const LinkedItemMark: FC<LinkedItemMarkProps> = (props) => {
       </TooltipTrigger>
       <TooltipContent className={styles.tooltipContent}>
         <span className={styles.contentTitle}>Also appears in:</span>
-        {loading && <Loader className={styles.loader} />}
-        {!loading &&
+        {!fetched && <Loader className={styles.loader} />}
+        {fetched &&
           commonPaths.map((commons, index) => {
             const lastCommon = commons[commons.length - 1];
             const key = lastCommon?.id || String(index);
