@@ -59,6 +59,7 @@ const LinkedItemMark: FC<LinkedItemMarkProps> = (props) => {
       open={isOpen}
       onOpenChange={setIsOpen}
       placement={isTabletView ? "bottom-start" : "right"}
+      shouldOpenOnHover={!isTabletView}
     >
       <TooltipTrigger onClick={toggleTooltip} asChild>
         <ButtonIcon>
