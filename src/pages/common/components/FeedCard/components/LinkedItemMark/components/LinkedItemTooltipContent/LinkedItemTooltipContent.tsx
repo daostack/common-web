@@ -17,14 +17,17 @@ const renderCutPath = (commons: Common[]): ReactElement => {
         {parentCommons.map((common, commonIndex) => (
           <React.Fragment key={common.id}>
             {common.name}
-            {commonIndex !== commons.length - 1 && (
+            {commonIndex !== parentCommons.length - 1 && (
               <RightArrowThinIcon className={styles.arrowIcon} />
             )}
           </React.Fragment>
         ))}
       </div>
       <div className={styles.ellipsis}>…</div>
-      <div className={styles.linkRight}>{lastCommon?.name}</div>
+      <div className={styles.linkRight}>
+        <RightArrowThinIcon className={styles.arrowIcon} />
+        {lastCommon?.name}
+      </div>
     </>
   );
 };
