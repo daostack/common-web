@@ -8,7 +8,6 @@ import { BaseProposal } from "@/shared/models/governance/proposals";
 import { transformFirebaseDataList } from "@/shared/utils/transformFirebaseDataToModel";
 import { BASE_URL } from "../constants";
 import { Common, DateFormat, Time, User } from "../models";
-import { ElementType } from "../ui-kit/TextEditor/constants";
 
 export const getPrefix = (currency: Currency): string => {
   switch (currency) {
@@ -202,34 +201,22 @@ export const isRTL = (text = ""): boolean => {
 };
 
 export const isRtlText = (text = ""): boolean => {
-  try {
-    const parsedText = JSON.parse(text);
-    const textWithNoMentions = JSON.stringify(
-      parsedText[0].children?.filter(
-        (item) => item.type !== ElementType.Mention,
-      ),
-    );
+  for (let i = 0; i < text.length; i++) {
+    const charCode = text.charCodeAt(i);
 
-    for (let i = 0; i < textWithNoMentions.length; i++) {
-      const charCode = textWithNoMentions.charCodeAt(i);
+    // Hebrew Block
+    if (charCode >= 0x0590 && charCode <= 0x05ff) return true;
 
-      // Hebrew Block
-      if (charCode >= 0x0590 && charCode <= 0x05ff) return true;
+    // Arabic Block
+    if (charCode >= 0x0600 && charCode <= 0x06ff) return true;
 
-      // Arabic Block
-      if (charCode >= 0x0600 && charCode <= 0x06ff) return true;
+    // Arabic Supplement Block
+    if (charCode >= 0x0750 && charCode <= 0x077f) return true;
 
-      // Arabic Supplement Block
-      if (charCode >= 0x0750 && charCode <= 0x077f) return true;
-
-      // Arabic Extended-A Block
-      if (charCode >= 0x08a0 && charCode <= 0x08ff) return true;
-    }
-    return false;
-  } catch (error) {
-    console.error(error);
-    return false;
+    // Arabic Extended-A Block
+    if (charCode >= 0x08a0 && charCode <= 0x08ff) return true;
   }
+  return false;
 };
 
 /**
