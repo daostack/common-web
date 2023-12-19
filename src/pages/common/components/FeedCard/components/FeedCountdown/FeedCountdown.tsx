@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import firebase from "firebase/app";
+import { Timestamp } from "@/shared/models";
 import { getTimeAgo } from "./utils";
 
 interface FeedCountdownProps {
@@ -8,7 +8,7 @@ interface FeedCountdownProps {
   timeAgoClassName?: string;
   timer?: string;
   isCountdownFinished: boolean;
-  expirationTimestamp: firebase.firestore.Timestamp | null;
+  expirationTimestamp: Timestamp | null;
 }
 
 const FeedCountdown: FC<FeedCountdownProps> = (props) => {

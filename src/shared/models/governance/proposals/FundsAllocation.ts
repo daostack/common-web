@@ -1,6 +1,6 @@
-import firebase from "firebase/app";
 import { AllocateFundsTo, ProposalsTypes } from "@/shared/constants";
 import { DocInfo, PaymentAmount } from "@/shared/models";
+import { Timestamp } from "../../Timestamp";
 import { BaseProposal } from "./BaseProposal";
 import { BasicArgsProposal } from "./BasicArgsProposal";
 
@@ -25,8 +25,8 @@ export interface FundsAllocationArgs extends BasicArgsProposal {
 
 export interface FundsAllocation extends BaseProposal {
   data: {
-    votingExpiresOn: firebase.firestore.Timestamp | null;
-    discussionExpiresOn: firebase.firestore.Timestamp | null;
+    votingExpiresOn: Timestamp | null;
+    discussionExpiresOn: Timestamp | null;
     args: FundsAllocationArgs;
     legal: {
       payoutDocs: DocInfo[];
@@ -42,9 +42,9 @@ export interface FundsAllocation extends BaseProposal {
 
       invoicesNotUploadedNotificationsCounter: number;
 
-      trusteeApprovedAt: firebase.firestore.Timestamp | null;
+      trusteeApprovedAt: Timestamp | null;
 
-      withdrawnAt: firebase.firestore.Timestamp | null;
+      withdrawnAt: Timestamp | null;
     };
   };
   type: ProposalsTypes.FUNDS_ALLOCATION;

@@ -1,3 +1,4 @@
+import { User as FirebaseUser } from "firebase/auth";
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 import { AuthProvider } from "../../../shared/constants";
@@ -14,6 +15,20 @@ export const socialLogin = createAsyncAction(
 )<
   PayloadWithOptionalCallback<
     { provider: AuthProvider; authCode: string },
+    { user: User; isNewUser: boolean },
+    Error
+  >,
+  User,
+  Error
+>();
+
+export const loginWithFirebaseUser = createAsyncAction(
+  AuthActionTypes.LOGIN_WITH_FIREBASE_USER,
+  AuthActionTypes.LOGIN_WITH_FIREBASE_USER_SUCCESS,
+  AuthActionTypes.LOGIN_WITH_FIREBASE_USER_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    { firebaseUser: firebase.User | FirebaseUser | null; authCode: string },
     { user: User; isNewUser: boolean },
     Error
   >,
