@@ -8,12 +8,16 @@ import {
   useFeedItemContext,
 } from "@/pages/common";
 import { useRoutesContext } from "@/shared/contexts";
+import { NotionIcon } from "@/shared/icons";
 import { PredefinedTypes } from "@/shared/models";
 import {
   ContextMenu,
   ContextMenuRef,
   TextEditorWithReinitialization as TextEditor,
   TimeAgo,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
   checkIsTextEditorValueEmpty,
 } from "@/shared/ui-kit";
 import { CommonAvatar } from "@/shared/ui-kit/CommonAvatar";
@@ -48,6 +52,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     groupMessage,
     createdBy,
     hoverTitle,
+    notion,
   } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
@@ -147,14 +152,30 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       </div>
       <div className={styles.content}>
         <div className={styles.topContent}>
-          <p
-            title={typeof hoverTitle === "string" ? hoverTitle : undefined}
+          <div
             className={classNames(styles.text, styles.title, {
               [styles.titleActive]: isActive,
             })}
           >
-            {finalTitle || "Loading..."}
-          </p>
+            <span
+              title={typeof hoverTitle === "string" ? hoverTitle : undefined}
+            >
+              {finalTitle || "Loading..."}
+            </span>
+            {Boolean(notion) && (
+              <Tooltip placement="top-start">
+                <TooltipTrigger asChild>
+                  <div className={styles.tooltipTriggerContainer}>
+                    <NotionIcon />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className={styles.tooltipContent}>
+                  <span>Notion sync</span>
+                  <span>Database: {notion?.title}</span>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
           <p
             className={classNames(styles.text, styles.lastActivity, {
               [styles.lastActivityActive]:
