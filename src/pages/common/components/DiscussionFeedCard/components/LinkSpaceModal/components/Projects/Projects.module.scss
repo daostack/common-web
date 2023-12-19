@@ -14,16 +14,30 @@
   border-radius: 0;
 
   &:hover {
-    --bg-color: #{var(--secondary-text)};
+    --bg-color: var(--secondary-text);
     --item-text-color: #{$c-shades-white};
+  }
+
+  @media (hover: none) {
+    &:hover {
+      --bg-color: var(--primary-background);
+      --item-text-color: var(--primary-text);
+    }
   }
 }
 .projectsTreeItemTriggerActiveClassName {
-  --bg-color: #{var(--primary-fill)};
+  --bg-color: var(--primary-fill);
   --item-text-color: #{$c-shades-white};
 
   &:hover {
-    --bg-color: #{var(--primary-fill)};
+    --bg-color: var(--primary-fill);
+  }
+
+  @media (hover: none) {
+    &:hover {
+      --bg-color: var(--primary-fill);
+      --item-text-color: #{$c-shades-white};
+    }
   }
 }
 
