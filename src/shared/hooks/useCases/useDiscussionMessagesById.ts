@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
 import classNames from 'classnames';
-import { isEqual, xor } from "lodash";
 import firebase from "@/shared/utils/firebase";
-import { fetchOwners } from "@/pages/OldCommon/store/api";
 import { DiscussionMessageService } from "@/services";
 import { LoadingState } from "@/shared/interfaces";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
@@ -70,8 +68,6 @@ export const useDiscussionMessagesById = ({
   const dispatch = useDispatch();
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
-  const [messageOwners, setMessageOwners] = useState<User[]>([]);
-  const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
   const [lastVisible, setLastVisible] = useState<Record<string, firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>>>({});
   const [isEndOfList, setIsEndOfList] = useState<Record<string, boolean>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -255,16 +251,6 @@ export const useDiscussionMessagesById = ({
     );
   };
 
-  const fetchMessageOwners = async (ids: string[]): Promise<User[]> => {
-    if (isEqual(messageOwnersIds, ids)) {
-      return [...messageOwners];
-    }
-    const newOwnerIds = xor(messageOwnersIds, ids);
-    const owners = (await fetchOwners(newOwnerIds)) as User[];
-    setMessageOwnersIds(ids);
-    setMessageOwners([...messageOwners, ...owners]);
-    return owners;
-  };
 
   useEffect(() => {
     (async () => {
@@ -276,16 +262,7 @@ export const useDiscussionMessagesById = ({
         ({ moderation }) =>
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
       );
-      const ownerIds = Array.from(
-        new Set(
-          filteredMessages
-            ?.filter(checkIsUserDiscussionMessage)
-            .map((d) => d.ownerId),
-        ),
-      ) as string[];
-      const owners = await fetchMessageOwners(ownerIds);
-
-      const loadedDiscussionMessages = await Promise.all(filteredMessages.map(async (d) => {
+      const loadedDiscussionMessages = filteredMessages.map((d) => {
         const newDiscussionMessage = { ...d };
         const parentMessage = filteredMessages.find(
           ({ id }) => id === d.parentId,
@@ -294,7 +271,7 @@ export const useDiscussionMessagesById = ({
           checkIsUserDiscussionMessage(d) &&
           checkIsUserDiscussionMessage(newDiscussionMessage)
         ) {
-          newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+          newDiscussionMessage.owner = users.find((o) => o.uid === d.ownerId);
         }
         newDiscussionMessage.parentMessage = parentMessage
           ? {
@@ -311,12 +288,12 @@ export const useDiscussionMessagesById = ({
           }
           : null;
         return newDiscussionMessage;
-      }));
+      });
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
       setIsLoading(false);
     })();
-  }, [state.data, messageOwnersIds, messageOwners, hasPermissionToHide]);
+  }, [state.data, hasPermissionToHide, users]);
 
   return {
     ...state,
