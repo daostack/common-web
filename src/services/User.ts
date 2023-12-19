@@ -8,6 +8,8 @@ import {
   Collection,
   CommonFeed,
   FeedItemFollowWithMetadata,
+  InboxItem,
+  SubCollections,
   Timestamp,
   User,
 } from "@/shared/models";
@@ -22,10 +24,17 @@ import Api from "./Api";
 import { waitForUserToBeLoaded } from "./utils";
 
 const converter = firestoreDataConverter<User>();
+const inboxConverter = firestoreDataConverter<InboxItem>();
 
 class UserService {
   private getUsersCollection = () =>
     firebase.firestore().collection(Collection.Users).withConverter(converter);
+
+  private getInboxSubCollection = (userId: string) =>
+    this.getUsersCollection()
+      .doc(userId)
+      .collection(SubCollections.Inbox)
+      .withConverter(inboxConverter);
 
   public updateUser = async (user: User): Promise<User> => {
     const body: UpdateUserDto = {
@@ -135,7 +144,7 @@ class UserService {
     });
   };
 
-  public getInboxItems = async (
+  public getInboxItemsWithMetadata = async (
     options: {
       startAfter?: Timestamp | null;
       limit?: number;
@@ -196,6 +205,67 @@ class UserService {
       lastDocTimestamp,
       hasMore: data.hasMore,
     };
+  };
+
+  public getInboxItems = async (options: {
+    userId: string;
+    startAt?: Timestamp;
+    endAt?: Timestamp;
+  }): Promise<InboxItem[]> => {
+    const { userId, startAt, endAt } = options;
+    let query = this.getInboxSubCollection(userId).orderBy(
+      "itemUpdatedAt",
+      "desc",
+    );
+
+    if (startAt) {
+      query = query.startAt(startAt);
+    }
+    if (endAt) {
+      query = query.endAt(endAt);
+    }
+
+    const snapshot = await query.get();
+
+    return snapshot.docs.map((doc) => doc.data());
+  };
+
+  public subscribeToNewInboxItems = (
+    options: {
+      userId: string;
+      endBefore: Timestamp;
+      unread?: boolean;
+      orderBy?: "itemUpdatedAt" | "updatedAt";
+    },
+    callback: (
+      data: {
+        item: InboxItem;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const { userId, endBefore, unread, orderBy = "itemUpdatedAt" } = options;
+    let query = this.getInboxSubCollection(userId)
+      .orderBy(orderBy, "desc")
+      .endBefore(endBefore);
+
+    if (unread) {
+      query = query.where("unread", "==", true);
+    }
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        item: docChange.doc.data(),
+        statuses: {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        },
+      }));
+      callback(data);
+    });
   };
 }
 

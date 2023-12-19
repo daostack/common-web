@@ -1,5 +1,5 @@
 import { stringify } from "query-string";
-import { ApiEndpoint } from "@/shared/constants";
+import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
 import {
   GetChatChannelMessagesResponse,
@@ -20,7 +20,7 @@ import {
   firestoreDataConverter,
   getUserName,
 } from "@/shared/utils";
-import firebase from "@/shared/utils/firebase";
+import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
 
 const chatChannelConverter = firestoreDataConverter<ChatChannel>();
@@ -232,6 +232,31 @@ class ChatService {
         callback(docChange.doc.data(), docChange.type === "removed");
       }
     });
+  };
+
+  public getChatChannelById = async (
+    chatChannelId: string,
+    source = FirestoreDataSource.Default,
+  ): Promise<ChatChannel | null> => {
+    try {
+      const snapshot = await this.getChatChannelCollection()
+        .doc(chatChannelId)
+        .get({ source });
+
+      return snapshot?.data() || null;
+    } catch (error) {
+      if (
+        source === FirestoreDataSource.Cache &&
+        isFirestoreCacheError(error)
+      ) {
+        return this.getChatChannelById(
+          chatChannelId,
+          FirestoreDataSource.Server,
+        );
+      }
+
+      throw error;
+    }
   };
 
   public getChatChannels = async (options: {

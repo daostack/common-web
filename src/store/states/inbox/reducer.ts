@@ -558,6 +558,11 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
       nextState.nextChatChannelItemId = null;
     }),
   )
+  .handleAction(actions.setHasMoreInboxItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.items.hasMore = payload;
+    }),
+  )
   .handleAction(actions.setSharedFeedItemId, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.sharedFeedItemId = payload;
