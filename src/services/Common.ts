@@ -323,6 +323,24 @@ class CommonService {
     return finalCommons;
   };
 
+  public getCommonAndParents = async (
+    commonId: string,
+    cached = false,
+  ): Promise<Common[]> => {
+    const common = await this.getCommonById(commonId, cached);
+
+    if (!common) {
+      return [];
+    }
+
+    const parentCommons = await this.getAllParentCommonsForCommon(
+      common,
+      cached,
+    );
+
+    return [...parentCommons, common];
+  };
+
   public getParentCommonForCommonId = async (
     commonId: string,
   ): Promise<Common | null> => {

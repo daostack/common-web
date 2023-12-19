@@ -48,7 +48,8 @@ type FeedCardProps = PropsWithChildren<{
   hasImages?: boolean;
   hasUnseenMention?: boolean;
   notion?: CommonNotion;
-  isLinked?: boolean;
+  originalCommonIdForLinking?: string;
+  linkedCommonIds?: string[];
 }>;
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -90,7 +91,8 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     hasImages,
     hasFiles,
     notion,
-    isLinked,
+    originalCommonIdForLinking,
+    linkedCommonIds,
   } = props;
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTabletView = useIsTabletView();
@@ -215,7 +217,8 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
             hasImages,
             hasUnseenMention,
             notion,
-            isLinked,
+            originalCommonIdForLinking,
+            linkedCommonIds,
           })}
         </div>
       )}

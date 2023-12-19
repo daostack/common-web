@@ -168,13 +168,6 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       !isFeedItemUserMetadataFetched ||
       !commonId;
     const cardTitle = discussion?.title;
-    const linkedCommonIds = discussion?.linkedCommonIds || [];
-    const isLinked = Boolean(
-      commonId &&
-        linkedCommonIds.length > 0 &&
-        (linkedCommonIds.includes(commonId) ||
-          discussion?.commonId === commonId),
-    );
 
     const handleOpenChat = useCallback(() => {
       if (discussion) {
@@ -359,7 +352,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
             isFeedItemUserMetadataFetched &&
             feedItemUserMetadata?.hasUnseenMention
           }
-          isLinked={isLinked}
+          originalCommonIdForLinking={discussion?.commonId}
+          linkedCommonIds={discussion?.linkedCommonIds}
         >
           {renderContent()}
         </FeedCard>
