@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, FC } from "react";
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import firebase from "firebase/app";
 import { Button, ButtonVariant, ModalFooter } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import {
@@ -10,6 +9,7 @@ import {
   Payment,
   PaymentType,
   Subscription,
+  Timestamp,
 } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
 import { formatDate, formatPrice } from "@/shared/utils";
@@ -38,9 +38,7 @@ const General: FC<GeneralProps> = (props) => {
   const { setTitle } = useMyContributionsContext();
   const screenSize = useSelector(getScreenSize());
   const isMobileView = screenSize === ScreenSize.Mobile;
-  const dueDate =
-    subscription?.dueDate?.seconds ||
-    firebase.firestore.Timestamp.now().seconds;
+  const dueDate = subscription?.dueDate?.seconds || Timestamp.now().seconds;
   const total = useMemo(
     () => payments.reduce((acc, payment) => acc + payment.price.amount, 0),
     [payments],
