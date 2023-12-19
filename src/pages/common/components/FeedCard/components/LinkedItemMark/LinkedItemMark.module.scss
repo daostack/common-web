@@ -37,11 +37,11 @@
   display: flex;
   align-items: center;
   font-size: 0.875rem;
-  color: $c-shades-black;
+  color: var(--primary-text);
   text-decoration: none;
 
   &:hover {
-    color: $c-pink-primary;
+    color: var(--primary-fill);
   }
 }
 .linkWithBottomMargin {
