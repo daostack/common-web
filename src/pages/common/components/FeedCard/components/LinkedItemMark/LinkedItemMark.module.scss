@@ -1,4 +1,5 @@
 @import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
 
 .linkIcon {
   width: 1rem;
@@ -11,9 +12,13 @@
 
 .tooltipContent {
   max-width: 30rem;
-  z-index: 3;
+  z-index: 1;
   display: flex;
   flex-direction: column;
+
+  @include tablet {
+    max-width: 100vw;
+  }
 }
 
 .contentTitle {
@@ -29,7 +34,6 @@
 
 .link {
   width: 100%;
-  margin-bottom: 0.625rem;
   display: flex;
   align-items: center;
   font-size: 0.875rem;
@@ -38,10 +42,9 @@
   &:hover {
     color: $c-pink-primary;
   }
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+}
+.linkWithBottomMargin {
+  margin-bottom: 0.625rem;
 }
 
 .linkLeft,

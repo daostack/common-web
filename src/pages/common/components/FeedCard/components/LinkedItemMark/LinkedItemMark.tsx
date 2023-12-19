@@ -1,21 +1,17 @@
-import React, {
-  FC,
-  MouseEventHandler,
-  ReactElement,
-  useEffect,
-  useState,
-} from "react";
+import React, { FC, MouseEventHandler, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import classNames from "classnames";
 import { ButtonIcon } from "@/shared/components";
 import { useRoutesContext } from "@/shared/contexts";
-import { RightArrowThinIcon, Link4Icon } from "@/shared/icons";
-import { Common } from "@/shared/models";
+import { useIsTabletView } from "@/shared/hooks/viewport";
+import { Link4Icon } from "@/shared/icons";
 import {
   Loader,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/shared/ui-kit";
+import { LinkedItemTooltipContent } from "./components";
 import { useCommonPaths } from "./hooks";
 import styles from "./LinkedItemMark.module.scss";
 
@@ -31,6 +27,7 @@ const LinkedItemMark: FC<LinkedItemMarkProps> = (props) => {
     originalCommonId = "",
     linkedCommonIds = [],
   } = props;
+  const isTabletView = useIsTabletView();
   const [isOpen, setIsOpen] = useState(false);
   const {
     data: commonPaths,
@@ -57,45 +54,12 @@ const LinkedItemMark: FC<LinkedItemMarkProps> = (props) => {
     fetchCommonPaths(commonIds);
   }, [isOpen]);
 
-  const renderFullPath = (commons: Common[]): ReactElement => {
-    return (
-      <div className={styles.linkLeft}>
-        {commons.map((common, commonIndex) => (
-          <React.Fragment key={common.id}>
-            {common.name}
-            {commonIndex !== commons.length - 1 && (
-              <RightArrowThinIcon className={styles.arrowIcon} />
-            )}
-          </React.Fragment>
-        ))}
-      </div>
-    );
-  };
-
-  const renderCutPath = (commons: Common[]): ReactElement => {
-    const lastCommon = commons[commons.length - 1];
-    const parentCommons = commons.slice(0, -1);
-
-    return (
-      <>
-        <div className={styles.linkLeft}>
-          {parentCommons.map((common, commonIndex) => (
-            <React.Fragment key={common.id}>
-              {common.name}
-              {commonIndex !== commons.length - 1 && (
-                <RightArrowThinIcon className={styles.arrowIcon} />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-        <div className={styles.ellipsis}>…</div>
-        <div className={styles.linkRight}>{lastCommon?.name}</div>
-      </>
-    );
-  };
-
   return (
-    <Tooltip open={isOpen} onOpenChange={setIsOpen} placement="right">
+    <Tooltip
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      placement={isTabletView ? "bottom-start" : "right"}
+    >
       <TooltipTrigger onClick={toggleTooltip} asChild>
         <ButtonIcon>
           <Link4Icon className={styles.linkIcon} />
@@ -112,11 +76,14 @@ const LinkedItemMark: FC<LinkedItemMarkProps> = (props) => {
             return (
               <NavLink
                 key={key}
-                className={styles.link}
+                className={classNames(styles.link, {
+                  [styles.linkWithBottomMargin]:
+                    index !== commonPaths.length - 1,
+                })}
                 to={getCommonPagePath(lastCommon?.id || "")}
                 title={lastCommon?.name}
               >
-                {renderCutPath(commons)}
+                <LinkedItemTooltipContent commons={commons} />
               </NavLink>
             );
           })}
