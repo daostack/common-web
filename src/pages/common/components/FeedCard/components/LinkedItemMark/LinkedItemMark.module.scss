@@ -10,8 +10,10 @@
 }
 
 .tooltipContent {
-  max-width: 20rem;
+  max-width: 30rem;
   z-index: 3;
+  display: flex;
+  flex-direction: column;
 }
 
 .contentTitle {
@@ -19,4 +21,49 @@
   margin-bottom: 0.5rem;
   font-size: 0.75rem;
   color: $c-gray-40;
+}
+
+.loader {
+  margin: 0 auto;
+}
+
+.link {
+  width: 100%;
+  margin-bottom: 0.625rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  text-decoration: none;
+
+  &:hover {
+    color: $c-pink-primary;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.linkLeft,
+.linkRight {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.linkLeft {
+  display: flex;
+  align-items: center;
+  text-overflow: ellipsis;
+}
+
+.linkRight {
+  flex-shrink: 0;
+}
+
+.ellipsis {
+  flex-shrink: 0;
+}
+
+.arrowIcon {
+  flex-shrink: 0;
 }
