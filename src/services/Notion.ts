@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "firebase/compat/app";
 import { ApiEndpoint } from "@/shared/constants";
 import {
   Collection,
