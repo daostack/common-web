@@ -15,13 +15,9 @@ interface LinkProps {
 const Link: FC<LinkProps> = (props) => {
   const { attributes, element, children } = props;
   const { onInternalLinkClick } = useInternalLink();
-
-  console.log(element);
   const internalLink = parseMessageLink(element.url);
 
-  console.log(element);
   if (internalLink) {
-    console.log("internalLink");
     return (
       <a
         {...attributes}
