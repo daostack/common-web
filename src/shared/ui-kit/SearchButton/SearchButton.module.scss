@@ -1,0 +1,7 @@
+@import "../../../constants.scss";
+
+.buttonIcon {
+  &:hover {
+    background-color: var(--hover-fill);
+  }
+}

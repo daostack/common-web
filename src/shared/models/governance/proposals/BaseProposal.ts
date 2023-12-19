@@ -1,4 +1,3 @@
-import firebase from "firebase/app";
 import { ProposalsTypes } from "@/shared/constants";
 import {
   BaseEntity,
@@ -9,6 +8,7 @@ import {
   ResolutionType,
   SoftDeleteEntity,
 } from "@/shared/models";
+import { Timestamp } from "../../Timestamp";
 
 export interface VoteTracker {
   [key: number]: {
@@ -62,13 +62,13 @@ export interface BaseProposal extends BaseEntity, SoftDeleteEntity {
   votes: CalculatedVotes;
 
   data: Record<string, unknown> & {
-    votingExpiresOn: firebase.firestore.Timestamp | null;
-    discussionExpiresOn: firebase.firestore.Timestamp | null;
+    votingExpiresOn: Timestamp | null;
+    discussionExpiresOn: Timestamp | null;
   };
 
   state: ProposalState;
 
-  approvalDate: firebase.firestore.Timestamp | null;
+  approvalDate: Timestamp | null;
 
   discussionId: string;
 

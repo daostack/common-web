@@ -13,6 +13,12 @@ export const selectDiscussionStateById =
   (discussionId: string) => (state: AppState) =>
     state.cache.discussionStates[discussionId] || null;
 
+export const selectDiscussionStates = () => (state: AppState) =>
+  state.cache.discussionStates;
+
+export const selectProposalStates = () => (state: AppState) =>
+  state.cache.proposalStates;
+
 export const selectProposalStateById =
   (proposalId: string) => (state: AppState) =>
     state.cache.proposalStates[proposalId] || null;

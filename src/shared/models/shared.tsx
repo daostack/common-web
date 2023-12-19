@@ -1,9 +1,9 @@
-import firebase from "@/shared/utils/firebase";
+import { Timestamp } from "./Timestamp";
 
 export interface Time {
   seconds: number;
   nanoseconds: number;
-  toDate: firebase.firestore.Timestamp["toDate"];
+  toDate: Timestamp["toDate"];
 }
 
 export interface Moderation {
@@ -44,7 +44,7 @@ export enum SubCollections {
   ChatChannelUserUnique = "chatChannelUserUnique",
   CommonFeed = "commonFeed",
   CommonFeedObjectUserUnique = "commonFeedObjectUserUnique",
-  Inbox = "Inbox",
+  Inbox = "inbox",
   FeedItemFollows = "feedItemFollows",
 }
 

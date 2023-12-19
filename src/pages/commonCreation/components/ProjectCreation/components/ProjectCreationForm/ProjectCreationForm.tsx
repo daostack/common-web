@@ -143,7 +143,11 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   );
   const projectId = initialCommon?.id || project?.id;
 
+  /**
+   * Existing projects names under the same direct parent only.
+   */
   const existingProjectsNames = projects
+    .filter((project) => project.directParent?.commonId === parentCommonId)
     .map((project) => project?.name)
     .filter((spaceName) => spaceName !== initialValues?.spaceName);
 

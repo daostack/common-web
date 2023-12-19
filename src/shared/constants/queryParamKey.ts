@@ -8,4 +8,5 @@ export enum QueryParamKey {
   ChatItem = "chatItem",
   Message = "message",
   Unread = "unread",
+  Search = "search",
 }

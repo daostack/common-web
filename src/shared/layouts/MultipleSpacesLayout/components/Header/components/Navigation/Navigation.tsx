@@ -14,7 +14,7 @@ import {
   useLastVisitedCommon,
   useUserCommonIds,
 } from "@/shared/hooks/useCases";
-import { BlocksIcon, InboxIcon } from "@/shared/icons";
+import { Blocks2Icon, InboxIcon } from "@/shared/icons";
 import {
   CommonSidenavLayoutTab,
   getActiveLayoutTab,
@@ -54,7 +54,7 @@ const Navigation: FC<NavigationProps> = (props) => {
     {
       text: "My spaces",
       route: mySpacesPagePath,
-      icon: <BlocksIcon className={styles.blocksIcon} />,
+      icon: <Blocks2Icon className={styles.blocksIcon} />,
       isActive: activeTab === CommonSidenavLayoutTab.Spaces,
       onClick: !mySpacesPagePath ? onCreateCommonPromptOpen : undefined,
     },
@@ -65,7 +65,7 @@ const Navigation: FC<NavigationProps> = (props) => {
           : ""
       }`,
       route: inboxPagePath,
-      icon: <InboxIcon className={styles.icon} />,
+      icon: <InboxIcon className={styles.inboxIcon} />,
       isActive: activeTab === CommonSidenavLayoutTab.Inbox,
       isDisabled: !isAuthenticated,
       tooltipContent: !isAuthenticated ? (

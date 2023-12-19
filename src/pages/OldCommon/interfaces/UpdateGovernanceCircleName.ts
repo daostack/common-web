@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import { Timestamp } from "@/shared/models";
 
 interface NewCircle {
   circleId: string;
@@ -14,5 +14,5 @@ export interface UpdateGovernanceCirclesNamesPayload {
 export interface UpdateGovernanceCirclesNamesResponse {
   circles: NewCircle[];
   message: string;
-  updatedAt: firebase.firestore.Timestamp;
+  updatedAt: Timestamp;
 }

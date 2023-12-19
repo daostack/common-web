@@ -1,4 +1,4 @@
-import { ApiEndpoint } from "@/shared/constants";
+import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import { DocChange } from "@/shared/constants/docChange";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { FollowFeedItemPayload } from "@/shared/interfaces/api";
@@ -10,7 +10,7 @@ import {
   Timestamp,
 } from "@/shared/models";
 import { firestoreDataConverter } from "@/shared/utils";
-import firebase from "@/shared/utils/firebase";
+import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
 import CommonService from "./Common";
 import CommonFeedService from "./CommonFeed";
@@ -25,6 +25,33 @@ class FeedItemFollowsService {
       .doc(userId)
       .collection(SubCollections.FeedItemFollows)
       .withConverter(converter);
+
+  public getFeedItemFollowDataById = async (
+    userId: string,
+    feedItemFollowId: string,
+    source = FirestoreDataSource.Default,
+  ): Promise<FeedItemFollow | null> => {
+    try {
+      const snapshot = await this.getFeedItemFollowsSubCollection(userId)
+        .doc(feedItemFollowId)
+        .get({ source });
+
+      return snapshot?.data() || null;
+    } catch (error) {
+      if (
+        source === FirestoreDataSource.Cache &&
+        isFirestoreCacheError(error)
+      ) {
+        return this.getFeedItemFollowDataById(
+          userId,
+          feedItemFollowId,
+          FirestoreDataSource.Server,
+        );
+      }
+
+      throw error;
+    }
+  };
 
   public getUserFeedItemFollowData = async (
     userId: string,
