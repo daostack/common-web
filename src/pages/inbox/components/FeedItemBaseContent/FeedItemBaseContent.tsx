@@ -46,9 +46,12 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     isImageRounded,
     isProject,
     discussionPredefinedType,
-    dmUserId,
+    dmUserIds,
     commonId,
     hasUnseenMention,
+    isGroupMessage,
+    createdBy,
+    hoverTitle,
     notion,
   } = props;
   const history = useHistory();
@@ -115,12 +118,16 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   };
 
   const handleAvatarClick = () => {
-    if (onUserSelect && dmUserId) {
-      onUserSelect(dmUserId);
+    if (onUserSelect && dmUserIds && !isGroupMessage) {
+      onUserSelect(dmUserIds[0]);
     } else if (commonId) {
       history.push(getCommonPagePath(commonId));
     }
   };
+
+  const lastMessageClassName = classNames(styles.text, styles.lastMessage, {
+    [styles.lastMessageActive]: isActive || (isExpanded && isMobileView),
+  });
 
   return (
     <div
@@ -150,7 +157,11 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               [styles.titleActive]: isActive,
             })}
           >
-            <span>{finalTitle || "Loading..."}</span>
+            <span
+              title={typeof hoverTitle === "string" ? hoverTitle : undefined}
+            >
+              {finalTitle || "Loading..."}
+            </span>
             {Boolean(notion) && (
               <Tooltip placement="top-start">
                 <TooltipTrigger asChild>
@@ -178,10 +189,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
             <TextEditor
               className={styles.lastMessageContainer}
-              editorClassName={classNames(styles.text, styles.lastMessage, {
-                [styles.lastMessageActive]:
-                  isActive || (isExpanded && isMobileView),
-              })}
+              editorClassName={lastMessageClassName}
               value={lastMessage}
               elementStyles={{
                 mention: isActive ? styles.mentionText : "",
@@ -189,7 +197,12 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               readOnly
             />
           ) : (
-            <div />
+            isGroupMessage &&
+            createdBy && (
+              <span className={lastMessageClassName}>
+                {`${createdBy} created this group chat`}
+              </span>
+            )
           )}
           <div className={styles.bottomContentRight}>
             <FeedCardTags
