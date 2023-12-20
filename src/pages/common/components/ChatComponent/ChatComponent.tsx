@@ -688,6 +688,7 @@ export default function ChatComponent({
           shouldReinitializeEditor={shouldReinitializeEditor}
           onClearFinished={onClearFinished}
           scrollSelectionIntoView={emptyFunction}
+          groupChat={chatChannel && chatChannel?.participants.length > 2}
         />
         <button
           className={styles.sendIcon}

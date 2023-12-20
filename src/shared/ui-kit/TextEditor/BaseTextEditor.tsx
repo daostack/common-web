@@ -63,6 +63,7 @@ export interface TextEditorProps {
   onClearFinished: () => void;
   scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
   elementStyles?: EditorElementStyles;
+  groupChat?: boolean;
 }
 
 const INITIAL_SEARCH_VALUE = {
@@ -97,6 +98,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     onClearFinished,
     scrollSelectionIntoView,
     elementStyles,
+    groupChat,
   } = props;
   const editor = useMemo(
     () =>
@@ -276,7 +278,9 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           }}
         />
 
-        {target && chars.length > 0 && (
+        {/* For now, we don't support the ability to mention in a group chat.
+          See https://github.com/daostack/common-web/issues/2380 */}
+        {!groupChat && target && chars.length > 0 && (
           <MentionDropdown
             shouldFocusTarget={shouldFocusTarget}
             onClick={(user: User) => {
