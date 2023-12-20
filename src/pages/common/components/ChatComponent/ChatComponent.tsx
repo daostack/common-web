@@ -51,7 +51,12 @@ import {
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
-import { getUserName, hasPermission, isMobile } from "@/shared/utils";
+import {
+  emptyFunction,
+  getUserName,
+  hasPermission,
+  isMobile,
+} from "@/shared/utils";
 import {
   cacheActions,
   chatActions,
@@ -682,6 +687,7 @@ export default function ChatComponent({
           users={users}
           shouldReinitializeEditor={shouldReinitializeEditor}
           onClearFinished={onClearFinished}
+          scrollSelectionIntoView={emptyFunction}
         />
         <button
           className={styles.sendIcon}

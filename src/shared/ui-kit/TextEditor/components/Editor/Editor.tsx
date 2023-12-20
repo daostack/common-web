@@ -7,7 +7,8 @@ import React, {
 } from "react";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
-import { Editable, useSlate } from "slate-react";
+import { Editable, ReactEditor, useSlate } from "slate-react";
+import { DOMRange } from "slate-react/dist/utils/dom";
 import { Element, Leaf } from "../../components";
 import { HOTKEYS, TextEditorSize } from "../../constants";
 import { EditorElementStyles } from "../../types";
@@ -25,17 +26,19 @@ interface EditorProps {
   onBlur?: FocusEventHandler;
   elementStyles?: EditorElementStyles;
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
+  scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
 }
 
 const Editor: FC<EditorProps> = (props) => {
   const {
     size = TextEditorSize.Small,
     placeholder,
+    elementStyles,
     readOnly = false,
     disabled = false,
     onBlur,
     onKeyDown,
-    elementStyles,
+    scrollSelectionIntoView,
   } = props;
   const editor = useSlate();
   const renderElement = useCallback(
@@ -78,6 +81,7 @@ const Editor: FC<EditorProps> = (props) => {
       readOnly={readOnly || disabled}
       onBlur={onBlur}
       onKeyDown={handleKeyDown}
+      scrollSelectionIntoView={scrollSelectionIntoView}
     />
   );
 };

@@ -19,6 +19,7 @@ import {
 } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
+import { DOMRange } from "slate-react/dist/utils/dom";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { User } from "@/shared/models";
 import { getUserName, isMobile, isRtlText } from "@/shared/utils";
@@ -60,6 +61,7 @@ export interface TextEditorProps {
   users?: User[];
   shouldReinitializeEditor: boolean;
   onClearFinished: () => void;
+  scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
   elementStyles?: EditorElementStyles;
 }
 
@@ -93,6 +95,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     users,
     shouldReinitializeEditor = false,
     onClearFinished,
+    scrollSelectionIntoView,
     elementStyles,
   } = props;
   const editor = useMemo(
@@ -259,6 +262,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           disabled={disabled}
           onBlur={onBlur}
           onKeyDown={handleKeyDown}
+          scrollSelectionIntoView={scrollSelectionIntoView}
           elementStyles={elementStyles}
         />
         <EmojiPicker
