@@ -549,6 +549,8 @@ export default function ChatComponent({
     (messageId: string) => {
       if (isChatChannel) {
         chatMessagesData.deleteChatMessage(messageId);
+      } else {
+        discussionMessagesData.deleteDiscussionMessage(messageId);
       }
     },
     [isChatChannel, chatMessagesData.deleteChatMessage],
