@@ -83,7 +83,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       commonId,
       commonName,
       commonImage,
-      commonNotion,
+      commonNotion: outerCommonNotion,
       pinnedFeedItems,
       commonMember,
       isProject,
@@ -136,7 +136,9 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
-    const { data: common } = useCommon(isHome ? commonId : "");
+    const shouldLoadCommonData =
+      isHome || (discussion?.notion && !outerCommonNotion);
+    const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
     const menuItems = useMenuItems(
       {
         commonId,
@@ -168,6 +170,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       !isFeedItemUserMetadataFetched ||
       !commonId;
     const cardTitle = discussion?.title;
+    const commonNotion = outerCommonNotion ?? common?.notion;
 
     const handleOpenChat = useCallback(() => {
       if (discussion) {

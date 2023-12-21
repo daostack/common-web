@@ -7,7 +7,7 @@ export interface ParseMessageLinkData {
   params: Record<string, string>;
 }
 
-export const parseMessageLink = (url: string): ParseMessageLinkData | null => {
+export const parseMessageLink = (url?: string): ParseMessageLinkData | null => {
   if (!url) {
     return null;
   }

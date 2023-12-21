@@ -1,6 +1,7 @@
+@import "../../../../../../styles/mixins";
+
 .notionInfo {
-  display: flex;
-  gap: 10px;
+  @include flex-list-with-gap(0.5rem);
 }
 
 .link {

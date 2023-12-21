@@ -79,9 +79,10 @@ class ChatService {
 
   public getDMUserChatChannel = async (
     currentUserId: string,
-    dmUserId: string,
+    dmUserIds: string[],
   ): Promise<ChatChannel | null> => {
-    if (currentUserId === dmUserId) {
+    // What is it? Looks like this condition is never fulfilled because dmUserIds never includes the currrent user.
+    if (currentUserId === dmUserIds[0]) {
       return this.getUserOwnChatChannel(currentUserId);
     }
 
@@ -91,7 +92,19 @@ class ChatService {
     const docSnapshot = snapshot.docs.find((doc) => {
       const { participants } = doc.data();
 
-      return participants.length === 2 && participants.includes(dmUserId);
+      // dmUserIds - never includes the currrent user.
+      // participants - includes the currrent user.
+
+      if (dmUserIds.length === 1) {
+        // Regular 1 on 1 chat
+        return participants.length === 2 && participants.includes(dmUserIds[0]);
+      } else if (dmUserIds.length > 1) {
+        // Group chat
+        return (
+          participants.length === dmUserIds.length + 1 &&
+          dmUserIds.every((participant) => participants.includes(participant))
+        );
+      }
     });
 
     if (!docSnapshot) {

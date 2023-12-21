@@ -44,11 +44,14 @@ export interface FeedItemBaseContentProps {
   hasImages?: boolean;
   isLoading?: boolean;
   shouldHideBottomContent?: boolean;
-  dmUserId?: string;
+  dmUserIds?: string[];
   hasUnseenMention?: boolean;
   notion?: CommonNotion;
   originalCommonIdForLinking?: string;
   linkedCommonIds?: string[];
+  isGroupMessage?: boolean;
+  createdBy?: string;
+  hoverTitle?: string;
 }
 
 export interface GetLastMessageOptions {

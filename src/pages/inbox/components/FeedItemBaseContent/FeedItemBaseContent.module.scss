@@ -1,5 +1,6 @@
 @import "../../../../constants";
 @import "../../../../styles/sizes";
+@import "../../../../styles/mixins.scss";
 
 .container {
   min-height: 3.0625rem;
@@ -106,6 +107,9 @@
 }
 
 .title {
+  @include flex-list-with-gap(0.5rem);
+
+  align-items: center;
   color: var(--primary-text);
   font-size: $moderate-xsmall;
   line-height: 1.5rem;
@@ -171,4 +175,15 @@
 
 .bottomContentRight {
   display: flex;
+}
+
+.tooltipTriggerContainer {
+  display: inline-flex;
+}
+
+.tooltipContent {
+  display: flex;
+  flex-direction: column;
+  max-width: 20rem;
+  z-index: 3;
 }

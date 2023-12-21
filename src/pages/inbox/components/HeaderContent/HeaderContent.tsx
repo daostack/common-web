@@ -1,13 +1,9 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { useSearchFeedItems } from "@/pages/commonFeed/components/HeaderContent/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { InboxIcon } from "@/shared/icons";
-import { SearchButton, SearchInput } from "@/shared/ui-kit";
-import { DirectMessageButton } from "../DirectMessageButton";
 import { HeaderContent_v04 } from "../HeaderContent_v04";
-import { InboxFilterButton } from "../InboxFilterButton";
-import { PlusButton } from "./components";
+import NewDirectMessageButton from "../NewDirectMessageButton/NewDirectMessageButton";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
@@ -50,10 +46,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
         {/* {!searchInputToggle.isToggledOn && (
           <SearchButton onClick={searchInputToggle.setToggleOn} />
         )} */}
-        <DirectMessageButton
-          isMobileVersion={isMobileVersion}
-          ButtonComponent={PlusButton}
-        />
+        <NewDirectMessageButton isMobileVersion={isMobileVersion} />
       </div>
     </div>
   );

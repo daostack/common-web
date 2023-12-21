@@ -39,7 +39,10 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
   const userId = user?.uid;
   const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
 
-  const allUsers = useMemo(() => commonMembers.map(({ user }) => user), [commonMembers]);
+  const allUsers = useMemo(
+    () => commonMembers.map(({ user }) => user),
+    [commonMembers],
+  );
 
   const discussionUsers = useMemo(
     () => allUsers.filter((user) => user.uid !== userId),
