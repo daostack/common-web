@@ -1,11 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
-import classNames from 'classnames';
-import { isEqual, xor } from "lodash";
-import firebase from "@/shared/utils/firebase";
-import { fetchOwners } from "@/pages/OldCommon/store/api";
+import classNames from "classnames";
 import { DiscussionMessageService } from "@/services";
+import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
+import { useRoutesContext } from "@/shared/contexts";
 import { LoadingState } from "@/shared/interfaces";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -17,18 +16,20 @@ import {
   User,
 } from "@/shared/models";
 import {
+  countTextEditorEmojiElements,
+  parseStringToTextEditorValue,
+} from "@/shared/ui-kit";
+import firebase from "@/shared/utils/firebase";
+import {
   cacheActions,
   selectDiscussionMessagesStateByDiscussionId,
 } from "@/store/states";
-import { countTextEditorEmojiElements, parseStringToTextEditorValue } from "@/shared/ui-kit";
-import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
-import { useRoutesContext } from "@/shared/contexts";
 
 export type TextStyles = {
   mentionTextCurrentUser: string;
   singleEmojiText: string;
   multipleEmojiText: string;
-}
+};
 
 interface Options {
   hasPermissionToHide: boolean;
@@ -66,20 +67,19 @@ export const useDiscussionMessagesById = ({
   onUserClick,
   onFeedItemClick,
   users,
-  textStyles
+  textStyles,
 }: Options): Return => {
   const dispatch = useDispatch();
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
-  const [messageOwners, setMessageOwners] = useState<User[]>([]);
-  const [messageOwnersIds, setMessageOwnersIds] = useState<string[]>([]);
-  const [lastVisible, setLastVisible] = useState<Record<string, firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>>>({});
+  const [lastVisible, setLastVisible] = useState<
+    Record<string, firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>>
+  >({});
   const [isEndOfList, setIsEndOfList] = useState<Record<string, boolean>>({});
   const [isLoading, setIsLoading] = useState(true);
   const state =
-    useSelector(
-      selectDiscussionMessagesStateByDiscussionId(discussionId),
-    ) || defaultState;
+    useSelector(selectDiscussionMessagesStateByDiscussionId(discussionId)) ||
+    defaultState;
   const [discussionMessagesWithOwners, setDiscussionMessagesWithOwners] =
     useState<any>();
 
@@ -87,13 +87,11 @@ export const useDiscussionMessagesById = ({
     if (discussionId) {
       setDiscussionMessagesWithOwners([]);
     }
-
-  }, [discussionId])
+  }, [discussionId]);
 
   const addDiscussionMessage = async (
     discussionMessage: DiscussionMessage,
   ): Promise<void> => {
-
     const emojiCount = countTextEditorEmojiElements(
       parseStringToTextEditorValue(discussionMessage.text),
     );
@@ -133,49 +131,63 @@ export const useDiscussionMessagesById = ({
     )
   }, []);
 
-  const fetchRepliedMessages = async (messageId: string, endDate: Date): Promise<void> => {
+  const fetchRepliedMessages = async (
+    messageId: string,
+    endDate: Date,
+  ): Promise<void> => {
     if (state.data?.find((item) => item.id === discussionId)) {
       return Promise.resolve();
     }
 
-    const { data: updatedDiscussionMessages, lastVisibleSnapshot } = await DiscussionMessageService.getDiscussionMessagesByEndDate(discussionId, lastVisible && lastVisible[discussionId], endDate);
-
-    setLastVisible((prevVisible) => ({ ...prevVisible, [discussionId]: lastVisibleSnapshot }));
-    const discussionsWithText = await Promise.all((updatedDiscussionMessages.map(async (discussionMessage) => {
-      const emojiCount = countTextEditorEmojiElements(
-        parseStringToTextEditorValue(discussionMessage.text),
+    const { data: updatedDiscussionMessages, lastVisibleSnapshot } =
+      await DiscussionMessageService.getDiscussionMessagesByEndDate(
+        discussionId,
+        lastVisible && lastVisible[discussionId],
+        endDate,
       );
 
-      const isUserDiscussionMessage =
-        checkIsUserDiscussionMessage(discussionMessage);
-      const isSystemMessage = checkIsSystemDiscussionMessage(discussionMessage);
+    setLastVisible((prevVisible) => ({
+      ...prevVisible,
+      [discussionId]: lastVisibleSnapshot,
+    }));
+    const discussionsWithText = await Promise.all(
+      updatedDiscussionMessages.map(async (discussionMessage) => {
+        const emojiCount = countTextEditorEmojiElements(
+          parseStringToTextEditorValue(discussionMessage.text),
+        );
 
-      const isNotCurrentUserMessage =
-        !isUserDiscussionMessage || userId !== discussionMessage.ownerId;
-      const parsedText = await getTextFromTextEditorString({
-        textEditorString: discussionMessage.text,
-        users,
-        mentionTextClassName: !isNotCurrentUserMessage
-          ? textStyles.mentionTextCurrentUser
-          : "",
-        emojiTextClassName: classNames({
-          [textStyles.singleEmojiText]: emojiCount.isSingleEmoji,
-          [textStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-        }),
-        commonId: discussionMessage.commonId,
-        systemMessage: isSystemMessage ? discussionMessage : undefined,
-        getCommonPagePath,
-        getCommonPageAboutTabPath,
-        directParent,
-        onUserClick,
-        onFeedItemClick,
-      });
+        const isUserDiscussionMessage =
+          checkIsUserDiscussionMessage(discussionMessage);
+        const isSystemMessage =
+          checkIsSystemDiscussionMessage(discussionMessage);
 
-      return {
-        ...discussionMessage,
-        parsedText,
-      }
-    })))
+        const isNotCurrentUserMessage =
+          !isUserDiscussionMessage || userId !== discussionMessage.ownerId;
+        const parsedText = await getTextFromTextEditorString({
+          textEditorString: discussionMessage.text,
+          users,
+          mentionTextClassName: !isNotCurrentUserMessage
+            ? textStyles.mentionTextCurrentUser
+            : "",
+          emojiTextClassName: classNames({
+            [textStyles.singleEmojiText]: emojiCount.isSingleEmoji,
+            [textStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+          }),
+          commonId: discussionMessage.commonId,
+          systemMessage: isSystemMessage ? discussionMessage : undefined,
+          getCommonPagePath,
+          getCommonPageAboutTabPath,
+          directParent,
+          onUserClick,
+          onFeedItemClick,
+        });
+
+        return {
+          ...discussionMessage,
+          parsedText,
+        };
+      }),
+    );
     dispatch(
       cacheActions.updateDiscussionMessagesStateByDiscussionId({
         discussionId,
@@ -185,14 +197,11 @@ export const useDiscussionMessagesById = ({
           data: discussionsWithText as any,
         },
       }),
-    )
-  }
+    );
+  };
 
   const fetchDiscussionMessages = () => {
-    if (
-      !discussionId ||
-      isEndOfList[discussionId]
-    ) {
+    if (!discussionId || isEndOfList[discussionId]) {
       return null;
     }
 
@@ -204,46 +213,54 @@ export const useDiscussionMessagesById = ({
       discussionId,
       lastVisible && lastVisible[discussionId],
       async (snapshot, updatedDiscussionMessages) => {
-        const lastVisibleDocument = snapshot.docs[updatedDiscussionMessages.length - 1];
+        const lastVisibleDocument =
+          snapshot.docs[updatedDiscussionMessages.length - 1];
 
-        setLastVisible((prevVisible) => ({ ...prevVisible, [discussionId]: lastVisibleDocument }));
+        setLastVisible((prevVisible) => ({
+          ...prevVisible,
+          [discussionId]: lastVisibleDocument,
+        }));
 
         const hasLastVisibleDocument = !!lastVisibleDocument?.data();
 
-        const discussionsWithText = await Promise.all((updatedDiscussionMessages.map(async (discussionMessage) => {
-          const emojiCount = countTextEditorEmojiElements(
-            parseStringToTextEditorValue(discussionMessage.text),
-          );
+        const discussionsWithText = await Promise.all(
+          updatedDiscussionMessages.map(async (discussionMessage) => {
+            const emojiCount = countTextEditorEmojiElements(
+              parseStringToTextEditorValue(discussionMessage.text),
+            );
 
-          const isUserDiscussionMessage = checkIsUserDiscussionMessage(discussionMessage);
-          const isSystemMessage = checkIsSystemDiscussionMessage(discussionMessage);
+            const isUserDiscussionMessage =
+              checkIsUserDiscussionMessage(discussionMessage);
+            const isSystemMessage =
+              checkIsSystemDiscussionMessage(discussionMessage);
 
-          const isNotCurrentUserMessage =
-            !isUserDiscussionMessage || userId !== discussionMessage.ownerId;
-          const parsedText = await getTextFromTextEditorString({
-            textEditorString: discussionMessage.text,
-            users,
-            mentionTextClassName: !isNotCurrentUserMessage
-              ? textStyles.mentionTextCurrentUser
-              : "",
-            emojiTextClassName: classNames({
-              [textStyles.singleEmojiText]: emojiCount.isSingleEmoji,
-              [textStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-            }),
-            commonId: discussionMessage.commonId,
-            systemMessage: isSystemMessage ? discussionMessage : undefined,
-            getCommonPagePath,
-            getCommonPageAboutTabPath,
-            directParent,
-            onUserClick,
-            onFeedItemClick,
-          });
+            const isNotCurrentUserMessage =
+              !isUserDiscussionMessage || userId !== discussionMessage.ownerId;
+            const parsedText = await getTextFromTextEditorString({
+              textEditorString: discussionMessage.text,
+              users,
+              mentionTextClassName: !isNotCurrentUserMessage
+                ? textStyles.mentionTextCurrentUser
+                : "",
+              emojiTextClassName: classNames({
+                [textStyles.singleEmojiText]: emojiCount.isSingleEmoji,
+                [textStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+              }),
+              commonId: discussionMessage.commonId,
+              systemMessage: isSystemMessage ? discussionMessage : undefined,
+              getCommonPagePath,
+              getCommonPageAboutTabPath,
+              directParent,
+              onUserClick,
+              onFeedItemClick,
+            });
 
-          return {
-            ...discussionMessage,
-            parsedText,
-          }
-        })));
+            return {
+              ...discussionMessage,
+              parsedText,
+            };
+          }),
+        );
         dispatch(
           cacheActions.updateDiscussionMessagesStateByDiscussionId({
             discussionId,
@@ -253,32 +270,21 @@ export const useDiscussionMessagesById = ({
               data: discussionsWithText as any,
             },
           }),
-        )
+        );
 
-        if (
-          discussionsWithText.length < 15 &&
-          !hasLastVisibleDocument
-        ) {
-          setIsEndOfList((prevIsEndOfList) => ({ ...prevIsEndOfList, [discussionId]: true }));
+        if (discussionsWithText.length < 15 && !hasLastVisibleDocument) {
+          setIsEndOfList((prevIsEndOfList) => ({
+            ...prevIsEndOfList,
+            [discussionId]: true,
+          }));
         }
       },
     );
   };
 
-  const fetchMessageOwners = async (ids: string[]): Promise<User[]> => {
-    if (isEqual(messageOwnersIds, ids)) {
-      return [...messageOwners];
-    }
-    const newOwnerIds = xor(messageOwnersIds, ids);
-    const owners = (await fetchOwners(newOwnerIds)) as User[];
-    setMessageOwnersIds(ids);
-    setMessageOwners([...messageOwners, ...owners]);
-    return owners;
-  };
-
   useEffect(() => {
     (async () => {
-      if(discussionMessagesWithOwners?.length === 0) {
+      if (discussionMessagesWithOwners?.length === 0) {
         setIsLoading(true);
       }
       const discussionMessages = [...(state.data || [])];
@@ -286,16 +292,7 @@ export const useDiscussionMessagesById = ({
         ({ moderation }) =>
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
       );
-      const ownerIds = Array.from(
-        new Set(
-          filteredMessages
-            ?.filter(checkIsUserDiscussionMessage)
-            .map((d) => d.ownerId),
-        ),
-      ) as string[];
-      const owners = await fetchMessageOwners(ownerIds);
-
-      const loadedDiscussionMessages = await Promise.all(filteredMessages.map(async (d) => {
+      const loadedDiscussionMessages = filteredMessages.map((d) => {
         const newDiscussionMessage = { ...d };
         const parentMessage = filteredMessages.find(
           ({ id }) => id === d.parentId,
@@ -304,29 +301,29 @@ export const useDiscussionMessagesById = ({
           checkIsUserDiscussionMessage(d) &&
           checkIsUserDiscussionMessage(newDiscussionMessage)
         ) {
-          newDiscussionMessage.owner = owners.find((o) => o.uid === d.ownerId);
+          newDiscussionMessage.owner = users.find((o) => o.uid === d.ownerId);
         }
         newDiscussionMessage.parentMessage = parentMessage
           ? {
-            id: parentMessage.id,
-            text: parentMessage.text,
-            ownerName: parentMessage?.ownerName,
-            ...(checkIsUserDiscussionMessage(parentMessage) && {
-              ownerId: parentMessage.ownerId,
-            }),
-            moderation: parentMessage?.moderation,
-            images: parentMessage?.images,
-            files: parentMessage?.files,
-            createdAt: parentMessage.createdAt
-          }
+              id: parentMessage.id,
+              text: parentMessage.text,
+              ownerName: parentMessage?.ownerName,
+              ...(checkIsUserDiscussionMessage(parentMessage) && {
+                ownerId: parentMessage.ownerId,
+              }),
+              moderation: parentMessage?.moderation,
+              images: parentMessage?.images,
+              files: parentMessage?.files,
+              createdAt: parentMessage.createdAt,
+            }
           : null;
         return newDiscussionMessage;
-      }));
+      });
 
       setDiscussionMessagesWithOwners(loadedDiscussionMessages);
       setIsLoading(false);
     })();
-  }, [state.data, messageOwnersIds, messageOwners, hasPermissionToHide]);
+  }, [state.data, hasPermissionToHide, users]);
 
   return {
     ...state,

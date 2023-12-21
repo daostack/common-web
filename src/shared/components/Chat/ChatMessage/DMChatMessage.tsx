@@ -35,7 +35,8 @@ import {
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
-import { StaticLinkType, isRtlText, getUserName } from "@/shared/utils";
+import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
+import { StaticLinkType, getUserName } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
 import { ChatMessageLinkify, InternalLinkData, Time } from "./components";
@@ -286,7 +287,7 @@ export default function DMChatMessage({
                   !isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
                 [styles.replyMessageContentWithFile]: file,
-                [styles.messageContentRtl]: isRtlText(
+                [styles.messageContentRtl]: isRtlWithNoMentions(
                   discussionMessage?.parentMessage?.text,
                 ),
               },
@@ -358,7 +359,9 @@ export default function DMChatMessage({
               onContextMenu={handleContextMenu}
               className={classNames(styles.messageText, {
                 [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
-                [styles.messageTextRtl]: isRtlText(discussionMessage.text),
+                [styles.messageTextRtl]: isRtlWithNoMentions(
+                  discussionMessage.text,
+                ),
                 [styles.messageTextWithReply]:
                   !!discussionMessage.parentMessage?.id,
                 [styles.systemMessage]: isSystemMessage,
@@ -379,7 +382,8 @@ export default function DMChatMessage({
                 className={classNames(styles.messageContent, {
                   [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
                   [styles.messageContentRtl]:
-                    !isSystemMessage && isRtlText(discussionMessage.text),
+                    !isSystemMessage &&
+                    isRtlWithNoMentions(discussionMessage.text),
                 })}
               >
                 {filePreview && (

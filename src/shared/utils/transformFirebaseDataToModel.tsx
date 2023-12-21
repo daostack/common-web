@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "./firebase";
 
 export function transformFirebaseDataList<T>(
   data: firebase.firestore.QuerySnapshot,

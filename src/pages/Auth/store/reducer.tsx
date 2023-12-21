@@ -22,6 +22,7 @@ const reducer = createReducer<AuthStateType, Action>(initialState)
   .handleAction(
     [
       actions.socialLogin.success,
+      actions.loginWithFirebaseUser.success,
       actions.loginUsingEmailAndPassword.success,
       actions.confirmVerificationCode.success,
       actions.webviewLogin.success,

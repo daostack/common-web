@@ -54,6 +54,7 @@ import {
   selectCommonAction,
   selectIsSearchingFeedItems,
   selectRecentStreamId,
+  selectSearchValue,
   selectSharedFeedItem,
 } from "@/store/states";
 import {
@@ -103,6 +104,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const userId = user?.uid;
   const recentStreamId = useSelector(selectRecentStreamId);
   const isSearchingFeedItems = useSelector(selectIsSearchingFeedItems);
+  const searchValue = useSelector(selectSearchValue);
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
@@ -220,6 +222,11 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const firstItem = commonFeedItems?.[0];
   const isDataFetched = isCommonDataFetched;
   const hasPublicItems = commonData?.common.hasPublicItems ?? false;
+  const emptyText = hasMoreCommonFeedItems
+    ? ""
+    : searchValue
+    ? "Looks like there are no matches for your query."
+    : "No items here yet.";
 
   const fetchData = () => {
     fetchCommonData({
@@ -530,11 +537,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         topFeedItems={topFeedItems}
         feedItems={commonFeedItems}
         loading={areCommonFeedItemsLoading || isSearchingFeedItems}
-        emptyText={
-          hasMoreCommonFeedItems
-            ? ""
-            : "Looks like there are no matches for your query."
-        }
+        emptyText={emptyText}
         batchNumber={batchNumber}
         onFetchNext={fetchMoreCommonFeedItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}

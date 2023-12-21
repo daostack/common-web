@@ -25,6 +25,7 @@ export { useSubCommons } from "./useSubCommons";
 export { useSupportersData } from "./useSupportersData";
 export { useLastVisitedCommon } from "./useLastVisitedCommon";
 export { useUserById } from "./useUserById";
+export { useUsersByIds } from "./useUsersByIds";
 export { default as useUserCards } from "./useUserCards";
 export { useUserCommonIds } from "./useUserCommonIds";
 export { default as useUserContributions } from "./useUserContributions";

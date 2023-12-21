@@ -1,4 +1,3 @@
-import firebase from "firebase/app";
 import { BaseEntity } from "./BaseEntity";
 import { Discussion } from "./Discussion";
 import { DiscussionMessage } from "./DiscussionMessage";
@@ -152,7 +151,7 @@ export interface CommonMember {
   readonly id: string;
   readonly userId: string;
   rulesAccepted?: boolean;
-  joinedAt: firebase.firestore.Timestamp;
+  joinedAt: Timestamp;
   circleIds: string[];
   isFollowing: boolean;
   streamsUnreadCountByProjectStream?: Record<string, number>;

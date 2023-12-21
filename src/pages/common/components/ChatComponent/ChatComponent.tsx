@@ -684,6 +684,7 @@ export default function ChatComponent({
           users={users}
           shouldReinitializeEditor={shouldReinitializeEditor}
           onClearFinished={onClearFinished}
+          groupChat={chatChannel && chatChannel?.participants.length > 2}
         />
         <button
           className={styles.sendIcon}
