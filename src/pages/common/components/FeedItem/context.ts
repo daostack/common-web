@@ -47,6 +47,8 @@ export interface FeedItemBaseContentProps {
   dmUserIds?: string[];
   hasUnseenMention?: boolean;
   notion?: CommonNotion;
+  originalCommonIdForLinking?: string;
+  linkedCommonIds?: string[];
   isGroupMessage?: boolean;
   createdBy?: string;
   hoverTitle?: string;

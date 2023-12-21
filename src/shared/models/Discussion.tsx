@@ -27,6 +27,11 @@ export interface Discussion extends BaseEntity, SoftDeleteEntity {
   notion?: DiscussionNotion;
 
   /**
+   * List of common IDs that are have linked this discussion
+   */
+  linkedCommonIds: string[];
+
+  /**
    * A discussion can be linked to a proposal, if it does - proposalId will exist.
    */
   proposalId?: string;
@@ -36,6 +41,12 @@ export interface Discussion extends BaseEntity, SoftDeleteEntity {
    * If discussion is attached to a proposal, this field will be not exist.
    */
   circleVisibility?: string[];
+
+  /**
+   * If array is empty, everyone in common can view.
+   * If discussion is attached to a proposal, this field is null.
+   */
+  circleVisibilityByCommon: Record<string, string[]> | null;
 }
 
 export interface DiscussionWithOwnerInfo extends Discussion {
