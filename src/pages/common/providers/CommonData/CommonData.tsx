@@ -130,8 +130,10 @@ const CommonData: FC<CommonDataProps> = (props) => {
     (menuItem: CommonMenuItem | null) => {
       setSelectedMenuItem(menuItem);
 
-      if (menuItem === CommonMenuItem.DeleteCommon) {
+      if (menuItem === CommonMenuItem.DeleteCommonProposal) {
         onCommonDelete();
+      } else if (menuItem === CommonMenuItem.DeleteCommonAction) {
+        console.log("DELETE COMMON ACTION!");
       }
     },
     [onCommonDelete],

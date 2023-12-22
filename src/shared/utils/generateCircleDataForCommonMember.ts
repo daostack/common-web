@@ -11,6 +11,12 @@ export const circleIndexGuard = (n: number | string) => {
   return castedN as CircleIndex;
 };
 
+/**
+ * TODO: this functions returns wrong data about DETELE_COMMON value.
+ * It probably happens in case we have both DELETE_COMMON key in proposals and actions.
+ * One solution could be giving in the BE different key for common deletion for proposal and for actions.
+ * Something like: COMMON_DELETE_ACTION OR to change the logic of this function.
+ */
 export const generateCirclesDataForCommonMember = (
   governanceCircles: Governance["circles"],
   circleIds: string[],

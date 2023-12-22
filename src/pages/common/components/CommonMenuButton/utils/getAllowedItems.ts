@@ -1,4 +1,4 @@
-import { ProposalsTypes } from "@/shared/constants";
+import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
 import { CirclesPermissions, CommonMember, Governance } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
 import { CommonMenuItem } from "../../../constants";
@@ -22,13 +22,22 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
     isSubCommon,
     canLeaveSpace,
   }) => Boolean(commonMember && isSubCommon && canLeaveSpace),
-  [CommonMenuItem.DeleteCommon]: ({ commonMember, governance }) =>
+  [CommonMenuItem.DeleteCommonProposal]: ({ commonMember, governance }) =>
     Boolean(
       commonMember &&
         hasPermission({
           commonMember,
           governance,
           key: ProposalsTypes.DELETE_COMMON,
+        }),
+    ),
+  [CommonMenuItem.DeleteCommonAction]: ({ commonMember, governance }) =>
+    Boolean(
+      commonMember &&
+        hasPermission({
+          commonMember,
+          governance,
+          key: GovernanceActions.DELETE_COMMON,
         }),
     ),
 };
@@ -40,7 +49,8 @@ export const getAllowedItems = (
     CommonMenuItem.Governance,
     CommonMenuItem.LeaveCommon,
     CommonMenuItem.LeaveProject,
-    CommonMenuItem.DeleteCommon,
+    CommonMenuItem.DeleteCommonProposal,
+    CommonMenuItem.DeleteCommonAction,
   ];
 
   return orderedItems.filter((item) =>
