@@ -19,7 +19,7 @@ interface TreeItemTriggerProps {
 
 const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
   const { className, item, level, isActive, isOpen, onToggle } = props;
-  const { treeItemTriggerStyles } = useTreeContext();
+  const { treeItemTriggerStyles, onItemClick } = useTreeContext();
   const { hasMembership = true } = item;
 
   const handleToggle: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -30,24 +30,28 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
     }
   };
 
-  return (
-    <NavLink
-      className={classNames(
-        styles.item,
-        {
-          [classNames(
-            styles.itemActive,
-            treeItemTriggerStyles?.containerActive,
-          )]: isActive,
-          [styles.itemWithoutMembership]: !hasMembership,
-        },
-        className,
-        treeItemTriggerStyles?.container,
-      )}
-      to={item.path}
-      title={item.name}
-      aria-label={`Go to ${item.name}`}
-    >
+  const handleItemClick: MouseEventHandler<HTMLDivElement> = () => {
+    if (!item.disabled) {
+      onItemClick?.(item.id);
+    }
+  };
+
+  const wrapperClassName = classNames(
+    styles.item,
+    {
+      [classNames(styles.itemActive, treeItemTriggerStyles?.containerActive)]:
+        isActive,
+      [styles.itemWithoutMembership]: !hasMembership,
+      [classNames(
+        styles.itemDisabled,
+        treeItemTriggerStyles?.containerDisabled,
+      )]: item.disabled,
+    },
+    className,
+    treeItemTriggerStyles?.container,
+  );
+  const contentEl = (
+    <>
       <ButtonIcon
         className={classNames(styles.arrowIconButton, {
           [styles.arrowIconButtonHidden]: !onToggle,
@@ -78,6 +82,7 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
       <span className={classNames(styles.name, treeItemTriggerStyles?.name)}>
         {item.name}
       </span>
+      {item.nameRightContent}
       {item.rightContent}
       {!!item.notificationsAmount && (
         <span
@@ -88,6 +93,32 @@ const TreeItemTrigger: FC<TreeItemTriggerProps> = (props) => {
           {item.notificationsAmount}
         </span>
       )}
+    </>
+  );
+
+  if (onItemClick || item.disabled) {
+    return (
+      <div
+        className={wrapperClassName}
+        title={item.name}
+        aria-label={`Select ${item.name}`}
+        aria-disabled={item.disabled}
+        tabIndex={0}
+        onClick={handleItemClick}
+      >
+        {contentEl}
+      </div>
+    );
+  }
+
+  return (
+    <NavLink
+      className={wrapperClassName}
+      to={item.path}
+      title={item.name}
+      aria-label={`Go to ${item.name}`}
+    >
+      {contentEl}
     </NavLink>
   );
 };

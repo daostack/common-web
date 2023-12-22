@@ -1,7 +1,7 @@
 @import "../../../../../../../../../constants";
 
 .item {
-  --bg-color: --var(--primary-background);
+  --bg-color: var(--primary-background);
   --item-pl-per-level: 1.125rem;
   --item-arrow-pl: var(--item-pl-per-level);
   --item-image-mr: 0.5rem;
@@ -25,7 +25,6 @@
 }
 .itemActive {
   --bg-color: #{$c-primary-200}99;
-  --item-text-color: #{$white};
 
   &:hover {
     --bg-color: var(--secondary-hover-fill);
@@ -33,6 +32,9 @@
 }
 .itemWithoutMembership {
   --item-text-color: #{$c-neutrals-300};
+}
+.itemDisabled {
+  cursor: not-allowed;
 }
 
 .arrowIconButton {
@@ -71,7 +73,7 @@
   font-family: PoppinsSans, sans-serif;
   font-weight: 600;
   font-size: $small;
-  color: var(--primary-text);
+  color: var(--item-text-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

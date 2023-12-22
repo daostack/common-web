@@ -43,6 +43,7 @@ interface FeedItemProps {
     commonId?: string,
   ) => void;
   directParent?: DirectParent | null;
+  rootCommonId?: string;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -67,6 +68,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     shouldCheckItemVisibility = true,
     onActiveItemDataChange,
     directParent,
+    rootCommonId,
   } = props;
   const {
     onFeedItemUpdate,
@@ -129,6 +131,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     isMobileVersion,
     onActiveItemDataChange: handleActiveItemDataChange,
     directParent,
+    rootCommonId,
     feedItemFollow,
     onUserSelect,
   };

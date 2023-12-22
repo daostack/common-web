@@ -5,6 +5,7 @@ import {
   PinOrUnpinEndpointAction,
 } from "@/shared/constants";
 import {
+  LinkStreamPayload,
   MarkCommonFeedItemAsSeenPayload,
   UnsubscribeFunction,
 } from "@/shared/interfaces";
@@ -227,6 +228,14 @@ class CommonFeedService {
     );
 
     return convertObjectDatesToFirestoreTimestamps(data);
+  };
+
+  public linkStream = async (
+    payload: LinkStreamPayload,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<void> => {
+    const { cancelToken } = options;
+    await Api.post(ApiEndpoint.LinkStream, payload, { cancelToken });
   };
 
   public markCommonFeedItemAsUnseen = (

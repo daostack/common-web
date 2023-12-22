@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
 import classNames from "classnames";
@@ -48,6 +48,7 @@ interface Return extends State {
   fetchDiscussionMessages: () => void;
   fetchRepliedMessages: (messageId: string, endDate: Date) => Promise<void>;
   addDiscussionMessage: (discussionMessage: DiscussionMessage) => void;
+  deleteDiscussionMessage: (discussionMessageId: string) => void;
   isEndOfList: Record<string, boolean> | null;
   rawData: DiscussionMessage[] | null;
 }
@@ -120,6 +121,15 @@ export const useDiscussionMessagesById = ({
       }),
     );
   };
+
+  const deleteDiscussionMessage = useCallback((discussionMessageId: string) => {
+    dispatch(
+      cacheActions.deleteDiscussionMessageById({
+        discussionId,
+        discussionMessageId,
+      }),
+    );
+  }, []);
 
   const fetchRepliedMessages = async (
     messageId: string,
@@ -324,5 +334,6 @@ export const useDiscussionMessagesById = ({
     fetchDiscussionMessages,
     fetchRepliedMessages,
     addDiscussionMessage,
+    deleteDiscussionMessage,
   };
 };

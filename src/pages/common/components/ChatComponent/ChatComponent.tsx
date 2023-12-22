@@ -51,7 +51,12 @@ import {
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
-import { getUserName, hasPermission, isMobile } from "@/shared/utils";
+import {
+  emptyFunction,
+  getUserName,
+  hasPermission,
+  isMobile,
+} from "@/shared/utils";
 import {
   cacheActions,
   chatActions,
@@ -544,6 +549,8 @@ export default function ChatComponent({
     (messageId: string) => {
       if (isChatChannel) {
         chatMessagesData.deleteChatMessage(messageId);
+      } else {
+        discussionMessagesData.deleteDiscussionMessage(messageId);
       }
     },
     [isChatChannel, chatMessagesData.deleteChatMessage],
@@ -682,6 +689,7 @@ export default function ChatComponent({
           users={users}
           shouldReinitializeEditor={shouldReinitializeEditor}
           onClearFinished={onClearFinished}
+          scrollSelectionIntoView={emptyFunction}
           groupChat={chatChannel && chatChannel?.participants.length > 2}
         />
         <button

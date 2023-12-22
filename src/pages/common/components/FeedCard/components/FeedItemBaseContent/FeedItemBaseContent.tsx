@@ -14,11 +14,13 @@ import {
 } from "@/shared/ui-kit";
 import { FeedItemBaseContentProps } from "../../../FeedItem";
 import { FeedCardTags } from "../FeedCardTags";
+import { LinkedItemMark } from "../LinkedItemMark";
 import styles from "./FeedItemBaseContent.module.scss";
 
 export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   const {
     className,
+    commonId,
     titleWrapperClassName,
     lastActivity,
     unreadMessages,
@@ -41,11 +43,20 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     shouldHideBottomContent = false,
     hasUnseenMention,
     notion,
+    originalCommonIdForLinking,
+    linkedCommonIds,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isLongPressed, setIsLongPressed] = useState(false);
   const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
+  const isLinked = Boolean(
+    commonId &&
+      linkedCommonIds &&
+      linkedCommonIds.length > 0 &&
+      (linkedCommonIds.includes(commonId) ||
+        originalCommonIdForLinking === commonId),
+  );
 
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
@@ -134,6 +145,13 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
                   <span>Database: {notion?.title}</span>
                 </TooltipContent>
               </Tooltip>
+            )}
+            {isLinked && (
+              <LinkedItemMark
+                currentCommonId={commonId}
+                originalCommonId={originalCommonIdForLinking}
+                linkedCommonIds={linkedCommonIds}
+              />
             )}
           </div>
           <p

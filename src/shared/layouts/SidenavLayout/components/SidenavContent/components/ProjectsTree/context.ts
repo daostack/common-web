@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 export interface TreeItemTriggerStyles {
   container?: string;
   containerActive?: string;
+  containerDisabled?: string;
   name?: string;
   image?: string;
   imageNonRounded?: string;
@@ -15,6 +16,7 @@ export interface TreeContextValue {
   isActiveCheckAllowed: boolean;
   treeItemTriggerStyles?: TreeItemTriggerStyles;
   onAddProjectClick?: (commonId: string) => void;
+  onItemClick?: (itemId: string) => void;
 }
 
 export const TreeContext = React.createContext<TreeContextValue>({

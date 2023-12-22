@@ -21,9 +21,13 @@ interface ProjectsTreeProps extends BaseProjectsTreeProps {
   commons: ProjectsStateItem[];
   currentCommonId?: string | null;
   onCommonClick: (commonId: string) => void;
-  onCommonCreationClick: () => void;
-  onAddProjectClick: (commonId: string) => void;
+  onCommonCreationClick?: () => void;
+  onAddProjectClick?: (commonId: string) => void;
+  onItemClick?: (itemId: string) => void;
   isLoading?: boolean;
+  withScrollbar?: boolean;
+  commonsMenuClassName?: string;
+  loaderDelay?: number;
 }
 
 const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
@@ -40,7 +44,11 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
     onCommonClick,
     onCommonCreationClick,
     onAddProjectClick,
+    onItemClick,
     isLoading = false,
+    withScrollbar = true,
+    commonsMenuClassName,
+    loaderDelay = LOADER_APPEARANCE_DELAY,
   } = props;
   const menuItems = useMenuItems({
     stateItems: commons,
@@ -59,6 +67,7 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
       treeItemTriggerStyles,
       parentItemIds,
       onAddProjectClick,
+      onItemClick,
     }),
     [
       activeItem?.id,
@@ -67,7 +76,24 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
       treeItemTriggerStyles,
       parentItemIds,
       onAddProjectClick,
+      onItemClick,
     ],
+  );
+
+  const itemsEl = (
+    <>
+      <TreeRecursive
+        className={className}
+        parentId={parentItem.id}
+        parentName={parentItem.name}
+        items={items}
+        hasPermissionToAddProject={
+          parentItem.hasPermissionToAddProject && isParentItemActive
+        }
+        level={INITIAL_TREE_ITEMS_LEVEL}
+      />
+      {isLoading && <Loader className={styles.loader} delay={loaderDelay} />}
+    </>
   );
 
   return (
@@ -82,26 +108,13 @@ const ProjectsTree: FC<ProjectsTreeProps> = (props) => {
               items={menuItems}
               activeItemId={currentCommonId}
               isActive={isParentItemActive}
+              menuItemsClassName={commonsMenuClassName}
             />
           ),
         }}
         isActive={isParentItemActive}
       />
-      <Scrollbar>
-        <TreeRecursive
-          className={className}
-          parentId={parentItem.id}
-          parentName={parentItem.name}
-          items={items}
-          hasPermissionToAddProject={
-            parentItem.hasPermissionToAddProject && isParentItemActive
-          }
-          level={INITIAL_TREE_ITEMS_LEVEL}
-        />
-        {isLoading && (
-          <Loader className={styles.loader} delay={LOADER_APPEARANCE_DELAY} />
-        )}
-      </Scrollbar>
+      {withScrollbar ? <Scrollbar>{itemsEl}</Scrollbar> : itemsEl}
     </TreeContext.Provider>
   );
 };
