@@ -13,7 +13,7 @@ const GroupChatIcon: FC<GroupChatIconProps> = ({ className }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g id="Layer_1" clip-path="url(#clip0_11827_31255)">
+    <g id="Layer_1" clipPath="url(#clip0_11827_31255)">
       <path
         id="Vector"
         d="M12.4725 8.84766C8.9225 8.84766 6.03516 12.2649 6.03516 14.4519C6.03516 16.6389 8.91856 17.9824 12.4725 17.9824C16.0265 17.9824 18.9138 16.6389 18.9138 14.4675C18.9138 12.2961 16.0501 8.84766 12.4725 8.84766Z"
