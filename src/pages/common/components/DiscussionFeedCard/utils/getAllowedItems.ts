@@ -4,6 +4,7 @@ import { FeedItemMenuItem, FeedItemPinAction } from "../../FeedItem/constants";
 import { GetAllowedItemsOptions } from "../../FeedItem/types";
 import { checkIsEditItemAllowed } from "./checkIsEditItemAllowed";
 import { checkIsLinkToAllowed } from "./checkIsLinkToAllowed";
+import { checkIsMoveToAllowed } from "./checkIsMoveToAllowed";
 import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
 import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
 
@@ -40,7 +41,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
     return Boolean(count) || !seen;
   },
   [FeedItemMenuItem.LinkTo]: checkIsLinkToAllowed,
-  [FeedItemMenuItem.MoveTo]: () => true,
+  [FeedItemMenuItem.MoveTo]: checkIsMoveToAllowed,
 };
 
 export const getAllowedItems = (
