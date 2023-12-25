@@ -6,7 +6,7 @@ import { useNotification } from "@/shared/hooks";
 import { useStreamLinking } from "@/shared/hooks/useCases";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
-import { Projects } from "./components";
+import { LinkStreamProjects } from "./components";
 import styles from "./LinkStreamModal.module.scss";
 
 interface LinkStreamModalProps {
@@ -59,7 +59,7 @@ const LinkStreamModal: FC<LinkStreamModalProps> = (props) => {
 
     return (
       <>
-        <Projects
+        <LinkStreamProjects
           rootCommonId={rootCommonId}
           commonId={commonId}
           activeItemId={activeItemId}
