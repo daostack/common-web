@@ -34,7 +34,7 @@ export const useMenuItems = (options: Options): Item[] => {
     },
     {
       id: CommonMenuItem.DeleteCommonProposal,
-      text: `Delete ${options.isSubCommon ? "space" : "common"} propsal`,
+      text: `Delete ${options.isSubCommon ? "space" : "common"}`,
       withWarning: true,
       onClick: () => {
         onMenuItemSelect(CommonMenuItem.DeleteCommonProposal);
@@ -42,7 +42,7 @@ export const useMenuItems = (options: Options): Item[] => {
     },
     {
       id: CommonMenuItem.DeleteCommonAction,
-      text: `Delete ${options.isSubCommon ? "space" : "common"} action`,
+      text: `Delete ${options.isSubCommon ? "space" : "common"}`,
       withWarning: true,
       onClick: () => {
         onMenuItemSelect(CommonMenuItem.DeleteCommonAction);
@@ -53,9 +53,15 @@ export const useMenuItems = (options: Options): Item[] => {
   /**
    * For now we give priority to DeleteCommonAction over DeleteCommonProposal.
    */
-  //const filteredItems = allowedMenuItems.includes(CommonMenuItem.DeleteCommonAction) ? allowedMenuItems.filter(item => item !== CommonMenuItem.DeleteCommonProposal) : allowedMenuItems;
+  const filteredItems = allowedMenuItems.includes(
+    CommonMenuItem.DeleteCommonAction,
+  )
+    ? allowedMenuItems.filter(
+        (item) => item !== CommonMenuItem.DeleteCommonProposal,
+      )
+    : allowedMenuItems;
 
   return items.filter((item) =>
-    allowedMenuItems.includes(item.id as CommonMenuItem),
+    filteredItems.includes(item.id as CommonMenuItem),
   );
 };

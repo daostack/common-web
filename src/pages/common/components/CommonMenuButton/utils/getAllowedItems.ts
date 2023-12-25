@@ -37,7 +37,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
         hasPermission({
           commonMember,
           governance,
-          key: GovernanceActions.DELETE_COMMON,
+          key: GovernanceActions.DELETE_COMMON_ACTION,
         }),
     ),
 };
