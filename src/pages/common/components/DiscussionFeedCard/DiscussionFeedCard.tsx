@@ -119,6 +119,11 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       onOpen: onLinkStreamModalOpen,
       onClose: onLinkStreamModalClose,
     } = useModal(false);
+    const {
+      isShowing: isMoveStreamModalOpen,
+      onOpen: onMoveStreamModalOpen,
+      onClose: onMoveStreamModalClose,
+    } = useModal(false);
     const [isDeletingInProgress, setDeletingInProgress] = useState(false);
     const {
       fetchUser: fetchDiscussionCreator,
@@ -156,6 +161,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         share: () => onShareModalOpen(),
         remove: onDeleteModalOpen,
         linkStream: onLinkStreamModalOpen,
+        moveStream: onMoveStreamModalOpen,
       },
     );
     const user = useSelector(selectUser());
