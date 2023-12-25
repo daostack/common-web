@@ -7,7 +7,7 @@ import { useStreamLinking } from "@/shared/hooks/useCases";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { Projects } from "./components";
-import styles from "./LinkSpaceModal.module.scss";
+import styles from "./LinkStreamModal.module.scss";
 
 interface LinkStreamModalProps {
   isOpen: boolean;
