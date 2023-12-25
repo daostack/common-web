@@ -1,5 +1,7 @@
 import React, { FC, useState } from "react";
-import { CommonMemberEventEmitter } from "@/events";
+import { useSelector } from "react-redux";
+import { CommonEvent, CommonEventEmitter } from "@/events";
+import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonService } from "@/services";
 import { Modal } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
@@ -18,20 +20,20 @@ interface DeleteCommonModalProps {
 const DeleteCommonModal: FC<DeleteCommonModalProps> = (props) => {
   const { isShowing, onClose, commonName, isSpace, commonId } = props;
   const [isDeleting, setIsDeleting] = useState(false);
+  const user = useSelector(selectUser());
   const [errorText, setErrorText] = useState("");
   const entityType = isSpace ? "space" : "common";
 
-  const handleLeave = async () => {
+  const handleDelete = async () => {
     setIsDeleting(true);
     setErrorText("");
 
     try {
-      await CommonService.deleteCommon(commonId);
-      // CommonMemberEventEmitter.emit(
-      //   CommonMemberEvent.Reset,
-      //   commonId,
-      //   commonMemberId,
-      // );
+      if (!user) {
+        return;
+      }
+      await CommonService.deleteCommon(commonId, user?.uid);
+      CommonEventEmitter.emit(CommonEvent.CommonDeleted, commonId);
       setIsDeleting(false);
       onClose();
     } catch (error) {
@@ -61,7 +63,7 @@ const DeleteCommonModal: FC<DeleteCommonModalProps> = (props) => {
           <Button
             className={styles.deleteButton}
             variant={ButtonVariant.PrimaryPink}
-            onClick={handleLeave}
+            onClick={handleDelete}
             disabled={isDeleting}
           >
             Delete {entityType}

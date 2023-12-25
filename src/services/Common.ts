@@ -533,10 +533,13 @@ class CommonService {
     await Api.post(ApiEndpoint.MuteCommon, { commonId });
   };
 
-  public deleteCommon = async (commonId: string): Promise<void> => {
+  public deleteCommon = async (
+    commonId: string,
+    userId: string,
+  ): Promise<void> => {
     await Api.post(ApiEndpoint.CreateAction, {
       type: GovernanceActions.DELETE_COMMON,
-      args: { commonId },
+      args: { userId, commonId },
     });
   };
 }
