@@ -3,10 +3,10 @@ import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { Modal } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
-import { useStreamLinking } from "@/shared/hooks/useCases";
+import { useStreamMoving } from "@/shared/hooks/useCases";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
-import { Projects } from "./components";
+import { MoveStreamProjects } from "./components";
 import styles from "./MoveStreamModal.module.scss";
 
 interface MoveStreamModalProps {
@@ -17,7 +17,6 @@ interface MoveStreamModalProps {
   rootCommonId: string;
   commonId: string;
   originalCommonId: string;
-  linkedCommonIds?: string[];
   circleVisibility: string[];
 }
 
@@ -30,11 +29,10 @@ const MoveStreamModal: FC<MoveStreamModalProps> = (props) => {
     rootCommonId,
     commonId,
     originalCommonId,
-    linkedCommonIds = [],
     circleVisibility,
   } = props;
   const { notify } = useNotification();
-  const { isStreamLinking, isStreamLinked, linkStream } = useStreamLinking();
+  const { isStreamMoving, isStreamMoved, moveStream } = useStreamMoving();
   const [activeItemId, setActiveItemId] = useState("");
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -44,7 +42,7 @@ const MoveStreamModal: FC<MoveStreamModalProps> = (props) => {
       return;
     }
 
-    linkStream({
+    moveStream({
       userId,
       feedObjectId: feedItemId,
       sourceCommonId: commonId,
@@ -53,19 +51,18 @@ const MoveStreamModal: FC<MoveStreamModalProps> = (props) => {
   };
 
   const renderContent = (): ReactElement => {
-    if (isStreamLinking) {
+    if (isStreamMoving) {
       return <Loader className={styles.loader} />;
     }
 
     return (
       <>
-        <Projects
+        <MoveStreamProjects
           rootCommonId={rootCommonId}
           commonId={commonId}
           activeItemId={activeItemId}
           onActiveItemId={setActiveItemId}
           originalCommonId={originalCommonId}
-          linkedCommonIds={linkedCommonIds}
           circleVisibility={circleVisibility}
         />
         <div className={styles.submitButtonWrapper}>
@@ -83,20 +80,20 @@ const MoveStreamModal: FC<MoveStreamModalProps> = (props) => {
   };
 
   useEffect(() => {
-    if (isStreamLinked) {
-      notify("Stream is successfully linked");
+    if (isStreamMoved) {
+      notify("Stream is successfully moved");
       onClose();
     }
-  }, [isStreamLinking, isStreamLinked]);
+  }, [isStreamMoving, isStreamMoved]);
 
   return (
     <Modal
       className={styles.modal}
       isShowing={isOpen}
-      onClose={isStreamLinking ? emptyFunction : onClose}
-      title={`Link “${title}“`}
+      onClose={isStreamMoving ? emptyFunction : onClose}
+      title={`Move “${title}“`}
       isHeaderSticky
-      hideCloseButton={isStreamLinking}
+      hideCloseButton={isStreamMoving}
       mobileFullScreen
       styles={{
         header: styles.modalHeader,

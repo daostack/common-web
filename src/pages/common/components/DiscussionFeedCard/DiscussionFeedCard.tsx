@@ -44,7 +44,7 @@ import {
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "../FeedItem";
-import { LinkStreamModal } from "./components";
+import { LinkStreamModal, MoveStreamModal } from "./components";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -396,17 +396,29 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           </GlobalOverlay>
         )}
         {commonId && (
-          <LinkStreamModal
-            isOpen={isLinkStreamModalOpen}
-            onClose={onLinkStreamModalClose}
-            feedItemId={item.id}
-            title={cardTitle || ""}
-            rootCommonId={rootCommonId || commonId}
-            commonId={commonId}
-            originalCommonId={discussion?.commonId || ""}
-            linkedCommonIds={discussion?.linkedCommonIds}
-            circleVisibility={item.circleVisibility}
-          />
+          <>
+            <LinkStreamModal
+              isOpen={isLinkStreamModalOpen}
+              onClose={onLinkStreamModalClose}
+              feedItemId={item.id}
+              title={cardTitle || ""}
+              rootCommonId={rootCommonId || commonId}
+              commonId={commonId}
+              originalCommonId={discussion?.commonId || ""}
+              linkedCommonIds={discussion?.linkedCommonIds}
+              circleVisibility={item.circleVisibility}
+            />
+            <MoveStreamModal
+              isOpen={isMoveStreamModalOpen}
+              onClose={onMoveStreamModalClose}
+              feedItemId={item.id}
+              title={cardTitle || ""}
+              rootCommonId={rootCommonId || commonId}
+              commonId={commonId}
+              originalCommonId={discussion?.commonId || ""}
+              circleVisibility={item.circleVisibility}
+            />
+          </>
         )}
       </>
     );

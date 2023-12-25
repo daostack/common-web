@@ -6,11 +6,11 @@ import styles from "./NameRightContent.module.scss";
 interface NameRightContentProps {
   projectsStateItem: ProjectsStateItem;
   originalCommonId: string;
-  linkedCommonIds: string[];
+  linkedCommonIds?: string[];
 }
 
 const NameRightContent: FC<NameRightContentProps> = (props) => {
-  const { projectsStateItem, originalCommonId, linkedCommonIds } = props;
+  const { projectsStateItem, originalCommonId, linkedCommonIds = [] } = props;
 
   if (projectsStateItem.commonId === originalCommonId) {
     return <span className={styles.originalText}>original</span>;
