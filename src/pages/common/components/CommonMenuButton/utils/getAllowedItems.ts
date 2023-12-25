@@ -28,7 +28,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
         hasPermission({
           commonMember,
           governance,
-          key: ProposalsTypes.DELETE_COMMON,
+          proposal: ProposalsTypes.DELETE_COMMON,
         }),
     ),
   [CommonMenuItem.DeleteCommonAction]: ({ commonMember, governance }) =>
@@ -37,7 +37,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
         hasPermission({
           commonMember,
           governance,
-          key: GovernanceActions.DELETE_COMMON_ACTION,
+          action: GovernanceActions.DELETE_COMMON,
         }),
     ),
 };

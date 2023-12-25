@@ -535,7 +535,7 @@ class CommonService {
 
   public deleteCommon = async (commonId: string): Promise<void> => {
     await Api.post(ApiEndpoint.CreateAction, {
-      type: GovernanceActions.DELETE_COMMON_ACTION,
+      type: GovernanceActions.DELETE_COMMON,
       args: { commonId },
     });
   };
