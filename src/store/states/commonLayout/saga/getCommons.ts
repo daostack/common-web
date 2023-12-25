@@ -104,6 +104,7 @@ export function* getCommons(
           hasMembership,
           hasPermissionToAddProject,
           hasPermissionToLinkToHere,
+          hasPermissionToMoveToHere,
         }) => ({
           commonId: common.id,
           image: common.image,
@@ -113,6 +114,7 @@ export function* getCommons(
           hasMembership,
           hasPermissionToAddProject,
           hasPermissionToLinkToHere,
+          hasPermissionToMoveToHere,
           notificationsAmount: 0,
         }),
       );
