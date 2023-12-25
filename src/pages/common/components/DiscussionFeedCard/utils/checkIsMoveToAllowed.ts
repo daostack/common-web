@@ -1,11 +1,15 @@
 import { GovernanceActions } from "@/shared/constants";
+import { PredefinedTypes } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
 import { GetAllowedItemsOptions } from "../../FeedItem";
 
 export const checkIsMoveToAllowed = (
   options: GetAllowedItemsOptions,
 ): boolean => {
-  if (!options.commonMember) {
+  if (
+    !options.commonMember ||
+    options.discussion?.predefinedType === PredefinedTypes.General
+  ) {
     return false;
   }
 
