@@ -4,10 +4,12 @@ export interface Item {
   id: string;
   image: string;
   name: string;
+  nameRightContent?: ReactNode;
   path: string;
   hasMembership?: boolean;
   hasPermissionToAddProject?: boolean;
   notificationsAmount?: number;
   rightContent?: ReactNode;
   items?: Item[];
+  disabled?: boolean;
 }

@@ -83,7 +83,7 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
     if (onDMClick) {
       onDMClick();
     } else {
-      fetchDMUserChatChannel(userId);
+      fetchDMUserChatChannel([userId]);
     }
   };
 

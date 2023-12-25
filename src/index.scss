@@ -204,15 +204,6 @@ body {
   }
 }
 
-/* Disable hover effects globally when using a touch device */
-@media (hover: none) {
-  * {
-    :hover {
-      opacity: unset !important;
-    }
-  }
-}
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

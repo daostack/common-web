@@ -16,6 +16,8 @@ export * from "./Popover";
 export * from "./Portal";
 export * from "./PreventNavigationPrompt";
 export * from "./PureCommonTopNavigation";
+export * from "./SearchButton";
+export * from "./SearchInput";
 export * from "./Sidenav";
 export * from "./Tags";
 export * from "./TextEditor";

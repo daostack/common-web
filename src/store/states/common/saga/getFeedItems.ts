@@ -7,6 +7,7 @@ import { selectFeedStateByCommonId } from "@/store/states";
 import * as actions from "../actions";
 import { selectFeedItems } from "../selectors";
 import { FeedItems } from "../types";
+import { searchFetchedFeedItems } from "./searchFetchedFeedItems";
 
 export function* getFeedItems(
   action: ReturnType<typeof actions.getFeedItems.request>,
@@ -57,6 +58,10 @@ export function* getFeedItems(
           : currentFeedItems.firstDocTimestamp,
       }),
     );
+
+    if (!isFirstRequest) {
+      yield searchFetchedFeedItems(convertedData);
+    }
   } catch (error) {
     if (isError(error)) {
       yield put(actions.getFeedItems.failure(error));

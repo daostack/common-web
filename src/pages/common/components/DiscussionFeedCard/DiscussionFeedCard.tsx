@@ -44,6 +44,7 @@ import {
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "../FeedItem";
+import { LinkSpaceModal } from "./components";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -65,6 +66,7 @@ interface DiscussionFeedCardProps {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   directParent?: DirectParent | null;
+  rootCommonId?: string;
   feedItemFollow: FeedItemFollowState;
   onUserSelect?: (userId: string, commonId?: string) => void;
 }
@@ -81,7 +83,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       commonId,
       commonName,
       commonImage,
-      commonNotion,
+      commonNotion: outerCommonNotion,
       pinnedFeedItems,
       commonMember,
       isProject,
@@ -93,6 +95,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       getNonAllowedItems,
       onActiveItemDataChange,
       directParent,
+      rootCommonId,
       feedItemFollow,
       onUserSelect,
     } = props;
@@ -111,6 +114,11 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       onOpen: onDeleteModalOpen,
       onClose: onDeleteModalClose,
     } = useModal(false);
+    const {
+      isShowing: isLinkSpaceModalOpen,
+      onOpen: onLinkSpaceModalOpen,
+      onClose: onLinkSpaceModalClose,
+    } = useModal(false);
     const [isDeletingInProgress, setDeletingInProgress] = useState(false);
     const {
       fetchUser: fetchDiscussionCreator,
@@ -128,7 +136,9 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
-    const { data: common } = useCommon(isHome ? commonId : "");
+    const shouldLoadCommonData =
+      isHome || (discussion?.notion && !outerCommonNotion);
+    const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
     const menuItems = useMenuItems(
       {
         commonId,
@@ -145,6 +155,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         report: onReportModalOpen,
         share: () => onShareModalOpen(),
         remove: onDeleteModalOpen,
+        linkSpace: onLinkSpaceModalOpen,
       },
     );
     const user = useSelector(selectUser());
@@ -159,6 +170,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       !isFeedItemUserMetadataFetched ||
       !commonId;
     const cardTitle = discussion?.title;
+    const commonNotion = outerCommonNotion ?? common?.notion;
 
     const handleOpenChat = useCallback(() => {
       if (discussion) {
@@ -343,6 +355,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
             isFeedItemUserMetadataFetched &&
             feedItemUserMetadata?.hasUnseenMention
           }
+          originalCommonIdForLinking={discussion?.commonId}
+          linkedCommonIds={discussion?.linkedCommonIds}
         >
           {renderContent()}
         </FeedCard>
@@ -374,6 +388,18 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
               isDeletingInProgress={isDeletingInProgress}
             />
           </GlobalOverlay>
+        )}
+        {commonId && (
+          <LinkSpaceModal
+            isOpen={isLinkSpaceModalOpen}
+            onClose={onLinkSpaceModalClose}
+            feedItemId={item.id}
+            title={cardTitle || ""}
+            rootCommonId={rootCommonId || commonId}
+            commonId={commonId}
+            originalCommonId={discussion?.commonId || ""}
+            linkedCommonIds={discussion?.linkedCommonIds}
+          />
         )}
       </>
     );

@@ -1,5 +1,6 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
+@import "../../../../../../styles/mixins";
 
 .container {
   --title-color: var(--primary-text);
@@ -89,9 +90,9 @@
 }
 
 .title {
-  display: flex;
+  @include flex-list-with-gap(0.5rem);
+
   align-items: center;
-  gap: 8px;
   color: var(--title-color);
   font-size: $moderate-xsmall;
   line-height: 1.5rem;

@@ -2,15 +2,15 @@ import {
   CreateDiscussionDto,
   EditDiscussionDto,
 } from "@/pages/OldCommon/interfaces";
-import { ApiEndpoint } from "@/shared/constants";
+import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { Collection, Discussion } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
-  transformFirebaseDataSingle,
+  transformFirebaseDataList,
 } from "@/shared/utils";
-import firebase from "@/shared/utils/firebase";
+import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api from "./Api";
 
 const converter = firestoreDataConverter<Discussion>();
@@ -24,15 +24,54 @@ class DiscussionService {
 
   public getDiscussionById = async (
     discussionId: string,
+    source = FirestoreDataSource.Default,
   ): Promise<Discussion | null> => {
-    const discussion = await this.getDiscussionCollection()
-      .doc(discussionId)
-      .get();
+    try {
+      const snapshot = await this.getDiscussionCollection()
+        .doc(discussionId)
+        .get({ source });
+      const fromCache = snapshot.metadata.fromCache ? "local cache" : "server";
+      const discussion = snapshot?.data() || null;
 
-    return (
-      (discussion && transformFirebaseDataSingle<Discussion>(discussion)) ||
-      null
-    );
+      console.log(
+        `getDiscussionById [${fromCache}]`,
+        discussionId,
+        snapshot?.data() || null,
+      );
+      if (!discussion && source === FirestoreDataSource.Cache) {
+        return this.getDiscussionById(discussionId, FirestoreDataSource.Server);
+      }
+
+      return discussion;
+    } catch (error) {
+      if (
+        source === FirestoreDataSource.Cache &&
+        isFirestoreCacheError(error)
+      ) {
+        return this.getDiscussionById(discussionId, FirestoreDataSource.Server);
+      } else {
+        throw error;
+      }
+    }
+  };
+
+  public getDiscussionsByIds = async (
+    ids: string[],
+  ): Promise<Array<Discussion | null>> => {
+    const queries: firebase.firestore.Query[] = [];
+
+    // Firebase allows to use at most 10 items per query for `in` option
+    for (let i = 0; i < ids.length; i += 10) {
+      queries.push(
+        this.getDiscussionCollection().where("id", "in", ids.slice(i, i + 10)),
+      );
+    }
+
+    const results = await Promise.all(queries.map((query) => query.get()));
+
+    return results
+      .map((result) => transformFirebaseDataList<Discussion | null>(result))
+      .reduce((acc, items) => [...acc, ...items], []);
   };
 
   public createDiscussion = async (
@@ -65,9 +104,13 @@ class DiscussionService {
 
     return query.onSnapshot((snapshot) => {
       const discussion = snapshot.data();
+      const source = snapshot.metadata.fromCache ? "local cache" : "server";
 
       if (discussion) {
+        // console.log(`discussion found! [${source}]`, discussionId);
         callback(discussion);
+      } else {
+        // console.log(`discussion was not found [${source}]`, discussionId);
       }
     });
   };
