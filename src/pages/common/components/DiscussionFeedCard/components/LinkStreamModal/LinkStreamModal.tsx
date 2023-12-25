@@ -9,7 +9,7 @@ import { emptyFunction } from "@/shared/utils";
 import { Projects } from "./components";
 import styles from "./LinkSpaceModal.module.scss";
 
-interface DirectMessageModalProps {
+interface LinkStreamModalProps {
   isOpen: boolean;
   onClose: () => void;
   feedItemId: string;
@@ -21,7 +21,7 @@ interface DirectMessageModalProps {
   circleVisibility: string[];
 }
 
-const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
+const LinkStreamModal: FC<LinkStreamModalProps> = (props) => {
   const {
     isOpen,
     onClose,
@@ -110,4 +110,4 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
   );
 };
 
-export default LinkSpaceModal;
+export default LinkStreamModal;
