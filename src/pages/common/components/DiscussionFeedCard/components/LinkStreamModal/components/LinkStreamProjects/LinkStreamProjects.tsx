@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from "react";
 import { Item } from "@/shared/layouts/SidenavLayout/components/SidenavContent/components";
 import { ProjectsStateItem } from "@/store/states";
-import { Projects, ProjectsProps } from "../Projects";
+import { Projects, ProjectsProps } from "../../../Projects";
 import { NameRightContent } from "./components";
 
 interface LinkStreamProjects
