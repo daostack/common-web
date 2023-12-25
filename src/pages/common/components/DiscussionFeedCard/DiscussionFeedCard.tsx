@@ -399,6 +399,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
             commonId={commonId}
             originalCommonId={discussion?.commonId || ""}
             linkedCommonIds={discussion?.linkedCommonIds}
+            circleVisibility={item.circleVisibility}
           />
         )}
       </>
