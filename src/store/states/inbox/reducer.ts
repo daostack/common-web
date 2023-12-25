@@ -53,6 +53,13 @@ const getDocTimestamps = (
     : null,
 });
 
+const areTimestampsEqual = (
+  timestampA: Timestamp | null,
+  timestampB: Timestamp | null,
+): boolean =>
+  timestampA?.seconds === timestampB?.seconds &&
+  timestampA?.nanoseconds === timestampB?.nanoseconds;
+
 const updateInboxItemInList = (
   state: WritableDraft<InboxState>,
   payload: {
@@ -93,10 +100,16 @@ const updateInboxItemInList = (
 
   state.items = {
     ...state.items,
-    firstDocTimestamp,
-    lastDocTimestamp,
     data: nextData,
   };
+
+  if (!areTimestampsEqual(state.items.firstDocTimestamp, firstDocTimestamp)) {
+    state.items.firstDocTimestamp = firstDocTimestamp;
+  }
+
+  if (!areTimestampsEqual(state.items.lastDocTimestamp, lastDocTimestamp)) {
+    state.items.lastDocTimestamp = lastDocTimestamp;
+  }
 };
 
 const updateInboxItemInChatChannelItems = (
@@ -194,10 +207,16 @@ const updateFeedItemInInboxItem = (
 
   state.items = {
     ...state.items,
-    firstDocTimestamp,
-    lastDocTimestamp,
     data: nextData,
   };
+
+  if (!areTimestampsEqual(state.items.firstDocTimestamp, firstDocTimestamp)) {
+    state.items.firstDocTimestamp = firstDocTimestamp;
+  }
+
+  if (!areTimestampsEqual(state.items.lastDocTimestamp, lastDocTimestamp)) {
+    state.items.lastDocTimestamp = lastDocTimestamp;
+  }
 };
 
 const updateSharedInboxItem = (
@@ -321,10 +340,16 @@ const updateChatChannelItemInInboxItem = (
 
   state.items = {
     ...state.items,
-    firstDocTimestamp,
-    lastDocTimestamp,
     data: nextData,
   };
+
+  if (!areTimestampsEqual(state.items.firstDocTimestamp, firstDocTimestamp)) {
+    state.items.firstDocTimestamp = firstDocTimestamp;
+  }
+
+  if (!areTimestampsEqual(state.items.lastDocTimestamp, lastDocTimestamp)) {
+    state.items.lastDocTimestamp = lastDocTimestamp;
+  }
 };
 
 const updateChatChannelItemInChatChannelItem = (
@@ -499,9 +524,22 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
       nextState.items = {
         ...nextState.items,
         data,
-        firstDocTimestamp,
-        lastDocTimestamp,
       };
+
+      if (
+        !areTimestampsEqual(
+          nextState.items.firstDocTimestamp,
+          firstDocTimestamp,
+        )
+      ) {
+        nextState.items.firstDocTimestamp = firstDocTimestamp;
+      }
+
+      if (
+        !areTimestampsEqual(nextState.items.lastDocTimestamp, lastDocTimestamp)
+      ) {
+        nextState.items.lastDocTimestamp = lastDocTimestamp;
+      }
     }),
   )
   .handleAction(actions.updateInboxItem, (state, { payload }) =>
