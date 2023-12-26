@@ -159,10 +159,21 @@ const addMetadataToItemsBatch = async (
   const batchWithChatChannelLayoutItems = (
     await Promise.all(
       batch.map(async (batchItem) => {
-        const item =
-          batchItem.item.type === InboxItemType.ChatChannel
-            ? await ChatService.getChatChannelById(batchItem.item.itemId)
-            : null;
+        if (batchItem.item.type !== InboxItemType.ChatChannel) {
+          return null;
+        }
+
+        let item = await ChatService.getChatChannelById(
+          batchItem.item.itemId,
+          FirestoreDataSource.Cache,
+        );
+
+        if (item?.messageCount === 0) {
+          item = await ChatService.getChatChannelById(
+            batchItem.item.itemId,
+            FirestoreDataSource.Server,
+          );
+        }
 
         return item ? { item, statuses: batchItem.statuses } : null;
       }, []),
