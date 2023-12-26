@@ -351,6 +351,7 @@ const CommonData: FC<CommonDataProps> = (props) => {
         isSpace={checkIsProject(common)}
         isShowing={isDeleteCommonModalOpen}
         onClose={onDeleteCommonModalClose}
+        parentCommonId={common.directParent?.commonId}
       />
     </CommonDataContext.Provider>
   );

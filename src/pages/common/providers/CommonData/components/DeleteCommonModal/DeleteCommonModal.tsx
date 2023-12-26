@@ -1,14 +1,14 @@
 import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
+import { CommonEvent, CommonEventEmitter } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonService } from "@/services";
 import { Modal } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
-import { ROUTE_PATHS } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { getCommonPagePath, getInboxPagePath } from "@/shared/utils";
 import styles from "./DeleteCommonModal.module.scss";
 
 interface DeleteCommonModalProps {
@@ -17,12 +17,14 @@ interface DeleteCommonModalProps {
   isSpace: boolean;
   isShowing: boolean;
   onClose: () => void;
+  parentCommonId?: string;
 }
 
 const DeleteCommonModal: FC<DeleteCommonModalProps> = (props) => {
   const history = useHistory();
   const { notify } = useNotification();
-  const { isShowing, onClose, commonName, isSpace, commonId } = props;
+  const { isShowing, onClose, commonName, isSpace, commonId, parentCommonId } =
+    props;
   const [isDeleting, setIsDeleting] = useState(false);
   const user = useSelector(selectUser());
   const [errorText, setErrorText] = useState("");
@@ -37,11 +39,17 @@ const DeleteCommonModal: FC<DeleteCommonModalProps> = (props) => {
         return;
       }
       await CommonService.deleteCommon(commonId, user?.uid);
-      CommonMemberEventEmitter.emit(CommonMemberEvent.Clear, user?.uid);
+      CommonEventEmitter.emit(CommonEvent.CommonDeleted, commonId);
+
       notify(`${commonName} has been successfully deleted`);
       setIsDeleting(false);
       onClose();
-      history.push(ROUTE_PATHS.INBOX);
+
+      if (parentCommonId) {
+        history.push(getCommonPagePath(parentCommonId));
+      } else {
+        history.push(getInboxPagePath());
+      }
     } catch (error) {
       setErrorText("Something went wrong");
       setIsDeleting(false);

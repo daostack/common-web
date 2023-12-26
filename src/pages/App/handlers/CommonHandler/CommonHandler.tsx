@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   CommonEvent,
@@ -37,6 +37,38 @@ const CommonHandler: FC = () => {
     return () => {
       CommonEventEmitter.off(CommonEvent.CommonCreated, handler);
       CommonEventEmitter.off(CommonEvent.CommonUpdated, handler);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handler: CommonEventToListener[CommonEvent.CommonDeleted] = (
+      commonId,
+    ) => {
+      /**
+       * Remove from cache
+       */
+      dispatch(
+        updateCommonState({
+          commonId,
+          state: {
+            loading: false,
+            fetched: false,
+            data: null,
+          },
+        }),
+      );
+    };
+
+    /**
+     * TODO: need to update current actions or to add a delete action in
+     * commonLayoutActions, multipleSpacesLayoutActions and projectsActions
+     * in order to update the UI.
+     */
+
+    CommonEventEmitter.on(CommonEvent.CommonDeleted, handler);
+
+    return () => {
+      CommonEventEmitter.off(CommonEvent.CommonDeleted, handler);
     };
   }, []);
 
