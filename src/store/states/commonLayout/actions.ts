@@ -56,3 +56,7 @@ export const markDataAsNotFetched = createStandardAction(
 export const removeMembershipFromItemAndChildren = createStandardAction(
   CommonLayoutActionType.REMOVE_MEMBERSHIP_FROM_ITEM_AND_CHILDREN,
 )<string>();
+
+export const deleteCommon = createStandardAction(
+  CommonLayoutActionType.DELETE_COMMON,
+)<{ commonId: string }>();

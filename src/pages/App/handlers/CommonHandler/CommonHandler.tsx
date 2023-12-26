@@ -57,13 +57,15 @@ const CommonHandler: FC = () => {
           },
         }),
       );
-    };
 
-    /**
-     * TODO: need to update current actions or to add a delete action in
-     * commonLayoutActions, multipleSpacesLayoutActions and projectsActions
-     * in order to update the UI.
-     */
+      dispatch(commonLayoutActions.deleteCommon({ commonId }));
+
+      /**
+       * TODO: need to update current actions or to add a delete action in
+       * commonLayoutActions, multipleSpacesLayoutActions and projectsActions
+       * in order to update the UI.
+       */
+    };
 
     CommonEventEmitter.on(CommonEvent.CommonDeleted, handler);
 
