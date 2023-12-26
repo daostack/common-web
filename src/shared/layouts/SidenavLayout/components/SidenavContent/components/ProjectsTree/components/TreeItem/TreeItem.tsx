@@ -30,7 +30,7 @@ const TreeItem: FC<TreeItemProps> = (props) => {
   const hasNestedContent = Boolean(children);
 
   useEffect(() => {
-    if (isActive && hasNestedContent) {
+    if ((isActive || hasActiveChild) && hasNestedContent) {
       setIsOpen(true);
       return;
     }
