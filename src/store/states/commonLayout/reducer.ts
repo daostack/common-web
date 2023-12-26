@@ -209,7 +209,6 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
   )
   .handleAction(actions.deleteCommon, (state, { payload }) =>
     produce(state, (nextState) => {
-      console.log("deleteCommon action reducer");
       updateCommonOrProject(nextState, payload, true);
     }),
   );

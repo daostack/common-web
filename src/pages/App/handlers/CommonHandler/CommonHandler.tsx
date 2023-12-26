@@ -59,12 +59,8 @@ const CommonHandler: FC = () => {
       );
 
       dispatch(commonLayoutActions.deleteCommon({ commonId }));
-
-      /**
-       * TODO: need to update current actions or to add a delete action in
-       * commonLayoutActions, multipleSpacesLayoutActions and projectsActions
-       * in order to update the UI.
-       */
+      dispatch(multipleSpacesLayoutActions.deleteCommon({ commonId }));
+      dispatch(projectsActions.deleteCommon({ commonId }));
     };
 
     CommonEventEmitter.on(CommonEvent.CommonDeleted, handler);
