@@ -1,12 +1,14 @@
 import React, { FC, useState } from "react";
 import { useSelector } from "react-redux";
-import { CommonEvent, CommonEventEmitter } from "@/events";
+import { useHistory } from "react-router-dom";
+import { CommonMemberEvent, CommonMemberEventEmitter } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { CommonService } from "@/services";
 import { Modal } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
+import { ROUTE_PATHS } from "@/shared/constants";
+import { useNotification } from "@/shared/hooks";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
-import { emptyFunction } from "@/shared/utils";
 import styles from "./DeleteCommonModal.module.scss";
 
 interface DeleteCommonModalProps {
@@ -18,6 +20,8 @@ interface DeleteCommonModalProps {
 }
 
 const DeleteCommonModal: FC<DeleteCommonModalProps> = (props) => {
+  const history = useHistory();
+  const { notify } = useNotification();
   const { isShowing, onClose, commonName, isSpace, commonId } = props;
   const [isDeleting, setIsDeleting] = useState(false);
   const user = useSelector(selectUser());
@@ -33,9 +37,11 @@ const DeleteCommonModal: FC<DeleteCommonModalProps> = (props) => {
         return;
       }
       await CommonService.deleteCommon(commonId, user?.uid);
-      CommonEventEmitter.emit(CommonEvent.CommonDeleted, commonId);
+      CommonMemberEventEmitter.emit(CommonMemberEvent.Clear, user?.uid);
+      notify(`${commonName} has been successfully deleted`);
       setIsDeleting(false);
       onClose();
+      history.push(ROUTE_PATHS.INBOX);
     } catch (error) {
       setErrorText("Something went wrong");
       setIsDeleting(false);
@@ -47,7 +53,8 @@ const DeleteCommonModal: FC<DeleteCommonModalProps> = (props) => {
       className={styles.modal}
       title={`Delete ${commonName} ${entityType}`}
       isShowing={isShowing}
-      onClose={isDeleting ? emptyFunction : onClose}
+      onClose={onClose}
+      hideCloseButton
     >
       <div>
         Deleting a {entityType} is irreversible and will delete all of its
@@ -62,7 +69,7 @@ const DeleteCommonModal: FC<DeleteCommonModalProps> = (props) => {
           </Button>
           <Button
             className={styles.deleteButton}
-            variant={ButtonVariant.PrimaryPink}
+            variant={ButtonVariant.Warning}
             onClick={handleDelete}
             disabled={isDeleting}
           >
