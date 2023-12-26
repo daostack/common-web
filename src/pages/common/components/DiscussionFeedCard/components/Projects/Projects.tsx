@@ -2,19 +2,21 @@ import React, { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { LOADER_APPEARANCE_DELAY } from "@/shared/constants";
 import { TreeItemTriggerStyles } from "@/shared/layouts";
 import { ProjectsTree } from "@/shared/layouts/CommonSidenavLayout/components/SidenavContent/components/ProjectsTree";
+import { Item } from "@/shared/layouts/SidenavLayout/components/SidenavContent/components";
 import { Loader } from "@/shared/ui-kit";
+import { ProjectsStateItem } from "@/store/states";
 import { useProjectsData } from "./hooks";
 import styles from "./Projects.module.scss";
 
-interface ProjectsProps {
+export interface ProjectsProps {
   rootCommonId: string;
   commonId: string;
   activeItemId: string;
   onActiveItemId: (activeItemId: string) => void;
-  originalCommonId: string;
-  linkedCommonIds: string[];
-  circleVisibility: string[];
   renderNoItemsInfo?: () => ReactNode;
+  getAdditionalItemData?: (
+    projectsStateItem: ProjectsStateItem,
+  ) => Partial<Item>;
 }
 
 const Projects: FC<ProjectsProps> = (props) => {
@@ -22,9 +24,7 @@ const Projects: FC<ProjectsProps> = (props) => {
     activeItemId,
     onActiveItemId,
     renderNoItemsInfo,
-    originalCommonId,
-    linkedCommonIds,
-    circleVisibility,
+    getAdditionalItemData,
   } = props;
   const [currentCommonId, setCurrentCommonId] = useState(props.rootCommonId);
   const {
@@ -37,11 +37,8 @@ const Projects: FC<ProjectsProps> = (props) => {
     parentItemIds,
   } = useProjectsData({
     currentCommonId,
-    currentCommonRootCommonId: props.rootCommonId,
     activeItemId,
-    originalCommonId,
-    linkedCommonIds,
-    circleVisibility,
+    getAdditionalItemData,
   });
   const treeItemTriggerStyles = useMemo<TreeItemTriggerStyles>(
     () => ({

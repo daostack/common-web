@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useLoadingState } from "@/shared/hooks";
@@ -14,15 +14,13 @@ import {
   selectCommonLayoutCommonsState,
 } from "@/store/states";
 import { getProjects as getProjectsUtil } from "@/store/states/commonLayout/saga/utils";
-import { NameRightContent } from "./components";
 
 interface ProjectsInfo {
   currentCommonId: string;
-  currentCommonRootCommonId: string;
   activeItemId: string;
-  originalCommonId: string;
-  linkedCommonIds: string[];
-  circleVisibility: string[];
+  getAdditionalItemData?: (
+    projectsStateItem: ProjectsStateItem,
+  ) => Partial<Item>;
 }
 
 interface Return {
@@ -38,14 +36,7 @@ interface Return {
 const generateItemCommonPagePath = () => "";
 
 export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
-  const {
-    currentCommonId,
-    currentCommonRootCommonId,
-    activeItemId,
-    originalCommonId,
-    linkedCommonIds,
-    circleVisibility,
-  } = projectsInfo;
+  const { currentCommonId, activeItemId, getAdditionalItemData } = projectsInfo;
   const currentCommonIdRef = useRef(currentCommonId);
   currentCommonIdRef.current = currentCommonId;
   const { commons, areCommonsLoading } = useSelector(
@@ -57,36 +48,6 @@ export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
     useLoadingState<ProjectsStateItem[]>([]);
   const currentCommon = commons.find(
     ({ commonId }) => commonId === currentCommonId,
-  );
-
-  const getAdditionalItemData = useCallback(
-    (projectsStateItem: ProjectsStateItem): Partial<Item> => {
-      const isAllowedToLink =
-        circleVisibility.length === 0 ||
-        projectsStateItem.commonId === currentCommonRootCommonId ||
-        projectsStateItem.rootCommonId === currentCommonRootCommonId;
-
-      return {
-        disabled:
-          !isAllowedToLink ||
-          !projectsStateItem.hasPermissionToLinkToHere ||
-          projectsStateItem.commonId === originalCommonId ||
-          linkedCommonIds.includes(projectsStateItem.commonId),
-        nameRightContent: (
-          <NameRightContent
-            projectsStateItem={projectsStateItem}
-            originalCommonId={originalCommonId}
-            linkedCommonIds={linkedCommonIds}
-          />
-        ),
-      };
-    },
-    [
-      originalCommonId,
-      linkedCommonIds,
-      currentCommonRootCommonId,
-      circleVisibility,
-    ],
   );
 
   const parentItem = useMemo(

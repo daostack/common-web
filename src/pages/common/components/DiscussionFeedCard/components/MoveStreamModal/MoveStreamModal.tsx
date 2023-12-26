@@ -3,13 +3,13 @@ import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { Modal } from "@/shared/components";
 import { useNotification } from "@/shared/hooks";
-import { useStreamLinking } from "@/shared/hooks/useCases";
+import { useStreamMoving } from "@/shared/hooks/useCases";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
-import { LinkStreamProjects } from "./components";
-import styles from "./LinkStreamModal.module.scss";
+import { MoveStreamProjects } from "./components";
+import styles from "./MoveStreamModal.module.scss";
 
-interface LinkStreamModalProps {
+interface MoveStreamModalProps {
   isOpen: boolean;
   onClose: () => void;
   feedItemId: string;
@@ -17,11 +17,10 @@ interface LinkStreamModalProps {
   rootCommonId: string;
   commonId: string;
   originalCommonId: string;
-  linkedCommonIds?: string[];
   circleVisibility: string[];
 }
 
-const LinkStreamModal: FC<LinkStreamModalProps> = (props) => {
+const MoveStreamModal: FC<MoveStreamModalProps> = (props) => {
   const {
     isOpen,
     onClose,
@@ -30,11 +29,10 @@ const LinkStreamModal: FC<LinkStreamModalProps> = (props) => {
     rootCommonId,
     commonId,
     originalCommonId,
-    linkedCommonIds = [],
     circleVisibility,
   } = props;
   const { notify } = useNotification();
-  const { isStreamLinking, isStreamLinked, linkStream } = useStreamLinking();
+  const { isStreamMoving, isStreamMoved, moveStream } = useStreamMoving();
   const [activeItemId, setActiveItemId] = useState("");
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -44,7 +42,7 @@ const LinkStreamModal: FC<LinkStreamModalProps> = (props) => {
       return;
     }
 
-    linkStream({
+    moveStream({
       userId,
       feedObjectId: feedItemId,
       sourceCommonId: commonId,
@@ -53,19 +51,18 @@ const LinkStreamModal: FC<LinkStreamModalProps> = (props) => {
   };
 
   const renderContent = (): ReactElement => {
-    if (isStreamLinking) {
+    if (isStreamMoving) {
       return <Loader className={styles.loader} />;
     }
 
     return (
       <>
-        <LinkStreamProjects
+        <MoveStreamProjects
           rootCommonId={rootCommonId}
           commonId={commonId}
           activeItemId={activeItemId}
           onActiveItemId={setActiveItemId}
           originalCommonId={originalCommonId}
-          linkedCommonIds={linkedCommonIds}
           circleVisibility={circleVisibility}
         />
         <div className={styles.submitButtonWrapper}>
@@ -83,20 +80,20 @@ const LinkStreamModal: FC<LinkStreamModalProps> = (props) => {
   };
 
   useEffect(() => {
-    if (isStreamLinked) {
-      notify("Stream is successfully linked");
+    if (isStreamMoved) {
+      notify("Stream is successfully moved");
       onClose();
     }
-  }, [isStreamLinking, isStreamLinked]);
+  }, [isStreamMoving, isStreamMoved]);
 
   return (
     <Modal
       className={styles.modal}
       isShowing={isOpen}
-      onClose={isStreamLinking ? emptyFunction : onClose}
-      title={`Link “${title}“`}
+      onClose={isStreamMoving ? emptyFunction : onClose}
+      title={`Move “${title}“`}
       isHeaderSticky
-      hideCloseButton={isStreamLinking}
+      hideCloseButton={isStreamMoving}
       mobileFullScreen
       styles={{
         header: styles.modalHeader,
@@ -110,4 +107,4 @@ const LinkStreamModal: FC<LinkStreamModalProps> = (props) => {
   );
 };
 
-export default LinkStreamModal;
+export default MoveStreamModal;
