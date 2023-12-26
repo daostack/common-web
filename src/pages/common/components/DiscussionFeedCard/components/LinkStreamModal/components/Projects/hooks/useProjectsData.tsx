@@ -18,9 +18,11 @@ import { NameRightContent } from "./components";
 
 interface ProjectsInfo {
   currentCommonId: string;
+  currentCommonRootCommonId: string;
   activeItemId: string;
   originalCommonId: string;
   linkedCommonIds: string[];
+  circleVisibility: string[];
 }
 
 interface Return {
@@ -36,8 +38,14 @@ interface Return {
 const generateItemCommonPagePath = () => "";
 
 export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
-  const { currentCommonId, activeItemId, originalCommonId, linkedCommonIds } =
-    projectsInfo;
+  const {
+    currentCommonId,
+    currentCommonRootCommonId,
+    activeItemId,
+    originalCommonId,
+    linkedCommonIds,
+    circleVisibility,
+  } = projectsInfo;
   const currentCommonIdRef = useRef(currentCommonId);
   currentCommonIdRef.current = currentCommonId;
   const { commons, areCommonsLoading } = useSelector(
@@ -52,20 +60,33 @@ export const useProjectsData = (projectsInfo: ProjectsInfo): Return => {
   );
 
   const getAdditionalItemData = useCallback(
-    (projectsStateItem: ProjectsStateItem): Partial<Item> => ({
-      disabled:
-        !projectsStateItem.hasPermissionToLinkToHere ||
-        projectsStateItem.commonId === originalCommonId ||
-        linkedCommonIds.includes(projectsStateItem.commonId),
-      nameRightContent: (
-        <NameRightContent
-          projectsStateItem={projectsStateItem}
-          originalCommonId={originalCommonId}
-          linkedCommonIds={linkedCommonIds}
-        />
-      ),
-    }),
-    [originalCommonId, linkedCommonIds],
+    (projectsStateItem: ProjectsStateItem): Partial<Item> => {
+      const isAllowedToLink =
+        circleVisibility.length === 0 ||
+        projectsStateItem.commonId === currentCommonRootCommonId ||
+        projectsStateItem.rootCommonId === currentCommonRootCommonId;
+
+      return {
+        disabled:
+          !isAllowedToLink ||
+          !projectsStateItem.hasPermissionToLinkToHere ||
+          projectsStateItem.commonId === originalCommonId ||
+          linkedCommonIds.includes(projectsStateItem.commonId),
+        nameRightContent: (
+          <NameRightContent
+            projectsStateItem={projectsStateItem}
+            originalCommonId={originalCommonId}
+            linkedCommonIds={linkedCommonIds}
+          />
+        ),
+      };
+    },
+    [
+      originalCommonId,
+      linkedCommonIds,
+      currentCommonRootCommonId,
+      circleVisibility,
+    ],
   );
 
   const parentItem = useMemo(

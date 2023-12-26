@@ -7,9 +7,9 @@ import { useStreamLinking } from "@/shared/hooks/useCases";
 import { Button, ButtonVariant, Loader } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { Projects } from "./components";
-import styles from "./LinkSpaceModal.module.scss";
+import styles from "./LinkStreamModal.module.scss";
 
-interface DirectMessageModalProps {
+interface LinkStreamModalProps {
   isOpen: boolean;
   onClose: () => void;
   feedItemId: string;
@@ -18,9 +18,10 @@ interface DirectMessageModalProps {
   commonId: string;
   originalCommonId: string;
   linkedCommonIds?: string[];
+  circleVisibility: string[];
 }
 
-const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
+const LinkStreamModal: FC<LinkStreamModalProps> = (props) => {
   const {
     isOpen,
     onClose,
@@ -30,6 +31,7 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
     commonId,
     originalCommonId,
     linkedCommonIds = [],
+    circleVisibility,
   } = props;
   const { notify } = useNotification();
   const { isStreamLinking, isStreamLinked, linkStream } = useStreamLinking();
@@ -64,6 +66,7 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
           onActiveItemId={setActiveItemId}
           originalCommonId={originalCommonId}
           linkedCommonIds={linkedCommonIds}
+          circleVisibility={circleVisibility}
         />
         <div className={styles.submitButtonWrapper}>
           <Button
@@ -107,4 +110,4 @@ const LinkSpaceModal: FC<DirectMessageModalProps> = (props) => {
   );
 };
 
-export default LinkSpaceModal;
+export default LinkStreamModal;

@@ -1,1 +1,1 @@
-export * from "./LinkSpaceModal";
+export * from "./LinkStreamModal";
