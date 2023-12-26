@@ -1,3 +1,4 @@
+import ReactGA from "react-ga4";
 import { User as FirebaseUser } from "firebase/auth";
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
@@ -601,6 +602,7 @@ function* authSagas() {
   firebase.auth().onAuthStateChanged(async (res) => {
     try {
       const { user: userInStore } = store.getState().auth;
+      ReactGA.set({ userId: res?.uid || null });
 
       if (userInStore?.uid !== res?.uid) {
         resetGlobalData(!res);
