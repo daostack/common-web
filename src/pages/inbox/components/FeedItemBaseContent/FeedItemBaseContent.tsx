@@ -153,11 +153,12 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       <div className={styles.content}>
         <div className={styles.topContent}>
           <div
-            className={classNames(styles.text, styles.title, {
-              [styles.titleActive]: isActive,
+            className={classNames(styles.text, styles.titleWrapper, {
+              [styles.titleWrapperActive]: isActive,
             })}
           >
             <span
+              className={styles.title}
               title={typeof hoverTitle === "string" ? hoverTitle : undefined}
             >
               {finalTitle || "Loading..."}
