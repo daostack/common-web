@@ -139,12 +139,15 @@ export const useDiscussionMessagesById = ({
       return Promise.resolve();
     }
 
-    const { data: updatedDiscussionMessages, lastVisibleSnapshot } =
-      await DiscussionMessageService.getDiscussionMessagesByEndDate(
-        discussionId,
-        lastVisible && lastVisible[discussionId],
-        endDate,
-      );
+    const {
+      updatedDiscussionMessages,
+      removedDiscussionMessages,
+      lastVisibleSnapshot,
+    } = await DiscussionMessageService.getDiscussionMessagesByEndDate(
+      discussionId,
+      lastVisible && lastVisible[discussionId],
+      endDate,
+    );
 
     setLastVisible((prevVisible) => ({
       ...prevVisible,
@@ -191,11 +194,8 @@ export const useDiscussionMessagesById = ({
     dispatch(
       cacheActions.updateDiscussionMessagesStateByDiscussionId({
         discussionId,
-        state: {
-          loading: false,
-          fetched: true,
-          data: discussionsWithText as any,
-        },
+        removedDiscussionMessages,
+        updatedDiscussionMessages: discussionsWithText,
       }),
     );
   };
@@ -212,10 +212,11 @@ export const useDiscussionMessagesById = ({
     DiscussionMessageService.getDiscussionMessagesByDiscussionId(
       discussionId,
       lastVisible && lastVisible[discussionId],
-      async (snapshot, updatedDiscussionMessages) => {
-        const lastVisibleDocument =
-          snapshot.docs[updatedDiscussionMessages.length - 1];
-
+      async (
+        updatedDiscussionMessages,
+        removedDiscussionMessages,
+        lastVisibleDocument,
+      ) => {
         setLastVisible((prevVisible) => ({
           ...prevVisible,
           [discussionId]: lastVisibleDocument,
@@ -264,11 +265,8 @@ export const useDiscussionMessagesById = ({
         dispatch(
           cacheActions.updateDiscussionMessagesStateByDiscussionId({
             discussionId,
-            state: {
-              loading: false,
-              fetched: true,
-              data: discussionsWithText as any,
-            },
+            removedDiscussionMessages,
+            updatedDiscussionMessages: discussionsWithText,
           }),
         );
 
