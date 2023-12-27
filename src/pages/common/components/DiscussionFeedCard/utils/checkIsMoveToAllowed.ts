@@ -22,7 +22,7 @@ export const checkIsMoveToAllowed = (
       governance: {
         circles: options.governanceCircles || {},
       },
-      key: GovernanceActions.MOVE_FROM_HERE,
+      action: GovernanceActions.MOVE_FROM_HERE,
     })
   );
 };
