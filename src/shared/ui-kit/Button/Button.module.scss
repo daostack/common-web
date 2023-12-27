@@ -240,12 +240,12 @@
 
 .buttonWarningVariant {
   --btn-color: #{$c-error-300};
-  --btn-bg-color: #{$c-primary-100};
+  --btn-bg-color: var(--primary-background);
   --btn-border-color: #{$c-error-300};
   --btn-border: 0.0625rem solid var(--btn-border-color);
 
   &:hover {
-    --btn-bg-color: #{$c-hover-secondary};
+    --btn-bg-color: var(--hover-fill);
   }
 
   &:active {

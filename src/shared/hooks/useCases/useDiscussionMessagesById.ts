@@ -126,9 +126,9 @@ export const useDiscussionMessagesById = ({
     dispatch(
       cacheActions.deleteDiscussionMessageById({
         discussionId,
-        discussionMessageId
-      })
-    )
+        discussionMessageId,
+      }),
+    );
   }, []);
 
   const fetchRepliedMessages = async (

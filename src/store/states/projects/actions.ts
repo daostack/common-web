@@ -35,3 +35,7 @@ export const removeMembershipFromProjectAndChildren = createStandardAction(
 export const setIsCommonCreationDisabled = createStandardAction(
   ProjectsActionType.SET_IS_COMMON_CREATION_DISABLED,
 )<boolean>();
+
+export const deleteCommon = createStandardAction(
+  ProjectsActionType.DELETE_COMMON,
+)<{ commonId: string }>();

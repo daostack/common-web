@@ -23,16 +23,21 @@ const clearProjects = (state: WritableDraft<ProjectsState>): void => {
 const updateProject = (
   state: WritableDraft<ProjectsState>,
   payload: { commonId: string } & Partial<Omit<ProjectsStateItem, "commonId">>,
+  removeIfExists = false,
 ): boolean => {
   const itemIndex = state.data.findIndex(
     (item) => item.commonId === payload.commonId,
   );
 
   if (itemIndex > -1) {
-    state.data[itemIndex] = {
-      ...state.data[itemIndex],
-      ...payload,
-    };
+    if (removeIfExists) {
+      state.data.splice(itemIndex, 1);
+    } else {
+      state.data[itemIndex] = {
+        ...state.data[itemIndex],
+        ...payload,
+      };
+    }
     return true;
   }
 
@@ -128,5 +133,10 @@ export const reducer = createReducer<ProjectsState, Action>(initialState)
   .handleAction(actions.setIsCommonCreationDisabled, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.isCommonCreationDisabled = payload;
+    }),
+  )
+  .handleAction(actions.deleteCommon, (state, { payload }) =>
+    produce(state, (nextState) => {
+      updateProject(nextState, payload, true);
     }),
   );
