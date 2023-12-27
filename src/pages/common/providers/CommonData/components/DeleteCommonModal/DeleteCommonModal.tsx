@@ -35,7 +35,7 @@ const DeleteCommonModal: FC<DeleteCommonModalProps> = (props) => {
     setErrorText("");
 
     try {
-      if (!user) {
+      if (!user?.uid) {
         return;
       }
       await CommonService.deleteCommon(commonId, user?.uid);

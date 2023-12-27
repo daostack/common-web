@@ -45,7 +45,7 @@ const CommonHandler: FC = () => {
       commonId,
     ) => {
       /**
-       * TODO: these updates are not working. Need to check.
+       * TODO: seems like these are not updating the UI. Need to check.
        */
 
       /**
