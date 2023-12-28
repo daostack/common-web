@@ -7,6 +7,7 @@ import {
 import {
   LinkStreamPayload,
   MarkCommonFeedItemAsSeenPayload,
+  MoveStreamPayload,
   UnsubscribeFunction,
 } from "@/shared/interfaces";
 import {
@@ -236,6 +237,14 @@ class CommonFeedService {
   ): Promise<void> => {
     const { cancelToken } = options;
     await Api.post(ApiEndpoint.LinkStream, payload, { cancelToken });
+  };
+
+  public moveStream = async (
+    payload: MoveStreamPayload,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<void> => {
+    const { cancelToken } = options;
+    await Api.post(ApiEndpoint.MoveStream, payload, { cancelToken });
   };
 
   public markCommonFeedItemAsUnseen = (

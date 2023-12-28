@@ -128,11 +128,16 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           <div
             className={classNames(
               styles.text,
-              styles.title,
+              styles.titleWrapper,
               titleWrapperClassName,
             )}
           >
-            <span>{isLoading || !title ? "Loading..." : title}</span>
+            <span
+              className={styles.title}
+              title={typeof title === "string" ? title : ""}
+            >
+              {isLoading || !title ? "Loading..." : title}
+            </span>
             {Boolean(notion) && (
               <Tooltip placement="top-start">
                 <TooltipTrigger asChild>

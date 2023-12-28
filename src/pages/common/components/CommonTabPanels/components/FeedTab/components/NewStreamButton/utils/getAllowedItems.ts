@@ -28,7 +28,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
         hasPermission({
           commonMember,
           governance,
-          key: ProposalsTypes.SURVEY,
+          proposal: ProposalsTypes.SURVEY,
         }),
     ),
   [CommonAction.NewDiscussion]: ({ commonMember, governance }) =>
@@ -37,7 +37,7 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
         hasPermission({
           commonMember,
           governance,
-          key: GovernanceActions.CREATE_DISCUSSION,
+          action: GovernanceActions.CREATE_DISCUSSION,
         }),
     ),
   [CommonAction.NewContribution]: () => false,

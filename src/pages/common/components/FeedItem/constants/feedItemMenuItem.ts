@@ -10,4 +10,5 @@ export enum FeedItemMenuItem {
   MarkUnread = "markUnread",
   MarkRead = "markRead",
   LinkTo = "linkTo",
+  MoveTo = "moveTo",
 }

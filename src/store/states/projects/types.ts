@@ -9,6 +9,7 @@ export interface ProjectsStateItem {
   hasMembership?: boolean;
   hasPermissionToAddProject?: boolean;
   hasPermissionToLinkToHere?: boolean;
+  hasPermissionToMoveToHere?: boolean;
   notificationsAmount?: number;
 }
 

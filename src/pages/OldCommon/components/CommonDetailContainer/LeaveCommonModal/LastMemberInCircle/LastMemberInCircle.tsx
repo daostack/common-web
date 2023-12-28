@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Button } from "@/shared/components";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
 interface LastMemberInCircleProps {
@@ -21,7 +21,7 @@ const LastMemberInCircle: FC<LastMemberInCircleProps> = (props) => {
       <Button
         className="last-member-in-circle-step__button"
         onClick={onOkClick}
-        shouldUseFullWidth
+        variant={ButtonVariant.PrimaryPink}
       >
         Got it
       </Button>

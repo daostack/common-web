@@ -35,6 +35,7 @@ export { default as LTRDirectionMarkIcon } from "./ltrDirection.icon";
 export { default as MenuIcon } from "./menu.icon";
 export { default as Menu2Icon } from "./menu2.icon";
 export { default as MoreIcon } from "./more.icon";
+export { default as MoveItemIcon } from "./moveItem.icon";
 export { default as NotionIcon } from "./notion.icon";
 export { OpenIcon } from "./open.icon";
 export { default as PeopleGroupIcon } from "./people-group.icon";

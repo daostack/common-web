@@ -1,6 +1,5 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
-@import "../../../../../../styles/mixins";
 
 .container {
   --title-color: var(--primary-text);
@@ -89,20 +88,31 @@
   font-weight: normal;
 }
 
-.title {
-  @include flex-list-with-gap(0.5rem);
-
+.titleWrapper {
+  display: flex;
   align-items: center;
   color: var(--title-color);
   font-size: $moderate-xsmall;
   line-height: 1.5rem;
+  overflow: hidden;
+
+  & > * {
+    margin-right: 0.5rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  @include tablet {
+    max-width: calc(100% - 3.125rem);
+  }
+}
+
+.title {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-
-  @include tablet {
-    max-width: 11.75rem;
-  }
 }
 
 .lastMessageContainer {
@@ -159,6 +169,7 @@
 .bottomContentRight {
   display: flex;
   align-items: center;
+  margin-left: auto;
 }
 
 .tooltipTriggerContainer {

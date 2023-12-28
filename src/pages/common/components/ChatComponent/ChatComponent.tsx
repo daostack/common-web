@@ -163,7 +163,7 @@ export default function ChatComponent({
           governance: {
             circles: governanceCircles,
           },
-          key: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
+          action: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
         })
       : false;
   const {
@@ -553,7 +553,11 @@ export default function ChatComponent({
         discussionMessagesData.deleteDiscussionMessage(messageId);
       }
     },
-    [isChatChannel, chatMessagesData.deleteChatMessage],
+    [
+      isChatChannel,
+      chatMessagesData.deleteChatMessage,
+      discussionMessagesData.deleteDiscussionMessage,
+    ],
   );
 
   useEffect(() => {

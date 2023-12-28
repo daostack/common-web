@@ -43,7 +43,8 @@ const getInitialValues = (
   pushNotificationPreference:
     data?.pushNotificationPreference ?? UserPushNotificationPreference.All,
   emailNotificationPreference:
-    data?.emailNotificationPreference ?? UserEmailNotificationPreference.All,
+    data?.emailNotificationPreference ??
+    UserEmailNotificationPreference.Important,
 });
 
 const SettingsForm: FC<SettingsFormProps> = (props) => {

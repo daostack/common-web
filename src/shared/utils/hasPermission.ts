@@ -2,20 +2,23 @@ import { GovernanceActions, ProposalsTypes } from "@/shared/constants";
 import { CommonMember, Governance } from "@/shared/models";
 import { generateCirclesDataForCommonMember } from "./generateCircleDataForCommonMember";
 
-interface Query {
+type Query = {
   commonMember: CommonMember;
   governance: Pick<Governance, "circles">;
-  key: ProposalsTypes | GovernanceActions;
-}
+} & (
+  | {
+      action: GovernanceActions;
+    }
+  | {
+      proposal: ProposalsTypes;
+    }
+);
 
 /**
  * Doesnt check for nested permissions, i.e assign/remove circle - these are check on the proposal creation level
  */
-export const hasPermission = ({
-  commonMember,
-  governance,
-  key,
-}: Query): boolean => {
+export const hasPermission = (query: Query): boolean => {
+  const { commonMember, governance } = query;
   if (!commonMember || !governance) {
     return false;
   }
@@ -26,22 +29,24 @@ export const hasPermission = ({
       commonMember.circleIds,
     );
 
-    if (Object.values(ProposalsTypes).includes(key as ProposalsTypes)) {
+    if (
+      "proposal" in query &&
+      Object.values(ProposalsTypes).includes(query.proposal)
+    ) {
       if (
         !circlesPermissions?.allowedActions[GovernanceActions.CREATE_PROPOSAL]
       ) {
         return false;
       }
 
-      return Boolean(
-        circlesPermissions?.allowedProposals[key as ProposalsTypes],
-      );
+      return Boolean(circlesPermissions?.allowedProposals[query.proposal]);
     }
 
-    if (Object.values(GovernanceActions).includes(key as GovernanceActions)) {
-      return Boolean(
-        circlesPermissions?.allowedActions[key as GovernanceActions],
-      );
+    if (
+      "action" in query &&
+      Object.values(GovernanceActions).includes(query.action)
+    ) {
+      return Boolean(circlesPermissions?.allowedActions[query.action]);
     }
   } catch (err) {
     return false;

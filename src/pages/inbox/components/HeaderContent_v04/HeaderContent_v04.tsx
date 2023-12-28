@@ -23,7 +23,7 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
           <div className={styles.infoWrapper}>
             <h1 className={styles.title}>Inbox</h1>
             <p className={styles.streamsWithNotificationsAmount}>
-              {streamsWithNotificationsAmount} updated stream
+              {streamsWithNotificationsAmount} unread stream
               {getPluralEnding(streamsWithNotificationsAmount)}
             </p>
           </div>

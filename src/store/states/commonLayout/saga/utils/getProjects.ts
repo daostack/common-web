@@ -35,6 +35,7 @@ export const getProjects = async (
       hasMembership,
       hasPermissionToAddProject,
       hasPermissionToLinkToHere,
+      hasPermissionToMoveToHere,
     }) => ({
       commonId: common.id,
       image: common.image,
@@ -44,6 +45,7 @@ export const getProjects = async (
       hasMembership,
       hasPermissionToAddProject,
       hasPermissionToLinkToHere,
+      hasPermissionToMoveToHere,
       notificationsAmount: 0,
     }),
   );

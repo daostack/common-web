@@ -37,7 +37,7 @@ export function checkIsPinUnpinAllowed(
     governance: {
       circles: options.governanceCircles || {},
     },
-    key: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
+    action: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
   });
 
   return isAllowed;

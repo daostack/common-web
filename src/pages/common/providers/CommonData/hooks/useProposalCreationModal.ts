@@ -15,7 +15,7 @@ interface Return {
   initialProposalTypeForCreation: ProposalsTypes | null;
   onProposalCreationModalOpen: () => void;
   onProposalCreationModalClose: () => void;
-  onCommonDelete: () => void;
+  onCommonDeleteProposal: () => void;
   redirectToProposalPage: (
     proposal: Proposal | ProposalWithHighlightedComment,
   ) => void;
@@ -53,7 +53,7 @@ export const useProposalCreationModal = (): Return => {
     setInitialProposalTypeForCreation(null);
   }, [onProposalCreationModalClose]);
 
-  const onCommonDelete = useCallback(() => {
+  const onCommonDeleteProposal = useCallback(() => {
     setInitialProposalTypeForCreation(ProposalsTypes.DELETE_COMMON);
     onProposalCreationModalOpen();
   }, [onProposalCreationModalOpen]);
@@ -63,7 +63,7 @@ export const useProposalCreationModal = (): Return => {
     initialProposalTypeForCreation,
     onProposalCreationModalOpen,
     onProposalCreationModalClose: handleProposalCreationModalClose,
-    onCommonDelete,
+    onCommonDeleteProposal,
     redirectToProposalPage,
   };
 };
