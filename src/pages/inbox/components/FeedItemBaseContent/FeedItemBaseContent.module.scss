@@ -122,7 +122,7 @@
   }
 
   @include tablet {
-    max-width: 11.75rem;
+    max-width: calc(100% - 3.125rem);
   }
 }
 
@@ -185,6 +185,7 @@
 
 .bottomContentRight {
   display: flex;
+  margin-left: auto;
 }
 
 .tooltipTriggerContainer {
