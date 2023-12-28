@@ -553,7 +553,11 @@ export default function ChatComponent({
         discussionMessagesData.deleteDiscussionMessage(messageId);
       }
     },
-    [isChatChannel, chatMessagesData.deleteChatMessage],
+    [
+      isChatChannel,
+      chatMessagesData.deleteChatMessage,
+      discussionMessagesData.deleteDiscussionMessage,
+    ],
   );
 
   useEffect(() => {

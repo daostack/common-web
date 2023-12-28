@@ -122,14 +122,17 @@ export const useDiscussionMessagesById = ({
     );
   };
 
-  const deleteDiscussionMessage = useCallback((discussionMessageId: string) => {
-    dispatch(
-      cacheActions.deleteDiscussionMessageById({
-        discussionId,
-        discussionMessageId,
-      }),
-    );
-  }, []);
+  const deleteDiscussionMessage = useCallback(
+    (discussionMessageId: string) => {
+      dispatch(
+        cacheActions.deleteDiscussionMessageById({
+          discussionId,
+          discussionMessageId,
+        }),
+      );
+    },
+    [discussionId],
+  );
 
   const fetchRepliedMessages = async (
     messageId: string,
