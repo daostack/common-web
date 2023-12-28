@@ -98,7 +98,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   useChatChannelSubscription(chatChannel.id, userId, handleChatChannelUpdate);
 
   useEffect(() => {
-    fetchDMUsers(dmUserIds); // dm users not including the current user.
+    fetchDMUsers(dmUserIds);
   }, [dmUserIds]);
 
   useEffect(() => {

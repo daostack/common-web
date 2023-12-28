@@ -10,7 +10,7 @@ import {
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
 import { InternalLinkData } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
-import { useUserById } from "@/shared/hooks/useCases";
+import { useUsersByIds } from "@/shared/hooks/useCases";
 import {
   Circles,
   CirclesPermissions,
@@ -18,7 +18,7 @@ import {
   DirectParent,
   PredefinedTypes,
 } from "@/shared/models";
-import { getUserName } from "@/shared/utils";
+import { getUserName, joinWithLast } from "@/shared/utils";
 import { Header } from "./components";
 import styles from "./MobileChat.module.scss";
 
@@ -60,25 +60,34 @@ const MobileChat: FC<ChatProps> = (props) => {
     onInternalLinkClick,
   } = props;
   const { setIsShowFeedItemDetailsModal } = useChatContext();
-  const {
-    fetchUser: fetchDMUser,
-    setUser: setDMUser,
-    data: dmUser,
-  } = useUserById();
+  const { fetchUsers: fetchDMUsers, data: dmUsers } = useUsersByIds();
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const userCircleIds = useMemo(
     () => Object.values(commonMember?.circles.map ?? {}),
     [commonMember?.circles.map],
   );
-  const dmUserId = chatItem?.chatChannel?.participants.filter(
-    (participant) => participant !== userId,
-  )[0];
-  const title =
-    getUserName(dmUser) ||
-    (chatItem?.discussion?.predefinedType === PredefinedTypes.General
-      ? commonName
-      : chatItem?.discussion?.title || "");
+
+  const chatParticipants = chatItem?.chatChannel?.participants;
+  const isDM = chatParticipants && chatParticipants.length > 0;
+  const isGroupMessage = chatParticipants && chatParticipants.length > 2;
+
+  const dmUserIds = useMemo(
+    () =>
+      isDM
+        ? chatParticipants.filter((participant) => participant !== userId)
+        : [],
+    [isDM],
+  );
+
+  const dmUsersNames = dmUsers?.map((user) => getUserName(user));
+  const dmFirstNames = dmUsers?.map((user) => user.firstName);
+  const dmTitle = joinWithLast(isGroupMessage ? dmFirstNames : dmUsersNames);
+  const title = isDM
+    ? dmTitle
+    : chatItem?.discussion?.predefinedType === PredefinedTypes.General
+    ? commonName
+    : chatItem?.discussion?.title;
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
@@ -90,12 +99,8 @@ const MobileChat: FC<ChatProps> = (props) => {
   };
 
   useEffect(() => {
-    if (dmUserId) {
-      fetchDMUser(dmUserId);
-    } else {
-      setDMUser(null);
-    }
-  }, [dmUserId]);
+    if (isDM && dmUserIds.length > 0) fetchDMUsers(dmUserIds);
+  }, [isDM, dmUserIds]);
 
   return (
     <>
@@ -109,8 +114,8 @@ const MobileChat: FC<ChatProps> = (props) => {
         header={
           <Header
             titleWrapperClassName={styles.headerTitleWrapper}
-            title={title}
-            userAvatar={dmUser?.photoURL}
+            title={title ?? ""}
+            userAvatar={isDM && !isGroupMessage ? dmUsers?.[0]?.photoURL : ""}
             userName={title}
             onBackClick={onClose}
             onTitleWrapperClick={
