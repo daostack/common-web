@@ -77,7 +77,7 @@ const MobileChat: FC<ChatProps> = (props) => {
       isDM
         ? chatParticipants.filter((participant) => participant !== userId)
         : [],
-    [isDM],
+    [isDM, userId],
   );
 
   const dmUsersNames = dmUsers?.map((user) => getUserName(user));
@@ -99,7 +99,9 @@ const MobileChat: FC<ChatProps> = (props) => {
   };
 
   useEffect(() => {
-    if (isDM && dmUserIds.length > 0) fetchDMUsers(dmUserIds);
+    if (isDM && dmUserIds.length > 0) {
+      fetchDMUsers(dmUserIds);
+    }
   }, [isDM, dmUserIds]);
 
   return (
