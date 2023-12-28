@@ -141,11 +141,23 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
     actions.updateDiscussionMessagesStateByDiscussionId,
     (state, { payload }) =>
       produce(state, (nextState) => {
-        const { discussionId } = payload;
+        const {
+          discussionId,
+          updatedDiscussionMessages,
+          removedDiscussionMessages,
+        } = payload;
+
+        const discussionMessages =
+          state.discussionMessagesStates[discussionId]?.data ?? [];
+        const removedDiscussionMessageIds = removedDiscussionMessages.map(
+          ({ id }) => id,
+        );
 
         const uniq = unionBy(
-          payload.state?.data ?? [],
-          state.discussionMessagesStates[discussionId]?.data ?? [],
+          updatedDiscussionMessages ?? [],
+          discussionMessages.filter(
+            ({ id }) => !removedDiscussionMessageIds.includes(id),
+          ),
           "id",
         ).sort(
           (a, b) =>
@@ -153,7 +165,8 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
         );
 
         nextState.discussionMessagesStates[discussionId] = {
-          ...payload.state,
+          loading: false,
+          fetched: true,
           data: uniq,
         };
       }),
