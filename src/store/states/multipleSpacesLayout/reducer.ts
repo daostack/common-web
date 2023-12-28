@@ -10,7 +10,6 @@ type Action = ActionType<typeof actions>;
 
 const initialState: MultipleSpacesLayoutState = {
   breadcrumbs: null,
-  previousBreadcrumbs: null,
   backUrl: null,
   mainWidth: window.innerWidth,
 };
@@ -18,6 +17,7 @@ const initialState: MultipleSpacesLayoutState = {
 const updateProjectInBreadcrumbs = (
   state: WritableDraft<MultipleSpacesLayoutState>,
   payload: { commonId: string } & Partial<Omit<ProjectsStateItem, "commonId">>,
+  removeIfExists = false,
 ): void => {
   if (state.breadcrumbs?.type !== InboxItemType.FeedItemFollow) {
     return;
@@ -28,13 +28,17 @@ const updateProjectInBreadcrumbs = (
   );
 
   if (itemIndex > -1) {
-    const item = state.breadcrumbs.items[itemIndex];
+    if (removeIfExists) {
+      state.breadcrumbs.items.splice(itemIndex, 1);
+    } else {
+      const item = state.breadcrumbs.items[itemIndex];
 
-    state.breadcrumbs.items[itemIndex] = {
-      ...item,
-      name: payload.name ?? item.name,
-      image: payload.image ?? item.image,
-    };
+      state.breadcrumbs.items[itemIndex] = {
+        ...item,
+        name: payload.name ?? item.name,
+        image: payload.image ?? item.image,
+      };
+    }
   }
 };
 
@@ -49,11 +53,8 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
       nextState.breadcrumbs = payload && { ...payload };
     }),
   )
-  .handleAction(actions.moveBreadcrumbsToPrevious, (state) =>
+  .handleAction(actions.clearBreadcrumbs, (state) =>
     produce(state, (nextState) => {
-      nextState.previousBreadcrumbs = nextState.breadcrumbs && {
-        ...nextState.breadcrumbs,
-      };
       nextState.breadcrumbs = null;
     }),
   )
@@ -76,5 +77,10 @@ export const reducer = createReducer<MultipleSpacesLayoutState, Action>(
   .handleAction(actions.setMainWidth, (state, { payload }) =>
     produce(state, (nextState) => {
       nextState.mainWidth = payload;
+    }),
+  )
+  .handleAction(actions.deleteCommon, (state, { payload }) =>
+    produce(state, (nextState) => {
+      updateProjectInBreadcrumbs(nextState, payload, true);
     }),
   );

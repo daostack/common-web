@@ -18,7 +18,7 @@ import {
   selectCurrentProposal,
 } from "@/pages/OldCommon/store/selectors";
 import { Loader, Button } from "@/shared/components";
-import { Colors, EntityTypes } from "@/shared/constants";
+import { EntityTypes } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
 import {
   Common,
@@ -120,8 +120,6 @@ const HideModal: FC<PropsWithChildren<HideModalProps>> = (props) => {
       isShowing={isShowing}
       onClose={onClose}
       title="Are you sure?"
-      closeColor={Colors.black}
-      closeIconSize={20}
       styles={{
         header: "hide-modal__header",
         content: "hide-modal__content",

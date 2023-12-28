@@ -8,12 +8,16 @@ import {
   useFeedItemContext,
 } from "@/pages/common";
 import { useRoutesContext } from "@/shared/contexts";
+import { NotionIcon } from "@/shared/icons";
 import { PredefinedTypes } from "@/shared/models";
 import {
   ContextMenu,
   ContextMenuRef,
   TextEditorWithReinitialization as TextEditor,
   TimeAgo,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
   checkIsTextEditorValueEmpty,
 } from "@/shared/ui-kit";
 import { CommonAvatar } from "@/shared/ui-kit/CommonAvatar";
@@ -42,9 +46,13 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     isImageRounded,
     isProject,
     discussionPredefinedType,
-    dmUserId,
+    dmUserIds,
     commonId,
     hasUnseenMention,
+    isGroupMessage,
+    createdBy,
+    hoverTitle,
+    notion,
   } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
@@ -110,12 +118,16 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   };
 
   const handleAvatarClick = () => {
-    if (onUserSelect && dmUserId) {
-      onUserSelect(dmUserId);
+    if (onUserSelect && dmUserIds && !isGroupMessage) {
+      onUserSelect(dmUserIds[0]);
     } else if (commonId) {
       history.push(getCommonPagePath(commonId));
     }
   };
+
+  const lastMessageClassName = classNames(styles.text, styles.lastMessage, {
+    [styles.lastMessageActive]: isActive || (isExpanded && isMobileView),
+  });
 
   return (
     <div
@@ -140,13 +152,31 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       </div>
       <div className={styles.content}>
         <div className={styles.topContent}>
-          <p
-            className={classNames(styles.text, styles.title, {
-              [styles.titleActive]: isActive,
+          <div
+            className={classNames(styles.text, styles.titleWrapper, {
+              [styles.titleWrapperActive]: isActive,
             })}
           >
-            {finalTitle || "Loading..."}
-          </p>
+            <span
+              className={styles.title}
+              title={typeof hoverTitle === "string" ? hoverTitle : undefined}
+            >
+              {finalTitle || "Loading..."}
+            </span>
+            {Boolean(notion) && (
+              <Tooltip placement="top-start">
+                <TooltipTrigger asChild>
+                  <div className={styles.tooltipTriggerContainer}>
+                    <NotionIcon />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className={styles.tooltipContent}>
+                  <span>Notion sync</span>
+                  <span>Database: {notion?.title}</span>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
           <p
             className={classNames(styles.text, styles.lastActivity, {
               [styles.lastActivityActive]:
@@ -160,10 +190,7 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
           {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
             <TextEditor
               className={styles.lastMessageContainer}
-              editorClassName={classNames(styles.text, styles.lastMessage, {
-                [styles.lastMessageActive]:
-                  isActive || (isExpanded && isMobileView),
-              })}
+              editorClassName={lastMessageClassName}
               value={lastMessage}
               elementStyles={{
                 mention: isActive ? styles.mentionText : "",
@@ -171,7 +198,12 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
               readOnly
             />
           ) : (
-            <div />
+            isGroupMessage &&
+            createdBy && (
+              <span className={lastMessageClassName}>
+                {`${createdBy} created this group chat`}
+              </span>
+            )
           )}
           <div className={styles.bottomContentRight}>
             <FeedCardTags

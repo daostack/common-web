@@ -69,7 +69,7 @@ const TreeRecursive: FC<TreeRecursiveProps> = (props) => {
           >
             {(item.items && item.items.length > 0) ||
             item.id === itemIdWithNewProjectCreation ||
-            hasPermissionToAddProject ? (
+            (hasPermissionToAddProject && onAddProjectClick) ? (
               <TreeRecursive
                 items={item.items || []}
                 parentId={item.id}

@@ -5,7 +5,7 @@
 .payment-method {
   direction: ltr;
   width: 100%;
-  color: $secondary-blue;
+  color: var(--primary-text);
 
   .payment-method__content-wrapper {
     display: flex;

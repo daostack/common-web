@@ -36,8 +36,8 @@ export const setBreadcrumbsData = createStandardAction(
   MultipleSpacesLayoutActionType.SET_BREADCRUMBS_DATA,
 )<MultipleSpacesLayoutBreadcrumbs | null>();
 
-export const moveBreadcrumbsToPrevious = createStandardAction(
-  MultipleSpacesLayoutActionType.MOVE_BREADCRUMBS_TO_PREVIOUS,
+export const clearBreadcrumbs = createStandardAction(
+  MultipleSpacesLayoutActionType.CLEAR_BREADCRUMBS,
 )();
 
 export const addOrUpdateProjectInBreadcrumbs = createStandardAction(
@@ -55,3 +55,7 @@ export const setBackUrl = createStandardAction(
 export const setMainWidth = createStandardAction(
   MultipleSpacesLayoutActionType.SET_MIN_WIDTH,
 )<number>();
+
+export const deleteCommon = createStandardAction(
+  MultipleSpacesLayoutActionType.DELETE_COMMON,
+)<{ commonId: string }>();

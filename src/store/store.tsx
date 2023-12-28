@@ -14,10 +14,15 @@ import { persistStore, persistReducer, PersistConfig } from "redux-persist";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import storage from "redux-persist/lib/storage";
 import createSagaMiddleware from "redux-saga";
+import { Environment, REACT_APP_ENV } from "@/shared/constants";
 import { AppState } from "@/shared/interfaces";
 import rootReducer from "./reducer";
 import appSagas from "./saga";
-import { inboxTransform, lastCommonFromFeedTransform } from "./transforms";
+import {
+  inboxTransform,
+  cacheTransform,
+  multipleSpacesLayoutTransform,
+} from "./transforms";
 
 const persistConfig: PersistConfig<AppState> = {
   key: "root",
@@ -27,12 +32,11 @@ const persistConfig: PersistConfig<AppState> = {
     "commonLayout",
     "commonFeedFollows",
     "cache",
-    "chat",
     "inbox",
     "multipleSpacesLayout",
   ],
   stateReconciler: autoMergeLevel2,
-  transforms: [inboxTransform, lastCommonFromFeedTransform],
+  transforms: [inboxTransform, cacheTransform, multipleSpacesLayoutTransform],
 };
 
 const sagaMiddleware = createSagaMiddleware();
@@ -40,12 +44,15 @@ let middleware: Array<Middleware>;
 // eslint-disable-next-line @typescript-eslint/ban-types
 let composer: Function;
 
-if (process.env.NODE_ENV === "development") {
+if (REACT_APP_ENV === Environment.Dev) {
   middleware = [freeze, sagaMiddleware];
   composer = composeWithDevTools({ trace: true, traceLimit: 25 });
 } else {
   middleware = [sagaMiddleware];
-  composer = compose;
+  composer =
+    REACT_APP_ENV === Environment.Production
+      ? compose
+      : composeWithDevTools({ trace: true, traceLimit: 25 });
 }
 
 const errorHandlerMiddleware: Middleware =

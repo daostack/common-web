@@ -20,7 +20,7 @@
   cursor: pointer;
 
   &:hover {
-    --item-color: #{$c-shades-black};
+    --item-color: #{var(--primary-text)};
   }
 }
 .itemActive {

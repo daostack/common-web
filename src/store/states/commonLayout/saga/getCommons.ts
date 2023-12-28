@@ -1,6 +1,11 @@
 import { call, put, select } from "redux-saga/effects";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { CommonService, GovernanceService, ProjectService } from "@/services";
+import {
+  CommonService,
+  GovernanceService,
+  ProjectService,
+  UserActivityService,
+} from "@/services";
 import { Awaited } from "@/shared/interfaces";
 import { User } from "@/shared/models";
 import { compareCommonsByLastActivity, isError } from "@/shared/utils";
@@ -70,11 +75,20 @@ const getProjectsInfo = async (
 export function* getCommons(
   action: ReturnType<typeof actions.getCommons.request>,
 ) {
-  const { payload: commonId = "" } = action;
+  let { payload: commonId = "" } = action;
 
   try {
     const user = (yield select(selectUser())) as User | null;
     const userId = user?.uid;
+
+    if (!commonId && userId) {
+      const userActivity = (yield call(
+        UserActivityService.getUserActivity,
+        userId,
+      )) as Awaited<ReturnType<typeof UserActivityService.getUserActivity>>;
+      commonId = userActivity?.lastVisitedCommon || "";
+    }
+
     const { data, currentCommonId } = (yield call(
       getProjectsInfo,
       commonId,
@@ -84,16 +98,26 @@ export function* getCommons(
       .sort((prevItem, nextItem) =>
         compareCommonsByLastActivity(prevItem.common, nextItem.common),
       )
-      .map(({ common, hasMembership, hasPermissionToAddProject }) => ({
-        commonId: common.id,
-        image: common.image,
-        name: common.name,
-        directParent: common.directParent,
-        rootCommonId: common.rootCommonId,
-        hasMembership,
-        hasPermissionToAddProject,
-        notificationsAmount: 0,
-      }));
+      .map(
+        ({
+          common,
+          hasMembership,
+          hasPermissionToAddProject,
+          hasPermissionToLinkToHere,
+          hasPermissionToMoveToHere,
+        }) => ({
+          commonId: common.id,
+          image: common.image,
+          name: common.name,
+          directParent: common.directParent,
+          rootCommonId: common.rootCommonId,
+          hasMembership,
+          hasPermissionToAddProject,
+          hasPermissionToLinkToHere,
+          hasPermissionToMoveToHere,
+          notificationsAmount: 0,
+        }),
+      );
 
     yield put(
       actions.getCommons.success({

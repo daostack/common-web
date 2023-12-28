@@ -14,6 +14,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { useForceUpdate, useModal, useNotification } from "@/shared/hooks";
 import {
   FeedItemFollowState,
+  useCommon,
   useDiscussionById,
   useFeedItemUserMetadata,
   useProposalById,
@@ -23,6 +24,7 @@ import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Common,
   CommonFeed,
+  CommonNotion,
   Governance,
   PredefinedTypes,
   ResolutionType,
@@ -68,6 +70,7 @@ interface ProposalFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  commonNotion?: CommonNotion;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject: boolean;
   isPinned: boolean;
@@ -91,6 +94,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       commonId,
       commonName,
       commonImage,
+      commonNotion: outerCommonNotion,
       pinnedFeedItems,
       isProject,
       isPinned,
@@ -149,6 +153,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
+    const shouldLoadCommonData = discussion?.notion && !outerCommonNotion;
+    const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
     const {
       isShowing: isProposalDeleteModalOpen,
       onOpen: onProposalDeleteModalOpen,
@@ -196,6 +202,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       },
     );
     const cardTitle = discussion?.title;
+    const commonNotion = outerCommonNotion ?? common?.notion;
 
     const onProposalDelete = useCallback(async () => {
       try {
@@ -371,6 +378,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
               proposal.data.args.description,
               proposal.type,
             )}
+            notion={discussion?.notion}
             images={discussion?.images}
             onClick={handleOpenChat}
             onMouseEnter={() => {
@@ -445,6 +453,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           })}
           canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
           isPreviewMode={isPreviewMode}
+          commonName={commonName}
           image={commonImage}
           imageAlt={`${commonName}'s image`}
           isProject={isProject}
@@ -459,9 +468,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           menuItems={menuItems}
           ownerId={item.userId}
           commonId={commonId}
+          notion={discussion?.notion && commonNotion}
           hasUnseenMention={
-            feedItemUserMetadata?.hasUnseenMention ??
-            !isFeedItemUserMetadataFetched
+            isFeedItemUserMetadataFetched &&
+            feedItemUserMetadata?.hasUnseenMention
           }
         >
           {renderContent()}

@@ -1,6 +1,7 @@
 import { put, select } from "redux-saga/effects";
 import { InboxItemType } from "@/shared/constants";
 import {
+  MultipleSpacesLayoutFeedItemBreadcrumbs,
   selectCommonLayoutCommonsState,
   selectCommonLayoutProjectsState,
 } from "@/store/states";
@@ -37,6 +38,42 @@ const getItemsByExistingData = (
   }
 
   return items;
+};
+
+const getNextBreadcrumbsData = (
+  items: ProjectsStateItem[] | null,
+  currentBreadcrumbs: MultipleSpacesLayoutFeedItemBreadcrumbs | null,
+  activeCommonId: string,
+): Pick<
+  MultipleSpacesLayoutFeedItemBreadcrumbs,
+  "items" | "areItemsLoading" | "areItemsFetched"
+> => {
+  if (items) {
+    return {
+      items,
+      areItemsLoading: false,
+      areItemsFetched: true,
+    };
+  }
+  if (!currentBreadcrumbs) {
+    return {
+      items: [],
+      areItemsLoading: true,
+      areItemsFetched: false,
+    };
+  }
+
+  const activeItemIndex = currentBreadcrumbs.items.findIndex(
+    (item) => item.commonId === activeCommonId,
+  );
+
+  return {
+    ...currentBreadcrumbs,
+    items:
+      activeItemIndex > -1
+        ? currentBreadcrumbs.items.slice(0, activeItemIndex + 1)
+        : currentBreadcrumbs.items,
+  };
 };
 
 export function* configureBreadcrumbsData(
@@ -88,17 +125,11 @@ export function* configureBreadcrumbsData(
 
   yield put(
     actions.setBreadcrumbsData({
-      ...(items
-        ? {
-            items,
-            areItemsLoading: false,
-            areItemsFetched: true,
-          }
-        : currentBreadcrumbs || {
-            items: [],
-            areItemsLoading: true,
-            areItemsFetched: false,
-          }),
+      ...getNextBreadcrumbsData(
+        items,
+        currentBreadcrumbs,
+        payload.activeCommonId,
+      ),
       type: InboxItemType.FeedItemFollow,
       activeItem: payload.activeItem ? { ...payload.activeItem } : null,
       activeCommonId: payload.activeCommonId,

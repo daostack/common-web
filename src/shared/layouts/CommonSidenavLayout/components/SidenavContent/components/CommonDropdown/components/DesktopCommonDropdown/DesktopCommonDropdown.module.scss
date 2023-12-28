@@ -14,17 +14,13 @@
 }
 
 .iconActive {
-  color: $white;
+  color: var(--primary-text);
 }
 
 .changeLabel {
   color: $c-pink-primary;
   font-size: $mobile-title;
   font-family: PoppinsSans, sans-serif;
-}
-
-.changeLabelActive {
-  color: $c-neutrals-100;
 }
 
 .menuItems {
@@ -46,7 +42,7 @@
 }
 
 .menuItemActive {
-  --item-bg-color: #{$c-pink-hover-feed-cards};
+  --item-bg-color: var(--secondary-hover-fill);
 }
 
 .menuItemText {

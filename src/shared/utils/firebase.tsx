@@ -1,7 +1,7 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
-import "firebase/storage";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
 import { local } from "@/config";
 import { Environment, REACT_APP_ENV } from "@/shared/constants";
 import config from "../../config";
@@ -32,8 +32,13 @@ if (REACT_APP_ENV === Environment.Local) {
     });
 }
 
-export const isFirebaseError = (error: any): error is FirebaseError => {
-  return error && error.code && error.code.startsWith("auth/");
-};
+// firebase.firestore.setLogLevel("debug");
+
+export const isFirebaseError = (error: any): error is FirebaseError =>
+  (error && error.code && error.code.startsWith("auth/")) ||
+  error.name === "FirebaseError";
+
+export const isFirestoreCacheError = (error: any): boolean =>
+  isFirebaseError(error) && error.code === "unavailable";
 
 export default firebase;

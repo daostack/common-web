@@ -72,14 +72,14 @@ export default function AssignCircleModal({
         </div>
         <div className={styles.buttonsContainer}>
           <Button
-            variant={ButtonVariant.PrimaryGray}
+            variant={ButtonVariant.OutlineDarkPink}
             onClick={handleClose}
             disabled={isAdding}
           >
             Cancel
           </Button>
           <Button
-            variant={ButtonVariant.PrimaryPurple}
+            variant={ButtonVariant.PrimaryPink}
             onClick={handleAdd}
             disabled={isAdding}
           >

@@ -4,6 +4,7 @@
 .container {
   display: flex;
   overflow: hidden;
+  max-width: 400px;
 }
 
 .openSidenavButton {
@@ -89,6 +90,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  color: var(--primary-text);
 
   @include tablet {
     font-size: $moderate-xsmall;
@@ -108,4 +110,15 @@
     font-family: PoppinsSans, sans-serif;
     font-size: $xxsmall-2;
   }
+}
+
+.tooltipTriggerContainer {
+  display: inline-flex;
+}
+
+.tooltipContent {
+  display: flex;
+  flex-direction: column;
+  max-width: 20rem;
+  z-index: 3;
 }

@@ -8,7 +8,7 @@ import React, {
   ReactNode,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useDebounce, useMeasure } from "react-use";
+import { useDebounce, useMeasure, useScroll } from "react-use";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
 import { debounce, delay, omit } from "lodash";
@@ -36,7 +36,7 @@ import {
   CommonMember,
   DirectParent,
   Discussion,
-  DiscussionMessage,
+  DiscussionMessageWithParsedText,
   Timestamp,
   UserDiscussionMessage,
 } from "@/shared/models";
@@ -51,7 +51,12 @@ import {
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
-import { getUserName, hasPermission, isMobile } from "@/shared/utils";
+import {
+  emptyFunction,
+  getUserName,
+  hasPermission,
+  isMobile,
+} from "@/shared/utils";
 import {
   cacheActions,
   chatActions,
@@ -94,7 +99,7 @@ interface ChatComponentInterface {
 }
 
 interface Messages {
-  [key: number]: DiscussionMessage[];
+  [key: number]: DiscussionMessageWithParsedText[];
 }
 
 type CreateDiscussionMessageDtoWithFilesPreview = CreateDiscussionMessageDto & {
@@ -102,7 +107,10 @@ type CreateDiscussionMessageDtoWithFilesPreview = CreateDiscussionMessageDto & {
   imagesPreview?: FileInfo[] | null;
 };
 
-function groupday(acc: any, currentValue: DiscussionMessage): Messages {
+function groupday(
+  acc: any,
+  currentValue: DiscussionMessageWithParsedText,
+): Messages {
   const d = new Date(currentValue.createdAt.seconds * 1000);
   const i = Math.floor(d.getTime() / (1000 * 60 * 60 * 24));
   const timestamp = i * (1000 * 60 * 60 * 24);
@@ -112,6 +120,8 @@ function groupday(acc: any, currentValue: DiscussionMessage): Messages {
 }
 
 const CHAT_HOT_KEYS = [HotKeys.Enter, HotKeys.ModEnter, HotKeys.ShiftEnter];
+
+const SCROLL_THRESHOLD = 400;
 
 export default function ChatComponent({
   commonId,
@@ -153,7 +163,7 @@ export default function ChatComponent({
           governance: {
             circles: governanceCircles,
           },
-          key: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
+          action: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
         })
       : false;
   const {
@@ -162,7 +172,15 @@ export default function ChatComponent({
     discussionUsers,
     fetchDiscussionUsers,
   } = useDiscussionChatAdapter({
+    discussionId,
     hasPermissionToHide,
+    textStyles: {
+      mentionTextCurrentUser: styles.mentionTextCurrentUser,
+      singleEmojiText: styles.singleEmojiText,
+      multipleEmojiText: styles.multipleEmojiText,
+    },
+    onFeedItemClick,
+    onUserClick,
   });
   const {
     chatMessagesData,
@@ -232,17 +250,14 @@ export default function ChatComponent({
   );
 
   const messages = useMemo(
-    () => (discussionMessages ?? []).reduce(groupday, {}),
+    () =>
+      ((discussionMessages ?? []) as DiscussionMessageWithParsedText[]).reduce(
+        groupday,
+        {},
+      ),
     [discussionMessages],
   );
   const dateList = useMemo(() => Object.keys(messages), [messages]);
-
-  useEffect(() => {
-    if (discussionId) {
-      discussionMessagesData.fetchDiscussionMessages(discussionId);
-      dispatch(chatActions.clearCurrentDiscussionMessageReply());
-    }
-  }, [discussionId]);
 
   const [newMessages, setMessages] = useState<
     CreateDiscussionMessageDtoWithFilesPreview[]
@@ -451,6 +466,7 @@ export default function ChatComponent({
                   text: discussionMessageReply.text,
                   files: discussionMessageReply.files,
                   images: discussionMessageReply.images,
+                  createdAt: discussionMessageReply.createdAt,
                 }
               : null,
             images: imagesPreview?.map((file) =>
@@ -478,10 +494,7 @@ export default function ChatComponent({
           });
         } else {
           pendingMessages.forEach((pendingMessage) => {
-            discussionMessagesData.addDiscussionMessage(
-              discussionId,
-              pendingMessage,
-            );
+            discussionMessagesData.addDiscussionMessage(pendingMessage);
           });
         }
 
@@ -536,9 +549,15 @@ export default function ChatComponent({
     (messageId: string) => {
       if (isChatChannel) {
         chatMessagesData.deleteChatMessage(messageId);
+      } else {
+        discussionMessagesData.deleteDiscussionMessage(messageId);
       }
     },
-    [isChatChannel, chatMessagesData.deleteChatMessage],
+    [
+      isChatChannel,
+      chatMessagesData.deleteChatMessage,
+      discussionMessagesData.deleteDiscussionMessage,
+    ],
   );
 
   useEffect(() => {
@@ -674,6 +693,8 @@ export default function ChatComponent({
           users={users}
           shouldReinitializeEditor={shouldReinitializeEditor}
           onClearFinished={onClearFinished}
+          scrollSelectionIntoView={emptyFunction}
+          groupChat={chatChannel && chatChannel?.participants.length > 2}
         />
         <button
           className={styles.sendIcon}
@@ -685,6 +706,35 @@ export default function ChatComponent({
       </>
     );
   };
+
+  const { y } = useScroll(chatContainerRef);
+
+  const isTopReached = useMemo(() => {
+    const currentScrollPosition = Math.abs(y); // Since y can be negative
+    const container = chatContainerRef.current;
+
+    if (!container) return false;
+
+    const scrollHeight = container.scrollHeight;
+    const clientHeight = container.clientHeight;
+
+    return (
+      scrollHeight - clientHeight - currentScrollPosition <= SCROLL_THRESHOLD
+    );
+  }, [y]);
+
+  useEffect(() => {
+    if (discussionId) {
+      discussionMessagesData.fetchDiscussionMessages();
+      dispatch(chatActions.clearCurrentDiscussionMessageReply());
+    }
+  }, [discussionId, dispatch]);
+
+  useEffect(() => {
+    if (isTopReached && discussionId) {
+      discussionMessagesData.fetchDiscussionMessages();
+    }
+  }, [isTopReached, discussionId]);
 
   return (
     <div className={styles.chatWrapper}>
@@ -698,6 +748,10 @@ export default function ChatComponent({
         <ChatContentContext.Provider value={chatContentContextValue}>
           <ChatContent
             ref={chatContentRef}
+            discussionMessages={discussionMessagesData.data}
+            fetchReplied={discussionMessagesData.fetchRepliedMessages}
+            isChatChannel={isChatChannel}
+            discussionId={discussionId}
             type={type}
             commonMember={commonMember}
             governanceCircles={governanceCircles}
@@ -707,7 +761,6 @@ export default function ChatComponent({
             lastSeenItem={lastSeenItem}
             hasPermissionToHide={hasPermissionToHide}
             users={users}
-            discussionId={discussionId}
             feedItemId={feedItemId}
             isLoading={!discussion || isLoadingDiscussionMessages}
             onMessageDelete={handleMessageDelete}
@@ -717,7 +770,7 @@ export default function ChatComponent({
             onInternalLinkClick={onInternalLinkClick}
             isEmpty={
               discussionMessagesData.fetched &&
-              !discussionMessagesData.data?.length && // for non direct messages chats. not using messageCount because it includes the deleted messages as well.
+              !discussionMessagesData.rawData?.length && // for non direct messages chats. not using messageCount because it includes the deleted messages as well.
               Object.keys(discussionMessages).length === 0 // for direct messages chats
             }
           />

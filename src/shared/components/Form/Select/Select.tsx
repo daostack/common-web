@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import Select, { components, DropdownIndicatorProps } from "react-select";
 import classNames from "classnames";
 import { useFormikContext } from "formik";
+import useThemeColor from "@/shared/hooks/useThemeColor";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { SelectOptionType } from "@/shared/interfaces/Select";
 import { selectorStyles } from "./selectorStyles";
@@ -38,6 +39,8 @@ const FormSelect: FC<FormSelectProps> = ({
 }) => {
   const { values, setFieldValue, handleBlur, touched, errors } =
     useFormikContext<Record<string, unknown>>();
+
+  const { getThemeColor } = useThemeColor();
   const hasError = Boolean(touched[formName] && errors[formName]);
 
   return (
@@ -54,7 +57,7 @@ const FormSelect: FC<FormSelectProps> = ({
         }}
         onBlur={handleBlur(formName)}
         hideSelectedOptions={false}
-        styles={selectorStyles(hasError)}
+        styles={selectorStyles(hasError, getThemeColor)}
         components={{
           DropdownIndicator,
         }}

@@ -32,7 +32,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
   } = useFeedItemCounters(item.id, common?.directParent?.commonId);
   const commonId = item.data.id;
   const lastMessage = parseStringToTextEditorValue(
-    `${unreadStreamsCount ?? 0} updated stream${
+    `${unreadStreamsCount ?? 0} unread stream${
       unreadStreamsCount === 1 ? "" : "s"
     }`,
   );
@@ -81,6 +81,7 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           renderLeftContent,
           shouldHideBottomContent: !lastMessage,
           isFollowing: feedItemFollow.isFollowing,
+          notion: common?.notion,
         })}
       </>
     ) || null

@@ -1,6 +1,5 @@
 import React, {
   forwardRef,
-  useEffect,
   useImperativeHandle,
   useRef,
   useState,
@@ -21,7 +20,6 @@ import {
   FloatingFocusManager,
   FloatingOverlay,
 } from "@floating-ui/react";
-import { useLockedBody } from "@/shared/hooks";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { Loader } from "../Loader";
 import { ContextMenuItem } from "./components";
@@ -45,7 +43,6 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
     const [isOpen, setIsOpen] = useState(false);
     const listItemsRef = useRef<(HTMLElement | null)[]>([]);
     const listContentRef = useRef(menuItems.map((item) => item.text));
-    const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
 
     const handleOpenChange = (open: boolean) => {
       setIsOpen(open);
@@ -117,14 +114,6 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
       }),
       [refs],
     );
-
-    useEffect(() => {
-      if (isOpen) {
-        lockBodyScroll();
-      } else {
-        unlockBodyScroll();
-      }
-    }, [isOpen]);
 
     return (
       <FloatingPortal>

@@ -19,6 +19,7 @@ import {
 } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
+import { DOMRange } from "slate-react/dist/utils/dom";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { User } from "@/shared/models";
 import { getUserName, isMobile, isRtlText } from "@/shared/utils";
@@ -60,7 +61,9 @@ export interface TextEditorProps {
   users?: User[];
   shouldReinitializeEditor: boolean;
   onClearFinished: () => void;
+  scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
   elementStyles?: EditorElementStyles;
+  groupChat?: boolean;
 }
 
 const INITIAL_SEARCH_VALUE = {
@@ -93,7 +96,9 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     users,
     shouldReinitializeEditor = false,
     onClearFinished,
+    scrollSelectionIntoView,
     elementStyles,
+    groupChat,
   } = props;
   const editor = useMemo(
     () =>
@@ -259,6 +264,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           disabled={disabled}
           onBlur={onBlur}
           onKeyDown={handleKeyDown}
+          scrollSelectionIntoView={scrollSelectionIntoView}
           elementStyles={elementStyles}
         />
         <EmojiPicker
@@ -272,7 +278,9 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           }}
         />
 
-        {target && chars.length > 0 && (
+        {/* For now, we don't support the ability to mention in a group chat.
+          See https://github.com/daostack/common-web/issues/2380 */}
+        {!groupChat && target && chars.length > 0 && (
           <MentionDropdown
             shouldFocusTarget={shouldFocusTarget}
             onClick={(user: User) => {

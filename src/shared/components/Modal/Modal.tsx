@@ -14,13 +14,10 @@ import React, {
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
-import { Colors } from "../../constants";
-import { useComponentWillUnmount, useMount } from "../../hooks";
+import { useComponentWillUnmount, useLockedBody, useMount } from "../../hooks";
 import Close2Icon from "../../icons/close2.icon";
-import CloseIcon from "../../icons/close.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
 import {
-  CloseIconVariant,
   ModalProps,
   ModalRef,
   ModalTransition,
@@ -39,7 +36,6 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     onGoBack,
     onClose,
     children,
-    closeColor,
     mobileFullScreen,
     title,
     onHeaderScrolledToTop,
@@ -47,14 +43,13 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     type = ModalType.Default,
     transition,
     hideCloseButton = false,
-    closeIconSize = 24,
+    closeIconSize = 14,
     isHeaderSticky = false,
     shouldShowHeaderShadow = true,
     closePrompt = false,
     withoutHorizontalPadding = false,
     withoutHeader = false,
     fullHeight = false,
-    closeIconVariant = CloseIconVariant.Regular,
   } = props;
   const contentRef = useRef<HTMLDivElement>(null);
   const isMounted = useMount({ isOpen, delay: 300 });
@@ -67,6 +62,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   const [showClosePrompt, setShowClosePrompt] = useState(false);
   const modalId = useMemo(() => `modal-${uuidv4()}`, []);
   const isShowing = transition ? isMounted : isOpen;
+  const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
 
   const handleModalContainerClick: MouseEventHandler = (event) => {
     event.stopPropagation();
@@ -100,7 +96,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     }
 
     const modalRoot = document.getElementById(modalId);
-    document.body.style.overflow = "initial";
+    unlockBodyScroll();
 
     if (modalRoot) {
       document.body.removeChild(modalRoot);
@@ -110,12 +106,12 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   useEffect(() => {
     if (!isShowing) {
       const modalRoot = document.getElementById(modalId);
-      document.body.style.overflow = "initial";
+      unlockBodyScroll();
       if (modalRoot) {
         document.body.removeChild(modalRoot);
       }
     } else {
-      document.body.style.overflow = "hidden";
+      lockBodyScroll();
     }
   }, [isShowing, modalId]);
 
@@ -192,7 +188,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
           </div>
         )}
         {typeof title === "string" ? (
-          <h3 className="modal__title">{title}</h3>
+          <h3 className={classNames("modal__title", styles?.title)}>{title}</h3>
         ) : (
           title
         )}
@@ -204,15 +200,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
             )}
             onClick={handleClose}
           >
-            {closeIconVariant === CloseIconVariant.Regular ? (
-              <CloseIcon
-                width={closeIconSize}
-                height={closeIconSize}
-                fill={closeColor ?? Colors.black}
-              />
-            ) : (
-              <Close2Icon width={closeIconSize} height={closeIconSize} />
-            )}
+            <Close2Icon width={closeIconSize} height={closeIconSize} />
           </div>
         )}
       </div>

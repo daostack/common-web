@@ -97,7 +97,7 @@ export const PopoverItem: FC<CommonMemberInfoProps> = (props) => {
     return (
       <Button
         className={styles.actionButton}
-        variant={ButtonVariant.OutlineBlue}
+        variant={ButtonVariant.OutlineDarkPink}
         disabled={!canRequestToJoin}
         onClick={() =>
           onJoinCircle(

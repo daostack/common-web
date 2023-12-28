@@ -1,30 +1,32 @@
 import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
-import { InboxItemType } from "@/shared/constants";
+import { InboxItemType, QueryParamKey } from "@/shared/constants";
 import {
   checkIsChatChannelLayoutItem,
   checkIsFeedItemFollowLayoutItem,
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
 import { ChatChannel, CommonFeed, Timestamp } from "@/shared/models";
+import { getQueryParam } from "@/shared/utils/queryParams";
 import * as actions from "./actions";
 import { InboxItems, InboxState } from "./types";
 import { getFeedLayoutItemDateForSorting } from "./utils";
 
 type Action = ActionType<typeof actions>;
 
-const initialInboxItems: InboxItems = {
+export const INITIAL_INBOX_ITEMS: InboxItems = {
   data: null,
   loading: false,
   hasMore: false,
   firstDocTimestamp: null,
   lastDocTimestamp: null,
   batchNumber: 0,
+  unread: getQueryParam(QueryParamKey.Unread) === "true",
 };
 
-const initialState: InboxState = {
-  items: { ...initialInboxItems },
+export const INITIAL_INBOX_STATE: InboxState = {
+  items: { ...INITIAL_INBOX_ITEMS },
   sharedFeedItemId: null,
   sharedItem: null,
   chatChannelItems: [],
@@ -50,6 +52,13 @@ const getDocTimestamps = (
     ? getFeedLayoutItemDateForSorting(data[data.length - 1])
     : null,
 });
+
+const areTimestampsEqual = (
+  timestampA: Timestamp | null,
+  timestampB: Timestamp | null,
+): boolean =>
+  timestampA?.seconds === timestampB?.seconds &&
+  timestampA?.nanoseconds === timestampB?.nanoseconds;
 
 const updateInboxItemInList = (
   state: WritableDraft<InboxState>,
@@ -91,10 +100,16 @@ const updateInboxItemInList = (
 
   state.items = {
     ...state.items,
-    firstDocTimestamp,
-    lastDocTimestamp,
     data: nextData,
   };
+
+  if (!areTimestampsEqual(state.items.firstDocTimestamp, firstDocTimestamp)) {
+    state.items.firstDocTimestamp = firstDocTimestamp;
+  }
+
+  if (!areTimestampsEqual(state.items.lastDocTimestamp, lastDocTimestamp)) {
+    state.items.lastDocTimestamp = lastDocTimestamp;
+  }
 };
 
 const updateInboxItemInChatChannelItems = (
@@ -192,10 +207,16 @@ const updateFeedItemInInboxItem = (
 
   state.items = {
     ...state.items,
-    firstDocTimestamp,
-    lastDocTimestamp,
     data: nextData,
   };
+
+  if (!areTimestampsEqual(state.items.firstDocTimestamp, firstDocTimestamp)) {
+    state.items.firstDocTimestamp = firstDocTimestamp;
+  }
+
+  if (!areTimestampsEqual(state.items.lastDocTimestamp, lastDocTimestamp)) {
+    state.items.lastDocTimestamp = lastDocTimestamp;
+  }
 };
 
 const updateSharedInboxItem = (
@@ -319,10 +340,16 @@ const updateChatChannelItemInInboxItem = (
 
   state.items = {
     ...state.items,
-    firstDocTimestamp,
-    lastDocTimestamp,
     data: nextData,
   };
+
+  if (!areTimestampsEqual(state.items.firstDocTimestamp, firstDocTimestamp)) {
+    state.items.firstDocTimestamp = firstDocTimestamp;
+  }
+
+  if (!areTimestampsEqual(state.items.lastDocTimestamp, lastDocTimestamp)) {
+    state.items.lastDocTimestamp = lastDocTimestamp;
+  }
 };
 
 const updateChatChannelItemInChatChannelItem = (
@@ -410,8 +437,14 @@ const updateChatChannelItem = (
   updateChatChannelItemInSharedInboxItem(state, payload);
 };
 
-export const reducer = createReducer<InboxState, Action>(initialState)
-  .handleAction(actions.resetInbox, () => ({ ...initialState }))
+export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
+  .handleAction(actions.resetInbox, (state, { payload }) => {
+    if (payload?.onlyIfUnread && !state.items.unread) {
+      return state;
+    }
+
+    return { ...INITIAL_INBOX_STATE };
+  })
   .handleAction(actions.getInboxItems.request, (state) =>
     produce(state, (nextState) => {
       nextState.items = {
@@ -451,6 +484,7 @@ export const reducer = createReducer<InboxState, Action>(initialState)
     produce(state, (nextState) => {
       const payload = action.payload.filter(
         (item) =>
+          item.item.itemId !== state.sharedItem?.itemId &&
           !nextState.chatChannelItems.some(
             (chatChannelItem) => chatChannelItem.itemId === item.item.itemId,
           ),
@@ -490,9 +524,22 @@ export const reducer = createReducer<InboxState, Action>(initialState)
       nextState.items = {
         ...nextState.items,
         data,
-        firstDocTimestamp,
-        lastDocTimestamp,
       };
+
+      if (
+        !areTimestampsEqual(
+          nextState.items.firstDocTimestamp,
+          firstDocTimestamp,
+        )
+      ) {
+        nextState.items.firstDocTimestamp = firstDocTimestamp;
+      }
+
+      if (
+        !areTimestampsEqual(nextState.items.lastDocTimestamp, lastDocTimestamp)
+      ) {
+        nextState.items.lastDocTimestamp = lastDocTimestamp;
+      }
     }),
   )
   .handleAction(actions.updateInboxItem, (state, { payload }) =>
@@ -542,11 +589,16 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   )
   .handleAction(actions.resetInboxItems, (state) =>
     produce(state, (nextState) => {
-      nextState.items = { ...initialInboxItems };
+      nextState.items = { ...INITIAL_INBOX_ITEMS };
       nextState.sharedFeedItemId = null;
       nextState.sharedItem = null;
       nextState.chatChannelItems = [];
       nextState.nextChatChannelItemId = null;
+    }),
+  )
+  .handleAction(actions.setHasMoreInboxItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.items.hasMore = payload;
     }),
   )
   .handleAction(actions.setSharedFeedItemId, (state, { payload }) =>
@@ -556,7 +608,18 @@ export const reducer = createReducer<InboxState, Action>(initialState)
   )
   .handleAction(actions.setSharedInboxItem, (state, { payload }) =>
     produce(state, (nextState) => {
-      nextState.sharedItem = payload && { ...payload };
+      const sharedItem = payload && { ...payload };
+
+      nextState.sharedItem = sharedItem;
+
+      if (sharedItem && nextState.items.data) {
+        nextState.items = {
+          ...nextState.items,
+          data: nextState.items.data.filter(
+            (item) => item.itemId !== sharedItem.itemId,
+          ),
+        };
+      }
     }),
   )
   .handleAction(actions.addChatChannelItem, (state, { payload }) =>

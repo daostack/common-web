@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
 import { ProposalsTypes } from "@/shared/constants/governance";
+import { Timestamp } from "../../Timestamp";
 import { BaseProposal } from "./BaseProposal";
 import { BasicArgsProposal } from "./BasicArgsProposal";
 
@@ -10,8 +10,8 @@ export interface AssignCircleArgs extends BasicArgsProposal {
 
 export interface AssignCircle extends BaseProposal {
   data: {
-    votingExpiresOn: firebase.firestore.Timestamp | null;
-    discussionExpiresOn: firebase.firestore.Timestamp | null;
+    votingExpiresOn: Timestamp | null;
+    discussionExpiresOn: Timestamp | null;
     args: AssignCircleArgs;
   };
   type: ProposalsTypes.ASSIGN_CIRCLE;

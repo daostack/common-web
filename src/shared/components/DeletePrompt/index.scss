@@ -9,11 +9,13 @@
   top: 50%;
   left: 50%;
   z-index: 11;
-  background-color: $white;
+  background-color: var(--primary-background);
   align-items: center;
-  box-shadow: $secondary-modal-shadow;
+  color: var(--primary-text);
   border-radius: 30px;
   padding: 45px;
+  filter: drop-shadow(0 0.6rem 1.3rem rgba(0, 0, 0, 0.25));
+  box-shadow: 0 0.25rem 1rem 0 var(--drop-shadow);
 
   .delete-prompt__buttons-wrapper {
     display: flex;
@@ -26,8 +28,8 @@
       margin: 0 0.5rem;
 
       &.delete {
-        background-color: $red;
-        color: $white;
+        background-color: var(--warning);
+        color: var(--primary-text);
         margin-left: 1.5rem;
       }
     }

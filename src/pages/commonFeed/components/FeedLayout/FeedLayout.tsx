@@ -620,7 +620,13 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [batchNumber]);
 
   useEffect(() => {
-    if (sharedFeedItemId && isTabletView && allFeedItems) {
+    if (
+      isTabletView &&
+      sharedFeedItemId &&
+      allFeedItems.length > 0 &&
+      allFeedItems.some((item) => item.itemId === sharedFeedItemId)
+    ) {
+      deleteQueryParam(QueryParamKey.Item, true);
       setActiveChatItem({ feedItemId: sharedFeedItemId });
     }
   }, [sharedFeedItemId, isTabletView, allFeedItems]);
@@ -694,6 +700,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
+                      commonNotion={outerCommon?.notion}
                       pinnedFeedItems={outerCommon?.pinnedFeedItems}
                       isProject={commonData?.isProject}
                       isPinned={isPinned}
@@ -711,6 +718,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       }
                       onActiveItemDataChange={handleActiveFeedItemDataChange}
                       directParent={outerCommon?.directParent}
+                      rootCommonId={outerCommon?.rootCommonId}
                     />
                   );
                 }

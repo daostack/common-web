@@ -7,6 +7,7 @@ import {
   CommonMember,
   Governance,
 } from "@/shared/models";
+import { SearchButton, SearchInput } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
 import {
   ActionsButton,
@@ -14,6 +15,7 @@ import {
   HeaderContentWrapper,
   NewStreamButton,
 } from "./components";
+import { useSearchFeedItems } from "./hooks";
 import styles from "./HeaderContent.module.scss";
 
 interface HeaderContentProps {
@@ -27,6 +29,8 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
   const { className, common, commonMember, governance } = props;
   const isMobileVersion = useIsTabletView();
   const commonFollow = useCommonFollow(common.id, commonMember);
+  const { searchValue, searchInputToggle, onChangeSearchValue, onCloseSearch } =
+    useSearchFeedItems();
   const showFollowIcon =
     !isMobileVersion &&
     (commonFollow.isFollowInProgress
@@ -39,16 +43,34 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
         commonId={common.id}
         commonName={common.name}
         commonImage={common.image}
+        notion={common.notion}
         isProject={checkIsProject(common)}
         memberCount={common.memberCount}
         showFollowIcon={showFollowIcon}
       />
       <div className={styles.actionButtonsWrapper}>
+        {!isMobileVersion && (
+          <>
+            {searchInputToggle.isToggledOn && (
+              <SearchInput
+                value={searchValue}
+                placeholder="Search space"
+                onChange={onChangeSearchValue}
+                onClose={onCloseSearch}
+                autoFocus
+              />
+            )}
+            {!searchInputToggle.isToggledOn && (
+              <SearchButton onClick={searchInputToggle.setToggleOn} />
+            )}
+          </>
+        )}
         <NewStreamButton
           commonId={common.id}
           commonMember={commonMember}
           governance={governance}
           isMobileVersion={isMobileVersion}
+          onClick={onCloseSearch}
         />
         <ActionsButton
           common={common}

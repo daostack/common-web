@@ -15,8 +15,8 @@
   padding: 0 0 var(--bottom-tabs-pb);
   display: grid;
   grid-template-columns: repeat(var(--items-amount, 5), minmax(0, 1fr));
-  background-color: $c-shades-white;
-  border-top: 0.0625rem solid $c-neutrals-100;
+  background-color: var(--secondary-background);
+  border-top: 0.0625rem solid var(--gentle-stroke);
 }
 
 .tab {
@@ -25,7 +25,7 @@
   --tab-fw: 600;
   --tab-fs: #{$small};
   --tab-inactive-color: #{$c-neutrals-300};
-  --tab-inactive-hover-color: #{$c-neutrals-600};
+  --tab-inactive-hover-color: #{var(--primary-text)};
   --tab-active-color: #{$c-neutrals-600};
 
   @include tablet {

@@ -1,5 +1,5 @@
 import { stringify } from "query-string";
-import { ApiEndpoint } from "@/shared/constants";
+import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
 import { DMUser, UnsubscribeFunction } from "@/shared/interfaces";
 import {
   GetChatChannelMessagesResponse,
@@ -20,7 +20,7 @@ import {
   firestoreDataConverter,
   getUserName,
 } from "@/shared/utils";
-import firebase from "@/shared/utils/firebase";
+import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
 
 const chatChannelConverter = firestoreDataConverter<ChatChannel>();
@@ -79,9 +79,10 @@ class ChatService {
 
   public getDMUserChatChannel = async (
     currentUserId: string,
-    dmUserId: string,
+    dmUserIds: string[],
   ): Promise<ChatChannel | null> => {
-    if (currentUserId === dmUserId) {
+    // What is it? Looks like this condition is never fulfilled because dmUserIds never includes the currrent user.
+    if (currentUserId === dmUserIds[0]) {
       return this.getUserOwnChatChannel(currentUserId);
     }
 
@@ -91,7 +92,19 @@ class ChatService {
     const docSnapshot = snapshot.docs.find((doc) => {
       const { participants } = doc.data();
 
-      return participants.length === 2 && participants.includes(dmUserId);
+      // dmUserIds - never includes the currrent user.
+      // participants - includes the currrent user.
+
+      if (dmUserIds.length === 1) {
+        // Regular 1 on 1 chat
+        return participants.length === 2 && participants.includes(dmUserIds[0]);
+      } else if (dmUserIds.length > 1) {
+        // Group chat
+        return (
+          participants.length === dmUserIds.length + 1 &&
+          dmUserIds.every((participant) => participants.includes(participant))
+        );
+      }
     });
 
     if (!docSnapshot) {
@@ -234,12 +247,38 @@ class ChatService {
     });
   };
 
+  public getChatChannelById = async (
+    chatChannelId: string,
+    source = FirestoreDataSource.Default,
+  ): Promise<ChatChannel | null> => {
+    try {
+      const snapshot = await this.getChatChannelCollection()
+        .doc(chatChannelId)
+        .get({ source });
+
+      return snapshot?.data() || null;
+    } catch (error) {
+      if (
+        source === FirestoreDataSource.Cache &&
+        isFirestoreCacheError(error)
+      ) {
+        return this.getChatChannelById(
+          chatChannelId,
+          FirestoreDataSource.Server,
+        );
+      }
+
+      throw error;
+    }
+  };
+
   public getChatChannels = async (options: {
     participantId: string;
     startAt?: Timestamp;
     endAt?: Timestamp;
+    onlyWithMessages?: boolean;
   }): Promise<ChatChannel[]> => {
-    const { participantId, startAt, endAt } = options;
+    const { participantId, startAt, endAt, onlyWithMessages = false } = options;
     let query = this.getChatChannelCollection()
       .where("participants", "array-contains", participantId)
       .orderBy("updatedAt", "desc");
@@ -252,8 +291,13 @@ class ChatService {
     }
 
     const snapshot = await query.get();
+    const chatChannels = snapshot.docs.map((doc) => doc.data());
 
-    return snapshot.docs.map((doc) => doc.data());
+    if (!onlyWithMessages) {
+      return chatChannels;
+    }
+
+    return chatChannels.filter((chatChannel) => chatChannel.messageCount > 0);
   };
 
   public subscribeToNewUpdatedChatChannels = (

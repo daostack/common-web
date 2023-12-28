@@ -11,6 +11,7 @@ export interface InboxItems {
   firstDocTimestamp: Timestamp | null;
   lastDocTimestamp: Timestamp | null;
   batchNumber: number;
+  unread: boolean;
 }
 
 export interface InboxState {

@@ -6,10 +6,16 @@ import {
   useDiscussionMessagesById,
   useMarkFeedItemAsSeen,
 } from "@/shared/hooks/useCases";
-import { User } from "@/shared/models";
+import { TextStyles } from "@/shared/hooks/useCases/useDiscussionMessagesById";
+import { DirectParent, User } from "@/shared/models";
 
 interface Options {
   hasPermissionToHide: boolean;
+  onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
+  directParent?: DirectParent | null;
+  textStyles: TextStyles;
+  discussionId: string;
 }
 
 interface Return {
@@ -22,22 +28,35 @@ interface Return {
 }
 
 export const useDiscussionChatAdapter = (options: Options): Return => {
-  const { hasPermissionToHide } = options;
-  const discussionMessagesData = useDiscussionMessagesById({
+  const {
     hasPermissionToHide,
-  });
-  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
-  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+    textStyles,
+    discussionId,
+    onFeedItemClick,
+    onUserClick,
+  } = options;
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
 
-  const users = useMemo(
-    () =>
-      commonMembers
-        .filter((member) => member.userId !== userId)
-        .map(({ user }) => user),
-    [userId, commonMembers],
+  const allUsers = useMemo(
+    () => commonMembers.map(({ user }) => user),
+    [commonMembers],
   );
+
+  const discussionUsers = useMemo(
+    () => allUsers.filter((user) => user.uid !== userId),
+    [userId, allUsers],
+  );
+  const discussionMessagesData = useDiscussionMessagesById({
+    discussionId,
+    hasPermissionToHide,
+    users: allUsers,
+    textStyles,
+    onFeedItemClick,
+    onUserClick,
+  });
+  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
 
   const fetchDiscussionUsers = useCallback(
     (commonId: string, circleVisibility?: string[]) => {
@@ -49,7 +68,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
   return {
     discussionMessagesData,
     markDiscussionMessageItemAsSeen: markFeedItemAsSeen,
-    discussionUsers: users,
+    discussionUsers,
     fetchDiscussionUsers,
   };
 };

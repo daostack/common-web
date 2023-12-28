@@ -1,5 +1,10 @@
 import { UploadFile } from "@/shared/interfaces";
-import { BaseRule, CommonLink, Roles } from "@/shared/models";
+import {
+  BaseRule,
+  CommonLink,
+  NotionIntegrationPayloadIntermediate,
+  Roles,
+} from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { TextEditorValue } from "@/shared/ui-kit/TextEditor/types";
 
@@ -59,6 +64,7 @@ export interface IntermediateUpdateCommonData {
   gallery?: UploadFile[];
   links?: CommonLink[];
   roles?: Roles;
+  notion?: NotionIntegrationPayloadIntermediate;
 }
 
 export interface UpdateCommonData {

@@ -52,6 +52,25 @@ class ProposalService {
     );
   };
 
+  public getProposalsByIds = async (
+    ids: string[],
+  ): Promise<Array<Proposal | null>> => {
+    const queries: firebase.firestore.Query[] = [];
+
+    // Firebase allows to use at most 10 items per query for `in` option
+    for (let i = 0; i < ids.length; i += 10) {
+      queries.push(
+        this.getProposalCollection().where("id", "in", ids.slice(i, i + 10)),
+      );
+    }
+
+    const results = await Promise.all(queries.map((query) => query.get()));
+
+    return results
+      .map((result) => transformFirebaseDataList<Proposal | null>(result))
+      .reduce((acc, items) => [...acc, ...items], []);
+  };
+
   public checkActiveProposalsExistenceInCommon = async (
     commonId: string,
   ): Promise<boolean> => {
@@ -95,7 +114,14 @@ class ProposalService {
     const query = this.getProposalCollection().doc(proposalId);
 
     return query.onSnapshot((snapshot) => {
-      callback(transformFirebaseDataSingle<Proposal>(snapshot));
+      const proposal = snapshot.data();
+
+      if (proposal) {
+        console.log("proposal found!", proposalId);
+        callback(proposal);
+      } else {
+        console.log("proposal was not found", proposalId);
+      }
     });
   };
 

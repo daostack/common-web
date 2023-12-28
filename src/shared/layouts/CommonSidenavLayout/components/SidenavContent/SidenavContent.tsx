@@ -7,7 +7,7 @@ import { ButtonIcon } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Close2Icon } from "@/shared/icons";
 import { CommonLogo } from "@/shared/ui-kit";
-import { getUserName } from "@/shared/utils";
+import { closeSidenav, getUserName } from "@/shared/utils";
 import {
   ContentStyles,
   MenuItemsPlacement,
@@ -19,11 +19,10 @@ import styles from "./SidenavContent.module.scss";
 
 interface SidenavContentProps {
   className?: string;
-  onClose?: () => void;
 }
 
 const SidenavContent: FC<SidenavContentProps> = (props) => {
-  const { className, onClose } = props;
+  const { className } = props;
   const isAuthenticated = useSelector(authentificated());
   const user = useSelector(selectUser());
   const isTabletView = useIsTabletView();
@@ -43,7 +42,7 @@ const SidenavContent: FC<SidenavContentProps> = (props) => {
         logoSrc={commonLogoSrc}
       />
       {isTabletView && (
-        <ButtonIcon className={styles.closeIconWrapper} onClick={onClose}>
+        <ButtonIcon className={styles.closeIconWrapper} onClick={closeSidenav}>
           <Close2Icon />
         </ButtonIcon>
       )}

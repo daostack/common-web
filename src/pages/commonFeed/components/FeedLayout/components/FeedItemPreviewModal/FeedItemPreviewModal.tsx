@@ -3,11 +3,8 @@ import { FeedItem } from "@/pages/common";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { Modal } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import {
-  ModalType,
-  CloseIconVariant,
-  FeedLayoutItemChangeData,
-} from "@/shared/interfaces";
+import { ModalType, FeedLayoutItemChangeData } from "@/shared/interfaces";
+import { Breadcrumbs } from "@/shared/layouts/MultipleSpacesLayout/components/Header/components";
 import { Circles, CommonFeed } from "@/shared/models";
 import styles from "./FeedItemPreviewModal.module.scss";
 
@@ -68,16 +65,15 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
         modalOverlay: styles.modalOverlay,
         modalWrapper: styles.modalWrapper,
       }}
-      closeIconSize={16}
       isShowing={
         Boolean(isShowFeedItemDetailsModal) && Boolean(selectedFeedItem)
       }
       onClose={handleCloseModal}
       type={ModalType.MobilePopUp}
-      closeIconVariant={CloseIconVariant.Thin}
     >
       {selectedFeedItem && (
         <>
+          <Breadcrumbs itemsWithMenus={false} />
           {title && <h3 className={styles.itemTitle}>{title}</h3>}
           <FeedItem
             commonId={commonId}

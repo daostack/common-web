@@ -7,4 +7,7 @@
   bottom: 0;
   left: 0;
   z-index: $global-overlay-z-index;
+  -webkit-backdrop-filter: blur(0.13rem);
+  backdrop-filter: blur(0.13rem);
+  background-color: rgba($black, 0.5);
 }

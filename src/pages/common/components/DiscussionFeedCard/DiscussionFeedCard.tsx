@@ -23,6 +23,7 @@ import {
   Common,
   CommonFeed,
   CommonMember,
+  CommonNotion,
   DirectParent,
   Governance,
   PredefinedTypes,
@@ -43,6 +44,7 @@ import {
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "../FeedItem";
+import { LinkStreamModal, MoveStreamModal } from "./components";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -52,6 +54,7 @@ interface DiscussionFeedCardProps {
   commonId?: string;
   commonName: string;
   commonImage: string;
+  commonNotion?: CommonNotion;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   commonMember?: CommonMember | null;
   isProject: boolean;
@@ -63,6 +66,7 @@ interface DiscussionFeedCardProps {
   getNonAllowedItems?: GetNonAllowedItemsOptions;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   directParent?: DirectParent | null;
+  rootCommonId?: string;
   feedItemFollow: FeedItemFollowState;
   onUserSelect?: (userId: string, commonId?: string) => void;
 }
@@ -79,6 +83,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       commonId,
       commonName,
       commonImage,
+      commonNotion: outerCommonNotion,
       pinnedFeedItems,
       commonMember,
       isProject,
@@ -90,6 +95,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       getNonAllowedItems,
       onActiveItemDataChange,
       directParent,
+      rootCommonId,
       feedItemFollow,
       onUserSelect,
     } = props;
@@ -108,6 +114,16 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       onOpen: onDeleteModalOpen,
       onClose: onDeleteModalClose,
     } = useModal(false);
+    const {
+      isShowing: isLinkStreamModalOpen,
+      onOpen: onLinkStreamModalOpen,
+      onClose: onLinkStreamModalClose,
+    } = useModal(false);
+    const {
+      isShowing: isMoveStreamModalOpen,
+      onOpen: onMoveStreamModalOpen,
+      onClose: onMoveStreamModalClose,
+    } = useModal(false);
     const [isDeletingInProgress, setDeletingInProgress] = useState(false);
     const {
       fetchUser: fetchDiscussionCreator,
@@ -125,7 +141,9 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
-    const { data: common } = useCommon(isHome ? commonId : "");
+    const shouldLoadCommonData =
+      isHome || (discussion?.notion && !outerCommonNotion);
+    const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
     const menuItems = useMenuItems(
       {
         commonId,
@@ -142,6 +160,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         report: onReportModalOpen,
         share: () => onShareModalOpen(),
         remove: onDeleteModalOpen,
+        linkStream: onLinkStreamModalOpen,
+        moveStream: onMoveStreamModalOpen,
       },
     );
     const user = useSelector(selectUser());
@@ -156,6 +176,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       !isFeedItemUserMetadataFetched ||
       !commonId;
     const cardTitle = discussion?.title;
+    const commonNotion = outerCommonNotion ?? common?.notion;
 
     const handleOpenChat = useCallback(() => {
       if (discussion) {
@@ -283,6 +304,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           <FeedCardContent
             description={isHome ? common?.description : discussion?.message}
             images={isHome ? common?.gallery : discussion?.images}
+            notion={discussion?.notion}
             onClick={handleOpenChat}
             onMouseEnter={() => {
               onHover(true);
@@ -334,10 +356,13 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
           ownerId={item.userId}
           discussionPredefinedType={discussion?.predefinedType}
+          notion={discussion?.notion && commonNotion}
           hasUnseenMention={
-            feedItemUserMetadata?.hasUnseenMention ??
-            !isFeedItemUserMetadataFetched
+            isFeedItemUserMetadataFetched &&
+            feedItemUserMetadata?.hasUnseenMention
           }
+          originalCommonIdForLinking={discussion?.commonId}
+          linkedCommonIds={discussion?.linkedCommonIds}
         >
           {renderContent()}
         </FeedCard>
@@ -369,6 +394,31 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
               isDeletingInProgress={isDeletingInProgress}
             />
           </GlobalOverlay>
+        )}
+        {commonId && (
+          <>
+            <LinkStreamModal
+              isOpen={isLinkStreamModalOpen}
+              onClose={onLinkStreamModalClose}
+              feedItemId={item.id}
+              title={cardTitle || ""}
+              rootCommonId={rootCommonId || commonId}
+              commonId={commonId}
+              originalCommonId={discussion?.commonId || ""}
+              linkedCommonIds={discussion?.linkedCommonIds}
+              circleVisibility={item.circleVisibility}
+            />
+            <MoveStreamModal
+              isOpen={isMoveStreamModalOpen}
+              onClose={onMoveStreamModalClose}
+              feedItemId={item.id}
+              title={cardTitle || ""}
+              rootCommonId={rootCommonId || commonId}
+              commonId={commonId}
+              originalCommonId={discussion?.commonId || ""}
+              circleVisibility={item.circleVisibility}
+            />
+          </>
         )}
       </>
     );

@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Button, ButtonVariant } from "@/shared/components";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
 interface AddingCardProps {
@@ -22,11 +22,7 @@ const AddingCard: FC<AddingCardProps> = (props) => {
       />
       <div className="billing-adding-card__content">
         <p className="billing-adding-card__content__text">{text}</p>
-        <Button
-          className="billing-adding-card__content__button"
-          variant={ButtonVariant.Secondary}
-          onClick={onClick}
-        >
+        <Button variant={ButtonVariant.OutlineDarkPink} onClick={onClick}>
           {buttonText}
         </Button>
       </div>

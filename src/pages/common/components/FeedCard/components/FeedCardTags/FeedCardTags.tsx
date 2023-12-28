@@ -58,7 +58,12 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
       )}
       {hasUnseenMention && <div className={styles.hasUnseenMention}>@</div>}
       {isFollowing && (
-        <StarIcon className={styles.starIcon} stroke="currentColor" />
+        <StarIcon
+          className={classNames(styles.starIcon, {
+            [styles.starActive]: isActive,
+          })}
+          stroke="currentColor"
+        />
       )}
       {isNewTagVisible && (
         <div

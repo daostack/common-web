@@ -17,8 +17,8 @@ $two-columns-grid-gap: 1rem 0.5rem;
   display: grid;
   grid-template-columns: repeat(var(--columns-amount, 4), auto);
   grid-gap: var(--columns-gap);
-  background-color: $c-shades-white;
-  border: 0.0625rem solid $c-neutrals-100;
+  background-color: var(--primary-background);
+  border: 0.0625rem solid var(--gentle-stroke);
   box-sizing: border-box;
 }
 .containerCol4 {

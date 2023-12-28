@@ -8,6 +8,7 @@ import {
   CommonFeed,
   CommonFeedType,
   CommonMember,
+  CommonNotion,
   DirectParent,
 } from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
@@ -23,6 +24,7 @@ interface FeedItemProps {
   commonName: string;
   commonMember?: (CommonMember & CirclesPermissions) | null;
   commonImage: string;
+  commonNotion?: CommonNotion;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject?: boolean;
   isPinned?: boolean;
@@ -41,6 +43,7 @@ interface FeedItemProps {
     commonId?: string,
   ) => void;
   directParent?: DirectParent | null;
+  rootCommonId?: string;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -48,6 +51,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     commonId,
     commonName,
     commonImage,
+    commonNotion,
     pinnedFeedItems,
     commonMember,
     isProject = false,
@@ -64,6 +68,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     shouldCheckItemVisibility = true,
     onActiveItemDataChange,
     directParent,
+    rootCommonId,
   } = props;
   const {
     onFeedItemUpdate,
@@ -112,6 +117,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     commonId,
     commonName,
     commonImage,
+    commonNotion,
     pinnedFeedItems,
     isActive,
     isExpanded,
@@ -125,6 +131,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     isMobileVersion,
     onActiveItemDataChange: handleActiveItemDataChange,
     directParent,
+    rootCommonId,
     feedItemFollow,
     onUserSelect,
   };

@@ -1,5 +1,6 @@
 import { call, put, select } from "redux-saga/effects";
 import { DiscussionService } from "@/services";
+import { FirestoreDataSource } from "@/shared/constants";
 import { Awaited, LoadingState } from "@/shared/interfaces";
 import { Discussion } from "@/shared/models";
 import { isError } from "@/shared/utils";
@@ -35,9 +36,11 @@ export function* getDiscussionStateById({
         },
       }),
     );
-    const data = (yield call(requestFunction, discussionId)) as Awaited<
-      ReturnType<typeof requestFunction>
-    >;
+    const data = (yield call(
+      requestFunction,
+      discussionId,
+      FirestoreDataSource.Cache,
+    )) as Awaited<ReturnType<typeof requestFunction>>;
 
     yield put(
       updateStateAction({

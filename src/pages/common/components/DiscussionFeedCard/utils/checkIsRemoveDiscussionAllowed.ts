@@ -21,7 +21,7 @@ export function checkIsRemoveDiscussionAllowed(
     hasPermission({
       commonMember,
       governance: { circles },
-      key: GovernanceActions.HIDE_OR_UNHIDE_DISCUSSION,
+      action: GovernanceActions.HIDE_OR_UNHIDE_DISCUSSION,
     }) || isDiscussionOwner;
 
   if (!options.discussion?.proposalId) {

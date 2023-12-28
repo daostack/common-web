@@ -1,12 +1,19 @@
 import React, { FC, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { matchPath, useLocation } from "react-router";
 import { logOut } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { SettingsMenuButton } from "@/pages/settings/components/Settings/components";
 import { ButtonIcon, Loader } from "@/shared/components";
+import { ROUTE_PATHS } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
+import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Edit3Icon as EditIcon, LogoutIcon } from "@/shared/icons";
+import ThemeIcon from "@/shared/icons/theme.icon";
+import { toggleTheme } from "@/shared/store/actions";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { DeleteUserModal } from "./DeleteUserModal";
 import { Header, MenuButton, UserDetails, UserDetailsRef } from "./components";
 import styles from "./Profile.module.scss";
 
@@ -23,6 +30,14 @@ const Profile: FC<ProfileProps> = (props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const user = useSelector(selectUser());
   const isMobileView = useIsTabletView();
+  const { pathname } = useLocation();
+  const isV04 = matchPath(ROUTE_PATHS.V04_PROFILE, pathname);
+
+  const {
+    isShowing: isDeleteAccountModalShowing,
+    onOpen: onDeleteAccountModalOpen,
+    onClose: onDeleteAccountModalClose,
+  } = useModal(false);
 
   const handleEditingChange = (isEditing: boolean) => {
     setIsEditing(isEditing);
@@ -47,6 +62,10 @@ const Profile: FC<ProfileProps> = (props) => {
 
   const handleSubmit = () => {
     userDetailsRef.current?.submit();
+  };
+
+  const handleThemeToggle = () => {
+    dispatch(toggleTheme(null));
   };
 
   const handleLogout = () => {
@@ -77,15 +96,22 @@ const Profile: FC<ProfileProps> = (props) => {
     </ButtonIcon>
   );
 
+  const profileMenuButtonEl = (
+    <SettingsMenuButton
+      isMobileVersion={isMobileView}
+      onAccountDelete={onDeleteAccountModalOpen}
+    />
+  );
+
   return (
     <div className={styles.container}>
-      {!isMobileView && !isEditing && editButtonEl}
       <div className={styles.content}>
         <Header
           className={styles.header}
           isEditing={isEditing}
           isMobileVersion={isMobileView}
           editButtonEl={editButtonEl}
+          profileMenuButton={profileMenuButtonEl}
         />
         {!user && <Loader />}
         {user && (
@@ -108,7 +134,7 @@ const Profile: FC<ProfileProps> = (props) => {
               <div className={styles.menuButtonsWrapper}>
                 <MenuButton
                   className={styles.menuButton}
-                  text="Settings"
+                  text="Notifications"
                   to={getSettingsPagePath()}
                 />
                 <MenuButton
@@ -116,6 +142,14 @@ const Profile: FC<ProfileProps> = (props) => {
                   text="Billing"
                   to={getBillingPagePath()}
                 />
+                {!isV04 && (
+                  <MenuButton
+                    className={`${styles.menuButton} ${styles.themeMenuButton}`}
+                    text="Light/Dark mode"
+                    onClick={handleThemeToggle}
+                    iconEl={<ThemeIcon />}
+                  />
+                )}
                 <MenuButton
                   className={`${styles.menuButton} ${styles.logoutMenuButton}`}
                   text="Logout"
@@ -127,6 +161,10 @@ const Profile: FC<ProfileProps> = (props) => {
           </>
         )}
       </div>
+      <DeleteUserModal
+        isShowing={isDeleteAccountModalShowing}
+        onClose={onDeleteAccountModalClose}
+      />
     </div>
   );
 };

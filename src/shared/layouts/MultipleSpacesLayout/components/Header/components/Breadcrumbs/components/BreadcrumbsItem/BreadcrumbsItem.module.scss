@@ -1,4 +1,5 @@
 @import "../../../../../../../../../constants";
+@import "../../../../../../../../../styles/sizes";
 
 .button {
   --breadcrumbs-color: #{$c-gray-40};
@@ -23,7 +24,17 @@
   box-sizing: border-box;
 
   &:hover {
-    --breadcrumbs-color: #{$c-shades-black};
+    --breadcrumbs-color: #{var(--primary-text)};
     --breadcrumbs-bg-color: #{$c-gray-20};
+  }
+}
+
+@include tablet {
+  .li {
+    &:first-child {
+      .button {
+        padding-left: 0;
+      }
+    }
   }
 }

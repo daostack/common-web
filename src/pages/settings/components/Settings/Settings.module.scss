@@ -4,6 +4,7 @@
 .container {
   position: relative;
   width: 100%;
+  color: var(--primary-text);
 }
 
 .content {
@@ -15,12 +16,6 @@
   @include tablet {
     padding-top: 0;
   }
-}
-
-.settingsMenuButton {
-  position: absolute;
-  top: 1.5rem;
-  right: 0;
 }
 
 .header {

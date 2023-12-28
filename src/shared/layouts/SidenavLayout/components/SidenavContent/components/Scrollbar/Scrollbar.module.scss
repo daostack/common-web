@@ -34,7 +34,9 @@
   &:active {
     --scroll-thumb-color: #{$c-neutrals-300};
   }
-  &:hover {
-    --scroll-thumb-color: var(--medium-gray);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      --scroll-thumb-color: $c-gray-20;
+    }
   }
 }

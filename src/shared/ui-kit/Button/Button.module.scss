@@ -122,7 +122,7 @@
 }
 
 .buttonPrimaryPinkVariant {
-  --btn-color: var(--white-text);
+  --btn-color: #ffffff;
   --btn-bg-color: var(--primary-fill);
   --btn-border-color: none;
   --btn-border: 0;
@@ -138,7 +138,7 @@
   }
 
   &.buttonDisabled {
-    --btn-bg-color: #{$c-shades-neutrals-30};
+    --btn-bg-color: #{var(--quaternary-fill)};
   }
 }
 
@@ -226,31 +226,26 @@
 
 .buttonOutlineDarkPinkVariant {
   --btn-color: #{$c-pink-next-dark};
-  --btn-bg-color: #{$c-shades-white};
   --btn-border-color: #{$c-pink-next-dark};
   --btn-border: 0.0625rem solid var(--btn-border-color);
 
   &:hover {
-    --btn-bg-color: #{$c-pink-hover-feed-cards};
+    --btn-bg-color: var(--secondary-hover-fill);
   }
 
   &:active {
     --btn-bg-color: #{$c-pink-active-btn};
   }
-
-  &.buttonDisabled {
-    --btn-bg-color: #{$c-neutrals-100};
-  }
 }
 
 .buttonWarningVariant {
   --btn-color: #{$c-error-300};
-  --btn-bg-color: #{$c-primary-100};
+  --btn-bg-color: var(--primary-background);
   --btn-border-color: #{$c-error-300};
   --btn-border: 0.0625rem solid var(--btn-border-color);
 
   &:hover {
-    --btn-bg-color: #{$c-hover-secondary};
+    --btn-bg-color: var(--hover-fill);
   }
 
   &:active {

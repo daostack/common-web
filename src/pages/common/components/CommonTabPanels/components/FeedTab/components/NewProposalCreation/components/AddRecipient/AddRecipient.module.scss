@@ -4,7 +4,7 @@
   padding: 1.25rem 0.625rem;
   display: flex;
   align-items: center;
-  background-color: $c-light-gray;
+  background-color: var(--secondary-background);
   margin-top: 2.5rem;
 }
 
@@ -14,14 +14,15 @@
 }
 
 .tableHead {
-  border-bottom: 1px solid $c-neutrals-200;
+  border-bottom: 1px solid var(--gentle-stroke);
   padding: 0 1rem;
 }
 
 .tableBody {
   padding: 0 1rem;
-  background-color: $white;
+  background-color: var(--tertiary-fill);
   width: 100%;
+  color: var(--primary-text);
 }
 
 .tableHeader {
@@ -31,6 +32,7 @@
   font-size: $xsmall;
   font-weight: 400;
   padding-right: 1rem;
+  color: var(--primary-text);
 }
 
 .tableHeader:first-child {
@@ -41,14 +43,14 @@
 .tableCell {
   padding-top: 0.5rem;
   padding-bottom: 0.375rem;
-  border-top: 0.0625rem solid $c-neutrals-200;
-  border-bottom: 0.0625rem solid $c-neutrals-200;
+  border-top: 0.0625rem solid var(--gentle-stroke);
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
 }
 
 .tableCell:first-child {
   padding-left: 0.5625rem;
   width: 1.125rem;
-  border-left: 0.0625rem solid $c-neutrals-200;
+  border-left: 0.0625rem solid var(--gentle-stroke);
 }
 
 .goalCell {
@@ -60,7 +62,7 @@
 }
 
 .tableCell:last-child {
-  border-right: 0.0625rem solid $c-neutrals-200;
+  border-right: 0.0625rem solid var(--gentle-stroke);
 }
 
 .editIcon {
@@ -81,8 +83,4 @@
 
 .clickableRow {
   cursor: pointer;
-
-  &:hover {
-    background-color: $c-primary-100;
-  }
 }

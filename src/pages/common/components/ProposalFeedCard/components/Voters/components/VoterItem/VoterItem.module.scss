@@ -5,7 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: $c-shades-white;
+  background-color: var(--primary-background);
 }
 
 .content {

@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { CommonService, UserService } from "@/services";
+import { store } from "@/shared/appConfig";
 import { SystemDiscussionMessageType } from "@/shared/constants";
 import {
   Common,
@@ -16,6 +17,7 @@ import {
   getCommonPagePath,
   getUserName,
 } from "@/shared/utils";
+import { commonLayoutActions } from "@/store/states";
 import { UserMention } from "../components";
 import { Text, TextData } from "../types";
 import { getFeedItemDisplayingData } from "./getFeedItemDisplayingData";
@@ -31,6 +33,14 @@ const getCommon = async (commonId: string): Promise<Common | null> =>
 const getCommonTypeText = (commonType: SystemMessageCommonType): string =>
   commonType === SystemMessageCommonType.Common ? "common" : "space";
 
+const handleCommonClick = (commonId: string, rootCommonId?: string) => {
+  store.dispatch(
+    commonLayoutActions.resetCurrentCommonIdAndProjects(
+      rootCommonId || commonId,
+    ),
+  );
+};
+
 const renderUserMention = (
   user: User | null,
   data: TextData,
@@ -42,16 +52,14 @@ const renderUserMention = (
       userId={user.uid}
       displayName={getUserName(user)}
       mentionTextClassName={data.mentionTextClassName}
-      commonId={data.commonId}
-      directParent={data.directParent}
       onUserClick={data.onUserClick}
     />
   ) : (
     defaultName
   );
 
-const renderLink = (to: string, name: string): Text => (
-  <NavLink className={styles.systemMessageCommonLink} to={to}>
+const renderLink = (to: string, name: string, onClick?: () => void): Text => (
+  <NavLink className={styles.systemMessageCommonLink} to={to} onClick={onClick}>
     {name}
   </NavLink>
 );
@@ -84,6 +92,7 @@ const getCommonCreatedSystemMessageText = async (
       {renderLink(
         (data.getCommonPagePath || getCommonPagePath)(common.id),
         common.name,
+        () => handleCommonClick(common.id, common.rootCommonId),
       )}
     </>
   ) : (
@@ -97,7 +106,10 @@ const getCommonEditedSystemMessageText = async (
   systemMessageData: CommonEditedSystemMessage["systemMessageData"],
   data: TextData,
 ): Promise<Text[]> => {
-  const user = await getUser(systemMessageData.userId, data.users);
+  const [user, common] = await Promise.all([
+    getUser(systemMessageData.userId, data.users),
+    getCommon(systemMessageData.commonId),
+  ]);
   const userEl = renderUserMention(user, data);
 
   return [
@@ -107,6 +119,7 @@ const getCommonEditedSystemMessageText = async (
         systemMessageData.commonId,
       ),
       "info",
+      () => handleCommonClick(systemMessageData.commonId, common?.rootCommonId),
     ),
     " was edited by ",
     userEl,

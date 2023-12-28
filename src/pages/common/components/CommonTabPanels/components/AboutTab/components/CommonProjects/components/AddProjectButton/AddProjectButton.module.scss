@@ -36,9 +36,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--main-color);
-  background-color: $c-primary-100;
-  border: 0.0625rem solid var(--main-color);
+  color: var(--primary-fill);
+  background-color: var(--secondary-background);
+  border: 0.0625rem solid var(--primary-fill);
   border-radius: 50%;
   box-sizing: border-box;
 }
@@ -55,11 +55,12 @@
   font-family: PoppinsSans, sans-serif;
   font-weight: bold;
   font-size: $small;
-  color: var(--main-color);
+  color: var(--primary-fill);
   text-decoration: var(--text-decoration);
 }
 
 .tooltipContent {
   max-width: 20rem;
   z-index: 3;
+  background-color: var(--secondary-background);
 }

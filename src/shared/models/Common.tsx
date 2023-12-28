@@ -1,7 +1,7 @@
-import firebase from "firebase/app";
 import { BaseEntity } from "./BaseEntity";
 import { Discussion } from "./Discussion";
 import { DiscussionMessage } from "./DiscussionMessage";
+import { NotionIntegration } from "./NotionIntegration";
 import { PaymentAmount } from "./Payment";
 import { Proposal } from "./Proposals";
 import { Timestamp } from "./Timestamp";
@@ -122,6 +122,8 @@ export interface Common extends BaseEntity {
   rootCommonId?: string;
 
   lastActivity?: Timestamp;
+
+  notion?: CommonNotion;
 }
 
 export interface Project extends Common {
@@ -149,7 +151,7 @@ export interface CommonMember {
   readonly id: string;
   readonly userId: string;
   rulesAccepted?: boolean;
-  joinedAt: firebase.firestore.Timestamp;
+  joinedAt: Timestamp;
   circleIds: string[];
   isFollowing: boolean;
   streamsUnreadCountByProjectStream?: Record<string, number>;
@@ -195,6 +197,10 @@ export interface CommonLink {
 
 export interface CommonPayment {
   link: string;
+}
+
+export interface CommonNotion extends Omit<NotionIntegration, "token"> {
+  title: string;
 }
 
 interface FeedItem {

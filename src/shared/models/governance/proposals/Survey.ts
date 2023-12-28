@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
 import { ProposalsTypes } from "@/shared/constants";
+import { Timestamp } from "../../Timestamp";
 import { CircleIndex } from "../Circles";
 import { BaseProposal } from "./BaseProposal";
 import { BasicArgsProposal } from "./BasicArgsProposal";
@@ -9,8 +9,8 @@ export interface SurveyArgs extends BasicArgsProposal {}
 
 export interface Survey extends BaseProposal {
   data: {
-    votingExpiresOn: firebase.firestore.Timestamp | null;
-    discussionExpiresOn: firebase.firestore.Timestamp | null;
+    votingExpiresOn: Timestamp | null;
+    discussionExpiresOn: Timestamp | null;
     args: SurveyArgs;
   };
   type: ProposalsTypes.SURVEY;

@@ -2,6 +2,7 @@ import React from "react";
 import Select, { components, DropdownIndicatorProps } from "react-select";
 import { useFormikContext } from "formik";
 import { ProposalsTypes } from "@/shared/constants";
+import useThemeColor from "@/shared/hooks/useThemeColor";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { NewProposalCreationFormValues } from "@/shared/interfaces";
 import { selectorStyles } from "./selectorStyles";
@@ -38,6 +39,8 @@ const getProposalOptions = (commonBalance: number) => {
 const ProposalTypeSelect = ({ commonBalance }: ProposalTypeSelectProps) => {
   const { values, setFieldValue, handleBlur, touched, errors } =
     useFormikContext<NewProposalCreationFormValues>();
+
+  const { getThemeColor } = useThemeColor();
   const hasError = Boolean(touched.proposalType && errors.proposalType);
 
   return (
@@ -52,7 +55,7 @@ const ProposalTypeSelect = ({ commonBalance }: ProposalTypeSelectProps) => {
         }}
         onBlur={handleBlur("proposalType")}
         hideSelectedOptions={false}
-        styles={selectorStyles(hasError)}
+        styles={selectorStyles(hasError, getThemeColor)}
         components={{
           DropdownIndicator,
         }}

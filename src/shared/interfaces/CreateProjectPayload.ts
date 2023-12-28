@@ -1,4 +1,10 @@
-import { BaseRule, CommonLink, Roles } from "@/shared/models";
+import {
+  BaseRule,
+  CommonLink,
+  NotionIntegrationPayload,
+  NotionIntegrationPayloadIntermediate,
+  Roles,
+} from "@/shared/models";
 import { TextEditorValue } from "@/shared/ui-kit";
 import { UploadFile } from "./UploadFile";
 
@@ -13,6 +19,7 @@ export interface CreateProjectPayload {
   video?: CommonLink;
   tags?: string[];
   highestCircleId: string;
+  notion?: NotionIntegrationPayload;
 }
 
 export interface IntermediateCreateProjectPayload {
@@ -25,4 +32,5 @@ export interface IntermediateCreateProjectPayload {
   links?: CommonLink[];
   roles?: Roles;
   highestCircleId: string;
+  notion?: NotionIntegrationPayloadIntermediate;
 }

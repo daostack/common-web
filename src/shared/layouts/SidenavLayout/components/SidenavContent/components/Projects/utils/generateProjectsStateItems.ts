@@ -5,6 +5,9 @@ export const getItemFromProjectsStateItem = (
   projectsStateItem: ProjectsStateItem,
   generatePath: (projectsStateItem: ProjectsStateItem) => string,
   itemsGroupedByCommonParentId?: Map<string | null, ProjectsStateItem[]>,
+  getAdditionalItemData?: (
+    projectsStateItem: ProjectsStateItem,
+  ) => Partial<Item>,
 ): Item => {
   const items = itemsGroupedByCommonParentId
     ? (itemsGroupedByCommonParentId.get(projectsStateItem.commonId) || []).map(
@@ -13,6 +16,7 @@ export const getItemFromProjectsStateItem = (
             subCommon,
             generatePath,
             itemsGroupedByCommonParentId,
+            getAdditionalItemData,
           ),
       )
     : [];
@@ -26,12 +30,16 @@ export const getItemFromProjectsStateItem = (
     hasPermissionToAddProject: projectsStateItem.hasPermissionToAddProject,
     notificationsAmount: projectsStateItem.notificationsAmount,
     items,
+    ...(getAdditionalItemData?.(projectsStateItem) || {}),
   };
 };
 
 export const generateProjectsTreeItems = (
   data: ProjectsStateItem[],
   generatePath: (projectsStateItem: ProjectsStateItem) => string,
+  getAdditionalItemData?: (
+    projectsStateItem: ProjectsStateItem,
+  ) => Partial<Item>,
 ): Item[] => {
   const itemsGroupedByCommonParentId = data.reduce((map, item) => {
     const commonId = item.directParent?.commonId || null;
@@ -50,6 +58,7 @@ export const generateProjectsTreeItems = (
           item,
           generatePath,
           itemsGroupedByCommonParentId,
+          getAdditionalItemData,
         ),
       ),
     [],

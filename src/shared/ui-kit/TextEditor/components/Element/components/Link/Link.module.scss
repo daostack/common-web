@@ -1,5 +1,7 @@
 @import "../../../../../../../constants";
 
 .link {
-  color: $c-primary-500;
+  color: var(--primary-fill);
+  cursor: pointer;
+  text-decoration: underline;
 }

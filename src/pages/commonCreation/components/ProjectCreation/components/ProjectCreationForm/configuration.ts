@@ -1,4 +1,4 @@
-import { Roles } from "@/shared/models";
+import { NotionIntegration, Roles, SyncLeaseStatus } from "@/shared/models";
 import { TextEditorSize } from "@/shared/ui-kit";
 import { CreationFormItem, CreationFormItemType } from "../../../CreationForm";
 import {
@@ -14,6 +14,7 @@ interface Options {
   roles?: Roles;
   shouldBeUnique?: { existingNames: string[] };
   isImageRequired?: boolean;
+  notionIntegration?: NotionIntegration | null;
 }
 
 export const getConfiguration = (options: Options): CreationFormItem[] => {
@@ -21,6 +22,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     isProject = true,
     roles,
     shouldBeUnique,
+    notionIntegration,
     isImageRequired = false,
   } = options;
   const type = isProject ? "Space" : "Common";
@@ -138,6 +140,34 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
         required: {
           value: true,
           message: "Role name is required",
+        },
+      },
+    });
+  }
+
+  if (isProject) {
+    const isNotionIntegrationDisabledForUpdate = Boolean(
+      notionIntegration &&
+        notionIntegration.lastSuccessfulSyncAt === null &&
+        notionIntegration.syncLease?.status === SyncLeaseStatus.Pending,
+    );
+
+    items.push({
+      type: CreationFormItemType.NotionIntegration,
+      props: {
+        name: "notion",
+        isEnabled: {
+          name: "notion.isEnabled",
+          label: "Notion database integration",
+          disabled: isNotionIntegrationDisabledForUpdate,
+        },
+        token: {
+          name: "notion.token",
+          label: "Notion's Internal Integration Secret",
+        },
+        databaseId: {
+          name: "notion.databaseId",
+          label: "Notion database ID",
         },
       },
     });

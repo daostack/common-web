@@ -8,8 +8,8 @@ import React, {
 import { useDispatch } from "react-redux";
 import { createReport } from "@/pages/OldCommon/store/actions";
 import { subscribeToMessageRefresh } from "@/pages/OldCommon/store/saga";
-import { Loader, Button } from "@/shared/components";
-import { Colors, EntityTypes } from "@/shared/constants";
+import { Loader } from "@/shared/components";
+import { EntityTypes } from "@/shared/constants";
 import { useNotification } from "@/shared/hooks";
 import {
   Discussion,
@@ -17,6 +17,7 @@ import {
   Proposal,
   Common,
 } from "@/shared/models";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { emptyFunction } from "@/shared/utils";
 import { Modal } from "../Modal";
 import "./index.scss";
@@ -132,8 +133,6 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
       onClose={isLoading ? emptyFunction : onClose}
       hideCloseButton={isLoading}
       title="Report"
-      closeColor={Colors.black}
-      closeIconSize={20}
       styles={{
         header: "report-modal__header",
         content: "report-modal__content",
@@ -151,6 +150,7 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
           disabled={isLoading}
           className="report-modal__button-container__button report-modal__button-container__cancel"
           onClick={onClose}
+          variant={ButtonVariant.OutlineDarkPink}
         >
           Cancel
         </Button>
@@ -158,6 +158,7 @@ const ReportModal: FC<PropsWithChildren<ReportModalProps>> = (props) => {
           disabled={isLoading || !message}
           className="report-modal__button-container__button report-modal__button-container__send"
           onClick={sendReport}
+          variant={ButtonVariant.PrimaryPink}
         >
           {isLoading ? (
             <Loader className="report-modal__button-container__send__loader" />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import {
@@ -7,14 +7,20 @@ import {
   CommonService,
   FeedItemFollowsService,
   Logger,
+  UserService,
 } from "@/services";
-import { InboxItemType } from "@/shared/constants";
+import { FirestoreDataSource, InboxItemType } from "@/shared/constants";
 import { useIsMounted } from "@/shared/hooks";
-import { FeedLayoutItemWithFollowData } from "@/shared/interfaces";
+import {
+  ChatChannelLayoutItem,
+  FeedLayoutItemWithFollowData,
+} from "@/shared/interfaces";
 import {
   ChatChannel,
   FeedItemFollow,
   FeedItemFollowWithMetadata,
+  InboxItem,
+  Timestamp,
 } from "@/shared/models";
 import { inboxActions, InboxItems, selectInboxItems } from "@/store/states";
 
@@ -24,7 +30,7 @@ interface Return
   refetch: () => void;
 }
 
-interface ItemBatch<T = FeedItemFollow> {
+interface ItemBatch<T = InboxItem> {
   item: T;
   statuses: {
     isAdded: boolean;
@@ -34,8 +40,8 @@ interface ItemBatch<T = FeedItemFollow> {
 
 type ItemsBatch = ItemBatch[];
 
-const addMetadataToItemsBatch = async (
-  batch: ItemsBatch,
+const addMetadataToFeedItemFollowItemsBatch = async (
+  batch: ItemBatch<FeedItemFollow>[],
 ): Promise<ItemBatch<FeedLayoutItemWithFollowData>[]> => {
   const data = await Promise.all(
     batch.map(async ({ item }) => {
@@ -115,6 +121,73 @@ const addMetadataToItemsBatch = async (
     }));
 };
 
+const addMetadataToChatChannelsBatch = (
+  batch: ItemBatch<ChatChannel>[],
+): ItemBatch<ChatChannelLayoutItem>[] =>
+  batch
+    .filter(({ item: chatChannel }) => chatChannel.messageCount > 0)
+    .map(({ item: chatChannel, statuses }) => ({
+      item: {
+        itemId: chatChannel.id,
+        type: InboxItemType.ChatChannel,
+        chatChannel: chatChannel,
+      },
+      statuses,
+    }));
+
+const addMetadataToItemsBatch = async (
+  userId: string,
+  batch: ItemsBatch,
+  feedItemIdsForNotListening: string[] = [],
+): Promise<ItemBatch<FeedLayoutItemWithFollowData>[]> => {
+  const batchWithFeedItemFollowItems = (
+    await Promise.all(
+      batch.map(async (batchItem) => {
+        const item =
+          batchItem.item.type === InboxItemType.FeedItemFollow
+            ? await FeedItemFollowsService.getFeedItemFollowDataById(
+                userId,
+                batchItem.item.itemId,
+                FirestoreDataSource.Cache,
+              )
+            : null;
+
+        return item ? { item, statuses: batchItem.statuses } : null;
+      }, []),
+    )
+  ).filter((item): item is ItemBatch<FeedItemFollow> => Boolean(item));
+  const batchWithChatChannelLayoutItems = (
+    await Promise.all(
+      batch.map(async (batchItem) => {
+        if (batchItem.item.type !== InboxItemType.ChatChannel) {
+          return null;
+        }
+
+        let item = await ChatService.getChatChannelById(
+          batchItem.item.itemId,
+          FirestoreDataSource.Cache,
+        );
+
+        if (item?.messageCount === 0) {
+          item = await ChatService.getChatChannelById(
+            batchItem.item.itemId,
+            FirestoreDataSource.Server,
+          );
+        }
+
+        return item ? { item, statuses: batchItem.statuses } : null;
+      }, []),
+    )
+  ).filter((item): item is ItemBatch<ChatChannel> => Boolean(item));
+  const batchWithFeedLayoutItemWithFollowItems =
+    await addMetadataToFeedItemFollowItemsBatch(batchWithFeedItemFollowItems);
+
+  return [
+    ...batchWithFeedLayoutItemWithFollowItems,
+    ...addMetadataToChatChannelsBatch(batchWithChatChannelLayoutItems),
+  ].filter(({ item }) => !feedItemIdsForNotListening.includes(item.itemId));
+};
+
 export const useInboxItems = (
   feedItemIdsForNotListening?: string[],
   options?: { unread?: boolean },
@@ -122,16 +195,20 @@ export const useInboxItems = (
   const dispatch = useDispatch();
   const isMounted = useIsMounted();
   const [newItemsBatches, setNewItemsBatches] = useState<ItemsBatch[]>([]);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<Timestamp | null>(null);
   const inboxItems = useSelector(selectInboxItems);
   const user = useSelector(selectUser());
+  const inboxItemsRef = useRef(inboxItems);
   const userId = user?.uid;
+  const unread = options?.unread;
   const lastBatch = newItemsBatches[0];
+  inboxItemsRef.current = inboxItems;
 
   const fetch = () => {
     dispatch(
       inboxActions.getInboxItems.request({
         limit: 15,
-        unread: options?.unread,
+        unread,
       }),
     );
   };
@@ -141,43 +218,9 @@ export const useInboxItems = (
     fetch();
   };
 
-  const addNewChatChannels = (
+  const addNewInboxItems = (
     data: {
-      chatChannel: ChatChannel;
-      statuses: {
-        isAdded: boolean;
-        isRemoved: boolean;
-      };
-    }[],
-  ) => {
-    const finalData =
-      feedItemIdsForNotListening && feedItemIdsForNotListening.length > 0
-        ? data.filter(
-            (item) => !feedItemIdsForNotListening.includes(item.chatChannel.id),
-          )
-        : data;
-
-    if (finalData.length === 0) {
-      return;
-    }
-
-    dispatch(
-      inboxActions.addNewInboxItems(
-        finalData.map((item) => ({
-          item: {
-            itemId: item.chatChannel.id,
-            type: InboxItemType.ChatChannel,
-            chatChannel: item.chatChannel,
-          },
-          statuses: item.statuses,
-        })),
-      ),
-    );
-  };
-
-  const addNewFollowFeedItems = (
-    data: {
-      item: FeedItemFollow;
+      item: InboxItem;
       statuses: {
         isAdded: boolean;
         isRemoved: boolean;
@@ -188,54 +231,40 @@ export const useInboxItems = (
       return;
     }
 
-    const finalData =
-      feedItemIdsForNotListening && feedItemIdsForNotListening.length > 0
-        ? data.filter(
-            (item) =>
-              !feedItemIdsForNotListening.includes(item.item.feedItemId),
-          )
-        : data;
-    setNewItemsBatches((currentItems) => [...currentItems, finalData]);
+    setNewItemsBatches((currentItems) => [...currentItems, data]);
   };
 
   useEffect(() => {
     (async () => {
       try {
-        const { firstDocTimestamp: startAt, lastDocTimestamp: endAt } =
-          inboxItems;
+        const {
+          data,
+          firstDocTimestamp: startAt,
+          lastDocTimestamp: endAt,
+        } = inboxItems;
 
         if (!userId || !startAt || !endAt) {
           return;
         }
 
-        const [chatChannels, feedItemFollows] = await Promise.all([
-          ChatService.getChatChannels({
-            participantId: userId,
-            startAt,
-            endAt,
-          }),
-          FeedItemFollowsService.getFollowFeedItems({
-            userId,
-            startAt,
-            endAt,
-          }),
-        ]);
+        const fetchedInboxItems = await UserService.getInboxItems({
+          userId,
+          startAt,
+          endAt,
+        });
 
         if (!isMounted()) {
           return;
         }
 
-        addNewChatChannels(
-          chatChannels.map((chatChannel) => ({
-            chatChannel,
-            statuses: {
-              isAdded: false,
-              isRemoved: false,
-            },
-          })),
-        );
-        addNewFollowFeedItems(
-          feedItemFollows.map((item) => ({
+        const filteredInboxItems = data
+          ? fetchedInboxItems.filter((fetchedItem) =>
+              data.every((item) => item.itemId !== fetchedItem.itemId),
+            )
+          : fetchedInboxItems;
+
+        addNewInboxItems(
+          filteredInboxItems.map((item) => ({
             item,
             statuses: {
               isAdded: false,
@@ -254,36 +283,75 @@ export const useInboxItems = (
       return;
     }
 
-    const unsubscribe = ChatService.subscribeToNewUpdatedChatChannels(
-      userId,
-      inboxItems.firstDocTimestamp,
+    const unsubscribe = UserService.subscribeToNewInboxItems(
+      {
+        userId,
+        endBefore: inboxItems.firstDocTimestamp,
+        unread,
+      },
+      addNewInboxItems,
+    );
+
+    return unsubscribe;
+  }, [
+    inboxItems.firstDocTimestamp,
+    userId,
+    feedItemIdsForNotListening,
+    unread,
+  ]);
+
+  useEffect(() => {
+    const endBefore = lastUpdatedAt || inboxItems.firstDocTimestamp;
+
+    if (!endBefore || !userId) {
+      return;
+    }
+
+    const unsubscribe = UserService.subscribeToNewInboxItems(
+      {
+        userId,
+        endBefore,
+        unread,
+        orderBy: "updatedAt",
+      },
       (data) => {
-        addNewChatChannels(data);
+        const lastDocTimestampSeconds =
+          inboxItemsRef.current?.lastDocTimestamp?.seconds;
+        const currentInboxData = inboxItemsRef.current?.data;
+        const filteredData =
+          lastDocTimestampSeconds && currentInboxData
+            ? data.filter(
+                ({ item }) =>
+                  item.itemUpdatedAt.seconds >= lastDocTimestampSeconds &&
+                  !currentInboxData.some(
+                    (currentItem) => currentItem.itemId === item.itemId,
+                  ),
+              )
+            : [];
+
+        if (data[0]) {
+          setLastUpdatedAt(data[0].item.updatedAt);
+        }
+
+        addNewInboxItems(filteredData);
+
+        if (filteredData.length !== data.length) {
+          dispatch(inboxActions.setHasMoreInboxItems(true));
+        }
       },
     );
 
     return unsubscribe;
-  }, [inboxItems.firstDocTimestamp, userId, feedItemIdsForNotListening]);
+  }, [
+    inboxItems.firstDocTimestamp,
+    lastUpdatedAt,
+    userId,
+    feedItemIdsForNotListening,
+    unread,
+  ]);
 
   useEffect(() => {
-    if (!inboxItems.firstDocTimestamp || !userId) {
-      return;
-    }
-
-    const unsubscribe =
-      FeedItemFollowsService.subscribeToNewUpdatedFollowFeedItem(
-        userId,
-        inboxItems.firstDocTimestamp,
-        (data) => {
-          addNewFollowFeedItems(data);
-        },
-      );
-
-    return unsubscribe;
-  }, [inboxItems.firstDocTimestamp, userId, feedItemIdsForNotListening]);
-
-  useEffect(() => {
-    if (!lastBatch) {
+    if (!lastBatch || !userId) {
       return;
     }
     if (lastBatch.length === 0) {
@@ -293,8 +361,15 @@ export const useInboxItems = (
 
     (async () => {
       try {
-        const finalData = await addMetadataToItemsBatch(lastBatch);
-        dispatch(inboxActions.addNewInboxItems(finalData));
+        const finalData = await addMetadataToItemsBatch(
+          userId,
+          lastBatch,
+          feedItemIdsForNotListening,
+        );
+
+        if (finalData.length > 0) {
+          dispatch(inboxActions.addNewInboxItems(finalData));
+        }
       } catch (error) {
         Logger.error(error);
       } finally {

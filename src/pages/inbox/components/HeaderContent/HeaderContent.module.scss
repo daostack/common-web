@@ -16,11 +16,12 @@
 .content {
   display: flex;
   align-items: center;
+  margin-right: 50px;
 }
 
 .inboxIcon {
-  width: 2.125rem;
-  height: 2.125rem;
+  width: 1.5rem;
+  height: 1.5rem;
   margin-right: 0.75rem;
 }
 
@@ -34,6 +35,8 @@
 .actionButtonsWrapper {
   display: flex;
   align-items: center;
+  justify-content: end;
+  flex-grow: 1;
 
   & > * {
     margin-right: 1rem;
