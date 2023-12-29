@@ -117,7 +117,7 @@ export default function ChatMessage({
         ));
 
       const parsedText = await getTextFromTextEditorString({
-        textEditorString: parentMessage.text,
+        textEditorString: parentMessage?.text,
         users,
         commonId: discussionMessage.commonId,
         directParent,
