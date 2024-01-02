@@ -1,23 +1,30 @@
 import React from "react";
 import { FC } from "react";
 import { Image } from "@/shared/components/Image";
-import { getRandomUserAvatarURL } from "@/shared/utils";
+import {
+  ResizedFileSize,
+  getRandomUserAvatarURL,
+  getResizedFileUrl,
+} from "@/shared/utils";
 
 interface CommonAvatarProps {
   name?: string;
   src?: string;
   className?: string;
   alt?: string;
+  useResizedFile?: boolean;
 }
 
 const CommonAvatar: FC<CommonAvatarProps> = (props) => {
-  const { src = "", name, className, alt } = props;
+  const { src = "", name, className, alt, useResizedFile = true } = props;
   const finalName = name ?? "unknown";
 
   return (
     <Image
       className={className}
-      src={src}
+      src={
+        useResizedFile ? getResizedFileUrl(src, ResizedFileSize.Avatars) : src
+      }
       alt={alt ?? `${finalName}'s image`}
       placeholderElement={
         <Image
