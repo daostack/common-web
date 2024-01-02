@@ -78,6 +78,11 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
           isLoading: !isCommonFetched,
           unreadMessages,
           lastMessage,
+          seen: !(
+            unreadStreamsCount &&
+            unreadStreamsCount > 0 &&
+            unreadMessages === 0
+          ),
           renderLeftContent,
           shouldHideBottomContent: !lastMessage,
           isFollowing: feedItemFollow.isFollowing,
