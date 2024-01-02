@@ -205,7 +205,11 @@ const reducer = createReducer<CommonsStateType, Action>(initialState)
     produce(state, (nextState) => {
       const { commonId, state } = payload;
 
-      nextState.commonStates[commonId] = { ...state };
+      if (state) {
+        nextState.commonStates[commonId] = { ...state };
+      } else {
+        delete nextState.commonStates[commonId];
+      }
     }),
   );
 
