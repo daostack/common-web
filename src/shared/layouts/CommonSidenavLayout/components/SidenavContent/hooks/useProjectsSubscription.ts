@@ -81,12 +81,13 @@ export const useProjectsSubscription = (data: Data) => {
       activeItemId,
       (data) => {
         const commons = data.reduce<Common[]>((acc, { common, isRemoved }) => {
-          if (!isRemoved) {
+          if (isRemoved) {
+            CommonEventEmitter.emit(CommonEvent.CommonDeleted, common.id);
+            return acc;
+          } else {
             CommonEventEmitter.emit(CommonEvent.CommonUpdated, common);
             return acc.concat(common);
           }
-
-          return acc;
         }, []);
 
         if (commons.length !== 0) {
