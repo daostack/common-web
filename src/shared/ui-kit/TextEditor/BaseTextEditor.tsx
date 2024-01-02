@@ -206,7 +206,11 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
   return (
     <div ref={inputContainerRef} className={styles.container}>
-      <Slate editor={editor} value={value as any} onChange={onChangeSlate}>
+      <Slate
+        editor={editor}
+        initialValue={value as any}
+        onChange={onChangeSlate}
+      >
         <Editor
           className={className}
           id={id}
