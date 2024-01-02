@@ -1,4 +1,4 @@
-import { ApiEndpoint } from "@/shared/constants";
+import { ApiEndpoint, DocChange } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import { Collection, DiscussionMessage } from "@/shared/models";
@@ -13,6 +13,26 @@ import { Api } from ".";
 
 const converter = firestoreDataConverter<DiscussionMessage>();
 
+const getDiscussionMessagesByStatus = (
+  snapshot: firebase.firestore.QuerySnapshot<DiscussionMessage>,
+) => {
+  const added: DiscussionMessage[] = [];
+  const removed: DiscussionMessage[] = [];
+
+  snapshot.docChanges().forEach((docChange) => {
+    switch (docChange.type) {
+      case DocChange.Added:
+        added.push(transformFirebaseDataSingle(docChange.doc));
+        break;
+      case DocChange.Removed:
+        removed.push(transformFirebaseDataSingle(docChange.doc));
+        break;
+    }
+  });
+
+  return { added, removed };
+};
+
 class DiscussionMessageService {
   private getDiscussionMessageCollection = () =>
     firebase
@@ -20,68 +40,77 @@ class DiscussionMessageService {
       .collection(Collection.DiscussionMessage)
       .withConverter(converter);
 
-  public getDiscussionMessageById = async (discussionMessageId: string): Promise<DiscussionMessage> => {
-    const discussionMessage = await this.getDiscussionMessageCollection().doc(discussionMessageId).get();
+  public getDiscussionMessageById = async (
+    discussionMessageId: string,
+  ): Promise<DiscussionMessage> => {
+    const discussionMessage = await this.getDiscussionMessageCollection()
+      .doc(discussionMessageId)
+      .get();
 
     return transformFirebaseDataSingle<DiscussionMessage>(discussionMessage);
-  }
+  };
 
   public getDiscussionMessagesByEndDate = async (
     discussionId: string,
     lastVisible: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage> | null,
-    endDate: Date
+    endDate: Date,
   ): Promise<{
-    data: DiscussionMessage[],
-    lastVisibleSnapshot: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>
+    updatedDiscussionMessages: DiscussionMessage[];
+    removedDiscussionMessages: DiscussionMessage[];
+    lastVisibleSnapshot: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>;
   }> => {
-    const snapshot = await this.getDiscussionMessageCollection().where(
-      "discussionId",
-      "==",
-      discussionId,
-    ).where("createdAt", ">=", endDate)
-      .orderBy('createdAt', 'desc')
+    const snapshot = await this.getDiscussionMessageCollection()
+      .where("discussionId", "==", discussionId)
+      .where("createdAt", ">=", endDate)
+      .orderBy("createdAt", "desc")
       .startAfter(lastVisible)
       .get();
 
-    const data = transformFirebaseDataList<DiscussionMessage>(snapshot);
-    const snapshotOfItemsAfterEndDate = await this.getDiscussionMessageCollection().where(
-      "discussionId",
-      "==",
-      discussionId,
-    ).orderBy('createdAt', 'desc')
-      .startAfter(snapshot.docs[data.length - 1])
-      .limit(5)
-      .get();
-    const dataAfterEndDate = transformFirebaseDataList<DiscussionMessage>(snapshotOfItemsAfterEndDate);
+    const { added, removed } = getDiscussionMessagesByStatus(snapshot);
+    const snapshotOfItemsAfterEndDate =
+      await this.getDiscussionMessageCollection()
+        .where("discussionId", "==", discussionId)
+        .orderBy("createdAt", "desc")
+        .startAfter(snapshot.docs[snapshot.docs.length - 1])
+        .limit(5)
+        .get();
+    const { added: addedAfterEndDate, removed: removedAfterEndDate } =
+      getDiscussionMessagesByStatus(snapshotOfItemsAfterEndDate);
 
     return {
-      data: [...data, ...dataAfterEndDate],
-      lastVisibleSnapshot: snapshotOfItemsAfterEndDate.docs[dataAfterEndDate.length - 1]
+      updatedDiscussionMessages: [...added, ...addedAfterEndDate],
+      removedDiscussionMessages: [...removed, ...removedAfterEndDate],
+      lastVisibleSnapshot:
+        snapshotOfItemsAfterEndDate.docs[
+          snapshotOfItemsAfterEndDate.docs.length - 1
+        ],
     };
-  }
+  };
 
-  public getDiscussionMessagesByDiscussionId = (discussionId: string,
+  public getDiscussionMessagesByDiscussionId = (
+    discussionId: string,
     lastVisible: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage> | null,
-    callback: (snapshot: firebase.firestore.QuerySnapshot<DiscussionMessage>,
-      discussion: DiscussionMessage[]) => void
+    callback: (
+      updatedDiscussionMessages: DiscussionMessage[],
+      removedDiscussionMessages: DiscussionMessage[],
+      lastVisibleDocument: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>,
+    ) => void,
   ): UnsubscribeFunction => {
-    let query = this.getDiscussionMessageCollection().where(
-      "discussionId",
-      "==",
-      discussionId,
-    ).limit(15).orderBy('createdAt', 'desc');
+    let query = this.getDiscussionMessageCollection()
+      .where("discussionId", "==", discussionId)
+      .limit(15)
+      .orderBy("createdAt", "desc");
 
     if (lastVisible) {
       query = query.startAfter(lastVisible);
     }
 
     return query.onSnapshot((snapshot) => {
-      callback(
-        snapshot,
-        transformFirebaseDataList<DiscussionMessage>(snapshot),
-      );
+      const { added, removed } = getDiscussionMessagesByStatus(snapshot);
+
+      callback(added, removed, snapshot.docs[snapshot.docs.length - 1]);
     });
-  }
+  };
 
   public subscribeToDiscussionMessages = (
     discussionId: string,

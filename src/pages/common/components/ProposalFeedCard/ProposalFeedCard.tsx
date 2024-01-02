@@ -453,6 +453,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           })}
           canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
           isPreviewMode={isPreviewMode}
+          commonName={commonName}
           image={commonImage}
           imageAlt={`${commonName}'s image`}
           isProject={isProject}

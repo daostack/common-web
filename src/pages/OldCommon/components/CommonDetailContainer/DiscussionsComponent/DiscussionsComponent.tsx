@@ -34,7 +34,7 @@ export default function DiscussionsComponent({
     hasPermission({
       commonMember,
       governance,
-      key: GovernanceActions.CREATE_DISCUSSION,
+      action: GovernanceActions.CREATE_DISCUSSION,
     });
 
   return (

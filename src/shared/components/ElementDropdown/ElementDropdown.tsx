@@ -191,7 +191,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
         governance: {
           circles: governanceCircles,
         },
-        key: HideContentTypes[entityType],
+        action: HideContentTypes[entityType],
       }) &&
       !isOwner &&
       !isHiddenElement
@@ -211,7 +211,7 @@ const ElementDropdown: FC<ElementDropdownProps> = ({
           governance: {
             circles: governanceCircles,
           },
-          key: DeleteContentTypes[entityType],
+          action: DeleteContentTypes[entityType],
         })) &&
       (isDiscussionMessage || isChatMessage)
     ) {

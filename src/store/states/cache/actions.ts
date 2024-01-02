@@ -106,7 +106,8 @@ export const updateDiscussionMessagesStateByDiscussionId = createStandardAction(
   CacheActionType.UPDATE_DISCUSSION_STATE_BY_DISCUSSION_ID,
 )<{
   discussionId: string;
-  state: LoadingState<DiscussionMessageWithParsedText[] | null>;
+  updatedDiscussionMessages: DiscussionMessageWithParsedText[];
+  removedDiscussionMessages: DiscussionMessage[];
 }>();
 
 export const addDiscussionMessageByDiscussionId = createStandardAction(

@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   CommonEvent,
@@ -37,6 +37,40 @@ const CommonHandler: FC = () => {
     return () => {
       CommonEventEmitter.off(CommonEvent.CommonCreated, handler);
       CommonEventEmitter.off(CommonEvent.CommonUpdated, handler);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handler: CommonEventToListener[CommonEvent.CommonDeleted] = (
+      commonId,
+    ) => {
+      /**
+       * TODO: seems like these are not updating the UI. Need to check.
+       */
+
+      /**
+       * Remove from cache
+       */
+      dispatch(
+        updateCommonState({
+          commonId,
+          state: {
+            loading: false,
+            fetched: false,
+            data: null,
+          },
+        }),
+      );
+
+      dispatch(commonLayoutActions.deleteCommon({ commonId }));
+      dispatch(multipleSpacesLayoutActions.deleteCommon({ commonId }));
+      dispatch(projectsActions.deleteCommon({ commonId }));
+    };
+
+    CommonEventEmitter.on(CommonEvent.CommonDeleted, handler);
+
+    return () => {
+      CommonEventEmitter.off(CommonEvent.CommonDeleted, handler);
     };
   }, []);
 

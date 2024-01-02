@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Button } from "@/shared/components";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
 interface DeleteCommonRequestProps {
@@ -21,7 +21,7 @@ const DeleteCommonRequest: FC<DeleteCommonRequestProps> = (props) => {
       <Button
         className="delete-common-request__button"
         onClick={onOkClick}
-        shouldUseFullWidth
+        variant={ButtonVariant.PrimaryPink}
       >
         Got it
       </Button>

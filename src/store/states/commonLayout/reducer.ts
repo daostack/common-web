@@ -30,16 +30,21 @@ const clearData = (state: WritableDraft<CommonLayoutState>): void => {
 const updateCommonOrProject = (
   state: WritableDraft<CommonLayoutState>,
   payload: { commonId: string } & Partial<Omit<ProjectsStateItem, "commonId">>,
+  removeIfExists = false,
 ): boolean => {
   const commonItemIndex = state.commons.findIndex(
     (item) => item.commonId === payload.commonId,
   );
 
   if (commonItemIndex > -1) {
-    state.commons[commonItemIndex] = {
-      ...state.commons[commonItemIndex],
-      ...payload,
-    };
+    if (removeIfExists) {
+      state.commons.splice(commonItemIndex, 1);
+    } else {
+      state.commons[commonItemIndex] = {
+        ...state.commons[commonItemIndex],
+        ...payload,
+      };
+    }
     return true;
   }
 
@@ -201,4 +206,9 @@ export const reducer = createReducer<CommonLayoutState, Action>(initialState)
           item.hasMembership = false;
         });
       }),
+  )
+  .handleAction(actions.deleteCommon, (state, { payload }) =>
+    produce(state, (nextState) => {
+      updateCommonOrProject(nextState, payload, true);
+    }),
   );

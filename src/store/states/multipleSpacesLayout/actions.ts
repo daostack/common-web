@@ -55,3 +55,7 @@ export const setBackUrl = createStandardAction(
 export const setMainWidth = createStandardAction(
   MultipleSpacesLayoutActionType.SET_MIN_WIDTH,
 )<number>();
+
+export const deleteCommon = createStandardAction(
+  MultipleSpacesLayoutActionType.DELETE_COMMON,
+)<{ commonId: string }>();

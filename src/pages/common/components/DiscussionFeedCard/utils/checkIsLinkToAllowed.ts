@@ -26,7 +26,7 @@ export const checkIsLinkToAllowed = (
       governance: {
         circles: options.governanceCircles || {},
       },
-      key: GovernanceActions.LINK_FROM_HERE,
+      action: GovernanceActions.LINK_FROM_HERE,
     })
   );
 };

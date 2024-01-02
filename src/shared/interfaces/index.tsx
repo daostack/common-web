@@ -16,6 +16,7 @@ export * from "./Notification";
 export * from "./redux";
 export * from "./SharedState";
 export * from "./ModalProps";
+export * from "./MoveStreamPayload";
 export * from "./SynchronizedDate";
 export * from "./UnsubscribeFunction";
 export * from "./UploadFile";
