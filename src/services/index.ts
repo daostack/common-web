@@ -1,3 +1,4 @@
+export { default as AnalyticsService } from "./Analytics";
 export {
   default as Api,
   getCancelTokenSource,

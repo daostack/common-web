@@ -1,4 +1,3 @@
-import ReactGA from "react-ga4";
 import { User as FirebaseUser } from "firebase/auth";
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
@@ -6,7 +5,7 @@ import {
   seenNotification,
   subscribeToNotification,
 } from "@/pages/OldCommon/store/api";
-import { UserService } from "@/services";
+import { AnalyticsService, UserService } from "@/services";
 import { store } from "@/shared/appConfig";
 import { Awaited } from "@/shared/interfaces";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
@@ -602,7 +601,7 @@ function* authSagas() {
   firebase.auth().onAuthStateChanged(async (res) => {
     try {
       const { user: userInStore } = store.getState().auth;
-      ReactGA.set({ userId: res?.uid || null });
+      AnalyticsService.setUserId(res?.uid);
 
       if (userInStore?.uid !== res?.uid) {
         resetGlobalData(!res);
