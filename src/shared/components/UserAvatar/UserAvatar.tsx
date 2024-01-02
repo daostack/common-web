@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import {
+  FilePrefix,
   ResizedFileSize,
   getRandomUserAvatarURL,
   getResizedFileUrl,
@@ -42,7 +43,11 @@ const UserAvatar: FC<UserAvatarProps> = (props) => {
       imageContainerClassName={imageContainerClassName}
       src={
         useResizedFile && !isGoogleImage
-          ? getResizedFileUrl(userAvatarURL, ResizedFileSize.Avatars, true)
+          ? getResizedFileUrl(
+              userAvatarURL,
+              ResizedFileSize.Avatars,
+              FilePrefix.UserAvatar,
+            )
           : userAvatarURL
       }
       alt={userAvatarAlt}
