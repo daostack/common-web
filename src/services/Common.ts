@@ -35,12 +35,13 @@ class CommonService {
   public getCommonById = async (
     commonId: string,
     cached = false,
+    state = CommonState.ACTIVE,
   ): Promise<Common | null> => {
     const snapshot = await firebase
       .firestore()
       .collection(Collection.Daos)
       .where("id", "==", commonId)
-      .where("state", "==", CommonState.ACTIVE)
+      .where("state", "==", state)
       .withConverter(converter)
       .get({ source: cached ? "cache" : "default" });
     const commons = snapshot.docs.map((doc) => doc.data());
