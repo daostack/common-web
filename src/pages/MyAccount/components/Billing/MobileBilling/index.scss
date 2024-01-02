@@ -1,7 +1,7 @@
 @import "../../../../../constants";
 
 .my-account-mobile-billing {
-  --content-ph: var(--container-pl, #{$content-padding-mobile});
+  --content-ph: 1rem;
 
   flex: 1;
   display: flex;
@@ -19,13 +19,13 @@
 
 .my-account-mobile-billing__tabs-wrapper {
   padding: 0 var(--content-ph);
-  margin: 0 calc(var(--content-ph) * -1);
   white-space: nowrap;
-  border-bottom: 1px solid $light-gray-1;
+  border-bottom: 1px solid var(--gentle-stroke);
 }
 
 .my-account-mobile-billing__tab-panels {
   height: 100%;
+  padding: 0 var(--content-ph);
 }
 
 .my-account-mobile-billing__tab-panel {

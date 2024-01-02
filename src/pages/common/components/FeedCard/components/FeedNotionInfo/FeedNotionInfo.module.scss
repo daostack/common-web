@@ -1,0 +1,14 @@
+@import "../../../../../../styles/mixins";
+
+.notionInfo {
+  @include flex-list-with-gap(0.5rem);
+}
+
+.link {
+  color: var(--primary-fill);
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}

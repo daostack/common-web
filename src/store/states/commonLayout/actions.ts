@@ -1,6 +1,6 @@
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { CommonLayoutActionType } from "./constants";
-import { ProjectsStateItem } from "./types";
+import { CommonLayoutState, ProjectsStateItem } from "./types";
 
 export const getCommons = createAsyncAction(
   CommonLayoutActionType.GET_COMMONS,
@@ -21,8 +21,8 @@ export const getProjects = createAsyncAction(
   CommonLayoutActionType.GET_PROJECTS_FAILURE,
 )<string, ProjectsStateItem[], Error>();
 
-export const addProject = createStandardAction(
-  CommonLayoutActionType.ADD_PROJECT,
+export const addOrUpdateProject = createStandardAction(
+  CommonLayoutActionType.ADD_OR_UPDATE_PROJECT,
 )<ProjectsStateItem>();
 
 export const updateCommonOrProject = createStandardAction(
@@ -32,6 +32,14 @@ export const updateCommonOrProject = createStandardAction(
 export const setCurrentCommonId = createStandardAction(
   CommonLayoutActionType.SET_CURRENT_COMMON_ID,
 )<string>();
+
+export const resetCurrentCommonIdAndProjects = createStandardAction(
+  CommonLayoutActionType.RESET_CURRENT_COMMON_ID_AND_PROJECTS,
+)<string>();
+
+export const setLastCommonFromFeed = createStandardAction(
+  CommonLayoutActionType.SET_LAST_COMMON_FROM_FEED,
+)<CommonLayoutState["lastCommonFromFeed"]>();
 
 export const clearData = createStandardAction(
   CommonLayoutActionType.CLEAR_DATA,
@@ -52,3 +60,7 @@ export const markDataAsNotFetched = createStandardAction(
 export const removeMembershipFromItemAndChildren = createStandardAction(
   CommonLayoutActionType.REMOVE_MEMBERSHIP_FROM_ITEM_AND_CHILDREN,
 )<string>();
+
+export const deleteCommon = createStandardAction(
+  CommonLayoutActionType.DELETE_COMMON,
+)<{ commonId: string }>();

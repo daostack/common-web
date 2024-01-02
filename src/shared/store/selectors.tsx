@@ -31,9 +31,6 @@ export const selectAreReportsLoading = () =>
 export const selectHeader = () =>
   createSelector(selectShared, (state) => state.header);
 
-export const selectTutorialModalState = () =>
-  createSelector(selectShared, (state) => state.tutorialModalState);
-
 export const selectLanguage = () =>
   createSelector(selectShared, (state) => state.language);
 

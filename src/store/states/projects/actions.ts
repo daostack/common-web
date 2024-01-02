@@ -8,8 +8,8 @@ export const getProjects = createAsyncAction(
   ProjectsActionType.GET_PROJECTS_FAILURE,
 )<string | void, ProjectsStateItem[], Error>();
 
-export const addProject = createStandardAction(
-  ProjectsActionType.ADD_PROJECT,
+export const addOrUpdateProject = createStandardAction(
+  ProjectsActionType.ADD_OR_UPDATE_PROJECT,
 )<ProjectsStateItem>();
 
 export const updateProject = createStandardAction(
@@ -35,3 +35,7 @@ export const removeMembershipFromProjectAndChildren = createStandardAction(
 export const setIsCommonCreationDisabled = createStandardAction(
   ProjectsActionType.SET_IS_COMMON_CREATION_DISABLED,
 )<boolean>();
+
+export const deleteCommon = createStandardAction(
+  ProjectsActionType.DELETE_COMMON,
+)<{ commonId: string }>();

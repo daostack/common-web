@@ -53,7 +53,10 @@ const ProposalForm: FC<ProposalFormProps> = (props) => {
         styles={{
           labelWrapper: styles.textFieldLabelWrapper,
           hint: styles.textFieldHint,
+          input: { default: styles.titleTextarea },
         }}
+        isTextarea
+        rows={3}
       />
       <TextEditor
         className={styles.field}

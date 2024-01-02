@@ -1,10 +1,12 @@
 @import "../../../../styles/sizes";
 
 .content {
+  position: relative;
   flex: 1;
   padding: 0 1.5rem;
   display: flex;
   flex-direction: column;
+  overflow-anchor: none;
 
   & > * {
     margin-bottom: 0;
@@ -16,18 +18,23 @@
   justify-content: center;
 }
 
+.infiniteScrollMarker {
+  position: absolute;
+  bottom: 50rem;
+}
+
 .emptyText {
   margin: 0;
   font-weight: 500;
   font-size: $moderate-xsmall;
   text-align: center;
-  color: $c-neutrals-600;
+  color: var(--primary-text);
 }
 
 .desktopRightPane {
-  right: var(--sb-h-indent);
+  right: calc(var(--page-extra-pr) + var(--sb-h-indent));
   width: var(--chat-w, 22rem);
-  border-right: 0.0625rem solid $c-light-gray;
+  border-right: 0.0625rem solid var(--gentle-stroke);
 }
 
 .feedItemDetailsModal {

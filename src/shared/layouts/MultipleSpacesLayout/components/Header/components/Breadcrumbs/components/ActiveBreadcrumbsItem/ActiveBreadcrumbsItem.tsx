@@ -3,15 +3,18 @@ import { ButtonIcon, UserAvatar } from "@/shared/components";
 import { RightArrowThinIcon } from "@/shared/icons";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
+import { truncateBreadcrumbName } from "../../utils";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
 import styles from "./ActiveBreadcrumbsItem.module.scss";
 
-interface ActiveBreadcrumbsItemProps {
+export interface ActiveBreadcrumbsItemProps {
   name: string;
   image?: string;
   items?: ProjectsStateItem[];
   commonIdToAddProject?: string | null;
   withMenu?: boolean;
+  isLoading?: boolean;
+  truncate?: boolean;
 }
 
 const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
@@ -21,6 +24,8 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
     items = [],
     commonIdToAddProject,
     withMenu = true,
+    isLoading = false,
+    truncate = false,
   } = props;
   const itemsButtonRef = useRef<HTMLButtonElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
@@ -42,7 +47,9 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
           userName={name}
         />
       )}
-      <span className={styles.name}>{name}</span>
+      <span className={styles.name}>
+        {truncate ? truncateBreadcrumbName(name) : name}
+      </span>
       {(items.length > 0 || commonIdToAddProject) && withMenu && (
         <ButtonIcon
           ref={itemsButtonRef}
@@ -57,6 +64,7 @@ const ActiveBreadcrumbsItem: FC<ActiveBreadcrumbsItemProps> = (props) => {
           ref={contextMenuRef}
           items={items}
           commonIdToAddProject={commonIdToAddProject}
+          isLoading={isLoading}
         />
       )}
     </li>

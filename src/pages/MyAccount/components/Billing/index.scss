@@ -2,15 +2,17 @@
 @import "../../../../styles/sizes";
 
 .my-account-billing {
+  max-width: 36.25rem;
   width: 100%;
+  margin: 0 auto;
+  padding-top: 3.375rem;
+  display: flex;
+  flex-direction: column;
   font-family: PoppinsSans, sans-serif;
-  color: $secondary-blue;
-  overflow: hidden;
+  color: var(--primary-text);
 
-  @include big-phone {
-    display: flex;
-    flex-direction: column;
-    overflow: initial;
+  @include tablet {
+    padding-top: 0;
   }
 
   .my-account-billing__header {

@@ -73,6 +73,7 @@ const ImageGalleryMobileModal: FC<ImageGalleryMobileModalProps> = (props) => {
           )}
           {images.map((imageURL, index) => (
             <Image
+              hasZoom
               id={`gallery-${index}`}
               key={imageURL}
               className={styles.image}

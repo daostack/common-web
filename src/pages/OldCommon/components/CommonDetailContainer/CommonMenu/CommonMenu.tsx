@@ -186,7 +186,7 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
       hasPermission({
         commonMember: currentCommonMember,
         governance,
-        key: GovernanceActions.CREATE_SUBCOMMON,
+        action: GovernanceActions.CREATE_SUBCOMMON,
       })
     ) {
       items.push(MenuItem.CreateProject);
@@ -338,7 +338,6 @@ const CommonMenu: FC<CommonMenuProps> = (props) => {
           onClose={handleMenuClose}
           commonId={common.id}
           memberCount={common.memberCount}
-          memberCircleIds={Object.values(currentCommonMember.circles.map)}
         />
       )}
       <CreateCommonModal

@@ -12,6 +12,9 @@ import {
   Trash2Icon,
   UnfollowIcon,
   UnpinIcon,
+  Link4Icon as LinkIcon,
+  Message3Icon,
+  MoveItemIcon,
 } from "@/shared/icons";
 import { ContextMenuItem as Item, UploadFile } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
@@ -24,6 +27,8 @@ interface Actions {
   report: () => void;
   share: () => void;
   remove?: () => void;
+  linkStream?: () => void;
+  moveStream?: () => void;
 }
 
 export const useMenuItems = (
@@ -31,8 +36,14 @@ export const useMenuItems = (
   actions: Actions,
 ): Item[] => {
   const dispatch = useDispatch();
-  const { discussion, commonId, feedItem, feedItemFollow } = options;
-  const { report, share, remove } = actions;
+  const {
+    discussion,
+    commonId,
+    feedItem,
+    feedItemFollow,
+    feedItemUserMetadata,
+  } = options;
+  const { report, share, remove, linkStream, moveStream } = actions;
   const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
   const items: Item[] = [
     {
@@ -58,6 +69,38 @@ export const useMenuItems = (
       text: "Share",
       onClick: share,
       icon: <Share3Icon />,
+    },
+    {
+      id: FeedItemMenuItem.MarkUnread,
+      text: "Mark as unread",
+      onClick: async () => {
+        if (!commonId || !feedItem) {
+          return;
+        }
+
+        await CommonFeedService.markCommonFeedItemAsUnseen(
+          commonId,
+          feedItem.id,
+        );
+      },
+      icon: <Message3Icon />,
+    },
+    {
+      id: FeedItemMenuItem.MarkRead,
+      text: "Mark as read",
+      onClick: async () => {
+        if (!commonId || !feedItem) {
+          return;
+        }
+
+        await CommonFeedService.markCommonFeedItemAsSeen({
+          commonId,
+          feedObjectId: feedItem.id,
+          lastSeenId: feedItemUserMetadata?.lastSeen?.id,
+          type: feedItemUserMetadata?.lastSeen?.type,
+        });
+      },
+      icon: <Message3Icon />,
     },
     {
       id: FeedItemMenuItem.Report,
@@ -106,6 +149,22 @@ export const useMenuItems = (
         feedItemFollow.onFollowToggle(FollowFeedItemAction.Unfollow),
       icon: <UnfollowIcon />,
     },
+    linkStream
+      ? {
+          id: FeedItemMenuItem.LinkTo,
+          text: "Link to...",
+          onClick: linkStream,
+          icon: <LinkIcon />,
+        }
+      : undefined,
+    moveStream
+      ? {
+          id: FeedItemMenuItem.MoveTo,
+          text: "Move to...",
+          onClick: moveStream,
+          icon: <MoveItemIcon />,
+        }
+      : undefined,
     remove
       ? {
           id: FeedItemMenuItem.Remove,

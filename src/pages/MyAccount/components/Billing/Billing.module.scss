@@ -1,0 +1,14 @@
+@import "../../../../constants";
+@import "../../../../styles/sizes";
+
+.container {
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 2.25rem;
+
+  @include tablet {
+    margin-bottom: 0;
+  }
+}

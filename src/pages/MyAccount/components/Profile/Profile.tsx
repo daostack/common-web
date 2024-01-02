@@ -1,43 +1,60 @@
-import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { FC, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { matchPath, useLocation } from "react-router";
+import { logOut } from "@/pages/Auth/store/actions";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import {
-  UserDetails,
-  UserDetailsRef,
-} from "@/pages/Login/components/LoginContainer/UserDetails";
+import { SettingsMenuButton } from "@/pages/settings/components/Settings/components";
 import { ButtonIcon, Loader } from "@/shared/components";
-import { ScreenSize } from "@/shared/constants";
+import { ROUTE_PATHS } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useModal } from "@/shared/hooks";
-import EditIcon from "@/shared/icons/edit.icon";
-import { getScreenSize } from "@/shared/store/selectors";
+import { useIsTabletView } from "@/shared/hooks/viewport";
+import { Edit3Icon as EditIcon, LogoutIcon } from "@/shared/icons";
+import ThemeIcon from "@/shared/icons/theme.icon";
+import { toggleTheme } from "@/shared/store/actions";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
-import { DeleteUserModal } from "../../components/Profile";
-import "./index.scss";
+import { DeleteUserModal } from "./DeleteUserModal";
+import { Header, MenuButton, UserDetails, UserDetailsRef } from "./components";
+import styles from "./Profile.module.scss";
 
-export default function Profile() {
+interface ProfileProps {
+  onEditingChange?: (isEditing: boolean) => void;
+}
+
+const Profile: FC<ProfileProps> = (props) => {
+  const { onEditingChange } = props;
+  const dispatch = useDispatch();
+  const { getBillingPagePath, getSettingsPagePath } = useRoutesContext();
   const userDetailsRef = useRef<UserDetailsRef>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const user = useSelector(selectUser());
+  const isMobileView = useIsTabletView();
+  const { pathname } = useLocation();
+  const isV04 = matchPath(ROUTE_PATHS.V04_PROFILE, pathname);
+
   const {
     isShowing: isDeleteAccountModalShowing,
     onOpen: onDeleteAccountModalOpen,
     onClose: onDeleteAccountModalClose,
   } = useModal(false);
-  const user = useSelector(selectUser());
-  const screenSize = useSelector(getScreenSize());
-  const isMobileView = screenSize === ScreenSize.Mobile;
+
+  const handleEditingChange = (isEditing: boolean) => {
+    setIsEditing(isEditing);
+    onEditingChange?.(isEditing);
+  };
 
   const handleEditClick = () => {
-    setIsEditing(true);
+    handleEditingChange(true);
   };
 
   const handleCancelClick = () => {
-    setIsEditing(false);
+    handleEditingChange(false);
   };
 
   const handleSubmittingChange = (isSubmitting: boolean) => {
     if (!isSubmitting) {
-      setIsEditing(false);
+      handleEditingChange(false);
     }
 
     setIsSubmitting(isSubmitting);
@@ -47,10 +64,17 @@ export default function Profile() {
     userDetailsRef.current?.submit();
   };
 
+  const handleThemeToggle = () => {
+    dispatch(toggleTheme(null));
+  };
+
+  const handleLogout = () => {
+    dispatch(logOut());
+  };
+
   const buttonsWrapperEl = (
-    <div className="profile-wrapper__buttons-wrapper">
+    <div className={styles.buttonsWrapper}>
       <Button
-        className="profile-wrapper__button"
         variant={ButtonVariant.OutlineDarkPink}
         onClick={handleCancelClick}
         disabled={isSubmitting}
@@ -59,65 +83,90 @@ export default function Profile() {
       </Button>
       <Button
         variant={ButtonVariant.PrimaryPink}
-        className="profile-wrapper__button"
         onClick={handleSubmit}
         disabled={isSubmitting}
       >
-        Save
+        {isMobileView ? "Save changes" : "Save"}
       </Button>
     </div>
   );
+  const editButtonEl = (
+    <ButtonIcon className={styles.editButton} onClick={handleEditClick}>
+      <EditIcon />
+    </ButtonIcon>
+  );
+
+  const profileMenuButtonEl = (
+    <SettingsMenuButton
+      isMobileVersion={isMobileView}
+      onAccountDelete={onDeleteAccountModalOpen}
+    />
+  );
 
   return (
-    <div className="route-content profile-wrapper">
-      <header className="profile-wrapper__header">
-        <h2 className="route-title">Profile</h2>
-        {isEditing && !isMobileView && buttonsWrapperEl}
-        {!isEditing && (
-          <ButtonIcon onClick={handleEditClick}>
-            <EditIcon />
-          </ButtonIcon>
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <Header
+          className={styles.header}
+          isEditing={isEditing}
+          isMobileVersion={isMobileView}
+          editButtonEl={editButtonEl}
+          profileMenuButton={profileMenuButtonEl}
+        />
+        {!user && <Loader />}
+        {user && (
+          <>
+            <div className={styles.formWrapper}>
+              <UserDetails
+                ref={userDetailsRef}
+                className={styles.userDetails}
+                user={user}
+                isCountryDropdownFixed={false}
+                isEditing={isEditing}
+                isMobileView={isMobileView}
+                onEdit={handleEditClick}
+                onLoading={setIsSubmitting}
+                onSubmitting={handleSubmittingChange}
+              />
+              {isEditing && buttonsWrapperEl}
+            </div>
+            {isMobileView && !isEditing && (
+              <div className={styles.menuButtonsWrapper}>
+                <MenuButton
+                  className={styles.menuButton}
+                  text="Notifications"
+                  to={getSettingsPagePath()}
+                />
+                <MenuButton
+                  className={styles.menuButton}
+                  text="Billing"
+                  to={getBillingPagePath()}
+                />
+                {!isV04 && (
+                  <MenuButton
+                    className={`${styles.menuButton} ${styles.themeMenuButton}`}
+                    text="Light/Dark mode"
+                    onClick={handleThemeToggle}
+                    iconEl={<ThemeIcon />}
+                  />
+                )}
+                <MenuButton
+                  className={`${styles.menuButton} ${styles.logoutMenuButton}`}
+                  text="Logout"
+                  onClick={handleLogout}
+                  iconEl={<LogoutIcon />}
+                />
+              </div>
+            )}
+          </>
         )}
-      </header>
-      {!user ? (
-        <Loader />
-      ) : (
-        <>
-          <UserDetails
-            ref={userDetailsRef}
-            className="profile-wrapper__user-details"
-            user={user}
-            showAuthProvider={false}
-            customSaveButton
-            isCountryDropdownFixed={false}
-            isEditing={isEditing}
-            onLoading={setIsSubmitting}
-            onSubmitting={handleSubmittingChange}
-            styles={{
-              avatarWrapper: "profile-wrapper__avatar-wrapper",
-              avatar: "profile-wrapper__avatar",
-              userAvatar: "profile-wrapper__user-avatar",
-              editAvatar: "profile-wrapper__edit-avatar",
-              fieldContainer: "profile-wrapper__field-container",
-              introInputWrapper: "profile-wrapper__form-intro-input-wrapper",
-            }}
-          />
-          {isEditing && isMobileView && buttonsWrapperEl}
-          {!isEditing && (
-            <Button
-              variant={ButtonVariant.Warning}
-              className="profile-wrapper__delete-account-button"
-              onClick={onDeleteAccountModalOpen}
-            >
-              Delete My Account
-            </Button>
-          )}
-        </>
-      )}
+      </div>
       <DeleteUserModal
         isShowing={isDeleteAccountModalShowing}
         onClose={onDeleteAccountModalClose}
       />
     </div>
   );
-}
+};
+
+export default Profile;

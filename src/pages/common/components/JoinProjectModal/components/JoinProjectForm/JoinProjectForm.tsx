@@ -42,7 +42,7 @@ const JoinProjectForm: FC<PropsWithChildren<JoinProjectFormProps>> = (
           disabled={!message}
           onClick={handleRequestToJoin}
         >
-          {isJoinMemberAdmittanceRequest ? "Request to join" : "Join space"}
+          {isJoinMemberAdmittanceRequest ? "Request to join" : "Join"}
         </Button>
       </div>
     </>

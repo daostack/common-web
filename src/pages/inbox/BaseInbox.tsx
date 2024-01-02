@@ -8,6 +8,8 @@ import React, {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { useUpdateEffect } from "react-use";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { FeedItemBaseContentProps } from "@/pages/common";
 import {
@@ -15,7 +17,8 @@ import {
   FeedLayoutOuterStyles,
   FeedLayoutSettings,
 } from "@/pages/commonFeed";
-import { QueryParamKey } from "@/shared/constants";
+import { LOADER_APPEARANCE_DELAY, QueryParamKey } from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
@@ -60,9 +63,13 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   } = props;
   const queryParams = useQueryParams();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { getCommonPagePath } = useRoutesContext();
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
+  const isActiveUnreadInboxItemsQueryParam =
+    queryParams[QueryParamKey.Unread] === "true";
   const sharedFeedItemIdQueryParam = queryParams[QueryParamKey.Item];
   const sharedFeedItemId =
     (typeof sharedFeedItemIdQueryParam === "string" &&
@@ -84,7 +91,11 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     loading: areInboxItemsLoading,
     hasMore: hasMoreInboxItems,
     fetch: fetchInboxItems,
-  } = useInboxItems(feedItemIdsForNotListening);
+    refetch: refetchInboxItems,
+    batchNumber,
+  } = useInboxItems(feedItemIdsForNotListening, {
+    unread: isActiveUnreadInboxItemsQueryParam,
+  });
   const sharedInboxItem = useSelector(selectSharedInboxItem);
   const chatChannelItems = useSelector(selectChatChannelItems);
   const nextChatChannelItemId = useSelector(selectNextChatChannelItemId);
@@ -100,6 +111,10 @@ const InboxPage: FC<InboxPageProps> = (props) => {
 
     return items;
   }, [chatChannelItems, sharedInboxItem]);
+
+  useUpdateEffect(() => {
+    refetchInboxItems();
+  }, [isActiveUnreadInboxItemsQueryParam]);
 
   const fetchData = () => {
     fetchInboxData({
@@ -135,6 +150,18 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     [dispatch],
   );
 
+  const handleFeedItemUnfollowed = useCallback(
+    (itemId: string) => {
+      dispatch(
+        inboxActions.updateFeedItem({
+          item: { id: itemId },
+          isRemoved: true,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
   const handleActiveItemChange = useCallback(
     (activeItemId?: string) => {
       dispatch(inboxActions.removeEmptyChatChannelItems(activeItemId));
@@ -154,6 +181,18 @@ const InboxPage: FC<InboxPageProps> = (props) => {
       }
     },
     [dispatch],
+  );
+
+  const handleFeedItemSelect = useCallback(
+    (commonId: string, feedItemId: string, messageId?: string) => {
+      history.push(
+        getCommonPagePath(commonId, {
+          item: feedItemId,
+          message: messageId,
+        }),
+      );
+    },
+    [history.push, getCommonPagePath],
   );
 
   useEffect(() => {
@@ -183,7 +222,6 @@ const InboxPage: FC<InboxPageProps> = (props) => {
       discussion: ChatChannelToDiscussionConverter.toTargetEntity(
         chatChannelItem.chatChannel,
       ),
-      circleVisibility: [],
     });
   }, [nextChatChannelItemId, feedLayoutRef]);
 
@@ -197,7 +235,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     fetchData();
 
     return () => {
-      dispatch(inboxActions.resetInbox());
+      dispatch(inboxActions.resetInbox({ onlyIfUnread: true }));
     };
   }, [userId]);
 
@@ -210,7 +248,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   if (!isDataFetched) {
     return (
       <div className={styles.centerWrapper}>
-        <Loader />
+        <Loader delay={LOADER_APPEARANCE_DELAY} />
       </div>
     );
   }
@@ -240,16 +278,24 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         feedItems={inboxItems}
         loading={areInboxItemsLoading || !user}
         shouldHideContent={!user}
+        batchNumber={batchNumber}
         onFetchNext={fetchMoreInboxItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         renderChatChannelItem={renderChatChannelItem}
         onFeedItemUpdate={handleFeedItemUpdate}
+        onFeedItemUnfollowed={handleFeedItemUnfollowed}
         getLastMessage={getLastMessage}
-        emptyText="Your inbox is empty"
+        sharedFeedItemId={sharedFeedItemId}
+        emptyText={
+          isActiveUnreadInboxItemsQueryParam
+            ? "Hurry! No unread items in your inbox :-)"
+            : "Your inbox is empty"
+        }
         getNonAllowedItems={getNonAllowedItems}
         onActiveItemChange={handleActiveItemChange}
         onActiveItemDataChange={onActiveItemDataChange}
         onMessagesAmountEmptinessToggle={handleMessagesAmountEmptinessToggle}
+        onFeedItemSelect={handleFeedItemSelect}
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
       />

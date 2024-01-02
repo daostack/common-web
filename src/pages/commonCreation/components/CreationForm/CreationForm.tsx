@@ -62,6 +62,7 @@ const CreationForm = <T extends FormikValues>(
       validationSchema={validationSchema}
       onSubmit={onSubmit}
       validateOnMount
+      enableReinitialize
     >
       <Form className={styles.form}>
         <div className={styles.itemsWrapper}>

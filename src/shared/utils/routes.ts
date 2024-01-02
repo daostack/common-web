@@ -1,3 +1,4 @@
+import { stringify } from "query-string";
 import { CommonTab } from "@/pages/common";
 import { QueryParamKey, ROUTE_PATHS } from "@/shared/constants";
 
@@ -6,6 +7,7 @@ export type GetCommonPagePath = (
   queryParamKey?: {
     tab?: CommonTab;
     item?: string;
+    message?: string;
   },
 ) => string;
 export type GetCommonPageAboutTabPath = (commonId: string) => string;
@@ -18,18 +20,20 @@ export const buildCommonPagePath = (
   queryParamKey?: {
     tab?: CommonTab;
     item?: string;
+    message?: string;
   },
 ): string => {
   const path = baseCommonPagePath.replace(":id", commonId);
+  const params = queryParamKey
+    ? {
+        [QueryParamKey.Item]: queryParamKey.item,
+        [QueryParamKey.Tab]: queryParamKey.tab,
+        [QueryParamKey.Message]: queryParamKey.message,
+      }
+    : null;
+  const search = params ? `?${stringify(params)}` : "";
 
-  if (queryParamKey?.item) {
-    return `${path}?${QueryParamKey.Item}=${queryParamKey.item}`;
-  }
-  if (queryParamKey?.tab) {
-    return `${path}?${QueryParamKey.Tab}=${queryParamKey.tab}`;
-  }
-
-  return path;
+  return `${path}${search}`;
 };
 
 export const getCommonPagePath: GetCommonPagePath = (...args) =>
@@ -54,6 +58,9 @@ export const getInboxPagePath: GetGeneralPagePath = () => ROUTE_PATHS.INBOX;
 export const getProfilePagePath: GetGeneralPagePath = () => ROUTE_PATHS.PROFILE;
 
 export const getBillingPagePath: GetGeneralPagePath = () => ROUTE_PATHS.BILLING;
+
+export const getSettingsPagePath: GetGeneralPagePath = () =>
+  ROUTE_PATHS.SETTINGS;
 
 // v03
 export const getCommonPagePath_v03: GetCommonPagePath = (...args) =>
@@ -82,3 +89,6 @@ export const getProfilePagePath_v04: GetGeneralPagePath = () =>
 
 export const getBillingPagePath_v04: GetGeneralPagePath = () =>
   ROUTE_PATHS.V04_BILLING;
+
+export const getSettingsPagePath_v04: GetGeneralPagePath = () =>
+  ROUTE_PATHS.V04_SETTINGS;

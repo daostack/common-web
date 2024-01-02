@@ -4,6 +4,7 @@ import { useIsTabletView } from "@/shared/hooks/viewport";
 import { Common } from "@/shared/models";
 import { MemberAdmittanceLimitations } from "@/shared/models/governance/proposals";
 import { Container } from "@/shared/ui-kit";
+import { checkIsProject } from "@/shared/utils";
 import { CommonCard } from "../../../../../CommonCard";
 import { CommonEntranceItem, CommonEntranceJoin } from "./components";
 import styles from "./CommonEntranceInfo.module.scss";
@@ -16,7 +17,7 @@ interface CommonEntranceInfoProps {
 
 const CommonEntranceInfo: FC<CommonEntranceInfoProps> = (props) => {
   const { limitations, withJoinRequest = false, common } = props;
-  const isProject = Boolean(common.directParent);
+  const isProject = checkIsProject(common);
   const isTabletView = useIsTabletView();
 
   return (

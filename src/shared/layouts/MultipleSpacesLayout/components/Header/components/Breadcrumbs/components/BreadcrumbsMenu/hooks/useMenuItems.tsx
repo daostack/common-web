@@ -17,21 +17,12 @@ interface Options {
 export const useMenuItems = (options: Options): ContextMenuItem[] => {
   const { items, activeItemId, commonIdToAddProject, onCommonCreate } = options;
   const history = useHistory();
-  const {
-    getCommonPagePath,
-    getCommonPageAboutTabPath,
-    getProjectCreationPagePath,
-  } = useRoutesContext();
+  const { getCommonPagePath, getProjectCreationPagePath } = useRoutesContext();
 
   const menuItems: ContextMenuItem[] = items.map((item) => ({
     id: item.commonId,
     text: item.name,
-    onClick: () =>
-      history.push(
-        item.hasMembership
-          ? getCommonPagePath(item.commonId)
-          : getCommonPageAboutTabPath(item.commonId),
-      ),
+    onClick: () => history.push(getCommonPagePath(item.commonId)),
     className: classNames(styles.contextMenuItem, {
       [styles.contextMenuItemWithoutMembership]: !item.hasMembership,
     }),

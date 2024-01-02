@@ -5,8 +5,11 @@ export interface ProjectsStateItem {
   image: string;
   name: string;
   directParent: Common["directParent"];
+  rootCommonId?: string;
   hasMembership?: boolean;
   hasPermissionToAddProject?: boolean;
+  hasPermissionToLinkToHere?: boolean;
+  hasPermissionToMoveToHere?: boolean;
   notificationsAmount?: number;
 }
 

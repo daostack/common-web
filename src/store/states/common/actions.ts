@@ -20,7 +20,13 @@ import {
   Proposal,
 } from "@/shared/models";
 import { CommonActionType } from "./constants";
-import { FeedItems, PinnedFeedItems } from "./types";
+import {
+  CommonSearchState,
+  CommonState,
+  FeedItems,
+  FeedItemsPayload,
+  PinnedFeedItems,
+} from "./types";
 
 export const resetCommon = createStandardAction(
   CommonActionType.RESET_COMMON,
@@ -114,11 +120,8 @@ export const getFeedItems = createAsyncAction(
   CommonActionType.GET_FEED_ITEMS_FAILURE,
   CommonActionType.GET_FEED_ITEMS_CANCEL,
 )<
-  {
-    commonId: string;
-    limit?: number;
-  },
-  Omit<FeedItems, "loading">,
+  FeedItemsPayload,
+  Omit<FeedItems, "loading" | "batchNumber">,
   Error,
   string
 >();
@@ -136,6 +139,13 @@ export const getPinnedFeedItems = createAsyncAction(
   Error,
   string
 >();
+
+export const setFeedState = createStandardAction(
+  CommonActionType.SET_FEED_STATE,
+)<{
+  data: Pick<CommonState, "feedItems" | "pinnedFeedItems" | "sharedFeedItem">;
+  sharedFeedItemId?: string | null;
+}>();
 
 export const addNewFeedItems = createStandardAction(
   CommonActionType.ADD_NEW_FEED_ITEMS,
@@ -175,6 +185,26 @@ export const updateFeedItem = createStandardAction(
 export const resetFeedItems = createStandardAction(
   CommonActionType.RESET_FEED_ITEMS,
 )();
+
+export const searchFeedItems = createStandardAction(
+  CommonActionType.SEARCH_FEED_ITEMS,
+)<string>();
+
+export const setSearchState = createStandardAction(
+  CommonActionType.SET_SEARCH_STATE,
+)<CommonSearchState>();
+
+export const resetSearchState = createStandardAction(
+  CommonActionType.RESET_SEARCH_STATE,
+)();
+
+export const updateSearchFeedItems = createStandardAction(
+  CommonActionType.UPDATE_SEARCH_FEED_ITEMS,
+)<string[]>();
+
+export const setIsSearchingFeedItems = createStandardAction(
+  CommonActionType.SET_IS_SEARCHING_FEED_ITEMS,
+)<boolean>();
 
 export const setIsNewProjectCreated = createStandardAction(
   CommonActionType.SET_IS_NEW_PROJECT_CREATED,

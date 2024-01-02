@@ -3,6 +3,8 @@ import { PredefinedTypes } from "@/shared/models";
 import { hasPermission } from "@/shared/utils";
 import { FeedItemPinAction, GetAllowedItemsOptions } from "../../FeedItem";
 
+const PINNED_ITEMS_LIMIT = 7;
+
 export function checkIsPinUnpinAllowed(
   action: FeedItemPinAction,
   options: GetAllowedItemsOptions,
@@ -17,7 +19,7 @@ export function checkIsPinUnpinAllowed(
   }
 
   if (action === FeedItemPinAction.Pin) {
-    const hasReachedPinLimit = pinnedFeedItems.length >= 3;
+    const hasReachedPinLimit = pinnedFeedItems.length >= PINNED_ITEMS_LIMIT;
 
     if (isDiscussionPinned || hasReachedPinLimit) {
       return false;
@@ -35,7 +37,7 @@ export function checkIsPinUnpinAllowed(
     governance: {
       circles: options.governanceCircles || {},
     },
-    key: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
+    action: GovernanceActions.PIN_OR_UNPIN_FEED_ITEMS,
   });
 
   return isAllowed;

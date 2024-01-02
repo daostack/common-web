@@ -1,4 +1,5 @@
-import React, { FC, memo } from "react";
+import React, { forwardRef, memo, useEffect } from "react";
+import { useFeedItemFollow } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
 import {
   Circles,
@@ -6,8 +7,8 @@ import {
   Common,
   CommonFeed,
   CommonFeedType,
-  CommonLink,
   CommonMember,
+  CommonNotion,
   DirectParent,
 } from "@/shared/models";
 import { checkIsItemVisibleForUser } from "@/shared/utils";
@@ -16,12 +17,14 @@ import { DiscussionFeedCard } from "../DiscussionFeedCard";
 import { ProposalFeedCard } from "../ProposalFeedCard";
 import { ProjectFeedItem } from "./components";
 import { useFeedItemContext } from "./context";
+import { FeedItemRef } from "./types";
 
 interface FeedItemProps {
   commonId?: string;
   commonName: string;
   commonMember?: (CommonMember & CirclesPermissions) | null;
   commonImage: string;
+  commonNotion?: CommonNotion;
   pinnedFeedItems?: Common["pinnedFeedItems"];
   isProject?: boolean;
   isPinned?: boolean;
@@ -40,13 +43,15 @@ interface FeedItemProps {
     commonId?: string,
   ) => void;
   directParent?: DirectParent | null;
+  rootCommonId?: string;
 }
 
-const FeedItem: FC<FeedItemProps> = (props) => {
+const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
   const {
     commonId,
     commonName,
     commonImage,
+    commonNotion,
     pinnedFeedItems,
     commonMember,
     isProject = false,
@@ -63,10 +68,32 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     shouldCheckItemVisibility = true,
     onActiveItemDataChange,
     directParent,
+    rootCommonId,
   } = props;
-  const { onFeedItemUpdate, getLastMessage, getNonAllowedItems, onUserSelect } =
-    useFeedItemContext();
+  const {
+    onFeedItemUpdate,
+    onFeedItemUnfollowed,
+    getLastMessage,
+    getNonAllowedItems,
+    onUserSelect,
+  } = useFeedItemContext();
+  const feedItemFollow = useFeedItemFollow(
+    { feedItemId: item.id, commonId },
+    { withSubscription: true },
+  );
   useFeedItemSubscription(item.id, commonId, onFeedItemUpdate);
+
+  useEffect(() => {
+    if (
+      feedItemFollow.isUserFeedItemFollowDataFetched &&
+      !feedItemFollow.userFeedItemFollowData
+    ) {
+      onFeedItemUnfollowed?.(item.id);
+    }
+  }, [
+    feedItemFollow.isUserFeedItemFollowDataFetched,
+    feedItemFollow.userFeedItemFollowData,
+  ]);
 
   if (
     shouldCheckItemVisibility &&
@@ -85,10 +112,12 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   };
 
   const generalProps = {
+    ref,
     item,
     commonId,
     commonName,
     commonImage,
+    commonNotion,
     pinnedFeedItems,
     isActive,
     isExpanded,
@@ -102,6 +131,8 @@ const FeedItem: FC<FeedItemProps> = (props) => {
     isMobileVersion,
     onActiveItemDataChange: handleActiveItemDataChange,
     directParent,
+    rootCommonId,
+    feedItemFollow,
     onUserSelect,
   };
 
@@ -118,6 +149,6 @@ const FeedItem: FC<FeedItemProps> = (props) => {
   }
 
   return null;
-};
+});
 
 export default memo(FeedItem);

@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { InboxIcon } from "@/shared/icons";
 import { getPluralEnding } from "@/shared/utils";
-import { DirectMessageButton } from "../DirectMessageButton";
+import NewDirectMessageButton from "../NewDirectMessageButton/NewDirectMessageButton";
 import styles from "./HeaderContent_v04.module.scss";
 
 interface HeaderContentProps {
@@ -23,16 +23,16 @@ const HeaderContent_v04: FC<HeaderContentProps> = (props) => {
           <div className={styles.infoWrapper}>
             <h1 className={styles.title}>Inbox</h1>
             <p className={styles.streamsWithNotificationsAmount}>
-              {streamsWithNotificationsAmount} updated stream
+              {streamsWithNotificationsAmount} unread stream
               {getPluralEnding(streamsWithNotificationsAmount)}
             </p>
           </div>
         </div>
       </div>
-      <DirectMessageButton
-        className={styles.directMessageButton}
-        isMobileVersion={isMobileVersion}
-      />
+      <div className={styles.actionButtonsWrapper}>
+        {/* <InboxFilterButton /> */}
+        <NewDirectMessageButton isMobileVersion={isMobileVersion} />
+      </div>
     </div>
   );
 };

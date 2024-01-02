@@ -53,17 +53,32 @@
 .messageText {
   padding: 0.5rem 0rem;
   border-radius: 0.875rem;
-  background-color: $c-light-gray;
+  background-color: var(--secondary-background);
   flex-direction: row;
   box-sizing: border-box;
   position: relative;
   text-align: start;
+  font-size: $small;
+  color: var(--primary-text);
+  max-width: 33.563rem;
+  margin-right: 2.8rem;
 
   &:hover {
     .menuArrowButton {
       display: block;
     }
   }
+}
+
+.elementDropdownMenu {
+  direction: ltr;
+}
+
+.menuArrowButton {
+  display: none;
+}
+.menuArrowButtonVisible {
+  display: block;
 }
 
 .messageTextWithReply {
@@ -77,6 +92,12 @@
 
 .messageTextCurrentUser {
   background-color: $c-pink-active-feed-cards;
+  margin-left: 2.8rem;
+  margin-right: unset;
+
+  .mentionText {
+    color: $c-pink-mention-2;
+  }
 }
 
 .systemMessageContainer {
@@ -85,34 +106,41 @@
 }
 
 .systemMessage {
-  width: 100%;
-  max-width: unset;
-  min-width: unset;
-  background-color: $c-pink-light;
+  width: fit-content;
+  text-align: center;
+  font-size: $xxsmall-2;
+  color: $c-gray-60;
+  direction: ltr;
+  margin: 0 1.25rem;
 }
 
 .messageName {
   font-size: $xsmall;
   font-weight: 600;
-  color: $secondary-blue;
+  color: var(--primary-text);
   margin-right: 2.5rem;
-  margin-left: 1rem;
+  margin-left: 0.75rem;
   margin-bottom: 0.5rem;
   cursor: pointer;
 }
 
 .messageContent {
-  font-size: $small;
-  color: $secondary-blue;
   word-wrap: break-word;
   white-space: pre-line;
-  margin-right: 1rem;
-  margin-left: 1rem;
+  margin-right: 0.75rem;
+  margin-left: 0.75rem;
+  word-break: break-word;
+}
+
+.messageContentRtl {
+  direction: rtl;
+  text-align: right;
 }
 
 .messageContentCurrentUser {
   color: $white;
-  margin-right: 2.5rem;
+  margin-right: 0.75rem;
+  margin-top: 0.5rem;
 }
 
 .mentionText {
@@ -128,6 +156,7 @@
 .systemMessageCommonLink {
   color: $c-pink-mention;
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     text-decoration: underline;
@@ -137,7 +166,8 @@
 .replyMessageContainer {
   display: flex;
   cursor: pointer;
-  background-color: $c-neutrals-200;
+  background-color: var(--quaternary-fill);
+  color: var(--primary-text);
   border-radius: 0.625rem;
   padding: 0.5rem 0 0.625rem;
   margin: 0.25rem;
@@ -145,7 +175,7 @@
 }
 
 .replyMessageContainerCurrentUser {
-  background-color: $c-pink-light;
+  background-color: var(--secondary-fill);
 }
 
 .replyMessageImage {
@@ -161,14 +191,13 @@
 
 .replyMessageName {
   font-size: $xxsmall;
-  color: $c-neutrals-600;
   font-weight: 600;
   line-height: 1.25rem;
   margin-bottom: 0.125rem;
 }
 
 .replyMessageNameCurrentUser {
-  color: $c-neutrals-600;
+  color: var(--primary-text);
 }
 
 .replyMessageNameWithImage {
@@ -181,7 +210,6 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: $c-neutrals-600;
   font-size: $xxsmall;
   margin-bottom: 0.4rem;
   line-height: 0.8rem;
@@ -189,7 +217,7 @@
 }
 
 .replyMessageContentCurrentUser {
-  color: $c-neutrals-600;
+  color: var(--primary-text);
 }
 
 .replyMessageContentWithImage {
@@ -210,10 +238,6 @@
   .custom-dropdown-wrapper__menu {
     z-index: $dropdown-z-index;
   }
-}
-
-.menuArrowButton {
-  display: none;
 }
 
 .highlighted {
@@ -250,7 +274,6 @@
 
 .fileTitle {
   font-size: $xxsmall;
-  color: $c-gray-100;
   font-weight: 600;
   line-height: 1.25rem;
   margin: 0;
@@ -258,7 +281,6 @@
 }
 
 .fileSize {
-  color: $c-gray-100;
   font-size: $xxsmall-3;
   font-weight: 400;
   margin: 0;

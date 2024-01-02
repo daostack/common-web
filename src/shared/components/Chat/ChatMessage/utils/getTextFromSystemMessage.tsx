@@ -1,11 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { CommonService, UserService } from "@/services";
+import { store } from "@/shared/appConfig";
 import { SystemDiscussionMessageType } from "@/shared/constants";
 import {
   Common,
   CommonCreatedSystemMessage,
   CommonEditedSystemMessage,
+  CommonFeedItemCreatedSystemMessage,
   CommonMemberAddedSystemMessage,
   SystemMessageCommonType,
   User,
@@ -15,8 +17,10 @@ import {
   getCommonPagePath,
   getUserName,
 } from "@/shared/utils";
+import { commonLayoutActions } from "@/store/states";
 import { UserMention } from "../components";
 import { Text, TextData } from "../types";
+import { getFeedItemDisplayingData } from "./getFeedItemDisplayingData";
 import styles from "../ChatMessage.module.scss";
 
 const getUser = async (userId: string, users: User[]): Promise<User | null> =>
@@ -29,6 +33,14 @@ const getCommon = async (commonId: string): Promise<Common | null> =>
 const getCommonTypeText = (commonType: SystemMessageCommonType): string =>
   commonType === SystemMessageCommonType.Common ? "common" : "space";
 
+const handleCommonClick = (commonId: string, rootCommonId?: string) => {
+  store.dispatch(
+    commonLayoutActions.resetCurrentCommonIdAndProjects(
+      rootCommonId || commonId,
+    ),
+  );
+};
+
 const renderUserMention = (
   user: User | null,
   data: TextData,
@@ -40,18 +52,22 @@ const renderUserMention = (
       userId={user.uid}
       displayName={getUserName(user)}
       mentionTextClassName={data.mentionTextClassName}
-      commonId={data.commonId}
-      directParent={data.directParent}
       onUserClick={data.onUserClick}
     />
   ) : (
     defaultName
   );
 
-const renderLink = (to: string, name: string): Text => (
-  <NavLink className={styles.systemMessageCommonLink} to={to}>
+const renderLink = (to: string, name: string, onClick?: () => void): Text => (
+  <NavLink className={styles.systemMessageCommonLink} to={to} onClick={onClick}>
     {name}
   </NavLink>
+);
+
+const renderClickableText = (text: string, onClick: () => void): Text => (
+  <a className={styles.systemMessageCommonLink} onClick={onClick}>
+    {text}
+  </a>
 );
 
 const getCommonCreatedSystemMessageText = async (
@@ -64,8 +80,8 @@ const getCommonCreatedSystemMessageText = async (
 
   if (isThisCommonCreated) {
     return [
+      `This ${getCommonTypeText(systemMessageData.commonType)} was created by `,
       userEl,
-      ` created this ${getCommonTypeText(systemMessageData.commonType)}`,
     ];
   }
 
@@ -76,31 +92,37 @@ const getCommonCreatedSystemMessageText = async (
       {renderLink(
         (data.getCommonPagePath || getCommonPagePath)(common.id),
         common.name,
+        () => handleCommonClick(common.id, common.rootCommonId),
       )}
     </>
   ) : (
     ""
   );
 
-  return [userEl, " created the space", commonEl].filter(Boolean);
+  return ["The ", commonEl, " space was created by ", userEl].filter(Boolean);
 };
 
 const getCommonEditedSystemMessageText = async (
   systemMessageData: CommonEditedSystemMessage["systemMessageData"],
   data: TextData,
 ): Promise<Text[]> => {
-  const user = await getUser(systemMessageData.userId, data.users);
+  const [user, common] = await Promise.all([
+    getUser(systemMessageData.userId, data.users),
+    getCommon(systemMessageData.commonId),
+  ]);
   const userEl = renderUserMention(user, data);
 
   return [
-    userEl,
-    ` edited this ${getCommonTypeText(systemMessageData.commonType)}’s `,
+    `This ${getCommonTypeText(systemMessageData.commonType)}’s `,
     renderLink(
       (data.getCommonPageAboutTabPath || getCommonPageAboutTabPath)(
         systemMessageData.commonId,
       ),
       "info",
+      () => handleCommonClick(systemMessageData.commonId, common?.rootCommonId),
     ),
+    " was edited by ",
+    userEl,
   ];
 };
 
@@ -115,6 +137,39 @@ const getCommonMemberAddedSystemMessageText = async (
     userEl,
     ` joined this ${getCommonTypeText(systemMessageData.commonType)}`,
   ];
+};
+
+const getFeedItemCreatedSystemMessageText = async (
+  systemMessageData: CommonFeedItemCreatedSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, feedItemDisplayingData] = await Promise.all([
+    getUser(systemMessageData.userId, data.users),
+    getFeedItemDisplayingData(
+      systemMessageData.feedItemDataId,
+      systemMessageData.feedItemType,
+    ),
+  ]);
+  const userEl = renderUserMention(user, data);
+  const title =
+    feedItemDisplayingData.title &&
+    `${feedItemDisplayingData.title}${
+      feedItemDisplayingData.isDeleted ? " (deleted)" : ""
+    }`;
+  const titleEl = title ? (
+    <>
+      {" "}
+      {feedItemDisplayingData.isDeleted
+        ? title
+        : renderClickableText(title, () =>
+            data.onFeedItemClick?.(systemMessageData.feedItemId),
+          )}
+    </>
+  ) : (
+    ""
+  );
+
+  return [titleEl, " was created by ", userEl].filter(Boolean);
 };
 
 export const getTextFromSystemMessage = async (
@@ -142,6 +197,12 @@ export const getTextFromSystemMessage = async (
       break;
     case SystemDiscussionMessageType.CommonMemberAdded:
       text = await getCommonMemberAddedSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.FeedItemCreated:
+      text = await getFeedItemCreatedSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );

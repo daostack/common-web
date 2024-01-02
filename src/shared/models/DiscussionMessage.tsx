@@ -1,11 +1,12 @@
-import firebase from "firebase/app";
 import {
   DiscussionMessageOwnerType,
   SystemDiscussionMessageType,
 } from "@/shared/constants";
 import { Moderation } from "@/shared/interfaces/Moderation";
 import { BaseEntity } from "./BaseEntity";
+import { CommonFeedType } from "./CommonFeed";
 import { Link } from "./Link";
+import { Timestamp } from "./Timestamp";
 import { User } from "./User";
 
 export enum DiscussionMessageType {
@@ -35,6 +36,7 @@ export interface ParentDiscussionMessage {
   moderation?: Moderation;
   images?: Link[];
   files?: Link[];
+  createdAt: Timestamp;
 }
 
 interface BaseDiscussionMessage extends BaseEntity {
@@ -49,7 +51,7 @@ interface BaseDiscussionMessage extends BaseEntity {
   files?: Link[];
   tags?: DiscussionMessageTag[];
   parentMessage: ParentDiscussionMessage | null;
-  editedAt?: firebase.firestore.Timestamp;
+  editedAt?: Timestamp;
   ownerType: DiscussionMessageOwnerType;
 }
 
@@ -98,9 +100,11 @@ export interface CommonFeedItemCreatedSystemMessage
   extends BaseSystemDiscussionMessage {
   systemMessageType: SystemDiscussionMessageType.FeedItemCreated;
   systemMessageData: {
-    commonType: SystemMessageCommonType;
-    commonId: string;
     userId: string;
+    commonId: string;
+    feedItemId: string;
+    feedItemType: CommonFeedType;
+    feedItemDataId: string;
   };
 }
 
@@ -111,6 +115,12 @@ export type SystemDiscussionMessage =
   | CommonFeedItemCreatedSystemMessage;
 
 export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
+
+export type Text = string | JSX.Element;
+
+export type DiscussionMessageWithParsedText = DiscussionMessage & {
+  parsedText: Text[];
+};
 
 export enum PendingMessageStatus {
   Sending,

@@ -1,6 +1,6 @@
 import React, { FC, MouseEventHandler, useRef } from "react";
 import { useSelector } from "react-redux";
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 import { v4 } from "uuid";
 import { MemberDropdown } from "@/pages/common/components/CommonTabPanels/components/MembersTab/components/MemberDropdown";
 import { GovernanceActions } from "@/shared/constants";
@@ -10,6 +10,7 @@ import {
   CirclesPermissions,
   CommonMemberWithUserInfo,
   DirectParent,
+  Timestamp,
 } from "@/shared/models";
 import { CommonMember as CommonMemberModel } from "@/shared/models";
 import { ContextMenuRef } from "@/shared/ui-kit";
@@ -24,7 +25,7 @@ import { UserAvatar, UserInfoPopup } from "../../../../../shared/components";
 
 interface CommonMemberProps {
   avatar: string | undefined;
-  joinedAt: firebase.firestore.Timestamp;
+  joinedAt: Timestamp;
   member: CommonMemberWithUserInfo;
   commonId: string;
   commonMember?: (CommonMemberModel & CirclesPermissions) | null;
@@ -79,7 +80,7 @@ const CommonMember: FC<CommonMemberProps> = ({
     circlesWithHighestTier[circlesWithHighestTier.length - 1];
 
   governanceCircles.forEach((circle) => {
-    if (!highestMemberCircle.hierarchy) {
+    if (!highestMemberCircle?.hierarchy) {
       return;
     }
     if (!circle.hierarchy) {

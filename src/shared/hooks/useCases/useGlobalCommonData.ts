@@ -6,6 +6,7 @@ import { useUserPendingJoin } from "./useUserPendingJoin";
 
 interface UseGlobalCommonDataArguments {
   commonId: string;
+  rootCommonId?: string;
   parentCommonId?: string;
   parentCircleId?: string;
   governanceCircles?: Circles;
@@ -13,12 +14,14 @@ interface UseGlobalCommonDataArguments {
 
 type State = LoadingState<{
   commonMember: (CommonMember & CirclesPermissions) | null;
+  rootCommonMember: (CommonMember & CirclesPermissions) | null;
   parentCommonMember: (CommonMember & CirclesPermissions) | null;
   isJoinPending: boolean;
 }>;
 
 interface Return extends State {
   fetchUserRelatedData: () => void;
+  fetchRootCommonMemberData: () => void;
   fetchParentCommonMemberData: () => void;
   setIsJoinPending: (isJoinPending: boolean) => void;
 }
@@ -26,7 +29,13 @@ interface Return extends State {
 export const useGlobalCommonData = (
   data: UseGlobalCommonDataArguments,
 ): Return => {
-  const { commonId, parentCommonId, parentCircleId, governanceCircles } = data;
+  const {
+    commonId,
+    rootCommonId,
+    parentCommonId,
+    parentCircleId,
+    governanceCircles,
+  } = data;
   const {
     loading: isCommonMemberLoading,
     fetched: isCommonMemberFetched,
@@ -37,6 +46,16 @@ export const useGlobalCommonData = (
     withSubscription: true,
     commonId,
     governanceCircles,
+  });
+  const {
+    loading: isRootCommonMemberLoading,
+    fetched: isRootCommonMemberFetched,
+    data: rootCommonMember,
+    fetchCommonMember: fetchRootCommonMember,
+    setCommonMember: setRootCommonMember,
+    resetCommonMember: resetRootCommonMember,
+  } = useCommonMember({
+    shouldAutoReset: false,
   });
   const {
     loading: isParentCommonMemberLoading,
@@ -58,13 +77,16 @@ export const useGlobalCommonData = (
   const isGlobalDataLoading =
     isCommonMemberLoading ||
     isPendingJoinCheckLoading ||
+    isRootCommonMemberLoading ||
     isParentCommonMemberLoading;
   const isGlobalDataFetched =
     isCommonMemberFetched &&
     isPendingJoinCheckFinished &&
+    isRootCommonMemberFetched &&
     isParentCommonMemberFetched;
 
   const fetchUserRelatedData = useCallback(() => {
+    resetRootCommonMember();
     resetParentCommonMember();
     fetchCommonMember(commonId, {}, true);
     checkUserPendingJoin(commonId, {
@@ -77,8 +99,17 @@ export const useGlobalCommonData = (
     parentCircleId,
     fetchCommonMember,
     checkUserPendingJoin,
+    resetRootCommonMember,
     resetParentCommonMember,
   ]);
+
+  const fetchRootCommonMemberData = useCallback(() => {
+    if (rootCommonId) {
+      fetchRootCommonMember(rootCommonId, {}, true);
+    } else {
+      setRootCommonMember(null);
+    }
+  }, [rootCommonId, fetchRootCommonMember, setRootCommonMember]);
 
   const fetchParentCommonMemberData = useCallback(() => {
     if (parentCommonId) {
@@ -93,10 +124,12 @@ export const useGlobalCommonData = (
     fetched: isGlobalDataFetched,
     data: {
       commonMember,
+      rootCommonMember,
       parentCommonMember,
       isJoinPending,
     },
     fetchUserRelatedData,
+    fetchRootCommonMemberData,
     fetchParentCommonMemberData,
     setIsJoinPending,
   };

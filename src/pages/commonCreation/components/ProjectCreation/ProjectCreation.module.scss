@@ -23,6 +23,7 @@
   display: flex;
   align-items: center;
   text-decoration: none;
+  color: var(--primary-text);
 
   &:hover {
     text-decoration: underline;
@@ -40,10 +41,12 @@
   font-weight: normal;
   font-size: $large-1;
   line-height: 133%;
+  color: var(--primary-text);
 }
 
 .subtitle {
   margin: 0 0 2.25rem;
   font-size: $small;
   line-height: 125%;
+  color: var(--primary-text);
 }

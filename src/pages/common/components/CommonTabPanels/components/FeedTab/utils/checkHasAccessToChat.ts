@@ -8,10 +8,10 @@ export const checkHasAccessToChat = (
     return false;
   }
 
+  const { circleVisibility = [] } = chatItem;
+
   return (
-    !chatItem.circleVisibility.length ||
-    chatItem.circleVisibility.some((circleId) =>
-      userCircleIds.includes(circleId),
-    )
+    !circleVisibility.length ||
+    circleVisibility.some((circleId) => userCircleIds.includes(circleId))
   );
 };

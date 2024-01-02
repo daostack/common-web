@@ -1,6 +1,8 @@
+import { takeLatest } from "redux-saga/effects";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import { takeLeadingByIdentifier } from "@/shared/utils/saga";
 import * as actions from "../actions";
+import { copyFeedStateByCommonId } from "./copyFeedStateByCommonId";
 import { getDiscussionStateById } from "./getDiscussionStateById";
 import { getFeedItemUserMetadataState } from "./getFeedItemUserMetadataState";
 import { getGovernanceStateByCommonId } from "./getGovernanceStateByCommonId";
@@ -33,4 +35,5 @@ export function* mainSaga() {
     ({ payload: { payload } }) => getFeedItemUserMetadataKey(payload),
     getFeedItemUserMetadataState,
   );
+  yield takeLatest(actions.copyFeedStateByCommonId, copyFeedStateByCommonId);
 }

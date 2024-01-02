@@ -41,7 +41,7 @@
   position: absolute;
   bottom: 2.125rem;
   z-index: 2;
-  color: $black;
+  color: var(--primary-text);
 
   &:disabled {
     color: $gray;
@@ -101,4 +101,9 @@
   left: calc(50% + 3px);
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.image-container {
+  height: 100%;
+  width: 100%;
 }

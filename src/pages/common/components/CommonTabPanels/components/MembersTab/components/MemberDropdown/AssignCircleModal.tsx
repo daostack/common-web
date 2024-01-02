@@ -5,6 +5,7 @@ import { Modal } from "@/shared/components";
 import { ErrorText } from "@/shared/components/Form";
 import { Circle } from "@/shared/models";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
+import { pluralizeWord } from "@/shared/utils";
 import { commonActions } from "@/store/states";
 import styles from "./AssignCircleModal.module.scss";
 
@@ -62,7 +63,7 @@ export default function AssignCircleModal({
       onClose={handleClose}
       hideCloseButton={isAdding}
       className={styles.modal}
-      title={`Add ${memberName} to ${selectedCircle?.name}?`}
+      title={`Add ${memberName} to ${pluralizeWord(selectedCircle?.name)}?`}
     >
       <div className={styles.content}>
         <div className={styles.text}>
@@ -71,14 +72,14 @@ export default function AssignCircleModal({
         </div>
         <div className={styles.buttonsContainer}>
           <Button
-            variant={ButtonVariant.PrimaryGray}
+            variant={ButtonVariant.OutlineDarkPink}
             onClick={handleClose}
             disabled={isAdding}
           >
             Cancel
           </Button>
           <Button
-            variant={ButtonVariant.PrimaryPurple}
+            variant={ButtonVariant.PrimaryPink}
             onClick={handleAdd}
             disabled={isAdding}
           >

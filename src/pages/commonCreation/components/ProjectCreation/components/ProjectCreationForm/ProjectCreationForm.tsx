@@ -1,9 +1,14 @@
 import React, { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCommonUpdate } from "@/pages/OldCommon/components/CommonListContainer/EditCommonModal/useCases";
+import { ConfirmationModal } from "@/shared/components";
 import { usePreventReload } from "@/shared/hooks";
-import { useProjectCreation } from "@/shared/hooks/useCases";
-import { Circles, Common, Project } from "@/shared/models";
+import {
+  useGovernanceByCommonId,
+  useNotionIntegration,
+  useProjectCreation,
+} from "@/shared/hooks/useCases";
+import { Circles, Common, Governance, Project, Roles } from "@/shared/models";
 import {
   Loader,
   LoaderVariant,
@@ -12,6 +17,7 @@ import {
 import {
   convertLinksToUploadFiles,
   getCirclesWithHighestTier,
+  removeProjectCircles,
 } from "@/shared/utils";
 import { projectsActions, selectCommonLayoutProjects } from "@/store/states";
 import { generateCreationForm, CreationFormRef } from "../../../CreationForm";
@@ -20,6 +26,8 @@ import { getConfiguration } from "./configuration";
 import { ProjectCreationFormValues } from "./types";
 import styles from "./ProjectCreationForm.module.scss";
 
+const NOTION_INTEGRATION_TOKEN_MASK = "************";
+
 const CreationForm = generateCreationForm<ProjectCreationFormValues>();
 
 interface ProjectCreationFormProps {
@@ -27,17 +35,19 @@ interface ProjectCreationFormProps {
   governanceCircles: Circles;
   initialCommon?: Project;
   isEditing: boolean;
-  onFinish: (createdProject: Common) => void;
+  onFinish: (data: { project: Common; governance: Governance }) => void;
   onCancel: () => void;
 }
 
 const getInitialValues = (
   governanceCircles: Circles,
   initialCommon?: Project,
+  roles?: Roles,
 ): ProjectCreationFormValues => {
   const circlesWithHighestTier = getCirclesWithHighestTier(
     Object.values(governanceCircles),
   );
+  const isNotionIntegrationEnabled = Boolean(initialCommon?.notion);
 
   return {
     projectImages: initialCommon?.image
@@ -61,6 +71,12 @@ const getInitialValues = (
       initialCommon?.directParent.circleId ||
       circlesWithHighestTier[0]?.id ||
       "",
+    roles: roles || [],
+    notion: {
+      isEnabled: isNotionIntegrationEnabled,
+      databaseId: initialCommon?.notion?.databaseId || "",
+      token: isNotionIntegrationEnabled ? NOTION_INTEGRATION_TOKEN_MASK : "",
+    },
   };
 };
 
@@ -75,8 +91,8 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   } = props;
   const dispatch = useDispatch();
   const projects = useSelector(selectCommonLayoutProjects);
-
   const formRef = useRef<CreationFormRef>(null);
+  const { data: governance, fetchGovernance } = useGovernanceByCommonId();
   const {
     isProjectCreationLoading,
     project,
@@ -89,14 +105,49 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     error: updateProjectError,
     updateCommon: updateProject,
   } = useCommonUpdate(initialCommon?.id);
-  const isLoading = isProjectCreationLoading || isCommonUpdateLoading;
+  const {
+    data: notionIntegration,
+    loading: isNotionIntegrationLoading,
+    isNotionIntegrationUpdated,
+    notionIntegrationErrorModalState,
+    disconnectNotionModalState,
+    fetchNotionIntegration,
+    setNotionIntegrationFormData,
+  } = useNotionIntegration({
+    projectId: project?.id || updatedProject?.id,
+    isNotionIntegrationEnabled: Boolean(initialCommon?.notion),
+  });
+  const isLoading =
+    isProjectCreationLoading ||
+    isCommonUpdateLoading ||
+    isNotionIntegrationLoading;
   const error = createProjectError || updateProjectError;
-  const initialValues = useMemo(
-    () => getInitialValues(governanceCircles, initialCommon),
-    [governanceCircles],
-  );
 
+  useEffect(() => {
+    if (initialCommon?.id) {
+      fetchNotionIntegration(initialCommon.id);
+    }
+  }, [initialCommon?.id]);
+
+  const nonProjectCircles = useMemo(
+    () => removeProjectCircles(Object.values(governance?.circles || {})),
+    [governance?.circles],
+  );
+  const roles: Roles = nonProjectCircles.map((circle) => ({
+    circleId: circle.id,
+    circleName: circle.name,
+  }));
+  const initialValues = useMemo(
+    () => getInitialValues(governanceCircles, initialCommon, roles),
+    [governanceCircles, nonProjectCircles],
+  );
+  const projectId = initialCommon?.id || project?.id;
+
+  /**
+   * Existing projects names under the same direct parent only.
+   */
   const existingProjectsNames = projects
+    .filter((project) => project.directParent?.commonId === parentCommonId)
     .map((project) => project?.name)
     .filter((spaceName) => spaceName !== initialValues?.spaceName);
 
@@ -106,6 +157,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   );
 
   const handleProjectCreate = (values: ProjectCreationFormValues) => {
+    setNotionIntegrationFormData(values.notion);
     createProject(parentCommonId, values);
   };
 
@@ -117,6 +169,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
 
     const [image] = values.projectImages;
 
+    setNotionIntegrationFormData(values.notion);
     updateProject({
       ...values,
       image,
@@ -135,12 +188,21 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, []);
 
   useEffect(() => {
+    if (projectId) {
+      fetchGovernance(projectId);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
     const finalProject = project || updatedProject;
 
-    if (finalProject) {
-      onFinish(finalProject);
+    if (finalProject && governance && isNotionIntegrationUpdated) {
+      onFinish({
+        project: finalProject,
+        governance,
+      });
     }
-  }, [project, updatedProject]);
+  }, [project, updatedProject, governance, isNotionIntegrationUpdated]);
 
   return (
     <>
@@ -154,12 +216,39 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         ref={formRef}
         initialValues={initialValues}
         onSubmit={isEditing ? handleProjectUpdate : handleProjectCreate}
-        items={getConfiguration(true, { existingNames: existingProjectsNames })}
+        items={getConfiguration({
+          isProject: true,
+          roles,
+          notionIntegration,
+          shouldBeUnique: {
+            existingNames: existingProjectsNames,
+          },
+        })}
         submitButtonText={isEditing ? "Save changes" : "Create Space"}
         disabled={isLoading}
         error={error}
       />
       <UnsavedChangesPrompt shouldShowPrompt={shouldPreventReload} />
+      <ConfirmationModal
+        isShowing={notionIntegrationErrorModalState.isShowing}
+        title="Notion integration error"
+        confirmText="Okay"
+        onClose={notionIntegrationErrorModalState.onClose}
+        onConfirm={notionIntegrationErrorModalState.onConfirm}
+      >
+        Oops, our attempt to integrate the space with Notion hit a bump. Recheck
+        your settings, and don't hesitate to ask for help if needed!
+      </ConfirmationModal>
+      <ConfirmationModal
+        isShowing={disconnectNotionModalState.isShowing}
+        title="Disconnect Notion"
+        confirmText="Yes, I'm sure"
+        closeText="Cancel"
+        onClose={disconnectNotionModalState.onClose}
+        onConfirm={disconnectNotionModalState.onConfirm}
+      >
+        Are you sure you want to remove the Notion integration?
+      </ConfirmationModal>
     </>
   );
 };

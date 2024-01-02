@@ -1,56 +1,98 @@
-import React, { FC, useMemo } from "react";
-import { MultipleSpacesLayoutFeedItemBreadcrumbs } from "@/store/states";
+import React, { FC, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { CommonEvent, CommonEventEmitter } from "@/events";
+import { CommonService } from "@/services";
+import { useIsTabletView } from "@/shared/hooks/viewport";
+import {
+  commonLayoutActions,
+  MultipleSpacesLayoutFeedItemBreadcrumbs,
+  ProjectsStateItem,
+} from "@/store/states";
 import { useGoToCreateCommon } from "../../../../../../hooks";
-import { ActiveBreadcrumbsItem } from "../ActiveBreadcrumbsItem";
-import { BreadcrumbsItem } from "../BreadcrumbsItem";
-import { LoadingBreadcrumbsItem } from "../LoadingBreadcrumbsItem";
 import { Separator } from "../Separator";
-import { getBreadcrumbsData } from "./utils";
+import { ActiveFeedBreadcrumbsItem, FeedBreadcrumbsItem } from "./components";
 import styles from "./FeedItemBreadcrumbs.module.scss";
 
 interface FeedItemBreadcrumbsProps {
   breadcrumbs: MultipleSpacesLayoutFeedItemBreadcrumbs;
   itemsWithMenus: boolean;
+  truncate: boolean;
 }
 
 const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
-  const { breadcrumbs, itemsWithMenus } = props;
+  const { breadcrumbs, itemsWithMenus, truncate } = props;
+  const dispatch = useDispatch();
   const goToCreateCommon = useGoToCreateCommon();
-  const { data, projects, hasPermissionToAddProjectInActiveCommon } = useMemo(
-    () => getBreadcrumbsData(breadcrumbs.items, breadcrumbs.activeCommonId),
-    [breadcrumbs.items, breadcrumbs.activeCommonId],
-  );
+  const isMobileView = useIsTabletView();
+  const breadcrumbsItems = truncate
+    ? [breadcrumbs.items[0], breadcrumbs.items[breadcrumbs.items.length - 1]]
+    : breadcrumbs.items;
+
+  const handleItemClick = (item: ProjectsStateItem) => {
+    if (item.rootCommonId) {
+      dispatch(
+        commonLayoutActions.resetCurrentCommonIdAndProjects(item.rootCommonId),
+      );
+    }
+  };
+
+  useEffect(() => {
+    const commonIds = breadcrumbs.items.map((item) => item.commonId);
+
+    if (commonIds.length === 0) {
+      return;
+    }
+
+    const unsubscribe = CommonService.subscribeToCommons(commonIds, (data) => {
+      data.forEach(({ common }) => {
+        CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
+          commonId: common.id,
+          image: common.image,
+          name: common.name,
+          directParent: common.directParent,
+          rootCommonId: common.rootCommonId,
+        });
+      });
+    });
+
+    return unsubscribe;
+  }, [breadcrumbs.activeItem?.id]);
 
   return (
     <ul className={styles.container}>
-      {breadcrumbs.areItemsLoading && <LoadingBreadcrumbsItem />}
       {!breadcrumbs.areItemsLoading &&
-        data.map((item, index) => (
-          <React.Fragment key={item.activeCommonId}>
+        breadcrumbsItems.map((item, index) => (
+          <React.Fragment key={item.commonId}>
             {index > 0 && <Separator />}
-            <BreadcrumbsItem
-              activeItemId={item.activeCommonId}
-              items={item.items}
-              commonIdToAddProject={item.commonIdToAddProject}
+            {truncate && index === 1 && (
+              <>
+                ...
+                <Separator />
+              </>
+            )}
+            <FeedBreadcrumbsItem
+              activeItem={item}
               onCommonCreate={index === 0 ? goToCreateCommon : undefined}
               withMenu={itemsWithMenus}
+              truncate={isMobileView}
+              onClick={() => handleItemClick(item)}
             />
           </React.Fragment>
         ))}
       {breadcrumbs.activeItem && (
         <>
-          {(breadcrumbs.areItemsLoading || data.length > 0) && <Separator />}
-          <ActiveBreadcrumbsItem
-            name={breadcrumbs.activeItem.name}
-            image={breadcrumbs.activeItem.image}
-            items={projects}
-            commonIdToAddProject={
-              hasPermissionToAddProjectInActiveCommon
-                ? breadcrumbs.activeCommonId
-                : null
-            }
-            withMenu={itemsWithMenus}
-          />
+          {!breadcrumbs.areItemsLoading && breadcrumbs.items.length > 0 && (
+            <Separator />
+          )}
+          {!isMobileView && (
+            <ActiveFeedBreadcrumbsItem
+              activeItemId={breadcrumbs.activeCommonId}
+              name={breadcrumbs.activeItem.name}
+              image={breadcrumbs.activeItem.image}
+              withMenu={itemsWithMenus}
+              truncate={isMobileView}
+            />
+          )}
         </>
       )}
     </ul>

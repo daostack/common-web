@@ -5,8 +5,8 @@ import {
   CommonFeed,
   CommonMember,
   Discussion,
-  Proposal,
   CommonFeedType,
+  CommonFeedObjectUserUnique,
 } from "@/shared/models";
 import { FeedItemMenuItem } from "./constants";
 
@@ -21,10 +21,14 @@ export interface GetAllowedItemsOptions {
   discussion?: Discussion | null;
   governanceCircles?: Circles;
   feedItem?: CommonFeed;
-  proposal?: Proposal;
   commonMember?: CommonMember | null;
   feedItemFollow: FeedItemFollowState;
   getNonAllowedItems?: GetNonAllowedItemsOptions;
+  feedItemUserMetadata: CommonFeedObjectUserUnique | null;
 }
 
 export type MenuItemOptions = Omit<GetAllowedItemsOptions, "feedItemFollow">;
+
+export interface FeedItemRef {
+  scrollToItem: () => void;
+}

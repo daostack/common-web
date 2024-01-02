@@ -3,6 +3,7 @@ import { ContextMenuItem } from "@/shared/interfaces";
 import {
   CommonFeed,
   CommonFeedType,
+  CommonNotion,
   Discussion,
   PredefinedTypes,
 } from "@/shared/models";
@@ -26,8 +27,10 @@ export interface FeedItemBaseContentProps {
   menuItems?: ContextMenuItem[];
   type?: CommonFeedType;
   seenOnce?: boolean;
+  seen?: boolean;
   ownerId?: string;
   commonName?: string;
+  commonId?: string;
   renderImage?: (className?: string) => ReactNode;
   renderLeftContent?: () => ReactNode;
   image?: string;
@@ -41,6 +44,14 @@ export interface FeedItemBaseContentProps {
   hasImages?: boolean;
   isLoading?: boolean;
   shouldHideBottomContent?: boolean;
+  dmUserIds?: string[];
+  hasUnseenMention?: boolean;
+  notion?: CommonNotion;
+  originalCommonIdForLinking?: string;
+  linkedCommonIds?: string[];
+  isGroupMessage?: boolean;
+  createdBy?: string;
+  hoverTitle?: string;
 }
 
 export interface GetLastMessageOptions {
@@ -62,6 +73,7 @@ export interface FeedItemContextValue {
   setExpandedFeedItemId?: (feedItemId: string | null) => void;
   renderFeedItemBaseContent?: (props: FeedItemBaseContentProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
+  onFeedItemUnfollowed?: (itemId: string) => void;
   feedCardSettings?: FeedCardSettings;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   getNonAllowedItems?: GetNonAllowedItemsOptions;

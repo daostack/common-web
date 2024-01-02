@@ -11,3 +11,17 @@
 .desktopRightPane {
   top: var(--split-view-top);
 }
+
+.headerContentWrapper {
+  display: none;
+
+  @include tablet {
+    height: 3.25rem;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 0.0625rem solid var(--gentle-stroke);
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+}

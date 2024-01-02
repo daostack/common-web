@@ -1,0 +1,192 @@
+@import "../../../../../../constants";
+@import "../../../../../../styles/sizes";
+@import "../../../../../../styles/typography";
+
+.container {
+  width: 100%;
+  max-width: 36.5rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--primary-text);
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.previewWrapper {
+  margin-bottom: 2.25rem;
+  display: flex;
+  align-items: flex-start;
+
+  @include tablet {
+    margin-bottom: 2.625rem;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.introWrapper {
+  margin-bottom: 2.25rem;
+
+  @include tablet {
+    margin-bottom: 1rem;
+  }
+}
+
+.introTitle {
+  @include h5;
+
+  margin: 0 0 0.5rem;
+  text-align: left;
+}
+
+.introDescription {
+  @include body-sm-regular;
+
+  max-width: 24.875rem;
+  margin: 0;
+  text-align: left;
+  word-break: break-word;
+
+  @include tablet {
+    max-width: unset;
+  }
+}
+
+.avatar {
+  position: relative;
+  text-align: center;
+
+  @include tablet {
+    margin-bottom: 0.625rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.avatarInputFile {
+  display: none;
+}
+
+.userDetailsPreview {
+  margin-left: 1rem;
+
+  @include tablet {
+    margin-left: 0;
+  }
+}
+
+.userPhoto {
+  width: 6.25rem;
+  height: 6.25rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.editAvatarButton {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $c-pink-mention;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.editAvatarButtonMobile {
+  --btn-h: 1.5rem;
+  --btn-pl: 0.25rem;
+  --btn-pr: 0.25rem;
+
+  margin-top: 0.625rem;
+  font-weight: 500;
+  background-color: transparent;
+}
+
+.editAvatarImage {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: $c-pink-light;
+}
+
+.editAvatarLoader {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.textFieldContainer {
+  max-width: 100%;
+  display: grid;
+  gap: 2rem 2.5rem;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "firstName lastName"
+    "email country"
+    "intro intro";
+
+  @include tablet {
+    grid-template-areas:
+      "firstName"
+      "lastName"
+      "email"
+      "country"
+      "intro";
+  }
+}
+
+.textField,
+.textareaTextField {
+  width: 100%;
+  text-align: left;
+  z-index: 1;
+
+  .textFieldLabelWrapper {
+    @include body-sm-regular;
+  }
+
+  .textFieldInput {
+    padding-left: 0.75rem;
+    padding-right: 0.875rem;
+  }
+
+  .introInputWrapper {
+    height: 100%;
+
+    @include tablet {
+      height: 9rem;
+    }
+  }
+}
+
+.firstNameTextField {
+  grid-area: firstName;
+}
+
+.lastNameTextField {
+  grid-area: lastName;
+}
+
+.emailTextField {
+  grid-area: email;
+}
+
+.countryTextField {
+  z-index: 2;
+  grid-area: country;
+}
+
+.textareaTextField {
+  grid-area: intro;
+  width: 100%;
+}

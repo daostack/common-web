@@ -1,10 +1,13 @@
+import { User as FirebaseUser } from "firebase/auth";
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
   getProposalById,
   seenNotification,
   subscribeToNotification,
 } from "@/pages/OldCommon/store/api";
+import { UserService } from "@/services";
 import { store } from "@/shared/appConfig";
+import { Awaited } from "@/shared/interfaces";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 import { EventTypeState, NotificationItem } from "@/shared/models/Notification";
 import { isFundsAllocationProposal } from "@/shared/models/governance/proposals";
@@ -12,7 +15,10 @@ import { showNotification } from "@/shared/store/actions";
 import { getProvider } from "@/shared/utils/authProvider";
 import { getFundingRequestNotification } from "@/shared/utils/notifications";
 import {
+  cacheActions,
+  commonActions,
   commonLayoutActions,
+  inboxActions,
   multipleSpacesLayoutActions,
 } from "@/store/states";
 import {
@@ -30,6 +36,7 @@ import history from "../../../shared/history";
 import { Collection, Proposal, User } from "../../../shared/models";
 import {
   GeneralError,
+  getFirebaseAuthProvider,
   getRandomUserAvatarURL,
   isAcceptedFundsAllocationToSubCommonEvent,
   isError,
@@ -66,7 +73,7 @@ const getAuthProviderFromProviderData = (
 };
 
 const createUser = async (
-  user: firebase.User,
+  user: firebase.User | FirebaseUser,
 ): Promise<{ user: User; isNewUser: boolean }> => {
   const userSnapshot = await firebase
     .firestore()
@@ -121,26 +128,8 @@ export const uploadImage = async (imageUri: any) => {
   return await ref.getDownloadURL();
 };
 
-const getFirebaseAuthProvider = (
-  authProvider: AuthProvider,
-): firebase.auth.GoogleAuthProvider | firebase.auth.OAuthProvider => {
-  switch (authProvider) {
-    case AuthProvider.Apple: {
-      const provider = new firebase.auth.OAuthProvider("apple.com");
-      provider.addScope("email");
-      provider.addScope("name");
-
-      return provider;
-    }
-    case AuthProvider.Facebook:
-      return new firebase.auth.FacebookAuthProvider();
-    default:
-      return new firebase.auth.GoogleAuthProvider();
-  }
-};
-
 const verifyLoggedInUser = async (
-  user: firebase.User | null,
+  user: firebase.User | FirebaseUser | null,
   shouldCreateUserIfNotExist: boolean,
   authCode = "",
 ): Promise<{ user: User; isNewUser: boolean }> => {
@@ -264,7 +253,7 @@ const confirmVerificationCode = async (
   return verifyLoggedInUser(user, true, authCode);
 };
 
-const updateUserData = async (user: User) => {
+const updateUserData = async (user: User): Promise<User> => {
   const currentUser = await firebase.auth().currentUser;
   const profileData: {
     displayName?: string | null;
@@ -283,40 +272,29 @@ const updateUserData = async (user: User) => {
   }
 
   await currentUser?.updateProfile(profileData);
-
   const updatedCurrentUser = await firebase.auth().currentUser;
 
-  if (updatedCurrentUser) {
-    await firebase
-      .firestore()
-      .collection(Collection.Users)
-      .doc(updatedCurrentUser?.uid)
-      .update({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        photoURL: updatedCurrentUser.photoURL || user.photo || "",
-        intro: user.intro,
-        displayName: `${user.firstName} ${user.lastName}`,
-        country: user.country,
-        phoneNumber: user.phoneNumber || "",
-      })
-      .then(async () => {
-        const updatedCurrentUser = await firebase.auth().currentUser;
+  return await UserService.updateUser({
+    ...user,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    photoURL: updatedCurrentUser?.photoURL || user.photo || "",
+    intro: user.intro,
+    displayName: `${user.firstName} ${user.lastName}`,
+    country: user.country,
+    phoneNumber: user.phoneNumber || "",
+  });
+};
 
-        if (updatedCurrentUser) {
-          const databaseUser = await getUserData(updatedCurrentUser?.uid ?? "");
-          if (databaseUser) {
-            store.dispatch(actions.socialLogin.success(databaseUser));
-          }
-        }
-
-        return updatedCurrentUser;
-      })
-      .catch((err) => console.error(err));
+const resetGlobalData = (fullReset: boolean) => {
+  if (fullReset) {
+    store.dispatch(multipleSpacesLayoutActions.resetMultipleSpacesLayout());
+    store.dispatch(commonLayoutActions.clearData());
   }
-
-  return getUserData(updatedCurrentUser?.uid ?? "");
+  store.dispatch(inboxActions.resetInbox());
+  store.dispatch(cacheActions.resetFeedStates());
+  store.dispatch(commonActions.resetCommon());
 };
 
 function* socialLoginSaga({
@@ -340,6 +318,41 @@ function* socialLoginSaga({
   } catch (error) {
     if (isError(error)) {
       yield put(actions.socialLogin.failure(error));
+
+      if (payload.callback) {
+        payload.callback(error);
+      }
+    }
+  } finally {
+    yield put(actions.stopAuthLoading());
+  }
+}
+
+function* loginWithFirebaseUserSaga({
+  payload,
+}: ReturnType<typeof actions.loginWithFirebaseUser.request>) {
+  try {
+    yield put(actions.startAuthLoading());
+
+    const { user, isNewUser } = (yield call(
+      verifyLoggedInUser,
+      payload.payload.firebaseUser,
+      true,
+      payload.payload.authCode,
+    )) as Awaited<ReturnType<typeof verifyLoggedInUser>>;
+    const firebaseUser = (yield call(getUserData, user.uid ?? "")) as Awaited<
+      ReturnType<typeof getUserData>
+    >;
+
+    if (firebaseUser) {
+      yield put(actions.loginWithFirebaseUser.success(firebaseUser));
+    }
+    if (payload.callback) {
+      payload.callback(null, { user, isNewUser });
+    }
+  } catch (error) {
+    if (isError(error)) {
+      yield put(actions.loginWithFirebaseUser.failure(error));
 
       if (payload.callback) {
         payload.callback(error);
@@ -483,8 +496,6 @@ function* logOut() {
     window.ReactNativeWebView.postMessage(WebviewActions.logout);
   }
 
-  yield put(multipleSpacesLayoutActions.resetMultipleSpacesLayout());
-  yield put(commonLayoutActions.clearData());
   history.push(ROUTE_PATHS.HOME);
   yield true;
 }
@@ -494,11 +505,24 @@ function* updateUserDetails({
 }: ReturnType<typeof actions.updateUserDetails.request>) {
   try {
     yield put(actions.startAuthLoading());
-    const user: User = yield call(updateUserData, payload.user);
+    const user = (yield call(updateUserData, payload.user)) as Awaited<
+      ReturnType<typeof updateUserData>
+    >;
 
     yield put(actions.updateUserDetails.success(user));
+    yield put(actions.socialLogin.success(user));
+    yield put(
+      cacheActions.updateUserStateById({
+        userId: user.uid,
+        state: {
+          loading: false,
+          fetched: true,
+          data: user,
+        },
+      }),
+    );
     tokenHandler.setUser(user);
-    yield payload.callback(null);
+    yield payload.callback(null, user);
   } catch (error) {
     if (isError(error)) {
       yield put(actions.updateUserDetails.failure(error));
@@ -539,6 +563,10 @@ function* authSagas() {
   yield takeLatest(actions.webviewLogin.request, webviewLoginSaga);
   yield takeLatest(actions.socialLogin.request, socialLoginSaga);
   yield takeLatest(
+    actions.loginWithFirebaseUser.request,
+    loginWithFirebaseUserSaga,
+  );
+  yield takeLatest(
     actions.loginUsingEmailAndPassword.request,
     loginUsingEmailAndPasswordSaga,
   );
@@ -572,6 +600,12 @@ function* authSagas() {
 
   firebase.auth().onAuthStateChanged(async (res) => {
     try {
+      const { user: userInStore } = store.getState().auth;
+
+      if (userInStore?.uid !== res?.uid) {
+        resetGlobalData(!res);
+      }
+
       store.dispatch(
         actions.setAuthProvider(
           getAuthProviderFromProviderData(res?.providerData),

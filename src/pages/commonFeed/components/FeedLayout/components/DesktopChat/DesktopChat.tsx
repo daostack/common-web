@@ -7,7 +7,7 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { checkHasAccessToChat } from "@/pages/common/components/CommonTabPanels/components";
-import { UserAvatar } from "@/shared/components";
+import { InternalLinkData, UserAvatar } from "@/shared/components";
 import { useUserById } from "@/shared/hooks/useCases";
 import {
   Circles,
@@ -30,7 +30,10 @@ interface ChatProps {
   titleRightContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  renderChatInput?: () => ReactNode;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const DesktopChat: FC<ChatProps> = (props) => {
@@ -44,7 +47,10 @@ const DesktopChat: FC<ChatProps> = (props) => {
     titleRightContent,
     onMessagesAmountChange,
     directParent,
+    renderChatInput,
     onUserClick,
+    onFeedItemClick,
+    onInternalLinkClick,
   } = props;
   const {
     fetchUser: fetchDMUser,
@@ -60,7 +66,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
   const dmUserId = chatItem.chatChannel?.participants.filter(
     (participant) => participant !== userId,
   )[0];
-  const title = getUserName(dmUser) || chatItem.discussion.title;
+  const title = getUserName(dmUser) || chatItem.discussion?.title || "";
 
   const hasAccessToChat = useMemo(
     () => checkHasAccessToChat(userCircleIds, chatItem),
@@ -76,7 +82,11 @@ const DesktopChat: FC<ChatProps> = (props) => {
   }, [dmUserId]);
 
   return (
-    <DesktopRightPane className={className}>
+    <DesktopRightPane
+      className={classNames(className, {
+        [styles.rightPaneContainerWithHeader]: withTitle,
+      })}
+    >
       {withTitle && (
         <div className={styles.titleWrapper}>
           {dmUser?.photoURL && (
@@ -115,7 +125,10 @@ const DesktopChat: FC<ChatProps> = (props) => {
         isAuthorized={Boolean(user)}
         onMessagesAmountChange={onMessagesAmountChange}
         directParent={directParent}
+        renderChatInput={renderChatInput}
         onUserClick={onUserClick}
+        onFeedItemClick={onFeedItemClick}
+        onInternalLinkClick={onInternalLinkClick}
       />
     </DesktopRightPane>
   );

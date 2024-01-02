@@ -32,8 +32,8 @@
 
 .inboxIcon {
   flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   margin-right: 1rem;
 
   @include tablet {
@@ -77,4 +77,17 @@
 
 .directMessageButton {
   align-self: center;
+}
+
+.actionButtonsWrapper {
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin-right: 1rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }

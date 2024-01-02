@@ -1,12 +1,14 @@
 import React, { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { NavLink, Redirect, useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { CommonEvent, CommonEventEmitter } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { CenterWrapper } from "@/pages/commonCreation/components";
 import { styles } from "@/pages/commonCreation/components/ProjectCreation";
+import { ButtonLink } from "@/shared/components";
 import { GovernanceActions } from "@/shared/constants";
+import { useGoBack } from "@/shared/hooks";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import { Common } from "@/shared/models";
 import { Container, Loader } from "@/shared/ui-kit";
@@ -21,6 +23,7 @@ interface EditingProps {
 const Editing: FC<EditingProps> = (props) => {
   const { common } = props;
   const history = useHistory();
+  const { canGoBack, goBack } = useGoBack();
   const {
     fetched: isCommonMemberFetched,
     data: commonMember,
@@ -35,6 +38,7 @@ const Editing: FC<EditingProps> = (props) => {
       <Loader />
     </CenterWrapper>
   );
+  const backRoute = getCommonPageAboutTabPath(common.id);
 
   const handleUpdatedCommon = (updatedCommon: Common) => {
     CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
@@ -46,6 +50,14 @@ const Editing: FC<EditingProps> = (props) => {
     history.push(getCommonPageAboutTabPath(updatedCommon.id));
   };
 
+  const handleBackButtonClick = () => {
+    if (canGoBack) {
+      goBack();
+    } else {
+      history.push(backRoute);
+    }
+  };
+
   useEffect(() => {
     fetchCommonMember(common.id, {}, true);
   }, [common.id, userId]);
@@ -53,8 +65,6 @@ const Editing: FC<EditingProps> = (props) => {
   if (!isCommonMemberFetched) {
     return loaderEl;
   }
-
-  const backRoute = getCommonPageAboutTabPath(common.id);
 
   if (
     !commonMember ||
@@ -70,10 +80,10 @@ const Editing: FC<EditingProps> = (props) => {
   return (
     <Container className={styles.container}>
       <div className={styles.content}>
-        <NavLink className={styles.backLink} to={backRoute}>
+        <ButtonLink className={styles.backLink} onClick={handleBackButtonClick}>
           <LongLeftArrowIcon className={styles.backArrowIcon} />
           Back
-        </NavLink>
+        </ButtonLink>
         <h1 className={`${styles.title} ${editingStyles.title}`}>
           Edit common {common.name}
         </h1>

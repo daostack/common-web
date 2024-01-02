@@ -7,9 +7,10 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
@@ -20,6 +21,7 @@ import {
   FeedItemBaseContentProps,
   FeedItemContext,
   FeedItemContextValue,
+  FeedItemRef,
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "@/pages/common";
@@ -28,7 +30,14 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
-import { InboxItemType, QueryParamKey } from "@/shared/constants";
+import { InternalLinkData } from "@/shared/components";
+import {
+  InboxItemType,
+  LOADER_APPEARANCE_DELAY,
+  QueryParamKey,
+  ROUTE_PATHS,
+} from "@/shared/constants";
+import { useRoutesContext } from "@/shared/contexts";
 import { useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -52,8 +61,12 @@ import {
   User,
 } from "@/shared/models";
 import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
-import { addQueryParam, deleteQueryParam, getUserName } from "@/shared/utils";
-import { commonActions, selectRecentStreamId } from "@/store/states";
+import {
+  addQueryParam,
+  deleteQueryParam,
+  getParamsFromOneOfRoutes,
+  getUserName,
+} from "@/shared/utils";
 import { MIN_CHAT_WIDTH } from "../../constants";
 import {
   DesktopChat,
@@ -65,9 +78,11 @@ import {
   MobileProfile,
   SplitView,
 } from "./components";
+import { BATCHES_AMOUNT_TO_PRELOAD } from "./constants";
 import { useUserForProfile } from "./hooks";
 import {
   checkShouldAutoOpenPreview,
+  getChatChannelItemByUserIds,
   getDefaultSize,
   getItemCommonData,
   getSplitViewMaxSize,
@@ -82,7 +97,6 @@ export interface FeedLayoutOuterStyles {
 
 export interface FeedLayoutSettings {
   withDesktopChatTitle?: boolean;
-  sidenavWidth?: number;
   getSplitViewMaxSize?: (width: number) => number;
 }
 
@@ -100,10 +114,12 @@ interface FeedLayoutProps {
   topFeedItems?: FeedLayoutItem[];
   loading: boolean;
   shouldHideContent?: boolean;
-  onFetchNext: () => void;
+  batchNumber?: number;
+  onFetchNext: (feedItemId?: string) => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
   onFeedItemUpdate?: (item: CommonFeed, isRemoved: boolean) => void;
+  onFeedItemUnfollowed?: (itemId: string) => void;
   getLastMessage: (options: GetLastMessageOptions) => TextEditorValue;
   sharedFeedItemId?: string | null;
   emptyText?: string;
@@ -114,8 +130,14 @@ interface FeedLayoutProps {
     feedItem: FeedLayoutItem,
     becameEmpty: boolean,
   ) => void;
+  onFeedItemSelect?: (
+    commonId: string,
+    feedItemId: string,
+    messageId?: string,
+  ) => void;
   outerStyles?: FeedLayoutOuterStyles;
   settings?: FeedLayoutSettings;
+  renderChatInput?: () => ReactNode;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -133,10 +155,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     topFeedItems = [],
     loading,
     shouldHideContent = false,
+    batchNumber,
     onFetchNext,
     renderFeedItemBaseContent,
     renderChatChannelItem,
     onFeedItemUpdate,
+    onFeedItemUnfollowed,
     getLastMessage,
     sharedFeedItemId,
     emptyText,
@@ -144,16 +168,18 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onActiveItemChange,
     onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
+    onFeedItemSelect,
     outerStyles,
     settings,
+    renderChatInput,
   } = props;
-  const dispatch = useDispatch();
+  const { getCommonPagePath } = useRoutesContext();
+  const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
   const { width: windowWidth } = useWindowSize();
   const history = useHistory();
   const queryParams = useQueryParams();
   const isTabletView = useIsTabletView();
   const user = useSelector(selectUser());
-  const recentStreamId = useSelector(selectRecentStreamId);
   const userId = user?.uid;
   const [chatItem, setChatItem] = useState<ChatItem | null>();
   const [isShowFeedItemDetailsModal, setIsShowFeedItemDetailsModal] =
@@ -171,14 +197,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   } = useCommonMember({
     shouldAutoReset: false,
   });
+  const commonMember = outerCommonMember || fetchedCommonMember;
   const userForProfile = useUserForProfile();
   const governance = outerGovernance || fetchedGovernance;
-  const commonMember = outerCommonMember || fetchedCommonMember;
   const maxChatSize =
     settings?.getSplitViewMaxSize?.(windowWidth) ??
     getSplitViewMaxSize(windowWidth);
   const [realChatWidth, setRealChatWidth] = useState(() =>
-    getDefaultSize(windowWidth, maxChatSize, settings?.sidenavWidth),
+    getDefaultSize(windowWidth, maxChatSize),
   );
   const chatWidth = Math.min(realChatWidth, maxChatSize);
   const [expandedFeedItemId, setExpandedFeedItemId] = useState<string | null>(
@@ -196,6 +222,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return items;
   }, [topFeedItems, feedItems]);
+  const chatChannelItemForProfile = useMemo(
+    () =>
+      getChatChannelItemByUserIds(
+        allFeedItems,
+        userId,
+        userForProfile.userForProfileData?.userId,
+      ),
+    [allFeedItems, userId, userForProfile.userForProfileData?.userId],
+  );
   const isContentEmpty =
     !loading && (!allFeedItems || allFeedItems.length === 0) && emptyText;
   const chatItemQueryParam = queryParams[QueryParamKey.ChatItem];
@@ -208,45 +243,46 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
+    if (chatChannelItemForProfile?.itemId) {
+      return chatChannelItemForProfile.itemId;
+    }
     if (
       userForProfile.userForProfileData ||
       shouldAllowChatAutoOpen === false
     ) {
       return;
     }
-    if (recentStreamId) {
-      const foundItem = allFeedItems.find(
-        (item) =>
-          checkIsFeedItemFollowLayoutItem(item) &&
-          item.feedItem.data.id === recentStreamId,
-      );
-      return foundItem?.itemId;
-    }
-
     if (sharedFeedItemId) {
       return sharedFeedItemId;
     }
-
     if (chatItem?.feedItemId) {
       return;
     }
 
-    const foundItem = allFeedItems?.find(
-      (item) =>
-        !checkIsFeedItemFollowLayoutItem(item) ||
-        [CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
+    const foundItem = allFeedItems?.find((item) => {
+      if (!checkIsFeedItemFollowLayoutItem(item)) {
+        return true;
+      }
+      if (
+        ![CommonFeedType.Proposal, CommonFeedType.Discussion].includes(
           item.feedItem.data.type,
-        ),
-    );
+        )
+      ) {
+        return false;
+      }
+
+      return Boolean(userId) || item.feedItem.circleVisibility.length === 0;
+    });
 
     return foundItem?.itemId;
   }, [
+    chatChannelItemForProfile?.itemId,
     allFeedItems,
     chatItem?.feedItemId,
-    recentStreamId,
     sharedFeedItemId,
     userForProfile.userForProfileData,
     shouldAllowChatAutoOpen,
+    userId,
   ]);
   const activeFeedItemId = chatItem?.feedItemId || feedItemIdForAutoChatOpen;
   const sizeKey = `${windowWidth}_${chatWidth}`;
@@ -292,6 +328,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       setExpandedFeedItemId,
       renderFeedItemBaseContent,
       onFeedItemUpdate,
+      onFeedItemUnfollowed,
       getLastMessage,
       getNonAllowedItems,
       onUserSelect: handleUserWithCommonClick,
@@ -299,6 +336,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     [
       renderFeedItemBaseContent,
       onFeedItemUpdate,
+      onFeedItemUnfollowed,
       getLastMessage,
       getNonAllowedItems,
       handleUserWithCommonClick,
@@ -393,11 +431,122 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       title: getUserName(dmUser),
       image: dmUser.photoURL,
     });
+
+    if (!isTabletView) {
+      setActiveChatItem(null);
+    }
   };
 
   const handleProfileClose = () => {
     userForProfile.resetUserForProfileData(isTabletView);
   };
+
+  const handleDMClick = () => {
+    if (checkIsChatChannelLayoutItem(selectedFeedItem)) {
+      handleProfileClose();
+      return;
+    }
+
+    setActiveChatItem(null);
+    setShouldAllowChatAutoOpen(true);
+  };
+
+  const onDMClick =
+    checkIsChatChannelLayoutItem(selectedFeedItem) ||
+    (!isTabletView && chatChannelItemForProfile)
+      ? handleDMClick
+      : undefined;
+
+  const handleFeedItemClickExternal = useCallback(
+    (
+      feedItemId: string,
+      options: { commonId?: string; messageId?: string } = {},
+    ) => {
+      const { commonId = selectedItemCommonData?.id, messageId } = options;
+
+      if (commonId) {
+        onFeedItemSelect?.(commonId, feedItemId, messageId);
+      }
+    },
+    [selectedItemCommonData?.id, onFeedItemSelect],
+  );
+
+  const handleFeedItemClickInternal = (
+    feedItemId: string,
+    options: { commonId?: string; messageId?: string } = {},
+  ) => {
+    const { commonId, messageId } = options;
+
+    if (chatItem?.feedItemId === feedItemId && !messageId) {
+      return;
+    }
+
+    if (commonId && commonId !== outerCommon?.id) {
+      history.push(
+        getCommonPagePath(commonId, {
+          item: feedItemId,
+          message: messageId,
+        }),
+      );
+      return;
+    }
+
+    setActiveChatItem({ feedItemId });
+
+    const itemExists = allFeedItems.some((item) => item.itemId === feedItemId);
+
+    if (itemExists) {
+      refsByItemId.current[feedItemId]?.scrollToItem();
+    } else {
+      onFetchNext(feedItemId);
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }, 50);
+    }
+
+    if (messageId) {
+      addQueryParam(QueryParamKey.Message, messageId);
+    }
+  };
+
+  const handleFeedItemClick = onFeedItemSelect
+    ? handleFeedItemClickExternal
+    : handleFeedItemClickInternal;
+
+  const handleInternalLinkClick = useCallback(
+    (data: InternalLinkData) => {
+      const feedPageParams = getParamsFromOneOfRoutes<{ id: string }>(
+        data.pathname,
+        [ROUTE_PATHS.COMMON, ROUTE_PATHS.V04_COMMON],
+      );
+
+      if (!feedPageParams) {
+        return;
+      }
+
+      const itemId = data.params[QueryParamKey.Item];
+      const messageId = data.params[QueryParamKey.Message];
+
+      if (itemId) {
+        handleFeedItemClick(itemId, {
+          commonId: feedPageParams.id,
+          messageId,
+        });
+        return;
+      }
+
+      history.push(
+        getCommonPagePath(feedPageParams.id, {
+          item: itemId,
+          message: messageId,
+        }),
+      );
+    },
+    [getCommonPagePath, handleFeedItemClick],
+  );
 
   useEffect(() => {
     if (!outerGovernance && selectedItemCommonData?.id) {
@@ -426,7 +575,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [activeFeedItemId]);
 
   useEffect(() => {
-    if (selectedFeedItem?.itemId) {
+    if (selectedFeedItem?.itemId && !isTabletView) {
+      refsByItemId.current[selectedFeedItem.itemId]?.scrollToItem();
+    }
+    if (selectedFeedItem?.itemId || (chatItem && !chatItem.discussion)) {
       return;
     }
 
@@ -458,22 +610,26 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   }, [isTabletView, shouldAutoExpandItem, activeFeedItemId]);
 
   useEffect(() => {
-    if (!isTabletView && userForProfile.userForProfileData?.chatChannel) {
-      setActiveChatItem(null);
+    if (
+      batchNumber &&
+      batchNumber >= 1 &&
+      batchNumber <= BATCHES_AMOUNT_TO_PRELOAD
+    ) {
+      onFetchNext();
     }
-  }, [isTabletView, userForProfile.userForProfileData?.chatChannel || null]);
+  }, [batchNumber]);
 
   useEffect(() => {
-    if (!recentStreamId || !selectedFeedItem) {
-      return;
-    }
     if (
-      !checkIsFeedItemFollowLayoutItem(selectedFeedItem) ||
-      recentStreamId === selectedFeedItem?.feedItem.data.id
+      isTabletView &&
+      sharedFeedItemId &&
+      allFeedItems.length > 0 &&
+      allFeedItems.some((item) => item.itemId === sharedFeedItemId)
     ) {
-      dispatch(commonActions.setRecentStreamId(""));
+      deleteQueryParam(QueryParamKey.Item, true);
+      setActiveChatItem({ feedItemId: sharedFeedItemId });
     }
-  }, [recentStreamId, selectedFeedItem]);
+  }, [sharedFeedItemId, isTabletView, allFeedItems]);
 
   useImperativeHandle(
     ref,
@@ -511,7 +667,16 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
           >
             {topContent}
             {isContentEmpty && <p className={styles.emptyText}>{emptyText}</p>}
-            <InfiniteScroll onFetchNext={onFetchNext} isLoading={loading}>
+            <InfiniteScroll
+              markerClassName={
+                allFeedItems && allFeedItems.length > 7
+                  ? styles.infiniteScrollMarker
+                  : ""
+              }
+              onFetchNext={onFetchNext}
+              isLoading={loading}
+              loaderDelay={LOADER_APPEARANCE_DELAY}
+            >
               {allFeedItems?.map((item) => {
                 const isActive = item.itemId === activeFeedItemId;
 
@@ -527,11 +692,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
                   return (
                     <FeedItem
+                      ref={(ref) => {
+                        refsByItemId.current[item.itemId] = ref;
+                      }}
                       key={item.feedItem.id}
                       commonMember={commonMember}
                       commonId={commonData?.id}
                       commonName={commonData?.name || ""}
                       commonImage={commonData?.image || ""}
+                      commonNotion={outerCommon?.notion}
                       pinnedFeedItems={outerCommon?.pinnedFeedItems}
                       isProject={commonData?.isProject}
                       isPinned={isPinned}
@@ -549,6 +718,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                       }
                       onActiveItemDataChange={handleActiveFeedItemDataChange}
                       directParent={outerCommon?.directParent}
+                      rootCommonId={outerCommon?.rootCommonId}
                     />
                   );
                 }
@@ -570,7 +740,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
               })}
             </InfiniteScroll>
             {!isTabletView &&
-              (chatItem ? (
+              (chatItem?.discussion ? (
                 <DesktopChat
                   className={desktopRightPaneClassName}
                   chatItem={chatItem}
@@ -581,12 +751,15 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   titleRightContent={followFeedItemEl}
                   onMessagesAmountChange={handleMessagesAmountChange}
                   directParent={outerCommon?.directParent}
+                  renderChatInput={renderChatInput}
                   onUserClick={handleUserClick}
+                  onFeedItemClick={handleFeedItemClick}
+                  onInternalLinkClick={handleInternalLinkClick}
                 />
               ) : (
                 <DesktopChatPlaceholder
                   className={desktopRightPaneClassName}
-                  isItemSelected={Boolean(selectedItemCommonData)}
+                  isItemSelected={Boolean(selectedItemCommonData || chatItem)}
                   withTitle={settings?.withDesktopChatTitle}
                 />
               ))}
@@ -603,7 +776,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 onMessagesAmountChange={handleMessagesAmountChange}
                 directParent={outerCommon?.directParent}
                 onClose={handleMobileChatClose}
+                renderChatInput={renderChatInput}
                 onUserClick={handleUserClick}
+                onFeedItemClick={handleFeedItemClick}
+                onInternalLinkClick={handleInternalLinkClick}
               >
                 {selectedItemCommonData &&
                   checkIsFeedItemFollowLayoutItem(selectedFeedItem) && (
@@ -626,13 +802,12 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             {userForProfile.userForProfileData &&
               (!isTabletView ? (
                 <DesktopProfile
+                  governanceCircles={governance?.circles}
                   className={desktopRightPaneClassName}
                   userId={userForProfile.userForProfileData.userId}
                   commonId={userForProfile.userForProfileData.commonId}
                   chatChannel={userForProfile.userForProfileData.chatChannel}
-                  shouldCloseOnDMClick={checkIsChatChannelLayoutItem(
-                    selectedFeedItem,
-                  )}
+                  onDMClick={onDMClick}
                   withTitle={settings?.withDesktopChatTitle}
                   onClose={handleProfileClose}
                   onChatChannelCreate={handleChatChannelCreate}
@@ -643,9 +818,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                   userId={userForProfile.userForProfileData.userId}
                   commonId={userForProfile.userForProfileData.commonId}
                   chatChannel={userForProfile.userForProfileData.chatChannel}
-                  shouldCloseOnDMClick={checkIsChatChannelLayoutItem(
-                    selectedFeedItem,
-                  )}
+                  onDMClick={onDMClick}
                   onClose={handleProfileClose}
                   onChatChannelCreate={handleChatChannelCreate}
                   onUserClick={handleUserClick}

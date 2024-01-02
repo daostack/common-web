@@ -2,7 +2,7 @@ import React from "react";
 import { useCommonMember } from "@/pages/OldCommon/hooks";
 import { UserAvatar, ElementDropdown } from "@/shared/components";
 import { EntityTypes, ProposalsTypes } from "@/shared/constants";
-import { Proposal } from "@/shared/models";
+import { Circles, Proposal } from "@/shared/models";
 import {
   StaticLinkType,
   formatPrice,
@@ -15,11 +15,13 @@ import { VotesComponent } from "../VotesComponent";
 interface ProposalItemComponentProps {
   loadProposalDetail: (payload: Proposal) => void;
   proposal: Proposal;
+  governanceCircles?: Circles;
 }
 
 export default function ProposalItemComponent({
   proposal,
   loadProposalDetail,
+  governanceCircles,
 }: ProposalItemComponentProps) {
   const { data: commonMember } = useCommonMember();
 
@@ -44,6 +46,8 @@ export default function ProposalItemComponent({
           </div>
           <div onClick={(e) => e.stopPropagation()}>
             <ElementDropdown
+              commonMember={commonMember}
+              governanceCircles={governanceCircles}
               entityType={EntityTypes.Proposal}
               linkType={StaticLinkType.Proposal}
               elem={proposal}

@@ -1,15 +1,23 @@
-import React, { FC, useEffect, useRef, MouseEventHandler } from "react";
+import React, {
+  useEffect,
+  useRef,
+  MouseEventHandler,
+  forwardRef,
+  useImperativeHandle,
+  PropsWithChildren,
+} from "react";
 import { useCollapse } from "react-collapsed";
 import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
-import { CommonFeedType, PredefinedTypes } from "@/shared/models";
+import { CommonFeedType, CommonNotion, PredefinedTypes } from "@/shared/models";
 import { Loader, TextEditorValue } from "@/shared/ui-kit";
 import { CommonCard } from "../CommonCard";
+import { FeedCardRef } from "./types";
 import styles from "./FeedCard.module.scss";
 
-interface FeedCardProps {
+type FeedCardProps = PropsWithChildren<{
   className?: string;
   feedItemId: string;
   isHovering?: boolean;
@@ -23,6 +31,7 @@ interface FeedCardProps {
   lastMessage?: TextEditorValue;
   isPreviewMode?: boolean;
   commonName?: string;
+  commonId?: string;
   image?: string;
   imageAlt?: string;
   isProject?: boolean;
@@ -32,11 +41,16 @@ interface FeedCardProps {
   type?: CommonFeedType;
   menuItems?: ContextMenuItem[];
   seenOnce?: boolean;
+  seen?: boolean;
   ownerId?: string;
   discussionPredefinedType?: PredefinedTypes;
   hasFiles?: boolean;
   hasImages?: boolean;
-}
+  hasUnseenMention?: boolean;
+  notion?: CommonNotion;
+  originalCommonIdForLinking?: string;
+  linkedCommonIds?: string[];
+}>;
 
 const MOBILE_HEADER_HEIGHT = 52;
 const DESKTOP_HEADER_HEIGHT = 72;
@@ -45,7 +59,7 @@ const COLLAPSE_DURATION = 300;
 const OFFSET_FROM_BOTTOM_FOR_SCROLLING = 10;
 const EXTRA_WAITING_TIME_FOR_TIMEOUT = 10;
 
-export const FeedCard: FC<FeedCardProps> = (props) => {
+export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
   const {
     className,
     feedItemId,
@@ -60,6 +74,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     lastMessage,
     isPreviewMode = true,
     commonName,
+    commonId,
     image,
     imageAlt,
     isProject,
@@ -69,12 +84,17 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     type,
     menuItems,
     seenOnce,
+    seen,
+    hasUnseenMention,
     ownerId,
     discussionPredefinedType,
     hasImages,
     hasFiles,
+    notion,
+    originalCommonIdForLinking,
+    linkedCommonIds,
   } = props;
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTabletView = useIsTabletView();
   const { setExpandedFeedItemId, renderFeedItemBaseContent, feedCardSettings } =
     useFeedItemContext();
@@ -161,6 +181,10 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
     toggleExpanding();
   };
 
+  useImperativeHandle(ref, () => ({
+    scrollToItem: scrollToTargetAdjusted,
+  }));
+
   return (
     <div ref={containerRef}>
       {!isPreviewMode && (
@@ -178,6 +202,7 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
             lastMessage: !isLoading ? lastMessage : undefined,
             menuItems,
             commonName,
+            commonId,
             image,
             imageAlt,
             isProject,
@@ -185,10 +210,15 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
             isFollowing,
             type,
             seenOnce,
+            seen,
             ownerId,
             discussionPredefinedType,
             hasFiles,
             hasImages,
+            hasUnseenMention,
+            notion,
+            originalCommonIdForLinking,
+            linkedCommonIds,
           })}
         </div>
       )}
@@ -210,4 +240,4 @@ export const FeedCard: FC<FeedCardProps> = (props) => {
       </div>
     </div>
   );
-};
+});

@@ -1,9 +1,13 @@
 import { isEqual } from "lodash";
-import { getCommonState } from "@/pages/OldCommon/store/actions";
+import {
+  getCommonState,
+  updateCommonState,
+} from "@/pages/OldCommon/store/actions";
 import { commonMembersSubCollection } from "@/pages/OldCommon/store/api";
 import { store } from "@/shared/appConfig";
 import {
   ApiEndpoint,
+  DocChange,
   GovernanceActions,
   ProposalsTypes,
 } from "@/shared/constants";
@@ -16,7 +20,7 @@ import {
   SubCollections,
 } from "@/shared/models";
 import {
-  convertObjectDatesToFirestoreTimestamps,
+  emptyFunction,
   firestoreDataConverter,
   transformFirebaseDataList,
 } from "@/shared/utils";
@@ -28,37 +32,62 @@ const converter = firestoreDataConverter<Common>();
 const commonMemberConverter = firestoreDataConverter<CommonMember>();
 
 class CommonService {
-  public getCommonById = async (commonId: string): Promise<Common | null> => {
-    const common = await firebase
+  public getCommonById = async (
+    commonId: string,
+    cached = false,
+  ): Promise<Common | null> => {
+    const snapshot = await firebase
       .firestore()
       .collection(Collection.Daos)
       .where("id", "==", commonId)
       .where("state", "==", CommonState.ACTIVE)
-      .get();
-    const data = transformFirebaseDataList<Common>(common);
+      .withConverter(converter)
+      .get({ source: cached ? "cache" : "default" });
+    const commons = snapshot.docs.map((doc) => doc.data());
+    const common = commons[0] || null;
 
-    return data[0] ? convertObjectDatesToFirestoreTimestamps(data[0]) : null;
+    if (cached && !common) {
+      return this.getCommonById(commonId);
+    }
+
+    return common;
   };
 
   public getCachedCommonById = async (
     commonId: string,
   ): Promise<Common | null> => {
-    const commonState = store.getState().commons.commonStates[commonId];
+    try {
+      const commonState = store.getState().commons.commonStates[commonId];
 
-    if (commonState?.fetched) {
-      return commonState.data;
-    }
-    if (commonState?.loading) {
+      if (commonState?.fetched) {
+        return commonState.data;
+      }
+      if (commonState?.loading) {
+        return await waitForCommonToBeLoaded(commonId);
+      }
+
+      store.dispatch(
+        getCommonState.request({
+          payload: { commonId },
+        }),
+      );
+
       return await waitForCommonToBeLoaded(commonId);
+    } catch (err) {
+      const common = await this.getCommonById(commonId, true);
+      store.dispatch(
+        updateCommonState({
+          commonId,
+          state: {
+            loading: false,
+            fetched: true,
+            data: common,
+          },
+        }),
+      );
+
+      return common;
     }
-
-    store.dispatch(
-      getCommonState.request({
-        payload: { commonId },
-      }),
-    );
-
-    return await waitForCommonToBeLoaded(commonId);
   };
 
   public getCommonsByIds = async (
@@ -91,6 +120,26 @@ class CommonService {
       .reduce((acc, items) => [...acc, ...items], []);
   };
 
+  public getCommonsByDirectParentId = async (
+    parentCommonId: string,
+    cached = false,
+  ): Promise<Common[]> => {
+    const snapshot = await firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE)
+      .where("directParent.commonId", "==", parentCommonId)
+      .withConverter(converter)
+      .get({ source: cached ? "cache" : "default" });
+    const commons = snapshot.docs.map((doc) => doc.data());
+
+    if (cached && commons.length === 0) {
+      return this.getCommonsByDirectParentId(parentCommonId);
+    }
+
+    return commons;
+  };
+
   public getCommonsByDirectParentIds = async (
     ids: string[],
   ): Promise<Common[]> => {
@@ -117,6 +166,38 @@ class CommonService {
       .reduce((acc, items) => [...acc, ...items], []);
   };
 
+  public subscribeToCommonsByDirectParentId = (
+    parentCommonId: string,
+    callback: (
+      data: {
+        common: Common;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collection(Collection.Daos)
+      .where("state", "==", CommonState.ACTIVE)
+      .where("directParent.commonId", "==", parentCommonId)
+      .withConverter(converter);
+
+    return query.onSnapshot((snapshot) => {
+      callback(
+        snapshot.docChanges().map((docChange) => ({
+          common: docChange.doc.data(),
+          statuses: {
+            isAdded: docChange.type === DocChange.Added,
+            isRemoved: docChange.type === DocChange.Removed,
+          },
+        })),
+      );
+    });
+  };
+
   public getUserCommonIds = async (userId: string): Promise<string[]> =>
     (
       await firebase
@@ -125,6 +206,23 @@ class CommonService {
         .where("userId", "==", userId)
         .get()
     ).docs.map((ref) => ref.ref.path.split("/")[1]);
+
+  public subscribeToUserCommonIds = (
+    userId: string,
+    callback: (data: string[]) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collectionGroup(SubCollections.Members)
+      .where("userId", "==", userId);
+
+    return query.onSnapshot((snapshot) => {
+      const userCommonIds = snapshot.docs.map(
+        (ref) => ref.ref.path.split("/")[1],
+      );
+      callback(userCommonIds);
+    });
+  };
 
   public getAllUserCommonMemberInfo = async (
     userId: string,
@@ -140,6 +238,39 @@ class CommonService {
       ...doc.data(),
       commonId: doc.ref.path.split("/")[1],
     }));
+  };
+
+  public subscribeToAllUserCommonMemberInfo = (
+    userId: string,
+    callback: (
+      data: {
+        commonId: string;
+        commonMember: CommonMember;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = firebase
+      .firestore()
+      .collectionGroup(SubCollections.Members)
+      .where("userId", "==", userId)
+      .withConverter(commonMemberConverter);
+
+    return query.onSnapshot((snapshot) => {
+      callback(
+        snapshot.docChanges().map((docChange) => ({
+          commonId: docChange.doc.ref.path.split("/")[1],
+          commonMember: docChange.doc.data(),
+          statuses: {
+            isAdded: docChange.type === DocChange.Added,
+            isRemoved: docChange.type === DocChange.Removed,
+          },
+        })),
+      );
+    });
   };
 
   public getCommonsWithSubCommons = async (
@@ -162,13 +293,14 @@ class CommonService {
     return finalCommons;
   };
 
-  // Fetch all parent commons. Order: from main parent common to lowest ones
+  // Fetch all parent commons. Order: from root parent common to lowest ones
   public getAllParentCommonsForCommon = async (
     commonToCheck: Pick<Common, "directParent"> | string,
+    cached = false,
   ): Promise<Common[]> => {
     const common =
       typeof commonToCheck === "string"
-        ? await this.getCommonById(commonToCheck)
+        ? await this.getCommonById(commonToCheck, cached)
         : commonToCheck;
 
     if (!common || common.directParent === null) {
@@ -179,7 +311,7 @@ class CommonService {
     let nextCommonId = common.directParent.commonId;
 
     while (nextCommonId) {
-      const common = await this.getCommonById(nextCommonId);
+      const common = await this.getCommonById(nextCommonId, cached);
 
       if (common) {
         finalCommons = [common, ...finalCommons];
@@ -189,6 +321,24 @@ class CommonService {
     }
 
     return finalCommons;
+  };
+
+  public getCommonAndParents = async (
+    commonId: string,
+    cached = false,
+  ): Promise<Common[]> => {
+    const common = await this.getCommonById(commonId, cached);
+
+    if (!common) {
+      return [];
+    }
+
+    const parentCommons = await this.getAllParentCommonsForCommon(
+      common,
+      cached,
+    );
+
+    return [...parentCommons, common];
   };
 
   public getParentCommonForCommonId = async (
@@ -296,6 +446,10 @@ class CommonService {
     parentCommonId: string,
     callback: (data: { common: Common; isRemoved: boolean }[]) => void,
   ): UnsubscribeFunction => {
+    if (!parentCommonId) {
+      return emptyFunction;
+    }
+
     const query = firebase
       .firestore()
       .collection(Collection.Daos)
@@ -332,17 +486,11 @@ class CommonService {
 
       if (docChange) {
         callback(docChange.doc.data(), {
-          isAdded: docChange.type === "added",
-          isRemoved: docChange.type === "removed",
+          isAdded: docChange.type === DocChange.Added,
+          isRemoved: docChange.type === DocChange.Removed,
         });
       }
     });
-  };
-
-  public getCommonMembersAmount = async (commonId: string): Promise<number> => {
-    const snapshot = await commonMembersSubCollection(commonId).get();
-
-    return snapshot.size;
   };
 
   public leaveCircle = async (
@@ -374,6 +522,24 @@ class CommonService {
     await Api.post(ApiEndpoint.CreateAction, {
       type: ProposalsTypes.ASSIGN_CIRCLE,
       args: { circleId, commonId, userId },
+    });
+  };
+
+  public followCommon = async (commonId: string): Promise<void> => {
+    await Api.post(ApiEndpoint.FollowCommon, { commonId });
+  };
+
+  public muteCommon = async (commonId: string): Promise<void> => {
+    await Api.post(ApiEndpoint.MuteCommon, { commonId });
+  };
+
+  public deleteCommon = async (
+    commonId: string,
+    userId: string,
+  ): Promise<void> => {
+    await Api.post(ApiEndpoint.CreateAction, {
+      type: GovernanceActions.DELETE_COMMON,
+      args: { userId, commonId },
     });
   };
 }

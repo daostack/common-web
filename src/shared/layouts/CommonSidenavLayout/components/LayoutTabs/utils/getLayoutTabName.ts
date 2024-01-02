@@ -1,7 +1,7 @@
 import { LayoutTab } from "../../../constants";
 
 const LAYOUT_TAB_TO_NAME_MAP: Record<LayoutTab, string> = {
-  [LayoutTab.Spaces]: "Feed",
+  [LayoutTab.Spaces]: "Spaces",
   [LayoutTab.Inbox]: "Inbox",
   [LayoutTab.Profile]: "Profile",
 };

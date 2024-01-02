@@ -8,10 +8,6 @@ export interface SharedHeaderState {
   shouldShowAuth: boolean | null;
 }
 
-export interface SharedModalState {
-  isShowing: boolean;
-}
-
 export interface SharedStateType {
   loading: boolean;
   notification: NotificationData | null;
@@ -20,7 +16,6 @@ export interface SharedStateType {
   loadingShareLinks: Record<string, boolean>;
   areReportsLoading: boolean;
   header: SharedHeaderState;
-  tutorialModalState: SharedModalState;
   language: Language;
   isRtlLanguage: boolean;
   theme: Theme;

@@ -1,27 +1,49 @@
+import { NotionIntegration, Roles, SyncLeaseStatus } from "@/shared/models";
 import { TextEditorSize } from "@/shared/ui-kit";
 import { CreationFormItem, CreationFormItemType } from "../../../CreationForm";
 import {
   MAX_LINK_TITLE_LENGTH,
   MAX_PROJECT_NAME_LENGTH,
   MAX_PROJECT_TAGLINE_LENGTH,
+  MAX_ROLE_TITLE_LENGTH,
 } from "../../constants";
 import styles from "./ProjectCreationForm.module.scss";
 
-export const getConfiguration = (
-  isProject = true,
-  shouldBeUnique?: { existingNames: string[] },
-): CreationFormItem[] => {
+interface Options {
+  isProject: boolean;
+  roles?: Roles;
+  shouldBeUnique?: { existingNames: string[] };
+  isImageRequired?: boolean;
+  notionIntegration?: NotionIntegration | null;
+}
+
+export const getConfiguration = (options: Options): CreationFormItem[] => {
+  const {
+    isProject = true,
+    roles,
+    shouldBeUnique,
+    notionIntegration,
+    isImageRequired = false,
+  } = options;
   const type = isProject ? "Space" : "Common";
 
-  return [
+  const items: CreationFormItem[] = [
     {
       type: CreationFormItemType.UploadFiles,
       className: styles.projectImages,
       props: {
         name: "projectImages",
-        label: `${type} picture`,
+        label: `${type} picture${isImageRequired ? " (required)" : ""}`,
         maxImagesAmount: 1,
       },
+      validation: isImageRequired
+        ? {
+            min: {
+              value: 1,
+              message: `${type} picture is required`,
+            },
+          }
+        : undefined,
     },
     {
       type: CreationFormItemType.TextField,
@@ -105,4 +127,51 @@ export const getConfiguration = (
       },
     },
   ];
+
+  if (roles) {
+    items.push({
+      type: CreationFormItemType.Roles,
+      props: {
+        name: "roles",
+        title: "Roles",
+        maxTitleLength: MAX_ROLE_TITLE_LENGTH,
+      },
+      validation: {
+        required: {
+          value: true,
+          message: "Role name is required",
+        },
+      },
+    });
+  }
+
+  if (isProject) {
+    const isNotionIntegrationDisabledForUpdate = Boolean(
+      notionIntegration &&
+        notionIntegration.lastSuccessfulSyncAt === null &&
+        notionIntegration.syncLease?.status === SyncLeaseStatus.Pending,
+    );
+
+    items.push({
+      type: CreationFormItemType.NotionIntegration,
+      props: {
+        name: "notion",
+        isEnabled: {
+          name: "notion.isEnabled",
+          label: "Notion database integration",
+          disabled: isNotionIntegrationDisabledForUpdate,
+        },
+        token: {
+          name: "notion.token",
+          label: "Notion's Internal Integration Secret",
+        },
+        databaseId: {
+          name: "notion.databaseId",
+          label: "Notion database ID",
+        },
+      },
+    });
+  }
+
+  return items;
 };

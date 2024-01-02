@@ -5,7 +5,9 @@ import {
   PinOrUnpinEndpointAction,
 } from "@/shared/constants";
 import {
+  LinkStreamPayload,
   MarkCommonFeedItemAsSeenPayload,
+  MoveStreamPayload,
   UnsubscribeFunction,
 } from "@/shared/interfaces";
 import {
@@ -25,7 +27,7 @@ import {
   convertToTimestamp,
   firestoreDataConverter,
 } from "@/shared/utils";
-import firebase from "@/shared/utils/firebase";
+import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
 
 const converter = firestoreDataConverter<CommonFeed>();
@@ -42,12 +44,21 @@ class CommonFeedService {
   public getCommonFeedItemById = async (
     commonId: string,
     commonFeedId: string,
+    cached = false,
   ): Promise<CommonFeed | null> => {
-    const snapshot = await this.getCommonFeedSubCollection(commonId)
-      .doc(commonFeedId)
-      .get();
+    try {
+      const snapshot = await this.getCommonFeedSubCollection(commonId)
+        .doc(commonFeedId)
+        .get({ source: cached ? "cache" : "default" });
 
-    return snapshot?.data() || null;
+      return snapshot?.data() || null;
+    } catch (error) {
+      if (cached && isFirestoreCacheError(error)) {
+        return this.getCommonFeedItemById(commonId, commonFeedId);
+      } else {
+        throw error;
+      }
+    }
   };
 
   public getCommonFeedItemWithSnapshot = async (
@@ -78,6 +89,7 @@ class CommonFeedService {
     commonId: string,
     options: {
       startAfter?: Timestamp | null;
+      feedItemId?: string;
       limit?: number;
     } = {},
   ): Promise<{
@@ -86,12 +98,13 @@ class CommonFeedService {
     lastDocTimestamp: Timestamp | null;
     hasMore: boolean;
   }> => {
-    const { startAfter, limit = 10 } = options;
+    const { startAfter, feedItemId, limit = 10 } = options;
     const endpoint = ApiEndpoint.GetCommonFeedItems.replace(
       ":commonId",
       commonId,
     );
     const queryParams: Record<string, unknown> = {
+      feedItemId,
       limit,
     };
 
@@ -216,6 +229,32 @@ class CommonFeedService {
     );
 
     return convertObjectDatesToFirestoreTimestamps(data);
+  };
+
+  public linkStream = async (
+    payload: LinkStreamPayload,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<void> => {
+    const { cancelToken } = options;
+    await Api.post(ApiEndpoint.LinkStream, payload, { cancelToken });
+  };
+
+  public moveStream = async (
+    payload: MoveStreamPayload,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<void> => {
+    const { cancelToken } = options;
+    await Api.post(ApiEndpoint.MoveStream, payload, { cancelToken });
+  };
+
+  public markCommonFeedItemAsUnseen = (
+    commonId: string,
+    feedObjectId: string,
+  ) => {
+    return Api.post(ApiEndpoint.MarkFeedObjectUnseenForUser, {
+      commonId,
+      feedObjectId,
+    });
   };
 
   public subscribeToCommonFeedItem = (

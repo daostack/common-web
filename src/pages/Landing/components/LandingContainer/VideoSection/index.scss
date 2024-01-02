@@ -6,13 +6,19 @@ $viewport-breakpoint: 1000px;
 
 .landing-video-section {
   position: relative;
+
+  @include big-phone {
+    background-image: url("/assets/images/landing-mobile-poster.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 37.125rem;
+  }
 }
 
 .landing-video-section__video-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0.8;
 }
 
 .landing-video-section__video {

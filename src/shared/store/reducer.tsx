@@ -1,6 +1,11 @@
 import produce from "immer";
 import { ActionType, createReducer } from "typesafe-actions";
-import { Language, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "../constants";
+import {
+  Language,
+  ScreenSize,
+  SMALL_SCREEN_BREAKPOINT,
+  Theme,
+} from "../constants";
 import { SharedStateType } from "../interfaces";
 import { getTheme } from "../utils/getTheme";
 import * as actions from "./actions";
@@ -22,9 +27,6 @@ const initialState: SharedStateType = {
     shouldShowMenuItems: null,
     shouldShowDownloadLinks: null,
     shouldShowAuth: null,
-  },
-  tutorialModalState: {
-    isShowing: false,
   },
   language: Language.English,
   isRtlLanguage: false,
@@ -103,20 +105,19 @@ const reducer = createReducer<SharedStateType, Action>(initialState)
       };
     }),
   )
-  .handleAction(actions.setTutorialModalState, (state, action) =>
-    produce(state, (nextState) => {
-      nextState.tutorialModalState = action.payload;
-    }),
-  )
   .handleAction(actions.changeLanguage, (state, action) =>
     produce(state, (nextState) => {
       nextState.language = action.payload;
       nextState.isRtlLanguage = nextState.language === Language.Hebrew;
     }),
   )
-  .handleAction(actions.changeTheme, (state, action) =>
+  .handleAction(actions.toggleTheme, (state, action) =>
     produce(state, (nextState) => {
-      nextState.theme = action.payload;
+      if (action.payload) {
+        nextState.theme = action.payload;
+      } else {
+        nextState.theme = state.theme === Theme.Dark ? Theme.Light : Theme.Dark;
+      }
     }),
   );
 

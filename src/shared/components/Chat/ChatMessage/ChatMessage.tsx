@@ -3,64 +3,57 @@ import React, {
   useCallback,
   useEffect,
   useState,
-  useRef,
   useMemo,
 } from "react";
 import classNames from "classnames";
+import { useLongPress } from "use-long-press";
+import { DiscussionMessageService } from "@/services";
+import { ElementDropdown, UserAvatar } from "@/shared/components";
 import {
-  Linkify,
-  ElementDropdown,
-  UserAvatar,
-  UserInfoPopup,
-} from "@/shared/components";
-import { Orientation, ChatType, EntityTypes } from "@/shared/constants";
-import { Colors } from "@/shared/constants";
-import { useRoutesContext } from "@/shared/contexts";
-import { useModal } from "@/shared/hooks";
+  Orientation,
+  ChatType,
+  EntityTypes,
+  QueryParamKey,
+} from "@/shared/constants";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
   CommonMember,
   checkIsSystemDiscussionMessage,
   checkIsUserDiscussionMessage,
-  DiscussionMessage,
   User,
   DirectParent,
+  Circles,
+  DiscussionMessageWithParsedText,
+  ParentDiscussionMessage,
 } from "@/shared/models";
-import {
-  FilePreview,
-  FilePreviewVariant,
-  countTextEditorEmojiElements,
-  getFileName,
-  parseStringToTextEditorValue,
-} from "@/shared/ui-kit";
+import { FilePreview, FilePreviewVariant, getFileName } from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
-import { StaticLinkType, isRTL } from "@/shared/utils";
-import { getUserName } from "@/shared/utils";
+import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
+import { StaticLinkType, getUserName } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { Time } from "./components/Time";
+import { ChatMessageLinkify, InternalLinkData, Time } from "./components";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
 
 interface ChatMessageProps {
-  discussionMessage: DiscussionMessage;
+  discussionMessage: DiscussionMessageWithParsedText;
   chatType: ChatType;
   highlighted?: boolean;
   className?: string;
-  onMessageDropdownOpen?: (
-    isOpen: boolean,
-    messageTopPosition?: number,
-  ) => void;
   user: User | null;
-  scrollToRepliedMessage: (messageId: string) => void;
+  scrollToRepliedMessage: (messageId: string, messageDate: Date) => void;
   hasPermissionToHide: boolean;
   users: User[];
   feedItemId: string;
   commonMember: CommonMember | null;
+  governanceCircles?: Circles;
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -79,19 +72,19 @@ export default function ChatMessage({
   chatType,
   highlighted = false,
   className,
-  onMessageDropdownOpen,
   user,
   scrollToRepliedMessage,
   hasPermissionToHide,
   users,
   feedItemId,
   commonMember,
+  governanceCircles,
   onMessageDelete,
   directParent,
   onUserClick,
+  onFeedItemClick,
+  onInternalLinkClick,
 }: ChatMessageProps) {
-  const messageRef = useRef<HTMLDivElement>(null);
-  const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isTabletView = useIsTabletView();
@@ -105,96 +98,35 @@ export default function ChatMessage({
   const isNotCurrentUserMessage =
     !isUserDiscussionMessage || userId !== discussionMessageUserId;
 
-  const [messageText, setMessageText] = useState<(string | JSX.Element)[]>([]);
-
   const [replyMessageText, setReplyMessageText] = useState<
     (string | JSX.Element)[]
   >([]);
 
-  const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
-  const editedAtDate = new Date(
-    (discussionMessage.editedAt?.seconds ?? 0) * 1000,
-  );
-
-  const {
-    isShowing: isShowingUserProfile,
-    onClose: onCloseUserProfile,
-    onOpen: onOpenUserProfile,
-  } = useModal(false);
-
-  const handleUserClick = () => {
-    if (onUserClick && discussionMessageUserId) {
-      onUserClick(discussionMessageUserId);
-    } else {
-      onOpenUserProfile();
-    }
-  };
-
-  const handleMessageDropdownOpen =
-    onMessageDropdownOpen &&
-    ((isOpen: boolean) => {
-      onMessageDropdownOpen(
-        isOpen,
-        messageRef.current?.getBoundingClientRect().top,
-      );
-    });
+  const [parentMessage, setParentMessage] = useState<ParentDiscussionMessage>();
 
   useEffect(() => {
     (async () => {
-      if (!discussionMessage.text) {
-        setMessageText([]);
+      if (!discussionMessage?.parentId) {
         return;
       }
 
-      const emojiCount = countTextEditorEmojiElements(
-        parseStringToTextEditorValue(discussionMessage.text),
-      );
-      const parsedText = await getTextFromTextEditorString({
-        textEditorString: discussionMessage.text,
-        users,
-        mentionTextClassName: !isNotCurrentUserMessage
-          ? styles.mentionTextCurrentUser
-          : "",
-        emojiTextClassName: classNames({
-          [styles.singleEmojiText]: emojiCount.isSingleEmoji,
-          [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-        }),
-        commonId: discussionMessage.commonId,
-        systemMessage: isSystemMessage ? discussionMessage : undefined,
-        getCommonPagePath,
-        getCommonPageAboutTabPath,
-        directParent,
-        onUserClick,
-      });
-
-      setMessageText(parsedText);
-    })();
-  }, [
-    users,
-    discussionMessage.text,
-    isNotCurrentUserMessage,
-    discussionMessage.commonId,
-    isSystemMessage,
-    getCommonPagePath,
-    getCommonPageAboutTabPath,
-    onUserClick,
-  ]);
-
-  useEffect(() => {
-    (async () => {
-      if (!discussionMessage?.parentMessage?.text) {
-        return;
-      }
+      const parentMessage =
+        discussionMessage?.parentMessage ||
+        (await DiscussionMessageService.getDiscussionMessageById(
+          discussionMessage?.parentId,
+        ));
 
       const parsedText = await getTextFromTextEditorString({
-        textEditorString: discussionMessage?.parentMessage.text,
+        textEditorString: parentMessage?.text,
         users,
         commonId: discussionMessage.commonId,
         directParent,
         onUserClick,
+        onFeedItemClick,
       });
 
       setReplyMessageText(parsedText);
+      setParentMessage(parentMessage);
     })();
   }, [
     users,
@@ -204,45 +136,77 @@ export default function ChatMessage({
     onUserClick,
   ]);
 
-  const handleMenuToggle = (isOpen: boolean) => {
-    setIsMenuOpen(isOpen);
+  const createdAtDate = new Date(discussionMessage.createdAt.seconds * 1000);
+  const editedAtDate = new Date(
+    (discussionMessage.editedAt?.seconds ?? 0) * 1000,
+  );
 
-    if (handleMessageDropdownOpen) {
-      handleMessageDropdownOpen(isOpen);
+  const handleUserClick = () => {
+    if (onUserClick && discussionMessageUserId) {
+      onUserClick(discussionMessageUserId);
     }
   };
 
-  const handleMessageClick: MouseEventHandler<HTMLDivElement> = () => {
-    if (isTabletView) {
-      setIsMenuOpen(true);
-    }
+  const handleLongPress = () => {
+    setIsMenuOpen(true);
   };
 
-  const handleContextMenu: MouseEventHandler<HTMLLIElement> = (event) => {
+  const getLongPressProps = useLongPress(
+    isTabletView ? handleLongPress : null,
+    {
+      threshold: 400,
+      cancelOnMovement: true,
+    },
+  );
+
+  const handleContextMenu: MouseEventHandler<HTMLDivElement> = (event) => {
     if (!isTabletView) {
       event.preventDefault();
       setIsMenuOpen(true);
     }
   };
 
+  const handleInternalLinkClick = useCallback(
+    (data: InternalLinkData) => {
+      const messageId = data.params[QueryParamKey.Message];
+
+      if (
+        data.params[QueryParamKey.Item] === feedItemId &&
+        typeof messageId === "string"
+      ) {
+        parentMessage &&
+          scrollToRepliedMessage(messageId, parentMessage.createdAt.toDate());
+      } else {
+        onInternalLinkClick?.(data);
+      }
+    },
+    [feedItemId, scrollToRepliedMessage, onInternalLinkClick],
+  );
+
+  const scrollToReplied = (): void => {
+    if (parentMessage) {
+      scrollToRepliedMessage(
+        parentMessage?.id as string,
+        parentMessage.createdAt.toDate(),
+      );
+    }
+  };
+
   const ReplyMessage = useCallback(() => {
     if (
-      !discussionMessage.parentMessage?.id ||
-      (discussionMessage.parentMessage?.moderation?.flag ===
-        ModerationFlags.Hidden &&
+      !parentMessage?.id ||
+      (parentMessage?.moderation?.flag === ModerationFlags.Hidden &&
         !hasPermissionToHide)
     ) {
       return null;
     }
 
-    const image = discussionMessage.parentMessage?.images?.[0]?.value;
-    const file = discussionMessage.parentMessage?.files?.[0];
+    const image = parentMessage?.images?.[0]?.value;
+    const file = parentMessage?.files?.[0];
 
     return (
       <div
-        onClick={() => {
-          scrollToRepliedMessage(discussionMessage.parentMessage?.id as string);
-        }}
+        onClick={scrollToReplied}
         className={classNames(styles.replyMessageContainer, {
           [styles.replyMessageContainerCurrentUser]: !isNotCurrentUserMessage,
         })}
@@ -265,46 +229,44 @@ export default function ChatMessage({
               [styles.replyMessageNameWithImage]: image,
             })}
           >
-            {userId === discussionMessage.parentMessage.ownerId
+            {userId === parentMessage.ownerId
               ? "You"
-              : discussionMessage.parentMessage?.ownerName}
+              : parentMessage?.ownerName}
           </div>
           <div
             className={classNames(
               styles.messageContent,
               styles.replyMessageContent,
-
               {
                 [styles.replyMessageContentCurrentUser]:
                   !isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
                 [styles.replyMessageContentWithFile]: file,
+                [styles.messageContentRtl]: isRtlWithNoMentions(
+                  parentMessage?.text,
+                ),
               },
             )}
           >
             {file ? (
               <>
                 <p className={styles.fileTitle}>
-                  {getFileName(file.title, FILE_NAME_LIMIT)}
+                  {getFileName(file.name ?? file.title, FILE_NAME_LIMIT)}
                 </p>
                 {file.size && (
                   <p className={styles.fileSize}>{convertBytes(file.size)}</p>
                 )}
               </>
             ) : (
-              <Linkify>{replyMessageText.map((text) => text)}</Linkify>
+              <ChatMessageLinkify>
+                {replyMessageText.map((text) => text)}
+              </ChatMessageLinkify>
             )}
           </div>
         </div>
       </div>
     );
-  }, [
-    discussionMessage.parentMessage,
-    replyMessageText,
-    hasPermissionToHide,
-    isNotCurrentUserMessage,
-    userId,
-  ]);
+  }, [parentMessage, hasPermissionToHide, isNotCurrentUserMessage, userId]);
 
   const filePreview = useMemo(
     () => discussionMessage.files?.[0],
@@ -315,7 +277,6 @@ export default function ChatMessage({
     <li
       id={discussionMessage.id}
       className={classNames(styles.container, className)}
-      onContextMenu={handleContextMenu}
     >
       <div
         className={classNames(styles.message, {
@@ -344,18 +305,19 @@ export default function ChatMessage({
         ) : (
           <>
             <div
-              ref={messageRef}
+              onContextMenu={handleContextMenu}
               className={classNames(styles.messageText, {
                 [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
-                [styles.messageTextRtl]: isRTL(discussionMessage.text),
-                [styles.messageTextWithReply]:
-                  !!discussionMessage.parentMessage?.id,
+                [styles.messageTextRtl]: isRtlWithNoMentions(
+                  discussionMessage.text,
+                ),
+                [styles.messageTextWithReply]: !!parentMessage?.id,
                 [styles.systemMessage]: isSystemMessage,
                 [styles.highlighted]: highlighted && isNotCurrentUserMessage,
                 [styles.highlightedOwn]:
                   highlighted && !isNotCurrentUserMessage,
               })}
-              onClick={handleMessageClick}
+              {...getLongPressProps()}
             >
               {isNotCurrentUserMessage && !isSystemMessage && (
                 <div className={styles.messageName} onClick={handleUserClick}>
@@ -367,6 +329,9 @@ export default function ChatMessage({
               <div
                 className={classNames(styles.messageContent, {
                   [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
+                  [styles.messageContentRtl]:
+                    !isSystemMessage &&
+                    isRtlWithNoMentions(discussionMessage.text),
                 })}
               >
                 {filePreview && (
@@ -375,14 +340,15 @@ export default function ChatMessage({
                     name={filePreview.name || filePreview.title}
                     fileSize={filePreview.size}
                     variant={FilePreviewVariant.medium}
-                    iconColor={
-                      isNotCurrentUserMessage ? Colors.black : Colors.lightPink
-                    }
                     isCurrentUser={!isNotCurrentUserMessage}
                   />
                 )}
                 <ChatImageGallery gallery={discussionMessage.images ?? []} />
-                <Linkify>{messageText.map((text) => text)}</Linkify>
+                <ChatMessageLinkify
+                  onInternalLinkClick={handleInternalLinkClick}
+                >
+                  {discussionMessage.parsedText.map((text) => text)}
+                </ChatMessageLinkify>
                 {!isSystemMessage && (
                   <Time
                     createdAtDate={createdAtDate}
@@ -394,6 +360,8 @@ export default function ChatMessage({
               </div>
               {!isSystemMessage && (
                 <ElementDropdown
+                  commonMember={commonMember}
+                  governanceCircles={governanceCircles}
                   linkType={getStaticLinkByChatType(chatType)}
                   entityType={
                     [
@@ -406,7 +374,7 @@ export default function ChatMessage({
                   elem={discussionMessage}
                   className={styles.dropdownMenu}
                   variant={Orientation.Arrow}
-                  onMenuToggle={handleMenuToggle}
+                  onMenuToggle={setIsMenuOpen}
                   transparent
                   isDiscussionMessage
                   isChatMessage={chatType === ChatType.ChatMessages}
@@ -422,34 +390,19 @@ export default function ChatMessage({
                   isControlledDropdown={false}
                   isOpen={isMenuOpen}
                   styles={{
-                    menuButton: styles.menuArrowButton,
+                    menu: styles.elementDropdownMenu,
+                    menuButton: classNames(styles.menuArrowButton, {
+                      [styles.menuArrowButtonVisible]: isMenuOpen,
+                    }),
                   }}
                   feedItemId={feedItemId}
                   onDelete={onMessageDelete}
                 />
               )}
             </div>
-            {isSystemMessage && (
-              <Time
-                createdAtDate={createdAtDate}
-                editedAtDate={editedAtDate}
-                moderation={discussionMessage.moderation}
-                isNotCurrentUserMessage={isNotCurrentUserMessage}
-              />
-            )}
           </>
         )}
       </div>
-      {isShowingUserProfile && isUserDiscussionMessage && (
-        <UserInfoPopup
-          commonId={discussionMessage.commonId}
-          userId={discussionMessage.ownerId}
-          avatar={discussionMessage.ownerAvatar}
-          isShowing={isShowingUserProfile}
-          onClose={onCloseUserProfile}
-          directParent={directParent}
-        />
-      )}
     </li>
   );
 }

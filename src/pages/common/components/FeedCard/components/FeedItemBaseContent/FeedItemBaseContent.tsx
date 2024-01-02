@@ -1,21 +1,26 @@
 import React, { FC, MouseEventHandler, useRef, useState } from "react";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
-import { PredefinedTypes } from "@/shared/models";
+import { NotionIcon } from "@/shared/icons";
 import {
   checkIsTextEditorValueEmpty,
   ContextMenu,
   ContextMenuRef,
   TextEditorWithReinitialization as TextEditor,
   TimeAgo,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@/shared/ui-kit";
 import { FeedItemBaseContentProps } from "../../../FeedItem";
 import { FeedCardTags } from "../FeedCardTags";
+import { LinkedItemMark } from "../LinkedItemMark";
 import styles from "./FeedItemBaseContent.module.scss";
 
 export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
   const {
     className,
+    commonId,
     titleWrapperClassName,
     lastActivity,
     unreadMessages,
@@ -29,17 +34,29 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     type,
     menuItems,
     seenOnce,
+    seen,
     ownerId,
     renderLeftContent,
     isPinned,
     isFollowing,
     isLoading = false,
     shouldHideBottomContent = false,
+    hasUnseenMention,
+    notion,
+    originalCommonIdForLinking,
+    linkedCommonIds,
   } = props;
   const contextMenuRef = useRef<ContextMenuRef>(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
   const [isLongPressed, setIsLongPressed] = useState(false);
   const isContextMenuEnabled = Boolean(menuItems && menuItems.length > 0);
+  const isLinked = Boolean(
+    commonId &&
+      linkedCommonIds &&
+      linkedCommonIds.length > 0 &&
+      (linkedCommonIds.includes(commonId) ||
+        originalCommonIdForLinking === commonId),
+  );
 
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
@@ -108,15 +125,40 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       {renderLeftContent?.()}
       <div className={styles.content}>
         <div className={styles.topContent}>
-          <p
+          <div
             className={classNames(
               styles.text,
-              styles.title,
+              styles.titleWrapper,
               titleWrapperClassName,
             )}
           >
-            {isLoading || !title ? "Loading..." : title}
-          </p>
+            <span
+              className={styles.title}
+              title={typeof title === "string" ? title : ""}
+            >
+              {isLoading || !title ? "Loading..." : title}
+            </span>
+            {Boolean(notion) && (
+              <Tooltip placement="top-start">
+                <TooltipTrigger asChild>
+                  <div className={styles.tooltipTriggerContainer}>
+                    <NotionIcon />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className={styles.tooltipContent}>
+                  <span>Notion sync</span>
+                  <span>Database: {notion?.title}</span>
+                </TooltipContent>
+              </Tooltip>
+            )}
+            {isLinked && (
+              <LinkedItemMark
+                currentCommonId={commonId}
+                originalCommonId={originalCommonIdForLinking}
+                linkedCommonIds={linkedCommonIds}
+              />
+            )}
+          </div>
           <p
             className={classNames(styles.text, styles.lastActivity, {
               [styles.lastActivityActive]:
@@ -149,10 +191,12 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
                 unreadMessages={unreadMessages}
                 type={type}
                 seenOnce={seenOnce}
+                seen={seen}
                 ownerId={ownerId}
                 isActive={isActive}
                 isPinned={isPinned}
                 isFollowing={isFollowing}
+                hasUnseenMention={hasUnseenMention}
               />
             </div>
           </div>

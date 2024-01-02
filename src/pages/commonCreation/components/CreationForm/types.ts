@@ -3,6 +3,8 @@ import {
   TextFieldProps,
   TextEditorProps,
   UploadFilesProps,
+  RolesArrayWrapperProps,
+  NotionIntegrationProps,
 } from "@/shared/components/Form/Formik";
 import { CreationFormItemType } from "./constants";
 
@@ -55,8 +57,20 @@ export interface LinksFormItem extends BaseFormItem<LinksArrayWrapperProps> {
   validation?: Pick<ItemValidation, "links">;
 }
 
+export interface RolesFormItem extends BaseFormItem<RolesArrayWrapperProps> {
+  type: CreationFormItemType.Roles;
+  validation?: Pick<ItemValidation, "required">;
+}
+
+export interface NotionIntegrationFormItem
+  extends BaseFormItem<NotionIntegrationProps> {
+  type: CreationFormItemType.NotionIntegration;
+}
+
 export type CreationFormItem =
   | TextFieldFormItem
   | TextEditorFormItem
   | UploadFilesFormItem
-  | LinksFormItem;
+  | LinksFormItem
+  | RolesFormItem
+  | NotionIntegrationFormItem;

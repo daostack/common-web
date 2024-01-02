@@ -16,8 +16,6 @@
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.625rem;
-  transform: rotate(180deg);
-  color: $c-neutrals-600;
 }
 
 .feedLayout {
@@ -30,4 +28,20 @@
   bottom: 0;
   left: 0;
   padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.chatInputLoaderWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatInputText {
+  width: 100%;
+  margin-right: 0.3125rem;
+  font-size: 0.875rem;
+  color: var(--primary-fill);
+  text-align: center;
+  cursor: pointer;
 }

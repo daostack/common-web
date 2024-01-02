@@ -1,14 +1,8 @@
 import React, { ReactNode } from "react";
-import { Colors } from "../constants";
 
 export enum ModalType {
   Default,
   MobilePopUp,
-}
-
-export enum CloseIconVariant {
-  Regular = "regular",
-  Thin = "thin",
 }
 
 export interface ModalProps {
@@ -17,12 +11,10 @@ export interface ModalProps {
   onGoBack?: () => void;
   onClose: () => void;
   children: React.ReactNode;
-  closeColor?: Colors;
   className?: string;
   mobileFullScreen?: boolean;
   title?: ReactNode;
   hideCloseButton?: boolean;
-  closeIconVariant?: CloseIconVariant;
   closeIconSize?: number;
   isHeaderSticky?: boolean;
   shouldShowHeaderShadow?: boolean;
@@ -36,6 +28,7 @@ export interface ModalProps {
     modalOverlay?: string;
     headerWrapper?: string;
     header?: string;
+    title?: string;
     closeWrapper?: string;
     content?: string;
   };

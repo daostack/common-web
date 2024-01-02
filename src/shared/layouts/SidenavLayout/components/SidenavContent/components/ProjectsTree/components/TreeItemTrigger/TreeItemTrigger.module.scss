@@ -1,11 +1,11 @@
 @import "../../../../../../../../../constants";
 
 .item {
-  --bg-color: #{$c-shades-white};
+  --bg-color: var(--primary-background);
   --item-pl-per-level: 1.125rem;
   --item-arrow-pl: var(--item-pl-per-level);
   --item-image-mr: 0.5rem;
-  --item-text-color: #{$c-neutrals-600};
+  --item-text-color: var(--primary-text);
 
   height: 2.75rem;
   padding-left: calc(var(--item-pl-per-level) * (var(--tree-level, 1) - 1));
@@ -20,29 +20,33 @@
   overflow: hidden;
 
   &:hover {
-    --bg-color: #{$c-primary-100};
+    --bg-color: var(--secondary-hover-fill);
   }
 }
 .itemActive {
   --bg-color: #{$c-primary-200}99;
-  --item-text-color: #{$white};
 
   &:hover {
-    --bg-color: var(--hover-fill);
+    --bg-color: var(--secondary-hover-fill);
   }
 }
 .itemWithoutMembership {
   --item-text-color: #{$c-neutrals-300};
 }
+.itemDisabled {
+  cursor: not-allowed;
+}
 
 .arrowIconButton {
-  padding: 0.75rem 0.625rem 0.75rem var(--item-arrow-pl);
+  padding: 0.75rem 1.25rem 0.75rem var(--item-arrow-pl);
 }
 .arrowIconButtonHidden {
   visibility: hidden;
 }
 
 .arrowIcon {
+  width: 0.5rem;
+  height: 0.625rem;
   color: $c-neutrals-600;
   transition: transform 0.2s;
 }

@@ -8,6 +8,7 @@ $vertical-view-breakpoint: 790px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: $white;
 
   @include viewport-breakpoint($vertical-view-breakpoint) {
     padding: 3rem 1.25rem;

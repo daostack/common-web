@@ -21,6 +21,7 @@ import {
   FloatingOverlay,
 } from "@floating-ui/react";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
+import { Loader } from "../Loader";
 import { ContextMenuItem } from "./components";
 import styles from "./ContextMenu.module.scss";
 
@@ -32,11 +33,12 @@ interface ContextMenuProps {
   menuItems: Item[];
   onOpenChange?: (open: boolean) => void;
   listClassName?: string;
+  isLoading?: boolean;
 }
 
 export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
   (props, forwardedRef) => {
-    const { menuItems, onOpenChange, listClassName } = props;
+    const { menuItems, onOpenChange, listClassName, isLoading = false } = props;
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const listItemsRef = useRef<(HTMLElement | null)[]>([]);
@@ -116,7 +118,7 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
     return (
       <FloatingPortal>
         {isOpen && (
-          <FloatingOverlay className={styles.overlay} lockScroll>
+          <FloatingOverlay className={styles.overlay}>
             <FloatingFocusManager
               context={context}
               initialFocus={refs.floating}
@@ -145,6 +147,7 @@ export const ContextMenu = forwardRef<ContextMenuRef, ContextMenuProps>(
                     })}
                   />
                 ))}
+                {isLoading && <Loader className={styles.loader} />}
               </div>
             </FloatingFocusManager>
           </FloatingOverlay>

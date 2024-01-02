@@ -79,7 +79,6 @@ const AboutTab: FC<AboutTabProps> = (props) => {
   const renderMobileColumn = () => (
     <div className={styles.mainColumnWrapper}>
       <CommonDescription common={common} />
-      <div className={styles.separator} />
       {subCommons.length > 0 && (
         <>
           <CommonProjects
@@ -88,12 +87,9 @@ const AboutTab: FC<AboutTabProps> = (props) => {
             circles={governance.circles}
             styles={{ projectsWrapper: styles.commonProjectsWrapper }}
           />
-          <div className={styles.separator} />
         </>
       )}
-      <div className={styles.separator} />
       {rules.length > 0 && <CommonRules rules={rules} />}
-      <div className={styles.separator} />
       <CommonEntranceInfo
         limitations={limitations}
         withJoinRequest={!commonMember}

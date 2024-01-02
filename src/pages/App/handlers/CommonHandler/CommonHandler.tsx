@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {
   CommonEvent,
@@ -41,20 +41,55 @@ const CommonHandler: FC = () => {
   }, []);
 
   useEffect(() => {
-    const handler: CommonEventToListener[CommonEvent.ProjectCreated] = (
-      projectsStateItem,
+    const handler: CommonEventToListener[CommonEvent.CommonDeleted] = (
+      commonId,
     ) => {
+      /**
+       * TODO: seems like these are not updating the UI. Need to check.
+       */
+
+      /**
+       * Remove from cache
+       */
       dispatch(
-        multipleSpacesLayoutActions.addProjectToBreadcrumbs(projectsStateItem),
+        updateCommonState({
+          commonId,
+          state: {
+            loading: false,
+            fetched: false,
+            data: null,
+          },
+        }),
       );
-      dispatch(commonLayoutActions.addProject(projectsStateItem));
-      dispatch(projectsActions.addProject(projectsStateItem));
+
+      dispatch(commonLayoutActions.deleteCommon({ commonId }));
+      dispatch(multipleSpacesLayoutActions.deleteCommon({ commonId }));
+      dispatch(projectsActions.deleteCommon({ commonId }));
     };
 
-    CommonEventEmitter.on(CommonEvent.ProjectCreated, handler);
+    CommonEventEmitter.on(CommonEvent.CommonDeleted, handler);
 
     return () => {
-      CommonEventEmitter.off(CommonEvent.ProjectCreated, handler);
+      CommonEventEmitter.off(CommonEvent.CommonDeleted, handler);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handler: CommonEventToListener[CommonEvent.ProjectCreatedOrUpdated] =
+      (projectsStateItem) => {
+        dispatch(
+          multipleSpacesLayoutActions.addOrUpdateProjectInBreadcrumbs(
+            projectsStateItem,
+          ),
+        );
+        dispatch(commonLayoutActions.addOrUpdateProject(projectsStateItem));
+        dispatch(projectsActions.addOrUpdateProject(projectsStateItem));
+      };
+
+    CommonEventEmitter.on(CommonEvent.ProjectCreatedOrUpdated, handler);
+
+    return () => {
+      CommonEventEmitter.off(CommonEvent.ProjectCreatedOrUpdated, handler);
     };
   }, []);
 

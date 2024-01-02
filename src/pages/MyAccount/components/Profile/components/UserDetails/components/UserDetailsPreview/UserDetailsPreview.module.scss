@@ -1,0 +1,38 @@
+@import "../../../../../../../../constants";
+@import "../../../../../../../../styles/sizes";
+@import "../../../../../../../../styles/typography";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  word-break: break-word;
+
+  @include tablet {
+    align-items: center;
+  }
+}
+
+.name {
+  @include h6;
+  color: var(--primary-text);
+  margin: 0 0 0.25rem;
+  text-align: left;
+}
+
+.info {
+  @include body-sm-regular;
+
+  margin: 0 0 0.25rem;
+  text-align: left;
+  color: $c-gray-40;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  @include tablet {
+    text-align: center;
+  }
+}

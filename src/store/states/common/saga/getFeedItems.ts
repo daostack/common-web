@@ -3,25 +3,40 @@ import { CommonFeedService } from "@/services";
 import { InboxItemType } from "@/shared/constants";
 import { Awaited, FeedItemFollowLayoutItem } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
+import { selectFeedStateByCommonId } from "@/store/states";
 import * as actions from "../actions";
 import { selectFeedItems } from "../selectors";
 import { FeedItems } from "../types";
+import { searchFetchedFeedItems } from "./searchFetchedFeedItems";
 
 export function* getFeedItems(
   action: ReturnType<typeof actions.getFeedItems.request>,
 ) {
   const {
-    payload: { commonId, limit },
+    payload: { commonId, sharedFeedItemId, feedItemId, limit },
   } = action;
 
   try {
     const currentFeedItems = (yield select(selectFeedItems)) as FeedItems;
+    const cachedFeedState = yield select(selectFeedStateByCommonId(commonId));
+
+    if (!currentFeedItems.data && !feedItemId && cachedFeedState) {
+      yield put(
+        actions.setFeedState({
+          data: cachedFeedState,
+          sharedFeedItemId,
+        }),
+      );
+      return;
+    }
+
     const isFirstRequest = !currentFeedItems.lastDocTimestamp;
     const { data, firstDocTimestamp, lastDocTimestamp, hasMore } = (yield call(
       CommonFeedService.getCommonFeedItemsByUpdatedAt,
       commonId,
       {
         startAfter: currentFeedItems.lastDocTimestamp,
+        feedItemId,
         limit,
       },
     )) as Awaited<
@@ -43,6 +58,10 @@ export function* getFeedItems(
           : currentFeedItems.firstDocTimestamp,
       }),
     );
+
+    if (!isFirstRequest) {
+      yield searchFetchedFeedItems(convertedData);
+    }
   } catch (error) {
     if (isError(error)) {
       yield put(actions.getFeedItems.failure(error));

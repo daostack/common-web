@@ -1,4 +1,5 @@
-import { ApiEndpoint } from "@/shared/constants";
+import { ApiEndpoint, FirestoreDataSource } from "@/shared/constants";
+import { DocChange } from "@/shared/constants/docChange";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { FollowFeedItemPayload } from "@/shared/interfaces/api";
 import {
@@ -9,7 +10,7 @@ import {
   Timestamp,
 } from "@/shared/models";
 import { firestoreDataConverter } from "@/shared/utils";
-import firebase from "@/shared/utils/firebase";
+import firebase, { isFirestoreCacheError } from "@/shared/utils/firebase";
 import Api, { CancelToken } from "./Api";
 import CommonService from "./Common";
 import CommonFeedService from "./CommonFeed";
@@ -25,6 +26,33 @@ class FeedItemFollowsService {
       .collection(SubCollections.FeedItemFollows)
       .withConverter(converter);
 
+  public getFeedItemFollowDataById = async (
+    userId: string,
+    feedItemFollowId: string,
+    source = FirestoreDataSource.Default,
+  ): Promise<FeedItemFollow | null> => {
+    try {
+      const snapshot = await this.getFeedItemFollowsSubCollection(userId)
+        .doc(feedItemFollowId)
+        .get({ source });
+
+      return snapshot?.data() || null;
+    } catch (error) {
+      if (
+        source === FirestoreDataSource.Cache &&
+        isFirestoreCacheError(error)
+      ) {
+        return this.getFeedItemFollowDataById(
+          userId,
+          feedItemFollowId,
+          FirestoreDataSource.Server,
+        );
+      }
+
+      throw error;
+    }
+  };
+
   public getUserFeedItemFollowData = async (
     userId: string,
     feedItemId: string,
@@ -34,6 +62,37 @@ class FeedItemFollowsService {
       .get();
 
     return snapshot.docs[0]?.data() || null;
+  };
+
+  public subscribeToUserFeedItemFollowData = (
+    userId: string,
+    feedItemId: string,
+    callback: (
+      userFeedItemFollowData: FeedItemFollow | null,
+      statuses: {
+        isAdded: boolean;
+        isRemoved: boolean;
+        isModified: boolean;
+      },
+    ) => void,
+  ): UnsubscribeFunction => {
+    const query = this.getFeedItemFollowsSubCollection(userId).where(
+      "feedItemId",
+      "==",
+      feedItemId,
+    );
+
+    return query.onSnapshot((snapshot) => {
+      const docChange = snapshot.docChanges()[0];
+
+      if (docChange) {
+        callback(docChange.doc.data(), {
+          isAdded: docChange.type === DocChange.Added,
+          isRemoved: docChange.type === DocChange.Removed,
+          isModified: docChange.type === DocChange.Modified,
+        });
+      }
+    });
   };
 
   public getUserFeedItemFollowDataWithMetadata = async (
@@ -82,6 +141,29 @@ class FeedItemFollowsService {
   ): Promise<void> => {
     const { cancelToken } = options;
     await Api.post(ApiEndpoint.FollowFeedItem, data, { cancelToken });
+  };
+
+  public getFollowFeedItems = async (options: {
+    userId: string;
+    startAt?: Timestamp;
+    endAt?: Timestamp;
+  }): Promise<FeedItemFollow[]> => {
+    const { userId, startAt, endAt } = options;
+    let query = this.getFeedItemFollowsSubCollection(userId).orderBy(
+      "lastActivity",
+      "desc",
+    );
+
+    if (startAt) {
+      query = query.startAt(startAt);
+    }
+    if (endAt) {
+      query = query.endAt(endAt);
+    }
+
+    const snapshot = await query.get();
+
+    return snapshot.docs.map((doc) => doc.data());
   };
 
   public subscribeToNewUpdatedFollowFeedItem = (

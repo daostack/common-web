@@ -1,7 +1,14 @@
 import { createContext, useContext } from "react";
 import { CreateProposal } from "@/pages/OldCommon/interfaces";
 import { ProposalsTypes } from "@/shared/constants";
-import { Circle, Common, Governance, SupportersData } from "@/shared/models";
+import {
+  Circle,
+  CirclesPermissions,
+  Common,
+  CommonMember,
+  Governance,
+  SupportersData,
+} from "@/shared/models";
 import { CommonMenuItem } from "../../constants";
 import { CommonPageSettings } from "../../types";
 
@@ -10,10 +17,14 @@ interface Data {
   onMenuItemSelect: (menuItem: CommonMenuItem | null) => void;
   onProjectCreate: () => void;
   common: Common;
+  commonMember: (CommonMember & CirclesPermissions) | null;
   governance: Governance;
   parentCommons: Common[];
   subCommons: Common[];
+  rootCommon: Common | null;
+  rootCommonMember: CommonMember | null;
   parentCommon?: Common;
+  parentCommonMember: CommonMember | null;
   parentCommonSubCommons: Common[];
   supportersData: SupportersData | null;
   isJoinAllowed: boolean;

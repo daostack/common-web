@@ -7,7 +7,6 @@ import {
   LeaveCommonModal,
   MembershipRequestModal,
 } from "@/pages/OldCommon/components";
-import { ProposalsTypes } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
 import { useAuthorizedModal, useNotification } from "@/shared/hooks";
 import {
@@ -17,16 +16,18 @@ import {
   Governance,
   SupportersData,
 } from "@/shared/models";
-import { getProjectCreationPagePath } from "@/shared/utils";
+import { checkIsProject, getProjectCreationPagePath } from "@/shared/utils";
 import { projectsActions } from "@/store/states";
 import { getDefaultGovDocUrl } from "../../components/CommonTabPanels/components/AboutTab/utils";
 import { JoinProjectModal } from "../../components/JoinProjectModal";
 import { CommonMenuItem } from "../../constants";
 import { CommonPageSettings } from "../../types";
 import { LeaveCircleModal } from "./components";
+import { DeleteCommonModal } from "./components/DeleteCommonModal";
 import { JoinCircleModal } from "./components/JoinCircleModal";
 import { CommonDataContext, CommonDataContextValue } from "./context";
 import {
+  useDeleteCommonModal,
   useJoinCircleModal,
   useLeaveCircleModal,
   useProposalCreationModal,
@@ -37,10 +38,12 @@ interface CommonDataProps {
   common: Common;
   governance: Governance;
   commonMember: (CommonMember & CirclesPermissions) | null;
+  rootCommonMember: CommonMember | null;
   parentCommonMember: CommonMember | null;
   isGlobalDataFetched: boolean;
   parentCommons: Common[];
   subCommons: Common[];
+  rootCommon: Common | null;
   parentCommon?: Common;
   parentCommonSubCommons: Common[];
   supportersData: SupportersData | null;
@@ -54,10 +57,12 @@ const CommonData: FC<CommonDataProps> = (props) => {
     common,
     governance,
     commonMember,
+    rootCommonMember,
     parentCommonMember,
     isGlobalDataFetched,
     parentCommons,
     subCommons,
+    rootCommon,
     parentCommon,
     parentCommonSubCommons,
     supportersData,
@@ -86,9 +91,11 @@ const CommonData: FC<CommonDataProps> = (props) => {
     isProposalCreationModalOpen,
     initialProposalTypeForCreation,
     onProposalCreationModalClose,
-    onCommonDelete,
+    onCommonDeleteProposal,
     redirectToProposalPage,
   } = useProposalCreationModal();
+  const { isDeleteCommonModalOpen, onDeleteCommonModalClose, onCommonDelete } =
+    useDeleteCommonModal();
   const {
     circleToLeave,
     isLeaveCircleModalOpen,
@@ -112,26 +119,28 @@ const CommonData: FC<CommonDataProps> = (props) => {
     onOpen: onProjectJoinModalOpen,
     onClose: onProjectJoinModalClose,
   } = useAuthorizedModal();
-  const isProject = Boolean(common.directParent);
+  const isProject = checkIsProject(common);
 
   const isJoinPending =
     isGlobalDataFetched && !commonMember && props.isJoinPending;
   const isJoinAllowed = Boolean(
     isGlobalDataFetched &&
+      !isJoinPending &&
       ((!isProject && !commonMember) ||
-        (isProject && parentCommonMember && !commonMember)) &&
-      !isJoinPending,
+        (isProject && rootCommonMember && parentCommonMember && !commonMember)),
   );
 
   const handleMenuItemSelect = useCallback(
     (menuItem: CommonMenuItem | null) => {
       setSelectedMenuItem(menuItem);
 
-      if (menuItem === CommonMenuItem.DeleteCommon) {
+      if (menuItem === CommonMenuItem.DeleteCommonProposal) {
+        onCommonDeleteProposal();
+      } else if (menuItem === CommonMenuItem.DeleteCommonAction) {
         onCommonDelete();
       }
     },
-    [onCommonDelete],
+    [onCommonDeleteProposal, onCommonDelete],
   );
 
   const handleMenuClose = () => {
@@ -215,10 +224,14 @@ const CommonData: FC<CommonDataProps> = (props) => {
       onMenuItemSelect: handleMenuItemSelect,
       onProjectCreate: handleProjectCreate,
       common,
+      commonMember,
       governance,
       parentCommons,
       subCommons,
+      rootCommon,
+      rootCommonMember,
       parentCommon,
+      parentCommonMember,
       parentCommonSubCommons,
       supportersData,
       isJoinAllowed,
@@ -232,10 +245,14 @@ const CommonData: FC<CommonDataProps> = (props) => {
       handleMenuItemSelect,
       handleProjectCreate,
       common,
+      commonMember,
       governance,
       parentCommons,
       subCommons,
+      rootCommon,
+      rootCommonMember,
       parentCommon,
+      parentCommonMember,
       parentCommonSubCommons,
       supportersData,
       isJoinAllowed,
@@ -260,24 +277,22 @@ const CommonData: FC<CommonDataProps> = (props) => {
       {children}
       {commonMember && (
         <LeaveCommonModal
-          isShowing={selectedMenuItem === CommonMenuItem.LeaveCommon}
+          isShowing={Boolean(
+            selectedMenuItem &&
+              [
+                CommonMenuItem.LeaveCommon,
+                CommonMenuItem.LeaveProject,
+              ].includes(selectedMenuItem),
+          )}
           onClose={handleMenuClose}
           commonId={common.id}
           memberCount={common.memberCount}
-          memberCircleIds={Object.values(commonMember.circles.map)}
-          onSuccessfulLeave={handleSuccessfulLeave}
-        />
-      )}
-      {commonMember && common.directParent && (
-        <LeaveCommonModal
-          isShowing={selectedMenuItem === CommonMenuItem.LeaveProject}
-          onClose={handleMenuClose}
-          commonId={common.directParent.commonId}
-          memberCount={common.memberCount}
-          memberCircleIds={[common.directParent.circleId]}
-          onSuccessfulLeave={handleSuccessfulProjectLeave}
-          subCommonId={common.id}
-          isSubCommon
+          onSuccessfulLeave={
+            selectedMenuItem === CommonMenuItem.LeaveProject
+              ? handleSuccessfulProjectLeave
+              : handleSuccessfulLeave
+          }
+          isSubCommon={selectedMenuItem === CommonMenuItem.LeaveProject}
         />
       )}
       {isProposalCreationModalOpen && commonMember && (
@@ -316,11 +331,8 @@ const CommonData: FC<CommonDataProps> = (props) => {
         onClose={handleCommonJoinModalClose}
         common={common}
         governance={governance}
-        shouldShowLoadingAfterSuccessfulCreation={
-          governance.proposals[ProposalsTypes.MEMBER_ADMITTANCE]?.global
-            .votingDuration === 0
-        }
         onRequestCreated={handleCommonJoinRequestCreated}
+        showLoadingAfterSuccessfulCreation
       />
       <JoinProjectModal
         isShowing={
@@ -332,6 +344,14 @@ const CommonData: FC<CommonDataProps> = (props) => {
         governance={governance}
         shouldKeepLoadingIfPossible
         onRequestCreated={handleProjectJoinRequestCreated}
+      />
+      <DeleteCommonModal
+        commonId={common.id}
+        commonName={common.name}
+        isSpace={checkIsProject(common)}
+        isShowing={isDeleteCommonModalOpen}
+        onClose={onDeleteCommonModalClose}
+        parentCommonId={common.directParent?.commonId}
       />
     </CommonDataContext.Provider>
   );

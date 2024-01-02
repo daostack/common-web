@@ -1,7 +1,10 @@
 import { CommonFeedType } from "@/shared/models";
+import { notEmpty } from "@/shared/utils/notEmpty";
 import { FeedItemMenuItem, FeedItemPinAction } from "../../FeedItem/constants";
 import { GetAllowedItemsOptions } from "../../FeedItem/types";
 import { checkIsEditItemAllowed } from "./checkIsEditItemAllowed";
+import { checkIsLinkToAllowed } from "./checkIsLinkToAllowed";
+import { checkIsMoveToAllowed } from "./checkIsMoveToAllowed";
 import { checkIsPinUnpinAllowed } from "./checkIsPinUnpinAllowed";
 import { checkIsRemoveDiscussionAllowed } from "./checkIsRemoveDiscussionAllowed";
 
@@ -27,6 +30,18 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
       !options.feedItemFollow.isDisabled && options.feedItemFollow.isFollowing
     );
   },
+  [FeedItemMenuItem.MarkUnread]: ({ feedItemUserMetadata }) => {
+    const { count, seen } = feedItemUserMetadata || {};
+
+    return notEmpty(count) && notEmpty(seen) && count === 0 && seen;
+  },
+  [FeedItemMenuItem.MarkRead]: ({ feedItemUserMetadata }) => {
+    const { count, seen } = feedItemUserMetadata || {};
+
+    return Boolean(count) || !seen;
+  },
+  [FeedItemMenuItem.LinkTo]: checkIsLinkToAllowed,
+  [FeedItemMenuItem.MoveTo]: checkIsMoveToAllowed,
 };
 
 export const getAllowedItems = (
@@ -38,8 +53,12 @@ export const getAllowedItems = (
     FeedItemMenuItem.Pin,
     FeedItemMenuItem.Unpin,
     FeedItemMenuItem.Share,
+    FeedItemMenuItem.MarkUnread,
+    FeedItemMenuItem.MarkRead,
     FeedItemMenuItem.Report,
     FeedItemMenuItem.Edit,
+    FeedItemMenuItem.LinkTo,
+    FeedItemMenuItem.MoveTo,
     FeedItemMenuItem.Remove,
   ];
   const nonAllowedItems =

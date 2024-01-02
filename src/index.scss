@@ -3,49 +3,65 @@
 
 @font-face {
   font-family: NotoSerifSC-Black;
-  src: url("/shared/assets/fonts/NotoSerifSC-Black.otf");
-}
-
-@font-face {
-  font-family: NunitoSans-Regular;
-  src: url("/shared/assets/fonts/NunitoSans-Regular.ttf");
+  src: url("/shared/assets/fonts/NotoSerifSC-Black.woff2");
+  font-display: swap;
 }
 
 @font-face {
   font-family: NotoSerifSC-Bold;
-  src: url("/shared/assets/fonts/NotoSerifSC-Bold.otf");
+  src: url("/shared/assets/fonts/NotoSerifSC-Bold.woff2");
+  font-display: swap;
 }
 
 @font-face {
   font-family: NotoSerifSC-SemiBold;
-  src: url("/shared/assets/fonts/NotoSerifSC-SemiBold.otf");
-}
-
-@font-face {
-  font-family: NunitoSans-SemiBold;
-  src: url("/shared/assets/fonts/NunitoSans-SemiBold.ttf");
-}
-
-@font-face {
-  font-family: NunitoSans-Bold;
-  src: url("/shared/assets/fonts/NunitoSans-Bold.ttf");
+  src: url("/shared/assets/fonts/NotoSerifSC-SemiBold.woff2");
+  font-display: swap;
 }
 
 @font-face {
   font-family: Assistant-Bold;
   src: url("/shared/assets/fonts/Assistant-Bold.ttf");
+  font-display: swap;
 }
 
 @font-face {
   font-family: Assistant-Light;
   src: url("/shared/assets/fonts/Assistant-Light.ttf");
+  font-display: swap;
+}
+
+html {
+  background-color: var(--primary-background);
+}
+
+:root {
+  --page-extra-pr: 0px;
+}
+
+// Remove Arrows/Spinners from input type number
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+// Disable highlight when Touch/Press for inputs
+input:focus {
+  outline: $transparent;
 }
 
 body {
   --safe-area-inset-bottom: 0;
 
   // Disable highlight when Touch/Press
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-tap-highlight-color: $transparent;
   margin: 0;
   font-family: PoppinsSans, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -188,15 +204,6 @@ body {
   }
 }
 
-/* Disable hover effects globally when using a touch device */
-@media (hover: none) {
-  * {
-    :hover {
-      opacity: unset !important;
-    }
-  }
-}
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
@@ -236,10 +243,15 @@ code {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--medium-gray);
+  background-color: $c-gray-20;
   border-radius: 0.5rem;
   &:hover {
-    background-color: var(--strong-gray);
+    background-color: $c-gray-50;
     cursor: pointer;
   }
+}
+
+a:visited {
+  background-color: transparent;
+  text-decoration: none;
 }

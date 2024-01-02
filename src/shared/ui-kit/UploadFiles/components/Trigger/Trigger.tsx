@@ -1,4 +1,5 @@
 import React, { ChangeEventHandler, FC } from "react";
+import { useImageSizeCheck } from "@/shared/hooks";
 import { UploadIcon } from "@/shared/icons";
 import styles from "./Trigger.module.scss";
 
@@ -18,11 +19,12 @@ const Trigger: FC<TriggerProps> = (props) => {
     accept = ACCEPTED_EXTENSIONS,
     disabled = false,
   } = props;
+  const { checkImageSize } = useImageSizeCheck();
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const file = event.target.files ? event.target.files[0] : null;
 
-    if (file) {
+    if (file && checkImageSize(file.name, file.size)) {
       onChange(file);
     }
 

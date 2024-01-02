@@ -4,7 +4,7 @@
 .container {
   position: fixed;
   top: 0;
-  right: var(--sb-h-indent);
+  right: calc(var(--page-extra-pr) + var(--sb-h-indent));
   left: var(--sb-h-indent);
   z-index: 3;
   height: var(--header-h);
@@ -12,7 +12,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: $c-light-gray-2;
+  background-color: var(--secondary-background);
   box-sizing: border-box;
 }
 
@@ -32,6 +32,7 @@
   align-items: center;
   font-family: PoppinsSans, sans-serif;
   font-size: 1rem;
+  color: var(--primary-text);
 
   &:hover {
     text-decoration: underline;

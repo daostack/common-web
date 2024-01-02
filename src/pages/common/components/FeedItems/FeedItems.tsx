@@ -74,6 +74,7 @@ const FeedItems: FC<FeedItemsProps> = (props) => {
                 commonId={common.id}
                 commonName={common.name}
                 commonImage={common.image}
+                commonNotion={common.notion}
                 pinnedFeedItems={common.pinnedFeedItems}
                 isPinned={isPinned}
                 isProject={checkIsProject(common)}

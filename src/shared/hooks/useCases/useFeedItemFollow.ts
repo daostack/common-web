@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { FollowFeedItemAction } from "@/shared/constants";
+import { FeedItemFollow } from "@/shared/models";
 import {
   selectCommonFeedFollows,
   selectFollowFeedItemMutationState,
@@ -15,13 +16,26 @@ export interface FeedItemFollowState {
   isFollowing: boolean;
   isDisabled: boolean;
   onFollowToggle: (action?: FollowFeedItemAction) => void;
+  isUserFeedItemFollowDataFetched: boolean;
+  userFeedItemFollowData: FeedItemFollow | null;
+}
+
+interface Data {
+  commonId?: string;
+  feedItemId?: string;
+}
+
+interface Options {
+  withSubscription?: boolean;
 }
 
 export function useFeedItemFollow(
-  feedItemId?: string,
-  commonId?: string,
+  { commonId, feedItemId }: Data,
+  { withSubscription }: Options = {},
 ): FeedItemFollowState {
   const dispatch = useDispatch();
+  const user = useSelector(selectUser());
+  const userId = user?.uid;
   const follows = useSelector(selectCommonFeedFollows);
   const isFollowing =
     feedItemId && commonId ? !!follows[commonId]?.[feedItemId] : false;
@@ -30,7 +44,7 @@ export function useFeedItemFollow(
     data: userFeedItemFollowData,
     fetchUserFeedItemFollowData,
     setUserFeedItemFollowData,
-  } = useUserFeedItemFollowData();
+  } = useUserFeedItemFollowData({ feedItemId, userId }, { withSubscription });
   const followFeedItemMutationState = useSelector(
     selectFollowFeedItemMutationState,
   );
@@ -46,8 +60,6 @@ export function useFeedItemFollow(
           isFollowingFinished: false,
         };
 
-  const user = useSelector(selectUser());
-  const userId = user?.uid;
   const isDisabled = !isUserFeedItemFollowDataFetched || isFollowingInProgress;
 
   const onFollowToggle = (action?: FollowFeedItemAction) => {
@@ -78,19 +90,25 @@ export function useFeedItemFollow(
 
   useEffect(() => {
     if (isUserFeedItemFollowDataFetched && feedItemId && commonId) {
+      const action = userFeedItemFollowData
+        ? FollowFeedItemAction.Follow
+        : FollowFeedItemAction.Unfollow;
+
       dispatch(
         commonFeedFollowsActions.setFeedItemFollow({
-          itemId: feedItemId,
-          commonId: commonId,
-          isFollowing: Boolean(userFeedItemFollowData),
+          feedItemId,
+          commonId,
+          action,
         }),
       );
     }
-  }, [isUserFeedItemFollowDataFetched]);
+  }, [isUserFeedItemFollowDataFetched, userFeedItemFollowData]);
 
   return {
     isFollowing,
     isDisabled,
     onFollowToggle,
+    isUserFeedItemFollowDataFetched,
+    userFeedItemFollowData,
   };
 }

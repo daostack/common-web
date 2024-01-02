@@ -19,6 +19,7 @@ import {
   getParentItemIds,
   Item,
 } from "../../../../SidenavLayout/components/SidenavContent/components";
+import { useProjectsSubscription } from "./useProjectsSubscription";
 
 interface Return {
   currentCommonId: string | null;
@@ -36,7 +37,7 @@ export const useProjectsData = (): Return => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = history.location;
-  const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
+  const { getCommonPagePath } = useRoutesContext();
   const isAuthenticated = useSelector(authentificated());
   const currentCommonId = useSelector(selectCommonLayoutCommonId);
   const { commons, areCommonsLoading, areCommonsFetched } = useSelector(
@@ -50,10 +51,8 @@ export const useProjectsData = (): Return => {
   );
   const generateItemCommonPagePath = useCallback(
     (projectsStateItem: ProjectsStateItem): string =>
-      projectsStateItem.hasMembership
-        ? getCommonPagePath(projectsStateItem.commonId)
-        : getCommonPageAboutTabPath(projectsStateItem.commonId),
-    [getCommonPagePath, getCommonPageAboutTabPath],
+      getCommonPagePath(projectsStateItem.commonId),
+    [getCommonPagePath],
   );
   const parentItem = useMemo(
     () =>
@@ -85,6 +84,12 @@ export const useProjectsData = (): Return => {
   const itemIdWithNewProjectCreation = getItemIdWithNewProjectCreationByPath(
     location.pathname,
   );
+  useProjectsSubscription({
+    activeItemId,
+    areProjectsFetched,
+    commons,
+    projects,
+  });
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -99,22 +104,16 @@ export const useProjectsData = (): Return => {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (areCommonsLoading) {
-      return;
-    }
     if (!areCommonsFetched) {
       dispatch(commonLayoutActions.getCommons.request(activeItemId));
     }
-  }, [areCommonsLoading, areCommonsFetched]);
+  }, [areCommonsFetched]);
 
   useEffect(() => {
-    if (areProjectsLoading || !currentCommonId) {
-      return;
-    }
-    if (!areProjectsFetched) {
+    if (currentCommonId && !areProjectsFetched) {
       dispatch(commonLayoutActions.getProjects.request(currentCommonId));
     }
-  }, [areProjectsLoading, areProjectsFetched, currentCommonId]);
+  }, [areProjectsFetched, currentCommonId]);
 
   useEffect(() => {
     if (

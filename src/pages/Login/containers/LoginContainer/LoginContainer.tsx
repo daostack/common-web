@@ -15,19 +15,26 @@ import {
   ErrorCode,
   ScreenSize,
   QueryParamKey,
+  ROUTE_PATHS,
 } from "@/shared/constants";
 import { useQueryParams, useRemoveQueryParams } from "@/shared/hooks";
 import { ModalProps, ModalType } from "@/shared/interfaces";
-import { setTutorialModalState } from "@/shared/store/actions";
 import { getScreenSize } from "@/shared/store/selectors";
 import {
   emptyFunction,
+  getFirebaseAuthProvider,
   getInboxPagePath,
   isGeneralError,
+  matchOneOfRoutes,
 } from "@/shared/utils";
-import { isFirebaseError } from "@/shared/utils/firebase";
+import firebase, { isFirebaseError } from "@/shared/utils/firebase";
 import { LoginModalType } from "../../../Auth/interface";
-import { setLoginModalState, socialLogin } from "../../../Auth/store/actions";
+import {
+  setLoginModalState,
+  loginWithFirebaseUser,
+  startAuthLoading,
+  stopAuthLoading,
+} from "../../../Auth/store/actions";
 import {
   authentificated,
   selectIsAuthLoading,
@@ -83,11 +90,7 @@ const LoginContainer: FC = () => {
 
   const handleClose = useCallback(() => {
     dispatch(setLoginModalState({ isShowing: false }));
-    if (stage === AuthStage.CompleteAccountDetails) {
-      dispatch(setTutorialModalState({ isShowing: true }));
-      return;
-    }
-  }, [dispatch, stage, location.pathname]);
+  }, [dispatch, location.pathname]);
 
   const handleError = useCallback((errorText?: string) => {
     setErrorText(errorText || DEFAULT_AUTH_ERROR_TEXT);
@@ -104,9 +107,24 @@ const LoginContainer: FC = () => {
       } else {
         handleClose();
       }
-      history.push(getInboxPagePath());
+      if (
+        !matchOneOfRoutes(
+          history.location.pathname,
+          [ROUTE_PATHS.COMMON, ROUTE_PATHS.V04_COMMON],
+          {
+            exact: false,
+          },
+        )
+      ) {
+        history.push(getInboxPagePath());
+      }
     },
-    [removeQueryParams, handleClose, shouldShowUserDetailsAfterSignUp],
+    [
+      removeQueryParams,
+      handleClose,
+      shouldShowUserDetailsAfterSignUp,
+      history.location.pathname,
+    ],
   );
 
   const handleAuthButtonClick = useCallback(
@@ -118,30 +136,42 @@ const LoginContainer: FC = () => {
         return;
       }
 
-      dispatch(
-        socialLogin.request({
-          payload: { provider, authCode },
-          callback: (error, data) => {
-            if (error) {
-              if (
-                isGeneralError(error) &&
-                error.code === ErrorCode.CUserDoesNotExist
-              ) {
-                handleError(ERROR_TEXT_FOR_NON_EXISTENT_USER);
-              } else if (
-                !isFirebaseError(error) ||
-                error.code !== "auth/popup-closed-by-user"
-              ) {
-                handleError();
-              }
+      const handleAuthError = (error: Error | null) => {
+        if (
+          isGeneralError(error) &&
+          error.code === ErrorCode.CUserDoesNotExist
+        ) {
+          handleError(ERROR_TEXT_FOR_NON_EXISTENT_USER);
+        } else if (
+          !isFirebaseError(error) ||
+          error.code !== "auth/popup-closed-by-user"
+        ) {
+          handleError();
+        }
 
-              return;
-            }
+        dispatch(stopAuthLoading());
+      };
 
-            handleAuthFinish(data?.isNewUser);
-          },
-        }),
-      );
+      dispatch(startAuthLoading());
+      firebase
+        .auth()
+        .signInWithPopup(getFirebaseAuthProvider(provider))
+        .then(({ user }) =>
+          dispatch(
+            loginWithFirebaseUser.request({
+              payload: { firebaseUser: user, authCode },
+              callback: (error, data) => {
+                if (error) {
+                  handleAuthError(error);
+                  return;
+                }
+
+                handleAuthFinish(data?.isNewUser);
+              },
+            }),
+          ),
+        )
+        .catch(handleAuthError);
     },
     [dispatch, handleError, handleAuthFinish, authCode],
   );

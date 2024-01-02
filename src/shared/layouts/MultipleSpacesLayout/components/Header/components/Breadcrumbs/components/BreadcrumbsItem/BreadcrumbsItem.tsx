@@ -3,38 +3,41 @@ import { useHistory } from "react-router";
 import { useRoutesContext } from "@/shared/contexts";
 import { ContextMenuRef } from "@/shared/ui-kit";
 import { ProjectsStateItem } from "@/store/states";
+import { truncateBreadcrumbName } from "../../utils";
 import { BreadcrumbsMenu } from "../BreadcrumbsMenu";
 import styles from "./BreadcrumbsItem.module.scss";
 
-interface BreadcrumbsItemProps {
-  activeItemId: string;
+export interface BreadcrumbsItemProps {
+  activeItem: ProjectsStateItem;
   items: ProjectsStateItem[];
   commonIdToAddProject?: string | null;
   onCommonCreate?: () => void;
   withMenu?: boolean;
+  isLoading?: boolean;
+  truncate?: boolean;
+  onClick?: () => void;
 }
 
 const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   const {
-    activeItemId,
+    activeItem,
     items,
     commonIdToAddProject,
     onCommonCreate,
     withMenu = true,
+    isLoading = false,
+    truncate = false,
+    onClick,
   } = props;
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
   const containerRef = useRef<HTMLLIElement>(null);
   const contextMenuRef = useRef<ContextMenuRef>(null);
-  const activeItem = items.find((item) => item.commonId === activeItemId);
-
-  if (!activeItem) {
-    return null;
-  }
 
   const handleButtonClick = () => {
     if (!withMenu) {
-      history.push(getCommonPagePath(activeItemId));
+      history.push(getCommonPagePath(activeItem.commonId));
+      onClick?.();
       return;
     }
     if (containerRef.current) {
@@ -44,16 +47,17 @@ const BreadcrumbsItem: FC<BreadcrumbsItemProps> = (props) => {
   };
 
   return (
-    <li ref={containerRef}>
+    <li ref={containerRef} className={styles.li}>
       <button className={styles.button} onClick={handleButtonClick}>
-        {activeItem.name}
+        {truncate ? truncateBreadcrumbName(activeItem.name) : activeItem.name}
       </button>
       {withMenu && (
         <BreadcrumbsMenu
           ref={contextMenuRef}
           items={items}
-          activeItemId={activeItemId}
+          activeItemId={activeItem.commonId}
           commonIdToAddProject={commonIdToAddProject}
+          isLoading={isLoading}
           onCommonCreate={onCommonCreate}
         />
       )}

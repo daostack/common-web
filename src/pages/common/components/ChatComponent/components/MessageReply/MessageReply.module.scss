@@ -3,10 +3,10 @@
 .container {
   display: flex;
   flex-direction: row;
-  background-color: $white;
+  background-color: var(--primary-background);
   padding: 0.4375rem 2rem 0.625rem;
-  border-top: 0.0625rem solid $c-neutrals-100;
-  border-bottom: 0.0625rem solid $c-neutrals-100;
+  border-top: 0.0625rem solid var(--gentle-stroke);
+  border-bottom: 0.0625rem solid var(--gentle-stroke);
 }
 
 .containerEmpty {
@@ -18,7 +18,8 @@
   flex-direction: row;
   align-items: flex-start;
   width: 100%;
-  background-color: $c-pink-light;
+  background-color: var(--secondary-fill);
+  color: var(--primary-text);
   border-radius: 0.875rem;
   padding: 0.5rem 0.75rem;
 }
@@ -67,4 +68,5 @@
 
 .closeButton {
   margin-left: 1.375rem;
+  color: var(--primary-text);
 }

@@ -186,7 +186,11 @@ export const containsHebrew = (str: string) => {
   return /[\u0590-\u05FF]/.test(str);
 };
 
-export const isRTL = (text: string): boolean => {
+export const isRTL = (text = ""): boolean => {
+  if (!text) {
+    return false;
+  }
+
   const ltrChars =
     "A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02B8\u0300-\u0590\u0800-\u1FFF" +
     "\u2C00-\uFB1C\uFDFE-\uFE6F\uFEFD-\uFFFF";
@@ -194,6 +198,25 @@ export const isRTL = (text: string): boolean => {
   const rtlDirCheck = new RegExp("^[^" + ltrChars + "]*[" + rtlChars + "]");
 
   return Boolean(text && rtlDirCheck.test(text));
+};
+
+export const isRtlText = (text = ""): boolean => {
+  for (let i = 0; i < text.length; i++) {
+    const charCode = text.charCodeAt(i);
+
+    // Hebrew Block
+    if (charCode >= 0x0590 && charCode <= 0x05ff) return true;
+
+    // Arabic Block
+    if (charCode >= 0x0600 && charCode <= 0x06ff) return true;
+
+    // Arabic Supplement Block
+    if (charCode >= 0x0750 && charCode <= 0x077f) return true;
+
+    // Arabic Extended-A Block
+    if (charCode >= 0x08a0 && charCode <= 0x08ff) return true;
+  }
+  return false;
 };
 
 /**

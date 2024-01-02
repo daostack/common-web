@@ -4,16 +4,19 @@ import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { PinIcon, StarIcon } from "@/shared/icons";
 import { CommonFeedType } from "@/shared/models";
+import { notEmpty } from "@/shared/utils/notEmpty";
 import styles from "./FeedCardTags.module.scss";
 
 interface FeedCardTagsProps {
   unreadMessages?: number;
   type?: CommonFeedType;
   seenOnce?: boolean;
+  seen?: boolean;
   ownerId?: string;
   isActive: boolean;
   isPinned?: boolean;
   isFollowing?: boolean;
+  hasUnseenMention?: boolean;
 }
 
 export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
@@ -21,13 +24,19 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
     unreadMessages,
     type,
     seenOnce,
+    seen,
     ownerId,
     isActive,
     isPinned,
     isFollowing,
+    hasUnseenMention,
   } = props;
   const user = useSelector(selectUser());
   const isOwner = ownerId === user?.uid;
+  const isNewTagVisible =
+    notEmpty(seenOnce) && notEmpty(isOwner) && !seenOnce && !isOwner;
+  const isUnseenTagVisible =
+    !isNewTagVisible && !unreadMessages && notEmpty(seen) && !seen;
 
   return (
     <>
@@ -47,10 +56,16 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
           })}
         />
       )}
+      {hasUnseenMention && <div className={styles.hasUnseenMention}>@</div>}
       {isFollowing && (
-        <StarIcon className={styles.starIcon} stroke="currentColor" />
+        <StarIcon
+          className={classNames(styles.starIcon, {
+            [styles.starActive]: isActive,
+          })}
+          stroke="currentColor"
+        />
       )}
-      {!seenOnce && !isOwner && (
+      {isNewTagVisible && (
         <div
           className={classNames(styles.tag, styles.new, {
             [styles.tagActive]: isActive,
@@ -68,6 +83,9 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
         >
           {unreadMessages}
         </div>
+      )}
+      {isUnseenTagVisible && (
+        <div className={classNames(styles.tag, styles.unseen)}></div>
       )}
     </>
   );

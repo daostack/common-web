@@ -1,0 +1,62 @@
+@import "../../../constants.scss";
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+}
+
+.input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  width: 100%;
+  height: 2.125rem;
+  margin: 0;
+  padding: 0 0.875rem 0 2.875rem;
+  font-family: PoppinsSans, sans-serif;
+  font-size: $moderate-xsmall;
+  font-weight: normal;
+  line-height: 127%;
+  color: var(--primary-text);
+  background-color: var(--secondary-background);
+  border: 0.0625rem solid var(--gentle-stroke);
+  border-radius: 0.25rem;
+  outline: none;
+  box-sizing: border-box;
+  resize: none;
+
+  &::placeholder {
+    color: $c-neutrals-300;
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 0.875rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: inherit;
+  transform: translateY(-50%);
+}
+
+.closeIconButton {
+  position: absolute;
+  right: 0rem;
+  --btn-w: 2rem;
+  --btn-h: 2rem;
+  --btn-icon-size: 12px;
+
+  &:hover {
+    background-color: var(--quaternary-fill);
+  }
+}

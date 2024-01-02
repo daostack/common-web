@@ -2,12 +2,14 @@ import { stringify } from "query-string";
 import { store } from "@/shared/appConfig";
 import { ApiEndpoint } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
-import { GetInboxResponse } from "@/shared/interfaces/api";
+import { GetInboxResponse, UpdateUserDto } from "@/shared/interfaces/api";
 import {
   ChatChannel,
   Collection,
   CommonFeed,
   FeedItemFollowWithMetadata,
+  InboxItem,
+  SubCollections,
   Timestamp,
   User,
 } from "@/shared/models";
@@ -15,44 +17,98 @@ import {
   convertObjectDatesToFirestoreTimestamps,
   convertToTimestamp,
   firestoreDataConverter,
-  transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
-import { cacheActions } from "@/store/states";
+import * as cacheActions from "@/store/states/cache/actions";
 import Api from "./Api";
 import { waitForUserToBeLoaded } from "./utils";
 
 const converter = firestoreDataConverter<User>();
+const inboxConverter = firestoreDataConverter<InboxItem>();
 
 class UserService {
   private getUsersCollection = () =>
     firebase.firestore().collection(Collection.Users).withConverter(converter);
 
-  public getUserById = async (userId: string): Promise<User | null> => {
-    const userSnapshot = await this.getUsersCollection()
-      .where("uid", "==", userId)
-      .get();
+  private getInboxSubCollection = (userId: string) =>
+    this.getUsersCollection()
+      .doc(userId)
+      .collection(SubCollections.Inbox)
+      .withConverter(inboxConverter);
 
-    return transformFirebaseDataList<User>(userSnapshot)[0] || null;
+  public updateUser = async (user: User): Promise<User> => {
+    const body: UpdateUserDto = {
+      userId: user.uid,
+      changes: {
+        email: user.email,
+        photoURL: user.photoURL,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        displayName: user.displayName,
+        pushNotificationPreference: user.pushNotificationPreference,
+        emailNotificationPreference: user.emailNotificationPreference,
+      },
+    };
+    const response = await Api.put<
+      UpdateUserDto["changes"] | Pick<User, "uid" | "updatedAt">
+    >(ApiEndpoint.UpdateUser, body);
+
+    return {
+      ...user,
+      ...response.data,
+    };
+  };
+
+  public getUserById = async (
+    userId: string,
+    cached = false,
+  ): Promise<User | null> => {
+    const snapshot = await this.getUsersCollection()
+      .where("uid", "==", userId)
+      .get({ source: cached ? "cache" : "default" });
+    const users = snapshot.docs.map((doc) => doc.data());
+    const user = users[0] || null;
+
+    if (cached && !user) {
+      return this.getUserById(userId);
+    }
+
+    return user;
   };
 
   public getCachedUserById = async (userId: string): Promise<User | null> => {
-    const userState = store.getState().cache.userStates[userId];
+    try {
+      const userState = store.getState().cache.userStates[userId];
 
-    if (userState?.fetched) {
-      return userState.data;
-    }
-    if (userState?.loading) {
+      if (userState?.fetched) {
+        return userState.data;
+      }
+      if (userState?.loading) {
+        return await waitForUserToBeLoaded(userId);
+      }
+
+      store.dispatch(
+        cacheActions.getUserStateById.request({
+          payload: { userId },
+        }),
+      );
+
       return await waitForUserToBeLoaded(userId);
+    } catch (err) {
+      const user = await this.getUserById(userId, true);
+      store.dispatch(
+        cacheActions.updateUserStateById({
+          userId,
+          state: {
+            loading: false,
+            fetched: true,
+            data: user,
+          },
+        }),
+      );
+
+      return user;
     }
-
-    store.dispatch(
-      cacheActions.getUserStateById.request({
-        payload: { userId },
-      }),
-    );
-
-    return await waitForUserToBeLoaded(userId);
   };
 
   public getCachedUsersById = async (userIds: string[]): Promise<User[]> =>
@@ -88,10 +144,11 @@ class UserService {
     });
   };
 
-  public getInboxItems = async (
+  public getInboxItemsWithMetadata = async (
     options: {
       startAfter?: Timestamp | null;
       limit?: number;
+      unread?: boolean;
     } = {},
   ): Promise<{
     data: GetInboxResponse["data"]["inboxWithMetadata"];
@@ -106,6 +163,10 @@ class UserService {
 
     if (startAfter) {
       queryParams.startAfter = startAfter.toDate().toISOString();
+    }
+
+    if (options.unread) {
+      queryParams.unread = true;
     }
 
     const {
@@ -144,6 +205,67 @@ class UserService {
       lastDocTimestamp,
       hasMore: data.hasMore,
     };
+  };
+
+  public getInboxItems = async (options: {
+    userId: string;
+    startAt?: Timestamp;
+    endAt?: Timestamp;
+  }): Promise<InboxItem[]> => {
+    const { userId, startAt, endAt } = options;
+    let query = this.getInboxSubCollection(userId).orderBy(
+      "itemUpdatedAt",
+      "desc",
+    );
+
+    if (startAt) {
+      query = query.startAt(startAt);
+    }
+    if (endAt) {
+      query = query.endAt(endAt);
+    }
+
+    const snapshot = await query.get();
+
+    return snapshot.docs.map((doc) => doc.data());
+  };
+
+  public subscribeToNewInboxItems = (
+    options: {
+      userId: string;
+      endBefore: Timestamp;
+      unread?: boolean;
+      orderBy?: "itemUpdatedAt" | "updatedAt";
+    },
+    callback: (
+      data: {
+        item: InboxItem;
+        statuses: {
+          isAdded: boolean;
+          isRemoved: boolean;
+        };
+      }[],
+    ) => void,
+  ): UnsubscribeFunction => {
+    const { userId, endBefore, unread, orderBy = "itemUpdatedAt" } = options;
+    let query = this.getInboxSubCollection(userId)
+      .orderBy(orderBy, "desc")
+      .endBefore(endBefore);
+
+    if (unread) {
+      query = query.where("unread", "==", true);
+    }
+
+    return query.onSnapshot((snapshot) => {
+      const data = snapshot.docChanges().map((docChange) => ({
+        item: docChange.doc.data(),
+        statuses: {
+          isAdded: docChange.type === "added",
+          isRemoved: docChange.type === "removed",
+        },
+      }));
+      callback(data);
+    });
   };
 }
 

@@ -11,19 +11,28 @@ import { useSelector } from "react-redux";
 import { scroller, animateScroll } from "react-scroll";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
-import { EmptyTabComponent } from "@/pages/OldCommon/components/CommonDetailContainer";
-import { Loader } from "@/shared/components";
-import { ChatMessage } from "@/shared/components";
-import { ChatType, QueryParamKey } from "@/shared/constants";
+import { DiscussionMessageService } from "@/services";
+import {
+  ChatMessage,
+  InternalLinkData,
+  DMChatMessage,
+} from "@/shared/components";
+import {
+  ChatType,
+  QueryParamKey,
+  LOADER_APPEARANCE_DELAY,
+} from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
 import {
   checkIsUserDiscussionMessage,
   CommonFeedObjectUserUnique,
   CommonMember,
   DirectParent,
-  DiscussionMessage,
   User,
+  Circles,
+  DiscussionMessageWithParsedText,
 } from "@/shared/models";
+import { Loader } from "@/shared/ui-kit";
 import { formatDate } from "@/shared/utils";
 import { Separator } from "./components";
 import { checkIsLastSeenInPreviousDay } from "./utils";
@@ -36,12 +45,10 @@ export interface ChatContentRef {
 interface ChatContentInterface {
   type: ChatType;
   commonMember: CommonMember | null;
-  isCommonMemberFetched: boolean;
-  isJoiningPending?: boolean;
-  hasAccess: boolean;
-  isHidden: boolean;
+  governanceCircles?: Circles;
   chatWrapperId: string;
-  messages: Record<number, DiscussionMessage[]>;
+  messages: Record<number, DiscussionMessageWithParsedText[]>;
+  discussionMessages: DiscussionMessageWithParsedText[] | null;
   dateList: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   hasPermissionToHide: boolean;
@@ -52,6 +59,11 @@ interface ChatContentInterface {
   onMessageDelete?: (messageId: string) => void;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
+  isEmpty?: boolean;
+  isChatChannel: boolean;
+  fetchReplied: (messageId: string, endDate: Date) => Promise<void>;
 }
 
 const isToday = (someDate: Date) => {
@@ -70,12 +82,8 @@ const ChatContent: ForwardRefRenderFunction<
   {
     type,
     commonMember,
-    isCommonMemberFetched,
-    isJoiningPending,
-    hasAccess,
-    isHidden,
+    governanceCircles,
     chatWrapperId,
-    messages,
     dateList,
     lastSeenItem,
     hasPermissionToHide,
@@ -86,21 +94,24 @@ const ChatContent: ForwardRefRenderFunction<
     onMessageDelete,
     directParent,
     onUserClick,
+    onFeedItemClick,
+    onInternalLinkClick,
+    isEmpty,
+    messages,
+    isChatChannel,
+    fetchReplied,
+    discussionMessages,
   },
   chatContentRef,
 ) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const queryParams = useQueryParams();
+  const messageIdParam = queryParams[QueryParamKey.Message];
 
-  const [highlightedMessageId, setHighlightedMessageId] = useState(() => {
-    const sharedMessageIdQueryParam = queryParams[QueryParamKey.Message];
-    return (
-      (typeof sharedMessageIdQueryParam === "string" &&
-        sharedMessageIdQueryParam) ||
-      null
-    );
-  });
+  const [highlightedMessageId, setHighlightedMessageId] = useState(
+    () => (typeof messageIdParam === "string" && messageIdParam) || null,
+  );
 
   const [scrolledToMessage, setScrolledToMessage] = useState(false);
 
@@ -111,20 +122,6 @@ const ChatContent: ForwardRefRenderFunction<
       setTimeout(
         () =>
           animateScroll.scrollToBottom({
-            containerId: chatWrapperId,
-            smooth: true,
-            delay: 0,
-          }),
-        0,
-      ),
-    [chatWrapperId],
-  );
-
-  const scrollMore = useCallback(
-    (toY: number) =>
-      setTimeout(
-        () =>
-          animateScroll.scrollMore(toY, {
             containerId: chatWrapperId,
             smooth: true,
             delay: 0,
@@ -161,7 +158,25 @@ const ChatContent: ForwardRefRenderFunction<
     setScrolledToMessage(true);
   }, [chatWrapperId, highlightedMessageId, dateList.length, scrolledToMessage]);
 
-  function scrollToRepliedMessage(messageId: string) {
+  const [shouldScrollToElementId, setShouldScrollToElementId] =
+    useState<string>();
+
+  useEffect(() => {
+    if (
+      shouldScrollToElementId &&
+      discussionMessages?.find((item) => item.id === shouldScrollToElementId)
+    ) {
+      setHighlightedMessageId(shouldScrollToElementId);
+      setShouldScrollToElementId("");
+    }
+  }, [shouldScrollToElementId, discussionMessages]);
+
+  async function scrollToRepliedMessage(messageId: string, endDate: Date) {
+    await fetchReplied(messageId, endDate);
+    setShouldScrollToElementId(messageId);
+  }
+
+  function scrollToRepliedMessageDMChat(messageId: string) {
     scroller.scrollTo(messageId, {
       containerId: chatWrapperId,
       delay: 0,
@@ -172,6 +187,25 @@ const ChatContent: ForwardRefRenderFunction<
     setHighlightedMessageId(messageId);
   }
 
+  useEffect(() => {
+    if (typeof messageIdParam === "string") {
+      (async () => {
+        try {
+          const messageData =
+            await DiscussionMessageService.getDiscussionMessageById(
+              messageIdParam,
+            );
+          scrollToRepliedMessage(
+            messageData.id,
+            messageData.createdAt.toDate(),
+          );
+        } catch (err) {
+          setShouldScrollToElementId("");
+        }
+      })();
+    }
+  }, [messageIdParam]);
+
   useImperativeHandle(
     chatContentRef,
     () => ({
@@ -180,27 +214,10 @@ const ChatContent: ForwardRefRenderFunction<
     [scrollToContainerBottom],
   );
 
-  if (!hasAccess || isHidden) {
-    return (
-      <EmptyTabComponent
-        currentTab="messages"
-        message={
-          isHidden
-            ? "This discussion was hidden due to inappropriate content"
-            : "This content is private and visible only to members of the common in specific circles."
-        }
-        title=""
-        isCommonMember={Boolean(commonMember)}
-        isCommonMemberFetched={isCommonMemberFetched}
-        isJoiningPending={isJoiningPending}
-      />
-    );
-  }
-
   if (isLoading) {
     return (
       <div className={styles.loaderContainer}>
-        <Loader />
+        <Loader delay={LOADER_APPEARANCE_DELAY} />
       </div>
     );
   }
@@ -236,7 +253,26 @@ const ChatContent: ForwardRefRenderFunction<
               const isMyMessageNext =
                 checkIsUserDiscussionMessage(nextMessage) &&
                 nextMessage.ownerId === userId;
-              const messageEl = (
+              const messageEl = isChatChannel ? (
+                <DMChatMessage
+                  key={message.id}
+                  user={user}
+                  discussionMessage={message}
+                  chatType={type}
+                  scrollToRepliedMessage={scrollToRepliedMessageDMChat}
+                  highlighted={message.id === highlightedMessageId}
+                  hasPermissionToHide={hasPermissionToHide}
+                  users={users}
+                  feedItemId={feedItemId}
+                  commonMember={commonMember}
+                  governanceCircles={governanceCircles}
+                  onMessageDelete={onMessageDelete}
+                  directParent={directParent}
+                  onUserClick={onUserClick}
+                  onFeedItemClick={onFeedItemClick}
+                  onInternalLinkClick={onInternalLinkClick}
+                />
+              ) : (
                 <ChatMessage
                   key={message.id}
                   user={user}
@@ -245,23 +281,15 @@ const ChatContent: ForwardRefRenderFunction<
                   scrollToRepliedMessage={scrollToRepliedMessage}
                   highlighted={message.id === highlightedMessageId}
                   hasPermissionToHide={hasPermissionToHide}
-                  onMessageDropdownOpen={(isOpen, messageTopPosition = 0) => {
-                    const dropdownHeight = 240;
-                    const visibleDropdownHeight =
-                      window.innerHeight - messageTopPosition;
-                    const hasEnoughSpaceForMenu =
-                      visibleDropdownHeight >= dropdownHeight;
-
-                    if (isOpen && !hasEnoughSpaceForMenu) {
-                      scrollMore(dropdownHeight - visibleDropdownHeight + 20);
-                    }
-                  }}
                   users={users}
                   feedItemId={feedItemId}
                   commonMember={commonMember}
+                  governanceCircles={governanceCircles}
                   onMessageDelete={onMessageDelete}
                   directParent={directParent}
                   onUserClick={onUserClick}
+                  onFeedItemClick={onFeedItemClick}
+                  onInternalLinkClick={onInternalLinkClick}
                 />
               );
 
@@ -283,7 +311,7 @@ const ChatContent: ForwardRefRenderFunction<
           </ul>
         );
       })}
-      {!dateList.length && !isLoading && (
+      {!isLoading && isEmpty && (
         <p className={styles.noMessagesText}>
           There are no messages here yet.
           <br />

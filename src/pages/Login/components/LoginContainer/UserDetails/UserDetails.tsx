@@ -16,6 +16,7 @@ import {
   ANONYMOUS_USER_FIRST_NAME,
   ANONYMOUS_USER_LAST_NAME,
 } from "@/shared/constants";
+import { useImageSizeCheck } from "@/shared/hooks";
 import { countryList } from "../../../../../shared/assets/countries";
 import {
   Button,
@@ -112,6 +113,7 @@ const UserDetails: ForwardRefRenderFunction<
     onSubmitting,
   } = props;
   const formRef = useRef<FormikProps<FormValues>>(null);
+  const { checkImageSize } = useImageSizeCheck();
   const [loading, setLoading] = useState(false);
   const [uploadedPhoto, setUploadedPhoto] = useState("");
   const inputFile: any = useRef(null);
@@ -140,6 +142,10 @@ const UserDetails: ForwardRefRenderFunction<
     const file = files && files[0];
 
     if (!file) {
+      return;
+    }
+
+    if (!checkImageSize(file.name, file.size)) {
       return;
     }
 

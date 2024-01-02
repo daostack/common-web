@@ -18,13 +18,13 @@
     font-weight: bold;
     line-height: 1.8rem;
     letter-spacing: normal;
-    color: $secondary-blue;
+    color: var(--primary-text);
   }
 
   .members__common-name {
     font-size: $small;
     font-weight: bold;
-    color: $purple-2;
+    color: var(--primary-text);
     margin-top: 0.5rem;
   }
 }
@@ -126,8 +126,8 @@
       justify-content: space-between;
       align-items: center;
       padding: 1rem;
-      background-color: $c-shades-white;
-      box-shadow: 0 0.1875rem 0.5rem $box-shadow-color;
+      background-color: var(--primary-background);
+      box-shadow: 0 0.1875rem 0.5rem var(--drop-shadow);
       margin-bottom: 1rem;
 
       .members__section__common-member-details {
@@ -145,7 +145,7 @@
           font-style: normal;
           font-weight: 400;
           font-size: $xxsmall;
-          color: var(--secondary-fill);
+          color: var(--secondary-text);
           margin-top: 0.1rem;
         }
 
@@ -155,7 +155,7 @@
           font-style: normal;
           font-weight: 700;
           font-size: $xsmall;
-          color: $secondary-blue;
+          color: var(--primary-text);
         }
       }
 

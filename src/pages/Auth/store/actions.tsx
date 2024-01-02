@@ -1,3 +1,4 @@
+import { User as FirebaseUser } from "firebase/auth";
 import { createAsyncAction, createStandardAction } from "typesafe-actions";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 import { AuthProvider } from "../../../shared/constants";
@@ -14,6 +15,20 @@ export const socialLogin = createAsyncAction(
 )<
   PayloadWithOptionalCallback<
     { provider: AuthProvider; authCode: string },
+    { user: User; isNewUser: boolean },
+    Error
+  >,
+  User,
+  Error
+>();
+
+export const loginWithFirebaseUser = createAsyncAction(
+  AuthActionTypes.LOGIN_WITH_FIREBASE_USER,
+  AuthActionTypes.LOGIN_WITH_FIREBASE_USER_SUCCESS,
+  AuthActionTypes.LOGIN_WITH_FIREBASE_USER_FAILURE,
+)<
+  PayloadWithOptionalCallback<
+    { firebaseUser: firebase.User | FirebaseUser | null; authCode: string },
     { user: User; isNewUser: boolean },
     Error
   >,
@@ -79,7 +94,11 @@ export const updateUserDetails = createAsyncAction(
   AuthActionTypes.UPDATE_USER_DATA,
   AuthActionTypes.UPDATE_USER_DATA_SUCCESS,
   AuthActionTypes.UPDATE_USER_DATA_FAILURE,
-)<{ user: User; callback: (error: Error | null) => void }, User, Error>();
+)<
+  { user: User; callback: (error: Error | null, user?: User) => void },
+  User,
+  Error
+>();
 
 export const setLoginModalState = createStandardAction(
   AuthActionTypes.SET_LOGIN_MODAL_STATE,

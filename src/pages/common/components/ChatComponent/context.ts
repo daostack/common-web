@@ -9,12 +9,13 @@ import {
 export interface ChatItem {
   feedItemId: string;
   proposal?: Proposal;
-  discussion: Discussion;
+  discussion?: Discussion;
   chatChannel?: ChatChannel;
-  circleVisibility: string[];
+  circleVisibility?: string[];
   lastSeenItem?: CommonFeedObjectUserUnique["lastSeen"];
   lastSeenAt?: CommonFeedObjectUserUnique["lastSeenAt"];
   seenOnce?: boolean;
+  hasUnseenMention?: CommonFeedObjectUserUnique["hasUnseenMention"];
 }
 
 export interface ChatContextValue {

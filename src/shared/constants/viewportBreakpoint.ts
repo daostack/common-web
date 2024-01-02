@@ -3,6 +3,7 @@ export enum ViewportBreakpoint {
   Desktop = 1560,
   Laptop = 1152,
   Tablet = 768,
+  BigPhone = 450,
   Phone = 390,
 }
 

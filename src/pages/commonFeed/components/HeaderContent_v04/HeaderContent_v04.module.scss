@@ -12,6 +12,13 @@
   }
 }
 
+.actionsContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
 .openSidenavButton {
   display: none;
 
@@ -43,6 +50,13 @@
   @include tablet {
     padding-left: 0;
     padding-right: 0.5rem;
+
+    &:hover {
+      .commonName {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
   }
 }
 
@@ -50,8 +64,6 @@
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.625rem;
-  transform: rotate(180deg);
-  color: $c-neutrals-600;
 }
 
 .image {
@@ -76,6 +88,12 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.commonMainInfoWrapper {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
 }
 
 .commonName {

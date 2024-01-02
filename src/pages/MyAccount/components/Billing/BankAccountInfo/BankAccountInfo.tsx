@@ -1,15 +1,11 @@
 import React, { FC } from "react";
 import { useSelector } from "react-redux";
 import { BANKS_OPTIONS } from "@/shared/assets/banks";
-import {
-  Modal,
-  Button,
-  ButtonVariant,
-  DeletePrompt,
-} from "@/shared/components";
+import { Modal, DeletePrompt } from "@/shared/components";
 import { ScreenSize } from "@/shared/constants";
 import { BankAccountDetails } from "@/shared/models";
 import { getScreenSize } from "@/shared/store/selectors";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import "./index.scss";
 
 interface BankAccountInfoProps {
@@ -39,10 +35,8 @@ const BankAccountInfo: FC<BankAccountInfoProps> = (props) => {
   const detailsButtons = (
     <div className="billing-bank-account-info__details-buttons-wrapper">
       <Button
-        className="billing-bank-account-info__details-button edit-details"
-        variant={ButtonVariant.Secondary}
+        variant={ButtonVariant.OutlineDarkPink}
         onClick={onBankAccountChange}
-        shouldUseFullWidth={isMobileView}
       >
         Edit Details
       </Button>

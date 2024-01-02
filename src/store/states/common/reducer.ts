@@ -2,10 +2,19 @@ import produce from "immer";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { ActionType, createReducer } from "typesafe-actions";
 import { InboxItemType } from "@/shared/constants";
-import { FeedItemFollowLayoutItem } from "@/shared/interfaces";
+import {
+  deserializeFeedItemFollowLayoutItem,
+  FeedItemFollowLayoutItem,
+} from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
+import { convertToTimestamp } from "@/shared/utils";
 import * as actions from "./actions";
-import { CommonState, FeedItems, PinnedFeedItems } from "./types";
+import {
+  CommonSearchState,
+  CommonState,
+  FeedItems,
+  PinnedFeedItems,
+} from "./types";
 
 type Action = ActionType<typeof actions>;
 
@@ -15,6 +24,7 @@ const initialFeedItems: FeedItems = {
   hasMore: false,
   firstDocTimestamp: null,
   lastDocTimestamp: null,
+  batchNumber: 0,
 };
 
 const initialPinnedFeedItems: PinnedFeedItems = {
@@ -22,9 +32,17 @@ const initialPinnedFeedItems: PinnedFeedItems = {
   loading: false,
 };
 
+const initialSearchState: CommonSearchState = {
+  isSearching: false,
+  feedItems: null,
+  pinnedFeedItems: null,
+  searchValue: "",
+};
+
 const initialState: CommonState = {
   feedItems: { ...initialFeedItems },
   pinnedFeedItems: { ...initialPinnedFeedItems },
+  searchState: { ...initialSearchState },
   sharedFeedItemId: null,
   sharedFeedItem: null,
   commonAction: null,
@@ -41,6 +59,13 @@ const initialState: CommonState = {
   governance: null,
   recentStreamId: "",
   recentAssignedCircle: null,
+};
+
+const sortFeedItems = (data: FeedItemFollowLayoutItem[]): void => {
+  data.sort(
+    (prevItem, nextItem) =>
+      nextItem.feedItem.updatedAt.seconds - prevItem.feedItem.updatedAt.seconds,
+  );
 };
 
 const updateFeedItemInList = (
@@ -76,10 +101,17 @@ const updateFeedItemInList = (
         ...updatedItem,
       },
     };
+    sortFeedItems(nextData);
   }
+
+  const firstDocTimestamp = nextData[0]?.feedItem.updatedAt || null;
+  const lastDocTimestamp =
+    nextData[nextData.length - 1]?.feedItem.updatedAt || null;
 
   state.feedItems = {
     ...state.feedItems,
+    firstDocTimestamp,
+    lastDocTimestamp,
     data: nextData,
   };
 };
@@ -95,8 +127,6 @@ const addNewFeedItems = (
   }[],
   shouldSortNewItems = false,
 ) => {
-  let firstDocTimestamp = state.feedItems.firstDocTimestamp;
-
   const data = payload.reduceRight((acc, { commonFeedItem, statuses }) => {
     const nextData = [...acc];
     const itemIndex = nextData.findIndex(
@@ -117,7 +147,6 @@ const addNewFeedItems = (
       itemId: commonFeedItem.id,
       feedItem: commonFeedItem,
     };
-    firstDocTimestamp = commonFeedItem.updatedAt;
 
     if (itemIndex >= 0) {
       nextData[itemIndex] = finalItem;
@@ -139,11 +168,16 @@ const addNewFeedItems = (
 
     return nextData;
   }, state.feedItems.data || []);
+  sortFeedItems(data);
+
+  const firstDocTimestamp = data[0]?.feedItem.updatedAt || null;
+  const lastDocTimestamp = data[data.length - 1]?.feedItem.updatedAt || null;
 
   state.feedItems = {
     ...state.feedItems,
     data,
     firstDocTimestamp,
+    lastDocTimestamp,
   };
 };
 
@@ -411,6 +445,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
         data:
           payloadData && (nextState.feedItems.data || []).concat(payloadData),
         loading: false,
+        batchNumber: nextState.feedItems.batchNumber + 1,
       };
     }),
   )
@@ -418,6 +453,7 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       nextState.feedItems = {
         ...nextState.feedItems,
+        data: nextState.feedItems.data || [],
         loading: false,
         hasMore: false,
         lastDocTimestamp: null,
@@ -444,8 +480,99 @@ export const reducer = createReducer<CommonState, Action>(initialState)
     produce(state, (nextState) => {
       nextState.pinnedFeedItems = {
         ...nextState.pinnedFeedItems,
+        data: nextState.pinnedFeedItems.data || [],
         loading: false,
       };
+    }),
+  )
+  .handleAction(actions.setSearchState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.searchState = payload;
+    }),
+  )
+  .handleAction(actions.resetSearchState, (state) =>
+    produce(state, (nextState) => {
+      nextState.searchState = { ...initialSearchState };
+    }),
+  )
+  .handleAction(actions.updateSearchFeedItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      if (!nextState.searchState.feedItems) {
+        nextState.searchState.feedItems = [];
+      }
+
+      payload.forEach((feedItemEntityId) => {
+        const feedItem = nextState.feedItems.data?.find(
+          (item) =>
+            item.feedItem.data.id === feedItemEntityId ||
+            item.feedItem.data.discussionId === feedItemEntityId,
+        );
+
+        if (feedItem) {
+          nextState.searchState.feedItems!.push(feedItem);
+        }
+      });
+    }),
+  )
+  .handleAction(actions.setIsSearchingFeedItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.searchState.isSearching = payload;
+    }),
+  )
+  .handleAction(actions.setFeedState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const {
+        data: { feedItems, pinnedFeedItems, sharedFeedItem },
+        sharedFeedItemId,
+      } = payload;
+      nextState.feedItems = {
+        ...feedItems,
+        data:
+          feedItems.data &&
+          feedItems.data.map(deserializeFeedItemFollowLayoutItem),
+        firstDocTimestamp:
+          (feedItems.firstDocTimestamp &&
+            convertToTimestamp(feedItems.firstDocTimestamp)) ||
+          null,
+        lastDocTimestamp:
+          (feedItems.lastDocTimestamp &&
+            convertToTimestamp(feedItems.lastDocTimestamp)) ||
+          null,
+        hasMore: true,
+      };
+      nextState.pinnedFeedItems = {
+        ...pinnedFeedItems,
+        data:
+          pinnedFeedItems.data &&
+          pinnedFeedItems.data.map(deserializeFeedItemFollowLayoutItem),
+      };
+
+      if (sharedFeedItem && sharedFeedItem.itemId === sharedFeedItemId) {
+        return;
+      }
+      if (
+        sharedFeedItem &&
+        !pinnedFeedItems.data?.some(
+          (item) => item.itemId === sharedFeedItem.itemId,
+        ) &&
+        !feedItems.data?.some((item) => item.itemId === sharedFeedItem.itemId)
+      ) {
+        const data = [sharedFeedItem, ...(feedItems.data || [])];
+        sortFeedItems(data);
+        nextState.feedItems.data = data;
+      }
+      if (sharedFeedItemId) {
+        nextState.feedItems.data =
+          nextState.feedItems.data &&
+          nextState.feedItems.data.filter(
+            (item) => item.itemId !== sharedFeedItemId,
+          );
+        nextState.pinnedFeedItems.data =
+          nextState.pinnedFeedItems.data &&
+          nextState.pinnedFeedItems.data.filter(
+            (item) => item.itemId !== sharedFeedItemId,
+          );
+      }
     }),
   )
   .handleAction(actions.addNewFeedItems, (state, { payload }) =>

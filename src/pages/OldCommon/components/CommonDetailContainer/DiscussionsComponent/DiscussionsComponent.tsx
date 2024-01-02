@@ -34,7 +34,7 @@ export default function DiscussionsComponent({
     hasPermission({
       commonMember,
       governance,
-      key: GovernanceActions.CREATE_DISCUSSION,
+      action: GovernanceActions.CREATE_DISCUSSION,
     });
 
   return (
@@ -55,6 +55,7 @@ export default function DiscussionsComponent({
               <DiscussionItemComponent
                 key={d.id}
                 discussion={d}
+                commonMember={commonMember}
                 loadDiscussionDetail={loadDiscussionDetail}
                 governance={governance}
               />

@@ -6,6 +6,7 @@ import {
   LinksFormItem,
   TextFieldFormItem,
   UploadFilesFormItem,
+  RolesFormItem,
 } from "../types";
 
 type Schema = Yup.Schema<unknown>;
@@ -82,6 +83,40 @@ const getValidationSchemaForLinksItem = ({
   );
 };
 
+const getValidationSchemaForRolesItem = ({
+  validation,
+}: Pick<RolesFormItem, "validation">): Schema => {
+  if (!validation) {
+    return Yup.array();
+  }
+
+  return Yup.array().of(
+    Yup.object().shape({
+      circleName: Yup.string().required(
+        validation.required?.message || "Role name is required",
+      ),
+    }),
+  );
+};
+
+const getValidationSchemaForNotionIntegrationItem = (): Schema => {
+  return Yup.object().shape({
+    isEnabled: Yup.boolean(),
+    token: Yup.string().when("isEnabled", (isEnabled: boolean) => {
+      if (isEnabled) {
+        return Yup.string().required(
+          "Please enter Notion's internal integration secret",
+        );
+      }
+    }),
+    databaseId: Yup.string().when("isEnabled", (isEnabled: boolean) => {
+      if (isEnabled) {
+        return Yup.string().required("Please enter Notion database ID");
+      }
+    }),
+  });
+};
+
 export const generateValidationSchema = (
   items: CreationFormItem[],
 ): Yup.ObjectSchema => {
@@ -96,6 +131,12 @@ export const generateValidationSchema = (
     }
     if (item.type === CreationFormItemType.Links) {
       schema = getValidationSchemaForLinksItem(item);
+    }
+    if (item.type === CreationFormItemType.Roles) {
+      schema = getValidationSchemaForRolesItem(item);
+    }
+    if (item.type === CreationFormItemType.NotionIntegration) {
+      schema = getValidationSchemaForNotionIntegrationItem();
     }
 
     return schema

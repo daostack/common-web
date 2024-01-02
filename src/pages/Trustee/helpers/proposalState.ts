@@ -9,6 +9,12 @@ export const checkPendingApprovalProposal = (
   proposal.data.tracker.status ===
   FundingAllocationStatus.PENDING_INVOICE_APPROVAL;
 
+export const checkPendingReapprovalProposal = (
+  proposal: FundsAllocation,
+): boolean =>
+  proposal.data.tracker.status ===
+  FundingAllocationStatus.PENDING_SELLER_APPROVAL;
+
 export const checkDeclinedProposal = (proposal: FundsAllocation): boolean =>
   proposal.data.legal.payoutDocsRejectionReason !== null &&
   proposal.data.tracker.status ===

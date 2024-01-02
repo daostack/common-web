@@ -1,15 +1,17 @@
+@import "../../constants";
 @import "../../styles/sizes";
 
-.topNavigation {
-  z-index: 2;
-}
-
 .container {
-  padding-top: 3rem;
+  flex: 1;
+  max-width: 49.5rem;
+  padding-top: var(--header-h);
   padding-bottom: 3rem;
+  border-left: 0.0625rem solid var(--gentle-stroke);
+  border-right: 0.0625rem solid var(--gentle-stroke);
 
   @include tablet {
-    padding-top: 1rem;
+    padding-top: 0;
     padding-bottom: 1rem;
+    border: 0;
   }
 }

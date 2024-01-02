@@ -1,0 +1,32 @@
+@import "../../../../../constants.scss";
+
+.integrationGuidanceText {
+  color: $c-gray-60;
+  font-family: PoppinsSans, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.integrationGuidanceSteps {
+  padding-left: 1.25rem;
+}
+
+.integrationGuidanceStep {
+  margin-bottom: 1rem;
+}
+
+.link {
+  text-decoration: none;
+  color: var(--primary-fill);
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}
+
+.textFieldDisabled {
+  &:disabled {
+    background-color: var(--gentle-stroke);
+  }
+}
