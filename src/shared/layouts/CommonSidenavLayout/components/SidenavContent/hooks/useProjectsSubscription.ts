@@ -79,7 +79,11 @@ export const useProjectsSubscription = (data: Data) => {
 
     const unsubscribe = CommonService.subscribeToSubCommons(
       activeItemId,
-      (data) => {
+      (data, fromCache) => {
+        if (fromCache) {
+          return;
+        }
+
         const commons = data.reduce<Common[]>((acc, { common, isRemoved }) => {
           if (isRemoved) {
             CommonEventEmitter.emit(CommonEvent.CommonDeleted, common.id);
