@@ -53,10 +53,14 @@ const updateCommonOrProject = (
   );
 
   if (projectItemIndex > -1) {
-    state.projects[projectItemIndex] = {
-      ...state.projects[projectItemIndex],
-      ...payload,
-    };
+    if (removeIfExists) {
+      state.projects.splice(projectItemIndex, 1);
+    } else {
+      state.projects[projectItemIndex] = {
+        ...state.projects[projectItemIndex],
+        ...payload,
+      };
+    }
     return true;
   }
 

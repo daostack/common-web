@@ -444,7 +444,10 @@ class CommonService {
 
   public subscribeToSubCommons = (
     parentCommonId: string,
-    callback: (data: { common: Common; isRemoved: boolean }[]) => void,
+    callback: (
+      data: { common: Common; isRemoved: boolean }[],
+      fromCache: boolean,
+    ) => void,
   ): UnsubscribeFunction => {
     if (!parentCommonId) {
       return emptyFunction;
@@ -462,7 +465,7 @@ class CommonService {
         common: docChange.doc.data(),
         isRemoved: docChange.type === "removed",
       }));
-      callback(data);
+      callback(data, snapshot.metadata.fromCache);
     });
   };
 
