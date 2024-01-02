@@ -206,7 +206,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
   return (
     <div ref={inputContainerRef} className={styles.container}>
-      <Slate editor={editor} value={value} onChange={onChangeSlate}>
+      <Slate editor={editor} value={value as any} onChange={onChangeSlate}>
         <Editor
           className={className}
           id={id}
@@ -220,6 +220,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           elementStyles={elementStyles}
         />
         <EmojiPicker
+          isRtl
           isMessageSent={isMessageSent}
           onToggleIsMessageSent={onToggleIsMessageSent}
           containerClassName={emojiContainerClassName}
