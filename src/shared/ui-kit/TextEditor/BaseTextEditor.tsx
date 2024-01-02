@@ -237,9 +237,9 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
           if (selection && Range.isCollapsed(selection)) {
             const [start] = Range.edges(selection);
-            const before = EditorSlate.before(editor, start);
+            const before = start && EditorSlate.before(editor, start);
             const beforeRange =
-              before && EditorSlate.range(editor, before, start);
+              before && start && EditorSlate.range(editor, before, start);
             const beforeText =
               beforeRange && EditorSlate.string(editor, beforeRange);
 
