@@ -64,6 +64,11 @@ export interface EmojiElement extends BaseElement<CustomText> {
   emoji: Skin;
 }
 
+export interface CheckboxItemElement extends BaseElement<CustomText> {
+  type: ElementType.CheckboxItem;
+  checked: boolean;
+}
+
 export interface TextEditorStyles {
   label?: string;
   hint?: string;
@@ -84,4 +89,5 @@ export type CustomElement =
   | BulletedListElement
   | ListItemElement
   | MentionElement
-  | EmojiElement;
+  | EmojiElement
+  | CheckboxItemElement;

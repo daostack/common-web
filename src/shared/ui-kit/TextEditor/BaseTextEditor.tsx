@@ -30,7 +30,7 @@ import {
   EmojiPicker,
 } from "./components";
 import { TextEditorSize } from "./constants";
-import { withInlines, withMentions, withEmojis } from "./hofs";
+import { withInlines, withMentions, withEmojis, withChecklists } from "./hofs";
 import { TextEditorValue, EditorElementStyles } from "./types";
 import {
   parseStringToTextEditorValue,
@@ -102,11 +102,13 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   } = props;
   const editor = useMemo(
     () =>
-      withEmojis(
-        withMentions(
-          withInlines(withHistory(withReact(createEditor())), {
-            shouldInsertURLAsLink: false,
-          }),
+      withChecklists(
+        withEmojis(
+          withMentions(
+            withInlines(withHistory(withReact(createEditor())), {
+              shouldInsertURLAsLink: false,
+            }),
+          ),
         ),
       ),
     [],

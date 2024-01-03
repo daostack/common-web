@@ -1,0 +1,29 @@
+@import "../../../../../../../constants";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  & + & {
+    margin-top: 0;
+  }
+}
+
+.checkboxWrapper {
+  margin-right: 0.75em;
+}
+
+.checkboxText {
+  flex: 1;
+  opacity: 1;
+  text-decoration: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+.checkboxTextChecked {
+  opacity: 0.666;
+  text-decoration: line-through;
+}
