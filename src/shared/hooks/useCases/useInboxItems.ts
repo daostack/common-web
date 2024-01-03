@@ -10,7 +10,6 @@ import {
   UserService,
 } from "@/services";
 import { FirestoreDataSource, InboxItemType } from "@/shared/constants";
-import { useIsMounted } from "@/shared/hooks";
 import {
   ChatChannelLayoutItem,
   FeedLayoutItemWithFollowData,
@@ -193,7 +192,6 @@ export const useInboxItems = (
   options?: { unread?: boolean },
 ): Return => {
   const dispatch = useDispatch();
-  const isMounted = useIsMounted();
   const [newItemsBatches, setNewItemsBatches] = useState<ItemsBatch[]>([]);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<Timestamp | null>(null);
   const inboxItems = useSelector(selectInboxItems);
@@ -214,6 +212,7 @@ export const useInboxItems = (
   };
 
   const refetch = () => {
+    setNewItemsBatches([]);
     dispatch(inboxActions.resetInboxItems());
     fetch();
   };
@@ -235,6 +234,8 @@ export const useInboxItems = (
   };
 
   useEffect(() => {
+    let isMounted = true;
+
     (async () => {
       try {
         const {
@@ -253,7 +254,7 @@ export const useInboxItems = (
           endAt,
         });
 
-        if (!isMounted()) {
+        if (!isMounted || inboxItemsRef.current.unread) {
           return;
         }
 
@@ -276,6 +277,10 @@ export const useInboxItems = (
         Logger.error(err);
       }
     })();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -359,6 +364,8 @@ export const useInboxItems = (
       return;
     }
 
+    let isMounted = true;
+
     (async () => {
       try {
         const finalData = await addMetadataToItemsBatch(
@@ -367,7 +374,7 @@ export const useInboxItems = (
           feedItemIdsForNotListening,
         );
 
-        if (finalData.length > 0) {
+        if (finalData.length > 0 && isMounted) {
           dispatch(inboxActions.addNewInboxItems(finalData));
         }
       } catch (error) {
@@ -376,6 +383,10 @@ export const useInboxItems = (
         setNewItemsBatches((currentItems) => currentItems.slice(1));
       }
     })();
+
+    return () => {
+      isMounted = false;
+    };
   }, [lastBatch]);
 
   return {
