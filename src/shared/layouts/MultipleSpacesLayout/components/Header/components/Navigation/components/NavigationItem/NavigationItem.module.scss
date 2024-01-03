@@ -24,7 +24,7 @@
   }
 }
 .itemActive {
-  --item-color: #{$c-pink-mention};
+  --item-color: var(--primary-fill);
 
   &:hover {
     --item-color: #{$c-pink-next-dark};

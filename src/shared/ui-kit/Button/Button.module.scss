@@ -162,7 +162,7 @@
 }
 
 .buttonLightPinkVariant {
-  --btn-color: #{$c-pink-mention};
+  --btn-color: var(--primary-fill);
   --btn-bg-color: #{$c-pink-active-feed-cards-light};
   --btn-border-color: none;
   --btn-border: 0;
@@ -230,7 +230,7 @@
   --btn-border: 0.0625rem solid var(--btn-border-color);
 
   &:hover {
-    --btn-bg-color: var(--secondary-hover-fill);
+    --btn-bg-color: var(--hover-fill);
   }
 
   &:active {

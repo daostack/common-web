@@ -91,7 +91,7 @@
 }
 
 .messageTextCurrentUser {
-  background-color: $c-pink-active-feed-cards;
+  background-color: var(--secondary-fill);
   margin-left: 2.8rem;
   margin-right: unset;
 
@@ -117,7 +117,6 @@
 .messageName {
   font-size: $xsmall;
   font-weight: 600;
-  color: var(--primary-text);
   margin-right: 2.5rem;
   margin-left: 0.75rem;
   margin-bottom: 0.5rem;
@@ -145,7 +144,7 @@
 
 .mentionText {
   cursor: pointer;
-  color: $c-pink-mention;
+  color: var(--primary-fill);
 }
 
 .mentionTextCurrentUser {
@@ -154,7 +153,7 @@
 }
 
 .systemMessageCommonLink {
-  color: $c-pink-mention;
+  color: var(--primary-fill);
   text-decoration: none;
   cursor: pointer;
 
@@ -167,7 +166,7 @@
   display: flex;
   cursor: pointer;
   background-color: var(--quaternary-fill);
-  color: var(--primary-text);
+  color: var(--tertiary-text);
   border-radius: 0.625rem;
   padding: 0.5rem 0 0.625rem;
   margin: 0.25rem;
@@ -175,7 +174,7 @@
 }
 
 .replyMessageContainerCurrentUser {
-  background-color: var(--secondary-fill);
+  background-color: var(--quaternary-fill);
 }
 
 .replyMessageImage {
@@ -196,10 +195,6 @@
   margin-bottom: 0.125rem;
 }
 
-.replyMessageNameCurrentUser {
-  color: var(--primary-text);
-}
-
 .replyMessageNameWithImage {
   margin-left: 0.5rem;
 }
@@ -214,10 +209,6 @@
   margin-bottom: 0.4rem;
   line-height: 0.8rem;
   max-height: 1.6rem;
-}
-
-.replyMessageContentCurrentUser {
-  color: var(--primary-text);
 }
 
 .replyMessageContentWithImage {
@@ -249,7 +240,7 @@
 .highlightedOwn {
   animation: highlightedOwn 10s forwards;
   border: 0.094rem solid $dark-yellow;
-  background-color: $c-pink-mention;
+  background-color: var(--primary-fill);
 }
 
 @keyframes highlighted {

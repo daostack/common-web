@@ -3,7 +3,7 @@
 .container {
   display: flex;
   align-items: center;
-  color: $c-pink-mention;
+  color: var(--primary-fill);
 }
 
 .image {

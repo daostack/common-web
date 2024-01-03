@@ -225,7 +225,6 @@ export default function ChatMessage({
         <div className={styles.replyMessagesWrapper}>
           <div
             className={classNames(styles.messageName, styles.replyMessageName, {
-              [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
               [styles.replyMessageNameWithImage]: image,
             })}
           >
@@ -238,8 +237,6 @@ export default function ChatMessage({
               styles.messageContent,
               styles.replyMessageContent,
               {
-                [styles.replyMessageContentCurrentUser]:
-                  !isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
                 [styles.replyMessageContentWithFile]: file,
                 [styles.messageContentRtl]: isRtlWithNoMentions(

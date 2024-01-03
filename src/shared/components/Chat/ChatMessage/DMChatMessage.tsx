@@ -270,7 +270,6 @@ export default function DMChatMessage({
         <div className={styles.replyMessagesWrapper}>
           <div
             className={classNames(styles.messageName, styles.replyMessageName, {
-              [styles.replyMessageNameCurrentUser]: !isNotCurrentUserMessage,
               [styles.replyMessageNameWithImage]: image,
             })}
           >
@@ -283,8 +282,6 @@ export default function DMChatMessage({
               styles.messageContent,
               styles.replyMessageContent,
               {
-                [styles.replyMessageContentCurrentUser]:
-                  !isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
                 [styles.replyMessageContentWithFile]: file,
                 [styles.messageContentRtl]: isRtlWithNoMentions(

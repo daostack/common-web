@@ -26,11 +26,11 @@
 
   &:hover {
     cursor: pointer;
-    background-color: var(--secondary-hover-fill);
+    background-color: var(--hover-fill);
   }
 
   &:focus {
-    background-color: var(--secondary-hover-fill);
+    background-color: var(--hover-fill);
     outline: none;
   }
 }

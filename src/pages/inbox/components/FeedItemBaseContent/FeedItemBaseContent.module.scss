@@ -17,7 +17,7 @@
       background-color: var(--hover-fill);
     }
     .lastMessageActive {
-      background-color: $c-pink-active-feed-cards;
+      background-color: var(--quinary-fill);
     }
   }
 
@@ -32,7 +32,7 @@
 
 .containerActive {
   margin: 0 -1.4375rem 0 -1.5rem;
-  background-color: $c-pink-active-feed-cards;
+  background-color: var(--quinary-fill);
 
   &:hover {
     background-color: $c-pink-active-feed-cards;
@@ -158,7 +158,7 @@
 
 .lastMessageActive {
   color: $c-neutrals-200;
-  background-color: $c-pink-active-feed-cards;
+  background-color: var(--quinary-fill);
 }
 
 .mentionText {
