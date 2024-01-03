@@ -85,7 +85,7 @@ const TextEditor: FC<TextEditorProps> = (props) => {
   }, [editorRef, editor]);
 
   return (
-    <Slate editor={editor} initialValue={value} onChange={onChange}>
+    <Slate editor={editor} value={value} onChange={onChange}>
       <div className={classNames(styles.container, className)}>
         <Header
           label={label}
