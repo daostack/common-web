@@ -20,6 +20,7 @@ export interface FeedCardHeaderProps {
   userId?: string;
   directParent?: DirectParent | null;
   onUserSelect?: () => void;
+  isHome?: boolean;
 }
 
 export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
@@ -35,6 +36,7 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
     userId,
     directParent,
     onUserSelect,
+    isHome,
   } = props;
   const {
     isShowing: isShowingUserProfile,
@@ -79,7 +81,7 @@ export const FeedCardHeader: React.FC<FeedCardHeaderProps> = (props) => {
             </p>
           )}
         </div>
-        {!isMobileVersion && menuItems.length > 0 && (
+        {!isHome && !isMobileVersion && menuItems.length > 0 && (
           <DesktopMenu
             triggerEl={<MenuButton className={styles.threeDotMenu} />}
             items={menuItems}

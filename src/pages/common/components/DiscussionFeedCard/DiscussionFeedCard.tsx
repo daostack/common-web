@@ -276,31 +276,30 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
 
       return (
         <>
-          {!isHome && (
-            <FeedCardHeader
-              avatar={discussionCreator?.photoURL}
-              title={getUserName(discussionCreator)}
-              createdAt={
-                <>
-                  Created:{" "}
-                  <FeedCountdown
-                    isCountdownFinished
-                    expirationTimestamp={item.createdAt}
-                  />
-                </>
-              }
-              type="Discussion"
-              circleVisibility={circleVisibility}
-              menuItems={menuItems}
-              isMobileVersion={isMobileVersion}
-              commonId={commonId}
-              userId={item.userId}
-              directParent={directParent}
-              onUserSelect={
-                onUserSelect && (() => onUserSelect(item.userId, commonId))
-              }
-            />
-          )}
+          <FeedCardHeader
+            avatar={discussionCreator?.photoURL}
+            title={getUserName(discussionCreator)}
+            createdAt={
+              <>
+                Created:{" "}
+                <FeedCountdown
+                  isCountdownFinished
+                  expirationTimestamp={item.createdAt}
+                />
+              </>
+            }
+            type={isHome ? "Home" : "Discussion"}
+            circleVisibility={circleVisibility}
+            menuItems={menuItems}
+            isMobileVersion={isMobileVersion}
+            commonId={commonId}
+            userId={item.userId}
+            directParent={directParent}
+            onUserSelect={
+              onUserSelect && (() => onUserSelect(item.userId, commonId))
+            }
+            isHome={isHome}
+          />
           <FeedCardContent
             description={isHome ? common?.description : discussion?.message}
             images={isHome ? common?.gallery : discussion?.images}
