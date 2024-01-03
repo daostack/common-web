@@ -4,9 +4,11 @@ import { CommonFeedType } from "@/shared/models";
 export const getFeedItemDisplayingData = async (
   feedItemDataId: string,
   feedItemType: CommonFeedType,
+  currentCommonId?: string,
 ): Promise<{
   title: string;
   isDeleted: boolean;
+  isMoved?: boolean;
 }> => {
   if (feedItemType === CommonFeedType.Discussion) {
     const discussion = await DiscussionService.getDiscussionById(
@@ -15,6 +17,7 @@ export const getFeedItemDisplayingData = async (
     return {
       title: discussion?.title || "",
       isDeleted: discussion?.isDeleted ?? true,
+      isMoved: discussion?.commonId !== currentCommonId,
     };
   }
   if (feedItemType === CommonFeedType.Proposal) {

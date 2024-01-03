@@ -9,6 +9,7 @@ import {
   CommonEditedSystemMessage,
   CommonFeedItemCreatedSystemMessage,
   CommonMemberAddedSystemMessage,
+  CommonState,
   SystemMessageCommonType,
   User,
 } from "@/shared/models";
@@ -28,7 +29,8 @@ const getUser = async (userId: string, users: User[]): Promise<User | null> =>
   UserService.getCachedUserById(userId);
 
 const getCommon = async (commonId: string): Promise<Common | null> =>
-  CommonService.getCachedCommonById(commonId);
+  (await CommonService.getCachedCommonById(commonId)) ||
+  (await CommonService.getCommonById(commonId, false, CommonState.INACTIVE));
 
 const getCommonTypeText = (commonType: SystemMessageCommonType): string =>
   commonType === SystemMessageCommonType.Common ? "common" : "space";
@@ -89,11 +91,13 @@ const getCommonCreatedSystemMessageText = async (
   const commonEl = common ? (
     <>
       {" "}
-      {renderLink(
-        (data.getCommonPagePath || getCommonPagePath)(common.id),
-        common.name,
-        () => handleCommonClick(common.id, common.rootCommonId),
-      )}
+      {common.state === CommonState.ACTIVE
+        ? renderLink(
+            (data.getCommonPagePath || getCommonPagePath)(common.id),
+            common.name,
+            () => handleCommonClick(common.id, common.rootCommonId),
+          )
+        : `${common.name} (deleted)`}
     </>
   ) : (
     ""
@@ -148,18 +152,23 @@ const getFeedItemCreatedSystemMessageText = async (
     getFeedItemDisplayingData(
       systemMessageData.feedItemDataId,
       systemMessageData.feedItemType,
+      data.commonId,
     ),
   ]);
   const userEl = renderUserMention(user, data);
   const title =
     feedItemDisplayingData.title &&
     `${feedItemDisplayingData.title}${
-      feedItemDisplayingData.isDeleted ? " (deleted)" : ""
+      feedItemDisplayingData.isDeleted
+        ? " (deleted)"
+        : feedItemDisplayingData.isMoved
+        ? " (moved)"
+        : ""
     }`;
   const titleEl = title ? (
     <>
       {" "}
-      {feedItemDisplayingData.isDeleted
+      {feedItemDisplayingData.isDeleted || feedItemDisplayingData.isMoved
         ? title
         : renderClickableText(title, () =>
             data.onFeedItemClick?.(systemMessageData.feedItemId),

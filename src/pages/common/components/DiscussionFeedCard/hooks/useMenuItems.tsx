@@ -18,6 +18,10 @@ import {
 } from "@/shared/icons";
 import { ContextMenuItem as Item, UploadFile } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
+import {
+  getCirclesWithLowestTier,
+  getFilteredByIdCircles,
+} from "@/shared/utils";
 import { notEmpty } from "@/shared/utils/notEmpty";
 import { commonActions } from "@/store/states";
 import { FeedItemMenuItem, GetAllowedItemsOptions } from "../../FeedItem";
@@ -121,10 +125,19 @@ export const useMenuItems = (
           title: file.title,
           file: file.value,
         }));
+        const circleVisibility =
+          discussion.circleVisibilityByCommon?.[options.commonId || ""] || [];
+        const filteredByIdCircles = getFilteredByIdCircles(
+          options.governanceCircles
+            ? Object.values(options.governanceCircles)
+            : null,
+          circleVisibility,
+        );
+        const circles = getCirclesWithLowestTier(filteredByIdCircles);
 
         dispatch(
           commonActions.setDiscussionCreationData({
-            circle: null,
+            circle: circles[0] || null,
             title: discussion.title,
             content: parseStringToTextEditorValue(discussion.message),
             images: files,
