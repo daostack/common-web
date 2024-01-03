@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import {
   FilePrefix,
-  ResizedFileSize,
+  ResizeType,
   getRandomUserAvatarURL,
   getResizedFileUrl,
 } from "../../utils";
@@ -45,7 +45,7 @@ const UserAvatar: FC<UserAvatarProps> = (props) => {
         useResizedFile && !isGoogleImage
           ? getResizedFileUrl(
               userAvatarURL,
-              ResizedFileSize.Avatars,
+              ResizeType.Avatars,
               FilePrefix.UserAvatar,
             )
           : userAvatarURL

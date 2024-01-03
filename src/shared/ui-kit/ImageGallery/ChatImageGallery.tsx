@@ -4,7 +4,7 @@ import { Image } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonLink } from "@/shared/models";
-import { FilePrefix, ResizedFileSize, getResizedFileUrl } from "@/shared/utils";
+import { FilePrefix, ResizeType, getResizedFileUrl } from "@/shared/utils";
 import { Button } from "../Button";
 import {
   ImageGalleryModal,
@@ -26,7 +26,7 @@ const ChatImageGallery: FC<ChatImageGalleryProps> = (props) => {
   const [initialSlide, setInitialSlide] = useState(0);
   const images = (gallery || []).map(({ value }) =>
     useResizedFile
-      ? getResizedFileUrl(value, ResizedFileSize.Images, FilePrefix.Image)
+      ? getResizedFileUrl(value, ResizeType.Images, FilePrefix.Image)
       : value,
   );
 

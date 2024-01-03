@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Image } from "@/shared/components/Image";
 import {
   FilePrefix,
-  ResizedFileSize,
+  ResizeType,
   getRandomUserAvatarURL,
   getResizedFileUrl,
 } from "@/shared/utils";
@@ -25,11 +25,7 @@ const CommonAvatar: FC<CommonAvatarProps> = (props) => {
       className={className}
       src={
         useResizedFile
-          ? getResizedFileUrl(
-              src,
-              ResizedFileSize.Avatars,
-              FilePrefix.CommonAvatar,
-            )
+          ? getResizedFileUrl(src, ResizeType.Avatars, FilePrefix.CommonAvatar)
           : src
       }
       alt={alt ?? `${finalName}'s image`}

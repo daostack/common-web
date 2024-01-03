@@ -5,7 +5,7 @@ import { ButtonLink, Image } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonLink } from "@/shared/models";
-import { FilePrefix, ResizedFileSize, getResizedFileUrl } from "@/shared/utils";
+import { FilePrefix, ResizeType, getResizedFileUrl } from "@/shared/utils";
 import {
   ImageGalleryModal,
   ImageGalleryMobileModal,
@@ -26,7 +26,7 @@ const ImageGallery: FC<ImageGalleryProps> = (props) => {
   const { isShowing, onOpen, onClose } = useModal(false);
   const images = (gallery || []).map(({ value }) =>
     useResizedFile
-      ? getResizedFileUrl(value, ResizedFileSize.Images, FilePrefix.Image)
+      ? getResizedFileUrl(value, ResizeType.Images, FilePrefix.Image)
       : value,
   );
 
