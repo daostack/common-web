@@ -152,18 +152,23 @@ const getFeedItemCreatedSystemMessageText = async (
     getFeedItemDisplayingData(
       systemMessageData.feedItemDataId,
       systemMessageData.feedItemType,
+      data.commonId,
     ),
   ]);
   const userEl = renderUserMention(user, data);
   const title =
     feedItemDisplayingData.title &&
     `${feedItemDisplayingData.title}${
-      feedItemDisplayingData.isDeleted ? " (deleted)" : ""
+      feedItemDisplayingData.isDeleted
+        ? " (deleted)"
+        : feedItemDisplayingData.isMoved
+        ? " (moved)"
+        : ""
     }`;
   const titleEl = title ? (
     <>
       {" "}
-      {feedItemDisplayingData.isDeleted
+      {feedItemDisplayingData.isDeleted || feedItemDisplayingData.isMoved
         ? title
         : renderClickableText(title, () =>
             data.onFeedItemClick?.(systemMessageData.feedItemId),
