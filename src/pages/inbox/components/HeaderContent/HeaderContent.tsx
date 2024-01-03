@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { InboxIcon } from "@/shared/icons";
 import { HeaderContent_v04 } from "../HeaderContent_v04";
+import { InboxFilterButton } from "../InboxFilterButton";
 import NewDirectMessageButton from "../NewDirectMessageButton/NewDirectMessageButton";
 import styles from "./HeaderContent.module.scss";
 
@@ -42,7 +43,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
             autoFocus
           />
         )} */}
-        {/* <InboxFilterButton /> */}
+        <InboxFilterButton />
         {/* {!searchInputToggle.isToggledOn && (
           <SearchButton onClick={searchInputToggle.setToggleOn} />
         )} */}
