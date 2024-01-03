@@ -35,7 +35,7 @@
   background-color: var(--quinary-fill);
 
   &:hover {
-    background-color: $c-pink-active-feed-cards;
+    background-color: var(--quinary-fill);
   }
 
   @include tablet {
@@ -127,7 +127,7 @@
 }
 
 .titleWrapperActive {
-  color: $white;
+  color: var(--primary-text);
 }
 
 .title {
@@ -157,7 +157,7 @@
 }
 
 .lastMessageActive {
-  color: $c-neutrals-200;
+  color: var(--primary-text);
   background-color: var(--quinary-fill);
 }
 
@@ -180,7 +180,7 @@
 }
 
 .lastActivityActive {
-  color: $white;
+  color: var(--primary-text);
 }
 
 .bottomContentRight {
