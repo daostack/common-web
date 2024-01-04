@@ -298,7 +298,6 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
             onUserSelect={
               onUserSelect && (() => onUserSelect(item.userId, commonId))
             }
-            isHome={isHome}
           />
           <FeedCardContent
             description={isHome ? common?.description : discussion?.message}
