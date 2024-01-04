@@ -24,14 +24,11 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
     isFullTextShowing,
     toggleFullText,
   } = useFullText<HTMLElement>();
-  console.log(description);
   const parsedDescription = useMemo(
     () => parseStringToTextEditorValue(description),
     [description],
   );
-  console.log(parsedDescription);
   const isDescriptionEmpty = checkIsTextEditorValueEmpty(parsedDescription);
-  console.log(isDescriptionEmpty);
   const shouldDisplaySeeMoreButton =
     (shouldShowFullContent || !isFullTextShowing) && !isDescriptionEmpty;
 
