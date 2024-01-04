@@ -258,7 +258,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           readOnly={false}
           disabled={disabled}
           onBlur={onBlur}
-          onKeyDown={handleKeyDown}
+          // onKeyDown={handleKeyDown}
           elementStyles={elementStyles}
         />
         <EmojiPicker
