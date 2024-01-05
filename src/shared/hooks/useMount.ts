@@ -13,9 +13,12 @@ export const useMount = (options: Options): boolean => {
 
   useUpdateEffect(() => {
     if (isOpen && !isMounted) {
-      setIsMounted(true);
+      setTimeout(() => {
+        setIsMounted(true);
+      }, 0);
       return;
     }
+
     if (isOpen || !isMounted) {
       return;
     }

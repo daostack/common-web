@@ -13,6 +13,13 @@ interface TransitionProps {
   transition?: ModalTransition | null;
 }
 
+const bottomToTopTransitionClasses: TransitionClasses = {
+  enter: styles.bottomToTopTransitionEnter,
+  enterTo: styles.bottomToTopTransitionEnterActive,
+  leave: styles.bottomToTopTransitionExit,
+  leaveTo: styles.bottomToTopTransitionExitActive,
+};
+
 const rightToLeftTransitionClasses: TransitionClasses = {
   enter: styles.rightToLeftTransitionEnter,
   enterTo: styles.rightToLeftTransitionEnterActive,
@@ -28,7 +35,7 @@ const fadeInTransitionClasses: TransitionClasses = {
 };
 
 const MAP_TRANSITION_TO_CLASSES: Record<ModalTransition, TransitionClasses> = {
-  [ModalTransition.BottomToTop]: {},
+  [ModalTransition.BottomToTop]: bottomToTopTransitionClasses,
   [ModalTransition.RightToLeft]: rightToLeftTransitionClasses,
   [ModalTransition.FadeIn]: fadeInTransitionClasses,
 };

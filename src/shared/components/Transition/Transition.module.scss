@@ -10,6 +10,27 @@
   z-index: 999;
 }
 
+.bottomToTopTransitionEnter {
+  will-change: transform;
+  transform: translateY(110vw);
+  transition: transform var(--transition-duration) var(--easing),
+    visibility 0s linear var(--transition-duration);
+}
+.bottomToTopTransitionEnterActive {
+  transform: translateY(0);
+  transition: transform var(--transition-duration) var(--easing);
+}
+.bottomToTopTransitionExit {
+  transform: translateY(0);
+  transition: transform var(--transition-duration) var(--easing);
+}
+.bottomToTopTransitionExitActive {
+  will-change: transform;
+  transform: translateY(110vw);
+  transition: transform var(--transition-duration) var(--easing),
+    visibility 0s linear var(--transition-duration);
+}
+
 .rightToLeftTransitionEnter {
   will-change: transform;
   transform: translateX(110vw);

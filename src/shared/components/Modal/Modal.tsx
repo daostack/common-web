@@ -23,7 +23,8 @@ import {
   ModalTransition,
   ModalType,
 } from "../../interfaces";
-import { ClosePrompt, Transition } from "./components";
+import { Transition } from "../Transition";
+import { ClosePrompt } from "./components";
 import { FooterOptions, ModalContext, ModalContextValue } from "./context";
 import "./index.scss";
 

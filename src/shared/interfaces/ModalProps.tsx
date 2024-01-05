@@ -6,7 +6,7 @@ export enum ModalType {
 }
 
 export enum ModalTransition {
-  BottomToTop,
+  BottomToTop = 1,
   RightToLeft,
   FadeIn,
 }
