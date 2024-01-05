@@ -8,7 +8,7 @@ export const checkIsTextEditorValueEmpty = (
   if (value.length === 0) {
     return true;
   }
-  if (value.length > 1) {
+  if (value.length > 0) {
     return false;
   }
 

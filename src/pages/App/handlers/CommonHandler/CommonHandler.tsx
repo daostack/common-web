@@ -45,20 +45,12 @@ const CommonHandler: FC = () => {
       commonId,
     ) => {
       /**
-       * TODO: seems like these are not updating the UI. Need to check.
-       */
-
-      /**
        * Remove from cache
        */
       dispatch(
         updateCommonState({
           commonId,
-          state: {
-            loading: false,
-            fetched: false,
-            data: null,
-          },
+          state: null,
         }),
       );
 

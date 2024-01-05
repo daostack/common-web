@@ -98,7 +98,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   useChatChannelSubscription(chatChannel.id, userId, handleChatChannelUpdate);
 
   useEffect(() => {
-    fetchDMUsers(dmUserIds); // dm users not including the current user.
+    fetchDMUsers(dmUserIds);
   }, [dmUserIds]);
 
   useEffect(() => {
@@ -123,8 +123,8 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     if (isActive && finalTitle && dmUsersNames) {
       onActiveItemDataChange?.({
         itemId: chatChannel.id,
-        title: dmUsersNames?.[0],
-        image: dmUsers?.[0]?.photoURL,
+        title: finalTitle,
+        image: isGroupMessage ? "" : dmUsers?.[0]?.photoURL,
       });
     }
   }, [isActive, finalTitle, dmUsers?.[0]?.photoURL, dmUsersNames?.[0]]);
