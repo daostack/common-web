@@ -5,6 +5,7 @@ import { ButtonLink, Image } from "@/shared/components";
 import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { CommonLink } from "@/shared/models";
+import { FilePrefix, ResizeType, getResizedFileUrl } from "@/shared/utils";
 import {
   ImageGalleryModal,
   ImageGalleryMobileModal,
@@ -15,14 +16,19 @@ import styles from "./ImageGallery.module.scss";
 interface ImageGalleryProps {
   gallery: CommonLink[];
   videoSrc?: string;
+  useResizedFile?: boolean;
 }
 
 const ImageGallery: FC<ImageGalleryProps> = (props) => {
-  const { gallery, videoSrc } = props;
+  const { gallery, videoSrc, useResizedFile = true } = props;
   const isTabletView = useIsTabletView();
   const [videoContainerRef, { width: videoContainerWidth }] = useMeasure();
   const { isShowing, onOpen, onClose } = useModal(false);
-  const images = (gallery || []).map(({ value }) => value);
+  const images = (gallery || []).map(({ value }) =>
+    useResizedFile
+      ? getResizedFileUrl(value, ResizeType.Images, FilePrefix.Image)
+      : value,
+  );
 
   const [leftImage, rightImage, mainImage] = images;
 
