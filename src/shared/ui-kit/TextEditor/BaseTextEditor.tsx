@@ -3,7 +3,6 @@ import React, {
   FocusEventHandler,
   KeyboardEvent,
   MutableRefObject,
-  ReactHTMLElement,
   RefCallback,
   useEffect,
   useMemo,
@@ -23,7 +22,7 @@ import { ReactEditor, Slate, withReact } from "slate-react";
 import { DOMRange } from "slate-react/dist/utils/dom";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { User } from "@/shared/models";
-import { getUserName, isMobile, isRtlText, isAndroid } from "@/shared/utils";
+import { getUserName, isMobile, isRtlText } from "@/shared/utils";
 import {
   Editor,
   MentionDropdown,
@@ -225,12 +224,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
         onToggleIsMessageSent();
       }
     }
-
-    // if (isAndroid()) {
-    //   if (!ReactEditor.isComposing(editor) && (editorRef as MutableRefObject<HTMLElement>)?.current) {
-    //     setTimeout((editorRef as MutableRefObject<any>).current?.onChange, 10);
-    //   }
-    // }
   };
 
   return (
