@@ -7,15 +7,17 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useCallback,
 } from "react";
 import classNames from "classnames";
-import { isEqual } from "lodash";
+import { isEqual, debounce } from "lodash";
 import {
   createEditor,
   Transforms,
   Range,
   Editor as EditorSlate,
   BaseRange,
+  BaseSelection,
 } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
@@ -226,29 +228,39 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
+  const handleOnChangeSelection = (selection: BaseSelection) => {
+    if (selection && Range.isCollapsed(selection)) {
+      const [start] = Range.edges(selection);
+      const before = EditorSlate.before(editor, start);
+      const beforeRange = before && EditorSlate.range(editor, before, start);
+      const beforeText = beforeRange && EditorSlate.string(editor, beforeRange);
+
+      handleSearch(beforeText ?? "", beforeRange);
+    }
+
+    setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
+  };
+
+  const handleOnChangeSelectionDebounce = useCallback(
+    debounce(handleOnChangeSelection, 500),
+    [handleOnChangeSelection],
+  );
+
+  const handleOnChange = useCallback(
+    (updatedContent) => {
+      // Prevent update for cursor clicks
+      if (isEqual(updatedContent, value)) return;
+      onChange && onChange(updatedContent);
+      const { selection } = editor;
+
+      handleOnChangeSelectionDebounce(selection);
+    },
+    [onChange, value, handleOnChangeSelection],
+  );
+
   return (
     <div ref={inputContainerRef} className={styles.container}>
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(val) => {
-          onChange && onChange(val);
-          const { selection } = editor;
-
-          if (selection && Range.isCollapsed(selection)) {
-            const [start] = Range.edges(selection);
-            const before = EditorSlate.before(editor, start);
-            const beforeRange =
-              before && EditorSlate.range(editor, before, start);
-            const beforeText =
-              beforeRange && EditorSlate.string(editor, beforeRange);
-
-            handleSearch(beforeText ?? "", beforeRange);
-          }
-
-          setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
-        }}
-      >
+      <Slate editor={editor} value={value} onChange={handleOnChange}>
         <Editor
           className={classNames(
             className,

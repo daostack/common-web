@@ -214,6 +214,8 @@ export default function ChatComponent({
     parseStringToTextEditorValue(),
   );
 
+  const initialMessage = parseStringToTextEditorValue();
+
   const emojiCount = useMemo(
     () => countTextEditorEmojiElements(message),
     [message],
@@ -686,7 +688,7 @@ export default function ChatComponent({
               [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
             }),
           }}
-          value={message}
+          value={initialMessage}
           onChange={setMessage}
           placeholder="Message"
           onKeyDown={onEnterKeyDown}
@@ -785,56 +787,7 @@ export default function ChatComponent({
             [styles.chatInputWrapperMultiLine]: isMultiLineInput,
           })}
         >
-          <>
-            <ButtonIcon
-              className={styles.addFilesIcon}
-              onClick={() => {
-                document.getElementById("file")?.click();
-              }}
-            >
-              <PlusIcon />
-            </ButtonIcon>
-            <input
-              id="file"
-              type="file"
-              onChange={uploadFiles}
-              style={{ display: "none" }}
-              multiple
-              accept={FILES_ACCEPTED_EXTENSIONS}
-            />
-            <BaseTextEditor
-              inputContainerRef={inputContainerRef}
-              size={TextEditorSize.Auto}
-              editorRef={editorRef}
-              className={classNames(styles.messageInput, {
-                [styles.messageInputEmpty]:
-                  checkIsTextEditorValueEmpty(message),
-              })}
-              classNameRtl={styles.messageInputRtl}
-              elementStyles={{
-                emoji: classNames({
-                  [styles.singleEmojiText]: emojiCount.isSingleEmoji,
-                  [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-                }),
-              }}
-              value={message}
-              onChange={setMessage}
-              placeholder="Message"
-              onKeyDown={onEnterKeyDown}
-              users={users}
-              shouldReinitializeEditor={shouldReinitializeEditor}
-              onClearFinished={onClearFinished}
-              scrollSelectionIntoView={emptyFunction}
-              groupChat={chatChannel && chatChannel?.participants.length > 2}
-            />
-            <button
-              className={styles.sendIcon}
-              onClick={sendChatMessage}
-              disabled={!canSendMessage}
-            >
-              <SendIcon />
-            </button>
-          </>
+          {renderChatInput()}
         </div>
       </div>
     </div>
