@@ -3,6 +3,7 @@ import React, {
   FocusEventHandler,
   KeyboardEvent,
   MutableRefObject,
+  ReactHTMLElement,
   RefCallback,
   useEffect,
   useMemo,
@@ -226,8 +227,8 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
 
     if (isAndroid()) {
-      if (!ReactEditor.isComposing(editor) && editorRef?.current) {
-        setTimeout(editorRef.current?.onChange, 10);
+      if (!ReactEditor.isComposing(editor) && (editorRef as MutableRefObject<HTMLElement>)?.current) {
+        setTimeout((editorRef as MutableRefObject<any>).current?.onChange, 10);
       }
     }
   };
