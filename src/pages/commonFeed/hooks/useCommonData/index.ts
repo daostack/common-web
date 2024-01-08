@@ -5,6 +5,7 @@ import {
   CommonService,
   GovernanceService,
 } from "@/services";
+import { FirestoreDataSource } from "@/shared/constants";
 import { getRootCommon } from "@/shared/hooks/useCases/useFullCommonData";
 import { useCommonSubscription } from "@/shared/hooks/useCases/useFullCommonData/useCommonSubscription";
 import { State, CombinedState } from "./types";
@@ -48,7 +49,10 @@ export const useCommonData = (userId?: string): Return => {
         try {
           const [common, governance, sharedFeedItem] = await Promise.all([
             CommonService.getCommonById(commonId, true),
-            GovernanceService.getGovernanceByCommonId(commonId, true),
+            GovernanceService.getGovernanceByCommonId(
+              commonId,
+              FirestoreDataSource.Cache,
+            ),
             sharedFeedItemId
               ? CommonFeedService.getCommonFeedItemById(
                   commonId,
@@ -73,7 +77,10 @@ export const useCommonData = (userId?: string): Return => {
               CommonService.getAllParentCommonsForCommon(common, true),
               CommonService.getCommonsByDirectParentId(common.id, true),
               rootCommonId
-                ? GovernanceService.getGovernanceByCommonId(rootCommonId, true)
+                ? GovernanceService.getGovernanceByCommonId(
+                    rootCommonId,
+                    FirestoreDataSource.Cache,
+                  )
                 : null,
             ]);
           const rootCommon = await getRootCommon(

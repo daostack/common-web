@@ -8,7 +8,7 @@ import { cacheActions, selectGovernanceStateByCommonId } from "@/store/states";
 type State = LoadingState<Governance | null>;
 
 interface Return extends State {
-  fetchGovernance: (commonId: string) => void;
+  fetchGovernance: (commonId: string, force?: boolean) => void;
   setGovernance: (governance: Governance | null) => void;
 }
 
@@ -28,12 +28,12 @@ export const useGovernanceByCommonId = (): Return => {
   const governanceId = state.data?.id || "";
 
   const fetchGovernance = useCallback(
-    (commonId: string) => {
+    (commonId: string, force = false) => {
       setDefaultState({ ...DEFAULT_STATE });
       setCurrentCommonId(commonId);
       dispatch(
         cacheActions.getGovernanceStateByCommonId.request({
-          payload: { commonId },
+          payload: { commonId, force },
         }),
       );
     },

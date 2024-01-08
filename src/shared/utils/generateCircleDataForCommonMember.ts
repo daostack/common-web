@@ -1,12 +1,17 @@
+import { GeneralError } from "@/shared/utils/error";
 import { generateCirclesBinaryNumber } from "../../pages/OldCommon/components/CommonDetailContainer/CommonWhitepaper/utils";
-import { GovernanceActions, ProposalsTypes } from "../constants";
+import { ErrorCode, GovernanceActions, ProposalsTypes } from "../constants";
 import { CircleIndex, CirclesPermissions, Governance } from "../models";
 
 export const circleIndexGuard = (n: number | string) => {
   const castedN = Number(n);
 
-  if (castedN < 0 || castedN > 31)
-    throw new Error("Circle index validation failed");
+  if (castedN < 0 || castedN > 31) {
+    throw new GeneralError({
+      message: "Circle index validation failed",
+      code: ErrorCode.CCircleIndexValidationFailure,
+    });
+  }
 
   return castedN as CircleIndex;
 };
@@ -25,8 +30,12 @@ export const generateCirclesDataForCommonMember = (
     const circle = Object.entries(governanceCircles).find(
       ([_, circle]) => circle.id === id,
     );
-    if (!circle || !circle[1])
-      throw new Error(`could not find circle in governance ${id}`);
+    if (!circle || !circle[1]) {
+      throw new GeneralError({
+        message: `could not find circle in governance ${id}`,
+        code: ErrorCode.CCircleInGovernanceNotFound,
+      });
+    }
     circleIdsByHierarchy.add(circle[1].id);
     circlesIndexesByHierarchy.add(circleIndexGuard(circle[0]));
 
@@ -61,8 +70,12 @@ export const generateCirclesDataForCommonMember = (
       ([_, circle]) => circle.id === circleId,
     );
 
-    if (!circle) throw new Error("could not find cirlce in governance");
-
+    if (!circle) {
+      throw new GeneralError({
+        message: "could not find cirlce in governance",
+        code: ErrorCode.CCircleInGovernanceNotFound,
+      });
+    }
     Object.keys(circle[1].allowedActions).forEach((action) => {
       allowedActions.add(action as GovernanceActions);
     });
@@ -95,10 +108,14 @@ export const generateCirclesDataForCommonMember = (
   const circlesMap = Array.from(circlesIndexesByHierarchy).reduce(
     (prev, next) => {
       const circle = governanceCircles[next];
-      if (!circle)
-        throw new Error(
-          `could not find cirlce in governance ${JSON.stringify(circle)}`,
-        );
+      if (!circle) {
+        throw new GeneralError({
+          message: `could not find cirlce in governance ${JSON.stringify(
+            circle,
+          )}`,
+          code: ErrorCode.CCircleInGovernanceNotFound,
+        });
+      }
       circleIdsByHierarchy.add(circle[1]?.id);
       return { ...prev, [next]: circle.id };
     },

@@ -12,7 +12,7 @@ export const useFeedItemCounters = (
   commonId?: string,
 ): Return => {
   const { data: governance, fetchGovernance } = useGovernanceByCommonId();
-  const { data: commonMember } = useCommonMember({
+  const { data: commonMember, missingCirclesError } = useCommonMember({
     shouldAutoReset: false,
     withSubscription: true,
     governanceCircles: governance?.circles,
@@ -26,6 +26,12 @@ export const useFeedItemCounters = (
       fetchGovernance(commonId);
     }
   }, [fetchGovernance, commonId]);
+
+  useEffect(() => {
+    if (missingCirclesError && commonId) {
+      fetchGovernance(commonId, true);
+    }
+  }, [missingCirclesError]);
 
   return {
     projectUnreadStreamsCount: streamsUnreadCountByProjectStream?.[feedItemId],
