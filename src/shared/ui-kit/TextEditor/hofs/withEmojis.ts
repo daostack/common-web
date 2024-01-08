@@ -3,8 +3,7 @@ import { ElementType } from "../constants";
 import { checkIsInlineType } from "../utils";
 
 export const withEmojis = (editor: Editor): Editor => {
-  // const { isInline, isVoid, markableVoid } = editor;
-  const { isInline, isVoid } = editor;
+  const { isInline, isVoid, markableVoid } = editor;
 
   editor.isInline = (element) =>
     checkIsInlineType(element.type) || isInline(element);
@@ -15,12 +14,12 @@ export const withEmojis = (editor: Editor): Editor => {
       : isVoid(element);
   };
 
-  // editor.markableVoid = (element) => {
-  //   return (
-  //     (element.type as ElementType) === ElementType.Emoji ||
-  //     markableVoid(element)
-  //   );
-  // };
+  editor.markableVoid = (element) => {
+    return (
+      (element.type as ElementType) === ElementType.Emoji ||
+      markableVoid(element)
+    );
+  };
 
   return editor;
 };
