@@ -226,11 +226,11 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       }
     }
 
-    if (isAndroid()) {
-      if (!ReactEditor.isComposing(editor) && (editorRef as MutableRefObject<HTMLElement>)?.current) {
-        setTimeout((editorRef as MutableRefObject<any>).current?.onChange, 10);
-      }
-    }
+    // if (isAndroid()) {
+    //   if (!ReactEditor.isComposing(editor) && (editorRef as MutableRefObject<HTMLElement>)?.current) {
+    //     setTimeout((editorRef as MutableRefObject<any>).current?.onChange, 10);
+    //   }
+    // }
   };
 
   return (
