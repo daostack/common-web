@@ -1,6 +1,11 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { getRandomUserAvatarURL } from "../../utils";
+import {
+  FilePrefix,
+  ResizeType,
+  getRandomUserAvatarURL,
+  getResizedFileUrl,
+} from "../../utils";
 import { Image } from "../Image";
 import "./index.scss";
 
@@ -12,6 +17,7 @@ interface UserAvatarProps {
   userName?: string;
   preloaderSrc?: string;
   onClick?: () => void;
+  useResizedFile?: boolean;
 }
 
 const UserAvatar: FC<UserAvatarProps> = (props) => {
@@ -23,17 +29,27 @@ const UserAvatar: FC<UserAvatarProps> = (props) => {
     nameForRandomAvatar = userName,
     preloaderSrc,
     onClick,
+    useResizedFile = true,
   } = props;
   const randomUserAvatarURL = getRandomUserAvatarURL(nameForRandomAvatar);
   const userAvatarURL = photoURL || randomUserAvatarURL;
   const userAvatarAlt = `${userName || "User"}'s avatar`;
   const imageClassName = classNames("general-user-avatar", className);
+  const isGoogleImage = userAvatarURL.includes("googleusercontent");
 
   return (
     <Image
       className={imageClassName}
       imageContainerClassName={imageContainerClassName}
-      src={userAvatarURL}
+      src={
+        useResizedFile && !isGoogleImage
+          ? getResizedFileUrl(
+              userAvatarURL,
+              ResizeType.Avatars,
+              FilePrefix.UserAvatar,
+            )
+          : userAvatarURL
+      }
       alt={userAvatarAlt}
       preloaderSrc={preloaderSrc}
       onClick={onClick}
