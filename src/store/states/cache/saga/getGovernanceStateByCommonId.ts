@@ -1,5 +1,6 @@
 import { call, put, select } from "redux-saga/effects";
 import { GovernanceService } from "@/services";
+import { FirestoreDataSource } from "@/shared/constants";
 import { Awaited, LoadingState } from "@/shared/interfaces";
 import { Governance } from "@/shared/models";
 import { isError } from "@/shared/utils";
@@ -16,13 +17,15 @@ type State = LoadingState<Governance | null>;
 export function* getGovernanceStateByCommonId({
   payload,
 }: ReturnType<typeof getStateAction.request>) {
-  const { commonId } = payload.payload;
+  const { commonId, force } = payload.payload;
 
   try {
-    const state = ((yield select(selectState(commonId))) as State) || null;
+    if (!force) {
+      const state = ((yield select(selectState(commonId))) as State) || null;
 
-    if (state?.fetched || state?.loading) {
-      return;
+      if (state?.fetched || state?.loading) {
+        return;
+      }
     }
 
     yield put(
@@ -35,9 +38,11 @@ export function* getGovernanceStateByCommonId({
         },
       }),
     );
-    const data = (yield call(requestFunction, commonId)) as Awaited<
-      ReturnType<typeof requestFunction>
-    >;
+    const data = (yield call(
+      requestFunction,
+      commonId,
+      force ? FirestoreDataSource.Server : FirestoreDataSource.Default,
+    )) as Awaited<ReturnType<typeof requestFunction>>;
 
     yield put(
       updateStateAction({
