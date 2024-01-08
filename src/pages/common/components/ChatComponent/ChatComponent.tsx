@@ -565,7 +565,7 @@ export default function ChatComponent({
       markChatMessageItemAsSeen({
         chatChannelId: feedItemId,
       });
-    } else {
+    } else if (commonId) {
       markDiscussionMessageItemAsSeen({
         feedObjectId: feedItemId,
         commonId,
