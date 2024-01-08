@@ -30,14 +30,8 @@ class DiscussionService {
       const snapshot = await this.getDiscussionCollection()
         .doc(discussionId)
         .get({ source });
-      const fromCache = snapshot.metadata.fromCache ? "local cache" : "server";
       const discussion = snapshot?.data() || null;
 
-      console.log(
-        `getDiscussionById [${fromCache}]`,
-        discussionId,
-        snapshot?.data() || null,
-      );
       if (!discussion && source === FirestoreDataSource.Cache) {
         return this.getDiscussionById(discussionId, FirestoreDataSource.Server);
       }
