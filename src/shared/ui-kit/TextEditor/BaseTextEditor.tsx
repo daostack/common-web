@@ -22,7 +22,7 @@ import { ReactEditor, Slate, withReact } from "slate-react";
 import { DOMRange } from "slate-react/dist/utils/dom";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { User } from "@/shared/models";
-import { getUserName, isMobile, isRtlText } from "@/shared/utils";
+import { getUserName, isMobile, isRtlText, isAndroid } from "@/shared/utils";
 import {
   Editor,
   MentionDropdown,
@@ -222,6 +222,12 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       onKeyDown && onKeyDown(event);
       if (event.key === KeyboardKeys.Enter && !isMobile()) {
         onToggleIsMessageSent();
+      }
+    }
+
+    if (isAndroid()) {
+      if (!ReactEditor.isComposing(editor) && editorRef?.current) {
+        setTimeout(editorRef.current?.onChange, 10);
       }
     }
   };

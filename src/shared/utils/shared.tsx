@@ -178,6 +178,9 @@ export const isMobile = (): boolean => {
   );
 };
 
+export const isAndroid = (): boolean => {
+  return /Android/i.test(navigator.userAgent);
+}
 /**
  * Returns true if the given string contains Hebrew
  * @param {string} str
