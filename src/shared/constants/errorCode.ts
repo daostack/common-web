@@ -1,6 +1,8 @@
 export enum ErrorCode {
   // Front-end error codes
   CUserDoesNotExist = "CUserDoesNotExist",
+  CCircleInGovernanceNotFound = "CCircleInGovernanceNotFound",
+  CCircleIndexValidationFailure = "CCircleIndexValidationFailure",
 
   // Back-end error codes
   ArgumentDuplicatedError = "ArgumentDuplicatedError",

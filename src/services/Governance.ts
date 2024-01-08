@@ -1,5 +1,5 @@
 import { governanceCollection } from "@/pages/OldCommon/store/api";
-import { DocChange } from "@/shared/constants";
+import { DocChange, FirestoreDataSource } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { Collection, Governance } from "@/shared/models";
 import {
@@ -13,17 +13,17 @@ const converter = firestoreDataConverter<Governance>();
 class GovernanceService {
   public getGovernanceByCommonId = async (
     commonId: string,
-    cached = false,
+    source = FirestoreDataSource.Default,
   ): Promise<Governance | null> => {
     const snapshot = await governanceCollection
       .where("commonId", "==", commonId)
       .withConverter(converter)
-      .get({ source: cached ? "cache" : "default" });
+      .get({ source });
     const governanceList = snapshot.docs.map((doc) => doc.data());
     const governance = governanceList[0] || null;
 
-    if (cached && !governance) {
-      return this.getGovernanceByCommonId(commonId);
+    if (source === FirestoreDataSource.Cache && !governance) {
+      return this.getGovernanceByCommonId(commonId, FirestoreDataSource.Server);
     }
 
     return governance;
