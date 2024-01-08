@@ -47,6 +47,8 @@ export const FeedGeneralInfo: React.FC<FeedGeneralInfoProps> = (props) => {
           editorRef={setDescriptionRef}
           editorClassName={classNames(styles.description, {
             [styles.descriptionShortened]: !shouldShowFullContent,
+            [styles.descriptionLessShortened]:
+              !shouldShowFullContent && (!images || images.length === 0),
           })}
           value={parsedDescription}
           readOnly
