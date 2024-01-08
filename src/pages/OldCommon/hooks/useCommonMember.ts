@@ -8,6 +8,7 @@ import {
   CommonEvent,
 } from "@/events";
 import { selectUser } from "@/pages/Auth/store/selectors";
+import { ErrorCode } from "@/shared/constants";
 import { LoadingState } from "@/shared/interfaces";
 import {
   Circles,
@@ -15,7 +16,10 @@ import {
   CommonMember,
   Governance,
 } from "@/shared/models";
-import { generateCirclesDataForCommonMember } from "@/shared/utils";
+import {
+  generateCirclesDataForCommonMember,
+  isGeneralError,
+} from "@/shared/utils";
 import { CommonService, GovernanceService, Logger } from "../../../services";
 
 interface Options {
@@ -38,6 +42,7 @@ interface Return extends State {
     commonMember: (CommonMember & CirclesPermissions) | null,
   ) => void;
   resetCommonMember: () => void;
+  missingCirclesError: boolean;
 }
 
 export const useCommonMember = (options: Options = {}): Return => {
@@ -52,6 +57,7 @@ export const useCommonMember = (options: Options = {}): Return => {
     fetched: false,
     data: null,
   });
+  const [missingCirclesError, setMissingCirclesError] = useState(false);
   const user = useSelector(selectUser());
   const userId = options.userId || user?.uid;
   const commonMemberId = state.data?.id;
@@ -189,29 +195,39 @@ export const useCommonMember = (options: Options = {}): Return => {
         commonId,
         userId,
         (commonMember, { isAdded, isRemoved }) => {
-          let data: State["data"] = null;
+          try {
+            let data: State["data"] = null;
 
-          if (isAdded) {
-            CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
-              commonId,
-              hasMembership: true,
+            if (isAdded) {
+              CommonEventEmitter.emit(CommonEvent.ProjectUpdated, {
+                commonId,
+                hasMembership: true,
+              });
+            }
+            if (!isRemoved) {
+              data = {
+                ...commonMember,
+                ...generateCirclesDataForCommonMember(
+                  governanceCircles,
+                  commonMember.circleIds,
+                ),
+              };
+            }
+
+            setState({
+              loading: false,
+              fetched: true,
+              data,
             });
+          } catch (err) {
+            if (
+              isGeneralError(err) &&
+              (err.code === ErrorCode.CCircleInGovernanceNotFound ||
+                err.code === ErrorCode.CCircleIndexValidationFailure)
+            ) {
+              setMissingCirclesError(true);
+            }
           }
-          if (!isRemoved) {
-            data = {
-              ...commonMember,
-              ...generateCirclesDataForCommonMember(
-                governanceCircles,
-                commonMember.circleIds,
-              ),
-            };
-          }
-
-          setState({
-            loading: false,
-            fetched: true,
-            data,
-          });
         },
       );
 
@@ -223,5 +239,6 @@ export const useCommonMember = (options: Options = {}): Return => {
     fetchCommonMember,
     setCommonMember,
     resetCommonMember,
+    missingCirclesError,
   };
 };
