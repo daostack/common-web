@@ -672,10 +672,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
             {isContentEmpty && <p className={styles.emptyText}>{emptyText}</p>}
             <PullToRefresh
               isPullable={isTabletView && Boolean(onPullToRefresh)}
-              //className={styles.ptr__children} //ptr__pull-down--pull-more
+              className={styles.pullToRefresh}
               onRefresh={async () => onPullToRefresh?.()}
               refreshingContent={<Loader />}
-              //pullingContent={"pull to refresh"}
             >
               <InfiniteScroll
                 markerClassName={
