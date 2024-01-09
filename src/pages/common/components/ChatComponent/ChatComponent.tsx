@@ -376,13 +376,13 @@ export default function ChatComponent({
     );
   };
 
-  console.log('---message',JSON.stringify(message));
+  console.log("---message", JSON.stringify(message));
 
   const sendMessage = useCallback(
     async (editorMessage: TextEditorValue) => {
       if (user && user.uid) {
         const pendingMessageId = uuidv4();
-        console.log('---editorMessage',JSON.stringify(editorMessage));
+        console.log("---editorMessage", JSON.stringify(editorMessage));
         const message = removeTextEditorEmptyEndLinesValues(editorMessage);
 
         const mentionTags = getMentionTags(message).map((tag) => ({
@@ -791,7 +791,56 @@ export default function ChatComponent({
             [styles.chatInputWrapperMultiLine]: isMultiLineInput,
           })}
         >
-          {renderChatInput()}
+          <>
+            <ButtonIcon
+              className={styles.addFilesIcon}
+              onClick={() => {
+                document.getElementById("file")?.click();
+              }}
+            >
+              <PlusIcon />
+            </ButtonIcon>
+            <input
+              id="file"
+              type="file"
+              onChange={uploadFiles}
+              style={{ display: "none" }}
+              multiple
+              accept={FILES_ACCEPTED_EXTENSIONS}
+            />
+            <BaseTextEditor
+              inputContainerRef={inputContainerRef}
+              size={TextEditorSize.Auto}
+              editorRef={editorRef}
+              className={classNames(styles.messageInput, {
+                [styles.messageInputEmpty]:
+                  checkIsTextEditorValueEmpty(message),
+              })}
+              classNameRtl={styles.messageInputRtl}
+              elementStyles={{
+                emoji: classNames({
+                  [styles.singleEmojiText]: emojiCount.isSingleEmoji,
+                  [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+                }),
+              }}
+              value={message}
+              onChange={setMessage}
+              placeholder="Message"
+              onKeyDown={onEnterKeyDown}
+              users={users}
+              shouldReinitializeEditor={shouldReinitializeEditor}
+              onClearFinished={onClearFinished}
+              scrollSelectionIntoView={emptyFunction}
+              groupChat={chatChannel && chatChannel?.participants.length > 2}
+            />
+            <button
+              className={styles.sendIcon}
+              onClick={sendChatMessage}
+              disabled={!canSendMessage}
+            >
+              <SendIcon />
+            </button>
+          </>
         </div>
       </div>
     </div>

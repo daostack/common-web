@@ -9,6 +9,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
+import { useDebounce } from "react-use";
 import classNames from "classnames";
 import { isEqual, debounce } from "lodash";
 import {
@@ -116,6 +117,14 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
   const [target, setTarget] = useState<Range | null>();
   const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
+
+  useDebounce(
+    () => {
+      setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
+    },
+    5000,
+    [value],
+  );
 
   const [isRtlLanguage, setIsRtlLanguage] = useState(false);
   useEffect(() => {
@@ -237,8 +246,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
       handleSearch(beforeText ?? "", beforeRange);
     }
-
-    // setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
   };
 
   const handleOnChangeSelectionDebounce = useCallback(
