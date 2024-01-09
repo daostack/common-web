@@ -2,28 +2,50 @@
 
 .container {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+}
 
-  & + & {
-    margin-top: 0;
+.inputWrapper {
+  position: relative;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-top: 0.125rem;
+  margin-right: 0.25rem;
+  flex-shrink: 0;
+}
+
+.input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0 !important;
+  cursor: pointer;
+
+  &:checked ~ .iconRegular,
+  &:not(:checked) ~ .iconSelected {
+    display: none;
+  }
+
+  &:focus-visible ~ .icon {
+    outline: $purple auto 0.3125rem;
   }
 }
 
-.checkboxWrapper {
-  margin-right: 0.75em;
+.icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.iconSelected {
+  color: $c-pink-light-2;
 }
 
-.checkboxText {
-  flex: 1;
-  opacity: 1;
-  text-decoration: none;
-
-  &:focus {
-    outline: none;
-  }
-}
-.checkboxTextChecked {
-  opacity: 0.666;
-  text-decoration: line-through;
+.textWrapper {
+  line-height: 1.125rem;
 }

@@ -1,7 +1,8 @@
-import React, { FC } from "react";
+import React, { ChangeEventHandler, FC } from "react";
 import classNames from "classnames";
 import { Transforms } from "slate";
 import { ReactEditor, useReadOnly, useSlateStatic } from "slate-react";
+import { RegularCheckboxIcon, SelectedCheckboxIcon } from "@/shared/icons";
 import { CheckboxItemElement } from "../../../../types";
 import { ElementAttributes } from "../../types";
 import styles from "./CheckboxItem.module.scss";
@@ -17,30 +18,38 @@ const CheckboxItem: FC<CheckboxItemProps> = (props) => {
   const readOnly = useReadOnly();
   const { checked } = element;
 
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    const path = ReactEditor.findPath(editor, element);
+    const newProperties: Partial<CheckboxItemElement> = {
+      checked: event.target.checked,
+    };
+    Transforms.setNodes(editor, newProperties, { at: path });
+  };
+
   return (
     <div
       {...attributes}
       className={classNames(styles.container, attributes.className)}
     >
-      <span contentEditable={false} className={styles.checkboxWrapper}>
+      <div className={styles.inputWrapper} contentEditable={false}>
         <input
+          className={styles.input}
           type="checkbox"
           checked={checked}
-          onChange={(event) => {
-            const path = ReactEditor.findPath(editor, element);
-            const newProperties: Partial<CheckboxItemElement> = {
-              checked: event.target.checked,
-            };
-            Transforms.setNodes(editor, newProperties, { at: path });
-          }}
+          onChange={handleChange}
         />
-      </span>
+        <RegularCheckboxIcon
+          className={`${styles.icon} ${styles.iconRegular}`}
+        />
+        <SelectedCheckboxIcon
+          className={`${styles.icon} ${styles.iconSelected}`}
+          color="currentColor"
+        />
+      </div>
       <span
+        className={styles.textWrapper}
         contentEditable={!readOnly}
         suppressContentEditableWarning
-        className={classNames(styles.checkboxText, {
-          [styles.checkboxTextChecked]: checked,
-        })}
       >
         {children}
       </span>
