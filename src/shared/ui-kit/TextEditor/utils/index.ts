@@ -17,6 +17,7 @@ export * from "./isMarkActive";
 export * from "./parseStringToTextEditorValue";
 export * from "./prependTextInTextEditorValue";
 export * from "./serializeTextEditorValue";
+export * from "./toggleCheckboxItem";
 export * from "./toggleElement";
 export * from "./toggleList";
 export * from "./toggleMark";

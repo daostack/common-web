@@ -37,6 +37,8 @@ import {
   insertEmoji,
   insertMention,
   checkIsCheckboxCreationText,
+  toggleCheckboxItem,
+  checkIsEmptyCheckboxCreationText,
 } from "./utils";
 import styles from "./BaseTextEditor.module.scss";
 
@@ -273,7 +275,11 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
               selectionOffset === lineLastPoint?.offset &&
               checkIsCheckboxCreationText(checkboxText)
             ) {
-              // TODO: replace line with checkbox
+              toggleCheckboxItem(
+                editor,
+                !checkIsEmptyCheckboxCreationText(checkboxText),
+                true,
+              );
               return;
             }
 
