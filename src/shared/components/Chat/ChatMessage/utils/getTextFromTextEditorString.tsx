@@ -8,7 +8,7 @@ import {
 } from "@/shared/ui-kit/TextEditor";
 import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
 import { EmojiElement } from "@/shared/ui-kit/TextEditor/types";
-import { UserMention } from "../components";
+import { CheckboxItem, UserMention } from "../components";
 import { Text, TextData } from "../types";
 import { getTextFromSystemMessage } from "./getTextFromSystemMessage";
 
@@ -80,6 +80,13 @@ const getTextFromDescendant = ({
         <ChatEmoji
           descendant={descendant}
           emojiTextClassName={emojiTextClassName}
+        />
+      );
+    case ElementType.CheckboxItem:
+      return (
+        <CheckboxItem
+          checked={descendant.checked}
+          text={descendant.children[0]?.text}
         />
       );
     default:
