@@ -238,7 +238,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       handleSearch(beforeText ?? "", beforeRange);
     }
 
-    setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
+    // setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
   };
 
   const handleOnChangeSelectionDebounce = useCallback(

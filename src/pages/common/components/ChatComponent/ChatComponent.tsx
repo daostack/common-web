@@ -376,11 +376,13 @@ export default function ChatComponent({
     );
   };
 
+  console.log('---message',JSON.stringify(message));
+
   const sendMessage = useCallback(
     async (editorMessage: TextEditorValue) => {
       if (user && user.uid) {
         const pendingMessageId = uuidv4();
-        console.log('---editorMessage',editorMessage);
+        console.log('---editorMessage',JSON.stringify(editorMessage));
         const message = removeTextEditorEmptyEndLinesValues(editorMessage);
 
         const mentionTags = getMentionTags(message).map((tag) => ({
