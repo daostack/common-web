@@ -216,10 +216,15 @@ export const useDiscussionMessagesById = ({
       discussionId,
       lastVisible && lastVisible[discussionId],
       async (
-        updatedDiscussionMessages,
+        addedDiscussionMessages,
+        modifiedDiscussionMessages,
         removedDiscussionMessages,
         lastVisibleDocument,
       ) => {
+        const updatedDiscussionMessages = [
+          ...addedDiscussionMessages,
+          ...modifiedDiscussionMessages,
+        ];
         setLastVisible((prevVisible) => ({
           ...prevVisible,
           [discussionId]: lastVisibleDocument,

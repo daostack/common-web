@@ -17,6 +17,7 @@ const getDiscussionMessagesByStatus = (
   snapshot: firebase.firestore.QuerySnapshot<DiscussionMessage>,
 ) => {
   const added: DiscussionMessage[] = [];
+  const modified: DiscussionMessage[] = [];
   const removed: DiscussionMessage[] = [];
 
   snapshot.docChanges().forEach((docChange) => {
@@ -27,10 +28,13 @@ const getDiscussionMessagesByStatus = (
       case DocChange.Removed:
         removed.push(transformFirebaseDataSingle(docChange.doc));
         break;
+      default:
+        modified.push(transformFirebaseDataSingle(docChange.doc));
+        break;
     }
   });
 
-  return { added, removed };
+  return { added, modified, removed };
 };
 
 class DiscussionMessageService {
@@ -91,7 +95,8 @@ class DiscussionMessageService {
     discussionId: string,
     lastVisible: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage> | null,
     callback: (
-      updatedDiscussionMessages: DiscussionMessage[],
+      addedDiscussionMessages: DiscussionMessage[],
+      modifiedDiscussionMessages: DiscussionMessage[],
       removedDiscussionMessages: DiscussionMessage[],
       lastVisibleDocument: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>,
     ) => void,
@@ -106,9 +111,15 @@ class DiscussionMessageService {
     }
 
     return query.onSnapshot((snapshot) => {
-      const { added, removed } = getDiscussionMessagesByStatus(snapshot);
+      const { added, modified, removed } =
+        getDiscussionMessagesByStatus(snapshot);
 
-      callback(added, removed, snapshot.docs[snapshot.docs.length - 1]);
+      callback(
+        added,
+        modified,
+        removed,
+        snapshot.docs[snapshot.docs.length - 1],
+      );
     });
   };
 
