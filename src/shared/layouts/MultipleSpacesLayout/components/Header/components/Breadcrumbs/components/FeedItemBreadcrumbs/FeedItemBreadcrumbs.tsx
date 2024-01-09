@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { CommonEvent, CommonEventEmitter } from "@/events";
 import { CommonService } from "@/services";
 import { useIsTabletView } from "@/shared/hooks/viewport";
@@ -7,7 +7,6 @@ import {
   commonLayoutActions,
   MultipleSpacesLayoutFeedItemBreadcrumbs,
   ProjectsStateItem,
-  selectCommonLayoutCommonId,
 } from "@/store/states";
 import { useGoToCreateCommon } from "../../../../../../hooks";
 import { Separator } from "../Separator";
@@ -23,7 +22,6 @@ interface FeedItemBreadcrumbsProps {
 const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
   const { breadcrumbs, itemsWithMenus, truncate } = props;
   const dispatch = useDispatch();
-  const currentLayoutCommonId = useSelector(selectCommonLayoutCommonId);
   const goToCreateCommon = useGoToCreateCommon();
   const isMobileView = useIsTabletView();
   const breadcrumbsItems = truncate
@@ -31,13 +29,10 @@ const FeedItemBreadcrumbs: FC<FeedItemBreadcrumbsProps> = (props) => {
     : breadcrumbs.items;
 
   const handleItemClick = (item: ProjectsStateItem) => {
-    if (
-      currentLayoutCommonId &&
-      item.rootCommonId &&
-      item.rootCommonId !== currentLayoutCommonId
-    ) {
-      dispatch(commonLayoutActions.setCurrentCommonId(item.rootCommonId));
-      dispatch(commonLayoutActions.clearProjects());
+    if (item.rootCommonId) {
+      dispatch(
+        commonLayoutActions.resetCurrentCommonIdAndProjects(item.rootCommonId),
+      );
     }
   };
 

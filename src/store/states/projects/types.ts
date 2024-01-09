@@ -8,6 +8,8 @@ export interface ProjectsStateItem {
   rootCommonId?: string;
   hasMembership?: boolean;
   hasPermissionToAddProject?: boolean;
+  hasPermissionToLinkToHere?: boolean;
+  hasPermissionToMoveToHere?: boolean;
   notificationsAmount?: number;
 }
 

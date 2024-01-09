@@ -9,7 +9,12 @@ import {
 import { CommonFeed } from "@/shared/models";
 import { convertToTimestamp } from "@/shared/utils";
 import * as actions from "./actions";
-import { CommonState, FeedItems, PinnedFeedItems } from "./types";
+import {
+  CommonSearchState,
+  CommonState,
+  FeedItems,
+  PinnedFeedItems,
+} from "./types";
 
 type Action = ActionType<typeof actions>;
 
@@ -27,9 +32,17 @@ const initialPinnedFeedItems: PinnedFeedItems = {
   loading: false,
 };
 
+const initialSearchState: CommonSearchState = {
+  isSearching: false,
+  feedItems: null,
+  pinnedFeedItems: null,
+  searchValue: "",
+};
+
 const initialState: CommonState = {
   feedItems: { ...initialFeedItems },
   pinnedFeedItems: { ...initialPinnedFeedItems },
+  searchState: { ...initialSearchState },
   sharedFeedItemId: null,
   sharedFeedItem: null,
   commonAction: null,
@@ -470,6 +483,40 @@ export const reducer = createReducer<CommonState, Action>(initialState)
         data: nextState.pinnedFeedItems.data || [],
         loading: false,
       };
+    }),
+  )
+  .handleAction(actions.setSearchState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.searchState = payload;
+    }),
+  )
+  .handleAction(actions.resetSearchState, (state) =>
+    produce(state, (nextState) => {
+      nextState.searchState = { ...initialSearchState };
+    }),
+  )
+  .handleAction(actions.updateSearchFeedItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      if (!nextState.searchState.feedItems) {
+        nextState.searchState.feedItems = [];
+      }
+
+      payload.forEach((feedItemEntityId) => {
+        const feedItem = nextState.feedItems.data?.find(
+          (item) =>
+            item.feedItem.data.id === feedItemEntityId ||
+            item.feedItem.data.discussionId === feedItemEntityId,
+        );
+
+        if (feedItem) {
+          nextState.searchState.feedItems!.push(feedItem);
+        }
+      });
+    }),
+  )
+  .handleAction(actions.setIsSearchingFeedItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.searchState.isSearching = payload;
     }),
   )
   .handleAction(actions.setFeedState, (state, { payload }) =>

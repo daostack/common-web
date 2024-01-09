@@ -4,7 +4,7 @@ import { webviewLogin } from "@/pages/Auth/store/actions";
 import { history } from "@/shared/appConfig";
 import { WebviewActions } from "@/shared/constants";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
-import { getInboxPagePath_v04 } from "@/shared/utils";
+import { getInboxPagePath } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import { parseJson } from "@/shared/utils/json";
 
@@ -14,10 +14,10 @@ const WebViewLoginHandler: FC = () => {
   const handleWebviewLogin = React.useCallback(async (event) => {
     const data = parseJson(event.data) as FirebaseCredentials;
     const user = await firebase.auth().currentUser;
+
     if (data?.redirectUrl) {
       history.push(data?.redirectUrl);
     }
-
     if (!data?.providerId || !!user) {
       return;
     }
@@ -31,7 +31,7 @@ const WebViewLoginHandler: FC = () => {
               window.ReactNativeWebView.postMessage(
                 WebviewActions.loginSuccess,
               );
-              history.push(getInboxPagePath_v04());
+              history.push(getInboxPagePath());
             } else {
               window.ReactNativeWebView.postMessage(WebviewActions.loginError);
             }

@@ -4,7 +4,9 @@ import { ChatChannel, CommonFeed } from "@/shared/models";
 import { InboxActionType } from "./constants";
 import { InboxItems } from "./types";
 
-export const resetInbox = createStandardAction(InboxActionType.RESET_INBOX)();
+export const resetInbox = createStandardAction(InboxActionType.RESET_INBOX)<{
+  onlyIfUnread?: boolean;
+} | void>();
 
 export const getInboxItems = createAsyncAction(
   InboxActionType.GET_INBOX_ITEMS,
@@ -64,6 +66,10 @@ export const updateChatChannelItemEmptiness = createStandardAction(
 export const resetInboxItems = createStandardAction(
   InboxActionType.RESET_INBOX_ITEMS,
 )();
+
+export const setHasMoreInboxItems = createStandardAction(
+  InboxActionType.SET_HAS_MORE_INBOX_ITEMS,
+)<boolean>();
 
 export const setSharedFeedItemId = createStandardAction(
   InboxActionType.SET_SHARED_FEED_ITEM_ID,

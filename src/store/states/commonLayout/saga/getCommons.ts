@@ -98,16 +98,26 @@ export function* getCommons(
       .sort((prevItem, nextItem) =>
         compareCommonsByLastActivity(prevItem.common, nextItem.common),
       )
-      .map(({ common, hasMembership, hasPermissionToAddProject }) => ({
-        commonId: common.id,
-        image: common.image,
-        name: common.name,
-        directParent: common.directParent,
-        rootCommonId: common.rootCommonId,
-        hasMembership,
-        hasPermissionToAddProject,
-        notificationsAmount: 0,
-      }));
+      .map(
+        ({
+          common,
+          hasMembership,
+          hasPermissionToAddProject,
+          hasPermissionToLinkToHere,
+          hasPermissionToMoveToHere,
+        }) => ({
+          commonId: common.id,
+          image: common.image,
+          name: common.name,
+          directParent: common.directParent,
+          rootCommonId: common.rootCommonId,
+          hasMembership,
+          hasPermissionToAddProject,
+          hasPermissionToLinkToHere,
+          hasPermissionToMoveToHere,
+          notificationsAmount: 0,
+        }),
+      );
 
     yield put(
       actions.getCommons.success({

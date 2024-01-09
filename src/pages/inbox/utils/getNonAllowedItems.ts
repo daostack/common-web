@@ -5,4 +5,5 @@ export const getNonAllowedItems: GetNonAllowedItemsOptions = () => [
   FeedItemMenuItem.Unpin,
   FeedItemMenuItem.Edit,
   FeedItemMenuItem.Remove,
+  FeedItemMenuItem.LinkTo,
 ];

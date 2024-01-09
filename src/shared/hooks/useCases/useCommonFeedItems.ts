@@ -1,7 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CommonFeedService } from "@/services";
-import { commonActions, FeedItems, selectFeedItems } from "@/store/states";
+import {
+  commonActions,
+  FeedItems,
+  selectFeedItems,
+  selectFilteredFeedItems,
+} from "@/store/states";
 
 interface Return
   extends Pick<FeedItems, "data" | "loading" | "hasMore" | "batchNumber"> {
@@ -15,6 +20,7 @@ export const useCommonFeedItems = (
 ): Return => {
   const dispatch = useDispatch();
   const feedItems = useSelector(selectFeedItems);
+  const filteredFeedItems = useSelector(selectFilteredFeedItems);
   const idsForNotListeningRef = useRef<string[]>(idsForNotListening || []);
 
   const fetch = (feedItemId?: string) => {
@@ -74,6 +80,7 @@ export const useCommonFeedItems = (
 
   return {
     ...feedItems,
+    data: filteredFeedItems || feedItems.data,
     fetch,
   };
 };

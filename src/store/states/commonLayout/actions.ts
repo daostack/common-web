@@ -33,6 +33,10 @@ export const setCurrentCommonId = createStandardAction(
   CommonLayoutActionType.SET_CURRENT_COMMON_ID,
 )<string>();
 
+export const resetCurrentCommonIdAndProjects = createStandardAction(
+  CommonLayoutActionType.RESET_CURRENT_COMMON_ID_AND_PROJECTS,
+)<string>();
+
 export const setLastCommonFromFeed = createStandardAction(
   CommonLayoutActionType.SET_LAST_COMMON_FROM_FEED,
 )<CommonLayoutState["lastCommonFromFeed"]>();
@@ -56,3 +60,7 @@ export const markDataAsNotFetched = createStandardAction(
 export const removeMembershipFromItemAndChildren = createStandardAction(
   CommonLayoutActionType.REMOVE_MEMBERSHIP_FROM_ITEM_AND_CHILDREN,
 )<string>();
+
+export const deleteCommon = createStandardAction(
+  CommonLayoutActionType.DELETE_COMMON,
+)<{ commonId: string }>();

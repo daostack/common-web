@@ -23,9 +23,11 @@ import { JoinProjectModal } from "../../components/JoinProjectModal";
 import { CommonMenuItem } from "../../constants";
 import { CommonPageSettings } from "../../types";
 import { LeaveCircleModal } from "./components";
+import { DeleteCommonModal } from "./components/DeleteCommonModal";
 import { JoinCircleModal } from "./components/JoinCircleModal";
 import { CommonDataContext, CommonDataContextValue } from "./context";
 import {
+  useDeleteCommonModal,
   useJoinCircleModal,
   useLeaveCircleModal,
   useProposalCreationModal,
@@ -89,9 +91,11 @@ const CommonData: FC<CommonDataProps> = (props) => {
     isProposalCreationModalOpen,
     initialProposalTypeForCreation,
     onProposalCreationModalClose,
-    onCommonDelete,
+    onCommonDeleteProposal,
     redirectToProposalPage,
   } = useProposalCreationModal();
+  const { isDeleteCommonModalOpen, onDeleteCommonModalClose, onCommonDelete } =
+    useDeleteCommonModal();
   const {
     circleToLeave,
     isLeaveCircleModalOpen,
@@ -130,11 +134,13 @@ const CommonData: FC<CommonDataProps> = (props) => {
     (menuItem: CommonMenuItem | null) => {
       setSelectedMenuItem(menuItem);
 
-      if (menuItem === CommonMenuItem.DeleteCommon) {
+      if (menuItem === CommonMenuItem.DeleteCommonProposal) {
+        onCommonDeleteProposal();
+      } else if (menuItem === CommonMenuItem.DeleteCommonAction) {
         onCommonDelete();
       }
     },
-    [onCommonDelete],
+    [onCommonDeleteProposal, onCommonDelete],
   );
 
   const handleMenuClose = () => {
@@ -338,6 +344,14 @@ const CommonData: FC<CommonDataProps> = (props) => {
         governance={governance}
         shouldKeepLoadingIfPossible
         onRequestCreated={handleProjectJoinRequestCreated}
+      />
+      <DeleteCommonModal
+        commonId={common.id}
+        commonName={common.name}
+        isSpace={checkIsProject(common)}
+        isShowing={isDeleteCommonModalOpen}
+        onClose={onDeleteCommonModalClose}
+        parentCommonId={common.directParent?.commonId}
       />
     </CommonDataContext.Provider>
   );

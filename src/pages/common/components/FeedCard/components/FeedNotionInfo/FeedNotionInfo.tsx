@@ -17,7 +17,7 @@ export const FeedNotionInfo: React.FC<FeedNotionInfoProps> = (props) => {
       target="_blank"
       rel="noopener noreferrer"
     >
-      Notion pageID: {notion?.pageId}
+      Notion page
     </a>
   );
 

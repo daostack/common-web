@@ -7,18 +7,22 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useCallback,
 } from "react";
+import { useDebounce } from "react-use";
 import classNames from "classnames";
-import { isEqual } from "lodash";
+import { isEqual, debounce } from "lodash";
 import {
   createEditor,
   Transforms,
   Range,
   Editor as EditorSlate,
   BaseRange,
+  BaseSelection,
 } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
+import { DOMRange } from "slate-react/dist/utils/dom";
 import { KeyboardKeys } from "@/shared/constants/keyboardKeys";
 import { User } from "@/shared/models";
 import { getUserName, isMobile, isRtlText } from "@/shared/utils";
@@ -60,7 +64,9 @@ export interface TextEditorProps {
   users?: User[];
   shouldReinitializeEditor: boolean;
   onClearFinished: () => void;
+  scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
   elementStyles?: EditorElementStyles;
+  groupChat?: boolean;
 }
 
 const INITIAL_SEARCH_VALUE = {
@@ -93,7 +99,9 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     users,
     shouldReinitializeEditor = false,
     onClearFinished,
+    scrollSelectionIntoView,
     elementStyles,
+    groupChat,
   } = props;
   const editor = useMemo(
     () =>
@@ -111,6 +119,15 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
 
   const [isRtlLanguage, setIsRtlLanguage] = useState(false);
+
+  useDebounce(
+    () => {
+      setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
+    },
+    5000,
+    [value],
+  );
+
   useEffect(() => {
     if (!shouldReinitializeEditor) {
       return;
@@ -221,29 +238,37 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
+  const handleOnChangeSelection = (selection: BaseSelection) => {
+    if (selection && Range.isCollapsed(selection)) {
+      const [start] = Range.edges(selection);
+      const before = EditorSlate.before(editor, start);
+      const beforeRange = before && EditorSlate.range(editor, before, start);
+      const beforeText = beforeRange && EditorSlate.string(editor, beforeRange);
+
+      handleSearch(beforeText ?? "", beforeRange);
+    }
+  };
+
+  const handleOnChangeSelectionDebounce = useCallback(
+    debounce(handleOnChangeSelection, 500),
+    [handleOnChangeSelection],
+  );
+
+  const handleOnChange = useCallback(
+    (updatedContent) => {
+      // Prevent update for cursor clicks
+      if (isEqual(updatedContent, value)) return;
+      onChange && onChange(updatedContent);
+      const { selection } = editor;
+
+      handleOnChangeSelectionDebounce(selection);
+    },
+    [onChange, value, handleOnChangeSelection],
+  );
+
   return (
     <div ref={inputContainerRef} className={styles.container}>
-      <Slate
-        editor={editor}
-        initialValue={value}
-        onChange={(val) => {
-          onChange && onChange(val);
-          const { selection } = editor;
-
-          if (selection && Range.isCollapsed(selection)) {
-            const [start] = Range.edges(selection);
-            const before = EditorSlate.before(editor, start);
-            const beforeRange =
-              before && EditorSlate.range(editor, before, start);
-            const beforeText =
-              beforeRange && EditorSlate.string(editor, beforeRange);
-
-            handleSearch(beforeText ?? "", beforeRange);
-          }
-
-          setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
-        }}
-      >
+      <Slate editor={editor} value={value} onChange={handleOnChange}>
         <Editor
           className={classNames(
             className,
@@ -259,6 +284,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           disabled={disabled}
           onBlur={onBlur}
           onKeyDown={handleKeyDown}
+          scrollSelectionIntoView={scrollSelectionIntoView}
           elementStyles={elementStyles}
         />
         <EmojiPicker
@@ -272,7 +298,9 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           }}
         />
 
-        {target && chars.length > 0 && (
+        {/* For now, we don't support the ability to mention in a group chat.
+          See https://github.com/daostack/common-web/issues/2380 */}
+        {!groupChat && target && chars.length > 0 && (
           <MentionDropdown
             shouldFocusTarget={shouldFocusTarget}
             onClick={(user: User) => {

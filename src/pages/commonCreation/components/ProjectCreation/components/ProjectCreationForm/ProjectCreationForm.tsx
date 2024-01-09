@@ -106,16 +106,29 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     updateCommon: updateProject,
   } = useCommonUpdate(initialCommon?.id);
   const {
+    data: notionIntegration,
+    loading: isNotionIntegrationLoading,
     isNotionIntegrationUpdated,
     notionIntegrationErrorModalState,
     disconnectNotionModalState,
+    fetchNotionIntegration,
     setNotionIntegrationFormData,
   } = useNotionIntegration({
     projectId: project?.id || updatedProject?.id,
     isNotionIntegrationEnabled: Boolean(initialCommon?.notion),
   });
-  const isLoading = isProjectCreationLoading || isCommonUpdateLoading;
+  const isLoading =
+    isProjectCreationLoading ||
+    isCommonUpdateLoading ||
+    isNotionIntegrationLoading;
   const error = createProjectError || updateProjectError;
+
+  useEffect(() => {
+    if (initialCommon?.id) {
+      fetchNotionIntegration(initialCommon.id);
+    }
+  }, [initialCommon?.id]);
+
   const nonProjectCircles = useMemo(
     () => removeProjectCircles(Object.values(governance?.circles || {})),
     [governance?.circles],
@@ -130,7 +143,11 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   );
   const projectId = initialCommon?.id || project?.id;
 
+  /**
+   * Existing projects names under the same direct parent only.
+   */
   const existingProjectsNames = projects
+    .filter((project) => project.directParent?.commonId === parentCommonId)
     .map((project) => project?.name)
     .filter((spaceName) => spaceName !== initialValues?.spaceName);
 
@@ -202,6 +219,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         items={getConfiguration({
           isProject: true,
           roles,
+          notionIntegration,
           shouldBeUnique: {
             existingNames: existingProjectsNames,
           },

@@ -41,6 +41,21 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
       nextState.discussionStates[discussionId] = { ...state };
     }),
   )
+  .handleAction(actions.updateDiscussionStates, (state, { payload }) =>
+    produce(state, (nextState) => {
+      payload.forEach((discussion) => {
+        if (!discussion) {
+          return;
+        }
+
+        nextState.discussionStates[discussion.id] = {
+          data: discussion,
+          loading: false,
+          fetched: true,
+        };
+      });
+    }),
+  )
   .handleAction(
     actions.updateDiscussionMessageWithActualId,
     (state, { payload }) =>
@@ -62,6 +77,21 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
           fetched: true,
         };
       }),
+  )
+  .handleAction(actions.updateProposalStates, (state, { payload }) =>
+    produce(state, (nextState) => {
+      payload.forEach((proposal) => {
+        if (!proposal) {
+          return;
+        }
+
+        nextState.proposalStates[proposal.id] = {
+          data: proposal,
+          loading: false,
+          fetched: true,
+        };
+      });
+    }),
   )
   .handleAction(actions.updateProposalStateById, (state, { payload }) =>
     produce(state, (nextState) => {
@@ -111,11 +141,23 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
     actions.updateDiscussionMessagesStateByDiscussionId,
     (state, { payload }) =>
       produce(state, (nextState) => {
-        const { discussionId } = payload;
+        const {
+          discussionId,
+          updatedDiscussionMessages,
+          removedDiscussionMessages,
+        } = payload;
+
+        const discussionMessages =
+          state.discussionMessagesStates[discussionId]?.data ?? [];
+        const removedDiscussionMessageIds = removedDiscussionMessages.map(
+          ({ id }) => id,
+        );
 
         const uniq = unionBy(
-          payload.state?.data ?? [],
-          state.discussionMessagesStates[discussionId]?.data ?? [],
+          updatedDiscussionMessages ?? [],
+          discussionMessages.filter(
+            ({ id }) => !removedDiscussionMessageIds.includes(id),
+          ),
           "id",
         ).sort(
           (a, b) =>
@@ -123,7 +165,8 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
         );
 
         nextState.discussionMessagesStates[discussionId] = {
-          ...payload.state,
+          loading: false,
+          fetched: true,
           data: uniq,
         };
       }),
@@ -144,4 +187,18 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
           data: updatedDiscussionMessages,
         };
       }),
+  )
+  .handleAction(actions.deleteDiscussionMessageById, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { discussionMessageId, discussionId } = payload;
+
+      const updatedDiscussionMessages = (
+        state.discussionMessagesStates[discussionId]?.data ?? []
+      ).filter((message) => message.id !== discussionMessageId);
+
+      nextState.discussionMessagesStates[discussionId] = {
+        ...state.discussionMessagesStates[discussionId],
+        data: updatedDiscussionMessages,
+      };
+    }),
   );

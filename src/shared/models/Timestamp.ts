@@ -1,3 +1,3 @@
-import firebase from "firebase";
+import { Timestamp as FirestoreTimestamp } from "firebase/firestore";
 
-export class Timestamp extends firebase.firestore.Timestamp {}
+export class Timestamp extends FirestoreTimestamp {}

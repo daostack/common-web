@@ -12,7 +12,9 @@ import {
   Trash2Icon,
   UnfollowIcon,
   UnpinIcon,
+  Link4Icon as LinkIcon,
   Message3Icon,
+  MoveItemIcon,
 } from "@/shared/icons";
 import { ContextMenuItem as Item, UploadFile } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
@@ -25,6 +27,8 @@ interface Actions {
   report: () => void;
   share: () => void;
   remove?: () => void;
+  linkStream?: () => void;
+  moveStream?: () => void;
 }
 
 export const useMenuItems = (
@@ -39,7 +43,7 @@ export const useMenuItems = (
     feedItemFollow,
     feedItemUserMetadata,
   } = options;
-  const { report, share, remove } = actions;
+  const { report, share, remove, linkStream, moveStream } = actions;
   const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
   const items: Item[] = [
     {
@@ -145,6 +149,22 @@ export const useMenuItems = (
         feedItemFollow.onFollowToggle(FollowFeedItemAction.Unfollow),
       icon: <UnfollowIcon />,
     },
+    linkStream
+      ? {
+          id: FeedItemMenuItem.LinkTo,
+          text: "Link to...",
+          onClick: linkStream,
+          icon: <LinkIcon />,
+        }
+      : undefined,
+    moveStream
+      ? {
+          id: FeedItemMenuItem.MoveTo,
+          text: "Move to...",
+          onClick: moveStream,
+          icon: <MoveItemIcon />,
+        }
+      : undefined,
     remove
       ? {
           id: FeedItemMenuItem.Remove,

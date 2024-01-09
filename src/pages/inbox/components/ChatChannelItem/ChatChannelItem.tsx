@@ -1,15 +1,19 @@
-import React, { FC, useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { UserAvatar } from "@/shared/components";
 import { LastSeenEntity } from "@/shared/constants";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
-import { useChatChannelUserStatus, useUserById } from "@/shared/hooks/useCases";
+import {
+  useChatChannelUserStatus,
+  useUsersByIds,
+} from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
+import { GroupChatIcon } from "@/shared/icons";
 import { ChatChannelFeedLayoutItemProps } from "@/shared/interfaces";
 import { ChatChannel } from "@/shared/models";
-import { getUserName } from "@/shared/utils";
+import { getUserName, joinWithLast } from "@/shared/utils";
 import { inboxActions } from "@/store/states";
 import { FeedItemBaseContent } from "../FeedItemBaseContent";
 import { useChatChannelSubscription, useMenuItems } from "./hooks";
@@ -19,7 +23,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const { chatChannel, isActive, onActiveItemDataChange } = props;
   const dispatch = useDispatch();
   const isTabletView = useIsTabletView();
-  const { fetchUser: fetchDMUser, data: dmUser } = useUserById();
+  const { fetchUsers: fetchDMUsers, data: dmUsers } = useUsersByIds();
   const {
     data: chatChannelUserStatus,
     fetched: isChatChannelUserStatusFetched,
@@ -30,14 +34,23 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     useChatContext();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const dmUserId =
-    chatChannel.participants.length === 1
-      ? chatChannel.participants[0]
-      : chatChannel.participants.filter(
-          (participant) => participant !== userId,
-        )[0];
-  const dmUserName = getUserName(dmUser);
-  const finalTitle = dmUserName;
+
+  const isGroupMessage = chatChannel.participants.length > 2;
+  const dmUserIds = useMemo(
+    () =>
+      chatChannel.participants.filter((participant) => participant !== userId),
+    [],
+  );
+
+  const dmUsersNames = dmUsers?.map((user) => getUserName(user));
+  const dmFirstNames = dmUsers?.map((user) => user.firstName);
+  const finalTitle = joinWithLast(isGroupMessage ? dmFirstNames : dmUsersNames);
+  const hoverTitle = isGroupMessage ? joinWithLast(dmUsersNames) : finalTitle;
+  const groupChatCreatorName = getUserName(
+    chatChannel.createdBy === user?.uid
+      ? user
+      : dmUsers?.find((user) => user.uid === chatChannel.createdBy),
+  );
 
   const handleOpenChat = useCallback(() => {
     setChatItem({
@@ -70,20 +83,23 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
     [dispatch],
   );
 
-  const renderImage = (className?: string) => (
-    <UserAvatar
-      className={className}
-      photoURL={dmUser?.photoURL}
-      nameForRandomAvatar={dmUserName}
-      userName={dmUserName}
-    />
-  );
+  const renderImage = (className?: string) =>
+    isGroupMessage ? (
+      <GroupChatIcon className={className} />
+    ) : (
+      <UserAvatar
+        className={className}
+        photoURL={dmUsers?.[0]?.photoURL}
+        nameForRandomAvatar={dmUsersNames?.[0]}
+        userName={dmUsersNames?.[0]}
+      />
+    );
 
   useChatChannelSubscription(chatChannel.id, userId, handleChatChannelUpdate);
 
   useEffect(() => {
-    fetchDMUser(dmUserId);
-  }, [dmUserId]);
+    fetchDMUsers(dmUserIds);
+  }, [dmUserIds]);
 
   useEffect(() => {
     fetchChatChannelUserStatus({
@@ -104,14 +120,14 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   }, [isChatChannelUserStatusFetched, shouldAllowChatAutoOpen]);
 
   useEffect(() => {
-    if (isActive && finalTitle) {
+    if (isActive && finalTitle && dmUsersNames) {
       onActiveItemDataChange?.({
         itemId: chatChannel.id,
         title: finalTitle,
-        image: dmUser?.photoURL,
+        image: isGroupMessage ? "" : dmUsers?.[0]?.photoURL,
       });
     }
-  }, [isActive, finalTitle, dmUser?.photoURL]);
+  }, [isActive, finalTitle, dmUsers?.[0]?.photoURL, dmUsersNames?.[0]]);
 
   return (
     <FeedItemBaseContent
@@ -129,7 +145,10 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       ownerId={userId}
       renderImage={renderImage}
       isImageRounded
-      dmUserId={dmUserId}
+      dmUserIds={dmUserIds}
+      isGroupMessage={isGroupMessage}
+      createdBy={groupChatCreatorName}
+      hoverTitle={hoverTitle}
     />
   );
 };

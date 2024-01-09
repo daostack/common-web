@@ -14,6 +14,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { useForceUpdate, useModal, useNotification } from "@/shared/hooks";
 import {
   FeedItemFollowState,
+  useCommon,
   useDiscussionById,
   useFeedItemUserMetadata,
   useProposalById,
@@ -93,7 +94,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       commonId,
       commonName,
       commonImage,
-      commonNotion,
+      commonNotion: outerCommonNotion,
       pinnedFeedItems,
       isProject,
       isPinned,
@@ -152,6 +153,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
+    const shouldLoadCommonData = discussion?.notion && !outerCommonNotion;
+    const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
     const {
       isShowing: isProposalDeleteModalOpen,
       onOpen: onProposalDeleteModalOpen,
@@ -199,6 +202,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       },
     );
     const cardTitle = discussion?.title;
+    const commonNotion = outerCommonNotion ?? common?.notion;
 
     const onProposalDelete = useCallback(async () => {
       try {
@@ -449,6 +453,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           })}
           canBeExpanded={discussion?.predefinedType !== PredefinedTypes.General}
           isPreviewMode={isPreviewMode}
+          commonName={commonName}
           image={commonImage}
           imageAlt={`${commonName}'s image`}
           isProject={isProject}

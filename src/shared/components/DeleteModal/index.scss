@@ -46,3 +46,8 @@
 .delete-modal__button-container__cancel {
   margin-right: 0.75rem;
 }
+
+.delete-modal__button-container__send__loader {
+  left: 0;
+  transform: unset;
+}

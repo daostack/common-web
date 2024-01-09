@@ -105,21 +105,35 @@
   font-weight: normal;
 }
 
-.title {
+.titleWrapper {
+  display: flex;
+  align-items: center;
   color: var(--primary-text);
   font-size: $moderate-xsmall;
   line-height: 1.5rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
 
+  & > * {
+    margin-right: 0.5rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
   @include tablet {
-    max-width: 11.75rem;
+    max-width: calc(100% - 3.125rem);
   }
 }
 
-.titleActive {
+.titleWrapperActive {
   color: $white;
+}
+
+.title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .lastMessageContainer {
@@ -171,4 +185,16 @@
 
 .bottomContentRight {
   display: flex;
+  margin-left: auto;
+}
+
+.tooltipTriggerContainer {
+  display: inline-flex;
+}
+
+.tooltipContent {
+  display: flex;
+  flex-direction: column;
+  max-width: 20rem;
+  z-index: 3;
 }

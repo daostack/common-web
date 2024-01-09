@@ -51,7 +51,12 @@ import {
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
-import { getUserName, hasPermission, isMobile } from "@/shared/utils";
+import {
+  emptyFunction,
+  getUserName,
+  hasPermission,
+  isMobile,
+} from "@/shared/utils";
 import {
   cacheActions,
   chatActions,
@@ -158,7 +163,7 @@ export default function ChatComponent({
           governance: {
             circles: governanceCircles,
           },
-          key: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
+          action: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
         })
       : false;
   const {
@@ -544,9 +549,15 @@ export default function ChatComponent({
     (messageId: string) => {
       if (isChatChannel) {
         chatMessagesData.deleteChatMessage(messageId);
+      } else {
+        discussionMessagesData.deleteDiscussionMessage(messageId);
       }
     },
-    [isChatChannel, chatMessagesData.deleteChatMessage],
+    [
+      isChatChannel,
+      chatMessagesData.deleteChatMessage,
+      discussionMessagesData.deleteDiscussionMessage,
+    ],
   );
 
   useEffect(() => {
@@ -554,7 +565,7 @@ export default function ChatComponent({
       markChatMessageItemAsSeen({
         chatChannelId: feedItemId,
       });
-    } else {
+    } else if (commonId) {
       markDiscussionMessageItemAsSeen({
         feedObjectId: feedItemId,
         commonId,
@@ -572,16 +583,16 @@ export default function ChatComponent({
         markChatMessageItemAsSeen({
           chatMessageId: lastNonUserMessage.id,
         });
-      } else {
+      } else if (commonId) {
         markDiscussionMessageItemAsSeen({
           feedObjectId: feedItemId,
-          commonId: lastNonUserMessage.commonId,
+          commonId,
           lastSeenId: lastNonUserMessage.id,
           type: LastSeenEntity.DiscussionMessage,
         });
       }
     }
-  }, [lastNonUserMessage?.id]);
+  }, [lastNonUserMessage?.id, commonId]);
 
   useEffect(() => {
     if (discussionMessageReply || currentFilesPreview) {
@@ -682,6 +693,8 @@ export default function ChatComponent({
           users={users}
           shouldReinitializeEditor={shouldReinitializeEditor}
           onClearFinished={onClearFinished}
+          scrollSelectionIntoView={emptyFunction}
+          groupChat={chatChannel && chatChannel?.participants.length > 2}
         />
         <button
           className={styles.sendIcon}

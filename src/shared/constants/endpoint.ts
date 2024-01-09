@@ -8,6 +8,8 @@ export const ApiEndpoint = {
   CreateSubCommon: "/commons/subcommon/create",
   MarkFeedObjectSeenForUser: "/commons/mark-feed-object-seen-for-user",
   MarkFeedObjectUnseenForUser: "/commons/mark-feed-object-unseen-for-user",
+  LinkStream: "/commons/link-stream",
+  MoveStream: "/commons/move-stream",
   AcceptRules: "/commons/accept-rules",
   GetCommonFeedItems: "/commons/:commonId/feed-items",
   GetCommonPinnedFeedItems: "/commons/:commonId/pinned-feed-items",

@@ -4,6 +4,7 @@ import {
   autoUpdate,
   offset,
   flip,
+  safePolygon,
   shift,
   arrow,
   useHover,
@@ -20,9 +21,12 @@ export const useTooltip = (options: TooltipOptions = {}) => {
     placement = "top",
     open: controlledOpen,
     onOpenChange: setControlledOpen,
+    shouldOpenOnHover,
   } = options;
   const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
   const arrowRef = useRef<HTMLDivElement>(null);
+  const shouldEnableHover =
+    shouldOpenOnHover ?? typeof controlledOpen === "undefined";
 
   const open = controlledOpen ?? uncontrolledOpen;
   const setOpen = setControlledOpen ?? setUncontrolledOpen;
@@ -46,7 +50,8 @@ export const useTooltip = (options: TooltipOptions = {}) => {
 
   const hover = useHover(context, {
     move: false,
-    enabled: typeof controlledOpen === "undefined",
+    enabled: shouldEnableHover,
+    handleClose: shouldEnableHover ? safePolygon() : null,
   });
   const focus = useFocus(context, {
     enabled: typeof controlledOpen === "undefined",

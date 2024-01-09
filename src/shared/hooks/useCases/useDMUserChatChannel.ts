@@ -8,7 +8,7 @@ import { ChatChannel } from "@/shared/models";
 interface Return {
   loading: boolean;
   dmUserChatChannel: ChatChannel | null;
-  fetchDMUserChatChannel: (dmUserId: string) => void;
+  fetchDMUserChatChannel: (dmUserIds: string[]) => void;
   resetDMUserChatChannel: () => void;
   error?: boolean;
 }
@@ -21,7 +21,7 @@ export const useDMUserChatChannel = (): Return => {
   const userId = user?.uid;
 
   const fetchDMUserChatChannel = useCallback(
-    async (dmUserId: string) => {
+    async (dmUserIds: string[]) => {
       if (!userId) {
         return;
       }
@@ -37,13 +37,13 @@ export const useDMUserChatChannel = (): Return => {
       try {
         dmUserChatChannel = await ChatService.getDMUserChatChannel(
           userId,
-          dmUserId,
+          dmUserIds,
         );
 
         if (!dmUserChatChannel) {
           dmUserChatChannel = await ChatService.createChatChannel([
             userId,
-            dmUserId,
+            ...dmUserIds,
           ]);
         }
       } catch (error) {

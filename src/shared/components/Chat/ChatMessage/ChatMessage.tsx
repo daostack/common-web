@@ -15,7 +15,6 @@ import {
   EntityTypes,
   QueryParamKey,
 } from "@/shared/constants";
-import { useModal } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -30,7 +29,8 @@ import {
 } from "@/shared/models";
 import { FilePreview, FilePreviewVariant, getFileName } from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
-import { StaticLinkType, isRtlText, getUserName } from "@/shared/utils";
+import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
+import { StaticLinkType, getUserName } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
 import { ChatMessageLinkify, InternalLinkData, Time } from "./components";
@@ -117,7 +117,7 @@ export default function ChatMessage({
         ));
 
       const parsedText = await getTextFromTextEditorString({
-        textEditorString: parentMessage.text,
+        textEditorString: parentMessage?.text,
         users,
         commonId: discussionMessage.commonId,
         directParent,
@@ -242,7 +242,9 @@ export default function ChatMessage({
                   !isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
                 [styles.replyMessageContentWithFile]: file,
-                [styles.messageContentRtl]: isRtlText(parentMessage?.text),
+                [styles.messageContentRtl]: isRtlWithNoMentions(
+                  parentMessage?.text,
+                ),
               },
             )}
           >
@@ -306,7 +308,9 @@ export default function ChatMessage({
               onContextMenu={handleContextMenu}
               className={classNames(styles.messageText, {
                 [styles.messageTextCurrentUser]: !isNotCurrentUserMessage,
-                [styles.messageTextRtl]: isRtlText(discussionMessage.text),
+                [styles.messageTextRtl]: isRtlWithNoMentions(
+                  discussionMessage.text,
+                ),
                 [styles.messageTextWithReply]: !!parentMessage?.id,
                 [styles.systemMessage]: isSystemMessage,
                 [styles.highlighted]: highlighted && isNotCurrentUserMessage,
@@ -326,7 +330,8 @@ export default function ChatMessage({
                 className={classNames(styles.messageContent, {
                   [styles.messageContentCurrentUser]: !isNotCurrentUserMessage,
                   [styles.messageContentRtl]:
-                    !isSystemMessage && isRtlText(discussionMessage.text),
+                    !isSystemMessage &&
+                    isRtlWithNoMentions(discussionMessage.text),
                 })}
               >
                 {filePreview && (

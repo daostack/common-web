@@ -12,21 +12,18 @@ interface CommonAvatarProps {
 
 const CommonAvatar: FC<CommonAvatarProps> = (props) => {
   const { src = "", name, className, alt } = props;
-
-  if (!name) {
-    return null;
-  }
+  const finalName = name ?? "unknown";
 
   return (
     <Image
       className={className}
       src={src}
-      alt={alt ?? `${name}'s image`}
+      alt={alt ?? `${finalName}'s image`}
       placeholderElement={
         <Image
           className={className}
           src={getRandomUserAvatarURL(name)}
-          alt={alt ?? name}
+          alt={alt || finalName}
         />
       }
     />
