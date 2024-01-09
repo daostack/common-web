@@ -487,8 +487,9 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   }
 
   const onPullToRefresh = () => {
-    fetchCommonPinnedFeedItems();
-    fetchCommonFeedItems();
+    if (hasMoreCommonFeedItems) {
+      fetchCommonFeedItems();
+    }
   };
 
   const renderContentWrapper = (
