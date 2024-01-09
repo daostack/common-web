@@ -41,6 +41,7 @@ import {
 import { useRoutesContext } from "@/shared/contexts";
 import { useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
+import { useDisableOverscroll } from "@/shared/hooks/useDisableOverscroll";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   ChatChannelFeedLayoutItemProps,
@@ -176,6 +177,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     renderChatInput,
     onPullToRefresh,
   } = props;
+  useDisableOverscroll();
   const { getCommonPagePath } = useRoutesContext();
   const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
   const { width: windowWidth } = useWindowSize();
