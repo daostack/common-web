@@ -21,7 +21,7 @@ export const useTooltip = (options: TooltipOptions = {}) => {
     placement = "top",
     open: controlledOpen,
     onOpenChange: setControlledOpen,
-    shouldOpenOnHover = false,
+    shouldOpenOnHover,
   } = options;
   const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
   const arrowRef = useRef<HTMLDivElement>(null);
