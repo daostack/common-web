@@ -380,6 +380,7 @@ export default function ChatComponent({
     async (editorMessage: TextEditorValue) => {
       if (user && user.uid) {
         const pendingMessageId = uuidv4();
+        console.log('---editorMessage',editorMessage);
         const message = removeTextEditorEmptyEndLinesValues(editorMessage);
 
         const mentionTags = getMentionTags(message).map((tag) => ({
@@ -395,6 +396,7 @@ export default function ChatComponent({
         const isFilesMessageWithoutTextAndImages =
           filesPreview.length > 0 && isEmptyText && imagesPreview.length === 0;
 
+        console.log("sendMessage", JSON.stringify(message));
         const payload: CreateDiscussionMessageDtoWithFilesPreview = {
           pendingMessageId,
           text: JSON.stringify(message),
