@@ -5,11 +5,10 @@ import styles from "@/shared/ui-kit/TextEditor/components/Element/components/Che
 
 interface CheckboxItemProps {
   checked: boolean;
-  text?: string;
 }
 
 const CheckboxItem: FC<CheckboxItemProps> = (props) => {
-  const { text } = props;
+  const { children } = props;
   const [checked, setChecked] = useState(props.checked);
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -33,7 +32,7 @@ const CheckboxItem: FC<CheckboxItemProps> = (props) => {
           color="currentColor"
         />
       </div>
-      <span className={styles.textWrapper}>{text}</span>
+      <span className={styles.textWrapper}>{children}</span>
     </div>
   );
 };

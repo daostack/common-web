@@ -84,10 +84,21 @@ const getTextFromDescendant = ({
       );
     case ElementType.CheckboxItem:
       return (
-        <CheckboxItem
-          checked={descendant.checked}
-          text={descendant.children[0]?.text}
-        />
+        <CheckboxItem checked={descendant.checked}>
+          {descendant.children.map((item, index) => (
+            <React.Fragment key={index}>
+              {getTextFromDescendant({
+                descendant: item,
+                users,
+                mentionTextClassName,
+                emojiTextClassName,
+                commonId,
+                directParent,
+                onUserClick,
+              })}
+            </React.Fragment>
+          ))}
+        </CheckboxItem>
       );
     default:
       return descendant.text || "";
