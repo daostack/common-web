@@ -583,16 +583,16 @@ export default function ChatComponent({
         markChatMessageItemAsSeen({
           chatMessageId: lastNonUserMessage.id,
         });
-      } else {
+      } else if (commonId) {
         markDiscussionMessageItemAsSeen({
           feedObjectId: feedItemId,
-          commonId: lastNonUserMessage.commonId,
+          commonId,
           lastSeenId: lastNonUserMessage.id,
           type: LastSeenEntity.DiscussionMessage,
         });
       }
     }
-  }, [lastNonUserMessage?.id]);
+  }, [lastNonUserMessage?.id, commonId]);
 
   useEffect(() => {
     if (discussionMessageReply || currentFilesPreview) {
