@@ -5,9 +5,11 @@ import React, {
   useState,
   useMemo,
 } from "react";
+import { useDispatch } from "react-redux";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
-import { DiscussionMessageService } from "@/services";
+import * as oldCommonActions from "@/pages/OldCommon/store/actions";
+import { ChatService, DiscussionMessageService } from "@/services";
 import { ElementDropdown, UserAvatar } from "@/shared/components";
 import {
   Orientation,
@@ -15,6 +17,7 @@ import {
   EntityTypes,
   QueryParamKey,
 } from "@/shared/constants";
+import { useNotification } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -27,7 +30,12 @@ import {
   DiscussionMessageWithParsedText,
   ParentDiscussionMessage,
 } from "@/shared/models";
-import { FilePreview, FilePreviewVariant, getFileName } from "@/shared/ui-kit";
+import {
+  FilePreview,
+  FilePreviewVariant,
+  getFileName,
+  TextEditorValue,
+} from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
 import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
 import { StaticLinkType, getUserName } from "@/shared/utils";
@@ -85,8 +93,11 @@ export default function ChatMessage({
   onFeedItemClick,
   onInternalLinkClick,
 }: ChatMessageProps) {
+  const dispatch = useDispatch();
+  const { notify } = useNotification();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMessageEditLoading, setIsMessageEditLoading] = useState(false);
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
     checkIsUserDiscussionMessage(discussionMessage);
@@ -189,6 +200,61 @@ export default function ChatMessage({
         parentMessage?.id as string,
         parentMessage.createdAt.toDate(),
       );
+    }
+  };
+
+  const handleEditModeClose = () => {
+    setEditMode(false);
+  };
+
+  const updateDiscussionMessage = (message: TextEditorValue) => {
+    if (!checkIsUserDiscussionMessage(discussionMessage)) {
+      notify("Something went wrong");
+      return;
+    }
+    setIsMessageEditLoading(true);
+    dispatch(
+      oldCommonActions.updateDiscussionMessage.request({
+        payload: {
+          discussionMessageId: discussionMessage.id,
+          ownerId: discussionMessage.ownerId,
+          text: JSON.stringify(message),
+        },
+        isProposalMessage: chatType === ChatType.ProposalComments,
+        discussionId: discussionMessage.discussionId,
+        callback(isSucceed) {
+          if (isSucceed) {
+            handleEditModeClose();
+          } else {
+            notify("Something went wrong");
+          }
+          setIsMessageEditLoading(false);
+        },
+      }),
+    );
+  };
+
+  const updateChatMessage = async (message: TextEditorValue) => {
+    setIsMessageEditLoading(true);
+
+    try {
+      const updatedMessage = await ChatService.updateChatMessage({
+        chatMessageId: discussionMessage.id,
+        text: JSON.stringify(message),
+      });
+      handleEditModeClose();
+    } catch (err) {
+      notify("Something went wrong");
+    } finally {
+      setIsMessageEditLoading(false);
+    }
+  };
+
+  const updateMessage = (message: TextEditorValue) => {
+    if (chatType === ChatType.ChatMessages) {
+      updateChatMessage(message);
+    } else {
+      updateDiscussionMessage(message);
     }
   };
 
@@ -296,11 +362,11 @@ export default function ChatMessage({
         )}
         {isEditMode ? (
           <EditMessageInput
-            isProposalMessage={chatType === ChatType.ProposalComments}
-            isChatMessage={chatType === ChatType.ChatMessages}
             discussionMessage={discussionMessage}
-            onClose={() => setEditMode(false)}
+            onClose={handleEditModeClose}
             commonMember={commonMember}
+            isLoading={isMessageEditLoading}
+            updateMessage={updateMessage}
           />
         ) : (
           <>
