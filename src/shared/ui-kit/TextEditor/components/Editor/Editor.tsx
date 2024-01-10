@@ -26,6 +26,7 @@ interface EditorProps {
   onBlur?: FocusEventHandler;
   elementStyles?: EditorElementStyles;
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
+  onKeyUp?: (event: KeyboardEvent<HTMLElement>) => void;
   scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
 }
 
@@ -38,6 +39,7 @@ const Editor: FC<EditorProps> = (props) => {
     disabled = false,
     onBlur,
     onKeyDown,
+    onKeyUp,
     scrollSelectionIntoView,
   } = props;
   const editor = useSlate();
@@ -81,6 +83,7 @@ const Editor: FC<EditorProps> = (props) => {
       readOnly={readOnly || disabled}
       onBlur={onBlur}
       onKeyDown={handleKeyDown}
+      onKeyUp={onKeyUp}
       scrollSelectionIntoView={scrollSelectionIntoView}
     />
   );

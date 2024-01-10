@@ -12,6 +12,7 @@ import { useDebounce, useMeasure, useScroll } from "react-use";
 import classNames from "classnames";
 import isHotkey from "is-hotkey";
 import { debounce, delay, omit } from "lodash";
+import { Editor } from "slate";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";
@@ -160,12 +161,12 @@ export default function ChatComponent({
   const hasPermissionToHide =
     commonMember && governanceCircles
       ? hasPermission({
-        commonMember,
-        governance: {
-          circles: governanceCircles,
-        },
-        action: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
-      })
+          commonMember,
+          governance: {
+            circles: governanceCircles,
+          },
+          action: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
+        })
       : false;
   const {
     discussionMessagesData,
@@ -462,16 +463,16 @@ export default function ChatComponent({
             parentId: discussionMessageReply?.id,
             parentMessage: discussionMessageReply?.id
               ? {
-                id: discussionMessageReply?.id,
-                ownerName: discussionMessageReply.ownerName,
-                ...(checkIsUserDiscussionMessage(discussionMessageReply) && {
-                  ownerId: discussionMessageReply.ownerId,
-                }),
-                text: discussionMessageReply.text,
-                files: discussionMessageReply.files,
-                images: discussionMessageReply.images,
-                createdAt: discussionMessageReply.createdAt,
-              }
+                  id: discussionMessageReply?.id,
+                  ownerName: discussionMessageReply.ownerName,
+                  ...(checkIsUserDiscussionMessage(discussionMessageReply) && {
+                    ownerId: discussionMessageReply.ownerId,
+                  }),
+                  text: discussionMessageReply.text,
+                  files: discussionMessageReply.files,
+                  images: discussionMessageReply.images,
+                  createdAt: discussionMessageReply.createdAt,
+                }
               : null,
             images: imagesPreview?.map((file) =>
               FileService.convertFileInfoToCommonLink(file),
@@ -527,11 +528,8 @@ export default function ChatComponent({
     setShouldReinitializeEditor(false);
   };
 
-  console.log("--message", JSON.stringify(message));
-
   const sendChatMessage = (): void => {
     if (canSendMessage) {
-      console.log("---sendMessage", JSON.stringify(message));
       sendMessage && sendMessage(message);
       chatContentRef.current?.scrollToContainerBottom();
       onClear();

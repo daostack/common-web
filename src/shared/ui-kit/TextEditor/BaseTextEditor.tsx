@@ -227,7 +227,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-    console.log("--onKeyDown", JSON.stringify(event));
     if (event.key === KeyboardKeys.ArrowUp && target) {
       event.preventDefault();
       setShouldFocusTarget(true);
@@ -258,14 +257,16 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     (updatedContent) => {
       // Prevent update for cursor clicks
       if (isEqual(updatedContent, value)) return;
-      console.log("--updatedContent", JSON.stringify(updatedContent));
-      onChange && onChange(updatedContent);
-      // const { selection } = editor;
+      const { selection } = editor;
 
-      // handleOnChangeSelectionDebounce(selection);
+      handleOnChangeSelectionDebounce(selection);
     },
     [onChange, value, handleOnChangeSelection],
   );
+
+  const handleKeyUp = () => {
+    onChange && onChange(editor.children);
+  }
 
   return (
     <div ref={inputContainerRef} className={styles.container}>
@@ -287,6 +288,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           onKeyDown={handleKeyDown}
           scrollSelectionIntoView={scrollSelectionIntoView}
           elementStyles={elementStyles}
+          onKeyUp={handleKeyUp}
         />
         <EmojiPicker
           isRtl={isRtlLanguage}
