@@ -268,7 +268,7 @@ export default function ChatComponent({
   const canSendMessage =
     !checkIsTextEditorValueEmpty(message) ||
     currentFilesPreview?.length ||
-    (isTyping && isAndroid());
+    (!isTyping && isAndroid());
 
   const focusOnChat = () => {
     editorRef.current?.focus();
