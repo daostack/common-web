@@ -227,6 +227,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    console.log("--onKeyDown", JSON.stringify(event));
     if (event.key === KeyboardKeys.ArrowUp && target) {
       event.preventDefault();
       setShouldFocusTarget(true);
