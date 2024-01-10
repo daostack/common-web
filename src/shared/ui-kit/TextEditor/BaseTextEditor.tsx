@@ -249,11 +249,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
-  const handleOnChangeSelectionDebounce = useCallback(
-    debounce(handleOnChangeSelection, 500),
-    [handleOnChangeSelection],
-  );
-
   const handleOnChange = useCallback(
     (updatedContent) => {
       // Prevent update for cursor clicks
@@ -261,14 +256,14 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       onChange && onChange(updatedContent);
       const { selection } = editor;
 
-      handleOnChangeSelectionDebounce(selection);
+      handleOnChangeSelection(selection);
     },
     [onChange, value, handleOnChangeSelection],
   );
 
   return (
     <div ref={inputContainerRef} className={styles.container}>
-      <Slate editor={editor} value={value} onChange={handleOnChange}>
+      <Slate editor={editor} initialValue={value} onChange={handleOnChange}>
         <Editor
           className={classNames(
             className,
