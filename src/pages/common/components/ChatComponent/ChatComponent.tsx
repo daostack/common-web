@@ -56,6 +56,7 @@ import {
   getUserName,
   hasPermission,
   isMobile,
+  isAndroid,
 } from "@/shared/utils";
 import {
   cacheActions,
@@ -159,12 +160,12 @@ export default function ChatComponent({
   const hasPermissionToHide =
     commonMember && governanceCircles
       ? hasPermission({
-          commonMember,
-          governance: {
-            circles: governanceCircles,
-          },
-          action: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
-        })
+        commonMember,
+        governance: {
+          circles: governanceCircles,
+        },
+        action: GovernanceActions.HIDE_OR_UNHIDE_MESSAGE,
+      })
       : false;
   const {
     discussionMessagesData,
@@ -213,6 +214,7 @@ export default function ChatComponent({
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
   );
+  const [isTyping, setIsTyping] = useState<boolean>(false);
 
   const emojiCount = useMemo(
     () => countTextEditorEmojiElements(message),
@@ -264,7 +266,9 @@ export default function ChatComponent({
   >([]);
 
   const canSendMessage =
-    !checkIsTextEditorValueEmpty(message) || currentFilesPreview?.length;
+    !checkIsTextEditorValueEmpty(message) ||
+    currentFilesPreview?.length ||
+    (isTyping && isAndroid());
 
   const focusOnChat = () => {
     editorRef.current?.focus();
@@ -458,16 +462,16 @@ export default function ChatComponent({
             parentId: discussionMessageReply?.id,
             parentMessage: discussionMessageReply?.id
               ? {
-                  id: discussionMessageReply?.id,
-                  ownerName: discussionMessageReply.ownerName,
-                  ...(checkIsUserDiscussionMessage(discussionMessageReply) && {
-                    ownerId: discussionMessageReply.ownerId,
-                  }),
-                  text: discussionMessageReply.text,
-                  files: discussionMessageReply.files,
-                  images: discussionMessageReply.images,
-                  createdAt: discussionMessageReply.createdAt,
-                }
+                id: discussionMessageReply?.id,
+                ownerName: discussionMessageReply.ownerName,
+                ...(checkIsUserDiscussionMessage(discussionMessageReply) && {
+                  ownerId: discussionMessageReply.ownerId,
+                }),
+                text: discussionMessageReply.text,
+                files: discussionMessageReply.files,
+                images: discussionMessageReply.images,
+                createdAt: discussionMessageReply.createdAt,
+              }
               : null,
             images: imagesPreview?.map((file) =>
               FileService.convertFileInfoToCommonLink(file),
@@ -523,8 +527,11 @@ export default function ChatComponent({
     setShouldReinitializeEditor(false);
   };
 
+  console.log("--message", JSON.stringify(message));
+
   const sendChatMessage = (): void => {
     if (canSendMessage) {
+      console.log("---sendMessage", JSON.stringify(message));
       sendMessage && sendMessage(message);
       chatContentRef.current?.scrollToContainerBottom();
       onClear();
@@ -637,6 +644,15 @@ export default function ChatComponent({
     };
   }, []);
 
+  const handleInputChange = (value: TextEditorValue) => {
+    setIsTyping(true);
+
+    setMessage(value);
+    setTimeout(() => {
+      setIsTyping(false);
+    }, 1000);
+  };
+
   const renderChatInput = (): ReactNode => {
     const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
 
@@ -687,7 +703,7 @@ export default function ChatComponent({
             }),
           }}
           value={message}
-          onChange={setMessage}
+          onChange={handleInputChange}
           placeholder="Message"
           onKeyDown={onEnterKeyDown}
           users={users}
