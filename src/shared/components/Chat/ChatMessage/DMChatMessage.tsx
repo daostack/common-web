@@ -5,9 +5,10 @@ import React, {
   useState,
   useMemo,
 } from "react";
+import { useDispatch } from "react-redux";
 import classNames from "classnames";
 import { useLongPress } from "use-long-press";
-import { Logger } from "@/services";
+import { ChatService, Logger } from "@/services";
 import { ElementDropdown, UserAvatar } from "@/shared/components";
 import {
   Orientation,
@@ -16,6 +17,7 @@ import {
   QueryParamKey,
 } from "@/shared/constants";
 import { useRoutesContext } from "@/shared/contexts";
+import { useNotification } from "@/shared/hooks";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ModerationFlags } from "@/shared/interfaces/Moderation";
 import {
@@ -33,6 +35,7 @@ import {
   countTextEditorEmojiElements,
   getFileName,
   parseStringToTextEditorValue,
+  TextEditorValue,
 } from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
 import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
@@ -91,9 +94,12 @@ export default function DMChatMessage({
   onFeedItemClick,
   onInternalLinkClick,
 }: ChatMessageProps) {
+  const dispatch = useDispatch();
+  const { notify } = useNotification();
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const [isEditMode, setEditMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMessageEditLoading, setIsMessageEditLoading] = useState(false);
   const isTabletView = useIsTabletView();
   const isUserDiscussionMessage =
     checkIsUserDiscussionMessage(discussionMessage);
@@ -324,6 +330,26 @@ export default function DMChatMessage({
     [discussionMessage.files],
   );
 
+  const handleEditModeClose = () => {
+    setEditMode(false);
+  };
+
+  const updateMessage = async (message: TextEditorValue) => {
+    setIsMessageEditLoading(true);
+
+    try {
+      const updatedMessage = await ChatService.updateChatMessage({
+        chatMessageId: discussionMessage.id,
+        text: JSON.stringify(message),
+      });
+      handleEditModeClose();
+    } catch (err) {
+      notify("Something went wrong");
+    } finally {
+      setIsMessageEditLoading(false);
+    }
+  };
+
   return (
     <li
       id={discussionMessage.id}
@@ -347,11 +373,11 @@ export default function DMChatMessage({
         )}
         {isEditMode ? (
           <EditMessageInput
-            isProposalMessage={chatType === ChatType.ProposalComments}
-            isChatMessage={chatType === ChatType.ChatMessages}
             discussionMessage={discussionMessage}
-            onClose={() => setEditMode(false)}
+            onClose={handleEditModeClose}
             commonMember={commonMember}
+            isLoading={isMessageEditLoading}
+            updateMessage={updateMessage}
           />
         ) : (
           <>
