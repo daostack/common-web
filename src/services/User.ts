@@ -17,6 +17,7 @@ import {
   convertObjectDatesToFirestoreTimestamps,
   convertToTimestamp,
   firestoreDataConverter,
+  transformFirebaseDataList,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import * as cacheActions from "@/store/states/cache/actions";
@@ -74,6 +75,23 @@ class UserService {
     }
 
     return user;
+  };
+
+  public getUsersByIds = async (ids: string[]): Promise<Array<User | null>> => {
+    const queries: firebase.firestore.Query[] = [];
+
+    // Firebase allows to use at most 10 items per query for `in` option
+    for (let i = 0; i < ids.length; i += 10) {
+      queries.push(
+        this.getUsersCollection().where("uid", "in", ids.slice(i, i + 10)),
+      );
+    }
+
+    const results = await Promise.all(queries.map((query) => query.get()));
+
+    return results
+      .map((result) => transformFirebaseDataList<User | null>(result))
+      .reduce((acc, items) => [...acc, ...items], []);
   };
 
   public getCachedUserById = async (userId: string): Promise<User | null> => {

@@ -5,7 +5,7 @@ import { FeedItemFollowLayoutItem, LoadingState } from "@/shared/interfaces";
 import { Common, CommonFeedType, Discussion, Proposal } from "@/shared/models";
 import { cacheActions, selectDiscussionStateById } from "../../cache";
 import * as actions from "../actions";
-import { selectSearchValue } from "../selectors";
+import { selectFeedSearchValue } from "../selectors";
 
 function* doesDiscussionMatchSearchValue(
   searchValue: string,
@@ -47,7 +47,7 @@ function* doesProjectMatchSearchValue(searchValue: string, projectId: string) {
 }
 
 export function* searchFetchedFeedItems(feedItems: FeedItemFollowLayoutItem[]) {
-  const searchValue = (yield select(selectSearchValue)).toLowerCase();
+  const searchValue = (yield select(selectFeedSearchValue)).toLowerCase();
 
   if (!searchValue) {
     return;

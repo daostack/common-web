@@ -10,10 +10,16 @@ import {
 import { ChatChannel, CommonFeed, Timestamp } from "@/shared/models";
 import { getQueryParam } from "@/shared/utils/queryParams";
 import * as actions from "./actions";
-import { InboxItems, InboxState } from "./types";
+import { InboxItems, InboxSearchState, InboxState } from "./types";
 import { getFeedLayoutItemDateForSorting } from "./utils";
 
 type Action = ActionType<typeof actions>;
+
+const INITIAL_SEARCH_STATE: InboxSearchState = {
+  isSearching: false,
+  searchValue: "",
+  items: null,
+};
 
 export const INITIAL_INBOX_ITEMS: InboxItems = {
   data: null,
@@ -27,6 +33,7 @@ export const INITIAL_INBOX_ITEMS: InboxItems = {
 
 export const INITIAL_INBOX_STATE: InboxState = {
   items: { ...INITIAL_INBOX_ITEMS },
+  searchState: { ...INITIAL_SEARCH_STATE },
   sharedFeedItemId: null,
   sharedItem: null,
   chatChannelItems: [],
@@ -540,6 +547,41 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
       ) {
         nextState.items.lastDocTimestamp = lastDocTimestamp;
       }
+    }),
+  )
+  .handleAction(actions.setSearchState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.searchState = payload;
+    }),
+  )
+  .handleAction(actions.resetSearchState, (state) =>
+    produce(state, (nextState) => {
+      nextState.searchState = { ...INITIAL_SEARCH_STATE };
+    }),
+  )
+  .handleAction(actions.updateSearchInboxItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      if (!nextState.searchState.items) {
+        nextState.searchState.items = [];
+      }
+
+      payload.forEach((feedItemEntityId) => {
+        const feedItem = nextState.items.data?.find((item) =>
+          checkIsChatChannelLayoutItem(item)
+            ? item.itemId === feedItemEntityId
+            : item.feedItem.data.id === feedItemEntityId ||
+              item.feedItem.data.discussionId === feedItemEntityId,
+        );
+
+        if (feedItem) {
+          nextState.searchState.items!.push(feedItem);
+        }
+      });
+    }),
+  )
+  .handleAction(actions.setIsSearchingInboxItems, (state, { payload }) =>
+    produce(state, (nextState) => {
+      nextState.searchState.isSearching = payload;
     }),
   )
   .handleAction(actions.updateInboxItem, (state, { payload }) =>

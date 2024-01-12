@@ -10,6 +10,7 @@ import * as actions from "../actions";
 import { selectInboxItems } from "../selectors";
 import { InboxItems } from "../types";
 import { getFeedLayoutItemDateForSorting } from "../utils";
+import { searchFetchedInboxItems } from "./searchFetchedInboxItems";
 
 const sortItems = (
   data: FeedLayoutItemWithFollowData[],
@@ -63,6 +64,10 @@ export function* getInboxItems(
         unread,
       }),
     );
+
+    if (!isFirstRequest) {
+      yield searchFetchedInboxItems(convertedData);
+    }
   } catch (error) {
     if (isError(error)) {
       yield put(actions.getInboxItems.failure(error));

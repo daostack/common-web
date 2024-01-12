@@ -36,6 +36,8 @@ import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
   inboxActions,
   selectChatChannelItems,
+  selectInboxSearchValue,
+  selectIsSearchingInboxItems,
   selectNextChatChannelItemId,
   selectSharedInboxItem,
 } from "@/store/states";
@@ -81,6 +83,8 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   );
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const isSearchingInboxItems = useSelector(selectIsSearchingInboxItems);
+  const searchValue = useSelector(selectInboxSearchValue);
   const {
     data: inboxData,
     fetched: isDataFetched,
@@ -99,6 +103,21 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   const sharedInboxItem = useSelector(selectSharedInboxItem);
   const chatChannelItems = useSelector(selectChatChannelItems);
   const nextChatChannelItemId = useSelector(selectNextChatChannelItemId);
+
+  const getEmptyText = (): string => {
+    if (hasMoreInboxItems) {
+      return "";
+    }
+
+    if (searchValue) {
+      ("Looks like there are no matches for your query.");
+    }
+
+    return isActiveUnreadInboxItemsQueryParam
+      ? "Hurry! No unread items in your inbox :-)"
+      : "Your inbox is empty";
+  };
+
   const topFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
 
@@ -123,7 +142,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   };
 
   const fetchMoreInboxItems = () => {
-    if (hasMoreInboxItems) {
+    if (hasMoreInboxItems && !isSearchingInboxItems) {
       fetchInboxItems();
     }
   };
@@ -240,10 +259,15 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   }, [userId]);
 
   useEffect(() => {
-    if (userId && !inboxItems && !areInboxItemsLoading) {
+    if (
+      userId &&
+      !inboxItems &&
+      !areInboxItemsLoading &&
+      !isSearchingInboxItems
+    ) {
       fetchInboxItems();
     }
-  }, [userId, inboxItems, areInboxItemsLoading]);
+  }, [userId, inboxItems, areInboxItemsLoading, isSearchingInboxItems]);
 
   if (!isDataFetched) {
     return (
@@ -276,7 +300,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         commonMember={null}
         topFeedItems={topFeedItems}
         feedItems={inboxItems}
-        loading={areInboxItemsLoading || !user}
+        loading={areInboxItemsLoading || isSearchingInboxItems || !user}
         shouldHideContent={!user}
         batchNumber={batchNumber}
         onFetchNext={fetchMoreInboxItems}
@@ -286,11 +310,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         onFeedItemUnfollowed={handleFeedItemUnfollowed}
         getLastMessage={getLastMessage}
         sharedFeedItemId={sharedFeedItemId}
-        emptyText={
-          isActiveUnreadInboxItemsQueryParam
-            ? "Hurry! No unread items in your inbox :-)"
-            : "Your inbox is empty"
-        }
+        emptyText={getEmptyText()}
         getNonAllowedItems={getNonAllowedItems}
         onActiveItemChange={handleActiveItemChange}
         onActiveItemDataChange={onActiveItemDataChange}
