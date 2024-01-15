@@ -42,8 +42,14 @@
   height: 100%;
   pointer-events: none;
 }
+.iconRegular {
+  color: $c-neutrals-300;
+}
 .iconSelected {
   color: $c-pink-light-2;
+}
+.iconDisabled {
+  opacity: 0.5;
 }
 
 .textWrapper {

@@ -1,6 +1,7 @@
 export * from "./changeElementIndent";
 export * from "./changeElementTextDirection";
 export * from "./checkIsCheckboxCreationText";
+export * from "./checkIsCheckboxItemElement";
 export * from "./checkIsCheckboxItemType";
 export * from "./checkIsIndentType";
 export * from "./checkIsInlineType";

@@ -84,7 +84,7 @@ const getTextFromDescendant = ({
       );
     case ElementType.CheckboxItem:
       return (
-        <CheckboxItem checked={descendant.checked}>
+        <CheckboxItem id={descendant.id} checked={descendant.checked}>
           {descendant.children.map((item, index) => (
             <React.Fragment key={index}>
               {getTextFromDescendant({
