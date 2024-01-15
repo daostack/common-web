@@ -66,6 +66,7 @@ export interface EmojiElement extends BaseElement<CustomText> {
 
 export interface CheckboxItemElement extends BaseElement<CustomText> {
   type: ElementType.CheckboxItem;
+  id: string;
   checked: boolean;
 }
 

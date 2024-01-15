@@ -1,4 +1,5 @@
 import { Editor, Element as SlateElement, Transforms } from "slate";
+import { v4 as uuidv4 } from "uuid";
 import { ElementType } from "../constants";
 import { CheckboxItemElement } from "../types";
 import { isElementActive } from "./isElementActive";
@@ -21,6 +22,7 @@ export const toggleCheckboxItem = (
   const { selection } = editor;
   const checkboxItemElement: Partial<CheckboxItemElement> = {
     type: ElementType.CheckboxItem,
+    id: uuidv4(),
     checked,
   };
 
