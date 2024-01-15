@@ -31,7 +31,6 @@ const UnlinkStreamModal: FC<UnlinkStreamModalProps> = (props) => {
   const [isUnlinking, setIsUnlinking] = useState(false);
   const [errorText, setErrorText] = useState("");
   const cancelTokenRef = useRef<CancelTokenSource | null>(null);
-
   const user = useSelector(selectUser());
   const userId = user?.uid;
 
