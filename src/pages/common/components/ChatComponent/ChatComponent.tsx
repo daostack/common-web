@@ -209,6 +209,7 @@ export default function ChatComponent({
     }),
     [isScrolling, chatContainerRef.current],
   );
+  const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
 
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
@@ -638,8 +639,6 @@ export default function ChatComponent({
   }, []);
 
   const renderChatInput = (): ReactNode => {
-    const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
-
     if (shouldHideChatInput) {
       return null;
     }
@@ -773,6 +772,7 @@ export default function ChatComponent({
               !discussionMessagesData.rawData?.length && // for non direct messages chats. not using messageCount because it includes the deleted messages as well.
               Object.keys(discussionMessages).length === 0 // for direct messages chats
             }
+            isMessageEditAllowed={!shouldHideChatInput}
           />
         </ChatContentContext.Provider>
       </div>

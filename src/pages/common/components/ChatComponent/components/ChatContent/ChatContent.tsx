@@ -63,6 +63,7 @@ interface ChatContentInterface {
   onInternalLinkClick?: (data: InternalLinkData) => void;
   isEmpty?: boolean;
   isChatChannel: boolean;
+  isMessageEditAllowed: boolean;
   fetchReplied: (messageId: string, endDate: Date) => Promise<void>;
 }
 
@@ -99,6 +100,7 @@ const ChatContent: ForwardRefRenderFunction<
     isEmpty,
     messages,
     isChatChannel,
+    isMessageEditAllowed,
     fetchReplied,
     discussionMessages,
   },
@@ -290,6 +292,7 @@ const ChatContent: ForwardRefRenderFunction<
                   onUserClick={onUserClick}
                   onFeedItemClick={onFeedItemClick}
                   onInternalLinkClick={onInternalLinkClick}
+                  isMessageEditAllowed={isMessageEditAllowed}
                 />
               );
 

@@ -11,8 +11,10 @@ interface CheckboxItemProps {
 
 const CheckboxItem: FC<CheckboxItemProps> = (props) => {
   const { id, children } = props;
-  const { isMessageLoading, onCheckboxChange } = useChatMessageContext();
+  const { isMessageLoading, isMessageEditAllowed, onCheckboxChange } =
+    useChatMessageContext();
   const [checked, setChecked] = useState(props.checked);
+  const isDisabled = isMessageLoading || !isMessageEditAllowed;
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onCheckboxChange?.(id, !checked);
@@ -27,17 +29,17 @@ const CheckboxItem: FC<CheckboxItemProps> = (props) => {
           type="checkbox"
           checked={checked}
           onChange={handleChange}
-          disabled={isMessageLoading}
+          disabled={isDisabled}
         />
         <RegularCheckboxIcon
           className={classNames(styles.icon, styles.iconRegular, {
-            [styles.iconDisabled]: isMessageLoading,
+            [styles.iconDisabled]: isDisabled,
           })}
           color="currentColor"
         />
         <SelectedCheckboxIcon
           className={classNames(styles.icon, styles.iconSelected, {
-            [styles.iconDisabled]: isMessageLoading,
+            [styles.iconDisabled]: isDisabled,
           })}
           color="currentColor"
         />

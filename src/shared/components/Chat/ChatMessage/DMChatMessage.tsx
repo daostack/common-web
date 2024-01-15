@@ -391,6 +391,7 @@ export default function DMChatMessage({
     () => ({
       isMessageLoading: isMessageEditLoading,
       onCheckboxChange: handleCheckboxChange,
+      isMessageEditAllowed: true,
     }),
     [isMessageEditLoading, handleCheckboxChange],
   );

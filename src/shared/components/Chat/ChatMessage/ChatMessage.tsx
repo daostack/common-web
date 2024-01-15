@@ -69,6 +69,7 @@ interface ChatMessageProps {
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
   onInternalLinkClick?: (data: InternalLinkData) => void;
+  isMessageEditAllowed: boolean;
 }
 
 const getStaticLinkByChatType = (chatType: ChatType): StaticLinkType => {
@@ -99,6 +100,7 @@ export default function ChatMessage({
   onUserClick,
   onFeedItemClick,
   onInternalLinkClick,
+  isMessageEditAllowed,
 }: ChatMessageProps) {
   const dispatch = useDispatch();
   const { notify } = useNotification();
@@ -381,8 +383,9 @@ export default function ChatMessage({
     () => ({
       isMessageLoading: isMessageEditLoading,
       onCheckboxChange: handleCheckboxChange,
+      isMessageEditAllowed,
     }),
-    [isMessageEditLoading, handleCheckboxChange],
+    [isMessageEditLoading, handleCheckboxChange, isMessageEditAllowed],
   );
 
   return (
