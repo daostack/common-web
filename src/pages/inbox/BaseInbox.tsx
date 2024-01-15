@@ -110,7 +110,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     }
 
     if (searchValue) {
-      ("Looks like there are no matches for your query.");
+      return "Looks like there are no matches for your query.";
     }
 
     return isActiveUnreadInboxItemsQueryParam

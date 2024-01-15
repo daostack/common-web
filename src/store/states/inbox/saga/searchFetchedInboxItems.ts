@@ -20,6 +20,7 @@ import {
   Proposal,
   User,
 } from "@/shared/models";
+import { getUserName } from "@/shared/utils";
 import {
   cacheActions,
   selectDiscussionStateById,
@@ -32,9 +33,7 @@ export function doesUserMatchSearchValue(
   user: User,
   searchValue: string,
 ): boolean {
-  const displayName = user.displayName || `${user.firstName} ${user.lastName}`;
-
-  return displayName.toLowerCase().includes(searchValue);
+  return getUserName(user).toLowerCase().includes(searchValue);
 }
 
 function* doesDiscussionMatchSearchValue(
@@ -220,7 +219,9 @@ export function* searchFetchedInboxChatChannels(
         UserService.getUsersByIds,
         Array.from(new Set(userIdsToFetch)),
       );
-      yield put(cacheActions.updateUserStates(users));
+      yield put(
+        cacheActions.updateUserStates(users.filter(Boolean) as Array<User>),
+      );
     }
 
     const resultInboxChatChannelIds = chatChannelItemsToTest
