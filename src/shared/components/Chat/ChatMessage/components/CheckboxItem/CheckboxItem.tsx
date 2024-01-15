@@ -7,10 +7,11 @@ import { useChatMessageContext } from "../../context";
 interface CheckboxItemProps {
   id: string;
   checked: boolean;
+  isRTL: boolean;
 }
 
 const CheckboxItem: FC<CheckboxItemProps> = (props) => {
-  const { id, children } = props;
+  const { id, isRTL, children } = props;
   const { isMessageLoading, isMessageEditAllowed, onCheckboxChange } =
     useChatMessageContext();
   const [checked, setChecked] = useState(props.checked);
@@ -22,8 +23,17 @@ const CheckboxItem: FC<CheckboxItemProps> = (props) => {
   };
 
   return (
-    <div className={classNames(styles.container)}>
-      <div className={styles.inputWrapper} contentEditable={false}>
+    <div
+      className={classNames(styles.container, {
+        [styles.containerRTL]: isRTL,
+      })}
+    >
+      <div
+        className={classNames(styles.inputWrapper, {
+          [styles.inputWrapperRTL]: isRTL,
+        })}
+        contentEditable={false}
+      >
         <input
           className={styles.input}
           type="checkbox"

@@ -8,6 +8,7 @@ import {
 } from "@/shared/ui-kit/TextEditor";
 import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
 import { EmojiElement } from "@/shared/ui-kit/TextEditor/types";
+import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
 import { CheckboxItem, UserMention } from "../components";
 import { Text, TextData } from "../types";
 import { getTextFromSystemMessage } from "./getTextFromSystemMessage";
@@ -84,7 +85,11 @@ const getTextFromDescendant = ({
       );
     case ElementType.CheckboxItem:
       return (
-        <CheckboxItem id={descendant.id} checked={descendant.checked}>
+        <CheckboxItem
+          id={descendant.id}
+          checked={descendant.checked}
+          isRTL={isRtlWithNoMentions([descendant])}
+        >
           {descendant.children.map((item, index) => (
             <React.Fragment key={index}>
               {getTextFromDescendant({

@@ -1,12 +1,15 @@
 import { isRtlText } from "@/shared/utils";
 import { ElementType } from "../constants";
+import { TextEditorValue } from "../types";
 
 /**
  * Check whether an Editor text is 'rtl' while ignoring mentions.
  */
-export const isRtlWithNoMentions = (text = ""): boolean => {
+export const isRtlWithNoMentions = (
+  text: string | TextEditorValue = "",
+): boolean => {
   try {
-    const parsedText = JSON.parse(text);
+    const parsedText = typeof text === "string" ? JSON.parse(text) : text;
     const textWithNoMentions = JSON.stringify(
       parsedText[0].children?.filter(
         (item) => item.type !== ElementType.Mention,
