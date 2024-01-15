@@ -45,7 +45,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
         {searchInputToggle.isToggledOn && (
           <SearchInput
             value={searchValue}
-            placeholder="Search spaces"
+            placeholder="Search inbox"
             onChange={onChangeSearchValue}
             onClose={onCloseSearch}
             autoFocus
