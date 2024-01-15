@@ -42,6 +42,10 @@
   overflow: hidden;
 }
 
+.descriptionLessShortened {
+  -webkit-line-clamp: 20;
+}
+
 .seeMore {
   color: $c-pink-active-feed-cards;
   width: fit-content;

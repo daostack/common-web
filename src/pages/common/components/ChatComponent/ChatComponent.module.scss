@@ -82,6 +82,8 @@
   word-break: break-word;
   padding: 0.125rem 1.75rem 0.125rem 0.75rem;
   margin: 0.3rem 0;
+  overflow-x: hidden;
+  min-height: 2.625rem !important;
 }
 
 .messageInputRtl {

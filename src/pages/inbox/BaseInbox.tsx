@@ -298,6 +298,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         onFeedItemSelect={handleFeedItemSelect}
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
+        onPullToRefresh={fetchInboxItems}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
     </>

@@ -486,6 +486,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
     );
   }
 
+  const onPullToRefresh = () => {
+    if (hasMoreCommonFeedItems) {
+      fetchCommonFeedItems();
+    }
+  };
+
   const renderContentWrapper = (
     children: ReactNode,
     wrapperStyles?: CSSProperties,
@@ -548,6 +554,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
         renderChatInput={renderChatInput}
+        onPullToRefresh={onPullToRefresh}
       />
       <CommonSidenavLayoutTabs className={styles.tabs} />
       {commonData.common && commonData.governance && (
