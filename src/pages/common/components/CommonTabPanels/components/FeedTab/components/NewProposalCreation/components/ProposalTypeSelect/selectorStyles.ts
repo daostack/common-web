@@ -1,6 +1,9 @@
 import { ThemeColors } from "@/shared/constants";
 
-export const selectorStyles = (hasError: boolean, getThemeColor: (color: ThemeColors) => string) => {
+export const selectorStyles = (
+  hasError: boolean,
+  getThemeColor: (color: ThemeColors) => string,
+) => {
   return {
     menu: (provided) => ({ ...provided, zIndex: 10000 }),
     menuPortal: (provided) => ({ ...provided, zIndex: 10000 }),

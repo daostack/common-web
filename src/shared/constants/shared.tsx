@@ -60,7 +60,7 @@ export const MAX_LINK_TITLE_LENGTH = 30;
 export const NUMBERS_ONLY_REGEXP = /^[0-9]*$/;
 
 export const URL_REGEXP =
-  /^(http:\/\/|https:\/\/)[\w.-]+\.[\w]{2,}(\/[\w/_.]*)*\/?$/;
+  /^(http:\/\/|https:\/\/)[\w.-]+\.[\w]{2,}(\/[\w/?&=._-]*)*\/?$/;
 export const NAME_REGEXP = /^[aA-zZ\s]+$/;
 
 export enum ShareViewType {

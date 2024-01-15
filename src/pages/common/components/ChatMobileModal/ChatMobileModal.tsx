@@ -4,6 +4,7 @@ import { Image, Modal, ButtonIcon } from "@/shared/components";
 import { Colors } from "@/shared/constants";
 import { LongLeftArrowIcon } from "@/shared/icons";
 import CloseIcon from "@/shared/icons/close.icon";
+import { ModalTransition } from "@/shared/interfaces";
 import { emptyFunction, isRTL } from "@/shared/utils";
 import styles from "./ChatMobileModal.module.scss";
 
@@ -45,6 +46,7 @@ const ChatMobileModal: FC<ChatMobileModalProps> = (props) => {
     <Modal
       className={classNames(outerStyles?.modal)}
       isShowing={isShowing}
+      transition={ModalTransition.RightToLeft}
       title={header}
       styles={{
         headerWrapper: outerStyles?.modalHeaderWrapper,
