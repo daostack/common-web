@@ -9,6 +9,7 @@ import {
   CommonDeletedSystemMessage,
   CommonEditedSystemMessage,
   CommonFeedItemCreatedSystemMessage,
+  CommonFeedItemDeletedSystemMessage,
   CommonMemberAddedSystemMessage,
   CommonState,
   SystemMessageCommonType,
@@ -210,6 +211,25 @@ const getFeedItemCreatedSystemMessageText = async (
   return [titleEl, " was created by ", userEl].filter(Boolean);
 };
 
+const getFeedItemDeletedSystemMessageText = async (
+  systemMessageData: CommonFeedItemDeletedSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, feedItemDisplayingData] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getFeedItemDisplayingData(
+      systemMessageData.feedItemDataId,
+      systemMessageData.feedItemType,
+      data.commonId,
+    ),
+  ]);
+  const userEl = renderUserMention(user, data);
+
+  return [`${feedItemDisplayingData.title} was deleted by `, userEl].filter(
+    Boolean,
+  );
+};
+
 export const getTextFromSystemMessage = async (
   data: TextData,
 ): Promise<Text[] | null> => {
@@ -247,6 +267,12 @@ export const getTextFromSystemMessage = async (
       break;
     case SystemDiscussionMessageType.FeedItemCreated:
       text = await getFeedItemCreatedSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.FeedItemDeleted:
+      text = await getFeedItemDeletedSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );

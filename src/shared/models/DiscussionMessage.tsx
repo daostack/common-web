@@ -118,12 +118,25 @@ export interface CommonFeedItemCreatedSystemMessage
   };
 }
 
+export interface CommonFeedItemDeletedSystemMessage
+  extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.FeedItemDeleted;
+  systemMessageData: {
+    userId: string;
+    commonId: string;
+    feedItemId: string;
+    feedItemType: CommonFeedType;
+    feedItemDataId: string;
+  };
+}
+
 export type SystemDiscussionMessage =
   | CommonCreatedSystemMessage
   | CommonMemberAddedSystemMessage
   | CommonEditedSystemMessage
   | CommonDeletedSystemMessage
-  | CommonFeedItemCreatedSystemMessage;
+  | CommonFeedItemCreatedSystemMessage
+  | CommonFeedItemDeletedSystemMessage;
 
 export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
 
