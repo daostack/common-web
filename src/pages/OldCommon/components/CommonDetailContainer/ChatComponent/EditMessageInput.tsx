@@ -7,6 +7,10 @@ import {
   checkIsSystemDiscussionMessage,
   DiscussionMessage,
 } from "@/shared/models";
+import {
+  checkUncheckedItemsInTextEditorValue,
+  parseStringToTextEditorValue,
+} from "@/shared/ui-kit/TextEditor/utils";
 import { getUserName } from "@/shared/utils";
 import "./edit-message-input.scss";
 
@@ -38,6 +42,9 @@ export default function EditMessageInput({
           discussionMessageId: discussionMessage.id,
           ownerId: discussionMessage.ownerId,
           text: message,
+          hasUncheckedItems: checkUncheckedItemsInTextEditorValue(
+            parseStringToTextEditorValue(message),
+          ),
         },
         isProposalMessage,
         discussionId: discussionMessage.discussionId,
