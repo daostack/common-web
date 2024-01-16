@@ -82,6 +82,10 @@ const Editor: FC<EditorProps> = (props) => {
       onBlur={onBlur}
       onKeyDown={handleKeyDown}
       scrollSelectionIntoView={scrollSelectionIntoView}
+      onFocus={() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+      }}
     />
   );
 };
