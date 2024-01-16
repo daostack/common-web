@@ -3,7 +3,6 @@
 .content {
   position: relative;
   flex: 1;
-  padding: 0 1.5rem;
   display: flex;
   flex-direction: column;
   overflow-anchor: none;
@@ -62,4 +61,13 @@
 
 .feedItemDetailsModalOverlay {
   background-color: unset;
+}
+
+.pullToRefresh {
+  text-align: center;
+  color: var(--primary-text);
+
+  @include tablet {
+    padding-bottom: 5rem;
+  }
 }

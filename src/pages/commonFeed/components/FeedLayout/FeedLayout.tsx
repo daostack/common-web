@@ -12,6 +12,7 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import PullToRefresh from "react-simple-pull-to-refresh";
 import { useWindowSize } from "react-use";
 import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
@@ -40,6 +41,7 @@ import {
 import { useRoutesContext } from "@/shared/contexts";
 import { useQueryParams } from "@/shared/hooks";
 import { useGovernanceByCommonId } from "@/shared/hooks/useCases";
+import { useDisableOverscroll } from "@/shared/hooks/useDisableOverscroll";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
   ChatChannelFeedLayoutItemProps,
@@ -60,7 +62,7 @@ import {
   Governance,
   User,
 } from "@/shared/models";
-import { InfiniteScroll, TextEditorValue } from "@/shared/ui-kit";
+import { InfiniteScroll, Loader, TextEditorValue } from "@/shared/ui-kit";
 import {
   addQueryParam,
   deleteQueryParam,
@@ -138,6 +140,7 @@ interface FeedLayoutProps {
   outerStyles?: FeedLayoutOuterStyles;
   settings?: FeedLayoutSettings;
   renderChatInput?: () => ReactNode;
+  onPullToRefresh?: () => void;
 }
 
 const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
@@ -172,7 +175,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     outerStyles,
     settings,
     renderChatInput,
+    onPullToRefresh,
   } = props;
+  useDisableOverscroll();
   const { getCommonPagePath } = useRoutesContext();
   const refsByItemId = useRef<Record<string, FeedItemRef | null>>({});
   const { width: windowWidth } = useWindowSize();
@@ -667,78 +672,85 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
           >
             {topContent}
             {isContentEmpty && <p className={styles.emptyText}>{emptyText}</p>}
-            <InfiniteScroll
-              markerClassName={
-                allFeedItems && allFeedItems.length > 7
-                  ? styles.infiniteScrollMarker
-                  : ""
-              }
-              onFetchNext={onFetchNext}
-              isLoading={loading}
-              loaderDelay={LOADER_APPEARANCE_DELAY}
+            <PullToRefresh
+              isPullable={isTabletView && Boolean(onPullToRefresh)}
+              className={styles.pullToRefresh}
+              onRefresh={async () => onPullToRefresh?.()}
+              refreshingContent={<Loader />}
             >
-              {allFeedItems?.map((item) => {
-                const isActive = item.itemId === activeFeedItemId;
-
-                if (checkIsFeedItemFollowLayoutItem(item)) {
-                  const commonData = getItemCommonData(
-                    item.feedItemFollowWithMetadata,
-                    outerCommon,
-                  );
-                  const isPinned = (outerCommon?.pinnedFeedItems || []).some(
-                    (pinnedItem) =>
-                      pinnedItem.feedObjectId === item.feedItem.id,
-                  );
-
-                  return (
-                    <FeedItem
-                      ref={(ref) => {
-                        refsByItemId.current[item.itemId] = ref;
-                      }}
-                      key={item.feedItem.id}
-                      commonMember={commonMember}
-                      commonId={commonData?.id}
-                      commonName={commonData?.name || ""}
-                      commonImage={commonData?.image || ""}
-                      commonNotion={outerCommon?.notion}
-                      pinnedFeedItems={outerCommon?.pinnedFeedItems}
-                      isProject={commonData?.isProject}
-                      isPinned={isPinned}
-                      item={item.feedItem}
-                      governanceCircles={governance?.circles}
-                      isMobileVersion={isTabletView}
-                      userCircleIds={userCircleIds}
-                      isActive={isActive}
-                      isExpanded={item.feedItem.id === expandedFeedItemId}
-                      sizeKey={isActive ? sizeKey : undefined}
-                      currentUserId={userId}
-                      shouldCheckItemVisibility={
-                        !item.feedItemFollowWithMetadata ||
-                        item.feedItemFollowWithMetadata.userId !== userId
-                      }
-                      onActiveItemDataChange={handleActiveFeedItemDataChange}
-                      directParent={outerCommon?.directParent}
-                      rootCommonId={outerCommon?.rootCommonId}
-                    />
-                  );
+              <InfiniteScroll
+                markerClassName={
+                  allFeedItems && allFeedItems.length > 7
+                    ? styles.infiniteScrollMarker
+                    : ""
                 }
-                if (
-                  renderChatChannelItem &&
-                  checkIsChatChannelLayoutItem(item)
-                ) {
-                  return (
-                    <React.Fragment key={item.itemId}>
-                      {renderChatChannelItem({
-                        chatChannel: item.chatChannel,
-                        isActive,
-                        onActiveItemDataChange:
-                          handleActiveChatChannelItemDataChange,
-                      })}
-                    </React.Fragment>
-                  );
-                }
-              })}
-            </InfiniteScroll>
+                onFetchNext={onFetchNext}
+                isLoading={loading}
+                loaderDelay={LOADER_APPEARANCE_DELAY}
+              >
+                {allFeedItems?.map((item) => {
+                  const isActive = item.itemId === activeFeedItemId;
+
+                  if (checkIsFeedItemFollowLayoutItem(item)) {
+                    const commonData = getItemCommonData(
+                      item.feedItemFollowWithMetadata,
+                      outerCommon,
+                    );
+                    const isPinned = (outerCommon?.pinnedFeedItems || []).some(
+                      (pinnedItem) =>
+                        pinnedItem.feedObjectId === item.feedItem.id,
+                    );
+
+                    return (
+                      <FeedItem
+                        ref={(ref) => {
+                          refsByItemId.current[item.itemId] = ref;
+                        }}
+                        key={item.feedItem.id}
+                        commonMember={commonMember}
+                        commonId={commonData?.id}
+                        commonName={commonData?.name || ""}
+                        commonImage={commonData?.image || ""}
+                        commonNotion={outerCommon?.notion}
+                        pinnedFeedItems={outerCommon?.pinnedFeedItems}
+                        isProject={commonData?.isProject}
+                        isPinned={isPinned}
+                        item={item.feedItem}
+                        governanceCircles={governance?.circles}
+                        isMobileVersion={isTabletView}
+                        userCircleIds={userCircleIds}
+                        isActive={isActive}
+                        isExpanded={item.feedItem.id === expandedFeedItemId}
+                        sizeKey={isActive ? sizeKey : undefined}
+                        currentUserId={userId}
+                        shouldCheckItemVisibility={
+                          !item.feedItemFollowWithMetadata ||
+                          item.feedItemFollowWithMetadata.userId !== userId
+                        }
+                        onActiveItemDataChange={handleActiveFeedItemDataChange}
+                        directParent={outerCommon?.directParent}
+                        rootCommonId={outerCommon?.rootCommonId}
+                      />
+                    );
+                  }
+                  if (
+                    renderChatChannelItem &&
+                    checkIsChatChannelLayoutItem(item)
+                  ) {
+                    return (
+                      <React.Fragment key={item.itemId}>
+                        {renderChatChannelItem({
+                          chatChannel: item.chatChannel,
+                          isActive,
+                          onActiveItemDataChange:
+                            handleActiveChatChannelItemDataChange,
+                        })}
+                      </React.Fragment>
+                    );
+                  }
+                })}
+              </InfiniteScroll>
+            </PullToRefresh>
             {!isTabletView &&
               (chatItem?.discussion ? (
                 <DesktopChat

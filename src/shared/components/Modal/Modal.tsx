@@ -1,4 +1,8 @@
 import React, {
+  forwardRef,
+  ForwardRefRenderFunction,
+  MouseEventHandler,
+  ReactNode,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -6,20 +10,22 @@ import React, {
   useMemo,
   useRef,
   useState,
-  forwardRef,
-  ForwardRefRenderFunction,
-  MouseEventHandler,
-  ReactNode,
 } from "react";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 import { v4 as uuidv4 } from "uuid";
-import { useComponentWillUnmount, useLockedBody } from "../../hooks";
+import { useComponentWillUnmount, useLockedBody, useMount } from "../../hooks";
 import Close2Icon from "../../icons/close2.icon";
 import LeftArrowIcon from "../../icons/leftArrow.icon";
-import { ModalProps, ModalRef, ModalType } from "../../interfaces";
-import { ClosePrompt } from "./components/ClosePrompt";
-import { ModalContext, FooterOptions, ModalContextValue } from "./context";
+import {
+  ModalProps,
+  ModalRef,
+  ModalTransition,
+  ModalType,
+} from "../../interfaces";
+import { Transition } from "../Transition";
+import { ClosePrompt } from "./components";
+import { FooterOptions, ModalContext, ModalContextValue } from "./context";
 import "./index.scss";
 
 const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
@@ -27,7 +33,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   modalRef,
 ) => {
   const {
-    isShowing,
+    isShowing: isOpen,
     onGoBack,
     onClose,
     children,
@@ -36,6 +42,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     onHeaderScrolledToTop,
     styles,
     type = ModalType.Default,
+    transition,
     hideCloseButton = false,
     closeIconSize = 14,
     isHeaderSticky = false,
@@ -46,6 +53,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
     fullHeight = false,
   } = props;
   const contentRef = useRef<HTMLDivElement>(null);
+  const isMounted = useMount({ isOpen, delay: 300 });
   const [footer, setFooter] = useState<ReactNode>(null);
   const [footerOptions, setFooterOptions] = useState<FooterOptions>({});
   const [headerContent, setHeaderContent] = useState<ReactNode>(null);
@@ -54,6 +62,7 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   const { sticky: isFooterSticky = false } = footerOptions;
   const [showClosePrompt, setShowClosePrompt] = useState(false);
   const modalId = useMemo(() => `modal-${uuidv4()}`, []);
+  const isShowing = transition ? isMounted : isOpen;
   const { lockBodyScroll, unlockBodyScroll } = useLockedBody();
 
   const handleModalContainerClick: MouseEventHandler = (event) => {
@@ -233,30 +242,40 @@ const Modal: ForwardRefRenderFunction<ModalRef, ModalProps> = (
   return isShowing
     ? ReactDOM.createPortal(
         <div id={modalId}>
-          <div className={modalOverlayClassName} />
-          <div className={modalWrapperClassName} onClick={handleClose}>
-            <div className={modalClassName} onClick={handleModalContainerClick}>
-              {isHeaderSticky && !withoutHeader && headerEl}
-              <ModalContext.Provider value={contextValue}>
-                <div
-                  ref={contentRef}
-                  className={modalContentClassName}
-                  onScroll={handleScroll}
-                >
-                  {!isHeaderSticky && !withoutHeader && headerEl}
-                  {children}
-                  {!isFooterSticky && footerEl}
-                </div>
-              </ModalContext.Provider>
-              {isFooterSticky && footerEl}
-              {showClosePrompt && (
-                <ClosePrompt
-                  onClose={handleClosePromptClose}
-                  onContinue={handleClosePromptContinue}
-                />
-              )}
+          <Transition
+            show={isOpen}
+            transition={transition ? ModalTransition.FadeIn : null}
+          >
+            <div className={modalOverlayClassName} />
+          </Transition>
+          <Transition show={isOpen} transition={transition}>
+            <div className={modalWrapperClassName} onClick={handleClose}>
+              <div
+                className={modalClassName}
+                onClick={handleModalContainerClick}
+              >
+                {isHeaderSticky && !withoutHeader && headerEl}
+                <ModalContext.Provider value={contextValue}>
+                  <div
+                    ref={contentRef}
+                    className={modalContentClassName}
+                    onScroll={handleScroll}
+                  >
+                    {!isHeaderSticky && !withoutHeader && headerEl}
+                    {children}
+                    {!isFooterSticky && footerEl}
+                  </div>
+                </ModalContext.Provider>
+                {isFooterSticky && footerEl}
+                {showClosePrompt && (
+                  <ClosePrompt
+                    onClose={handleClosePromptClose}
+                    onContinue={handleClosePromptContinue}
+                  />
+                )}
+              </div>
             </div>
-          </div>
+          </Transition>
         </div>,
         document.body,
       )

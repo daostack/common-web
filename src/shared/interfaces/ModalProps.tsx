@@ -5,9 +5,16 @@ export enum ModalType {
   MobilePopUp,
 }
 
+export enum ModalTransition {
+  BottomToTop = 1,
+  RightToLeft,
+  FadeIn,
+}
+
 export interface ModalProps {
   isShowing: boolean;
   type?: ModalType;
+  transition?: ModalTransition;
   onGoBack?: () => void;
   onClose: () => void;
   children: React.ReactNode;
