@@ -30,9 +30,7 @@ import {
 import {
   FilePreview,
   FilePreviewVariant,
-  countTextEditorEmojiElements,
   getFileName,
-  parseStringToTextEditorValue,
 } from "@/shared/ui-kit";
 import { ChatImageGallery } from "@/shared/ui-kit";
 import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
@@ -130,23 +128,14 @@ export default function DMChatMessage({
         return;
       }
 
-      const emojiCount = countTextEditorEmojiElements(
-        parseStringToTextEditorValue(discussionMessage.text),
-      );
-
       setIsMessageDataFetching(true);
 
       try {
         const parsedText = await getTextFromTextEditorString({
+          userId,
+          ownerId: discussionMessageUserId,
           textEditorString: discussionMessage.text,
           users,
-          mentionTextClassName: !isNotCurrentUserMessage
-            ? styles.mentionTextCurrentUser
-            : "",
-          emojiTextClassName: classNames({
-            [styles.singleEmojiText]: emojiCount.isSingleEmoji,
-            [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-          }),
           commonId: discussionMessage.commonId,
           systemMessage: isSystemMessage ? discussionMessage : undefined,
           getCommonPagePath,
@@ -181,6 +170,8 @@ export default function DMChatMessage({
       }
 
       const parsedText = await getTextFromTextEditorString({
+        userId,
+        ownerId: discussionMessageUserId,
         textEditorString: discussionMessage?.parentMessage.text,
         users,
         commonId: discussionMessage.commonId,
@@ -197,6 +188,8 @@ export default function DMChatMessage({
     isNotCurrentUserMessage,
     discussionMessage.commonId,
     onUserClick,
+    discussionMessageUserId,
+    userId,
   ]);
 
   const handleLongPress = () => {
@@ -435,11 +428,7 @@ export default function DMChatMessage({
                   isDiscussionMessage
                   isChatMessage={chatType === ChatType.ChatMessages}
                   isDiscussionMessageWithFile={Boolean(filePreview)}
-                  ownerId={
-                    isUserDiscussionMessage
-                      ? discussionMessage.ownerId
-                      : undefined
-                  }
+                  ownerId={discussionMessageUserId || undefined}
                   userId={userId}
                   commonId={discussionMessage.commonId}
                   onEdit={() => setEditMode(true)}

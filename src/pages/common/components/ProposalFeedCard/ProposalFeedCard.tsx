@@ -440,6 +440,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           isExpanded={isExpanded}
           unreadMessages={feedItemUserMetadata?.count || 0}
           title={cardTitle}
+          circleVisibility={item.circleVisibility}
+          discussionId={discussion?.id}
           lastMessage={getLastMessage({
             commonFeedType: item.data.type,
             lastMessage: item.data.lastMessage,
