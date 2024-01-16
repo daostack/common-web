@@ -18,7 +18,6 @@ import firebase from "@/shared/utils/firebase";
 import {
   cacheActions,
   selectDiscussionMessagesStateByDiscussionId,
-  selectPreloadDiscussionMessagesStateByDiscussionId,
 } from "@/store/states";
 
 export type TextStyles = {
