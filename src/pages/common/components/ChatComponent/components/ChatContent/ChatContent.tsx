@@ -114,6 +114,8 @@ const ChatContent: ForwardRefRenderFunction<
   const isTabletView = useIsTabletView();
   const queryParams = useQueryParams();
   const messageIdParam = queryParams[QueryParamKey.Message];
+  const shouldDisplayMessagesOnlyWithUncheckedItems =
+    queryParams[QueryParamKey.Unchecked] === "true";
 
   const [highlightedMessageId, setHighlightedMessageId] = useState(
     () => (typeof messageIdParam === "string" && messageIdParam) || null,
@@ -232,7 +234,9 @@ const ChatContent: ForwardRefRenderFunction<
     <>
       {dateListReverse.map((day, dayIndex) => {
         const date = new Date(Number(day));
-        const currentMessages = messages[Number(day)];
+        const currentMessages = shouldDisplayMessagesOnlyWithUncheckedItems
+          ? messages[Number(day)].filter((message) => message.hasUncheckedItems)
+          : messages[Number(day)];
         const previousDayMessages =
           messages[Number(dateListReverse[dayIndex + 1])] || [];
         const isLastSeenInPreviousDay = checkIsLastSeenInPreviousDay(
