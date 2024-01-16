@@ -7,8 +7,10 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useCallback
 } from "react";
 import classNames from "classnames";
+import { useDebounce } from "react-use";
 import { isEqual } from "lodash";
 import {
   createEditor,
@@ -16,6 +18,7 @@ import {
   Range,
   Editor as EditorSlate,
   BaseRange,
+  BaseSelection,
 } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
@@ -45,8 +48,8 @@ export interface TextEditorProps {
   emojiContainerClassName?: string;
   emojiPickerContainerClassName?: string;
   inputContainerRef?:
-    | MutableRefObject<HTMLDivElement | null>
-    | RefCallback<HTMLDivElement>;
+  | MutableRefObject<HTMLDivElement | null>
+  | RefCallback<HTMLDivElement>;
   editorRef?: MutableRefObject<HTMLElement | null> | RefCallback<HTMLElement>;
   id?: string;
   name?: string;
@@ -116,6 +119,14 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
 
   const [isRtlLanguage, setIsRtlLanguage] = useState(false);
+  useDebounce(
+    () => {
+      setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
+    },
+    5000,
+    [value],
+  );
+
   useEffect(() => {
     if (!shouldReinitializeEditor) {
       return;
@@ -226,28 +237,34 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
+  const handleOnChangeSelection = (selection: BaseSelection) => {
+    if (selection && Range.isCollapsed(selection)) {
+      const [start] = Range.edges(selection);
+      const before = EditorSlate.before(editor, start);
+      const beforeRange = before && EditorSlate.range(editor, before, start);
+      const beforeText = beforeRange && EditorSlate.string(editor, beforeRange);
+      handleSearch(beforeText ?? "", beforeRange);
+    }
+  };
+
+  const handleOnChange = useCallback(
+    (updatedContent) => {
+      // Prevent update for cursor clicks
+      if (isEqual(updatedContent, value)) return;
+      onChange && onChange(updatedContent);
+      const { selection } = editor;
+
+      handleOnChangeSelection(selection);
+    },
+    [onChange, value, handleOnChangeSelection],
+  );
+
   return (
     <div ref={inputContainerRef} className={styles.container}>
       <Slate
         editor={editor}
-        value={value}
-        onChange={(val) => {
-          onChange && onChange(val);
-          const { selection } = editor;
-
-          if (selection && Range.isCollapsed(selection)) {
-            const [start] = Range.edges(selection);
-            const before = EditorSlate.before(editor, start);
-            const beforeRange =
-              before && EditorSlate.range(editor, before, start);
-            const beforeText =
-              beforeRange && EditorSlate.string(editor, beforeRange);
-
-            handleSearch(beforeText ?? "", beforeRange);
-          }
-
-          setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
-        }}
+        initialValue={value}
+        onChange={handleOnChange}
       >
         <Editor
           className={classNames(
