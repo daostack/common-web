@@ -7,7 +7,9 @@ import React, {
   useEffect,
   useMemo,
   useState,
+  useCallback,
 } from "react";
+import { useDebounce } from "react-use";
 import classNames from "classnames";
 import { isEqual } from "lodash";
 import {
@@ -16,6 +18,7 @@ import {
   Range,
   Editor as EditorSlate,
   BaseRange,
+  BaseSelection,
 } from "slate";
 import { withHistory } from "slate-history";
 import { ReactEditor, Slate, withReact } from "slate-react";
@@ -121,6 +124,14 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
 
   const [isRtlLanguage, setIsRtlLanguage] = useState(false);
+  useDebounce(
+    () => {
+      setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
+    },
+    5000,
+    [value],
+  );
+
   useEffect(() => {
     if (!shouldReinitializeEditor) {
       return;
@@ -231,64 +242,69 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
+  const handleOnChangeSelection = (selection: BaseSelection) => {
+    if (selection && Range.isCollapsed(selection)) {
+      const {
+        anchor: { path: selectionPath, offset: selectionOffset },
+      } = selection;
+      const [start] = Range.edges(selection);
+      const before = EditorSlate.before(editor, start);
+      const lineLastPoint = EditorSlate.after(
+        editor,
+        {
+          anchor: {
+            offset: 0,
+            path: selectionPath,
+          },
+          focus: {
+            offset: 0,
+            path: selectionPath,
+          },
+        },
+        { unit: "line" },
+      );
+      const beforeRange = before && EditorSlate.range(editor, before, start);
+      const beforeText = beforeRange && EditorSlate.string(editor, beforeRange);
+      const checkboxText = EditorSlate.string(editor, {
+        anchor: { offset: 0, path: selectionPath },
+        focus: { offset: 3, path: selectionPath },
+      });
+
+      if (
+        beforeText === " " &&
+        selectionOffset === 4 &&
+        selectionOffset === lineLastPoint?.offset &&
+        checkIsCheckboxCreationText(checkboxText)
+      ) {
+        toggleCheckboxItem(
+          editor,
+          !checkIsEmptyCheckboxCreationText(checkboxText),
+          true,
+        );
+        return;
+      }
+
+      handleSearch(beforeText ?? "", beforeRange);
+    }
+  };
+
+  const handleOnChange = useCallback(
+    (updatedContent) => {
+      // Prevent update for cursor clicks
+      if (isEqual(updatedContent, value)) {
+        return;
+      }
+      onChange && onChange(updatedContent);
+      const { selection } = editor;
+
+      handleOnChangeSelection(selection);
+    },
+    [onChange, value, handleOnChangeSelection],
+  );
+
   return (
     <div ref={inputContainerRef} className={styles.container}>
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(val) => {
-          onChange && onChange(val);
-          const { selection } = editor;
-
-          if (selection && Range.isCollapsed(selection)) {
-            const {
-              anchor: { path: selectionPath, offset: selectionOffset },
-            } = selection;
-            const [start] = Range.edges(selection);
-            const before = EditorSlate.before(editor, start);
-            const lineLastPoint = EditorSlate.after(
-              editor,
-              {
-                anchor: {
-                  offset: 0,
-                  path: selectionPath,
-                },
-                focus: {
-                  offset: 0,
-                  path: selectionPath,
-                },
-              },
-              { unit: "line" },
-            );
-            const beforeRange =
-              before && EditorSlate.range(editor, before, start);
-            const beforeText =
-              beforeRange && EditorSlate.string(editor, beforeRange);
-            const checkboxText = EditorSlate.string(editor, {
-              anchor: { offset: 0, path: selectionPath },
-              focus: { offset: 3, path: selectionPath },
-            });
-
-            if (
-              beforeText === " " &&
-              selectionOffset === 4 &&
-              selectionOffset === lineLastPoint?.offset &&
-              checkIsCheckboxCreationText(checkboxText)
-            ) {
-              toggleCheckboxItem(
-                editor,
-                !checkIsEmptyCheckboxCreationText(checkboxText),
-                true,
-              );
-              return;
-            }
-
-            handleSearch(beforeText ?? "", beforeRange);
-          }
-
-          setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
-        }}
-      >
+      <Slate editor={editor} initialValue={value} onChange={handleOnChange}>
         <Editor
           className={classNames(
             className,
