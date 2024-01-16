@@ -1,6 +1,10 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
+.modal {
+  max-width: 31.875rem;
+}
+
 .buttonsWrapper {
   display: flex;
   margin-top: 1rem;

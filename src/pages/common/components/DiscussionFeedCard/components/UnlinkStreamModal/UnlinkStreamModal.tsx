@@ -77,14 +77,16 @@ const UnlinkStreamModal: FC<UnlinkStreamModalProps> = (props) => {
 
   return (
     <Modal
+      className={styles.modal}
       isShowing={isOpen}
       onClose={isUnlinking ? emptyFunction : onClose}
       title={`Unlink “${title}“ from “${commonName}“`}
       isHeaderSticky
       mobileFullScreen
+      hideCloseButton
     >
       <div>
-        This stream is linked in multiple sapces. <br />
+        This stream is linked in multiple spaces. <br />
         If you proceed, it will be removed from "{commonName}" only and will
         remain in other locations. Do you want to continue?
         <div className={styles.buttonsWrapper}>
