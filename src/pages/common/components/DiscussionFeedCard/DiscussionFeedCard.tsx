@@ -145,13 +145,16 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetched: isDiscussionFetched,
     } = useDiscussionById();
     const isHome = discussion?.predefinedType === PredefinedTypes.General;
+    const discussionNotion = commonId
+      ? discussion?.notionByCommon?.[commonId]
+      : undefined;
     const {
       data: feedItemUserMetadata,
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
     const shouldLoadCommonData =
-      isHome || (discussion?.notion && !outerCommonNotion);
+      isHome || (discussionNotion && !outerCommonNotion);
     const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
     const menuItems = useMenuItems(
       {
@@ -312,7 +315,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           <FeedCardContent
             description={isHome ? common?.description : discussion?.message}
             images={isHome ? common?.gallery : discussion?.images}
-            notion={discussion?.notion}
+            notion={discussionNotion}
             onClick={handleOpenChat}
             onMouseEnter={() => {
               onHover(true);
@@ -364,7 +367,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
           ownerId={item.userId}
           discussionPredefinedType={discussion?.predefinedType}
-          notion={discussion?.notion && commonNotion}
+          notion={discussionNotion && commonNotion}
           hasUnseenMention={
             isFeedItemUserMetadataFetched &&
             feedItemUserMetadata?.hasUnseenMention
