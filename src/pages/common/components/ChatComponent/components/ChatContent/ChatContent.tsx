@@ -248,12 +248,13 @@ const ChatContent: ForwardRefRenderFunction<
 
         return (
           <Transition
+            key={day}
             show={currentMessages.length > 0}
             transition={isTabletView ? ModalTransition.FadeIn : null}
             className={styles.messageListTransitionContainer}
           >
             {currentMessages.length > 0 && (
-              <ul id={chatId} className={styles.messageList} key={day}>
+              <ul id={chatId} className={styles.messageList}>
                 {isLastSeenInPreviousDay && !isMyMessageFirst && newSeparatorEl}
                 <li className={styles.dateTitle}>
                   {isToday(date) ? "Today" : formatDate(date)}

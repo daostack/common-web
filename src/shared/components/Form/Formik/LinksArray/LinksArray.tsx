@@ -1,6 +1,11 @@
 import React, { useMemo, FC } from "react";
 import classNames from "classnames";
-import { FieldArray, FieldArrayConfig, FormikErrors } from "formik";
+import {
+  FieldArray,
+  FieldArrayConfig,
+  FormikErrors,
+  useFormikContext,
+} from "formik";
 import { FormikTouched } from "formik/dist/types";
 import DeleteIcon from "@/shared/icons/delete.icon";
 import { CommonLink } from "@/shared/models";
@@ -64,6 +69,7 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
     disabled,
     ...restProps
   } = props;
+  const { setFieldValue } = useFormikContext();
   const isAddLinkButtonHidden = useMemo<boolean>(
     () =>
       Boolean(
@@ -118,6 +124,17 @@ const LinksArray: FC<LinksArrayProps> = (props) => {
                   />
                   <div className="links-array__link-input-wrapper">
                     <TextField
+                      onBlurCapture={(value) => {
+                        if (
+                          !value.target.value.startsWith("http://") &&
+                          !value.target.value.startsWith("https://")
+                        ) {
+                          setFieldValue(
+                            `${restProps.name}.${index}.value`,
+                            `https://${value.target.value}`,
+                          );
+                        }
+                      }}
                       id={`${restProps.name}.${index}.value`}
                       name={`${restProps.name}.${index}.value`}
                       placeholder={`Link #${index + 1}`}
