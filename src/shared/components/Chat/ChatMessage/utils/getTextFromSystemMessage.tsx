@@ -6,6 +6,7 @@ import { SystemDiscussionMessageType } from "@/shared/constants";
 import {
   Common,
   CommonCreatedSystemMessage,
+  CommonDeletedSystemMessage,
   CommonEditedSystemMessage,
   CommonFeedItemCreatedSystemMessage,
   CommonMemberAddedSystemMessage,
@@ -24,9 +25,19 @@ import { Text, TextData } from "../types";
 import { getFeedItemDisplayingData } from "./getFeedItemDisplayingData";
 import styles from "../ChatMessage.module.scss";
 
-const getUser = async (userId: string, users: User[]): Promise<User | null> =>
-  users.find((user) => user.uid === userId) ||
-  UserService.getCachedUserById(userId);
+const getUser = async (
+  users: User[],
+  userId?: string,
+): Promise<User | null> => {
+  if (!userId) {
+    return null;
+  }
+
+  return (
+    users.find((user) => user.uid === userId) ||
+    UserService.getCachedUserById(userId)
+  );
+};
 
 const getCommon = async (commonId: string): Promise<Common | null> =>
   (await CommonService.getCachedCommonById(commonId)) ||
@@ -76,7 +87,7 @@ const getCommonCreatedSystemMessageText = async (
   systemMessageData: CommonCreatedSystemMessage["systemMessageData"],
   data: TextData,
 ): Promise<Text[]> => {
-  const user = await getUser(systemMessageData.userId, data.users);
+  const user = await getUser(data.users, systemMessageData.userId);
   const isThisCommonCreated = systemMessageData.commonId === data.commonId;
   const userEl = renderUserMention(user, data);
 
@@ -111,7 +122,7 @@ const getCommonEditedSystemMessageText = async (
   data: TextData,
 ): Promise<Text[]> => {
   const [user, common] = await Promise.all([
-    getUser(systemMessageData.userId, data.users),
+    getUser(data.users, systemMessageData.userId),
     getCommon(systemMessageData.commonId),
   ]);
   const userEl = renderUserMention(user, data);
@@ -130,11 +141,29 @@ const getCommonEditedSystemMessageText = async (
   ];
 };
 
+const getCommonDeletedSystemMessageText = async (
+  systemMessageData: CommonDeletedSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, common] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getCommon(systemMessageData.commonId),
+  ]);
+  const userEl = renderUserMention(user, data);
+
+  return [
+    `The ${common?.name || ""} ${getCommonTypeText(
+      systemMessageData.commonType,
+    )} was deleted by `,
+    userEl,
+  ];
+};
+
 const getCommonMemberAddedSystemMessageText = async (
   systemMessageData: CommonMemberAddedSystemMessage["systemMessageData"],
   data: TextData,
 ): Promise<Text[]> => {
-  const user = await getUser(systemMessageData.userId, data.users);
+  const user = await getUser(data.users, systemMessageData.userId);
   const userEl = renderUserMention(user, data);
 
   return [
@@ -148,7 +177,7 @@ const getFeedItemCreatedSystemMessageText = async (
   data: TextData,
 ): Promise<Text[]> => {
   const [user, feedItemDisplayingData] = await Promise.all([
-    getUser(systemMessageData.userId, data.users),
+    getUser(data.users, systemMessageData.userId),
     getFeedItemDisplayingData(
       systemMessageData.feedItemDataId,
       systemMessageData.feedItemType,
@@ -200,6 +229,12 @@ export const getTextFromSystemMessage = async (
       break;
     case SystemDiscussionMessageType.CommonEdited:
       text = await getCommonEditedSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.CommonDeleted:
+      text = await getCommonDeletedSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );

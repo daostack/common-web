@@ -96,6 +96,16 @@ export interface CommonEditedSystemMessage extends BaseSystemDiscussionMessage {
   };
 }
 
+export interface CommonDeletedSystemMessage
+  extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.CommonDeleted;
+  systemMessageData: {
+    commonType: SystemMessageCommonType;
+    commonId: string;
+    userId?: string;
+  };
+}
+
 export interface CommonFeedItemCreatedSystemMessage
   extends BaseSystemDiscussionMessage {
   systemMessageType: SystemDiscussionMessageType.FeedItemCreated;
@@ -112,6 +122,7 @@ export type SystemDiscussionMessage =
   | CommonCreatedSystemMessage
   | CommonMemberAddedSystemMessage
   | CommonEditedSystemMessage
+  | CommonDeletedSystemMessage
   | CommonFeedItemCreatedSystemMessage;
 
 export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
