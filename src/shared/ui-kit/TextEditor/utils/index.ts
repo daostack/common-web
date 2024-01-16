@@ -9,6 +9,7 @@ export * from "./checkIsListType";
 export * from "./checkIsParentElementType";
 export * from "./checkIsTextDirectionType";
 export * from "./checkIsTextEditorValueEmpty";
+export * from "./checkUncheckedItemsInTextEditorValue";
 export * from "./getElementsByType";
 export * from "./getMentionTags";
 export * from "./getStringFromTextEditorValue";

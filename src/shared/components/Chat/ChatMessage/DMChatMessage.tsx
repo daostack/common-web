@@ -42,6 +42,7 @@ import {
 import { ChatImageGallery } from "@/shared/ui-kit";
 import {
   checkIsCheckboxItemElement,
+  checkUncheckedItemsInTextEditorValue,
   isRtlWithNoMentions,
 } from "@/shared/ui-kit/TextEditor/utils";
 import { StaticLinkType, getUserName } from "@/shared/utils";
@@ -351,6 +352,7 @@ export default function DMChatMessage({
       const updatedMessage = await ChatService.updateChatMessage({
         chatMessageId: discussionMessage.id,
         text: JSON.stringify(message),
+        hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
       });
       handleEditModeClose();
     } catch (err) {

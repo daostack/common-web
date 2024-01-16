@@ -51,6 +51,7 @@ import {
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
+import { checkUncheckedItemsInTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import {
   emptyFunction,
   getUserName,
@@ -314,6 +315,9 @@ export default function ChatComponent({
               files: payload.files,
               mentions: payload.tags?.map((tag) => tag.value),
               parentId: payload.parentId,
+              hasUncheckedItems: checkUncheckedItemsInTextEditorValue(
+                parseStringToTextEditorValue(payload.text),
+              ),
             });
             chatMessagesData.updateChatMessage(response);
 
@@ -407,6 +411,7 @@ export default function ChatComponent({
           filesPreview: [],
           tags: mentionTags,
           mentions: mentionTags.map((tag) => tag.value),
+          hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
         };
 
         const filePreviewPayload: CreateDiscussionMessageDtoWithFilesPreview[] =
@@ -424,6 +429,7 @@ export default function ChatComponent({
             commonId,
             discussionId,
             filesPreview: [filePreview],
+            hasUncheckedItems: false,
           });
 
           pendingMessages.push({
@@ -440,6 +446,7 @@ export default function ChatComponent({
             createdAt: firebaseDate,
             updatedAt: firebaseDate,
             files: [FileService.convertFileInfoToCommonLink(filePreview)],
+            hasUncheckedItems: false,
           });
         });
 
@@ -474,6 +481,7 @@ export default function ChatComponent({
               FileService.convertFileInfoToCommonLink(file),
             ),
             tags: mentionTags,
+            hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
           });
         }
 

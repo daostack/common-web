@@ -1,6 +1,8 @@
+import { Descendant } from "slate";
 import { ElementType } from "../constants";
 import { CheckboxItemElement, CustomElement } from "../types";
 
 export const checkIsCheckboxItemElement = (
-  element: CustomElement,
-): element is CheckboxItemElement => element.type === ElementType.CheckboxItem;
+  element: CustomElement | Descendant,
+): element is CheckboxItemElement =>
+  (element as CustomElement).type === ElementType.CheckboxItem;
