@@ -7,7 +7,7 @@ import {
   FeedItemFollowLayoutItem,
 } from "@/shared/interfaces";
 import { CommonFeed } from "@/shared/models";
-import { convertToTimestamp } from "@/shared/utils";
+import { areTimestampsEqual, convertToTimestamp } from "@/shared/utils";
 import * as actions from "./actions";
 import {
   CommonSearchState,
@@ -110,10 +110,18 @@ const updateFeedItemInList = (
 
   state.feedItems = {
     ...state.feedItems,
-    firstDocTimestamp,
-    lastDocTimestamp,
     data: nextData,
   };
+
+  if (
+    !areTimestampsEqual(state.feedItems.firstDocTimestamp, firstDocTimestamp)
+  ) {
+    state.feedItems.firstDocTimestamp = firstDocTimestamp;
+  }
+
+  if (!areTimestampsEqual(state.feedItems.lastDocTimestamp, lastDocTimestamp)) {
+    state.feedItems.lastDocTimestamp = lastDocTimestamp;
+  }
 };
 
 const addNewFeedItems = (
@@ -176,9 +184,17 @@ const addNewFeedItems = (
   state.feedItems = {
     ...state.feedItems,
     data,
-    firstDocTimestamp,
-    lastDocTimestamp,
   };
+
+  if (
+    !areTimestampsEqual(state.feedItems.firstDocTimestamp, firstDocTimestamp)
+  ) {
+    state.feedItems.firstDocTimestamp = firstDocTimestamp;
+  }
+
+  if (!areTimestampsEqual(state.feedItems.lastDocTimestamp, lastDocTimestamp)) {
+    state.feedItems.lastDocTimestamp = lastDocTimestamp;
+  }
 };
 
 const addNewPinnedFeedItems = (

@@ -8,7 +8,7 @@ import {
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
 import { ChatChannel, CommonFeed, Timestamp } from "@/shared/models";
-import { getQueryParam } from "@/shared/utils/queryParams";
+import { areTimestampsEqual, getQueryParam } from "@/shared/utils";
 import * as actions from "./actions";
 import { InboxItems, InboxState } from "./types";
 import { getFeedLayoutItemDateForSorting } from "./utils";
@@ -52,13 +52,6 @@ const getDocTimestamps = (
     ? getFeedLayoutItemDateForSorting(data[data.length - 1])
     : null,
 });
-
-const areTimestampsEqual = (
-  timestampA: Timestamp | null,
-  timestampB: Timestamp | null,
-): boolean =>
-  timestampA?.seconds === timestampB?.seconds &&
-  timestampA?.nanoseconds === timestampB?.nanoseconds;
 
 const updateInboxItemInList = (
   state: WritableDraft<InboxState>,

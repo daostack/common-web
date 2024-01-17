@@ -40,3 +40,4 @@ export * from "./getTheme";
 export * from "./pluralizeWord";
 export * from "./joinWithLast";
 export * from "./getResizedFileUrl";
+export * from "./areTimestampsEqual";
