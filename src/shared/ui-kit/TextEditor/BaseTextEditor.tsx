@@ -11,7 +11,6 @@ import React, {
 } from "react";
 import { useDebounce } from "react-use";
 import classNames from "classnames";
-import { useDebounce } from "react-use";
 import { isEqual } from "lodash";
 import {
   createEditor,
