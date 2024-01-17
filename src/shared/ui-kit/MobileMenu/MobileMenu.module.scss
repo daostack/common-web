@@ -1,25 +1,7 @@
 .itemsWrapper {
-  position: fixed;
-  right: 0;
   bottom: var(--safe-area-inset-bottom);
-  left: 0;
-  z-index: 2;
   padding: 0 0.5rem;
   display: flex;
+  align-items: end;
   justify-content: center;
-}
-
-.menuTransitionEnter {
-  opacity: 0;
-}
-.menuTransitionEnterActive {
-  opacity: 1;
-  transition: opacity 200ms;
-}
-.menuTransitionExit {
-  opacity: 1;
-}
-.menuTransitionExitActive {
-  opacity: 0;
-  transition: opacity 200ms;
 }

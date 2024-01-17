@@ -3,7 +3,11 @@ import { FeedItem } from "@/pages/common";
 import { useChatContext } from "@/pages/common/components/ChatComponent";
 import { Modal } from "@/shared/components";
 import { useIsTabletView } from "@/shared/hooks/viewport";
-import { ModalType, FeedLayoutItemChangeData } from "@/shared/interfaces";
+import {
+  ModalType,
+  FeedLayoutItemChangeData,
+  ModalTransition,
+} from "@/shared/interfaces";
 import { Breadcrumbs } from "@/shared/layouts/MultipleSpacesLayout/components/Header/components";
 import { Circles, CommonFeed } from "@/shared/models";
 import styles from "./FeedItemPreviewModal.module.scss";
@@ -70,6 +74,7 @@ const FeedItemPreviewModal: FC<FeedItemPreviewModalProps> = (props) => {
       }
       onClose={handleCloseModal}
       type={ModalType.MobilePopUp}
+      transition={ModalTransition.BottomToTop}
     >
       {selectedFeedItem && (
         <>

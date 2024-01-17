@@ -16,6 +16,7 @@ import {
   ChatMessage,
   InternalLinkData,
   DMChatMessage,
+  Transition,
 } from "@/shared/components";
 import {
   ChatType,
@@ -23,6 +24,8 @@ import {
   LOADER_APPEARANCE_DELAY,
 } from "@/shared/constants";
 import { useQueryParams } from "@/shared/hooks";
+import { useIsTabletView } from "@/shared/hooks/viewport";
+import { ModalTransition } from "@/shared/interfaces";
 import {
   checkIsUserDiscussionMessage,
   CommonFeedObjectUserUnique,
@@ -106,6 +109,7 @@ const ChatContent: ForwardRefRenderFunction<
 ) => {
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const isTabletView = useIsTabletView();
   const queryParams = useQueryParams();
   const messageIdParam = queryParams[QueryParamKey.Message];
 
@@ -243,72 +247,81 @@ const ChatContent: ForwardRefRenderFunction<
         );
 
         return (
-          <ul id={chatId} className={styles.messageList} key={day}>
-            {isLastSeenInPreviousDay && !isMyMessageFirst && newSeparatorEl}
-            <li className={styles.dateTitle}>
-              {isToday(date) ? "Today" : formatDate(date)}
-            </li>
-            {currentMessages.map((message, messageIndex) => {
-              const nextMessage = currentMessages[messageIndex + 1];
-              const isMyMessageNext =
-                checkIsUserDiscussionMessage(nextMessage) &&
-                nextMessage.ownerId === userId;
-              const messageEl = isChatChannel ? (
-                <DMChatMessage
-                  key={message.id}
-                  user={user}
-                  discussionMessage={message}
-                  chatType={type}
-                  scrollToRepliedMessage={scrollToRepliedMessageDMChat}
-                  highlighted={message.id === highlightedMessageId}
-                  hasPermissionToHide={hasPermissionToHide}
-                  users={users}
-                  feedItemId={feedItemId}
-                  commonMember={commonMember}
-                  governanceCircles={governanceCircles}
-                  onMessageDelete={onMessageDelete}
-                  directParent={directParent}
-                  onUserClick={onUserClick}
-                  onFeedItemClick={onFeedItemClick}
-                  onInternalLinkClick={onInternalLinkClick}
-                />
-              ) : (
-                <ChatMessage
-                  key={message.id}
-                  user={user}
-                  discussionMessage={message}
-                  chatType={type}
-                  scrollToRepliedMessage={scrollToRepliedMessage}
-                  highlighted={message.id === highlightedMessageId}
-                  hasPermissionToHide={hasPermissionToHide}
-                  users={users}
-                  feedItemId={feedItemId}
-                  commonMember={commonMember}
-                  governanceCircles={governanceCircles}
-                  onMessageDelete={onMessageDelete}
-                  directParent={directParent}
-                  onUserClick={onUserClick}
-                  onFeedItemClick={onFeedItemClick}
-                  onInternalLinkClick={onInternalLinkClick}
-                />
-              );
+          <Transition
+            key={day}
+            show={currentMessages.length > 0}
+            transition={isTabletView ? ModalTransition.FadeIn : null}
+            className={styles.messageListTransitionContainer}
+          >
+            {currentMessages.length > 0 && (
+              <ul id={chatId} className={styles.messageList}>
+                {isLastSeenInPreviousDay && !isMyMessageFirst && newSeparatorEl}
+                <li className={styles.dateTitle}>
+                  {isToday(date) ? "Today" : formatDate(date)}
+                </li>
+                {currentMessages.map((message, messageIndex) => {
+                  const nextMessage = currentMessages[messageIndex + 1];
+                  const isMyMessageNext =
+                    checkIsUserDiscussionMessage(nextMessage) &&
+                    nextMessage.ownerId === userId;
+                  const messageEl = isChatChannel ? (
+                    <DMChatMessage
+                      key={message.id}
+                      user={user}
+                      discussionMessage={message}
+                      chatType={type}
+                      scrollToRepliedMessage={scrollToRepliedMessageDMChat}
+                      highlighted={message.id === highlightedMessageId}
+                      hasPermissionToHide={hasPermissionToHide}
+                      users={users}
+                      feedItemId={feedItemId}
+                      commonMember={commonMember}
+                      governanceCircles={governanceCircles}
+                      onMessageDelete={onMessageDelete}
+                      directParent={directParent}
+                      onUserClick={onUserClick}
+                      onFeedItemClick={onFeedItemClick}
+                      onInternalLinkClick={onInternalLinkClick}
+                    />
+                  ) : (
+                    <ChatMessage
+                      key={message.id}
+                      user={user}
+                      discussionMessage={message}
+                      chatType={type}
+                      scrollToRepliedMessage={scrollToRepliedMessage}
+                      highlighted={message.id === highlightedMessageId}
+                      hasPermissionToHide={hasPermissionToHide}
+                      users={users}
+                      feedItemId={feedItemId}
+                      commonMember={commonMember}
+                      governanceCircles={governanceCircles}
+                      onMessageDelete={onMessageDelete}
+                      directParent={directParent}
+                      onUserClick={onUserClick}
+                      onFeedItemClick={onFeedItemClick}
+                      onInternalLinkClick={onInternalLinkClick}
+                    />
+                  );
 
-              if (
-                message.id !== lastSeenItem?.id ||
-                messageIndex === currentMessages.length - 1 ||
-                isMyMessageNext
-              ) {
-                return messageEl;
-              }
+                  if (
+                    message.id !== lastSeenItem?.id ||
+                    messageIndex === currentMessages.length - 1 ||
+                    isMyMessageNext
+                  ) {
+                    return messageEl;
+                  }
 
-              return (
-                <React.Fragment key={message.id}>
-                  {messageEl}
-                  {newSeparatorEl}
-                </React.Fragment>
-              );
-            })}
-          </ul>
+                  return (
+                    <React.Fragment key={message.id}>
+                      {messageEl}
+                      {newSeparatorEl}
+                    </React.Fragment>
+                  );
+                })}
+              </ul>
+            )}
+          </Transition>
         );
       })}
       {!isLoading && isEmpty && (
