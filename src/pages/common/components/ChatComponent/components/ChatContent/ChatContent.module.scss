@@ -1,6 +1,10 @@
 @import "../../../../../../constants";
 @import "../../../../../../styles/sizes";
 
+.messageListTransitionContainer {
+  position: unset;
+}
+
 .messageList {
   scrollbar-width: none;
   padding: 0;

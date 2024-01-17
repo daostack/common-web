@@ -1,6 +1,7 @@
 import React, { FC, ReactNode } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { MenuItem as Item } from "@/shared/interfaces";
+import { Menu } from "@headlessui/react";
+import { Transition } from "@/shared/components";
+import { MenuItem as Item, ModalTransition } from "@/shared/interfaces";
 import { Portal } from "@/shared/ui-kit";
 import { MenuItems } from "./components";
 import styles from "./MobileMenu.module.scss";
@@ -23,11 +24,8 @@ const MobileMenu: FC<MobileMenuProps> = (props) => {
             <Portal>
               <Transition
                 show={open}
+                transition={ModalTransition.BottomToTop}
                 className={styles.itemsWrapper}
-                enter={styles.menuTransitionEnter}
-                enterTo={styles.menuTransitionEnterActive}
-                leave={styles.menuTransitionExit}
-                leaveTo={styles.menuTransitionExitActive}
               >
                 {open && <MenuItems items={items} />}
               </Transition>

@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import { NotionIcon, SidebarIcon, StarIcon } from "@/shared/icons";
+import { CommonNotion } from "@/shared/models";
 import {
   CommonAvatar,
   Tooltip,
@@ -8,7 +9,6 @@ import {
   TooltipTrigger,
   TopNavigationOpenSidenavButton,
 } from "@/shared/ui-kit";
-import { CommonNotion } from "@/shared/models";
 import { getPluralEnding } from "@/shared/utils";
 import { ContentWrapper } from "./components";
 import styles from "./HeaderCommonContent.module.scss";

@@ -24,7 +24,7 @@ export interface Discussion extends BaseEntity, SoftDeleteEntity {
   messageCount: number;
   discussionMessages: DiscussionMessage[];
   predefinedType?: PredefinedTypes;
-  notion?: DiscussionNotion;
+  notionByCommon?: Record<string, DiscussionNotion>;
 
   /**
    * List of common IDs that are have linked this discussion

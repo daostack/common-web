@@ -10,6 +10,7 @@ import {
   MoveStreamPayload,
   UnsubscribeFunction,
 } from "@/shared/interfaces";
+import { UnlinkStreamPayload } from "@/shared/interfaces/UnlinkStreamPayload";
 import {
   GetFeedItemsResponse,
   GetPinnedFeedItemsResponse,
@@ -237,6 +238,14 @@ class CommonFeedService {
   ): Promise<void> => {
     const { cancelToken } = options;
     await Api.post(ApiEndpoint.LinkStream, payload, { cancelToken });
+  };
+
+  public unlinkStream = async (
+    payload: UnlinkStreamPayload,
+    options: { cancelToken?: CancelToken } = {},
+  ): Promise<void> => {
+    const { cancelToken } = options;
+    await Api.post(ApiEndpoint.UnlinkStream, payload, { cancelToken });
   };
 
   public moveStream = async (

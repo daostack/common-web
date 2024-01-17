@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { useDebounce } from "react-use";
 import classNames from "classnames";
-import { isEqual, debounce } from "lodash";
+import { isEqual } from "lodash";
 import {
   createEditor,
   Transforms,
@@ -48,8 +48,8 @@ export interface TextEditorProps {
   emojiContainerClassName?: string;
   emojiPickerContainerClassName?: string;
   inputContainerRef?:
-    | MutableRefObject<HTMLDivElement | null>
-    | RefCallback<HTMLDivElement>;
+  | MutableRefObject<HTMLDivElement | null>
+  | RefCallback<HTMLDivElement>;
   editorRef?: MutableRefObject<HTMLElement | null> | RefCallback<HTMLElement>;
   id?: string;
   name?: string;
@@ -249,10 +249,6 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
-  const handleOnChangeSelectionDebounce = useCallback(
-    debounce(handleOnChangeSelection, 500),
-    [handleOnChangeSelection],
-  );
 
   const handleOnChange = useCallback(
     (updatedContent) => {
@@ -261,14 +257,18 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       onChange && onChange(updatedContent);
       const { selection } = editor;
 
-      handleOnChangeSelectionDebounce(selection);
+      handleOnChangeSelection(selection);
     },
-    [onChange, value, handleOnChangeSelection],
+    [onChange, value],
   );
 
   return (
     <div ref={inputContainerRef} className={styles.container}>
-      <Slate editor={editor} value={value} onChange={handleOnChange}>
+      <Slate
+        editor={editor}
+        initialValue={value}
+        onChange={handleOnChange}
+      >
         <Editor
           className={classNames(
             className,
