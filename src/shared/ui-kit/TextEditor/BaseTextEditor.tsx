@@ -7,8 +7,9 @@ import React, {
   useEffect,
   useMemo,
   useState,
-  useCallback
+  useCallback,
 } from "react";
+import { useDebounce } from "react-use";
 import classNames from "classnames";
 import { useDebounce } from "react-use";
 import { isEqual } from "lodash";
@@ -119,6 +120,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
 
   const [isRtlLanguage, setIsRtlLanguage] = useState(false);
+
   useDebounce(
     () => {
       setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
@@ -243,9 +245,11 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
       const before = EditorSlate.before(editor, start);
       const beforeRange = before && EditorSlate.range(editor, before, start);
       const beforeText = beforeRange && EditorSlate.string(editor, beforeRange);
+
       handleSearch(beforeText ?? "", beforeRange);
     }
   };
+
 
   const handleOnChange = useCallback(
     (updatedContent) => {
@@ -256,7 +260,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
       handleOnChangeSelection(selection);
     },
-    [onChange, value, handleOnChangeSelection],
+    [onChange, value],
   );
 
   return (
