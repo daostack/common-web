@@ -96,7 +96,7 @@
   margin-right: unset;
 
   .mentionText {
-    color: $c-pink-mention-2;
+    color: var(--mention-secondary);
   }
 }
 
@@ -137,18 +137,18 @@
 }
 
 .messageContentCurrentUser {
-  color: $white;
+  color: var(--tertiary-text);
   margin-right: 0.75rem;
   margin-top: 0.5rem;
 }
 
 .mentionText {
   cursor: pointer;
-  color: var(--primary-fill);
+  color: var(--mention-primary);
 }
 
 .mentionTextCurrentUser {
-  color: $c-pink-mention-2;
+  color: #cf7d9b;
   font-weight: 600;
 }
 
@@ -166,7 +166,7 @@
   display: flex;
   cursor: pointer;
   background-color: var(--quaternary-fill);
-  color: var(--tertiary-text);
+  color: var(--primary-text);
   border-radius: 0.625rem;
   padding: 0.5rem 0 0.625rem;
   margin: 0.25rem;

@@ -11,15 +11,17 @@
   --primary-fill: #d84c7f;
   --secondary-fill: #b5406a;
   --tertiary-fill: #ffffff;
-  --quaternary-fill: #7a2845;
+  --quaternary-fill: #ef9dba;
   --quinary-fill: #edcedf;
   --drop-shadow: rgba(0, 0, 0, 0.15259);
+  --mention-primary: #d84c7f;
+  --mention-secondary: #edcedf;
 }
 
 :root[data-theme="dark"] {
   --primary-background: #101010;
   --secondary-background: #1f2124;
-  --hover-fill: #432b33;
+  --hover-fill: #271d21;
   --secondary-hover-fill: #432b33;
   --primary-text: #ffffff;
   --secondary-text: #a75a93;
@@ -29,7 +31,9 @@
   --primary-fill: #d84c7f;
   --secondary-fill: #cf7d9b;
   --tertiary-fill: #131b23;
-  --quaternary-fill: #ef9dba;
+  --quaternary-fill: #7a2845;
   --quinary-fill: #432b33;
   --drop-shadow: rgba(0, 0, 0, 0.15259);
+  --mention-primary: #d84c7f;
+  --mention-secondary: #edcedf;
 }
