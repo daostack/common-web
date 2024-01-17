@@ -42,6 +42,13 @@ const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   },
   [FeedItemMenuItem.LinkTo]: checkIsLinkToAllowed,
   [FeedItemMenuItem.MoveTo]: checkIsMoveToAllowed,
+  [FeedItemMenuItem.Unlink]: (options) => {
+    return Boolean(
+      options.discussion?.linkedCommonIds &&
+        options.discussion?.linkedCommonIds.length > 0 &&
+        checkIsRemoveDiscussionAllowed(options),
+    );
+  },
 };
 
 export const getAllowedItems = (
@@ -59,6 +66,7 @@ export const getAllowedItems = (
     FeedItemMenuItem.Edit,
     FeedItemMenuItem.LinkTo,
     FeedItemMenuItem.MoveTo,
+    FeedItemMenuItem.Unlink,
     FeedItemMenuItem.Remove,
   ];
   const nonAllowedItems =
