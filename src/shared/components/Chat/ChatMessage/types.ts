@@ -4,6 +4,8 @@ import { GetCommonPageAboutTabPath, GetCommonPagePath } from "@/shared/utils";
 export type Text = string | JSX.Element;
 
 export interface TextData {
+  userId?: string;
+  ownerId?: string | null;
   textEditorString: string;
   users: User[];
   mentionTextClassName?: string;

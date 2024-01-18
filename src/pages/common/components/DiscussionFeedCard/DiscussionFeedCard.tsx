@@ -340,6 +340,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           isExpanded={isExpanded}
           onClick={handleOpenChat}
           title={cardTitle}
+          circleVisibility={item.circleVisibility}
+          discussionId={discussion?.id}
           lastMessage={getLastMessage({
             commonFeedType: item.data.type,
             lastMessage: item.data.lastMessage,
