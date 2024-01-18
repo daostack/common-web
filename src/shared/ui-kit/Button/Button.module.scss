@@ -225,9 +225,9 @@
 }
 
 .buttonOutlineDarkPinkVariant {
-  --btn-color: #{$c-pink-next-dark};
-  --btn-border-color: #{$c-pink-next-dark};
-  --btn-border: 0.0625rem solid var(--btn-border-color);
+  --btn-color: var(--primary-fill);
+  --btn-border-color: var(--primary-fill);
+  --btn-border: 0.0625rem solid var(--primary-fill);
 
   &:hover {
     --btn-bg-color: var(--hover-fill);
