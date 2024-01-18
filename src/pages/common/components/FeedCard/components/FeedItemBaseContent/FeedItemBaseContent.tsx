@@ -57,7 +57,6 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
       (linkedCommonIds.includes(commonId) ||
         originalCommonIdForLinking === commonId),
   );
-
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
   const handleLongPress = (event) => {

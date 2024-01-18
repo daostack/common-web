@@ -1,0 +1,14 @@
+@import "../../../../constants";
+
+.mentionTextCurrentUser {
+  color: $c-pink-mention-2;
+  font-weight: 600;
+}
+
+.singleEmojiText {
+  font-size: $xlarge;
+}
+
+.multipleEmojiText {
+  font-size: $large;
+}

@@ -2,10 +2,12 @@ import React, { ReactElement } from "react";
 
 interface SelectedCheckboxIconProps {
   className?: string;
+  color?: string;
 }
 
 export default function SelectedCheckboxIcon({
   className,
+  color = "#c32ea3",
 }: SelectedCheckboxIconProps): ReactElement {
   return (
     <svg

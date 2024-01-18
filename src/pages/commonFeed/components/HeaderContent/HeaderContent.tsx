@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useDispatch } from "react-redux";
 import { useCommonFollow } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import {
@@ -9,6 +10,7 @@ import {
 } from "@/shared/models";
 import { SearchButton, SearchInput } from "@/shared/ui-kit";
 import { checkIsProject } from "@/shared/utils";
+import { commonActions } from "@/store/states";
 import {
   ActionsButton,
   HeaderCommonContent,
@@ -27,10 +29,14 @@ interface HeaderContentProps {
 
 const HeaderContent: FC<HeaderContentProps> = (props) => {
   const { className, common, commonMember, governance } = props;
+  const dispatch = useDispatch();
   const isMobileVersion = useIsTabletView();
   const commonFollow = useCommonFollow(common.id, commonMember);
   const { searchValue, searchInputToggle, onChangeSearchValue, onCloseSearch } =
-    useSearchFeedItems();
+    useSearchFeedItems({
+      onSearch: (value) => dispatch(commonActions.searchFeedItems(value)),
+      onResetSearchState: () => dispatch(commonActions.resetSearchState()),
+    });
   const showFollowIcon =
     !isMobileVersion &&
     (commonFollow.isFollowInProgress
