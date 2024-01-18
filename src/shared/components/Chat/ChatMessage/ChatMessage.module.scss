@@ -175,6 +175,10 @@
 
 .replyMessageContainerCurrentUser {
   background-color: var(--quaternary-fill);
+
+  .mentionText {
+    color: var(--mention-primary);
+  }
 }
 
 .replyMessageImage {
