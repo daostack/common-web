@@ -1,6 +1,6 @@
 import { Element } from "slate";
 import { ElementType } from "../constants";
-import { TextEditorValue, ParagraphElement } from "../types";
+import { TextEditorValue } from "../types";
 
 export const removeTextEditorEmptyEndLinesValues = (
   value: TextEditorValue,
@@ -14,8 +14,9 @@ export const removeTextEditorEmptyEndLinesValues = (
     }
 
     if (
-      (element as ParagraphElement)?.type === ElementType.Paragraph &&
-      Element.isElement(element)
+      Element.isElement(element) &&
+      (element.type === ElementType.Paragraph ||
+        element.type === ElementType.CheckboxItem)
     ) {
       const firstChild = element.children?.[0];
       const secondChild = element.children?.[1];

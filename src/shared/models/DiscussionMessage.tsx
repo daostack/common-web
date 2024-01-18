@@ -53,6 +53,7 @@ interface BaseDiscussionMessage extends BaseEntity {
   parentMessage: ParentDiscussionMessage | null;
   editedAt?: Timestamp;
   ownerType: DiscussionMessageOwnerType;
+  hasUncheckedItems: boolean;
 }
 
 export interface UserDiscussionMessage extends BaseDiscussionMessage {

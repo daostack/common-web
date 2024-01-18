@@ -10,7 +10,8 @@ import {
 import { countTextEditorEmojiElements } from "@/shared/ui-kit";
 import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
 import { EmojiElement } from "@/shared/ui-kit/TextEditor/types";
-import { UserMention } from "../components";
+import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
+import { CheckboxItem, UserMention } from "../components";
 import { Text, TextData } from "../types";
 import { getTextFromSystemMessage } from "./getTextFromSystemMessage";
 import textEditorElementsStyles from "@/shared/ui-kit/TextEditor/shared/TextEditorElements.module.scss"
@@ -84,6 +85,28 @@ const getTextFromDescendant = ({
           descendant={descendant}
           emojiTextClassName={emojiTextClassName}
         />
+      );
+    case ElementType.CheckboxItem:
+      return (
+        <CheckboxItem
+          id={descendant.id}
+          checked={descendant.checked}
+          isRTL={isRtlWithNoMentions([descendant])}
+        >
+          {descendant.children.map((item, index) => (
+            <React.Fragment key={index}>
+              {getTextFromDescendant({
+                descendant: item,
+                users,
+                mentionTextClassName,
+                emojiTextClassName,
+                commonId,
+                directParent,
+                onUserClick,
+              })}
+            </React.Fragment>
+          ))}
+        </CheckboxItem>
       );
     default:
       return descendant.text || "";
