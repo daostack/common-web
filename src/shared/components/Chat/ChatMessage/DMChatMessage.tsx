@@ -34,7 +34,6 @@ import {
 import {
   FilePreview,
   FilePreviewVariant,
-  countTextEditorEmojiElements,
   getFileName,
   parseStringToTextEditorValue,
   TextEditorValue,
@@ -147,23 +146,14 @@ export default function DMChatMessage({
         return;
       }
 
-      const emojiCount = countTextEditorEmojiElements(
-        parseStringToTextEditorValue(discussionMessage.text),
-      );
-
       setIsMessageDataFetching(true);
 
       try {
         const parsedText = await getTextFromTextEditorString({
+          userId,
+          ownerId: discussionMessageUserId,
           textEditorString: discussionMessage.text,
           users,
-          mentionTextClassName: !isNotCurrentUserMessage
-            ? styles.mentionTextCurrentUser
-            : "",
-          emojiTextClassName: classNames({
-            [styles.singleEmojiText]: emojiCount.isSingleEmoji,
-            [styles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-          }),
           commonId: discussionMessage.commonId,
           systemMessage: isSystemMessage ? discussionMessage : undefined,
           getCommonPagePath,
@@ -198,6 +188,8 @@ export default function DMChatMessage({
       }
 
       const parsedText = await getTextFromTextEditorString({
+        userId,
+        ownerId: discussionMessageUserId,
         textEditorString: discussionMessage?.parentMessage.text,
         users,
         commonId: discussionMessage.commonId,
@@ -214,6 +206,8 @@ export default function DMChatMessage({
     isNotCurrentUserMessage,
     discussionMessage.commonId,
     onUserClick,
+    discussionMessageUserId,
+    userId,
   ]);
 
   const handleLongPress = () => {

@@ -1,11 +1,14 @@
 import { ApiEndpoint, DocChange } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
-import { Collection, DiscussionMessage } from "@/shared/models";
 import {
+  Collection,
+  DiscussionMessage
+} from "@/shared/models";
+import {
+  convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
   transformFirebaseDataList,
-  convertObjectDatesToFirestoreTimestamps,
   transformFirebaseDataSingle,
 } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
@@ -91,7 +94,7 @@ class DiscussionMessageService {
     };
   };
 
-  public getDiscussionMessagesByDiscussionId = (
+  public subscribeToDiscussionMessagesByDiscussionId = (
     discussionId: string,
     lastVisible: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage> | null,
     callback: (
@@ -121,6 +124,17 @@ class DiscussionMessageService {
         snapshot.docs[snapshot.docs.length - 1],
       );
     });
+  };
+
+  public getPreloadDiscussionMessagesByDiscussionId = async (
+    discussionId: string,
+  ): Promise<DiscussionMessage[]> => {
+    const discussionMessages = await this.getDiscussionMessageCollection()
+      .where("discussionId", "==", discussionId)
+      .limit(15)
+      .orderBy("createdAt", "desc").get();
+
+    return transformFirebaseDataList<DiscussionMessage>(discussionMessages);
   };
 
   public subscribeToDiscussionMessages = (

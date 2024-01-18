@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 import { Descendant, Element } from "slate";
 import { UserService } from "@/services";
 import { DirectParent, User } from "@/shared/models";
@@ -6,12 +7,14 @@ import {
   getMentionTags,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
+import { countTextEditorEmojiElements } from "@/shared/ui-kit";
 import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
 import { EmojiElement } from "@/shared/ui-kit/TextEditor/types";
 import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
 import { CheckboxItem, UserMention } from "../components";
 import { Text, TextData } from "../types";
 import { getTextFromSystemMessage } from "./getTextFromSystemMessage";
+import textEditorElementsStyles from "@/shared/ui-kit/TextEditor/shared/TextEditorElements.module.scss"
 
 interface ChatEmoji {
   descendant: EmojiElement;
@@ -114,6 +117,8 @@ export const getTextFromTextEditorString = async (
   data: TextData,
 ): Promise<Text[]> => {
   const {
+    userId,
+    ownerId,
     textEditorString,
     users,
     mentionTextClassName,
@@ -124,6 +129,8 @@ export const getTextFromTextEditorString = async (
     onUserClick,
   } = data;
 
+  const isCurrentUser = userId === ownerId
+
   if (systemMessage) {
     const systemMessageText = await getTextFromSystemMessage(data);
 
@@ -133,6 +140,8 @@ export const getTextFromTextEditorString = async (
   }
 
   const textEditorValue = parseStringToTextEditorValue(textEditorString);
+
+  const emojiCount = countTextEditorEmojiElements(textEditorValue);
   const mentionTags = getMentionTags(textEditorValue);
   const allNecessaryUsers = await Promise.all(
     mentionTags.map(async (mentionTag) => {
@@ -150,6 +159,8 @@ export const getTextFromTextEditorString = async (
     Boolean(user),
   );
 
+  const mentionCurrentUserTextStyle = isCurrentUser ? textEditorElementsStyles.mentionTextCurrentUser : "";
+
   return textEditorValue.reduce<Text[]>(
     (acc, item, index) => [
       ...acc,
@@ -157,8 +168,11 @@ export const getTextFromTextEditorString = async (
         {getTextFromDescendant({
           descendant: item,
           users: filteredUsers,
-          mentionTextClassName,
-          emojiTextClassName,
+          mentionTextClassName: mentionTextClassName || mentionCurrentUserTextStyle,
+          emojiTextClassName: emojiTextClassName || classNames({
+            [textEditorElementsStyles.singleEmojiText]: emojiCount.isSingleEmoji,
+            [textEditorElementsStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
+          }),
           commonId,
           directParent,
           onUserClick,

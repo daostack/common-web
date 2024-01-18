@@ -119,9 +119,7 @@ const getCommonEditedSystemMessageText = async (
   return [
     `This ${getCommonTypeText(systemMessageData.commonType)}’s `,
     renderLink(
-      (data.getCommonPageAboutTabPath || getCommonPageAboutTabPath)(
-        systemMessageData.commonId,
-      ),
+      (data.getCommonPageAboutTabPath || getCommonPageAboutTabPath)(systemMessageData.commonId),
       "info",
       () => handleCommonClick(systemMessageData.commonId, common?.rootCommonId),
     ),

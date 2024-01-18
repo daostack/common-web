@@ -784,17 +784,15 @@ export default function ChatComponent({
           />
         </ChatContentContext.Provider>
       </div>
-      <div className={styles.bottomChatContainer}>
-        <MessageReply users={users} />
-        <ChatFilePreview />
-        <div
-          ref={chatInputWrapperRef}
-          className={classNames(styles.chatInputWrapper, {
-            [styles.chatInputWrapperMultiLine]: isMultiLineInput,
-          })}
-        >
-          {renderChatInput()}
-        </div>
+      <MessageReply users={users} />
+      <ChatFilePreview />
+      <div
+        ref={chatInputWrapperRef}
+        className={classNames(styles.chatInputWrapper, {
+          [styles.chatInputWrapperMultiLine]: isMultiLineInput,
+        })}
+      >
+        {renderChatInput()}
       </div>
     </div>
   );
