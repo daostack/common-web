@@ -9,10 +9,11 @@ import { PlusButton } from "../HeaderContent/components";
 interface NewDirectMessageButton {
   isMobileVersion?: boolean;
   className?: string;
+  onClick?: () => void;
 }
 
 const NewDirectMessageButton: FC<NewDirectMessageButton> = (props) => {
-  const { isMobileVersion, className } = props;
+  const { isMobileVersion, className, onClick } = props;
   const {
     isShowing: isDirectMessageModalOpen,
     onOpen: onDirectMessageModalOpen,
@@ -42,7 +43,7 @@ const NewDirectMessageButton: FC<NewDirectMessageButton> = (props) => {
     [isGroupMessage],
   );
 
-  const triggerEl = <PlusButton />;
+  const triggerEl = <PlusButton onClick={onClick} />;
   const menuProps = {
     className,
     triggerEl,
