@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DiscussionMessageService } from "@/services";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
@@ -39,9 +39,9 @@ export const usePreloadDiscussionMessagesById = ({
     fetchCommonMembers,
   } = useCommonMembers();
 
-  const preloadDiscussionMessages = async (commonId, circleVisibility) => {
+  const preloadDiscussionMessages = useCallback(async (commonId, circleVisibility) => {
     fetchCommonMembers(commonId, circleVisibility);
-  };
+  },[fetchCommonMembers]);
 
   const fetchDiscussionMessages = async () => {
     if (!discussionId) {
@@ -88,7 +88,7 @@ export const usePreloadDiscussionMessagesById = ({
   }
 
   useEffect(() => {
-    if (!commonMembers || !discussionId || !commonId) {
+    if (!commonMembers || !commonId) {
       return
     }
 

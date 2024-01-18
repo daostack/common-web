@@ -2,7 +2,8 @@ import { ApiEndpoint, DocChange } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
 import {
-  Collection, DiscussionMessage
+  Collection,
+  DiscussionMessage
 } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
@@ -84,7 +85,7 @@ class DiscussionMessageService {
       removedDiscussionMessages: [...removed, ...removedAfterEndDate],
       lastVisibleSnapshot:
         snapshotOfItemsAfterEndDate.docs[
-        snapshotOfItemsAfterEndDate.docs.length - 1
+          snapshotOfItemsAfterEndDate.docs.length - 1
         ],
     };
   };
