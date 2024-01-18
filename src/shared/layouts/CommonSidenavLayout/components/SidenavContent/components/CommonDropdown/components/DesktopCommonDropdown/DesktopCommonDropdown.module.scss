@@ -18,7 +18,7 @@
 }
 
 .changeLabel {
-  color: $c-pink-primary;
+  color: var(--primary-fill);
   font-size: $mobile-title;
   font-family: PoppinsSans, sans-serif;
 }
@@ -38,7 +38,7 @@
 }
 
 .menuItemForCommonCreation {
-  color: $c-pink-primary;
+  color: var(--primary-fill);
 }
 
 .menuItemActive {

@@ -206,7 +206,7 @@
 }
 
 .buttonOutlinePinkVariant {
-  --btn-color: #{$c-pink-primary};
+  --btn-color: var(--primary-fill);
   --btn-bg-color: #{$c-pink-active-feed-cards};
   --btn-border-color: #{$c-pink-active-btn};
   --btn-border: 0.0625rem solid var(--btn-border-color);

@@ -27,7 +27,7 @@
   --item-color: var(--primary-fill);
 
   &:hover {
-    --item-color: #{$c-pink-next-dark};
+    --item-color: none;
   }
 }
 .itemDisabled {
