@@ -8,7 +8,8 @@ import {
   FeedLayoutItemWithFollowData,
 } from "@/shared/interfaces";
 import { ChatChannel, CommonFeed, Timestamp } from "@/shared/models";
-import { areTimestampsEqual, getQueryParam } from "@/shared/utils";
+import { areTimestampsEqual } from "@/shared/utils";
+import { getQueryParam } from "@/shared/utils/queryParams";
 import * as actions from "./actions";
 import { InboxItems, InboxSearchState, InboxState } from "./types";
 import { getFeedLayoutItemDateForSorting } from "./utils";
