@@ -6,4 +6,9 @@ export enum SystemDiscussionMessageType {
   FeedItemCreated = "feed-item-created",
   FeedItemDeleted = "feed-item-deleted",
   StreamCreatedInternal = "stream-created-internal",
+  StreamMovedInternal = "stream-moved-internal",
+  StreamMovedSource = "stream-moved-source",
+  StreamMovedTarget = "stream-moved-target",
+  StreamLinkedTarget = "stream-linked-target",
+  StreamLinkedInternal = "stream-linked-internal",
 }

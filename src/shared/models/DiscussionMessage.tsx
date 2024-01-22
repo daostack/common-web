@@ -24,6 +24,11 @@ export enum SystemMessageCommonType {
   Space = "space",
 }
 
+export enum SystemMessageStreamType {
+  Discussion = "discussion",
+  Proposal = "proposal",
+}
+
 export interface DiscussionMessageTag {
   value: string;
 }
@@ -131,13 +136,59 @@ export interface CommonFeedItemDeletedSystemMessage
   };
 }
 
+export interface StreamMovedInternalSystemMessage
+  extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.StreamMovedInternal;
+  systemMessageData: {
+    type: SystemMessageStreamType;
+    sourceCommonId: string;
+    targetCommonId: string;
+    userId: string;
+  };
+}
+
+export interface StreamMovedSourceSystemMessage
+  extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.StreamMovedSource;
+  systemMessageData: {
+    type: SystemMessageStreamType;
+    sourceCommonId: string;
+    targetCommonId: string;
+    feedItemDataId: string;
+    userId: string;
+  };
+}
+
+export interface StreamMovedTargetSystemMessage
+  extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.StreamMovedTarget;
+  systemMessageData: StreamMovedSourceSystemMessage["systemMessageData"];
+}
+
+export interface StreamLinkedTargetSystemMessage
+  extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.StreamLinkedTarget;
+  systemMessageData: StreamMovedSourceSystemMessage["systemMessageData"];
+}
+
+export interface StreamLinkedInternalSystemMessage
+  extends BaseSystemDiscussionMessage {
+  systemMessageType: SystemDiscussionMessageType.StreamLinkedInternal;
+  systemMessageData: StreamMovedInternalSystemMessage["systemMessageData"];
+}
+
 export type SystemDiscussionMessage =
   | CommonCreatedSystemMessage
   | CommonMemberAddedSystemMessage
   | CommonEditedSystemMessage
   | CommonDeletedSystemMessage
   | CommonFeedItemCreatedSystemMessage
-  | CommonFeedItemDeletedSystemMessage;
+  | CommonFeedItemDeletedSystemMessage
+  | StreamMovedInternalSystemMessage
+  | StreamMovedSourceSystemMessage
+  | StreamMovedTargetSystemMessage
+  | StreamLinkedTargetSystemMessage
+  | StreamLinkedInternalSystemMessage;
 
 export type DiscussionMessage = UserDiscussionMessage | SystemDiscussionMessage;
 
