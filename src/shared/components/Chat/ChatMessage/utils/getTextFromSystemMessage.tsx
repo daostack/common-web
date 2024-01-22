@@ -13,6 +13,7 @@ import {
   CommonFeedType,
   CommonMemberAddedSystemMessage,
   CommonState,
+  StreamMovedInternalSystemMessage,
   StreamMovedSourceSystemMessage,
   StreamMovedTargetSystemMessage,
   SystemMessageCommonType,
@@ -262,6 +263,37 @@ const getFeedItemDeletedSystemMessageText = async (
   );
 };
 
+const getStreamMovedInternalSystemMessageText = async (
+  systemMessageData: StreamMovedInternalSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, sourceCommon, targetCommon] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getCommon(systemMessageData.sourceCommonId),
+    getCommon(systemMessageData.targetCommonId),
+  ]);
+  const sourceCommonEl = getCommonLink(
+    sourceCommon,
+    sourceCommon?.id &&
+      (data.getCommonPagePath || getCommonPagePath)(sourceCommon.id),
+  );
+  const targetCommonEl = getCommonLink(
+    targetCommon,
+    targetCommon?.id &&
+      (data.getCommonPagePath || getCommonPagePath)(targetCommon.id),
+  );
+  const userEl = renderUserMention(user, data);
+
+  return [
+    "This stream was moved from ",
+    sourceCommonEl,
+    " to ",
+    targetCommonEl,
+    " by ",
+    userEl,
+  ].filter(Boolean);
+};
+
 const getStreamMovedSourceSystemMessageText = async (
   systemMessageData: StreamMovedSourceSystemMessage["systemMessageData"],
   data: TextData,
@@ -365,6 +397,12 @@ export const getTextFromSystemMessage = async (
       break;
     case SystemDiscussionMessageType.FeedItemDeleted:
       text = await getFeedItemDeletedSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.StreamMovedInternal:
+      text = await getStreamMovedInternalSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );
