@@ -17,6 +17,7 @@ import {
   useCommon,
   useDiscussionById,
   useFeedItemUserMetadata,
+  usePreloadDiscussionMessagesById,
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
@@ -86,6 +87,7 @@ interface ProposalFeedCardProps {
   feedItemFollow: FeedItemFollowState;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   onUserSelect?: (userId: string, commonId?: string) => void;
+  shouldPreLoadMessages: boolean;
 }
 
 const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
@@ -109,6 +111,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       feedItemFollow,
       onActiveItemDataChange,
       onUserSelect,
+      shouldPreLoadMessages,
     } = props;
     const user = useSelector(selectUser());
     const userId = user?.uid;
@@ -186,6 +189,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       onOpen: onShareModalOpen,
       onClose: onShareModalClose,
     } = useModal(false);
+    const { preloadDiscussionMessages } = usePreloadDiscussionMessagesById({
+      commonId,
+      discussionId: discussion?.id,
+    });
     const menuItems = useMenuItems(
       {
         commonId,
@@ -325,6 +332,17 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       }
     }, [isExpanded]);
 
+    useEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(commonId, item.circleVisibility);
+      }
+    }, [shouldPreLoadMessages, isActive]);
+
     const renderContent = (): ReactNode => {
       if (isLoading) {
         return null;
@@ -443,8 +461,6 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           isExpanded={isExpanded}
           unreadMessages={feedItemUserMetadata?.count || 0}
           title={cardTitle}
-          circleVisibility={item.circleVisibility}
-          discussionId={discussion?.id}
           lastMessage={getLastMessage({
             commonFeedType: item.data.type,
             lastMessage: item.data.lastMessage,

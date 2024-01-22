@@ -44,6 +44,7 @@ interface FeedItemProps {
   ) => void;
   directParent?: DirectParent | null;
   rootCommonId?: string;
+  shouldPreLoadMessages?: boolean;
 }
 
 const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
@@ -69,6 +70,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     onActiveItemDataChange,
     directParent,
     rootCommonId,
+    shouldPreLoadMessages = false,
   } = props;
   const {
     onFeedItemUpdate,
@@ -134,6 +136,7 @@ const FeedItem = forwardRef<FeedItemRef, FeedItemProps>((props, ref) => {
     rootCommonId,
     feedItemFollow,
     onUserSelect,
+    shouldPreLoadMessages,
   };
 
   if (item.data.type === CommonFeedType.Discussion) {
