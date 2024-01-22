@@ -14,6 +14,7 @@ import {
   CommonMemberAddedSystemMessage,
   CommonState,
   StreamLinkedInternalSystemMessage,
+  StreamLinkedTargetSystemMessage,
   StreamMovedInternalSystemMessage,
   StreamMovedSourceSystemMessage,
   StreamMovedTargetSystemMessage,
@@ -378,6 +379,28 @@ const getStreamLinkedInternalSystemMessageText = async (
   ].filter(Boolean);
 };
 
+const getStreamLinkedTargetSystemMessageText = async (
+  systemMessageData: StreamLinkedTargetSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  // $streamName was linked here by $userName.
+  const [user, feedItemDisplayingData] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getFeedItemDisplayingData(
+      systemMessageData.feedItemDataId,
+      systemMessageData.type === SystemMessageStreamType.Discussion
+        ? CommonFeedType.Discussion
+        : CommonFeedType.Proposal,
+      data.commonId,
+    ),
+  ]);
+  const userEl = renderUserMention(user, data);
+
+  return [feedItemDisplayingData.title, " was linked here by ", userEl].filter(
+    Boolean,
+  );
+};
+
 export const getTextFromSystemMessage = async (
   data: TextData,
 ): Promise<Text[] | null> => {
@@ -445,6 +468,12 @@ export const getTextFromSystemMessage = async (
       break;
     case SystemDiscussionMessageType.StreamLinkedInternal:
       text = await getStreamLinkedInternalSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.StreamLinkedTarget:
+      text = await getStreamLinkedTargetSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );
