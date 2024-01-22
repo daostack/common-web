@@ -14,6 +14,7 @@ import {
   CommonMemberAddedSystemMessage,
   CommonState,
   StreamMovedSourceSystemMessage,
+  StreamMovedTargetSystemMessage,
   SystemMessageCommonType,
   SystemMessageStreamType,
   User,
@@ -291,6 +292,36 @@ const getStreamMovedSourceSystemMessageText = async (
   ].filter(Boolean);
 };
 
+const getStreamMovedTargetSystemMessageText = async (
+  systemMessageData: StreamMovedTargetSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, common, feedItemDisplayingData] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getCommon(systemMessageData.sourceCommonId),
+    getFeedItemDisplayingData(
+      systemMessageData.feedItemDataId,
+      systemMessageData.type === SystemMessageStreamType.Discussion
+        ? CommonFeedType.Discussion
+        : CommonFeedType.Proposal,
+      data.commonId,
+    ),
+  ]);
+  const commonEl = getCommonLink(
+    common,
+    common?.id && (data.getCommonPagePath || getCommonPagePath)(common.id),
+  );
+  const userEl = renderUserMention(user, data);
+
+  return [
+    feedItemDisplayingData.title,
+    " was moved here from ",
+    commonEl,
+    " by ",
+    userEl,
+  ].filter(Boolean);
+};
+
 export const getTextFromSystemMessage = async (
   data: TextData,
 ): Promise<Text[] | null> => {
@@ -340,6 +371,12 @@ export const getTextFromSystemMessage = async (
       break;
     case SystemDiscussionMessageType.StreamMovedSource:
       text = await getStreamMovedSourceSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.StreamMovedTarget:
+      text = await getStreamMovedTargetSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );
