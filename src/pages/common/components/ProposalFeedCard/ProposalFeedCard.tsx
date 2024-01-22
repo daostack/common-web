@@ -153,7 +153,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
-    const shouldLoadCommonData = discussion?.notion && !outerCommonNotion;
+    const discussionNotion = commonId
+      ? discussion?.notionByCommon?.[commonId]
+      : undefined;
+    const shouldLoadCommonData = discussionNotion && !outerCommonNotion;
     const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
     const {
       isShowing: isProposalDeleteModalOpen,
@@ -378,7 +381,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
               proposal.data.args.description,
               proposal.type,
             )}
-            notion={discussion?.notion}
+            notion={discussionNotion}
             images={discussion?.images}
             onClick={handleOpenChat}
             onMouseEnter={() => {
@@ -440,6 +443,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           isExpanded={isExpanded}
           unreadMessages={feedItemUserMetadata?.count || 0}
           title={cardTitle}
+          circleVisibility={item.circleVisibility}
+          discussionId={discussion?.id}
           lastMessage={getLastMessage({
             commonFeedType: item.data.type,
             lastMessage: item.data.lastMessage,
@@ -468,7 +473,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
           menuItems={menuItems}
           ownerId={item.userId}
           commonId={commonId}
-          notion={discussion?.notion && commonNotion}
+          notion={discussionNotion && commonNotion}
           hasUnseenMention={
             isFeedItemUserMetadataFetched &&
             feedItemUserMetadata?.hasUnseenMention

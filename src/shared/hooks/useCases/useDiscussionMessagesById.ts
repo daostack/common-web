@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateEffect } from "react-use";
-import classNames from "classnames";
 import { DiscussionMessageService } from "@/services";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
 import { useRoutesContext } from "@/shared/contexts";
@@ -15,10 +14,6 @@ import {
   DiscussionMessageWithParsedText,
   User,
 } from "@/shared/models";
-import {
-  countTextEditorEmojiElements,
-  parseStringToTextEditorValue,
-} from "@/shared/ui-kit";
 import firebase from "@/shared/utils/firebase";
 import {
   cacheActions,
@@ -67,7 +62,6 @@ export const useDiscussionMessagesById = ({
   onUserClick,
   onFeedItemClick,
   users,
-  textStyles,
 }: Options): Return => {
   const dispatch = useDispatch();
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
@@ -92,17 +86,11 @@ export const useDiscussionMessagesById = ({
   const addDiscussionMessage = async (
     discussionMessage: DiscussionMessage,
   ): Promise<void> => {
-    const emojiCount = countTextEditorEmojiElements(
-      parseStringToTextEditorValue(discussionMessage.text),
-    );
     const parsedText = await getTextFromTextEditorString({
+      userId,
+      ownerId: userId,
       textEditorString: discussionMessage.text,
       users,
-      mentionTextClassName: textStyles.mentionTextCurrentUser,
-      emojiTextClassName: classNames({
-        [textStyles.singleEmojiText]: emojiCount.isSingleEmoji,
-        [textStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-      }),
       commonId: discussionMessage.commonId,
       getCommonPagePath,
       getCommonPageAboutTabPath,
@@ -158,27 +146,16 @@ export const useDiscussionMessagesById = ({
     }));
     const discussionsWithText = await Promise.all(
       updatedDiscussionMessages.map(async (discussionMessage) => {
-        const emojiCount = countTextEditorEmojiElements(
-          parseStringToTextEditorValue(discussionMessage.text),
-        );
-
         const isUserDiscussionMessage =
           checkIsUserDiscussionMessage(discussionMessage);
         const isSystemMessage =
           checkIsSystemDiscussionMessage(discussionMessage);
 
-        const isNotCurrentUserMessage =
-          !isUserDiscussionMessage || userId !== discussionMessage.ownerId;
         const parsedText = await getTextFromTextEditorString({
+          userId,
+          ownerId: isUserDiscussionMessage ? discussionMessage.ownerId : null,
           textEditorString: discussionMessage.text,
           users,
-          mentionTextClassName: !isNotCurrentUserMessage
-            ? textStyles.mentionTextCurrentUser
-            : "",
-          emojiTextClassName: classNames({
-            [textStyles.singleEmojiText]: emojiCount.isSingleEmoji,
-            [textStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-          }),
           commonId: discussionMessage.commonId,
           systemMessage: isSystemMessage ? discussionMessage : undefined,
           getCommonPagePath,
@@ -212,7 +189,7 @@ export const useDiscussionMessagesById = ({
       setDefaultState({ ...DEFAULT_STATE });
     }
 
-    DiscussionMessageService.getDiscussionMessagesByDiscussionId(
+    DiscussionMessageService.subscribeToDiscussionMessagesByDiscussionId(
       discussionId,
       lastVisible && lastVisible[discussionId],
       async (
@@ -234,27 +211,17 @@ export const useDiscussionMessagesById = ({
 
         const discussionsWithText = await Promise.all(
           updatedDiscussionMessages.map(async (discussionMessage) => {
-            const emojiCount = countTextEditorEmojiElements(
-              parseStringToTextEditorValue(discussionMessage.text),
-            );
 
             const isUserDiscussionMessage =
               checkIsUserDiscussionMessage(discussionMessage);
             const isSystemMessage =
               checkIsSystemDiscussionMessage(discussionMessage);
 
-            const isNotCurrentUserMessage =
-              !isUserDiscussionMessage || userId !== discussionMessage.ownerId;
             const parsedText = await getTextFromTextEditorString({
+              userId,
+              ownerId: isUserDiscussionMessage ? discussionMessage.ownerId : null,
               textEditorString: discussionMessage.text,
               users,
-              mentionTextClassName: !isNotCurrentUserMessage
-                ? textStyles.mentionTextCurrentUser
-                : "",
-              emojiTextClassName: classNames({
-                [textStyles.singleEmojiText]: emojiCount.isSingleEmoji,
-                [textStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-              }),
               commonId: discussionMessage.commonId,
               systemMessage: isSystemMessage ? discussionMessage : undefined,
               getCommonPagePath,
@@ -277,7 +244,6 @@ export const useDiscussionMessagesById = ({
             updatedDiscussionMessages: discussionsWithText,
           }),
         );
-
         if (discussionsWithText.length < 15 && !hasLastVisibleDocument) {
           setIsEndOfList((prevIsEndOfList) => ({
             ...prevIsEndOfList,

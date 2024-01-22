@@ -52,9 +52,9 @@ import {
   cacheActions,
   commonActions,
   selectCommonAction,
+  selectFeedSearchValue,
   selectIsSearchingFeedItems,
   selectRecentStreamId,
-  selectSearchValue,
   selectSharedFeedItem,
 } from "@/store/states";
 import {
@@ -104,7 +104,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
   const userId = user?.uid;
   const recentStreamId = useSelector(selectRecentStreamId);
   const isSearchingFeedItems = useSelector(selectIsSearchingFeedItems);
-  const searchValue = useSelector(selectSearchValue);
+  const searchValue = useSelector(selectFeedSearchValue);
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );

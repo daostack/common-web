@@ -73,10 +73,7 @@ const getValidationSchemaForLinksItem = ({
         value: Yup.string().when("title", (title: string) => {
           if (title) {
             return Yup.string()
-              .matches(
-                URL_REGEXP,
-                "Please enter correct URL (including http:// or https://)",
-              )
+              .matches(URL_REGEXP, "Please enter correct URL")
               .required("Please enter a link");
           }
         }),

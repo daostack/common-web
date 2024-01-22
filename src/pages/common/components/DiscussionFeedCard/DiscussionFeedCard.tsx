@@ -44,7 +44,11 @@ import {
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "../FeedItem";
-import { LinkStreamModal, MoveStreamModal } from "./components";
+import {
+  LinkStreamModal,
+  MoveStreamModal,
+  UnlinkStreamModal,
+} from "./components";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -120,6 +124,11 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       onClose: onLinkStreamModalClose,
     } = useModal(false);
     const {
+      isShowing: isUnlinkStreamModalOpen,
+      onOpen: onUnlinkStreamModalOpen,
+      onClose: onUnlinkStreamModalClose,
+    } = useModal(false);
+    const {
       isShowing: isMoveStreamModalOpen,
       onOpen: onMoveStreamModalOpen,
       onClose: onMoveStreamModalClose,
@@ -136,13 +145,16 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       fetched: isDiscussionFetched,
     } = useDiscussionById();
     const isHome = discussion?.predefinedType === PredefinedTypes.General;
+    const discussionNotion = commonId
+      ? discussion?.notionByCommon?.[commonId]
+      : undefined;
     const {
       data: feedItemUserMetadata,
       fetched: isFeedItemUserMetadataFetched,
       fetchFeedItemUserMetadata,
     } = useFeedItemUserMetadata();
     const shouldLoadCommonData =
-      isHome || (discussion?.notion && !outerCommonNotion);
+      isHome || (discussionNotion && !outerCommonNotion);
     const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
     const menuItems = useMenuItems(
       {
@@ -161,6 +173,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         share: () => onShareModalOpen(),
         remove: onDeleteModalOpen,
         linkStream: onLinkStreamModalOpen,
+        unlinkStream: onUnlinkStreamModalOpen,
         moveStream: onMoveStreamModalOpen,
       },
     );
@@ -302,7 +315,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           <FeedCardContent
             description={isHome ? common?.description : discussion?.message}
             images={isHome ? common?.gallery : discussion?.images}
-            notion={discussion?.notion}
+            notion={discussionNotion}
             onClick={handleOpenChat}
             onMouseEnter={() => {
               onHover(true);
@@ -327,6 +340,8 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           isExpanded={isExpanded}
           onClick={handleOpenChat}
           title={cardTitle}
+          circleVisibility={item.circleVisibility}
+          discussionId={discussion?.id}
           lastMessage={getLastMessage({
             commonFeedType: item.data.type,
             lastMessage: item.data.lastMessage,
@@ -354,7 +369,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
           seen={feedItemUserMetadata?.seen ?? !isFeedItemUserMetadataFetched}
           ownerId={item.userId}
           discussionPredefinedType={discussion?.predefinedType}
-          notion={discussion?.notion && commonNotion}
+          notion={discussionNotion && commonNotion}
           hasUnseenMention={
             isFeedItemUserMetadataFetched &&
             feedItemUserMetadata?.hasUnseenMention
@@ -405,6 +420,14 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
               originalCommonId={discussion?.commonId || ""}
               linkedCommonIds={discussion?.linkedCommonIds}
               circleVisibility={item.circleVisibility}
+            />
+            <UnlinkStreamModal
+              isOpen={isUnlinkStreamModalOpen}
+              onClose={onUnlinkStreamModalClose}
+              feedItemId={item.id}
+              title={cardTitle || ""}
+              commonId={commonId}
+              commonName={commonName}
             />
             <MoveStreamModal
               isOpen={isMoveStreamModalOpen}

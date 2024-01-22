@@ -20,10 +20,12 @@ export interface SendChatMessageDto {
   files?: InfoItem[];
   mentions?: string[];
   parentId?: string;
+  hasUncheckedItems: boolean;
 }
 
 export interface UpdateChatMessageDto {
   chatMessageId: string;
+  hasUncheckedItems: boolean;
   text?: string;
   images?: InfoItem[];
   files?: InfoItem[];

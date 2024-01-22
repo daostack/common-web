@@ -33,6 +33,7 @@ interface Actions {
   remove?: () => void;
   linkStream?: () => void;
   moveStream?: () => void;
+  unlinkStream?: () => void;
 }
 
 export const useMenuItems = (
@@ -47,7 +48,8 @@ export const useMenuItems = (
     feedItemFollow,
     feedItemUserMetadata,
   } = options;
-  const { report, share, remove, linkStream, moveStream } = actions;
+  const { report, share, remove, linkStream, moveStream, unlinkStream } =
+    actions;
   const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
   const items: Item[] = [
     {
@@ -176,6 +178,15 @@ export const useMenuItems = (
           text: "Move to...",
           onClick: moveStream,
           icon: <MoveItemIcon />,
+        }
+      : undefined,
+    unlinkStream
+      ? {
+          id: FeedItemMenuItem.Unlink,
+          text: "Unlink",
+          onClick: unlinkStream,
+          withWarning: true,
+          icon: <Trash2Icon />,
         }
       : undefined,
     remove

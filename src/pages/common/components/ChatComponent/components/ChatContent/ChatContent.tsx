@@ -66,6 +66,7 @@ interface ChatContentInterface {
   onInternalLinkClick?: (data: InternalLinkData) => void;
   isEmpty?: boolean;
   isChatChannel: boolean;
+  isMessageEditAllowed: boolean;
   fetchReplied: (messageId: string, endDate: Date) => Promise<void>;
 }
 
@@ -102,6 +103,7 @@ const ChatContent: ForwardRefRenderFunction<
     isEmpty,
     messages,
     isChatChannel,
+    isMessageEditAllowed,
     fetchReplied,
     discussionMessages,
   },
@@ -112,6 +114,8 @@ const ChatContent: ForwardRefRenderFunction<
   const isTabletView = useIsTabletView();
   const queryParams = useQueryParams();
   const messageIdParam = queryParams[QueryParamKey.Message];
+  const shouldDisplayMessagesOnlyWithUncheckedItems =
+    queryParams[QueryParamKey.Unchecked] === "true";
 
   const [highlightedMessageId, setHighlightedMessageId] = useState(
     () => (typeof messageIdParam === "string" && messageIdParam) || null,
@@ -230,7 +234,9 @@ const ChatContent: ForwardRefRenderFunction<
     <>
       {dateListReverse.map((day, dayIndex) => {
         const date = new Date(Number(day));
-        const currentMessages = messages[Number(day)];
+        const currentMessages = shouldDisplayMessagesOnlyWithUncheckedItems
+          ? messages[Number(day)].filter((message) => message.hasUncheckedItems)
+          : messages[Number(day)];
         const previousDayMessages =
           messages[Number(dateListReverse[dayIndex + 1])] || [];
         const isLastSeenInPreviousDay = checkIsLastSeenInPreviousDay(
@@ -248,12 +254,13 @@ const ChatContent: ForwardRefRenderFunction<
 
         return (
           <Transition
+            key={day}
             show={currentMessages.length > 0}
             transition={isTabletView ? ModalTransition.FadeIn : null}
             className={styles.messageListTransitionContainer}
           >
             {currentMessages.length > 0 && (
-              <ul id={chatId} className={styles.messageList} key={day}>
+              <ul id={chatId} className={styles.messageList}>
                 {isLastSeenInPreviousDay && !isMyMessageFirst && newSeparatorEl}
                 <li className={styles.dateTitle}>
                   {isToday(date) ? "Today" : formatDate(date)}
@@ -300,6 +307,7 @@ const ChatContent: ForwardRefRenderFunction<
                       onUserClick={onUserClick}
                       onFeedItemClick={onFeedItemClick}
                       onInternalLinkClick={onInternalLinkClick}
+                      isMessageEditAllowed={isMessageEditAllowed}
                     />
                   );
 

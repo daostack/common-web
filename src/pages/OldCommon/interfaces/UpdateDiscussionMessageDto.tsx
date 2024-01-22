@@ -9,4 +9,5 @@ export interface UpdateDiscussionMessageDto {
   images?: InfoItem[];
   parentId?: string;
   tags?: InfoItem[];
+  hasUncheckedItems: boolean;
 }
