@@ -25,7 +25,7 @@
 
   &:hover {
     --breadcrumbs-color: #{var(--primary-text)};
-    --breadcrumbs-bg-color: #{$c-gray-20};
+    --breadcrumbs-bg-color: var(--secondary-hover-fill);
   }
 }
 

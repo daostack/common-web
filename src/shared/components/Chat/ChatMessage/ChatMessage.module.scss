@@ -91,7 +91,7 @@
 }
 
 .messageTextCurrentUser {
-  background-color: var(--secondary-fill);
+  background-color: var(--primary-fill);
   margin-left: 2.8rem;
   margin-right: unset;
 
@@ -137,7 +137,7 @@
 }
 
 .messageContentCurrentUser {
-  color: var(--tertiary-text);
+  color: $white;
   margin-right: 0.75rem;
   margin-top: 0.5rem;
 }
@@ -153,7 +153,7 @@
 }
 
 .systemMessageCommonLink {
-  color: var(--primary-fill);
+  color: var(--mention-primary);
   text-decoration: none;
   cursor: pointer;
 
@@ -165,7 +165,7 @@
 .replyMessageContainer {
   display: flex;
   cursor: pointer;
-  background-color: var(--quaternary-fill);
+  background-color: var(--secondary-fill);
   color: var(--primary-text);
   border-radius: 0.625rem;
   padding: 0.5rem 0 0.625rem;
@@ -176,8 +176,12 @@
 .replyMessageContainerCurrentUser {
   background-color: var(--quaternary-fill);
 
+  .replyMessageName {
+    color: $white;
+  }
+
   .mentionText {
-    color: var(--mention-primary);
+    color: var(--mention-secondary);
   }
 }
 
@@ -197,6 +201,7 @@
   font-weight: 600;
   line-height: 1.25rem;
   margin-bottom: 0.125rem;
+  color: var(--primary-text);
 }
 
 .replyMessageNameWithImage {

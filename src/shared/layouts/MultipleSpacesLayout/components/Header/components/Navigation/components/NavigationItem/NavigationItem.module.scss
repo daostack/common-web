@@ -25,10 +25,6 @@
 }
 .itemActive {
   --item-color: var(--primary-fill);
-
-  &:hover {
-    --item-color: none;
-  }
 }
 .itemDisabled {
   --item-color: #{$c-neutrals-300};

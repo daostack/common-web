@@ -22,8 +22,9 @@
 }
 
 .proposal {
-  background-color: $c-neutrals-300;
+  background-color: var(--secondary-background);
   padding: 0 0.5rem;
+  color: $gray;
 }
 
 .new {
