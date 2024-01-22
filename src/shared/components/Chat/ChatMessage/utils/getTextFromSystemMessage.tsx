@@ -10,9 +10,12 @@ import {
   CommonEditedSystemMessage,
   CommonFeedItemCreatedSystemMessage,
   CommonFeedItemDeletedSystemMessage,
+  CommonFeedType,
   CommonMemberAddedSystemMessage,
   CommonState,
+  StreamMovedSourceSystemMessage,
   SystemMessageCommonType,
+  SystemMessageStreamType,
   User,
 } from "@/shared/models";
 import {
@@ -23,7 +26,10 @@ import {
 import { commonLayoutActions } from "@/store/states";
 import { UserMention } from "../components";
 import { Text, TextData } from "../types";
-import { getFeedItemDisplayingData } from "./getFeedItemDisplayingData";
+import {
+  getFeedItemDisplayingData,
+  getFeedItemDisplayingTitle,
+} from "./getFeedItemDisplayingData";
 import styles from "../ChatMessage.module.scss";
 
 const getUser = async (
@@ -84,6 +90,39 @@ const renderClickableText = (text: string, onClick: () => void): Text => (
   </a>
 );
 
+const getCommonLinkWithPartialData = ({
+  commonId,
+  name = "",
+  rootCommonId,
+  state,
+  path,
+}: {
+  commonId?: string;
+  name?: string;
+  rootCommonId?: string;
+  state?: CommonState;
+  path?: string;
+}): Text => {
+  if (!commonId) {
+    return "";
+  }
+
+  return !state || state === CommonState.ACTIVE
+    ? renderLink(path || "", name, () =>
+        handleCommonClick(commonId, rootCommonId),
+      )
+    : `${name} (deleted)`;
+};
+
+const getCommonLink = (common?: Common | null, path?: string): Text =>
+  getCommonLinkWithPartialData({
+    commonId: common?.id,
+    name: common?.name,
+    rootCommonId: common?.rootCommonId,
+    state: common?.state,
+    path,
+  });
+
 const getCommonCreatedSystemMessageText = async (
   systemMessageData: CommonCreatedSystemMessage["systemMessageData"],
   data: TextData,
@@ -131,7 +170,9 @@ const getCommonEditedSystemMessageText = async (
   return [
     `This ${getCommonTypeText(systemMessageData.commonType)}’s `,
     renderLink(
-      (data.getCommonPageAboutTabPath || getCommonPageAboutTabPath)(systemMessageData.commonId),
+      (data.getCommonPageAboutTabPath || getCommonPageAboutTabPath)(
+        systemMessageData.commonId,
+      ),
       "info",
       () => handleCommonClick(systemMessageData.commonId, common?.rootCommonId),
     ),
@@ -184,15 +225,7 @@ const getFeedItemCreatedSystemMessageText = async (
     ),
   ]);
   const userEl = renderUserMention(user, data);
-  const title =
-    feedItemDisplayingData.title &&
-    `${feedItemDisplayingData.title}${
-      feedItemDisplayingData.isDeleted
-        ? " (deleted)"
-        : feedItemDisplayingData.isMoved
-        ? " (moved)"
-        : ""
-    }`;
+  const title = getFeedItemDisplayingTitle(feedItemDisplayingData);
   const titleEl = title ? (
     <>
       {" "}
@@ -226,6 +259,36 @@ const getFeedItemDeletedSystemMessageText = async (
   return [`${feedItemDisplayingData.title} was deleted by `, userEl].filter(
     Boolean,
   );
+};
+
+const getStreamMovedSourceSystemMessageText = async (
+  systemMessageData: StreamMovedSourceSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, common, feedItemDisplayingData] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getCommon(systemMessageData.targetCommonId),
+    getFeedItemDisplayingData(
+      systemMessageData.feedItemDataId,
+      systemMessageData.type === SystemMessageStreamType.Discussion
+        ? CommonFeedType.Discussion
+        : CommonFeedType.Proposal,
+      data.commonId,
+    ),
+  ]);
+  const commonEl = getCommonLink(
+    common,
+    common?.id && (data.getCommonPagePath || getCommonPagePath)(common.id),
+  );
+  const userEl = renderUserMention(user, data);
+
+  return [
+    feedItemDisplayingData.title,
+    " was moved to ",
+    commonEl,
+    " by ",
+    userEl,
+  ].filter(Boolean);
 };
 
 export const getTextFromSystemMessage = async (
@@ -271,6 +334,12 @@ export const getTextFromSystemMessage = async (
       break;
     case SystemDiscussionMessageType.FeedItemDeleted:
       text = await getFeedItemDeletedSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.StreamMovedSource:
+      text = await getStreamMovedSourceSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );
