@@ -3,11 +3,7 @@ import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
 import { useRoutesContext } from "@/shared/contexts";
-import {
-  useCommon,
-  useFeedItemFollow,
-  usePreloadDiscussionMessagesById,
-} from "@/shared/hooks/useCases";
+import { useCommon, useFeedItemFollow } from "@/shared/hooks/useCases";
 import { OpenIcon } from "@/shared/icons";
 import { CommonFeed } from "@/shared/models";
 import { CommonAvatar, parseStringToTextEditorValue } from "@/shared/ui-kit";
@@ -35,21 +31,6 @@ export const ProjectFeedItem: FC<ProjectFeedItemProps> = (props) => {
     projectUnreadMessages: unreadMessages,
   } = useFeedItemCounters(item.id, common?.directParent?.commonId);
   const commonId = item.data.id;
-  const discussionId = item.data.discussionId;
-  const circleVisibility = item.circleVisibility;
-
-  const { preloadDiscussionMessages } = usePreloadDiscussionMessagesById({
-    discussionId,
-    commonId,
-  });
-
-  useEffect(() => {
-    if (!commonId || !circleVisibility) {
-      return;
-    }
-
-    preloadDiscussionMessages(commonId, circleVisibility);
-  }, [commonId, circleVisibility]);
   const lastMessage = parseStringToTextEditorValue(
     `${unreadStreamsCount ?? 0} unread stream${
       unreadStreamsCount === 1 ? "" : "s"
