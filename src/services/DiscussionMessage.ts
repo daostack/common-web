@@ -8,6 +8,7 @@ import {
 import {
   convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
+  isMobile,
   transformFirebaseDataList,
   transformFirebaseDataSingle,
 } from "@/shared/utils";
@@ -15,6 +16,8 @@ import firebase from "@/shared/utils/firebase";
 import { Api } from ".";
 
 const converter = firestoreDataConverter<DiscussionMessage>();
+
+const LOAD_MESSAGES_COUNT = isMobile() ? 8 : 15;
 
 const getDiscussionMessagesByStatus = (
   snapshot: firebase.firestore.QuerySnapshot<DiscussionMessage>,
@@ -104,9 +107,10 @@ class DiscussionMessageService {
       lastVisibleDocument: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>,
     ) => void,
   ): UnsubscribeFunction => {
+    console.log('---LOAD_MESSAGES_COUNT',LOAD_MESSAGES_COUNT);
     let query = this.getDiscussionMessageCollection()
       .where("discussionId", "==", discussionId)
-      .limit(15)
+      .limit(LOAD_MESSAGES_COUNT)
       .orderBy("createdAt", "desc");
 
     if (lastVisible) {
@@ -131,7 +135,7 @@ class DiscussionMessageService {
   ): Promise<DiscussionMessage[]> => {
     const discussionMessages = await this.getDiscussionMessageCollection()
       .where("discussionId", "==", discussionId)
-      .limit(15)
+      .limit(LOAD_MESSAGES_COUNT)
       .orderBy("createdAt", "desc").get();
 
     return transformFirebaseDataList<DiscussionMessage>(discussionMessages);
