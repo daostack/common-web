@@ -9,6 +9,7 @@ export const ApiEndpoint = {
   MarkFeedObjectSeenForUser: "/commons/mark-feed-object-seen-for-user",
   MarkFeedObjectUnseenForUser: "/commons/mark-feed-object-unseen-for-user",
   LinkStream: "/commons/link-stream",
+  UnlinkStream: "/commons/unlink-stream",
   MoveStream: "/commons/move-stream",
   AcceptRules: "/commons/accept-rules",
   GetCommonFeedItems: "/commons/:commonId/feed-items",

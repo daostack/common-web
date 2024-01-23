@@ -5,6 +5,9 @@ import { AppState } from "@/shared/interfaces";
 export const selectUserStateById = (userId: string) => (state: AppState) =>
   state.cache.userStates[userId] || null;
 
+export const selectUserStates = () => (state: AppState) =>
+  state.cache.userStates;
+
 export const selectGovernanceStateByCommonId =
   (commonId: string) => (state: AppState) =>
     state.cache.governanceByCommonIdStates[commonId] || null;

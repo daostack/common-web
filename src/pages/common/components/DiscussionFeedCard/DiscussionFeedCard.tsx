@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { useSelector } from "react-redux";
+import { useUpdateEffect } from "react-use";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionService } from "@/services";
 import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
@@ -16,6 +17,7 @@ import {
   useCommon,
   useDiscussionById,
   useFeedItemUserMetadata,
+  usePreloadDiscussionMessagesById,
   useUserById,
 } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
@@ -44,7 +46,11 @@ import {
   GetLastMessageOptions,
   GetNonAllowedItemsOptions,
 } from "../FeedItem";
-import { LinkStreamModal, MoveStreamModal } from "./components";
+import {
+  LinkStreamModal,
+  MoveStreamModal,
+  UnlinkStreamModal,
+} from "./components";
 import { useMenuItems } from "./hooks";
 
 interface DiscussionFeedCardProps {
@@ -69,6 +75,7 @@ interface DiscussionFeedCardProps {
   rootCommonId?: string;
   feedItemFollow: FeedItemFollowState;
   onUserSelect?: (userId: string, commonId?: string) => void;
+  shouldPreLoadMessages: boolean;
 }
 
 const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
@@ -98,6 +105,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       rootCommonId,
       feedItemFollow,
       onUserSelect,
+      shouldPreLoadMessages,
     } = props;
     const {
       isShowing: isReportModalOpen,
@@ -118,6 +126,11 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       isShowing: isLinkStreamModalOpen,
       onOpen: onLinkStreamModalOpen,
       onClose: onLinkStreamModalClose,
+    } = useModal(false);
+    const {
+      isShowing: isUnlinkStreamModalOpen,
+      onOpen: onUnlinkStreamModalOpen,
+      onClose: onUnlinkStreamModalClose,
     } = useModal(false);
     const {
       isShowing: isMoveStreamModalOpen,
@@ -147,6 +160,10 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
     const shouldLoadCommonData =
       isHome || (discussionNotion && !outerCommonNotion);
     const { data: common } = useCommon(shouldLoadCommonData ? commonId : "");
+    const { preloadDiscussionMessages } = usePreloadDiscussionMessagesById({
+      commonId,
+      discussionId: discussion?.id,
+    });
     const menuItems = useMenuItems(
       {
         commonId,
@@ -164,6 +181,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         share: () => onShareModalOpen(),
         remove: onDeleteModalOpen,
         linkStream: onLinkStreamModalOpen,
+        unlinkStream: onUnlinkStreamModalOpen,
         moveStream: onMoveStreamModalOpen,
       },
     );
@@ -267,6 +285,28 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         });
       }
     }, [isActive, cardTitle]);
+
+    useEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(commonId, item.circleVisibility);
+      }
+    }, [shouldPreLoadMessages, isActive]);
+
+    useUpdateEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(commonId, item.circleVisibility, true);
+      }
+    }, [item.data.lastMessage?.content]);
 
     const renderContent = (): ReactNode => {
       if (isLoading) {
@@ -408,6 +448,14 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
               originalCommonId={discussion?.commonId || ""}
               linkedCommonIds={discussion?.linkedCommonIds}
               circleVisibility={item.circleVisibility}
+            />
+            <UnlinkStreamModal
+              isOpen={isUnlinkStreamModalOpen}
+              onClose={onUnlinkStreamModalClose}
+              feedItemId={item.id}
+              title={cardTitle || ""}
+              commonId={commonId}
+              commonName={commonName}
             />
             <MoveStreamModal
               isOpen={isMoveStreamModalOpen}

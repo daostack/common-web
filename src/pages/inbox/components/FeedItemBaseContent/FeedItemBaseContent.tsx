@@ -71,7 +71,6 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     [styles.imageNonRounded]: !shouldImageBeRounded,
     [styles.imageRounded]: shouldImageBeRounded,
   });
-
   // Here we get either MouseEven, or TouchEven, but I was struggling with importing them from react
   // and use here to have correct types.
   const handleLongPress = (event) => {

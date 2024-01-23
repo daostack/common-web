@@ -33,7 +33,7 @@ export const selectFilteredFeedItems = (state: AppState) =>
 export const selectFilteredPinnedFeedItems = (state: AppState) =>
   state.common.searchState.pinnedFeedItems;
 
-export const selectSearchValue = (state: AppState) =>
+export const selectFeedSearchValue = (state: AppState) =>
   state.common.searchState.searchValue;
 
 export const selectIsSearchingFeedItems = (state: AppState) =>

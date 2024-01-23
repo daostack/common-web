@@ -14,4 +14,5 @@ export interface CreateDiscussionMessageDto {
   parentId?: string;
   tags?: InfoItem[];
   mentions?: string[];
+  hasUncheckedItems: boolean;
 }

@@ -27,6 +27,21 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
       nextState.userStates[userId] = { ...state };
     }),
   )
+  .handleAction(actions.updateUserStates, (state, { payload }) =>
+    produce(state, (nextState) => {
+      payload.forEach((user) => {
+        if (!user) {
+          return;
+        }
+
+        nextState.userStates[user.uid] = {
+          data: user,
+          loading: false,
+          fetched: true,
+        };
+      });
+    }),
+  )
   .handleAction(actions.updateGovernanceStateByCommonId, (state, { payload }) =>
     produce(state, (nextState) => {
       const { commonId, state } = payload;

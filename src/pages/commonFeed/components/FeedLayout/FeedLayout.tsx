@@ -80,7 +80,10 @@ import {
   MobileProfile,
   SplitView,
 } from "./components";
-import { BATCHES_AMOUNT_TO_PRELOAD } from "./constants";
+import {
+  BATCHES_AMOUNT_TO_PRELOAD,
+  ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES,
+} from "./constants";
 import { useUserForProfile } from "./hooks";
 import {
   checkShouldAutoOpenPreview,
@@ -688,8 +691,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 isLoading={loading}
                 loaderDelay={LOADER_APPEARANCE_DELAY}
               >
-                {allFeedItems?.map((item) => {
+                {allFeedItems?.map((item, index) => {
                   const isActive = item.itemId === activeFeedItemId;
+                  const shouldPreLoadMessages =
+                    index < ITEMS_AMOUNT_TO_PRE_LOAD_MESSAGES;
 
                   if (checkIsFeedItemFollowLayoutItem(item)) {
                     const commonData = getItemCommonData(
@@ -730,6 +735,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                         onActiveItemDataChange={handleActiveFeedItemDataChange}
                         directParent={outerCommon?.directParent}
                         rootCommonId={outerCommon?.rootCommonId}
+                        shouldPreLoadMessages={shouldPreLoadMessages}
                       />
                     );
                   }

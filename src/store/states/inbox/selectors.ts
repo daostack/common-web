@@ -10,3 +10,12 @@ export const selectChatChannelItems = (state: AppState) =>
 
 export const selectNextChatChannelItemId = (state: AppState) =>
   state.inbox.nextChatChannelItemId;
+
+export const selectFilteredInboxItems = (state: AppState) =>
+  state.inbox.searchState.items;
+
+export const selectInboxSearchValue = (state: AppState) =>
+  state.inbox.searchState.searchValue;
+
+export const selectIsSearchingInboxItems = (state: AppState) =>
+  state.inbox.searchState.isSearching;
