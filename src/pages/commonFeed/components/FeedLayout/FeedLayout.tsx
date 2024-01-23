@@ -450,7 +450,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   };
 
   const handleDMClick = () => {
-    if (checkIsChatChannelLayoutItem(selectedFeedItem)) {
+    if (
+      checkIsChatChannelLayoutItem(selectedFeedItem) &&
+      selectedFeedItem.chatChannel.participants.length <= 2
+    ) {
       handleProfileClose();
       return;
     }
@@ -460,10 +463,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   };
 
   const onDMClick =
-    checkIsChatChannelLayoutItem(selectedFeedItem) ||
-    (!isTabletView && chatChannelItemForProfile)
-      ? handleDMClick
-      : undefined;
+    !isTabletView && chatChannelItemForProfile ? handleDMClick : undefined;
 
   const handleFeedItemClickExternal = useCallback(
     (
