@@ -87,8 +87,8 @@ import {
 import { useUserForProfile } from "./hooks";
 import {
   checkShouldAutoOpenPreview,
-  getChatChannelItemByUserIds,
   getDefaultSize,
+  getDMChatChannelItemByUserIds,
   getItemCommonData,
   getSplitViewMaxSize,
   saveChatSize,
@@ -230,9 +230,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return items;
   }, [topFeedItems, feedItems]);
-  const chatChannelItemForProfile = useMemo(
+  const dmChatChannelItemForProfile = useMemo(
     () =>
-      getChatChannelItemByUserIds(
+      getDMChatChannelItemByUserIds(
         allFeedItems,
         userId,
         userForProfile.userForProfileData?.userId,
@@ -251,8 +251,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
-    if (chatChannelItemForProfile?.itemId) {
-      return chatChannelItemForProfile.itemId;
+    if (dmChatChannelItemForProfile?.itemId) {
+      return dmChatChannelItemForProfile.itemId;
     }
     if (
       userForProfile.userForProfileData ||
@@ -284,7 +284,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return foundItem?.itemId;
   }, [
-    chatChannelItemForProfile?.itemId,
+    dmChatChannelItemForProfile?.itemId,
     allFeedItems,
     chatItem?.feedItemId,
     sharedFeedItemId,
@@ -463,7 +463,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   };
 
   const onDMClick =
-    !isTabletView && chatChannelItemForProfile ? handleDMClick : undefined;
+    !isTabletView && dmChatChannelItemForProfile ? handleDMClick : undefined;
 
   const handleFeedItemClickExternal = useCallback(
     (
