@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
@@ -22,6 +22,7 @@ interface Return {
   preloadDiscussionMessages: (
     commonId: string,
     circleVisibility?: string[] | null,
+    force?: boolean,
   ) => void;
 }
 
@@ -36,10 +37,15 @@ export const usePreloadDiscussionMessagesById = ({
   const user = useSelector(selectUser());
   const userId = user?.uid;
   const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+  const [forceUpdateFlag, setForceUpdateFlag] = useState(false);
 
   const preloadDiscussionMessages = useCallback(
-    async (commonId, circleVisibility) => {
+    async (commonId, circleVisibility, force = false) => {
       fetchCommonMembers(commonId, circleVisibility);
+
+      if (force) {
+        setForceUpdateFlag((s) => !s);
+      }
     },
     [fetchCommonMembers],
   );
@@ -98,7 +104,7 @@ export const usePreloadDiscussionMessagesById = ({
     }
 
     fetchDiscussionMessages();
-  }, [commonMembers, discussionId, commonId]);
+  }, [commonMembers, discussionId, commonId, forceUpdateFlag]);
 
   return {
     preloadDiscussionMessages,

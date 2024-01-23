@@ -6,11 +6,20 @@ import { SystemDiscussionMessageType } from "@/shared/constants";
 import {
   Common,
   CommonCreatedSystemMessage,
+  CommonDeletedSystemMessage,
   CommonEditedSystemMessage,
   CommonFeedItemCreatedSystemMessage,
+  CommonFeedItemDeletedSystemMessage,
+  CommonFeedType,
   CommonMemberAddedSystemMessage,
   CommonState,
+  StreamLinkedInternalSystemMessage,
+  StreamLinkedTargetSystemMessage,
+  StreamMovedInternalSystemMessage,
+  StreamMovedSourceSystemMessage,
+  StreamMovedTargetSystemMessage,
   SystemMessageCommonType,
+  SystemMessageStreamType,
   User,
 } from "@/shared/models";
 import {
@@ -21,12 +30,25 @@ import {
 import { commonLayoutActions } from "@/store/states";
 import { UserMention } from "../components";
 import { Text, TextData } from "../types";
-import { getFeedItemDisplayingData } from "./getFeedItemDisplayingData";
+import {
+  getFeedItemDisplayingData,
+  getFeedItemDisplayingTitle,
+} from "./getFeedItemDisplayingData";
 import styles from "../ChatMessage.module.scss";
 
-const getUser = async (userId: string, users: User[]): Promise<User | null> =>
-  users.find((user) => user.uid === userId) ||
-  UserService.getCachedUserById(userId);
+const getUser = async (
+  users: User[],
+  userId?: string,
+): Promise<User | null> => {
+  if (!userId) {
+    return null;
+  }
+
+  return (
+    users.find((user) => user.uid === userId) ||
+    UserService.getCachedUserById(userId)
+  );
+};
 
 const getCommon = async (commonId: string): Promise<Common | null> =>
   (await CommonService.getCachedCommonById(commonId)) ||
@@ -72,11 +94,44 @@ const renderClickableText = (text: string, onClick: () => void): Text => (
   </a>
 );
 
+const getCommonLinkWithPartialData = ({
+  commonId,
+  name = "",
+  rootCommonId,
+  state,
+  path,
+}: {
+  commonId?: string;
+  name?: string;
+  rootCommonId?: string;
+  state?: CommonState;
+  path?: string;
+}): Text => {
+  if (!commonId) {
+    return "";
+  }
+
+  return !state || state === CommonState.ACTIVE
+    ? renderLink(path || "", name, () =>
+        handleCommonClick(commonId, rootCommonId),
+      )
+    : `${name} (deleted)`;
+};
+
+const getCommonLink = (common?: Common | null, path?: string): Text =>
+  getCommonLinkWithPartialData({
+    commonId: common?.id,
+    name: common?.name,
+    rootCommonId: common?.rootCommonId,
+    state: common?.state,
+    path,
+  });
+
 const getCommonCreatedSystemMessageText = async (
   systemMessageData: CommonCreatedSystemMessage["systemMessageData"],
   data: TextData,
 ): Promise<Text[]> => {
-  const user = await getUser(systemMessageData.userId, data.users);
+  const user = await getUser(data.users, systemMessageData.userId);
   const isThisCommonCreated = systemMessageData.commonId === data.commonId;
   const userEl = renderUserMention(user, data);
 
@@ -111,7 +166,7 @@ const getCommonEditedSystemMessageText = async (
   data: TextData,
 ): Promise<Text[]> => {
   const [user, common] = await Promise.all([
-    getUser(systemMessageData.userId, data.users),
+    getUser(data.users, systemMessageData.userId),
     getCommon(systemMessageData.commonId),
   ]);
   const userEl = renderUserMention(user, data);
@@ -130,11 +185,29 @@ const getCommonEditedSystemMessageText = async (
   ];
 };
 
+const getCommonDeletedSystemMessageText = async (
+  systemMessageData: CommonDeletedSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, common] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getCommon(systemMessageData.commonId),
+  ]);
+  const userEl = renderUserMention(user, data);
+
+  return [
+    `The ${common?.name || ""} ${getCommonTypeText(
+      systemMessageData.commonType,
+    )} was deleted by `,
+    userEl,
+  ];
+};
+
 const getCommonMemberAddedSystemMessageText = async (
   systemMessageData: CommonMemberAddedSystemMessage["systemMessageData"],
   data: TextData,
 ): Promise<Text[]> => {
-  const user = await getUser(systemMessageData.userId, data.users);
+  const user = await getUser(data.users, systemMessageData.userId);
   const userEl = renderUserMention(user, data);
 
   return [
@@ -148,7 +221,7 @@ const getFeedItemCreatedSystemMessageText = async (
   data: TextData,
 ): Promise<Text[]> => {
   const [user, feedItemDisplayingData] = await Promise.all([
-    getUser(systemMessageData.userId, data.users),
+    getUser(data.users, systemMessageData.userId),
     getFeedItemDisplayingData(
       systemMessageData.feedItemDataId,
       systemMessageData.feedItemType,
@@ -156,15 +229,7 @@ const getFeedItemCreatedSystemMessageText = async (
     ),
   ]);
   const userEl = renderUserMention(user, data);
-  const title =
-    feedItemDisplayingData.title &&
-    `${feedItemDisplayingData.title}${
-      feedItemDisplayingData.isDeleted
-        ? " (deleted)"
-        : feedItemDisplayingData.isMoved
-        ? " (moved)"
-        : ""
-    }`;
+  const title = getFeedItemDisplayingTitle(feedItemDisplayingData);
   const titleEl = title ? (
     <>
       {" "}
@@ -179,6 +244,161 @@ const getFeedItemCreatedSystemMessageText = async (
   );
 
   return [titleEl, " was created by ", userEl].filter(Boolean);
+};
+
+const getFeedItemDeletedSystemMessageText = async (
+  systemMessageData: CommonFeedItemDeletedSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, feedItemDisplayingData] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getFeedItemDisplayingData(
+      systemMessageData.feedItemDataId,
+      systemMessageData.feedItemType,
+      data.commonId,
+    ),
+  ]);
+  const userEl = renderUserMention(user, data);
+
+  return [`${feedItemDisplayingData.title} was deleted by `, userEl].filter(
+    Boolean,
+  );
+};
+
+const getStreamMovedInternalSystemMessageText = async (
+  systemMessageData: StreamMovedInternalSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, sourceCommon, targetCommon] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getCommon(systemMessageData.sourceCommonId),
+    getCommon(systemMessageData.targetCommonId),
+  ]);
+  const sourceCommonEl = getCommonLink(
+    sourceCommon,
+    sourceCommon?.id &&
+      (data.getCommonPagePath || getCommonPagePath)(sourceCommon.id),
+  );
+  const targetCommonEl = getCommonLink(
+    targetCommon,
+    targetCommon?.id &&
+      (data.getCommonPagePath || getCommonPagePath)(targetCommon.id),
+  );
+  const userEl = renderUserMention(user, data);
+
+  return [
+    "This stream was moved from ",
+    sourceCommonEl,
+    " to ",
+    targetCommonEl,
+    " by ",
+    userEl,
+  ].filter(Boolean);
+};
+
+const getStreamMovedSourceSystemMessageText = async (
+  systemMessageData: StreamMovedSourceSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, common, feedItemDisplayingData] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getCommon(systemMessageData.targetCommonId),
+    getFeedItemDisplayingData(
+      systemMessageData.feedItemDataId,
+      systemMessageData.type === SystemMessageStreamType.Discussion
+        ? CommonFeedType.Discussion
+        : CommonFeedType.Proposal,
+      data.commonId,
+    ),
+  ]);
+  const commonEl = getCommonLink(
+    common,
+    common?.id && (data.getCommonPagePath || getCommonPagePath)(common.id),
+  );
+  const userEl = renderUserMention(user, data);
+
+  return [
+    feedItemDisplayingData.title,
+    " was moved to ",
+    commonEl,
+    " by ",
+    userEl,
+  ].filter(Boolean);
+};
+
+const getStreamMovedTargetSystemMessageText = async (
+  systemMessageData: StreamMovedTargetSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, common, feedItemDisplayingData] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getCommon(systemMessageData.sourceCommonId),
+    getFeedItemDisplayingData(
+      systemMessageData.feedItemDataId,
+      systemMessageData.type === SystemMessageStreamType.Discussion
+        ? CommonFeedType.Discussion
+        : CommonFeedType.Proposal,
+      data.commonId,
+    ),
+  ]);
+  const commonEl = getCommonLink(
+    common,
+    common?.id && (data.getCommonPagePath || getCommonPagePath)(common.id),
+  );
+  const userEl = renderUserMention(user, data);
+
+  return [
+    feedItemDisplayingData.title,
+    " was moved here from ",
+    commonEl,
+    " by ",
+    userEl,
+  ].filter(Boolean);
+};
+
+const getStreamLinkedInternalSystemMessageText = async (
+  systemMessageData: StreamLinkedInternalSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  const [user, targetCommon] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getCommon(systemMessageData.targetCommonId),
+  ]);
+  const targetCommonEl = getCommonLink(
+    targetCommon,
+    targetCommon?.id &&
+      (data.getCommonPagePath || getCommonPagePath)(targetCommon.id),
+  );
+  const userEl = renderUserMention(user, data);
+
+  return [
+    "This stream was linked into ",
+    targetCommonEl,
+    " by ",
+    userEl,
+  ].filter(Boolean);
+};
+
+const getStreamLinkedTargetSystemMessageText = async (
+  systemMessageData: StreamLinkedTargetSystemMessage["systemMessageData"],
+  data: TextData,
+): Promise<Text[]> => {
+  // $streamName was linked here by $userName.
+  const [user, feedItemDisplayingData] = await Promise.all([
+    getUser(data.users, systemMessageData.userId),
+    getFeedItemDisplayingData(
+      systemMessageData.feedItemDataId,
+      systemMessageData.type === SystemMessageStreamType.Discussion
+        ? CommonFeedType.Discussion
+        : CommonFeedType.Proposal,
+      data.commonId,
+    ),
+  ]);
+  const userEl = renderUserMention(user, data);
+
+  return [feedItemDisplayingData.title, " was linked here by ", userEl].filter(
+    Boolean,
+  );
 };
 
 export const getTextFromSystemMessage = async (
@@ -204,6 +424,12 @@ export const getTextFromSystemMessage = async (
         data,
       );
       break;
+    case SystemDiscussionMessageType.CommonDeleted:
+      text = await getCommonDeletedSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
     case SystemDiscussionMessageType.CommonMemberAdded:
       text = await getCommonMemberAddedSystemMessageText(
         systemMessage.systemMessageData,
@@ -212,6 +438,42 @@ export const getTextFromSystemMessage = async (
       break;
     case SystemDiscussionMessageType.FeedItemCreated:
       text = await getFeedItemCreatedSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.FeedItemDeleted:
+      text = await getFeedItemDeletedSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.StreamMovedInternal:
+      text = await getStreamMovedInternalSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.StreamMovedSource:
+      text = await getStreamMovedSourceSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.StreamMovedTarget:
+      text = await getStreamMovedTargetSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.StreamLinkedInternal:
+      text = await getStreamLinkedInternalSystemMessageText(
+        systemMessage.systemMessageData,
+        data,
+      );
+      break;
+    case SystemDiscussionMessageType.StreamLinkedTarget:
+      text = await getStreamLinkedTargetSystemMessageText(
         systemMessage.systemMessageData,
         data,
       );

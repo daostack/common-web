@@ -20,17 +20,19 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
   const { className, streamsWithNotificationsAmount } = props;
   const dispatch = useDispatch();
   const isMobileVersion = useIsTabletView();
+  const searchInboxItemsData = useSearchFeedItems({
+    onSearch: (value) => dispatch(inboxActions.searchInboxItems(value)),
+    onResetSearchState: () => dispatch(inboxActions.resetSearchState()),
+  });
   const { searchValue, searchInputToggle, onChangeSearchValue, onCloseSearch } =
-    useSearchFeedItems({
-      onSearch: (value) => dispatch(inboxActions.searchInboxItems(value)),
-      onResetSearchState: () => dispatch(inboxActions.resetSearchState()),
-    });
+    searchInboxItemsData;
 
   if (isMobileVersion) {
     return (
       <HeaderContent_v04
         className={className}
         streamsWithNotificationsAmount={streamsWithNotificationsAmount}
+        searchInboxItemsData={searchInboxItemsData}
       />
     );
   }

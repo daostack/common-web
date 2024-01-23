@@ -9,7 +9,6 @@ import React, {
 import { useCollapse } from "react-collapsed";
 import classNames from "classnames";
 import { useFeedItemContext } from "@/pages/common";
-import { usePreloadDiscussionMessagesById } from "@/shared/hooks/useCases";
 import { useIsTabletView } from "@/shared/hooks/viewport";
 import { ContextMenuItem } from "@/shared/interfaces";
 import { CommonFeedType, CommonNotion, PredefinedTypes } from "@/shared/models";
@@ -51,8 +50,6 @@ type FeedCardProps = PropsWithChildren<{
   notion?: CommonNotion;
   originalCommonIdForLinking?: string;
   linkedCommonIds?: string[];
-  circleVisibility?: string[];
-  discussionId?: string | null;
 }>;
 
 const MOBILE_HEADER_HEIGHT = 52;
@@ -96,8 +93,6 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
     notion,
     originalCommonIdForLinking,
     linkedCommonIds,
-    circleVisibility,
-    discussionId,
   } = props;
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTabletView = useIsTabletView();
@@ -110,18 +105,6 @@ export const FeedCard = forwardRef<FeedCardRef, FeedCardProps>((props, ref) => {
   });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { preloadDiscussionMessages } = usePreloadDiscussionMessagesById({
-    commonId,
-    discussionId,
-  });
-
-  useEffect(() => {
-    if (!commonId || !circleVisibility) {
-      return;
-    }
-
-    preloadDiscussionMessages(commonId, circleVisibility);
-  }, [commonId, circleVisibility]);
   const toggleExpanding = () => {
     if (setExpandedFeedItemId) {
       setExpandedFeedItemId(isExpanded ? null : feedItemId);
