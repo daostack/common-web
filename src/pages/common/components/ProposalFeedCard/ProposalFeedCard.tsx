@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { useSelector } from "react-redux";
+import { useUpdateEffect } from "react-use";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import { ProposalService } from "@/services";
@@ -342,6 +343,17 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         preloadDiscussionMessages(commonId, item.circleVisibility);
       }
     }, [shouldPreLoadMessages, isActive]);
+
+    useUpdateEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(commonId, item.circleVisibility, true);
+      }
+    }, [item.data.lastMessage?.content]);
 
     const renderContent = (): ReactNode => {
       if (isLoading) {

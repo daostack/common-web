@@ -1,5 +1,7 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "@/pages/Auth/store/selectors";
+import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import { DiscussionMessageService } from "@/services";
 import { getTextFromTextEditorString } from "@/shared/components/Chat/ChatMessage/utils";
 import { useRoutesContext } from "@/shared/contexts";
@@ -7,11 +9,7 @@ import {
   checkIsSystemDiscussionMessage,
   checkIsUserDiscussionMessage,
 } from "@/shared/models";
-import {
-  cacheActions,
-} from "@/store/states";
-import { useCommonMembers } from "@/pages/OldCommon/hooks";
-import { selectUser } from "@/pages/Auth/store/selectors";
+import { cacheActions } from "@/store/states";
 
 interface Options {
   discussionId?: string | null;
@@ -21,7 +19,11 @@ interface Options {
 }
 
 interface Return {
-  preloadDiscussionMessages: (commonId: string, circleVisibility?: string[] | null) => void;
+  preloadDiscussionMessages: (
+    commonId: string,
+    circleVisibility?: string[] | null,
+    force?: boolean,
+  ) => void;
 }
 
 export const usePreloadDiscussionMessagesById = ({
@@ -34,27 +36,34 @@ export const usePreloadDiscussionMessagesById = ({
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
   const user = useSelector(selectUser());
   const userId = user?.uid;
-  const {
-    data: commonMembers,
-    fetchCommonMembers,
-  } = useCommonMembers();
+  const { data: commonMembers, fetchCommonMembers } = useCommonMembers();
+  const [forceUpdateFlag, setForceUpdateFlag] = useState(false);
 
-  const preloadDiscussionMessages = useCallback(async (commonId, circleVisibility) => {
-    fetchCommonMembers(commonId, circleVisibility);
-  },[fetchCommonMembers]);
+  const preloadDiscussionMessages = useCallback(
+    async (commonId, circleVisibility, force = false) => {
+      fetchCommonMembers(commonId, circleVisibility);
+
+      if (force) {
+        setForceUpdateFlag((s) => !s);
+      }
+    },
+    [fetchCommonMembers],
+  );
 
   const fetchDiscussionMessages = async () => {
     if (!discussionId) {
       return;
     }
 
-    const discussionMessages = await DiscussionMessageService.getPreloadDiscussionMessagesByDiscussionId(discussionId);
+    const discussionMessages =
+      await DiscussionMessageService.getPreloadDiscussionMessagesByDiscussionId(
+        discussionId,
+      );
 
     const users = commonMembers.map(({ user }) => user);
 
     const discussionsWithText = await Promise.all(
       discussionMessages.map(async (discussionMessage) => {
-
         const isUserDiscussionMessage =
           checkIsUserDiscussionMessage(discussionMessage);
         const isSystemMessage =
@@ -82,19 +91,20 @@ export const usePreloadDiscussionMessagesById = ({
 
     dispatch(
       cacheActions.updateDiscussionMessagesStateByDiscussionId({
-        discussionId, updatedDiscussionMessages: discussionsWithText, removedDiscussionMessages: []
+        discussionId,
+        updatedDiscussionMessages: discussionsWithText,
+        removedDiscussionMessages: [],
       }),
     );
-  }
+  };
 
   useEffect(() => {
     if (!commonMembers || !commonId) {
-      return
+      return;
     }
 
     fetchDiscussionMessages();
-
-  }, [commonMembers, discussionId, commonId]);
+  }, [commonMembers, discussionId, commonId, forceUpdateFlag]);
 
   return {
     preloadDiscussionMessages,

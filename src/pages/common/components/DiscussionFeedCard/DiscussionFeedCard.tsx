@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { useSelector } from "react-redux";
+import { useUpdateEffect } from "react-use";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionService } from "@/services";
 import { DeletePrompt, GlobalOverlay, ReportModal } from "@/shared/components";
@@ -295,6 +296,17 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         preloadDiscussionMessages(commonId, item.circleVisibility);
       }
     }, [shouldPreLoadMessages, isActive]);
+
+    useUpdateEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(commonId, item.circleVisibility, true);
+      }
+    }, [item.data.lastMessage?.content]);
 
     const renderContent = (): ReactNode => {
       if (isLoading) {
