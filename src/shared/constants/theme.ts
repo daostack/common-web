@@ -23,6 +23,7 @@ export enum ThemeColors {
   dropShadowSecondary,
   mentionPrimary,
   mentionSecondary,
+  highlight,
 }
 
 export const ThemeColorsValues = {
@@ -46,6 +47,7 @@ export const ThemeColorsValues = {
     [ThemeColors.dropShadowSecondary]: "rgba(187, 187, 187, 0.7)",
     [ThemeColors.mentionPrimary]: "#d84c7f",
     [ThemeColors.mentionSecondary]: "#ffa6d7",
+    [ThemeColors.highlight]: "#D84CA0",
   },
   [Theme.Dark]: {
     [ThemeColors.primaryBackground]: "#101010",
@@ -67,5 +69,6 @@ export const ThemeColorsValues = {
     [ThemeColors.dropShadowSecondary]: "rgba(104, 104, 104, 0.7)",
     [ThemeColors.mentionPrimary]: "#d84c7f",
     [ThemeColors.mentionSecondary]: "#ffa6d7",
+    [ThemeColors.highlight]: "#D84CA0",
   },
 };

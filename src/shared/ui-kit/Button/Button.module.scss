@@ -138,7 +138,7 @@
   }
 
   &.buttonDisabled {
-    --btn-bg-color: #{var(--quaternary-fill)};
+    --btn-bg-color: #{$c-shades-neutrals-30};
   }
 }
 

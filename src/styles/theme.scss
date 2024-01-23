@@ -18,6 +18,7 @@
   --drop-shadow-secondary: rgba(187, 187, 187, 0.7);
   --mention-primary: #d84c7f;
   --mention-secondary: #ffa6d7;
+  --highlight: #d84ca0;
 }
 
 :root[data-theme="dark"] {
@@ -28,7 +29,7 @@
   --primary-text: #ffffff;
   --secondary-text: #a75a93;
   --tertiary-text: #001a36;
-  --quaternary-text: #432b33;
+  --quaternary-text: #edcedf;
   --gentle-stroke: #1f2124;
   --warning: #ff603e;
   --primary-fill: #b5407f;
@@ -40,4 +41,5 @@
   --drop-shadow-secondary: rgba(104, 104, 104, 0.7);
   --mention-primary: #d84c7f;
   --mention-secondary: #ffa6d7;
+  --highlight: #d84ca0;
 }
