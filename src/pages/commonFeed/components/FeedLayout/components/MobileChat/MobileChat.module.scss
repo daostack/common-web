@@ -6,10 +6,17 @@
 
   .modalHeaderWrapper {
     padding: 0;
+    position: sticky;
+    top: 0px;
+    z-index: 999999;
 
     .modalHeader {
       padding: 0;
     }
+  }
+
+  .keyboardOpen {
+    top: 50%;
   }
 
   @include big-phone {

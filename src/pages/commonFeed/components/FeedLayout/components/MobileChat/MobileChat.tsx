@@ -1,5 +1,6 @@
 import React, { FC, ReactNode, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
+import classNames from "classnames";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatMobileModal } from "@/pages/common/components";
 import {
@@ -104,6 +105,21 @@ const MobileChat: FC<ChatProps> = (props) => {
     }
   }, [isDM, dmUserIds]);
 
+  let height = window.visualViewport?.height;
+  const viewport = window.visualViewport;
+  window.visualViewport?.addEventListener("resize", resizeHandler);
+  let isKeyboardOpen = false;
+
+  function resizeHandler() {
+    if (/iPhone|iPad|iPod/.test(window.navigator.userAgent)) {
+      height = viewport?.height;
+      console.log("iOS device");
+      isKeyboardOpen = true;
+    }
+
+    //button.style.bottom = `${height - viewport.height + 10}px`;
+  }
+
   return (
     <>
       {children}
@@ -135,7 +151,9 @@ const MobileChat: FC<ChatProps> = (props) => {
         }
         styles={{
           modal: styles.modal,
-          modalHeaderWrapper: styles.modalHeaderWrapper,
+          modalHeaderWrapper: classNames(styles.modalHeaderWrapper, {
+            [styles.keyboardOpen]: isKeyboardOpen,
+          }),
           modalHeader: styles.modalHeader,
         }}
       >
