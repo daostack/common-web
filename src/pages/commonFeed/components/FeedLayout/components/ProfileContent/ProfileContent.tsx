@@ -80,8 +80,9 @@ const ProfileContent: FC<ProfileContentProps> = (props) => {
   const country = countryList.find(({ value }) => value === user?.country);
 
   const handleDMButtonClick = () => {
-    if (onDMClick) {
-      onDMClick();
+    if (dmUserChatChannel && user) {
+      onChatChannelCreate(dmUserChatChannel, user);
+      if (onDMClick) onDMClick();
     } else {
       fetchDMUserChatChannel([userId]);
     }
