@@ -9,7 +9,7 @@ interface Options {
   onResetSearchState: () => void;
 }
 
-interface Return {
+export interface SearchFeedItemsData {
   searchValue: string;
   searchInputToggle: ToggleState;
   onChangeSearchValue: (value: string) => void;
@@ -19,9 +19,10 @@ interface Return {
 export const useSearchFeedItems = ({
   onSearch,
   onResetSearchState,
-}: Options): Return => {
+}: Options): SearchFeedItemsData => {
   const params = useQueryParams();
   const searchParam = params[QueryParamKey.Search];
+  const isActiveUnreadInboxItemsParam = params[QueryParamKey.Unread] === "true";
   const [searchValue, setSearchValue] = useState("");
   const searchInputToggle = useToggle(false);
 
@@ -43,6 +44,12 @@ export const useSearchFeedItems = ({
 
     return onResetSearchState;
   }, []);
+
+  useEffect(() => {
+    if (searchValue) {
+      searchFeedItems(searchValue);
+    }
+  }, [isActiveUnreadInboxItemsParam]);
 
   const onChangeSearchValue = useCallback((value: string) => {
     setSearchValue(value);
