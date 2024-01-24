@@ -3,11 +3,15 @@
 
 .contentWrapper {
   display: flex;
-  padding: 0.375rem 1rem;
+  padding: 0.375rem 0.75rem;
   border-radius: 0.313rem;
 
   &:hover {
     background-color: var(--secondary-hover-fill);
+  }
+
+  &.open {
+    color: var(--highlight);
   }
 }
 

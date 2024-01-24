@@ -24,7 +24,7 @@
   }
 }
 .itemActive {
-  --item-color: var(--primary-fill);
+  --item-color: var(--highlight);
 }
 .itemDisabled {
   --item-color: #{$c-neutrals-300};
