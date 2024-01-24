@@ -50,16 +50,18 @@ function Content<T extends keyof Element>(
       className={classNames(styles.menuButton, outerStyles?.container)}
       {...restProps}
     >
-      <UserAvatar
-        className={classNames(styles.avatar, outerStyles?.userAvatar)}
-        photoURL={avatarURL}
-        userName={userName}
-        preloaderSrc={avatarPlaceholderSrc}
-      />
-      <span className={classNames(styles.name, outerStyles?.userName)}>
-        {userName}
-      </span>
-      {leftSideEl}
+      <div className={styles.contentWrapper}>
+        <UserAvatar
+          className={classNames(styles.avatar, outerStyles?.userAvatar)}
+          photoURL={avatarURL}
+          userName={userName}
+          preloaderSrc={avatarPlaceholderSrc}
+        />
+        <span className={classNames(styles.name, outerStyles?.userName)}>
+          {userName}
+        </span>
+        {leftSideEl}
+      </div>
     </Tag>
   );
 }
