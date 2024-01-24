@@ -24,6 +24,7 @@ interface EditorProps {
   readOnly?: boolean;
   disabled?: boolean;
   onBlur?: FocusEventHandler;
+  onFocus?: FocusEventHandler;
   elementStyles?: EditorElementStyles;
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
   scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
@@ -37,6 +38,7 @@ const Editor: FC<EditorProps> = (props) => {
     readOnly = false,
     disabled = false,
     onBlur,
+    onFocus,
     onKeyDown,
     scrollSelectionIntoView,
   } = props;
@@ -80,6 +82,7 @@ const Editor: FC<EditorProps> = (props) => {
       spellCheck
       readOnly={readOnly || disabled}
       onBlur={onBlur}
+      onFocus={onFocus}
       onKeyDown={handleKeyDown}
       scrollSelectionIntoView={scrollSelectionIntoView}
     />

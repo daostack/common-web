@@ -137,3 +137,11 @@ $phone-breakpoint: 415px;
 .multipleEmojiText {
   font-size: $large;
 }
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: red;
+  z-index: 99999;
+}

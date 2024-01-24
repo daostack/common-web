@@ -156,6 +156,7 @@ export default function ChatComponent({
   const userId = user?.uid;
   const discussionId = discussion?.id || "";
   const isChatChannel = Boolean(chatChannel);
+  const [showHeader, setShowHeader] = useState(false);
 
   const hasPermissionToHide =
     commonMember && governanceCircles
@@ -694,6 +695,12 @@ export default function ChatComponent({
             }),
           }}
           value={message}
+          onFocus={() => {
+            setShowHeader(true);
+          }}
+          onBlur={() => {
+            setShowHeader(false);
+          }}
           onChange={setMessage}
           placeholder="Message"
           onKeyDown={onEnterKeyDown}
@@ -753,6 +760,7 @@ export default function ChatComponent({
         ref={chatContainerRef}
       >
         <ChatContentContext.Provider value={chatContentContextValue}>
+          {showHeader && <div className={styles.header}>HEADER</div>}
           <ChatContent
             ref={chatContentRef}
             discussionMessages={discussionMessagesData.data}

@@ -61,6 +61,7 @@ export interface TextEditorProps {
   value: TextEditorValue;
   onChange?: (value: TextEditorValue) => void;
   onBlur?: FocusEventHandler;
+  onFocus?: FocusEventHandler;
   size?: TextEditorSize;
   disabled?: boolean;
   onKeyDown?: (event: KeyboardEvent<HTMLElement>) => void;
@@ -95,6 +96,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     value,
     onChange,
     onBlur,
+    onFocus,
     onKeyDown,
     size,
     placeholder,
@@ -319,6 +321,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
           readOnly={false}
           disabled={disabled}
           onBlur={onBlur}
+          onFocus={onFocus}
           onKeyDown={handleKeyDown}
           scrollSelectionIntoView={scrollSelectionIntoView}
           elementStyles={elementStyles}
