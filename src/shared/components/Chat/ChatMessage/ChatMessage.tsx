@@ -348,6 +348,8 @@ export default function ChatMessage({
               styles.messageContent,
               styles.replyMessageContent,
               {
+                [styles.replyMessageContentNotCurrentUser]:
+                  isNotCurrentUserMessage,
                 [styles.replyMessageContentWithImage]: image,
                 [styles.replyMessageContentWithFile]: file,
                 [styles.messageContentRtl]: isRtlWithNoMentions(

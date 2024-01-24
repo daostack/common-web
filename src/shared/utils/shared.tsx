@@ -6,7 +6,8 @@ import { CurrencySymbol, PaymentAmount } from "@/shared/models";
 import { Currency } from "@/shared/models";
 import { BaseProposal } from "@/shared/models/governance/proposals";
 import { transformFirebaseDataList } from "@/shared/utils/transformFirebaseDataToModel";
-import { BASE_URL } from "../constants";
+import { BASE_URL, ThemeColors } from "../constants";
+import useThemeColor from "../hooks/useThemeColor";
 import { Common, DateFormat, Time, User } from "../models";
 
 export const getPrefix = (currency: Currency): string => {
@@ -121,11 +122,13 @@ export const getUserInitials = (user: User | undefined) => {
 };
 
 export const getRandomUserAvatarURL = (name?: string | null): string => {
+  const { getThemeColor } = useThemeColor();
   const isOneWord = words(name ?? "").length === 1;
-  return `https://eu.ui-avatars.com/api/?background=99999D&color=fff&name=${name?.replace(
-    /\s/gi,
-    "+",
-  )}&rounded=true&${isOneWord ? "uppercase=false" : ""}`;
+  return `https://eu.ui-avatars.com/api/?background=99999D&color=${getThemeColor(
+    ThemeColors.tertiaryText,
+  ).substring(1)}&name=${name?.replace(/\s/gi, "+")}&rounded=true&${
+    isOneWord ? "uppercase=false" : ""
+  }`;
 };
 
 export const isRandomUserAvatarURL = (url: string): boolean =>

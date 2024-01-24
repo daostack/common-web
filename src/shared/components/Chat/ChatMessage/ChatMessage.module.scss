@@ -144,16 +144,16 @@
 
 .mentionText {
   cursor: pointer;
-  color: var(--mention-primary);
+  color: var(--primary-fill);
 }
 
 .mentionTextCurrentUser {
-  color: #cf7d9b;
+  color: $c-pink-mention-3;
   font-weight: 600;
 }
 
 .systemMessageCommonLink {
-  color: var(--mention-primary);
+  color: var(--primary-fill);
   text-decoration: none;
   cursor: pointer;
 
@@ -219,6 +219,10 @@
   line-height: 0.8rem;
   max-height: 1.6rem;
   color: $white;
+}
+
+.replyMessageContentNotCurrentUser {
+  color: var(--primary-text);
 }
 
 .replyMessageContentWithImage {

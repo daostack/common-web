@@ -32,7 +32,7 @@
 }
 
 .containerActive {
-  --title-color: #ffffff;
+  //--title-color: #ffffff;
   background-color: var(--quinary-fill);
 
   &:hover {
@@ -85,7 +85,7 @@
 .titleWrapper {
   display: flex;
   align-items: center;
-  color: var(--primary-text);
+  color: var(--title-color);
   font-size: $moderate-xsmall;
   line-height: 1.5rem;
   overflow: hidden;
