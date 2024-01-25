@@ -1,6 +1,6 @@
 export * from "./chatSize";
 export * from "./checkShouldAutoOpenPreview";
-export * from "./getChatChannelItemByUserIds";
 export * from "./getDefaultSize";
+export * from "./getDMChatChannelItemByUserIds";
 export * from "./getItemCommonData";
 export * from "./getSplitViewMaxSize";

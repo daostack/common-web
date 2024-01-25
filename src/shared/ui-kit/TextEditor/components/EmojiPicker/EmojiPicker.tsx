@@ -54,9 +54,7 @@ const EmojiPicker: FC<EmojiPickerProps> = (props) => {
   return (
     <div
       ref={wrapperRef}
-      className={classNames(styles.container, containerClassName, {
-        [styles.containerRtl]: isRtl,
-      })}
+      className={classNames(styles.container, containerClassName)}
     >
       <ButtonIcon onClick={handleOpenPicker}>
         <EmojiIcon />
