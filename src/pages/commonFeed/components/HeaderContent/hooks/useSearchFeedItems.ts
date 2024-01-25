@@ -22,7 +22,6 @@ export const useSearchFeedItems = ({
 }: Options): SearchFeedItemsData => {
   const params = useQueryParams();
   const searchParam = params[QueryParamKey.Search];
-  const isActiveUnreadInboxItemsParam = params[QueryParamKey.Unread] === "true";
   const [searchValue, setSearchValue] = useState("");
   const searchInputToggle = useToggle(false);
 
@@ -44,12 +43,6 @@ export const useSearchFeedItems = ({
 
     return onResetSearchState;
   }, []);
-
-  useEffect(() => {
-    if (searchValue) {
-      searchFeedItems(searchValue);
-    }
-  }, [isActiveUnreadInboxItemsParam]);
 
   const onChangeSearchValue = useCallback((value: string) => {
     setSearchValue(value);

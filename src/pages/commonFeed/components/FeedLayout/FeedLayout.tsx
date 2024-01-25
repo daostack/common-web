@@ -120,6 +120,7 @@ interface FeedLayoutProps {
   loading: boolean;
   shouldHideContent?: boolean;
   batchNumber?: number;
+  isPreloadDisabled?: boolean;
   onFetchNext: (feedItemId?: string) => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
@@ -161,6 +162,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     topFeedItems = [],
     loading,
     shouldHideContent = false,
+    isPreloadDisabled = false,
     batchNumber,
     onFetchNext,
     renderFeedItemBaseContent,
@@ -619,13 +621,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
   useEffect(() => {
     if (
+      !isPreloadDisabled &&
       batchNumber &&
       batchNumber >= 1 &&
       batchNumber <= BATCHES_AMOUNT_TO_PRELOAD
     ) {
       onFetchNext();
     }
-  }, [batchNumber]);
+  }, [batchNumber, isPreloadDisabled]);
 
   useEffect(() => {
     if (

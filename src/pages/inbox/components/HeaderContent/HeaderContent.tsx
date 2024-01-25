@@ -44,7 +44,7 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
         <h1 className={styles.title}>Inbox</h1>
       </div>
       <div className={styles.actionButtonsWrapper}>
-        {searchInputToggle.isToggledOn && (
+        {searchInputToggle.isToggledOn ? (
           <SearchInput
             value={searchValue}
             placeholder="Search inbox"
@@ -52,11 +52,10 @@ const HeaderContent: FC<HeaderContentProps> = (props) => {
             onClose={onCloseSearch}
             autoFocus
           />
-        )}
-        <InboxFilterButton onClick={onCloseSearch} />
-        {!searchInputToggle.isToggledOn && (
+        ) : (
           <SearchButton onClick={searchInputToggle.setToggleOn} />
         )}
+        <InboxFilterButton />
         <NewDirectMessageButton
           isMobileVersion={isMobileVersion}
           onClick={onCloseSearch}

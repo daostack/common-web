@@ -31,6 +31,8 @@ export function* searchInboxItems(
     return;
   }
 
+  yield put(actions.setIsSearchingInboxItems(true));
+
   const inboxItems = (yield select(selectInboxItems)) as InboxItems;
   const discussionStates = yield select(selectDiscussionStates());
   const proposalStates = yield select(selectProposalStates());
