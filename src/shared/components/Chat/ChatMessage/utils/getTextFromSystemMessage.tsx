@@ -50,14 +50,14 @@ const getUser = async (
   );
 };
 
-const getCommon = async (commonId: string): Promise<Common | null> =>
+export const getCommon = async (commonId: string): Promise<Common | null> =>
   (await CommonService.getCachedCommonById(commonId)) ||
   (await CommonService.getCommonById(commonId, false, CommonState.INACTIVE));
 
 const getCommonTypeText = (commonType: SystemMessageCommonType): string =>
   commonType === SystemMessageCommonType.Common ? "common" : "space";
 
-const handleCommonClick = (commonId: string, rootCommonId?: string) => {
+export const handleCommonClick = (commonId: string, rootCommonId?: string) => {
   store.dispatch(
     commonLayoutActions.resetCurrentCommonIdAndProjects(
       rootCommonId || commonId,
@@ -82,7 +82,11 @@ const renderUserMention = (
     defaultName
   );
 
-const renderLink = (to: string, name: string, onClick?: () => void): Text => (
+export const renderLink = (
+  to: string,
+  name: string,
+  onClick?: () => void,
+): Text => (
   <NavLink className={styles.systemMessageCommonLink} to={to} onClick={onClick}>
     {name}
   </NavLink>

@@ -3,18 +3,19 @@ import classNames from "classnames";
 import { Descendant, Element } from "slate";
 import { UserService } from "@/services";
 import { DirectParent, User } from "@/shared/models";
+import { countTextEditorEmojiElements } from "@/shared/ui-kit";
 import {
   getMentionTags,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
-import { countTextEditorEmojiElements } from "@/shared/ui-kit";
 import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
+import textEditorElementsStyles from "@/shared/ui-kit/TextEditor/shared/TextEditorElements.module.scss";
 import { EmojiElement } from "@/shared/ui-kit/TextEditor/types";
 import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
 import { CheckboxItem, UserMention } from "../components";
 import { Text, TextData } from "../types";
+import { generateInternalLink } from "./generateInternalLink";
 import { getTextFromSystemMessage } from "./getTextFromSystemMessage";
-import textEditorElementsStyles from "@/shared/ui-kit/TextEditor/shared/TextEditorElements.module.scss"
 
 interface ChatEmoji {
   descendant: EmojiElement;
@@ -35,7 +36,7 @@ interface TextFromDescendant {
   onUserClick?: (userId: string) => void;
 }
 
-const getTextFromDescendant = ({
+const getTextFromDescendant = async ({
   descendant,
   users,
   mentionTextClassName,
@@ -43,9 +44,15 @@ const getTextFromDescendant = ({
   commonId,
   directParent,
   onUserClick,
-}: TextFromDescendant): Text => {
+}: TextFromDescendant): Promise<Text> => {
   if (!Element.isElement(descendant)) {
-    return descendant.text || "";
+    const separatedText = descendant.text.split(" ");
+    const mappedText = await Promise.all(
+      separatedText.map(async (item) => {
+        return await generateInternalLink(item);
+      }),
+    );
+    return <span>{mappedText}</span> || "";
   }
 
   switch (descendant.type) {
@@ -53,19 +60,21 @@ const getTextFromDescendant = ({
     case ElementType.Link:
       return (
         <span>
-          {descendant.children.map((item, index) => (
-            <React.Fragment key={index}>
-              {getTextFromDescendant({
-                descendant: item,
-                users,
-                mentionTextClassName,
-                emojiTextClassName,
-                commonId,
-                directParent,
-                onUserClick,
-              })}
-            </React.Fragment>
-          ))}
+          {await Promise.all(
+            descendant.children.map(async (item, index) => (
+              <React.Fragment key={index}>
+                {await getTextFromDescendant({
+                  descendant: item,
+                  users,
+                  mentionTextClassName,
+                  emojiTextClassName,
+                  commonId,
+                  directParent,
+                  onUserClick,
+                })}
+              </React.Fragment>
+            )),
+          )}
           <br />
         </span>
       );
@@ -93,19 +102,21 @@ const getTextFromDescendant = ({
           checked={descendant.checked}
           isRTL={isRtlWithNoMentions([descendant])}
         >
-          {descendant.children.map((item, index) => (
-            <React.Fragment key={index}>
-              {getTextFromDescendant({
-                descendant: item,
-                users,
-                mentionTextClassName,
-                emojiTextClassName,
-                commonId,
-                directParent,
-                onUserClick,
-              })}
-            </React.Fragment>
-          ))}
+          {await Promise.all(
+            descendant.children.map(async (item, index) => (
+              <React.Fragment key={index}>
+                {await getTextFromDescendant({
+                  descendant: item,
+                  users,
+                  mentionTextClassName,
+                  emojiTextClassName,
+                  commonId,
+                  directParent,
+                  onUserClick,
+                })}
+              </React.Fragment>
+            )),
+          )}
         </CheckboxItem>
       );
     default:
@@ -129,8 +140,7 @@ export const getTextFromTextEditorString = async (
     onUserClick,
   } = data;
 
-  const isCurrentUser = userId === ownerId
-
+  const isCurrentUser = userId === ownerId;
   if (systemMessage) {
     const systemMessageText = await getTextFromSystemMessage(data);
 
@@ -159,26 +169,31 @@ export const getTextFromTextEditorString = async (
     Boolean(user),
   );
 
-  const mentionCurrentUserTextStyle = isCurrentUser ? textEditorElementsStyles.mentionTextCurrentUser : "";
+  const mentionCurrentUserTextStyle = isCurrentUser
+    ? textEditorElementsStyles.mentionTextCurrentUser
+    : "";
 
-  return textEditorValue.reduce<Text[]>(
-    (acc, item, index) => [
-      ...acc,
+  return await Promise.all(
+    textEditorValue.map(async (item, index) => (
       <React.Fragment key={index}>
-        {getTextFromDescendant({
+        {await getTextFromDescendant({
           descendant: item,
           users: filteredUsers,
-          mentionTextClassName: mentionTextClassName || mentionCurrentUserTextStyle,
-          emojiTextClassName: emojiTextClassName || classNames({
-            [textEditorElementsStyles.singleEmojiText]: emojiCount.isSingleEmoji,
-            [textEditorElementsStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-          }),
+          mentionTextClassName:
+            mentionTextClassName || mentionCurrentUserTextStyle,
+          emojiTextClassName:
+            emojiTextClassName ||
+            classNames({
+              [textEditorElementsStyles.singleEmojiText]:
+                emojiCount.isSingleEmoji,
+              [textEditorElementsStyles.multipleEmojiText]:
+                emojiCount.isMultipleEmoji,
+            }),
           commonId,
           directParent,
           onUserClick,
         })}
-      </React.Fragment>,
-    ],
-    [],
+      </React.Fragment>
+    )),
   );
 };
