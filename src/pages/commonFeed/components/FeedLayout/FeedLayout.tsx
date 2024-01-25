@@ -140,6 +140,7 @@ interface FeedLayoutProps {
     feedItemId: string,
     messageId?: string,
   ) => void;
+  onChatChannelCreate?: (chatChannel: ChatChannel) => void;
   outerStyles?: FeedLayoutOuterStyles;
   settings?: FeedLayoutSettings;
   renderChatInput?: () => ReactNode;
@@ -175,6 +176,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
     onFeedItemSelect,
+    onChatChannelCreate,
     outerStyles,
     settings,
     renderChatInput,
@@ -439,6 +441,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       title: getUserName(dmUser),
       image: dmUser.photoURL,
     });
+    onChatChannelCreate?.(chatChannel);
 
     if (!isTabletView) {
       setActiveChatItem(null);
