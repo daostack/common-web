@@ -31,7 +31,7 @@ import {
   FeedLayoutRef,
 } from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
-import { CommonFeed } from "@/shared/models";
+import { ChatChannel, CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
   inboxActions,
@@ -214,6 +214,13 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     [history.push, getCommonPagePath],
   );
 
+  const handleChatChannelCreate = useCallback(
+    (chatChannel: ChatChannel) => {
+      dispatch(inboxActions.addChatChannelItem(chatChannel));
+    },
+    [dispatch],
+  );
+
   useEffect(() => {
     dispatch(inboxActions.setSharedFeedItemId(sharedFeedItemId));
 
@@ -316,6 +323,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         onActiveItemDataChange={onActiveItemDataChange}
         onMessagesAmountEmptinessToggle={handleMessagesAmountEmptinessToggle}
         onFeedItemSelect={handleFeedItemSelect}
+        onChatChannelCreate={handleChatChannelCreate}
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
         onPullToRefresh={fetchInboxItems}
