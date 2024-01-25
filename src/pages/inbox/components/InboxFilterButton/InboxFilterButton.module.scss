@@ -6,18 +6,18 @@
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--hover-fill);
+      background-color: var(--primary-fill);
     }
   }
 }
 
 .unreadFilterActive {
-  background-color: $c-pink-next-dark;
+  background-color: var(--highlight);
   color: $white;
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: $c-pink-mention-2;
+      background-color: var(--primary-fill);
     }
   }
 }

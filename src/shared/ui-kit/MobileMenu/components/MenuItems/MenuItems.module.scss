@@ -13,14 +13,14 @@
   font-size: $small;
   list-style-type: none;
   background-color: rgba(242, 242, 242, 0.9);
-  border-radius: var(--items-br);
-  box-shadow: 0 0.25rem 0.9375rem var(--drop-shadow);
+  border-top-right-radius: var(--items-br);
+  border-top-left-radius: var(--items-br);
+  box-shadow: 2rem 2rem 2rem 2rem var(--drop-shadow-secondary);
 }
 
 @supports (backdrop-filter: blur(1.7rem)) {
   .itemsWrapper {
     background-color: transparent;
     backdrop-filter: blur(1.7rem);
-    box-shadow: none;
   }
 }

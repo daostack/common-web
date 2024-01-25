@@ -61,7 +61,7 @@ export const ThemeColorsValues = {
     [ThemeColors.gentleStroke]: "#1F2124",
     [ThemeColors.warning]: "#ff603e",
     [ThemeColors.primaryFill]: "#d84c7f",
-    [ThemeColors.secondaryFill]: "#CF7D9B",
+    [ThemeColors.secondaryFill]: "#464853",
     [ThemeColors.tertiaryFill]: "#131b23",
     [ThemeColors.quaternaryFill]: "#EF9DBA",
     [ThemeColors.quinaryFill]: "#432B33",
