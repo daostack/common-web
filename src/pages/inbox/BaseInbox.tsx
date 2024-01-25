@@ -165,6 +165,12 @@ const InboxPage: FC<InboxPageProps> = (props) => {
           isRemoved,
         }),
       );
+
+      if (!isRemoved) {
+        document
+          .getElementById("feedLayoutWrapper")
+          ?.scrollIntoView({ behavior: "smooth" });
+      }
     },
     [dispatch],
   );

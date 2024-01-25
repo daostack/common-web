@@ -255,6 +255,12 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
           isRemoved,
         }),
       );
+
+      if (!isRemoved) {
+        document
+          .getElementById("feedLayoutWrapper")
+          ?.scrollIntoView({ behavior: "smooth" });
+      }
     },
     [dispatch],
   );
