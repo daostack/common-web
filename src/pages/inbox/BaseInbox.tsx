@@ -142,7 +142,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   };
 
   const fetchMoreInboxItems = () => {
-    if (hasMoreInboxItems && !isSearchingInboxItems) {
+    if (hasMoreInboxItems && !isSearchingInboxItems && !areInboxItemsLoading) {
       fetchInboxItems();
     }
   };
@@ -310,6 +310,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         loading={areInboxItemsLoading || isSearchingInboxItems || !user}
         shouldHideContent={!user}
         batchNumber={batchNumber}
+        isPreloadDisabled={Boolean(searchValue)}
         onFetchNext={fetchMoreInboxItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         renderChatChannelItem={renderChatChannelItem}
