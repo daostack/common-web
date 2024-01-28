@@ -21,6 +21,7 @@ export interface FeedItemBaseContentProps {
   isExpanded?: boolean;
   title?: string | ReactNode;
   lastMessage?: TextEditorValue;
+  lastMessageOwnerName?: string;
   canBeExpanded?: boolean;
   onClick?: () => void;
   onExpand?: MouseEventHandler;

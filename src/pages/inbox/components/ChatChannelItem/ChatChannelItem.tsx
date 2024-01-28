@@ -137,6 +137,7 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
       isActive={isActive}
       title={finalTitle}
       lastMessage={getLastMessage(chatChannel.lastMessage)}
+      lastMessageOwnerName={chatChannel.lastMessage?.ownerName}
       canBeExpanded={false}
       onClick={handleOpenChat}
       menuItems={menuItems}
