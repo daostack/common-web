@@ -197,7 +197,7 @@ const authorizeUserViaCredentials = async (
   if (data.customToken) {
     const { user } = await firebase
       .auth()
-      .signInWithCustomToken(credential.customToken);
+      .signInWithCustomToken(data.customToken);
 
     return user;
   } else if (data.providerId === AuthProviderID.Apple) {
