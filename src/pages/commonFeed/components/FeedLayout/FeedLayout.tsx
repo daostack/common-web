@@ -675,6 +675,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       <ChatContext.Provider value={chatContextValue}>
         {!shouldHideContent && (
           <div
+            id="feedLayoutWrapper"
             className={classNames(styles.content, className, {
               [styles.contentCentered]: isContentEmpty,
             })}
