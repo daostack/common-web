@@ -6,7 +6,6 @@ import {
   FormikTouched,
 } from "formik";
 import { Role, Roles } from "@/shared/models";
-import { ErrorText } from "../../ErrorText";
 import { TextField } from "../TextField";
 import styles from "./RolesArray.module.scss";
 

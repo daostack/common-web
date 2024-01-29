@@ -171,6 +171,13 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
         },
       },
     });
+
+    items.push({
+      type: CreationFormItemType.AdvancedSettings,
+      props: {
+        name: "rootCommonCircles",
+      },
+    });
   }
 
   return items;

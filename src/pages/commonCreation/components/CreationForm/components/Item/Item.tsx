@@ -7,6 +7,7 @@ import {
   UploadFiles,
   RolesArrayWrapper,
   NotionIntegration,
+  AdvancedSettings,
 } from "@/shared/components/Form/Formik";
 import { CreationFormItemType } from "../../constants";
 import { CreationFormItem } from "../../types";
@@ -82,6 +83,8 @@ const Item: FC<ItemProps> = (props) => {
       );
     case CreationFormItemType.NotionIntegration:
       return <NotionIntegration {...item.props} className={className} />;
+    case CreationFormItemType.AdvancedSettings:
+      return <AdvancedSettings {...item.props} />;
     default:
       return null;
   }

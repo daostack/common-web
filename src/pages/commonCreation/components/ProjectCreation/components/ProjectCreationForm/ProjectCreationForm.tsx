@@ -43,6 +43,7 @@ const getInitialValues = (
   governanceCircles: Circles,
   initialCommon?: Project,
   roles?: Roles,
+  rootCommonCircles?: Circles,
 ): ProjectCreationFormValues => {
   const circlesWithHighestTier = getCirclesWithHighestTier(
     Object.values(governanceCircles),
@@ -72,6 +73,7 @@ const getInitialValues = (
       circlesWithHighestTier[0]?.id ||
       "",
     roles: roles || [],
+    rootCommonCircles: rootCommonCircles,
     notion: {
       isEnabled: isNotionIntegrationEnabled,
       databaseId: initialCommon?.notion?.databaseId || "",
@@ -138,7 +140,13 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     circleName: circle.name,
   }));
   const initialValues = useMemo(
-    () => getInitialValues(governanceCircles, initialCommon, roles),
+    () =>
+      getInitialValues(
+        governanceCircles,
+        initialCommon,
+        roles,
+        governanceCircles,
+      ),
     [governanceCircles, nonProjectCircles],
   );
   const projectId = initialCommon?.id || project?.id;
