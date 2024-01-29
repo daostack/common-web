@@ -348,6 +348,19 @@ export default function ChatComponent({
     [newMessages, discussionId, dispatch],
   );
 
+  /**
+   * Since the component's state is stale while executing the "paste" event listener callback,
+   * we need to save it in a ref and update it so the fresh data is available in the callback.
+   */
+  useEffect(() => {
+    setCurrentFilesPreviewRef(currentFilesPreview);
+  }, [currentFilesPreview]);
+
+  const currentFilesPreviewRef = useRef(currentFilesPreview);
+  const setCurrentFilesPreviewRef = (currentFiles: FileInfo[] | null) => {
+    currentFilesPreviewRef.current = currentFiles;
+  };
+
   const uploadFiles = (
     event: ChangeEvent<HTMLInputElement> | ClipboardEvent,
   ) => {
@@ -374,7 +387,10 @@ export default function ChatComponent({
       .filter(Boolean) as FileInfo[];
     dispatch(
       chatActions.setFilesPreview(
-        [...(currentFilesPreview ?? []), ...newFilesPreview].slice(0, 10),
+        [...(currentFilesPreviewRef.current ?? []), ...newFilesPreview].slice(
+          0,
+          10,
+        ),
       ),
     );
   };
