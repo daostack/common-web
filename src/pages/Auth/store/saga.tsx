@@ -199,7 +199,6 @@ const authorizeUserViaCredentials = async (
       .auth()
       .signInWithCustomToken(data.customToken);
 
-    window.ReactNativeWebView.postMessage(`user ${user}`);
     return user;
   } else if (data.providerId === AuthProviderID.Apple) {
     const provider = new firebase.auth.OAuthProvider(data.providerId);
