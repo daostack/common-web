@@ -33,7 +33,6 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
     canBeExpanded = true,
     title,
     lastMessage,
-    lastMessageOwnerName,
     onClick,
     type,
     menuItems,
@@ -188,26 +187,15 @@ export const FeedItemBaseContent: FC<FeedItemBaseContentProps> = (props) => {
         </div>
         <div className={styles.bottomContent}>
           {lastMessage && !checkIsTextEditorValueEmpty(lastMessage) ? (
-            <>
-              {isGroupMessage && lastMessageOwnerName && (
-                <span
-                  className={classNames(styles.lastMessage, {
-                    [styles.lastMessageActive]: isActive,
-                  })}
-                >
-                  {lastMessageOwnerName}:&nbsp;
-                </span>
-              )}
-              <TextEditor
-                className={styles.lastMessageContainer}
-                editorClassName={lastMessageClassName}
-                value={lastMessage}
-                elementStyles={{
-                  mention: isActive ? styles.mentionText : "",
-                }}
-                readOnly
-              />
-            </>
+            <TextEditor
+              className={styles.lastMessageContainer}
+              editorClassName={lastMessageClassName}
+              value={lastMessage}
+              elementStyles={{
+                mention: isActive ? styles.mentionText : "",
+              }}
+              readOnly
+            />
           ) : (
             isGroupMessage &&
             createdBy && (
