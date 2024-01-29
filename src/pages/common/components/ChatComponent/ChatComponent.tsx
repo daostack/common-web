@@ -352,14 +352,8 @@ export default function ChatComponent({
    * Since the component's state is stale while executing the "paste" event listener callback,
    * we need to save it in a ref and update it so the fresh data is available in the callback.
    */
-  useEffect(() => {
-    setCurrentFilesPreviewRef(currentFilesPreview);
-  }, [currentFilesPreview]);
-
   const currentFilesPreviewRef = useRef(currentFilesPreview);
-  const setCurrentFilesPreviewRef = (currentFiles: FileInfo[] | null) => {
-    currentFilesPreviewRef.current = currentFiles;
-  };
+  currentFilesPreviewRef.current = currentFilesPreview;
 
   const uploadFiles = (
     event: ChangeEvent<HTMLInputElement> | ClipboardEvent,
