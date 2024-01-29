@@ -256,7 +256,7 @@ const CommonFeedComponent: FC<CommonFeedProps> = (props) => {
         }),
       );
 
-      if (!isRemoved) {
+      if (!isRemoved && item.data.lastMessage?.ownerId === userId) {
         document
           .getElementById("feedLayoutWrapper")
           ?.scrollIntoView({ behavior: "smooth" });
