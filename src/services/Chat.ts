@@ -80,20 +80,21 @@ class ChatService {
   public getDMUserChatChannel = async (
     currentUserId: string,
     dmUserIds: string[],
+    source = FirestoreDataSource.Default,
   ): Promise<ChatChannel | null> => {
-    // What is it? Looks like this condition is never fulfilled because dmUserIds never includes the currrent user.
-    if (currentUserId === dmUserIds[0]) {
+    // This is for the case when we fetch chat channel for current user with himself
+    if (currentUserId === dmUserIds[0] && dmUserIds.length === 1) {
       return this.getUserOwnChatChannel(currentUserId);
     }
 
     const snapshot = await this.getChatChannelCollection()
       .where("participants", "array-contains", currentUserId)
-      .get();
+      .get({ source });
     const docSnapshot = snapshot.docs.find((doc) => {
       const { participants } = doc.data();
 
-      // dmUserIds - never includes the currrent user.
-      // participants - includes the currrent user.
+      // dmUserIds - never includes the current user.
+      // participants - includes the current user.
 
       if (dmUserIds.length === 1) {
         // Regular 1 on 1 chat
@@ -108,7 +109,13 @@ class ChatService {
     });
 
     if (!docSnapshot) {
-      return null;
+      return source === FirestoreDataSource.Cache
+        ? this.getDMUserChatChannel(
+            currentUserId,
+            dmUserIds,
+            FirestoreDataSource.Server,
+          )
+        : null;
     }
 
     return docSnapshot.data();
