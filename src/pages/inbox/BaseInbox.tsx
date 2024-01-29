@@ -22,6 +22,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import {
   ChatChannelFeedLayoutItemProps,
@@ -67,6 +68,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
+  const isTabletView = useIsTabletView();
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
@@ -216,9 +218,11 @@ const InboxPage: FC<InboxPageProps> = (props) => {
 
   const handleChatChannelCreate = useCallback(
     (chatChannel: ChatChannel) => {
-      dispatch(inboxActions.addChatChannelItem(chatChannel));
+      if (!isTabletView) {
+        dispatch(inboxActions.addChatChannelItem(chatChannel));
+      }
     },
-    [dispatch],
+    [dispatch, isTabletView],
   );
 
   useEffect(() => {

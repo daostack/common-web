@@ -799,6 +799,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 rightHeaderContent={followFeedItemEl}
                 onMessagesAmountChange={handleMessagesAmountChange}
                 directParent={outerCommon?.directParent}
+                chatChannel={userForProfile.userForProfileData?.chatChannel}
                 onClose={handleMobileChatClose}
                 renderChatInput={renderChatInput}
                 onUserClick={handleUserClick}
