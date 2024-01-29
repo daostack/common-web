@@ -12,6 +12,7 @@ import styles from "./ProjectCreationForm.module.scss";
 interface Options {
   isProject: boolean;
   roles?: Roles;
+  rootCommonRoles?: Roles;
   shouldBeUnique?: { existingNames: string[] };
   isImageRequired?: boolean;
   notionIntegration?: NotionIntegration | null;
@@ -21,6 +22,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
   const {
     isProject = true,
     roles,
+    rootCommonRoles,
     shouldBeUnique,
     notionIntegration,
     isImageRequired = false,
@@ -175,7 +177,9 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     items.push({
       type: CreationFormItemType.AdvancedSettings,
       props: {
-        name: "rootCommonCircles",
+        name: "advancedSettings",
+        roles: roles || [],
+        rootCommonRoles: rootCommonRoles || [],
       },
     });
   }

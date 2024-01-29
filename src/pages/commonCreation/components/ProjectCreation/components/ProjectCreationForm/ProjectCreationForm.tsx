@@ -43,7 +43,7 @@ const getInitialValues = (
   governanceCircles: Circles,
   initialCommon?: Project,
   roles?: Roles,
-  rootCommonCircles?: Circles,
+  rootCommonRoles?: Roles,
 ): ProjectCreationFormValues => {
   const circlesWithHighestTier = getCirclesWithHighestTier(
     Object.values(governanceCircles),
@@ -73,7 +73,7 @@ const getInitialValues = (
       circlesWithHighestTier[0]?.id ||
       "",
     roles: roles || [],
-    rootCommonCircles: rootCommonCircles,
+    rootCommonRoles: rootCommonRoles || [],
     notion: {
       isEnabled: isNotionIntegrationEnabled,
       databaseId: initialCommon?.notion?.databaseId || "",
@@ -95,6 +95,10 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const projects = useSelector(selectCommonLayoutProjects);
   const formRef = useRef<CreationFormRef>(null);
   const { data: governance, fetchGovernance } = useGovernanceByCommonId();
+  const { data: rootGovernance, fetchGovernance: fetchRootGovernance } =
+    useGovernanceByCommonId();
+  const isParentIsRoot =
+    initialCommon?.directParent.commonId === initialCommon?.rootCommonId;
   const {
     isProjectCreationLoading,
     project,
@@ -139,13 +143,24 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     circleId: circle.id,
     circleName: circle.name,
   }));
+  const nonProjectRootCircles = useMemo(
+    () => removeProjectCircles(Object.values(rootGovernance?.circles || {})),
+    [rootGovernance?.circles],
+  );
+  const rootCommonRoles: Roles = isParentIsRoot
+    ? roles
+    : nonProjectRootCircles.map((circle) => ({
+        circleId: circle.id,
+        circleName: circle.name,
+      }));
+
   const initialValues = useMemo(
     () =>
       getInitialValues(
         governanceCircles,
         initialCommon,
         roles,
-        governanceCircles,
+        rootCommonRoles,
       ),
     [governanceCircles, nonProjectCircles],
   );
@@ -202,6 +217,12 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, [projectId]);
 
   useEffect(() => {
+    if (!isParentIsRoot && initialCommon?.rootCommonId) {
+      fetchRootGovernance(initialCommon.rootCommonId);
+    }
+  }, [initialCommon?.rootCommonId]);
+
+  useEffect(() => {
     const finalProject = project || updatedProject;
 
     if (finalProject && governance && isNotionIntegrationUpdated) {
@@ -227,6 +248,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         items={getConfiguration({
           isProject: true,
           roles,
+          rootCommonRoles,
           notionIntegration,
           shouldBeUnique: {
             existingNames: existingProjectsNames,

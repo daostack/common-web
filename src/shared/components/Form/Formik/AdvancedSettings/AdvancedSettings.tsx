@@ -2,15 +2,17 @@ import React, { FC } from "react";
 import { useField } from "formik";
 import { ButtonLink } from "@/shared/components/ButtonLink";
 import { useModal } from "@/shared/hooks";
-import { Circles, Roles } from "@/shared/models";
+import { Roles } from "@/shared/models";
 import { AdvancedSettingsModal } from "./components";
 
 export interface AdvancedSettingsProps {
   name: string;
+  roles: Roles;
+  rootCommonRoles: Roles;
 }
 
 const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
-  const [{ value }] = useField<Circles>(props.name);
+  const { rootCommonRoles, roles } = props;
   const {
     isShowing: isAdvancedSettingsModalOpen,
     onOpen: onAdvancedSettingsModalOpen,
@@ -25,7 +27,8 @@ const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
       <AdvancedSettingsModal
         isOpen={isAdvancedSettingsModalOpen}
         onClose={onAdvancedSettingsModalClose}
-        rootCommonCircles={value}
+        roles={roles}
+        rootCommonRoles={rootCommonRoles}
       />
     </>
   );

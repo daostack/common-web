@@ -1,17 +1,19 @@
 import React, { FC } from "react";
 import { Modal } from "@/shared/components/Modal";
-import { Circles, Roles } from "@/shared/models";
+import { Roles } from "@/shared/models";
 
 interface AdvancedSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  rootCommonCircles: Circles;
+  roles: Roles;
+  rootCommonRoles: Roles;
 }
 
 const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
-  const { isOpen, onClose, rootCommonCircles } = props;
+  const { isOpen, onClose, rootCommonRoles, roles } = props;
 
-  console.log(rootCommonCircles);
+  console.log(roles);
+  console.log(rootCommonRoles);
 
   return (
     <Modal title="Advanced settings" isShowing={isOpen} onClose={onClose}>

@@ -1,6 +1,5 @@
 import {
   BaseRule,
-  Circles,
   CommonLink,
   NotionIntegrationPayload,
   NotionIntegrationPayloadIntermediate,
@@ -32,7 +31,7 @@ export interface IntermediateCreateProjectPayload {
   gallery: UploadFile[];
   links?: CommonLink[];
   roles?: Roles;
-  rootCommonCircles?: Circles;
+  rootCommonRoles?: Roles;
   highestCircleId: string;
   notion?: NotionIntegrationPayloadIntermediate;
 }
