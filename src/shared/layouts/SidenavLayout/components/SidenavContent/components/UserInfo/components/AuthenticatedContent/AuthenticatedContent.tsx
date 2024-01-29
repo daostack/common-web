@@ -27,26 +27,37 @@ const AuthenticatedContent: FC<AuthenticatedContentProps> = (props) => {
 
   return (
     <Menu>
-      <Menu.Button as={React.Fragment}>
-        <Content
-          avatarURL={avatarURL}
-          userName={userName}
-          leftSideEl={
-            <RightArrowThinIcon
-              className={classNames(styles.arrowIcon, rightArrowIconClassName)}
+      {({ open }) => (
+        <>
+          <Menu.Button as={React.Fragment}>
+            <Content
+              open={open}
+              avatarURL={avatarURL}
+              userName={userName}
+              leftSideEl={
+                <RightArrowThinIcon
+                  className={classNames(
+                    styles.arrowIcon,
+                    rightArrowIconClassName,
+                  )}
+                />
+              }
+              styles={contentStyles}
             />
-          }
-          styles={contentStyles}
-        />
-      </Menu.Button>
-      <Transition
-        enter={styles.menuTransitionEnter}
-        enterTo={styles.menuTransitionEnterActive}
-        leave={styles.menuTransitionExit}
-        leaveTo={styles.menuTransitionExitActive}
-      >
-        <MenuItems placement={menuItemsPlacement} styles={menuItemsStyles} />
-      </Transition>
+          </Menu.Button>
+          <Transition
+            enter={styles.menuTransitionEnter}
+            enterTo={styles.menuTransitionEnterActive}
+            leave={styles.menuTransitionExit}
+            leaveTo={styles.menuTransitionExitActive}
+          >
+            <MenuItems
+              placement={menuItemsPlacement}
+              styles={menuItemsStyles}
+            />
+          </Transition>
+        </>
+      )}
     </Menu>
   );
 };

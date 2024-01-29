@@ -138,7 +138,7 @@
   }
 
   &.buttonDisabled {
-    --btn-bg-color: #{var(--quaternary-fill)};
+    --btn-bg-color: #{$c-shades-neutrals-30};
   }
 }
 
@@ -162,7 +162,7 @@
 }
 
 .buttonLightPinkVariant {
-  --btn-color: #{$c-pink-mention};
+  --btn-color: var(--primary-fill);
   --btn-bg-color: #{$c-pink-active-feed-cards-light};
   --btn-border-color: none;
   --btn-border: 0;
@@ -206,7 +206,7 @@
 }
 
 .buttonOutlinePinkVariant {
-  --btn-color: #{$c-pink-primary};
+  --btn-color: var(--primary-fill);
   --btn-bg-color: #{$c-pink-active-feed-cards};
   --btn-border-color: #{$c-pink-active-btn};
   --btn-border: 0.0625rem solid var(--btn-border-color);
@@ -225,12 +225,12 @@
 }
 
 .buttonOutlineDarkPinkVariant {
-  --btn-color: #{$c-pink-next-dark};
-  --btn-border-color: #{$c-pink-next-dark};
-  --btn-border: 0.0625rem solid var(--btn-border-color);
+  --btn-color: var(--primary-fill);
+  --btn-border-color: var(--primary-fill);
+  --btn-border: 0.0625rem solid var(--primary-fill);
 
   &:hover {
-    --btn-bg-color: var(--secondary-hover-fill);
+    --btn-bg-color: var(--hover-fill);
   }
 
   &:active {

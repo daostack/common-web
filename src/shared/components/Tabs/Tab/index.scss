@@ -43,12 +43,12 @@
   }
 }
 .custom-tab--active {
-  --tab-bb-color: var(--secondary-text);
-  --tab-color: var(--secondary-text);
+  --tab-bb-color: var(--primary-fill);
+  --tab-color: var(--primary-fill);
 
   &:active {
-    --tab-bb-color: var(--secondary-text);
-    --tab-color: var(--secondary-text);
+    --tab-bb-color: var(--primary-fill);
+    --tab-color: var(--primary-fill);
   }
 }
 .custom-tab--with-icon {

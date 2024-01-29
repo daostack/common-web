@@ -14,7 +14,7 @@ $modal-mobile-padding: 1.5rem;
   z-index: $modal-z-index;
   width: 100vw;
   height: 100vh;
-  background-color: $black;
+  background-color: var(--drop-shadow-secondary);
   opacity: 0.5;
 }
 

@@ -1,10 +1,7 @@
 import { ApiEndpoint, DocChange } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
-import {
-  Collection,
-  DiscussionMessage
-} from "@/shared/models";
+import { Collection, DiscussionMessage } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,
@@ -132,7 +129,8 @@ class DiscussionMessageService {
     const discussionMessages = await this.getDiscussionMessageCollection()
       .where("discussionId", "==", discussionId)
       .limit(15)
-      .orderBy("createdAt", "desc").get();
+      .orderBy("createdAt", "desc")
+      .get();
 
     return transformFirebaseDataList<DiscussionMessage>(discussionMessages);
   };

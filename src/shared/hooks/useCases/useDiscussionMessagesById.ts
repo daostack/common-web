@@ -211,7 +211,6 @@ export const useDiscussionMessagesById = ({
 
         const discussionsWithText = await Promise.all(
           updatedDiscussionMessages.map(async (discussionMessage) => {
-
             const isUserDiscussionMessage =
               checkIsUserDiscussionMessage(discussionMessage);
             const isSystemMessage =
@@ -219,7 +218,9 @@ export const useDiscussionMessagesById = ({
 
             const parsedText = await getTextFromTextEditorString({
               userId,
-              ownerId: isUserDiscussionMessage ? discussionMessage.ownerId : null,
+              ownerId: isUserDiscussionMessage
+                ? discussionMessage.ownerId
+                : null,
               textEditorString: discussionMessage.text,
               users,
               commonId: discussionMessage.commonId,

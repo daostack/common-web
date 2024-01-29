@@ -23,6 +23,7 @@ export interface ContentStyles {
 
 interface ContentProps<T> {
   as?: T;
+  open?: boolean;
   avatarURL?: string;
   userName?: string;
   leftSideEl?: ReactNode;
@@ -35,6 +36,7 @@ function Content<T extends keyof Element>(
 ): ReactElement {
   const {
     as = "button",
+    open,
     avatarURL = avatarPlaceholderSrc,
     userName,
     leftSideEl,
@@ -50,16 +52,20 @@ function Content<T extends keyof Element>(
       className={classNames(styles.menuButton, outerStyles?.container)}
       {...restProps}
     >
-      <UserAvatar
-        className={classNames(styles.avatar, outerStyles?.userAvatar)}
-        photoURL={avatarURL}
-        userName={userName}
-        preloaderSrc={avatarPlaceholderSrc}
-      />
-      <span className={classNames(styles.name, outerStyles?.userName)}>
-        {userName}
-      </span>
-      {leftSideEl}
+      <div
+        className={classNames(styles.contentWrapper, { [styles.open]: open })}
+      >
+        <UserAvatar
+          className={classNames(styles.avatar, outerStyles?.userAvatar)}
+          photoURL={avatarURL}
+          userName={userName}
+          preloaderSrc={avatarPlaceholderSrc}
+        />
+        <span className={classNames(styles.name, outerStyles?.userName)}>
+          {userName}
+        </span>
+        {leftSideEl}
+      </div>
     </Tag>
   );
 }

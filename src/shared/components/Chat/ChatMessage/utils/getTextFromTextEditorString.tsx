@@ -3,18 +3,18 @@ import classNames from "classnames";
 import { Descendant, Element } from "slate";
 import { UserService } from "@/services";
 import { DirectParent, User } from "@/shared/models";
+import { countTextEditorEmojiElements } from "@/shared/ui-kit";
 import {
   getMentionTags,
   parseStringToTextEditorValue,
 } from "@/shared/ui-kit/TextEditor";
-import { countTextEditorEmojiElements } from "@/shared/ui-kit";
 import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
+import textEditorElementsStyles from "@/shared/ui-kit/TextEditor/shared/TextEditorElements.module.scss";
 import { EmojiElement } from "@/shared/ui-kit/TextEditor/types";
 import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
 import { CheckboxItem, UserMention } from "../components";
 import { Text, TextData } from "../types";
 import { getTextFromSystemMessage } from "./getTextFromSystemMessage";
-import textEditorElementsStyles from "@/shared/ui-kit/TextEditor/shared/TextEditorElements.module.scss"
 
 interface ChatEmoji {
   descendant: EmojiElement;
@@ -129,7 +129,7 @@ export const getTextFromTextEditorString = async (
     onUserClick,
   } = data;
 
-  const isCurrentUser = userId === ownerId
+  const isCurrentUser = userId === ownerId;
 
   if (systemMessage) {
     const systemMessageText = await getTextFromSystemMessage(data);
@@ -159,7 +159,9 @@ export const getTextFromTextEditorString = async (
     Boolean(user),
   );
 
-  const mentionCurrentUserTextStyle = isCurrentUser ? textEditorElementsStyles.mentionTextCurrentUser : "";
+  const mentionCurrentUserTextStyle = isCurrentUser
+    ? textEditorElementsStyles.mentionTextCurrentUser
+    : "";
 
   return textEditorValue.reduce<Text[]>(
     (acc, item, index) => [
@@ -168,11 +170,16 @@ export const getTextFromTextEditorString = async (
         {getTextFromDescendant({
           descendant: item,
           users: filteredUsers,
-          mentionTextClassName: mentionTextClassName || mentionCurrentUserTextStyle,
-          emojiTextClassName: emojiTextClassName || classNames({
-            [textEditorElementsStyles.singleEmojiText]: emojiCount.isSingleEmoji,
-            [textEditorElementsStyles.multipleEmojiText]: emojiCount.isMultipleEmoji,
-          }),
+          mentionTextClassName:
+            mentionTextClassName || mentionCurrentUserTextStyle,
+          emojiTextClassName:
+            emojiTextClassName ||
+            classNames({
+              [textEditorElementsStyles.singleEmojiText]:
+                emojiCount.isSingleEmoji,
+              [textEditorElementsStyles.multipleEmojiText]:
+                emojiCount.isMultipleEmoji,
+            }),
           commonId,
           directParent,
           onUserClick,
