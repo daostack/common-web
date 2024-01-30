@@ -7,6 +7,7 @@ import {
 import {
   LinkStreamPayload,
   MarkCommonFeedItemAsSeenPayload,
+  MarkCommonFeedItemAsUnseenPayload,
   MoveStreamPayload,
   UnsubscribeFunction,
 } from "@/shared/interfaces";
@@ -257,13 +258,10 @@ class CommonFeedService {
   };
 
   public markCommonFeedItemAsUnseen = (
-    commonId: string,
-    feedObjectId: string,
+    payload: MarkCommonFeedItemAsUnseenPayload,
+    options: { cancelToken?: CancelToken } = {},
   ) => {
-    return Api.post(ApiEndpoint.MarkFeedObjectUnseenForUser, {
-      commonId,
-      feedObjectId,
-    });
+    return Api.post(ApiEndpoint.MarkFeedObjectUnseenForUser, payload, options);
   };
 
   public subscribeToCommonFeedItem = (

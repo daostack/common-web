@@ -4,7 +4,7 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
 import {
   useDiscussionMessagesById,
-  useMarkFeedItemAsSeen,
+  useUpdateFeedItemSeenState,
 } from "@/shared/hooks/useCases";
 import { TextStyles } from "@/shared/hooks/useCases/useDiscussionMessagesById";
 import { DirectParent, User } from "@/shared/models";
@@ -21,7 +21,7 @@ interface Options {
 interface Return {
   discussionMessagesData: ReturnType<typeof useDiscussionMessagesById>;
   markDiscussionMessageItemAsSeen: ReturnType<
-    typeof useMarkFeedItemAsSeen
+    typeof useUpdateFeedItemSeenState
   >["markFeedItemAsSeen"];
   discussionUsers: User[];
   fetchDiscussionUsers: (commonId: string, circleVisibility?: string[]) => void;
@@ -56,7 +56,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     onFeedItemClick,
     onUserClick,
   });
-  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
+  const { markFeedItemAsSeen } = useUpdateFeedItemSeenState();
 
   const fetchDiscussionUsers = useCallback(
     (commonId: string, circleVisibility?: string[]) => {
