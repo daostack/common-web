@@ -18,8 +18,13 @@ const WebViewLoginHandler: FC = () => {
     if (data?.redirectUrl) {
       history.push(data?.redirectUrl);
     }
-    if (!data?.providerId || !!user) {
+
+    if (!data?.providerId) {
       return;
+    }
+
+    if (user) {
+      window.ReactNativeWebView.postMessage(WebviewActions.loginSuccess);
     }
 
     try {
