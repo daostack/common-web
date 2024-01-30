@@ -1,7 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
-import { CommonService, UserService } from "@/services";
-import { store } from "@/shared/appConfig";
+import { UserService } from "@/services";
 import { SystemDiscussionMessageType } from "@/shared/constants";
 import {
   Common,
@@ -27,13 +25,15 @@ import {
   getCommonPagePath,
   getUserName,
 } from "@/shared/utils";
-import { commonLayoutActions } from "@/store/states";
 import { UserMention } from "../components";
 import { Text, TextData } from "../types";
+import { getCommon } from "./getCommon";
 import {
   getFeedItemDisplayingData,
   getFeedItemDisplayingTitle,
 } from "./getFeedItemDisplayingData";
+import { handleCommonClick } from "./handleCommonClick";
+import { renderLink } from "./renderLink";
 import styles from "../ChatMessage.module.scss";
 
 const getUser = async (
@@ -50,20 +50,8 @@ const getUser = async (
   );
 };
 
-const getCommon = async (commonId: string): Promise<Common | null> =>
-  (await CommonService.getCachedCommonById(commonId)) ||
-  (await CommonService.getCommonById(commonId, false, CommonState.INACTIVE));
-
 const getCommonTypeText = (commonType: SystemMessageCommonType): string =>
   commonType === SystemMessageCommonType.Common ? "common" : "space";
-
-const handleCommonClick = (commonId: string, rootCommonId?: string) => {
-  store.dispatch(
-    commonLayoutActions.resetCurrentCommonIdAndProjects(
-      rootCommonId || commonId,
-    ),
-  );
-};
 
 const renderUserMention = (
   user: User | null,
@@ -81,12 +69,6 @@ const renderUserMention = (
   ) : (
     defaultName
   );
-
-const renderLink = (to: string, name: string, onClick?: () => void): Text => (
-  <NavLink className={styles.systemMessageCommonLink} to={to} onClick={onClick}>
-    {name}
-  </NavLink>
-);
 
 const renderClickableText = (text: string, onClick: () => void): Text => (
   <a className={styles.systemMessageCommonLink} onClick={onClick}>
@@ -112,9 +94,11 @@ const getCommonLinkWithPartialData = ({
   }
 
   return !state || state === CommonState.ACTIVE
-    ? renderLink(path || "", name, () =>
-        handleCommonClick(commonId, rootCommonId),
-      )
+    ? renderLink({
+        to: path || "",
+        name,
+        onClick: () => handleCommonClick(commonId, rootCommonId),
+      })
     : `${name} (deleted)`;
 };
 
@@ -147,11 +131,11 @@ const getCommonCreatedSystemMessageText = async (
     <>
       {" "}
       {common.state === CommonState.ACTIVE
-        ? renderLink(
-            (data.getCommonPagePath || getCommonPagePath)(common.id),
-            common.name,
-            () => handleCommonClick(common.id, common.rootCommonId),
-          )
+        ? renderLink({
+            to: (data.getCommonPagePath || getCommonPagePath)(common.id),
+            name: common.name,
+            onClick: () => handleCommonClick(common.id, common.rootCommonId),
+          })
         : `${common.name} (deleted)`}
     </>
   ) : (
@@ -173,13 +157,14 @@ const getCommonEditedSystemMessageText = async (
 
   return [
     `This ${getCommonTypeText(systemMessageData.commonType)}’s `,
-    renderLink(
-      (data.getCommonPageAboutTabPath || getCommonPageAboutTabPath)(
+    renderLink({
+      to: (data.getCommonPageAboutTabPath || getCommonPageAboutTabPath)(
         systemMessageData.commonId,
       ),
-      "info",
-      () => handleCommonClick(systemMessageData.commonId, common?.rootCommonId),
-    ),
+      name: "info",
+      onClick: () =>
+        handleCommonClick(systemMessageData.commonId, common?.rootCommonId),
+    }),
     " was edited by ",
     userEl,
   ];

@@ -14,6 +14,7 @@ import { EmojiElement } from "@/shared/ui-kit/TextEditor/types";
 import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
 import { CheckboxItem, UserMention } from "../components";
 import { Text, TextData } from "../types";
+import { generateInternalLink } from "./generateInternalLink";
 import { getTextFromSystemMessage } from "./getTextFromSystemMessage";
 
 interface ChatEmoji {
@@ -35,7 +36,7 @@ interface TextFromDescendant {
   onUserClick?: (userId: string) => void;
 }
 
-const getTextFromDescendant = ({
+const getTextFromDescendant = async ({
   descendant,
   users,
   mentionTextClassName,
@@ -43,9 +44,15 @@ const getTextFromDescendant = ({
   commonId,
   directParent,
   onUserClick,
-}: TextFromDescendant): Text => {
+}: TextFromDescendant): Promise<Text> => {
   if (!Element.isElement(descendant)) {
-    return descendant.text || "";
+    const separatedText = descendant.text.split(" ");
+    const mappedText = await Promise.all(
+      separatedText.map(async (item) => {
+        return await generateInternalLink(item);
+      }),
+    );
+    return <span>{mappedText}</span> || "";
   }
 
   switch (descendant.type) {
@@ -53,19 +60,21 @@ const getTextFromDescendant = ({
     case ElementType.Link:
       return (
         <span>
-          {descendant.children.map((item, index) => (
-            <React.Fragment key={index}>
-              {getTextFromDescendant({
-                descendant: item,
-                users,
-                mentionTextClassName,
-                emojiTextClassName,
-                commonId,
-                directParent,
-                onUserClick,
-              })}
-            </React.Fragment>
-          ))}
+          {await Promise.all(
+            descendant.children.map(async (item, index) => (
+              <React.Fragment key={index}>
+                {await getTextFromDescendant({
+                  descendant: item,
+                  users,
+                  mentionTextClassName,
+                  emojiTextClassName,
+                  commonId,
+                  directParent,
+                  onUserClick,
+                })}
+              </React.Fragment>
+            )),
+          )}
           <br />
         </span>
       );
@@ -93,19 +102,21 @@ const getTextFromDescendant = ({
           checked={descendant.checked}
           isRTL={isRtlWithNoMentions([descendant])}
         >
-          {descendant.children.map((item, index) => (
-            <React.Fragment key={index}>
-              {getTextFromDescendant({
-                descendant: item,
-                users,
-                mentionTextClassName,
-                emojiTextClassName,
-                commonId,
-                directParent,
-                onUserClick,
-              })}
-            </React.Fragment>
-          ))}
+          {await Promise.all(
+            descendant.children.map(async (item, index) => (
+              <React.Fragment key={index}>
+                {await getTextFromDescendant({
+                  descendant: item,
+                  users,
+                  mentionTextClassName,
+                  emojiTextClassName,
+                  commonId,
+                  directParent,
+                  onUserClick,
+                })}
+              </React.Fragment>
+            )),
+          )}
         </CheckboxItem>
       );
     default:
@@ -163,11 +174,10 @@ export const getTextFromTextEditorString = async (
     ? textEditorElementsStyles.mentionTextCurrentUser
     : "";
 
-  return textEditorValue.reduce<Text[]>(
-    (acc, item, index) => [
-      ...acc,
+  return await Promise.all(
+    textEditorValue.map(async (item, index) => (
       <React.Fragment key={index}>
-        {getTextFromDescendant({
+        {await getTextFromDescendant({
           descendant: item,
           users: filteredUsers,
           mentionTextClassName:
@@ -184,8 +194,7 @@ export const getTextFromTextEditorString = async (
           directParent,
           onUserClick,
         })}
-      </React.Fragment>,
-    ],
-    [],
+      </React.Fragment>
+    )),
   );
 };
