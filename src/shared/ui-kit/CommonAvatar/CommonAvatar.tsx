@@ -1,6 +1,8 @@
 import React from "react";
 import { FC } from "react";
 import { Image } from "@/shared/components/Image";
+import { ThemeColors } from "@/shared/constants";
+import useThemeColor from "@/shared/hooks/useThemeColor";
 import {
   FilePrefix,
   ResizeType,
@@ -19,6 +21,7 @@ interface CommonAvatarProps {
 const CommonAvatar: FC<CommonAvatarProps> = (props) => {
   const { src = "", name, className, alt, useResizedFile = true } = props;
   const finalName = name ?? "unknown";
+  const { getThemeColor } = useThemeColor();
 
   return (
     <Image
@@ -32,7 +35,10 @@ const CommonAvatar: FC<CommonAvatarProps> = (props) => {
       placeholderElement={
         <Image
           className={className}
-          src={getRandomUserAvatarURL(name)}
+          src={getRandomUserAvatarURL(
+            name,
+            getThemeColor(ThemeColors.tertiaryText),
+          )}
           alt={alt || finalName}
         />
       }
