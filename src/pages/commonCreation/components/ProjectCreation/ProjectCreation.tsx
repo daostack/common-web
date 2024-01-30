@@ -176,6 +176,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
         </p>
         <ProjectCreationForm
           parentCommonId={parentCommon.id}
+          parentCommonName={parentCommon.name}
           governanceCircles={parentGovernance.circles}
           initialCommon={initialCommon}
           isEditing={isEditing}

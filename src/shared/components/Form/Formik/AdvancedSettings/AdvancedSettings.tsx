@@ -1,18 +1,16 @@
 import React, { FC } from "react";
-import { useField } from "formik";
 import { ButtonLink } from "@/shared/components/ButtonLink";
 import { useModal } from "@/shared/hooks";
-import { Roles } from "@/shared/models";
 import { AdvancedSettingsModal } from "./components";
 
 export interface AdvancedSettingsProps {
   name: string;
-  roles: Roles;
-  rootCommonRoles: Roles;
+  parentCommonName?: string;
 }
 
 const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
-  const { rootCommonRoles, roles } = props;
+  const { parentCommonName } = props;
+
   const {
     isShowing: isAdvancedSettingsModalOpen,
     onOpen: onAdvancedSettingsModalOpen,
@@ -27,8 +25,7 @@ const AdvancedSettings: FC<AdvancedSettingsProps> = (props) => {
       <AdvancedSettingsModal
         isOpen={isAdvancedSettingsModalOpen}
         onClose={onAdvancedSettingsModalClose}
-        roles={roles}
-        rootCommonRoles={rootCommonRoles}
+        parentCommonName={parentCommonName}
       />
     </>
   );

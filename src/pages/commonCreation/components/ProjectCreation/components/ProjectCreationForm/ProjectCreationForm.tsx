@@ -8,7 +8,14 @@ import {
   useNotionIntegration,
   useProjectCreation,
 } from "@/shared/hooks/useCases";
-import { Circles, Common, Governance, Project, Roles } from "@/shared/models";
+import {
+  Circles,
+  Common,
+  Governance,
+  Project,
+  Roles,
+  SpaceAdvancedSettingsIntermediate,
+} from "@/shared/models";
 import {
   Loader,
   LoaderVariant,
@@ -32,6 +39,7 @@ const CreationForm = generateCreationForm<ProjectCreationFormValues>();
 
 interface ProjectCreationFormProps {
   parentCommonId: string;
+  parentCommonName?: string;
   governanceCircles: Circles;
   initialCommon?: Project;
   isEditing: boolean;
@@ -43,7 +51,7 @@ const getInitialValues = (
   governanceCircles: Circles,
   initialCommon?: Project,
   roles?: Roles,
-  rootCommonRoles?: Roles,
+  advancedSettings?: SpaceAdvancedSettingsIntermediate,
 ): ProjectCreationFormValues => {
   const circlesWithHighestTier = getCirclesWithHighestTier(
     Object.values(governanceCircles),
@@ -73,18 +81,19 @@ const getInitialValues = (
       circlesWithHighestTier[0]?.id ||
       "",
     roles: roles || [],
-    rootCommonRoles: rootCommonRoles || [],
     notion: {
       isEnabled: isNotionIntegrationEnabled,
       databaseId: initialCommon?.notion?.databaseId || "",
       token: isNotionIntegrationEnabled ? NOTION_INTEGRATION_TOKEN_MASK : "",
     },
+    advancedSettings: advancedSettings,
   };
 };
 
 const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   const {
     parentCommonId,
+    parentCommonName,
     governanceCircles,
     initialCommon,
     isEditing,
@@ -154,13 +163,31 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         circleName: circle.name,
       }));
 
+  const advancedSettings: SpaceAdvancedSettingsIntermediate =
+    initialCommon?.advancedSettings || {
+      permissionGovernanceId: rootGovernance?.id,
+      circles: rootCommonRoles.map((role, index) => {
+        return {
+          circleId: role.circleId,
+          circleName: role.circleName,
+          selected: true,
+          synced: false,
+          inheritFrom: {
+            governanceId: governance?.id,
+            circleId: roles[index].circleId,
+            circleName: roles[index].circleName,
+          },
+        };
+      }),
+    };
+
   const initialValues = useMemo(
     () =>
       getInitialValues(
         governanceCircles,
         initialCommon,
         roles,
-        rootCommonRoles,
+        advancedSettings,
       ),
     [governanceCircles, nonProjectCircles],
   );
@@ -217,7 +244,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, [projectId]);
 
   useEffect(() => {
-    if (!isParentIsRoot && initialCommon?.rootCommonId) {
+    if (initialCommon?.rootCommonId) {
       fetchRootGovernance(initialCommon.rootCommonId);
     }
   }, [initialCommon?.rootCommonId]);
@@ -248,8 +275,9 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         items={getConfiguration({
           isProject: true,
           roles,
-          rootCommonRoles,
           notionIntegration,
+          advancedSettings,
+          parentCommonName,
           shouldBeUnique: {
             existingNames: existingProjectsNames,
           },

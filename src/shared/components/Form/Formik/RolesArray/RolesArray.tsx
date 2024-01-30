@@ -45,7 +45,7 @@ const RolesArray: FC<RolesArrayProps> = (props) => {
           <div>
             {values?.map((role, index) => {
               return (
-                <div className={styles.roleField}>
+                <div key={index} className={styles.roleField}>
                   <TextField
                     key={index}
                     id={`${restProps.name}.${index}.circleName`}

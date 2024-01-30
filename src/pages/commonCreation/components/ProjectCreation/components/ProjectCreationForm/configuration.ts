@@ -1,4 +1,9 @@
-import { NotionIntegration, Roles, SyncLeaseStatus } from "@/shared/models";
+import {
+  NotionIntegration,
+  Roles,
+  SpaceAdvancedSettingsIntermediate,
+  SyncLeaseStatus,
+} from "@/shared/models";
 import { TextEditorSize } from "@/shared/ui-kit";
 import { CreationFormItem, CreationFormItemType } from "../../../CreationForm";
 import {
@@ -12,19 +17,21 @@ import styles from "./ProjectCreationForm.module.scss";
 interface Options {
   isProject: boolean;
   roles?: Roles;
-  rootCommonRoles?: Roles;
   shouldBeUnique?: { existingNames: string[] };
   isImageRequired?: boolean;
   notionIntegration?: NotionIntegration | null;
+  advancedSettings?: SpaceAdvancedSettingsIntermediate;
+  parentCommonName?: string;
 }
 
 export const getConfiguration = (options: Options): CreationFormItem[] => {
   const {
     isProject = true,
     roles,
-    rootCommonRoles,
     shouldBeUnique,
     notionIntegration,
+    advancedSettings,
+    parentCommonName,
     isImageRequired = false,
   } = options;
   const type = isProject ? "Space" : "Common";
@@ -174,14 +181,15 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
       },
     });
 
-    items.push({
-      type: CreationFormItemType.AdvancedSettings,
-      props: {
-        name: "advancedSettings",
-        roles: roles || [],
-        rootCommonRoles: rootCommonRoles || [],
-      },
-    });
+    if (advancedSettings) {
+      items.push({
+        type: CreationFormItemType.AdvancedSettings,
+        props: {
+          name: "advancedSettings",
+          parentCommonName,
+        },
+      });
+    }
   }
 
   return items;
