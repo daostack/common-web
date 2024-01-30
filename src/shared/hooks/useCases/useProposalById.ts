@@ -29,11 +29,6 @@ export const useProposalById = (): Return => {
     (proposalId: string) => {
       setDefaultState({ ...DEFAULT_STATE });
       setCurrentProposalId(proposalId);
-      dispatch(
-        cacheActions.getProposalStateById.request({
-          payload: { proposalId },
-        }),
-      );
     },
     [dispatch],
   );
