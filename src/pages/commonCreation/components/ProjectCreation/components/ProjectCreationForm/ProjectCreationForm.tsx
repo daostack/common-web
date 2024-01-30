@@ -41,6 +41,7 @@ interface ProjectCreationFormProps {
   parentCommonId: string;
   parentCommonName?: string;
   governanceCircles: Circles;
+  parentGovernanceId?: string;
   initialCommon?: Project;
   isEditing: boolean;
   onFinish: (data: { project: Common; governance: Governance }) => void;
@@ -95,6 +96,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
     parentCommonId,
     parentCommonName,
     governanceCircles,
+    parentGovernanceId,
     initialCommon,
     isEditing,
     onFinish,
@@ -145,8 +147,8 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
   }, [initialCommon?.id]);
 
   const nonProjectCircles = useMemo(
-    () => removeProjectCircles(Object.values(governance?.circles || {})),
-    [governance?.circles],
+    () => removeProjectCircles(Object.values(governanceCircles || {})),
+    [governance?.circles || governanceCircles],
   );
   const roles: Roles = nonProjectCircles.map((circle) => ({
     circleId: circle.id,
@@ -164,22 +166,27 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
       }));
 
   const advancedSettings: SpaceAdvancedSettingsIntermediate =
-    initialCommon?.advancedSettings || {
-      permissionGovernanceId: rootGovernance?.id,
-      circles: rootCommonRoles.map((role, index) => {
-        return {
-          circleId: role.circleId,
-          circleName: role.circleName,
-          selected: true,
-          synced: false,
-          inheritFrom: {
-            governanceId: governance?.id,
-            circleId: roles[index].circleId,
-            circleName: roles[index].circleName,
-          },
-        };
-      }),
-    };
+    initialCommon?.advancedSettings ||
+    useMemo(() => {
+      return {
+        permissionGovernanceId: isParentIsRoot
+          ? parentGovernanceId
+          : rootGovernance?.id,
+        circles: rootCommonRoles.map((role, index) => {
+          return {
+            circleId: role.circleId,
+            circleName: role.circleName,
+            selected: true,
+            synced: false,
+            inheritFrom: {
+              governanceId: governance?.id,
+              circleId: roles[index].circleId,
+              circleName: roles[index].circleName,
+            },
+          };
+        }),
+      };
+    }, [rootGovernance?.id]);
 
   const initialValues = useMemo(
     () =>

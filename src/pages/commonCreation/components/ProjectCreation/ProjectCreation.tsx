@@ -178,6 +178,7 @@ const ProjectCreation: FC<ProjectCreationProps> = (props) => {
           parentCommonId={parentCommon.id}
           parentCommonName={parentCommon.name}
           governanceCircles={parentGovernance.circles}
+          parentGovernanceId={parentGovernance.id}
           initialCommon={initialCommon}
           isEditing={isEditing}
           onFinish={handleCreatedProject}

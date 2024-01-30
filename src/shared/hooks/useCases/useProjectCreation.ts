@@ -48,6 +48,21 @@ export const useProjectCreation = (): Return => {
           getFilesDownloadInfo(creationData.gallery),
         ]);
         const links = parseLinksForSubmission(creationData.links || []);
+
+        /** TODO: need to improve. This is just for test creation using GovernanceActions.CREATE_SUBCOMMON */
+        const advancedSettingsCircles =
+          creationData.advancedSettings?.circles?.map((circle) => {
+            if (circle.synced) {
+              return {
+                circleId: circle.circleId,
+                inheritFrom: {
+                  governanceId: circle.inheritFrom?.governanceId,
+                  circleId: circle.inheritFrom?.circleId,
+                },
+              };
+            } else return {};
+          });
+
         const payload: CreateProjectPayload = {
           name: creationData.spaceName,
           byline: creationData.byline,
@@ -64,6 +79,11 @@ export const useProjectCreation = (): Return => {
             : undefined,
           links,
           highestCircleId: creationData.highestCircleId,
+          advancedSettings: {
+            permissionGovernanceId:
+              creationData.advancedSettings?.permissionGovernanceId,
+            circles: advancedSettingsCircles,
+          },
         };
         const createdProject = await ProjectService.createNewProject(
           parentCommonId,
