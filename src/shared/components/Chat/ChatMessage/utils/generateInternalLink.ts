@@ -1,22 +1,38 @@
 import { BASE_URL } from "@/shared/constants";
-import { getCommonPagePath } from "@/shared/utils";
-import {
-  getCommon,
-  handleCommonClick,
-  renderLink
-} from "./getTextFromSystemMessage";
 import { Text } from "@/shared/models";
+import { getCommonPagePath } from "@/shared/utils";
+import { getCommon } from "./getCommon";
+import { handleCommonClick } from "./handleCommonClick";
+import { renderLink } from "./renderLink";
+import styles from "../ChatMessage.module.scss";
+
+const ITEM_KEY = "item";
+
+export const getQueryParam = (path: string, key: string): string | null => {
+  const urlParams = new URLSearchParams(path);
+
+  return urlParams.get(key);
+};
 
 export const generateInternalLink = async (text: string): Promise<Text> => {
-  const commonId = text.split("/").pop();
-  if (text.startsWith(BASE_URL) && commonId) {
-    const common = await getCommon(commonId);
-    if (common?.id && common.name) {
-      return renderLink(getCommonPagePath(common?.id), common.name, () =>
-        handleCommonClick(common?.id, common?.rootCommonId),
-      );
+  const commonPath = text.split("/").pop();
+  if (text.startsWith(BASE_URL) && commonPath) {
+    const itemId = getQueryParam(commonPath, ITEM_KEY);
+    const commonId = commonPath.split("?").shift();
+    if (commonId) {
+      const common = await getCommon(commonId);
+      if (common?.id && common.name) {
+        return renderLink({
+          to: getCommonPagePath(common?.id, {
+            ...(itemId && { item: itemId }),
+          }),
+          name: `${common.name} `,
+          onClick: () => handleCommonClick(common?.id, common?.rootCommonId),
+          className: styles.internalLink,
+        });
+      }
     }
   }
 
   return text;
-}
+};
