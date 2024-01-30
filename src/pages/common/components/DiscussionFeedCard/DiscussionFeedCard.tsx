@@ -244,7 +244,7 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         >(
           (...args) =>
             preloadDiscussionMessagesData.preloadDiscussionMessages(...args),
-          3000,
+          6000,
         ),
       [preloadDiscussionMessagesData.preloadDiscussionMessages],
     );
