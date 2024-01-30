@@ -2,7 +2,7 @@ import React, { FC, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { webviewLogin } from "@/pages/Auth/store/actions";
 import { history } from "@/shared/appConfig";
-import { WebviewActions } from "@/shared/constants";
+import { Theme, WebviewActions } from "@/shared/constants";
 import { FirebaseCredentials } from "@/shared/interfaces/FirebaseCredentials";
 import { getInboxPagePath } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
@@ -33,6 +33,13 @@ const WebViewLoginHandler: FC = () => {
           payload: data,
           callback: (isLoggedIn) => {
             if (isLoggedIn) {
+              const isDarkThemePreferred = window.matchMedia(
+                `(prefers-color-scheme: ${Theme.Dark})`,
+              );
+
+              if (isDarkThemePreferred) {
+                window.ReactNativeWebView.postMessage(Theme.Dark);
+              }
               window.ReactNativeWebView.postMessage(
                 WebviewActions.loginSuccess,
               );
