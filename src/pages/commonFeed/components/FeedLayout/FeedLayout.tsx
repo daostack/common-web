@@ -87,8 +87,8 @@ import {
 import { useUserForProfile } from "./hooks";
 import {
   checkShouldAutoOpenPreview,
-  getChatChannelItemByUserIds,
   getDefaultSize,
+  getDMChatChannelItemByUserIds,
   getItemCommonData,
   getSplitViewMaxSize,
   saveChatSize,
@@ -120,6 +120,7 @@ interface FeedLayoutProps {
   loading: boolean;
   shouldHideContent?: boolean;
   batchNumber?: number;
+  isPreloadDisabled?: boolean;
   onFetchNext: (feedItemId?: string) => void;
   renderFeedItemBaseContent: (props: FeedItemBaseContentProps) => ReactNode;
   renderChatChannelItem?: (props: ChatChannelFeedLayoutItemProps) => ReactNode;
@@ -140,6 +141,7 @@ interface FeedLayoutProps {
     feedItemId: string,
     messageId?: string,
   ) => void;
+  onChatChannelCreate?: (chatChannel: ChatChannel) => void;
   outerStyles?: FeedLayoutOuterStyles;
   settings?: FeedLayoutSettings;
   renderChatInput?: () => ReactNode;
@@ -161,6 +163,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     topFeedItems = [],
     loading,
     shouldHideContent = false,
+    isPreloadDisabled = false,
     batchNumber,
     onFetchNext,
     renderFeedItemBaseContent,
@@ -175,6 +178,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
     onActiveItemDataChange,
     onMessagesAmountEmptinessToggle,
     onFeedItemSelect,
+    onChatChannelCreate,
     outerStyles,
     settings,
     renderChatInput,
@@ -230,9 +234,9 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return items;
   }, [topFeedItems, feedItems]);
-  const chatChannelItemForProfile = useMemo(
+  const dmChatChannelItemForProfile = useMemo(
     () =>
-      getChatChannelItemByUserIds(
+      getDMChatChannelItemByUserIds(
         allFeedItems,
         userId,
         userForProfile.userForProfileData?.userId,
@@ -251,8 +255,8 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   );
 
   const feedItemIdForAutoChatOpen = useMemo(() => {
-    if (chatChannelItemForProfile?.itemId) {
-      return chatChannelItemForProfile.itemId;
+    if (dmChatChannelItemForProfile?.itemId) {
+      return dmChatChannelItemForProfile.itemId;
     }
     if (
       userForProfile.userForProfileData ||
@@ -284,7 +288,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
     return foundItem?.itemId;
   }, [
-    chatChannelItemForProfile?.itemId,
+    dmChatChannelItemForProfile?.itemId,
     allFeedItems,
     chatItem?.feedItemId,
     sharedFeedItemId,
@@ -439,6 +443,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       title: getUserName(dmUser),
       image: dmUser.photoURL,
     });
+    onChatChannelCreate?.(chatChannel);
 
     if (!isTabletView) {
       setActiveChatItem(null);
@@ -450,7 +455,10 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   };
 
   const handleDMClick = () => {
-    if (checkIsChatChannelLayoutItem(selectedFeedItem)) {
+    if (
+      checkIsChatChannelLayoutItem(selectedFeedItem) &&
+      selectedFeedItem.chatChannel.participants.length <= 2
+    ) {
       handleProfileClose();
       return;
     }
@@ -460,10 +468,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
   };
 
   const onDMClick =
-    checkIsChatChannelLayoutItem(selectedFeedItem) ||
-    (!isTabletView && chatChannelItemForProfile)
-      ? handleDMClick
-      : undefined;
+    !isTabletView && dmChatChannelItemForProfile ? handleDMClick : undefined;
 
   const handleFeedItemClickExternal = useCallback(
     (
@@ -619,13 +624,14 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
 
   useEffect(() => {
     if (
+      !isPreloadDisabled &&
       batchNumber &&
       batchNumber >= 1 &&
       batchNumber <= BATCHES_AMOUNT_TO_PRELOAD
     ) {
       onFetchNext();
     }
-  }, [batchNumber]);
+  }, [batchNumber, isPreloadDisabled]);
 
   useEffect(() => {
     if (
@@ -669,6 +675,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
       <ChatContext.Provider value={chatContextValue}>
         {!shouldHideContent && (
           <div
+            id="feedLayoutWrapper"
             className={classNames(styles.content, className, {
               [styles.contentCentered]: isContentEmpty,
             })}
@@ -793,6 +800,7 @@ const FeedLayout: ForwardRefRenderFunction<FeedLayoutRef, FeedLayoutProps> = (
                 rightHeaderContent={followFeedItemEl}
                 onMessagesAmountChange={handleMessagesAmountChange}
                 directParent={outerCommon?.directParent}
+                chatChannel={userForProfile.userForProfileData?.chatChannel}
                 onClose={handleMobileChatClose}
                 renderChatInput={renderChatInput}
                 onUserClick={handleUserClick}

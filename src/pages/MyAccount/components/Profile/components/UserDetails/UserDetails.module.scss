@@ -99,7 +99,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $c-pink-mention;
+  background-color: var(--primary-fill);
   border-radius: 50%;
   cursor: pointer;
 }

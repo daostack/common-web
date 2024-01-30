@@ -9,4 +9,5 @@ export interface FirebaseCredentials {
   secret: string;
   rawNonce?: string;
   isLoggedIn: string;
+  customToken?: string;
 }

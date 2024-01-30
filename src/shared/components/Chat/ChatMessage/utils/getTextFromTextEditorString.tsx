@@ -141,6 +141,7 @@ export const getTextFromTextEditorString = async (
   } = data;
 
   const isCurrentUser = userId === ownerId;
+
   if (systemMessage) {
     const systemMessageText = await getTextFromSystemMessage(data);
 

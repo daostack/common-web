@@ -24,11 +24,7 @@
   }
 }
 .itemActive {
-  --item-color: #{$c-pink-mention};
-
-  &:hover {
-    --item-color: #{$c-pink-next-dark};
-  }
+  --item-color: var(--highlight);
 }
 .itemDisabled {
   --item-color: #{$c-neutrals-300};
