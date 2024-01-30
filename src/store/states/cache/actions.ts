@@ -27,6 +27,10 @@ export const getUserStateById = createAsyncAction(
   Error
 >();
 
+export const updateUserStates = createStandardAction(
+  CacheActionType.UPDATE_USER_STATES,
+)<Array<User>>();
+
 export const updateUserStateById = createStandardAction(
   CacheActionType.UPDATE_USER_STATE_BY_ID,
 )<{

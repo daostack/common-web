@@ -6,12 +6,15 @@ export interface Options {
   common: Common;
   commonMember: (CommonMember & CirclesPermissions) | null;
   isFollowInProgress: boolean;
+  isSearchActionAvailable: boolean;
 }
 
 const MENU_ITEM_TO_CHECK_FUNCTION_MAP: Record<
   CommonFeedMenuItem,
   (options: Options) => boolean
 > = {
+  [CommonFeedMenuItem.Search]: ({ isSearchActionAvailable }) =>
+    isSearchActionAvailable,
   [CommonFeedMenuItem.Share]: () => true,
   [CommonFeedMenuItem.Follow]: ({ commonMember, isFollowInProgress }) =>
     !isFollowInProgress && Boolean(commonMember && !commonMember.isFollowing),

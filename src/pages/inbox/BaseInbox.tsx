@@ -22,6 +22,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import {
   ChatChannelFeedLayoutItemProps,
@@ -31,11 +32,13 @@ import {
   FeedLayoutRef,
 } from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
-import { CommonFeed } from "@/shared/models";
+import { ChatChannel, CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
   inboxActions,
   selectChatChannelItems,
+  selectInboxSearchValue,
+  selectIsSearchingInboxItems,
   selectNextChatChannelItemId,
   selectSharedInboxItem,
 } from "@/store/states";
@@ -65,6 +68,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
+  const isTabletView = useIsTabletView();
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
@@ -81,6 +85,8 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   );
   const user = useSelector(selectUser());
   const userId = user?.uid;
+  const isSearchingInboxItems = useSelector(selectIsSearchingInboxItems);
+  const searchValue = useSelector(selectInboxSearchValue);
   const {
     data: inboxData,
     fetched: isDataFetched,
@@ -99,6 +105,21 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   const sharedInboxItem = useSelector(selectSharedInboxItem);
   const chatChannelItems = useSelector(selectChatChannelItems);
   const nextChatChannelItemId = useSelector(selectNextChatChannelItemId);
+
+  const getEmptyText = (): string => {
+    if (hasMoreInboxItems) {
+      return "";
+    }
+
+    if (searchValue) {
+      return "Looks like there are no matches for your query.";
+    }
+
+    return isActiveUnreadInboxItemsQueryParam
+      ? "Hurry! No unread items in your inbox :-)"
+      : "Your inbox is empty";
+  };
+
   const topFeedItems = useMemo(() => {
     const items: FeedLayoutItem[] = [];
 
@@ -123,7 +144,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   };
 
   const fetchMoreInboxItems = () => {
-    if (hasMoreInboxItems) {
+    if (hasMoreInboxItems && !isSearchingInboxItems && !areInboxItemsLoading) {
       fetchInboxItems();
     }
   };
@@ -146,6 +167,12 @@ const InboxPage: FC<InboxPageProps> = (props) => {
           isRemoved,
         }),
       );
+
+      if (!isRemoved && item.data.lastMessage?.ownerId === userId) {
+        document
+          .getElementById("feedLayoutWrapper")
+          ?.scrollIntoView({ behavior: "smooth" });
+      }
     },
     [dispatch],
   );
@@ -195,6 +222,15 @@ const InboxPage: FC<InboxPageProps> = (props) => {
     [history.push, getCommonPagePath],
   );
 
+  const handleChatChannelCreate = useCallback(
+    (chatChannel: ChatChannel) => {
+      if (!isTabletView) {
+        dispatch(inboxActions.addChatChannelItem(chatChannel));
+      }
+    },
+    [dispatch, isTabletView],
+  );
+
   useEffect(() => {
     dispatch(inboxActions.setSharedFeedItemId(sharedFeedItemId));
 
@@ -240,10 +276,15 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   }, [userId]);
 
   useEffect(() => {
-    if (userId && !inboxItems && !areInboxItemsLoading) {
+    if (
+      userId &&
+      !inboxItems &&
+      !areInboxItemsLoading &&
+      !isSearchingInboxItems
+    ) {
       fetchInboxItems();
     }
-  }, [userId, inboxItems, areInboxItemsLoading]);
+  }, [userId, inboxItems, areInboxItemsLoading, isSearchingInboxItems]);
 
   if (!isDataFetched) {
     return (
@@ -276,9 +317,10 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         commonMember={null}
         topFeedItems={topFeedItems}
         feedItems={inboxItems}
-        loading={areInboxItemsLoading || !user}
+        loading={areInboxItemsLoading || isSearchingInboxItems || !user}
         shouldHideContent={!user}
         batchNumber={batchNumber}
+        isPreloadDisabled={Boolean(searchValue)}
         onFetchNext={fetchMoreInboxItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         renderChatChannelItem={renderChatChannelItem}
@@ -286,16 +328,13 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         onFeedItemUnfollowed={handleFeedItemUnfollowed}
         getLastMessage={getLastMessage}
         sharedFeedItemId={sharedFeedItemId}
-        emptyText={
-          isActiveUnreadInboxItemsQueryParam
-            ? "Hurry! No unread items in your inbox :-)"
-            : "Your inbox is empty"
-        }
+        emptyText={getEmptyText()}
         getNonAllowedItems={getNonAllowedItems}
         onActiveItemChange={handleActiveItemChange}
         onActiveItemDataChange={onActiveItemDataChange}
         onMessagesAmountEmptinessToggle={handleMessagesAmountEmptinessToggle}
         onFeedItemSelect={handleFeedItemSelect}
+        onChatChannelCreate={handleChatChannelCreate}
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
         onPullToRefresh={fetchInboxItems}

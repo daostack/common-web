@@ -7,6 +7,7 @@ export enum ElementType {
   BulletedList = "bulleted-list",
   ListItem = "list-item",
   Emoji = "emoji",
+  CheckboxItem = "checkbox-item",
 }
 
 export const LIST_TYPES = [ElementType.NumberedList, ElementType.BulletedList];

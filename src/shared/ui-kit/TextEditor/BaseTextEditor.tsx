@@ -33,12 +33,15 @@ import {
   EmojiPicker,
 } from "./components";
 import { TextEditorSize } from "./constants";
-import { withInlines, withMentions, withEmojis } from "./hofs";
+import { withInlines, withMentions, withEmojis, withChecklists } from "./hofs";
 import { TextEditorValue, EditorElementStyles } from "./types";
 import {
   parseStringToTextEditorValue,
   insertEmoji,
   insertMention,
+  checkIsCheckboxCreationText,
+  toggleCheckboxItem,
+  checkIsEmptyCheckboxCreationText,
 } from "./utils";
 import styles from "./BaseTextEditor.module.scss";
 
@@ -48,8 +51,8 @@ export interface TextEditorProps {
   emojiContainerClassName?: string;
   emojiPickerContainerClassName?: string;
   inputContainerRef?:
-  | MutableRefObject<HTMLDivElement | null>
-  | RefCallback<HTMLDivElement>;
+    | MutableRefObject<HTMLDivElement | null>
+    | RefCallback<HTMLDivElement>;
   editorRef?: MutableRefObject<HTMLElement | null> | RefCallback<HTMLElement>;
   id?: string;
   name?: string;
@@ -105,11 +108,13 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   } = props;
   const editor = useMemo(
     () =>
-      withEmojis(
-        withMentions(
-          withInlines(withHistory(withReact(createEditor())), {
-            shouldInsertURLAsLink: false,
-          }),
+      withChecklists(
+        withEmojis(
+          withMentions(
+            withInlines(withHistory(withReact(createEditor())), {
+              shouldInsertURLAsLink: false,
+            }),
+          ),
         ),
       ),
     [],
@@ -240,10 +245,45 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
   const handleOnChangeSelection = (selection: BaseSelection) => {
     if (selection && Range.isCollapsed(selection)) {
+      const {
+        anchor: { path: selectionPath, offset: selectionOffset },
+      } = selection;
       const [start] = Range.edges(selection);
       const before = EditorSlate.before(editor, start);
+      const lineLastPoint = EditorSlate.after(
+        editor,
+        {
+          anchor: {
+            offset: 0,
+            path: selectionPath,
+          },
+          focus: {
+            offset: 0,
+            path: selectionPath,
+          },
+        },
+        { unit: "line" },
+      );
       const beforeRange = before && EditorSlate.range(editor, before, start);
       const beforeText = beforeRange && EditorSlate.string(editor, beforeRange);
+      const checkboxText = EditorSlate.string(editor, {
+        anchor: { offset: 0, path: selectionPath },
+        focus: { offset: 3, path: selectionPath },
+      });
+
+      if (
+        beforeText === " " &&
+        selectionOffset === 4 &&
+        selectionOffset === lineLastPoint?.offset &&
+        checkIsCheckboxCreationText(checkboxText)
+      ) {
+        toggleCheckboxItem(
+          editor,
+          !checkIsEmptyCheckboxCreationText(checkboxText),
+          true,
+        );
+        return;
+      }
 
       handleSearch(beforeText ?? "", beforeRange);
     }
@@ -253,7 +293,9 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const handleOnChange = useCallback(
     (updatedContent) => {
       // Prevent update for cursor clicks
-      if (isEqual(updatedContent, value)) return;
+      if (isEqual(updatedContent, value)) {
+        return;
+      }
       onChange && onChange(updatedContent);
       const { selection } = editor;
 
@@ -264,11 +306,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
   return (
     <div ref={inputContainerRef} className={styles.container}>
-      <Slate
-        editor={editor}
-        initialValue={value}
-        onChange={handleOnChange}
-      >
+      <Slate editor={editor} initialValue={value} onChange={handleOnChange}>
         <Editor
           className={classNames(
             className,

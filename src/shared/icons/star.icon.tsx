@@ -6,7 +6,7 @@ interface StarIconProps {
 }
 
 const StarIcon: FC<StarIconProps> = (props) => {
-  const { className, stroke = "#de189b" } = props;
+  const { className, stroke = "#d84c7f" } = props;
   const color = "currentColor";
 
   return (

@@ -18,4 +18,5 @@ export interface ChatMessage extends BaseEntity {
 
   owner?: User;
   parentMessage?: ParentDiscussionMessage | null;
+  hasUncheckedItems: boolean;
 }

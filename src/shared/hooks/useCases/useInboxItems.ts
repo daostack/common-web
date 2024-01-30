@@ -21,7 +21,12 @@ import {
   InboxItem,
   Timestamp,
 } from "@/shared/models";
-import { inboxActions, InboxItems, selectInboxItems } from "@/store/states";
+import {
+  inboxActions,
+  InboxItems,
+  selectFilteredInboxItems,
+  selectInboxItems,
+} from "@/store/states";
 
 interface Return
   extends Pick<InboxItems, "data" | "loading" | "hasMore" | "batchNumber"> {
@@ -195,6 +200,7 @@ export const useInboxItems = (
   const [newItemsBatches, setNewItemsBatches] = useState<ItemsBatch[]>([]);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<Timestamp | null>(null);
   const inboxItems = useSelector(selectInboxItems);
+  const filteredInboxItems = useSelector(selectFilteredInboxItems);
   const user = useSelector(selectUser());
   const inboxItemsRef = useRef(inboxItems);
   const userId = user?.uid;
@@ -258,14 +264,14 @@ export const useInboxItems = (
           return;
         }
 
-        const filteredInboxItems = data
+        const filteredItems = data
           ? fetchedInboxItems.filter((fetchedItem) =>
               data.every((item) => item.itemId !== fetchedItem.itemId),
             )
           : fetchedInboxItems;
 
         addNewInboxItems(
-          filteredInboxItems.map((item) => ({
+          filteredItems.map((item) => ({
             item,
             statuses: {
               isAdded: false,
@@ -391,6 +397,7 @@ export const useInboxItems = (
 
   return {
     ...inboxItems,
+    data: filteredInboxItems || inboxItems.data,
     fetch,
     refetch,
   };

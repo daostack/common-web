@@ -23,7 +23,7 @@
   --tab-fs: #{$small};
   --tab-inactive-color: #{$c-neutrals-300};
   --tab-inactive-hover-color: var(--hover-fill);
-  --tab-active-color: #{$c-pink-primary};
+  --tab-active-color: var(--primary-fill);
 
   @include tablet {
     --tab-ml: 0;

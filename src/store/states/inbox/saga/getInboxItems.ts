@@ -7,9 +7,10 @@ import {
 import { Awaited, FeedLayoutItemWithFollowData } from "@/shared/interfaces";
 import { isError } from "@/shared/utils";
 import * as actions from "../actions";
-import { selectInboxItems } from "../selectors";
+import { selectInboxItems, selectInboxSearchValue } from "../selectors";
 import { InboxItems } from "../types";
 import { getFeedLayoutItemDateForSorting } from "../utils";
+import { searchFetchedInboxItems } from "./searchFetchedInboxItems";
 
 const sortItems = (
   data: FeedLayoutItemWithFollowData[],
@@ -63,6 +64,14 @@ export function* getInboxItems(
         unread,
       }),
     );
+
+    if (isFirstRequest) {
+      const searchValue: string = yield select(selectInboxSearchValue);
+      if (searchValue) {
+        yield put(actions.updateSearchInboxItems([]));
+      }
+    }
+    yield searchFetchedInboxItems(convertedData);
   } catch (error) {
     if (isError(error)) {
       yield put(actions.getInboxItems.failure(error));

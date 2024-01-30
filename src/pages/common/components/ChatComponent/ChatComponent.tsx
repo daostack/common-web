@@ -51,6 +51,7 @@ import {
   removeTextEditorEmptyEndLinesValues,
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
+import { checkUncheckedItemsInTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
 import {
   emptyFunction,
   getUserName,
@@ -209,6 +210,7 @@ export default function ChatComponent({
     }),
     [isScrolling, chatContainerRef.current],
   );
+  const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
 
   const [message, setMessage] = useState<TextEditorValue>(
     parseStringToTextEditorValue(),
@@ -313,6 +315,9 @@ export default function ChatComponent({
               files: payload.files,
               mentions: payload.tags?.map((tag) => tag.value),
               parentId: payload.parentId,
+              hasUncheckedItems: checkUncheckedItemsInTextEditorValue(
+                parseStringToTextEditorValue(payload.text),
+              ),
             });
             chatMessagesData.updateChatMessage(response);
 
@@ -343,6 +348,13 @@ export default function ChatComponent({
     [newMessages, discussionId, dispatch],
   );
 
+  /**
+   * Since the component's state is stale while executing the "paste" event listener callback,
+   * we need to save it in a ref and update it so the fresh data is available in the callback.
+   */
+  const currentFilesPreviewRef = useRef(currentFilesPreview);
+  currentFilesPreviewRef.current = currentFilesPreview;
+
   const uploadFiles = (
     event: ChangeEvent<HTMLInputElement> | ClipboardEvent,
   ) => {
@@ -369,7 +381,10 @@ export default function ChatComponent({
       .filter(Boolean) as FileInfo[];
     dispatch(
       chatActions.setFilesPreview(
-        [...(currentFilesPreview ?? []), ...newFilesPreview].slice(0, 10),
+        [...(currentFilesPreviewRef.current ?? []), ...newFilesPreview].slice(
+          0,
+          10,
+        ),
       ),
     );
   };
@@ -406,6 +421,7 @@ export default function ChatComponent({
           filesPreview: [],
           tags: mentionTags,
           mentions: mentionTags.map((tag) => tag.value),
+          hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
         };
 
         const filePreviewPayload: CreateDiscussionMessageDtoWithFilesPreview[] =
@@ -423,6 +439,7 @@ export default function ChatComponent({
             commonId,
             discussionId,
             filesPreview: [filePreview],
+            hasUncheckedItems: false,
           });
 
           pendingMessages.push({
@@ -439,6 +456,7 @@ export default function ChatComponent({
             createdAt: firebaseDate,
             updatedAt: firebaseDate,
             files: [FileService.convertFileInfoToCommonLink(filePreview)],
+            hasUncheckedItems: false,
           });
         });
 
@@ -473,6 +491,7 @@ export default function ChatComponent({
               FileService.convertFileInfoToCommonLink(file),
             ),
             tags: mentionTags,
+            hasUncheckedItems: checkUncheckedItemsInTextEditorValue(message),
           });
         }
 
@@ -638,8 +657,6 @@ export default function ChatComponent({
   }, []);
 
   const renderChatInput = (): ReactNode => {
-    const shouldHideChatInput = !isChatChannel && (!hasAccess || isHidden);
-
     if (shouldHideChatInput) {
       return null;
     }
@@ -773,6 +790,7 @@ export default function ChatComponent({
               !discussionMessagesData.rawData?.length && // for non direct messages chats. not using messageCount because it includes the deleted messages as well.
               Object.keys(discussionMessages).length === 0 // for direct messages chats
             }
+            isMessageEditAllowed={!shouldHideChatInput}
           />
         </ChatContentContext.Provider>
       </div>

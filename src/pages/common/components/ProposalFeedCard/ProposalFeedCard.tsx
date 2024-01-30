@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { useSelector } from "react-redux";
+import { useUpdateEffect } from "react-use";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMember, useProposalUserVote } from "@/pages/OldCommon/hooks";
 import { ProposalService } from "@/services";
@@ -17,6 +18,7 @@ import {
   useCommon,
   useDiscussionById,
   useFeedItemUserMetadata,
+  usePreloadDiscussionMessagesById,
   useProposalById,
   useUserById,
 } from "@/shared/hooks/useCases";
@@ -86,6 +88,7 @@ interface ProposalFeedCardProps {
   feedItemFollow: FeedItemFollowState;
   onActiveItemDataChange?: (data: FeedLayoutItemChangeData) => void;
   onUserSelect?: (userId: string, commonId?: string) => void;
+  shouldPreLoadMessages: boolean;
 }
 
 const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
@@ -109,6 +112,7 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       feedItemFollow,
       onActiveItemDataChange,
       onUserSelect,
+      shouldPreLoadMessages,
     } = props;
     const user = useSelector(selectUser());
     const userId = user?.uid;
@@ -186,6 +190,10 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       onOpen: onShareModalOpen,
       onClose: onShareModalClose,
     } = useModal(false);
+    const { preloadDiscussionMessages } = usePreloadDiscussionMessagesById({
+      commonId,
+      discussionId: discussion?.id,
+    });
     const menuItems = useMenuItems(
       {
         commonId,
@@ -324,6 +332,28 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         forceUpdate();
       }
     }, [isExpanded]);
+
+    useEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(commonId, item.circleVisibility);
+      }
+    }, [shouldPreLoadMessages, isActive]);
+
+    useUpdateEffect(() => {
+      if (
+        shouldPreLoadMessages &&
+        !isActive &&
+        commonId &&
+        item.circleVisibility
+      ) {
+        preloadDiscussionMessages(commonId, item.circleVisibility, true);
+      }
+    }, [item.data.lastMessage?.content]);
 
     const renderContent = (): ReactNode => {
       if (isLoading) {

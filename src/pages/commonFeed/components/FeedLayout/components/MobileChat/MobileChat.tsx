@@ -12,6 +12,7 @@ import { InternalLinkData } from "@/shared/components";
 import { ChatType } from "@/shared/constants";
 import { useUsersByIds } from "@/shared/hooks/useCases";
 import {
+  ChatChannel,
   Circles,
   CirclesPermissions,
   CommonMember,
@@ -33,6 +34,7 @@ interface ChatProps {
   rightHeaderContent?: ReactNode;
   onMessagesAmountChange?: (newMessagesAmount: number) => void;
   directParent?: DirectParent | null;
+  chatChannel?: ChatChannel;
   renderChatInput?: () => ReactNode;
   onClose: () => void;
   onUserClick?: (userId: string) => void;
@@ -53,6 +55,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     rightHeaderContent,
     onMessagesAmountChange,
     directParent,
+    chatChannel,
     renderChatInput,
     onClose,
     onUserClick,
@@ -68,7 +71,7 @@ const MobileChat: FC<ChatProps> = (props) => {
     [commonMember?.circles.map],
   );
 
-  const chatParticipants = chatItem?.chatChannel?.participants;
+  const chatParticipants = (chatChannel || chatItem?.chatChannel)?.participants;
   const isDM = chatParticipants && chatParticipants.length > 0;
   const isGroupMessage = chatParticipants && chatParticipants.length > 2;
 
@@ -77,7 +80,7 @@ const MobileChat: FC<ChatProps> = (props) => {
       isDM
         ? chatParticipants.filter((participant) => participant !== userId)
         : [],
-    [isDM, userId],
+    [isDM, userId, chatParticipants],
   );
 
   const dmUsersNames = dmUsers?.map((user) => getUserName(user));

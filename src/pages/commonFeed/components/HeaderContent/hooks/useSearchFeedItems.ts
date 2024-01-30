@@ -1,20 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { debounce } from "lodash";
 import { QueryParamKey } from "@/shared/constants";
 import { ToggleState, useQueryParams, useToggle } from "@/shared/hooks";
 import { addQueryParam, deleteQueryParam } from "@/shared/utils";
-import { commonActions } from "@/store/states";
 
-interface Return {
+interface Options {
+  onSearch: (value: string) => void;
+  onResetSearchState: () => void;
+}
+
+export interface SearchFeedItemsData {
   searchValue: string;
   searchInputToggle: ToggleState;
   onChangeSearchValue: (value: string) => void;
   onCloseSearch: () => void;
 }
 
-export const useSearchFeedItems = (): Return => {
-  const dispatch = useDispatch();
+export const useSearchFeedItems = ({
+  onSearch,
+  onResetSearchState,
+}: Options): SearchFeedItemsData => {
   const params = useQueryParams();
   const searchParam = params[QueryParamKey.Search];
   const [searchValue, setSearchValue] = useState("");
@@ -27,7 +32,7 @@ export const useSearchFeedItems = (): Return => {
       deleteQueryParam(QueryParamKey.Search);
     }
 
-    dispatch(commonActions.searchFeedItems(value));
+    onSearch(value);
   }, 300);
 
   useEffect(() => {
@@ -36,9 +41,7 @@ export const useSearchFeedItems = (): Return => {
       onChangeSearchValue(searchParam);
     }
 
-    return () => {
-      dispatch(commonActions.resetSearchState());
-    };
+    return onResetSearchState;
   }, []);
 
   const onChangeSearchValue = useCallback((value: string) => {

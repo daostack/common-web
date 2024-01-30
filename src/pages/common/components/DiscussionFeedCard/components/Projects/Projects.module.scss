@@ -14,8 +14,8 @@
   border-radius: 0;
 
   &:hover {
-    --bg-color: var(--secondary-text);
-    --item-text-color: #{$c-shades-white};
+    --bg-color: var(--hover-fill);
+    --item-text-color: var(--primary-text);
   }
 
   @media (hover: none) {
