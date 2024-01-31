@@ -32,7 +32,7 @@ const getStreamNameByFeedItemId = async (
   if (feetItem?.data.type === CommonFeedType.Discussion) {
     const item = await DiscussionService.getDiscussionById(feetItem?.data.id);
     return item?.title;
-  } else (feetItem?.data.type === CommonFeedType.Proposal) {
+  } else if (feetItem?.data.type === CommonFeedType.Proposal) {
     const item = await ProposalService.getProposalById(feetItem?.data.id);
     return item?.discussion?.title;
   }
