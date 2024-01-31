@@ -1,3 +1,4 @@
+import React from "react";
 import { BASE_URL } from "@/shared/constants";
 import { Text } from "@/shared/models";
 import { getCommonPagePath } from "@/shared/utils";
@@ -17,22 +18,27 @@ export const getQueryParam = (path: string, key: string): string | null => {
 export const generateInternalLink = async (text: string): Promise<Text> => {
   const commonPath = text.split("/").pop();
   if (text.startsWith(BASE_URL) && commonPath) {
-    const itemId = getQueryParam(commonPath, ITEM_KEY);
-    const commonId = commonPath.split("?").shift();
+    const [commonId, itemQueryParam] = commonPath.split("?");
+    const itemId = getQueryParam(itemQueryParam, ITEM_KEY);
     if (commonId) {
       const common = await getCommon(commonId);
       if (common?.id && common.name) {
-        return renderLink({
-          to: getCommonPagePath(common?.id, {
-            ...(itemId && { item: itemId }),
-          }),
-          name: `${common.name} `,
-          onClick: () => handleCommonClick(common?.id, common?.rootCommonId),
-          className: styles.internalLink,
-        });
+        return (
+          <>
+            {renderLink({
+              to: getCommonPagePath(common?.id, {
+                ...(itemId && { item: itemId }),
+              }),
+              name: common.name,
+              onClick: () =>
+                handleCommonClick(common?.id, common?.rootCommonId),
+              className: styles.internalLink,
+            })}{" "}
+          </>
+        );
       }
     }
   }
 
-  return text;
+  return `${text} `;
 };
