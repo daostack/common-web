@@ -6,7 +6,7 @@ import { IntermediateCreateProjectPayload } from "@/shared/interfaces";
 import { SpaceAdvancedSettingsIntermediate } from "@/shared/models";
 import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Checkbox } from "../../../Checkbox";
-import { SYNCED_UNSYNCED_OPTIONS } from "./constants";
+import { SYNCING_OPTIONS } from "./constants";
 import styles from "./AdvancedSettingsModal.module.scss";
 
 interface AdvancedSettingsModalProps {
@@ -81,7 +81,7 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                   {circle.selected && (
                     <Dropdown
                       name={`advancedSettings.circles.${index}.synced`}
-                      options={SYNCED_UNSYNCED_OPTIONS}
+                      options={SYNCING_OPTIONS}
                       shouldBeFixed={false}
                       className={styles.dropdown}
                     />

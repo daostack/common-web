@@ -288,6 +288,7 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
           shouldBeUnique: {
             existingNames: existingProjectsNames,
           },
+          isEditing,
         })}
         submitButtonText={isEditing ? "Save changes" : "Create Space"}
         disabled={isLoading}

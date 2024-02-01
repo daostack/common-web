@@ -22,6 +22,7 @@ interface Options {
   notionIntegration?: NotionIntegration | null;
   advancedSettings?: SpaceAdvancedSettingsIntermediate;
   parentCommonName?: string;
+  isEditing?: boolean;
 }
 
 export const getConfiguration = (options: Options): CreationFormItem[] => {
@@ -33,6 +34,7 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     advancedSettings,
     parentCommonName,
     isImageRequired = false,
+    isEditing,
   } = options;
   const type = isProject ? "Space" : "Common";
 
@@ -185,7 +187,10 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
       },
     });
 
-    if (advancedSettings) {
+    /**
+     * We don't support editing roles inheritance in the BE yet.
+     */
+    if (!isEditing && advancedSettings) {
       items.push({
         type: CreationFormItemType.AdvancedSettings,
         props: {

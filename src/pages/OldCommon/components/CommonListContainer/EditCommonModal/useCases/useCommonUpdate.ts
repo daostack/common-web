@@ -62,7 +62,7 @@ const useCommonUpdate = (commonId?: string): Return => {
   const user = useSelector(selectUser());
 
   /**
-   * NOTE that currently we don't support yet updating advnaced settings in the BE.
+   * NOTE that currently we don't support editing roles inheritance in the BE.
    * For now, we don't handle it here.
    */
   const updateCommon = useCallback(

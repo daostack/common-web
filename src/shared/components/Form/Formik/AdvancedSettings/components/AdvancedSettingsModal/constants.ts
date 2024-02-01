@@ -1,6 +1,6 @@
 import { DropdownOption } from "@/shared/components";
 
-export const SYNCED_UNSYNCED_OPTIONS: DropdownOption[] = [
+export const SYNCING_OPTIONS: DropdownOption[] = [
   {
     text: "synced",
     value: true,
