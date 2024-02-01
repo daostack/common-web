@@ -15,12 +15,16 @@ export const renderLink = ({
   name,
   onClick,
   className,
-}: RenderLinkProps): Text => (
-  <NavLink
-    className={className || styles.systemMessageCommonLink}
-    to={to}
-    onClick={onClick}
-  >
-    {name}
-  </NavLink>
-);
+}: RenderLinkProps): Text => {
+  return (
+    <>
+      <NavLink
+        className={className || styles.systemMessageCommonLink}
+        to={to}
+        onClick={onClick}
+      >
+        {name}
+      </NavLink>
+    </>
+  );
+};

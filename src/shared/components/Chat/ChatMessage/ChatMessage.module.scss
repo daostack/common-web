@@ -163,7 +163,7 @@
 }
 
 .internalLink {
-  color: $c-pink-mention-2;
+  color: var(--mention-secondary);
 
   &:hover {
     cursor: pointer;
