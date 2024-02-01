@@ -6,6 +6,10 @@
   font-family: PoppinsSans, sans-serif;
   font-size: $xsmall;
   z-index: $dropdown-z-index;
+
+  &.--open {
+    z-index: $dropdown-z-index + 1;
+  }
 }
 
 .custom-dropdown-wrapper__label-wrapper {

@@ -49,19 +49,18 @@ export const useProjectCreation = (): Return => {
         ]);
         const links = parseLinksForSubmission(creationData.links || []);
 
-        /** TODO: need to improve. This is just for test creation using GovernanceActions.CREATE_SUBCOMMON */
-        const advancedSettingsCircles =
-          creationData.advancedSettings?.circles?.map((circle) => {
-            if (circle.synced) {
-              return {
-                circleId: circle.circleId,
+        const advancedSettingsCirclesPayload =
+          creationData.advancedSettings?.circles
+            ?.filter((circle) => circle.selected)
+            .map((circle) => ({
+              circleId: circle.circleId,
+              ...(circle.synced && {
                 inheritFrom: {
                   governanceId: circle.inheritFrom?.governanceId,
                   circleId: circle.inheritFrom?.circleId,
                 },
-              };
-            } else return {};
-          });
+              }),
+            }));
 
         const payload: CreateProjectPayload = {
           name: creationData.spaceName,
@@ -82,7 +81,7 @@ export const useProjectCreation = (): Return => {
           advancedSettings: {
             permissionGovernanceId:
               creationData.advancedSettings?.permissionGovernanceId,
-            circles: advancedSettingsCircles,
+            circles: advancedSettingsCirclesPayload,
           },
         };
         const createdProject = await ProjectService.createNewProject(

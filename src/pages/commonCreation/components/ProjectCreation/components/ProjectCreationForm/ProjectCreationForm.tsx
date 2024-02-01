@@ -175,13 +175,13 @@ const ProjectCreationForm: FC<ProjectCreationFormProps> = (props) => {
         circles: rootCommonRoles.map((role, index) => {
           return {
             circleId: role.circleId,
-            circleName: role.circleName,
+            circleName: `${role.circleName}s`,
             selected: true,
             synced: false,
             inheritFrom: {
-              governanceId: governance?.id,
+              governanceId: parentGovernanceId,
               circleId: roles[index].circleId,
-              circleName: roles[index].circleName,
+              circleName: `${roles[index].circleName}s`,
             },
           };
         }),

@@ -164,7 +164,9 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
     <>
       <MenuWrapper
         id={dropdownId}
-        className={classNames("custom-dropdown-wrapper", className)}
+        className={classNames("custom-dropdown-wrapper", className, {
+          ["--open"]: isOpen,
+        })}
         onSelection={handleSelection}
         onMenuToggle={handleMenuToggle}
       >

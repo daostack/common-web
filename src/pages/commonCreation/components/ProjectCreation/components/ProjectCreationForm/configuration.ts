@@ -137,7 +137,11 @@ export const getConfiguration = (options: Options): CreationFormItem[] => {
     },
   ];
 
-  if (roles) {
+  /**
+   * For now, if we have advancedSettings we don't show the roles editing section.
+   * It's showen only for root commons since advancedSettings is enabled only for spaces.
+   */
+  if (!advancedSettings && roles) {
     items.push({
       type: CreationFormItemType.Roles,
       props: {

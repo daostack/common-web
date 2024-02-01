@@ -1,8 +1,10 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useMemo, useRef } from "react";
 import { FieldArray, useFormikContext } from "formik";
 import { Dropdown } from "@/shared/components/Form/Formik";
 import { Modal } from "@/shared/components/Modal";
 import { IntermediateCreateProjectPayload } from "@/shared/interfaces";
+import { SpaceAdvancedSettingsIntermediate } from "@/shared/models";
+import { Button, ButtonVariant } from "@/shared/ui-kit";
 import { Checkbox } from "../../../Checkbox";
 import { SYNCED_UNSYNCED_OPTIONS } from "./constants";
 import styles from "./AdvancedSettingsModal.module.scss";
@@ -15,9 +17,7 @@ interface AdvancedSettingsModalProps {
 
 /**
  * TODO
- * 1. fix z-index of dropdown
- * 2. need apply button to keep recent changes, otherwise need to bring back the initial settings.
- * 3. need to understand why after cliking a role in the dropdown, they are duplicated.
+ * 1. need to understand why after cliking a role in the dropdown, they are duplicated.
  */
 
 const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
@@ -26,23 +26,41 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
     useFormikContext<IntermediateCreateProjectPayload>();
   const advancedSettings = values.advancedSettings;
 
-  //const initialValues = useMemo(() => (values.advancedSettings), []);
-
-  if (!advancedSettings) {
-    return <span>Error</span>;
-  }
+  const prevFormDataRef = useRef<SpaceAdvancedSettingsIntermediate | undefined>(
+    values.advancedSettings,
+  );
 
   const inheritedCircles = useMemo(
     () =>
-      advancedSettings.circles?.map((circle) => ({
+      advancedSettings?.circles?.map((circle) => ({
         text: circle.inheritFrom?.circleName,
         value: circle.inheritFrom,
       })),
-    [advancedSettings.circles],
+    [advancedSettings?.circles],
   );
 
+  if (!advancedSettings) {
+    return <span>Error loading advanced settings.</span>;
+  }
+
+  const cancel = () => {
+    setFieldValue("advancedSettings", prevFormDataRef.current);
+    onClose();
+  };
+
+  const apply = () => {
+    prevFormDataRef.current = values.advancedSettings;
+    onClose();
+  };
+
   return (
-    <Modal title="Advanced settings" isShowing={isOpen} onClose={onClose}>
+    <Modal
+      title="Advanced settings"
+      isShowing={isOpen}
+      onClose={cancel}
+      styles={{ header: styles.modalHeader }}
+    >
+      <span>Roles</span>
       <FieldArray
         name="advancedSettings"
         render={() => (
@@ -54,6 +72,10 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                     id={`advancedSettings.circles.${index}.selected`}
                     name={`advancedSettings.circles.${index}.selected`}
                     label={circle.circleName}
+                    disabled={
+                      advancedSettings.circles &&
+                      index === advancedSettings.circles?.length - 1
+                    }
                   />
 
                   {circle.selected && (
@@ -67,7 +89,7 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
 
                   {circle.selected && circle.synced && (
                     <div className={styles.syncedWrapper}>
-                      <b>wite space</b>
+                      <b>with space</b>
                       <span className={styles.parentSpaceNameLabel}>
                         {parentCommonName}
                       </span>
@@ -83,6 +105,14 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
                 </div>
               );
             })}
+
+            <Button
+              onClick={apply}
+              variant={ButtonVariant.PrimaryPink}
+              className={styles.applyButton}
+            >
+              Apply
+            </Button>
           </>
         )}
       />
