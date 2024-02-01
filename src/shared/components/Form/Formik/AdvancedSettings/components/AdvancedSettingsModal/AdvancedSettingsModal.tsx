@@ -16,8 +16,7 @@ interface AdvancedSettingsModalProps {
 }
 
 /**
- * TODO
- * 1. need to understand why after cliking a role in the dropdown, they are duplicated.
+ * TODO: need to handle hierarchy
  */
 
 const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
@@ -32,11 +31,12 @@ const AdvancedSettingsModal: FC<AdvancedSettingsModalProps> = (props) => {
 
   const inheritedCircles = useMemo(
     () =>
-      advancedSettings?.circles?.map((circle) => ({
+      advancedSettings?.circles?.map((circle, index) => ({
         text: circle.inheritFrom?.circleName,
         value: circle.inheritFrom,
+        key: String(index),
       })),
-    [advancedSettings?.circles],
+    [],
   );
 
   if (!advancedSettings) {

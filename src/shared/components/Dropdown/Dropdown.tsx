@@ -43,6 +43,7 @@ export interface Option {
   searchText?: string;
   value: unknown;
   className?: string;
+  key?: string;
 }
 
 export enum ElementDropdownMenuItems {
@@ -251,7 +252,7 @@ const Dropdown: ForwardRefRenderFunction<DropdownRef, DropdownProps> = (
             >
               {options.map((option) => (
                 <MenuItem
-                  key={String(option.value)}
+                  key={String(option.key) || String(option.value)}
                   className={classNames(
                     "custom-dropdown-wrapper__menu-item",
                     styles?.menuItem,
