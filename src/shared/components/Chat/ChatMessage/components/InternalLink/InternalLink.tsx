@@ -5,22 +5,22 @@ import {
 } from "react-linkify";
 import classNames from "classnames";
 import { parseMessageLink, InternalLinkData } from "@/shared/utils";
-import styles from "./ChatMessageLinkify.module.scss";
+import styles from "./InternalLink.module.scss";
 
-interface ChatMessageLinkifyProps {
+interface InternalLinkProps {
   className?: string;
   onInternalLinkClick?: (data: InternalLinkData) => void;
+  link: string;
 }
 
-const ChatMessageLinkify: FC<ChatMessageLinkifyProps> = (props) => {
-  const { className, onInternalLinkClick, children,} = props;
+export const InternalLink: FC<InternalLinkProps> = (props) => {
+  const { className, onInternalLinkClick, children, link } = props;
   const componentDecorator: ReactLinkifyProps["componentDecorator"] =
     useCallback(
-      (decoratedHref, decoratedText, key) => {
+      (_, decoratedText, key) => {
         const linkClassName = classNames(styles.link, className);
-        const parsedLinkData = parseMessageLink(decoratedHref);
+        const parsedLinkData = parseMessageLink(link);
 
-        console.log("---parsed", parsedLinkData);
         if (parsedLinkData && onInternalLinkClick) {
           return (
             <a
@@ -37,7 +37,7 @@ const ChatMessageLinkify: FC<ChatMessageLinkifyProps> = (props) => {
           <a
             key={key}
             className={linkClassName}
-            href={decoratedHref}
+            href={link}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -54,5 +54,3 @@ const ChatMessageLinkify: FC<ChatMessageLinkifyProps> = (props) => {
     </ReactLinkify>
   );
 };
-
-export default ChatMessageLinkify;

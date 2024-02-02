@@ -15,7 +15,6 @@ import { debounce, delay, omit } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService, DiscussionMessageService, FileService } from "@/services";
-import { InternalLinkData } from "@/shared/components";
 import {
   ChatType,
   DiscussionMessageOwnerType,
@@ -52,6 +51,7 @@ import {
   countTextEditorEmojiElements,
 } from "@/shared/ui-kit";
 import { checkUncheckedItemsInTextEditorValue } from "@/shared/ui-kit/TextEditor/utils";
+import { InternalLinkData } from "@/shared/utils";
 import {
   emptyFunction,
   getUserName,
@@ -182,6 +182,7 @@ export default function ChatComponent({
     },
     onFeedItemClick,
     onUserClick,
+    onInternalLinkClick,
   });
   const {
     chatMessagesData,

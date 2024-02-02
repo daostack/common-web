@@ -45,9 +45,10 @@ import {
   isRtlWithNoMentions,
 } from "@/shared/ui-kit/TextEditor/utils";
 import { StaticLinkType, getUserName } from "@/shared/utils";
+import { InternalLinkData } from "@/shared/utils";
 import { convertBytes } from "@/shared/utils/convertBytes";
 import { EditMessageInput } from "../EditMessageInput";
-import { ChatMessageLinkify, InternalLinkData, Time } from "./components";
+import { ChatMessageLinkify, Time } from "./components";
 import { ChatMessageContext, ChatMessageContextValue } from "./context";
 import { getTextFromTextEditorString } from "./utils";
 import styles from "./ChatMessage.module.scss";
@@ -161,6 +162,7 @@ export default function DMChatMessage({
           directParent,
           onUserClick,
           onFeedItemClick,
+          onInternalLinkClick,
         });
 
         setMessageText(parsedText);
@@ -196,6 +198,7 @@ export default function DMChatMessage({
         directParent,
         onUserClick,
         onFeedItemClick,
+        onInternalLinkClick,
       });
 
       setReplyMessageText(parsedText);
@@ -208,6 +211,7 @@ export default function DMChatMessage({
     onUserClick,
     discussionMessageUserId,
     userId,
+    onInternalLinkClick,
   ]);
 
   const handleLongPress = () => {

@@ -3,11 +3,18 @@ import { DiscussionService, ProposalService } from "@/services";
 import CommonFeed from "@/services/CommonFeed";
 import { BASE_URL } from "@/shared/constants";
 import { CommonFeedType, Text } from "@/shared/models";
+import { InternalLinkData } from "@/shared/utils";
 import { getCommonPagePath } from "@/shared/utils";
+import { parseMessageLink } from "@/shared/utils";
 import { getCommon } from "./getCommon";
 import { handleCommonClick } from "./handleCommonClick";
 import { renderLink } from "./renderLink";
 import styles from "../ChatMessage.module.scss";
+
+interface GenerateInternalLinkProps {
+  text: string;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
+}
 
 const ITEM_KEY = "item";
 
@@ -38,7 +45,10 @@ const getStreamNameByFeedItemId = async (
   }
 };
 
-export const generateInternalLink = async (text: string): Promise<Text> => {
+export const generateInternalLink = async ({
+  text,
+  onInternalLinkClick,
+}: GenerateInternalLinkProps): Promise<Text> => {
   const commonPath = text.split("/").pop();
   if (text.startsWith(BASE_URL) && commonPath) {
     const [commonId, itemQueryParam] = commonPath.split("?");
@@ -55,8 +65,18 @@ export const generateInternalLink = async (text: string): Promise<Text> => {
                 ...(itemId && { item: itemId }),
               }),
               name: itemTitle ?? common.name,
-              onClick: () =>
-                handleCommonClick(common?.id, common?.rootCommonId),
+              onClick: () => {
+                const parsedLinkData = parseMessageLink(text);
+                console.log(
+                  "--parsedLinkData",
+                  JSON.stringify(parsedLinkData),
+                  "---onInternalLinkClick",
+                  onInternalLinkClick,
+                );
+                onInternalLinkClick &&
+                  parsedLinkData &&
+                  onInternalLinkClick(parsedLinkData);
+              },
               className: styles.internalLink,
             })}{" "}
           </>
