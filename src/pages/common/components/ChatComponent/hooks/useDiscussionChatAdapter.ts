@@ -60,7 +60,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
 
   const fetchDiscussionUsers = useCallback(
     (commonId: string, circleVisibility?: string[]) => {
-      fetchCommonMembers(commonId, circleVisibility, true);
+      fetchCommonMembers(commonId, circleVisibility, false);
     },
     [fetchCommonMembers],
   );
