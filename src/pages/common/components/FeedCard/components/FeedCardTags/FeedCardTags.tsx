@@ -50,18 +50,12 @@ export const FeedCardTags: FC<FeedCardTagsProps> = (props) => {
         </div>
       )}
       {seenOnce && !unreadMessages && isPinned && (
-        <PinIcon
-          className={classNames(styles.pin, {
-            [styles.pinActive]: isActive,
-          })}
-        />
+        <PinIcon className={classNames(styles.pin)} />
       )}
       {hasUnseenMention && <div className={styles.hasUnseenMention}>@</div>}
       {isFollowing && (
         <StarIcon
-          className={classNames(styles.starIcon, {
-            [styles.starActive]: isActive,
-          })}
+          className={classNames(styles.starIcon)}
           stroke="currentColor"
         />
       )}

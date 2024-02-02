@@ -37,6 +37,6 @@
 .mention {
   vertical-align: baseline;
   font-size: inherit;
-  color: $c-pink-mention;
+  color: var(--primary-fill);
   white-space: pre-wrap;
 }

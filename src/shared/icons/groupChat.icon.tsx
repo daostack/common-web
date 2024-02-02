@@ -14,7 +14,7 @@ const GroupChatIcon: FC<GroupChatIconProps> = ({ className }) => (
     xmlns="http://www.w3.org/2000/svg"
   >
     <rect y="0.5" width="40" height="40" rx="20" fill="#DDDDDD" />
-    <g clip-path="url(#clip0_11827_31246)">
+    <g clipPath="url(#clip0_11827_31246)">
       <path
         d="M20.4725 19.3477C16.9225 19.3477 14.0352 22.7649 14.0352 24.9519C14.0352 27.1389 16.9186 28.4824 20.4725 28.4824C24.0265 28.4824 26.9138 27.1389 26.9138 24.9675C26.9138 22.7961 24.0501 19.3477 20.4725 19.3477Z"
         fill="#464853"

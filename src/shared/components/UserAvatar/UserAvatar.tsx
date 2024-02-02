@@ -1,5 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
+import { ThemeColors } from "@/shared/constants";
+import useThemeColor from "@/shared/hooks/useThemeColor";
 import {
   FilePrefix,
   ResizeType,
@@ -31,7 +33,11 @@ const UserAvatar: FC<UserAvatarProps> = (props) => {
     onClick,
     useResizedFile = true,
   } = props;
-  const randomUserAvatarURL = getRandomUserAvatarURL(nameForRandomAvatar);
+  const { getThemeColor } = useThemeColor();
+  const randomUserAvatarURL = getRandomUserAvatarURL(
+    nameForRandomAvatar,
+    getThemeColor(ThemeColors.tertiaryText),
+  );
   const userAvatarURL = photoURL || randomUserAvatarURL;
   const userAvatarAlt = `${userName || "User"}'s avatar`;
   const imageClassName = classNames("general-user-avatar", className);

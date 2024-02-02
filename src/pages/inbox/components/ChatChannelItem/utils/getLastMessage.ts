@@ -18,11 +18,11 @@ export const getLastMessage = (
   const hasText = !checkIsTextEditorValueEmpty(parsedMessageContent);
 
   return prependTextInTextEditorValue(
-    getLastMessageIconWithText({
+    `${lastMessage.ownerName}: ${getLastMessageIconWithText({
       hasText,
       hasImages: lastMessage.hasImages,
       hasFiles: lastMessage.hasFiles,
-    }),
+    })}`,
     parsedMessageContent,
   );
 };

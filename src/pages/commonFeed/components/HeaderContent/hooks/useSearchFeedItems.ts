@@ -9,7 +9,7 @@ interface Options {
   onResetSearchState: () => void;
 }
 
-interface Return {
+export interface SearchFeedItemsData {
   searchValue: string;
   searchInputToggle: ToggleState;
   onChangeSearchValue: (value: string) => void;
@@ -19,7 +19,7 @@ interface Return {
 export const useSearchFeedItems = ({
   onSearch,
   onResetSearchState,
-}: Options): Return => {
+}: Options): SearchFeedItemsData => {
   const params = useQueryParams();
   const searchParam = params[QueryParamKey.Search];
   const [searchValue, setSearchValue] = useState("");

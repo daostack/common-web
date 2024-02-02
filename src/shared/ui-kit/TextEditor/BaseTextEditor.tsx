@@ -124,6 +124,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
   const [shouldFocusTarget, setShouldFocusTarget] = useState(false);
 
   const [isRtlLanguage, setIsRtlLanguage] = useState(false);
+
   useDebounce(
     () => {
       setIsRtlLanguage(isRtlText(EditorSlate.string(editor, [])));
@@ -288,6 +289,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
     }
   };
 
+
   const handleOnChange = useCallback(
     (updatedContent) => {
       // Prevent update for cursor clicks
@@ -299,7 +301,7 @@ const BaseTextEditor: FC<TextEditorProps> = (props) => {
 
       handleOnChangeSelection(selection);
     },
-    [onChange, value, handleOnChangeSelection],
+    [onChange, value],
   );
 
   return (

@@ -1,10 +1,7 @@
 import { ApiEndpoint, DocChange } from "@/shared/constants";
 import { UnsubscribeFunction } from "@/shared/interfaces";
 import { CreateDiscussionMessageDto } from "@/shared/interfaces/api/discussionMessages";
-import {
-  Collection,
-  DiscussionMessage
-} from "@/shared/models";
+import { Collection, DiscussionMessage } from "@/shared/models";
 import {
   convertObjectDatesToFirestoreTimestamps,
   firestoreDataConverter,

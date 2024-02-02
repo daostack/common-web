@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { ChatService } from "@/services";
+import { FirestoreDataSource } from "@/shared/constants";
 import { useIsMounted, useLoadingState } from "@/shared/hooks";
 import { ChatChannel } from "@/shared/models";
 
@@ -38,6 +39,7 @@ export const useDMUserChatChannel = (): Return => {
         dmUserChatChannel = await ChatService.getDMUserChatChannel(
           userId,
           dmUserIds,
+          FirestoreDataSource.Cache,
         );
 
         if (!dmUserChatChannel) {

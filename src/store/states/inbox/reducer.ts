@@ -626,6 +626,7 @@ export const reducer = createReducer<InboxState, Action>(INITIAL_INBOX_STATE)
   .handleAction(actions.resetInboxItems, (state) =>
     produce(state, (nextState) => {
       nextState.items = { ...INITIAL_INBOX_ITEMS };
+      nextState.searchState.items = null;
       nextState.sharedFeedItemId = null;
       nextState.sharedItem = null;
       nextState.chatChannelItems = [];

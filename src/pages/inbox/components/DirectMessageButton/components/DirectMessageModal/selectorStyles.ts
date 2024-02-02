@@ -50,12 +50,10 @@ export const selectorStyles = (
     }),
     multiValue: (provided) => ({
       ...provided,
-      backgroundColor: getThemeColor(ThemeColors.quaternaryFill),
-      color: getThemeColor(ThemeColors.primaryText),
+      backgroundColor: getThemeColor(ThemeColors.quinaryFill),
     }),
     multiValueGeneric: (provided) => ({
       ...provided,
-      color: "unset",
     }),
     multiValueRemove: (provided) => ({
       ...provided,

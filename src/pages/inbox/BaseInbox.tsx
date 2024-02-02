@@ -22,6 +22,7 @@ import { useRoutesContext } from "@/shared/contexts";
 import { ChatChannelToDiscussionConverter } from "@/shared/converters";
 import { useQueryParams } from "@/shared/hooks";
 import { useInboxItems } from "@/shared/hooks/useCases";
+import { useIsTabletView } from "@/shared/hooks/viewport";
 import { RightArrowThinIcon } from "@/shared/icons";
 import {
   ChatChannelFeedLayoutItemProps,
@@ -31,7 +32,7 @@ import {
   FeedLayoutRef,
 } from "@/shared/interfaces";
 import { CommonSidenavLayoutTabs } from "@/shared/layouts";
-import { CommonFeed } from "@/shared/models";
+import { ChatChannel, CommonFeed } from "@/shared/models";
 import { Loader, NotFound, PureCommonTopNavigation } from "@/shared/ui-kit";
 import {
   inboxActions,
@@ -67,6 +68,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { getCommonPagePath } = useRoutesContext();
+  const isTabletView = useIsTabletView();
   const [feedLayoutRef, setFeedLayoutRef] = useState<FeedLayoutRef | null>(
     null,
   );
@@ -142,7 +144,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
   };
 
   const fetchMoreInboxItems = () => {
-    if (hasMoreInboxItems && !isSearchingInboxItems) {
+    if (hasMoreInboxItems && !isSearchingInboxItems && !areInboxItemsLoading) {
       fetchInboxItems();
     }
   };
@@ -165,6 +167,12 @@ const InboxPage: FC<InboxPageProps> = (props) => {
           isRemoved,
         }),
       );
+
+      if (!isRemoved && item.data.lastMessage?.ownerId === userId) {
+        document
+          .getElementById("feedLayoutWrapper")
+          ?.scrollIntoView({ behavior: "smooth" });
+      }
     },
     [dispatch],
   );
@@ -212,6 +220,15 @@ const InboxPage: FC<InboxPageProps> = (props) => {
       );
     },
     [history.push, getCommonPagePath],
+  );
+
+  const handleChatChannelCreate = useCallback(
+    (chatChannel: ChatChannel) => {
+      if (!isTabletView) {
+        dispatch(inboxActions.addChatChannelItem(chatChannel));
+      }
+    },
+    [dispatch, isTabletView],
   );
 
   useEffect(() => {
@@ -303,6 +320,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         loading={areInboxItemsLoading || isSearchingInboxItems || !user}
         shouldHideContent={!user}
         batchNumber={batchNumber}
+        isPreloadDisabled={Boolean(searchValue)}
         onFetchNext={fetchMoreInboxItems}
         renderFeedItemBaseContent={renderFeedItemBaseContent}
         renderChatChannelItem={renderChatChannelItem}
@@ -316,6 +334,7 @@ const InboxPage: FC<InboxPageProps> = (props) => {
         onActiveItemDataChange={onActiveItemDataChange}
         onMessagesAmountEmptinessToggle={handleMessagesAmountEmptinessToggle}
         onFeedItemSelect={handleFeedItemSelect}
+        onChatChannelCreate={handleChatChannelCreate}
         outerStyles={feedLayoutOuterStyles}
         settings={feedLayoutSettings}
         onPullToRefresh={fetchInboxItems}
