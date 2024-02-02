@@ -34,11 +34,17 @@ export const selectFeedStateByCommonId =
   (commonId: string) => (state: AppState) =>
     state.cache.feedByCommonIdStates[commonId] || null;
 
+export const selectFeedItemUserMetadataStates = (state: AppState) =>
+  state.cache.feedItemUserMetadataStates;
+
 export const selectFeedItemUserMetadata =
   (info: { commonId: string; userId: string; feedObjectId: string }) =>
   (state: AppState) =>
     state.cache.feedItemUserMetadataStates[getFeedItemUserMetadataKey(info)] ||
     null;
+
+export const selectChatChannelUserStatusStates = (state: AppState) =>
+  state.cache.chatChannelUserStatusStates;
 
 export const selectChatChannelUserStatus =
   (info: { userId: string; chatChannelId: string }) => (state: AppState) =>
