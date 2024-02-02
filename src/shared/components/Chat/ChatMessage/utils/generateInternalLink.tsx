@@ -7,7 +7,6 @@ import { InternalLinkData } from "@/shared/utils";
 import { getCommonPagePath } from "@/shared/utils";
 import { parseMessageLink } from "@/shared/utils";
 import { getCommon } from "./getCommon";
-import { handleCommonClick } from "./handleCommonClick";
 import { renderLink } from "./renderLink";
 import styles from "../ChatMessage.module.scss";
 
