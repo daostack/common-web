@@ -20,7 +20,6 @@ const ChatMessageLinkify: FC<ChatMessageLinkifyProps> = (props) => {
         const linkClassName = classNames(styles.link, className);
         const parsedLinkData = parseMessageLink(decoratedHref);
 
-        console.log("---parsed", parsedLinkData);
         if (parsedLinkData && onInternalLinkClick) {
           return (
             <a

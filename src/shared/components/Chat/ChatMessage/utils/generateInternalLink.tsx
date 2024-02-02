@@ -67,12 +67,6 @@ export const generateInternalLink = async ({
               name: itemTitle ?? common.name,
               onClick: () => {
                 const parsedLinkData = parseMessageLink(text);
-                console.log(
-                  "--parsedLinkData",
-                  JSON.stringify(parsedLinkData),
-                  "---onInternalLinkClick",
-                  onInternalLinkClick,
-                );
                 onInternalLinkClick &&
                   parsedLinkData &&
                   onInternalLinkClick(parsedLinkData);
