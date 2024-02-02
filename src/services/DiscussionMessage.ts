@@ -104,7 +104,6 @@ class DiscussionMessageService {
       lastVisibleDocument: firebase.firestore.QueryDocumentSnapshot<DiscussionMessage>,
     ) => void,
   ): UnsubscribeFunction => {
-    console.log('---LOAD_MESSAGES_COUNT',LOAD_MESSAGES_COUNT);
     let query = this.getDiscussionMessageCollection()
       .where("discussionId", "==", discussionId)
       .limit(LOAD_MESSAGES_COUNT)
@@ -133,7 +132,8 @@ class DiscussionMessageService {
     const discussionMessages = await this.getDiscussionMessageCollection()
       .where("discussionId", "==", discussionId)
       .limit(LOAD_MESSAGES_COUNT)
-      .orderBy("createdAt", "desc").get();
+      .orderBy("createdAt", "desc")
+      .get();
 
     return transformFirebaseDataList<DiscussionMessage>(discussionMessages);
   };
