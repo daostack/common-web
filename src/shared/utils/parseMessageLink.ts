@@ -2,12 +2,12 @@ import { parse } from "query-string";
 import { BASE_URL, ROUTE_PATHS } from "@/shared/constants";
 import { matchOneOfRoutes } from "@/shared/utils";
 
-export interface ParseMessageLinkData {
+export interface InternalLinkData {
   pathname: string;
   params: Record<string, string>;
 }
 
-export const parseMessageLink = (url?: string): ParseMessageLinkData | null => {
+export const parseMessageLink = (url?: string): InternalLinkData | null => {
   if (!url) {
     return null;
   }

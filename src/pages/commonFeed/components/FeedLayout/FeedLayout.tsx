@@ -31,7 +31,6 @@ import {
   ChatItem,
 } from "@/pages/common/components/ChatComponent";
 import { ChatContext } from "@/pages/common/components/ChatComponent/context";
-import { InternalLinkData } from "@/shared/components";
 import {
   InboxItemType,
   LOADER_APPEARANCE_DELAY,
@@ -63,6 +62,7 @@ import {
   User,
 } from "@/shared/models";
 import { InfiniteScroll, Loader, TextEditorValue } from "@/shared/ui-kit";
+import { InternalLinkData } from "@/shared/utils";
 import {
   addQueryParam,
   deleteQueryParam,

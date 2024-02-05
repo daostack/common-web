@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
-import { parseMessageLink } from "@/shared/components/Chat/ChatMessage/components/ChatMessageLinkify/utils";
 import useInternalLink from "@/shared/hooks/useInternalLink";
+import { parseMessageLink } from "@/shared/utils";
 import { LinkElement } from "../../../../types";
 import { ElementAttributes } from "../../types";
 import { InlineChromiumBugfix } from "../InlineChromiumBugfix";

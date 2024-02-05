@@ -14,10 +14,10 @@ import { selectUser } from "@/pages/Auth/store/selectors";
 import { DiscussionMessageService } from "@/services";
 import {
   ChatMessage,
-  InternalLinkData,
   DMChatMessage,
   Transition,
 } from "@/shared/components";
+import { InternalLinkData } from "@/shared/utils";
 import {
   ChatType,
   QueryParamKey,
