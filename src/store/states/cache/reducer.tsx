@@ -1,7 +1,10 @@
 import produce from "immer";
 import { unionBy, uniqBy } from "lodash";
 import { ActionType, createReducer } from "typesafe-actions";
-import { getChatChannelUserStatusKey } from "@/shared/constants";
+import {
+  getChatChannelUserStatusKey,
+  getCommonMemberStateKey,
+} from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import * as actions from "./actions";
 import { CacheState } from "./types";
@@ -19,6 +22,7 @@ export const INITIAL_CACHE_STATE: CacheState = {
   feedByCommonIdStates: {},
   feedItemUserMetadataStates: {},
   chatChannelUserStatusStates: {},
+  commonMemberByUserAndCommonIdsStates: {},
 };
 
 export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
@@ -228,4 +232,18 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
         data: updatedDiscussionMessages,
       };
     }),
+  )
+  .handleAction(
+    actions.updateCommonMemberStateByUserAndCommonIds,
+    (state, { payload }) =>
+      produce(state, (nextState) => {
+        const { userId, commonId, state } = payload;
+
+        nextState.commonMemberByUserAndCommonIdsStates[
+          getCommonMemberStateKey({
+            userId,
+            commonId,
+          })
+        ] = { ...state };
+      }),
   );

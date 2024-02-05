@@ -1,4 +1,7 @@
-import { getChatChannelUserStatusKey } from "@/shared/constants";
+import {
+  getChatChannelUserStatusKey,
+  getCommonMemberStateKey,
+} from "@/shared/constants";
 import { getFeedItemUserMetadataKey } from "@/shared/constants/getFeedItemUserMetadataKey";
 import { AppState } from "@/shared/interfaces";
 
@@ -50,4 +53,10 @@ export const selectChatChannelUserStatus =
   (info: { userId: string; chatChannelId: string }) => (state: AppState) =>
     state.cache.chatChannelUserStatusStates[
       getChatChannelUserStatusKey(info)
+    ] || null;
+
+export const selectCommonMemberStateByUserAndCommonIds =
+  (info: { userId: string; commonId: string }) => (state: AppState) =>
+    state.cache.commonMemberByUserAndCommonIdsStates[
+      getCommonMemberStateKey(info)
     ] || null;

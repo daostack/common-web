@@ -97,6 +97,9 @@ export const cacheTransform = createTransform(
     chatChannelUserStatusStates: clearNonFinishedStates(
       inboundState.chatChannelUserStatusStates,
     ),
+    commonMemberByUserAndCommonIdsStates: clearNonFinishedStates(
+      inboundState.commonMemberByUserAndCommonIdsStates,
+    ),
   }),
   (outboundState: CacheState) => outboundState,
   { whitelist: ["cache"] },

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CommonMemberEventEmitter,
   CommonMemberEvent,
@@ -20,6 +20,10 @@ import {
   generateCirclesDataForCommonMember,
   isGeneralError,
 } from "@/shared/utils";
+import {
+  cacheActions,
+  selectCommonMemberStateByUserAndCommonIds,
+} from "@/store/states";
 import { CommonService, GovernanceService, Logger } from "../../../services";
 
 interface Options {
@@ -31,6 +35,11 @@ interface Options {
 }
 
 type State = LoadingState<(CommonMember & CirclesPermissions) | null>;
+
+interface IdentificationInfo {
+  userId: string;
+  commonId: string;
+}
 
 interface Return extends State {
   fetchCommonMember: (
@@ -45,6 +54,12 @@ interface Return extends State {
   missingCirclesError: boolean;
 }
 
+const DEFAULT_STATE: State = {
+  loading: false,
+  fetched: false,
+  data: null,
+};
+
 export const useCommonMember = (options: Options = {}): Return => {
   const {
     shouldAutoReset = true,
@@ -52,6 +67,7 @@ export const useCommonMember = (options: Options = {}): Return => {
     commonId,
     governanceCircles,
   } = options;
+  const dispatch = useDispatch();
   const [state, setState] = useState<State>({
     loading: false,
     fetched: false,
@@ -60,6 +76,20 @@ export const useCommonMember = (options: Options = {}): Return => {
   const [missingCirclesError, setMissingCirclesError] = useState(false);
   const user = useSelector(selectUser());
   const userId = options.userId || user?.uid;
+  const [identificationInfo, setIdentificationInfo] =
+    useState<IdentificationInfo | null>(
+      userId && commonId ? { userId, commonId } : null,
+    );
+  const identificationInfoRef = useRef<IdentificationInfo | null>(
+    identificationInfo,
+  );
+  identificationInfoRef.current = identificationInfo;
+  const commonMemberState =
+    useSelector(
+      selectCommonMemberStateByUserAndCommonIds(
+        identificationInfo || { userId: "", commonId: "" },
+      ),
+    ) || DEFAULT_STATE;
   const commonMemberId = state.data?.id;
 
   const fetchCommonMember = useCallback(
@@ -79,6 +109,7 @@ export const useCommonMember = (options: Options = {}): Return => {
         });
         return;
       }
+      setIdentificationInfo({ userId, commonId });
 
       setState({
         loading: true,
@@ -94,8 +125,15 @@ export const useCommonMember = (options: Options = {}): Return => {
             (await CommonService.getCommonMemberByUserId(commonId, userId)),
         ]);
 
+        if (
+          identificationInfoRef.current?.commonId !== commonId ||
+          identificationInfoRef.current?.userId !== userId
+        ) {
+          return;
+        }
+
         if (governance && commonMember) {
-          setState({
+          const finalState: State = {
             loading: false,
             fetched: true,
             data: {
@@ -105,13 +143,36 @@ export const useCommonMember = (options: Options = {}): Return => {
                 commonMember.circleIds,
               ),
             },
-          });
+          };
+          setState(finalState);
+          dispatch(
+            cacheActions.updateCommonMemberStateByUserAndCommonIds({
+              userId,
+              commonId,
+              state: finalState,
+            }),
+          );
         } else {
-          setState({
+          if (
+            identificationInfoRef.current?.commonId !== commonId ||
+            identificationInfoRef.current?.userId !== userId
+          ) {
+            return;
+          }
+
+          const finalState = {
             loading: false,
             fetched: true,
             data: null,
-          });
+          };
+          setState(finalState);
+          dispatch(
+            cacheActions.updateCommonMemberStateByUserAndCommonIds({
+              userId,
+              commonId,
+              state: finalState,
+            }),
+          );
         }
       } catch (e) {
         Logger.error({ state, e });
@@ -214,11 +275,19 @@ export const useCommonMember = (options: Options = {}): Return => {
               };
             }
 
-            setState({
+            const finalState = {
               loading: false,
               fetched: true,
               data,
-            });
+            };
+            setState(finalState);
+            dispatch(
+              cacheActions.updateCommonMemberStateByUserAndCommonIds({
+                userId,
+                commonId,
+                state: finalState,
+              }),
+            );
           } catch (err) {
             if (
               isGeneralError(err) &&
@@ -235,7 +304,7 @@ export const useCommonMember = (options: Options = {}): Return => {
   }, [withSubscription, commonId, userId, governanceCircles]);
 
   return {
-    ...state,
+    ...(state.fetched ? state : commonMemberState),
     fetchCommonMember,
     setCommonMember,
     resetCommonMember,
