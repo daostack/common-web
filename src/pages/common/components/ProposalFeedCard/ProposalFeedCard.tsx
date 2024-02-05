@@ -20,6 +20,7 @@ import {
   useFeedItemUserMetadata,
   usePreloadDiscussionMessagesById,
   useProposalById,
+  useUpdateFeedItemSeenState,
   useUserById,
 } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
@@ -194,6 +195,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
       commonId,
       discussionId: discussion?.id,
     });
+    const { markFeedItemAsSeen, markFeedItemAsUnseen } =
+      useUpdateFeedItemSeenState();
     const menuItems = useMenuItems(
       {
         commonId,
@@ -210,6 +213,8 @@ const ProposalFeedCard = forwardRef<FeedItemRef, ProposalFeedCardProps>(
         report: () => {},
         share: () => onShareModalOpen(),
         remove: onProposalDeleteModalOpen,
+        markFeedItemAsSeen,
+        markFeedItemAsUnseen,
       },
     );
     const cardTitle = discussion?.title;

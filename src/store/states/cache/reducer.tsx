@@ -152,6 +152,21 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
       ] = { ...state };
     }),
   )
+  .handleAction(actions.updateFeedItemUserSeenState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { commonId, userId, feedObjectId, seen } = payload;
+      const key = getFeedItemUserMetadataKey({
+        commonId,
+        userId,
+        feedObjectId,
+      });
+      const state = nextState.feedItemUserMetadataStates[key]?.data;
+
+      if (state) {
+        state.seen = seen;
+      }
+    }),
+  )
   .handleAction(actions.updateChatChannelUserStatus, (state, { payload }) =>
     produce(state, (nextState) => {
       const { userId, chatChannelId, state } = payload;
@@ -162,6 +177,20 @@ export const reducer = createReducer<CacheState, Action>(INITIAL_CACHE_STATE)
           chatChannelId,
         })
       ] = { ...state };
+    }),
+  )
+  .handleAction(actions.updateChatChannelUserSeenState, (state, { payload }) =>
+    produce(state, (nextState) => {
+      const { chatChannelId, userId, seen } = payload;
+      const key = getChatChannelUserStatusKey({
+        chatChannelId,
+        userId,
+      });
+      const state = nextState.chatChannelUserStatusStates[key]?.data;
+
+      if (state) {
+        state.seen = seen;
+      }
     }),
   )
   .handleAction(

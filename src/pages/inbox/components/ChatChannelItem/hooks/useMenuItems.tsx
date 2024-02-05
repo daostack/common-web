@@ -1,12 +1,20 @@
 import React from "react";
-import { ChatService } from "@/services";
 import { Message3Icon } from "@/shared/icons";
 import { ContextMenuItem as Item } from "@/shared/interfaces";
 import { ChatChannelMenuItem } from "../constants";
 import { getAllowedItems, Options as GetAllowedItemsOptions } from "../utils";
 
-export const useMenuItems = (options: GetAllowedItemsOptions): Item[] => {
+interface Actions {
+  markChatChannelAsSeen: (chatChannelId: string) => void;
+  markChatChannelAsUnseen: (chatChannelId: string) => void;
+}
+
+export const useMenuItems = (
+  options: GetAllowedItemsOptions,
+  actions: Actions,
+): Item[] => {
   const { chatChannelUserStatus } = options;
+  const { markChatChannelAsSeen, markChatChannelAsUnseen } = actions;
   const items: Item[] = [
     {
       id: ChatChannelMenuItem.MarkUnread,
@@ -16,9 +24,7 @@ export const useMenuItems = (options: GetAllowedItemsOptions): Item[] => {
           return;
         }
 
-        await ChatService.markChatChannelAsUnseen(
-          chatChannelUserStatus.chatChannelId,
-        );
+        markChatChannelAsUnseen(chatChannelUserStatus.chatChannelId);
       },
       icon: <Message3Icon />,
     },
@@ -30,9 +36,7 @@ export const useMenuItems = (options: GetAllowedItemsOptions): Item[] => {
           return;
         }
 
-        await ChatService.markChatChannelAsSeen(
-          chatChannelUserStatus.chatChannelId,
-        );
+        markChatChannelAsSeen(chatChannelUserStatus.chatChannelId);
       },
       icon: <Message3Icon />,
     },
