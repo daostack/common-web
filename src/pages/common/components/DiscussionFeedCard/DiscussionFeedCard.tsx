@@ -20,7 +20,6 @@ import {
   useDiscussionById,
   useFeedItemUserMetadata,
   usePreloadDiscussionMessagesById,
-  useUpdateFeedItemSeenState,
   useUserById,
 } from "@/shared/hooks/useCases";
 import { FeedLayoutItemChangeData } from "@/shared/interfaces";
@@ -167,8 +166,6 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
       commonId,
       discussionId: discussion?.id,
     });
-    const { markFeedItemAsSeen, markFeedItemAsUnseen } =
-      useUpdateFeedItemSeenState();
     const menuItems = useMenuItems(
       {
         commonId,
@@ -188,8 +185,6 @@ const DiscussionFeedCard = forwardRef<FeedItemRef, DiscussionFeedCardProps>(
         linkStream: onLinkStreamModalOpen,
         unlinkStream: onUnlinkStreamModalOpen,
         moveStream: onMoveStreamModalOpen,
-        markFeedItemAsSeen,
-        markFeedItemAsUnseen,
       },
     );
     const user = useSelector(selectUser());
