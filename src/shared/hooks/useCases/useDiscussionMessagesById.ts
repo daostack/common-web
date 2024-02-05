@@ -14,12 +14,12 @@ import {
   DiscussionMessageWithParsedText,
   User,
 } from "@/shared/models";
+import { InternalLinkData } from "@/shared/utils";
 import firebase from "@/shared/utils/firebase";
 import {
   cacheActions,
   selectDiscussionMessagesStateByDiscussionId,
 } from "@/store/states";
-import { InternalLinkData } from "@/shared/utils";
 
 export type TextStyles = {
   mentionTextCurrentUser: string;
@@ -235,7 +235,7 @@ export const useDiscussionMessagesById = ({
               directParent,
               onUserClick,
               onFeedItemClick,
-              onInternalLinkClick
+              onInternalLinkClick,
             });
 
             return {
@@ -268,9 +268,9 @@ export const useDiscussionMessagesById = ({
       }
       const discussionMessages = [...(state.data || [])];
 
-      if(discussionMessages.length > 0 && users.length === 0) {
-        return;
-      }
+      // if (discussionMessages.length > 0 && users.length === 0) {
+      // return;
+      // }
 
       const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
