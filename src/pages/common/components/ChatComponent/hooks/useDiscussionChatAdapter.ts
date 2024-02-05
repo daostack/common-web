@@ -2,9 +2,10 @@ import { useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/pages/Auth/store/selectors";
 import { useCommonMembers } from "@/pages/OldCommon/hooks";
+import { InternalLinkData } from "@/shared/utils";
 import {
   useDiscussionMessagesById,
-  useMarkFeedItemAsSeen,
+  useUpdateFeedItemSeenState,
 } from "@/shared/hooks/useCases";
 import { TextStyles } from "@/shared/hooks/useCases/useDiscussionMessagesById";
 import { DirectParent, User } from "@/shared/models";
@@ -13,6 +14,7 @@ interface Options {
   hasPermissionToHide: boolean;
   onUserClick?: (userId: string) => void;
   onFeedItemClick?: (feedItemId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
   directParent?: DirectParent | null;
   textStyles: TextStyles;
   discussionId: string;
@@ -21,7 +23,7 @@ interface Options {
 interface Return {
   discussionMessagesData: ReturnType<typeof useDiscussionMessagesById>;
   markDiscussionMessageItemAsSeen: ReturnType<
-    typeof useMarkFeedItemAsSeen
+    typeof useUpdateFeedItemSeenState
   >["markFeedItemAsSeen"];
   discussionUsers: User[];
   fetchDiscussionUsers: (commonId: string, circleVisibility?: string[]) => void;
@@ -34,6 +36,7 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     discussionId,
     onFeedItemClick,
     onUserClick,
+    onInternalLinkClick,
   } = options;
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -55,12 +58,13 @@ export const useDiscussionChatAdapter = (options: Options): Return => {
     textStyles,
     onFeedItemClick,
     onUserClick,
+    onInternalLinkClick,
   });
-  const { markFeedItemAsSeen } = useMarkFeedItemAsSeen();
+  const { markFeedItemAsSeen } = useUpdateFeedItemSeenState();
 
   const fetchDiscussionUsers = useCallback(
     (commonId: string, circleVisibility?: string[]) => {
-      fetchCommonMembers(commonId, circleVisibility, true);
+      fetchCommonMembers(commonId, circleVisibility, false);
     },
     [fetchCommonMembers],
   );

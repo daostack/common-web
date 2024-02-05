@@ -12,6 +12,7 @@ import { ElementType } from "@/shared/ui-kit/TextEditor/constants";
 import textEditorElementsStyles from "@/shared/ui-kit/TextEditor/shared/TextEditorElements.module.scss";
 import { EmojiElement } from "@/shared/ui-kit/TextEditor/types";
 import { isRtlWithNoMentions } from "@/shared/ui-kit/TextEditor/utils";
+import { InternalLinkData } from "@/shared/utils";
 import { CheckboxItem, UserMention } from "../components";
 import { Text, TextData } from "../types";
 import { generateInternalLink } from "./generateInternalLink";
@@ -34,6 +35,7 @@ interface TextFromDescendant {
   commonId?: string;
   directParent?: DirectParent | null;
   onUserClick?: (userId: string) => void;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 const getTextFromDescendant = async ({
@@ -44,12 +46,13 @@ const getTextFromDescendant = async ({
   commonId,
   directParent,
   onUserClick,
+  onInternalLinkClick,
 }: TextFromDescendant): Promise<Text> => {
   if (!Element.isElement(descendant)) {
     const separatedText = descendant.text.split(" ");
     const mappedText = await Promise.all(
-      separatedText.map(async (item) => {
-        return await generateInternalLink(item);
+      separatedText.map(async (text) => {
+        return await generateInternalLink({ text, onInternalLinkClick });
       }),
     );
     return <span>{mappedText}</span> || "";
@@ -71,6 +74,7 @@ const getTextFromDescendant = async ({
                   commonId,
                   directParent,
                   onUserClick,
+                  onInternalLinkClick,
                 })}
               </React.Fragment>
             )),
@@ -138,6 +142,7 @@ export const getTextFromTextEditorString = async (
     systemMessage,
     directParent,
     onUserClick,
+    onInternalLinkClick,
   } = data;
 
   const isCurrentUser = userId === ownerId;
@@ -193,6 +198,7 @@ export const getTextFromTextEditorString = async (
           commonId,
           directParent,
           onUserClick,
+          onInternalLinkClick,
         })}
       </React.Fragment>
     )),

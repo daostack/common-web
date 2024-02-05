@@ -19,6 +19,7 @@ import {
   cacheActions,
   selectDiscussionMessagesStateByDiscussionId,
 } from "@/store/states";
+import { InternalLinkData } from "@/shared/utils";
 
 export type TextStyles = {
   mentionTextCurrentUser: string;
@@ -35,6 +36,7 @@ interface Options {
   onFeedItemClick?: (feedItemId: string) => void;
   users: User[];
   textStyles: TextStyles;
+  onInternalLinkClick?: (data: InternalLinkData) => void;
 }
 
 type State = LoadingState<DiscussionMessageWithParsedText[] | null>;
@@ -62,6 +64,7 @@ export const useDiscussionMessagesById = ({
   onUserClick,
   onFeedItemClick,
   users,
+  onInternalLinkClick,
 }: Options): Return => {
   const dispatch = useDispatch();
   const { getCommonPagePath, getCommonPageAboutTabPath } = useRoutesContext();
@@ -97,6 +100,7 @@ export const useDiscussionMessagesById = ({
       directParent,
       onUserClick,
       onFeedItemClick,
+      onInternalLinkClick,
     });
 
     dispatch(
@@ -163,6 +167,7 @@ export const useDiscussionMessagesById = ({
           directParent,
           onUserClick,
           onFeedItemClick,
+          onInternalLinkClick,
         });
 
         return {
@@ -230,6 +235,7 @@ export const useDiscussionMessagesById = ({
               directParent,
               onUserClick,
               onFeedItemClick,
+              onInternalLinkClick
             });
 
             return {
@@ -261,6 +267,11 @@ export const useDiscussionMessagesById = ({
         setIsLoading(true);
       }
       const discussionMessages = [...(state.data || [])];
+
+      if(discussionMessages.length > 0 && users.length === 0) {
+        return;
+      }
+
       const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
