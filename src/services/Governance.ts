@@ -21,6 +21,7 @@ class GovernanceService {
       .get({ source });
     const governanceList = snapshot.docs.map((doc) => doc.data());
     const governance = governanceList[0] || null;
+    console.log({ source, fromCache: snapshot.metadata.fromCache, governance });
 
     if (source === FirestoreDataSource.Cache && !governance) {
       return this.getGovernanceByCommonId(commonId, FirestoreDataSource.Server);
