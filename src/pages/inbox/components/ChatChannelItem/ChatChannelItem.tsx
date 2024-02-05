@@ -38,8 +38,12 @@ export const ChatChannelItem: FC<ChatChannelFeedLayoutItemProps> = (props) => {
   const isGroupMessage = chatChannel.participants.length > 2;
   const dmUserIds = useMemo(
     () =>
-      chatChannel.participants.filter((participant) => participant !== userId),
-    [],
+      chatChannel.participants.length === 1
+        ? chatChannel.participants
+        : chatChannel.participants.filter(
+            (participant) => participant !== userId,
+          ),
+    [chatChannel.participants],
   );
 
   const dmUsersNames = dmUsers?.map((user) => getUserName(user));
