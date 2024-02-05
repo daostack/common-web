@@ -162,6 +162,15 @@
   }
 }
 
+.internalLink {
+  color: var(--mention-secondary);
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}
+
 .replyMessageContainer {
   display: flex;
   cursor: pointer;
