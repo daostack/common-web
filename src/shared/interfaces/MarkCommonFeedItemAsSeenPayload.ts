@@ -6,8 +6,3 @@ export interface MarkCommonFeedItemAsSeenPayload {
   lastSeenId?: string;
   type?: LastSeenEntity;
 }
-
-export interface MarkCommonFeedItemAsUnseenPayload {
-  feedObjectId: string;
-  commonId: string;
-}

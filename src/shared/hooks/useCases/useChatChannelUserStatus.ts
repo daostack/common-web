@@ -1,17 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ChatService } from "@/services";
-import {
-  ChatChannelIdentificationData,
-  LoadingState,
-} from "@/shared/interfaces";
+import { LoadingState } from "@/shared/interfaces";
 import { ChatChannelUserStatus } from "@/shared/models";
 import { cacheActions, selectChatChannelUserStatus } from "@/store/states";
 
 type State = LoadingState<ChatChannelUserStatus | null>;
 
+interface IdentificationInfo {
+  userId: string;
+  chatChannelId: string;
+}
+
 interface Return extends State {
-  fetchChatChannelUserStatus: (info: ChatChannelIdentificationData) => void;
+  fetchChatChannelUserStatus: (info: IdentificationInfo) => void;
 }
 
 const DEFAULT_STATE: State = {
@@ -23,7 +25,7 @@ const DEFAULT_STATE: State = {
 export const useChatChannelUserStatus = (): Return => {
   const dispatch = useDispatch();
   const [identificationInfo, setIdentificationInfo] =
-    useState<ChatChannelIdentificationData | null>(null);
+    useState<IdentificationInfo | null>(null);
   const [defaultState, setDefaultState] = useState({ ...DEFAULT_STATE });
   const state =
     useSelector(
@@ -33,7 +35,7 @@ export const useChatChannelUserStatus = (): Return => {
     ) || defaultState;
 
   const fetchChatChannelUserStatus = useCallback(
-    (info: ChatChannelIdentificationData) => {
+    (info: IdentificationInfo) => {
       setDefaultState({ ...DEFAULT_STATE });
       setIdentificationInfo(info);
       dispatch(

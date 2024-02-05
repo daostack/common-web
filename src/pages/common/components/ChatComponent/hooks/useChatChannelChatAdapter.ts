@@ -5,7 +5,6 @@ import { ChatMessageToUserDiscussionMessageConverter } from "@/shared/converters
 import {
   useChatMessages,
   useMarkChatMessageAsSeen,
-  useUpdateChatChannelSeenState,
   useUserById,
 } from "@/shared/hooks/useCases";
 import { User, UserDiscussionMessage } from "@/shared/models";
@@ -21,7 +20,6 @@ interface Return {
   markChatMessageItemAsSeen: ReturnType<
     typeof useMarkChatMessageAsSeen
   >["markChatMessageAsSeen"];
-  markChatChannelAsSeen: (id: string) => void;
   chatUsers: User[];
   fetchChatUsers: () => void;
 }
@@ -30,7 +28,6 @@ export const useChatChannelChatAdapter = (options: Options): Return => {
   const { participants = [] } = options;
   const chatMessagesData = useChatMessages();
   const { markChatMessageAsSeen } = useMarkChatMessageAsSeen();
-  const { markChatChannelAsSeen } = useUpdateChatChannelSeenState();
   const { fetchUser: fetchDMUser, data: dmUser } = useUserById();
   const user = useSelector(selectUser());
   const userId = user?.uid;
@@ -56,7 +53,6 @@ export const useChatChannelChatAdapter = (options: Options): Return => {
       data: messages,
     },
     markChatMessageItemAsSeen: markChatMessageAsSeen,
-    markChatChannelAsSeen,
     chatUsers: users,
     fetchChatUsers,
   };
