@@ -16,12 +16,7 @@ import {
   Message3Icon,
   MoveItemIcon,
 } from "@/shared/icons";
-import {
-  ContextMenuItem as Item,
-  MarkCommonFeedItemAsSeenPayload,
-  MarkCommonFeedItemAsUnseenPayload,
-  UploadFile,
-} from "@/shared/interfaces";
+import { ContextMenuItem as Item, UploadFile } from "@/shared/interfaces";
 import { parseStringToTextEditorValue } from "@/shared/ui-kit";
 import {
   getCirclesWithLowestTier,
@@ -39,8 +34,6 @@ interface Actions {
   linkStream?: () => void;
   moveStream?: () => void;
   unlinkStream?: () => void;
-  markFeedItemAsSeen: (payload: MarkCommonFeedItemAsSeenPayload) => void;
-  markFeedItemAsUnseen: (payload: MarkCommonFeedItemAsUnseenPayload) => void;
 }
 
 export const useMenuItems = (
@@ -55,16 +48,8 @@ export const useMenuItems = (
     feedItemFollow,
     feedItemUserMetadata,
   } = options;
-  const {
-    report,
-    share,
-    remove,
-    linkStream,
-    moveStream,
-    unlinkStream,
-    markFeedItemAsSeen,
-    markFeedItemAsUnseen,
-  } = actions;
+  const { report, share, remove, linkStream, moveStream, unlinkStream } =
+    actions;
   const allowedMenuItems = getAllowedItems({ ...options, feedItemFollow });
   const items: Item[] = [
     {
@@ -94,27 +79,27 @@ export const useMenuItems = (
     {
       id: FeedItemMenuItem.MarkUnread,
       text: "Mark as unread",
-      onClick: () => {
+      onClick: async () => {
         if (!commonId || !feedItem) {
           return;
         }
 
-        markFeedItemAsUnseen({
+        await CommonFeedService.markCommonFeedItemAsUnseen(
           commonId,
-          feedObjectId: feedItem.id,
-        });
+          feedItem.id,
+        );
       },
       icon: <Message3Icon />,
     },
     {
       id: FeedItemMenuItem.MarkRead,
       text: "Mark as read",
-      onClick: () => {
+      onClick: async () => {
         if (!commonId || !feedItem) {
           return;
         }
 
-        markFeedItemAsSeen({
+        await CommonFeedService.markCommonFeedItemAsSeen({
           commonId,
           feedObjectId: feedItem.id,
           lastSeenId: feedItemUserMetadata?.lastSeen?.id,
