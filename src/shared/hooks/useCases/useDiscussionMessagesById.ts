@@ -261,6 +261,11 @@ export const useDiscussionMessagesById = ({
         setIsLoading(true);
       }
       const discussionMessages = [...(state.data || [])];
+
+      if(discussionMessages.length > 0 && users.length === 0) {
+        return;
+      }
+
       const filteredMessages = discussionMessages.filter(
         ({ moderation }) =>
           moderation?.flag !== ModerationFlags.Hidden || hasPermissionToHide,
