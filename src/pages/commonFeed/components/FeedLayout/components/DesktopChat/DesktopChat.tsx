@@ -123,6 +123,7 @@ const DesktopChat: FC<ChatProps> = (props) => {
         hasAccess={hasAccessToChat}
         lastSeenItem={chatItem.lastSeenItem}
         isHidden={false}
+        seenOnce={chatItem.seenOnce}
         isAuthorized={Boolean(user)}
         onMessagesAmountChange={onMessagesAmountChange}
         directParent={directParent}
